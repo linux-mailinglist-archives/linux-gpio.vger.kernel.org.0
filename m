@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-29479-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29480-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA102CB83AE
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 09:20:28 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA7F4CB83BD
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 09:21:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0FE7B3047444
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 08:20:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5DE2C304746A
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 08:20:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E52530F527;
-	Fri, 12 Dec 2025 08:19:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7274930F538;
+	Fri, 12 Dec 2025 08:20:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j+++aXoT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dx5DDZza"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9622DFA5A;
-	Fri, 12 Dec 2025 08:19:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2802DFA5A;
+	Fri, 12 Dec 2025 08:20:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765527599; cv=none; b=SyrbsPBh/Nyce8vHNoImEhfR360yIev8oMRb94l7zpqy4KqFsLqAso52JCwmIbd4E8gGXMBXxAdf9JHryt5tivZCmsifDRmCZwVp4TJ+87Pntooak/BsgzlmUaeceq/K2rWl2JEna6MGy/qNAI+rWn+tEc3Qx9mr8it8Go+8l3g=
+	t=1765527651; cv=none; b=Ve8XxC0/EOv4BNPVK35Xe2o+r6wIGAbAb/ItGX50aM9n789kF39Ur5O5FvxiV1XvDPHi7Fq3NBbq1UyYCLRlnwIuKvdYqnUtkbalI5kNqV+r4Bbg4i88u0/Vxdf9VHMHq9xhmuWasBO2Fzb2+VybmExqGRnkYh8EVsUgPRfzNz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765527599; c=relaxed/simple;
-	bh=jlMwHtPPA4m4TUifTdzUjwtNLhDFy1jJCvgxdEHIdDw=;
+	s=arc-20240116; t=1765527651; c=relaxed/simple;
+	bh=Xou53jiBQo9ysRj18wzsAyfyw/eH3lkYRVNejIVVlAg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HI625/aDya0dKJl9J7LjuN3TvVut55d2ZUjPDPV6qxMxQvEpo0/7TGiDeqi8WkYtMU1E+V8KpL7ounUu4uTFkH+E1IWveaUCCXbunn2hQ08qjGPyrmNMEqh6pOfND2g5Bq5vUW2ivD/EhkN5wflXNTeXiu0DBlIDakPVPTGvG4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j+++aXoT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D8DDC4CEF1;
-	Fri, 12 Dec 2025 08:19:53 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=h3L4TbAHZnNBsLpixUR8GFIK2Aw+IKcutbT+81BcBvkOg4CyJsmaZpMZbDBpqAkD5JqZOHgujraXuXSg5Sr/7KqugCH1DbgErAouP5Kd11b5DjppPp1eGqg5yamKewFZyXCzSNePPAWuv88MwDTI0SeDGaB460QVbM0LEPfd8j8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dx5DDZza; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F9A6C4CEF1;
+	Fri, 12 Dec 2025 08:20:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765527599;
-	bh=jlMwHtPPA4m4TUifTdzUjwtNLhDFy1jJCvgxdEHIdDw=;
+	s=k20201202; t=1765527650;
+	bh=Xou53jiBQo9ysRj18wzsAyfyw/eH3lkYRVNejIVVlAg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=j+++aXoTVzo2+MUUz0a3s7wMkjHxdNd8PDxjGNylI3PaGaXcmxqR0VK9rkxgAOYXV
-	 183tl8Zyk0wRyCosNMzKyYXIl7LL9GQKMB6HgnR3pmbea12RyUBNnAmBHuLC+j0wll
-	 IKnfJxwtPuwH6h0R7Bp+6gii9kI5KXL6AlJOIij0HiDQliOMqtEDXi9WC47eg/M66k
-	 QcKcoLjbY8UxHolIopj/TBfnSIdpEZxq1cM7tV6h3y8vIPBUvUO8mMOF4FXMyq/cdU
-	 lkD5VxDAVLzORl/5tVPhdqllA9N4CA+6kvHwyysUFDxzkoTLFYIO6VBpBOqNFn/nIG
-	 r1ppm1fs5CP2A==
-Message-ID: <297c2582-0879-433f-a854-211ad1d21837@kernel.org>
-Date: Fri, 12 Dec 2025 09:19:51 +0100
+	b=Dx5DDZza6H1mti9vaxZl65HrR80E8WnQIPcedB8ieEqtVqJESO22i5rTWouxXjy5Q
+	 QKMPJMl7cM32PbArkRDhgUfdbZ+BM8l+GJJjSOKKiEECOElweQwViXNbXegXtBbEVn
+	 o1paCSAmN9CdjBdevFR0kbi3G9+m6sHOCRCl5IofzscAWlfnAOmA/P3KgmkpP4y+S1
+	 bSc4R2brBCJ65c6yssDYrIP4NIuCj3YmjHfOYFwsNEVysai8VzleQlqqpvO9eW5cHo
+	 3d42huWeBykYwfW46GAkTap34ERuLhiBRZANieA1VMqM+FWCa4vNYoFqnv82ogpqQJ
+	 tNwY0hkYtFNIg==
+Message-ID: <019aa49f-fe59-488d-aff8-f07cf07ee68d@kernel.org>
+Date: Fri, 12 Dec 2025 09:20:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -48,8 +48,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/8] dt-bindings: gpio: Add AAEON embedded controller GPIO
- binding
+Subject: Re: [PATCH 3/8] dt-bindings: watchdog: Add AAEON embedded controller
+ watchdog binding
 To: "Thomas Perrot (Schneider Electric)" <thomas.perrot@bootlin.com>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linusw@kernel.org>,
@@ -65,7 +65,7 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org,
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 References: <20251212-dev-b4-aaeon-mcu-driver-v1-0-6bd65bc8ef12@bootlin.com>
- <20251212-dev-b4-aaeon-mcu-driver-v1-2-6bd65bc8ef12@bootlin.com>
+ <20251212-dev-b4-aaeon-mcu-driver-v1-3-6bd65bc8ef12@bootlin.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -111,56 +111,25 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20251212-dev-b4-aaeon-mcu-driver-v1-2-6bd65bc8ef12@bootlin.com>
+In-Reply-To: <20251212-dev-b4-aaeon-mcu-driver-v1-3-6bd65bc8ef12@bootlin.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 On 12/12/2025 08:41, Thomas Perrot (Schneider Electric) wrote:
-> Add device tree binding documentation for the GPIO controller functionality
-> provided by the AAEON embedded controller. This controller provides 7 GPOs
-> and 12 GPIOs for a total of 19 GPIO lines.
-> 
-> The GPIO controller is defined as a child node of the AAEON MCU device.
-> 
-> Signed-off-by: Thomas Perrot (Schneider Electric) <thomas.perrot@bootlin.com>
-> ---
->  .../bindings/gpio/aaeon,srg-imx8pl-gpio.yaml       | 54 ++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/aaeon,srg-imx8pl-gpio.yaml b/Documentation/devicetree/bindings/gpio/aaeon,srg-imx8pl-gpio.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..8040dc0a36ee5650488520c2218f09fd08cdf64a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/aaeon,srg-imx8pl-gpio.yaml
-> @@ -0,0 +1,54 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/aaeon,srg-imx8pl-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: AAEON Embedded Controller GPIO
+> +additionalProperties: false
 > +
-> +maintainers:
-> +  - Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>
-> +  - Thomas Perrot <thomas.perrot@bootlin.com>
-> +
-> +description: |
-> +  GPIO controller functionality provided by the AAEON embedded controller.
-> +  This controller provides 7 GPOs and 12 GPIOs.
-> +
-> +  The GPIO controller is a sub-device of the AAEON MCU and must be defined
-> +  as a child node of the MCU device.
-> +
-> +properties:
-> +  compatible:
-> +    const: aaeon,srg-imx8pl-gpio
-> +
-> +  gpio-controller: true
+> +examples:
+> +  - |
+> +    watchdog {
+> +      compatible = "aaeon,srg-imx8pl-wdt";
 
+No, that was discussed many times on the mailing list already. Fold the
+child into the parent. Your driver model really do not matter for DT.
 
-That's not really separate node if you do not have any resources. Fold
-it into the parent.
+> +    };
+> 
+
 
 Best regards,
 Krzysztof
