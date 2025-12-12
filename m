@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-29481-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29482-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A736CB83C6
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 09:22:24 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C950ACB8435
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 09:26:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id F04BA3009866
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 08:22:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7AB84309A7C8
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 08:23:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F84830FC10;
-	Fri, 12 Dec 2025 08:22:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53C7030FC19;
+	Fri, 12 Dec 2025 08:23:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uafR4QfS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KkRwMDVn"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AF3296BAB;
-	Fri, 12 Dec 2025 08:22:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0471F1D5147;
+	Fri, 12 Dec 2025 08:23:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765527742; cv=none; b=hbG7j34N4U7FqFBztKQxaH7cWO+2Mh2pR8saB3KiIJMgLm0bz5h+vfSQBd4EWQLG6ZZOt62oos080T5kIP29ExyPTWgjeJy4sadMx9CUomUujJGQpWu67jSuEBEUejfDzWYytsdU/gPlXIl4fiRqsO3ir61Ud8C6x290FrpOUqk=
+	t=1765527814; cv=none; b=FNYqSsyVrSOyYS06FYb6Mju9grYFvPZhMm8ZyWKz3WNcvk1k8NSA6B1nKG4D2Ub3RDw/wNwCzwoKFbjH512pFBJzLNQeXvo1By+/FW0DZY/cU90nYJrCqsGXsZyq3w+NAY1tkOp5wDUEVp5VqTAqPSNvh/h3nLo21A+g3K+J4mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765527742; c=relaxed/simple;
-	bh=8oDqilr9Yuyz/KLO/4N+MW/6rShPklfg64mSLOz4/K0=;
+	s=arc-20240116; t=1765527814; c=relaxed/simple;
+	bh=/j/1ScGxZjR6kSM7InGcpMqir6HHE0SEYQMEId1tmR0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H/NOkBAwAjVSQdz6HkvGp934qMrSX+qBlx6S7gfjwB33xk+gRtdb+A7R3BE8gmuvtwMxuOv2hMkgrJHWl0jHfynqSs52dVTkbrrRe40fdYc1bjRhCG/rCBsXVRU55uj44mn/3WJBQ5qBLvyrI4m9yNPH6ijDzxfD1QNz2Sev7Mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uafR4QfS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA22FC4CEF1;
-	Fri, 12 Dec 2025 08:22:15 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=b+BULYdHq7bPrNfrLaGKuNrN2NdaHU1beQpWWtHzjpey4CvQR0Isimmqjv8FxH//ueirC3lwmXVbq9e36aDLoWO13FWiaeLrd0l4ZjmyO3o3/ScqKYefOse+yv+QSyrJLNUU0iLKjHiS2c38r3piIcGq86MEhrPnrzkboFpjkIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KkRwMDVn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1360EC19421;
+	Fri, 12 Dec 2025 08:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765527741;
-	bh=8oDqilr9Yuyz/KLO/4N+MW/6rShPklfg64mSLOz4/K0=;
+	s=k20201202; t=1765527813;
+	bh=/j/1ScGxZjR6kSM7InGcpMqir6HHE0SEYQMEId1tmR0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uafR4QfSZiUrnDMiMddpKEkSC8tD30xPjAM49K02OT/uaJSMpiG1JlCahvhFA3cLE
-	 fnLHx9pZBu7MgPK3bxI5w9smPEBc8XGkKUSWO1ArWSsLs4lNYXh0fuUggcrZLGiWed
-	 S0cx0TPnKF33mYJrqS80wZ4O4DXizrEv7XFfy5FhsPuiVmFmRsl9IiYamtT58Wlfwb
-	 UNx50IkM7KkOy+3DGJ0YEX6TTf+xgXf9kJDGPjBOUA7zjGRdS4aGeEfWgrBpJSkeLU
-	 xuoblsociYy/bJrTeLI156How0+Pgx9yo+nCv/izWJz90x0beP7YKQOu/o0za2zEQT
-	 CDG28tegoJftw==
-Message-ID: <160d61b0-7819-4566-9543-2dabec226713@kernel.org>
-Date: Fri, 12 Dec 2025 09:22:13 +0100
+	b=KkRwMDVnoFuKQOr6gwuRYOBlideqLk91TzXBlyCypVMmqrMivn/fb2UupBY7poXu8
+	 Xf00NQNelapVOxVlUnf8NguLm0fQSKdrdQuHG2lmu8wvHEDRAcn3TfVXSV+4OpYIMN
+	 oLAw8Cao7PYJczck+3bwy+LFCHy+3Q/poU3dVID9QZnmruOHPXoVP4pTLpXPd48u/H
+	 OJ7la/Siz+1BUBmpTQc3RWvynTyZ0h/WxaQuHmpMnYoHYx9f5+Y9CdjgZrhkLE2MMr
+	 UHZz9QDl48nfvwOaya65AhlsswBMsi33PKfuR4/rQ2EDyfa6eu4aQQf45mpKEZdh3f
+	 v1KPH7sGVZjBw==
+Message-ID: <ac5d7935-3285-416d-8024-02a26753c564@kernel.org>
+Date: Fri, 12 Dec 2025 09:23:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -48,8 +48,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/8] dt-bindings: mfd: Add AAEON embedded controller
- binding
+Subject: Re: [PATCH 8/8] MAINTAINERS: Add entry for AAEON SRG-IMX8PL MCU
+ driver
 To: "Thomas Perrot (Schneider Electric)" <thomas.perrot@bootlin.com>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linusw@kernel.org>,
@@ -65,7 +65,7 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org,
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 References: <20251212-dev-b4-aaeon-mcu-driver-v1-0-6bd65bc8ef12@bootlin.com>
- <20251212-dev-b4-aaeon-mcu-driver-v1-4-6bd65bc8ef12@bootlin.com>
+ <20251212-dev-b4-aaeon-mcu-driver-v1-8-6bd65bc8ef12@bootlin.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -111,83 +111,21 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20251212-dev-b4-aaeon-mcu-driver-v1-4-6bd65bc8ef12@bootlin.com>
+In-Reply-To: <20251212-dev-b4-aaeon-mcu-driver-v1-8-6bd65bc8ef12@bootlin.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 On 12/12/2025 08:41, Thomas Perrot (Schneider Electric) wrote:
-> Add device tree binding documentation for the AAEON embedded controller
-> (MCU). This microcontroller is found on AAEON embedded boards and provides
-> system features such as GPIO control, watchdog timer, and LED management.
+> +AAEON SRG-IMX8PL CONTROLLER MFD DRIVER
+> +M:	Thomas Perrot <thomas.perrot@bootlin.com>
+> +R:	Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>
+> +S:	Maintained
+> +F:	drivers/gpio/gpio-aaeon-mcu.c
+> +F:	drivers/mfd/aaeon-mcu.c
+> +F:	drivers/watchdog/aaeon_mcu_wdt.c
+> +F:	include/linux/mfd/aaeon-mcu.h
 
-A nit, subject: drop second/last, redundant "binding". The "dt-bindings"
-prefix is already stating that these are bindings.
-See also:
-https://elixir.bootlin.com/linux/v6.17-rc3/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
-
-> 
-> The MCU is connected via I2C and acts as a multi-function device with
-> GPIO and watchdog as child nodes.
-> 
-> Signed-off-by: Thomas Perrot (Schneider Electric) <thomas.perrot@bootlin.com>
-> ---
->  .../bindings/mfd/aaeon,srg-imx8pl-mcu.yaml         | 58 ++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/aaeon,srg-imx8pl-mcu.yaml b/Documentation/devicetree/bindings/mfd/aaeon,srg-imx8pl-mcu.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..680d06a7e7cb3754bdfc67a1b8c484811eba55d1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/aaeon,srg-imx8pl-mcu.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/aaeon,srg-imx8pl-mcu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: AAEON Embedded Controller
-> +
-> +maintainers:
-> +  - Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>
-> +  - Thomas Perrot <thomas.perrot@bootlin.com>
-> +
-> +description: |
-
-Do not need '|' unless you need to preserve formatting.
-
-> +  AAEON embeds a microcontroller on their embedded boards providing system
-> +  features such as GPIO control, watchdog timer, and LED management.
-> +  The MCU is connected via I2C bus.
-> +
-> +properties:
-> +  compatible:
-> +    const: aaeon,srg-imx8pl-mcu
-
-What is srg? Why isn't this explained anywhere here?
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  gpio:
-
-Drop the child, properties go here directly.
-
-> +    $ref: /schemas/gpio/aaeon,srg-imx8pl-gpio.yaml
-> +
-> +  watchdog:
-
-Same here
-
-> +    $ref: /schemas/watchdog/aaeon,srg-imx8pl-wdt.yaml
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-
-
+Incomplete - missing bindings.
 
 Best regards,
 Krzysztof
