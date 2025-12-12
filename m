@@ -1,895 +1,234 @@
-Return-Path: <linux-gpio+bounces-29510-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29511-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89B4BCB9974
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 19:43:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2364FCB9B57
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 20:55:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AD7C230715C3
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 18:43:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 359CC30F196A
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Dec 2025 19:51:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9036309EEC;
-	Fri, 12 Dec 2025 18:43:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30BF13271F5;
+	Fri, 12 Dec 2025 19:44:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ihuRZLqT"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="lLqfZiwG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013026.outbound.protection.outlook.com [40.107.162.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55E73093D1
-	for <linux-gpio@vger.kernel.org>; Fri, 12 Dec 2025 18:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765565009; cv=none; b=AzTu9eZUNSqESQH1K2YdrApnIAtpzThz/VDc9qeV3F7NCw3uWY29Duye1G4IRL5E+v0IkC/oxOJTCcJLiuN+QYDpNATkASxB74oO3w1v2CMR9Qmtxv+QqKgMgoP+0MQ7NvxyLOQy2S1F+poY5eoFwoNhvOLBTUxD0DL1ERVH6hY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765565009; c=relaxed/simple;
-	bh=klikMh7SsRMehniAETpjNmjpMxfugGEv6pO2iBUsuFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LfzAh1OGzbwDyfNdwE2g+cbr3Wqn8RUKEUQZ+2EixVz3gZXsy1sxbmDGHMTGOiAQNcVLm0/gYiyw34kTXq0OVXVYQF7f8XYiWbFO0XREQ15ETA2nhxn4IpBWK0XBpnPtpJZ8GMi7ejsVS09a4jb3za8pD6n8788OLDU2XQzW+Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ihuRZLqT; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-297e264528aso16729145ad.2
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Dec 2025 10:43:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765565005; x=1766169805; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3V1Tntzsv6/ontXJ2NamjGQc7g3JceFHAeQO4cFMwqk=;
-        b=ihuRZLqT4NxlbfMGbKLsN0MplhOn5RjjctkNE0NtGtgP/bKA9Yz0hnpQ5fqfONNhOI
-         NxvKpgRkTszXRmhsiS5imPYXUoBz4IRk2dBFA373jdBRTwj1Ut6IwK59eCjdAL/6O3wM
-         wDiyiQOouSN54RgXOiboEPuYQM5QZkFnuUvo5D4ouTG5KsnvIzTKe6WKLq5Ye14CG4mn
-         7vuQsLf1F9nICJpXn9jdvBKbhZudJdLmHQ8Q2Eog4YexiJ60RO2XzYq386X2r4Hh+0nE
-         97Z/vo1Pi5sxnSzrT5/cQCQUYjo+5Cbg2aHpdm95ofDpKLnONAJT3T3UWh8jdCSom94l
-         6zpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765565005; x=1766169805;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3V1Tntzsv6/ontXJ2NamjGQc7g3JceFHAeQO4cFMwqk=;
-        b=YQXqCO75mo7aOZ0Oib1M6jf5AKJj9SgHwozoEsxJLHxCVmxSC3hcm7XdT4Z4zWmls4
-         5p6AZHyyBuSjNZqWIJ8S5+7aENbst118hkwqz5702+yDgz1Je04K7MG0oNfe7xdE1N/l
-         2FwAVg1jR1aTWoeaKCV+oV+3rw/tniUTPPvAUaJaMCwrd9jYRTHZ2oAWDJ5RkACnjVXg
-         kjnDeVmfXqNRncA/zCA6b1DAvgBQfOFllASm/ldfhVmbJ/GJjtkWCFG5djcVBINMAyL1
-         nTuu4kYp/mHm73K+Em2ZapmQW/zqv7AIcBi8CmyKppTfh64PUKO/ZsA7CGqwMEsT9LE+
-         pPuw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1yUgpGuBZFmliz4zFzzlpsXSEafb+iyiWJNOOvPpFGVG+LjhLpjv+f1jpPQP48jcsgDS30ciCQDPk@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYqTCQYZ5svJ6+nJEx/uFzq+tXuorSdke0dI1vGgQBdvqn52Eq
-	WnzUDEOyyEVe9sNCcrCX6EVf6w9c0AXdUa57LqdNeI/RGblkAFcOkefe
-X-Gm-Gg: AY/fxX4QeWtA/9bMSM3TAkpSf/oiXNXWImxTMzeyuNcpJrP/ddSh8QgXrZH6LMdK8FL
-	bvk5GzC3gWdBX6iKv9ODLHoIG+bNZ7CZNyRwTyA8UyTK2cwDaTrurovQ4kTyCTSlnhPgrIsiimy
-	cduXJJKnV57hgLZxbwdEd7lJ9a0FVK6ysbH635YrwtN8fPTn+jM5d1zMeKOqA9hdZnBObHmv/Xu
-	Y7rqUGsltyisDZjE4koeOSW8PN5RifxopmQlbAtZlQvXhduTzAjsBWCrdoeJzzc0TOHuogYmn00
-	1NnYnvc4U5+3JCPn1vBz78oj4H1Y0yL+Xe5x78+eQjrudPM5xBV0ehRSgSR08Pk2jwW9XCYTSHG
-	ZSIoYM6fRQ/o/gMxOzwo9kNM0WqKpB2o7fwl8X9xcOQw09SX6dERLhXnvJgm/EqWcWh9frDfbZ4
-	Kk5ZAx5YnJqeiGGlPztkiuB/DMhlqaPBwHWA==
-X-Google-Smtp-Source: AGHT+IEpDcZzX346VirWot2FLU3yLGtf7DjJEHDYFbSoNjUTnm8K3md74oCC6+8Q71/RJNBdRa+O9w==
-X-Received: by 2002:a05:7022:ea49:b0:119:e56b:98b0 with SMTP id a92af1059eb24-11f34c02b7dmr1649588c88.23.1765565004774;
-        Fri, 12 Dec 2025 10:43:24 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11f2e2b4867sm19892432c88.6.2025.12.12.10.43.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Dec 2025 10:43:24 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Fri, 12 Dec 2025 10:43:23 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Ramiro Oliveira <ramiro.oliveira@advantech.com>
-Cc: Lee Jones <lee@kernel.org>, Linus Walleij <linusw@kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7EF3271E7;
+	Fri, 12 Dec 2025 19:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.26
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765568665; cv=fail; b=DQhr9/Ak/qH93QFeq+7+YCnyMSzvYM8aDjLCWSmf19IUWwK+1mX6lhuyPFUnvMBeoX6k2k+20BsKK/IUEtU57gEVE+7uBSbwlLfkkDHXtZNRBMBMJrLp/Ts5KSKgR3VRe56VeiBfcQECqwE2ZETdM+kverUYL99axnLg5zT5RIQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765568665; c=relaxed/simple;
+	bh=V54aLADkFHboy1h8N/iYvzPOsP6/MyPhnR80Wjc/0zA=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=UD0kDGotfhSo/AgpSyZ7lcJ2UPnxvCm3SD1lFXJd1R5t+Y/6tdaL/YvkfEkTbQFJjM9xYx3nDgnaZ7gnOjDSBI+fsrwgmPN53dmH9/s//UMWMl30dBsSHIJk6pryHn5INqRROp2+cPdob04slcCMT6TL8vZyedLrwc4/QHIE2pU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=lLqfZiwG; arc=fail smtp.client-ip=40.107.162.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tIkYSw+xeFlfK4VlAwV45g0Axj71HHLwym+FESVPoX4efkIdpMawlR9PTfS0Yb1VeE0AsyBeMsYwGhi1sYyhTchND1yM1BTx/JEefPqDDGVnwmde+EcW/8gVQFvCohNICX8IebNlBbvyKPbcNEjFgCu3VqFIC2sMtJ9qjtzJFjo9VJdeEYagYlhAjbo40oOw2t4y+IS8Uv42eFSwCtSLXSEQRTyjNMVOp6n3rrJ1S9s/lvAI00YvqrsyXlwWbVErCxd1z+PysrLeqTOPd67FhA5g3UcrDJPdcFd3aDvDn6XMwpPFgwaNoxHUPN/DRNg5dvbWp/2J8jP7TBTNk/BYgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SkYMZASm1sTfUJTMt1hu8GFXMzRAK/LiB3rR26lTP/8=;
+ b=rlLKW/jjSqdHkf2GAUO2o8oH1F/hWpjCVI1u6UtUuMx2Df14ui3N015RqIpDoStoP/TccKKZiwJH33ru3wELF2NpfyGaHOL5rMbvwjZ+qHKjqWwmFfN9Q7LWbimiuFjSIMqgxoXDfcKIUyk4w8tbFcz1DoMxutIQ5Zf4K4RJfEvcqEjhTb5EQjCbMVG+MVmABMkevZ9vZIO7RMaTH6p19o+p7wZ2rQK4lVJPaJCwzMhC78AmPziJHCnAXz0SutzRBW8GIjb7Tt46fXY2VaeyonuBNnT8FlLzxmvi2EaQ/EpgItRtR1s4LyOD6jrVXuUiQ1d9/RXYX5iUI3qkiwUQKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SkYMZASm1sTfUJTMt1hu8GFXMzRAK/LiB3rR26lTP/8=;
+ b=lLqfZiwG6Clhc3RtqHIZAdnUU9C1RtY0Z7k/MqIfns69JY/kGLy6Aw67BRs3XyWnuQ0Q/Q846x1OP6IyRMO7F6inn/3iCUoL8Ily+TS1+wtwkmGMhkWbDQDQLxWY8Y/snhxA4bq6La2FX3b1q1SQ0L9K4xi9TGSoTBQvQ/W2EuJh86najdCtSWIsmYn7yq0TrvJAr9e9inbkMFvBNOO6bPURldSPDEFq3AW6LdE5FP++WV2Qz9Eo/DGlIEtrCq9xCn9eTfvaAmVVSzU3IhhCNUaa5SqV9lz07OdzOht2uGvCZF3TzRFqgRCwyrxjEb/VjsV8GyzdwRirzXKrp78+UQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9185.eurprd04.prod.outlook.com (2603:10a6:102:231::11)
+ by DU0PR04MB9249.eurprd04.prod.outlook.com (2603:10a6:10:350::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.9; Fri, 12 Dec
+ 2025 19:44:19 +0000
+Received: from PAXPR04MB9185.eurprd04.prod.outlook.com
+ ([fe80::21bf:975e:f24d:1612]) by PAXPR04MB9185.eurprd04.prod.outlook.com
+ ([fe80::21bf:975e:f24d:1612%5]) with mapi id 15.20.9412.011; Fri, 12 Dec 2025
+ 19:44:19 +0000
+From: Shenwei Wang <shenwei.wang@nxp.com>
+To: Linus Walleij <linusw@kernel.org>,
 	Bartosz Golaszewski <brgl@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Daniel Thompson <danielt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org,
-	Wenkai Chung <wenkai.chung@advantech.com.tw>,
-	Francisco Aragon-Trivino <francisco.aragon-trivino@advantech.com>,
-	Hongzhi Wang <hongzhi.wang@advantech.com>,
-	Mikhail Tsukerman <mikhail.tsukerman@advantech.com>,
-	Thomas Kastner <thomas.kastner@advantech.com>
-Subject: Re: [PATCH 6/8] Add Advantech EIO Watchdog driver
-Message-ID: <d3f38cb0-3953-4bf3-8fb0-8c52afd39256@roeck-us.net>
-References: <20251212-upstream-v1-v1-0-d50d40ec8d8a@advantech.com>
- <20251212-upstream-v1-v1-6-d50d40ec8d8a@advantech.com>
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Shenwei Wang <shenwei.wang@nxp.com>,
+	Peng Fan <peng.fan@nxp.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org,
+	linux-imx@nxp.com
+Subject: [PATCH v6 0/5] Enable Remote GPIO over RPMSG on i.MX Platform
+Date: Fri, 12 Dec 2025 13:43:36 -0600
+Message-ID: <20251212194341.966387-1-shenwei.wang@nxp.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: PH7P220CA0169.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:33b::26) To PAXPR04MB9185.eurprd04.prod.outlook.com
+ (2603:10a6:102:231::11)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251212-upstream-v1-v1-6-d50d40ec8d8a@advantech.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9185:EE_|DU0PR04MB9249:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9cf189e2-e85d-4e7d-887b-08de39b6d75d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|19092799006|376014|366016|7416014|52116014|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Siqv4DKM6r2DgQFRatiKkVf2dQII9+IGBpyjLcoZbXCiN+KtX7EwAEs0tMeF?=
+ =?us-ascii?Q?Qb4dByLqFwfDWtx5Dse7kXiXbq3KT4O4sA7rhPHxDpHk2f3vCJR4FSjv7jpg?=
+ =?us-ascii?Q?iF7fXtgLF3Ztb5XeTmMdTnwr2pG4QPchKdGw49I6VBx5Dx7evruMbRH77rhw?=
+ =?us-ascii?Q?uX9Pi/jD3f/QGLfW7q54UO8yw9xN2EOG0dqMCUPv2+U9kKbUOKNwJa8GpPWY?=
+ =?us-ascii?Q?4ZDbEMG6q0kSNHjo5amNaXOIYl5rHI5JwcmpFgSs0nTNr1vf7vnqbuvgE4qD?=
+ =?us-ascii?Q?JTu2TWdMx2qAL6zA6G7NyOnhXBfMRR+ozH20SlOSka7wPvpT0TgjWMMo4Ras?=
+ =?us-ascii?Q?jKYMPJIBaYweOTW9yUD24FnuUBRV28vUtGksADRm+TAVJNrT/E21fKhAvjav?=
+ =?us-ascii?Q?3eM/ux8fL9ntm8A3zbi/4tvj/+ZJHLlJKgsNY0N3Azl521YfrrH3wkGcNpW9?=
+ =?us-ascii?Q?eM4r77uAOiUaocYmDkUXS4b643RpvDF0GMPC4Fg4NIx2U9VIavnpG6d6VYw/?=
+ =?us-ascii?Q?HADWyjvKnKmR3P3kPQySFcZ7EWNyRIon69+JQd7DHeZtTWgH5yqX8IKclyay?=
+ =?us-ascii?Q?7WtX+1dPxKLQYL1NNiSX3/7RSSg7npP52tUu9M3xQLf64Fw4ZFxaX6firQ46?=
+ =?us-ascii?Q?2VmMXy2d3Ey21N29ygtkUkFNkq6ghljNMrirTMaC+zZl3Lfp4h9b5XhJ/pqZ?=
+ =?us-ascii?Q?4O0zt79lAetBFGXDqhIu+5kNhl8CRIihbUtIVGqU2wBK5lCOs22F/qYA0Gyf?=
+ =?us-ascii?Q?EULdWV7C0Yipby4y1XuPBal+abcYXpAOaipg5pWHRrNXak+4uZcUnzdtmmVT?=
+ =?us-ascii?Q?GY/xqfNilgtbgGxzd9RSj2a/C90fPWeEpCgUUPXUSmFtiTXD98BKOayv+8Ns?=
+ =?us-ascii?Q?Go5HJW+eUarF8WpP0NVtBkGgY4mfZ4gz0uWvy9Yw2tn7Vey9iJuVBX7HETzU?=
+ =?us-ascii?Q?rpITz40AH9UVWaxMf4M1RmqwOHJA8pIdvBKxwbHpQdJQWMPsg/QkydHQl2RF?=
+ =?us-ascii?Q?dQXpYRwpOEngmXpEOukd0UV3F7NExF13fmIHHZm+D2qcX+JwMNI6hg3GaCEa?=
+ =?us-ascii?Q?+DSY9SdT30+VMwErAZT/YQsR2t7bgVOrddoJxKm5QiZyPWPOheQYX4kDCZ5t?=
+ =?us-ascii?Q?AfCxTDuFNX2SFm2EPM/MQld2wrLZiIGKT2pvbEK0cfpRfIsV8XFLoTMpyEZp?=
+ =?us-ascii?Q?aV0HNgTrI86nBEMQ0+N3kRziWCPdpnncqJoe690lCXMYf5p+uWNME29dZP41?=
+ =?us-ascii?Q?PPnJpOz88E/D4+2vJtGY5bd/fyRY76ZSW4elnL4xKXB5uEMrREEWUTZKNUvK?=
+ =?us-ascii?Q?afwrzIDZV97TW3ldWidnpZZv2Ielb2bGChmeVb0XYjfzAkTHaSIoK4m3tkMQ?=
+ =?us-ascii?Q?Epb2CqDtje6VemBsSw4MohSK9aN9XVQuOuHqBhUpbItMq/Lfcz0y8wUN/9Hk?=
+ =?us-ascii?Q?YHWIluu1D41wLMcdaCQzTWkpuio+jGQw0L8griJu6VjYV+ett7rVsFZYg+aB?=
+ =?us-ascii?Q?umc8+mPPkIuBJshvwONN61kx+rnGcUkCAqRb?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9185.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(19092799006)(376014)(366016)(7416014)(52116014)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?T/8kuMHNObrH+1jOzQjVKO1p6KD7WF/Ad7Ih1yLPaabXwyt5AbAB/q8gj2Lv?=
+ =?us-ascii?Q?2NMp6IdCpDbDuNOZcahxunVZOdGRnuLzxWbzUtg8ronXKoM0SoqYGdPM6w6+?=
+ =?us-ascii?Q?LeMBtz1kWLj1Sfw1KoTyUktTzXYxm362/bUZTy/DJj+p1VzGeFAgskBIaitH?=
+ =?us-ascii?Q?vxrmEPmgVWKV9ZBgyqQ03NzDdFEqvkiAG05uQugSWgErd2h8+TrHoSm/KqwR?=
+ =?us-ascii?Q?2pVCQ8bXzZ3aloMOxFx3TwA68bHba2QIJqrKfGsRJ+licwWcyx5s9tzv1uVE?=
+ =?us-ascii?Q?PqgpH1zZLeLuvZc50ifU3jy706zZcPl4uYTJNd1BuLU5OOjPmieiZ0XUn78W?=
+ =?us-ascii?Q?qIxOMKdM6RDD2fWL8MNEha09rLdB4UiiVe+87+b0i3IaC2JLv33l1IS9/1HV?=
+ =?us-ascii?Q?rToWiAC6SyF29bTIVK1d3jfwdK3TWZV17KFsSauOh6iaBhs2FmPD5YOEUWW6?=
+ =?us-ascii?Q?+4jC87kfsXezrE7o64RDoqugCGtkIQ/yg3HKoimwALIEP6ber6J7R/3xkBn/?=
+ =?us-ascii?Q?T+xo2CQXe5QG0U/285MyKHQe2owQr23H882PDVMGRskbzoUJR7bbtcGpBsvg?=
+ =?us-ascii?Q?sl3mxp1HR4lf9yraMupIy4OeYBOWPSkbN+sZtDpGeUG92CnaZJLW+iHU4T+z?=
+ =?us-ascii?Q?G6fsyNdxG/6YaJ19PLyLovQpaGD77qF6dQnPxf8wL10TlEXg0C21O0KRL/+U?=
+ =?us-ascii?Q?KSZ5XJ2iM9nbEcyo1w96sH0nVAGcVtQfFv6DXzNNd+f6CFtHN5VkQiLxUTDd?=
+ =?us-ascii?Q?Q6ITQQQUqcX/wHcNllSnKQ+FwL5BvVGxal2s3m2Gv+g+HBH+WrY49EIxmRgp?=
+ =?us-ascii?Q?rCunbbSUfv0EtM0Pmuajmb0UYwgm6O47eUgB5inmw5FrvZmO7JPfLSJtblv/?=
+ =?us-ascii?Q?Z13Qr4NzG6C0XLCOvZaSnTCNKltWCXaaTEqcOgvwt6TeJjNRooBArvme+dtp?=
+ =?us-ascii?Q?X9mkuPGRZpdLOY9FYF+bKQediEIGCJ8bFC7+M4mjkCYk/b2VNDjlD2Zt5L6i?=
+ =?us-ascii?Q?GmCfkoaMwYVRrXZvFbzkpKdCy2NXETjYycw+OS//SSZKR19ZSbpZsvUCrKDx?=
+ =?us-ascii?Q?w8mr2k6BuC9Aoo3TlsZlGEpy/IMzhII5jHRoB5SZAQKZZfsUNq8jB0Y+vcvv?=
+ =?us-ascii?Q?KYlHa4cLrtaqZUOZ7ocmv1XRX1Rd32IEd6sWCAHKxe49RFfbhIz+fss5d1ct?=
+ =?us-ascii?Q?/LjHEdXnuGeeg8Os0RpZ3A2CcV93P4jwaEB/Z3vOX47pAh8nXOAYQLOzu06c?=
+ =?us-ascii?Q?O6m1vPfFuScxGVQeT8JItXGl6wfOtI/OIkhMRxgNydMYe1vftXL8ehSYDBvw?=
+ =?us-ascii?Q?alkmds+KmVUk1OeWNeUi8NrRVs02vJubkElVLIIqh/3vvSdV6dGZJy8a5eFL?=
+ =?us-ascii?Q?OeSz2JEkNu/35c94SiSPwkhQVqHuzIXMXVoKxIOVnrF0gi5saxxK4VHx4piq?=
+ =?us-ascii?Q?gPrIKZcKZoqcXeiWK/VIQ5wExmURT7kbjl8qSGx4jZw78cXlU8PvNqb5lsYz?=
+ =?us-ascii?Q?w9Gj/QNgRAV0z4BqVKCryesQ3XQO4THAOTGJRCL5hFy66Y7NC/U1zf1mzLnj?=
+ =?us-ascii?Q?pYW3v6/Wp5l6nLFab6p3KA47jH8hHmq7OuAYqWl6?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9cf189e2-e85d-4e7d-887b-08de39b6d75d
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9185.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2025 19:44:19.5870
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xVA1QXdcFkjUXfr7x3jBBxErOb47OBHg5iEMlZL76AG1/dfZpmY4UsT71fc3mNOGhHU75cqqFrXbIDjGEFlgxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR04MB9249
 
-On Fri, Dec 12, 2025 at 05:40:57PM +0100, Ramiro Oliveira wrote:
-> This commit adds the driver to control the Advantech EIO Watchdog block,
-> this block is included in the Advantech EIO Embedded Controller.
-> 
-> Signed-off-by: Ramiro Oliveira <ramiro.oliveira@advantech.com>
-> ---
->  MAINTAINERS                |   1 +
->  drivers/watchdog/Kconfig   |   7 +
->  drivers/watchdog/Makefile  |   1 +
->  drivers/watchdog/eio_wdt.c | 672 +++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 681 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index df4b4cc31257..dfdf4f39c14b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -624,6 +624,7 @@ F:	drivers/hwmon/eio-hwmon.c
->  F:	drivers/i2c/busses/i2c-eio.c
->  F:	drivers/mfd/eio_core.c
->  F:	drivers/video/backlight/eio_bl.c
-> +F:	drivers/watchdog/eio_wdt.c
->  F:	include/linux/mfd/eio.h
->  
->  ADXL313 THREE-AXIS DIGITAL ACCELEROMETER DRIVER
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index d3b9df7d466b..2f8508e51634 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -248,6 +248,13 @@ config DA9062_WATCHDOG
->  
->  	  This driver can be built as a module. The module name is da9062_wdt.
->  
-> +config EIO_WATCHDOG
-> +	tristate "Advantech EIO Watchdog"
-> +	depends on MFD_EIO
-> +	help
-> +	  Watchdog timer driver for the Advantech EIO.
-> +	  If unsure, say N.
-> +
->  config GPIO_WATCHDOG
->  	tristate "Watchdog device controlled through GPIO-line"
->  	depends on OF_GPIO
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index ba52099b1253..59b5ec0246d6 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -230,6 +230,7 @@ obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
->  obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
->  obj-$(CONFIG_DA9062_WATCHDOG) += da9062_wdt.o
->  obj-$(CONFIG_DA9063_WATCHDOG) += da9063_wdt.o
-> +obj-$(CONFIG_EIO_WATCHDOG) += eio_wdt.o
->  obj-$(CONFIG_GPIO_WATCHDOG)	+= gpio_wdt.o
->  obj-$(CONFIG_WDAT_WDT) += wdat_wdt.o
->  obj-$(CONFIG_WM831X_WATCHDOG) += wm831x_wdt.o
-> diff --git a/drivers/watchdog/eio_wdt.c b/drivers/watchdog/eio_wdt.c
-> new file mode 100644
-> index 000000000000..a81f005d82d2
-> --- /dev/null
-> +++ b/drivers/watchdog/eio_wdt.c
-> @@ -0,0 +1,672 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Advantech EIO Watchdog Driver
-> + *
-> + * Copyright (C) 2025 Advantech Co., Ltd.
-> + */
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/module.h>
-> +#include <linux/reboot.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/watchdog.h>
-> +#include <linux/mfd/eio.h>
-> +
-> +#define WATCHDOG_TIMEOUT	60
-> +#define WATCHDOG_PRETIMEOUT	10
-> +
-> +/* Support Flags */
-> +#define SUPPORT_AVAILABLE	BIT(0)
-> +#define SUPPORT_PWRBTN		BIT(3)
-> +#define SUPPORT_IRQ		BIT(4)
-> +#define SUPPORT_SCI		BIT(5)
-> +#define SUPPORT_PIN		BIT(6)
-> +#define SUPPORT_RESET		BIT(7)
-> +
-> +/* PMC registers */
-> +#define REG_STATUS		0x00
-> +#define REG_CONTROL		0x02
-> +#define REG_EVENT		0x10
-> +#define REG_PWR_EVENT_TIME	0x12
-> +#define REG_IRQ_EVENT_TIME	0x13
-> +#define REG_RESET_EVENT_TIME	0x14
-> +#define REG_PIN_EVENT_TIME	0x15
-> +#define REG_SCI_EVENT_TIME	0x16
-> +#define REG_IRQ_NUMBER		0x17
-> +
-> +/* PMC command and control */
-> +#define CMD_WDT_WRITE		0x2A
-> +#define CMD_WDT_READ		0x2B
-> +#define CTRL_STOP		0x00
-> +#define CTRL_START		0x01
-> +#define CTRL_TRIGGER		0x02
-> +
-> +/* I/O register and its flags */
-> +#define IOREG_UNLOCK		0x87
-> +#define IOREG_LOCK		0xAA
-> +#define IOREG_LDN		0x07
-> +#define IOREG_LDN_PMCIO		0x0F
-> +#define IOREG_IRQ		0x70
-> +#define IOREG_WDT_STATUS	0x30
-> +
-> +/* Flags */
-> +#define FLAG_WDT_ENABLED	0x01
-> +#define FLAG_TRIGGER_IRQ	BIT(4)
-> +
-> +/* Mapping event type to supported bit */
-> +#define EVENT_BIT(type)	BIT(type + 2)
-> +
-> +enum event_type {
-> +	EVENT_NONE,
-> +	EVENT_PWRBTN,
-> +	EVENT_IRQ,
-> +	EVENT_SCI,
-> +	EVENT_PIN
-> +};
-> +
-> +struct eio_wdt_dev {
-> +	u32 event_type;
-> +	u32 support;
-> +	int irq;
-> +	unsigned long last_time;
-> +	struct regmap *iomap;
-> +	struct device *mfd;
-> +	struct device *dev;
-> +	struct watchdog_device wdd;
-> +	struct eio_dev *core;
-> +};
-> +
-> +static char * const type_strs[] = {
-> +	"NONE",
-> +	"PWRBTN",
-> +	"IRQ",
-> +	"SCI",
-> +	"PIN",
-> +};
-> +
-> +static u32 type_regs[] = {
-> +	REG_RESET_EVENT_TIME,
-> +	REG_PWR_EVENT_TIME,
-> +	REG_IRQ_EVENT_TIME,
-> +	REG_SCI_EVENT_TIME,
-> +	REG_PIN_EVENT_TIME,
-> +};
-> +
-> +/* Specify the pin triggered on pretimeout or timeout */
-> +static char *event_type = "NONE";
-> +module_param(event_type, charp, 0);
-> +MODULE_PARM_DESC(event_type, "Watchdog timeout event type (NONE, PWRBTN, IRQ, SCI, PIN)");
-> +
-> +/* Specify the IRQ number when the IRQ event is triggered */
-> +static int irq;
-> +module_param(irq, int, 0);
-> +MODULE_PARM_DESC(irq, "The IRQ number for IRQ event");
-> +
-> +static int timeout;
-> +module_param(timeout, int, 0444);
-> +MODULE_PARM_DESC(timeout, "Set PMC command timeout value.\n");
-> +
+Support the remote devices on the remote processor via the RPMSG bus on
+i.MX platform.
 
-Those module parameters are unusual and (for timeout) even misleading.
-The "timeout" module parameter in a watchdog driver, if it exists,
-is usually the watchdog timeout. This is likely to be confused.
-On top of that, expecting the user to know the PMC timeout or an irq
-number is just not reasonable, much less giving the user an opportunity
-to write such values into the chip.
+Changes in v6:
+ - make the driver more generic with the actions below:
+     rename the driver file to gpio-rpmsg.c
+     remove the imx related info in the function and variable names
+     rename the imx_rpmsg.h to rpdev_info.h
+     create a gpio-rpmsg.yaml and refer it in imx_rproc.yaml
+ - update the gpio-rpmsg.rst according to the feedback from Andrew and
+   move the source file to driver-api/gpio
+ - fix the bug reported by Zhongqiu Han
+ - remove the I2C related info
 
-> +static int pmc_write(struct device *dev, u8 ctrl, void *data)
-> +{
-> +	struct pmc_op op = {
-> +		.cmd       = CMD_WDT_WRITE,
-> +		.control   = ctrl,
-> +		.payload   = data,
-> +		.size     = (ctrl <= REG_EVENT) ? 1 :
-> +			    (ctrl >= REG_IRQ_NUMBER) ? 1 : 4,
-> +		.timeout   = timeout,
-> +	};
-> +	return eio_core_pmc_operation(dev, &op);
-> +}
-> +
-> +static int pmc_read(struct device *dev, u8 ctrl, void *data)
-> +{
-> +	struct pmc_op op = {
-> +		.cmd       = CMD_WDT_READ,
-> +		.control   = ctrl,
-> +		.payload   = data,
-> +		.size     = (ctrl <= REG_EVENT) ? 1 :
-> +			    (ctrl >= REG_IRQ_NUMBER) ? 1 : 4,
-> +		.timeout   = timeout,
-> +	};
-> +	return eio_core_pmc_operation(dev, &op);
-> +}
+Changes in v5:
+ - move the gpio-rpmsg.rst from admin-guide to staging directory after
+   discussion with Randy Dunlap.
+ - add include files with some code improvements per Bartosz's comments.
 
-Those functions are almost the same. Only CMD_WDT_READ/CMD_WDT_WRITE
-is different. Please fold into a single function.
+Changes in v4:
+ - add a documentation to describe the transport protocol per Andrew's
+   comments.
+ - add a new handler to get the gpio direction.
 
-> +
-> +static int wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
-> +{
-> +	struct eio_wdt_dev *eio_wdt = watchdog_get_drvdata(wdd);
-> +
-> +	wdd->timeout = timeout;
-> +	dev_info(eio_wdt->dev, "Set timeout: %u\n", timeout);
-> +
-> +	return 0;
-> +}
-> +
-> +static int wdt_set_pretimeout(struct watchdog_device *wdd, unsigned int pretimeout)
-> +{
-> +	struct eio_wdt_dev *eio_wdt = watchdog_get_drvdata(wdd);
-> +
-> +	wdd->pretimeout = pretimeout;
-> +	dev_info(eio_wdt->dev, "Set pretimeout: %u\n", pretimeout);
-> +
-> +	return 0;
-> +}
+Changes in v3:
+ - fix various format issue and return value check per Peng 's review
+   comments.
+ - add the logic to also populate the subnodes which are not in the
+   device map per Arnaud's request. (in imx_rproc.c)
+ - update the yaml per Frank's review comments.
 
-The above two functions to nothing that isn't already done by the watchdog
-core, except to add logging noise. That is not acceptable.
+Changes in v2:
+ - re-implemented the gpio driver per Linus Walleij's feedback by using
+   GPIOLIB_IRQCHIP helper library.
+ - fix various format issue per Mathieu/Peng 's review comments.
+ - update the yaml doc per Rob's feedback
 
-> +
-> +static int wdt_get_type(struct eio_wdt_dev *eio_wdt)
-> +{
-> +	int i;
-> +
-> +	for (i = 1; i < ARRAY_SIZE(type_strs); i++) {
-> +		if (strcasecmp(event_type, type_strs[i]) == 0) {
-> +			if ((eio_wdt->support & EVENT_BIT(i)) == 0) {
-> +				dev_err(eio_wdt->dev,
-> +					"This board doesn't support %s trigger type\n",
-> +					event_type);
-> +				return -EINVAL;
-> +			}
-> +
-> +			dev_info(eio_wdt->dev, "Trigger type is %d:%s\n",
-> +				 i, type_strs[i]);
-> +			eio_wdt->event_type = i;
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	dev_info(eio_wdt->dev, "Event type: %s\n",
-> +		 type_strs[eio_wdt->event_type]);
+Shenwei Wang (5):
+  dt-bindings: remoteproc: imx_rproc: Add "rpmsg" subnode support
+  remoteproc: imx_rproc: Populate devices under "rpmsg" subnode
+  docs: driver-api: gpio: generic gpio driver over rpmsg bus
+  gpio: rpmsg: add generic rpmsg GPIO driver
+  arm64: dts: imx8ulp: Add rpmsg node under imx_rproc
 
-Drop all that logging noise.
+ .../devicetree/bindings/gpio/gpio-rpmsg.yaml  |  49 ++
+ .../bindings/remoteproc/fsl,imx-rproc.yaml    |  54 ++
+ Documentation/driver-api/gpio/gpio-rpmsg.rst  | 232 +++++++++
+ Documentation/driver-api/gpio/index.rst       |   1 +
+ arch/arm64/boot/dts/freescale/imx8ulp.dtsi    |  27 +
+ drivers/gpio/Kconfig                          |  16 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-rpmsg.c                     | 490 ++++++++++++++++++
+ drivers/remoteproc/imx_rproc.c                | 143 +++++
+ include/linux/rpmsg/rpdev_info.h              |  33 ++
+ 10 files changed, 1046 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-rpmsg.yaml
+ create mode 100644 Documentation/driver-api/gpio/gpio-rpmsg.rst
+ create mode 100644 drivers/gpio/gpio-rpmsg.c
+ create mode 100644 include/linux/rpmsg/rpdev_info.h
 
-> +	return 0;
-> +}
-> +
-> +static int get_time(struct eio_wdt_dev *eio_wdt, u8 ctrl, u32 *val)
-> +{
-> +	int ret;
-> +
-> +	ret = pmc_read(eio_wdt->mfd, ctrl, val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* ms to sec */
-> +	*val /= 1000;
-> +
-> +	return 0;
-> +}
-> +
-> +static int set_time(struct eio_wdt_dev *eio_wdt, u8 ctrl, u32 time)
-> +{
-> +	/* sec to ms */
-> +	time *= 1000;
-> +
-> +	return pmc_write(eio_wdt->mfd, ctrl, &time);
-> +}
-> +
-> +static int wdt_set_config(struct eio_wdt_dev *eio_wdt)
-> +{
-> +	int ret, type;
-> +	u32 event_time = 0;
-> +	u32 reset_time = 0;
-> +
-> +	if (eio_wdt->event_type > EVENT_PIN)
-> +		return -EFAULT;
-> +
-> +	/* Calculate event time and reset time */
-> +	if (eio_wdt->wdd.pretimeout && eio_wdt->wdd.timeout) {
-> +		if (eio_wdt->wdd.timeout < eio_wdt->wdd.pretimeout)
-> +			return -EINVAL;
-> +
-> +		reset_time = eio_wdt->wdd.timeout;
-> +		event_time = eio_wdt->wdd.timeout - eio_wdt->wdd.pretimeout;
-> +
-> +	} else if (eio_wdt->wdd.timeout) {
-> +		reset_time = eio_wdt->event_type ?	0 : eio_wdt->wdd.timeout;
-> +		event_time = eio_wdt->event_type ? eio_wdt->wdd.timeout : 0;
-> +	}
-> +
-> +	/* Set reset time */
-> +	ret = set_time(eio_wdt, REG_RESET_EVENT_TIME, reset_time);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Set every other times */
-> +	for (type = 1; type < ARRAY_SIZE(type_regs); type++) {
-> +		ret = set_time(eio_wdt, type_regs[type],
-> +			       (eio_wdt->event_type == type) ? event_time : 0);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	dev_dbg(eio_wdt->dev, "Config wdt reset time %u\n", reset_time);
-> +	dev_dbg(eio_wdt->dev, "Config wdt event time %u\n", event_time);
-> +	dev_dbg(eio_wdt->dev, "Config wdt event type %s\n",
-> +		type_strs[eio_wdt->event_type]);
-> +
-> +	return 0;
-> +}
-> +
-> +static int wdt_get_config(struct eio_wdt_dev *eio_wdt)
-> +{
-> +	int ret, type;
-> +	u32 event_time = 0, reset_time = 0;
-> +
-> +	/* Get Reset Time */
-> +	ret = get_time(eio_wdt, REG_RESET_EVENT_TIME, &reset_time);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_dbg(eio_wdt->dev, "Timeout H/W default timeout: %u secs\n", reset_time);
-> +
-> +	/* Get every other times */
-> +	for (type = 1; type < ARRAY_SIZE(type_regs); type++) {
-> +		if ((eio_wdt->support & EVENT_BIT(type)) == 0)
-> +			continue;
-> +
-> +		ret = get_time(eio_wdt, type_regs[type], &event_time);
-> +		if (ret)
-> +			return ret;
-> +
-> +		if (event_time == 0)
-> +			continue;
-> +
-> +		if (reset_time) {
-> +			if (reset_time < event_time)
-> +				continue;
-> +
-> +			eio_wdt->wdd.timeout    = reset_time;
-> +			eio_wdt->wdd.pretimeout = reset_time - event_time;
-> +
-> +			dev_dbg(eio_wdt->dev,
-> +				"Pretimeout H/W enabled with event %s of %u secs\n",
-> +				type_strs[type], eio_wdt->wdd.pretimeout);
-> +		} else {
-> +			eio_wdt->wdd.timeout    = event_time;
-> +			eio_wdt->wdd.pretimeout = 0;
-> +		}
-> +
-> +		eio_wdt->event_type = type;
-> +
-> +		dev_dbg(eio_wdt->dev, "Timeout H/W enabled of %u secs\n",
-> +			eio_wdt->wdd.timeout);
-> +		return 0;
-> +	}
-> +
-> +	eio_wdt->event_type         = EVENT_NONE;
-> +	eio_wdt->wdd.pretimeout     = reset_time ? 0 : WATCHDOG_PRETIMEOUT;
-> +	eio_wdt->wdd.timeout        = reset_time ? reset_time : WATCHDOG_TIMEOUT;
-> +
-> +	dev_dbg(eio_wdt->dev, "Pretimeout H/W disabled\n");
+--
+2.43.0
 
-Is it ? Then why set it to a value != 0 above ?
-
-> +	return 0;
-> +}
-> +
-> +static int set_ctrl(struct eio_wdt_dev *eio_wdt, u8 ctrl)
-> +{
-> +	return pmc_write(eio_wdt->mfd, REG_CONTROL, &ctrl);
-> +}
-> +
-> +static int wdt_start(struct watchdog_device *wdd)
-> +{
-> +	struct eio_wdt_dev *eio_wdt = watchdog_get_drvdata(wdd);
-> +	int ret;
-> +
-> +	ret = wdt_set_config(eio_wdt);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = set_ctrl(eio_wdt, CTRL_START);
-> +	if (!ret) {
-> +		eio_wdt->last_time = jiffies;
-> +		dev_dbg(eio_wdt->dev, "Watchdog started\n");
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int wdt_stop(struct watchdog_device *wdd)
-> +{
-> +	struct eio_wdt_dev *eio_wdt = watchdog_get_drvdata(wdd);
-> +	int ret;
-> +
-> +	dev_dbg(eio_wdt->dev, "Watchdog stopped\n");
-> +	eio_wdt->last_time = 0;
-> +
-> +	ret = set_ctrl(eio_wdt, CTRL_STOP);
-> +	return ret;
-> +}
-> +
-> +static int wdt_ping(struct watchdog_device *wdd)
-> +{
-> +	struct eio_wdt_dev *eio_wdt = watchdog_get_drvdata(wdd);
-> +	int ret;
-> +
-> +	dev_dbg(eio_wdt->dev, "Watchdog ping\n");
-> +
-> +	ret = set_ctrl(eio_wdt, CTRL_TRIGGER);
-> +	if (!ret)
-> +		eio_wdt->last_time = jiffies;
-> +
-> +	return ret;
-> +}
-> +
-> +static unsigned int wdt_get_timeleft(struct watchdog_device *wdd)
-> +{
-> +	struct eio_wdt_dev *eio_wdt = watchdog_get_drvdata(wdd);
-> +	unsigned int timeleft = 0;
-> +
-> +	if (eio_wdt->last_time && wdd->timeout) {
-> +		unsigned long delta   = jiffies - eio_wdt->last_time;
-> +		unsigned int  elapsed = (unsigned int)(delta / HZ);
-> +
-> +		if (elapsed < wdd->timeout)
-> +			timeleft = wdd->timeout - elapsed;
-> +	}
-> +	return timeleft;
-
-No, that is not what the timeleft function is supposed to do. It is supposed
-to read the remaining time from the chip. If the chip does not support reading
-the remaining time, do not simulate it in software.
-
-> +}
-> +
-> +static int wdt_support(struct eio_wdt_dev *eio_wdt)
-> +{
-> +	u8 support;
-> +
-> +	if (pmc_read(eio_wdt->mfd, REG_STATUS, &support))
-> +		return -EIO;
-> +
-> +	if (!(support & SUPPORT_AVAILABLE))
-> +		return -ENODEV;
-> +
-> +	if ((support & SUPPORT_RESET) != SUPPORT_RESET)
-> +		return -ENODEV;
-> +
-> +	eio_wdt->support = support;
-> +
-> +	return 0;
-> +}
-> +
-> +static int wdt_get_irq_io(struct eio_wdt_dev *eio_wdt)
-> +{
-> +	int ret  = 0;
-> +	int idx  = EIO_PNP_INDEX;
-> +	int data = EIO_PNP_DATA;
-> +	struct regmap *map = eio_wdt->iomap;
-> +
-> +	mutex_lock(&eio_wdt->core->mutex);
-> +
-> +	/* Unlock EC IO port */
-> +	ret |= regmap_write(map, idx, IOREG_UNLOCK);
-> +	ret |= regmap_write(map, idx, IOREG_UNLOCK);
-> +
-> +	/* Select logical device to PMC */
-> +	ret |= regmap_write(map, idx,  IOREG_LDN);
-> +	ret |= regmap_write(map, data, IOREG_LDN_PMCIO);
-> +
-> +	/* Get IRQ number */
-> +	ret |= regmap_write(map, idx,  IOREG_IRQ);
-> +	ret |= regmap_read(map, data, &eio_wdt->irq);
-> +
-> +	/* Lock back */
-> +	ret |= regmap_write(map, idx, IOREG_LOCK);
-> +
-> +	mutex_unlock(&eio_wdt->core->mutex);
-> +
-> +	return ret ? -EIO : 0;
-> +}
-> +
-> +static int wdt_get_irq_pmc(struct eio_wdt_dev *eio_wdt)
-> +{
-> +	return pmc_read(eio_wdt->mfd, REG_IRQ_NUMBER, &eio_wdt->irq);
-> +}
-> +
-> +static int wdt_get_irq(struct eio_wdt_dev *eio_wdt)
-> +{
-> +	int ret;
-> +
-> +	if (!(eio_wdt->support & BIT(EVENT_IRQ)))
-> +		return -ENODEV;
-> +
-> +	ret = wdt_get_irq_pmc(eio_wdt);
-> +	if (ret) {
-> +		dev_err(eio_wdt->dev, "Error get irq by pmc\n");
-> +		return ret;
-> +	}
-> +
-> +	if (eio_wdt->irq)
-> +		return 0;
-> +
-> +	/* Fallback: get IRQ number from EC IO space */
-> +	ret = wdt_get_irq_io(eio_wdt);
-> +	if (ret) {
-> +		dev_err(eio_wdt->dev, "Error get irq by io\n");
-> +		return ret;
-> +	}
-> +
-> +	if (!eio_wdt->irq) {
-> +		dev_err(eio_wdt->dev, "Error IRQ number = 0\n");
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int wdt_set_irq_io(struct eio_wdt_dev *eio_wdt)
-> +{
-> +	int ret  = 0;
-> +	int idx  = EIO_PNP_INDEX;
-> +	int data = EIO_PNP_DATA;
-> +	struct regmap *map = eio_wdt->iomap;
-> +
-> +	mutex_lock(&eio_wdt->core->mutex);
-> +
-> +	/* Unlock EC IO port */
-> +	ret |= regmap_write(map, idx, IOREG_UNLOCK);
-> +	ret |= regmap_write(map, idx, IOREG_UNLOCK);
-> +
-> +	/* Select logical device to PMC */
-> +	ret |= regmap_write(map, idx,  IOREG_LDN);
-> +	ret |= regmap_write(map, data, IOREG_LDN_PMCIO);
-> +
-> +	/* Enable WDT */
-> +	ret |= regmap_write(map, idx,  IOREG_WDT_STATUS);
-> +	ret |= regmap_write(map, data, FLAG_WDT_ENABLED);
-> +
-> +	/* Set IRQ number */
-> +	ret |= regmap_write(map, idx,  IOREG_IRQ);
-> +	ret |= regmap_write(map, data, eio_wdt->irq);
-> +
-> +	/* Lock back */
-> +	ret |= regmap_write(map, idx, IOREG_LOCK);
-
-While it may be convenient, it is unacceptable to bundle return codes
-this way. The behavior of this code is completely undefined if any
-of the accesses above fails.
-
-> +
-> +	mutex_unlock(&eio_wdt->core->mutex);
-> +
-> +	return ret ? -EIO : 0;
-> +}
-> +
-> +static int wdt_set_irq_pmc(struct eio_wdt_dev *eio_wdt)
-> +{
-> +	return pmc_write(eio_wdt->mfd, REG_IRQ_NUMBER, &eio_wdt->irq);
-> +}
-> +
-> +static int wdt_set_irq(struct eio_wdt_dev *eio_wdt)
-> +{
-> +	int ret;
-> +
-> +	if (!(eio_wdt->support & BIT(EVENT_IRQ)))
-> +		return -ENODEV;
-> +
-> +	ret = wdt_set_irq_io(eio_wdt);
-> +	if (ret) {
-> +		dev_err(eio_wdt->dev, "Error set irq by io\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = wdt_set_irq_pmc(eio_wdt);
-> +	if (ret) {
-> +		dev_err(eio_wdt->dev, "Error set irq by pmc\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int wdt_get_irq_event(struct eio_wdt_dev *eio_wdt)
-> +{
-> +	u8 status;
-> +
-> +	if (pmc_read(eio_wdt->mfd, REG_EVENT, &status))
-> +		return 0;
-> +
-> +	return status;
-> +}
-> +
-> +static irqreturn_t wdt_isr(int irq, void *arg)
-> +{
-> +	return IRQ_WAKE_THREAD;
-> +}
-> +
-> +static irqreturn_t wdt_threaded_isr(int irq, void *arg)
-> +{
-> +	struct eio_wdt_dev *eio_wdt = arg;
-> +	u8 status = wdt_get_irq_event(eio_wdt) & FLAG_TRIGGER_IRQ;
-> +
-> +	if (!status)
-> +		return IRQ_NONE;
-> +
-> +	if (eio_wdt->wdd.pretimeout) {
-> +		watchdog_notify_pretimeout(&eio_wdt->wdd);
-> +	} else {
-> +		dev_crit(eio_wdt->dev, "Watchdog expired, rebooting\n");
-> +		emergency_restart();
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int query_irq(struct eio_wdt_dev *eio_wdt)
-> +{
-> +	int ret = 0;
-> +
-> +	if (irq) {
-> +		eio_wdt->irq = irq;
-> +	} else {
-> +		ret = wdt_get_irq(eio_wdt);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	dev_dbg(eio_wdt->dev, "IRQ = %d\n", eio_wdt->irq);
-> +
-> +	return wdt_set_irq(eio_wdt);
-> +}
-> +
-> +static int wdt_init(struct eio_wdt_dev *eio_wdt)
-> +{
-> +	int ret;
-> +
-> +	ret = wdt_support(eio_wdt);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = wdt_get_config(eio_wdt);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = wdt_get_type(eio_wdt);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (eio_wdt->event_type == EVENT_IRQ)
-> +		ret = query_irq(eio_wdt);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct watchdog_ops wdt_ops = {
-> +	.owner		= THIS_MODULE,
-> +	.start		= wdt_start,
-> +	.stop		= wdt_stop,
-> +	.ping		= wdt_ping,
-> +	.set_timeout	= wdt_set_timeout,
-> +	.get_timeleft	= wdt_get_timeleft,
-> +	.set_pretimeout = wdt_set_pretimeout,
-> +};
-> +
-> +static struct watchdog_info wdinfo = {
-> +	.identity = KBUILD_MODNAME,
-> +	.options  = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
-> +		    WDIOF_PRETIMEOUT | WDIOF_MAGICCLOSE,
-> +};
-> +
-> +static int eio_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct eio_wdt_dev *eio_wdt;
-> +	struct watchdog_device *wdd;
-> +	int ret = 0;
-> +
-> +	eio_wdt = devm_kzalloc(dev, sizeof(*eio_wdt), GFP_KERNEL);
-> +	if (!eio_wdt)
-> +		return -ENOMEM;
-> +
-> +	eio_wdt->dev = dev;
-> +	eio_wdt->mfd = dev->parent;
-> +	eio_wdt->iomap = dev_get_regmap(dev->parent, NULL);
-> +	if (!eio_wdt->iomap)
-> +		return dev_err_probe(dev, -ENODEV, "parent regmap missing\n");
-> +
-> +	eio_wdt->core = dev_get_drvdata(dev->parent);
-> +	if (!eio_wdt->core)
-> +		return dev_err_probe(dev, -ENODEV, "eio_core not present\n");
-> +
-> +	ret = wdt_init(eio_wdt);
-> +	if (ret) {
-> +		dev_err(dev, "wdt_init fail\n");
-> +		return -EIO;
-> +	}
-> +
-> +	if (eio_wdt->event_type == EVENT_IRQ) {
-> +		ret = devm_request_threaded_irq(dev, eio_wdt->irq,
-
-This would end up requesting an irq provided through the module parameter.
-This is completely unacceptable.
-
-> +						wdt_isr, wdt_threaded_isr,
-> +						IRQF_SHARED | IRQF_ONESHOT, pdev->name,
-> +						eio_wdt);
-> +		if (ret) {
-> +			dev_err(dev, "IRQ %d request fail:%d. Disabled.\n",
-> +				eio_wdt->irq, ret);
-
-You might want to consider using dev_err_probe().
-
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	wdd = &eio_wdt->wdd;
-> +	wdd->info        = &wdinfo;
-> +	wdd->ops         = &wdt_ops;
-> +	wdd->parent      = dev;
-> +	wdd->min_timeout = 1;
-> +	wdd->max_timeout = 0x7FFF;
-> +
-> +	ret = watchdog_init_timeout(wdd, wdd->timeout, dev);
-
-This is pretty pointless. The function is normally used to overwrite
-the default timeout (which is already in wdd->timeout) with a module
-parameter or a timeout from devicetree. Calling it with the already
-configured timeout does not add any value. Either call it with "0"
-as timeout parameter to let it read any timeout from devicetree if
-provided, or drop the call.
-
-> +	if (ret) {
-> +		dev_err(dev, "Init timeout fail\n");
-> +		return ret;
-> +	}
-> +
-> +	watchdog_stop_on_reboot(&eio_wdt->wdd);
-> +	watchdog_stop_on_unregister(&eio_wdt->wdd);
-> +
-> +	watchdog_set_drvdata(&eio_wdt->wdd, eio_wdt);
-> +	platform_set_drvdata(pdev, eio_wdt);
-> +
-> +	ret = devm_watchdog_register_device(dev, &eio_wdt->wdd);
-> +	if (ret)
-> +		dev_err(dev, "Cannot register watchdog device (err: %d)\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static struct platform_driver eio_wdt_driver = {
-> +	.probe  = eio_wdt_probe,
-> +	.driver = {
-> +		.name = "eio_wdt",
-> +	},
-> +};
-> +module_platform_driver(eio_wdt_driver);
-> +
-> +MODULE_AUTHOR("Wenkai Chung <wenkai.chung@advantech.com.tw>");
-> +MODULE_AUTHOR("Ramiro Oliveira <ramiro.oliveira@advantech.com>");
-> +MODULE_DESCRIPTION("Watchdog interface for Advantech EIO embedded controller");
-> +MODULE_LICENSE("GPL");
-> 
-> -- 
-> 2.43.0
-> 
-> 
 
