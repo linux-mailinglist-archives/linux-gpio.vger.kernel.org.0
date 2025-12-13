@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-29519-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29520-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1003CBA39C
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Dec 2025 03:59:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D452DCBA3D6
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Dec 2025 04:06:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3F3703094B4A
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Dec 2025 02:59:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DB30330BD1E2
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Dec 2025 03:05:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 960852F28FC;
-	Sat, 13 Dec 2025 02:59:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEAAC2F39BF;
+	Sat, 13 Dec 2025 03:05:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbGcO2MI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tou1TIzz"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE2E238C03;
-	Sat, 13 Dec 2025 02:59:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCE32F1FF6;
+	Sat, 13 Dec 2025 03:05:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765594743; cv=none; b=RxFJbi2d9lgfKq9/w1s+v8IIrnho5W6GqbJCYLKgz5WWZGJ73JplEmAFmpFNHjaBj9QorKE7Th4J2ExfoVEwGBWQ+uZQNYcLEQXAgLw/fxE5aOU0Z0OkBUtmX7JzUlpNWr+A8yZOzK2qVl39whewGYibniJioxaiZQJ7ZXLX5L0=
+	t=1765595149; cv=none; b=io0P9h4UA0RmhUdjBNMfXVf0zZJ4UfPNkSBf58YIAczwVPpYUVBxjzWROEFly37XqJxa8kOb47xVv8pxHkSh29aFpuwrtG02uYW0ujJpSaahZWtrcXZ9S2RsKbDrcJ28eP6gSo0Ir5hv0Xk9cBqG8HdOFg8puG9SzkYUFJeCSzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765594743; c=relaxed/simple;
-	bh=KNH4RZL5PUFyyCM7KZsz16mXm7HYj28WnHjsws4VIXw=;
+	s=arc-20240116; t=1765595149; c=relaxed/simple;
+	bh=W1uFmluCEYHY1sOBLQ72GWVhd+nRPEVsqx5xqB65vEw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JFOHfl1t3NxUDWGptauXRWZD1A5f3drzbkePmXxWWmKn8P7ROwr/Mq35+bcj9lO0pNFMLOW3QnlUj8fPIIIro/6Dr8ZmcuFSWCdJ6atViEe0DiyuOwUC8M9AZzGf+oOuibo166G7NU1VDlX3WHBgzelCO2yhcnxeRiUCMC4kDHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NbGcO2MI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15F6FC4CEF1;
-	Sat, 13 Dec 2025 02:58:54 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=SUhz6uzCQfTBb4D+NNZzMDKIH11BHXomvtR5/WNqTzXYYMX9ZE8PmTcv3oyL5kv8zCZYwzw3ssvyQBOfjxAhAEEntafj3RtfyAE7aRM+o1LQeTE8CnXacy1+mJ6IaUDnG5bcle2a0zkmM9ZXZ/7NFSzpNnDntWl8ixIFUDESano=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tou1TIzz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43F45C4CEF1;
+	Sat, 13 Dec 2025 03:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765594742;
-	bh=KNH4RZL5PUFyyCM7KZsz16mXm7HYj28WnHjsws4VIXw=;
+	s=k20201202; t=1765595146;
+	bh=W1uFmluCEYHY1sOBLQ72GWVhd+nRPEVsqx5xqB65vEw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NbGcO2MIOVUn/ry7gCdKnJs3l6qlwFRxPB3pgc+cbGlDEP3T0pp7H6H7vEwIyp/Gm
-	 U7LIILqAZzdtEaconNoYl1LBBtaHqeoxuJ7ns2TVlNaHG2FdNwKKAr1pvaixwrzvmk
-	 7pIMhvloTDvZTrBLAtolu4UauWO/iW/FB4SM+X2+ufjxcFUdkGrun4NPhzPSgvJAny
-	 lNbizq4d53nCtFXyevHgT2peCHFgqKyrUS8KzbK0E58HOge8bbIQir7a9525+JXlPF
-	 Z4odhM8vaBUglqdz8m4Zg15qSDTHOV12skFGdTSgKs/Je7HKZU3m8bQAvclO+TEXp7
-	 zhT8L4w2gz/CQ==
-Message-ID: <02201ae8-d705-4896-a3ff-9b2d5cf833f8@kernel.org>
-Date: Sat, 13 Dec 2025 03:58:52 +0100
+	b=Tou1TIzzeH/GhH7Lort8J9KMhi+bPhFkdsPbOBUyXc0+glBlLmCmOKIfsksInFHF3
+	 Olq5d6gkVxpnHGTDpivXm7ipwTh40Hi9hYqJ8ATuANW7lv4OM2PJXePJmkhBHRO9zY
+	 BVLgbHCvRCPqXcjeUzQXVOCQoBQzCqgH3RNUAQ+V+weuc/NSXpftqYVQH2isZh8wqj
+	 GfMSFgzWLF1rWodQOnjjXb3aBSnoXHp6dwcvZXolVZGlmVRTqprmIeygKDTsyNYNvZ
+	 7R576zd02YOgBelkc2bJ89T6WNpEUAi5XMdfnnAyeHlrTbGeTicqL0Kid8KJafAqoS
+	 H0oUpDf8IgkhQ==
+Message-ID: <176bd9cf-688a-480e-93b7-8f1710563c56@kernel.org>
+Date: Sat, 13 Dec 2025 04:05:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -48,32 +48,26 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: Remove unused includes
-To: "Rob Herring (Arm)" <robh@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Michal Simek <michal.simek@amd.com>, Vinod Koul <vkoul@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Yong Wu <yong.wu@mediatek.com>,
- Peter Rosin <peda@axentia.se>, Linus Walleij <linusw@kernel.org>,
- Chen-Yu Tsai <wens@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Philipp Zabel
- <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
+Subject: Re: [PATCH 3/8] dt-bindings: watchdog: Add AAEON embedded controller
+ watchdog binding
+To: Guenter Roeck <linux@roeck-us.net>,
+ "Thomas Perrot (Schneider Electric)" <thomas.perrot@bootlin.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linusw@kernel.org>,
+ Bartosz Golaszewski <brgl@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
  Sascha Hauer <s.hauer@pengutronix.de>,
  Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-iio@vger.kernel.org,
- iommu@lists.linux.dev, linux-gpio@vger.kernel.org,
- linux-sunxi@lists.linux.dev, imx@lists.linux.dev, linux-sound@vger.kernel.org
-References: <20251212231203.727227-1-robh@kernel.org>
+ Fabio Estevam <festevam@gmail.com>,
+ =?UTF-8?B?SsOpcsOpbWllIERhdXRoZXJpYmVz?= <jeremie.dautheribes@bootlin.com>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>, Lee Jones <lee@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20251212-dev-b4-aaeon-mcu-driver-v1-0-6bd65bc8ef12@bootlin.com>
+ <20251212-dev-b4-aaeon-mcu-driver-v1-3-6bd65bc8ef12@bootlin.com>
+ <019aa49f-fe59-488d-aff8-f07cf07ee68d@kernel.org>
+ <cb8031bb-9213-49b7-a85a-5ca9091aee5c@roeck-us.net>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -119,21 +113,32 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20251212231203.727227-1-robh@kernel.org>
+In-Reply-To: <cb8031bb-9213-49b7-a85a-5ca9091aee5c@roeck-us.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 13/12/2025 00:11, Rob Herring (Arm) wrote:
-> Remove includes which are not referenced by either DTS files or drivers.
+On 12/12/2025 12:46, Guenter Roeck wrote:
+> On 12/12/25 00:20, Krzysztof Kozlowski wrote:
+>> On 12/12/2025 08:41, Thomas Perrot (Schneider Electric) wrote:
+>>> +
+>>> +additionalProperties: false
+>>> +
+>>> +examples:
+>>> +  - |
+>>> +    watchdog {
+>>> +      compatible = "aaeon,srg-imx8pl-wdt";
+>>
+>> No, that was discussed many times on the mailing list already. Fold the
+>> child into the parent. Your driver model really do not matter for DT.
+>>
 > 
-> There's a few more which are new, so they are excluded for now.
+> Theoretically there could be a 'timeout' property since this is
+> a watchdog driver, but that isn't supported by the driver, so
+> I agree.
 > 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-
-Oh yes!
-
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Timeout can be added to the parent node. The most differentiating factor
+are dedicated resources and none are here.
 
 Best regards,
 Krzysztof
