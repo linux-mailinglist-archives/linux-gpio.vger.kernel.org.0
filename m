@@ -1,462 +1,137 @@
-Return-Path: <linux-gpio+bounces-29529-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29530-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3763CBB578
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Dec 2025 01:54:29 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8FFFCBB67C
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Dec 2025 04:41:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DDBFD300310F
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Dec 2025 00:54:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 758FF301226B
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Dec 2025 03:41:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83A5D2C11D5;
-	Sun, 14 Dec 2025 00:54:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7453224634F;
+	Sun, 14 Dec 2025 03:41:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FCCqmTzQ"
+	dkim=pass (1024-bit key) header.d=thingy.jp header.i=@thingy.jp header.b="bVLjaNZI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414ED2D063E
-	for <linux-gpio@vger.kernel.org>; Sun, 14 Dec 2025 00:54:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA12C78F26
+	for <linux-gpio@vger.kernel.org>; Sun, 14 Dec 2025 03:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765673666; cv=none; b=F2GuFiiyBiLc8DIGeS/qu2ipkVephaTOz0whhkZ0G02n4WBjylth97/f4MNiocS/KTE9J0lWXw8OIf/cQsKckhzzSpZEGDgLjlVcby13jNLz4R+OKMv3M0yA/8XG2gLMYqOV/AjBdWiuA0lNGPhLE6nt7P4B+iG2b3uepIwJCXQ=
+	t=1765683663; cv=none; b=YS/EkeS7lwyosXF4tXf9CeS09qoXUPVjOhp18u15y/q/t1qIZOZfC0jBt9gTjt4Yv9cdNeWOmKLKuVtg3p9X7x+nZOwMiHHSrfVdOiu8g9i4zccbEKNtjTXvG8MHw9h23+rjLhr8XcHnV3cuvhBgYNfjruB7DWH/5CUUSoGAPn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765673666; c=relaxed/simple;
-	bh=ERnGOFeUU+FQpv7jY6ycnDkzi1PWq3mrRjKSp8p+Tno=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VTZo4fiQmQPTg7m3dOv6QUkuI+tzA8C7O77TEVRa/EB3rsPGnONKYZwR+pP8n7Rm/h8Osg12C9WkwPJukJs6omiyXsavcIvrcHr6e80S7i63vcKoX6aj014q8NMYXoMfW8watuR1C8LfljmGtaZaInO8IHmpSgiCvhZqmcGl9Ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FCCqmTzQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2DFDC2BCB1
-	for <linux-gpio@vger.kernel.org>; Sun, 14 Dec 2025 00:54:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765673665;
-	bh=ERnGOFeUU+FQpv7jY6ycnDkzi1PWq3mrRjKSp8p+Tno=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=FCCqmTzQMJfXI+75bKihD5Op6Hx1tue1ECM/xu2+KD1qPMjsbMIGH8/fHaAgwuWMJ
-	 0Iva5wpt9NmU5W0rHW9jXZ0iA2zDWD4bcibWyXAXm9JJML4BZWrnqcj09eYVNEAQBg
-	 yU8q/bobkKUVbqaUUfwy2OS8ojfUsidNI2ZCx+yjl1+vnggoy9IQBLDgf/qsobnv4c
-	 iqfd9lq5DjK9Gf1wTHAQaPrs4B6pQJBWsEgAQ65fYVYyXLJqkbit27U5SqVRxdnoVD
-	 Wany39R3Ji8+O0xGDcXPt36gui5eD6hL8E2egkLQTDEmRU7FFFcZpkn7cWn+9g8NH/
-	 447RzeFhE/eXw==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-37a3340391cso17145451fa.3
-        for <linux-gpio@vger.kernel.org>; Sat, 13 Dec 2025 16:54:25 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVDh7ZkmNlf8jYNa+uU7wGkxrhbxJO2yD/XlhFZJsoyiFBnVFKXThtVwPXylgcuBykhXkiTMXhf+roh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0f4kWZh3st5DF8oQMcKIt35eD8Gv+Cs2S7rrAyxqWU1D4T8Em
-	j7p/eY+5F3u6qz/xX5JBHg+VrfV/EdDKoW8vyX73N+9S3avc2lgpCDcZWNUROT6ZANn4bwPZ2Q/
-	dqeqErqCRrZD7RWIGue9byK4D0GC1BiuJkfurhhFr8g==
-X-Google-Smtp-Source: AGHT+IF+JTcUODVC8z3ioXKDx5XLzM5A1F8MUCHcdRDUszOJc4X0+0PBaKTTlEDU6RzJck0+mvccxy7H3ksd1gh+4p8=
-X-Received: by 2002:a2e:bd12:0:b0:37b:96e5:dc40 with SMTP id
- 38308e7fff4ca-37fd0726477mr18776321fa.8.1765673664108; Sat, 13 Dec 2025
- 16:54:24 -0800 (PST)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Sat, 13 Dec 2025 19:54:22 -0500
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Sat, 13 Dec 2025 19:54:22 -0500
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20251212-upstream-v1-v1-2-d50d40ec8d8a@advantech.com>
+	s=arc-20240116; t=1765683663; c=relaxed/simple;
+	bh=upnkDqK0jsYJUAUIR1U7J8vvEOYVDstthYc0bcbNVVs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IKpooUxTo4/BP47FRuQs8PTrCC3UjvtMG4FoLobueTKiPzbLjUQjEk39ap3hXnK/PvW5Cg2sF29QZhvozJgfSqfs1qRgDcDvgN1OUjdDiG3XC4QQyp/5gzXaFGX0WBhVUDnJYSNiFmxjmeAFktBGn29JxSB8tSBS3GLUzsZ+r9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thingy.jp; spf=pass smtp.mailfrom=0x0f.com; dkim=pass (1024-bit key) header.d=thingy.jp header.i=@thingy.jp header.b=bVLjaNZI; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thingy.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0x0f.com
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-29f102b013fso28487545ad.2
+        for <linux-gpio@vger.kernel.org>; Sat, 13 Dec 2025 19:40:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thingy.jp; s=google; t=1765683659; x=1766288459; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/ftlGwLraBwtP5qDAHdP3DeAImsaoltqnKOlDDZ3Wec=;
+        b=bVLjaNZI3LYMiL81M4rDyobmZhgYSqaMASPlOC8APhl1TSzNdazE049WOOlk5vNw8c
+         SXprmTawBEsRS/C8Jke8/UGgrV3FIXxPAD3v9vLgdt4M7oT0nwoKp2UO7+b+4inlqSfp
+         eZrowxCniUD93q07ZXBj7hq+aq8InavFUa/RY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765683659; x=1766288459;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/ftlGwLraBwtP5qDAHdP3DeAImsaoltqnKOlDDZ3Wec=;
+        b=bkUbXR3lsFnsDPbCP0jPgUysF6J0Vnc67wKDezkBWnHZKdAaotyvs/8h8346FGqQEn
+         qsv9Gp9H1pu8TP1g/lsR9ZENYN61wbKLkn6RVGBItePM5nzYFLfBcr4Qu3b7EkmUAhO8
+         7mfiav4wIcRvX5JWPxJ7alIpLcnfDD36jhkqEv3ifotbFIY41lT8vD64ViskERsXVeES
+         tu2UGrTzAZj1VWE9f23zDNc2ufJADwd5fQYZat3jE78uroZGr1EmAueUivydiyyYQVJx
+         VfHBUdtMCmWE+Rd8EDTYRp5SFF4mPRddyq4tj4A1grKEBMtDNz2hYQL9/78YKPugZuN4
+         u+pw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHiZaoLZh3Md8J1fjuWJjpDEZWwOqPDt5HiJ5pBhVvPDW5aDLnlV+jZtgP1eart36mXYBa8KB8SU/R@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT8brpWB2xGH2kjqQWOFX6o4aj/mcm+tCXIj6lCjdQip70Q9Hi
+	Agwsit3zdFc8Ob5uTxmHRGqKEXFvuut7jxLh8wjV++PPAYrlbj2At8rO16brzY7bkoTZEJfpFf3
+	VjNa4U8I=
+X-Gm-Gg: AY/fxX5VoIgt/K+Go5klvSN+95Mr3Q9oTCAGTBwZaepTty/a2BSiXVCXHdjyeR84eiK
+	ifS/ufV+pLbgG0CVa0U2o5L+OakVP/c5Yos10wbH/LallyuK2rcqDyLPPVLBz6MWq6jrgljEoBw
+	/uDRkKpU14KGJam5bFSCPKTDeyMD+7tHKgAUjcjohGoSozKz6X3HACJrxxZZKxNZdIhc3m55DZg
+	r1tYuTtP/UglRosyo3heaxBfJ1yTIkyUDwMNVzIW7+F8SHalG+sfq72S7jkvqW+5NjGEEVGoio5
+	GxyEoIHGnhkRUZC3EA2/aN6Cj3Flqshv4CF2qE/5qABxhWFkFx42dciHfkHqVVLYTDQOUsvYy91
+	idbXSHT40OmNVGZyONfCQkjd3PUiolJjNZYoek7yArm8cAmBzG4upbm7Wi96wWSWxYMoL+JYM4F
+	UrYi8v1rYB18l50DTIihAF/2+6CuZykyRoe4VFf71zI8PGAanGaqGRXjVMHd/tyYfU6hGWZyKrZ
+	7s=
+X-Google-Smtp-Source: AGHT+IFHc1+TYCvytPF78eCj6A1LcvaaIa6OPSv2vKyl032ofHC1uLqcY8uMfMoAo4FsDwk3re6ZoA==
+X-Received: by 2002:a17:903:fa7:b0:297:ece8:a3cb with SMTP id d9443c01a7336-29f23e55212mr64866665ad.25.1765683659034;
+        Sat, 13 Dec 2025 19:40:59 -0800 (PST)
+Received: from kinako.work.home.arpa (p1344243-ipxg00a01sizuokaden.shizuoka.ocn.ne.jp. [114.145.20.243])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-29ee9d38adcsm94837555ad.30.2025.12.13.19.40.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Dec 2025 19:40:58 -0800 (PST)
+From: Daniel Palmer <daniel@thingy.jp>
+To: linusw@kernel.org,
+	brgl@kernel.org,
+	linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Daniel Palmer <daniel@thingy.jp>
+Subject: [PATCH] gpiolib: of: Only compile in MT2701 quirk when it is needed.
+Date: Sun, 14 Dec 2025 12:40:45 +0900
+Message-ID: <20251214034045.4029590-1-daniel@thingy.jp>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251212-upstream-v1-v1-0-d50d40ec8d8a@advantech.com> <20251212-upstream-v1-v1-2-d50d40ec8d8a@advantech.com>
-Date: Sat, 13 Dec 2025 19:54:22 -0500
-X-Gmail-Original-Message-ID: <CAMRc=McWhREAapUO1C26c7MxFhwsq9=HH7Z8BZabwbB1L5UoBw@mail.gmail.com>
-X-Gm-Features: AQt7F2rFZ6NOo1ZqC__JipFGbv1EYlUkIy_oMb4Oy-Kh-pnz_txKQTmUlgiNcFo
-Message-ID: <CAMRc=McWhREAapUO1C26c7MxFhwsq9=HH7Z8BZabwbB1L5UoBw@mail.gmail.com>
-Subject: Re: [PATCH 2/8] Add Advantech EIO GPIO driver
-To: Ramiro Oliveira <ramiro.oliveira@advantech.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org, 
-	Wenkai Chung <wenkai.chung@advantech.com.tw>, 
-	Francisco Aragon-Trivino <francisco.aragon-trivino@advantech.com>, 
-	Hongzhi Wang <hongzhi.wang@advantech.com>, 
-	Mikhail Tsukerman <mikhail.tsukerman@advantech.com>, 
-	Thomas Kastner <thomas.kastner@advantech.com>, Lee Jones <lee@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Andi Shyti <andi.shyti@kernel.org>, Daniel Thompson <danielt@kernel.org>, 
-	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, 
-	Wim Van Sebroeck <wim@linux-watchdog.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, 12 Dec 2025 17:40:53 +0100, Ramiro Oliveira
-<ramiro.oliveira@advantech.com> said:
-> This driver controls the GPIO component of the Advantech EIO chip.
->
-> Signed-off-by: Ramiro Oliveira <ramiro.oliveira@advantech.com>
-> ---
->  MAINTAINERS             |   1 +
->  drivers/gpio/Kconfig    |   6 ++
->  drivers/gpio/Makefile   |   1 +
->  drivers/gpio/gpio-eio.c | 273 ++++++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 281 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index bd9279796c2f..359d4a13f212 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -619,6 +619,7 @@ F:	drivers/platform/x86/adv_swbutton.c
->  ADVANTECH EIO DRIVER
->  M:	Ramiro Oliveira <ramiro.oliveira@advantech.com>
->  S:	Maintained
-> +F:	drivers/gpio/gpio-eio.c
+The compiler cannot workout if this is actually needed or not
+so machines that will never need this code also get it.
 
-Instead of churning MAINTAINERS in every patch of the series, I suggest you
-add a separate patch adding the full entry at the end.
+For example:
+m68k-linux-gnu-nm vmlinux | grep mt27
+00135742 t of_find_mt2701_gpio
 
->  F:	drivers/mfd/eio_core.c
->  F:	include/linux/mfd/eio.h
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index bd185482a7fd..628a914842bd 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -277,6 +277,12 @@ config GPIO_DWAPB
->  	  Say Y or M here to build support for the Synopsys DesignWare APB
->  	  GPIO block.
->
-> +config GPIO_EIO
-> +	tristate "Advantech EIO GPIO"
-> +	depends on MFD_EIO
-> +	help
-> +	  Say Y or M to build support for Advantech EIO GPIO block.
-> +
->  config GPIO_EIC_SPRD
->  	tristate "Spreadtrum EIC support"
->  	depends on ARCH_SPRD || COMPILE_TEST
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index 2421a8fd3733..ba3883d5e4a0 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -64,6 +64,7 @@ obj-$(CONFIG_GPIO_DLN2)			+= gpio-dln2.o
->  obj-$(CONFIG_GPIO_DS4520)		+= gpio-ds4520.o
->  obj-$(CONFIG_GPIO_DWAPB)		+= gpio-dwapb.o
->  obj-$(CONFIG_GPIO_EIC_SPRD)		+= gpio-eic-sprd.o
-> +obj-$(CONFIG_GPIO_EIO)			+= gpio-eio.o
->  obj-$(CONFIG_GPIO_ELKHARTLAKE)		+= gpio-elkhartlake.o
->  obj-$(CONFIG_GPIO_EM)			+= gpio-em.o
->  obj-$(CONFIG_GPIO_EN7523)		+= gpio-en7523.o
-> diff --git a/drivers/gpio/gpio-eio.c b/drivers/gpio/gpio-eio.c
-> new file mode 100644
-> index 000000000000..50f66a325e8f
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-eio.c
-> @@ -0,0 +1,273 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * GPIO driver for Advantech EIO Embedded controller.
-> + *
-> + * Copyright (C) 2025 Advantech Corporation. All rights reserved.
-> + */
-> +
-> +#include <linux/errno.h>
-> +#include <linux/gpio.h>
+Add some ugly ifdef'ery to get rid of it.
 
-Don't include this, it's a legacy header as per one of the first lines in this
-file.
+Signed-off-by: Daniel Palmer <daniel@thingy.jp>
+---
+ drivers/gpio/gpiolib-of.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> +#include <linux/gpio/driver.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/eio.h>
-> +#include <linux/module.h>
-> +
-> +#define GPIO_MAX_PINS	48
-> +#define GPIO_WRITE	0x18
-> +#define GPIO_READ	0x19
-> +
-> +struct eio_gpio_dev {
-> +	u64 avail;
-> +	int max;
-> +	struct gpio_chip chip;
-> +	struct device *dev;
-> +};
-> +
-> +struct {
-> +	int size;
-> +	bool write;
-> +} ctrl_para[] = {
-> +	{ 0x01, false }, { 0x00, false }, { 0x00, false }, { 0x02, false },
-> +	{ 0x01, false }, { 0x00, false }, { 0x00, false }, { 0x00, false },
-> +	{ 0x00, false }, { 0x00, false }, { 0x00, false }, { 0x00, false },
-> +	{ 0x00, false }, { 0x00, false }, { 0x00, false }, { 0x00, false },
-> +	{ 0x01, true  }, { 0x01, true  }, { 0x02, true  }, { 0x02, true  },
-> +	{ 0x02, false }, { 0x10, false }
-> +};
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 8657379e9165..ef1ac68b94b7 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -634,6 +634,7 @@ static struct gpio_desc *of_find_gpio_rename(struct device_node *np,
+ 	return ERR_PTR(-ENOENT);
+ }
+ 
++#if IS_ENABLED(CONFIG_SND_SOC_MT2701_CS42448)
+ static struct gpio_desc *of_find_mt2701_gpio(struct device_node *np,
+ 					     const char *con_id,
+ 					     unsigned int idx,
+@@ -665,6 +666,7 @@ static struct gpio_desc *of_find_mt2701_gpio(struct device_node *np,
+ 
+ 	return desc;
+ }
++#endif
+ 
+ /*
+  * Trigger sources are special, they allow us to use any GPIO as a LED trigger
+@@ -699,7 +701,9 @@ typedef struct gpio_desc *(*of_find_gpio_quirk)(struct device_node *np,
+ 						enum of_gpio_flags *of_flags);
+ static const of_find_gpio_quirk of_find_gpio_quirks[] = {
+ 	of_find_gpio_rename,
++#if IS_ENABLED(CONFIG_SND_SOC_MT2701_CS42448)
+ 	of_find_mt2701_gpio,
++#endif
+ 	of_find_trigger_gpio,
+ 	NULL
+ };
+-- 
+2.51.0
 
-This should be static.
-
-> +
-> +enum {
-> +	GPIO_STATUS	 = 0,
-> +	GPIO_GROUP_AVAIL = 3,
-> +	GPIO_ERROR	 = 0x04,
-> +	GPIO_PIN_DIR	 = 0x10,
-> +	GPIO_PIN_LEVEL	 = 0x11,
-> +	GPIO_GROUP_DIR	 = 0x12,
-> +	GPIO_GROUP_LEVEL = 0x13,
-> +	GPIO_MAPPING	 = 0x14,
-> +	GPIO_NAME	 = 0x15
-> +} gpio_ctrl;
-
-Do enum gpio_ctrl {. But also use a common prefix for all symbols in
-this driver.
-
-> +
-> +struct {
-> +	int group;
-> +	int port;
-> +} group_map[] = {
-> +	{ 0, 0 }, { 0, 1 },
-> +	{ 1, 0 }, { 1, 1 },
-> +	{ 2, 0 }, { 2, 1 },
-> +	{ 3, 0 }, { 3, 1 },
-> +	{ 3, 2 }, { 3, 3 },
-> +	{ 3, 4 }, { 3, 5 },
-> +	{ 3, 6 }, { 3, 7 }
-> +};
-> +
-> +static int timeout;
-> +module_param(timeout, int, 0444);
-> +MODULE_PARM_DESC(timeout, "Set PMC command timeout value.\n");
-> +
-> +static int pmc_write(struct device *mfd_dev, u8 ctrl, u8 dev_id, void *data)
-> +{
-> +	struct pmc_op op = {
-> +		 .cmd       = GPIO_WRITE,
-> +		 .control   = ctrl,
-> +		 .device_id = dev_id,
-> +		 .payload   = (u8 *)data,
-> +		 .timeout   = timeout,
-> +	};
-> +
-> +	if (ctrl > ARRAY_SIZE(ctrl_para))
-> +		return -ENOMEM;
-> +
-> +	if (!ctrl_para[ctrl].write)
-> +		return -EINVAL;
-> +
-> +	op.size = ctrl_para[ctrl].size;
-> +
-> +	return eio_core_pmc_operation(mfd_dev, &op);
-> +}
-> +
-> +static int pmc_read(struct device *mfd_dev, u8 ctrl, u8 dev_id, void *data)
-> +{
-> +	struct pmc_op op = {
-> +		 .cmd       = GPIO_READ,
-> +		 .control   = ctrl,
-> +		 .device_id = dev_id,
-> +		 .payload   = (u8 *)data,
-> +		 .timeout   = timeout,
-> +	};
-> +
-> +	if (ctrl > ARRAY_SIZE(ctrl_para))
-> +		return -ENOMEM;
-> +
-> +	op.size = ctrl_para[ctrl].size;
-> +
-> +	return eio_core_pmc_operation(mfd_dev, &op);
-> +}
-> +
-> +static int get_dir(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +	u8 dir;
-> +	int ret;
-> +
-> +	ret = pmc_read(chip->parent, GPIO_PIN_DIR, offset, &dir);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return dir ? 0 : 1;
-> +}
-> +
-> +static int dir_input(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +	u8 dir = 0;
-> +
-> +	return pmc_write(chip->parent, GPIO_PIN_DIR, offset, &dir);
-> +}
-> +
-> +static int dir_output(struct gpio_chip *chip, unsigned int offset, int value)
-> +{
-> +	u8 dir = 1;
-> +	u8 val = value;
-> +
-> +	pmc_write(chip->parent, GPIO_PIN_DIR, offset, &dir);
-> +
-> +	return pmc_write(chip->parent, GPIO_PIN_LEVEL, offset, &val);
-> +}
-> +
-> +static int gpio_get(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +	u8 level;
-> +	int ret;
-> +
-> +	ret = pmc_read(chip->parent, GPIO_PIN_LEVEL, offset, &level);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return level;
-> +}
-> +
-> +static int gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
-> +{
-> +	u8 val = value;
-> +
-> +	pmc_write(chip->parent, GPIO_PIN_LEVEL, offset, &val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int check_support(struct device *dev)
-> +{
-> +	u8  data;
-> +	int ret;
-> +
-> +	ret = pmc_read(dev, GPIO_STATUS, 0, &data);
-> +	if (!ret)
-> +		return ret;
-> +
-> +	if ((data & 0x01) == 0)
-> +		return -EOPNOTSUPP;
-> +
-> +	return 0;
-> +}
-> +
-> +static int check_pin(struct device *dev, int pin)
-> +{
-> +	int ret;
-> +	int group, bit;
-> +	u16 data;
-> +
-> +	/* Get pin mapping */
-> +	ret = pmc_read(dev, GPIO_MAPPING, pin, &data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if ((data & 0xFF) > ARRAY_SIZE(group_map))
-> +		return -EINVAL;
-> +
-> +	group = group_map[data & 0xFF].group;
-> +	bit   = data >> 8;
-> +
-> +	/* Check mapped pin */
-> +	ret = pmc_read(dev, GPIO_GROUP_AVAIL, group, &data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return data & BIT(bit) ? 0 : -EOPNOTSUPP;
-> +}
-> +
-> +static int gpio_init(struct device *mfd, struct eio_gpio_dev *eio_gpio)
-> +{
-> +	int ret;
-> +	int i;
-
-Keep these on the same line.
-
-> +	char str[GPIO_MAX_PINS + 1];
-> +
-> +	memset(str, 0x30, sizeof(str));
-> +
-> +	ret = check_support(mfd);
-> +	if (ret) {
-> +		dev_err(eio_gpio->dev, "GPIO not supported (%d)\n", ret);
-
-return dev_err_probe()
-
-> +		return ret;
-> +	}
-> +
-> +	eio_gpio->avail = 0;
-> +
-> +	for (i = 0 ; i <  GPIO_MAX_PINS ; i++) {
-> +		ret = check_pin(mfd, i);
-> +		if (ret)
-> +			continue;
-> +
-> +		eio_gpio->avail |= BIT(i);
-> +		eio_gpio->max = i + 1;
-> +		str[GPIO_MAX_PINS - i] = '1';
-> +	}
-> +
-> +	dev_info(eio_gpio->dev, "GPIO pins=%s\n", str);
-> +
-
-No need to print anything here.
-
-> +	return eio_gpio->max ? 0 : -EOPNOTSUPP;
-> +}
-> +
-> +static const struct gpio_chip eio_gpio_chip = {
-> +	.label	 	  = KBUILD_MODNAME,
-> +	.owner		  = THIS_MODULE,
-> +	.direction_input  = dir_input,
-> +	.get		  = gpio_get,
-> +	.direction_output = dir_output,
-> +	.set		  = gpio_set,
-> +	.get_direction	  = get_dir,
-> +	.base		  = -1,
-> +	.can_sleep	  = true,
-> +};
-
-Instead of having an unnecessary copy of the chip in .rodata, just use compound
-literals when initiating it in probe().
-
-> +
-> +static int gpio_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =  &pdev->dev;
-> +	struct eio_gpio_dev *eio_gpio;
-> +	struct eio_dev *eio_dev = dev_get_drvdata(dev->parent);
-> +
-> +	if (!eio_dev) {
-> +		dev_err(dev, "Error contact eio_core\n");
-> +		return -ENODEV;
-> +	}
-
-return dev_err_probe()
-
-> +
-> +	eio_gpio = devm_kzalloc(dev, sizeof(*eio_gpio), GFP_KERNEL);
-
-This can fail, please check the return value.
-
-> +	eio_gpio->dev = dev;
-> +
-> +	if (gpio_init(dev->parent, eio_gpio))
-> +		return -EIO;
-> +
-> +	eio_gpio->chip	   = eio_gpio_chip;
-
-Don't use tabs like that please. Just stick to single spaces.
-
-> +	eio_gpio->chip.parent = dev->parent;
-> +	eio_gpio->chip.ngpio  = eio_gpio->max;
-> +
-> +	return devm_gpiochip_add_data(dev, &eio_gpio->chip, eio_gpio);
-> +}
-> +
-> +static struct platform_driver gpio_driver = {
-> +	.probe  = gpio_probe,
-> +	.driver = { .name = KBUILD_MODNAME, },
-> +};
-> +
-> +module_platform_driver(gpio_driver);
-> +
-> +MODULE_AUTHOR("Wenkai Chung <wenkai.chung@advantech.com.tw>");
-> +MODULE_AUTHOR("Ramiro Oliveira <ramiro.oliveira@advantech.com>");
-> +MODULE_DESCRIPTION("GPIO driver for Advantech EIO embedded controller");
-> +MODULE_LICENSE("GPL");
->
-> --
-> 2.43.0
->
->
 
