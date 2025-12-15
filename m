@@ -1,185 +1,327 @@
-Return-Path: <linux-gpio+bounces-29555-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29556-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69482CBECA3
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 16:57:07 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84E0ECBE753
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 16:01:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4E6EC30A894C
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 15:51:01 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 67D91301A946
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 15:01:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C16C338F45;
-	Mon, 15 Dec 2025 14:04:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09A1533B970;
+	Mon, 15 Dec 2025 14:28:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLT6GV62"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QN0EXLfn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FDC9338F39
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Dec 2025 14:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2E233ADBD;
+	Mon, 15 Dec 2025 14:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765807497; cv=none; b=htB8ybhhQhr9TsYGzUJjoNy+O643GWqrkRwwwLqhxw+H1uyJCf1/aOgMUNmnydo+2RcK0dOVwQv1WPMn2qfToyZTa0n8NKq245cDXe74vpkBQPwN75J9m0uUYs7lh1pX0NE5fo+8SuWPO9uMjvWsJdbw6wZ+n7A0vjOa/TIqGcc=
+	t=1765808937; cv=none; b=XsAlotLu7NyrjnOpAh6I7fOV5QiqPCO9TPmroOLExtQ3tgp3jSBTCvTL7j5A0ZmD0qXeAO+4zGmlPUQcrQo82J/aGIFxW8oK+FuglrYOtro3Rh3fG7JBNaDZt1oWZvw6hCmKKRwyix1ifOzOjhVcy2zE+t9DblySK589lz2/fO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765807497; c=relaxed/simple;
-	bh=KI9QIWcad/B9ZjYeffUF4N7PpYb0fDIpzH9w8RVTAyc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LSTHhPqUdjK2ZE/Yn7nw47rOK5/r8H5hNsSUM1JPx1sdIls8am4SNRngE4UEayLF9zPAXKm+hrOWlDEL1PkgwVBkgt1K41dTSBAtt7uC5/KCsl9dswyvBEsROrXJposza5DlTpt2sPi9jpNi89fbFWyEpV8zj9T6R8hU92IS9Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dLT6GV62; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-29f1bc40b35so49648575ad.2
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Dec 2025 06:04:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765807493; x=1766412293; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=eiURzUZDdB4fxsl1ptJaHGccRecrpuUcKuZLpsQ1g5U=;
-        b=dLT6GV62XPJqC3P1M1WXu15g5BNPw68iYdTSehV2oSEyp6eKeByNbqqba77ale8WYw
-         zWYXla8p6sE+E1miUzmDn0iFZM2ow1d9QODCNqQTG4RlUOPpsviLjHZ2rLS88SIoJSJN
-         AcTiOB0g0x8TBDLl3+hhcIwgpKXTyzLO6yhlafGeMJIzadVStML+JAmrMOmGipdGXDC1
-         EN7lM4ce2FQoUOGFFNbEBuW2EOBeEZFv7PG5mjr87P81w8eUOmjUisX3hA/n/GEZLr2m
-         fwD2nD2WBaK7WHA44zvVLQ1de0tsW/VrJraTQzK/YYRr+4dZrcfX9H9IWIyr3WFxMuIB
-         Seng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765807493; x=1766412293;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eiURzUZDdB4fxsl1ptJaHGccRecrpuUcKuZLpsQ1g5U=;
-        b=enpx128sCBnCk86BA57SEY9TDs9V9uIb16+M+tx705DUqvtm0clnAfzCVbUbOPvxqM
-         +unT14qyQiWrUt0JacIgZvcJwj6mDhNDj2Apx2L9ZLWR2SmMT92XVfc7MX+JVKPu9JoI
-         SYNHBTXgX4qol0A9WowneSWl4pqSf6vsSL49m/+BLDYk4vQEGT50jeb+ITGTb60O1DCK
-         +Zf/yEIFh6Kwr+0Ad6iiuAT7y5Nlpu5vaxAkULbd8+qjdD7DXy58oPzQlsljiG44xDsK
-         HrQZlXX+9bX43sbK1uarFWUit3Y2yNUZY3vCH1qF5E0jWDtJhZxzcIeHuH8CfaanwVMS
-         9RjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUF0JDL/fAC4w1DZk87JOSmoD2cU63tRhjs/XpOmLPJqp8Bc1O9/fy+FwQD6/ZosfgxLrPuEyw6+DEx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2fo7+id/izyGR9q+Q0EIpSwl+VwrR12IvQbhMGDj6t/eYU+5d
-	kDltYBnUqYXuQxR3Om7dwIM+i93/bzcqy3elyl+YTesubpVbbIUZdQDW
-X-Gm-Gg: AY/fxX6w9Av8vNczscW41itDJgpS7iSKtH6170yvSbLcl3hU1ritmdJSDCXc8uZGADU
-	gvfLx1/83MWHyaLqMFCWU6JZgYa9jl1YU4WaCEssjzHVMG82KBt2vFz88rhMaZaIFz2MWjp7Cvb
-	JdqLqhZC/1Xq58PLIkBv+l8ogPBhc0nZuXwELuFoummn8QgHpnu3Q39TB5zZnWuR+fdheWCFhtq
-	3c1XwR8sJ40q1ZCia593rIyVA3mVYwK99VAqJgaV532BnRfkp4lFeifjNpVDVOJ0k9RSvs6A680
-	P02UvG/yNcimzGOoRgRjqxf3NBYXkMYS8ZmpT0UgY++cXLf391J8Phj2eYwrVoK8pyT/B9JBhHH
-	Vk1TCv46RojVqoBP+EOB1H5czjG9g7PdQ7qKvRSs1Mayaxq/59lliJlW24zwdGrRFNsYfDkRQlp
-	6zAkxWBCthuD1E8AV+wVa/h3qiFTtFVtdfM/2SHogovErsT/0EnENTmgh819M=
-X-Google-Smtp-Source: AGHT+IGRL20LoecJ6pn1jdufZiNAGa9JtUlJUvG+45A3c3rMqwURCEs7Wewuin0iwJX6orhOUQMjxg==
-X-Received: by 2002:a17:902:c94a:b0:2a1:deb:c46c with SMTP id d9443c01a7336-2a10debc778mr23305005ad.44.1765807493228;
-        Mon, 15 Dec 2025 06:04:53 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29eea06b651sm137028605ad.94.2025.12.15.06.04.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Dec 2025 06:04:52 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <94e647ec-3cd4-4475-b064-064916cf83bd@roeck-us.net>
-Date: Mon, 15 Dec 2025 06:04:50 -0800
+	s=arc-20240116; t=1765808937; c=relaxed/simple;
+	bh=plEMs9As68eGoG47QQ4ZErUKAxjyIZSUj604/YGX4YI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WKXlf0Qkwe2qBAGchMQAZV+9i3SpCQGhwY6V3NQie9bimmIqhu6EhOuVnmw5kenSD8DJ3tkCee6UHUiIl8NQ4nWihWchL/YJjDY23t1Z083nNgoTYvBc6DEEzpqJUTsEFobVE/SJNbDzsUJNBgTtgj8FvCouHDITzQOMYgrtJ5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QN0EXLfn; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id DE3E5C19D1C;
+	Mon, 15 Dec 2025 14:28:28 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 2B8CA60664;
+	Mon, 15 Dec 2025 14:28:53 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C509C119421A4;
+	Mon, 15 Dec 2025 15:28:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1765808932; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=7VAhU5Fa2gp4Ls0yekahh9p8eZur4e+Cg6iC0NYpQks=;
+	b=QN0EXLfnZPDRORHO2LE9kKBtx7XM41Epku6T7awvmEUYw96an8uYMyIJ+ujOtiGp8xSxHs
+	5KmiUvFPw0UfhuH6FeHQCi3YSC/YT2BSAUvh7xnhYBtMKP08A7rDiy07ztqSYUganK4xn9
+	vDAhlV/g6MK92LZZf9MmJs/AKp8B/LNt8Dcs93qlUqYdmuKq8AY687ohqR8mbiGRKoFbUZ
+	SHTFRmxbBAHmXCbvXDn1zKuSOizxWxKGBq0myKlej7wQuHVWuGNrAlnz3wRIvheChlnQju
+	sUJiT2+e4oTUrWNudRgt/ul4xHJzMEk3BnyXfBq/kwyTy7nXDyaQG4C8mh4MxQ==
+From: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Herve Codina <herve.codina@bootlin.com>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Pascal Eberhard <pascal.eberhard@se.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH v7 0/8] gpio: renesas: Add support for GPIO and related interrupts in RZ/N1 SoC
+Date: Mon, 15 Dec 2025 15:28:22 +0100
+Message-ID: <20251215142836.167101-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] hwmon: ltc4283: Add support for the LTC4283 Swap
- Controller
-To: Tomas Melin <tomas.melin@vaisala.com>, nuno.sa@analog.com,
- linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>,
- Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-References: <20251204-ltc4283-support-v4-0-db0197fd7984@analog.com>
- <20251204-ltc4283-support-v4-2-db0197fd7984@analog.com>
- <c655d548-85be-4c42-a802-d9342ea90aed@vaisala.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <c655d548-85be-4c42-a802-d9342ea90aed@vaisala.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On 12/15/25 00:20, Tomas Melin wrote:
-> Hi,
-> 
-> On 04/12/2025 18:15, Nuno Sá via B4 Relay wrote:
->> From: Nuno Sá <nuno.sa@analog.com>
->>
->> Support the LTC4283 How Swap Controller. The device features programmable
-> 
-> I think You mean hot swap controller?
-> 
->> current limit with foldback and independently adjustable inrush current to
->> optimize the MOSFET safe operating area (SOA). The SOA timer limits MOSFET
->> temperature rise for reliable protection against overstresses.
->>
->> An I2C interface and onboard ADC allow monitoring of board current,
->> voltage, power, energy, and fault status.
->>
->> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
->> ---
->>   Documentation/hwmon/index.rst   |    1 +
->>   Documentation/hwmon/ltc4283.rst |  266 ++++++
->>   MAINTAINERS                     |    1 +
->>   drivers/hwmon/Kconfig           |   12 +
->>   drivers/hwmon/Makefile          |    1 +
->>   drivers/hwmon/ltc4283.c         | 1719 +++++++++++++++++++++++++++++++++++++++
->>   6 files changed, 2000 insertions(+)
->>
-> 
-> This is quite a big patch, I wonder would it ease review to try to add a
-> minimalistic implementation and after that add new features one by one...
-> 
+Hi,
 
-Please don't. I'll end up being the one person who will have to review it,
-and those piece by piece driver submissions often end up taking much more time
-to review than a single patch because the initial pieces miss the big picture.
+This series adds support for GPIO and GPIO IRQ mux available in the
+RZ/N1 SoCs.
 
-Guenter
+The first patches in this series are related to a new helper introduced
+to parse an interrupt-map property.
+  - patch 1: Introduce the helper (for_each_of_imap_item)
+  - patch 2: Add a unittest for the new helper
+  - patch 3 and 4: convert existing drivers to use this new helper
+
+Patch 5 adds support for GPIO (device-tree description)
+
+The last patches (6, 7 and 8) of the series are related to GPIO
+interrupts and GPIO IRQ multiplexer.
+
+In the RZ/N1 SoCs, GPIO interrupts are wired to a GPIO IRQ multiplexer.
+
+This multiplexer does nothing but select 8 GPIO IRQ lines out of the 96
+available to wire them to the GIC input lines.
+
+One upstreaming attempt have been done previously by Phil Edworthy [1]
+but the series has never been applied.
+
+Based on my understanding, I have fully reworked the driver proposed by
+Phil and removed the IRQ domain. Indeed, the device doesn't handle
+interrupts. It just routes signals.
+
+Also, as an interrupt-map property is used, the driver cannot be
+involved as an interrupt controller itself. It is a nexus node.
+
+With that in mind,
+  - Patch 6 is related to the irq-mux binding.
+
+  - Patch 7 introduces the irq-mux driver.
+    This driver uses the 'for_each_of_imap_item' helper introduced
+    previously. Indeed, the lines routing is defined by the
+    interrupt-map property and the driver needs to set registers to
+    apply this routing.
+
+  - Patch 8 is the RZ/N1 device-tree description update to have the
+    support for the GPIO interrupts.
+
+[1] https://lore.kernel.org/all/20190219155511.28507-1-phil.edworthy@renesas.com/
+
+Best regards,
+Hervé
+
+Changes v6 -> v7
+  v6: https://lore.kernel.org/all/20251027123601.77216-1-herve.codina@bootlin.com/
+
+  Rebase on top of v6.19-rc1.
+
+  Patches 1 to 4 :
+   - Add 'Reviewed-by: Linus Walleij'.
+
+  Patch 5:
+   - Fix a typo (Synopsys) in commit log.
+   - GPIO controllers enabled by default.
+   - Move "reg" just below "compatible".
+   - Add 'Reviewed-by: Linus Walleij'.
+   - Add 'Reviewed-by: Geert Uytterhoeven'.
+
+  Patch 6:
+   - Add 'Reviewed-by: Linus Walleij'.
+   - Add 'Reviewed-by: Geert Uytterhoeven'.
+
+  Patch 7:
+   - Enable RZN1_IRQMUX only if GPIO_DWAPB is enabled.
+   - Move a 'if' condition to a single line.
+   - Print the output line index in the 'already defined' error message.
+   - Move rzn1_irqmux_setup() code directly into rzn1_irqmux_probe().
+   - Add 'Reviewed-by: Linus Walleij'.
+   - Add 'Tested-by: Wolfram Sang'.
+   - Add 'Reviewed-by: Wolfram Sang'.
+   - Add 'Reviewed-by: Geert Uytterhoeven'.
+
+  Patch 8:
+   - Remove unneeded spaces.
+   - Add 'Reviewed-by: Linus Walleij'
+   - Add 'Reviewed-by: Wolfram Sang'
+   - Add 'Reviewed-by: Geert Uytterhoeven'
+
+Changes v5 -> v6
+  v5: https://lore.kernel.org/lkml/20251020080648.13452-1-herve.codina@bootlin.com/
+
+  Patches 1 and 2:
+    Add 'Reviewed-by: Rob Herring'
+
+  Patches 3, and 5:
+    No changes
+
+  Patch 6:
+    Add 'Reviewed-by: Rob Herring'
+
+  Patch 7:
+    Remove an unneeded TAB in Makefile.
+    Use RZN1_IRQMUX_GIC_SPI_BASE and RZN1_IRQMUX_NUM_OUTPUTS to replace
+    the irq/output mapping table.
+    Use DECLARE_BITMAP().
+
+  Patch 8:
+    No changes
+
+Changes v4 -> v5
+  v4: https://lore.kernel.org/lkml/20250922152640.154092-1-herve.codina@bootlin.com/
+
+  Rebase on top of v6.18-rc1
+
+  Patches 1 to 3:
+    No changes
+
+  Patch 4:
+    Fix conflict.
+    Add 'Tested-by: Wolfram Sang'.
+
+  Patch 5:
+    Add 'Reviewed-by: Bartosz Golaszewski'.
+
+  Patch 6:
+    Add 'Reviewed-by: Wolfram Sang'.
+
+  Patch 7:
+    Add a missing 'const' qualifier.
+    Remove an unneeded dev_err_probe() call.
+    Add a check to avoid setting the same output line multiple times.
+
+  Patch 8:
+    Update comment
+    Add 'Reviewed-by: Bartosz Golaszewski'
+
+Changes v3 -> v4
+  v3: https://lore.kernel.org/lkml/20250918104009.94754-1-herve.codina@bootlin.com/
+
+  Patch 1:
+    - Add 'Tested-by: Wolfram Sang'
+
+  Patch 2..5:
+    - No changes
+
+  Patch 6:
+    - Add minItems and maxItems
+    - Update the 'interrup-map' description
+
+  Patch 7:
+    - Use rzn1_irqmux prefix instead of irqmux.
+    - Introduce rzn1_irqmux_output_lines[] to give the mapping between
+      the interrupt output line index and the GIC controller interrupt
+      number.
+    - Remove of_irq_count() call and related checks
+
+  Patch 8:
+    - Describe the irq mux node using a reduced (one item) interrupt-map
+      property.
+
+Changes v2 -> v3
+  v2: https://lore.kernel.org/lkml/20250909120041.154459-1-herve.codina@bootlin.com/
+
+  Reordered patches as suggested by Thomas Gleixner.
+
+  Patch 1: (3 in v2)
+    - Replace a wrong 'extern' by 'static inline' in of_irq.h  (detected
+      by test robots)
+
+  Patch 2: (4 in v2)
+  Patch 3: (5 in v2)
+  Patch 4: (6 in v2)
+    - No changes
+
+  Patch 5: (1 in v2)
+    - Add 'Reviewed-by: Wolfram Sang'
+    - Add 'Tested-by: Wolfram Sang'
+
+  Patch 6: (2 in v2)
+    - Add '#address-cells = <0>;' in the interrupt-controller node
+      present in the example.
+
+  Patch 7:
+  Patch 8:
+    - No changes
+
+Changes v1 -> v2
+  v1: https://lore.kernel.org/lkml/20250725152618.32886-1-herve.codina@bootlin.com/
+
+  Rebase on top of v6.17-rc5
+
+  Patch 1 in v1
+    - Removed in v2 (no need for RZ/N1 compatible strings).
+
+  Patch 1 (2 in v1)
+    - Fix node names (issue reported by Rob's bot)
+    - Fix compatible RZ/N1 compatible strings
+    - Removed undocumented and unused 'bank-name' properties
+
+  Patch 2 (3 in v1)
+   - Remove 'interrupts' property
+   - Update 'interrupt-map' description
+
+  Patch 3 (4 in v1)
+   - Rework of_irq_foreach_imap() to provide the for_each_of_imap_item
+     iterator (similar to for_each_of_range)
+
+  Patch 4 (new in v2)
+   - Add a unittest for for_each_of_imap_item
+
+  Patch 5 (new in v2)
+   - Convert irqchip/ls-extirq to use for_each_of_imap_item
+
+  Patch 6 (new in v2)
+   - Convert irqchip/renesas-rza1 to use for_each_of_imap_item
+
+  Patch 7 (5 in v1)
+   - Use for_each_of_imap_item
+   - Remove 'interrupts' property usage
+
+  Patch 8 (6 in v1)
+   - Remove 'interrupts' property
+
+Herve Codina (Schneider Electric) (8):
+  of/irq: Introduce for_each_of_imap_item
+  of: unittest: Add a test case for for_each_of_imap_item iterator
+  irqchip/ls-extirq: Use for_each_of_imap_item iterator
+  irqchip/renesas-rza1: Use for_each_of_imap_item iterator
+  ARM: dts: r9a06g032: Add GPIO controllers
+  dt-bindings: soc: renesas: Add the Renesas RZ/N1 GPIO Interrupt
+    Multiplexer
+  soc: renesas: Add support for Renesas RZ/N1 GPIO Interrupt Multiplexer
+  ARM: dts: r9a06g032: Add support for GPIO interrupts
+
+ .../soc/renesas/renesas,rzn1-gpioirqmux.yaml  |  87 ++++++++++
+ arch/arm/boot/dts/renesas/r9a06g032.dtsi      | 159 ++++++++++++++++++
+ drivers/irqchip/irq-ls-extirq.c               |  47 ++----
+ drivers/irqchip/irq-renesas-rza1.c            |  43 ++---
+ drivers/of/irq.c                              |  70 ++++++++
+ .../of/unittest-data/tests-interrupts.dtsi    |   9 +
+ drivers/of/unittest.c                         | 116 +++++++++++++
+ drivers/soc/renesas/Kconfig                   |   4 +
+ drivers/soc/renesas/Makefile                  |   1 +
+ drivers/soc/renesas/rzn1_irqmux.c             | 127 ++++++++++++++
+ include/linux/of_irq.h                        |  41 ++++-
+ 11 files changed, 646 insertions(+), 58 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/renesas/renesas,rzn1-gpioirqmux.yaml
+ create mode 100644 drivers/soc/renesas/rzn1_irqmux.c
+
+-- 
+2.52.0
 
 
