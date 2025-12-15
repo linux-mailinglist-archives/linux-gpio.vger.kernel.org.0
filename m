@@ -1,43 +1,43 @@
-Return-Path: <linux-gpio+bounces-29550-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29551-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4A92CBE1AF
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 14:41:09 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29812CBE082
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 14:22:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0769F30974AE
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 13:32:03 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C6FBD3018763
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 13:21:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9149A32D0C7;
-	Mon, 15 Dec 2025 13:21:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 112EA32D431;
+	Mon, 15 Dec 2025 13:21:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="t83uPLBi"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LH8JqM5G"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08354315764
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Dec 2025 13:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0BD31812F
+	for <linux-gpio@vger.kernel.org>; Mon, 15 Dec 2025 13:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765804861; cv=none; b=LPgPaq4pkvtKMG1IdddXpyfQ5SYhIHxGK7FgGP1edFA5w7G0IQnyagiSBytrt78MrEEwIQWc9kcT0p1EuhUruyBqYYLG0XzK7M//YCxRnuxUl3efEheIBDzXRk+vJ8NCIyLTLJYJzFg7v1Y38PSYT80Jf+DyyqM8mZnOcpV94Kk=
+	t=1765804877; cv=none; b=Gm56YpafUHdIM17v7Pulm8QF2LsC0iw51NGiiNEjj1UC7QprITL/x+i2fGhQ+HqQvpDdK7ivtdDDxNpbfHyhaWyjtc5MIvDF/RmcKiGbclamXSxow8+dNKYqgQXFfA5L3ZZhlLsd+a0G73BU6/xr568DLyPNbfOWVgOZV8YHWak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765804861; c=relaxed/simple;
-	bh=9JtRaVTCUByXkLOu+YTSVTz1lkC60PblVa/Ge11fduo=;
+	s=arc-20240116; t=1765804877; c=relaxed/simple;
+	bh=Jw+CX3PHdG2rHH3xrE0jpWheNpQR9tkuVjIZOkOxeqE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gnDkqvVmmhY2aOXjrzQ0W6hqtPWsOB0HJhRzSIPNOQiSFMeD+9daWYbz6xTXHbL5bg19qAQDD/d5vfEajQeOJvRZoKuUcrfDpuafuc79Qaq9R8jeLAHXeWFNmhHnqdjfltqMEhcIO/XKIkvlvCd3mbst7HJRQAdVUNsW2VXSU5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=t83uPLBi; arc=none smtp.client-ip=95.215.58.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=C0H6kq+M/gT2HPhn3PhXDK7koVYoy/gmec2ChKUUHoCPvlQ49enU9aj4ysm+VQ89J7fnYvm11rDGFI5pkjhQHuTMGm3rQdiw2NBqQ7HlTn5n4qJSc/iYOBNVBNF6Zid6YDKdtnXn/cRLDysGcyO7WYaBCXVQbBNtCFye+xwXLVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LH8JqM5G; arc=none smtp.client-ip=95.215.58.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Mon, 15 Dec 2025 15:20:50 +0200
+Date: Mon, 15 Dec 2025 15:21:03 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1765804857; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	t=1765804872; h=from:from:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:in-reply-to:in-reply-to:  references:references;
-	bh=5Qe2X5dtJk9O8WONzalRNh+8GKWelpEOMSRQZ70zUHY=;
-	b=t83uPLBijwK8TTSisbNKTxMjVvQXR16RjZiH3QtQfgtgu/8Cm52ujwClyRtjvqmqaD8eIs
-	bJ+gDB4sb89z4etug45sEwxyYf5fn4YDSAiVT6Q0XFj2JKUqoRGXlXUtObMmlu6NcIxj6J
-	aVCcwpE0MBkNTp94inOUynsj5aK7+wE=
+	bh=aIDX8dlrQfZYDV9HKQkvFvrDlGxMhp6dMUe5xU4EmoA=;
+	b=LH8JqM5GKm+62fg3Y9/5ch2nGoFMzwpXp615ZbEYkM5Z1S58/BzvBFWvgLrM+mRURC65Um
+	5kJ2Ehs2DvchUvmV+BKlJ/DWHQYVuGkC3ykYRXVKFN94gLice1KM1FrtYh+F0dHuqm8dBN
+	HwCwvTcj0PP401mb8LmYDTgdjcfbb7c=
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Matti Vaittinen <matti.vaittinen@linux.dev>
 To: Matti Vaittinen <mazziesaccount@gmail.com>,
@@ -59,8 +59,9 @@ Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
 	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
 	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
 	linux-rtc@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH RESEND v6 14/17] rtc: bd70528: Support BD72720 rtc
-Message-ID: <3241773f0f8e8d8e591a8e948495686cfdee4875.1765804226.git.mazziesaccount@gmail.com>
+Subject: [PATCH RESEND v6 15/17] power: supply: bd71828: Support wider
+ register addresses
+Message-ID: <57c87f7e2082a666f0adeafcd11f673c0af7d326.1765804226.git.mazziesaccount@gmail.com>
 Reply-To: Matti Vaittinen <mazziesaccount@gmail.com>
 References: <cover.1765804226.git.mazziesaccount@gmail.com>
 Precedence: bulk
@@ -70,120 +71,111 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="w/bi4r6yG05+JGgA"
+	protocol="application/pgp-signature"; boundary="54kIi+IO5qC+nA/M"
 Content-Disposition: inline
 In-Reply-To: <cover.1765804226.git.mazziesaccount@gmail.com>
 X-Migadu-Flow: FLOW_OUT
 
 
---w/bi4r6yG05+JGgA
+--54kIi+IO5qC+nA/M
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 =46rom: Matti Vaittinen <mazziesaccount@gmail.com>
 
-The BD72720 has similar RTC block as a few other ROHM PMICs.
+The BD71828 power-supply driver assumes register addresses to be 8-bit.
+The new BD72720 will use stacked register maps to hide paging which is
+done using secondary I2C slave address. This requires use of 9-bit
+register addresses in the power-supply driver (added offset 0x100 to
+the 8-bit hardware register addresses).
 
-Add support for BD72720 RTC.
+The cost is slightly used memory consumption as the members in the
+struct pwr_regs will be changed from u8 to unsigned int, which means 3
+byte increase / member / instance.
+This is currently 14 members (expected to possibly be increased when
+adding new variants / new functionality which may introduce new
+registers, but not expected to grow much) and 2 instances (will be 3
+instances when BD72720 gets added).
+
+So, even if the number of registers grew to 50 it'd be 150 bytes /
+instance. Assuming we eventually supported 5 variants, it'd be
+5 * 150 bytes, which stays very reasonable considering systems we are
+dealing with.
+
+As a side note, we can reduce the "wasted space / member / instance" from
+3 bytes to 1 byte, by using u16 instead of the unsigned int if needed. I
+rather use unsigned int to be initially prepared for devices with 32 bit
+registers if there is no need to count bytes.
 
 Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-
 ---
 Revision history:
- RFCv1 =3D>:
+ v2 =3D> :
  - No changes
----
- drivers/rtc/Kconfig       |  3 ++-
- drivers/rtc/rtc-bd70528.c | 21 ++++++++++++++-------
- 2 files changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 50dc779f7f98..7ac18985e438 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -570,7 +570,8 @@ config RTC_DRV_BD70528
- 	depends on MFD_ROHM_BD71828
- 	help
- 	  If you say Y here you will get support for the RTC
--	  block on ROHM BD71815 and BD71828 Power Management IC.
-+	  block on ROHM BD71815, BD71828 and BD72720 Power
-+	  Management ICs.
+ RFCv1 =3D> v2:
+ - New patch
+---
+ drivers/power/supply/bd71828-power.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/power/supply/bd71828-power.c b/drivers/power/supply/bd=
+71828-power.c
+index f667baedeb77..ce73c0f48397 100644
+--- a/drivers/power/supply/bd71828-power.c
++++ b/drivers/power/supply/bd71828-power.c
+@@ -44,19 +44,19 @@
+ #define VBAT_LOW_TH			0x00D4
 =20
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rtc-bd70528.
-diff --git a/drivers/rtc/rtc-bd70528.c b/drivers/rtc/rtc-bd70528.c
-index 954ac4ef53e8..4c8599761b2e 100644
---- a/drivers/rtc/rtc-bd70528.c
-+++ b/drivers/rtc/rtc-bd70528.c
-@@ -7,6 +7,7 @@
- #include <linux/bcd.h>
- #include <linux/mfd/rohm-bd71815.h>
- #include <linux/mfd/rohm-bd71828.h>
-+#include <linux/mfd/rohm-bd72720.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-@@ -262,13 +263,13 @@ static int bd70528_probe(struct platform_device *pdev)
-=20
- 		/*
- 		 * See also BD718XX_ALM_EN_OFFSET:
--		 * This works for BD71828 and BD71815 as they have same offset
--		 * between ALM0 start and ALM0_MASK. If new ICs are to be
--		 * added this requires proper check as ALM0_MASK is not located
--		 * at the end of ALM0 block - but after all ALM blocks so if
--		 * amount of ALMs differ the offset to enable/disable is likely
--		 * to be incorrect and enable/disable must be given as own
--		 * reg address here.
-+		 * This works for BD71828, BD71815, and BD72720 as they all
-+		 * have same offset between the ALM0 start and the ALM0_MASK.
-+		 * If new ICs are to be added this requires proper check as
-+		 * the  ALM0_MASK is not located at the end of ALM0 block -
-+		 * but after all ALM blocks. If amount of ALMs differ, the
-+		 * offset to enable/disable is likely to be incorrect and
-+		 * enable/disable must be given as own reg address here.
- 		 */
- 		bd_rtc->bd718xx_alm_block_start =3D BD71815_REG_RTC_ALM_START;
- 		hour_reg =3D BD71815_REG_HOUR;
-@@ -278,6 +279,11 @@ static int bd70528_probe(struct platform_device *pdev)
- 		bd_rtc->bd718xx_alm_block_start =3D BD71828_REG_RTC_ALM_START;
- 		hour_reg =3D BD71828_REG_RTC_HOUR;
- 		break;
-+	case ROHM_CHIP_TYPE_BD72720:
-+		bd_rtc->reg_time_start =3D BD72720_REG_RTC_START;
-+		bd_rtc->bd718xx_alm_block_start =3D BD72720_REG_RTC_ALM_START;
-+		hour_reg =3D BD72720_REG_RTC_HOUR;
-+		break;
- 	default:
- 		dev_err(&pdev->dev, "Unknown chip\n");
- 		return -ENOENT;
-@@ -337,6 +343,7 @@ static int bd70528_probe(struct platform_device *pdev)
- static const struct platform_device_id bd718x7_rtc_id[] =3D {
- 	{ "bd71828-rtc", ROHM_CHIP_TYPE_BD71828 },
- 	{ "bd71815-rtc", ROHM_CHIP_TYPE_BD71815 },
-+	{ "bd72720-rtc", ROHM_CHIP_TYPE_BD72720 },
- 	{ },
+ struct pwr_regs {
+-	u8 vbat_avg;
+-	u8 ibat;
+-	u8 ibat_avg;
+-	u8 btemp_vth;
+-	u8 chg_state;
+-	u8 bat_temp;
+-	u8 dcin_stat;
+-	u8 dcin_collapse_limit;
+-	u8 chg_set1;
+-	u8 chg_en;
+-	u8 vbat_alm_limit_u;
+-	u8 conf;
+-	u8 vdcin;
++	unsigned int vbat_avg;
++	unsigned int ibat;
++	unsigned int ibat_avg;
++	unsigned int btemp_vth;
++	unsigned int chg_state;
++	unsigned int bat_temp;
++	unsigned int dcin_stat;
++	unsigned int dcin_collapse_limit;
++	unsigned int chg_set1;
++	unsigned int chg_en;
++	unsigned int vbat_alm_limit_u;
++	unsigned int conf;
++	unsigned int vdcin;
  };
- MODULE_DEVICE_TABLE(platform, bd718x7_rtc_id);
+=20
+ static const struct pwr_regs pwr_regs_bd71828 =3D {
 --=20
 2.52.0
 
 
---w/bi4r6yG05+JGgA
+--54kIi+IO5qC+nA/M
 Content-Type: application/pgp-signature; name=signature.asc
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCgAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmlACzIACgkQeFA3/03a
-ocUn+wf+LjgqAcukg+Vs7gDF4jlXtDnhohij9rPseui/0/h27XcqOtE/HLAER0Yv
-v5T0mNGJon/SiTpHCjGP6W4KZf7Q+nqDo0QlCVuHTLBta7bQthFFcXbklkFquhZE
-ZgvDnoQULVTR19jAi+NON6Kjb7QegnyuuYQmO3OHqk8twoUDC33/S1I9Bk95ItLh
-PvLohOn+MPRPf4EZf1cSMUBydU3ethCWu0E/z5NcRM/BNWlw+LxIufk11zOxZRnu
-229fw0C+3cbjs0tEZAyIDtP2gXwlaPaTS1miTwXDit81C1LPub7UAPLi17hk1PEi
-W9UKmOj1+Y3vslto1WSgyjq1PWr5pA==
-=HFvt
+iQEzBAEBCgAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmlACz8ACgkQeFA3/03a
+ocVqxggAj3bxN7BT3GSQ2QVWHScrNKrRMRVFc3iP68Nd9RFiIi5Ov/+uWUR24H7+
+8Yiz5/dSaRG1LCvaritIa/mUdmma8fcsTF9dGialP36OhRGSPcu0uEYqkCR3acMY
+asB8C6XrQYIIXD/48D1SWX2ar1sdkIMzqmeQ3RlYpgZmalNEsaBqUeCGanDtguVu
+OMtxomHQJ6Glm8nvaYKLbGEkL4g9A0mZh9ArQwLlvaGaswdMd1AH+lDlUeIG3Zdd
+tkrfAb1zlu2irUfwo+0+gPw/A6mBry6eMGBrEN4vHxmpKgYb5HweysGcCQ9hIzgC
+JFYNxkgJ0Lynd4Do5u77t3ysxOJcmg==
+=eSjJ
 -----END PGP SIGNATURE-----
 
---w/bi4r6yG05+JGgA--
+--54kIi+IO5qC+nA/M--
 
