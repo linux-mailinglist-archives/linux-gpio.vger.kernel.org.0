@@ -1,104 +1,131 @@
-Return-Path: <linux-gpio+bounces-29565-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29566-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3574ECBEBAA
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 16:46:41 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40DF1CBEF18
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 17:38:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D8C7D3011BE4
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 15:46:38 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 13DB43018495
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 16:38:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 250F62BD5BB;
-	Mon, 15 Dec 2025 15:46:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E05D3093C9;
+	Mon, 15 Dec 2025 16:38:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GHxT/2B/";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Hu+wZ9kQ"
+	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="AIWJvlhh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8CB29E11A
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Dec 2025 15:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE5E30AACF
+	for <linux-gpio@vger.kernel.org>; Mon, 15 Dec 2025 16:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765813597; cv=none; b=n4IjXvYGaJSaUv0Yt2V6HMHrud2QTE7K0KPrMgGcJ0zj8fg8TFSgG1JOe7rhpaWKE7+mnKSja6A1tjMuwav6FtJ0CM6/qGDu3IQ/KSnG1ZyZi5sk+JKXb5LQzVciuQMw5pnGkVvdJjmy89WI1XdekC78HYyc8QAdFG7V0LQRAjg=
+	t=1765816714; cv=none; b=FgoJyrfwvkI3dmKeK9CGR//mu5fSG8Y4iyqfc1WH0jh9WJS5pJyFw/+A846SE2kc4qVkGbhKP3XC+x2rFd9lAOJ/gqhePWKsbTy5gK2gb4+aE0tRyIuRgr2gdkPe96OFVoEO8lliIteP81PBHl9oQgSl6kbvcOhy46dOGJnyqhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765813597; c=relaxed/simple;
-	bh=i7HTV6k47P45ObdvvxS7eMjZZQEjI6MJNjKdvk5f+FI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WRcC+eBISrlESmDZ6FDxlsLhUzdYql6BVd+2slz4PTpkgSiZnfop9XPodVg/hDrAPsjQ9KD291CS7fhSzYsx2mul4bqRpSFB/NCgGnX9dMyvuNeBtgTO69wfC13+lnZjQuAJKnAfvAGrZ+kI7I0OOG3vwO+iXAa0n1rKcmj5ZZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GHxT/2B/; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Hu+wZ9kQ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BFC5LsM367095
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Dec 2025 15:46:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=VN9hm8flaXJlAMoKWsCfoolm2x7byHy2J4n
-	I/XIKGkI=; b=GHxT/2B/vp4ORFiWD6ugwf+7jBhquCwUl6HOfG6iwchwrWRPZbG
-	SjHUmZcaqNgMADgoBuXqCxh3ZPFM3j9K2kBzsBaC134QOpCov0FYmmhqpwetFpXQ
-	NfhP2xtc14+QlSEd00XQczfjI4SGGzg9Fwh7uocNGoIDRAoOBekPhYtHkfs+Rumx
-	BiFXstgKJH1sgmMOacblHXOgmHK0X3ztWwHkBoOPM6nioanrz/l99iz0nF2AICtd
-	yvh7LmRyViS9/0knxT2C5RPxyslH77suKVUHMJUieHJ8znJJcHeyA+EJQ28Ha5zq
-	iEJlhfp7MckR5Wn+TX7CTvDVqCdVCghYweQ==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4b2j1c0n8g-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Dec 2025 15:46:35 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4f1d26abbd8so76821161cf.1
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Dec 2025 07:46:35 -0800 (PST)
+	s=arc-20240116; t=1765816714; c=relaxed/simple;
+	bh=k/Yd1BmFzU0e9UFcJv9URIkTbmDEVBM0hOo+JTGIPAg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P1YzWpb01JLzi1HScgHCVfkeVxb7F5vyXUbGXn5EhBp1D9TvOLus4ZnFZvodkN7C1gEK2pfOz8J3szwfm1HHFnVHwCZVR1jvRHouytAFsSjgQ4+0A692sZMdnDx6eS5QE96KQOUxrXi54vFXDwxmoILVDxtCugcScXF70oWgvSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=AIWJvlhh; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4777771ed1aso28044785e9.2
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Dec 2025 08:38:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1765813595; x=1766418395; darn=vger.kernel.org;
+        d=sartura.hr; s=sartura; t=1765816709; x=1766421509; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VN9hm8flaXJlAMoKWsCfoolm2x7byHy2J4nI/XIKGkI=;
-        b=Hu+wZ9kQM6nMOexwDfeCTUVHtvAeYEjmGl3bMOQ//SMnU2OMoTXHYt3uOS7M7oOJXt
-         NPzXpx/1upiwjN8juk2Tc4zr0Bndm83M6p+lzsI3fvW2v3ozLRKhaeXdJLNXQrSOOFFL
-         MMX9kJnxJkM9zaDaN6+GmRMYdWcoHrHbIuZAXW5mtzVJ2lc4ualSf+ehj+2EB3habYNr
-         Sr0LXkg0R3TLjg2izE+B0pw85Upp+fp1gui0cbwhKx+hbfisZVijwO74ylgqDLEC1Z7u
-         b7KaeDq2PgB6xHvBXJbR+fObnNcNxokZbjrWJO12S1jvi7bsGjNmemZSRCK36syjXN5n
-         7N9g==
+        bh=cnKll+Mu3yr6wHuUg3E47hI29XfbMlTNI5VvcSPHEnI=;
+        b=AIWJvlhhcWl5hbSyydkjLe/GDVS3V4vTDb4qeNWdR80M81ODF67qfM5mpLQNIjN2zg
+         Cg0N+4vq4jQXHdnYY3svgMl/T49I5Zrp29STPCUNk6JrOin56BtaqbkiwBbaqR3OEZxD
+         49isbVf+h4T2y7jhcwZgxNVTn28fbsNDx6pSx03mQF/0PDPnwg/ClnbgMkoHgXwi33ES
+         l4rcR55YPGa4n54zK4ReHi/Fp9QkdZ9iXcPVs3V1UJHq0sTlTOTD31QjCOJN1tBd4HdH
+         ScnT8mVHvKhb7KcWLzK4aDi21gN7q6e+xh5Vf/QLRwsO8/PdYTmcByG2duRS9HvdtUPv
+         m4cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765813595; x=1766418395;
+        d=1e100.net; s=20230601; t=1765816709; x=1766421509;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VN9hm8flaXJlAMoKWsCfoolm2x7byHy2J4nI/XIKGkI=;
-        b=seBXIxq+elzQnmgPRhPY3SFphKuxJkeDmQgL99CR0aKq5yGjKtKgsdQp7PlNjCUYRn
-         1sza/F4qAzgv/wH1XGnyw3vBRNB5T9medENN0M0ZbdJsNICo9LX7gsNCTc8r78W0asrr
-         NCUnbONopw+eLubmReIW0BIyoVG77ykVVLbHz+CMVHnX3jW44GykeHk88YClGdrbZbqK
-         ozHj2a2QxC3n2nlCVcct4Hj1zZYe8fLT4wAsAslBMlsSLrrAe3k4dZ7fk+QJqxsaOwLL
-         CdEcGoU7t1Mjs0t7odELB9mU47IDuCegAGhWkpRGD/v+dmzURneEV1uxQgiPsDNKOSkz
-         71Rg==
-X-Gm-Message-State: AOJu0YzPEuSlGn4Q0aGH5TcKxY6Ly+bd8AcpSh5ycyHZiHI36B8YYlw7
-	GWyoPKr76AUhymcHCXYPXbjRFKKGkfR+CnvWCg5hO/iIDyVOBLYwqBjVFeoyw5er6/yP1L1HvTo
-	qiCP0ltqgzcdJt5s7gDiS7aF+G2hf8TwwPPVkstW9OFyWQgLOnq1tLpb/aXTZjCYm
-X-Gm-Gg: AY/fxX5Ebs+3+Zg+p8gIYwC6wlSURAtXm260Mb6UzbasrPRKOkugGMvKq5dfpztcYvS
-	VzvHMh5W+4JB/WHQFyYQs2QEv6BTu58iddq8G9LhQMiDAWdTJQIKokXLE07tnWl4IVnhuSB0mpf
-	FeHCZjFNfJ4XhHOXvJARlmmGS15uOMaMnCc3yx6eBV2tDS3zU4dPQU/L+RFSn8DBws78YTKAzsB
-	uYB2/hUQ461Ut65dqONz4SNPcuQCkJQRRv4YVilkUMw4NO0DLUMLnOjtl0Q5NyNHt3nPq6X3r29
-	ftiwWbbTClNKXE/NZEFqe1In+ZknCX6cVmxE3Cv7gA5o6D1nPWzvkuTvoEAIGPS6G+gxjZ6vFO2
-	x0O5hr+4tX3gpKb4YG/RsZjTqCHNV7L9W
-X-Received: by 2002:a05:622a:130d:b0:4ee:1bc7:9d8d with SMTP id d75a77b69052e-4f1d0467029mr119416781cf.17.1765813594582;
-        Mon, 15 Dec 2025 07:46:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFzwhYBddmY792geA2ZrLUAETvcShHFsQm73K1o17VpiJkUAlh0wB1C4+D2At55N2iaoYXOFg==
-X-Received: by 2002:a05:622a:130d:b0:4ee:1bc7:9d8d with SMTP id d75a77b69052e-4f1d0467029mr119416291cf.17.1765813593925;
-        Mon, 15 Dec 2025 07:46:33 -0800 (PST)
-Received: from brgl-uxlite ([2a01:cb1d:dc:7e00:9230:746:c30b:f2e5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47a8f4af065sm71408105e9.6.2025.12.15.07.46.32
+        bh=cnKll+Mu3yr6wHuUg3E47hI29XfbMlTNI5VvcSPHEnI=;
+        b=FrsCPfNsANMLscPeWCezSJuAHB5hw3Z1dI1mp2fYQz+UTpcvZPzLxGw6b6+/FaWqNJ
+         lXcLp2D/k88jJy4jIjVY6wex18qxhBo72yDGELYDdVonMSfHWDqenwC8nA+ZJBKwo1AM
+         m9rCyGZ6dz5ttcjqkihz1l7hT7XxNm7Y5W4AjB8DW7ny/EUZYfcRHXpkpOTmFSNfgcu7
+         6pSdVJLpjMwR2ocSxQO1funVeALOkapkdyxFi6qcJ4Ug9ATbnUIinoZDoO60/8WLuIDM
+         Gm1Jckt9h7BwN303P7WWYLxzOIWcV6+JLpPMWeKKugxoo5cz4YWU0ReRvmOOY540y+CB
+         1t3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXg8V4yOHYfmkpo6Um3tXrOxr3mRX7OLnwE710N0Ebj5voKlDt33bVXn7dzgkZ6nKJw4Q5gUcSY+08u@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy23XlcttllqzmnOQ/DsXHuD1WFnQRgb3FBubVyqOPkl8mDy09f
+	AFLHNbWRPSEbcjGQXEORU6Q7rjzQgOmjtz61+McIDXkIG/R+NXLujr8TsogdUbS9iuU=
+X-Gm-Gg: AY/fxX6I7Z7HKPmYM0Q8ZrrHm9AU8k85LX6vq412KHNsP0a23HJFuOaWLatdTrNVC9u
+	7mmXeFCui0U2atpLJWrxkzwnxRVl5RZ2WRvFMBVNEOM/OjARnMm/nQMbPIAlObZ9AqQIyrl0EvZ
+	6qP8A0kxZRucw/31rqau/NsXdDSKFa1zFg/84MuN3IMt1gOJC1xmRYZqibca+/35Zsm6SM49D+N
+	L2nHISDfsajFP8lEkjfkmo3+ArG0384uUNOKSBKkzW69hd35HLhs0cv9BYRkbTHidcLw55N+zDD
+	72FVWDeHS/i4X+PB1pHIHV5+jmL+ZFYtWIY817NFV/eJqA5g5LuioPQWNDqSG0A3lEwXu8lsMFa
+	jqLRY3KmVTL91bTBm0O9PhfLR0nI5PtXfoRLULsfX8aJw9CIJKur/9pd8PT76IYDNo6pxcrSuwt
+	ePjynD8Zb0Q5MQd+WkLRlSaniu6eA4xXSmM1M9R+Pwmwie
+X-Google-Smtp-Source: AGHT+IHqk87hRgFNW+4zdWPZBEuhhkRVJA1LnAloDmFeZHxaQu5P+L96TkAMIyaxKGjp4sqU43QQWQ==
+X-Received: by 2002:a05:600c:a086:b0:471:1774:3003 with SMTP id 5b1f17b1804b1-47a8f90fefamr116081975e9.29.1765816709336;
+        Mon, 15 Dec 2025 08:38:29 -0800 (PST)
+Received: from fedora (cpezg-94-253-146-254-cbl.xnet.hr. [94.253.146.254])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-47a8f74b44csm192209725e9.3.2025.12.15.08.38.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Dec 2025 07:46:33 -0800 (PST)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Linus Walleij <linusw@kernel.org>,
-        Bartosz Golaszewski <brgl@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: [PATCH] gpio: swnode: compare the "undefined" swnode by its address, not name
-Date: Mon, 15 Dec 2025 16:46:24 +0100
-Message-ID: <20251215154624.67099-1-bartosz.golaszewski@oss.qualcomm.com>
-X-Mailer: git-send-email 2.51.0
+        Mon, 15 Dec 2025 08:38:28 -0800 (PST)
+From: Robert Marko <robert.marko@sartura.hr>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	nicolas.ferre@microchip.com,
+	alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev,
+	Steen.Hegelund@microchip.com,
+	daniel.machon@microchip.com,
+	UNGLinuxDriver@microchip.com,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	vkoul@kernel.org,
+	linux@roeck-us.net,
+	andi.shyti@kernel.org,
+	lee@kernel.org,
+	andrew+netdev@lunn.ch,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linusw@kernel.org,
+	olivia@selenic.com,
+	radu_nicolae.pirea@upb.ro,
+	richard.genoud@bootlin.com,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	richardcochran@gmail.com,
+	wsa+renesas@sang-engineering.com,
+	romain.sioen@microchip.com,
+	Ryan.Wanner@microchip.com,
+	lars.povlsen@microchip.com,
+	tudor.ambarus@linaro.org,
+	charan.pedumuru@microchip.com,
+	kavyasree.kotagiri@microchip.com,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	mwalle@kernel.org
+Cc: luka.perkov@sartura.hr,
+	Robert Marko <robert.marko@sartura.hr>
+Subject: [PATCH v2 01/19] include: dt-bindings: add LAN969x clock bindings
+Date: Mon, 15 Dec 2025 17:35:18 +0100
+Message-ID: <20251215163820.1584926-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -106,84 +133,49 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE1MDEzNyBTYWx0ZWRfX5KghIv8v3cRW
- XrwT+myfUDVpn0N6d6ykjkyvIp/bZZ8jz914pg7DT/BnH0hHLaA3z2jamYCT1sP7eMx51gZwLhi
- 7KzCbNjBAht074ojKGs+gkT0Nedx/Hcz9Nu8GobF98Nl6ueInpVNqlNu/ddyjJL5wpb1RX/XlBg
- bkajSsXO1gla0Ygo9Z71WceO/+xA0Mr85CCu6NJ/LdzRORBCV5iBcQLw930ihf8RSVKtcedCk62
- NVGAlhghpQqfvN8Bzf8mosqpRwcW3mX9RidjTRLIkeOezs3EQg5dkA/ZLdgKTUpy3cKhQX9h9Lm
- 6Tm3ySqfFSFPM5dhLXx4zorTIq3q5Mr1CDJdqP8PPlEY+0PaewXW00NIgSz16wqk1LdF4ZyFvSI
- IpfSklf5+kbGs8f5uPXI4MFxVbYaHg==
-X-Proofpoint-GUID: xj_DHtwk9FRXyIzln6tSr0yPJhnIV0qi
-X-Authority-Analysis: v=2.4 cv=ceLfb3DM c=1 sm=1 tr=0 ts=69402d5b cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=wP3pNCr1ah4A:10
- a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8
- a=esFB21bSQ0nGF8Mf3lgA:9 a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-ORIG-GUID: xj_DHtwk9FRXyIzln6tSr0yPJhnIV0qi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-15_03,2025-12-15_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 impostorscore=0 clxscore=1015 phishscore=0 priorityscore=1501
- adultscore=0 bulkscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512150137
 
-We know the address of the underlying remote software node referenced by
-the GPIO property (if it is a software node). We don't need to compare
-its name, we can compare its address which is more precise anyway.
+Add the required LAN969x clock bindings.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
 ---
- drivers/gpio/gpiolib-swnode.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+Changes in v2:
+* Rename file to microchip,lan9691.h
 
-diff --git a/drivers/gpio/gpiolib-swnode.c b/drivers/gpio/gpiolib-swnode.c
-index b44f35d684590..54bad9e88fe5c 100644
---- a/drivers/gpio/gpiolib-swnode.c
-+++ b/drivers/gpio/gpiolib-swnode.c
-@@ -18,19 +18,18 @@
- 
- #include <linux/gpio/consumer.h>
- #include <linux/gpio/driver.h>
-+#include <linux/gpio/property.h>
- 
- #include "gpiolib.h"
- #include "gpiolib-swnode.h"
- 
--#define GPIOLIB_SWNODE_UNDEFINED_NAME "swnode-gpio-undefined"
--
- static struct gpio_device *swnode_get_gpio_device(struct fwnode_handle *fwnode)
- {
- 	const struct software_node *gdev_node;
- 	struct gpio_device *gdev;
- 
- 	gdev_node = to_software_node(fwnode);
--	if (!gdev_node || !gdev_node->name)
-+	if (!gdev_node)
- 		goto fwnode_lookup;
- 
- 	/*
-@@ -38,7 +37,7 @@ static struct gpio_device *swnode_get_gpio_device(struct fwnode_handle *fwnode)
- 	 * primarily used as a key for internal chip selects in SPI bindings.
- 	 */
- 	if (IS_ENABLED(CONFIG_GPIO_SWNODE_UNDEFINED) &&
--	    !strcmp(gdev_node->name, GPIOLIB_SWNODE_UNDEFINED_NAME))
-+	    gdev_node == &swnode_gpio_undefined)
- 		return ERR_PTR(-ENOENT);
- 
- fwnode_lookup:
-@@ -139,9 +138,7 @@ int swnode_gpio_count(const struct fwnode_handle *fwnode, const char *con_id)
-  * A special node that identifies undefined GPIOs, this is primarily used as
-  * a key for internal chip selects in SPI bindings.
-  */
--const struct software_node swnode_gpio_undefined = {
--	.name = GPIOLIB_SWNODE_UNDEFINED_NAME,
--};
-+const struct software_node swnode_gpio_undefined = { };
- EXPORT_SYMBOL_NS_GPL(swnode_gpio_undefined, "GPIO_SWNODE");
- 
- static int __init swnode_gpio_init(void)
+ include/dt-bindings/clock/microchip,lan9691.h | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 include/dt-bindings/clock/microchip,lan9691.h
+
+diff --git a/include/dt-bindings/clock/microchip,lan9691.h b/include/dt-bindings/clock/microchip,lan9691.h
+new file mode 100644
+index 000000000000..260370c2b238
+--- /dev/null
++++ b/include/dt-bindings/clock/microchip,lan9691.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++
++#ifndef _DT_BINDINGS_CLK_LAN9691_H
++#define _DT_BINDINGS_CLK_LAN9691_H
++
++#define GCK_ID_QSPI0		0
++#define GCK_ID_QSPI2		1
++#define GCK_ID_SDMMC0		2
++#define GCK_ID_SDMMC1		3
++#define GCK_ID_MCAN0		4
++#define GCK_ID_MCAN1		5
++#define GCK_ID_FLEXCOM0		6
++#define GCK_ID_FLEXCOM1		7
++#define GCK_ID_FLEXCOM2		8
++#define GCK_ID_FLEXCOM3		9
++#define GCK_ID_TIMER		10
++#define GCK_ID_USB_REFCLK	11
++
++/* Gate clocks */
++#define GCK_GATE_USB_DRD	12
++#define GCK_GATE_MCRAMC		13
++#define GCK_GATE_HMATRIX	14
++
++#endif
 -- 
-2.51.0
+2.52.0
 
 
