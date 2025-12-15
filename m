@@ -1,112 +1,152 @@
-Return-Path: <linux-gpio+bounces-29592-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29593-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAFE0CBF515
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 18:55:01 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41E20CBF74F
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 19:41:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EECFB304228F
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 17:51:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F2E8E300F5B6
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 18:40:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32B12325738;
-	Mon, 15 Dec 2025 17:51:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA8E4326D5C;
+	Mon, 15 Dec 2025 18:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="dAS0FWam"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nAb+sZvA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from polaris.svanheule.net (polaris.svanheule.net [84.16.241.116])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE74D324B31
-	for <linux-gpio@vger.kernel.org>; Mon, 15 Dec 2025 17:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.241.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53CB311956
+	for <linux-gpio@vger.kernel.org>; Mon, 15 Dec 2025 18:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765821097; cv=none; b=F3ci8P7ZEhYUpddZQq27ayvNlkkFaWhXurf08s2sf/d6UrcMzIQwXa+opOqjhVzKuYPEtUS9tA4/ZQC94oa7SOuOVYNOpx0LG3CpIolmMp1zbpsyF8ORNQk3NmD5bebXtIInxpeWVTQGuIjuOXbwuA0eEW98M4mjkVFNFGJdMDM=
+	t=1765824054; cv=none; b=FsWVV+qHQZHm3u/yU/B3+UDfCfpEin8cUJD9/tyoyOAyxYeRt3rn8dDNm88j7LfjzzaKCYxIUCv6KOmbA6Kw2IcM+f4NjCYGL1b6X/qPqZ9KPlB4Bs2f62Jei0BKSwszgB+dTitvzXgzJhryIY1gIg/qaygA3TRuKKP5TjUS2Zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765821097; c=relaxed/simple;
-	bh=OMBjumZfPZOkHIbUa00uG1t2OyMoQw4hQhX9sXpxidk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MWGP+t1uYOwVacJwZH52Yi2KV5oPwNjLXBBREGfTpeNL/NhvI8/jwdpwL1h3ykbx8Y7FjpLomkF/MbfZ7Kf1oMp5lQoYJGPN1ulvv9cWgJ8+AgEHJ8Li1AIuY3KUwfdR7sConPjJRBTEGlap8BIj4r+w9kB523TTBYtyl9cuThc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=dAS0FWam; arc=none smtp.client-ip=84.16.241.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svanheule.net
-Received: from terra.vega.svanheule.net (2a02-1812-162c-8f00-1e2d-b404-3319-eba8.ip6.access.telenet.be [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sander@svanheule.net)
-	by polaris.svanheule.net (Postfix) with ESMTPSA id 068806B1FA8;
-	Mon, 15 Dec 2025 18:51:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-	s=mail1707; t=1765821085;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zYHl0cckTMDsYyUvY6SsUbK63A6J0gTMMaV4kaaWOBg=;
-	b=dAS0FWamLr5KGQVyIgZo99X2WE8m/IFkuyOny14wslRBzbIJANJMQRCI2A/IjyWyxZU9P6
-	fNESpBaUtH83/V1yolRm0YZJGpsqm2RVxoEElruRstjnsoOeUaCCutrxPzUfIx9yQAdPtI
-	hEM+xaDX4B/5WSkB+9e8C79lpjS4G5M+FCAosNExy9gl073/nsr2NikmkjPKX2mC9ASX0C
-	ZHtSHp/jO1+wTuSBJwYKdJbGEZs5U4Ux2uBnv9i4Gk1Hs7J0MVh7yyWcHblWWS5c7nt7Ii
-	WD81nnnZrgfGVaNuobTX/93N7upbShTRxjsG7BoR243tw7Lc0fonXS8Xph0MhA==
-From: Sander Vanheule <sander@svanheule.net>
-To: Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
+	s=arc-20240116; t=1765824054; c=relaxed/simple;
+	bh=lIVXipTQUVpTOtDEFUYihhyCWJmbz98l7oWne/NFb7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JNTR6gvdK1oc0h8YQakrtx7ZG72yrV7zkOTHzsD0SXOnpTST/BEK6Aze2dgKgh3T+uNczbNzBY+Dk7aVitxaDv0owAj3i2Q/9SbpEnbgqjz/rFoRNvzpYG75ZwWepBF0dMoSGFvTDPXVlP9o/TjCXwX/XcIWrZbEOfm2SVSw/bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nAb+sZvA; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-430f3ef2d37so1419842f8f.3
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Dec 2025 10:40:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765824051; x=1766428851; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9CyBTq9jLEiMDCmEowsuiPxhEFRUD4GVU2KPfPukCJE=;
+        b=nAb+sZvAqbk0+0fa7+lJd27J73fsbUCOsQmoXfZLkJkJOpvLUtNqD6W9lSr95DuyYp
+         7XcNEOgdMomo6hL1vuXtKpfWoAG4OZb+vQoFDkWhFDhlx20AQTeqCRBkt9XWiUhlr8Yz
+         kBuxgsQNwSIa+KHKVtTTFevZ96md6N8r34Tx16re+dB2o1gOCDW0yLrqUs8Bh/5Y3njA
+         aOKbtWZMQap4Y60d1Ugrr/Kc2zOTnvhdnhu9vXYkkFco6pK/9KqqahxdJyMJnFJMJ6ii
+         Px2InM/DARYhXax97Ua5qHnkNs4hfRrkTbw7wVh4jybhsuv1ACNripFISh+rWvpMMl03
+         K6Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765824051; x=1766428851;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9CyBTq9jLEiMDCmEowsuiPxhEFRUD4GVU2KPfPukCJE=;
+        b=SIucBt/TpEo8a3A0Gr/JjiNG6O9fXeakI4przl0kBFXLc6IjJ02T6bV8+6Uw6UOHz0
+         kSOc8kYJj3PxBPBA7q3t24Mp8JyFXQyo0GwYuLqxgGxvEejvy0SchaghROUO2zz7dnkX
+         xX2QRdHvECI/aOlkmyCuCE1f87xdemtVTDC1u5+YCtqaSiGsbXN+tJuBg4eChNXYTwB6
+         7iNp0Tr15wI6hDNvtz6JkNeOzqO6NXYYF7iFA0bNBu/vw9mDiaEk/TK/3WBArsRXklaK
+         cE7uvcIqB6+SVsPIYwUE4oeS6ZdeowGaxVbvxfKg83s6P4dz/TscCH99Kf9JkFXjmd9z
+         3Dog==
+X-Forwarded-Encrypted: i=1; AJvYcCXp72L/yG8BXA0I25LSlQw6+aX/ZYKvDL1E/1LIpoiXjIsxOW90tpxgsd+Qx+441wvAR52zLf9Uy+ZN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzk9t99PLd9czV1j+LxNb6X4D6DyRS4/mYKkYZWL9x9d/I/v6/a
+	ojoovY9aErJxX9vMKklX0ChJ2+z3RTYCO17Zmp0R9HuPXzjP7pzdXDdhi8wmTYIgu7Q=
+X-Gm-Gg: AY/fxX70arqH44uKdKJwQ8urHgBF0JyNMvBM631d9pg17XMj9UEVUCb51AAgrs1ngMJ
+	Fs6vU7//KxYsv2CyemYP5LXQVE/0O3dSdokGTO9L2csri7GnUdIIaV/Q5FKZxO3Xv3hy6SbEWXc
+	PVywTVb3oLRIjLYFKmbQ5B1ANbpNWN+ELAePXk46WEcw9D73KIBASzZpX6jvrBg2jDIQRInLwDY
+	jURin5PtUReV0kUps0kR2Kw8MjzJyGjWPWVN8uEyVKMs/whYlDpxnk4xnXUoNzje0cYHB6lPuqH
+	hQ3E20WRsqHOBkLh6XCngIXX3T7HX8XpQc43eBpxue27ivYvxQ0GjajIZhIr/PznziJ1Mj/fZxS
+	x/WkpCLaLIsOQSWHfWkzMRobPoAVsfx3fJglAeGiFP+HnoNfSsGCizQDlaSjAJhIgKJeML5JUPt
+	Ny9lovwYKfKnMtd/915Woa5CNEZIx/4nQioC0NWTg47qVCWX4Z+5fhmY59g02Pi1zy
+X-Google-Smtp-Source: AGHT+IFpW6CxSU45/d3ozXnd56s4i9wy9U479O5ED3vRIcHNNAFa5Ur26ZBdU+1QKOAT3KavHokbqg==
+X-Received: by 2002:a05:6000:230f:b0:430:fdb8:8510 with SMTP id ffacd0b85a97d-430fdb886c1mr4417808f8f.24.1765824050820;
+        Mon, 15 Dec 2025 10:40:50 -0800 (PST)
+Received: from localhost (brnt-04-b2-v4wan-170138-cust2432.vm7.cable.virginm.net. [94.175.9.129])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-430f268d459sm15401602f8f.32.2025.12.15.10.40.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Dec 2025 10:40:50 -0800 (PST)
+Date: Mon, 15 Dec 2025 18:40:49 +0000
+From: Stafford Horne <shorne@gmail.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux OpenRISC <linux-openrisc@vger.kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Sander Vanheule <sander@svanheule.net>
-Subject: [PATCH v9 6/6] MAINTAINERS: Add RTL8231 MFD driver
-Date: Mon, 15 Dec 2025 18:51:14 +0100
-Message-ID: <20251215175115.135294-7-sander@svanheule.net>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20251215175115.135294-1-sander@svanheule.net>
-References: <20251215175115.135294-1-sander@svanheule.net>
+	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/5] dt-bindings: Add compatible string opencores,gpio to
+ gpio-mmio
+Message-ID: <aUBWMbKLMWO2Wv_B@antec>
+References: <20251214180158.3955285-1-shorne@gmail.com>
+ <20251214180158.3955285-2-shorne@gmail.com>
+ <20251215-skillet-perceive-2b564a29ed71@spud>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251215-skillet-perceive-2b564a29ed71@spud>
 
-Add the files associated with the RTL8231 support, and list Sander
-Vanheule (myself) as maintainer.
+On Mon, Dec 15, 2025 at 04:57:45PM +0000, Conor Dooley wrote:
+> On Sun, Dec 14, 2025 at 06:01:41PM +0000, Stafford Horne wrote:
+> > In FPGA Development boards with GPIOs we use the opencores gpio verilog
+> > rtl.  This is compatible with the gpio-mmio.  Add the compatible string
+> > to allow as below.
+> > 
+> > Example:
+> > 
+> >         gpio0: gpio@91000000 {
+> >                 compatible = "opencores,gpio", "brcm,bcm6345-gpio";
+> 
+> What you have done below does not permit this, it only permits
+> opencores,gpio in isolation.
+> pw-bot: changes-requested
 
-Signed-off-by: Sander Vanheule <sander@svanheule.net>
----
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Understood, I was not familar with the new schema. I was trying to follow what
+was seen in some other patches, now I see where I went wrong.  I will fix this
+and use the schema validation tools to verify.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5b11839cba9d..f07803adeff1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -21962,6 +21962,16 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/watchdog/realtek,otto-wdt.yaml
- F:	drivers/watchdog/realtek_otto_wdt.c
- 
-+REALTEK RTL8231 MFD DRIVER
-+M:	Sander Vanheule <sander@svanheule.net>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/leds/realtek,rtl8231-leds.yaml
-+F:	Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
-+F:	drivers/leds/leds-rtl8231.c
-+F:	drivers/mfd/rtl8231.c
-+F:	drivers/pinctrl/pinctrl-rtl8231.c
-+F:	include/linux/mfd/rtl8231.h
-+
- REALTEK RTL83xx SMI DSA ROUTER CHIPS
- M:	Linus Walleij <linusw@kernel.org>
- M:	Alvin Šipraga <alsi@bang-olufsen.dk>
--- 
-2.52.0
+Thanks for pointing it out.
+
+> >                 reg = <0x91000000 0x1>, <0x91000001 0x1>;
+> >                 reg-names = "dat", "dirout";
+> >                 gpio-controller;
+> >                 #gpio-cells = <2>;
+> >                 status = "okay";
+> >         };
+> > 
+> > Link: https://opencores.org/projects/gpio
+> > Signed-off-by: Stafford Horne <shorne@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/gpio/gpio-mmio.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml b/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
+> > index b4d55bf6a285..0490580df19e 100644
+> > --- a/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
+> > +++ b/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
+> > @@ -23,6 +23,7 @@ properties:
+> >        - ni,169445-nand-gpio
+> >        - wd,mbl-gpio # Western Digital MyBook Live memory-mapped GPIO controller
+> >        - intel,ixp4xx-expansion-bus-mmio-gpio
+> > +      - opencores,gpio
+> >  
+> >    big-endian: true
+> >  
+> > -- 
+> > 2.51.0
+> > 
+
 
 
