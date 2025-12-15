@@ -1,132 +1,170 @@
-Return-Path: <linux-gpio+bounces-29585-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29586-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91FDDCBF1A7
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 18:05:08 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44085CBF4C4
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 18:51:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6642D302A3BD
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 16:57:53 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 63F5F3000963
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Dec 2025 17:51:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98554331230;
-	Mon, 15 Dec 2025 16:57:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05D4D3242B4;
+	Mon, 15 Dec 2025 17:51:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="om7Amasb"
+	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="P0uuvtuo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from polaris.svanheule.net (polaris.svanheule.net [84.16.241.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D4C314A79;
-	Mon, 15 Dec 2025 16:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902272DCC13
+	for <linux-gpio@vger.kernel.org>; Mon, 15 Dec 2025 17:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.241.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765817870; cv=none; b=eosZwefXz4FSHXKta9Q4tOJ3e0mJzQsvWBfzJmIvoVCebWWnvBC16ihrVCjX541875DLPhYEzVP6XdUVzL59XD2+YY72VmzYF8N/gtQXPb/yEyZ4X4hqFyRCI9APgwmyXrYFZH/R0qfVhB72Ihk3UAIBnmPUMQB1J2JTvphGAzc=
+	t=1765821091; cv=none; b=sbTJih8vINfyniz7rlt09Tq7fuRY4mIJnt206xc2l5YdDGjiKJwFHvTA6mez9YF+zLmhdguMmUnmYL5B43HxlhKmLoWOIyjCbKMn9ljki5o4buxWI5g/kCaIV0uchrPzScN/17BEmt2taSFLymmvDA71nEj1TnxPt7oAX3FS+Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765817870; c=relaxed/simple;
-	bh=SgLS/ANrRVlpnUEOwB1p5hcDPAOgfBmKArBaS7U2zyk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k4DjrX/JodgqYPpbmWVetrlrFL0KJwgnfl4T1k0TJYuzoyz8bxNjep04z5Y31uVLm4E24RzQ/1cFZAU+x82IlQDivgNae4LI+NlEvGT7+E/OZ14kzyoanGm/WyZ6Zt6evRb5JFDt2VGSeUkouEIfFBrpc9V7E0rnvw5PpclG2YM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=om7Amasb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D045CC4CEF5;
-	Mon, 15 Dec 2025 16:57:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765817869;
-	bh=SgLS/ANrRVlpnUEOwB1p5hcDPAOgfBmKArBaS7U2zyk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=om7AmasbxAaw0I5/gGKkCdAuXEIeDEUAe8b17Fx3QHqdFO3v4Y0fliNorW0Bhp2CF
-	 Djj13oVRiWwoQR5/Qzm4OjrLt8ZXAkpSkA58EM+IHRuUdL9kVm2c9fd636Tw+0v/lY
-	 RXVR5zGRVbW0RtYxd5UFlZj9Gu5nnJbanjM2HwkapRtR8GNUCQHl19Izpti1oXlTNy
-	 F9zsbmbo5b9r0hImPQpg80dyiUFZY1LjJ5qoJ6rbasr8kMkkb9ii39tLa680VitLEm
-	 Ncy4Hd60z1ej4wPj0fWEbtH1AKHS5Ai/FQat9zP6xirOELTXWlqDpBGmq7qlo4Jt3T
-	 UZ8VOmrF//1jg==
-Date: Mon, 15 Dec 2025 16:57:45 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Stafford Horne <shorne@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux OpenRISC <linux-openrisc@vger.kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
+	s=arc-20240116; t=1765821091; c=relaxed/simple;
+	bh=hGESFDHN0cScS8HX+PUDAVWfBBgxxynfSPIQOpSViA8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ItRTfruirL4IvqB/aS2VqGStX/hmsQax/Z2Jzttwno8wSMH8sEx06cIrsi5EuV/3y6cfJDfaR9pzV6hVzY49E88vk2U7aqaH9MWjlZ8jWO35LnbBni2jNSMhig+m0jAmE6Npj8J8XblG4MDyPNyrL/usJJm9oIt9dP/d6NNZshc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=P0uuvtuo; arc=none smtp.client-ip=84.16.241.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svanheule.net
+Received: from terra.vega.svanheule.net (2a02-1812-162c-8f00-1e2d-b404-3319-eba8.ip6.access.telenet.be [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sander@svanheule.net)
+	by polaris.svanheule.net (Postfix) with ESMTPSA id 94F186B1FA2;
+	Mon, 15 Dec 2025 18:51:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+	s=mail1707; t=1765821082;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PWl1EwvinAHVTukioGc0f8nDw4G1d0vgl+v+BhLtPtY=;
+	b=P0uuvtuoGH9ZF+BF55NOtW8Fnw7NA2+uq808mfAvxGEjNGzo1owS/Wxj9K9F3DeBjesEy5
+	BYVbVyJ1xPoRfw+iW/bV+UFrWdFi9zIGs73dkBAG1+IJtuiTsAVnbUo17cBVaDMdFY/LyM
+	qcS13qUzACyjyo0sPNH6ac/BYQeQmq1h3DQgKrL7+JEalMspeJQ/FmkY/0FWVb4oVGA7bw
+	kEch30x2SsYmZgtlpkamXIi1A6U95uldN2mDBv1/AysnvWv05qosQWqux95t2yhDTv1cTt
+	q6YrzE5o0kwJLdCzDJhgKNQ1g+MwtwhaxlWRClsp9cNdJ6dF5H5CqtBntg0VCg==
+From: Sander Vanheule <sander@svanheule.net>
+To: Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/5] dt-bindings: Add compatible string opencores,gpio to
- gpio-mmio
-Message-ID: <20251215-skillet-perceive-2b564a29ed71@spud>
-References: <20251214180158.3955285-1-shorne@gmail.com>
- <20251214180158.3955285-2-shorne@gmail.com>
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Sander Vanheule <sander@svanheule.net>
+Subject: [PATCH v9 0/6] RTL8231 GPIO expander support
+Date: Mon, 15 Dec 2025 18:51:08 +0100
+Message-ID: <20251215175115.135294-1-sander@svanheule.net>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hCJub4guA5h1GUdJ"
-Content-Disposition: inline
-In-Reply-To: <20251214180158.3955285-2-shorne@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+The RTL8231 GPIO and LED expander can be configured for use as an MDIO
+or SMI bus device. Currently only the MDIO mode is supported, although
+SMI mode support should be fairly straightforward, once an SMI bus
+driver is available.
 
---hCJub4guA5h1GUdJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Provided features by the RTL8231:
+  - Up to 37 GPIOs
+    - Configurable drive strength: 8mA or 4mA (currently unsupported)
+    - Input debouncing on GPIOs 31-36
+  - Up to 88 LEDs in multiple scan matrix groups
+    - On, off, or one of six toggling intervals
+    - "single-color mode": 2×36 single color LEDs + 8 bi-color LEDs
+    - "bi-color mode": (12 + 2×6) bi-color LEDs + 24 single color LEDs
+  - Up to one PWM output (currently unsupported)
+    - Fixed duty cycle, 8 selectable frequencies (1.2kHz - 4.8kHz)
 
-On Sun, Dec 14, 2025 at 06:01:41PM +0000, Stafford Horne wrote:
-> In FPGA Development boards with GPIOs we use the opencores gpio verilog
-> rtl.  This is compatible with the gpio-mmio.  Add the compatible string
-> to allow as below.
->=20
-> Example:
->=20
->         gpio0: gpio@91000000 {
->                 compatible =3D "opencores,gpio", "brcm,bcm6345-gpio";
+The patches have been in use downstream by OpenWrt for some months. As
+the original patches are already a few years old, I would like to request
+all patches to be reviewed again (and I've dropped all provided tags and
+changelogs until v6).
 
-What you have done below does not permit this, it only permits
-opencores,gpio in isolation.
-pw-bot: changes-requested
+---
+Changes since v8:
+Link: https://lore.kernel.org/lkml/20251119200306.60569-1-sander@svanheule.net/
+- Rebase on top of v6.19-rc1
+- Drop no longer needed __maybe_unused for PM functions
+- No abbreviations in user messages
+- Replace {0,RTL8231_REG_COUNT-1} with RTL8231_REG_{START,END}
+- Replace led_start regmap_field with direct regmap operations
+- Replace SIMPLE_DEV_PM_OPS with DEFINE_SIMPLE_DEV_PM_OPS
+- Switch to REGCACHE_FLAT_S for improved cache performance
 
->                 reg =3D <0x91000000 0x1>, <0x91000001 0x1>;
->                 reg-names =3D "dat", "dirout";
->                 gpio-controller;
->                 #gpio-cells =3D <2>;
->                 status =3D "okay";
->         };
->=20
-> Link: https://opencores.org/projects/gpio
-> Signed-off-by: Stafford Horne <shorne@gmail.com>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio-mmio.yaml | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml b/Docu=
-mentation/devicetree/bindings/gpio/gpio-mmio.yaml
-> index b4d55bf6a285..0490580df19e 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
-> @@ -23,6 +23,7 @@ properties:
->        - ni,169445-nand-gpio
->        - wd,mbl-gpio # Western Digital MyBook Live memory-mapped GPIO con=
-troller
->        - intel,ixp4xx-expansion-bus-mmio-gpio
-> +      - opencores,gpio
-> =20
->    big-endian: true
-> =20
-> --=20
-> 2.51.0
->=20
+Changes since v7:
+Link: https://lore.kernel.org/lkml/20251117215138.4353-1-sander@svanheule.net/
+- All drivers can now be built independently with COMPILE_TEST
+- Fix storage size of pinfunction flags in a more compatible way
+- Add missing OF dependency to pinctrl driver
+- Improve referenced properties in bindings
 
---hCJub4guA5h1GUdJ
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes since v6:
+Link: https://lore.kernel.org/lkml/20251021142407.307753-1-sander@svanheule.net/
+- Drop already merged regmap_gpio changes
+- Devicetree bindings:
+  - Relax description formatting
+  - Use absolute paths for schema references
+  - Enforce address format for led node names
+  - Add pinctrl properties to led-controller node in example
+- mfd driver:
+  - Small code refactors, variable renames
+  - Header include sorting
+  - regmap/regcache usage updates
+- pinctrl driver:
+  - Fixed build issue on 64b platforms
+  - Simplify safe direction startup config
+  - Add GPIOLIB dependency
 
------BEGIN PGP SIGNATURE-----
+RFC for gpio-regmap changes:
+Link: https://lore.kernel.org/lkml/20251020115636.55417-1-sander@svanheule.net/
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaUA9/QAKCRB4tDGHoIJi
-0t/TAQDBFZJqiD8sF0fIRoGIM15mzcD4JOHWG2CkFfH3s11/XgEAiXh2/9JDMpcA
-yuyf/eZw+zXGHSep5v7xawMQr0Gt+AY=
-=JiOe
------END PGP SIGNATURE-----
+Patch series v5 (June 2021):
+Link: https://lore.kernel.org/lkml/cover.1623532208.git.sander@svanheule.net/
 
---hCJub4guA5h1GUdJ--
+Sander Vanheule (6):
+  dt-bindings: leds: Binding for RTL8231 scan matrix
+  dt-bindings: mfd: Binding for RTL8231
+  mfd: Add RTL8231 core device
+  pinctrl: Add RTL8231 pin control and GPIO support
+  leds: Add support for RTL8231 LED scan matrix
+  MAINTAINERS: Add RTL8231 MFD driver
+
+ .../bindings/leds/realtek,rtl8231-leds.yaml   | 136 +++++
+ .../bindings/mfd/realtek,rtl8231.yaml         | 199 +++++++
+ MAINTAINERS                                   |  10 +
+ drivers/leds/Kconfig                          |  10 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-rtl8231.c                   | 285 ++++++++++
+ drivers/mfd/Kconfig                           |   9 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/rtl8231.c                         | 188 ++++++
+ drivers/pinctrl/Kconfig                       |  12 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-rtl8231.c             | 533 ++++++++++++++++++
+ include/linux/mfd/rtl8231.h                   |  73 +++
+ 13 files changed, 1458 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/realtek,rtl8231-leds.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/realtek,rtl8231.yaml
+ create mode 100644 drivers/leds/leds-rtl8231.c
+ create mode 100644 drivers/mfd/rtl8231.c
+ create mode 100644 drivers/pinctrl/pinctrl-rtl8231.c
+ create mode 100644 include/linux/mfd/rtl8231.h
+
+-- 
+2.52.0
+
 
