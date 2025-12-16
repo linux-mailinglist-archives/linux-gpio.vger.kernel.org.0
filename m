@@ -1,149 +1,190 @@
-Return-Path: <linux-gpio+bounces-29595-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29596-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB363CC04C2
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Dec 2025 01:05:17 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC548CC0814
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Dec 2025 02:50:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 14EB93017EF7
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Dec 2025 00:05:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0E3173017644
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Dec 2025 01:50:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2B9DEACD;
-	Tue, 16 Dec 2025 00:05:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIkdHao+"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1C6726F2B6;
+	Tue, 16 Dec 2025 01:50:11 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F4336B;
-	Tue, 16 Dec 2025 00:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD3D1487F6;
+	Tue, 16 Dec 2025 01:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765843511; cv=none; b=Gq6024UywrSGdOiXmc6ZI8Lf5FwFfZwOq5OJTnMV7ERY0OMjQzXxhfl5IOANpkZusA4Hjit+5hfoIPFKaCeSXOmHsqvblZEfgLeDfWe3trQADidx5+A+V1CZX7ctDdbwGqXZfjHUEe90q4h6mSMJJnJOis9p++GBNhnCk5QqoxU=
+	t=1765849811; cv=none; b=u5XxlxwyCzxnPtHileDGa4szE626M4BqO1eEgHwsvENaCXpS6tR3b9QhCWaLx9Xpgl6NdYI8MPN6W+DAKKjQRx8N59HKf1qc9SLqB2Bp0dBdgAmjgE6emojvkfILVSuEV7TSTUk2S1s+MshBW41Zpd4VkjCDBF7OMaSazayWQKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765843511; c=relaxed/simple;
-	bh=LJhx7W/W6voccLzCJ3OlzUKuTDdqlnqRvF+0+Fs3Ndg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YqlMLr1Pgs6iRHLwYOx6CdP2ggw7LQxedlZEpFi9gOv5aHBrVHGM8b42cJer8CtW/gVGktZI2ZQMNz+EG8Wth0RRoL1hGSLJVK3KF7/Ic3jo6vorteUZz1z4n0s2AgCAnUtmbJZrjEbe6wNKaL8k9hgeNUaF665WbpZcRzHhpK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIkdHao+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD37AC4CEF5;
-	Tue, 16 Dec 2025 00:05:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765843510;
-	bh=LJhx7W/W6voccLzCJ3OlzUKuTDdqlnqRvF+0+Fs3Ndg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dIkdHao+A3DaGCD4A28Dg7JqAHFsQYRHKKbz4m/RlRoWcAzcMH0WkwkWAYH8ZQDgT
-	 wzfNRrtG8czgE5M9kg1tJGGvpkVb9/JfBL4T2XqVc9r9lATJWdM01kHcB8tllAyhEk
-	 WSfs4YfbqEkN76LMG7I71OYyCa1wXcAe2RN9CVzSbAssBdwjBqn84J/BEBZxNLASJl
-	 ZHz1uOZXVNozwDOC9NqXzsFy+s5IglIqbWHW2vFyjjK4aFVEy+fZkZX8X956hGBhZj
-	 EooslNMgQtWH7aiiu+vBEMMXYOonTmz/gXOKkXgH/xWlekgfsqP3rrXl9qQE2Uq8JM
-	 plQYbS8lAwU7g==
-Date: Tue, 16 Dec 2025 00:05:06 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Stafford Horne <shorne@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux OpenRISC <linux-openrisc@vger.kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/5] dt-bindings: Add compatible string opencores,gpio to
- gpio-mmio
-Message-ID: <20251216-area-commuting-d20343c98fce@spud>
-References: <20251214180158.3955285-1-shorne@gmail.com>
- <20251214180158.3955285-2-shorne@gmail.com>
- <20251215-skillet-perceive-2b564a29ed71@spud>
- <aUBWMbKLMWO2Wv_B@antec>
- <aUBi0Fid8vF-G8Wl@antec>
+	s=arc-20240116; t=1765849811; c=relaxed/simple;
+	bh=cJwhKYW1mmF+nLh+Mx/yy2wJXAjZzNw2SxwR3VWI+Sw=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=bcQO77Yc5vBh3QLbZ9l2IH9sxDOtf/mGFb2htKGiyXrZxRoh7kCt7Ft6cwuM4D05lE8Ih5e4l7uVLTgpKm3DBtszWhjl0SEDniZHqu9IhPXnkZbgNPPFAI80TokRFTVj+S2p9SPT4A0kuXRfoJultuY0pSbAPNbNh1Ms9Rt3VUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 16 Dec
+ 2025 09:50:00 +0800
+Received: from [127.0.1.1] (192.168.10.13) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Tue, 16 Dec 2025 09:50:00 +0800
+From: Jacky Chou <jacky_chou@aspeedtech.com>
+Subject: [PATCH v7 0/7] Add ASPEED PCIe Root Complex support
+Date: Tue, 16 Dec 2025 09:49:59 +0800
+Message-ID: <20251216-upstream_pcie_rc-v7-0-4aeb0f53c4ce@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bIdgZ0CC1Xivo1pc"
-Content-Disposition: inline
-In-Reply-To: <aUBi0Fid8vF-G8Wl@antec>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMe6QGkC/43QQWrDMBCF4asErSszo/FIcle9RylGlpVaLYmN5
+ JiG4LtXyaJeJJAun+D7B3QROaQYsnjdXUQKS8xxPJZhXnbCD+74GWTsyxYKFCMCydOU5xTcoZ1
+ 8DG3y0tY1G276ziKJwqYU9vHnlnz/KHuIeR7T+XZhwevrLQYaCYgAsCJk0mQkyi/nv8+tH8bTm
+ 8tTCP0c/FD58SCupUVt2iAD1aSgUsxk/6Np0w0gMDdKVVg0MzzX9Z9GUAYatoortIgan2PeMKK
+ 5/8OFJciudthYNtr5/cOK3ioK8EFFl4r11gJ41h3qu8q6rr+L85hu8gEAAA==
+X-Change-ID: 20251103-upstream_pcie_rc-8445759db813
+To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, "Andrew
+ Jeffery" <andrew@codeconstruct.com.au>, Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, "Manivannan
+ Sadhasivam" <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, Neil Armstrong
+	<neil.armstrong@linaro.org>
+CC: <linux-aspeed@lists.ozlabs.org>, <linux-pci@vger.kernel.org>,
+	<linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	Andrew Jeffery <andrew@aj.id.au>, <openbmc@lists.ozlabs.org>,
+	<linux-gpio@vger.kernel.org>, Jacky Chou <jacky_chou@aspeedtech.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1765849800; l=5397;
+ i=jacky_chou@aspeedtech.com; s=20251031; h=from:subject:message-id;
+ bh=cJwhKYW1mmF+nLh+Mx/yy2wJXAjZzNw2SxwR3VWI+Sw=;
+ b=3J44svCb+SFxYbW4PGjsRszZw90/97HE2keEtgn1pIzkD+ujyFhSIgcg+p2up1Vuciv7OLd2Y
+ uay+YUp3FkDCJG+wnPwpHVxGTrNYfjgGn6NCLm0JVtlr7kyfCUZcrfz
+X-Developer-Key: i=jacky_chou@aspeedtech.com; a=ed25519;
+ pk=8XBx7KFM1drEsfCXTH9QC2lbMlGU4XwJTA6Jt9Mabdo=
 
+This patch series adds support for the ASPEED PCIe Root Complex,
+including device tree bindings, pinctrl support, and the PCIe host controller
+driver. The patches introduce the necessary device tree nodes, pinmux groups,
+and driver implementation to enable PCIe functionality on ASPEED platforms.
+Currently, the ASPEED PCIe Root Complex only supports a single port.
 
---bIdgZ0CC1Xivo1pc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Summary of changes:
+- Add device tree binding documents for ASPEED PCIe PHY and PCIe RC
+- Update MAINTAINERS for new bindings and driver
+- Implement ASPEED PCIe PHY driver
+- Implement ASPEED PCIe Root Complex host controller driver
 
-On Mon, Dec 15, 2025 at 07:34:40PM +0000, Stafford Horne wrote:
-> On Mon, Dec 15, 2025 at 06:40:49PM +0000, Stafford Horne wrote:
-> > On Mon, Dec 15, 2025 at 04:57:45PM +0000, Conor Dooley wrote:
-> > > On Sun, Dec 14, 2025 at 06:01:41PM +0000, Stafford Horne wrote:
-> > > > In FPGA Development boards with GPIOs we use the opencores gpio ver=
-ilog
-> > > > rtl.  This is compatible with the gpio-mmio.  Add the compatible st=
-ring
-> > > > to allow as below.
-> > > >=20
-> > > > Example:
-> > > >=20
-> > > >         gpio0: gpio@91000000 {
-> > > >                 compatible =3D "opencores,gpio", "brcm,bcm6345-gpio=
-";
-> > >=20
-> > > What you have done below does not permit this, it only permits
-> > > opencores,gpio in isolation.
-> > > pw-bot: changes-requested
-> >=20
-> > Understood, I was not familar with the new schema. I was trying to foll=
-ow what
-> > was seen in some other patches, now I see where I went wrong.  I will f=
-ix this
-> > and use the schema validation tools to verify.
-> >=20
-> > Thanks for pointing it out.
->=20
-> I think the below is correct. But, would this be ok to put in one patch?
->=20
-> I do:
->   - Convert compatible from simple enum to oneOf.
->   - Add items: for the openrisc,gpio compatiblity string.
->=20
->  properties:
->    compatible:
-> -    enum:
-> -      - brcm,bcm6345-gpio
-> -      - ni,169445-nand-gpio
-> -      - wd,mbl-gpio # Western Digital MyBook Live memory-mapped GPIO con=
-troller
-> -      - intel,ixp4xx-expansion-bus-mmio-gpio
-> +    oneOf:
+This series has been tested on AST2600/AST2700 platforms and enables PCIe device
+enumeration and operation.
 
-> +      - const: brcm,bcm6345-gpio
-> +      - const: ni,169445-nand-gpio
-> +      - const: wd,mbl-gpio # Western Digital MyBook Live memory-mapped G=
-PIO controller
-> +      - const: intel,ixp4xx-expansion-bus-mmio-gpio
+Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
+---
+Changes in v7:
+- Add PCIe port into aspeed,ast2600-pci.yaml.
+- Remove aspeed_pcie_init_ports() and merge aspeed_pcie_port_init() to
+  aspeed_pcie_parse_port()
+- Refactor aspeed remap pcie addr to aspeed_pcie_map_ranges()
+- Link to v6: https://lore.kernel.org/r/20251201-upstream_pcie_rc-v6-0-8c8800c56b16@aspeedtech.com
 
-This is fine, but keep the enum instead of making these into a bunch of
-const entries. IOW, just put a - in front of the existing enum: and
-reindent it to be correct under the oneOf.
+Changes in v6:
+- Refer to pci-cpi-bridge.yaml to update aspeed,ast2600-pcie.yaml and
+  the pcie node of aspeed-g6.dtsi.
+- 'dt-bindings: pinctrl: aspeed,ast2600-pinctrl: Add PCIe RC PERST#
+  group' have applied, remove it from this version.
+- Adjust the defnitions in pci.h. 
+- Link to v5: https://lore.kernel.org/r/20251117-upstream_pcie_rc-v5-0-b4a198576acf@aspeedtech.com
 
-> +      - items:
-> +          - enum:
-> +              - opencores,gpio
-> +          - const: brcm,bcm6345-gpio
+Changes in v5:
+- Remove legacy-interrupt-controller and the INTx points to pcie node itself.
+- Correct bar mapping description and implementation to PCIe address
+  configuration in pcie-aspeed.c driver.
+- Link to v4: https://lore.kernel.org/r/20251027095825.181161-1-jacky_chou@aspeedtech.com/
 
---bIdgZ0CC1Xivo1pc
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in v4:
+- Remove aspeed,ast2700-pcie-cfg.yaml
+- Add more descriptions for AST2600 PCIe RC in aspeed,ast2600-pcie.yaml
+- Change interrupt-controller to legacy-interrupt-controller in yaml
+  and dtsi
+- Remove msi-parent property in yaml and dtsi
+- Modify the bus range to starting from 0x00 in aspeed-g6.dtsi
+- Fixed the typo on MODULE_DEVICE_TABLE() in phy-aspeed-pcie.c
+- Add PCIE_CPL_STS_SUCCESS definition in pci/pci.h
+- Add prefix ASPEED_ for register definition in RC driver
+- Add a flag to indicate clear msi status twice for AST2700 workaround
+- Remove getting domain number
+- Remove scanning AST2600 HOST bridge on device number 0
+- Remove all codes about CONFIG_PCI_MSI
+- Get root but number from resouce list by IORESOURCE_BUS
+- Change module_platform_driver to builtin_platform_driver
+- Link to v3: https://lore.kernel.org/r/20250901055922.1553550-1-jacky_chou@aspeedtech.com/
 
------BEGIN PGP SIGNATURE-----
+Changes in v3:
+- Add ASPEED PCIe PHY driver
+- Remove the aspeed,pciecfg property from AST2600 RC node, merged into RC node
+- Update the binding doc for aspeed,ast2700-pcie-cfg to reflect the changes
+- Update the binding doc for aspeed,ast2600-pcie to reflect the changes
+- Update the binding doc for aspeed,ast2600-pinctrl to reflect the changes
+- Update the device tree source to reflect the changes
+- Adjusted the use of mutex in RC drivers to use GRAND
+- Updated from reviewer comments
+- Link to v2: https://lore.kernel.org/r/20250715034320.2553837-1-jacky_chou@aspeedtech.com/
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaUCiMgAKCRB4tDGHoIJi
-0tJJAQDPP7IUyjpfrVRCrN1DBjIkm1Wgwun0jxfuFzSGrHiObAD+Ns3gpbcNgIc+
-6rzW60Cumuuy+qnrAZUBUGVHsD1D4A8=
-=R5UD
------END PGP SIGNATURE-----
+Changes in v2:
+- Moved ASPEED PCIe PHY yaml binding to `soc/aspeed` directory and
+  changed it as syscon
+- Added `MAINTAINERS` entry for the new PCIe RC driver
+- Updated device tree bindings to reflect the new structure
+- Refactored configuration read and write functions to main bus and
+  child bus ops
+- Refactored initialization to implement multiple ports support
+- Added PCIe FMT and TYPE definitions for TLP header in
+  `include/uapi/linux/pci_regs.h`
+- Updated from reviewer comments
+- Link to v1: https://lore.kernel.org/r/20250613033001.3153637-1-jacky_chou@aspeedtech.com/
 
---bIdgZ0CC1Xivo1pc--
+---
+Jacky Chou (7):
+      dt-bindings: phy: aspeed: Add ASPEED PCIe PHY
+      dt-bindings: PCI: Add ASPEED PCIe RC support
+      ARM: dts: aspeed-g6: Add PCIe RC and PCIe PHY node
+      PHY: aspeed: Add ASPEED PCIe PHY driver
+      PCI: Add FMT, TYPE and CPL status definition for TLP header
+      PCI: aspeed: Add ASPEED PCIe RC driver
+      MAINTAINERS: Add ASPEED PCIe RC driver
+
+ .../bindings/pci/aspeed,ast2600-pcie.yaml          |  182 ++++
+ .../bindings/phy/aspeed,ast2600-pcie-phy.yaml      |   42 +
+ MAINTAINERS                                        |   12 +
+ arch/arm/boot/dts/aspeed/aspeed-g6-pinctrl.dtsi    |    5 +
+ arch/arm/boot/dts/aspeed/aspeed-g6.dtsi            |   51 +
+ drivers/pci/controller/Kconfig                     |   16 +
+ drivers/pci/controller/Makefile                    |    1 +
+ drivers/pci/controller/pcie-aspeed.c               | 1111 ++++++++++++++++++++
+ drivers/pci/pci.h                                  |   15 +
+ drivers/phy/Kconfig                                |    1 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/aspeed/Kconfig                         |   15 +
+ drivers/phy/aspeed/Makefile                        |    2 +
+ drivers/phy/aspeed/phy-aspeed-pcie.c               |  209 ++++
+ 14 files changed, 1663 insertions(+)
+---
+base-commit: 50455515d2364d7f4397b9db98515a1028558295
+change-id: 20251103-upstream_pcie_rc-8445759db813
+
+Best regards,
+-- 
+Jacky Chou <jacky_chou@aspeedtech.com>
+
 
