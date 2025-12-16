@@ -1,56 +1,85 @@
-Return-Path: <linux-gpio+bounces-29653-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29654-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DB38CC553F
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Dec 2025 23:17:35 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14C88CC55F7
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Dec 2025 23:40:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 51304300B2AB
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Dec 2025 22:16:36 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 1511C30024A9
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Dec 2025 22:40:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5696A313E3B;
-	Tue, 16 Dec 2025 22:16:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A66633F39A;
+	Tue, 16 Dec 2025 22:40:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mq5kqh3B"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UtJIEklL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9702765C3;
-	Tue, 16 Dec 2025 22:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA0F22A1D5;
+	Tue, 16 Dec 2025 22:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765923395; cv=none; b=Xh7+NlARJXgqhaicPtBcbhwyJAgjtK0XVtubxS79KbgkGTsvTnIR3MdxwRDXg+Oiwpqlg0zNM8qS+EvCREB8f33TCI5RSen4eM+4YqkAvQkWoX02v7D2toNe800XQ0Jepu2URc+y/p2LIrpytJLisWBN9wTieSvb8k3k48+ni6w=
+	t=1765924821; cv=none; b=iUshJg2K0CoJnzvHysVD4PXTpYi9o4DQ5DybEPglCwz0c4jIqoWh53A758rdRPH0dJoPLxlfTA49uNUgOfgXLYKfoOLx9tbPcWUz/GCyIWftzQLkePuBikMwhY9aB63m2HfYdGRQQ4Q6olnqG/XSv6y4K+B0rDUCqllZ8J+7p6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765923395; c=relaxed/simple;
-	bh=RVv6U8vNQOFBzIPO5hHvHCI19OQVuc9YoOmPnXLDOQE=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xm+h9dkdZRNhddESRF+gttXAllPjZWfmNT3vwO2l/AsXtQLGiIx+hI6WGzk5uRHNybTK0kS3XvS1dOD2F2vYr9VzibH0dLOpRjMKhoglzosnuZcOICbjBBH/dq8sZe7F+Xfh1epRQRjfX8cYsUwqJknE2liIfIn85TEwV97jT7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mq5kqh3B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E547C4CEF1;
-	Tue, 16 Dec 2025 22:16:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765923394;
-	bh=RVv6U8vNQOFBzIPO5hHvHCI19OQVuc9YoOmPnXLDOQE=;
-	h=From:Date:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mq5kqh3BpmknEekWUGcwqTVlPjbgK45L+YGUn2woq60DUxDH785keSwAQVJ5xqVDY
-	 +8c4ZA4bQv6vVDtC8v/2mBYuBVLctkJLjua5yg7yijIIumK3FJ0FYpVoYXzG/QIujd
-	 mibLqEc/inkaELbvzyVC+v778pShpq71mKffoUKKVJAiA60d8hfFjBG0vpKDyNTKOg
-	 ENN2Eb3qCN8opCh2N+WJbzU+KXq68PjKjrNmNh1CRDCzYoDLaJUpxDmvMtHRNMtByi
-	 xOwM30wNuSQkEEuDL+R7qc0Mvo7TH+1y9m1X2EZselLV8HEuobMkywRNNZBN6jHeRC
-	 VYmhgpew4FXYw==
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 16 Dec 2025 16:16:31 -0600
-To: Conor Dooley <conor@kernel.org>
-Cc: linus.walleij@linaro.org, Conor Dooley <conor.dooley@microchip.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, Valentina.FernandezAlanis@microchip.com
-Subject: Re: [RFC v2 1/5] dt-bindings: pinctrl: document polarfire soc mssio
- pin controller
-Message-ID: <20251216220624.GA3114300-robh@kernel.org>
-References: <20251127-bogged-gauze-74aed9fdac0e@spud>
- <20251127-spousal-bless-199b36f89c80@spud>
+	s=arc-20240116; t=1765924821; c=relaxed/simple;
+	bh=SFPOamL0cQPXqkLhodBhCDXvus3KxGNWMnm+9DocSlU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GrP3Ezlfrqwfd4a7b4m1avz8/PuXaRZq4v8ht/OBT7RPiqL8Ta4hmzqtdsApKF+ToQ9dK7VJfewzayn50Vxo3op2CQEze38wXWKA7anAMjF3OpBPSMGK0XWu7JFsIQmk6ztp3J+bzBda9UFmPs/ulQu/Mmkgl/V55pCfvrD668M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UtJIEklL; arc=none smtp.client-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 4FFBE4E41C41;
+	Tue, 16 Dec 2025 22:40:16 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 19F146071C;
+	Tue, 16 Dec 2025 22:40:16 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 331B8102F01D0;
+	Tue, 16 Dec 2025 23:40:00 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1765924813; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=YjySOHXxChpeAIXP7WiviiCVM3iOHIkW8SnbIAyhMbg=;
+	b=UtJIEklL707ymXV/8HCjyKT+EobGjo9ZqL/vbQfvhhbRyudL/xWnk2Mv+F8druWzsb494W
+	cAmzshRPqJbM87ZkegTVdkAF+kU0MP8ZKGR+jKn2V1G7n2aqLHnh8yafzrJVDXwf/veoBk
+	eYMp4u61D4wTi1PjSEGEi5NBxjyfP3SaP+OKlRRy+/+FdG3sDT2neGe0O9iwWwk7hmi0zV
+	9ar5gz1PnvOx5hBjGQYpUJWnpW97kiCMulKZZMkCFVa8ZlHmkfOQghjw74oEjWm9wUmZMK
+	JfDi9BzBOBDMLQ0ddmoVO4T2fyd6QhWUN2EQUglFcqDbXV7XKtEaiL2/RtkmWg==
+Date: Tue, 16 Dec 2025 23:40:00 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Robert Marko <robert.marko@sartura.hr>
+Cc: Conor Dooley <conor@kernel.org>, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, nicolas.ferre@microchip.com,
+	claudiu.beznea@tuxon.dev, Steen.Hegelund@microchip.com,
+	daniel.machon@microchip.com, UNGLinuxDriver@microchip.com,
+	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org,
+	linux@roeck-us.net, andi.shyti@kernel.org, lee@kernel.org,
+	andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, linusw@kernel.org, olivia@selenic.com,
+	radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com,
+	gregkh@linuxfoundation.org, jirislaby@kernel.org,
+	mturquette@baylibre.com, sboyd@kernel.org, richardcochran@gmail.com,
+	wsa+renesas@sang-engineering.com, romain.sioen@microchip.com,
+	Ryan.Wanner@microchip.com, lars.povlsen@microchip.com,
+	tudor.ambarus@linaro.org, kavyasree.kotagiri@microchip.com,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-clk@vger.kernel.org, mwalle@kernel.org,
+	luka.perkov@sartura.hr
+Subject: Re: [PATCH v2 04/19] dt-bindings: arm: move AT91 to generic
+ Microchip binding
+Message-ID: <202512162240006f3ddfdf@mail.local>
+References: <20251215163820.1584926-1-robert.marko@sartura.hr>
+ <20251215163820.1584926-4-robert.marko@sartura.hr>
+ <202512161628415e9896d1@mail.local>
+ <CA+HBbNFG+xNokn5VY5G6Cgh41NZ=KteRi0D9c0B15xb77mzv8w@mail.gmail.com>
+ <202512161726449fe42d71@mail.local>
+ <20251216-underarm-trapped-626f16d856f5@spud>
+ <CA+HBbNFq=+uWp05YD08EQtaOhrN9FCBAtnOAsOJc4dNfoJRfxA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -59,179 +88,26 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251127-spousal-bless-199b36f89c80@spud>
+In-Reply-To: <CA+HBbNFq=+uWp05YD08EQtaOhrN9FCBAtnOAsOJc4dNfoJRfxA@mail.gmail.com>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Thu, Nov 27, 2025 at 10:57:57AM +0000, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
+On 16/12/2025 20:35:49+0100, Robert Marko wrote:
+> Hi Conor,
+> What do you think about renaming the SparX-5 binding and adding LAN969x to that?
+> Cause both are from the current Microchip and from the same UNG
+> business unit, with
+> probably more generations to follow.
 > 
-> On Polarfire SoC, the Bank 2 and Bank 4 IOs connected to the
-> Multiprocessor Subsystem (MSS) are controlled by IOMUX_CRs 1 through 6,
-> which determine what function in routed to them, and
-> MSSIO_BANK#_IO_CFG_CRs, which determine the configuration of each pin.
-> 
-> Document it, including several custom configuration options that stem
-> from MSS Configurator options (the MSS Configurator is part of the FPGA
-> tooling for this device). "ibufmd" unfortunately is not a 1:1 mapping
-> with an MSS Configurator option, unlike clamp-diode or lockdown, and I
-> do not know the effect of any bits in the field. I have no been able to
-> find an explanation for these bits in documentation.
-> 
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  .../pinctrl/microchip,mpfs-pinctrl-mssio.yaml | 119 ++++++++++++++++++
->  .../microchip,mpfs-mss-top-sysreg.yaml        |   4 +
->  2 files changed, 123 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/microchip,mpfs-pinctrl-mssio.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/microchip,mpfs-pinctrl-mssio.yaml b/Documentation/devicetree/bindings/pinctrl/microchip,mpfs-pinctrl-mssio.yaml
-> new file mode 100644
-> index 000000000000..c8e509ba2f51
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/microchip,mpfs-pinctrl-mssio.yaml
-> @@ -0,0 +1,119 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/microchip,mpfs-pinctrl-mssio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip Polarfire SoC MSSIO pinctrl
-> +
-> +maintainers:
-> +  - Conor Dooley <conor.dooley@microchip.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: microchip,mpfs-pinctrl-mssio
-> +      - items:
-> +          - const: microchip,pic64gx-pinctrl-mssio
-> +          - const: microchip,mpfs-pinctrl-mssio
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  pinctrl-use-default: true
-> +
-> +patternProperties:
-> +  '-cfg$':
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    patternProperties:
-> +      '-pins$':
-> +        type: object
-> +        additionalProperties: false
-> +
-> +        allOf:
-> +          - $ref: pincfg-node.yaml#
-> +          - $ref: pinmux-node.yaml#
-> +
-> +        properties:
-> +          pins:
-> +            description:
-> +              The list of IOs that properties in the pincfg node apply to.
-
-pins can be int or string. You need to define which one here.
-
-> +
-> +          function:
-> +            description:
-> +              A string containing the name of the function to mux for these
-> +              pins. The "reserved" function tristates a pin.
-> +            enum: [ sd, emmc, qspi, spi, usb, uart, i2c, can, mdio, misc
-> +                    reserved, gpio, fabric-test, tied-low, tied-high, tristate ]
-> +
-> +          bias-bus-hold: true
-> +          bias-disable: true
-> +          bias-pull-down: true
-> +          bias-pull-up: true
-> +          input-schmitt-enable: true
-> +          low-power-enable: true
-> +
-> +          drive-strength:
-> +            enum: [ 2, 4, 6, 8, 10, 12, 16, 20 ]
-> +
-> +          microchip,bank-voltage-microvolt:
-> +            description:
-> +              Which bank voltage to use. This cannot differ for pins in a
-> +              given bank, the whole bank uses the same voltage.
-> +            enum: [ 1200000, 1500000, 1800000, 2500000, 3300000 ]
-
-"power-source" serves this purpose. It's not well defined as sometimes 
-it's a register value and sometimes a voltage (in various units).
-
-> +
-> +          microchip,clamp-diode:
-> +            $ref: /schemas/types.yaml#/definitions/flag
-> +            description:
-> +              Reflects the "Clamp Diode" setting in the MSS Configurator for
-> +              this pin. This setting controls whether or not input voltage
-> +              clamping should be enabled.
-> +
-> +          microchip,ibufmd:
-> +            $ref: /schemas/types.yaml#/definitions/uint32
-> +            default: 0
-> +            description:
-> +              Reflects the "IBUFMD" bits in the MSS Configurator output files
-> +              for this pin.
-> +
-> +        required:
-> +          - pins
-> +          - function
-> +          - microchip,bank-voltage-microvolt
-> +
-> +        if:
-> +          properties:
-> +            microchip,bank-voltage-microvolt:
-> +              contains:
-> +                enum: [ 1200000, 1500000, 1800000 ]
-> +        then:
-> +          required:
-> +            - input-schmitt-enable
-> +
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pinctrl@204 {
-> +      compatible = "microchip,mpfs-pinctrl-mssio";
-> +      reg = <0x204 0x7c>;
-> +
-> +      ikrd-spi1-cfg {
-> +        spi1-pins {
-> +          pins = <30>, <31>, <32>, <33>;
-> +          function = "spi";
-> +          bias-pull-up;
-> +          drive-strength = <8>;
-> +          microchip,bank-voltage-microvolt = <3300000>;
-> +          microchip,ibufmd = <0x1>;
-> +        };
-> +      };
-> +    };
-> +...
-> diff --git a/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-mss-top-sysreg.yaml b/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-mss-top-sysreg.yaml
-> index 39987f722411..44e4a50c3155 100644
-> --- a/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-mss-top-sysreg.yaml
-> +++ b/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-mss-top-sysreg.yaml
-> @@ -42,6 +42,10 @@ properties:
->      type: object
->      $ref: /schemas/pinctrl/microchip,mpfs-pinctrl-iomux0.yaml
->  
-> +  pinctrl@204:
-> +    type: object
-> +    $ref: /schemas/pinctrl/microchip,mpfs-pinctrl-mssio.yaml
-> +
->  required:
->    - compatible
->    - reg
-> -- 
-> 2.51.0
+> LAN969x does not really belong in Atmel bindings to me, but I am flexible.
 > 
 
+On the contrary, this is the one that is based on the "previously atmel"
+BU SoCs. It is a sama7 with a microchip UNG switch while SparX-5 looks
+more like a microsemi chip with ARM64 cores instead of mips.
+
+
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
