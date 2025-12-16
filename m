@@ -1,61 +1,57 @@
-Return-Path: <linux-gpio+bounces-29604-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29605-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A7A8CC1257
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Dec 2025 07:41:06 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E003CC1212
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Dec 2025 07:37:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 18EB8307F60F
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Dec 2025 06:36:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 60CA73058E7C
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Dec 2025 06:35:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61E7D341666;
-	Tue, 16 Dec 2025 06:25:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3890336EDD;
+	Tue, 16 Dec 2025 06:33:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X6eKLQbs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PXsSIbZE"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FC6341060;
-	Tue, 16 Dec 2025 06:25:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D1B261B9F;
+	Tue, 16 Dec 2025 06:33:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765866323; cv=none; b=n5SSw4jGy/j/bEhNhMJaIDm2CXN3YJsl7joNaCI52mVZE+o1uCYIMZ5Xfnj5G6kkYqhurFesnKOQ/ejZfCnW7DcAeVuzBCZaChGTfXrU++OFU2xmDDedvOMnj3Edbt3peOdHQKOLTLu4d2ii/etbinIq5/IMAFdh9Lw5SKGBjbU=
+	t=1765866797; cv=none; b=WB4uzEAcYYVIh2hoZx4hPFyAHJxVGUuFti5dAgAwWDi3ZFZnd/+BuOTMHQ4II4GOsQa3vkfF3cfUqqVcbn/eFpjrs2dTHnOGdA0tilmkLXCwW8ED5/jsvSsapstKeeRXkTmGO/IetGBVI3o8lys/+LlpjYro+wXc8sEyn6nH2Cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765866323; c=relaxed/simple;
-	bh=jURSggc8h5Auoce5njAyzjWeWLT5P7bncC7/J9uqAIk=;
+	s=arc-20240116; t=1765866797; c=relaxed/simple;
+	bh=NJGJ02Pkjh2ueUVuyCYqUUbn8lG4/n/q4AZCncqhQus=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=icQa6lA0XBEfJvXFrzqDiN9MqviwlC1v2ZCeJktYhMapncQZnFqVLI2504U78h5S/v/vV55Eq0BUIDttzaNN66Q9cLKg99IwbextWo4vr4lO/nezH+RiGw9H0LgFq/KnMz5GnC78Ir2K6mFGaIopMLt5KEnCFflb1a7TMfTvJh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X6eKLQbs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DEA4C4CEF1;
-	Tue, 16 Dec 2025 06:25:19 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y8QxzcyTAZKPczZZASsUK1/pU6Mi8wH6Pg5W6HwZcRW0eoIFFEjF29tGYy+gdOFSlFD12v3vzVSWUgV+13z2O6wU7qQLs6utDKCk0Stsz9KECaKa8+160b2bmfAHkAnKSsp2Aj95ORJe6Myww6BJB5LyG3PzmemTb31pbAFlxfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PXsSIbZE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EE96C4CEF1;
+	Tue, 16 Dec 2025 06:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765866320;
-	bh=jURSggc8h5Auoce5njAyzjWeWLT5P7bncC7/J9uqAIk=;
+	s=k20201202; t=1765866795;
+	bh=NJGJ02Pkjh2ueUVuyCYqUUbn8lG4/n/q4AZCncqhQus=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X6eKLQbs299j6gqCWs0N6kliERfyOLEJYBLj9OjmQWO8xApvcW1nMZW7qSPX9qF2t
-	 Gpl8+hGXqMt3pkh0mxh/9/e+v5GKe7qILvY7jujhVhdrTJDI8QDBp0e/zterdp/Au8
-	 XZ7GtBVJr8c33wkRJEmNk/pxUSM36yPE5/+e39YE+pIdIRqyd21KJxjfieF+Y++vHu
-	 KLfdXaj1r+PVuSxADZZpJczinr4nWQOZ+dlCe4/iSsOeGsEGzNAhDqs8PQKwxUNDQl
-	 N6x9LzTfvBVbI4qDrV+33hthxDs4imD+uGJ+ksRIC7z2GVq/u54ScozuMvWeVf9khP
-	 3sP/tTAuG7i4A==
-Date: Tue, 16 Dec 2025 07:25:18 +0100
+	b=PXsSIbZEGhUQsFoqxoBWJouME+WHkIjIG4g2AsojOEzYhElYYLSNNgnKu3e8icryq
+	 lrJJJs/RO/beOWHzEyJTtQO9e84Hl0UNwsrJd1vs35u2GeOps18cSTj/AmiZ3gem59
+	 Xr2LuMH7iE3wwkWkDkCoHiLlgBzI9WGQNvsoVnvGmYh+T1j7aX3NFQ3cxDS7Ao66Sx
+	 csFLX3vp5ognoua743exkfgpRRzkgeKMiBBIrDvCYDXAGYBRN/dLIkNS6zMtpzpOp6
+	 LxhFWsL/TXCuBN0w6qJqa2LsriN315uzmahEehuak7T0kMos5OfGfOe3PO7SzWDywr
+	 hI+muzJ0fGMJQ==
+Date: Tue, 16 Dec 2025 07:33:13 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: "Thomas Perrot (Schneider Electric)" <thomas.perrot@bootlin.com>
-Cc: Rob Herring <robh@kernel.org>, 
+To: Jan Remmet <j.remmet@phytec.de>
+Cc: Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	=?utf-8?B?SsOpcsOpbWll?= Dautheribes <jeremie.dautheribes@bootlin.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 1/8] dt-bindings: vendor-prefixes: Add AAEON vendor prefix
-Message-ID: <20251216-tricky-masterful-wildcat-1efbd5@quoll>
-References: <20251212-dev-b4-aaeon-mcu-driver-v1-0-6bd65bc8ef12@bootlin.com>
- <20251212-dev-b4-aaeon-mcu-driver-v1-1-6bd65bc8ef12@bootlin.com>
+	Levente =?utf-8?B?UsOpdsOpc3o=?= <levente.revesz@eilabs.com>, linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, upstream@lists.phytec.de
+Subject: Re: [PATCH 3/3] dt-bindings: gpio: gpio-pca95xx: Add tcal6408 and
+ tcal6416
+Message-ID: <20251216-happy-beige-bug-a8fad0@quoll>
+References: <20251212-wip-jremmet-tcal6416rtw-v1-0-e5db1b66d4cc@phytec.de>
+ <20251212-wip-jremmet-tcal6416rtw-v1-3-e5db1b66d4cc@phytec.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -64,16 +60,24 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251212-dev-b4-aaeon-mcu-driver-v1-1-6bd65bc8ef12@bootlin.com>
+In-Reply-To: <20251212-wip-jremmet-tcal6416rtw-v1-3-e5db1b66d4cc@phytec.de>
 
-On Fri, Dec 12, 2025 at 08:41:04AM +0100, Thomas Perrot (Schneider Electric) wrote:
-> Add the AAEON vendor prefix to support the AAEON SRG-IMX8PL MCU driver
-> devicetree bindings.
+On Fri, Dec 12, 2025 at 02:03:18PM +0100, Jan Remmet wrote:
+> TCAL6408 and TCAL6416 supports latchable inputs and maskable interrupt.
+> add compatibles ti,tcal6408 and ti,tcal6416
+
+And are not compatible with other variants? Explain here why.
+
 > 
-> Signed-off-by: Thomas Perrot (Schneider Electric) <thomas.perrot@bootlin.com>
+> Signed-off-by: Jan Remmet <j.remmet@phytec.de>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml | 2 ++
 >  1 file changed, 2 insertions(+)
+> 
+
+Please organize the patch documenting the compatible (DT bindings) before the patch using that compatible.
+See also: https://elixir.bootlin.com/linux/v6.14-rc6/source/Documentation/devicetree/bindings/submitting-patches.rst#L46
+
 
 Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 
