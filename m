@@ -1,317 +1,178 @@
-Return-Path: <linux-gpio+bounces-29690-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29691-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26560CC7908
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 13:20:27 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC58ACC7A6A
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 13:38:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BD7E730B84A2
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 12:15:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6A28230A808B
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 12:34:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EEB7345CD3;
-	Wed, 17 Dec 2025 12:14:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B6CA341AD7;
+	Wed, 17 Dec 2025 12:33:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="sgeD5y49"
+	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="A2rYCXgU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7593446C0;
-	Wed, 17 Dec 2025 12:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69408342502
+	for <linux-gpio@vger.kernel.org>; Wed, 17 Dec 2025 12:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765973666; cv=none; b=FjnFOLA++RpjMDDOPcmht0Yyx3mLhgI5C7COG9Rl0PJlRhhKBxeBYDO7wUjiqWX5y5I6jItc75coo4bl+xBkdib0Uh5K0xT1EHK/1ZmgzDKfn6z7I+/afLmLLK2cdLzUkCKbCLlGzv+557641iVe2BHHtDhp7LPBGjMRITERrq4=
+	t=1765974839; cv=none; b=lY9W+NdF0Oefv2Hif/G57T2EkeYj6KQe0U9eImp7mcQVmRxGsgns25ny2GP97MvKcAHmQtAzuYVYb13/K3egH6rB0tjVUPtQ52zxgH7naWs/nDowkmzK0DTooMsJ1yyM6vmWjrX1Y+EkZv1cU+XUMGBCY4ag1NRBVGYkQ5y+Dgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765973666; c=relaxed/simple;
-	bh=rWhz1qhXX5cZm+GWRaQ9ciBLBk8IoCqoYZlI/GtAfiU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=lljBBkP4ko5LLJL/1Q+9XdeixaOgSh4vBSG4LQWsrrHVGazAhFDBILgB16X9HhwGJeVHcqcsdujaK8wtpDmu7uEDAjyFXxvcBO/04co3pnDQ0ZtJzlYMq+yGAaoEp7e/SFAez0WLzWGvBKzAeUmGe1XUtKjnwRxw2m4xlytmN4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=sgeD5y49; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BHC7Tx23978997;
-	Wed, 17 Dec 2025 07:14:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=KHwHt
-	qQuusmzdK7NM7ocl1bh8RRVDH4lMJb8lzPokRI=; b=sgeD5y490ivnBlHVayFX6
-	NxU5z7mRE39VNGYf1AVEE2q2y7ZHQTQrBy+usEJTmkyy+iLiM12J4NKNU/0a0dbk
-	OlLUDHDMnKkjg1gUYNWGLcFzXbWyurXUHNNZrNutRnJPiH7JxWIwYb176seDP2x6
-	w4DOPBhVWHwUWfVEfMIHeZgR/CInXW9vUatvb4u8XSJePFY2TGEiyrvJltGr5MXI
-	GAEcmi2hkuy3R/AR9l86+lZN02pLwtj7ZONlANTGATNNN7wCK/YF+dHduQWnozKq
-	WQX9d2FLLgxS2p7yK5KORlQoKcXs0lLvSyPZlN6f/U8pBGaYVrft2iEAuBuDAWES
-	Q==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 4b3bbevk6u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Dec 2025 07:14:07 -0500 (EST)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 5BHCE6FF041126
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 17 Dec 2025 07:14:06 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.37; Wed, 17 Dec
- 2025 07:14:06 -0500
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.37 via Frontend
- Transport; Wed, 17 Dec 2025 07:14:06 -0500
-Received: from HYB-DlYm71t3hSl.ad.analog.com (HYB-DlYm71t3hSl.ad.analog.com [10.44.3.73])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 5BHCDUvF014815;
-	Wed, 17 Dec 2025 07:13:57 -0500
-From: Jorge Marques <jorge.marques@analog.com>
-Date: Wed, 17 Dec 2025 13:13:32 +0100
-Subject: [PATCH v4 9/9] iio: adc: ad4062: Add GPIO Controller support
+	s=arc-20240116; t=1765974839; c=relaxed/simple;
+	bh=s8GEKXnaSXfLaP2KVal8xoX7Yub2x5YeO61XyI9SmwQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DoXPja0smA5iYzCkRdc8QGjHm6pi5/2LnK7y4iA2uzM9WeUawNPYuqHsipoprAH1p7Mp7ChRqFu3V+xy3EgSS0EPpSZYaVThZMGFLNTh/olrJ3sZ6WqowxtosV3pZez1BcvIp7/JQOidMgKKdAN3YPlaWqUs4seKHxt+TRtzXik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=A2rYCXgU; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-64b4b35c812so180560a12.0
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Dec 2025 04:33:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura.hr; s=sartura; t=1765974835; x=1766579635; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s8GEKXnaSXfLaP2KVal8xoX7Yub2x5YeO61XyI9SmwQ=;
+        b=A2rYCXgUYr9ALJpNgKYHWr7vJr+BFYlLRilkjQiry5X9M3LQQ88mX4hFh1RagqJ6lZ
+         uLtt7f7uVrILg7+B+4YELj4FONtVCFqJA7XwsLHNNYAUI6dirg68L6UOFtUVg/pflSZn
+         976Z2ay8EvD2m28JR88LPxi35onEJ8E+FN4FGVILCcgQKmTMqb22K5nAnVyqmLxQDd6O
+         LbFKdJDvIY/Y8kWMUSdGNCbLVuKFxZCVvOnWjidEXE282hJwaojoXOnOsdvcE8Yo8AOE
+         MRm/wjI6RrNDNxlhO3goPl87r39rYRTEA/cEsAWTInxIkFYA/Fm8IQlepQjUUy1g/gnO
+         RIDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765974835; x=1766579635;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=s8GEKXnaSXfLaP2KVal8xoX7Yub2x5YeO61XyI9SmwQ=;
+        b=nXBdsgu3rIrwScd8gr95k7Jl3+rs3iG1P1BMRfzYfLxKMuk5vEgYekmXBxUS+Wneil
+         dHnuM+1vxtjdiIVeyIThSCXfEtlMtz0iR+NRV/yzIl4CEK6b49xhZsUWqHH/xjk8c8ab
+         /M0sM/bcrijh5DCEXuKtevPz7vEPXRuokZ9wtRgEDDiSLb65TCxJTZejvHEz1wzJx4Kp
+         Vvd6MgZyI7fAJfBLjycgRsrCg4nJm0Z1JZfmqiI11ttDgxiEvA1weAqKKkKk/BCTvV4t
+         5tU/AxSzO96NdGLgdDth5bXD2Zk6mwOKBahZExxmQD2s7yIRlUDPFuTp1dvui59aTtKQ
+         gaeg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+U4dO8Dp35OH1LYCO+NrGvhRdLtZHA88LvvAhLnsPBUyEzmHk8ufQgnprfILEQfi1rl3n/HI0RIs/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNs7ZlLlciOYHgOddxScHfgegoRZYXnBNyD7oRIqaFjNLwuLgl
+	bCt3fJNZqF1Z2dDvL0TBaGo5bylB2KAlcvh4lePvdEA5ixy12CxxMi4B6vVXcbWgsYVqCPuf7D7
+	eGOQLh2jQawa1Uu5InCqWLrkMVAw2pDpLRlXmwVApww==
+X-Gm-Gg: AY/fxX6+RnU8TN3R9FVnAEQNjfjGmfWdG2GWGA0fi9myL3cTkIQBX0y4WI0gTtRFL3Y
+	mZ2Mz4s5cClbryDiR+0Lt5QpkeEvBjJ7wrHHYtlQ81h/VSrJJUsK3ISksSDsmUaaBOBkfINEmPu
+	DcwNZtFDm3uIoisQHIRYXuDTBNvZsZo2xiZfTAjDNdxx1FhZp8dN06YigZwjxQGc1HUKcfObOgV
+	3MZvw17/efTXl7JMneNWqA6YoRT1vIQLWDc/s1QNVogi9F6dsdj4d6lPtP+dknh6oXxbu6R/0hE
+	NXnxdUUGM9HZOkXpgWqc5Ve89ASbeRrLbl62zprXxI83a4+jBscc
+X-Google-Smtp-Source: AGHT+IE7Hjde/+kkViqYv1A0LhGo3fNDzXkWHEO+dWmCgW+32Gp4be+4LUgDpSNymwFzE86qvkEGL0RYLcWs3u76qoo=
+X-Received: by 2002:a17:907:3d43:b0:b7c:e320:5250 with SMTP id
+ a640c23a62f3a-b7d238ebd71mr1711209066b.7.1765974834580; Wed, 17 Dec 2025
+ 04:33:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20251217-staging-ad4062-v4-9-7890a2951a8f@analog.com>
-References: <20251217-staging-ad4062-v4-0-7890a2951a8f@analog.com>
-In-Reply-To: <20251217-staging-ad4062-v4-0-7890a2951a8f@analog.com>
-To: Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich
-	<Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        David
- Lechner <dlechner@baylibre.com>,
-        =?utf-8?q?Nuno_S=C3=A1?=
-	<nuno.sa@analog.com>,
-        Andy Shevchenko <andy@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, Jorge Marques <jorge.marques@analog.com>,
-        Linus
- Walleij <linusw@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1765973610; l=5630;
- i=jorge.marques@analog.com; s=20250303; h=from:subject:message-id;
- bh=rWhz1qhXX5cZm+GWRaQ9ciBLBk8IoCqoYZlI/GtAfiU=;
- b=h16QtNehE13q2APVGRNCeEMKpMfldJrbGJvTDRVuABLEbYt7oxYkLRAKNQmg8+ALzaizen8Ym
- oTUbxYvehAQAfOzzKGbEuTXlBrnsFx/opjcwaZoxHAsuIZrsrWNLFup
-X-Developer-Key: i=jorge.marques@analog.com; a=ed25519;
- pk=NUR1IZZMH0Da3QbJ2tBSznSPVfRpuoWdhBzKGSpAdbg=
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-ORIG-GUID: ckUSgF4LPP59bHdYNifnVx-5YPN-zhUu
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE3MDA5NSBTYWx0ZWRfX6dHUfdknNgPL
- 9FVSstJkgNDxfckZxjcWQB2/JmskCToaAi252B97jS86QmiMPPZOOZUUO7pLeJnELJTFScuMOBQ
- gt5ZGmYRyIUsq/hlrSzIXyWwCko4hl9gxChnxYKNeCm2EC/t5P6ApxQbtkMP9ZF1wzdrR7Vz9Rg
- OmSiLmbGzLujoio7rGtGkzsqQ7AZKD9Ts5RlRDcjgeGHFSo1bTjMMdQ/YVIQsZWjmoLJbnDmemq
- iDcNQgvbw/IlYgB9Xj9xzhVqOKee2zw9fbptimU5YqNWcbQ+ZGmAMDV/Fsgzv3ktlpmhhkjMyO7
- 0y6T4xArldYx3tBAetS4ADcVeZ/4/mp3i1/S9kd0I2+HEBoWE68w6C6PJ2mSeSm4VS2nee2dY5q
- ASsFPXI1zFvjycYpCs5DSh0VzMHs2A==
-X-Authority-Analysis: v=2.4 cv=YqsChoYX c=1 sm=1 tr=0 ts=69429e8f cx=c_pps
- a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=gAnH3GRIAAAA:8 a=VwQbUJbxAAAA:8 a=xMyuZJbwAj7bCYiyej4A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: ckUSgF4LPP59bHdYNifnVx-5YPN-zhUu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-17_01,2025-12-16_05,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 malwarescore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0
- phishscore=0 impostorscore=0 clxscore=1011 adultscore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512170095
+References: <20251215163820.1584926-1-robert.marko@sartura.hr>
+ <20251215163820.1584926-4-robert.marko@sartura.hr> <202512161628415e9896d1@mail.local>
+ <CA+HBbNFG+xNokn5VY5G6Cgh41NZ=KteRi0D9c0B15xb77mzv8w@mail.gmail.com>
+ <202512161726449fe42d71@mail.local> <20251216-underarm-trapped-626f16d856f5@spud>
+ <2025121622404642e6f789@mail.local>
+In-Reply-To: <2025121622404642e6f789@mail.local>
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Wed, 17 Dec 2025 13:33:42 +0100
+X-Gm-Features: AQt7F2rRCO2ytZ0VdvYzTGe4b0Ox8AKF-v29YqVKrXuogSLDfcjlg9rn0S9yxlg
+Message-ID: <CA+HBbNGPWcwzCSGbMCU-n8Y+g6SjBSKcS7p6Mmrn3gFCWCSCeA@mail.gmail.com>
+Subject: Re: [PATCH v2 04/19] dt-bindings: arm: move AT91 to generic Microchip binding
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Conor Dooley <conor@kernel.org>, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev, 
+	Steen.Hegelund@microchip.com, daniel.machon@microchip.com, 
+	UNGLinuxDriver@microchip.com, herbert@gondor.apana.org.au, 
+	davem@davemloft.net, vkoul@kernel.org, linux@roeck-us.net, 
+	andi.shyti@kernel.org, lee@kernel.org, andrew+netdev@lunn.ch, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, linusw@kernel.org, 
+	olivia@selenic.com, radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com, 
+	gregkh@linuxfoundation.org, jirislaby@kernel.org, mturquette@baylibre.com, 
+	sboyd@kernel.org, richardcochran@gmail.com, wsa+renesas@sang-engineering.com, 
+	romain.sioen@microchip.com, Ryan.Wanner@microchip.com, 
+	lars.povlsen@microchip.com, tudor.ambarus@linaro.org, 
+	kavyasree.kotagiri@microchip.com, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-clk@vger.kernel.org, mwalle@kernel.org, luka.perkov@sartura.hr
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When gp0 or gp1 is not taken as an interrupt, expose them as GPO if
-gpio-contoller is set in the devicetree. gpio-regmap is not used
-because the GPO static low is 'b101 and static high is 0b110; low state
-requires setting bit 0, not fitting the abstraction of low=0 and
-high=mask.
+On Tue, Dec 16, 2025 at 11:40=E2=80=AFPM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> On 16/12/2025 19:21:27+0000, Conor Dooley wrote:
+> > On Tue, Dec 16, 2025 at 06:26:44PM +0100, Alexandre Belloni wrote:
+> > > On 16/12/2025 17:56:20+0100, Robert Marko wrote:
+> > > > On Tue, Dec 16, 2025 at 5:29=E2=80=AFPM Alexandre Belloni
+> > > > <alexandre.belloni@bootlin.com> wrote:
+> > > > >
+> > > > > On 15/12/2025 17:35:21+0100, Robert Marko wrote:
+> > > > > > Create a new binding file named microchip.yaml, to which all Mi=
+crochip
+> > > > > > based devices will be moved to.
+> > > > > >
+> > > > > > Start by moving AT91, next will be SparX-5.
+> > > > >
+> > > > > Both lines of SoCs are designed by different business units and a=
+re
+> > > > > wildly different and while both business units are currently owne=
+d by
+> > > > > the same company, there are no guarantees this will stay this way=
+ so I
+> > > > > would simply avoid merging both.
+> > > >
+> > > > Hi Alexandre,
+> > > >
+> > > > The merge was requested by Conor instead of adding a new binding fo=
+r LAN969x [1]
+> > > >
+> > > > [1] https://patchwork.kernel.org/project/linux-arm-kernel/patch/202=
+51203122313.1287950-2-robert.marko@sartura.hr/
+> > > >
+> > >
+> > > I would still keep them separate, SparX-5 is closer to what is
+> > > devicetree/bindings/mips/mscc.txt than to any atmel descended SoCs.
+> >
+> > If you don't want the sparx-5 stuff in with the atmel bits, that's fine=
+,
+> > but I stand over my comments about this lan969x stuff not getting a fil=
+e
+> > of its own.
+> > Probably that means putting it in the atmel file, alongside the lan966x
+> > boards that are in there at the moment.
+>
+> I'm fine with this.
 
-Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-Reviewed-by: Linus Walleij <linusw@kernel.org>
----
- drivers/iio/adc/ad4062.c | 125 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 125 insertions(+)
+Works for me, will switch to it in v3.
 
-diff --git a/drivers/iio/adc/ad4062.c b/drivers/iio/adc/ad4062.c
-index 2084f0058627d..a6b3ccc98acfc 100644
---- a/drivers/iio/adc/ad4062.c
-+++ b/drivers/iio/adc/ad4062.c
-@@ -11,6 +11,7 @@
- #include <linux/delay.h>
- #include <linux/devm-helpers.h>
- #include <linux/err.h>
-+#include <linux/gpio/driver.h>
- #include <linux/i3c/device.h>
- #include <linux/i3c/master.h>
- #include <linux/iio/buffer.h>
-@@ -88,8 +89,11 @@
- #define AD4060_PROD_ID		0x7A
- #define AD4062_PROD_ID		0x7C
- 
-+#define AD4062_GP_DISABLED	0x0
- #define AD4062_GP_INTR		0x1
- #define AD4062_GP_DRDY		0x2
-+#define AD4062_GP_STATIC_LOW	0x5
-+#define AD4062_GP_STATIC_HIGH	0x6
- 
- #define AD4062_LIMIT_BITS	12
- 
-@@ -687,12 +691,14 @@ static int ad4062_request_irq(struct iio_dev *indio_dev)
- 		return ret;
- 
- 	if (ret < 0) {
-+		st->gpo_irq[0] = false;
- 		ret = regmap_update_bits(st->regmap, AD4062_REG_ADC_IBI_EN,
- 					 AD4062_REG_ADC_IBI_EN_MAX | AD4062_REG_ADC_IBI_EN_MIN,
- 					 AD4062_REG_ADC_IBI_EN_MAX | AD4062_REG_ADC_IBI_EN_MIN);
- 		if (ret)
- 			return ret;
- 	} else {
-+		st->gpo_irq[0] = true;
- 		ret = devm_request_threaded_irq(dev, ret, NULL,
- 						ad4062_irq_handler_thresh,
- 						IRQF_ONESHOT, indio_dev->name,
-@@ -1347,6 +1353,121 @@ static int ad4062_regulators_get(struct ad4062_state *st, bool *ref_sel)
- 	return 0;
- }
- 
-+static int ad4062_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-+{
-+	return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int ad4062_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
-+{
-+	struct ad4062_state *st = gpiochip_get_data(gc);
-+	unsigned int reg_val = value ? AD4062_GP_STATIC_HIGH : AD4062_GP_STATIC_LOW;
-+
-+	if (offset)
-+		return regmap_update_bits(st->regmap, AD4062_REG_GP_CONF,
-+					  AD4062_REG_GP_CONF_MODE_MSK_1,
-+					  FIELD_PREP(AD4062_REG_GP_CONF_MODE_MSK_1, reg_val));
-+	else
-+		return regmap_update_bits(st->regmap, AD4062_REG_GP_CONF,
-+					  AD4062_REG_GP_CONF_MODE_MSK_0,
-+					  FIELD_PREP(AD4062_REG_GP_CONF_MODE_MSK_0, reg_val));
-+}
-+
-+static int ad4062_gpio_get(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct ad4062_state *st = gpiochip_get_data(gc);
-+	unsigned int reg_val;
-+	int ret;
-+
-+	ret = regmap_read(st->regmap, AD4062_REG_GP_CONF, &reg_val);
-+	if (ret)
-+		return ret;
-+
-+	if (offset)
-+		reg_val = FIELD_GET(AD4062_REG_GP_CONF_MODE_MSK_1, reg_val);
-+	else
-+		reg_val = FIELD_GET(AD4062_REG_GP_CONF_MODE_MSK_0, reg_val);
-+
-+	return reg_val == AD4062_GP_STATIC_HIGH;
-+}
-+
-+static void ad4062_gpio_disable(void *data)
-+{
-+	struct ad4062_state *st = data;
-+	u8 val = FIELD_PREP(AD4062_REG_GP_CONF_MODE_MSK_0, AD4062_GP_DISABLED) |
-+		 FIELD_PREP(AD4062_REG_GP_CONF_MODE_MSK_1, AD4062_GP_DISABLED);
-+
-+	regmap_update_bits(st->regmap, AD4062_REG_GP_CONF,
-+			   AD4062_REG_GP_CONF_MODE_MSK_1 | AD4062_REG_GP_CONF_MODE_MSK_0,
-+			   val);
-+}
-+
-+static int ad4062_gpio_init_valid_mask(struct gpio_chip *gc,
-+				       unsigned long *valid_mask,
-+				       unsigned int ngpios)
-+{
-+	struct ad4062_state *st = gpiochip_get_data(gc);
-+
-+	bitmap_zero(valid_mask, ngpios);
-+
-+	for (unsigned int i = 0; i < ARRAY_SIZE(st->gpo_irq); i++)
-+		__assign_bit(i, valid_mask, !st->gpo_irq[i]);
-+
-+	return 0;
-+}
-+
-+static int ad4062_gpio_init(struct ad4062_state *st)
-+{
-+	struct device *dev = &st->i3cdev->dev;
-+	struct gpio_chip *gc;
-+	u8 val, mask;
-+	int ret;
-+
-+	if (!device_property_read_bool(dev, "gpio-controller"))
-+		return 0;
-+
-+	gc = devm_kzalloc(dev, sizeof(*gc), GFP_KERNEL);
-+	if (!gc)
-+		return -ENOMEM;
-+
-+	val = 0;
-+	mask = 0;
-+	if (!st->gpo_irq[0]) {
-+		mask |= AD4062_REG_GP_CONF_MODE_MSK_0;
-+		val |= FIELD_PREP(AD4062_REG_GP_CONF_MODE_MSK_0, AD4062_GP_STATIC_LOW);
-+	}
-+	if (!st->gpo_irq[1]) {
-+		mask |= AD4062_REG_GP_CONF_MODE_MSK_1;
-+		val |= FIELD_PREP(AD4062_REG_GP_CONF_MODE_MSK_1, AD4062_GP_STATIC_LOW);
-+	}
-+
-+	ret = regmap_update_bits(st->regmap, AD4062_REG_GP_CONF,
-+				 mask, val);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(dev, ad4062_gpio_disable, st);
-+	if (ret)
-+		return ret;
-+
-+	gc->parent = dev;
-+	gc->label = st->chip->name;
-+	gc->owner = THIS_MODULE;
-+	gc->base = -1;
-+	gc->ngpio = 2;
-+	gc->init_valid_mask = ad4062_gpio_init_valid_mask;
-+	gc->get_direction = ad4062_gpio_get_direction;
-+	gc->set = ad4062_gpio_set;
-+	gc->get = ad4062_gpio_get;
-+	gc->can_sleep = true;
-+
-+	ret = devm_gpiochip_add_data(dev, gc, st);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Unable to register GPIO chip\n");
-+
-+	return 0;
-+}
-+
- static const struct i3c_device_id ad4062_id_table[] = {
- 	I3C_DEVICE(AD4062_I3C_VENDOR, AD4060_PROD_ID, &ad4060_chip_info),
- 	I3C_DEVICE(AD4062_I3C_VENDOR, AD4062_PROD_ID, &ad4062_chip_info),
-@@ -1435,6 +1556,10 @@ static int ad4062_probe(struct i3c_device *i3cdev)
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Failed to request i3c ibi\n");
- 
-+	ret = ad4062_gpio_init(st);
-+	if (ret)
-+		return ret;
-+
- 	ret = devm_work_autocancel(dev, &st->trig_conv, ad4062_trigger_work);
- 	if (ret)
- 		return ret;
+Regards,
+Robert
 
--- 
-2.51.1
+>
+> --
+> Alexandre Belloni, co-owner and COO, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
+
+
+--=20
+Robert Marko
+Staff Embedded Linux Engineer
+Sartura d.d.
+Lendavska ulica 16a
+10000 Zagreb, Croatia
+Email: robert.marko@sartura.hr
+Web: www.sartura.hr
 
