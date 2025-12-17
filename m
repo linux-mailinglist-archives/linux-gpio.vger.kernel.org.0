@@ -1,83 +1,83 @@
-Return-Path: <linux-gpio+bounces-29667-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29668-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 109C8CC6436
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 07:32:59 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F7C5CC645B
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 07:36:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 927C73026F93
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 06:32:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0837E3075C2E
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 06:33:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18E0130EF86;
-	Wed, 17 Dec 2025 06:32:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62FA930FC01;
+	Wed, 17 Dec 2025 06:32:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3j/eoaT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ftx9YPMT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CED830EF6D
-	for <linux-gpio@vger.kernel.org>; Wed, 17 Dec 2025 06:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6DB430F53E
+	for <linux-gpio@vger.kernel.org>; Wed, 17 Dec 2025 06:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765953171; cv=none; b=Bjndvs0Nvzs537kLWIUEvWrqtFPDkyfU55sDmj19L3/UXynd1d1X3cgFY59vlKbccOE8jbPD/msqKHVA1dxMeyteYjEuF6G3fJd2JJH1t/C2hSexWlHLSfDb9IjWIlv5kATvyPOJmNoacIXOyQuhpMW4/AyO5JDaiUiLjW7YSFM=
+	t=1765953173; cv=none; b=VWSIcZ/bG2bx0MgpHSORPBoC4/CAOSwOKe2Rh8M1L5yDNunm34GertX13IWiAvdzTfj/Q52ouGmEWpTG69GpAGkp38esT8+6L12ujOjsOgbzR/kQDdhJ+f8TbccpEV98TpWYaQwc10RvbkZVlm9dXblNJyPY5y72CjxwWIerUSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765953171; c=relaxed/simple;
-	bh=TTuLXEC9+smH6ECrXuAkOVYJpekwEPisXMOjlBy4phs=;
+	s=arc-20240116; t=1765953173; c=relaxed/simple;
+	bh=rW5DsqsMjWWHjQEsYx8z72EgddoKroWZmXvjEjgRKCY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IDPguwiXYqLyfqvg6sOqnhj9pPi5oJiZ7MtyYJ5XWJk9nkYM6pedOnLTS0xopbe4vP830Wnium0JKvZfl0xnmJxuHCsdmNgSzuoreAC39TEOeN8lbC7rAYmVm0T3kfKKCtb9kWp0nLPNdyq5GBthZVDXSkanyOBbSDXTaoiGJAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X3j/eoaT; arc=none smtp.client-ip=209.85.216.42
+	 MIME-Version; b=cSPDIkjgmsP9VNZba91kAaPiMTXXz7ehODEbn+qsEtbRELqfssxUxKV3jmukMPASOSNHxqn6OMl5NTOYpvObFkLoj4/ohn9odOvLWvXEf0Cs52C+41w9EPhkqqiew8OT6pqKOOuOVsgy/knE6uNqLd7DmBUzbwmwXDoS41uXrJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ftx9YPMT; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-34c71f462d2so3159656a91.0
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Dec 2025 22:32:50 -0800 (PST)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2a0c20ee83dso39668305ad.2
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Dec 2025 22:32:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765953169; x=1766557969; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1765953170; x=1766557970; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rRE1DknyyjLQmnJkmfNRcVBZ7uDHu9Cc8oh+v6J5iSY=;
-        b=X3j/eoaTygFdrx6Al3xGhLcfPua0z1eiS+nADhsJgWS+QrJ8LRtMw/BZppe0Xt5w+E
-         8pB6siS+UjLhdFYItf5W8j27l2uUDr/rw9IKfBMHB94MT9VuyxKIik50FzeYwqc648HS
-         18sw+xYrLEYt7Eytodli/SYE0cFg2wRViXPRSTKMWBH78VppB3UXVZf/Z2ZOn8LZFe/A
-         3BhVhpCmKYdZooz4UnEEzwbjNM+OiELMnVlsi1nt4/fRF3S9KjQP2OBlhFiHmfN8pdVU
-         k9mZVAp35BvQ5wOPxR+5GSatnBp23kxpCyw3N4vrBRQyz3AVFpqEEpGXOuf7YujWptnn
-         a83A==
+        bh=GAuFqjrPqhJgxHFq4ApQDcmO10xNy8KFtK32eik8LWY=;
+        b=Ftx9YPMTRTcmeFRRSrN96LuwdSqV5KJOWzwGAs+91qiFmoQdYy142joCTj/dyvj0Ou
+         DRu3v9Y/AVk8/A0WmY9fCVfwNDY9ddCAbI6hbxDqBpiHdxmRB+FtNok4MCSSONFfnwDN
+         wn2pAxv005ZCUAh+eUg2m6iYEvA3sXu7zWBKM4nESzqhicX2G3CdzKkUUoJgnQy+egx+
+         p/7jtmAlTPa6mKE0BQoG1xLGn1WEF7j9I2jHBmOnxHAqB9jomSFICE00SIClGO1oMiN2
+         4gIiW/MzyhwI8iaWIDn1yUc8SaQSXMSI5CXu4zKtbbDT7meHZd1v+87VKZuBKDfVk6uc
+         avQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765953169; x=1766557969;
+        d=1e100.net; s=20230601; t=1765953170; x=1766557970;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=rRE1DknyyjLQmnJkmfNRcVBZ7uDHu9Cc8oh+v6J5iSY=;
-        b=sLcgSejiADonKmmka2GQe0aRKk2YWGnW/CLoxaCqAQJ7be8A+BcXaC7DxAWAnjb22j
-         3iA5T51Qy5GiR2zKJ2HdK1ub2ZHge1QEhyGkNo27PI0+e/+Qyuqe3LKtKKCoRd/klVnr
-         Qq6m2if0Rg0+MXswNqtLTJ+ny5ygc4GVxX0Yq+m9u1yuYq+vQL+6dQ1jHHYKI7TWhUK6
-         qf07xkG9aJ96GbGVj0MyX2SpMnHIdyq7anOrWz+7/7BTCu3TdQa9R7B4zOQI84pvQ2GI
-         Nozc0Pn0Jl3rWv9etHCDjEVJLx4NyHu42L35fFfJKzBhM3GMpbSm+IUZEmGuM2rMVbTx
-         iIOQ==
-X-Gm-Message-State: AOJu0YwRqFeJr7xEM0NywVsPFDVM8LEz4YcAcuOQLw+Jd/bxWsXNZfj/
-	9kzPMvxFBc4okHYKYZRjFj5TcYuN4xn6qqAbsgfmEdaGwk60mq3DdsmNIGY7rg==
-X-Gm-Gg: AY/fxX7/Cd+BuzUuNoQYqhtg5SRvNXJafC1YI+fDjh0SqaxKueQtzxZ0BTQoWD6kdIc
-	iueU9wimrmN5spen76lJ2qVMuQKSde+Ukd76V+ERmjQgcFSHz89yJ/RwdXSIwnN9/DjQKm6G3fr
-	3VjW0yZMb87yXw9dCr4QeZjdLSibhEPgX9fCc2KDb1COrYyTA41s3lO/VNMrfb22an34Mbh7Zf8
-	I+63t1ZSDjyM3lWBIHezPjdSY/QXhaZVXfRQk5puEHZDJseM8e/bzbnSAH/PGAMlZv9TRqT6Uaf
-	kc2ckZO64NK+su6s5L3vOglumFEz8jugKkE5TnN5lIMLIyJ/FHBkD/ukVpzpW7lXeEUWsbjD5T6
-	vN1sZO0KLCZ7Sp7yZOvM/nDcSZJYSJ8yxIMrsE5DWR0Rb6hXBelvunQlREQ==
-X-Google-Smtp-Source: AGHT+IEn/70XafWsMhS3UvnzdSd44G2Qaqqp2HBIRN5fh+LzhsfR4LAxfIq4S53rCc7n4gsDuFetuw==
-X-Received: by 2002:a05:701b:280e:b0:11b:aca4:be1f with SMTP id a92af1059eb24-11f349c5919mr9802347c88.17.1765953168938;
-        Tue, 16 Dec 2025 22:32:48 -0800 (PST)
+        bh=GAuFqjrPqhJgxHFq4ApQDcmO10xNy8KFtK32eik8LWY=;
+        b=XrU936tUmlaLvFmjrnbtcUpkBFronQ3R7uKeOriGB6G0FvFMrs+FZw58Z/EnZT5YDp
+         DBHVXXkeoR08R5eOmucbnNtMI4GMsbEIKHAuh2vv9IRocqkEeBg+d+rxfQ2u3pIfKF6B
+         u+c2DubeOXHRH0mGs56q8vrg33qTqeR5rTYgIhEh99BzWdoHe8/XZFRkJzTPuDVF5mSJ
+         mnbT1KDmI4r8x06PBRHR/wbaBcMYI1kCyqHRIz2GWn+ge0vQkFHSWuJgX0V2I5PeY0c4
+         Xpt8HrjGfTHZazIayJsUnaGNVAUxg5Ga+oi8NQ38p8Zy7mhpksCzvFSYYOh+OR8PMp7n
+         LcZw==
+X-Gm-Message-State: AOJu0Yzijumu4ZKud7qj+K7heAzqie6sUQ2ccoFD5MGNRZcK4jobB2mN
+	gk8Ha9pUdRckkph/V3ssG5Cs5tzKDiv1HosQVEUYhmAeUmkQAmU7tSDrGYcSfg==
+X-Gm-Gg: AY/fxX5TULsQ8T46qFKSIAcoBU9T5SjNpPcyDRM7WlRdcf08egJhS8Yw07MTXSHkipc
+	+KRTxo0a1J1dgY9SocNYFIK3KkgMetYG5sQy0VNpWEIAbexIxUpVgEpBQTJhxJlz2UwouUkGwym
+	qMI14IRWctQFJZFVTXKFLq6yN32Dgrq+JLtmUeq8aVxqC+rec/GaWMeH1HEQA7wS63NBE9BN03j
+	aIOmPBIYd2W+W+PZokHABcQrsHPdtR8meRTx4ydiLzd/3qlYbh/vEpMQaglidv6VLYyBNnCEcvC
+	WLuaYOBGt8E44unT2B/EFvCOWREDjNX02RulEyUxmG+1Jy9hJN5IMaR7Ib8A/v34XplFbJVTLQs
+	LvKr7lJISIdillN69NX9/KpkVy/TckNgRLTmZokbHqc+XaH70lOq7xp2mhA==
+X-Google-Smtp-Source: AGHT+IHudpsqgqJ7Pe4ds+hiM2td2fNRGmgBuTl2BOB1qROmTwkI/CR4t8ZKV2sv4NUCyUWIZY0O9Q==
+X-Received: by 2002:a05:7022:5f14:b0:11b:78e6:8323 with SMTP id a92af1059eb24-11f34c39981mr8587226c88.37.1765953170349;
+        Tue, 16 Dec 2025 22:32:50 -0800 (PST)
 Received: from ryzen ([2601:644:8000:8e26::c20])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11f2e304766sm61454672c88.13.2025.12.16.22.32.47
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11f2e304766sm61454672c88.13.2025.12.16.22.32.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Dec 2025 22:32:48 -0800 (PST)
+        Tue, 16 Dec 2025 22:32:49 -0800 (PST)
 From: Rosen Penev <rosenp@gmail.com>
 To: linux-gpio@vger.kernel.org
 Cc: Linus Walleij <linusw@kernel.org>,
 	Bartosz Golaszewski <brgl@kernel.org>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/3] gpio: realtek-otto: use kernel_ulong_t
-Date: Tue, 16 Dec 2025 22:32:27 -0800
-Message-ID: <20251217063229.38175-2-rosenp@gmail.com>
+Subject: [PATCH 2/3] gpio: realtek-otto: add COMPILE_TEST
+Date: Tue, 16 Dec 2025 22:32:28 -0800
+Message-ID: <20251217063229.38175-3-rosenp@gmail.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251217063229.38175-1-rosenp@gmail.com>
 References: <20251217063229.38175-1-rosenp@gmail.com>
@@ -89,26 +89,26 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fixes compilation on 64-bit platforms as pointers needed a larger type.
+Allows the buildbots to test compilation.
 
 Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/gpio/gpio-realtek-otto.c | 2 +-
+ drivers/gpio/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-realtek-otto.c b/drivers/gpio/gpio-realtek-otto.c
-index de527f4fc6c2..efcddbe01308 100644
---- a/drivers/gpio/gpio-realtek-otto.c
-+++ b/drivers/gpio/gpio-realtek-otto.c
-@@ -372,7 +372,7 @@ static int realtek_gpio_probe(struct platform_device *pdev)
- 	if (!ctrl)
- 		return -ENOMEM;
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index bd185482a7fd..fb6b479700d3 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -600,7 +600,7 @@ config GPIO_RDA
  
--	dev_flags = (unsigned int) device_get_match_data(dev);
-+	dev_flags = (unsigned int)(kernel_ulong_t)device_get_match_data(dev);
- 
- 	ngpios = REALTEK_GPIO_MAX;
- 	device_property_read_u32(dev, "ngpios", &ngpios);
+ config GPIO_REALTEK_OTTO
+ 	tristate "Realtek Otto GPIO support"
+-	depends on MACH_REALTEK_RTL
++	depends on MACH_REALTEK_RTL || COMPILE_TEST
+ 	default MACH_REALTEK_RTL
+ 	select GPIO_GENERIC
+ 	select GPIOLIB_IRQCHIP
 -- 
 2.52.0
 
