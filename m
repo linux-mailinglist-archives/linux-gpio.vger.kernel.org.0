@@ -1,60 +1,60 @@
-Return-Path: <linux-gpio+bounces-29662-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29663-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC535CC5F75
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 05:34:01 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BFEFCC5F88
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 05:43:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4B63B3020480
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 04:33:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 928243022F2C
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 04:43:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7808231A32;
-	Wed, 17 Dec 2025 04:33:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4FD325D1E9;
+	Wed, 17 Dec 2025 04:43:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Si8KYqBc"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DOFN8gqS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810D622D7B0
-	for <linux-gpio@vger.kernel.org>; Wed, 17 Dec 2025 04:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D0A231836
+	for <linux-gpio@vger.kernel.org>; Wed, 17 Dec 2025 04:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765946009; cv=none; b=WXU3C2F9b7TcIWQWl/5WJEFX0kw8sTg8YVQkoyAmYhF/HKhL1rG5hZbfLv99Lm8gz4KSCmJpcSOQUAz7EZ6TBca7qKbPRN0XrP7W0jXmHSsLAWS2/k+WKaxbEWTWhuy8qN5JkkocHpAQRuNuTjtwZwMSV6z7x0YLueTHnVWvFvA=
+	t=1765946609; cv=none; b=CP6Y08Zy2Y5ZAHmLnVS+Co1YUPs1lKK2PSNlfSEhaMsmiyjBCpUWqUhRtn3pHDIsVJmpKAQsg5EqZ0ANGj4KRHZ4POX3gAX5/wpIoCaPYwgywv1d3jM07OQUnOD50qj1HvwJBCDSd1NFjIJmiESjUcRkPuibYPXxXZi+aQeph/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765946009; c=relaxed/simple;
-	bh=+QVDdlpqYQJvpcip8+rh9MAEtfAv7rDEwteqrP+zV/I=;
+	s=arc-20240116; t=1765946609; c=relaxed/simple;
+	bh=wntWIHSg9UY6achikBORjG8viGhEJfOq4UuJcKAlK+g=;
 	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=kkWpOUvOo4AL54BmWA0RkDzwX6FrWmJhS8C7dPOGtqAVlBKGsHrW7GV+GrTTamODCW2zZRdEdTw7ISpxozE59/c1Qkd2rjjRir8YXwESSYLoGG4RxnrUz+xx2CG9HGOcmC/yEve41fQ/3CR9YuGJquLCWQJTX+ovxCzF0z71NcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Si8KYqBc; arc=none smtp.client-ip=203.254.224.34
+	 Content-Type:References; b=QjkRH7hQ4tZhrYd4Pp7s7bcKx4MMSz3b6SAPSrA6Uz4kQZJ4H47tpBTy9KBKZfdHmTpH8y8cCUMBgYooLajCNQ0XLig8SN8rrubRQq0zZRuaG0vUG0l0Pc6ZSXsA01Ardz013w7VLM5cKQRJtxvHv8+sTgTU+BJHR8D5yEO6Z4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=DOFN8gqS; arc=none smtp.client-ip=203.254.224.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20251217043320epoutp04c79ab94a4a3116db6fae5f57f2e55861~B5ofufMua2734127341epoutp047
-	for <linux-gpio@vger.kernel.org>; Wed, 17 Dec 2025 04:33:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20251217043320epoutp04c79ab94a4a3116db6fae5f57f2e55861~B5ofufMua2734127341epoutp047
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20251217044325epoutp02d635cdc648f59dd24ff9a60cbc9d25aa~B5xTCw5lV2977929779epoutp02t
+	for <linux-gpio@vger.kernel.org>; Wed, 17 Dec 2025 04:43:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20251217044325epoutp02d635cdc648f59dd24ff9a60cbc9d25aa~B5xTCw5lV2977929779epoutp02t
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1765946000;
-	bh=y0J3PnL2BKaLoFuJGvyxGh17PgdmTUCfDKR9Hdls1sA=;
+	s=mail20170921; t=1765946605;
+	bh=wntWIHSg9UY6achikBORjG8viGhEJfOq4UuJcKAlK+g=;
 	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=Si8KYqBcRT1XjtFJRIKLJmNTT2vCPV0FEyBJY6rbA5A0ANTBSKS5s52tt2Kd6vB9H
-	 qdvK58Y85NRkVpvNtHS71KaS1a/uhh9B0/osnkh4nQZkvZHQke2mxGc0t2EvRehP3B
-	 eZ+SVgnjscriQHHvs9vEYmxE86ceHwPZNRAVj7Tw=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20251217043319epcas5p4985f521bd57309ed404f3b9218d41b59~B5ofIagsg1310513105epcas5p4_;
-	Wed, 17 Dec 2025 04:33:19 +0000 (GMT)
-Received: from epcas5p1.samsung.com (unknown [182.195.38.90]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4dWLWy5d7sz2SSKX; Wed, 17 Dec
-	2025 04:33:18 +0000 (GMT)
+	b=DOFN8gqSfX4toBLOtYCQ6YJ2t6OnrPP44OERtI64Vlmhqprxld4RD8WXh5P3o7lNM
+	 fjXbILz8j2haDKLMdDrLD5uRoWg0NCQ2oFLYnZuEOLpQPbwKlIbSo6PCKhxJCkXeIv
+	 3mWpBgkWmQB7yDZ8iJP660c8RL/tQUxFkC53Efps=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20251217044324epcas5p24766d5be3325dd37a25ca3b25c734ff1~B5xSnBQPo2573425734epcas5p2U;
+	Wed, 17 Dec 2025 04:43:24 +0000 (GMT)
+Received: from epcas5p2.samsung.com (unknown [182.195.38.88]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4dWLlb5Hq5z6B9m6; Wed, 17 Dec
+	2025 04:43:23 +0000 (GMT)
 Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20251217043317epcas5p303a51a5ecae59ec994dec8d1ae7bce9d~B5odYEZVn2667326673epcas5p3T;
-	Wed, 17 Dec 2025 04:33:17 +0000 (GMT)
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20251217044323epcas5p1509325d070f6a5bbdccafa4b07e22010~B5xRH2t390460304603epcas5p1k;
+	Wed, 17 Dec 2025 04:43:23 +0000 (GMT)
 Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip2.samsung.com
 	(KnoxPortal) with ESMTPA id
-	20251217043313epsmtip22e5d96625da110faf098ce06ffa52b64~B5oZAxP-T0687206872epsmtip2k;
-	Wed, 17 Dec 2025 04:33:12 +0000 (GMT)
+	20251217044320epsmtip29c4e29ee7c9ce92651fcdd7810bfd325~B5xO67pQn1118811188epsmtip21;
+	Wed, 17 Dec 2025 04:43:20 +0000 (GMT)
 From: "Alim Akhtar" <alim.akhtar@samsung.com>
 To: "'Youngmin Nam'" <youngmin.nam@samsung.com>, <krzk@kernel.org>,
 	<s.nawrocki@samsung.com>, <linus.walleij@linaro.org>,
@@ -64,11 +64,11 @@ Cc: <ryu.real@samsung.com>, <d7271.choe@samsung.com>,
 	<shin.son@samsung.com>, <jaewon02.kim@samsung.com>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
 	<linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <20251202093613.852109-3-youngmin.nam@samsung.com>
-Subject: RE: [PATCH v3 2/5] pinctrl: samsung: fix incorrect pin-bank entries
- on Exynos2200/7885/8890/8895
-Date: Wed, 17 Dec 2025 10:03:10 +0530
-Message-ID: <12a401dc6f0e$441ae1f0$cc50a5d0$@samsung.com>
+In-Reply-To: <20251202093613.852109-5-youngmin.nam@samsung.com>
+Subject: RE: [PATCH v3 4/5] pinctrl: samsung: fold GS101 pin-bank macros
+ into EXYNOS9_*
+Date: Wed, 17 Dec 2025 10:13:19 +0530
+Message-ID: <12a501dc6f0f$ace76270$06b62750$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,20 +77,20 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQF3wuMlGH6lOpjjwF0q/fgc3qftgQIr5xjBAatK81O1z9vLcA==
+Thread-Index: AQF3wuMlGH6lOpjjwF0q/fgc3qftgQHmAf8yAbO5uNu10cjf4A==
 Content-Language: en-us
-X-CMS-MailID: 20251217043317epcas5p303a51a5ecae59ec994dec8d1ae7bce9d
+X-CMS-MailID: 20251217044323epcas5p1509325d070f6a5bbdccafa4b07e22010
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 105P
 cpgsPolicy: CPGSC10-542,Y
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20251202093027epcas2p24adbd3226dd50b2780baceee6588f3ba
+X-CMS-RootMailID: 20251202093028epcas2p1955176332d21ce4cadf7ed8894c5c1fa
 References: <20251202093613.852109-1-youngmin.nam@samsung.com>
-	<CGME20251202093027epcas2p24adbd3226dd50b2780baceee6588f3ba@epcas2p2.samsung.com>
-	<20251202093613.852109-3-youngmin.nam@samsung.com>
+	<CGME20251202093028epcas2p1955176332d21ce4cadf7ed8894c5c1fa@epcas2p1.samsung.com>
+	<20251202093613.852109-5-youngmin.nam@samsung.com>
 
-Hello Youngmin
+Hi Youngmin
 
 > -----Original Message-----
 > From: Youngmin Nam <youngmin.nam=40samsung.com>
@@ -104,55 +104,34 @@ m;
 > kernel=40lists.infradead.org; linux-samsung-soc=40vger.kernel.org; linux-
 > gpio=40vger.kernel.org; linux-kernel=40vger.kernel.org; Youngmin Nam
 > <youngmin.nam=40samsung.com>
-> Subject: =5BPATCH v3 2/5=5D pinctrl: samsung: fix incorrect pin-bank entr=
-ies on
-> Exynos2200/7885/8890/8895
+> Subject: =5BPATCH v3 4/5=5D pinctrl: samsung: fold GS101 pin-bank macros =
+into
+> EXYNOS9_*
 >=20
-> This patch corrects wrong pin bank table definitions for 4 SoCs based on =
-their
-> TRMs.
+> GS101 had dedicated GS101_PIN_BANK_EINT=7BG,W=7D helpers, but they are
+> redundant with EXYNOS9_PIN_BANK_EINT=7BG,W=7D (same semantics, including
+> the per-bank .eint_fltcon_offset).
+> This change removes the GS101_* macros and switches the GS101 pin-bank
+> tables to the EXYNOS9_* helpers with exynos9_bank_type_=7Balive,off=7D.
+> While here, update the struct comment to note FLTCON is Exynos9-specific
+> (not 'GS101-specific').
 >=20
-> Exynos2200
-> - gpq0/1/2 were using EXYNOS_PIN_BANK_EINTN(), which implies a
->   'bank_type_off' layout (.fld_width =3D =7B4,1,2,2,2,2=7D).
-> - Per the SoC TRM these banks must use the 'alive' layout
->   (.fld_width =3D =7B4,1,4,4=7D).
-> - Switch them to EXYNOS9_PIN_BANK_EINTN(exynos9_bank_type_alive, ...).
->=20
-> Exynos7885
-> - etc0, etc1: update bank type to match the SoC TRM.
-> - gpq0 is a non-wakeup interrupt bank; change EINTW -> EINTN accordingly.
->=20
-> Exynos8890
-> - Per the SoC TRM, rename bank ect0 to gpb3 and mark it as
->   a non-external interrupt bank.
-> - gpi1, gpi2: update bank type to match the SoC TRM.
->   exynos8895_bank_type_off (.fld_width =3D =7B4,1,2,3,2,2=7D) ->
->   exynos5433_bank_type_off (.fld_width =3D =7B4,1,2,4,2,2=7D)
-> - Per the SoC TRM, mark etc1 as a non-external interrupt bank.
-> - apply lower case style for hex numbers.
->=20
-> Exynos8895
-> - gpa4 is a non-wakeup interrupt bank per the SoC TRM.
->   change EINTW -> EINTN. (The bank_type itself was correct and is kept
->   unchanged.)
-> - apply lower case style for hex numbers.
->=20
-> This aligns the pin-bank tables with the documented bitfield layouts and
-> wakeup domains. No DT/ABI change.
+> One macro family for all Exynos9-era SoCs (incl. GS101) reduces copy-past=
+e
+> drift and keeps the FLTCON handling consistent.
+> There is no functional change.
 >=20
 > Signed-off-by: Youngmin Nam <youngmin.nam=40samsung.com>
 > Reviewed-by: Sam Protsenko <semen.protsenko=40linaro.org>
-> Reviewed-by: Ivaylo Ivanov <ivo.ivanov.ivanov1=40gmail.com>
+> Reviewed-by: Peter Griffin <peter.griffin=40linaro.org>
 > Tested-by: Sam Protsenko <semen.protsenko=40linaro.org>
+> Tested-by: Peter Griffin <peter.griffin=40linaro.org> (tested on Pixel6/g=
+s101)
 > ---
-
 Reviewed-by: Alim Akhtar <alim.akhtar=40samsung.com>
 
-Tested on Exynosautov920 SADK board
+Tested this series on Exynosautov920 sadk board
 
 Tested-by: Alim Akhtar <alim.akhtar=40samsung.com>
-
-
 
 
