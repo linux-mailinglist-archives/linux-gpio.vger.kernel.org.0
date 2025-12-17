@@ -1,168 +1,90 @@
-Return-Path: <linux-gpio+bounces-29709-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29710-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 770A9CC8185
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 15:11:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BD5CCC848D
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 15:51:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 799A930569B0
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 14:04:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B35C53012777
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 14:41:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BE1C382BCF;
-	Wed, 17 Dec 2025 14:02:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3C67393DC2;
+	Wed, 17 Dec 2025 14:07:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="LixhGvrN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="COj/Z3nK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-244122.protonmail.ch (mail-244122.protonmail.ch [109.224.244.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C740838E143
-	for <linux-gpio@vger.kernel.org>; Wed, 17 Dec 2025 14:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CAA393797;
+	Wed, 17 Dec 2025 14:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765980121; cv=none; b=nikjnz4zEeFepY5H41HjdjGZ7tGKQy2MXRjAbFhedgbDEQmJW5YqTex02cVikUyccjcnnW5JW+rRE8uw7w2lxFvBa/2Y2vJZz8zSp4ewwrcfQY+rVvoZzJOelo2Oq5azqf0bktMTN7qRT2m4mghfwFuC9yo6rZUGd9n6x4SVKtY=
+	t=1765980434; cv=none; b=DzMChH4IMZ7N3v/z4OR7E4Yrp8qg3PrDKT5gZvSLXqTcrEZkVfckE1ZrDs854bxOb4myz20agav8MEuVKq6btQIgTjmShfwj8LZlUgVQJvEKElnIimxEF6P6Adi8TfPx93AlcLe1ldr3ZcjQ3pX9A3Bjl9Oj4J21xCZOpKKS35k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765980121; c=relaxed/simple;
-	bh=u25j76qwGnRUqcQwkw9CffxRdmeo2S9TfbZWsUxPi54=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FkNg6xfhfRPNBqsFDXSe0DbGx5ZRywFyDGF7VWysBkJynZtZ+ZULch9dR4JzFkhf2AI0QM+cYar/9ZZ/Pa5oR7PfMrO0J5eTAffNCSZM9NCnPIeai0Amo3ukRVnei1pTNZon0kzNHuBFtyK5OB/qgv55iFil7i7VJ1oyi/j/S3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=LixhGvrN; arc=none smtp.client-ip=109.224.244.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1765980115; x=1766239315;
-	bh=u25j76qwGnRUqcQwkw9CffxRdmeo2S9TfbZWsUxPi54=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=LixhGvrNQ4cBW7ZKRVLqubWtljJk8MSpwhNtGgQIgp5T/xus2XHdq9o3VlyFwhheM
-	 mEUqhv6gRwOv6cGKZl5SHLhGqHmSnh02QXd/Mtn0hsh3xCFiLBo9izxPkxZbRN+Mxl
-	 um09jzeU7PgzHjMompVUGFXdZfM0GhwFRJcMKp2QCRa4fuCtuFeRLY7ZZYp16DDD/+
-	 Jt2THDcgYK5FHDN0Wa4Ep1NZo0vicObBGY585htRtSTXd+HX2shYYZNRUitL0MkuKY
-	 JPMXIzoxpI/Xa7jkv9wi8d9vwaicYAYcJxlHjQ5IeZwljqGrPDu9BvVGgHBiOa4mTH
-	 e3RKTu8pYk94A==
-Date: Wed, 17 Dec 2025 14:01:51 +0000
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-From: Francesco Lauritano <francesco.lauritano1@protonmail.com>
-Cc: Mika Westerberg <westeri@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: Disable edge events on boot on ASUS ROG Strix G16 G614PP
-Message-ID: <X9fJuqzxIBzuhcbjDFYBPSScoKnUpKLe13znKYaJkJpgmjcbfF6_RN2_24ksQq0Hwyvy9pVrnL7_vHEarnQyUBC0zBLmhlvp75nNhgmq7OI=@protonmail.com>
-In-Reply-To: <20251217130822.GS2275908@black.igk.intel.com>
-References: <2kSCn4XaoXsXJ3EUR0syTdmip8Z1cBuUr0Br4sFVnwnsA8q4GlhiHOmsJkeBxvxYoLnetp4r44wIPXw42yTAFl-BtMROnIwR-NkckKgA5EY=@protonmail.com> <6iFCwGH2vssb7NRUTWGpkubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pnu5hzPguTa0s=@protonmail.com> <20251217120146.51321-1-francesco.lauritano1@protonmail.com> <20251217130822.GS2275908@black.igk.intel.com>
-Feedback-ID: 66654272:user:proton
-X-Pm-Message-ID: 8daf313e9631af51c88f53e393a3181169e4a355
+	s=arc-20240116; t=1765980434; c=relaxed/simple;
+	bh=BBej7b2TZcIfv26VO07aVWI/nJSmjhBy+pY5L+9zcb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FvW7cOP4Lj16eITkAdUzFWZf/AFk8L5uV5c6wnpQbpICBhcETCwxZHc4tR44+2Jq1BG7q+3W0vd6R2xS3hjvcE6kvMZo3n3NEp9qNlQQ0LT3PxUAteaYvzZbTrc7d/MnTPoohu5jK1G/Kcd2GXxg2R5O8B7UDSsGH8dRszNn2kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=COj/Z3nK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7828C4CEF5;
+	Wed, 17 Dec 2025 14:07:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765980434;
+	bh=BBej7b2TZcIfv26VO07aVWI/nJSmjhBy+pY5L+9zcb8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=COj/Z3nKklzgE1lymvXRLZGmg/6UR6V78uX8ycnn0SpbWOJFD//Tg/lKvkrv+zzpt
+	 KJmm3fOvLHd4j4ZFg+6/uGG4WACNgTs/vdylLOhGT5TANFGTJK2lPvQN4/Z1QG26CY
+	 Jj2buSSzuYkRB41d1MQmoOV6hGIL2FdNUHCgu0Uoo0WNYpPU2XS3yp5nwVsioshvWP
+	 cGUceKKnL2caC3UC1OAflD7JMCoqIWXwNe8O5eaiMPqs7HJ2EMcAhYjt8I+IFQtxQs
+	 3HlkLx7Kss0Kh/B/ENnxkaAwJxYiJzpVokdyTv6qtVRgPJfTodJSPLHuxzcH2dOQwj
+	 Rwr2agbdZ/hXQ==
+Date: Wed, 17 Dec 2025 08:07:09 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: Andrew Jeffery <andrew@aj.id.au>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	openbmc@lists.ozlabs.org, Vinod Koul <vkoul@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org,
+	linux-aspeed@lists.ozlabs.org,
+	Linus Walleij <linus.walleij@linaro.org>, linux-pci@vger.kernel.org,
+	Joel Stanley <joel@jms.id.au>, Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>
+Subject: Re: [PATCH v7 2/7] dt-bindings: PCI: Add ASPEED PCIe RC support
+Message-ID: <176598042865.925447.819427829703405501.robh@kernel.org>
+References: <20251216-upstream_pcie_rc-v7-0-4aeb0f53c4ce@aspeedtech.com>
+ <20251216-upstream_pcie_rc-v7-2-4aeb0f53c4ce@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-Hi Mika,
-
-Thanks for looking into this. Happy to dig deeper.
-
-Here are the requested dumps (boot with initcall_debug, no workaround):
-
-dmesg: https://gist.github.com/kylan11/63ec3ec319cd6bcaa043fa0b1366965a
-
-acpidump: https://gist.githubusercontent.com/kylan11/7956bbf75714265107f088=
-6f6ed2a381/raw/1614845eb1dc6ab7e2effb6fe56b585a746abe4f/gistfile1.txt
-
-Some quick notes:
-- The AMD GPIO controller probes successfully (LINE 2077)
-
-- The hang occurs in the deferred IRQ handler (line 2960)
-
-- There are some ACPI errors around 0.285373 to 0.289806, though they compl=
-ete quickly
-
-- After the 36-second hang, everything else initializes normally.=20
-touchpad, audio, wifi, nvidia GPU all work fine.
-
-The ACPI tables show there's a _AEI method under \_SB_GPIO. Not sure if tho=
-se
-unresolved GPP2/GPP7 references are related to what's blocking the deferred
-IRQ handler, or if it's something else entirely.
-
-Let me know if you need anything else or want me to test something specific=
-.
-
-Thanks,
-Francesco
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251216-upstream_pcie_rc-v7-2-4aeb0f53c4ce@aspeedtech.com>
 
 
-On Wednesday, December 17th, 2025 at 2:08 PM, Mika Westerberg <mika.westerb=
-erg@linux.intel.com> wrote:
+On Tue, 16 Dec 2025 09:50:01 +0800, Jacky Chou wrote:
+> ASPEED AST2600 provides one PCIe RC for Gen2 and AST2700 provides three
+> PCIe RC for two Gen4 and one Gen2. All of these RCs have just one root
+> port to connect to PCIe device. And also have Mem, I/O access, legacy
+> interrupt and MSI.
+> 
+> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
+> ---
+>  .../bindings/pci/aspeed,ast2600-pcie.yaml          | 182 +++++++++++++++++++++
+>  1 file changed, 182 insertions(+)
+> 
 
-> Hi,
->=20
-> On Wed, Dec 17, 2025 at 12:01:52PM +0000, francesco.lauritano1@protonmail=
-.com wrote:
->=20
-> > From: Francesco Lauritano francesco.lauritano1@protonmail.com
-> >=20
-> > On the ASUS ROG Strix G16 G614PP (2025), the kernel can stall for ~36
-> > seconds during late init in acpi_gpio_handle_deferred_request_irqs().
-> >=20
-> > Booting with gpiolib_acpi.run_edge_events_on_boot=3D0 avoids the stall =
-and
-> > restores normal boot times.
->=20
->=20
-> Okay but it might just accidentally "work" and hides the real issue. Doin=
-g
-> things like this blindly might end up breaking something that relies on
-> that _AEI.
->=20
-> Can you post full dmesg and acpipdump somewhere so we can try to figure o=
-ut
-> what is going on?
->=20
-> > Add a DMI quirk to disable edge events on boot by default on this model=
-.
-> >=20
-> > Link: https://lore.kernel.org/platform-driver-x86/6iFCwGH2vssb7NRUTWGpk=
-ubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pn=
-u5hzPguTa0s=3D@protonmail.com/
-> >=20
-> > Tested-by: Francesco Lauritano francesco.lauritano1@protonmail.com
-> > Signed-off-by: Francesco Lauritano francesco.lauritano1@protonmail.com
-> > ---
-> > drivers/gpio/gpiolib-acpi-quirks.c | 16 ++++++++++++++++
-> > 1 file changed, 16 insertions(+)
-> >=20
-> > diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-=
-acpi-quirks.c
-> > index a0116f004..763dd3cbd 100644
-> > --- a/drivers/gpio/gpiolib-acpi-quirks.c
-> > +++ b/drivers/gpio/gpiolib-acpi-quirks.c
-> > @@ -370,6 +370,22 @@ static const struct dmi_system_id gpiolib_acpi_qui=
-rks[] __initconst =3D {
-> > .ignore_wake =3D "ASCP1A00:00@8",
-> > },
-> > },
-> > + {
-> > + /*
-> > + * The ASUS ROG Strix G16 (2025) has a buggy ACPI GPIO configuration
-> > + * causing acpi_gpio_handle_deferred_request_irqs() to stall for
-> > + * ~36 seconds during boot.
-> > + *
-> > + * Found in BIOS G614PP.307.
-> > + /
-> > + .matches =3D {
-> > + DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> > + DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16 G614PP_G614PP"),
-> > + },
-> > + .driver_data =3D &(struct acpi_gpiolib_dmi_quirk) {
-> > + .no_edge_events_on_boot =3D true,
-> > + },
-> > + },
-> > {
-> > /
-> > * Spurious wakeups, likely from touchpad controller
-> > --
-> > 2.52.0
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+
 
