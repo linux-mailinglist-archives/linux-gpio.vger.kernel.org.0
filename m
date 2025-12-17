@@ -1,157 +1,177 @@
-Return-Path: <linux-gpio+bounces-29694-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29695-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9967CC7DD1
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 14:38:02 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9DC1CC7E9A
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 14:44:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 56B7A3078A2C
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 13:33:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E17E6305D1D4
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 13:37:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02350365A17;
-	Wed, 17 Dec 2025 13:33:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E6082D77E6;
+	Wed, 17 Dec 2025 13:36:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="G3TZwRs8"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="to6fZldY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C950C3659EB
-	for <linux-gpio@vger.kernel.org>; Wed, 17 Dec 2025 13:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281899463;
+	Wed, 17 Dec 2025 13:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765978386; cv=none; b=qlZ6zWaCULexBZzxRlWzi9sv/T6g5x+MDBh7+DQ9rCZLZ6XbO+pic5WLfRwPxX2Euf3XsX+Kz/5SO2tK3/4LLhNBknXqVBk/64yhjrHcE53AWnwb/peYX+MS9OZ20xXG98pln+xZATcKBgg5Aopb7xNEpDoQpekHJ7/72SolOf4=
+	t=1765978576; cv=none; b=Whpwahop+qtWIsPl0c8TJZSYCAEmv/rK/I7qtWdj+6YocThqfXTN780Q08O5hkBzGD8Yrfl9zh3ZEhNKc5tlBVKIrZVsxHJeXgYMtFWnI7bCmpnzEAm4PhMLGc8FEbUMgICvBKvZTx73B3QNU4FsFF4tlwjVfxMa31ZdUt1ADMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765978386; c=relaxed/simple;
-	bh=3NxV/sdr2BZyW6Fp6jeGvfWxTA5ctLtFaPPYKmOmWzs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CUB0bZ8j8An/lYOfMAJlupCvqbNf2Qax9b7QBG2ADpSDq1G33XFmb3JrM3RHOoLnbO20ijVbO6bYfH7zffqXFM9RyCmddOKKRh9RbezejqQS41N4C2LFTVWJZ7+q6/VTv/Qcm3d5JBNJZcsvP5r4c2/AnzzIgnBjuhMGRDXl5yE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=G3TZwRs8; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-644f90587e5so9814348a12.0
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Dec 2025 05:33:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1765978382; x=1766583182; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3NxV/sdr2BZyW6Fp6jeGvfWxTA5ctLtFaPPYKmOmWzs=;
-        b=G3TZwRs8slika+uM8zA2b/tbxbmR9UD4zQjKjHTYFdQgFKQIvb5WcOE963ZZ02V0Mc
-         qP0y3gHvcLeM0uzdbqcjgz/OUiak06hFqxxk2bqy9JyIuV+hWAOR+yfQT3/puygEdmcZ
-         mSOwl2czqg7bWviUHQvoqfL2VNr6lSNSEKluYXqSdbSaAHT1yuKd6fpzL1rD93FYSdgq
-         nGfR/UWTLwfs3EF6NQKalofoEucjD9bsNEEN4J8bADznJikY/0q8pziBBNcl66wb0YW6
-         VefrjPLW58syX/GbFPK5ltyANGRw4PSWy3W4rvQNgVF5nVe6Cj7L6F0oCvRlAt9PVq8m
-         SAHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765978382; x=1766583182;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=3NxV/sdr2BZyW6Fp6jeGvfWxTA5ctLtFaPPYKmOmWzs=;
-        b=jIFcN4QXPesfVmSY7+iA8aRpNY4NbtDPFUPgvdrjhSQVjQ5K8zwjPUS4UUJN02ZI5T
-         FOhzeQ9rNpZIiU3cab4b+MoJiXwyzoGAJ8le7xfuQN7pFpRLC4IdfkjpfDLyBFcV/7E9
-         pnWLoMy0KBBCA53dd1ZWBtvFDtGJeOr3pWOeNg3VBZabrOQ7yfzMkLT37gTBT0e6wrIb
-         M0LHOGBw2IBGAuVWYTSh4fKk8e1DxOiB1j9qBBxqw1dpD+tDwMsFIhdjvc0fTNxM1plK
-         KgjPp5z3Lgz8Wk7xtm2MBiozd9rww7fpTj1/tIqfnJZ9POdn5eR63J261aNiqqeegDih
-         H4LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVOs6/v6UKmA5fL45KOZSn81PHp4EJjiYZm+ORPgPKNJxKhU+dc4n4rvQBaZ8siXatNjXIckivXEVW7@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAmhJB8SNjDmr8bx0SC1BxOGRfjl4ksO4voW5fSnoYLkFNZyip
-	toR12JI0P9SrC2Uvt0zUsZP9tfC9BQTUNRAwAA6vGVAdTbtDsrmIWi0lNIvgahw8t8E8hZmhdTy
-	C+m8x5J5wftGrjuoKOoU4xH+uWMRhHY1cwvi058B6+Q==
-X-Gm-Gg: AY/fxX42FBzBAtUtBaUlFIaAWXxMN3Aza9hYZTcnSeVK0cToddfCdN37qcbRwXPYa8Q
-	lu+9XI2Pzjs+/Ozb6jdd/KGjlVGc/bEGIPxPWdeZ1hw//dNTdMOO6mD2BhwjpHCcZmr/6MidjQ6
-	5CZkfPmiMefOB4SUIhjdASDyF/pMl1YXwv/UCdx1S8qe2OCKSPjq2P1JmvzDev5N3EfRQ7ufz+v
-	J/zQKottNeJDOvFDRleGvA1FDJtdFLgCawMoxyQO7v1Ph60hQdhrEFZFGlkQnyjmLOVKD9m27Oa
-	FtYtAPgFjTKWVQBSGXjj6hg554AvrsznuiXzqAfN/5biQzCoD5wI
-X-Google-Smtp-Source: AGHT+IHQBmS2mrQa3fgyiBBuz2kWHV24zlBwa/1NFFHKPKgWTqO46GlqIXXFCMupFuoXyMzVWH1kl/6iZAAmZg0kVsk=
-X-Received: by 2002:a17:906:c39e:b0:b7f:e709:d447 with SMTP id
- a640c23a62f3a-b7fe709d458mr591500066b.33.1765978382116; Wed, 17 Dec 2025
- 05:33:02 -0800 (PST)
+	s=arc-20240116; t=1765978576; c=relaxed/simple;
+	bh=BG5WjneFUAcYerU4QAtzF9PfZciUrUH9GPXPrWL5Ik4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nZYh4rVdS6EP9THTOul/zy9MERHA5mIWuXr26Y7JfAIFOpwLB45HdLyy5RiKS/XU5XpcRNBDsGbvCgoQH5BdJ1QMO5NjPCDtKWIeeB8VzmKcPc2lUwGh/ItzTOvWbYaSMoHknN0gtbyr72PvpFzcPyR7suynlCMYAhBCsl6mYkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=to6fZldY; arc=none smtp.client-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 746244E41C5E;
+	Wed, 17 Dec 2025 13:36:11 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 344F56072F;
+	Wed, 17 Dec 2025 13:36:11 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 8C6A3102F0AD2;
+	Wed, 17 Dec 2025 14:36:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1765978566; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=YMEO4XGsTesQV2me7FMOZ81Y5IcMWo887Z9CgZajqyk=;
+	b=to6fZldYjVFS4arTIkGZex72ttLVnNNpfUGa584NixIVwN7a7kXWOZMiRxziZQsBlEagSL
+	dm7P9SGxgVlCyVv721R+SHWBIArFuAvHswn1BYuNI1vXIc/hcpg0de79GfdCLAgQ5U0WnP
+	g3nddTawnOi04/IwJFMN0r5bOU0AeKDEu3RDXIWkdgH4YsU+aRFy2mH9mSZBXZyHFfIDKS
+	wkhf5kVJ7WZTY8OrnU1gEYsaJQoJ2roJBYJ0mRqzxivTdN4NUfto9Mrq3Y/EMQN3I9G36T
+	nvIpFNoZgU1rSVoSTh15GNM3KbOgFZ53+JmBsf8ca9fyIkD79bFfQH5pNKQvEw==
+From: =?utf-8?q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>
+Subject: [PATCH 00/13] Introducing the Mobileye EyeQ6Lplus SoC
+Date: Wed, 17 Dec 2025 14:35:50 +0100
+Message-Id: <20251217-eyeq6lplus-v1-0-e9cdbd3af4c2@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251215163820.1584926-1-robert.marko@sartura.hr>
- <20251215163820.1584926-5-robert.marko@sartura.hr> <fe15fcce-865a-4969-9b6f-95920fcaa5c7@kernel.org>
- <CA+HBbNGNMGRL11kdg14LwkiTazXJYXOZeVCKsmW6-XF6k5+sVA@mail.gmail.com> <3d6f254c-d53f-47d9-8081-8506d202bf9d@kernel.org>
-In-Reply-To: <3d6f254c-d53f-47d9-8081-8506d202bf9d@kernel.org>
-From: Robert Marko <robert.marko@sartura.hr>
-Date: Wed, 17 Dec 2025 14:32:49 +0100
-X-Gm-Features: AQt7F2p7AtghDvAyv4NK8Ascs8BHBx___HwB1JF-DX23awYiIEMyiUo7jk7sWyI
-Message-ID: <CA+HBbNEKJ2qG4s51Gq9dh0uGuSwyPDfsq+mb5w6Kry6e9N0VSg@mail.gmail.com>
-Subject: Re: [PATCH v2 05/19] dt-bindings: arm: microchip: move SparX-5 to
- generic Microchip binding
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
-	claudiu.beznea@tuxon.dev, Steen.Hegelund@microchip.com, 
-	daniel.machon@microchip.com, UNGLinuxDriver@microchip.com, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org, 
-	linux@roeck-us.net, andi.shyti@kernel.org, lee@kernel.org, 
-	andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, linusw@kernel.org, olivia@selenic.com, 
-	radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com, 
-	gregkh@linuxfoundation.org, jirislaby@kernel.org, mturquette@baylibre.com, 
-	sboyd@kernel.org, richardcochran@gmail.com, wsa+renesas@sang-engineering.com, 
-	romain.sioen@microchip.com, Ryan.Wanner@microchip.com, 
-	lars.povlsen@microchip.com, tudor.ambarus@linaro.org, 
-	kavyasree.kotagiri@microchip.com, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-clk@vger.kernel.org, mwalle@kernel.org, luka.perkov@sartura.hr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIALaxQmkC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1NDQyML3dTK1EKznIKc0mJdSzPDZDNjgzQDSxMDJaCGgqLUtMwKsGHRsbW
+ 1AHIwZwhcAAAA
+X-Change-ID: 20251128-eyeq6lplus-961c630f0940
+To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+ Linus Walleij <linusw@kernel.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-mips@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ =?utf-8?q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>
+X-Mailer: b4 0.14.3
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Wed, Dec 17, 2025 at 2:23=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On 16/12/2025 18:01, Robert Marko wrote:
-> > On Tue, Dec 16, 2025 at 4:58=E2=80=AFPM Krzysztof Kozlowski <krzk@kerne=
-l.org> wrote:
-> >>
-> >> On 15/12/2025 17:35, Robert Marko wrote:
-> >>> Now that we have a generic Microchip binding, lets move SparX-5 as we=
-ll as
-> >>> there is no reason to have specific binding file for each SoC series.
-> >>>
-> >>> The check for AXI node was dropped.
-> >>
-> >> Why?
-> >
-> > According to Conor, it is pointless [1]
->
-> You have entire commit msg to explain this. It's basically my third
-> question where reasoning behind changes is not explained.
->
-> When you send v3, you will get the same questions...
+The Eyeq6Lplus is a new system-on-chip part of Mobileye's EyeQ family
+of SoC aimed at Advanced Driver Assistance Systems (ADAS). It is built
+around a multicore MIPS I6500 with 2 cores and 8 threads and integrates
+controllers and accelerators dedicated to driving assistance.
 
-Hi Krzysztof,
-Considering that instead of merging the bindings LAN969x will be added
-to Atmel instead,
-this will be dropped in v3.
-Sorry for the inconvenience.
+This patchset adds the initial support for the EyeQ6Lplus and its
+evaluation board with the following list of controllers:
+* The OLB ("Other Logic Block") providing clocks, resets and pin controls.
+* One UART from DesignWare.
+* One GPIO controller from DesignWare.
+* Two SPI controllers from DesignWare, one in host mode and one in target
+  mode.
+* One octoSPI flash controller from Cadence, identical to the one found
+  in the EyeQ5.
+* Two I2C controllers from Designware.
 
-Regards,
-Robert
->
->
-> Best regards,
-> Krzysztof
+The support for the particularities of the I2C controllers is 
+currently under review[1], but basic operations (single read,
+single write, write-then-read) work with the compatible fallback to
+"snps,designware-i2c".
 
+The patch series adds the device tree bindings for the SoC and the OLB. It
+also adds the Kconfig entry for the EyeQ6Lplus, the SoC and evaluation
+board device tree, and the defconfig. For the OLB, the series adds the
+match data to the clk-eyeq, reset-eyeq and pinctrl-eyeq5 drivers.
 
+It also brings three other changes. One for the pinctrl-eyeq5 driver to
+access the pin descriptions, pin functions and pin bank register via
+the match data instead of directly. This is needed to add support for
+the EyeQ6Lplus alongside the EyeQ5 to the pinctrl driver.
 
---=20
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura d.d.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
+To be able to match against compatible entries, An OF node is needed
+but the pinctrl-eyeq5 does not have one as it is an auxiliary device
+of clk-eyeq. As part of his MACB phy series[2], Théo switched to
+devm_auxiliary_device_create() to register the auxiliary devices and this
+helper sets the OF node of the auxiliary device. To avoid a dependency
+between the patch series, eq5p_probe() is able to handle both cases,
+having the of_node field already set in the device structure or getting
+it from the parent device. After both series are merged, a cleanup of
+the pinctrl-eyeq5 probe function can be done.
+
+The two other changes are in the clk-eyeq driver. First we skip the
+post-divisor when computing the PLL frequency in the clk-eyeq driver,
+to match how the clock signal is wired internally in all EyeQ PLL and
+compute the correct frequency for the PLL of the EyeQ6Lplus. Second we
+adjust the accuracy and down spreading computation of the PLL frequency
+as the spread spectrum of all EyeQ PLL is in 1/1024 and not in 1/1000
+as previously thought.
+
+[1]: https://lore.kernel.org/all/20251126-i2c-dw-v4-0-b0654598e7c5@bootlin.com/
+[2]: https://lore.kernel.org/all/20251215-macb-phy-v5-0-a9dfea39da34@bootlin.com/
+
+Signed-off-by: Benoît Monin <benoit.monin@bootlin.com>
+---
+Benoît Monin (13):
+      dt-bindings: mips: Add Mobileye EyeQ6Lplus SoC
+      dt-bindings: soc: mobileye: Add EyeQ6Lplus OLB
+      MIPS: Add Mobileye eyeQ6Lplus support
+      reset: eyeq: Add Mobileye EyeQ6Lplus OLB
+      pinctrl: eyeq5: Use match data
+      pinctrl: eyeq5: Add Mobileye EyeQ6Lplus OLB
+      clk: eyeq: Skip post-divisor when computing PLL frequency
+      clk: eyeq: Adjust PLL accuracy computation
+      clk: eyeq: Add Mobileye EyeQ6Lplus OLB
+      MIPS: Add Mobileye EyeQ6Lplus SoC dtsi
+      MIPS: Add Mobileye EyeQ6Lplus evaluation board dts
+      MIPS: config: add eyeq6lplus_defconfig
+      MAINTAINERS: Mobileye: Add EyeQ6Lplus files
+
+ .../devicetree/bindings/mips/mobileye.yaml         |   5 +
+ .../soc/mobileye/mobileye,eyeq6lplus-olb.yaml      | 208 ++++++++++
+ MAINTAINERS                                        |   4 +-
+ arch/mips/boot/dts/mobileye/Makefile               |   1 +
+ arch/mips/boot/dts/mobileye/eyeq6lplus-epm6.dts    | 112 +++++
+ arch/mips/boot/dts/mobileye/eyeq6lplus-pins.dtsi   |  84 ++++
+ arch/mips/boot/dts/mobileye/eyeq6lplus.dtsi        | 169 ++++++++
+ arch/mips/configs/eyeq6lplus_defconfig             | 119 ++++++
+ arch/mips/mobileye/Kconfig                         |   3 +
+ arch/mips/mobileye/Platform                        |   1 +
+ drivers/clk/Kconfig                                |   4 +-
+ drivers/clk/clk-eyeq.c                             |  90 +++-
+ drivers/pinctrl/Kconfig                            |   4 +-
+ drivers/pinctrl/pinctrl-eyeq5.c                    | 462 +++++++++++++++------
+ drivers/reset/Kconfig                              |   4 +-
+ drivers/reset/reset-eyeq.c                         |  31 ++
+ .../dt-bindings/clock/mobileye,eyeq6lplus-clk.h    |  37 ++
+ 17 files changed, 1192 insertions(+), 146 deletions(-)
+---
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+change-id: 20251128-eyeq6lplus-961c630f0940
+
+Best regards,
+-- 
+Benoît Monin, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
