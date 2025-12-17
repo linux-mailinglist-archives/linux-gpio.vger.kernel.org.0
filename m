@@ -1,105 +1,93 @@
-Return-Path: <linux-gpio+bounces-29715-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29716-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 027A3CC8AB5
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 17:07:14 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2D17CC8FA4
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 18:11:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AEBCD311BDBF
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 15:50:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 80FD530000B7
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 16:58:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D85433BBAC;
-	Wed, 17 Dec 2025 15:37:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A20AE324B09;
+	Wed, 17 Dec 2025 16:58:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hMNPbQfH"
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="faEeMp0b"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-24417.protonmail.ch (mail-24417.protonmail.ch [109.224.244.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163553168EE
-	for <linux-gpio@vger.kernel.org>; Wed, 17 Dec 2025 15:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE04224B05
+	for <linux-gpio@vger.kernel.org>; Wed, 17 Dec 2025 16:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765985862; cv=none; b=MhaR0d5G6I8uzW6zwlNwXfHB3MRNKWM/J2aS7rczvV0+rzER5P2Jk8jjIPpAHbTi7AvywbqO1aT/1gwj1flHbHAv4sLxmKFMy48aShL9estHO8O+atBLmwBx7g1f7HkfKocm3Je8rmu5/knDnOnTl22xRS9WShte6vzNTW64yIA=
+	t=1765990685; cv=none; b=rSHQ9grqSlw5oOEURfRjnpK0kkmg3tTczyVzucI8iF7RYVtiEtZYSi3OZVCaSRJkwAOuwiL1aFLRRt7kl14CTB/TevboqM7y1QWRWnGd8ViGZS0QO483xA6vwASjvmCH/5i0dLtpnsxC5nJRy7ViFU5oPVwk2VOc8WruuAoSSTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765985862; c=relaxed/simple;
-	bh=3zWGgAak/FBm7Vkk94ZrLytELeHbedaeePRas4C5o5A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ATUwgId1BZmtG3uAIjtwkijS/45DrljwzfBPHbskp9WHy4kszOyexDZdrHtAm8h/37psUFj3uboi60g2/lzUI+ubETlsVN720wI+zhfwl1/Gd/YZvkx6miRtiJOLra3RF3EH12m3DFwmvO75PuIDkDqwmBvpRBfuwoTMuP5AU2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hMNPbQfH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E279BC19421
-	for <linux-gpio@vger.kernel.org>; Wed, 17 Dec 2025 15:37:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765985861;
-	bh=3zWGgAak/FBm7Vkk94ZrLytELeHbedaeePRas4C5o5A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hMNPbQfHkiOGVqJHw5AtuOCvRV0FWKVO23ESw20F2cpxcqWTBIOhlBqGNkwequi0i
-	 3oeUmzcEgHgSCtPoeLi5W9KvVXmE1VGX7UUnHrN1mtR68GvWl08uXF7HTsH54i7ZE9
-	 KfYRP9/8MnbbeqwSYkqRzywXs1Oee8xupqaf+a3s5LDAgTLnveEoDXptQ80gqAbzq5
-	 bjMNZezJ7p4GnTY2AwYJ0eq5AHSinGdYScOtbFN/Adxv8qepgBFrnvzwv9d+LJGjra
-	 iG70B1IeKSjTYdQQgNkT1NrvCLmUQmuqa9VxS8bv5ivZq+pOTD21TTRtZYR98YCKkC
-	 GNKlOB4AN3+tA==
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b79ea617f55so599483266b.3
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Dec 2025 07:37:41 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUIAzQpMga/sEzSeiFIWVkhHhLu3GtZOFWBRVziWrxgAyanVRMlhUb4w8nYRn3vlbFmPd9LyS3pAhts@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz62BsRD4jOlRjy/t/su3sUa2iC29Pgubcb/0ArtiCE0lSt68rv
-	SY5NMb/B9AjqmFLAWx3W5AooH3deOFIm4UajhVBdIzx5j7JXd54Yb+iDG2+fkx/mDJVyU2R/W+g
-	fy7oiBOZv0OrMo88ZpdLUC97BYmdL7w==
-X-Google-Smtp-Source: AGHT+IE+MbpVy0D9cI7vtayEcuAQ5BpKDVDav3dQlj552I/4svzEpwf9VDtWU/NeRoVokGuFNkCPT8ATPD0NU91eNy8=
-X-Received: by 2002:a17:907:3cca:b0:b72:c261:3ad2 with SMTP id
- a640c23a62f3a-b7d23af00e6mr1859042566b.50.1765985860268; Wed, 17 Dec 2025
- 07:37:40 -0800 (PST)
+	s=arc-20240116; t=1765990685; c=relaxed/simple;
+	bh=Mdgf1xrwj6ePxOwSPFAm39chF49gYnS5GIZrmTBc9W4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PkbP5TAspWb3svXl/fGFakv1d3+0oSlVAsCE/tY+qmd96WY8F78ArhqrZzulV040tXaeuFuApWrChOk92ebKJDzIzeJ05Z46ZRYMkVa6G0PHswTrAPayqa4bjHdqFKj50mDS8XoNEcceWiqf0Eoi81GXwuFgMBWbQl8BAIECWQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=faEeMp0b; arc=none smtp.client-ip=109.224.244.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1765990681; x=1766249881;
+	bh=ZEXvYe1lDmnxsyCFWRdLKARj04UHQ5mSH6Oq9QoAojE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=faEeMp0byJqJp86pMjdUMibam6EJdKNn96h/0nGyvepX3JdHrlD2Lwq2mePDhgdzp
+	 id1bC2Sm8qA1Aedm7eBHcA/PKltx99yPbM/5EaJOgPqlHvrDeE4jjlXJpbhIrLFrEA
+	 DfBgjT9Mu3dJKdHSZtkxoxNKAdEDMvmhG12XHBr+KvzUAK6p+DUQbBb3/qo2PVwtTt
+	 +kBTxqFbkx332xrqRSBMGEPyDymimoROdaWlBThflayXZas7qn5m1hdVGDC2p8bs2Z
+	 fJ1L0YVFQw8KgmRHTjwInCRwHxbiiLSGSw7r+Lhg/6WgoTZD3rqhiSBufAvvrW2wzS
+	 6HYoWRXQleLEQ==
+Date: Wed, 17 Dec 2025 16:57:58 +0000
+To: Mario Limonciello <superm1@kernel.org>
+From: Francesco Lauritano <francesco.lauritano1@protonmail.com>
+Cc: Hans de Goede <hansg@kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "westeri@kernel.org" <westeri@kernel.org>
+Subject: Re: [BUG] 36-second boot delay due to by acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
+Message-ID: <NIIS8XD_nSRvp36X39GxcDRAWsaScQIFx6o9JsFCbyBZk5PqznRdxg9EDDb_9tzWd5TcjzxrRtFx5_uLCVa5wJAYykW2k0Ue_XPMPtWCQiY=@protonmail.com>
+In-Reply-To: <woxnPhTYiKi2aLzBK8GnO8DpvdgYjQc-P42uhJOzyrcYC3Gdstht27hML8yNHgOklhm2MgGA7wt9gGZ17BHoWlG0vqJuVVJDgCSev8udfds=@protonmail.com>
+References: <2kSCn4XaoXsXJ3EUR0syTdmip8Z1cBuUr0Br4sFVnwnsA8q4GlhiHOmsJkeBxvxYoLnetp4r44wIPXw42yTAFl-BtMROnIwR-NkckKgA5EY=@protonmail.com> <6iFCwGH2vssb7NRUTWGpkubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pnu5hzPguTa0s=@protonmail.com> <4402ed86-77f5-4a47-a9e1-8d57a709bb15@kernel.org> <woxnPhTYiKi2aLzBK8GnO8DpvdgYjQc-P42uhJOzyrcYC3Gdstht27hML8yNHgOklhm2MgGA7wt9gGZ17BHoWlG0vqJuVVJDgCSev8udfds=@protonmail.com>
+Feedback-ID: 66654272:user:proton
+X-Pm-Message-ID: 5886d2650bfc8d25da78d3cc0473592092b1c1f8
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251211-dev-dt-warnings-all-v1-0-21b18b9ada77@codeconstruct.com.au>
- <20251211-dev-dt-warnings-all-v1-1-21b18b9ada77@codeconstruct.com.au>
-In-Reply-To: <20251211-dev-dt-warnings-all-v1-1-21b18b9ada77@codeconstruct.com.au>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 17 Dec 2025 09:37:28 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJUaKKsJ8BCNbVXe4vLVsQ2Av7VuWqf9DnUKHeLzLb8NQ@mail.gmail.com>
-X-Gm-Features: AQt7F2q-nb9Xy6ZmXCdkQqrO-_0mpnqJ_RWJ9ZzKv3sOBl98lQ-TH7L8rvtaBLo
-Message-ID: <CAL_JsqJUaKKsJ8BCNbVXe4vLVsQ2Av7VuWqf9DnUKHeLzLb8NQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 01/16] dt-bindings: hwmon: Convert aspeed,ast2400-pwm-tacho
- to DT schema
-To: Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, Joel Stanley <joel@jms.id.au>, linux-hwmon@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-iio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 11, 2025 at 2:46=E2=80=AFAM Andrew Jeffery
-<andrew@codeconstruct.com.au> wrote:
->
-> From: "Rob Herring (Arm)" <robh@kernel.org>
->
-> Convert the ASpeed fan controller binding to DT schema format.
->
-> The '#cooling-cells' value used is 1 rather than 2. '#size-cells' is 0
-> rather 1.
+On Wednesday, December 17th, 2025 at 4:12 PM, Francesco Lauritano <francesc=
+o.lauritano1@protonmail.com> wrote:
 
-Okay, I can't figure out why I thought '#cooling-cells' needed to be 1
-here. I don't see that anywhere in the tree. The driver for sure only
-supports 2, so anything that's not is an error in any case.
+> The _AEI defines 5 GPIO interrupts. Narrowed it down to two:
+>=20
+> gpiolib_acpi.ignore_interrupt=3DAMDI0030:00@21,AMDI0030:00@24
+>=20
+> This fixes the delay. Pins 0x15 and 0x18 both call: \_SB.PCI0.SBRG.HNC0()
 
-> Some users define more that 8 fan nodes where 2 fans share a PWM. The
-> driver seems to let the 2nd fan just overwrite the 1st one. That also
-> creates some addressing errors in the DT (duplicate addresses and wrong
-> unit-addresses).
->
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
-> ---
->  .../bindings/hwmon/aspeed,ast2400-pwm-tacho.yaml   | 106 +++++++++++++++=
-++++++
->  .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt |  73 --------------
->  2 files changed, 106 insertions(+), 73 deletions(-)
+Traced it further. HNC0(pin, 0) takes the Else branch and calls:
+ATKM(0xC0)
+ADTM(Zero)
+
+ADTM calls NOD2(), which is the actual culprit:
+
+While ((Arg0 !=3D RDNT))
+{
+    If ((Local0 >=3D 0x0F)) { Break }
+    Notify (^^GPP0.PEGP, Arg0)
+    Local0++
+    Sleep (Local0 * 0x64)
+}
+
+It notifies the dGPU and polls RDNT, sleeping 100, 200, ... 1500ms per iter=
+ation.=20
+Max 15 loops =3D ~12s per pin. GPU doesn't respond at boot so it maxes out.
+
+Two pins, ~12s each, ~24-36s total.
+
+Francesco
 
