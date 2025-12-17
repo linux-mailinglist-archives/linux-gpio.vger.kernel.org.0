@@ -1,141 +1,326 @@
-Return-Path: <linux-gpio+bounces-29718-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29721-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4BBECC9675
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 20:20:37 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5759CC9881
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 21:56:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 38470304B946
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 19:20:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CD6603034EC0
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 20:56:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72437299A94;
-	Wed, 17 Dec 2025 19:20:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FE5430B518;
+	Wed, 17 Dec 2025 20:56:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="OLmNAUZe"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="eFAWShri"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-244116.protonmail.ch (mail-244116.protonmail.ch [109.224.244.116])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011015.outbound.protection.outlook.com [52.101.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1941E520C;
-	Wed, 17 Dec 2025 19:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.116
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765999208; cv=none; b=j4g6moYnF5trpuoz65yXPhQIthRmPCMx7QtDSAjgcqdlnTu+H/ThNJCMnZ+ulbeL1KKs6XwpSW2/sgjfHBEJjltqFOK2eqEK8M1e9PThwTg3mSaNho63Y22ABHmdRpfWePP8tBV+/RDCtj8NkEilUbXyhnKyHVAxBAno3QKYt94=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765999208; c=relaxed/simple;
-	bh=1+wQu3DU4CveI1Mh+k8iA2Z1S2uievEyjDzxJ+b0qXk=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rRZjvrhxk5SS87qZwuUJALFsPqRB2Dp66fPdbAea/uE30hxJOkgchRY+0tsIVjyGHkQ5bYEJz1iXHLxLyEfq83bHO3CgyijuuW5ktI4/uAkjOxO5d2zvee71U7SelS1O+s1LBD0krAZvC5yE22OFW6+Tktf3TmzoCPeqW/4vHxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=OLmNAUZe; arc=none smtp.client-ip=109.224.244.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1765999202; x=1766258402;
-	bh=SxDHQdz0UsAAfomsYBxGUPDOxZEVHiqHRxjT3siJq0Y=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=OLmNAUZeqWq7HeJDwGUR9ZexOwdIfVY0lTN3vV8I7B5fsJ1Y74OnrPVVULnJHJTPc
-	 bm1PViGhKNofLwWUu9psDlsj+J69cNFQy+6JLWz5ZTUt2qrRtcceGOwMXL8w8ilstY
-	 nhQFJSZc7lDyq5D20eQYYgkti9k1NcO8qMKkpOdphN+ZmbUMqar9hVnLBt6qgcE69s
-	 73vkTNXYx9ZfYwe2hLPE2faJRbjcSXDUn2bz6HaZAiPj+n4AjUXPswgDoRE8DkmVt8
-	 K6hGP0cR0/pXrcEexJNvDtx+sqOp4LUOX5yt5/fiT+Eto5U+XARqPy3rzohbOCn696
-	 TkmQbb35ISf4A==
-Date: Wed, 17 Dec 2025 19:19:56 +0000
-To: Mario Limonciello <superm1@kernel.org>
-From: Francesco Lauritano <francesco.lauritano1@protonmail.com>
-Cc: Hans de Goede <hansg@kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "westeri@kernel.org" <westeri@kernel.org>
-Subject: Re: [BUG] 36-second boot delay due to by acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
-Message-ID: <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
-In-Reply-To: <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
-References: <2kSCn4XaoXsXJ3EUR0syTdmip8Z1cBuUr0Br4sFVnwnsA8q4GlhiHOmsJkeBxvxYoLnetp4r44wIPXw42yTAFl-BtMROnIwR-NkckKgA5EY=@protonmail.com> <6iFCwGH2vssb7NRUTWGpkubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pnu5hzPguTa0s=@protonmail.com> <4402ed86-77f5-4a47-a9e1-8d57a709bb15@kernel.org> <woxnPhTYiKi2aLzBK8GnO8DpvdgYjQc-P42uhJOzyrcYC3Gdstht27hML8yNHgOklhm2MgGA7wt9gGZ17BHoWlG0vqJuVVJDgCSev8udfds=@protonmail.com> <NIIS8XD_nSRvp36X39GxcDRAWsaScQIFx6o9JsFCbyBZk5PqznRdxg9EDDb_9tzWd5TcjzxrRtFx5_uLCVa5wJAYykW2k0Ue_XPMPtWCQiY=@protonmail.com> <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
-Feedback-ID: 66654272:user:proton
-X-Pm-Message-ID: e296eaddc6befbe5480d0ef28284d40fa59a5ac2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897D926C385;
+	Wed, 17 Dec 2025 20:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766004966; cv=fail; b=ASwHC6HiSTLBS1LFUtcBPY4kTFbqQBxiTb1SmlZhYkLNN6FHcRDZrY/aMiHYugBNN1g11FrHzoUJguS/kmLPoxN1TkLPZz4gtaN5jidygBQzZCb69auLB6GwQtT1+qhJf/iiq0xm4fmrvdOE9vfltds+h8tX4j/0c59sr1Ju/ig=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766004966; c=relaxed/simple;
+	bh=aZUtHP8KQc74V1Yj5hdNOFN3devmsICHrxFym4h6LJE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ls3pwXhH7pOIlwAijDsfPQ3tmRAjanXCfiV1yxMxR+P83n2lRlKU9DdSaWuyk5t2hwHb3c0xNToIDjR859xEGk6EopIHjit0jkbLX9/Pvfkj4Jd1IIWlnRN17aOZqXOhL1hU4NpAabGmQyFtI/HQ/FDyXJ+01fNLMf9d4oseB18=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=eFAWShri; arc=fail smtp.client-ip=52.101.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from VE1PR04MB7344.eurprd04.prod.outlook.com (2603:10a6:800:1a1::10)
+ by AMDPR04MB11608.eurprd04.prod.outlook.com (2603:10a6:20b:717::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.6; Wed, 17 Dec
+ 2025 20:22:24 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aJYbeeu841DC8frGe+YvhdJ0xAnOMfsPYaGWyX6R0FuKbmnZbyKQbtOIIsAUPp4b1OLmKJFZgie5tDpFNqllBVor+JY5NY6i1P99UlSZ5szhwrI0aPJyF2xVS6JPYZ1W2JE9g7fEi5MkmM09c2ix4flLR6PORLbXUZGMfirMxTGwpj++wKoYnwR3NUziYxfGyJyUWPPcAOxedyUu0db5u5OrH90B0Kqw1vyzlAUfhokLlDJNieDWbWXJmD0h1QkCxODWOomjKj+U4PNaQFs2v5WJIupeNl6J12K4yoSBpEEIXxnjtD1LULF9R1aJGtdCoaGq3Oh1Gfe9tqaLUXPueA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sfACWLHp3df4sJIZvQAd9/UNu9AkArwbM4B04f0+SxI=;
+ b=sF720XE4f/L7CYStIlCszjjhVyskaqdoDMkyy1DhcSipnWroUK1mY0xjnDR0PVXvZ2kx3vTBtuVkFMvyejMDbiuN64QQqtOsXi3CtCSzUrcD7JJH4OOfyww1hEZXOP0+gfP7OOXT1+SdBSuYx/WME1ETmx8QndGdmYZOIvP3BIJ2GDfdesU/9jdBrWkK3ZLdj81sV3cHmsD/xPY5Df4enP2FWSkIU04tsENNbNm22Uf6tnKVTTo0AkQYx1+s5w19Ao5anGt8dAqyZlXWpqnayS/2h8DxQLeAKk133IJQ9U+Wz8bQxFEpBEAp/EuxcB8vtSR+2aVMr5crtj4Uyj1flQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sfACWLHp3df4sJIZvQAd9/UNu9AkArwbM4B04f0+SxI=;
+ b=eFAWShriqgmMYLa20gAHZ4i60xMVLN3iWgiFaxANBceDL912XE6p+2N4OiQrQ3l7YAhHMR9VGM9Wgvn2HYmzJT52vmIJqWS2+ChIoQC4cjJJS2dY3k+0SPQ04tKsKWAegSQHX6W1Vg9JKvUbuixSa8GyXjjJV1NubkobpPMGfPJvJ8HcSnmXh0bBr3YHKXDsyAYzH+ud8iAvPWhZJLoQVVHI+/U/tpjrclyZoDk380N0jMqSFmaFqpgtlAwRTxPwCrcY1EfAQs16QJJKIq+bqwPBe8xyqHi78Ragv+yh3ef8DuPAUMCsySC1jJgavmbV615hRaSj+NkeyzSyrAnW+A==
+Received: from PAXPR04MB9185.eurprd04.prod.outlook.com (2603:10a6:102:231::11)
+ by VE1PR04MB7344.eurprd04.prod.outlook.com (2603:10a6:800:1a1::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.7; Wed, 17 Dec
+ 2025 19:45:11 +0000
+Received: from PAXPR04MB9185.eurprd04.prod.outlook.com
+ ([fe80::21bf:975e:f24d:1612]) by PAXPR04MB9185.eurprd04.prod.outlook.com
+ ([fe80::21bf:975e:f24d:1612%5]) with mapi id 15.20.9434.001; Wed, 17 Dec 2025
+ 19:45:10 +0000
+From: Shenwei Wang <shenwei.wang@nxp.com>
+To: Rob Herring <robh@kernel.org>
+CC: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier
+	<mathieu.poirier@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+	<s.hauer@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Peng
+ Fan <peng.fan@nxp.com>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-remoteproc@vger.kernel.org"
+	<linux-remoteproc@vger.kernel.org>, "imx@lists.linux.dev"
+	<imx@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v6 1/5] dt-bindings: remoteproc: imx_rproc: Add "rpmsg"
+ subnode support
+Thread-Topic: [PATCH v6 1/5] dt-bindings: remoteproc: imx_rproc: Add "rpmsg"
+ subnode support
+Thread-Index: AQHcb42nD0vV/FZ/cEahrrMlv9mXGw==
+Date: Wed, 17 Dec 2025 19:45:10 +0000
+Message-ID:
+ <PAXPR04MB9185E86CB81C111DAB5B329D89ABA@PAXPR04MB9185.eurprd04.prod.outlook.com>
+References: <20251212194341.966387-1-shenwei.wang@nxp.com>
+ <20251212194341.966387-2-shenwei.wang@nxp.com>
+ <20251217005758.GA3452672-robh@kernel.org>
+In-Reply-To: <20251217005758.GA3452672-robh@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic:
+	PAXPR04MB9185:EE_|VE1PR04MB7344:EE_|AMDPR04MB11608:EE_
+x-ms-office365-filtering-correlation-id: c10af08c-1e1d-44a1-90b7-08de3da4ca1e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|19092799006|376014|7416014|1800799024|38070700021;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?ASk2nHi1s63vFuGMc7ka9p+JaT+euGcfSH7YKkL3p44ALDawwX4+2quemlQd?=
+ =?us-ascii?Q?QApxCDWVr8r8bhgEO5jTkdNCBTGIp+/Rh2a4SsM6ojXmpnvPy7ylCGGU3cL2?=
+ =?us-ascii?Q?Y+GUYzZJT/FIElBtJKxbo4v2qGnvkFZgDBW1TTcdQLXqLhrn3qSyNhqep2kO?=
+ =?us-ascii?Q?fspNxmPh8KzC6YxdW5KRfsEKvNMMoDMrUE8BWmaa5+w9r/Oih7NcwJW+id5n?=
+ =?us-ascii?Q?r4botM7SuzmLwz9rBZ8k158jVjYvJD26ow+ysGz+hFr4M8D2WwFW/NsFdRUE?=
+ =?us-ascii?Q?ATMFXOWMhNHKHfh5jW7LgWbXTebvgPBO73nWC6bQs/505IVje7kaN3BrwVg/?=
+ =?us-ascii?Q?r9HsmZ163tT2/aJyt4FjcmCXTyQoagFtbz218M0rr7aBoMgjN44V5dXQ8ewT?=
+ =?us-ascii?Q?jnW+nNZ0Ze5iSIJl5Tl3k0d9o2jPP3viEBjHo+EF0itoQHLdRUINswAFXfB/?=
+ =?us-ascii?Q?oP8AtnKbdfvEpyLEnEQEQD9f1Zrb4TKOt5YGEDs7BLV8hw++45Z/Y64eT44M?=
+ =?us-ascii?Q?eVMoEmcl5Pg8YQ6LIO2QoM/VNBqAeDrU2EaX0vD+4N3H9sIlnk1e+2LPmRH1?=
+ =?us-ascii?Q?VTVTux3eEhfdoa6EkCw09OhpigRtib76Je2QZopa+2UgDHY/VOuMgacWR0Kz?=
+ =?us-ascii?Q?6dpuQ98CWie04TorJ3ncuQ5iebMQS8/Nc+ZY/VknkfGNxSwRzlvzP131sm+Y?=
+ =?us-ascii?Q?x9+U7WGlB+6C1spteYd/BY9e7BXLbmI9d8kIERIpy0aE8CZ5/SLxN74NN7R9?=
+ =?us-ascii?Q?I4wXgmDwRkyWoocnmL4byccN6IYJTJpmAu3bEwQBeiy68tGUrMMXRUVKWPhz?=
+ =?us-ascii?Q?+EalXGhy/UFbizQjrkNn7dN69n4uKDtSlQC8kihNpBizF9EHflcWVyFsikfy?=
+ =?us-ascii?Q?Q7CrA3BJnHiNirzRs+Q/94cIzCulDFvtwTAaSzWNv5yU1K2Y7HcM9+iq2k3o?=
+ =?us-ascii?Q?pGg4Sxgl5tNTcGDo5Xw1QA3Am8ECfWTCPLJ6fnz3aLgQG5sQ3MxxWsYjq1vz?=
+ =?us-ascii?Q?Q9Bkl+Mrx/5a1+0TkQGuvUyT29muZ7CLlzBMzrEWKGwZkhLhmu8yQGAVNMQN?=
+ =?us-ascii?Q?pM/2ucknebT2VlhNSeJ7VRAatqzLGN2pJ9b8MhC8V2gEqmDxIKfYAoAxlC6b?=
+ =?us-ascii?Q?2+T/eZofWRNzN6Uxmi+jJIaq9+U4+x6GERBHDYTYTf3iSeW+j3MBwkKlNhJa?=
+ =?us-ascii?Q?Q4AKc/UVlpyW58mXXIa/TX3f7i7UJYE9BoXo2CaPXDLuJ/fiTv6STe/vi689?=
+ =?us-ascii?Q?GpjvozFKP0XLYKyOVinE1vpbr9zohkp0in7l+nkzy8foOgKuv6Xm1/oj8ikT?=
+ =?us-ascii?Q?zDHN4v9+xb7jkH2CfJJVkyJNbiw6jKHiz+omuoB4MGmCMV1UxdKeOx2C9yEz?=
+ =?us-ascii?Q?ZnIKHeonTPL5p3xC418HvQXsbE48gNrNYPTyh+0Y2Y3t94I4iG2IL12jEDiM?=
+ =?us-ascii?Q?n/5EJm2qNSnpbwt+uSwddqOhGZkjtyOq0tr7Q8a3Lqm30nnSKQm4UKJObbR8?=
+ =?us-ascii?Q?gaI1eKSXKC+ud1vdt3dXWOk01rybZmSLDlo6?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9185.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(19092799006)(376014)(7416014)(1800799024)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?rrLsLs+Qi1OCwP7DhBAWjKnBJMXbbSvytitYsGzC8PjymB5qZ50J2NfDhSec?=
+ =?us-ascii?Q?wZb4HsGu4rmqbdFL1j4k8zKdBA+gvefUDM7VltgLlJgCeiatOvVdo8F9E1UK?=
+ =?us-ascii?Q?HBuJUzuzNsjyzj2ucXcHd9O+XesUE6Hlz8eTjKFAfhL+A9q0Wt7qK+lPAZSO?=
+ =?us-ascii?Q?nr5GDHkSn6o9p/OSK77D6LTEKp8f6sSsgIar1f0VghalqmBoyViMxvUO+wNJ?=
+ =?us-ascii?Q?hQ6Ok9lLWmak9Yn+nmruvbEhkP7p3Cmuc8/s8XHIQTjtzeassP+2q7mtNUVF?=
+ =?us-ascii?Q?gejNsLA89Qy6nztzRzEnQ9pVC9YhYXx99p94vS19Yx80YisVMimEuctSSPnA?=
+ =?us-ascii?Q?1An56UTNkk0zZ53tGr6A6dQ3x2O1UPeCXpfvzz6avA0Ha9XHuMgWQ3Jr+KDT?=
+ =?us-ascii?Q?DgUpqyaVnu6VBuhR6o95kiNNMelPtuoATcif1rHxb0tuS6R3YT73oas3bJaW?=
+ =?us-ascii?Q?TFyvsTTCV7zOUyGNHwkswbGmnZD9kDTXZL+DsezCIV5E/OXLvr41pUIXOucj?=
+ =?us-ascii?Q?52wvl3D0CU7vCtto2cIe3fsxqmr3lF9iVz+1Zxya9QCDPLjybeHUdKUG/BAY?=
+ =?us-ascii?Q?oPflazdwq4O8fcM03vn0qaen2hq3Zy5szMFpgmpdGqb7j2cULyWe1HqxXeNl?=
+ =?us-ascii?Q?o2g4gwxhWAKbK8FSwDmjcxwTtLwu4DaJQ/3AsWZ4Br+gMKReW0qwEBVpvQ3J?=
+ =?us-ascii?Q?Cvzu2XCS6+yx+TX0igWkmIE/cWuRhAIewFlO3ANR7i3VLb0CASg3kOSWm5Ip?=
+ =?us-ascii?Q?X5155fkl3HIGrOfDiRvd2l002xWdq2uMUJOqqDPlgcA5L0O2kfNHlGDAarC6?=
+ =?us-ascii?Q?mclW0/2HDp8Ra771FIuzx7D4QGsqTbC0ho6nzROyoJ0aQobWly06HT1qr65C?=
+ =?us-ascii?Q?YWNgRCRRIeSOb2Eaj56rDKJLPoFTDSRr3sV19Ta67Fr66Lg4NFj9BUtF0ECE?=
+ =?us-ascii?Q?4/zf6xEQETb4P+Eu4sqG/jNpr9lHu4su5COJjfTLEszSThZ0fwqM0Z6UZ+AQ?=
+ =?us-ascii?Q?RLiG6gQWLiKIZav3yGTp/hNVK3UTo4uvPWQzgFpnaOgaAkRcWpU6bbVth7Yg?=
+ =?us-ascii?Q?u2t9LIHQZuLl1aWjgehHrdvsN55OCrVY76qlVJMy9c7laPJ14CG0azLP4Ytq?=
+ =?us-ascii?Q?BpBTG19zXdTCEIsKgJ1eFDyGHLp8weAyzza33Js0PrS1HcfTN9HEpWYAjuBf?=
+ =?us-ascii?Q?OnrSSWxzstFF68H/5hYkC0rXNNLVZSf3u2mcxiUqUvjlYfXoAEfdo8rFljeL?=
+ =?us-ascii?Q?aeKrCePvO1ED5Wop6wewUDalGWTa60KZ9G4jLHEXfNnt1dYcjPWc7thL1XU0?=
+ =?us-ascii?Q?7VdHwcM7WPBnCWAkjAYsDTy8tf9rhppcaPldn5r22oAIyKj8KAsFMufH6EFE?=
+ =?us-ascii?Q?JqNqJk/qfSQhGMCcRwkbeA5/LgNce7bGEM7GPUMQ5TKz2Q6AEoE+fCiAo7Sd?=
+ =?us-ascii?Q?AompyvA33FgA/OUt1iAvpxc3EUc6aAiFQQPBPNgVpTenGmbiON0JuQYiKAVw?=
+ =?us-ascii?Q?01umVFQUw3jozLh/+t9sVwNslYcA5xlA52EbfVQ0AQC0Suin50gT6OOMyx7c?=
+ =?us-ascii?Q?6Xq8RBt71d8SzJdQtgA=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9185.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c10af08c-1e1d-44a1-90b7-08de3da4ca1e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Dec 2025 19:45:10.7995
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: keBMDMAVJ6m9P82fUO9jGGdoUMiih5PhnT59MTvQoq4EVDfTBseiir7F9WNTg8ickAbww24+Nf+7/mIudjTtgA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7344
+X-OriginatorOrg: nxp.com
 
-On Wednesday, December 17th, 2025 at 7:01 PM, Mario Limonciello <superm1@ke=
-rnel.org> wrote:
 
-> On 12/17/25 10:57 AM, Francesco Lauritano wrote:
+
+> -----Original Message-----
+> Subject: [EXT] Re: [PATCH v6 1/5] dt-bindings: remoteproc: imx_rproc: Add
+> "rpmsg" subnode support
+> On Fri, Dec 12, 2025 at 01:43:37PM -0600, Shenwei Wang wrote:
+> > Remote processors may announce multiple devices (e.g., I2C, GPIO) over
+> > an RPMSG channel.
 >=20
-> > On Wednesday, December 17th, 2025 at 4:12 PM, Francesco Lauritano franc=
-esco.lauritano1@protonmail.com wrote:
-> >=20
-> > > The _AEI defines 5 GPIO interrupts. Narrowed it down to two:
-> > >=20
-> > > gpiolib_acpi.ignore_interrupt=3DAMDI0030:00@21,AMDI0030:00@24
-> > >=20
-> > > This fixes the delay. Pins 0x15 and 0x18 both call: \_SB.PCI0.SBRG.HN=
-C0()
-> >=20
-> > Traced it further. HNC0(pin, 0) takes the Else branch and calls:
-> > ATKM(0xC0)
-> > ADTM(Zero)
-> >=20
-> > ADTM calls NOD2(), which is the actual culprit:
-> >=20
-> > While ((Arg0 !=3D RDNT))
-> > {
-> > If ((Local0 >=3D 0x0F)) { Break }
-> > Notify (^^GPP0.PEGP, Arg0)
-> > Local0++
-> > Sleep (Local0 * 0x64)
-> > }
-> >=20
-> > It notifies the dGPU and polls RDNT, sleeping 100, 200, ... 1500ms per =
-iteration.
-> > Max 15 loops =3D ~12s per pin. GPU doesn't respond at boot so it maxes =
-out.
-> >=20
-> > Two pins, ~12s each, ~24-36s total.
-> >=20
-> > Francesco
+> Which channel does that happen on?
+
+It runs on the RPMSG  Control channel.
+
 >=20
+> > These devices may require corresponding device tree nodes, especially
+> > when acting as providers, to supply phandles for their consumers.
+> >
+> > Define an RPMSG node to work as a container for a group of RPMSG
+> > channels under the imx_rproc node.
+> >
+> > Each subnode within "rpmsg" represents an individual RPMSG channel.
+> > The name of each subnode corresponds to the channel name as defined by
+> > the remote processor.
+> >
+> > All remote devices associated with a given channel are defined as
+> > child nodes under the corresponding channel node.
+> >
+> > Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
+> > ---
+> >  .../devicetree/bindings/gpio/gpio-rpmsg.yaml  | 49 +++++++++++++++++
+> >  .../bindings/remoteproc/fsl,imx-rproc.yaml    | 54 +++++++++++++++++++
+> >  2 files changed, 103 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/gpio/gpio-rpmsg.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/gpio/gpio-rpmsg.yaml
+> > b/Documentation/devicetree/bindings/gpio/gpio-rpmsg.yaml
+> > new file mode 100644
+> > index 000000000000..b3e1a5dbf731
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/gpio-rpmsg.yaml
+> > @@ -0,0 +1,49 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
+> > +---
+> > +
+> > +title: Generic GPIO driver over RPMSG
 >=20
-> Any idea why isn't the dGPU responding? I would have expected
-> https://git.kernel.org/torvalds/c/4d4c10f763d78 sets up policy that it's
-> in D0.
+> The driver doesn't go over RPMSG. It's a GPIO provider or protocol.
 >=20
-> Is the dGPU turned off in BIOS or through some reverse engineered
-> tool/API or something?
 
-dmesg without the workaround:
-[    1.005184] pci 0000:01:00.0: PME# supported from D0 D3hot
-[    1.288811] pci 0000:01:00.0: vgaarb: VGA device added
-[   38.250139] nvidia: loading out-of-tree module taints kernel.
-[   38.369358] nvidia 0000:01:00.0: enabling device (0000 -> 0003)
-[   39.744421] NVRM: GPS ACPI DSM called before _acpiDsmSupportedFuncCacheI=
-nit
+Yes, it might be clearer to phrase it as 'Generic RPMSG GPIO Controller,' s=
+ince this is=20
+a GPIO controller driver that operates over the RPMsg bus.
 
-GPU is in D0 from 1.0s. nvidia loads at 38.2s after the GPIO hang completes=
-.
+> > +
+> > +maintainers:
+> > +  - Shenwei Wang <shenwei.wang@nxp.com>
+> > +
+> > +description:
+> > +  On an AMP platform, some GPIO controllers are exposed by the remote
+> > +processor
+> > +  through the RPMSG bus. The RPMSG GPIO transport protocol defines
+> > +the packet
+> > +  structure and communication flow between Linux and the remote
+> > +firmware. Those
+> > +  controllers are managed via this transport protocol.
+>=20
+> Got a reference to where any of this is defined?
 
-No weird tools/APIs besides userspace utils (asusctl/supergfxctl).=20
+Will add a ref to the gpio-rpmsg.rst doc.
 
-No changes to BIOS factory defaults other than disabling Fast Boot.
-dGPU is active, Display Mode is Dynamic (hybrid).
+>=20
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +              - fsl,rpmsg-gpio
+> > +          - const: rpmsg-gpio
+> > +      - const: rpmsg-gpio
+> > +
+> > +  reg:
+> > +    maxItems: 1
+>=20
+> I still don't understand how 'reg' is determined. You may have explained =
+it
+> previously, but *this* patch needs to make me understand.
+>=20
 
-Traced RDNT - it's set by GPS function 19 in the ACPI tables:
-Case (0x13)
-{
-    Debug =3D "GPS fun 19"
-    \_SB.PCI0.SBRG.RDNT =3D (Local1 + 0xD1)
-}
+I see. Will add a description for this item.
 
-As far as I can understand GPIO initcall blocks at late_initcall_sync, prev=
-enting nvidia=20
-from loading in time to respond. Based on the timing, GPU is awake but noth=
-ing can=20
-register a handler while kernel is stuck at NOD2 polling loop.
+> > +
+> > +  "#gpio-cells":
+> > +    const: 2
+> > +
+> > +  gpio-controller: true
+> >        memory-region =3D <&vdev0buffer>, <&vdev0vring0>, <&vdev0vring1>=
+,
+> <&rsc_table>;
+> >        syscon =3D <&src>;
+> > +
+> > +      rpmsg {
+>=20
+> What's the purpose of this node? Is it going to contain things other than=
+ "rpmsg io
+> channels"?
+
+It represents the RPMSG bus between Linux and the remote processor, and wil=
+l eventually=20
+host additional channels such as rpmsg-i2c-channel and rpmsg-pwm-channel.
 
 Thanks,
-Francesco
+Shenwei
 
+>=20
+> > +        rpmsg-io-channel {
+> > +          #address-cells =3D <1>;
+> > +          #size-cells =3D <0>;
+> > +
+> > +          gpio@0 {
+> > +            compatible =3D "rpmsg-gpio";
+> > +            reg =3D <0>;
+> > +            gpio-controller;
+> > +            #gpio-cells =3D <2>;
+> > +            #interrupt-cells =3D <2>;
+> > +            interrupt-controller;
+> > +            interrupt-parent =3D <&rpmsg_gpioa>;
+> > +          };
+> > +
+> > +          gpio@1 {
+> > +            compatible =3D "rpmsg-gpio";
+> > +            reg =3D <1>;
+> > +            gpio-controller;
+> > +            #gpio-cells =3D <2>;
+> > +            #interrupt-cells =3D <2>;
+> > +            interrupt-controller;
+> > +            interrupt-parent =3D <&rpmsg_gpiob>;
+> > +          };
+> > +        };
+> > +      };
+> >      };
+> >  ...
+> > --
+> > 2.43.0
+> >
 
