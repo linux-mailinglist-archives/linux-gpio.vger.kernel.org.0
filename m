@@ -1,122 +1,168 @@
-Return-Path: <linux-gpio+bounces-29708-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29709-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EEA9CC7E2E
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 14:40:53 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 770A9CC8185
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 15:11:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DAF27301D057
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 13:40:52 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 799A930569B0
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 14:04:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6073036404F;
-	Wed, 17 Dec 2025 13:36:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BE1C382BCF;
+	Wed, 17 Dec 2025 14:02:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XGNV5C/3"
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="LixhGvrN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from mail-244122.protonmail.ch (mail-244122.protonmail.ch [109.224.244.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC523587D6;
-	Wed, 17 Dec 2025 13:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C740838E143
+	for <linux-gpio@vger.kernel.org>; Wed, 17 Dec 2025 14:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765978607; cv=none; b=fUi8k2eFZ8kSWieWUOAmJLwQ11XPWUhQFj6V/qb225kbZdJwG2DoVRXj6rB/O9AdvO6DM3ihoSiZ84EcsQUE8dF4iNZSquXLWfvxmrlg3z4KVmic8SXMaEuTXGpcHJzY0Wjoo9qNbfNiLUC3pfznbfuOeZz6kiH8OzifxuFu2/Y=
+	t=1765980121; cv=none; b=nikjnz4zEeFepY5H41HjdjGZ7tGKQy2MXRjAbFhedgbDEQmJW5YqTex02cVikUyccjcnnW5JW+rRE8uw7w2lxFvBa/2Y2vJZz8zSp4ewwrcfQY+rVvoZzJOelo2Oq5azqf0bktMTN7qRT2m4mghfwFuC9yo6rZUGd9n6x4SVKtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765978607; c=relaxed/simple;
-	bh=LIkfmsbB41k+9MsbsTLxVnGV4T9iI8gQK3V6MzvEhm0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RqaWj27SKuatp5FqYI4wLxyjRbMQJPy3pnzr3opKBZXMBoKpcDvJU68zAsoR5UJHsjbAkUwiqdE9NSmhIw4lHSGnvpuY0VzDe2KKBECiWIE+638ekvcGDfct9jV0mxkEHISfHk2EVLDE/zSrVd0X11A4Cf8ScdgfZ4tTB2K+mSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XGNV5C/3; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 4BFB54E41C5E;
-	Wed, 17 Dec 2025 13:36:44 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 1C7596072F;
-	Wed, 17 Dec 2025 13:36:44 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D5222102F0ACC;
-	Wed, 17 Dec 2025 14:36:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1765978599; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=CPXK4xPFSHub2GLu8DYY2PFIxvuvqeXwLRAJB3rF6Zg=;
-	b=XGNV5C/37zt5xJYUbV5+er/pOUhqxWDp/E+zg87FeA0jrvhyQhwwVGGZxM20RzyDKhp0Z0
-	NTbwNURB9XUiJa3dz060QeAPYZl0z4hKKucFHd2F43RBBEhfAn0fKaUimGpJX5hNX6ykf3
-	oT1gXXu+LqcBHY1eyM32QKRMGv1m7o/8l+9TisBEkaoyPazJ1erbPJ33SAsrWn4anEZcV6
-	eEdL6i+8aWnVuIVSl9/EniQorjqgPiTwaEBivlPic7anlAFb24CE83CGwAPQ7XKC0YOJ9w
-	H9sXQvz7SjzHC0hlq4Dx1C8NJgUXVsu9o99ULkA0HR9xNFpKzkQhL8aLCjNnmg==
-From: =?utf-8?q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>
-Date: Wed, 17 Dec 2025 14:36:03 +0100
-Subject: [PATCH 13/13] MAINTAINERS: Mobileye: Add EyeQ6Lplus files
+	s=arc-20240116; t=1765980121; c=relaxed/simple;
+	bh=u25j76qwGnRUqcQwkw9CffxRdmeo2S9TfbZWsUxPi54=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FkNg6xfhfRPNBqsFDXSe0DbGx5ZRywFyDGF7VWysBkJynZtZ+ZULch9dR4JzFkhf2AI0QM+cYar/9ZZ/Pa5oR7PfMrO0J5eTAffNCSZM9NCnPIeai0Amo3ukRVnei1pTNZon0kzNHuBFtyK5OB/qgv55iFil7i7VJ1oyi/j/S3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=LixhGvrN; arc=none smtp.client-ip=109.224.244.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1765980115; x=1766239315;
+	bh=u25j76qwGnRUqcQwkw9CffxRdmeo2S9TfbZWsUxPi54=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=LixhGvrNQ4cBW7ZKRVLqubWtljJk8MSpwhNtGgQIgp5T/xus2XHdq9o3VlyFwhheM
+	 mEUqhv6gRwOv6cGKZl5SHLhGqHmSnh02QXd/Mtn0hsh3xCFiLBo9izxPkxZbRN+Mxl
+	 um09jzeU7PgzHjMompVUGFXdZfM0GhwFRJcMKp2QCRa4fuCtuFeRLY7ZZYp16DDD/+
+	 Jt2THDcgYK5FHDN0Wa4Ep1NZo0vicObBGY585htRtSTXd+HX2shYYZNRUitL0MkuKY
+	 JPMXIzoxpI/Xa7jkv9wi8d9vwaicYAYcJxlHjQ5IeZwljqGrPDu9BvVGgHBiOa4mTH
+	 e3RKTu8pYk94A==
+Date: Wed, 17 Dec 2025 14:01:51 +0000
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Francesco Lauritano <francesco.lauritano1@protonmail.com>
+Cc: Mika Westerberg <westeri@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: acpi: Disable edge events on boot on ASUS ROG Strix G16 G614PP
+Message-ID: <X9fJuqzxIBzuhcbjDFYBPSScoKnUpKLe13znKYaJkJpgmjcbfF6_RN2_24ksQq0Hwyvy9pVrnL7_vHEarnQyUBC0zBLmhlvp75nNhgmq7OI=@protonmail.com>
+In-Reply-To: <20251217130822.GS2275908@black.igk.intel.com>
+References: <2kSCn4XaoXsXJ3EUR0syTdmip8Z1cBuUr0Br4sFVnwnsA8q4GlhiHOmsJkeBxvxYoLnetp4r44wIPXw42yTAFl-BtMROnIwR-NkckKgA5EY=@protonmail.com> <6iFCwGH2vssb7NRUTWGpkubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pnu5hzPguTa0s=@protonmail.com> <20251217120146.51321-1-francesco.lauritano1@protonmail.com> <20251217130822.GS2275908@black.igk.intel.com>
+Feedback-ID: 66654272:user:proton
+X-Pm-Message-ID: 8daf313e9631af51c88f53e393a3181169e4a355
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20251217-eyeq6lplus-v1-13-e9cdbd3af4c2@bootlin.com>
-References: <20251217-eyeq6lplus-v1-0-e9cdbd3af4c2@bootlin.com>
-In-Reply-To: <20251217-eyeq6lplus-v1-0-e9cdbd3af4c2@bootlin.com>
-To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- Gregory CLEMENT <gregory.clement@bootlin.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
- Linus Walleij <linusw@kernel.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-mips@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
- =?utf-8?q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>
-X-Mailer: b4 0.14.3
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Use wildcard to match all EyeQ defconfigs under arch/mips. This covers
-the newly added defconfig, and the EyeQ5 and EyeQ6H ones. Add an entry
-for the dt-bindings header of the EyeQ6Lplus clocks.
+Hi Mika,
 
-While at it, add myself to the maintainers of Mobileye MIPS SoCs.
+Thanks for looking into this. Happy to dig deeper.
 
-Signed-off-by: Benoît Monin <benoit.monin@bootlin.com>
----
- MAINTAINERS | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Here are the requested dumps (boot with initcall_debug, no workaround):
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5b11839cba9d..d9ad70501278 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17595,6 +17595,7 @@ F:	drivers/media/dvb-frontends/mn88473*
- 
- MOBILEYE MIPS SOCS
- M:	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-+M:	Benoît Monin <benoit.monin@bootlin.com>
- M:	Gregory CLEMENT <gregory.clement@bootlin.com>
- M:	Théo Lebrun <theo.lebrun@bootlin.com>
- L:	linux-mips@vger.kernel.org
-@@ -17602,12 +17603,13 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/mips/mobileye.yaml
- F:	Documentation/devicetree/bindings/soc/mobileye/
- F:	arch/mips/boot/dts/mobileye/
--F:	arch/mips/configs/eyeq5_defconfig
-+F:	arch/mips/configs/eyeq*_defconfig
- F:	arch/mips/mobileye/board-epm5.its.S
- F:	drivers/clk/clk-eyeq.c
- F:	drivers/pinctrl/pinctrl-eyeq5.c
- F:	drivers/reset/reset-eyeq.c
- F:	include/dt-bindings/clock/mobileye,eyeq5-clk.h
-+F:	include/dt-bindings/clock/mobileye,eyeq6lplus-clk.h
- 
- MODULE SUPPORT
- M:	Luis Chamberlain <mcgrof@kernel.org>
+dmesg: https://gist.github.com/kylan11/63ec3ec319cd6bcaa043fa0b1366965a
 
--- 
-2.52.0
+acpidump: https://gist.githubusercontent.com/kylan11/7956bbf75714265107f088=
+6f6ed2a381/raw/1614845eb1dc6ab7e2effb6fe56b585a746abe4f/gistfile1.txt
 
+Some quick notes:
+- The AMD GPIO controller probes successfully (LINE 2077)
+
+- The hang occurs in the deferred IRQ handler (line 2960)
+
+- There are some ACPI errors around 0.285373 to 0.289806, though they compl=
+ete quickly
+
+- After the 36-second hang, everything else initializes normally.=20
+touchpad, audio, wifi, nvidia GPU all work fine.
+
+The ACPI tables show there's a _AEI method under \_SB_GPIO. Not sure if tho=
+se
+unresolved GPP2/GPP7 references are related to what's blocking the deferred
+IRQ handler, or if it's something else entirely.
+
+Let me know if you need anything else or want me to test something specific=
+.
+
+Thanks,
+Francesco
+
+
+On Wednesday, December 17th, 2025 at 2:08 PM, Mika Westerberg <mika.westerb=
+erg@linux.intel.com> wrote:
+
+> Hi,
+>=20
+> On Wed, Dec 17, 2025 at 12:01:52PM +0000, francesco.lauritano1@protonmail=
+.com wrote:
+>=20
+> > From: Francesco Lauritano francesco.lauritano1@protonmail.com
+> >=20
+> > On the ASUS ROG Strix G16 G614PP (2025), the kernel can stall for ~36
+> > seconds during late init in acpi_gpio_handle_deferred_request_irqs().
+> >=20
+> > Booting with gpiolib_acpi.run_edge_events_on_boot=3D0 avoids the stall =
+and
+> > restores normal boot times.
+>=20
+>=20
+> Okay but it might just accidentally "work" and hides the real issue. Doin=
+g
+> things like this blindly might end up breaking something that relies on
+> that _AEI.
+>=20
+> Can you post full dmesg and acpipdump somewhere so we can try to figure o=
+ut
+> what is going on?
+>=20
+> > Add a DMI quirk to disable edge events on boot by default on this model=
+.
+> >=20
+> > Link: https://lore.kernel.org/platform-driver-x86/6iFCwGH2vssb7NRUTWGpk=
+ubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pn=
+u5hzPguTa0s=3D@protonmail.com/
+> >=20
+> > Tested-by: Francesco Lauritano francesco.lauritano1@protonmail.com
+> > Signed-off-by: Francesco Lauritano francesco.lauritano1@protonmail.com
+> > ---
+> > drivers/gpio/gpiolib-acpi-quirks.c | 16 ++++++++++++++++
+> > 1 file changed, 16 insertions(+)
+> >=20
+> > diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-=
+acpi-quirks.c
+> > index a0116f004..763dd3cbd 100644
+> > --- a/drivers/gpio/gpiolib-acpi-quirks.c
+> > +++ b/drivers/gpio/gpiolib-acpi-quirks.c
+> > @@ -370,6 +370,22 @@ static const struct dmi_system_id gpiolib_acpi_qui=
+rks[] __initconst =3D {
+> > .ignore_wake =3D "ASCP1A00:00@8",
+> > },
+> > },
+> > + {
+> > + /*
+> > + * The ASUS ROG Strix G16 (2025) has a buggy ACPI GPIO configuration
+> > + * causing acpi_gpio_handle_deferred_request_irqs() to stall for
+> > + * ~36 seconds during boot.
+> > + *
+> > + * Found in BIOS G614PP.307.
+> > + /
+> > + .matches =3D {
+> > + DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> > + DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16 G614PP_G614PP"),
+> > + },
+> > + .driver_data =3D &(struct acpi_gpiolib_dmi_quirk) {
+> > + .no_edge_events_on_boot =3D true,
+> > + },
+> > + },
+> > {
+> > /
+> > * Spurious wakeups, likely from touchpad controller
+> > --
+> > 2.52.0
 
