@@ -1,90 +1,171 @@
-Return-Path: <linux-gpio+bounces-29710-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29711-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BD5CCC848D
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 15:51:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DBF3FCC834B
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 15:32:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B35C53012777
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 14:41:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4A69D306D8F8
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Dec 2025 14:24:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3C67393DC2;
-	Wed, 17 Dec 2025 14:07:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 902B1341666;
+	Wed, 17 Dec 2025 14:23:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="COj/Z3nK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9gPmFlq"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CAA393797;
-	Wed, 17 Dec 2025 14:07:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458B533B6F8;
+	Wed, 17 Dec 2025 14:23:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765980434; cv=none; b=DzMChH4IMZ7N3v/z4OR7E4Yrp8qg3PrDKT5gZvSLXqTcrEZkVfckE1ZrDs854bxOb4myz20agav8MEuVKq6btQIgTjmShfwj8LZlUgVQJvEKElnIimxEF6P6Adi8TfPx93AlcLe1ldr3ZcjQ3pX9A3Bjl9Oj4J21xCZOpKKS35k=
+	t=1765981383; cv=none; b=tBA4Jl6SbQIZEsrNq/mezXm8bfISWy7vd+688wzIs2LrsGesyZNnRrT+xwZx5XA9kYwLSHLAqtBCMPlVWBFMzI1lIVdtkuE9ZdyQlE3YaW0RGP3teN6hCS6/8rL/MFZhjLEue175iIJRaNKQqzGkj9Wtg6Vk4siucyXMsScke3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765980434; c=relaxed/simple;
-	bh=BBej7b2TZcIfv26VO07aVWI/nJSmjhBy+pY5L+9zcb8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FvW7cOP4Lj16eITkAdUzFWZf/AFk8L5uV5c6wnpQbpICBhcETCwxZHc4tR44+2Jq1BG7q+3W0vd6R2xS3hjvcE6kvMZo3n3NEp9qNlQQ0LT3PxUAteaYvzZbTrc7d/MnTPoohu5jK1G/Kcd2GXxg2R5O8B7UDSsGH8dRszNn2kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=COj/Z3nK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7828C4CEF5;
-	Wed, 17 Dec 2025 14:07:13 +0000 (UTC)
+	s=arc-20240116; t=1765981383; c=relaxed/simple;
+	bh=SEcdHCQ4hyzEe6q3rbznOxDqeVfF4KdBSqC+7BJbnqg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FGIbownjnZt+HzC6nYzhiTeXIoUneu7QodZvLzdQqdZ/iW0u1NqSUpRBP27um/vSXtBhP6+zaOWUwsiVCUGdAfHaGtKe6+GAmKUuMbJumhe6QwDl5cx8Gzq2Kaijc/99OXnyVpcCY+yeC465oNWWu1UIuVYeegvnZ1sIcl+MX8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9gPmFlq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60C4AC4CEF5;
+	Wed, 17 Dec 2025 14:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765980434;
-	bh=BBej7b2TZcIfv26VO07aVWI/nJSmjhBy+pY5L+9zcb8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=COj/Z3nKklzgE1lymvXRLZGmg/6UR6V78uX8ycnn0SpbWOJFD//Tg/lKvkrv+zzpt
-	 KJmm3fOvLHd4j4ZFg+6/uGG4WACNgTs/vdylLOhGT5TANFGTJK2lPvQN4/Z1QG26CY
-	 Jj2buSSzuYkRB41d1MQmoOV6hGIL2FdNUHCgu0Uoo0WNYpPU2XS3yp5nwVsioshvWP
-	 cGUceKKnL2caC3UC1OAflD7JMCoqIWXwNe8O5eaiMPqs7HJ2EMcAhYjt8I+IFQtxQs
-	 3HlkLx7Kss0Kh/B/ENnxkaAwJxYiJzpVokdyTv6qtVRgPJfTodJSPLHuxzcH2dOQwj
-	 Rwr2agbdZ/hXQ==
-Date: Wed, 17 Dec 2025 08:07:09 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: Andrew Jeffery <andrew@aj.id.au>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	openbmc@lists.ozlabs.org, Vinod Koul <vkoul@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org,
-	linux-aspeed@lists.ozlabs.org,
-	Linus Walleij <linus.walleij@linaro.org>, linux-pci@vger.kernel.org,
-	Joel Stanley <joel@jms.id.au>, Bjorn Helgaas <bhelgaas@google.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>
-Subject: Re: [PATCH v7 2/7] dt-bindings: PCI: Add ASPEED PCIe RC support
-Message-ID: <176598042865.925447.819427829703405501.robh@kernel.org>
-References: <20251216-upstream_pcie_rc-v7-0-4aeb0f53c4ce@aspeedtech.com>
- <20251216-upstream_pcie_rc-v7-2-4aeb0f53c4ce@aspeedtech.com>
+	s=k20201202; t=1765981381;
+	bh=SEcdHCQ4hyzEe6q3rbznOxDqeVfF4KdBSqC+7BJbnqg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=R9gPmFlqb+KS5GweeIXUizpWihybg6WdSUGsBXJqze0npuf0c+7xP0z42rpkpkCyR
+	 RFCJ71xX+MMVlMnhF2MzBqptmW5WKaBjKNPg+fQXjXjfS0eeRYKcyQmJzzExVJEALm
+	 vvTXQZkn74Bcs5SQY7hoW/sqV2DslFF59lkPZIFwqRzRzz2UhxSA+HHLvJrfY9q+Yp
+	 gmzvQ1UnzgRfI+wuR6OugjzA3ZjsDIjYLoFm0TqYjhfKXRESY0O1Zx0sUjnZl0rCLU
+	 R3htBRoohyF2QDFowUGm0oj91Miw2t+/F67d17k34kjXB67AT6eEeLOAvvKoIzA02n
+	 bcZgyQxeB/0+A==
+Message-ID: <4402ed86-77f5-4a47-a9e1-8d57a709bb15@kernel.org>
+Date: Wed, 17 Dec 2025 08:23:00 -0600
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251216-upstream_pcie_rc-v7-2-4aeb0f53c4ce@aspeedtech.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] 36-second boot delay due to by
+ acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
+To: Francesco Lauritano <francesco.lauritano1@protonmail.com>,
+ Hans de Goede <hansg@kernel.org>
+Cc: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+References: <2kSCn4XaoXsXJ3EUR0syTdmip8Z1cBuUr0Br4sFVnwnsA8q4GlhiHOmsJkeBxvxYoLnetp4r44wIPXw42yTAFl-BtMROnIwR-NkckKgA5EY=@protonmail.com>
+ <6iFCwGH2vssb7NRUTWGpkubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pnu5hzPguTa0s=@protonmail.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <6iFCwGH2vssb7NRUTWGpkubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pnu5hzPguTa0s=@protonmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+++linux-gpio, Hans
 
-On Tue, 16 Dec 2025 09:50:01 +0800, Jacky Chou wrote:
-> ASPEED AST2600 provides one PCIe RC for Gen2 and AST2700 provides three
-> PCIe RC for two Gen4 and one Gen2. All of these RCs have just one root
-> port to connect to PCIe device. And also have Mem, I/O access, legacy
-> interrupt and MSI.
+On 12/17/25 4:06 AM, Francesco Lauritano wrote:
+> ASUS ROG Strix G16 G614PP (2025) experiences a 36-second kernel boot delay caused by `acpi_gpio_handle_deferred_request_irqs()` hanging during late_initcall_sync. The workaround is `gpiolib_acpi.run_edge_events_on_boot=0`.
 > 
-> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
-> ---
->  .../bindings/pci/aspeed,ast2600-pcie.yaml          | 182 +++++++++++++++++++++
->  1 file changed, 182 insertions(+)
+> System Information
+> ------------------
+> 
+> -   Hardware: ASUS ROG Strix G16 G614PP_G614PP
+> -   DMI Product: ROG Strix G16 G614PP_G614PP
+> -   DMI Vendor: ASUSTeK COMPUTER INC.
+> -   BIOS Version: G614PP.307 (08/14/2025)
+> -   CPU: AMD Ryzen (Strix Point)
+> -   GPU: NVIDIA (with nvidia-open 580.105.08)
+> -   Distribution: EndeavourOS
+> -   Kernel: 6.17.9 (also reproduced on zem)
+> -   Bootloader: systemd-boot with dracut
+> 
+> Problem Description
+> -------------------
+> 
+> The system takes approximately 56 seconds to boot, with 37.8 seconds spent in the kernel phase. Using `initcall_debug`, the culprit was identified as:
+> 
+>      [    1.739645] calling  acpi_gpio_handle_deferred_request_irqs+0x0/0x40 @ 1
+>      [   38.077788] initcall acpi_gpio_handle_deferred_request_irqs+0x0/0x40 returned 0 after 36338138 usecs
+> 
+> The kernel goes completely silent between ~2 seconds and ~38 seconds (no dmesg output during this period):
+> 
+>      [    2.607764] clocksource: Switched to clocksource tsc
+>      [   37.828217] clk: Disabling unused clocks
+> 
+> Windows boots normally on the same hardware, indicating this is a Linux-specific ACPI handling issue.
+> 
+> systemd-analyze output
+> ----------------------
+> 
+>      Startup finished in 8.593s (firmware) + 1.273s (loader) + 37.877s (kernel) + 4.645s (initrd) + 3.831s (userspace) = 56.221s
+> 
+> ACPI Errors During Boot
+> -----------------------
+> 
+> The following ACPI errors appear in dmesg (though these complete quickly and are not the direct cause of the delay):
+> 
+>      ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PCI0.GPP2], AE_NOT_FOUND (20250404/dswload2-162)
+>      ACPI Error: AE_NOT_FOUND, During name lookup/catalog (20250404/psobject-220)
+>      ACPI: Skipping parse of AML opcode: Scope (0x0010)
+>      ACPI Error: AE_NOT_FOUND, While resolving a named reference package element - \_SB_.PCI0.GPP7.UP00.DP00.U4UP.U4P3.UHI0 (20250404/dspkginit-438)
+>      ACPI: [Firmware Bug]: BIOS _OSI(Linux) query ignored
+> 
+> GPIO-related dmesg output
+> -------------------------
+> 
+>      [    0.257981] calling  pinctrl_init+0x0/0xc0 @ 1
+>      [    0.257982] pinctrl core: initialized pinctrl subsystem
+>      [    0.257994] initcall pinctrl_init+0x0/0xc0 returned 0 after 0 usecs
+>      [    1.612848] calling  amd_gpio_driver_init+0x0/0x20 @ 1
+>      [    1.613779] initcall amd_gpio_driver_init+0x0/0x20 returned 0 after 930 usecs
+>      [    1.739645] calling  acpi_gpio_handle_deferred_request_irqs+0x0/0x40 @ 1
+>      [   38.077788] initcall acpi_gpio_handle_deferred_request_irqs+0x0/0x40 returned 0 after 36338138 usecs
+> 
+> Workaround
+> ----------
+> 
+> Adding the following kernel parameter resolves the issue and reduces boot time to ~10 seconds:
+> 
+>      gpiolib_acpi.run_edge_events_on_boot=0
+> 
+> Impact of Workaround
+> --------------------
+> 
+> Testing with the workaround applied, no obvious regressions have been observed:
+> 
+> -   Lid switch works
+> -   Power button works
+> -   Keyboard function keys work
+> -   Sleep/wake works
+> 
+> Long-term, a DMI quirk entry for this device would be preferable.
+> 
+> Suggested Fix
+> -------------
+> 
+> Add a DMI quirk entry to `drivers/gpio/gpiolib-acpi.c` for the ASUS ROG Strix G16 G614PP, though it may be needed on other ROG/Strix/Zephyrus models from 2021-2025.
+> 
+> Steps to Reproduce
+> ------------------
+> 
+> 1.  Install Linux on ASUS ROG Strix G16 G614PP (2025)
+> 2.  Boot without `gpiolib_acpi.run_edge_events_on_boot=0`
+> 3.  Observe ~40 second boot time with `systemd-analyze time`
+> 4.  Add `initcall_debug` to kernel parameters and observe the 36-second hang in `acpi_gpio_handle_deferred_request_ir`
+> 
+> 
 > 
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+The behavior to run these interrupts at boot was introduced by:
 
+https://git.kernel.org/torvalds/c/ca876c7483b6
+
+Have you already analyzed the ACPI tables to understand where the large 
+delay is coming from?  I think before jumping into the quirk like the 
+LLM you used suggests we should understand which deferred interrupt 
+handler is causing the issue to make sure we're not masking another issue.
+
+Could you please attach the acpidump to a kernel Bugzilla to look over?
 
