@@ -1,163 +1,363 @@
-Return-Path: <linux-gpio+bounces-29735-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29737-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAD9DCCB62A
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 11:32:02 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF9EDCCB699
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 11:36:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CFC31302B303
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 10:29:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 07E3230D556B
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 10:30:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5AC82ECD32;
-	Thu, 18 Dec 2025 10:27:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 447B7277C96;
+	Thu, 18 Dec 2025 10:30:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IJNXqYjZ";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Xi20Ze0u"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="FHpBc3tE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1842264A3
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Dec 2025 10:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766053665; cv=none; b=bdCAQDG00Ak2cC4m81UItQDR5fJe9aUzzzie3+rVLETSlWR7P4zoXxnccA9XdBMkMMHMHDmsU1bdkglhXWs20iSLEuJVyxmAcDGO8iJzqFuL6ZglDcljjjE9iECpjszUF73ViApJydOAZa3XrKZVjMmSGYL9Ab/OgOV/y2C1cYQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766053665; c=relaxed/simple;
-	bh=OI71iMPCva/n2OGZyxyBKYJ1LY828j88+PQeNz7+1mM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eGIyvllTO8QCXAzYdjIGvP2hCav+NsyazJXLm9Qfq4jZT8za6JXH/dRX7PlILFxuoY6fn3mu3E2x1vHhq5IH5WfdwC6p+cJytCuvGvoOiwUykDSWBJ24/9NVlCJp3fJSaae5G/RtIxmMxQmlKP1WZXFkEL57235g39waIbT+xrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IJNXqYjZ; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Xi20Ze0u; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BI9N3Hh4057302
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Dec 2025 10:27:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Co3+UnxzYNDboe0H8zPytVumPx/fk5cCzhFhhgpDVMQ=; b=IJNXqYjZD2Rj/hNw
-	J5gw/J/isgvIQznAd+3v16hKtA0gdCOF9xhFTMuTf2I6RVa3Rvi9MPWMjnT9WFtT
-	m+m2/WsqYaHV/yXk5ddqUSB62PmzbU426AQq3+5BOtR00xEj6MNc1TPWw6SJjMjv
-	nfUkyFReFTid2AuTAdZojZOxHTvaRrAV9NDI80gmoR/EOlMqf45FoSeelUIej0Li
-	4ZvBkbe0QYof3lMdhPqkIBfxbcAc52lAMY19WPI+vAt1HRisg65NsrYi5+j6sVdO
-	qrSfnRfOodQ4NlfZ7qMG6dKEIbiMKtdI4icYvMY0lSRwO5m1JWFV4vpz4Vw1HBbf
-	Avwt9g==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4b3xr5b790-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Dec 2025 10:27:43 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4ee0c1c57bcso15602161cf.2
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Dec 2025 02:27:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1766053662; x=1766658462; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Co3+UnxzYNDboe0H8zPytVumPx/fk5cCzhFhhgpDVMQ=;
-        b=Xi20Ze0uELR6K04WLEjHsfSnp6e8rsTEmZulcl4agb7Wl/mkhni7qiNklSpDKrrynW
-         OW6/vToHMwqNxQar18OOh8k3/kwUICELg+joQbN3TTw8QAsNjZspher3olAtFBhqlo9s
-         vD/hcotQS2Zilq4nI/6X/QOAu++i8N74/rmFr6QgJWBZD2E+R3qtpA1MckSMyWMjOLdV
-         HcJooH0HP43zg9oc8blsM8CEfZRuKkw/Zn7tklM+C4N/yXJ1iIF4Nh8XGLT3a4d5o9ix
-         TtQPTFrsWW9/j+14EeXLquWA9VvU2Ixczk4iLRRz+FssmKbJElpsR63RE5jMvl9aEpl6
-         WtHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766053662; x=1766658462;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Co3+UnxzYNDboe0H8zPytVumPx/fk5cCzhFhhgpDVMQ=;
-        b=DsKvrur5IQNYe3/iixbFit5+oUlFThRnejMNyWP4eU91wo1Nx0TI5k4nXo8j7DvsGb
-         m3DfXFz2oZ+zdJ6kOpFI4X6KeDSYzB3IMZ48lp/KkVVxj7Xm4YQrMKrjPQwGwsL97cAw
-         lXTs2MU5X0QJFnXaj/k8BvBqLI0Vf05+tIom7SMtFofBAj6SA2nDhL57LLL/52PUYNZ+
-         OxpiI0yPJGcRvbA2L16W8Nq7quVP2p/NaQdhEWiSroZ6A4ZeVRWMBRsAoy4NGM2YXxLJ
-         5SzrFtyYCVsty0sHTIwNJ6NzfLsAHXS5puQEQQb2q69owy9MvboOUyLM4hSRxDdYiopA
-         4J9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWsk/yHGMkv4hf/8f7ujKrDyDs7z/ifY0n/rkyHHLXghMpNHOYaiMLOawEkUlZUuYCv0rlZoop+BKFm@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjdVQM6CoZDBcClpQrPyTNeNBHss6TwAVi/95BPakv83PQyybM
-	9ufgf2VcVjWoxb/jmOr3JhBDhl0Oox6vMlNAa4TyfBWCxUYfwTkNx47yVUaRT57vMxddUBbFklL
-	LOmoEi27hsOn/eqXvBczq5ZlqvSd/4tsryJrZCplixwNxaNzCSgvtJgQpahmDF19J
-X-Gm-Gg: AY/fxX5ebUNGTe6DTkuM/rb7uo43YqTTXd0CtDsX9oiHbWPMpz4y1aO/+d2EztxtQeV
-	rdPS5v9DuDcYcUSglK08lITtGL7rJ8y+YD0AeLwGNR0Pt9Uvst0/Q6aXRkNh9OeafRdvcjdJ0xy
-	ADQcNQHGhiDcepCddyDvgWlF5HFTBaKoKVwZYIMWFqWU23kkAMTRqRrccqC5jrcaRwVXlPgQigy
-	OtAhoVTdl4FkEsOJljPjujACdkb832gM03ZMDJrg1qTIkFpjeAGSzQgj1XjQdB2Yv7k+sUXGGW1
-	Eb2y/rLdC2ocgHN0bApEeiwvCgY+yI15zIWLYPRM7NvH587kbv1eJMXhpoNyMxGQoNvSfqz2q9n
-	dEE88lbt2LFiLa/8wuxtT5QDGRBLOCzy9KjlfjzU=
-X-Received: by 2002:a05:622a:4891:b0:4ee:1b36:b5c2 with SMTP id d75a77b69052e-4f1d05fda8cmr274645731cf.68.1766053662492;
-        Thu, 18 Dec 2025 02:27:42 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGH8Xs99lwk0ln8Fhm8MT0KYk43fwblcEWogwddMnWX6PXNnrsr2mBiRPPS1m4a03lPfWrYtg==
-X-Received: by 2002:a05:622a:4891:b0:4ee:1b36:b5c2 with SMTP id d75a77b69052e-4f1d05fda8cmr274645531cf.68.1766053662095;
-        Thu, 18 Dec 2025 02:27:42 -0800 (PST)
-Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:f231:224c:1d69:c0c1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432448ca8dbsm4192238f8f.0.2025.12.18.02.27.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Dec 2025 02:27:40 -0800 (PST)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        =?UTF-8?q?Levente=20R=C3=A9v=C3=A9sz?= <levente.revesz@eilabs.com>,
-        Jan Remmet <j.remmet@phytec.de>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        devicetree@vger.kernel.org, upstream@lists.phytec.de,
-        Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Subject: Re: [PATCH v2 0/3] gpio: pca953x: Add support for TCAL6408 TCAL6416
-Date: Thu, 18 Dec 2025 11:27:35 +0100
-Message-ID: <176605365223.36578.17805523730541624399.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251216-wip-jremmet-tcal6416rtw-v2-0-6516d98a9836@phytec.de>
-References: <20251216-wip-jremmet-tcal6416rtw-v2-0-6516d98a9836@phytec.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E6119755B;
+	Thu, 18 Dec 2025 10:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=185.132.182.106
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766053830; cv=fail; b=KXpKTzCep8DnXdysgleAR/hH/vUxaEvLIeWyB25Weeh3N76Cp9MdoPvNQRgRGf6H6dk9BgYFzId5pg4eqnP8RYqKxJ3Jl7E4k63PzvACR/oa4D4QmeQCiDz6t9CFe7hgucp5At2pROzm7r37inoN1GGmttO5LreKYkiSFvH38X4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766053830; c=relaxed/simple;
+	bh=xaEXZfGrlA1mSTghtQgQCneDWuPdo/gwSww3C9PFT0c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rofLL8HgcxTcSOn4ZKYTqP3Krd0NG6mNgMSmpduh3+bGzQw3kiYRMhkvc3EfmfyTShbpqFaszmVionUlDdda9tCwghH7ar57M8zzvpnnzs3PlxhGZHJsjAQLOmhyfoCqQBSg+FHRJ75Jqtm+bOqiCTRogxJTXLlxiPzcwmS7Nzk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=FHpBc3tE; arc=fail smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BIANJrd2086179;
+	Thu, 18 Dec 2025 11:29:54 +0100
+Received: from du2pr03cu002.outbound.protection.outlook.com (mail-northeuropeazon11011037.outbound.protection.outlook.com [52.101.65.37])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4b3xb73vts-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Thu, 18 Dec 2025 11:29:54 +0100 (CET)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HytNhJOpxUCTA5u6XeDUi3bimo3HLaS14Ks0i0Utuc2VDvCeNKnQSfMzRWYg7jV8w6Y2tHRnO9TaJ6UfYy+S2kZ8nIRgllybgTQi/4PJrjKzOwo8ju9OMwi+A0MYfvgTb9SzAzC5mWt0Fv10oZzffIJr3KkMGJ8I5GpipTzvSVnDNT7agICBVhZK0WmoqrG7iRcFhMMdjJ6p378b1F0YMRtjQvxNQRiaGkG2fqdpWzTir6lXuJCSnvrhQEaLxBKPUsihvqkz/1TURUkkOwjgl3RE7sTZ6xTfYS7vAW9wIPJxMBe1YCm2f4VyrlRDCFOc2nGi4nuiqigRmvJATRpT9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EOf9GceQ1+zOdDDlYCSkyGG9ZbiZqGL3a9c4+ZkFcc0=;
+ b=SOgxjFyqJI+rKUR5SNft0pchJCkmSSVYScjnTxZ5xrodu+D8tGktHBgln61bhP3VkpXlnlXL257s+lbSR/e8eWV4rSfnAhzlcu5hHMwDQ3bqxJHd5aTEr7fEFetrddPnvXMafYvw1qx7h9Ikct6EcezQ5XiCQGelgpuSmDRdn1/jDLcVKZ+VlbVJWdf3cCLzpsrctxC9sZ1CZXXZeVkBUIo2juhRJOoSkkmoxw650fHVZ1gtEYJW+qK+Dct+lHyrw+RfO8I1zQlf7WLMMJ3lozX+5dQAohPXJyuakJ9p5Q5mMKI9ooWwGuw8Od72gCyZYu1Gt7lqQbktByxlNYb2PQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 164.130.1.60) smtp.rcpttodomain=nxp.com smtp.mailfrom=foss.st.com; dmarc=fail
+ (p=none sp=none pct=100) action=none header.from=foss.st.com; dkim=none
+ (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EOf9GceQ1+zOdDDlYCSkyGG9ZbiZqGL3a9c4+ZkFcc0=;
+ b=FHpBc3tEdBUckbyZOF+pYMiK3dcWm7cgzd5JJiuoKndXb5FzarskPSQMYmWDY8tKUqgb8Gq7VQ4QaOrd0NurDixCdxGvydO6l6Tv34GHmJFpo+1aRSx2RfpkbNG5tz+KPPdVoSh0QAeJSCIFZDLUUJdCfSUBsel97z+6qM8znbAEtj9fE5RPhxWqdB5SX8nAo70+sMY9air8n8QX1wOoAQhn2kqDQhTmRzjqMzsjYVm3hGLmOsOX2zEFyMn/L8xRKJCSZWbX+LMONbtsyIuJa89FKkkFlBqQogBw8MPJP/11HurMbG9WmE6WTwrcWuzVIbYIeGRdCMa7Hz4UGc0fBQ==
+Received: from DU7P250CA0003.EURP250.PROD.OUTLOOK.COM (2603:10a6:10:54f::30)
+ by AS8PR10MB7182.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:61e::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.6; Thu, 18 Dec
+ 2025 10:29:48 +0000
+Received: from DB1PEPF000509FE.eurprd03.prod.outlook.com
+ (2603:10a6:10:54f:cafe::72) by DU7P250CA0003.outlook.office365.com
+ (2603:10a6:10:54f::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9434.7 via Frontend Transport; Thu,
+ 18 Dec 2025 10:29:46 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 164.130.1.60)
+ smtp.mailfrom=foss.st.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=foss.st.com;
+Received-SPF: Fail (protection.outlook.com: domain of foss.st.com does not
+ designate 164.130.1.60 as permitted sender) receiver=protection.outlook.com;
+ client-ip=164.130.1.60; helo=smtpO365.st.com;
+Received: from smtpO365.st.com (164.130.1.60) by
+ DB1PEPF000509FE.mail.protection.outlook.com (10.167.242.40) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9412.4 via Frontend Transport; Thu, 18 Dec 2025 10:29:48 +0000
+Received: from STKDAG1NODE2.st.com (10.75.128.133) by smtpO365.st.com
+ (10.250.44.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 18 Dec
+ 2025 11:30:33 +0100
+Received: from [10.48.87.127] (10.48.87.127) by STKDAG1NODE2.st.com
+ (10.75.128.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 18 Dec
+ 2025 11:29:46 +0100
+Message-ID: <f53639e8-feef-438a-9b1a-c349fc17d0c6@foss.st.com>
+Date: Thu, 18 Dec 2025 11:29:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: rLNgzjczqbS_8VIq2peR6VFEqlVOus_1
-X-Authority-Analysis: v=2.4 cv=DsBbOW/+ c=1 sm=1 tr=0 ts=6943d71f cx=c_pps
- a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=EUspDBNiAAAA:8 a=N8dQhNKznRLd4DIZfUgA:9 a=QEXdDO2ut3YA:10
- a=uxP6HrT_eTzRwkO_Te1X:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE4MDA4NSBTYWx0ZWRfX02ysEyCwVlhD
- DhDqSFs8XfSYEZntqHcwwSKTaDbsNTgkMTV+qFX0/coUuTemA8kwgY6Bi/G5YF7mCwx0sNktWSM
- id7MdAlsq39to18WIPk4wn1QPelNjyvFuNSdbk1GeEmvw29/RuDskZjOD4gwJ5PB1e5e/Jf7DRu
- CvDs2NlXMd8Il4KFxScR7Gt+sBp8rM+FFs5JlUyX5G+ExGS0aI1ofh4mw6BHBU6RRq9PxWPdbAX
- ycgS1//0asSNuG0rBbLxpS6HUMLNq7M2+4APVzhVp7HzhyeLcZJEt4VtNAEyCaPKC7nZBHemmrz
- j6cjySMGq7jkp2P2Jd9cGNrblIpVmOErW/opT+GqaFA1+lDT+yNf8Rsozu58WAx/S0OzeCJjRfS
- ZsTM6Qyh4WK/Po8PeAmvQ0kRvw0PmQ==
-X-Proofpoint-ORIG-GUID: rLNgzjczqbS_8VIq2peR6VFEqlVOus_1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/5] dt-bindings: remoteproc: imx_rproc: Add "rpmsg"
+ subnode support
+To: Shenwei Wang <shenwei.wang@nxp.com>, Linus Walleij <linusw@kernel.org>,
+        Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier
+	<mathieu.poirier@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer
+	<s.hauer@pengutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>
+CC: Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam
+	<festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        <imx@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-doc@vger.kernel.org>, <linux-imx@nxp.com>
+References: <20251212194341.966387-1-shenwei.wang@nxp.com>
+ <20251212194341.966387-2-shenwei.wang@nxp.com>
+Content-Language: en-US
+From: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
+In-Reply-To: <20251212194341.966387-2-shenwei.wang@nxp.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: ENXCAS1NODE2.st.com (10.75.128.138) To STKDAG1NODE2.st.com
+ (10.75.128.133)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB1PEPF000509FE:EE_|AS8PR10MB7182:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54d5cda5-9b2b-4c6f-a301-08de3e205f13
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|7416014|376014|36860700013|13003099007|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?M0RpbnF2TmVUOW9jQTlpbUhIL25ybXNpRGZSVFNjZmRQYWtxNENYcm9KTnY3?=
+ =?utf-8?B?VVZORjhwa0w1R1hNRFk3L01LbnYvN01vUCttK01GcHlIM0FhYUlFdFlINFM3?=
+ =?utf-8?B?WmtQRW55Q0RJN1R5cjZsRm9XdUI4OFFoNWxScHoyMUpzSVBhZWpmMG5PUWRF?=
+ =?utf-8?B?Nk1GeE1NbjlvVC90RnZmaXpqSlhleFdpcHc1Z0x5aDdLREl2YzNuTFZESmVx?=
+ =?utf-8?B?MnVGTDA0R1QrR0wyT0M5M3l1bURMOXo4UmFudGlndGRZZUlBWjVrVWEvTmlV?=
+ =?utf-8?B?c1ovenlETnV1Vll4aXU3NkxjRG80ZFpmTmZyaFkyN3hOSXQzaDhBTnp5amRu?=
+ =?utf-8?B?Q1VQVnAzRklXSExwM3lNZ0x4VGtuaG9ESzd0NEVhSXBpczNHMEUyNkJWcDg2?=
+ =?utf-8?B?RUxBSXQ1SEhDTWpneHh1OTF2YXhrTktkM2VjQ0Z1c012ZW9TbjdYTUJCdWl6?=
+ =?utf-8?B?WDZxVkxzMjhxRisyZyt4eTB6OEJvaml0ZzBCK25HRDJ5c1l2NThsUmRKQi9B?=
+ =?utf-8?B?NmtmSG9iU1ZZUE55VE05b2VFaExyQW5SbVdEU0oySklwQzloL2lvMGlKNWs2?=
+ =?utf-8?B?enVPU3FpcGUvNVorSE5MTVZlU056ZDN5T3pXbEI2ZGI4WmpRa2szbnR5VlBu?=
+ =?utf-8?B?MUQrZ1NUODhYN2l5dnN4UzFkQkZISTRQNzF3STNGOGZsaHM2S2VtWE50U1NV?=
+ =?utf-8?B?eVprNFJSNFdRODVKZDJBK09LNzB6WGRBRUF4M2s3Nk9COUg2S1RMMzc3aFRz?=
+ =?utf-8?B?MlFYSEdxNlpjdjdZN284YzdDS3dRVVA5NEJxRVJjY1hmOWE3azZCTlk4TXRS?=
+ =?utf-8?B?TUlXcFozQzZ4NFJqNnRiclNhY3lmVFlsNllJTnBsaVdJOVkzRGdXVlFMZ2Q0?=
+ =?utf-8?B?R29XTmd4R0ZPYUlOcE9sZnJnb0pqZjlNcjZZMnpvTCtFZllTdmpvTjlpdHZT?=
+ =?utf-8?B?ZHZlWlFETDkrUGxLa092elBPSHVJbDN1cEEzbWZMb3FlVlFOanBwY1Bkc2k0?=
+ =?utf-8?B?WFErZnR4R2dibEV2OHRXd3hPby9uZ0V2ZU9GR09RQmE4bWtTQnNZYTB2NkQ5?=
+ =?utf-8?B?V1R2OGVXOGtkb2xaSFczeXZYSVY5UFNaQjJnNzVsOEZKRXU2eUFSOEtuSDhN?=
+ =?utf-8?B?UkNTZ0IveldrWW1xT2JQZkl0RzRoRjNFQWk3MHFUZ2FrSTFQVXQ4TklvVjNT?=
+ =?utf-8?B?ZjRXRWN2OFdGTENLVm16MjFqN1BFV0ttbk54Q09DNWJLL3JrS0FhYWVPeG9X?=
+ =?utf-8?B?Q1JwYVVJdlBVUmhKUnlDU2Y3Z3VvZ0ZyU2NpNGZKQnErYzhxYzhHNjRjQ2ho?=
+ =?utf-8?B?eXJYYkdKQXFsR3laMXlETUlPT1diRmEwK1FvOVRYZURXdVRlaVFidkJ0d3o4?=
+ =?utf-8?B?SXJjdWhpdXJUcFQxY3VqaWttazVPWnoxSEk3b2h5T2FzWkhucjFwU2NzRVg0?=
+ =?utf-8?B?UGpYN2VjdGd3cHY1TnZTKzVhR0JRZ0lYRTM2bzM2Q0xVeERtMVVPUmZWOW5n?=
+ =?utf-8?B?dmNWVmJoMXJqcnlUQ01reG5DMkJXMzZ1Z1Jqd3YrL0JGeHUyZzY2U2pkSndM?=
+ =?utf-8?B?RER0QVFkUGIxU3gzUmRBb2tFSDVOSmRDdEV2cjBzZUdubW4yNnZlK1RBRjcz?=
+ =?utf-8?B?bWxuZUFwUm0rOGRnWDBuNVVNVkNWRVZCMWVsNTRrTzdGaFJPRFpwY1dickww?=
+ =?utf-8?B?c3o4WlNkNXZlNXIyMTkydW9RZVlCcUduRWVBV0JHZlArTWJ1SHZOdHNMUGxX?=
+ =?utf-8?B?U0htZ2NmcTFSUFlBajVoTEozZmxNMWtTYmM5Tjc1ZGpraG9PNzByUEFMQ205?=
+ =?utf-8?B?U3BBcDI3MmdDTFVpNDdHeDNNVG1JN28wbWU2WlBxRmtPTWR3ZEVoaHQzOFYx?=
+ =?utf-8?B?amh3SXNuWFhMaWFMUVBuWlVaRHlDLzV0TnZNOGVWRS9wb2J4M1g1aS9GRmFV?=
+ =?utf-8?B?WFVjWWFTNXpnUjdhZnpmVXQzd2FaaWhGWEdtTE9leWRldnVqYjViUnNKZGFm?=
+ =?utf-8?B?cGpYTkg3cXVRSVNLTWI4RWJKcUxjZUZDeDJ1MXV6cWlaTDAyRlp5c3JDVjBp?=
+ =?utf-8?Q?M7YVIz?=
+X-Forefront-Antispam-Report:
+	CIP:164.130.1.60;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(7416014)(376014)(36860700013)(13003099007)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: foss.st.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2025 10:29:48.7016
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54d5cda5-9b2b-4c6f-a301-08de3e205f13
+X-MS-Exchange-CrossTenant-Id: 75e027c9-20d5-47d5-b82f-77d7cd041e8f
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=75e027c9-20d5-47d5-b82f-77d7cd041e8f;Ip=[164.130.1.60];Helo=[smtpO365.st.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB1PEPF000509FE.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR10MB7182
+X-Proofpoint-GUID: j5y8Q_jCrlZQ-dlEKYqYENpasEiN9Nos
+X-Proofpoint-ORIG-GUID: j5y8Q_jCrlZQ-dlEKYqYENpasEiN9Nos
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE4MDA4NSBTYWx0ZWRfXxo1ebNaKo7wX
+ R3A3CIT10Z0L6WTgEVGjmj3uwBfG7+MNjNH1RykRC3gCMmc0jYZ2J3OKqEoldc0M6jjC/ccwuxt
+ 8sRstSmV+KMKoUnYQIgaP17SQkmezINKKkeh9/PBUp1t+9SMHQwkgDub/ZkXtOpWt6FWKPMCdCQ
+ 6KRmn/eOpeDiwOS9e7RYT1fCN8weWWP8HXQElEZXB/1MTkmSY9LdyLgXR8jTgblzi1pZJHv5ZHg
+ Gk3oY5s4XydKkUbvk8rHE1SOozvX7f7lP7ULvYxPJNcLCywKr8rJ8xFiauQ+2pdLeOENsF3OqgS
+ WqlFBmHXbqSyRYW8tKU4fHgHF0ypEm8ibXW9GDLRugi8+NcqQ2puzfFW8/+VyKnyc/prm+ZO+uT
+ VIgHMObLS9XPKZ6aPhGzGEPuNBFilQ==
+X-Authority-Analysis: v=2.4 cv=NZfrFmD4 c=1 sm=1 tr=0 ts=6943d7a2 cx=c_pps
+ a=u8ACBDucoOS8YlAhSULG+Q==:117 a=uCuRqK4WZKO1kjFMGfU4lQ==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=FOPVHIcnkjUA:10 a=IkcTkHD0fZMA:10
+ a=wP3pNCr1ah4A:10 a=s63m1ICgrNkA:10 a=KrXZwBdWH7kA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=gEfo2CItAAAA:8 a=8AirrxEcAAAA:8
+ a=5IOWRsNVRSX8QqzWhv0A:9 a=QEXdDO2ut3YA:10 a=sptkURWiP4Gy88Gu7hUp:22
+ a=ST-jHhOKWsTCqRlWije3:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-12-18_01,2025-12-17_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 priorityscore=1501 impostorscore=0 spamscore=0 adultscore=0
- clxscore=1015 bulkscore=0 malwarescore=0 phishscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512180085
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0
+ bulkscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501
+ clxscore=1011 spamscore=0 phishscore=0 suspectscore=0 classifier=typeunknown
+ authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.22.0-2510240001 definitions=main-2512180085
+
+Hello Shenwei,
 
 
-On Tue, 16 Dec 2025 08:39:32 +0100, Jan Remmet wrote:
-> Add two compatible. They share register layout with nxp pcal6408 and
-> pcal6416
+On 12/12/25 20:43, Shenwei Wang wrote:
+> Remote processors may announce multiple devices (e.g., I2C, GPIO) over
+> an RPMSG channel. These devices may require corresponding device tree
+> nodes, especially when acting as providers, to supply phandles for their
+> consumers.
 > 
+> Define an RPMSG node to work as a container for a group of RPMSG channels
+> under the imx_rproc node.
 > 
+> Each subnode within "rpmsg" represents an individual RPMSG channel. The
+> name of each subnode corresponds to the channel name as defined by the
+> remote processor.
+> 
+> All remote devices associated with a given channel are defined as child
+> nodes under the corresponding channel node.
+> 
+> Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
+> ---
+>   .../devicetree/bindings/gpio/gpio-rpmsg.yaml  | 49 +++++++++++++++++
+>   .../bindings/remoteproc/fsl,imx-rproc.yaml    | 54 +++++++++++++++++++
+>   2 files changed, 103 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-rpmsg.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-rpmsg.yaml b/Documentation/devicetree/bindings/gpio/gpio-rpmsg.yaml
+> new file mode 100644
+> index 000000000000..b3e1a5dbf731
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-rpmsg.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/gpio-rpmsg.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Generic GPIO driver over RPMSG
+> +
+> +maintainers:
+> +  - Shenwei Wang <shenwei.wang@nxp.com>
+> +
+> +description:
+> +  On an AMP platform, some GPIO controllers are exposed by the remote processor
+> +  through the RPMSG bus. The RPMSG GPIO transport protocol defines the packet
+> +  structure and communication flow between Linux and the remote firmware. Those
+> +  controllers are managed via this transport protocol.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - fsl,rpmsg-gpio
+> +          - const: rpmsg-gpio
+> +      - const: rpmsg-gpio
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#gpio-cells"
+> +  - "#interrupt-cells"
+> +
+> +allOf:
+> +  - $ref: /schemas/gpio/gpio.yaml#
+> +
+> +unevaluatedProperties: false
+> diff --git a/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
+> index 57d75acb0b5e..fd8e5a61a459 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
+> +++ b/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
+> @@ -84,6 +84,33 @@ properties:
+>         This property is to specify the resource id of the remote processor in SoC
+>         which supports SCFW
+>   
+> +  rpmsg:
+> +    type: object
+> +    additionalProperties: false
+> +    description:
+> +      Present a group of RPMSG channel devices.
+> +
+> +    properties:
+> +      rpmsg-io-channel:
+> +        type: object
+> +        additionalProperties: false
+> +        properties:
+> +          '#address-cells':
+> +            const: 1
+> +
+> +          '#size-cells':
+> +            const: 0
+> +
+> +        patternProperties:
+> +          "gpio@[0-9a-f]+$":
+> +            type: object
+> +            $ref: /schemas/gpio/gpio-rpmsg.yaml#
+> +            unevaluatedProperties: false
+> +
+> +        required:
+> +          - '#address-cells'
+> +          - '#size-cells'
+> +
+>   required:
+>     - compatible
+>   
+> @@ -146,5 +173,32 @@ examples:
+>                   &mu 3 1>;
+>         memory-region = <&vdev0buffer>, <&vdev0vring0>, <&vdev0vring1>, <&rsc_table>;
+>         syscon = <&src>;
+> +
+> +      rpmsg {
+> +        rpmsg-io-channel {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          gpio@0 {
+> +            compatible = "rpmsg-gpio";
+> +            reg = <0>;
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +            #interrupt-cells = <2>;
+> +            interrupt-controller;
+> +            interrupt-parent = <&rpmsg_gpioa>;
 
-Applied, thanks!
 
-[1/3] Documentation: gpio: add TCAL6408 and TCAL6416
-      commit: d19c36134fe14647873af5569329489502c174b9
-[2/3] dt-bindings: gpio: gpio-pca95xx: Add tcal6408 and tcal6416
-      commit: 9b5f506ff6c11e82574e7f6aa763c92ddb3afc57
-[3/3] gpio: pca953x: Add support for TCAL6408 TCAL6416
-      commit: a30a9cb9bca4296d25f253619883e7013b6be158
+"rpmsg_gpioa" seems not defined, or I missed something?
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Regards,
+Arnaud
+
+> +          };
+> +
+> +          gpio@1 {
+> +            compatible = "rpmsg-gpio";
+> +            reg = <1>;
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +            #interrupt-cells = <2>;
+> +            interrupt-controller;
+> +            interrupt-parent = <&rpmsg_gpiob>;
+> +          };
+> +        };
+> +      };
+>       };
+>   ...
+
 
