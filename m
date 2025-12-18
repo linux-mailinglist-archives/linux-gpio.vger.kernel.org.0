@@ -1,195 +1,123 @@
-Return-Path: <linux-gpio+bounces-29731-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29732-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41134CCB1CC
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 10:16:02 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F866CCB302
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 10:33:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 0895A30161DB
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 09:15:57 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E7F01304E8E8
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 09:33:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B59E2F6928;
-	Thu, 18 Dec 2025 09:15:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BDE633290C;
+	Thu, 18 Dec 2025 09:32:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FZuHTKuJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDHFLroe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4978F30274D
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Dec 2025 09:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7433328F4
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Dec 2025 09:32:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766049353; cv=none; b=ujoWVS0eD8BTmJXkKgfSsr/CMaqiyjxeBcau52KTPrblNmNsbbB97j8HjlvDdu/g8l2Gvmp44OxxU8TLmF41CnyVhw78nRPXr0htNpBDYLTFygoixUMuvtSSqryzcHT8B0KmljdDyCTVrsqbABR2jKB6lG7kaikTp4G3kBs6Wrk=
+	t=1766050374; cv=none; b=Ru4V4OrBdW50pkWfkCDXJ80fAVKrrACgurEQAf3L/jQHstzHL+V12B3LlxCuX7PnPLw5IthP1nUZoHrZKF3D6xd7UBDeRJeiEvmMY0jtI6mbLgcn0nier3lzbOtAt15V5OkzshW8olQJOrAstjvcIMb9c+QRdGXKonMpesSzUhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766049353; c=relaxed/simple;
-	bh=M8R1W9w45wNbmNXzjsnUtrx48q5+svUbetCOgjF1O4c=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q6rwyzWzjCKySA1gMSt/z8ecc6dIOg72f+faLc1vrNb+DVikM0KWyp5R59z19q+XYlucIZL2lsHD33TMZV/dVM1Y/gTPbwPvx8pCXoqg7oQ00RTrCCMA8E9szjo7BmAAT43iAAzi8V6R93yp1UfEPbr+hHTCpeV54iIHS6HYgRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FZuHTKuJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6E6BC4CEFB
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Dec 2025 09:15:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766049352;
-	bh=M8R1W9w45wNbmNXzjsnUtrx48q5+svUbetCOgjF1O4c=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=FZuHTKuJwPO5i4CJ75W7oSumG2dfmEC9tIATVMv3hDuRjYtGHD8nhKFJB235FWSVi
-	 uQ9UrkHu8qxHCE/oD5QGCVDnrjxSckgkqML1vJM7RIBztF6/jrieuGrSrI590tZKdF
-	 oHUMZIY+XRmu32ALTgCVgg3KZl670uLAQicPDWvRGZmxRaUlWhiFMtgBVtsLvmlYjD
-	 I80BxYmFVxnmztrq9nrbl1jX36Flq6FJXgZUjmN33Rxka9kctFzSyuw5CuyvFX5fPc
-	 2QATw392Homm05Ylt5hln8675TGDtrerUp+LGHZNu2HvyRg70XDezFKakeGgGKzpA3
-	 BODBjnJMqyfSA==
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-37a415a22ecso3559121fa.0
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Dec 2025 01:15:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUZ2qJzHe4+s+krAz4HmIhmhNgrmucaZDFbMd1tDy5GDClipvZNk0fbC1Pbm85jzldkT6n1dyEsGFnc@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9BeUM4I0gSnIsltre4ahb3GIUTlA+TXRlAoaOOyjEtReab50Q
-	fGyvr///DsaOu/DuyCB7jYDirVKs4vQlsY0Pl0UspEdvKpaAcdJuXUlI9GXW3wn52HZkrHMkAVE
-	GxYLEEggmdjIo3UmjKpD5W0x9/gHa8QbhvF8yav1HqQ==
-X-Google-Smtp-Source: AGHT+IGddlJU0seb2vkpl3ywZnH/NWQkhgcnYhtxgt58KbAEeph1cdDhqxyCkCn5cPrFBgqKLU4TcjAMvO/LX7XUeeE=
-X-Received: by 2002:a05:651c:548:b0:37a:582b:9ae3 with SMTP id
- 38308e7fff4ca-38113272b01mr6430371fa.17.1766049346640; Thu, 18 Dec 2025
- 01:15:46 -0800 (PST)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 18 Dec 2025 01:15:45 -0800
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 18 Dec 2025 01:15:45 -0800
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20251215175115.135294-5-sander@svanheule.net>
+	s=arc-20240116; t=1766050374; c=relaxed/simple;
+	bh=EnQ5X8UqCacfM2+VnkaV7I0yNk6b8t7/CjHBmYVAIag=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rw1Kc6HYaN2Bo6hwmk4xBBNYxso8kmdgLW+HZpmok/bL21U/4uZlRwvlDO03tAbAD4X2v3bBm+6M8bd1JQAD3t/P6zXQepkKCoKdfGjoZvsuQnqYxvX+15AWEnvhYs7/rtkDUUdgdjy41XaQc6ISZrL1lLGffBaN/3SyY0psae4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XDHFLroe; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-64b4f730a02so510768a12.0
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Dec 2025 01:32:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766050371; x=1766655171; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EnQ5X8UqCacfM2+VnkaV7I0yNk6b8t7/CjHBmYVAIag=;
+        b=XDHFLroeZjUsVnWqf6czlXeWwFYMwTjiHIcdtISBhdAQKkz9cRIo9VE2sPCXDtzyrw
+         EGxfc6PJqbNoZHZhtMQOKRv5esrFcTAL5EO/JDHLeeqc0dwbAYbQ8LTUsINRVHKsbwxs
+         ZR+mN3CgpTYBFyRzB286Bkm1f3dm6jk1pu4RXalhNY0csNOIh5WCnt/RgK14I+8/P6FJ
+         nI6zZpaExWUrPN+X8VHVgL7jaQa0829yrRqW+edm5OV7MHURtar1tynxu1HnxLK20nBs
+         Z6nftCvczHz5VrluccbotiEkkYZsyX4megfiYAAjWoxQyitOeZqICslAZwmKe3UItUKV
+         LC8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766050371; x=1766655171;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=EnQ5X8UqCacfM2+VnkaV7I0yNk6b8t7/CjHBmYVAIag=;
+        b=FQz8r+wtZaqIb02T+2/j5wwwSgV4ZrsYMh3iq3D4WZhEhtcEO2l8ThEom/gc8+YhRg
+         OJMY9PwCW+KwIYSryomeMxEXavKUOS8DRAV8V8LjxS/rfO5U9/WRMhpzQGl2orDHxD/1
+         UrOOCbM1SRwGKWd5drTn9ZMuFmtXF0Wg7R9tT0J48heuu3YlcGD7FfSCpS4zmsx0xkuY
+         hu0Z6R2ON0guZ8hbGJhAFRS6naC2EyLE5PlCbOoyRJdp7CxbW4+7AW46y+GYVo44oBBe
+         fID61fOHugZHFATcIhp4Ky3uTXqbawP6ufrLWxSs9jRk7NygycPckNgeJWdau4ZHCfsV
+         +tgQ==
+X-Gm-Message-State: AOJu0Yxo9h04HuQ9Y4tOaVsAn+oEuBcVrTyjiEDDb448J/za+IBRBHlO
+	HvUCo5TddU9i1D5fwAOn1GuAQmK1EVtoMVGZiszXMXUyABhj1DB59opFCgKJMpEWckFHQse0W88
+	ePrJFrCM47TRdcv94uxyio87YX5Gp6Nc=
+X-Gm-Gg: AY/fxX6/Du6D7kH3b6XwN+J2t9P832TccFxhm5H3DJ1w0354Pp48YXtPLdmlPBo5IL8
+	jztiWi3uWVdCCYGW+Ytv+MuvYBhj3z9XqZSyAO2jcld4f5dC2AMwifRVHwME8/fDzDKNlXqDT0I
+	1lOE+43Ks2kAHWLnxn2euUNWaufwwSOKmgLWwyoiX+FMlOGYX3xZkmgSwlKyVluL0N7n+zfWvms
+	7orO89bYWddKu8M51kmt94G79DzVPksKDIbJytUE9GBCcn45SRabljk1b0pHdjqdkjAgf23Wjoq
+	UHUZ56jq
+X-Google-Smtp-Source: AGHT+IE1QyJImJkNPANHGEc9nnZY+S84kSi30zApV4XHtp1+3wGFpo/NxumfZzBAk+jHB+j/O3kJHLCVv42u5dm4MBU=
+X-Received: by 2002:a05:6402:2551:b0:640:74f5:d9f6 with SMTP id
+ 4fb4d7f45d1cf-6499b308a06mr18187216a12.25.1766050370441; Thu, 18 Dec 2025
+ 01:32:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251215175115.135294-1-sander@svanheule.net> <20251215175115.135294-5-sander@svanheule.net>
-Date: Thu, 18 Dec 2025 01:15:45 -0800
-X-Gmail-Original-Message-ID: <CAMRc=Mdb7CWB9PmzXJyfvGjvG0iwuwUgfLuKJuMweRFvAhAoHg@mail.gmail.com>
-X-Gm-Features: AQt7F2rUvr97O3iEgnnTgHzpdjlYUFzbEonXdFtHgSUK-RNIsoOlIwmvbiCA_I4
-Message-ID: <CAMRc=Mdb7CWB9PmzXJyfvGjvG0iwuwUgfLuKJuMweRFvAhAoHg@mail.gmail.com>
-Subject: Re: [PATCH v9 4/6] pinctrl: Add RTL8231 pin control and GPIO support
-To: Sander Vanheule <sander@svanheule.net>
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Michael Walle <mwalle@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20251217063229.38175-1-rosenp@gmail.com> <20251217063229.38175-4-rosenp@gmail.com>
+ <CAMRc=MfnN0sD=yb7NO6ixHC-mhv2Cg5qw_wb8cZGtg23chwmOg@mail.gmail.com>
+ <CAKxU2N_SM7EauHNpu+Ko5bHfFUkONMVGYNRfp6jAL_wjcJn9wA@mail.gmail.com> <CAMRc=Me7Ogsa9qXzwzdS_oWfVXaAYhK4E9onB5FfOO8LAU4pdw@mail.gmail.com>
+In-Reply-To: <CAMRc=Me7Ogsa9qXzwzdS_oWfVXaAYhK4E9onB5FfOO8LAU4pdw@mail.gmail.com>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Thu, 18 Dec 2025 01:32:39 -0800
+X-Gm-Features: AQt7F2ojjJDvRtNFzRaZwSmOCawFRle8ByRJ28vfmCyK_D3qK6ALtNoTMz8G-hw
+Message-ID: <CAKxU2N-vr=GjkkXLo_f2M9MAf2GEmKjK8J_pDwsY7jd26p-AYQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] gpio: realtek-otto: use of instead of device handlers
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linusw@kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 15 Dec 2025 18:51:12 +0100, Sander Vanheule <sander@svanheule.net> said:
-> This driver implements the GPIO and pin muxing features provided by the
-> RTL8231. The device should be instantiated as an MFD child, where the
-> parent device has already configured the regmap used for register
-> access.
+On Thu, Dec 18, 2025 at 12:31=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.o=
+rg> wrote:
 >
-> Debouncing is only available for the six highest GPIOs, and must be
-> emulated when other pins are used for (button) inputs. Although
-> described in the bindings, drive strength selection is currently not
-> implemented.
+> On Wed, Dec 17, 2025 at 9:26=E2=80=AFPM Rosen Penev <rosenp@gmail.com> wr=
+ote:
+> > >
+> > > Yeah, no, there's almost *never* a point in using OF-specific accesso=
+rs. NAK.
+> >
+> > Argument made to me on netdev before is it's pointless overhead for an
+> > OF only driver.
 >
-> Signed-off-by: Sander Vanheule <sander@svanheule.net>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-
-[snip]
-
-> +#include <linux/bitfield.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/gpio/regmap.h>
-> +#include <linux/module.h>
-> +#include <linux/pinctrl/pinconf.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include <linux/pinctrl/pinmux.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#include "core.h"
-> +#include "pinmux.h"
-> +#include <linux/mfd/rtl8231.h>
-
-Please put this together with other global headers.
-
-> +	RTL8231_LED_PIN_DESC(33, RTL8231_REG_PIN_HI_CFG, 1),
-> +	RTL8231_LED_PIN_DESC(34, RTL8231_REG_PIN_HI_CFG, 2),
-> +	RTL8231_PWM_PIN_DESC(35, RTL8231_REG_FUNC1, 3),
-> +	RTL8231_GPIO_PIN_DESC(36, RTL8231_REG_PIN_HI_CFG, 4),
-> +};
-
-Newline?
-
-> +static const unsigned int PWM_PIN = 35;
-
-Please use the RTL8231 prefix for all symbols.
-
-> +static int rtl8231_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
-> +	unsigned int group_selector)
-> +{
-> +	const struct function_desc *func = pinmux_generic_get_function(pctldev, func_selector);
-> +	const struct rtl8231_pin_desc *desc = rtl8231_pins[group_selector].drv_data;
-> +	const struct rtl8231_pin_ctrl *ctrl = pinctrl_dev_get_drvdata(pctldev);
-> +	enum rtl8231_pin_function func_flag = (uintptr_t) func->data;
-> +	unsigned int function_mask;
-> +	unsigned int gpio_function;
-
-Can you put these on the same line here and elsewhere?
-
-> +
-> +	if (!(desc->functions & func_flag))
-> +		return -EINVAL;
-> +
-> +	function_mask = BIT(desc->offset);
-> +	gpio_function = desc->gpio_function_value << desc->offset;
-> +
-> +	if (func_flag == RTL8231_PIN_FUNCTION_GPIO)
-> +		return regmap_update_bits(ctrl->map, desc->reg, function_mask, gpio_function);
-> +	else
-> +		return regmap_update_bits(ctrl->map, desc->reg, function_mask, ~gpio_function);
-
-Just drop the else.
-
-> +		/*
-> +		 * Set every pin that is not muxed as a GPIO to gpio-in. That
-> +		 * way the pin will be high impedance when it is muxed to GPIO,
-> +		 * preventing unwanted glitches.
-> +		 * The pin muxes are left as-is, so there are no signal changes.
-> +		 */
-> +		regmap_field_write(field_dir, is_input | ~is_gpio);
-
-This is an MDIO regmap. The operations may fail. Don't you want to check the
-return values of regmap routines?
-
-> +
-> +static int rtl8231_pinctrl_init(struct device *dev, struct rtl8231_pin_ctrl *ctrl)
-> +{
-> +	struct pinctrl_dev *pctldev;
-> +	int err;
-> +
-> +	err = devm_pinctrl_register_and_init(dev->parent, &rtl8231_pctl_desc, ctrl, &pctldev);
-> +	if (err) {
-> +		dev_err(dev, "failed to register pin controller\n");
-> +		return err;
-
-Please use dev_err_probe() here an elsewhere.
-
-> +	}
-> +
-> +	err = rtl8231_pinctrl_init_functions(pctldev, &rtl8231_pctl_desc);
-> +	if (err)
-> +		return err;
-> +
-> +	err = pinctrl_enable(pctldev);
-> +	if (err)
-> +		dev_err(dev, "failed to enable pin controller\n");
-> +
-> +	return err;
-> +}
-> +
-> +/*
-> + * GPIO controller functionality
-> + */
-> +static int rtl8231_gpio_reg_mask_xlate(struct gpio_regmap *gpio, unsigned int base,
-> +	unsigned int offset, unsigned int *reg, unsigned int *mask)
-
-Can you align the start of the line with the opening bracket?
-
-Bart
+> Would you mind posting a lore link? I'll gladly chime in.
+>
+> Drivers are OF-only until they aren't. Vide: lots of discussions
+> currently about supporting ARM laptops and servers with mixed DT-ACPI
+> setup.
+Hrm I must have misremembered or I can't find it. In any case, these
+devices will never support ACPI. They're all embedded devices with
+uboot.
+>
+> The overhead of going through the fwnode pointer is absolutely
+> negligible while using generic accessors allows taking secondary
+> fwnodes into account.
+>
+> Please don't tell me people are going around the kernel converting
+> drivers to using of_ routines?
+There's one special case I know of, of_get_mac_address vs
+device_get_mac_address. The former supports NVMEM. The latter does
+not.
+>
+> Bart
 
