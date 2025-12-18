@@ -1,160 +1,95 @@
-Return-Path: <linux-gpio+bounces-29729-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29730-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC68CCCA818
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 07:41:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B134BCCAECF
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 09:36:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 37523301FC24
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 06:40:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 57A3A30155E4
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 08:31:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D7FC32ED3B;
-	Thu, 18 Dec 2025 06:40:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC2833321A1;
+	Thu, 18 Dec 2025 08:31:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cmt6SgFT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bYtvwKsf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC3332A3C8;
-	Thu, 18 Dec 2025 06:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756F2331A5C
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Dec 2025 08:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766040000; cv=none; b=Ud8zM7wFzv4cXsNa6yCt3rP2OTlDpWnabuNxVqOHdRyPt49tNMF2hbpX7tfwi5Q+/nZVU1FlXxpUA+Ga8jPK1glifgp04MIxPadLp7UxOGjocmEk+iAMhKN2Y/6U89pHOtjoZcqO0i8rmfqz0gYlpxq8xJlrANUhE1QO/tYoIRk=
+	t=1766046683; cv=none; b=FCZatpJoynv0HOxkGG2Rl2r9WM3eCaYoBYfSGrNjiYSU98PhTi+gdMOXoGUfWTflBqDC22ta6ocz9RgMbwHPJu1OnBH8wLQQI3cZ/hMdh3Xy6mXtMjWg3TD/4psqrNr2f2A2qPaWlltDih0he4dkHWmwHtozTIyGxNk3oEG3E4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766040000; c=relaxed/simple;
-	bh=uoPF7WSfeTcDhwLGWPpS+bzYgMaUKE7QOPRMvdBh5fk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rMJW19rmnBmP4h0RpWXFrDIH7YGr5kFmUx4ruYH2lHlQ0aSZ2+k9ZA0zdAn3bSksvGFIprHT53PWNfpFxDIUTcZ6FoClGzqMBJk6qrbbAtPZD7uTCYQ7Xdrrt7JNOf/WBSRDznEu9Fr3IpmoNSVPS9ek51j9mPJBWdRz63qmEBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cmt6SgFT; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766039999; x=1797575999;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uoPF7WSfeTcDhwLGWPpS+bzYgMaUKE7QOPRMvdBh5fk=;
-  b=cmt6SgFTBSpj4tQm7jx8mKwVAz3n1FZVljEGOsfWgH5e8Dd5YR5bpAbL
-   MH0RgdFxtGkOneZ99gXCJGWg0ff//dwv/3k6hgw5GFu2jFg+HQZRVtVVN
-   Ft4Cr9/qNTi1nGkJ5bIzlpUUehcEDK5bXZFZP5WBH2d5T62wtiT1PUj1P
-   eCRIQ8iAMFijAYQ8Zzoliz9KJDRIhS0vdmrqZ//0cP9hABqlncPaZAxrT
-   RpI6knRqeQ+Qmc7imZ3Plk5vIOs/QV7jo3V3hHHHle+6WPhvLafgmQUHf
-   /dHGVJxqAUWqvHZ+S6yY/Y+0Jb/jB7ImnVIsLefJT2lkRJsbq6RyHiEiZ
-   w==;
-X-CSE-ConnectionGUID: 1lAosaWKQE2I9gCwacNiJw==
-X-CSE-MsgGUID: lPEAKc4CSy2g6V4GzF4mpw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11635"; a="67925116"
-X-IronPort-AV: E=Sophos;i="6.20,256,1758610800"; 
-   d="scan'208";a="67925116"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2025 22:39:58 -0800
-X-CSE-ConnectionGUID: 6u2/uD1OTKqAHi3XxhFwMg==
-X-CSE-MsgGUID: fcOSVWwKQXOYgq5/esolTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,156,1763452800"; 
-   d="scan'208";a="229565235"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa001.fm.intel.com with ESMTP; 17 Dec 2025 22:39:55 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id AB1258E; Thu, 18 Dec 2025 07:39:54 +0100 (CET)
-Date: Thu, 18 Dec 2025 07:39:54 +0100
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Francesco Lauritano <francesco.lauritano1@protonmail.com>
-Cc: Mario Limonciello <superm1@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"westeri@kernel.org" <westeri@kernel.org>
-Subject: Re: [BUG] 36-second boot delay due to by
- acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
-Message-ID: <20251218063954.GT2275908@black.igk.intel.com>
-References: <2kSCn4XaoXsXJ3EUR0syTdmip8Z1cBuUr0Br4sFVnwnsA8q4GlhiHOmsJkeBxvxYoLnetp4r44wIPXw42yTAFl-BtMROnIwR-NkckKgA5EY=@protonmail.com>
- <6iFCwGH2vssb7NRUTWGpkubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pnu5hzPguTa0s=@protonmail.com>
- <4402ed86-77f5-4a47-a9e1-8d57a709bb15@kernel.org>
- <woxnPhTYiKi2aLzBK8GnO8DpvdgYjQc-P42uhJOzyrcYC3Gdstht27hML8yNHgOklhm2MgGA7wt9gGZ17BHoWlG0vqJuVVJDgCSev8udfds=@protonmail.com>
- <NIIS8XD_nSRvp36X39GxcDRAWsaScQIFx6o9JsFCbyBZk5PqznRdxg9EDDb_9tzWd5TcjzxrRtFx5_uLCVa5wJAYykW2k0Ue_XPMPtWCQiY=@protonmail.com>
- <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
- <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
+	s=arc-20240116; t=1766046683; c=relaxed/simple;
+	bh=TrsC91RxEXnUnzwriEeTqPCTi3Ox+UG1XNp5n7oHr4g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cYAT4AD/SFWQE4UmcJQJqnx0nqw/bL/IYD8PoDADetsSgSR+k+sBa/ZhGiULacFsa/nG556WY/UCmSVqY2t329l4PpExRQqpAnnXdILpVFIZlgrqQ+WEl8u6KIxdGq/ETciNVz4zhqtivkucvB28kl8BczJopfETbloHbJxjn5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bYtvwKsf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23311C113D0
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Dec 2025 08:31:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766046683;
+	bh=TrsC91RxEXnUnzwriEeTqPCTi3Ox+UG1XNp5n7oHr4g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=bYtvwKsfIcGRpWafwo0ZJQv7zh6DoxTcQsJS4kf8SzuOf9Oz9AMkYYVQVIIweqW7B
+	 eOQbH5Mmul1zcuCDhJeB0IMUM4nl7h1Dlt3Ubw+Prt6PWqIOvvvOJpQTxnaJyMFgDN
+	 PuDEwZmoBjtFaFwV4qlEj//QhAZbA++0LE/Xy8uYgeEffvqtuhLNT2OqfEAUO5Jy8k
+	 VI+av49Y2B06Z+oXpJvcS5wQfGepjgwVbT3UPGjWG0GmO3Yye4D/AdX7NpulX3qTIK
+	 Zh9xtexiDN2FgMJCDELIX1hhXqFQnGcc1EX6cEavEAdsWlwFQBtDDeLHtuETtDd+nL
+	 cieZjvOX/Z5YQ==
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-37a3340391cso2489471fa.3
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Dec 2025 00:31:23 -0800 (PST)
+X-Gm-Message-State: AOJu0Yxy/IlxeNel3cSj3M02gzrE7Cx3FuexJE+VH/RSw4n6aFyP/zcX
+	2GWzCtYysrk2V+MnPcDXLCb+sgxxecl1sGl17kZ9dNh+9DAhPzcOX1RbpcZFLGdEALE/2j6PX+4
+	GVSF6GuVgjW3iP6i5fMmEVnEjbIkl+y/9pOuYB1FfgA==
+X-Google-Smtp-Source: AGHT+IFvbHO+sfAUbdhMYj77JcpjMMVTkA/7pMfzL2BI73/i9jq6apoHAq8Blvjjb6tRnnWjNRj5YbvRTotchkNiNtY=
+X-Received: by 2002:a05:651c:19a5:b0:37f:9168:c26c with SMTP id
+ 38308e7fff4ca-37fd08d4095mr63962511fa.41.1766046681744; Thu, 18 Dec 2025
+ 00:31:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
+References: <20251217063229.38175-1-rosenp@gmail.com> <20251217063229.38175-4-rosenp@gmail.com>
+ <CAMRc=MfnN0sD=yb7NO6ixHC-mhv2Cg5qw_wb8cZGtg23chwmOg@mail.gmail.com> <CAKxU2N_SM7EauHNpu+Ko5bHfFUkONMVGYNRfp6jAL_wjcJn9wA@mail.gmail.com>
+In-Reply-To: <CAKxU2N_SM7EauHNpu+Ko5bHfFUkONMVGYNRfp6jAL_wjcJn9wA@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Thu, 18 Dec 2025 09:31:09 +0100
+X-Gmail-Original-Message-ID: <CAMRc=Me7Ogsa9qXzwzdS_oWfVXaAYhK4E9onB5FfOO8LAU4pdw@mail.gmail.com>
+X-Gm-Features: AQt7F2pasGzvkH17tYspBarbWVe0uHohBn8RjL3Zb3mi-7i2iyP2w9K6wn4lB5g
+Message-ID: <CAMRc=Me7Ogsa9qXzwzdS_oWfVXaAYhK4E9onB5FfOO8LAU4pdw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] gpio: realtek-otto: use of instead of device handlers
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linusw@kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 17, 2025 at 07:19:56PM +0000, Francesco Lauritano wrote:
-> On Wednesday, December 17th, 2025 at 7:01 PM, Mario Limonciello <superm1@kernel.org> wrote:
-> 
-> > On 12/17/25 10:57 AM, Francesco Lauritano wrote:
-> > 
-> > > On Wednesday, December 17th, 2025 at 4:12 PM, Francesco Lauritano francesco.lauritano1@protonmail.com wrote:
-> > > 
-> > > > The _AEI defines 5 GPIO interrupts. Narrowed it down to two:
-> > > > 
-> > > > gpiolib_acpi.ignore_interrupt=AMDI0030:00@21,AMDI0030:00@24
-> > > > 
-> > > > This fixes the delay. Pins 0x15 and 0x18 both call: \_SB.PCI0.SBRG.HNC0()
-> > > 
-> > > Traced it further. HNC0(pin, 0) takes the Else branch and calls:
-> > > ATKM(0xC0)
-> > > ADTM(Zero)
-> > > 
-> > > ADTM calls NOD2(), which is the actual culprit:
-> > > 
-> > > While ((Arg0 != RDNT))
-> > > {
-> > > If ((Local0 >= 0x0F)) { Break }
-> > > Notify (^^GPP0.PEGP, Arg0)
-> > > Local0++
-> > > Sleep (Local0 * 0x64)
-> > > }
-> > > 
-> > > It notifies the dGPU and polls RDNT, sleeping 100, 200, ... 1500ms per iteration.
-> > > Max 15 loops = ~12s per pin. GPU doesn't respond at boot so it maxes out.
-> > > 
-> > > Two pins, ~12s each, ~24-36s total.
-> > > 
-> > > Francesco
-> > 
-> > 
-> > Any idea why isn't the dGPU responding? I would have expected
-> > https://git.kernel.org/torvalds/c/4d4c10f763d78 sets up policy that it's
-> > in D0.
-> > 
-> > Is the dGPU turned off in BIOS or through some reverse engineered
-> > tool/API or something?
-> 
-> dmesg without the workaround:
-> [    1.005184] pci 0000:01:00.0: PME# supported from D0 D3hot
-> [    1.288811] pci 0000:01:00.0: vgaarb: VGA device added
-> [   38.250139] nvidia: loading out-of-tree module taints kernel.
-> [   38.369358] nvidia 0000:01:00.0: enabling device (0000 -> 0003)
-> [   39.744421] NVRM: GPS ACPI DSM called before _acpiDsmSupportedFuncCacheInit
-> 
-> GPU is in D0 from 1.0s. nvidia loads at 38.2s after the GPIO hang completes.
-> 
-> No weird tools/APIs besides userspace utils (asusctl/supergfxctl). 
-> 
-> No changes to BIOS factory defaults other than disabling Fast Boot.
-> dGPU is active, Display Mode is Dynamic (hybrid).
-> 
-> Traced RDNT - it's set by GPS function 19 in the ACPI tables:
-> Case (0x13)
-> {
->     Debug = "GPS fun 19"
->     \_SB.PCI0.SBRG.RDNT = (Local1 + 0xD1)
-> }
-> 
-> As far as I can understand GPIO initcall blocks at late_initcall_sync, preventing nvidia 
-> from loading in time to respond. Based on the timing, GPU is awake but nothing can 
-> register a handler while kernel is stuck at NOD2 polling loop.
+On Wed, Dec 17, 2025 at 9:26=E2=80=AFPM Rosen Penev <rosenp@gmail.com> wrot=
+e:
+> >
+> > Yeah, no, there's almost *never* a point in using OF-specific accessors=
+. NAK.
+>
+> Argument made to me on netdev before is it's pointless overhead for an
+> OF only driver.
 
-I wonder if you could try with the nouveau driver so that it's built-in to
-the kernel proper? Then it should be ready at the time these events
-trigger.
+Would you mind posting a lore link? I'll gladly chime in.
+
+Drivers are OF-only until they aren't. Vide: lots of discussions
+currently about supporting ARM laptops and servers with mixed DT-ACPI
+setup.
+
+The overhead of going through the fwnode pointer is absolutely
+negligible while using generic accessors allows taking secondary
+fwnodes into account.
+
+Please don't tell me people are going around the kernel converting
+drivers to using of_ routines?
+
+Bart
 
