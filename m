@@ -1,153 +1,191 @@
-Return-Path: <linux-gpio+bounces-29736-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29738-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 164D2CCB684
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 11:35:40 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 505ABCCB681
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 11:35:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7404330CA0AB
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 10:30:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id F0683301D31B
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 10:33:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B06033DEDD;
-	Thu, 18 Dec 2025 10:29:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52DDA332EA5;
+	Thu, 18 Dec 2025 10:33:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YrQfYA14";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="joobypOh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8NCQRZ0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7EF33DEE3
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Dec 2025 10:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F793321A1;
+	Thu, 18 Dec 2025 10:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766053799; cv=none; b=E+MXnnFCgNfR92T0rN3a8xL1BbqFXyIuo7CORFpxDkBEQCmBqEptvyXmh/p2swhpLaY3Sx1qaMTnUud28vTgniSxU8PJSn0zh1WA5z60Pj6zR41ln12V4MRjDAp144sh6v0GwW89OBdoLzkmpyulQLXSLywUl45/0YhZt17wpIE=
+	t=1766053999; cv=none; b=OThdphWmWBW1DvVrLqCBI5FNyJIZjpkO9ZGDbhYeNZQzjAWskwxtZjbaH4DXP2Mx2NwdJXN34SJz77Xwxk6KEKYu0H9wH8rcxlpt0qdS07WDkA7fw+H9PMlyxV/PHwFshEGE5EV+RRrgAiWGQ3lFem4Bb5uBALr2vjTQnFKYpvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766053799; c=relaxed/simple;
-	bh=iYdfC9CAkfXkJkV2h7RmKHf/s3154g2d54zaobngEV4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cC5QnhZtJo4F9tUVG39GEGrDWjjnm1ZUK6a+sfIf5n/+OWouRyUJQe1nUF0coppt1Lh9sINleZ5dRAWFNzj3pQnvWs9JjIYRVp+3O6BkYSnUADKDE3j9Bd4wErW2I/fIa3pZlR0GURx4jr5rmQ96f+Ps3SCU5t6uuoG/SVq+kwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YrQfYA14; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=joobypOh; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BI946Pe237698
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Dec 2025 10:29:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	RUy1KLOdLXCbZRjp9oLI7ObwJyzRZXx6rAcW2KvuasE=; b=YrQfYA149nEMiWNT
-	zjo70azYyd14Z5TXgcZZjI9M5sxGa1ZOVrfPRDwEC2BqMBE36/aJrm+prhm9zYWq
-	Rhimf3MpI5dEI7ESuJWR+33pHITLS5PhJzd9CyxtISI8XNUViaAQbXu00F9MYvpc
-	a6XIpj4CGw1/+MCwiuvJ5fQCZ0s3hMS0Xpiv2udqLdJHbNePKF8vkdqEViUE/E70
-	r0TEqT254Q3EIW+v7KSdihCX5cexAqxMiKTnYW9Lpv4UQkbN+u8+4/VMEcAp7scr
-	09+XiaTjJLsUCrGj63Bo0wTz8Dg2ziO3s0osdsF8IgOcMErDEC7t5vym8YS0Vdls
-	r8wsuw==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4b44x3j1f7-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Dec 2025 10:29:56 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4ee25cd2da3so7909241cf.2
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Dec 2025 02:29:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1766053796; x=1766658596; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RUy1KLOdLXCbZRjp9oLI7ObwJyzRZXx6rAcW2KvuasE=;
-        b=joobypOhyRBITi/O5x08JYQzRQwE+FFegcdBdiewC+t3p08nCBCTjHQCmUttrhQozQ
-         +acs/hpfp0kQJdblRHlrmkGma+ko8p2ILjqWvWobfDAzAyIw4vYKL00lE2tJsyT9JrtB
-         eoFTeR9IctBpFm1Sl7kOtOgonPZzqh/Pa2jpth0rZD+lBN7KaOmi83P0Qj+LHu9hz9jI
-         JJF6tnQlUoUTtBkleIBnNqDNJptILXgXEOe/ltFDpmJUMFEYC24UEcQUBKbV/vwx8gxX
-         R85ev6IPQqtQYclVxl7YEgdgJAuFn8QyRrggP0/bs9zC6e+hTZshqq3VwWdmOOxqlQIH
-         0Dpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766053796; x=1766658596;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=RUy1KLOdLXCbZRjp9oLI7ObwJyzRZXx6rAcW2KvuasE=;
-        b=GySdnwwdeEdB6RZpYzEbSrdwrMiU/CubDRXDsE2dNryydBjlhi0fspMFhuDs+V2mqZ
-         iLI9rdU7YiI3UAXqjcNliNX/PTfXmOFf/SXFZKGksy0t0OLJkIPruasI1NHPy1xbiapQ
-         aCwvrLWyCUSP0QozTEEsu4HDF5Ytf4UD1h1udkiFWTMX12r8wmsYOZB1pAXdQF1NHVTy
-         1BS2uQ5Djhjw2ACGwkztJl8yzHOWuYU7Jx/W/SevDf1h6lnITkXTlWj0tyHy7u0wzhtR
-         YGLfreEu7Kp6O4Ae1qM4CW7WqC9dbkiSAT/yEy3JmVHiwVhQ5Yd++EaSjTLjG+7fn/bw
-         iwCg==
-X-Gm-Message-State: AOJu0YxxC97g5IfJoci72eFYqFsxrlKjx62Zjc9JnZHUJivd5pvWMbDw
-	uCFN8gWqek3fR+k/+qImDoAm/fvXG30KktkA7OQ8VuWAskD90+LkSQBn3GnsJpOAKY/BFxyITnn
-	vnS7M3WNcL+5eHo+WChnsHe59HD7ryxz5GF/p5vxSY/syE7LBJRJv2lII7lQn37xq
-X-Gm-Gg: AY/fxX7dkqBbk8SlbDOlnbNwsEj99T8ON0Rd8Y+CiDYfcxifXd1f+4NHc2N8knNlGsv
-	hxCHgQ8sFWnS8urHDJOet8zVmM6ZBvnUrfUk0AVvxTASYsMgqUxvDLwhfcX/KIvA2Cv8kTLLlva
-	uv2bI1N3V1NXzI5MsiaHPmdmmp350Zx/Wf028SAwpouRLDmm6JDyoCKhkxpwuaPRFHzYFYXvxP/
-	Cgl+O7Xgr9Tv7Wbgj1hMa9QT9E86/vJGHLiMBpdumGcfBYkJNw8VCV7/pADCGVzbajKPbQXQwSg
-	9i+lUkZsPYw+bk8Fg7sBxFqhKzqoutl6l63TqHBh56eMdtTQlXk9AycVJaYnO+HyIfSwjfGpqHk
-	IkCrRWZ/hHB+Gl6pTYqpgJkqP76ojhFG14hdb6Q==
-X-Received: by 2002:a05:622a:5e11:b0:4ed:df09:a6a6 with SMTP id d75a77b69052e-4f1d04b1dffmr282094291cf.25.1766053796140;
-        Thu, 18 Dec 2025 02:29:56 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHWBQPgK3ZgzoKyCX6LqM0fYutT2XJSOynhqEkV++CpKSw/dRVEbDl214z5abvn4EJu5yPgAA==
-X-Received: by 2002:a05:622a:5e11:b0:4ed:df09:a6a6 with SMTP id d75a77b69052e-4f1d04b1dffmr282094111cf.25.1766053795713;
-        Thu, 18 Dec 2025 02:29:55 -0800 (PST)
-Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:f231:224c:1d69:c0c1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43244934b74sm4211894f8f.4.2025.12.18.02.29.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Dec 2025 02:29:54 -0800 (PST)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: Linus Walleij <linusw@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-        Bartosz Golaszewski <brgl@kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Gibson <daniel@gibson.sh>
-Subject: Re: [PATCH v2] gpio: it87: balance superio enter/exit calls in error path
-Date: Thu, 18 Dec 2025 11:29:52 +0100
-Message-ID: <176605379017.37016.2197520310748254432.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251210055026.23146-1-bartosz.golaszewski@oss.qualcomm.com>
-References: <20251210055026.23146-1-bartosz.golaszewski@oss.qualcomm.com>
+	s=arc-20240116; t=1766053999; c=relaxed/simple;
+	bh=skIvvXN07qvYfaK6UHfMPbtyuznCiAiYd7zPINp94oU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Os5mIDIuDKhhjTEUSMOfov3722KFywPgd3WlAucJhqD4LaN0fxA/AeglFwC1FDezoyTmyDuQzOJRMkNs/T0MgCA8UCvpI3yQV9IDpxn8Istlzdz6w6b98HXwpFtUF57ZaBFMUYY5F5UXruidgdtYdClHnVKiBskxOvDCXRH0/Ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8NCQRZ0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D2EC116D0;
+	Thu, 18 Dec 2025 10:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766053998;
+	bh=skIvvXN07qvYfaK6UHfMPbtyuznCiAiYd7zPINp94oU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=r8NCQRZ0lmcz3qsAg7BJ26MIYdk6j2BqV+lBp9AgjYepdp9M6kJMKXj6Acdnm5+Ds
+	 dyOVe6ouY+GgSX3pICEhCS/OI5x2elvwzwIPtry1q6s2d7LbtwfAR9MsPlrXo8fsfV
+	 C/KvlKQnPgrP7/5KIjzpgsHlMn4gGqPa3t4efRA+4/5nSRbuqlRCzBQy32+zFrUqc5
+	 TSITbzi+vzT94KSjlMg/AEHHn/rM3AjSyf0DrlzcI3pbLRj2wwdMw86l40y4Lq3GUR
+	 iXyD+31xbWb05mtZjt/EafamTaBekwJOMdYQxGJy1xwUGNoSa1MkoyGdFxrL65teVG
+	 9UK0URaDm5+Rw==
+Message-ID: <b57b44c3-ea96-4189-8b70-71bf4a80d29b@kernel.org>
+Date: Thu, 18 Dec 2025 11:33:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE4MDA4NSBTYWx0ZWRfX7zPj2sZylKRs
- zL0e2SBRaCuPS1XDoxnjFCwg8HSfyylWPqXEhDllHttx67mxYFFUzEYk0wD/egRXf6TmTzqQgm9
- asc+KXXXK7yCR/AEiT4Q4gZ+ozfGb4GXZboTFnLW/hm77MP7XviRg+ZDiOE/lNBsKx599CA0Qq5
- OesPgPKgshwi/dQkMtNz6kj0/fdgNsKq9eKx9Lhl9HC7LzgfMjnx8aRffTW6rt9L/F0UB7UR8s9
- qeBLBOB0MbxIdptFIGWGW82CXs9A7nw2/DwlEHZpegR9V0hmamoU0B52VLPqYb9u1IrYxxML9LC
- ORO7ts2SHTLJAYB/PB7I/fFem7KNwplJ7RPIEqkYGrbrAjUeJCMdqjvLMDeFI0ev1MXa0rpVjNO
- 3/L8X/4rVrajO+2ai3RUiQVLZwL7oQ==
-X-Proofpoint-GUID: 4D84LCT67i_Z9g58q_RerRulrka_9OqI
-X-Proofpoint-ORIG-GUID: 4D84LCT67i_Z9g58q_RerRulrka_9OqI
-X-Authority-Analysis: v=2.4 cv=Zpjg6t7G c=1 sm=1 tr=0 ts=6943d7a4 cx=c_pps
- a=WeENfcodrlLV9YRTxbY/uA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=EUspDBNiAAAA:8 a=MXvQDq4xZDojel53yV8A:9 a=QEXdDO2ut3YA:10
- a=kacYvNCVWA4VmyqE58fU:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-18_01,2025-12-17_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 bulkscore=0 suspectscore=0 spamscore=0 lowpriorityscore=0
- phishscore=0 malwarescore=0 clxscore=1015 impostorscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2510240001 definitions=main-2512180085
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] 36-second boot delay due to by
+ acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
+To: Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Francesco Lauritano <francesco.lauritano1@protonmail.com>
+Cc: Mario Limonciello <superm1@kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "westeri@kernel.org" <westeri@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>
+References: <2kSCn4XaoXsXJ3EUR0syTdmip8Z1cBuUr0Br4sFVnwnsA8q4GlhiHOmsJkeBxvxYoLnetp4r44wIPXw42yTAFl-BtMROnIwR-NkckKgA5EY=@protonmail.com>
+ <6iFCwGH2vssb7NRUTWGpkubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pnu5hzPguTa0s=@protonmail.com>
+ <4402ed86-77f5-4a47-a9e1-8d57a709bb15@kernel.org>
+ <woxnPhTYiKi2aLzBK8GnO8DpvdgYjQc-P42uhJOzyrcYC3Gdstht27hML8yNHgOklhm2MgGA7wt9gGZ17BHoWlG0vqJuVVJDgCSev8udfds=@protonmail.com>
+ <NIIS8XD_nSRvp36X39GxcDRAWsaScQIFx6o9JsFCbyBZk5PqznRdxg9EDDb_9tzWd5TcjzxrRtFx5_uLCVa5wJAYykW2k0Ue_XPMPtWCQiY=@protonmail.com>
+ <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
+ <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
+ <20251218063954.GT2275908@black.igk.intel.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20251218063954.GT2275908@black.igk.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi,
 
-On Wed, 10 Dec 2025 06:50:26 +0100, Bartosz Golaszewski wrote:
-> We always call superio_enter() in it87_gpio_direction_out() but only
-> call superio_exit() if the call to it87_gpio_set() succeeds. Move the
-> label to balance the calls in error path as well.
+On 18-Dec-25 07:39, Mika Westerberg wrote:
+> On Wed, Dec 17, 2025 at 07:19:56PM +0000, Francesco Lauritano wrote:
+>> On Wednesday, December 17th, 2025 at 7:01 PM, Mario Limonciello <superm1@kernel.org> wrote:
+>>
+>>> On 12/17/25 10:57 AM, Francesco Lauritano wrote:
+>>>
+>>>> On Wednesday, December 17th, 2025 at 4:12 PM, Francesco Lauritano francesco.lauritano1@protonmail.com wrote:
+>>>>
+>>>>> The _AEI defines 5 GPIO interrupts. Narrowed it down to two:
+>>>>>
+>>>>> gpiolib_acpi.ignore_interrupt=AMDI0030:00@21,AMDI0030:00@24
+>>>>>
+>>>>> This fixes the delay. Pins 0x15 and 0x18 both call: \_SB.PCI0.SBRG.HNC0()
+>>>>
+>>>> Traced it further. HNC0(pin, 0) takes the Else branch and calls:
+>>>> ATKM(0xC0)
+>>>> ADTM(Zero)
+>>>>
+>>>> ADTM calls NOD2(), which is the actual culprit:
+>>>>
+>>>> While ((Arg0 != RDNT))
+>>>> {
+>>>> If ((Local0 >= 0x0F)) { Break }
+>>>> Notify (^^GPP0.PEGP, Arg0)
+>>>> Local0++
+>>>> Sleep (Local0 * 0x64)
+>>>> }
+>>>>
+>>>> It notifies the dGPU and polls RDNT, sleeping 100, 200, ... 1500ms per iteration.
+>>>> Max 15 loops = ~12s per pin. GPU doesn't respond at boot so it maxes out.
+>>>>
+>>>> Two pins, ~12s each, ~24-36s total.
+>>>>
+>>>> Francesco
+>>>
+>>>
+>>> Any idea why isn't the dGPU responding? I would have expected
+>>> https://git.kernel.org/torvalds/c/4d4c10f763d78 sets up policy that it's
+>>> in D0.
+>>>
+>>> Is the dGPU turned off in BIOS or through some reverse engineered
+>>> tool/API or something?
+>>
+>> dmesg without the workaround:
+>> [    1.005184] pci 0000:01:00.0: PME# supported from D0 D3hot
+>> [    1.288811] pci 0000:01:00.0: vgaarb: VGA device added
+>> [   38.250139] nvidia: loading out-of-tree module taints kernel.
+>> [   38.369358] nvidia 0000:01:00.0: enabling device (0000 -> 0003)
+>> [   39.744421] NVRM: GPS ACPI DSM called before _acpiDsmSupportedFuncCacheInit
+>>
+>> GPU is in D0 from 1.0s. nvidia loads at 38.2s after the GPIO hang completes.
+>>
+>> No weird tools/APIs besides userspace utils (asusctl/supergfxctl). 
+>>
+>> No changes to BIOS factory defaults other than disabling Fast Boot.
+>> dGPU is active, Display Mode is Dynamic (hybrid).
+>>
+>> Traced RDNT - it's set by GPS function 19 in the ACPI tables:
+>> Case (0x13)
+>> {
+>>     Debug = "GPS fun 19"
+>>     \_SB.PCI0.SBRG.RDNT = (Local1 + 0xD1)
+>> }
+>>
+>> As far as I can understand GPIO initcall blocks at late_initcall_sync, preventing nvidia 
+>> from loading in time to respond. Based on the timing, GPU is awake but nothing can 
+>> register a handler while kernel is stuck at NOD2 polling loop.
 > 
-> 
+> I wonder if you could try with the nouveau driver so that it's built-in to
+> the kernel proper? Then it should be ready at the time these events
+> trigger.
 
-Applied, thanks!
+That is not really a workable solution though.
 
-[1/1] gpio: it87: balance superio enter/exit calls in error path
-      commit: a05543d6b05ba998fdbb4b383319ae5121bb7407
+I think either we need to DMI quirk the 2 models with this issue;
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Or perhaps it is time to rethink the whole running of edge handlers
+on boot thing.
+
+Based on the existing DMI quirks, which fix some much more serious
+breakage (breaking HDMI out port DCC, causing a USB-A port to not
+get 5V out) I would say it is safe to say that Windows does not do
+this.
+
+As for the original reasons mentioned in the commit message
+introducing this:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ca876c7483b6
+
+The BYT tabled ID pin handling has been sowewhat controversial. Some
+people actually liked that many BYT BIOSes leave the USB data pins in
+host mode even when a charger is connected as this allows using
+a USB-otg-charging HUB charging and being in host mode at the same time.
+
+That just leaves the original LID handling on microsoft surface 3
+tablets case as somewhat of a problem.
+
+But we can just pick an initial LID state of LID not closed there,
+booting up with the LID closed is unusual and if done, the user
+likely does *not* want to suspend right away which would happen
+when reporting the LID as closed.
+
+I still have a Surface 3 and I can check if that is the default and
+if not this could be fixed with a quirk in the ACPI LID handling code.
+
+TL;DR: I think this is a case where we can fix things by ripping
+out a whole bunch of code + quirks and stop running edge event
+handlers on boot.
+
+Regards,
+
+Hans
+
+
 
