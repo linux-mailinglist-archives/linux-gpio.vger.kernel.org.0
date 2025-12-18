@@ -1,404 +1,687 @@
-Return-Path: <linux-gpio+bounces-29748-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29749-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6405CCC8FD
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 16:49:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D8E2CCD5E4
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 20:21:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 06F1A30303B2
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 15:47:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2EF91303525D
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Dec 2025 19:21:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5B5434E255;
-	Thu, 18 Dec 2025 15:36:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 768D93612C5;
+	Thu, 18 Dec 2025 15:58:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="NHwlv7h2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TQaiFQaJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013018.outbound.protection.outlook.com [40.107.159.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C34734DCC2;
-	Thu, 18 Dec 2025 15:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766072204; cv=fail; b=hXsZrz1ijbOcdaRpMsnBIaI7tyaZuSCNxWHAxs/7xot+pEGujZjSxQkMg2yZJyBd9wbdRdOpCZgcgeVktkCv8DbnILJ0OdKaBUIVnhwxZGfv75PxNI1kNo4ooF8mUrV+ss9/wpugGpzezM7zlKNIiFGu3o7VncMTv/pmwMuMfXI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766072204; c=relaxed/simple;
-	bh=WbZynvr52dZhJf5AX7W/t8OMcBZ2ud86lY9Kq6rbHWI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=mw40PFEknUk5gQqeD1r9B8bDOdBL+fmzQPsjwXlrGv80kyDTX3BfYBAN9voDIIFMeNv3uXSF2RfKTSJBMse/FYg4X08BXQoF1PMFCyN+GBD6b5O61TIGaxmU2l/vnuEzb58SJsCqgXKFtTrzg8bkJUaL1qBu7JqpCiFqi32lKZY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=NHwlv7h2; arc=fail smtp.client-ip=40.107.159.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=F09J32ZjzSWB6I3HmLryfymIFMlS++vSDBD9iRMzkjeIAl1ax2qeGOx2qfwpB3jp+T+Zjhh79TmmVNuj4z57ANDe4I8k3m5uH+2Virh/Aou2TyQFJ96tf2dWNFoyydvPcBOetQPcTUvKseelvQUIcLbLG5qRCtm5i20kJhnelJq0tOdWG6yuKTTd1Xn1sOYct9yZskzewni0RTZkGczd9IFOHNKXXIQDpJw73ufKx5m1dzI2VLS+mC9WVGvV7V8jzMgKt6vUo+R2b01UVUR+FTwCZT90Iu1htOiSqvhlfPDHApcPEl2I/okcj0Lcf2qnKg/2tmPrtJJc3duW4fCd8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WbZynvr52dZhJf5AX7W/t8OMcBZ2ud86lY9Kq6rbHWI=;
- b=yv6OS3ZizTJLOQ/CbtSwFv914ocv1i+6qATgx8Cwb3FzitK7aA7TrWYSremURxiF6PdUCOTRQKKTmqxf+bP1f5qsVBWtVTlE4fSEZrWmVuBzIr4TkrRCrX6tci+qUCI0bJ51WCgEcZ0NlIyVzA/IavOdnIyu0uikE0FgKgJjTIGSNWs2xDPeERimJOUqRGcI4814pmqLmGPGN0oHsxYiK1cDO77slzaqWQBZu6LADKO/3kYjHg5sow+3DxIVP4AWcQGT0vEggtdXIZPwe82M6tyXu2oOCSz0k2y2QGgRfIHdbq38YUjHoY4gpAZeQrzxNdCBueOvaoqhhTZTaYpXSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WbZynvr52dZhJf5AX7W/t8OMcBZ2ud86lY9Kq6rbHWI=;
- b=NHwlv7h2j0SWOxbrWvxKYSnEkQ664dY3blA5i9upqvmY39e76+32gFjog9QIdc3H3DvXyLwGXJ4SCiZo/dNdN9EGnjorVJdE9N23GvrE7GsfRbtWNdMmraxQ817mBPQIl3QR9fNvIgSdomsR5b2PjKqIkBQ0mBG9ul46jhvnh5aQvm22sjjRtyrYjlyrCBu28tfGYM3Rs9pALS9tVomYffiSj+qE8Ce5H8Io3ZIXWdCjJBFAzOfstYy65pRao97Ww6g0ABhvTAo9atUwmuccRa1JaIjSOBblyiq6uAGeqpGm/0N1oZJKQ6iN/3I7pDO9xfhRESMf1frcwe95k8J/rQ==
-Received: from PAXPR04MB9185.eurprd04.prod.outlook.com (2603:10a6:102:231::11)
- by PA4PR04MB8014.eurprd04.prod.outlook.com (2603:10a6:102:c7::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.7; Thu, 18 Dec
- 2025 15:36:37 +0000
-Received: from PAXPR04MB9185.eurprd04.prod.outlook.com
- ([fe80::21bf:975e:f24d:1612]) by PAXPR04MB9185.eurprd04.prod.outlook.com
- ([fe80::21bf:975e:f24d:1612%5]) with mapi id 15.20.9434.001; Thu, 18 Dec 2025
- 15:36:37 +0000
-From: Shenwei Wang <shenwei.wang@nxp.com>
-To: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>, Linus Walleij
-	<linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Mathieu
- Poirier <mathieu.poirier@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>
-CC: Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
-	<festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v6 3/5] docs: driver-api: gpio: generic gpio driver over
- rpmsg bus
-Thread-Topic: [PATCH v6 3/5] docs: driver-api: gpio: generic gpio driver over
- rpmsg bus
-Thread-Index: AQHccDQYl7xLhPI7LkyLRD1mrkx3qA==
-Date: Thu, 18 Dec 2025 15:36:37 +0000
-Message-ID:
- <PAXPR04MB9185A82D9E6FFCA1D1D45BDE89A8A@PAXPR04MB9185.eurprd04.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F54A35FF77;
+	Thu, 18 Dec 2025 15:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766073497; cv=none; b=CXvz26Y3a3oHrIac5J431sDrs/prFzMZYBiuwmlBj1en723u/V8bESgshOQFKpwO2n4kf/Avv3ePOCI0v6iuFPstgw5dm/8lBFgQoEbaikQB78QGLT9PhJeKFesMw5ISnIFLIIWAeV/JMZG6eRFZa0IsYLCkCaMcn0z9r2FsTJ0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766073497; c=relaxed/simple;
+	bh=eYLSjabc3lxrWUD3joy0AohRmvTtr+01/ZPVbcKGqeo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DnXQ0LwatQ7SlGVq0w4YOLU2z03/cGoH7f9tw+e1ZeyXmOoMy1Rikf2RRd67LVAfsXdRaTJNItsR/NdgwilylhMTTaWCHRWD4djvS3WBthTEsP1uvRuhy6NPkeXt/DeHOwvuS+FvcYtcR/OxXI+U57InxELVDzG7TBHqN7fNWA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TQaiFQaJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38D7CC116B1;
+	Thu, 18 Dec 2025 15:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766073496;
+	bh=eYLSjabc3lxrWUD3joy0AohRmvTtr+01/ZPVbcKGqeo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TQaiFQaJetA8F/PgWOXGZeYl5GEeUyt0kvPlUfbcu/m3Qc/DNev7yksxTp+ojj9xr
+	 +4HsM4Du+dYJlRYawu6uzjM2PR5hSGJlPCIhD/30E/wcj2PpnhTzntWbBPZdQLkIHD
+	 xpsG8Je758IPlXE4pc/7kYAcnFwaQGwiYwN4yx9F8afNXCxyzUiZGVS9HjvFP+s4g8
+	 Zp4cbDfHWDNYjx9E8l9yuHOthbQEz/Su/uT17GuHGC/7QTpaAooN+kJGR/QGiuGTIy
+	 UcDmiTnUMbZaZe1Ccez2NXJI0ejW0EGzWS2FKvh44vBiZGwZqvyjsA0ifvFkXaxes4
+	 b9Ola+SshDnIQ==
+Date: Thu, 18 Dec 2025 09:58:13 -0600
+From: Bjorn Andersson <andersson@kernel.org>
+To: Shenwei Wang <shenwei.wang@nxp.com>
+Cc: Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-remoteproc@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-imx@nxp.com, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v6 4/5] gpio: rpmsg: add generic rpmsg GPIO driver
+Message-ID: <mnpg4xanzl45lal72c6kgog7qmqgk2zcp734eqdpk3gsonq63f@vlewh6jgdjy4>
 References: <20251212194341.966387-1-shenwei.wang@nxp.com>
- <20251212194341.966387-4-shenwei.wang@nxp.com>
- <86f7f157-d25f-48cb-806c-c8dc914033f1@foss.st.com>
-In-Reply-To: <86f7f157-d25f-48cb-806c-c8dc914033f1@foss.st.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PAXPR04MB9185:EE_|PA4PR04MB8014:EE_
-x-ms-office365-filtering-correlation-id: c47f1f47-1c07-417e-caa0-08de3e4b3b4f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|19092799006|1800799024|366016|376014|7416014|38070700021|921020;
-x-microsoft-antispam-message-info:
- =?utf-8?B?MVZUUk9lVkRlSGxJSndXYU5OQXNoZFcwTVo5c244Q3BzTGcxNURIdXdHSEJ3?=
- =?utf-8?B?Wm9iM2FXcFQwWm5CR1dhTTRiWnpFaG9tMnJ0WnBMSTNBVGY0SzcrbHVMeGJp?=
- =?utf-8?B?R25raE5LUWIrSG9aaURXWHFOU2VMdWhXU2dRNlNiQ1Noanp5cnlSMGFFK1Qw?=
- =?utf-8?B?UG9oZU1iZlcvSTVjYmVNR2ZncERUNkUzZmptZms0K2pwWjBBVThRSjRnVWNn?=
- =?utf-8?B?VmxRZjhlYlg2Skt3Y1o4UGNONlVTcFNyVUpBaWREbHRqYW9FTHpZQ0xKSkxT?=
- =?utf-8?B?N25JUld5WkZaV1pyall2R0R4d1pOaUlKRjNnK3hYNHVpSldPNHNOamNwZ2Z0?=
- =?utf-8?B?V0RzVlhDZk9WRk00MVFtYWdIYXpwNEsyWSt0YnNYbTBpRjFOSDB1V3hKcTd3?=
- =?utf-8?B?KzRFNnNubHhEUFhReGpNQTUwdGx0b0RaZjVZbFlCZFRsYyswMGREd3A3L3NR?=
- =?utf-8?B?M3UvN0YxaEk1U1JsMGk4bU51R1hxZGFSU1JlZXQ5a0YxSzUwa05xcjkzOHow?=
- =?utf-8?B?UDM1K0hLaEVZaGNBbGowdXRBM1FYUHhsQnlOdEFhUmVRRUNMdXJ4U1BIVnpB?=
- =?utf-8?B?NW1aUG5seTV2djQyNXh0R3dLeDgvNUN4bGxyYUY3MGU2WEwrZ0llL01XQUJX?=
- =?utf-8?B?enFNR1NXNWtGa3RSRVNKTVpVQlM0QnBscXdaL1V2Y25EUmdoYVBXR1V0T1lO?=
- =?utf-8?B?QkhlWlBDM05oNHFYOURqMVFaZ201cDFZYnhNaUtFcUJYRDVaYUNTeWhIV244?=
- =?utf-8?B?djc3YStnTXhUVjRPM2M0T0tFaWNNb1J2VDFIcS9vNmxTMG80dnZDb0ZBWUVy?=
- =?utf-8?B?cDZZamM1MWtEb2ZkRjJMZUs4ZHVjbjU3Wmd4VzJWUklXU0F1dTJNaHlyTEly?=
- =?utf-8?B?VkY5Tktaem05am5oUVM4T0RIRHdBZi9hL2hycjhmK0ErL3dRbk82ZkVBenFE?=
- =?utf-8?B?VnA5a0FsOExtTUY0eTBFd2RUN05MNW5SQlFkRkpMMTNKV202b0NaenE2L0t1?=
- =?utf-8?B?d2Vyekc3bjJaVm1BL3lqRk9IcHVlYm9vU2d4Q1AyZDY0Wmw1LzUyd0s3T2N6?=
- =?utf-8?B?MEhzNjhNTmd1c2VYaGp6UEZua3lYRlZKV1hzUE5PbDBKQWJWdFJ4UWtnQVhh?=
- =?utf-8?B?b1pQMzNHTExNZlUreGRVR2RpSFdxTUU2MHMwT1pMdTNINmpTV0pneEJ5K241?=
- =?utf-8?B?dUd4Y1dtNFpQL20vKzB3UnRVZGFyNUNIRCt3YmpVOENOUUkyRzVrcjFvV25a?=
- =?utf-8?B?WGh0enRSWUh6RkF1VHhiZ1BKS2NWcENmeGR4NDZrS1BjWm9YOXIwL3ZkTDBE?=
- =?utf-8?B?YVZTUjE4OWhUUk5kSE40Zzk4RFNtTzRDZlNKQ1NFU1JYVDJwTU9HMlFMUHVW?=
- =?utf-8?B?RWpaNEt1cXBURFdlRWxTVXJsVldDVVROQ0lZWVZxNmhrUGVGeTVFTUtkV0pX?=
- =?utf-8?B?TGdWenBXZWZIU2tGeU54eEdZcWVSekxjZEQvdGxHTDcvdGVQQnU0UUkzUmx0?=
- =?utf-8?B?U0ppZDNWcUhrOE5WZUtFOTRvMk50dmVzZ3NjUWRCZy9uWmx3eVpVQjBxUDcv?=
- =?utf-8?B?WE1TZVRTdzdpK1Ywa0ZoL1BQRktBWjZjQ3pHQ1VBeEtYVkk0U0NzVDFhV05Q?=
- =?utf-8?B?QWtTdC8zOVZPSVpDem1jQVh1UVlyLzlMNkNRSW91ak1BcDBob1UwbW1mTlJX?=
- =?utf-8?B?U2ozWGFvLzFFYllEOElSclJHQVZTNW5ONXBZWFI5NVpVWjJLbEliNG5PbGdR?=
- =?utf-8?B?MnZISWVNQmY5VTl2Rk1aOXZjM0xFWElLdTV3V3ZqSE5Pb0c2QlBTbjB5ajFk?=
- =?utf-8?B?eWJ5Y0RueWExTE4zU3JRVGhVUGVzdE1XdGdOc3ZtYVl1cHhSSzhzMDlCV0RK?=
- =?utf-8?B?dEliR3gxQVhPS0dzWlgybkgrSk9OUFI4MW1iR2ZrOWV4RkpuTEpyS0RlTG9o?=
- =?utf-8?B?UEdueTF6djZzaENBdDJwcm5IZjNYVU9tek9YdVpxb0lUOFpIWlVtQUJBY2ox?=
- =?utf-8?B?UFZLbEpoU0hwVDNMT25aSGJlT2VVa1hVc2ZkeDNEV0R5Yk0wM24xTHN5Ull3?=
- =?utf-8?B?cFd6WUYxTGh4dHEzWWttZ1g0VTh0eFlzbHhJQT09?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9185.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(1800799024)(366016)(376014)(7416014)(38070700021)(921020);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?M1pYUnh0Snl6Nld6bEdNL1JzY1gwTC9GaFB6SnU4b1loTkVPemt3WFJJOTIz?=
- =?utf-8?B?cmhHTzZPMmJOR1NGWjR5NWcyc0JRRStTS0JKdmFibkNSSmVpaEVHbVNGcjdS?=
- =?utf-8?B?aTM1UzdqNzVqZnlmUTNYQkQ2TEVlR2RjcDIwQ0d5YnlwNFNaaGlpckVrUnFw?=
- =?utf-8?B?NXFUM1hTZVRtcFJ5Mk5mUEkvaFpZaHNZQ2RCbDNxTHBQSHN1OTZSdTZ2M3Bs?=
- =?utf-8?B?ekVFREZYVU1TWUUyMEhHYXl4RjRseEhQRHZ4NGsrZk93WS9SWUVnTFBmYUx4?=
- =?utf-8?B?NW9sSmx4V0t2U3BxQktsb0ZKWUNUNG1jdERCRk54R2pKTnFNWktjRm00eHZp?=
- =?utf-8?B?MVRYTmkwNUFQK0VTeGMwaUVWeDNKU3Frc0N5MGptK2xUa0R4RndHdGV6YkM5?=
- =?utf-8?B?OXgwckwvZlc2eTIzNm5jOU9ySjNqVi91V2pEQzhBNVVmbkg2MGhBMjVTNXNQ?=
- =?utf-8?B?NU9oK0pHZk1Wa1JNWm5xMjk0Y25NdklwNmZUVW9hSllrVTByOXRSd2lGTlQ3?=
- =?utf-8?B?ZHBOano0Yk5GL2pSRUx0MjN4bFBha3VIZExvdE85dWxNUXNTYmV3bXlFcDkx?=
- =?utf-8?B?RGpTajRUVUVFTlkyUnBJc1hhS1NwNzQxN3JpMXJVMk1CcUtkZXR0bEt0bHZP?=
- =?utf-8?B?cmxTUDd4cmpGSFc3SWVPYU0zM281NG5UMmJoRjNBZnZvWmtUNUNBTlAwZFZI?=
- =?utf-8?B?Q2lCUmtSUXRCNFJZT1FpT1FXOGovaWxCcUhla3VjajBKVWtDdGxiUm1icG94?=
- =?utf-8?B?aFBzSzVhTFdSNEJxaWI0bmRvbVpxVkZTbm10VjRBTHBiSnkyWng1NmFENUgz?=
- =?utf-8?B?TGdlaVNJNHN3ajVDeWpsQkdWTXdoU2lZVGZxRU5LY0o1aXdqRitCc3JnRXRP?=
- =?utf-8?B?NG9KNTlaWnJUL1QyN2RWZ2VodDJjRkJqZXNOdFRKNkhFRktDRlB1VTZlOFY4?=
- =?utf-8?B?WVB2YlNMTlJJVmRnVWs4b0NPZkNZSklwSVlIN1p2RXlhWXZ5RWdYNHQxd3ln?=
- =?utf-8?B?OTViaG1kYjZNeFdPQnplV01VeGoyMHB1ZHg2NlAwNmJ0b20vbWNiZ3NQM1FZ?=
- =?utf-8?B?WnZVUll5RW9tdDJ0RUJUVEhiT1d0OTM2Q0hUdkxQSkdWVGZZdnpvVys0VEJu?=
- =?utf-8?B?S3RNOVFHWm9yUFM1UEtHc3JRbExYMncraSsrL0FuLzcyZ1lHNStzSG1iWldr?=
- =?utf-8?B?bkhabXBjUVdVcmpwRzNFYjFIdVF4a2NKa3hNVm9CNkQ0RTcrdHZRcnpGR090?=
- =?utf-8?B?eDFFZlQzajVVeG05SXMwTUh0dVBLNkdJTEhGbWhuL3BPSnhDUjdBeW1uamNE?=
- =?utf-8?B?ek1KTmdyS0Z4bk5zZVZmdXAyelFYTXFza0dIRTV1Q0VudzRnV3NzOGl6RnZR?=
- =?utf-8?B?NFBydERsSXg0b1hydkNiK1VDcWdvYTFlUDkxRjF3djdJRHRmMEZGaGgxeWNF?=
- =?utf-8?B?dUtJQnNWdmdveUpRbHE2K1ZvS1lrdk9VdCtwdEw5T2VmVkgwYUI0K1JpQmpU?=
- =?utf-8?B?OGdGNG9jT1NmYnhJdUlMZmhrTVRyQ2c3U25jWU1BZDRLRlBXWGNGbC8vbW40?=
- =?utf-8?B?TjZZQU9iekQ2WGFmNFNabnNIcGdHeW9SQlZzVW93clFTbnRKRXdPMmxEalVq?=
- =?utf-8?B?aGl4U1RyNllqKzQvSHIrMmdnNjZCQ0Z0dHJKMjUzVldrc1puUVM3K2hQNGdQ?=
- =?utf-8?B?SmJTUElCbm9MNHJ3cGxmaUUyS2pMRjRkVWVDRytpZVZrcjhuNFljV3FrZ0dU?=
- =?utf-8?B?OEhyNDhuNmZJcENVNzhBTHQySm0wbmFrc2J3cHJsZVErdTBreGZtVlg4NWZo?=
- =?utf-8?B?T0cvNWQxMmE4c0p5dDhiUmRCRG1saGNIckpWTDZDc1NpYkNHaUVRQzEwdHpk?=
- =?utf-8?B?aFV2eDNVUzRRZ2xwaUFiR0psRnhjM1VLMjJhUWZGREdjZi9VOVJKMnVYdnpQ?=
- =?utf-8?B?TkNIZlB1V1VaUEFxWERkdzBBU2lETnJpVGErZWlLMGRmUmxuNGZzeFhWdjcr?=
- =?utf-8?B?cDN2ZUFVOHRYTS9hbXdvRjE2UmwrMk5LeVJEWmNpSzMwTmgvRDFWdnc0M1gx?=
- =?utf-8?B?T1Ara2NMaklVOENKbzhadU5MczJSeVpLaG1LRzdMdWp0ZEt3eEhtSDVGZmhu?=
- =?utf-8?Q?bSPg3OYPXNZPUy5rE0eyMi78f?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <20251212194341.966387-5-shenwei.wang@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9185.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c47f1f47-1c07-417e-caa0-08de3e4b3b4f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2025 15:36:37.1305
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9pJLc9hE5QkH/ioZAqf8sLNICufLOoFZjbyfFryiqcjsl9nEkJ+kxOthVEdSF2t81TDQfKRGA2YVoTjvyJ5+Fw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB8014
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251212194341.966387-5-shenwei.wang@nxp.com>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQXJuYXVkIFBPVUxJUVVF
-TiA8YXJuYXVkLnBvdWxpcXVlbkBmb3NzLnN0LmNvbT4NCj4gU2VudDogVGh1cnNkYXksIERlY2Vt
-YmVyIDE4LCAyMDI1IDQ6NDUgQU0NCj4gVG86IFNoZW53ZWkgV2FuZyA8c2hlbndlaS53YW5nQG54
-cC5jb20+OyBMaW51cyBXYWxsZWlqDQo+IDxsaW51c3dAa2VybmVsLm9yZz47IEJhcnRvc3ogR29s
-YXN6ZXdza2kgPGJyZ2xAa2VybmVsLm9yZz47IFJvYiBIZXJyaW5nDQo+IDxyb2JoQGtlcm5lbC5v
-cmc+OyBLcnp5c3p0b2YgS296bG93c2tpIDxrcnprK2R0QGtlcm5lbC5vcmc+OyBDb25vciBEb29s
-ZXkNCj4gPGNvbm9yK2R0QGtlcm5lbC5vcmc+OyBCam9ybiBBbmRlcnNzb24gPGFuZGVyc3NvbkBr
-ZXJuZWwub3JnPjsgTWF0aGlldQ0KPiBQb2lyaWVyIDxtYXRoaWV1LnBvaXJpZXJAbGluYXJvLm9y
-Zz47IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47DQo+IFNhc2NoYSBIYXVlciA8cy5o
-YXVlckBwZW5ndXRyb25peC5kZT47IEpvbmF0aGFuIENvcmJldCA8Y29yYmV0QGx3bi5uZXQ+DQo+
-IENjOiBQZW5ndXRyb25peCBLZXJuZWwgVGVhbSA8a2VybmVsQHBlbmd1dHJvbml4LmRlPjsgRmFi
-aW8gRXN0ZXZhbQ0KPiA8ZmVzdGV2YW1AZ21haWwuY29tPjsgUGVuZyBGYW4gPHBlbmcuZmFuQG54
-cC5jb20+OyBsaW51eC0NCj4gZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5r
-ZXJuZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtcmVtb3Rl
-cHJvY0B2Z2VyLmtlcm5lbC5vcmc7IGlteEBsaXN0cy5saW51eC5kZXY7DQo+IGxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtZG9jQHZnZXIua2VybmVsLm9yZzsgZGwt
-bGludXgtaW14DQo+IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogW0VYVF0gUmU6IFtQ
-QVRDSCB2NiAzLzVdIGRvY3M6IGRyaXZlci1hcGk6IGdwaW86IGdlbmVyaWMgZ3BpbyBkcml2ZXIg
-b3Zlcg0KPiBycG1zZyBidXMNCj4gPiArDQo+ID4gKyArLS0tLS0rLS0tLS0tLSstLS0tLS0tLSst
-LS0tLSstLS0tLSstLS0tLS0tLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLQ0KPiA+ICsgLS0tKw0K
-PiA+ICsNCj4gPiArLSAqKklEIChNZXNzYWdlIElkZW50aWZpY2F0aW9uIENvZGUpKio6IEFsd2F5
-cyBiZSAweDUuIEluZGljYXRlcyB0aGUgR1BJTw0KPiBtZXNzYWdlLg0KPiA+ICsNCj4gPiArLSAq
-KlZlbmRvcioqOiBWZW5kb3IgSUQgbnVtYmVyLg0KPiA+ICsgIC0gMDogUmVzZXJ2ZWQNCj4gPiAr
-ICAtIDE6IE5YUA0KPiANCj4gVGhlc2UgdHdvIGZpZWxkcyBhYm92ZSBzZWVtIHVzZWxlc3MgZm9y
-IHRoZSBycG1zZy1ncGlvLiBJcyB0aGVyZSBhbnkgcmVhc29uIHRvDQo+IGtlZXAgdGhlbT8NCj4g
-DQoNClRoZXkgYXJlIG5vdCB1c2VkIHNvIGZhci4NCkFuZCB0aGV5IGFyZSByZXNlcnZlZCBmb3Ig
-aW1wbGVtZW50aW5nIHdvcmthcm91bmRzIHRoYXQgbWlnaHQgYmUgcmVxdWlyZWQgYnkgDQpkaWZm
-ZXJlbnQgdmVuZG9ycyBvciBkaWZmZXJlbnQgZmlybXdhcmUgdmVyc2lvbnMuDQoNCj4gPiArDQo+
-ID4gKy0gKipWZXJzaW9uKio6IFZlbmRvci1zcGVjaWZpYyB2ZXJzaW9uIG51bWJlciAoc3VjaCBh
-cyBzb2Z0d2FyZSByZWxlYXNlKS4NCj4gPiArDQo+ID4gKy0gKipUeXBlIChNZXNzYWdlIFR5cGUp
-Kio6IFRoZSBtZXNzYWdlIHR5cGUgY2FuIGJlIG9uZSBvZjoNCj4gPiArDQo+ID4gKyAgLSAwOiBH
-UElPX1JQTVNHX1NFVFVQDQo+ID4gKyAgLSAxOiBHUElPX1JQTVNHX1JFUExZDQo+ID4gKyAgLSAy
-OiBHUElPX1JQTVNHX05PVElGWQ0KPiA+ICsNCj4gPiArLSAqKkNtZCoqOiBDb21tYW5kIGNvZGUs
-IHVzZWQgZm9yIEdQSU9fUlBNU0dfU0VUVVAgbWVzc2FnZXMuDQo+ID4gKw0KPiA+ICstICoqcmVz
-ZXJ2ZWRbNV0qKjogUmVzZXJ2ZWQgYnl0ZXMuIFNob3VsZCBhbHdheXMgYmUgMC4NCj4gPiArDQo+
-ID4gKy0gKipsaW5lKio6IFRoZSBHUElPIGxpbmUgaW5kZXguDQo+ID4gKw0KPiA+ICstICoqcG9y
-dCoqOiBUaGUgR1BJTyBjb250cm9sbGVyIGluZGV4Lg0KPiANCj4gVGhlIGRlc2NyaXB0aW9uIG9m
-IHBvcnQgYW5kIGxpbmUgc2hvdWxkIGJlIE9TLWFnbm9zdGljLg0KPiBUaGUgbm90aW9uIG9mIGEg
-R1BJTyBjb250cm9sbGVyIGluZGV4IG1ha2VzIHNlbnNlIGZyb20gYSBMaW51eCBwZXJzcGVjdGl2
-ZSwgYnV0DQo+IGhlcmUgeW91IHNob3VsZCBwcm92aWRlIGEgaGFyZHdhcmUgZGVzY3JpcHRpb24u
-DQo+IEFkZGl0aW9uYWxseSwgSSBzdWdnZXN0IHJldmVyc2luZyB0aGUgb3JkZXIgb2YgcG9ydCBh
-bmQgbGluZSwgYXMgYSBsaW5lIGlzIGFuIGluc3RhbmNlDQo+IHdpdGhpbiBhIHBvcnQuDQo+IA0K
-PiBTdWdnZXN0ZWQgZGVmaW5pdGlvbnM6DQo+ICAgICoqcG9ydCoqOiBUaGUgR1BJTyBwb3J0KGJh
-bmspIGluZGV4Lg0KPiAgICAqKmxpbmUqKjogVGhlIEdQSU8gbGluZShwaW4pIGluZGV4IG9mIHRo
-ZSBwb3J0Lg0KPiANCg0KT2theSwgSeKAmWxsIHVzZSB5b3VyIHN1Z2dlc3RlZCBkZXNjcmlwdGlv
-bnMgaW4gdGhlIG5leHQgdmVyc2lvbi4gDQpIb3dldmVyLCBJ4oCZbGwga2VlcCB0aGUgY3VycmVu
-dCBieXRlIG9yZGVyIHNpbmNlIGl04oCZcyB0aGUgb25seSBpbXBsZW1lbnRhdGlvbiB3ZeKAmXZl
-IGJlZW4gYWJsZSB0byB0ZXN0Lg0KDQo+IA0KPiA+ICsNCj4gPiArLSAqKmRhdGEqKjogU2VlIGRl
-dGFpbHMgaW4gdGhlIGNvbW1hbmQgZGVzY3JpcHRpb24gYmVsb3cuDQo+ID4gKw0KPiA+ICtHUElP
-IENvbW1hbmRzDQo+ID4gKy0tLS0tLS0tLS0tLS0NCj4gPiArDQo+ID4gK0NvbW1hbmRzIGFyZSBz
-cGVjaWZpZWQgaW4gdGhlICoqQ21kKiogZmllbGQgZm9yICoqR1BJT19SUE1TR19TRVRVUCoqDQo+
-IChUeXBlPTApIG1lc3NhZ2VzLg0KPiA+ICsNCj4gPiArVGhlIFNFVFVQIG1lc3NhZ2UgaXMgYWx3
-YXlzIHNlbnQgZnJvbSBMaW51eCB0byB0aGUgcmVtb3RlIGZpcm13YXJlLg0KPiA+ICtFYWNoIFNF
-VFVQIGNvcnJlc3BvbmRzIHRvIGEgc2luZ2xlIFJFUExZIG1lc3NhZ2UuIFRoZSBHUElPIGRyaXZl
-cg0KPiA+ICtzaG91bGQgc2VyaWFsaXplIG1lc3NhZ2VzIGFuZCBkZXRlcm1pbmUgd2hldGhlciBh
-IFJFUExZIG1lc3NhZ2UgaXMNCj4gPiArcmVxdWlyZWQuIElmIGEgUkVQTFkgbWVzc2FnZSBpcyBl
-eHBlY3RlZCBidXQgbm90IHJlY2VpdmVkIHdpdGhpbiB0aGUNCj4gPiArc3BlY2lmaWVkIHRpbWVv
-dXQgcGVyaW9kIChjdXJyZW50bHkgMSBzZWNvbmQgaW4gdGhlIExpbnV4IGRyaXZlciksDQo+ID4g
-K3RoZSBkcml2ZXIgc2hvdWxkIHJldHVybiAtRVRJTUVPVVQuDQo+ID4gKw0KPiA+ICtHUElPX1JQ
-TVNHX0lOUFVUX0lOSVQgKENtZD0wKQ0KPiA+ICt+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
-fn4NCj4gPiArDQo+ID4gKyoqUmVxdWVzdDoqKg0KPiA+ICsNCj4gPiArLi4gY29kZS1ibG9jazo6
-IG5vbmUNCj4gPiArDQo+ID4gKyAgICstLS0tLSstLS0tLSstLS0tLSstLS0tLSstLS0tLSstLS0t
-LS0tLS0tLSstLS0tLSstLS0tLSstLS0tLSstLS0tKw0KPiA+ICsgICB8MHgwMCB8MHgwMSB8MHgw
-MiB8MHgwMyB8MHgwNCB8MHgwNS4uMHgwOSB8MHgwQSB8MHgwQiB8MHgwQyB8MHgwRHwNCj4gPiAr
-ICAgfCA1ICAgfCAxICAgfCAwICAgfCAwICAgfCAwICAgfCAgMCAgICAgICAgfGxpbmUgfHBvcnQg
-fCB2YWwgfCB3ayB8DQo+ID4gKyAgICstLS0tLSstLS0tLSstLS0tLSstLS0tLSstLS0tLSstLS0t
-LS0tLS0tLSstLS0tLSstLS0tLSstLS0tLSstLS0tKw0KPiA+ICsNCj4gPiArLSAqKnZhbCoqOiBJ
-bnRlcnJ1cHQgdHJpZ2dlciB0eXBlLg0KPiA+ICsNCj4gPiArICAtIDA6IEludGVycnVwdCBkaXNh
-YmxlZA0KPiA+ICsgIC0gMTogUmlzaW5nIGVkZ2UgdHJpZ2dlcg0KPiA+ICsgIC0gMjogRmFsbGlu
-ZyBlZGdlIHRyaWdnZXINCj4gPiArICAtIDM6IEJvdGggZWRnZSB0cmlnZ2VyDQo+ID4gKyAgLSA0
-OiBMb3cgbGV2ZWwgdHJpZ2dlcg0KPiA+ICsgIC0gNTogSGlnaCBsZXZlbCB0cmlnZ2VyDQo+ID4g
-Kw0KPiA+ICstICoqd2sqKjogV2FrZXVwIGVuYWJsZS4NCj4gPiArDQo+ID4gKyAgVGhlIHJlbW90
-ZSBzeXN0ZW0gc2hvdWxkIGFsd2F5cyBhaW0gdG8gc3RheSBpbiBhIHBvd2VyLWVmZmljaWVudA0K
-PiA+ICsgc3RhdGUgYnkgIHNodXR0aW5nIGRvd24gb3IgY2xvY2stZ2F0aW5nIHRoZSBHUElPIGJs
-b2NrcyB0aGF0IGFyZW4ndA0KPiA+ICsgaW4gdXNlLiBTaW5jZSAgdGhlIHJlbW90ZXByb2MgZHJp
-dmVyIGlzIHJlc3BvbnNpYmUgZm9yIG1hbmFnaW5nIHRoZQ0KPiA+ICsgcG93ZXIgc3RhdGVzIG9m
-IHRoZQ0KPiANCj4gcy9yZXNwb25zaWJlL3Jlc3BvbnNpYmxlDQo+IA0KPiA+ICsgIHJlbW90ZSBm
-aXJtd2FyZSwgdGhlIEdQSU8gZHJpdmVyIGRvZXMgbm90IHJlcXVpcmUgdG8ga29ub3cgdGhlDQo+
-ID4gKyBmaXJtd2FyZSdzDQo+IA0KPiBzL2tvbm93L2tub3cvDQo+IA0KPiA+ICsgIHJ1bm5pbmcg
-c3RhdGVzLg0KPiA+ICsNCj4gPiArICBXaGVuIHRoZSB3YWtldXAgYml0IGlzIHNldCwgdGhlIHJl
-bW90ZSBmaXJtd2FyZSBzaG91bGQgY29uZmlndXJlDQo+ID4gKyB0aGUgbGluZSAgYXMgYSB3YWtl
-dXAgc291cmNlLiBUaGUgZmlybXdhcmUgc2hvdWxkIHNlbmQgdGhlDQo+ID4gKyBub3RpZmljYXRp
-b24gbWVzc2FnZSB0byAgTGludXggYWZ0ZXIgaXQgaXMgd29rZW4gZnJvbSB0aGUgR1BJTyBsaW5l
-Lg0KPiANCj4gV2hhdCBhYm91dCB0aGUgb3RoZXIgZGlyZWN0aW9uPyBUaGUgcmVtb3RlIGNvdWxk
-IGFsc28gbmVlZCB0byBkaXNhYmxlIG1lc3NhZ2UNCj4gZnJvbSBMaW51eCwgcmlnaHQ/DQoNClRo
-ZXJlIGFyZSBubyByZXN0cmljdGlvbnMgb24gdGhhdC4NCg0KPiBJbiBzdWNoIGNhc2UgdGhlIHJl
-bW90ZSBtaWdodCBuZWVkIGEgbWVzc2FnZSB0byBnZXQgdGhlIEdQSU8gdmFsdWUgb24gd2FrZS0N
-Cj4gdXAuDQo+IA0KDQpUaGUgcmVtb3RlIGlzIGFjdHVhbGx5IG1hbmFnaW5nIHRoZSBHUElPIGNv
-bnRyb2xsZXIuIEl0IGNhbiBnZXQgYW55IGluZm9ybWF0aW9uIA0KcmVnYXJkaW5nIHRoZSBHUElP
-IGNvbnRyb2xsZXIgaWYgaXQgd2FudHMuIA0KDQo+ID4gKw0KPiA+ICsgIC0gMDogRGlzYWJsZSB3
-YWtldXAgZnJvbSBHUElPDQo+ID4gKyAgLSAxOiBFbmFibGUgd2FrZXVwIGZyb20gR1BJTw0KPiA+
-ICsNCj4gPiArKipSZXBseToqKg0KPiA+ICsNCj4gPiArLi4gY29kZS1ibG9jazo6IG5vbmUNCj4g
-PiArDQo+ID4gKyAgICstLS0tLSstLS0tLSstLS0tLSstLS0tLSstLS0tLSstLS0tLS0tLS0tLSst
-LS0tLSstLS0tLSstLS0tLSstLS0tKw0KPiA+ICsgICB8MHgwMCB8MHgwMSB8MHgwMiB8MHgwMyB8
-MHgwNCB8MHgwNS4uMHgwOSB8MHgwQSB8MHgwQiB8MHgwQyB8MHgwRHwNCj4gPiArICAgfCA1ICAg
-fCAxICAgfCAwICAgfCAxICAgfCAxICAgfCAgMCAgICAgICAgfGxpbmUgfHBvcnQgfCBlcnIgfCAw
-ICB8DQo+ID4gKyAgICstLS0tLSstLS0tLSstLS0tLSstLS0tLSstLS0tLSstLS0tLS0tLS0tLSst
-LS0tLSstLS0tLSstLS0tLSstLS0tKw0KPiA+ICsNCj4gPiArLSAqKmVycioqOiBFcnJvciBjb2Rl
-IGZyb20gdGhlIHJlbW90ZSBjb3JlLg0KPiA+ICsNCj4gPiArICAtIDA6IFN1Y2Nlc3MNCj4gPiAr
-ICAtIDE6IEdlbmVyYWwgZXJyb3IgKGVhcmx5IHJlbW90ZSBzb2Z0d2FyZSBvbmx5IHJldHVybnMg
-dGhpcw0KPiA+ICsgdW5jbGFzc2lmaWVkIGVycm9yKQ0KPiA+ICsgIC0gMjogTm90IHN1cHBvcnRl
-ZCAoQSBjb21tYW5kIGlzIG5vdCBzdXBwb3J0ZWQgYnkgdGhlIHJlbW90ZQ0KPiA+ICsgZmlybXdh
-cmUpDQo+ID4gKyAgLSAzOiBSZXNvdXJjZSBub3QgYXZhaWxhYmxlIChUaGUgcmVzb3VyY2UgaXMg
-bm90IGFsbG9jYXRlZCB0byB0aGUNCj4gPiArIExpbnV4KQ0KPiA+ICsgIC0gNDogUmVzb3VyY2Ug
-YnVzeSAoVGhlIHJlc291cmNlIGlzIGFscmVhZHkgdXNlZCkNCj4gPiArICAtIDU6IFBhcmFtZXRl
-ciBlcnJvcg0KPiA+ICsNCj4gPiArR1BJT19SUE1TR19PVVRQVVRfSU5JVCAoQ21kPTEpDQo+ID4g
-K35+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fg0KPiANCj4gRG9lcyB0aGlzIG1lYW5zIHRo
-YXQgd2UgY2FuIG5vdCBjaGFuZ2UgdGhlIG91dHB1dCBsZXZlbCBkdXJpbmcgcnVudGltZT8NCj4g
-ZWxzZSB0aGlzIHNob3VsZCBiZSByZW5hbWVkIEdQSU9fUlBNU0dfT1VUUFVUX1NFVA0KPiANCg0K
-Tm8uIFlvdSBjYW4gcnVuIHRoZSBJTklUIGNtZCBtdWx0aXBsZSB0aW1lcy4NCg0KPiA+ICsNCj4g
-PiArKipSZXF1ZXN0OioqDQo+ID4gKw0KPiA+ICsuLiBjb2RlLWJsb2NrOjogbm9uZQ0KPiA+ICsN
-Cj4gPiArICAgKy0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tLS0tLS0tKy0tLS0t
-Ky0tLS0tKy0tLS0tKy0tLS0rDQo+ID4gKyAgIHwweDAwIHwweDAxIHwweDAyIHwweDAzIHwweDA0
-IHwweDA1Li4weDA5IHwweDBBIHwweDBCIHwweDBDIHwweDBEfA0KPiA+ICsgICB8IDUgICB8IDEg
-ICB8IDAgICB8IDAgICB8IDEgICB8ICAwICAgICAgICB8bGluZSB8cG9ydCB8IHZhbCB8IDAgIHwN
-Cj4gPiArICAgKy0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tLS0tLS0tKy0tLS0t
-Ky0tLS0tKy0tLS0tKy0tLS0rDQo+ID4gKw0KPiA+ICstICoqdmFsKio6IE91dHB1dCBsZXZlbC4N
-Cj4gPiArDQo+ID4gKyAgLSAwOiBMb3cNCj4gPiArICAtIDE6IEhpZ2gNCj4gPiArDQo+ID4gKyoq
-UmVwbHk6KioNCj4gPiArDQo+ID4gKy4uIGNvZGUtYmxvY2s6OiBub25lDQo+ID4gKw0KPiA+ICsg
-ICArLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0tLS0tLS0rLS0tLS0rLS0tLS0r
-LS0tLS0rLS0tLSsNCj4gPiArICAgfDB4MDAgfDB4MDEgfDB4MDIgfDB4MDMgfDB4MDQgfDB4MDUu
-LjB4MDkgfDB4MEEgfDB4MEIgfDB4MEMgfDB4MER8DQo+ID4gKyAgIHwgNSAgIHwgMSAgIHwgMCAg
-IHwgMSAgIHwgMSAgIHwgIDAgICAgICAgIHxsaW5lIHxwb3J0IHwgZXJyIHwgMCAgfA0KPiA+ICsg
-ICArLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0tLS0tLS0rLS0tLS0rLS0tLS0r
-LS0tLS0rLS0tLSsNCj4gPiArDQo+ID4gKy0gKiplcnIqKjogU2VlIGFib3ZlIGZvciBkZWZpbml0
-aW9ucy4NCj4gPiArDQo+ID4gK0dQSU9fUlBNU0dfSU5QVVRfR0VUIChDbWQ9MikNCj4gPiArfn5+
-fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fg0KPiA+ICsNCj4gPiArKipSZXF1ZXN0OioqDQo+ID4g
-Kw0KPiA+ICsuLiBjb2RlLWJsb2NrOjogbm9uZQ0KPiA+ICsNCj4gPiArICAgKy0tLS0tKy0tLS0t
-Ky0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tLS0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tKy0tLS0rDQo+
-ID4gKyAgIHwweDAwIHwweDAxIHwweDAyIHwweDAzIHwweDA0IHwweDA1Li4weDA5IHwweDBBIHww
-eDBCIHwweDBDIHwweDBEfA0KPiA+ICsgICB8IDUgICB8IDEgICB8IDAgICB8IDAgICB8IDIgICB8
-ICAwICAgICAgICB8bGluZSB8cG9ydCB8IDAgICB8IDAgIHwNCj4gPiArICAgKy0tLS0tKy0tLS0t
-Ky0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tLS0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tKy0tLS0rDQo+
-ID4gKw0KPiA+ICsqKlJlcGx5OioqDQo+ID4gKw0KPiA+ICsuLiBjb2RlLWJsb2NrOjogbm9uZQ0K
-PiA+ICsNCj4gPiArICAgKy0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tLS0tLS0t
-Ky0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tKw0KPiA+ICsgICB8MHgwMCB8MHgwMSB8MHgwMiB8MHgw
-MyB8MHgwNCB8MHgwNS4uMHgwOSB8MHgwQSB8MHgwQiB8MHgwQyB8MHgwRCB8DQo+ID4gKyAgIHwg
-NSAgIHwgMSAgIHwgMCAgIHwgMSAgIHwgMiAgIHwgIDAgICAgICAgIHxsaW5lIHxwb3J0IHwgZXJy
-IHxsZXZlbHwNCj4gPiArDQo+ID4gKyArLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0t
-LS0tLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rDQo+ID4gKw0KPiA+ICstICoqZXJyKio6
-IFNlZSBhYm92ZSBmb3IgZGVmaW5pdGlvbnMuDQo+ID4gKw0KPiA+ICstICoqbGV2ZWwqKjogSW5w
-dXQgbGV2ZWwuDQo+ID4gKw0KPiA+ICsgIC0gMDogTG93DQo+ID4gKyAgLSAxOiBIaWdoDQo+ID4g
-Kw0KPiA+ICtHUElPX1JQTVNHX0dFVF9ESVJFQ1RJT04gKENtZD0zKQ0KPiA+ICt+fn5+fn5+fn5+
-fn5+fn5+fn5+fn5+fn5+fn5+fn5+fg0KPiA+ICsNCj4gPiArKipSZXF1ZXN0OioqDQo+ID4gKw0K
-PiA+ICsuLiBjb2RlLWJsb2NrOjogbm9uZQ0KPiA+ICsNCj4gPiArICAgKy0tLS0tKy0tLS0tKy0t
-LS0tKy0tLS0tKy0tLS0tKy0tLS0tLS0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tKy0tLS0rDQo+ID4g
-KyAgIHwweDAwIHwweDAxIHwweDAyIHwweDAzIHwweDA0IHwweDA1Li4weDA5IHwweDBBIHwweDBC
-IHwweDBDIHwweDBEfA0KPiA+ICsgICB8IDUgICB8IDEgICB8IDAgICB8IDAgICB8IDMgICB8ICAw
-ICAgICAgICB8bGluZSB8cG9ydCB8IDAgICB8IDAgIHwNCj4gPiArICAgKy0tLS0tKy0tLS0tKy0t
-LS0tKy0tLS0tKy0tLS0tKy0tLS0tLS0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tKy0tLS0rDQo+ID4g
-Kw0KPiA+ICsqKlJlcGx5OioqDQo+ID4gKw0KPiA+ICsuLiBjb2RlLWJsb2NrOjogbm9uZQ0KPiA+
-ICsNCj4gPiArICAgKy0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tKy0tLS0tLS0tLS0tKy0t
-LS0tKy0tLS0tKy0tLS0tKy0tLS0tKw0KPiA+ICsgICB8MHgwMCB8MHgwMSB8MHgwMiB8MHgwMyB8
-MHgwNCB8MHgwNS4uMHgwOSB8MHgwQSB8MHgwQiB8MHgwQyB8MHgwRCB8DQo+ID4gKyAgIHwgNSAg
-IHwgMSAgIHwgMCAgIHwgMSAgIHwgMyAgIHwgIDAgICAgICAgIHxsaW5lIHxwb3J0IHwgZXJyIHwg
-ZGlyIHwNCj4gPiArDQo+ID4gKyArLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0t
-LS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rDQo+ID4gKw0KPiA+ICstICoqZXJyKio6IFNl
-ZSBhYm92ZSBmb3IgZGVmaW5pdGlvbnMuDQo+ID4gKw0KPiA+ICstICoqZGlyKio6IERpcmVjdGlv
-bi4NCj4gPiArDQo+ID4gKyAgLSAwOiBPdXRwdXQNCj4gPiArICAtIDE6IElucHV0DQo+IA0KPiBT
-byBoZXJlIGlmIEkgd2VsbCB1bmRlcnN0YW5kLCB0aGUgbGlzdCBvZiBHUElPIGFyZSBkZWZpbmVk
-IGluIERUIGFuZCBUaGlzIGNvbW1hbmQNCj4gc2hvdWxkIGJlIHVzZSB0byBjaGVjayB0aGUgZGly
-ZWN0aW9uIGR1cmluZyB0aGUgcHJvYmUuDQo+IENvdWxkIHlvdSBkb2N1bWVudCBpdHMgdXNhZ2U/
-DQo+IA0KDQpBcyB0aGUgY21kIG5hbWUgc3VnZ2VzdHMsIGl04oCZcyB1c2VkIHRvIHJldHJpZXZl
-IHRoZSBjdXJyZW50IEdQSU8gbGluZSBkaXJlY3Rpb24uIFRoaXMgY21kDQpjYW4gcnVuIGR1cmlu
-ZyB0aGUgcHJvYmUgcGhhc2UgYXMgd2VsbCBhcyBhdCBvdGhlciB0aW1lcy4NCg0KPiA+ICsNCj4g
-PiArTm90aWZpY2F0aW9uIE1lc3NhZ2UNCj4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiAr
-DQo+ID4gK05vdGlmaWNhdGlvbnMgYXJlIHNlbnQgd2l0aCAqKlR5cGU9MiAoR1BJT19SUE1TR19O
-T1RJRlkpKio6DQo+ID4gKw0KPiA+ICtXaGVuIGEgR1BJTyBsaW5lIGFzc2VydHMgYW4gaW50ZXJy
-dXB0IG9uIHRoZSByZW1vdGUgcHJvY2Vzc29yLCB0aGUNCj4gPiArZmlybXdhcmUgc2hvdWxkIGlt
-bWVkaWF0ZWx5IG1hc2sgdGhlIGNvcnJlc3BvbmRpbmcgaW50ZXJydXB0IHNvdXJjZQ0KPiA+ICth
-bmQgc2VuZCBhIG5vdGlmaWNhdGlvbiBtZXNzYWdlIHRvIHRoZSBMaW51eC4gVXBvbiBjb21wbGV0
-aW9uIG9mIHRoZQ0KPiA+ICtpbnRlcnJ1cHQgaGFuZGxpbmcgb24gdGhlIExpbnV4IHNpZGUsIHRo
-ZSBkcml2ZXIgc2hvdWxkIGlzc3VlIGENCj4gPiArKipHUElPX1JQTVNHX0lOUFVUX0lOSVQqKiBj
-b21tYW5kIHRvIHRoZSBmaXJtd2FyZSB0byB1bm1hc2sgdGhlDQo+IGludGVycnVwdC4NCj4gPiAr
-DQo+ID4gK0EgTm90aWZpY2F0aW9uIG1lc3NhZ2UgY2FuIGFycml2ZSBiZXR3ZWVuIGEgU0VUVVAg
-YW5kIGl0cyBSRVBMWQ0KPiA+ICttZXNzYWdlLCBhbmQgdGhlIGRyaXZlciBpcyBleHBlY3RlZCB0
-byBoYW5kbGUgdGhpcyBzY2VuYXJpby4NCj4gPiArDQo+ID4gKy4uIGNvZGUtYmxvY2s6OiBub25l
-DQo+ID4gKw0KPiA+ICsgICArLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0tLS0t
-LS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLSsNCj4gPiArICAgfDB4MDAgfDB4MDEgfDB4MDIgfDB4
-MDMgfDB4MDQgfDB4MDUuLjB4MDkgfDB4MEEgfDB4MEIgfDB4MEMgfDB4MER8DQo+ID4gKyAgIHwg
-NSAgIHwgMSAgIHwgMCAgIHwgMiAgIHwgMCAgIHwgIDAgICAgICAgIHxsaW5lIHxwb3J0IHwgMCAg
-IHwgMCAgfA0KPiA+ICsgICArLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0tLS0t
-LS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLSsNCj4gPiArDQo+ID4gKy0gKipsaW5lKio6IFRoZSBH
-UElPIGxpbmUgaW5kZXguDQo+ID4gKy0gKipwb3J0Kio6IFRoZSBHUElPIGNvbnRyb2xsZXIgaW5k
-ZXguDQo+ID4gKw0KPiA+ICtUaGUgcmVwbHkgbWVzc2FnZSBmb3IgdGhlIG5vdGlmaWNhdGlvbiBp
-cyBvcHRpb25hbC4gVGhlIHJlbW90ZQ0KPiA+ICtmaXJtd2FyZSBjYW4gaW1wbGVtZW50IGl0IHRv
-IHNpbXVsYXRlIHRoZSBpbnRlcnJ1cHQgYWNrbm93bGVkZ21lbnQNCj4gYmVoYXZpb3IuDQo+ID4g
-Kw0KPiA+ICtUaGUgbm90aWZpY2F0aW9uIHJlcGx5IGlzIHNlbnQgd2l0aCB0aGUgYnl0ZSBpbmRl
-eCAweDQ9MS4NCj4gPiArDQo+ID4gKy4uIGNvZGUtYmxvY2s6OiBub25lDQo+ID4gKw0KPiA+ICsg
-ICArLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0tLS0tLS0rLS0tLS0rLS0tLS0r
-LS0tLS0rLS0tLSsNCj4gPiArICAgfDB4MDAgfDB4MDEgfDB4MDIgfDB4MDMgfDB4MDQgfDB4MDUu
-LjB4MDkgfDB4MEEgfDB4MEIgfDB4MEMgfDB4MER8DQo+ID4gKyAgIHwgNSAgIHwgMSAgIHwgMCAg
-IHwgMiAgIHwgMSAgIHwgIDAgICAgICAgIHxsaW5lIHxwb3J0IHwgMCAgIHwgMCAgfA0KPiA+ICsg
-ICArLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0rLS0tLS0tLS0tLS0rLS0tLS0rLS0tLS0r
-LS0tLS0rLS0tLSsNCj4gPiArDQo+ID4gKy0gKipsaW5lKio6IFRoZSBHUElPIGxpbmUgaW5kZXgu
-DQo+ID4gKy0gKipwb3J0Kio6IFRoZSBHUElPIGNvbnRyb2xsZXIgaW5kZXguDQo+IA0KPiBUaGUg
-dHlwZSBzZWVtcyBzdHJhbmdlIGhlcmUsIGl0IGlzIGEgcmVwbHkgYnV0IHRhZ2dlZCBhcyBub3Rp
-ZmljYXRpb24sIHdoYXQgYWJvdXQNCj4gYWRkaW5nIGEgdHlwZSA0IEdQSU9fUlBNU0dfTk9USUZZ
-X1JFUExZID8NCj4gDQoNClNlZW1zIHJlYXNvbmFibGUuIEkgd2lsbCB1cGRhdGUgaXQgaW4gbmV4
-dCB2ZXJzaW9uLg0KDQo+IA0KPiBJdCBtaWdodCBiZSB1c2VmdWwgdG8gc3BlY2lmeSB0aGUgR1BJ
-TyBsZXZlbCBhcyBwYXJhbWV0ZXIsIGVzcGVjaWFsbHkgZm9yICAiMzogQm90aA0KPiBlZGdlIHRy
-aWdnZXIiDQo+IA0KDQpPa2F5LiBXaWxsIGFkZCBhICJ0cmlnZ2VyZWQgZXZlbnQgdHlwZSIgYXMg
-YSBwYXJhbWV0ZXIgaW4gdGhlIG5vdGlmaWNhdGlvbiBtZXNzYWdlIGluIHRoZSBuZXh0IHZlcnNp
-b24uDQoNClJlZ2FyZHMsDQpTaGVud2VpDQoNCj4gVGhhbmtzLA0KPiBBcm5hdWQNCj4gDQo+ID4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9ncGlvL2luZGV4LnJzdA0KPiA+
-IGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2dwaW8vaW5kZXgucnN0DQo+ID4gaW5kZXggYmVl
-NThmNzA5YjlhLi5lNWViMWY4MmYwMWYgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9k
-cml2ZXItYXBpL2dwaW8vaW5kZXgucnN0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kcml2ZXIt
-YXBpL2dwaW8vaW5kZXgucnN0DQo+ID4gQEAgLTE2LDYgKzE2LDcgQEAgQ29udGVudHM6DQo+ID4g
-ICAgICBkcml2ZXJzLW9uLWdwaW8NCj4gPiAgICAgIGJ0OHh4Z3Bpbw0KPiA+ICAgICAgcGNhOTUz
-eA0KPiA+ICsgICBncGlvLXJwbXNnDQo+ID4NCj4gPiAgIENvcmUNCj4gPiAgID09PT0NCg0K
+On Fri, Dec 12, 2025 at 01:43:40PM -0600, Shenwei Wang wrote:
+> On an AMP platform, the system may include two processors:
+
+We have many examples where there's N systems and it's certainly not
+unreasonable to have multiple remote processors expose GPIOs in this
+fashion.
+
+> 	- An MCU running an RTOS
+> 	- An MPU running Linux
+> 
+> These processors communicate via the RPMSG protocol.
+> The driver implements the standard GPIO interface, allowing
+> the Linux side to control GPIO controllers which reside in
+> the remote processor via RPMSG protocol.
+> 
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
+> ---
+>  drivers/gpio/Kconfig      |  16 ++
+>  drivers/gpio/Makefile     |   1 +
+>  drivers/gpio/gpio-rpmsg.c | 490 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 507 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-rpmsg.c
+> 
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index bd185482a7fd..7a72b5dbd4a9 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1883,6 +1883,22 @@ config GPIO_SODAVILLE
+>  
+>  endmenu
+>  
+> +menu "RPMSG GPIO drivers"
+> +	depends on RPMSG
+> +
+> +config GPIO_RPMSG
+> +	tristate "Generic RPMSG GPIO support"
+> +	select GPIOLIB_IRQCHIP
+> +	default REMOTEPROC
+> +	help
+> +	  Say yes here to support the generic GPIO functions over the RPMSG
+> +	  bus. Currently supported devices: i.MX7ULP, i.MX8ULP, i.MX8x,and
+> +	  i.MX9x.
+> +
+> +	  If unsure, say N.
+> +
+> +endmenu
+> +
+>  menu "SPI GPIO expanders"
+>  	depends on SPI_MASTER
+>  
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 2421a8fd3733..b1373ec274c8 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -156,6 +156,7 @@ obj-$(CONFIG_GPIO_RDC321X)		+= gpio-rdc321x.o
+>  obj-$(CONFIG_GPIO_REALTEK_OTTO)		+= gpio-realtek-otto.o
+>  obj-$(CONFIG_GPIO_REG)			+= gpio-reg.o
+>  obj-$(CONFIG_GPIO_ROCKCHIP)	+= gpio-rockchip.o
+> +obj-$(CONFIG_GPIO_RPMSG)		+= gpio-rpmsg.o
+>  obj-$(CONFIG_GPIO_RTD)			+= gpio-rtd.o
+>  obj-$(CONFIG_ARCH_SA1100)		+= gpio-sa1100.o
+>  obj-$(CONFIG_GPIO_SAMA5D2_PIOBU)	+= gpio-sama5d2-piobu.o
+> diff --git a/drivers/gpio/gpio-rpmsg.c b/drivers/gpio/gpio-rpmsg.c
+> new file mode 100644
+> index 000000000000..cf10e2958374
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-rpmsg.c
+> @@ -0,0 +1,490 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright 2025 NXP
+> + *
+> + * The driver exports a standard gpiochip interface to control
+> + * the GPIO controllers via RPMSG on a remote processor.
+> + */
+> +#include <linux/completion.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/init.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/rpmsg.h>
+> +#include <linux/rpmsg/rpdev_info.h>
+> +
+> +#define RPMSG_GPIO_ID		5
+> +#define RPMSG_VENDOR		1
+> +#define RPMSG_VERSION		0
+> +
+> +#define GPIOS_PER_PORT		32
+> +#define RPMSG_TIMEOUT		1000
+> +
+> +enum gpio_input_trigger_type {
+> +	GPIO_RPMSG_TRI_IGNORE,
+
+These aren't enumerations, they are well defined constants of the
+protocol. I think #define is better.
+
+> +	GPIO_RPMSG_TRI_RISING,
+> +	GPIO_RPMSG_TRI_FALLING,
+> +	GPIO_RPMSG_TRI_BOTH_EDGE,
+> +	GPIO_RPMSG_TRI_LOW_LEVEL,
+> +	GPIO_RPMSG_TRI_HIGH_LEVEL,
+> +};
+> +
+> +enum gpio_rpmsg_header_type {
+> +	GPIO_RPMSG_SETUP,
+> +	GPIO_RPMSG_REPLY,
+> +	GPIO_RPMSG_NOTIFY,
+> +};
+> +
+> +enum gpio_rpmsg_header_cmd {
+> +	GPIO_RPMSG_INPUT_INIT,
+> +	GPIO_RPMSG_OUTPUT_INIT,
+> +	GPIO_RPMSG_INPUT_GET,
+> +	GPIO_RPMSG_DIRECTION_GET,
+> +};
+> +
+> +struct gpio_rpmsg_head {
+> +	u8 id;		/* Message ID Code */
+> +	u8 vendor;	/* Vendor ID number */
+> +	u8 version;	/* Vendor-specific version number */
+> +	u8 type;	/* Message type */
+> +	u8 cmd;		/* Command code */
+> +	u8 reserved[5];
+> +} __packed;
+> +
+> +struct gpio_rpmsg_packet {
+> +	struct gpio_rpmsg_head header;
+> +	u8 pin_idx;
+> +	u8 port_idx;
+> +	union {
+> +		u8 event;
+> +		u8 retcode;
+> +		u8 value;
+> +	} out;
+> +	union {
+> +		u8 wakeup;
+> +		u8 value;
+> +	} in;
+> +} __packed __aligned(8);
+> +
+> +struct gpio_rpmsg_pin {
+> +	u8 irq_shutdown;
+> +	u8 irq_unmask;
+> +	u8 irq_mask;
+> +	u32 irq_wake_enable;
+> +	u32 irq_type;
+> +	struct gpio_rpmsg_packet msg;
+> +};
+> +
+> +struct gpio_rpmsg_info {
+> +	struct rpmsg_device *rpdev;
+> +	struct gpio_rpmsg_packet *notify_msg;
+> +	struct gpio_rpmsg_packet *reply_msg;
+> +	struct completion cmd_complete;
+> +	struct mutex lock;
+> +	void **port_store;
+> +};
+> +
+> +struct rpmsg_gpio_port {
+> +	struct gpio_chip gc;
+> +	struct gpio_rpmsg_pin gpio_pins[GPIOS_PER_PORT];
+> +	struct gpio_rpmsg_info info;
+> +	int idx;
+> +};
+> +
+> +static int gpio_send_message(struct rpmsg_gpio_port *port,
+> +			     struct gpio_rpmsg_packet *msg,
+> +			     bool sync)
+> +{
+> +	struct gpio_rpmsg_info *info = &port->info;
+> +	int err;
+> +
+> +	if (!info->rpdev) {
+> +		pr_err("rpmsg channel doesn't exist, is remote core ready?\n");
+
+How is this possible? You're creating and destroying the platform_device
+based on the presence of the rpmsg channel/endpoint, in what case would
+you end up here without a valid rpdev?
+
+And if this is to deal with the race during removal, I guess the error
+message is wrong and rpdev might go away before you access it below?
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	reinit_completion(&info->cmd_complete);
+> +	err = rpmsg_send(info->rpdev->ept, (void *)msg,
+> +			 sizeof(struct gpio_rpmsg_packet));
+> +	if (err) {
+> +		dev_err(&info->rpdev->dev, "rpmsg_send failed: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	if (sync) {
+> +		err = wait_for_completion_timeout(&info->cmd_complete,
+> +						  msecs_to_jiffies(RPMSG_TIMEOUT));
+> +		if (!err) {
+> +			dev_err(&info->rpdev->dev, "rpmsg_send timeout!\n");
+> +			return -ETIMEDOUT;
+> +		}
+> +
+> +		if (info->reply_msg->out.retcode != 0) {
+> +			dev_err(&info->rpdev->dev, "remote core replies an error: %d!\n",
+> +				info->reply_msg->out.retcode);
+> +			return -EINVAL;
+> +		}
+> +
+> +		/* copy the reply message */
+> +		memcpy(&port->gpio_pins[info->reply_msg->pin_idx].msg,
+> +		       info->reply_msg, sizeof(*info->reply_msg));
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct gpio_rpmsg_packet *gpio_setup_msg_header(struct rpmsg_gpio_port *port,
+> +						       unsigned int offset,
+> +						       u8 cmd)
+> +{
+> +	struct gpio_rpmsg_packet *msg = &port->gpio_pins[offset].msg;
+> +
+> +	memset(msg, 0, sizeof(struct gpio_rpmsg_packet));
+> +	msg->header.id = RPMSG_GPIO_ID;
+> +	msg->header.vendor = RPMSG_VENDOR;
+> +	msg->header.version = RPMSG_VERSION;
+> +	msg->header.type = GPIO_RPMSG_SETUP;
+> +	msg->header.cmd = cmd;
+> +	msg->pin_idx = offset;
+> +	msg->port_idx = port->idx;
+> +
+> +	return msg;
+> +};
+> +
+> +static int rpmsg_gpio_get(struct gpio_chip *gc, unsigned int gpio)
+> +{
+> +	struct rpmsg_gpio_port *port = gpiochip_get_data(gc);
+> +	struct gpio_rpmsg_packet *msg = NULL;
+
+There's no reason to initialize msg here, the first reference is an
+assignment.
+
+> +	int ret;
+> +
+> +	guard(mutex)(&port->info.lock);
+> +
+> +	msg = gpio_setup_msg_header(port, gpio, GPIO_RPMSG_INPUT_GET);
+> +
+> +	ret = gpio_send_message(port, msg, true);
+> +	if (!ret)
+> +		ret = !!port->gpio_pins[gpio].msg.in.value;
+> +
+> +	return ret;
+> +}
+> +
+> +static int rpmsg_gpio_get_direction(struct gpio_chip *gc, unsigned int gpio)
+> +{
+> +	struct rpmsg_gpio_port *port = gpiochip_get_data(gc);
+> +	struct gpio_rpmsg_packet *msg = NULL;
+> +	int ret;
+> +
+> +	guard(mutex)(&port->info.lock);
+> +
+> +	msg = gpio_setup_msg_header(port, gpio, GPIO_RPMSG_DIRECTION_GET);
+> +
+> +	ret = gpio_send_message(port, msg, true);
+> +	if (!ret)
+> +		ret = !!port->gpio_pins[gpio].msg.in.value;
+> +
+> +	return ret;
+> +}
+> +
+> +static int rpmsg_gpio_direction_input(struct gpio_chip *gc, unsigned int gpio)
+> +{
+> +	struct rpmsg_gpio_port *port = gpiochip_get_data(gc);
+> +	struct gpio_rpmsg_packet *msg = NULL;
+> +
+> +	guard(mutex)(&port->info.lock);
+> +
+> +	msg = gpio_setup_msg_header(port, gpio, GPIO_RPMSG_INPUT_INIT);
+> +
+> +	return gpio_send_message(port, msg, true);
+> +}
+> +
+> +static int rpmsg_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+> +{
+> +	struct rpmsg_gpio_port *port = gpiochip_get_data(gc);
+> +	struct gpio_rpmsg_packet *msg = NULL;
+> +
+> +	guard(mutex)(&port->info.lock);
+> +
+> +	msg = gpio_setup_msg_header(port, gpio, GPIO_RPMSG_OUTPUT_INIT);
+> +	msg->out.value = val;
+> +
+> +	return gpio_send_message(port, msg, true);
+> +}
+> +
+> +static int rpmsg_gpio_direction_output(struct gpio_chip *gc,
+> +				       unsigned int gpio,
+> +				       int val)
+> +{
+> +
+> +	return rpmsg_gpio_set(gc, gpio, val);
+> +}
+> +
+> +static int gpio_rpmsg_irq_set_type(struct irq_data *d, u32 type)
+> +{
+> +	struct rpmsg_gpio_port *port = irq_data_get_irq_chip_data(d);
+> +	u32 gpio_idx = d->hwirq;
+> +	int edge = 0;
+> +	int ret = 0;
+> +
+> +	switch (type) {
+> +	case IRQ_TYPE_EDGE_RISING:
+> +		edge = GPIO_RPMSG_TRI_RISING;
+> +		irq_set_handler_locked(d, handle_simple_irq);
+> +		break;
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +		edge = GPIO_RPMSG_TRI_FALLING;
+> +		irq_set_handler_locked(d, handle_simple_irq);
+> +		break;
+> +	case IRQ_TYPE_EDGE_BOTH:
+> +		edge = GPIO_RPMSG_TRI_BOTH_EDGE;
+> +		irq_set_handler_locked(d, handle_simple_irq);
+> +		break;
+> +	case IRQ_TYPE_LEVEL_LOW:
+> +		edge = GPIO_RPMSG_TRI_LOW_LEVEL;
+> +		irq_set_handler_locked(d, handle_level_irq);
+> +		break;
+> +	case IRQ_TYPE_LEVEL_HIGH:
+> +		edge = GPIO_RPMSG_TRI_HIGH_LEVEL;
+> +		irq_set_handler_locked(d, handle_level_irq);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		irq_set_handler_locked(d, handle_bad_irq);
+> +		break;
+> +	}
+> +
+> +	port->gpio_pins[gpio_idx].irq_type = edge;
+> +
+> +	return ret;
+> +}
+> +
+> +static int gpio_rpmsg_irq_set_wake(struct irq_data *d, u32 enable)
+> +{
+> +	struct rpmsg_gpio_port *port = irq_data_get_irq_chip_data(d);
+> +	u32 gpio_idx = d->hwirq;
+> +
+> +	port->gpio_pins[gpio_idx].irq_wake_enable = enable;
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * This function will be called at:
+> + *  - one interrupt setup.
+> + *  - the end of one interrupt happened
+> + * The gpio over rpmsg driver will not write the real register, so save
+> + * all infos before this function and then send all infos to M core in this
+> + * step.
+> + */
+> +static void gpio_rpmsg_unmask_irq(struct irq_data *d)
+> +{
+> +	struct rpmsg_gpio_port *port = irq_data_get_irq_chip_data(d);
+> +	u32 gpio_idx = d->hwirq;
+> +
+> +	port->gpio_pins[gpio_idx].irq_unmask = 1;
+> +}
+> +
+> +static void gpio_rpmsg_mask_irq(struct irq_data *d)
+> +{
+> +	struct rpmsg_gpio_port *port = irq_data_get_irq_chip_data(d);
+> +	u32 gpio_idx = d->hwirq;
+> +	/*
+> +	 * No need to implement the callback at A core side.
+> +	 * M core will mask interrupt after a interrupt occurred, and then
+> +	 * sends a notify to A core.
+> +	 * After A core dealt with the notify, A core will send a rpmsg to
+> +	 * M core to unmask this interrupt again.
+
+There's nothing in this scheme that dictates that we have A cores and M
+cores, or that we have a single core system on both sides, or that they
+are Arm cores, please describe things in terms of Linux system and
+"remote system".
+
+> +	 */
+> +	port->gpio_pins[gpio_idx].irq_mask = 1;
+> +}
+> +
+> +static void gpio_rpmsg_irq_shutdown(struct irq_data *d)
+> +{
+> +	struct rpmsg_gpio_port *port = irq_data_get_irq_chip_data(d);
+> +	u32 gpio_idx = d->hwirq;
+> +
+> +	port->gpio_pins[gpio_idx].irq_shutdown = 1;
+> +}
+> +
+> +static void gpio_rpmsg_irq_bus_lock(struct irq_data *d)
+> +{
+> +	struct rpmsg_gpio_port *port = irq_data_get_irq_chip_data(d);
+> +
+> +	mutex_lock(&port->info.lock);
+> +}
+> +
+> +static void gpio_rpmsg_irq_bus_sync_unlock(struct irq_data *d)
+> +{
+> +	struct rpmsg_gpio_port *port = irq_data_get_irq_chip_data(d);
+> +	struct gpio_rpmsg_packet *msg = NULL;
+> +	u32 gpio_idx = d->hwirq;
+> +
+> +	if (!port)
+> +		return;
+> +
+> +	/*
+> +	 * For mask irq, do nothing here.
+> +	 * M core will mask interrupt after a interrupt occurred, and then
+> +	 * sends a notify to A core.
+> +	 * After A core dealt with the notify, A core will send a rpmsg to
+> +	 * M core to unmask this interrupt again.
+> +	 */
+> +
+> +	if (port->gpio_pins[gpio_idx].irq_mask && !port->gpio_pins[gpio_idx].irq_unmask) {
+> +		port->gpio_pins[gpio_idx].irq_mask = 0;
+> +		mutex_unlock(&port->info.lock);
+> +		return;
+> +	}
+> +
+> +	msg = gpio_setup_msg_header(port, gpio_idx, GPIO_RPMSG_INPUT_INIT);
+> +
+> +	if (port->gpio_pins[gpio_idx].irq_shutdown) {
+> +		msg->out.event = GPIO_RPMSG_TRI_IGNORE;
+> +		msg->in.wakeup = 0;
+> +		port->gpio_pins[gpio_idx].irq_shutdown = 0;
+> +	} else {
+> +		 /* if not set irq type, then use low level as trigger type */
+> +		msg->out.event = port->gpio_pins[gpio_idx].irq_type;
+> +		if (!msg->out.event)
+> +			msg->out.event = GPIO_RPMSG_TRI_LOW_LEVEL;
+> +		if (port->gpio_pins[gpio_idx].irq_unmask) {
+> +			msg->in.wakeup = 0;
+> +			port->gpio_pins[gpio_idx].irq_unmask = 0;
+> +		} else /* irq set wake */
+> +			msg->in.wakeup = port->gpio_pins[gpio_idx].irq_wake_enable;
+> +	}
+> +
+> +	gpio_send_message(port, msg, false);
+> +	mutex_unlock(&port->info.lock);
+> +}
+> +
+> +static const struct irq_chip gpio_rpmsg_irq_chip = {
+> +	.irq_mask = gpio_rpmsg_mask_irq,
+> +	.irq_unmask = gpio_rpmsg_unmask_irq,
+> +	.irq_set_wake = gpio_rpmsg_irq_set_wake,
+> +	.irq_set_type = gpio_rpmsg_irq_set_type,
+> +	.irq_shutdown = gpio_rpmsg_irq_shutdown,
+> +	.irq_bus_lock = gpio_rpmsg_irq_bus_lock,
+> +	.irq_bus_sync_unlock = gpio_rpmsg_irq_bus_sync_unlock,
+> +	.flags = IRQCHIP_IMMUTABLE,
+> +};
+> +
+> +static int rpmsg_gpio_callback(struct rpmsg_device *rpdev,
+> +			       void *data, int len, void *priv, u32 src)
+> +{
+> +	struct gpio_rpmsg_packet *msg = (struct gpio_rpmsg_packet *)data;
+> +	struct rpmsg_gpio_port *port = NULL;
+> +	struct rpdev_platform_info *drvdata;
+> +
+> +	drvdata = dev_get_drvdata(&rpdev->dev);
+> +	if (msg)
+> +		port = drvdata->channel_devices[msg->port_idx];
+> +
+> +	if (!port)
+> +		return -ENODEV;
+> +
+> +	if (msg->header.type == GPIO_RPMSG_REPLY) {
+> +		port->info.reply_msg = msg;
+
+As soon as you return from this function, the msg buffer is put back
+into the virtqueue, so you can't just stash a reference to it here and
+hope that it's still available when gpio_send_message() tries to read
+it.
+
+> +		complete(&port->info.cmd_complete);
+> +	} else if (msg->header.type == GPIO_RPMSG_NOTIFY) {
+> +		port->info.notify_msg = msg;
+
+Ditto.
+
+Although notify_msg is assigned, but I never see any further access to
+it.
+
+> +		generic_handle_domain_irq_safe(port->gc.irq.domain, msg->pin_idx);
+> +	} else
+> +		dev_err(&rpdev->dev, "wrong command type!\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static void rpmsg_gpio_remove_action(void *data)
+> +{
+> +	struct rpmsg_gpio_port *port = data;
+> +
+> +	port->info.port_store[port->idx] = NULL;
+> +}
+> +
+> +static int rpmsg_gpio_probe(struct platform_device *pdev)
+> +{
+> +	struct rpdev_platform_info *pltdata = pdev->dev.platform_data;
+> +	struct rpmsg_gpio_port *port;
+> +	struct gpio_irq_chip *girq;
+> +	struct gpio_chip *gc;
+> +	int ret;
+> +
+> +	if (!pltdata)
+> +		return -EPROBE_DEFER;
+
+EPROBE_DEFER would imply that if we try again a bit later, platform_data
+is suddenly non-NULL, that seems unlikely.
+
+> +
+> +	port = devm_kzalloc(&pdev->dev, sizeof(*port), GFP_KERNEL);
+> +	if (!port)
+> +		return -ENOMEM;
+> +
+> +	ret = device_property_read_u32(&pdev->dev, "reg", &port->idx);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (port->idx > MAX_DEV_PER_CHANNEL)
+> +		return -EINVAL;
+> +
+> +	ret = devm_mutex_init(&pdev->dev, &port->info.lock);
+> +	if (ret)
+> +		return ret;
+> +
+> +	init_completion(&port->info.cmd_complete);
+> +	port->info.rpdev = pltdata->rpdev;
+> +	port->info.port_store = pltdata->channel_devices;
+> +	port->info.port_store[port->idx] = port;
+> +	if (!pltdata->rx_callback)
+> +		pltdata->rx_callback = rpmsg_gpio_callback;
+
+What happens if you rmmod your rpmsg gpio driver and then trigger an
+interrupt?
+
+> +
+> +	gc = &port->gc;
+> +	gc->owner = THIS_MODULE;
+> +	gc->parent = &pdev->dev;
+> +	gc->label = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%s-gpio%d",
+> +				   pltdata->rproc_name, port->idx);
+> +	gc->ngpio = GPIOS_PER_PORT;
+> +	gc->base = -1;
+> +
+> +	gc->direction_input = rpmsg_gpio_direction_input;
+> +	gc->direction_output = rpmsg_gpio_direction_output;
+> +	gc->get_direction = rpmsg_gpio_get_direction;
+> +	gc->get = rpmsg_gpio_get;
+> +	gc->set = rpmsg_gpio_set;
+> +
+> +	platform_set_drvdata(pdev, port);
+> +	girq = &gc->irq;
+> +	gpio_irq_chip_set_chip(girq, &gpio_rpmsg_irq_chip);
+> +	girq->parent_handler = NULL;
+> +	girq->num_parents = 0;
+> +	girq->parents = NULL;
+> +	girq->chip->name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%s-gpio%d",
+> +					  pltdata->rproc_name, port->idx);
+> +
+> +	ret = devm_add_action_or_reset(&pdev->dev, rpmsg_gpio_remove_action, port);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_gpiochip_add_data(&pdev->dev, gc, port);
+> +}
+> +
+> +static const struct of_device_id rpmsg_gpio_dt_ids[] = {
+> +	{ .compatible = "rpmsg-gpio" },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static struct platform_driver rpmsg_gpio_driver = {
+
+It's an "rpmsg gpio driver", but it's a platform_driver...
+
+I don't think this is the correct design, but if it is then this needs
+to be well documented.
+
+Same thing as platform_data forms a strong ABI between some other driver
+and this platform_driver, this needs to be well documented (but should
+be avoided).
+
+Regards,
+Bjorn
+
+> +	.driver	= {
+> +		.name = "gpio-rpmsg",
+> +		.of_match_table = rpmsg_gpio_dt_ids,
+> +	},
+> +	.probe = rpmsg_gpio_probe,
+> +};
+> +
+> +module_platform_driver(rpmsg_gpio_driver);
+> +
+> +MODULE_AUTHOR("Shenwei Wang <shenwei.wang@nxp.com>");
+> +MODULE_DESCRIPTION("generic rpmsg gpio driver");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.43.0
+> 
 
