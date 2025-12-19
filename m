@@ -1,86 +1,92 @@
-Return-Path: <linux-gpio+bounces-29771-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29772-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DED4CD1EA4
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Dec 2025 22:05:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A155CCD1EEF
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Dec 2025 22:10:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DF3273027CD8
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Dec 2025 21:05:01 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 433C03062BE6
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Dec 2025 21:10:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D715B33F8DE;
-	Fri, 19 Dec 2025 21:05:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19288341ADF;
+	Fri, 19 Dec 2025 21:10:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZfMs3aZS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UHgWn5L3"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8422E1E520C;
-	Fri, 19 Dec 2025 21:05:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3721E520C;
+	Fri, 19 Dec 2025 21:10:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766178300; cv=none; b=O2SQdtyq3pTs/BqmjiIawahC8MJqR8++TB0GKbJDO5jNRrMTiIcLaxSHQcspDb0ysi0H78wIWZPSsejOK7Ghtxu2Yc1QWqUNSctEUtPtkuGHdGc1svj/b+Rtrb1fXykiqKgLJR5myWamJDJacDMGX8b1Sa1JMMQTdRYKxKjC54Q=
+	t=1766178619; cv=none; b=HvaCIevVmpj1nRQqK6Gn/4ILeeOmUFA9LM0rXXxRWmuX42Spl+MZRk4BOCAW+2vCYJV9ilfktDfIedHNapDvuRnpPw/Qe2pgMCe0Srrg6RxzbHo2rpiur5+/IGMq4gqZgWkGiblGllnlv9swrAGpRsIe8rnakgVFPPGyvV1VGYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766178300; c=relaxed/simple;
-	bh=4sgIqEwPXXLAOBFYR/9KviOsCVn5w5BeCFeoELqc7Mo=;
+	s=arc-20240116; t=1766178619; c=relaxed/simple;
+	bh=pSElffqhUXoNWi7Xq9cuand1YUuQxMSn64bOhhVsLy4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PS2dZVoLRIb2NKqXz6GKK6lFZFon46Ps4V2ExsUdfcIR9Ih5CxrLQHjBlduqd7qKowOXEmgJi9Lfq5zfpjz1RC6WaJNwcl1dRdT6TKLlygg9dJrUyMoPaE5eYbPfYV1cm4oDd/ZE/kF6rIxwNLpMDmKmYLaIhPOtUem52qQwpzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZfMs3aZS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA953C4CEF1;
-	Fri, 19 Dec 2025 21:04:59 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=YjEljCg5/vP2qmOG5Ma83hlrw0llr4BC+bLY8S+XpOpwP45qZ8RkTHJvXCMZ/LThGssXHZOSyMPeaE79zCBV65Tx9fk17NaAR0moWfbG5plJmyNZ+ltu5zwHP837sHqWTE7W2f7R+eT1TgSNIIk4G2C0Q0JnNvWFZjrbThFlewU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UHgWn5L3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DA66C4CEF1;
+	Fri, 19 Dec 2025 21:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766178300;
-	bh=4sgIqEwPXXLAOBFYR/9KviOsCVn5w5BeCFeoELqc7Mo=;
+	s=k20201202; t=1766178619;
+	bh=pSElffqhUXoNWi7Xq9cuand1YUuQxMSn64bOhhVsLy4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZfMs3aZSNNfkQ9MoZuxxd+vbw82OrHIh/AKb8fyfm5jNcaTraQayNloRHtyjaM//P
-	 DgvdFLVvl+4P7NnH6m8tVhw6DNodUcsXCoziLQBwP0Frp8Amb6aMFcC0DdUo3Ub7T0
-	 YPCCRnXBXU1why3bYJiVEy/IWpIJtCrQ81Mppt46NvONPRycpVbBBtjjm606fxz0cJ
-	 /tMBHJnntONP3QhGxeGthJHUCCmJ/R+YMPxAzXl6RwFR37g95To62VMbZRVvjr4Kyi
-	 TKFVctjpumN1YCUFUsIJu9P3En05rUJWXMJ4IAj2yNS0igWUrA/jsamySjwgdGFvpO
-	 LzZX2mYwJiQEg==
-Date: Fri, 19 Dec 2025 15:04:57 -0600
+	b=UHgWn5L3SIPEfIN9p2uhk01/SVOJgltoRlYl7pq0bC7Og4dGl1wn3F6T3rWmj66gC
+	 YVdgPKiiGUWS8VRDr28si7f02zYGbkWfM0MUiRdXUB1M8zP7KvWt+1RrdiRay7s5+V
+	 JFl5PPh8FcmmPA+Prpbs9zmjhB5ARE1qzIN5+9nfs+bx3G1P2SvfQ8/Pdzq6oVZUzf
+	 pRkkn20KYZckWaergHdcdOBRNLgy4UC4OGrnJn2nhglgRgZfccwEbVZb1Fr7NDl0pq
+	 Layde6II7wetgwb+FavC/2jKf83tbMpuFgj6hWElasO3uNTt6hWLheI1SLq1Sw7N6P
+	 jWiBQaiKMShhw==
+Date: Fri, 19 Dec 2025 15:10:16 -0600
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Jorge Marques <jorge.marques@analog.com>
-Cc: linux-kernel@vger.kernel.org,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	linux-iio@vger.kernel.org,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	linux-gpio@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Andy Shevchenko <andy@kernel.org>,
-	linux-doc@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	David Lechner <dlechner@baylibre.com>,
+To: =?iso-8859-1?Q?Beno=EEt?= Monin <benoit.monin@bootlin.com>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Conor Dooley <conor+dt@kernel.org>, linux-clk@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 1/9] dt-bindings: iio: adc: Add adi,ad4062
-Message-ID: <176617829657.3934846.6702160905493410565.robh@kernel.org>
-References: <20251217-staging-ad4062-v4-0-7890a2951a8f@analog.com>
- <20251217-staging-ad4062-v4-1-7890a2951a8f@analog.com>
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org,
+	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-mips@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 02/13] dt-bindings: soc: mobileye: Add EyeQ6Lplus OLB
+Message-ID: <176617861588.3941955.6842279246230193415.robh@kernel.org>
+References: <20251217-eyeq6lplus-v1-0-e9cdbd3af4c2@bootlin.com>
+ <20251217-eyeq6lplus-v1-2-e9cdbd3af4c2@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20251217-staging-ad4062-v4-1-7890a2951a8f@analog.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251217-eyeq6lplus-v1-2-e9cdbd3af4c2@bootlin.com>
 
 
-On Wed, 17 Dec 2025 13:13:24 +0100, Jorge Marques wrote:
-> Add dt-bindings for AD4062 family, devices AD4060/AD4062, low-power with
-> monitor capabilities SAR ADCs. Each variant of the family differs in
-> resolution. The device contains two outputs (gp0, gp1). The outputs can
-> be configured for range of options, such as threshold and data ready.
-> The device uses a 2-wire I3C interface.
+On Wed, 17 Dec 2025 14:35:52 +0100, Benoît Monin wrote:
+> The "Other Logic Block" found in the EyeQ6Lplus from Mobileye provides
+> various functions for the controllers present in the SoC.
 > 
-> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> The OLB produces 22 clocks derived from its input, which is connected
+> to the main oscillator of the SoC.
+> 
+> It provides reset signals via two reset domains.
+> 
+> It also controls 32 pins to be either a GPIO or an alternate function.
+> 
+> Signed-off-by: Benoît Monin <benoit.monin@bootlin.com>
 > ---
->  .../devicetree/bindings/iio/adc/adi,ad4062.yaml    | 120 +++++++++++++++++++++
->  MAINTAINERS                                        |   6 ++
->  2 files changed, 126 insertions(+)
+>  .../soc/mobileye/mobileye,eyeq6lplus-olb.yaml      | 208 +++++++++++++++++++++
+>  .../dt-bindings/clock/mobileye,eyeq6lplus-clk.h    |  37 ++++
+>  2 files changed, 245 insertions(+)
 > 
 
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
