@@ -1,201 +1,121 @@
-Return-Path: <linux-gpio+bounces-29781-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29782-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FBE1CD3100
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Dec 2025 15:36:29 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43476CD4966
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Dec 2025 03:55:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F187730382A0
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Dec 2025 14:35:22 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 43D393004418
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Dec 2025 02:55:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 919BC2BF00A;
-	Sat, 20 Dec 2025 14:35:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27D32324B0A;
+	Mon, 22 Dec 2025 02:55:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gjDup0Jo"
+	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="lPahPrWf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98AB72BE7D2;
-	Sat, 20 Dec 2025 14:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688E83246FF;
+	Mon, 22 Dec 2025 02:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766241317; cv=none; b=HUMOTJ2Wse217U+Ikn68WSKVx6dlBCIjBaIryWZ+KLUpyTyQG4eb4dk2tpyqNzJHhstLkAem9LzdZEBaICWQOWNBCTvxRzdcQAtu0WKFgFx8sEjpQPy5H1URuA/Fdxt5t5FyHMf1xj6kGnXeSUCXGThnPwtZ3ZHR6oVsqfxEAFk=
+	t=1766372153; cv=none; b=Mk694b2QNfDLzW1LTe3SFgpS+AYcUJ6X+aV/a0jdN8O/b6H9Tq3jdYb/dQy9Q8RessiiE7fOQ/oQ+WFM928EdPSZUqPM5M7gOoKW97SnJQPeaftJQCcoTbMBBvDqoyhLBMmroybFBTHQUaIsABsrdBk/af5dlYOY7a+KjV+3VkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766241317; c=relaxed/simple;
-	bh=GsZe3oYDGQQQdCIWN2VonPdTj7WIfct+WPUTYIxdLoo=;
+	s=arc-20240116; t=1766372153; c=relaxed/simple;
+	bh=7CEqajst8BEMGMTxuhfyazlTZNKgGxx6H4k0UVO21wo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QBYU7cLKj7TA3+sDWcG28l+V99yuRVxtr1uLZAkLTic0vHb6cfAwghbyA07UPf0IgAkOf1EFYZWpSFkrJKpdO4IJmpE3WI2yDhC89YCeN1dejdKe2PsRUyoddg7cKjoMPZvWVzOuPThBOUrxhBHQ4jYBVnbVshGxQf/SPLxSMUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gjDup0Jo; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766241315; x=1797777315;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=GsZe3oYDGQQQdCIWN2VonPdTj7WIfct+WPUTYIxdLoo=;
-  b=gjDup0JoCNn8cgVde1fg+HRVwkSbF77dVjtU6bodbOicImQK/mx4dsru
-   GKRH46deQy2OJTkjuv3oEJzJ3eZ7oZdOKzTqaoJ+xSDVF0srVTXRBRYk1
-   Wfv63pQMjPIsI/1t0NgWwMZA1wqMEM/oIjzTtEXr08n/mSHwIxjkbIQ87
-   XvfeiAPL2SiWRP5QN6bxoiKUR6C/tvrTcTHEtXsx9OK+KdE3bYpagPots
-   YdRGLxsKnGQ3OUFaFjuOgVE8bnnBlDl9R40JQ9VJnT+Oz7DDL+A/eAVAD
-   APx8Yy5X3R+ne4WCqOQgJqOc9lQh0bRoYGAGWpZij/El9sbKqNmGR/1tq
-   w==;
-X-CSE-ConnectionGUID: +NdrpYCzQbC8nvIqcvGe6A==
-X-CSE-MsgGUID: 1m7p9f0tSyGDbR90wtY/hw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11648"; a="93650042"
-X-IronPort-AV: E=Sophos;i="6.21,164,1763452800"; 
-   d="scan'208";a="93650042"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2025 06:35:11 -0800
-X-CSE-ConnectionGUID: NyNwaJ+vTy2l5No14hj0xg==
-X-CSE-MsgGUID: bt6upZJbQYeISeMZTtOfIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,164,1763452800"; 
-   d="scan'208";a="199023541"
-Received: from lkp-server01.sh.intel.com (HELO 0d09efa1b85f) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 20 Dec 2025 06:35:07 -0800
-Received: from kbuild by 0d09efa1b85f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vWy2z-000000004eD-05w0;
-	Sat, 20 Dec 2025 14:35:05 +0000
-Date: Sat, 20 Dec 2025 22:34:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: =?iso-8859-1?Q?Beno=EEt?= Monin <benoit.monin@bootlin.com>,
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=ETNsu5Jlwx5ZbmXT9L5OZdmUDT24mOrFiPSMgbvF+wRcqNVlPHW6c269Gxuu8L1FYS3lvbeclIzolkJKxJR1RXl9Nk9ZNJAaWtuV4l8pC3VRD1oir1NuSc+w2bAVdWTIB3SL8bojix1ilN9+wB+D976cTekgkpyf5++okSY0K60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=lPahPrWf; arc=none smtp.client-ip=54.204.34.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
+	s=mxsw2412; t=1766372062;
+	bh=aWH3AozSjguJ/qtUp5vAwnVP8kUGmn82dw0UQ/1G5hc=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version;
+	b=lPahPrWfzOgEAzNxMnHKClZP1RisOAI+Gqbur7ZYULDU5+HUEtRk80Hu9NHCXc3g/
+	 8BlQco2ivOg0Ch2O6nfSrX76mNm+fOI+e/nC4HpxKO0d/nZtSu8+qKW9XGloYC58QZ
+	 Y+WnVe70Q9cvQBDHP9aob9P4eYNPk4gwC8VcY7jA=
+X-QQ-mid: zesmtpgz1t1766372060t7d1c31d5
+X-QQ-Originating-IP: AU9lTnr49pGqU6zJR7M6OH6rqyvohYLLw/StbRivpDs=
+Received: from = ( [120.237.158.181])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 22 Dec 2025 10:54:19 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 537527025626833711
+EX-QQ-RecipientCnt: 11
+Date: Mon, 22 Dec 2025 10:54:19 +0800
+From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+To: Yixun Lan <dlan@gentoo.org>, Linus Walleij <linusw@kernel.org>,
 	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Linus Walleij <linusw@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
-	linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	=?iso-8859-1?Q?Beno=EEt?= Monin <benoit.monin@bootlin.com>
-Subject: Re: [PATCH 05/13] pinctrl: eyeq5: Use match data
-Message-ID: <202512202142.StvDXvbg-lkp@intel.com>
-References: <20251217-eyeq6lplus-v1-5-e9cdbd3af4c2@bootlin.com>
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Troy Mitchell <troy.mitchell@linux.spacemit.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 3/3] pinctrl: spacemit: k3: adjust drive strength and
+ schmitter trigger
+Message-ID: <408BBF8CF676D97D+aUiy2w1iP1LJoUOW@kernel.org>
+References: <20251220-02-k3-pinctrl-v1-0-f6f4aea60abf@gentoo.org>
+ <20251220-02-k3-pinctrl-v1-3-f6f4aea60abf@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251217-eyeq6lplus-v1-5-e9cdbd3af4c2@bootlin.com>
+In-Reply-To: <20251220-02-k3-pinctrl-v1-3-f6f4aea60abf@gentoo.org>
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpgz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz3a-0
+X-QQ-XMAILINFO: MDqtQ4jGWXAGC96n/QJW5CqpNOGa29lPeU/ke22VWtG5mYgikCnLbyF4
+	LM+3VxP3zFygJmLj9nbjC/3bq2TADA+TlpB6wPXfeJ5GRWix4z3vNDK8wNwl2XD4Prx0z3A
+	bJ1gsiTeeKeX+LLnQFXBUAw7to7j01VAYd1jwskuOXIxXpw8N9QN6bDu4NAlFpMqQTYEHyG
+	q4JPoBQWRbz7rNJO+3e/LAtzXlXU+VU6SOVpVjj6+8WMuZeJdVcV68DBHxkvfQDgpCaROv3
+	gncjGO8AL+P769yWkgHyN2L3iHfgU6U4mvcQOjMq4kOW49zCn4teI2CC7l1jdE2LNZdLBlZ
+	Z2smg/UvNWaUhOG5OkGwcR7N4mvKxRXSR359sjyTArnGtyHtmPfruNy/yh7ZkIPHl8J19+s
+	FzJ+UDSIDynF5iZKXtb2t/i4s+IDwt6ZieVc3rLVhjjWI2wfoHhRvB+rh5xhsOJJ02TSTMl
+	dKvFq3J4YEl26bWWBUTvmMmkIOWuXraxc5+5ZV6vG/OKvwOD7qaNCQtrFls2T5SshHtGGXV
+	BlZW1XaLtPuyN4FpYo1dlYCxkks8ew91SHfib4EjQSGnihTxCgxsX2KcfBAA4TpsMYPzEJF
+	i+QEe1u6elgWJDaI/9chfDUP5C4WxX6qRgW5gLc0+4dikkJI6y4Q069zNpQIgQ6P32W2LRW
+	woWRC9puy1HLAhNmH1aeTkmHioYEbMtZ/mEh2UmoTq1MmjsPp10qyufw4xmgixM2ZO/vGqN
+	zovDhaJsFgA9LXUxnQ2ujxGQhuCTe6pn2AixIQPxuZh3nruONWhzjmpHshQDgZmzBkmmRGq
+	kO5P3AjpjzN2sIZ3Z1shR29AwB4Ft9Of5D0tg8f3RSMvTR4sO5t3V1KzHApW624Xb0ezdvm
+	fKZuDDuL759vve2z4HulCAQ2ocSgAtgb1mkCiH+EA9I9aOGvx9FOmpXIDPwKtaYXy2+nEAE
+	xIQELjikjx1s9NaWFWFXb+LNMyJc+a1ghBwqPr3ZokEk61pTLM4ExVH+Def8GWx1m50z96I
+	RRMCVJ/Lj2LLJlba7AqTlcuSr5Qj0=
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-RECHKSPAM: 0
 
-Hi Benoît,
+Hi Yixun,
 
-kernel test robot noticed the following build warnings:
+On Sat, Dec 20, 2025 at 06:14:55PM +0800, Yixun Lan wrote:
+> K3 SoC expand drive strength to 4 bits which support even larger
+> settings table comparing to old SoC generation. Also schmitter trigger
+> setting is changed to 1 bit.
+> 
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> ---
+>  drivers/pinctrl/spacemit/pinctrl-k1.c | 163 ++++++++++++++++++++++++----------
+>  1 file changed, 116 insertions(+), 47 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
+> index 441817f539e3..8ca247fb8ba0 100644
+> --- a/drivers/pinctrl/spacemit/pinctrl-k1.c
+> +++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
+[...]
+> -		val = spacemit_get_driver_strength(type, drv_strength);
+> +		val = spacemit_get_driver_strength(type, dconf, drv_strength);
+>  
+> -		v &= ~PAD_DRIVE;
+> -		v |= FIELD_PREP(PAD_DRIVE, val);
+> +		v &= ~dconf->drive_mask;
+> +		v |= (arg << __ffs(dconf->drive_mask)) & dconf->drive_mask;
+            ^^^^
+use val here.
 
-[auto build test WARNING on 8f0b4cce4481fb22653697cced8d0d04027cb1e8]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Beno-t-Monin/dt-bindings-mips-Add-Mobileye-EyeQ6Lplus-SoC/20251217-214926
-base:   8f0b4cce4481fb22653697cced8d0d04027cb1e8
-patch link:    https://lore.kernel.org/r/20251217-eyeq6lplus-v1-5-e9cdbd3af4c2%40bootlin.com
-patch subject: [PATCH 05/13] pinctrl: eyeq5: Use match data
-config: parisc-allyesconfig (https://download.01.org/0day-ci/archive/20251220/202512202142.StvDXvbg-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251220/202512202142.StvDXvbg-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512202142.StvDXvbg-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/pinctrl/pinctrl-eyeq5.c: In function 'eq5p_pinconf_set':
->> drivers/pinctrl/pinctrl-eyeq5.c:533:13: warning: 'offset' is used uninitialized [-Wuninitialized]
-     533 |         u32 val = BIT(offset);
-         |             ^~~
-   drivers/pinctrl/pinctrl-eyeq5.c:532:22: note: 'offset' was declared here
-     532 |         unsigned int offset;
-         |                      ^~~~~~
-
-
-vim +/offset +533 drivers/pinctrl/pinctrl-eyeq5.c
-
-41795aa1f56a6e Théo Lebrun  2024-07-30  524  
-41795aa1f56a6e Théo Lebrun  2024-07-30  525  static int eq5p_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
-41795aa1f56a6e Théo Lebrun  2024-07-30  526  			    unsigned long *configs, unsigned int num_configs)
-41795aa1f56a6e Théo Lebrun  2024-07-30  527  {
-41795aa1f56a6e Théo Lebrun  2024-07-30  528  	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-41795aa1f56a6e Théo Lebrun  2024-07-30  529  	const char *pin_name = pctldev->desc->pins[pin].name;
-41795aa1f56a6e Théo Lebrun  2024-07-30  530  	struct device *dev = pctldev->dev;
-e3ba56038b97ee Benoît Monin 2025-12-17  531  	const struct eq5p_bank *bank;
-e3ba56038b97ee Benoît Monin 2025-12-17  532  	unsigned int offset;
-41795aa1f56a6e Théo Lebrun  2024-07-30 @533  	u32 val = BIT(offset);
-41795aa1f56a6e Théo Lebrun  2024-07-30  534  	unsigned int i;
-e3ba56038b97ee Benoît Monin 2025-12-17  535  	int ret;
-e3ba56038b97ee Benoît Monin 2025-12-17  536  
-e3ba56038b97ee Benoît Monin 2025-12-17  537  	ret = eq5p_pin_to_bank_offset(pctrl, pin, &bank, &offset);
-e3ba56038b97ee Benoît Monin 2025-12-17  538  	if (ret)
-e3ba56038b97ee Benoît Monin 2025-12-17  539  		return ret;
-41795aa1f56a6e Théo Lebrun  2024-07-30  540  
-41795aa1f56a6e Théo Lebrun  2024-07-30  541  	for (i = 0; i < num_configs; i++) {
-41795aa1f56a6e Théo Lebrun  2024-07-30  542  		enum pin_config_param param = pinconf_to_config_param(configs[i]);
-41795aa1f56a6e Théo Lebrun  2024-07-30  543  		u32 arg = pinconf_to_config_argument(configs[i]);
-41795aa1f56a6e Théo Lebrun  2024-07-30  544  
-41795aa1f56a6e Théo Lebrun  2024-07-30  545  		switch (param) {
-41795aa1f56a6e Théo Lebrun  2024-07-30  546  		case PIN_CONFIG_BIAS_DISABLE:
-41795aa1f56a6e Théo Lebrun  2024-07-30  547  			dev_dbg(dev, "pin=%s bias_disable\n", pin_name);
-41795aa1f56a6e Théo Lebrun  2024-07-30  548  
-41795aa1f56a6e Théo Lebrun  2024-07-30  549  			eq5p_update_bits(pctrl, bank, EQ5P_PD, val, 0);
-41795aa1f56a6e Théo Lebrun  2024-07-30  550  			eq5p_update_bits(pctrl, bank, EQ5P_PU, val, 0);
-41795aa1f56a6e Théo Lebrun  2024-07-30  551  			break;
-41795aa1f56a6e Théo Lebrun  2024-07-30  552  
-41795aa1f56a6e Théo Lebrun  2024-07-30  553  		case PIN_CONFIG_BIAS_PULL_DOWN:
-41795aa1f56a6e Théo Lebrun  2024-07-30  554  			dev_dbg(dev, "pin=%s bias_pull_down arg=%u\n",
-41795aa1f56a6e Théo Lebrun  2024-07-30  555  				pin_name, arg);
-41795aa1f56a6e Théo Lebrun  2024-07-30  556  
-41795aa1f56a6e Théo Lebrun  2024-07-30  557  			if (arg == 0) /* cannot connect to GND */
-41795aa1f56a6e Théo Lebrun  2024-07-30  558  				return -ENOTSUPP;
-41795aa1f56a6e Théo Lebrun  2024-07-30  559  
-41795aa1f56a6e Théo Lebrun  2024-07-30  560  			eq5p_update_bits(pctrl, bank, EQ5P_PD, val, val);
-41795aa1f56a6e Théo Lebrun  2024-07-30  561  			eq5p_update_bits(pctrl, bank, EQ5P_PU, val, 0);
-41795aa1f56a6e Théo Lebrun  2024-07-30  562  			break;
-41795aa1f56a6e Théo Lebrun  2024-07-30  563  
-41795aa1f56a6e Théo Lebrun  2024-07-30  564  		case PIN_CONFIG_BIAS_PULL_UP:
-41795aa1f56a6e Théo Lebrun  2024-07-30  565  			dev_dbg(dev, "pin=%s bias_pull_up arg=%u\n",
-41795aa1f56a6e Théo Lebrun  2024-07-30  566  				pin_name, arg);
-41795aa1f56a6e Théo Lebrun  2024-07-30  567  
-41795aa1f56a6e Théo Lebrun  2024-07-30  568  			if (arg == 0) /* cannot connect to VDD */
-41795aa1f56a6e Théo Lebrun  2024-07-30  569  				return -ENOTSUPP;
-41795aa1f56a6e Théo Lebrun  2024-07-30  570  
-41795aa1f56a6e Théo Lebrun  2024-07-30  571  			eq5p_update_bits(pctrl, bank, EQ5P_PD, val, 0);
-41795aa1f56a6e Théo Lebrun  2024-07-30  572  			eq5p_update_bits(pctrl, bank, EQ5P_PU, val, val);
-41795aa1f56a6e Théo Lebrun  2024-07-30  573  			break;
-41795aa1f56a6e Théo Lebrun  2024-07-30  574  
-41795aa1f56a6e Théo Lebrun  2024-07-30  575  		case PIN_CONFIG_DRIVE_STRENGTH:
-41795aa1f56a6e Théo Lebrun  2024-07-30  576  			dev_dbg(dev, "pin=%s drive_strength arg=%u\n",
-41795aa1f56a6e Théo Lebrun  2024-07-30  577  				pin_name, arg);
-41795aa1f56a6e Théo Lebrun  2024-07-30  578  
-41795aa1f56a6e Théo Lebrun  2024-07-30  579  			eq5p_pinconf_set_drive_strength(pctldev, pin, arg);
-41795aa1f56a6e Théo Lebrun  2024-07-30  580  			break;
-41795aa1f56a6e Théo Lebrun  2024-07-30  581  
-41795aa1f56a6e Théo Lebrun  2024-07-30  582  		default:
-41795aa1f56a6e Théo Lebrun  2024-07-30  583  			dev_err(dev, "Unsupported pinconf %u\n", param);
-41795aa1f56a6e Théo Lebrun  2024-07-30  584  			return -ENOTSUPP;
-41795aa1f56a6e Théo Lebrun  2024-07-30  585  		}
-41795aa1f56a6e Théo Lebrun  2024-07-30  586  	}
-41795aa1f56a6e Théo Lebrun  2024-07-30  587  
-41795aa1f56a6e Théo Lebrun  2024-07-30  588  	return 0;
-41795aa1f56a6e Théo Lebrun  2024-07-30  589  }
-41795aa1f56a6e Théo Lebrun  2024-07-30  590  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+                          - Troy
 
