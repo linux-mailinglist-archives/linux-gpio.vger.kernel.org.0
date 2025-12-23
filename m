@@ -1,167 +1,149 @@
-Return-Path: <linux-gpio+bounces-29812-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29814-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 663C1CD89B5
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Dec 2025 10:37:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B101CD89F3
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Dec 2025 10:44:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C4A0B3009FB0
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Dec 2025 09:37:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EE53C302A3B0
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Dec 2025 09:43:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 010AE328B78;
-	Tue, 23 Dec 2025 09:37:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 409E5329C75;
+	Tue, 23 Dec 2025 09:43:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q0mtlyEY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyrWW33j"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f42.google.com (mail-dl1-f42.google.com [74.125.82.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B109E2E0934
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Dec 2025 09:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0DC3271E8
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Dec 2025 09:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766482623; cv=none; b=q9ZbFRJe/BAycIX2CJJ5gzMQA38aJ7v0MrWHLTARjaOCn0takf1PUxgga2yvMYESvS804ftctmK2uNx5pRlXunN4SotgOKa9rHnZGlX4E5x+XE/6GwmBA7NVOXrPuth4Fxwx1rncLvr16INwcXFg1+5FZw4Oklu/AV0nT+nfpjE=
+	t=1766483020; cv=none; b=m5GFHyOrxl7CLOsZbaH62TOwhm/wrSFfvnpZNES98kpgqB6+tvktuX2dY6+ICQ97rnZZOJwUjmQC/HDlKUfBG5fydqLfmBXPbN92SoBZCwb7ndZXT54xpyfV/WB9mdd4jKykqZL3EDxbxbZqA3Rojx2DtpBydWrWYz5G1MUxKaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766482623; c=relaxed/simple;
-	bh=T7KdQjnc1uAnk0At9YIJM3OVO0ziJByUW/8OGO/MlBg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L76O5eNAZhKxrCb0ThZUP7jbWS42kwdGFgHu1ylefo8tbZ1PavWe4Xq80pBgI5I2dXLzycrfVIVomf51L3OTUzI+yb9i4pmNYmdxHd83hZtHc79QWNiBtdjDeNCMkBo0IJB8E/OiPycr+L3F6MoudWOCWeI+Fl7NigsWEwlFdzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q0mtlyEY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 628ABC19423
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Dec 2025 09:37:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766482623;
-	bh=T7KdQjnc1uAnk0At9YIJM3OVO0ziJByUW/8OGO/MlBg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Q0mtlyEYiBuWBeUMXAJByFmBy8npgy2+oi12ugdiP0o5JCAhEA3zeSKW+micYtDa6
-	 7TwBW3mwlYmcUQIPmOqZ0EpXQteHWQrEXoh2CpQd/fO3C6MBcWwyOwFGXIXXP4r0ph
-	 1/yZ7X9oC7OfPezZ8UozxmIyqHWPJRRv8911BfqqI//WDMliRy17DzesDncZ1uGcdc
-	 jyEuCQzy2v71YIZsjeJjaav+ksZPZh+hbsc7rvZo2YLdYZfOEw10DsMhEWsG+LsCpw
-	 ieJQUpSQNg+QvAS5N2u7TWsXqEckSNDq/UMLmns7irEfYYhhQC1VhvlUC9S0ngamKd
-	 OZP+JopGHaDCg==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-596ba07504dso4360887e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Dec 2025 01:37:03 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX4trgpWAPtCRiy8T85f1p7nDus1RUjQmtsQ7z/dlbbliqm9ligF5kXTxd5Kbux1Mwwrx7qjUZgtGnm@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXSq9Jv77lDV0iG2wVVe6C2JOjXDP8vGFafLdvj5vQONx/ZWkT
-	nAc4AEebsFhPmJJ4nQAmfYc415OW4kF1hnUkYK4Z1mVBKNk+jqzxbWDTtquZoeDwR9GhXwZw8QR
-	qR1yP4e7LYQEFmNFLdW7bHyECSHz5+Q50TflaV/GeZg==
-X-Google-Smtp-Source: AGHT+IFQmsuAwcJwXOY4Cft1R1mIu4P0sIxwn5FcrYQ9SfkpyCGe9lU8pbvbXq6nf2AIumojH6nvcmsXC8PZXvc1epU=
-X-Received: by 2002:a05:6512:150c:20b0:59a:19dd:5225 with SMTP id
- 2adb3069b0e04-59a19dd523fmr3452366e87.16.1766482621926; Tue, 23 Dec 2025
- 01:37:01 -0800 (PST)
+	s=arc-20240116; t=1766483020; c=relaxed/simple;
+	bh=l/xGg3lZcqpSBWluJfeIDeMimjyGoXBIIVY9RShRyGU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TnZfySFwQleZxF828Wz3o9dWq4y5iirsOAbDsHNlEeY7xmPmt1OoqbEpqM1hoUg43WLJDi7bzjlmq8iEa4t8uFxc6MZJ1nse3AV1Zt55gezasYKDguwAH1XPeedRvkk/DnMTE3H1Qj137SebdlXMElRML6QTabGTfKwNy0gz0o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fyrWW33j; arc=none smtp.client-ip=74.125.82.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-dl1-f42.google.com with SMTP id a92af1059eb24-11b6bc976d6so8432306c88.0
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Dec 2025 01:43:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766483017; x=1767087817; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SxJbYsS9Flodz6V0WJwrBiZXTghxJcKYTBqtlgaql2c=;
+        b=fyrWW33jdFVCvBDNrCL4oWlp9NRWeQr1WW6BpG2bX4PxaJyPLzZhjQJtRGu4ywU0lc
+         ElzOLtHwJSFvPrce6A5MidqY/f9V9qch/hdEtdSgN685/GveRi2krjW/wvFdTTwuz/iv
+         KP7mKZ23NaYDkS1F13GOGKSiEnJtjsXVsoynDTKnfga9rnAmAjFe55DRd9X9xmBSWuYx
+         kZposqeRRNBRK5rWbql94+vQK8VqEvU2VPLHKmKISYBDUnKC4NwVYjwmYhYvcFXUrCN9
+         ufbiKkigjSfzaIdNtKNCDcQkhIpkQp6eC6rFY9YV+Kzeft8fcKaYS0m2ypEHTZ4DbYI8
+         fq+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766483017; x=1767087817;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SxJbYsS9Flodz6V0WJwrBiZXTghxJcKYTBqtlgaql2c=;
+        b=KQQsXJUpD4dXEOXHepF0rZ+LVeCSkSGj04yYeARoH8LQ9zi0oTBO2V+x4QluELZk0x
+         711kxQNxh1V1eEMXcejdpEIOgzpH6aB/OypkwkcKWFZgaAm5lNxcr9lNjlTaSbP85mmz
+         wmXsGtcy1GoqZ5xKnQhYM8k+7S9wZlHxVE9MKpN651UxDKjZBtDkwBCBSAzTBkhwDJus
+         zjyg0I4QjA8osSNVXJFI4+Z8MTExCnLNK/PWOEl/mLMQ4j0mxJN14E8XYFZoCcXHhhRz
+         E1ZxS2HMof7nglEpddGaXCJgSpgeL8ahU8n0ENUf35AkB7fkn88X+Hvw/CHrV72zC/nC
+         bfQw==
+X-Forwarded-Encrypted: i=1; AJvYcCX5DuYWYcnQOoxvP+y3r2zzAzHI7hm/9xkxkOIn0iAk1QCGyCVaHN5LJHS4Yy3Z4TUQTdNEZJYEt08S@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6DdHsDAQVCZAxzLlwZiuL518mgYn97JcTlRfq7qBsSMUyEYMJ
+	/U2mIJK6ZFq8qK1sANrS7++ymiiP8AHRMsvTxauIAEPfhrwYk4oU5PZD
+X-Gm-Gg: AY/fxX79RSFZPYDjsErprO54Ztknumn1IpNo6lujVhBfCi77Wl9Nv6qsBzB0v5cxDfM
+	KN5V5dp7DZkodjt6ROSBs464g9mDBoqb93gOSJ0ltFlzPENiloD/Lzh4oXGjmcj03tiPzPW2MV/
+	1m46Xk2QW1Omso4SNM+phOqMXo2C8WoJ1d3RViGHOnTN0hhQzSv+atMyD9pkO2h/SyD/YokwqZi
+	yhZP8uhro4F/T+aU5Xx1/bgB943hsRAL50FEHGyJK2r4qXhROXjrYcTSSpX2SXYX8g50Bz2SN4+
+	EXjUYs63UPxrIYMaE/5/fHHLXsktj2jQ+wMLcz9Ryvzf2Un3QkVfYEMJ9DwQX+Nf9Y4R7w8J3Qe
+	UHm1uRZp35sODWo/GOnWJB8U4847uXvavRc80WyLGWQCGRmcSfNcFNtaQFGtVafNqDCDwqGuJhM
+	O98irO4j2Z8g==
+X-Google-Smtp-Source: AGHT+IEp+OSd9R0lrP291Dk7W1AafeaeXYagMJNjBu0iohEINVzAIJUCtwgGHA2QHs2m9CJoX6vTug==
+X-Received: by 2002:a05:7022:608a:b0:11b:a8e3:847b with SMTP id a92af1059eb24-12171a685cbmr13887306c88.5.1766483017187;
+        Tue, 23 Dec 2025 01:43:37 -0800 (PST)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-121724cfc0esm56367570c88.2.2025.12.23.01.43.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Dec 2025 01:43:36 -0800 (PST)
+Date: Tue, 23 Dec 2025 17:42:26 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Troy Mitchell <troy.mitchell@linux.spacemit.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Linus Walleij <linusw@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 2/2] pinctrl: spacemit: support I/O power domain
+ configuration
+Message-ID: <aUpirQFWf3w-5PQ2@inochi.infowork>
+References: <20251223-kx-pinctrl-aib-io-pwr-domain-v1-0-5f1090a487c7@linux.spacemit.com>
+ <20251223-kx-pinctrl-aib-io-pwr-domain-v1-2-5f1090a487c7@linux.spacemit.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <02fd01dc73df$3b641bf0$b22c53d0$@trustnetic.com>
- <CAMRc=Mf2A++CHYcMdBi0bQ0DOAGLaSatQEOmu=aAEG_YjCqEWg@mail.gmail.com> <030001dc73e8$56e38330$04aa8990$@trustnetic.com>
-In-Reply-To: <030001dc73e8$56e38330$04aa8990$@trustnetic.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Tue, 23 Dec 2025 10:36:49 +0100
-X-Gmail-Original-Message-ID: <CAMRc=Meugd9tEDefPnYHidDMTdCP+8fptVXNvqjSi1tjXPuVRA@mail.gmail.com>
-X-Gm-Features: AQt7F2qmNlXBQvP6GbuHDACTxUbNxwHE2nXemqt_etQvVh1rf8nZyb3TWDSPYLc
-Message-ID: <CAMRc=Meugd9tEDefPnYHidDMTdCP+8fptVXNvqjSi1tjXPuVRA@mail.gmail.com>
-Subject: Re: [PATCH v7 3/9] software node: allow referencing firmware nodes
-To: Jiawen Wu <jiawenwu@trustnetic.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, andriy.shevchenko@linux.intel.com, 
-	andy@kernel.org, broonie@kernel.org, ckeepax@opensource.cirrus.com, 
-	dakr@kernel.org, david.rhodes@cirrus.com, djrscally@gmail.com, 
-	gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, krzk@kernel.org, 
-	linus.walleij@linaro.org, linux-acpi@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-spi@vger.kernel.org, 
-	mstrozek@opensource.cirrus.com, p.zabel@pengutronix.de, 
-	patches@opensource.cirrus.com, rafael@kernel.org, rf@opensource.cirrus.com, 
-	sakari.ailus@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251223-kx-pinctrl-aib-io-pwr-domain-v1-2-5f1090a487c7@linux.spacemit.com>
 
-On Tue, Dec 23, 2025 at 9:44=E2=80=AFAM Jiawen Wu <jiawenwu@trustnetic.com>=
- wrote:
->
-> On Tue, Dec 23, 2025 4:09 PM, Bartosz Golaszewski wrote:
-> > On Tue, Dec 23, 2025 at 8:39=E2=80=AFAM Jiawen Wu <jiawenwu@trustnetic.=
-com> wrote:
-> > >
-> > > >
-> > > >  #define SOFTWARE_NODE_REFERENCE(_ref_, ...)                  \
-> > > >  (const struct software_node_ref_args) {                           =
-   \
-> > > > -     .node =3D _ref_,                                          \
-> > > > +     .swnode =3D _Generic(_ref_,                               \
-> > > > +                        const struct software_node *: _ref_, \
-> > > > +                        default: NULL),                      \
-> > > > +     .fwnode =3D _Generic(_ref_,                               \
-> > > > +                        struct fwnode_handle *: _ref_,       \
-> > > > +                        default: NULL),                      \
-> > > >       .nargs =3D COUNT_ARGS(__VA_ARGS__),                       \
-> > > >       .args =3D { __VA_ARGS__ },                                \
-> > > >  }
-> > >
-> > > This change seems incompatible with my driver txgbe, since the softwa=
-re nodes
-> > > are registered in " struct software_node * " but not " const struct s=
-oftware_node * ".
-> > >
-> > > So when I pulled the net-next-6.19-rc1 that merged this patch, to pro=
-be my driver.
-> > > The error logs shows:
-> > >
-> > > [    5.243396] txgbe 0000:10:00.0 (unnamed net_device) (uninitialized=
-): unable to attach SFP bus: -EINVAL
-> > > [    5.243399] txgbe 0000:10:00.0: failed to init phylink
-> > > [    5.576008] txgbe 0000:10:00.0: probe with driver txgbe failed wit=
-h error -22
-> > > [    6.109548] txgbe 0000:10:00.1 (unnamed net_device) (uninitialized=
-): unable to attach SFP bus: -EINVAL
-> > > [    6.109551] txgbe 0000:10:00.1: failed to init phylink
-> > > [    6.442044] txgbe 0000:10:00.1: probe with driver txgbe failed wit=
-h error -22
-> > >
-> >
-> > This shouldn't have changed anything for existing software nodes - the
-> > pointer in struct software_node_ref_args has always been const. This
-> > would have failed at build-time if this was an issue. Have you
-> > bisected it to this very commit? What line is the -EINVAL assigned and
-> > for what reason?
->
-> The -EINVAL is assigned software_node_get_reference_args():
->
->         if (ref->swnode)
->                 refnode =3D software_node_fwnode(ref->swnode);
->         else if (ref->fwnode)
->                 refnode =3D ref->fwnode;
->         else
->                 return -EINVAL;
->
-> I think the reason is that _Generic selection is restrictive, it only acc=
-ept
-> exactly const struct software_node for software node references. So the
-> macro SOFTWARE_NODE_REFERENCE fall back to the default to set .swnode =3D=
-  NULL.
->
-> And I temporarily added this line to fix it:
->
-> diff --git a/include/linux/property.h b/include/linux/property.h
-> index 272bfbdea7bf..e30ef23a9af3 100644
-> --- a/include/linux/property.h
-> +++ b/include/linux/property.h
-> @@ -371,6 +371,7 @@ struct software_node_ref_args {
->  (const struct software_node_ref_args) {                                \
->         .swnode =3D _Generic(_ref_,                               \
->                            const struct software_node *: _ref_, \
-> +                          struct software_node *: _ref_,       \
->                            default: NULL),                      \
->         .fwnode =3D _Generic(_ref_,                               \
->                            struct fwnode_handle *: _ref_,       \
->
+On Tue, Dec 23, 2025 at 05:11:12PM +0800, Troy Mitchell wrote:
+> IO domain power control registers are used to configure the operating
+> voltage of dual-voltage GPIO banks. By default, these registers are
+> configured for 3.3V operation. As a result, even when a GPIO bank is
+> externally supplied with 1.8V, the internal logic continues to
+> operate in the 3.3V domain, which may lead to functional failures.
+> 
+> This patch adds support for programming the IO domain power control
+> registers, allowing dual-voltage GPIO banks to be explicitly configured
+> for 1.8V operation when required.
+> 
+> Care must be taken when configuring these registers. If a GPIO bank is
+> externally supplied with 3.3V while the corresponding IO power domain
+> is configured for 1.8V, external current injection (back-powering)
+> may occur, potentially causing damage to the GPIO pin.
+> 
+> Due to these hardware constraints and safety considerations, the IO
+> domain power control registers are implemented as secure registers.
+> Access to these registers requires unlocking via the AIB Secure Access
+> Register (ASAR) in the APBC block before a single read or write
+> operation can be performed.
+> 
+> Signed-off-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+> ---
+>  arch/riscv/boot/dts/spacemit/k1.dtsi  |   4 +-
+>  drivers/pinctrl/spacemit/pinctrl-k1.c | 131 +++++++++++++++++++++++++++++++++-
+>  2 files changed, 131 insertions(+), 4 deletions(-)
+> 
 
-Ah I see, we'd assign struct software_node * to const struct
-software_node * and it used to work but with _Generic() we need the
-exact type. I agree with this approach, do you want to send a proper
-patch?
+> diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
+> index 7818ca4979b6a7755722919a5958512aa11950ab..23ecb19624f227f3c39de35bf3078379f7a2490e 100644
+> --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
+> +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
+> @@ -565,10 +565,12 @@ i2c8: i2c@d401d800 {
+>  
+>  		pinctrl: pinctrl@d401e000 {
+>  			compatible = "spacemit,k1-pinctrl";
+> -			reg = <0x0 0xd401e000 0x0 0x400>;
+> +			reg = <0x0 0xd401e000 0x0 0x400>,
+> +			      <0x0 0xd401e800 0x0 0x34>;
+>  			clocks = <&syscon_apbc CLK_AIB>,
+>  				 <&syscon_apbc CLK_AIB_BUS>;
+>  			clock-names = "func", "bus";
+> +			spacemit,apbc = <&syscon_apbc 0x50>;
+>  		};
 
-Bart
+This change breaks binding, can we use something like <0x0 0xd401e000 0x0 0x1000>?
+If you insist on a new reg field, you should change the binding as well.
+
+Regards,
+Inochi
 
