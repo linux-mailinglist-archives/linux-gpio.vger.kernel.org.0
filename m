@@ -1,156 +1,186 @@
-Return-Path: <linux-gpio+bounces-29816-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29817-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 676A5CD8A5C
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Dec 2025 10:51:06 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDE34CD8B01
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Dec 2025 11:03:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E65353013EEB
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Dec 2025 09:51:01 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 82298300E3C4
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Dec 2025 10:02:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56953330B07;
-	Tue, 23 Dec 2025 09:50:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A844130F957;
+	Tue, 23 Dec 2025 10:02:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="u24iAiyN"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TmX5VajP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA13924337B;
-	Tue, 23 Dec 2025 09:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4247C220F3E;
+	Tue, 23 Dec 2025 10:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766483459; cv=none; b=Ngu7WpxquLoI2KWyiXx8PKJxlec9Bra1K0UMzbnSt9ekmSbNq2zqu3Ff/lwcE6Y5XawBFVTZBD7OBB+dnIU6u7ERKTxOVeC7Z6geOkIRtBLbmtMo/whG7V2QzpBQJR34X4l3VEP5wMjTyUGGicLldRCI4odo59FM943PGiVmkGQ=
+	t=1766484158; cv=none; b=Dk/Y5rOa99CyacgF0fVEAjjXxmEGVARSWtqrqFaiO2jflnoRgkCtwBMRK93RkvTKa2HLonMP73vDbfiu7Hj0LXinTXcLR8Cn6rxoHNAqsJIUXmpp/VAlXirK+sp3KGiN7DmgBo2IwkleICIVsnfWWGYpGyvQ2gBOZxtoQ4khVx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766483459; c=relaxed/simple;
-	bh=awkVaKxcxpnoZNbVIV6brtv3aH1jdH80/Pm61a4HP9Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=StKIwSmr3waHpNe+MjkTMcVr8Hh3pZm4SYgCLlJ8ahJTx3GMFCY0sO3DhXl2ck0Cp/0GbNIEDjXPXnIQRPkXy0nsSc+VC+LknH87EQLa7LkKHmg+G6/04x4B6dQOW0NMXpZAUFC7gaJ4vOF8aazZKa40NRWAT8mMHD+zNFw1OyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=u24iAiyN; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
-	s=mxsw2412; t=1766483417;
-	bh=1KBspn3lmpuGr/bDugn3e48PSLrjb85y6rjRy4Voyt4=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version;
-	b=u24iAiyNs6lGt0qgzU2EpPrW9NT9VbylknFN0ewSm6DQpPb+xUtQUwMlS2iFQDRU5
-	 AcRVKgh1xCL4jQWtdTl/9BY/qGgB9VMnK0NYaPCQH7W/9BSG+pRuKG/+A/OrbG2+J9
-	 txZ/NOuyhksgqwlDVVzHFZ8mZRxzfJMV/RrrLPEA=
-X-QQ-mid: zesmtpgz7t1766483410t6e8ce7a7
-X-QQ-Originating-IP: B1Taz1X5IZEtgU0JhcBaI4ePti2+yVkLQPsGXXa3Be8=
-Received: from = ( [183.48.247.204])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 23 Dec 2025 17:50:08 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 4315336128673413360
-EX-QQ-RecipientCnt: 16
-Date: Tue, 23 Dec 2025 17:50:08 +0800
-From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
-To: Inochi Amaoto <inochiama@gmail.com>,
-	Troy Mitchell <troy.mitchell@linux.spacemit.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Linus Walleij <linusw@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 2/2] pinctrl: spacemit: support I/O power domain
- configuration
-Message-ID: <B479B24A35F8D731+aUpl0JdKOziIH14S@kernel.org>
-References: <20251223-kx-pinctrl-aib-io-pwr-domain-v1-0-5f1090a487c7@linux.spacemit.com>
- <20251223-kx-pinctrl-aib-io-pwr-domain-v1-2-5f1090a487c7@linux.spacemit.com>
- <aUpirQFWf3w-5PQ2@inochi.infowork>
+	s=arc-20240116; t=1766484158; c=relaxed/simple;
+	bh=7CJYGTSN7WTAdsrk5nTSBNcdB82v5ao3fSIminUpoxg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=uWOw5ocaWBBh9XkvLxFYXdmXmq4YfpF2LJzQroAMiH4K/k2NlivP7RRk4t3h7DU7CQ+fiMS1Q7jR7OKm4mVq2XoayZrozGFgj+zs7B+AIQj1z3Cp++/pc6Y/fjl6L8T5phlk0KwOH9kxWzuucOuQF7YcgWviwA1L/uHklVxN+zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TmX5VajP; arc=none smtp.client-ip=185.246.84.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id EF1251A23A0;
+	Tue, 23 Dec 2025 10:02:28 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id B8FBD60716;
+	Tue, 23 Dec 2025 10:02:28 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 7728010AB09B8;
+	Tue, 23 Dec 2025 11:02:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1766484147; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding; bh=vKXAVXkQkoVX1RqytPUqRo6pHinh5Q8zwojN9SALFLc=;
+	b=TmX5VajPV4iSMDrTOxLZKRMRooArXGamRR0GfkJQtfe1zQwCSGNlcIa20hFyqbfDiBLrbN
+	pLIf57C5fmY8cTBf0IqLfo9b6IW8I0QXWfliwBLDdR5bPqRvfxbSUcSPVqO6Dm7MDHiY4v
+	sutGtWevHE3dkY7teQ6kzW5d3pEH09F8gfiU7RHuRP+5yqFzhe8VvqwRmwFzGgiVSwr1W9
+	JMdEVvQHTP2CMendD3PEAbLHPtpR1y0coisFaK8W93jm7ALCe1ACQIl8EN/Zq9CLzsKgBa
+	5deEOxs91I46DWcSY25VbmhCCG/Xn5YJp9QRAztfRP5p2wnbob7se6HxBp7WqQ==
+From: =?utf-8?q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>
+Subject: [PATCH v2 00/13] Introducing the Mobileye EyeQ6Lplus SoC
+Date: Tue, 23 Dec 2025 11:02:15 +0100
+Message-Id: <20251223-eyeq6lplus-v2-0-cd1fd21d182c@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aUpirQFWf3w-5PQ2@inochi.infowork>
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: MIXpHopat2Iaqb1wLJTzqDwL25IVyIFnc+2GWQpFhcUseBA29rIfaqre
-	6q8uXAJAI4bMYYDiCNXhm66sTuKeAP+/hEbrYtwfGw7K6YZw6UgjyN59zzk/IQhNyiaCjRj
-	7tPaKCmvBIK6BI7J/EZa2ESM8m12JJwFZYfB1gxE9wXypKJYa0yw7RI52Z+ROdjnqEHZ9p2
-	BqG6SMSfGxi4eMwbAcydo8meNlx1bCeIOy9BkKicEyJRRASHt2x5ALMISl8BwF/YtH+Qy/V
-	7uVL6+zpoc0nhuyMM3d16ZKFcl6/TkdQhxXdgaUdGQINT/cMASyHiFB7VNO8Lwe/GjyRTSL
-	w1x0qAvs4TAhC+HM99WAJjLPvbW0R5s7PtSmSn+EgiKna7BYKQJ+FxoPrc6xmRm/WZgddnA
-	v0zePzvC78ZMh2K+VpArQ1ijUZWpqswvWK1lMbYtuq2fLQ8RS4rGKiWdAQmXlwdY52nQ4Yn
-	9hieQPqjky714PjeaInwWjrAHKGVty0SaCe1KSuApYtor9UxejIuEwv4WC2nVcgjyvrC4sO
-	eVt3W+LmFpD0UiFW2d4FTmdDdE76LI7+BGM43dWT7P6EmBvFUfKABFbaRmI/WbGHnM7pAXM
-	FJz4uCWGbCrVD/nD8EWgF55zI8zOs1pb1LZoVl2N2TxAgsnbDxz8vTV8kwuD/rp+6T3mYCZ
-	k99G7mjZy9rLLKa47aTKiWe7ffHiYZmAWG/JJ8rD8IvSLMP9kWJwOEu2S2n5EN6gTyvP2MD
-	vYoT/MVXLoPOPpn+J6AiulTxZ2lSzGvMFvN8t1iz4rgLjXQqeIQ/iVmK8AD3QJ+sJCnaBHn
-	oOO3AueXdo4WQAt002WH/GwFyTVBelChuvgvn/6NT0wU7n/lnjDnjr5Uwg2ZusDcCPT1sXW
-	Sp11pcSCUlDLZSQGklg+DLFqQky+UciPi23H/h0PjOA8gXD07CDfhysIaU8TxEPkoDvubmR
-	9BOlvDcKw44qOAmv2C6pa2l83Xr8WLkUWNFYNVtSNnp9Qh75GOviQNpdvUrYyquIrBf/uFD
-	wB2X4DKJIqJm9RvfQJQYw9QmYNLynJsTHMig05EU4T4DqX+4hpJ6twa4dAmCmGhpNblXPw5
-	WgyLxs0zGzTWRWIxkuKmbMTlTddgxZH51s/kAQeyAsV0rDE7+SnGjA=
-X-QQ-XMRINFO: MPJ6Tf5t3I/ylTmHUqvI8+Wpn+Gzalws3A==
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAKdoSmkC/03MQQ6CMBCF4auQWVvTFqyWlfcwLKBMZZJKsUUiI
+ b27FTcu/5e8b4OIgTBCXWwQcKFIfswhDwWYoR3vyKjPDZLLkxDywnDFp3KTe0WmlTCq5JbrikM
+ +TAEtvXfs1uQeKM4+rLu9iO/6Y6Q4/zOLYJyhNn3Xl62tjLx23s+OxqPxD2hSSh/UiCxYpgAAA
+ A==
+X-Change-ID: 20251128-eyeq6lplus-961c630f0940
+To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+ Linus Walleij <linusw@kernel.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-mips@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ =?utf-8?q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>
+X-Mailer: b4 0.14.3
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, Dec 23, 2025 at 05:42:26PM +0800, Inochi Amaoto wrote:
-> On Tue, Dec 23, 2025 at 05:11:12PM +0800, Troy Mitchell wrote:
-> > IO domain power control registers are used to configure the operating
-> > voltage of dual-voltage GPIO banks. By default, these registers are
-> > configured for 3.3V operation. As a result, even when a GPIO bank is
-> > externally supplied with 1.8V, the internal logic continues to
-> > operate in the 3.3V domain, which may lead to functional failures.
-> > 
-> > This patch adds support for programming the IO domain power control
-> > registers, allowing dual-voltage GPIO banks to be explicitly configured
-> > for 1.8V operation when required.
-> > 
-> > Care must be taken when configuring these registers. If a GPIO bank is
-> > externally supplied with 3.3V while the corresponding IO power domain
-> > is configured for 1.8V, external current injection (back-powering)
-> > may occur, potentially causing damage to the GPIO pin.
-> > 
-> > Due to these hardware constraints and safety considerations, the IO
-> > domain power control registers are implemented as secure registers.
-> > Access to these registers requires unlocking via the AIB Secure Access
-> > Register (ASAR) in the APBC block before a single read or write
-> > operation can be performed.
-> > 
-> > Signed-off-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
-> > ---
-> >  arch/riscv/boot/dts/spacemit/k1.dtsi  |   4 +-
-> >  drivers/pinctrl/spacemit/pinctrl-k1.c | 131 +++++++++++++++++++++++++++++++++-
-> >  2 files changed, 131 insertions(+), 4 deletions(-)
-> > 
-> 
-> > diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-> > index 7818ca4979b6a7755722919a5958512aa11950ab..23ecb19624f227f3c39de35bf3078379f7a2490e 100644
-> > --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-> > +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-> > @@ -565,10 +565,12 @@ i2c8: i2c@d401d800 {
-> >  
-> >  		pinctrl: pinctrl@d401e000 {
-> >  			compatible = "spacemit,k1-pinctrl";
-> > -			reg = <0x0 0xd401e000 0x0 0x400>;
-> > +			reg = <0x0 0xd401e000 0x0 0x400>,
-> > +			      <0x0 0xd401e800 0x0 0x34>;
-> >  			clocks = <&syscon_apbc CLK_AIB>,
-> >  				 <&syscon_apbc CLK_AIB_BUS>;
-> >  			clock-names = "func", "bus";
-> > +			spacemit,apbc = <&syscon_apbc 0x50>;
-> >  		};
-> 
-> If you insist on a new reg field, you should change the binding as well.
-Yes, I forgot to modify the binding.
+The Eyeq6Lplus is a new system-on-chip part of Mobileye's EyeQ family
+of SoC aimed at Advanced Driver Assistance Systems (ADAS). It is built
+around a multicore MIPS I6500 with 2 cores and 8 threads and integrates
+controllers and accelerators dedicated to driving assistance.
 
-> This change breaks binding, can we use something like <0x0 0xd401e000 0x0 0x1000>?
-I'll double check this. Thanks!
+This patchset adds the initial support for the EyeQ6Lplus and its
+evaluation board with the following list of controllers:
+* The OLB ("Other Logic Block") providing clocks, resets and pin controls.
+* One UART from DesignWare.
+* One GPIO controller from DesignWare.
+* Two SPI controllers from DesignWare, one in host mode and one in target
+  mode.
+* One octoSPI flash controller from Cadence, identical to the one found
+  in the EyeQ5.
+* Two I2C controllers from Designware.
 
-                            - Troy
-> 
-> Regards,
-> Inochi
-> 
+The support for the particularities of the I2C controllers is 
+currently under review[1], but basic operations (single read,
+single write, write-then-read) work with the compatible fallback to
+"snps,designware-i2c".
+
+The patch series adds the device tree bindings for the SoC and the OLB. It
+also adds the Kconfig entry for the EyeQ6Lplus, the SoC and evaluation
+board device tree, and the defconfig. For the OLB, the series adds the
+match data to the clk-eyeq, reset-eyeq and pinctrl-eyeq5 drivers.
+
+It also brings three other changes. One for the pinctrl-eyeq5 driver to
+access the pin descriptions, pin functions and pin bank register via
+the match data instead of directly. This is needed to add support for
+the EyeQ6Lplus alongside the EyeQ5 to the pinctrl driver.
+
+To be able to match against compatible entries, An OF node is needed
+but the pinctrl-eyeq5 does not have one as it is an auxiliary device
+of clk-eyeq. As part of his MACB phy series[2], Théo switched to
+devm_auxiliary_device_create() to register the auxiliary devices and this
+helper sets the OF node of the auxiliary device. To avoid a dependency
+between the patch series, eq5p_probe() is able to handle both cases,
+having the of_node field already set in the device structure or getting
+it from the parent device. After both series are merged, a cleanup of
+the pinctrl-eyeq5 probe function can be done.
+
+The two other changes are in the clk-eyeq driver. First we skip the
+post-divisor when computing the PLL frequency in the clk-eyeq driver,
+to match how the clock signal is wired internally in all EyeQ PLL and
+compute the correct frequency for the PLL of the EyeQ6Lplus. Second we
+adjust the accuracy and down spreading computation of the PLL frequency
+as the spread spectrum of all EyeQ PLL is in 1/1024 and not in 1/1000
+as previously thought.
+
+[1]: https://lore.kernel.org/all/20251126-i2c-dw-v4-0-b0654598e7c5@bootlin.com/
+[2]: https://lore.kernel.org/all/20251215-macb-phy-v5-0-a9dfea39da34@bootlin.com/
+
+Signed-off-by: Benoît Monin <benoit.monin@bootlin.com>
+---
+Changes in v2:
+- Rebased on v6.19-rc2.
+- Drop spidev nodes from the evaluation board DT, they were
+  here for test only.
+- Fix bug in eq5p_pinconf_set() using uninitialized value.
+- Link to v1: https://lore.kernel.org/r/20251217-eyeq6lplus-v1-0-e9cdbd3af4c2@bootlin.com
+
+---
+Benoît Monin (13):
+      dt-bindings: mips: Add Mobileye EyeQ6Lplus SoC
+      dt-bindings: soc: mobileye: Add EyeQ6Lplus OLB
+      MIPS: Add Mobileye EyeQ6Lplus support
+      reset: eyeq: Add Mobileye EyeQ6Lplus OLB
+      pinctrl: eyeq5: Use match data
+      pinctrl: eyeq5: Add Mobileye EyeQ6Lplus OLB
+      clk: eyeq: Skip post-divisor when computing PLL frequency
+      clk: eyeq: Adjust PLL accuracy computation
+      clk: eyeq: Add Mobileye EyeQ6Lplus OLB
+      MIPS: Add Mobileye EyeQ6Lplus SoC dtsi
+      MIPS: Add Mobileye EyeQ6Lplus evaluation board dts
+      MIPS: config: add eyeq6lplus_defconfig
+      MAINTAINERS: Mobileye: Add EyeQ6Lplus files
+
+ .../devicetree/bindings/mips/mobileye.yaml         |   5 +
+ .../soc/mobileye/mobileye,eyeq6lplus-olb.yaml      | 208 +++++++++
+ MAINTAINERS                                        |   4 +-
+ arch/mips/boot/dts/mobileye/Makefile               |   1 +
+ arch/mips/boot/dts/mobileye/eyeq6lplus-epm6.dts    | 103 +++++
+ arch/mips/boot/dts/mobileye/eyeq6lplus-pins.dtsi   |  84 ++++
+ arch/mips/boot/dts/mobileye/eyeq6lplus.dtsi        | 169 ++++++++
+ arch/mips/configs/eyeq6lplus_defconfig             | 119 ++++++
+ arch/mips/mobileye/Kconfig                         |   3 +
+ arch/mips/mobileye/Platform                        |   1 +
+ drivers/clk/Kconfig                                |   4 +-
+ drivers/clk/clk-eyeq.c                             |  90 +++-
+ drivers/pinctrl/Kconfig                            |   4 +-
+ drivers/pinctrl/pinctrl-eyeq5.c                    | 465 +++++++++++++++------
+ drivers/reset/Kconfig                              |   4 +-
+ drivers/reset/reset-eyeq.c                         |  31 ++
+ .../dt-bindings/clock/mobileye,eyeq6lplus-clk.h    |  37 ++
+ 17 files changed, 1185 insertions(+), 147 deletions(-)
+---
+base-commit: 9448598b22c50c8a5bb77a9103e2d49f134c9578
+change-id: 20251128-eyeq6lplus-961c630f0940
+
+Best regards,
+-- 
+Benoît Monin, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
