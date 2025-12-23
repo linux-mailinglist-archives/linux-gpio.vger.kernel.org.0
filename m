@@ -1,382 +1,157 @@
-Return-Path: <linux-gpio+bounces-29836-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29837-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 317F1CD93F6
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Dec 2025 13:29:07 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D56A2CD9676
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Dec 2025 14:12:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6161A3051334
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Dec 2025 12:26:49 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 178393018438
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Dec 2025 13:11:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B440310655;
-	Tue, 23 Dec 2025 12:21:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DEA733BBBF;
+	Tue, 23 Dec 2025 13:11:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1gQY1qR"
+	dkim=pass (1024-bit key) header.d=ziyao.cc header.i=@ziyao.cc header.b="QZrBurUv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail65.out.titan.email (mail65.out.titan.email [34.235.186.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AF53358C0;
-	Tue, 23 Dec 2025 12:21:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B120832D448
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Dec 2025 13:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.235.186.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766492472; cv=none; b=GO3VSzhVfjhUfYa2uyqb4UpAYCS3CGyUkPJn5OJBBaQHAwIZcaaexv7VqJ22uEllZYsnFNu3hUP1KUZvi47izmmfMpCJV3e0R1MD+2RU0SHnL9WYOJ3cl8YJwSgP/B5AqMn7zzucOvXWa0/QDgoP0I11a4OYGNk4a9ynhsw9ViY=
+	t=1766495516; cv=none; b=IqRUOyNlpqIWGG2lmbM2OWpGSyg1CDings/85dPL18c3xUPWWfrmyTRmmj2KC7b36yk0qFmHYGtqWFoDOMRJcayUotzcBiVHx4czImdnwenOy7Pgx++nd/MeZmB1LWnoqtBTyi74fEptE8rvAYrng65qD0Hznbkkea4HAilH94s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766492472; c=relaxed/simple;
-	bh=VydWiLj/eaPz3qzkGgluRekphP3tIfecxKBSEWhfAkM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LXv1L60tNAsUuPaN7cJtBSsNWusJxY9VGhZRJkWzBrIBROKvRQiwAQFStyHragunAz9WrtaMj71KYn22SSt7/YQvfnyuwPlIqrcAjlm7H+BAbWsdp5h6nn9yE5iKEsFJhP1MCdYM0QYNofvhysny+AG3wtAjlNf2nCFi0AiVKM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e1gQY1qR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A8267C19425;
-	Tue, 23 Dec 2025 12:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766492471;
-	bh=VydWiLj/eaPz3qzkGgluRekphP3tIfecxKBSEWhfAkM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=e1gQY1qR1KFk1CVtOXApzizipnDMu1p7zf1FvJSXx4SxlsEHN7Qa/xotUY7UQJXiX
-	 kk9lCvB++ce8bpqQAkWO8vEIq5Dj6DaSAS3y9/wOdUGB8imrbHcOkERt1McPzMsijB
-	 7Nw+ntksofm+OaI9aWXfpsmJUj/POJSt+Sid9YWyRShEK33Z4goMz2njf5rdaPAo7x
-	 nSlxBooaKyp9ym7YBk+fFBv6sOGZIoiJ4wImPWtRw7/Rd9PR+d9gcqm7AuHjMhB1fC
-	 IXI2YwNubYx7uSqt5xKCfUocFXC8Po3MUjccVIL/X5192oAz3MkSy8i1GQ+ajCdbgR
-	 TMJstMHnrTRmg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E643E6F088;
-	Tue, 23 Dec 2025 12:21:11 +0000 (UTC)
-From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
-Date: Tue, 23 Dec 2025 12:21:44 +0000
-Subject: [PATCH v5 3/3] gpio: gpio-ltc4283: Add support for the LTC4283
- Swap Controller
+	s=arc-20240116; t=1766495516; c=relaxed/simple;
+	bh=pecVmsoK5qEfj6C5kVS/vQWHu3GxbJmDpCtt4wlz6sw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MCpcm13jWLhWNFnb2v26I1U+SBrpnaOT+512cHmjqjQ1IrtZi1L4jjQeQ/Bv5cNNqphG7hHPZaffadbBwLs20bJQ6FGv3NAHIYlyRuD5DsJRpfFSmgos4Od++OYOY4udcDccFRjQAxJ1O0jpt2e1EZ9/Z/eSWlGe89PeoucJ9qM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc; spf=pass smtp.mailfrom=ziyao.cc; dkim=pass (1024-bit key) header.d=ziyao.cc header.i=@ziyao.cc header.b=QZrBurUv; arc=none smtp.client-ip=34.235.186.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ziyao.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziyao.cc
+Received: from localhost (localhost [127.0.0.1])
+	by smtp-out.flockmail.com (Postfix) with ESMTP id 4dbFZB5nPbz7t8t;
+	Tue, 23 Dec 2025 13:03:46 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; bh=I76jbNhd2RnmoQzo2cA05wxM926Wl/tgrqz3TL3NnOw=;
+	c=relaxed/relaxed; d=ziyao.cc;
+	h=from:to:subject:mime-version:date:cc:message-id:in-reply-to:references:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
+	q=dns/txt; s=titan1; t=1766495026; v=1;
+	b=QZrBurUv3CXhzp3FFy9bI/Z7CVNdjHHS7lMRj4rol2r25ZAfM59ObLsQtz3lhLeahovWgQ12
+	uZC9VD6ALu2KtOhgTkuyKF5u1ftWhweOnCSrfb3LRXpmK8JCTWoz7d4haLsjUQZgeAqKQiclXxx
+	3Uw1XngdPpvWZqdjusB3LSTQ=
+Received: from pie (unknown [117.171.66.90])
+	by smtp-out.flockmail.com (Postfix) with ESMTPA id 4dbFZ26L07z7t88;
+	Tue, 23 Dec 2025 13:03:38 +0000 (UTC)
+Date: Tue, 23 Dec 2025 13:03:27 +0000
+Feedback-ID: :me@ziyao.cc:ziyao.cc:flockmailId
+From: Yao Zi <me@ziyao.cc>
+To: Troy Mitchell <troy.mitchell@linux.spacemit.com>,
+	Inochi Amaoto <inochiama@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Linus Walleij <linusw@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 2/2] pinctrl: spacemit: support I/O power domain
+ configuration
+Message-ID: <aUqTH_fis1-g42SU@pie>
+References: <20251223-kx-pinctrl-aib-io-pwr-domain-v1-0-5f1090a487c7@linux.spacemit.com>
+ <20251223-kx-pinctrl-aib-io-pwr-domain-v1-2-5f1090a487c7@linux.spacemit.com>
+ <aUpirQFWf3w-5PQ2@inochi.infowork>
+ <B479B24A35F8D731+aUpl0JdKOziIH14S@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20251223-ltc4283-support-v5-3-1152bff59a61@analog.com>
-References: <20251223-ltc4283-support-v5-0-1152bff59a61@analog.com>
-In-Reply-To: <20251223-ltc4283-support-v5-0-1152bff59a61@analog.com>
-To: linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, 
- Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linusw@kernel.org>, 
- Bartosz Golaszewski <brgl@kernel.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1766492512; l=8636;
- i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
- bh=FYkO2RgDoT+AsP2sCyoOSqHa97cEm7cafv5gaSsnvLU=;
- b=hPNlCz2pexoPCmvo3MicK83y06y5OJ6gqOkdpyTEUzH7pQQJWZ6UcXhe+vvuuTMR/jFCUCb8s
- xAaH3FrKaF0BTOZsGzhzo5scidxB2/wK540sVNGwWfbYCWqh2vS/RzQ
-X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
- pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
-X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
- auth_id=100
-X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
-Reply-To: nuno.sa@analog.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <B479B24A35F8D731+aUpl0JdKOziIH14S@kernel.org>
+X-F-Verdict: SPFVALID
+X-Titan-Src-Out: 1766495026646385511.30087.5691599438730667089@prod-use1-smtp-out1002.
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.4 cv=a8/K9VSF c=1 sm=1 tr=0 ts=694a9332
+	a=rBp+3XZz9uO5KTvnfbZ58A==:117 a=rBp+3XZz9uO5KTvnfbZ58A==:17
+	a=kj9zAlcOel0A:10 a=MKtGQD3n3ToA:10 a=CEWIc4RMnpUA:10 a=lv0vYI88AAAA:8
+	a=q2HxCz5xri-O7L11LKAA:9 a=CjuIK1q_8ugA:10 a=E7e_GlrEz2WywKPBwZdi:22
+	a=9qqun4PRrEabIEPCFt1_:22 a=3z85VNIBY5UIEeAh_hcH:22
+	a=NWVoK91CQySWRX1oVYDe:22
 
-From: Nuno Sá <nuno.sa@analog.com>
+On Tue, Dec 23, 2025 at 05:50:08PM +0800, Troy Mitchell wrote:
+> On Tue, Dec 23, 2025 at 05:42:26PM +0800, Inochi Amaoto wrote:
+> > On Tue, Dec 23, 2025 at 05:11:12PM +0800, Troy Mitchell wrote:
+> > > IO domain power control registers are used to configure the operating
+> > > voltage of dual-voltage GPIO banks. By default, these registers are
+> > > configured for 3.3V operation. As a result, even when a GPIO bank is
+> > > externally supplied with 1.8V, the internal logic continues to
+> > > operate in the 3.3V domain, which may lead to functional failures.
+> > > 
+> > > This patch adds support for programming the IO domain power control
+> > > registers, allowing dual-voltage GPIO banks to be explicitly configured
+> > > for 1.8V operation when required.
+> > > 
+> > > Care must be taken when configuring these registers. If a GPIO bank is
+> > > externally supplied with 3.3V while the corresponding IO power domain
+> > > is configured for 1.8V, external current injection (back-powering)
+> > > may occur, potentially causing damage to the GPIO pin.
+> > > 
+> > > Due to these hardware constraints and safety considerations, the IO
+> > > domain power control registers are implemented as secure registers.
+> > > Access to these registers requires unlocking via the AIB Secure Access
+> > > Register (ASAR) in the APBC block before a single read or write
+> > > operation can be performed.
+> > > 
+> > > Signed-off-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+> > > ---
+> > >  arch/riscv/boot/dts/spacemit/k1.dtsi  |   4 +-
+> > >  drivers/pinctrl/spacemit/pinctrl-k1.c | 131 +++++++++++++++++++++++++++++++++-
+> > >  2 files changed, 131 insertions(+), 4 deletions(-)
+> > > 
+> > 
+> > > diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
+> > > index 7818ca4979b6a7755722919a5958512aa11950ab..23ecb19624f227f3c39de35bf3078379f7a2490e 100644
+> > > --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
+> > > +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
+> > > @@ -565,10 +565,12 @@ i2c8: i2c@d401d800 {
+> > >  
+> > >  		pinctrl: pinctrl@d401e000 {
+> > >  			compatible = "spacemit,k1-pinctrl";
+> > > -			reg = <0x0 0xd401e000 0x0 0x400>;
+> > > +			reg = <0x0 0xd401e000 0x0 0x400>,
+> > > +			      <0x0 0xd401e800 0x0 0x34>;
+> > >  			clocks = <&syscon_apbc CLK_AIB>,
+> > >  				 <&syscon_apbc CLK_AIB_BUS>;
+> > >  			clock-names = "func", "bus";
+> > > +			spacemit,apbc = <&syscon_apbc 0x50>;
+> > >  		};
+> > 
+> > If you insist on a new reg field, you should change the binding as well.
+> Yes, I forgot to modify the binding.
 
-The LTC4283 device has up to 8 pins that can be configured as GPIOs.
+This will also break ABI compatibility with older devicetrees, I
+strongly suggest against a new item in reg property.
 
-Note that PGIO pins are not set as GPIOs by default so if they are
-configured to be used as GPIOs we need to make sure to initialize them
-to a sane default. They are set as inputs by default.
+Furthermore, it's unreasonable to describe d401_e000 - d401_e400 and
+d401_e800 - d401_e834 as separate memory regions. TRM claims the region
+starting from 0xd401_e000 with length 0xc00 is "Pad Configuration". So I
+think this separation neither simplifies anything nor matches the
+hardware.
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Reviewed-by: Linus Walleij <linusw@kernel.org>
-Signed-off-by: Nuno Sá <nuno.sa@analog.com>
----
- MAINTAINERS                 |   2 +
- drivers/gpio/Kconfig        |  15 +++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-ltc4283.c | 218 ++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 236 insertions(+)
+> > This change breaks binding, can we use something like <0x0 0xd401e000 0x0 0x1000>?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9fa27d0b1890..4d544996fde8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14957,9 +14957,11 @@ F:	drivers/hwmon/ltc4282.c
- 
- LTC4283 HARDWARE MONITOR AND GPIO DRIVER
- M:	Nuno Sá <nuno.sa@analog.com>
-+L:	linux-gpio@vger.kernel.org
- L:	linux-hwmon@vger.kernel.org
- S:	Supported
- F:	Documentation/devicetree/bindings/hwmon/adi,ltc4283.yaml
-+F:	drivers/gpio/gpio-ltc4283.c
- F:	drivers/hwmon/ltc4283.c
- 
- LTC4286 HARDWARE MONITOR DRIVER
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index c74da29253e8..5dc603268a75 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1749,6 +1749,21 @@ config GPIO_WM8994
- 
- endmenu
- 
-+menu "Auxiliary Bus GPIO drivers"
-+	depends on AUXILIARY_BUS
-+
-+config GPIO_LTC4283
-+	tristate "Analog Devices LTC4283 GPIO support"
-+	depends on SENSORS_LTC4283
-+	help
-+	  If you say yes here you want the GPIO function available in Analog
-+	  Devices LTC4283 Negative Voltage Hot Swap Controller.
-+
-+	  This driver can also be built as a module. If so, the module will
-+	  be called gpio-ltc4283.
-+
-+endmenu
-+
- menu "PCI GPIO expanders"
- 	depends on PCI
- 
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 2421a8fd3733..f38e529f4618 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -100,6 +100,7 @@ obj-$(CONFIG_GPIO_LP873X)		+= gpio-lp873x.o
- obj-$(CONFIG_GPIO_LP87565)		+= gpio-lp87565.o
- obj-$(CONFIG_GPIO_LPC18XX)		+= gpio-lpc18xx.o
- obj-$(CONFIG_GPIO_LPC32XX)		+= gpio-lpc32xx.o
-+obj-$(CONFIG_GPIO_LTC4283)		+= gpio-ltc4283.o
- obj-$(CONFIG_GPIO_MACSMC)		+= gpio-macsmc.o
- obj-$(CONFIG_GPIO_MADERA)		+= gpio-madera.o
- obj-$(CONFIG_GPIO_MAX3191X)		+= gpio-max3191x.o
-diff --git a/drivers/gpio/gpio-ltc4283.c b/drivers/gpio/gpio-ltc4283.c
-new file mode 100644
-index 000000000000..fa0c106d4fac
---- /dev/null
-+++ b/drivers/gpio/gpio-ltc4283.c
-@@ -0,0 +1,218 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Analog Devices LTC4283 GPIO driver
-+ *
-+ * Copyright 2025 Analog Devices Inc.
-+ */
-+
-+#include <linux/auxiliary_bus.h>
-+#include <linux/bitfield.h>
-+#include <linux/bitmap.h>
-+#include <linux/bits.h>
-+#include <linux/device.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+
-+#define LTC4283_PINS_MAX			8
-+#define LTC4283_PGIOX_START_NR			4
-+#define LTC4283_INPUT_STATUS			0x02
-+#define LTC4283_PGIO_CONFIG			0x10
-+#define   LTC4283_PGIO_CFG_MASK(pin) \
-+	GENMASK(((pin) - LTC4283_PGIOX_START_NR) * 2 + 1, (((pin) - LTC4283_PGIOX_START_NR) * 2))
-+#define LTC4283_PGIO_CONFIG_2			0x11
-+
-+#define LTC42823_ADIO_CONFIG			0x12
-+/* starts at bit 4 */
-+#define   LTC4283_ADIOX_CONFIG_MASK(pin)	BIT((pin) + 4)
-+#define LTC4283_PGIO_DIR_IN			3
-+#define LTC4283_PGIO_DIR_OUT			2
-+
-+struct ltc4283_gpio {
-+	struct gpio_chip gpio_chip;
-+	struct regmap *regmap;
-+};
-+
-+static int ltc4283_pgio_get_direction(const struct ltc4283_gpio *st, unsigned int off)
-+{
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(st->regmap, LTC4283_PGIO_CONFIG, &val);
-+	if (ret)
-+		return ret;
-+
-+	val = field_get(LTC4283_PGIO_CFG_MASK(off), val);
-+	if (val == LTC4283_PGIO_DIR_IN)
-+		return GPIO_LINE_DIRECTION_IN;
-+
-+	return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int ltc4283_gpio_get_direction(struct gpio_chip *gc, unsigned int off)
-+{
-+	struct ltc4283_gpio *st = gpiochip_get_data(gc);
-+	unsigned int val;
-+	int ret;
-+
-+	if (off >= LTC4283_PGIOX_START_NR)
-+		return ltc4283_pgio_get_direction(st, off);
-+
-+	ret = regmap_read(st->regmap, LTC42823_ADIO_CONFIG, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (val & LTC4283_ADIOX_CONFIG_MASK(off))
-+		return GPIO_LINE_DIRECTION_IN;
-+
-+	return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int ltc4283_gpio_direction_set(const struct ltc4283_gpio *st,
-+				      unsigned int off, bool input)
-+{
-+	if (off >= LTC4283_PGIOX_START_NR) {
-+		unsigned int val = LTC4283_PGIO_DIR_OUT;
-+
-+		if (input)
-+			val = LTC4283_PGIO_DIR_IN;
-+
-+		val = field_prep(LTC4283_PGIO_CFG_MASK(off), val);
-+		return regmap_update_bits(st->regmap, LTC4283_PGIO_CONFIG,
-+					  LTC4283_PGIO_CFG_MASK(off), val);
-+	}
-+
-+	return regmap_update_bits(st->regmap, LTC42823_ADIO_CONFIG,
-+				  LTC4283_ADIOX_CONFIG_MASK(off),
-+				  field_prep(LTC4283_ADIOX_CONFIG_MASK(off), input));
-+}
-+
-+static int __ltc4283_gpio_set_value(const struct ltc4283_gpio *st,
-+				    unsigned int off, int val)
-+{
-+	u32 reg = off < LTC4283_PGIOX_START_NR ? LTC42823_ADIO_CONFIG : LTC4283_PGIO_CONFIG_2;
-+
-+	return regmap_update_bits(st->regmap, reg, BIT(off),
-+				  field_prep(BIT(off), !!val));
-+}
-+
-+static int ltc4283_gpio_direction_input(struct gpio_chip *gc, unsigned int off)
-+{
-+	struct ltc4283_gpio *st = gpiochip_get_data(gc);
-+
-+	return ltc4283_gpio_direction_set(st, off, true);
-+}
-+
-+static int ltc4283_gpio_direction_output(struct gpio_chip *gc, unsigned int off, int val)
-+{
-+	struct ltc4283_gpio *st = gpiochip_get_data(gc);
-+	int ret;
-+
-+	ret = ltc4283_gpio_direction_set(st, off, false);
-+	if (ret)
-+		return ret;
-+
-+	return __ltc4283_gpio_set_value(st, off, val);
-+}
-+
-+static int ltc4283_gpio_get_value(struct gpio_chip *gc, unsigned int off)
-+{
-+	struct ltc4283_gpio *st = gpiochip_get_data(gc);
-+	unsigned int val, reg;
-+	int ret, dir;
-+
-+	dir = ltc4283_gpio_get_direction(gc, off);
-+	if (dir < 0)
-+		return dir;
-+
-+	if (dir == GPIO_LINE_DIRECTION_IN) {
-+		ret = regmap_read(st->regmap, LTC4283_INPUT_STATUS, &val);
-+		if (ret)
-+			return ret;
-+
-+		/* ADIO1 is at bit 3. */
-+		if (off < LTC4283_PGIOX_START_NR)
-+			return !!(val & BIT(3 - off));
-+
-+		/* PGIO1 is at bit 7. */
-+		return !!(val & BIT(7 - (off - LTC4283_PGIOX_START_NR)));
-+	}
-+
-+	if (off < LTC4283_PGIOX_START_NR)
-+		reg = LTC42823_ADIO_CONFIG;
-+	else
-+		reg = LTC4283_PGIO_CONFIG_2;
-+
-+	ret = regmap_read(st->regmap, reg, &val);
-+	if (ret)
-+		return ret;
-+
-+	return !!(val & BIT(off));
-+}
-+
-+static int ltc4283_gpio_set_value(struct gpio_chip *gc, unsigned int off, int val)
-+{
-+	struct ltc4283_gpio *st = gpiochip_get_data(gc);
-+
-+	return __ltc4283_gpio_set_value(st, off, val);
-+}
-+
-+static int ltc4283_init_valid_mask(struct gpio_chip *gc, unsigned long *valid_mask,
-+				   unsigned int ngpios)
-+{
-+	unsigned long *mask = dev_get_platdata(gc->parent);
-+
-+	bitmap_copy(valid_mask, mask, ngpios);
-+	return 0;
-+}
-+
-+static int ltc4283_gpio_probe(struct auxiliary_device *adev,
-+			      const struct auxiliary_device_id *id)
-+{
-+	struct device *dev = &adev->dev;
-+	struct ltc4283_gpio *st;
-+	struct gpio_chip *gc;
-+
-+	st = devm_kzalloc(dev, sizeof(*st), GFP_KERNEL);
-+	if (!st)
-+		return -ENOMEM;
-+
-+	st->regmap = dev_get_regmap(dev->parent, "ltc4283-8");
-+	if (!st->regmap)
-+		return dev_err_probe(dev, -ENODEV,
-+				     "Failed to get byte regmap\n");
-+
-+	gc = &st->gpio_chip;
-+	gc->parent = dev;
-+	gc->get_direction = ltc4283_gpio_get_direction;
-+	gc->direction_input = ltc4283_gpio_direction_input;
-+	gc->direction_output = ltc4283_gpio_direction_output;
-+	gc->get = ltc4283_gpio_get_value;
-+	gc->set = ltc4283_gpio_set_value;
-+	gc->init_valid_mask = ltc4283_init_valid_mask;
-+	gc->can_sleep = true;
-+
-+	gc->base = -1;
-+	gc->ngpio = LTC4283_PINS_MAX;
-+	gc->label = adev->name;
-+	gc->owner = THIS_MODULE;
-+
-+	return devm_gpiochip_add_data(dev, &st->gpio_chip, st);
-+}
-+
-+static const struct auxiliary_device_id ltc4283_aux_id_table[] = {
-+	{ "ltc4283.gpio" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(auxiliary, ltc4283_aux_id_table);
-+
-+static struct auxiliary_driver ltc4283_gpio_driver = {
-+	.probe = ltc4283_gpio_probe,
-+	.id_table = ltc4283_aux_id_table,
-+};
-+module_auxiliary_driver(ltc4283_gpio_driver);
-+
-+MODULE_AUTHOR("Nuno Sá <nuno.sa@analog.com>");
-+MODULE_DESCRIPTION("GPIO LTC4283 Driver");
-+MODULE_LICENSE("GPL");
+If the TRM is correct, we probably can and should.
 
--- 
-2.52.0
+> I'll double check this. Thanks!
+> 
+>                             - Troy
+> > 
+> > Regards,
+> > Inochi
 
-
+Regards,
+Yao Zi
 
