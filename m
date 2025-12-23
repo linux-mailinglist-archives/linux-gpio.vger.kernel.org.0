@@ -1,106 +1,93 @@
-Return-Path: <linux-gpio+bounces-29842-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29843-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D04A2CD9E1E
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Dec 2025 16:59:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B504CD9E76
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Dec 2025 17:09:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6AE74301A71E
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Dec 2025 15:59:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ACB223031CEA
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Dec 2025 16:09:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58A5328C014;
-	Tue, 23 Dec 2025 15:59:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B40232C237F;
+	Tue, 23 Dec 2025 16:09:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UeDI8oUb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="acD1RMhj"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4D6271440;
-	Tue, 23 Dec 2025 15:59:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BB32C159A
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Dec 2025 16:09:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766505562; cv=none; b=XsfET8rFe+MvUpghMxlEH3JqQzfxLtOH/Dij4jYPVyOgIGrmYwBiHVC1oAOgLR0paKr8PWiJWalrC5n5qqKDLrXRGa8gICz+PYdR2ClKyuAmmomiMIAQ58v25Jn4D/yOgRNanhwzXKJyAq9McUy4poxf0MI8GNSwwUJKXVBaBXo=
+	t=1766506174; cv=none; b=DeWH3s8CHEkwgFOjqEoC3PjOH2r9I777pryIM8BZ6+q5GmtfqfaQ4w2u1qNzzzDFnegu/p+tZNJsq4DZXsi61+gpx0s/hNmQkha4kVIwKAADqhvYvd5AWpfx2Fd1d53lHTMyV7AKvvOO/mp1OIvhVpYlttdweN1xukSEyZwk+so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766505562; c=relaxed/simple;
-	bh=FbWzgepLOv260NOsYwp6cw6dEnGFg6D/tQJ2zegwDW0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rRsvvhAp/4hb6xJ/95wnt8YL+aIs1EltMh6qAPrQV0Oe6/yI+90uPT2SzaMO3aBfTXgWrc4TyTduMxbb9I6cGxtnbx2lArWfgjLf5ddwte7Ez7vVSJTJaUf84hIK0+vwFtkjwCg3ixZY4Jc3eMxjZaG3BGEjTeRqmK99lNYI5U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UeDI8oUb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66062C113D0;
-	Tue, 23 Dec 2025 15:59:15 +0000 (UTC)
+	s=arc-20240116; t=1766506174; c=relaxed/simple;
+	bh=sYMwkmQi/E32TipE37W7r45ZiTnG1W6dlwO+cXCMkao=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dYO3Cam/fccEW0OjvQqXMJR8nyuhWlh7qZs4A1Q4Ogrec27pRqQy3lE6ObWMuik+5WQYBLN80XUyL+E8aSTgioNYMmpSowBvsJIL1JSvppIN+i2xqv4n36Ud1NHmNk2jyS71/2ctmmcpZV7ICDP+mtN0aajeXKITK4yexWNBris=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=acD1RMhj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11C65C116C6
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Dec 2025 16:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766505561;
-	bh=FbWzgepLOv260NOsYwp6cw6dEnGFg6D/tQJ2zegwDW0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UeDI8oUbunx4UBfNA6d7KG5fyjjI9KmunMraw0Wx9LS4Hp16nLeZZBz8kyIj52oUv
-	 9uRuyPnv20E20eYGmaepK4E7hP/ltzOo6PshS9Z0Dh8yZjmxIzUN8d68qs4Y5FB6ge
-	 Zo+5vkJwIxesmQ56/duA4lb4JqSm7FFcHyOxdkLNsHjnhAvhYjqFFUeI3bQuTuR9sL
-	 6WA8iJPckwmgiYiynonJ8g3Pb8ONVPP5B0L7ezwkZ2UYiOxDuGAfjV+Eec2asCYsSP
-	 rlqz5MfZzR8AJHivVawcVr7LwfVLNerplK5SK43XjEeA16sT09SmSdaJFLylwvGwSw
-	 +wThtapcDsxgQ==
-Date: Tue, 23 Dec 2025 21:29:12 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	linux-aspeed@lists.ozlabs.org, linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, openbmc@lists.ozlabs.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v7 7/7] MAINTAINERS: Add ASPEED PCIe RC driver
-Message-ID: <kbads4vnfjf2ce6sks7bvjmhpt73fmvdmrikxwp7y6wjw3flse@5yer3aegbfo6>
-References: <20251216-upstream_pcie_rc-v7-0-4aeb0f53c4ce@aspeedtech.com>
- <20251216-upstream_pcie_rc-v7-7-4aeb0f53c4ce@aspeedtech.com>
+	s=k20201202; t=1766506174;
+	bh=sYMwkmQi/E32TipE37W7r45ZiTnG1W6dlwO+cXCMkao=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=acD1RMhjEgNjFoA9eo0n/785A/eHP9gWVKp1hdpNi7Lxi+DNr4mzs2Odq2Mx+3w11
+	 k7J2wYDBNACxzD9vMzcdW8nDyM3B7M4Yne4xcqEypuVl2L7ONnwhtk6IwpNQQ5bR5k
+	 sHZtIDNdEsMNL6zl6bGoUcFbGGiIJgTgtVbMbsYJt5vwe74jnHp2uc8NqxicOyFVw7
+	 9TanBSX5boV62BEXsmIH1PiPbvqnlkc00Rk9xjvRCjKAVlqCeE68NIYfrYRBtDJxGf
+	 JWbTc8aUHv2IB8bHw5zHMg2NkPHFAfIGqW/anQ9hz+/jqnLxs9EzWvzX4irgQRXg0Q
+	 H73Nxg6WFH5IQ==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-37fd6e91990so39064431fa.3
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Dec 2025 08:09:33 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUVVxYUVVSTM/cFhSNhMZ9fLqOfvp6Kd+hxhNJJwhrc9KephY5nTwFqw5bDgu6hkeMK/0mRu4rm9Frh@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyk8YkXc2yQO0yCmCyN8AoWNDfYWtBhCxAYZYkIR3Cy4PH5cxPX
+	1K7RzqhhoFqEPc47IWl8lIJP0MJ9wuQM+vp5nBRNnjagO6GGsD6UIZNT+QJFrBDXz+lcTTdL7FU
+	7122hv9hvcm9KFo0yl8LeA2r69GjTYMPXLlJ5d03IIg==
+X-Google-Smtp-Source: AGHT+IHtyM9WAchHOUKa8BcWkk6VFC0AU430UdpcdeTckkiVBu3og6q0OXBdqhQ9LMbEPiz51SOcyAPtSXuVpi8n9Gw=
+X-Received: by 2002:a05:651c:3135:b0:380:989:f623 with SMTP id
+ 38308e7fff4ca-381215e84femr49587261fa.9.1766506172719; Tue, 23 Dec 2025
+ 08:09:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251216-upstream_pcie_rc-v7-7-4aeb0f53c4ce@aspeedtech.com>
+References: <20251223065306.131008-1-nihaal@cse.iitm.ac.in>
+In-Reply-To: <20251223065306.131008-1-nihaal@cse.iitm.ac.in>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Tue, 23 Dec 2025 17:09:18 +0100
+X-Gmail-Original-Message-ID: <CAMRc=Mcsk3dHR9c99Muqqej789YzMmamLfays4LiTRV9jn=+Lg@mail.gmail.com>
+X-Gm-Features: AQt7F2qSLmI91VVckvIzdx9xvf63VqFIL_4VpWX3rMCjnEOrhJn4HM4UFDy-9aw
+Message-ID: <CAMRc=Mcsk3dHR9c99Muqqej789YzMmamLfays4LiTRV9jn=+Lg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mpsse: fix reference leak in gpio_mpsse_probe()
+ error paths
+To: Abdun Nihaal <nihaal@cse.iitm.ac.in>
+Cc: linusw@kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 16, 2025 at 09:50:06AM +0800, Jacky Chou wrote:
-> Add maintainer for ASPEED PCIe RC driver.
-> 
-> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
+On Tue, Dec 23, 2025 at 7:53=E2=80=AFAM Abdun Nihaal <nihaal@cse.iitm.ac.in=
+> wrote:
+>
+> The reference obtained by calling usb_get_dev() is not released in the
+> gpio_mpsse_probe() error paths. Fix that by calling usb_put_dev().
+>
+> Cc: stable@vger.kernel.org
+> Fixes: c46a74ff05c0 ("gpio: add support for FTDI's MPSSE as GPIO")
+> Signed-off-by: Abdun Nihaal <nihaal@cse.iitm.ac.in>
 > ---
->  MAINTAINERS | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index aff3e162180d..c327ea375746 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3900,6 +3900,18 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
->  F:	drivers/media/platform/aspeed/
->  
-> +ASPEED PCIE CONTROLLER DRIVER
-> +M:	Jacky Chou <jacky_chou@aspeedtech.com>
-> +L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
-> +L:	linux-pci@vger.kernel.org
-> +L:	linux-phy@lists.infradead.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/pci/aspeed,ast2600-pcie.yaml
-> +F:	Documentation/devicetree/bindings/phy/aspeed,ast2600-pcie-phy.yaml
-> +F:	drivers/pci/controller/pcie-aspeed.c
-> +F:	drivers/phy/aspeed/Kconfig
-> +F:	drivers/phy/aspeed/pcie-phy-aspeed.c
+> Compile tested only. Issue found using static analysis.
+>
 
-PHY drivers and binding belong to a separate entry. So I've removed these while
-applying.
+Hi!
 
-- Mani
+The same should be done when the driver is unbound. Can you simplify
+your patch by using devm_add_action_or_reset() instead? That way you
+avoid all the gotos.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Bart
 
