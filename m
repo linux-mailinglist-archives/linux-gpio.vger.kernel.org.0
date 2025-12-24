@@ -1,166 +1,131 @@
-Return-Path: <linux-gpio+bounces-29865-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29866-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC813CDB1EB
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Dec 2025 02:59:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EB96CDB349
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Dec 2025 03:58:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 55C1E30275EF
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Dec 2025 01:59:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3FC0B302A974
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Dec 2025 02:57:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD1B92874E9;
-	Wed, 24 Dec 2025 01:59:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1CBB27B34F;
+	Wed, 24 Dec 2025 02:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="OQoHIOsp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E12285CB6;
-	Wed, 24 Dec 2025 01:59:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A012E25F96D;
+	Wed, 24 Dec 2025 02:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766541586; cv=none; b=IKiJ2DSGXD5D5ZOQ1L3wNFgnTVRzvfDOpzxcQ0P8ryzrFmpO0DfEJAG7zLPBmPdJ2s0WW8sx3HIvOi1NWEw67/1NaoAmRrZVAXTW3QXa6QzwScD9uneCeSgFJwjGYovkLlcZ/EFolOuzepox1kAkqQQNiVc8nNrSjJvkdLyq+Pc=
+	t=1766545076; cv=none; b=nSoVMpUOgf2SSK+dkSmtYta+GMSeITz07MHheRhqkWmBjDjjN/l89d82s+uBR6cFsWpij4gMO4EdDODcA4sIrxd+RzAcEgBRp+DiNEW4s7TMz6PdjKfKJLEE04DmRfFIS4SemoOY7fn3pmSNQReuc0sJr7BZc2No0qwE8ECRL+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766541586; c=relaxed/simple;
-	bh=bP6OzLvDhPIw8UzwOyVhjy9qPXvncOlFG/g8rgc0Xxc=;
-	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=bRl0B+qjGi8TVyVcoy3gArSempr/V0wm4yyRxxZ0flfbQaqbAq6npNLQ0CnjY144xp5TSWSwI+4BVhufZ0rwcvFtdf9Dol2WlPDGmhw6x+hsyahskD2ctbp9DtLWT/nRiPMP2gY5iYMCG4YwfDSOobrE9IBr+8jCW0Vyv5n4kTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=trustnetic.com; spf=pass smtp.mailfrom=trustnetic.com; arc=none smtp.client-ip=54.206.16.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=trustnetic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trustnetic.com
-X-QQ-mid:Yeas4t1766541573t010t35411
-Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [36.24.96.96])
-X-QQ-SSF:0000000000000000000000000000000
-From: =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
-X-BIZMAIL-ID: 12084601525523118900
-To: "'Danilo Krummrich'" <dakr@kernel.org>
-Cc: "'Bartosz Golaszewski'" <brgl@kernel.org>,
-	"'Bartosz Golaszewski'" <bartosz.golaszewski@linaro.org>,
-	<andriy.shevchenko@linux.intel.com>,
-	<andy@kernel.org>,
-	<broonie@kernel.org>,
-	<ckeepax@opensource.cirrus.com>,
-	<david.rhodes@cirrus.com>,
-	<djrscally@gmail.com>,
-	<gregkh@linuxfoundation.org>,
-	<heikki.krogerus@linux.intel.com>,
-	<krzk@kernel.org>,
-	<linus.walleij@linaro.org>,
-	<linux-acpi@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	<linux-sound@vger.kernel.org>,
-	<linux-spi@vger.kernel.org>,
-	<mstrozek@opensource.cirrus.com>,
-	<p.zabel@pengutronix.de>,
-	<patches@opensource.cirrus.com>,
-	<rafael@kernel.org>,
-	<rf@opensource.cirrus.com>,
-	<sakari.ailus@linux.intel.com>,
-	"'Bartosz Golaszewski'" <brgl@kernel.org>,
-	"'Bartosz Golaszewski'" <bartosz.golaszewski@linaro.org>,
-	<andriy.shevchenko@linux.intel.com>,
-	<andy@kernel.org>,
-	<broonie@kernel.org>,
-	<ckeepax@opensource.cirrus.com>,
-	<david.rhodes@cirrus.com>,
-	<djrscally@gmail.com>,
-	<gregkh@linuxfoundation.org>,
-	<heikki.krogerus@linux.intel.com>,
-	<krzk@kernel.org>,
-	<linus.walleij@linaro.org>,
-	<linux-acpi@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	<linux-sound@vger.kernel.org>,
-	<linux-spi@vger.kernel.org>,
-	<mstrozek@opensource.cirrus.com>,
-	<p.zabel@pengutronix.de>,
-	<patches@opensource.cirrus.com>,
-	<rafael@kernel.org>,
-	<rf@opensource.cirrus.com>,
-	<sakari.ailus@linux.intel.com>
-References: <02fd01dc73df$3b641bf0$b22c53d0$@trustnetic.com> <CAMRc=Mf2A++CHYcMdBi0bQ0DOAGLaSatQEOmu=aAEG_YjCqEWg@mail.gmail.com> <030001dc73e8$56e38330$04aa8990$@trustnetic.com> <CAMRc=Meugd9tEDefPnYHidDMTdCP+8fptVXNvqjSi1tjXPuVRA@mail.gmail.com> <030101dc73f1$46a62b40$d3f281c0$@trustnetic.com> <DF5J7H0BSBTK.362ZAJTRBK6U1@kernel.org>
-In-Reply-To: <DF5J7H0BSBTK.362ZAJTRBK6U1@kernel.org>
-Subject: RE: [PATCH v7 3/9] software node: allow referencing firmware nodes
-Date: Wed, 24 Dec 2025 09:59:32 +0800
-Message-ID: <031401dc7478$f2246040$d66d20c0$@trustnetic.com>
+	s=arc-20240116; t=1766545076; c=relaxed/simple;
+	bh=7lROny5Tge0kHhh8J5Rq9wnPXe82+bezEHVpY85EBso=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZvzDg7sQFe0uvo3jXCjrKLpig5qU+FpuMIFfshJwzpCCAkl5mQ8oqd9s/QEjcLGeE3hk+OvxVYHuwGbk/GuDB5d8jyTBYPulU/3EP3SfYchxs9ksbG9RPsBlcr+XpcnncXoRzuj+FO4g7sYkot4iCpazClluJ8jXxoWIxRq4sms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=OQoHIOsp; arc=none smtp.client-ip=54.204.34.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
+	s=mxsw2412; t=1766544994;
+	bh=kqmD9KzPofpBkzhYXj3pS9Rz14dgYcaXw+mdYqkGSmU=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version;
+	b=OQoHIOspfBKFLmhjKkTuv/gh0sTFRGK5Q2nEbbos0BPNKxk2DBJfDO69ZWI1Ec9Vd
+	 jmAra/QY/HDExEoYbxa3PEvG2k/4zLv7mHyDtxKbVWirChOsCnlxXTD59Xi7zPDgfN
+	 FyFwyGpoES7QGFpbKzRohuLi3yrm1AYkqm8hoIM4=
+X-QQ-mid: zesmtpgz3t1766544992t73a38fc5
+X-QQ-Originating-IP: rtoro2YV/3fXqeddsOLVmiGvuBnIxcaaNAkjFCG+GJw=
+Received: from = ( [120.239.196.19])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 24 Dec 2025 10:56:31 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 15150131563580533562
+EX-QQ-RecipientCnt: 11
+Date: Wed, 24 Dec 2025 10:56:31 +0800
+From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+To: Yixun Lan <dlan@gentoo.org>, Linus Walleij <linusw@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Troy Mitchell <troy.mitchell@linux.spacemit.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/3] dt-bindings: pinctrl: spacemit: add K3 SoC
+ support
+Message-ID: <8840B91CE3D9278B+aUtWX6fizXnheGMl@kernel.org>
+References: <20251220-02-k3-pinctrl-v1-0-f6f4aea60abf@gentoo.org>
+ <20251220-02-k3-pinctrl-v1-1-f6f4aea60abf@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: zh-cn
-Thread-Index: AQIzaRfJPMiwz9071uYI3gJ0t6u2qwFWX8iGAiY76pIB9a+LsAJlPnfRAfA44Bm0M9/nYA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251220-02-k3-pinctrl-v1-1-f6f4aea60abf@gentoo.org>
 X-QQ-SENDSIZE: 520
-Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz6b-0
-X-QQ-XMAILINFO: M//muKyjQOU4LZpHac2tuoQLK7s9sl0rzCnwrd3FdjlvJHwJzl53pBpS
-	w6yhlldtqXViC71TMWuwapuWGHoNpyQ14BLToaqKBzRDYYfAu39JmwHFvN6LFWQ+ng7cfq4
-	jOha1tvZp5tZFW0uDVgGfb1ciymolOUovtKpeNALxp2Qy08Biw3Kjv9bsNnblR+h5Hertix
-	ShYNTUAKsFjkHP/vT3YTGnC7/EVaxGc20hi5j/SjgAvE6od0ljs7Of0ujp9rzYHSFASf9li
-	kWMmUUBhZHYCmfUzqF8NRieE+Su0WdXQwuyYN247hJQ5pIoYsDYag/wh3fdBX2aEXyU44wc
-	pwN+grtrwbx0HqWt0tQTKqU/ck+BOgRKGYd+oNolFryARk38Z3KYH1z5vpTrR6RayC8qhFF
-	YOXJJ+A4vnhr8vUIkOZCaUJKfzio9kvCBHSgoF42zBeP6O/ZoMlRr09Z/0xFjg2WkxCi1TX
-	950w57ApKpGFaQxqAoFLybDQ4LhjxJE1a9WbcWcze6XY2Bzv6fKxMM6ka6I3eTEJ4DLPA2b
-	/QLBhVG9W9kZFoos6hXIjWV8sbTavZfkdvizgenEPbH7/UreydV8PSzsLr+XCB/xBmly32Y
-	soR3i69XvyfGQwWo5Q+85d/pe1zVI5JLmUPxVPtuhxd9kpaaKD3AjNpn90aLUs5GiY0z3pD
-	+8zvsp31Tp+NO4CE1ZIhCNePauFOM7fuwyvSm9U6t7D6dDLuoJSt+DQkMemUmekeJOanWNe
-	mmqXjt0NOQW3kvpvJMz8z744PrOPNXHpgSeKApxI+zSiott1td6hNwSql14/v9dwwW7HH3o
-	08Q91HAhENnGOUziLOqVhVubQ1490GYRf5Vi+4SFuwjmPec25pUS1vdw4ZvED63tVYMfNlP
-	9R2QJUrB5S1/AxRM/pFgu/Z0b3ZbZOAW94gwM0ZENT0OE4Vxu/S60dORe9qSFUjO+e3RfcT
-	TH+aUYapAvWpcC2Pw1iT+m0R/wAJknc2491gbcwDqTMH2kzzqU/GY8wZWNG3HE7YhFAEQyC
-	f5Lh0kul5VtgDVchvl1UCFm36Nq3F8u9sYbOMWoQ==
-X-QQ-XMRINFO: MPJ6Tf5t3I/ylTmHUqvI8+Wpn+Gzalws3A==
+Feedback-ID: zesmtpgz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz3a-0
+X-QQ-XMAILINFO: MfJtHqZtrd+ORU4zn6lBUs2gKRknHpX78VxNZ/1kWuCzh6l+l2WAA+/T
+	fad2+uhblq41A5eaTtRDLaAQRcfOeqIp7zcaPTSL/gac3P2n4O1zhCgXSd713Gcz7WKiOLa
+	kXmXqiEq1x5zNYEIrzfsbQyaU2HfdqSVJFhUYfvFkarkXMqdS51Qnr8t4VfeQDpVocu62Qe
+	9/rEg5f4iL49FGvxbIYtNlc4/O+CDuQTS/iXXmr66J/vl42+doHIY5PBQp0HrOWs98k+CM1
+	qfpl21DKr/oZBjB9JTBv9N3YPy+xMq1WE6TDdtHUo4mkyEsGZfjQvK+vYM82WtNHa0vBlmX
+	c4dQBiFsohqzLj/QMDlfHET4h4SNqTcM2y8LqV4VJFpb+17yPwLaXnrHhDDLrH8cgen/vI/
+	vofbcufut19cQq2ueMhKBqZwlV45aEzpSq+vnhqLvK8MhMapeSHjxVlWQ74aCEleAWOwdES
+	TEKZ1XRNCapQhImZJdum3+vp+iPA3xDDjIUFLAJ5CxZ/SbF2SOpB1X8zFTv5CBD46/D4r68
+	NmS1W4mkta5uneU7vg1Af/K8Md5xM2LrtVa50ftxY4Kr0u67DZeDoHsn84exRUq77mkThAY
+	WxZaWMDhd8SBJDPk953AltRx4VTdKfTljgzm8fwnBhJiDAM3d3d5tRVzx61Z/GA8GtF223A
+	2aDRiiYaHXyUyTdEcnc1SuTkN584TX8mwgnmzrE/Hnd+GHXYokmJIuTyqX7T1HhwqamHCUa
+	S2jE11ovs2HzRSnVkZPsgJCMpWEKhFvQ7driar/i0UgXlWedHrsaIMrOfbXaPl/J31YRBbq
+	jO5jbrgsJ0huj2Ohqj1wZt7SQ+cmWuhn7uUA2+Xo5sUOfNs1hHXpHYnol2gQl90+62cZQT/
+	ShyoyccjSE7KkjJKl1e03gdQWe9Lu8F922y6auqoCOhKcB71PWeccvBbGnSPDnIzgwy9u6t
+	k3iQJNFIr84cjPh0mko7FusweS2RjrjMyrXgjL418mM9Mjbg/iXDu31V+y9vZzZbmbqeXW1
+	FxjF9E5GnwKQoz1Zuq6npCZx8XiY/Y5iuU65G0kw==
+X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
 X-QQ-RECHKSPAM: 0
 
-On Tue, Dec 23, 2025 6:42 PM, Danilo Krummrich wrote:
-> On Tue Dec 23, 2025 at 10:48 AM CET, Jiawen Wu wrote:
-> > On Tue, Dec 23, 2025 5:37 PM, Bartosz Golaszewski wrote:
-> >> On Tue, Dec 23, 2025 at 9:44=E2=80=AFAM Jiawen Wu =
-<jiawenwu@trustnetic.com> wrote:
-> >> > And I temporarily added this line to fix it:
-> >> >
-> >> > diff --git a/include/linux/property.h b/include/linux/property.h
-> >> > index 272bfbdea7bf..e30ef23a9af3 100644
-> >> > --- a/include/linux/property.h
-> >> > +++ b/include/linux/property.h
-> >> > @@ -371,6 +371,7 @@ struct software_node_ref_args {
-> >> >  (const struct software_node_ref_args) {                          =
-      \
-> >> >         .swnode =3D _Generic(_ref_,                               =
-\
-> >> >                            const struct software_node *: _ref_, \
-> >> > +                          struct software_node *: _ref_,       \
-> >> >                            default: NULL),                      \
-> >> >         .fwnode =3D _Generic(_ref_,                               =
-\
-> >> >                            struct fwnode_handle *: _ref_,       \
-> >> >
-> >>
-> >> Ah I see, we'd assign struct software_node * to const struct
-> >> software_node * and it used to work but with _Generic() we need the
-> >> exact type. I agree with this approach, do you want to send a =
-proper
-> >> patch?
-> >
-> > It might be more appropriate for you to send the patch, and could =
-also
-> > check if there are any other missed details, like for fwnode...
-> > I'm not very proficient in this field. :)
->=20
-> There is already [1], which I queued up in the driver-core tree to =
-send as fix
-> for -rc3.
->=20
-> [1] =
-https://lore.kernel.org/lkml/20251219083638.2454138-1-sakari.ailus@linux.=
-intel.com/
+Hi Yixun,
 
-I apologize for not noticing this patch... I did something superfluous.
+On Sat, Dec 20, 2025 at 06:14:53PM +0800, Yixun Lan wrote:
+> Add new compatible string for SpacemiT K3 SoC, the pinctrl IP shares
+> almost same logic with previous K1 generation, but has different register
+> offset and pin configuration, for example the drive strength and
+> schmitter trigger settings has been changed.
+> 
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+> index d80e88aa07b4..c5b0218ad625 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+> @@ -11,7 +11,9 @@ maintainers:
+>  
+>  properties:
+>    compatible:
+> -    const: spacemit,k1-pinctrl
+> +    enum:
+> +      - spacemit,k1-pinctrl
+> +      - spacemit,k3-pinctrl
+The drive-strength description should be updated. The driver uses a
+different current table between K1 and K3, but the binding description does not
+mention K3.
 
-
+                              - Troy
+>  
+>    reg:
+>      items:
+> 
+> -- 
+> 2.52.0
+> 
+> 
 
