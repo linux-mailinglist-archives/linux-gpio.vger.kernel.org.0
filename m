@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-29883-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29884-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9E3FCDD821
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Dec 2025 09:36:51 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B261CDD87B
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Dec 2025 09:48:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 85887300F9CA
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Dec 2025 08:36:42 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8966B301512A
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Dec 2025 08:47:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 749BB30171E;
-	Thu, 25 Dec 2025 08:36:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30CC2314B82;
+	Thu, 25 Dec 2025 08:47:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y49kadE8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rSQfAtpu"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE182222A9;
-	Thu, 25 Dec 2025 08:36:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6900314A83;
+	Thu, 25 Dec 2025 08:47:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766651801; cv=none; b=NPr7AgtwC1eiTelmt0oPcbRnxGWAlxOHAgQTXl/hyLdDLPzFP/9NN7zig8ir1SRiEtW9QnxRqReLx+5Ey9HHt2oDiuN1DyK/CaTh31Tr5rMhDMm1/crXvj8/KxeXlwf79BLe3LSer/tc9Q2gOp8i/3OZ7ZNVOPMFe4bCC+R7NWI=
+	t=1766652472; cv=none; b=K3NXHeyp1NAIvAgv7IEwBd4StYUFQPoSmtGS+xD8LzLwZ8YKO7T8iqtaA/res1ppLYDeJdiyyUanZteOkNo9SzNIstG7m0s1fhwBS9cZFdL8uvwYqamIr2LkhTRwe7sCW2QfiR3xuwFC8InzuxLdHjvbHz2qB/0pTttLB2kv2UQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766651801; c=relaxed/simple;
-	bh=+LTmmExZhYIq3wRPRw18QmDP2pXk7ZkD9j48bgY5Hgs=;
+	s=arc-20240116; t=1766652472; c=relaxed/simple;
+	bh=tGzoiwIypyZ1iLWL1dGZAiulpww0GETNLT0hTiOL9vU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u3p4qnytAsUwp8e3ltyevqxouUeEVLEq7hnvK6ZfuYAJVjlP2zN7qS+vP8tS0gTnaE+uKWIC4Q3nWjKE9Xm+Mdw6Xiyf9yjm3PCWV/dmoYMEV8w0ZZTlQLUO6dkxEsBThoJsXXGBvF7Ami5Z0LedMZJr8/J7VIvJEqHK/JB4Uj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y49kadE8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3F42C4CEF1;
-	Thu, 25 Dec 2025 08:36:35 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=UZzeGi6q+nj8y7x1iEgJScub8HC0APJ8wOZB8jaZznlyaDsHLEoO/2MSkNOLndJSJ2cc7lm3kawrl4JW837WTMriJckbqCJ0K12vLngK9rFDfFSCD4TTHxXGxirO/UVaOs7usuVUZuuKkV+RDwP874a8NB0NXLfbFnO3Wn/ELxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rSQfAtpu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C230FC4CEF1;
+	Thu, 25 Dec 2025 08:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766651800;
-	bh=+LTmmExZhYIq3wRPRw18QmDP2pXk7ZkD9j48bgY5Hgs=;
+	s=k20201202; t=1766652472;
+	bh=tGzoiwIypyZ1iLWL1dGZAiulpww0GETNLT0hTiOL9vU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Y49kadE8vK3VRthElztNnUF2LI97elLlbCHeguKGaq0lZhke/QNdqrZ8ckdZYU7OF
-	 Vh9b3NA6JEWJXHG8SMmP/59gZ7hMBqSNEolfLd14p+KL/iepV6MSzvEZjFyQFDFPC3
-	 9TX7QnsbDclAgVY18zA094ew0RCsSoFSl/oH4sEMiBzhyrwPeuZwofUeFCD3LU0Rm1
-	 BabJZdvQMNdtZs5wlrN/JDVR3Fx+JYKyMw8NRoX0yBGJmMGrZ7Lv2DQW7TdhkG4vIG
-	 ct/QP2lg+Lwe6RdCIitD9pU+fT4PMEjD9BP2+2OUF5p50kEkERMV3lJ25hnpyzP1Gm
-	 Pa+j1M3K5vHJg==
-Message-ID: <f58ccc03-286e-4ca0-acc4-6c6474a9df5c@kernel.org>
-Date: Thu, 25 Dec 2025 09:36:32 +0100
+	b=rSQfAtpu1Tvje/pcoez2UitanssUVwM5Cw1SU9kJa9Dw+XhVX2F+U9GlYoKtGJVbX
+	 yg+sXK4KfXtEVLU+r7yvHaiA8uPZaF4WDYdaALbqFC8+I2x4MDvryas+cJma11Ktgl
+	 bD/8n2VD+10tm2Qlrlbp4Uz5mFXnFttIOL5jxnpnZbqe/hojpQ/ctBkpk4ebOK7p53
+	 Jk0AxOaAoVTP73KCHaPr876LRnUVqNn4CHB1Bz/f24N2otmhGdG08GivmZk4jTOXzA
+	 kjH/eT9zXi3CGjKZ95ockcCO0V8gAcyf/rnmeM89AJXIW3sf8z5SUCO7F2KFrsQEdq
+	 HKbnq3pWlXfqg==
+Message-ID: <d210552f-c8bf-4084-9317-b743075d9946@kernel.org>
+Date: Thu, 25 Dec 2025 09:47:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -48,20 +48,30 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/7] dt-bindings: pinctrl: rockchip: Add RMIO
- controller binding
-To: Ye Zhang <ye.zhang@rock-chips.com>,
- Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+Subject: Re: [PATCH v3 01/15] include: dt-bindings: add LAN969x clock bindings
+To: Robert Marko <robert.marko@sartura.hr>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+ claudiu.beznea@tuxon.dev, herbert@gondor.apana.org.au, davem@davemloft.net,
+ vkoul@kernel.org, andi.shyti@kernel.org, lee@kernel.org,
+ andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, linusw@kernel.org, Steen.Hegelund@microchip.com,
+ daniel.machon@microchip.com, UNGLinuxDriver@microchip.com,
+ olivia@selenic.com, radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com,
+ gregkh@linuxfoundation.org, jirislaby@kernel.org, broonie@kernel.org,
+ mturquette@baylibre.com, sboyd@kernel.org, lars.povlsen@microchip.com,
  devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- tao.huang@rock-chips.com
-References: <20251216112053.1927852-1-ye.zhang@rock-chips.com>
- <20251216112053.1927852-7-ye.zhang@rock-chips.com>
- <5154ca76-0f23-4b52-8e6d-07005c52ac6d@kernel.org>
- <8e126c63-1388-40ff-9046-818f7a8c969f@rock-chips.com>
+ linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+ netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-clk@vger.kernel.org, luka.perkov@sartura.hr
+References: <20251223201921.1332786-1-robert.marko@sartura.hr>
+ <20251223201921.1332786-2-robert.marko@sartura.hr>
+ <20251224-berserk-mackerel-of-snow-4cae54@quoll>
+ <CA+HBbNGym6Q9b166n-P=h_JssOHm0yfyL73JZ+G9P81muK=g4A@mail.gmail.com>
+ <78bf252c-fd5e-4a36-b1a3-ca8ed26fde7a@kernel.org>
+ <CA+HBbNG+ZVD6grGDp32Ninx7H1AyEbGvP0nwc0zUv94tOV8hYg@mail.gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -107,37 +117,39 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <8e126c63-1388-40ff-9046-818f7a8c969f@rock-chips.com>
+In-Reply-To: <CA+HBbNG+ZVD6grGDp32Ninx7H1AyEbGvP0nwc0zUv94tOV8hYg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 25/12/2025 04:25, Ye Zhang wrote:
->>> +/* RMIO function definition */
->>> +#define RMIO_UART1_TX			1
->>> +#define RMIO_UART1_RX			2
->>> +#define RMIO_UART2_TX			3
->>> +#define RMIO_UART2_RX			4
->>> +#define RMIO_UART3_TX			5
->>> +#define RMIO_UART3_RX			6
->>> +#define RMIO_UART3_CTSN			7
->>> +#define RMIO_UART3_RTSN			8
->>> +#define RMIO_UART4_TX			9
->>> +#define RMIO_UART4_RX			10
->>> +#define RMIO_UART4_CTSN			11
->>> +#define RMIO_UART4_RTSN			12
->>> +#define RMIO_MIPITE			13
->>> +#define RMIO_CLK_32K			14
->>> +#define RMIO_I2C0_SCL			15
->>> +#define RMIO_I2C0_SDA			16
+On 24/12/2025 15:01, Robert Marko wrote:
+> On Wed, Dec 24, 2025 at 2:05 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >>
->> I do not see how this is a binding. Please point me to the patch using
->> this in the driver.
-> These macros are intended to be used in the Device Tree sources to 
-> improve readability, avoiding “magic numbers” for the RMIO function IDs.
+>> On 24/12/2025 11:30, Robert Marko wrote:
+>>> On Wed, Dec 24, 2025 at 11:21 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>>
+>>>> On Tue, Dec 23, 2025 at 09:16:12PM +0100, Robert Marko wrote:
+>>>>> Add the required LAN969x clock bindings.
+>>>>
+>>>> I do not see clock bindings actually here. Where is the actual binding?
+>>>> Commit msg does not help me at all to understand why you are doing this
+>>>> without actual required bindings.
+>>>
+>>> I guess it is a bit confusing, there is no schema here, these are the
+>>> clock indexes that
+>>> reside in dt-bindings and are used by the SoC DTSI.
+>>
+>> I understand as not used by drivers? Then no ABI and there is no point
+>> in putting them into bindings.
+> 
+> It is not included by the driver directly, but it requires these exact
+> indexes to be passed
+> so its effectively ABI.
 
-That was not my question. Read again what I asked.
+How it requires the exact index? In what way? I do not see anything in
+the gck driver using/relying on these values. Nothing. Please point me
+to the line which directly uses these values.... or how many times I
+will need to write this is not ABI?
 
-So not a binding, remove.
 
 
 Best regards,
