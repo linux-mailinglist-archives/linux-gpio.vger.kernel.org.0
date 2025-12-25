@@ -1,77 +1,77 @@
-Return-Path: <linux-gpio+bounces-29895-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29896-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EDE3CDE08C
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Dec 2025 19:36:40 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67231CDE092
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Dec 2025 19:37:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A4F423014AF1
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Dec 2025 18:36:16 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 11D9030010F7
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Dec 2025 18:37:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A43B137930;
-	Thu, 25 Dec 2025 18:36:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABF7F27B34F;
+	Thu, 25 Dec 2025 18:37:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7Hl5DzG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JkJb9XCU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE4D2798EA
-	for <linux-gpio@vger.kernel.org>; Thu, 25 Dec 2025 18:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE4D1EC01B
+	for <linux-gpio@vger.kernel.org>; Thu, 25 Dec 2025 18:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766687775; cv=none; b=hbgIXk2KWA3jejm/bjHcb+vn9BbFpk/GiObE1kdCe+kIBNi1XrvxaMmr8csm7Ffe5etq5Ym0+pZHPRX2YPKgWsCWXYLcseFGskjiMVYLQTPKxePWh6ou/0WDCf7LAuU0H/s/54PQB2qe0A+bPUBFthJO35wLXwD4yDm/rwRBBIk=
+	t=1766687844; cv=none; b=PBYBSWWU0bLnxNgkQT0TaCm0Lt7BFXJTaH/v3Uv4s6rmPvyeo7yTNXnGVpbIuLu7MHWewSgP1JBoLUcnHCG7WwJzovUrPzysUPQr9jv4BssovdN+K1Mb6GRAbJX3Lgy6TwHqfu4upVv/lSajGn1XGx/BeATxEf4SfBsAEjsr6jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766687775; c=relaxed/simple;
-	bh=7JUOyMg8Or8uhrVC4CD+kMcOGeXL28oIZJIkKzR4J1E=;
+	s=arc-20240116; t=1766687844; c=relaxed/simple;
+	bh=EeP3w6mxZsd240QO+T3jiig23vz+oT72Plo2mHGY5pE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IVzOnh6NjTpyapZyZEo6o8vWrWrcGuXf3IOG9xaBnTNUj2X7pAkvNZ0KqQYy5jk4WII8/uLsNTosy+hP257+gpHEeYg2rOtkQzH52TXw2y07I0prB5OCPA0U5sOt0ZV7JbqvSgSSXYe/3176VmwV3HogITTBYXDvQd4QwKnnRJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a7Hl5DzG; arc=none smtp.client-ip=209.85.208.45
+	 MIME-Version:Content-Type; b=VrTbS+lDZmlUst6DybaFeu09MwnOc46bvCJLXOsL+P6XfTM6t61owHBj7h5vFIJl9durxM2mOOo2cMdaswDvUwb9stqxZim4j2mowjiD1uzquxaOXmy9w68tkLIkFRs8WPsfBFdC1ycfngAdn8hMm/uSqGCEsHFgAeJp1CbFD4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JkJb9XCU; arc=none smtp.client-ip=209.85.218.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-64b7b737eddso8066708a12.1
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Dec 2025 10:36:10 -0800 (PST)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b79e7112398so1177575366b.3
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Dec 2025 10:37:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766687769; x=1767292569; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1766687841; x=1767292641; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7JUOyMg8Or8uhrVC4CD+kMcOGeXL28oIZJIkKzR4J1E=;
-        b=a7Hl5DzGX/VND598QcCWZ9gPceIhGhboJIXRtCEoZ4swuU7teT7UtlaKw+Qtdh3/RN
-         TPjGTQ5+nd6hWVRpeRSGxF92o3mUJKn/cuPqrRfW16XkjRZZdaWSvJyRcIYzj5Uk0zUa
-         f8w1uAvxqB+iK6zIJkNfSgmCqnS5LQjRtyxgUn1dvUBQ1bR5cPfrdu4lnOVegv5X9nTI
-         xx/Li3Z8mHwh0w+sXPgq80+gZgxf8U/TlqffsZ854pRYNQzvBqCUR0wGEd8AHprtQOwF
-         SUqpYiudnDGPz0ccD+n+USk4PDgK7eWPzBjqdeytQRimjvALbYwLaz55ck/qKwQo12/D
-         9lPA==
+        bh=EeP3w6mxZsd240QO+T3jiig23vz+oT72Plo2mHGY5pE=;
+        b=JkJb9XCUAWeiTcMq7ESspZPfSsOgKBWu/brlSnUIZFwXWE2q9i7iixd2K0CF62grQl
+         0qBQnU7BdEfoAt+s9TwV7Kgp27qW0tgwjsm9+qKAWDVmNAVMNz5xJ30fOVTG/XmCgPzK
+         lD7/o2nVn0cDUnrU2ANLIAO6pHh7DURb3tRLYKS5L/T3eo72BfoL/MPXIAtKtZIhydac
+         v2LGmtCIA+PJGlD/IrL+1qIzpyvghqtt1pI6E6bntfV0qnBYpAeMnjElJPIIhMh0CP1d
+         1YszRu3IBy08gXRX5gpb9fsW7AQPZoEPjVv446x5+UZSKt/IyudW7ykAWmc2/dRmRwWC
+         DGig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766687769; x=1767292569;
+        d=1e100.net; s=20230601; t=1766687841; x=1767292641;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=7JUOyMg8Or8uhrVC4CD+kMcOGeXL28oIZJIkKzR4J1E=;
-        b=J36zpkmzddv8xh/v8Lj09lewWQZ6qIXupB49cI68Nn8QDt6vovkxeuyv8FBSyOs70Q
-         RfOfPFbvbPit5B+nqig8FmCaV+bBPC2aXVixdVMOjx5JklNgCZ3xopjuhr6osKl03mig
-         7ufIuVzQYYGgcf2uXzsNXc1/2JhkjdIlqtjLgPjIWTJ14QpHknCy0zSTircgBHXMS4SO
-         889tm7bAyKwVPGdR0og8IAyygAm8TzTXrUac365GLTJ5VDm3hO/LmwAUx1cEZmRaU7wm
-         WQqxk12RWVsbKtdOkv70r04O6TvkFVuP9ivdg6wlLP2CNNDFZoBZuLSMFXkTZ4jueaeo
-         cJoA==
-X-Forwarded-Encrypted: i=1; AJvYcCX05IK7ui3UU9j0v+NuCP6JVlvW22i3WJe2o/QD5ArCb9x+2kHkinowBSQLvu1nlDFyWE1eWFTL3KlN@vger.kernel.org
-X-Gm-Message-State: AOJu0YxR+Fw6VkBhOKcNvYfrQubxGWk5vykL1gGE+b61q52cKacf5710
-	6uXmH0JH5eix7a4MHCh0gcuF2N+SoqgPhfr8AACZ3Ht8Xrh6qN25WTGS
-X-Gm-Gg: AY/fxX6gKfEfecAhMmLtUItIRZ7/WEsD8PTEYRqsrNZ5+GyOVLugJgUq/u65hLU9akq
-	Q8LQkLmJBCoTpsAL5Mhi2qtgGjP+mr2/TIL5wboIMUPQfTMjLVZi10oPrxqQFgFfPQTK9E5Iozj
-	+MWs+9b3X6vt3lrtDrGuIf+w2I+LDsflWDKQb6YWKZ44obqvhVBVwBzjpSShYKx00lMZ8iMMhIh
-	aEyw1sgRuBkxpmQ8rbiS0T+Tf+UKrUJEi7JnfvPR/1tqiBaBUZ3pLAxpUvEWY6zFu8+ps4TUF71
-	KOrczM8H4sYZkb6NNfmnUqGlHJdKKlUOUYaPfri7G0TDLEeF2Tfc508jJFLsJpz7TFPGCPLCM1K
-	JN1OBK1xFZftsfSfqlAzSMrQFrKEkR2KBcoY4TxYGev7W11YIOuq5MPcLjgSNFw6G4AA2nNmpf0
-	7kMcAeigvSIPfjYw2MPZS5sKDdl1pzNUdM4WLeOs0tHBY=
-X-Google-Smtp-Source: AGHT+IHEIjHpbPASvhXMCNryNTALHso5yEhVN2Zt1Wti83jtrsqyLd89aktdU3iFdV+yBgA6+HZu7g==
-X-Received: by 2002:a17:906:d54d:b0:b83:1400:482c with SMTP id a640c23a62f3a-b8314005538mr450270266b.64.1766687769040;
-        Thu, 25 Dec 2025 10:36:09 -0800 (PST)
+        bh=EeP3w6mxZsd240QO+T3jiig23vz+oT72Plo2mHGY5pE=;
+        b=d58cto1boYdVwdq5HmCuuNb7iGCfd1BD6nCU6vmGy9l88wJcCOQ0XAsfEkbiIg6Ey4
+         R8F+oeYS/i1w6n3y5T/xT2T2jw1ICvppSMVLqDSga6qNjHefPVfe7oe8l0TW4Azt3bwn
+         QG4KTY18Sa3IWlfcD/HA6D1GSq0oHVsNStXm0O9joS059F9JYpA2WjuklDnywwjbkWbN
+         0WyOtdRbPMCZKlE/VH8O0GG5dvZw2lbtkdWHplefVskSXkzRu8TtW7/olRjSLPPGSlIO
+         CTOcNMkGmGt8i99zfGxaO39/JOulxRoEpNdX251qVC91/GEE7O44hLsKCAUL7uB77/8z
+         1HMA==
+X-Forwarded-Encrypted: i=1; AJvYcCU1b77eg3moo5Tu7eX3WP0eO3ac4ZnR37SHjnXPzpRc4DQYqjMGBEcnWqjQTmXE980inb5hYTVHV6mR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy60BPaFS5tOIP9drdF+GDsoWJhlZ06t1f94UnkmVcLnzc1efM/
+	F84hBNavxulCRjDyppQ4ixy9cwmnxGQVtq4s6OpaKdWHbGDzE54UxO1Z
+X-Gm-Gg: AY/fxX4Aox41SheD3m8DUu8EXkcDMiIavDpYckyxcG2ZyHNkLkTvsHJToF8caIe7/+c
+	J/LbkP/vWLTqVMlfHy1676S+whbaExbWTys565jOKfxLipTKF4OioLzshhdG3cKIgIOQdQYOIjA
+	8F53Oe2CTOvyloxDILmnCTYdix5PKywmabHKO2LgJiIzYfIRn9bDaLuh6Df84Jf9zZhNYwxJ6C4
+	nEwmMgJIorMArAmcjkcdIxWLtNWbnmFFhJF3XL++Asir+1Ozq5HgKNr+VC4dcflmRQauLevIKvE
+	yoZIE3781ar8kHn97JBH1nkFuuQt3amMRvvAodU1Rr5DC6HMeBMadTRF/9KM6+T5BxRGHkaq0up
+	Yl+1NvMf7wYiwbKuXPCWEA/H+51ClO2gJwmmHMP1Kcpw98lRlu2s7+YQkWTgJb5tn2OJVQLehh9
+	0DVX8FWBcL9otlLCtB2D/tK6bXQI5nW0pm
+X-Google-Smtp-Source: AGHT+IH4B3XzX8QXujzZunFfKEc/cY4W3MiVUX7/1rzA6qLulDTYIhj8orR5H1uD8QCD+qBxL3d2xw==
+X-Received: by 2002:a17:907:1c27:b0:b7c:eb19:6a3f with SMTP id a640c23a62f3a-b803705e31cmr2146669666b.35.1766687841205;
+        Thu, 25 Dec 2025 10:37:21 -0800 (PST)
 Received: from jernej-laptop.localnet ([188.159.248.16])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8037ad806asm2154858066b.23.2025.12.25.10.36.07
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b803d3cea32sm2033127866b.34.2025.12.25.10.37.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Dec 2025 10:36:08 -0800 (PST)
+        Thu, 25 Dec 2025 10:37:20 -0800 (PST)
 From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@kernel.org>,
@@ -80,16 +80,17 @@ To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Mauro Carvalho Chehab <mchehab@kernel.org>, Chen-Yu Tsai <wens@kernel.org>
 Cc: devicetree@vger.kernel.org, linux-sunxi@lists.linux.dev,
  linux-gpio@vger.kernel.org, linux-media@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Hans de Goede <hdegoede@redhat.com>
 Subject:
- Re: [PATCH 2/4] dt-bindings: pinctrl: sunxi: Allow pinmux sub-pattern with
- leading numbers
-Date: Thu, 25 Dec 2025 19:36:06 +0100
-Message-ID: <5080862.31r3eYUQgx@jernej-laptop>
-In-Reply-To: <20251225103616.3203473-3-wens@kernel.org>
+ Re: [PATCH 3/4] ARM: dts: allwinner: sun5i-a13-utoo-p66: delete "power-gpios"
+ property
+Date: Thu, 25 Dec 2025 19:37:18 +0100
+Message-ID: <2409366.ElGaqSPkdT@jernej-laptop>
+In-Reply-To: <20251225103616.3203473-4-wens@kernel.org>
 References:
  <20251225103616.3203473-1-wens@kernel.org>
- <20251225103616.3203473-3-wens@kernel.org>
+ <20251225103616.3203473-4-wens@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -99,23 +100,25 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 
-Dne =C4=8Detrtek, 25. december 2025 ob 11:36:13 Srednjeevropski standardni =
+Dne =C4=8Detrtek, 25. december 2025 ob 11:36:14 Srednjeevropski standardni =
 =C4=8Das je Chen-Yu Tsai napisal(a):
-> The pattern for pinmux node names is typically the peripheral name and
-> instance number, followed by pingroup name if there are multiple options.
+> The P66's device tree includes the reference design dtsi files, which
+> defines a node and properties for the touchpanel in the common design.
+> The P66 dts file then overrides all the properties to match its own
+> design, but as the touchpanel model is different, a different schema
+> is matched. This other schema uses a different name for the GPIO.
 >=20
-> Normally the instance number is directly appended to the peripheral
-> name, like "mmc0" or "i2c2". But if the peripheral name ends with a
-> number, then it becomes confusing.
+> The original submission added the correct GPIO property, but did not
+> delete the one inherited from the reference design, causing validation
+> errors.
 >=20
-> On the A20, the PS2 interface controller has two instances. This
-> produces pinmux node names like "ps2-0-pins". Make the sub-pattern
-> "[0-9]-" valid to fit this pattern. Avoid having to confusing "ps20-pins"
-> name.
+> Explicitly delete the incorrect GPIO property.
 >=20
+> Fixes: 2a53aff27236 ("ARM: dts: sun5i: Enable touchscreen on Utoo P66")
 > Signed-off-by: Chen-Yu Tsai <wens@kernel.org>
+>=20
 
-Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 
 Best regards,
 Jernej
