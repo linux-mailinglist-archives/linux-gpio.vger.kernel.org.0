@@ -1,122 +1,101 @@
-Return-Path: <linux-gpio+bounces-29885-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29888-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E534ECDD909
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Dec 2025 10:08:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B06FCDDAFA
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Dec 2025 11:37:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 47F153029C7E
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Dec 2025 09:07:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F3646301EC43
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Dec 2025 10:36:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E02AD3168E6;
-	Thu, 25 Dec 2025 09:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEF3431A800;
+	Thu, 25 Dec 2025 10:36:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="caBCnPSr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ja/rtA+4"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9919F3164B6
-	for <linux-gpio@vger.kernel.org>; Thu, 25 Dec 2025 09:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3ACD3093D3;
+	Thu, 25 Dec 2025 10:36:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766653673; cv=none; b=bcvyzIiHsto9Dx+5os5b2EJOET5vfOpUNIP7JRrMtaTFlPNK58J+AxsgP0so5SdOjIbAkMK0XJFFp1OD6V/QTNt20j40pJ3ZWWPF7ulCIPCTkE2BPvusadGq/kkFTRLJxHJlOpVrdaJDqGBeQrzNSyLSwn90I1TSj80OnEoIH6k=
+	t=1766658987; cv=none; b=Zw5bDccZHJc/bxy+rAjQjD6Oyx2Lp5sLf1XRvcGWlXTIFUGoVcMAqZL6T6vla0IdEK1U0sPtlOJxkzF/E6J8XkUxAo0sz43IXWCryyb59+LE5mstPpeDHClMeEPVycvYH4r33Qie8tnHQg0a+ov/ln+Mpgh3e9iYRUrE5l/K1uU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766653673; c=relaxed/simple;
-	bh=hZc1+DU7BxaZ0pHjHw8/tfR/Nq71rMC9Z07diFqHTEw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ve67gorMuUtf0nT/SbW5ePt6h0IEAeZ07yId74XRpeamZANFROrBVLJ9PKGvw9ID8+dRll/lSEST3Spl1Z57HWSDxR0evTb3VX5aYo9Uvym1KmkcfAWrIgNQ+F+NQnF2jr/Pk7YBN2ezXTmeNdQXpp80NdBF+RvKoX46CzYUv14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=caBCnPSr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 321BFC2BCB3
-	for <linux-gpio@vger.kernel.org>; Thu, 25 Dec 2025 09:07:53 +0000 (UTC)
+	s=arc-20240116; t=1766658987; c=relaxed/simple;
+	bh=hUjiGAUCEtkj7Gi1H/0UYonfjZuOU7AW5JdzHCgDQe0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pdWG0bxs8H26C/9JUXDvPDOjYMkEiM9iaG1qKTFU0yAF9B72yDZc1dBB7ae1j/u+vt6SrZDu2kolqtgdglrQ1jD4Q7g+uNN1Q8w6GQuOdNdr5ZBb39YPZ3OnbpiHuZh9eOiDCOfRQUv/DH4Xpz2mQPaorwa4Wh4imn03fk8C+1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ja/rtA+4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 053ADC4AF09;
+	Thu, 25 Dec 2025 10:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766653673;
-	bh=hZc1+DU7BxaZ0pHjHw8/tfR/Nq71rMC9Z07diFqHTEw=;
-	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
-	b=caBCnPSrtJ32X2296HO3meZX1otJPRMu2wMIRegIwALIMzO0rNIdKPF9/ll5/fGfg
-	 tdXLDY+eqDWvJEz4PEMpSgGR/LTyGW4Bg5vpmT4YiHvXXbnCyvH1qNtxtcKqGz++a9
-	 7GuohHuJFJjudgAvRuYY2Bn9x+b8Lhv++VAjYpRDCUle403KSZ78am4pZGBOqIjBHg
-	 ZP9xYPwyZC2O7hqDmuqmXGC3FRtQTxvHiCfEyKERyxJKu9BKhFFk+tKVuXk8thcXYs
-	 Emsb6rG/ENWpdN1jfpFWFZ8sqf8XIyUwjb5HgUQ3OH1IBjFyuzsTjWyriCG+U/yvnc
-	 dLt/Ge4Mx12yA==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-59577c4c7c1so6843755e87.1
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Dec 2025 01:07:53 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUGn1fcbCTkNMpCplVOnOqblKxxej2cVd+46uNykeRW+5GpQIEk+Oe1LGjtLkQ6zE34gXIvnZsJNV1Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjWnnLWrLB3/z9OFDGtUSPeAYEfuatHM4zLl95W6/WKRvs2QsJ
-	IbwwpJnNfikWSDGb+4gjpM4KzbwcaJTVaFguKIfsd8dxCPbHfVdDjcX87qjw5xM5i+EnKDl+MMw
-	c4HqmEwL19HCtZ5ZHTLo3BWKsPAck518=
-X-Google-Smtp-Source: AGHT+IHfPWz1heWtm82AOh8ny5sgT9kzx+lyzDjyJcBgqVf6WZJpwpmEyZeQVabkjvt5oV4xlzU03UcKE5H1xk8UgF0=
-X-Received: by 2002:a05:651c:1470:b0:378:e0f3:53c1 with SMTP id
- 38308e7fff4ca-38113275820mr72648701fa.18.1766653671109; Thu, 25 Dec 2025
- 01:07:51 -0800 (PST)
+	s=k20201202; t=1766658985;
+	bh=hUjiGAUCEtkj7Gi1H/0UYonfjZuOU7AW5JdzHCgDQe0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Ja/rtA+4bw+OqEQTsX/xoFbdMOp9T+S9QqDvRK1rNtpM6yZWb1Ywh1s2zj6LDV0uH
+	 01CqVcszRJZCqKQkxeKcHb0eXgObpkLck9PHhNz9c1rBJCA0hyXkzkzqN8LZh6S0KT
+	 bqdukJ96hfpxeqe/Ruubc2S9B8aub3irjbV3VVVo7J0A0y7Wtyc4DdFm5FawtHNNRE
+	 hymEksH+BRXERvnIrpNe01+saDNXIR5jRxUBRvBdhWeE5WOEwPRIaKEje/ryAISMoX
+	 DspYTlEoTml2dICU6g/4Y0Syz+6hBkXivHV9qiIkKASY+L7VOszabsKb/wOvs20g45
+	 Ms+w6EK225+zA==
+Received: by wens.tw (Postfix, from userid 1000)
+	id 4AF465FC5C; Thu, 25 Dec 2025 18:36:22 +0800 (CST)
+From: Chen-Yu Tsai <wens@kernel.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@kernel.org>,
+	Jernej Skrabec <jernej@kernel.org>,
+	Samuel Holland <samuel@sholland.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: devicetree@vger.kernel.org,
+	linux-sunxi@lists.linux.dev,
+	linux-gpio@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] ARM: dts: allwinner: Fix remaining DT validation errors
+Date: Thu, 25 Dec 2025 18:36:11 +0800
+Message-ID: <20251225103616.3203473-1-wens@kernel.org>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251212231203.727227-1-robh@kernel.org>
-In-Reply-To: <20251212231203.727227-1-robh@kernel.org>
-Reply-To: wens@kernel.org
-From: Chen-Yu Tsai <wens@kernel.org>
-Date: Thu, 25 Dec 2025 17:07:38 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65Pt=c7rNtE-u7j_=SbT4DLw03iOw=PFchbisPQenhOtg@mail.gmail.com>
-X-Gm-Features: AQt7F2qwpZzDsTD1g9DqdU3xoJFe0KlIMNtkshCEa1nlt61s05fF43c85tHciK8
-Message-ID: <CAGb2v65Pt=c7rNtE-u7j_=SbT4DLw03iOw=PFchbisPQenhOtg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Remove unused includes
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Michal Simek <michal.simek@amd.com>, 
-	Vinod Koul <vkoul@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Yong Wu <yong.wu@mediatek.com>, Peter Rosin <peda@axentia.se>, 
-	Linus Walleij <linusw@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	dmaengine@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-iio@vger.kernel.org, iommu@lists.linux.dev, linux-gpio@vger.kernel.org, 
-	linux-sunxi@lists.linux.dev, imx@lists.linux.dev, linux-sound@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Dec 13, 2025 at 7:12=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org>=
- wrote:
->
-> Remove includes which are not referenced by either DTS files or drivers.
->
-> There's a few more which are new, so they are excluded for now.
->
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  include/dt-bindings/clock/oxsemi,ox810se.h    |  19 --
->  include/dt-bindings/clock/oxsemi,ox820.h      |  29 --
->  include/dt-bindings/clock/qcom,mss-sc7180.h   |  12 -
->  include/dt-bindings/clock/xlnx-versal-clk.h   | 123 ---------
->  include/dt-bindings/clock/xlnx-zynqmp-clk.h   | 133 ---------
->  include/dt-bindings/dma/jz4775-dma.h          |  44 ---
->  include/dt-bindings/dma/x2000-dma.h           |  54 ----
->  include/dt-bindings/gce/mt6779-gce.h          | 222 ---------------
->  .../dt-bindings/iio/qcom,spmi-adc7-pmr735b.h  |  30 --
->  .../dt-bindings/iio/qcom,spmi-adc7-smb139x.h  |  19 --
->  include/dt-bindings/memory/mt6779-larb-port.h | 206 --------------
->  include/dt-bindings/mux/ti-serdes.h           | 190 -------------
->  include/dt-bindings/pinctrl/mt6397-pinfunc.h  | 257 ------------------
->  .../power/allwinner,sun20i-d1-ppu.h           |  10 -
+Hi folks,
 
-For this one, a node is present in the DT, but there are currently no
-references to it, and thus no users of the header.
+This series gets rid of the remaining DT validation errors for Allwinner
+(sunxi) ARM 32-bit device trees. The patches are self explaining.
 
-Also this chip hasn't seen a lot of interest after it was initially
-brought up. None of the peripherals that have a separate power
-domain have been enabled.
+I plan to take all four patches through the sunxi tree.
 
 
 ChenYu
+
+
+Chen-Yu Tsai (4):
+  dt-bindings: media: sun4i-a10-video-engine: Add interconnect
+    properties
+  dt-bindings: pinctrl: sunxi: Allow pinmux sub-pattern with leading
+    numbers
+  ARM: dts: allwinner: sun5i-a13-utoo-p66: delete "power-gpios" property
+  ARM: dts: allwinner: Replace status "failed" with "fail"
+
+ .../media/allwinner,sun4i-a10-video-engine.yaml        | 10 ++++++++++
+ .../bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml  |  2 +-
+ .../boot/dts/allwinner/sun4i-a10-dserve-dsrv9703c.dts  |  2 +-
+ .../boot/dts/allwinner/sun4i-a10-pov-protab2-ips9.dts  |  2 +-
+ arch/arm/boot/dts/allwinner/sun5i-a13-utoo-p66.dts     |  1 +
+ arch/arm/boot/dts/allwinner/sun6i-a31-hummingbird.dts  |  2 +-
+ arch/arm/boot/dts/allwinner/sun6i-a31s-primo81.dts     |  2 +-
+ 7 files changed, 16 insertions(+), 5 deletions(-)
+
+-- 
+2.47.3
+
 
