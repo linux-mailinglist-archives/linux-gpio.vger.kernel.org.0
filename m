@@ -1,107 +1,176 @@
-Return-Path: <linux-gpio+bounces-29911-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29912-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C47ABCDEDCE
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 18:46:14 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DB61CDEDFF
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 19:08:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2ED71300663D
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 17:46:13 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 069B03000B45
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 18:07:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A4DE227B95;
-	Fri, 26 Dec 2025 17:46:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39F2D28313D;
+	Fri, 26 Dec 2025 18:07:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AmI/6adO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sj8Ykdu3"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4925F7E0FF
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 17:46:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE748137C52
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 18:07:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766771171; cv=none; b=I0yeGbJonFUXFpyt1KcrJoV+flBjCW2Gldrfs6le1qhEaMVAvtFQjz5iLuvE3cxqInzxrC+kExv/aUxqo5uAToxnn5Ei46tsT39rRP1BDnIAJ22Rcrk+Ry/h89iVK9BLvmIC7LRhX6YGKRIPW+Qfn/2ciW3ivxB4P/sQl+WebQM=
+	t=1766772477; cv=none; b=pZWFeRJRuz4FoMpZh5vG9yqT5VxiS8OCV0+dKT8Y/F7vBh+uM+0sssXMRllGWVUSHpJWPKY02GZTr0bih+xo0Aef8/KRRWAMSmTvni+EJC//qi25TkJgnKhuDn3vpMiTHggl0wFo71YUUtGSMPk4K27P16OMHUqv7DGtD6Tl6YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766771171; c=relaxed/simple;
-	bh=yaWWygL8WsP4cVvJT6R3siyfFYnRS5lDtTG/t4oXvO0=;
+	s=arc-20240116; t=1766772477; c=relaxed/simple;
+	bh=Mo8DKiQXbP10FfBrG4jSD9A1fN4U7FZm/QO+xQpqVV4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XkdAlPixJww90scLiU/Bl+iY2Ygi72Z/5zIlSEt2Hi2x1Si0u/pJU6wVPYc04Krh08htUFU/0oolnoN4/99hIDTM4+e0vF7jq1AAEhfVZbFWouW8+OGD3My8mPClxOXzO8SZ1bLopJfFYRj4dBHBwPdp4bArp9WgBDgrVrwYtIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AmI/6adO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E432EC19422
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 17:46:10 +0000 (UTC)
+	 To:Cc:Content-Type; b=dq+30OHs6wvHvBqancn5R/qC2ABKgxiLKYFuYUusJWuthcySorZL0/7YSv8pzxdoA9InngERNXuNGHg9n+rzI9bZZLoa3azBFu/iRjoafPjSAZRyxxSEQ11f9x3A+X+rCxHCB4g0YUsb2bDs4HkQAGasueNc36WaMoSf+4ZEHeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sj8Ykdu3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4137C19423
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 18:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766771170;
-	bh=yaWWygL8WsP4cVvJT6R3siyfFYnRS5lDtTG/t4oXvO0=;
+	s=k20201202; t=1766772476;
+	bh=Mo8DKiQXbP10FfBrG4jSD9A1fN4U7FZm/QO+xQpqVV4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AmI/6adOPlKtoWCWqKZe5yJ8oG3l7QmB6BbKWw9PHiLE4tV6bO6ppPs6EZc4/Mvo5
-	 BjWFzvBn3Qb+2938U+x2In324OewndYjEoiGA/Hw5Lu/asj+hGzh2cw64zgT7fE4/u
-	 U/n2g3PR+kAcRcNK7qFD+pdAZr4pwngYfob6YN3eD7/S/ulXVd5Rnl+Sfj+LvhRFSg
-	 nGuEoUds1QWt16egeOkTcuQVERlbhN7u/q3mpxsPxTWlCJTsfc/SPGD4dNKcGKsOZI
-	 7Sj1/m7i30EuY3YG84OmaMZArKg4RaWE1y6BIuUKyZ7mb/7fl7maX3SxZ/FpXjkRaK
-	 IwWMLTZ/mE13w==
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-787df0d729dso61345167b3.3
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 09:46:10 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW+149Wi2478tCZ5Vg+Zq2YxuClAe8EuXdGb+slNCEYrdhNcnapvv09lpglLo9A/msqcoIZ1+z8XXjb@vger.kernel.org
-X-Gm-Message-State: AOJu0YziuKArek7DHZnQSiY3iDtzpdWsGQCSZHAzh4CTMr6sMtkO/OcD
-	XsSHBsu1ubY+Izh7B6jRVJI4aBM0jGdB5RuzZcGJcjU2CgVo/Hg/3HgGZUjAHB+n5n/cZqOpwZi
-	NI63q2pe226DtScwM3+AvSZceaFhUSE8=
-X-Google-Smtp-Source: AGHT+IGkQ6XUIR2QS+jzQzwyb+uH06UnhoOZauP500HEuu+uE09VYZhz6TrKU/N7A068s7lGjbjGraZIx3VxSmvZI40=
-X-Received: by 2002:a05:690c:680c:b0:78f:9854:2603 with SMTP id
- 00721157ae682-78fb406ad93mr234198697b3.28.1766771170211; Fri, 26 Dec 2025
- 09:46:10 -0800 (PST)
+	b=Sj8Ykdu3Z8gYuEOZSpZfrwpRaD0qg+avjRrmXpPCEaE5KuBdPEaiWo5cVLdXMFOIB
+	 9vAyLQ25/BSc1JusmL2JztNMoApXaSCRXIkJGLO9m2Z8nGbpQd7wEU+dNMwfEWGEth
+	 gYqYlSz0XBVzLtMrC9abdPt82RS9+ES7oqRjUcHpr9HQZy3K5Gk6EjNa0kHq9ohlEn
+	 XIPXPGrA3sYNzMLs6Xn+GVfEGB3c3K+7gGWMgVFEXtC/M7HTc+A9mshE2H+EqS4yYi
+	 n6xaFJNuFFpfw7QjOUsWwjGUYQXpvL6xMI/+WEKOisEhMqyBScG5UMSDE17rNMhvRs
+	 QWthtXmQ/YAeA==
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-78fba1a1b1eso82801227b3.1
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 10:07:56 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXz8/taPrJmd3374m4PML/CCInpjk1/TZ458szdhnR4kyR1g29cOVvKTElcvX/W/LxfvTYv7QhMyrEm@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTqOyU70IU9K9o/jJsi72jZY1Qp0J2Bc9VBenLAderPjAzLR6F
+	IhBmCZhZUR+Hi8Aj1sqQ50nUwawZVXMxlIpeMNhK5dvdspzDIjU1uRXjvqLq3C8fnrGcmIl+1/6
+	Zt4GRhInHdX/NhopdWDZe+unmXDvHCrY=
+X-Google-Smtp-Source: AGHT+IHXFYYWTsvxkiAzCuYl1w+1gAwdOMQor8XIU2GYqR9g+iZUH2rKjwqFU6Vi/SZe0tIuniB4xtJv4Fw3RoZpxPI=
+X-Received: by 2002:a05:690e:11c6:b0:641:f5bc:692a with SMTP id
+ 956f58d0204a3-646632c32fbmr22677636d50.35.1766772475962; Fri, 26 Dec 2025
+ 10:07:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251203-mt8189-pinctrl-fix-regname-order-v1-1-16c8ff5490a7@collabora.com>
-In-Reply-To: <20251203-mt8189-pinctrl-fix-regname-order-v1-1-16c8ff5490a7@collabora.com>
+References: <20251216112053.1927852-1-ye.zhang@rock-chips.com> <20251216112053.1927852-7-ye.zhang@rock-chips.com>
+In-Reply-To: <20251216112053.1927852-7-ye.zhang@rock-chips.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 26 Dec 2025 18:45:59 +0100
-X-Gmail-Original-Message-ID: <CAD++jLnfTdN7Wwa+a-ze2112vkMPcTtvEUoOZDtu166hu4DP3g@mail.gmail.com>
-X-Gm-Features: AQt7F2rJr7E3FC3Q9d909t1YtxKsBcuUtJWHcYVrXihmnvhQlQW_9VrzDPk4caM
-Message-ID: <CAD++jLnfTdN7Wwa+a-ze2112vkMPcTtvEUoOZDtu166hu4DP3g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: mt8189: restore previous register base
- name array order
-To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-Cc: Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, kernel@collabora.com, 
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date: Fri, 26 Dec 2025 19:07:45 +0100
+X-Gmail-Original-Message-ID: <CAD++jLntu4LY=VHOMSXeLKXOBD9MTNziv47B0qkDjxUa1xAsng@mail.gmail.com>
+X-Gm-Features: AQt7F2oo9iVMDuNkiBl10i_Zvh5ka_JIKyMORrwHeD221KqqGenYfp36zyHsPm0
+Message-ID: <CAD++jLntu4LY=VHOMSXeLKXOBD9MTNziv47B0qkDjxUa1xAsng@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] dt-bindings: pinctrl: rockchip: Add RMIO
+ controller binding
+To: Ye Zhang <ye.zhang@rock-chips.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	tao.huang@rock-chips.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 3, 2025 at 12:33=E2=80=AFPM Louis-Alexis Eyraud
-<louisalexis.eyraud@collabora.com> wrote:
+Hi Ye,
 
-> In mt8189-pinctrl driver, a previous commit changed the register base
-> name array (mt8189_pinctrl_register_base_names) entry name and order to
-> align it with the same name and order as the "mediatek,mt8189-pinctrl"
-> devicetree bindings. The new order (by ascending register address) now
-> causes an issue with MT8189 pinctrl configuration.
->
-> MT8189 SoC has multiple base addresses for the pin configuration
-> registers. Several constant data structures, declaring each pin
-> configuration, are using PIN_FIELD_BASE() macro which i_base parameter
-> indicates for a given pin the lookup index in the base register address
-> array of the driver internal data for the configuration register
-> read/write accesses. But in practice, this parameter is given a
-> hardcoded numerical value that corresponds to the expected base
-> register entry index in mt8189_pinctrl_register_base_names array.
-> Since this array reordering, the i_base index matching is no more
-> correct.
->
-> So, in order to avoid modifying over a thousand of PIN_FIELD_BASE()
-> calls, restore previous mt8189_pinctrl_register_base_names entry order.
->
-> Fixes: 518919276c41 ("pinctrl: mediatek: mt8189: align register base name=
-s to dt-bindings ones")
-> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+thanks for your patch!
 
-There have not been any comments on this so patch applied for
-fixes.
+On Tue, Dec 16, 2025 at 3:50=E2=80=AFPM Ye Zhang <ye.zhang@rock-chips.com> =
+wrote:
+
+
+> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,rmio.yaml=
+ b/Documentation/devicetree/bindings/pinctrl/rockchip,rmio.yaml
+
+> +  rockchip,rmio-grf:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      The phandle of the syscon node (GRF or PMU) containing the RMIO re=
+gisters.
+> +      This property is required if the RMIO registers are located in a d=
+ifferent
+> +      syscon than the parent pinctrl node.
+> +
+> +  rockchip,offset:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      The offset of the RMIO configuration registers within the GRF.
+
+Can't this just be a cell in the phandle?
+
+> +  rockchip,pins-num:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      The number of physical pins supported by this RMIO instance.
+> +      Used for boundary checking and driver initialization.
+
+Isn't this implicit from the compatible? Why is this different
+between two device trees using the same compatible pin
+controller? I don't get it, I think this should be a constant in the
+code based on the compatible instead.
+
+> +patternProperties:
+> +  "^[a-z0-9-]+$":
+> +    type: object
+> +    description:
+> +      Function node grouping multiple groups.
+> +
+> +    patternProperties:
+> +      "^[a-z0-9-]+$":
+> +        type: object
+> +        description:
+> +          Group node containing the pinmux configuration.
+> +
+> +        properties:
+> +          rockchip,rmio:
+> +            $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +            description:
+> +              A list of pin-function pairs. The format is <pin_id functi=
+on_id>.
+> +            minItems: 1
+> +            items:
+> +              items:
+> +                - description: RMIO Pin ID (0 to pins-num - 1)
+> +                  minimum: 0
+> +                  maximum: 31
+> +                - description: Function ID
+> +                  minimum: 0
+> +                  maximum: 98
+
+Please avoid these custom properties and just use the standard
+"pinmux" property. I don't want any more opaque custom bindings
+for functions and groups.
+
+Reference Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+and use pinmux from there.
+
+You can use some shifting and defines to shoehorn your config
+into a single u32 and parse that in your driver; i.e. instead of
+rockchip,rmio =3D <1, 2>;
+use
+pinmux =3D <1 << 8 | 2 << 0>;
+these shifter numerals can come from defines.
+In the driver shift & mask out the components you want.
+
+e.g.;
+
+> +            rmio-uart {
+> +                rmio_pin27_uart1_tx: rmio-pin27-uart1-tx {
+> +                    rockchip,rmio =3D <27 RMIO_UART1_TX>;
+
+pinmux =3D <27 << 8 | RMIO_UART1_TX>;
+
+> +++ b/include/dt-bindings/pinctrl/rockchip,rk3506-rmio.h
+
+These number dumps are not appreciated inside the bindings
+despite quite a few found their way in there.
+
+Use something like
+arch/*/dts/rockchip/rk3506-rmio-pins.dtsi
+and include that into your device trees instead.
 
 Yours,
 Linus Walleij
