@@ -1,28 +1,29 @@
-Return-Path: <linux-gpio+bounces-29905-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29906-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEF30CDEB4E
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 13:58:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AA50BCDEB5A
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 13:59:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1BA77300B80D
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 12:58:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5F85A301619E
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 12:58:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA933320A3B;
-	Fri, 26 Dec 2025 12:58:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B32A5320CBC;
+	Fri, 26 Dec 2025 12:58:55 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD4D1494A8;
-	Fri, 26 Dec 2025 12:58:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458A231C597;
+	Fri, 26 Dec 2025 12:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766753928; cv=none; b=RWMQEBOF31qTgugtUHDVWDgUT6m7N68aouAVrJ6ckJMLb3GWBFU5jedDWB/ywi7KvTSoM7UmNUQWLFdfrmpRYORcMP54CmqgRbOYIIroaS52Hwwlkhb23m5q5Rqh+9HbeGkLjcLbKsiSlpx1PHGuehrveTX4Dh/ValQm0YO4eXE=
+	t=1766753935; cv=none; b=ciWGfh5Sd9L2AW/u+ap2dIvFRCLp017wR0AYwvZd9PwBMoq6ndKO1S31OtjufkhiD/CmO5kfG3x6lWf/Ezyfu79hcI/wGKqR6Vxo8MeIifv4cYVtyyCFaJba5dUINQ/5INh4VtEW3DySOz0ar710VMYqX5c/XBPKWkkSVa8Y+TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766753928; c=relaxed/simple;
-	bh=mISs6e4sFOmpqFJF5huwwA03CYAmRcdBj3UxE2vX5+w=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=M7J7VqowoelJt84u+pPt7X0evC1xAWkLq+DyzcefjqFUYO7Ocag2qKTz3JxK7YxUCdQp/sQAxCFJ/oTtQT8q31llE8SPdHaHlW9QkV5XRac0S573GFq4l+C2t0+oU2EyfwESr10Tbnmcl5h0hyWKKDmZP5YzzMxrWA5h6lXCd7Q=
+	s=arc-20240116; t=1766753935; c=relaxed/simple;
+	bh=SutOUYsKHnB32xSj1pZ5Xcaf2Z88gPgTQ32lxI4PKBU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jg5QzP0fEZTSRupJTp9tqxq+O4zfmUY9y2oB7wXR4z1kYx22jM9rZCxrMrA3RdEufUsD9EyiUY9+yhBWZ+zXhXtPI9ivHlYpsmLNThJiNvM5HZoLJK8yK0v4xn1JDy4+MoVy8oRv8bvk9sWw4y7qRVqSwoOlKi0gVBifNGvnUuA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
@@ -31,12 +32,11 @@ Received: from [127.0.0.1] (unknown [116.232.18.222])
 	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 3A3A23415E9;
-	Fri, 26 Dec 2025 12:58:42 +0000 (UTC)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 0764A3415F1;
+	Fri, 26 Dec 2025 12:58:47 +0000 (UTC)
 From: Yixun Lan <dlan@gentoo.org>
-Subject: [PATCH v2 0/3] pinctrl: spacemit: add support for K3 SoC
-Date: Fri, 26 Dec 2025 20:58:23 +0800
-Message-Id: <20251226-02-k3-pinctrl-v2-0-5172397e6831@gentoo.org>
+Date: Fri, 26 Dec 2025 20:58:24 +0800
+Subject: [PATCH v2 1/3] dt-bindings: pinctrl: spacemit: add K3 SoC support
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -45,11 +45,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAG+GTmkC/13Myw6CMBCF4Vchs3ZMO1y8rHwPw6LQKUw0LWkJ0
- RDe3Yo7l/9JzrdC4iic4FqsEHmRJMHnoEMB/Wj8wCg2N5CiWmuqURE+SpzE93N84qk89521HVc
- XC/kzRXby2r17m3uUNIf43vlFf9efRKT+pEWjQte4yrBplOncbWA/h3AMcYB227YPvB1YaasAA
- AA=
-X-Change-ID: 20251125-02-k3-pinctrl-738cbddbe49d
+Message-Id: <20251226-02-k3-pinctrl-v2-1-5172397e6831@gentoo.org>
+References: <20251226-02-k3-pinctrl-v2-0-5172397e6831@gentoo.org>
+In-Reply-To: <20251226-02-k3-pinctrl-v2-0-5172397e6831@gentoo.org>
 To: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>
@@ -58,61 +56,67 @@ Cc: Troy Mitchell <troy.mitchell@linux.spacemit.com>,
  linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
  linux-kernel@vger.kernel.org, Yixun Lan <dlan@gentoo.org>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1471; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=mISs6e4sFOmpqFJF5huwwA03CYAmRcdBj3UxE2vX5+w=;
- b=owEB6QIW/ZANAwAKATGq6kdZTbvtAcsmYgBpToZ2sXKWCLz7sikw7eDEqH4mys554B/JUlG6x
- g94EcrjLsSJAq8EAAEKAJkWIQS1urjJwxtxFWcCI9wxqupHWU277QUCaU6GdhsUgAAAAAAEAA5t
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1732; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=SutOUYsKHnB32xSj1pZ5Xcaf2Z88gPgTQ32lxI4PKBU=;
+ b=owEB6QIW/ZANAwAKATGq6kdZTbvtAcsmYgBpToZ5whC2XNQ/3Z3VOI/IZvPTC5NovxvPin3gp
+ WobKUNbOX+JAq8EAAEKAJkWIQS1urjJwxtxFWcCI9wxqupHWU277QUCaU6GeRsUgAAAAAAEAA5t
  YW51MiwyLjUrMS4xMSwyLDJfFIAAAAAALgAoaXNzdWVyLWZwckBub3RhdGlvbnMub3BlbnBncC5
  maWZ0aGhvcnNlbWFuLm5ldEI1QkFCOEM5QzMxQjcxMTU2NzAyMjNEQzMxQUFFQTQ3NTk0REJCRU
- QACgkQMarqR1lNu+3nAg//bcFwZe43UMQMUvof6Cd+Ra84AQgnlE06KFJldrRDftkiQBc7+qcPX
- 03m/xs+cpvQfDH70A/iG7D7aomvbrjii9ydC4lhnJdjanvrmOQ/fnP26QKciI4twg8wLc+iLPcY
- awK8e7z4j0vpu7He9m1n3mmKl/96bMJcvWcIKvYdZBSJ5x/i5BS4yAz/TpTVZHcYA4JvdPCt2+k
- QOuLYIFOvRjGfj1pqi1pZ+16a1ICpx0aJ74ifrefy/VKsxnP+pPBGWFQkaD+7HsXhma5gja9kqs
- hwzZ2SDtPNSRtChi9Zh54xE+Y3umbo/Ft2RhQsd6lWaPjEImL/J//3+VDBuPPv+u/y5qM9o5RPP
- qAYTIQSQYoxM89Zz2HwZR/eM+5M0iJrRyiKd3I0kzX4FVT9UCuMZzUa6V4pNfC7bSa62aYWw0ut
- AW/jrZ2JIUQyryK29hJlpQNZ+Y3nNznhsv88SXeDKCnRt6ftxytK61F5Yaw21JuKzkzBLkkpnJR
- gEgTFtlunDT9su0XDqu3jwvf9Ag6E5LNlEvKq3RHXhd0TOi40D5SfNsMWXAEDw1LIG5rk3V7SXi
- KmWwLqDG4n8wy/VgG3J+N6vdbCPAYaIeJdHn9nSwlAV4lDRaBts5pF5/Jc15CV91vSxPo92aYjf
- gyC0dXXDdomG+8DW8zRdr4ZZfooO2s=
+ QACgkQMarqR1lNu+2byA/+IrrABW5FF4g8zsEFUxQNxwuN3ET8VTxa0iyVa17eEFumYfGgOjAKD
+ 4eh1p+mtngZBWOtDiYo8T/8qTaietVmKfz/Ak7/RJwRwVonwb5B0K1HEgxDxURpAvJ3vTwA2fPo
+ XHdUQ63nRHOaHzxODos7OAMWWsQEcye+1ccFvc7nHaGWA5vzbIdSKYnKsd4kTNm2ppBSvlcXwwL
+ N+okN/B6qR5Ry7arV5hLHRb/lLghd3QaZ8Q43kA8PjjqziiD0GmZzfMm+2KPd1EBzqiYkvuWKEL
+ 8TWVNquC7vIKr0l1r/sDByUtDExz1dXfaK2A9nkD3hkFsLTrJy+o9yJorAvNu6Rdbtt7QlKZyyI
+ v1IF1q/anWFMnnB49RfafeU4davhPx+3VdQLaMA8M0UfzJ9nxtwRe1VQqXlR4HoyjOI9Dg8sQPD
+ 7587C/t0bxSi2OH8BqzYBBzfIvmKP4vJcIlb8A3EXl31rMdnQGgvm4K06n0cA/VsrMgZE61kcF+
+ j0DUOHN6T99YMCgMSHiXZ/UCePCn5jOyH/h/eFQM/pPRrpSv5TK28D/6uNQ8PvSk1pzNX9gA2OF
+ XsQvnopet1I3L2ScF/b4/TxZTFnMyjJ53AzhoEeVNjyo13QAP/To7LjeNp1UvM4AC58AMhklezY
+ NyT5c78grhijooVBvzh9i/gDwlkqig=
 X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
  fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-This series attempt to add pinctrl support for SpacemiT K3 SoC,
-
-I've removed the RFC tag as the driver is tested on K3 SoC.
-
-The K3 pinctrl IP shares almost same logic with previous K1 SoC generation,
-but has different register offset and pin configuration, I've introduced
-a pin_to_offset() function to handle the difference of register offset.
-for the drive strength and schmitter trigger settings, they are also changed.
-
-The patch #1 try to add pin support which should handle pin mux, while patch #2
-adjust drive strength and schmitter trigger settings accordingly for new SoC.
+Add new compatible string for SpacemiT K3 SoC, the pinctrl IP shares
+almost same logic with previous K1 generation, but has different register
+offset and pin configuration, for example the drive strength and
+schmitter trigger settings has been changed.
 
 Signed-off-by: Yixun Lan <dlan@gentoo.org>
 ---
-Changes in v2:
-- RFC tag removed
-- update dt-binding docs for drive strength
-- fix wrong argument for drive strength
-- Link to v1: https://lore.kernel.org/r/20251220-02-k3-pinctrl-v1-0-f6f4aea60abf@gentoo.org
+ .../devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml     | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
----
-Yixun Lan (3):
-      dt-bindings: pinctrl: spacemit: add K3 SoC support
-      pinctrl: spacemit: k3: add initial pin support
-      pinctrl: spacemit: k3: adjust drive strength and schmitter trigger
+diff --git a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+index d80e88aa07b4..d2cb994e30c1 100644
+--- a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+@@ -11,7 +11,9 @@ maintainers:
+ 
+ properties:
+   compatible:
+-    const: spacemit,k1-pinctrl
++    enum:
++      - spacemit,k1-pinctrl
++      - spacemit,k3-pinctrl
+ 
+   reg:
+     items:
+@@ -74,8 +76,12 @@ patternProperties:
+           drive-strength:
+             description: |
+               typical current when output high level.
+-              1.8V output: 11, 21, 32, 42 (mA)
+-              3.3V output: 7, 10, 13, 16, 19, 23, 26, 29 (mA)
++              For K1 SoC, the settings show as below:
++                1.8V output: 11, 21, 32, 42 (mA)
++                3.3V output: 7, 10, 13, 16, 19, 23, 26, 29 (mA)
++              For K3 SoC, the settings show as below:
++                1.8V output: 2, 4, 6, 7, 9, 11, 13, 14, 21, 23, 25, 26, 28, 30, 31, 33 (mA)
++                3.3V output: 3, 5, 7, 9, 11, 13, 15, 17, 25, 27, 29, 31, 33, 35, 37, 38 (mA)
+ 
+           input-schmitt:
+             description: |
 
- .../bindings/pinctrl/spacemit,k1-pinctrl.yaml      |  12 +-
- drivers/pinctrl/spacemit/Kconfig                   |   4 +-
- drivers/pinctrl/spacemit/pinctrl-k1.c              | 517 +++++++++++++++++++--
- 3 files changed, 477 insertions(+), 56 deletions(-)
----
-base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
-change-id: 20251125-02-k3-pinctrl-738cbddbe49d
-
-Best regards,
 -- 
-Yixun Lan
+2.52.0
 
 
