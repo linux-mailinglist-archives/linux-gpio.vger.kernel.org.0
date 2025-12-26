@@ -1,153 +1,135 @@
-Return-Path: <linux-gpio+bounces-29900-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29901-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68501CDE5C6
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 07:04:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11259CDE897
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 10:29:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C284C3005AB7
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 06:04:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9F5A2300DA6B
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 09:29:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BEED28150F;
-	Fri, 26 Dec 2025 06:04:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 257FF28D8CC;
+	Fri, 26 Dec 2025 09:29:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cse-iitm-ac-in.20230601.gappssmtp.com header.i=@cse-iitm-ac-in.20230601.gappssmtp.com header.b="cI+vNnf1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pJpVyiJ1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1239E26E6F2
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 06:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D654F28641F
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 09:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766729076; cv=none; b=XgT86/6P9Tjo0poiuRM19WMgFKy2TPUUUdiPOxjeJujgxDzoIdf56VT/mlDLnU/c3l1atCHng3zRluzYoskiEcBowwVyGzuvxbS0WPSdV6eWpEOewm+FC7S0LqH3KEJmPsnoeUalVfE1UYrfJh0QeyqZKAj2k0SKuhkfV0HAsr8=
+	t=1766741382; cv=none; b=kmKU/urH4Ws9PemzttxJwq//pjNcXFkJoCQOsiIYpQaZEGK+Ilt2maX+9G4y4zU2NwTFTLAsqFNOPuVc+gVH8mandtRxtfkwU5VE/jeV2mpvOw7eGoiMPeQZDfMukfdMfqayyc4dhmIcFQfFXiJfvF6YmsQdIjNTVK6Jm+9BALg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766729076; c=relaxed/simple;
-	bh=OKO8pPQ2u1PVbIbGFtwSsJ8PUCHGOqHmtWYFr7S9Uf4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=astQSeF1PTeti0YoK0ZA/7Ti3qmFnfcQDumkyMro4Ci8n1ZPMNfQsHTu9QielPoGuj6SiS0MIRBwM4wWG6Cd0fsNhLYYGluoayprJnrTzQbcn+1k1Pgm2z/Z7e+PuWP673c4isk34TsTuPbf1bm35T6woxDXF3m6OZiOp8w+LIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cse.iitm.ac.in; spf=pass smtp.mailfrom=cse.iitm.ac.in; dkim=pass (2048-bit key) header.d=cse-iitm-ac-in.20230601.gappssmtp.com header.i=@cse-iitm-ac-in.20230601.gappssmtp.com header.b=cI+vNnf1; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cse.iitm.ac.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cse.iitm.ac.in
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7f121c00dedso9437345b3a.0
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Dec 2025 22:04:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cse-iitm-ac-in.20230601.gappssmtp.com; s=20230601; t=1766729073; x=1767333873; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=j4xGho7aYPu0F2BOeXnW+h7VL+kSgq0Xp5r0+dbQtUA=;
-        b=cI+vNnf1uUnYbrrx3IjPLs1moi2coHQLtkzNejX7Pka+zTg4SPoKVrG3eklXax2pxZ
-         jQCnPgjliO69vuZ7XpyxKu9czN4+9I9PixYceRrjER6FBxTB6k/0d1PaExmnT4txHmSN
-         6AiWVMgenegnSMkuieLZ3ev9x7b++OLyzTM9Sdvfu6DiI7A+qvGsKZ/dTT2Njq0ZE+3P
-         fV68IDoPNYxFR1Avh63kOx3isk1NrxUtUGRT2s5usI98opgQy1PH9kIuJuC57jDEW6RG
-         QXXou5u7I7ktESXevN7vaHELmLrE1rq7/Odc0wTqN0RkzkI+luyhiI3R3rXGRtkaiNY9
-         Z/Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766729073; x=1767333873;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j4xGho7aYPu0F2BOeXnW+h7VL+kSgq0Xp5r0+dbQtUA=;
-        b=JZ/9SyJqQ+99QBqH6MmfBr+tXBmIEq/d0JMVX+0Jzt8Rzs++iRrlKmd/sV20DKCPxZ
-         N6OqAvdaA6uZ8QVJwrM72m0nhhwfPjAPT27aV8IhoIfyPIwCW/DZnon9WAIYC/Q/wJXg
-         AiiG9fHpn/sAQJ0FsweCI1g9w1+vje1iEA9MIExz/OIUc35+S0tJ9XJHLW9L2ChCTNWu
-         60akGDXPYJHBQYuvsIUp7EgZnicE8wLiY0SCtmO4/U6VLpI8FouJF8OillVDe0G3n0ko
-         +kAOE8xEHVN8e0EeXEd1hnEw5o7RbPQ3nZFGOvIfpKvMGYg8Ck/N0vnx5Z3XbXZXXEca
-         NkQA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9vkKlULY2NE+FlDpFI/I8Ykdq+gzTV/zP+/ufV7BEYVMouspbumVNAX9jN3ja4onsCj3J8OreFWtU@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywg20T7sYKOgj2DmiQ3frTVXsQvnqUcbz6Zmuub9rxNYzvwrWDZ
-	ovb60zKkfr7CuHIzDJKJN3ES8nsvRZ82rX/fq59WvEwZszuYHi6ak+kquF69dEs5wjfa4Kzehnd
-	xnuJV
-X-Gm-Gg: AY/fxX6QpWWd/Xos8mAiuWMESODNss1MR6mOUxVPAU7bTB5oIhfiQ6O70QOVS+l60BJ
-	kPFgILjtJR9U4eIz0RVc6AnY9yuvkDH7mtwkM/4XXT2cZWEVifunWHafRSaJxM5aFfua0CPl4vj
-	p4fAQeurgiVTmdee2EA7SzUXhUWkuhBi4q7v1AaYARW+MRfZYXAow9ZTUnAMNqMQRbltoYgVTRd
-	RDGDobc3r3H13VZGUB9Mm5EjdlSuqgjL6+P3wkq8tLBytyBlmxoF17u5lXEC5tBLqxWNEOYKs4g
-	r5wBNuRWAVbwFCGkIf0NF43qacansbPHjlCEkfUUk7rD4SlG8uG7HJooQcMTJes6EH3SgW8RF4i
-	eWWyuRFeY3t4+C6oJDEdr5cOPb54vNnGA5gHJnQai3YdJ9lHpNxxDfF65C2LHCQoCW/ESbl5DDd
-	zuGu6BQlqDoEY7LQ6s8rykr5dd
-X-Google-Smtp-Source: AGHT+IG+gJCqvf6cX/cvf23QXKpxJilzTTZX3/LI0nMqhPGbDIqafJa+NVZYkW9sVgMEo5U1DYe4PA==
-X-Received: by 2002:a05:6a00:302a:b0:7b7:79ca:9a73 with SMTP id d2e1a72fcca58-7ff646f9664mr22376207b3a.10.1766729072784;
-        Thu, 25 Dec 2025 22:04:32 -0800 (PST)
-Received: from localhost.localdomain ([103.158.43.19])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-7ff7e48cea1sm21262129b3a.45.2025.12.25.22.04.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Dec 2025 22:04:32 -0800 (PST)
-From: Abdun Nihaal <nihaal@cse.iitm.ac.in>
-To: linusw@kernel.org
-Cc: Abdun Nihaal <nihaal@cse.iitm.ac.in>,
-	brgl@kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v2] gpio: mpsse: fix reference leak in gpio_mpsse_probe() error paths
-Date: Fri, 26 Dec 2025 11:34:10 +0530
-Message-ID: <20251226060414.20785-1-nihaal@cse.iitm.ac.in>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1766741382; c=relaxed/simple;
+	bh=ajEhdSEL5pNc/Ubh7CXIVerCP1cnWW3WU3kkjZReQfQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rvlMFzzBAJZFkwBdePEynqnsPQ10YUH8hkePI1ihpAC//AOtqrTZOwySQP0yqki+Q+Sh+fSFGRjLGL9aUt8UwjMl7voYHNNIEifxbCGFMevlZc2B904aM3Ifv1loylHI43Rs1OeKFqG6DhOcPPOEQDKsl8Z51sWpaXZJkZk7cM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pJpVyiJ1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65A67C19423
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 09:29:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766741382;
+	bh=ajEhdSEL5pNc/Ubh7CXIVerCP1cnWW3WU3kkjZReQfQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pJpVyiJ18DyN3LpXtqImIEX68eyZG78dLXXQxNSv7S1ovw6d39+Omz4G534l+PJ1A
+	 V2vHVoyjTeAT3Y+L7WXqS/dFmTxDSIR6xb2NF7a+/91lwt/2I0qpiKa/ihDRI+/mZh
+	 kxYuLvjOzWcIgjqwPAiCPF8PhDV2dk7eqtJsbuzr1a1LcwSt+ofoh59vNGAQFP7JeS
+	 oVp7GgtUE9QtlX77U/0Mlaopce5jF9ZUZ/ILuHuIDC8l9ZkRkhrFYjKsi/QgW8mkJH
+	 qLCCXjJtrfZM37Ogl81Yjg6q8fbH0qcklBLRjwoscY4JoaegMVDUf3UGlEdUMeHDqF
+	 53S/5imKzBcaA==
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-787eb2d8663so89580377b3.0
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 01:29:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWhCFW/iEEk12K3lg4AycFG+K73Tj7+QlifxVI64gq649aFc5XaTAAYd20BBT595ROAZkE8vhhrICWf@vger.kernel.org
+X-Gm-Message-State: AOJu0YzT+6Juxz7zoFkmsQ5jyCrYLFyjwJPKnnK+w7BdhhaDXKy7cicV
+	wUztiPFmG3O9JJ8cpG8iZu1GpFdTShZK0Gu37CBtkeCLeeCl+b0EHCoCAbqmOwD8XxXFx5W/JZm
+	2J4ZakPHauVzUmUo9sHlsAcSkqizZ50Y=
+X-Google-Smtp-Source: AGHT+IF3r5BG9hTIHr8zuwTx79GqFycotrCyN/4vMXe9RrjtpXeL6chNB8YbmmqnT/TEhvbFt44GOPJsJC5H2SIP8Og=
+X-Received: by 2002:a05:690c:ed5:b0:787:a126:5619 with SMTP id
+ 00721157ae682-78fa5a8cb44mr238635187b3.11.1766741381741; Fri, 26 Dec 2025
+ 01:29:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251127-bogged-gauze-74aed9fdac0e@spud> <20251127-approve-parsley-49302c061ea1@spud>
+In-Reply-To: <20251127-approve-parsley-49302c061ea1@spud>
+From: Linus Walleij <linusw@kernel.org>
+Date: Fri, 26 Dec 2025 10:29:31 +0100
+X-Gmail-Original-Message-ID: <CAD++jLnLgLHeCjc7HD6KHQ-pWb9TFHbTUC-KB5X8eCFDXNNOBA@mail.gmail.com>
+X-Gm-Features: AQt7F2ofkXwYRaQ5RRWsRICeS2UHrcZAnOb0uu0G4CApv4Ccik0sbfg0XhOvPco
+Message-ID: <CAD++jLnLgLHeCjc7HD6KHQ-pWb9TFHbTUC-KB5X8eCFDXNNOBA@mail.gmail.com>
+Subject: Re: [RFC v2 2/5] pinctrl: add generic functions + pins mapper
+To: Conor Dooley <conor@kernel.org>
+Cc: linus.walleij@linaro.org, Conor Dooley <conor.dooley@microchip.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	Valentina.FernandezAlanis@microchip.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The reference obtained by calling usb_get_dev() is not released in the
-gpio_mpsse_probe() error paths. Fix that by using device managed helper
-functions. Also remove the usb_put_dev() call in the disconnect function
-since now it will be released automatically.
+Hi Conor,
 
-Cc: stable@vger.kernel.org
-Fixes: c46a74ff05c0 ("gpio: add support for FTDI's MPSSE as GPIO")
-Signed-off-by: Abdun Nihaal <nihaal@cse.iitm.ac.in>
----
-Compile tested only. Not tested on real hardware.
+sorry for being slow in reviews!
 
-v1->v2:
-- Switched to use devm_add_action_or_reset() to avoid unnecessary gotos,
-  as suggested by Bartosz Golaszewski.
+On Thu, Nov 27, 2025 at 11:58=E2=80=AFAM Conor Dooley <conor@kernel.org> wr=
+ote:
 
-Link to v1: https://lore.kernel.org/all/20251223065306.131008-1-nihaal@cse.iitm.ac.in/
+> +config GENERIC_PINCTRL_BELLS_AND_WHISTLES
 
- drivers/gpio/gpio-mpsse.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+Interesting name :D
 
-diff --git a/drivers/gpio/gpio-mpsse.c b/drivers/gpio/gpio-mpsse.c
-index ace652ba4df1..12191aeb6566 100644
---- a/drivers/gpio/gpio-mpsse.c
-+++ b/drivers/gpio/gpio-mpsse.c
-@@ -548,6 +548,13 @@ static void gpio_mpsse_ida_remove(void *data)
- 	ida_free(&gpio_mpsse_ida, priv->id);
- }
- 
-+static void gpio_mpsse_usb_put_dev(void *data)
-+{
-+	struct mpsse_priv *priv = data;
-+
-+	usb_put_dev(priv->udev);
-+}
-+
- static int mpsse_init_valid_mask(struct gpio_chip *chip,
- 				 unsigned long *valid_mask,
- 				 unsigned int ngpios)
-@@ -592,6 +599,10 @@ static int gpio_mpsse_probe(struct usb_interface *interface,
- 	INIT_LIST_HEAD(&priv->workers);
- 
- 	priv->udev = usb_get_dev(interface_to_usbdev(interface));
-+	err = devm_add_action_or_reset(dev, gpio_mpsse_usb_put_dev, priv);
-+	if (err)
-+		return err;
-+
- 	priv->intf = interface;
- 	priv->intf_id = interface->cur_altsetting->desc.bInterfaceNumber;
- 
-@@ -713,7 +724,6 @@ static void gpio_mpsse_disconnect(struct usb_interface *intf)
- 
- 	priv->intf = NULL;
- 	usb_set_intfdata(intf, NULL);
--	usb_put_dev(priv->udev);
- }
- 
- static struct usb_driver gpio_mpsse_driver = {
--- 
-2.43.0
+A bit like GENERIC_PINCTRL_LOCK_STOCK_AND_BARREL.
 
+Have you considered simply GENERIC_PINCTRL?
+
+> +obj-$(CONFIG_GENERIC_PINCTRL_BELLS_AND_WHISTLES) +=3D pinctrl-generic.o
+
+especially since the file is named like so...
+
+> +/*
+> + * For platforms that do not define groups or functions in the driver, b=
+ut
+> + * instead use the devicetree to describe them. This function will, unli=
+ke
+> + * pinconf_generic_dt_node_to_map() etc which rely on driver defined gro=
+ups
+> + * and functions, create them in addition to parsing pinconf properties =
+and
+> + * adding mappings.
+> + */
+> +int pinctrl_generic_pins_function_dt_node_to_map(struct pinctrl_dev *pct=
+ldev,
+> +                                                struct device_node *np,
+> +                                                struct pinctrl_map **map=
+s,
+> +                                                unsigned int *num_maps)
+
+All code looks fine.
+
+There is just the philosophical question whether groups and functions shoul=
+d
+really be in the device tree, as they can obviously be statically defined a=
+nd
+associated with the compatible.
+
+I got so much pressure to do it this way because so many driver authors rea=
+lly
+wanted to keep this in the device tree (usually because it saves memory in =
+the
+kernel) that I eventually caved in, and I have also been criticized for bei=
+ng to
+lenient on this because the compatible should suffice.
+
+For me this is all fine, and with you submitting this I suppose even the DT
+maintainers think this is fine to keep groups and functions in the device
+tree, so there it is.
+
+I can merge this when it's out of RFC.
+
+Yours,
+Linus Walleij
 
