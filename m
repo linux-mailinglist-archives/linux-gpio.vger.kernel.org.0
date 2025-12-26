@@ -1,170 +1,130 @@
-Return-Path: <linux-gpio+bounces-29909-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29910-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78AB6CDEC70
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 15:52:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D7063CDECCC
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 16:30:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AE28B3006F6F
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 14:52:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E28C83007EDA
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 15:30:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD09B231836;
-	Fri, 26 Dec 2025 14:52:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F38E23C516;
+	Fri, 26 Dec 2025 15:30:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="yEUhes3A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XOKc67Ko"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from polaris.svanheule.net (polaris.svanheule.net [84.16.241.116])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C651142E83
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 14:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.241.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20786D27E;
+	Fri, 26 Dec 2025 15:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766760751; cv=none; b=aF1JPDSSk9EYnkTR+lDUrglT59wx4Ef7QO517TjTOCUo8iOiJnzBZlHpe9ajraEpv/tAJ26YXQT67AqSkVNks0pTYloB+AAThHoPNaR4oPX8DR5Rhk7PclIL9/ikHjtFlJwU3yQazKC4V4OH0AMrQeXKq+fmOn0FGEwCy576TZg=
+	t=1766763040; cv=none; b=ub+eS+uK6twK7XueDHEo11GG14ITOmVZkidAUYDbaJxPELf2jFjriB6vnCVLxd1F8rb64TfHHjfNAM6YwfCsA4cPmLOMeJSkMt1cqm36KJ4Gz9/MYQawfP9zEBh3yIDc17V9QPLAFPTX62zj9v9tPxFbUYLwUMtKNOArAntLVeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766760751; c=relaxed/simple;
-	bh=8cv+uRDsgY/kwycqF2X1hXxbRFbVLqnu/AZyd5HHPNM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ihMUsNflhu9DJUvENMuUH+VKJEHa/VfRXTXQpiU6cd10lzPIY2FsJqh6q1OufT3vMLHna642T4BA/4yIAd0zjnw1iwYMW0VKcdw91OY01j7ExOIS47MS54V/Zt2DjyjTeSwewpSS12P2E4rITbG5hWuosSLKNjR+kZOTQY47dTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=yEUhes3A; arc=none smtp.client-ip=84.16.241.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svanheule.net
-Received: from [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8] (2a02-1812-162c-8f00-1e2d-b404-3319-eba8.ip6.access.telenet.be [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sander@svanheule.net)
-	by polaris.svanheule.net (Postfix) with ESMTPSA id D48E66B8DB8;
-	Fri, 26 Dec 2025 15:52:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-	s=mail1707; t=1766760747;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WAThaaKjBVKVFz/Q0ebC6b7atC4HpfaPtb4nS/rc8QA=;
-	b=yEUhes3Ah6Cx5ZxXDtQNZ6VyqYrO4/f2heXKM/THg/s4+iWariqU3z5zv3TWpH3XcbTPc9
-	BU6MaOpAga2ds3WXUCL+ml8NJaghTODKtObu9OSF5VZQlZOd8ug+nexDFAGP6bcAVRHLQ8
-	YOZpyxlR7gB4kscEmxwGcW3Dk/FPRhmbbYav/50sS9AqNQNIvwBq+lPiCKeZbUCq2PTmrO
-	1VTTFP8EulztRLAcxEwMis/y2Q40bt6iy8WhO2KNglwsv5c39tSj+lSJZJkhReaJONDxrg
-	4YHDf4QZEzhQ3pw3LHrA+uM83daNFmKPLVJUNM5kEdNJYqBqTaQRMXBILqchvQ==
-Message-ID: <a844934b105136f576ab46a5779cf57ef0cc7bbb.camel@svanheule.net>
-Subject: Re: [PATCH v9 3/6] mfd: Add RTL8231 core device
-From: Sander Vanheule <sander@svanheule.net>
-To: Krzysztof Kozlowski <krzk@kernel.org>, kernel test robot
- <lkp@intel.com>,  Lee Jones <lee@kernel.org>, Pavel Machek
- <pavel@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,  Michael
- Walle <mwalle@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Mark Brown
- <broonie@kernel.org>,  Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit
- <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,  "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Randy Dunlap
- <rdunlap@infradead.org>
-Cc: Paul Gazzillo <paul@pgazz.com>, Necip Fazil Yildiran	
- <fazilyildiran@gmail.com>, oe-kbuild-all@lists.linux.dev, 
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- netdev@vger.kernel.org,  Rob Herring <robh@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>
-Date: Fri, 26 Dec 2025 15:52:25 +0100
-In-Reply-To: <a26a5397-7597-49f6-9e73-3eb853915166@kernel.org>
-References: <20251215175115.135294-4-sander@svanheule.net>
-	 <202512220956.FVakrdhV-lkp@intel.com>
-	 <12c98c7c8bead26a61764e3e9611badf2cdfcac5.camel@svanheule.net>
-	 <a26a5397-7597-49f6-9e73-3eb853915166@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	s=arc-20240116; t=1766763040; c=relaxed/simple;
+	bh=RyZbK7uJYOhWI9dcoiLP7LXlTwKZf+N6eHUD0tVmLKc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BEOcP/y0MVEEFcM731VriDi2iji5nrGtzVsj/kkAIfzfKOk1UsPTxf1RWSshSKw1wzXD73HgzwVj1pMuh7GcPj/p1n8SCCFaTnPcK7fQmw2VNWtSIeTAVJzWLgDQoZwc/xFK04pD8q35wQh4ZAMopT0Y+afyCfWh9usnBdZg3ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XOKc67Ko; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60CA9C116D0;
+	Fri, 26 Dec 2025 15:30:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766763039;
+	bh=RyZbK7uJYOhWI9dcoiLP7LXlTwKZf+N6eHUD0tVmLKc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XOKc67KonQASLOJpRT1C3yITZWldDUqMnULeHL/+Zis5ZOxt6X7dmWNnfH0CJRoM5
+	 p7NZMcsfOgVhMWxFg2zP2WSGuqHexkWDU9TkD7LWH9XMNZcZ9HOghiitLvJdLEzwQg
+	 ztzDYeUwO9no08M8NQbDm8FFQfWek52GIjynfJhPmVPgIPUL30G07Iegpi7fb+vHh4
+	 AJdlruOhI6dDtRMucpxsFYZqT3znNCrpVajLSOrRAwGsspOCeTl98sYgGBgmkoxwKo
+	 zSNsPzt8NDnogyGA1cadVgazQMne0cMyUer52NhvtJfWOFrkWyn7L4FmRNfR+t8Xhi
+	 0AGO6VCnjm99g==
+Date: Fri, 26 Dec 2025 15:30:34 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Jiayu Du <jiayu.riscv@isrc.iscas.ac.cn>
+Cc: Yangyu Chen <cyy@cyyself.name>, linux-riscv@lists.infradead.org,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 10/11] riscv: dts: add initial canmv-k230 and k230-evb
+ dts
+Message-ID: <20251226-immunity-morale-67aad0a0fda1@spud>
+References: <tencent_F76EB8D731C521C18D5D7C4F8229DAA58E08@qq.com>
+ <tencent_DF5D7CD182AFDA188E0FB80E314A21038D08@qq.com>
+ <aUzjn3XHJTSl3vY9@duge-virtual-machine>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pv4dX9VFg9vNdESc"
+Content-Disposition: inline
+In-Reply-To: <aUzjn3XHJTSl3vY9@duge-virtual-machine>
 
-Hi Krzysztof,
 
-On Fri, 2025-12-26 at 13:19 +0100, Krzysztof Kozlowski wrote:
-> On 26/12/2025 12:59, Sander Vanheule wrote:
-> > > kismet warnings: (new ones prefixed by >>)
-> > > > > kismet: WARNING: unmet direct dependencies detected for MDIO_BUS =
-when
-> > > > > selected by REGMAP_MDIO
-> > > =C2=A0=C2=A0 WARNING: unmet direct dependencies detected for MDIO_BUS
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 Depends on [n]: NETDEVICES [=3Dn]
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 Selected by [y]:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 - REGMAP_MDIO [=3Dy]
+--pv4dX9VFg9vNdESc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Dec 25, 2025 at 03:11:27PM +0800, Jiayu Du wrote:
+> On Sat, Mar 23, 2024 at 08:12:22PM +0800, Yangyu Chen wrote:
+> ...
+> > diff --git a/arch/riscv/boot/dts/canaan/k230.dtsi b/arch/riscv/boot/dts=
+/canaan/k230.dtsi
+> ...
+> > +
+> > +	aliases {
+> > +		serial0 =3D &uart0;
+> > +	};
+>=20
+> The aliases should be set in the board-level dts file,
+> so please consider removing the aliases.
+>=20
+> ...
+> > +
+> > +		plic: interrupt-controller@f00000000 {
+> > +			compatible =3D "canaan,k230-plic" ,"thead,c900-plic";
+> Incorrect comma separation. It should be: "canaan,k230-plic", "thead,c900=
+-plic";
+
+If you send a follow-up patch, I'll squash it into my current k230
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/log/?h=3Dk2=
+30-basic
+
+> > +			reg =3D <0xf 0x00000000 0x0 0x04000000>;
+> > +			interrupts-extended =3D <&cpu0_intc 11>, <&cpu0_intc 9>;
+> > +			interrupt-controller;
+> > +			#address-cells =3D <0>;
+> > +			#interrupt-cells =3D <2>;
+> ...
+> > --=20
+> > 2.43.0
 > >=20
-> > I'm a bit puzzled on how to solve this one. The issue detected here is =
-that
-> > my
-> > driver (MFD_RTL8231) selects REGMAP_MDIO, which in turn selects MDIO_BU=
-S.
-> > The
-> > latter is dependent on NETDEVICES, which is not selected in this test.=
-=C2=A0
-> > The kernel does not yet have any other consumers of REGMAP_MDIO, which =
-is
-> > probably the reason the dependency issue has gone undetected until now.
-> >=20
-> > REGMAP_MDIO is not a visible symbol, so it must be selected by drivers.
 >=20
-> Reminds me old problem, probably the same:
->=20
-> https://lore.kernel.org/all/20250515140555.325601-2-krzysztof.kozlowski@l=
-inaro.org/
->=20
-> https://lore.kernel.org/all/20250516141722.13772-1-afd@ti.com/
->=20
-> Exactly the same MDIO here and there.
-> > [...]
-> Rather fix the same way Andrew did it. Or maybe his patch was not merged?
 
-Andrew's patch was merged, that's the code I'm seeing now. I think by
-placing the dependency under REGMAP_MDIO (or REGMAP_IRQ) instead of
-REGMAP, it just made the circular dependency less visible.
+--pv4dX9VFg9vNdESc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Making PINCTRL_RTL8231 "depends on GPIOLIB", like the GPIO drivers, only
-shortens the circular dependency loop:
+-----BEGIN PGP SIGNATURE-----
 
-   error: recursive dependency detected!
-   	symbol IRQ_DOMAIN is selected by MFD_CORE
-   	symbol MFD_CORE is selected by MFD_RTL8231
-   	symbol MFD_RTL8231 depends on MDIO_BUS
-   	symbol MDIO_BUS is selected by PHYLIB
-   	symbol PHYLIB is selected by ARC_EMAC_CORE
-   	symbol ARC_EMAC_CORE is selected by EMAC_ROCKCHIP
-   	symbol EMAC_ROCKCHIP depends on OF_IRQ
-   	symbol OF_IRQ depends on IRQ_DOMAIN
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaU6qGQAKCRB4tDGHoIJi
+0k6AAP4u0EmWqs7RVpZTsIhPhImspKGTDirwrgX5zDYM35145wEAnxKsxiCGjnRF
+5P5BedAwKl8ThZYT4gBz1GaGGbX1jgw=
+=E41A
+-----END PGP SIGNATURE-----
 
-Of these symbols, IRQ_DOMAIN and OF_IRQ are hidden symbols, so they must be
-selected by another symbol to be used. As shown above, OF_IRQ *depends* on
-IRQ_DOMAIN, which means some other symbol *must* select it for the dependen=
-cy to
-be satisfied, as IRQ_DOMAIN also cannot be selected directly by the user. O=
-F_IRQ
-also appears to be the only symbol in the kernel to depend on, rather than
-select, IRQ_DOMAIN.
-
-Turning the dependency of OF_IRQ on IRQ_DOMAIN around resolves the dependen=
-cy
-loop here, and ensures the hidden IRQ_DOMAIN symbol is selected whenever an=
-y
-other symbol selects OF_IRQ.
-
-The same reasoning was actually used in 2023 to suggest this change as well=
-:
-https://lore.kernel.org/lkml/20230213041535.12083-3-rdunlap@infradead.org/
-
-I found some follow-up, but it didn't look like it actually got wrapped up:
-https://lore.kernel.org/lkml/20230313023935.31037-1-rdunlap@infradead.org/
-
-Randy, do you happen to recall if/why this stalled? Should we just try to i=
-nvert
-the dependency again if there is no pressing need for the "proper" clean-up=
-?
-
-
-Best,
-Sander
+--pv4dX9VFg9vNdESc--
 
