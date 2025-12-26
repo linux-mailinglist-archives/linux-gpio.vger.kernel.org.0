@@ -1,130 +1,108 @@
-Return-Path: <linux-gpio+bounces-29910-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29911-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7063CDECCC
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 16:30:49 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C47ABCDEDCE
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 18:46:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E28C83007EDA
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 15:30:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2ED71300663D
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 17:46:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F38E23C516;
-	Fri, 26 Dec 2025 15:30:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A4DE227B95;
+	Fri, 26 Dec 2025 17:46:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XOKc67Ko"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AmI/6adO"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20786D27E;
-	Fri, 26 Dec 2025 15:30:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4925F7E0FF
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 17:46:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766763040; cv=none; b=ub+eS+uK6twK7XueDHEo11GG14ITOmVZkidAUYDbaJxPELf2jFjriB6vnCVLxd1F8rb64TfHHjfNAM6YwfCsA4cPmLOMeJSkMt1cqm36KJ4Gz9/MYQawfP9zEBh3yIDc17V9QPLAFPTX62zj9v9tPxFbUYLwUMtKNOArAntLVeA=
+	t=1766771171; cv=none; b=I0yeGbJonFUXFpyt1KcrJoV+flBjCW2Gldrfs6le1qhEaMVAvtFQjz5iLuvE3cxqInzxrC+kExv/aUxqo5uAToxnn5Ei46tsT39rRP1BDnIAJ22Rcrk+Ry/h89iVK9BLvmIC7LRhX6YGKRIPW+Qfn/2ciW3ivxB4P/sQl+WebQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766763040; c=relaxed/simple;
-	bh=RyZbK7uJYOhWI9dcoiLP7LXlTwKZf+N6eHUD0tVmLKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BEOcP/y0MVEEFcM731VriDi2iji5nrGtzVsj/kkAIfzfKOk1UsPTxf1RWSshSKw1wzXD73HgzwVj1pMuh7GcPj/p1n8SCCFaTnPcK7fQmw2VNWtSIeTAVJzWLgDQoZwc/xFK04pD8q35wQh4ZAMopT0Y+afyCfWh9usnBdZg3ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XOKc67Ko; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60CA9C116D0;
-	Fri, 26 Dec 2025 15:30:36 +0000 (UTC)
+	s=arc-20240116; t=1766771171; c=relaxed/simple;
+	bh=yaWWygL8WsP4cVvJT6R3siyfFYnRS5lDtTG/t4oXvO0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XkdAlPixJww90scLiU/Bl+iY2Ygi72Z/5zIlSEt2Hi2x1Si0u/pJU6wVPYc04Krh08htUFU/0oolnoN4/99hIDTM4+e0vF7jq1AAEhfVZbFWouW8+OGD3My8mPClxOXzO8SZ1bLopJfFYRj4dBHBwPdp4bArp9WgBDgrVrwYtIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AmI/6adO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E432EC19422
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 17:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766763039;
-	bh=RyZbK7uJYOhWI9dcoiLP7LXlTwKZf+N6eHUD0tVmLKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XOKc67KonQASLOJpRT1C3yITZWldDUqMnULeHL/+Zis5ZOxt6X7dmWNnfH0CJRoM5
-	 p7NZMcsfOgVhMWxFg2zP2WSGuqHexkWDU9TkD7LWH9XMNZcZ9HOghiitLvJdLEzwQg
-	 ztzDYeUwO9no08M8NQbDm8FFQfWek52GIjynfJhPmVPgIPUL30G07Iegpi7fb+vHh4
-	 AJdlruOhI6dDtRMucpxsFYZqT3znNCrpVajLSOrRAwGsspOCeTl98sYgGBgmkoxwKo
-	 zSNsPzt8NDnogyGA1cadVgazQMne0cMyUer52NhvtJfWOFrkWyn7L4FmRNfR+t8Xhi
-	 0AGO6VCnjm99g==
-Date: Fri, 26 Dec 2025 15:30:34 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Jiayu Du <jiayu.riscv@isrc.iscas.ac.cn>
-Cc: Yangyu Chen <cyy@cyyself.name>, linux-riscv@lists.infradead.org,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 10/11] riscv: dts: add initial canmv-k230 and k230-evb
- dts
-Message-ID: <20251226-immunity-morale-67aad0a0fda1@spud>
-References: <tencent_F76EB8D731C521C18D5D7C4F8229DAA58E08@qq.com>
- <tencent_DF5D7CD182AFDA188E0FB80E314A21038D08@qq.com>
- <aUzjn3XHJTSl3vY9@duge-virtual-machine>
+	s=k20201202; t=1766771170;
+	bh=yaWWygL8WsP4cVvJT6R3siyfFYnRS5lDtTG/t4oXvO0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AmI/6adOPlKtoWCWqKZe5yJ8oG3l7QmB6BbKWw9PHiLE4tV6bO6ppPs6EZc4/Mvo5
+	 BjWFzvBn3Qb+2938U+x2In324OewndYjEoiGA/Hw5Lu/asj+hGzh2cw64zgT7fE4/u
+	 U/n2g3PR+kAcRcNK7qFD+pdAZr4pwngYfob6YN3eD7/S/ulXVd5Rnl+Sfj+LvhRFSg
+	 nGuEoUds1QWt16egeOkTcuQVERlbhN7u/q3mpxsPxTWlCJTsfc/SPGD4dNKcGKsOZI
+	 7Sj1/m7i30EuY3YG84OmaMZArKg4RaWE1y6BIuUKyZ7mb/7fl7maX3SxZ/FpXjkRaK
+	 IwWMLTZ/mE13w==
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-787df0d729dso61345167b3.3
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 09:46:10 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW+149Wi2478tCZ5Vg+Zq2YxuClAe8EuXdGb+slNCEYrdhNcnapvv09lpglLo9A/msqcoIZ1+z8XXjb@vger.kernel.org
+X-Gm-Message-State: AOJu0YziuKArek7DHZnQSiY3iDtzpdWsGQCSZHAzh4CTMr6sMtkO/OcD
+	XsSHBsu1ubY+Izh7B6jRVJI4aBM0jGdB5RuzZcGJcjU2CgVo/Hg/3HgGZUjAHB+n5n/cZqOpwZi
+	NI63q2pe226DtScwM3+AvSZceaFhUSE8=
+X-Google-Smtp-Source: AGHT+IGkQ6XUIR2QS+jzQzwyb+uH06UnhoOZauP500HEuu+uE09VYZhz6TrKU/N7A068s7lGjbjGraZIx3VxSmvZI40=
+X-Received: by 2002:a05:690c:680c:b0:78f:9854:2603 with SMTP id
+ 00721157ae682-78fb406ad93mr234198697b3.28.1766771170211; Fri, 26 Dec 2025
+ 09:46:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pv4dX9VFg9vNdESc"
-Content-Disposition: inline
-In-Reply-To: <aUzjn3XHJTSl3vY9@duge-virtual-machine>
-
-
---pv4dX9VFg9vNdESc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20251203-mt8189-pinctrl-fix-regname-order-v1-1-16c8ff5490a7@collabora.com>
+In-Reply-To: <20251203-mt8189-pinctrl-fix-regname-order-v1-1-16c8ff5490a7@collabora.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Fri, 26 Dec 2025 18:45:59 +0100
+X-Gmail-Original-Message-ID: <CAD++jLnfTdN7Wwa+a-ze2112vkMPcTtvEUoOZDtu166hu4DP3g@mail.gmail.com>
+X-Gm-Features: AQt7F2rJr7E3FC3Q9d909t1YtxKsBcuUtJWHcYVrXihmnvhQlQW_9VrzDPk4caM
+Message-ID: <CAD++jLnfTdN7Wwa+a-ze2112vkMPcTtvEUoOZDtu166hu4DP3g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: mediatek: mt8189: restore previous register base
+ name array order
+To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+Cc: Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, kernel@collabora.com, 
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 25, 2025 at 03:11:27PM +0800, Jiayu Du wrote:
-> On Sat, Mar 23, 2024 at 08:12:22PM +0800, Yangyu Chen wrote:
-> ...
-> > diff --git a/arch/riscv/boot/dts/canaan/k230.dtsi b/arch/riscv/boot/dts=
-/canaan/k230.dtsi
-> ...
-> > +
-> > +	aliases {
-> > +		serial0 =3D &uart0;
-> > +	};
->=20
-> The aliases should be set in the board-level dts file,
-> so please consider removing the aliases.
->=20
-> ...
-> > +
-> > +		plic: interrupt-controller@f00000000 {
-> > +			compatible =3D "canaan,k230-plic" ,"thead,c900-plic";
-> Incorrect comma separation. It should be: "canaan,k230-plic", "thead,c900=
--plic";
+On Wed, Dec 3, 2025 at 12:33=E2=80=AFPM Louis-Alexis Eyraud
+<louisalexis.eyraud@collabora.com> wrote:
 
-If you send a follow-up patch, I'll squash it into my current k230
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/log/?h=3Dk2=
-30-basic
+> In mt8189-pinctrl driver, a previous commit changed the register base
+> name array (mt8189_pinctrl_register_base_names) entry name and order to
+> align it with the same name and order as the "mediatek,mt8189-pinctrl"
+> devicetree bindings. The new order (by ascending register address) now
+> causes an issue with MT8189 pinctrl configuration.
+>
+> MT8189 SoC has multiple base addresses for the pin configuration
+> registers. Several constant data structures, declaring each pin
+> configuration, are using PIN_FIELD_BASE() macro which i_base parameter
+> indicates for a given pin the lookup index in the base register address
+> array of the driver internal data for the configuration register
+> read/write accesses. But in practice, this parameter is given a
+> hardcoded numerical value that corresponds to the expected base
+> register entry index in mt8189_pinctrl_register_base_names array.
+> Since this array reordering, the i_base index matching is no more
+> correct.
+>
+> So, in order to avoid modifying over a thousand of PIN_FIELD_BASE()
+> calls, restore previous mt8189_pinctrl_register_base_names entry order.
+>
+> Fixes: 518919276c41 ("pinctrl: mediatek: mt8189: align register base name=
+s to dt-bindings ones")
+> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
 
-> > +			reg =3D <0xf 0x00000000 0x0 0x04000000>;
-> > +			interrupts-extended =3D <&cpu0_intc 11>, <&cpu0_intc 9>;
-> > +			interrupt-controller;
-> > +			#address-cells =3D <0>;
-> > +			#interrupt-cells =3D <2>;
-> ...
-> > --=20
-> > 2.43.0
-> >=20
->=20
+There have not been any comments on this so patch applied for
+fixes.
 
---pv4dX9VFg9vNdESc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaU6qGQAKCRB4tDGHoIJi
-0k6AAP4u0EmWqs7RVpZTsIhPhImspKGTDirwrgX5zDYM35145wEAnxKsxiCGjnRF
-5P5BedAwKl8ThZYT4gBz1GaGGbX1jgw=
-=E41A
------END PGP SIGNATURE-----
-
---pv4dX9VFg9vNdESc--
+Yours,
+Linus Walleij
 
