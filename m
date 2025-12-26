@@ -1,396 +1,170 @@
-Return-Path: <linux-gpio+bounces-29908-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29909-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2CBACDEB6A
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 14:00:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 78AB6CDEC70
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 15:52:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 002853026877
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 12:59:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AE28B3006F6F
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 14:52:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D66D32252E;
-	Fri, 26 Dec 2025 12:59:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD09B231836;
+	Fri, 26 Dec 2025 14:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="yEUhes3A"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from polaris.svanheule.net (polaris.svanheule.net [84.16.241.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECC8248880;
-	Fri, 26 Dec 2025 12:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C651142E83
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 14:52:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.241.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766753948; cv=none; b=n/Gaex7eij4FHf8D14bpqkCcng5RHy+BAOVrZCzwLWmlowAhQ/lq9tPagPaJsqB820EJcyrN36LySjB5ZH+8sOxqJG1wm7FAf2hy5ux7ECQb0BT7N+ENfhJz9fz15LDV95fq6YZzu+x/z1Lhc5Ht1Dm1XijapaOK7K3Ncukqh8s=
+	t=1766760751; cv=none; b=aF1JPDSSk9EYnkTR+lDUrglT59wx4Ef7QO517TjTOCUo8iOiJnzBZlHpe9ajraEpv/tAJ26YXQT67AqSkVNks0pTYloB+AAThHoPNaR4oPX8DR5Rhk7PclIL9/ikHjtFlJwU3yQazKC4V4OH0AMrQeXKq+fmOn0FGEwCy576TZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766753948; c=relaxed/simple;
-	bh=NLUQ+bvVOCaNTkqoksoZUBzNK0bLwckRSG+XlsNzJ+E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bO96xjYiRcZ4femYI1Ogx8gN1Atv8JRfvhHBBg4CE+pp9vfYM53A6l+tTZRJu6oZ4lU244ZJRfUDyLuSRFUFcFBQLK0Ra+/J48W9Hf5va15rMXqADU2VpekF0ksay1V44eJTEh8Q3um6NsYz/MA3hz1yfi9XHZ0j60KnZ1IsvHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from [127.0.0.1] (unknown [116.232.18.222])
+	s=arc-20240116; t=1766760751; c=relaxed/simple;
+	bh=8cv+uRDsgY/kwycqF2X1hXxbRFbVLqnu/AZyd5HHPNM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ihMUsNflhu9DJUvENMuUH+VKJEHa/VfRXTXQpiU6cd10lzPIY2FsJqh6q1OufT3vMLHna642T4BA/4yIAd0zjnw1iwYMW0VKcdw91OY01j7ExOIS47MS54V/Zt2DjyjTeSwewpSS12P2E4rITbG5hWuosSLKNjR+kZOTQY47dTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=yEUhes3A; arc=none smtp.client-ip=84.16.241.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svanheule.net
+Received: from [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8] (2a02-1812-162c-8f00-1e2d-b404-3319-eba8.ip6.access.telenet.be [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id C10003415F1;
-	Fri, 26 Dec 2025 12:58:59 +0000 (UTC)
-From: Yixun Lan <dlan@gentoo.org>
-Date: Fri, 26 Dec 2025 20:58:26 +0800
-Subject: [PATCH v2 3/3] pinctrl: spacemit: k3: adjust drive strength and
- schmitter trigger
+	(Authenticated sender: sander@svanheule.net)
+	by polaris.svanheule.net (Postfix) with ESMTPSA id D48E66B8DB8;
+	Fri, 26 Dec 2025 15:52:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+	s=mail1707; t=1766760747;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WAThaaKjBVKVFz/Q0ebC6b7atC4HpfaPtb4nS/rc8QA=;
+	b=yEUhes3Ah6Cx5ZxXDtQNZ6VyqYrO4/f2heXKM/THg/s4+iWariqU3z5zv3TWpH3XcbTPc9
+	BU6MaOpAga2ds3WXUCL+ml8NJaghTODKtObu9OSF5VZQlZOd8ug+nexDFAGP6bcAVRHLQ8
+	YOZpyxlR7gB4kscEmxwGcW3Dk/FPRhmbbYav/50sS9AqNQNIvwBq+lPiCKeZbUCq2PTmrO
+	1VTTFP8EulztRLAcxEwMis/y2Q40bt6iy8WhO2KNglwsv5c39tSj+lSJZJkhReaJONDxrg
+	4YHDf4QZEzhQ3pw3LHrA+uM83daNFmKPLVJUNM5kEdNJYqBqTaQRMXBILqchvQ==
+Message-ID: <a844934b105136f576ab46a5779cf57ef0cc7bbb.camel@svanheule.net>
+Subject: Re: [PATCH v9 3/6] mfd: Add RTL8231 core device
+From: Sander Vanheule <sander@svanheule.net>
+To: Krzysztof Kozlowski <krzk@kernel.org>, kernel test robot
+ <lkp@intel.com>,  Lee Jones <lee@kernel.org>, Pavel Machek
+ <pavel@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,  Michael
+ Walle <mwalle@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Mark Brown
+ <broonie@kernel.org>,  Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,  "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Randy Dunlap
+ <rdunlap@infradead.org>
+Cc: Paul Gazzillo <paul@pgazz.com>, Necip Fazil Yildiran	
+ <fazilyildiran@gmail.com>, oe-kbuild-all@lists.linux.dev, 
+	linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ netdev@vger.kernel.org,  Rob Herring <robh@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>
+Date: Fri, 26 Dec 2025 15:52:25 +0100
+In-Reply-To: <a26a5397-7597-49f6-9e73-3eb853915166@kernel.org>
+References: <20251215175115.135294-4-sander@svanheule.net>
+	 <202512220956.FVakrdhV-lkp@intel.com>
+	 <12c98c7c8bead26a61764e3e9611badf2cdfcac5.camel@svanheule.net>
+	 <a26a5397-7597-49f6-9e73-3eb853915166@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251226-02-k3-pinctrl-v2-3-5172397e6831@gentoo.org>
-References: <20251226-02-k3-pinctrl-v2-0-5172397e6831@gentoo.org>
-In-Reply-To: <20251226-02-k3-pinctrl-v2-0-5172397e6831@gentoo.org>
-To: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Troy Mitchell <troy.mitchell@linux.spacemit.com>, 
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
- linux-kernel@vger.kernel.org, Yixun Lan <dlan@gentoo.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10394; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=NLUQ+bvVOCaNTkqoksoZUBzNK0bLwckRSG+XlsNzJ+E=;
- b=owEB6QIW/ZANAwAKATGq6kdZTbvtAcsmYgBpToZ/uvQmQeL0Rj5pKT3fAHffYpObjk7v3iyQa
- MJm+zCHreeJAq8EAAEKAJkWIQS1urjJwxtxFWcCI9wxqupHWU277QUCaU6GfxsUgAAAAAAEAA5t
- YW51MiwyLjUrMS4xMSwyLDJfFIAAAAAALgAoaXNzdWVyLWZwckBub3RhdGlvbnMub3BlbnBncC5
- maWZ0aGhvcnNlbWFuLm5ldEI1QkFCOEM5QzMxQjcxMTU2NzAyMjNEQzMxQUFFQTQ3NTk0REJCRU
- QACgkQMarqR1lNu+3jnA//Rtnm4n9FsTnaRzy5MjMupoNTtMRIevo4Gotcqes6+ge6N167M4vw8
- 0P61rPUj3W1DvkO15zihHciMDBtEPW5axDQ81B1rAEUau6KUCtUATYR7zRGgKVoehYTYAVonukm
- qgfAEehGO5sHXitAq82xdGBWZ7CsPF6XKB0vNsv+pLhLAfyP0SZsBHscngawlbcHHm+ZbOIgtaD
- lxgRinabKgrK7GatfebHwqSw/PevGECvefPMnZO9s729wVYAfCt/z9qyZpLVKT715e9iIpzpBSn
- CxvEDPhv53uDp0vg5HEyxPp8N0Xu4nA3Iy8YrFp5kqjnDzOcstn43MM/al3ZPCy2JPMPffQtduR
- NiUrjFKtZkRXRPCpKIAVARjzKKrUGe/LIrMS3cmncAekgkvMXXj+dYH9VdeY9YObhzIPjw6tKjP
- hAEob5AoL6Nd4Bg1Hru8sh94C08uivQ7sqRdbnZC+tQ0ubiEJhwjvlaZnhK319rGvIPCLEafXjK
- Y35Ug/epgPlSZdzm9i7088duapOUXw0DHEQZkzlqEDej2tP9eLB+8V0KtfajfocBxUGlF+rglbU
- nCGgwvxCFl2PpCgmVfZt51DOnwtYYcn3zzIKDR9KocSxvAKaFO6xKyY8e8jrmqrBFQqi6FTxdp9
- k8yIii+LiUDKL16GrKtHBWSyTiIxTk=
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-K3 SoC expand drive strength to 4 bits which support even larger
-settings table comparing to old SoC generation. Also schmitter trigger
-setting is changed to 1 bit.
+Hi Krzysztof,
 
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
----
- drivers/pinctrl/spacemit/pinctrl-k1.c | 163 ++++++++++++++++++++++++----------
- 1 file changed, 116 insertions(+), 47 deletions(-)
+On Fri, 2025-12-26 at 13:19 +0100, Krzysztof Kozlowski wrote:
+> On 26/12/2025 12:59, Sander Vanheule wrote:
+> > > kismet warnings: (new ones prefixed by >>)
+> > > > > kismet: WARNING: unmet direct dependencies detected for MDIO_BUS =
+when
+> > > > > selected by REGMAP_MDIO
+> > > =C2=A0=C2=A0 WARNING: unmet direct dependencies detected for MDIO_BUS
+> > > =C2=A0=C2=A0=C2=A0=C2=A0 Depends on [n]: NETDEVICES [=3Dn]
+> > > =C2=A0=C2=A0=C2=A0=C2=A0 Selected by [y]:
+> > > =C2=A0=C2=A0=C2=A0=C2=A0 - REGMAP_MDIO [=3Dy]
+> >=20
+> > I'm a bit puzzled on how to solve this one. The issue detected here is =
+that
+> > my
+> > driver (MFD_RTL8231) selects REGMAP_MDIO, which in turn selects MDIO_BU=
+S.
+> > The
+> > latter is dependent on NETDEVICES, which is not selected in this test.=
+=C2=A0
+> > The kernel does not yet have any other consumers of REGMAP_MDIO, which =
+is
+> > probably the reason the dependency issue has gone undetected until now.
+> >=20
+> > REGMAP_MDIO is not a visible symbol, so it must be selected by drivers.
+>=20
+> Reminds me old problem, probably the same:
+>=20
+> https://lore.kernel.org/all/20250515140555.325601-2-krzysztof.kozlowski@l=
+inaro.org/
+>=20
+> https://lore.kernel.org/all/20250516141722.13772-1-afd@ti.com/
+>=20
+> Exactly the same MDIO here and there.
+> > [...]
+> Rather fix the same way Andrew did it. Or maybe his patch was not merged?
 
-diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
-index 441817f539e3..07267c5f0f44 100644
---- a/drivers/pinctrl/spacemit/pinctrl-k1.c
-+++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
-@@ -24,11 +24,12 @@
- #include "pinctrl-k1.h"
- 
- /*
-- * +---------+----------+-----------+--------+--------+----------+--------+
-- * |   pull  |   drive  | schmitter |  slew  |  edge  |  strong  |   mux  |
-- * | up/down | strength |  trigger  |  rate  | detect |   pull   |  mode  |
-- * +---------+----------+-----------+--------+--------+----------+--------+
-- *   3 bits     3 bits     2 bits     1 bit    3 bits     1 bit    3 bits
-+ *     |   pull  |   drive  | schmitter | slew  |  edge  | strong |   mux  |
-+ * SoC | up/down | strength |  trigger  | rate  | detect |  pull  |  mode  |
-+ *-----+---------+----------+-----------+-------+--------+--------+--------+
-+ * K1  | 3 bits  |  3 bits  |   2 bits  | 1 bit | 3 bits |  1 bit | 3 bits |
-+ *-----+---------+----------+-----------+-------+--------+--------+--------+
-+ * K3  | 3 bits  |  4 bits  |   1 bits  | 1 bit | 3 bits |  1 bit | 3 bits |
-  */
- 
- #define PAD_MUX			GENMASK(2, 0)
-@@ -38,12 +39,29 @@
- #define PAD_EDGE_CLEAR		BIT(6)
- #define PAD_SLEW_RATE		GENMASK(12, 11)
- #define PAD_SLEW_RATE_EN	BIT(7)
--#define PAD_SCHMITT		GENMASK(9, 8)
--#define PAD_DRIVE		GENMASK(12, 10)
-+#define PAD_SCHMITT_K1		GENMASK(9, 8)
-+#define PAD_DRIVE_K1		GENMASK(12, 10)
-+#define PAD_SCHMITT_K3		BIT(8)
-+#define PAD_DRIVE_K3		GENMASK(12, 9)
- #define PAD_PULLDOWN		BIT(13)
- #define PAD_PULLUP		BIT(14)
- #define PAD_PULL_EN		BIT(15)
- 
-+struct spacemit_pin_drv_strength {
-+	u8		val;
-+	u32		mA;
-+};
-+
-+struct spacemit_pinctrl_dconf {
-+	u64				schmitt_mask;
-+	u64				drive_mask;
-+
-+	struct spacemit_pin_drv_strength *ds_1v8_tbl;
-+	size_t				 ds_1v8_tbl_num;
-+	struct spacemit_pin_drv_strength *ds_3v3_tbl;
-+	size_t				 ds_3v3_tbl_num;
-+};
-+
- struct spacemit_pin {
- 	u16				pin;
- 	u16				flags;
-@@ -67,6 +85,7 @@ struct spacemit_pinctrl_data {
- 	const struct spacemit_pin	*data;
- 	u16				npins;
- 	unsigned int			(*pin_to_offset)(unsigned int pin);
-+	const struct spacemit_pinctrl_dconf	*dconf;
- };
- 
- struct spacemit_pin_mux_config {
-@@ -74,11 +93,6 @@ struct spacemit_pin_mux_config {
- 	u32				config;
- };
- 
--struct spacemit_pin_drv_strength {
--	u8		val;
--	u32		mA;
--};
--
- /* map pin id to pinctrl register offset, refer MFPR definition */
- static unsigned int spacemit_k1_pin_to_offset(unsigned int pin)
- {
-@@ -193,23 +207,70 @@ static void spacemit_pctrl_dbg_show(struct pinctrl_dev *pctldev,
- 	seq_printf(seq, "mux: %ld reg: 0x%04x", (value & PAD_MUX), value);
- }
- 
--/* use IO high level output current as the table */
--static struct spacemit_pin_drv_strength spacemit_ds_1v8_tbl[4] = {
--	{ 0, 11 },
--	{ 2, 21 },
--	{ 4, 32 },
--	{ 6, 42 },
-+static const struct spacemit_pinctrl_dconf k1_drive_conf = {
-+	.drive_mask = PAD_DRIVE_K1,
-+	.schmitt_mask = PAD_SCHMITT_K1,
-+	.ds_1v8_tbl = (struct spacemit_pin_drv_strength[]) {
-+		{ 0, 11 },
-+		{ 2, 21 },
-+		{ 4, 32 },
-+		{ 6, 42 },
-+	},
-+	.ds_1v8_tbl_num = 4,
-+	.ds_3v3_tbl = (struct spacemit_pin_drv_strength[]) {
-+		{ 0,  7 },
-+		{ 2, 10 },
-+		{ 4, 13 },
-+		{ 6, 16 },
-+		{ 1, 19 },
-+		{ 3, 23 },
-+		{ 5, 26 },
-+		{ 7, 29 },
-+	},
-+	.ds_3v3_tbl_num = 8,
- };
- 
--static struct spacemit_pin_drv_strength spacemit_ds_3v3_tbl[8] = {
--	{ 0,  7 },
--	{ 2, 10 },
--	{ 4, 13 },
--	{ 6, 16 },
--	{ 1, 19 },
--	{ 3, 23 },
--	{ 5, 26 },
--	{ 7, 29 },
-+static const struct spacemit_pinctrl_dconf k3_drive_conf = {
-+	.drive_mask = PAD_DRIVE_K3,
-+	.schmitt_mask = PAD_SCHMITT_K3,
-+	.ds_1v8_tbl = (struct spacemit_pin_drv_strength[]) {
-+		{ 0,  2 },
-+		{ 1,  4 },
-+		{ 2,  6 },
-+		{ 3,  7 },
-+		{ 4,  9 },
-+		{ 5,  11 },
-+		{ 6,  13 },
-+		{ 7,  14 },
-+		{ 8,  21 },
-+		{ 9,  23 },
-+		{ 10, 25 },
-+		{ 11, 26 },
-+		{ 12, 28 },
-+		{ 13, 30 },
-+		{ 14, 31 },
-+		{ 15, 33 },
-+	},
-+	.ds_1v8_tbl_num = 16,
-+	.ds_3v3_tbl = (struct spacemit_pin_drv_strength[]) {
-+		{ 0,  3 },
-+		{ 1,  5 },
-+		{ 2,  7 },
-+		{ 3,  9 },
-+		{ 4,  11 },
-+		{ 5,  13 },
-+		{ 6,  15 },
-+		{ 7,  17 },
-+		{ 8,  25 },
-+		{ 9,  27 },
-+		{ 10, 29 },
-+		{ 11, 31 },
-+		{ 12, 33 },
-+		{ 13, 35 },
-+		{ 14, 37 },
-+		{ 15, 38 },
-+	},
-+	.ds_3v3_tbl_num = 16,
- };
- 
- static inline u8 spacemit_get_ds_value(struct spacemit_pin_drv_strength *tbl,
-@@ -237,16 +298,17 @@ static inline u32 spacemit_get_ds_mA(struct spacemit_pin_drv_strength *tbl,
- }
- 
- static inline u8 spacemit_get_driver_strength(enum spacemit_pin_io_type type,
-+					      const struct spacemit_pinctrl_dconf *dconf,
- 					      u32 mA)
- {
- 	switch (type) {
- 	case IO_TYPE_1V8:
--		return spacemit_get_ds_value(spacemit_ds_1v8_tbl,
--					     ARRAY_SIZE(spacemit_ds_1v8_tbl),
-+		return spacemit_get_ds_value(dconf->ds_1v8_tbl,
-+					     dconf->ds_1v8_tbl_num,
- 					     mA);
- 	case IO_TYPE_3V3:
--		return spacemit_get_ds_value(spacemit_ds_3v3_tbl,
--					     ARRAY_SIZE(spacemit_ds_3v3_tbl),
-+		return spacemit_get_ds_value(dconf->ds_3v3_tbl,
-+					     dconf->ds_3v3_tbl_num,
- 					     mA);
- 	default:
- 		return 0;
-@@ -254,16 +316,17 @@ static inline u8 spacemit_get_driver_strength(enum spacemit_pin_io_type type,
- }
- 
- static inline u32 spacemit_get_drive_strength_mA(enum spacemit_pin_io_type type,
-+						 const struct spacemit_pinctrl_dconf *dconf,
- 						 u32 value)
- {
- 	switch (type) {
- 	case IO_TYPE_1V8:
--		return spacemit_get_ds_mA(spacemit_ds_1v8_tbl,
--					  ARRAY_SIZE(spacemit_ds_1v8_tbl),
--					  value & 0x6);
-+		return spacemit_get_ds_mA(dconf->ds_1v8_tbl,
-+					  dconf->ds_1v8_tbl_num,
-+					  value);
- 	case IO_TYPE_3V3:
--		return spacemit_get_ds_mA(spacemit_ds_3v3_tbl,
--					  ARRAY_SIZE(spacemit_ds_3v3_tbl),
-+		return spacemit_get_ds_mA(dconf->ds_3v3_tbl,
-+					  dconf->ds_3v3_tbl_num,
- 					  value);
- 	default:
- 		return 0;
-@@ -510,6 +573,7 @@ static int spacemit_pinconf_get(struct pinctrl_dev *pctldev,
- #define ENABLE_DRV_STRENGTH	BIT(1)
- #define ENABLE_SLEW_RATE	BIT(2)
- static int spacemit_pinconf_generate_config(const struct spacemit_pin *spin,
-+					    const struct spacemit_pinctrl_dconf *dconf,
- 					    unsigned long *configs,
- 					    unsigned int num_configs,
- 					    u32 *value)
-@@ -547,8 +611,8 @@ static int spacemit_pinconf_generate_config(const struct spacemit_pin *spin,
- 			drv_strength = arg;
- 			break;
- 		case PIN_CONFIG_INPUT_SCHMITT:
--			v &= ~PAD_SCHMITT;
--			v |= FIELD_PREP(PAD_SCHMITT, arg);
-+			v &= ~dconf->schmitt_mask;
-+			v |= (arg << __ffs(dconf->schmitt_mask)) & dconf->schmitt_mask;
- 			break;
- 		case PIN_CONFIG_POWER_SOURCE:
- 			voltage = arg;
-@@ -584,10 +648,10 @@ static int spacemit_pinconf_generate_config(const struct spacemit_pin *spin,
- 			}
- 		}
- 
--		val = spacemit_get_driver_strength(type, drv_strength);
-+		val = spacemit_get_driver_strength(type, dconf, drv_strength);
- 
--		v &= ~PAD_DRIVE;
--		v |= FIELD_PREP(PAD_DRIVE, val);
-+		v &= ~dconf->drive_mask;
-+		v |= (val << __ffs(dconf->drive_mask)) & dconf->drive_mask;
- 	}
- 
- 	if (flag & ENABLE_SLEW_RATE) {
-@@ -637,7 +701,8 @@ static int spacemit_pinconf_set(struct pinctrl_dev *pctldev,
- 	const struct spacemit_pin *spin = spacemit_get_pin(pctrl, pin);
- 	u32 value;
- 
--	if (spacemit_pinconf_generate_config(spin, configs, num_configs, &value))
-+	if (spacemit_pinconf_generate_config(spin, pctrl->data->dconf,
-+					     configs, num_configs, &value))
- 		return -EINVAL;
- 
- 	return spacemit_pin_set_config(pctrl, pin, value);
-@@ -659,7 +724,8 @@ static int spacemit_pinconf_group_set(struct pinctrl_dev *pctldev,
- 		return -EINVAL;
- 
- 	spin = spacemit_get_pin(pctrl, group->grp.pins[0]);
--	if (spacemit_pinconf_generate_config(spin, configs, num_configs, &value))
-+	if (spacemit_pinconf_generate_config(spin, pctrl->data->dconf,
-+					     configs, num_configs, &value))
- 		return -EINVAL;
- 
- 	for (i = 0; i < group->grp.npins; i++)
-@@ -693,6 +759,7 @@ static void spacemit_pinconf_dbg_show(struct pinctrl_dev *pctldev,
- 				      struct seq_file *seq, unsigned int pin)
- {
- 	struct spacemit_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-+	const struct spacemit_pinctrl_dconf *dconf = pctrl->data->dconf;
- 	const struct spacemit_pin *spin = spacemit_get_pin(pctrl, pin);
- 	enum spacemit_pin_io_type type = spacemit_to_pin_io_type(spin);
- 	void __iomem *reg = spacemit_pin_to_reg(pctrl, pin);
-@@ -703,17 +770,17 @@ static void spacemit_pinconf_dbg_show(struct pinctrl_dev *pctldev,
- 
- 	seq_printf(seq, ", io type (%s)", io_type_desc[type]);
- 
--	tmp = FIELD_GET(PAD_DRIVE, value);
-+	tmp = (value & dconf->drive_mask) >> __ffs(dconf->drive_mask);
- 	if (type == IO_TYPE_1V8 || type == IO_TYPE_3V3) {
--		mA = spacemit_get_drive_strength_mA(type, tmp);
-+		mA = spacemit_get_drive_strength_mA(type, dconf, tmp);
- 		seq_printf(seq, ", drive strength (%d mA)", mA);
- 	}
- 
- 	/* drive strength depend on power source, so show all values */
- 	if (type == IO_TYPE_EXTERNAL)
- 		seq_printf(seq, ", drive strength (%d or %d mA)",
--			   spacemit_get_drive_strength_mA(IO_TYPE_1V8, tmp),
--			   spacemit_get_drive_strength_mA(IO_TYPE_3V3, tmp));
-+			   spacemit_get_drive_strength_mA(IO_TYPE_1V8, dconf, tmp),
-+			   spacemit_get_drive_strength_mA(IO_TYPE_3V3, dconf, tmp));
- 
- 	seq_printf(seq, ", register (0x%04x)", value);
- }
-@@ -1051,6 +1118,7 @@ static const struct spacemit_pinctrl_data k1_pinctrl_data = {
- 	.data = k1_pin_data,
- 	.npins = ARRAY_SIZE(k1_pin_desc),
- 	.pin_to_offset = spacemit_k1_pin_to_offset,
-+	.dconf = &k1_drive_conf,
- };
- 
- static const struct pinctrl_pin_desc k3_pin_desc[] = {
-@@ -1387,6 +1455,7 @@ static const struct spacemit_pinctrl_data k3_pinctrl_data = {
- 	.data = k3_pin_data,
- 	.npins = ARRAY_SIZE(k3_pin_desc),
- 	.pin_to_offset = spacemit_k3_pin_to_offset,
-+	.dconf = &k3_drive_conf,
- };
- 
- static const struct of_device_id k1_pinctrl_ids[] = {
+Andrew's patch was merged, that's the code I'm seeing now. I think by
+placing the dependency under REGMAP_MDIO (or REGMAP_IRQ) instead of
+REGMAP, it just made the circular dependency less visible.
 
--- 
-2.52.0
+Making PINCTRL_RTL8231 "depends on GPIOLIB", like the GPIO drivers, only
+shortens the circular dependency loop:
 
+   error: recursive dependency detected!
+   	symbol IRQ_DOMAIN is selected by MFD_CORE
+   	symbol MFD_CORE is selected by MFD_RTL8231
+   	symbol MFD_RTL8231 depends on MDIO_BUS
+   	symbol MDIO_BUS is selected by PHYLIB
+   	symbol PHYLIB is selected by ARC_EMAC_CORE
+   	symbol ARC_EMAC_CORE is selected by EMAC_ROCKCHIP
+   	symbol EMAC_ROCKCHIP depends on OF_IRQ
+   	symbol OF_IRQ depends on IRQ_DOMAIN
+
+Of these symbols, IRQ_DOMAIN and OF_IRQ are hidden symbols, so they must be
+selected by another symbol to be used. As shown above, OF_IRQ *depends* on
+IRQ_DOMAIN, which means some other symbol *must* select it for the dependen=
+cy to
+be satisfied, as IRQ_DOMAIN also cannot be selected directly by the user. O=
+F_IRQ
+also appears to be the only symbol in the kernel to depend on, rather than
+select, IRQ_DOMAIN.
+
+Turning the dependency of OF_IRQ on IRQ_DOMAIN around resolves the dependen=
+cy
+loop here, and ensures the hidden IRQ_DOMAIN symbol is selected whenever an=
+y
+other symbol selects OF_IRQ.
+
+The same reasoning was actually used in 2023 to suggest this change as well=
+:
+https://lore.kernel.org/lkml/20230213041535.12083-3-rdunlap@infradead.org/
+
+I found some follow-up, but it didn't look like it actually got wrapped up:
+https://lore.kernel.org/lkml/20230313023935.31037-1-rdunlap@infradead.org/
+
+Randy, do you happen to recall if/why this stalled? Should we just try to i=
+nvert
+the dependency again if there is no pressing need for the "proper" clean-up=
+?
+
+
+Best,
+Sander
 
