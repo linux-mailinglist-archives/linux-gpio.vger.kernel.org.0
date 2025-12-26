@@ -1,68 +1,68 @@
-Return-Path: <linux-gpio+bounces-29901-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29902-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11259CDE897
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 10:29:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DD7ECDE8B5
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 10:40:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9F5A2300DA6B
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 09:29:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 967BD300D407
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 09:40:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 257FF28D8CC;
-	Fri, 26 Dec 2025 09:29:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73BDC2882B2;
+	Fri, 26 Dec 2025 09:40:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pJpVyiJ1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gUCOWOnJ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D654F28641F
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 09:29:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3148A1CD15
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 09:40:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766741382; cv=none; b=kmKU/urH4Ws9PemzttxJwq//pjNcXFkJoCQOsiIYpQaZEGK+Ilt2maX+9G4y4zU2NwTFTLAsqFNOPuVc+gVH8mandtRxtfkwU5VE/jeV2mpvOw7eGoiMPeQZDfMukfdMfqayyc4dhmIcFQfFXiJfvF6YmsQdIjNTVK6Jm+9BALg=
+	t=1766742019; cv=none; b=I24nh2UWHcgG37HmFVR+G6PoV3vqShEWBLvWbQXfFF6d1V4+PVu+P3FUpQVwmedQY0cRUMRElg/OZP2uHsWjyUkEu/FL5FxXhNiMUHi7xB8bngP2Ukxzjgmmn1t5ow9QrQESn3lNq9+JMwdRF8Nhz3xCQNRZuW6KM+fdrBfpgYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766741382; c=relaxed/simple;
-	bh=ajEhdSEL5pNc/Ubh7CXIVerCP1cnWW3WU3kkjZReQfQ=;
+	s=arc-20240116; t=1766742019; c=relaxed/simple;
+	bh=5I7POZJE3YvoV+pQSYaW68qSelNdJuJ4iajk1o+KTpg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rvlMFzzBAJZFkwBdePEynqnsPQ10YUH8hkePI1ihpAC//AOtqrTZOwySQP0yqki+Q+Sh+fSFGRjLGL9aUt8UwjMl7voYHNNIEifxbCGFMevlZc2B904aM3Ifv1loylHI43Rs1OeKFqG6DhOcPPOEQDKsl8Z51sWpaXZJkZk7cM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pJpVyiJ1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65A67C19423
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 09:29:42 +0000 (UTC)
+	 To:Cc:Content-Type; b=ZJBDw2Md4QkyKbnl0QK7+UpOCgHuq2yZJmuTL3yqYg79nA2QWDCdd1PHM8Ju4D+B9lsRVjTvnkxTZk0fuedpE1vp3j/GE4dXiFWBf4tuc5DTwb1+nGhBOBeMe1dY4Aje8cjSZqozK8virmdyJ7vplHBfIKWh3Z5lVN7E6IAMakY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUCOWOnJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D206CC19421
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 09:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766741382;
-	bh=ajEhdSEL5pNc/Ubh7CXIVerCP1cnWW3WU3kkjZReQfQ=;
+	s=k20201202; t=1766742018;
+	bh=5I7POZJE3YvoV+pQSYaW68qSelNdJuJ4iajk1o+KTpg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pJpVyiJ18DyN3LpXtqImIEX68eyZG78dLXXQxNSv7S1ovw6d39+Omz4G534l+PJ1A
-	 V2vHVoyjTeAT3Y+L7WXqS/dFmTxDSIR6xb2NF7a+/91lwt/2I0qpiKa/ihDRI+/mZh
-	 kxYuLvjOzWcIgjqwPAiCPF8PhDV2dk7eqtJsbuzr1a1LcwSt+ofoh59vNGAQFP7JeS
-	 oVp7GgtUE9QtlX77U/0Mlaopce5jF9ZUZ/ILuHuIDC8l9ZkRkhrFYjKsi/QgW8mkJH
-	 qLCCXjJtrfZM37Ogl81Yjg6q8fbH0qcklBLRjwoscY4JoaegMVDUf3UGlEdUMeHDqF
-	 53S/5imKzBcaA==
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-787eb2d8663so89580377b3.0
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 01:29:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWhCFW/iEEk12K3lg4AycFG+K73Tj7+QlifxVI64gq649aFc5XaTAAYd20BBT595ROAZkE8vhhrICWf@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT+6Juxz7zoFkmsQ5jyCrYLFyjwJPKnnK+w7BdhhaDXKy7cicV
-	wUztiPFmG3O9JJ8cpG8iZu1GpFdTShZK0Gu37CBtkeCLeeCl+b0EHCoCAbqmOwD8XxXFx5W/JZm
-	2J4ZakPHauVzUmUo9sHlsAcSkqizZ50Y=
-X-Google-Smtp-Source: AGHT+IF3r5BG9hTIHr8zuwTx79GqFycotrCyN/4vMXe9RrjtpXeL6chNB8YbmmqnT/TEhvbFt44GOPJsJC5H2SIP8Og=
-X-Received: by 2002:a05:690c:ed5:b0:787:a126:5619 with SMTP id
- 00721157ae682-78fa5a8cb44mr238635187b3.11.1766741381741; Fri, 26 Dec 2025
- 01:29:41 -0800 (PST)
+	b=gUCOWOnJ21o0jarlXD+3Im4xfOsmn7kfuaofttyX6VJlqeNOWFUl3JApqsASR6BbP
+	 FzlTrrFLia0HBEMRyQJnbsiIl1Cvl96iwg86IUvBX638WB+/Wf/dfC5X+o8s2wSZsm
+	 VluJ2x4LWkUx8pCNK3dhHL9h2Fcs2pWZ+Znym1xd6SGX5ShuZUUPJLy26HgXSeWgON
+	 stz9LLaTp7nMWa1sbGH9pjjMQYD1wFsMcX34lStVOUMd4TDFF21n0X2sbaXCP6Nuk9
+	 kpWTcRja/QGR9S7VP0qOhrbKnMt+fIDsxEG/Bxe/bpKkKs02i5OEJsWisbWFpuhnb3
+	 nUlrZPTU/glWg==
+Received: by mail-yx1-f53.google.com with SMTP id 956f58d0204a3-6446fcddf2fso6146160d50.0
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 01:40:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUys2DTJVMdU30gr+4OwCQzPTi+B6hEc52V8EYQcX8DUL8H1OuitisXpbdzL63vLd37awEEY/XWilp9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7bNLeIODYpJdStCPMLkvkgO6QrGVsTDnRzMx1BIqN81mXa0si
+	pQN7+90pwrVObZARPBS8f2WUU/cz7o3flf7URVn/zzZ7TU+qkxQmbYlia0SGqqS34Ev0GRgW53o
+	gxKhCGCeLas5Xsj2toLiCyHBJPmDrgE8=
+X-Google-Smtp-Source: AGHT+IGcwb2TeHYDKNTx8CIo3l6BUNTefrHdtcjF0SPVuX6OipOL9CuqT2u8WnyVWqecxVQhOAC4cpRaKGBZHgLh6TU=
+X-Received: by 2002:a05:690e:2581:b0:63f:b605:b7eb with SMTP id
+ 956f58d0204a3-6466a8ba610mr12258752d50.67.1766742018199; Fri, 26 Dec 2025
+ 01:40:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251127-bogged-gauze-74aed9fdac0e@spud> <20251127-approve-parsley-49302c061ea1@spud>
-In-Reply-To: <20251127-approve-parsley-49302c061ea1@spud>
+References: <20251127-bogged-gauze-74aed9fdac0e@spud> <20251127-capped-prewar-99fd94faea24@spud>
+In-Reply-To: <20251127-capped-prewar-99fd94faea24@spud>
 From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 26 Dec 2025 10:29:31 +0100
-X-Gmail-Original-Message-ID: <CAD++jLnLgLHeCjc7HD6KHQ-pWb9TFHbTUC-KB5X8eCFDXNNOBA@mail.gmail.com>
-X-Gm-Features: AQt7F2ofkXwYRaQ5RRWsRICeS2UHrcZAnOb0uu0G4CApv4Ccik0sbfg0XhOvPco
-Message-ID: <CAD++jLnLgLHeCjc7HD6KHQ-pWb9TFHbTUC-KB5X8eCFDXNNOBA@mail.gmail.com>
-Subject: Re: [RFC v2 2/5] pinctrl: add generic functions + pins mapper
+Date: Fri, 26 Dec 2025 10:40:07 +0100
+X-Gmail-Original-Message-ID: <CAD++jLkxLJRZocHenBASLzoUAbw=oPpMajNF6a5z-Lzds+5Ecw@mail.gmail.com>
+X-Gm-Features: AQt7F2rK1JHkCZSXBra8Mc8o6eeAj4vJMJDNICdCzPbkDo6wZd0Gv1mG7Epb7uA
+Message-ID: <CAD++jLkxLJRZocHenBASLzoUAbw=oPpMajNF6a5z-Lzds+5Ecw@mail.gmail.com>
+Subject: Re: [RFC v2 3/5] pinctrl: add polarfire soc mssio pinctrl driver
 To: Conor Dooley <conor@kernel.org>
 Cc: linus.walleij@linaro.org, Conor Dooley <conor.dooley@microchip.com>, 
 	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
@@ -71,64 +71,81 @@ Cc: linus.walleij@linaro.org, Conor Dooley <conor.dooley@microchip.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Conor,
-
-sorry for being slow in reviews!
-
 On Thu, Nov 27, 2025 at 11:58=E2=80=AFAM Conor Dooley <conor@kernel.org> wr=
 ote:
 
-> +config GENERIC_PINCTRL_BELLS_AND_WHISTLES
+>  drivers/pinctrl/Kconfig              |   7 +-
+>  drivers/pinctrl/Makefile             |   1 +
+>  drivers/pinctrl/pinctrl-mpfs-mssio.c | 750 +++++++++++++++++++++++++++
 
-Interesting name :D
+Time to move the drivers to drivers/pinctrl/microchip
+before it becomes an overpopulation problem?
 
-A bit like GENERIC_PINCTRL_LOCK_STOCK_AND_BARREL.
+(The previous drivers can be moved in a separate patch.)
 
-Have you considered simply GENERIC_PINCTRL?
 
-> +obj-$(CONFIG_GENERIC_PINCTRL_BELLS_AND_WHISTLES) +=3D pinctrl-generic.o
+> +       select GENERIC_PINCTRL_GROUPS
+> +       select GENERIC_PINMUX_FUNCTIONS
+> +       select GENERIC_PINCTRL_BELLS_AND_WHISTLES
 
-especially since the file is named like so...
+Just the bottom select will bring it all in, right?
 
-> +/*
-> + * For platforms that do not define groups or functions in the driver, b=
-ut
-> + * instead use the devicetree to describe them. This function will, unli=
-ke
-> + * pinconf_generic_dt_node_to_map() etc which rely on driver defined gro=
-ups
-> + * and functions, create them in addition to parsing pinconf properties =
-and
-> + * adding mappings.
-> + */
-> +int pinctrl_generic_pins_function_dt_node_to_map(struct pinctrl_dev *pct=
-ldev,
-> +                                                struct device_node *np,
-> +                                                struct pinctrl_map **map=
-s,
-> +                                                unsigned int *num_maps)
+> +static int mpfs_pinctrl_pin_to_iocfg_reg(unsigned int pin)
+> +{
+> +       u32 reg =3D MPFS_PINCTRL_IOCFG01_REG;
+> +
+> +       if (pin >=3D MPFS_PINCTRL_BANK2_START)
+> +               reg +=3D MPFS_PINCTRL_INTER_BANK_GAP;
+> +
+> +       // 2 pins per 32-bit register
+> +       reg +=3D (pin / 2) * 0x4;
 
-All code looks fine.
+It's helpful with these nice comments that ease the reading of the code
+quite a bit.
 
-There is just the philosophical question whether groups and functions shoul=
-d
-really be in the device tree, as they can obviously be statically defined a=
-nd
-associated with the compatible.
+> +static int mpfs_pinctrl_set_mux(struct pinctrl_dev *pctrl_dev, unsigned =
+int fsel,
+> +                               unsigned int gsel)
+> +{
+> +       struct mpfs_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctrl_dev)=
+;
+> +       const struct group_desc *group;
+> +       const char **functions;
+> +
+> +       group =3D pinctrl_generic_get_group(pctrl_dev, gsel);
+> +       if (!group)
+> +               return -EINVAL;
+> +
+> +       functions =3D group->data;
+> +
+> +       for (int i =3D 0; i < group->grp.npins; i++) {
+> +               u32 function;
+> +
+> +               //TODO @Linus my new function being actually generic mean=
+s that
+> +               // the mapping of function string to something the hardwa=
+re
+> +               // understands only happens at this point.
+> +               // I think this is fine, because dt validation would whin=
+ge
+> +               // about something invalid, but it's the "catch" with my =
+approach.
+> +               // The other option I considered was to provide a mapping
+> +               // function pointer that the driver can populate, but I t=
+hink
+> +               // that's overkill.
+> +               function =3D mpfs_pinctrl_function_map(functions[i]);
+> +               if (function < 0) {
+> +                       dev_err(pctrl->dev, "invalid function %s\n", func=
+tions[i]);
+> +                       return function;
+> +               }
 
-I got so much pressure to do it this way because so many driver authors rea=
-lly
-wanted to keep this in the device tree (usually because it saves memory in =
-the
-kernel) that I eventually caved in, and I have also been criticized for bei=
-ng to
-lenient on this because the compatible should suffice.
+This is fine with me.
 
-For me this is all fine, and with you submitting this I suppose even the DT
-maintainers think this is fine to keep groups and functions in the device
-tree, so there it is.
-
-I can merge this when it's out of RFC.
+Ideally I would like code that does a lot of string stacking and comparing
+to be using Rust, but we cannot yet use that in core code so that is for
+another day.
 
 Yours,
 Linus Walleij
