@@ -1,126 +1,134 @@
-Return-Path: <linux-gpio+bounces-29915-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29921-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A86FCDF8B5
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 12:17:26 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C9B4CDF97C
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 13:05:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 59E7B3001BE0
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 11:17:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 73A70300C6CF
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 12:05:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44A18311C24;
-	Sat, 27 Dec 2025 11:17:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AC54313E21;
+	Sat, 27 Dec 2025 12:05:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mp7Vf87Q"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="iZSar4ym"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m155100.qiye.163.com (mail-m155100.qiye.163.com [101.71.155.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CC92853E9;
-	Sat, 27 Dec 2025 11:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4382831328F;
+	Sat, 27 Dec 2025 12:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766834242; cv=none; b=uhe4DrJrk75m79+0UDM0BwCiS6ANvW8eGqYX61HQFEfOkNRvX2TeCyB52HECIZmkz9gpit9gLJBJZPpNBOm9V3HX24+XspYGkYfS8WhsqYG1ki22Y153sU81Fz3neAv+zZJS1aer2zUhlDQRjfymETOPyL6SLa1BDrPQ8tuDHWE=
+	t=1766837130; cv=none; b=lAVpqCiWgyU3zq09FqNItjsS0TTg5mk8wDbm8zZI9ECYxJRAN1qmTDOY7muAKDgWUg50cg8j/igzI+JXVZfbt0qFj7sdav/HZsB/mTSVznbgODsgu/BILdcAQ27IGaCgqQpJ5xNA2/d3ubR7j5jFv2s2Ya2pjQ8wo0kSLh1h2aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766834242; c=relaxed/simple;
-	bh=mkTJBdGWaaGFXpk4ABan/EOXP8frmcAGWpzfe9DTQsY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RHdvuj2XjjAJUdzKsASVVjPnTmzXKv0m8dNl+CQdZxXSe1HLlFDbCXsKPV9eUur4dK/dm3kgTtrZHXIVqPBY4YsorIRmVKlu4yv2Nh+vm21pp69jPbjnRQ5XWJmIQCxnoGdp3RNTprAbmc/9KYc2Fx9On5/StfvYvCH++XGaa0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mp7Vf87Q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F9FCC4CEF1;
-	Sat, 27 Dec 2025 11:17:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766834241;
-	bh=mkTJBdGWaaGFXpk4ABan/EOXP8frmcAGWpzfe9DTQsY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mp7Vf87QB6NclKUBLSZgG25HwjCXi0w1BFQg/Xi32LC2n/3/VELl6cCodVL+Uaohv
-	 knt2f4OAFECmBI2yR6QaJKc4Fu3a0RgdjeQelMCbEngpVtwWKTYTsHw2W1Iz+bxEWv
-	 0zWs04mKwiyvgUvPwIasj1QjjKsDJq89hdt7OjelzvGxzL+3ihvEu5fdHBabQtgXr8
-	 DllSXXTp5/+fVCOegZ18LBeyKqUAgJDvKyYQhRds9kFnFYu05Qmf5FSqSpvj2eGiJS
-	 UXpqSihw//fBPaMJNj+nca6ZTcB88RkYwMxJpkTmCUhvWbKSEP90A++xF9C0FO43Cv
-	 F68a/aRlgpAVQ==
-Date: Sat, 27 Dec 2025 12:17:18 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Robert Marko <robert.marko@sartura.hr>, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, nicolas.ferre@microchip.com, 
-	claudiu.beznea@tuxon.dev, herbert@gondor.apana.org.au, davem@davemloft.net, 
-	vkoul@kernel.org, andi.shyti@kernel.org, lee@kernel.org, andrew+netdev@lunn.ch, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, linusw@kernel.org, 
-	Steen.Hegelund@microchip.com, daniel.machon@microchip.com, UNGLinuxDriver@microchip.com, 
-	olivia@selenic.com, radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com, 
-	gregkh@linuxfoundation.org, jirislaby@kernel.org, broonie@kernel.org, 
-	mturquette@baylibre.com, sboyd@kernel.org, lars.povlsen@microchip.com, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, netdev@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-clk@vger.kernel.org, luka.perkov@sartura.hr
-Subject: Re: [PATCH v3 01/15] include: dt-bindings: add LAN969x clock bindings
-Message-ID: <20251227-splendid-striped-starfish-ece074@quoll>
-References: <20251223201921.1332786-1-robert.marko@sartura.hr>
- <20251223201921.1332786-2-robert.marko@sartura.hr>
- <20251224-berserk-mackerel-of-snow-4cae54@quoll>
- <CA+HBbNGym6Q9b166n-P=h_JssOHm0yfyL73JZ+G9P81muK=g4A@mail.gmail.com>
- <78bf252c-fd5e-4a36-b1a3-ca8ed26fde7a@kernel.org>
- <CA+HBbNG+ZVD6grGDp32Ninx7H1AyEbGvP0nwc0zUv94tOV8hYg@mail.gmail.com>
- <d210552f-c8bf-4084-9317-b743075d9946@kernel.org>
- <2025122516245554f59e2e@mail.local>
+	s=arc-20240116; t=1766837130; c=relaxed/simple;
+	bh=tZ5ejdYJsW3ohkgc69SM1Yfihtea5gCoJDv9UKWX1tU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rDJSighAKTE9B5a/Jd6ReH9/ocebfkNWprDlAEkJmQLtJF7hCuZscAt2BhNrR/jvQNRJrlnbRMHs3YdhAw+XMJwPcd6awu+2La0ha2o7W9OxdM0Yu4n5o0SJzqtOX1m2B3zYy51/oVJIfS9LBASdJpMXJEaM5chtMzHqZMy5PjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=iZSar4ym; arc=none smtp.client-ip=101.71.155.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from rockchip.. (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 2ebf64df3;
+	Sat, 27 Dec 2025 19:49:59 +0800 (GMT+08:00)
+From: Ye Zhang <ye.zhang@rock-chips.com>
+To: Ye Zhang <ye.zhang@rock-chips.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	tao.huang@rock-chips.com
+Subject: [PATCH v4 0/7] pinctrl: rockchip: Add RK3506 and RV1126B pinctrl and RMIO support
+Date: Sat, 27 Dec 2025 19:49:50 +0800
+Message-Id: <20251227114957.3287944-1-ye.zhang@rock-chips.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <2025122516245554f59e2e@mail.local>
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9b5fa4e03509d8kunm85cc97d2e30872
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGR5JS1ZCT0hJSRlLSxoeQ09WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=iZSar4ymSjyHwz3MeShOijNn1bq6sIzFgQe1hAVsA8K8rzzaW3c8mKcMtiBOKTJrSXlyvo85sbu0PzSjEKJINiBE2PBGok12UNre4UkdtlRe2vxUG2GKz4gzJxw48yg/fYxVrpijXrOY8REoB+KiKKl7G8PMQASWDl9GkC1837Y=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=dV28SK6+Gm42e/jjqz4QnjJtKhxGLkRJ5zgDMZyozSI=;
+	h=date:mime-version:subject:message-id:from;
 
-On Thu, Dec 25, 2025 at 05:24:55PM +0100, Alexandre Belloni wrote:
-> On 25/12/2025 09:47:34+0100, Krzysztof Kozlowski wrote:
-> > On 24/12/2025 15:01, Robert Marko wrote:
-> > > On Wed, Dec 24, 2025 at 2:05=E2=80=AFPM Krzysztof Kozlowski <krzk@ker=
-nel.org> wrote:
-> > >>
-> > >> On 24/12/2025 11:30, Robert Marko wrote:
-> > >>> On Wed, Dec 24, 2025 at 11:21=E2=80=AFAM Krzysztof Kozlowski <krzk@=
-kernel.org> wrote:
-> > >>>>
-> > >>>> On Tue, Dec 23, 2025 at 09:16:12PM +0100, Robert Marko wrote:
-> > >>>>> Add the required LAN969x clock bindings.
-> > >>>>
-> > >>>> I do not see clock bindings actually here. Where is the actual bin=
-ding?
-> > >>>> Commit msg does not help me at all to understand why you are doing=
- this
-> > >>>> without actual required bindings.
-> > >>>
-> > >>> I guess it is a bit confusing, there is no schema here, these are t=
-he
-> > >>> clock indexes that
-> > >>> reside in dt-bindings and are used by the SoC DTSI.
-> > >>
-> > >> I understand as not used by drivers? Then no ABI and there is no poi=
-nt
-> > >> in putting them into bindings.
-> > >=20
-> > > It is not included by the driver directly, but it requires these exact
-> > > indexes to be passed
-> > > so its effectively ABI.
-> >=20
-> > How it requires the exact index? In what way? I do not see anything in
-> > the gck driver using/relying on these values. Nothing. Please point me
-> > to the line which directly uses these values.... or how many times I
-> > will need to write this is not ABI?
-> >=20
->=20
-> The index here is the exact id that needs to be set in the PMC_PCR
-> register and so it is dictated by the hardware.
+This series adds pinctrl support for the Rockchip RK3506 and RV1126B SoC,
+and adds support for RMIO (Rockchip Matrix I/O).
 
-So not a binding between Linux and DTS.
+The series includes:
+- RK3506 pinctrl driver implementation
+- RV1126B pinctrl driver implementation
+- RMIO controller binding and driver support
+- GPIO driver update to support new version GPIO
 
-Best regards,
-Krzysztof
+Note on grouping:
+The RV1126B support patches are included in this series because the RV1126B
+pinctrl driver implementation depends on the PIN_BANK_IOMUX_FLAGS_OFFSET_DRV_FLAGS
+macro, which is introduced in the RK3506 support patches. Splitting these
+patches into separate series would break the build for RV1126B if applied
+independently.
+
+Changes in v4:
+- Remove rockchip,rmio.yaml and drop the separate RMIO child node.
+- Remove rockchip,rk3506-rmio.h
+- Refactor RK3506 RMIO implementation:
+  - RMIO is now handled as a separate list within the pin group, allowing
+    flexible mapping (e.g., multiple RMIO configs per group).
+  - The driver now retrieves the RMIO regmap via a syscon phandle defined
+    in the pinctrl node.
+- Add RK3506 pinctrl and rmio DTS to match the new RMIO binding format.
+
+Changes in v3:
+- Drop already merged patches (rk3506 basic support).
+- Remove unhelpful mappings in rockchip,rk3506-rmio.h
+- Improve YAML schema: fix constraints and examples for RMIO.
+
+Changes in v2:
+- Added RV1126B pinctrl support (patches 3 and 4)
+- Updated GPIO driver to support new version GPIO (patch 5)
+- Added header file for RK3506 RMIO (patch 6)
+- RMIO is now implemented as a separate pinctrl device (patches 7, 8)
+
+Ye Zhang (7):
+  dt-bindings: pinctrl: Add rv1126b pinctrl support
+  pinctrl: rockchip: Add rv1126b pinctrl support
+  arm64: dts: rockchip: rv1126b: Add pinconf and pinctrl dtsi for
+    rv1126b
+  gpio: rockchip: support new version GPIO
+  dt-bindings: pinctrl: rockchip: Add rk3506 rmio support
+  pinctrl: rockchip: Add RK3506 RMIO support
+  ARM: dts: rockchip: rk3506: Add pinctrl and rmio dtsi for rk3506
+
+ .../bindings/pinctrl/rockchip,pinctrl.yaml    |    25 +
+ .../dts/rockchip/rk3506-pinctrl-rmio.dtsi     | 25162 ++++++++++++++++
+ .../arm/boot/dts/rockchip/rk3506-pinctrl.dtsi |  1795 ++
+ .../boot/dts/rockchip/rv1126b-pinconf.dtsi    |   660 +
+ .../boot/dts/rockchip/rv1126b-pinctrl.dtsi    |  3218 ++
+ drivers/gpio/gpio-rockchip.c                  |     2 +
+ drivers/pinctrl/pinctrl-rockchip.c            |   282 +-
+ drivers/pinctrl/pinctrl-rockchip.h            |    20 +
+ 8 files changed, 31160 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm/boot/dts/rockchip/rk3506-pinctrl-rmio.dtsi
+ create mode 100644 arch/arm/boot/dts/rockchip/rk3506-pinctrl.dtsi
+ create mode 100644 arch/arm64/boot/dts/rockchip/rv1126b-pinconf.dtsi
+ create mode 100644 arch/arm64/boot/dts/rockchip/rv1126b-pinctrl.dtsi
+
+-- 
+2.34.1
 
 
