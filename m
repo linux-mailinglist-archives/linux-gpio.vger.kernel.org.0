@@ -1,37 +1,37 @@
-Return-Path: <linux-gpio+bounces-29948-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29918-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFC77CDFCAF
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 14:06:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 09817CDF942
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 12:55:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 670EA300F33F
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 13:05:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 64DC4300E3E0
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 11:55:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4693A31DD90;
-	Sat, 27 Dec 2025 13:05:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17C8831353E;
+	Sat, 27 Dec 2025 11:55:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="bC6exZdb"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="ZSdLH+Zc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-m1973192.qiye.163.com (mail-m1973192.qiye.163.com [220.197.31.92])
+Received: from mail-m49234.qiye.163.com (mail-m49234.qiye.163.com [45.254.49.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D895C3128CD;
-	Sat, 27 Dec 2025 13:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203E631353D;
+	Sat, 27 Dec 2025 11:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766840755; cv=none; b=p99jWJesJ87RQhBCf6wjfC5acHKV8BGbNhH95iElsf/Bfr1eUoXzyv7XMsXHHOCbkihv14/nxewA2ybBvcuCLRFHYaz/aTWulrrV2enFwVUJhamfNlATNsBKvvPTvJ2Cu4VYA63HPsuIsZ+9394PST9ELXpNZhgnkQiZNqEPu0k=
+	t=1766836525; cv=none; b=gL85B5jA77BRveP+y849vvFdTvKaJ/00w1FsZCoD65LC37WZKPc1qoPk8riVKfB1HRbMsILRfyEEvPwZEictlIeHiMgXilMhIxO+2JTCkGKUt725pWGU1UQ7gZU28vj1KIJOTUfT6uCBLJj8pw2ssXHVltygdtIJ0mxy0zgRL/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766840755; c=relaxed/simple;
-	bh=mai/qavLD7A2q7N+r8XyBKi8RI97KnH6yhf+yvobCew=;
+	s=arc-20240116; t=1766836525; c=relaxed/simple;
+	bh=1Lj69IlRBQf7GLDktFYZ0NWEhXIeDIiyEFRI2kp9TAk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jXH2c35eSRt/IK8g6YrjLV1zqgpYbFsBDxj4QnADfad8QYdGGL4zROnqcVm2jH5EXkP1xlhLY5oGaPJMiKB6Em+KJqaje7cQO4KhzRGj5u93rHSG87TeCffTbrUUfsY2+scMFHKWRPM20JNKO1P4802K1LnaZmtTWHiuTpQy9pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=bC6exZdb; arc=none smtp.client-ip=220.197.31.92
+	 MIME-Version; b=I/JpWa5vLGP8U/BNGqqTSMV6O57/maCc2jAYsZ7/nhMX6E/OTJ0iDyweRusRLcbLaumVGHfG2tIZ66NlnQn4DLWxSCZRwqD5e/onPPwgzNiKfU64D3QnRyGg6/NeEY5i0m6KpcYDgk650LuVDJ+5ceCQUMwOyCP8JRshtCNLJEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=ZSdLH+Zc; arc=none smtp.client-ip=45.254.49.234
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Received: from rockchip.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 2ebf64e06;
-	Sat, 27 Dec 2025 19:50:04 +0800 (GMT+08:00)
+	by smtp.qiye.163.com (Hmail) with ESMTP id 2ebf64e08;
+	Sat, 27 Dec 2025 19:50:05 +0800 (GMT+08:00)
 From: Ye Zhang <ye.zhang@rock-chips.com>
 To: Ye Zhang <ye.zhang@rock-chips.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
@@ -45,11 +45,10 @@ Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	tao.huang@rock-chips.com,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: [PATCH v4 4/7] gpio: rockchip: support new version GPIO
-Date: Sat, 27 Dec 2025 19:49:54 +0800
-Message-Id: <20251227114957.3287944-5-ye.zhang@rock-chips.com>
+	tao.huang@rock-chips.com
+Subject: [PATCH v4 5/7] dt-bindings: pinctrl: rockchip: Add rk3506 rmio support
+Date: Sat, 27 Dec 2025 19:49:55 +0800
+Message-Id: <20251227114957.3287944-6-ye.zhang@rock-chips.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251227114957.3287944-1-ye.zhang@rock-chips.com>
 References: <20251227114957.3287944-1-ye.zhang@rock-chips.com>
@@ -60,45 +59,73 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9b5fa4f3d609d8kunm85cc97d2e30a05
+X-HM-Tid: 0a9b5fa4f8a809d8kunm85cc97d2e30a64
 X-HM-MType: 1
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGRlIQlYYSR1CHRodT09DGBpWFRQJFh
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUkdSVZPSUtOTkkYTRlPGRpWFRQJFh
 	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
 	hVSktLVUpCS0tZBg++
 DKIM-Signature: a=rsa-sha256;
-	b=bC6exZdbJV5uWp0lB/ND7hHaFfXL7bv3RJwjGwFqc6ybX7WUaJJmHHTJiUrHZwdgiK8PXyc7jzwz+YYoLsnvuBusdD/WVfNpxSB9rl3Dg5Qnmqhq6EPInqMSP9uycCwYjQ2EZE+hy9p50IukpjR1Fphfn8hqGZ9PJQPoxIgvM8s=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=2RsNzulXAZLkL2QafonCahbYbZr1u/QuXtoWJZpywhQ=;
+	b=ZSdLH+ZcF3RZZpP6xKRbDNhs0yS9mWcg4tAQ72tlHCQusjor8NhauZTDceAmmwhg/lrY5c+Pm8fczb5xfxGzuKK2x2K/XFbVAAc3eXQtkbL5ZJLYBSz995RYwJLHClOvIZd0T5GWmcbyowINKfJ01iAV/TBcTZRCz25ZmFpYnIA=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=CUb3WvGCjbszmhGW+RQqN+i+i3u3FpqE02r/bmTKsh4=;
 	h=date:mime-version:subject:message-id:from;
 
-Support the next version GPIO controller on SoCs like rv1126b.
+The RK3506 SoC introduces a secondary block-level pinmux controller called
+RMIO (Rockchip Matrix I/O). When the primary IOMUX is selected to a
+specific function, the pin signal is routed to the RMIO block, where a
+secondary selection determines the final function.
+
+This patch adds the necessary properties to support RMIO:
+- rockchip,rmio: phandle to the RMIO syscon node.
+- rockchip,rmio-pins: a matrix to configure the RMIO block.
 
 Signed-off-by: Ye Zhang <ye.zhang@rock-chips.com>
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 ---
- drivers/gpio/gpio-rockchip.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../bindings/pinctrl/rockchip,pinctrl.yaml    | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-index 47174eb3ba76..c3e831c6bcf1 100644
---- a/drivers/gpio/gpio-rockchip.c
-+++ b/drivers/gpio/gpio-rockchip.c
-@@ -36,6 +36,7 @@
- #define GPIO_TYPE_V2		(0x01000C2B)
- #define GPIO_TYPE_V2_1		(0x0101157C)
- #define GPIO_TYPE_V2_2		(0x010219C8)
-+#define GPIO_TYPE_V2_6          (0x01063F6E)
+diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+index 97960245676d..887bec22b172 100644
+--- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+@@ -66,6 +66,13 @@ properties:
+       Required for at least rk3188 and rk3288. On the rk3368 this should
+       point to the PMUGRF syscon.
  
- static const struct rockchip_gpio_regs gpio_regs_v1 = {
- 	.port_dr = 0x00,
-@@ -674,6 +675,7 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
- 	case GPIO_TYPE_V2:
- 	case GPIO_TYPE_V2_1:
- 	case GPIO_TYPE_V2_2:
-+	case GPIO_TYPE_V2_6:
- 		bank->gpio_regs = &gpio_regs_v2;
- 		bank->gpio_type = GPIO_TYPE_V2;
- 		bank->db_clk = of_clk_get(bank->of_node, 1);
++  rockchip,rmio:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      The phandle of the syscon node for the RMIO registers, used by
++      some SoCs (e.g. rk3506) to configure the secondary block-level
++      pinmux functions.
++
+   "#address-cells":
+     enum: [1, 2]
+ 
+@@ -144,6 +151,23 @@ additionalProperties:
+                 The phandle of a node contains the generic pinconfig options
+                 to use as described in pinctrl-bindings.txt.
+ 
++      rockchip,rmio-pins:
++        $ref: /schemas/types.yaml#/definitions/uint32-matrix
++        minItems: 1
++        items:
++          items:
++            - minimum: 0
++              description: RMIO ID (Controller index)
++            - minimum: 0
++              description: Pin index within the RMIO controller
++            - minimum: 0
++              description: Function Mux ID
++        description:
++          Configuration for the Rockchip Matrix I/O (RMIO) block. The format
++          is <rmio_id pin_id function_id>. This acts as a secondary muxing
++          layer when the primary 'rockchip,pins' mux is set to the RMIO
++          function.
++
+ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
 -- 
 2.34.1
 
