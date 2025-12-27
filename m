@@ -1,176 +1,125 @@
-Return-Path: <linux-gpio+bounces-29939-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29945-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 489D9CDFAFE
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 13:29:24 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 745A3CDFC75
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 13:58:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A79DC3026871
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 12:26:28 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 702203004406
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 12:58:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23C163321A6;
-	Sat, 27 Dec 2025 12:24:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F25EB31AAB1;
+	Sat, 27 Dec 2025 12:58:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QgjuHIvC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTWjKue4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2422132E72E
-	for <linux-gpio@vger.kernel.org>; Sat, 27 Dec 2025 12:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B9D2D0606;
+	Sat, 27 Dec 2025 12:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766838288; cv=none; b=PLam23y6E10Kwr7g5gFF5+3NZDxmCQt6OzfENhNp+BYznm3iYW7cMpkLXXTwFfYS00+/dsy3EIzsKtsWtGvojgmvDnoJJD1j9hfzelolvm5XDybW65w67yTGMTvp4Ri/6Pi+lZmFGf3RruxnD1jEKgZpU2/Dng5cm6lxPw+G8kI=
+	t=1766840305; cv=none; b=HD7CIettlVAP+uF65oxu8fBdL4RBgo0TZsSqYYnUhUQjAQ2MimX4m4vhzRWIKdiH6jSW4mPgcoK7tl/x99OB/x1peweqWgYnS3XQOS2FpjJ3uGTTSBfb4EKEmdUkHLZZT8uT9+QDa5ndmbjGwAF5H4yXXUjFgZjw9o6R3mwj31c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766838288; c=relaxed/simple;
-	bh=61ADjJrgT2o/i8020WOTVait6ro421Ajicl8SlsuO9U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qICxkyUxDPqoJBSXQylAsK+VZTWv2KOaB2ePMRTseuhGTSd3+wxFfrJf5JbeOQDe6tsI6N5msD3KXtfoMiMnBDeKF2vqiI7CbiKxhBn8yPOdy2zNMwbPWev2a4q1l+ukPgaBn94kVa0ZdOuY91uwE5T/hI9tuDwNXD+eBVyb2jQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QgjuHIvC; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-64b9d01e473so10537895a12.2
-        for <linux-gpio@vger.kernel.org>; Sat, 27 Dec 2025 04:24:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1766838281; x=1767443081; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6RGJHpYPSzzQbbGCB4wy3BgFrQgesxTAcE0/qZgwEOg=;
-        b=QgjuHIvCQ5py7O52/Jj4oZR6bhc4rf8+nVBWdogTfdPsRyC/OHquSadTl163SPvG5A
-         WC9pZDOdodVBwMOWLdIjqDfI4jB/Qb7Er7CXvgSF37SeU8urtVHUDtY0AsI2Rm9wt+4x
-         Lqp+yvsS1Mr1Fnuv+nlmaV13syk3+cgmJsQEoZizieoRVTEUSeJzfMMp3zGqLcJVsdS2
-         znauhuMBjhkCbiTFRABwdht5p/l7tHC0as8ZmgWrSW97+YTbDbq7jF9Ak2ll+nx7l4D1
-         V1XA8gtit4mE/Au8GeCuydaaIYGD3Qf5WKOK2KDV3QxR+qyxCAYldONbMzciJFzOB4NK
-         DM7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766838281; x=1767443081;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6RGJHpYPSzzQbbGCB4wy3BgFrQgesxTAcE0/qZgwEOg=;
-        b=Nr2qE08gnwi3GkeXr+cxWOopXi9xpJQnlqNuNCSUqjbS+8wUH5I59U2G3dpeEt1Dt7
-         xKVX/bjwVjPHUUiW+K/L68HaPZCYANHX2/biDS0wa9xig5kg1a6eDIsVU6omFUl5Lq9P
-         HWDIBQvMdsZlh1lrhMcQgHwA4TzBQFrHxKlGuImQI5MddPtFdnV6YrZcmW6N7cW59lGC
-         44B2NBZXbBfIWI8KGZSEPgyJr4gteEGV/A7qxA/XMwLj9dPkB9U0kinevi8duIaifXUJ
-         5/a+1rIfoxTWtTDba1Yxgj0BlhVDGHoG7WqlHKgbhSAlSwoaxKzwb7nmo8EX8YVDZXQE
-         BXuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEgDNYb3sEMotnXnOCjCatm8hOZHG2FFl1qpF0Y7LkMEZo4n0iUPygVOj1G8NN/3Koni73xx/WRTPi@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlGnI1d4jV79/Y/vt7cK5e1ENpKUIsfA1V+7+MpetKtuQb7xUO
-	196XY19F06Kc4fd9dA8XBJH8+uNjhsRhlVgx0LFHBWazdNGLud5UVuSyk6uC+KWN/358ZNgtXVL
-	iqo5WtuE=
-X-Gm-Gg: AY/fxX5IXB888ImeqmIBg7TEBt1TpEEOONxJkFHzo7hYfmM7sRms9ZmlgFjxoewKTVN
-	YfkFObpwK6FO5yjHphU8KSXB1KpFBdQsIFjskECO8oa/BRYAxFYD05EV++Z6bOWdHQO5/ad7Ixo
-	bJBrhFlWImwNoWlRecclOeq9EzeSO2DiOEeqFdCe4/uG+YnXACCGl99e0F1yU5Hxc32T36OSLc7
-	m8frja5ytKzc0L4we4vHRHg6DWbqiG0GV3aiO51zVEBtz0rdg1D4gg0WShAyjopmTSv9YxX3W1I
-	wtfzi1FvMlwm+hg2YJxoSMKZEEnKmFfuw33NGZO1n7fUVo+mZsYjhryiLKFufo3YmqnLGJgBUkt
-	1sLfUH+smAcaf4WDladf0dXM5Nlq4ZqwONGta5wANpWhKOac0wJTbd0iw6kyWHJPKq7xJd1NMbX
-	rHoJgIQxqfoHXFtHXUl5AdhkZGNQ9Oc7q8bWvLEYjmUVHFT0rxyRTcLUCdyJXbeS+kfsEBDj+Rz
-	swljA==
-X-Google-Smtp-Source: AGHT+IEZhhM0KME5WuKQ84Ts8cerCjpsb60R6tSjSyudT0VTKXNA6pzXYu7jRUwWEVFLnHJWn9IpIQ==
-X-Received: by 2002:a05:6402:51cb:b0:64b:3eeb:80b1 with SMTP id 4fb4d7f45d1cf-64b8ec6cb05mr22638603a12.22.1766838281265;
-        Sat, 27 Dec 2025 04:24:41 -0800 (PST)
-Received: from puffmais2.c.googlers.com (244.175.141.34.bc.googleusercontent.com. [34.141.175.244])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-64b916adc61sm25932659a12.31.2025.12.27.04.24.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Dec 2025 04:24:41 -0800 (PST)
-From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Sat, 27 Dec 2025 12:24:43 +0000
-Subject: [PATCH v5 21/21] regulator: s2mps11: enable-gpios is optional on
- s2mpg1x
+	s=arc-20240116; t=1766840305; c=relaxed/simple;
+	bh=/pXRR/sWcGQCcY5EBpPQcvK8Drdg24de1jwnX3o0WXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mvNEPmvVvfxwm22N2FgqBxWwAvm5bRbIP1jXynmmk0LC/lX8zgbSzgq15UZvvtuscsqp94vxnEVC2tS3dJIA6S0FihQcic27LR85qyTCiWnTsbXUGRzEe89i2fFETi9C/hAFWIJQg89V7gDL+fVFUZ5pBiuTCUykmHANv8ETSEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTWjKue4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E1AAC4CEF1;
+	Sat, 27 Dec 2025 12:58:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766840305;
+	bh=/pXRR/sWcGQCcY5EBpPQcvK8Drdg24de1jwnX3o0WXU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lTWjKue4TjA1ChtdzFqrhqVW8jMA2ZJhY0FS9H3uB6ODx57QrTRsooBNJDU/sWjtg
+	 l8oLOuVJ++slptmhKHpqpCQ3jOaucdGTxmTqvXoHAxCWj69XOE2zWZPBatwzcMwHaQ
+	 ko67X//SoFPtUoxeJRL0QXKgOiRbYBfQrfWNAzqP92TSE/bpP1h3LTzxaQijJhkgql
+	 Hrg6T1sQz2W3kdUvHPT/yGRqxYyDU2S3OStsZL/brZtjBOKB5S9LWm5KDeFElZrnI9
+	 3odLcPYqreAbaryfcizU+3Szdt/r1qp80aIcK98G3gzs2E2lOwaNEO+kDRar5ZYS4g
+	 GXFdCLv8Dutbw==
+Date: Sat, 27 Dec 2025 13:58:22 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Linus Walleij <linusw@kernel.org>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: add syscon property
+Message-ID: <20251227-sambar-of-imminent-persistence-fd8c51@quoll>
+References: <20251223-kx-pinctrl-aib-io-pwr-domain-v1-0-5f1090a487c7@linux.spacemit.com>
+ <20251223-kx-pinctrl-aib-io-pwr-domain-v1-1-5f1090a487c7@linux.spacemit.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20251227-s2mpg1x-regulators-v5-21-0c04b360b4c9@linaro.org>
-References: <20251227-s2mpg1x-regulators-v5-0-0c04b360b4c9@linaro.org>
-In-Reply-To: <20251227-s2mpg1x-regulators-v5-0-0c04b360b4c9@linaro.org>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij <linusw@kernel.org>, 
- Bartosz Golaszewski <brgl@kernel.org>
-Cc: Peter Griffin <peter.griffin@linaro.org>, 
- Will McVicker <willmcvicker@google.com>, Juan Yescas <jyescas@google.com>, 
- kernel-team@android.com, linux-kernel@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-gpio@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251223-kx-pinctrl-aib-io-pwr-domain-v1-1-5f1090a487c7@linux.spacemit.com>
 
-For s2mpg1x, enable-gpios is optional, but when not given, the driver
-is complaining quite verbosely about the missing property.
+On Tue, Dec 23, 2025 at 05:11:11PM +0800, Troy Mitchell wrote:
+> In order to access the protected IO power domain registers, a valid
+> unlock sequence must be performed by writing the required keys to the
+> AIB Secure Access Register (ASAR).
+> 
+> The ASAR register resides within the APBC register address space.
+> A corresponding syscon property is added to allow the pinctrl driver
+> to access this register.
+> 
+> Signed-off-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+> ---
+>  .../devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml      | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+> index c5b0218ad6251f97b1f27089ffff724a7b0f69ae..4dc49c2cc1d52008ad89896ae0419091802cd2c4 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+> @@ -32,6 +32,15 @@ properties:
+>    resets:
+>      maxItems: 1
+>  
+> +  spacemit,apbc:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    items:
+> +      - items:
+> +          - description: phandle to syscon that access the protected register
+> +          - description: offset of access secure registers
+> +    description:
+> +      A phandle to syscon with byte offset to access the protected register
 
-Refactor the code slightly to avoid printing those messages to the
-kernel log in that case.
+Say here for what purpose.
 
-Signed-off-by: André Draszik <andre.draszik@linaro.org>
----
- drivers/regulator/s2mps11.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+> +
+>  patternProperties:
+>    '-cfg$':
+>      type: object
+> @@ -111,6 +120,7 @@ required:
+>    - reg
+>    - clocks
+>    - clock-names
+> +  - spacemit,apbc
 
-diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
-index 178a032c0dc192874118906aee45441a1bbd8515..2d5510acd0780ab6f9296c48ddcde5efe15ff488 100644
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -352,7 +352,7 @@ static int s2mps11_regulator_set_suspend_disable(struct regulator_dev *rdev)
- }
- 
- static int s2mps11_of_parse_gpiod(struct device_node *np,
--				  const char *con_id,
-+				  const char *con_id, bool optional,
- 				  const struct regulator_desc *desc,
- 				  struct regulator_config *config)
- {
-@@ -371,14 +371,19 @@ static int s2mps11_of_parse_gpiod(struct device_node *np,
- 		if (ret == -EPROBE_DEFER)
- 			return ret;
- 
--		if (ret == -ENOENT)
-+		if (ret == -ENOENT) {
-+			if (optional)
-+				return 0;
-+
- 			dev_info(config->dev,
- 				 "No entry for control GPIO for %d/%s in node %pOF\n",
- 				 desc->id, desc->name, np);
--		else
-+		} else {
- 			dev_warn_probe(config->dev, ret,
- 				       "Failed to get control GPIO for %d/%s in node %pOF\n",
- 				       desc->id, desc->name, np);
-+		}
-+
- 		return 0;
- 	}
- 
-@@ -409,7 +414,8 @@ static int s2mps11_of_parse_cb(struct device_node *np,
- 	else
- 		return 0;
- 
--	return s2mps11_of_parse_gpiod(np, "samsung,ext-control", desc, config);
-+	return s2mps11_of_parse_gpiod(np, "samsung,ext-control", false, desc,
-+				      config);
- }
- 
- static int s2mpg10_of_parse_cb(struct device_node *np,
-@@ -528,7 +534,7 @@ static int s2mpg10_of_parse_cb(struct device_node *np,
- 
- 	++s2mpg10_desc->desc.ops;
- 
--	return s2mps11_of_parse_gpiod(np, "enable", desc, config);
-+	return s2mps11_of_parse_gpiod(np, "enable", true, desc, config);
- }
- 
- static int s2mpg10_enable_ext_control(struct s2mps11_info *s2mps11,
+That's ABI break without justification.
 
--- 
-2.52.0.351.gbe84eed79e-goog
-
+>  
+>  additionalProperties: false
+>  
+> @@ -128,6 +138,7 @@ examples:
+>              clocks = <&syscon_apbc 42>,
+>                       <&syscon_apbc 94>;
+>              clock-names = "func", "bus";
+> +            spacemit,apbc = <&syscon_apbc 0x50>;
+>  
+>              uart0_2_cfg: uart0-2-cfg {
+>                  uart0-2-pins {
+> 
+> -- 
+> 2.52.0
+> 
 
