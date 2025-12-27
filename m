@@ -1,45 +1,45 @@
-Return-Path: <linux-gpio+bounces-29946-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29947-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAF59CDFC81
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 13:59:14 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id A25A2CDFC8E
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 14:00:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5F06A300C2A6
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 12:58:56 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 08B7430010F3
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 13:00:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A70DE31AF0A;
-	Sat, 27 Dec 2025 12:58:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC4FC31BC80;
+	Sat, 27 Dec 2025 13:00:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a3tfka+8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XRgVXU5Y"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D70B3164BF;
-	Sat, 27 Dec 2025 12:58:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF3617B506;
+	Sat, 27 Dec 2025 13:00:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766840334; cv=none; b=Spjri9JQ9WtVsrYQEV5MzG9t6Nl0S6J55f9EKY65odKupcl2SW7BGu2TQRZ9jE3ZjKmDxcseLk7UZwCMVjS8g0LEaoM7sYme5/amVa8Ebm1oyaKhrAC7wUHLvM6lj0+rHPu5kUuiOcxP+KtbP232cBt+iDR/ub7Ja/D0CE6xxEA=
+	t=1766840424; cv=none; b=Wl2Q4HmHop8mVG5Qs2Rd5YNem20cxjPgHuksnu0zMx30/EYG04RLmgPLUkXi021/i088cbHFsrlzP/VXkVRsMLFIRyESFrORNa3DijFzE3lrGPiHv9/oLqqjLFHXx9RZUu9BgqUYN7Wrp7CEf/wQM2Fd86eX+PxvmRFfY6qhHo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766840334; c=relaxed/simple;
-	bh=k4FB5zVKTKqkWa9q1H2Dj2JT2mpBhRONcOMtrdXSqvo=;
+	s=arc-20240116; t=1766840424; c=relaxed/simple;
+	bh=Gh6gqoS5hMGDmiIF264QlqRD2aJHzbjUVlGUqxG43cU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o6/0jHTfmuuyc2z6FjnBpVDhm2zvQzXmDsgAnIu2hyMIZ/DuuIuMjvZii38pXUrA1ufKe3Tiz+vtgPn6kuRCC/Tne2uudoq2km30gJDwMMfRKWCJ5ANZ8O0ARwvkxjirGreJKdQcQyZFNGzrBnaR7CZ4jvneX7isZDrKDDqly3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a3tfka+8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D75D5C4CEF1;
-	Sat, 27 Dec 2025 12:58:53 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=GxAW1oMCcjHNgYvnn4NwX0j+JpMLjbwlGZo9JUYat1BnQ12Ulfrcm7hhDYBoQ9fvN0PlmVk6KQoM8epvMjxdLKacxkOLYZat0LJRaqrRgTt7JkZvlOtcpJS9LELadHNQvZ5AFaSzeEzIi1ZLwm7cWAeRsJ6Z0tR8sLqsFv3j4y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XRgVXU5Y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADFFEC4CEF1;
+	Sat, 27 Dec 2025 13:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766840334;
-	bh=k4FB5zVKTKqkWa9q1H2Dj2JT2mpBhRONcOMtrdXSqvo=;
+	s=k20201202; t=1766840424;
+	bh=Gh6gqoS5hMGDmiIF264QlqRD2aJHzbjUVlGUqxG43cU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a3tfka+8fd5bfBRBJw4GDpHKx+C9QZYi1/1GeoC0lJDaWrWmz2VbKlF6Dh5Gbmxt3
-	 zFQRB5XBreiQvlF+27l6rjI3wh4CZq3vneXmiIaSEH5dHmX2IIdtfKUOEy/04LSQnw
-	 JzJA2jc1HLPsmmx8IC/WMYAzGRJLiGM+T/sNtiUGc8eG9hb1kRLXhyAlRgCZ/BGfGA
-	 h/HbRz8vyBaJrY/NTTMoR2ovlKY1sbXNHYeoBFV/Ixxj0Ase55sFq/pqomiSrhtaOe
-	 hlthOFUkZc5w/rXIcge7f5zzB6ze7sPtrIVA+g0Xx0wkP/qYJjgMB5bC2aYOChjeJl
-	 PEgXCD6uSt8og==
-Date: Sat, 27 Dec 2025 13:58:52 +0100
+	b=XRgVXU5YOBBADhBt7fo0NPjp5x67v/ZS3Kkc5iQtFeEVf9ojbZuhzwTJ5EX9g7Ad4
+	 Lk0DgezSXYiM6gm73K6CvbfUzrNTQyGM9xqP5VsiST3jUsq6RurBWB7vSkD9AZUi5y
+	 dnZwfCO+feez9AMKLXMr0Pp+CMNDtjEsrtPFASUClKbh3y45B7xosdX5beSLGhomyB
+	 OXYrD+9RkAllOvCBSE68bylE4SRO3Mir03EEsrFlreW54K3SrPGWHBy4dEvOYmtT8M
+	 jBMDuj7Yco6Se8vEQL3Mxq4O4CNs9/D1bdra63n3jLNC4qNqRq0CoUhtiybmOfIZAJ
+	 uyeqLV/Z6rbqQ==
+Date: Sat, 27 Dec 2025 14:00:21 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Cc: Rob Herring <robh@kernel.org>, 
@@ -48,10 +48,11 @@ Cc: Rob Herring <robh@kernel.org>,
 	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
 	Linus Walleij <linusw@kernel.org>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
 	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: add syscon property
-Message-ID: <20251227-lavender-turkey-from-camelot-ab6aec@quoll>
+Subject: Re: [PATCH 2/2] pinctrl: spacemit: support I/O power domain
+ configuration
+Message-ID: <20251227-pastel-certain-orca-4b53cf@quoll>
 References: <20251223-kx-pinctrl-aib-io-pwr-domain-v1-0-5f1090a487c7@linux.spacemit.com>
- <20251223-kx-pinctrl-aib-io-pwr-domain-v1-1-5f1090a487c7@linux.spacemit.com>
+ <20251223-kx-pinctrl-aib-io-pwr-domain-v1-2-5f1090a487c7@linux.spacemit.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -60,27 +61,70 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251223-kx-pinctrl-aib-io-pwr-domain-v1-1-5f1090a487c7@linux.spacemit.com>
+In-Reply-To: <20251223-kx-pinctrl-aib-io-pwr-domain-v1-2-5f1090a487c7@linux.spacemit.com>
 
-On Tue, Dec 23, 2025 at 05:11:11PM +0800, Troy Mitchell wrote:
-> In order to access the protected IO power domain registers, a valid
-> unlock sequence must be performed by writing the required keys to the
-> AIB Secure Access Register (ASAR).
+On Tue, Dec 23, 2025 at 05:11:12PM +0800, Troy Mitchell wrote:
+> IO domain power control registers are used to configure the operating
+> voltage of dual-voltage GPIO banks. By default, these registers are
+> configured for 3.3V operation. As a result, even when a GPIO bank is
+> externally supplied with 1.8V, the internal logic continues to
+> operate in the 3.3V domain, which may lead to functional failures.
 > 
-> The ASAR register resides within the APBC register address space.
-> A corresponding syscon property is added to allow the pinctrl driver
-> to access this register.
->
+> This patch adds support for programming the IO domain power control
 
-Also:
+Please do not use "This commit/patch/change", but imperative mood. See
+longer explanation here:
+https://elixir.bootlin.com/linux/v6.16/source/Documentation/process/submitting-patches.rst#L94
 
-Please use subject prefixes matching the subsystem. You can get them for
-example with 'git log --oneline -- DIRECTORY_OR_FILE' on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+> registers, allowing dual-voltage GPIO banks to be explicitly configured
+> for 1.8V operation when required.
+> 
+> Care must be taken when configuring these registers. If a GPIO bank is
+> externally supplied with 3.3V while the corresponding IO power domain
+> is configured for 1.8V, external current injection (back-powering)
+> may occur, potentially causing damage to the GPIO pin.
+> 
+> Due to these hardware constraints and safety considerations, the IO
+> domain power control registers are implemented as secure registers.
+> Access to these registers requires unlocking via the AIB Secure Access
+> Register (ASAR) in the APBC block before a single read or write
+> operation can be performed.
+> 
+> Signed-off-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+> ---
+>  arch/riscv/boot/dts/spacemit/k1.dtsi  |   4 +-
 
-You are not adding syscon to all pinctrls.
+No, this never, never comes together with driver code. You cannot fix
+non-bisectability and ABI break that way.
+
+Read carefully maintainers soc profile and submitting patches in DT dir.
+
+...
+
+
+>  static int spacemit_pinctrl_probe(struct platform_device *pdev)
+>  {
+> +	struct device_node *np = pdev->dev.of_node;
+>  	struct device *dev = &pdev->dev;
+>  	struct spacemit_pinctrl *pctrl;
+>  	struct clk *func_clk, *bus_clk;
+> @@ -816,6 +927,18 @@ static int spacemit_pinctrl_probe(struct platform_device *pdev)
+>  	if (IS_ERR(pctrl->regs))
+>  		return PTR_ERR(pctrl->regs);
+>  
+> +	pctrl->io_pd_reg = devm_platform_ioremap_resource(pdev, 1);
+> +	if (IS_ERR(pctrl->io_pd_reg))
+> +		return PTR_ERR(pctrl->io_pd_reg);
+> +
+> +	pctrl->regmap_apbc =
+> +		syscon_regmap_lookup_by_phandle_args(np, "spacemit,apbc", 1,
+> +						     &pctrl->regmap_apbc_offset);
+> +
+> +	if (IS_ERR(pctrl->regmap_apbc))
+> +		return dev_err_probe(dev, PTR_ERR(pctrl->regmap_apbc),
+> +				     "failed to get syscon\n");
+
+Actual ABI break.
 
 Best regards,
 Krzysztof
