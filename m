@@ -1,118 +1,198 @@
-Return-Path: <linux-gpio+bounces-29913-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29914-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C80BCDEE08
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 19:15:14 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E2C7CDF80B
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 11:37:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4389A3007954
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Dec 2025 18:15:10 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 756723003061
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 10:37:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25129239E81;
-	Fri, 26 Dec 2025 18:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9672A243956;
+	Sat, 27 Dec 2025 10:37:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N0s+bXAG"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="S82G0n9a"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m49233.qiye.163.com (mail-m49233.qiye.163.com [45.254.49.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5FA21448E0
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 18:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D1833EC;
+	Sat, 27 Dec 2025 10:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766772908; cv=none; b=Hrkm0C/I6ZVPGDgNYJw+urJfbq/F38yNZdtZzzdWWMKHCRGtQmX5wZJ5KshGAKVI5RJvqhikrXP8Yl/YKE6brDEeLUxrDS6QbUpbFDLfZ7JJryhST7Gld95voX316+sdjtUBw+eJJnMqN0EKnbkFvIUkiwwub4lh+YaQ3zIuPDU=
+	t=1766831858; cv=none; b=EOWz09fP2FkVNQh6iO/NPK3qk4DmkH3Mhpgipf/LlcFbHZWAptDgTWXT4RCYEutQRsR2rsUTGycFPZBcs067nL9YFCqYRYqbErV7SGGxrcvruT+z6tTfyIlvpwnjJJOBVwt0S8VBXebzAdPIcdFIsBy0cSLDFpBkQDl4uEonPOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766772908; c=relaxed/simple;
-	bh=NX6RIM5/8L8qFW+YvFD3wCwe9QDXgdbVg5kkPCGn5CA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d6c6n6FXtrSP1kJgovqsj3RmYdlBzR3wl+10m+kAtI6JVm0C7dTmRkeWbOO+78GfLDy4iEbA03jnKe1NYBaJGpYcwYcIrrkjiu0vJuyJgcdXvJYldWxa8v0Qn0/d5VCffRFqIpdtaxrCrHBUXwTqG/VPFRjw03GXNdi23co7rCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N0s+bXAG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 162AEC19422
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 18:15:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766772907;
-	bh=NX6RIM5/8L8qFW+YvFD3wCwe9QDXgdbVg5kkPCGn5CA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=N0s+bXAGNxzxRKjv6pFkLvYrSjV9ypoHkicrHxazdV+q4sKLpR9pHK13MxfltzC50
-	 +/pcZql6nTDxImg/U1Yu2IQcrmy61tCJa8jPe/bLRYL/F3+VEqRdQvfqo9R1kmHH5Q
-	 KmXW3bBOzNl3CXeugufCjTWx9k3N4JEAFtBqVMVHHor6a7Tsysvu09ck/O357aR/I+
-	 o6WTA+A6LDtpYnui6+YYVIT62Nzw2pEj2Iy+ERdWyzut66C1K6wIOz/q45SaVzF4Lz
-	 3FgmSkDDKVGRRdkdCQvOJo28xiKki/8aA5cQBK7jfnHOZBHMBB5ZWDuCHnC1Of8DgO
-	 OMnNfs/XHJ1Zw==
-Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-6467c5acb7dso3640757d50.1
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Dec 2025 10:15:07 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWHIcRGtPhACiwRIkEh2AhDq5MHJVMEplfqbbBOOdPEvVIVlwnA5j0t01T604x9OIwODv/lCOJ7XzMw@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNZR5YzBeY2yiJO9xC5yxIEtp6p6XPCckACdgHWN3WHdtWqMMW
-	qZP8ayYUyIqRBE/9YTi7LThO+G/S6JUgu3IWPqhh+RLm6oQp/8t9YB98XQrxcqiaMfH8qjs9kgR
-	fmC801wQQzvjrcfTO9QSNUVxQ5zSpH20=
-X-Google-Smtp-Source: AGHT+IFL/eFQTSATZ2Bf61DWomlLriB5LN0ipSM+U2txIu61j0knFv4Qg7uMaWLBJDkrxYOknRLWJaCqm2IE7jOc1mY=
-X-Received: by 2002:a05:690e:dc4:b0:644:60d9:7531 with SMTP id
- 956f58d0204a3-6466a8dec8emr16296223d50.87.1766772906452; Fri, 26 Dec 2025
- 10:15:06 -0800 (PST)
+	s=arc-20240116; t=1766831858; c=relaxed/simple;
+	bh=gZFPHMAazmQJ9ZQkJ9BKBAW3nhx2gVwHprBVP/u1KBI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fxzesURfT7zFPq+SJ0ygdLAES/k3NmIOVc07b/ixUgk+gkfRQtnXReoVeT2tDDaQMSiIfIseKWDIxnq2pChlum81LWGewb65AR9xyUglhqN7iSP5c+6UoCH47f02o1+2oy6fQGQHQn+85MUgeYZVQliLhc4lpFclqrjcM2avRmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=S82G0n9a; arc=none smtp.client-ip=45.254.49.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.16] (gy-adaptive-ssl-proxy-2-entmail-virt205.gy.ntes [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 2eb991a79;
+	Sat, 27 Dec 2025 10:40:46 +0800 (GMT+08:00)
+Message-ID: <85032ae4-4d82-4884-aa7c-b69fee76d509@rock-chips.com>
+Date: Sat, 27 Dec 2025 10:40:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251209100217.167581-1-buaajxlj@163.com>
-In-Reply-To: <20251209100217.167581-1-buaajxlj@163.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 26 Dec 2025 19:14:55 +0100
-X-Gmail-Original-Message-ID: <CAD++jLmHWkmOm9nNbchNNoWG=TYPs3nZmB-fUEwb6fuspiTd7A@mail.gmail.com>
-X-Gm-Features: AQt7F2rA_AcCIAiUWMktXnkp-AqA6ONVXV1t7NBRvWnGYZATyRI-vw1nTZCoxHY
-Message-ID: <CAD++jLmHWkmOm9nNbchNNoWG=TYPs3nZmB-fUEwb6fuspiTd7A@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: make devm allocations safer and
- clearer in mtk_eint_do_init()
-To: Liang Jie <buaajxlj@163.com>
-Cc: Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	"moderated list:PIN CONTROLLER - MEDIATEK" <linux-mediatek@lists.infradead.org>, 
-	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
-	"open list:ARM/Mediatek SoC support" <linux-kernel@vger.kernel.org>, 
-	"moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>, liangjie@lixiang.com, 
-	fanggeng <fanggeng@lixiang.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 6/7] dt-bindings: pinctrl: rockchip: Add RMIO
+ controller binding
+To: Linus Walleij <linusw@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner
+ <heiko@sntech.de>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ tao.huang@rock-chips.com
+References: <20251216112053.1927852-1-ye.zhang@rock-chips.com>
+ <20251216112053.1927852-7-ye.zhang@rock-chips.com>
+ <CAD++jLntu4LY=VHOMSXeLKXOBD9MTNziv47B0qkDjxUa1xAsng@mail.gmail.com>
+From: Ye Zhang <ye.zhang@rock-chips.com>
+In-Reply-To: <CAD++jLntu4LY=VHOMSXeLKXOBD9MTNziv47B0qkDjxUa1xAsng@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Tid: 0a9b5dae0c4309d8kunm0072215ab85e90
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQkxPS1YZTk9IGR4YS0IeQxpWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=S82G0n9alxeC/lJ7wczOryWq01BiBFxbD/UAUrYkHAT5q4Gw2jqum7W2VTN3FnmUURwmsfRZc3tjkMpsZjWkngiChIgVP7F+9x/NHNkMdbaMClH28qqiyG9ICq1N0tgwznp1JGm03WC2sw9P7+SpBCDRE95qATcYzcGMl0OO1j8=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=O4w+UFBbBnd7fGgwKE2LjjzpfQNimm6h/LQPdpbH+AY=;
+	h=date:mime-version:subject:message-id:from;
 
-On Tue, Dec 9, 2025 at 11:03=E2=80=AFAM Liang Jie <buaajxlj@163.com> wrote:
 
-> From: Liang Jie <liangjie@lixiang.com>
+在 2025/12/27 2:07, Linus Walleij 写道:
+> Hi Ye,
 >
-> mtk_eint_do_init() allocates several pointer arrays which are then
-> populated in a per-instance loop and freed on error. The arrays are
-> currently allocated with devm_kmalloc(), so their entries are left
-> uninitialised until the per-instance allocations succeed.
+> thanks for your patch!
 >
-> On a failure in the middle of the loop, the error path iterates over
-> the full nbase range and calls devm_kfree() on each element. For
-> indices which were never initialised, the corresponding array entries
-> contain stack garbage. If any of those happen to be non-zero,
-> devm_kfree() will pass them to devres_destroy(), which will WARN
-> because there is no matching devm_kmalloc() resource for such bogus
-> pointers.
+> On Tue, Dec 16, 2025 at 3:50 PM Ye Zhang <ye.zhang@rock-chips.com> wrote:
 >
-> Improve the robustness and readability by:
 >
->   - Using devm_kcalloc() for the pointer arrays so that all entries
->     start as NULL, ensuring that only genuinely initialised elements
->     may be freed and preventing spurious WARN_ON()s in the error path.
->   - Switching the allocations to sizeof(*ptr) / sizeof(**ptr) forms,
->     avoiding hard-coded element types and making the code more resilient
->     to future type changes.
->   - Dropping the redundant NULL checks before devm_kfree(), as
->     devm_kfree() safely handles NULL pointers.
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,rmio.yaml b/Documentation/devicetree/bindings/pinctrl/rockchip,rmio.yaml
+>> +  rockchip,rmio-grf:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>> +    description:
+>> +      The phandle of the syscon node (GRF or PMU) containing the RMIO registers.
+>> +      This property is required if the RMIO registers are located in a different
+>> +      syscon than the parent pinctrl node.
+>> +
+>> +  rockchip,offset:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      The offset of the RMIO configuration registers within the GRF.
+> Can't this just be a cell in the phandle?
+In my upcoming v4, it will be moved into the driver code.
+>> +  rockchip,pins-num:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      The number of physical pins supported by this RMIO instance.
+>> +      Used for boundary checking and driver initialization.
+> Isn't this implicit from the compatible? Why is this different
+> between two device trees using the same compatible pin
+> controller? I don't get it, I think this should be a constant in the
+> code based on the compatible instead.
+In my upcoming v4, it will be moved into the driver code.
+>> +patternProperties:
+>> +  "^[a-z0-9-]+$":
+>> +    type: object
+>> +    description:
+>> +      Function node grouping multiple groups.
+>> +
+>> +    patternProperties:
+>> +      "^[a-z0-9-]+$":
+>> +        type: object
+>> +        description:
+>> +          Group node containing the pinmux configuration.
+>> +
+>> +        properties:
+>> +          rockchip,rmio:
+>> +            $ref: /schemas/types.yaml#/definitions/uint32-matrix
+>> +            description:
+>> +              A list of pin-function pairs. The format is <pin_id function_id>.
+>> +            minItems: 1
+>> +            items:
+>> +              items:
+>> +                - description: RMIO Pin ID (0 to pins-num - 1)
+>> +                  minimum: 0
+>> +                  maximum: 31
+>> +                - description: Function ID
+>> +                  minimum: 0
+>> +                  maximum: 98
+> Please avoid these custom properties and just use the standard
+> "pinmux" property. I don't want any more opaque custom bindings
+> for functions and groups.
 >
-> The functional behaviour in the successful initialisation path remains
-> unchanged, while the error handling becomes simpler and less
-> error-prone.
+> Reference Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+> and use pinmux from there.
 >
-> Reviewed-by: fanggeng <fanggeng@lixiang.com>
-> Signed-off-by: Liang Jie <liangjie@lixiang.com>
+> You can use some shifting and defines to shoehorn your config
+> into a single u32 and parse that in your driver; i.e. instead of
+> rockchip,rmio = <1, 2>;
+> use
+> pinmux = <1 << 8 | 2 << 0>;
+> these shifter numerals can come from defines.
+> In the driver shift & mask out the components you want.
+>
+> e.g.;
+>
+>> +            rmio-uart {
+>> +                rmio_pin27_uart1_tx: rmio-pin27-uart1-tx {
+>> +                    rockchip,rmio = <27 RMIO_UART1_TX>;
+> pinmux = <27 << 8 | RMIO_UART1_TX>;
 
-This looks reasonable to me, so patch applied.
+In v4, I will remove rockchip,rmio.yaml
 
-Yours,
-Linus Walleij
+I understand your preference for standard bindings.  However, there is a 
+specific constraint here: the RMIO acts as a secondary layer of muxing, 
+sitting behind the primary IOMUX controller.
+
+The existing Rockchip pinctrl binding uses the vendor-specific 
+rockchip,pins property for the primary IOMUX configuration.  If I were 
+to use the standard pinmux property for RMIO, the node would contain 
+mixed bindings like this:
+
+node {
+     /* Primary IOMUX (existing binding) */
+     rockchip,pins = <1 RK_PB1 16 &pcfg_pull_none>;
+     /* Secondary RMIO  */
+     pinmux = <(RMIO_ID << 16) | (RMIO_PIN << 8) | RMIO_FUNC>;
+};
+
+Since this node describes a single hardware pin configuration that 
+requires two separate hardware settings (Primary Mux + Secondary RMIO), 
+I thought keeping the secondary config as a vendor-specific property 
+(rockchip,rmio) alongside rockchip,pins would be more consistent and 
+less confusing than mixing legacy custom bindings with standard pinmux.
+
+In v4, I have removed the separate RMIO child node entirely.  The RMIO 
+configuration is now integrated into the main pinctrl group as a 
+supplemental property:
+
+node {
+
+rockchip,pins = <1 RK_PB1 7 &pcfg_pull_none>
+
+/* rmio_id pin_id func_id */
+rockchip,rmio-pins = <0 24 68>;
+};
+
+>
+>> +++ b/include/dt-bindings/pinctrl/rockchip,rk3506-rmio.h
+> These number dumps are not appreciated inside the bindings
+> despite quite a few found their way in there.
+>
+> Use something like
+> arch/*/dts/rockchip/rk3506-rmio-pins.dtsi
+> and include that into your device trees instead.
+In my upcoming v4, rockchip,rk3506-rmio.h will be removed.
 
