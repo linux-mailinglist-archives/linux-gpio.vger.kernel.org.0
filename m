@@ -1,45 +1,45 @@
-Return-Path: <linux-gpio+bounces-29945-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29946-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 745A3CDFC75
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 13:58:28 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAF59CDFC81
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 13:59:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 702203004406
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 12:58:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5F06A300C2A6
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Dec 2025 12:58:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F25EB31AAB1;
-	Sat, 27 Dec 2025 12:58:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A70DE31AF0A;
+	Sat, 27 Dec 2025 12:58:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTWjKue4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a3tfka+8"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B9D2D0606;
-	Sat, 27 Dec 2025 12:58:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D70B3164BF;
+	Sat, 27 Dec 2025 12:58:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766840305; cv=none; b=HD7CIettlVAP+uF65oxu8fBdL4RBgo0TZsSqYYnUhUQjAQ2MimX4m4vhzRWIKdiH6jSW4mPgcoK7tl/x99OB/x1peweqWgYnS3XQOS2FpjJ3uGTTSBfb4EKEmdUkHLZZT8uT9+QDa5ndmbjGwAF5H4yXXUjFgZjw9o6R3mwj31c=
+	t=1766840334; cv=none; b=Spjri9JQ9WtVsrYQEV5MzG9t6Nl0S6J55f9EKY65odKupcl2SW7BGu2TQRZ9jE3ZjKmDxcseLk7UZwCMVjS8g0LEaoM7sYme5/amVa8Ebm1oyaKhrAC7wUHLvM6lj0+rHPu5kUuiOcxP+KtbP232cBt+iDR/ub7Ja/D0CE6xxEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766840305; c=relaxed/simple;
-	bh=/pXRR/sWcGQCcY5EBpPQcvK8Drdg24de1jwnX3o0WXU=;
+	s=arc-20240116; t=1766840334; c=relaxed/simple;
+	bh=k4FB5zVKTKqkWa9q1H2Dj2JT2mpBhRONcOMtrdXSqvo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mvNEPmvVvfxwm22N2FgqBxWwAvm5bRbIP1jXynmmk0LC/lX8zgbSzgq15UZvvtuscsqp94vxnEVC2tS3dJIA6S0FihQcic27LR85qyTCiWnTsbXUGRzEe89i2fFETi9C/hAFWIJQg89V7gDL+fVFUZ5pBiuTCUykmHANv8ETSEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTWjKue4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E1AAC4CEF1;
-	Sat, 27 Dec 2025 12:58:24 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=o6/0jHTfmuuyc2z6FjnBpVDhm2zvQzXmDsgAnIu2hyMIZ/DuuIuMjvZii38pXUrA1ufKe3Tiz+vtgPn6kuRCC/Tne2uudoq2km30gJDwMMfRKWCJ5ANZ8O0ARwvkxjirGreJKdQcQyZFNGzrBnaR7CZ4jvneX7isZDrKDDqly3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a3tfka+8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D75D5C4CEF1;
+	Sat, 27 Dec 2025 12:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766840305;
-	bh=/pXRR/sWcGQCcY5EBpPQcvK8Drdg24de1jwnX3o0WXU=;
+	s=k20201202; t=1766840334;
+	bh=k4FB5zVKTKqkWa9q1H2Dj2JT2mpBhRONcOMtrdXSqvo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lTWjKue4TjA1ChtdzFqrhqVW8jMA2ZJhY0FS9H3uB6ODx57QrTRsooBNJDU/sWjtg
-	 l8oLOuVJ++slptmhKHpqpCQ3jOaucdGTxmTqvXoHAxCWj69XOE2zWZPBatwzcMwHaQ
-	 ko67X//SoFPtUoxeJRL0QXKgOiRbYBfQrfWNAzqP92TSE/bpP1h3LTzxaQijJhkgql
-	 Hrg6T1sQz2W3kdUvHPT/yGRqxYyDU2S3OStsZL/brZtjBOKB5S9LWm5KDeFElZrnI9
-	 3odLcPYqreAbaryfcizU+3Szdt/r1qp80aIcK98G3gzs2E2lOwaNEO+kDRar5ZYS4g
-	 GXFdCLv8Dutbw==
-Date: Sat, 27 Dec 2025 13:58:22 +0100
+	b=a3tfka+8fd5bfBRBJw4GDpHKx+C9QZYi1/1GeoC0lJDaWrWmz2VbKlF6Dh5Gbmxt3
+	 zFQRB5XBreiQvlF+27l6rjI3wh4CZq3vneXmiIaSEH5dHmX2IIdtfKUOEy/04LSQnw
+	 JzJA2jc1HLPsmmx8IC/WMYAzGRJLiGM+T/sNtiUGc8eG9hb1kRLXhyAlRgCZ/BGfGA
+	 h/HbRz8vyBaJrY/NTTMoR2ovlKY1sbXNHYeoBFV/Ixxj0Ase55sFq/pqomiSrhtaOe
+	 hlthOFUkZc5w/rXIcge7f5zzB6ze7sPtrIVA+g0Xx0wkP/qYJjgMB5bC2aYOChjeJl
+	 PEgXCD6uSt8og==
+Date: Sat, 27 Dec 2025 13:58:52 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Cc: Rob Herring <robh@kernel.org>, 
@@ -49,7 +49,7 @@ Cc: Rob Herring <robh@kernel.org>,
 	Linus Walleij <linusw@kernel.org>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
 	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: add syscon property
-Message-ID: <20251227-sambar-of-imminent-persistence-fd8c51@quoll>
+Message-ID: <20251227-lavender-turkey-from-camelot-ab6aec@quoll>
 References: <20251223-kx-pinctrl-aib-io-pwr-domain-v1-0-5f1090a487c7@linux.spacemit.com>
  <20251223-kx-pinctrl-aib-io-pwr-domain-v1-1-5f1090a487c7@linux.spacemit.com>
 Precedence: bulk
@@ -70,56 +70,19 @@ On Tue, Dec 23, 2025 at 05:11:11PM +0800, Troy Mitchell wrote:
 > The ASAR register resides within the APBC register address space.
 > A corresponding syscon property is added to allow the pinctrl driver
 > to access this register.
-> 
-> Signed-off-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
-> ---
->  .../devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml      | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
-> index c5b0218ad6251f97b1f27089ffff724a7b0f69ae..4dc49c2cc1d52008ad89896ae0419091802cd2c4 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
-> @@ -32,6 +32,15 @@ properties:
->    resets:
->      maxItems: 1
->  
-> +  spacemit,apbc:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    items:
-> +      - items:
-> +          - description: phandle to syscon that access the protected register
-> +          - description: offset of access secure registers
-> +    description:
-> +      A phandle to syscon with byte offset to access the protected register
+>
 
-Say here for what purpose.
+Also:
 
-> +
->  patternProperties:
->    '-cfg$':
->      type: object
-> @@ -111,6 +120,7 @@ required:
->    - reg
->    - clocks
->    - clock-names
-> +  - spacemit,apbc
+Please use subject prefixes matching the subsystem. You can get them for
+example with 'git log --oneline -- DIRECTORY_OR_FILE' on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
 
-That's ABI break without justification.
+You are not adding syscon to all pinctrls.
 
->  
->  additionalProperties: false
->  
-> @@ -128,6 +138,7 @@ examples:
->              clocks = <&syscon_apbc 42>,
->                       <&syscon_apbc 94>;
->              clock-names = "func", "bus";
-> +            spacemit,apbc = <&syscon_apbc 0x50>;
->  
->              uart0_2_cfg: uart0-2-cfg {
->                  uart0-2-pins {
-> 
-> -- 
-> 2.52.0
-> 
+Best regards,
+Krzysztof
+
 
