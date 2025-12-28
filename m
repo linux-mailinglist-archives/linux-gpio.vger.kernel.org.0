@@ -1,136 +1,80 @@
-Return-Path: <linux-gpio+bounces-29954-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29955-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55726CE4A4D
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 09:50:37 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32522CE4AC2
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 11:30:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 61140300D144
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 08:50:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 06E72300C0C2
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 10:30:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 355BF2BD01B;
-	Sun, 28 Dec 2025 08:50:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31EB1286405;
+	Sun, 28 Dec 2025 10:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BtWKMpXi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57FA029D291;
-	Sun, 28 Dec 2025 08:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4D01E89C;
+	Sun, 28 Dec 2025 10:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766911833; cv=none; b=BhvAuW9PIizXaYVZbFN5YcEMbVOccXuv0yqhM2OcLRHLWzmutU60SAL5P8fir8Cu4xLOlDlRC0+u1/S+aGLGohFAahD8DTo/MOFjVsDxPUkFw97Sx5e4A+scETRtr4O6PLX2zxvIbj8qbtQ2XAbjO9AbcTd/Zceu9dC56TOR/Y8=
+	t=1766917843; cv=none; b=mcKTtLU1Zdns2tW+Hrsp8Yg4F9Asz3DhXja6BDspEqquknQoMKV0EAOm6MK4LfJ/+w+TmkeGHDDAZ3ARFU3EyCkvoAtUFthER7pwUMdn1tvf+u0BRWilGQSwYYTnuhYPvmO6j11LZ4WQ8SBBJ3Rmj3WPvgsudjf8Kzej11OS+Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766911833; c=relaxed/simple;
-	bh=OAoUOEcCoUKhMRe59+mV6WGvEEXyncU1vhw8T47Fb6g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KBzpZX60sGCT/Wc17hjG1/dRYys0agudhGJASUBV+NUVUGDe+KOVgSWC1+Iqt4cTO1fSfLOwJeEj818YkBeXzGoapy3LQVeB04zatAJXQzGaZcPRTctldcdbXZaEBfzM/wPwXroVobhH3UTVcUPQFxrRr/2GxGwWcEySTM1Bfp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn; spf=pass smtp.mailfrom=isrc.iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isrc.iscas.ac.cn
-Received: from duge-virtual-machine.localdomain (unknown [183.192.221.253])
-	by APP-03 (Coremail) with SMTP id rQCowABHS8JC71BpFy9OAg--.14364S2;
-	Sun, 28 Dec 2025 16:50:10 +0800 (CST)
-From: Jiayu Du <jiayu.riscv@isrc.iscas.ac.cn>
-To: linusw@kernel.org
-Cc: pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	linux-gpio@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	gaohan@iscas.ac.cn,
-	me@ziyao.cc,
-	Jiayu Du <jiayu.riscv@isrc.iscas.ac.cn>
-Subject: [PATCH 1/1] pinctrl: canaan: k230: Fix NULL pointer dereference in device tree parsing
-Date: Sun, 28 Dec 2025 16:50:05 +0800
-Message-ID: <20251228085005.155760-1-jiayu.riscv@isrc.iscas.ac.cn>
-X-Mailer: git-send-email 2.52.0
+	s=arc-20240116; t=1766917843; c=relaxed/simple;
+	bh=iSoBZKWqJzZOiZShBZ0SH5d1WexPAjGU44wbacsprJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I0FV2PHL2qVdDzf4X5Cvyq/n9XGqlGTTgTRlj0zgn6nVGtlB02qVqcIsMd5LbT6SaA7pJpOPbcBe1yng+TTCPzCxhtZR7FZAHvpQ7RFuSN/PesGPJRFIo76vqvmf7Ed29N6sHQQvi1NJmVRIXXrss1ORImBSdGBIx/6u6KQTaw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BtWKMpXi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8720C4CEFB;
+	Sun, 28 Dec 2025 10:30:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766917842;
+	bh=iSoBZKWqJzZOiZShBZ0SH5d1WexPAjGU44wbacsprJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BtWKMpXiztzSDj7ueLLhMipJA0rLwp//K64RVHmJIYzIcP8aKBgqMQZuxUOs4dt/Q
+	 cIOaepS2VAx1eWlAsn9mKJ7N3/Q+tQdGoge8olMwM+FZNCUtZstk0wrqQBS/fgGcp2
+	 eaKVA4PuMSKQqqHLPqnYd6SVDoci+13dF6M9LaGRvKy7pss/8PKpc8Qaln0h5p9agV
+	 EhRW9U6buwJrNDLBU/Gb+VocPuoPvcjxPcaJhkHyLtm2Ms3xXpq5fMbxUbfZPfgc0P
+	 g8J+rBuw5J1K11OlJzR57zjxeopKqGQTD4a4/2NR4n3W70p+Qf+Ls5puewFw+4/Mld
+	 qyBGOqBMt1f6g==
+Date: Sun, 28 Dec 2025 11:30:39 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Ye Zhang <ye.zhang@rock-chips.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	tao.huang@rock-chips.com
+Subject: Re: [PATCH v4 1/7] dt-bindings: pinctrl: Add rv1126b pinctrl support
+Message-ID: <20251228-airborne-elated-asp-c8f1fb@quoll>
+References: <20251227114957.3287944-1-ye.zhang@rock-chips.com>
+ <20251227114957.3287944-2-ye.zhang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowABHS8JC71BpFy9OAg--.14364S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zry8XrWUGFWruF4ruF1xKrg_yoW8Zw1rpF
-	43Ga98Kr47JF4kWw1rAayDZFya9as7A34fCw13t34Fgwn8tryDX3W5WFWUZws8CFZxCF15
-	tr4YyFyj9w1UJr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWUuVWrJwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
-	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
-	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
-X-CM-SenderInfo: 5mld534oul2uny6l223fol2u1dvotugofq/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251227114957.3287944-2-ye.zhang@rock-chips.com>
 
-When probing the k230 pinctrl driver, the kernel triggers a NULL pointer
-dereference. The crash trace showed:
-[    0.732084] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000068
-[    0.740737] ...
-[    0.776296] epc : k230_pinctrl_probe+0x1be/0x4fc
+On Sat, Dec 27, 2025 at 07:49:51PM +0800, Ye Zhang wrote:
+> The RV1126B is a new SoC that is the successor of the RV1126. It has
+> different pinctrl registers and is not compatible with the RV1126.
+> Therefore, add a new compatible string for it.
+> 
+> Signed-off-by: Ye Zhang <ye.zhang@rock-chips.com>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-In k230_pinctrl_parse_functions(), we attempt to retrieve
-the device pointer via info->pctl_dev->dev, but info->pctl_dev is only
-initialized after k230_pinctrl_parse_dt() completes.
-At the time of DT parsing, info->pctl_dev is still NULL, leading to the invalid
-dereference of info->pctl_dev->dev.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 
-Use the already available device pointer from platform_device
-instead of accessing through uninitialized pctl_dev.
-
-Signed-off-by: Jiayu Du <jiayu.riscv@isrc.iscas.ac.cn>
----
- drivers/pinctrl/pinctrl-k230.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-k230.c b/drivers/pinctrl/pinctrl-k230.c
-index d716f23d83..20f7c0f70e 100644
---- a/drivers/pinctrl/pinctrl-k230.c
-+++ b/drivers/pinctrl/pinctrl-k230.c
-@@ -65,6 +65,7 @@ struct k230_pmx_func {
- };
- 
- struct k230_pinctrl {
-+	struct device		*dev;
- 	struct pinctrl_desc	pctl;
- 	struct pinctrl_dev	*pctl_dev;
- 	struct regmap		*regmap_base;
-@@ -470,7 +471,7 @@ static int k230_pinctrl_parse_groups(struct device_node *np,
- 				     struct k230_pinctrl *info,
- 				     unsigned int index)
- {
--	struct device *dev = info->pctl_dev->dev;
-+	struct device *dev = info->dev;
- 	const __be32 *list;
- 	int size, i, ret;
- 
-@@ -511,7 +512,7 @@ static int k230_pinctrl_parse_functions(struct device_node *np,
- 					struct k230_pinctrl *info,
- 					unsigned int index)
- {
--	struct device *dev = info->pctl_dev->dev;
-+	struct device *dev = info->dev;
- 	struct k230_pmx_func *func;
- 	struct k230_pin_group *grp;
- 	static unsigned int idx, i;
-@@ -596,6 +597,8 @@ static int k230_pinctrl_probe(struct platform_device *pdev)
- 	if (!info)
- 		return -ENOMEM;
- 
-+	info->dev = dev;
-+
- 	pctl = &info->pctl;
- 
- 	pctl->name	= "k230-pinctrl";
--- 
-2.52.0
+Best regards,
+Krzysztof
 
 
