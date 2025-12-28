@@ -1,56 +1,75 @@
-Return-Path: <linux-gpio+bounces-29969-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29970-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 860DACE556B
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 19:06:34 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B9C6CE55A3
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 19:25:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C1C96300AB2E
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 18:06:17 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 7A3E2300AC97
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 18:25:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BCEE23A58F;
-	Sun, 28 Dec 2025 18:06:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23422230BD5;
+	Sun, 28 Dec 2025 18:25:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=chimac.ro header.i=@chimac.ro header.b="hAsqc5/m"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RivUscPw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-06.mail-europe.com (mail-06.mail-europe.com [85.9.210.45])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DF922A7F1;
-	Sun, 28 Dec 2025 18:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.9.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC7DDF76;
+	Sun, 28 Dec 2025 18:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766945175; cv=none; b=FJyAgqyR73n3WIYF3qhOEbtSsjlpjsta0gTpTob4P6z15pRwKyG+3BRN5xIxHx6rVocEJsiHq+CP4rgikr6nWnxzXZMsYDCqC2KjdoVXO+/7K8EjByyw7bAPZOdB0gM1cQEyW+ed61BuFgY4fDOM+u/LsLgG1ZWK70xUQK30ulM=
+	t=1766946319; cv=none; b=D4HHOClN46JNdkFAl3f93g1LLYI9Kp4tw2+PLYKFIkfnJPVOjrwq23uI1XQiAwwgKePrzMgJ1vMJEFWMkNDFilA2NFRYffaQ+pCqNOmWTjRxgfYaVZHnKTYpyBWErFykEtVaPBJSPt09iT4yOfZdA1IvVEM3RL8XebhArVrXJCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766945175; c=relaxed/simple;
-	bh=2WBWmLDvI+3uWaI6iGjj/oIiCNEaKia41qm7RafJtQM=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XbzvOMyws8zkxkeKBP8/llQjOEENehZBpFpaVsiZ8EEO3FGh32FGwqFgjwn4kQNHNMAaBDy023aKkfAk1iUu8w+jCyYLnQKDRktnRlJAil26w6lZBbX6QNloe577H5inEsqGpPCc82kgNcwlgxLDQbFFBg138CuSQAiaOjkOG2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chimac.ro; spf=pass smtp.mailfrom=chimac.ro; dkim=pass (2048-bit key) header.d=chimac.ro header.i=@chimac.ro header.b=hAsqc5/m; arc=none smtp.client-ip=85.9.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chimac.ro
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chimac.ro
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chimac.ro;
-	s=protonmail2; t=1766945156; x=1767204356;
-	bh=Iimb+k4FWtKsauCwXJMg2NmIw/RYvYhly8/W3jnsDME=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=hAsqc5/mtwasv2h7vm6JImYTC5XGg2/j+Z2JaxXJ5iFhr7cqX6FUzqIAWSd6gi8SS
-	 ze0MGLcufVBc0Oi8HtDVySI+SBn29SPTBXx2TFQ6prZU2YTQqOTbEuGd86uh1VOBtq
-	 lcxLkW3/DxHWT1M612bBMlym5Pj95YNzTwgUpdcdGY8hqIUSqX2VBw4Hl6YiLLsYIL
-	 8GbLEXQn7o2pbxHGBCn8lW005c8I+kruTzJQX0LMBSQQIxfWFumExM7ttPFMzj+inp
-	 mMBZdt32C/8fMCilAW7PUVBPMcnO8WoUWLofZh02ofYfk34bLZcyVMSVIE9oZkWbuq
-	 b5Smt4iuYYAzQ==
-Date: Sun, 28 Dec 2025 18:05:55 +0000
-To: Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
-From: Alexandru Chimac <alex@chimac.ro>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Alexandru Chimac <alex@chimac.ro>
-Subject: [PATCH v2 3/3] pinctrl: samsung: Add Exynos9610 pinctrl configuration
-Message-ID: <20251228-exynos9610-pinctrl-v2-3-c9bbeee4c54b@chimac.ro>
-In-Reply-To: <20251228-exynos9610-pinctrl-v2-0-c9bbeee4c54b@chimac.ro>
-References: <20251228-exynos9610-pinctrl-v2-0-c9bbeee4c54b@chimac.ro>
-Feedback-ID: 139133584:user:proton
-X-Pm-Message-ID: bb7879cbc9d07814358c81cae2b54fee2b09a00b
+	s=arc-20240116; t=1766946319; c=relaxed/simple;
+	bh=zsyfulJkmLHcNKeZfPJVQVzY3t4JWQz72/ZtR4mnMBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u05j185VfC2yE6B1LrGbfXjuYmIGrHmrnNQAue+MP74t/yy/XZNeSR3fJ0ifhfMuBoY3p3+IIru8Frmdo9wscTbKR2aXpRus+mTPklAPhYukrI458x5fJj1jophPnXs9DHOVKdTqPx9Az52dnjQrTuh16iKpYvkj3TY4LRYbmm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RivUscPw; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1766946318; x=1798482318;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=zsyfulJkmLHcNKeZfPJVQVzY3t4JWQz72/ZtR4mnMBg=;
+  b=RivUscPw4hqQJQ4jGIeGxyzBy3z6CPNs7hfVLrKtIDIANctF/9b4vOfa
+   vGDNGCQHWjkMDEtUlDiCJHMBJBQIV7xWElbwPWMkSj20BiM6dEpIsL23D
+   CbqP7SAFprPBpSO6eE+d2m72cVYKw705KQT5hKY/e3YmBP1mHMTKD/+zq
+   e7BXtioDNUDELnNqtVffqh6J90Vq3BgNyNu21D1SdDpKBryqR6s7gRxWI
+   Pz4pyuLJHpMxLxWNy/LVFYAapy/d0/KdvR2VxN0WMIkbzDHoF8JqEouvW
+   y3ZgY4nJx3op1+rXqp8jQv6sH/xM+ES9ETSi1tDqULaOtDndzL/2eocqQ
+   g==;
+X-CSE-ConnectionGUID: 0GFVviLQTvSueUHzJFvnRg==
+X-CSE-MsgGUID: 3WeliolZS5mVJ7FwQZzdhw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11655"; a="91237886"
+X-IronPort-AV: E=Sophos;i="6.21,184,1763452800"; 
+   d="scan'208";a="91237886"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2025 10:25:17 -0800
+X-CSE-ConnectionGUID: dIBHnoZuRDa3KUBMvZBqdA==
+X-CSE-MsgGUID: S+abYjMvQGWncZACRH9IDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,184,1763452800"; 
+   d="scan'208";a="204887549"
+Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.236])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2025 10:25:14 -0800
+Date: Sun, 28 Dec 2025 20:25:12 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
+Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+	Ernest Van Hoecke <ernest.vanhoecke@toradex.com>,
+	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	lakabd <lakabd.work@gmail.com>, Yong Li <yong.b.li@intel.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] gpio: pca953x: handle short interrupt pulses on PCAL
+ devices
+Message-ID: <aVF2CIorE5ylV1b4@smile.fi.intel.com>
+References: <20251217153050.142057-1-ernestvanhoecke@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -58,190 +77,90 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251217153050.142057-1-ernestvanhoecke@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Add pinctrl configuration for Exynos9610. The bank types
-used are the same as on Exynos850 and gs101, so we can
-reuse the macros.
+On Wed, Dec 17, 2025 at 04:30:25PM +0100, Ernest Van Hoecke wrote:
+> From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+> 
+> GPIO drivers with latch input support may miss short pulses on input
+> pins even when input latching is enabled. The generic interrupt logic in
+> the pca953x driver reports interrupts by comparing the current input
+> value against the previously sampled one and only signals an event when
+> a level change is observed between two reads.
+> 
+> For short pulses, the first edge is captured when the input register is
+> read, but if the signal returns to its previous level before the read,
+> the second edge is not observed. As a result, successive pulses can
+> produce identical input values at read time and no level change is
+> detected, causing interrupts to be missed. Below timing diagram shows
+> this situation where the top signal is the input pin level and the
+> bottom signal indicates the latched value.
+> 
+> ─────┐     ┌──*───────────────┐     ┌──*─────────────────┐     ┌──*───
+>      │     │  .               │     │  .                 │     │  .
+>      │     │  │               │     │  │                 │     │  │
+>      └──*──┘  │               └──*──┘  │                 └──*──┘  │
+> Input   │     │                  │     │                    │     │
+>         ▼     │                  ▼     │                    ▼     │
+>        IRQ    │                 IRQ    │                   IRQ    │
+>               .                        .                          .
+> ─────┐        .┌──────────────┐        .┌────────────────┐        .┌──
+>      │         │              │         │                │         │
+>      │         │              │         │                │         │
+>      └────────*┘              └────────*┘                └────────*┘
+> Latched       │                        │                          │
+>               ▼                        ▼                          ▼
+>             READ 0                   READ 0                     READ 0
+>                                    NO CHANGE                  NO CHANGE
+> 
+> PCAL variants provide an interrupt status register that records which
+> pins triggered an interrupt, but the status and input registers cannot
+> be read atomically. The interrupt status is only cleared when the input
+> port is read, and the input value must also be read to determine the
+> triggering edge. If another interrupt occurs on a different line after
+> the status register has been read but before the input register is
+> sampled, that event will not be reflected in the earlier status
+> snapshot, so relying solely on the interrupt status register is also
+> insufficient.
+> 
+> Support for input latching and interrupt status handling was previously
+> added by [1], but the interrupt status-based logic was reverted by [2]
+> due to these issues. This patch addresses the original problem by
+> combining both sources of information. Events indicated by the interrupt
+> status register are merged with events detected through the existing
+> level-change logic. As a result:
+> 
+> * short pulses, whose second edges are invisible, are detected via the
+>   interrupt status register, and
+> * interrupts that occur between the status and input reads are still
+>   caught by the generic level-change logic.
+> 
+> This significantly improves robustness on devices that signal interrupts
+> as short pulses, while avoiding the issues that led to the earlier
+> reversion. In practice, even if only the first edge of a pulse is
+> observable, the interrupt is reliably detected.
+> 
+> This fixes missed interrupts from an Ilitek touch controller with its
+> interrupt line connected to a PCAL6416A, where active-low pulses are
+> approximately 200 us long.
+> 
+> [1] commit 44896beae605 ("gpio: pca953x: add PCAL9535 interrupt support for Galileo Gen2")
+> [2] commit d6179f6c6204 ("gpio: pca953x: Improve interrupt support")
 
-Signed-off-by: Alexandru Chimac <alex@chimac.ro>
----
- drivers/pinctrl/samsung/pinctrl-exynos-arm64.c | 117 +++++++++++++++++++++=
-++++
- drivers/pinctrl/samsung/pinctrl-samsung.c      |   2 +
- drivers/pinctrl/samsung/pinctrl-samsung.h      |   1 +
- 3 files changed, 120 insertions(+)
+Wow, this is a very good wrap-up of the interrupt behaviour on those chips.
+While I am fully with you on the fix (this patch), can you also add a
+chapter/section about this to the documentation file (now we have it for these
+chips!) Documentation/driver-api/gpio/pca953x.rst?
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c b/drivers/pinct=
-rl/samsung/pinctrl-exynos-arm64.c
-index 627dca504d7a..fe9f92cb037e 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-@@ -1770,6 +1770,123 @@ const struct samsung_pinctrl_of_match_data exynos88=
-95_of_data __initconst =3D {
- =09.num_ctrl=09=3D ARRAY_SIZE(exynos8895_pin_ctrl),
- };
-=20
-+/* pin banks of exynos9610 pin-controller 0 (ALIVE) */
-+static const struct samsung_pin_bank_data exynos9610_pin_banks0[] __initco=
-nst =3D {
-+=09EXYNOS850_PIN_BANK_EINTN(6, 0x000, "etc0"),
-+=09GS101_PIN_BANK_EINTW(8, 0x020, "gpa0", 0x00, 0x00),
-+=09GS101_PIN_BANK_EINTW(8, 0x040, "gpa1", 0x04, 0x08),
-+=09GS101_PIN_BANK_EINTW(8, 0x060, "gpa2", 0x08, 0x0c),
-+=09EXYNOS850_PIN_BANK_EINTN(5, 0x080, "gpq0"),
-+};
-+
-+/* pin banks of exynos9610 pin-controller 1 (CMGP) */
-+static const struct samsung_pin_bank_data exynos9610_pin_banks1[] __initco=
-nst =3D {
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x000, "gpm0", 0x00),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x020, "gpm1", 0x04),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x040, "gpm2", 0x08),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x060, "gpm3", 0x0C),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x080, "gpm4", 0x10),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x0A0, "gpm5", 0x14),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x0C0, "gpm6", 0x18),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x0E0, "gpm7", 0x1C),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x100, "gpm8", 0x20),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x120, "gpm9", 0x24),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x140, "gpm10", 0x28),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x160, "gpm11", 0x2C),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x180, "gpm12", 0x30),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x1A0, "gpm13", 0x34),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x1C0, "gpm14", 0x38),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x1E0, "gpm15", 0x3C),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x200, "gpm16", 0x40),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x220, "gpm17", 0x44),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x240, "gpm18", 0x48),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x260, "gpm19", 0x4C),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x280, "gpm20", 0x50),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x2A0, "gpm21", 0x54),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x2C0, "gpm22", 0x58),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x2E0, "gpm23", 0x5C),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x300, "gpm24", 0x60),
-+=09EXYNOS850_PIN_BANK_EINTW(1, 0x320, "gpm25", 0x64),
-+};
-+
-+/* pin banks of exynos9610 pin-controller 2 (DISPAUD) */
-+static const struct samsung_pin_bank_data exynos9610_pin_banks2[] __initco=
-nst =3D {
-+=09GS101_PIN_BANK_EINTG(5, 0x000, "gpb0", 0x00, 0x00),
-+=09GS101_PIN_BANK_EINTG(4, 0x020, "gpb1", 0x04, 0x08),
-+=09GS101_PIN_BANK_EINTG(5, 0x040, "gpb2", 0x08, 0x0c),
-+};
-+
-+/* pin banks of exynos9610 pin-controller 3 (FSYS) */
-+static const struct samsung_pin_bank_data exynos9610_pin_banks3[] __initco=
-nst =3D {
-+=09GS101_PIN_BANK_EINTG(4, 0x000, "gpf0", 0x00, 0x00),
-+=09GS101_PIN_BANK_EINTG(8, 0x020, "gpf1", 0x04, 0x04),
-+=09GS101_PIN_BANK_EINTG(6, 0x040, "gpf2", 0x08, 0x0c),
-+};
-+
-+/* pin banks of exynos9610 pin-controller 4 (TOP) */
-+static const struct samsung_pin_bank_data exynos9610_pin_banks4[] __initco=
-nst =3D {
-+=09GS101_PIN_BANK_EINTG(8, 0x000, "gpp0", 0x00, 0x00),
-+=09GS101_PIN_BANK_EINTG(6, 0x020, "gpp1", 0x04, 0x08),
-+=09GS101_PIN_BANK_EINTG(8, 0x040, "gpp2", 0x08, 0x10),
-+=09GS101_PIN_BANK_EINTG(8, 0x060, "gpc0", 0x0C, 0x18),
-+=09GS101_PIN_BANK_EINTG(8, 0x080, "gpc1", 0x10, 0x20),
-+=09GS101_PIN_BANK_EINTG(5, 0x0A0, "gpc2", 0x14, 0x28),
-+=09GS101_PIN_BANK_EINTG(8, 0x0C0, "gpg0", 0x18, 0x30),
-+=09GS101_PIN_BANK_EINTG(8, 0x0E0, "gpg1", 0x1C, 0x38),
-+=09GS101_PIN_BANK_EINTG(8, 0x100, "gpg2", 0x20, 0x40),
-+=09GS101_PIN_BANK_EINTG(6, 0x120, "gpg3", 0x24, 0x48),
-+=09GS101_PIN_BANK_EINTG(3, 0x140, "gpg4", 0x28, 0x50),
-+};
-+
-+/* pin banks of exynos9610 pin-controller 5 (SHUB) */
-+static const struct samsung_pin_bank_data exynos9610_pin_banks5[] __initco=
-nst =3D {
-+=09EXYNOS850_PIN_BANK_EINTG(4, 0x000, "gph0", 0x00),
-+=09EXYNOS850_PIN_BANK_EINTG(3, 0x020, "gph1", 0x04),
-+};
-+
-+static const struct samsung_pin_ctrl exynos9610_pin_ctrl[] __initconst =3D=
- {
-+=09{
-+=09=09/* pin-controller instance 0 ALIVE data */
-+=09=09.pin_banks=09=3D exynos9610_pin_banks0,
-+=09=09.nr_banks=09=3D ARRAY_SIZE(exynos9610_pin_banks0),
-+=09=09.eint_wkup_init =3D exynos_eint_wkup_init,
-+=09=09.suspend=09=3D exynos_pinctrl_suspend,
-+=09=09.resume=09=09=3D exynos_pinctrl_resume,
-+=09}, {
-+=09=09/* pin-controller instance 1 CMGP data */
-+=09=09.pin_banks=09=3D exynos9610_pin_banks1,
-+=09=09.nr_banks=09=3D ARRAY_SIZE(exynos9610_pin_banks1),
-+=09=09.eint_wkup_init =3D exynos_eint_wkup_init,
-+=09=09.suspend=09=3D exynos_pinctrl_suspend,
-+=09=09.resume=09=09=3D exynos_pinctrl_resume,
-+=09}, {
-+=09=09/* pin-controller instance 2 DISPAUD data */
-+=09=09.pin_banks=09=3D exynos9610_pin_banks2,
-+=09=09.nr_banks=09=3D ARRAY_SIZE(exynos9610_pin_banks2),
-+=09}, {
-+=09=09/* pin-controller instance 3 FSYS data */
-+=09=09.pin_banks=09=3D exynos9610_pin_banks3,
-+=09=09.nr_banks=09=3D ARRAY_SIZE(exynos9610_pin_banks3),
-+=09=09.suspend=09=3D exynos_pinctrl_suspend,
-+=09=09.resume=09=09=3D exynos_pinctrl_resume,
-+=09}, {
-+=09=09/* pin-controller instance 4 TOP data */
-+=09=09.pin_banks=09=3D exynos9610_pin_banks4,
-+=09=09.nr_banks=09=3D ARRAY_SIZE(exynos9610_pin_banks4),
-+=09=09.suspend=09=3D exynos_pinctrl_suspend,
-+=09=09.resume=09=09=3D exynos_pinctrl_resume,
-+=09}, {
-+=09=09/* pin-controller instance 5 SHUB data */
-+=09=09.pin_banks=09=3D exynos9610_pin_banks5,
-+=09=09.nr_banks=09=3D ARRAY_SIZE(exynos9610_pin_banks5),
-+=09},
-+};
-+
-+const struct samsung_pinctrl_of_match_data exynos9610_of_data __initconst =
-=3D {
-+=09.ctrl=09=09=3D exynos9610_pin_ctrl,
-+=09.num_ctrl=09=3D ARRAY_SIZE(exynos9610_pin_ctrl),
-+};
-+
- /*
-  * Pinctrl driver data for Tesla FSD SoC. FSD SoC includes three
-  * gpio/pin-mux/pinconfig controllers.
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/sa=
-msung/pinctrl-samsung.c
-index e374effba25a..5ac6f6b02327 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -1504,6 +1504,8 @@ static const struct of_device_id samsung_pinctrl_dt_m=
-atch[] =3D {
- =09=09.data =3D &exynos8890_of_data },
- =09{ .compatible =3D "samsung,exynos8895-pinctrl",
- =09=09.data =3D &exynos8895_of_data },
-+=09{ .compatible =3D "samsung,exynos9610-pinctrl",
-+=09=09.data =3D &exynos9610_of_data },
- =09{ .compatible =3D "samsung,exynos9810-pinctrl",
- =09=09.data =3D &exynos9810_of_data },
- =09{ .compatible =3D "samsung,exynos990-pinctrl",
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/sa=
-msung/pinctrl-samsung.h
-index 0f7b2ea98158..937600430a6e 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.h
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
-@@ -398,6 +398,7 @@ extern const struct samsung_pinctrl_of_match_data exyno=
-s7885_of_data;
- extern const struct samsung_pinctrl_of_match_data exynos850_of_data;
- extern const struct samsung_pinctrl_of_match_data exynos8890_of_data;
- extern const struct samsung_pinctrl_of_match_data exynos8895_of_data;
-+extern const struct samsung_pinctrl_of_match_data exynos9610_of_data;
- extern const struct samsung_pinctrl_of_match_data exynos9810_of_data;
- extern const struct samsung_pinctrl_of_match_data exynos990_of_data;
- extern const struct samsung_pinctrl_of_match_data exynosautov9_of_data;
+(As a separate patch.)
 
---=20
-2.51.0
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
 
