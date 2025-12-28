@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-29960-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29961-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31611CE4B66
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 12:43:11 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED637CE4B6C
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 12:44:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 209BA30198E9
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 11:41:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 951C23008FB2
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 11:43:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AEE82C234A;
-	Sun, 28 Dec 2025 11:41:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37E292C2363;
+	Sun, 28 Dec 2025 11:43:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="di09trJE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PHUla6Y/"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FA3258CED;
-	Sun, 28 Dec 2025 11:41:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E260E265CDD;
+	Sun, 28 Dec 2025 11:43:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766922109; cv=none; b=W62GLDmkKc4nQzhf/f2JlQYjkO+H7DIGOrW/lsrxovQp848BcvzoFeamC/E6M1+AkZFSB3MlTkMJDWCIm3JXJJoy7WHhiwlsX88slh2ymRFXVSrh03ilLg1P2Sr9HlEIoWmo1Y61AO2rxG3nYZeL1AXkGuX5PnobyEedQ/xHpRw=
+	t=1766922237; cv=none; b=gs34LK4AkSTwC/B93De/JUQa+tqIvrwEzMFfjRQpJ31JTpd6usB+c/wkPK5eHAEPSSYB2DlM5HEYPZlp5FWZLvNDE052CuCKSQkqtXChGfa8Kovgzn4N5k6hlpdM9BBI52ubnqSOFv0ZAG4MIbWx09PVXfadc5VLjn+TVT64PyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766922109; c=relaxed/simple;
-	bh=EsDxdjrqmFhk850c4TWV5UzGF/hO7UbOe0ZM1zq22Y8=;
+	s=arc-20240116; t=1766922237; c=relaxed/simple;
+	bh=sMFt/DL9zGunASxCqLcb7zpNgfgsmgCv3E5jkezPqtY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lcmeVdmKatqSuFEMVUxmbX1kyboznPJLIYBuM4WXiEVtZeCdWUFgeWBDCSQuGSubcGDIP3go5NV/FD4ZgqdKF7xnIzYi5yR/isqKXmxbIn3pNLBHQx7oyt4GiTSb6SvhpNxGDluZqgl3Hyx155S0ty0Ot/adcBlWlcUJEw9FfEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=di09trJE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B34CC4CEFB;
-	Sun, 28 Dec 2025 11:41:46 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=YnPGyz/JFngH5z/qOXEcKNDPLCGkn3ZvcTNj0prcPv9om1OM84vYyTK37ZKaVr+lqiUKan50V03gprd4j+/XQZSlN/eDVervyWVY6G6S6/c0YckUQCZPiWKKmEdaiJH5G54F9clDCvbrA42lFrk2IIL0AeCQsCnwo9E2ly+g9Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PHUla6Y/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FB97C4CEFB;
+	Sun, 28 Dec 2025 11:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766922109;
-	bh=EsDxdjrqmFhk850c4TWV5UzGF/hO7UbOe0ZM1zq22Y8=;
+	s=k20201202; t=1766922236;
+	bh=sMFt/DL9zGunASxCqLcb7zpNgfgsmgCv3E5jkezPqtY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=di09trJE0hPH0zk2xiq3/Uvffzus60LLrsPUAKaS4m4f+6E71OubaKLOyze46uB6V
-	 NgUBlO55QCN2JPOhqgzINtn3YOw17d/TCEGK6Ab0CkWdDWFSI2Q9cs21O+iaUscbWp
-	 Z9eWawk6Q3Avglpz6tgaEuObV8FFjWOzsqaQ9iJAsWfcqqHz05ttc6Ey/BGzDTWR95
-	 AaJPTkGwTx0Ceqd9F30SJmFTsR9xLwwjos3xOHP+jVHtBoc8wleCJHC2gV+5/OlNkQ
-	 f9Yn//Q1LQuMh1PE1KMEixCN/XSOsNWubMEw8eKPNS9h2NYXCVRJITjsmRmVsaS0ps
-	 boc89rPQoC1uQ==
-Message-ID: <39a6dce9-ea6e-4a43-9bbc-54d822118db4@kernel.org>
-Date: Sun, 28 Dec 2025 12:41:44 +0100
+	b=PHUla6Y/BmfaqupTVeJDcziJvJ6GzknwDVrLWR/3DXknm0Irw01T+WklGtWXUODq+
+	 VTNulfsCz8FD+UvqWb9hRgt38e8eJcXikk/IGafy5nAlpX9RFb/f2l5zRmeYwT1+pa
+	 L//Lild6vuSWGuPikJMcvqq+twMY4A181EM3+brdqFvet1QfI4N6hcanjje0cFMX/s
+	 cZnQnXCOBeEhaUUBDnl3oAzgaTS6Mn9B2ZLMsOq3AMbQhHZrLs53AT42rK8/SlO8Ja
+	 oMF2kyic4Rilh40dRlARAzlewIYo44y8tQandSzG61D8MUpJNxQjFUsOQxOWIaEXWi
+	 vC8KJOH3XmnvA==
+Message-ID: <20d454a7-1606-4418-8996-6755c1ea3180@kernel.org>
+Date: Sun, 28 Dec 2025 12:43:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -48,8 +48,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/5] pinctrl: samsung: add per-bank FLTCON offset to
- EXYNOS9_PIN_BANK_* and fix tables
+Subject: Re: [PATCH v3 5/5] pinctrl: samsung: rename gs101_pinctrl_* to
+ exynos9_pinctrl_*
 To: Youngmin Nam <youngmin.nam@samsung.com>, s.nawrocki@samsung.com,
  alim.akhtar@samsung.com, linus.walleij@linaro.org, peter.griffin@linaro.org,
  semen.protsenko@linaro.org, ivo.ivanov.ivanov1@gmail.com
@@ -58,8 +58,8 @@ Cc: ryu.real@samsung.com, d7271.choe@samsung.com, shin.son@samsung.com,
  linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20251202093613.852109-1-youngmin.nam@samsung.com>
- <CGME20251202093028epcas2p456b6a2bfebfc76384f706a9962266fcf@epcas2p4.samsung.com>
- <20251202093613.852109-4-youngmin.nam@samsung.com>
+ <CGME20251202093029epcas2p19224bab81f8ed2b9f63613fdd010ab57@epcas2p1.samsung.com>
+ <20251202093613.852109-6-youngmin.nam@samsung.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -105,19 +105,21 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20251202093613.852109-4-youngmin.nam@samsung.com>
+In-Reply-To: <20251202093613.852109-6-youngmin.nam@samsung.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 02/12/2025 10:36, Youngmin Nam wrote:
-> Several Exynos9-era pin-bank tables were implicitly assuming that the
-> filter control (FLTCON) registers are laid out contiguously from the
-> EINT base offset. Per the TRMs this is not always true. FLTCON can live
-> at a separate per-bank offset, and the current tables cause the driver
-> to program the wrong FLTCON addresses for some banks.
+> The suspend/resume helpers named gs101_pinctrl_{suspend,resume} are not
+> GS101-specific. They implement the generic save/restore sequence used by
+> Exynos9-style controllers that have EINT filter configuration
+> (eint_fltcon) to preserve.
+> 
+> Rename them to exynos9_pinctrl_{suspend,resume} and update all users:
 
-"Can live" or "Does live"? Adding unused offset is not improving the
-code. The implicit offset is fine, if it is correct.
+Why? Exynos9 does not exist, there is no such SoC. All other SoCs can
+use GS101 naming, just like GS101 could use Exynos-foo. You need to come
+with a reason why Exynos9 is better than GS101.
 
 
 Best regards,
