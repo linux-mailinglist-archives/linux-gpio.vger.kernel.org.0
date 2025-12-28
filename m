@@ -1,62 +1,62 @@
-Return-Path: <linux-gpio+bounces-29970-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29971-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B9C6CE55A3
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 19:25:22 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C44E5CE55A9
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 19:26:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7A3E2300AC97
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 18:25:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C4C133004D21
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 18:26:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23422230BD5;
-	Sun, 28 Dec 2025 18:25:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A283F230BD5;
+	Sun, 28 Dec 2025 18:26:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RivUscPw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KeRxgA9x"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC7DDF76;
-	Sun, 28 Dec 2025 18:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CEECA59;
+	Sun, 28 Dec 2025 18:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766946319; cv=none; b=D4HHOClN46JNdkFAl3f93g1LLYI9Kp4tw2+PLYKFIkfnJPVOjrwq23uI1XQiAwwgKePrzMgJ1vMJEFWMkNDFilA2NFRYffaQ+pCqNOmWTjRxgfYaVZHnKTYpyBWErFykEtVaPBJSPt09iT4yOfZdA1IvVEM3RL8XebhArVrXJCA=
+	t=1766946372; cv=none; b=KbZ9hiMF6QmyeqIaEPiZ7oECaYDE+eaiQPWswrSybDlIsu5PKrWeWE181Y4q2nFxuwlXMZrFyEhNMh3+IRwKioZsBV2i1nNEVmpXAe6wUvR7BTPAb4hvL6q73CDBRWk9BDrlayzYxEo5ryJKIIlQY8dUuNAe3wM6N24oP8SpUoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766946319; c=relaxed/simple;
-	bh=zsyfulJkmLHcNKeZfPJVQVzY3t4JWQz72/ZtR4mnMBg=;
+	s=arc-20240116; t=1766946372; c=relaxed/simple;
+	bh=cci3FY5ia69FtMOxBM9uL2a2YEewtMJ1HQuhAo3WpjY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u05j185VfC2yE6B1LrGbfXjuYmIGrHmrnNQAue+MP74t/yy/XZNeSR3fJ0ifhfMuBoY3p3+IIru8Frmdo9wscTbKR2aXpRus+mTPklAPhYukrI458x5fJj1jophPnXs9DHOVKdTqPx9Az52dnjQrTuh16iKpYvkj3TY4LRYbmm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RivUscPw; arc=none smtp.client-ip=198.175.65.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=II1NORgygqymjnuTAfMh7Ws7D+ZP8zfzCDKq8QL85FFO/3j41RqDJrln97NzDDWo4YEzgMzwkZwtApCMZ456FrS+EgNvVyLuLomcFuv5jOje/D3ivJd6YTx1smZl0FF1+u0/86RLSGUfA3f4HdPbhfnyh7V9P/U6lvnpSKywaVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KeRxgA9x; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766946318; x=1798482318;
+  t=1766946370; x=1798482370;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:content-transfer-encoding:in-reply-to;
-  bh=zsyfulJkmLHcNKeZfPJVQVzY3t4JWQz72/ZtR4mnMBg=;
-  b=RivUscPw4hqQJQ4jGIeGxyzBy3z6CPNs7hfVLrKtIDIANctF/9b4vOfa
-   vGDNGCQHWjkMDEtUlDiCJHMBJBQIV7xWElbwPWMkSj20BiM6dEpIsL23D
-   CbqP7SAFprPBpSO6eE+d2m72cVYKw705KQT5hKY/e3YmBP1mHMTKD/+zq
-   e7BXtioDNUDELnNqtVffqh6J90Vq3BgNyNu21D1SdDpKBryqR6s7gRxWI
-   Pz4pyuLJHpMxLxWNy/LVFYAapy/d0/KdvR2VxN0WMIkbzDHoF8JqEouvW
-   y3ZgY4nJx3op1+rXqp8jQv6sH/xM+ES9ETSi1tDqULaOtDndzL/2eocqQ
-   g==;
-X-CSE-ConnectionGUID: 0GFVviLQTvSueUHzJFvnRg==
-X-CSE-MsgGUID: 3WeliolZS5mVJ7FwQZzdhw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11655"; a="91237886"
+  bh=cci3FY5ia69FtMOxBM9uL2a2YEewtMJ1HQuhAo3WpjY=;
+  b=KeRxgA9xwzKRISJYP3H9e3DG/IsbGnlgAmb1jBqTqNHSOaevxoyHvPqg
+   yn3ERtAK2CO3GNnnF8njWGInNn7pbVC38xlN8QDCUtSZ2SEvcGJUA2hcO
+   ROeB2741ObHLzS9K8ALBC6tP3YB8LQiYtwUPtl3gb0gMhn2xFP/wKaTZD
+   SyJTOeneyOtDY+JjcER+Tj1xEvKgbdP/+qmOn1DJNNE8paNC30T9r9dNA
+   KJvJ3XtrqGX8i+pu4hm3EYPlnRevHoC2IeKjOuK9MsWeLyGg8/iE+rF+Y
+   Okl2K8PX+oXIDHw39drSdmFTbgpIZNVVY7pIZPrLoI/yiuc17mfcxWgam
+   Q==;
+X-CSE-ConnectionGUID: fGE6MaYRR+CnBuLxFvC99w==
+X-CSE-MsgGUID: qXp1n9dWS3WzJIz9Bfy+oQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11655"; a="86161592"
 X-IronPort-AV: E=Sophos;i="6.21,184,1763452800"; 
-   d="scan'208";a="91237886"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2025 10:25:17 -0800
-X-CSE-ConnectionGUID: dIBHnoZuRDa3KUBMvZBqdA==
-X-CSE-MsgGUID: S+abYjMvQGWncZACRH9IDA==
+   d="scan'208";a="86161592"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2025 10:26:08 -0800
+X-CSE-ConnectionGUID: dAFYB/nJQ6+tO6Yq70CP2Q==
+X-CSE-MsgGUID: u0VYWnBHQ6KOcGMnQSMxsA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,184,1763452800"; 
-   d="scan'208";a="204887549"
+   d="scan'208";a="200717489"
 Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.236])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2025 10:25:14 -0800
-Date: Sun, 28 Dec 2025 20:25:12 +0200
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2025 10:26:06 -0800
+Date: Sun, 28 Dec 2025 20:26:03 +0200
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
 Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -68,7 +68,7 @@ Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v1] gpio: pca953x: handle short interrupt pulses on PCAL
  devices
-Message-ID: <aVF2CIorE5ylV1b4@smile.fi.intel.com>
+Message-ID: <aVF2O5lVpPtJtoER@smile.fi.intel.com>
 References: <20251217153050.142057-1-ernestvanhoecke@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -151,12 +151,8 @@ On Wed, Dec 17, 2025 at 04:30:25PM +0100, Ernest Van Hoecke wrote:
 > [1] commit 44896beae605 ("gpio: pca953x: add PCAL9535 interrupt support for Galileo Gen2")
 > [2] commit d6179f6c6204 ("gpio: pca953x: Improve interrupt support")
 
-Wow, this is a very good wrap-up of the interrupt behaviour on those chips.
-While I am fully with you on the fix (this patch), can you also add a
-chapter/section about this to the documentation file (now we have it for these
-chips!) Documentation/driver-api/gpio/pca953x.rst?
-
-(As a separate patch.)
+And missed my tag
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
 With Best Regards,
