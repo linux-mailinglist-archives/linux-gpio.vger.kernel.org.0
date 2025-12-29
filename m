@@ -1,175 +1,179 @@
-Return-Path: <linux-gpio+bounces-29975-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29976-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32326CE640C
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Dec 2025 09:48:04 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47BA7CE6A38
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Dec 2025 13:07:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 5DB3E300F61E
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Dec 2025 08:48:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 07310300B921
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Dec 2025 12:07:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAB72271464;
-	Mon, 29 Dec 2025 08:48:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5AE230F815;
+	Mon, 29 Dec 2025 12:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j6wR2jaz"
+	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="iamT1tTG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6111C8626;
-	Mon, 29 Dec 2025 08:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EFB930F55C
+	for <linux-gpio@vger.kernel.org>; Mon, 29 Dec 2025 12:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766998080; cv=none; b=i++yTvcBG8n96uvVLIO2WjUI058dwJvDQKnLltm5/vhtJu92WXfZ0glz1XmsJGtFM/GPRo8/IjJYFNBBd4tAdK4PjYjY3iZ/05pnAOnzq7nfeWgPIpzTU/RMygcq7H6ouU8p3axbtGxpCrJ3UNK/nUcJAi9H6lpKId4Ojh1onsQ=
+	t=1767010048; cv=none; b=Az2+fNH0x02Grc6WzQpUGdQUSQ0+9SjjKJH2NeRYnKSE10L74AXrUxDg//352tlx0EB+UArIDJjID8w+3D+OaqwOFN/0YHb6KECJ5gRAJBo+Bx74Tozb8h+IR1BQBdFznLIa6p04qwX9nP7sTXGgDfTm6SlYZ8IrCcmqou6BOMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766998080; c=relaxed/simple;
-	bh=v44N2XjK2sH90Tnjd62vX1wVHggfuf7c0wYY7lW0ojw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L1SZafegx4YYBuBnnnrAdTVHLq+xRdcYk97Da4XHbEjBNcVWPwROmb9OUOndqdxKqiIatgPpFQb/0tRpq+lJEQnY2LdxRN+7IidY479E3zh0/G7yi49Op0CAuU2DxncBUg4JM+SkDCRGiprEWSOxybjudipce2uxENeJuWn0za4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j6wR2jaz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ED58C4CEF7;
-	Mon, 29 Dec 2025 08:47:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766998080;
-	bh=v44N2XjK2sH90Tnjd62vX1wVHggfuf7c0wYY7lW0ojw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=j6wR2jaz06bwagPAFZPp9NkfKLy0tfyM0sR6Ei4rugvguB0/p45UYoVOiYhoXEJOH
-	 Eih13gd10GToygImTgWkbJy4EIGXbJ3lwdO3eNZAp6Hg2Aatl/jJiu8DZrcenWSzZ2
-	 QXHCoHHCmK1I2+zXTt9G18LvqAsiPCAuMvd2vaWsE4YxN+VyF1M1La6TvboxyRLFVi
-	 VLa8WVXUBY3RRoLNCmjfTUoVxJBlCpVMo8Ex4mlddkA74oYVd2bD+dXgIfKZfRXsgd
-	 UoUJ7L3k5I73UW66GchIZW7HDBErav/OZmQjgwXyNnOgTbSOHILRlyZ6wZ+5U04VpI
-	 d6pgLuMQYqUyg==
-Message-ID: <57d27a43-4c3a-415b-b633-3d52c9f96f5a@kernel.org>
-Date: Mon, 29 Dec 2025 09:47:54 +0100
+	s=arc-20240116; t=1767010048; c=relaxed/simple;
+	bh=M0RIAwtADvVOqaERuCW9IojIKIPb3AOQCX/h4YSSMVA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ss9XBle6Jbl3DfX19QXuoodtZxi+cAtmL7xYKOLYVR4EhVBPJS/Qur3k0jB6mE4DVFmOsuoyau4I96FiYK/o96bCLJSO/cBV632s0qw8tSqLobqOxtNw66enn4zS5Zf6wNjog5BDMExrUXAlC11UvaIL4miyMSYd8apDZVHFu5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=iamT1tTG; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b79ea617f55so1676493566b.3
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Dec 2025 04:07:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura.hr; s=sartura; t=1767010045; x=1767614845; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M0RIAwtADvVOqaERuCW9IojIKIPb3AOQCX/h4YSSMVA=;
+        b=iamT1tTGYGQlzW0SD7Bc5Gh9ZF8yq3i589wLhXJrSD1Kp1ZG0ZaxE07zplkkGHJVEP
+         gb0by9XjDcH0ilhHcxSpil+RiSM7Ic1A8SSNbg2dpEfXCZg6NkVkwkdjMMKKxH2KX1Gf
+         pdYGVDhIhWLK9RFe3oxaeh42xev2B9E2QeiJUwmTrK4iiImu5MhqPNxGIoaKR9SmPIJk
+         BWAa1Ab215SKOtSeT5lNMMdyImsouv4dTKP/3SsgFQhmmnNLv71u8lm9YmvDxnym0Tez
+         P3Fx5ZSdHR5Mqj4oBpHnVUccNb6D0RfhAVP83lrcvz6sILAhn4GItv8EK4Uo/FOIg5GA
+         UIIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767010045; x=1767614845;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=M0RIAwtADvVOqaERuCW9IojIKIPb3AOQCX/h4YSSMVA=;
+        b=Ohm6FWQBWbjKoBQhqjRB8ifpoFh10UTZ7Z5WZBRN002Cv4zeCEH/OvodJgelNY21Jx
+         8Ful6mISmmG3AKNEc0baiTpmVQNoVzuyaOUO/6NIVZbhTf7Z89UC3JIMzPRH1zU3l+4O
+         nA0BWt50C61j6Lahy/hgV9qSF1khuKlsj2aqqLF/0XzTbK0nOpefQGnDFnIvujMUVSDv
+         euAEIknMRVd28N7K/ub98IG7qc3ynuJuObypNHVjQuoEg2/L7Tflh9kYkZ8PxVDtl/Jb
+         BbUKNq3neShNyUSEb4Y1ubcm5pN/sO0nQ5599Dk/8qIZYoncsFC3ueGt5ZN5ngFapdo+
+         7DZg==
+X-Forwarded-Encrypted: i=1; AJvYcCUwgQ+KwCYRBCWCFCxHuvDwZTEBfuk/YZY+ku4XJ/WF2v0Y0aJbzbWV8buT7WP8cT3gq6d0dZYCe0o+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQTFc6GPYVHrJLA5V+U+t5s1vSQZaMiwo0P9c/c5P+MTGK20Gh
+	GzCG5+s1nCtYGPDsd2+NVfPF+skgW5Uls4j8YxjikMVCo/6eYiMadvyUzmFThuEgxpRd9QrhsiQ
+	izvfhpUAGHCSpVEfsByvAoPDfEa4XL4t85Y21jSOM/Q==
+X-Gm-Gg: AY/fxX4Y1FpStJf27Ru6SeQc3j4WHjtgPqlisqpv5jfOh+TJMU6x7pfPoQkk1VPcy4l
+	hg6l2/yNa7StO2VWKQ71KieBT7m9uQFX8Xj7H2m3pSMCbMMGSCGLAHmbIGTcmooPRjeNDYDACgT
+	OUY60jKG6c3AS8KXsWcjVKEOjjBezpSYenqgfF72uVcHjwosJisUd7h0L+dzRlAWd3AydZF6/KT
+	35zji8A1OaTLa2Lj/WCKaTfDykkI7Wd4u8KwN1cN9WBymmKfxV1LIn9ZdmEXh4aqn5U04SFUHth
+	6N1vWehkrt8pjeFCcv/25mi0PfQ9fzwyT+u1GyctGQOfMlgf3bdN
+X-Google-Smtp-Source: AGHT+IHwGBZ7fPOTgnv1RT35iaeFO7HZRzkOQtdPCeQFstms7NNREAW/jaHp2F7zdlu800ZsYVpbEuZjGBw4wnDce1o=
+X-Received: by 2002:a17:906:2081:b0:b80:415e:5b2 with SMTP id
+ a640c23a62f3a-b80415e05efmr2616951466b.4.1767010044222; Mon, 29 Dec 2025
+ 04:07:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 7/7] ARM: dts: rockchip: rk3506: Add pinctrl and rmio
- dtsi for rk3506
-To: =?UTF-8?B?5byg54Oo?= <ye.zhang@rock-chips.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner
- <heiko@sntech.de>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Rob Herring <robh@kernel.org>, krzk+dt <krzk+dt@kernel.org>,
- conor+dt <conor+dt@kernel.org>, linux-gpio <linux-gpio@vger.kernel.org>,
- devicetree <devicetree@vger.kernel.org>,
- linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
- linux-rockchip <linux-rockchip@lists.infradead.org>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- "tao.huang" <tao.huang@rock-chips.com>
-References: <20251227114957.3287944-1-ye.zhang@rock-chips.com>
- <20251227114957.3287944-8-ye.zhang@rock-chips.com>
- <ebb720f6-4756-437f-a71a-d94f45d732e8@kernel.org>
- <AGkAtwAtJy-UDFfi3M2RSaqR.3.1766993111418.Hmail.ye.zhang@rock-chips.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <AGkAtwAtJy-UDFfi3M2RSaqR.3.1766993111418.Hmail.ye.zhang@rock-chips.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20251223201921.1332786-1-robert.marko@sartura.hr>
+ <20251223201921.1332786-2-robert.marko@sartura.hr> <20251224-berserk-mackerel-of-snow-4cae54@quoll>
+ <CA+HBbNGym6Q9b166n-P=h_JssOHm0yfyL73JZ+G9P81muK=g4A@mail.gmail.com>
+ <78bf252c-fd5e-4a36-b1a3-ca8ed26fde7a@kernel.org> <CA+HBbNG+ZVD6grGDp32Ninx7H1AyEbGvP0nwc0zUv94tOV8hYg@mail.gmail.com>
+ <d210552f-c8bf-4084-9317-b743075d9946@kernel.org> <2025122516245554f59e2e@mail.local>
+ <20251227-splendid-striped-starfish-ece074@quoll>
+In-Reply-To: <20251227-splendid-striped-starfish-ece074@quoll>
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Mon, 29 Dec 2025 13:07:13 +0100
+X-Gm-Features: AQt7F2pkPcBxmyeR-DPcdCGLawGZy7wfoKy0BfxlIeZ5QxnvZTUu33UqbaIu3eU
+Message-ID: <CA+HBbNEqq9ZqBR88DFSSSrYw=LBzAreFC0kL88-HZCGAsOrqZw@mail.gmail.com>
+Subject: Re: [PATCH v3 01/15] include: dt-bindings: add LAN969x clock bindings
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev, 
+	herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org, 
+	andi.shyti@kernel.org, lee@kernel.org, andrew+netdev@lunn.ch, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, linusw@kernel.org, 
+	Steen.Hegelund@microchip.com, daniel.machon@microchip.com, 
+	UNGLinuxDriver@microchip.com, olivia@selenic.com, radu_nicolae.pirea@upb.ro, 
+	richard.genoud@bootlin.com, gregkh@linuxfoundation.org, jirislaby@kernel.org, 
+	broonie@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
+	lars.povlsen@microchip.com, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, netdev@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, 
+	linux-usb@vger.kernel.org, linux-clk@vger.kernel.org, luka.perkov@sartura.hr
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 29/12/2025 08:25, 张烨 wrote:
-> 在 2025/12/28 18:37, Krzysztof Kozlowski 写道:
-> &gt; On 27/12/2025 12:49, Ye Zhang wrote:
-> &gt;&gt; +		/omit-if-no-ref/
-> &gt;&gt; +		rm_io28_touch_key_in6: rm-io28-touch-key-in6 {
-> &gt;&gt; +			rockchip,pins =
-> &gt;&gt; +				&lt;1 RK_PC3 7 &amp;pcfg_pull_none&gt;;
-> &gt;&gt; +			rockchip,rmio-pins =
-> &gt;&gt; +				&lt;0 28 49&gt;;
-> &gt;&gt; +		};
-> &gt;&gt; +
-> &gt;&gt; +		/omit-if-no-ref/
-> &gt;&gt; +		rm_io28_touch_key_in7: rm-io28-touch-key-in7 {
-> &gt;&gt; +			rockchip,pins =
-> &gt;&gt; +				&lt;1 RK_PC3 7 &amp;pcfg_pull_none&gt;;
-> &gt;&gt; +			rockchip,rmio-pins =
-> &gt;&gt; +				&lt;0 28 50&gt;;
-> &gt;&gt; +		};
-> &gt;&gt; +
-> &gt;&gt; +		/omit-if-no-ref/
-> &gt;&gt; +		rm_io28_sai0_mclk: rm-io28-sai0-mclk {
-> &gt;&gt; +			rockchip,pins =
-> &gt;&gt; +				&lt;1 RK_PC3 7 &amp;pcfg_pull_none&gt;;
-> &gt;&gt; +			rockchip,rmio-pins =
-> &gt;&gt; +				&lt;0 28 51&gt;;
-> &gt;&gt; +		};
-> &gt;&gt; +
-> &gt;&gt; +		/omit-if-no-ref/
-> &gt;&gt; +		rm_io28_sai0_sclk: rm-io28-sai0-sclk {
-> &gt;&gt; +			rockchip,pins =
-> &gt;&gt; +				&lt;1 RK_PC3 7 &amp;pcfg_pull_none&gt;;
-> &gt;&gt; +			rockchip,rmio-pins =
-> &gt;&gt; +				&lt;0 28 52&gt;;
-> &gt;&gt; +		};
-> &gt;&gt; +
-> &gt;&gt; +		/omit-if-no-ref/
-> &gt;&gt; +		rm_io28_sai0_lrck: rm-io28-sai0-lrck {
-> &gt;&gt; +			rockchip,pins =
-> &gt;&gt; +				&lt;1 RK_PC3 7 &amp;pcfg_pull_none&gt;;
-> &gt;&gt; +			rockchip,rmio-pins =
-> &gt;&gt; +				&lt;0 28 53&gt;;
-> &gt;&gt; +		};
-> &gt;&gt; +
-> &gt;&gt; +		/omit-if-no-ref/
-> &gt;&gt; +		rm_io28_sai0_sdi0: rm-io28-sai0-sdi0 {
-> &gt;&gt; +			rockchip,pins =
-> &gt;&gt; +				&lt;1 RK_PC3 7 &amp;pcfg_pull_none&gt;;
-> &gt;&gt; +			rockchip,rmio-pins =
-> &gt;&gt; +				&lt;0 28 54&gt;;
-> &gt;&gt; +		};
-> &gt;
-> &gt; Why are you defining all pins? This is wrong, your driver has to do it,
-> &gt; not DTS. All these definitions when not used are just pointless.
-> &gt;
+On Sat, Dec 27, 2025 at 12:17=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.o=
+rg> wrote:
+>
+> On Thu, Dec 25, 2025 at 05:24:55PM +0100, Alexandre Belloni wrote:
+> > On 25/12/2025 09:47:34+0100, Krzysztof Kozlowski wrote:
+> > > On 24/12/2025 15:01, Robert Marko wrote:
+> > > > On Wed, Dec 24, 2025 at 2:05=E2=80=AFPM Krzysztof Kozlowski <krzk@k=
+ernel.org> wrote:
+> > > >>
+> > > >> On 24/12/2025 11:30, Robert Marko wrote:
+> > > >>> On Wed, Dec 24, 2025 at 11:21=E2=80=AFAM Krzysztof Kozlowski <krz=
+k@kernel.org> wrote:
+> > > >>>>
+> > > >>>> On Tue, Dec 23, 2025 at 09:16:12PM +0100, Robert Marko wrote:
+> > > >>>>> Add the required LAN969x clock bindings.
+> > > >>>>
+> > > >>>> I do not see clock bindings actually here. Where is the actual b=
+inding?
+> > > >>>> Commit msg does not help me at all to understand why you are doi=
+ng this
+> > > >>>> without actual required bindings.
+> > > >>>
+> > > >>> I guess it is a bit confusing, there is no schema here, these are=
+ the
+> > > >>> clock indexes that
+> > > >>> reside in dt-bindings and are used by the SoC DTSI.
+> > > >>
+> > > >> I understand as not used by drivers? Then no ABI and there is no p=
+oint
+> > > >> in putting them into bindings.
+> > > >
+> > > > It is not included by the driver directly, but it requires these ex=
+act
+> > > > indexes to be passed
+> > > > so its effectively ABI.
+> > >
+> > > How it requires the exact index? In what way? I do not see anything i=
+n
+> > > the gck driver using/relying on these values. Nothing. Please point m=
+e
+> > > to the line which directly uses these values.... or how many times I
+> > > will need to write this is not ABI?
+> > >
+> >
+> > The index here is the exact id that needs to be set in the PMC_PCR
+> > register and so it is dictated by the hardware.
+>
+> So not a binding between Linux and DTS.
+>
 
-Don't send HTML to us. I cannot parse above.
+What would be your suggestion on moving forwarding regarding the clock
+HW indexes?
 
-Best regards,
-Krzysztof
+LAN966x does the same with HW clock indexes in the dt-bindings includes.
+
+Regards,
+Robert
+
+> Best regards,
+> Krzysztof
+>
+
+
+--=20
+Robert Marko
+Staff Embedded Linux Engineer
+Sartura d.d.
+Lendavska ulica 16a
+10000 Zagreb, Croatia
+Email: robert.marko@sartura.hr
+Web: www.sartura.hr
 
