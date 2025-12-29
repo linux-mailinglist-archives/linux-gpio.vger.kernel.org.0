@@ -1,148 +1,121 @@
-Return-Path: <linux-gpio+bounces-29972-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-29973-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC7D5CE570B
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 21:15:19 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2068CCE60C4
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Dec 2025 07:48:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 59338300BB9A
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Dec 2025 20:15:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E893430034A5
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Dec 2025 06:48:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D105242D98;
-	Sun, 28 Dec 2025 20:15:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC64423A58F;
+	Mon, 29 Dec 2025 06:48:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fiu4+dpf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xFduY41G"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2A27083C;
-	Sun, 28 Dec 2025 20:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE13522333B
+	for <linux-gpio@vger.kernel.org>; Mon, 29 Dec 2025 06:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766952912; cv=none; b=HF57KXciVsmAm9jRhjwAGBd0wMfBTtIdJ6cKBmpFXIoaIjYoFg9cRDVr8sxMePkbpTDhALuU8ijVB7v7yUs4pAnkzaOlpWJtSCPYpJqK2cD7vNQLgrc8cwNvCFkTgTHsCFuGPcUWDg9vZfMRHGc2CHZFZ8MFXsmtQnPxOoQSndo=
+	t=1766990885; cv=none; b=L4IV3Uq7Wl/ptH4xTKyRDlU7hsUPkZThOkb+YmMlYactfEHnKg5zvnUPBmuy/NNK5Dhh80rA05jar+uvPjXCVjHkmxp20EHNVZf0QFLy0E5fPg0TTfngpaHqfGWIeQbHuENqgiBWJFNUlW7Bn320a92gNtrBY8LMF/b/0jVPfdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766952912; c=relaxed/simple;
-	bh=+9l7RPUslIPHW/THX1/QNwzs4MImlyHOusYT9W1RtJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M/l5GNZMHrjFAGTEwrFYDfJqqlN+TqonQ2LLDsvhg42KBAUZC/0rKFn/2VHz5nwPezeV/ozXEInFP8Kt8LNdyn1qe6kmcaFY3CAb+lByG+EcR9nt0Tx0iW4Ou7RL2GWKQh1LWwXrNt98H/N900KMvFQdDcrAfjz7IlRGB5KVLP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fiu4+dpf; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766952911; x=1798488911;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+9l7RPUslIPHW/THX1/QNwzs4MImlyHOusYT9W1RtJQ=;
-  b=fiu4+dpfxkdm5Ie8lGxziPnKDHKKoLKTx73+cD8U8n++oIisP8bbbQxr
-   AmT6PrNFxnCEA8JcnPaSp+0P0XSDN+K2GMeAo0OlODCwaob10GLCKe3Ne
-   YhWGKVff0pFz8g25jTpXyh46HKsxv20KBgK45LuevJFoZLEDPyY52gT/4
-   cqHOvYEQQnRppUxwRXdvyvHWsgZW6n/w74sH786ik0aQZMS+TnmTvaU6T
-   SRc0ZbAKhNRJVaCPLQkfv2qTJ82pbbbgMZGsi8yCfK9MC96aQb3J3v19D
-   EEEeedZdcuWulwTdeHQOwrIpd8iv/YO1HNppPkAQGS5T3tKevq7wTcF2c
-   w==;
-X-CSE-ConnectionGUID: kXK5UXhUTNyOthi4cv9ANA==
-X-CSE-MsgGUID: SBGWaZP3S5CeCVz6VWZTMw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11655"; a="72207920"
-X-IronPort-AV: E=Sophos;i="6.21,184,1763452800"; 
-   d="scan'208";a="72207920"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2025 12:15:11 -0800
-X-CSE-ConnectionGUID: epHtT5m7QhmfH4MW7GFt9A==
-X-CSE-MsgGUID: wlkIvAvsRGa32e6TnuU7wA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,184,1763452800"; 
-   d="scan'208";a="201693922"
-Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.236])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2025 12:15:08 -0800
-Date: Sun, 28 Dec 2025 22:15:06 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Francesco Lauritano <francesco.lauritano1@protonmail.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Mika Westerberg <westeri@kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: Disable edge events on boot on ASUS ROG
- Strix G16 G614PP
-Message-ID: <aVGPysQghxHGaJ2r@smile.fi.intel.com>
-References: <2kSCn4XaoXsXJ3EUR0syTdmip8Z1cBuUr0Br4sFVnwnsA8q4GlhiHOmsJkeBxvxYoLnetp4r44wIPXw42yTAFl-BtMROnIwR-NkckKgA5EY=@protonmail.com>
- <6iFCwGH2vssb7NRUTWGpkubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pnu5hzPguTa0s=@protonmail.com>
- <20251217120146.51321-1-francesco.lauritano1@protonmail.com>
- <20251217130822.GS2275908@black.igk.intel.com>
- <X9fJuqzxIBzuhcbjDFYBPSScoKnUpKLe13znKYaJkJpgmjcbfF6_RN2_24ksQq0Hwyvy9pVrnL7_vHEarnQyUBC0zBLmhlvp75nNhgmq7OI=@protonmail.com>
+	s=arc-20240116; t=1766990885; c=relaxed/simple;
+	bh=OZvhZ7NpA5Ybm+ZyBhQlb2l5FV9Gu92NCEHcOuIiZT4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CITI2UOWfWxmcX32VJWxYEYbixBN/2hozU5CgvUR2j67XCcWuhnsfm3AbNBEZz5c25yqhOxCpWmoHunUYqZukzHlXwic+RiB0lU++5+meSsPyv3/xSxB+FIQVP9oabqei4nUOKtsYgBBfP1I4fshkgdWTfy5zOEcBckNF64wmlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xFduY41G; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b76b5afdf04so1299519066b.1
+        for <linux-gpio@vger.kernel.org>; Sun, 28 Dec 2025 22:48:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1766990882; x=1767595682; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=OZvhZ7NpA5Ybm+ZyBhQlb2l5FV9Gu92NCEHcOuIiZT4=;
+        b=xFduY41Gix57+U7ifvJyavEcSA7re5yz3g5JhhXQqY8cwv6VBP5iGvNlET6qVDohdS
+         9fGbV7771Id/xLUIfDRCb3jSDY6nwnn7+IOZGg/QpolIG+WcVLTpoHJvB5soE8Q3lQY0
+         /+pB+/l9rCvwgrRQFJwZr/hh+xDgbK9SJTHU6Kq2NrltRaQaQdavQ7Ju5ttAWhUwXOj1
+         GGxrZsVyKaaj+CLzhzUMwgIIEFuTAmab5s/wMpngnRccojoaiDVUhnJ3Yhj8J66Cs1vF
+         WUYcCrDaIH/hGPmKTVHVEFyE0Fx72YXKEB1LiOYY07MeXrBAAeCsZgU8kiokujj+7bNL
+         mS7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766990882; x=1767595682;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OZvhZ7NpA5Ybm+ZyBhQlb2l5FV9Gu92NCEHcOuIiZT4=;
+        b=GtR0vYJgWKGZDXl4KF65GuRpPnqlDk7X2xzNTs1Zz6kzuxoC+puH99oC2QEjTznGud
+         X4hYGYtAO3qFlKij6R0BwjucDzxnU8DoDhpbEFH1eC4EeKxgBOuWI5tiTsdP6Qd6Yt5M
+         z4LxuLLX56uwY0Kfao5P4hg+jzOWlrWDnSWbXwsNB1QuKhvslABCBnTeyRcaYqYm3EPl
+         h/Et1jkwLYmdWFhmZmaxRBXwcaNoZjOwwJ5OlFqG8N26Osm2FbPU2HTaxtFVbgawXRVZ
+         LHEEnWFvtzP8HbbGUZhTKQrQfdlwB3TDPTCjm+Rrikf3rNBlEvjvQIxOVl+3jj9JaCzT
+         relA==
+X-Forwarded-Encrypted: i=1; AJvYcCWN4lhx42+98zi6vgg5DRXbVFoc4qKiZV/y/JLWNb5s8+MMhVs/UIMmqU3bsw1fBDbZL3clvxfoECaQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYfHg2LO7Gf2gabSnHYn5XSeLLCosKKsQ11GfZAtRgXaqXfHI9
+	nntMZTCC7YZ2B8kxlesVY/cal/aapKTVFEBNOn57QBpF7tm0N6CZyUUXso1kpVcEpbQ=
+X-Gm-Gg: AY/fxX6zOFTFLl2weyRS8R1G+p8jxuu94+hF/8fX/oYdVUB7IAKXKlneX6D+rP9tyA5
+	s0nULWQBO4qvvawgacbSSB5nwGzCy0Ki+mymRpQerUcv+8xrv6SHmxQs8XPcS/Tx8fjWSXDsYDT
+	0t7SJCScYT6G5U1RyzQDO/oHgh6imhIJ7ECnRBpSiSQe5LVfWRHdtbX3wgmOal67CNBaOdq4xfp
+	jokybA3jkprCkyXa5T0Z02R7FeOgi+pU7O3ZGdAsUXii0fwoJDqYRvE8LAM2lCj6y/PIFOgtH2R
+	WYizEBQ/muehAf0ronx+/DTXUQnL7UDXUW9h5zDrVMDum2gxmcW5MkLIlVkFbO0dNNCAhL/B+10
+	5zZzCfINUP0pybUfK5bFvm3oYTt1xMPdirCnCyzK0tZEtA/m9wFSD+fWIIoZuVW6RGM+NKhgiA+
+	PiVvBq2UzxLZ68k5fbWA==
+X-Google-Smtp-Source: AGHT+IFKJOEnoMT9pd7t4bMOfdAuLJ3dwRnOBx+hhm/y0iCl4h0HCimfd94oOij5S8bCa43IL/8WUQ==
+X-Received: by 2002:a17:907:7f15:b0:b76:b632:1123 with SMTP id a640c23a62f3a-b8037159828mr3025066266b.42.1766990882195;
+        Sun, 28 Dec 2025 22:48:02 -0800 (PST)
+Received: from draszik.lan ([212.129.79.255])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8037ad83dasm3338654666b.25.2025.12.28.22.48.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Dec 2025 22:48:01 -0800 (PST)
+Message-ID: <fe1428dd0d6b744ad3c57bf5797550b54f85ff96.camel@linaro.org>
+Subject: Re: [PATCH v5 00/21] Samsung S2MPG10 regulator and S2MPG11 PMIC
+ drivers
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>,  Mark Brown <broonie@kernel.org>, Lee
+ Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,  Bartosz
+ Golaszewski	 <brgl@bgdev.pl>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Linus Walleij	 <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, Will McVicker
+	 <willmcvicker@google.com>, Juan Yescas <jyescas@google.com>, 
+	kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Date: Mon, 29 Dec 2025 06:48:21 +0000
+In-Reply-To: <20251227-s2mpg1x-regulators-v5-0-0c04b360b4c9@linaro.org>
+References: <20251227-s2mpg1x-regulators-v5-0-0c04b360b4c9@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-2+build3 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <X9fJuqzxIBzuhcbjDFYBPSScoKnUpKLe13znKYaJkJpgmjcbfF6_RN2_24ksQq0Hwyvy9pVrnL7_vHEarnQyUBC0zBLmhlvp75nNhgmq7OI=@protonmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Dec 17, 2025 at 02:01:51PM +0000, Francesco Lauritano wrote:
-> 
-> Thanks for looking into this. Happy to dig deeper.
-> 
-> Here are the requested dumps (boot with initcall_debug, no workaround):
+On Sat, 2025-12-27 at 12:24 +0000, Andr=C3=A9 Draszik wrote:
+> This series extends the existing S2MPG10 PMIC driver to add support for
+> the regulators, and adds new S2MPG11 core and regulator drivers.
+>=20
+> As part of this it was necessary to update the regulator core to allow
+> regulator registration to succeed when supplies aren't ready yet,
+> because on the current user of those PMICs (Google Pixel 6) multiple
+> PMICs supply each other and otherwise regulator registration would fail
+> altogether. This is implemented via an additional 'regulator-bus' which
+> allows us to keep track of regulators with missing supply and retry
+> supply resolution whenever new regulators are registered.
 
-(Usually we also use `ignore_loglevel`, but I think dmesg should have it anyway.)
+Forgot to drop this paragraph from the message, as I sent a separate
+series series for that in
+https://lore.kernel.org/r/20251227-regulators-defer-v1-0-3104b22d84cb@linar=
+o.org
 
-> dmesg: https://gist.github.com/kylan11/63ec3ec319cd6bcaa043fa0b1366965a
-> 
-> acpidump: https://gist.githubusercontent.com/kylan11/7956bbf75714265107f0886f6ed2a381/raw/1614845eb1dc6ab7e2effb6fe56b585a746abe4f/gistfile1.txt
-
-> Some quick notes:
-> - The AMD GPIO controller probes successfully (LINE 2077)
-> 
-> - The hang occurs in the deferred IRQ handler (line 2960)
-> 
-> - There are some ACPI errors around 0.285373 to 0.289806, though they complete quickly
-
-This looks like related to USB4 (thubderbolt) dock? Mika, does it look familiar?
-
-> - After the 36-second hang, everything else initializes normally.
-> touchpad, audio, wifi, nvidia GPU all work fine.
-> 
-> The ACPI tables show there's a _AEI method under \_SB_GPIO. Not sure if those
-> unresolved GPP2/GPP7 references are related to what's blocking the deferred
-> IRQ handler, or if it's something else entirely.
-> 
-> Let me know if you need anything else or want me to test something specific.
-> 
-> On Wednesday, December 17th, 2025 at 2:08 PM, Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
-> > On Wed, Dec 17, 2025 at 12:01:52PM +0000, francesco.lauritano1@protonmail.com wrote:
-> > 
-> > > On the ASUS ROG Strix G16 G614PP (2025), the kernel can stall for ~36
-> > > seconds during late init in acpi_gpio_handle_deferred_request_irqs().
-> > > 
-> > > Booting with gpiolib_acpi.run_edge_events_on_boot=0 avoids the stall and
-> > > restores normal boot times.
-> > 
-> > Okay but it might just accidentally "work" and hides the real issue. Doing
-> > things like this blindly might end up breaking something that relies on
-> > that _AEI.
-> > 
-> > Can you post full dmesg and acpipdump somewhere so we can try to figure out
-> > what is going on?
-
-> > > Link: https://lore.kernel.org/platform-driver-x86/6iFCwGH2vssb7NRUTWGpkubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pnu5hzPguTa0s=@protonmail.com/
-
-Not sure what this means. Maybe better tag like Closes should be used?
-
-> > > Tested-by: Francesco Lauritano francesco.lauritano1@protonmail.com
-
-This is implied that the author of the patch tested it before sending.
-
-> > > Signed-off-by: Francesco Lauritano francesco.lauritano1@protonmail.com
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+A.
 
