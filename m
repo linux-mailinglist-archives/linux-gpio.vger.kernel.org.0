@@ -1,84 +1,96 @@
-Return-Path: <linux-gpio+bounces-30003-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30004-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F190CCEA59C
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Dec 2025 18:46:25 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5435ECEA5C9
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Dec 2025 18:48:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A9C083004ECD
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Dec 2025 17:46:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0E7433027CF9
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Dec 2025 17:48:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 117B526ED37;
-	Tue, 30 Dec 2025 17:46:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9693A32BF40;
+	Tue, 30 Dec 2025 17:48:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LaZQLtCC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iskjk0uk"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49EFD531;
-	Tue, 30 Dec 2025 17:46:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D57225779;
+	Tue, 30 Dec 2025 17:48:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767116780; cv=none; b=rhBZullcyhb7s/77SJ7CnZmLF0ssFKJNwcjV65bt2X7ui4s42POZDwJ3oTLI4n2kcIvsvQIAB9CRfdjv5LOKvm62dtOVXaEtC+Y9dDozB2vA0bCDWQ6qXaJXJnccOMEojPCvHiLdaeGLtOBYz5HrPPUJRapYO4AnyMVf2AyrBgM=
+	t=1767116886; cv=none; b=SqqqdKk16oDoO3YlEMPNGF4xRIcZWCqSmN4hugdZQUT+w9SBR7Szm09no6BoQ79eYTZN8XAbvhvg2iUhR5CxCheKOJqj4dSzZuHu05nOkgX99UzYFr/owt1qki9SXx5+TFtitGLqRgRKCXZzfJhHtxTiMleXWrx3YZEGOlJLDQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767116780; c=relaxed/simple;
-	bh=ILOYy8k0vEwyHW23Hdi68K3x8vNTQdr7Kn6tc5mNowA=;
+	s=arc-20240116; t=1767116886; c=relaxed/simple;
+	bh=N7UUAxBiz2VNPSI7n0ZU15lbc01uDl6QBt1Zyg5SYlg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=exu4NOMeDYoBEq7pGK2S5Mc9XtAfnuCy/n+yjuwH41rGMdnVUgZMvrSbzcIw+ejniZAsncWHtujzTf4qJGeAC0MpODyom4rXmFjDoJsQt9TJwgb1bnV72QJR9SdE3N81jeqzo+0rscJWQjxBKkVfab3JlHLqCuGc8mRa8xol0uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LaZQLtCC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12DB3C4CEFB;
-	Tue, 30 Dec 2025 17:46:19 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=r+cwxI+GdV1So9MTthJ48p9dBpPNI/AddJxHzdNb0xyB/kUg7SUHeMJX/pVPDePCkL/cFubwVnMz/Ea3h4HiAtPGet/JY08LQHgtcoQnZBRyAeia++/HFGgbsxn7PpkK4iBP4tjQOxJmQDQShO4K7u/7Ojf4eN+dCJGOhysn+dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iskjk0uk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA01BC4CEFB;
+	Tue, 30 Dec 2025 17:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767116780;
-	bh=ILOYy8k0vEwyHW23Hdi68K3x8vNTQdr7Kn6tc5mNowA=;
+	s=k20201202; t=1767116885;
+	bh=N7UUAxBiz2VNPSI7n0ZU15lbc01uDl6QBt1Zyg5SYlg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LaZQLtCCuBKPDeQKKafj+JA3Mq4a3BUcto087E4IeFDfQqkA4SOpqRHjFdXuWYyat
-	 Eo7VPYMZFHtj0udAiB2ztbN6os3Ce+UBMBva+rP13Kf3+Na/zlSSXtkP7o2cLGfZNr
-	 KFG5R61dq60QBmB3eH/5dOT//iYzPcs+N0hCEzIeeZUdpLGCOgLFvk+TW5FAyrqrVq
-	 EUIoSibKYV/mXjkwcwxUQq3vm3iikdW4kpGmUcp02bqKaMOHMF81zZ9DRZCoNCZp+H
-	 ySeKFdV/gcYamjzhntFWIYd/iSGukcvbm708WoVRnlOnmg+x+ZwZDtbx2o2FGADAiY
-	 WFPCTp/JD9cIg==
-Date: Tue, 30 Dec 2025 11:46:19 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Chen-Yu Tsai <wens@kernel.org>
-Cc: linux-media@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
-	linux-sunxi@lists.linux.dev, linux-gpio@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	devicetree@vger.kernel.org, Jernej Skrabec <jernej@kernel.org>,
-	linux-kernel@vger.kernel.org, Linus Walleij <linusw@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Conor Dooley <conor+dt@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: media: sun4i-a10-video-engine: Add
- interconnect properties
-Message-ID: <176711677675.852762.10312933098835387721.robh@kernel.org>
-References: <20251225103616.3203473-1-wens@kernel.org>
- <20251225103616.3203473-2-wens@kernel.org>
+	b=iskjk0ukY1R3GMaQ4173SEL1UBw1S23M3vuCmZpUxD6ByaTFqGNWya1PiPjLxhx2X
+	 LR6my8/W09bViFJbO3An9D/BSikw8KBehDvWvmzYHw4KmWmnchIBsYGbEo9UCrVVPe
+	 ikCNEbAeSkSDXJEXgJi1/RIU13aRPX+QQJ/i0D8WAjFwFvt9mhJBLrbRy1vmGemVIY
+	 Wwh7XDzIRw+ZrzYM9xSgPnZT9IIyvBm8uIYl2/sQligLHSKK4qUlwYsLQesw4OGUUl
+	 bwq4aN/0jDRyQD1Hl6RlBXHKdH7xySJ7mEia1rzZARx3dbdtC5wnYwG14sVzJWsJMi
+	 +pH9dnWceBcgQ==
+Date: Tue, 30 Dec 2025 17:47:56 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Robert Marko <robert.marko@sartura.hr>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev, herbert@gondor.apana.org.au,
+	davem@davemloft.net, vkoul@kernel.org, andi.shyti@kernel.org,
+	lee@kernel.org, andrew+netdev@lunn.ch, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, linusw@kernel.org,
+	Steen.Hegelund@microchip.com, daniel.machon@microchip.com,
+	UNGLinuxDriver@microchip.com, olivia@selenic.com,
+	radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com,
+	gregkh@linuxfoundation.org, jirislaby@kernel.org,
+	broonie@kernel.org, lars.povlsen@microchip.com,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+	netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-usb@vger.kernel.org, luka.perkov@sartura.hr
+Subject: Re: [PATCH v4 14/15] dt-bindings: arm: AT91: document EV23X71A board
+Message-ID: <20251230-imprecise-cohesive-25a1f0ec1896@spud>
+References: <20251229184004.571837-1-robert.marko@sartura.hr>
+ <20251229184004.571837-15-robert.marko@sartura.hr>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZWjypDN5GPfEBIGy"
+Content-Disposition: inline
+In-Reply-To: <20251229184004.571837-15-robert.marko@sartura.hr>
+
+
+--ZWjypDN5GPfEBIGy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251225103616.3203473-2-wens@kernel.org>
 
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-On Thu, 25 Dec 2025 18:36:12 +0800, Chen-Yu Tsai wrote:
-> The Allwinner video engine sits behind the MBUS that is represented as
-> an interconnect.
-> 
-> Make sure that the interconnect properties are valid in the binding.
-> 
-> Fixes: d41662e52a03 ("media: dt-bindings: media: allwinner,sun4i-a10-video-engine: Add R40 compatible")
-> Signed-off-by: Chen-Yu Tsai <wens@kernel.org>
-> ---
->  .../media/allwinner,sun4i-a10-video-engine.yaml        | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
+--ZWjypDN5GPfEBIGy
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaVQQTAAKCRB4tDGHoIJi
+0ufVAP41AIR3LR0nvj27ohIxrkUaPNdUAsA77vMxPkkpcl6SgAEA2oZF4ChuF/6n
+1N8HRuxXSCp7DSjp7VlfsdsWNtMzeQo=
+=pUr1
+-----END PGP SIGNATURE-----
+
+--ZWjypDN5GPfEBIGy--
 
