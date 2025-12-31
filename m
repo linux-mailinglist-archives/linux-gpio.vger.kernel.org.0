@@ -1,111 +1,98 @@
-Return-Path: <linux-gpio+bounces-30017-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30018-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C6D5CEBF58
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Dec 2025 13:29:09 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A222CEC8F0
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Dec 2025 22:13:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CA7A63008571
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Dec 2025 12:29:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0CB8E300CBAD
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Dec 2025 21:13:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A36B32AAC3;
-	Wed, 31 Dec 2025 12:29:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20A832F83A7;
+	Wed, 31 Dec 2025 21:13:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=chimac.ro header.i=@chimac.ro header.b="gW97Na2E"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZ9IZKMf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-4318.protonmail.ch (mail-4318.protonmail.ch [185.70.43.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C27331CA50;
-	Wed, 31 Dec 2025 12:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38752E228D
+	for <linux-gpio@vger.kernel.org>; Wed, 31 Dec 2025 21:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767184146; cv=none; b=QmlD8N8kfEc8fT+h4aVrKyNH3pZBBZzXB41H2ofAy/4n0/3OJ8hEjk2jrabKQfhJ8uGiYQoDLsposyjfYhCXgfsUxgXmYC3XadQFpz9qFbKWAiMUo4WOX9nwH1nZ1ObsEv1mX32N2+Bcz/ovUnQmHfu61x3Df/wVfuBfHLa9/bc=
+	t=1767215587; cv=none; b=Wm9ph17TicmTif7Farm8ejwmeKKyYZ8nSi7c8HVt9wi1qqxNrdmRIgslp7MrftsSyxO8yHn6wJ1C22UGMSh7VFXyAmcQO1MurRvatmqxMAEpKPfBASL+vjJEcnGuQlIRS5ALh4IY6FyFAzYXkZv5qUX/F9DwTpgY31kMqSvF9SE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767184146; c=relaxed/simple;
-	bh=9rLreqkh3KOaBoBE6zwFaHYZmSbkF23wTl1G/WkHYfM=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WYhMHNbPzEAGTkLg89pF5mXBWqdv6akzJpfBGR6EyOJQgr6+vlydAAELwlNirFMVgjB/oVfwR6pqLRPWNkLvAB8tx7JAMeyW0EnkUkC1OIbrtoW14DfZeQ8687xDG17GfL+Vju9tQngOyY2Q7ebPmj0mBFpOJ81epHL+Q5GaONk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chimac.ro; spf=pass smtp.mailfrom=chimac.ro; dkim=pass (2048-bit key) header.d=chimac.ro header.i=@chimac.ro header.b=gW97Na2E; arc=none smtp.client-ip=185.70.43.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chimac.ro
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chimac.ro
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chimac.ro;
-	s=protonmail2; t=1767184133; x=1767443333;
-	bh=9rLreqkh3KOaBoBE6zwFaHYZmSbkF23wTl1G/WkHYfM=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=gW97Na2EOh7XeoR+ZPLRj590d53u8hvmVD5biXySbGbYF8aaTo8wu/pS4/4xzLwzi
-	 5mmO8XPtCeBJz57RtvTSKzDdV7aRQR1RVf1jVv1ys1GEL/wKlt+ORrvVP4hSwQ/+Ij
-	 rrp0cIFFJ5BcUvKcxduCVogMEfVSNuaaMA67x106ReSZSs0S0yewhxnKror9lLcrDs
-	 +MkN27KPRpKWKmBrumZqOHYMWRPfoEtbNY4a7uLb0fgzwXd7Nx0guoMQUe8bGYM3fV
-	 ee1U0WmxIUxJUzGoefq8t8UOQZVKWUBVNLsYMA+E4Fa0jzBonnivbwVl+oVeT4iWM7
-	 S3UxlorkVCk5g==
-Date: Wed, 31 Dec 2025 12:28:50 +0000
-To: Krzysztof Kozlowski <krzk@kernel.org>
-From: Alexandru Chimac <alex@chimac.ro>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: pinctrl: samsung: Add exynos9610-wakeup-eint node
-Message-ID: <yB5WFgsxeeqHQgi87UeNPD8K2OlQbWWC6-BovxADBtgusN3n8UOrm7Gi6jz6Th0dsMA9J-LEpx69sWjNmWTH_-jx9r7AgvXNTwR2hQW7-SM=@chimac.ro>
-In-Reply-To: <20251230-dramatic-gregarious-stallion-15bc07@quoll>
-References: <20251228-exynos9610-pinctrl-v2-0-c9bbeee4c54b@chimac.ro> <20251228-exynos9610-pinctrl-v2-2-c9bbeee4c54b@chimac.ro> <20251230-dramatic-gregarious-stallion-15bc07@quoll>
-Feedback-ID: 139133584:user:proton
-X-Pm-Message-ID: 438c4b314bd6f15975c0d8bc145d9e4161d2dfb1
+	s=arc-20240116; t=1767215587; c=relaxed/simple;
+	bh=x7vb6kXWtlKUuGx05ngsu+JusxV51eT2zPRcBHPCOzM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Mlv0Q6eo1AZQRvUqphNj1uNH9o97cVmWejf/VjuZohyCAlI4LIoZlZ8G/jgFlCjL6BlHTVTqGrZRUh3TxzSiKPPcjVCruN8Agw22Tw3NeboX/PFxdR96WozB+6anP5fEsdUlX4bgHh1t1vesGYufYder4dq83G14OR645hlqoM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZ9IZKMf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D806C113D0
+	for <linux-gpio@vger.kernel.org>; Wed, 31 Dec 2025 21:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767215587;
+	bh=x7vb6kXWtlKUuGx05ngsu+JusxV51eT2zPRcBHPCOzM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=QZ9IZKMfgRG+yXORo1uNJmDYrUzJ54l8csaLLhyPk39UWAdLkszb3ZaxP4LO9CYRj
+	 UynHVMPqKjzayCIhhQZVAJJTK5S+zZtdPzA6VIiXlscDDmAx/oa55qwEKDy8ncehQo
+	 jXBIjyAKsxtL7e1tva8ge10SWK5JjGpHCLmZN0njgw8V++bsknxOpXhADQi4ffBi8k
+	 RMR5Y7XJYnUlgbGxIWDd+MASKPiW+foRsysEJJtwGp+LOVWxWJmLqn5umspEuIRrPd
+	 gaG5zX56p+hIoQou4Lvk4bNlwa1Ly+Sex34B8dt0fTkYobulrOfIQFLr2KYZiIM6t/
+	 ZCr2K3m4nuRTQ==
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-7881b67da53so92040177b3.1
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Dec 2025 13:13:07 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWS/iaNSCcDitHXmvEDqOYd91i6eaOeiIPJ9DW5Wz6umoLf4P772GnIr7BPWMkAm32AsAhpPRm2M3W2@vger.kernel.org
+X-Gm-Message-State: AOJu0YyN+O8hhDjO74DPcPMHR/UfOp62b0f393SuQqlfuT7CG17TCvoO
+	dMRyYEYaE2bFClEdqHAhuPi/sHKNXDYSmbEE+1jQvRfa+1T9EGyPWK7lGAEFjSn+Qz0FJubNf1x
+	bUElQmBcY/kW6188DCTlDPZ/xLYDArpU=
+X-Google-Smtp-Source: AGHT+IEcp3a62mstciWUIcVndIe52/9cQwt7d/YtQeDhyaUNqbmXgvqu6T/7pOVRdCkxQqFehpqEHHQ6u/ZiYaoAGGo=
+X-Received: by 2002:a05:690c:6705:b0:78a:6e1d:cc0f with SMTP id
+ 00721157ae682-78fb40c8d29mr320754387b3.66.1767215586810; Wed, 31 Dec 2025
+ 13:13:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <CAMVG2svCF06KF0e8MDCVGGjxP-FM16UE1Fip-toHUcVs-kqBQA@mail.gmail.com>
+In-Reply-To: <CAMVG2svCF06KF0e8MDCVGGjxP-FM16UE1Fip-toHUcVs-kqBQA@mail.gmail.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Wed, 31 Dec 2025 22:12:55 +0100
+X-Gmail-Original-Message-ID: <CAD++jLng8aAhKJ-qCvrywm1k-_yZAMnwoVxkwT51EJozFQ8Vfw@mail.gmail.com>
+X-Gm-Features: AQt7F2oX3uQW8Rt5C9gxNSA2tXRCyPxivz43jmdHZLmd3HlvjGRHMZKWN1ilHss
+Message-ID: <CAD++jLng8aAhKJ-qCvrywm1k-_yZAMnwoVxkwT51EJozFQ8Vfw@mail.gmail.com>
+Subject: Re: [6.19-rc2 arm64] sleeping while atomic in gpiod_configure_flags
+To: Daniel J Blueman <daniel@quora.org>
+Cc: Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
+	Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tuesday, December 30th, 2025 at 11:51, Krzysztof Kozlowski <krzk@kernel.=
-org> wrote:
->=20
->=20
-> On Sun, Dec 28, 2025 at 06:05:52PM +0000, Alexandru Chimac wrote:
->=20
-> > Add a dedicated compatible for the exynos9610-wakeup-eint node,
-> > which is compatbile with Exynos850's implementation (and the
-> > Exynos7 fallback).
-> >=20
-> > Signed-off-by: Alexandru Chimac alex@chimac.ro
-> > ---
-> > .../devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml |=
- 2 ++
-> > 1 file changed, 2 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-=
-wakeup-interrupt.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,p=
-inctrl-wakeup-interrupt.yaml
-> > index f3c433015b12..deb2730855bd 100644
-> > --- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-=
-interrupt.yaml
-> > +++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-=
-interrupt.yaml
-> > @@ -48,6 +48,7 @@ properties:
-> > - enum:
-> > - google,gs101-wakeup-eint
-> > - samsung,exynos2200-wakeup-eint
-> > + - samsung,exynos9610-wakeup-eint
-> > - samsung,exynos9810-wakeup-eint
-> > - samsung,exynos990-wakeup-eint
-> > - samsung,exynosautov9-wakeup-eint
-> > @@ -107,6 +108,7 @@ allOf:
-> > contains:
-> > enum:
-> > - samsung,exynos850-wakeup-eint
-> > + - samsung,exynos9610-wakeup-eint
->=20
->=20
-> This is not needed. Device has 850 fallback, no?
-It's not required, but I guess it would make the device tree look better. I=
-f this patch isn't to be merged, it doesn't functionally affect anything so=
- it can just be dropped instead of requiring another patchset revision.
->=20
-> Best regards,
-> Krzysztof
-Best regards,
-Alexandru Chimac
+On Sun, Dec 28, 2025 at 8:18=E2=80=AFAM Daniel J Blueman <daniel@quora.org>=
+ wrote:
+
+> When booting 6.19-rc2 [1, 2] with lockdep enabled on a Qualcomm X1
+> Lenovo Slim7x ARM64 laptop, I am seeing mutex usage while atomic
+> during gpiod driver registration:
+
+OK...
+
+(...)
+> gpiod_direction_output (drivers/gpio/gpiolib.c:3026 drivers/gpio/gpiolib.=
+c:3019)
+>  gpio_shared_proxy_direction_output
+> (drivers/gpio/gpio-shared-proxy.c:188) gpio_shared_proxy
+> gpiochip_direction_output (drivers/gpio/gpiolib.c:2830)
+
+Aha it's something with the shared proxy, it's related to the whole
+trail of commits adding and fixing this feature, part of which you see
+if you do:
+git log drivers/gpio/gpiolib-shared.c
+
+But don't worry: it's shared proxy and it's qualcomm which means Bartosz
+will be all over it as soon as he's back from holidays!
+
+Yours,
+Linus Walleij
 
