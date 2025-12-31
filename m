@@ -1,100 +1,101 @@
-Return-Path: <linux-gpio+bounces-30012-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30013-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29EE0CEB4EF
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Dec 2025 06:50:05 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD341CEB508
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Dec 2025 06:51:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 84D553009C07
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Dec 2025 05:50:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 743A9301E1A1
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Dec 2025 05:51:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56D4C30FC17;
-	Wed, 31 Dec 2025 05:50:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B0723101A6;
+	Wed, 31 Dec 2025 05:51:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fkSI7ssW";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="PqRAGHLs"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Y84VpmM8";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="JoR86WTQ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C01230FC0B
-	for <linux-gpio@vger.kernel.org>; Wed, 31 Dec 2025 05:50:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E17630FF03
+	for <linux-gpio@vger.kernel.org>; Wed, 31 Dec 2025 05:51:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767160202; cv=none; b=T3G1NcHysrSBYeyPGNn72Kk1uK4i9Pg0k/e+zJJ3FkxiAcfLRlm9t1RviHCoh+RpTAqywjzYeZs5wZwFo/7s4XTJ5zWmntc2GH6Mj+9yCC/YPIjGH7+1Fuapsg8gFHk7ZJPulrkGIzwEHL5tbx4kumBoCzMOgGp49uZKFjHsXSk=
+	t=1767160285; cv=none; b=B8pJUmP/sqMX1Ne96vgxXHLZyzywepbhGmgkXnhphYqjG+N41FOgK8/0QnpeDLH8saRocG7gnHI+ILg88hd3BwQZiL8rFGWn/4qjIFhHxLFjTxkSE16GXskBo/ix516Rg48NVHWFJeLBzWHEewthMGW2mr9spoKWXdB4kaSw97c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767160202; c=relaxed/simple;
-	bh=K5u+eRWd7fSWKZVrVjHpRwBJeW28aH7Jd12NZ+vtvZo=;
+	s=arc-20240116; t=1767160285; c=relaxed/simple;
+	bh=hNUc66KYmzNDHPT8SqKUItmFE1YMMDH/P/ZygNmOpHc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F7hYtw2iy9uUfH6wCMpCWZWeeC5SuAiqhdCVny7/U54SnzVKZtInRlmVbPWZnGV+SilLNRX7ywfzG5zF4/fvsczJq2JWtXhl1H7EHLYpfRF34NUo2Z0vCKQ7UGNeX/AdCdOjbbUljgiOHMk/TFRIIa9wbYhZ4qg2K7uXamAVFeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fkSI7ssW; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=PqRAGHLs; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:Content-Type; b=ktK4/Nv18e+QSkIoE7OoiQGpKWJBpWXRiyeLHBqI5s0QdU9/vXxAJ0nJJJUFVJMKlsc0k2X9/24KAXovnr3QwxqaqSCgX7xSy6bc4QTJ1fCslia8bbNNYIhubmAKjuywvsu3yl8b9hqh9cO3oZze38Mp3tWEfWlTlfOrVcFvP40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Y84VpmM8; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=JoR86WTQ; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BV03aL61750839
-	for <linux-gpio@vger.kernel.org>; Wed, 31 Dec 2025 05:49:59 GMT
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BV18Yem2004587
+	for <linux-gpio@vger.kernel.org>; Wed, 31 Dec 2025 05:51:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	1zxkjFyeB6W9vaIK/85qvGukvVA2Gg9ekN87KzDrwBE=; b=fkSI7ssWln79ZN54
-	31hin3PwHF0DEMjtP/Z/wKXLGnXr4CdmaJipEg7ps3y/X3SkHRvwLQKKjoH8GutN
-	r8l7wtc5kIjNvtBTBKaXH+dTGschJl52D3HPXmy5OeGFJVX7ZGQZgEb+qKJ8EhOR
-	xcZlu83UiOpzDtyI6L6iJ+2e5FW3R6l7b9OtqO4nXNPIemoG1X4i3tjDw10VFSYG
-	/2hG/5dtyv/q3WBFiXOkfz2KlZ3e1QAdwu9znObKVsUl/2CkpiBIKsi6OMZ5OEM4
-	Iaa82SOIBI4tRkBYl6bImadcZvDqzyjx8BN1oDGP22Y7+VPCdhBg5S4ZIF0WB243
-	uBEJpQ==
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bc0sgumrt-1
+	U1D1WI01HlWUlaBhDxLjuNMuNuC+Y9y55bVeztJwMQI=; b=Y84VpmM8usfQpKZw
+	UMp0RqQfDytX20JxVyZCvbXCb2Db4ncE2aZ04VHDDwb46qAY3dg9ir2/etdCpEun
+	X9jdLYSUkkVghDLuaA9a2CDd6xviKbGrGNK3PO+w7/H42ldlrw6q2o/OL7AgB5M6
+	kq+qZRKe6sa7QMSEk4ueXi7jnTWki/ECUQA0uXB57ZvVesN8ZdnU+vGudRTckEfn
+	gpOvXAn76DEKQpUa8q6Z2NsDTgj5s4Iqg5pXIBEc58WB99jhxS86852swNRnIhB/
+	Kc/zDrr4GqIn9t9dk+YgRfFtGmt+VJiIvozwpZc+IS4XRDnm+i+2i2Koos3kuGz5
+	jG9DCQ==
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bc7462ya5-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Wed, 31 Dec 2025 05:49:59 +0000 (GMT)
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-7b952a966d7so21532374b3a.3
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Dec 2025 21:49:59 -0800 (PST)
+	for <linux-gpio@vger.kernel.org>; Wed, 31 Dec 2025 05:51:22 +0000 (GMT)
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-88fcbe2e351so172067346d6.1
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Dec 2025 21:51:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1767160198; x=1767764998; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1767160282; x=1767765082; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1zxkjFyeB6W9vaIK/85qvGukvVA2Gg9ekN87KzDrwBE=;
-        b=PqRAGHLsSEFWJZbWaAr0vCTJGSYNR6irR5EJpcyFVLoqn7LVoDQbetQRy4jW/EYH3T
-         EK1Cobj4Bn5cfZeDKY5LvRN3+baUAuUnRyLpKwEusPnMbbEispsD1HdeaYqgYytzMl+1
-         flQRPXSHjwoatiYfQprJmzBpAVqwW034owSoPd5bTX5ISmMetEPbzi7rYbOL0Q0NkaL4
-         c7pJM29B9fQrtKISGkWOPWabZ5gaJCtol+httVawTKnzp46zSG/GEoQaxoy11Vvj2rEB
-         pydsUWl4YhHCxlAURnEQOYUYk6WTv0m4WCbrnXp66kMoAx90y0hMpliP25CBDFGQkOd8
-         Fh3Q==
+        bh=U1D1WI01HlWUlaBhDxLjuNMuNuC+Y9y55bVeztJwMQI=;
+        b=JoR86WTQNnmDigv3AJs0rir2WwQj2llqRuUeHW746SPNvtUmm8vkaEHe+Wf3275mwx
+         2mH1qAPnHR8TZIYEyOXdnQFgJrsDFe5QU6S2xr4IhCEmE129Up9xyt9ptjyUiwUSYAzz
+         QpyakToLE5sPTcZO27k6T0UUr+wle+ja7yoG4Q6z1myUVFLtNOt1LwUQrx+nUZnFKAIH
+         jy3XN0vG0V1sA4epox37Jnk99JwPxN8RiuO8/dBbQOtlSQU7MhZ+D8lLFU9Nf5UcgTS6
+         d/L5/cZ5OKBGpqFVq94aSm7+kGP5koEK/5NK9qSZiZ5RcNJw8Q+vz/heu4YRXJRZyyzV
+         YSBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767160198; x=1767764998;
+        d=1e100.net; s=20230601; t=1767160282; x=1767765082;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=1zxkjFyeB6W9vaIK/85qvGukvVA2Gg9ekN87KzDrwBE=;
-        b=KmjSzY9rPyUe+itcUw1sfARiMGyui+i1JinUsP6mexW3HpmbLl+vLlY+ln0o3XdgS5
-         YmMOIsBl/9eX0lBb34yJX9mnLwDQK3b/8s95ReQJ8I0UgU1Qo578l9NzkE6z68LYAKWQ
-         Fu3Js7Ck0X90bGWXDcps6UnlsiX0pqodFcdZmMa4AhfgMh20PASl8sLT3ZuM07ZjYejJ
-         Z1EgLK5xteuYs30121uhWWfiOswra2KHfgeC4hGa857iq0zkvFbhaKLzNdCafypkiqVz
-         39nExOTBaoPawwN/IiuJeS6oE6TGmqZhz5cQbn0RbBde0ILbeKajEsfHGS/RrqVaERX+
-         xrIg==
-X-Forwarded-Encrypted: i=1; AJvYcCUllDjiQKv7DL5uK1StqaSC7kyXaHLloBl9QH7jqm96G5YBomfAYkXsfQVKWkFqB5j6Lz+vdGgi2A7Z@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCHoDAnumErNKNjY2hkpXerXs2DgQdbsF8bOBcm70osaYLqWfd
-	PTmUNjAoLa5TNK/c7xsbSIsy4MYmaRto11bd1IlmebMVp1iQdpCmX1kGf6TY1L8gAnVm40MoggX
-	oZ9r0sC7T6J9E+sOL0ZNfON6Y2t1ONXRGwJgVHdCco6RcMPAIuLpGK4XzYZGGGDVb
-X-Gm-Gg: AY/fxX69Fyo6EoUty/XhZD2NirDw0OKVCPUwiZ4qbnD5umnv+cWDjWPSyEIkRDUxeoT
-	Jqui/pusY2eeB1685W0ND17Z+szN98ydBkuIHR57UF9I2EL2KemFhtyOuLksTR/c0+32C4F+TIM
-	AZhGbxPbatADWeaKA4j0wV3d/L5jpmDY73u9U3A8dJa08JtuQ/HL/I+pjrzFUgDQhLPvOdqTGo/
-	0LBbaj8pLMiCbnZmtU1OUdukfxpukUwqVdipGW46RhArnhJ7Ep7eX1wLFm+iUEIoGxFu+f3Dv/V
-	YnXG33+oLaMc6fi1KiDwzzPTuMuGLOhvCxEMFM68RObUEkKorMOMx87e8VNZsOTQddIslcaKUo1
-	YDIbZ3F1vtfh1LNK9YYhtCRo0/lI0EQmFRIRRVdUcKA==
-X-Received: by 2002:a05:6a00:f99:b0:7e8:43f5:bd20 with SMTP id d2e1a72fcca58-7ff6735e9b3mr34201473b3a.53.1767160198362;
-        Tue, 30 Dec 2025 21:49:58 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHhDAAd4FXIRm+uxCsatqItAfqk+HxTSDykvgup7HvRPE9rMtXU1lYciJQd0KxdGdeqqlJqSg==
-X-Received: by 2002:a05:6a00:f99:b0:7e8:43f5:bd20 with SMTP id d2e1a72fcca58-7ff6735e9b3mr34201448b3a.53.1767160197751;
-        Tue, 30 Dec 2025 21:49:57 -0800 (PST)
-Received: from [10.218.32.171] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7ff7e0a19d8sm33944978b3a.42.2025.12.30.21.49.51
+        bh=U1D1WI01HlWUlaBhDxLjuNMuNuC+Y9y55bVeztJwMQI=;
+        b=uByVud+1E0iPOuzB/mzO7vavXbCaepug38xL7uoTXDsX+HAOcaDYbApSDAxJ73oir/
+         bgWHJuqbzJ1wV1Bl8lK9QSLFDzIcsb3yEB1M0k6iCuD32PL9mfvq6y/CNx6cUJw7tegS
+         vBACsTUpZQxt3oI5XoMCNniqhw41BPTcPdKTp7Z0cVF1/M6xhouIvShT+3qhEZ5VZJSi
+         Sr0je+lUi4VvAQZbvFvJ2fknu7Tw2smALK1xQ6CNOhfQ9GtlWrNFyooa983v8yBhrPiX
+         No624aI+uw2WvYeU2YZrakdrgm7N6szmc+GWcc38eZiGDKam9o4BgTAN8s/s5IN61C2j
+         aM+w==
+X-Forwarded-Encrypted: i=1; AJvYcCXDQUjP2QsvIL2Ft0oTdgSE11tcFHtA2Y3VnrYRVXoVFsV4HPM6fnkHrylXSWZ0pUmuAjSTzH1Bswgl@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWsqokHg0YwZqITC/1qTKSSMNMUEhtavqZ08Pq9ChpsOHZM2ND
+	mS1/D271a6bCeWbP8I0d4kS7uZGXToCuDdug3FlDgr/2RbpX8IA8XoFYmhmViUnfUMowbZB0iAr
+	vEZF+jAmZ4M+AfZx3qYNk8oRt52c+lnaYaSfgi5L4sm0pEQyhdGf/JUtDodOpVXoQ
+X-Gm-Gg: AY/fxX4xdWH8beSFmpvhF5JR+YxIWYJNSYjNcNfAxVkyFDN785+uJ7ei4MsyQOoBhth
+	Z2zCAqfVaOw8s9w5h7BZCvO25RbuaiiJLF2L6nHr9zrTJoTxlRlO0uKT/0iB4qJRomlJg9MN4zs
+	/zgCzsEHCRlLXD/l+VwSdDn8HekNIUUctWxnsU2M57vKoeSWIHOUDcv7NFuI5OWUPSMe4kOXt2t
+	Dk/XDy1onE1NPx1NOdCWcHI6zTvc43RwF7Av92XpmVbX6OZ6zoO4ErgKyXRbjuM3yq/X49sSjhY
+	tjdcKVuZov2Siclkbez6jtfdvE0QGQlK3lL2ncIQjCnUVnvIfvvsH0bchrbpylOp6Uc9+JqENW5
+	JL5zRgiSMAt+g4dfNTfCqjmH1gOI00Qn0Mv4OGOVOU+ZAGGnSTGrT+XKEygzzlfk/CcVJI46/sU
+	VviKMWGxSle0YH
+X-Received: by 2002:a05:6214:451d:b0:70f:b03d:2e85 with SMTP id 6a1803df08f44-88d83a7a462mr512987516d6.24.1767160281662;
+        Tue, 30 Dec 2025 21:51:21 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGDVSrWGjW6xKNkyVl0qN5PqwhywtxIUqWcyoHqIgPA5BF+PZbHWgx7U74OxIHPHe9jOV0m0A==
+X-Received: by 2002:a05:6214:451d:b0:70f:b03d:2e85 with SMTP id 6a1803df08f44-88d83a7a462mr512987156d6.24.1767160281226;
+        Tue, 30 Dec 2025 21:51:21 -0800 (PST)
+Received: from ?IPV6:2001:14ba:a073:af00::4c9? (2001-14ba-a073-af00--4c9.rev.dnainternet.fi. [2001:14ba:a073:af00::4c9])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59a185d5eb2sm10526002e87.1.2025.12.30.21.51.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Dec 2025 21:49:57 -0800 (PST)
-Message-ID: <793dafa1-43bb-49c4-9e05-cfb597ba39c6@oss.qualcomm.com>
-Date: Wed, 31 Dec 2025 11:19:49 +0530
+        Tue, 30 Dec 2025 21:51:19 -0800 (PST)
+Message-ID: <8a51bb87-ce81-4adc-92b3-9a077f124ff8@oss.qualcomm.com>
+Date: Wed, 31 Dec 2025 07:51:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -104,7 +105,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v1 3/4] serial: qcom-geni: Enable PM runtime for serial
  driver
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Praveen Talari <praveen.talari@oss.qualcomm.com>
 Cc: Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -127,154 +128,166 @@ References: <20251110101043.2108414-1-praveen.talari@oss.qualcomm.com>
  <2zeqt3tu36qcxs6xrzqqmn3ssmyzetl6tq6lxrjdvt5dhxrtv4@g5q4zhk4sebs>
  <8c734f2d-59db-4815-bfc6-3823cf3ef37a@oss.qualcomm.com>
  <25f3e3c0-7796-4318-b479-a680b878528a@oss.qualcomm.com>
+ <793dafa1-43bb-49c4-9e05-cfb597ba39c6@oss.qualcomm.com>
 Content-Language: en-US
-From: Praveen Talari <praveen.talari@oss.qualcomm.com>
-In-Reply-To: <25f3e3c0-7796-4318-b479-a680b878528a@oss.qualcomm.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+In-Reply-To: <793dafa1-43bb-49c4-9e05-cfb597ba39c6@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjMxMDA0NyBTYWx0ZWRfX+E+pb+LzTjeS
- WUt8G0J8tL2nOVc3WBjXIgvGiF+Xo44om4HMANmmXy9oKc78bT/9Q2F4Z4QkWD/j62xrzLKyn+v
- Sl+nB/S7Vq8NuCc4wbGberKO3SSC6g5bzKiEe/Vt6eR5COju1SlJwmcMVhlNmlii+QmCmfexRw1
- fr3k0q7uOu5hv9946CXpzeOoki5T3T4eXgsjnhSrPZMQGQdGmogxGJkRTKzN8SE5K7Rax7MYlIO
- SzxCUx2TBWvavokflB/XkC0zuJU2p36r6wCgp9zPEa95TAtKu7KxyPdCQ3kztsYq0haqtbE6wEv
- NET+6qYBACiWRfBqkXEmc2kJ74guLM/0kk7AEKNw4K4uD3/WBZVpg2RaXONlEDtzUugoULIh8Ds
- 5v2m0TIecjmuDoK8x6G/FqJ/YToQBBRzUv9TYXQPwO9Y6+9tu31W/GLTlrz+9DqL4C4ZfDHr98P
- 1HfADANGQrjimLaB1BQ==
-X-Proofpoint-GUID: 13HKpv2R4Xzd6ScwnbsP4dT9C70kuBa_
-X-Proofpoint-ORIG-GUID: 13HKpv2R4Xzd6ScwnbsP4dT9C70kuBa_
-X-Authority-Analysis: v=2.4 cv=foHRpV4f c=1 sm=1 tr=0 ts=6954b987 cx=c_pps
- a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=Q2HD4d10TjE189mA8KgA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=IoOABgeZipijB_acs4fv:22
+X-Authority-Analysis: v=2.4 cv=Do9bOW/+ c=1 sm=1 tr=0 ts=6954b9da cx=c_pps
+ a=wEM5vcRIz55oU/E2lInRtA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=wP3pNCr1ah4A:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=EUspDBNiAAAA:8 a=GBWqcSOinP7OtOi6gIQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=OIgjcC2v60KrkQgK7BGD:22
+X-Proofpoint-GUID: m5YbFhhcQhUAHaExOdQXYaIF_JjZNldW
+X-Proofpoint-ORIG-GUID: m5YbFhhcQhUAHaExOdQXYaIF_JjZNldW
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjMxMDA0OSBTYWx0ZWRfX9dVJJ2KHWJjc
+ 0Mq4a3Mw/nHX7zCa1iXD9sbGH5Cp6G6rMZ4B06D+n25jY+K8zZzozVKUBsgIEoR5+JFFnwET88w
+ d9oBffghczcU4iWgDbEtMTpsSVHD/7yuS9RywyAs5tInwfZzvVnsOl1zaRPYM53A3lDNjFeV7J7
+ 1/i/MOuBMppLyWvPw5ihvQCeltKeo/oRopg3cK35Xs6FHdwmzpL4S8pNYbKQJ/MMyVqp7YT5tWV
+ YcnENtaUcWNjjQTDrMnT+6wccD4zMnTvTrv/PFEEXtLZNr+qxvHZ4pbo2ovCj0/pZEtSjhsf2i9
+ /Chu8rkTyKtzsop0WfLfokIVS+SGK+T3d821oZYwWMuKF4pJE65PPxVlbkoG2IuCwM4n98fSP33
+ F22nXTyV+/m37D6CPCTEJ6pnjANR9MVUsX0KntFJ9pSWXoi62YGy+pTle7KhoIa0w5fMeUl3Oc0
+ Kw1wMNNjLfN6YqtWozw==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-12-31_01,2025-12-31_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 clxscore=1015 malwarescore=0 suspectscore=0 phishscore=0
- impostorscore=0 bulkscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0
+ priorityscore=1501 clxscore=1015 bulkscore=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 malwarescore=0 phishscore=0 suspectscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2512120000 definitions=main-2512310047
+ reason=mlx scancount=1 engine=8.22.0-2512120000 definitions=main-2512310049
 
-Hi Dmitry,
-
-On 12/31/2025 8:30 AM, Dmitry Baryshkov wrote:
-> On 31/12/2025 05:00, Praveen Talari wrote:
->> Hi Dmitry,
->>
->> On 12/30/2025 11:53 PM, Dmitry Baryshkov wrote:
->>> On Mon, Nov 10, 2025 at 03:40:42PM +0530, Praveen Talari wrote:
->>>> The GENI serial driver currently handles power resource management
->>>> through calls to the statically defined geni_serial_resources_on() and
->>>> geni_serial_resources_off() functions. This approach reduces modularity
->>>> and limits support for platforms with diverse power management
->>>> mechanisms, including resource managed by firmware.
+On 31/12/2025 07:49, Praveen Talari wrote:
+> Hi Dmitry,
+> 
+> On 12/31/2025 8:30 AM, Dmitry Baryshkov wrote:
+>> On 31/12/2025 05:00, Praveen Talari wrote:
+>>> Hi Dmitry,
+>>>
+>>> On 12/30/2025 11:53 PM, Dmitry Baryshkov wrote:
+>>>> On Mon, Nov 10, 2025 at 03:40:42PM +0530, Praveen Talari wrote:
+>>>>> The GENI serial driver currently handles power resource management
+>>>>> through calls to the statically defined geni_serial_resources_on() and
+>>>>> geni_serial_resources_off() functions. This approach reduces 
+>>>>> modularity
+>>>>> and limits support for platforms with diverse power management
+>>>>> mechanisms, including resource managed by firmware.
+>>>>>
+>>>>> Improve modularity and enable better integration with platform- 
+>>>>> specific
+>>>>> power management, introduce support for runtime PM. Use
+>>>>> pm_runtime_resume_and_get() and pm_runtime_put_sync() within the
+>>>>> qcom_geni_serial_pm() callback to control resource power state
+>>>>> transitions based on UART power state changes.
+>>>>>
+>>>>> Signed-off-by: Praveen Talari <praveen.talari@oss.qualcomm.com>
+>>>>> ---
+>>>>>   drivers/tty/serial/qcom_geni_serial.c | 24 ++++++++++++++++++++++--
+>>>>>   1 file changed, 22 insertions(+), 2 deletions(-)
+>>>>>
 >>>>
->>>> Improve modularity and enable better integration with platform-specific
->>>> power management, introduce support for runtime PM. Use
->>>> pm_runtime_resume_and_get() and pm_runtime_put_sync() within the
->>>> qcom_geni_serial_pm() callback to control resource power state
->>>> transitions based on UART power state changes.
+>>>> This breaks BT support on the Qualcomm RB2 platform. With this patch
+>>>> applied, I'm getting the following:
 >>>>
->>>> Signed-off-by: Praveen Talari <praveen.talari@oss.qualcomm.com>
->>>> ---
->>>>   drivers/tty/serial/qcom_geni_serial.c | 24 ++++++++++++++++++++++--
->>>>   1 file changed, 22 insertions(+), 2 deletions(-)
+>>>> root@qcom-armv8a:~# dmesg | grep tty\\\|hci0
+>>>> [    0.000000] Kernel command line:  ignore_loglevel 
+>>>> console=ttyMSM0,115200n8 earlycon root=PARTLABEL=rootfs rootwait 
+>>>> systemd.mask=pd-mapper.service -- 
+>>>> androidboot.bootdevice=4744000.sdhci androidboot.serialno=2b89b520 
+>>>> androidboot.baseband=apq 
+>>>> msm_drm.dsi_display0=qcom,mdss_dsi_ext_bridge_1080p:
+>>>> [    4.074354] 4a8c000.serial: ttyHS1 at MMIO 0x4a8c000 (irq = 140, 
+>>>> base_baud = 0) is a MSM
+>>>> [    4.099410] serial serial0: tty port ttyHS1 registered
+>>>> [    4.131200] Bluetooth: hci0: setting up wcn399x
+>>>> [    4.149847] 4a90000.serial: ttyMSM0 at MMIO 0x4a90000 (irq = 142, 
+>>>> base_baud = 0) is a MSM
+>>>> [    4.229099] printk: legacy console [ttyMSM0] enabled
+>>>> [    6.499519] Bluetooth: hci0: command 0xfc00 tx timeout
+>>>> [    6.514347] Bluetooth: hci0: Reading QCA version information 
+>>>> failed (-110)
+>>>> [    6.559933] Bluetooth: hci0: Retry BT power ON:0
+>>>> [    8.016330] systemd[1]: Created slice Slice /system/getty.
+>>>> [    8.066194] systemd[1]: Created slice Slice /system/serial-getty.
+>>>> [    8.148389] systemd[1]: Expecting device /dev/ttyMSM0...
+>>>> [    8.956804] Bluetooth: hci0: command 0xfc00 tx timeout
+>>>> [    8.962447] Bluetooth: hci0: Reading QCA version information 
+>>>> failed (-110)
+>>>> [    8.976917] Bluetooth: hci0: Retry BT power ON:1
+>>>> [   11.296715] Bluetooth: hci0: command 0xfc00 tx timeout
+>>>> [   11.302340] Bluetooth: hci0: Reading QCA version information 
+>>>> failed (-110)
+>>>> [   11.309534] Bluetooth: hci0: Retry BT power ON:2
+>>>> [   13.660078] Bluetooth: hci0: command 0xfc00 tx timeout
+>>>> [   13.665814] Bluetooth: hci0: Reading QCA version information 
+>>>> failed (-110)
+>>>
+>>> Sure, will check and update.
+>>>
+>>> If possible, can you share what is DT filename for RB2.
+>>
+>> qrb4210-rb2.dts
+> 
+> Can you please try below change on target since i didn't get target yet?
+
+Yes, I have this patch too. It didn't help.
+
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts b/arch/arm64/boot/ 
+> dts/qcom/qrb4210-rb2.dts
+> index 0cd36c54632f..5f8613150bdd 100644
+> --- a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
+> +++ b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
+> @@ -694,7 +694,7 @@ sdc2_card_det_n: sd-card-det-n-state {
+> 
+>   &uart3 {
+>          interrupts-extended = <&intc GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
+> -                             <&tlmm 11 IRQ_TYPE_LEVEL_HIGH>;
+> +                             <&tlmm 11 IRQ_TYPE_EDGE_FALLING>;
+>          pinctrl-0 = <&uart3_default>;
+>          pinctrl-1 = <&uart3_sleep>;
+>          pinctrl-names = "default", "sleep";
+> 
+> Thanks,
+> Praveen Talari
+> 
+>>
+>>>
+>>> Earlier I had validated on RB1 and Kodiak.
+>>>
+>>> Thanks,
+>>> Praveen
+>>>
 >>>>
->>>
->>> This breaks BT support on the Qualcomm RB2 platform. With this patch
->>> applied, I'm getting the following:
->>>
->>> root@qcom-armv8a:~# dmesg | grep tty\\\|hci0
->>> [    0.000000] Kernel command line:  ignore_loglevel 
->>> console=ttyMSM0,115200n8 earlycon root=PARTLABEL=rootfs rootwait 
->>> systemd.mask=pd-mapper.service -- 
->>> androidboot.bootdevice=4744000.sdhci androidboot.serialno=2b89b520 
->>> androidboot.baseband=apq 
->>> msm_drm.dsi_display0=qcom,mdss_dsi_ext_bridge_1080p:
->>> [    4.074354] 4a8c000.serial: ttyHS1 at MMIO 0x4a8c000 (irq = 140, 
->>> base_baud = 0) is a MSM
->>> [    4.099410] serial serial0: tty port ttyHS1 registered
->>> [    4.131200] Bluetooth: hci0: setting up wcn399x
->>> [    4.149847] 4a90000.serial: ttyMSM0 at MMIO 0x4a90000 (irq = 142, 
->>> base_baud = 0) is a MSM
->>> [    4.229099] printk: legacy console [ttyMSM0] enabled
->>> [    6.499519] Bluetooth: hci0: command 0xfc00 tx timeout
->>> [    6.514347] Bluetooth: hci0: Reading QCA version information 
->>> failed (-110)
->>> [    6.559933] Bluetooth: hci0: Retry BT power ON:0
->>> [    8.016330] systemd[1]: Created slice Slice /system/getty.
->>> [    8.066194] systemd[1]: Created slice Slice /system/serial-getty.
->>> [    8.148389] systemd[1]: Expecting device /dev/ttyMSM0...
->>> [    8.956804] Bluetooth: hci0: command 0xfc00 tx timeout
->>> [    8.962447] Bluetooth: hci0: Reading QCA version information 
->>> failed (-110)
->>> [    8.976917] Bluetooth: hci0: Retry BT power ON:1
->>> [   11.296715] Bluetooth: hci0: command 0xfc00 tx timeout
->>> [   11.302340] Bluetooth: hci0: Reading QCA version information 
->>> failed (-110)
->>> [   11.309534] Bluetooth: hci0: Retry BT power ON:2
->>> [   13.660078] Bluetooth: hci0: command 0xfc00 tx timeout
->>> [   13.665814] Bluetooth: hci0: Reading QCA version information 
->>> failed (-110)
+>>>> After reverting the next and this patches, BT is back to normal:
+>>>>
+>>>> [    4.067201] 4a8c000.serial: ttyHS1 at MMIO 0x4a8c000 (irq = 140, 
+>>>> base_baud = 0) is a MSM
+>>>> [    4.082426] serial serial0: tty port ttyHS1 registered
+>>>> [    4.106122] 4a90000.serial: ttyMSM0 at MMIO 0x4a90000 (irq = 142, 
+>>>> base_baud = 0) is a MSM
+>>>> [    4.108647] Bluetooth: hci0: setting up wcn399x
+>>>> [    4.125371] printk: legacy console [ttyMSM0] enabled
+>>>> [    4.445205] Bluetooth: hci0: QCA Product ID   :0x0000000a
+>>>> [    4.450927] Bluetooth: hci0: QCA SOC Version  :0x40020150
+>>>> [    4.456470] Bluetooth: hci0: QCA ROM Version  :0x00000201
+>>>> [    4.462006] Bluetooth: hci0: QCA Patch Version:0x00000001
+>>>> [    4.509408] Bluetooth: hci0: QCA controller version 0x01500201
+>>>> [    4.515656] Bluetooth: hci0: QCA Downloading qca/apbtfw11.tlv
+>>>> [    5.488739] Bluetooth: hci0: QCA Downloading qca/apnv11.bin
+>>>> [    5.671740] Bluetooth: hci0: QCA setup on UART is completed
+>>>> [    7.993368] systemd[1]: Created slice Slice /system/getty.
+>>>> [    8.045612] systemd[1]: Created slice Slice /system/serial-getty.
+>>>> [    8.125418] systemd[1]: Expecting device /dev/ttyMSM0...
+>>>>
+>>>>
 >>
->> Sure, will check and update.
 >>
->> If possible, can you share what is DT filename for RB2.
-> 
-> qrb4210-rb2.dts
-
-Can you please try below change on target since i didn't get target yet?
-
-diff --git a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts 
-b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-index 0cd36c54632f..5f8613150bdd 100644
---- a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-+++ b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
-@@ -694,7 +694,7 @@ sdc2_card_det_n: sd-card-det-n-state {
-
-  &uart3 {
-         interrupts-extended = <&intc GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
--                             <&tlmm 11 IRQ_TYPE_LEVEL_HIGH>;
-+                             <&tlmm 11 IRQ_TYPE_EDGE_FALLING>;
-         pinctrl-0 = <&uart3_default>;
-         pinctrl-1 = <&uart3_sleep>;
-         pinctrl-names = "default", "sleep";
-
-Thanks,
-Praveen Talari
-
-> 
->>
->> Earlier I had validated on RB1 and Kodiak.
->>
->> Thanks,
->> Praveen
->>
->>>
->>> After reverting the next and this patches, BT is back to normal:
->>>
->>> [    4.067201] 4a8c000.serial: ttyHS1 at MMIO 0x4a8c000 (irq = 140, 
->>> base_baud = 0) is a MSM
->>> [    4.082426] serial serial0: tty port ttyHS1 registered
->>> [    4.106122] 4a90000.serial: ttyMSM0 at MMIO 0x4a90000 (irq = 142, 
->>> base_baud = 0) is a MSM
->>> [    4.108647] Bluetooth: hci0: setting up wcn399x
->>> [    4.125371] printk: legacy console [ttyMSM0] enabled
->>> [    4.445205] Bluetooth: hci0: QCA Product ID   :0x0000000a
->>> [    4.450927] Bluetooth: hci0: QCA SOC Version  :0x40020150
->>> [    4.456470] Bluetooth: hci0: QCA ROM Version  :0x00000201
->>> [    4.462006] Bluetooth: hci0: QCA Patch Version:0x00000001
->>> [    4.509408] Bluetooth: hci0: QCA controller version 0x01500201
->>> [    4.515656] Bluetooth: hci0: QCA Downloading qca/apbtfw11.tlv
->>> [    5.488739] Bluetooth: hci0: QCA Downloading qca/apnv11.bin
->>> [    5.671740] Bluetooth: hci0: QCA setup on UART is completed
->>> [    7.993368] systemd[1]: Created slice Slice /system/getty.
->>> [    8.045612] systemd[1]: Created slice Slice /system/serial-getty.
->>> [    8.125418] systemd[1]: Expecting device /dev/ttyMSM0...
->>>
->>>
-> 
 > 
 
+
+-- 
+With best wishes
+Dmitry
 
