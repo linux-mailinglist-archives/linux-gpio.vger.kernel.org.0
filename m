@@ -1,102 +1,106 @@
-Return-Path: <linux-gpio+bounces-30033-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30034-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56F60CED7AA
-	for <lists+linux-gpio@lfdr.de>; Thu, 01 Jan 2026 23:42:56 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5583CCED871
+	for <lists+linux-gpio@lfdr.de>; Thu, 01 Jan 2026 23:56:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E86A730081BE
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jan 2026 22:42:49 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3CB9B3007CBD
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jan 2026 22:56:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEFD921D5BC;
-	Thu,  1 Jan 2026 22:42:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71F6A28135D;
+	Thu,  1 Jan 2026 22:50:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ryZxsXkX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IYRH+e1x"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAEC260588
-	for <linux-gpio@vger.kernel.org>; Thu,  1 Jan 2026 22:42:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336D6280014
+	for <linux-gpio@vger.kernel.org>; Thu,  1 Jan 2026 22:50:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767307368; cv=none; b=C1nmZqh89GKoXjWqKpjKFmXIwni/6g83wFTsGR1T6Xuq7GCCqg9EDIWaguuwkBwEhnQPNYy4ZPOrX9z7iWMBmdZJYpQvw/6yoMwOu/sgmFWercGcbAuugvoMQLSllrdaUgsZGPJCcmZJ7brzJKngtPXE6P/uC1xicfzKLMDdo4w=
+	t=1767307809; cv=none; b=tzO3eJdMHdw6BqzJczNuviz6qIfQnwbyRwogYU/tpAOjWzphN+74agCC1EUaJouJsEcj28dS8PKwrQDygtHhIzoMKe/TJxvxtLBtxVlJM2RsbzmKG4hO5YRTZ5Ry3qWBeJYdcAEakWTP/nfzXTFQvtvqumslUbSDfVIZ1B47b40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767307368; c=relaxed/simple;
-	bh=c03Ouoop/OW3SvavreidSQNFjtJjTLM/VhWkUCy+XCA=;
+	s=arc-20240116; t=1767307809; c=relaxed/simple;
+	bh=qoQ2LWoUBAb80RcbR+OV8fg8vhcqgnhQ8/NW3hsNVFk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TETU+3vkE4Spja/r9dZCpDIKeZJo9MJsU49YZxud+VBfpQ0nJudlN55dLjkEr8XgqYubggVlLJ0Rl/U6lkQ+hGn8hMUj2+AWlk2iDXjqFXuFqeiUGFhop2d1e+uBh67ZTlNTOxe2c0q0aK7QpR78aB1BS0h492f3rWJOUrA2jVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ryZxsXkX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DADFC2BCAF
-	for <linux-gpio@vger.kernel.org>; Thu,  1 Jan 2026 22:42:48 +0000 (UTC)
+	 To:Cc:Content-Type; b=VOf3DOOuBALkFEK1fLQAkJxbXxxgRpMvfzldBuRKBQOE0vh7KLYZEcooKwhBSjzA0nG71COCttBxJ30xzKcSYwWQNP5ndwGpXqDIw/gM4WaR2oJl/SqZWGKMsEZHso9+nP+O5acxAaCAVwwHg43/E3I0DkS7q7NAk3g9EkTMeE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IYRH+e1x; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B60C1C19424
+	for <linux-gpio@vger.kernel.org>; Thu,  1 Jan 2026 22:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767307368;
-	bh=c03Ouoop/OW3SvavreidSQNFjtJjTLM/VhWkUCy+XCA=;
+	s=k20201202; t=1767307808;
+	bh=qoQ2LWoUBAb80RcbR+OV8fg8vhcqgnhQ8/NW3hsNVFk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ryZxsXkX2A5BlERIpG9p4sMf7Xbu47Iqut65LWm5eoubtMgGNIUccUg6ms6KoagMJ
-	 0GlUPPWrdl15h/CIYeyzFV8GziyNOl6LhZHjywiGqqkNugSfhsWCUQiHk3D3QpwkWd
-	 a2v2agOk0F94oWc2GlRnZSG5PHXvq8owxhrDRrP0XdOxD26mmW6dLhoKS5Tzlsul6J
-	 ArOMjy5fN/ZKU9/y3RCSRFju5Enz0uJzCX2q7qnzhrdrEXvRZ5IS4KuR3ykWzw9ig3
-	 cq+ygrD/7y/MqBrQWz55srKZq1GpZm3nSqze6Fd3woh6J1lPUMLodL1+w8oJ1A7N5R
-	 +B5Aki8T2hbzg==
-Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-6446c2bbfe3so9208720d50.1
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Jan 2026 14:42:48 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUUub9rG2oxzBFEOp6OqyDTZ4q6Bp41GDGzQYtkwYI/LJ6fsA9GXyKw4XwlP7eP47M9vKaaFWMv2jor@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9BsK3EnI7/7Ho94mqTaYKZCsZkh2XJeGrRePOQdhLwPUFUBEs
-	1UgwyvXoMn+vajiWQ6ODWGzaNdJY/fS+qQqYznsZRPwJLtFR6r3beO15kuXPAJSjta9Y0+j+FH0
-	E9mRrQKdfzx8lASef1sOKIr/yvXoNUIY=
-X-Google-Smtp-Source: AGHT+IGuCSdWh+iJDmbFEBp3W61sWvSWqQfdLVlCzvdLNew329ciqVsgcnUXKXJoXSwcIcnZqwOTDxMTLToTAL+paPw=
-X-Received: by 2002:a53:b701:0:b0:641:f5bc:68d6 with SMTP id
- 956f58d0204a3-6466a8c5275mr26057369d50.83.1767307367560; Thu, 01 Jan 2026
- 14:42:47 -0800 (PST)
+	b=IYRH+e1xZasvaKPQTcFF+l7qwCxD82O18aOK/MFql6CMiErq9pPez9MkpXc6fs+PR
+	 vNIxJbPUcUpA0nR6mHzduQZbK0nBsS8EPnzFqpzTTKIbt9mlZiQEH+Hub7X/3udWkU
+	 c2iC5P3APhxNoYuZmYKzhoJesw2LkcufH62SPxn8naJKYBu4mNUPQyBRvpQIxosjL2
+	 i024rcHVvAvioc93SEzzqWXDBXL2NbAQaHbmPRcDkm2R2SJX+1rTz6XdQBb5EuCpXe
+	 ky3FzontcHnhpfChURVpedREzdL+herqaKtMtDSlKPzhu+drjrcSJIdAzFjxVXPh2n
+	 UWasZDHSCAIeA==
+Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-64472121ad5so6972032d50.0
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Jan 2026 14:50:08 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXv/foGbS9I4uPoYT3lo/JXpVmkGPm6lKFAn9zmTplpJ8qUngWUS2BQ/nATsTn1+qLQC9xWscEtMcFm@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlBmXHq8F6LAC8E4JMm/Sys5o/JnCArqTRO/8GB1AxqNLNxCaS
+	25WnDSs20qMQ3NdzycgGnCOjRSLzy10bJ0/M9urcPmnTLS83fiFD27Kr7ZmoOdLcRDNCq+FJTtG
+	ZSA7n0e09X1crBHMSMM73uD2ThzhrkwI=
+X-Google-Smtp-Source: AGHT+IGrOLcTdHnWAvTikdGCf6UnlAcc0B+tsmqY9EjgNAatB1fqNxo0UDIF6456Ig9rz2ogunu8BgIZ5Cj1gcf0eoM=
+X-Received: by 2002:a05:690e:2457:b0:644:60d9:7514 with SMTP id
+ 956f58d0204a3-6466a8c5b6emr24385932d50.88.1767307808085; Thu, 01 Jan 2026
+ 14:50:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251217-eyeq6lplus-v1-0-e9cdbd3af4c2@bootlin.com>
- <20251217-eyeq6lplus-v1-11-e9cdbd3af4c2@bootlin.com> <38f097cb-5329-4b91-b1a8-3eb5fed05ad4@kernel.org>
- <fe9e594f-9718-48b5-8208-fb567a54cae9@bootlin.com>
-In-Reply-To: <fe9e594f-9718-48b5-8208-fb567a54cae9@bootlin.com>
+References: <20251226-02-k3-pinctrl-v2-0-5172397e6831@gentoo.org>
+In-Reply-To: <20251226-02-k3-pinctrl-v2-0-5172397e6831@gentoo.org>
 From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 1 Jan 2026 23:42:36 +0100
-X-Gmail-Original-Message-ID: <CAD++jL=7eU+jSHn0t2KKzHjipXYKoQreOdaHH8OcyriPmwHJQw@mail.gmail.com>
-X-Gm-Features: AQt7F2pQQoDMhu8lNy4TdUpYluCLS90ViEjybo-mgp7DpUhoLaNeRiZuGoShcsE
-Message-ID: <CAD++jL=7eU+jSHn0t2KKzHjipXYKoQreOdaHH8OcyriPmwHJQw@mail.gmail.com>
-Subject: Re: [PATCH 11/13] MIPS: Add Mobileye EyeQ6Lplus evaluation board dts
-To: =?UTF-8?Q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>, 
-	Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-	Gregory CLEMENT <gregory.clement@bootlin.com>, =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-mips@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+Date: Thu, 1 Jan 2026 23:49:57 +0100
+X-Gmail-Original-Message-ID: <CAD++jL=AeGETR9gT4dO4=MVokCubS4VbbsUdcwShYD8Kjybehg@mail.gmail.com>
+X-Gm-Features: AQt7F2rP7_9KdxaprrRWjgopjc31HFpU37nXxJKU_cZD0aXworSU8dVIf4jtxh0
+Message-ID: <CAD++jL=AeGETR9gT4dO4=MVokCubS4VbbsUdcwShYD8Kjybehg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] pinctrl: spacemit: add support for K3 SoC
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Troy Mitchell <troy.mitchell@linux.spacemit.com>, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 19, 2025 at 4:57=E2=80=AFPM Beno=C3=AEt Monin <benoit.monin@boo=
-tlin.com> wrote:
+Hi Yixun,
 
-> In my particular case of a microcontroller acting as an SPI "relay" on th=
-e
-> evaluation board, what would be the best way to describe it? It connects
-> the two SPI controllers of the SoC, one is a host and one is a target, so
-> it behave as an SPI target on one side and as an SPI host on the other.
+thanks for your patches!
+
+On Fri, Dec 26, 2025 at 1:58=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
+
+> This series attempt to add pinctrl support for SpacemiT K3 SoC,
 >
-> The trivial devices bindings seems to be dedicated to devices, thus not f=
-or
-> SPI hosts. Do I need a dedicated binding or did I miss something I could
-> use for a trivial spidev slave?
+> I've removed the RFC tag as the driver is tested on K3 SoC.
+>
+> The K3 pinctrl IP shares almost same logic with previous K1 SoC generatio=
+n,
+> but has different register offset and pin configuration, I've introduced
+> a pin_to_offset() function to handle the difference of register offset.
+> for the drive strength and schmitter trigger settings, they are also chan=
+ged.
+>
+> The patch #1 try to add pin support which should handle pin mux, while pa=
+tch #2
+> adjust drive strength and schmitter trigger settings accordingly for new =
+SoC.
+>
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
 
-That needs to be detailed and discussed with the SPI maintainer on the SPI
-devel list. (Added.)
+As Krzysztof mentioned, try to use an explicit device tree schema to
+enforce the legal drive strength values as e.g. enums.
 
-Can you illustrate with a picture or so what is going on here?
+Other than this the code looks fine so once the bindings are
+ACK:ed I'm ready to merge this.
 
 Yours,
 Linus Walleij
