@@ -1,86 +1,89 @@
-Return-Path: <linux-gpio+bounces-30023-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30024-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E420CECA0D
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Dec 2025 23:29:18 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3EC7CED11A
+	for <lists+linux-gpio@lfdr.de>; Thu, 01 Jan 2026 15:34:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 810393000EA6
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Dec 2025 22:29:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3563E300725F
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jan 2026 14:34:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ACDD30F54B;
-	Wed, 31 Dec 2025 22:29:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05F6E22A7E4;
+	Thu,  1 Jan 2026 14:34:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uUTuCNB2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="THVccr33"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEE130F53B
-	for <linux-gpio@vger.kernel.org>; Wed, 31 Dec 2025 22:29:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6F6179A3
+	for <linux-gpio@vger.kernel.org>; Thu,  1 Jan 2026 14:34:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767220156; cv=none; b=aYlijVt8B4Y0toQ4abxXMEQM6Y7LkNHlyn8l6LTNB/rCiZpxUBWylsDr6LiGBwg+aWsH+mo1lKd1S8uZG/TNXvAQYysXjgdvR2pS5U71K1VVCLM/rdSyfzMgrNbEax8syAhOglgm0AQpG5D8O5OkN5R3yRk2HrZH+hGcZaxIVIo=
+	t=1767278043; cv=none; b=Ph5jKW9CXnIKJ9I1JoPcb0SVM+h0PFTkThYMschmog9TeqdPWzDIoktygzyKXoiNJzoIWEKztsMtaUKzJRQvQtQRR9pT4RNX+m8HsxVV2CugAEuw78qHRVSS4H5hQFakMc+nxeXPYHLsLxO6CKiigwK7OrtnsQlW9JpoVAfrSX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767220156; c=relaxed/simple;
-	bh=6iFdMKZkJ6hGjkxBe2dINSuN4PGRXw1sktK3VGLhTqI=;
+	s=arc-20240116; t=1767278043; c=relaxed/simple;
+	bh=1jbfehvip0Ck0xQ3ODNecVWR0kVC7HlpPrBC4wNGPkw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j9JQ+BzbpizjZii+duYXmcGG0dibX1lJXQmncZ1eEUorRSdibhfRIoVEvY4mP5tBrXPvH2+SojtXD8cU9f374rhLm+gZAaYG0EDmqwaxMjax08znVDkaRwQliEG0/mW9jfdcT2TN0arJ6UIiEoUCw9YG5i1q3tn0CpQr6OE8Lh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uUTuCNB2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C152EC19421
-	for <linux-gpio@vger.kernel.org>; Wed, 31 Dec 2025 22:29:15 +0000 (UTC)
+	 To:Cc:Content-Type; b=Yok4YT3oDTHIdsx6WTV2jKX9E9o0/liEb25sHZZl2AYCG3amcLeGSl+4UgM+cnuizVHc2UTtkTF2rsYZEQL39MFmS+SZU+mEqzS8Snd1FGJjFGUSL85GO92xlImcdxc/RKEf1z1lzf6IWX9SKuL904E4dZeh8VaTngPj7fYQKAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=THVccr33; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61011C16AAE
+	for <linux-gpio@vger.kernel.org>; Thu,  1 Jan 2026 14:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767220155;
-	bh=6iFdMKZkJ6hGjkxBe2dINSuN4PGRXw1sktK3VGLhTqI=;
+	s=k20201202; t=1767278043;
+	bh=1jbfehvip0Ck0xQ3ODNecVWR0kVC7HlpPrBC4wNGPkw=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uUTuCNB2O++1hjQmuYdQbo+c4fX7oUagTIlKeIVOXRxJYZeQ/DloReDOoPJpGm9JD
-	 Mj78Y+lO/yodsGpj6KPy/aOI7//+e39DkkvARs1DhEVE+a9iKmxMXxV3KihRjwUAJS
-	 iNrqLDNqhCiidHV8wCLA7vfcY5oGVZbtbPl2NpZGnAffWFdvdsRnj4Y+2PTSQmcPxL
-	 Rl8FSVQpK/ViJP4JPfHUGwCi90JxvFo5k/RuApe59HQxrMQrajW5qiyndmUafAL+kF
-	 njYflr0NDrYqw9h7gyvIqPj+ZmqvgOtG39tjCw1jCkzbCDZyE9TEWPJgbmySR/FZGD
-	 +hU/QuV1HMJ0w==
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-78fd0cd23faso79018177b3.2
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Dec 2025 14:29:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXodrjAusxHHJmo08RsxGv5/C4a9xKT66BrRc6JmnZ1uFqUocHqduCwXmhdDLBgzHWGZxPOvrQrJ8ly@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnY9LK/rN2c760/KYdOroS4F9kRXIhUs/Z6vdFADBbxjeddwwh
-	384ukdKwBi2SeP3pSNDhlkIxKXCBkrKZffwjf3QoI7A6qUFEZ4o36Gmv+4hitOAiqHTEFzt12Jp
-	MhadT8TXLPwUkNpZCYywCHoPYqskJuUI=
-X-Google-Smtp-Source: AGHT+IG1+n/ex2NEoCUCMCBnC9WyiECa7Zs7Ak8DBsCyu7qqQn8dF+w1bby0paeUKzmRb80pm4ur6VI9kprHt+wRVcY=
-X-Received: by 2002:a05:690c:c522:b0:78f:8666:4bb8 with SMTP id
- 00721157ae682-78fb4067fbdmr306968037b3.55.1767220155178; Wed, 31 Dec 2025
- 14:29:15 -0800 (PST)
+	b=THVccr33nqztO8STmXmHOaJoZAR9coSUTYdjqz9u2KVrpvYjQztHtHeb5/FDRlBvJ
+	 wioibCvK2uz7Dzz2SaouJErY3WCFqvpZkT08nyVBuOl1Z1G5NYWkq4VMZmJIr6Ex9x
+	 3jPU9dotVQrzhwgi/C0EQSPTNnqaQu+ViZC1i20hoWF7gQduXw57M+MsXJhITJ9V+6
+	 rsZD21Zj1WE454JL7WO/3qDUrAlQuV+IM18SGHnZqVrE0EIJJvnZSul0wNgkRdgexS
+	 gcWanPeiXZt4gsBqMbCXtYbLZ7XocKJNwASmJmw4G3IbzCyTXDoy/N9C35Ob/sAucO
+	 crhkZc4/TNGrw==
+Received: by mail-yx1-f51.google.com with SMTP id 956f58d0204a3-64455a2a096so9181337d50.3
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Jan 2026 06:34:03 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV1svoR2kBtI8LxFK+gqilnz5Wa+wi1k4X2dJGx4Uw6W/fhO0BOo81J6xaMJFWnMBENDDGtrcVhz/3l@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqnlWZA3p8acaMdflesYXgTGa388bd+Yn9y/+I56Ow59441lR5
+	GTrEEXkBoAQPPcKuVOX7f4Xg2Sgh9Oh6ugHbDUUinZD1fzdChio0QLNHFUAcDX3P+nZx4Mkv/qU
+	Ib5XL7NjI4IYmMHHK0U4b+2gJzruAjRs=
+X-Google-Smtp-Source: AGHT+IEuwPpLU6j9tE048N0Djk0oLF70SM5maQ2a+GO3o6GXjjIFNXznbtZsrDbH2SDpIUi60rv2RBsuKa/mir2emKc=
+X-Received: by 2002:a05:690c:fd5:b0:78f:c1ce:edd1 with SMTP id
+ 00721157ae682-78fc1cf03bemr677785747b3.10.1767278042654; Thu, 01 Jan 2026
+ 06:34:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251212-wip-jremmet-tcal6416rtw-v1-0-e5db1b66d4cc@phytec.de> <20251212-wip-jremmet-tcal6416rtw-v1-2-e5db1b66d4cc@phytec.de>
-In-Reply-To: <20251212-wip-jremmet-tcal6416rtw-v1-2-e5db1b66d4cc@phytec.de>
+References: <20251219115631.218609-1-sander@svanheule.net>
+In-Reply-To: <20251219115631.218609-1-sander@svanheule.net>
 From: Linus Walleij <linusw@kernel.org>
-Date: Wed, 31 Dec 2025 23:29:04 +0100
-X-Gmail-Original-Message-ID: <CAD++jLnpia9uAxXBggBHsq-4aOonPWc0BMM-tScNhw4bZMwXGA@mail.gmail.com>
-X-Gm-Features: AQt7F2pa_qGQ8UWKBWoTq6TW2pqjjQEMlUn4YtEc638rbnmQPMyR4tK5hOumyoU
-Message-ID: <CAD++jLnpia9uAxXBggBHsq-4aOonPWc0BMM-tScNhw4bZMwXGA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] Documentation: gpio: add TCAL6408 and TCAL6416
-To: Jan Remmet <j.remmet@phytec.de>
-Cc: Bartosz Golaszewski <brgl@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	=?UTF-8?B?TGV2ZW50ZSBSw6l2w6lzeg==?= <levente.revesz@eilabs.com>, 
-	linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, 
-	upstream@lists.phytec.de
+Date: Thu, 1 Jan 2026 15:33:51 +0100
+X-Gmail-Original-Message-ID: <CAD++jLkN_9=jF1it3dBW7uMPqdriZP_MBj3eqw87XfJFbY0u4w@mail.gmail.com>
+X-Gm-Features: AQt7F2qt83BaoZF2UNvp3emyQGZrdIDsBpWhnO38GP6gbfiEqf32whLTlcHSC8w
+Message-ID: <CAD++jLkN_9=jF1it3dBW7uMPqdriZP_MBj3eqw87XfJFbY0u4w@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: pic64gx-gpio2: Add REGMAP_MMIO dependency
+To: Sander Vanheule <sander@svanheule.net>
+Cc: Conor Dooley <conor.dooley@microchip.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 12, 2025 at 2:03=E2=80=AFPM Jan Remmet <j.remmet@phytec.de> wro=
-te:
+On Fri, Dec 19, 2025 at 12:56=E2=80=AFPM Sander Vanheule <sander@svanheule.=
+net> wrote:
 
-> Checked datasheets, the offsets are identical to pcal6408 and pcal6416.
+> In line with other drivers depending on REGMAP_*, select the required
+> symbol to prevent a linker error when building with COMPILE_TEST=3Dy:
 >
-> Signed-off-by: Jan Remmet <j.remmet@phytec.de>
+> ld: drivers/pinctrl/pinctrl-pic64gx-gpio2.o: in function `pic64gx_gpio2_p=
+robe':
+> pinctrl-pic64gx-gpio2.c:315:(.text+0x198): undefined reference to `__devm=
+_regmap_init_mmio_clk'
+>
+> Fixes: 38cf9d641314 ("pinctrl: add pic64gx "gpio2" pinmux driver")
+> Signed-off-by: Sander Vanheule <sander@svanheule.net>
 
-Reviewed-by: Linus Walleij <linusw@kernel.org>
+Patch applied for fixes, thanks Sander!
 
 Yours,
 Linus Walleij
