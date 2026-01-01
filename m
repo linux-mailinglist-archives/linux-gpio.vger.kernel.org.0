@@ -1,68 +1,68 @@
-Return-Path: <linux-gpio+bounces-30031-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30032-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A033CED777
-	for <lists+linux-gpio@lfdr.de>; Thu, 01 Jan 2026 23:37:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id ECC6DCED77A
+	for <lists+linux-gpio@lfdr.de>; Thu, 01 Jan 2026 23:37:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 43E823004CA1
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jan 2026 22:37:09 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E4C4A3004CA7
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Jan 2026 22:37:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 598AC1A9F91;
-	Thu,  1 Jan 2026 22:37:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A9F6242D9B;
+	Thu,  1 Jan 2026 22:37:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kl4pgeQT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ldleX95I"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D171C3F36
-	for <linux-gpio@vger.kernel.org>; Thu,  1 Jan 2026 22:37:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E386222597
+	for <linux-gpio@vger.kernel.org>; Thu,  1 Jan 2026 22:37:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767307028; cv=none; b=XWn1dU6DnLhhQVaxn7WIRFW+raGIE6chVxN06l92IH4EnMHzWVVHcQZMIvZZqWa2EfEbHesnKxVFh0SYMz/PAaIBqz0MpwHhDKmJgt5sTB/RWyOVI7hUAXNhbAaClmjyHypk7CFisg7Ul6IXRoYS30LOUgCupArviIafNryRTAg=
+	t=1767307046; cv=none; b=f5uqgJs2rdxDBnMEvsgzZZ1sDrWJhPg+etrycAOHofoac+lpu76SBBCTNKPDKhdc2eENNZbrCAup2+mrcr+bBLxcjyj/QAIA9rcwG/87mUh0EGD3ezOJVCwa2sC5CUFNjn4f5xWEy1rve+9yG9amCeKPp7UHGoQ5qcgHlG/jzEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767307028; c=relaxed/simple;
-	bh=zFPbOYoiGK2YHEkPa6hnUfO45Q+tjDmbpv/dwRaLQsU=;
+	s=arc-20240116; t=1767307046; c=relaxed/simple;
+	bh=4NjZxR7n/i3V7hLD9I4rLfeAHHpOdNccUfDSk4/Vc7I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lp1ynXdjdgW5BzBsyul4cldT1apHQVXQv2e+tfD9qZKe97qAEdXS2VSfTM+F5INUl7xNxTE09PWXyu8yFmU4Sq21UnkYyYIXdNi0lEQ1XEQ9neVCIP+X7LxWFvD+qRke71ORerPjA2iwfnXMGc6wGF4KmuzjHxLAWfIeX+D8hKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kl4pgeQT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A5A0C4AF0D
-	for <linux-gpio@vger.kernel.org>; Thu,  1 Jan 2026 22:37:07 +0000 (UTC)
+	 To:Cc:Content-Type; b=BE0ehNbdlhTs2DZptEx4iSfnCaSDxdJCuoJqVsTCxN+tvLJOJ4yslSwUZTaBDWzM9kWIRrx+A7AB6DDKUkolkyW1/F7gaUGgsP1lzZQ6cJ6CUd+/QyO0IEUXpu2dKlqp+gMz9iDuZXrqnuKIiTQzn1lSl3XcZmDukEcmslWuigk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ldleX95I; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E30BDC19423
+	for <linux-gpio@vger.kernel.org>; Thu,  1 Jan 2026 22:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767307027;
-	bh=zFPbOYoiGK2YHEkPa6hnUfO45Q+tjDmbpv/dwRaLQsU=;
+	s=k20201202; t=1767307045;
+	bh=4NjZxR7n/i3V7hLD9I4rLfeAHHpOdNccUfDSk4/Vc7I=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kl4pgeQTMcNieDd0E9vjK0PVEZAl50YBJtlvRVdNDWMxg7YN8mqBWtoYLiY91IMRi
-	 BdXVr1OyKkuUtXwyc9LJpZtj1d6UUH/o8Mg6pvaHUk+5Dbex2dmg5YHvJp42+5K4EP
-	 pB2Yv6wpLhNBBuu9UBgbxxW8T8hCh+NS/C1Wbr/xVwmfm/re3MF43VA5FptGVfY0fa
-	 UIa3jTgCrqkr6g/v4LgRdhf/+L+Yp4SYf+V79kXo7SKh4hZRaaHQOEEI76o0bm+Z6O
-	 WeBWvuD+es7Z46FwOPh2OmjYP2GQzdh1XD5xyydWSA8e6MwSjpUaHB7+Y/yOY260YL
-	 8Uz4Jv4EQEhQg==
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-7900ab67562so45980187b3.0
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Jan 2026 14:37:07 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWHKPTZf0xXH0W7oAjAcOfXodt+e1tRHN7QpSAMrXkuBEUx+BOAW1wzSqG2C4vq2BI/OCIuZjMA9kaG@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1TdIuK3bcfNXUtBJzC3/i1icws0dA6o5+61MtnnLABs9s17N+
-	dPu5mN6aHH2tlh7UhtlSQjuklMVQy3d42o8XOTwkiH8tRyyqRElxe34JPbUCBlHEJ6kw58zYnht
-	crwRvXErxYwWHzNo71rP9dJyxEHqenSk=
-X-Google-Smtp-Source: AGHT+IH3rHX+MO0pndYIAY3BMyel2/PmtkDfaZjjQgMxYMPVkQt2SYFlCdvDRxCbn4W4GcVq5UmB1hnOFsctyFssdo0=
-X-Received: by 2002:a05:690c:6f8e:b0:78e:1aa5:e970 with SMTP id
- 00721157ae682-78fb3f5c183mr344105557b3.31.1767307026776; Thu, 01 Jan 2026
- 14:37:06 -0800 (PST)
+	b=ldleX95IA/Rhvnga9zhFQWYGX90TGGbu/MedExFGoLKzVm9VARMh8b4CPjo/2oO4z
+	 uKiJMDiRPe8vx9Ae2im5rgASh7toMyvrp+3s8uV+b4s2A1bo2kIMVdy/np8WxJ0nFF
+	 jpnUfQKMo0eZWT2s3O6705wXXVNYU0bfvpsidNKw5cKrp6aHSDERDTXmzczKXpTR+H
+	 tz2TLU3He7TUxiY7sjfuAbq5j/4OEo5k6fbMpAy+E9hoj9Y5cZ0GOXDFSkbrB+HL+d
+	 0Z0ONjr6g5QbbGc3ZTShvcyOdNkauf7dciFEh9mQ4iBPiJyTohSkKFEEp8kOKXbz2o
+	 SyoTt/wvt2k6Q==
+Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-644715aad1aso13486018d50.0
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Jan 2026 14:37:25 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUg2nFz2LTFkLNoS6ppj3Lwf3l4hbaIqfy8wb58PjCQqZn8i5fGqrlpu3csqVZWo+56ChrQ3jugqDdq@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUSShF3aj/wZEQAmdroEahL/GfPv9ZuRQtno6g76uM4uVreN1A
+	9T4GWT5RwlPVMuUJE++a4pH9CQRS7MzCSNvHw6wSm0Q6xjDfewxmTPyTiFPTgqG6UfGWJlOeybn
+	wgHBkOeQIbcjk1OPP3xcB03ekb7hi4KA=
+X-Google-Smtp-Source: AGHT+IGxfFDsTCRV20/MitXOg9IYsjIgYuqKye3DeOL8wH03xNmqZuWnyqOfWZ2rc2d7AeH+J//qkrFfgP8RZqpfLp8=
+X-Received: by 2002:a53:8585:0:b0:644:60d9:8661 with SMTP id
+ 956f58d0204a3-646632e1cd7mr26165537d50.45.1767307045252; Thu, 01 Jan 2026
+ 14:37:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251219-gpio-of-match-v3-0-6b84194a02a8@oss.qualcomm.com> <20251219-gpio-of-match-v3-2-6b84194a02a8@oss.qualcomm.com>
-In-Reply-To: <20251219-gpio-of-match-v3-2-6b84194a02a8@oss.qualcomm.com>
+References: <20251219-gpio-of-match-v3-0-6b84194a02a8@oss.qualcomm.com> <20251219-gpio-of-match-v3-3-6b84194a02a8@oss.qualcomm.com>
+In-Reply-To: <20251219-gpio-of-match-v3-3-6b84194a02a8@oss.qualcomm.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 1 Jan 2026 23:36:55 +0100
-X-Gmail-Original-Message-ID: <CAD++jLnoxse5RrX0-m3dNNa-B_h0yHCw6H24H14Dkts5XwYCDA@mail.gmail.com>
-X-Gm-Features: AQt7F2oRBtplfDlu9a7oL72YgDu3OW_f7prR_jrtoZC5RVkWzk3Mu6ddY4BWlD0
-Message-ID: <CAD++jLnoxse5RrX0-m3dNNa-B_h0yHCw6H24H14Dkts5XwYCDA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] gpio: creg-snps: Simplify with device_get_match_data()
+Date: Thu, 1 Jan 2026 23:37:14 +0100
+X-Gmail-Original-Message-ID: <CAD++jLndAvhQC_pxU7fU2DgL2HyosfNQqnTxVXrm4uLNK59y3A@mail.gmail.com>
+X-Gm-Features: AQt7F2pIVe2by9dHgGDwlRyH8hysFAWe6pLdQf74mH3djmHANQGvVjg82Ayxg4s
+Message-ID: <CAD++jLndAvhQC_pxU7fU2DgL2HyosfNQqnTxVXrm4uLNK59y3A@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] gpio: zynq: Simplify with device_get_match_data()
 To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, 
 	Andrew Jeffery <andrew@codeconstruct.com.au>, 
@@ -80,6 +80,9 @@ On Fri, Dec 19, 2025 at 1:13=E2=80=AFPM Krzysztof Kozlowski
 > Driver's probe function matches against driver's of_device_id table,
 > where each entry has non-NULL match data, so of_match_node() can be
 > simplified with device_get_match_data().
+>
+> While changing the error message, switch to dev_err_probe() so error
+> path is a bit simpler.
 >
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 
