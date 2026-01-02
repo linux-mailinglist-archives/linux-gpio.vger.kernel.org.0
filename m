@@ -1,244 +1,131 @@
-Return-Path: <linux-gpio+bounces-30054-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30055-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72E4ECEE2AB
-	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 11:29:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AB0ECEE31E
+	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 11:51:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0DB04300B9BC
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 10:29:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 18D6A3009F9C
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 10:51:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 410F82D73BE;
-	Fri,  2 Jan 2026 10:29:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA4972DE715;
+	Fri,  2 Jan 2026 10:51:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s6spx48E"
+	dkim=pass (2048-bit key) header.d=chimac.ro header.i=@chimac.ro header.b="l1HqgXMm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-106100.protonmail.ch (mail-106100.protonmail.ch [79.135.106.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0164D4A3E
-	for <linux-gpio@vger.kernel.org>; Fri,  2 Jan 2026 10:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16332DA779;
+	Fri,  2 Jan 2026 10:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767349785; cv=none; b=EGMeu9gkihm+S+vQ3gtf0FWXcNP9oWSEQdLEwlWCgK3hMGobTnkBk4P4yJ+y0yEpNhDanM5e+AMmK6G77bVz5Vk7irRmX1C8Cc0t70xYWUKzQo7tsJTUtr33fg8yW0aSfTjGL3GTXU9Ug7r1TitrfaHQaREyMS2U7LtpHO+neZ8=
+	t=1767351073; cv=none; b=kt7hVonWT6MOyaDVaZuQ8upQJxn+T9jI3TQ06LydJTCZqx0YZyzOUsBythuQAw/jEdWWg4/U7fFjn6vakJaHI5vgMs8Etp5115Stk+c7vCWMah45SdVJcph4F8wEKb1AkLqT70hb1zkbfXVyZSdatVQFH5n5ylFfsOhoQlu9HXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767349785; c=relaxed/simple;
-	bh=fvoMNAbdqvP92dhYq1nfi37dK43O80JjH7EIa0iBWX0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bqHcKw85oru0u1JBfkkdfy95s9tHl6T7RzVO7STWWG5CzHrV9uZjXKXxKHRBiyKEleKleAGAwZTSHiwnZ1gw2Dr6SPicSH0OWlRJFxhXBUV4hbvgmGUfE+Bj7EqQfgauK43nsbeeg0n8Kmtuwp/vM+CoyuRuUNBeLLwPPukH8lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s6spx48E; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 877A9C19422
-	for <linux-gpio@vger.kernel.org>; Fri,  2 Jan 2026 10:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767349784;
-	bh=fvoMNAbdqvP92dhYq1nfi37dK43O80JjH7EIa0iBWX0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=s6spx48EQo1akd1ApMY0b3PUtT+NBhruEIBiroaeikrV92bS3LofkOnPfIHka4b7T
-	 ASeI7byUK5dDnYVrzfoHC7vfhKz6xGWQHbAPcRW8Ofno/zeHPG+SVdFqZuAbxnSrM6
-	 r/mpC3k2OWtnk8Rf6RUC5+P6ml1BfBTCTZe/97KAqWImwDwEDnonafzKs/bqTJUO5D
-	 MPAUsLGAwJ51sCuKdgWP3u6/ax8yF8SCDtOVgfJ4gDV97SjI2ey4TGqXo2FSaHxwIz
-	 U/WgxDbYzJRk+mqtGIlDbHjx3SF92dfUsHeWLumCYdSqB7lSLHoClEZ4mJ9voaaz9T
-	 pYthoqF140j+g==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5959187c5a9so10284641e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Jan 2026 02:29:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW0t468yaJs/Y94zSz0CKVH1pDphFA5KRUQUVdyDmTMpAbCYeM1uUxMyqJvF0cn8GcYLunEmQUl25G+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8C80Brsb18oC6cvmNXBM3Eu0b/YxQ/FaziN5UuHwSboVnqtfr
-	wqJjhbgOd4Gd1isufkEuUusc87QdrDKv1AZvqQcjs3fnoNxGUdSG8GJyroE9JJzrKe9nXG76EJU
-	Y9skU/TPtIwzYkvO4FomKNTY+Ol6AXSQwJd/EZ1oo8A==
-X-Google-Smtp-Source: AGHT+IG9KsTNhdvD3hNA4by6Oh3vsJCw6a1+IJ+TvN2At6IjX0fAOBHpQVlYERDELDwgiBq0kxlBTLzuF/G+OSUNLq8=
-X-Received: by 2002:a05:6512:4010:b0:598:fabd:b3f5 with SMTP id
- 2adb3069b0e04-59a17d606ccmr13503319e87.17.1767349783098; Fri, 02 Jan 2026
- 02:29:43 -0800 (PST)
+	s=arc-20240116; t=1767351073; c=relaxed/simple;
+	bh=a1x9bOOyonA/zI9tuhPm5HjCUKdxuCnIwcYuEH4ju3A=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JPioY0JG+9aLv9w2EVgIBQIJmsqUHabPjSKbBH1wq4M03ORdmK20RIZnIkeA+c3dSq5RYYZDvowpIQrfU0bkJwb0RJT3CTb+2BKOZOaS9j3q171Vj9ap4cgL5f3tr9sI6BU4RqSPsUDlMZXjzLWAGyvp2/eXy03hmGaNKAfbkzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chimac.ro; spf=pass smtp.mailfrom=chimac.ro; dkim=pass (2048-bit key) header.d=chimac.ro header.i=@chimac.ro header.b=l1HqgXMm; arc=none smtp.client-ip=79.135.106.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=chimac.ro
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chimac.ro
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chimac.ro;
+	s=protonmail2; t=1767351062; x=1767610262;
+	bh=Wm8iFenI7rV4BHDLWQQC9m1LuaI6pjS4oGcE2me2wdo=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=l1HqgXMmMKg/G/y/hrjp5w5NLDbzu6bAnCleWW0aF0bBOclzustHcaR8DAp2pRLxi
+	 bFkR/CTrovwjKtwjlQS2uNQEML/hkYWvjG4n+znncN2B9xPsWhswjOyRngS9I7p/YL
+	 Ilx4iQe5+K1ZsjbPSkDiWpjUlMyvTzM5iQGxTBhbYk6idOQQIvqvi5bpBHj6d1UnhD
+	 6OhcPl0U8E7CcYGYGZWNFR3E2prkYpExHyisQtL4w62zFpbnMoI31abqpR31g1F+zH
+	 TH4tSdG4f6MYI0emEcHpl5+AAs71O/Cc4mQlFpa1lHt/vJQe8z+vzdJFxLSllt1gys
+	 XX0KHRKPqY9FQ==
+Date: Fri, 02 Jan 2026 10:50:55 +0000
+To: Krzysztof Kozlowski <krzk@kernel.org>
+From: Alexandru Chimac <alex@chimac.ro>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] dt-bindings: pinctrl: samsung: Add exynos9610-wakeup-eint node
+Message-ID: <SIUwFRvVetTkOo41ZvVr5kiSwjfVoFRJ9HPWVYoNFQgd06BUJSDLEdl95hV1W3INlc50uZNQppCZaA41mTA22kQfpDOjseC-PiHgyIfTCSA=@chimac.ro>
+In-Reply-To: <fb98e395-d590-47f7-8dba-d9a691a2c174@kernel.org>
+References: <20251228-exynos9610-pinctrl-v2-0-c9bbeee4c54b@chimac.ro> <20251228-exynos9610-pinctrl-v2-2-c9bbeee4c54b@chimac.ro> <20251230-dramatic-gregarious-stallion-15bc07@quoll> <yB5WFgsxeeqHQgi87UeNPD8K2OlQbWWC6-BovxADBtgusN3n8UOrm7Gi6jz6Th0dsMA9J-LEpx69sWjNmWTH_-jx9r7AgvXNTwR2hQW7-SM=@chimac.ro> <fb98e395-d590-47f7-8dba-d9a691a2c174@kernel.org>
+Feedback-ID: 139133584:user:proton
+X-Pm-Message-ID: fcae599c395b499a3659dfd5541d73bbf461087c
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251222-axiado-ax3000-cadence-gpio-support-v1-0-c9ef8e0d0bce@axiado.com>
- <20251222-axiado-ax3000-cadence-gpio-support-v1-1-c9ef8e0d0bce@axiado.com>
-In-Reply-To: <20251222-axiado-ax3000-cadence-gpio-support-v1-1-c9ef8e0d0bce@axiado.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Fri, 2 Jan 2026 11:29:31 +0100
-X-Gmail-Original-Message-ID: <CAMRc=MesW=pf9K4OcgZHn3iyULLf0ysRrFx51cj82JCeugcHWw@mail.gmail.com>
-X-Gm-Features: AQt7F2oc83-1fOqEv6lJNcIrBPjoNokHdwdyI15hqouhDChRgCJCLtRiUEcjrPs
-Message-ID: <CAMRc=MesW=pf9K4OcgZHn3iyULLf0ysRrFx51cj82JCeugcHWw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: cadence: Add quirk for Axiado AX3000 platform
-To: Swark Yang <syang@axiado.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Tzu-Hao Wei <twei@axiado.com>, 
-	Prasad Bolisetty <pbolisetty@axiado.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 23, 2025 at 8:30=E2=80=AFAM Swark Yang <syang@axiado.com> wrote=
-:
->
-> On the Axiado AX3000 platform, pinmux and pin configuration (such as
-> direction and output enable) are configured by the hardware/firmware
-> at boot time before Linux boots.
->
-> To prevent conflicts, introduce a platform-specific quirk triggered by
-> the "axiado,ax3000-gpio" compatible string.
->
-> When this quirk is active, the driver will skip its default
-> initialization of pinmux configuration and direction settings during
-> probe.
->
-> Co-developed-by: Tzu-Hao Wei <twei@axiado.com>
-> Signed-off-by: Tzu-Hao Wei <twei@axiado.com>
-> Signed-off-by: Swark Yang <syang@axiado.com>
-> Signed-off-by: Prasad Bolisetty <pbolisetty@axiado.com>
-> ---
->  drivers/gpio/gpio-cadence.c | 53 +++++++++++++++++++++++++++++++++++----=
-------
->  1 file changed, 42 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-cadence.c b/drivers/gpio/gpio-cadence.c
-> index b75734ca22dd..b9f39566b0f9 100644
-> --- a/drivers/gpio/gpio-cadence.c
-> +++ b/drivers/gpio/gpio-cadence.c
-> @@ -6,6 +6,9 @@
->   * Authors:
->   *  Jan Kotas <jank@cadence.com>
->   *  Boris Brezillon <boris.brezillon@free-electrons.com>
-> + *
-> + * Copyright (C) 2025 Axiado Corporation.
 
-Move this to where the original copyright is.
 
-> + *
->   */
->
->  #include <linux/cleanup.h>
-> @@ -31,12 +34,18 @@
->  #define CDNS_GPIO_IRQ_VALUE            0x28
->  #define CDNS_GPIO_IRQ_ANY_EDGE         0x2c
->
-> +#define CDNS_GPIO_QUIRKS_SKIP_PINMUX_CFG       BIT(1)
-> +
->  struct cdns_gpio_chip {
->         struct gpio_generic_chip gen_gc;
->         void __iomem *regs;
->         u32 bypass_orig;
->  };
->
-> +struct cdns_platform_data {
-> +       u32 quirks;
-> +};
-> +
->  static int cdns_gpio_request(struct gpio_chip *chip, unsigned int offset=
-)
->  {
->         struct cdns_gpio_chip *cgpio =3D gpiochip_get_data(chip);
-> @@ -141,6 +150,16 @@ static const struct irq_chip cdns_gpio_irqchip =3D {
->         GPIOCHIP_IRQ_RESOURCE_HELPERS,
->  };
->
-> +static const struct cdns_platform_data ax3000_gpio_def =3D {
-> +       .quirks =3D CDNS_GPIO_QUIRKS_SKIP_PINMUX_CFG, };
 
-Didn't checkpatch complain about the trailing bracket? Please move it
-to the next line.
 
-> +
-> +static const struct of_device_id cdns_of_ids[] =3D {
-> +       { .compatible =3D "axiado,ax3000-gpio", .data =3D &ax3000_gpio_de=
-f },
-> +       { .compatible =3D "cdns,gpio-r1p02" },
-> +       { /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, cdns_of_ids);
-> +
->  static int cdns_gpio_probe(struct platform_device *pdev)
->  {
->         struct gpio_generic_chip_config config =3D { };
-> @@ -148,6 +167,8 @@ static int cdns_gpio_probe(struct platform_device *pd=
-ev)
->         int ret, irq;
->         u32 dir_prev;
->         u32 num_gpios =3D 32;
-> +       bool skip_pinmux_cfg =3D false;
-> +       const struct of_device_id *match;
->         struct clk *clk;
->
->         cgpio =3D devm_kzalloc(&pdev->dev, sizeof(*cgpio), GFP_KERNEL);
-> @@ -165,6 +186,13 @@ static int cdns_gpio_probe(struct platform_device *p=
-dev)
->                 return -EINVAL;
->         }
->
-> +       match =3D of_match_node(cdns_of_ids, pdev->dev.of_node);
 
-Just use device_get_match_data().
+On Friday, January 2nd, 2026 at 12:02, Krzysztof Kozlowski <krzk@kernel.org=
+> wrote:
 
-> +       if (match && match->data) {
-> +               const struct cdns_platform_data *data =3D match->data;
-> +
-> +               skip_pinmux_cfg =3D data->quirks & CDNS_GPIO_QUIRKS_SKIP_=
-PINMUX_CFG;
-> +       }
-> +
->         /*
->          * Set all pins as inputs by default, otherwise:
->          * gpiochip_lock_as_irq:
-> @@ -173,8 +201,15 @@ static int cdns_gpio_probe(struct platform_device *p=
-dev)
->          * so it needs to be changed before gpio_generic_chip_init() is c=
-alled.
->          */
->         dir_prev =3D ioread32(cgpio->regs + CDNS_GPIO_DIRECTION_MODE);
-> -       iowrite32(GENMASK(num_gpios - 1, 0),
-> -                 cgpio->regs + CDNS_GPIO_DIRECTION_MODE);
-> +
-> +       /*
-> +        * The AX3000 platform performs the required configuration at boo=
-t time
-> +        * before Linux boots, so this quirk disables pinmux initializati=
-on.
-> +        */
-> +       if (!skip_pinmux_cfg) {
-> +               iowrite32(GENMASK(num_gpios - 1, 0),
-> +                         cgpio->regs + CDNS_GPIO_DIRECTION_MODE);
-> +       }
->
->         config.dev =3D &pdev->dev;
->         config.sz =3D 4;
-> @@ -240,9 +275,11 @@ static int cdns_gpio_probe(struct platform_device *p=
-dev)
->         /*
->          * Enable gpio outputs, ignored for input direction
->          */
-> -       iowrite32(GENMASK(num_gpios - 1, 0),
-> -                 cgpio->regs + CDNS_GPIO_OUTPUT_EN);
-> -       iowrite32(0, cgpio->regs + CDNS_GPIO_BYPASS_MODE);
-> +       if (!skip_pinmux_cfg) {
-> +               iowrite32(GENMASK(num_gpios - 1, 0),
-> +                         cgpio->regs + CDNS_GPIO_OUTPUT_EN);
-> +               iowrite32(0, cgpio->regs + CDNS_GPIO_BYPASS_MODE);
-> +       }
->
->         platform_set_drvdata(pdev, cgpio);
->         return 0;
-> @@ -260,12 +297,6 @@ static void cdns_gpio_remove(struct platform_device =
-*pdev)
->         iowrite32(cgpio->bypass_orig, cgpio->regs + CDNS_GPIO_BYPASS_MODE=
-);
->  }
->
-> -static const struct of_device_id cdns_of_ids[] =3D {
-> -       { .compatible =3D "cdns,gpio-r1p02" },
-> -       { /* sentinel */ },
-> -};
-> -MODULE_DEVICE_TABLE(of, cdns_of_ids);
-> -
->  static struct platform_driver cdns_gpio_driver =3D {
->         .driver =3D {
->                 .name =3D "cdns-gpio",
->
-> --
-> 2.25.1
->
-
-Bart
+>=20
+>=20
+> On 31/12/2025 13:28, Alexandru Chimac wrote:
+>=20
+> > On Tuesday, December 30th, 2025 at 11:51, Krzysztof Kozlowski krzk@kern=
+el.org wrote:
+> >=20
+> > > On Sun, Dec 28, 2025 at 06:05:52PM +0000, Alexandru Chimac wrote:
+> > >=20
+> > > > Add a dedicated compatible for the exynos9610-wakeup-eint node,
+> > > > which is compatbile with Exynos850's implementation (and the
+> > > > Exynos7 fallback).
+> > > >=20
+> > > > Signed-off-by: Alexandru Chimac alex@chimac.ro
+> > > > ---
+> > > > .../devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.ya=
+ml | 2 ++
+> > > > 1 file changed, 2 insertions(+)
+> > > >=20
+> > > > diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinc=
+trl-wakeup-interrupt.yaml b/Documentation/devicetree/bindings/pinctrl/samsu=
+ng,pinctrl-wakeup-interrupt.yaml
+> > > > index f3c433015b12..deb2730855bd 100644
+> > > > --- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wak=
+eup-interrupt.yaml
+> > > > +++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wak=
+eup-interrupt.yaml
+> > > > @@ -48,6 +48,7 @@ properties:
+> > > > - enum:
+> > > > - google,gs101-wakeup-eint
+> > > > - samsung,exynos2200-wakeup-eint
+> > > > + - samsung,exynos9610-wakeup-eint
+> > > > - samsung,exynos9810-wakeup-eint
+> > > > - samsung,exynos990-wakeup-eint
+> > > > - samsung,exynosautov9-wakeup-eint
+> > > > @@ -107,6 +108,7 @@ allOf:
+> > > > contains:
+> > > > enum:
+> > > > - samsung,exynos850-wakeup-eint
+> > > > + - samsung,exynos9610-wakeup-eint
+> > >=20
+> > > This is not needed. Device has 850 fallback, no?
+> > > It's not required, but I guess it would make the device tree look bet=
+ter. If this patch isn't to be merged, it doesn't functionally affect anyth=
+ing so it can just be dropped instead of requiring another patchset revisio=
+n.
+>=20
+>=20
+> Please wrap your replies.
+>=20
+> I did not comment on the patch. Comments are in specific places
+> discussing specific lines. I asked why do you need this enum to grow?
+Oh, sorry, I thought you meant the whole commit. Yeah, it looks wrong.
+Thanks for noticing, I will fix it in v3.
+>=20
+>=20
+> Best regards,
+> Krzysztof
+Best regards,
+Alexandru Chimac 
 
