@@ -1,171 +1,96 @@
-Return-Path: <linux-gpio+bounces-30071-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30072-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 019D4CEE625
-	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 12:38:10 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5F14CEE637
+	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 12:39:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CCDD73009405
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 11:36:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5C9863006F69
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 11:39:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7E9B2EF662;
-	Fri,  2 Jan 2026 11:36:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 224F62F5308;
+	Fri,  2 Jan 2026 11:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jlmdF7l4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DA5222584;
-	Fri,  2 Jan 2026 11:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C492F0C68;
+	Fri,  2 Jan 2026 11:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767353811; cv=none; b=Zvf7jPKZcUWailEK+EmFZmy1lgE5lk9uVWRGIeXm56eVG/2WIKFhN/YN8JG0VEIJwQ+CoJhG1ezbpNBnEswBi6Y2LMQxF5Ogx/42uSQRHL1caiFNxALFOkExkZ1r5L0IpOBfD96wz0TkIVNd8zEw3h4zl1oqVv9tviX+HeuZUnE=
+	t=1767353979; cv=none; b=CjZQKD8agJ5MMsaJ5Jjw2JaIEAB4seA6FHQQcjq2lXaeT0CeXIIqkVHwd5k/R3mlG+OYxPEUROjQ/hhaL12kmQlBttnq1CMXeIivpMhFLNpUr5/y9xBBgFjV7mVqtAzTKULzTwlcO1u2OiWHkWwVtE7vOeyJIS3tFv5koPcY/2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767353811; c=relaxed/simple;
-	bh=qYW2fr0EASe6j5jt/RMQovxpWx0lyPJUTq6TeaAySHU=;
+	s=arc-20240116; t=1767353979; c=relaxed/simple;
+	bh=V+mvrspCEr1ENDWePx7PDCH5nlDayDVhNhZiHlQO9j4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sU8fLeFyf+Rac0ahUZQeNK1KGtbKUyWEJAi0iwZpeu3CS0xBbABAlUme3m9K/1hSrq1hw+sv+WqAkfoZkzmSIENB2RP3pMYCRUV5HEMXv7N2bCwp8l6Evj6rJWy9ztupnpPsy2hyWtkTxzvnCxV+f2mnF+aHFWpbtHSNwKBb0K0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.18.222])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 203E334134D;
-	Fri, 02 Jan 2026 11:36:48 +0000 (UTC)
-Date: Fri, 2 Jan 2026 19:36:43 +0800
-From: Yixun Lan <dlan@gentoo.org>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] gpio: spacemit: Add GPIO support for K3 SoC
-Message-ID: <20260102113643-GYA2060252@gentoo.org>
-References: <20251229-02-k3-gpio-v1-0-269e76785abb@gentoo.org>
- <20251229-02-k3-gpio-v1-2-269e76785abb@gentoo.org>
- <CAMRc=MfHzP+xm-uX+jad5gPOGDpR23O6mB+xcSvF6ZiZfnxQjg@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=MOKL5Y2n9iovFquEsmz3kF4dy4m66OHVTRfonrZOkX+q9OtsZQXfwMCgvpbwaxEubP6v4R7uAVeLkg/fr/3RK3VT2r+3LA9dUB1b7CpxgJ89nFEBc0VYsepp848wkaVJGAo/yxHUvgUWLEaIxVGkyx/cA42YOipxdK+QeVeySgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jlmdF7l4; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767353978; x=1798889978;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=V+mvrspCEr1ENDWePx7PDCH5nlDayDVhNhZiHlQO9j4=;
+  b=jlmdF7l4epHcHOOu0cRRASUbjALmv6M3CDhwSkh+/EHaQoN09Mlg1ytK
+   +EWpC2UskQZ0CFIjF0c27A7zFQtI7dV9TgyC92MhcEmcR1Q8ZYq00/Kpo
+   ejNlxbNxL5bUaQ3aIvtlScrDUPuXyMetSOrONEYi1hLL1wJhpa3mAhjMK
+   yAVgnNDFqMfSy2U9WlAyR/qlwPeaRTO+ybeJsrbIZ6HV8WPFCagMuKttr
+   UAoDCuoPC+1UUaMHDLysLTxx3jTTWtUFKJ133gwKGAHrdriAcQ1QU8C/v
+   JvuNz51/gg4lFacb4YhsNx9CJIdVP8cXPPAvLchK6d2FzSpvagFqRUaLh
+   w==;
+X-CSE-ConnectionGUID: l9tztG+WTHW1H3fP4h/7HQ==
+X-CSE-MsgGUID: /qSH4/nDQk2ce5xKypep5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11658"; a="68044563"
+X-IronPort-AV: E=Sophos;i="6.21,197,1763452800"; 
+   d="scan'208";a="68044563"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2026 03:39:37 -0800
+X-CSE-ConnectionGUID: X/omDzugRRytI/p+4hZ+8Q==
+X-CSE-MsgGUID: 2kplrY42TluwkgHPpb3/BA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,197,1763452800"; 
+   d="scan'208";a="201431537"
+Received: from ncintean-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.46])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2026 03:39:35 -0800
+Date: Fri, 2 Jan 2026 13:39:33 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: swnode: restore the name of the undefined software
+ node
+Message-ID: <aVeudcz_Am5VDQHT@smile.fi.intel.com>
+References: <20260102093349.17822-1-bartosz.golaszewski@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfHzP+xm-uX+jad5gPOGDpR23O6mB+xcSvF6ZiZfnxQjg@mail.gmail.com>
+In-Reply-To: <20260102093349.17822-1-bartosz.golaszewski@oss.qualcomm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi Bart,
+On Fri, Jan 02, 2026 at 10:33:49AM +0100, Bartosz Golaszewski wrote:
+> Commit 6774a66d0e10 ("gpio: swnode: compare the "undefined" swnode by
+> its address, not name") switched to comparing the software nodes by
+> address instead of names but it's still useful to keep the name of the
+> node to expose the relevant information over sysfs. Restore the
+> human-readable name.
 
-On 12:10 Fri 02 Jan     , Bartosz Golaszewski wrote:
-> On Mon, Dec 29, 2025 at 1:47 PM Yixun Lan <dlan@gentoo.org> wrote:
-> >
-> > SpacemiT K3 SoC has changed gpio register layout while comparing
-> > with previous generation, the register offset and bank offset
-> > need to be adjusted, introduce a compatible data to extend the
-> > driver to support this.
-> >
-> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> > ---
-> >  drivers/gpio/gpio-spacemit-k1.c | 150 ++++++++++++++++++++++++++++------------
-> >  1 file changed, 106 insertions(+), 44 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-spacemit-k1.c b/drivers/gpio/gpio-spacemit-k1.c
-> > index eb66a15c002f..02cc5c11b617 100644
-> > --- a/drivers/gpio/gpio-spacemit-k1.c
-> > +++ b/drivers/gpio/gpio-spacemit-k1.c
-> > @@ -15,28 +15,19 @@
-> >  #include <linux/platform_device.h>
-> >  #include <linux/seq_file.h>
-> >
-> > -/* register offset */
-> > -#define SPACEMIT_GPLR          0x00 /* port level - R */
-> > -#define SPACEMIT_GPDR          0x0c /* port direction - R/W */
-> > -#define SPACEMIT_GPSR          0x18 /* port set - W */
-> > -#define SPACEMIT_GPCR          0x24 /* port clear - W */
-> > -#define SPACEMIT_GRER          0x30 /* port rising edge R/W */
-> > -#define SPACEMIT_GFER          0x3c /* port falling edge R/W */
-> > -#define SPACEMIT_GEDR          0x48 /* edge detect status - R/W1C */
-> > -#define SPACEMIT_GSDR          0x54 /* (set) direction - W */
-> > -#define SPACEMIT_GCDR          0x60 /* (clear) direction - W */
-> > -#define SPACEMIT_GSRER         0x6c /* (set) rising edge detect enable - W */
-> > -#define SPACEMIT_GCRER         0x78 /* (clear) rising edge detect enable - W */
-> > -#define SPACEMIT_GSFER         0x84 /* (set) falling edge detect enable - W */
-> > -#define SPACEMIT_GCFER         0x90 /* (clear) falling edge detect enable - W */
-> > -#define SPACEMIT_GAPMASK       0x9c /* interrupt mask , 0 disable, 1 enable - R/W */
-> > -
-> >  #define SPACEMIT_NR_BANKS              4
-> >  #define SPACEMIT_NR_GPIOS_PER_BANK     32
-> >
-> >  #define to_spacemit_gpio_bank(x) container_of((x), struct spacemit_gpio_bank, gc)
-> > +#define to_spacemit_gpio_regs(sg) ((sg)->data->reg_offsets)
-> >
-> >  struct spacemit_gpio;
-> > +struct spacemit_gpio_reg_offsets;
-> 
-> Why not move this structure here instead and avoid the forward declaration?
-> 
-sure, I will do
-
-> > +
-> > +struct spacemit_gpio_data {
-> > +       struct spacemit_gpio_reg_offsets *reg_offsets;
-> > +       u32 bank_offsets[4];
-> > +};
-> >
-> >  struct spacemit_gpio_bank {
-> >         struct gpio_generic_chip chip;
-> > @@ -49,9 +40,28 @@ struct spacemit_gpio_bank {
-> >
-> >  struct spacemit_gpio {
-> >         struct device *dev;
-> > +       const struct spacemit_gpio_data *data;
-> >         struct spacemit_gpio_bank sgb[SPACEMIT_NR_BANKS];
-> >  };
-> >
-> > +struct spacemit_gpio_reg_offsets {
-> > +       u32 gplr;      /* port level - R */
-> > +       u32 gpdr;      /* port direction - R/W */
-> > +       u32 gpsr;      /* port set - W */
-> > +       u32 gpcr;      /* port clear - W */
-> > +       u32 grer;      /* port rising edge R/W */
-> > +       u32 gfer;      /* port falling edge R/W */
-> > +       u32 gedr;      /* edge detect status - R/W1C */
-> > +       u32 gsdr;      /* (set) direction - W */
-> > +       u32 gcdr;      /* (clear) direction - W */
-> > +       u32 gsrer;     /* (set) rising edge detect enable - W */
-> > +       u32 gcrer;     /* (clear) rising edge detect enable - W */
-> > +       u32 gsfer;     /* (set) falling edge detect enable - W */
-> > +       u32 gcfer;     /* (clear) falling edge detect enable - W */
-> > +       u32 gapmask;   /* interrupt mask , 0 disable, 1 enable - R/W */
-> > +       u32 gcpmask;   /* interrupt mask for K3 */
-> > +};
-> > +
-> >  static u32 spacemit_gpio_bank_index(struct spacemit_gpio_bank *gb)
-> >  {
-> >         return (u32)(gb - gb->sg->sgb);
-> > @@ -60,13 +70,14 @@ static u32 spacemit_gpio_bank_index(struct spacemit_gpio_bank *gb)
-> >  static irqreturn_t spacemit_gpio_irq_handler(int irq, void *dev_id)
-> >  {
-> >         struct spacemit_gpio_bank *gb = dev_id;
-> > +       struct spacemit_gpio *sg = gb->sg;
-> >         unsigned long pending;
-> >         u32 n, gedr;
-> >
-> > -       gedr = readl(gb->base + SPACEMIT_GEDR);
-> > +       gedr = readl(gb->base + to_spacemit_gpio_regs(sg)->gedr);
-> 
-> Since you're already touching all these register accesses - can you
-> maybe provide dedicated wrapper functions around readl()/writel() and
-> avoid any file-wide changes in the future if anything requires further
-> modification?
-> 
-can you elaborate a bit further on this?
-I don't get how a wrapper helper could help to avoid file-wide changes..
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
-Yixun Lan (dlan)
+With Best Regards,
+Andy Shevchenko
+
+
 
