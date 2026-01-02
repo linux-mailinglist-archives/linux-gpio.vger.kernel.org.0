@@ -1,141 +1,171 @@
-Return-Path: <linux-gpio+bounces-30070-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30071-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78307CEE5F8
-	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 12:34:54 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 019D4CEE625
+	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 12:38:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AE032302E061
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 11:32:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CCDD73009405
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 11:36:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A6D130CDB0;
-	Fri,  2 Jan 2026 11:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/QRuPbe"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7E9B2EF662;
+	Fri,  2 Jan 2026 11:36:51 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4760286889;
-	Fri,  2 Jan 2026 11:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DA5222584;
+	Fri,  2 Jan 2026 11:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767353548; cv=none; b=FESb9mDqKL5pRxXFZhyfbDRg1g3xY7tFEHpLJf/o7zd0puHy0mgo+KSjWztLgo+q7zyD3eAMNx5J+RlU2hGsKW737Lg0UauZpyxUwe/JRmC2VgqWOsGlV86TZ2cinSOwjUTYVbhT+1aM0e9Y9Jbp5zhC34lesIM09sw1Ix16OxM=
+	t=1767353811; cv=none; b=Zvf7jPKZcUWailEK+EmFZmy1lgE5lk9uVWRGIeXm56eVG/2WIKFhN/YN8JG0VEIJwQ+CoJhG1ezbpNBnEswBi6Y2LMQxF5Ogx/42uSQRHL1caiFNxALFOkExkZ1r5L0IpOBfD96wz0TkIVNd8zEw3h4zl1oqVv9tviX+HeuZUnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767353548; c=relaxed/simple;
-	bh=bC9b1N5b2q5Fb+eh0w51EhNxxZN71IpFQa6InZWQsnY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MFite5Mj5TqL2xwc5rKSW9ia9uwH1L2FU10jUURtGE7z+A7ZbfNj1oaOV/viEWKQGqrhLyXcYezBwTrFskNjUH5eKQHm5L5uFyUIQFrI7MCTbf3NPmRjYs2/yvgf9y4rw5+sPP9m4YhHF18y3GW6iiVb7UMUMgcV3ZPjDk89MZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/QRuPbe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8261DC116B1;
-	Fri,  2 Jan 2026 11:32:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767353548;
-	bh=bC9b1N5b2q5Fb+eh0w51EhNxxZN71IpFQa6InZWQsnY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=m/QRuPbeKwpnnGH3LZhwMEQLRNbRRGlxJGmr8bB7mP6bZK+6IqDZxNxLKw91ef7P1
-	 dBXq53ST3j2Yoo7Msgh6GdPPjTMBSqHi30eOFQizTJU6zPouOZIbl6Hjv3MsdcCLUf
-	 Gpbf4MzKzBle7ShU9wIHY133G6KTALNmeVn/8bnFWzVQTG9A1ERLox2dnuf/dFkgtm
-	 FAdaocIIZEf8yrfru2MvZsemgDOChoEHhro2TajnEsM9L/NEMLZucnjk16lo0qx53R
-	 MbDoscT/mb67sI9wZ6sej0JPC9EHadkDsQWo0BB45XHz00YiZS33CETlNunEOcVvZA
-	 FNOeA+sGx3K+g==
-Message-ID: <4e118863-885f-4858-a6c1-8f345cae4d7e@kernel.org>
-Date: Fri, 2 Jan 2026 12:32:22 +0100
+	s=arc-20240116; t=1767353811; c=relaxed/simple;
+	bh=qYW2fr0EASe6j5jt/RMQovxpWx0lyPJUTq6TeaAySHU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sU8fLeFyf+Rac0ahUZQeNK1KGtbKUyWEJAi0iwZpeu3CS0xBbABAlUme3m9K/1hSrq1hw+sv+WqAkfoZkzmSIENB2RP3pMYCRUV5HEMXv7N2bCwp8l6Evj6rJWy9ztupnpPsy2hyWtkTxzvnCxV+f2mnF+aHFWpbtHSNwKBb0K0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.18.222])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 203E334134D;
+	Fri, 02 Jan 2026 11:36:48 +0000 (UTC)
+Date: Fri, 2 Jan 2026 19:36:43 +0800
+From: Yixun Lan <dlan@gentoo.org>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] gpio: spacemit: Add GPIO support for K3 SoC
+Message-ID: <20260102113643-GYA2060252@gentoo.org>
+References: <20251229-02-k3-gpio-v1-0-269e76785abb@gentoo.org>
+ <20251229-02-k3-gpio-v1-2-269e76785abb@gentoo.org>
+ <CAMRc=MfHzP+xm-uX+jad5gPOGDpR23O6mB+xcSvF6ZiZfnxQjg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 21/21] regulator: s2mps11: enable-gpios is optional on
- s2mpg1x
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Lee Jones <lee@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij <linusw@kernel.org>,
- Peter Griffin <peter.griffin@linaro.org>,
- Will McVicker <willmcvicker@google.com>, Juan Yescas <jyescas@google.com>,
- kernel-team@android.com, linux-kernel@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org
-References: <20251227-s2mpg1x-regulators-v5-0-0c04b360b4c9@linaro.org>
- <20251227-s2mpg1x-regulators-v5-21-0c04b360b4c9@linaro.org>
- <CAMRc=Meu6-5569rMcV0zf2V+Sz_QZgShoEhmhw41k6fczULcoA@mail.gmail.com>
- <4bfcb1420b9684f67bd4b8f583313c1a08a1616d.camel@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <4bfcb1420b9684f67bd4b8f583313c1a08a1616d.camel@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MfHzP+xm-uX+jad5gPOGDpR23O6mB+xcSvF6ZiZfnxQjg@mail.gmail.com>
 
-On 02/01/2026 12:26, André Draszik wrote:
-> On Fri, 2026-01-02 at 11:19 +0100, Bartosz Golaszewski wrote:
->> On Sat, Dec 27, 2025 at 1:24 PM André Draszik <andre.draszik@linaro.org> wrote:
->>>
->>> For s2mpg1x, enable-gpios is optional, but when not given, the driver
->>> is complaining quite verbosely about the missing property.
->>>
->>> Refactor the code slightly to avoid printing those messages to the
->>> kernel log in that case.
->>>
->>
->> I don't get the point of this - you added this function in the same
->> series, why can't it be done right the first time it's implemented?
+Hi Bart,
+
+On 12:10 Fri 02 Jan     , Bartosz Golaszewski wrote:
+> On Mon, Dec 29, 2025 at 1:47 PM Yixun Lan <dlan@gentoo.org> wrote:
+> >
+> > SpacemiT K3 SoC has changed gpio register layout while comparing
+> > with previous generation, the register offset and bank offset
+> > need to be adjusted, introduce a compatible data to extend the
+> > driver to support this.
+> >
+> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> > ---
+> >  drivers/gpio/gpio-spacemit-k1.c | 150 ++++++++++++++++++++++++++++------------
+> >  1 file changed, 106 insertions(+), 44 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-spacemit-k1.c b/drivers/gpio/gpio-spacemit-k1.c
+> > index eb66a15c002f..02cc5c11b617 100644
+> > --- a/drivers/gpio/gpio-spacemit-k1.c
+> > +++ b/drivers/gpio/gpio-spacemit-k1.c
+> > @@ -15,28 +15,19 @@
+> >  #include <linux/platform_device.h>
+> >  #include <linux/seq_file.h>
+> >
+> > -/* register offset */
+> > -#define SPACEMIT_GPLR          0x00 /* port level - R */
+> > -#define SPACEMIT_GPDR          0x0c /* port direction - R/W */
+> > -#define SPACEMIT_GPSR          0x18 /* port set - W */
+> > -#define SPACEMIT_GPCR          0x24 /* port clear - W */
+> > -#define SPACEMIT_GRER          0x30 /* port rising edge R/W */
+> > -#define SPACEMIT_GFER          0x3c /* port falling edge R/W */
+> > -#define SPACEMIT_GEDR          0x48 /* edge detect status - R/W1C */
+> > -#define SPACEMIT_GSDR          0x54 /* (set) direction - W */
+> > -#define SPACEMIT_GCDR          0x60 /* (clear) direction - W */
+> > -#define SPACEMIT_GSRER         0x6c /* (set) rising edge detect enable - W */
+> > -#define SPACEMIT_GCRER         0x78 /* (clear) rising edge detect enable - W */
+> > -#define SPACEMIT_GSFER         0x84 /* (set) falling edge detect enable - W */
+> > -#define SPACEMIT_GCFER         0x90 /* (clear) falling edge detect enable - W */
+> > -#define SPACEMIT_GAPMASK       0x9c /* interrupt mask , 0 disable, 1 enable - R/W */
+> > -
+> >  #define SPACEMIT_NR_BANKS              4
+> >  #define SPACEMIT_NR_GPIOS_PER_BANK     32
+> >
+> >  #define to_spacemit_gpio_bank(x) container_of((x), struct spacemit_gpio_bank, gc)
+> > +#define to_spacemit_gpio_regs(sg) ((sg)->data->reg_offsets)
+> >
+> >  struct spacemit_gpio;
+> > +struct spacemit_gpio_reg_offsets;
 > 
-> Sure, I can merge this patch into the refactoring patch 15 - the intention
-> was to have incremental changes to simplify review.
+> Why not move this structure here instead and avoid the forward declaration?
+> 
+sure, I will do
 
-When you add new code which is already wrong and you need to fix it in
-patch 21, it is not easier to review. Adding undesired code, which you
-immediately change, is making things difficult to review.
+> > +
+> > +struct spacemit_gpio_data {
+> > +       struct spacemit_gpio_reg_offsets *reg_offsets;
+> > +       u32 bank_offsets[4];
+> > +};
+> >
+> >  struct spacemit_gpio_bank {
+> >         struct gpio_generic_chip chip;
+> > @@ -49,9 +40,28 @@ struct spacemit_gpio_bank {
+> >
+> >  struct spacemit_gpio {
+> >         struct device *dev;
+> > +       const struct spacemit_gpio_data *data;
+> >         struct spacemit_gpio_bank sgb[SPACEMIT_NR_BANKS];
+> >  };
+> >
+> > +struct spacemit_gpio_reg_offsets {
+> > +       u32 gplr;      /* port level - R */
+> > +       u32 gpdr;      /* port direction - R/W */
+> > +       u32 gpsr;      /* port set - W */
+> > +       u32 gpcr;      /* port clear - W */
+> > +       u32 grer;      /* port rising edge R/W */
+> > +       u32 gfer;      /* port falling edge R/W */
+> > +       u32 gedr;      /* edge detect status - R/W1C */
+> > +       u32 gsdr;      /* (set) direction - W */
+> > +       u32 gcdr;      /* (clear) direction - W */
+> > +       u32 gsrer;     /* (set) rising edge detect enable - W */
+> > +       u32 gcrer;     /* (clear) rising edge detect enable - W */
+> > +       u32 gsfer;     /* (set) falling edge detect enable - W */
+> > +       u32 gcfer;     /* (clear) falling edge detect enable - W */
+> > +       u32 gapmask;   /* interrupt mask , 0 disable, 1 enable - R/W */
+> > +       u32 gcpmask;   /* interrupt mask for K3 */
+> > +};
+> > +
+> >  static u32 spacemit_gpio_bank_index(struct spacemit_gpio_bank *gb)
+> >  {
+> >         return (u32)(gb - gb->sg->sgb);
+> > @@ -60,13 +70,14 @@ static u32 spacemit_gpio_bank_index(struct spacemit_gpio_bank *gb)
+> >  static irqreturn_t spacemit_gpio_irq_handler(int irq, void *dev_id)
+> >  {
+> >         struct spacemit_gpio_bank *gb = dev_id;
+> > +       struct spacemit_gpio *sg = gb->sg;
+> >         unsigned long pending;
+> >         u32 n, gedr;
+> >
+> > -       gedr = readl(gb->base + SPACEMIT_GEDR);
+> > +       gedr = readl(gb->base + to_spacemit_gpio_regs(sg)->gedr);
+> 
+> Since you're already touching all these register accesses - can you
+> maybe provide dedicated wrapper functions around readl()/writel() and
+> avoid any file-wide changes in the future if anything requires further
+> modification?
+> 
+can you elaborate a bit further on this?
+I don't get how a wrapper helper could help to avoid file-wide changes..
 
-Best regards,
-Krzysztof
+-- 
+Yixun Lan (dlan)
 
