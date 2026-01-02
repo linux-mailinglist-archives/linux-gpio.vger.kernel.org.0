@@ -1,143 +1,123 @@
-Return-Path: <linux-gpio+bounces-30074-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30075-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF0E8CEE76B
-	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 13:12:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BA167CEE82E
+	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 13:23:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E9BE130222C2
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 12:10:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5DC5F30402FF
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 12:20:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F6BD30E83C;
-	Fri,  2 Jan 2026 12:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eIHHoUeO"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24FF930FC00;
+	Fri,  2 Jan 2026 12:20:55 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99312D24B4;
-	Fri,  2 Jan 2026 12:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2BD30F93F;
+	Fri,  2 Jan 2026 12:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767355858; cv=none; b=XwkcYmXXKZRyK4CJLpSvgdcu6SFX4ZOklTeEX/7iUDBBJSy0aX8DPJ7CdUW3KUSqsIrarH2mX1P+1lNdWTs8ycKY6oOQZZ7hnlmDkDahwFfB7DU9pg6v8gkvfuq2sXzlzl1aArhLT0DwajQKaMkAukXvPmVErgi7AKJKKjo5deY=
+	t=1767356454; cv=none; b=M1YCXLu8yNzslR8n5uHpNNag8z4G77oCYq/KkQCyWT/konYa3KpWRXpCSHLf225PpbLsqFwNNTIZnEGU6JH4XxQKVvrSRrnj5Ik9RNQUiZsyXr8K0xGvt8QXnZt0T/S3c2IOIH6p/pXNEZb8D2f3AteP+mzwavjSQVAxwkV7K7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767355858; c=relaxed/simple;
-	bh=JK7nSk0IJHSQlVpb8K07ZplJPjYnIqFLO73vpnXu68k=;
+	s=arc-20240116; t=1767356454; c=relaxed/simple;
+	bh=4Mdq6hZB0+/x5dVwQ7uZ67F5C7DJej573g6EGXHCG1o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N5vJcZau9IjSBZfH78xm6dDZPNq2iLaiSnAaONFkA/B83ozz8UVw2uvKJA/CFFMqP8eo/vq9ciIYnNnVoreQrNwDWK+0lSfXzQvqoc3kAILXp9k57Zeb6OVI6jC8u6wx//2znWof1aVtTWJSm9VsMc9/tqStw4ZbD6Mf6lxvP7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eIHHoUeO; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767355857; x=1798891857;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JK7nSk0IJHSQlVpb8K07ZplJPjYnIqFLO73vpnXu68k=;
-  b=eIHHoUeO9lWD/LWglPKdiWQHdyqY3z1YjWQWxNQJwb2FG2fITNSgvmui
-   KzgpdB4s/bUFosJJ7NzjwKfgB9wETs9d336TT6zvGwIcw7VUlwyCDCBRE
-   Bgo+ze+TA5TSFwGPiUsJWnPfxFaGL7kTRxI1N0q1WGkFuhj5Cg26OA6nt
-   HLaVD/LdsYXRIzIKstHZGY9NFeYAEuB/wb+ue3xVMgkKs7uBFJjJQ22lI
-   OT5a1KLACX1lej6m4A0yYeypbeN3BUjdnDSL3+1lPx3xGqBS1/0eJVv0R
-   6uIkgkZgwyW0Mv1MyFFLtLrzgwVsF8T+hulpLCD6D6HzX2ascrmu2MtQq
-   Q==;
-X-CSE-ConnectionGUID: XWuRJaJJSNWp8VyOUi/mDA==
-X-CSE-MsgGUID: fciQFgkaTSCtFoHWGz5PVA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11658"; a="68892446"
-X-IronPort-AV: E=Sophos;i="6.21,197,1763452800"; 
-   d="scan'208";a="68892446"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2026 04:10:52 -0800
-X-CSE-ConnectionGUID: hvj5HC3CRqWEugoZfoa00Q==
-X-CSE-MsgGUID: w9HVVgW+RQukI5+MQNiwjg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,197,1763452800"; 
-   d="scan'208";a="232500026"
-Received: from ncintean-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.46])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2026 04:10:50 -0800
-Date: Fri, 2 Jan 2026 14:10:47 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Javier Rodriguez <josejavier.rodriguez@duagon.com>
-Cc: linux-kernel@vger.kernel.org,
-	Jose Javier Rodriguez Barbarin <dev-josejavier.rodriguez@duagon.com>,
-	Jorge Sanjuan Garcia <dev-jorge.sanjuangarcia@duagon.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/5] gpio: gpio-menz127: drop unneeded MODULE_ALIAS
-Message-ID: <aVe1x3a_q4b6rSrX@smile.fi.intel.com>
-References: <20251230215928.62258-1-josejavier.rodriguez@duagon.com>
- <d0c53c64-37c6-46dc-8df4-7dcabda4a980.d621b331-3ed1-47f1-9d60-e41be6c9e787.6c4fe9b6-7521-4dba-9edc-dba43347acca@emailsignatures365.codetwo.com>
- <20251230215928.62258-2-josejavier.rodriguez@duagon.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=QWiFhQ80S4wckItSZ2HMusuCFFb+apSX1ijxvF8EerAkQaMwc4fQmp9qmzTwMEVBHoXn9ln5BZ1Nw/XYUfeeRMMsRKcMEPLnOH65Nk7vwj8wbJWD8AAFX0dHBafR3U+uuCol3I/I2jKTdBOAA5DPH7Nq4jNzwZIq9kkwAl4D2NU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.18.222])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id D5F8D341291;
+	Fri, 02 Jan 2026 12:20:50 +0000 (UTC)
+Date: Fri, 2 Jan 2026 20:20:45 +0800
+From: Yixun Lan <dlan@gentoo.org>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] gpio: spacemit: Add GPIO support for K3 SoC
+Message-ID: <20260102122045-GYA2060493@gentoo.org>
+References: <20251229-02-k3-gpio-v1-0-269e76785abb@gentoo.org>
+ <20251229-02-k3-gpio-v1-2-269e76785abb@gentoo.org>
+ <CAMRc=MfHzP+xm-uX+jad5gPOGDpR23O6mB+xcSvF6ZiZfnxQjg@mail.gmail.com>
+ <20260102113643-GYA2060252@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251230215928.62258-2-josejavier.rodriguez@duagon.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260102113643-GYA2060252@gentoo.org>
 
-On Tue, Dec 30, 2025 at 10:59:24PM +0100, Javier Rodriguez wrote:
->    From: Jose Javier Rodriguez Barbarin <dev-josejavier.rodriguez@duagon.com>
+Hi bart,
+
+On 19:36 Fri 02 Jan     , Yixun Lan wrote:
+> Hi Bart,
 > 
->    The MODULE_ALIAS() is redundant since the module alias is now
->    automatically generated from the MODULE_DEVICE_TABLE().
+> On 12:10 Fri 02 Jan     , Bartosz Golaszewski wrote:
+> > On Mon, Dec 29, 2025 at 1:47 PM Yixun Lan <dlan@gentoo.org> wrote:
+> > >
+> > > SpacemiT K3 SoC has changed gpio register layout while comparing
+> > > with previous generation, the register offset and bank offset
+> > > need to be adjusted, introduce a compatible data to extend the
+> > > driver to support this.
+> > >
+> > > Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> > > ---
+> > >  drivers/gpio/gpio-spacemit-k1.c | 150 ++++++++++++++++++++++++++++------------
+> > >  1 file changed, 106 insertions(+), 44 deletions(-)
+> > >
+> > > diff --git a/drivers/gpio/gpio-spacemit-k1.c b/drivers/gpio/gpio-spacemit-k1.c
+> > > index eb66a15c002f..02cc5c11b617 100644
+> > > --- a/drivers/gpio/gpio-spacemit-k1.c
+> > > +++ b/drivers/gpio/gpio-spacemit-k1.c
+> > > @@ -15,28 +15,19 @@
+> > >  #include <linux/platform_device.h>
+> > >  #include <linux/seq_file.h>
+> > >
+[snip]...
+> > >  static u32 spacemit_gpio_bank_index(struct spacemit_gpio_bank *gb)
+> > >  {
+> > >         return (u32)(gb - gb->sg->sgb);
+> > > @@ -60,13 +70,14 @@ static u32 spacemit_gpio_bank_index(struct spacemit_gpio_bank *gb)
+> > >  static irqreturn_t spacemit_gpio_irq_handler(int irq, void *dev_id)
+> > >  {
+> > >         struct spacemit_gpio_bank *gb = dev_id;
+> > > +       struct spacemit_gpio *sg = gb->sg;
+> > >         unsigned long pending;
+> > >         u32 n, gedr;
+> > >
+> > > -       gedr = readl(gb->base + SPACEMIT_GEDR);
+> > > +       gedr = readl(gb->base + to_spacemit_gpio_regs(sg)->gedr);
+> > 
+> > Since you're already touching all these register accesses - can you
+> > maybe provide dedicated wrapper functions around readl()/writel() and
+> > avoid any file-wide changes in the future if anything requires further
+> > modification?
+> > 
+> can you elaborate a bit further on this?
+> I don't get how a wrapper helper could help to avoid file-wide changes..
 > 
->    Remove the explicit alias.
-> 
->    No functional change intended.
+here is my attempt to solve this, define a macro to register address:
 
-The patch is mangled.
+#define to_spacemit_gpio_regs(gb) ((gb)->sg->data->reg_offsets)
 
->    Fixes: 1f4ea4838b13 ("mcb: Add missing modpost build support")
->    Reviewed-by: Jorge Sanjuan Garcia <dev-jorge.sanjuangarcia@duagon.com>
+#define SPACEMIT_GEDR(gb)      ((gb)->base + to_spacemit_gpio_regs(gb)->gedr)
 
->    Cc: Linus Walleij <linusw@kernel.org>
->    Cc: Bartosz Golaszewski <brgl@kernel.org>
->    Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
->    Cc: linux-gpio@vger.kernel.org
+	gedr = readl(SPACEMIT_GEDR(gb));
 
-Please, move the Cc: list after the '---' line...
-
->    Signed-off-by: Jose Javier Rodriguez Barbarin
->    <dev-josejavier.rodriguez@duagon.com>
->    ---
-
-...here. It will have the same effect on email, but will reduce a noise in the
-Git history.
-
-...
-
->    The information contained in this message is private and confidential, as
->    well as any enclosed document/file attached to it and is addressed
->    exclusively to its recipient. Please if you are not the intended recipient
->    and have received this message by mistake, notify us of this fact and
->    delete the message from your system. The copying, dissemination or
->    disclosure of its content to third parties without the prior written
->    consent of DUAGON IBERIA S.L. is forbidden. Otherwise, it will violate
->    current legislation. In accordance with Spanish Data Protection Law 3/2018
->    and the European Data Protection Regulation 2016/679, we remind you that
->    your data is processed by DUAGON IBERIA S.L.. You can freely exercise the
->    rights of access, opposition, rectification, cancellation or suppression,
->    revocation of consent, portability and limitation of data processing, by
->    contacting DUAGON IBERIA S.L., Ronda de Europa, 5. Tres Cantos. Madrid,
->    C.P. 28760. Spain.
-
-This is not compatible with the Open Source workflow. Please, make sure there
-is no footer in the next version.
-
-...
-
-Also, you missed a cover letter. Or send the patches separately as I don't see
-now any evidence of the cross patch dependency.
+please let me know if this follow your suggestion or not
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yixun Lan (dlan)
 
