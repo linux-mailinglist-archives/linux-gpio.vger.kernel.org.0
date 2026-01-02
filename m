@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-30062-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30063-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1849CEE480
-	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 12:11:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E1F1ECEE487
+	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 12:12:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1AA563008F8D
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 11:11:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ED564300519A
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 11:11:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BF222E228D;
-	Fri,  2 Jan 2026 11:11:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BBCB2D480F;
+	Fri,  2 Jan 2026 11:11:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eFgj7Y+4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cfcFMgTB"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCDF2620FC;
-	Fri,  2 Jan 2026 11:11:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26A62DECB1;
+	Fri,  2 Jan 2026 11:11:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767352265; cv=none; b=Op2LcYoFaTDUH2ZneiHh0iWER37OPoXy5VhQFt7w8hdC0QsHvR57z6/FgyLLW35UIwR/f+2n7rTVnwT1uKXnex4LoE6iPy/g7xtvD7sHGogPysq3WG+JgoxstX8GjMzS2nhzavxjls9dMMKGlC0uyvWZRsMWVsb37EOmitoIM2c=
+	t=1767352314; cv=none; b=hea8EjtrwUxiKQLJwpBESmLR7eXWz68tOcs3NTf9hX58C/tk6bc9siN8TTr1r5huhpXwkusbWLbQJqShMiC+x1Vpsa7W24lqt7mzs26weSL9aqJ3ak5/v5jvYSTM9crjF3sZVP/z0maieHOQKDZ64y/8cpQNsNMp+9bcRTtQ+Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767352265; c=relaxed/simple;
-	bh=dkjzjZd16Blz9ZKipiLDZzZfb2FyFwPvCZwnjotlRTQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IHQ53/i+scJQLhueHAAyD4WjFGj7vkknSoolwWZZSesJERbrPswCoAmDoi0ZqYEIMH8V8BHnNoumQO8ZoImGwgjEfGzjha4xHxibhFyUp9D/zXit16rgBquv2nFwsdWihet/Y9tUEGxpnIQ4xeHzUvh8jbOkM0vXahOx66S0j+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eFgj7Y+4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8D84C116B1;
-	Fri,  2 Jan 2026 11:11:01 +0000 (UTC)
+	s=arc-20240116; t=1767352314; c=relaxed/simple;
+	bh=42wbbdTAXRWWe5rBJOMa4OS71wTnCN045GEeI3fs0WQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=TYB3aBPUokeHegT+J+q3ahEzfk+BKptzuMW0e6YSYK/R1C5h2lSehL/CgNmNxYtdPeWOTxEcQ967YDmZ1G6C8yJGmCpHsS3/INYMi7UMY3XGL4XC/yeoYFKmi1a3xUGgiX4gAg44m/l5/VMxFCh+QtPli3CKHKrKnOl+h+o/tXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cfcFMgTB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A920C116B1;
+	Fri,  2 Jan 2026 11:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767352264;
-	bh=dkjzjZd16Blz9ZKipiLDZzZfb2FyFwPvCZwnjotlRTQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eFgj7Y+4zroavaKTh12v7WWILLlLHmwLRhvVgU4R7lhxnBdjFsqCNjbaHF0PzG3aj
-	 ZBY1wx2tGByoGRt3QRisYAIzmyTiRiLw8XiaM6TkEQ+bsJ2VbNeNpGbSm3GWZh3Msj
-	 y8cIAF+7mWFlqLbWI0GnXEtXCfRwvVl7dFi4Q1M/ll/hjI1nEUMsDICe9ckEzAGdXL
-	 HnA5dOBlOdFXTKCMJMnMbjB3eap3LS7s/Sh0v+S7YW9JERqrklmydyMJoe2sZ9r7T+
-	 O3RuKeKL/VuxHmraDt+kNvnHvd1XTHtF0jSYqpkY0vxtqrQ43WiBtnENmqP0wLkheC
-	 4M99ROe37Fqeg==
-Message-ID: <7e25da82-6a26-4ade-9247-1bb7abd5615c@kernel.org>
-Date: Fri, 2 Jan 2026 12:10:59 +0100
+	s=k20201202; t=1767352314;
+	bh=42wbbdTAXRWWe5rBJOMa4OS71wTnCN045GEeI3fs0WQ=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=cfcFMgTBa51WLM/pdykE83YqJ1wuc3tjgul4JQZ0zIW7lDGopZ/T6Bq/LeSYXACPm
+	 6hXJIaDeYxQ5vARneogeNWqX6eEP4yRhgGvIZGByAzIQChutebN7gNuwTOK2bUCRM7
+	 Tl5nx3yypBMudW2T++A+BT/IMr+CpsQkAFXryMKdBzMkKD0ixkXA+snvP9Ke57Opx1
+	 DWkqKQdJtcBkM14tFB1aZvf1bXprgu3EEL1yprtDE6kPn2fMkGC8hEylZ3LNNhaNxK
+	 CDGn2uETd7pq0F/kAAo2ONIYuWAJJ+RScUtO+8gr2cimwQS64zCfw3XS5O2TwSOxVr
+	 wtdSDyIikmjOA==
+Message-ID: <4db1c69d-2b0f-4e87-9704-d061ecd3d81f@kernel.org>
+Date: Fri, 2 Jan 2026 12:11:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -49,6 +49,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Add Mahua TLMM support
+From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Gopikrishna Garmidi <gopikrishna.garmidi@oss.qualcomm.com>,
  Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linusw@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -61,7 +62,7 @@ Cc: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20260102-pinctrl-qcom-mahua-tlmm-v1-0-0edd71af08b2@oss.qualcomm.com>
  <20260102-pinctrl-qcom-mahua-tlmm-v1-1-0edd71af08b2@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <7e25da82-6a26-4ade-9247-1bb7abd5615c@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -106,26 +107,31 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260102-pinctrl-qcom-mahua-tlmm-v1-1-0edd71af08b2@oss.qualcomm.com>
+In-Reply-To: <7e25da82-6a26-4ade-9247-1bb7abd5615c@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 02/01/2026 12:07, Gopikrishna Garmidi wrote:
-> Update the compatible property to accept both "qcom,glymur-tlmm" and
-> "qcom,mahua-tlmm" using enum to allow proper device tree validation
-> for both SoCs.
+On 02/01/2026 12:10, Krzysztof Kozlowski wrote:
+> On 02/01/2026 12:07, Gopikrishna Garmidi wrote:
+>> Update the compatible property to accept both "qcom,glymur-tlmm" and
+>> "qcom,mahua-tlmm" using enum to allow proper device tree validation
+>> for both SoCs.
+> 
+> 1. Why? You explained what, with a lot of redundant words. I do not find
+> "paid by commit line" useful. Drop all the redundancies, do not explain
+> what is "device tree validation". Look at other commits to learn how
+> this is supposed to be written.
+> 
+> 2. Why they are not compatible? You have entire commit msg to say
+> something useful instead stating obvious and repeating the diff.
+> 
+> 3. Subject: You cannot add "support" in the binding. Again, look at
+> other commits.
 
-1. Why? You explained what, with a lot of redundant words. I do not find
-"paid by commit line" useful. Drop all the redundancies, do not explain
-what is "device tree validation". Look at other commits to learn how
-this is supposed to be written.
 
-2. Why they are not compatible? You have entire commit msg to say
-something useful instead stating obvious and repeating the diff.
-
-3. Subject: You cannot add "support" in the binding. Again, look at
-other commits.
-
+AND I give you this feedback 4 minutes AFTER you sent your patches, so
+you can stop now and fix the same issues for all your future and your
+team's future Mahua patches.
 
 Best regards,
 Krzysztof
