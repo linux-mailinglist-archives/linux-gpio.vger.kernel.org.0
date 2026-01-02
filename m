@@ -1,96 +1,119 @@
-Return-Path: <linux-gpio+bounces-30072-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30073-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5F14CEE637
-	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 12:39:42 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AAF5CEE735
+	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 13:04:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5C9863006F69
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 11:39:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 39AE83014585
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 12:04:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 224F62F5308;
-	Fri,  2 Jan 2026 11:39:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F00FE30EF6B;
+	Fri,  2 Jan 2026 12:04:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jlmdF7l4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SfnBg3z6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C492F0C68;
-	Fri,  2 Jan 2026 11:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00702F0C74
+	for <linux-gpio@vger.kernel.org>; Fri,  2 Jan 2026 12:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767353979; cv=none; b=CjZQKD8agJ5MMsaJ5Jjw2JaIEAB4seA6FHQQcjq2lXaeT0CeXIIqkVHwd5k/R3mlG+OYxPEUROjQ/hhaL12kmQlBttnq1CMXeIivpMhFLNpUr5/y9xBBgFjV7mVqtAzTKULzTwlcO1u2OiWHkWwVtE7vOeyJIS3tFv5koPcY/2g=
+	t=1767355470; cv=none; b=R1NrZGMcgqG7I+worxMiVb87QKMb7+svfOhLvV9I20MXEHy+k/Ng+NWuFJa+05WBJZckVXeFgmRB5Y9heTfoV91MnD5t+ApN8EiG9Us4M5CG47Qfgfdj2rJ0ueNjq+1VOb7ujw2zp9OV2udqrhAy30OTmJgt/ytQQCLenL2VYfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767353979; c=relaxed/simple;
-	bh=V+mvrspCEr1ENDWePx7PDCH5nlDayDVhNhZiHlQO9j4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MOKL5Y2n9iovFquEsmz3kF4dy4m66OHVTRfonrZOkX+q9OtsZQXfwMCgvpbwaxEubP6v4R7uAVeLkg/fr/3RK3VT2r+3LA9dUB1b7CpxgJ89nFEBc0VYsepp848wkaVJGAo/yxHUvgUWLEaIxVGkyx/cA42YOipxdK+QeVeySgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jlmdF7l4; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767353978; x=1798889978;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=V+mvrspCEr1ENDWePx7PDCH5nlDayDVhNhZiHlQO9j4=;
-  b=jlmdF7l4epHcHOOu0cRRASUbjALmv6M3CDhwSkh+/EHaQoN09Mlg1ytK
-   +EWpC2UskQZ0CFIjF0c27A7zFQtI7dV9TgyC92MhcEmcR1Q8ZYq00/Kpo
-   ejNlxbNxL5bUaQ3aIvtlScrDUPuXyMetSOrONEYi1hLL1wJhpa3mAhjMK
-   yAVgnNDFqMfSy2U9WlAyR/qlwPeaRTO+ybeJsrbIZ6HV8WPFCagMuKttr
-   UAoDCuoPC+1UUaMHDLysLTxx3jTTWtUFKJ133gwKGAHrdriAcQ1QU8C/v
-   JvuNz51/gg4lFacb4YhsNx9CJIdVP8cXPPAvLchK6d2FzSpvagFqRUaLh
-   w==;
-X-CSE-ConnectionGUID: l9tztG+WTHW1H3fP4h/7HQ==
-X-CSE-MsgGUID: /qSH4/nDQk2ce5xKypep5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11658"; a="68044563"
-X-IronPort-AV: E=Sophos;i="6.21,197,1763452800"; 
-   d="scan'208";a="68044563"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2026 03:39:37 -0800
-X-CSE-ConnectionGUID: X/omDzugRRytI/p+4hZ+8Q==
-X-CSE-MsgGUID: 2kplrY42TluwkgHPpb3/BA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,197,1763452800"; 
-   d="scan'208";a="201431537"
-Received: from ncintean-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.46])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2026 03:39:35 -0800
-Date: Fri, 2 Jan 2026 13:39:33 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: swnode: restore the name of the undefined software
- node
-Message-ID: <aVeudcz_Am5VDQHT@smile.fi.intel.com>
-References: <20260102093349.17822-1-bartosz.golaszewski@oss.qualcomm.com>
+	s=arc-20240116; t=1767355470; c=relaxed/simple;
+	bh=59k3WvNfbtsHGqp3wrH4jG/zkpNkZY4RPujBPr3N4Ec=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=po0+dGHwIH3t+iCO06bKoMA6uG5OXZBGCyXi4K8Y9L1c8YqKt4EPkRMI75hdPJX1GlpXCuZkeleNBA4kLgBO9B9YxypH24HtBuC8yA22UTOJ474na/E+TcbUgBLYbm42DMJ6/HuMdeZmYUmRM4lErDamHRebbuwFyaS/mZulhhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SfnBg3z6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E20CC116B1
+	for <linux-gpio@vger.kernel.org>; Fri,  2 Jan 2026 12:04:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767355470;
+	bh=59k3WvNfbtsHGqp3wrH4jG/zkpNkZY4RPujBPr3N4Ec=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
+	b=SfnBg3z6JXiRoZflPmOVGUHFuruFYuiE+zkZrLeS0AEQTeec4jgW+4ZJJziClTTQE
+	 tXZ8fJVnTWbUb/KXHS+l5x8LEQF5LKb9u5iQRQqZgLXMtp7cyTk8GQKj6+Phfmy1wA
+	 2Lx0oLJf4/0Cd//JpD7TwLulUvSEWolWSBZJMFveLSX30K5lfjQ2fIoIVgW/ToD3NX
+	 UMeVez8z4WOgOi7b3n/tFCiRsH0y+xZr3Sap6cH0I+19WMv7KyWW9eJMHjq9Xnr/V4
+	 bVxKz8oG+2sJVFGs1VETgutBH2D8fJlYRWeUwSQpbQPxhBG80r2sYtRPNnntR7wyrf
+	 9DFt5+7ZqJh2A==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-37cd7f9de7cso101092731fa.1
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Jan 2026 04:04:30 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVUapjNLmcgtMVO6pU4eSMCNGCAh9A4DIXTObq/jzdi8uA5YDfu13REa3ZVwbrVkKP5h6hRsEaGoozA@vger.kernel.org
+X-Gm-Message-State: AOJu0YysacgblLRlwAAAfDHtuV8k312jkJSwcV+7YjJWzP9x+KQ+GKMU
+	ePzhCNSG8PD6FI3xNY1N7VqDuyPALn2kKx+OZ7/OzTkGaMvMNB8bXO8D74mltVDSwnkh59fNjdk
+	VnTQg4JfK+tO4XpevBbw+YsCcM2gTA+NHPY61zU593w==
+X-Google-Smtp-Source: AGHT+IFUiX6/gBsxHBbe8XiBBJNLN4AHx3ry+rnXue2rQrXSZAdwUQSv/gaC9bW4w7uNTZPy0KYDhnlDKOZnmPqAmek=
+X-Received: by 2002:a05:651c:241:b0:37a:84e5:a1cc with SMTP id
+ 38308e7fff4ca-381216b59b9mr125204291fa.22.1767355469012; Fri, 02 Jan 2026
+ 04:04:29 -0800 (PST)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 2 Jan 2026 12:04:27 +0000
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 2 Jan 2026 12:04:27 +0000
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260102113643-GYA2060252@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260102093349.17822-1-bartosz.golaszewski@oss.qualcomm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20251229-02-k3-gpio-v1-0-269e76785abb@gentoo.org>
+ <20251229-02-k3-gpio-v1-2-269e76785abb@gentoo.org> <CAMRc=MfHzP+xm-uX+jad5gPOGDpR23O6mB+xcSvF6ZiZfnxQjg@mail.gmail.com>
+ <20260102113643-GYA2060252@gentoo.org>
+Date: Fri, 2 Jan 2026 12:04:27 +0000
+X-Gmail-Original-Message-ID: <CAMRc=MeHbod4CaUX7aff_guK531dwyoYhqPOP0rP=i9ydAKmmg@mail.gmail.com>
+X-Gm-Features: AQt7F2rbDr8PJDI60jTnbkM-CN_H7pZqQh59NrJ8eglG_7JODhy0DFRdFCZvpcI
+Message-ID: <CAMRc=MeHbod4CaUX7aff_guK531dwyoYhqPOP0rP=i9ydAKmmg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: spacemit: Add GPIO support for K3 SoC
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jan 02, 2026 at 10:33:49AM +0100, Bartosz Golaszewski wrote:
-> Commit 6774a66d0e10 ("gpio: swnode: compare the "undefined" swnode by
-> its address, not name") switched to comparing the software nodes by
-> address instead of names but it's still useful to keep the name of the
-> node to expose the relevant information over sysfs. Restore the
-> human-readable name.
+On Fri, 2 Jan 2026 12:36:43 +0100, Yixun Lan <dlan@gentoo.org> said:
+>
+>> >  static u32 spacemit_gpio_bank_index(struct spacemit_gpio_bank *gb)
+>> >  {
+>> >         return (u32)(gb - gb->sg->sgb);
+>> > @@ -60,13 +70,14 @@ static u32 spacemit_gpio_bank_index(struct spacemit_gpio_bank *gb)
+>> >  static irqreturn_t spacemit_gpio_irq_handler(int irq, void *dev_id)
+>> >  {
+>> >         struct spacemit_gpio_bank *gb = dev_id;
+>> > +       struct spacemit_gpio *sg = gb->sg;
+>> >         unsigned long pending;
+>> >         u32 n, gedr;
+>> >
+>> > -       gedr = readl(gb->base + SPACEMIT_GEDR);
+>> > +       gedr = readl(gb->base + to_spacemit_gpio_regs(sg)->gedr);
+>>
+>> Since you're already touching all these register accesses - can you
+>> maybe provide dedicated wrapper functions around readl()/writel() and
+>> avoid any file-wide changes in the future if anything requires further
+>> modification?
+>>
+> can you elaborate a bit further on this?
+> I don't get how a wrapper helper could help to avoid file-wide changes..
+>
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Just create functions called "spacemit_gpio_read/write()" that wrap the
+readl()/writel() and its arguments.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Like:
 
+static u32 spacemit_gpio_read(struct spacemit_gpio_bank *gb, unsigned long reg)
+{
+	return readl(gb->base + func_to_convert_reg_enum_to_offset(reg));
+}
 
+Looks cleaner at call sites even if it's a bit more complex. Just create an
+array mapping the register enum to offset and assign it to platform data.
+
+Bart
 
