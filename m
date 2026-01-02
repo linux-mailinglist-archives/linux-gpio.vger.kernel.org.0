@@ -1,177 +1,156 @@
-Return-Path: <linux-gpio+bounces-30081-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30082-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00E37CEEAF4
-	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 14:38:20 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C034ECEEDE2
+	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 16:27:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CF0033013545
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 13:38:17 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C4BB330094B4
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 15:27:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6E631FC101;
-	Fri,  2 Jan 2026 13:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CB1526A08A;
+	Fri,  2 Jan 2026 15:27:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CZJoR2dh"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VlFGiiQg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61B9242D62
-	for <linux-gpio@vger.kernel.org>; Fri,  2 Jan 2026 13:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8393D26D4EF;
+	Fri,  2 Jan 2026 15:27:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767361095; cv=none; b=sOFn9GXO/HWsgAUCz5G3tPkCQrPkhHxSHcFIjeaKFZ6AJBwSBqkMZ63L8LSIng0ClbIDd32kZusTPeO/0NLHuQ0Twd2XQajMmOBA4CO/UWd+uPsdVjP5LKBp1CIj3gKbcKe89GPIN0+ZmDAU2pBq72174y1Z/6+ubfAy360cdTg=
+	t=1767367671; cv=none; b=D94xRkL44mV0q5Tnx+3KYcl//VTztDzUxt9OIqtj0N1qyf9RqIywf6/epZJKWAEqzKUW/Xr+bVtycPWtQQGqRsr6qJvlFWRaxfwSDG+qPDuxcTMJwOKnxZH71ROwHM6GXJaPT41i0YpwSYvA5YaYob0olJMVKzqM9ZcKqHSggd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767361095; c=relaxed/simple;
-	bh=gq+78Fh/gPAKqoWALmYCs3Wq8SZnDyUWpmAJ14Lfa9M=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tBgNSJZjbT9n2Q0egrIfA5l8nhUj3hYpcrgJQyLX6JxTSg8YvAuBSYOeqce0w6wtRQn5RZWQ0rspESdOxf5nFede0g+mNvIEsY2lyhMWl6tOqOGHVfXFb86quPqHqxqzMGKhzUCJds7HEmedE0eITXHF4Rfda6Qzs07g6OuIVZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CZJoR2dh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 548AAC4AF09
-	for <linux-gpio@vger.kernel.org>; Fri,  2 Jan 2026 13:38:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767361095;
-	bh=gq+78Fh/gPAKqoWALmYCs3Wq8SZnDyUWpmAJ14Lfa9M=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=CZJoR2dhd3AvgA42ulIUoDPndc0HhGe2/B0lTkgiorXqXwGPvO1J46zmiD1zATfEF
-	 JnmANo/5dpSiK3Ipj//Et47GbCRIWLhKHUXdVMoczQjHSD/IdwILNB0xe4tkulTAW2
-	 FCpsVjHYIAfjAx98lQDVVuW8NwT6GtA5nWfR2n4HAeyp9bExaiEfmip/JdYPyZdhnO
-	 sYJ0Ig/x5ENnJhEkBxB84BnjAhC3etu+UG926KsZFhBwBEuNxAUrb3aylZTZ4MjypU
-	 eU2UB2dOYatljrVaJY7Asy1Wj4avkc8/532VIn0yaz4gQ4Q2oGLTz6+0GTQ9OJCf1Q
-	 HYRrk9xTRpZVA==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-37b97e59520so105043301fa.2
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Jan 2026 05:38:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWl7tCukvFXL27XIfFpviIjzniyiuwmCLQa3SkpjQcYm0zXKQM7Mt0dgjuPy4/wnGacwd2qZHxxrjm7@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUpTfD+TuwnMXKmv3msM4Sutq0ZKQVNefTtG2fAqwc0Qd4z2JL
-	YABnXbDP1vjTnMhE4S6/XDbLVnxdRaP85HZtH+QzH+BQyQIrm6FzySZguOIC+JDKsIqHoZDQx+u
-	fi29Rg+ViOyCvG2WdTYEaKLwomtQzS8SMxJNPj3fo/g==
-X-Google-Smtp-Source: AGHT+IGuDMXwA23bDwSJce/Vd9d45irhKXefXohA/Hh2xht/kdpdJ9akMojcELSe93u+/GpGxclkCRihGnFWklcOYY8=
-X-Received: by 2002:a2e:bc18:0:b0:37b:a32b:ed41 with SMTP id
- 38308e7fff4ca-381215c5edemr119052751fa.18.1767361093846; Fri, 02 Jan 2026
- 05:38:13 -0800 (PST)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 2 Jan 2026 08:38:12 -0500
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 2 Jan 2026 08:38:12 -0500
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260102122045-GYA2060493@gentoo.org>
+	s=arc-20240116; t=1767367671; c=relaxed/simple;
+	bh=SS2yV2DafXZ82Hx7kPgx/KxsyZ2YqKWv5FrorUnyBug=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jvrjyuTF53b3cMHqRFZ0Aqygnh8DyaU5FKk/NUSGM19eos3nEiKrNXl2Xz2pkvIy71GhGHwHj1Ofc2E/2fXxXpY1uIZsCW/HhlA+FgPSfj9HBz7W+nR+9uZCAnlYSap7ChMRZFZeQ66EolJukxtcLyfyow9yT+Gf2WOHQkBNT7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VlFGiiQg; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 0DC53C1C3B6;
+	Fri,  2 Jan 2026 15:27:15 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id C6D1E606C7;
+	Fri,  2 Jan 2026 15:27:40 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id F036B113B0726;
+	Fri,  2 Jan 2026 16:27:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1767367659; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=XPS1mjvtZ+X94jm0JM9hHsjy2dgTByBQDp6LZfgUsSQ=;
+	b=VlFGiiQgyp4A1jr1xVk3EEGB85uX0RicBd+tpt6aBlXBJJU5VZFGs6HfjTaleC9IT9dWb7
+	jX6NkeMB0LJLHzQIrrQS4yM/1qqtyr/87Df1aMhUdLNwOZQkkcF2jM5DpztcXTVufyhI+5
+	2Tej944Nisw1cu2YXgteKsF2Q2UVlw5UHguPe8eFMuK5sPihb0Wm956X0UgjYfX3Pb33iP
+	sjtJ793m1Ixv9v8AeNS0VbMTUo9LGpXn2u67apY/pOeHcOD8CYKNTXq5sApIopOPQOBmuH
+	0C/zIB3QNzw2rWSJJWf4923tCBNJf6D0IXuXmSuTTGxCMo1Kdf/co5qh64vJHQ==
+From: =?UTF-8?B?QmVub8OudA==?= Monin <benoit.monin@bootlin.com>
+To: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+ Linus Walleij <linusw@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+ Gregory CLEMENT <gregory.clement@bootlin.com>,
+ =?UTF-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-mips@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 11/13] MIPS: Add Mobileye EyeQ6Lplus evaluation board dts
+Date: Fri, 02 Jan 2026 16:27:34 +0100
+Message-ID: <2775216.vuYhMxLoTh@benoit.monin>
+In-Reply-To:
+ <CAD++jL=7eU+jSHn0t2KKzHjipXYKoQreOdaHH8OcyriPmwHJQw@mail.gmail.com>
+References:
+ <20251217-eyeq6lplus-v1-0-e9cdbd3af4c2@bootlin.com>
+ <fe9e594f-9718-48b5-8208-fb567a54cae9@bootlin.com>
+ <CAD++jL=7eU+jSHn0t2KKzHjipXYKoQreOdaHH8OcyriPmwHJQw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251229-02-k3-gpio-v1-0-269e76785abb@gentoo.org>
- <20251229-02-k3-gpio-v1-2-269e76785abb@gentoo.org> <CAMRc=MfHzP+xm-uX+jad5gPOGDpR23O6mB+xcSvF6ZiZfnxQjg@mail.gmail.com>
- <20260102113643-GYA2060252@gentoo.org> <20260102122045-GYA2060493@gentoo.org>
-Date: Fri, 2 Jan 2026 08:38:12 -0500
-X-Gmail-Original-Message-ID: <CAMRc=Meq8T_HJwDvf3wm5W2+ZFuHezGjqQx6sj-6HNJhThKjhg@mail.gmail.com>
-X-Gm-Features: AQt7F2qd6dFpn0yYdBOT3j_jTKwwJxkbKKmPhd6nOCJ-bhAWcdN7_KfX3YW0ch8
-Message-ID: <CAMRc=Meq8T_HJwDvf3wm5W2+ZFuHezGjqQx6sj-6HNJhThKjhg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: spacemit: Add GPIO support for K3 SoC
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Bartosz Golaszewski <brgl@kernel.org>, Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Fri, 2 Jan 2026 13:20:45 +0100, Yixun Lan <dlan@gentoo.org> said:
-> Hi bart,
->
-> On 19:36 Fri 02 Jan     , Yixun Lan wrote:
->> Hi Bart,
->>
->> On 12:10 Fri 02 Jan     , Bartosz Golaszewski wrote:
->> > On Mon, Dec 29, 2025 at 1:47=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wr=
-ote:
->> > >
->> > > SpacemiT K3 SoC has changed gpio register layout while comparing
->> > > with previous generation, the register offset and bank offset
->> > > need to be adjusted, introduce a compatible data to extend the
->> > > driver to support this.
->> > >
->> > > Signed-off-by: Yixun Lan <dlan@gentoo.org>
->> > > ---
->> > >  drivers/gpio/gpio-spacemit-k1.c | 150 ++++++++++++++++++++++++++++-=
------------
->> > >  1 file changed, 106 insertions(+), 44 deletions(-)
->> > >
->> > > diff --git a/drivers/gpio/gpio-spacemit-k1.c b/drivers/gpio/gpio-spa=
-cemit-k1.c
->> > > index eb66a15c002f..02cc5c11b617 100644
->> > > --- a/drivers/gpio/gpio-spacemit-k1.c
->> > > +++ b/drivers/gpio/gpio-spacemit-k1.c
->> > > @@ -15,28 +15,19 @@
->> > >  #include <linux/platform_device.h>
->> > >  #include <linux/seq_file.h>
->> > >
-> [snip]...
->> > >  static u32 spacemit_gpio_bank_index(struct spacemit_gpio_bank *gb)
->> > >  {
->> > >         return (u32)(gb - gb->sg->sgb);
->> > > @@ -60,13 +70,14 @@ static u32 spacemit_gpio_bank_index(struct space=
-mit_gpio_bank *gb)
->> > >  static irqreturn_t spacemit_gpio_irq_handler(int irq, void *dev_id)
->> > >  {
->> > >         struct spacemit_gpio_bank *gb =3D dev_id;
->> > > +       struct spacemit_gpio *sg =3D gb->sg;
->> > >         unsigned long pending;
->> > >         u32 n, gedr;
->> > >
->> > > -       gedr =3D readl(gb->base + SPACEMIT_GEDR);
->> > > +       gedr =3D readl(gb->base + to_spacemit_gpio_regs(sg)->gedr);
->> >
->> > Since you're already touching all these register accesses - can you
->> > maybe provide dedicated wrapper functions around readl()/writel() and
->> > avoid any file-wide changes in the future if anything requires further
->> > modification?
->> >
->> can you elaborate a bit further on this?
->> I don't get how a wrapper helper could help to avoid file-wide changes..
->>
-> here is my attempt to solve this, define a macro to register address:
->
-> #define to_spacemit_gpio_regs(gb) ((gb)->sg->data->reg_offsets)
->
-> #define SPACEMIT_GEDR(gb)      ((gb)->base + to_spacemit_gpio_regs(gb)->g=
-edr)
->
-> 	gedr =3D readl(SPACEMIT_GEDR(gb));
->
-> please let me know if this follow your suggestion or not
->
-> --
-> Yixun Lan (dlan)
->
+Hi Linus,
 
-I was thinking more of something like this:
+On Thursday, 1 January 2026 at 23:42:36 CET, Linus Walleij wrote:
+> On Fri, Dec 19, 2025 at 4:57=E2=80=AFPM Beno=C3=AEt Monin <benoit.monin@b=
+ootlin.com> wrote:
+>=20
+> > In my particular case of a microcontroller acting as an SPI "relay" on =
+the
+> > evaluation board, what would be the best way to describe it? It connects
+> > the two SPI controllers of the SoC, one is a host and one is a target, =
+so
+> > it behave as an SPI target on one side and as an SPI host on the other.
+> >
+> > The trivial devices bindings seems to be dedicated to devices, thus not=
+ for
+> > SPI hosts. Do I need a dedicated binding or did I miss something I could
+> > use for a trivial spidev slave?
+>=20
+> That needs to be detailed and discussed with the SPI maintainer on the SPI
+> devel list. (Added.)
+>=20
+> Can you illustrate with a picture or so what is going on here?
+>=20
+> Yours,
+> Linus Walleij
+>=20
+Here is what it looks like on the evaluation board of the EyeQ6Lplus:
 
-enum spacemit_gpio_registers {
-	SPACEMIT_GPLR,
-	SPACEMIT_GPDR,
-	...
-};
+    +------------------------+          +------------------------+
+    | EyeQ6Lplus SoC         |          | Evaluation board MCU   |
+    |                        |          |                        |
+    |           +------------+          +------------+           |
+    |           | SPI host   |          | SPI target |           |
+    |           |            |          |            |           |
+    |           |        CLK >----------> CLK        |           |
+    |           |        SDO >----------> SDI        |           |
+    |           |        SDI <----------< SDO        |=C2=B7=C2=B7=C2=B7=C2=
+=B7=C2=B7      |
+    |           |        CS0 >----------> CS         |    =C2=B7      |
+    |           +------------+          +------------+    =C2=B7      |
+    |                        |          |                 =C2=B7 (1)  |
+    |           +------------+          +------------+    =C2=B7      |
+    |           | SPI target |          | SPI host   |    =C2=B7      |
+    |           |            |          |            |<=C2=B7=C2=B7=C2=B7=
+=C2=B7      |
+    |           |        CLK <----------< CLK        |           |
+    |           |        SDI <----------< SDO        |           |
+    |           |        SDO >----------> SDI        |           |
+    |           |        CS  <----------< CS0        |           |
+    |           +------------+          +------------+           |
+    |                        |          |                        |
+    +------------------------+          +------------------------+
 
-static const unsigned int spacemit_gpio_k1_offsets =3D {
-	[SPACEMIT_GPLR] =3D 0x00,
-	[SPACEMIT_GPDR] =3D 0x0c,
-	...
-};
+(1): The MCU, when the chip select is asserted on its SPI target, starts
+     a transaction on its SPI host side. It then copies data received by
+     the target side to the host side.
 
-static const unsigned int spacemit_gpio_k3_offsets =3D ...
+With the spidev entries in the device tree, it is used to test that SPI
+of the SoC is working with `spidev_test`. So the MCU is part of the test
+harness found on the evaluation board.
 
-struct spacemit_gpio_data {
-	const unsigned int *offsets;
-	u32 bank_offsets[4];
-};
+If the SPI signals of the SoC had been routed to a header, we could do the
+same test with jumper wires, directly connecting the host and the target.
 
-static void spacemit_gpio_write(struct spacemit_gpio_bank *gb,
-				enum spacemit_gpio_registers reg, u32 val)
-{
-	writel(val, gb->base + gb->data->offsets[reg]);
-}
+Best regards,
+=2D-=20
+Beno=C3=AEt Monin, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Bart
+
+
 
