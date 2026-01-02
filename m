@@ -1,109 +1,90 @@
-Return-Path: <linux-gpio+bounces-30086-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30087-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6D52CEF672
-	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 23:05:14 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C1BCCEF6A9
+	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 23:22:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id ECBF63020CDA
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 22:03:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C7B6F3016357
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 22:21:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 154F82D8379;
-	Fri,  2 Jan 2026 22:03:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B58812D877E;
+	Fri,  2 Jan 2026 22:21:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Oiqxx2qF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eWZIKhNz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02DD3597B;
-	Fri,  2 Jan 2026 22:03:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63514277037;
+	Fri,  2 Jan 2026 22:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767391412; cv=none; b=uj1aCy26vU/TqO6ADlton/VDpS1/tOvx5amdKMfpCzPA9g4Q162uEYhty1PZ6xbeanSM2ixttwvR11xmS0GSBSPu2zzVQV2iD84I4cMQQ+KSj/4GCdlH5/ZxT9aqfLSsXFIdxw11Kgy/zM4FkAS6GnYICAuy0ecH3Y65U0sFDuE=
+	t=1767392514; cv=none; b=EVm3/9oQmwdODy2w4zDjg0Iinxjx+1ZUsX9R226loxt6hFviK75kMm4jHSe+vK5Bcl3UNqdIiKeFYz4da+B4ZqG5ynSIdYt1hpKqkHI9XulwatKdDn1WQyaX68iTdnTEdJwd7zQIbFOpzVvNNnsin0jW3F4YtbYCX+gxic96Oz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767391412; c=relaxed/simple;
-	bh=3IttiT3Nu4XseUo8hCXiX7c/hNKsQtyXN94ILpvt1Jg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BUZgJrIn1bYa+XtTbpnCgbUT2cVJ1lRrR+QhBpjHRLxU4UYIg6wK9HIrmlhZJjEKbcFtEsdV/kx58ONhuvhCc4zMnUIkpr+FmeSzrURRARW1ev/FTXslxHqYs/6aDHvCHTskH2JSP/LHUgs9il68MSNQ1oMw9toHkraMpvIWjrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Oiqxx2qF; arc=none smtp.client-ip=185.171.202.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 3EEBAC1C3BC;
-	Fri,  2 Jan 2026 22:03:02 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id D6A27606C7;
-	Fri,  2 Jan 2026 22:03:27 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 46A97113B023E;
-	Fri,  2 Jan 2026 23:03:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1767391406; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=DzBEEZRd/TfGbBRgPI1LV+yJYKfoYamGrcNf95MHCek=;
-	b=Oiqxx2qFMOdFkK4UejUswt++zRt7vL1iotMTqjcQp816p/MwR1lgtC/4Kq1U/3h5x/ca0s
-	ce3mSKWFmIxgOWdBejoJCqKhCUbBmo6MDmk45qLpfeY6xY1FTbUYG90finTAnRNDPfN8Ji
-	Lx7b+BEyQeaXjP7/ahuciacxyO1ZfryINNKu+zWay1n3ez6WBAbkXIp9lchABcHYJPyVAv
-	gxSq9P2h/+9W96fDOMUnPQv94GvsCxSHQ5wKTwxTKNwKC+W1uJfiF08tP//V0CS78gqeo8
-	ckhQPYFjmF0xNftTyJW2sF1r3sf3gVjgHSvh8SgIX33w/MNawfPE9zbizLlMnQ==
-Date: Fri, 2 Jan 2026 23:03:22 +0100
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-To: Linus Walleij <linusw@kernel.org>
-Cc: =?UTF-8?B?QmVub8OudA==?= Monin <benoit.monin@bootlin.com>, Vladimir
- Kondratiev <vladimir.kondratiev@mobileye.com>, Gregory CLEMENT
- <gregory.clement@bootlin.com>, =?UTF-8?B?VGjDqW8=?= Lebrun
- <theo.lebrun@bootlin.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Philipp Zabel
- <p.zabel@pengutronix.de>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
- linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 06/13] pinctrl: eyeq5: Add Mobileye EyeQ6Lplus OLB
-Message-ID: <20260102230322.29d2ea65@windsurf>
-In-Reply-To: <CAD++jLnBMXQAv75a8k=mbEt8pAxS0UXhayQPz1YWCiLic9_+ig@mail.gmail.com>
-References: <20251223-eyeq6lplus-v2-0-cd1fd21d182c@bootlin.com>
-	<20251223-eyeq6lplus-v2-6-cd1fd21d182c@bootlin.com>
-	<CAD++jLnBMXQAv75a8k=mbEt8pAxS0UXhayQPz1YWCiLic9_+ig@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1767392514; c=relaxed/simple;
+	bh=EuNLzlV8r8Dinon10Riipi7R88Xe9qFlOj4ZVceZa/0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pHyz0/UEen93yEttw8On6r+uDlGQ0Kd1TDgLNtlkWEoGuq1L76xJtLDoo22Clp+/6vtp6JDl7w2awUqmsXxAnFNinknNZIexu9iEx3m7hTbZAdBz43ddJGMq+xyoq8PrfUTsCxtXj5iMgdWZxqDPHaodE8ZlMVyJ18XB/f6fB0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eWZIKhNz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5462C116B1;
+	Fri,  2 Jan 2026 22:21:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767392513;
+	bh=EuNLzlV8r8Dinon10Riipi7R88Xe9qFlOj4ZVceZa/0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eWZIKhNzEB80owCh/NWA4FrrPhPUfGz+puZjrw8cTOivwCmVTN7FiN1qN2uq3tGLD
+	 BU+ZidiHrcuNI0SXFvSXTlaHrn3H7r6ulyI4j/xdxZ3bOQf6LVzB8AnzSLwMIyVsL/
+	 deUWsv25lpeSkvqG+qAPpFMio3XMsSYZUXjp9C5Gyw0vdoaggt3Hmz3BiXJX0Sf+k3
+	 L9lo3f95n4SO3vkg7iOITUpU9aENXWUHriiiJm0Tgnub1b9y4PQKO/D8dXUGXQ7j7Q
+	 F9B3Btu6p87Jw4d8lMSVhSfXB3WFuNtJ64IkbUbq3SvD5c358O7KzYGYIpUlvVuj3P
+	 5A/4M+uKOfrFg==
+Date: Fri, 2 Jan 2026 16:21:52 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Chen-Yu Tsai <wens@kernel.org>
+Cc: linux-gpio@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Jernej Skrabec <jernej@kernel.org>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Samuel Holland <samuel@sholland.org>, linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-sunxi@lists.linux.dev, linux-media@vger.kernel.org,
+	Linus Walleij <linusw@kernel.org>
+Subject: Re: [PATCH 2/4] dt-bindings: pinctrl: sunxi: Allow pinmux
+ sub-pattern with leading numbers
+Message-ID: <176739251233.279904.10109675432814007356.robh@kernel.org>
+References: <20251225103616.3203473-1-wens@kernel.org>
+ <20251225103616.3203473-3-wens@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251225103616.3203473-3-wens@kernel.org>
 
-Hello Linus,
 
-On Fri, 2 Jan 2026 22:57:44 +0100
-Linus Walleij <linusw@kernel.org> wrote:
+On Thu, 25 Dec 2025 18:36:13 +0800, Chen-Yu Tsai wrote:
+> The pattern for pinmux node names is typically the peripheral name and
+> instance number, followed by pingroup name if there are multiple options.
+> 
+> Normally the instance number is directly appended to the peripheral
+> name, like "mmc0" or "i2c2". But if the peripheral name ends with a
+> number, then it becomes confusing.
+> 
+> On the A20, the PS2 interface controller has two instances. This
+> produces pinmux node names like "ps2-0-pins". Make the sub-pattern
+> "[0-9]-" valid to fit this pattern. Avoid having to confusing "ps20-pins"
+> name.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens@kernel.org>
+> ---
+>  .../bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml           | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-> On Tue, Dec 23, 2025 at 11:02=E2=80=AFAM Beno=C3=AEt Monin <benoit.monin@=
-bootlin.com> wrote:
->=20
-> >  static const struct of_device_id eq5p_match_table[] =3D {
-> >         { .compatible =3D "mobileye,eyeq5-olb", .data =3D &eq5p_eyeq5_d=
-ata },
-> > +       { .compatible =3D "mobileye,eyeq6lplus-olb", .data =3D &eq5p_ey=
-eq6lplus_data }, =20
->=20
-> Which patch can I find this new binding in? Or is it already upstream?
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-In the same series, PATCH 02/13:
-
-  https://lore.kernel.org/all/20251223-eyeq6lplus-v2-2-cd1fd21d182c@bootlin=
-.com/
-
-Best regards,
-
-Thomas
---=20
-Thomas Petazzoni, co-owner and CEO, Bootlin
-Embedded Linux and Kernel engineering and training
-https://bootlin.com
 
