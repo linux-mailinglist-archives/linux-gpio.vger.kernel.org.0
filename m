@@ -1,54 +1,54 @@
-Return-Path: <linux-gpio+bounces-30083-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30084-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35624CEF5D3
-	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 22:46:19 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41E82CEF60C
+	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 22:54:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 87BED300749B
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 21:46:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 031503015AAA
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 21:54:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E4071E1A3D;
-	Fri,  2 Jan 2026 21:46:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 301962609CC;
+	Fri,  2 Jan 2026 21:54:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JobVJNOL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xu7GF75J"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D021214A8E
-	for <linux-gpio@vger.kernel.org>; Fri,  2 Jan 2026 21:46:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38DE21C17D
+	for <linux-gpio@vger.kernel.org>; Fri,  2 Jan 2026 21:54:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767390374; cv=none; b=Rgx3evn7gpCoVsPhL7CeFNUWl3E5DL0WFxYKyfn8z52H/A8VbsPbXX/776MMLx2k1pICD7RYNlAu/hcFxKDLRvoqur42J1RywyqVkRk5CxuN++GjpgLbPxvXKtAYxZ3TK6n3GN7sUZqMJS2eFZMimd+tsWFnDBDRreEUyFN8QkI=
+	t=1767390851; cv=none; b=ZzRnP56Ozbzt4Iy1p85YRUuh0kPdKgFEIQfYzx+dtA2KJuuY1SQjjFIgJAn1wR83exCuzUElygGVGuLAWsAkJuNClzBcoyfHbtqPMvOf+UxBYeMULhW2a7hUI8mpiYs6n8cWLVHsf3zb0h7HhpOiNW4gVYaQG39IOyvEWKH9mL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767390374; c=relaxed/simple;
-	bh=NTdnCl4f2V1cGkrm0UOB+dRqAyLBUxn3DkcIZlsbztI=;
+	s=arc-20240116; t=1767390851; c=relaxed/simple;
+	bh=bXO5/mKi14SNXt+ALR0xb15wP92GSk4JfVc32yECu98=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oR5NWxKko0WIZ/MWrpmk8MR6DFf/JigcNO/o+J2uHqXlZqGpExDzV9CdZRHALIxeoygnFt69WpRR/5dCK131wVFjEflk0fnET9CfhvN519r2/M68nIH5MfqSCir7IUkHFsbOm5yz5tiPS9s1E84Kau5WRP5xg+Ylne7n86h+MU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JobVJNOL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 714C7C116C6
-	for <linux-gpio@vger.kernel.org>; Fri,  2 Jan 2026 21:46:14 +0000 (UTC)
+	 To:Cc:Content-Type; b=K6zwd8O/3Du4XUnWRcjIVpzAW6P/EseyQnFGb7Wpukw4OmnLXqMdazQncCH2af6az3cmsLdZPQt33Bc7rLIPbM5+xquwmwQ0PHd5Oet/O2hNc8SR/VFbAikI8wKioqIk1HkcDTJRRRQ9ELUjBP/ryd5dk56UgZmEjjeZLysiwPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xu7GF75J; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90A94C16AAE
+	for <linux-gpio@vger.kernel.org>; Fri,  2 Jan 2026 21:54:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767390374;
-	bh=NTdnCl4f2V1cGkrm0UOB+dRqAyLBUxn3DkcIZlsbztI=;
+	s=k20201202; t=1767390850;
+	bh=bXO5/mKi14SNXt+ALR0xb15wP92GSk4JfVc32yECu98=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=JobVJNOLvMN5w4REcp926dGvD1aUF+QalXIR0holTtGUa+/MwNXyDUcIwz8J5eEaD
-	 C5TvLmTuf/qt/ec+5rF1p+MPy6nXbs5DsdCMhds5keKK78JqrGA9VvCr6CXwmaLjsZ
-	 zmzsheZ1EgqGbtd/i1JylvAaeVYSFmtGZl9U5bp63I1THcKAxe1dWW7R86eGq93c4H
-	 NkiHch4KKCmtW91A6RiizojrkTHRmDHQfs13kK3vWFzhWOnzr7ZqL+DnaM6yzK9h8t
-	 i59Urku+YTar3Noj2j+JwfFnaBrXaa1SdAGSxWSWyTvsWJI+xAct1TkWPRYucg4HsS
-	 8ph5Rz9ZSodVg==
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-78fb6c7874cso114441357b3.0
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Jan 2026 13:46:14 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXzWIqzj9shfj28+TpFgCrr7/mJD+IUeHgiAp45TalNHldnXxxft3Y7INXoiT9E/BJh9dWxb9dzq1j0@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOOKTS3EzylUt805Up2b8oE9d4X8vM+dWoCe1aRvzyVGfXH6U5
-	Zzfn+eNY4H221qOQduSUE3L8ivN7v9qzchL1MAjgq4sdfiiqwMiNEX7t7ySNXh6BQOS4qIVNEUm
-	sNLnW7dk0+IjRXukSNdJwRl9DJf6oRYM=
-X-Google-Smtp-Source: AGHT+IH33olNfgulnhiqfwveNZ/JUIYECnmqjnapImldBhSvuoAY0vQgtlBVK5spJfNyThgZAg6EHVDlx9d3WxxA4nU=
-X-Received: by 2002:a05:690c:c533:b0:78d:6716:229 with SMTP id
- 00721157ae682-78fb405d282mr305206767b3.48.1767390373785; Fri, 02 Jan 2026
- 13:46:13 -0800 (PST)
+	b=Xu7GF75JqygqgjG7jRFqBQC9amhxigiNBCbpjl/4a7XEqmVHHBo5Bz1At3iNeilOK
+	 GMxOJccXg/of3MMOS23sl2AUM47InHLe5oDVnHWHctMUHngnkITry5gbSl4SX1m1DZ
+	 pCY4qdvJzYlMEN6ezIYfdI7PUlnZHBVr88dIe2C+8freNRrXqQxy6WvdtmVoRB+qt1
+	 xGJ6cDLeYwfa0lyzH2W2HNlk5DSriXN5iXM5yj9TRNfuWocZ3a/w/lSggBuBLejWXw
+	 WiLz3FlqMTlWPucaWmT4TnE5izms5W4wgYb+DJUAw3/bGPdpdOF5tLuDBTlt6HJg21
+	 mPUCB4Sms6kSg==
+Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-64669a2ecb5so325390d50.1
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Jan 2026 13:54:10 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXmrk8kTOs5lyrapyB9CjG5h/GlpIQ2moGN7XC9SJrdhcGYAtn9J6bBzIKS+a/NlPS/X2gbcWkU8hHn@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB+Us0C2MkXl8FU1NnVodSwGc72J54iWdIycA4de1wsGYwkCmW
+	c20DuHfa/FtXuqYG1CRoVFIQ+shRwdhwTSuREuZSxqjqjWoLdUKxxWORgnrQiNnY9Pr4pAq/5U3
+	CVtsatuH3Qh6S9KwO2M6FYqCxV0ozyAY=
+X-Google-Smtp-Source: AGHT+IEhEl1mjhchJ1w5VCgkAeC73rxu4iaz3+l4FeH+T1USCuQFRrCa5hkkli4BCMUqb7ZNPk1qWfl/sZFC0YgOzI4=
+X-Received: by 2002:a05:690e:1c1b:b0:63e:336c:20e1 with SMTP id
+ 956f58d0204a3-646e341aaa6mr795999d50.25.1767390849835; Fri, 02 Jan 2026
+ 13:54:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -56,14 +56,14 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20251222-axiado-ax3000-cadence-gpio-support-v1-0-c9ef8e0d0bce@axiado.com>
- <20251222-axiado-ax3000-cadence-gpio-support-v1-1-c9ef8e0d0bce@axiado.com>
-In-Reply-To: <20251222-axiado-ax3000-cadence-gpio-support-v1-1-c9ef8e0d0bce@axiado.com>
+ <20251222-axiado-ax3000-cadence-gpio-support-v1-2-c9ef8e0d0bce@axiado.com>
+In-Reply-To: <20251222-axiado-ax3000-cadence-gpio-support-v1-2-c9ef8e0d0bce@axiado.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 2 Jan 2026 22:46:02 +0100
-X-Gmail-Original-Message-ID: <CAD++jL=BxQ0oqmSJnwLPnev1rjEygVXW1okB9VkywJUbXf3puQ@mail.gmail.com>
-X-Gm-Features: AQt7F2oVG1hZIE9pct9EJL51eDTK0oJQwNIYpT9OV5vCIXg4nikXu49g7eYW3Tk
-Message-ID: <CAD++jL=BxQ0oqmSJnwLPnev1rjEygVXW1okB9VkywJUbXf3puQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: cadence: Add quirk for Axiado AX3000 platform
+Date: Fri, 2 Jan 2026 22:53:58 +0100
+X-Gmail-Original-Message-ID: <CAD++jLkxsynXSgpO+O_ThOE=3yzDH+2NgO3v=9LDDOMezXJ_Ag@mail.gmail.com>
+X-Gm-Features: AQt7F2qR1nZxgt8AjUDTlSYxIt007uMjm-AatbFykgqpTu4GeHTEhl8LDn4DEx4
+Message-ID: <CAD++jLkxsynXSgpO+O_ThOE=3yzDH+2NgO3v=9LDDOMezXJ_Ag@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: cadence: Add support for edge-triggered interrupts
 To: Swark Yang <syang@axiado.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@kernel.org>, 
 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -73,164 +73,50 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi Swark,
 
-thanks for your patch!
+thanks for your patch! This is an important improvement for the Cadence
+GPIO driver.
 
 On Tue, Dec 23, 2025 at 8:30=E2=80=AFAM Swark Yang <syang@axiado.com> wrote=
 :
-
-> On the Axiado AX3000 platform, pinmux and pin configuration (such as
-> direction and output enable) are configured by the hardware/firmware
-> at boot time before Linux boots.
 >
-> To prevent conflicts, introduce a platform-specific quirk triggered by
-> the "axiado,ax3000-gpio" compatible string.
+> From: Tzu-Hao Wei <twei@axiado.com>
 >
-> When this quirk is active, the driver will skip its default
-> initialization of pinmux configuration and direction settings during
-> probe.
+> The Cadence GPIO controller (CDNS IP6508) supports edge-triggered
+> interrupts (rising, falling, and both) via IRQ_TYPE, IRQ_VALUE,
+> and IRQ_ANY_EDGE registers. This commit enables support for these
+> modes in cdns_gpio_irq_set_type().
 >
-> Co-developed-by: Tzu-Hao Wei <twei@axiado.com>
+> Although the interrupt status register is cleared on read and lacks
+> per-pin acknowledgment, the driver already handles this safely by
+> reading the ISR once and dispatching all pending interrupts immediately.
+> This allows edge IRQs to be used reliably in controlled environments.
+>
 > Signed-off-by: Tzu-Hao Wei <twei@axiado.com>
 > Signed-off-by: Swark Yang <syang@axiado.com>
 > Signed-off-by: Prasad Bolisetty <pbolisetty@axiado.com>
 
-> +#define CDNS_GPIO_QUIRKS_SKIP_PINMUX_CFG       BIT(1)
+> -       /*
+> -        * The GPIO controller doesn't have an ACK register.
+> -        * All interrupt statuses are cleared on a status register read.
+> -        * Don't support edge interrupts for now.
+> -        */
 
-This is just using bits and copying stuff unnecessarily.
+Maybe we can instead insert a comment with a little table like this:
 
-Do this:
+Interrupt polarity and trigger behaviour is configured like this:
 
-struct cdns_gpio_quirks {
-    bool skip_init;
-};
+(type, value)
+(0, 0) =3D Falling edge triggered
+(0, 1) =3D Rising edge triggered
+(1, 0) =3D Low level triggered
+(1, 1) =3D High level triggered
 
->  struct cdns_gpio_chip {
->         struct gpio_generic_chip gen_gc;
->         void __iomem *regs;
->         u32 bypass_orig;
+It's good that you also clear the "any" register for all other modes which
+is something we didn't do before and could cause problems if e.g. the
+boot loader set some value into that register!
 
-In this struct add:
-
-struct cdns_gpio_quirks *quirks;
-
-And assign it in probe.
-
-> +struct cdns_platform_data {
-> +       u32 quirks;
-> +};
-
-Skip this double-translated thing.
-
->  static int cdns_gpio_request(struct gpio_chip *chip, unsigned int offset=
-)
->  {
->         struct cdns_gpio_chip *cgpio =3D gpiochip_get_data(chip);
-> @@ -141,6 +150,16 @@ static const struct irq_chip cdns_gpio_irqchip =3D {
->         GPIOCHIP_IRQ_RESOURCE_HELPERS,
->  };
->
-> +static const struct cdns_platform_data ax3000_gpio_def =3D {
-> +       .quirks =3D CDNS_GPIO_QUIRKS_SKIP_PINMUX_CFG, };
-
-static const struct cdns_gpio_quirks cdns_default_quirks =3D {
-    .skip_init =3D true,
-};
-
-static const struct cdns_gpio_quirks ax300_gpio_quirks =3D {
-    .skip_init =3D true,
-};
-
-> +static const struct of_device_id cdns_of_ids[] =3D {
-> +       { .compatible =3D "axiado,ax3000-gpio", .data =3D &ax3000_gpio_de=
-f },
-
-.data =3D &ax3000_gpio_quirks,
-
-> +       { .compatible =3D "cdns,gpio-r1p02" },
-
-.data =3D &cdns_default_quirks,
-
-This becomes more manageable, as I know there is *at least* one
-more variant arriving, which is for CIX semiconductors and who knows
-how many quirks we will have to carry in the future.
-
->  static int cdns_gpio_probe(struct platform_device *pdev)
->  {
->         struct gpio_generic_chip_config config =3D { };
-> @@ -148,6 +167,8 @@ static int cdns_gpio_probe(struct platform_device *pd=
-ev)
->         int ret, irq;
->         u32 dir_prev;
->         u32 num_gpios =3D 32;
-> +       bool skip_pinmux_cfg =3D false;
-
-Nah, just reference the quirk.
-
-> +       const struct of_device_id *match;
->         struct clk *clk;
->
->         cgpio =3D devm_kzalloc(&pdev->dev, sizeof(*cgpio), GFP_KERNEL);
-> @@ -165,6 +186,13 @@ static int cdns_gpio_probe(struct platform_device *p=
-dev)
->                 return -EINVAL;
->         }
->
-> +       match =3D of_match_node(cdns_of_ids, pdev->dev.of_node);
-> +       if (match && match->data) {
-> +               const struct cdns_platform_data *data =3D match->data;
-> +
-> +               skip_pinmux_cfg =3D data->quirks & CDNS_GPIO_QUIRKS_SKIP_=
-PINMUX_CFG;
-> +       }
-
-Instead do:
-
-cgpio->quirks =3D device_get_match_data() like Bartosz suggests.
-
->         dir_prev =3D ioread32(cgpio->regs + CDNS_GPIO_DIRECTION_MODE);
-> -       iowrite32(GENMASK(num_gpios - 1, 0),
-> -                 cgpio->regs + CDNS_GPIO_DIRECTION_MODE);
-> +
-> +       /*
-> +        * The AX3000 platform performs the required configuration at boo=
-t time
-> +        * before Linux boots, so this quirk disables pinmux initializati=
-on.
-> +        */
-
-> +       if (!skip_pinmux_cfg) {
-
-Here:
-if (cgpio->quirks->skip_init) {
-
-> +               iowrite32(GENMASK(num_gpios - 1, 0),
-> +                         cgpio->regs + CDNS_GPIO_DIRECTION_MODE);
-> +       }
->
->         config.dev =3D &pdev->dev;
->         config.sz =3D 4;
-> @@ -240,9 +275,11 @@ static int cdns_gpio_probe(struct platform_device *p=
-dev)
->         /*
->          * Enable gpio outputs, ignored for input direction
->          */
-> -       iowrite32(GENMASK(num_gpios - 1, 0),
-> -                 cgpio->regs + CDNS_GPIO_OUTPUT_EN);
-> -       iowrite32(0, cgpio->regs + CDNS_GPIO_BYPASS_MODE);
-> +       if (!skip_pinmux_cfg) {
-
-if (cgpio->quirks->skip_init) {
-
-> +               iowrite32(GENMASK(num_gpios - 1, 0),
-> +                         cgpio->regs + CDNS_GPIO_OUTPUT_EN);
-
-This has nothing to do with pinmux whatsoever so it is better to call
-this quirk "skip_init"
-
-> +               iowrite32(0, cgpio->regs + CDNS_GPIO_BYPASS_MODE);
-
-This affects the pinmuxing though. But the muxing happens outside
-of the GPIO block itself.
++/- this small comment addition:
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
 Yours,
 Linus Walleij
