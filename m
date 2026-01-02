@@ -1,240 +1,184 @@
-Return-Path: <linux-gpio+bounces-30060-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30061-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 897F9CEE459
-	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 12:08:29 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E01DCEE46E
+	for <lists+linux-gpio@lfdr.de>; Fri, 02 Jan 2026 12:10:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3C7C13014DB7
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 11:08:04 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4F0A53009F56
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Jan 2026 11:10:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68C9A2E6CA8;
-	Fri,  2 Jan 2026 11:08:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 739CB2E228D;
+	Fri,  2 Jan 2026 11:10:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Q4bxZYCS";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="iJof4HBF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="atudahxl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F7C2DFF04
-	for <linux-gpio@vger.kernel.org>; Fri,  2 Jan 2026 11:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B092DEA94
+	for <linux-gpio@vger.kernel.org>; Fri,  2 Jan 2026 11:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767352082; cv=none; b=EYNOSTB9Uue55Xi+HP+ndvQqOMVp1h4xT1wR/JPDxdmwlQXQW4Zdd6SC/9MG8VGCG12B1s74bXVWr/H6+8g3yzUeh40v8izIEmebnws1+ms04IgDnOchg78UbjpY1RtoLwQXZ18cGNNMFUOj36iTAM9uivgzvx6uFmQg5U945gE=
+	t=1767352220; cv=none; b=N+9vUdxeo7X/I8SX1hJnmg62M/b19d/TAi+CeJUUCHD32GVnHQBeh64tjz3izovFrr0U/UAEnnC9wMavXYfh85SygjnS6t/8d0m1JFH4MdX4FBuVCyizOvl9esXT0Wnxi02JjCs12ObQsbeh7wK9Y0cjZRJgC/u3hcV5BqH9CoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767352082; c=relaxed/simple;
-	bh=KkDQhZMSUVwp0+1UmXnDBE8Swp6Wh3Yql6B8Y7cFvJM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=j76izvCIZb0VjYEp68arxMZJpdJWtNEhoM7Gq0BF3GCu1JdY3+mEkCPMxbEIGdrdPNa4JYSljKBeQdTCDl0OaP8LCiPqjkybh/HG9sxBGOH3cgIq+6Gt54NclJXyOnhpefdABUvVOQ4pBZ0bo0bHdziqBL9oACRy1Wns+SyYzK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Q4bxZYCS; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=iJof4HBF; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6029Wcd3824913
-	for <linux-gpio@vger.kernel.org>; Fri, 2 Jan 2026 11:07:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	/X6FFg5ASsMmd5AH4CAj055KPd8ELixeAxe3qlYhEaE=; b=Q4bxZYCSuFG7rRjg
-	RJyih2wu/hLJNoFarNpLqx9SpbxcUxCYEBsF4Y+HkDQggbLm80SUnReWTWFXFCuw
-	OYxSvl/qIuO3yAq7a4K/Dc/yhmUsp2RI/RkwqEu4cquQqbWZVPP0iBjxY82/2WbD
-	HmZDmkPZyY9L8Ird6iJNropzPWUMEaxuSz+z5JWYafT2VsbeA68tRLI6QV4CkX4t
-	Da6YXWf/WPriri0ZBsKA50gj36SPC1EwViQTYvPeGjb5txfAMuyECil4JYLvbejy
-	kAiuLjFR0tXh/WqH1Wt8Rx7CdpBq2n3a4Di2lQjjrpBozByY1NyFKahmR+U+W0d9
-	lH9LUQ==
-Received: from mail-dl1-f69.google.com (mail-dl1-f69.google.com [74.125.82.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bd85336gf-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Fri, 02 Jan 2026 11:07:59 +0000 (GMT)
-Received: by mail-dl1-f69.google.com with SMTP id a92af1059eb24-11bd7a827fdso21539890c88.1
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Jan 2026 03:07:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1767352079; x=1767956879; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/X6FFg5ASsMmd5AH4CAj055KPd8ELixeAxe3qlYhEaE=;
-        b=iJof4HBF5yYRTaobP8z6ix15Ljq95Ssz4cNBg9Hqwpc0uLrzcawEgadnHbetQR0rBo
-         KlwEOhJEA0AbSMWh9pCFQSMI0uS51OfNe7UYSr3GHdDyoxPIb5GsMFN54arfmdh4Rrn8
-         kxZr2gq0MfLHIlUPT9Jb1JdOfb02Tkej39xjPvYRwuc42I8jvU2pEn7UMVxqRv2FLEW+
-         h/DPgnWBwRWp6QubyOzaEHT5AD2WVPHwA2eqwMtx8tagJ9xsZ1bSaRSfEF29bN0xwnVW
-         4cWkmkwtDtDNlfsdMh2DegerkAExa3ujZ6OH/o6ZCgl39cLzqGXfJrNwix/mcDjlH5p/
-         FxiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767352079; x=1767956879;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/X6FFg5ASsMmd5AH4CAj055KPd8ELixeAxe3qlYhEaE=;
-        b=WQqqhOu2LRLt7xy5cxrL8XhuusxoQ97ZpYUinUmcgQDGYgQYIXN2xpJ4bGy329fPx9
-         4STBK5wlS/hbqKWjBQIIoL2csjq3c9fYMfpJMvAxgtk+kYdMrnvre0kYPpyOHFqsV++7
-         +fG37XES4rns1nmSeLJtOA+zCxTogEpNZPKswwwK9l1zR1KDl8zRW+bQRaZuFYthVZkN
-         TabMuaywbqCNS/CLhWsSrzdk7ygRRTBJ4nTTJpVHYEB1c0uSaPJS7HAkzfwe8ved101M
-         8wJAhWcFpyAesnLu6F4/7aTjJrAFjc4iUWyZBaD2zn8U6tkLAijWvb2GHx7KUWYUhnF0
-         AOjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVogA/SkxhNpZimtz8TZliUV1x3WwHOHQfn70jQplDz1FZBPUk9a1JwR9lJqws4ts3GpFh/BbIXsKny@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLMuYdmjw0hX7i3Zv3rs3XEoztn7mlAbHDe+OIOjNjyJPmUDKa
-	Vj9WuwHFYXFc12o2PK7wKNUehxamt37T7Q/+K5FLbdcIt9Xu/QQBFFfmf3eqkvHaPRT/dKipEIc
-	gw1tRBj7td0DH+njwBdVkaScr8pc86UKFx70XhvEqgld2JZOIhD0yOEkupMYiyl1R
-X-Gm-Gg: AY/fxX6xt7cHvm7g2sAwYtCbliw5X4XeGns42tLaHP6tsPL4rVWiSoidjkXM7yrdumW
-	/Uy99stCErQ24Eece8HcyRfi/Bbgbl+cSFbLLZB2yW+iynEbe+yb+wlmypmRmtSJIr3iQvOP8yf
-	NpKjFG8wpowRGxXmlgm69xIpFm5FE+7RiWZ2IkvzhvyYQ+JF6o6/nReJX9XGjxhMbnmkZ1uisFU
-	W6QLlMwMP97/nDK2aRi5SOSbLWHThpBPIamcSmiidnFIN3B8ip5hexJjdQpSRuILnaBmlK0rZ5j
-	3QBl/emZolObuKTg2Rui7Q0lJNb+h5HRJIF9tO7C1RU/nVTZzkn0cGiK90uQ2wi/3+Fqc1U/PLf
-	5j0BXCSEM/RPyZU43iblh87ajGJwe+QGz5rTrVd+MC8ez+Ot+ACgwjho8XgcyrG7eGpSJl5CsfQ
-	==
-X-Received: by 2002:a05:7022:6709:b0:119:e569:f874 with SMTP id a92af1059eb24-12171ae9412mr41785647c88.17.1767352078821;
-        Fri, 02 Jan 2026 03:07:58 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF5DP9FQSdI+sVx9/kt6FQVQLCaAZX3r4WT9lg3jds0XTfiicsnWUpRGu7OBO/lQqmA2iVKgQ==
-X-Received: by 2002:a05:7022:6709:b0:119:e569:f874 with SMTP id a92af1059eb24-12171ae9412mr41785614c88.17.1767352078128;
-        Fri, 02 Jan 2026 03:07:58 -0800 (PST)
-Received: from hu-ggarmidi-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1217253c058sm157431107c88.11.2026.01.02.03.07.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jan 2026 03:07:57 -0800 (PST)
-From: Gopikrishna Garmidi <gopikrishna.garmidi@oss.qualcomm.com>
-Date: Fri, 02 Jan 2026 03:07:55 -0800
-Subject: [PATCH 2/2] pinctrl: qcom: glymur: Add Mahua TLMM support
+	s=arc-20240116; t=1767352220; c=relaxed/simple;
+	bh=re/lVUHs4kpt0uqKvmFx8BrYvmHm2mzCMHLFeQDYLAA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZNPMvojRbTPLeIe4C7XjW1LoBwgqvSqtL/J4Psm+wGd+H4j8rYrDSVOm+59tSaw4FoIYgrjGcwYRvVXpDoZktWOqkw9H2IaPZFsIbuJQeH/reXg3qHYU1j5v8aefdPtRxat+1XHt8Pt7BX/kuJ7LNxIY4Kyjkll6/ulH7GnvLf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=atudahxl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1064C4AF0B
+	for <linux-gpio@vger.kernel.org>; Fri,  2 Jan 2026 11:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767352219;
+	bh=re/lVUHs4kpt0uqKvmFx8BrYvmHm2mzCMHLFeQDYLAA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=atudahxlVrUZuCPVDkJ4LwCvR4MFh+fD2126mwB0FEeczqh7nTznDYvwcgPXT2Pi/
+	 JWM9Fw4y9/K50w93zEv9j/FEiGk0pmLeN0ovag2Pf9EH30NAINWwrlOn8EDNwl+oC7
+	 dMr7nsEMjBJ/T3Dq/KB6JqQp2DeOocRH6cvk5Evnho/W+vsTOMzAv636KTlWaxcwmh
+	 mpYcic+vuB6qb8pMPOdqMJOXdmHBJsGeJe2Ca6fL7SpU4uxqos9ueVBixj2xVtJu6Y
+	 40PKMvzfRpcWMAz1NyAIvH4Y3Gj2ftrb/+GAvdObafKgfj7TiATaGPqRC4FAhDZct6
+	 D5LgdFbg6QbVQ==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-598f59996aaso14247697e87.1
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Jan 2026 03:10:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV0RxCyEQV6Hsj+QcuaWsizzlAIvdgYoLV5zIic3DI5N2ZDzpS5G5MeR5amVUGEIUts8AfsRLvcRV4Q@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3W7GuPiBZeuJeW93Mnnt5d++aAlbALQqGzq1IIq0ylqUi8XjY
+	WOFE5qfW7bAtoqWSuSN9vL9PquyXSg7DBJEeYICIi91Q2KKctTGQ0VD1rhpSD5dcSmwVG68SwS+
+	opoiQHRBPWLhSsgqj4iPz/+FGoeazHn458OzFY2In0Q==
+X-Google-Smtp-Source: AGHT+IEQ7ednqbBJO2VgC95rOeiLl6BCkoGEMSAJg7b+XLLGpVniCILMJvrIy2hN08yx90/CKzL8XK3HVso0oifztYA=
+X-Received: by 2002:a05:6512:4016:b0:594:3270:3b14 with SMTP id
+ 2adb3069b0e04-59a17d3dd2amr13470822e87.32.1767352218463; Fri, 02 Jan 2026
+ 03:10:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260102-pinctrl-qcom-mahua-tlmm-v1-2-0edd71af08b2@oss.qualcomm.com>
-References: <20260102-pinctrl-qcom-mahua-tlmm-v1-0-0edd71af08b2@oss.qualcomm.com>
-In-Reply-To: <20260102-pinctrl-qcom-mahua-tlmm-v1-0-0edd71af08b2@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linusw@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Rajendra Nayak <rajendra.nayak@oss.qualcomm.com>,
-        Pankaj Patil <pankaj.patil@oss.qualcomm.com>,
-        Sibi Sankar <sibi.sankar@oss.qualcomm.com>
-Cc: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gopikrishna Garmidi <gopikrishna.garmidi@oss.qualcomm.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1767352076; l=3637;
- i=gopikrishna.garmidi@oss.qualcomm.com; s=20260102;
- h=from:subject:message-id; bh=KkDQhZMSUVwp0+1UmXnDBE8Swp6Wh3Yql6B8Y7cFvJM=;
- b=r4xgs1j4ZijJF823M8n2RgReEm28pbSrR7BFi3dpzd6YSEtqY36g+ccHhT/QLPHHPtZU73oUi
- H/izleqlrLAC4gX34E1gAAiMT63XW+heTx0rmuS0xc63anezWyl87ku
-X-Developer-Key: i=gopikrishna.garmidi@oss.qualcomm.com; a=ed25519;
- pk=TkSjNEhrfsj90i3wkABTZtAjLNr2cfYsujaTvyOIDsE=
-X-Proofpoint-GUID: ECG-X9JmJBo5ipSk4iVzDNcTwTF7ukZT
-X-Authority-Analysis: v=2.4 cv=fL80HJae c=1 sm=1 tr=0 ts=6957a70f cx=c_pps
- a=kVLUcbK0zfr7ocalXnG1qA==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=Cqdlar3rRHXyc8QQv8IA:9
- a=QEXdDO2ut3YA:10 a=vr4QvYf-bLy2KjpDp97w:22
-X-Proofpoint-ORIG-GUID: ECG-X9JmJBo5ipSk4iVzDNcTwTF7ukZT
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTAyMDA5NyBTYWx0ZWRfX/LAYdnV0C3u0
- AsqHcHeKTSThTAGRCtxZ3eOyRS/32Wb25VCYHnt4gQNvZfS29wqzAC31qg6IxGkzJxFYG+rC3PR
- 9JBsxZRfFRiFQduKc9U2BedEChlfheR/ByQodMkwULQesz+LnqWZxLQta+iuG9BNkWCzO4vNfBm
- FmoU0PxzlujE47W3TzCIf9J1a84Gti/+oWYdhFqATWLgsVTdJH3f28xXbl1JHC8+LqeXqZlvyq6
- Kl1beWa6der51qhNFDUEfjKD+YhU0MymRlMnv5APMmdzULLCXanpo3D7+rrswNz90PRX3O5oWnM
- rBidVuK2g3YB+dBBVU6TIryzR41jKHHilrfqHRZ6pUnObH8NEfpaJlkBMIfU+V96vNR3do6P7ix
- lpHPH4ckRWCeSabC8kcMR5yDb5v6ELSkHNwQasfyiwIn7Mo5qmLe2a+0/0xpH9jJjKULfvegSJ8
- /esWvu2p8Y1iFo9axCw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-02_01,2025-12-31_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 malwarescore=0 lowpriorityscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 spamscore=0 impostorscore=0 adultscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2512120000
- definitions=main-2601020097
+References: <20251229-02-k3-gpio-v1-0-269e76785abb@gentoo.org> <20251229-02-k3-gpio-v1-2-269e76785abb@gentoo.org>
+In-Reply-To: <20251229-02-k3-gpio-v1-2-269e76785abb@gentoo.org>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Fri, 2 Jan 2026 12:10:05 +0100
+X-Gmail-Original-Message-ID: <CAMRc=MfHzP+xm-uX+jad5gPOGDpR23O6mB+xcSvF6ZiZfnxQjg@mail.gmail.com>
+X-Gm-Features: AQt7F2pPs6mTb0NBOMkrzh1IIi9oh6OnGyb-pPW3iEvvQf6OlFBF1OVtqlQ2SF0
+Message-ID: <CAMRc=MfHzP+xm-uX+jad5gPOGDpR23O6mB+xcSvF6ZiZfnxQjg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: spacemit: Add GPIO support for K3 SoC
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Introduce support for the Mahua TLMM (Top Level Mode Multiplexer)
-in the pinctrl-glymur driver. Mahua shares the same pin configuration
-as Glymur but requires a different PDC wake IRQ mapping.
+On Mon, Dec 29, 2025 at 1:47=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
+>
+> SpacemiT K3 SoC has changed gpio register layout while comparing
+> with previous generation, the register offset and bank offset
+> need to be adjusted, introduce a compatible data to extend the
+> driver to support this.
+>
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> ---
+>  drivers/gpio/gpio-spacemit-k1.c | 150 ++++++++++++++++++++++++++++------=
+------
+>  1 file changed, 106 insertions(+), 44 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-spacemit-k1.c b/drivers/gpio/gpio-spacemit=
+-k1.c
+> index eb66a15c002f..02cc5c11b617 100644
+> --- a/drivers/gpio/gpio-spacemit-k1.c
+> +++ b/drivers/gpio/gpio-spacemit-k1.c
+> @@ -15,28 +15,19 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/seq_file.h>
+>
+> -/* register offset */
+> -#define SPACEMIT_GPLR          0x00 /* port level - R */
+> -#define SPACEMIT_GPDR          0x0c /* port direction - R/W */
+> -#define SPACEMIT_GPSR          0x18 /* port set - W */
+> -#define SPACEMIT_GPCR          0x24 /* port clear - W */
+> -#define SPACEMIT_GRER          0x30 /* port rising edge R/W */
+> -#define SPACEMIT_GFER          0x3c /* port falling edge R/W */
+> -#define SPACEMIT_GEDR          0x48 /* edge detect status - R/W1C */
+> -#define SPACEMIT_GSDR          0x54 /* (set) direction - W */
+> -#define SPACEMIT_GCDR          0x60 /* (clear) direction - W */
+> -#define SPACEMIT_GSRER         0x6c /* (set) rising edge detect enable -=
+ W */
+> -#define SPACEMIT_GCRER         0x78 /* (clear) rising edge detect enable=
+ - W */
+> -#define SPACEMIT_GSFER         0x84 /* (set) falling edge detect enable =
+- W */
+> -#define SPACEMIT_GCFER         0x90 /* (clear) falling edge detect enabl=
+e - W */
+> -#define SPACEMIT_GAPMASK       0x9c /* interrupt mask , 0 disable, 1 ena=
+ble - R/W */
+> -
+>  #define SPACEMIT_NR_BANKS              4
+>  #define SPACEMIT_NR_GPIOS_PER_BANK     32
+>
+>  #define to_spacemit_gpio_bank(x) container_of((x), struct spacemit_gpio_=
+bank, gc)
+> +#define to_spacemit_gpio_regs(sg) ((sg)->data->reg_offsets)
+>
+>  struct spacemit_gpio;
+> +struct spacemit_gpio_reg_offsets;
 
-Changes include:
-- Add mahua_pdc_map[] with Mahua-specific GPIO to PDC IRQ mappings
-- Define mahua_tlmm msm_pinctrl_soc_data structure
-- Update device match table to include "qcom,mahua-tlmm" compatible
-- Modify probe function to use of_device_get_match_data() for dynamic
-  SoC-specific data selection
+Why not move this structure here instead and avoid the forward declaration?
 
-Signed-off-by: Gopikrishna Garmidi <gopikrishna.garmidi@oss.qualcomm.com>
----
- drivers/pinctrl/qcom/pinctrl-glymur.c | 43 ++++++++++++++++++++++++++++++++---
- 1 file changed, 40 insertions(+), 3 deletions(-)
+> +
+> +struct spacemit_gpio_data {
+> +       struct spacemit_gpio_reg_offsets *reg_offsets;
+> +       u32 bank_offsets[4];
+> +};
+>
+>  struct spacemit_gpio_bank {
+>         struct gpio_generic_chip chip;
+> @@ -49,9 +40,28 @@ struct spacemit_gpio_bank {
+>
+>  struct spacemit_gpio {
+>         struct device *dev;
+> +       const struct spacemit_gpio_data *data;
+>         struct spacemit_gpio_bank sgb[SPACEMIT_NR_BANKS];
+>  };
+>
+> +struct spacemit_gpio_reg_offsets {
+> +       u32 gplr;      /* port level - R */
+> +       u32 gpdr;      /* port direction - R/W */
+> +       u32 gpsr;      /* port set - W */
+> +       u32 gpcr;      /* port clear - W */
+> +       u32 grer;      /* port rising edge R/W */
+> +       u32 gfer;      /* port falling edge R/W */
+> +       u32 gedr;      /* edge detect status - R/W1C */
+> +       u32 gsdr;      /* (set) direction - W */
+> +       u32 gcdr;      /* (clear) direction - W */
+> +       u32 gsrer;     /* (set) rising edge detect enable - W */
+> +       u32 gcrer;     /* (clear) rising edge detect enable - W */
+> +       u32 gsfer;     /* (set) falling edge detect enable - W */
+> +       u32 gcfer;     /* (clear) falling edge detect enable - W */
+> +       u32 gapmask;   /* interrupt mask , 0 disable, 1 enable - R/W */
+> +       u32 gcpmask;   /* interrupt mask for K3 */
+> +};
+> +
+>  static u32 spacemit_gpio_bank_index(struct spacemit_gpio_bank *gb)
+>  {
+>         return (u32)(gb - gb->sg->sgb);
+> @@ -60,13 +70,14 @@ static u32 spacemit_gpio_bank_index(struct spacemit_g=
+pio_bank *gb)
+>  static irqreturn_t spacemit_gpio_irq_handler(int irq, void *dev_id)
+>  {
+>         struct spacemit_gpio_bank *gb =3D dev_id;
+> +       struct spacemit_gpio *sg =3D gb->sg;
+>         unsigned long pending;
+>         u32 n, gedr;
+>
+> -       gedr =3D readl(gb->base + SPACEMIT_GEDR);
+> +       gedr =3D readl(gb->base + to_spacemit_gpio_regs(sg)->gedr);
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-glymur.c b/drivers/pinctrl/qcom/pinctrl-glymur.c
-index 335005084b6b..bf56a064d09c 100644
---- a/drivers/pinctrl/qcom/pinctrl-glymur.c
-+++ b/drivers/pinctrl/qcom/pinctrl-glymur.c
-@@ -1729,6 +1729,25 @@ static const struct msm_gpio_wakeirq_map glymur_pdc_map[] = {
- 	{ 232, 206 }, { 234, 172 }, { 235, 173 }, { 242, 158 }, { 244, 156 },
- };
- 
-+static const struct msm_gpio_wakeirq_map mahua_pdc_map[] = {
-+	{ 0, 116 },   { 2, 114 },   { 3, 115 },	  { 4, 175 },	{ 5, 176 },
-+	{ 7, 111 },   { 11, 129 },  { 13, 130 },  { 15, 112 },	{ 19, 113 },
-+	{ 23, 187 },  { 27, 188 },  { 28, 121 },  { 29, 122 },	{ 30, 136 },
-+	{ 31, 203 },  { 32, 189 },  { 34, 174 },  { 35, 190 },	{ 36, 191 },
-+	{ 39, 124 },  { 43, 192 },  { 47, 193 },  { 51, 123 },	{ 53, 133 },
-+	{ 55, 125 },  { 59, 131 },  { 64, 134 },  { 65, 150 },	{ 66, 186 },
-+	{ 67, 132 },  { 68, 195 },  { 71, 135 },  { 75, 196 },	{ 79, 197 },
-+	{ 83, 198 },  { 84, 181 },  { 85, 199 },  { 87, 200 },	{ 91, 201 },
-+	{ 92, 182 },  { 93, 183 },  { 94, 184 },  { 95, 185 },	{ 98, 202 },
-+	{ 105, 157 }, { 113, 128 }, { 121, 117 }, { 123, 118 }, { 125, 119 },
-+	{ 129, 120 }, { 131, 126 }, { 132, 160 }, { 133, 194 }, { 134, 127 },
-+	{ 141, 137 }, { 144, 138 }, { 145, 139 }, { 147, 140 }, { 148, 141 },
-+	{ 150, 146 }, { 151, 147 }, { 153, 148 }, { 154, 144 }, { 155, 159 },
-+	{ 156, 149 }, { 157, 151 }, { 163, 142 }, { 172, 143 }, { 181, 145 },
-+	{ 193, 161 }, { 196, 152 }, { 203, 177 }, { 208, 178 }, { 215, 162 },
-+	{ 217, 153 }, { 220, 154 }, { 221, 155 }, { 228, 179 }, { 230, 180 },
-+	{ 232, 206 }, { 234, 172 }, { 235, 173 }, { 242, 158 }, { 244, 156 },
-+};
- static const struct msm_pinctrl_soc_data glymur_tlmm = {
- 	.pins = glymur_pins,
- 	.npins = ARRAY_SIZE(glymur_pins),
-@@ -1742,14 +1761,32 @@ static const struct msm_pinctrl_soc_data glymur_tlmm = {
- 	.egpio_func = 11,
- };
- 
-+static const struct msm_pinctrl_soc_data mahua_tlmm = {
-+	.pins = glymur_pins,
-+	.npins = ARRAY_SIZE(glymur_pins),
-+	.functions = glymur_functions,
-+	.nfunctions = ARRAY_SIZE(glymur_functions),
-+	.groups = glymur_groups,
-+	.ngroups = ARRAY_SIZE(glymur_groups),
-+	.ngpios = 251,
-+	.wakeirq_map = mahua_pdc_map,
-+	.nwakeirq_map = ARRAY_SIZE(mahua_pdc_map),
-+	.egpio_func = 11,
-+};
- static const struct of_device_id glymur_tlmm_of_match[] = {
--	{ .compatible = "qcom,glymur-tlmm", },
--	{ }
-+	{ .compatible = "qcom,glymur-tlmm", .data = &glymur_tlmm },
-+	{ .compatible = "qcom,mahua-tlmm", .data = &mahua_tlmm },
-+	{ },
- };
- 
- static int glymur_tlmm_probe(struct platform_device *pdev)
- {
--	return msm_pinctrl_probe(pdev, &glymur_tlmm);
-+	const struct msm_pinctrl_soc_data *data;
-+
-+	data = of_device_get_match_data(&pdev->dev);
-+	if (!data)
-+		return -ENODEV;
-+	return msm_pinctrl_probe(pdev, data);
- }
- 
- static struct platform_driver glymur_tlmm_driver = {
+Since you're already touching all these register accesses - can you
+maybe provide dedicated wrapper functions around readl()/writel() and
+avoid any file-wide changes in the future if anything requires further
+modification?
 
--- 
-2.34.1
-
+Bart
 
