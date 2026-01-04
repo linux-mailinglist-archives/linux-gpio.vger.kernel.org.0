@@ -1,54 +1,54 @@
-Return-Path: <linux-gpio+bounces-30100-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30101-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40AFCCF0D67
-	for <lists+linux-gpio@lfdr.de>; Sun, 04 Jan 2026 12:40:03 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F836CF0D88
+	for <lists+linux-gpio@lfdr.de>; Sun, 04 Jan 2026 12:45:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 323F530047B9
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Jan 2026 11:40:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8F54E300EA30
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Jan 2026 11:45:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0419286D57;
-	Sun,  4 Jan 2026 11:40:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC0DD2874E9;
+	Sun,  4 Jan 2026 11:44:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hyJSJ5ED"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cg7UMARt"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF0F285061
-	for <linux-gpio@vger.kernel.org>; Sun,  4 Jan 2026 11:40:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C925287265
+	for <linux-gpio@vger.kernel.org>; Sun,  4 Jan 2026 11:44:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767526800; cv=none; b=nXMR+wQN4BU+yjAZY5FNKR1h/DnYkFulPttzTlaibTyaEgPFCgyM1+c8HE2AoK5CsBRHRrL62NDKWfO14gRm0VM8TyHaIesVSHbq1fNtDspUWSl9uRvymWtk2ZZ26WnwDl0TDpK+ID957HmFNE/+WWxkB2KmSBArxzFylyPrmrM=
+	t=1767527099; cv=none; b=Jsk+TEmAjs18kLS7ta0Za0GwBWkozmyD1gDXQ6LVkkHRQfTg1eUZLpAlXRbEz6OE92WfBRzXIaX0VTOZn5A/QyMHPbjNRzGxpqRAN0YPmWnmdGTdHXqofBTuJUbkcuWEV5NBVXLuCDe+L/lnX2SOb4OvcQnf9b6paJPTmVCEzyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767526800; c=relaxed/simple;
-	bh=4OlOxxutktzHnj47iAJg6lb1/kg6UJCstgjPUdHssPw=;
+	s=arc-20240116; t=1767527099; c=relaxed/simple;
+	bh=UJmd/RUuc8kvXGdj1yLXTt0tcEL4280vqD8fV3f882w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=azy1Q/icaezhArInMNn+fatQFKjec46+DYGt1CBeo3Eaehz8DPElo9mmrvF+zEQ1uG4E6rvyPsW82UqoFReW0vdQOk4/38lmITZDUXJqhvzN/S4M3GcPif/oXAIoetbunYk66Nme462SjeqZcPKJDkZfefIJrhpVvLy4ywgRzSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hyJSJ5ED; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7915BC19425
-	for <linux-gpio@vger.kernel.org>; Sun,  4 Jan 2026 11:40:00 +0000 (UTC)
+	 To:Cc:Content-Type; b=qz5YXGID9LsxgsB2TKCGsUnrZCaJnb2EenirIS8XCSveTbvqL5AlrWcs7YhKlA3DdJm0PpP3co+8huh51TI0D0bsVUNLscB4/HueE1fXQCGDQm9seRtf+xvvFZ5vQyncotyx5KWnf6OpT5eh/+bkbIgtPi1a5MtUrj/LzKf8hTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cg7UMARt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DDD8C19425
+	for <linux-gpio@vger.kernel.org>; Sun,  4 Jan 2026 11:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767526800;
-	bh=4OlOxxutktzHnj47iAJg6lb1/kg6UJCstgjPUdHssPw=;
+	s=k20201202; t=1767527099;
+	bh=UJmd/RUuc8kvXGdj1yLXTt0tcEL4280vqD8fV3f882w=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hyJSJ5EDQCgI/03F+MYNO93KhNLLP8NLLkVCB6stSSFPbPGXYuMrIbZ/qqWq9WL3G
-	 YDonSDrxXoYN10wmBOrpUBAmr28DuD54Q9KjBjqNrB62lV2PvC1gCSxHIjVWLqWd8S
-	 bNCWaBLyVG/jHfzGI5kw0WshYZp35yT646rPHUFuckTIubSF1bPtEKRyfh0zdjBX+J
-	 ghmz1R3FfjfY+6w6NHLvgv5ulKfL+Gl/CxxhHiNl3keA++7ZRwlvgHm+qb7M9V3280
-	 8cDSKZOsSNSaiwuCF8/YSRx1ig+rF0alihaa4tOSRDpfcwAa21PO33QSAtOWJXtQCF
-	 75TwETjtqNvPQ==
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-786a822e73aso118186277b3.3
-        for <linux-gpio@vger.kernel.org>; Sun, 04 Jan 2026 03:40:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWk2cQ2GBK2fK8sXabBzId2G+wEfETMWe4SIQwC1xNJi+SF1ZjkpwZ5IKOqCuJWWEEKBMTpMZY/r1Fs@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJU/WvH1nD98HxBv/ZmW+kLYe+ZouqSAOZA9FXosmxfFZ6TNrY
-	YdyKLa3mfyBAUFnUXq5ebTdFGOeT+rrhRqi9tfyQAMU2VfV3q7ZWqZceKlXRVvdQzwNiA0hAre4
-	UX1frLoRLoLw15FASUO6Fi0qAdutXx8w=
-X-Google-Smtp-Source: AGHT+IGKIXjy7lexXGYCiKMkRPD8ggwV371jcFQdcHsITC/B9zTB3o/bAj5rEawF9HMxUDdZ3DoVx/M+caRG/RtXYBo=
-X-Received: by 2002:a05:690e:1519:b0:643:33e8:11f1 with SMTP id
- 956f58d0204a3-6466a859594mr34395536d50.38.1767526799488; Sun, 04 Jan 2026
- 03:39:59 -0800 (PST)
+	b=Cg7UMARt7QUJwPWBD9T+bOjhUn6d/+c+hNn0FR+uMbWvqrb7/n9MLts7caS49DJkF
+	 OQah1x368eMjg5W21HTv1Ef9+DHSCbLVYph3jX6D5lkWKi5qT4fdSbErocHRthZJz4
+	 X06hftKfXtkkAz3/BIX0Ageje0ZQh6EmSGQ8FL9SCO2gSJo6eayH+9jHUK5fyOPE3/
+	 JQk1DnogBQ8uEQB2oUv0I32CBnpuwQw/+JBp3+sZmIrKbQRVJjNIdCT8AIGiNVMlnH
+	 7Mj/NT/NQEk6FHxkB2CTf5aXKmCrSNgaHwOjhqUdwlJak51zZDPkT77xXzn3LLYT20
+	 lgdyEfkCD4AcQ==
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-78fb5764382so100329947b3.0
+        for <linux-gpio@vger.kernel.org>; Sun, 04 Jan 2026 03:44:59 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUcsG7oCbBoWPgy/qAM3GgTKB0e4JN8BlAl9HOlCL4GYbnMw4Ix8Mk0omSyay9f+c4msTP93zeyhsrJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVzb3YKa4bDRTnebW34u0pmr8iseLMc923Iptxud7+0VOLl7Ys
+	Cu7fQ3hbk0pNRT7KiV+zUZSGhIf1avfmOL4xmsxghIblucsRJYcIJCa6cmmMLIeSZ/gD0urQg2/
+	pq4GL1FIu6mrqvZl6ydzZl/0D2D9Nvs0=
+X-Google-Smtp-Source: AGHT+IEg3DaZt0YbBBc1tGezgqWn4TsJbUX2OEwOcSIQLrbHB84o22MN0yY/1FtAcAVCX+iV8p02b8Dygwa19reZFf0=
+X-Received: by 2002:a53:b163:0:b0:640:d174:3839 with SMTP id
+ 956f58d0204a3-6466a8a66d9mr27719698d50.36.1767527098556; Sun, 04 Jan 2026
+ 03:44:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,12 +57,13 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20251216112053.1927852-1-ye.zhang@rock-chips.com>
  <20251216112053.1927852-7-ye.zhang@rock-chips.com> <CAD++jLntu4LY=VHOMSXeLKXOBD9MTNziv47B0qkDjxUa1xAsng@mail.gmail.com>
-In-Reply-To: <CAD++jLntu4LY=VHOMSXeLKXOBD9MTNziv47B0qkDjxUa1xAsng@mail.gmail.com>
+ <85032ae4-4d82-4884-aa7c-b69fee76d509@rock-chips.com>
+In-Reply-To: <85032ae4-4d82-4884-aa7c-b69fee76d509@rock-chips.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Sun, 4 Jan 2026 12:39:48 +0100
-X-Gmail-Original-Message-ID: <CAD++jLmLhgxagenhum0KQ1eDuzAa1E5DQqM-oN1VQUby3mTpZg@mail.gmail.com>
-X-Gm-Features: AQt7F2rYKdQBghWjfGpof99Et6swSjlhX4OCTK6LrN1u1e2LW2ybvz55mCS36AM
-Message-ID: <CAD++jLmLhgxagenhum0KQ1eDuzAa1E5DQqM-oN1VQUby3mTpZg@mail.gmail.com>
+Date: Sun, 4 Jan 2026 12:44:47 +0100
+X-Gmail-Original-Message-ID: <CAD++jLnH2vLNxTLj8Lw8RnOHxfitwi3G_8WCBtu+_=XL3ryH_w@mail.gmail.com>
+X-Gm-Features: AQt7F2rYL5D4zs_GjxYPSmiyYP8LYXnbe2QAtqp2dHlaiukECPzoU61iv3jhlis
+Message-ID: <CAD++jLnH2vLNxTLj8Lw8RnOHxfitwi3G_8WCBtu+_=XL3ryH_w@mail.gmail.com>
 Subject: Re: [PATCH v3 6/7] dt-bindings: pinctrl: rockchip: Add RMIO
  controller binding
 To: Ye Zhang <ye.zhang@rock-chips.com>
@@ -75,19 +76,44 @@ Cc: Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner <heiko@sntech.de>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Correcting myself:
+On Sat, Dec 27, 2025 at 3:46=E2=80=AFAM Ye Zhang <ye.zhang@rock-chips.com> =
+wrote:
 
-On Fri, Dec 26, 2025 at 7:07=E2=80=AFPM Linus Walleij <linusw@kernel.org> w=
-rote:
-
-> > +  rockchip,offset:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description:
-> > +      The offset of the RMIO configuration registers within the GRF.
+> I understand your preference for standard bindings.  However, there is a
+> specific constraint here: the RMIO acts as a secondary layer of muxing,
+> sitting behind the primary IOMUX controller.
 >
-> Can't this just be a cell in the phandle?
+> The existing Rockchip pinctrl binding uses the vendor-specific
+> rockchip,pins property for the primary IOMUX configuration.  If I were
+> to use the standard pinmux property for RMIO, the node would contain
+> mixed bindings like this:
+>
+> node {
+>      /* Primary IOMUX (existing binding) */
+>      rockchip,pins =3D <1 RK_PB1 16 &pcfg_pull_none>;
+>      /* Secondary RMIO  */
+>      pinmux =3D <(RMIO_ID << 16) | (RMIO_PIN << 8) | RMIO_FUNC>;
+> };
+>
+> Since this node describes a single hardware pin configuration that
+> requires two separate hardware settings (Primary Mux + Secondary RMIO),
+> I thought keeping the secondary config as a vendor-specific property
+> (rockchip,rmio) alongside rockchip,pins would be more consistent and
+> less confusing than mixing legacy custom bindings with standard pinmux.
 
-This can probably also be determined from the comaptible, can it not?
+I see the concern but I would say two wrongs doesn't make one right.
+
+The DT binding people will have to say what to do here, but ideally
+I would say the primary IOMUX should be modified to *also* *additionally*
+support the standard bindings and deprecating the old rockchip,pins,
+and then you can consistently use the pinmux=3D<>; binding in new
+trees for both pinmuxes.
+
+I understand that maybe you are only working on this other controller
+and might feel that the primary IOMUX is none of your concern,
+but someone has to stand up and take the responsibility for the system
+as a whole, if no-one else then the Rockchip SoC maintainer, else
+we get throw-over-the-wall-engineering.
 
 Yours,
 Linus Walleij
