@@ -1,101 +1,93 @@
-Return-Path: <linux-gpio+bounces-30099-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30100-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53859CF0D58
-	for <lists+linux-gpio@lfdr.de>; Sun, 04 Jan 2026 12:38:14 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40AFCCF0D67
+	for <lists+linux-gpio@lfdr.de>; Sun, 04 Jan 2026 12:40:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 589DD300EA34
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Jan 2026 11:38:08 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 323F530047B9
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Jan 2026 11:40:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18667286D4B;
-	Sun,  4 Jan 2026 11:38:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0419286D57;
+	Sun,  4 Jan 2026 11:40:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSrmBejJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hyJSJ5ED"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C839E28469A
-	for <linux-gpio@vger.kernel.org>; Sun,  4 Jan 2026 11:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF0F285061
+	for <linux-gpio@vger.kernel.org>; Sun,  4 Jan 2026 11:40:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767526686; cv=none; b=uz25EevLgXn/K06RpcJERDYAStGYwIkfZZwkATSsqzSiHGuAZkq5iRqrGuA4MP2L4Grloq+bLSFqqssbIXHLHI62g2zbw0p+e8TmGJs9JetYmJAi5j5AYH8GRJc0sIaGcPiQ/LLd/pAC3SKTd6sxGpZ18/vAEWjJH14zLOOb6ZE=
+	t=1767526800; cv=none; b=nXMR+wQN4BU+yjAZY5FNKR1h/DnYkFulPttzTlaibTyaEgPFCgyM1+c8HE2AoK5CsBRHRrL62NDKWfO14gRm0VM8TyHaIesVSHbq1fNtDspUWSl9uRvymWtk2ZZ26WnwDl0TDpK+ID957HmFNE/+WWxkB2KmSBArxzFylyPrmrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767526686; c=relaxed/simple;
-	bh=zzt8nsTReCOrFFimHSYnuwYVhyLibD7TXrGiySpB+f0=;
+	s=arc-20240116; t=1767526800; c=relaxed/simple;
+	bh=4OlOxxutktzHnj47iAJg6lb1/kg6UJCstgjPUdHssPw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pf3t88EDvMwVVpVQrVEs4f/bUAzWiI1m2PYF2Yl2sC9n1ejAyH/AhFDaiyOfdZcQS9eGCZEtijN0BPIHtUAIp5zKLDZku+7cgJsA5sZD8Jx89klPAx2R5C1l3fZvVcvFaZdIYj6cfp+juMXYSRkDN3I6RZtK4LgsAAOdjpUA+GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSrmBejJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 872A7C2BCB6
-	for <linux-gpio@vger.kernel.org>; Sun,  4 Jan 2026 11:38:06 +0000 (UTC)
+	 To:Cc:Content-Type; b=azy1Q/icaezhArInMNn+fatQFKjec46+DYGt1CBeo3Eaehz8DPElo9mmrvF+zEQ1uG4E6rvyPsW82UqoFReW0vdQOk4/38lmITZDUXJqhvzN/S4M3GcPif/oXAIoetbunYk66Nme462SjeqZcPKJDkZfefIJrhpVvLy4ywgRzSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hyJSJ5ED; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7915BC19425
+	for <linux-gpio@vger.kernel.org>; Sun,  4 Jan 2026 11:40:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767526686;
-	bh=zzt8nsTReCOrFFimHSYnuwYVhyLibD7TXrGiySpB+f0=;
+	s=k20201202; t=1767526800;
+	bh=4OlOxxutktzHnj47iAJg6lb1/kg6UJCstgjPUdHssPw=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lSrmBejJxZP8gHrW1lt8qLoXx5i5yIr8c9JjAw76JwT4w2DU5Bw/V3A8ds+61J9gA
-	 qrA1BD0oGFxFt5TGFqAv6/RSxsC53w/k7B87GXnPPGu5JyBIFEy/k2xW5XqJfBLQwZ
-	 s7To43MM/23LrjwnT2MHsbj2v+MNR3gch8pFv9yPYQDYuMjuaAik+CInCYu5+ZmfZA
-	 x9Du36muqnYdgEnwcEtBPGE0Q2krb+xtqRR3x8L+34PJR5hQ5QQvm7VmmsMrN+wnM9
-	 I2UaQA0Jag3f/lobO/fONtZhnVUHsQ9680OTtldkoKQt1MckmCleLVqFj0F055vXis
-	 sgoDnkXq9m56w==
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-78fba1a1b1eso14063137b3.1
-        for <linux-gpio@vger.kernel.org>; Sun, 04 Jan 2026 03:38:06 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXCpe9ZNBSOQlcohc6MtUBrpBjvgRST3faEFFF4Ghit/PpJA97OIhEN+CZCvB3nqkvcx6H/DoGyUNjG@vger.kernel.org
-X-Gm-Message-State: AOJu0YwE6QF/D0RVrcNAu674oTC7QJjJrL3ZwNZWHhVoz+IHRJZoVTI2
-	tUd/Q00b6MKo4pDfQLsvv+w01nlepQiNtiLKOVQDFuF/5uFSxIWhtyf3yGK/mpC+tHNqSEN5CwC
-	BSOj3MZMx8w33yxU68jC5BtdiprgUdA8=
-X-Google-Smtp-Source: AGHT+IF4Orabbp+U3oU6DE4mJfK9KKnbEOxrcm3UcvoG3IBBIUd0oK3DmWjwYq82sAXiIcIbWSh2iznA2Fvf8inAirk=
-X-Received: by 2002:a05:690e:b4d:b0:645:591a:cb5c with SMTP id
- 956f58d0204a3-646e341a6cdmr3638468d50.23.1767526685648; Sun, 04 Jan 2026
- 03:38:05 -0800 (PST)
+	b=hyJSJ5EDQCgI/03F+MYNO93KhNLLP8NLLkVCB6stSSFPbPGXYuMrIbZ/qqWq9WL3G
+	 YDonSDrxXoYN10wmBOrpUBAmr28DuD54Q9KjBjqNrB62lV2PvC1gCSxHIjVWLqWd8S
+	 bNCWaBLyVG/jHfzGI5kw0WshYZp35yT646rPHUFuckTIubSF1bPtEKRyfh0zdjBX+J
+	 ghmz1R3FfjfY+6w6NHLvgv5ulKfL+Gl/CxxhHiNl3keA++7ZRwlvgHm+qb7M9V3280
+	 8cDSKZOsSNSaiwuCF8/YSRx1ig+rF0alihaa4tOSRDpfcwAa21PO33QSAtOWJXtQCF
+	 75TwETjtqNvPQ==
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-786a822e73aso118186277b3.3
+        for <linux-gpio@vger.kernel.org>; Sun, 04 Jan 2026 03:40:00 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWk2cQ2GBK2fK8sXabBzId2G+wEfETMWe4SIQwC1xNJi+SF1ZjkpwZ5IKOqCuJWWEEKBMTpMZY/r1Fs@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJU/WvH1nD98HxBv/ZmW+kLYe+ZouqSAOZA9FXosmxfFZ6TNrY
+	YdyKLa3mfyBAUFnUXq5ebTdFGOeT+rrhRqi9tfyQAMU2VfV3q7ZWqZceKlXRVvdQzwNiA0hAre4
+	UX1frLoRLoLw15FASUO6Fi0qAdutXx8w=
+X-Google-Smtp-Source: AGHT+IGKIXjy7lexXGYCiKMkRPD8ggwV371jcFQdcHsITC/B9zTB3o/bAj5rEawF9HMxUDdZ3DoVx/M+caRG/RtXYBo=
+X-Received: by 2002:a05:690e:1519:b0:643:33e8:11f1 with SMTP id
+ 956f58d0204a3-6466a859594mr34395536d50.38.1767526799488; Sun, 04 Jan 2026
+ 03:39:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251212231203.727227-1-robh@kernel.org>
-In-Reply-To: <20251212231203.727227-1-robh@kernel.org>
+References: <20251216112053.1927852-1-ye.zhang@rock-chips.com>
+ <20251216112053.1927852-7-ye.zhang@rock-chips.com> <CAD++jLntu4LY=VHOMSXeLKXOBD9MTNziv47B0qkDjxUa1xAsng@mail.gmail.com>
+In-Reply-To: <CAD++jLntu4LY=VHOMSXeLKXOBD9MTNziv47B0qkDjxUa1xAsng@mail.gmail.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Sun, 4 Jan 2026 12:37:54 +0100
-X-Gmail-Original-Message-ID: <CAD++jLkAaAH9_YdTGqHUcOp8PfW+1P=ZLZzS_QseVYWxA4kiWw@mail.gmail.com>
-X-Gm-Features: AQt7F2qijkDXeXovdHRRQ5QEL33UZBQlEMiEIzun3p2-rj7cwfnP7kAmQfWhUyg
-Message-ID: <CAD++jLkAaAH9_YdTGqHUcOp8PfW+1P=ZLZzS_QseVYWxA4kiWw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Remove unused includes
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Michal Simek <michal.simek@amd.com>, 
-	Vinod Koul <vkoul@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Yong Wu <yong.wu@mediatek.com>, Peter Rosin <peda@axentia.se>, 
-	Chen-Yu Tsai <wens@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	dmaengine@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-iio@vger.kernel.org, iommu@lists.linux.dev, linux-gpio@vger.kernel.org, 
-	linux-sunxi@lists.linux.dev, imx@lists.linux.dev, linux-sound@vger.kernel.org
+Date: Sun, 4 Jan 2026 12:39:48 +0100
+X-Gmail-Original-Message-ID: <CAD++jLmLhgxagenhum0KQ1eDuzAa1E5DQqM-oN1VQUby3mTpZg@mail.gmail.com>
+X-Gm-Features: AQt7F2rYKdQBghWjfGpof99Et6swSjlhX4OCTK6LrN1u1e2LW2ybvz55mCS36AM
+Message-ID: <CAD++jLmLhgxagenhum0KQ1eDuzAa1E5DQqM-oN1VQUby3mTpZg@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] dt-bindings: pinctrl: rockchip: Add RMIO
+ controller binding
+To: Ye Zhang <ye.zhang@rock-chips.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	tao.huang@rock-chips.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Dec 13, 2025 at 12:12=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org=
-> wrote:
+Correcting myself:
 
-> Remove includes which are not referenced by either DTS files or drivers.
->
-> There's a few more which are new, so they are excluded for now.
->
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+On Fri, Dec 26, 2025 at 7:07=E2=80=AFPM Linus Walleij <linusw@kernel.org> w=
+rote:
 
-Good.
-Reviewed-by: Linus Walleij <linusw@kernel.org>
+> > +  rockchip,offset:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description:
+> > +      The offset of the RMIO configuration registers within the GRF.
+>
+> Can't this just be a cell in the phandle?
+
+This can probably also be determined from the comaptible, can it not?
 
 Yours,
 Linus Walleij
