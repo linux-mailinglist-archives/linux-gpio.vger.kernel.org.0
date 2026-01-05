@@ -1,55 +1,55 @@
-Return-Path: <linux-gpio+bounces-30172-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30173-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 724ACCF5145
-	for <lists+linux-gpio@lfdr.de>; Mon, 05 Jan 2026 18:51:07 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0D68CF535C
+	for <lists+linux-gpio@lfdr.de>; Mon, 05 Jan 2026 19:19:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D0DA13029C12
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jan 2026 17:51:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6953530C9B85
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jan 2026 18:16:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A567D346A18;
-	Mon,  5 Jan 2026 17:51:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F8D93254B5;
+	Mon,  5 Jan 2026 18:16:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GiM/WJV4"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gfCIieX/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF96346768
-	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 17:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09A732570D
+	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 18:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767635463; cv=none; b=FIjxQVRaPdaGbS9G+aBtN017vJ/EOS3SaWaync6ntJKGC2mbDUD+0yUp/ZZ7OqHu/WDrllSGNo68ZZiwKPyauYXk8Qm9XjjLveWXUfk5mRkAxmGRijvUgu8MRikbJltzPO51d9qBh5siQftJnqUEdlXTa1sLzgW+1yDnzXGAtc8=
+	t=1767636970; cv=none; b=dQb5xWf5B69yF2FtSBYPl3d3VqxeiWR3EfVXtfZBOtvXAo3B1l7aKic8XyDMWTrK+wBh7WBx8VG6k4fBSPiwOYFjjtKSmhTesMPFqZZS/exZLGltfFmoJ3zVapq32uJWEXjqrljVb9lhAypkn0ubGUZxOyWLxT+v25Y5uyBtJys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767635463; c=relaxed/simple;
-	bh=9p1fiHwOGBf+CAAbiRfNz3uGPtd19UyeeyZrPnVWdbc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=ZMUEaw/WQA4imn3wAOltaZU7qPsQ5YPCntIPup7ysFJnAVTud9LLvokkj8wVosNvHEJWsLNRlPrn2eY+J4Dpi6rp3WsWLDr6SY5B6Zg9h9/xvyMi32yKUtP+BlEuJbcF9te85JeSAouOT4Fr8MVGwW7V13Yx2ZmEDLm6kqRDkxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GiM/WJV4; arc=none smtp.client-ip=210.118.77.11
+	s=arc-20240116; t=1767636970; c=relaxed/simple;
+	bh=A7gNXNFB8xRtDfZr1V3EN/I8adhlhmCKGYrl7EFiLoI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:In-Reply-To:
+	 Content-Type:References; b=X3sohXtUtznyroq2jMVlCxvlqRvuKAYhSLpWp0qUUfiMnWzmwwJEaTE9NMW2YPZGdR8QUx2x3zuiUFkw8/YfgItScf1bN7AdQv2ohy5qQfnRlhykFsff06YlTn6uJmUQFuvhWOyNi+3XxsEAI7He1kInEiqRfIID3Y/M3w+kdso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=gfCIieX/; arc=none smtp.client-ip=210.118.77.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20260105175058euoutp01e7c00fe0a0f7545f9bf27ba63cbaa267~H5xVyEXiq3175131751euoutp01C
-	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 17:50:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20260105175058euoutp01e7c00fe0a0f7545f9bf27ba63cbaa267~H5xVyEXiq3175131751euoutp01C
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20260105181604euoutp02deaee51038e1acf2145a5f97fe19a54f~H6HRHyZIJ2944329443euoutp02x
+	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 18:16:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20260105181604euoutp02deaee51038e1acf2145a5f97fe19a54f~H6HRHyZIJ2944329443euoutp02x
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1767635458;
-	bh=UIl6SHJhWkfN0/1FLxWUZ38nXwKxplUrKF/eFOo1uVI=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=GiM/WJV48jrskVobEyKgi0zMxPnakTZILgr9xs5nLcJUMteqWX+UA4H5dn+8tQBfG
-	 eEjBFYSdZHxP7pXQLzHJadNpHOS1agFolQJbMwygokqAGAwGse0W4jjI5xCvrsJ2u5
-	 x9zG/eMfACdNYs9467DjD7I5LUrKcj9SYhQYX+LY=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	s=mail20170921; t=1767636964;
+	bh=CZpNhKgKBUJeeJlb2Oj06Qm6plDvlhoN1tV/Sntfu10=;
+	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
+	b=gfCIieX/XAsyYCo75g4mZmzjGDpxvJBlfMKZx8sp1OERx3qDFULmGlANtdm4Jmlki
+	 82NHg+pIzyibAf+uJcHKy/ybh+0ph4T+tFzLgG12hKwjdk57rA9hxX2ZFLKGs8F9sy
+	 TuDpbwBP9lfhc+d7KDRvc2ozr0oFILwk7jme4SKw=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
 	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20260105175057eucas1p274610bd996f1599b43d386f0afdb0fb6~H5xVeVD8s2877028770eucas1p2i;
-	Mon,  5 Jan 2026 17:50:57 +0000 (GMT)
+	20260105181604eucas1p2c0c3f917560e8deda5dfa5b7cd09ac89~H6HQ8FGc61567315673eucas1p2U;
+	Mon,  5 Jan 2026 18:16:04 +0000 (GMT)
 Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20260105175055eusmtip2bd9960cd4f35babf9088305da14604af~H5xTTw38e1923619236eusmtip2N;
-	Mon,  5 Jan 2026 17:50:55 +0000 (GMT)
-Message-ID: <d035fc29-3b03-4cd6-b8ec-001f93540bc6@samsung.com>
-Date: Mon, 5 Jan 2026 18:50:53 +0100
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20260105181603eusmtip1c8f3f9a01d1f78ce46a688dc2d0392da~H6HPvItmA0426604266eusmtip1f;
+	Mon,  5 Jan 2026 18:16:02 +0000 (GMT)
+Message-ID: <eac0d2aa-fcc0-4aa4-a266-89957dcf7b70@samsung.com>
+Date: Mon, 5 Jan 2026 19:16:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,122 +57,116 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH] pinctrl: meson: mark the GPIO controller as sleeping
-To: Bartosz Golaszewski <brgl@kernel.org>, Martin Blumenstingl
-	<martin.blumenstingl@googlemail.com>
-Cc: Linus Walleij <linusw@kernel.org>, Neil Armstrong
-	<neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Jerome
-	Brunet <jbrunet@baylibre.com>, linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, Bartosz Golaszewski
-	<bartosz.golaszewski@oss.qualcomm.com>
-Content-Language: en-US
+Subject: Re: [PATCH 3/3] gpio: shared: allow sharing a reset-gpios pin
+ between reset-gpio and gpiolib
 From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <CAMRc=MeYWm=5bwfT5s+w6_kjt=wROonZSYo8=kA3Eyva4hpp1g@mail.gmail.com>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Linus
+	Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Content-Language: en-US
+In-Reply-To: <3cb799ed-6760-481b-991d-5d90a23b9128@samsung.com>
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20260105175057eucas1p274610bd996f1599b43d386f0afdb0fb6
+X-CMS-MailID: 20260105181604eucas1p2c0c3f917560e8deda5dfa5b7cd09ac89
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20260105173844eucas1p1d0d5b5a84d4690d42f98f73a04de8b42
+X-RootMTR: 20260105115023eucas1p1af1f8e80041f94843beb664966894fb9
 X-EPHeader: CA
-X-CMS-RootMailID: 20260105173844eucas1p1d0d5b5a84d4690d42f98f73a04de8b42
-References: <20260105150509.56537-1-bartosz.golaszewski@oss.qualcomm.com>
-	<CAFBinCAc7CO8gfNQakCu3LfkYXuyTd2iRpMRm8EKXSL0mwOnJw@mail.gmail.com>
-	<CGME20260105173844eucas1p1d0d5b5a84d4690d42f98f73a04de8b42@eucas1p1.samsung.com>
-	<CAMRc=MeYWm=5bwfT5s+w6_kjt=wROonZSYo8=kA3Eyva4hpp1g@mail.gmail.com>
+X-CMS-RootMailID: 20260105115023eucas1p1af1f8e80041f94843beb664966894fb9
+References: <20251222-gpio-shared-reset-gpio-proxy-v1-0-8d4bba7d8c14@oss.qualcomm.com>
+	<CGME20260105115023eucas1p1af1f8e80041f94843beb664966894fb9@eucas1p1.samsung.com>
+	<20251222-gpio-shared-reset-gpio-proxy-v1-3-8d4bba7d8c14@oss.qualcomm.com>
+	<00107523-7737-4b92-a785-14ce4e93b8cb@samsung.com>
+	<CAMRc=Mc7dqqpNTb9WSLD7ZZr9dmUTO_rvujJi3LhhjVncjE-8w@mail.gmail.com>
+	<3cb799ed-6760-481b-991d-5d90a23b9128@samsung.com>
 
-On 05.01.2026 18:38, Bartosz Golaszewski wrote:
-> On Mon, 5 Jan 2026 18:28:23 +0100, Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> said:
->> Hi Bartosz,
+On 05.01.2026 18:26, Marek Szyprowski wrote:
+> On 05.01.2026 13:28, Bartosz Golaszewski wrote:
+>> On Mon, Jan 5, 2026 at 12:50 PM Marek Szyprowski
+>> <m.szyprowski@samsung.com> wrote:
+>>> On 22.12.2025 11:01, Bartosz Golaszewski wrote:
+>>>> We currently support sharing GPIOs between multiple devices whose 
+>>>> drivers
+>>>> use either the GPIOLIB API *OR* the reset control API but not both at
+>>>> the same time.
+>>>>
+>>>> There's an unlikely corner-case where a reset-gpios pin can be 
+>>>> shared by
+>>>> one driver using the GPIOLIB API and a second using the reset API. 
+>>>> This
+>>>> will currently not work as the reset-gpio consumers are not 
+>>>> described in
+>>>> firmware at the time of scanning so the shared GPIO just chooses 
+>>>> one of
+>>>> the proxies created for the consumers when the reset-gpio driver 
+>>>> performs
+>>>> the lookup. This can of course conflict in the case described above.
+>>>>
+>>>> In order to fix it: if we deal with the "reset-gpios" pin that's 
+>>>> shared
+>>>> acconding to the firmware node setup, create a proxy for each 
+>>>> described
+>>>> consumer as well as another one for the potential reset-gpio 
+>>>> device. To
+>>>> that end: rework the matching to take this into account.
+>>>>
+>>>> Fixes: 7b78b26757e0 ("gpio: shared: handle the reset-gpios corner 
+>>>> case")
+>>>> Signed-off-by: Bartosz Golaszewski 
+>>>> <bartosz.golaszewski@oss.qualcomm.com>
+>>> This patch landed in linux-next as commit 49416483a953 ("gpio: shared:
+>>> allow sharing a reset-gpios pin between reset-gpio and gpiolib"). In my
+>>> tests I found that it breaks booting and triggers warnings on some 
+>>> of my
+>>> test boards. Reverting it on top of next-20260105 fixes those issues.
+>>> Let me know if I can help debugging this issue.
+>>>
+>>>
+>>> Here are relevant logs from my 3 test systems:
+>>>
+>> Thanks for the report.
 >>
->> On Mon, Jan 5, 2026 at 4:05 PM Bartosz Golaszewski
->> <bartosz.golaszewski@oss.qualcomm.com> wrote:
->> [...]
->>>    mutex_lock_nested+0x24/0x30
->>>    pinctrl_get_device_gpio_range+0x44/0x128
->>>    pinctrl_gpio_set_config+0x40/0xdc
->>>    gpiochip_generic_config+0x28/0x3c
->>>    gpio_do_set_config+0xa8/0x194
->> $ git grep gpiochip_generic_config drivers/pinctrl/meson/
->> drivers/pinctrl/meson/pinctrl-amlogic-a4.c:     .set_config
->>   = gpiochip_generic_config,
->> drivers/pinctrl/meson/pinctrl-meson.c:  pc->chip.set_config =
->> gpiochip_generic_config;
+>> Nice combo, it looks like these are three separate bugs...
 >>
->> pinctrl-amlogic-a4.c still has:
->>    .can_sleep = false,
->>
->> Are there plans to send a separate fix for pinctrl-amlogic-a4.c - or
->> was the intention to fix "all" Amlogic pin controllers in this patch
->> (which would mean that the change to pinctrl-amlogic-a4.c is missing)?
->>
->>
-> Yeah, I missed it. I will send a follow-up tomorrow.
+>>> 1. Samsung TM2e - arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
+>>>
+>>> exynos-dsi 13900000.dsi: [drm:samsung_dsim_host_attach] Attached 
+>>> s6e3hf2
+>>> device (lanes:4 bpp:24 mode-flags:0x6e0)
+>>> Unable to handle kernel NULL pointer dereference at virtual address
+>> Could you use faddr2line to point me to the exact offending line? This
+>> would speed up the debugging.
+>
+> I need some time to get that output, but this issue is caused by a 
+> devm_gpiod_get_optional() call for a gpio that is not defined for that 
+> board.
+>
+I think that everything is in the call stack:
 
-I found that drivers/pinctrl/pinctrl-rockchip.c suffers for the same 
-issue, although I don't see where this ".can_sleep" flag has to be added:
-
-BUG: sleeping function called from invalid context at 
-kernel/locking/mutex.c:591
-in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 12, name: 
-kworker/u16:0
-preempt_count: 1, expected: 0
-RCU nest depth: 0, expected: 0
-6 locks held by kworker/u16:0/12:
-  #0: ffff0001f0018d48 ((wq_completion)events_unbound#2){+.+.}-{0:0}, 
-at: process_one_work+0x18c/0x604
-  #1: ffff8000842dbdf0 (deferred_probe_work){+.+.}-{0:0}, at: 
-process_one_work+0x1b4/0x604
-  #2: ffff0001f18498f8 (&dev->mutex){....}-{4:4}, at: 
-__device_attach+0x38/0x1b0
-  #3: ffff0001f75f1e90 (&gdev->srcu){.+.?}-{0:0}, at: 
-gpiod_direction_output_raw_commit+0x0/0x360
-  #4: ffff0001f46e3db8 (&shared_desc->spinlock){....}-{3:3}, at: 
-gpio_shared_proxy_direction_output+0xd0/0x144 [gpio_shared_proxy]
-  #5: ffff0001f180ee90 (&gdev->srcu){.+.?}-{0:0}, at: 
-gpiod_direction_output_raw_commit+0x0/0x360
-irq event stamp: 81450
-hardirqs last  enabled at (81449): [<ffff8000813acba4>] 
-_raw_spin_unlock_irqrestore+0x74/0x78
-hardirqs last disabled at (81450): [<ffff8000813abfb8>] 
-_raw_spin_lock_irqsave+0x84/0x88
-softirqs last  enabled at (79616): [<ffff8000811455fc>] 
-__alloc_skb+0x17c/0x1e8
-softirqs last disabled at (79614): [<ffff8000811455fc>] 
-__alloc_skb+0x17c/0x1e8
-CPU: 2 UID: 0 PID: 12 Comm: kworker/u16:0 Not tainted 
-6.19.0-rc4-next-20260105+ #11975 PREEMPT
-Hardware name: Hardkernel ODROID-M1 (DT)
-Workqueue: events_unbound deferred_probe_work_func
 Call trace:
-  show_stack+0x18/0x24 (C)
-  dump_stack_lvl+0x90/0xd0
-  dump_stack+0x18/0x24
-  __might_resched+0x144/0x248
-  __might_sleep+0x48/0x98
-  __mutex_lock+0x5c/0x894
-  mutex_lock_nested+0x24/0x30
-  pinctrl_get_device_gpio_range+0x44/0x128
-  pinctrl_gpio_direction+0x3c/0xe0
-  pinctrl_gpio_direction_output+0x14/0x20
-  rockchip_gpio_direction_output+0xb8/0x19c
-  gpiochip_direction_output+0x38/0x94
-  gpiod_direction_output_raw_commit+0x1d8/0x360
-  gpiod_direction_output_nonotify+0x7c/0x230
-  gpiod_direction_output+0x34/0xf8
-  gpio_shared_proxy_direction_output+0xec/0x144 [gpio_shared_proxy]
-  gpiochip_direction_output+0x38/0x94
-  gpiod_direction_output_raw_commit+0x1d8/0x360
-  gpiod_direction_output_nonotify+0x7c/0x230
-  gpiod_configure_flags+0xbc/0x480
+  gpiod_direction_input_nonotify+0x20/0x39c (P)
+  gpiod_configure_flags+0x23c/0x480
   gpiod_find_and_request+0x1a0/0x574
   gpiod_get_index+0x58/0x84
   devm_gpiod_get_index+0x20/0xb4
   devm_gpiod_get_optional+0x18/0x30
-  rockchip_pcie_probe+0x98/0x380
-  platform_probe+0x5c/0xac
-  really_probe+0xbc/0x298
+  samsung_dsim_host_attach+0x1c8/0x284
+  mipi_dsi_attach+0x30/0x54
+  s6e3ha2_probe+0x148/0x200 [panel_samsung_s6e3ha2]
+
+...
+
+
+The issue is in gpiod_direction_input_nonotify+0x20/0x39c:
+
+$ grep gpiod_direction_input_nonotify System.map
+ffff800080810360 T gpiod_direction_input_nonotify
+
+$ aarch64-linux-gnu-addr2line -f -e vmlinux ffff800080810380
+class_gpio_chip_guard_constructor
+/home/m.szyprowski/dev/kernel/linux-next/drivers/gpio/gpiolib.h:231
+
+IMHO it looks that gpiod_configure_flags() is called for NULL gpio_chip.
 
 Best regards
 -- 
