@@ -1,170 +1,182 @@
-Return-Path: <linux-gpio+bounces-30171-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30172-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5081CF509D
-	for <lists+linux-gpio@lfdr.de>; Mon, 05 Jan 2026 18:42:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 724ACCF5145
+	for <lists+linux-gpio@lfdr.de>; Mon, 05 Jan 2026 18:51:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6F7C8302F923
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jan 2026 17:42:40 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D0DA13029C12
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jan 2026 17:51:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CE7B33BBD4;
-	Mon,  5 Jan 2026 17:42:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A567D346A18;
+	Mon,  5 Jan 2026 17:51:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FiPwtp6/"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GiM/WJV4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A1933AD87
-	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 17:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF96346768
+	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 17:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767634958; cv=none; b=Oo/xfZ/2e1oRrpQd3zHhtQV9udbnwDmxUlg0kM2/a5AjarKEjPUQn4RGOhxYKIdX3TUxQnUCV+bo9L69iIi23dOgY0bVSGUR9h4E58zny9Pp7o4Ym71iq2x/3ggmwTOqn7yArhj8he/Izbl0jf8JUDALNT8hbTZ9zIAIL4XLqa4=
+	t=1767635463; cv=none; b=FIjxQVRaPdaGbS9G+aBtN017vJ/EOS3SaWaync6ntJKGC2mbDUD+0yUp/ZZ7OqHu/WDrllSGNo68ZZiwKPyauYXk8Qm9XjjLveWXUfk5mRkAxmGRijvUgu8MRikbJltzPO51d9qBh5siQftJnqUEdlXTa1sLzgW+1yDnzXGAtc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767634958; c=relaxed/simple;
-	bh=wbYLsgDD03dm4sNR05eSoXr+Dzzy9LENlk/8p0wONVQ=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aLcFq8MYhOc3+nqHBphOSYyB8hQwvy0IoEZx9Frprli1OzlTahqJ8dZRLLx+FokttnHbcFygZeGsTtBAfTsbpKKClNM160pW/TQI1/a+lT7+pmgXSLonmM4pSHa9NCqCtWudyjXfyOU7oj0ZBXLmDB4DK6lHpaJn7wLAW2lDioo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FiPwtp6/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FAADC4AF09
-	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 17:42:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767634957;
-	bh=wbYLsgDD03dm4sNR05eSoXr+Dzzy9LENlk/8p0wONVQ=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=FiPwtp6/1IIwMp9OD7ki6dBrkG0xXz1S9kL/gTpr19NdAm4aCm0Ytbx3P4SfomaEf
-	 fpRzZbKJ3YGWcpx0C2N5dxCOL/Ty5hqnH7Avz8b+sewQGe3O1IDRe87nVA+HfvRWoV
-	 kblJ/DRVwnyrC1NT20XYitZJlny+CpC6Zw9LA1WMB7luwJY8hkrtJrgPqdHrZIDpKO
-	 +PiTlxeGrpRFsAbHG8P/ynpcu5H7RhKL0uL//6AagVY4T1qn11OvmFYVHblWoJqVeV
-	 v4f4TZnu1DI1yv0Xkly7tJo0Xj3AI4MUEbn7GuixrmwwTiyOXy7Mh4tNg2m0Gz8XKy
-	 9CQfFaxCXHomA==
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-37bac34346dso1360541fa.2
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Jan 2026 09:42:37 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXzOPgW4MHRVwEyaYeK0H0BRGgZg91i9mTjYu3vpBot+2e9UtoPKBG+Pxyp+pSR2za1YdBjyEmZ1A50@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywo+Zeo7smcntSjZhNs2sYIpdBx1QwM9s4ZrAlweLO3HeHegRbm
-	ZpRqQP+2xcZC3CFLsg/jWfR297ia6qji/uxAoax8yToOKxDq47o370/xWOy8s5QGxSgCJv0o8JW
-	VuQyarclCquRgkweS9W5KGydMXr2DGYekyb0+slvuDA==
-X-Google-Smtp-Source: AGHT+IHpghTQQyrUN0Z9VxbS6fN3aM/lQadTRQJsW+KOcBcpywrLxs6XQlKq3dFyHnypOsYzRrooDGGEq3wK7tu3QrU=
-X-Received: by 2002:a05:651c:41d6:b0:356:7e6f:c66b with SMTP id
- 38308e7fff4ca-382eaae3ec8mr188771fa.38.1767634956232; Mon, 05 Jan 2026
- 09:42:36 -0800 (PST)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 5 Jan 2026 09:42:35 -0800
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 5 Jan 2026 09:42:35 -0800
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <c53c4f14-cb0e-475d-baf9-c02f24e3df5c@samsung.com>
+	s=arc-20240116; t=1767635463; c=relaxed/simple;
+	bh=9p1fiHwOGBf+CAAbiRfNz3uGPtd19UyeeyZrPnVWdbc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=ZMUEaw/WQA4imn3wAOltaZU7qPsQ5YPCntIPup7ysFJnAVTud9LLvokkj8wVosNvHEJWsLNRlPrn2eY+J4Dpi6rp3WsWLDr6SY5B6Zg9h9/xvyMi32yKUtP+BlEuJbcF9te85JeSAouOT4Fr8MVGwW7V13Yx2ZmEDLm6kqRDkxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GiM/WJV4; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20260105175058euoutp01e7c00fe0a0f7545f9bf27ba63cbaa267~H5xVyEXiq3175131751euoutp01C
+	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 17:50:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20260105175058euoutp01e7c00fe0a0f7545f9bf27ba63cbaa267~H5xVyEXiq3175131751euoutp01C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1767635458;
+	bh=UIl6SHJhWkfN0/1FLxWUZ38nXwKxplUrKF/eFOo1uVI=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=GiM/WJV48jrskVobEyKgi0zMxPnakTZILgr9xs5nLcJUMteqWX+UA4H5dn+8tQBfG
+	 eEjBFYSdZHxP7pXQLzHJadNpHOS1agFolQJbMwygokqAGAwGse0W4jjI5xCvrsJ2u5
+	 x9zG/eMfACdNYs9467DjD7I5LUrKcj9SYhQYX+LY=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20260105175057eucas1p274610bd996f1599b43d386f0afdb0fb6~H5xVeVD8s2877028770eucas1p2i;
+	Mon,  5 Jan 2026 17:50:57 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20260105175055eusmtip2bd9960cd4f35babf9088305da14604af~H5xTTw38e1923619236eusmtip2N;
+	Mon,  5 Jan 2026 17:50:55 +0000 (GMT)
+Message-ID: <d035fc29-3b03-4cd6-b8ec-001f93540bc6@samsung.com>
+Date: Mon, 5 Jan 2026 18:50:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20260105155232eucas1p1a0d0d603716267eacef8f57f7aa5e34f@eucas1p1.samsung.com>
- <20260105-gpio-shared-fixes-v1-0-76d6ff0afcd8@oss.qualcomm.com>
- <9ce71b14-b058-4192-9562-99856a89af1d@samsung.com> <CAMRc=McGaZBDQp2+4Q5G_qkKu_fPDxWwsoo3MujkZs70eBDqxQ@mail.gmail.com>
- <c53c4f14-cb0e-475d-baf9-c02f24e3df5c@samsung.com>
-Date: Mon, 5 Jan 2026 09:42:35 -0800
-X-Gmail-Original-Message-ID: <CAMRc=Mc0YUvoEYB7RCEBWmU1gM_zEzB0mhQ3D9+fO7jwkmAtGQ@mail.gmail.com>
-X-Gm-Features: AQt7F2rL2-g-TifdH_KNl-4gKJp2Ts74VWT15e6l5HGnxOgLYArGxIMlYH_3vu8
-Message-ID: <CAMRc=Mc0YUvoEYB7RCEBWmU1gM_zEzB0mhQ3D9+fO7jwkmAtGQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] gpio: shared: another set of small fixes
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Linus Walleij <linusw@kernel.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <brgl@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH] pinctrl: meson: mark the GPIO controller as sleeping
+To: Bartosz Golaszewski <brgl@kernel.org>, Martin Blumenstingl
+	<martin.blumenstingl@googlemail.com>
+Cc: Linus Walleij <linusw@kernel.org>, Neil Armstrong
+	<neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Jerome
+	Brunet <jbrunet@baylibre.com>, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, Bartosz Golaszewski
+	<bartosz.golaszewski@oss.qualcomm.com>
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <CAMRc=MeYWm=5bwfT5s+w6_kjt=wROonZSYo8=kA3Eyva4hpp1g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20260105175057eucas1p274610bd996f1599b43d386f0afdb0fb6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20260105173844eucas1p1d0d5b5a84d4690d42f98f73a04de8b42
+X-EPHeader: CA
+X-CMS-RootMailID: 20260105173844eucas1p1d0d5b5a84d4690d42f98f73a04de8b42
+References: <20260105150509.56537-1-bartosz.golaszewski@oss.qualcomm.com>
+	<CAFBinCAc7CO8gfNQakCu3LfkYXuyTd2iRpMRm8EKXSL0mwOnJw@mail.gmail.com>
+	<CGME20260105173844eucas1p1d0d5b5a84d4690d42f98f73a04de8b42@eucas1p1.samsung.com>
+	<CAMRc=MeYWm=5bwfT5s+w6_kjt=wROonZSYo8=kA3Eyva4hpp1g@mail.gmail.com>
 
-On Mon, 5 Jan 2026 18:22:31 +0100, Marek Szyprowski
-<m.szyprowski@samsung.com> said:
-> On 05.01.2026 17:53, Bartosz Golaszewski wrote:
->> On Mon, 5 Jan 2026 17:48:05 +0100, Marek Szyprowski
->> <m.szyprowski@samsung.com> said:
->>> On 05.01.2026 16:52, Bartosz Golaszewski wrote:
->>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.c=
-om>
->>>> ---
->>>> Bartosz Golaszewski (2):
->>>>         gpio: shared: assign the correct firmware node for reset-gpio =
-use-case
->>>>         gpio: shared: fix a race condition
->>>>
->>>>    drivers/gpio/gpiolib-shared.c | 4 +++-
->>>>    1 file changed, 3 insertions(+), 1 deletion(-)
->>>> ---
->>>> base-commit: 19fb766a1e5ed5943a62fc671c09d45352a81b1d
->>>> change-id: 20260105-gpio-shared-fixes-40a8ec3b6b25
->>> Those patches indeed fixes some timing issues with the commit
->>> 49416483a953 ("gpio: shared: allow sharing a reset-gpios pin between
->>> reset-gpio and gpiolib"), but they also reveals another one. I've
->>> initially thought that this is a false positive and needs only a proper
->>> lockdep annotation, but some boards=C2=A0hang just after similar lockde=
-p splat:
->>>
->>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>> WARNING: possible recursive locking detected
->>> 6.19.0-rc4-next-20260105+ #11974 Not tainted
->>> --------------------------------------------
->>> (udev-worker)/192 is trying to acquire lock:
->>> ffff000004c15098 (&ref->lock){+.+.}-{4:4}, at:
->>> gpio_shared_dev_is_reset_gpio+0xcc/0x234
->>>
->>> but task is already holding lock:
->>> ffff000004c15898 (&ref->lock){+.+.}-{4:4}, at:
->>> gpio_shared_add_proxy_lookup+0x98/0x228
->>>
->>> other info that might help us debug this:
->>>   =C2=A0Possible unsafe locking scenario:
->>>
->>>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 CPU0
->>>   =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ----
->>>   =C2=A0 lock(&ref->lock);
->>>   =C2=A0 lock(&ref->lock);
->>>
->>>   =C2=A0*** DEADLOCK ***
->>>
->>>   =C2=A0May be due to missing lock nesting notation
->>>
->>> 3 locks held by (udev-worker)/192:
->>>   =C2=A0#0: ffff00000b3ad8e8 (&dev->mutex){....}-{4:4}, at:
->>> __driver_attach+0x90/0x1ac
->>>   =C2=A0#1: ffff8000830f2600 (gpio_devices_srcu){.+.+}-{0:0}, at:
->>> gpiod_find_and_request+0x0/0x574
->>>   =C2=A0#2: ffff000004c15898 (&ref->lock){+.+.}-{4:4}, at:
->>> gpio_shared_add_proxy_lookup+0x98/0x228
->>>
->> Ah this must be due to also trying to compare the ref to the base ref...
+On 05.01.2026 18:38, Bartosz Golaszewski wrote:
+> On Mon, 5 Jan 2026 18:28:23 +0100, Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> said:
+>> Hi Bartosz,
 >>
->> Could you try to add the following on top:
+>> On Mon, Jan 5, 2026 at 4:05 PM Bartosz Golaszewski
+>> <bartosz.golaszewski@oss.qualcomm.com> wrote:
+>> [...]
+>>>    mutex_lock_nested+0x24/0x30
+>>>    pinctrl_get_device_gpio_range+0x44/0x128
+>>>    pinctrl_gpio_set_config+0x40/0xdc
+>>>    gpiochip_generic_config+0x28/0x3c
+>>>    gpio_do_set_config+0xa8/0x194
+>> $ git grep gpiochip_generic_config drivers/pinctrl/meson/
+>> drivers/pinctrl/meson/pinctrl-amlogic-a4.c:     .set_config
+>>   = gpiochip_generic_config,
+>> drivers/pinctrl/meson/pinctrl-meson.c:  pc->chip.set_config =
+>> gpiochip_generic_config;
 >>
->> diff --git a/drivers/gpio/gpiolib-shared.c b/drivers/gpio/gpiolib-shared=
-.c
->> index 198951c4c80b..5f3b8bc4a4fc 100644
->> --- a/drivers/gpio/gpiolib-shared.c
->> +++ b/drivers/gpio/gpiolib-shared.c
->> @@ -378,6 +378,9 @@ static bool gpio_shared_dev_is_reset_gpio(struct
->> device *consumer,
->>   	 * arguments match the ones from this consumer's node.
->>   	 */
->>   	list_for_each_entry(real_ref, &entry->refs, list) {
->> +		if (real_ref =3D=3D ref)
->> +			continue;
->> +
->>   		guard(mutex)(&real_ref->lock);
+>> pinctrl-amlogic-a4.c still has:
+>>    .can_sleep = false,
 >>
->>   		if (!real_ref->fwnode)
+>> Are there plans to send a separate fix for pinctrl-amlogic-a4.c - or
+>> was the intention to fix "all" Amlogic pin controllers in this patch
+>> (which would mean that the change to pinctrl-amlogic-a4.c is missing)?
 >>
 >>
->> If that works, I'll send a v2.
->
-> This fixed the hangs, but the lockdep whining is still there.
->
+> Yeah, I missed it. I will send a follow-up tomorrow.
 
-Then it's a false-positive. I will try to play with lockdep_set_class()
-tomorrow.
+I found that drivers/pinctrl/pinctrl-rockchip.c suffers for the same 
+issue, although I don't see where this ".can_sleep" flag has to be added:
 
-Bart
+BUG: sleeping function called from invalid context at 
+kernel/locking/mutex.c:591
+in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 12, name: 
+kworker/u16:0
+preempt_count: 1, expected: 0
+RCU nest depth: 0, expected: 0
+6 locks held by kworker/u16:0/12:
+  #0: ffff0001f0018d48 ((wq_completion)events_unbound#2){+.+.}-{0:0}, 
+at: process_one_work+0x18c/0x604
+  #1: ffff8000842dbdf0 (deferred_probe_work){+.+.}-{0:0}, at: 
+process_one_work+0x1b4/0x604
+  #2: ffff0001f18498f8 (&dev->mutex){....}-{4:4}, at: 
+__device_attach+0x38/0x1b0
+  #3: ffff0001f75f1e90 (&gdev->srcu){.+.?}-{0:0}, at: 
+gpiod_direction_output_raw_commit+0x0/0x360
+  #4: ffff0001f46e3db8 (&shared_desc->spinlock){....}-{3:3}, at: 
+gpio_shared_proxy_direction_output+0xd0/0x144 [gpio_shared_proxy]
+  #5: ffff0001f180ee90 (&gdev->srcu){.+.?}-{0:0}, at: 
+gpiod_direction_output_raw_commit+0x0/0x360
+irq event stamp: 81450
+hardirqs last  enabled at (81449): [<ffff8000813acba4>] 
+_raw_spin_unlock_irqrestore+0x74/0x78
+hardirqs last disabled at (81450): [<ffff8000813abfb8>] 
+_raw_spin_lock_irqsave+0x84/0x88
+softirqs last  enabled at (79616): [<ffff8000811455fc>] 
+__alloc_skb+0x17c/0x1e8
+softirqs last disabled at (79614): [<ffff8000811455fc>] 
+__alloc_skb+0x17c/0x1e8
+CPU: 2 UID: 0 PID: 12 Comm: kworker/u16:0 Not tainted 
+6.19.0-rc4-next-20260105+ #11975 PREEMPT
+Hardware name: Hardkernel ODROID-M1 (DT)
+Workqueue: events_unbound deferred_probe_work_func
+Call trace:
+  show_stack+0x18/0x24 (C)
+  dump_stack_lvl+0x90/0xd0
+  dump_stack+0x18/0x24
+  __might_resched+0x144/0x248
+  __might_sleep+0x48/0x98
+  __mutex_lock+0x5c/0x894
+  mutex_lock_nested+0x24/0x30
+  pinctrl_get_device_gpio_range+0x44/0x128
+  pinctrl_gpio_direction+0x3c/0xe0
+  pinctrl_gpio_direction_output+0x14/0x20
+  rockchip_gpio_direction_output+0xb8/0x19c
+  gpiochip_direction_output+0x38/0x94
+  gpiod_direction_output_raw_commit+0x1d8/0x360
+  gpiod_direction_output_nonotify+0x7c/0x230
+  gpiod_direction_output+0x34/0xf8
+  gpio_shared_proxy_direction_output+0xec/0x144 [gpio_shared_proxy]
+  gpiochip_direction_output+0x38/0x94
+  gpiod_direction_output_raw_commit+0x1d8/0x360
+  gpiod_direction_output_nonotify+0x7c/0x230
+  gpiod_configure_flags+0xbc/0x480
+  gpiod_find_and_request+0x1a0/0x574
+  gpiod_get_index+0x58/0x84
+  devm_gpiod_get_index+0x20/0xb4
+  devm_gpiod_get_optional+0x18/0x30
+  rockchip_pcie_probe+0x98/0x380
+  platform_probe+0x5c/0xac
+  really_probe+0xbc/0x298
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
 
