@@ -1,120 +1,111 @@
-Return-Path: <linux-gpio+bounces-30169-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30170-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76C78CF4FEE
-	for <lists+linux-gpio@lfdr.de>; Mon, 05 Jan 2026 18:28:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44A89CF50A0
+	for <lists+linux-gpio@lfdr.de>; Mon, 05 Jan 2026 18:43:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 71DDF301D307
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jan 2026 17:28:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2E3E7304EDA6
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jan 2026 17:38:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D29E322DC1;
-	Mon,  5 Jan 2026 17:28:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1B5131B81B;
+	Mon,  5 Jan 2026 17:38:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bBO9/wRN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ih9Qw6lz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF172DEA86
-	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 17:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8124B301010
+	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 17:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767634116; cv=none; b=vFqqHPkXOgReTPu8fewRgEUJo1V0Gli4k/uKThHmq8+Yzp5FQEHdCaF7ZqY26HDd+drfBfqn+6ortpJNA+ICRZuWOb6HTxvxIxbIr+aUYwFCOymoRrcbyg3SS+9uib8jnvmh8OihjPVA1oDgGoRjKCbaVsh4gldyGvh+OO5AzQ8=
+	t=1767634719; cv=none; b=FPY/irrtYXk7SlgF3aqR6/VL0osfeeCm8fvBh4VtHMQu2RQS4tLBjo3htQgf8uRkR1GQHnmshcG4U30Cp4SII+/nKDDXmaMRqBZ+6EB0kRgKIGROap3Pwztr19/BMo8dsBTZ1Z/UpAKXbCptOSOzUMpyGwe9DFTuoAs/6iswbMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767634116; c=relaxed/simple;
-	bh=X+w4qyFtEyMwzhhxgFY/CtE0PdRwRP2uvw32cpV5NjY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vu26QSVvg+/srRtdKczXjUpV+I88Th+KGjUapsoR2jigRhOymWHVlS01FEuFHqLpVC7YMVp6S52FOs7hvABCwC8QLregecXDi92g91xDxFyKlbnUCCGO5u7/xQmEMYcxGw2BKhxYPEwekm2Y5ZAIjosiPrIRze5bwRHuEb3NiaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=bBO9/wRN; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-29f1bc40b35so1789505ad.2
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Jan 2026 09:28:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1767634114; x=1768238914; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y/1XjgDM2zvwUKqTXN8xIQijd7DIn4lsKVtfgTVJNUw=;
-        b=bBO9/wRNMv/MaOa3XFvMlFYfyO2Erv3AR+KkhTmok70fewjn2iap2Tfg23rk/mlSTO
-         H3YwOa1r+gdwJTVpYuP+PCd/si2gEVaLOrujAf1RAh/2R6WgIMCnosGIDgJRqpCHV7JK
-         QYSonb4bxWrdRqF9ypC7y03LsbQFgW3ogy4XovMJiYNCylZjXR6v5bQ45M6GsICOu7aN
-         L0AHyFDgSDoXBSlMJT1OsphByVoufnwLh/AILI1VV4HIBTXG/1Yb+bXx0vv0mLIepysi
-         oHuEP8VHStRzuBu7yN6jUEDfyv7qhKXlEbGhEuOs1nuv4pb8QBVLoJ+TWofGxBbQZ6Lr
-         +a5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767634114; x=1768238914;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Y/1XjgDM2zvwUKqTXN8xIQijd7DIn4lsKVtfgTVJNUw=;
-        b=JmCdQB0jB+nUbUznKHLNpuKIjyXEDSRfaeUxbWHggWF6Yvleu9mLOV3LYSUtEa2MH6
-         pEUNYX+N/KOEjAVOTFHodC9Rzk7wAjcahhUYtaEohyZiBWvgUS38SsR7PvLRhjJd6bbu
-         PGOP9xKavc88yT1MGhS/O9kjdqHwPfDfCdJ+5Gve9JIj32m5CP3hqwGYjxtIKP+4P3Gr
-         /4AayYgoT1DOZVuBasjIJ2lwo9gBFIO3nJk44W6ssoyYhiRX/4RKjWu+IYmo+XY8/vXX
-         RzFSe9B3FAPBXZiwgw/vVQjd8EF+5ZJhIsyfxcI4MA2nAh4MkIGM9ammcBchZuMlI0ih
-         K76w==
-X-Forwarded-Encrypted: i=1; AJvYcCX0ZUE3tGW/7jj2Tui607bJwCLSR+i4Kr7TdmSZul2KqBcT8xKBji66nII64P4nFvabIEeL1+ffogHo@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdI0WmkVCDhdfKNEaXM+XUC9Wd5Lx4in52zEIxQIoMLYckErrn
-	SObbNorKhkEe8vyn3LOfcNJ8TK0eZ1m6VmXuZnWK34VniRQ4rGeLZwWavdSqtFtV5zx7XZgo2Hz
-	WTZPPnbcWROxxE6KPzycwClL0krDUHE0=
-X-Gm-Gg: AY/fxX6yrdP5bpZTbdhD1sdZAaC8vqjpWKnItyKlc5GK9a0TOn1dTrULiYU1+8Mluxr
-	D21eXQQtBeB8lA0qEVcbclz1grwlcO0FdXD9lHzxI+IOR5fFmV4u2v2xdwn+WwLUGe2d+xSuI0P
-	D3yfwTLzakIK3bfxDuvyvtZ9jK45iO6Mnm0nqx6xw77RVsklTpMIr9duyVv/6HEYjhC5Pc8basX
-	n7mnd32iejgdHgpTtWLhdPnPhJBYz+6NXDlVg4+sKnGUh6krVhir9qEHHdtT9MWmDambeNJGkIS
-	cPMnMshlPCjYDyHOwuX6/6XGn64C
-X-Google-Smtp-Source: AGHT+IGpy3FSTV06PFzbySqT0GxE+YkHmWqyF+kpdkmaFPx4+wxyXnjiYwrYZ6SYwKhEXTYGmchl6zZMo9euRvgtVx8=
-X-Received: by 2002:a17:902:d547:b0:2a0:d692:5681 with SMTP id
- d9443c01a7336-2a3e2da7892mr3742555ad.24.1767634114320; Mon, 05 Jan 2026
- 09:28:34 -0800 (PST)
+	s=arc-20240116; t=1767634719; c=relaxed/simple;
+	bh=Xp0i1Ix8i4EVXbO6cbFPIEaut/C7zGARDQHbCBH0TDs=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mUxhTH0l2xudMScDCFOoDol73aSkJjAHPkUzoa7WS0I43SjRtQgD+uoedcn9+92h1IXjbq3TNsaJCmO+2yLFzCOaNoSZKTgP9mpCHjFuewYHpVgL86pirwR7v1tg7ngtSr7ATT0qSIoqask10XQa80AfgrkY37TkHN5j2jiiI18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ih9Qw6lz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D81DC2BC87
+	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 17:38:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767634719;
+	bh=Xp0i1Ix8i4EVXbO6cbFPIEaut/C7zGARDQHbCBH0TDs=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
+	b=ih9Qw6lz1Sko5fL7pFLbomG8nmlCZWV5f7VzhNkCv3qefRr8/DZCKpPozic2neoTd
+	 Xw4fRybgZh/FRbdFzVZ7KJ3VUaI+bO8UXaC0hYJ6BHPod+ZT9Fbf54stFIjt889hVF
+	 JrGDcMSZtE2iEZp6xZj9JnTOSTTs2m75dLdvvRvpmnYM4/IqnM5c5fRWYDDFtGfmU5
+	 buKtj+8Sw+3eOCb2sKEA4X7KO3Dgn3T6udqPNwd+kNITAJjjP5Wv1CZDkGPCa7Ftr9
+	 GnV7m7L+1R6UyMjEMJ0APffCchNsz13K5mszzy3M2J0GHXoIaUObJ8m0lFNZY6a2Oa
+	 N9eikJpKN+0jA==
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-37fd6e91990so1345721fa.3
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Jan 2026 09:38:39 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXs1F+Cukj/0krsNBUDLPRa7uDbkyockzq3SoKolnHflJiHNwPnIy+h0BaqpVeopRnr38/LwLeC8UHS@vger.kernel.org
+X-Gm-Message-State: AOJu0YxscNVd1Zuwma+ntcu0Oo+KnayQPRKijwz73oKIPuJIEiHTashN
+	1XlELIUtgI6r4QS0F5Tmb+OS70n824cSQE27m/i45GiZLscxXsqsC66RC34wkH2oMsQ7dLCGUE3
+	kyKH7Cqrjrdz0v4Y5KlezFNQh9KokLr8D2ROJzjU65Q==
+X-Google-Smtp-Source: AGHT+IG6SIPigJxkJHInO+tkcsToIW/YovjrsTkuD8gZ0NGaSCdwwzyT7wEbNisz6v64WdN2v0/svdmJHeaElAERj4U=
+X-Received: by 2002:a2e:ad13:0:b0:382:8844:2080 with SMTP id
+ 38308e7fff4ca-382eaabb736mr255161fa.25.1767634717790; Mon, 05 Jan 2026
+ 09:38:37 -0800 (PST)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 5 Jan 2026 09:38:36 -0800
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 5 Jan 2026 09:38:36 -0800
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <CAFBinCAc7CO8gfNQakCu3LfkYXuyTd2iRpMRm8EKXSL0mwOnJw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260105150509.56537-1-bartosz.golaszewski@oss.qualcomm.com>
-In-Reply-To: <20260105150509.56537-1-bartosz.golaszewski@oss.qualcomm.com>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Mon, 5 Jan 2026 18:28:23 +0100
-X-Gm-Features: AQt7F2r1mVRbDaQh2zFy4l3agObZCNqWz_Ifa4aviOfolqOQgQGGMy9JJh7ZWmA
-Message-ID: <CAFBinCAc7CO8gfNQakCu3LfkYXuyTd2iRpMRm8EKXSL0mwOnJw@mail.gmail.com>
+References: <20260105150509.56537-1-bartosz.golaszewski@oss.qualcomm.com> <CAFBinCAc7CO8gfNQakCu3LfkYXuyTd2iRpMRm8EKXSL0mwOnJw@mail.gmail.com>
+Date: Mon, 5 Jan 2026 09:38:36 -0800
+X-Gmail-Original-Message-ID: <CAMRc=MeYWm=5bwfT5s+w6_kjt=wROonZSYo8=kA3Eyva4hpp1g@mail.gmail.com>
+X-Gm-Features: AQt7F2oSq5mFA1y8aimNhkWa6uJgJwLZMRBreFji3RmTtVrRuRT8uL2rJ5zqO0Q
+Message-ID: <CAMRc=MeYWm=5bwfT5s+w6_kjt=wROonZSYo8=kA3Eyva4hpp1g@mail.gmail.com>
 Subject: Re: [PATCH] pinctrl: meson: mark the GPIO controller as sleeping
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc: Linus Walleij <linusw@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
 	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
 	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
 	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Marek Szyprowski <m.szyprowski@samsung.com>
+	Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Bartosz,
+On Mon, 5 Jan 2026 18:28:23 +0100, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> said:
+> Hi Bartosz,
+>
+> On Mon, Jan 5, 2026 at 4:05=E2=80=AFPM Bartosz Golaszewski
+> <bartosz.golaszewski@oss.qualcomm.com> wrote:
+> [...]
+>>   mutex_lock_nested+0x24/0x30
+>>   pinctrl_get_device_gpio_range+0x44/0x128
+>>   pinctrl_gpio_set_config+0x40/0xdc
+>>   gpiochip_generic_config+0x28/0x3c
+>>   gpio_do_set_config+0xa8/0x194
+> $ git grep gpiochip_generic_config drivers/pinctrl/meson/
+> drivers/pinctrl/meson/pinctrl-amlogic-a4.c:     .set_config
+>  =3D gpiochip_generic_config,
+> drivers/pinctrl/meson/pinctrl-meson.c:  pc->chip.set_config =3D
+> gpiochip_generic_config;
+>
+> pinctrl-amlogic-a4.c still has:
+>   .can_sleep =3D false,
+>
+> Are there plans to send a separate fix for pinctrl-amlogic-a4.c - or
+> was the intention to fix "all" Amlogic pin controllers in this patch
+> (which would mean that the change to pinctrl-amlogic-a4.c is missing)?
+>
+>
 
-On Mon, Jan 5, 2026 at 4:05=E2=80=AFPM Bartosz Golaszewski
-<bartosz.golaszewski@oss.qualcomm.com> wrote:
-[...]
->   mutex_lock_nested+0x24/0x30
->   pinctrl_get_device_gpio_range+0x44/0x128
->   pinctrl_gpio_set_config+0x40/0xdc
->   gpiochip_generic_config+0x28/0x3c
->   gpio_do_set_config+0xa8/0x194
-$ git grep gpiochip_generic_config drivers/pinctrl/meson/
-drivers/pinctrl/meson/pinctrl-amlogic-a4.c:     .set_config
- =3D gpiochip_generic_config,
-drivers/pinctrl/meson/pinctrl-meson.c:  pc->chip.set_config =3D
-gpiochip_generic_config;
+Yeah, I missed it. I will send a follow-up tomorrow.
 
-pinctrl-amlogic-a4.c still has:
-  .can_sleep =3D false,
-
-Are there plans to send a separate fix for pinctrl-amlogic-a4.c - or
-was the intention to fix "all" Amlogic pin controllers in this patch
-(which would mean that the change to pinctrl-amlogic-a4.c is missing)?
-
-
-Best regards,
-Martin
+Bartosz
 
