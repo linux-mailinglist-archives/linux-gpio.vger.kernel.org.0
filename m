@@ -1,136 +1,120 @@
-Return-Path: <linux-gpio+bounces-30168-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30169-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2859CF5023
-	for <lists+linux-gpio@lfdr.de>; Mon, 05 Jan 2026 18:31:26 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76C78CF4FEE
+	for <lists+linux-gpio@lfdr.de>; Mon, 05 Jan 2026 18:28:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 684D330DBDC0
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jan 2026 17:26:26 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 71DDF301D307
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jan 2026 17:28:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9949F33C1A2;
-	Mon,  5 Jan 2026 17:26:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D29E322DC1;
+	Mon,  5 Jan 2026 17:28:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YTqplzI7"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bBO9/wRN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB2F221F13
-	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 17:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF172DEA86
+	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 17:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767633977; cv=none; b=MUfJ9aP7+isMrdpvpOBdHxyXBq3Y5PQYx2+RNU+OClR84gziu+dmNs7Tz78YrH96ldayQE4LO33v2O4AvpdlEb7UgrgKV425SAgKWO2Pz021+RMSJWeULjrft7+y3oy2Azow13OWtrFFCBCxjGz8Dn39COfpSI4bne+Ze+f7vcM=
+	t=1767634116; cv=none; b=vFqqHPkXOgReTPu8fewRgEUJo1V0Gli4k/uKThHmq8+Yzp5FQEHdCaF7ZqY26HDd+drfBfqn+6ortpJNA+ICRZuWOb6HTxvxIxbIr+aUYwFCOymoRrcbyg3SS+9uib8jnvmh8OihjPVA1oDgGoRjKCbaVsh4gldyGvh+OO5AzQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767633977; c=relaxed/simple;
-	bh=CVpW5/Zd9lYOzQZDUV5oXk9ELhtlaEwa9p16fIJQxaE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=VCxkxJmxjTvQ6Nb1jYeMPpK3x0b6PHXiXgE/kjwJMWTYs9I11XiSio3k7pEGVemmb4G4N8zgUhjxJOxX36ejjFJOdA+KbdFnfFR0QbYvY40hvHEC5WmZ9pviMO+W++7v+E8yhZR+ayphzpFoDXCx071auIBn6KY6ca47fioRwSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=YTqplzI7; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20260105172610euoutp019a825a2f590ae8946f144a18e74c297c~H5bsA7HhP0698406984euoutp01M
-	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 17:26:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20260105172610euoutp019a825a2f590ae8946f144a18e74c297c~H5bsA7HhP0698406984euoutp01M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1767633970;
-	bh=HOjgqd3iH9VSaEyXmTlVr38S71qCvBeaplEY9gEOh+s=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=YTqplzI7NEdneVn1JNM5Ld2bXzHUxzturbJpsNJr71x1L6PAaK6Qu32pZQD3C0/i/
-	 NPeCriGQ+tBNHjNIvvQyW2rBZ6UWAtCyVFYoDJCszUB2X0ysZtapG163sgAgntR9IY
-	 ECbQm4iMcisknEn/fA3nvMBBnfn7c5knTJM+K1JI=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20260105172609eucas1p15f537acd3c8b5693fd859caa4bb3ebeb~H5brneMDU0899108991eucas1p1n;
-	Mon,  5 Jan 2026 17:26:09 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20260105172608eusmtip14f6aa4938548bf91f924900b03d95e92~H5bqLuayW0890808908eusmtip1P;
-	Mon,  5 Jan 2026 17:26:07 +0000 (GMT)
-Message-ID: <3cb799ed-6760-481b-991d-5d90a23b9128@samsung.com>
-Date: Mon, 5 Jan 2026 18:26:06 +0100
+	s=arc-20240116; t=1767634116; c=relaxed/simple;
+	bh=X+w4qyFtEyMwzhhxgFY/CtE0PdRwRP2uvw32cpV5NjY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vu26QSVvg+/srRtdKczXjUpV+I88Th+KGjUapsoR2jigRhOymWHVlS01FEuFHqLpVC7YMVp6S52FOs7hvABCwC8QLregecXDi92g91xDxFyKlbnUCCGO5u7/xQmEMYcxGw2BKhxYPEwekm2Y5ZAIjosiPrIRze5bwRHuEb3NiaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=bBO9/wRN; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-29f1bc40b35so1789505ad.2
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Jan 2026 09:28:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1767634114; x=1768238914; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y/1XjgDM2zvwUKqTXN8xIQijd7DIn4lsKVtfgTVJNUw=;
+        b=bBO9/wRNMv/MaOa3XFvMlFYfyO2Erv3AR+KkhTmok70fewjn2iap2Tfg23rk/mlSTO
+         H3YwOa1r+gdwJTVpYuP+PCd/si2gEVaLOrujAf1RAh/2R6WgIMCnosGIDgJRqpCHV7JK
+         QYSonb4bxWrdRqF9ypC7y03LsbQFgW3ogy4XovMJiYNCylZjXR6v5bQ45M6GsICOu7aN
+         L0AHyFDgSDoXBSlMJT1OsphByVoufnwLh/AILI1VV4HIBTXG/1Yb+bXx0vv0mLIepysi
+         oHuEP8VHStRzuBu7yN6jUEDfyv7qhKXlEbGhEuOs1nuv4pb8QBVLoJ+TWofGxBbQZ6Lr
+         +a5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767634114; x=1768238914;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Y/1XjgDM2zvwUKqTXN8xIQijd7DIn4lsKVtfgTVJNUw=;
+        b=JmCdQB0jB+nUbUznKHLNpuKIjyXEDSRfaeUxbWHggWF6Yvleu9mLOV3LYSUtEa2MH6
+         pEUNYX+N/KOEjAVOTFHodC9Rzk7wAjcahhUYtaEohyZiBWvgUS38SsR7PvLRhjJd6bbu
+         PGOP9xKavc88yT1MGhS/O9kjdqHwPfDfCdJ+5Gve9JIj32m5CP3hqwGYjxtIKP+4P3Gr
+         /4AayYgoT1DOZVuBasjIJ2lwo9gBFIO3nJk44W6ssoyYhiRX/4RKjWu+IYmo+XY8/vXX
+         RzFSe9B3FAPBXZiwgw/vVQjd8EF+5ZJhIsyfxcI4MA2nAh4MkIGM9ammcBchZuMlI0ih
+         K76w==
+X-Forwarded-Encrypted: i=1; AJvYcCX0ZUE3tGW/7jj2Tui607bJwCLSR+i4Kr7TdmSZul2KqBcT8xKBji66nII64P4nFvabIEeL1+ffogHo@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdI0WmkVCDhdfKNEaXM+XUC9Wd5Lx4in52zEIxQIoMLYckErrn
+	SObbNorKhkEe8vyn3LOfcNJ8TK0eZ1m6VmXuZnWK34VniRQ4rGeLZwWavdSqtFtV5zx7XZgo2Hz
+	WTZPPnbcWROxxE6KPzycwClL0krDUHE0=
+X-Gm-Gg: AY/fxX6yrdP5bpZTbdhD1sdZAaC8vqjpWKnItyKlc5GK9a0TOn1dTrULiYU1+8Mluxr
+	D21eXQQtBeB8lA0qEVcbclz1grwlcO0FdXD9lHzxI+IOR5fFmV4u2v2xdwn+WwLUGe2d+xSuI0P
+	D3yfwTLzakIK3bfxDuvyvtZ9jK45iO6Mnm0nqx6xw77RVsklTpMIr9duyVv/6HEYjhC5Pc8basX
+	n7mnd32iejgdHgpTtWLhdPnPhJBYz+6NXDlVg4+sKnGUh6krVhir9qEHHdtT9MWmDambeNJGkIS
+	cPMnMshlPCjYDyHOwuX6/6XGn64C
+X-Google-Smtp-Source: AGHT+IGpy3FSTV06PFzbySqT0GxE+YkHmWqyF+kpdkmaFPx4+wxyXnjiYwrYZ6SYwKhEXTYGmchl6zZMo9euRvgtVx8=
+X-Received: by 2002:a17:902:d547:b0:2a0:d692:5681 with SMTP id
+ d9443c01a7336-2a3e2da7892mr3742555ad.24.1767634114320; Mon, 05 Jan 2026
+ 09:28:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 3/3] gpio: shared: allow sharing a reset-gpios pin
- between reset-gpio and gpiolib
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Linus
-	Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <CAMRc=Mc7dqqpNTb9WSLD7ZZr9dmUTO_rvujJi3LhhjVncjE-8w@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20260105172609eucas1p15f537acd3c8b5693fd859caa4bb3ebeb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20260105115023eucas1p1af1f8e80041f94843beb664966894fb9
-X-EPHeader: CA
-X-CMS-RootMailID: 20260105115023eucas1p1af1f8e80041f94843beb664966894fb9
-References: <20251222-gpio-shared-reset-gpio-proxy-v1-0-8d4bba7d8c14@oss.qualcomm.com>
-	<CGME20260105115023eucas1p1af1f8e80041f94843beb664966894fb9@eucas1p1.samsung.com>
-	<20251222-gpio-shared-reset-gpio-proxy-v1-3-8d4bba7d8c14@oss.qualcomm.com>
-	<00107523-7737-4b92-a785-14ce4e93b8cb@samsung.com>
-	<CAMRc=Mc7dqqpNTb9WSLD7ZZr9dmUTO_rvujJi3LhhjVncjE-8w@mail.gmail.com>
+References: <20260105150509.56537-1-bartosz.golaszewski@oss.qualcomm.com>
+In-Reply-To: <20260105150509.56537-1-bartosz.golaszewski@oss.qualcomm.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Mon, 5 Jan 2026 18:28:23 +0100
+X-Gm-Features: AQt7F2r1mVRbDaQh2zFy4l3agObZCNqWz_Ifa4aviOfolqOQgQGGMy9JJh7ZWmA
+Message-ID: <CAFBinCAc7CO8gfNQakCu3LfkYXuyTd2iRpMRm8EKXSL0mwOnJw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: meson: mark the GPIO controller as sleeping
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Linus Walleij <linusw@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 05.01.2026 13:28, Bartosz Golaszewski wrote:
-> On Mon, Jan 5, 2026 at 12:50 PM Marek Szyprowski
-> <m.szyprowski@samsung.com> wrote:
->> On 22.12.2025 11:01, Bartosz Golaszewski wrote:
->>> We currently support sharing GPIOs between multiple devices whose drivers
->>> use either the GPIOLIB API *OR* the reset control API but not both at
->>> the same time.
->>>
->>> There's an unlikely corner-case where a reset-gpios pin can be shared by
->>> one driver using the GPIOLIB API and a second using the reset API. This
->>> will currently not work as the reset-gpio consumers are not described in
->>> firmware at the time of scanning so the shared GPIO just chooses one of
->>> the proxies created for the consumers when the reset-gpio driver performs
->>> the lookup. This can of course conflict in the case described above.
->>>
->>> In order to fix it: if we deal with the "reset-gpios" pin that's shared
->>> acconding to the firmware node setup, create a proxy for each described
->>> consumer as well as another one for the potential reset-gpio device. To
->>> that end: rework the matching to take this into account.
->>>
->>> Fixes: 7b78b26757e0 ("gpio: shared: handle the reset-gpios corner case")
->>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
->> This patch landed in linux-next as commit 49416483a953 ("gpio: shared:
->> allow sharing a reset-gpios pin between reset-gpio and gpiolib"). In my
->> tests I found that it breaks booting and triggers warnings on some of my
->> test boards. Reverting it on top of next-20260105 fixes those issues.
->> Let me know if I can help debugging this issue.
->>
->>
->> Here are relevant logs from my 3 test systems:
->>
-> Thanks for the report.
->
-> Nice combo, it looks like these are three separate bugs...
->
->> 1. Samsung TM2e - arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
->>
->> exynos-dsi 13900000.dsi: [drm:samsung_dsim_host_attach] Attached s6e3hf2
->> device (lanes:4 bpp:24 mode-flags:0x6e0)
->> Unable to handle kernel NULL pointer dereference at virtual address
-> Could you use faddr2line to point me to the exact offending line? This
-> would speed up the debugging.
+Hi Bartosz,
 
-I need some time to get that output, but this issue is caused by a 
-devm_gpiod_get_optional() call for a gpio that is not defined for that 
-board.
+On Mon, Jan 5, 2026 at 4:05=E2=80=AFPM Bartosz Golaszewski
+<bartosz.golaszewski@oss.qualcomm.com> wrote:
+[...]
+>   mutex_lock_nested+0x24/0x30
+>   pinctrl_get_device_gpio_range+0x44/0x128
+>   pinctrl_gpio_set_config+0x40/0xdc
+>   gpiochip_generic_config+0x28/0x3c
+>   gpio_do_set_config+0xa8/0x194
+$ git grep gpiochip_generic_config drivers/pinctrl/meson/
+drivers/pinctrl/meson/pinctrl-amlogic-a4.c:     .set_config
+ =3D gpiochip_generic_config,
+drivers/pinctrl/meson/pinctrl-meson.c:  pc->chip.set_config =3D
+gpiochip_generic_config;
 
-> > ...
+pinctrl-amlogic-a4.c still has:
+  .can_sleep =3D false,
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Are there plans to send a separate fix for pinctrl-amlogic-a4.c - or
+was the intention to fix "all" Amlogic pin controllers in this patch
+(which would mean that the change to pinctrl-amlogic-a4.c is missing)?
 
+
+Best regards,
+Martin
 
