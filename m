@@ -1,129 +1,145 @@
-Return-Path: <linux-gpio+bounces-30142-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30143-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73426CF2E5D
-	for <lists+linux-gpio@lfdr.de>; Mon, 05 Jan 2026 11:04:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B3C15CF2F98
+	for <lists+linux-gpio@lfdr.de>; Mon, 05 Jan 2026 11:28:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0FE933005FF4
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jan 2026 10:00:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CD82A302ABB9
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jan 2026 10:24:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 398622F0C70;
-	Mon,  5 Jan 2026 10:00:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D4D51D54FA;
+	Mon,  5 Jan 2026 10:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="g9yge/6y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZxPa15hp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1C21DD9AC;
-	Mon,  5 Jan 2026 10:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DC81A9FAB
+	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 10:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767607241; cv=none; b=sz7HLfL3ph4tiBZpNzZjE4xeRuYA/LlkgIjTDemW7+SBG+OtL6Bj+tKeVLpnfS+4XwTJNRRcgtenTJATGADh/t1gz2qWiDkendTbOUCYOv6aWnWdveVyUSU3MH/tMsFHFM+MgO+u2tEGmRKB8tolz/fQnTdpAsyvfC1niB4aqzQ=
+	t=1767608676; cv=none; b=TlCGAiu5hQT8Wwi4Xf0onTXnAasLWTxC9dD800rOsu7fVMh29w8SLCaqZy+4XRPU4fCE0AinndKmKbECzjzh0qI1fgkT+gk+bwYUbvhzgbpLYBAwGninEJuBWEATTlm9XW8DoWtLcM+UkYFw5Qbd9FuZPEPj5fBBBg90EmhFFoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767607241; c=relaxed/simple;
-	bh=xQSdvZemonWKFcvogkSyedmORtzPF+JXg26oljkZZ18=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=U1b595di5NXRYw8VQEupwEmY9AVnj9LY9p/wd/6AMz2uqf3QpDDZQcHiw48CeYCaGY+qfwd6tqDceT+xzZTOHfzHMyF/bx5VMZFLswAu3hJcgZvBDRcebiIxcuKsSY5jai8Z14CdXLziTya4kurj2be9uq5HRkUIaVCsG5pGTw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=g9yge/6y; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1767608676; c=relaxed/simple;
+	bh=rCdUctoDPX1n1LupuS7hQP3ah6UMokxYtUUPC3hnUkQ=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=p3Xodw35UsTwb6aqK1nfJwi7uKLMEwERbDMK1R5odUckUANMlf2Oc2b81o7/NOUGlxdo4Jzr0OnzmiLREsvntIAlEV/DEHYek5dP1y/RqezkZ3MX/FcEL2PTYvxbjdt46JYYDAtlK85cxWr8bMdWQDYySYuEj2ch5fHCuCtJg5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZxPa15hp; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1767607239; x=1799143239;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=xQSdvZemonWKFcvogkSyedmORtzPF+JXg26oljkZZ18=;
-  b=g9yge/6yro6cRaB+vwuPoceZi/C9WWSww8EpaF71yhwAPSHSgTNvT4Tp
-   95LnJl36DGgcTy1uY7BnGwPGnWFjaY6Bualq8e5Df26/DwT6ww84ay1+a
-   6R7GNTfF/yUQxNbvXSeMztdle5xXmQ8Idgl6wH/XZttNFFVHqNl8HKjmw
-   obbqrxZByvt6xcmX4zOB2CeZSn8TEoGMcX1uNmk0bcu57o+xpeUdf8kBs
-   cq3AXQd5VSUviHuFQxNVUDPwg19O92XyulgpMnI8A0COdtR7JY4k6AVaC
-   X3ME2KxxSMoIfo79PVl6b5mKlrAxAhKfsL+dRtGKSrc4+XQtkUv/xnssi
-   w==;
-X-CSE-ConnectionGUID: 1cStLnPtRFaQ+RdhyhcX1A==
-X-CSE-MsgGUID: +D7jvq+CSPSE/XhOcm2XOQ==
-X-IronPort-AV: E=Sophos;i="6.21,203,1763449200"; 
-   d="scan'208";a="58246851"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Jan 2026 03:00:33 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.58; Mon, 5 Jan 2026 03:00:18 -0700
-Received: from ROU-LL-M43238.microchip.com (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.58 via Frontend Transport; Mon, 5 Jan 2026 03:00:16 -0700
-From: <nicolas.ferre@microchip.com>
-To: <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-kernel@vger.kernel.org>, Nicolas Ferre
-	<nicolas.ferre@microchip.com>, Ryan Wanner <Ryan.Wanner@microchip.com>
-Subject: [PATCH] pinctrl: at91-pio4: Add sama7d65 pio4 support
-Date: Mon, 5 Jan 2026 10:59:56 +0100
-Message-ID: <20260105095956.19615-1-nicolas.ferre@microchip.com>
-X-Mailer: git-send-email 2.43.0
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767608674; x=1799144674;
+  h=date:from:to:cc:subject:message-id;
+  bh=rCdUctoDPX1n1LupuS7hQP3ah6UMokxYtUUPC3hnUkQ=;
+  b=ZxPa15hpHlcIp6kvI9djBtPD07xuD+wexIWxEUeRB4EL5sy60t8/PuyX
+   Duh1y3A6MZrfHTQc0f7Lk/4UwOjMUUr9P6vcWHDgOe7mQPik4nT6gh3XU
+   hOHS6L9YyDAbmNDG+Zh4hsAwVfZ8+mpSpPwWOvRVlXXlKwD7vekgt8wqD
+   7r9te/E9zmR2lNpHa0Uyw/Wyn8tv/gEHmR53zMDDl+kmxrQXqPjiPTi7X
+   WHQ5zpmAd4dlKTDPQpj8PNZ1PKscY4Y6hlIQ1eoEvyYDJyMT4QNf8RhSw
+   EBnah42pJVgAfRCZmq1xf647D7gpRe0Xjeq1lxUdqoaDqBi7bjYzitP2X
+   Q==;
+X-CSE-ConnectionGUID: 0eH6kHqdQgy7538L72HGKg==
+X-CSE-MsgGUID: uqb8KLp9SfmnscXmkyaRmg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11661"; a="68952961"
+X-IronPort-AV: E=Sophos;i="6.21,203,1763452800"; 
+   d="scan'208";a="68952961"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2026 02:24:33 -0800
+X-CSE-ConnectionGUID: zo75U73bQaCCPCaYf5okrw==
+X-CSE-MsgGUID: 8Nwa9/QWRy6Qg6yd1i4dmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,203,1763452800"; 
+   d="scan'208";a="233498433"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 05 Jan 2026 02:24:32 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vchlG-0000000015F-18o7;
+	Mon, 05 Jan 2026 10:24:30 +0000
+Date: Mon, 05 Jan 2026 18:23:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linusw@kernel.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:b4/maintainer-fix-mailmap] BUILD SUCCESS
+ 4c0a9baaa002d8f2ce841b6df28bb68bd0399b45
+Message-ID: <202601051830.7tppLjvM-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-From: Ryan Wanner <Ryan.Wanner@microchip.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git b4/maintainer-fix-mailmap
+branch HEAD: 4c0a9baaa002d8f2ce841b6df28bb68bd0399b45  Update .mailmap for Linus Walleij
 
-Add sama7d65 compatibility string.
+elapsed time: 5466m
 
-Sama7d65 does not have a full last bank of PIO lines similar to the
-Sama7g54 SoC. Sama7d65 only has 14 lines on the last PIO bank not the
-full 32; adjusting the SoC attributes accordingly.
+configs tested: 54
+configs skipped: 4
 
-Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
----
-Hi,
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-dt-bindings already up-to-date with this new compatible string by:
-https://lore.kernel.org/821255840c09d8d9cebbb1f2daaedd8a7c138875.1736522006.git.Ryan.Wanner@microchip.com
-(even if still .txt)
+tested configs:
+alpha         allnoconfig    gcc-15.1.0
+alpha        allyesconfig    gcc-15.1.0
+arc          allmodconfig    gcc-15.1.0
+arc           allnoconfig    gcc-15.1.0
+arc          allyesconfig    gcc-15.1.0
+arm           allnoconfig    clang-22
+arm          allyesconfig    gcc-15.1.0
+arm64        allmodconfig    clang-19
+arm64         allnoconfig    gcc-15.1.0
+csky         allmodconfig    gcc-15.1.0
+csky          allnoconfig    gcc-15.1.0
+hexagon      allmodconfig    clang-17
+hexagon       allnoconfig    clang-22
+i386         allmodconfig    gcc-14
+i386          allnoconfig    gcc-14
+i386         allyesconfig    gcc-14
+loongarch    allmodconfig    clang-19
+loongarch     allnoconfig    clang-22
+m68k         allmodconfig    gcc-15.1.0
+m68k          allnoconfig    gcc-15.1.0
+m68k         allyesconfig    gcc-15.1.0
+microblaze    allnoconfig    gcc-15.1.0
+microblaze   allyesconfig    gcc-15.1.0
+mips         allmodconfig    gcc-15.1.0
+mips          allnoconfig    gcc-15.1.0
+mips         allyesconfig    gcc-15.1.0
+nios2        allmodconfig    gcc-11.5.0
+nios2         allnoconfig    gcc-11.5.0
+openrisc     allmodconfig    gcc-15.1.0
+openrisc      allnoconfig    gcc-15.1.0
+parisc       allmodconfig    gcc-15.1.0
+parisc        allnoconfig    gcc-15.1.0
+parisc       allyesconfig    gcc-15.1.0
+powerpc      allmodconfig    gcc-15.1.0
+powerpc       allnoconfig    gcc-15.1.0
+riscv        allmodconfig    clang-22
+riscv         allnoconfig    gcc-15.1.0
+riscv        allyesconfig    clang-16
+s390         allmodconfig    clang-18
+s390          allnoconfig    clang-22
+s390         allyesconfig    gcc-15.1.0
+sh           allmodconfig    gcc-15.1.0
+sh            allnoconfig    gcc-15.1.0
+sh           allyesconfig    gcc-15.1.0
+sparc         allnoconfig    gcc-15.1.0
+sparc64      allmodconfig    clang-22
+um           allmodconfig    clang-19
+um            allnoconfig    clang-22
+um           allyesconfig    gcc-14
+x86_64       allmodconfig    clang-20
+x86_64        allnoconfig    clang-20
+x86_64       allyesconfig    clang-20
+x86_64      rhel-9.4-rust    clang-20
+xtensa        allnoconfig    gcc-15.1.0
 
-Regards,
-  Nicolas
-
- drivers/pinctrl/pinctrl-at91-pio4.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
-index ec5351fc282e..41cbb46ac589 100644
---- a/drivers/pinctrl/pinctrl-at91-pio4.c
-+++ b/drivers/pinctrl/pinctrl-at91-pio4.c
-@@ -1053,6 +1053,12 @@ static const struct atmel_pioctrl_data atmel_sama5d2_pioctrl_data = {
- 	.last_bank_count	= ATMEL_PIO_NPINS_PER_BANK,
- };
- 
-+static const struct atmel_pioctrl_data microchip_sama7d65_pioctrl_data = {
-+	.nbanks			= 5,
-+	.last_bank_count	= 14, /* sama7d65 has only PE0 to PE13 */
-+	.slew_rate_support	= 1,
-+};
-+
- static const struct atmel_pioctrl_data microchip_sama7g5_pioctrl_data = {
- 	.nbanks			= 5,
- 	.last_bank_count	= 8, /* sama7g5 has only PE0 to PE7 */
-@@ -1063,6 +1069,9 @@ static const struct of_device_id atmel_pctrl_of_match[] = {
- 	{
- 		.compatible = "atmel,sama5d2-pinctrl",
- 		.data = &atmel_sama5d2_pioctrl_data,
-+	}, {
-+		.compatible = "microchip,sama7d65-pinctrl",
-+		.data = &microchip_sama7d65_pioctrl_data,
- 	}, {
- 		.compatible = "microchip,sama7g5-pinctrl",
- 		.data = &microchip_sama7g5_pioctrl_data,
--- 
-2.43.0
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
