@@ -1,77 +1,77 @@
-Return-Path: <linux-gpio+bounces-30109-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30110-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B740CF1D19
-	for <lists+linux-gpio@lfdr.de>; Mon, 05 Jan 2026 05:56:52 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54653CF1D49
+	for <lists+linux-gpio@lfdr.de>; Mon, 05 Jan 2026 05:57:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1107D3001BF3
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jan 2026 04:56:51 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D90B2300E7FC
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jan 2026 04:57:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF2E2324B27;
-	Mon,  5 Jan 2026 04:56:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 068BF32549E;
+	Mon,  5 Jan 2026 04:57:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DjZdAnPS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ho85gyha"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824D93242C2
-	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 04:56:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE5A324B19
+	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 04:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767589006; cv=none; b=LN2Iv3gAbrTdvM8/CjilcTzDfBzGnt6/geR2Jkg/cLIqDG1JctWPpsjHYWFFDJjNgcgyRnLXcbDDhndOnoFNjNDqWeum7dlq4iQnhb7f+sOT3pyu7q5f8bROwMgZRltlYdwtzS1ocXiBCv23JIAf1nhT9c9EKhleKWHYooiai10=
+	t=1767589037; cv=none; b=J6YL/Tzg/hYs3Y44QB38io7Cm+egyzCij63HyuCh4W2l2YGYStQ5EbUoBQYcX9FjWH302OT28BJkLfna5Z51iScu14yQWxmNNWpXRrzcJxUVlujK/b/duv082uniKQyWGoMILLhSuHRvZtxTN6DF/kGf8g7UaQHvtPbAEbvOoPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767589006; c=relaxed/simple;
-	bh=jBwvhnDfidsek4dpH3nFNU7R+wPfEwm8oFGbdpxTVpU=;
+	s=arc-20240116; t=1767589037; c=relaxed/simple;
+	bh=wdM/b8hJbUaslNLfaUyaSG8t8yHTFzri8J0kMFatf2M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WuSD/tr10xTMpsVeRK6CM+I2b80vs4KXOs4TX0lvaPUt0LpTwSWr9lxU569IU749erXbKlrkE3J+Fk2cyJwOCWaDpZnOJKAKtPxQlF0uvzh8zmOuuAHJsku0NakZva+rCyT0sBet6yV8xA81TYki3je6rcCnSSP5do43EgqJ+dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DjZdAnPS; arc=none smtp.client-ip=209.85.216.54
+	 Content-Type:Content-Disposition:In-Reply-To; b=Acz3kkG9GWqQzyk8r5JRklfAJ3Tz1ncZ2GK2M6WHwMV2GRn8dHePukH0zzDJ8Tl3fkr1ok0ni+sefPF+clOx3yb5hfbnyJMpOdueF0nYxFLlrbe75K/jUdcEOq2JAF+G47zN3KPqesy6hsGJrW5hc+pGqM1pCVFuHtgfpaWX4pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ho85gyha; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-34c868b197eso15258422a91.2
-        for <linux-gpio@vger.kernel.org>; Sun, 04 Jan 2026 20:56:44 -0800 (PST)
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-34ca40c1213so11676814a91.0
+        for <linux-gpio@vger.kernel.org>; Sun, 04 Jan 2026 20:57:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1767589004; x=1768193804; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1767589034; x=1768193834; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3hFH3lNfVrL079RvxBKm1qFjwG/jqKdNHXIh3f8h06U=;
-        b=DjZdAnPSKhJjowEybd/uJ3UxV4OTWKNcfMD3RPhr7GOQBhEU1ggmKlEbgpwq3nYYd7
-         vMjDrXkBziU78LtkXjQM6vRVvpdeUtbLuUtGpzs+mUFwiV8moSiDCztvjjZ6KfJmT78F
-         XE9GUMAsvxex901xRgK8DUbCEP0oBhxREssCW+UjXtCSTVKSvjdhTUTB3jBTfhKS82xU
-         ogWEp4HXMt8SBoqXAqIVM1cOVzYVjo59TK7XKFWzWMalXOsSLTCuLFLXe6uCkMvPfIJJ
-         w6gP28JLvMgVR8c3/qLtEHJ4NlgRdYX9QvVd05WhbZ57HD/OBYup3pPGDa3a0+z26Ujx
-         wckg==
+        bh=EOEgCzmZP0GTJHcnce/bEe96Bif2a5t1CJ7MWxViYzU=;
+        b=ho85gyhaKzhQd2LkobbDGyUs+P/owvm/KOpiZS4dO+Gf4YuFWvgFamob9qdCJ9r9lk
+         CLr9/RyFtHqQFUBotNoAM7KhHAtZt1Jp5d0KrfTfEbwagr6SxMdsx/4fE0BSAkcxMDYW
+         hBxIWUZzrdi1VxRIajuMMCUWM94J/ABCw0OqR1S9Q7KJQTpTvaIEnHNlkPc5J/4jESGd
+         XTIkIW6zDUqzcVTAuqoCRGwL3BR2rGk9MaM3FmQJSNYeqluqV2cf553LNAaO+Ru5IIr6
+         vpnPaBULT5dfb6ydqqvBTOTjU7RSO1ix7RqULQUiOx2UaSolPasj3CB9WpJAXHp8n2jn
+         ZWag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767589004; x=1768193804;
+        d=1e100.net; s=20230601; t=1767589034; x=1768193834;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3hFH3lNfVrL079RvxBKm1qFjwG/jqKdNHXIh3f8h06U=;
-        b=Z/eaMKfi6/bRLIFYSncRaekTrND6qSlAmx6GcvbX3v18X+J8wL2FZNUDT+JZOnZGui
-         9fwo8w9FEuDUpwXPAK9N+NpY4jzrdQe6ptlGQIfo2BMVj5xL6VZexrCLZ6Stn43sIBQw
-         TM2aRcr2ELC00imKUrHK/CXDzBzDYy/SqdwYfaS/57lq1AUdRLQ+unm9GVuOKAHjF1Dp
-         BOt7Wh33BPbeJgxfHbgti9Uvpzq/FloIy1MumgQzrTwYH7yBoXpGq+AzC7P2LDULf75e
-         hrkal7DHuqEqETg60o1RvWlwhKDtR3I0Yt4pVrjDed69mU/6WO5/NhAtngsy1QfZUHsI
-         TWaw==
-X-Forwarded-Encrypted: i=1; AJvYcCU0hWXeFFaago9e8OeptgHjFPBSzoXTR3xbFrv6xpCMMTODbSfreVO9FAJdSaKD1L1Zg/BTBXFd2Him@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPZduAxDd3agqVt49Jdd7gq/jr5gr3OSxLpqnAgjaWS2vGKT4d
-	zKWHpNrbv2wqMXgpTYu1FDcokN5aec30/wSVdWgVD2Z0504ECcbIXGPMQzsQLHG87Bs=
-X-Gm-Gg: AY/fxX5dJaIsDnJPU6+RcZbfyhMW+aszqm52Ftrb46ix8gLgSKAimcd3ZcsqW9gzp+k
-	m9XoV8qkzsX7A0UXtKbdqPYmbsPb4f0KzLNmxLIfyYZrEzdd5xottzNGRGdyuI+Lo1oXaVnpGxC
-	SevJ2nBCubLOEwUWWVM/rxsPNbYYsUJBnIW0TFi6H2qCsWcG4RxZ7GmRR1sS1dcsGo+vMOGzvyr
-	cne3JYuPYjgCy2A4GSpTsfGChTiSfCGd/dRpMnXw3bq54jJvgvPDFaNLaqY+a1wDT84I1oNHweK
-	OWUOlMI+VmCUyjjYCOU9rg7qPvYU6gXdQEappQrRIZA3C7fptUHdr73j93bqbbaibsxQPoED1Ow
-	IX7C9qQN2A7sA3n6+DqysbyfR+C46CLOKuUJdXrHwq0ZCq3kgyUPXTQ0oGCQqNg7AcDs0ooAwkv
-	AYJ1IxjhXoepc=
-X-Google-Smtp-Source: AGHT+IFZ00gScIfn7Z/S2C4S8PPgyPbUGX5mTMlgh0Rzf0TnKH5YXmLt4fA7cx6w6t8/JqVkxOTy2w==
-X-Received: by 2002:a05:6a20:918e:b0:364:13aa:a526 with SMTP id adf61e73a8af0-376a9ce54bbmr44864432637.60.1767589003573;
-        Sun, 04 Jan 2026 20:56:43 -0800 (PST)
+        bh=EOEgCzmZP0GTJHcnce/bEe96Bif2a5t1CJ7MWxViYzU=;
+        b=HbK1b3CwYaj/ohJ/ghNxP5siMczFBuLQ2QngZLSQsVZmlqiY5CVDrJxz995gKe7elw
+         QgVOSWKPJsQHKq7L8EkLcdghd/2kts1JStEF2e0G/Z5dpxL4v21Ei4ieppCgc4NnMxsF
+         0jve/A/rwI78HyNOqIiBRq+2V5mrIfZGGcNNJwIS/4nG6hOU4E+WiFTCJJRaMXwkesMs
+         jEnAUIEYHSNEZITpdyfkrRrM/1ljIiE6SugJePxSVyeQ33Xs+b1xzrg2L4aSzeFMZQCQ
+         4HTd3JZqapUFLC9YY6YRuzeZq7Retc4ES/8T/GVZRyvkbvMK2/iB6QStCIvOJfIjZSlI
+         Tbpg==
+X-Forwarded-Encrypted: i=1; AJvYcCVnU51UlwNlTFZwc7tvsOQFIpgeWTR9XLmy7dJKVZHOFgMSg2ql3IeU9qfKNIYcZ/ZZT0bGGhtir52H@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmI30pNWWS3ce7vyNon+tRZs2AHSMYtx/QmRlA/1MrCAgz0+Ot
+	5bUsgL+jOC7hFniLfvmxt3PVi63JkiE8EuYLkuE7UUBd3tJR5fhA0Kj+9vJT4xGNV9k=
+X-Gm-Gg: AY/fxX7IcqdeMLhKj0Df3AJwKaxUEtqrKQtu2KumMn0XdgFBQ5QF16JFLv8NduNTDXI
+	YALjpI82YYB7yZepc5p/Ny/V0u+roiqtJuPJ5VwJuFap4r2Inr0w/Vz7f8VyjuDap/0OQo0fiQz
+	i+rzdUHIvUc/u/TFvAXI4eIAHnarMQcgJB/JRoKhLpPilNtDqjpg8r2Ci6UPVu5JMvttTlxx+NB
+	78GP+IY7GDkHPXagoE024rfzL2XJX+oLs5ADDLw0n6OgaIe6pbU8QDMQe0f/VyOXqCIHEKDy5Pq
+	Q6k/15eSYpxSk8hbjCPUdzXXl/YYYEWaeRoDLBEDFxEj7kPEbWdZrGdiR8Mms/8+yNPKXr/k0UD
+	8AtBUt9cnK5moV7xiI0foe3S1jyc3UDTPM3nTW5y4fGnQ9huzRZakKGd4toAAA5yjEapmCAifU6
+	p0Zjj2WReB5kOnGbr0a3Dw3A==
+X-Google-Smtp-Source: AGHT+IECK/LcBFPZYYyRh4cCx6nIWU2Vivu4V4Wo0++VXRb6DotO+ATVsJPLekWH+2yfoIoKe3qHow==
+X-Received: by 2002:a17:90b:278d:b0:32e:3c57:8a9e with SMTP id 98e67ed59e1d1-34e921f0439mr39742351a91.35.1767589033897;
+        Sun, 04 Jan 2026 20:57:13 -0800 (PST)
 Received: from localhost ([122.172.80.63])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c1e7bd61b4csm40590900a12.18.2026.01.04.20.56.42
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34f476ec31dsm4899585a91.3.2026.01.04.20.57.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Jan 2026 20:56:42 -0800 (PST)
-Date: Mon, 5 Jan 2026 10:26:40 +0530
+        Sun, 04 Jan 2026 20:57:13 -0800 (PST)
+Date: Mon, 5 Jan 2026 10:27:11 +0530
 From: Viresh Kumar <viresh.kumar@linaro.org>
 To: "Michael S. Tsirkin" <mst@redhat.com>
 Cc: linux-kernel@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>, 
@@ -91,10 +91,11 @@ Cc: linux-kernel@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
 	"Enrico Weigelt, metux IT consult" <info@metux.net>, Viresh Kumar <vireshk@kernel.org>, 
 	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
 	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH RFC 14/13] gpio: virtio: fix DMA alignment
-Message-ID: <nyz6mnesozpu5u6p2mxrg37fwuj3sy7hjo2xkyepd3aybm7m52@7weoocg2pbs5>
+Subject: Re: [PATCH RFC 15/13] gpio: virtio: reorder fields to reduce struct
+ padding
+Message-ID: <w6to6itartzrxgapaj6dys2q3yqqoz3zetpb5bejnjb4heof2c@jkhmal3chyn2>
 References: <cover.1767089672.git.mst@redhat.com>
- <6f2f2a7a74141fa3ad92e001ee276c01ffe9ae49.1767112757.git.mst@redhat.com>
+ <55e9351282f530e2302e11497c6339c4a2e74471.1767112757.git.mst@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -103,36 +104,23 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6f2f2a7a74141fa3ad92e001ee276c01ffe9ae49.1767112757.git.mst@redhat.com>
+In-Reply-To: <55e9351282f530e2302e11497c6339c4a2e74471.1767112757.git.mst@redhat.com>
 
 On 30-12-25, 11:40, Michael S. Tsirkin wrote:
-> The res and ires buffers in struct virtio_gpio_line and struct
-> vgpio_irq_line respectively are used for DMA_FROM_DEVICE via virtqueue_add_sgs().
-> However, within these structs, even though these elements are tagged
-> as ____cacheline_aligned, adjacent struct elements
-> can share DMA cachelines on platforms where ARCH_DMA_MINALIGN >
-> L1_CACHE_BYTES (e.g., arm64 with 128-byte DMA alignment but 64-byte
-> cache lines).
+> Reorder struct virtio_gpio_line fields to place the DMA buffers (req/res)
+> last. This eliminates the need for __dma_from_device_aligned_end padding
+> after the DMA buffer, since struct tail padding naturally protects it,
+> making the struct a bit smaller.
 > 
-> The existing ____cacheline_aligned annotation aligns to L1_CACHE_BYTES
-> which is now always sufficient for DMA alignment. For example,
-> with L1_CACHE_BYTES = 32 and ARCH_DMA_MINALIGN = 128
->   - irq_lines[0].ires at offset 128
->   - irq_lines[1].type at offset 192
-> both in same 128-byte DMA cacheline [128-256)
-> 
-> When the device writes to irq_lines[0].ires and the CPU concurrently
-> modifies one of irq_lines[1].type/disabled/masked/queued flags,
-> corruption can occur on non-cache-coherent platform.
-> 
-> Fix by using __dma_from_device_aligned_begin/end annotations on the
-> DMA buffers. Drop ____cacheline_aligned - it's not required to isolate
-> request and response, and keeping them would increase the memory cost.
+> Size reduction estimation when ARCH_DMA_MINALIGN=128:
+> - request is 8 bytes
+> - response is 2 bytes
+> - removing _end saves up to 128-6=122 bytes padding to align rxlen field
 > 
 > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 > ---
->  drivers/gpio/gpio-virtio.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
+>  drivers/gpio/gpio-virtio.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 
 Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
