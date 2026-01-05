@@ -1,82 +1,82 @@
-Return-Path: <linux-gpio+bounces-30134-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30135-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F01ACF29EE
-	for <lists+linux-gpio@lfdr.de>; Mon, 05 Jan 2026 10:08:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B7FDDCF29F2
+	for <lists+linux-gpio@lfdr.de>; Mon, 05 Jan 2026 10:08:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 92EB33092828
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jan 2026 09:03:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 202213032FFA
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jan 2026 09:03:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2AD532AAAB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC8A232ABF7;
 	Mon,  5 Jan 2026 09:02:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pmCjTJqb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dfpL1WuY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1F432D443
-	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 09:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DC232D45B
+	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 09:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767603721; cv=none; b=tOo7lA8uB+ue/8qymeJZ2OZErOBdP3ByadCLGyetnYUnnCq8Khj1H4aDMpk6ZPgSE9nCsGkD3PXsHA1ifNm/oLxdLiuxtrI63VkTplSqzQoD6dXSMNObVLOCgHaHFah3RTeryy3d9OVjYBnwA9finWoyiJZ0gh2Ez1wzSPLd15M=
+	t=1767603721; cv=none; b=YTjWmZs9ZIkeQ/zsw7p6o51kUvRlc5jxHVYz3iaGlsNrvro/kE23fmkju+/CSiP74JOgf/RI8/hcHWwB5cBYWAqUBv4G1q/B04YYZrB2QAYHD/jOFgh0Le3NiNYU1VCfGg8Evnvhl9/Ie8xq8JC/CQNYukVou5mDQINvEPisrg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1767603721; c=relaxed/simple;
-	bh=pYoKo+digtWVPSZwb9N952iQQptJW29ndQ+/P5fC4eM=;
+	bh=gdA0sZvZ0YzUA5VbllhyP/LA1RBGbn5sCuJW2ofmkv8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Al8MhwAaTnLtn95mBTVjX3PRHR1bRxvDjVSuAwvKxevfaia2kxE2SWXK0P4oYR8+gkfKHhm2xNlCiff2Ar2774bMP/9+BLcgNZEuOXkb+2h89JzY+C2Mh6eOtzAtzhbVXjOugE62DpTQN0LdMc67qX5gtBsRhJz7CqA6QxAGNUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pmCjTJqb; arc=none smtp.client-ip=209.85.208.50
+	 In-Reply-To:To:Cc; b=AVgrisXBSnWEbxh0T5OqA5CLfC4ZYFircG9/j053203nYO8kxyp1Ggcbh7qCPM4npHoMZEyIsnRZMtX2JYjbrfcIbID1XntNaiKZrnBAXJ3S2BAJ8IEQUVBqUoWsmLIPZGjTy2Ez/geAhW6iue04IGi3QRe0hGLnX/jCXXDlU6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dfpL1WuY; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-64b4b35c812so19497198a12.0
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Jan 2026 01:01:53 -0800 (PST)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b83d6a06304so272804766b.2
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Jan 2026 01:01:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1767603711; x=1768208511; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1767603712; x=1768208512; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tHyxC3mJTt3T5SfTPxkXMI8FFVxPvrKadVGkzzCyb1s=;
-        b=pmCjTJqbUiaKuYNl5r70vd+4KkuIlwxNDQ50Xp9F+n020HYldC6x3KQ8bkfLuTLCJh
-         Pa8fD8seBOmYc8+2nOoPJ7PBP0J1C+wAam28NhqlKqV0l0UKPKmGB1YNe0NSDbOHhG9l
-         U7t7jHRjMdCJgskN8xJKsog1WmFM4jUCmQxgxKtCJHb06jqPKgkbUTLF2tO3PenNWTT3
-         y9ERfWhLLNROIQReQmlFWsm2xA3n4AJmh6U2jCKu3p2wNHXela+Tqnv6eNHrdzOnxUZW
-         IlDLXo2P29fh62NF7ApSkOCl73B8IYaneNh433gFuY33ygcpGloLnsg3+MMyfrK90Ett
-         GEOQ==
+        bh=bdm4unydgK85s5YLaStWETQ4AILRmGjAlJ/lhyhIAds=;
+        b=dfpL1WuY0jAcr/AfgQScMKsRnyEZvVotB4yzFf1kMJrEcoliiu6bpT4MYXcz9u1XHO
+         VssTyQKnI3vJefNQI9P3KIaIyM7FfrCejcuNBfGmuOLYZ39Cb8r1Skml+55IrOlpTs/c
+         0K93viX0pjYkp0JO+2eTdDc96NZ/cVLYf8RCKTML8YE19ag2mVH+IzvG+Mjre66YV7NT
+         7F8f43ttC9ETjO9uhJx3c98/+n0UONOutbmuS0dwnogX7FiLBx4wbWdKmQfyAw9KdtMu
+         RO/ktw2oTr8SZoJx6GCpSbjIp4kaPH6MelY8NRqwcFeSuVJIFElk5wXH4bSvbZbTubdl
+         adGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767603711; x=1768208511;
+        d=1e100.net; s=20230601; t=1767603712; x=1768208512;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=tHyxC3mJTt3T5SfTPxkXMI8FFVxPvrKadVGkzzCyb1s=;
-        b=KGodF/cQdF/a3kxxQQVbNaPQz14ENMZPl4coYhinSzLvY6CCX0fVjZOaJ+9/uvuXpb
-         RhH+Ip3K1EcbMLYp1YrWPsTbjm6LAqnHdAsKKwpuZg6PcMwBGpcoEGHXy81QIJClJXCo
-         St2NXA4e2/FAmge9UBBhOY7pO+mtAjbPI3Sr1zNMx8m3YH8cjuSvCvKOuOa3gusrywZE
-         ko+6CXK0lGMgiVoTzGNvgdcwd4/5pkQNYOWF7ju+u3ERFE1ubrxdZmDL5C2b9MuI2T9c
-         w6AvvG3K8J9muVtNq3k2ND7L9DpY5jz+GOuPM8tsb75eDV+WUC8p4WFlfX1VJt5V9XpJ
-         Vx4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVcQpVFU0h52KXi8JZb+KPpJHf+mLSBY2PC11KpCQUunH3L2UaWijhndmeNQkDPqLJCtaVJN5KodTe8@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6Z7oN+bDyfPAus74tXPbtIpNJaakdLTF2CYHhBVSmv5RcwjkA
-	+INl6+f0HyyU93GpH/erH6Vd5frf2OoA+AIy8Y7Nmsv3wKdTmCFPGkDACCpWNf9l1X4=
-X-Gm-Gg: AY/fxX64ZpM7VBrDlCEgmeCrnNZsNmwea7H+3nWIGjkmbzkkzwmsS0bKH8KZdv8EUzf
-	EFanwXOiF7aK4IG02qKYDQGNh+L2EioIthIm/Xyd93Xj0/kmS8BKiPVHlPiMGXdeWvmZo2Pdzuk
-	GoFSx36V84SJ4fbA+9NGg7QiNgyNihcRrINjfB0WYhdFUZqsuuywreHomdL4QUWzaVP1kzS6UbS
-	4M0jRkV8jojA9P3HKQV3jUC1o2dl1atHdBg5vX4cZk7+xYC4x2dcczpuLody73FGZ6y/Na0T02E
-	oPO0BU3PDMvRGd/rslRewibORJrKMoA39ljjRNrYInx/ZDvOi9F8YE0P9Q9ebYIOCTsZ9klwgpu
-	yhWhMbRKd9Wh01f7G4QbZsU93PQYdgTkpc61wOL3XlAxTjhbCDHJhBXW0NPn7v7JbP42WnMy25F
-	dtQbQNf8ErxppyZ0xZB15Z8d5kAbCR5lRKBzy3ThEscht3Gc6bIP1/JQvw4K2GM/dsLpS0FIqb+
-	twjbg==
-X-Google-Smtp-Source: AGHT+IHE2Bk2ccsf+dZVQINoCVjuNssHJWZ8dARVmDYm9psJbwoyILdGIxup09aHKiJs6mnKKYTX2A==
-X-Received: by 2002:a17:907:7288:b0:b80:15f6:6deb with SMTP id a640c23a62f3a-b8036ebd4eamr4997195966b.1.1767603710386;
-        Mon, 05 Jan 2026 01:01:50 -0800 (PST)
+        bh=bdm4unydgK85s5YLaStWETQ4AILRmGjAlJ/lhyhIAds=;
+        b=JTlOQre5cP8GAlVZVyPQvo8wGVRDvugxTKnFxFAN+vwEBNp8zHLlr++Tkr2Pj/7eDW
+         rQNWIPKG2xD7+HteQ2SZ1pM8hqrPoORE/QIl0e9Zz8EuSibaDJ893ljh1M5mHUO1Je6V
+         ky8kj+tkLQblqGXDd+72M/YQiq0hmuE01rP/4YmW4zTXUGiMQDuNZ/Rcm+G1xsA8bxd9
+         bZetxXKA4EopA9LA+cLZdiNkcy95r5hCCsc6rzueQaIdbD+CdoZnPpAmgE6sn9pUENSs
+         Cjc2rVl+6OVKeo4xeFk9rF7GJ6Ws7gVzSgcjrF3RYiAcJPJNUck3pxOYn9Ov2+ksmz2j
+         D+9w==
+X-Forwarded-Encrypted: i=1; AJvYcCURUiARIZ3PaVv/1yoVYzcXKU8QQMCX9w0cElFS2Z6GrOI4xgE2bFXuVtP3r1ZITnZiNXuqy31NWfGm@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrOMieO0ekZ+VoqmNslMKmvRuaGdBIKGs9DwOOqvb1KeghxBiH
+	vc7L1B7b/6/a3tyHo+LMVv86qLRvtEEwG22CV1/BUwatLFPudLixyqqh4A4QPczzO1Q=
+X-Gm-Gg: AY/fxX6zJ3oCWgPX6qqf5O1UzW4jiFr6/+ys8S+rdvm2eQeOgX0ZP9tGVuhSWJOEAY6
+	ExQuCMX0yIbqXNUFXNnYXHvrz+Hq//nP1Aot+UPCL7DlZLOkzteYA2sU4y6uub25IiCY5JsRfQ+
+	NzbPFB4+XKVqZTxtatIICL8HGhwwZtJj8fgmlEQgLoToxh+Ui0U64PF+Y0SmL++OH1JTefFJ1Xi
+	1vywmby7No/PK+IpaHVMtbo3+E0McoeTS0+PmBPTP0812Q0haKaC3MBlsXtKaNdJ/IGxEikoHfm
+	9q6b5GuSBlJRDdeXJ3+egDMNsyXeAVYY3KW3n5pDHQy1odHOYFqgflvsRoU20eT6A4wiBmdmBAY
+	jbFh8QWsihNc+jzVghEVM7goij0VviHNCEjtbvMmDpMUbhN48sFEOUaQI4oKDtIwEKnTy/2hDYq
+	CDHW/0hZDhRVhc6fzxbt3GLFKmVG2TSkgjd4UDS0zsROAoiuxnXVW6/z6plwg2V8QaSEgi1x8P8
+	IuXqQ==
+X-Google-Smtp-Source: AGHT+IGpEAwTdgiIFqYVLwZr5Dshta5wUiaNkwk7GiDRbOtmpc5D7uh2c6qY0I7WpfIMYQ7/WqMhpQ==
+X-Received: by 2002:a17:907:847:b0:b83:c81a:197e with SMTP id a640c23a62f3a-b83c81a199fmr1121260466b.24.1767603711921;
+        Mon, 05 Jan 2026 01:01:51 -0800 (PST)
 Received: from puffmais2.c.googlers.com (244.175.141.34.bc.googleusercontent.com. [34.141.175.244])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8037f0ecb9sm5384010466b.56.2026.01.05.01.01.49
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8037f0ecb9sm5384010466b.56.2026.01.05.01.01.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jan 2026 01:01:50 -0800 (PST)
+        Mon, 05 Jan 2026 01:01:51 -0800 (PST)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Mon, 05 Jan 2026 09:01:54 +0000
-Subject: [PATCH v6 18/20] regulator: s2mps11: refactor S2MPG10 regulator
- macros for S2MPG11 reuse
+Date: Mon, 05 Jan 2026 09:01:56 +0000
+Subject: [PATCH v6 20/20] regulator: s2mps11: more descriptive gpio
+ consumer name
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -85,7 +85,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260105-s2mpg1x-regulators-v6-18-80f4b6d1bf9d@linaro.org>
+Message-Id: <20260105-s2mpg1x-regulators-v6-20-80f4b6d1bf9d@linaro.org>
 References: <20260105-s2mpg1x-regulators-v6-0-80f4b6d1bf9d@linaro.org>
 In-Reply-To: <20260105-s2mpg1x-regulators-v6-0-80f4b6d1bf9d@linaro.org>
 To: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
@@ -99,142 +99,37 @@ Cc: Peter Griffin <peter.griffin@linaro.org>,
  kernel-team@android.com, linux-kernel@vger.kernel.org, 
  linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-gpio@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
+ Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
 
-Rails in the S2MPG11 share a very similar set of properties with
-S2MPG10 with slight differences. Update the existing macros to allow
-reuse by the upcoming S2MPG11 driver.
+Currently, GPIOs claimed by this driver for external rail control
+all show up with "s2mps11-regulator" as consumer, which is not
+very informative.
 
+Switch to using the regulator name via desc->name instead, using the
+device name as fallback.
+
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
-
 ---
-Note: checkpatch complains about unused macro arguments _r_mask,
-_r_table, and _r_table_sz, but these are false-positives due to patch
-context.
-
-v2:
-- fix commit message typos: s2mp1 -> s2mpg1
-- drop duplicated assignment of ::of_parse_cb in
-  regulator_desc_s2mpg1x_buck_cmn() macro
----
- drivers/regulator/s2mps11.c | 69 +++++++++++++++++++++++++++------------------
- 1 file changed, 42 insertions(+), 27 deletions(-)
+ drivers/regulator/s2mps11.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
-index 5e35840605472e20019ef936d283be2c38146854..c75ee0bd34377b9888b74e8b561727c51b630127 100644
+index 4a9d70947f17cb7520e0e820d3d1b9eb370ff600..2d5510acd0780ab6f9296c48ddcde5efe15ff488 100644
 --- a/drivers/regulator/s2mps11.c
 +++ b/drivers/regulator/s2mps11.c
-@@ -655,31 +655,44 @@ static const struct regulator_ops s2mpg10_reg_buck_ops[] = {
-  * (12.5mV/μs) while our ::set_voltage_time() takes the value in ramp_reg
-  * into account.
-  */
--#define regulator_desc_s2mpg10_buck(_num, _vrange, _r_reg) {		\
--	.name		= "buck"#_num "m",				\
--	.supply_name	= "vinb"#_num "m",				\
--	.of_match	= of_match_ptr("buck"#_num "m"),		\
-+#define regulator_desc_s2mpg1x_buck_cmn(_name, _id, _supply, _ops,	\
-+		_vrange, _vsel_reg, _vsel_mask, _en_reg, _en_mask,	\
-+		_r_reg, _r_mask, _r_table, _r_table_sz,			\
-+		_en_time) {						\
-+	.name		= "buck" _name,					\
-+	.supply_name	= _supply,					\
-+	.of_match	= of_match_ptr("buck" _name),			\
- 	.regulators_node = of_match_ptr("regulators"),			\
- 	.of_parse_cb	= s2mpg10_of_parse_cb,				\
--	.id		= S2MPG10_BUCK##_num,				\
--	.ops		= &s2mpg10_reg_buck_ops[0],			\
-+	.id		= _id,						\
-+	.ops		= &(_ops)[0],					\
- 	.type		= REGULATOR_VOLTAGE,				\
- 	.owner		= THIS_MODULE,					\
- 	.linear_ranges	= _vrange,					\
- 	.n_linear_ranges = ARRAY_SIZE(_vrange),				\
- 	.n_voltages	= _vrange##_count,				\
--	.vsel_reg	= S2MPG10_PMIC_B##_num##M_OUT1,			\
--	.vsel_mask	= 0xff,						\
--	.enable_reg	= S2MPG10_PMIC_B##_num##M_CTRL,			\
--	.enable_mask	= GENMASK(7, 6),				\
--	.ramp_reg	= S2MPG10_PMIC_##_r_reg,			\
--	.ramp_mask	= s2mpg10_buck_to_ramp_mask(S2MPG10_BUCK##_num	\
--						    - S2MPG10_BUCK1),	\
--	.ramp_delay_table = s2mpg10_buck_ramp_table,			\
--	.n_ramp_values	= ARRAY_SIZE(s2mpg10_buck_ramp_table),		\
--	.enable_time	= 30, /* + V/enable_ramp_rate */		\
-+	.vsel_reg	= _vsel_reg,					\
-+	.vsel_mask	= _vsel_mask,					\
-+	.enable_reg	= _en_reg,					\
-+	.enable_mask	= _en_mask,					\
-+	.ramp_reg	= _r_reg,					\
-+	.ramp_mask	= _r_mask,					\
-+	.ramp_delay_table = _r_table,					\
-+	.n_ramp_values	= _r_table_sz,					\
-+	.enable_time	= _en_time, /* + V/enable_ramp_rate */		\
- }
+@@ -362,7 +362,8 @@ static int s2mps11_of_parse_gpiod(struct device_node *np,
+ 	ena_gpiod = fwnode_gpiod_get_index(of_fwnode_handle(np), con_id, 0,
+ 					   GPIOD_OUT_HIGH |
+ 					   GPIOD_FLAGS_BIT_NONEXCLUSIVE,
+-					   "s2mps11-regulator");
++					   desc->name
++					   ? : dev_name(config->dev));
+ 	if (IS_ERR(ena_gpiod)) {
+ 		ret = PTR_ERR(ena_gpiod);
  
-+#define regulator_desc_s2mpg10_buck(_num, _vrange, _r_reg)		\
-+	regulator_desc_s2mpg1x_buck_cmn(#_num "m", S2MPG10_BUCK##_num,	\
-+		"vinb"#_num "m", s2mpg10_reg_buck_ops, _vrange,		\
-+		S2MPG10_PMIC_B##_num##M_OUT1, GENMASK(7, 0),		\
-+		S2MPG10_PMIC_B##_num##M_CTRL, GENMASK(7, 6),		\
-+		S2MPG10_PMIC_##_r_reg,					\
-+		s2mpg10_buck_to_ramp_mask(S2MPG10_BUCK##_num		\
-+					  - S2MPG10_BUCK1),		\
-+		s2mpg10_buck_ramp_table,				\
-+		ARRAY_SIZE(s2mpg10_buck_ramp_table), 30)
-+
- #define s2mpg10_regulator_desc_buck_cm(_num, _vrange, _r_reg)		\
- 	.desc = regulator_desc_s2mpg10_buck(_num, _vrange, _r_reg),	\
- 	.enable_ramp_rate = 12500
-@@ -743,24 +756,24 @@ static const struct regulator_ops s2mpg10_reg_ldo_ramp_ops[] = {
- 	}
- };
- 
--#define regulator_desc_s2mpg10_ldo_cmn(_num, _supply, _ops, _vrange,	\
--		_vsel_reg_sfx, _vsel_mask, _en_reg, _en_mask,		\
-+#define regulator_desc_s2mpg1x_ldo_cmn(_name, _id, _supply, _ops,	\
-+		_vrange, _vsel_reg, _vsel_mask, _en_reg, _en_mask,	\
- 		_ramp_delay, _r_reg, _r_mask, _r_table,	_r_table_sz) {	\
--	.name		= "ldo"#_num "m",				\
-+	.name		= "ldo" _name,					\
- 	.supply_name	= _supply,					\
--	.of_match	= of_match_ptr("ldo"#_num "m"),			\
-+	.of_match	= of_match_ptr("ldo" _name),			\
- 	.regulators_node = of_match_ptr("regulators"),			\
- 	.of_parse_cb	= s2mpg10_of_parse_cb,				\
--	.id		= S2MPG10_LDO##_num,				\
-+	.id		= _id,						\
- 	.ops		= &(_ops)[0],					\
- 	.type		= REGULATOR_VOLTAGE,				\
- 	.owner		= THIS_MODULE,					\
- 	.linear_ranges	= _vrange,					\
- 	.n_linear_ranges = ARRAY_SIZE(_vrange),				\
- 	.n_voltages	= _vrange##_count,				\
--	.vsel_reg	= S2MPG10_PMIC_L##_num##M_##_vsel_reg_sfx,	\
-+	.vsel_reg	= _vsel_reg,					\
- 	.vsel_mask	= _vsel_mask,					\
--	.enable_reg	= S2MPG10_PMIC_##_en_reg,			\
-+	.enable_reg	= _en_reg,					\
- 	.enable_mask	= _en_mask,					\
- 	.ramp_delay	= _ramp_delay,					\
- 	.ramp_reg	= _r_reg,					\
-@@ -775,10 +788,12 @@ static const struct regulator_ops s2mpg10_reg_ldo_ramp_ops[] = {
- 		_ramp_delay, _r_reg, _r_mask, _r_table,	_r_table_sz,	\
- 		_pc_reg, _pc_mask)					\
- 	[S2MPG10_LDO##_num] = {						\
--		.desc = regulator_desc_s2mpg10_ldo_cmn(_num, _supply,	\
--				_ops,					\
--				_vrange, _vsel_reg_sfx, _vsel_mask,	\
--				_en_reg, _en_mask,			\
-+		.desc = regulator_desc_s2mpg1x_ldo_cmn(#_num "m",	\
-+				S2MPG10_LDO##_num, _supply, _ops,	\
-+				_vrange,				\
-+				S2MPG10_PMIC_L##_num##M_##_vsel_reg_sfx, \
-+				_vsel_mask,				\
-+				S2MPG10_PMIC_##_en_reg, _en_mask,	\
- 				_ramp_delay, _r_reg, _r_mask, _r_table,	\
- 				_r_table_sz),				\
- 		.pctrlsel_reg = _pc_reg,				\
 
 -- 
 2.52.0.351.gbe84eed79e-goog
