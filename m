@@ -1,233 +1,163 @@
-Return-Path: <linux-gpio+bounces-30166-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30167-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02648CF4FE7
-	for <lists+linux-gpio@lfdr.de>; Mon, 05 Jan 2026 18:27:33 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68A72CF4F90
+	for <lists+linux-gpio@lfdr.de>; Mon, 05 Jan 2026 18:22:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 86791301720B
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jan 2026 17:26:43 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 1DAB830060FF
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Jan 2026 17:22:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CEDF33B6E4;
-	Mon,  5 Jan 2026 17:20:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64E14314B89;
+	Mon,  5 Jan 2026 17:22:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="acnHXp8l";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="JihDbq+a"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="j8Itlb2i"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A86A2DECD2
-	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 17:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C352F60A2
+	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 17:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767633637; cv=none; b=jkjeRUldMz9qWRmeaurSwjfZFhcKdAIGWya/gGQSGef3h4GC8fGNLABcPZCgJ0IotkellatsK2ZmM7kIVShJ4R/MOe1GHm8qmEUvHzek98JfZ/AoLWVCQjgBTUhiLgdi5YgOQ3mZXIxC3xzBbMEcECi/QY7/YAvNwSyXyxTKbpY=
+	t=1767633759; cv=none; b=NlbBpJ+0wu1FDvoXq4kNbcXIKwNJyd94j5/t7PVAbmO7Iyto7RAkW7IxzsFs3gtn+U2JiTcif5bgF3+g1jevDl0Kejl4GBO5OoaD/+F77fQtisCWf7ocXnwG4OsuGYRyXluNLDGXIyn5DvUokBbaRREj0EwHsvw9/sm14jryjFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767633637; c=relaxed/simple;
-	bh=HkvBiaLkZQB/XCm2RcDqyMZQP4FwmPg7nmbZ8Yw17sA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TUag5Y3fHHG0/XHIq8e++hngY825mDhLUzMXEbDO1mWlePYWVj1eiBYUxs446wUAzy7dIcPweZa6uHmiORHTiwzABsVl8eCVIPyW0BMhom5yhhxWPpD2zVm9/7cEHrbkVvcumchIKxEGjuuc06m2vXxo8TTZiHku3jkgm/+Jy9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=acnHXp8l; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=JihDbq+a; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 605CdC5J4031674
-	for <linux-gpio@vger.kernel.org>; Mon, 5 Jan 2026 17:20:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	DHiFrg5t/UNh1oQC2wzIPwwhl3MV3upU6x3ntNRIRB0=; b=acnHXp8la7C7Qwb6
-	NclaxRUMrTjWhEI/h+smfGyqHrAokffUI299zfOdbBbXNDvrsDUkLS7quiTsA8Me
-	tf8JEKHW3C70/f/KNWnwsq7/tvvR2zuTdARFcQ0Yrr7i8zAvpySTJCTHrDdUe8S6
-	66Lb9s2a9Wfp/Sd2J+91eZiyLI0AFJAnpRvWtdImsEoV8S0sDATdBYP/GApXynD8
-	eXRi1Vj3lDsyDA7eUDGkx0R9xbR/znwbZPQSiKwXeqIiiyiq72zttKrSqQZEa53n
-	w+9aLJAnzLJAc9rdyUX74Lt/JVkIBfH0uMUKWtE848k5fjLIE6ZV/kjPJV6pgstc
-	57ZoOw==
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bg79nhytd-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Mon, 05 Jan 2026 17:20:30 +0000 (GMT)
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-7b9090d9f2eso562376b3a.0
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Jan 2026 09:20:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1767633630; x=1768238430; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DHiFrg5t/UNh1oQC2wzIPwwhl3MV3upU6x3ntNRIRB0=;
-        b=JihDbq+adagLmOXxAfGtg4+KQfq84v59ytcncBEO9zJtEr+r+sYhhPh0CFDObXM885
-         wGpsE7Ih1+q5wRfIypIbNW9m44iVux+F2lkvJOvf7KqwfTTOGqD0Zc7HLFF11OwkNGis
-         P+ZzuVdhql/F3M4Cs5cVKyG8B08KXa2T86WLjUwrHrhoTXQxyieqaphQPlUnwHvbjP8O
-         cknTYxilHx046dn4wyQRAJxR4uI7aeJSCX9eNfmCHEQ1qVBL53Eb0GswPC+FJMXC6d/D
-         10tcpuUl3+1t+g9cv3cGtJWU5lrr4xc63W5Vxzt/WD0FXXmKHEdDDt3dSu9AFRzvufB/
-         W96Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767633630; x=1768238430;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DHiFrg5t/UNh1oQC2wzIPwwhl3MV3upU6x3ntNRIRB0=;
-        b=gXaw20lL/jOSCf0j5fYiagxbEf1ieYhsgANgciatwXlMyCSJd8kjW3N6HKtyzyZNle
-         nSMY04E2gYWY/VRGVAG5hN/EAvWczBqs4pZS6U+z+MF8DRFM6OnwnMWWA51WKj4GJ5CM
-         n0tq/PcF10gPoOoGrrtxvnsTj7FaBo59p5ItzHzv6v8+C7Zd9lUAPa4crLIcveXl0aZO
-         LkQLIc/3fhwrtFtbGNA/jzEWWCV+BCootR1B1bWV38BYDvqUar9NGRhm9U1aTD48bysH
-         xf3tO8KUZ+nbIAVWdapeO3VdTgWaREUz897EWjbiYFbTEUTXIgnf0H6BHqPYPXrOY5yM
-         Kafg==
-X-Forwarded-Encrypted: i=1; AJvYcCWWI9j2I8hOR9dKmiCnt6ksizhT0Jyd7pBTezrpmhkWx21I6oCoR2+cIo0sbM5KyTBbqBvtkyz4n27F@vger.kernel.org
-X-Gm-Message-State: AOJu0YxglzCfImOhoQf/+6gV/vjpwWJ0lJ8Sb1LVAghflYMquV9f0mod
-	J55NZ2nTlz2hgcJThvWzj66z6M/pjYADknxbbLDuINsDDzgHKhK8kdVV5EtkI7dj4puQOqOvcfj
-	C7GWy1Fqr11iIGmf4uZ077kAVpKyen2FZpxsPQ7dgXKlxluGj7a0C7lHTnt8Vhb/f
-X-Gm-Gg: AY/fxX5QhiAmc+J1CWCPce3FTj5iU9zpi5UK9FuEXIWA6QJpnEip1tIb8DLdaYuy3gi
-	sl3ob0nPPuinRxw8iu733PilH4LN/r2d9A3eKNjhA0Gkm+T8W6ROZVe5X30+audQu9KaA3FAYrt
-	6olAcWu9nYsDBtWzMBh/YDDq2cC0hXL7IoFlr+ZBTGdlUhSLdPsbnTsGHe6vE75aOS8/vsGTy3N
-	fiXfL0WB7sUAYj5qdpBpqE1LPISbeQGmsvHRv1NH/eVr7SsVRp66llI6EBNuaEDpAxowWwIcPAf
-	yFyopydmgbzciT+W18bmXeOqxrHEaonSetYsD5iCQBHWgTI9ESj4CIU5ucepWaNnnk3WMtoMn6L
-	yMzoRTCj8FbJxM4PHQvK6dY9GUg==
-X-Received: by 2002:a05:6a20:a126:b0:35b:b97f:7bd2 with SMTP id adf61e73a8af0-389822aa534mr55374637.10.1767633629753;
-        Mon, 05 Jan 2026 09:20:29 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IElAgZKmBLzSEgsjbdp00nEWJPVoGLSNwfo1YQ/FYe6i4rtPXr90JULXq/r66u1BxMJh1qbkQ==
-X-Received: by 2002:a05:6a20:a126:b0:35b:b97f:7bd2 with SMTP id adf61e73a8af0-389822aa534mr55337637.10.1767633629141;
-        Mon, 05 Jan 2026 09:20:29 -0800 (PST)
-Received: from work ([120.56.194.222])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c4bfc9789e4sm203107a12.7.2026.01.05.09.20.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jan 2026 09:20:28 -0800 (PST)
-Date: Mon, 5 Jan 2026 22:50:22 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Gopikrishna Garmidi <gopikrishna.garmidi@oss.qualcomm.com>,
-        Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Rajendra Nayak <rajendra.nayak@oss.qualcomm.com>,
-        Pankaj Patil <pankaj.patil@oss.qualcomm.com>,
-        Sibi Sankar <sibi.sankar@oss.qualcomm.com>,
-        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] pinctrl: qcom: glymur: Add Mahua TLMM support
-Message-ID: <zaf4uoms75wc7yvmrmqs53couefqsv5oie2hbiwvhitqonbs4u@aq6bcvf4nq3o>
-References: <20260102-pinctrl-qcom-mahua-tlmm-v1-0-0edd71af08b2@oss.qualcomm.com>
- <20260102-pinctrl-qcom-mahua-tlmm-v1-2-0edd71af08b2@oss.qualcomm.com>
- <91d2e5f7-7d93-4909-9ed2-6b19abf0b448@oss.qualcomm.com>
- <dayj662qu7tb3l2fuq4sfdxunvkk2rt777vm7dfvdazbwiwpzn@mysrwdbdptqt>
- <adlhkus5gvum6fkd7bxjohwlsiumw7w6w4c36vzphjz7my2644@pmobztmgpdvx>
+	s=arc-20240116; t=1767633759; c=relaxed/simple;
+	bh=xDVJzZV1vTGFToFTSaRAAt/2OxG49QMQBoU/QyYEhpo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=SxGKD79qYFN7tdQhUxzWoOKaZeaQMJZVqXnnBsfXnt4cvjKo87yOnrPyRJlF841e4fKfRsq39I3hcaYJnaKaRedJo6rNZgq+8rQaxD/ENAuOF7HjWrFXRAgX3PqsONY+RlZOqa67INH78b8yP2fE01SdcQG/l0AExf/9ce5Yadg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=j8Itlb2i; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20260105172234euoutp0267db95bc381b5544e04bc95f2c0c98d2~H5YjqRRYu0571605716euoutp02T
+	for <linux-gpio@vger.kernel.org>; Mon,  5 Jan 2026 17:22:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20260105172234euoutp0267db95bc381b5544e04bc95f2c0c98d2~H5YjqRRYu0571605716euoutp02T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1767633755;
+	bh=dL7PsjrsSQCxLMyQpiUMZD+cf05qReFHDjOR+NOKGBk=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=j8Itlb2ivsyeA92BttEXBX0nkcGwoovL0VnX1EWJ8Tsavw/X0IBio5s4sbBt5m/cX
+	 W8ZOugGrBePUX8PS8FtxC3F6+HRWGKJM23cuKtZoRT0BpAFM5q6atjaOXqX15VQmrF
+	 fSmu7YUtHBumC7tMuds8Npp4F3s7IFj75M32AlLU=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20260105172234eucas1p24e36134a1a125b0c4a2e273d8323998e~H5Yjf-CG11675716757eucas1p2l;
+	Mon,  5 Jan 2026 17:22:34 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20260105172233eusmtip11910bf8c532801f153c150cc09926011~H5YiZaBiQ1274212742eusmtip1L;
+	Mon,  5 Jan 2026 17:22:33 +0000 (GMT)
+Message-ID: <c53c4f14-cb0e-475d-baf9-c02f24e3df5c@samsung.com>
+Date: Mon, 5 Jan 2026 18:22:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 0/2] gpio: shared: another set of small fixes
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Linus
+	Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <CAMRc=McGaZBDQp2+4Q5G_qkKu_fPDxWwsoo3MujkZs70eBDqxQ@mail.gmail.com>
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <adlhkus5gvum6fkd7bxjohwlsiumw7w6w4c36vzphjz7my2644@pmobztmgpdvx>
-X-Proofpoint-GUID: iwM2UmEKZHh1eJRZ1rVsp1Th23t-gcVO
-X-Proofpoint-ORIG-GUID: iwM2UmEKZHh1eJRZ1rVsp1Th23t-gcVO
-X-Authority-Analysis: v=2.4 cv=Y8P1cxeN c=1 sm=1 tr=0 ts=695bf2de cx=c_pps
- a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=3dEILRYKsVIWdVk4w2Qziw==:17
- a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=qW_9IeAHNZvJjEDOEU8A:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=2VI0MkxyNR6bbpdq8BZq:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA1MDE1MSBTYWx0ZWRfXw/Qe5ZUnnCY5
- o1/WtUsVagj0PzLglxnrL/sx/bPQIlW7qq9I2YcBC4YJOy1ALpJoctZyfPpiLVx+YKpyfLYPmHe
- 715ZO8tn8ddXCbbhukK6AEvkXIwRakxhjHHA8EiOmfSgspqpcNh3Otk9PdJMVHBsVmw310ZlR3e
- ND/tfXGmjFULzF93vcY5IMcVmlz4ezw7TjXMZvfGOpAOtMHZ5rE6l8zZ8fBQaKwNYgigBmODGBZ
- CtXHL9eAhwC1Lzl/CAWrubprtKFM6NaXTjMRTdhrbjW2SXyj8Gz4Bu+7j14ofYt+JijixHlHM+f
- toJhbwJd9NjIAwofUSZKvbsTjfETno6Vd+dq2FQgt6Sl+JBsup9lZVNnd9MJ8PN2uMLZuqJaS3g
- 8P5xNAw8y/IMVVPNpush9r+7gOr1/s2Tfgkh1mWiJST48cCRGKxKC1yk+bnAaua77YEGcAOqgwY
- tdAutpzNLENSC9w4HGg==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-05_01,2026-01-05_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 malwarescore=0 lowpriorityscore=0 phishscore=0
- impostorscore=0 suspectscore=0 clxscore=1015 bulkscore=0 adultscore=0
- spamscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2512120000
- definitions=main-2601050151
+X-CMS-MailID: 20260105172234eucas1p24e36134a1a125b0c4a2e273d8323998e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20260105155232eucas1p1a0d0d603716267eacef8f57f7aa5e34f
+X-EPHeader: CA
+X-CMS-RootMailID: 20260105155232eucas1p1a0d0d603716267eacef8f57f7aa5e34f
+References: <CGME20260105155232eucas1p1a0d0d603716267eacef8f57f7aa5e34f@eucas1p1.samsung.com>
+	<20260105-gpio-shared-fixes-v1-0-76d6ff0afcd8@oss.qualcomm.com>
+	<9ce71b14-b058-4192-9562-99856a89af1d@samsung.com>
+	<CAMRc=McGaZBDQp2+4Q5G_qkKu_fPDxWwsoo3MujkZs70eBDqxQ@mail.gmail.com>
 
-On Mon, Jan 05, 2026 at 09:31:03AM -0600, Bjorn Andersson wrote:
-> On Mon, Jan 05, 2026 at 11:04:44AM +0530, Manivannan Sadhasivam wrote:
-> > On Fri, Jan 02, 2026 at 01:40:22PM +0100, Konrad Dybcio wrote:
-> > > On 1/2/26 12:07 PM, Gopikrishna Garmidi wrote:
-> > > > Introduce support for the Mahua TLMM (Top Level Mode Multiplexer)
-> > > > in the pinctrl-glymur driver. Mahua shares the same pin configuration
-> > > > as Glymur but requires a different PDC wake IRQ mapping.
-> > > > 
-> > > > Changes include:
-> > > > - Add mahua_pdc_map[] with Mahua-specific GPIO to PDC IRQ mappings
-> > > > - Define mahua_tlmm msm_pinctrl_soc_data structure
-> > > > - Update device match table to include "qcom,mahua-tlmm" compatible
-> > > > - Modify probe function to use of_device_get_match_data() for dynamic
-> > > >   SoC-specific data selection
-> > > > 
-> > > > Signed-off-by: Gopikrishna Garmidi <gopikrishna.garmidi@oss.qualcomm.com>
-> > > > ---
-> > > >  drivers/pinctrl/qcom/pinctrl-glymur.c | 43 ++++++++++++++++++++++++++++++++---
-> > > >  1 file changed, 40 insertions(+), 3 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pinctrl/qcom/pinctrl-glymur.c b/drivers/pinctrl/qcom/pinctrl-glymur.c
-> > > > index 335005084b6b..bf56a064d09c 100644
-> > > > --- a/drivers/pinctrl/qcom/pinctrl-glymur.c
-> > > > +++ b/drivers/pinctrl/qcom/pinctrl-glymur.c
-> > > > @@ -1729,6 +1729,25 @@ static const struct msm_gpio_wakeirq_map glymur_pdc_map[] = {
-> > > >  	{ 232, 206 }, { 234, 172 }, { 235, 173 }, { 242, 158 }, { 244, 156 },
-> > > >  };
-> > > >  
-> > > > +static const struct msm_gpio_wakeirq_map mahua_pdc_map[] = {
-> > > > +	{ 0, 116 },   { 2, 114 },   { 3, 115 },	  { 4, 175 },	{ 5, 176 },
-> > > > +	{ 7, 111 },   { 11, 129 },  { 13, 130 },  { 15, 112 },	{ 19, 113 },
-> > > > +	{ 23, 187 },  { 27, 188 },  { 28, 121 },  { 29, 122 },	{ 30, 136 },
-> > > > +	{ 31, 203 },  { 32, 189 },  { 34, 174 },  { 35, 190 },	{ 36, 191 },
-> > > > +	{ 39, 124 },  { 43, 192 },  { 47, 193 },  { 51, 123 },	{ 53, 133 },
-> > > > +	{ 55, 125 },  { 59, 131 },  { 64, 134 },  { 65, 150 },	{ 66, 186 },
-> > > > +	{ 67, 132 },  { 68, 195 },  { 71, 135 },  { 75, 196 },	{ 79, 197 },
-> > > > +	{ 83, 198 },  { 84, 181 },  { 85, 199 },  { 87, 200 },	{ 91, 201 },
-> > > > +	{ 92, 182 },  { 93, 183 },  { 94, 184 },  { 95, 185 },	{ 98, 202 },
-> > > > +	{ 105, 157 }, { 113, 128 }, { 121, 117 }, { 123, 118 }, { 125, 119 },
-> > > > +	{ 129, 120 }, { 131, 126 }, { 132, 160 }, { 133, 194 }, { 134, 127 },
-> > > > +	{ 141, 137 }, { 144, 138 }, { 145, 139 }, { 147, 140 }, { 148, 141 },
-> > > > +	{ 150, 146 }, { 151, 147 }, { 153, 148 }, { 154, 144 }, { 155, 159 },
-> > > > +	{ 156, 149 }, { 157, 151 }, { 163, 142 }, { 172, 143 }, { 181, 145 },
-> > > > +	{ 193, 161 }, { 196, 152 }, { 203, 177 }, { 208, 178 }, { 215, 162 },
-> > > > +	{ 217, 153 }, { 220, 154 }, { 221, 155 }, { 228, 179 }, { 230, 180 },
-> > > > +	{ 232, 206 }, { 234, 172 }, { 235, 173 }, { 242, 158 }, { 244, 156 },
-> > > 
-> > > Over the "common" base, Glymur has GPIO143 (PCIE3a_RST) and Mahua has GPIO155
-> > > (PCIE3b_RST). Both SoCs GPIO maps seem to contain both, but Mahua has a _unused
-> > > suffix for the missing 143, which makes sense given the bus isn't bifurcated
-> > > there.
-> > > 
-> > > The _RST (PERST#) pin is driven by the SoC so I don't think it's useful to
-> > > have it as a wakeup source, unless someone decides to connect something that's
-> > > not PCIe to it (+Mani)
-> > > 
-> > 
-> > PERST# by definition is an optional reset line, but on most of the *recent*
-> > designs, OEMs always connect it to PERST# line. So practically, I don't think it
-> > make sense to mark this GPIO as a wakeup source.
-> > 
-> 
-> This assumes that all the OEMs uses the particular PCI instance. If they
-> choose to route this GPIO to some other use case, they would have to
-> figure out that we omitted one entry in this table and patch it with
-> the appropriate data in order to have their GPIO wakeup capable.
-> 
-> Wouldn't it be better to put the correct information in this table at
-> this time? If we have a concrete reason not to, I think we should
-> include something useful in the commit message to help the poor engineer
-> faced with this task...
-> 
+On 05.01.2026 17:53, Bartosz Golaszewski wrote:
+> On Mon, 5 Jan 2026 17:48:05 +0100, Marek Szyprowski
+> <m.szyprowski@samsung.com> said:
+>> On 05.01.2026 16:52, Bartosz Golaszewski wrote:
+>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+>>> ---
+>>> Bartosz Golaszewski (2):
+>>>         gpio: shared: assign the correct firmware node for reset-gpio use-case
+>>>         gpio: shared: fix a race condition
+>>>
+>>>    drivers/gpio/gpiolib-shared.c | 4 +++-
+>>>    1 file changed, 3 insertions(+), 1 deletion(-)
+>>> ---
+>>> base-commit: 19fb766a1e5ed5943a62fc671c09d45352a81b1d
+>>> change-id: 20260105-gpio-shared-fixes-40a8ec3b6b25
+>> Those patches indeed fixes some timing issues with the commit
+>> 49416483a953 ("gpio: shared: allow sharing a reset-gpios pin between
+>> reset-gpio and gpiolib"), but they also reveals another one. I've
+>> initially thought that this is a false positive and needs only a proper
+>> lockdep annotation, but some boards hang just after similar lockdep splat:
+>>
+>> ============================================
+>> WARNING: possible recursive locking detected
+>> 6.19.0-rc4-next-20260105+ #11974 Not tainted
+>> --------------------------------------------
+>> (udev-worker)/192 is trying to acquire lock:
+>> ffff000004c15098 (&ref->lock){+.+.}-{4:4}, at:
+>> gpio_shared_dev_is_reset_gpio+0xcc/0x234
+>>
+>> but task is already holding lock:
+>> ffff000004c15898 (&ref->lock){+.+.}-{4:4}, at:
+>> gpio_shared_add_proxy_lookup+0x98/0x228
+>>
+>> other info that might help us debug this:
+>>    Possible unsafe locking scenario:
+>>
+>>          CPU0
+>>          ----
+>>     lock(&ref->lock);
+>>     lock(&ref->lock);
+>>
+>>    *** DEADLOCK ***
+>>
+>>    May be due to missing lock nesting notation
+>>
+>> 3 locks held by (udev-worker)/192:
+>>    #0: ffff00000b3ad8e8 (&dev->mutex){....}-{4:4}, at:
+>> __driver_attach+0x90/0x1ac
+>>    #1: ffff8000830f2600 (gpio_devices_srcu){.+.+}-{0:0}, at:
+>> gpiod_find_and_request+0x0/0x574
+>>    #2: ffff000004c15898 (&ref->lock){+.+.}-{4:4}, at:
+>> gpio_shared_add_proxy_lookup+0x98/0x228
+>>
+> Ah this must be due to also trying to compare the ref to the base ref...
+>
+> Could you try to add the following on top:
+>
+> diff --git a/drivers/gpio/gpiolib-shared.c b/drivers/gpio/gpiolib-shared.c
+> index 198951c4c80b..5f3b8bc4a4fc 100644
+> --- a/drivers/gpio/gpiolib-shared.c
+> +++ b/drivers/gpio/gpiolib-shared.c
+> @@ -378,6 +378,9 @@ static bool gpio_shared_dev_is_reset_gpio(struct
+> device *consumer,
+>   	 * arguments match the ones from this consumer's node.
+>   	 */
+>   	list_for_each_entry(real_ref, &entry->refs, list) {
+> +		if (real_ref == ref)
+> +			continue;
+> +
+>   		guard(mutex)(&real_ref->lock);
+>
+>   		if (!real_ref->fwnode)
+>
+>
+> If that works, I'll send a v2.
 
-There is no concrete reason actually. I just mentioned that in practical
-usecase, I never saw an OEM routing the PERST# signal to other wakeup capable
-functionality. But the possibility still exists, so I'm not completely against
-it.
+This fixed the hangs, but the lockdep whining is still there.
 
-- Mani
-
+Best regards
 -- 
-மணிவண்ணன் சதாசிவம்
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
 
