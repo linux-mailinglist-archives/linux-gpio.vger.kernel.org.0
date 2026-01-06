@@ -1,124 +1,117 @@
-Return-Path: <linux-gpio+bounces-30196-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30197-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D89D4CF84EE
-	for <lists+linux-gpio@lfdr.de>; Tue, 06 Jan 2026 13:25:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CF867CF8500
+	for <lists+linux-gpio@lfdr.de>; Tue, 06 Jan 2026 13:26:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3287A3060890
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jan 2026 12:21:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3D6A1307AF98
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jan 2026 12:21:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4385032E132;
-	Tue,  6 Jan 2026 12:21:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A18BA30DEC4;
+	Tue,  6 Jan 2026 12:21:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gIbYfj9j"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XxIX/Uc6"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB7432D45B;
-	Tue,  6 Jan 2026 12:21:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7714C81;
+	Tue,  6 Jan 2026 12:21:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767702074; cv=none; b=tRbGDKWdsnytHXJallGeuHqG5Ecml0DbY2szzEZhZLWFbIC4tIrttfDpo7u6Uh3+le2X/7iQIsMcS02Djzr3udk7c7mwVG1lH/s4XXAVAwdFDVYgjVrsMAUVLJMzSgVd5Hyz18LovV/aFrs7fEzWz4prtsW8Ha7FbD2dYSVVpiw=
+	t=1767702099; cv=none; b=qG+lXnY7dRA9httSw2891+hwsOtmLJJv6ifDvPL9hoYgVyvUfSOlSbj3qXFGLYap7GbdD+1/Z/maZOvngXa9nQybzvrkM3quQtDERY+MrI3B1RYQy/OFI1MXw7xMGT4cghfJciyxeIVELvBlv8xH2G4yKBINn/WRo4DgxTjOc28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767702074; c=relaxed/simple;
-	bh=/FW8ps6pxXXlw2luJiOk+CvVS5wOhKku3s0GylKczrQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nwFJvYiydjKQqdOP1m14C8BZ+VVrS0Y4457S4y3dvP50nPw5y+2eZP/kAbLy1EvIIfd4hVNVGYMBFrvkqd7YyVEkpkJujDHaCTMCl4UsRKdXq36VPmK0gv9vpK2M+FM4whUKGS5sLXk+zmGbWeBqWdyTGVKwDMVwJjLOnENq5hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gIbYfj9j; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50D89C19422;
-	Tue,  6 Jan 2026 12:21:12 +0000 (UTC)
+	s=arc-20240116; t=1767702099; c=relaxed/simple;
+	bh=zKoDQhppgeJZ9g12tU8EVyMA0qPWRL9mN42OuCpgg2o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=iVPXsc+CJoh9r+1NjpphV0KlTEQGJzUwPngwxqBR61OaMDRZsjAiad9U9qNePaL3pA1tYGPpkAitUr221YDv4vC+GQt8a5yf3J7GAbkplLx3+QLtHYItSTfKrog86wRFUQFLT/5SPmukJRbPUNy9q3y6G5WKC8Lp3GqC1nHcMnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XxIX/Uc6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67B30C116C6;
+	Tue,  6 Jan 2026 12:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767702073;
-	bh=/FW8ps6pxXXlw2luJiOk+CvVS5wOhKku3s0GylKczrQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gIbYfj9jr+qSj8GCTiUPpvjBGljoFWqdrva81Bd/RRvztIunxIWQ1FzppFxiZg9jc
-	 6L36NlfhQwA5/28SdOmdriBM5HG3dC0jPADYnVBUB8pTQPolK7FiVzQtjOfys55M90
-	 UvsiAR34wLcv6VyAryKXSnb53Pf2uyQ3oVOAN22CBX/ZqpD7C8lvoHduCGp1FCWkto
-	 xr91BgE8bj2kMJxWuP8vvw/1XbEeT0zrbBOZB/uSs1W3fRDcoPDzb18Syn7sMlr7di
-	 k9POpE+I5zJrToXKdvM57m/+uwtdtHiAE8wEM4rJg1hv/uX/idXlYJggFZKlvykz+W
-	 jz3RLgBo/pAbQ==
-Date: Tue, 6 Jan 2026 12:21:09 +0000
+	s=k20201202; t=1767702099;
+	bh=zKoDQhppgeJZ9g12tU8EVyMA0qPWRL9mN42OuCpgg2o=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=XxIX/Uc67pW2srZGfx7L0M+e9v4WJplWlh+0kQ17cQgE3TXo+brUPnDmZLyRtoSUt
+	 NS+uIwMPQZ70cpM6y22JW6jE/dRqSDBuoaKh3TDd4eQ4IT4Jx15VdWTziP2iWd7hyT
+	 8OX2eLY4it+aWALZe6uARyvIyLy21rDK0Ye78wOqq/EzQrYHKYcMeEdEu4Z4w+nezL
+	 tzp4dBFmmOQZQbNRn7ffWbWe0RozvMjSW0zRQdrMreHOK30MtxQyiBnLFJ206BIfbe
+	 8CnAyOGc9R4FmPtyuFsNwRGbSDB0oM4sgN4C+vBUFcob0xOC+hjUtYbCLlYNR7KL28
+	 4JA9Jx+fmQb/A==
 From: Mark Brown <broonie@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/3] gpio: shared: allow sharing a reset-gpios pin
- between reset-gpio and gpiolib
-Message-ID: <9948f635-b753-44cf-8977-7fee4cfb6e3d@sirena.org.uk>
-References: <20251222-gpio-shared-reset-gpio-proxy-v1-0-8d4bba7d8c14@oss.qualcomm.com>
- <20251222-gpio-shared-reset-gpio-proxy-v1-3-8d4bba7d8c14@oss.qualcomm.com>
- <CGME20260105115023eucas1p1af1f8e80041f94843beb664966894fb9@eucas1p1.samsung.com>
- <00107523-7737-4b92-a785-14ce4e93b8cb@samsung.com>
+To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+ nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
+ claudiu.beznea@tuxon.dev, herbert@gondor.apana.org.au, davem@davemloft.net, 
+ vkoul@kernel.org, andi.shyti@kernel.org, lee@kernel.org, 
+ andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org, 
+ pabeni@redhat.com, linusw@kernel.org, Steen.Hegelund@microchip.com, 
+ daniel.machon@microchip.com, UNGLinuxDriver@microchip.com, 
+ olivia@selenic.com, radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com, 
+ gregkh@linuxfoundation.org, jirislaby@kernel.org, 
+ lars.povlsen@microchip.com, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
+ linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, 
+ Robert Marko <robert.marko@sartura.hr>
+Cc: luka.perkov@sartura.hr
+In-Reply-To: <20251229184004.571837-1-robert.marko@sartura.hr>
+References: <20251229184004.571837-1-robert.marko@sartura.hr>
+Subject: Re: (subset) [PATCH v4 00/15] Add support for Microchip LAN969x
+Message-Id: <176770209215.32810.211066871008391751.b4-ty@kernel.org>
+Date: Tue, 06 Jan 2026 12:21:32 +0000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="l4Fe2VIbQaulikkt"
-Content-Disposition: inline
-In-Reply-To: <00107523-7737-4b92-a785-14ce4e93b8cb@samsung.com>
-X-Cookie: I will not forget you.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-47773
 
+On Mon, 29 Dec 2025 19:37:41 +0100, Robert Marko wrote:
+> This series adds support for the Microchip LAN969x switch SoC family.
+> 
+> Series is a bit long since after discussions in previous versions, it was
+> recommended[1][2] to add SoC specific compatibles for device nodes so it
+> includes the required bindings updates.
+> 
+> [1] https://lore.kernel.org/all/20251203-splendor-cubbyhole-eda2d6982b46@spud/
+> [2] https://lore.kernel.org/all/173412c8-c2fb-4c38-8de7-5b1c2eebdbf9@microchip.com/
+> [3] https://lore.kernel.org/all/20251203-duly-leotard-86b83bd840c6@spud/
+> [4] https://lore.kernel.org/all/756ead5d-8c9b-480d-8ae5-71667575ab7c@kernel.org/
+> 
+> [...]
 
---l4Fe2VIbQaulikkt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to
 
-On Mon, Jan 05, 2026 at 12:50:22PM +0100, Marek Szyprowski wrote:
-> On 22.12.2025 11:01, Bartosz Golaszewski wrote:
-> > We currently support sharing GPIOs between multiple devices whose drive=
-rs
-> > use either the GPIOLIB API *OR* the reset control API but not both at
-> > the same time.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-> This patch landed in linux-next as commit 49416483a953 ("gpio: shared:=20
-> allow sharing a reset-gpios pin between reset-gpio and gpiolib"). In my=
-=20
-> tests I found that it breaks booting and triggers warnings on some of my=
-=20
-> test boards. Reverting it on top of next-20260105 fixes those issues.=20
-> Let me know if I can help debugging this issue.
+Thanks!
 
-Not sure if it's this specific patch (one of the bisects identified it,
-but I'm seeing others going to the merge commit for the gpio fixes
-branch) but I'm also seeing issues with gpios.  pwrseq is affected on
-several platforms after backtraces that look a lot like the one that
-Marek is seeing on Raspberry Pi 3B+ (which I also see).  This breaks at
-least the WiFi:
+[04/15] dt-bindings: spi: at91: add microchip,lan9691-spi
+        commit: 96d337436fe0921177a6090aeb5bb214753654fc
 
-[   13.475670] platform wifi-pwrseq: deferred probe pending: pwrseq_simple:=
- reset control not ready
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-Raspberry Pi 4:
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-   https://lava.sirena.org.uk/scheduler/job/2335022#L1200
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Toradax Mallow (TI K3):
-  =20
-   https://lava.sirena.org.uk/scheduler/job/2335415#L1457
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---l4Fe2VIbQaulikkt
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+Mark
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmlc/jQACgkQJNaLcl1U
-h9AIQAf+MHrzNu3aysPrnhQZqhc0fQm6gTUePEEZadiJtUxk3MQ1qsyqEjjCyPNN
-BXjTDMPPuecS/YQ4TLLfKBC950EHr+eTEakUCUWGimCCD88B+5XeXyxQiK2gFUOl
-XqqwQVkAyX4FPFhCCapy2nN+03e7I5K7BQNgtn5TtigI308DjVoW05h/Hn819g1t
-9mP8G78lnqtgrWrPRcrJcgdFPmlRyTC1eBJ2e9I4kbNHxOtsL9Rr7fzeBnesqbag
-GQXXFtqvNnoVQkW0G+TyceYQi6wkZCJFo/AQ8r8fQ5SVTidcGay07KdFgERW3z8j
-WmIbD6AauPGgDfM0t+udTjukPfTJ4A==
-=ax5A
------END PGP SIGNATURE-----
-
---l4Fe2VIbQaulikkt--
 
