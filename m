@@ -1,117 +1,121 @@
-Return-Path: <linux-gpio+bounces-30197-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30198-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF867CF8500
-	for <lists+linux-gpio@lfdr.de>; Tue, 06 Jan 2026 13:26:09 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FD65CF84F7
+	for <lists+linux-gpio@lfdr.de>; Tue, 06 Jan 2026 13:25:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3D6A1307AF98
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jan 2026 12:21:45 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 906DF3008F34
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jan 2026 12:25:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A18BA30DEC4;
-	Tue,  6 Jan 2026 12:21:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C6E5322DD6;
+	Tue,  6 Jan 2026 12:25:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XxIX/Uc6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aJthu95e"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7714C81;
-	Tue,  6 Jan 2026 12:21:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3C830FC37
+	for <linux-gpio@vger.kernel.org>; Tue,  6 Jan 2026 12:25:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767702099; cv=none; b=qG+lXnY7dRA9httSw2891+hwsOtmLJJv6ifDvPL9hoYgVyvUfSOlSbj3qXFGLYap7GbdD+1/Z/maZOvngXa9nQybzvrkM3quQtDERY+MrI3B1RYQy/OFI1MXw7xMGT4cghfJciyxeIVELvBlv8xH2G4yKBINn/WRo4DgxTjOc28=
+	t=1767702343; cv=none; b=HbPSk9W/dEbQb/G84NWPLBwDrzi2kBCnOD6cnhjuss6vvdBFN399dkzbh+GFFjKvvRyF3FpiylOhWOkm1lUftDUiWNX9DM1An0T5YvFeuBKfmp8IWwTb0xoAJJLfe6CavXb6oSuUUnc/ghwi2xPPFg9i5OgLrifWPyTfm6el/Sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767702099; c=relaxed/simple;
-	bh=zKoDQhppgeJZ9g12tU8EVyMA0qPWRL9mN42OuCpgg2o=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=iVPXsc+CJoh9r+1NjpphV0KlTEQGJzUwPngwxqBR61OaMDRZsjAiad9U9qNePaL3pA1tYGPpkAitUr221YDv4vC+GQt8a5yf3J7GAbkplLx3+QLtHYItSTfKrog86wRFUQFLT/5SPmukJRbPUNy9q3y6G5WKC8Lp3GqC1nHcMnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XxIX/Uc6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67B30C116C6;
-	Tue,  6 Jan 2026 12:21:32 +0000 (UTC)
+	s=arc-20240116; t=1767702343; c=relaxed/simple;
+	bh=wg6p23gjDukL2cRVJ78Oc5P5KU7hnB4MDtRCIp1BtIo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IBy2g1fZ/syMni7sTkBFJFf5kcG1dxoWn2mDt0XGrdmRXEFnTfWorDAriZBI4NK6FtSdXoKWXJR/CAU4Ob1sScqwXccxUv+hubLjZz7jWZefWqy4NzzFQdR9cJIFEn8kM9vUBBn3PKCpIad3FRTM9qZaaLfoIMeTBZ5sAUwVPnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aJthu95e; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADB1CC19424
+	for <linux-gpio@vger.kernel.org>; Tue,  6 Jan 2026 12:25:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767702099;
-	bh=zKoDQhppgeJZ9g12tU8EVyMA0qPWRL9mN42OuCpgg2o=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=XxIX/Uc67pW2srZGfx7L0M+e9v4WJplWlh+0kQ17cQgE3TXo+brUPnDmZLyRtoSUt
-	 NS+uIwMPQZ70cpM6y22JW6jE/dRqSDBuoaKh3TDd4eQ4IT4Jx15VdWTziP2iWd7hyT
-	 8OX2eLY4it+aWALZe6uARyvIyLy21rDK0Ye78wOqq/EzQrYHKYcMeEdEu4Z4w+nezL
-	 tzp4dBFmmOQZQbNRn7ffWbWe0RozvMjSW0zRQdrMreHOK30MtxQyiBnLFJ206BIfbe
-	 8CnAyOGc9R4FmPtyuFsNwRGbSDB0oM4sgN4C+vBUFcob0xOC+hjUtYbCLlYNR7KL28
-	 4JA9Jx+fmQb/A==
-From: Mark Brown <broonie@kernel.org>
-To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
- nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
- claudiu.beznea@tuxon.dev, herbert@gondor.apana.org.au, davem@davemloft.net, 
- vkoul@kernel.org, andi.shyti@kernel.org, lee@kernel.org, 
- andrew+netdev@lunn.ch, edumazet@google.com, kuba@kernel.org, 
- pabeni@redhat.com, linusw@kernel.org, Steen.Hegelund@microchip.com, 
- daniel.machon@microchip.com, UNGLinuxDriver@microchip.com, 
- olivia@selenic.com, radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com, 
- gregkh@linuxfoundation.org, jirislaby@kernel.org, 
- lars.povlsen@microchip.com, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
- linux-i2c@vger.kernel.org, netdev@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
- linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, 
- Robert Marko <robert.marko@sartura.hr>
-Cc: luka.perkov@sartura.hr
-In-Reply-To: <20251229184004.571837-1-robert.marko@sartura.hr>
-References: <20251229184004.571837-1-robert.marko@sartura.hr>
-Subject: Re: (subset) [PATCH v4 00/15] Add support for Microchip LAN969x
-Message-Id: <176770209215.32810.211066871008391751.b4-ty@kernel.org>
-Date: Tue, 06 Jan 2026 12:21:32 +0000
+	s=k20201202; t=1767702342;
+	bh=wg6p23gjDukL2cRVJ78Oc5P5KU7hnB4MDtRCIp1BtIo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=aJthu95es2uZpaCdxmSWIe01j3tHZj0B4FpMqAvoL3Oso+KZqJ8HNHQAsXx6D8sJc
+	 0rdlAtHyGNN+yNf5AoD18s2eOabbv3dqy2HUDH32MvbfmbYdNEPILyQtAbHVfie/Cr
+	 u41bhGxdXLHYZzASUM1cW6VOd3GzPEYnzKEhovwV5tOLSpBNDD2RQH88eVieQDGCXA
+	 Sfg7Y/GZcSE8Wg1ZTQSzNLQupG7S4zoIloNH1Rx5+OfmDMc32zEuaGR/zqm3n/aP08
+	 5IyxHT1bIru0qf3tR31f4xSVO37TNVg1HVvO7QOgiy1GqrbYzWHoIVozKwhsAQJj4W
+	 cBTgMqhcUsuWQ==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-59b30275e69so572331e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Jan 2026 04:25:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVftIz6IJ8bCMMhzPyw607rdI///dMbvofBAWEG6Yw96CkTqnUP3ySS66gFYGygdqdNhWEX9HfEc7ra@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZ2VW8N1Qg1Y1EGzUb6gL/Oaaq7nBCvVv55QG6bowHhIwTjjKW
+	bRgTX76OnpVkcm5UTC+v92v/U4QwOna7h9aGqyL2HDnp6Mcm8he9XVVHFG7NBGQj1cklsYC6Kv7
+	GCu8L4LuUmP4TsWk23lruN/3IZ2Cq5GKuyuMAEHyE2Q==
+X-Google-Smtp-Source: AGHT+IE6DFYY/3rRfXe7XSzL1OxNQpFcEuniQY70NWdKpsxhOEm1y3QR6wUF6cLmyvwNYXoUYahLVw33DzhaMW8X7tU=
+X-Received: by 2002:a05:6512:2350:b0:59b:4213:75e6 with SMTP id
+ 2adb3069b0e04-59b6521e2f5mr1113951e87.21.1767702341395; Tue, 06 Jan 2026
+ 04:25:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-47773
+References: <20251222-gpio-shared-reset-gpio-proxy-v1-0-8d4bba7d8c14@oss.qualcomm.com>
+ <20251222-gpio-shared-reset-gpio-proxy-v1-3-8d4bba7d8c14@oss.qualcomm.com>
+ <CGME20260105115023eucas1p1af1f8e80041f94843beb664966894fb9@eucas1p1.samsung.com>
+ <00107523-7737-4b92-a785-14ce4e93b8cb@samsung.com> <9948f635-b753-44cf-8977-7fee4cfb6e3d@sirena.org.uk>
+In-Reply-To: <9948f635-b753-44cf-8977-7fee4cfb6e3d@sirena.org.uk>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Tue, 6 Jan 2026 13:25:29 +0100
+X-Gmail-Original-Message-ID: <CAMRc=MdVs4Lu11XuDTassdGrdM+RLSAN=9tjO2ZLHZsT3fGY-Q@mail.gmail.com>
+X-Gm-Features: AQt7F2ptws5Ge5GRn0wLuORiWFu5YPp03xp3H1Zu7XyDX54f2WmFWc1qQlA9EVA
+Message-ID: <CAMRc=MdVs4Lu11XuDTassdGrdM+RLSAN=9tjO2ZLHZsT3fGY-Q@mail.gmail.com>
+Subject: Re: [PATCH 3/3] gpio: shared: allow sharing a reset-gpios pin between
+ reset-gpio and gpiolib
+To: Mark Brown <broonie@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Linus Walleij <linusw@kernel.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 29 Dec 2025 19:37:41 +0100, Robert Marko wrote:
-> This series adds support for the Microchip LAN969x switch SoC family.
-> 
-> Series is a bit long since after discussions in previous versions, it was
-> recommended[1][2] to add SoC specific compatibles for device nodes so it
-> includes the required bindings updates.
-> 
-> [1] https://lore.kernel.org/all/20251203-splendor-cubbyhole-eda2d6982b46@spud/
-> [2] https://lore.kernel.org/all/173412c8-c2fb-4c38-8de7-5b1c2eebdbf9@microchip.com/
-> [3] https://lore.kernel.org/all/20251203-duly-leotard-86b83bd840c6@spud/
-> [4] https://lore.kernel.org/all/756ead5d-8c9b-480d-8ae5-71667575ab7c@kernel.org/
-> 
-> [...]
+On Tue, Jan 6, 2026 at 1:21=E2=80=AFPM Mark Brown <broonie@kernel.org> wrot=
+e:
+>
+> On Mon, Jan 05, 2026 at 12:50:22PM +0100, Marek Szyprowski wrote:
+> > On 22.12.2025 11:01, Bartosz Golaszewski wrote:
+> > > We currently support sharing GPIOs between multiple devices whose dri=
+vers
+> > > use either the GPIOLIB API *OR* the reset control API but not both at
+> > > the same time.
+>
+> > This patch landed in linux-next as commit 49416483a953 ("gpio: shared:
+> > allow sharing a reset-gpios pin between reset-gpio and gpiolib"). In my
+> > tests I found that it breaks booting and triggers warnings on some of m=
+y
+> > test boards. Reverting it on top of next-20260105 fixes those issues.
+> > Let me know if I can help debugging this issue.
+>
+> Not sure if it's this specific patch (one of the bisects identified it,
+> but I'm seeing others going to the merge commit for the gpio fixes
+> branch) but I'm also seeing issues with gpios.  pwrseq is affected on
+> several platforms after backtraces that look a lot like the one that
+> Marek is seeing on Raspberry Pi 3B+ (which I also see).  This breaks at
+> least the WiFi:
+>
+> [   13.475670] platform wifi-pwrseq: deferred probe pending: pwrseq_simpl=
+e: reset control not ready
+>
+> Raspberry Pi 4:
+>
+>    https://lava.sirena.org.uk/scheduler/job/2335022#L1200
+>
+> Toradax Mallow (TI K3):
+>
+>    https://lava.sirena.org.uk/scheduler/job/2335415#L1457
 
-Applied to
+Hi! These two should be fixed by the following series:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+https://lore.kernel.org/all/20260106-gpio-shared-fixes-v2-0-c7091d2f7581@os=
+s.qualcomm.com/
 
-Thanks!
+Could you please give it a try and possibly add your T-b?
 
-[04/15] dt-bindings: spi: at91: add microchip,lan9691-spi
-        commit: 96d337436fe0921177a6090aeb5bb214753654fc
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+Bart
 
