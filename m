@@ -1,230 +1,161 @@
-Return-Path: <linux-gpio+bounces-30181-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30182-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50E44CF7602
-	for <lists+linux-gpio@lfdr.de>; Tue, 06 Jan 2026 09:59:20 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCBA1CF7606
+	for <lists+linux-gpio@lfdr.de>; Tue, 06 Jan 2026 10:00:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 60501300FFA5
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jan 2026 08:56:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7061D30424AB
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jan 2026 08:57:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD6FD30AD1C;
-	Tue,  6 Jan 2026 08:56:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1ECD30ACE8;
+	Tue,  6 Jan 2026 08:57:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QzP1B6J1"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Xjcgm1uZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E4E1BBBE5
-	for <linux-gpio@vger.kernel.org>; Tue,  6 Jan 2026 08:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0367C1BBBE5
+	for <linux-gpio@vger.kernel.org>; Tue,  6 Jan 2026 08:57:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767689812; cv=none; b=R0aHX0O6YU8SSvWGoGKew+BIzioBJtD4xl7fGvwhUbCVnWP4rxbXt+BnSrI/ptEXcz3w8oYY5VEsJgfoAUegu9ZcpYYelKb3zYyI1boMCLKA7WevWfqVtlvHYlYvtAxc5hJod3RFJQyhcElAcuRgv+Quxetzc761PL1+AbNkVC8=
+	t=1767689872; cv=none; b=RoP/a1X6keKuVR7/a45xJtTUjQBsmxFUkidyGcL+3cb7GTwRxBsgY0DKbXTkJfbG3eXg5SBG1T5OrWWKJAvkxh6C8qNxXxs3mbWZtQ01oSajb4eA7/Fp2Su/49WkZHMlI9PIs+bOfj6M0mRYqhuSvZq4Y0/e/ZV4mt9mziDYOZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767689812; c=relaxed/simple;
-	bh=FBMWckxymhA+ToG+ir0P1Kll6A2GbDb1qBYQoZRs3QU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=PVGQuEflhCsBYqgCqAysEFJlVZURMljpwgXWTntGjNXJYZ3j+PgPzd6GBXbQBtODQqRDvWj/xfe4wPbZ2bU9IXfSye01aj0H3q96VxSwSZ3AIcDGhHPAYtH6ktII0CI6oneZvwjIiclQhSVs/J3dHwO0ZSYZQR8J40t55xha3CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QzP1B6J1; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-430fbb6012bso500584f8f.1
-        for <linux-gpio@vger.kernel.org>; Tue, 06 Jan 2026 00:56:50 -0800 (PST)
+	s=arc-20240116; t=1767689872; c=relaxed/simple;
+	bh=cbSUjLlW/Y4BDt71FGIS9VUfKEh99zsDpKuBMFMzi68=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ax5x+ceQmHOsXiysnz7J9+25Lovy+51YuGw6KurSYraUra4Xf/yRe8c8DqqmwMecEN4MQ6RKFo2fNeZv2ovP+CCfMvWUnaSOReeIYbZia9vFgP0a4VUB2r1kMzTc1/1Km51plAH61t8TzK8in5KeZtw0E3xugsFiqnn9+jksvSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=Xjcgm1uZ; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2a0bb2f093aso7748505ad.3
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Jan 2026 00:57:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1767689809; x=1768294609; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g5XIBpzljoHQjxZKC8ws+REqtExLjvp1kVGJG4on0yQ=;
-        b=QzP1B6J1XhcGcroqpAwEYC+pdzSSYt4PKclgY1mcr2lWhYyS8k7da5DedhSUk7D1CO
-         A6CG8/lgZfibA2VzBVCpxhF9XRem+G9JauYrZvphgkD9/Gd8dqiM3UB+lRy3dGiconfG
-         Svf51zYpD2swRDrhsa1R16At2JwIT4FoF9jjVPlgc+Mj31A8cs+kt8S8Tfl1BX52OFij
-         w2Op985G7QCL4Zq5vHiYKLNNFzjt90riT8tHWGU5er0Risi4m/9Xq0HXrJVCaINFvD6N
-         h90T63OzVPpVBxYnccX60joQZ6+HJiRjw/8QQXAGtPKTLiQkRDH332aRydWrj4ZasM2G
-         PQ0w==
+        d=googlemail.com; s=20230601; t=1767689870; x=1768294670; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CIEziJptyk5NU5d1R4im25WNnI9+PWCcCW6Jz9T4txA=;
+        b=Xjcgm1uZgXzzLepefzsxKhNruNq0GSxTkkfx46kQBYgkMoJEOrPdcDtFOWHN5dw0ka
+         ozfZ7zJJsvP9Su/SYeBw2jRnep51dqBKkJcXia3sWZlXq+lYHUpaF4TNJ8ErZO7HGRDZ
+         00E+RNVzi27Etxt1PUyx8OLtqKl/RyQ5RgTKf84GNDvdqlrWwN4YlvlpIScUFjNRQx88
+         UayEVQkqOZeyOmZTCeSl9Mee0YnCWgUiaem85TYp4El/OwLtvxZPZaS6LOA0OFNg/w9S
+         IvtgC3fHtqtREtyguXrqudS8O11/F+fFIBo75YreYMHP3sl7hYkxgWXshnBSRc9jjSTe
+         AFyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767689809; x=1768294609;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g5XIBpzljoHQjxZKC8ws+REqtExLjvp1kVGJG4on0yQ=;
-        b=k1pMhtBx8MicY9+nlX7ipSi6oHEV8qXH38tc/+3MkzzDoYcyyMDPc65HDzrjWhOuq3
-         tADikYpXTMOIbbfaPkEx1JpTtSVVSfgLy76L9ZceJwt7kzDO3de+UKQpzfB3m9NUXUfb
-         S+ciYsqaKJdBNRxijNXyY/BSnqemx0FDCUT0WWy7qm+3uAyIZu5KeXr7DqCjicyRunhD
-         Ob5iwEGgiJTL4g2YMe8GImBzBansGbRsxgfjjMHAhpCGaWC/PqDupvQ43uSHBZXaaZC2
-         cPWT2FIZ93YUvMeuwvgeX5bJiyiuI7yF4MkXCb6ZPHx0377eMn9sZVylVrBndLfWNQEc
-         97dA==
-X-Gm-Message-State: AOJu0YxL4HMdBxJmk9VcGguB+xNkEiMFdRi8t7EN+cOZcrdUce64qo2d
-	iMIImu46RZNZibvtgJGQqD+OuXKpezOjJNfNDOmhiE0krInii0v1LCyavWS17LGfXmA=
-X-Gm-Gg: AY/fxX7+6d7TE/dk4uDIFHjkkjsMpikL5eX+GpMjD9Krihg7yyeif2Y/57uz5NqoRoT
-	bxVZ23VjYzmSjDhOXyrQAnD12zIP3Ruoyx4lM9kA1XhyFwa6/LWx9vIrF389Lhprjk+jTAOgigB
-	a+fC2RdIVHMBodE94R/Fd1esecGVgr+S6w3zA3Act/VAwNmhDxCihNdpB3NK7htTWzLstNdlwEU
-	PM+TMbDBFVOnaK2y3ZOopCSGk20pD48WpPKXJQ9yJ1MWJ8n5C2A7iJQodB/U4ul784X2WnBpxcd
-	Vc7AQMD5ZlzGCZghKgDaTgqEif7E0eIiHmLlpVPG0+dkQ6XpF8kTWMZ+XFFQIk7IdnhKqedzfgB
-	wnG53clR07puwBjGMC2TuSg/Ly4E6tuqXomoCKmrSELafUkM1Bl3y/sQn0EWm0QrCblFWFk7Y3c
-	tafqh5DzUns/8P/WbXHH6ZLowxQU0H8MMtWVQbrDe1e4dnldeAVD7wVrD8QOnlsXo=
-X-Google-Smtp-Source: AGHT+IHVhcrD4cFn15kBjA+uODwKV5wK2G+r23W9N60bAGfWDxnPZimvr/c08dbGWpVozMUlUFTokA==
-X-Received: by 2002:a05:6000:2302:b0:430:f742:fbb9 with SMTP id ffacd0b85a97d-432bc9d0f80mr3076920f8f.23.1767689809193;
-        Tue, 06 Jan 2026 00:56:49 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:3d9:2080:d283:7a7e:4c57:678d? ([2a01:e0a:3d9:2080:d283:7a7e:4c57:678d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd5ee24esm3109698f8f.33.2026.01.06.00.56.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Jan 2026 00:56:48 -0800 (PST)
-Message-ID: <728220d3-f093-4252-a0be-c45bf0dab597@linaro.org>
-Date: Tue, 6 Jan 2026 09:56:48 +0100
+        d=1e100.net; s=20230601; t=1767689870; x=1768294670;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=CIEziJptyk5NU5d1R4im25WNnI9+PWCcCW6Jz9T4txA=;
+        b=OCyeBhSgu7/PzMPKno+xRxWA54EnsFAzQ7Ge4J1GzHPLZUNrIxxuRqc8oNt8+1DrTp
+         GMQUM2gxZgTRlj0h4GSN5JMRGrSxnP7O/5sphV+ZEHopztDyQu8hcvVAKQMGZ/60zBoY
+         DhUlVgiV5x0zjYVrrSBe5Z//ovLgNFlkOtfzJs3NPlU8n1sfAsNcPemOdmM/IbMMB3Te
+         NFGRw87mlQb0VF5Tud1f4Ooil9qN20AyFHmEa5Db728faMkVLaiukXRiCeRgso6j3DjY
+         0I+RG97wvcLsb/zQxg6lB2mAJfFxY/9qciL7LD8YYuNWjLWN7gQQyrjDdy5/s2+lflCS
+         lSMw==
+X-Forwarded-Encrypted: i=1; AJvYcCW6VsBQb+qmser/v3pAPc39yJ6BYZVzTbgSXD4GiJA041GttIfE/CtCM6C7bFgVO5bfKGoZKNqAAoiA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5TrNciIK08JIuffBqCQX0OqnzaHCzK5PBjbrhvzr5vzJZdCc1
+	9ZBxamzKlr33WQ7CxRGw1xe8dh2wWnjGVdeL3eazojt7sZ0Zh07FZBm5qPHBWjD0E80yVtqPZHM
+	o/s/VIX72ZjEgovrJbAIXl8GyRdKQ8HI=
+X-Gm-Gg: AY/fxX6fNqYSaantA6a9jIgm8l5CjsOh/TIrF2W047P/6BWXEmi78B+QnG7lg3G4n7b
+	oxGxk2T29ch4D3VTa9RsTys74v1kdodPvI4NscHcFsYgDdIKeIgP5xZ6WcVhaJXLPH3kfrHEkuy
+	2lQAd7Hg3OC7AZQfAQj+N6lLwsoe7/656O8yOCcp31tHcj0ESm96dK8/bYz5+bvtJLIlPZ35kDg
+	CKhYQ7m3Vx3Gt6+jwmTC7t9mO0TUEmmbS0IbvpeeAdQtCLHglBvj/uubwNuojtVKj5W77UqGv2e
+	fTc5/Vzo1y6vtuQaVsPihgN7rXM=
+X-Google-Smtp-Source: AGHT+IHqqVT35RqtKhqDVDeUn1JSuMEyVNYWSpbNfyaLVeAjnwJc+ZCsnwel1Ct5vYHiZKJmXURlUF7dYeogNEgy608=
+X-Received: by 2002:a17:903:1aab:b0:2a0:89b8:4686 with SMTP id
+ d9443c01a7336-2a3e2d1987bmr23189115ad.46.1767689870271; Tue, 06 Jan 2026
+ 00:57:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH] pinctrl: meson: extend build coverage with COMPILE_TEST=y
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
- Linus Walleij <linusw@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
- Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20260106085520.21129-1-bartosz.golaszewski@oss.qualcomm.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20260106085520.21129-1-bartosz.golaszewski@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20260105150509.56537-1-bartosz.golaszewski@oss.qualcomm.com>
+In-Reply-To: <20260105150509.56537-1-bartosz.golaszewski@oss.qualcomm.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Tue, 6 Jan 2026 09:57:39 +0100
+X-Gm-Features: AQt7F2ogEhOYqvAtPAq6OIcx9b6m5SyZMl6Xih8xD56bOOTG1yFuzVoJm_ASy1o
+Message-ID: <CAFBinCDfV-f98c+3EXWVqFkBidsm_OZmfBZOqh7F5wWR4w88tA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: meson: mark the GPIO controller as sleeping
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Linus Walleij <linusw@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/6/26 09:55, Bartosz Golaszewski wrote:
-> We currently only build these drivers on ARM but there's nothing that
-> should stop us from building it with allmodconfig on other
-> architectures. Extend the build coverage for all meson drivers.
-> 
+On Mon, Jan 5, 2026 at 4:05=E2=80=AFPM Bartosz Golaszewski
+<bartosz.golaszewski@oss.qualcomm.com> wrote:
+>
+> The GPIO controller is configured as non-sleeping but it uses generic
+> pinctrl helpers which use a mutex for synchronization.
+>
+> This can cause the following lockdep splat with shared GPIOs enabled on
+> boards which have multiple devices using the same GPIO:
+>
+> BUG: sleeping function called from invalid context at
+> kernel/locking/mutex.c:591
+> in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 142, name:
+> kworker/u25:3
+> preempt_count: 1, expected: 0
+> RCU nest depth: 0, expected: 0
+> INFO: lockdep is turned off.
+> irq event stamp: 46379
+> hardirqs last  enabled at (46379): [<ffff8000813acb24>]
+> _raw_spin_unlock_irqrestore+0x74/0x78
+> hardirqs last disabled at (46378): [<ffff8000813abf38>]
+> _raw_spin_lock_irqsave+0x84/0x88
+> softirqs last  enabled at (46330): [<ffff8000800c71b4>]
+> handle_softirqs+0x4c4/0x4dc
+> softirqs last disabled at (46295): [<ffff800080010674>]
+> __do_softirq+0x14/0x20
+> CPU: 1 UID: 0 PID: 142 Comm: kworker/u25:3 Tainted: G C
+> 6.19.0-rc4-next-20260105+ #11963 PREEMPT
+> Tainted: [C]=3DCRAP
+> Hardware name: Khadas VIM3 (DT)
+> Workqueue: events_unbound deferred_probe_work_func
+> Call trace:
+>   show_stack+0x18/0x24 (C)
+>   dump_stack_lvl+0x90/0xd0
+>   dump_stack+0x18/0x24
+>   __might_resched+0x144/0x248
+>   __might_sleep+0x48/0x98
+>   __mutex_lock+0x5c/0x894
+>   mutex_lock_nested+0x24/0x30
+>   pinctrl_get_device_gpio_range+0x44/0x128
+>   pinctrl_gpio_set_config+0x40/0xdc
+>   gpiochip_generic_config+0x28/0x3c
+>   gpio_do_set_config+0xa8/0x194
+>   gpiod_set_config+0x34/0xfc
+>   gpio_shared_proxy_set_config+0x6c/0xfc [gpio_shared_proxy]
+>   gpio_do_set_config+0xa8/0x194
+>   gpiod_set_transitory+0x4c/0xf0
+>   gpiod_configure_flags+0xa4/0x480
+>   gpiod_find_and_request+0x1a0/0x574
+>   gpiod_get_index+0x58/0x84
+>   devm_gpiod_get_index+0x20/0xb4
+>   devm_gpiod_get+0x18/0x24
+>   mmc_pwrseq_emmc_probe+0x40/0xb8
+>   platform_probe+0x5c/0xac
+>   really_probe+0xbc/0x298
+>   __driver_probe_device+0x78/0x12c
+>   driver_probe_device+0xdc/0x164
+>   __device_attach_driver+0xb8/0x138
+>   bus_for_each_drv+0x80/0xdc
+>   __device_attach+0xa8/0x1b0
+>
+> Fixes: 6ac730951104 ("pinctrl: add driver for Amlogic Meson SoCs")
+> Cc: stable@vger.kernel.org
+> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Closes: https://lore.kernel.org/all/00107523-7737-4b92-a785-14ce4e93b8cb@=
+samsung.com/
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
->   drivers/pinctrl/meson/Kconfig | 22 +++++++++++-----------
->   1 file changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/meson/Kconfig b/drivers/pinctrl/meson/Kconfig
-> index 0315e224bce6..ce6aeec2fc79 100644
-> --- a/drivers/pinctrl/meson/Kconfig
-> +++ b/drivers/pinctrl/meson/Kconfig
-> @@ -15,25 +15,25 @@ if PINCTRL_MESON
->   
->   config PINCTRL_MESON8
->   	bool "Meson 8 SoC pinctrl driver"
-> -	depends on ARM
-> +	depends on ARM || COMPILE_TEST
->   	select PINCTRL_MESON8_PMX
->   	default ARCH_MESON
->   
->   config PINCTRL_MESON8B
->   	bool "Meson 8b SoC pinctrl driver"
-> -	depends on ARM
-> +	depends on ARM || COMPILE_TEST
->   	select PINCTRL_MESON8_PMX
->   	default ARCH_MESON
->   
->   config PINCTRL_MESON_GXBB
->   	tristate "Meson gxbb SoC pinctrl driver"
-> -	depends on ARM64
-> +	depends on ARM64 || COMPILE_TEST
->   	select PINCTRL_MESON8_PMX
->   	default ARCH_MESON
->   
->   config PINCTRL_MESON_GXL
->   	tristate "Meson gxl SoC pinctrl driver"
-> -	depends on ARM64
-> +	depends on ARM64 || COMPILE_TEST
->   	select PINCTRL_MESON8_PMX
->   	default ARCH_MESON
->   
-> @@ -42,7 +42,7 @@ config PINCTRL_MESON8_PMX
->   
->   config PINCTRL_MESON_AXG
->   	tristate "Meson axg Soc pinctrl driver"
-> -	depends on ARM64
-> +	depends on ARM64 || COMPILE_TEST
->   	select PINCTRL_MESON_AXG_PMX
->   	default ARCH_MESON
->   
-> @@ -51,25 +51,25 @@ config PINCTRL_MESON_AXG_PMX
->   
->   config PINCTRL_MESON_G12A
->   	tristate "Meson g12a Soc pinctrl driver"
-> -	depends on ARM64
-> +	depends on ARM64 || COMPILE_TEST
->   	select PINCTRL_MESON_AXG_PMX
->   	default ARCH_MESON
->   
->   config PINCTRL_MESON_A1
->   	tristate "Meson a1 Soc pinctrl driver"
-> -	depends on ARM64
-> +	depends on ARM64 || COMPILE_TEST
->   	select PINCTRL_MESON_AXG_PMX
->   	default ARCH_MESON
->   
->   config PINCTRL_MESON_S4
->   	tristate "Meson s4 Soc pinctrl driver"
-> -	depends on ARM64
-> +	depends on ARM64 || COMPILE_TEST
->   	select PINCTRL_MESON_AXG_PMX
->   	default ARCH_MESON
->   
->   config PINCTRL_AMLOGIC_A4
->   	bool "AMLOGIC pincontrol"
-> -	depends on ARM64
-> +	depends on ARM64 || COMPILE_TEST
->   	default ARCH_MESON
->   	help
->   	  This is the driver for the pin controller found on Amlogic SoCs.
-> @@ -80,13 +80,13 @@ config PINCTRL_AMLOGIC_A4
->   
->   config PINCTRL_AMLOGIC_C3
->   	tristate "Amlogic C3 SoC pinctrl driver"
-> -	depends on ARM64
-> +	depends on ARM64 || COMPILE_TEST
->   	select PINCTRL_MESON_AXG_PMX
->   	default ARCH_MESON
->   
->   config PINCTRL_AMLOGIC_T7
->   	tristate "Amlogic T7 SoC pinctrl driver"
-> -	depends on ARM64
-> +	depends on ARM64 || COMPILE_TEST
->   	select PINCTRL_MESON_AXG_PMX
->   	default ARCH_MESON
->   
-
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-
-Thanks,
-Neil
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
