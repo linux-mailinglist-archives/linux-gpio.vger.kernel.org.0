@@ -1,75 +1,75 @@
-Return-Path: <linux-gpio+bounces-30205-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30206-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BFACCFBCEC
-	for <lists+linux-gpio@lfdr.de>; Wed, 07 Jan 2026 04:09:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A60ACFBCF2
+	for <lists+linux-gpio@lfdr.de>; Wed, 07 Jan 2026 04:10:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E3CE030843BB
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jan 2026 03:07:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2BA5630A2E4F
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jan 2026 03:08:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BA6B228CA9;
-	Wed,  7 Jan 2026 03:07:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 965212580CF;
+	Wed,  7 Jan 2026 03:07:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=thingy.jp header.i=@thingy.jp header.b="AvtUVP/T"
+	dkim=pass (1024-bit key) header.d=thingy.jp header.i=@thingy.jp header.b="Qfv24pqE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF432571B0
-	for <linux-gpio@vger.kernel.org>; Wed,  7 Jan 2026 03:07:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD36325CC79
+	for <linux-gpio@vger.kernel.org>; Wed,  7 Jan 2026 03:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767755270; cv=none; b=MXRPP46PfFmkquzLPYYi7QJiQRasZivUkI8lcUCDfTKxNzmnVxSdoDybMoeR1ZTzwD2rRobvUHoh3NHH/pkrPQTBw9ymlp9DTUKUZbIWNEAfikX9ESA7mNhtM2x6A5O/iR04SygmrDY+w3hd7a7A8uthk/jX4OdkrLdKVi5wZp4=
+	t=1767755273; cv=none; b=IFfkIbzs9hJ+uVoI1af10T7cu5s605s0VzadwkudjuPRRRspGsRdwXzzTCvGJk1Wt5rz23gmI6T9J4xx/Kc2Ncwhu2oaAHEHriaoHvo+FKElKPn1UBZoxJZ8rfEBhQq8PN/h50PO/6WJAur+YooW5h4uyoXlitMPDQhT0dqpHoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767755270; c=relaxed/simple;
-	bh=pv9Ul14Hhl3C/6tp4wzR+hrKRSItog/0e3CBoNlER7o=;
+	s=arc-20240116; t=1767755273; c=relaxed/simple;
+	bh=YCtL7XIQ2elQSXG/uJJP3S0gGTQbILzmG4WP4VYHMLY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H6K4cmI9oYDEol6iJdh/IiDW6sKs4TRUHOKH1lYCBEKge1/8JESvqQtUUTQd+KH/0CYWdSNE0zEjs5LQIuLcLlLN13DwA2Zsxc+yLN8YQl/HWFUD4kJ9+zIZJr4PvEfGLzpyNC2e2mr+VmF3S+cOxNcHzj40zYnf+IvhM7/I3Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thingy.jp; spf=pass smtp.mailfrom=0x0f.com; dkim=pass (1024-bit key) header.d=thingy.jp header.i=@thingy.jp header.b=AvtUVP/T; arc=none smtp.client-ip=209.85.214.173
+	 MIME-Version; b=mc/MFxkIuwzEuusOM4QIJhXQVUBR5bxho/oCPmmuNSEEzqAk+RLb0lEYXeHKKx3OKJUz04MwDPVgoYq054x/COINczyalzXw3oeUrjNeuGOJlTatA8NZVMwVy3azCJetVhs6yxDMmSNZTbUcwC2mX2IyP8aPE8/H+e3EjT6q6Nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thingy.jp; spf=pass smtp.mailfrom=0x0f.com; dkim=pass (1024-bit key) header.d=thingy.jp header.i=@thingy.jp header.b=Qfv24pqE; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thingy.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0x0f.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a09757004cso17697685ad.3
-        for <linux-gpio@vger.kernel.org>; Tue, 06 Jan 2026 19:07:48 -0800 (PST)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2a137692691so14672665ad.0
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Jan 2026 19:07:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thingy.jp; s=google; t=1767755268; x=1768360068; darn=vger.kernel.org;
+        d=thingy.jp; s=google; t=1767755271; x=1768360071; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=u8iCc64Rjmu7gwf6ybOiip/8D2NfZmfyUw4QOx0iSAQ=;
-        b=AvtUVP/TmSpeeB7k0Dl4mX3dYLflcknmJSfNVHblYMTUZXfafaKmxWhLLKhzIQok7A
-         +sh2o8qtYHRLEkBS5JET3IPxB4daTBnSHtBunUG49mGYhq+MPZSMTdfTybnJgW8RXs5S
-         4clpv/YtBgojFa9RvBKaAHdbB7VDCPA2/5zqI=
+        bh=R7ZFdLTnDvnIrydUNeznKuyxON1SPga3Daneut3hK8I=;
+        b=Qfv24pqEWgseRlnjw4P1mHrXUDrBpTvLmsenXQiyWWzG22HUvMRrurXJBzybeyo7bq
+         /TPNkH8vSWsVnQdjDoKIvyaM3w7OTplNWXt0RBSBbPz65/nvPOGskK+h0bYzG7PMFlmg
+         jwrxyDMSGwnJ6pICFK8Gs2wS9hFJ9kpUcCX6o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767755268; x=1768360068;
+        d=1e100.net; s=20230601; t=1767755271; x=1768360071;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=u8iCc64Rjmu7gwf6ybOiip/8D2NfZmfyUw4QOx0iSAQ=;
-        b=sv17IidVVGt6PyaV3g3JsuKWdgDCO9X3Eqs45qrZ/B6E++ISQTEbcC1TLtAipxmqkA
-         q8QN8OxQEkbwqwFdcqlLVURCSkzkjWWu40jGT2Is5bPRSPgJEhu5rjem+z//yMZuiDxJ
-         ZQeIZKzNG9ymyW/Gx88ADiAkeKgr2PzDN4mFncctH4o7Ga7ZGpTS5O5/z3oWfhdeP0IT
-         J8ivFzDS8t/+YK+fVvF0QmQ1rQZfbFYzREjT1RjGyLXqdejEkgg1n3jYhD9hsVEEotsL
-         5JN4BtzelF/cPQMhxB2AfShOfxpZ8ZZBVpUdV//8kujDZROF+hgahZw1rvqF7ApbPVYv
-         yVtA==
-X-Forwarded-Encrypted: i=1; AJvYcCX8mAUotf8Y3oRjQNpM3AGdAx5HqBPYVj7dlfSa2lE1WO0282lj53zizTnCYKkAIutCP0KB0xAy9rUq@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmPzOOsEFtJVDrz1rglchjKt8z8lbJmpDoML72YryElbVVQuUd
-	RySlmrTT6onog0WNqHiZZP7EsVcgSP3LKPK+0H5kKhoaFLc0tAzxm/6pTCUr+tspJQ0=
-X-Gm-Gg: AY/fxX6hNi65YojQ5Y88i1hGBJt6IkDrJA8hGm1Ee/+IkFRyb+4t3W/pJ4Gto7kEIcF
-	47YL1OrshOkYzMWVSKJ1gmidEni79qaJTc5Xmgsm8kKOtyr00mf3zrqoccewdE+rGkW1KDMQebW
-	m4ZUNMP1rNJ47Ur41q/diu8jhGCNPYxPECiR6Vjkycro0m6Z+JuOYqSFnF89uPYhAtE+dWT4N6j
-	dDsQvvxFjlyWeTtDJq96t3t6DKB+Bs6K125IsxcGZVCN4fvOmoVtGp8+eCDqnld7Na53XZ4a2fQ
-	pYPmEU/+JKD7n7KLzFlyVPBU3A5cFY4G53+jynskqSzDhnMXYe9CzOGAcHCXh34+X7e6Y4X6Ft8
-	xXUPklyhXUlVOrNUdZGVm/jkCjYzqJZKXwIiBnBcde5l/Z0HXS/UCEAmcVGw/EcpWVTJms0QVzO
-	qRf6Nu5NQaFw6h5zPlcYs1cJ5MQKe7VfdM4x1j8RBoMQPIEAjKZpdbWKripkrdKEOaZUyLV95XA
-	YM=
-X-Google-Smtp-Source: AGHT+IGszkSXtL7GhVTTV5pPCscn1qVDfJim0T8bRvyNHJT7IeORevR9ZW/WKb1oqJD5skkQqiz3Ew==
-X-Received: by 2002:a17:902:ce88:b0:298:6a79:397b with SMTP id d9443c01a7336-2a3ee4b8d62mr8864915ad.56.1767755267806;
-        Tue, 06 Jan 2026 19:07:47 -0800 (PST)
+        bh=R7ZFdLTnDvnIrydUNeznKuyxON1SPga3Daneut3hK8I=;
+        b=oEK0I3r3N6RsdFMCNlL0aAvf3QZmFrD4/nv4HrsN2CFzP1od6GNb+zN6hs6Ub0aqXt
+         xWWrigtcXLAM/ySWMFC7R4PMN7yadSSdPVcWvTdH+p2qaa164VN1AVdpHPgeGz1L19An
+         kpYx+Xpn1XZFFNqM/rx3PWm1WvauqwBAscCu2Gp69m7xhIXFUu9p/kL5mEZD9X0TFPZi
+         5H+QaHmeizKlO8+b3iAUxzN+uHeWzZndxjCTO1WSWsy7VSaVIHvB4i3NhdR7KMc9Pl1b
+         O/HtGmlESbd5VXZgUls0zwJAWrvgD2RiToVnfvGZdLYkI+VluTtemPBPgIJ8aLwv3fYj
+         0QPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnZ+uIFBbPEOjSn/j2lH7bnDNSB7l/9XpTpBm737OMsi54507DOjXTLzc30IrOTq8EkrnXdvEQjnN5@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3sl9Vn6EwKwM4+qTWVAfV6KGqwW4TF9LRorHZXUMAG0ekNgiU
+	l7eetk9yYLqzx3Yjup1AiGnkaEif+kxe5rTyiXdYAm6leIguYpRw0GTjbMhWXWTexeg=
+X-Gm-Gg: AY/fxX6x92bo9PQRx1hfu88B/fosVJKq/jbL3CyQ8tSdjy4XAxFdcLdLFLxz5sSx2Pa
+	brEjsegMq3sTrAz2VPEGy+7lfLxqot8rNVoBmgFtu2+qZQNACVDWOJn8JYiDUZJsxdlyaqZgHlh
+	u+DjPHg0N2yRsCK3Qxf8RIYhPqbpt6jX056WgbuvTQZbjd5SzXSC0nWZgzcosq/JJtpbMlVWNBk
+	H9TPdMJ8e6CvUCFctnC2CQb4edbxf1htel9BvAPfm3/bcSr9AsR7FEHLr82lNr3HejCigQaxiID
+	Vfuz3ZQmyHqOv5nqB678z/LXGYK0u1qgbRWpQAxR6RjgNXNkrB9R79E1TgDfvqiedDU/g83dee7
+	+8oCnZx0N2nN29iRUILWb65ZQb5bSbbOpO4WS+YmBWX1juJTU0FzIjeLshd/3O/8Au8tTVKTdpj
+	7ayavoIHdVrLHXmTXI8BHMwXgmWXEyj+k9CYuyQAvHyVd8nFStirzaZC6xHwhteb95rcQUig1yd
+	Qc=
+X-Google-Smtp-Source: AGHT+IEdpj9FBlTpGGiP4vWM+VPJOIFZzgRKvhnaBLXZwRM5iwazxSKJvIV2JHH5i9DicVEy3eXR5Q==
+X-Received: by 2002:a17:902:f60d:b0:2a0:daa7:8a3d with SMTP id d9443c01a7336-2a3ee47f15amr10294815ad.23.1767755271138;
+        Tue, 06 Jan 2026 19:07:51 -0800 (PST)
 Received: from kinako.work.home.arpa (p1536247-ipxg00c01sizuokaden.shizuoka.ocn.ne.jp. [122.26.212.247])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-2a3e3cd4bd8sm33694165ad.102.2026.01.06.19.07.45
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-2a3e3cd4bd8sm33694165ad.102.2026.01.06.19.07.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jan 2026 19:07:47 -0800 (PST)
+        Tue, 06 Jan 2026 19:07:50 -0800 (PST)
 From: Daniel Palmer <daniel@thingy.jp>
 To: linusw@kernel.org,
 	brgl@kernel.org,
@@ -79,9 +79,9 @@ To: linusw@kernel.org,
 	devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Daniel Palmer <daniel@thingy.jp>
-Subject: [RFC PATCH 1/2] of: Add a variant of of_device_is_compatible() that can be build time culled
-Date: Wed,  7 Jan 2026 12:07:30 +0900
-Message-ID: <20260107030731.1838823-2-daniel@thingy.jp>
+Subject: [RFC PATCH 2/2] gpiolib: of: Remove a bunch of compatible checks for spi controllers you don't have
+Date: Wed,  7 Jan 2026 12:07:31 +0900
+Message-ID: <20260107030731.1838823-3-daniel@thingy.jp>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260107030731.1838823-1-daniel@thingy.jp>
 References: <20260107030731.1838823-1-daniel@thingy.jp>
@@ -93,43 +93,32 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In a lot of places we are using of_device_is_compatible() to check for quirks
-etc that are simply not possible on some targets, i.e. a piece of hardware
-that needs special handling is only on one specific ARM machine and your
-target isn't even ARM.
-
-Add of_device_is_possible_and_compatible() that also takes a Kconfig
-symbol and checks if that is enabled before calling of_device_is_compatible().
-
-The Kconfig symbol is build time constant and the compiler should
-remove the call to of_device_is_compatible() if it is unneeded and also
-remove the data for the compatible string.
-
-Another merit of this is that in places were we are checking for quirks
-outside of drivers themselves, i.e. in the gpio and spi subsystems where
-some legacy devicetree handling is being handled for specific devices
-is in the core code, when the drivers that need the quirks are removed
-their Kconfig symbol should also be removed and it'll be easier to spot
-that the quirk handling can also go.
+Use of_device_is_possible_and_compatible() + The kconfig symbols that should indicate
+if the compatibles being checked are even possible to allow the compiler to totally
+remove the code for most users.
 
 Signed-off-by: Daniel Palmer <daniel@thingy.jp>
 ---
- include/linux/of.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpio/gpiolib-of.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 9bbdcf25a2b4..70be20b0be22 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -358,6 +358,8 @@ extern int of_property_read_string_helper(const struct device_node *np,
- 					      const char **out_strs, size_t sz, int index);
- extern int of_device_is_compatible(const struct device_node *device,
- 				   const char *);
-+#define of_device_is_possible_and_compatible(symbol, device, string) \
-+	(IS_ENABLED(symbol) && of_device_is_compatible(device, string))
- extern int of_device_compatible_match(const struct device_node *device,
- 				      const char *const *compat);
- extern bool of_device_is_available(const struct device_node *device);
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 8657379e9165..2c87f1fa1f95 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -93,9 +93,9 @@ static int of_gpio_spi_cs_get_count(const struct device_node *np,
+ 		return 0;
+ 	if (!con_id || strcmp(con_id, "cs"))
+ 		return 0;
+-	if (!of_device_is_compatible(np, "fsl,spi") &&
+-	    !of_device_is_compatible(np, "aeroflexgaisler,spictrl") &&
+-	    !of_device_is_compatible(np, "ibm,ppc4xx-spi"))
++	if (!of_device_is_possible_and_compatible(CONFIG_SPI_FSL_SPI, np, "fsl,spi") &&
++	    !of_device_is_possible_and_compatible(CONFIG_SPI_FSL_SPI, np, "aeroflexgaisler,spictrl") &&
++	    !of_device_is_possible_and_compatible(CONFIG_SPI_PPC4xx, np, "ibm,ppc4xx-spi"))
+ 		return 0;
+ 	return of_gpio_named_count(np, "gpios");
+ }
 -- 
 2.51.0
 
