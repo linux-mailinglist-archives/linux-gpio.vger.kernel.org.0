@@ -1,158 +1,215 @@
-Return-Path: <linux-gpio+bounces-30213-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30214-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C2F8CFCDD3
-	for <lists+linux-gpio@lfdr.de>; Wed, 07 Jan 2026 10:30:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04CD3CFCE1E
+	for <lists+linux-gpio@lfdr.de>; Wed, 07 Jan 2026 10:35:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EC9C83041CE7
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jan 2026 09:25:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6F11330124E4
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jan 2026 09:31:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DAD72C3242;
-	Wed,  7 Jan 2026 09:25:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38E5C2D97B9;
+	Wed,  7 Jan 2026 09:31:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbsFPiIU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KNdXQgT9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527452FFDE6
-	for <linux-gpio@vger.kernel.org>; Wed,  7 Jan 2026 09:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3951617DFE7
+	for <linux-gpio@vger.kernel.org>; Wed,  7 Jan 2026 09:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767777907; cv=none; b=aIoi0EfBpSeOjp7mh57Alr6N/ePF8atimqJgb8RDjCpn6JzthReIIuIx1c5GMKTyXc2qwvBvHkIyNxtjFuIxkMzTLTI4YYFq1kwUDU5uziTeG5MXz4qosw2c7m/UBNakXDVeuLYxKj3lFOi1HRroTMmo6HeD09qZumO0+dtdNLc=
+	t=1767778315; cv=none; b=aIAbkah2H/SfC42DJdzUtDyF/sWs8MrNijrv+Y6huUARRHIchmEX4eLdaw/c7oxvLjZfQf63hNxWYEZyMO+eRwVyrqBzjosp+jhX0ylBknoqw9cccJSy+CNDSwQkDXFc/m1kG6zLH/M5xdUyBGACkQ2Nne8ZpommTOnD0bjE7cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767777907; c=relaxed/simple;
-	bh=fjMVFlQNfF/Tvn6vpOODNhh+o9dtyfiwpzpLCeB2lrE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xpzr8Vr7DYi0IyiO+FADlyJCyzEOn60nuW1HMIoSJzndJVTdb85/Y7DtwInkVIrTvI702mUQfURWd43akv/VMC5g5rWLFmk5JoIwZkJXrrJFknQ9GNyxPhKHqXJAEHB6GRAgWEu2ZSevOx6FhrqAl9wTThv54rGo9Yjeh/1yjbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lbsFPiIU; arc=none smtp.client-ip=209.85.208.49
+	s=arc-20240116; t=1767778315; c=relaxed/simple;
+	bh=SL4jNbeZEI1+nkTGrXJvZLEhXFUFJa7CeOBZacq7IWM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GLK9J57iDHUTJpNKo2kfityHCa+1AR/KYzqfpeLOMT8E47QUqJmIDB1y5eRoQFdTyOkLZ9I6tR2hy0r6wwgYgGUEib/73blQHPqJBKNGkGouAAYB4Gpn65YGdTJ8Y403dnVPmkBDpGpDUeka2bBTxKInLJCokQSvRXKnSpvG6fY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KNdXQgT9; arc=none smtp.client-ip=209.85.218.67
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-64ba9a00b5aso2582916a12.2
-        for <linux-gpio@vger.kernel.org>; Wed, 07 Jan 2026 01:25:03 -0800 (PST)
+Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-b7633027cb2so343593266b.1
+        for <linux-gpio@vger.kernel.org>; Wed, 07 Jan 2026 01:31:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767777902; x=1768382702; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CwkMJv5FJ6wM0SfVxDZ1sKMFmxmOc2HwY8yL49JvVEk=;
-        b=lbsFPiIUP8Dho7KCeHizotFwXEuwpoMny6wuOaOqLT6UNrmb+dfhjkoxjrNdTLYntu
-         2B4WCIvOASHlHBIkqI+o8nazE4HWp6WgSoHbD9Hd1hBX1N7QlTaGNGlvo7PLNTT9WqTy
-         B5eBFTGo36GLQBgPkgj9ET/1CSEf2+JbsMjgzyToq5baS884FulGPodWxUH1tO8qj1CI
-         V85HLkvrW/RD7i83wikM0s/IAOa3TglDIq7ncBgMuRuFgeuoxX/iXIvzaHxGMnyyZQlP
-         oFthOpXQG7jY7SDzJ1rsYMJ+Jmtt/kS38tio98QeAkgBi/MkLGEEdbsuUymuDKkyoila
-         802Q==
+        d=gmail.com; s=20230601; t=1767778311; x=1768383111; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+V9JM8ZWElgqZZrdiMgxMNgv8OJd9DEJ1L+S/izWH/0=;
+        b=KNdXQgT9CEOmV32x18qHvy0agLAUtZ3RLpBHaYduK4bcbN0jZxdXehctKr6yqfWvH8
+         CwRlAxNhEmDuzSLhL0jtV2AEEERUDmElx7tP0YR1VKXEDwS4pVYVN5syF8YzgpS6fBjH
+         6nMGrq7LzDgHZOE2ttJWMlrB0zlfc3V53Faga4HzY8NXm7VL5lNiZrfcIrA030Kemalq
+         FqajXRcejhD4HBDrl4tyPcwCpoJHqGWP+/5m+LLtypDyoKNytz48OZsqzdBMW2nCEc+r
+         uD8fx5TMS4IIIhw/940b3YxeAZ4qOqi4PXeoT0u3HYWp8RGw4kBWlV/9T4gYknkjNDjs
+         TOVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767777902; x=1768382702;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CwkMJv5FJ6wM0SfVxDZ1sKMFmxmOc2HwY8yL49JvVEk=;
-        b=qlqRwPpWp2kycXT7824yVIX0p0XTGZFuWDnbb6Q7KOvdLgxzsYcur5otduM63YIJV4
-         B4nLQzFz7wn4PF0EHu2/9B1yxKjnyCNvjgaSOclEFkp0fNVT0IIhI4/uc/oPqlCc+Zqh
-         byDq8h274tChftPuwQ6SCH9aPLXMRZatn4LSOY9L+3FSLKxxYCEGItCXME73DkhBIR4Z
-         j5p9Q2mqdEYDDCV3Iq5aw0aiT6l13ZiSm7drPXDUySiHHlbhzzmNOEPZURgzD9d0rpuq
-         p7GVQo2zch1ELXKMKCMo4bE4m/T5yfyGKAeCHczV9CVVeIys7mD2tkhjD4nMNohWAR8N
-         kBdg==
-X-Gm-Message-State: AOJu0YylQcrSLPJ4NGzTO+qWZz1CD3X6ri5AqZxuKACj4IO55+ShCf+V
-	cEUWAU1yzDke9JTtVkwFmzop4VQM7Cr6WhmFZrhaFroRVJvf6Em3yA+k
-X-Gm-Gg: AY/fxX7aQRbU5ql6Md0FyhkMJpu74Ikh4GiPSxr8ygS4Et+BdLm30+kB3YojtWJH2v7
-	WdzRd8/KMUpY3WAnhi0Jj6rc6kqUXAVdhjZpmTaerJ3Yne4SPuu9tkEVZroUJN8pFzMkrAMZTvo
-	Obw0Tg7nFY09V9TeJcdZdNor84G9wXKAWGW4go2LWahy9yOVLaSDof1c5Ceni/eGQWe5EihL635
-	LC0rFAdoE8nF/dtNxmhnIJpOc8wX50/2DrG855BXa7iU6Z6aIBx7Gdr+pGhtufjpgsdBd/5LTt0
-	WjgZAUJYo5V/VDMAJX21CTRpMjKnMejqyyRYUctB7isO9MV/Rae+dgD3GL2IfVaqIvyf+doPke5
-	kTekGlPWbpDCk9kQFD7reV/eHXqtz2ES6+7Ze5cb+YE0DaEtmvuEzm4NJN9yvsqrzpolLS5TP20
-	N/omxPP/uIovvLODdP1/rhKrWZDacGEfLcHLtjaqvCrTEUKQHpvMwqUCTpGDCAU15rv68yhmTht
-	FCDTfHsgAU=
-X-Google-Smtp-Source: AGHT+IF5gTus43KHKJqt0E1pJCWbD2HwdQLbrkpZB5Dk88YTCWkkUkxD5wZuqMwRfHjHfPeR5J7n1A==
-X-Received: by 2002:a17:907:9812:b0:b73:792c:6326 with SMTP id a640c23a62f3a-b8444c59fc3mr185201266b.11.1767777902136;
-        Wed, 07 Jan 2026 01:25:02 -0800 (PST)
-Received: from ?IPV6:2001:9e8:f10a:a01:d0b3:d625:5f5a:710a? ([2001:9e8:f10a:a01:d0b3:d625:5f5a:710a])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b842a4cfe60sm455098866b.45.2026.01.07.01.25.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Jan 2026 01:25:01 -0800 (PST)
-Message-ID: <75d3d4ed-2288-4189-a027-05c5e9021a37@gmail.com>
-Date: Wed, 7 Jan 2026 10:25:00 +0100
+        d=1e100.net; s=20230601; t=1767778311; x=1768383111;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+V9JM8ZWElgqZZrdiMgxMNgv8OJd9DEJ1L+S/izWH/0=;
+        b=cEnwG6PEQ0HDKIP6+Grb87vI8fy/uxkqjsgdb40aUbZsFFAjfxKTmonh8lz5ikP5xx
+         8O5tsBO+ag/YQYXW6eMLi8uBvUo3XLTxEpIKOFzwXPj2NRwvYD4OoGtebKGObQfUOGGL
+         g/aVIwA1LPbh96etRQRMQ7rWj5gMBvvpZG4z+JAZGsdGHnHmRpa+m42RFxKNo6DJ7Os2
+         6d9BU9Lltq1FsWhr88rhUKktk8TLtNpgHjAtm+sMJKQpIRc266ufhkqGv36x6zP4hY0n
+         CEgjNqsTRFTIMl60F6Hh12s6djj4UgLU5EHVpi+sxdLP0aJDZ6a0Nxdm36MmVXg+F1X0
+         Wwcw==
+X-Forwarded-Encrypted: i=1; AJvYcCW3PshbxVbVTEnOOc4whhh64raiIX9tLosxUdyoai9cTu7x2mZHWZNxV6SloG5jxdHnGu8YX4KeSaZh@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRhni0tUnaNoGywt9d5AxJtIrcOlwPNg+JBf4yT+sGQYyT2ldk
+	MxkeYywLALYCJadHwiNz0O75WvYaopzbiMOEpoTvY9zynlkkOhDXEXzP
+X-Gm-Gg: AY/fxX5DDqquckCjNATu8y5Evlzaxgb9K6HMeLpo4I4G1QybaxBNHK9Bn7/lknn7qnG
+	Se+l/UF5w+9zwJYgFq+Zb1gCDz+oMkCYjWZ7z3pcCxMNnBEEius1iMNlBFq2KgdW7PJmHrqjd3C
+	YA2PzJhGAtAMTKY1yOHJRCdrUtNzEGm/GkN7k5hX0o+e6UfmdUKYz0x/mp8ZmHwQgOjToo8lsOj
+	MKWn31rm8z0otTmT08K8OMQzaRrYILDnha24A0Hz56Jmh7e4OGbjTa+IegnonxEPuQ1x8oOMWen
+	LQWsfpwXqhRbHj7W7qgmSiEla4fmM68+v+8NSeFn8xd8IH1BFlt9R3akT61calpCs0iNF6BcEBf
+	NyrK3H3pBYGj6U2AogiIOu5/jwZq3V90+hWdIiPSkddh5h3Sx/79PkgZDYsGAOQRWtWisDf0kqb
+	ArNmv1UN2QLabthU6XUr62DTLL2RGkbzylkZEY+IWRmS9zRWikqZHLkFsZPBF7YFnZQ6YhI2Hvk
+	OWnqNPomTyRrUhN60YkM8Q=
+X-Google-Smtp-Source: AGHT+IHN2t3DCkb0dmUHVIbl1BEhOZmHoBfyIGL+xoDRHJx3mpr43XpNECcaL/w1IjZijF2tGzr93g==
+X-Received: by 2002:a17:907:a49:b0:b7c:e4e9:b13f with SMTP id a640c23a62f3a-b8444f4e435mr201321066b.39.1767778311260;
+        Wed, 07 Jan 2026 01:31:51 -0800 (PST)
+Received: from ernest.corp.toradex.com (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch. [83.173.201.248])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b842a4d3831sm483455066b.44.2026.01.07.01.31.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Jan 2026 01:31:50 -0800 (PST)
+From: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
+To: Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] Documentation: gpio: pca953x: clarify interrupt source detection
+Date: Wed,  7 Jan 2026 10:31:22 +0100
+Message-ID: <20260107093125.4053468-1-ernestvanhoecke@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpio: line-mux: remove bits already handled by GPIO core
-Content-Language: en-US
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
- Thomas Richard <thomas.richard@bootlin.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- Dan Carpenter <dan.carpenter@linaro.org>
-References: <20260107085833.17338-1-bartosz.golaszewski@oss.qualcomm.com>
-From: Jonas Jelonek <jelonek.jonas@gmail.com>
-In-Reply-To: <20260107085833.17338-1-bartosz.golaszewski@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Bartosz,
+From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
 
-On 07.01.26 09:58, Bartosz Golaszewski wrote:
-> GPIO core already handles checking the offset against the number of
-> GPIOs as well as missing any of the GPIO chip callbacks. Remove the
-> unnecessary bits.
->
-> Also, the offset check was off-by-one as reported by Dan.
->
-> Fixes: 2b03d9a40cd1 ("gpio: add gpio-line-mux driver")
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/all/aV4b6GAGz1zyf8Xy@stanley.mountain/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
->  drivers/gpio/gpio-line-mux.c | 10 ----------
->  1 file changed, 10 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-line-mux.c b/drivers/gpio/gpio-line-mux.c
-> index a4f384306218..62548fbd3ca0 100644
-> --- a/drivers/gpio/gpio-line-mux.c
-> +++ b/drivers/gpio/gpio-line-mux.c
-> @@ -29,9 +29,6 @@ static int gpio_lmux_gpio_get(struct gpio_chip *gc, unsigned int offset)
->  	struct gpio_lmux *glm = gpiochip_get_data(gc);
->  	int ret;
->  
-> -	if (offset > gc->ngpio)
-> -		return -EINVAL;
-> -
->  	ret = mux_control_select_delay(glm->mux, glm->gpio_mux_states[offset],
->  				       MUX_SELECT_DELAY_US);
->  	if (ret < 0)
-> @@ -42,12 +39,6 @@ static int gpio_lmux_gpio_get(struct gpio_chip *gc, unsigned int offset)
->  	return ret;
->  }
->  
-> -static int gpio_lmux_gpio_set(struct gpio_chip *gc, unsigned int offset,
-> -			      int value)
-> -{
-> -	return -EOPNOTSUPP;
-> -}
-> -
->  static int gpio_lmux_gpio_get_direction(struct gpio_chip *gc,
->  					unsigned int offset)
->  {
-> @@ -80,7 +71,6 @@ static int gpio_lmux_probe(struct platform_device *pdev)
->  	glm->gc.parent = dev;
->  
->  	glm->gc.get = gpio_lmux_gpio_get;
-> -	glm->gc.set = gpio_lmux_gpio_set;
->  	glm->gc.get_direction = gpio_lmux_gpio_get_direction;
->  
->  	glm->mux = devm_mux_control_get(dev, NULL);
+There are multiple design tradeoffs and considerations in how the
+PCA953x driver detects the source(s) of an interrupt. This driver
+supports PCAL variants with input latching, a feature that is
+constrained by the fact that the interrupt status and input port
+registers cannot be read atomically. These limits and the design
+decisions deserve an in-depth explanation.
 
-Thanks a lot for taking care of that!
+Update the documentation to clarify these hardware limits and describe
+how the driver determines pending interrupts, and how it makes use of
+the PCAL input latching.
 
-Tested-by: Jonas Jelonek <jelonek.jonas@gmail.com>
-Reviewed-by: Jonas Jelonek <jelonek.jonas@gmail.com>
+Signed-off-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+---
+This documents behaviour implemented in a previously submitted patch and
+bases some of the descriptions on parts of that commit message:
+https://lore.kernel.org/all/20251217153050.142057-1-ernestvanhoecke@gmail.com/
+---
+ Documentation/driver-api/gpio/pca953x.rst | 75 +++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
-Best,
-Jonas
+diff --git a/Documentation/driver-api/gpio/pca953x.rst b/Documentation/driver-api/gpio/pca953x.rst
+index 4bd7cf1120cb..57e6c613c478 100644
+--- a/Documentation/driver-api/gpio/pca953x.rst
++++ b/Documentation/driver-api/gpio/pca953x.rst
+@@ -383,6 +383,13 @@ disabled.
+ Currently the driver enables the latch for each line with interrupt
+ enabled.
+ 
++An interrupt status register records which pins triggered an interrupt.
++However, the status register and the input port register must be read
++separately; there is no atomic mechanism to read both simultaneously, so races
++are possible. Refer to the chapter `Interrupt source detection`_ to understand
++the implications of this and how the driver still makes use of the latching
++feature.
++
+     1. base offset 0x40, bank 2, bank offsets of 2^n
+         - pcal6408
+         - pcal6416
+@@ -511,6 +518,74 @@ bits drive strength
+ 
+ Currently not supported by the driver.
+ 
++Interrupt source detection
++==========================
++
++When triggered by the GPIO expander's interrupt, the driver determines which
++IRQs are pending by reading the input port register.
++
++To be able to filter on specific interrupt events for all compatible devices,
++the driver keeps track of the previous input state of the lines, and emits an
++IRQ only for the correct edge or level. This system works irrespective of the
++number of enabled interrupts. Events will not be missed even if they occur
++between the GPIO expander's interrupt and the actual I2C read. Edges could of
++course be missed if the related signal level changes back to the value
++previously saved by the driver before the I2C read. PCAL variants offer input
++latching for that reason.
++
++PCAL input latching
++-------------------
++
++The PCAL variants have an input latch and the driver enables this for all
++interrupt-enabled lines. The interrupt is then only cleared when the input port
++is read out. These variants provide an interrupt status register that records
++which pins triggered an interrupt, but the status and input registers cannot be
++read atomically. If another interrupt occurs on a different line after the
++status register has been read but before the input port register is sampled,
++that event will not be reflected in the earlier status snapshot, so relying
++solely on the interrupt status register is insufficient.
++
++Thus, the PCAL variants also have to use the existing level-change logic.
++
++For short pulses, the first edge is captured when the input register is read,
++but if the signal returns to its previous level before this read, the second
++edge is not observed. As a result, successive pulses can produce identical
++input values at read time and no level change is detected, causing interrupts
++to be missed. Below timing diagram shows this situation where the top signal is
++the input pin level and the bottom signal indicates the latched value::
++
++  ─────┐     ┌──*───────────────┐     ┌──*─────────────────┐     ┌──*───
++       │     │  .               │     │  .                 │     │  .
++       │     │  │               │     │  │                 │     │  │
++       └──*──┘  │               └──*──┘  │                 └──*──┘  │
++  Input   │     │                  │     │                    │     │
++          ▼     │                  ▼     │                    ▼     │
++         IRQ    │                 IRQ    │                   IRQ    │
++                .                        .                          .
++  ─────┐        .┌──────────────┐        .┌────────────────┐        .┌──
++       │         │              │         │                │         │
++       │         │              │         │                │         │
++       └────────*┘              └────────*┘                └────────*┘
++  Latched       │                        │                          │
++                ▼                        ▼                          ▼
++              READ 0                   READ 0                     READ 0
++                                     NO CHANGE                  NO CHANGE
++
++To deal with this, events indicated by the interrupt status register are merged
++with events detected through the existing level-change logic. As a result:
++
++- short pulses, whose second edges are invisible, are detected via the
++  interrupt status register, and
++- interrupts that occur between the status and input reads are still
++  caught by the generic level-change logic.
++
++Note that this is still best-effort: the status and input registers are read
++separately, and short pulses on other lines may occur in between those reads.
++Such pulses can still be latched as an interrupt without leaving an observable
++level change at read time, and may not be attributable to a specific edge. This
++does not reduce detection compared to the generic path, but reflects inherent
++atomicity limitations.
++
+ Datasheets
+ ==========
+ 
+-- 
+2.43.0
+
 
