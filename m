@@ -1,97 +1,101 @@
-Return-Path: <linux-gpio+bounces-30224-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30226-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4149CFE4D7
-	for <lists+linux-gpio@lfdr.de>; Wed, 07 Jan 2026 15:30:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B9838CFE414
+	for <lists+linux-gpio@lfdr.de>; Wed, 07 Jan 2026 15:21:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0601E304E176
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jan 2026 14:23:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EA168300EE6A
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jan 2026 14:17:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 100CC33985E;
-	Wed,  7 Jan 2026 14:13:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A7E534105C;
+	Wed,  7 Jan 2026 14:17:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LxpUqBSC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MH3gKstO"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3048339856
-	for <linux-gpio@vger.kernel.org>; Wed,  7 Jan 2026 14:13:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196B434104B
+	for <linux-gpio@vger.kernel.org>; Wed,  7 Jan 2026 14:17:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767795212; cv=none; b=kQBUAKS6j0bdU9THU7SDH7Ms+lTpCeZJwP7UzCiPo7aUKDAeijDcxh9wwEAGL9ZB4Opn9Q177PSMTCpItBbElA6nejPDZJX/d3dHc2ls7c4APYL4ypvnckHRCVvT8plqfA5zl3YP7Uso6NoWJR4oUhEzGfbJE9zIquPr6jAUEJ4=
+	t=1767795442; cv=none; b=FZZzi09shIkmyskZWdWCxSUwQu00V70FT+Ymr2bAyLUNASInEI1RHRfhiluzKWGTzmpyzENuGmVZ4dvVGkQO97iiMLy1oGCjHj2ylx7eFzXrf9e3gWzy0SwZVvc9J7Av6FSVtIPjxypSc9S3Pvh1lhaXOAcGrsIKoYQYsGyWjAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767795212; c=relaxed/simple;
-	bh=vPUhQO/bJfTutZapkC7lSFc2q9gKbGxYafUo+Xs/Plc=;
+	s=arc-20240116; t=1767795442; c=relaxed/simple;
+	bh=YA+mxCm0xEj7DarLlUtNQJH0h/2IACD4TmnFXSGRqJY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rzA5C2/q1jJrX3QLcFd3fz8QwHG2YQ53Fq2qryGQNOOUCUKV20ep4UliRsbY3CGBx/eeq1NA4FigChBWSreKHVLnbPt9uK+G2l8EOzWQdsaUMl0S3QF4AcQJRpxj4k2t/F08e9jwBb8ZjNemuoWNKOlSvHK7faxFf5QVW3rD2Lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LxpUqBSC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ADC9C2BCAF
-	for <linux-gpio@vger.kernel.org>; Wed,  7 Jan 2026 14:13:31 +0000 (UTC)
+	 To:Cc:Content-Type; b=J5nYm6k7u4xjN/KSBEIbmOs6T0ECQ+xNR46+QfUagV6h2X/yqZKqbeF/a1gEUTkZkBlVNX9p8WYRJBt5mjy4+CLsuou/+WnRIp9XIJUKtj7UMxUQN3pp4btHflAjZ2nWq4jUP+vRqHak5UCuwNkG5I8SlCdiVhJ9tpc9CHRYGHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MH3gKstO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBAF5C19424
+	for <linux-gpio@vger.kernel.org>; Wed,  7 Jan 2026 14:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767795211;
-	bh=vPUhQO/bJfTutZapkC7lSFc2q9gKbGxYafUo+Xs/Plc=;
+	s=k20201202; t=1767795442;
+	bh=YA+mxCm0xEj7DarLlUtNQJH0h/2IACD4TmnFXSGRqJY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LxpUqBSCaEAFNHV6ZR13Wn3sVba/mylY/cSyRWIVNUjJyQ/RoL2O7Frk4XVnmTaI6
-	 vpd/fm7mnx9aKY8DUWFStsaVx96N3/iN7XssR5fP01+onZCKHcsqc59yZblqX9pgV4
-	 Xex8vwgsTKZ3+SE9L71+KngoiVZDI22HXt12ahm2rPXifUB8KukHkK5H2stkGnlQQz
-	 +FyfSWpuD9PRg78RPTSKUxL8KPaFOEICqu1pGmm7sYCQbyJ/EfmiLFvmft1A4YMDzM
-	 nO4jM4arQQtOSNxk9ykJ3we4r3oSkwD95uoSJNoq8dXTHJb+akI9ZpTQyCGGtUdjrF
-	 7D7vZG0+yHHTQ==
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-78fd0cd23faso22240407b3.2
-        for <linux-gpio@vger.kernel.org>; Wed, 07 Jan 2026 06:13:31 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVE2n50N9DEl0BM0yXTkdHToDKz34qCl0p++v1O+D5WF+AEcm5TbdO+sJ+gdlPDEjXGKg68PIYDHTHg@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBb2x1XSzZaDLde699bTcp4glnisg8p38bvQ2lgB+r0PdVNjOm
-	7qyEgrc21CSHYNIImGSUpPbvfq1IA4RNd06hiDUMRkoK9wfgrgF5ScPU2IhOnhZAEoZ/OzRJ75+
-	c8zMDaULEuOqy3dgCDXydiiLH/Msfq4M=
-X-Google-Smtp-Source: AGHT+IFpGRYBSvGge8PYFsRHSqJMEhcXggZW3h16GPs6+Lt8GMfLw75OX8+1p8hq0kvPo80jSxwj1LTh08lAgBDlaLw=
-X-Received: by 2002:a05:690e:1248:b0:645:581a:df8c with SMTP id
- 956f58d0204a3-64716c4dfb6mr2253264d50.91.1767795210728; Wed, 07 Jan 2026
- 06:13:30 -0800 (PST)
+	b=MH3gKstOmBHlP7FwRBEuPp5n/l/pcNf/0SB4TfyfeYmIK3p+pnDAauBLp+mo25vcQ
+	 C0cVDpoWD2NStcDnWXL6a+GdgHDBoazmHA4VhaTGnULGHXHcxVmdnah3bjQiAON3A1
+	 803+m52mctidSfj3bLGKeDDksym2Mv+8V8w3+y7rUraT2Vs6cdJT7FCL+S95BtaQ5B
+	 BZhg9tql9ZIoKCZGWlWTyNX0i3O/RC8N+3OZJQ5KDRo/Ibl0mYlUI5V2uYNKi5O1m3
+	 naEDw0o3MOsyIA1Ec50IFYKQaWVAmzVMkc+CPPLttp18Qwd9I+3WsK76dzUCyXz1C0
+	 qDU4BHx7sUs3g==
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-78fc0f33998so22302407b3.0
+        for <linux-gpio@vger.kernel.org>; Wed, 07 Jan 2026 06:17:21 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVntpeH8fLoEKLhNFoS1l9L835NP6+j1M9yt+A+O8foPeexf0c5taWtq30acCBGEJPimWlabeYG9fB7@vger.kernel.org
+X-Gm-Message-State: AOJu0YwC4fsFCmL93KGUbAVSgsOxGJPCAXRb6081mqh9gUuOgxqyiW89
+	SHEBw/cdqhG0fpEsidhFhsaRadj8qr+kxPQMY9gbWvFiijgObUG5qWcy4BojhRAuHjZCnDS4dHl
+	OvQIeoawZXYrrGrOhu3Bu1vLycbuZgac=
+X-Google-Smtp-Source: AGHT+IFWz8BRlceis+tRl/aW/9vd79KfmxBq1oamU+LQ9mQvDSyStZFHgNip5biPn+LgYnAn/tyKFWHR9JxLOnciWJg=
+X-Received: by 2002:a05:690c:2902:b0:78c:655d:f7ba with SMTP id
+ 00721157ae682-790b5800890mr55036157b3.38.1767795441238; Wed, 07 Jan 2026
+ 06:17:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251225103616.3203473-1-wens@kernel.org> <20251225103616.3203473-3-wens@kernel.org>
-In-Reply-To: <20251225103616.3203473-3-wens@kernel.org>
+References: <20251217080843.70621-1-shorne@gmail.com> <20251217080843.70621-2-shorne@gmail.com>
+In-Reply-To: <20251217080843.70621-2-shorne@gmail.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Wed, 7 Jan 2026 15:13:19 +0100
-X-Gmail-Original-Message-ID: <CAD++jLku5_fyDXw+uJ8Gj_1nQxjq8egOh60X1ARGC5dmFAcV+g@mail.gmail.com>
-X-Gm-Features: AQt7F2rAHH3lL_5LalTawPfcgjclmbR9cTZKvz98Rqt4039YJlca5QQ3lCXU-dQ
-Message-ID: <CAD++jLku5_fyDXw+uJ8Gj_1nQxjq8egOh60X1ARGC5dmFAcV+g@mail.gmail.com>
-Subject: Re: [PATCH 2/4] dt-bindings: pinctrl: sunxi: Allow pinmux sub-pattern
- with leading numbers
-To: Chen-Yu Tsai <wens@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jernej Skrabec <jernej@kernel.org>, 
-	Samuel Holland <samuel@sholland.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, 
-	linux-sunxi@lists.linux.dev, linux-gpio@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+Date: Wed, 7 Jan 2026 15:17:09 +0100
+X-Gmail-Original-Message-ID: <CAD++jLn6FrJ4ZsMMQxiKkYZ5k-ekEXw8B8+1FXUYycqN4Cm-Hg@mail.gmail.com>
+X-Gm-Features: AQt7F2r3cLS6QJSNoZCGwNenwmrF23J-ho2AOyeoy5pSDo7ehWmWTffX64bsUso
+Message-ID: <CAD++jLn6FrJ4ZsMMQxiKkYZ5k-ekEXw8B8+1FXUYycqN4Cm-Hg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: Add compatible string opencores,gpio
+ to gpio-mmio
+To: Stafford Horne <shorne@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux OpenRISC <linux-openrisc@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 25, 2025 at 11:36=E2=80=AFAM Chen-Yu Tsai <wens@kernel.org> wro=
-te:
+On Wed, Dec 17, 2025 at 9:09=E2=80=AFAM Stafford Horne <shorne@gmail.com> w=
+rote:
 
-> The pattern for pinmux node names is typically the peripheral name and
-> instance number, followed by pingroup name if there are multiple options.
+> In FPGA Development boards with GPIOs we use the opencores gpio verilog
+> rtl.  This is compatible with the gpio-mmio.  Add the compatible string
+> to allow as below.
 >
-> Normally the instance number is directly appended to the peripheral
-> name, like "mmc0" or "i2c2". But if the peripheral name ends with a
-> number, then it becomes confusing.
+> Example:
 >
-> On the A20, the PS2 interface controller has two instances. This
-> produces pinmux node names like "ps2-0-pins". Make the sub-pattern
-> "[0-9]-" valid to fit this pattern. Avoid having to confusing "ps20-pins"
-> name.
+>         gpio0: gpio@91000000 {
+>                 compatible =3D "opencores,gpio", "brcm,bcm6345-gpio";
+>                 reg =3D <0x91000000 0x1>, <0x91000001 0x1>;
+>                 reg-names =3D "dat", "dirout";
+>                 gpio-controller;
+>                 #gpio-cells =3D <2>;
+>                 status =3D "okay";
+>         };
 >
-> Signed-off-by: Chen-Yu Tsai <wens@kernel.org>
+> Link: https://opencores.org/projects/gpio
+> Signed-off-by: Stafford Horne <shorne@gmail.com>
 
-This patch 2/4 applied to the pin control tree.
+Looks reasonable,
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
