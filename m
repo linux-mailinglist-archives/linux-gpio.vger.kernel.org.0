@@ -1,91 +1,238 @@
-Return-Path: <linux-gpio+bounces-30202-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30203-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA19BCFA08C
-	for <lists+linux-gpio@lfdr.de>; Tue, 06 Jan 2026 19:17:43 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CFE3CFBBE6
+	for <lists+linux-gpio@lfdr.de>; Wed, 07 Jan 2026 03:34:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id CBEA630299CE
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Jan 2026 18:17:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 72AB5302F6A0
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jan 2026 02:29:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDC09358D0A;
-	Tue,  6 Jan 2026 17:57:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7392923BD06;
+	Wed,  7 Jan 2026 02:29:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rbXdr+70"
+	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="cDqO51WY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023130.outbound.protection.outlook.com [52.101.127.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6E5357A50;
-	Tue,  6 Jan 2026 17:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767722227; cv=none; b=kAx4Rfu/qL3DnWdt0d95GwTBoT0YYfd2WFv/SfahkrwcT5ESbEX5vgufyBNZPm7ykYrJHjl7nRvpCMuVKMzdc6tHpcYRAqDLP359IqvEOl4yb3+BkLMVf9aJh0gUeAOpIGhTtxor4zOp4J07PYOQ05GHYQxrN2ehgcDZU4//V9s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767722227; c=relaxed/simple;
-	bh=hQcVkxR/o5ATUWcW4CuQXwOu/rw6WdzBdJ24sxfFynw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=l3rzjLmHCsdKtzFCW5TBqOIlzNxDla10LrhI9BdBhi2R4L821uNA2+Cf0lYf2c34pyXAKK+PL8AvexWwamYsyRPtdbVG/t5VkjYKStTP3pfyjzSxQKA9D3ffQNeURp+Nhgww4RUnr4O5q5Q6JgZGz4UH18/5W4jABEK79VnXW7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rbXdr+70; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3422BC116C6;
-	Tue,  6 Jan 2026 17:57:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767722227;
-	bh=hQcVkxR/o5ATUWcW4CuQXwOu/rw6WdzBdJ24sxfFynw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=rbXdr+70VG7WegNXGbgtvzz3Hdi4UhZ+S8QqG2bFZdG5khjaOy2vfDgKeya1MP3qp
-	 yiwpkemEeOVn+qtMkZYlV4S6hvTb6s2PnWfhn52QU4/1u2TNskkzQ2oQaPaBb8xPif
-	 XbVy2+JlbvLQFPWRp+T/rUjmkWp08r970AC3SARu/E6WrtdsecznTfnOxL58bx2Meg
-	 lm57eJEV1/C5VnVNdDZTtVycThxkrPLJACd4iMpwZjQ8lxCKGf83NwUpuXD4mk3tsE
-	 nKpYCo1HZOgH/6Tzr6nndDVsaEEBXDgeDV+HHI2o+/FnJog54h48nImOH91AEKARmj
-	 xTd/k3ML+9JPg==
-Received: from wens.tw (localhost [127.0.0.1])
-	by wens.tw (Postfix) with ESMTP id 758D15FC25;
-	Wed, 07 Jan 2026 01:57:04 +0800 (CST)
-From: Chen-Yu Tsai <wens@kernel.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jernej Skrabec <jernej@kernel.org>, 
- Samuel Holland <samuel@sholland.org>, Linus Walleij <linusw@kernel.org>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, Chen-Yu Tsai <wens@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-sunxi@lists.linux.dev, 
- linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20251225103616.3203473-1-wens@kernel.org>
-References: <20251225103616.3203473-1-wens@kernel.org>
-Subject: Re: (subset) [PATCH 0/4] ARM: dts: allwinner: Fix remaining DT
- validation errors
-Message-Id: <176772222440.2799087.10450816532517235383.b4-ty@kernel.org>
-Date: Wed, 07 Jan 2026 01:57:04 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1161C22F74A;
+	Wed,  7 Jan 2026 02:29:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.130
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767752946; cv=fail; b=t9oLmkn0gtLTXfJllb6/M3+pmfdCFZrEYy3WKHsKFsTVaBwvnEsDbsYcnnUlEpT1G/kpkrpvBYSbhN4Dx2ihCZDOuHNuGP61ix+Sd82/Jc0AOQNoAJ1Ga3AjG1m0v28dtF2/8y6sdX6y2w0cbHUPKEWPmAoHWa7Z4bUOYkpR+6E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767752946; c=relaxed/simple;
+	bh=F5wjI6iWz2gKI2pjUPGFQ8pGJkh0PntROwExLQNeM78=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=SYo3bH8QCbw1LQzW6o+66ZCqKpMQQhy3QCQRjMIL30tR+id1DOmbrPdsF8rJvBJTvBAjWWfsVVphttuA95RD0AyRuIIElQoDkszIuL8mIVJ2ne6VMgmJBPTQdtTlF7Zn7YLrqedE98463vJj3QNh+vA7fcKO4TLjYTxd5kDSavI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=cDqO51WY; arc=fail smtp.client-ip=52.101.127.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sAjk0zC1NZG9ewwG7j1sO6j9Vi5ytjlw2kRyQpzmlJHBuz+ahLPSbfe5n4obZhRC0/b614ZS+ZGc9qaVj2nm8LuD0T0SRO4pFAXDW9I7sbtuEBcliJt8FD+XASRaQ1lsniu2Sjgew7rZW1vL/2JafVW2/25ejCeFbmuUEl6fYQP7uThqjMCYbUYPrHqHi87Ksf3MzEsVwuaMXXrYM8RlNU+/9YJU+nNVwCtCvL3qEwfpXLbhUJNqfp16dCm0Qx8Ntpsij/H2fDYOQbuJ6g1CBBVF4pqVhVdbVhzdNo8L3qCzKePiWAn9BPCwPiK0HgMRgoz9ENYQSZ22EJs8FcJG3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=El2sGo8IidLtLTWiHJNZ2Uher238QCN9I0XczR1zMX0=;
+ b=oAN3ki6O0NE0F1mhPP7Ok+tm2HU0lg8d/Li8RduFUWTGmHA13zgRkKJo3frpl7x3qTmJogx21/ZYcD3Fj1r3ww1RnLSAR5iuMtSQFBCHNflur+NB1BXEwaOBYH6I0/ARuag9kaieeYd7A8dkPG1LzE0GZVGtsvZmBaHkM4XlSgj/wzG4F4YEJp/5q3Jl1dIee9ZufCXDE2kgBw077l16LkBSs/rRebayp8xoxVpsPn+hqLHJfhjMlYuPg57SiFYgtSppi64cWnuVItXTCfMKQdNpnR32wbdWAJ10hrxo9aiedc6mNeWFd3YDqVLpDuz3tHypuHWlsfdJu9MoH3tSyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=El2sGo8IidLtLTWiHJNZ2Uher238QCN9I0XczR1zMX0=;
+ b=cDqO51WYSgAbkET29cncQ4IkbtxunSzrIJL14krZL+wYkm1Aj9bH0ctEPp7vdh54XbZRmGM4DXMM7UNJHN5V6s4ml6UyWK2E/NyaKzjLL1ilUEBSgtg5NJhNpn42DTa76R3etJx9qWdiz6lszD2QBmu0mihZcRuyUcruwzVqcugPtZ8/YR0w96V5vB9GorpJUh7Zj90Dqur3axlw2+VBg4cmBmxbMsv+qC4zj0iFjWyDB+7Pez7JLuO3I6obqBKU+7k282Qfuj09Y3iB7EWljTToN3ZeYpQczJDPsPoKnfAPKlyhoR/UcqvxOyjeMmwt7TVz6qYF7xVjUKSbopa5Tg==
+Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
+ by TYZPR06MB7336.apcprd06.prod.outlook.com (2603:1096:405:a0::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.2; Wed, 7 Jan
+ 2026 02:28:58 +0000
+Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
+ ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
+ ([fe80::6b58:6014:be6e:2f28%6]) with mapi id 15.20.9478.005; Wed, 7 Jan 2026
+ 02:28:57 +0000
+From: Jacky Chou <jacky_chou@aspeedtech.com>
+To: Mikhail Rudenko <mike.rudenko@gmail.com>
+CC: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Andrew
+ Jeffery <andrew@codeconstruct.com.au>, Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>, Manivannan
+ Sadhasivam <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, Neil Armstrong
+	<neil.armstrong@linaro.org>, "linux-aspeed@lists.ozlabs.org"
+	<linux-aspeed@lists.ozlabs.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-phy@lists.infradead.org"
+	<linux-phy@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
+	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: [PATCH v7 0/7] Add ASPEED PCIe Root Complex support
+Thread-Topic: [PATCH v7 0/7] Add ASPEED PCIe Root Complex support
+Thread-Index: AQHcbi5NGns8riYnf0mmItB8KdiQ8LVFCbQAgAETH2A=
+Date: Wed, 7 Jan 2026 02:28:57 +0000
+Message-ID:
+ <SEYPR06MB513404EB419B7850159F3CC29D84A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+References: <20251216-upstream_pcie_rc-v7-0-4aeb0f53c4ce@aspeedtech.com>
+ <875x9fuj7i.fsf@gmail.com>
+In-Reply-To: <875x9fuj7i.fsf@gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|TYZPR06MB7336:EE_
+x-ms-office365-filtering-correlation-id: af24aa42-829c-4473-d8f3-08de4d9482de
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700021;
+x-microsoft-antispam-message-info:
+ =?iso-8859-2?Q?/REi5ripc8ywtgDQMecOY3DtJEqP35yaIHWundEW5Pi6m1yRYmp8Z05Lp9?=
+ =?iso-8859-2?Q?MWbXXkcW6e2OKB8dGJU1sUUEZr8m02bKNYMfVfu+6iaU9yXAo16YLM+4tH?=
+ =?iso-8859-2?Q?8mwhqZlB6ls9LKVP6rTyUvFDtwigVk5NwbNmOCjcGvaKAdBj2Ee76VTKp5?=
+ =?iso-8859-2?Q?l5W+3BxOl8KC3VIQgLx/7IXtitZy5iZSs24MO2nq7FqXQNYN/fWED945bM?=
+ =?iso-8859-2?Q?YcQoHxlm03XarfDjrgqXvLR0QeyN3hBYWw4M8RubKLw3pl28Q3OTO1R4EX?=
+ =?iso-8859-2?Q?XQCiF0rF7dyGuRqfDqO/kg6cVE7qdhBNkuHG++C0+37cgSo0VdKg7azPEY?=
+ =?iso-8859-2?Q?qvOXOTG0EB6YOAFWqy+oLoEkxGfQWZw50xul1Pr4O1UPaMQ5wFgmCJDnjL?=
+ =?iso-8859-2?Q?5CQvu2q6jkTiG4o3de0IJoujmIcdHp+iFVn3BtCqBpa/I8d/4mIhhlbV+P?=
+ =?iso-8859-2?Q?cAhuq8CCr4SIifbqM6rU1xZ5KqMq3Ixnr42oafw1K6vq+3EC6BvZsw3qqi?=
+ =?iso-8859-2?Q?Vd+yUBjNfen+DANQgQ2RTr+IFZEIfW1msoV+bojYZms62gbHyqNjv2ne5T?=
+ =?iso-8859-2?Q?1GqLsOrsnqbEnKdxTOcBXtPxPf+O1iZ2XG0Z7EGPr/0afG1o7m1tejIMxJ?=
+ =?iso-8859-2?Q?6xPiU6H2SWRAjEfmwwYUd93RcRI/xnWcZS/eHKTShfv/wc6gb6/MrvYAKe?=
+ =?iso-8859-2?Q?timUSbmWjMmY+xmrMwva2yOnUUGRDFtuewWekmSmHqNWl0eAC8ZQWmDu1E?=
+ =?iso-8859-2?Q?ciaD//PAUfCOcb851Nr1x91ds0SOMFNp9Xus4y5RTWqt9DS85z5V3LsiFq?=
+ =?iso-8859-2?Q?VP1Uaufx45AK8zoJVCRxpVGtKCUzTb8IemTiGl3SsXXzsf5QCC48HFDUMk?=
+ =?iso-8859-2?Q?fxSgQbqQtEHbkE6Q8O7OTfGEnqaWcer4jv/mv/nUI5k94qus9ZGR87TGCX?=
+ =?iso-8859-2?Q?fMeCpunCaZKOnuZApK8N/gjuiiJEqtsTLZfeh6siRM2nZAkyQ7F9NG0B41?=
+ =?iso-8859-2?Q?7OLrZi3PRP+SdHz6VPe1chu2FmrMnBjbF2nMrkEGvkEwcEGePcCLGs893r?=
+ =?iso-8859-2?Q?N/CQFHIn7PLHgrjICZcVDx6R0Vdvp7EZtjblFucY7+DF27AseAw3/96L48?=
+ =?iso-8859-2?Q?1qJXwtg5giabprlRmkjrRYhXJKWxyrIU80Bt4gpSrzSPFjuOV02m0nSnHG?=
+ =?iso-8859-2?Q?ojoaFUyM77IBRJI10WzXNBCMkwPXg+Gz+UvmI10Y7wz04S+yNrKmlQGLIF?=
+ =?iso-8859-2?Q?S1KRC6CIb4GTX8RZJxjY8CY30Eq+TaQWZ/RmeO3gWfqKFfHFvuDxGekTf3?=
+ =?iso-8859-2?Q?dRUBRgQ1JrIHROEEKXopVBQsaJLNyYolmPSgYlIy7rWMTDxelWhNxnN7pG?=
+ =?iso-8859-2?Q?hc21oiRKiYQdjzzF3LnCTCsZ87H07eh9TFBdBWcK2t8o/Xo5CYhTo8neLT?=
+ =?iso-8859-2?Q?DXxbeiBNDu7mZ6YW57qWEWee8Rt5Zd+AzyA0vx1u+l3Piy3GuqPKiok7g3?=
+ =?iso-8859-2?Q?QUJX858MSmNhyQgGqGRgNIkSPS5D0UxT+nrLkq4otrr8BXXtI2dJydBa4y?=
+ =?iso-8859-2?Q?44gYLeJjK1Nfuubm1nc3eOqqx1tM?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700021);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?zzmalUfB0OSjzcKmOR+cVVJKgvwumP9fqF2EiWKPKaka2eIiPjAIlz87PX?=
+ =?iso-8859-2?Q?3ef53ZCaYD+iNbLSK3k7cQfmwOqZY2zGYdnMrApeOS/79ClbMPINoqYP39?=
+ =?iso-8859-2?Q?mzejn+TSyFWxPYPLQoOpXShGgh2/xQkJcsfSpu/gCdwlhbMYnoPfnP0n7r?=
+ =?iso-8859-2?Q?0mZtw8wO5CMbn+feP91zOHwb31SNdCT3ROiyfCRCCOQBcY5SgGhmqwgW+0?=
+ =?iso-8859-2?Q?ZSBEQ4I6blGGEms9VHx2g++lhfm4Sm3UxF7asTx8wvRyrH84iT8JDX1Hxw?=
+ =?iso-8859-2?Q?xmMDaQnWOS3GugtZ1XNnCM4qWJQRBRGrQbXEwZb3AGyqgR4iE7qFVkHKHh?=
+ =?iso-8859-2?Q?y9RWa30GNj4yOMhKYLqne7SujfDpOYVUwp/bPNrWpyPn6Yr10wWsrB2kMk?=
+ =?iso-8859-2?Q?Cv1EPAm0sfuemjz4vx5vOyGTV7rMrejKvOUSYM2hb5q6g+eCnLrNFNtu+K?=
+ =?iso-8859-2?Q?Qir6VPWVDe8awN30COTmuQmn9lZcWYS47dTMUVibw1te3qpBNE6zbJkAHR?=
+ =?iso-8859-2?Q?E405PRIGCchayVUQyCt9XXZSb1IHeHSbp0eXv0jNYzvI0kDRynmlh2pSWG?=
+ =?iso-8859-2?Q?GK6EzVeDwXbQFPjkbNTiTk5W3uSYeZbULHATlmAVqhjNMEfXHqTe1BGCe4?=
+ =?iso-8859-2?Q?BWakVCxCxfrBd4jM78dixwnyR83ilZq/8qfV7n2YVY4pq+/vT30NJFGmXk?=
+ =?iso-8859-2?Q?s67znzpqvytapZhx1uCxh2bGDKy+W9QkjNo/bx6d4lPl1Eal2Uy3vUp74k?=
+ =?iso-8859-2?Q?qFafUXvLC74y+NWCzzwMyA6onlQ+moH82EbivS2GK77W70GKKxmbaNMCX6?=
+ =?iso-8859-2?Q?Oq+WKx/TIMqNQvq2PsceJuxgDwENa6x1LvXv3BshgIT0OaFByUzzkjBfGG?=
+ =?iso-8859-2?Q?gUAigc8rHK92icw/kkDEf9A/KN69FqziLctOTOMbioJotLmj/eUNAVEs+e?=
+ =?iso-8859-2?Q?CfZMQTitbftGK5ensitPH5CbGE40fFI8XiPXZu07SskEFcrJ0RDzIhP4Gk?=
+ =?iso-8859-2?Q?PXGgwXjIDd1gExNh60AcBgGyZzj+7bdcEQWzjLwlx3O4q4AjkKmJFC9dkG?=
+ =?iso-8859-2?Q?Jr3PtGWxve5YgNLyd4NrYSO7+jE1P7JJ56/MxjixPDL1+4pIPkyI0tBgk9?=
+ =?iso-8859-2?Q?6GjYdE9U29rb7TxNXB/Pm2qpkyGjlHDA/TKUagxlbjkO6EaZQSsG/Tz1Or?=
+ =?iso-8859-2?Q?uvKhTSqa0YjIHHP2hkGeSRzZ+3ehgy9EUbMoc7Cf9pRGd/8TaCwODUvIwQ?=
+ =?iso-8859-2?Q?ekATBNju3MRgcK8hWPrSXxRgXxfTLN+h2NDWHQQCH8jcageQeu3FlqsNKJ?=
+ =?iso-8859-2?Q?WTgS03fOZKNk9uYaO8q89QHNaWcUOQ/Vuz82bEV/V7aDuKS9+SDod+a/VN?=
+ =?iso-8859-2?Q?VImfos8nZ2XpVOFLlBRpOIebsnZp1ocuvKAdQvjoO9EVOgrdJ0GRERS/um?=
+ =?iso-8859-2?Q?0AS5h5bm5anKLsv+3iDpRQW2bhSJlO9rLnNqChH60uNBRl7LVoE9flNlz6?=
+ =?iso-8859-2?Q?T813sUUa11Bw9ZM5upgrPxeWoqThGv0bduWGUx0criRso9Ijhalkcbo1JW?=
+ =?iso-8859-2?Q?18HHsyQ9jjlHL6z7kqrdDYQCbCkZXeLEinJl3jaAfXdflTpVgE/krr6cZV?=
+ =?iso-8859-2?Q?RbaR0PASDGLjUzhOha95gE6P67bqZ2dlWIfGgOxqFhSA83r0tEJ9E8VlPn?=
+ =?iso-8859-2?Q?BbrqPsZ53XfqdD52+g/NhGh7hHIe4RLUMKpLaxUgPUR00GSSdzOKahcmP6?=
+ =?iso-8859-2?Q?xi8SldXN4P9RzUyR4F5VxRKbNsQ6wykzYqAHPbKchyAB/4x+FDhcDFrPWF?=
+ =?iso-8859-2?Q?NanlnhcvPQ=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af24aa42-829c-4473-d8f3-08de4d9482de
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2026 02:28:57.9049
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LNfO1ty1TVpGoi43TLt+Z1IO1hUWB4vUwGNy+xJu0Lh7vchipProy9AuqbF/UxBZh1KEBOBQO3L+6O2G9TAb3dU/620lPzAWkA2iv62H5iY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB7336
 
-On Thu, 25 Dec 2025 18:36:11 +0800, Chen-Yu Tsai wrote:
-> This series gets rid of the remaining DT validation errors for Allwinner
-> (sunxi) ARM 32-bit device trees. The patches are self explaining.
-> 
-> I plan to take all four patches through the sunxi tree.
-> 
-> 
-> ChenYu
-> 
-> [...]
+Hi Mikhail Rudenko,
 
-Applied to sunxi/dt-for-6.20 in local tree, thanks!
+> First of all, thank you for your efforts in getting this driver upstreame=
+d! I am
+> trying to understand whether this driver supports PCIe devices that have =
+an I/O
+> port BAR, where CPU access to I/O ports is required for proper device
+> operation.
+>=20
+> If I understand correctly, this line in the Aspeed 2600 dtsi file declare=
+s the I/O
+> port range:
+>=20
+>     ranges =3D <0x01000000 0x0 0x00018000 0x00018000 0x0 0x00008000
+>=20
+> During system initialization, the pci_remap_iospace() function in
+> arch/arm/mm/ioremap.c maps the physical address range
+> 0x00018000-0x00020000 to the virtual address PCI_IO_VIRT_BASE
+> (0xfee00000). After this mapping, inb() and outb() calls work by converti=
+ng I/O
+> port addresses to virtual addresses starting at PCI_IO_VIRT_BASE, then
+> performing reads and writes to those virtual addresses.
+>=20
+> What I don't understand is this: according to the Aspeed 2600 datasheet, =
+the
+> address range 0x00000000-0x0fffffff (which contains
+> 0x00018000-0x00020000) is mapped to Firmware SPI Memory. This would
+> mean that outb() operations get routed to memory-mapped SPI flash instead=
+ of
+> PCIe.
+>=20
+> It seems like there's a missing piece to this puzzle. Could you help clar=
+ify how
+> this is supposed to work?
+>
 
-[3/4] ARM: dts: allwinner: sun5i-a13-utoo-p66: delete "power-gpios" property
-      commit: 0b2761eb1287bd9f62367cccf6626eb3107cef6f
-[4/4] ARM: dts: allwinner: Replace status "failed" with "fail"
-      (no commit info)
+Thank you for pointing this out, and sorry for the confusion.
 
-Best regards,
--- 
-Chen-Yu Tsai <wens@kernel.org>
+You are correct that, as things stand, this does not make sense from a real=
+ hardware perspective.
 
+In fact, the I/O addressing support you noticed was something we experiment=
+ed with internally
+only. There is no actual hardware design on AST2600 that supports PCIe I/O =
+port addressing in=20
+this way. To enable those experiments, we modified our internal kernel acco=
+rdingly, but this was=20
+never intended to represent real, supported hardware behavior.
+
+This is our mistake for leaving this description in the DTS, as it can inde=
+ed be misleading. We=20
+will remove this part to avoid further confusion.
+
+Thank you again for your careful review and for bringing this to our attent=
+ion.
+
+Thanks,
+Jacky
 
