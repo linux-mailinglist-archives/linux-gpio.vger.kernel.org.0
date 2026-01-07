@@ -1,238 +1,125 @@
-Return-Path: <linux-gpio+bounces-30203-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30204-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CFE3CFBBE6
-	for <lists+linux-gpio@lfdr.de>; Wed, 07 Jan 2026 03:34:55 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07BCACFBCE9
+	for <lists+linux-gpio@lfdr.de>; Wed, 07 Jan 2026 04:09:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 72AB5302F6A0
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jan 2026 02:29:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 388EF3041CCE
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jan 2026 03:07:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7392923BD06;
-	Wed,  7 Jan 2026 02:29:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B63BD143C61;
+	Wed,  7 Jan 2026 03:07:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="cDqO51WY"
+	dkim=pass (1024-bit key) header.d=thingy.jp header.i=@thingy.jp header.b="PwkMHhty"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023130.outbound.protection.outlook.com [52.101.127.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1161C22F74A;
-	Wed,  7 Jan 2026 02:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.130
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767752946; cv=fail; b=t9oLmkn0gtLTXfJllb6/M3+pmfdCFZrEYy3WKHsKFsTVaBwvnEsDbsYcnnUlEpT1G/kpkrpvBYSbhN4Dx2ihCZDOuHNuGP61ix+Sd82/Jc0AOQNoAJ1Ga3AjG1m0v28dtF2/8y6sdX6y2w0cbHUPKEWPmAoHWa7Z4bUOYkpR+6E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767752946; c=relaxed/simple;
-	bh=F5wjI6iWz2gKI2pjUPGFQ8pGJkh0PntROwExLQNeM78=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=SYo3bH8QCbw1LQzW6o+66ZCqKpMQQhy3QCQRjMIL30tR+id1DOmbrPdsF8rJvBJTvBAjWWfsVVphttuA95RD0AyRuIIElQoDkszIuL8mIVJ2ne6VMgmJBPTQdtTlF7Zn7YLrqedE98463vJj3QNh+vA7fcKO4TLjYTxd5kDSavI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=cDqO51WY; arc=fail smtp.client-ip=52.101.127.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sAjk0zC1NZG9ewwG7j1sO6j9Vi5ytjlw2kRyQpzmlJHBuz+ahLPSbfe5n4obZhRC0/b614ZS+ZGc9qaVj2nm8LuD0T0SRO4pFAXDW9I7sbtuEBcliJt8FD+XASRaQ1lsniu2Sjgew7rZW1vL/2JafVW2/25ejCeFbmuUEl6fYQP7uThqjMCYbUYPrHqHi87Ksf3MzEsVwuaMXXrYM8RlNU+/9YJU+nNVwCtCvL3qEwfpXLbhUJNqfp16dCm0Qx8Ntpsij/H2fDYOQbuJ6g1CBBVF4pqVhVdbVhzdNo8L3qCzKePiWAn9BPCwPiK0HgMRgoz9ENYQSZ22EJs8FcJG3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=El2sGo8IidLtLTWiHJNZ2Uher238QCN9I0XczR1zMX0=;
- b=oAN3ki6O0NE0F1mhPP7Ok+tm2HU0lg8d/Li8RduFUWTGmHA13zgRkKJo3frpl7x3qTmJogx21/ZYcD3Fj1r3ww1RnLSAR5iuMtSQFBCHNflur+NB1BXEwaOBYH6I0/ARuag9kaieeYd7A8dkPG1LzE0GZVGtsvZmBaHkM4XlSgj/wzG4F4YEJp/5q3Jl1dIee9ZufCXDE2kgBw077l16LkBSs/rRebayp8xoxVpsPn+hqLHJfhjMlYuPg57SiFYgtSppi64cWnuVItXTCfMKQdNpnR32wbdWAJ10hrxo9aiedc6mNeWFd3YDqVLpDuz3tHypuHWlsfdJu9MoH3tSyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=El2sGo8IidLtLTWiHJNZ2Uher238QCN9I0XczR1zMX0=;
- b=cDqO51WYSgAbkET29cncQ4IkbtxunSzrIJL14krZL+wYkm1Aj9bH0ctEPp7vdh54XbZRmGM4DXMM7UNJHN5V6s4ml6UyWK2E/NyaKzjLL1ilUEBSgtg5NJhNpn42DTa76R3etJx9qWdiz6lszD2QBmu0mihZcRuyUcruwzVqcugPtZ8/YR0w96V5vB9GorpJUh7Zj90Dqur3axlw2+VBg4cmBmxbMsv+qC4zj0iFjWyDB+7Pez7JLuO3I6obqBKU+7k282Qfuj09Y3iB7EWljTToN3ZeYpQczJDPsPoKnfAPKlyhoR/UcqvxOyjeMmwt7TVz6qYF7xVjUKSbopa5Tg==
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
- by TYZPR06MB7336.apcprd06.prod.outlook.com (2603:1096:405:a0::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.2; Wed, 7 Jan
- 2026 02:28:58 +0000
-Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
- ([fe80::6b58:6014:be6e:2f28%6]) with mapi id 15.20.9478.005; Wed, 7 Jan 2026
- 02:28:57 +0000
-From: Jacky Chou <jacky_chou@aspeedtech.com>
-To: Mikhail Rudenko <mike.rudenko@gmail.com>
-CC: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Andrew
- Jeffery <andrew@codeconstruct.com.au>, Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>, Manivannan
- Sadhasivam <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>, Neil Armstrong
-	<neil.armstrong@linaro.org>, "linux-aspeed@lists.ozlabs.org"
-	<linux-aspeed@lists.ozlabs.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "linux-phy@lists.infradead.org"
-	<linux-phy@lists.infradead.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
-	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: [PATCH v7 0/7] Add ASPEED PCIe Root Complex support
-Thread-Topic: [PATCH v7 0/7] Add ASPEED PCIe Root Complex support
-Thread-Index: AQHcbi5NGns8riYnf0mmItB8KdiQ8LVFCbQAgAETH2A=
-Date: Wed, 7 Jan 2026 02:28:57 +0000
-Message-ID:
- <SEYPR06MB513404EB419B7850159F3CC29D84A@SEYPR06MB5134.apcprd06.prod.outlook.com>
-References: <20251216-upstream_pcie_rc-v7-0-4aeb0f53c4ce@aspeedtech.com>
- <875x9fuj7i.fsf@gmail.com>
-In-Reply-To: <875x9fuj7i.fsf@gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|TYZPR06MB7336:EE_
-x-ms-office365-filtering-correlation-id: af24aa42-829c-4473-d8f3-08de4d9482de
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700021;
-x-microsoft-antispam-message-info:
- =?iso-8859-2?Q?/REi5ripc8ywtgDQMecOY3DtJEqP35yaIHWundEW5Pi6m1yRYmp8Z05Lp9?=
- =?iso-8859-2?Q?MWbXXkcW6e2OKB8dGJU1sUUEZr8m02bKNYMfVfu+6iaU9yXAo16YLM+4tH?=
- =?iso-8859-2?Q?8mwhqZlB6ls9LKVP6rTyUvFDtwigVk5NwbNmOCjcGvaKAdBj2Ee76VTKp5?=
- =?iso-8859-2?Q?l5W+3BxOl8KC3VIQgLx/7IXtitZy5iZSs24MO2nq7FqXQNYN/fWED945bM?=
- =?iso-8859-2?Q?YcQoHxlm03XarfDjrgqXvLR0QeyN3hBYWw4M8RubKLw3pl28Q3OTO1R4EX?=
- =?iso-8859-2?Q?XQCiF0rF7dyGuRqfDqO/kg6cVE7qdhBNkuHG++C0+37cgSo0VdKg7azPEY?=
- =?iso-8859-2?Q?qvOXOTG0EB6YOAFWqy+oLoEkxGfQWZw50xul1Pr4O1UPaMQ5wFgmCJDnjL?=
- =?iso-8859-2?Q?5CQvu2q6jkTiG4o3de0IJoujmIcdHp+iFVn3BtCqBpa/I8d/4mIhhlbV+P?=
- =?iso-8859-2?Q?cAhuq8CCr4SIifbqM6rU1xZ5KqMq3Ixnr42oafw1K6vq+3EC6BvZsw3qqi?=
- =?iso-8859-2?Q?Vd+yUBjNfen+DANQgQ2RTr+IFZEIfW1msoV+bojYZms62gbHyqNjv2ne5T?=
- =?iso-8859-2?Q?1GqLsOrsnqbEnKdxTOcBXtPxPf+O1iZ2XG0Z7EGPr/0afG1o7m1tejIMxJ?=
- =?iso-8859-2?Q?6xPiU6H2SWRAjEfmwwYUd93RcRI/xnWcZS/eHKTShfv/wc6gb6/MrvYAKe?=
- =?iso-8859-2?Q?timUSbmWjMmY+xmrMwva2yOnUUGRDFtuewWekmSmHqNWl0eAC8ZQWmDu1E?=
- =?iso-8859-2?Q?ciaD//PAUfCOcb851Nr1x91ds0SOMFNp9Xus4y5RTWqt9DS85z5V3LsiFq?=
- =?iso-8859-2?Q?VP1Uaufx45AK8zoJVCRxpVGtKCUzTb8IemTiGl3SsXXzsf5QCC48HFDUMk?=
- =?iso-8859-2?Q?fxSgQbqQtEHbkE6Q8O7OTfGEnqaWcer4jv/mv/nUI5k94qus9ZGR87TGCX?=
- =?iso-8859-2?Q?fMeCpunCaZKOnuZApK8N/gjuiiJEqtsTLZfeh6siRM2nZAkyQ7F9NG0B41?=
- =?iso-8859-2?Q?7OLrZi3PRP+SdHz6VPe1chu2FmrMnBjbF2nMrkEGvkEwcEGePcCLGs893r?=
- =?iso-8859-2?Q?N/CQFHIn7PLHgrjICZcVDx6R0Vdvp7EZtjblFucY7+DF27AseAw3/96L48?=
- =?iso-8859-2?Q?1qJXwtg5giabprlRmkjrRYhXJKWxyrIU80Bt4gpSrzSPFjuOV02m0nSnHG?=
- =?iso-8859-2?Q?ojoaFUyM77IBRJI10WzXNBCMkwPXg+Gz+UvmI10Y7wz04S+yNrKmlQGLIF?=
- =?iso-8859-2?Q?S1KRC6CIb4GTX8RZJxjY8CY30Eq+TaQWZ/RmeO3gWfqKFfHFvuDxGekTf3?=
- =?iso-8859-2?Q?dRUBRgQ1JrIHROEEKXopVBQsaJLNyYolmPSgYlIy7rWMTDxelWhNxnN7pG?=
- =?iso-8859-2?Q?hc21oiRKiYQdjzzF3LnCTCsZ87H07eh9TFBdBWcK2t8o/Xo5CYhTo8neLT?=
- =?iso-8859-2?Q?DXxbeiBNDu7mZ6YW57qWEWee8Rt5Zd+AzyA0vx1u+l3Piy3GuqPKiok7g3?=
- =?iso-8859-2?Q?QUJX858MSmNhyQgGqGRgNIkSPS5D0UxT+nrLkq4otrr8BXXtI2dJydBa4y?=
- =?iso-8859-2?Q?44gYLeJjK1Nfuubm1nc3eOqqx1tM?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700021);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?zzmalUfB0OSjzcKmOR+cVVJKgvwumP9fqF2EiWKPKaka2eIiPjAIlz87PX?=
- =?iso-8859-2?Q?3ef53ZCaYD+iNbLSK3k7cQfmwOqZY2zGYdnMrApeOS/79ClbMPINoqYP39?=
- =?iso-8859-2?Q?mzejn+TSyFWxPYPLQoOpXShGgh2/xQkJcsfSpu/gCdwlhbMYnoPfnP0n7r?=
- =?iso-8859-2?Q?0mZtw8wO5CMbn+feP91zOHwb31SNdCT3ROiyfCRCCOQBcY5SgGhmqwgW+0?=
- =?iso-8859-2?Q?ZSBEQ4I6blGGEms9VHx2g++lhfm4Sm3UxF7asTx8wvRyrH84iT8JDX1Hxw?=
- =?iso-8859-2?Q?xmMDaQnWOS3GugtZ1XNnCM4qWJQRBRGrQbXEwZb3AGyqgR4iE7qFVkHKHh?=
- =?iso-8859-2?Q?y9RWa30GNj4yOMhKYLqne7SujfDpOYVUwp/bPNrWpyPn6Yr10wWsrB2kMk?=
- =?iso-8859-2?Q?Cv1EPAm0sfuemjz4vx5vOyGTV7rMrejKvOUSYM2hb5q6g+eCnLrNFNtu+K?=
- =?iso-8859-2?Q?Qir6VPWVDe8awN30COTmuQmn9lZcWYS47dTMUVibw1te3qpBNE6zbJkAHR?=
- =?iso-8859-2?Q?E405PRIGCchayVUQyCt9XXZSb1IHeHSbp0eXv0jNYzvI0kDRynmlh2pSWG?=
- =?iso-8859-2?Q?GK6EzVeDwXbQFPjkbNTiTk5W3uSYeZbULHATlmAVqhjNMEfXHqTe1BGCe4?=
- =?iso-8859-2?Q?BWakVCxCxfrBd4jM78dixwnyR83ilZq/8qfV7n2YVY4pq+/vT30NJFGmXk?=
- =?iso-8859-2?Q?s67znzpqvytapZhx1uCxh2bGDKy+W9QkjNo/bx6d4lPl1Eal2Uy3vUp74k?=
- =?iso-8859-2?Q?qFafUXvLC74y+NWCzzwMyA6onlQ+moH82EbivS2GK77W70GKKxmbaNMCX6?=
- =?iso-8859-2?Q?Oq+WKx/TIMqNQvq2PsceJuxgDwENa6x1LvXv3BshgIT0OaFByUzzkjBfGG?=
- =?iso-8859-2?Q?gUAigc8rHK92icw/kkDEf9A/KN69FqziLctOTOMbioJotLmj/eUNAVEs+e?=
- =?iso-8859-2?Q?CfZMQTitbftGK5ensitPH5CbGE40fFI8XiPXZu07SskEFcrJ0RDzIhP4Gk?=
- =?iso-8859-2?Q?PXGgwXjIDd1gExNh60AcBgGyZzj+7bdcEQWzjLwlx3O4q4AjkKmJFC9dkG?=
- =?iso-8859-2?Q?Jr3PtGWxve5YgNLyd4NrYSO7+jE1P7JJ56/MxjixPDL1+4pIPkyI0tBgk9?=
- =?iso-8859-2?Q?6GjYdE9U29rb7TxNXB/Pm2qpkyGjlHDA/TKUagxlbjkO6EaZQSsG/Tz1Or?=
- =?iso-8859-2?Q?uvKhTSqa0YjIHHP2hkGeSRzZ+3ehgy9EUbMoc7Cf9pRGd/8TaCwODUvIwQ?=
- =?iso-8859-2?Q?ekATBNju3MRgcK8hWPrSXxRgXxfTLN+h2NDWHQQCH8jcageQeu3FlqsNKJ?=
- =?iso-8859-2?Q?WTgS03fOZKNk9uYaO8q89QHNaWcUOQ/Vuz82bEV/V7aDuKS9+SDod+a/VN?=
- =?iso-8859-2?Q?VImfos8nZ2XpVOFLlBRpOIebsnZp1ocuvKAdQvjoO9EVOgrdJ0GRERS/um?=
- =?iso-8859-2?Q?0AS5h5bm5anKLsv+3iDpRQW2bhSJlO9rLnNqChH60uNBRl7LVoE9flNlz6?=
- =?iso-8859-2?Q?T813sUUa11Bw9ZM5upgrPxeWoqThGv0bduWGUx0criRso9Ijhalkcbo1JW?=
- =?iso-8859-2?Q?18HHsyQ9jjlHL6z7kqrdDYQCbCkZXeLEinJl3jaAfXdflTpVgE/krr6cZV?=
- =?iso-8859-2?Q?RbaR0PASDGLjUzhOha95gE6P67bqZ2dlWIfGgOxqFhSA83r0tEJ9E8VlPn?=
- =?iso-8859-2?Q?BbrqPsZ53XfqdD52+g/NhGh7hHIe4RLUMKpLaxUgPUR00GSSdzOKahcmP6?=
- =?iso-8859-2?Q?xi8SldXN4P9RzUyR4F5VxRKbNsQ6wykzYqAHPbKchyAB/4x+FDhcDFrPWF?=
- =?iso-8859-2?Q?NanlnhcvPQ=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E0E2253FC
+	for <linux-gpio@vger.kernel.org>; Wed,  7 Jan 2026 03:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767755268; cv=none; b=luu9YuMPdwja4yX6XUHs035HjGrgq/Hv02fcdSRH7SnkcUtAAa2O2GJMZPH4CBvXk8SJK96moHgVpg0iHEy5CRU74ieWGt/z4Wi49TDGt5FPgTEJNd0a+bdyIk0AQdLOOoZCh4fe9sNg12Wk+jQYwFBiOxtYAmZrJI4v6Zxiu9k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767755268; c=relaxed/simple;
+	bh=A0Sb/c1+3nyw7j95RoY40IXeaUFjCzQ8wLUD/WKWUhI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n0L6PbslO6KhKjwKHAcJA35zQri9pJlu0jOb7Zfqs63I7cwZIPythv+hGorrkUC/oSS+Hmt1QDgs2/q8CdNHyZ+DdcVuWM7xNjrnyfWEPud1dRjyFltQ30tJGXB/DsfmL7QPD9Y9hOOBi3buxKHSM6VoVJ+XcDhR9lvVZODwEaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thingy.jp; spf=pass smtp.mailfrom=0x0f.com; dkim=pass (1024-bit key) header.d=thingy.jp header.i=@thingy.jp header.b=PwkMHhty; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thingy.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0x0f.com
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2a0a33d0585so12611205ad.1
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Jan 2026 19:07:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thingy.jp; s=google; t=1767755265; x=1768360065; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=a6Wp5tqQ2i9bGT22Xc5qD8OYwZmiFUbdcsOrP4/XS+c=;
+        b=PwkMHhty09WwvMXPNrbeJ4v4BaOvVJbOOiB8NFy2WpffWg4fLBO9kZZZ07nbfa4MGo
+         965cgpFvx1tSlfYtHUfdW+TefccBKnwSWm4tVSyPJRNiOs79040qxOGp/SuuMiKmYUV6
+         T5xuLjCKwANkMICTQO7VDXzTeiRV1mWUakuRQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767755265; x=1768360065;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a6Wp5tqQ2i9bGT22Xc5qD8OYwZmiFUbdcsOrP4/XS+c=;
+        b=bY/m/jEW7wOzMO9/kBOSilhBdrxd+K8BG5Zp68Ldx1aGp0K6cp6blBm0GIJvhSxKjN
+         v/we4XHVVKYEvilBlXff0tYgJw6Wv4i47nYiwauqKddPCFFdMVfGce7ntCkS9adqvhcz
+         mu4cqBVo9oE922Jdbs/9Q9+6L4rv17TOHECpNDvxgPxOz3/9b10dcMHmTquPz7IGeD+a
+         xAY4lhquhwybzwmHmHEh5ET3BxpQZN6RE+DDiIkSyp6uo0G417HcVtNom5lqVt7qq1os
+         KmdTbZIo6GFEPkaOeWJRLWCHraUTyx73lQc+26zYKUShrd6Skwld3WXUvFChUot2OkY5
+         Lp0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVmeln5BoQMjiIwgyjyb9h/fOrM+208MBs7VtslD5hU+CfFiN3f2/2yQ2vuo3XtPdgt0aAleKHaGbzX@vger.kernel.org
+X-Gm-Message-State: AOJu0YxelXNiDTOvSTlvHIP9CPkYhmIiHYHSqIp+LV1U9URxeuPkfzZk
+	ZmlvooXI7kV4rH+s8AVF70QnGp2Ju2dKLb3Nh4C76VL5JCLKV5IOuQVLWNxQ45vFMQEb3kPxmCp
+	kAskLACU=
+X-Gm-Gg: AY/fxX4jns6ncP8PzncrEQQnAlDK/1/RTnHWy8CpQJvikXv1byWECM37g2cCUS+ZD1t
+	uVkT6E+zB76g+CB4pAtuxH528YbSq7qBa75p9ECWYgKSxeGcDVZgy8oXS/0HbH7MFPJZ0Xj8BHU
+	GqX9Sr9ie42BYRoCvTT8M3vbuB7sQo7e7e9Kd3Gf2t1I5lakIu35eDUpkwQHG2wHsuB+GG9iuBf
+	9tissyAozQvRC9exZJmIvoD44qSHuR+9+l2IONBD4GqL2Ee0oB5hYVXheyiLsuZYu3G4JnsF9Rr
+	b8qmIBLi/n5BBCv7Q4N/V53cQty0e2iKvvm/oc/hLW6YwHMlRaK1C20E66ormkQUzt8hLUL4326
+	l/znI//zHNorDU1i70Nk0AVqBXsOyVyIQY4fhnly2Bp/qinvfP3xwlGsxmp6+nXoUx5cOJwDoxo
+	7NtvUvUgaBtXAhVceOfAkx3h4eWqbg2lc5FgefrYYLP0lB0HSyH2rXL1Vq/8DuX8UZs51x8xyf8
+	E3BP976Onv4mg==
+X-Google-Smtp-Source: AGHT+IG+sB+HojVoVOexYxe9/ikvcdN1H43dWusvFZ8jXjOgBaiHrSIaofUJWLWvSYbf3jeY2d+Z5Q==
+X-Received: by 2002:a17:902:f547:b0:295:8a21:155a with SMTP id d9443c01a7336-2a3ee48ff6cmr8697855ad.35.1767755264788;
+        Tue, 06 Jan 2026 19:07:44 -0800 (PST)
+Received: from kinako.work.home.arpa (p1536247-ipxg00c01sizuokaden.shizuoka.ocn.ne.jp. [122.26.212.247])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-2a3e3cd4bd8sm33694165ad.102.2026.01.06.19.07.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Jan 2026 19:07:44 -0800 (PST)
+From: Daniel Palmer <daniel@thingy.jp>
+To: linusw@kernel.org,
+	brgl@kernel.org,
+	robh@kernel.org,
+	saravanak@kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Daniel Palmer <daniel@thingy.jp>
+Subject: [RFC PATCH 0/2] Let the compiler remove unneeded compatible checks.
+Date: Wed,  7 Jan 2026 12:07:29 +0900
+Message-ID: <20260107030731.1838823-1-daniel@thingy.jp>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af24aa42-829c-4473-d8f3-08de4d9482de
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2026 02:28:57.9049
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LNfO1ty1TVpGoi43TLt+Z1IO1hUWB4vUwGNy+xJu0Lh7vchipProy9AuqbF/UxBZh1KEBOBQO3L+6O2G9TAb3dU/620lPzAWkA2iv62H5iY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB7336
+Content-Transfer-Encoding: 8bit
 
-Hi Mikhail Rudenko,
+I like devicetree but I dislike the way it removes the compiler's ability
+to remove dead code because the compiler can't know what is in the runtime
+devicetree.
 
-> First of all, thank you for your efforts in getting this driver upstreame=
-d! I am
-> trying to understand whether this driver supports PCIe devices that have =
-an I/O
-> port BAR, where CPU access to I/O ports is required for proper device
-> operation.
->=20
-> If I understand correctly, this line in the Aspeed 2600 dtsi file declare=
-s the I/O
-> port range:
->=20
->     ranges =3D <0x01000000 0x0 0x00018000 0x00018000 0x0 0x00008000
->=20
-> During system initialization, the pci_remap_iospace() function in
-> arch/arm/mm/ioremap.c maps the physical address range
-> 0x00018000-0x00020000 to the virtual address PCI_IO_VIRT_BASE
-> (0xfee00000). After this mapping, inb() and outb() calls work by converti=
-ng I/O
-> port addresses to virtual addresses starting at PCI_IO_VIRT_BASE, then
-> performing reads and writes to those virtual addresses.
->=20
-> What I don't understand is this: according to the Aspeed 2600 datasheet, =
-the
-> address range 0x00000000-0x0fffffff (which contains
-> 0x00018000-0x00020000) is mapped to Firmware SPI Memory. This would
-> mean that outb() operations get routed to memory-mapped SPI flash instead=
- of
-> PCIe.
->=20
-> It seems like there's a missing piece to this puzzle. Could you help clar=
-ify how
-> this is supposed to work?
->
+One common pattern is checking if a node is compatible with some compatible
+string that should never happen on the target machine. i.e checking for
+something that only exists on a very specific PPC platform on ARM etc.
 
-Thank you for pointing this out, and sorry for the confusion.
+For weird people like me that want to run Linux on FPGA softcores, processors
+from 1979 etc it is better to have the most minimal kernel config possible and
+for the compiler to strip out as much unneeded code and data as possible.
 
-You are correct that, as things stand, this does not make sense from a real=
- hardware perspective.
+The following is my quick hack to add a way to hint to the compiler whether
+a specific compatible check is even possible or not so it can remove deadcode
+and then an example usecase.
 
-In fact, the I/O addressing support you noticed was something we experiment=
-ed with internally
-only. There is no actual hardware design on AST2600 that supports PCIe I/O =
-port addressing in=20
-this way. To enable those experiments, we modified our internal kernel acco=
-rdingly, but this was=20
-never intended to represent real, supported hardware behavior.
+I think this is cleaner than #ifdef..#endif all over the place but maybe
+someone has a nicer way to do it.
 
-This is our mistake for leaving this description in the DTS, as it can inde=
-ed be misleading. We=20
-will remove this part to avoid further confusion.
+Daniel Palmer (2):
+  of: Add a variant of of_device_is_compatible() that can be build time
+    culled
+  gpiolib: of: Remove a bunch of compatible checks for spi controllers
+    you don't have
 
-Thank you again for your careful review and for bringing this to our attent=
-ion.
+ drivers/gpio/gpiolib-of.c | 6 +++---
+ include/linux/of.h        | 2 ++
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-Thanks,
-Jacky
+-- 
+2.51.0
+
 
