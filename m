@@ -1,146 +1,166 @@
-Return-Path: <linux-gpio+bounces-30221-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30222-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B184CFDB3C
-	for <lists+linux-gpio@lfdr.de>; Wed, 07 Jan 2026 13:38:18 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28A5DCFE188
+	for <lists+linux-gpio@lfdr.de>; Wed, 07 Jan 2026 14:55:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0BD183007DAE
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jan 2026 12:38:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 67CCF3050195
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Jan 2026 13:49:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5A7432BF26;
-	Wed,  7 Jan 2026 12:38:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08AAC329C70;
+	Wed,  7 Jan 2026 13:45:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UAiCiKsF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JQTCSVDg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E7A32B996
-	for <linux-gpio@vger.kernel.org>; Wed,  7 Jan 2026 12:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B626C322B75
+	for <linux-gpio@vger.kernel.org>; Wed,  7 Jan 2026 13:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767789494; cv=none; b=Pp6ew3iZ8Vf8+9naV7z34kh0UR1b+G1qxMAfI/YvHO8UMASc3fnVs8c29PsFQ+c8nZ1fgOKXU1vP1yTq3nZ93qRpqugFPZ5g4KFTJqCEsSaCXRSxEj19aMdq36aRpQZ7gR0t+V61uz+D1m+QgMbGYug1SQrPeEObTUbptrjcMS0=
+	t=1767793555; cv=none; b=D5CO492CHfjYkLUpn14lCMR3y7f/NA2KjruvLsmwUIa3AhwX9k0AvgXR+n9YNL8Iz4jHPzNCgVYZKObE6jMFkaBXBN/Vyrb0331YgoHowg4AKlj/Pzf4gmAjTy8RVhIad8iOnvNWrBieMe6x1EDvRx+eqUKANZn0NBiyLZTXUy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767789494; c=relaxed/simple;
-	bh=D+1XJlIo28pgV7tUDNN+Sp6W6XAtXQ+CPXiMEXuiDyo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=djiTgREJJQK51n5kT9R+RWuW5+t1y4aVdsRcjWGklxqcEs3NA6exdBDpIT4F+RZQ2v0J1rnCiWy4T0YJpOm8DQooWARN4lu2LtH/4yFxIE7xi2WyCgw4tWFxm3c/7QuPP+MITpIelwyTqDrCETN4mH5Tq1lv3EO4Zu3TV/EelXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UAiCiKsF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28014C4AF0B
-	for <linux-gpio@vger.kernel.org>; Wed,  7 Jan 2026 12:38:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767789494;
-	bh=D+1XJlIo28pgV7tUDNN+Sp6W6XAtXQ+CPXiMEXuiDyo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=UAiCiKsFkBxMj2IWBaju2RfeNJ3Iln6raBs3VgjSDcFYKxmAmOLoBPHDf1WBRAlIb
-	 araoruXGhZTu/JgSvZz+qGO3tzI/6UPYLrhYmGGYM8JPJKNCx+oYNchonPiTXLOiYR
-	 TY2Sb+ss4eKAOsd3NKc5wzimGKbco86SdFnz268dLB1E1rsbzxbCIZZt0rUjdeA7ba
-	 Ci2Xf28EyJsrPb36GBqMJKd2zRKOJV5PEmp0pYDzWZELK7rm1OfBrgGDkHakqf/Ljx
-	 siIfc6qFnQs0BD3PXDxGagu7y/ghqR0a0SElabcOMjyNUS2t7Po/Q8Yxh3prDzrBMg
-	 C8/UgnwLpqlnw==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-595819064cdso1322405e87.0
-        for <linux-gpio@vger.kernel.org>; Wed, 07 Jan 2026 04:38:14 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU1L1fvd3RoWHdg4I52tO6gfQW9jy0z4Sa40EBQisLsu/Sk85g4oNdve7NTXe8qc3nCcdFM4hqOmmIk@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNGdoyc9KqxmUPNmCDK8snf6TPAcUT6d+6wIoDpBaW7pdpV7VB
-	U9hdkZPxFBPc/2IOFnO2nesDzinqrsQXCfkX6d1Lo4gAK+G9jU5VuyxY881fM9mu+7MMU8UYihH
-	EJb83KK7fKReusOQXmpHGRYmlpcKGljR+UZtfZ3yfag==
-X-Google-Smtp-Source: AGHT+IET6YL/yQOWgZ/jye+5vJjHHBR0gOi/Agd3F1unhd20b9UQ7kE+T30lA0u/sDbLZsVeNsqtQhHT5hR9EPogOYs=
-X-Received: by 2002:a05:6512:33cb:b0:59b:73b9:1f49 with SMTP id
- 2adb3069b0e04-59b73b921e7mr211266e87.26.1767789492688; Wed, 07 Jan 2026
- 04:38:12 -0800 (PST)
+	s=arc-20240116; t=1767793555; c=relaxed/simple;
+	bh=Mo5zQFUvZgfbiFA5jz8xgr54ypO2nOCMgs6MX83smjw=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=UQ7YEjAegV1bNd3elbiy7Zw0mSpdv5ujTgf6SJfSHvIIZczjAW/BVtoip3zUVVj9mJ4OYFIph1VolFq8dyvkHbmZlzYN5e0HlU5+gQsX00p+gKf1DtCKqKM5JbKoymZtt9khVs0GelmY9itN9P+QjXPcp8tf1vN3p2k+lpxXXIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JQTCSVDg; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-59b6f267721so782033e87.2
+        for <linux-gpio@vger.kernel.org>; Wed, 07 Jan 2026 05:45:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767793546; x=1768398346; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=zbg60yhotFqS4lYQ4SPbRRNfljX1PZuvfnI5dpwkZJ8=;
+        b=JQTCSVDgtatkBFRNvr4BBUEVN/fPmYFca9a7gH1f4cdl98ymQ/RvuUbbXlIFbGpKvO
+         qed+KYFdgPvLtqSevr61usZx4cUgrlZLbQQEw6dSkQznr1oJZW6yyY/9swM4ukDNbRI/
+         x7VrNAWqwUqGgqWZcxbDm6LrmJlgMyH+3Mi8I4PasJKfDbp0a+cA3L4ltS/q/6bBq44l
+         ha+od8yY814+GO3yyZd+MoIzApfeSZS9ktHX5F+q1rRRGD/Bx7+gJyhGn4cakrlj1UlQ
+         ZkEzZaDTadm68WfK6wOOIJ7rgYX6PZgDVPKvL8UsEC2srAXjXW89lKlBHQg2xVNPKF4E
+         AZNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767793546; x=1768398346;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zbg60yhotFqS4lYQ4SPbRRNfljX1PZuvfnI5dpwkZJ8=;
+        b=eWWxzi3H/gTLrNRfkKj6t6N397RMu+/V1GDWKSS1n9VvuF5AKUeZmsHPLb6ZlWN0RM
+         NOblXDMwVSzPIFVbUBgRKIPpYzPqJ4UvFQdzwbURpGzlJyyNJRVfVott82fNwnpcGCYE
+         ZMfsxCi6/viVlE2eD5rUbfzRdj60T27D1m19K3HDrfT0fODNGwznJBdiP9qAxa418Eqc
+         q37QPaK2ONB7PmEp6ltv7Y9H6RDJyMzflZsXq0ZiagnnF6B8Zxu7JLea1HPE7WzwDS+d
+         jAUOXeft7KvANx7s5DSiHQT/2lXfMWHzSDUKEPTB2U+v6dTguvEchLhEpzb6hWiXuva3
+         t+mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX7BIh4tkVhj1Zf5ln7+GXskRBVi8NRFUtII+CaQXYkCzpbexVR3S+9nUX7nRSfdjCDArJmouZsQmMD@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgjOnDsT5UOtGOQxXWN3YUkl5vt8DqhfnjSKp69n0DpiRDbqQ9
+	ozR7ccyO00CzUFZXCOz5K7E6Sb/RxVWr+GeRPk9wM9oyENN95OPz8+EYDHfHe8H7
+X-Gm-Gg: AY/fxX4qDhwVbnvPRs8k+sieLYqHZovKTeF5ykEyBxwuw4NkM+F3mD3IJtvuUCC79Lv
+	vsN2AA6m/M1KOI1LBkTyJKyKgMXoHlj86TkGK990j3lcGb85WDPEHxvJTNqe1H8dDY9Wk7IWpSF
+	Wc1Wmu8S8lmTUNYn4hhNnyk4+yhw19aUtpXcZzNqHdfUSzqiZiRXXVco79zZ7ESW+R4wipNVW+U
+	OYeeURwjvKzNMTOO3C4ggDtVhzcXwbBr/R8I95XBOINfW/geWxJ8U2eA1QA/2zhVFarDep0qQ+d
+	XTXEgYiEFn4c1OuHCDe4HgfNgJZk5hv/5myiJWBVsWEYOE6nSeBkUrQofTaHPW4TWERpN4Ob/kE
+	E8ZmWH8c7c+QeNe9tIcbYB03iZV1rqdEgqYH50ys3MF0Ti5zEPb/6cdj47LuU0Um6BqFzzhbj
+X-Google-Smtp-Source: AGHT+IFBvFdbxlKvEOgpHQQ8YktwaenfQmmG9RkrtS+47ehkEyiqafqKukfyFwzDbyon83pp4CA81A==
+X-Received: by 2002:a05:6512:2399:b0:59b:730d:4a57 with SMTP id 2adb3069b0e04-59b730d4b44mr510415e87.39.1767793545398;
+        Wed, 07 Jan 2026 05:45:45 -0800 (PST)
+Received: from razdolb ([77.220.204.220])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59b669418b6sm1224545e87.20.2026.01.07.05.45.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Jan 2026 05:45:45 -0800 (PST)
+References: <20251216-upstream_pcie_rc-v7-0-4aeb0f53c4ce@aspeedtech.com>
+ <875x9fuj7i.fsf@gmail.com>
+ <SEYPR06MB513404EB419B7850159F3CC29D84A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+User-agent: mu4e 1.10.9; emacs 30.2
+From: Mikhail Rudenko <mike.rudenko@gmail.com>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Joel Stanley
+ <joel@jms.id.au>, Andrew  Jeffery <andrew@codeconstruct.com.au>, Bjorn
+ Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan
+  Sadhasivam
+ <mani@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Philipp Zabel
+ <p.zabel@pengutronix.de>, Neil Armstrong <neil.armstrong@linaro.org>,
+ "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
+ "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v7 0/7] Add ASPEED PCIe Root Complex support
+Date: Wed, 07 Jan 2026 16:40:09 +0300
+In-reply-to: <SEYPR06MB513404EB419B7850159F3CC29D84A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+Message-ID: <875x9dcz9c.fsf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
- <20251112-gpio-shared-v4-7-b51f97b1abd8@linaro.org> <66eaf003-c397-4920-b3b7-93ac8a5adfda@oss.qualcomm.com>
-In-Reply-To: <66eaf003-c397-4920-b3b7-93ac8a5adfda@oss.qualcomm.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Wed, 7 Jan 2026 13:38:00 +0100
-X-Gmail-Original-Message-ID: <CAMRc=McXFTLjE=2-xsx4sodHgd83h822iEBHT7bxcNOQm6OJ3A@mail.gmail.com>
-X-Gm-Features: AQt7F2pA13_wtRLLQWUOTtMFhQv1HJ_sZB68tT-M4ZgHKbE3BedmspQkreV0U28
-Message-ID: <CAMRc=McXFTLjE=2-xsx4sodHgd83h822iEBHT7bxcNOQm6OJ3A@mail.gmail.com>
-Subject: Re: [PATCH v4 07/10] arm64: select HAVE_SHARED_GPIOS for ARCH_QCOM
-To: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Will Deacon <will@kernel.org>, Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Wed, Jan 7, 2026 at 12:07=E2=80=AFPM Pankaj Patil
-<pankaj.patil@oss.qualcomm.com> wrote:
+
+Hi Jacky,
+
+On 2026-01-07 at 02:28 GMT, Jacky Chou <jacky_chou@aspeedtech.com> wrote:
+
+> Hi Mikhail Rudenko,
 >
-> On 11/12/2025 7:25 PM, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Some qualcomm platforms use shared GPIOs. Enable support for them by
-> > selecting the Kconfig switch provided by GPIOLIB.
-> >
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> >  arch/arm64/Kconfig.platforms | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platform=
-s
-> > index 13173795c43d4f28e2d47acc700f80a165d44671..3dbff0261f0add0516d8cb3=
-fd0f29e277af94f20 100644
-> > --- a/arch/arm64/Kconfig.platforms
-> > +++ b/arch/arm64/Kconfig.platforms
-> > @@ -316,6 +316,7 @@ config ARCH_QCOM
-> >       select GPIOLIB
-> >       select PINCTRL
-> >       select HAVE_PWRCTRL if PCI
-> > +     select HAVE_SHARED_GPIOS
-> >       help
-> >         This enables support for the ARMv8 based Qualcomm chipsets.
-> >
-> >
-> Enabling shared gpios is breaking hamoa and glymur boot on next-20260106
-> For hamoa - reg_fixed_voltage_probe which calls gpio api is breaking
-> Please find the log here - https://lava-oss.qualcomm.com/scheduler/job/24=
-722#L3514
+>> First of all, thank you for your efforts in getting this driver upstreamed! I am
+>> trying to understand whether this driver supports PCIe devices that have an I/O
+>> port BAR, where CPU access to I/O ports is required for proper device
+>> operation.
+>>
+>> If I understand correctly, this line in the Aspeed 2600 dtsi file declares the I/O
+>> port range:
+>>
+>>     ranges = <0x01000000 0x0 0x00018000 0x00018000 0x0 0x00008000
+>>
+>> During system initialization, the pci_remap_iospace() function in
+>> arch/arm/mm/ioremap.c maps the physical address range
+>> 0x00018000-0x00020000 to the virtual address PCI_IO_VIRT_BASE
+>> (0xfee00000). After this mapping, inb() and outb() calls work by converting I/O
+>> port addresses to virtual addresses starting at PCI_IO_VIRT_BASE, then
+>> performing reads and writes to those virtual addresses.
+>>
+>> What I don't understand is this: according to the Aspeed 2600 datasheet, the
+>> address range 0x00000000-0x0fffffff (which contains
+>> 0x00018000-0x00020000) is mapped to Firmware SPI Memory. This would
+>> mean that outb() operations get routed to memory-mapped SPI flash instead of
+>> PCIe.
+>>
+>> It seems like there's a missing piece to this puzzle. Could you help clarify how
+>> this is supposed to work?
+>>
 >
-> For Glymur - qcom_pcie_parse_perst calls the gpio api <4>[    2.910982] W=
-ARNING: drivers/gpio/gpiolib-shared.c:493 at gpio_shared_add_proxy_lookup+0=
-x160/0x24c, CPU#1: kworker/u75:0/109 <4>[    2.911027] Call trace: <4>[    =
-2.911028]  gpio_shared_add_proxy_lookup+0x160/0x24c (P) <4>[    2.911030]  =
-gpiod_find_and_request+0x1c0/0x504 <4>[    2.911032]  devm_fwnode_gpiod_get=
-_index+0x1c/0x6c <4>[    2.911034]  qcom_pcie_parse_perst+0x70/0x150 <4>[  =
-  2.911037]  qcom_pcie_probe+0x414/0x804 <4>[    2.911039]  platform_probe+=
-0x5c/0x98 <4>[    2.911042] qcom-eusb2-repeater c448000.spmi:pmic@9:phy@fd0=
-0: supply vdd18 not found, using dummy regulator <4>[    2.911043]  really_=
-probe+0xbc/0x298 <4>[    2.911045]  __driver_probe_device+0x78/0x12c <4>[  =
-  2.911047]  driver_probe_device+0x3c/0x15c <4>[    2.911049]  __device_att=
-ach_driver+0xb8/0x134 <4>[    2.911050]  bus_for_each_drv+0x84/0xe0 <4>[   =
- 2.911052]  __device_attach_async_helper+0xac/0xd0 <4>[    2.911053]  async=
-_run_entry_fn+0x34/0xe0
-> <4>[    2.911055]  process_one_work+0x14c/0x28c <4>[    2.911058]  worker=
-_thread+0x188/0x304 <4>[    2.911059]  kthread+0x11c/0x128 <4>[    2.911060=
-] qcom-eusb2-repeater c448000.spmi:pmic@9:phy@fd00: supply vdd3 not found, =
-using dummy regulator <4>[    2.911061]  ret_from_fork+0x10/0x20 <4>[    2.=
-911063] ---[ end trace 0000000000000000 ]--- <3>[    2.911065] qcom-pcie 1b=
-40000.pci: error -ENOENT: Failed to parse Root Port: -2 <3>[    2.911069] q=
-com-pcie 1b40000.pci: probe with driver qcom-pcie failed with error -2
-> Reverting this commit fixes the boot on both platforms
+> Thank you for pointing this out, and sorry for the confusion.
 >
+> You are correct that, as things stand, this does not make sense from a real hardware perspective.
+>
+> In fact, the I/O addressing support you noticed was something we experimented with internally
+> only. There is no actual hardware design on AST2600 that supports PCIe I/O port addressing in
+> this way. To enable those experiments, we modified our internal kernel accordingly, but this was
+> never intended to represent real, supported hardware behavior.
+>
+> This is our mistake for leaving this description in the DTS, as it can indeed be misleading. We
+> will remove this part to avoid further confusion.
+>
+> Thank you again for your careful review and for bringing this to our attention.
 
-Hi!
+Thank you for prompt reply and for getting this clarified!
 
-This is not really the offending commit, it's a recent one in the
-implementation. The issue should be fixed by the following series[1]
-that will be in the next next tag. Can you give it a try?
+> Thanks,
+> Jacky
 
-Bart
 
-[1] https://lore.kernel.org/all/20260106-gpio-shared-fixes-v2-0-c7091d2f758=
-1@oss.qualcomm.com/
+--
+Kind regards,
+Mikhail
 
