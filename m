@@ -1,163 +1,175 @@
-Return-Path: <linux-gpio+bounces-30280-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30281-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4101D03C1A
-	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 16:19:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 971CFD044A5
+	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 17:19:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1E2B7309B67D
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 14:50:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6590330F314E
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 15:08:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C4343803FD;
-	Thu,  8 Jan 2026 14:46:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AAE1270ED2;
+	Thu,  8 Jan 2026 15:08:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOKtgMLO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G4s2YCTw"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E4B36E488;
-	Thu,  8 Jan 2026 14:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BB926C38C
+	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 15:08:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767883608; cv=none; b=aSbHPgH1AYURooESbBdsVhTOxwKQSZaapbW0F0T6hE4sO/vVZRDHHZhEGZHqj6DFB80BJh0jb9ZNZi+gRIlYw5QcKkLdcLQeMjgn3W1hP1NqD/DV3HG3G7hO64uooKdhaHvdy9Lc1xhz24QroOU8+4NB8Ip1J2rkAyjDCKhiX7I=
+	t=1767884893; cv=none; b=d4zs06C/Ej8ddmOqnk7ETo+OwzKYvc0npUMLEg3PmEBRNInfxgD8JJDveE2c8KFeJpsqpKTRCPvpXLuNIZrhzv3/h+KUqM1ehmD+FmXc05bLpXTlh0zScTfSW1wvsOvgvZ/R6j79FE7fPEAP5ANmRgG1tMDan6mioyOJ7i10cNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767883608; c=relaxed/simple;
-	bh=2ei8nRnBAMWW9W6WszkkXLKWBiHlzTnUwXvTR2tRXME=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=IT8zoS6/UzIgGhrPwK7lPTyMF/H/2BBLhg7VGtfd6xZKOxjAuOs36y7yHj5CueTu0ifPPEOLhFyx7LnucliUfBhs9OW5ELNL5frybXPta6E81xJSCvyfm+xUsKNQBk45k0CEIlIcQqnWCIDYB/L4qrWzfmodpSkdSdu/AKqIjQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOKtgMLO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FA07C116C6;
-	Thu,  8 Jan 2026 14:46:46 +0000 (UTC)
+	s=arc-20240116; t=1767884893; c=relaxed/simple;
+	bh=39Z9S4WdE/PvsD7g4HhaCFW2OPS03zLo06BGT58/Sdg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GCC3763smGIkgubGM8g8XabfKimoHwi/Ywdpse0AwzN+40XRRKC8Z4unOuH60OJZ9g77hHsPtWJjtJ6CWw/bCyKtWDdINtCNd5/EfQ6LgRC6KjVXLp+YkEKLYd9Sir0kXrrgspBr3VDa9vAEEyEHwF5cxSPAuMIMQSES7R2qu54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G4s2YCTw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71EEDC116C6
+	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 15:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767883606;
-	bh=2ei8nRnBAMWW9W6WszkkXLKWBiHlzTnUwXvTR2tRXME=;
-	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
-	b=UOKtgMLOfyWCtqWtHypoDAaD5/hZoh/E4MzZsFgxwG0tK+Azgci2tjpkcWrwpm80f
-	 eZeK4Ssue8j6PZAsgHMEg9kIo3y6GeN9P/sp5IxVYIUbARxVOV/8D4kwbhmj5C3FbB
-	 TnQ+FnUlNMt8K+YyhcBAXaAi4RuCRJgQdQGTZRz56PrjcVXREWl6TTuFo8GHzgwWim
-	 CKbDvguGhsu13yTxzZVqUq0+NGrpByBbD9lJYi736zGK+Eip6vVlKFpxZ/rvJOKnFM
-	 1mQNaSTjXFqcQoFj3TsSSmhdQoE/79Ydh6M7MJVmuV+CI3728uh75GKeb+atncU7SS
-	 nTp0gpiiFXw9g==
+	s=k20201202; t=1767884893;
+	bh=39Z9S4WdE/PvsD7g4HhaCFW2OPS03zLo06BGT58/Sdg=;
+	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
+	b=G4s2YCTwalIIEOa5+zNpraynj/0tm4IP0B4nWh1B8yEFVsk2q/4Nwsv9udsyPMb/V
+	 c2DO2apYh/CjwSMjCs/GFKynWKqfctOOJP6KTPot1qppd7LbMrXROq0hxcvzwvQYug
+	 gbDa6i9pWATYUX1E67v6srC0L0rFGdb0qk2RXH+dPDqmYfqT2ULqYl2m7iJb8TvW22
+	 0Iv4ktk6Y54LOfGHWKdahqYrTTBH9vq6aJnCj8p4vWkSJl+TSizIs5myGfq2YeVxMD
+	 qU871L9PFs1zSFfmyBQZGNRSvkUNcOwVXUaUaOQ9oAi7VSMKLK5wPCr1O6DH+MZ5QT
+	 kdU2zU/LkS7rw==
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-65745a436f7so1904641eaf.3
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 07:08:13 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX0tXXjIFGCHqKEmDJPA4S0PNlyLvov62acA8nMt4hlpBxpmhpNyTiCdKRwMfERZeTaI86s7pv4FUPk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+XdZUSduvATDiv04QnS83jtYODYkRyEsBPTPUzadpHb/kR2qF
+	hBVJvXw93Uigb+bd6yP45UBt20UNPJvF6fXTfiDKVvcQ9C5Ixeaoo8enS7FLvGB6ZPi9w3yHLkF
+	EexxhOkMpf1Q7NJGj0laLJfUkJAMYMgw=
+X-Google-Smtp-Source: AGHT+IH/gnEZYqIaFUUN6qjbp6n1QUe5qlNXozvSo/LvWHOByHxaNwk2S8ODoFI4rDHWqv0owwBmLR26/u3UOEkO0ho=
+X-Received: by 2002:a05:6820:6181:b0:65f:5d31:2965 with SMTP id
+ 006d021491bc7-65f5d313701mr1029748eaf.47.1767884892592; Thu, 08 Jan 2026
+ 07:08:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=5411f11ff9f9c069b7f705877418128e825c926029051e168dc800dc1521;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Thu, 08 Jan 2026 15:46:36 +0100
-Message-Id: <DFJAFK3DTBOZ.3G2P3A5IH34GF@kernel.org>
-Subject: Re: [PATCH v4 00/10] gpio: improve support for shared GPIOs
-Cc: <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-sound@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>, "Bartosz
- Golaszewski" <bartosz.golaszewski@linaro.org>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Kees Cook" <kees@kernel.org>,
- "Mika Westerberg" <westeri@kernel.org>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, "Andrew Morton" <akpm@linux-foundation.org>,
- "Linus Walleij" <linus.walleij@linaro.org>, "Manivannan Sadhasivam"
- <mani@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Saravana
- Kannan" <saravanak@google.com>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Andy Shevchenko" <andy@kernel.org>, "Catalin
- Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "Srinivas Kandagatla" <srini@kernel.org>, "Liam Girdwood"
- <lgirdwood@gmail.com>, "Mark Brown" <broonie@kernel.org>, "Jaroslav Kysela"
- <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>, "Alexey Klimov"
- <alexey.klimov@linaro.org>, "Bjorn Andersson" <andersson@kernel.org>,
- "Konrad Dybcio" <konradybcio@kernel.org>
-X-Mailer: aerc 0.20.0
-References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
-In-Reply-To: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
-
---5411f11ff9f9c069b7f705877418128e825c926029051e168dc800dc1521
+MIME-Version: 1.0
+References: <20251225103616.3203473-1-wens@kernel.org> <20251225103616.3203473-5-wens@kernel.org>
+ <13929653.uLZWGnKmhe@jernej-laptop>
+In-Reply-To: <13929653.uLZWGnKmhe@jernej-laptop>
+Reply-To: wens@kernel.org
+From: Chen-Yu Tsai <wens@kernel.org>
+Date: Thu, 8 Jan 2026 23:07:52 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65LzhdXfX16HTgGbC7OYkuX=vqCzB65=BqD4i1SiCQeRw@mail.gmail.com>
+X-Gm-Features: AQt7F2r3aAZUypwXBa9lAFiH8eexcqiOW8WUO-M-nGoH39uZtjTr8DirPSqIr98
+Message-ID: <CAGb2v65LzhdXfX16HTgGbC7OYkuX=vqCzB65=BqD4i1SiCQeRw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] ARM: dts: allwinner: Replace status "failed" with "fail"
+To: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jernej Skrabec <jernej@kernel.org>, 
+	Samuel Holland <samuel@sholland.org>, Linus Walleij <linusw@kernel.org>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, 
+	linux-sunxi@lists.linux.dev, linux-gpio@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
 
-Hi Bartosz,
-
-On Wed Nov 12, 2025 at 2:55 PM CET, Bartosz Golaszewski wrote:
-> Bjorn, Konrad: I should have Cc'ed you on v1 but I just went with what
-> came out of b4 --auto-to-cc. It only gave me arm-msm. :( Patch 7 from
-> this series however impacts Qualcomm platforms. It's a runtime dependency
-> of patches 8 and 9. Would you mind Acking it so that I can take it into
-> an immutable branch that I'll make available to Mark Brown for him to
-> take patches 8-10 through the ASoC and regulator trees for v6.19?
+On Fri, Dec 26, 2025 at 2:49=E2=80=AFAM Jernej =C5=A0krabec <jernej.skrabec=
+@gmail.com> wrote:
 >
-> Problem statement: GPIOs are implemented as a strictly exclusive
-> resource in the kernel but there are lots of platforms on which single
-> pin is shared by multiple devices which don't communicate so need some
-> way of properly sharing access to a GPIO. What we have now is the
-> GPIOD_FLAGS_BIT_NONEXCLUSIVE flag which was introduced as a hack and
-> doesn't do any locking or arbitration of access - it literally just hand
-> the same GPIO descriptor to all interested users.
+> Dne =C4=8Detrtek, 25. december 2025 ob 11:36:15 Srednjeevropski standardn=
+i =C4=8Das je Chen-Yu Tsai napisal(a):
+> > The device tree bindings specify using "fail", not "failed".
+> >
+> > Fix up all the ones that are wrong.
 >
-> The proposed solution is composed of three major parts: the high-level,
-> shared GPIO proxy driver that arbitrates access to the shared pin and
-> exposes a regular GPIO chip interface to consumers, a low-level shared
-> GPIOLIB module that scans firmware nodes and creates auxiliary devices
-> that attach to the proxy driver and finally a set of core GPIOLIB
-> changes that plug the former into the GPIO lookup path.
+> While patch indeed fixes the issue, I wonder if "fail" is proper value?
+> According to specs, it means that device needs repair. What about just
+> keep "disabled"?
+
+"disabled" isn't right either, as that means its disconnected or not used.
+These are definitely connected.
+
+On the other hand we could fix these and describe the supplies for the
+external as supplies for the pin banks? But I doubt anyone has these
+devices around for testing.
+
+ChenYu
+
+> Best regards,
+> Jernej
 >
-> The changes are implemented in a way that allows to seamlessly compile
-> out any code related to sharing GPIOs for systems that don't need it.
-
-The problem here is that the aarch64 defconfig has ARCH_QCOM enabled
-and thus it will get enabled for any platforms, right?
-
-I haven't grokked everything, but does GPIO_SHARED=3Dy makes any sense
-without GPIO_SHARED_PROXY? It seems to me that the probing of shared
-pins will be deferred indefinitely.
-
-> The practical use-case for this are the powerdown GPIOs shared by
-> speakers on Qualcomm db845c platform, however I have also extensively
-> tested it using gpio-virtuser on arm64 qemu with various DT
-> configurations.
+> >
+> > Signed-off-by: Chen-Yu Tsai <wens@kernel.org>
+> > ---
+> >  arch/arm/boot/dts/allwinner/sun4i-a10-dserve-dsrv9703c.dts | 2 +-
+> >  arch/arm/boot/dts/allwinner/sun4i-a10-pov-protab2-ips9.dts | 2 +-
+> >  arch/arm/boot/dts/allwinner/sun6i-a31-hummingbird.dts      | 2 +-
+> >  arch/arm/boot/dts/allwinner/sun6i-a31s-primo81.dts         | 2 +-
+> >  4 files changed, 4 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/allwinner/sun4i-a10-dserve-dsrv9703c.dts=
+ b/arch/arm/boot/dts/allwinner/sun4i-a10-dserve-dsrv9703c.dts
+> > index 63e77c05bfda..f2413ba6a858 100644
+> > --- a/arch/arm/boot/dts/allwinner/sun4i-a10-dserve-dsrv9703c.dts
+> > +++ b/arch/arm/boot/dts/allwinner/sun4i-a10-dserve-dsrv9703c.dts
+> > @@ -112,7 +112,7 @@ axp209: pmic@34 {
+> >
+> >  &i2c1 {
+> >       /* pull-ups and devices require AXP209 LDO3 */
+> > -     status =3D "failed";
+> > +     status =3D "fail";
+> >  };
+> >
+> >  &i2c2 {
+> > diff --git a/arch/arm/boot/dts/allwinner/sun4i-a10-pov-protab2-ips9.dts=
+ b/arch/arm/boot/dts/allwinner/sun4i-a10-pov-protab2-ips9.dts
+> > index c32596947647..e0c7099015da 100644
+> > --- a/arch/arm/boot/dts/allwinner/sun4i-a10-pov-protab2-ips9.dts
+> > +++ b/arch/arm/boot/dts/allwinner/sun4i-a10-pov-protab2-ips9.dts
+> > @@ -96,7 +96,7 @@ axp209: pmic@34 {
+> >
+> >  &i2c1 {
+> >       /* pull-ups and devices require AXP209 LDO3 */
+> > -     status =3D "failed";
+> > +     status =3D "fail";
+> >  };
+> >
+> >  &i2c2 {
+> > diff --git a/arch/arm/boot/dts/allwinner/sun6i-a31-hummingbird.dts b/ar=
+ch/arm/boot/dts/allwinner/sun6i-a31-hummingbird.dts
+> > index 5bce7a32651e..5dfd36e3a49d 100644
+> > --- a/arch/arm/boot/dts/allwinner/sun6i-a31-hummingbird.dts
+> > +++ b/arch/arm/boot/dts/allwinner/sun6i-a31-hummingbird.dts
+> > @@ -170,7 +170,7 @@ hdmi_out_con: endpoint {
+> >
+> >  &i2c0 {
+> >       /* pull-ups and devices require AXP221 DLDO3 */
+> > -     status =3D "failed";
+> > +     status =3D "fail";
+> >  };
+> >
+> >  &i2c1 {
+> > diff --git a/arch/arm/boot/dts/allwinner/sun6i-a31s-primo81.dts b/arch/=
+arm/boot/dts/allwinner/sun6i-a31s-primo81.dts
+> > index b32b70ada7fd..fefd887fbc39 100644
+> > --- a/arch/arm/boot/dts/allwinner/sun6i-a31s-primo81.dts
+> > +++ b/arch/arm/boot/dts/allwinner/sun6i-a31s-primo81.dts
+> > @@ -90,7 +90,7 @@ hdmi_out_con: endpoint {
+> >
+> >  &i2c0 {
+> >       /* pull-ups and device VDDIO use AXP221 DLDO3 */
+> > -     status =3D "failed";
+> > +     status =3D "fail";
+> >  };
+> >
+> >  &i2c1 {
+> >
 >
-> I'm Cc'ing some people that may help with reviewing/be interested in
-> this: OF maintainers (because the main target are OF systems initially),
-> Mark Brown because most users of GPIOD_FLAGS_BIT_NONEXCLUSIVE live
-> in audio or regulator drivers and one of the goals of this series is
-> dropping the hand-crafted GPIO enable counting via struct
-> regulator_enable_gpio in regulator core), Andy and Mika because I'd like
-> to also cover ACPI (even though I don't know about any ACPI platform that
-> would need this at the moment, I think it makes sense to make the
-> solution complete), Dmitry (same thing but for software nodes), Mani
-> (because you have a somewhat related use-case for the PERST# signal and
-> I'd like to hear your input on whether this is something you can use or
-> maybe it needs a separate, implicit gpio-perst driver similar to what
-> Krzysztof did for reset-gpios) and Greg (because I mentioned this to you
-> last week in person and I also use the auxiliary bus for the proxy
-> devices).
-
-This broke my board (using the arm64 defconfig, works without
-GPIO_SHARED of course). I'm seeing two issues here with my board
-(arch/arm64/boot/dts/ti/k3-am67a-kontron-sa67*):
-
- (1) It's GPIO controller (gpio-davinci) doesn't support
-     .get_direction so I'm getting ENOTSUPP during probing of the
-     (some?) shared GPIOs.=20
-    =20
- (2) GPIO_SHARED_PROXY is default m in the defconfig, but I need the
-     pins for the root filesystem medium, i.e. the SD card regulators.
-
--michael
-
---5411f11ff9f9c069b7f705877418128e825c926029051e168dc800dc1521
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCaV/DTRIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/jkBQF+MtwNQeOvtcMN0ofh9FJstZG1LqdasjYc
-4/kT44u4mQt8stCwJA4J/rprAq7X8ayrAYD1LmLKHnkWQUO3PxpeH0TQvkMeEsd+
-4ITEdyzXpVm0JxSd8OaCMSAhsekBmk6e5M4=
-=cIVp
------END PGP SIGNATURE-----
-
---5411f11ff9f9c069b7f705877418128e825c926029051e168dc800dc1521--
+>
+>
+>
+>
 
