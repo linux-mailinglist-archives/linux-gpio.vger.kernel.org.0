@@ -1,114 +1,175 @@
-Return-Path: <linux-gpio+bounces-30253-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30254-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C854D020E8
-	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 11:14:16 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEBC6D01E4F
+	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 10:44:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C57BE33219DE
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 09:39:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5AF123062D7C
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 09:38:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB6FA3A7F63;
-	Thu,  8 Jan 2026 09:04:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68AE73A9DBF;
+	Thu,  8 Jan 2026 09:04:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVIooYzz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tZdQHdx4"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217FD33A718
-	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 09:04:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A383806BE;
+	Thu,  8 Jan 2026 09:04:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767863056; cv=none; b=o540gS30qc8nvQNXzwXkp7LdvXMEMxKE9v/9OF9wALNcr6MP3h359XV0xs8RtmBU9UONAJkW/oQmj+16D0FOkrSpMHA1S91jeBxnVQj0DmughrvMEN8L77SAVMr49zlujGhlSHMkkaSHxXYVMcnbBb3QLydGy+8bV6ChNReKCpo=
+	t=1767863093; cv=none; b=WVjdKWy+pVJuNWuGVa97e3V+T4l8JHiGPPdcyRaEXWONvVQDxurosnOpnDdOr8VKMK/A7kqPF+lguG/ZY0PMifpjVvzcAINqaezIu35OahQ0NZtxmzyhkxPXU1CoZRgNMOUZhq6yB38zzHWFYVtL0XeQftd7gsTtKsaAHY7F+1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767863056; c=relaxed/simple;
-	bh=CXye4V4yCGuXX+Yh6zLBGTO942MwnYAXfPhzjwIN0Bk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qXEZWAs+yipZntbB42adm+BUo+fxV/UkR8QHtW0YyhFmJc+x+2kQyq4PZqrxf0HHr3K9h48QQhjjzk/mYacEQRMKj3chrLJuxOC9KuSlrkBCIbVSd2UYa0TI8psIx7qpn0i5jKzBouVG0ynyhN6DjooST8tgVTp31PVzMdUeAME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVIooYzz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9DB5C4AF09
-	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 09:04:14 +0000 (UTC)
+	s=arc-20240116; t=1767863093; c=relaxed/simple;
+	bh=43HsA+1OXyUWr3mVZANSq6uxii1VuqzSvvFempqNf50=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J6s7jUzYvMIQBPKG/A5WDtEf+3SBkCihiMbg+K7QrzwHYBS487O+u0MSoEHbGXcQgr0dkfVuXWq1mqMcg67jizK9dLR35+PV6upErAYqDN8l742N3cB31TmiTIQKyaF7OdMqiJ0b8GT308dYuC6my7my0JdfAUwNfs5WWPv5VME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tZdQHdx4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95E5AC16AAE;
+	Thu,  8 Jan 2026 09:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767863054;
-	bh=CXye4V4yCGuXX+Yh6zLBGTO942MwnYAXfPhzjwIN0Bk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hVIooYzzAoNf0azJyBrEXD/fTwfn4nyFIUCLwdA6R5Dbx9kMjbSVUF4a7H9MTBRDr
-	 LfoPiA3M9AazFBgsm0wytFj3JYMdgsUYtFtsQmKQBOcPg64LE7HVGoVXbhwiHxcw9+
-	 4FMX1qv3ETPOiuBLrv3576vVEX+Y5kuFHGHOfCYpihYfXtllnKtMCrKfYjDHdRbF7+
-	 OeTAjwD4CvHJu3xGjVl7xGC3QNZswUYe6xt6lWeX0J1Wf6KPaZ//C99wq7tCoWo4fJ
-	 1kllXhzaPTtvSfH+ACs+uCZZCtvzdt0vEEkKGy4CV+4nggA33tZZFEqAH5qlkbJ/DJ
-	 75b4dNxKo9eXA==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-59b79451206so222752e87.1
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 01:04:14 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVVtHWCcSyV6HOQdMaxarOMBkuVN72wYsEqyTmVZAkPhxSWJzd2a7mFUKldDS/FLVoI/4vBvG/nUf9S@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywoq+hl0SjWXdomEt7HGWIYEVda6IGQd43D3ZXqVd63uOpmFrwp
-	td37wD3d1rkccm995gkuPPedNuwTQExR8KLwXxbS4qi9iil5/+pTqU25/eyiRhHnRLPd8pvC4wX
-	BfJV+U0OPvLh1rrKoi0NurJAwv8A1hq7FOxoRhTN1jQ==
-X-Google-Smtp-Source: AGHT+IFAK4kx2dU3M4f28nexLkW1J2UeJSomd8IyDXF0S2v0SmmwMwzxwKKUE+aMvKeHrebINV1vP8b+/PRBPdyefYI=
-X-Received: by 2002:a05:6512:3b21:b0:59b:7346:2612 with SMTP id
- 2adb3069b0e04-59b7346287emr1567053e87.52.1767863053429; Thu, 08 Jan 2026
- 01:04:13 -0800 (PST)
+	s=k20201202; t=1767863091;
+	bh=43HsA+1OXyUWr3mVZANSq6uxii1VuqzSvvFempqNf50=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tZdQHdx43glaOblk/H1NlkrIEfCgVhc9ixqj8kbFiMUqX7aVTE299Mp40oqArJUSZ
+	 kyhZWgNQN3uxMYQn2IfRo2RKMK4pDK8QiXf734qQV2+2HFDCZ5mrDC+c1YRJyU+v8t
+	 pZHbO3CIlPlOcKLnCA9bvFXZRNzkzIJTe9ODoa1q/fh97AN7MFPOlbVcSfmYO3s83h
+	 Li+f+GDArxZWQnZds67025iTikParUWNxhPZciqmO7+I9kAMNNkJzGCvYBUwKXL+Ca
+	 OljmmlIOv2MKdYTTR1KFTfF0PEcY0SulfOlvOmzk3AwUQDhvGADruz577Vc3A/DX8m
+	 FJD1T6e7PJOVQ==
+Date: Thu, 8 Jan 2026 10:04:48 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] pinctrl: qcom: sa8775p-lpass-lpi: Add SA8775P
+ LPASS pinctrl
+Message-ID: <20260108-archetypal-potoo-of-felicity-8ac479@quoll>
+References: <20260107192007.500995-1-mohammad.rafi.shaik@oss.qualcomm.com>
+ <20260107192007.500995-3-mohammad.rafi.shaik@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260108034217.2615017-1-rdunlap@infradead.org>
-In-Reply-To: <20260108034217.2615017-1-rdunlap@infradead.org>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Thu, 8 Jan 2026 10:04:00 +0100
-X-Gmail-Original-Message-ID: <CAMRc=Mcows9Mq9UC+307HzdV06zqRLgB9Bz=7igamT8k0mTCEA@mail.gmail.com>
-X-Gm-Features: AQt7F2pYI05C9wmkCCi8YslLk2dddsuCcDPvlYJVa9ryrfYkAlzfG53xJhKQ4e0
-Message-ID: <CAMRc=Mcows9Mq9UC+307HzdV06zqRLgB9Bz=7igamT8k0mTCEA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: drop Kconfig dependencies from symbol GPIO_TN48M_CPLD
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Robert Marko <robert.marko@sartura.hr>, 
-	Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260107192007.500995-3-mohammad.rafi.shaik@oss.qualcomm.com>
 
-On Thu, Jan 8, 2026 at 4:42=E2=80=AFAM Randy Dunlap <rdunlap@infradead.org>=
- wrote:
->
-> MFD_TN48M_CPLD is an undefined Kconfig symbol, so remove its use
-> in drivers/gpio/Kconfig.
-> Drop COMPILE_TEST so that the driver can be built at any time.
->
-> Fixes: b3dcb5de6209 ("gpio: Add Delta TN48M CPLD GPIO driver")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+On Thu, Jan 08, 2026 at 12:50:07AM +0530, Mohammad Rafi Shaik wrote:
+> Add pin control support for Low Power Audio SubSystem (LPASS)
+> of Qualcomm SA8775P SoC.
+> 
+> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
 > ---
-> Cc: Robert Marko <robert.marko@sartura.hr>
-> Cc: Linus Walleij <linusw@kernel.org>
-> Cc: Bartosz Golaszewski <brgl@kernel.org>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->
->  drivers/gpio/Kconfig |    1 -
->  1 file changed, 1 deletion(-)
->
-> --- linux-next-20260105.orig/drivers/gpio/Kconfig
-> +++ linux-next-20260105/drivers/gpio/Kconfig
-> @@ -1621,7 +1621,6 @@ config GPIO_TIMBERDALE
->
->  config GPIO_TN48M_CPLD
->         tristate "Delta Networks TN48M switch CPLD GPIO driver"
-> -       depends on MFD_TN48M_CPLD || COMPILE_TEST
->         select GPIO_REGMAP
->         help
->           This enables support for the GPIOs found on the Delta
+>  drivers/pinctrl/qcom/Kconfig                  |  10 +
+>  drivers/pinctrl/qcom/Makefile                 |   1 +
+>  .../pinctrl/qcom/pinctrl-sa8775p-lpass-lpi.c  | 216 ++++++++++++++++++
+>  3 files changed, 227 insertions(+)
+>  create mode 100644 drivers/pinctrl/qcom/pinctrl-sa8775p-lpass-lpi.c
+> 
+> diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+> index c480e8b78503..bb1524243906 100644
+> --- a/drivers/pinctrl/qcom/Kconfig
+> +++ b/drivers/pinctrl/qcom/Kconfig
+> @@ -60,6 +60,16 @@ config PINCTRL_LPASS_LPI
+>  	  Qualcomm Technologies Inc LPASS (Low Power Audio SubSystem) LPI
+>  	  (Low Power Island) found on the Qualcomm Technologies Inc SoCs.
+>  
+> +config PINCTRL_SA8775P_LPASS_LPI
+> +	tristate "Qualcomm Technologies Inc SA8775P LPASS LPI pin controller driver"
+> +	depends on ARM64 || COMPILE_TEST
+> +	depends on PINCTRL_LPASS_LPI
+> +	help
+> +	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+> +	  Qualcomm Technologies Inc LPASS (Low Power Audio SubSystem) LPI
+> +	  (Low Power Island) found on the Qualcomm Technologies Inc SA8775P
+> +	  platform.
+> +
+>  config PINCTRL_SC7280_LPASS_LPI
+>  	tristate "Qualcomm Technologies Inc SC7280 LPASS LPI pin controller driver"
+>  	depends on ARM64 || COMPILE_TEST
+> diff --git a/drivers/pinctrl/qcom/Makefile b/drivers/pinctrl/qcom/Makefile
+> index 748b17a77b2c..b2a23a824846 100644
+> --- a/drivers/pinctrl/qcom/Makefile
+> +++ b/drivers/pinctrl/qcom/Makefile
+> @@ -39,6 +39,7 @@ obj-$(CONFIG_PINCTRL_QCOM_SSBI_PMIC) += pinctrl-ssbi-gpio.o
+>  obj-$(CONFIG_PINCTRL_QCOM_SSBI_PMIC) += pinctrl-ssbi-mpp.o
+>  obj-$(CONFIG_PINCTRL_QDU1000)	+= pinctrl-qdu1000.o
+>  obj-$(CONFIG_PINCTRL_SA8775P)	+= pinctrl-sa8775p.o
+> +obj-$(CONFIG_PINCTRL_SA8775P_LPASS_LPI) += pinctrl-sa8775p-lpass-lpi.o
+>  obj-$(CONFIG_PINCTRL_SAR2130P)	+= pinctrl-sar2130p.o
+>  obj-$(CONFIG_PINCTRL_SC7180)	+= pinctrl-sc7180.o
+>  obj-$(CONFIG_PINCTRL_SC7280)	+= pinctrl-sc7280.o
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sa8775p-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sa8775p-lpass-lpi.c
+> new file mode 100644
+> index 000000000000..4579a079f7c6
+> --- /dev/null
+> +++ b/drivers/pinctrl/qcom/pinctrl-sa8775p-lpass-lpi.c
+> @@ -0,0 +1,216 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+> + */
+> +
+> +#include <linux/gpio/driver.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "pinctrl-lpass-lpi.h"
+> +
+> +enum lpass_lpi_functions {
+> +	LPI_MUX_dmic1_clk,
+> +	LPI_MUX_dmic1_data,
+> +	LPI_MUX_dmic2_clk,
+> +	LPI_MUX_dmic2_data,
+> +	LPI_MUX_dmic3_clk,
+> +	LPI_MUX_dmic3_data,
+> +	LPI_MUX_dmic4_clk,
+> +	LPI_MUX_dmic4_data,
+> +	LPI_MUX_i2s1_clk,
+> +	LPI_MUX_i2s1_data,
+> +	LPI_MUX_i2s1_ws,
+> +	LPI_MUX_i2s2_clk,
+> +	LPI_MUX_i2s2_data,
+> +	LPI_MUX_i2s2_ws,
+> +	LPI_MUX_i2s3_clk,
+> +	LPI_MUX_i2s3_data,
+> +	LPI_MUX_i2s3_ws,
+> +	LPI_MUX_i2s4_clk,
+> +	LPI_MUX_i2s4_data,
+> +	LPI_MUX_i2s4_ws,
+> +	LPI_MUX_qua_mi2s_data,
+> +	LPI_MUX_qua_mi2s_sclk,
+> +	LPI_MUX_qua_mi2s_ws,
+> +	LPI_MUX_slimbus_clk,
+> +	LPI_MUX_slimbus_data,
+> +	LPI_MUX_swr_rx_clk,
+> +	LPI_MUX_swr_rx_data,
+> +	LPI_MUX_swr_tx_clk,
+> +	LPI_MUX_swr_tx_data,
+> +	LPI_MUX_wsa_swr_clk,
+> +	LPI_MUX_wsa_swr_data,
+> +	LPI_MUX_wsa2_swr_clk,
+> +	LPI_MUX_wsa2_swr_data,
+> +	LPI_MUX_ext_mclk1_a,
+> +	LPI_MUX_ext_mclk1_b,
+> +	LPI_MUX_ext_mclk1_c,
+> +	LPI_MUX_ext_mclk1_d,
+> +	LPI_MUX_ext_mclk1_e,
+> +	LPI_MUX_gpio,
+> +	LPI_MUX__,
+> +};
 
-I see the core MFD part of this driver was reverted by commit
-540e6a8114d0 ("Revert "mfd: simple-mfd-i2c: Add Delta TN48M CPLD
-support"") years ago. Should this driver even be in the kernel? It
-seems to be useless without the parent driver that supplies the
-regmap?
+Isn't this entire driver exactly the same as sm8450?
 
-I'm asking, because with your change, it will pop up in people's make
-config and I've been yelled at before for displaying useless options
-so I'm hesitant to make it visible for everyone.
+Best regards,
+Krzysztof
 
-Bart
 
