@@ -1,153 +1,126 @@
-Return-Path: <linux-gpio+bounces-30298-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30299-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC057D05B85
-	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 20:04:20 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A38C7D06555
+	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 22:34:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1405430213E4
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 19:04:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1BBED302BAB8
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 21:33:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BC6E328256;
-	Thu,  8 Jan 2026 19:03:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B7B633CEB2;
+	Thu,  8 Jan 2026 21:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnyBQWSS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD1230EF92
-	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 19:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7931A76DE
+	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 21:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767899039; cv=none; b=BHs4G552sqyTceOXzZ8b8GEUzMUha9pPZ3KJBkGmDf7+fufcWpCSut+gFI3ya1Rve9um1z+bytq6OS7p3i2I8TVkLyeUuiUy14fHxgGIaX0b261hGynOTuVlnzCkUDZMS4mG3UCzNGdYdTNQbIxMgCWszzhSQzfgt29jXJntFeU=
+	t=1767908007; cv=none; b=EoEadKFpaarSbJ+ipR+JYi0hBwcexzxsbQsL9Kz3QDQ3z/44kTk4uOAIMR3jypc/ijVw3Mro4SCwNrLxrXFgcW5AXu0G1kp69O7iCba+xVDP7cRa9SpLaH5h0drZhWNCNGU6JluCum/8mh521nDOjH5lNx+jRROXwlLjSeTRByk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767899039; c=relaxed/simple;
-	bh=xkdhuC4s+3mOYP0yOIF0uzVtjPP7M61rCMLgQ0C6+CE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ps4GnTMYLuq9Hd3OwgzwxLbj1w1UXceBN9lPaXP1s7gbEMyqBJMtkZb0CsfdTSseMt4hShPsZ2ZBIeAzEwNH4RcpleZ4H9jAAd/KBO+nogJpZVPAu+HF0Mcxf7rUXM0kKIVuzPX6NwojDAI5pfKPczCY6fVrEeoPZRsS/tbaZww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-944199736ebso882224241.2
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 11:03:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767899037; x=1768503837;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l4POSF/G2AiiMzhu15VytRAuNKvteZUdBLrFSKMZB68=;
-        b=AHc4pk4DG6sJz652EUZUYulZxu2/l33dxB6RfxQHPPQSiSZEz5U15LWs4AeQUGEWna
-         AOh4ldM6QejIR+Qkp74qpV644lVPhxuCfPjl4anne2b0jiwhyP/lhbgnpk0kipl6HymB
-         uwCS7uIVoQV2VqhzNfA+tsYtMqFaT0vz5q02VvHMp6mPHaiWpe7wnY1FGIlzVg3yjzFO
-         OiVxm8+knl2f/gssWjWWFhxfPV6v38DmXrEn7ALQLvKd+NxegPKsUZuknqXV+8HmRz/g
-         TPTFpljsprhjanfjuNdnBMj9cYLW5+GsCuP718RYjz31V8mLxWN7swIwsI0sxDC5qBmJ
-         HpKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrmJmJOMwTZiBoDSW22vmTf8+mPr3Y8LEkJPc/nRPaG7Xzxo5BxSBuFIjcXeDeLemBgydYnuXmS1Qf@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZKyql1EdyOGrkvmWj+mj/BKDjrV+OS6dSo0zkdpIPLYRJOZOs
-	zmGM5L4/sxlKWbhKmrmrUwOR0ElVv5ZtIsBzyqH56Y0Kr88Be14svT/AMliD6SV5
-X-Gm-Gg: AY/fxX5IrDNLPQT4uM9POZeqmdPB9oaiKMZv0wTvLej0QhCZ7qcz/4aJWSS9TDwI5Gd
-	y2SR2ZDaBx3m0GRx2h34ZfnqFZYzcwuxhmPeoGdAeEIrYjCQJ5J1tlfPG4eMUy/efS3gXAYmEL3
-	0a1S5gIC34FwZrJgC+NuULU1EVOSICmqpdEg3xqujUIGgfkaGBvUyhI6GLy7icfM1VTPus2Yaco
-	G0h0NOzdGk7vdF/zJj9YrV323rM+cybOeOYBPadxSKctZhCas16h5BdvvuycqACHdfIWvgCCk4R
-	sQuq7FHPAA49jo4gyWQN06+KpjgZTy+Oj4yUyxM5yAdnDMB4qbE2sVvWKi7bolJmpRR0iIo+8M9
-	jo/LdiZqyYndU9F6pxbtxy3giD1zlWK7JZ78tnMaZ4E/dMGFsKXJWshPgmQ4zhpCguuEAebmkAt
-	Syj1UZphuPzvGsLdaM7viJ5PoFz6FCHx6Cg88rZ1ZocKwFd1sDQiyVVQ2edy0=
-X-Google-Smtp-Source: AGHT+IFQHerBw9xtPozoh9BzhRmcUjkLlfhmckmRXGx/fyI8Eb7H33O8BgyW+BEgHj7ixhbZl/brjw==
-X-Received: by 2002:a05:6102:1607:b0:5db:ca9e:b57e with SMTP id ada2fe7eead31-5ecbae46d35mr2495166137.43.1767899036789;
-        Thu, 08 Jan 2026 11:03:56 -0800 (PST)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-5ec7702eb72sm7140485137.4.2026.01.08.11.03.56
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Jan 2026 11:03:56 -0800 (PST)
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-944199736ebso882209241.2
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 11:03:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW2lIBsw0qFKVUBAEAhis5L/70NBprpe8c5PYVyLLt5bPAYU/ZcZsqC7kFBOzBgqI7gJWXhmgee8gGx@vger.kernel.org
-X-Received: by 2002:a67:e115:0:b0:5ee:9df0:a5f4 with SMTP id
- ada2fe7eead31-5ee9df0a818mr1083422137.31.1767899035850; Thu, 08 Jan 2026
- 11:03:55 -0800 (PST)
+	s=arc-20240116; t=1767908007; c=relaxed/simple;
+	bh=L0/fE30Ctsj/xrDTmCP+jQkb9IAeWr2/buOUR2E2Y+U=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=MGvPrWiXc8GnmO6zxYQ1Jvut22dMODgWDaQLMz9mlvjKclppmfCIcCt8VCfzApnB7piwFHAdnNPGgZna2WpJWKiYaa7XBNMkhEhTsS19S2xvAkoi++u7ICNqT9dohALmA8MNoVpElTDfhfuKLJnbMsfJ0jsNgGnZUlbPssx7WNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnyBQWSS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27163C116C6
+	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 21:33:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767908007;
+	bh=L0/fE30Ctsj/xrDTmCP+jQkb9IAeWr2/buOUR2E2Y+U=;
+	h=From:Date:Subject:To:Cc:From;
+	b=mnyBQWSSQ3Y7HJB/+C9kthGT/4SvhZSo4s8DSyxt3uSuCelxKKojHVLdcRERrLEs7
+	 i53lZjgyNHnJ/JGdhxFTtJcOkmVdEUZU9G3GN4KImMFznQQ5ccacWcGIowt2Sx7kVe
+	 sBZNfRqNxkX2K8YTuhz518Y3p2cE/09nz+3hRc2r39xvZp7xvvfMceC45BBpaJrTz3
+	 Jqy6Z/FfZZW34EsuQa465P82/kwE89i9tpYNL+/eO4Td4aqDwOothxm2tQKzVNOje/
+	 3Zk0IMpuzyy9aHh9goAoMQX7poM5vyVGeb4vs2rvFq9HQsM2dyQmjJWYXO1rQ1cKtg
+	 0ddQQqnVwR5UQ==
+Received: by mail-yx1-f51.google.com with SMTP id 956f58d0204a3-6455a60c12bso3496938d50.3
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 13:33:27 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWFs1G8VNSTwIOGESqYP1Yg45V+q7vM9NbuTal0muymzKgfJ6HjL2Cdt9iDD51d1mGewoZ6p3oi2sYp@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZwX8QupcGvhS0QqL3zxwepWfx/TJhJzswsotb0yI7VnwKRs7b
+	1vYsnJKh15j+GzTHsuto5HB5YTi1JM0csOXUzuhNpS4xK7nE/vJrgpigdgLMjZWkridEXogmQlm
+	bUwcN2aSCPeuTemacdnE2lrPpnN473go=
+X-Google-Smtp-Source: AGHT+IHgu2ms8qpT4gjoklQkF/+1KepASICAbvVshq1/mj/AcDEz7NE+T/S4GBv4q9WWSlEX4aZIoMgmHTSEdkiGbg8=
+X-Received: by 2002:a05:690e:189a:b0:644:60d9:8665 with SMTP id
+ 956f58d0204a3-64716c7ae8amr7794873d50.86.1767908006518; Thu, 08 Jan 2026
+ 13:33:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251205150234.2958140-1-cosmin-gabriel.tanislav.xa@renesas.com>
- <20251205150234.2958140-8-cosmin-gabriel.tanislav.xa@renesas.com>
- <CAMuHMdWSB=9d7jwFcLjJY3zJjs7neFJ+tr+GtTDAU85=o8xK1A@mail.gmail.com> <TYRPR01MB156196B6A2C6808841B5BAF818585A@TYRPR01MB15619.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYRPR01MB156196B6A2C6808841B5BAF818585A@TYRPR01MB15619.jpnprd01.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 8 Jan 2026 20:03:43 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXJ-zC0kWViGTbdyRifNKB5R1DRpLcgyk0_zr=XTjx9tA@mail.gmail.com>
-X-Gm-Features: AZwV_QiG1FTx5__3lAFmUWj9TP06IZp1Z3Zx_MjG3bA3hF9KZ0sDQDS0nL8rtcc
-Message-ID: <CAMuHMdXJ-zC0kWViGTbdyRifNKB5R1DRpLcgyk0_zr=XTjx9tA@mail.gmail.com>
-Subject: Re: [PATCH v2 7/8] arm64: dts: renesas: r9a09g077m44-rzt2h-evk: add
- GPIO keys
-To: Cosmin-Gabriel Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
-Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"magnus.damm" <magnus.damm@gmail.com>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Linus Walleij <linusw@kernel.org>
+Date: Thu, 8 Jan 2026 22:33:15 +0100
+X-Gmail-Original-Message-ID: <CAD++jLn1Ba7MH63VOtGQHDOA7a_2A9Ez0CQG+Mw_LkvhruswSg@mail.gmail.com>
+X-Gm-Features: AZwV_Qg_cqqaCdBzKo0pztvuPfbxeyqfM-p3_HFWRB6H-KRUXJF6TC_aVYFItBE
+Message-ID: <CAD++jLn1Ba7MH63VOtGQHDOA7a_2A9Ez0CQG+Mw_LkvhruswSg@mail.gmail.com>
+Subject: [GIT PULL] Pin control fixes for v6.19
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux pin control <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Cosmin,
+Hi Linus,
 
-On Thu, 8 Jan 2026 at 19:28, Cosmin-Gabriel Tanislav
-<cosmin-gabriel.tanislav.xa@renesas.com> wrote:
-> > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > On Fri, 5 Dec 2025 at 16:04, Cosmin Tanislav
-> > <cosmin-gabriel.tanislav.xa@renesas.com> wrote:
-> > > The Renesas RZ/T2H Evaluation Kit has three user buttons connected to
-> > > GPIOs that can be used as input keys.
-> > >
-> > > Add support for them.
-> > >
-> > > Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+some pin control fixes that stacked up. Very little has arrived but it's time
+to send over what I have.
 
-> > > --- a/arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dts
-> > > +++ b/arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dts
-> > > @@ -7,6 +7,8 @@
-> > >
-> > >  /dts-v1/;
-> > >
-> > > +#include <dt-bindings/input/input.h>
-> > > +
-> > >  #include "r9a09g077m44.dtsi"
-> > >
-> > >  /*
-> > > @@ -60,6 +62,37 @@ / {
-> > >         model = "Renesas RZ/T2H EVK Board based on r9a09g077m44";
-> > >         compatible = "renesas,rzt2h-evk", "renesas,r9a09g077m44", "renesas,r9a09g077";
-> > >
-> > > +       keys {
-> > > +               compatible = "gpio-keys";
-> > > +
-> > > +#if (!SD1_MICRO_SD)
-> > > +               /* SW2-3: ON */
-> >
-> > Shouldn't that be OFF?
->
-> Good catch! Yes, it should be OFF, as it's ON for SD Card.
+Small driver fixes and my addresses into .mailmap, that's it.
 
-Thanks for the confirmation, I will fix it why applyig.
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.20.
+Please pull it in, details in the signed tag.
 
-> I will fix it for the next version.
+Yours,
+Linus Walleij
 
-Hence no need to resend.
+The following changes since commit 8f0b4cce4481fb22653697cced8d0d04027cb1e8:
 
-Gr{oetje,eeting}s,
+  Linux 6.19-rc1 (2025-12-14 16:05:07 +1200)
 
-                        Geert
+are available in the Git repository at:
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v6.19-2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+for you to fetch changes up to ebc18e9854e5a2b62a041fb57b216a903af45b85:
+
+  pinctrl: qcom: lpass-lpi: mark the GPIO controller as sleeping
+(2026-01-01 15:40:56 +0100)
+
+----------------------------------------------------------------
+Pin control fixes for the v6.19 series:
+
+- Fix the mt8189 register base name order back from being fixed
+  broken.
+
+- Add REGMAP_MMIO to the pic64gx-gpio2 to avoid build breakages.
+
+- Mark the Qualcomm lpass-lpi pin controller GPIO chip instance
+  as sleeping to fix lock splats.
+
+- Update .mailmap with my new kernel.org address for all old mails
+  after maintainers ran into issues with this.
+
+----------------------------------------------------------------
+Bartosz Golaszewski (1):
+      pinctrl: qcom: lpass-lpi: mark the GPIO controller as sleeping
+
+Linus Walleij (1):
+      Update .mailmap for Linus Walleij
+
+Louis-Alexis Eyraud (1):
+      pinctrl: mediatek: mt8189: restore previous register base name array order
+
+Sander Vanheule (1):
+      pinctrl: pic64gx-gpio2: Add REGMAP_MMIO dependency
+
+ .mailmap                                  | 4 ++++
+ drivers/pinctrl/Kconfig                   | 1 +
+ drivers/pinctrl/mediatek/pinctrl-mt8189.c | 2 +-
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.c  | 2 +-
+ 4 files changed, 7 insertions(+), 2 deletions(-)
 
