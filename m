@@ -1,105 +1,149 @@
-Return-Path: <linux-gpio+bounces-30293-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30294-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9174D05839
-	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 19:27:51 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E7D9D05649
+	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 19:11:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E23683032594
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 18:04:41 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 78C333049F03
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 18:08:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0171E2EC558;
-	Thu,  8 Jan 2026 18:04:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ie518sbw"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEFDB2EBDD9;
+	Thu,  8 Jan 2026 18:08:23 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D1D2EC553
-	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 18:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2582EBBA1
+	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 18:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767895479; cv=none; b=eEHiuMjShld0AcuMoc3ZbqqSJzH/CB4gWmI2b2UJ6rOtwylmgtf/UeQIigGd/4wndSLg8fqi8mrizyulLDRy/gX6srY4EsrnpQ4J+SaDckx3/SH5zu/ox3d2l4FV1UZMP7cKLrz49qvXfUCmwrY3MokCa70Q+1QqX3HVZ0/IIdY=
+	t=1767895703; cv=none; b=kCxgLqKLtMT+J7BJNzpmngA2i29YkKS2EGs45C0PEt0dDUGDD3mBwX5Attd+8AolcmzWUTvXVa90rTiYxf9VuW/9nZ1jKWJUN83lVGQv+nprv/fCgpfhkukqWeg8HDK10ksqd1/ehYlaSDQsMZCF2Fmb/E9HaJcCSyPwqaOZfTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767895479; c=relaxed/simple;
-	bh=Ft/A8hWSgMc15FoFEXLCHrplBht3yr5qHqlp3RAyNPg=;
+	s=arc-20240116; t=1767895703; c=relaxed/simple;
+	bh=2xO+ZHQ5A8qFLt3P8aROWKAmWa7cUbLqr/lnbgCw24c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=unFcCNdFEEvyfQDeZbj30SjEcTlfv37lrYGvfI2qPS2Jj8/5TrYwe4zkV3dyeYwCs+nnHtBa07AildN/yNdDB02x9alKeUvOJsOpZEe8B7PMy/qFb4616UKykobDaxLXLV5H3lI6C9inTdaMZ1cJNgteT8TG+5Jpoi9CVYAxB0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ie518sbw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69E0CC4AF09
-	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 18:04:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767895479;
-	bh=Ft/A8hWSgMc15FoFEXLCHrplBht3yr5qHqlp3RAyNPg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ie518sbwXlFM96QDqk1hmmbaMCO5TZ9WJOs6sYvZ3IW0J8kkhfgmAoM6JP8DwrNRl
-	 qVSQz2n4iwrRqhVVSqZ1Qwev/dY1Uze0l6ZqC+Y+6+WZ1t/UoaulSG6hwev8zCul/u
-	 T+dbveuvdmeLpU0TRe0UA2v3qtW+LUJPNAtNUdJRb1QNXD9PiO2ImPferzitsM5LBm
-	 GjsoCqzJiagIEwegS92OgNctp6WLV/ITIfBpVsA6mPYOAI/MgOuU45AG7cuFncJ6Fz
-	 tTXn3JThBK0JX3KH3DZWTWcn3isTmK6wSZQRXWgBkjQetR155Kzfv/UAmUrhwnn6c/
-	 5yOsIHpjUJb2w==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-59b6c89d302so2532282e87.1
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 10:04:39 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXlgm/aSMWa8iK/RnoZCYlBDJWNOyl+m09XBgXW8yB0WaluXJhegesqmiYSawPh7okejsjN/wAX70MI@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGo4kaus4GFU4E1LXQD5FMJYmVh6wsNDaIPBu/cYzhq2r0G47j
-	lBh9GsYycGawGhe4OC6FerLSG2k1xzgb7CZpXx9Y+oL3RWCAeXsDw4LItHIxW9bCjKZ3/Veb89x
-	5saEi+vZ8plNQPRLXUBInyydwZubM4u62MDIi9EJ9zw==
-X-Google-Smtp-Source: AGHT+IEylp8rOLigBqQmnrBpIWQflwhGH3IkA/PHCIwbo0f7PPadeXyH/mRVwCiCCqhEGodItOK3rf2KUvikGP2bz1M=
-X-Received: by 2002:a05:6512:3b11:b0:59b:7319:3b6d with SMTP id
- 2adb3069b0e04-59b73193be6mr2005079e87.27.1767895477199; Thu, 08 Jan 2026
- 10:04:37 -0800 (PST)
+	 To:Cc:Content-Type; b=FQOuQ0bLjT0BbHuZw+qeLZRJScCcA/+VCok2YqVyA55tnbkiafVXSQVFZVQsw+bWGEAG3KlVmxpoIIvXZJY1trlb7z99SsUo0A0PJm/tZxp6yWl8+3HOToSGxN0Wthehq1LcL93VjLC0yuBG9bRgNoQSExUAb9m3iCg/lGz9E4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-93f542917eeso1120049241.2
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 10:08:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767895698; x=1768500498;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MfFjVTiVA/VL3JBWaNXNVyzJkm9nYhmIUTtZUIKm46g=;
+        b=ABUsAQ2q6gScWIDM8Tm8VXVRjcI5k7vbCcTI4LlIGGzjPHsP5t0mYeXrUYwqXb+sog
+         GiHwgxe5MZ2foaeyAxHCOU9BMgrHBfCaVxT9vo4MuXSWaOdl5UIG7M7QyBnFnnbx6JL+
+         7HiHFppYKZCm6v66oIw2n/XZ6x5Lwdaq9vm0OqHRIoYxJWNF38HryvApzfImziigDHEU
+         iRLl1Ms2gUJzhkb04W+Fa54nEAlt1Jhbuh/ZV4NqQGWnsD5VUk2jbhzFQ6QehR9gCt1S
+         5OExvqcl4hOgHsyiQ7ZTrXSdTBbkTejpNveG30ZwIBZPVv2izEZXEon8Uuu6+Xy5vPFs
+         BXZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUr5DuUEAbSAWv4k/J4/a7XPBxgD1psq2fK/12o3vFImF/jFoIvaLB8YzdGPysplKZWhCnyBnkX1n8A@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhrZp43HJqhVYox3d3WqVebFoFYLeovcqP0h3es7I1Gp7GBwTm
+	Ku3oYkEPYiTM4wyQ6AApLfa9tBT+L5Z5wdcqGzfuyMA9DOZVN9uMR1AoxEJa364v
+X-Gm-Gg: AY/fxX5cS/Jv28nG4+x59mn4HczIUxBSTEb7WFqrPoDtxXX+KmzoeI0d6M0e/yGVhDY
+	+O/4v3tbZQ8pwOFFGMEJ6GE6D71XZCodYOEbiGzhzB7cS7pDZiSpwtCvaMDpB0AXyirozV1BPYh
+	RrchNHpappw5+LrEZV9cPhoWtO5mnSc0SueWlnf7NPxF/7KNSRCE7d62nMj31FbLUHONslvX2BY
+	Yd+iSSlyWa4ERv07g7H6KQ62MG2CI1SoE8wkSrduhI6qP5I7SwKY8FvMPOnokFz8d0TJYcrefAg
+	6/pCe8fk7QMQ9RzOKpZ2ywff1C4u8Og6EhsVfSDO3PkIvwe0Cy0TYgE12tFURFPzqhKgrWZqKOO
+	2xxgMJoTsSXjIXqTHofVdXr4u8NX5QOaH1dk8nfeuhRibsSRmdjsbYfwDIl3FDCiexQwfoNPs61
+	Qvg41uOekp7/1XhpFLYbS7QoztofXSYKhKPoPE6oOlfS98+nTX
+X-Google-Smtp-Source: AGHT+IGaL8Td3lPb8m5eK86lMAMAgJlVFnR7KfLJajCNT8Xy5HE20kmmYB8BnWuL+fP8ThHQg/Z4fQ==
+X-Received: by 2002:a05:6102:e11:b0:522:86ea:42c with SMTP id ada2fe7eead31-5ecb6866d0fmr2882129137.11.1767895697744;
+        Thu, 08 Jan 2026 10:08:17 -0800 (PST)
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-944124e906esm6456740241.14.2026.01.08.10.08.16
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Jan 2026 10:08:16 -0800 (PST)
+Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-5eae7bb8018so1328003137.2
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 10:08:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXmf8K15isNIvuh1aZ4QIsuj9ZTuXm8ACvkT3QC+ReZ2EbE7rhwvC+xPDdNpUhp1EBhNwXvSMIQ2Jm7@vger.kernel.org
+X-Received: by 2002:a05:6102:6f07:b0:5ed:c98:37f1 with SMTP id
+ ada2fe7eead31-5ed0c983b52mr1804827137.1.1767895696438; Thu, 08 Jan 2026
+ 10:08:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251222-gpio-shared-reset-gpio-proxy-v1-0-8d4bba7d8c14@oss.qualcomm.com>
- <20251222-gpio-shared-reset-gpio-proxy-v1-3-8d4bba7d8c14@oss.qualcomm.com>
- <0bce9429-1cff-4a62-bdae-57697daf2920@sirena.org.uk> <CAMRc=MeUBhDqQWKqSbRP+bpBcc0Xptdgdj9CMfOzJmgqARJMDQ@mail.gmail.com>
- <c0ded9d3-b9b9-464c-81c0-63e0ebdc0194@sirena.org.uk>
-In-Reply-To: <c0ded9d3-b9b9-464c-81c0-63e0ebdc0194@sirena.org.uk>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Thu, 8 Jan 2026 19:04:24 +0100
-X-Gmail-Original-Message-ID: <CAMRc=McAkdYc3tg7qTRBxOa3zQw_YygzgK-9Vo3UG2DjmN+Syg@mail.gmail.com>
-X-Gm-Features: AQt7F2oqFz99bplEz4aI3K5nojZARYqLakd-DtWqKUbtQ9Q_Uf-hTHAI6LpmNsg
-Message-ID: <CAMRc=McAkdYc3tg7qTRBxOa3zQw_YygzgK-9Vo3UG2DjmN+Syg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] gpio: shared: allow sharing a reset-gpios pin between
- reset-gpio and gpiolib
-To: Mark Brown <broonie@kernel.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Linus Walleij <linusw@kernel.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Linus Walleij <linus.walleij@linaro.org>, Aishwarya.TCV@arm.com
+References: <20251205150234.2958140-1-cosmin-gabriel.tanislav.xa@renesas.com> <20251205150234.2958140-8-cosmin-gabriel.tanislav.xa@renesas.com>
+In-Reply-To: <20251205150234.2958140-8-cosmin-gabriel.tanislav.xa@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 8 Jan 2026 19:08:05 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWSB=9d7jwFcLjJY3zJjs7neFJ+tr+GtTDAU85=o8xK1A@mail.gmail.com>
+X-Gm-Features: AQt7F2oZ7EpOfRC5VK28dLvBYQp2AsKz2b03nI7P4C3otujbnCexl7cMnsmNYpA
+Message-ID: <CAMuHMdWSB=9d7jwFcLjJY3zJjs7neFJ+tr+GtTDAU85=o8xK1A@mail.gmail.com>
+Subject: Re: [PATCH v2 7/8] arm64: dts: renesas: r9a09g077m44-rzt2h-evk: add
+ GPIO keys
+To: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 8, 2026 at 5:29=E2=80=AFPM Mark Brown <broonie@kernel.org> wrot=
-e:
->
-> On Thu, Jan 08, 2026 at 04:52:24PM +0100, Bartosz Golaszewski wrote:
-> > On Thu, Jan 8, 2026 at 4:46=E2=80=AFPM Mark Brown <broonie@kernel.org> =
-wrote:
->
-> > > We're seeing futher issues which bisect to this patch in today's
-> > > next/pending-fixes on db845c:
->
-> > Does the following fix it by any chance?
->
-> > https://lore.kernel.org/all/20260108102314.18816-1-bartosz.golaszewski@=
-oss.qualcomm.com
->
-> Seems to, yes thanks.
+Hi Cosmin,
 
-Good, sorry for the fallout. There's one more patch[1] that fixes the
-issue that actually caused so many people to be affected.
+On Fri, 5 Dec 2025 at 16:04, Cosmin Tanislav
+<cosmin-gabriel.tanislav.xa@renesas.com> wrote:
+> The Renesas RZ/T2H Evaluation Kit has three user buttons connected to
+> GPIOs that can be used as input keys.
+>
+> Add support for them.
+>
+> Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
 
-If you could give it a spin as well and leave your T-b, that would be great=
-.
+Thanks for your patch!
 
-Thanks,
-Bartosz
+> --- a/arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dts
+> +++ b/arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dts
+> @@ -7,6 +7,8 @@
+>
+>  /dts-v1/;
+>
+> +#include <dt-bindings/input/input.h>
+> +
+>  #include "r9a09g077m44.dtsi"
+>
+>  /*
+> @@ -60,6 +62,37 @@ / {
+>         model = "Renesas RZ/T2H EVK Board based on r9a09g077m44";
+>         compatible = "renesas,rzt2h-evk", "renesas,r9a09g077m44", "renesas,r9a09g077";
+>
+> +       keys {
+> +               compatible = "gpio-keys";
+> +
+> +#if (!SD1_MICRO_SD)
+> +               /* SW2-3: ON */
 
-[1] https://lore.kernel.org/all/20260108-gpio-shared-false-positive-v1-1-5d=
-bf8d1b2f7d@oss.qualcomm.com/
+Shouldn't that be OFF?
+
+> +               key-1 {
+> +                       interrupts-extended = <&pinctrl RZT2H_GPIO(8, 6) IRQ_TYPE_EDGE_FALLING>;
+> +                       linux,code = <KEY_1>;
+> +                       label = "SW9";
+> +                       wakeup-source;
+> +                       debounce-interval = <20>;
+> +               };
+> +#endif
+
+The rest LGTM.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
