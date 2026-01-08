@@ -1,66 +1,69 @@
-Return-Path: <linux-gpio+bounces-30241-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30242-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89214D0130A
-	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 07:06:10 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DE18D0133D
+	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 07:09:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 536643001FD2
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 06:06:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 39AAF302C8FD
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 06:07:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1A82302779;
-	Thu,  8 Jan 2026 06:06:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00617318EFB;
+	Thu,  8 Jan 2026 06:07:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="Iqvu07/O"
+	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="vKxWQBP0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.67.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460602641D8;
-	Thu,  8 Jan 2026 06:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFA72641D8;
+	Thu,  8 Jan 2026 06:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.67.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767852365; cv=none; b=WQI2UdFpTXVPpJTpJFiFRC5Najhu6uW+5fms8Og8hbm+87nQQOU644f057wOquNX2QHJdS5f91NpYb5o8kleklY1XIXq1WnMByj1n74JgoVBOwgVDnJhAmmbPggUGHEGDuTr2MKXIngo0Ka6God58n8fqX2j9fbebXEUFC+Lq+Q=
+	t=1767852422; cv=none; b=BfqzfQxCR3gzIouNJmAzJAr9RyrrgeJVjzUutAJz9Y8ml114BazrwIWUJDpY3y9MinaaO1/o+991KZCwCKxMwBRgFFgrADQfvS33eKbG4mJ4GjAE/k6IwFmp8qp4NVt+Xy86S/AMuWK1vEC4+9gPkG2SR3MlcBtpttLUTufHvUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767852365; c=relaxed/simple;
-	bh=F9bgMHjWCtw9COwvVnYwRZ2ASNpIkArfUg6YDe4p0DY=;
+	s=arc-20240116; t=1767852422; c=relaxed/simple;
+	bh=fsrnb+Y4r81Veda1qwY1ytq+j3LmXnLMJwOLdwU1sWA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lEclO6+xBG0AR0DUn8dvaNH9jYJLAVoddTP1vSA/HgQpFplJtDx97N5q37GLnavWgqcYnt6JFNZJNfOAQ8RcPxSm2ZI0kLlyaqcAeg9QJwVkL/119i4Jny8Xnd3MlIqnnR506O99xat9no0FcIKodzMa5wI39HcgmxzhzFf+DA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=Iqvu07/O; arc=none smtp.client-ip=54.254.200.92
+	 Content-Type:Content-Disposition:In-Reply-To; b=sgJsQIZo/E/8hCb0mcl/DgtP5k/Yoh2eOa784EzmKgC51JK++RbyliO5YzhjO0lueFp3Uoh7ydCrzE+DyFwgcsKz4z7IT4ku+x6sNVIvObFDTXqDIouV8H0vXRGbaOTq78e0jhv+xk+VA6VHrRUGiYgpGkf3D7el15iBG8N8vZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=vKxWQBP0; arc=none smtp.client-ip=114.132.67.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
-	s=mxsw2412; t=1767852296;
-	bh=Kb5K0iHmhVo6j8LIgQJwjRVhLZwxwVD0tXIimEEYGb0=;
+	s=mxsw2412; t=1767852370;
+	bh=j0RQPNNJah66+rfz5mRIL/zR77AlQ7tUXDwKwV5J7t8=;
 	h=Date:From:To:Subject:Message-ID:MIME-Version;
-	b=Iqvu07/OMbvyV0bzDliIc/xPa9f/6yVQtZw+ol7kseaqR17G34lZEUsHEbK5eZDzj
-	 leFVxvggLW/zCLHPqSHhqBcuFF4UCywJ9NdUjA/IiQc6d9Aa2blYXW4D0JbKJQwh9F
-	 TOacrv4rT/Z7H/sFKXV0cFF412kfTfhOh8rehnoQ=
-X-QQ-mid: esmtpgz11t1767852294t43f90bb5
-X-QQ-Originating-IP: HffZ7RlcyMDrYxCv2ae82zj8z6cmAht2vrfhsveVQHU=
+	b=vKxWQBP0nZhb82Z1SoTqY3j0ocfBnhZndtL2O+hfjv75fAwIaqcdBQ9Y5GC8pxw3w
+	 LHkWTP/vh09WDOLbYVq+VuaeVumFbi9Sln5GRf03IHnfJrNfa953oVg3WvK3eB0vjq
+	 mW9n6/oSjsIztl3nnQSNFlpuFYb4sGHV+jYdEOas=
+X-QQ-mid: zesmtpgz4t1767852369tcd8001f2
+X-QQ-Originating-IP: beWczbJwO/mTqfpOHrU+Qy/PUKSpkmuOz7CV2yJE0rM=
 Received: from = ( [120.239.196.107])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 08 Jan 2026 14:04:53 +0800 (CST)
+	id ; Thu, 08 Jan 2026 14:06:07 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 3767647049890093468
+X-BIZMAIL-ID: 9103380488815538489
 EX-QQ-RecipientCnt: 16
-Date: Thu, 8 Jan 2026 14:04:52 +0800
+Date: Thu, 8 Jan 2026 14:06:07 +0800
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-	Troy Mitchell <troy.mitchell@linux.spacemit.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+To: Yixun Lan <dlan@gentoo.org>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Troy Mitchell <troy.mitchell@linux.spacemit.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
 	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
 	Linus Walleij <linusw@kernel.org>, devicetree@vger.kernel.org,
 	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
 	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: add syscon property
-Message-ID: <16661E5F43A23979+aV9JBP2EbX0iBE9T@kernel.org>
+Subject: Re: [PATCH 2/2] pinctrl: spacemit: support I/O power domain
+ configuration
+Message-ID: <2D1901252926D8F1+aV9JT8p0rON5RNc_@kernel.org>
 References: <20251223-kx-pinctrl-aib-io-pwr-domain-v1-0-5f1090a487c7@linux.spacemit.com>
- <20251223-kx-pinctrl-aib-io-pwr-domain-v1-1-5f1090a487c7@linux.spacemit.com>
- <20251227-lavender-turkey-from-camelot-ab6aec@quoll>
+ <20251223-kx-pinctrl-aib-io-pwr-domain-v1-2-5f1090a487c7@linux.spacemit.com>
+ <20251227-pastel-certain-orca-4b53cf@quoll>
+ <20260108042753-GYA2796@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -69,56 +72,73 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251227-lavender-turkey-from-camelot-ab6aec@quoll>
+In-Reply-To: <20260108042753-GYA2796@gentoo.org>
 X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: MHmS+iNcn8JXoEY7+Ai5LGVVDFRVb0VaCxkV25WDazznTQmYn5fkvl+E
-	cPqJcKLq+AkNHfuNJ/kmnbKpHd8ipHSsQXZ8cheexYrwjX/LOXgrPdbZwxkrnMhHufa6XlJ
-	AsxsjOsWyRs+zNGwpEds1zxzmGRpi8DGArLd0R7HGGpfEzkTl05MhquN/bF/Dl9uZbFl7VN
-	hfSTmCkKsS4m6owZPmPQfCJEueh1ALUqXK07CvTmtDKRIKYHbq8IG2cnWh0XNdMy2Aohv14
-	1IwyJp0MuySWikmwNrfnDAdR3aIoRnImoUvxqvB1hQg6FvN0Q0e42iNpttggiTUFnE3s9zr
-	6I5+5iwNgiELfbASmyEMQIgJUIHxlfxWiNASlyTGTPmemowSQevDiRvveyt1JcIVchcVKI2
-	LuoVEmyVBibLhzC/T4rIdRJ/eo4w5MabRZc0hgiBxp+Y9ZRHX13eRnb4/NCqQmW6iK7P04N
-	2i2Y9RDnV62VPHYZ4qIs3JskzAvt+91PmifOKBlXjEXjh+uW+B2ctSOBz0TmoaZAQ+3dCpS
-	XnvZddmgpHLoOf6CiHIVltrQAbp5Ts2MXMgLs6eG3gU+vJ2/1MyBlzpxH5W5jay6Iqv+zSp
-	8QnSFAuh04qpB7f8wEXUGHf0pI9Q+hQyrhpLhOe6ZA11U7H3thi75ycJ4IMmVjVJlDqdTAg
-	t+pmZkcaVEIRXW5nHLvCADvhEw2+iDYCpOlcnzc5Bg0v4U4mOcdMyVvvcrbfekS8MXSZ15u
-	xgrBo/95GT4rkwDcf5qMxQwq0vE28ehz19irc1GUipzmi4ZyoXaw8BGX/+l/FBsSoOe+8H0
-	3PYTgXZQczmYeajs+nR80sr1ertJaFz7B4HXaEzauYshitgRKwKXcMrH27OHuzW32NCjtt2
-	6UFVC57j9KXaAX2YT0dOZq0W7yZOzF7wO1NxDfIHPJUav3+A/Y0Qwfjl5hnRozcCU+LGSt7
-	l67AUw1xtk7duPnjn+BvO2nJ2ii4Q4N9VLD36QmtVrxgcZDETjVRXbgH5z2m+byDRfzu1i/
-	O6G+o6PzOAcxg4qskWiDpNtY1V+OIMX6zYXcVIftap+AxgZsNXY+93XdiF+4DuoY4qhBWtZ
-	6tMwluFAmX2nDmFrl4yDSeYqE/QWDKeuA==
+Feedback-ID: zesmtpgz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz3a-0
+X-QQ-XMAILINFO: NgbPj60qx8q1bjuxTEeAERR7k3tRz1wd46JBJAsBulCSVPZedRL7WOHm
+	5eoPazxdnZNaDn9d6aoeWb3LfE/K2ZuhPzMYAFRVRl3BdABLvx5wO50Dz20jg7YBXz68ENn
+	iRGVl5Ob7xU5nDWLzia9TupN8PNnQeC7wc5Dvx97qmyOe3YtlIIcGza/te//ehmswJHGx4x
+	J+rrlO6bB1QOnzC94iEnbLBzqs3UuC1nMDpyIS+5+m8y9xCqS/bxme3HoQu4IU4nsDy697f
+	Lbsa4aZkotxjZNcdBpUFr2eqKs6BQOztGEGyyBtiRWHBs5xQY5Nj8J4Rc0BFZnk81GGYnwJ
+	PdSITqEuv4cqqdfwgZK4a39KsvHSlIh72+psTdAsGBYQl/ovch/l1wwyMMYMgkTIcsyFyDg
+	GS+AO+A8/nxzSdR1q0aBuJ9hBYUVzejkBgtXSE4Mw4luDbzgZjdEROb0JQlihBCnBPESspR
+	kN7e2Yk3h/5DhRx9PN7dbJx862ntTUnByq7RcQsJ0B8m2K02uOdGlnUekYfchy7UwyW55d/
+	ukVmJ6PkuVStVfuUBjktRVUJ5xh7LBjl/VX/ECrdE/smLRc/DUDqr4JeWn29/8bc9O0JLVN
+	mlV42jnr8cPMA0pJdQ3oUEZtvzXRV1gHh59+LLhuo3QFGImnL84/YWxfv3O97SEATDaHuRC
+	w0P7X77zwzj8BZaT6dVjuFHrMZlKMcEBXp61Y0+b4iWYUpt0Fl88v96jzsbILVfURAAzKuB
+	7lgnxfTTciKtg3CEcXzoE1jprAscV4m6mlSM55HQnM/eqO0oWrwdFsbPT3pNiMi/xrx9XY0
+	Xuz1dOD0/FgymaAevIDfin2esZVQh+72LWNJgIkpKDK/eQ3IbLwpWeKer2fmgL9B5MwzPjC
+	C56lGIRndAco5ugdvS5j76pZCANmpDGPRCK7iUGqIIagxLLnVb4DEVm2qzDDU5AhhaPvQMq
+	G8ODgKBrgQHqY4EsPdj3aFaHQWiGG6PCdeedmVXLH84hFGWjGQK2ceELfrLfE2eZ7HBB6ec
+	kSzh/DgBJRMrb0Gfx2/U5wE85CTlNMcLXKLd2Kg50yaTFt1IJujNzsw3G2xTSJcyddgOP3F
+	tXH1drmq5i/jcOpSoCnk4+m9zDwALF7V6DQsn50fA4cMXvbPdDp8+3JFWoV5npRL4wAuOpz
+	hqeHO955dnG8hePPW/4jrS20OA==
 X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
 X-QQ-RECHKSPAM: 0
 
-On Sat, Dec 27, 2025 at 01:58:52PM +0100, Krzysztof Kozlowski wrote:
-> On Tue, Dec 23, 2025 at 05:11:11PM +0800, Troy Mitchell wrote:
-> > In order to access the protected IO power domain registers, a valid
-> > unlock sequence must be performed by writing the required keys to the
-> > AIB Secure Access Register (ASAR).
+On Thu, Jan 08, 2026 at 12:27:53PM +0800, Yixun Lan wrote:
+> Hi Troy, Krzysztof, 
+> 
+> On 14:00 Sat 27 Dec     , Krzysztof Kozlowski wrote:
+> > On Tue, Dec 23, 2025 at 05:11:12PM +0800, Troy Mitchell wrote:
+> > > IO domain power control registers are used to configure the operating
+> > > voltage of dual-voltage GPIO banks. By default, these registers are
+> > > configured for 3.3V operation. As a result, even when a GPIO bank is
+> > > externally supplied with 1.8V, the internal logic continues to
+> > > operate in the 3.3V domain, which may lead to functional failures.
+> > > 
+> ..
+> > > +	pctrl->io_pd_reg = devm_platform_ioremap_resource(pdev, 1);
+> > > +	if (IS_ERR(pctrl->io_pd_reg))
+> > > +		return PTR_ERR(pctrl->io_pd_reg);
+> > > +
+> > > +	pctrl->regmap_apbc =
+> > > +		syscon_regmap_lookup_by_phandle_args(np, "spacemit,apbc", 1,
+> > > +						     &pctrl->regmap_apbc_offset);
+> > > +
+> > > +	if (IS_ERR(pctrl->regmap_apbc))
+> > > +		return dev_err_probe(dev, PTR_ERR(pctrl->regmap_apbc),
+> > > +				     "failed to get syscon\n");
 > > 
-> > The ASAR register resides within the APBC register address space.
-> > A corresponding syscon property is added to allow the pinctrl driver
-> > to access this register.
-> >
+> > Actual ABI break.
+> > 
+> Indeed, there will be a ABI break.
 > 
-> Also:
+> so, how about not abort in probe() if no "spacemit,apbc" phandle found?
+> and then do it in a compatible way as old behevior
+will in the next version.
 > 
-> Please use subject prefixes matching the subsystem. You can get them for
-> example with 'git log --oneline -- DIRECTORY_OR_FILE' on the directory
-> your patch is touching. For bindings, the preferred subjects are
-> explained here:
-> https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
-> 
-> You are not adding syscon to all pinctrls.
-I lost "spacemit" prefix. I'll add it in the next version.
-Thanks!
+> We may still need to drop this property from "required" section in DT
+Yes. Thanks!
 
-                        - Troy
+                          - Troy
 > 
-> Best regards,
-> Krzysztof
+> > Best regards,
+> > Krzysztof
+> > 
+> > 
 > 
+> -- 
+> Yixun Lan (dlan)
 > 
 
