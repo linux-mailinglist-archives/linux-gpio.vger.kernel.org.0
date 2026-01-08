@@ -1,85 +1,85 @@
-Return-Path: <linux-gpio+bounces-30287-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30288-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F4E6D05298
-	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 18:47:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B8FCAD05427
+	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 18:57:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D633132172BA
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 16:51:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3D4073439F23
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 17:03:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E99F2DC34B;
-	Thu,  8 Jan 2026 16:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC60C29A9F9;
+	Thu,  8 Jan 2026 17:01:53 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+Received: from mail-vk1-f194.google.com (mail-vk1-f194.google.com [209.85.221.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402032DCF46
-	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 16:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC25271464
+	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 17:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767891082; cv=none; b=h/9yK86FzyBOaeKta0Q9sb7QtnAd5SQ9j9cdt/4+sDR/8xluJff8ZVGUaVDqw0Mm7Eb58HGDj599FAe6sOf3ZFrFQt1HsnhMRdcrPwO5Rqboh8OglwZtTBzyhiqJwz4udFZLh8EM8GwRBRrSCGv9oScQ3bnbgUzeCCMkk3GF9aI=
+	t=1767891713; cv=none; b=LlBgryM9C9T8Es+KRBLnmxbJNGS1d+VCGNflvPx9ZuJMW2IhHkk1B8hgBeUP/DZYlD/urbjzK8NZ7BmjWBYzX8JpubyAtTkEVH0Pi0BfZ/fxuiXCEGb5yFyrCXNtUEladX8HtgLqzt22Eitm5zcxLoXCluJH9olIp0p5Nwwxfik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767891082; c=relaxed/simple;
-	bh=ubwXu+btsiX1PB4I4N5BYmf0b7pajCdwdkJ9TDT2OtA=;
+	s=arc-20240116; t=1767891713; c=relaxed/simple;
+	bh=l/hatv9g6YZh7Jedhcdf7GctsSHL9xJ16ZgcVa0bhbg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B933pL+pqlwWD5AwE8OtSHHtUh/dxe2hhLE0owbqHRn1iG43NybuTlEL+n7SerxuhQQhRn/Ubtpkod2BgP+wamnInMqVvFBP6VUf6pf1yA8Jb9yF2KKU9Px7Y4m7JKz2APj6FENPJTtruKdLSATw/1Cc1//J/9tkbb8q8TSu3UA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
+	 To:Cc:Content-Type; b=rqXZkMRzfMcpkopDC49OMT6Hz3jIJy4zpgsY1b5JXQB1+aOMebUpUwh1cwyvqnhSkcnWBKWLXvlcd4/arr2ci28FV5qFDdyS8ZyNAxgvKvuKzZ9HUg1JJPQ0kzmaRo5dKm59RWtbbvXVRajdCLd5BG9Gsl9Jjv2DqyxbMNWcb+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-55b09d690dcso1188781e0c.1
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 08:51:17 -0800 (PST)
+Received: by mail-vk1-f194.google.com with SMTP id 71dfb90a1353d-5598b58d816so2492250e0c.3
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 09:01:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767891074; x=1768495874;
+        d=1e100.net; s=20230601; t=1767891711; x=1768496511;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=C875+rgiQSif2Oc/xF4OEYxzU+NtNWW3c7tGrI4duZo=;
-        b=E3PTidY2EB/08OiHSP+ARSJsPIh1DaHr6xk0VDHu1xgh1hOkTxRFpPM9Mmdbddte3a
-         nfyInSLpzWuLqoaKiOt78LGFpLPKNgUL5hday98Li8pPqqfAB9OAbJBTz3+CtIYiqrPU
-         YAHn39NOzQmJhCHgLdKQGzL3CDnN7YtLxPZZmHmRj2crvNwLK2Yp6rk2GGwHaJixBUhl
-         CLOgJxojxfAf12G95p4KOggpUz53cLw2Cc/+MNIOEZ//M20VAUJfx51w5P92pyPeIo8e
-         bMnpnYR2wO8zjx07SkT5d4hUKL184a4wDAjutF5eybxlo//nwnwninERsMJEj8Q1Xk6T
-         ONCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVV6RwqinByJst9ZjmEhhl4UYdnaUx+yTSFLpsxKjUUH33jWhaFmngjTyHTG4F6nDA9TIueKEwMd3T3@vger.kernel.org
-X-Gm-Message-State: AOJu0YysJyrYUaleYe6/ij7bnC9f4mrrpZ/ZdqwKI0bQhENttNmCVMyo
-	pNnkRG8YxlmalwabjEi8o7zwBMhsSjWX0sKbI0RUMd42GEg4RZjrkVFpp07B/6cX
-X-Gm-Gg: AY/fxX71AI7FmpF7iDTiQm2zw72/3EU41o0RLSqKDC8EATaKKK+dXdo/PimI/GxyB3M
-	a0pzWq28CDa0AGlxp6vWwMab7yL8TTtVc64xO6igid69zMnA2iOIVqKJ+jcjnB/8zkojVzWh/Nc
-	2aCkPQjPInTdfKtcNTCnFaCa9g97SHZhOSGOb9h1wiXSkMjxqPl5PXjxARJiKkjd/orIFwQXwCp
-	6rSxyUbKTnMKrWG8A25iNOK54yb202DmtRzsXCz56s1CEiC4VQBil+xtbybrYv9avhRTg/qaasG
-	dsBZzl/e/zJwJO6EZjCNJTJeCdY6dsSNsHN2NENIbDqRa2JG8FsL8XnoTQux194LUDDUwNazdMq
-	M22jVMQWp0THUImIXpK2zjmxvUsZ4A8K6D/M3eZJbtGk/dF41qfP+4aMFV3KE0e4zmgIzgn5yZm
-	AGD6IarKLzH0PcJw/roc2/LVjzuhwt9ab6r8yNgc4GQKQwqCmx
-X-Google-Smtp-Source: AGHT+IFMCw4AowCdezYL2YK8+UX6BhMwSni0hFthWy5CcX86SVesDT0OhydvHcEKZAxFxz0lpDFpiQ==
-X-Received: by 2002:a05:6122:4593:b0:54a:9fe8:171e with SMTP id 71dfb90a1353d-56347d8330amr2714385e0c.7.1767891074401;
-        Thu, 08 Jan 2026 08:51:14 -0800 (PST)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5633a443e32sm6731034e0c.22.2026.01.08.08.51.13
+        bh=3co9hJKBOyWFmQg9PlWXAOMJY35oVbLhgGmADuHFV00=;
+        b=E1RPYdcAgTmB0XZ5x34rJ/Xz9wwhipdjAjyLLbtX/vU++JRGVWgHfLVU/+ZqmJOLQO
+         vj4Ym95a3B0qKmMXKDpuCb26FIKwsVuhzc6UfRqEAp13BRJ6dJcoyRZOZQ/TdcDIH/o6
+         irAJNuIIKDG8fTKjOD4CIr+umWx4j9Y9lMAJMeQUSuj2KQHedkIMbhFou9jcjKh+swPq
+         GPZ3YAuYrbwfSD4RpWCSxeQald6rfwY67PGVGAJFpDpCiIqpIMRCRcYSsMP0yYzmw3RE
+         TIPH341y+giVYdlhPbsuf4QU7YRMtZNyrRiwS6DsP3kfM+l8ynaIbX5jB2BEEO6sSBa6
+         XQeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9g8dHGb1Q0WPffuWBugLsvWRFQ2zFQftqhExoClqo5nw1yTt7SQBmC8bRUUiNujhY85PynLLulICn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1CuPpm87inM3J7IifQ2EuPJCdiVLh5cI0ZaWQS1/xjuK8h19H
+	km20H7HMzaPyftTth2Cx7vjGBXZqP1UaUhrZAC92LF6DcB0e0b+v/AHMggABbcZARwo=
+X-Gm-Gg: AY/fxX4Y+0tzEwSx8ld2Jg1Kg+VlZ5GHfXiWqXUWxEip8U9Mvf15uCLQaJDnzlEfATZ
+	9T+MNWKrNNdAPjKBf5W7DjbRfiQk5rvIiImKDuzXZ43VVYBDoXhNUhrp42ihGqQehkVWnPP3knT
+	Vx627LIrteAy68mxsrERIUyyG25btGyZR879duJ81wYNXLHCKIsqngTIxaFGn+MvJUorVHPzn9x
+	RYF5jdZqIeGTQ/vfWjJ6xIqlMuRUFpJHnxasUmZviR+RR9bNbMoBamqLRvK+Qn2j5G+m/xApLM0
+	4BGd+/sfJxnHPNwLr3HHgbssUMqg3uI27AC9R0rntj4q+uGoP8xNw+qSA2the87qBWAxGPn8fQ7
+	kYLr+WhFqrPv01w8coax+lM/HJB8fGjdf/xzllRd0YPO4xrUj+KWHfui90kAdrQtZ6lVdmEwPpN
+	qx1z66g/gO/CoIJx2aF3+z272j8/uZhgtYx12h8sbwjhZm5S2bD4sW
+X-Google-Smtp-Source: AGHT+IGhP6JMwlLW9QjMpXifhhnivyh0IaMCisjtGfguVG5MRqqVsqu21jGPWF/kPzawkGWCJ/2tFQ==
+X-Received: by 2002:a05:6122:8d4:b0:559:6b7f:b110 with SMTP id 71dfb90a1353d-56347d3a261mr2806075e0c.2.1767891706180;
+        Thu, 08 Jan 2026 09:01:46 -0800 (PST)
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com. [209.85.221.172])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5633a440198sm6913076e0c.21.2026.01.08.09.01.45
         for <linux-gpio@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Jan 2026 08:51:13 -0800 (PST)
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-9413e5ee53eso1998400241.0
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 08:51:13 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXiTHpeU07sg70QfRWR/O3jz/+fYsDhmhF6pYH+2kkA0jlYgotqAV+RJdUZ7oiEcw4g0F/Kk5zGGY5f@vger.kernel.org
-X-Received: by 2002:a05:6102:c0b:b0:5db:fce3:af72 with SMTP id
- ada2fe7eead31-5ecb1eadbd9mr3013232137.11.1767891072901; Thu, 08 Jan 2026
- 08:51:12 -0800 (PST)
+        Thu, 08 Jan 2026 09:01:45 -0800 (PST)
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-55b09f54e98so1087239e0c.1
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 09:01:45 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWgAqxOUiFbr1/CXMhiP7q+wbdZTKGxWSpwAwixk2rLdwZtTaedtmjypD8znP13uIOu81+qQtNsJjtz@vger.kernel.org
+X-Received: by 2002:a05:6122:d26:b0:559:ef6b:1efb with SMTP id
+ 71dfb90a1353d-56347fd756dmr2483847e0c.11.1767891705232; Thu, 08 Jan 2026
+ 09:01:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251205150234.2958140-1-cosmin-gabriel.tanislav.xa@renesas.com> <20251205150234.2958140-3-cosmin-gabriel.tanislav.xa@renesas.com>
-In-Reply-To: <20251205150234.2958140-3-cosmin-gabriel.tanislav.xa@renesas.com>
+References: <20251205150234.2958140-1-cosmin-gabriel.tanislav.xa@renesas.com> <20251205150234.2958140-4-cosmin-gabriel.tanislav.xa@renesas.com>
+In-Reply-To: <20251205150234.2958140-4-cosmin-gabriel.tanislav.xa@renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 8 Jan 2026 17:51:02 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWV4uOMnz_FBMW4brWx+6snQ-WOQck5b_YXAxzHhjJgXA@mail.gmail.com>
-X-Gm-Features: AQt7F2pQ9Vlmf7HToBPagR5k-XQIvskfUPMsiSefk36sh5QQiJyR2JQPpu4Zals
-Message-ID: <CAMuHMdWV4uOMnz_FBMW4brWx+6snQ-WOQck5b_YXAxzHhjJgXA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/8] pinctrl: renesas: rzt2h: allow .get_direction()
- for IRQ function GPIOs
+Date: Thu, 8 Jan 2026 18:01:34 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWg7Txe1fm0XOaT9FB0pDq0SehoXHWrx2g=j26g80vnHQ@mail.gmail.com>
+X-Gm-Features: AQt7F2rYWZ2Ei2cs0E8SVTZUjMSM-px_qYqN_ex3GD4Ez2BxiCY01zZUOkvmZgc
+Message-ID: <CAMuHMdWg7Txe1fm0XOaT9FB0pDq0SehoXHWrx2g=j26g80vnHQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/8] dt-bindings: pinctrl: renesas,r9a09g077-pinctrl:
+ Document GPIO IRQ
 To: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
 Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
 	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -89,42 +89,27 @@ Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
+Hi Cosmin,
+
 On Fri, 5 Dec 2025 at 16:03, Cosmin Tanislav
 <cosmin-gabriel.tanislav.xa@renesas.com> wrote:
-> Setting up an IRQ would normally be done in the .activate() and
-> .deactivate() ops of the IRQ domain, but for hierarchical IRQ domains
-> the .activate() and .deactivate() ops are overridden in the
-> gpiochip_hierarchy_setup_domain_ops() function.
+> The Renesas RZ/T2H (R9A09G077) and Renesas RZ/N2H (R9A09G087) SoCs have
+> IRQ-capable pins handled by the ICU, which forwards them to the GIC.
 >
-> As such, activating and deactivating need to be done in the .translate()
-> and .free() ops of the IRQ domain.
+> The ICU supports 16 IRQ lines, the pins map to these lines arbitrarily,
+> and the mapping is not configurable.
 >
-> For RZ/T2H and RZ/N2H, interrupts go through the pin controller, into
-> the ICU, which level-translates them and forwards them to the GIC.
->
-> To use a GPIO as an interrupt it needs to be put into peripheral
-> function mode 0, which will connect it to the IRQ lines of the ICU.
->
-> The IRQ chip .child_to_parent_hwirq() callback is called as part of the
-> IRQ fwspec parsing logic (as part of irq_create_of_mapping()) which
-> happens before the IRQ is requested (as part of gpiochip_lock_as_irq()).
->
-> gpiochip_lock_as_irq() calls gpiod_get_direction() if the
-> .get_direction() callback is provided to ensure that the GPIO line is
-> set up as input.
->
-> In our case, IRQ function is separate from GPIO, and both cannot be true
-> at the same time.
->
-> Return GPIO_LINE_DIRECTION_IN even if pin is in IRQ function to allow
-> this setup to work.
->
-> Hold the spinlock to ensure atomicity between reading the PMC register
-> (which determines whether the pin is in GPIO mode or not) and reading
-> the function of the pin when it is not in GPIO mode.
+> Document the required properties to handle GPIO IRQ.
 >
 > Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
 
+Thanks for your patch!
+
+> V2:
+>  * drop interrupt-controller and #interrupt-cells from required to keep
+>    compatibility
+
+We can make these required once all pieces are upstream.
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 i.e. will queue in renesas-pinctrl for v6.20.
 
