@@ -1,126 +1,109 @@
-Return-Path: <linux-gpio+bounces-30299-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30300-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A38C7D06555
-	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 22:34:04 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33608D068DD
+	for <lists+linux-gpio@lfdr.de>; Fri, 09 Jan 2026 00:38:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1BBED302BAB8
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 21:33:28 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 02AF1301E998
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 23:38:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B7B633CEB2;
-	Thu,  8 Jan 2026 21:33:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5A6F335542;
+	Thu,  8 Jan 2026 23:38:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnyBQWSS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IEQauQcj"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7931A76DE
-	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 21:33:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C3D221FB6;
+	Thu,  8 Jan 2026 23:38:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767908007; cv=none; b=EoEadKFpaarSbJ+ipR+JYi0hBwcexzxsbQsL9Kz3QDQ3z/44kTk4uOAIMR3jypc/ijVw3Mro4SCwNrLxrXFgcW5AXu0G1kp69O7iCba+xVDP7cRa9SpLaH5h0drZhWNCNGU6JluCum/8mh521nDOjH5lNx+jRROXwlLjSeTRByk=
+	t=1767915499; cv=none; b=GtF29kzjRStdkLPJI+KPN7gTHWl9SqyqHwBD69FrVLrc4Fb/D25nm84D+CS37PUMqkIa/6Uicb0kagjZv2Q2iJIePSYBP2y1MVPcWJCVdqBMyzFU1J1xqlf5wema0KfhW2p9KW1RfO4fuN5pX9gBr/MIgY6u/T29yuMEjZvBAXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767908007; c=relaxed/simple;
-	bh=L0/fE30Ctsj/xrDTmCP+jQkb9IAeWr2/buOUR2E2Y+U=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=MGvPrWiXc8GnmO6zxYQ1Jvut22dMODgWDaQLMz9mlvjKclppmfCIcCt8VCfzApnB7piwFHAdnNPGgZna2WpJWKiYaa7XBNMkhEhTsS19S2xvAkoi++u7ICNqT9dohALmA8MNoVpElTDfhfuKLJnbMsfJ0jsNgGnZUlbPssx7WNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnyBQWSS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27163C116C6
-	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 21:33:27 +0000 (UTC)
+	s=arc-20240116; t=1767915499; c=relaxed/simple;
+	bh=yRZyKLmO7Lol22sNkcGpZCT9fMwtjVUEdeGzIuxRZHw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SQ4zqsCF/SfksC0c3mNZ7w2jvI4XT6TIAmgEdsyp4EG4L2E9rEO1DynHx4uM4X48S/8ImO/nzXg6lgl2eiQWlKePmA5Ego8nCqP5ulvTYNiwXWnsru3cgS961iAVBXIvuli/Xb5lRFMA6h/4ue22RdstBhMMg+IZkgq28FVwBc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IEQauQcj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12B17C116C6;
+	Thu,  8 Jan 2026 23:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767908007;
-	bh=L0/fE30Ctsj/xrDTmCP+jQkb9IAeWr2/buOUR2E2Y+U=;
-	h=From:Date:Subject:To:Cc:From;
-	b=mnyBQWSSQ3Y7HJB/+C9kthGT/4SvhZSo4s8DSyxt3uSuCelxKKojHVLdcRERrLEs7
-	 i53lZjgyNHnJ/JGdhxFTtJcOkmVdEUZU9G3GN4KImMFznQQ5ccacWcGIowt2Sx7kVe
-	 sBZNfRqNxkX2K8YTuhz518Y3p2cE/09nz+3hRc2r39xvZp7xvvfMceC45BBpaJrTz3
-	 Jqy6Z/FfZZW34EsuQa465P82/kwE89i9tpYNL+/eO4Td4aqDwOothxm2tQKzVNOje/
-	 3Zk0IMpuzyy9aHh9goAoMQX7poM5vyVGeb4vs2rvFq9HQsM2dyQmjJWYXO1rQ1cKtg
-	 0ddQQqnVwR5UQ==
-Received: by mail-yx1-f51.google.com with SMTP id 956f58d0204a3-6455a60c12bso3496938d50.3
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 13:33:27 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWFs1G8VNSTwIOGESqYP1Yg45V+q7vM9NbuTal0muymzKgfJ6HjL2Cdt9iDD51d1mGewoZ6p3oi2sYp@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZwX8QupcGvhS0QqL3zxwepWfx/TJhJzswsotb0yI7VnwKRs7b
-	1vYsnJKh15j+GzTHsuto5HB5YTi1JM0csOXUzuhNpS4xK7nE/vJrgpigdgLMjZWkridEXogmQlm
-	bUwcN2aSCPeuTemacdnE2lrPpnN473go=
-X-Google-Smtp-Source: AGHT+IHgu2ms8qpT4gjoklQkF/+1KepASICAbvVshq1/mj/AcDEz7NE+T/S4GBv4q9WWSlEX4aZIoMgmHTSEdkiGbg8=
-X-Received: by 2002:a05:690e:189a:b0:644:60d9:8665 with SMTP id
- 956f58d0204a3-64716c7ae8amr7794873d50.86.1767908006518; Thu, 08 Jan 2026
- 13:33:26 -0800 (PST)
+	s=k20201202; t=1767915499;
+	bh=yRZyKLmO7Lol22sNkcGpZCT9fMwtjVUEdeGzIuxRZHw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IEQauQcjj9DR8eS5xBh1f+QJSPEmbPc5gryyOJTg+wzKnG+MQztHAyb79Fb5vlEA2
+	 k3KjN85YH3EvJ+HQXkL0CG322HSgnGPSBh6lE08QSrqvDsS7I6+Ao26t+xa1LDmbkl
+	 fxQ5Uf2kQC4d4292F1t34I7BMVweVD+MOv5SprWxIzmbiy4ijYlcNwlko62rOoC5+W
+	 EVK5EzDtjCi3CM2uvgX0paets5ArMbqDjUs+TKp8tIjPfaOZulfbrcv1oO26I1hgm5
+	 0Dhzh6R2Avdwy6XI6taTz7U2GGfNOTopBzU6j7muHcrN9tkCIwsANy6JQ2kk+lrZd3
+	 CYddXdT34TRXQ==
+Date: Thu, 8 Jan 2026 17:38:18 -0600
+From: Rob Herring <robh@kernel.org>
+To: Daniel Palmer <daniel@thingy.jp>
+Cc: linusw@kernel.org, brgl@kernel.org, saravanak@kernel.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] of: Add a variant of of_device_is_compatible()
+ that can be build time culled
+Message-ID: <20260108233818.GA1466897-robh@kernel.org>
+References: <20260107030731.1838823-1-daniel@thingy.jp>
+ <20260107030731.1838823-2-daniel@thingy.jp>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 8 Jan 2026 22:33:15 +0100
-X-Gmail-Original-Message-ID: <CAD++jLn1Ba7MH63VOtGQHDOA7a_2A9Ez0CQG+Mw_LkvhruswSg@mail.gmail.com>
-X-Gm-Features: AZwV_Qg_cqqaCdBzKo0pztvuPfbxeyqfM-p3_HFWRB6H-KRUXJF6TC_aVYFItBE
-Message-ID: <CAD++jLn1Ba7MH63VOtGQHDOA7a_2A9Ez0CQG+Mw_LkvhruswSg@mail.gmail.com>
-Subject: [GIT PULL] Pin control fixes for v6.19
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux pin control <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260107030731.1838823-2-daniel@thingy.jp>
 
-Hi Linus,
+On Wed, Jan 07, 2026 at 12:07:30PM +0900, Daniel Palmer wrote:
+> In a lot of places we are using of_device_is_compatible() to check for quirks
 
-some pin control fixes that stacked up. Very little has arrived but it's time
-to send over what I have.
+I'm assuming 'a lot' is not just 3 places? Got a rough estimate?
 
-Small driver fixes and my addresses into .mailmap, that's it.
+This seems fine to me assuming there are more.
 
-Please pull it in, details in the signed tag.
-
-Yours,
-Linus Walleij
-
-The following changes since commit 8f0b4cce4481fb22653697cced8d0d04027cb1e8:
-
-  Linux 6.19-rc1 (2025-12-14 16:05:07 +1200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v6.19-2
-
-for you to fetch changes up to ebc18e9854e5a2b62a041fb57b216a903af45b85:
-
-  pinctrl: qcom: lpass-lpi: mark the GPIO controller as sleeping
-(2026-01-01 15:40:56 +0100)
-
-----------------------------------------------------------------
-Pin control fixes for the v6.19 series:
-
-- Fix the mt8189 register base name order back from being fixed
-  broken.
-
-- Add REGMAP_MMIO to the pic64gx-gpio2 to avoid build breakages.
-
-- Mark the Qualcomm lpass-lpi pin controller GPIO chip instance
-  as sleeping to fix lock splats.
-
-- Update .mailmap with my new kernel.org address for all old mails
-  after maintainers ran into issues with this.
-
-----------------------------------------------------------------
-Bartosz Golaszewski (1):
-      pinctrl: qcom: lpass-lpi: mark the GPIO controller as sleeping
-
-Linus Walleij (1):
-      Update .mailmap for Linus Walleij
-
-Louis-Alexis Eyraud (1):
-      pinctrl: mediatek: mt8189: restore previous register base name array order
-
-Sander Vanheule (1):
-      pinctrl: pic64gx-gpio2: Add REGMAP_MMIO dependency
-
- .mailmap                                  | 4 ++++
- drivers/pinctrl/Kconfig                   | 1 +
- drivers/pinctrl/mediatek/pinctrl-mt8189.c | 2 +-
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.c  | 2 +-
- 4 files changed, 7 insertions(+), 2 deletions(-)
+> etc that are simply not possible on some targets, i.e. a piece of hardware
+> that needs special handling is only on one specific ARM machine and your
+> target isn't even ARM.
+> 
+> Add of_device_is_possible_and_compatible() that also takes a Kconfig
+> symbol and checks if that is enabled before calling of_device_is_compatible().
+> 
+> The Kconfig symbol is build time constant and the compiler should
+> remove the call to of_device_is_compatible() if it is unneeded and also
+> remove the data for the compatible string.
+> 
+> Another merit of this is that in places were we are checking for quirks
+> outside of drivers themselves, i.e. in the gpio and spi subsystems where
+> some legacy devicetree handling is being handled for specific devices
+> is in the core code, when the drivers that need the quirks are removed
+> their Kconfig symbol should also be removed and it'll be easier to spot
+> that the quirk handling can also go.
+> 
+> Signed-off-by: Daniel Palmer <daniel@thingy.jp>
+> ---
+>  include/linux/of.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 9bbdcf25a2b4..70be20b0be22 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -358,6 +358,8 @@ extern int of_property_read_string_helper(const struct device_node *np,
+>  					      const char **out_strs, size_t sz, int index);
+>  extern int of_device_is_compatible(const struct device_node *device,
+>  				   const char *);
+> +#define of_device_is_possible_and_compatible(symbol, device, string) \
+> +	(IS_ENABLED(symbol) && of_device_is_compatible(device, string))
+>  extern int of_device_compatible_match(const struct device_node *device,
+>  				      const char *const *compat);
+>  extern bool of_device_is_available(const struct device_node *device);
+> -- 
+> 2.51.0
+> 
 
