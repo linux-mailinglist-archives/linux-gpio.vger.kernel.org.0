@@ -1,247 +1,163 @@
-Return-Path: <linux-gpio+bounces-30258-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30259-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94C49D029F9
-	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 13:28:37 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 950E3D0294A
+	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 13:21:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AFA6C303C823
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 12:22:10 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 67F6D35C85F4
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 11:58:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 804053921FA;
-	Thu,  8 Jan 2026 09:44:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D5C33EDABB;
+	Thu,  8 Jan 2026 09:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TnHFKNCV";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="eQtrDOaf"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GRk99dkS";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="cGSLAuu7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A253C1FFE
-	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 09:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A963B3D4102
+	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 09:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767865450; cv=none; b=YvKeVQNPA6qqbV9wZlWyjF04x75KxkFn/ia18775P/fweez54/rnrsin8cHFv/Q2I+ZqAvtOiQVqa9erAKdV/BRcBv0GOSKC8uzZ1zg8OquvUaKHMoP0tcxsUBQqIFHQNNbKGLdq/b5nJaw+nMZUUf/ZC5/jiNoUS3Y0LKDhFpg=
+	t=1767865854; cv=none; b=fx7WkovstKezu2RwfyTVukNZmOfoaNq+g3/uvpkPvfOyZtu4dx5dQkPibpis5Pnb34Lqsm6oxbKD7pioLQiMHv4SfwJQtw/T0Sr/714XafjoUuTOMqqVEWepJBS29hGQw+OCm+fqCHvgPvUtJ6AwwJ0tYIAdcrWFtvPQBB5R9bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767865450; c=relaxed/simple;
-	bh=EaOLDkGoTefEky/NuzjO//oMkSubroe0L7w93jOQv0k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eMzr9O/tBK3+2gSQXy+W2gsOY3WwNWp6jcgTtCCcgR3DEPRo5gf9oeN0vHdzqc93qmJKB4PZtHoBmK6LDo7+KNEk1DtXWuOF6v8eXxiG+Y5DncXNy4U5y8hWGhTA6N//0q72qzu6KsjJ0KUoAqQSRzF9vSMhDE+JMfonJHATmDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TnHFKNCV; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=eQtrDOaf; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1767865854; c=relaxed/simple;
+	bh=qXV6DUNbL+f+Th6TWepsqauColNIWnAgX/5uLK/gw4w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=otv8TMvZvF4SzcjjBaY21saGFj99sh0Jo+/EAgqr+k3PCFjzDqMc5pSQl9oL3QxkJSi3z5e/XUALx2SPdffo3zStF3isQ2EgBEe+OCGWDlIO+H5gGlgZgYS75wGE6l7b/r/ropjpGs74kF11IszsLLVJ9KtoWiueLXCeufb4esM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GRk99dkS; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=cGSLAuu7; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6087VN0i1837904
-	for <linux-gpio@vger.kernel.org>; Thu, 8 Jan 2026 09:44:01 GMT
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6089a299126164
+	for <linux-gpio@vger.kernel.org>; Thu, 8 Jan 2026 09:50:45 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	1M8PsJS3mXfr6k2RfWjXcrwIasndUjM0VPVwIaU/S4M=; b=TnHFKNCVpjP7QQwP
-	q/itYudfrtE9JK4odnA9oesUL9wCgxB7umvdi82dswmFdW4DBiEBKimPStLoGkr3
-	bozxmndHF6KE1KZSNhHhb3fk2U/Z6unhDh0eZSksK6l3xLffJ3Sl1dN9OeNLENpT
-	FGwaGsRquxE7WJ/kT0rKrLO0IDT2bYtIAcRu8uU8uRj9Zz2dl2l9J+HEdClN+ntE
-	U8kalwfPdZRNqv3qybo1pA1PTkdz/C140AtvIw7g22DzJfRiIVRiK0KEtjnAYCxn
-	ihk43mIJeeED1d2mQDx7M9XDa2gIdImJ5JNRNoCysDfA9THd5BknimTYXNR78TBK
-	oKZZFA==
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bj8920dfn-1
+	aNULNEG+nkj8J9wiTGy8bu7sRj2DD27akkwqGJSkd+4=; b=GRk99dkSQ5gWm1Jw
+	gtg5AMwZZXU64BmKoZ98mDnPWRfpCMX5MXBDvsLRET1g6onYWjD/Uf1VPcnVBhzR
+	04gss8ZZOuTKaSiLkk7iG1zQlbftTtiBoxrVzTYal4+Bfnit0aOAcM0GoTHPrMwW
+	o21zNdv2p3O+n148JqKP05S8dm1tP5c3XccPR8Yx6idqJnd7EiE96i31bLqfN5AM
+	7KgadEntgR8Ki/s2lStHaNBtKAXTftF4GvXnSupOFhUmvfdO8tInMOqTy9JNbX0/
+	iR0K6ZYDaHTvAOKNuN2TiXQm13b87QUFdUOgxjKA+nkY1DT04YH1ngNTPVA5rOMO
+	Ovhp5A==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bj3d69b2d-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 09:44:01 +0000 (GMT)
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-bf06c3426b7so2916273a12.3
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 01:44:01 -0800 (PST)
+	for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 09:50:44 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-8bb3388703dso1133755885a.1
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 01:50:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1767865440; x=1768470240; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1M8PsJS3mXfr6k2RfWjXcrwIasndUjM0VPVwIaU/S4M=;
-        b=eQtrDOafw7+VCd02oTnrVxiCDQYWhQ3l4OJqwHGSHjA9LAxiMWDs9Sr7euv+I1T0kJ
-         exj3UvFWiJfzeBpugtnUaMmNKDa5TfDTEd1orlE1EdSGTd1ZzIf1ocpYnE+LmzbE3zlT
-         S6acl+BsrGjtEJT3JzWO00TO0Q5zDyonT2aOuMEPEUamhlFoBPIOdRAXuNCY1/ICBSI8
-         5dEEyp7NbBSFNwrvBFZU61oobKl1FiQSxvl5YIwWGvjaOW9FKJz2b7vswRGegi6QXANC
-         woXw14IXjszIdrYBUalT2CAit7721Ehf0Lo9Vz7zauXULM9erTuBLPFtS65j9UwgE9eN
-         tkdw==
+        d=oss.qualcomm.com; s=google; t=1767865844; x=1768470644; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aNULNEG+nkj8J9wiTGy8bu7sRj2DD27akkwqGJSkd+4=;
+        b=cGSLAuu7uAA0pwZsRBcaoyMy68IdkgiV2qE/iTd3MsTG7KTaqlxS2/GMTdRSI/HgGq
+         rCxl4II8PA1tRxrYVkB1mjFk/5aXC1bYUKgstBqXO8SJBjPnGzhI+i0HNN6XucCLqKj0
+         ann4JyDyrBUFTMRPHc2rs9sJQSMRYlFdeL+ny8bA3wrfM5aTk6uAvilqAv09lgbi8hye
+         nUTc8hG4GhzXSx76eMJsW5tOVd1tn2p9rCC5yLDb10X24gVwsyEmPsd6SnwG4kSl4ejq
+         HIhZpZFU/II9QCRrOz8AIBiGasSz6eGgbQhNyGKJV+WB6UEs/eBITwXeVHSxawkZXsV0
+         awgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767865440; x=1768470240;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1M8PsJS3mXfr6k2RfWjXcrwIasndUjM0VPVwIaU/S4M=;
-        b=KazsJOU2ZHbZzbjplRc8ZMfdINYTWUspyhkGaLiAaFyeWhCwf20CPLuRkYDINqx8dy
-         mRPVdwJfUeX1IJQtI0tqHyefSoHUrF1WstRLs5EhSJgh0kgQIUAkq5aAETCmTbt++jY0
-         TrvTq2jBYCl2LemouzPf+3HFqwYAXxQuX+gewl02iyiSyqMa5NwmISl8qVDAZ3RgYNo/
-         TxJYbK9kR0dlUpXqkF02t0+uZ01Eo2o1j73QnCVYKKrzdletkGUF8kMDeWpKav63vote
-         8hENBGfBZ/gaVN1QnDIgmY+V+FvG6ireWmajiarAKaNob2EXH/l+zCtNtAg36yy5H9Lo
-         Xo+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWH7pVkzDJOMhLOTkr8h0fqwqp2ieUIULFEPm0djH8/cmsWUFG2uaL8NicxrWDFj73eJuHPr7WTdHRG@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzTm6KanBmfJLBOb9bCL9v3m1JTH/uVWR5B4xxdEWwQvgLs2PA
-	NZbrLbCt3SbsSniVnz6uPipnC9T9/Jlbl7pTS5UmP8tRDvOyP40oBrmV1BBk8RiIxB538upBDeI
-	EhGfGiV6aNNpc6d4+hLZggEXCOumdSFSRnuQ+nBSNJW6Nhy2hWZbDUQByweLSxhTP
-X-Gm-Gg: AY/fxX49X8DnkHL4HZr2RseCaStpXkXWqyDKQNUAEgEgkZZPpv59ziiv3vC6JxVVusk
-	aLbdXI9+tgWgloEuQQqR+3124H7OBZMKt7eC2sKkG2l35P8w9YVVmMerBYy5LdOtZBcBjJUbw6j
-	iwmyOs9vP/+HIXnS65L38mnBuxSQZD4yWn3nYUYYcPc7dNkt6dIppVmy9PW1kOhO29NlEertw1Y
-	u/xI+Sdj7DilM+P3Aw0dCJ8YG7bQNRLdt199bqvgWVW+dztT/AaY01JNs3XnrP7s1zAjBlcwk8K
-	nBv49ItBkqcBZbw7SzdNGT5jScMJ4kAS8wQ4ZbEzUSjqIGOUKxdfyNNVLlkCpbe9K/kX8WSGP1e
-	wLPbQiFL82hRMcgi5YPH2res8kiUW+K7Pf6iM/wAo32CdE9kiHsa6oruhGiYSgCUQ2sNsv7uv+N
-	UmTz7yYHa2/2rD95PWclFKQru2vN4=
-X-Received: by 2002:a05:6a20:1585:b0:366:14ac:e209 with SMTP id adf61e73a8af0-3898fa65f3amr5482068637.71.1767865440415;
-        Thu, 08 Jan 2026 01:44:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF4Co6md478Bni07LU4UJf1qlULZ9dhIAUPNNon9u4U6HztgO1NmE+JxLoEEQ4fc/5D13ilpA==
-X-Received: by 2002:a05:6a20:1585:b0:366:14ac:e209 with SMTP id adf61e73a8af0-3898fa65f3amr5482035637.71.1767865439877;
-        Thu, 08 Jan 2026 01:43:59 -0800 (PST)
-Received: from [10.190.201.90] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c4cc8d29521sm7461139a12.23.2026.01.08.01.43.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Jan 2026 01:43:59 -0800 (PST)
-Message-ID: <5151bdfe-7e83-4aa0-b9fc-28209d535e1e@oss.qualcomm.com>
-Date: Thu, 8 Jan 2026 15:13:54 +0530
+        d=1e100.net; s=20230601; t=1767865844; x=1768470644;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=aNULNEG+nkj8J9wiTGy8bu7sRj2DD27akkwqGJSkd+4=;
+        b=VuuXWya94yPjbBeY7CtPceneC6agdNvoLlGbYAtmbzg5WewlOF7IlGeNMj4KL0uaDS
+         hh5abD61cmisQFKqtzk2FGmiOk2oeU+2AZWB+Ez4G2+fJsKrLI1wps07NPT9i4gi0h43
+         kH89al+dCWvyiAlnpLE+kOT7P69FQrjdCTJliIa+8pIIpvspWv0z7J/LN8cThjbjYGnr
+         T1SaG86NzME1M3u9paVV48LnD3S6JP4uxNKLyBL6vIFD5soSEvHDxovoxaZW0yKanjYf
+         Y8vUM9fDWPri2+WjbKtY4DAniF/Bb7b2lM1aYif/JKm7qGrKqBjZZQRtc0KiA8WxSOAw
+         IRog==
+X-Forwarded-Encrypted: i=1; AJvYcCUBw9c6eul9EysGgw/3hVM1gYiZRNf3d0X3pT92dG2VSJMU8HA3Wj0xzapWrxi5Q+T4OGRKm5ip4BQK@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNZKVoyhvRsXGXQUfQLCwVDsvKTvM6zSclBuua1sMVOh6bm04c
+	7Wb/k67Mmd6QrAKb8rmXFai0MUTMypukYxI9QbaNgSV7OF3DBj5rXbEdim4Xw//7x+2J2iUmM6M
+	0xSFCQA8CkRqhNsnwkqIoSaQ4Xm7h7QP9if81CXJrMZ2dTI3nWRSqd370YvzzdMRJCjfbYllm
+X-Gm-Gg: AY/fxX5lqU8sv2EuDar456aQ21sb93uCzRbLWOIYfHZSyCT2H0Emmq6lkHdBEuM3xU1
+	ACv6RjRepJieLv4PpJXPxFlzyxpX3CvCodd/id/rHXOHG6pVwhlq8XNgU4UwrfpnUaexalwDx64
+	xNh97hxSJp17bEjb7Km+tmYhhw3TM5+TtPGEYSFZ1xpNFJi2fJhGya6D27DIssSLxJq16PU4k81
+	HbXkbEzKbNyaXwsqDp1gRCtZaODbGiiYrOkINP35paKkb5AeAw03Np0L9AG942MNE6SibfxW8Ms
+	jgDU2lbIN9tYDLgDAb/i/jrFg1cbNBHT+hNB5IBmCZE2/M/EBsKZVRq5IWbk63dvGXIRSdpE2mW
+	sfzthL266SaHEoxZLtZm8JgKooOVIVVOJSHlOHjQ=
+X-Received: by 2002:a05:620a:3703:b0:8c3:528b:1b10 with SMTP id af79cd13be357-8c389433d04mr713957385a.90.1767865844315;
+        Thu, 08 Jan 2026 01:50:44 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG5PF1XE9kRdd9WKzyEqKwPSZ6OfIZCL3efK7ZQ06VKG2/p2eNsnDfGHq7rotJOePmBdekGzQ==
+X-Received: by 2002:a05:620a:3703:b0:8c3:528b:1b10 with SMTP id af79cd13be357-8c389433d04mr713954785a.90.1767865843822;
+        Thu, 08 Jan 2026 01:50:43 -0800 (PST)
+Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:2dfa:dbd0:9cb3:22b1])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd5edd51sm15308360f8f.29.2026.01.08.01.50.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jan 2026 01:50:43 -0800 (PST)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ernest Van Hoecke <ernestvanhoecke@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+        Ernest Van Hoecke <ernest.vanhoecke@toradex.com>,
+        Francesco Dolcini <francesco.dolcini@toradex.com>,
+        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] Documentation: gpio: pca953x: clarify interrupt source detection
+Date: Thu,  8 Jan 2026 10:50:41 +0100
+Message-ID: <176786583791.10451.8759479946329178276.b4-ty@oss.qualcomm.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260107093125.4053468-1-ernestvanhoecke@gmail.com>
+References: <20260107093125.4053468-1-ernestvanhoecke@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 07/10] arm64: select HAVE_SHARED_GPIOS for ARCH_QCOM
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Will Deacon <will@kernel.org>,
-        Srinivas Kandagatla <srini@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-References: <20251112-gpio-shared-v4-0-b51f97b1abd8@linaro.org>
- <20251112-gpio-shared-v4-7-b51f97b1abd8@linaro.org>
- <66eaf003-c397-4920-b3b7-93ac8a5adfda@oss.qualcomm.com>
- <CAMRc=McXFTLjE=2-xsx4sodHgd83h822iEBHT7bxcNOQm6OJ3A@mail.gmail.com>
- <98d69fb9-d3bc-4439-88b4-60f3cdea3422@oss.qualcomm.com>
- <CAMRc=McmvaM9=K=0NLRcLLmo5ck=m8Fqekh7tBMz6quO9K4opQ@mail.gmail.com>
-Content-Language: en-US
-From: Pankaj Patil <pankaj.patil@oss.qualcomm.com>
-In-Reply-To: <CAMRc=McmvaM9=K=0NLRcLLmo5ck=m8Fqekh7tBMz6quO9K4opQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Authority-Analysis: v=2.4 cv=M45A6iws c=1 sm=1 tr=0 ts=695f7c61 cx=c_pps
- a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8
- a=3ijyyCfgxb-kCMGLBNUA:9 a=QEXdDO2ut3YA:10 a=3WC7DwWrALyhR5TkjVHa:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: GVvNqKFvO_tEmYpOO9Uqip20DqleHf6S
-X-Proofpoint-GUID: GVvNqKFvO_tEmYpOO9Uqip20DqleHf6S
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA4MDA2NCBTYWx0ZWRfX154TfUGus4XW
- CVqfcePc3dNOwVGgvn3Rpy/BXdwzQG7M6ILtcsQTY2SG12BoZjthz/Ieo1F3V2wHIBax+5V16Jf
- clQYM7cE+ouja9OWJVIwAGeVU0PXWn6PyO+ZJSzAGSpPpULjAXYvxNZMs/XS4LFyKiAyWS0h1AH
- 3fqnuv/LK/ln0+DYVigP3bDMpyvf34YQEDzBfg7yFjYkB7UqNXMXrSg54uN9xVntFGvPAbNJs9k
- Fvc3shUx4B3xG2G1S2SKqiipwM8kI8XErpYwK63NUgcym9iyA4Xn9AQqXErYwVl0HuTpTC/9y9G
- S7O6J54C8b3nyh2JgLNo8ywshvWz+jvOs8t713sROvp4q0uNo8gMMzfNNrLKK/BO0QqS0oNgIPU
- XTqRgQGfBlCfAbJbaBAzdd0PJ8W8eFmicETHn9wxDsQ65Wjm85kgqzsXqBXOFxAGEDfFnVHqnQW
- Q8UmbI5WcnpEn8UcLog==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: uqYu23rM5FobKBJjOrjgb3LVcqUQXioA
+X-Authority-Analysis: v=2.4 cv=APfYzRIR c=1 sm=1 tr=0 ts=695f7df4 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=EUspDBNiAAAA:8 a=RKIkRNZpZs9Xr75-G_0A:9 a=QEXdDO2ut3YA:10
+ a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA4MDA2NCBTYWx0ZWRfX+9dzOOUoGOBW
+ 2gj8EBazce+0zkXB6SOyC4AwFOldXU401JTE9E2kUtPv6axfMtjkUiKmU2Xze6T1xaxbBfNImNZ
+ 9UCXiW3bQZLnVf6YA3vC7PpQif5ovSk70LbvSnrvLnn5AzwoXw9iX/qIGlh3f5HCoMWuqr9baEx
+ pHXV9z/MRJYCaHtkRcTT+ao653R7mexnoBT6OMSpNXakcIl32myIl7N57BRl0qPYOGMFimcquSx
+ J8VaGNGaX5spAEvqrJs9RG2YGle2xkV1IOMMrA9oD1g+GP75KXoFtdWb2LLBpJK2yAced6kD+01
+ ZE9iA98dMIukDqF+CsquJH6ku5vVPxeRutK6fq42qz84dhop1YXAxTsquh4SJArh+J/rVCDmG6/
+ TIO5ssARvJ6igO8u+XXU6aUa72Ox+rlIjCmsP/BNVEvzwjx6XIjnMdjtQ1iV2JKQLe3/Fzf/hce
+ W+XMUwPKPrdHCGkjQjA==
+X-Proofpoint-ORIG-GUID: uqYu23rM5FobKBJjOrjgb3LVcqUQXioA
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2026-01-08_02,2026-01-07_03,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 bulkscore=0
- phishscore=0 suspectscore=0 clxscore=1015 spamscore=0 malwarescore=0
- adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ malwarescore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0
+ suspectscore=0 bulkscore=0 clxscore=1015 adultscore=0 phishscore=0
+ impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2512120000
  definitions=main-2601080064
 
-On 1/8/2026 2:15 PM, Bartosz Golaszewski wrote:
-> On Thu, Jan 8, 2026 at 7:49=E2=80=AFAM Pankaj Patil
-> <pankaj.patil@oss.qualcomm.com> wrote:
->>
->> On 1/7/2026 6:08 PM, Bartosz Golaszewski wrote:
->>> On Wed, Jan 7, 2026 at 12:07=E2=80=AFPM Pankaj Patil
->>> <pankaj.patil@oss.qualcomm.com> wrote:
->>>>
->>>> On 11/12/2025 7:25 PM, Bartosz Golaszewski wrote:
->>>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>>>
->>>>> Some qualcomm platforms use shared GPIOs. Enable support for them b=
-y
->>>>> selecting the Kconfig switch provided by GPIOLIB.
->>>>>
->>>>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->>>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>=
 
->>>>> ---
->>>>>  arch/arm64/Kconfig.platforms | 1 +
->>>>>  1 file changed, 1 insertion(+)
->>>>>
->>>>> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.plat=
-forms
->>>>> index 13173795c43d4f28e2d47acc700f80a165d44671..3dbff0261f0add0516d=
-8cb3fd0f29e277af94f20 100644
->>>>> --- a/arch/arm64/Kconfig.platforms
->>>>> +++ b/arch/arm64/Kconfig.platforms
->>>>> @@ -316,6 +316,7 @@ config ARCH_QCOM
->>>>>       select GPIOLIB
->>>>>       select PINCTRL
->>>>>       select HAVE_PWRCTRL if PCI
->>>>> +     select HAVE_SHARED_GPIOS
->>>>>       help
->>>>>         This enables support for the ARMv8 based Qualcomm chipsets.=
+On Wed, 07 Jan 2026 10:31:22 +0100, Ernest Van Hoecke wrote:
+> There are multiple design tradeoffs and considerations in how the
+> PCA953x driver detects the source(s) of an interrupt. This driver
+> supports PCAL variants with input latching, a feature that is
+> constrained by the fact that the interrupt status and input port
+> registers cannot be read atomically. These limits and the design
+> decisions deserve an in-depth explanation.
+> 
+> [...]
 
->>>>>
->>>>>
->>>> Enabling shared gpios is breaking hamoa and glymur boot on next-2026=
-0106
->>>> For hamoa - reg_fixed_voltage_probe which calls gpio api is breaking=
+Applied, thanks!
 
->>>> Please find the log here - https://lava-oss.qualcomm.com/scheduler/j=
-ob/24722#L3514
->>>>
->>>> For Glymur - qcom_pcie_parse_perst calls the gpio api <4>[    2.9109=
-82] WARNING: drivers/gpio/gpiolib-shared.c:493 at gpio_shared_add_proxy_l=
-ookup+0x160/0x24c, CPU#1: kworker/u75:0/109 <4>[    2.911027] Call trace:=
- <4>[    2.911028]  gpio_shared_add_proxy_lookup+0x160/0x24c (P) <4>[    =
-2.911030]  gpiod_find_and_request+0x1c0/0x504 <4>[    2.911032]  devm_fwn=
-ode_gpiod_get_index+0x1c/0x6c <4>[    2.911034]  qcom_pcie_parse_perst+0x=
-70/0x150 <4>[    2.911037]  qcom_pcie_probe+0x414/0x804 <4>[    2.911039]=
-  platform_probe+0x5c/0x98 <4>[    2.911042] qcom-eusb2-repeater c448000.=
-spmi:pmic@9:phy@fd00: supply vdd18 not found, using dummy regulator <4>[ =
-   2.911043]  really_probe+0xbc/0x298 <4>[    2.911045]  __driver_probe_d=
-evice+0x78/0x12c <4>[    2.911047]  driver_probe_device+0x3c/0x15c <4>[  =
-  2.911049]  __device_attach_driver+0xb8/0x134 <4>[    2.911050]  bus_for=
-_each_drv+0x84/0xe0 <4>[    2.911052]  __device_attach_async_helper+0xac/=
-0xd0 <4>[    2.911053]  async_run_entry_fn+0x34/0xe0
->>>> <4>[    2.911055]  process_one_work+0x14c/0x28c <4>[    2.911058]  w=
-orker_thread+0x188/0x304 <4>[    2.911059]  kthread+0x11c/0x128 <4>[    2=
-=2E911060] qcom-eusb2-repeater c448000.spmi:pmic@9:phy@fd00: supply vdd3 =
-not found, using dummy regulator <4>[    2.911061]  ret_from_fork+0x10/0x=
-20 <4>[    2.911063] ---[ end trace 0000000000000000 ]--- <3>[    2.91106=
-5] qcom-pcie 1b40000.pci: error -ENOENT: Failed to parse Root Port: -2 <3=
->[    2.911069] qcom-pcie 1b40000.pci: probe with driver qcom-pcie failed=
- with error -2
->>>> Reverting this commit fixes the boot on both platforms
->>>>
->>>
->>> Hi!
->>>
->>> This is not really the offending commit, it's a recent one in the
->>> implementation. The issue should be fixed by the following series[1]
->>> that will be in the next next tag. Can you give it a try?
->>>
->>> Bart
->>>
->>> [1] https://lore.kernel.org/all/20260106-gpio-shared-fixes-v2-0-c7091=
-d2f7581@oss.qualcomm.com/
->>
->> With the linked patchset applied I still see the same issue
->>
->> Pankaj
->>
->=20
-> Is the gpio-shared-proxy module available? If not, can you change the
-> config to make it built-in like CONFIG_GPIO_SHARED_PROXY=3Dy?
->=20
-> Bartosz
+[1/1] Documentation: gpio: pca953x: clarify interrupt source detection
+      commit: 8ba379879aa3e8cef871fed4a509d4f0a6370e6c
 
-With CONFIG_GPIO_SHARED_PROXY=3Dy the issue remains the same
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
