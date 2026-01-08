@@ -1,39 +1,100 @@
-Return-Path: <linux-gpio+bounces-30267-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30270-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 380C9D02E96
-	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 14:13:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E4B3D030B0
+	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 14:32:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1E86F30C4888
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 12:46:03 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BAF583112971
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 13:11:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4A0B466234;
-	Thu,  8 Jan 2026 12:14:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1386D47148E;
+	Thu,  8 Jan 2026 12:52:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="UV8AvzP1"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dsPMqdAC";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="fkNW00/V"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-m49214.qiye.163.com (mail-m49214.qiye.163.com [45.254.49.214])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0FA43C045;
-	Thu,  8 Jan 2026 12:14:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.214
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A84F471497
+	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 12:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767874454; cv=none; b=PVS7sAuaYafrtG1dbmyeP4ZzgESn6EcAI1e2J0yXrG3Z75bGbiuYnA961tUiqEKBWvPDr7yLFy7dxW9JCR0TSFA1ZjMmQTEbxiLwAc32TZleY7osMAiXXdQVlYq0kQaFZucimeUlo8M/UdpNyl6uiJQx5QrF8GVIAwkLZ3QonbQ=
+	t=1767876732; cv=none; b=VwHSSZWfYMvXSXdfWfUHEqmvh+N3csvlaNGhrPwWYv/lSOKAfoWGFj6A8Q7hFnJFKHk4yKIdDPxMRkvnELYNExQhrFBM8FNHRTZWJvqJiga0mugBWGGJc1CeJWHxmB158U8DzH9oUcjVtapaQyPgP0IljwV0HfIMVofvldpvSuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767874454; c=relaxed/simple;
-	bh=Ilk2WGvg3Kck0HZM3LZ+QljxkpJY4ZY3QQ5L2/KjwmI=;
+	s=arc-20240116; t=1767876732; c=relaxed/simple;
+	bh=QOFVeDUoq+RkKbWZq/pMK6/NwJiOTJMnMsw+4xmARgo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L0xzfj1sNzt3PdSjJ65YHdoEeln8h92+RbG/RrC4rCPh85HT33JSH6KlVGDg1p145TQiaWh8GRwXxu20aBopOQYjhSTtvI9/ct9cpybkjd/JNC/kjv/ci5CSoHeh6NlzbLmAx4kYvTWmOJLlZwjoIxN4I/6XzYawBTLpw6iKN4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=UV8AvzP1; arc=none smtp.client-ip=45.254.49.214
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [172.16.12.16] (gy-adaptive-ssl-proxy-4-entmail-virt151.gy.ntes [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 2ff5af838;
-	Thu, 8 Jan 2026 20:13:52 +0800 (GMT+08:00)
-Message-ID: <a2f5c2b3-2168-41b4-917f-183ab72a4499@rock-chips.com>
-Date: Thu, 8 Jan 2026 20:13:51 +0800
+	 In-Reply-To:Content-Type; b=VhM0MvU227PZu9g6HIxjyXGWPZuY7csmjEIqbZmbeyisGNdd+EmQbszTlgIz/3s+Rax4lXChIgg5a/cumNchQl7Mppqfga9WGMeUBvc4BgiBjKfhpD8EXzJJlUgKvtNKCoSyg84Y9TgQz0pWye+KxSshWr7xL4MQdP0Z7UjEX3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dsPMqdAC; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=fkNW00/V; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6089JXwG125951
+	for <linux-gpio@vger.kernel.org>; Thu, 8 Jan 2026 12:52:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	SSZq0W/AuZXDHLOoNS/P9czI9HRnbDZBm6oN0SdJro0=; b=dsPMqdACt2Xh921z
+	pRkDa8qe5suH+5GhB6H7n9IAh3Qy7G1LuN85nUII5FMXJpXNj9+kK0UMg7M1l201
+	LOWIGdY+dSbghFFh+hxtyUABxBUqVM8XdcjwoFpX/BMUtjjPfWx46iZgU/RDWYt7
+	vCurZWjy7vIbL3UnUlpvnUoE+b0y3Vqu20qXqNfpo3Z2EszkjScEBXM0N9PWBePb
+	ZzuXegM0TdDSCU2Hm0+yALRVRh4pKQWHJJbd1BFyZihZq1DUvpVzAzmFzsY14+0k
+	oIs/rzV/2q+j3d5ahZ8S/sFgTv/5UAeRsAUg+TMdBTFe6uf0MHlO/Lg1aMFHxkh8
+	5IxtjQ==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bj3d69une-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 12:52:08 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-8b2ea2b51cfso72312685a.0
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 04:52:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1767876728; x=1768481528; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SSZq0W/AuZXDHLOoNS/P9czI9HRnbDZBm6oN0SdJro0=;
+        b=fkNW00/VQAyq8xsMPjygWHJu4wIkmz3lGV2Aac6AaNhNFOBzk5RAqQ8tgjTivbvasa
+         Sj/znN4fIuRiEgOe2eWJDCmrPZNvI2/Ap47CVb6i035Uap+BJSi2y52pfkIDNz5+ffni
+         2gSFgQHi3QisVWnOTlK+YGMV2J1j5cXELZrAGHo5PIMj6NdEPjWoP93PtRUJAkj4QvM9
+         lUcNNdF4QIF4YiCzpZoNKO7+ndPhffAlVZnXzljTa1fhYxyQ4Uuc69lDphvHVFv2gAfJ
+         0iMN1ALtyaqrKbLXme1VI/cAFBf+Ng7zenhew1qHSQJvWaJKgc70w6IYlZbUKqziYKqq
+         y/WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767876728; x=1768481528;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SSZq0W/AuZXDHLOoNS/P9czI9HRnbDZBm6oN0SdJro0=;
+        b=nehRQhmAclp0iC6WbidcMCp3im0zpJx1qSc0N6Fude3MKwcWJoiIKKyANZTgFffk0t
+         +hSNEESQ/QkCi+NrWaUrUNdV05gaYxT+7xfDt5T2LWYtQA4MlanKbEZ/m7VkTY21dwGC
+         xSusF4/VJHiBtf61Dir/F9nO2jdnJhONxeYXga/mJfJEzs0FlDAE8WJUpRGvXD05GYYz
+         ODr6Fz1prc2YkCYfTx6mn61xvsLnBvBY6DLm4uNuA9p/nCpDbyNpZbGNBlbEap87aNeq
+         V7KkNk5rl6dmx87ZSyjoG9kBGZSLzqXHTHRhcM+SrbiydxZiBwNaVF63dOpKnS7gOpvi
+         lU7g==
+X-Forwarded-Encrypted: i=1; AJvYcCWRaj6nNDxwSfHnOYvSdyGHGCz1UZJIUg9sBl0H/zWJjrUlCr5sVmVs3LcMFOm0UD2Xz3Z/6PG84cTS@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNZCSWDL2tzY1yxoOYVF8PVmxvWyV0hy5bX3RRRrNUBzj9/mL2
+	VlTwh9KK4fd9ZVdMrNYW/X1K59EHKxgx3CubG7luce8Cepi08jQ6B5dqvqvRSPNg1+9+r5lv19n
+	LPBp+6KxGXpuzBdxsTPfjIERRqamoQN+LNwYEKGMzOimNsOHBU/PFsSAmnMGaiwMD
+X-Gm-Gg: AY/fxX4Qlqx8KmUqoALGfGjPpdVJl7Z2o/HU6tiMpXbYVHWy2OOu2F0lxq8bAtUA2Ax
+	tS4efptfpGcztwJupZHtjunP7fQA/c5dVSNHCQDALuTtwRZgX+cYPL8m74sT51fHaaIjis9dtI5
+	Cd8bOm7fU2VaLxj332wcUczjkYX+Wd/SFopwMAsHmFMoDnIoiad2DEzxaHSvQk+ELNykaKx1GRy
+	yWKlfgtZjbmAH8TSUpZJDy/JVeJoyMBXM4JC91c60e2SnJqejncgmWdTUA1GykxBKuaDBffMiJS
+	KF8ZOuKgiQuH2mTBFV4aTznYoBOuk2vXOWVHDA6wbOEf6tjlw2P8hOGnRDPvpjYI8xeU/EUjAAm
+	Mj3f1eg9JsqUdjiVzoiiFsyrI/LxySTgCh0jgYGhC+3FhA+DXlUZQm+e2ASe6Uam30OQ=
+X-Received: by 2002:a05:620a:1794:b0:89f:63e7:b085 with SMTP id af79cd13be357-8c389410364mr545961285a.10.1767876727865;
+        Thu, 08 Jan 2026 04:52:07 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHo45yMO7U4oaudAIbE+xfU6IFOYt/20jPnNbq86GzeDWfKgToo4vFxzHEx+lvnvjGdNyAZaQ==
+X-Received: by 2002:a05:620a:1794:b0:89f:63e7:b085 with SMTP id af79cd13be357-8c389410364mr545958885a.10.1767876727439;
+        Thu, 08 Jan 2026 04:52:07 -0800 (PST)
+Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b842a230db0sm811852566b.2.2026.01.08.04.52.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Jan 2026 04:52:06 -0800 (PST)
+Message-ID: <dff0c32f-b471-410b-8a70-9c20e436a3b7@oss.qualcomm.com>
+Date: Thu, 8 Jan 2026 13:52:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -41,110 +102,70 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/7] dt-bindings: pinctrl: rockchip: Add RMIO
- controller binding
-To: Linus Walleij <linusw@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner
- <heiko@sntech.de>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- tao.huang@rock-chips.com
-References: <20251216112053.1927852-1-ye.zhang@rock-chips.com>
- <20251216112053.1927852-7-ye.zhang@rock-chips.com>
- <CAD++jLntu4LY=VHOMSXeLKXOBD9MTNziv47B0qkDjxUa1xAsng@mail.gmail.com>
- <85032ae4-4d82-4884-aa7c-b69fee76d509@rock-chips.com>
- <CAD++jLnH2vLNxTLj8Lw8RnOHxfitwi3G_8WCBtu+_=XL3ryH_w@mail.gmail.com>
-From: Ye Zhang <ye.zhang@rock-chips.com>
-In-Reply-To: <CAD++jLnH2vLNxTLj8Lw8RnOHxfitwi3G_8WCBtu+_=XL3ryH_w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Tid: 0a9b9d870e4309d8kunm04506d9976d9ca
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQkoZT1YaHh1MTktNHUgZH0JWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=UV8AvzP1G+MxRLfAXtJtmMOMR0xcdDJUv3mojtqaLqKD+Z5/M3TRVtZjk3TfzxuWQYa3jqB77SY4oVsFjc5DjUX4G2ETFwmBWpscdhdvUh8j3EUCwEdcuzXbkpI2mBU2hvzcc+HqdPGhZ1DrjbsNfaRZRdUdW6NzmEOva4rFhc4=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=qKUPfb6RjX38dUPs0zWmKo6fI+2s9bZCTUhRH83gC7Y=;
-	h=date:mime-version:subject:message-id:from;
+Subject: Re: [PATCH] pinctrl: qcom: sm8350-lpass-lpi: Merge with SC7280 to fix
+ I2S2 and SWR TX pins
+To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linusw@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20260108100721.43777-2-krzysztof.kozlowski@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20260108100721.43777-2-krzysztof.kozlowski@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: O4nBXdAJvrUl4x_u7c7qFspUV1P4lJuE
+X-Authority-Analysis: v=2.4 cv=APfYzRIR c=1 sm=1 tr=0 ts=695fa878 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=EUspDBNiAAAA:8 a=7bMfskS0MixV3btvheMA:9
+ a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA4MDA5MSBTYWx0ZWRfX0l6gHIVeDnr9
+ mxHoBzf2vwq3L3kNrToP3AyVXRvWHqThZcypvR2ZaOTcv1iEYZ3f7UT50zWkq/mY+CY0Fd4SDz+
+ pqkWJDp7QESdb2AW+GMUFTsQHR2GP/iZJErF2FZXyd7Zung1l4svQ2f9v4QHnVEJHK1TXpsu+VW
+ lmBHdUejecvnz3zXtje5jaY7ULiAGwe85vcUDrx3kL133PWELNTmCafDwAKWFJQUwo7EkwVHzFX
+ KefzwpiMBMg/om9ttgTOKSJCYj1mit2F5Dgy4Y6AznG+sbejS7P9qC17yrVJDB1cahuRf/gx6Wd
+ vkcmewXMZmml3vgHbWeSDNYGiw685+nU1SVJkfHCuLTm1gmvWii/Uk1XDF39Sory9rOXEFiMAxp
+ i/ZGVPhkqXhup9WKdWZ5k6YwQKDUbIrrLqrAS+Ri37yR1xa0pCZx1ixLqoD3TeySISytxEHNReG
+ egODdhQ/sVSL/pFMh8A==
+X-Proofpoint-ORIG-GUID: O4nBXdAJvrUl4x_u7c7qFspUV1P4lJuE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-08_02,2026-01-07_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0
+ suspectscore=0 bulkscore=0 clxscore=1015 adultscore=0 phishscore=0
+ impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2512120000
+ definitions=main-2601080091
 
+On 1/8/26 11:07 AM, Krzysztof Kozlowski wrote:
+> Qualcomm SC7280 and SM8350 SoCs have slightly different LPASS audio
+> blocks (v9.4.5 and v9.2), however the LPASS LPI pin controllers are
+> exactly the same.  The driver for SM8350 has two issues, which can be
+> fixed by simply moving over to SC7280 driver which has them correct:
+> 
+> 1. "i2s2_data_groups" listed twice GPIO12, but should have both GPIO12
+>    and GPIO13,
+> 
+> 2. "swr_tx_data_groups" contained GPIO5 for "swr_tx_data2" function, but
+>    that function is also available on GPIO14, thus listing it twice is
+>    not necessary.  OTOH, GPIO5 has also "swr_rx_data1", so selecting
+>    swr_rx_data function should not block  the TX one.
 
-在 2026/1/4 19:44, Linus Walleij 写道:
-> On Sat, Dec 27, 2025 at 3:46 AM Ye Zhang <ye.zhang@rock-chips.com> wrote:
->
->> I understand your preference for standard bindings.  However, there is a
->> specific constraint here: the RMIO acts as a secondary layer of muxing,
->> sitting behind the primary IOMUX controller.
->>
->> The existing Rockchip pinctrl binding uses the vendor-specific
->> rockchip,pins property for the primary IOMUX configuration.  If I were
->> to use the standard pinmux property for RMIO, the node would contain
->> mixed bindings like this:
->>
->> node {
->>       /* Primary IOMUX (existing binding) */
->>       rockchip,pins = <1 RK_PB1 16 &pcfg_pull_none>;
->>       /* Secondary RMIO  */
->>       pinmux = <(RMIO_ID << 16) | (RMIO_PIN << 8) | RMIO_FUNC>;
->> };
->>
->> Since this node describes a single hardware pin configuration that
->> requires two separate hardware settings (Primary Mux + Secondary RMIO),
->> I thought keeping the secondary config as a vendor-specific property
->> (rockchip,rmio) alongside rockchip,pins would be more consistent and
->> less confusing than mixing legacy custom bindings with standard pinmux.
-> I see the concern but I would say two wrongs doesn't make one right.
->
-> The DT binding people will have to say what to do here, but ideally
-> I would say the primary IOMUX should be modified to *also* *additionally*
-> support the standard bindings and deprecating the old rockchip,pins,
-> and then you can consistently use the pinmux=<>; binding in new
-> trees for both pinmuxes.
->
-> I understand that maybe you are only working on this other controller
-> and might feel that the primary IOMUX is none of your concern,
-> but someone has to stand up and take the responsibility for the system
-> as a whole, if no-one else then the Rockchip SoC maintainer, else
-> we get throw-over-the-wall-engineering.
-Hi Linus,
+This is a little difficult to read, but tldr the correct functions are:
 
-We have discussed this internally, and we fully agree with your suggestion:
-the driver should be modified to *additionally* support the standard
-bindings, allowing us to eventually deprecate the old `rockchip,pins`.
+5 -> swr_rx_data1
+14 -> swr_tx_data2
 
-**Regarding the RMIO support in this series:**
-I am willing to implement the standard `pinmux` binding for the
-**RMIO** part immediately in this v5. This ensures that the new feature
-starts with the correct, standard binding.
+which is what this patch does
 
-**Regarding the primary IOMUX:**
-However, the RK3506 pinctrl support is built upon the existing
-`pinctrl-rockchip` driver infrastructure, which was originally designed 
-around
-the `rockchip,pins` property. Refactoring the driver to support the standard
-`pinmux` binding (and the suggested nested node structure) is a significant
-undertaking that involves core logic changes and regression risks for older
-SoCs. Mandating this refactoring as a prerequisite for RK3506 support
-would effectively block this SoC from being supported upstream for a 
-long time.
+so:
 
-Could we allow RK3506 to follow the existing driver's style for now to 
-ensure
-consistency and timely support? We agree that migrating to standard pinmux
-bindings is the right direction, but we believe it should be handled as a
-separate, dedicated project in the future rather than part of this 
-enablement series.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Hi Heiko,
-Do you agree with this?
-1.        Use standard `pinmux` for RMIO in this series.
-2.        Keep `rockchip,pins` for the primary IOMUX for now.
-3.        Plan a future refactoring to migrate the primary IOMUX to 
-standard bindings.
+Konrad
 
-Best regards,
-Ye Zhang
 
