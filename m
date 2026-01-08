@@ -1,124 +1,126 @@
-Return-Path: <linux-gpio+bounces-30263-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30274-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DB68D040D8
-	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 16:53:20 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 687BBD03BEB
+	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 16:19:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8AE1932E13FF
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 15:30:34 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id DC68D3052625
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 15:16:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E6EC4B7136;
-	Thu,  8 Jan 2026 10:31:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6C8A38B9A7;
+	Thu,  8 Jan 2026 13:48:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Uw1Fklrf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gY38rtPZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1494B7129
-	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 10:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227B736A023
+	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 13:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767868281; cv=none; b=KHfvwR03K86X9ArPzDVJVHg8y3ZpuBVFm/rfS8+5XiY/IDtGNbx6px13sXr+tsMzt9eOLYafFQVzVDGUgiUH5UhU5+O8HhljV4zYNdy/e42nqPTqsOqt7TAno/bQ1IkZxe2KmuzKfKQlWwfj11P7zCa8OFf2quwC0IkNA3NNQ/Q=
+	t=1767880127; cv=none; b=aCRc9JO9GxbxAOfe09/VjmS2VQalub9EUAZdMBzS6YoV2dxfHd0+7WaIVqYVqQROOyfClLoCvAE6oc7uKRpJ1T87wtoMgQq3NPO7NkJcVPTv+X1bqePVbZjID6XPCWh7TScddp6t0w9gHQmWGywzCofcPKPu8IJjKZKnk496bt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767868281; c=relaxed/simple;
-	bh=WjMDQIKpg7jBcOgP8J+2SBS55drFnxG2/PUWLE0iuP0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=ZDAQOqcaHb4z15scE6CTMuxumITbHSiXbqffzvAWd9uLr/FDIInoysHb9KQJPC1gG2P3wiAvNh2cumVeXDRzUnm5twT4HeXXBU5Yod3gkUKMKDRTWQEfdqzCLXFHzIkY2gThNlv6Uep9lmzNL4AXFAElVwaJwMRlpvbMrgA3h0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Uw1Fklrf; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20260108103115euoutp015fb57a6bd51100e5851b0f6141b560bb~IutR6OMdz2855228552euoutp01b
-	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 10:31:15 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20260108103115euoutp015fb57a6bd51100e5851b0f6141b560bb~IutR6OMdz2855228552euoutp01b
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1767868275;
-	bh=a1HTLMyM51weT/4dHbcu49LXEtAtqKJ/YTI6ZBmnq3U=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=Uw1FklrfnxL4ic0skDwsKqyz5ad0cPhIy3PwKOCQTK7YXtastNJKIkCalUGDy+w6B
-	 mN/mRUApKfXAnM/fmPpRvVW2oY9rOgUUGbiDgRBILY+w5OegnNkbz2A7t03MnBnVEt
-	 uQBfZ8SYTBTkt47j3p++q/ZEUpMO1cKhPVPvB6dM=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20260108103114eucas1p21eaaa1f177aad2539b3b0740aff1b6dd~IutRYkdfQ2114221142eucas1p2J;
-	Thu,  8 Jan 2026 10:31:14 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20260108103114eusmtip19c06b9724a2eeedf50fe73284487a3d0~IutRER2943042730427eusmtip1r;
-	Thu,  8 Jan 2026 10:31:14 +0000 (GMT)
-Message-ID: <b03f3d6f-cb29-4f14-878b-c3a060c0745d@samsung.com>
-Date: Thu, 8 Jan 2026 11:31:13 +0100
+	s=arc-20240116; t=1767880127; c=relaxed/simple;
+	bh=n8N+CKAPIFoLszRlbHptTyBTVh52MW8VkHEm90TrFkA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iW0KADk4Ih8bN+ZQTEy21DAfC+mssx6/h0QKJ1Lt5J/RoXuQOHp2zcoOM/GKiR8UPaPjo7Xn4qoN+GeqAzOUoDnrsV111Q80WWJvkkSVHom6vNuUUDnhDGiwxuEXzxkrK78B1ckUWN+hi2uuPIJQ/GuhFSBOdG9qX8KAT1PzuHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gY38rtPZ; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-47bdbc90dcaso23784725e9.1
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 05:48:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767880123; x=1768484923; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VR5Near76uEpKL1uvgvz4fJXXRgjVyevYhLP2Yn9Znc=;
+        b=gY38rtPZoSCg8hbUThaS3rVQehVutXwMMTXVf0KGk0lVNW3phcA/HJsGoLH+NHTfhj
+         LuVn9hr9VSImtfl46K0W1c3ODafJEhqCc69/OikmojizlvWyUSA2wUrnkGlUPxHbDaKr
+         Ss17biltrZZXe7A2TJQW2mu2RwRVoodq2ggtQYq0sV/pIJqLz/Z5YOfPsmWQiwgriONa
+         swTbL0YySKbfYXAJH6BHMggiju11NjbQQiiMHtOyBPNiaw7cnU6nYldvDwpVxNaJgFFl
+         LcFQ/MXhOByCwfKoseEx1bgtUcgi4gocI6ylNF1aDxD22U9tvTfz8sGNObmSTDEDR1/q
+         5pvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767880123; x=1768484923;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VR5Near76uEpKL1uvgvz4fJXXRgjVyevYhLP2Yn9Znc=;
+        b=TJIYUJRHg0Oeq4Cs5HdnXmw3djBB7nYZTtrNOn/56TXKgvAVfZQRAWdVxroVx6w7WE
+         XkJxIb42uHREyAN01LVxDDhwrH0cptePtuIlsM7ZgKZnk01yjm0ejnH5//v+K3Mm+u47
+         5WfPcHDwaX0uJgU4hcOXEUi9Xx6nhb7AtUIReGytfQSEWf4Cjeu6ZqNiFUzkmt/Qmcqb
+         2HKD29HGaax7zu4uoeHTe8NAzj5TLwd2aomgRjecsMmTjQzeBntYswI1zRvh1qc3DWFL
+         22Ij95xq0iANniMpTPJkjWxeM7GQMm4qFynuF+Um5m2RHdJ2QswJIHaBwvLpm2fPBWGA
+         Qt4g==
+X-Forwarded-Encrypted: i=1; AJvYcCWKnBowI4bU7MJjeBezdoFHihS2EhVvE4bnjNsMlWAQV2AWtdv28Km/LpPzEGg7XXsDRwbrGbaD8xOf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzx18vVfrCuZLbM3bygFpMHkIh50mB+DZq8LX7VV05euU8GBMy7
+	+IoPbBR6lwkZ3MrfqWnPitNkRQn158LVBDYMy6Sh7gpd+TKppNJ+h2Si
+X-Gm-Gg: AY/fxX5GSp51grI3T2w8sGbsOPOoEUlzmj9YSP9QXOSqzKr1ptMblUX0zO24HqQgELp
+	g7wgPS83Nz4SYxKWO4oBPC1sghHIfWGQUC1bvT1/APr6AeVvrwo/DU/rvdsKbv4ITrXS1ehhA/7
+	L6olmpYmvmS1EyPeZMer8aIsbAGrRvpqBhV7NS+0D2gLW578/7afLpz/5p0xXrYn2Dg4Kximorg
+	ZmrmqcvlH3vwI10B6/Hn8/+iGa6pyIsvgaes6AdSlxyIR9RxikpvRC1qpQyKFmk+xLqQN0zh5cq
+	gZgZRBWCNi1ijSf/fzddXsFhmIMV0Ipicj2NuKusOTTS1VCWGdIvhCn/5w3juXLU28DAs3ZSjDC
+	S7V0zUZPerL+aPFulnbSz7RuXqHjLeKpDm18VF9BPK44TZCXtn56RcJxGo4CZ38i/97Q9qNRNJC
+	u/y+nnD7xs0tqskhiyUg==
+X-Google-Smtp-Source: AGHT+IGpDU6JLfvzHqJSaoogrG0562//ALgzEHvj8Oq82kva9wo4Ahns8LraI5InqwBI5zqAJMVkhg==
+X-Received: by 2002:a05:600c:3b01:b0:477:9dc1:b706 with SMTP id 5b1f17b1804b1-47d84b34501mr70092875e9.19.1767880122785;
+        Thu, 08 Jan 2026 05:48:42 -0800 (PST)
+Received: from [192.168.0.100] ([188.27.129.46])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d7f70bc4fsm149977345e9.15.2026.01.08.05.48.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Jan 2026 05:48:42 -0800 (PST)
+Message-ID: <44b41858-fffa-411c-b4c0-a0c4da8a497b@gmail.com>
+Date: Thu, 8 Jan 2026 15:47:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH] gpiolib: fix lookup table matching
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Linus
-	Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Konrad
-	Dybcio <konradybcio@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] gpio: shared: another set of small fixes
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+ Linus Walleij <linusw@kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260106-gpio-shared-fixes-v2-0-c7091d2f7581@oss.qualcomm.com>
+ <2889f386-65d3-4f89-ac11-aa51e4384ed9@gmail.com>
+ <CAMRc=Me5nNXU0foqToYs4W8fvbTZ0DZSRXAQ7rfHdbcoB4+7cQ@mail.gmail.com>
+From: Cosmin Tanislav <demonsingur@gmail.com>
 Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20260108102314.18816-1-bartosz.golaszewski@oss.qualcomm.com>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20260108103114eucas1p21eaaa1f177aad2539b3b0740aff1b6dd
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20260108102327eucas1p1441a46ec3d1be1e9eaee611959014de3
-X-EPHeader: CA
-X-CMS-RootMailID: 20260108102327eucas1p1441a46ec3d1be1e9eaee611959014de3
-References: <CGME20260108102327eucas1p1441a46ec3d1be1e9eaee611959014de3@eucas1p1.samsung.com>
-	<20260108102314.18816-1-bartosz.golaszewski@oss.qualcomm.com>
+In-Reply-To: <CAMRc=Me5nNXU0foqToYs4W8fvbTZ0DZSRXAQ7rfHdbcoB4+7cQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 08.01.2026 11:23, Bartosz Golaszewski wrote:
-> If on any iteration in gpiod_find(), gpio_desc_table_match() returns
-> NULL (which is normal and expected), we never reinitialize desc back to
-> ERR_PTR(-ENOENT) and if we don't find a match later on, we will return
-> NULL causing a NULL-pointer dereference in users not expecting it. Don't
-> initialize desc, but return ERR_PTR(-ENOENT) explicitly at the end of
-> the function.
->
-> Fixes: 9700b0fccf38 ("gpiolib: allow multiple lookup tables per consumer")
-> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Closes: https://lore.kernel.org/all/00107523-7737-4b92-a785-14ce4e93b8cb@samsung.com/
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
->   drivers/gpio/gpiolib.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index fc382f43f9fc..0a14085f3871 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -4602,8 +4602,8 @@ static struct gpio_desc *gpio_desc_table_match(struct device *dev, const char *c
->   static struct gpio_desc *gpiod_find(struct device *dev, const char *con_id,
->   				    unsigned int idx, unsigned long *flags)
->   {
-> -	struct gpio_desc *desc = ERR_PTR(-ENOENT);
->   	struct gpiod_lookup_table *table;
-> +	struct gpio_desc *desc;
->   
->   	guard(mutex)(&gpio_lookup_lock);
->   
-> @@ -4619,7 +4619,7 @@ static struct gpio_desc *gpiod_find(struct device *dev, const char *con_id,
->   		return desc;
->   	}
->   
-> -	return desc;
-> +	return ERR_PTR(-ENOENT);
->   }
->   
->   static int platform_gpio_count(struct device *dev, const char *con_id)
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+
+On 1/8/26 2:18 PM, Bartosz Golaszewski wrote:
+> On Thu, Jan 8, 2026 at 1:13 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
+>>
+>> On 1/6/26 11:34 AM, Bartosz Golaszewski wrote:
+>>> Here are three more patches fixing issues reported with shared GPIO
+>>> management.
+>>>
+>>
+>> I'm still getting some intermittent failures on today's next (which
+>> contains this series).
+>>
+>> This does not seem to happen on every boot, so it might be some race.
+>>
+> 
+> Should be fixed by:
+> https://lore.kernel.org/all/20260108102314.18816-1-bartosz.golaszewski@oss.qualcomm.com/
+> 
+> Please give it a try and I'll queue it shortly.
+>
+
+Thank you, I can't seem to hit the issue anymore.
+
+> Bart
 
 
