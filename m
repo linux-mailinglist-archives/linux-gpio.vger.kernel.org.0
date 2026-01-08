@@ -1,113 +1,105 @@
-Return-Path: <linux-gpio+bounces-30292-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30293-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F02F3D056A9
-	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 19:14:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A9174D05839
+	for <lists+linux-gpio@lfdr.de>; Thu, 08 Jan 2026 19:27:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 59B223021A5E
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 17:37:56 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E23683032594
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 18:04:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 269A21EBFE0;
-	Thu,  8 Jan 2026 17:37:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0171E2EC558;
+	Thu,  8 Jan 2026 18:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ie518sbw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E012DC336
-	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 17:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D1D2EC553
+	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 18:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767893875; cv=none; b=NrpwOkUPDBpQ1tpRC6GN6VAlfwGA2raHFx9BsZs0mIjULerUEkzmsJaPBdiIOytN8vRuwtz9WtY5VrpZF0k6tacmwflwROLh4TkGQ/rCRFxDClNCz3LVe7iqwgSsMyEPh+gdMrqTuo+NeMsjFvDuHjaWOHcCHB+qmCaeZsh0u/g=
+	t=1767895479; cv=none; b=eEHiuMjShld0AcuMoc3ZbqqSJzH/CB4gWmI2b2UJ6rOtwylmgtf/UeQIigGd/4wndSLg8fqi8mrizyulLDRy/gX6srY4EsrnpQ4J+SaDckx3/SH5zu/ox3d2l4FV1UZMP7cKLrz49qvXfUCmwrY3MokCa70Q+1QqX3HVZ0/IIdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767893875; c=relaxed/simple;
-	bh=9u4IBlqSOQ6l3LSQqWSmzbPOCsn6dNCaZX1o0NoAiOs=;
+	s=arc-20240116; t=1767895479; c=relaxed/simple;
+	bh=Ft/A8hWSgMc15FoFEXLCHrplBht3yr5qHqlp3RAyNPg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rpnzsjaOPVnqcO/hoESg64iSW6NNpBOD3ZAzwnYTB2nbB5+ot/PTkCLLcK+d1j7bm5xmS8YfnqO4WI2bq0rg/0adz+xEDKxMLTaL4SrD6AEClAUxucCufJgRmdF17OFfGRleNigegL47X7nlMlEsOcOoCSasXeQU3VitHrrwmto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-5eea75115ceso263317137.1
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 09:37:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767893873; x=1768498673;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gg/FcISCTJfxkX3GTzaYaJZ+C1ltFuSP8SdueGldqwA=;
-        b=QDtnm2R7xYlWjEmpg0SoMGzuATgPpC55g/swLbrMOWgqQxpdag5/oO3oGgfXjq7+NT
-         WsgOmeeZlHucVXlTtYR96vpv3kk7iN02WJbNvQvyET9yI23mUkKD0e+qMb9n5q82cFNC
-         tUCdqC0vyxt/t4yYjdKULFuKW6NxeaUxfkI6wqOJPSa8RGr4ttvU/1DlvHPdMHrYgBnx
-         c/BcvJR/ZabqsxsxiXB+MTHs5yVuB4HbfvUEOUKf+xkbN77KkHmAebBeVTuvv3IYRUH5
-         IaiH5rFnkMvWaqcq0AGJ8gKITR+f3w7Q/ldy3PPGK2YyT9jxLEB6pFYBSXWr2u8thM8S
-         g3OA==
-X-Forwarded-Encrypted: i=1; AJvYcCVif2KagC9fNfQQxdOrplbmGnXUI3bLETtcQWWP+1ji9s3aU4wIZXzQrBDnrz7EgiAXnFv4EZtqwyi1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmuYRbV2sTvuw5URpYr88JKlVquVxjOrdb1CF2+1w2HCt+Rg7e
-	qMCsyagN5Db2gfFgM5KEfiYcb+FGNDqYP3KQM4HNNBzDPSDLW55Trf5Dr4R9hH37
-X-Gm-Gg: AY/fxX47GpfNwluasMAv28J/yWitD2RUlTzW6Q5jaFx5BATAorBIIluN1XsiPwlesF4
-	ZN4BJ1JEdPvFW0VypVthkyPMwXjvn+A7eBaJL6t7M2fRh1zwoyd2mYdw0keA4OxC135jwGfa/G7
-	CIhhoxxpWMxF/svnQKW2A3QkC1et6BlL/fjhpgUpZfc0VMdWL8rlkbgIZDYtJA93MOiClPvRm+k
-	YXISTPwj0cguaOssyEvTPd3BYoW5S13z67/7ys/Xb9zRJ5Vg6IVlMIA8vuHUxme0isO3ciBzJ85
-	yeEX8FGtkxSCxLYy8YKe8tFon04MMvk3Mg6NKQbSNciyIS3ZMLZqd7TwceJn2Suf6c57/eqToBx
-	+4MVMqdJdiQspdcvAddwBAreQ/DdnbkzCYjLxnrDmkp9UgGsC60pKmMWQ2W5pQbg0Q2JDwV6iUV
-	4xXQ6mtCeBcHaiYImLDIHpS/ZQjAAfymZ9fE+nGlnr1zUfWBYT/dgnwKkTWFA=
-X-Google-Smtp-Source: AGHT+IGF6njK4XkKMKYT9Uz8dBocY3EJzI2Xyl8OffnzcZSj6GYBzqFiHL+rPa8ZPV3Ts7G85/k1Kg==
-X-Received: by 2002:a05:6102:30b0:b0:5ed:ab0:e5d1 with SMTP id ada2fe7eead31-5ed0ab0f29amr1696564137.15.1767893872454;
-        Thu, 08 Jan 2026 09:37:52 -0800 (PST)
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-944124c452asm6446394241.13.2026.01.08.09.37.52
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Jan 2026 09:37:52 -0800 (PST)
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-5deb0b2f685so1571613137.0
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 09:37:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXi/C7xpLanTd2JfzYXa+EM46M1VRAKPxwcAYhwdwB7mw4aYHqERYbahyO5LOveOu1dsg841L5jsJWH@vger.kernel.org
-X-Received: by 2002:a05:6102:5706:b0:5df:abc1:e6b5 with SMTP id
- ada2fe7eead31-5ec7573f944mr3993999137.17.1767893871904; Thu, 08 Jan 2026
- 09:37:51 -0800 (PST)
+	 To:Cc:Content-Type; b=unFcCNdFEEvyfQDeZbj30SjEcTlfv37lrYGvfI2qPS2Jj8/5TrYwe4zkV3dyeYwCs+nnHtBa07AildN/yNdDB02x9alKeUvOJsOpZEe8B7PMy/qFb4616UKykobDaxLXLV5H3lI6C9inTdaMZ1cJNgteT8TG+5Jpoi9CVYAxB0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ie518sbw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69E0CC4AF09
+	for <linux-gpio@vger.kernel.org>; Thu,  8 Jan 2026 18:04:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767895479;
+	bh=Ft/A8hWSgMc15FoFEXLCHrplBht3yr5qHqlp3RAyNPg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ie518sbwXlFM96QDqk1hmmbaMCO5TZ9WJOs6sYvZ3IW0J8kkhfgmAoM6JP8DwrNRl
+	 qVSQz2n4iwrRqhVVSqZ1Qwev/dY1Uze0l6ZqC+Y+6+WZ1t/UoaulSG6hwev8zCul/u
+	 T+dbveuvdmeLpU0TRe0UA2v3qtW+LUJPNAtNUdJRb1QNXD9PiO2ImPferzitsM5LBm
+	 GjsoCqzJiagIEwegS92OgNctp6WLV/ITIfBpVsA6mPYOAI/MgOuU45AG7cuFncJ6Fz
+	 tTXn3JThBK0JX3KH3DZWTWcn3isTmK6wSZQRXWgBkjQetR155Kzfv/UAmUrhwnn6c/
+	 5yOsIHpjUJb2w==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-59b6c89d302so2532282e87.1
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Jan 2026 10:04:39 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXlgm/aSMWa8iK/RnoZCYlBDJWNOyl+m09XBgXW8yB0WaluXJhegesqmiYSawPh7okejsjN/wAX70MI@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGo4kaus4GFU4E1LXQD5FMJYmVh6wsNDaIPBu/cYzhq2r0G47j
+	lBh9GsYycGawGhe4OC6FerLSG2k1xzgb7CZpXx9Y+oL3RWCAeXsDw4LItHIxW9bCjKZ3/Veb89x
+	5saEi+vZ8plNQPRLXUBInyydwZubM4u62MDIi9EJ9zw==
+X-Google-Smtp-Source: AGHT+IEylp8rOLigBqQmnrBpIWQflwhGH3IkA/PHCIwbo0f7PPadeXyH/mRVwCiCCqhEGodItOK3rf2KUvikGP2bz1M=
+X-Received: by 2002:a05:6512:3b11:b0:59b:7319:3b6d with SMTP id
+ 2adb3069b0e04-59b73193be6mr2005079e87.27.1767895477199; Thu, 08 Jan 2026
+ 10:04:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251205150234.2958140-1-cosmin-gabriel.tanislav.xa@renesas.com> <20251205150234.2958140-7-cosmin-gabriel.tanislav.xa@renesas.com>
-In-Reply-To: <20251205150234.2958140-7-cosmin-gabriel.tanislav.xa@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 8 Jan 2026 18:37:40 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXM62yhXRnQZzyH_1piR9C8nVhPNszc41Z8Q2b7EygfTw@mail.gmail.com>
-X-Gm-Features: AQt7F2psJvokOqphYS5ymHo0GIXhtH0aEmkgjppDzcUqWuJACKalFIWERnHzJ_U
-Message-ID: <CAMuHMdXM62yhXRnQZzyH_1piR9C8nVhPNszc41Z8Q2b7EygfTw@mail.gmail.com>
-Subject: Re: [PATCH v2 6/8] arm64: dts: renesas: r9a09g087: add GPIO IRQ support
-To: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
-Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20251222-gpio-shared-reset-gpio-proxy-v1-0-8d4bba7d8c14@oss.qualcomm.com>
+ <20251222-gpio-shared-reset-gpio-proxy-v1-3-8d4bba7d8c14@oss.qualcomm.com>
+ <0bce9429-1cff-4a62-bdae-57697daf2920@sirena.org.uk> <CAMRc=MeUBhDqQWKqSbRP+bpBcc0Xptdgdj9CMfOzJmgqARJMDQ@mail.gmail.com>
+ <c0ded9d3-b9b9-464c-81c0-63e0ebdc0194@sirena.org.uk>
+In-Reply-To: <c0ded9d3-b9b9-464c-81c0-63e0ebdc0194@sirena.org.uk>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Thu, 8 Jan 2026 19:04:24 +0100
+X-Gmail-Original-Message-ID: <CAMRc=McAkdYc3tg7qTRBxOa3zQw_YygzgK-9Vo3UG2DjmN+Syg@mail.gmail.com>
+X-Gm-Features: AQt7F2oqFz99bplEz4aI3K5nojZARYqLakd-DtWqKUbtQ9Q_Uf-hTHAI6LpmNsg
+Message-ID: <CAMRc=McAkdYc3tg7qTRBxOa3zQw_YygzgK-9Vo3UG2DjmN+Syg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] gpio: shared: allow sharing a reset-gpios pin between
+ reset-gpio and gpiolib
+To: Mark Brown <broonie@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Linus Walleij <linusw@kernel.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Linus Walleij <linus.walleij@linaro.org>, Aishwarya.TCV@arm.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 5 Dec 2025 at 16:03, Cosmin Tanislav
-<cosmin-gabriel.tanislav.xa@renesas.com> wrote:
-> The Renesas RZ/N2H (R9A09G087) SoC includes pins which can be routed via
-> the ICU to generate interrupts.
+On Thu, Jan 8, 2026 at 5:29=E2=80=AFPM Mark Brown <broonie@kernel.org> wrot=
+e:
 >
-> Add support for using the pin controller as an interrupt chip.
+> On Thu, Jan 08, 2026 at 04:52:24PM +0100, Bartosz Golaszewski wrote:
+> > On Thu, Jan 8, 2026 at 4:46=E2=80=AFPM Mark Brown <broonie@kernel.org> =
+wrote:
 >
-> Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+> > > We're seeing futher issues which bisect to this patch in today's
+> > > next/pending-fixes on db845c:
+>
+> > Does the following fix it by any chance?
+>
+> > https://lore.kernel.org/all/20260108102314.18816-1-bartosz.golaszewski@=
+oss.qualcomm.com
+>
+> Seems to, yes thanks.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.20.
+Good, sorry for the fallout. There's one more patch[1] that fixes the
+issue that actually caused so many people to be affected.
 
-Gr{oetje,eeting}s,
+If you could give it a spin as well and leave your T-b, that would be great=
+.
 
-                        Geert
+Thanks,
+Bartosz
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+[1] https://lore.kernel.org/all/20260108-gpio-shared-false-positive-v1-1-5d=
+bf8d1b2f7d@oss.qualcomm.com/
 
