@@ -1,109 +1,91 @@
-Return-Path: <linux-gpio+bounces-30300-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30301-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33608D068DD
-	for <lists+linux-gpio@lfdr.de>; Fri, 09 Jan 2026 00:38:24 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81683D06B44
+	for <lists+linux-gpio@lfdr.de>; Fri, 09 Jan 2026 02:15:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 02AF1301E998
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Jan 2026 23:38:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DBDAC3028F60
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jan 2026 01:15:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5A6F335542;
-	Thu,  8 Jan 2026 23:38:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54194224AE8;
+	Fri,  9 Jan 2026 01:15:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IEQauQcj"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="LRIkXzIr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C3D221FB6;
-	Thu,  8 Jan 2026 23:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C952921C160;
+	Fri,  9 Jan 2026 01:15:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767915499; cv=none; b=GtF29kzjRStdkLPJI+KPN7gTHWl9SqyqHwBD69FrVLrc4Fb/D25nm84D+CS37PUMqkIa/6Uicb0kagjZv2Q2iJIePSYBP2y1MVPcWJCVdqBMyzFU1J1xqlf5wema0KfhW2p9KW1RfO4fuN5pX9gBr/MIgY6u/T29yuMEjZvBAXU=
+	t=1767921310; cv=none; b=YXbc6rv7rxNiFtpOwwjGrxwLtKH5vV8LCmAVETTPFOS4trlcrCiuhBrcSvC8DTEHp2y+JL2fUbKPUhviAb3v3peDUxY8TlnndjM1mzhDE8Mn0hmYd44WNtZI/0JYETPwNy/P+HJUfNj9iZJ3UXBc8uWyUUic6Szbuckl/b1eVic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767915499; c=relaxed/simple;
-	bh=yRZyKLmO7Lol22sNkcGpZCT9fMwtjVUEdeGzIuxRZHw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SQ4zqsCF/SfksC0c3mNZ7w2jvI4XT6TIAmgEdsyp4EG4L2E9rEO1DynHx4uM4X48S/8ImO/nzXg6lgl2eiQWlKePmA5Ego8nCqP5ulvTYNiwXWnsru3cgS961iAVBXIvuli/Xb5lRFMA6h/4ue22RdstBhMMg+IZkgq28FVwBc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IEQauQcj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12B17C116C6;
-	Thu,  8 Jan 2026 23:38:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767915499;
-	bh=yRZyKLmO7Lol22sNkcGpZCT9fMwtjVUEdeGzIuxRZHw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IEQauQcjj9DR8eS5xBh1f+QJSPEmbPc5gryyOJTg+wzKnG+MQztHAyb79Fb5vlEA2
-	 k3KjN85YH3EvJ+HQXkL0CG322HSgnGPSBh6lE08QSrqvDsS7I6+Ao26t+xa1LDmbkl
-	 fxQ5Uf2kQC4d4292F1t34I7BMVweVD+MOv5SprWxIzmbiy4ijYlcNwlko62rOoC5+W
-	 EVK5EzDtjCi3CM2uvgX0paets5ArMbqDjUs+TKp8tIjPfaOZulfbrcv1oO26I1hgm5
-	 0Dhzh6R2Avdwy6XI6taTz7U2GGfNOTopBzU6j7muHcrN9tkCIwsANy6JQ2kk+lrZd3
-	 CYddXdT34TRXQ==
-Date: Thu, 8 Jan 2026 17:38:18 -0600
-From: Rob Herring <robh@kernel.org>
-To: Daniel Palmer <daniel@thingy.jp>
-Cc: linusw@kernel.org, brgl@kernel.org, saravanak@kernel.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] of: Add a variant of of_device_is_compatible()
- that can be build time culled
-Message-ID: <20260108233818.GA1466897-robh@kernel.org>
-References: <20260107030731.1838823-1-daniel@thingy.jp>
- <20260107030731.1838823-2-daniel@thingy.jp>
+	s=arc-20240116; t=1767921310; c=relaxed/simple;
+	bh=q3E163uI3K5tcHbZm92cmc4Zh/3hUlsioPVQnfeSCfU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lwwn0fFdchpqtaD+WBuY6J0X02/A9HDNBNzuMu2sesbYwVcfoTQNpKuMrZisskmDBaxrTelLRohWkKfr6MKpUAx1ac2/J8psv39itjmF+751iXyFueaI6L7tiOq+iO1oiVvwmiDVcfqJVVbtDqPa6c7kLL3uCtOi+Y8eKAEvwX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=LRIkXzIr; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1767921306;
+	bh=q3E163uI3K5tcHbZm92cmc4Zh/3hUlsioPVQnfeSCfU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=LRIkXzIr3s7sm5+72Xzzm8SjVCwh35y5UgkNyHoV+JM3WTIw4jCZ0lDvwCm+aPN0e
+	 OQgFLIKM4BqvXo0NDLP3ls7rFqmmBeyhe3rnpJu/pg93332Xw7ohD6Pd9ZJ/hjBMlU
+	 PRjuB0y52YZmZ4+MH64SFaK4M4cz7aGbppx05rQHhJZ74p/FIDNPTDWN0K4c0V0JgD
+	 wiw55qfCcmMSwZ6OUkuCfyWIamYz6ikXWYRWi0kp9pEh45rf87ky9C+o4xQpR/1WKQ
+	 AYxvTEvGFmjwoc8wcX4fj2oaw7HDda+hVz5pALgfHA8ZdaPbXUesk0VOJX+gMBis+I
+	 YapIA/GolbjCw==
+Received: from [192.168.68.115] (unknown [180.150.112.60])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 50B3D7E142;
+	Fri,  9 Jan 2026 09:15:06 +0800 (AWST)
+Message-ID: <0671df0ea3568056e4d46112c4c9d132c64aed01.camel@codeconstruct.com.au>
+Subject: Re: [PATCH RFC 02/16] pinctrl: aspeed: g5: Constrain LPC binding
+ revision workaround to AST2500
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+ linux-hwmon@vger.kernel.org, 	devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, 	linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, 	openbmc@lists.ozlabs.org,
+ linux-gpio@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-iio@vger.kernel.org
+Date: Fri, 09 Jan 2026 11:45:05 +1030
+In-Reply-To: <CAD++jLmNGrDt3_w=DFnBnjEuz3LN-=uc1o9KHv1j=4gbGPoPQg@mail.gmail.com>
+References: 
+	<20251211-dev-dt-warnings-all-v1-0-21b18b9ada77@codeconstruct.com.au>
+	 <20251211-dev-dt-warnings-all-v1-2-21b18b9ada77@codeconstruct.com.au>
+	 <CAD++jLmNGrDt3_w=DFnBnjEuz3LN-=uc1o9KHv1j=4gbGPoPQg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-0+deb13u1 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260107030731.1838823-2-daniel@thingy.jp>
 
-On Wed, Jan 07, 2026 at 12:07:30PM +0900, Daniel Palmer wrote:
-> In a lot of places we are using of_device_is_compatible() to check for quirks
+On Wed, 2025-12-31 at 22:37 +0100, Linus Walleij wrote:
+> On Thu, Dec 11, 2025 at 9:46=E2=80=AFAM Andrew Jeffery
+> <andrew@codeconstruct.com.au> wrote:
+>=20
+> > Discovering a phandle to an AST2400 or AST2600 LPC node indicates an
+> > error for the purpose of the AST2500 pinctrl driver.
+> >=20
+> > Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+>=20
+> Reviewed-by: Linus Walleij <linusw@kernel.org>
+>=20
+> Also pretty obviously correct, can't I just apply this one?
 
-I'm assuming 'a lot' is not just 3 places? Got a rough estimate?
+Yep, I'm happy for you to apply this one now. I marked the series RFC
+because it's a bit of a scatter-gun set of changes and I figured there
+might be more feedback than I've received so far :)
 
-This seems fine to me assuming there are more.
-
-> etc that are simply not possible on some targets, i.e. a piece of hardware
-> that needs special handling is only on one specific ARM machine and your
-> target isn't even ARM.
-> 
-> Add of_device_is_possible_and_compatible() that also takes a Kconfig
-> symbol and checks if that is enabled before calling of_device_is_compatible().
-> 
-> The Kconfig symbol is build time constant and the compiler should
-> remove the call to of_device_is_compatible() if it is unneeded and also
-> remove the data for the compatible string.
-> 
-> Another merit of this is that in places were we are checking for quirks
-> outside of drivers themselves, i.e. in the gpio and spi subsystems where
-> some legacy devicetree handling is being handled for specific devices
-> is in the core code, when the drivers that need the quirks are removed
-> their Kconfig symbol should also be removed and it'll be easier to spot
-> that the quirk handling can also go.
-> 
-> Signed-off-by: Daniel Palmer <daniel@thingy.jp>
-> ---
->  include/linux/of.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 9bbdcf25a2b4..70be20b0be22 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -358,6 +358,8 @@ extern int of_property_read_string_helper(const struct device_node *np,
->  					      const char **out_strs, size_t sz, int index);
->  extern int of_device_is_compatible(const struct device_node *device,
->  				   const char *);
-> +#define of_device_is_possible_and_compatible(symbol, device, string) \
-> +	(IS_ENABLED(symbol) && of_device_is_compatible(device, string))
->  extern int of_device_compatible_match(const struct device_node *device,
->  				      const char *const *compat);
->  extern bool of_device_is_available(const struct device_node *device);
-> -- 
-> 2.51.0
-> 
+Andrew
 
