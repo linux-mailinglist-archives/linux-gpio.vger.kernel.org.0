@@ -1,96 +1,155 @@
-Return-Path: <linux-gpio+bounces-30323-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30324-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7D0AD086EA
-	for <lists+linux-gpio@lfdr.de>; Fri, 09 Jan 2026 11:08:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AC42D0880D
+	for <lists+linux-gpio@lfdr.de>; Fri, 09 Jan 2026 11:19:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 598EE304656D
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jan 2026 10:08:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9384A301A1DE
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jan 2026 10:19:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D822B2D9EF3;
-	Fri,  9 Jan 2026 10:08:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 251D63375C3;
+	Fri,  9 Jan 2026 10:19:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QfR7wV4L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q5HWPIYv"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C68329390
-	for <linux-gpio@vger.kernel.org>; Fri,  9 Jan 2026 10:08:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0BC933437B
+	for <linux-gpio@vger.kernel.org>; Fri,  9 Jan 2026 10:19:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767953312; cv=none; b=P9jS/Tn3Usaie6k7Ydl9AiyKCYaK2C4U7EYv41B0j3Zi61ibf9GkgQkhgBr1JN7cH4/3DkkCHeo6qNJ6XHfhO1gQ0ooYqn7F7u65hCBT6pFnKV15Ht354fTjs1KmrQq7Wj5HQRSsKvpmL6Nx+LcRGDrmrPlO7JZ6XCctGyv2YvQ=
+	t=1767953955; cv=none; b=boNUAqbkc7pBziiV71+yfLmGf373SiRwXlh9luXslAxQS2BGDIiwKEjbD3F5Gwb/xWYr7XmUwdqG/za6xmS3RPT0tprIzT8PuJUsQyQdI1vrrK0GKQZQrQR7oRdMwujqJE+fhWI4Q2zyES+0jXYWcywhtFG+QcsOQzxpWuEK1zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767953312; c=relaxed/simple;
-	bh=lcoaRbKgklCv5Ozju9D5Y7iqNxDrXNBFR4KGkZu7LFg=;
+	s=arc-20240116; t=1767953955; c=relaxed/simple;
+	bh=9hbsjUn6eYASbfA/oJT6XWtugpXGlLNjh8EPRyD3m04=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ApwNxilMrYXEahv4g5JKcFqlHjxayfhNZQ5vSmp7pedoZ/xIpFPc/WGfCjN7eeVJwO05k6IF0Y5CtUjfC+/Lq60nY3tbLFPk47LWGE2JHrZ8piF8uKpKHU8WjOrVt2OXmwfKzyY3/F5elALNYfyn1v1FexlDBO+HrIMu4k187aY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QfR7wV4L; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ED95C4CEF1
-	for <linux-gpio@vger.kernel.org>; Fri,  9 Jan 2026 10:08:32 +0000 (UTC)
+	 To:Cc:Content-Type; b=LbmC2ovQzAxjkG44Yi5/6C1aep36amU2sU070DGR9whU7sXk926JC+lys/rdNqcY1PVmPWsCX3MiyxtpDq1tXs0DpKv6V4OehqBT+R9Ixk635K+LJChvE/2B6cqoUV5F7keVERpl2+BmNAcPBHD5TAAAdJ6vxLXWTgX4O2GgoV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q5HWPIYv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F770C2BCB0
+	for <linux-gpio@vger.kernel.org>; Fri,  9 Jan 2026 10:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767953312;
-	bh=lcoaRbKgklCv5Ozju9D5Y7iqNxDrXNBFR4KGkZu7LFg=;
+	s=k20201202; t=1767953955;
+	bh=9hbsjUn6eYASbfA/oJT6XWtugpXGlLNjh8EPRyD3m04=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QfR7wV4LCKCZ71Bviyeg1ReRgFfkg4ECZHlSGg4cQ59wEtcs+rUMaoW65y68JEOkT
-	 dTPW8ymtjnYY6JOaGuhbGn6//SQk2H/6JVhzYHH8qmtj9Z4bjqCCaGPl6dLpbZVOyd
-	 ahbPjArUUHascpMGNgXWrNX8rUX3J8qdTmuEO7ZSqRlvSuu12QwMUku7+zKnCuf0oK
-	 U0Tma5BAJn6gGybTvGTirKmlssR13Kj9Lxgy/pu69aCM7lS6pIvZXPDEAbfX3kx9DZ
-	 D3fnI8b7/lFGY7vGx9sHEglnTmOE7PUHlby48sRETXnkEHVWbAHe9ycUO63kwYWRh5
-	 S//TvkbwvSpJQ==
-Received: by mail-yx1-f53.google.com with SMTP id 956f58d0204a3-64476c85854so4043201d50.0
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Jan 2026 02:08:32 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW82FrXnyjsq/XWRd6GWHzOuClnfuqkPfImU+GlsyLDeikauW1+9Wbuoc85mI0PUj4x5FaSvTkS4bxX@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgDKGho+UAIVrBOVlAEqBjCvIKVKA4hac70Oev4zFultYEB08y
-	H5GRkH0r+cvBVOZPw6iOtDzCtyq8DOPi/udellg8/UGSMGaj0zYTlzDQjwR0O2r5u6io7RqCbLR
-	fL5criQ6Dsnbd9nVuseKsoC0YW5WPS0E=
-X-Google-Smtp-Source: AGHT+IGIW2mkwPPw6w+QEaIPPoKfaOq7IWYJoIsilzo67O15ekgszcApUy3fF8Eo0fIrT+0A1VkZqkjkBbHIdWaHSgM=
-X-Received: by 2002:a05:690c:e0d:b0:788:201c:a170 with SMTP id
- 00721157ae682-790b58002a6mr177660677b3.42.1767953311626; Fri, 09 Jan 2026
- 02:08:31 -0800 (PST)
+	b=Q5HWPIYvfN0g+8t2ODLZ6RHYqLOPxZyUqAO8jXrlFFXbJfNk5PkQzNacBCGeWlOI4
+	 zVWxIN+v/ND+H67OS1j4Vi913awzUf4IrWnMQVfD2Dpr24wELqnc2MFBMKJ1ZKLRm+
+	 JVsn9pBwtUqBGoql22eIC2pTaZn/uEE9cygO2yg+h9puAJ1bsbFUfn6tnq0irE8nUt
+	 /FagBI3fN0qA257T3lWotje4TpFQ1+rWcTinV80/YofYEx4LczcmTg2VUYLrf15CVW
+	 3uX7arvzOc8Tv0ed/zvkpT7cPQwnGPex+YpZh2r/HPuz3I/px64pkGw3UDhomvDchG
+	 HZz+igJUYk/GQ==
+Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-644715aad1aso3533019d50.0
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Jan 2026 02:19:15 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXVvRdcxIG17rASKKvswrEM4n1wjkGSNvGZArcsuS0PvpFEJX+Bxo5BnmatP1yQgMljplBq2LulYAnM@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNB8S1MiNm3kLN/KCKVwPFQXtcHglEbgtXX4NXLkdYxx5aW/VH
+	v4axRa9IMT120LgKpPXEOALJfNSwPbwGTwVedeUgp0fCFK0mjVYwI6/H294uxr+EMlx9ytO+H9P
+	oSs0fUDvuM5JIogtHYpqviiWwOWnltKU=
+X-Google-Smtp-Source: AGHT+IF5GjxrLmuSZaExZjLaPOUjC/EsSoVJYPQqW4W2Vxtf6X+8zRZ62bSAxQ72fQzNPB0kphD/sc5lbPKYGJNdPlA=
+X-Received: by 2002:a05:690e:130e:b0:640:ce59:128b with SMTP id
+ 956f58d0204a3-6470d2437b1mr10650880d50.2.1767953954886; Fri, 09 Jan 2026
+ 02:19:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260107093125.4053468-1-ernestvanhoecke@gmail.com>
-In-Reply-To: <20260107093125.4053468-1-ernestvanhoecke@gmail.com>
+References: <20251216112053.1927852-1-ye.zhang@rock-chips.com>
+ <20251216112053.1927852-7-ye.zhang@rock-chips.com> <CAD++jLntu4LY=VHOMSXeLKXOBD9MTNziv47B0qkDjxUa1xAsng@mail.gmail.com>
+ <85032ae4-4d82-4884-aa7c-b69fee76d509@rock-chips.com> <CAD++jLnH2vLNxTLj8Lw8RnOHxfitwi3G_8WCBtu+_=XL3ryH_w@mail.gmail.com>
+ <a2f5c2b3-2168-41b4-917f-183ab72a4499@rock-chips.com>
+In-Reply-To: <a2f5c2b3-2168-41b4-917f-183ab72a4499@rock-chips.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 9 Jan 2026 11:08:20 +0100
-X-Gmail-Original-Message-ID: <CAD++jL=VQXxZysUMqLOQC8ayaqvuOZe+mWGLvm6o0T9F+2UjGw@mail.gmail.com>
-X-Gm-Features: AQt7F2qux-sXrQnOjJuHEmhzwWylBmv0KXQdTBvBJ2ldt0S4sCYy6As4TJM9SyI
-Message-ID: <CAD++jL=VQXxZysUMqLOQC8ayaqvuOZe+mWGLvm6o0T9F+2UjGw@mail.gmail.com>
-Subject: Re: [PATCH v1] Documentation: gpio: pca953x: clarify interrupt source detection
-To: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
-Cc: Bartosz Golaszewski <brgl@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Ernest Van Hoecke <ernest.vanhoecke@toradex.com>, 
-	Francesco Dolcini <francesco.dolcini@toradex.com>, linux-gpio@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 9 Jan 2026 11:19:02 +0100
+X-Gmail-Original-Message-ID: <CAD++jLkmieQpkJnAYyr7ys6m+v-=qNZaMoyKCtPFo+qjGwm8DQ@mail.gmail.com>
+X-Gm-Features: AQt7F2pjRZjybV4xPqr9Y0E2i2C1kVX68rvkdaRtoGr0Zh5amDZGu50_yar2YJk
+Message-ID: <CAD++jLkmieQpkJnAYyr7ys6m+v-=qNZaMoyKCtPFo+qjGwm8DQ@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] dt-bindings: pinctrl: rockchip: Add RMIO
+ controller binding
+To: Ye Zhang <ye.zhang@rock-chips.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	tao.huang@rock-chips.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 7, 2026 at 10:31=E2=80=AFAM Ernest Van Hoecke
-<ernestvanhoecke@gmail.com> wrote:
+Hi Ye,
 
-> From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
->
-> There are multiple design tradeoffs and considerations in how the
-> PCA953x driver detects the source(s) of an interrupt. This driver
-> supports PCAL variants with input latching, a feature that is
-> constrained by the fact that the interrupt status and input port
-> registers cannot be read atomically. These limits and the design
-> decisions deserve an in-depth explanation.
->
-> Update the documentation to clarify these hardware limits and describe
-> how the driver determines pending interrupts, and how it makes use of
-> the PCAL input latching.
->
-> Signed-off-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+thanks for agreeing on using standard bindings for
+RMIO, we are making progress!
 
-Reviewed-by: Linus Walleij <linusw@kernel.org>
+On Thu, Jan 8, 2026 at 1:19=E2=80=AFPM Ye Zhang <ye.zhang@rock-chips.com> w=
+rote:
+
+> **Regarding the primary IOMUX:**
+> However, the RK3506 pinctrl support is built upon the existing
+> `pinctrl-rockchip` driver infrastructure, which was originally designed
+> around
+> the `rockchip,pins` property. Refactoring the driver to support the stand=
+ard
+> `pinmux` binding (and the suggested nested node structure) is a significa=
+nt
+> undertaking that involves core logic changes and regression risks for old=
+er
+> SoCs. Mandating this refactoring as a prerequisite for RK3506 support
+> would effectively block this SoC from being supported upstream for a
+> long time.
+>
+> Could we allow RK3506 to follow the existing driver's style for now to
+> ensure
+> consistency and timely support?
+
+"timely support" is of lesser concern to the kernel and DT
+bindings which are more concerned with maintainability and long-term
+longevity. The ambition is to work predictably and impersonal, such
+as like the planets, or the plants.
+
+> We agree that migrating to standard pinmux
+> bindings is the right direction, but we believe it should be handled as a
+> separate, dedicated project in the future rather than part of this
+> enablement series.
+>
+> Hi Heiko,
+> Do you agree with this?
+> 1.        Use standard `pinmux` for RMIO in this series.
+> 2.        Keep `rockchip,pins` for the primary IOMUX for now.
+> 3.        Plan a future refactoring to migrate the primary IOMUX to
+> standard bindings.
+
+My main concern is this:
+
+foo {
+    rockchip,pins =3D <...>; // For IOMUX
+    pinmux =3D <...>; /// for RMIO
+};
+
+I don't want to see this, because that will be *hopeless* to migrate
+to both controllers using pinmux =3D <...>; how should you decide
+which one to pick for each?
+
+In that case it is better to do:
+
+foo {
+    rockchip,pins =3D <...>;
+    rmio {
+        pinmux =3D <....>;
+    };
+};
+
+Because then you can later migrate to:
+
+foo {
+    iomux {
+        pinmux =3D <....>;
+    };
+    rmio {
+        pinmux =3D <...>;
+    };
+};
 
 Yours,
 Linus Walleij
