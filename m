@@ -1,87 +1,92 @@
-Return-Path: <linux-gpio+bounces-30349-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30350-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B65FD0A7D7
-	for <lists+linux-gpio@lfdr.de>; Fri, 09 Jan 2026 14:49:29 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21638D0A7C5
+	for <lists+linux-gpio@lfdr.de>; Fri, 09 Jan 2026 14:48:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4056E3035A93
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jan 2026 13:44:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5F07B30A6E99
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jan 2026 13:44:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0157F35C1B7;
-	Fri,  9 Jan 2026 13:44:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13D6735CB8F;
+	Fri,  9 Jan 2026 13:44:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gke2i48I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T22xqPjo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC8A35BDA8
-	for <linux-gpio@vger.kernel.org>; Fri,  9 Jan 2026 13:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D8D35BDA8
+	for <linux-gpio@vger.kernel.org>; Fri,  9 Jan 2026 13:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767966269; cv=none; b=D18Wjt5ZnZDYO7vt4g+hOpSDGehbc60JizvXwukgEHVQKnu1zzmgDcbkwuPjTibyzBe++tfueU9kR9zVMR+vIYz6vZxcLJK294xp2O5sA4qgfnN7YFgdbO5nueXyfYbOr4eZ4g4e97AKAVTrnHLf4TGSOcKoTrTeMY4ocByD7gM=
+	t=1767966273; cv=none; b=SwAFE0KxnWa173jV+yQz3zvehHVwe7octyPiVuLeUMOLFN2EGbbgAj6dOHGs8dlOLqlNlV/TWMk7WjoKjpZXqGP3qR2MH3VwRoLaPhugB1FbDGyUQEsrPYSOZ8Lg1121lPCIvhK9uNGddOL5UoP1RecACXyc0TV4nx7XP1rvCMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767966269; c=relaxed/simple;
-	bh=jf9GAe5/XNqHlZ0uwLx04THFw3xzh+ejemb3PhLVe2M=;
+	s=arc-20240116; t=1767966273; c=relaxed/simple;
+	bh=1LQ7pgQADLkv3Q2JfJ0YKNTNCFMPBPWWQX+7eb5Jfpc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mX6DUjnSZmzUCse9qsHpTkgaCIc60cz1DuGpUarS/ut1sQ5z2lVBi3CEHzDao7fhfeAeXkoEB+yPcs2MU/05ydNQEtzrACCZFqul+PNDoqNOHm67gMW2zN7F1j/xYCdjnkdghSL+BpDV0tCtZ5e1argZKEl1/9nf8HsPG7adNlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gke2i48I; arc=none smtp.client-ip=209.85.221.50
+	 MIME-Version; b=ngaSDNKRISl2kQYtmc5ud8KaTZI4oiI10Egh7iQRsR+R6Xx205+pB0Jwkec91AKMD6Eh+XX2QcpPSpOHCtnczryxyBoVYeHSgh0DmDpNnDEhjEQSG4vKWxzpKMtLLmwBzpB6d+iA2x1p+O3oKGr9ctOi9wedNjPQ6AQjgj88xag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T22xqPjo; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-42fb2314eb0so3449849f8f.2
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Jan 2026 05:44:27 -0800 (PST)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-42fbc305914so2899793f8f.0
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Jan 2026 05:44:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767966266; x=1768571066; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1767966269; x=1768571069; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vV3VW4TRk7vZrwF4cTlZDuh2FMXs4uwC6OYZ3cT/LdI=;
-        b=Gke2i48IcfjM/bRpfxBtqVu8ltAGYvhcufgkZ3Zu4eVnd9Ze9rj8brM6F73LutVCR0
-         NT4VZAg/Z10756miBhKhvCnMQ+okCN0j7ZvqUM/DYMt1Er82BoHAKJfgfgRZBE36qw7y
-         uQEgOphk/A5Ib8iy7jO3A18XHuoUGKC825chLrKYlidA4UO1YNAELi4ZMu4VJrFmVUaI
-         lJrFLnT+U8w79/ex9HeVuOFrnPMUtF3Ar+RXKN5E1fpCB7f4ZDZfj4OfvRw3xxOc80IN
-         s+QShDtWiQTwfLCC4wVQXron2aMWhovuqsM3x6Vhh9rCUJlXeTfd+mYx5IHrAw4xpJ3K
-         +itA==
+        bh=SvvQmiFOUMr/XdsMeV6yI6szLxAkwyU8Gztse0HmU4Y=;
+        b=T22xqPjoUng3R0/lbVqftLHXYgAkCfQn9SJwHiC5fAy1/qCs7D450jYCl3UW1zjeHy
+         RZ9JTxonquhy3i+wQZJQ9/ndBGBuS2jSRINlJLj5Bj/2RkrfVcqs31laj+PDzfnESoBq
+         FUs3irdpEZ4dSCGtLxTfOGfrasm6ICBTK9o7C8kD9g8qSYj3bdFb3yf0xJWYvdDjS3ao
+         IhZMadggx/q87TczZtxQIHGcBDZ89GR+b9y3zLCTbYZSJHDIeBqTCES3yLa+ISRS0waH
+         47Vf/ThVhpohJLwOsNO+HXGHZ4wPv+vP50ahkaufIw1ZwpHpuC3nk/RViYvjj6KSfm9k
+         XzGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767966266; x=1768571066;
+        d=1e100.net; s=20230601; t=1767966269; x=1768571069;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=vV3VW4TRk7vZrwF4cTlZDuh2FMXs4uwC6OYZ3cT/LdI=;
-        b=SFAZ+9GEfcFe5/YESV9e7Xq1uT/u6j6OiHpBpneOTQ6Yew4Gr6ahmqftkPi60qXw25
-         ADIo4sogWRbrm/UKYMQUriHryrWy/ZnWCXZ66IdALQvgcS+4yiFi/jmZcA28IQbzYFMh
-         p8dJi++WAHXooANu0PWslUuVO9kVGbfGIfAhZglEUMRdmgwhmXPbgAwiGsyh3QySfxey
-         cXb5pULnlPlW9NphClIUP5oYKVEQ5vh1JuwNdRFtbMEx0+AaqYMvw228qsvRZVFBKnHf
-         VL+edGrHun9lqLuaxCVDq127U2KkjHSAJuQoWW3dq9x97l9ww/nTnoC83or1SsXiAxe4
-         kNyw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfDICgFAo7RS/HklhHEPANB9ZxkQW8bYXDx7EPhar9pqug3Q2QxaKtR84uSvB1r0O+EtSOfFUw7p94@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZeHSP8fTch6+KEXIw2RoeT36IEYRB4gItkHoli0uOuEr/F6PT
-	A2ZxnjfN96Ze5qkGSwOWaZTsbgscuOjBJ+4lsjyqcd/rAi+rTvK4/NVr
-X-Gm-Gg: AY/fxX4hixQVcqpQ1xlJi2gfyjG02705NICo0r624CPBLfGPcdReYeYA22VbWVGMLGQ
-	OU9wgRanN4OZhYLaiOf4ZDpWwKMD6AJuKFTF0oqg2t2C21/7NVULrICqz+qRz1AuekbjnBn8NwY
-	d+NfMUnN4po4TE5EdJUjw/xQNQ2EStuTxjvXvjmx1nHNfHIqpTZR6mquq3ztwHPVm1iE+KzFnVA
-	iySHGksicWEbke6r/AI02HQ+0btCFLKpNRz/+D3iVaiWQHBPko3ApXkdv7cRRLrXTwgj9C6pQZI
-	WUcEF47GVBcldo0aghxrG9Eq0wvxQUAscihERAv/S1fhX07IfBDxmtKAadQCUzcz5GYy7ezQsTX
-	3BoQM6AbWOJYoQTp68rjfHeGrWF9NkLo+O01ueEr8qIBb/y0VP2hfb2VAaamlG1k3T/KRKMttYL
-	A+Z/Wi3KawxHKIN4tCh0OngBVpEdZfZcxa89Asd163YCdDoItutLtCe3ZAGqcJsYHa
-X-Google-Smtp-Source: AGHT+IG/REh9ssKpIfP140JT4H5xk1mVz4P63JNqcaC2JTUABJbr0Ck3OTN6x5dTXPTtf9t5owUMcA==
-X-Received: by 2002:a05:6000:40cc:b0:432:ddce:284c with SMTP id ffacd0b85a97d-432ddce2b0emr1487056f8f.17.1767966266056;
-        Fri, 09 Jan 2026 05:44:26 -0800 (PST)
+        bh=SvvQmiFOUMr/XdsMeV6yI6szLxAkwyU8Gztse0HmU4Y=;
+        b=l2ZtXjNlVYP842jjjwsoS4wL2HEJTt+v+H3hh9aO2lr5ASfJg9rWoWn28q9ELxpWYn
+         P28FF3rEGrKzkvw+6wACRTqXMgtGYKgE2CCDox2BacVaIds9Jw5JMfyNNk18Tonvmxsq
+         ElCXUdRuOHtgPyNi3rDT9TjvaUv1P+KLi00JZ0pMqxnZ2LiSmHzOAkV/O6ZEdDwtfkLu
+         WM7HXl/S9prQABiLpvjldY4mogQsS/zbav6YJxtZrDU2P4sR/eWgesVTG0KuD/6ed9Ag
+         3tbaVc7A4qgHjR3jYoYJqFqjsuLR83kQkOQ9HeBIkDJJsVcRDCozLkg00SFif59/eWXh
+         oJ6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVvRw7eeQixAyZw4xhU29hVB14dXxfGh86sw60KGysy+DfGXbcNSriGUMCvpov6k+xBiA55xX/QFWoc@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywql6xJ12fE5l0aucWgl3eS9evXVFtvx/MqTo5AmlOvjI20gJjT
+	RP94EkSsD7/KI1342FwPZeM7fgsVx1Eoy+9wvfCkdVZsjUGXShC5J3yq
+X-Gm-Gg: AY/fxX4iUJRR1G7YLvlwe4CGOHYZaiPPVtSbwVMJk4VVXUrT60nUTRMA1dtAJBrncvB
+	PNiYzUOqa/z8Qu9tAX4bg+oAhXHzYVBlky4mSxD1FKEu7UTmJj/SSpIx3yPIv9RrJe5CZedaSKy
+	Q7XHGqDV44CI1uy7n+CfR9h6JzMmUxhytp0UPvNVaGAZeR1+6RUMG0Q3ntRjSG1HsId9TGZFeQN
+	PQ8FAosMn+3WlGXLkYXGLySgci0VWLZAQUUFnefk4g0jRcyTORQnoFFgYW3wKFjJIpcCwqM9+hL
+	DJYi2OOKgBy2hjtdiFF1PH7EzXkjm1KMt+xO2Jn8LHP/MVNHEob2hgPEAKmx25zS2Fy04HryGf0
+	YA+FRZqLYuxexBqgBVpKTXLiK9sAOFNhXiKuwI3J1scNTQmTfZVApMXG1AuElsSwGyjTY85CupF
+	b+iu4kICFo0tbfP0PUWN36L+NwiR+muEpRP2M5ANpMYEpMQM7DhDBjpUj1wsoAWv8UPEOp0Fgm8
+	b8=
+X-Google-Smtp-Source: AGHT+IEcyqPvQXXgSb8upUybhhoHWlS++tR42ZMn0J3rAkpHIq7i7iKiZeRqR+4mcCGlOkEYTV7yLA==
+X-Received: by 2002:a05:6000:420f:b0:430:fc0f:8f9f with SMTP id ffacd0b85a97d-432c37982f5mr11382930f8f.37.1767966268426;
+        Fri, 09 Jan 2026 05:44:28 -0800 (PST)
 Received: from localhost (brnt-04-b2-v4wan-170138-cust2432.vm7.cable.virginm.net. [94.175.9.129])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd0e19bfsm22111616f8f.18.2026.01.09.05.44.24
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd5fe83bsm22896047f8f.38.2026.01.09.05.44.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jan 2026 05:44:24 -0800 (PST)
+        Fri, 09 Jan 2026 05:44:27 -0800 (PST)
 From: Stafford Horne <shorne@gmail.com>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Linux OpenRISC <linux-openrisc@vger.kernel.org>,
 	Stafford Horne <shorne@gmail.com>,
 	Linus Walleij <linusw@kernel.org>,
 	Bartosz Golaszewski <brgl@kernel.org>,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH v3 1/6] gpio: mmio: Add compatible for opencores GPIO
-Date: Fri,  9 Jan 2026 13:43:52 +0000
-Message-ID: <20260109134409.2153333-2-shorne@gmail.com>
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v3 2/6] dt-bindings: gpio-mmio: Add opencores GPIO
+Date: Fri,  9 Jan 2026 13:43:53 +0000
+Message-ID: <20260109134409.2153333-3-shorne@gmail.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260109134409.2153333-1-shorne@gmail.com>
 References: <20260109134409.2153333-1-shorne@gmail.com>
@@ -93,31 +98,46 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+Add a device tree binding for the opencores GPIO controller.
+
 On FPGA Development boards with GPIOs the OpenRISC architecture uses the
-opencores gpio verilog rtl.  This is compatible with the gpio-mmio.  Add
-the compatible string to allow probing this driver from the devicetree.
+opencores gpio verilog rtl which is compatible with the MMIO GPIO driver.
 
 Link: https://opencores.org/projects/gpio
 Signed-off-by: Stafford Horne <shorne@gmail.com>
 ---
 Since v2:
- - New patch
+ - Fixup patch to simply add opencores,gpio and add an example.
+Since v1:
+ - Fix schema to actually match the example.
 
- drivers/gpio/gpio-mmio.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/gpio/gpio-mmio.yaml | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-index 5daf962b0323..edbcaad57d00 100644
---- a/drivers/gpio/gpio-mmio.c
-+++ b/drivers/gpio/gpio-mmio.c
-@@ -724,6 +724,7 @@ static const struct of_device_id gpio_mmio_of_match[] = {
- 	{ .compatible = "wd,mbl-gpio" },
- 	{ .compatible = "ni,169445-nand-gpio" },
- 	{ .compatible = "intel,ixp4xx-expansion-bus-mmio-gpio" },
-+	{ .compatible = "opencores,gpio" },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, gpio_mmio_of_match);
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml b/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
+index ee5d5d25ae82..d44edc181e0a 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
++++ b/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
+@@ -23,6 +23,7 @@ properties:
+       - ni,169445-nand-gpio
+       - wd,mbl-gpio # Western Digital MyBook Live memory-mapped GPIO controller
+       - intel,ixp4xx-expansion-bus-mmio-gpio
++      - opencores,gpio
+ 
+   big-endian: true
+ 
+@@ -160,3 +161,11 @@ examples:
+             intel,ixp4xx-eb-write-enable = <1>;
+         };
+     };
++
++    gpio@91000000 {
++        compatible = "opencores,gpio";
++        reg = <0x91000000 0x1>, <0x91000001 0x1>;
++        reg-names = "dat", "dirout";
++        gpio-controller;
++        #gpio-cells = <2>;
++    };
 -- 
 2.51.0
 
