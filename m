@@ -1,44 +1,44 @@
-Return-Path: <linux-gpio+bounces-30352-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30353-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 684C4D0A8B1
-	for <lists+linux-gpio@lfdr.de>; Fri, 09 Jan 2026 15:05:46 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4AAACD0A911
+	for <lists+linux-gpio@lfdr.de>; Fri, 09 Jan 2026 15:12:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9401F301C821
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jan 2026 14:05:44 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 1F9A33008711
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jan 2026 14:12:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E140135CBD3;
-	Fri,  9 Jan 2026 14:05:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB48A35CBDC;
+	Fri,  9 Jan 2026 14:12:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCArJN5P"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJIl1a4x"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EA035CB91;
-	Fri,  9 Jan 2026 14:05:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6DC35CB80;
+	Fri,  9 Jan 2026 14:12:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767967542; cv=none; b=suIblGgh7iOz+QNFCaovBIZa6TeQOGohlXOU6qvFVyo2L3VJzmf25nDqedObihiWWnDBCNdWYNLR8XnRKwGCMwX7xDIJlNoHhrVejxLn8TL8XaQTdUCGqmjEbqleEgW0zDH5XhvzgWScVfge9RVpAzIEhr8FH4IBmS6t7uPs8xc=
+	t=1767967949; cv=none; b=W2zTYCoSXKu78Mh5mbv9mNT+OCVkQvw7DpPYdrIc5v6s0snWKg13m2AkCFbhO/gyhKV3i21rRVsy/JLylNPBbj+03JJeG8wStnzVi0KvzJJdw3+qjAyco6sfFSGDBelsVvKtsuCaZKlhgnzn3BWFTztusw2KIsGXmAPiLOYX9vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767967542; c=relaxed/simple;
-	bh=yrih7gRBP3ftIXPawPbWi9tmAt3IunSJUCU6u8MVEoQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Subject:Cc:
-	 References:In-Reply-To; b=SaMyYuU4wBFLqcc13cM+oKc6RAhqopLG/f6LM1PScXSE8DNeIm7QjrPHMIb2uPe7UA1DR6oPKCCMqz31+U9FXoPkF4EvfY7oyHcqqhCNoEAZcvwcldQxQiCrS29OaBLhAiDD/+gJIuWtGVADG7d3dPFvl9dwMS+wWJPP0ABppho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCArJN5P; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0230C4CEF1;
-	Fri,  9 Jan 2026 14:05:40 +0000 (UTC)
+	s=arc-20240116; t=1767967949; c=relaxed/simple;
+	bh=4+mzqDzEaOLsrYXhGxtACkTBLW6Z+meNNs5bZHIEMfU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:Cc:From:
+	 References:In-Reply-To; b=mUpl8SvAv367P8ZyM9aqSlLFExXck9zyXocxla44lTPwV6OwLTZIsfwemY2dvLTrcndDbodVoSnvSwuwDt6w6gFdhVvgZjqDYsj/CCYt8ZvRC+//mUnLrMhsey/ZgNkNty9MmvVZ34zcgB1PHyBJ7904xUcLBWvwEWtWdEnT9H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJIl1a4x; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC20DC4CEF1;
+	Fri,  9 Jan 2026 14:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767967542;
-	bh=yrih7gRBP3ftIXPawPbWi9tmAt3IunSJUCU6u8MVEoQ=;
-	h=Date:From:To:Subject:Cc:References:In-Reply-To:From;
-	b=SCArJN5PjCd/pwKwMK6SZsgCb9GhMIcljv0rv2etrYREPgWO0SK5vTbGpMpKl3MdZ
-	 tUdEjuUqNdcxF+QhER6sxG55IOyosHOAC94uzgGV2w3/dAbcSxinKAbSk7Lv6uTKOh
-	 07u6E3lWrUvf/snLkQwNkKVvKsKRWH35SBg95DP1yhMAYcOGTa8lyT74k7VcU5rGOl
-	 sQzCTFo3Dr2lLaALs2gVn8UyAHB3cpQEcSd1e07yEQJXCiPyxeIMLpkZ0w9TsSJtI1
-	 ZHtHd7vR/K/fzDarg9Jwb9irs7s1QTnPN3vQtVLwBciThEunzyl9F38qmKM2WWJqSi
-	 h3E5H9vzO3ZdA==
+	s=k20201202; t=1767967949;
+	bh=4+mzqDzEaOLsrYXhGxtACkTBLW6Z+meNNs5bZHIEMfU=;
+	h=Date:To:Subject:Cc:From:References:In-Reply-To:From;
+	b=mJIl1a4xTSQzVlWcDldxHy2N/IguXfpNTNL/2JHYPTE3lr+pnFvVMlE5vScKJ71GG
+	 qhLrumE3D8pwFxjCKmxpC7h3pHjNhVZaqwE0op6TWYCei5KZ3Qx+GDFMctl/KXGcdE
+	 GKmdNOBuACqjDUDC6L1+dsDEHvYnygGQL+Fsq453xFn6CB0vLlAmaS3H/4fgA1BQh5
+	 wZIgRuC8x7A4oWhEHKGsmWXHXLn5R1V4nFPhrhMgBWXeX/aY3O0oXvMGzS9iPgHzC8
+	 niv5c/sJa8xQooGKOYjqpFNo3UEvq+qcgDt4Mv0GgZ5gA8UIW9lERyJG7q6uNlhMpu
+	 HQPjRo+OyZkPQ==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -46,77 +46,69 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed;
- boundary=f1617902ff2ddf7a2ec1316a0543e381ae6439ba0ce5a857e6cd39e18618;
+ boundary=6694aa45c8d7d90c717d128b40772a22741b9e2a5453c342ca2042e23cc0;
  micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Fri, 09 Jan 2026 15:05:36 +0100
-Message-Id: <DFK46PUEYQFD.1ZE4WO3YCYQJ9@kernel.org>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>, "Linus
- Walleij" <linusw@kernel.org>, "Bartosz Golaszewski" <brgl@kernel.org>
-Subject: Re: [PATCH] gpiolib: remove redundant callback check
+Date: Fri, 09 Jan 2026 15:12:23 +0100
+Message-Id: <DFK4BWTWHHQF.2IBES82YDKAEC@kernel.org>
+To: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>, "Keerthy"
+ <j-keerthy@ti.com>, "Linus Walleij" <linusw@kernel.org>, "Bartosz
+ Golaszewski" <brgl@kernel.org>
+Subject: Re: [PATCH v2] gpio: davinci: implement .get_direction()
 Cc: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+From: "Michael Walle" <mwalle@kernel.org>
 X-Mailer: aerc 0.20.0
-References: <20260109105557.20024-1-bartosz.golaszewski@oss.qualcomm.com>
-In-Reply-To: <20260109105557.20024-1-bartosz.golaszewski@oss.qualcomm.com>
+References: <20260109130832.27326-1-bartosz.golaszewski@oss.qualcomm.com>
+In-Reply-To: <20260109130832.27326-1-bartosz.golaszewski@oss.qualcomm.com>
 
---f1617902ff2ddf7a2ec1316a0543e381ae6439ba0ce5a857e6cd39e18618
+--6694aa45c8d7d90c717d128b40772a22741b9e2a5453c342ca2042e23cc0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
 
 Hi,
 
-On Fri Jan 9, 2026 at 11:55 AM CET, Bartosz Golaszewski wrote:
-> The presence of the .get_direction() callback is already checked in
-> gpiochip_get_direction(). Remove the duplicated check which also returns
-> the wrong error code to user-space.
+On Fri Jan 9, 2026 at 2:08 PM CET, Bartosz Golaszewski wrote:
+> It's strongly recommended for GPIO drivers to always implement the
+> .get_direction() callback - even for fixed-direction controllers.
 >
-> Fixes: e623c4303ed1 ("gpiolib: sanitize the return value of gpio_chip::ge=
-t_direction()")
+> GPIO core will even emit a warning if the callback is missing, when
+> users try to read the direction of a pin.
+>
+> Implement .get_direction() for gpio-davinci.
+
+I must be blind! I didn't see the direction register and I assumed
+that the direction is fixed and only known by the pinctrl (as on k3
+SoCs, you have to hardcode the directions of GPIOs in the device
+tree.
+
+Thanks for taking care.
+
 > Reported-by: Michael Walle <mwalle@kernel.org>
 > Closes: https://lore.kernel.org/all/DFJAFK3DTBOZ.3G2P3A5IH34GF@kernel.org=
 /
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
->  drivers/gpio/gpiolib.c | 3 ---
->  1 file changed, 3 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 0a14085f3871..5eb918da7ea2 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -468,9 +468,6 @@ int gpiod_get_direction(struct gpio_desc *desc)
->  	    test_bit(GPIOD_FLAG_IS_OUT, &flags))
->  		return 0;
-> =20
-> -	if (!guard.gc->get_direction)
-> -		return -ENOTSUPP;
-> -
 
-Not sure, if that will make it better or worse though.
+This will need a
 
->  	ret =3D gpiochip_get_direction(guard.gc, offset);
+Fixes: a060b8c511ab ("gpiolib: implement low-level, shared GPIO support")
 
-Because that will then do a WARN_ON(!.get_direction) and will spam
-the kernel log in case of the gpio-shared-proxy. Also the return
-code will change from ENOTSUPP to EOPNOTSUPP.
+Otherwise the sa67 board will be broken with the defconfig (or any
+config enabled ARCH_QCOM).
+
+Tested-by: Michael Walle <mwalle@kernel.org> # on sa67
 
 -michael
 
->  	if (ret < 0)
->  		return ret;
-
-
---f1617902ff2ddf7a2ec1316a0543e381ae6439ba0ce5a857e6cd39e18618
+--6694aa45c8d7d90c717d128b40772a22741b9e2a5453c342ca2042e23cc0
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCaWELMRIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/jaNQF/YUu9hoXsDgNCaCHWSY7bVlhhZZ0LXekq
-91FA+1Mq8z94MJUa+UlmN+CQCnRFpoWxAXoCNoEJTDqiMgAQPNBFGAqcUPPOaVIy
-5OBBM2ErcwaDfjDwh10oREu3Nwm4Yn0a+vE=
-=TnJu
+iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCaWEMyBIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQEic87j4CH/hcjQGAlM9IV3lYe6vCXh/T6g4V/rvpArdwWHK2
+DP5dBy8nqCXPdggu+HYxlQKDoydyrvdQAYCytzoINBNgAsebYSADQjYKvmU79dOG
+VFWCA/Kaq1kyu2DuJXiaOueKfUZndi3ukRk=
+=dpCg
 -----END PGP SIGNATURE-----
 
---f1617902ff2ddf7a2ec1316a0543e381ae6439ba0ce5a857e6cd39e18618--
+--6694aa45c8d7d90c717d128b40772a22741b9e2a5453c342ca2042e23cc0--
 
