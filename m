@@ -1,54 +1,54 @@
-Return-Path: <linux-gpio+bounces-30317-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30318-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BED0D0842B
-	for <lists+linux-gpio@lfdr.de>; Fri, 09 Jan 2026 10:39:14 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3905CD083B3
+	for <lists+linux-gpio@lfdr.de>; Fri, 09 Jan 2026 10:35:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 620CF3059659
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jan 2026 09:34:11 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5FAD130263DB
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jan 2026 09:35:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA6573596E1;
-	Fri,  9 Jan 2026 09:34:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 087F13563D5;
+	Fri,  9 Jan 2026 09:35:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lR79fTbk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AH/W5KKF"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DAD73590CA
-	for <linux-gpio@vger.kernel.org>; Fri,  9 Jan 2026 09:34:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AE6329390
+	for <linux-gpio@vger.kernel.org>; Fri,  9 Jan 2026 09:35:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767951245; cv=none; b=eWwo/bZFr1KM95IVqH5CEKMCSDI9nO47SfQvtuq7Ui+IC9Iqxf+o2LDQOgt190eDTXUlPSvBYDLKcxXXJ/1KHkot2t1zX0X2KFi9bZV1xp5UeT9F9LaKe0U/S2iK8PHyot/NCGhZwfi/T3koxs/ERHKCFLPBuMMXlcShkMSjahE=
+	t=1767951326; cv=none; b=UayMLojHhpRCdBYUKnRaO1tEfW2m1LGLyKJ6gs46zY5Iqi1L3INW2kiYYy0AS1uznb/bHrXu3QctFdF2dTZ9a0KYn81WP7W/wGuqBmLjtXr+04O7d6rJfipAYiSzDZjMChtDzQEGlYMrFRWbDPgKwLNlXronbcfCPg9V9+R/sX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767951245; c=relaxed/simple;
-	bh=eOPj6csaxqSh/pD94Xiow8fswoPt4epubaYlDPDsNMI=;
+	s=arc-20240116; t=1767951326; c=relaxed/simple;
+	bh=7L+vSRDTKzVhMW5uhxK2UgtWU6MpTyHtxzs1hw/M3/g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VrT2Cho4dPhVnK612hVtJAXUoxviYN92hnyqjrN65QJ/V8GCYa8/zGzBNH5hWKMAX/53OTtCRV8ju+88BVTtPRHh/oUry498FZ7+H3mkB54+vzctnr0a04X7GlhVEAFJx/9MHwZI4vhROuKXmCHLnjVa5W/KQHUgzwmeMSfmaV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lR79fTbk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 243E2C2BCB0
-	for <linux-gpio@vger.kernel.org>; Fri,  9 Jan 2026 09:34:05 +0000 (UTC)
+	 To:Cc:Content-Type; b=J/b+yCcpB84R7PR7Kw0ai3X++cMJM8T7fXzY/8D5BmMDRDrfW+ClXp8rr+EaqsfK4M3uRLUdWMBfrXHVaiXOJD1WmzEYvVGSQx1wfskZ9qPxnVQPEaIheyahNDGsoEj/+fcOsmq0HgghRp0fdNZ0z26lkfZbEfhQu6KuWiDicLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AH/W5KKF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 470F5C4CEF1
+	for <linux-gpio@vger.kernel.org>; Fri,  9 Jan 2026 09:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767951245;
-	bh=eOPj6csaxqSh/pD94Xiow8fswoPt4epubaYlDPDsNMI=;
+	s=k20201202; t=1767951326;
+	bh=7L+vSRDTKzVhMW5uhxK2UgtWU6MpTyHtxzs1hw/M3/g=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lR79fTbkQsjgiDlA6fkXm7nFk8wVuLWHxfCcZhKMCzk6nFbpiobQdH+19xNX1Edq8
-	 Xu5QeqrJLJmlalUk0cX4DpHpHY9k1VxZ9yB7U7Fe08DVHs5dkYebQbpdDXSk1uGuMs
-	 3NYEBRMjDXEQ7EyKut2fYDHiQqGOmhTyuFTWnsUWJnC8lAwsVSYvpIYCNB7FLTDCS9
-	 C4J4iJ2k1oQ1yXqnsNmHma70GA7ZUgrFAVWtMfhy0tgm/5HSq9wirt4ixPTU16Mu2c
-	 +lkpNLrYinmglFCoxuv5/Pzb5FFZDnCN4e5KeD4MboWw+Xp6Yv+qC9MI6/n5qR1hfs
-	 PV1vQd6HCvjWg==
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-78fb7ab7562so35832677b3.2
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Jan 2026 01:34:05 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUwCCp7uhu36gRTrvAtyTcRkt9CyyvGbEdzOC5/54P2rvNejjeYsHIpTdp6E1QYYWzi0C2nVjZpxbTZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbU6yCjn9fvDTgNRjBGrgCsqaZErc5OH5DQdwSPmW2UoYOS5vH
-	LkVw4+/7UQk+ggWJDYwj7mfQ7zcPeWUUa67HVhLgTBQoLA4+SvsnsNd7EGtrkCBR/7rUpC/bTuQ
-	tFyzIieYuJM4sUijERJDhIDE5L9ZtTJk=
-X-Google-Smtp-Source: AGHT+IEn0vqdkw8bEaFTh2evg/3/Gk5M0wvdcElU6mMy3Wg7wsSj3AKZVzV8/gWPdmB4yzqWtFjvi9yu72g/ac8yxEo=
-X-Received: by 2002:a05:690c:18:b0:789:2be7:ae80 with SMTP id
- 00721157ae682-790b582a8f8mr187013807b3.54.1767951244425; Fri, 09 Jan 2026
- 01:34:04 -0800 (PST)
+	b=AH/W5KKFf44NZgtKCeRwscvcd5f5OtMnEYBV1os7Xp3PrbVfqE5O8lmxtHr+rO2yr
+	 NcAgyZgBU4IMHzy3s0wz0/R7f1WwGy0v3zQSRSxCGkoAjzg2Ifl1gozBMs2DGIwtUA
+	 vNh35bPc7x64nokZhbHkMqQt3xbw+/nYKREnhzMJzWrVQVnpumY+9ME+PWH445hpXY
+	 0DsB9Y0bLVcpLaeDXTBX446uTpplwpcMUcrdkUGCj9AVvMxfOblx2kcHG+0wR+mnDF
+	 UEL1hUhhcM3FrpoFeHzKePOUEDOz0DFw6FckEIm4I6Go6IPaAjnl5eHXTq/KdIgGi/
+	 8Hrn1qmumtNhw==
+Received: by mail-yx1-f43.google.com with SMTP id 956f58d0204a3-6455a60c11fso3400143d50.2
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Jan 2026 01:35:26 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWbn4rterP/4H3OoyHBWLNZCsxAxb8P8SuaX8h1KLZ1oyDT4epbuidn4MeaUdCrB/TqcJJnBFEgMHn0@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfEuVXH2yHQL4uLzwotAA9+P6J6O57rAOGdjhWDYxi6RW4YZUf
+	5pj6q2UfB62zh1aEdDtbIa9Y/s96+9YFGDXPRBz1a0Gm3nC2ZMIDU2OkKYjLbnsSOzzyGHEYuCB
+	yuvP/x9FgmOLeEPRy6L82iwzLb35c+VY=
+X-Google-Smtp-Source: AGHT+IG1nuJdduHBaBbJWNLEpBHS/0bPJdMz2cSjVZpwv/kW086sM7bXE/jQGK5lNaXH05HMk/BcWVmQ+kqn/43rNZQ=
+X-Received: by 2002:a05:690e:1516:b0:63f:b18a:7819 with SMTP id
+ 956f58d0204a3-64716b70afcmr7942611d50.23.1767951325652; Fri, 09 Jan 2026
+ 01:35:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -58,10 +58,10 @@ MIME-Version: 1.0
 References: <20260106085253.20858-1-bartosz.golaszewski@oss.qualcomm.com>
 In-Reply-To: <20260106085253.20858-1-bartosz.golaszewski@oss.qualcomm.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 9 Jan 2026 10:33:53 +0100
-X-Gmail-Original-Message-ID: <CAD++jLkaKgGDTbzjdWNPFSF85VDx3HCnOdbF8GSeEZRp3jDbCQ@mail.gmail.com>
-X-Gm-Features: AZwV_Qh3gljFKlGTGVVG8Mveu2qlxxn_p3yMb-Bc-OOzKbAyx_Ef35y9X6nAS98
-Message-ID: <CAD++jLkaKgGDTbzjdWNPFSF85VDx3HCnOdbF8GSeEZRp3jDbCQ@mail.gmail.com>
+Date: Fri, 9 Jan 2026 10:35:14 +0100
+X-Gmail-Original-Message-ID: <CAD++jLmdBefq9JJrfw27Y-FkvywJ9bzJBSOo1RXmS0HjoC5h+Q@mail.gmail.com>
+X-Gm-Features: AZwV_Qixm-JNI9h7N_giBE-Mr4reCD8lf22oFl6XaRV7hyd7tvwUPsENCkrLvCY
+Message-ID: <CAD++jLmdBefq9JJrfw27Y-FkvywJ9bzJBSOo1RXmS0HjoC5h+Q@mail.gmail.com>
 Subject: Re: [PATCH] pinctrl: meson: amlogic-a4: mark the GPIO controller as sleeping
 To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Cc: Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
@@ -80,15 +80,9 @@ On Tue, Jan 6, 2026 at 9:53=E2=80=AFAM Bartosz Golaszewski
 > pinctrl helpers which use a mutex for synchronization. This will cause
 > lockdep splats when used together with shared GPIOs going through the
 > GPIO shared proxy driver.
->
-> Fixes: 6e9be3abb78c ("pinctrl: Add driver support for Amlogic SoCs")
-> Cc: stable@vger.kernel.org
-> Reported-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Closes: https://lore.kernel.org/all/CAFBinCAc7CO8gfNQakCu3LfkYXuyTd2iRpMR=
-m8EKXSL0mwOnJw@mail.gmail.com/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
-Patch applied for fixes!
+BTW it is a very *welcome* side-effect of the new shared GPIO rework
+that it just happens to find these old bugs, I'm very pleased with this :)
 
 Yours,
 Linus Walleij
