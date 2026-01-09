@@ -1,109 +1,77 @@
-Return-Path: <linux-gpio+bounces-30303-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30304-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F08C6D06C00
-	for <lists+linux-gpio@lfdr.de>; Fri, 09 Jan 2026 02:32:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A6265D06E0A
+	for <lists+linux-gpio@lfdr.de>; Fri, 09 Jan 2026 03:45:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A20C330321EF
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jan 2026 01:31:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0005D301D0FE
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jan 2026 02:45:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7887212B0A;
-	Fri,  9 Jan 2026 01:31:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F96D316904;
+	Fri,  9 Jan 2026 02:45:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b="YDs42Lu+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D6D/ZEsc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D221A9FA0;
-	Fri,  9 Jan 2026 01:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2319D20C461;
+	Fri,  9 Jan 2026 02:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767922308; cv=none; b=GYAK+hC3PWRuTspwZxA+D636Z2Vv6GJIR5wV0CViKUuEAyte1NUK+QwicQ/xRfv5gIRPkNw3GuYQ/Woij6eClMI5pV4OjvRjNMuajxcP1muXCBLflhq3qt7+H2O5Bg5hpmty/UznHzRghDWwqPbF4hk2rzDC29/ZpuHWZ21xp/Y=
+	t=1767926701; cv=none; b=Th1AfbWUsUgdesS4f3M/uplvjeK9+jkHvaLr1UBo3QyTmDOELtjsiOZk6ukCz5KLeFVZpI+kmHKdL88PgbONLKN2mSAYkCw4/SiJtLSudSJq+1BWNF+AZv6ueJmXT3Ku2H1R5gwbXZ8n8RdZePLEWgqWgxdRgkBUnuP17FHBZW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767922308; c=relaxed/simple;
-	bh=cF3e8hfldJWrkLrq63re0BxjmX8O8Uyne4H9gWO/Z7Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kyYON3a1Vw/u8sJ4pHOo1/MKzLO/uI2KrROL/DibJwcHrgQl0SAeOIw8iEM+5NwhL5HCCtt7YCkPX+PCX0UaD4+x6ZZuIpI42qBdYcsHyxCsdM8p4oGjijdYTimEnGZwj02CKAEPltss2uC2MCxrzA6URjhqscDviIEFiOvBA/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com; spf=none smtp.mailfrom=linux.spacemit.com; dkim=pass (1024-bit key) header.d=linux.spacemit.com header.i=@linux.spacemit.com header.b=YDs42Lu+; arc=none smtp.client-ip=18.132.163.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.spacemit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.spacemit.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.spacemit.com;
-	s=mxsw2412; t=1767922291;
-	bh=Lte9il4oOh/PBkig0SIYcOonMssQ6T0eES7c3nlrvpU=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version;
-	b=YDs42Lu+zCb3DcLYNEmbA8Btm7oKeWpZPxf1MziHJR791I+QImd4bXzUsE35Wxg62
-	 kD5Tuaya8Qyx/qIKZiehxCEYt1gKD4bVwovzYLz8xlmGnWBT5KEuKvBDE6cvazYGEr
-	 mJxz97+MDVh7jUzoMO7DyCm0odw9H+H7psqZztMA=
-X-QQ-mid: zesmtpgz9t1767922286t53ae930d
-X-QQ-Originating-IP: +461X0RnN79QDiEa+Js9FDVz3gMxkKWrRbCGmI76R8Y=
-Received: from = ( [120.239.196.107])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 09 Jan 2026 09:31:24 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 10842519875104114801
-EX-QQ-RecipientCnt: 15
-Date: Fri, 9 Jan 2026 09:31:24 +0800
-From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
-To: Yixun Lan <dlan@gentoo.org>,
-	Troy Mitchell <troy.mitchell@linux.spacemit.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Linus Walleij <linusw@kernel.org>, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] riscv: dts: spacemit: modify pinctrl node in dtsi
-Message-ID: <0AA43966D8DE9163+aWBabCQG8v4XzD2h@kernel.org>
-References: <20260108-kx-pinctrl-aib-io-pwr-domain-v2-0-6bcb46146e53@linux.spacemit.com>
- <20260108-kx-pinctrl-aib-io-pwr-domain-v2-3-6bcb46146e53@linux.spacemit.com>
- <20260108073722-GYA3634@gentoo.org>
+	s=arc-20240116; t=1767926701; c=relaxed/simple;
+	bh=zO3yUb/udjixAwJO/19XpPE+S0AJbdtmi4sXtrVBR88=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ZJmv+4zMV5OGaiTOvkebrIG/FNsOSH9L5v8G/IGgTMCWZVgYF9Vvr7GX9nFpc0bNSLc6BbPujLp55Cb4fBP5QfL4Iqn6dAqCPsjO36nG4JNy6EUTsuIcCfZrPQujMW5/rLKa+9GIVeI3TwPMvtPwZXvJBbLHAYlPX98aO87/ieY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D6D/ZEsc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7B15C116C6;
+	Fri,  9 Jan 2026 02:45:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767926700;
+	bh=zO3yUb/udjixAwJO/19XpPE+S0AJbdtmi4sXtrVBR88=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=D6D/ZEscAU0TJewTEPgFKiUOUXjqWR/9Wb1RaXfe1q1EPv8EJJYSMiyjTuqy+od36
+	 bR2+aQlERlIF6dYuCpoZh+xGrL1y50Hg8Z8/TznGrEn4jhoa1IfShyJ191I/Ql0eLP
+	 gOmjYrdARh71phBO8n6lQZK0esoDb7RfYpRDxjDroqYtsSe2+anOP1VuTq27frWC5t
+	 Z59ezJWJcpEv8sEvUxBQrrhOfPu41636iZrG4c0NXgB5m2I0FfKnCK0ori26MszTUG
+	 REAx7e/1C1S/So3iXVrzuHUAIP9PEUCrGVdZDe+byM8zWqlILFqwjlRoAtjBK5aQim
+	 UAFRU4alDItGA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id F3F453A8D145;
+	Fri,  9 Jan 2026 02:41:37 +0000 (UTC)
+Subject: Re: [GIT PULL] Pin control fixes for v6.19
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CAD++jLn1Ba7MH63VOtGQHDOA7a_2A9Ez0CQG+Mw_LkvhruswSg@mail.gmail.com>
+References: <CAD++jLn1Ba7MH63VOtGQHDOA7a_2A9Ez0CQG+Mw_LkvhruswSg@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAD++jLn1Ba7MH63VOtGQHDOA7a_2A9Ez0CQG+Mw_LkvhruswSg@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.19-2
+X-PR-Tracked-Commit-Id: ebc18e9854e5a2b62a041fb57b216a903af45b85
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 623fb9912f6af600cda3b6bd166ac738c1115ef4
+Message-Id: <176792649649.3874217.1665155660943559644.pr-tracker-bot@kernel.org>
+Date: Fri, 09 Jan 2026 02:41:36 +0000
+To: Linus Walleij <linusw@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, Linux pin control <linux-gpio@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260108073722-GYA3634@gentoo.org>
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:linux.spacemit.com:qybglogicsvrgz:qybglogicsvrgz3a-0
-X-QQ-XMAILINFO: NEbP9pf2ysjd3Q0Ysb+yD5ZoZepexWEDX0sm3Dj/dpNkkyVN+j4npUCL
-	mNS/8avowzfh9wGAblUZmC3m8AfYZiXauKN86/jULVlnHSiWi4qbaGmU4Y14OPv9rS0CZu8
-	6Ts3fLBLtF59NtqhDO8a6zt9NoYVrVVl1/O8ochX3Hf3DKVkXlP8sWB+C2tmq3WBHEXE+N3
-	32C+ZcEejQrb3NKbYGqvv/f2rXW5xzQmAybOi1s6o/g4ERfOS5HGuYAhRkluMW26FrwZ4zy
-	jiv8ei/Jnxdc3nL00TyRQsGSOJA8NNAT4ObeAOwxcKwHW/CYgNZKpJPj6gHcmlZTILfdMY2
-	mErvkzbJ2aNDxkyf4RzALC/4JI8t1E4ZDCcOB6Q4K8j5mSnsUUc+KYlyqRUTmeZbvoLfJ6k
-	8Cxmk08cWn2F3MPq/6AWzGquvZgcqRRsKNAH5P8ejLdyhSPLKR6WB/tijpmA7DezP66ygA8
-	RzdW+RMSYG6IPsFXJFs/VreyMtfwIAQ1bghCztYukMzJpYzQxMi6AkkBqV23f+CGH7uoyEy
-	1ds9io4HUT2r1IxKnmoKu5BQTdMnDpwJnJTlKwdcFTKJsCkGRyBaS6aWQKGdvh6RYzSPZfb
-	6zJwTUEi5p4Tbybp1ywMVAdl0XDFotqstHO4XFv8+D3a6Fi3l/UF2Nium0H5f3WH3tjYLI8
-	uj9u6GyeYBe9Po8Dqt6YkHngLhifg22/oVanEqQ2h0wpqD1lR8JnTFpgn3+vpEfKyVtn9Oi
-	BtAfB0yUv9C8oCQCfYsdDM8g/PbIfagYK77b6FYiDAd0/Msf5StUcjKZJqWH63aaU4QooI5
-	Pzdl1rXzEH+GIKA0kHGvh+umoyGF3Mb8ARiiSAFUe4/fWgwPyJ409YaJheER5rZhl2+9Ju9
-	y9QO72Z8MV1+qgOFyaq5DkRiUmC3ep+Y+avwjgSLYGae36yYcwOt3qYcj5nl/Z9DJTfvvI8
-	36z2ugFZSV+L1o2UKxOHbCFKaaJRrltM5AYehh0mqz9NSj5VqswlvueDEv9WD1YFBnb57Gt
-	vXH78uZ75/elpzGoQY9W9N4GyElVGm5eHJ0uOXZ1kKio5FJ2rOX8EkyV5zaq5XsGUBg17hn
-	orYtn48zLfYVZ0kLi3r6EY=
-X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
-X-QQ-RECHKSPAM: 0
 
-On Thu, Jan 08, 2026 at 03:37:22PM +0800, Yixun Lan wrote:
-> Hi Troy,
-> 
->   if there is one more iteration, I'd suggest to adjust the patch titile, 
-> to make it slightly more specific
-> 
->   riscv: dts: spacemit: pinctrl: update register and IO power
-Thanks for you pointing it out.
-I'll use it if there is one more interation.
+The pull request you sent on Thu, 8 Jan 2026 22:33:15 +0100:
 
-But I just want to confirm, if there are no further iterations,
-you will be making the title change before applying it to your tree, right?
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.19-2
 
-                              - Troy
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/623fb9912f6af600cda3b6bd166ac738c1115ef4
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
