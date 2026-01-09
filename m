@@ -1,144 +1,206 @@
-Return-Path: <linux-gpio+bounces-30350-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30351-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21638D0A7C5
-	for <lists+linux-gpio@lfdr.de>; Fri, 09 Jan 2026 14:48:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E4989D0A831
+	for <lists+linux-gpio@lfdr.de>; Fri, 09 Jan 2026 14:55:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5F07B30A6E99
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jan 2026 13:44:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 46C18302A96E
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jan 2026 13:52:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13D6735CB8F;
-	Fri,  9 Jan 2026 13:44:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB53835B149;
+	Fri,  9 Jan 2026 13:52:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T22xqPjo"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="m97Fgm70";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="d+V/vFpc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D8D35BDA8
-	for <linux-gpio@vger.kernel.org>; Fri,  9 Jan 2026 13:44:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F43322B92
+	for <linux-gpio@vger.kernel.org>; Fri,  9 Jan 2026 13:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767966273; cv=none; b=SwAFE0KxnWa173jV+yQz3zvehHVwe7octyPiVuLeUMOLFN2EGbbgAj6dOHGs8dlOLqlNlV/TWMk7WjoKjpZXqGP3qR2MH3VwRoLaPhugB1FbDGyUQEsrPYSOZ8Lg1121lPCIvhK9uNGddOL5UoP1RecACXyc0TV4nx7XP1rvCMo=
+	t=1767966744; cv=none; b=XmxPIoX4hmfCmeFwLtApFQ8lezzgCu54s29LbXfdnVdS+lWKrIGfJzK85kphTS1LrmAesxmvPrlSNakypJ8gk1KlhMUOlChp2L2fdmRMxDhD0QYp5pvMyyPClAK9syEgdp6H3bFfQgRTUNGq0WCykVlHDLfdRBOaIxkHbJermsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767966273; c=relaxed/simple;
-	bh=1LQ7pgQADLkv3Q2JfJ0YKNTNCFMPBPWWQX+7eb5Jfpc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ngaSDNKRISl2kQYtmc5ud8KaTZI4oiI10Egh7iQRsR+R6Xx205+pB0Jwkec91AKMD6Eh+XX2QcpPSpOHCtnczryxyBoVYeHSgh0DmDpNnDEhjEQSG4vKWxzpKMtLLmwBzpB6d+iA2x1p+O3oKGr9ctOi9wedNjPQ6AQjgj88xag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T22xqPjo; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-42fbc305914so2899793f8f.0
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Jan 2026 05:44:30 -0800 (PST)
+	s=arc-20240116; t=1767966744; c=relaxed/simple;
+	bh=KrvBla/JirEaghvseumcByhjB5L8NOjH46XBhmrwSbM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=umYNPDys9e88vnOdRtODbnq9i4+Kar0jb12egrNgFCoTiKQq+SF4mymkBOUkSIcs547YNCSrDsX/dBSzSmACEKFEvB7HTAWJ5AJQlYCakDEEXAlJPz6aOq/n/XU6ClHYyemXdJ1SsAreP1/zSeq7HPWh1f3s+bsEO5eBpWQUVw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=m97Fgm70; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=d+V/vFpc; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6098VvS43727355
+	for <linux-gpio@vger.kernel.org>; Fri, 9 Jan 2026 13:52:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=0gAXeQ8bf/Cf2YSt5r9BXE
+	qKe3k9xXJTjuTh2aE09d8=; b=m97Fgm70n28oKPjy4+5ANnV1Lc6+tQtpw4pxht
+	kIrXVEfyIa5II3T457kS/JYKB0OyRAgbre4ag1M86IPQrJx9HthnonlIguLXRL4X
+	hL5trCF9DinRVyeEeant3rjN27x3aVd2dXb9Y6at/bdOmdmuOpKutM3uWimntxC/
+	+cz2d1SCkjOJE6CrIpPq5tOKoSgQfIc7gwpp1sej+UdvZoSF4je2vTevak3uhXGZ
+	6yU/qs1ItAvn7yVcgmgiIwARTHjJzzs5TQi8ADeEd2RiqMvYe41fsRIlQ2BbTcUF
+	AoAWayJlURU8STTr6AAiagnTs2a51gJVHmF17wflHql0wAdA==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bjpmkj8g7-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Fri, 09 Jan 2026 13:52:22 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-8b2e19c8558so988240785a.2
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Jan 2026 05:52:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767966269; x=1768571069; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SvvQmiFOUMr/XdsMeV6yI6szLxAkwyU8Gztse0HmU4Y=;
-        b=T22xqPjoUng3R0/lbVqftLHXYgAkCfQn9SJwHiC5fAy1/qCs7D450jYCl3UW1zjeHy
-         RZ9JTxonquhy3i+wQZJQ9/ndBGBuS2jSRINlJLj5Bj/2RkrfVcqs31laj+PDzfnESoBq
-         FUs3irdpEZ4dSCGtLxTfOGfrasm6ICBTK9o7C8kD9g8qSYj3bdFb3yf0xJWYvdDjS3ao
-         IhZMadggx/q87TczZtxQIHGcBDZ89GR+b9y3zLCTbYZSJHDIeBqTCES3yLa+ISRS0waH
-         47Vf/ThVhpohJLwOsNO+HXGHZ4wPv+vP50ahkaufIw1ZwpHpuC3nk/RViYvjj6KSfm9k
-         XzGg==
+        d=oss.qualcomm.com; s=google; t=1767966742; x=1768571542; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0gAXeQ8bf/Cf2YSt5r9BXEqKe3k9xXJTjuTh2aE09d8=;
+        b=d+V/vFpcEHN2zmHpEmbeOrYS+V8MxOy6d9TSj3aVM+r5e8kY7TkPFQFaF+GTYUr6Wd
+         RkrrT+RLPhWsP6UZ7lBe16Bfm/cSHafzbNkwGK/JS1EiSA7aWG4r4u9cUlznBDqW/m+/
+         J66+apJp3/StXxpJWMYTU8xngzqwLZbB0tEINiibZQ6DUz9zKywAHc0JJJcXN1dr5npH
+         XMgQjuM1RTCSdz7N/BOP29YG3iEkf0Y3C7DQyqeSotaLKeBsHnnNcqnijcnYMpUQUEMd
+         sCQHfJYSKvpfJK1Fn60hxDRBQiTN946LDtZawrd87OpIb/zBV68ilfJAXZsUuI/el8Ml
+         6i8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767966269; x=1768571069;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=SvvQmiFOUMr/XdsMeV6yI6szLxAkwyU8Gztse0HmU4Y=;
-        b=l2ZtXjNlVYP842jjjwsoS4wL2HEJTt+v+H3hh9aO2lr5ASfJg9rWoWn28q9ELxpWYn
-         P28FF3rEGrKzkvw+6wACRTqXMgtGYKgE2CCDox2BacVaIds9Jw5JMfyNNk18Tonvmxsq
-         ElCXUdRuOHtgPyNi3rDT9TjvaUv1P+KLi00JZ0pMqxnZ2LiSmHzOAkV/O6ZEdDwtfkLu
-         WM7HXl/S9prQABiLpvjldY4mogQsS/zbav6YJxtZrDU2P4sR/eWgesVTG0KuD/6ed9Ag
-         3tbaVc7A4qgHjR3jYoYJqFqjsuLR83kQkOQ9HeBIkDJJsVcRDCozLkg00SFif59/eWXh
-         oJ6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVvRw7eeQixAyZw4xhU29hVB14dXxfGh86sw60KGysy+DfGXbcNSriGUMCvpov6k+xBiA55xX/QFWoc@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywql6xJ12fE5l0aucWgl3eS9evXVFtvx/MqTo5AmlOvjI20gJjT
-	RP94EkSsD7/KI1342FwPZeM7fgsVx1Eoy+9wvfCkdVZsjUGXShC5J3yq
-X-Gm-Gg: AY/fxX4iUJRR1G7YLvlwe4CGOHYZaiPPVtSbwVMJk4VVXUrT60nUTRMA1dtAJBrncvB
-	PNiYzUOqa/z8Qu9tAX4bg+oAhXHzYVBlky4mSxD1FKEu7UTmJj/SSpIx3yPIv9RrJe5CZedaSKy
-	Q7XHGqDV44CI1uy7n+CfR9h6JzMmUxhytp0UPvNVaGAZeR1+6RUMG0Q3ntRjSG1HsId9TGZFeQN
-	PQ8FAosMn+3WlGXLkYXGLySgci0VWLZAQUUFnefk4g0jRcyTORQnoFFgYW3wKFjJIpcCwqM9+hL
-	DJYi2OOKgBy2hjtdiFF1PH7EzXkjm1KMt+xO2Jn8LHP/MVNHEob2hgPEAKmx25zS2Fy04HryGf0
-	YA+FRZqLYuxexBqgBVpKTXLiK9sAOFNhXiKuwI3J1scNTQmTfZVApMXG1AuElsSwGyjTY85CupF
-	b+iu4kICFo0tbfP0PUWN36L+NwiR+muEpRP2M5ANpMYEpMQM7DhDBjpUj1wsoAWv8UPEOp0Fgm8
-	b8=
-X-Google-Smtp-Source: AGHT+IEcyqPvQXXgSb8upUybhhoHWlS++tR42ZMn0J3rAkpHIq7i7iKiZeRqR+4mcCGlOkEYTV7yLA==
-X-Received: by 2002:a05:6000:420f:b0:430:fc0f:8f9f with SMTP id ffacd0b85a97d-432c37982f5mr11382930f8f.37.1767966268426;
-        Fri, 09 Jan 2026 05:44:28 -0800 (PST)
-Received: from localhost (brnt-04-b2-v4wan-170138-cust2432.vm7.cable.virginm.net. [94.175.9.129])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd5fe83bsm22896047f8f.38.2026.01.09.05.44.26
+        d=1e100.net; s=20230601; t=1767966742; x=1768571542;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0gAXeQ8bf/Cf2YSt5r9BXEqKe3k9xXJTjuTh2aE09d8=;
+        b=j1NZ3mrm89sKtmpE7YYCbAl7gItbju/nnsa9HdFGumBhQPtATJSPobS0CQNf3zhsgg
+         +aY0Ph6tl68vS32as5z1xM4B6Pt/yK1PpJbwwLG0sO64fbmjEXJSl/9ucObij70MkVCQ
+         FFLT0fBpy6iMyNoyLiTkF5YHufN9sNVCrIVF0NlEr37EvfYZXTAqrbgM3+0naF3fCkiF
+         oGvKd+AaBdU/ucPSbbS1RYuWEyuRgUWdHfXvVNSN4nmE7ZCwGWoswUptWygEzSv6WDiy
+         EQWb9/aPRPFkdZ0W+SrtSzY5mUA2AThNpD4Z7F0s8Tvp+FQ0+KgioalWUmpzISR8++8A
+         yNjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVvckdWOnJ0sFBrfA5FRTZ4NDpz4zIJTpYT+2T0A7wce66L2YaVb5IhF6/L81lDn0WJxt+6ciMsalRM@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhpIoP/wmasDxSmNKSgRteGpMsGHGIU3qeFY0t3SR8dppMAljC
+	+J59En2PNURrh4JxzpU0CVtlriJcuQIcomxFopc+GrurZrs1snYQQtt2tNZc++MJ1rM9kvKGZzQ
+	6L/5wFJNP5mcH9vohr+TyYuCHP4WEh6VO7lfhBwJEubte8TDkvLBto0crkv/aqEPH
+X-Gm-Gg: AY/fxX6FK5Z7hy3vUJQ2db6pNw/zj3NLFhfycY2w9CIkySeuj/5XlS8MxvdHCg15IXd
+	W+ac/W1LSp4v3Wz/HVpRPejQjqjpb/hf+wUJ+iuCHjFCQJsPs5dJVa1kn8rTWdBgzqEcN9G2q2K
+	2XSS05UDuc8KTT2cQGzsPqQS2ynE9RnD2L/AA87KPtmYFz6I/D9sU/QaM4GMyPQAOlr3ZFA3dfk
+	23zeDbkETafH2ALRzYrvklHmJ/r9otfX6IEpYegBtBGIwIaCRZAVDszlp1+pODZSGX6mQuOg50N
+	xd1X6C0vxihjMQBQp08lDS/v7179DAaot9T7TwHqtYdvOEEvL41E9flG79p8Rpcs6IwBVAA7jab
+	IxO+t/SSaWpR33BFzU8K3kILFI7iFuTs+rp/v4Q==
+X-Received: by 2002:a05:620a:390d:b0:8b2:74e5:b36 with SMTP id af79cd13be357-8c38940bbf7mr1451906585a.68.1767966741576;
+        Fri, 09 Jan 2026 05:52:21 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGPCQGOOutzGqug/8WZ8nlMi+rYrNoXvX3Cv0heRRj6+MG8OrBrT9W9MJOcOSFq44Gzdp+VKg==
+X-Received: by 2002:a05:620a:390d:b0:8b2:74e5:b36 with SMTP id af79cd13be357-8c38940bbf7mr1451903485a.68.1767966741091;
+        Fri, 09 Jan 2026 05:52:21 -0800 (PST)
+Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:4b2e:be6e:9187:bb3c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd5dfa07sm22468376f8f.25.2026.01.09.05.52.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jan 2026 05:44:27 -0800 (PST)
-From: Stafford Horne <shorne@gmail.com>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Linux OpenRISC <linux-openrisc@vger.kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v3 2/6] dt-bindings: gpio-mmio: Add opencores GPIO
-Date: Fri,  9 Jan 2026 13:43:53 +0000
-Message-ID: <20260109134409.2153333-3-shorne@gmail.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260109134409.2153333-1-shorne@gmail.com>
-References: <20260109134409.2153333-1-shorne@gmail.com>
+        Fri, 09 Jan 2026 05:52:20 -0800 (PST)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: [GIT PULL] gpio fixes for v6.19-rc5
+Date: Fri,  9 Jan 2026 14:52:17 +0100
+Message-ID: <20260109135218.31712-1-bartosz.golaszewski@oss.qualcomm.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=YNiSCBGx c=1 sm=1 tr=0 ts=69610816 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=kOcde2gI6Mb1oPXbj8QA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-GUID: uSaQHQkkRd-M9ED8R6HidNypY9WPRo62
+X-Proofpoint-ORIG-GUID: uSaQHQkkRd-M9ED8R6HidNypY9WPRo62
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTA5MDEwMyBTYWx0ZWRfX1BsCX0/aeo3+
+ U7e50NXpqz0QycjVCjs2fAqoQRoGZ1ERhaXT/5NA68X3gTtH8GGR4yau7GlwHX/MheLlb+525FM
+ hG2bUIZkcasLUSjhlP//XMcFaMVaAhESuUX0354HAlNGgeyuzuhCMMifDW4WB8/kAb07xMeK4tO
+ hYwFu6cw2W46+FcTKRf9hB+ClRd+iqODeiRXzPuVtDmfOUbMP1mPSndofvv8tAZMhFeCiMVGDL1
+ 5T3qPBQEp2+/nlLnkU/c1q0gvJPMZ7+vP2m1k/WgMMpzmeoX8K2ksi8xG4KatcSBpVjJSq4dD0u
+ VRbPGVOt4FX3CXgVq8O8QKlDzLGmC7IdlfzYwO3SBJmWkfw+zS1sJYwt7M55iT4WzQqtm4c8MHm
+ 1ZQHwHTlXOdxeL2jLwYWvWdUDsJ9N4OdlX5hoBSor+sxTzhKlxxc2Do2QeAdxIrJ1aMt54gUViC
+ QEmimFcPL5XhzVlsRBA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-09_04,2026-01-08_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 phishscore=0 suspectscore=0 impostorscore=0 adultscore=0
+ spamscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2512120000 definitions=main-2601090103
 
-Add a device tree binding for the opencores GPIO controller.
+Linus,
 
-On FPGA Development boards with GPIOs the OpenRISC architecture uses the
-opencores gpio verilog rtl which is compatible with the MMIO GPIO driver.
+Here's a set of fixes for the upcoming RC. There are several ordinary
+driver fixes and a fix to a race between the registration of two chips
+that causes a crash in GPIO core.
 
-Link: https://opencores.org/projects/gpio
-Signed-off-by: Stafford Horne <shorne@gmail.com>
----
-Since v2:
- - Fixup patch to simply add opencores,gpio and add an example.
-Since v1:
- - Fix schema to actually match the example.
+The bulk of the changed lines however, concerns the management of shared
+GPIOs that landed in v6.19-rc1. Enabling it for ARCH_QCOM enabled it in
+defconfig which effectively enabled it for all arm64 platforms and
+exposed the code to quite a lot of testing (which is good, right? :)).
+I received a number of bug reports, which I progressively fixed over the
+course of last weeks. This explains the number of lines higher than what
+I normally aim for at this stage.
 
- Documentation/devicetree/bindings/gpio/gpio-mmio.yaml | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Please consider pulling.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml b/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
-index ee5d5d25ae82..d44edc181e0a 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
-@@ -23,6 +23,7 @@ properties:
-       - ni,169445-nand-gpio
-       - wd,mbl-gpio # Western Digital MyBook Live memory-mapped GPIO controller
-       - intel,ixp4xx-expansion-bus-mmio-gpio
-+      - opencores,gpio
- 
-   big-endian: true
- 
-@@ -160,3 +161,11 @@ examples:
-             intel,ixp4xx-eb-write-enable = <1>;
-         };
-     };
-+
-+    gpio@91000000 {
-+        compatible = "opencores,gpio";
-+        reg = <0x91000000 0x1>, <0x91000001 0x1>;
-+        reg-names = "dat", "dirout";
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+    };
--- 
-2.51.0
+Thanks
+Bartosz
 
+The following changes since commit 8f0b4cce4481fb22653697cced8d0d04027cb1e8:
+
+  Linux 6.19-rc1 (2025-12-14 16:05:07 +1200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.19-rc5
+
+for you to fetch changes up to d578b31856cec31315f27b3ba97b212e4c6989b3:
+
+  gpio: shared: fix a false-positive sharing detection with reset-gpios (2026-01-09 09:56:46 +0100)
+
+----------------------------------------------------------------
+gpio fixes for v6.19-rc5
+
+- balance superio enter/exit calls in error path in gpio-it87
+- fix a race where we try to take the SRCU read lock of the GPIO device
+  before it's been initialized causing a NULL-pointer dereference
+- fix handling of short-pulse interrupts in gpio-pca053x
+- fix a reference leak in error path in gpio-mpsse
+- mark the GPIO controller as sleeping (it calls sleeping functions) in
+  gpio-rockchip
+- fix several issues in management of shared GPIOs
+
+----------------------------------------------------------------
+Abdun Nihaal (1):
+      gpio: mpsse: fix reference leak in gpio_mpsse_probe() error paths
+
+Bartosz Golaszewski (10):
+      gpio: it87: balance superio enter/exit calls in error path
+      gpiolib: allow multiple lookup tables per consumer
+      gpio: shared: verify con_id when adding proxy lookup
+      gpio: shared: allow sharing a reset-gpios pin between reset-gpio and gpiolib
+      gpio: rockchip: mark the GPIO controller as sleeping
+      gpio: shared: assign the correct firmware node for reset-gpio use-case
+      gpio: shared: fix a race condition
+      gpio: shared: don't allocate the lookup table until we really need it
+      gpiolib: fix lookup table matching
+      gpio: shared: fix a false-positive sharing detection with reset-gpios
+
+Ernest Van Hoecke (1):
+      gpio: pca953x: handle short interrupt pulses on PCAL devices
+
+Paweł Narewski (1):
+      gpiolib: fix race condition for gdev->srcu
+
+ drivers/gpio/gpio-it87.c      |  11 +-
+ drivers/gpio/gpio-mpsse.c     |  12 +-
+ drivers/gpio/gpio-pca953x.c   |  25 ++++-
+ drivers/gpio/gpio-rockchip.c  |   1 +
+ drivers/gpio/gpiolib-shared.c | 249 ++++++++++++++++++++++++++++++------------
+ drivers/gpio/gpiolib-shared.h |   4 +-
+ drivers/gpio/gpiolib.c        | 136 +++++++++++++----------
+ 7 files changed, 300 insertions(+), 138 deletions(-)
 
