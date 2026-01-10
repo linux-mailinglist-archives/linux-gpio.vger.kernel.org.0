@@ -1,220 +1,228 @@
-Return-Path: <linux-gpio+bounces-30380-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30381-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50095D0C927
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Jan 2026 00:55:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A468D0CAB1
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Jan 2026 01:55:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D31073026AD3
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Jan 2026 23:55:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C13EF301D650
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Jan 2026 00:54:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 312733396F7;
-	Fri,  9 Jan 2026 23:55:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ED0D1FF7C7;
+	Sat, 10 Jan 2026 00:54:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="auJW8HSa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lHUvxeQl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B89F500970;
-	Fri,  9 Jan 2026 23:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768002949; cv=pass; b=BlR2WY09gpeBlfmkW85xJqMbQ/DlY0wrzXnmZShqJdWpqxy5bZ2KyAhYNg+7w9KRbcJkBlAc/QQ7U8zxjCZg/Y0r4jCA24a3e8D/bYlgsBsq0mmrKzEiIZ30kxNPB7FWRdUmSQ/TM6LR1BspyllyritIcjd1wGa3tzGG6JJ/f0Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768002949; c=relaxed/simple;
-	bh=ROuF2oSpzd8c4QiCEc+hD6nAk2bycBRppZcBg9982no=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jYVUT6HpeA3qgiWrrPfyp1FNKJvGLzP1j2/L4dH++56e2JkqABvD/uVX5NcA+wcgG/uwXmgKXxuzuHrRaBuclhuxMJVBnFHElmbu2TKIS4v+5uki2hd9qt2A0VA2SZtujZs2VQFNjCfzvXoPGOGQu/G6RSauEugDo2yXeWe2F9I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=auJW8HSa; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1768002934; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=NN3OwAe3jAgm4sj+vobEY2X8WnSQF/J1fsHm6sqoA1Gicef08O3Wqj8jPMRcM/xS2+Av91XGqAOy50JylgxFk2atLFBm3R+6hiIvt3vHipdMhFq042yrExh8xCEtlx3DHikLXbiuQFoTLnro2GEkBO0HSJrA5OOqq8mRZmo0NtE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1768002934; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=s24MoONrvK08rlo8bvl9m7ipijoyg03naqbwQJacKSM=; 
-	b=gcMaQHkYds4p20B7x9uTLQbzUzkpazPoezzcbhWhqrPem+slEkzjusurzeCC18WqiYbbtsd+PnoRGXTFwib1T4giFcHd20FJbuMG/GqudXwWdSQwGf0HxR5rJqiGAUqtAxQPW04BwDYjLoo3X8kKc9AYLxWR35KUKr7rJdIEvCw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1768002933;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=s24MoONrvK08rlo8bvl9m7ipijoyg03naqbwQJacKSM=;
-	b=auJW8HSabqLSRaDzXx3HgRLo2lU27TAvemK1wH7fWCrlPYBVav0uSLTWIFpIBTvp
-	ddmUq7dX39NmGurcAUxJreSqqr4nWbhHmQSHBccT4JELT3oh4nV0DvMDdvPsW/PCUQ5
-	woxYuKlTj2D9aB4IR4zce3RKJvrgCNVvZLpPuGZU=
-Received: by mx.zohomail.com with SMTPS id 1768002932813394.04223648136076;
-	Fri, 9 Jan 2026 15:55:32 -0800 (PST)
-Received: by venus (Postfix, from userid 1000)
-	id 8DBCD180789; Sat, 10 Jan 2026 00:55:28 +0100 (CET)
-Date: Sat, 10 Jan 2026 00:55:28 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Linus Walleij <linusw@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH] gpio: rockchip: mark the GPIO controller as sleeping
-Message-ID: <aWGSQYCXP4R08koQ@venus>
-References: <20260106090011.21603-1-bartosz.golaszewski@oss.qualcomm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D78B27472
+	for <linux-gpio@vger.kernel.org>; Sat, 10 Jan 2026 00:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768006444; cv=none; b=Lije++4rz5J3jDYGjg70O7/yNPy5aCb3oUw/2GUXKSmp1vdOm6YUpv+UREasR2xgESQoSgxSuzHUrJ35oiTeBKVjl9M1dET13tAiZJKDykX5yDailNG9smSlvH57Ic3PMZV9vGI7QCu/bPdLtiVvLkvhoeEDEEG2zKSqWUyZr6E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768006444; c=relaxed/simple;
+	bh=1TYTWwLU1QGun0hppTV4SCTq8u5983ZRbF/OBr+AbIg=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=gtTQv6AfTy+TxQpMQFyxs5nAWnwy84mFkmSEpL07pA6MuSImDtwVbKtsoXlfqiSGe9BWbSwxHBGde8r2eWwsywrL3V/8dAYDvpPAxLsb8suXeobqXSXTeA2kx+cAz3tEjI8LutAlSUhkGqQ7n1ilHBrjSrAaJgdJVsdMH70yoXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lHUvxeQl; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768006442; x=1799542442;
+  h=date:from:to:cc:subject:message-id;
+  bh=1TYTWwLU1QGun0hppTV4SCTq8u5983ZRbF/OBr+AbIg=;
+  b=lHUvxeQlG4dB588sKzqmHX5OEAPldh0SS2R4n3pA9Vvqk8Qg+jHWaRAW
+   9Nr4Uyn9QMj3EsqHUer57kMkTyGBMjdHVYFrJJappvOv9PMmPAbj78BXA
+   iEs1NKfcKChIPemi6azSBylGivsV5RXJusxKTS1CwkW7WsLQ6bHWHehbI
+   vPP9V3ao6pmC6K/UsEPzZimg1uC9o4OvsJqOik5TODSnTvLrFdgTHOJAX
+   7f409egI3i6pq1UUFVi+g2obsfuxnP/62GIBG4JPDm1NsMNi77SsSU/0C
+   6wDFqJC1BMUcqNCbyjw0evZpMgopM8bo3eeWRzm9gonufLz+Dhktn2lma
+   A==;
+X-CSE-ConnectionGUID: Tsw9yySlQtiVOiVjRfhQqA==
+X-CSE-MsgGUID: 485Nc+2LT+2Pp53e9N1l9w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11666"; a="69434834"
+X-IronPort-AV: E=Sophos;i="6.21,215,1763452800"; 
+   d="scan'208";a="69434834"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2026 16:54:02 -0800
+X-CSE-ConnectionGUID: cr5VoIClQ22ht/jZtQ8Qbg==
+X-CSE-MsgGUID: 54TOO8htRqiWy/mtLCYIBQ==
+X-ExtLoop1: 1
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 09 Jan 2026 16:54:00 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1veNEs-000000007tc-1p6I;
+	Sat, 10 Jan 2026 00:53:58 +0000
+Date: Sat, 10 Jan 2026 08:53:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linusw@kernel.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 4400dfd2acee4a492a29b33292d9f8c9c311cc6a
+Message-ID: <202601100849.U2MmOAkh-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="shwp5pkjv7w45ocl"
-Content-Disposition: inline
-In-Reply-To: <20260106090011.21603-1-bartosz.golaszewski@oss.qualcomm.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.5.1/267.941.65
-X-ZohoMailClient: External
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 4400dfd2acee4a492a29b33292d9f8c9c311cc6a  Merge branch 'devel' into for-next
 
---shwp5pkjv7w45ocl
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] gpio: rockchip: mark the GPIO controller as sleeping
-MIME-Version: 1.0
+elapsed time: 1590m
 
-Hi,
+configs tested: 139
+configs skipped: 2
 
-On Tue, Jan 06, 2026 at 10:00:11AM +0100, Bartosz Golaszewski wrote:
-> The GPIO controller is configured as non-sleeping but it uses generic
-> pinctrl helpers which use a mutex for synchronization.
->=20
-> This can cause the following lockdep splat with shared GPIOs enabled on
-> boards which have multiple devices using the same GPIO:
->=20
-> BUG: sleeping function called from invalid context at
-> kernel/locking/mutex.c:591
-> in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 12, name:
-> kworker/u16:0
-> preempt_count: 1, expected: 0
-> RCU nest depth: 0, expected: 0
-> 6 locks held by kworker/u16:0/12:
->   #0: ffff0001f0018d48 ((wq_completion)events_unbound#2){+.+.}-{0:0},
-> at: process_one_work+0x18c/0x604
->   #1: ffff8000842dbdf0 (deferred_probe_work){+.+.}-{0:0}, at:
-> process_one_work+0x1b4/0x604
->   #2: ffff0001f18498f8 (&dev->mutex){....}-{4:4}, at:
-> __device_attach+0x38/0x1b0
->   #3: ffff0001f75f1e90 (&gdev->srcu){.+.?}-{0:0}, at:
-> gpiod_direction_output_raw_commit+0x0/0x360
->   #4: ffff0001f46e3db8 (&shared_desc->spinlock){....}-{3:3}, at:
-> gpio_shared_proxy_direction_output+0xd0/0x144 [gpio_shared_proxy]
->   #5: ffff0001f180ee90 (&gdev->srcu){.+.?}-{0:0}, at:
-> gpiod_direction_output_raw_commit+0x0/0x360
-> irq event stamp: 81450
-> hardirqs last  enabled at (81449): [<ffff8000813acba4>]
-> _raw_spin_unlock_irqrestore+0x74/0x78
-> hardirqs last disabled at (81450): [<ffff8000813abfb8>]
-> _raw_spin_lock_irqsave+0x84/0x88
-> softirqs last  enabled at (79616): [<ffff8000811455fc>]
-> __alloc_skb+0x17c/0x1e8
-> softirqs last disabled at (79614): [<ffff8000811455fc>]
-> __alloc_skb+0x17c/0x1e8
-> CPU: 2 UID: 0 PID: 12 Comm: kworker/u16:0 Not tainted
-> 6.19.0-rc4-next-20260105+ #11975 PREEMPT
-> Hardware name: Hardkernel ODROID-M1 (DT)
-> Workqueue: events_unbound deferred_probe_work_func
-> Call trace:
->   show_stack+0x18/0x24 (C)
->   dump_stack_lvl+0x90/0xd0
->   dump_stack+0x18/0x24
->   __might_resched+0x144/0x248
->   __might_sleep+0x48/0x98
->   __mutex_lock+0x5c/0x894
->   mutex_lock_nested+0x24/0x30
->   pinctrl_get_device_gpio_range+0x44/0x128
->   pinctrl_gpio_direction+0x3c/0xe0
->   pinctrl_gpio_direction_output+0x14/0x20
->   rockchip_gpio_direction_output+0xb8/0x19c
->   gpiochip_direction_output+0x38/0x94
->   gpiod_direction_output_raw_commit+0x1d8/0x360
->   gpiod_direction_output_nonotify+0x7c/0x230
->   gpiod_direction_output+0x34/0xf8
->   gpio_shared_proxy_direction_output+0xec/0x144 [gpio_shared_proxy]
->   gpiochip_direction_output+0x38/0x94
->   gpiod_direction_output_raw_commit+0x1d8/0x360
->   gpiod_direction_output_nonotify+0x7c/0x230
->   gpiod_configure_flags+0xbc/0x480
->   gpiod_find_and_request+0x1a0/0x574
->   gpiod_get_index+0x58/0x84
->   devm_gpiod_get_index+0x20/0xb4
->   devm_gpiod_get_optional+0x18/0x30
->   rockchip_pcie_probe+0x98/0x380
->   platform_probe+0x5c/0xac
->   really_probe+0xbc/0x298
->=20
-> Fixes: 936ee2675eee ("gpio/rockchip: add driver for rockchip gpio")
-> Cc: stable@vger.kernel.org
-> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Closes: https://lore.kernel.org/all/d035fc29-3b03-4cd6-b8ec-001f93540bc6@=
-samsung.com/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
->  drivers/gpio/gpio-rockchip.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-> index 47174eb3ba76..bae2061f15fc 100644
-> --- a/drivers/gpio/gpio-rockchip.c
-> +++ b/drivers/gpio/gpio-rockchip.c
-> @@ -593,6 +593,7 @@ static int rockchip_gpiolib_register(struct rockchip_=
-pin_bank *bank)
->  	gc->ngpio =3D bank->nr_pins;
->  	gc->label =3D bank->name;
->  	gc->parent =3D bank->dev;
-> +	gc->can_sleep =3D true;
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-This means all operations are marked as can_sleep, even though
-pinctrl operations are only used for the direction setting.
-I.e. the common get/set operations always worked in atomic mode,
-but now complain. See for example:
+tested configs:
+alpha                             allnoconfig    gcc-15.2.0
+alpha                               defconfig    gcc-15.2.0
+arc                               allnoconfig    gcc-15.2.0
+arc                                 defconfig    gcc-15.2.0
+arc                   randconfig-001-20260109    gcc-13.4.0
+arc                   randconfig-002-20260109    gcc-13.4.0
+arm                               allnoconfig    gcc-15.2.0
+arm                       aspeed_g4_defconfig    clang-22
+arm                                 defconfig    gcc-15.2.0
+arm                   randconfig-001-20260109    gcc-13.4.0
+arm                   randconfig-002-20260109    gcc-13.4.0
+arm                   randconfig-003-20260109    gcc-13.4.0
+arm                   randconfig-004-20260109    gcc-13.4.0
+arm                           spitz_defconfig    clang-22
+arm64                             allnoconfig    gcc-15.2.0
+arm64                               defconfig    gcc-15.2.0
+arm64                 randconfig-001-20260109    gcc-8.5.0
+arm64                 randconfig-002-20260109    gcc-8.5.0
+arm64                 randconfig-003-20260109    gcc-8.5.0
+arm64                 randconfig-004-20260109    gcc-8.5.0
+csky                              allnoconfig    gcc-15.2.0
+csky                                defconfig    gcc-15.2.0
+csky                  randconfig-001-20260109    gcc-8.5.0
+csky                  randconfig-002-20260109    gcc-8.5.0
+hexagon                           allnoconfig    gcc-15.2.0
+hexagon                             defconfig    gcc-15.2.0
+hexagon               randconfig-001-20260109    gcc-8.5.0
+hexagon               randconfig-002-20260109    gcc-8.5.0
+i386                              allnoconfig    gcc-15.2.0
+i386        buildonly-randconfig-001-20260109    clang-20
+i386        buildonly-randconfig-002-20260109    clang-20
+i386        buildonly-randconfig-003-20260109    clang-20
+i386        buildonly-randconfig-004-20260109    clang-20
+i386        buildonly-randconfig-005-20260109    clang-20
+i386        buildonly-randconfig-006-20260109    clang-20
+i386                                defconfig    gcc-15.2.0
+i386                  randconfig-001-20260109    gcc-14
+i386                  randconfig-002-20260109    gcc-14
+i386                  randconfig-003-20260109    gcc-14
+i386                  randconfig-004-20260109    gcc-14
+i386                  randconfig-005-20260109    gcc-14
+i386                  randconfig-006-20260109    gcc-14
+i386                  randconfig-007-20260109    gcc-14
+i386                  randconfig-011-20260109    clang-20
+i386                  randconfig-012-20260109    clang-20
+i386                  randconfig-013-20260109    clang-20
+i386                  randconfig-014-20260109    clang-20
+i386                  randconfig-015-20260109    clang-20
+i386                  randconfig-016-20260109    clang-20
+i386                  randconfig-017-20260109    clang-20
+loongarch                         allnoconfig    gcc-15.2.0
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20260109    gcc-8.5.0
+loongarch             randconfig-002-20260109    gcc-8.5.0
+m68k                              allnoconfig    gcc-15.2.0
+m68k                                defconfig    clang-19
+m68k                           sun3_defconfig    clang-22
+microblaze                        allnoconfig    gcc-15.2.0
+microblaze                          defconfig    clang-19
+mips                              allnoconfig    gcc-15.2.0
+mips                     decstation_defconfig    clang-22
+mips                        vocore2_defconfig    clang-22
+nios2                             allnoconfig    clang-22
+nios2                               defconfig    clang-19
+nios2                 randconfig-001-20260109    gcc-8.5.0
+nios2                 randconfig-002-20260109    gcc-8.5.0
+openrisc                          allnoconfig    clang-22
+openrisc                            defconfig    gcc-15.2.0
+parisc                            allnoconfig    clang-22
+parisc                              defconfig    gcc-15.2.0
+parisc                randconfig-001-20260109    gcc-8.5.0
+parisc                randconfig-002-20260109    gcc-8.5.0
+parisc64                            defconfig    clang-19
+powerpc                           allnoconfig    clang-22
+powerpc               randconfig-001-20260109    gcc-8.5.0
+powerpc               randconfig-002-20260109    gcc-8.5.0
+powerpc                      tqm8xx_defconfig    clang-22
+powerpc64             randconfig-001-20260109    gcc-8.5.0
+powerpc64             randconfig-002-20260109    gcc-8.5.0
+riscv                             allnoconfig    clang-22
+riscv                               defconfig    gcc-15.2.0
+riscv                 randconfig-001-20260109    clang-22
+riscv                 randconfig-002-20260109    clang-22
+s390                              allnoconfig    clang-22
+s390                                defconfig    gcc-15.2.0
+s390                  randconfig-001-20260109    clang-22
+s390                  randconfig-002-20260109    clang-22
+s390                       zfcpdump_defconfig    clang-22
+sh                                allnoconfig    clang-22
+sh                                  defconfig    gcc-14
+sh                        dreamcast_defconfig    clang-22
+sh                    randconfig-001-20260109    clang-22
+sh                    randconfig-002-20260109    clang-22
+sparc                             allnoconfig    clang-22
+sparc                               defconfig    gcc-15.2.0
+sparc                 randconfig-001-20260109    gcc-14.3.0
+sparc                 randconfig-002-20260109    gcc-14.3.0
+sparc64                             defconfig    gcc-14
+sparc64               randconfig-001-20260109    gcc-14.3.0
+sparc64               randconfig-002-20260109    gcc-14.3.0
+um                                allnoconfig    clang-22
+um                                  defconfig    gcc-14
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20260109    gcc-14.3.0
+um                    randconfig-002-20260109    gcc-14.3.0
+um                           x86_64_defconfig    gcc-14
+x86_64                            allnoconfig    clang-22
+x86_64      buildonly-randconfig-001-20260109    gcc-14
+x86_64      buildonly-randconfig-002-20260109    gcc-14
+x86_64      buildonly-randconfig-003-20260109    gcc-14
+x86_64      buildonly-randconfig-004-20260109    gcc-14
+x86_64      buildonly-randconfig-005-20260109    gcc-14
+x86_64      buildonly-randconfig-006-20260109    gcc-14
+x86_64                              defconfig    gcc-14
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20260109    gcc-14
+x86_64                randconfig-002-20260109    gcc-14
+x86_64                randconfig-003-20260109    gcc-14
+x86_64                randconfig-004-20260109    gcc-14
+x86_64                randconfig-005-20260109    gcc-14
+x86_64                randconfig-006-20260109    gcc-14
+x86_64                randconfig-011-20260109    gcc-14
+x86_64                randconfig-012-20260109    gcc-14
+x86_64                randconfig-013-20260109    gcc-14
+x86_64                randconfig-014-20260109    gcc-14
+x86_64                randconfig-015-20260109    gcc-14
+x86_64                randconfig-016-20260109    gcc-14
+x86_64                randconfig-071-20260109    clang-20
+x86_64                randconfig-072-20260109    clang-20
+x86_64                randconfig-073-20260109    clang-20
+x86_64                randconfig-074-20260109    clang-20
+x86_64                randconfig-075-20260109    clang-20
+x86_64                randconfig-076-20260109    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                          rhel-9.4-func    clang-20
+x86_64                    rhel-9.4-kselftests    clang-20
+xtensa                            allnoconfig    clang-22
+xtensa                randconfig-001-20260109    gcc-14.3.0
+xtensa                randconfig-002-20260109    gcc-14.3.0
 
-https://lore.kernel.org/all/20260108-media-synopsys-hdmirx-fix-gpio-canslee=
-p-v1-1-3570518d8bab@kernel.org/
-
-It's not a big issue for the hdmirx driver specifically, but I wonder
-how many more (less often tested) rockchip drivers use GPIOs from their
-IRQ handler.
-
-Considering setting or getting the GPIO from atomic context is much
-more common than changing the direction - is there some way to
-describe the sleep behavior in a more specific way in the GPIO
-controller?
-
-Greetings,
-
--- Sebastian
-
---shwp5pkjv7w45ocl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmlhlW0ACgkQ2O7X88g7
-+pptgBAAqh8+3YVQeIEjk22P/v18zzNGOuX29yWFErdZn7R8KUGlNqXEklmrgdJ8
-MVHvoisa0IuCRm/O7AHTKy3SR9MOt9BpUoozoVThpoNWlmjbcQ8wGCrQDnzTRePm
-8u/ZgmsNyHkf+CeYy1SkuJxwuFibYFfPQE1naXeDQp+kN2LSrLIeg25QdgWX9nP8
-dAJghSuVvYMu5Sg78nvollkgXk245dq2LSAqMxc6FfA7XF1RFURvOk4XdGdDjmJb
-E/nnx1lWfoy2lMITtW7QukH5Mko03PDdGflG8PnaTJCumumcBBO7EMnMRqPcxSUm
-K4q+amfrIW8EH8GJleIzJhSRijC1WzslEy4b74V+EMwlgeZbbzZI9yaT2bIImfZi
-T8MRwyl3+tZsfoQFtXDQeeuQcQusoec43jEhFpdd5PRf7D2I/0F/qRXP7yKvgsvT
-Vf7YTxFaojf5ELnv6DWGW7MPSx6js/+0CJSeA5nU92ooJG+ogVi9fFhXYmcAtiSG
-52ifwTG0yBy/sXNp05M2SN98rCzOyWuNpS7/o40gBasszuxK2Imxw4YnlCeeYZPM
-2rBhcWeYNy9Qj2ih54hWCHMnjAxhlLMQHf+c/suGvR9tBcNRcY6Y29Zc4+LjJnJl
-ArrfYls9QZQUFmbwaWEg5GCLKg0offR0aoQc6iKXwulG+QzBonE=
-=2/cV
------END PGP SIGNATURE-----
-
---shwp5pkjv7w45ocl--
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
