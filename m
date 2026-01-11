@@ -1,166 +1,92 @@
-Return-Path: <linux-gpio+bounces-30411-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30412-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 226E2D0F76B
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Jan 2026 17:47:03 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E978D0FCDA
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Jan 2026 21:29:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9D150304B3CD
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Jan 2026 16:46:58 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 60C92300DD89
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Jan 2026 20:29:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68BB433E352;
-	Sun, 11 Jan 2026 16:46:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CF4E221F2F;
+	Sun, 11 Jan 2026 20:29:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQ6MJ9LH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HfBjUkCg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1797217F27
-	for <linux-gpio@vger.kernel.org>; Sun, 11 Jan 2026 16:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9D91EBFF7;
+	Sun, 11 Jan 2026 20:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768150018; cv=none; b=TjCdehyHNdTG9XlVgG2/xSP9ba2HBb3ZDm9xCkD/IHpRH0JIYBxYe6fdSjvX3sA+pylbw3cKaC2UPeq2rW7/+9hUaGxROrUv8yD++OT0p1Dp7tgW9WaxzAihIZYIXwaIThOlZySHHCesdjLO+dqrSLUDsB0/87xwLfG5lKSciTk=
+	t=1768163365; cv=none; b=A9tAO5HA1P4696ikA1/UQL5bkzyD8eafhr3ZsTCsXqUPRWHIrM8eIKreLDgloDjIrseeL7r9752AV7ux8MGq6O8cITULPjorQbsifqRJHIpaEe5+UXbog9A/yLN+jESZAzRzTxq5Q/Ws+GXGgWh/vCUlfISrIHOANSABvYnqDS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768150018; c=relaxed/simple;
-	bh=EKeMRlHlw2Rgeq19TymBbPBx8wczT3GJe0/hQx0Xx0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uup4IRUDzHpfEwDPTt06PLTuvwu0pHrWJU2FqyLwcFAk0OJKPKI6QR9ScaC3qUbHTX4/sVoYcoisnrwd+Ems8lAHuXY2UcvjaHKM+2xrfHE2FRRxgo7c97CiO5EPVOZrURzeq818uUSjAnVNeYlXbH8G9E66Bzbn2BpYrcg3n44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RQ6MJ9LH; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-47775fb6cb4so30816725e9.0
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Jan 2026 08:46:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768150014; x=1768754814; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JXXIjf5GUwJDqboXk/BUgrbJnl8FqgJPhbiKhNF9WA0=;
-        b=RQ6MJ9LHuABBd9ogQNkQfS/9O3RDmNxuR4vrJ14RGOcQgHchoqwJE5e4RpNtRWWYU3
-         OfEqQYJktCFKykX/DeyKL3ddpF49HcfKEwe+g8n5+nEDREgPIZnH8/F7fGLYqByTJwSW
-         1jgwVLD/DXoenWTSNiv4OCvV2PDZgWRDT/lxbdy5Wo3wB6+DdrlP9Qs8xowncs04aGfS
-         PWW2D6x0BnEU4D/hYc2bDaXkjVp58VIFosSRTQ39VgPP0GhydlCDF+hCDfJUxZsD7i2v
-         +tH/ovKHwBrvUtY2+Mf2DK2l1ErL0+NOUPJlVCZjdFtRFH4ObnucSJrKL3N3g0bMSmZz
-         1YYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768150014; x=1768754814;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JXXIjf5GUwJDqboXk/BUgrbJnl8FqgJPhbiKhNF9WA0=;
-        b=PMDm8xuTwiR678cSn93GGfgrtcyCtBXvH9PjcKHdxJuWbtO1dV+/iYNsupAp75H7El
-         uk5pc+TfBowBVcHP3kUEg70S3euFjBXK9G/zQs4AN73RFvgG915Dxpf7ydS2ic+5xbmp
-         QKqPSZKQiJahn5538kgwRqtSSaa/LfmiEGdLOgAFbVLkhJt/AOzpnAc9UMOAI9n0dkVw
-         K4XPA3D3s9kF4YLrRNK9VXvWsNXsvbTDaSU9D5ThASwNh9MRwjwNdqkQY7GyKClCwMrA
-         LcnO8OFFjKaOUf3HUztl+36jsBDSbPCcGgpNbQBhqqqWuSjS5qme23APL/UPSMm8G18y
-         mzdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpajZ1imkrq1JTwv5vVQdEO5jg+vuq0aUa9+0b2GdBQs2/r/ga/WIAXLiDP/zPp5jaiEqAcuLvMxZS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXk+MQksVnWAXr8h5uCCEj7zWNqSzup40IqJYmc/tMuAaNSKzK
-	1KoIILhYBRxKb3Vn3dZzI5brozms6JJs+Eeux51HebjMJRWjO+JVBCcy
-X-Gm-Gg: AY/fxX7DL1/dJQ37YB/7Ae7mWswi/NP4Bk86h8A+Gclz7G6pOhv/5jC1kmpfPeV2kDE
-	yh1sMC6t/wLPGFew/OAAgcEGB+D9PdcGT6wrKYSHe6PNqEMu9z2Tbpqd2ihqnxnw4Z2UomWWjeC
-	8vCAzj4aZW/508JSkObyC5HnQRQbL+sPcRhd0+b2hrYG/WYD/DGzhKoNMXjYgYt7bCvjfkAzs9l
-	qb6Eh7dN5kgX3iWYD4LQjPI6qtbnM0ebCMpYFg0KJ2x+ZYxuIfZNDFIZzr8+KNxyJAWk8A4wBxi
-	uO3jDFLvIQCzWOQuzdbFwr6nO+fxOusjOaV2I4S2yS69yV9VrX5ThO2h9DL6jP4TwYjvY354ROL
-	Lef/IXpaHGXOR0CRwFucYEvY5829N4mCxB44ag6+DOBkFX1OtD7/F+beUKJkybygi8+WWIXrK+M
-	tf8CYM0rlU2fBBXACKnVF4NG3Ut9AmFNJLbgt/T5nZz4P+okxPVRdR9479tXL/xD5N
-X-Google-Smtp-Source: AGHT+IE/2VrwBn/B2S3fOGbBdhWgsr/s+ZUXrx13BwQ/UzL/3rHx0t494nmIc60K28I7RKjr7ysiHw==
-X-Received: by 2002:a05:600c:a08:b0:477:b0b8:4dd0 with SMTP id 5b1f17b1804b1-47d84b36b7emr195633575e9.17.1768150014007;
-        Sun, 11 Jan 2026 08:46:54 -0800 (PST)
-Received: from localhost (brnt-04-b2-v4wan-170138-cust2432.vm7.cable.virginm.net. [94.175.9.129])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d865f0cf2sm110128995e9.3.2026.01.11.08.46.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Jan 2026 08:46:52 -0800 (PST)
-Date: Sun, 11 Jan 2026 16:46:52 +0000
-From: Stafford Horne <shorne@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux OpenRISC <linux-openrisc@vger.kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] dt-bindings: gpio-mmio: Add opencores GPIO
-Message-ID: <aWPT_HsRVC0dQ_j6@antec>
-References: <20260109134409.2153333-1-shorne@gmail.com>
- <20260109134409.2153333-3-shorne@gmail.com>
- <20260111-bold-wolf-of-champagne-58fac7@quoll>
+	s=arc-20240116; t=1768163365; c=relaxed/simple;
+	bh=I1h+NucLnbjVmPVCT4uT86wnetjl/SKcrwLsxIVeUkY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qmNw/1S86DRiffqleU8QaVOKs7M7OmNT4KMNAt1dnZo0/2MA9Qb8Ptgw2y2gNIiQk9LqBCRxCHFJHk7EMQSPMHrPg7UiiQ4CU9oFsDxUkwsdwhvSH+kcQRq3dIqh2aUZ/s0yHjcDw8641kWLaWgrpo4q3vxTf7LimWXTuJXIfzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HfBjUkCg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2423FC4CEF7;
+	Sun, 11 Jan 2026 20:29:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768163364;
+	bh=I1h+NucLnbjVmPVCT4uT86wnetjl/SKcrwLsxIVeUkY=;
+	h=From:Subject:Date:To:Cc:From;
+	b=HfBjUkCgy0Qsv6xO0RAaKH2pRA1G9OjbIn5sECkRGIEmhTwA8UXIM5KQ2Q09G45UQ
+	 DiL2NVtEMWBaWczYBSI0tB2Xy/sL6IKExaCADdrrXzcY1juoKBZaKDDhErPcoKW7Hk
+	 1Jk2iO0+K4p/AyPWM/ClQHB14y9mFIozyZJZrapzflpDesjHPDjohdjFE6GE//nbJv
+	 9a5OeyvKBfIGAfPnljynNQdB5f2FcAc7Ewoa8BbE/K8D6ZutrP7Mcc2LQx65YklVvq
+	 t0vc+Jwh+9kzNrLYP9G0Nd3O9h4qNVILTNp8+gXs09UdBJy/Su2tUwNKC1BpDvVOfm
+	 eemWCR7sUbstg==
+From: Linus Walleij <linusw@kernel.org>
+Subject: [PATCH 0/2] pinctrl: apple: Fixup and RFC GPIO mode patch
+Date: Sun, 11 Jan 2026 21:29:20 +0100
+Message-Id: <20260111-apple-req-gpio-func-v1-0-6deb1b695371@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260111-bold-wolf-of-champagne-58fac7@quoll>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MTQqAIBBA4avErBtw+iO6SrQQG20gzJQiCO+et
+ PwW772QOAonmKoXIt+S5PAFVFdgNu0do6zF0KhmUESEOoSdMfKJLsiB9vIGW0XK6K7XRCOUMkS
+ 28vzXecn5A10+DbZlAAAA
+X-Change-ID: 20260111-apple-req-gpio-func-3010ca45a118
+To: Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>, 
+ Neal Gompa <neal@gompa.dev>, Bartosz Golaszewski <brgl@kernel.org>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-gpio@vger.kernel.org, Linus Walleij <linusw@kernel.org>
+X-Mailer: b4 0.14.3
 
-On Sun, Jan 11, 2026 at 11:18:42AM +0100, Krzysztof Kozlowski wrote:
-> On Fri, Jan 09, 2026 at 01:43:53PM +0000, Stafford Horne wrote:
-> > Add a device tree binding for the opencores GPIO controller.
-> > 
-> > On FPGA Development boards with GPIOs the OpenRISC architecture uses the
-> > opencores gpio verilog rtl which is compatible with the MMIO GPIO driver.
-> > 
-> > Link: https://opencores.org/projects/gpio
-> > Signed-off-by: Stafford Horne <shorne@gmail.com>
-> > ---
-> > Since v2:
-> >  - Fixup patch to simply add opencores,gpio and add an example.
-> 
-> Simplify? You completely changed the meaning of binding here - now
-> device is not compatible.
->
-> I don't know which one is correct, but your changelog must explain why
-> now devices are not compatible but they were before.
+This fixes some uses of the "unsigned" type to "unsigned int"
+then propose to implement the .function_is_gpio() callback.
 
-Hello,
+The Apple pin control maintainers can comment on this: I
+am not sure that "mode 0" is GPIO on this hardware but I
+find it likely.
 
-Did you miss the 1/6 patch in this series?  We add the compatible string to the
-driver there before we add it here.
+Toggling a pin between a certain function mode and GPIO
+mode happens on any sufficiently advanced system sooner or
+later and this callback was implemented because Qualcomm
+ran into it, so let's add it to the Apple driver before
+the users turn up.
 
-Sorry, I thought the series and the over letter would be enough to understand
-what I meant by the "Fixup" description here.
+Signed-off-by: Linus Walleij <linusw@kernel.org>
+---
+Linus Walleij (2):
+      pinctrl: apple: Use unsigned int instead of unsigned
+      RFC: pinctrl: apple: Implement GPIO func check callback
 
-> > Since v1:
-> >  - Fix schema to actually match the example.
-> > 
-> >  Documentation/devicetree/bindings/gpio/gpio-mmio.yaml | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml b/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
-> > index ee5d5d25ae82..d44edc181e0a 100644
-> > --- a/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
-> > +++ b/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
-> > @@ -23,6 +23,7 @@ properties:
-> >        - ni,169445-nand-gpio
-> >        - wd,mbl-gpio # Western Digital MyBook Live memory-mapped GPIO controller
-> >        - intel,ixp4xx-expansion-bus-mmio-gpio
-> > +      - opencores,gpio
-> >  
-> >    big-endian: true
-> >  
-> > @@ -160,3 +161,11 @@ examples:
-> >              intel,ixp4xx-eb-write-enable = <1>;
-> >          };
-> >      };
-> > +
-> > +    gpio@91000000 {
-> 
-> Please do not grow the examples if they are exactly the same as other.
+ drivers/pinctrl/pinctrl-apple-gpio.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
+---
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+change-id: 20260111-apple-req-gpio-func-3010ca45a118
 
-I figured this is a new compatible string with a different set of 8 bit
-registers so having this example would be beneficial.
+Best regards,
+-- 
+Linus Walleij <linusw@kernel.org>
 
-> > +        compatible = "opencores,gpio";
-> > +        reg = <0x91000000 0x1>, <0x91000001 0x1>;
-> > +        reg-names = "dat", "dirout";
-> > +        gpio-controller;
-> > +        #gpio-cells = <2>;
-> > +    };
-> > -- 
-> > 2.51.0
-> > 
 
