@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-30394-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30395-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0AB3CD0EAF1
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Jan 2026 12:27:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 270A5D0EAFC
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Jan 2026 12:27:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 54BCB30042BE
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Jan 2026 11:27:23 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 93C0A30049C8
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Jan 2026 11:27:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B812D330D58;
-	Sun, 11 Jan 2026 11:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2DC93382C3;
+	Sun, 11 Jan 2026 11:27:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2LUXGZ2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mesbm3KU"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787D12CCB9;
-	Sun, 11 Jan 2026 11:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FC42CCB9;
+	Sun, 11 Jan 2026 11:27:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768130839; cv=none; b=RRjqunuHfeWsl+Xk5XueVfwa0hqXH72ZhPX2aaEVKcvxB2Cbq7xZy814IIF6y7V9+8ItMDR/M4fMy5uDEZD/uwSF6K3f/BA9Ak3mSgMKwfXufPPAA9nh2WRocBNmZp3vlHUyyoSARPzWeuZf4OilywElT3bnZsiWs8UkX3FBODo=
+	t=1768130867; cv=none; b=lhzJLV78SnanmjTZiA3OV6mxTqtZDePliV8lkYLmjGA2L4mzagwhZYvAYdzk4qJs7m32BT6drLkcg0y2dCIxJk8g9MmNsgRn9RxS551NSUEx1JhGIHkTykAv+x6ZwcpQHT5rkva+OiFiw70XlaNduQy0yerAehWBEfLDxQYXTFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768130839; c=relaxed/simple;
-	bh=stgwO9T5kYysIbbRN1ca+E0wNUENyn/Qu+WwsBXJpXI=;
+	s=arc-20240116; t=1768130867; c=relaxed/simple;
+	bh=zPJqN9LOFjBLU3yXIud5hCQrNqRO8hEy9xtsO89iMUw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M1kedMpJPOHhkfT57/+4U61n4tMhXGiyQxGj93f2+2/9Z6HJ4YSxbIvXRT1aAXiR1piUR89RGCu7KyMxVnpTQ6Nj3OEbbE0W6NJVKASLaeJI/ABOsbNHldkHiRj4Ri87HltrGmBIvA9LDXfmqNkBfmhLXAJwIT8Qc0FjUgt12HE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2LUXGZ2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 460CDC4CEF7;
-	Sun, 11 Jan 2026 11:27:15 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=pEma6qac/FS9wRSusxteEhcYR0ANyuT0IGl5kKz1WWhcQmN3c+eZYpP7P8p7GpcLfyRndBLLtTCgBRrGBTjDe6r7xHdf/d5xd+qjaLPAaFnSVFLSEkbWDCvxK+JW7LeddDZNBU2+tBXefpJm374q+Z/Wo+kJlYFs3lbuTpvaIpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mesbm3KU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A56C6C4CEF7;
+	Sun, 11 Jan 2026 11:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768130839;
-	bh=stgwO9T5kYysIbbRN1ca+E0wNUENyn/Qu+WwsBXJpXI=;
+	s=k20201202; t=1768130867;
+	bh=zPJqN9LOFjBLU3yXIud5hCQrNqRO8hEy9xtsO89iMUw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=r2LUXGZ2b2o9rfrci+BCMwAXwB6BHbecfKzOwNFQViCrUZGsCASznFmxz1PwkJflz
-	 g8Z4aMwICvR0CSNtR+OftCy4uaQHzg1fc9gVM7STQvg4PSwttxqbHZ6HiLzsW0Jdxk
-	 H+GSm7HudV9bjMkphbYErKDV1Y0KwExndOLYCDNcfESopX2qn/Ss7IV04BrI/0IK3P
-	 wgzfEy9S7BsF9C/jx8mtIOZAB0bTrJBcmVICoYUSZqLxmDeObcRUIyHVREl65cuZY6
-	 Y10AcauO6nxB6/uG4r8pTp4kH9p5OCfpDjfQYusAwoFixQu7hBFmob3QtkmQHJMcpA
-	 PvVm8QfGuUIAg==
-Message-ID: <429e4411-6372-482b-9a0c-be4befa8f016@kernel.org>
-Date: Sun, 11 Jan 2026 12:27:13 +0100
+	b=Mesbm3KUH2NTKvitxJ4A6J5ojU4QwFDRyDqYGemjJqlZz9qQdp/ewBcgawxaAxkiV
+	 SJenBudsWtvqKSU0xSAPjXvhDA6rb7miPKt9z7d9vOvTkNhHKAgocV3mMmXjGVHqJo
+	 hgxgkN5S022OS7eTPrXbNLJrG8Uhts9EdUd0/4X3iDnt/pdnPvHsMfB10Rkg5NlpZS
+	 cARSrXHHPuAzHWPg0lqunnBJYc4g6HKKtrwOXR+yYdHCS+3K9uySBDoQXRvh9CTynq
+	 Gn8cJ+gI6XDgg+MBF5oAxjOVA0VTptrVz9M84hLIDdQX90lAnlm31WrAqJUKOQwPUJ
+	 w6UtB6lPmjCVA==
+Message-ID: <a4e11134-3035-4963-a434-db168da32945@kernel.org>
+Date: Sun, 11 Jan 2026 12:27:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -48,7 +48,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/11] drivers: bus: add the stm32 debug bus driver
+Subject: Re: [PATCH 03/11] dt-bindings: bus: document the stm32 debug bus
 To: Gatien Chevallier <gatien.chevallier@foss.st.com>,
  Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
  <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
@@ -63,7 +63,7 @@ Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 References: <20260109-debug_bus-v1-0-8f2142b5a738@foss.st.com>
- <20260109-debug_bus-v1-5-8f2142b5a738@foss.st.com>
+ <20260109-debug_bus-v1-3-8f2142b5a738@foss.st.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,232 +109,144 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260109-debug_bus-v1-5-8f2142b5a738@foss.st.com>
+In-Reply-To: <20260109-debug_bus-v1-3-8f2142b5a738@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 09/01/2026 11:55, Gatien Chevallier wrote:
-> Add the stm32 debug bus driver that is responsible of checking the
+> Document the stm32 debug bus. The debug bus is responsible for
+> checking the debug sub-system accessibility before probing any related
+> drivers.
+> 
+> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
+> ---
+>  .../bindings/bus/st,stm32mp131-dbg-bus.yaml        | 86 ++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/bus/st,stm32mp131-dbg-bus.yaml b/Documentation/devicetree/bindings/bus/st,stm32mp131-dbg-bus.yaml
+> new file mode 100644
+> index 000000000000..68bdfba08909
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/bus/st,stm32mp131-dbg-bus.yaml
+> @@ -0,0 +1,86 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bus/st,stm32mp131-dbg-bus.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +static int stm32_dbg_bus_grant_access(struct stm32_firewall_controller *ctrl, u32 dbg_profile)
-> +{
-> +	struct tee_ioctl_invoke_arg inv_arg = {0};
-> +	struct tee_param param[1] = {0};
-> +	u32 session_id;
-> +	int ret;
+> +title: STM32 Coresight bus
 > +
-> +	if (dbg_profile != PERIPHERAL_DBG_PROFILE && dbg_profile != HDP_DBG_PROFILE)
-> +		return -EOPNOTSUPP;
+> +maintainers:
+> +  - Gatien Chevallier <gatien.chevallier@foss.st.com>
 > +
-> +	ret = stm32_dbg_pta_open_session(&session_id);
-> +	if (ret)
-> +		return ret;
-> +
-> +	inv_arg.func = PTA_CMD_GRANT_DBG_ACCESS;
-> +	inv_arg.session = session_id;
-> +	inv_arg.num_params = 1;
-> +	param[0].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT;
-> +	param[0].u.value.a = dbg_profile;
-> +
-> +	ret = tee_client_invoke_func(stm32_dbg_bus_priv->ctx, &inv_arg, param);
-> +	if (ret < 0 || inv_arg.ret != 0) {
-> +		dev_dbg(stm32_dbg_bus_priv->dev,
-> +			"When invoking function, err %x, TEE returns: %x\n", ret, inv_arg.ret);
-> +		if (!ret)
-> +			ret = -EACCES;
-> +	}
-> +
-> +	stm32_dbg_pta_close_session(session_id);
-> +
-> +	return ret;
-> +}
-> +
-> +/* Implement mandatory release_access ops even if it does nothing*/
-> +static void stm32_dbg_bus_release_access(struct stm32_firewall_controller *ctrl, u32 dbg_profile)
-> +{
-> +}
-> +
-> +static int stm32_dbg_bus_plat_probe(struct platform_device *pdev)
-> +{
-> +	struct stm32_firewall_controller *dbg_controller;
-> +	int ret;
-> +
-> +	if (!stm32_dbg_bus_priv)
-> +		return dev_err_probe(&pdev->dev, -EPROBE_DEFER,
-> +				     "OP-TEE debug services not yet available\n");
-> +
-> +	dbg_controller = devm_kzalloc(&pdev->dev, sizeof(*dbg_controller), GFP_KERNEL);
-> +	if (!dbg_controller)
-> +		return dev_err_probe(&pdev->dev, -ENOMEM, "Couldn't allocate debug controller\n");
-> +
-> +	dbg_controller->dev = &pdev->dev;
-> +	dbg_controller->mmio = NULL;
-> +	dbg_controller->name = dev_driver_string(dbg_controller->dev);
-> +	dbg_controller->type = STM32_PERIPHERAL_FIREWALL;
-> +	dbg_controller->grant_access = stm32_dbg_bus_grant_access;
-> +	dbg_controller->release_access = stm32_dbg_bus_release_access;
-> +
-> +	stm32_dbg_bus_priv->dbg_clk = devm_clk_get_enabled(&pdev->dev, NULL);
-> +	if (IS_ERR(stm32_dbg_bus_priv->dbg_clk))
-> +		return PTR_ERR(stm32_dbg_bus_priv->dbg_clk);
-> +
-> +	ret = stm32_firewall_controller_register(dbg_controller);
-> +	if (ret) {
-> +		dev_err(dbg_controller->dev, "Couldn't register as a firewall controller: %d", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = stm32_firewall_populate_bus(dbg_controller);
-> +	if (ret) {
-> +		dev_err(dbg_controller->dev, "Couldn't populate debug bus: %d", ret);
-> +		stm32_firewall_controller_unregister(dbg_controller);
-> +		return ret;
-> +	}
-> +
-> +	pm_runtime_enable(&pdev->dev);
-> +
-> +	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-> +	if (ret) {
-> +		dev_err(dbg_controller->dev, "Couldn't populate the node: %d", ret);
-> +		stm32_firewall_controller_unregister(dbg_controller);
-> +		return ret;
+> +description: |
 
-Where do you depopulate on unbind?
 
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused stm32_dbg_bus_runtime_suspend(struct device *dev)
-> +{
-> +	clk_disable_unprepare(stm32_dbg_bus_priv->dbg_clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused stm32_dbg_bus_runtime_resume(struct device *dev)
-> +{
-> +	int ret = clk_prepare_enable(stm32_dbg_bus_priv->dbg_clk);
-> +
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id stm32_dbg_bus_of_match[] = {
-> +	{ .compatible = "st,stm32mp131-dbg-bus", },
-> +	{ .compatible = "st,stm32mp151-dbg-bus", },
+Do not need '|' unless you need to preserve formatting.
 
-So devices are fully compatible?
+> +  The STM32 debug bus is in charge of checking the debug configuration
 
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, stm32_dbg_bus_of_match);
-> +
-> +static const struct dev_pm_ops simple_pm_bus_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(stm32_dbg_bus_runtime_suspend, stm32_dbg_bus_runtime_resume, NULL)
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
-> +};
-> +
-> +static struct platform_driver stm32_dbg_bus_driver = {
-> +	.probe = stm32_dbg_bus_plat_probe,
-> +	.driver = {
-> +		.name = "stm32-dbg-bus",
-> +		.of_match_table = of_match_ptr(stm32_dbg_bus_of_match),
+What sort of bus it is? What protocol? Looks like rather fake wrapping
+node. You cannot just organize children in MMIO and call it a "bus".
+just to justify having child nodes.
 
-Warning :/. Why do people still keep copying of_match_ptr?
+> +  of the platform before probing the peripheral drivers that rely on the debug
+> +  domain.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
 
-> +		.pm = pm_ptr(&simple_pm_bus_pm_ops),
-> +	},
-> +};
-> +
-> +static int optee_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
-> +{
-> +	return (ver->impl_id == TEE_IMPL_ID_OPTEE);
-> +}
-> +
-> +static int stm32_dbg_bus_probe(struct device *dev)
-> +{
-> +	struct stm32_dbg_bus *priv;
-> +
-> +	if (stm32_dbg_bus_priv)
-> +		return dev_err_probe(dev, -EBUSY,
-> +				     "A STM32 debug bus device is already initialized\n");
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return dev_err_probe(dev, -ENOMEM, "Cannot allocate priv data\n");
+Drop
 
-You NEVER print error allocations on kzalloc, even if with dev_err_probe
-it is silenced.
+> +      - items:
+
+Drop
+
+> +          - enum:
+> +              - st,stm32mp131-dbg-bus
+> +              - st,stm32mp151-dbg-bus
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  ranges: true
+> +
+> +  reg:
+> +    maxItems: 1
+
+What stuff is here? Your driver does not use it at all.
 
 > +
-> +	/* Open context with TEE driver */
-> +	priv->ctx = tee_client_open_context(NULL, optee_ctx_match, NULL, NULL);
-> +	if (IS_ERR_OR_NULL(priv->ctx))
-> +		return dev_err_probe(dev, PTR_ERR_OR_ZERO(priv->ctx), "Cannot open TEE context\n");
+> +  "#access-controller-cells":
+> +    const: 1
+> +    description:
+> +      Contains the debug profile necessary to access the peripheral.
 > +
-> +	stm32_dbg_bus_priv = priv;
-> +	stm32_dbg_bus_priv->dev = dev;
+> +patternProperties:
+> +  "^.*@[0-9a-f]+$":
+> +    description: Debug related peripherals
+> +    type: object
 > +
-> +	return 0;
-> +}
+> +    additionalProperties: true
 > +
-> +static int stm32_dbg_bus_remove(struct device *dev)
-> +{
-> +	tee_client_close_context(stm32_dbg_bus_priv->ctx);
-> +	stm32_dbg_bus_priv = NULL;
+> +    required:
+> +      - access-controllers
+
+I don't get why children need to reference the parent. If you have such
+relationship, then the access-controllers are redundant, no?
+
 > +
-> +	return 0;
-> +}
+> +required:
+> +  - "#access-controller-cells"
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - clocks
+> +  - compatible
+> +  - ranges
+> +  - reg
 > +
-> +static const struct tee_client_device_id optee_dbg_bus_id_table[] = {
-> +	{UUID_INIT(0xdd05bc8b, 0x9f3b, 0x49f0,
-> +		   0xb6, 0x49, 0x01, 0xaa, 0x10, 0xc1, 0xc2, 0x10)},
-> +	{}
-> +};
+> +additionalProperties: false
 > +
-> +static struct tee_client_driver stm32_optee_dbg_bus_driver = {
-> +	.id_table = optee_dbg_bus_id_table,
-> +	.driver = {
-> +		.name = "optee_dbg_bus",
-> +		.bus = &tee_bus_type,
-> +		.probe = stm32_dbg_bus_probe,
-> +		.remove = stm32_dbg_bus_remove,
-> +	},
-> +};
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/stm32mp1-clks.h>
 > +
-> +static int __init optee_dbg_bus_mod_init(void)
-> +{
-> +	int ret;
+> +    dbg_bus: bus@50080000 {
+> +      compatible = "st,stm32mp131-dbg-bus";
+> +      reg = <0x50080000 0x3f80000>;
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      clocks = <&rcc CK_DBG>;
+
+So the same clock as child? Another argument that this node is not a
+true bus node.
+
+> +      #access-controller-cells = <1>;
+> +      ranges;
 > +
-> +	ret = driver_register(&stm32_optee_dbg_bus_driver.driver);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = platform_driver_register(&stm32_dbg_bus_driver);
-> +	if (ret)
-> +		driver_unregister(&stm32_optee_dbg_bus_driver.driver);
-> +
-> +	return ret;
-> +}
-> +
-> +static void __exit optee_dbg_bus_mod_exit(void)
-> +{
-> +	platform_driver_unregister(&stm32_dbg_bus_driver);
-> +	driver_unregister(&stm32_optee_dbg_bus_driver.driver);
-> +}
-> +
-> +module_init(optee_dbg_bus_mod_init);
-> +module_exit(optee_dbg_bus_mod_exit);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Gatien Chevallier <gatien.chevallier@foss.st.com>");
-> +MODULE_DESCRIPTION("OP-TEE based STM32 debug access bus driver");
+> +      cs_cti_trace: cti@50094000 {
+
+Drop unused label
+
+> +        compatible = "arm,coresight-cti", "arm,primecell";
+> +        reg = <0x50094000 0x1000>;
+> +        clocks = <&rcc CK_DBG>;
+> +        clock-names = "apb_pclk";
+> +        access-controllers = <&dbg_bus 0>;
+> +        status = "disabled";
+
+Drop
+
+> +      };
+> +    };
 > 
 
 
