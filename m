@@ -1,89 +1,121 @@
-Return-Path: <linux-gpio+bounces-30391-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30392-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BB41D0E8FF
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Jan 2026 11:20:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 682C8D0EA3E
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Jan 2026 11:59:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6EBB3300762A
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Jan 2026 10:20:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BEE09300A1F6
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Jan 2026 10:59:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 181CD323406;
-	Sun, 11 Jan 2026 10:20:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A1BA332EC9;
+	Sun, 11 Jan 2026 10:59:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kqg5xM5k"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l3xkqanz"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC551A5B84;
-	Sun, 11 Jan 2026 10:20:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2886A279DAE
+	for <linux-gpio@vger.kernel.org>; Sun, 11 Jan 2026 10:59:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768126841; cv=none; b=KPYMRnVIWyyT1Bu3YMril2JNWJZ3UOKAytkGcopY41SobezNu7xGXu5M1FIhJt+FIHGWZp2CP9N6J+vKJkkvAQJcOavE/bm3SEVCNKJdd+ii21WUiBLWZKINvKZ8T8F6yKYPpNEu+LUXa+/Upav0W+vJ8G0/S6gqB6JIt2oao7s=
+	t=1768129167; cv=none; b=j3Jor7/wFF8t2REohG1CgZppHxJ4rkRRoL7gnnJamZ2WmFYaYUEQxsqzRYmlLdQIEfWThqpCg9pfj7odP8WX2gDWpGxkogaRhPx6oedfCZYhxVkRu8ur5Ds5YOX0jx5aBceElK+oSKCMp8QYig2cP8sOe63h5k20tlSqPvkA5TI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768126841; c=relaxed/simple;
-	bh=A14iIqfhAPwsb5yPYhuoHINHVqxscKHdBc8tdTtnxao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c6II5pA5eAEV8vqfECXbMMQJZaLVLCkowcinE2PG70ea+iMQq5Lz8PmBcubf2gSRHs0xD+hBHUNGBwzJmo0cFWuhc9EkEzxatr2GYIlL57UjZ2S5VeIo4aR9BI04cAQtpxj7suL/sJ/siz0EAOOpATerc9FeTUefrOw0viqpfWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kqg5xM5k; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C22ECC4CEF7;
-	Sun, 11 Jan 2026 10:20:40 +0000 (UTC)
+	s=arc-20240116; t=1768129167; c=relaxed/simple;
+	bh=lr9j1sAsj+iX5/TLickqNJnqlbrgsYiJdXIQL1hST7o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=erQBCRDTmfaGc+PGi8sqrT4uYHH9n+/CE+AFVICTsAqJfis/VYAJlo4SPD4VPrZzbRCdgKN//quVfV9Hf5jiDl8f1HK7EdC5gBQU+GlAOCaeFzw1RV2pNn4CjLna9CM2HwLJ+Pt13UQPhjtLfD1ukYLD1YalTWKhrDpABa4odJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l3xkqanz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1518C4AF09
+	for <linux-gpio@vger.kernel.org>; Sun, 11 Jan 2026 10:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768126841;
-	bh=A14iIqfhAPwsb5yPYhuoHINHVqxscKHdBc8tdTtnxao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kqg5xM5klUgdlPoFV5BmxbeL2QfkfIw6e4dbYlM0wY7ZEL3Rinc2/wKtjpBpplaHL
-	 Bf6TvPs5JDKkSnoQC5X8fw2Z4FsKskV5aCjFQcpYryUWBQw6baD8566lt3evIBEGTm
-	 lUJjGx2VCJmeUv7q8fyWRoXlhkbDeYhS6aV+QHSluiCloW2A8On6r00GPnOWUKs8eM
-	 h8eUTtURZSdRS3E95FnCSPhk8tZFjrL+C7TZD38vN7o8HppCmC3Z5WLcfSg7YGoTYR
-	 Xp4LUKH66qGt/ds62Mpk+SN+QgSKaWWEUQHNWsOR0DgC+qjCzrERvxyN+oMrsELxvv
-	 xwqBCL68LRUkA==
-Date: Sun, 11 Jan 2026 11:20:38 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Stafford Horne <shorne@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux OpenRISC <linux-openrisc@vger.kernel.org>, Linus Walleij <linusw@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] dt-bindings: gpio-mmio: Add opencores GPIO
-Message-ID: <20260111-amorphous-cow-of-stamina-6f2720@quoll>
-References: <20260109134409.2153333-1-shorne@gmail.com>
- <20260109134409.2153333-3-shorne@gmail.com>
+	s=k20201202; t=1768129166;
+	bh=lr9j1sAsj+iX5/TLickqNJnqlbrgsYiJdXIQL1hST7o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=l3xkqanz3iITQJVz8KFX12DvKTtZoQDDXPZeBi0yr1X2pb1GYslVk+U1T2pJsD06U
+	 1PrnK0kV0NV++H2p6jUx5s3wxhLlCgryiqo+FmiJ+eU3JW6K7FatlLemrrJI9nMjgq
+	 A86N+MEU5HB2zKlZQ6EwmInHZDGEqdfNwA/MspBHv+83do5gUTo7Jp1+1JqGmQRmq5
+	 g88x6zcdKGiooKKP4r3Ik5eDe/U9gCodNejh0vjNCW4r05k1oE9zJgqvWWA4bCC9c+
+	 k+CEFOxIIqWkToVVChh8LTtVhDFkfI8cCQbITMJhSY6wKEo/LiAGjHjD5fXm01l/ih
+	 EBGvJgzdwt7Sg==
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-7926b269f03so9443157b3.2
+        for <linux-gpio@vger.kernel.org>; Sun, 11 Jan 2026 02:59:26 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUxE1r5WW505xmTn6TYIKmhiFc5rT6Pj/wZFv37rEQYbTAk0e73p53YupgujCqNBPwXR5q/Dek9JWCx@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjSA6nTTCUmzIzKuacNlko8G5e3b2dPyi/r45wItr8beH4XwFj
+	F+O8gwqDjK0LHhzOXgfVElOz82eKbInfEEcd0LKltnNhk+l02OzP2/KCQ2oj/IOK9I+2ncmVjQJ
+	xP0J/11plPTsDvrjuq/VfgzLaez3WVwM=
+X-Google-Smtp-Source: AGHT+IF2Ycdmg3X8kZE1DimMHNHBKM1920rYiZ/5Fr2866a9RMj6dCyNTlrmWOuoaZR68tm9giaJ6v8oblS4SpPSafg=
+X-Received: by 2002:a05:690c:38b:b0:783:6f8d:e7a6 with SMTP id
+ 00721157ae682-790b5828d2amr276540817b3.51.1768129166093; Sun, 11 Jan 2026
+ 02:59:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260109134409.2153333-3-shorne@gmail.com>
+References: <20260107030731.1838823-1-daniel@thingy.jp> <20260107030731.1838823-2-daniel@thingy.jp>
+ <20260108233818.GA1466897-robh@kernel.org> <CAFr9PXn2HzkSRnX4X-X1q2U+zLxwSP=TxvRwmA5eYxad7SbLzw@mail.gmail.com>
+In-Reply-To: <CAFr9PXn2HzkSRnX4X-X1q2U+zLxwSP=TxvRwmA5eYxad7SbLzw@mail.gmail.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Sun, 11 Jan 2026 11:59:15 +0100
+X-Gmail-Original-Message-ID: <CAD++jL=fM8QL-cYwRTWNetUsoWoKUOEcxE2+6VYQ4o50F-H1PQ@mail.gmail.com>
+X-Gm-Features: AZwV_QhUE6u4ppZEoTRLf3C1_nScg51OUu71CLHUYVC9On0jgPVB2fMl2dz3yFM
+Message-ID: <CAD++jL=fM8QL-cYwRTWNetUsoWoKUOEcxE2+6VYQ4o50F-H1PQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] of: Add a variant of of_device_is_compatible()
+ that can be build time culled
+To: Daniel Palmer <daniel@thingy.jp>
+Cc: Rob Herring <robh@kernel.org>, brgl@kernel.org, saravanak@kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 09, 2026 at 01:43:53PM +0000, Stafford Horne wrote:
-> Add a device tree binding for the opencores GPIO controller.
-> 
-> On FPGA Development boards with GPIOs the OpenRISC architecture uses the
-> opencores gpio verilog rtl which is compatible with the MMIO GPIO driver.
-> 
-> Link: https://opencores.org/projects/gpio
-> Signed-off-by: Stafford Horne <shorne@gmail.com>
-> ---
-> Since v2:
->  - Fixup patch to simply add opencores,gpio and add an example.
-> Since v1:
->  - Fix schema to actually match the example.
-> 
->  Documentation/devicetree/bindings/gpio/gpio-mmio.yaml | 9 +++++++++
->  1 file changed, 9 insertions(+)
+Hi Daniel,
 
-This does not even apply now. Your previous version was applied almost
-one month before and you WERE notified about it.
+thanks for your patch!
 
-Why did you ignore Bartosz's reply?
+I like the idea in this patch set. Footprint is something we need
+to think more about, if for nothing else so for the increasing tendency
+of RAM prices.
 
-Best regards,
-Krzysztof
+On Fri, Jan 9, 2026 at 3:52=E2=80=AFAM Daniel Palmer <daniel@thingy.jp> wro=
+te:
+> On Fri, 9 Jan 2026 at 08:38, Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Wed, Jan 07, 2026 at 12:07:30PM +0900, Daniel Palmer wrote:
+> > > In a lot of places we are using of_device_is_compatible() to check fo=
+r quirks
+> >
+> > I'm assuming 'a lot' is not just 3 places? Got a rough estimate?
+> >
+> > This seems fine to me assuming there are more.
+>
+> In core code (like the gpio core, and not in a specific driver) there
+> are only a few places. I think around 10.
 
+Actually, if you look in gpiolib-of.c in e.g. of_gpio_try_fixup_polarity()
+you find:
+
+#if IS_ENABLED(CONFIG_LCD_HX8357)
+                /*
+                 * Himax LCD controllers used incorrectly named
+                 * "gpios-reset" property and also specified wrong
+                 * polarity.
+                 */
+                { "himax,hx8357",       "gpios-reset",  false },
+                { "himax,hx8369",       "gpios-reset",  false },
+#endif
+
+etc etc etc.
+
+It is actually a similar idea just clunkier, but maybe necessary
+for these quirks since they are in a table.
+
+But as you can see, there is some of the same thinking: if it's
+not configured in, then we need to compile it out.
+
+Yours,
+Linus Walleij
 
