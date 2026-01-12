@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-30426-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30427-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BA32D10DCD
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 08:27:46 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F76ED10E01
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 08:31:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 210053017C4B
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 07:27:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B5162302C4E2
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 07:31:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8C06330657;
-	Mon, 12 Jan 2026 07:27:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B85A13328EA;
+	Mon, 12 Jan 2026 07:31:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODZasNhv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZpyP91ty"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7847832F742;
-	Mon, 12 Jan 2026 07:27:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571B2331A6A;
+	Mon, 12 Jan 2026 07:31:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768202864; cv=none; b=eL4cHi6CgHpIQ6bq+E7MAFGyIRek5K0Nu1iEFD6HFm6141qEDzkLAnFf7liHGNEbPuuHyLYZiVchgfEwKwF0Huw6uS/YIRICTMAMKtp/QtHT74JI+3iCqbjGCyO93o+bZ7VT6YkSxmzH1lawl+iyUDAsOWex7zz2LvfJxj+2jtE=
+	t=1768203068; cv=none; b=B+Sw+kAonN0ljEYY07elsGk2qdJj/A1GubUt4GgCbzNA3TmmaOI103lc+3yiSdS+vBhPx5leb68pZ4pCl53GrRhT4gSc8SuKQhV0q5FYxbM11EF8l09QPlIRQhJdZ3vQRhbV4zTYY/FoVBzawqJkKABoAvjXKoATMO5BMxYLOPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768202864; c=relaxed/simple;
-	bh=qy+Nh6KG5jSBqOTN1aVym38XYOmTF27xLroqXmb8KWI=;
+	s=arc-20240116; t=1768203068; c=relaxed/simple;
+	bh=eB0/zyf/Sogxto5VFEyCo+QRxlgafOBFBnEd4EKzrDE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ducRIhWNxyx9XFqgp/TdPbB8zDXTP8VZjI4TZV+LGWNCemy0XazfPTnyxcxVDczd/tWqnPJCkho9KoHUoSnJB95LGsQ6EGEesFDysFGA0dccxj7afBGKRysdxrr4kUS77oSVaT2cxqJn6M8IQR/I/sykR8LSKueoflJRdiTT4EE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODZasNhv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97644C116D0;
-	Mon, 12 Jan 2026 07:27:41 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Fgp9bSuQSbPlU2zzeMdpRfu3RRHPj1WzWYfof1/BpuCTRAu9atvuRK9I+xxFmIze49Bg19GjyJlAHzu7TF+vZxGAPYxoFekuqYQnEDW4md/m6/lzVRoNCo5NwmN7vG/6tkfGOC3DZTu6vERQO985N+rAtT4VN/L+Yg1bdtJNwOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZpyP91ty; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88041C19422;
+	Mon, 12 Jan 2026 07:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768202864;
-	bh=qy+Nh6KG5jSBqOTN1aVym38XYOmTF27xLroqXmb8KWI=;
+	s=k20201202; t=1768203067;
+	bh=eB0/zyf/Sogxto5VFEyCo+QRxlgafOBFBnEd4EKzrDE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ODZasNhvfQ3y4J1xshnR4MXr31DIGLgWNRFGnGyICVQ7aJxx8B8eqQ+Jrllrz3lAy
-	 Xq9KqmNdrIMtKd/rd+fnOpY2O8TLII+aRtmJ3t4k7SzMMb0jWEezegEruyUzeG14o6
-	 IJe/e9LQxvTxHQMDHB8pB8JQsR92ixFt7bZsW0W4NdIoteDa8Aa3s49RdOABb21klS
-	 zQngbNr1BbLm1JTKrThDeEfYg9T3z3bUywXSGXct2JLgkBWr4IxiUmm/IW15kfFupX
-	 4rjVF2AaH6lRAyOUvn9fYlrWsYct11MJ0+rO8h5d2nG2dGOaDHm4OCrrQs7fO9bKIe
-	 Kj29r3Averedg==
-Message-ID: <a7d75307-7c99-4181-a3c7-10ad26752fc0@kernel.org>
-Date: Mon, 12 Jan 2026 08:27:39 +0100
+	b=ZpyP91tyjPy45op0LnPIegZwM0xwcySpcaNYfWGYnDEok156TVYWtxzqz2tShRacx
+	 pYZhvYBaIv8BSfZ7H2RPd3d2NcJny3XYlP9Cg92f5udUE4Y6ZnyALAkCte0Lnm5Kjw
+	 5ei7NajkmV/pESX1lVMawkHnUlax5hwFK/AEwwjFG3EgaRJ9dnH+sVAaDUrutWeLv0
+	 Wny8hJvoW7rb2KnczGM9SrujwHJnYhy8OZWGKNuNEtbRhSdsQ1ksYk3KNRcc/cNcRH
+	 2n/PnqKfr3iEVF/IqaNNoehzRrCUJkqr4EV+OSq8wx9ymYCVx//iHFL1YqrWFzn3U3
+	 ibZAfrZdnQtjg==
+Message-ID: <fb977dc3-54ea-4c58-be85-111fd7e1c371@kernel.org>
+Date: Mon, 12 Jan 2026 08:31:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -48,14 +48,17 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpio: remove the gpio-tn48m driver
-To: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc: Robert Marko <robert.marko@sartura.hr>, Linus Walleij
- <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
- linux-gpio@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Subject: Re: [PATCH v3 2/6] dt-bindings: gpio-mmio: Add opencores GPIO
+To: Stafford Horne <shorne@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux OpenRISC <linux-openrisc@vger.kernel.org>,
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
-References: <20260112064950.3837737-1-rdunlap@infradead.org>
+ Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20260109134409.2153333-1-shorne@gmail.com>
+ <20260109134409.2153333-3-shorne@gmail.com>
+ <20260111-bold-wolf-of-champagne-58fac7@quoll> <aWPT_HsRVC0dQ_j6@antec>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -101,16 +104,49 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260112064950.3837737-1-rdunlap@infradead.org>
+In-Reply-To: <aWPT_HsRVC0dQ_j6@antec>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/01/2026 07:49, Randy Dunlap wrote:
-> The gpio-tn48m driver is useless without the simple-mfd parent, which is
-> not present in the kernel tree, so delete it and all references to it.
+On 11/01/2026 17:46, Stafford Horne wrote:
+> On Sun, Jan 11, 2026 at 11:18:42AM +0100, Krzysztof Kozlowski wrote:
+>> On Fri, Jan 09, 2026 at 01:43:53PM +0000, Stafford Horne wrote:
+>>> Add a device tree binding for the opencores GPIO controller.
+>>>
+>>> On FPGA Development boards with GPIOs the OpenRISC architecture uses the
+>>> opencores gpio verilog rtl which is compatible with the MMIO GPIO driver.
+>>>
+>>> Link: https://opencores.org/projects/gpio
+>>> Signed-off-by: Stafford Horne <shorne@gmail.com>
+>>> ---
+>>> Since v2:
+>>>  - Fixup patch to simply add opencores,gpio and add an example.
+>>
+>> Simplify? You completely changed the meaning of binding here - now
+>> device is not compatible.
+>>
+>> I don't know which one is correct, but your changelog must explain why
+>> now devices are not compatible but they were before.
+> 
+> Hello,
+> 
+> Did you miss the 1/6 patch in this series?  We add the compatible string to the
 
-Same comment, simple-mfd exists in the kernel, so driver is perfectly
-usable based on above sentence...
+There is no 1/6!
+
+> driver there before we add it here.
+
+How does it matter? How can you add something to the driver before you
+document the ABI? Did you read the submitting patches doc?
+
+
+> 
+> Sorry, I thought the series and the over letter would be enough to understand
+> what I meant by the "Fixup" description here.
+
+You still did not answer to my comments.
+
+
 
 Best regards,
 Krzysztof
