@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-30427-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30428-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F76ED10E01
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 08:31:17 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B520D10E3A
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 08:33:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B5162302C4E2
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 07:31:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 22A2730D599F
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 07:32:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B85A13328EA;
-	Mon, 12 Jan 2026 07:31:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 700593328FB;
+	Mon, 12 Jan 2026 07:32:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZpyP91ty"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N+AGYuHi"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571B2331A6A;
-	Mon, 12 Jan 2026 07:31:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7F6330B2B;
+	Mon, 12 Jan 2026 07:32:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768203068; cv=none; b=B+Sw+kAonN0ljEYY07elsGk2qdJj/A1GubUt4GgCbzNA3TmmaOI103lc+3yiSdS+vBhPx5leb68pZ4pCl53GrRhT4gSc8SuKQhV0q5FYxbM11EF8l09QPlIRQhJdZ3vQRhbV4zTYY/FoVBzawqJkKABoAvjXKoATMO5BMxYLOPI=
+	t=1768203128; cv=none; b=tu+fNzWwPEBj23FBWnXfw5UgM10s5tYxfg68An/pr5c30/rxHT8h76b5CmNzAuuaXY0r2hUHIiXksRRA8Gkmnuy9oYZX2kkOlDjueiKd7+IwLfwoLYFBkcHDJPGsvMvfXlmqxFt9G0Jrjy5AnOJ4a18w6yc85B75npS8UkdU2wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768203068; c=relaxed/simple;
-	bh=eB0/zyf/Sogxto5VFEyCo+QRxlgafOBFBnEd4EKzrDE=;
+	s=arc-20240116; t=1768203128; c=relaxed/simple;
+	bh=x9zUZcTbJ63fS+4P9YOXAvKk0aAAogf1Y9hTZ8aFPxE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fgp9bSuQSbPlU2zzeMdpRfu3RRHPj1WzWYfof1/BpuCTRAu9atvuRK9I+xxFmIze49Bg19GjyJlAHzu7TF+vZxGAPYxoFekuqYQnEDW4md/m6/lzVRoNCo5NwmN7vG/6tkfGOC3DZTu6vERQO985N+rAtT4VN/L+Yg1bdtJNwOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZpyP91ty; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88041C19422;
-	Mon, 12 Jan 2026 07:31:05 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=NRjmTdTy4dAvfN4wEgnyt5s6gXUeaWcMvp7KYSffGhGAZHWL3k7Yqk/qLBoOBSXBzOM52xU97hCBtPWbwb/LWOi3lMmyILMX1je440yZbRnIElOMwWB8/WlHlCdVhlxP/fjQHXrj7dw2h5Vq0ASe80kRfHEGaEPOZEhLVXR8qHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N+AGYuHi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81F22C116D0;
+	Mon, 12 Jan 2026 07:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768203067;
-	bh=eB0/zyf/Sogxto5VFEyCo+QRxlgafOBFBnEd4EKzrDE=;
+	s=k20201202; t=1768203127;
+	bh=x9zUZcTbJ63fS+4P9YOXAvKk0aAAogf1Y9hTZ8aFPxE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZpyP91tyjPy45op0LnPIegZwM0xwcySpcaNYfWGYnDEok156TVYWtxzqz2tShRacx
-	 pYZhvYBaIv8BSfZ7H2RPd3d2NcJny3XYlP9Cg92f5udUE4Y6ZnyALAkCte0Lnm5Kjw
-	 5ei7NajkmV/pESX1lVMawkHnUlax5hwFK/AEwwjFG3EgaRJ9dnH+sVAaDUrutWeLv0
-	 Wny8hJvoW7rb2KnczGM9SrujwHJnYhy8OZWGKNuNEtbRhSdsQ1ksYk3KNRcc/cNcRH
-	 2n/PnqKfr3iEVF/IqaNNoehzRrCUJkqr4EV+OSq8wx9ymYCVx//iHFL1YqrWFzn3U3
-	 ibZAfrZdnQtjg==
-Message-ID: <fb977dc3-54ea-4c58-be85-111fd7e1c371@kernel.org>
-Date: Mon, 12 Jan 2026 08:31:03 +0100
+	b=N+AGYuHi0yU4tlRHAlboUD7yJLGpn2/bO7n4v8xeDMRmm7oTT+81o/Toulh5zux5M
+	 LEMvQLpBvYLfJ9dPMjKCapJALqQxaZSkj8FKWU3iznQ+C3mBw4SjEfqv17++V+SivI
+	 G2wcDD1NUuxyhBpLIXo/lT+x7Ms/t6Plb9rYWSjsP6SMoLidibLHBQjFxplrOlpZF9
+	 MmeGx3izEy6wvW2/tBEInZv909T/gfh7hXcE4Yww/1i8Shr0DlJZlv84a6uHUc1uWV
+	 qEKCTgkazAuZjMICBZxhEsPUcGlxRPGC6HRMzakkhxNYq84Uoxl0ks7P+gtrz37Zs3
+	 Bpoc0QwuYGJ1g==
+Message-ID: <a0199465-b488-4afe-8a42-4a082a780ed4@kernel.org>
+Date: Mon, 12 Jan 2026 08:32:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -58,7 +58,7 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
  devicetree@vger.kernel.org
 References: <20260109134409.2153333-1-shorne@gmail.com>
  <20260109134409.2153333-3-shorne@gmail.com>
- <20260111-bold-wolf-of-champagne-58fac7@quoll> <aWPT_HsRVC0dQ_j6@antec>
+ <20260111-amorphous-cow-of-stamina-6f2720@quoll> <aWPRHHhdjGE2f8aT@antec>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -104,12 +104,12 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <aWPT_HsRVC0dQ_j6@antec>
+In-Reply-To: <aWPRHHhdjGE2f8aT@antec>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 11/01/2026 17:46, Stafford Horne wrote:
-> On Sun, Jan 11, 2026 at 11:18:42AM +0100, Krzysztof Kozlowski wrote:
+On 11/01/2026 17:34, Stafford Horne wrote:
+> On Sun, Jan 11, 2026 at 11:20:38AM +0100, Krzysztof Kozlowski wrote:
 >> On Fri, Jan 09, 2026 at 01:43:53PM +0000, Stafford Horne wrote:
 >>> Add a device tree binding for the opencores GPIO controller.
 >>>
@@ -121,32 +121,28 @@ On 11/01/2026 17:46, Stafford Horne wrote:
 >>> ---
 >>> Since v2:
 >>>  - Fixup patch to simply add opencores,gpio and add an example.
+>>> Since v1:
+>>>  - Fix schema to actually match the example.
+>>>
+>>>  Documentation/devicetree/bindings/gpio/gpio-mmio.yaml | 9 +++++++++
+>>>  1 file changed, 9 insertions(+)
 >>
->> Simplify? You completely changed the meaning of binding here - now
->> device is not compatible.
+>> This does not even apply now. Your previous version was applied almost
+>> one month before and you WERE notified about it.
 >>
->> I don't know which one is correct, but your changelog must explain why
->> now devices are not compatible but they were before.
+>> Why did you ignore Bartosz's reply?
 > 
-> Hello,
+> Hi Krzysztof,
 > 
-> Did you miss the 1/6 patch in this series?  We add the compatible string to the
-
-There is no 1/6!
-
-> driver there before we add it here.
-
-How does it matter? How can you add something to the driver before you
-document the ABI? Did you read the submitting patches doc?
-
-
+> Sorry for the confusion, we discussed [1] this patch in the last Series with Geert
+> and Linus W. We decided to Fixup (replace) the original patch with this and a
+> patch to the GPIO MMIO driver instead.  I pointed it out in the cover letter but
+> it may have not been clear.
 > 
-> Sorry, I thought the series and the over letter would be enough to understand
-> what I meant by the "Fixup" description here.
+> I will reply to Bartosz's original mail too so he can understand the intent.
 
-You still did not answer to my comments.
-
-
+But you did not send any fixup, anything which would change what was
+applied almost one month ago!
 
 Best regards,
 Krzysztof
