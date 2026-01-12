@@ -1,187 +1,155 @@
-Return-Path: <linux-gpio+bounces-30433-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30434-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 496E3D11420
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 09:34:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CAFEFD1149A
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 09:43:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 09C5930CF7D9
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 08:32:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5F0CF30738B2
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 08:41:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 813A8341041;
-	Mon, 12 Jan 2026 08:32:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA1EF342526;
+	Mon, 12 Jan 2026 08:41:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3yFqGeO"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="L73P/yaY";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="jPiegj4B"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF88134029C
-	for <linux-gpio@vger.kernel.org>; Mon, 12 Jan 2026 08:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A91341076
+	for <linux-gpio@vger.kernel.org>; Mon, 12 Jan 2026 08:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768206774; cv=none; b=C0OkT86C06qSAjQJBGjYTQESI6nZjWEWnsdLr8hKJXBQWaBjtgzndwHUJq6u/YwDzBP8/2h8lUTcmuDZ+z+UTg4qMrYfgB2oCvJj3bQh5E2othb8+uWFnfzGi4AY4yhuC/IdhEbBPzPhLV8g/RuSon6zvTN4NFWDZPinh9m2TjE=
+	t=1768207276; cv=none; b=S9FHynYwt0PEfOgBcZGyeebalchO4b44iw8NCDRjNQ0er9dBQAdeIR+U/uC+15ZkivKOWGXDcvl4SDHKz3dSLwgVhkXJtc/xFePMI9f/yBqaNZYf9YaaQPTs8hCjaN+NlTTd2Vz36Ey93jLvwMiFVZLB/5e2s56GIbPpdHYQWLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768206774; c=relaxed/simple;
-	bh=CHhxbYtVRJ8UvARH1WuSWqeG79V38j2YQwQMMpKhPlg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u5xrz9SmZ9mEQQZSchwdbl0oDFLFK6KWxR2ojEvzJ+1rHHtn+M1DpBBpCKnr7HiH9oCr6NGIvCqilJrSNuL2y50oTA8bec3Y+X+0gm90YzCihvhahQQ03k1/QI9MvIzLZzmB9D0BX66KzWLgj281LOvwUrQhxYEtyGpa0Dz9rqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U3yFqGeO; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4779aa4f928so62774845e9.1
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Jan 2026 00:32:50 -0800 (PST)
+	s=arc-20240116; t=1768207276; c=relaxed/simple;
+	bh=q2QlYokdf03S0W2UdwO4jA9l+yQf2xP33BPLIi1S2/Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HWeVzU0m/XZm+FxzAiaSYHLMuNshObQ0k/y30yCoXkYMICxMKT4uRwpxnoi9rkuvboayzqsGpIszXrUkrHcCPLpuCGQkBS6LVGPGLw5jyPGvg9lqrtRm8etGiHhnwdftz5W9Ow4QvN+riKCWmMBHJszw2vBRHS4LgtKtVXuX2AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=L73P/yaY; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=jPiegj4B; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60C7OjSI555467
+	for <linux-gpio@vger.kernel.org>; Mon, 12 Jan 2026 08:41:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	YDUjGx/ZOw56ZloBT4UrEsIeJ/wiXm/hCSNqcWwCQkA=; b=L73P/yaYvkHc3+z5
+	AuO4ehXGZKUrI6N/CjFgriRjCj8wRuT7/10RFAA6uEjBjw6e2tMBLx+05umOT3pJ
+	d3A2cj2QyMst2Qt1kmL/CdxkaXm0ZSNheq+3y8x8D8cU5mzN2POa5BbYvGGfjI8m
+	05ULgh9R7KY3dVlBOmkFUz9WBhebMMS964/c4Vg/1EjmoNhCHGU3JXECJXn6gKwD
+	fdFs09GSUDdCVPpoa+4X2GMqWN5uzy9Aw3njoDAjBvFxmv/tCqB/Evy79B7BiL7T
+	CsGIfa/n4QfaH/iZDT6JoiJog6GcD0RiByHTXdEdd5wGNBJYq+TeF7nQYMuidCY0
+	CcYVQg==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bmvhw099k-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Mon, 12 Jan 2026 08:41:14 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8b24383b680so2475621085a.0
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Jan 2026 00:41:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768206769; x=1768811569; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p51irmMY54wjEoANrY9x5z2U+DeQ+nE/A1c1QJUgAvU=;
-        b=U3yFqGeOJ/quAntAUd8gY5ATQsK3KjF7LZAeI6ly0pJlc/lUkNSOlkls8i1hUPZl2H
-         x7t5mB9gQrGxk5yNCCC8owrgPj7QMYdInAI5UTndW03LQDe+kT9s5gYpfTcAjt/r8Cc/
-         i+cmxW6Jf12EOSWe8WGCJaoeozL6F8c61PAu6FlW81CYHoyt8/pU3Dd9NfWii+JQh9Eq
-         WuVZTF2H3vRFnyUBxLwCW5JYCS9Y6lVdahnjsb03bN/nlEUyfgSCR7lU9A7OKhZ7kCvU
-         QEiE0DdlvALZ2YjjSFAOsI7y49nmcS3Ury/h62HduIsRBhQW1yVX+titDY26q428CNDS
-         toOg==
+        d=oss.qualcomm.com; s=google; t=1768207274; x=1768812074; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YDUjGx/ZOw56ZloBT4UrEsIeJ/wiXm/hCSNqcWwCQkA=;
+        b=jPiegj4BxLuwcTCioitUip9eiHZhQqjkB9GZ2FhVzuiN4TjqbVMKK5U91QqJv3Qh8V
+         cHToryMwIKebpntoTL3OsuKCtGOrccfGviPpPYhe5YAD413Uz85gjyVLEZtzIIYaLgNq
+         qakWCns4FJeF96VO03LfNk3VtrwwQw1v8uLG03dFG0oc5QQ2KSCvuofHDu+p5dBtTEmd
+         gC3A3r0JwD98c+EQ3p+fwKTytjE2Hq1oUkHfkHONp9s1CSrWj2CwJu5SCczJlUwZaIBD
+         wdBugt8jS8BlIyKeA6sag62jCblh8aYK72IPnVJhokx6sShj9uFSE9ZADwPQ0ivcCcLy
+         hmBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768206769; x=1768811569;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p51irmMY54wjEoANrY9x5z2U+DeQ+nE/A1c1QJUgAvU=;
-        b=E45zEoYsEvAcNa6mr7zYiqEYpzKe0qprO+6gWa1mqFi0nUh7Ochzwl0U9iMW701sLr
-         XsnLfTiz5LPNaLyBhXMMfBqSw4br3FsZHV8NlZVgCSs7Ahbe/6YuZTiJVdzzuSWmAdUD
-         kFs6o4nWC7lUxcoHNBSYjH4v0mrvZBSbAxCu2K7ceSrZQOSMPdAShw2Cyb1ULDOaZE9/
-         Az5AcChXYRvsIMHIvDAg9r+/NuhMNJU4ZN7RY7dbymAfnLkNJk6PX6EVeuyb8hJF0wAd
-         Ub0VIjz9U+gm4pbKbJ18c+e91Vr1is55+wwsSPlR9uMgD7Nk2jEyPg/DqmLAc7NPhkgH
-         fjFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU24irBm1rJe6MLYX9u/7a0RZXj/jRpVVOB7p4y2wMckYRhee6dDNnQzfB2Evhq7WJSZUqVxGjUkUUT@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTf5e87iQmXZ4dNqUxcflMD5DFsq8KmnAjX8vwccr9LVKnzatA
-	nWe8O5yp4sBz6uYycOnkiRsjp84VVBuKlRhYj6EID94MPITpZWBdIvpz
-X-Gm-Gg: AY/fxX536crQAfLxyuY/bOsz/yhRGBdpNbIt8Pv+pKMll4ihp1AWxpFoBVO40EFeJeO
-	ht0WfvWALST/otOr0YpI/rZ+G3/7NEPmTIvNHUNOiRPbz5FufbNtMfApP2LA1KHQ3avzCmnD/10
-	9AfjijMz9Kf0e+1b37y2boTTdZRkeuz6OP2kWJZQ7LkqsltBa+XBU6jcJ6YNrYnASFbdns1TrxN
-	T2j7/quEjrLn9Eq+1I8Z1RXLFbPuqC1zPwjHk65eykSfGF8wYdg6F8nePHmA57vI/KQynSC7vo+
-	iehVXOVoxsUl3cHaVbTsyTiboep+WJKaV186LxfeOEsyR2L5dm8Hde7Fc09GXXTBJqYF1gn1XAe
-	0wxTYcu6X+zncFbVCe1oXtvAmZ5PZ/r4TuqnyHOTmDXumJXWUJJz2o4E35ULxCmMLXW4E1+oqr3
-	Hf50kPadPykoEYl4zDNo44gZnhBLYWIFWaRLOPWL70Z3xuzVDj9RCoH+kTy65MUvDxCxp/ctods
-	e8=
-X-Google-Smtp-Source: AGHT+IH6wXfedcQ2yu1RtG+zbjkyA3yU3V5+gN1yJHGFYOVEaMi7Q5RPlb6IdLZcFS0Zw8lmttQbCA==
-X-Received: by 2002:a05:600c:630f:b0:47d:5d27:2a7f with SMTP id 5b1f17b1804b1-47d84b38534mr177978875e9.26.1768206769102;
-        Mon, 12 Jan 2026 00:32:49 -0800 (PST)
-Received: from localhost (brnt-04-b2-v4wan-170138-cust2432.vm7.cable.virginm.net. [94.175.9.129])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47d7f695225sm344466455e9.4.2026.01.12.00.32.48
+        d=1e100.net; s=20230601; t=1768207274; x=1768812074;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=YDUjGx/ZOw56ZloBT4UrEsIeJ/wiXm/hCSNqcWwCQkA=;
+        b=T+hfSwIDP8mS3vtj30avrtRVOyrVBuCpCP2dc8vURMeAgAyCoYVAd7KPP8JDsWZuo0
+         hN3kanBP7iewJkno8WK71qBoixsN7IkeajqCPEQVaieh3yrO+39vDKimwW4Mf8OokcB0
+         LsvAcHuYFxKkquVeXDyW3gKniu8jzTgjWXGowl4AvTLfN33Z8K8EIoJC8NuB2BZMZ5rD
+         ZAfFjmqbCno73T7Tnp1X0nya0H4nltnehsppwNex8KdXSqTrrrULPg1kGlRGnrYZQy6r
+         rciK0j6WKfsf46+E96+sopED+xXXkRbA7+KLjtWomSinuju7JZJ+yXzHWRt3MAzVIr5f
+         G3Rw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZXwPu6f9jGKSoTZU7j0wCmQv4WGXzxmGExdd0dz4UjnKx1efPOQ9ZaNPyOS7lmxVh+B2IbFVezNj4@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfVofuv9+oKpa1sqTPHu+MhcRjmffxtUCVKanpYVX5YHvSuyaQ
+	F/ILl0XA6zepGZcohk4OJAuRTNgx3myw07qLQ3s+H8xDVLAVDhJWQX+X497t7xe8wqQEDMYQRWr
+	YmlkxT9414Wvzo5Bp0KWgGccmdKxKQkFk4PVn4b4UQuoA+doYEq8KFwRhC1w1oJ4M
+X-Gm-Gg: AY/fxX5APP/IVZQ4twCfhxoF5fcpUKWG/iio8A+z/BlpOtK9AsucxOlpaQr8LsEDzpI
+	/OR1M338bDuhf3gIXZ3nikTYEOMKgIb4K2qfzkWu4Z/nLkQaJhlH0siswoGXS72EcXTnZmYxZia
+	iTt2vI/RQW92M+19B718jcvPzlQ2qzDZ5Yx0f+u7uKDgYhtEeDvCg9BbUMjPBuPM89RBzH4nhl7
+	AfAn6NOiXyKdF3XpOlJYJ7q2GzUpqsW8/EWMzM43hkbrVdy0zkfiSdMxnOSW23H8IAvVET6z5xY
+	E6S0DXYxBOn4g+chriAtPXF5LM/arSzBuujFH4CUWDW1dfUC8kjXcG4GPggitDFxNs8fGuL/zxX
+	dIqBWj5A1d6DQg/hXMCm3afgwshKvvnmelHkCTaU=
+X-Received: by 2002:a05:620a:4083:b0:8b2:87a2:9c60 with SMTP id af79cd13be357-8c38942b90bmr2357473185a.83.1768207273683;
+        Mon, 12 Jan 2026 00:41:13 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEez+Er0gfsZ2wOCuWhTgBz8Je2voAyXBQuKBPt8pZ/sobpqFcxVS5GjDlird8dbnAScpKuOA==
+X-Received: by 2002:a05:620a:4083:b0:8b2:87a2:9c60 with SMTP id af79cd13be357-8c38942b90bmr2357472185a.83.1768207273287;
+        Mon, 12 Jan 2026 00:41:13 -0800 (PST)
+Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:a056:e497:8fff:6413])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd0dacc5sm37279608f8f.5.2026.01.12.00.41.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 00:32:48 -0800 (PST)
-Date: Mon, 12 Jan 2026 08:32:47 +0000
-From: Stafford Horne <shorne@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux OpenRISC <linux-openrisc@vger.kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] dt-bindings: gpio-mmio: Add opencores GPIO
-Message-ID: <aWSxr8TnZMoZ0ezl@antec>
-References: <20260109134409.2153333-1-shorne@gmail.com>
- <20260109134409.2153333-3-shorne@gmail.com>
- <20260111-bold-wolf-of-champagne-58fac7@quoll>
- <aWPT_HsRVC0dQ_j6@antec>
- <fb977dc3-54ea-4c58-be85-111fd7e1c371@kernel.org>
+        Mon, 12 Jan 2026 00:41:12 -0800 (PST)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Michael Walle <mwalle@kernel.org>
+Subject: Re: [PATCH] gpiolib: remove redundant callback check
+Date: Mon, 12 Jan 2026 09:41:08 +0100
+Message-ID: <176820726230.8044.8743651981622570624.b4-ty@oss.qualcomm.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260109105557.20024-1-bartosz.golaszewski@oss.qualcomm.com>
+References: <20260109105557.20024-1-bartosz.golaszewski@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fb977dc3-54ea-4c58-be85-111fd7e1c371@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTEyMDA2NyBTYWx0ZWRfX+QHqIEzmJdfO
+ vCjmVlwp0wSsynrr0nffu2ZJPCav0A2g6aOe38wYVUlVKWSF1plgEUqL04I0ExsGTccE5p+9T3K
+ hySvJb+aIbRim/Pb58M84bAcfMk+BZcdDfQi6JtvqPKLwZLDIXijqfQuWZbGicIHVwBgGYpZ8yA
+ j7d6JdLwxUiuI7YM/5hGq0u3B+ni2WQkkBhOGTRBZczp+ZxCvNsPAoG+O9CZeEQf4LGzKVxK5Fv
+ 6iOQ4niGlI9ZsF/mimfB1lcHi2+OSBoqnxF6KuVIcHoUfpJGAluppjc4z1NqJbffKSOWReUDjdY
+ sOeGtonLImhl0JI3E6p52j5B3OhMCTXtIXlUgOi49/NNwAZj4PGaVTFBJ0ZNBhUMsBmuPmbhDGK
+ sUCIsC1f+TGV2jdpPsWdyeP+UYrjy1wKmNmwPaH8NY/ng4YD7Lq+LJ9U6L1cVKjYxQ4jq882GOq
+ zhIJbRCXRUVd8G6rVlg==
+X-Authority-Analysis: v=2.4 cv=JP02csKb c=1 sm=1 tr=0 ts=6964b3aa cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=EUspDBNiAAAA:8 a=Uw1MibG_T-EZoDf9ypgA:9 a=QEXdDO2ut3YA:10
+ a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-GUID: eWgaBl9laoIxBy76o7n8dThZ9FrCkCWB
+X-Proofpoint-ORIG-GUID: eWgaBl9laoIxBy76o7n8dThZ9FrCkCWB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-12_02,2026-01-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 impostorscore=0
+ suspectscore=0 clxscore=1015 malwarescore=0 adultscore=0 spamscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2512120000
+ definitions=main-2601120067
 
-On Mon, Jan 12, 2026 at 08:31:03AM +0100, Krzysztof Kozlowski wrote:
-> On 11/01/2026 17:46, Stafford Horne wrote:
-> > On Sun, Jan 11, 2026 at 11:18:42AM +0100, Krzysztof Kozlowski wrote:
-> >> On Fri, Jan 09, 2026 at 01:43:53PM +0000, Stafford Horne wrote:
-> >>> Add a device tree binding for the opencores GPIO controller.
-> >>>
-> >>> On FPGA Development boards with GPIOs the OpenRISC architecture uses the
-> >>> opencores gpio verilog rtl which is compatible with the MMIO GPIO driver.
-> >>>
-> >>> Link: https://opencores.org/projects/gpio
-> >>> Signed-off-by: Stafford Horne <shorne@gmail.com>
-> >>> ---
-> >>> Since v2:
-> >>>  - Fixup patch to simply add opencores,gpio and add an example.
-> >>
-> >> Simplify? You completely changed the meaning of binding here - now
-> >> device is not compatible.
-> >>
-> >> I don't know which one is correct, but your changelog must explain why
-> >> now devices are not compatible but they were before.
 
-Trying to answer this better this time:
-
-As per our discussion with Geert and Linus W.  It was pointed out that the
-original patch, which added openrisc,gpio to be allowed along with the broadcom
-chip e.g. ( compatible = "opencores,gpio", "brcm,bcm6345-gpio"; ), was wrong.
-
-The opencores,gpio is compatible with the gpio-mmio driver, but it is not a
-hardware clone with the broadcomm chip.  It has 8-bit registers vs 32-bit
-registers and the register map is different.  Instead of allowing opencores,gpio
-to be specified along with the broadcom chip, opencores,gpio should be specified
-on its own.
-
-So we agreed to resend the patch with to parts:
-
- 1. A commit to add the opencores,gpio to the driver compatibility list. (new
-    1/6)
- 2. A commit to add opencores,gpio to the binding (replacement of the
-    original patch 2/6)
-
-(now I understand this order is bad, I can resend)
-
-This is a "simplification" as we are now just adding the opencores,gpio string
-to the list rather than changing the schema with oneOf and items.
-
-I wanted top get it out quickly so it can be fixed up before the merge window
-opens.
-
-> > Hello,
-> > 
-> > Did you miss the 1/6 patch in this series?  We add the compatible string to the
+On Fri, 09 Jan 2026 11:55:56 +0100, Bartosz Golaszewski wrote:
+> The presence of the .get_direction() callback is already checked in
+> gpiochip_get_direction(). Remove the duplicated check which also returns
+> the wrong error code to user-space.
 > 
-> There is no 1/6!
-
-It seems you are not on it, but it is on lore here, if you missed it.
-
- https://lore.kernel.org/lkml/20260109134409.2153333-2-shorne@gmail.com/
-
-Reading the bindings submitting patches doc's it seems I need to send the whole
-series to the bindings list.  Which may explain.
-
-> > driver there before we add it here.
 > 
-> How does it matter? How can you add something to the driver before you
-> document the ABI? Did you read the submitting patches doc?
 
-Sorry, I didn't read, or realize there was a device tree bindings specific patch
-document.  I see it now, and I see point 5 makes it clear that we should
-document the binding before the code change.  I got the order swapped.
+Applied, thanks!
 
- https://docs.kernel.org/devicetree/bindings/submitting-patches.html
+[1/1] gpiolib: remove redundant callback check
+      commit: 471e998c0e31206ff0eac7202b2659698cf9b46e
 
-If necessary I can resend the 2 patches in the right order as a series to the
-devicetree list.  devicetree@vger.kernel.org
-
-> > 
-> > Sorry, I thought the series and the over letter would be enough to understand
-> > what I meant by the "Fixup" description here.
-> 
-> You still did not answer to my comments.
-
-OK, I tried again above.
-
--stafford
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
