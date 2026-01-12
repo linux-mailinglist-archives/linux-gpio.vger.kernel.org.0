@@ -1,171 +1,139 @@
-Return-Path: <linux-gpio+bounces-30458-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30459-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84819D13E78
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 17:11:26 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A319D13EC3
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 17:15:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 75FF93026A83
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 16:10:50 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5A9EC302CBAB
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 16:15:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B22BD3644A1;
-	Mon, 12 Jan 2026 16:10:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8810F3644C2;
+	Mon, 12 Jan 2026 16:15:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="op9GvPJm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WH5GfX31"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739942C029C;
-	Mon, 12 Jan 2026 16:10:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490CF36402C;
+	Mon, 12 Jan 2026 16:15:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768234249; cv=none; b=o0PjdHOwqn5SJjm5pE6bPv5I3SnEvrwcWW+WvaZFvOrjMBY5ucJJR1I3mqsncXkuBj9ra+l4DNAnBIgwK8qzu+Y9ttQR+j5yTldzLg7KOIn61AjbUbRblmhbNrNDwuhwH4+30bA+4xBCqLLHjsaPYj5czm6vigwSzvmXkQHXCl4=
+	t=1768234500; cv=none; b=otel6CDiZQo8Pqnd7QQaZ6dW14VreizQlVqdQ3IyiSh8BKxOb83vw0nojks+DAiEvhlfPPYEqWrBlzO5/k0En1HlSCxgFFMclHEPuaTR+WDQEcsWJ9T3Yi97KoE5O1IU5Fxgrhmsy7J2iDTXo8dpy0ML51uGPjbKa+j0g4suBbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768234249; c=relaxed/simple;
-	bh=mgpj2TIPozPmj272al0hyX46YOdsg7JrFzwq3WOQA9w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XRpFCScqek7Zz9fe+2uavdqwxGXTCQB2/gKFzEmTPRVPZeYk0QUIbI4TRocAcjqfCOx1Wq8ozIxQaYjrKL2Rbp8xeholAwruZqSeGZilcTu67jj6/dLHGTUvzrAuwdG7L0VumCCOpDkZh9E6LYihuX/52jeNYYFKNf1YBCe5wOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=op9GvPJm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31948C116D0;
-	Mon, 12 Jan 2026 16:10:44 +0000 (UTC)
+	s=arc-20240116; t=1768234500; c=relaxed/simple;
+	bh=XAsw1Ng2RkdR08+1vG5HA7UnfGA93dXPoZepz7fgmwo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=s9yumfQFe58ooWQqJY4vJ9AFh10QmJODG6mw2KDuRPuqxLiXay7ZtAnNhw9HWg1/2BEAtrkmiJCbkwHjwYmEBqB7QvOFeZFtSXRrV7/9J5+/BfQCy+JcijMO1msm7LyIEoiAjNTaxTRPxdvCBzqcU4Bz8nco1dk7lSgdYkXFCEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WH5GfX31; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CDC2C16AAE;
+	Mon, 12 Jan 2026 16:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768234249;
-	bh=mgpj2TIPozPmj272al0hyX46YOdsg7JrFzwq3WOQA9w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=op9GvPJmyz8v6RI55sz8xBSs420fWAU+4QlSBKhwdrx6kb3c5Msg/7KczNsA69N9a
-	 xJ6/H0Dpqmzs4ghombWdFhAUJLI9cXd7JbWnhcy0/HCHzMyR+ulAGo2Bv/eIO16N6e
-	 cbNSSga2TZY5Fi/LU7+1aW3dsv3xSXmqYpRoy25Q534nlnfNkXthVUWVHheYK5D+Yf
-	 XmLSyYmfx6Y+6DWWBHwMEtdX8pNhBbGTYhS/NF5fag4Zz4kH4j72f3wVeq2AFUHkuh
-	 mSy4qy11aCBeZxDYrOlaS7E5GjXlg8dQNct6prBCjLlOq+GodJa44unKxId8evDtdX
-	 hDQGRT4+nxe/g==
-Message-ID: <66f6aeea-54da-4eec-930d-57b16e4547fa@kernel.org>
-Date: Mon, 12 Jan 2026 17:10:42 +0100
+	s=k20201202; t=1768234500;
+	bh=XAsw1Ng2RkdR08+1vG5HA7UnfGA93dXPoZepz7fgmwo=;
+	h=From:Date:Subject:To:Cc:From;
+	b=WH5GfX31E+XGmUgjVXBkGW5hgwJ1AQaJFjz1h7eMhxvQDvG9kHP4FRPwN3Xz0Z+Vv
+	 4weQI/KdtEKwzOoZKBAiWvBV+E09EQU2z4/zwcKA2h346Ie5WsgGWTr1oAD4oBN8vt
+	 1APqxyAF2m5UroYVeL5ei/ti1mml1P5KHD5ZV0ugVF8vY9S7ZlfGN++nzqbwAQ02Ou
+	 O/x/POUuA7ad0XLTzP9dB1y/mr3d05kEXPCAbMOz2lcnfq9EOaBrq/ZM0NgxTpzzwS
+	 H2x19ArAlcalN9CqLQ05lXg/iuaZn/AKcV2Wct7PPHj1PWslSI0xEhwNHnw2zw60F8
+	 bbmqv6+SsbI/w==
+From: Linus Walleij <linusw@kernel.org>
+Date: Mon, 12 Jan 2026 17:14:52 +0100
+Subject: [PATCH v11] mfd: simple-mfd-i2c: Add Delta TN48M CPLD support
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/11] dt-bindings: pinctrl: document access-controllers
- property for stm32 HDP
-To: Gatien CHEVALLIER <gatien.chevallier@foss.st.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>, Leo Yan <leo.yan@linux.dev>,
- =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <legoffic.clement@gmail.com>,
- Linus Walleij <linusw@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-References: <20260109-debug_bus-v1-0-8f2142b5a738@foss.st.com>
- <20260109-debug_bus-v1-2-8f2142b5a738@foss.st.com>
- <322e13df-5146-4dab-8f2a-6c635c82eb70@kernel.org>
- <09845133-5f71-4e1a-af0f-f90ad80ed8bd@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <09845133-5f71-4e1a-af0f-f90ad80ed8bd@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20260112-mfd-tn48m-v11-1-00c798d8cd2a@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDA11FJSSM
+ xLz0lN1M1OAAkpGBkZmBoaGRrq5aSm6JXkmFrm6lhYWSSZJqUaWKcmWSkD1BUWpaZkVYMOiY2t
+ rAYzV/Y9cAAAA
+X-Change-ID: 20260112-mfd-tn48m-988b4be29dc9
+To: Lee Jones <lee@kernel.org>, Robert Marko <robimarko@gmail.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, 
+ Bartosz Golaszewski <brgl@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Robert Marko <robert.marko@sartura.hr>, Linus Walleij <linusw@kernel.org>
+X-Mailer: b4 0.14.3
 
-On 12/01/2026 09:24, Gatien CHEVALLIER wrote:
-> 
-> 
-> On 1/11/26 12:27, Krzysztof Kozlowski wrote:
->> On 09/01/2026 11:55, Gatien Chevallier wrote:
->>> HDP being functional depends on the debug configuration on the platform
->>> that can be checked using the access-controllers property, document it.
->>>
->>> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
->>> ---
->>>   Documentation/devicetree/bindings/pinctrl/st,stm32-hdp.yaml | 4 ++++
->>>   1 file changed, 4 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-hdp.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-hdp.yaml
->>> index 845b6b7b7552..75054c1e4044 100644
->>> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-hdp.yaml
->>> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-hdp.yaml
->>> @@ -27,6 +27,10 @@ properties:
->>>     clocks:
->>>       maxItems: 1
->>>   
->>> +  access-controllers:
->>> +    minItems: 1
->>> +    maxItems: 2
->>
->> You need to list the items. Why is this flexible?
->>
->> Best regards,
->> Krzysztof
-> 
-> I will need to list 2 items (2 different firewall controllers)
-> for the stm32mp2x series that I planned doing in a second time.
-> 
-> On stm32mp1x series, only debug configuration needs to be checked
-> for this peripheral. On stm32mp2x series, both debug and RIFSC
-> (which is the peripheral firewall) configurations need to be checked.
-> 
-> By listing, you mean adding the description of each of the possible
-> access controller, am I right?
+From: Robert Marko <robert.marko@sartura.hr>
 
-items with "- description: foo bar" for each, so each is strictly
-defined. I doubt that you can hook it into any access controller...
+Delta TN48M switches have a Lattice CPLD that serves
+multiple purposes including being a GPIO expander.
 
-> 
-> Can I keep it like this or do I introduce the flexibility when needed?
+So, lets use the simple I2C MFD driver to provide the MFD core.
 
-Lists should not be flexible but rather constrained per each device.
-With loose approach here you only force quite restrictive driver
-behavior, although not sure if it matters now for Linux.
+Also add a virtual symbol which pulls in the simple-mfd-i2c driver and
+provide a common symbol on which the subdevice drivers can depend on.
+
+Fixes: b3dcb5de6209 ("gpio: Add Delta TN48M CPLD GPIO driver")
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Link: https://lore.kernel.org/20220131133049.77780-2-robert.marko@sartura.hr
+Link: https://lore.kernel.org/linux-gpio/20260112064950.3837737-1-rdunlap@infradead.org/
+Signed-off-by: Linus Walleij <linusw@kernel.org>
+---
+This fell off the planet after the v5.18 merge window,
+and now the subdrivers are facing deletion because the
+main symbols for the driver are not there. (See Link:
+tags.)
+
+The driver has users, so here is the patch, rebased on
+v6.19-rc1.
+
+I dropped Lee's Acked-for-MFD tag because Lee will be
+re-evaluating and eventually merging the patch anyway.
+---
+ drivers/mfd/Kconfig          | 11 +++++++++++
+ drivers/mfd/simple-mfd-i2c.c |  1 +
+ 2 files changed, 12 insertions(+)
+
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index aace5766b38a..f7f12a0428aa 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -407,6 +407,17 @@ config MFD_CS47L92
+ 	help
+ 	  Support for Cirrus Logic CS42L92, CS47L92 and CS47L93 Smart Codecs
+ 
++config MFD_TN48M_CPLD
++	tristate "Delta Networks TN48M switch CPLD driver"
++	depends on I2C
++	depends on ARCH_MVEBU || COMPILE_TEST
++	select MFD_SIMPLE_MFD_I2C
++	help
++	  Select this option to enable support for Delta Networks TN48M switch
++	  CPLD. It consists of reset and GPIO drivers. CPLD provides GPIOS-s
++	  for the SFP slots as well as power supply related information.
++	  SFP support depends on the GPIO driver being selected.
++
+ config PMIC_DA903X
+ 	bool "Dialog Semiconductor DA9030/DA9034 PMIC Support"
+ 	depends on I2C=y
+diff --git a/drivers/mfd/simple-mfd-i2c.c b/drivers/mfd/simple-mfd-i2c.c
+index 8b751d8e3b5a..7315fad618e4 100644
+--- a/drivers/mfd/simple-mfd-i2c.c
++++ b/drivers/mfd/simple-mfd-i2c.c
+@@ -116,6 +116,7 @@ static const struct simple_mfd_data spacemit_p1 = {
+ };
+ 
+ static const struct of_device_id simple_mfd_i2c_of_match[] = {
++	{ .compatible = "delta,tn48m-cpld" },
+ 	{ .compatible = "fsl,ls1028aqds-fpga" },
+ 	{ .compatible = "fsl,lx2160aqds-fpga" },
+ 	{ .compatible = "fsl,lx2160ardb-fpga" },
+
+---
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+change-id: 20260112-mfd-tn48m-988b4be29dc9
 
 Best regards,
-Krzysztof
+-- 
+Linus Walleij <linusw@kernel.org>
+
 
