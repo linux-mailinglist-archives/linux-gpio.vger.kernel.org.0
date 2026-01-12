@@ -1,252 +1,398 @@
-Return-Path: <linux-gpio+bounces-30424-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30425-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8D28D10BCC
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 07:45:02 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id B04C0D10C09
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 07:50:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 495963014D5B
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 06:44:57 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 943A13026C02
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 06:50:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF8AE31691C;
-	Mon, 12 Jan 2026 06:44:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E065931A7F6;
+	Mon, 12 Jan 2026 06:50:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ekpFp9zO"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nVJ6a/Ji"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6365B3161A7
-	for <linux-gpio@vger.kernel.org>; Mon, 12 Jan 2026 06:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E830C3128BD;
+	Mon, 12 Jan 2026 06:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768200293; cv=none; b=LxEf825zFBUaDUOalzYAF0UvGpaJWkxUX8t5vLbBIVA8eB8Je04nWT9fgSc7jKHRU9ExMDqfvKRxnrrhFVXCYYarZIjrc3nnvw6Phc8g0wYQliFZgpfkRkadkIZ1E35eS+FRgXfiwSAkOvkMP/+5cCYRX916Qr1mNspR/Xwwa5w=
+	t=1768200602; cv=none; b=cpZUP3j/QQYwgD4pSu5tu9yBWLf1DzXsRLGyEZu3HwJNZjHugTFTuq6Vw/90R1txHfzUcHYh8gp5lO2HAcExI1SPFfTzFiZGIPmy0DdKeVk7w9F8CUH+tabH1jpGHhIusVRtkluKtAuPBAc+AM5ys5j9/hNeXsVMqrCW+FPweJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768200293; c=relaxed/simple;
-	bh=zfdNkIcBOiVr8OwilGFhJRlfsq+4+153/P8cpC2UC2U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FON6/6XUJv6GH07U9X3AVhcV6VJOcu11c2rekg7l3+IypqFaOLMZFrkyJtsc90QPSD8zpabeNmZOSWxWIRzyh4D92krjPq26yg+Lj1mjfoifxBFTCCWJ+j5hfjd2uK9t6LNvY+KgRRzznqgzwA0ZsKLqPrLtSlRPpmoBimTOQ48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ekpFp9zO; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-59b672f8ec4so6348770e87.1
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Jan 2026 22:44:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768200289; x=1768805089; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V+aTDpJKFzih88kCdAP65ssAJslh2uJxvPnVKQWLfIA=;
-        b=ekpFp9zOcdu8v6aU0U9qa9Mm/f7r+Bn1amGsgFLCvHW2yI8bnxUNLuDZZrRf4VzDDM
-         fZ91lEH6HhSZoiAd0lBCaYCxWXh/9P18F1MlXF8j2XFPJ3XAIYaw28u7e+QnlwP1u2QP
-         AYxh9LkIO01LpWs7RI7NOJoKvuIwwq/gsDiR/vaBEjLNy2ch54vt0L+elO7BdjXdXrJ4
-         lj+gxLks5cHckI67bsjR78eU9SlVI4alZC+GROEv3wlcaZ2hbguQVXv78DZJ1CwOwvWY
-         51Zg7rPX1yVNIvjSP0AM51CJYvz8pPxo0K629v1XWg1OmVBvLrNlNYb+ozI+jBKO7vI0
-         2EDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768200289; x=1768805089;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=V+aTDpJKFzih88kCdAP65ssAJslh2uJxvPnVKQWLfIA=;
-        b=fCjb7Vf1OpjsVL3GKv/x/XbO5u/BH++lUhC6KJN/6H3HgkJrIei4TelL7307CD3/ks
-         WAjOhfz69nn+bO+aAo0esRuBnEMOojk6l7ewvQ/DZoQWWwVntGG4xcZB3eKK+AgAXfp0
-         8z0+T+D7ebSvlMgXqrb6vqo87PHFOMONwUPMCntLOeOonaZ1MHj3H6F3pGSvIJ63DJcb
-         WP3n11rfKYo7KuJXqAw/YEcup7GQoqNDUDsFCDjQMKxjErjiX4KHxdyELVKn+OIkcxOK
-         b3ryVBOLiA+7UbzNqW0kQyglRoNPK2un3LGZSNpkqKWkCy+zKbpH/vB2h7CFqNPOk+sy
-         KC5g==
-X-Forwarded-Encrypted: i=1; AJvYcCWj9C2DYCmqpn6dJr0N8TaR/rBIAkmgeQZPHY7R8cz7fhDiCeVAXtzai+p3VHUaO9Aj51Yc/8EHDv9J@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0cEHTa64v1b45gVvuKwVqClpjKiCeBB26s4fqc0336tccYlUw
-	ls2SdMWUM0HGQetQJrRNxQebnqdXq4CE/UIJFbAVNW4KCxdHyRMZkTl4
-X-Gm-Gg: AY/fxX4Q4YTu+VoRu1WLjSIteuYH9YwljBj/nDv605C4gSg6qFqD0AryQphISypx1zi
-	xqhQawEE5xHYKjRrVXfi24F6vic3kAmpFXAgHuAM34rWXKvvteOJMpHS9hZwHs/GdueF1dqMsoR
-	TKMqVOx2X7CPgc7gW6d1eEZM+NyqGztvTSimqiRfPcVcCQOrYnMbcm0lqPXcDyWZaNpUNueg7A4
-	IJy/Ne2G8OiCwhtLTB6/k7Et9Bai4H+RfiTEZq8k5HCQcJpg96b7UOSxqZ1ON45gKTUj/ZDcRnf
-	UaaSeV/SEalNOZQ4LV7qpl9mpvQVjaLvcddoB1x9IOqp8Z2KbTFhU5HRjbogFJIMtjlgRRrs8RY
-	3ymGTj6Bp9xvdzA9dWJpVJxp+VspiAhq5awb5pGirJH+tOued5uIU4LfN1j5atVrDBy6uDb5nUk
-	xM7sXgzDLTJZTgLSrp1rmyxS0NCFFKj+WZ2VaR75fSeahwzMnKeIAhwVhlZlVxS6g4JMA9
-X-Google-Smtp-Source: AGHT+IHpuxr8uDmHUpBx93Hk8o3UZa27eBQvlaVc9Y5wYrI/nFTMdUIo/B+CoBNRsZZ57UO1DmaH1w==
-X-Received: by 2002:a05:651c:30c9:b0:37b:967e:d73 with SMTP id 38308e7fff4ca-382ff8115efmr56528091fa.29.1768200288212;
-        Sun, 11 Jan 2026 22:44:48 -0800 (PST)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-382eb8e0e29sm37899581fa.35.2026.01.11.22.44.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 11 Jan 2026 22:44:47 -0800 (PST)
-Message-ID: <33787eea-f0e0-4041-b9e6-102209af5138@gmail.com>
-Date: Mon, 12 Jan 2026 08:44:45 +0200
+	s=arc-20240116; t=1768200602; c=relaxed/simple;
+	bh=LoiaYZy2WSc50D4dW5Sqre/VeB7KE/k0vjBXzXIqmwM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hgH9dOh+onxzsTqLzPrDs5wQLbNVT7ZTkpySlENRA3lqmksbtEpXvNKKNXcEZLDn1HJB+0OMGUbGHYOkLtYDsuq97QCAkVvpllCHNp32JZ58BmFDnfouD8KFAivFbXCQEh7SLAVZehTmGq9OpmcBTAQ9nSzLs2T5eEC7SplnsGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nVJ6a/Ji; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=vW8AxNR6zxeHimRqVJ6SOPdsMiOPq94LUTRJ9LMhnWk=; b=nVJ6a/JiJZY+1nkH1Nv6QgjWOT
+	8boJ98vkFOa8tLT+P8pBNC4sInSeudX1On6Y8DHYJtiiqLEr2CaIDkdhKg4wjsgmVIzVZIlY9PQbT
+	6UZVKsRAewNqcNRxGx1cISwll/AiVeZCL2twAgZKQn+QqtMOzv/MvbsLG8KsFJNfe6wRg4U24YYPt
+	qXk/O5bwo9y/uA8TBFXJqVJNRzyH/RHit7CMCLZu1LVv6gkD1WcQi4AZN8BOodnIOklSgUyXHQB3c
+	etgdo85vK338z8G9p/Ut85im8aLn44FjgCdiiw5gtNY5MyeNyh9+xoHyILnMYjsUWOJcjlvCVRHTu
+	+BVndfcg==;
+Received: from [50.53.43.113] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vfBkN-00000004pyD-1eXq;
+	Mon, 12 Jan 2026 06:49:51 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Robert Marko <robert.marko@sartura.hr>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	linux-gpio@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org
+Subject: [PATCH] gpio: remove the gpio-tn48m driver
+Date: Sun, 11 Jan 2026 22:49:50 -0800
+Message-ID: <20260112064950.3837737-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v6 16/17] power: supply: bd71828-power: Support
- ROHM BD72720
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-rtc@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>
-References: <cover.1765804226.git.mazziesaccount@gmail.com>
- <fb74c0cab3dfe534135d26dbbb9c66699678c2de.1765804226.git.mazziesaccount@gmail.com>
- <aWRERf70jg-IzqIx@venus>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <aWRERf70jg-IzqIx@venus>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 12/01/2026 02:51, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Mon, Dec 15, 2025 at 03:21:19PM +0200, Matti Vaittinen wrote:
->> From: Matti Vaittinen <mazziesaccount@gmail.com>
->>
->> The ROHM BD72720 is a power management IC with a charger and coulomb
->> counter block which is closely related to the charger / coulomb counter
->> found from the BD71815, BD71828, BD71879 which are all supported by the
->> bd71828-power driver. Due to the similarities it makes sense to support
->> also the BD72720 with the same driver.
->>
->> Add basic support for the charger logic on ROHM BD72720.
->>
->> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->>
->> ---
->> Revision history:
->>   v2 => :
->>   - No changes
->>
->>   RFCv1 => v2:
->>   - Support using 9-bit register addresses (offset of 0x100) with the
->>     BD72720
->>   - Simplify probe and IC data as we don't need two regmaps
->>   - Drop two BD72720 specific functions as we no longer need different
->>     regmap for it.
->>
->> Note: This patch depends on the series: "power: supply: add charger for
->> BD71828" by Andreas:
->> https://lore.kernel.org/all/20250918-bd71828-charger-v5-0-851164839c28@kemnade.info/
-> 
-> That should be in v6.19?
+The gpio-tn48m driver is useless without the simple-mfd parent, which is
+not present in the kernel tree, so delete it and all references to it.
+Also delete references to the (missing) mfd driver.
 
-Ah, right. As Andreas also stated, yes. This is no longer relevant. I 
-simply forgot to clean-up the note from this patch.
-
->> @@ -958,21 +1043,27 @@ static int bd71828_power_probe(struct platform_device *pdev)
->>   	struct power_supply_config ac_cfg = {};
->>   	struct power_supply_config bat_cfg = {};
->>   	int ret;
->> -	struct regmap *regmap;
->> -
->> -	regmap = dev_get_regmap(pdev->dev.parent, NULL);
->> -	if (!regmap) {
->> -		dev_err(&pdev->dev, "No parent regmap\n");
->> -		return -EINVAL;
->> -	}
->>   
->>   	pwr = devm_kzalloc(&pdev->dev, sizeof(*pwr), GFP_KERNEL);
->>   	if (!pwr)
->>   		return -ENOMEM;
->>   
->> -	pwr->regmap = regmap;
->> -	pwr->dev = &pdev->dev;
->> +	/*
->> +	 * The BD72720 MFD device registers two regmaps. Power-supply driver
->> +	 * uses the "wrap-map", which provides access to both of the I2C slave
->> +	 * addresses used by the BD72720
->> +	 */
->>   	pwr->chip_type = platform_get_device_id(pdev)->driver_data;
->> +	if (pwr->chip_type != ROHM_CHIP_TYPE_BD72720)
->> +		pwr->regmap = dev_get_regmap(pdev->dev.parent, NULL);
->> +	else
->> +		pwr->regmap = dev_get_regmap(pdev->dev.parent, "wrap-map");
->> +	if (!pwr->regmap) {
->> +		dev_err(&pdev->dev, "No parent regmap\n");
->> +		return -EINVAL;
->> +	}
-> 
-> return dev_err_probe(&pdev->dev, -EINVAL, "No parent regmap\n");
-> 
-> Otherwise LGTM.
-
-Thanks Sebastian! I appreciate the review!
-
-This driver uses dev_err_probe() only in cases where the error to be 
-returned is not hard-coded. The design dates back to when I was first 
-introduced to the dev_err_probe() - and using pattern like:
-
-ret = -EINVAL;
-if (ret == -EPROBE_DEFER)
-  ...
-
-(which results from calling the dev_err_probe with hard-coded error) 
-felt very repulsive to me.
-
-I have since quit resisting the 'use dev_err_probe() for all probe error 
-paths' -policy (since Resistance is futile - and because there are other 
-benefits besides the deferred probe handling) - but I suppose we should 
-clean-up also the other similar cases in this driver (I see at least one 
-other occurrence in the chip_type-check below). Is it Ok to merge this 
-as is, and do a follow-up patch to clean-up all the occurrences? If yes, 
-then this might go "as-is" via MFD, together with the other stuff, right?
-
-I can also re-spin this with the print fixed and:
-  - add new patch to fix the other occurrence.
-  - meld the fix for existing print in this patch.
-
-Just please let me know your preference.
-
-
-
->>   	switch (pwr->chip_type) {
->>   	case ROHM_CHIP_TYPE_BD71828:
->> @@ -985,6 +1076,12 @@ static int bd71828_power_probe(struct platform_device *pdev)
->>   		pwr->get_temp = bd71815_get_temp;
->>   		pwr->regs = &pwr_regs_bd71815;
->>   		break;
->> +	case ROHM_CHIP_TYPE_BD72720:
->> +		pwr->bat_inserted = bd71828_bat_inserted;
->> +		pwr->regs = &pwr_regs_bd72720;
->> +		pwr->get_temp = bd71828_get_temp;
->> +		dev_dbg(pwr->dev, "Found ROHM BD72720\n");
->> +		break;
->>   	default:
->>   		dev_err(pwr->dev, "Unknown PMIC\n");
->>   		return -EINVAL;
-
-The other occurrence --^
-
->> @@ -1030,6 +1127,7 @@ static int bd71828_power_probe(struct platform_device *pdev)
->>   static const struct platform_device_id bd71828_charger_id[] = {
->>   	{ "bd71815-power", ROHM_CHIP_TYPE_BD71815 },
->>   	{ "bd71828-power", ROHM_CHIP_TYPE_BD71828 },
->> +	{ "bd72720-power", ROHM_CHIP_TYPE_BD72720 },
->>   	{ },
->>   };
->>   MODULE_DEVICE_TABLE(platform, bd71828_charger_id);
->> -- 
->> 2.52.0
-
-Yours,
-	-- Matti
-
-
--- 
+Fixes: b3dcb5de6209 ("gpio: Add Delta TN48M CPLD GPIO driver")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 ---
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
+Based on v6.19-rc4.
 
-~~ When things go utterly wrong vim users can always type :help! ~~
+Cc: Robert Marko <robert.marko@sartura.hr>
+Cc: Linus Walleij <linusw@kernel.org>
+Cc: Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+
+ .../devicetree/bindings/gpio/delta,tn48m-gpio.yaml |  39 --------
+ .../devicetree/bindings/mfd/delta,tn48m-cpld.yaml  |  90 -------------------
+ MAINTAINERS                                        |   9 --
+ drivers/gpio/Kconfig                               |  12 ---
+ drivers/gpio/Makefile                              |   1 -
+ drivers/gpio/gpio-tn48m.c                          | 100 ---------------------
+ 6 files changed, 251 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml b/Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml
+deleted file mode 100644
+index e3e668a12091..000000000000
+--- a/Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml
++++ /dev/null
+@@ -1,39 +0,0 @@
+-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/gpio/delta,tn48m-gpio.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: Delta Networks TN48M CPLD GPIO controller
+-
+-maintainers:
+-  - Robert Marko <robert.marko@sartura.hr>
+-
+-description: |
+-  This module is part of the Delta TN48M multi-function device. For more
+-  details see ../mfd/delta,tn48m-cpld.yaml.
+-
+-  Delta TN48M has an onboard Lattice CPLD that is used as an GPIO expander.
+-  It provides 12 pins in total, they are input-only or ouput-only type.
+-
+-properties:
+-  compatible:
+-    enum:
+-      - delta,tn48m-gpo
+-      - delta,tn48m-gpi
+-
+-  reg:
+-    maxItems: 1
+-
+-  "#gpio-cells":
+-    const: 2
+-
+-  gpio-controller: true
+-
+-required:
+-  - compatible
+-  - reg
+-  - "#gpio-cells"
+-  - gpio-controller
+-
+-additionalProperties: false
+diff --git a/Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml b/Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml
+deleted file mode 100644
+index d3b79140cce2..000000000000
+--- a/Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml
++++ /dev/null
+@@ -1,90 +0,0 @@
+-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/mfd/delta,tn48m-cpld.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: Delta Networks TN48M CPLD controller
+-
+-maintainers:
+-  - Robert Marko <robert.marko@sartura.hr>
+-
+-description: |
+-  Lattice CPLD onboard the TN48M switches is used for system
+-  management.
+-
+-  It provides information about the hardware model, revision,
+-  PSU status etc.
+-
+-  It is also being used as a GPIO expander and reset controller
+-  for the switch MAC-s and other peripherals.
+-
+-properties:
+-  compatible:
+-    const: delta,tn48m-cpld
+-
+-  reg:
+-    description:
+-      I2C device address.
+-    maxItems: 1
+-
+-  "#address-cells":
+-    const: 1
+-
+-  "#size-cells":
+-    const: 0
+-
+-required:
+-  - compatible
+-  - reg
+-  - "#address-cells"
+-  - "#size-cells"
+-
+-patternProperties:
+-  "^gpio(@[0-9a-f]+)?$":
+-    $ref: /schemas/gpio/delta,tn48m-gpio.yaml
+-
+-  "^reset-controller?$":
+-    $ref: /schemas/reset/delta,tn48m-reset.yaml
+-
+-additionalProperties: false
+-
+-examples:
+-  - |
+-    i2c {
+-        #address-cells = <1>;
+-        #size-cells = <0>;
+-
+-        cpld@41 {
+-            compatible = "delta,tn48m-cpld";
+-            reg = <0x41>;
+-            #address-cells = <1>;
+-            #size-cells = <0>;
+-
+-            gpio@31 {
+-                compatible = "delta,tn48m-gpo";
+-                reg = <0x31>;
+-                gpio-controller;
+-                #gpio-cells = <2>;
+-            };
+-
+-            gpio@3a {
+-                compatible = "delta,tn48m-gpi";
+-                reg = <0x3a>;
+-                gpio-controller;
+-                #gpio-cells = <2>;
+-            };
+-
+-            gpio@40 {
+-                compatible = "delta,tn48m-gpi";
+-                reg = <0x40>;
+-                gpio-controller;
+-                #gpio-cells = <2>;
+-            };
+-
+-            reset-controller {
+-              compatible = "delta,tn48m-reset";
+-              #reset-cells = <1>;
+-            };
+-        };
+-    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 765ad2daa218..7d3c0d2375c8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7107,15 +7107,6 @@ S:	Maintained
+ F:	Documentation/hwmon/dps920ab.rst
+ F:	drivers/hwmon/pmbus/dps920ab.c
+ 
+-DELTA NETWORKS TN48M CPLD DRIVERS
+-M:	Robert Marko <robert.marko@sartura.hr>
+-S:	Maintained
+-F:	Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml
+-F:	Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml
+-F:	Documentation/devicetree/bindings/reset/delta,tn48m-reset.yaml
+-F:	drivers/gpio/gpio-tn48m.c
+-F:	include/dt-bindings/reset/delta,tn48m-reset.h
+-
+ DELTA ST MEDIA DRIVER
+ M:	Hugues Fruchet <hugues.fruchet@foss.st.com>
+ L:	linux-media@vger.kernel.org
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index bd185482a7fd..d1d3f98b87f6 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1619,18 +1619,6 @@ config GPIO_TIMBERDALE
+ 	help
+ 	Add support for the GPIO IP in the timberdale FPGA.
+ 
+-config GPIO_TN48M_CPLD
+-	tristate "Delta Networks TN48M switch CPLD GPIO driver"
+-	depends on MFD_TN48M_CPLD || COMPILE_TEST
+-	select GPIO_REGMAP
+-	help
+-	  This enables support for the GPIOs found on the Delta
+-	  Networks TN48M switch Lattice CPLD. It provides 12 pins in total,
+-	  they are input-only or output-only type.
+-
+-	  This driver can also be built as a module. If so, the
+-	  module will be called gpio-tn48m.
+-
+ config GPIO_TPS65086
+ 	tristate "TI TPS65086 GPO"
+ 	depends on MFD_TPS65086
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 2421a8fd3733..c3ee30133c24 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -181,7 +181,6 @@ obj-$(CONFIG_GPIO_TEGRA186)		+= gpio-tegra186.o
+ obj-$(CONFIG_GPIO_TEGRA)		+= gpio-tegra.o
+ obj-$(CONFIG_GPIO_THUNDERX)		+= gpio-thunderx.o
+ obj-$(CONFIG_GPIO_TIMBERDALE)		+= gpio-timberdale.o
+-obj-$(CONFIG_GPIO_TN48M_CPLD)		+= gpio-tn48m.o
+ obj-$(CONFIG_GPIO_TPIC2810)		+= gpio-tpic2810.o
+ obj-$(CONFIG_GPIO_TPS65086)		+= gpio-tps65086.o
+ obj-$(CONFIG_GPIO_TPS65218)		+= gpio-tps65218.o
+diff --git a/drivers/gpio/gpio-tn48m.c b/drivers/gpio/gpio-tn48m.c
+deleted file mode 100644
+index cd4a80b22794..000000000000
+--- a/drivers/gpio/gpio-tn48m.c
++++ /dev/null
+@@ -1,100 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * Delta TN48M CPLD GPIO driver
+- *
+- * Copyright (C) 2021 Sartura Ltd.
+- *
+- * Author: Robert Marko <robert.marko@sartura.hr>
+- */
+-
+-#include <linux/device.h>
+-#include <linux/gpio/driver.h>
+-#include <linux/gpio/regmap.h>
+-#include <linux/mod_devicetable.h>
+-#include <linux/module.h>
+-#include <linux/platform_device.h>
+-#include <linux/regmap.h>
+-
+-enum tn48m_gpio_type {
+-	TN48M_GP0 = 1,
+-	TN48M_GPI,
+-};
+-
+-struct tn48m_gpio_config {
+-	int ngpio;
+-	int ngpio_per_reg;
+-	enum tn48m_gpio_type type;
+-};
+-
+-static const struct tn48m_gpio_config tn48m_gpo_config = {
+-	.ngpio = 4,
+-	.ngpio_per_reg = 4,
+-	.type = TN48M_GP0,
+-};
+-
+-static const struct tn48m_gpio_config tn48m_gpi_config = {
+-	.ngpio = 4,
+-	.ngpio_per_reg = 4,
+-	.type = TN48M_GPI,
+-};
+-
+-static int tn48m_gpio_probe(struct platform_device *pdev)
+-{
+-	const struct tn48m_gpio_config *gpio_config;
+-	struct gpio_regmap_config config = {};
+-	struct regmap *regmap;
+-	u32 base;
+-	int ret;
+-
+-	if (!pdev->dev.parent)
+-		return -ENODEV;
+-
+-	gpio_config = device_get_match_data(&pdev->dev);
+-	if (!gpio_config)
+-		return -ENODEV;
+-
+-	ret = device_property_read_u32(&pdev->dev, "reg", &base);
+-	if (ret)
+-		return ret;
+-
+-	regmap = dev_get_regmap(pdev->dev.parent, NULL);
+-	if (!regmap)
+-		return -ENODEV;
+-
+-	config.regmap = regmap;
+-	config.parent = &pdev->dev;
+-	config.ngpio = gpio_config->ngpio;
+-	config.ngpio_per_reg = gpio_config->ngpio_per_reg;
+-	switch (gpio_config->type) {
+-	case TN48M_GP0:
+-		config.reg_set_base = base;
+-		break;
+-	case TN48M_GPI:
+-		config.reg_dat_base = base;
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-
+-	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(&pdev->dev, &config));
+-}
+-
+-static const struct of_device_id tn48m_gpio_of_match[] = {
+-	{ .compatible = "delta,tn48m-gpo", .data = &tn48m_gpo_config },
+-	{ .compatible = "delta,tn48m-gpi", .data = &tn48m_gpi_config },
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(of, tn48m_gpio_of_match);
+-
+-static struct platform_driver tn48m_gpio_driver = {
+-	.driver = {
+-		.name = "delta-tn48m-gpio",
+-		.of_match_table = tn48m_gpio_of_match,
+-	},
+-	.probe = tn48m_gpio_probe,
+-};
+-module_platform_driver(tn48m_gpio_driver);
+-
+-MODULE_AUTHOR("Robert Marko <robert.marko@sartura.hr>");
+-MODULE_DESCRIPTION("Delta TN48M CPLD GPIO driver");
+-MODULE_LICENSE("GPL");
 
