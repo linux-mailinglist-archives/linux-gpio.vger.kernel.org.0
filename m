@@ -1,147 +1,119 @@
-Return-Path: <linux-gpio+bounces-30419-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30420-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00223D10369
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 01:54:21 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1617DD10598
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 03:32:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A40F73049C65
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 00:54:15 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 0DC9B30021C2
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 02:32:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0E79202F71;
-	Mon, 12 Jan 2026 00:54:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3E48302CD5;
+	Mon, 12 Jan 2026 02:32:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="QQq04QTE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WTA86PtZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9A12BAF4;
-	Mon, 12 Jan 2026 00:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768179254; cv=pass; b=OfhuPNNAseiQzpHGqoi+r67uxCSK+5Mfm6IbwR6dwB6I1n6wB9YiH2eM07BR8wg4cgdIGGl/I4YKi+NaSo2esyLIhQA6S3OX8xeojBCpSC7e9WwbJm+M+kNdYRyWO+Bni+uI+aJlVt5bPwdmNM3/1pzh/xQQgRTomN5hnv2t+r4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768179254; c=relaxed/simple;
-	bh=+OlCe0L8FtqTbO+EJZ5Rpg2vR2nskkVXZvBMl1XbcDw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N/c8nyur/Jq+HMUXqfnJK8UIaRy6bpru2CnMHDbKxo+tryCSFR1FpgTRbDv0/Zo6LH0q3gBPa1bbAO45EhKDd0jSw1QuA9VQRVtztXD2un4LMypViSbzVsULYj1gdOLkTSNIeNVScv4eJAF2Gd6uUt9I2H7YAuWhr9p+aFombDQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=QQq04QTE; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1768179238; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=EUIsk1PVSGfo2Q2uU/ypgCCie1y4R+ZEmMdsE8YfRhOqjQSQ2Rj99aN0GFUGRCapbLJkUVqkKVinI+bdhcqzx+meDw05q2/+Y1rH3AFGwn/T203fqgzlKm+HFkIwYAwfeLuMISDFwypTcASStL/Sbspxe2BLOd9NwzSby5aVsIE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1768179238; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=+OlCe0L8FtqTbO+EJZ5Rpg2vR2nskkVXZvBMl1XbcDw=; 
-	b=WmH352C7BSaTYI8J9mleaV6RErEm0TdL7SPg92UcH3uw3cWhJbh2sHDrAMBYLY15W/hsBbeA9a/1aIw3qb+iZ87uxINpwCwI8Q+pZfH7DP0ijQroserPVRw+5M8HtJVM8tAFAcj7cseIrsajtKB8afDL/n3jhITQeUk6sKIHoVI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1768179238;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=+OlCe0L8FtqTbO+EJZ5Rpg2vR2nskkVXZvBMl1XbcDw=;
-	b=QQq04QTEsoMkVyuXJWCEK2frpPnsTif+pQdC1MhwwlsjNwlK+HDHeaSEYXhNZ3vw
-	4aMKGL+1sekcdyYFI6m8klGlDYiptkVXiZ2vl4LkzUHA8qlt8mjMGTB/X2Ko3xxbUfc
-	z2t5ScRMyy55qkXHcj5HL6C0/ypM4lz+KVrBBkz4=
-Received: by mx.zohomail.com with SMTPS id 1768179235482358.67420259126015;
-	Sun, 11 Jan 2026 16:53:55 -0800 (PST)
-Received: by venus (Postfix, from userid 1000)
-	id 607881803AD; Mon, 12 Jan 2026 01:53:48 +0100 (CET)
-Date: Mon, 12 Jan 2026 01:53:48 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Lee Jones <lee@kernel.org>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>, 
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH RESEND v6 00/17] Support ROHM BD72720 PMIC
-Message-ID: <aWRFs3CJvd37BaoH@venus>
-References: <cover.1765804226.git.mazziesaccount@gmail.com>
- <20260108172735.GK302752@google.com>
- <63bc889a-b97e-43c3-9f46-9ca444873b70@gmail.com>
- <20260109093831.GB1118061@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC54E3A1B5
+	for <linux-gpio@vger.kernel.org>; Mon, 12 Jan 2026 02:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768185174; cv=none; b=J+xPUoKLMepzY2iUL/2P68Zw1yQAITSJAZ5mQyxE/7h9SIpEUej2X+qPpBPR48KE+Noc06YY/34rFM2AgLzZGxcD/zQZZXiTSiAXTseEpdsfLLHpgrudXKnQPCWe62TDVfdJUXIwLz3XixxFr1OOeviU3gYcYyfJ781nYvG16lc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768185174; c=relaxed/simple;
+	bh=Wm0SyoWuWYpUbdCBKdyEKC6CZDpQz4s7UUZbkJQ5whM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DARlZ2mc3f91nm0wd1ek1W2Df4FOeTzQWr72BA3lh4PH96fLSnVsbHyEjdRjyeDvXyhqcWsV+n/AjhPOlejgwZRYxtRqtRquOfBROIMlg6pdmpX/28RtbvcOWGFP6nB5RbkaErrHCAPE5liE+ZzQhZ5LTbwxa4uHSyO6NhHij58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WTA86PtZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AA36C19425
+	for <linux-gpio@vger.kernel.org>; Mon, 12 Jan 2026 02:32:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768185174;
+	bh=Wm0SyoWuWYpUbdCBKdyEKC6CZDpQz4s7UUZbkJQ5whM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WTA86PtZoM2o8gogmdeHs2mZG59AIb3UsBh072pQOO0W6NW93n0n/b7+CPSY+8A3L
+	 LEeoTz5wNEi9B3wkJNDFY3DGdycV0xiJXC34VF1b7HsK/8KuwefCig8YYZ4zSOm6bN
+	 hya8sMfhGUNhKfciYIiRanwf94HdnJ8VhJtUagixsanqZvF6OmNZPcabaSk4N3qWM0
+	 ZAVgY/W1/EVKdRDo8g/kiSJ24ssMIc4+7XZnhRngksm4Hx5zOaaRMYtvf3gdSxauth
+	 3yWhI2O07HWdIeUEiykAN95OlRxT7qa8a/+jsYfJxHrNhS0dlIqXqzdh+osED+RCPn
+	 NGCbJafV+tRAg==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-64d1ef53cf3so8643851a12.0
+        for <linux-gpio@vger.kernel.org>; Sun, 11 Jan 2026 18:32:54 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV8bMPOYmbml7ivRkGbFYuGp9OJjh8zQnv+5EIm9uwLC3eUWmGGqVPwoHGvg2LLKfNX1eX8qJP6u8RN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyk+aU0QSU5GuPRhUdCm0vzwCewjG6cuGPdVtKSctfQ2jCX8Bpq
+	MkuBPvc1vf8qQhwnDSOTrDPWB2ctu3T21xQ0SUy6mCaNaAJMDbVyWF8XEzdmuhf6V6kkILLu1UG
+	QksL4bzd+17sdrioVB/OS4EJ9g187/2s=
+X-Google-Smtp-Source: AGHT+IHnFRUk9Kd7nBIk7drCLG+VlRsvsdUfgc9mGUEfCHqBJzkKhLAMdqT9OJtk1tkozQdTJ6DzDqRdjo+V3HkHP5A=
+X-Received: by 2002:a17:906:8a58:b0:b86:e938:1b26 with SMTP id
+ a640c23a62f3a-b86e93840aamr455645166b.24.1768185173274; Sun, 11 Jan 2026
+ 18:32:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="njvmbtnaoaenudkq"
-Content-Disposition: inline
-In-Reply-To: <20260109093831.GB1118061@google.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.5.1/268.172.5
-X-ZohoMailClient: External
-
-
---njvmbtnaoaenudkq
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <20260107030731.1838823-1-daniel@thingy.jp> <20260107030731.1838823-2-daniel@thingy.jp>
+ <20260108233818.GA1466897-robh@kernel.org> <CAFr9PXn2HzkSRnX4X-X1q2U+zLxwSP=TxvRwmA5eYxad7SbLzw@mail.gmail.com>
+ <20260109142907.GA3059757-robh@kernel.org>
+In-Reply-To: <20260109142907.GA3059757-robh@kernel.org>
+From: Saravana Kannan <saravanak@kernel.org>
+Date: Sun, 11 Jan 2026 18:32:43 -0800
+X-Gmail-Original-Message-ID: <CACRMN=ecP3aJSEwSWrmBDH+dP0F9kQLAjESBswfDu4HBJh-Jhw@mail.gmail.com>
+X-Gm-Features: AZwV_QiWu4THh74guSSQ-daUbnzckoNx5DmIarU6Y_B0BQmylxuX3W8VTipEFDA
+Message-ID: <CACRMN=ecP3aJSEwSWrmBDH+dP0F9kQLAjESBswfDu4HBJh-Jhw@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] of: Add a variant of of_device_is_compatible()
+ that can be build time culled
+To: Rob Herring <robh@kernel.org>
+Cc: Daniel Palmer <daniel@thingy.jp>, linusw@kernel.org, brgl@kernel.org, 
+	saravanak@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH RESEND v6 00/17] Support ROHM BD72720 PMIC
-MIME-Version: 1.0
 
-Hi,
+On Fri, Jan 9, 2026 at 6:29=E2=80=AFAM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Jan 09, 2026 at 11:51:52AM +0900, Daniel Palmer wrote:
+> > Hi Rob,
+> >
+> > On Fri, 9 Jan 2026 at 08:38, Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Wed, Jan 07, 2026 at 12:07:30PM +0900, Daniel Palmer wrote:
+> > > > In a lot of places we are using of_device_is_compatible() to check =
+for quirks
+> > >
+> > > I'm assuming 'a lot' is not just 3 places? Got a rough estimate?
+> > >
+> > > This seems fine to me assuming there are more.
+> >
+> > In core code (like the gpio core, and not in a specific driver) there
+> > are only a few places. I think around 10.
+> > There are more when we get into drivers that handle lots of variants
+> > of the same hardware and check the compatible string during probe.
+> > (There are ~700 calls to of_device_is_compatible() in drivers/, most
+> > of which seems to be quirks checking during probe).
+>
+> Generally in drivers, it is preferred to use match data rather than
+> of_device_is_compatible(). And if we're going in and touching
+> of_device_is_compatible() in drivers, that's what we want to do. Using
+> match data of course doesn't help your cause of reducing size. I suppose
+> you could define a macro that includes a compatible in the match table
+> or not. If the match data is function ptrs, then if those functions
+> aren't referenced, they would be dropped by the compiler.
 
-On Fri, Jan 09, 2026 at 09:38:31AM +0000, Lee Jones wrote:
-> [...]
-> > > The MFD parts LGTM.
-> >=20
-> > Thanks Lee!
-> >=20
-> > > What Acks are you waiting on? What's the merge strategy?
-> >=20
-> > I think everything else has been acked by maintainers, except the
-> > power-supply parts. I think those have only been looked at by Andreas a=
-nd
-> > Linus W. Haven't heard anything from Sebastian :(
+For the 10 or so instances in the core, I'm not sure the macro is even
+worth it. It's just hiding the IS_ENABLED() and obscuring the intent
+for not much of a reduction in code size. Not going to Nack it if Rob
+agrees, but I don't see the point of the macro. I see the point behind
+the idea though.
 
-Yes, I'm lacking behind quite a bit, sorry for that.
+Also, if we do land it, maybe call it "enabled" instead of "possible"?
+That lines up better with IS_ENABLED.
 
-> > I would love to see the patches 1 - 14 and 17 to be merged (via MFD?). I
-> > could then re-spin the 15 and 16 to limited audience as I hope Sebastia=
-n had
-> > time to take a look at them. However, I don't think any of the other pa=
-tches
-> > in the series depend on the last .
+-Saravana
 
-Sounds good to me.
-
-Greetings,
-
--- Sebastian
-
---njvmbtnaoaenudkq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmlkRhwACgkQ2O7X88g7
-+prO/Q//RUeU3aRLy6/gKRT0eG9pAJSbph2Ikd41UGeuXKFa2nIc0KBZU0fGmveO
-f0UYGXIyOhauQPguvy3qO2YluOgw4NoBbyKms2TKrkLcFeL/Cga674Vjc7XKFaQP
-wphwlW62PUT4MLo67D/apHwCoLmY34Ncm4t0k+6uDRvLklvt7+uWawLidX3exlev
-JrjkLMog5C/ifh1V2UDIyQ9Haa6lWjSSNvfsrRzD5n3qU0eQmL/PNwaChIq9QyLL
-v216cavM55KLOl0NmyiMTnt1O4tg6tTXKeEbN/nqxVXba1Wgl4gQf08i5pWWvaP8
-EtyDHe0kHdzh4kC2VN29Qy+8f8/xHQUUkqAoO442mITI7F6a7riUhVvFySgkQ1DZ
-y/cQ3+it8Hoxw3n8vxGnzeUgJ8wDpQphKihcax3iAQtOw382y5XOau+/N0ErZIPb
-QPlqfrZ0Io7Uu2DaZQyVChungrNQqL3wdnVUzZxjAC4+Ih56nsIe4ZM76T/dpy99
-djRrwzphkiVqWE2izhi/A78FOXyME/+PtpuwvHgK53na+6qESZDKfNSVEAUtn8qt
-2A5LheVMPETkaNFTjaJD4Pme9P8Bt93+V5ePwi/nqXE7EpjXP+/OZa/wPvrhUFEK
-+KAhuSHD6dXmB58zw5ZjlQVc1ocKe4GdiX22g72Wn8/RWByJs6E=
-=a6To
------END PGP SIGNATURE-----
-
---njvmbtnaoaenudkq--
+>
+> Rob
 
