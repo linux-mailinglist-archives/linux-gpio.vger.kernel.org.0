@@ -1,156 +1,143 @@
-Return-Path: <linux-gpio+bounces-30451-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30452-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6D42D1274B
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 13:06:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 05AB0D128AE
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 13:26:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DD9A430BB261
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 12:04:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 98603305D9A5
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 12:24:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 953B1357713;
-	Mon, 12 Jan 2026 12:04:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16E8D3570AE;
+	Mon, 12 Jan 2026 12:24:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Miz1fiQ/"
+	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="yOl3BrZN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF46A1DF248
-	for <linux-gpio@vger.kernel.org>; Mon, 12 Jan 2026 12:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D5130F547
+	for <linux-gpio@vger.kernel.org>; Mon, 12 Jan 2026 12:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768219493; cv=none; b=gogaFvRjahO6/5RKLyjIQVZv2P/cv7SqkauGspB2cqX2YvIo8xhIrvBpdfnOHtbUZb6lr+FuJEHWNFboUR7H9zr+dmAs2hpHDOBTj6Ab6aLv362dp8Iv+AKBVVlfds+tHqnT82UTnzR+njKT3a/hh9+lFZPq9fkSLLWWwPiPolU=
+	t=1768220686; cv=none; b=LpKM/2FGfdk/cm67cFGrO1WDlnkmVyV0mPuopIzpT7lQos312DszCiIU9XjN/z5RODS/tTXxIURapAgbgA1KsfPYxWeiPfbDv/9+Y3ftVuy9nacbPRMNXDV6uetkw6yCSBgM9e6Q5uV7eosG5vuHOFQtkQiULzM1dfUktFaLP38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768219493; c=relaxed/simple;
-	bh=7xtefCug/qYG2+PCm4VdtHs8ee1KPuhKc3l5IX/hhTg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e0574zM4BQwRs1HLx6Qtegfn7S53eQlIbpbFF8uotuN5wcguz9KCbrkTtEMG/CCyQCmL3ZkDA47T8oZAUwfWkDI+0ByIXdawVROwdIULg3XRXDtWHvfz7pMkw5i8bd++W/V9OFxjF0VxmQqSjmrXsw8QZwkzoreud8R1ZMjM8uY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Miz1fiQ/; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-59b76c092acso3653470e87.2
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Jan 2026 04:04:51 -0800 (PST)
+	s=arc-20240116; t=1768220686; c=relaxed/simple;
+	bh=e36I1KKUEK/sxZfTrjJ2xq32F1GQDKew287n3fswAvw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gDHpIYVdc8T4zomsRy/xc7p7CNP4G3E6It9klMg1iSjAUgxqGW+ppuYu96VgBY12wcPLYjrne6Up2wQwKgBOLI1E7KBdqpA5MVoOoxx6+YAEEnc55YFS0mmnCiGcZTbVDc1AvKAzS2lqU4PieWR6B+y3jvOc81eHUdiHsjsSoVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=yOl3BrZN; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6505d3adc3aso9955443a12.1
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Jan 2026 04:24:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768219490; x=1768824290; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=L5B9VOs5SZcPSzW1v2/zOZ9gYxEwx3VMLCzV7S6TNwM=;
-        b=Miz1fiQ/s3yr7JPIyhbRUthuw1t/U/xArJLxzMcdLcpt6EHnp6JhZcRuG/WtaX9DLF
-         RDa95ZFP412Xf6s0s1G4QySo4PBu0qsIuSUmAWq3OhtCAJYqQ/bMMYfa2+fs8JCNMwpe
-         Mjg2yVmmVAXC29dus4/jJYLqPjabb7DARB6WlLWxFvbfJPCDHVYl0n49/rzvxozt/gWy
-         JpRo3c5L2UHerrRQlOAVR36936H8oJq7zhc7hdeptsF7ivdP5ItlUCcYrhDpJCMcywen
-         Tu5Y84HkHrhRVaxmfhw0MNPPnp+NfQ7QSM5eTI5brSsbMi4qWPQRN9Ahny0etX7Epju3
-         WBBA==
+        d=sartura.hr; s=sartura; t=1768220683; x=1768825483; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e36I1KKUEK/sxZfTrjJ2xq32F1GQDKew287n3fswAvw=;
+        b=yOl3BrZN26CXk6jnuy0TyFoamixGK0rdfhKTodHZelcr0O46+OfDzr9Se7nS1K52yo
+         u8bu4MrWx5TybfLA5QCaGlm8N65lk15MG7UAzFI+FcsTBvrU9FOUoIrek8+Igv6tTwhN
+         e9E7PQ35a+5mZu2B+O1EswcEgmPiWTKG99rMb+liFCi5qpOR/EiQfDhhbBIPWRAk/n+3
+         mUK/SvSJocXDY/j3dtdkV5/JyMbt/m4wKhlkeNzMd34jczUxNBup7r97FUp65xVI6TvN
+         syUq8Dub6wqwBae1deY2Md16CN+kzGxl5HsGIqNuSOSnchfcw5xNuYcELMkCQs8iydMK
+         H57Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768219490; x=1768824290;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=L5B9VOs5SZcPSzW1v2/zOZ9gYxEwx3VMLCzV7S6TNwM=;
-        b=TxZG8cVIZdnMkBBc3pX3vsa9K67vkO1LlzbGZj2QAL9pvWWOXCAXBBGMsrTzhdoeR3
-         lrpPkJEwPqBbHeZGtLr/TqzchYrtW+VNOY0thMfJvUNrr7VGkBMbolsLZht7+Su16dAl
-         ajWzpi8g2goQ5TyN0kpvJnHkphruFeBjrDB3BcV6Q2WRfH9qCRd22c/ivAxOwTnKP+Op
-         CL5k97xBakUrdNP48o3q4e6SmOG0w5oaRrKBHQbiSwZ1T3Gi6VEFeVnVF72xfCYNfPj+
-         S94WwLHjSsHdbkKNldfpiZ/jfaqynGzZM+1lScKbPbblVZYWhPuwN920cQwstfUeqb/b
-         /Dmg==
-X-Forwarded-Encrypted: i=1; AJvYcCUj8ywUJjuIuKaZrOOtP15OFtROThLzKv9UlRET3RzAm+QbsF5iXxuoBFPhEoVeRUFnL6kFJkOVEjsK@vger.kernel.org
-X-Gm-Message-State: AOJu0YylvTs76Z919LAQKRVU9zp5AYVNu2UaxUp0kNYP76i3+F+9N+i9
-	XIRg7tJiA6+zpvvQxoXHDlzyXZffIKtM2QNhpginKfaj7si2wAE3XfdN
-X-Gm-Gg: AY/fxX5b+BjSFKx5OUcUUjbldOCNtfLsWK7oJt9V7D+39oyqX9BZAkciVAHZ5h29Q/M
-	EmgM9KmB4ia8405RGda0tfJHR0AkUXiEwB70IkGqZDDIY43kFHZ0qf+1bbeKSUlouM51yx/rmcN
-	o/NAEzWkRL1NlND+yZGL3vsWTUB0x30MYHz39ckQq2A4wV0E4f/54pIDJcpWmMklCLoeVlWOCiL
-	fm/WBOuQNKLlYLr8ruaBqcbzC7caxrW5/jIHsSecc33mEZHfyWyoYIGSanZ3RzyuNJSryB5Jayy
-	NXxxcJvomLcNN9LN8u93+64ym/C7x8SS1wjzTozplP2s8KOyzKhGlJDGBlrcm4mTbBfX6AyY6UV
-	//0Uprr8ah3vY1y6c4LP3rWSI/Ejm9V/PNH3kGYCb3E6jAwxKtLk/mS3fze4y5t2PnlGaGpqmIx
-	2Gq8skYYE0I0AdW9WsflH7VPr7zaTID1J6dvkiwpk3KjF1oJAwmtVmtMEYzJa/PGtbxnkQ
-X-Google-Smtp-Source: AGHT+IHIOma4TS1LvpaF0nAI7hxAzfTZfER7LKZt7Et+nsHWkt6YVR8gJlh4cjrPjzNGz/ehF3S4wQ==
-X-Received: by 2002:a05:6512:3093:b0:599:11a5:54fd with SMTP id 2adb3069b0e04-59b6ef028e5mr6174554e87.4.1768219489595;
-        Mon, 12 Jan 2026 04:04:49 -0800 (PST)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59b6ac0a769sm4379781e87.21.2026.01.12.04.04.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Jan 2026 04:04:48 -0800 (PST)
-Message-ID: <ebb14cef-9927-4211-94ef-2f209abeb406@gmail.com>
-Date: Mon, 12 Jan 2026 14:04:47 +0200
+        d=1e100.net; s=20230601; t=1768220683; x=1768825483;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=e36I1KKUEK/sxZfTrjJ2xq32F1GQDKew287n3fswAvw=;
+        b=piT//Y2VUYhMr+byaXNvkmhTLKiSxv/qd93Am7ttLRUp51TdoXgUXEllNcZSd/0MSL
+         7eUnf1A+mC6FJvo9g2JWWCufbfxZAY8JviViUn4aNV7qMzS8TocXbjlAE2omcNubbjWR
+         ij6igxEhV/rNr8jo4WbxaGyuLQF0m+fEZaedfUixgbie4iQ1ccCdFQa7jFgCBV1dG8y1
+         deWbY6x3wK4VY3mSmZ18wLAO9b1U6vSHk+iUotqddHMTJ+6EC2Eg04I3tcO/Iu09yPD/
+         a2BGFJCc2W3KBwf8Lzj2yuXXIbgLrbzeOZzlKkUvXfS9lGhbG6r3zQjVBqIOgcz7strB
+         XZSg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKZkseuQMYW/u4u29kGGmPO3X0wvuA3DlT7GCBPn5IjM7XaDxkXwkyx96OINKscVGu149eORnUeEny@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/phMcfY4AmSl/7U7QhyEAlun+edvjsonJEjI9nKiFemRiF1n/
+	cKrMvOSMoj5hLrMyu3zrJD7kRNfEKM7GtRw3ibbgXhHdebRvRdnnrrg19eym8RjnfryqJMlOWYf
+	1dIpU/u0XDb7L09g5FPEfV6zbyrW+iKM+hgASEplg0w==
+X-Gm-Gg: AY/fxX7iHZ9qtKwP9zvAOXOo/fslTAlDZ+7p276ZscJjmKD+xpffBgZhQ+e7OnkhDH6
+	xH1ZHIMCvDCGMzeMcSuT44SHbO7yi16/59rNgA68YxPkbgCRyj57Ny/TJr2R4iUcpgkMPce2stE
+	suFnD+M31vPWLVov18R4XcW94KjZnBvT6ZG6op3hTURupExbGGPJoUFIKb7293Bpds1BdY51OJY
+	3z0XqS5E67Kj08OdGl2reXwnEmuODjGwnV7s8qrpHTNihay3YRbF2Knp01mSJXr1EbQVyNDV9C6
+	fDSrXhVTeZHW4G3gitXjaYYoDQ9R7f1a5tFid1P+ltMOM9zXjXdY5v4nKphs
+X-Google-Smtp-Source: AGHT+IHCXmp3p+BgDcyniu6pC3W4HMFaiEgturOAQ9x++4qE+oTjfglFKbXLUgrlr5LdiQs0nIVxyNn31APDXRimaZk=
+X-Received: by 2002:a17:907:3ea9:b0:b7a:5bfd:7fe4 with SMTP id
+ a640c23a62f3a-b84451b4d37mr1788876766b.18.1768220683527; Mon, 12 Jan 2026
+ 04:24:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v6 00/17] Support ROHM BD72720 PMIC
-To: Sebastian Reichel <sebastian.reichel@collabora.com>,
- Lee Jones <lee@kernel.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-rtc@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>
-References: <cover.1765804226.git.mazziesaccount@gmail.com>
- <20260108172735.GK302752@google.com>
- <63bc889a-b97e-43c3-9f46-9ca444873b70@gmail.com>
- <20260109093831.GB1118061@google.com> <aWRFs3CJvd37BaoH@venus>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <aWRFs3CJvd37BaoH@venus>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20260112064950.3837737-1-rdunlap@infradead.org> <CAD++jLnrcsEjKpBQWL=RHKVyyfq1UDk-sDZ7MP-16z0hBLC_dA@mail.gmail.com>
+In-Reply-To: <CAD++jLnrcsEjKpBQWL=RHKVyyfq1UDk-sDZ7MP-16z0hBLC_dA@mail.gmail.com>
+From: Robert Marko <robert.marko@sartura.hr>
+Date: Mon, 12 Jan 2026 13:24:32 +0100
+X-Gm-Features: AZwV_Qg-xRhTnlnYX-HcqlJ8RzmjlDOBxMyZw6ynyt8NfH_3Ozeva4wyYjVcAlU
+Message-ID: <CA+HBbNFKyOFfhRu=XAE891dREPatFRD9VJ5=upz6xPBb8khGjQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: remove the gpio-tn48m driver
+To: Linus Walleij <linusw@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Lee Jones <lee@kernel.org>, 
+	Robert Marko <robimarko@gmail.com>, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12/01/2026 02:53, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Fri, Jan 09, 2026 at 09:38:31AM +0000, Lee Jones wrote:
->> [...]
->>>> The MFD parts LGTM.
->>>
->>> Thanks Lee!
->>>
->>>> What Acks are you waiting on? What's the merge strategy?
->>>
->>> I think everything else has been acked by maintainers, except the
->>> power-supply parts. I think those have only been looked at by Andreas and
->>> Linus W. Haven't heard anything from Sebastian :(
-> 
-> Yes, I'm lacking behind quite a bit, sorry for that.
-> 
->>> I would love to see the patches 1 - 14 and 17 to be merged (via MFD?). I
->>> could then re-spin the 15 and 16 to limited audience as I hope Sebastian had
->>> time to take a look at them. However, I don't think any of the other patches
->>> in the series depend on the last .
-> 
-> Sounds good to me.
+On Mon, Jan 12, 2026 at 11:30=E2=80=AFAM Linus Walleij <linusw@kernel.org> =
+wrote:
+>
+> On Mon, Jan 12, 2026 at 7:49=E2=80=AFAM Randy Dunlap <rdunlap@infradead.o=
+rg> wrote:
+>
+> > The gpio-tn48m driver is useless without the simple-mfd parent, which i=
+s
+> > not present in the kernel tree, so delete it and all references to it.
+> > Also delete references to the (missing) mfd driver.
+> >
+> > Fixes: b3dcb5de6209 ("gpio: Add Delta TN48M CPLD GPIO driver")
+> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>
+> Is an equally fine solution to get a rebased version of this patch:
+> https://lore.kernel.org/all/20220131133049.77780-2-robert.marko@sartura.h=
+r/
+>
+> to Lee, given that Robert indicates the driver has users?
+>
+> AFAICT it was just reverted out because of process, not
+> because of any problem wit the driver/subdrivers themselves.
 
-Ah. Since the 15/17:
-"[PATCH RESEND v6 15/17] power: supply: bd71828: Support wider register 
-addresses"
-was now acked by Sebastian, then it can also go via MFD?
+It would be awesome to see it in the tree again, as the drivers
+themselves work just fine
+and allow SFP-s to work on the TN48M and I have patches for TN4810M
+(Which is a SFP only version).
 
-Also, if it is Ok to address all the "dev_err() + return ERRNO" => 
-"return dev_err_probe(,ERRNO,)" conversions in a follow-up, then I guess 
-the whole series, including 16/17 is good to go? If this is the case, 
-please just let me know and I'll send the follow-up. Otherwise, I will 
-re-spin the 16/17 and add a new patch for the remaining "dev_err() + 
-return ERRNO" => "return dev_err_probe(,ERRNO,)" case(s).
+I still have both switches and there are some in the wild being
+actually used as L3 switches so
+it would be great to have the required CPLD drivers be compileable.
 
-Yours,
-   -- Matti
+Regards,
+Robert
+>
+> Lee might have something to add though.
+>
+> Yours,
+> Linus Walleij
 
--- 
----
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
 
-~~ When things go utterly wrong vim users can always type :help! ~~
+
+--=20
+Robert Marko
+Staff Embedded Linux Engineer
+Sartura d.d.
+Lendavska ulica 16a
+10000 Zagreb, Croatia
+Email: robert.marko@sartura.hr
+Web: www.sartura.hr
 
