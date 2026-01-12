@@ -1,130 +1,162 @@
-Return-Path: <linux-gpio+bounces-30454-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30455-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42ED0D12E2B
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 14:47:32 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10941D13509
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 15:52:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 743613024134
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 13:45:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2F0483026B27
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Jan 2026 14:48:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1673D35B144;
-	Mon, 12 Jan 2026 13:45:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01DD32D8375;
+	Mon, 12 Jan 2026 14:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="iUXN7uSf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBB722DFA5
-	for <linux-gpio@vger.kernel.org>; Mon, 12 Jan 2026 13:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60D82C0272;
+	Mon, 12 Jan 2026 14:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768225523; cv=none; b=uOH2iNkGusaenL8HZMeN9At8i5IUEAOfWmG1Bn6RqB/evRmnVZMVISswkWuMmk9yln6Cx9RsQZXbfaIrX6upFIz6JRkuy04lmp4YNQww67aQ0CwoGP/u9RZ9tdaluLN375chLYhgAmrZaNVjXLQDwMpMK1lZsL4/qajRc2KZvQE=
+	t=1768229278; cv=none; b=uHg7XXZYivJ3iDf97bIcPmtn/5mP5wxM/rmMVUxKDtbUnuhOx5DAgjJTSlLCHEDLGyZtevYxePLqtIq896PPBN3nP77YDa0DsYbEArQrKWWNJA7+95hGIC7VbIvUMYW/PmiqIT0urm6vHgkxThnaWSGjuAkRVGolxln/elyvM3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768225523; c=relaxed/simple;
-	bh=wQiVbguMyGjKSMqL9UFVXXfC2kZ11shLrO1Zg6cSg3w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LRbW6pjnP7IjH6HkF/7hMe8YRLO+YVbksg9Nc8beZd/eipHv+T7w/IyWkooW5Oqy21smAXJEgKLjSOpm+Sy1HMTYVC8g+sePdz+E6k95/rAC3aDAhVIiMxuCPLbyt1VkqCrHg6FlfrYWlaZOgVwZrYllDRA/v7ZHQkBmwvuTUR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-5eea9f9c29bso2570222137.2
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Jan 2026 05:45:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768225521; x=1768830321;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OO/WjXr3wzVpti8iWB/GBgohXEwzSHUfz2xAcjYWVKI=;
-        b=Z8C+he2UFuJeiBq7k1cLPw2/oMSn7nK+dnqS+RQQ2HjPmYY08r9p3LSKnNYwPuJZdq
-         5MvQVNQlxoevfQ2tw5Z5p1j8xpU0Tax2YQ/lOZ+QmHbl9312Zqrhk3USJUnC06e06Q1G
-         hF2BmcKsrsTnt+BoLCs5040T7dZDL3aeuzbh/TTgIv2w6KYZIyhUxa4Zjm0a9I+ori2o
-         VBaNVCSRCkvGEAzOgp3a4S3/U+h986FRoaKfIkxGbsZO9bKA7mxk2SFnp3R06g5K+N8Z
-         UbU9RF/mAYP2X3/LzWmH/ne4nRgc4E+RTQvrnqA3NZs8LlESb6xCDfyxIMm+KDNfVeLo
-         ZOFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVELvLBsjVIFzbgg3nzsrIRUqSqmBxyn0TjLSv5hfUTT/69+tvB0kxHcnwDv0nC4qV5FziN1oeGbSP1@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEzt87mdkqWGgaEd6tZimELMLaCO4CsM34/OGenaIxvATnJSBD
-	d3mndgcLQB/uYKRlPJfOWSZhPnRdilM2dGZEn6pdAmp9V1lnN82uWQlVCpTiiDYk
-X-Gm-Gg: AY/fxX71fnkenFAJsCYUAVNX/IyaTuWDPoZz5GLixap/ANRE3AxcakBCCGwq9ymR94m
-	w3rb1n80FJtJjpEvTXSkqsJFkhF4PGzNxGUy+bojcJF0zcYZPR8XTxeeky5n1M0dY9l61krSxCp
-	EcN5RORaKtBz/pCE6MI3SCv3EbHkTBQ5TMEDfb+SHS0aKk0myCjjwfKlSdmFQteDxzTv7cqW6I6
-	KN65hI5wu6moiqT1NyNIhMH2UlyRyoq7hoSXHlRKUVfgtKbORkpTiKoTkYVmgzYtRT1l/cTeJC+
-	x8GIrlmGCFRjvP47xstXRXbEnnvleDrTm/y6ll0Nm1FyCrWCJmaeYhoFj/6zE2lU8hnTRpeI6xv
-	1GSAAgno7Hj9EXtNQpDInMlxM3Fr3TA3ANvtWTtdMeLfV2nZzp9euy/u1woqDt9vv9f8325jeDk
-	1y8MdM5b+WFzcAnB4mKM0yi7CUFOt3K/+/Hcntt//ZECUj73KJ
-X-Google-Smtp-Source: AGHT+IFUCnSlfG3W27Xna7U7/3zDOqSkwmRM/5eLqKGL2qnRIkghLIJ7qEtCnZJGqw7kpR5SfeMzQQ==
-X-Received: by 2002:a05:6102:578d:b0:5ef:a3b1:3012 with SMTP id ada2fe7eead31-5efa3b130d9mr3814771137.24.1768225521123;
-        Mon, 12 Jan 2026 05:45:21 -0800 (PST)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-5ee9fe7f478sm12318793137.3.2026.01.12.05.45.20
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Jan 2026 05:45:20 -0800 (PST)
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-5ec87b1f525so2445834137.0
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Jan 2026 05:45:20 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXp7GghNpYNYK5Qib3DsYYA4gUbzoz5mkTfjgMHtQvEW9qCqoVSaS+UbExZlFODbX+z1W5c28Cdw1Wn@vger.kernel.org
-X-Received: by 2002:a05:6102:1626:b0:5ef:a6bd:c8af with SMTP id
- ada2fe7eead31-5efa6bdca83mr3722114137.39.1768225520792; Mon, 12 Jan 2026
- 05:45:20 -0800 (PST)
+	s=arc-20240116; t=1768229278; c=relaxed/simple;
+	bh=nUGXhmxfk4xVstkedOcb8jdC/4d8W+cXsb3tcmVsSFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ben6dkvqyniUjb21tjEwpevylp4fyRujP0lOpVPxKxLirB9XW/bIAjBmUmDwgVtPUFL5I1PUGiywgx5xmZFvSqwcdUtm+yEN9qz3fJ6TmPctCbJ4z+tS1MNmWEsPAk/S9B1fZ4nefmcs6urXkiXVU5ZA/26AswsA7Ai4QoZN+Rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=iUXN7uSf; arc=none smtp.client-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 7334E4E4207F;
+	Mon, 12 Jan 2026 14:47:54 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 42F05606FA;
+	Mon, 12 Jan 2026 14:47:54 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A0B3F103C8A5B;
+	Mon, 12 Jan 2026 15:47:32 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1768229271; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=q/WLPrz5mCQaWOceOk8Ks2oQ15KuKRHou0wGW5c209g=;
+	b=iUXN7uSfeXgQl4nNnPIxxArDY5Gzbwtk5FBobBJO+ueYTKc1/BEPsvLsksdtAAQpqIsWQO
+	/cnIaP1yp40XU+4otLwInaG3Ccgw4ZjdYuBZpKDSxPUmWLKE7SIJzjlyOttIjV5+FmXYBq
+	R26TBX76EEVjpW2JNaMKjbn9Bg5Hc0m/7+OqUYza1Mg8WIkIk5gJ9KPNwyEZMv8Yjfzikr
+	sTt+xW+RYnH9eZug2OQgC+nbK+tcnBHgnDLk+ZgL/pp++VYX0gvJquvTFjdbT3L5ZBtzCj
+	N8BCh1TaOXz9DcWQNxj+3/dOOdCe3qyYIz/NXGcGMfeq+14pb1zJbp2/pCkjtg==
+Date: Mon, 12 Jan 2026 15:47:31 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Saravana Kannan <saravanak@kernel.org>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Kalle Niemi
+ <kaleposti@gmail.com>, linux-arm-kernel@lists.infradead.org, Andrew Lunn
+ <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
+ Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Arnd
+ Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, Charles
+ Keepax <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
+ <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Andy
+ Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally
+ <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+ <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Alison
+ Schofield <alison.schofield@intel.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+ <dan.j.williams@intel.com>, Wolfram Sang <wsa@kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+ patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT
+ overlays"
+Message-ID: <20260112154731.6540453b@bootlin.com>
+In-Reply-To: <20251211161902.11ef4248@bootlin.com>
+References: <20251015071420.1173068-1-herve.codina@bootlin.com>
+	<f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com>
+	<CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
+	<5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com>
+	<CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
+	<072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com>
+	<CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
+	<55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com>
+	<20251202102619.5cd971cc@bootlin.com>
+	<088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com>
+	<20251202175836.747593c0@bootlin.com>
+	<dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com>
+	<20251204083839.4fb8a4b1@bootlin.com>
+	<CAMuHMdXdwf7La1EYBWTJadsTAJG3nKQVW6wtBn-bUqshA=XHRw@mail.gmail.com>
+	<20251210132140.32dbc3d7@bootlin.com>
+	<c50c40cc-69f6-436c-a94e-94a3a10f6727@gmail.com>
+	<20251211132044.10f5b1ea@bootlin.com>
+	<1b9fa77b-d74a-4fa7-b2e7-8b389d59a5a0@gmail.com>
+	<20251211161902.11ef4248@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260109143910.645628-1-cosmin-gabriel.tanislav.xa@renesas.com> <20260109143910.645628-2-cosmin-gabriel.tanislav.xa@renesas.com>
-In-Reply-To: <20260109143910.645628-2-cosmin-gabriel.tanislav.xa@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 12 Jan 2026 14:45:09 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUwzQSTk2ns2c_uXnER-jHXym2ep=u8t7yA1LuM+uwYZA@mail.gmail.com>
-X-Gm-Features: AZwV_QiPdXqTPfQwR6lIzBF4dtqc8FQL3DhvJdOHFP7aTpgdTsrHRXEboogPJLg
-Message-ID: <CAMuHMdUwzQSTk2ns2c_uXnER-jHXym2ep=u8t7yA1LuM+uwYZA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] pinctrl: renesas: rzt2h: add GPIO IRQ chip to
- handle interrupts
-To: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
-Cc: Linus Walleij <linusw@kernel.org>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Fri, 9 Jan 2026 at 15:40, Cosmin Tanislav
-<cosmin-gabriel.tanislav.xa@renesas.com> wrote:
-> The Renesas RZ/T2H (R9A09G077) and Renesas RZ/N2H (R9A09G087) SoCs have
-> IRQ-capable pins handled by the ICU, which forwards them to the GIC.
->
-> The ICU supports 16 IRQ lines, the pins map to these lines arbitrarily,
-> and the mapping is not configurable.
->
-> Add a GPIO IRQ chip to the pin controller that can be used to configure
-> these pins as IRQ lines.
->
-> The pin controller places the requested pins into IRQ function,
-> disabling GPIO mode. A hierarchical IRQ domain is used to forward other
-> functionality to the parent IRQ domain, the ICU. The ICU does level
-> translation and then forwards other functionality to the GIC.
->
-> Wakeup capability is implemented by placing the entire pin controller on
-> the wakeup path if any pins are requested to be wakeup-capable.
->
-> Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
-> ---
->
-> V3:
->  * adjust comment describing the source of truth for the data inside
->    rzt2h_gpio_irq_map
->  * check if interrupt-controller property is present before populating
->    GPIO's IRQ chip
->  * move rzt2h_pinctrl_suspend_noirq() above rzt2h_pinctrl_pm_ops
+Hi Saravana,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.20.
+(+To Saravana using his new email address)
 
-Gr{oetje,eeting}s,
+We still have issues related to devlink and overlays.
 
-                        Geert
+In order to move forward on the topic, I think I need your help.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Can you have a look and share any ideas to fix them?
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+On Thu, 11 Dec 2025 16:19:02 +0100
+Herve Codina <herve.codina@bootlin.com> wrote:
+...
+> 
+> IMHO, I think the issue is related to overlays and fw_devlink.
+> The distinction between "a new node is going to lead to a device" vs "a new
+> node is just data and will never been attached to a new device" when an
+> overlay is applied is broken.
+> 
+> This is broken with the upstream "treewide: Fix probing of devices in DT
+> overlays" commit I've tried to revert. Indeed, on the LAN966x PCI device
+> use case devlinks created are not correct with this commit applied.
+> 
+> I am not sure also that devlinks created with a more complex overlay will be
+> correct. For instance, Matti, with your overlay not sure that a phandle from
+> the oscillator node referencing the pmic node will lead to a correct
+> provider/consumer devlink between the pmic device and the oscillator device.
+> 
+> On the other hand, this is broken with "of: dynamic: Fix overlayed devices
+> not probing because of fw_devlink" works for the LAN966x PCI device use case
+> an lead to correct devlinks but breaks your use cases.
+> 
+> Does anyone have an idea about how to fix those issues?
+> 
+
+The commit "of: dynamic: Fix overlayed devices not probing because of fw_devlink"
+can be found in this series (patch 3)
+  https://lore.kernel.org/all/20251015071420.1173068-4-herve.codina@bootlin.com/
+
+Best regards,
+Hervé
 
