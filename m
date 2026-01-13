@@ -1,158 +1,306 @@
-Return-Path: <linux-gpio+bounces-30497-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30498-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA49AD19D05
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 16:19:59 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD968D1A1A8
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 17:11:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 300FB306B04C
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 15:12:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 621D1303C29A
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 16:10:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95B0036BCE6;
-	Tue, 13 Jan 2026 15:12:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DEA536CDFC;
+	Tue, 13 Jan 2026 16:10:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fny22VuI";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="TxHPUVPL"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="TK2jiw7Y"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA37279DC8
-	for <linux-gpio@vger.kernel.org>; Tue, 13 Jan 2026 15:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768317154; cv=none; b=G3EAb7xjIACBSt1cNNG8ue8ihhi1AN4fMQ0qmlXkZZVYrgGOilXOsGtUE+iJVm8jt5/wQ3RqW7MvQIfWlf574eEVX9xXl5jYi42CfyPyrDZsbbn5yYiFrK2UGU+7tmZUFT5t2uycDMv4dth8h6O8Cths7GWrHZFadAMxlIr7L1M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768317154; c=relaxed/simple;
-	bh=K/b/k9wVDrPRdCb3X+4NMZWJIQF0SD1HwX4N5jOlBA4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f4QgNcPEi8fkI3KGOkBZXNorNyPiUIBaaxROHviy/+S+t0kyk4sw1UqObN+MMQ1LVHSXGhVh9gEtown0iZXk6Qg8HN4jQsQkkzai/wUEyBjktIzPej/bsQ7MiuD9Okp8v3U0Vgv2b4dj/ZkS08lC5QBM4UMpNVPD/ovbbjWywhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fny22VuI; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=TxHPUVPL; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60DBreGa2865810
-	for <linux-gpio@vger.kernel.org>; Tue, 13 Jan 2026 15:12:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	aKia6b2tobpd6hXKg/OrcjG3xLaeMZML2xg1mAiSI14=; b=fny22VuIEmQM7zUN
-	fEKnOn5BHfHp5gaUOj07N2nDC67WXl3OIKtNQgk1IZTtcp1GRfvsOlKJ9MWIU57H
-	RxCAbujPAeULnVGHSlg4mf6WfTDfkfRceSPn3t2XHMpkFY+lAtGftHdMDVchLO/R
-	2TGIRDGAooElZ3GL7iWhOoIdNwzfRdDklGfREoH5b6Gb45yz0Z0N5Nm6IXv+r3c5
-	ZD7Dli06H6qtxiSHG6LNZlhQQJW10Fn0bbt5eT3wfidXiAbioRt0KWViJ3bF+QGM
-	3ZHjt6yqv5/U+UyCg5+hCO5Cw7geCCcMQGHGiasWfZltcx99krhcYmONlwwG45GK
-	r3Yqyw==
-Received: from mail-ua1-f72.google.com (mail-ua1-f72.google.com [209.85.222.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bnfjh9v69-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Tue, 13 Jan 2026 15:12:32 +0000 (GMT)
-Received: by mail-ua1-f72.google.com with SMTP id a1e0cc1a2514c-93f59bf206dso10161568241.0
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jan 2026 07:12:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1768317151; x=1768921951; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aKia6b2tobpd6hXKg/OrcjG3xLaeMZML2xg1mAiSI14=;
-        b=TxHPUVPLkhu6t/Cqvy66w38Zr75Loh679Qmw46JrKaJVRh6qwirUtDefZXOw+eHk4r
-         CVeCGbJmUbv3LaXlExV4uEblgQEQ0ZGhIIUVIwMwMeAJwF2wsxuMYXYZ8TWgQp9wJ28Q
-         JjIKkOVl2/LKAu4gX1cqV9Pl+z0oWyrVDBuB8zArL3P3HeWzYGpWkFgo2m1j2+kuxQvf
-         SlzwUCbSEWQZQrsjUDsVkgzKZtFV8ezLbTSfuhUuBXF6WehimQUAW0zKPU+4+Gv2ppx/
-         mSzRU5lf52MkT3W379qIbTgWrYanPdAlbcGdMy1Td+eDd0T264AHpuLtL71r0cuHkZ0Z
-         Y0Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768317151; x=1768921951;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=aKia6b2tobpd6hXKg/OrcjG3xLaeMZML2xg1mAiSI14=;
-        b=QpcF3rWsG0mk5DhZXvXRSMqvX4DJKNPPZEQeWpzti9WlZlo4BQ2chjsGZV5SS8Rmdw
-         o3ELoxtn6xDecZeEJ6Kbcjwak7IIZlwd9sp8LmoiCx0gdNYocjFbnhdH/lO9+79S+k6V
-         n0FgUJmLvtNQK3J6W98uzbRc55smnNy4NZvjvINz2X53Qz8V1TSC+huMAO0Ezld87XSC
-         KhawK/cjYJeP0qEq4mwD37dueQRcxWiMdNXJENK2c17utAhW68YmzVSOQdPIBZAknSvY
-         kI5wlsH7FZjoPbt36dxBxa5FXieOAn9JfkrPlE9SwZhc8ELCmY4sE1GovULDeq9C/ibl
-         5g8A==
-X-Gm-Message-State: AOJu0YwFkjQNG18HHcaCJxBEyOvdORCSsxbPLeSXNk+sjdl4ihae4W0p
-	ICmwj5PU29Y+CEGy73sehLhooXV/nbDw+ZI/6EWpc0b9C+7hyJ7fIxtb+DArUkpKq4O+DYnxJX5
-	S72lzMZQhdkFTkIWWhBN2RA2ul76g51Kx3+DplRfRx8GEKQPaFJFB8VT2WpekTNRc
-X-Gm-Gg: AY/fxX7KqmTgaVNoCfmVUwK47xVYVLY0QJ1OLoEfEw6LLE0yPSgjfhm571U6V2hZylK
-	cYERpS2Y/68hXIPW9229V9bvJInbMOuL0NbV5D9XugpeIRN39zT7C1DOSQWo61WfQob3G/DEcRX
-	18+cmkiYuLoRv18g7qhqyQsrT0I2nXzeTx+U2K6pOO1m3/rICIwJJft6sYGEOoZWmORf+2FWPmL
-	YP/VsqMJ96DtmM5T6ZK5nMA/DPTrtYk/cmhBNa0IEk38Pqkl6ijpqE+dmfnjNlewnbLTkYN529p
-	kqAWgrjvUfEjuj1OygQp7RqOsxWxZWoT2rugYX3JUbzfobVt/4MHDZetJrX0iWIip0DgPDK06U3
-	iS5ht/M7SqINrZ+ptEfQNlR9Ltn3sLIC7+bahKjY=
-X-Received: by 2002:a05:6102:26c6:b0:5ef:a164:ebec with SMTP id ada2fe7eead31-5efa164ece8mr5047670137.25.1768317149948;
-        Tue, 13 Jan 2026 07:12:29 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHqLIsWza6MMDIbfVX0uXs4LH4Y6SFrmjmaGcP4gTYLSkTFOTd06fLj5D196dPa3hxzaY4FUA==
-X-Received: by 2002:a05:6102:26c6:b0:5ef:a164:ebec with SMTP id ada2fe7eead31-5efa164ece8mr5047613137.25.1768317148096;
-        Tue, 13 Jan 2026 07:12:28 -0800 (PST)
-Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:bff4:6cab:7ac1:4ace])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8701e1d467sm873515366b.70.2026.01.13.07.12.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 07:12:27 -0800 (PST)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
-        Vincent Fazio <vfazio@xes-inc.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: linux-gpio@vger.kernel.org, Pierre Gramme <pgramme@gmail.com>
-Subject: Re: [PATCH libgpiod] bindings: python: add missing Py_None reference increment
-Date: Tue, 13 Jan 2026 16:12:24 +0100
-Message-ID: <176831714278.87572.6595922957920780251.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260113092852.42573-1-bartosz.golaszewski@oss.qualcomm.com>
-References: <20260113092852.42573-1-bartosz.golaszewski@oss.qualcomm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9283033F3;
+	Tue, 13 Jan 2026 16:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=185.132.182.106
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768320620; cv=fail; b=iPp/onND5SD0ho6YGllieVdXGhfG4Lb5zvpX1LmAXxOnxfSJ2BLkxXtLDipSmA8pER802qABsBF3GwZOrMwSxGW2GfdJPwCoBzG1PLbTqa5TZ1doWS8d3oBqprSE4atgr1WEHaQPGL0cz1BBvUjoAXDZH1STQCEos+1E8v8uuyo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768320620; c=relaxed/simple;
+	bh=pey3c8iSH0PVpxlq9LvYhubj9JdJkfU8JA8pyliLgMc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=kjgzbMMi8Xyx4Yhk29jU8r34bKn3QAIak7v1lDNbERTVFCJlJCTHpkbqlE99mLbTOItTiYvAofvKbvh+rQGsIMU6X/brk5Y6PQJ4rXQ4MuhnwKUaTPT8Xh3Fl+s7T2Jj5D963/TofQZ2SMRD/6SAxOBOCeA/jdF8aDrS678Nnmc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=TK2jiw7Y; arc=fail smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60DG6OI41492978;
+	Tue, 13 Jan 2026 17:09:40 +0100
+Received: from osppr02cu001.outbound.protection.outlook.com (mail-norwayeastazon11013046.outbound.protection.outlook.com [40.107.159.46])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4bm174sfuv-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Tue, 13 Jan 2026 17:09:40 +0100 (CET)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qDvmAs1SL2SjBW+ixZpwkmgUBQYZCVXUEMo82m57N3HCnne6xDPWxDpPvGoG5Pv70H3sQy2bQg0Jsf7vwHywHgmwA2Zrut+fM8e2jlmiHUNqsR9eeinfieeXHYUcKwOiyYaxVsOmrSUbZtBEMyQ12Oxkm6UwgcR8v4qKS3kuwijdVGgNtR7HkcL/NqMDvHHibvd+5DashZc4v7oJgFjI+WUHASCECPww06HMyqAfycVCr+Bc6cZTuPcMd31OX8py4t5LTU74uOMKDGso2qAjAmXIL/zwELDQHSwWznRogSbeHSdKtA+gURe/A5i+FFwVeeJMLYkqwUmGwZYKrwGXpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EMt2s06F6DUAXs0R6vQxihhDP6PNGO3NyLZio15Vv8g=;
+ b=huYd1s9WkL/Vb/Pa/EoCHbABOdtM6cCinn+MXoT/1TrExKpqpNcybEx39Tm3txTLmp02i57er+pUxrN632QwidaHcoruB2pcZUuUW1YKJI3p0Dl+eNkmenR9Uw1Cje9qmp2jgYa8w2csNIFoJ2sq+3wryt1MJMSutnAULWALumGbm2JtlkSynKmC3o51LlQjGWpRzLOdDhw5ug4cFY22kJ4YVrkUzTOFvF4ueRPutA97tIeJz3i4hK28SCJIvh85fW4jJtxKVcPi31WYWte+gpRWnfC2x277BXlx/kd2s2HGnTvjSChg1MS8Dl+drKstuEwvRBI2u+VtgIqO6QD1ug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 164.130.1.60) smtp.rcpttodomain=linaro.org smtp.mailfrom=foss.st.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=foss.st.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EMt2s06F6DUAXs0R6vQxihhDP6PNGO3NyLZio15Vv8g=;
+ b=TK2jiw7YDREU9Kf/H27y/WfVkb6CVLuB3qNnuF9NH3PQhrLToQIZcABpdL101mDI1nUWT7M3MdpI7bviNhNl+oTUyzXqRFi4UpO9PD54JKrDpQAo/e76sRplDMiMvmKQpB4Hek9iJTubRSHQk2M7CzPyO3kg/a7LWKtt3+2/TMHiD6Bi3kQVu07XnJkUIsJDWbOmlkRVvBo1uc540HMsWKXI/F3G3EfStWbKKwjYPLQx1A9GeoTeD0l5RX+sjMyOpzKx4SuOgcx0xUCWkA1TJGrNKKF9eqMscIRslGOkxR4yTsrjsN5lX0NU/klPxx8ly2U2JApxqYaZIOb7NIWAHQ==
+Received: from AS4P195CA0035.EURP195.PROD.OUTLOOK.COM (2603:10a6:20b:65a::19)
+ by AS8PR10MB6197.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:54b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.4; Tue, 13 Jan
+ 2026 16:09:37 +0000
+Received: from AM3PEPF0000A796.eurprd04.prod.outlook.com
+ (2603:10a6:20b:65a:cafe::10) by AS4P195CA0035.outlook.office365.com
+ (2603:10a6:20b:65a::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.4 via Frontend Transport; Tue,
+ 13 Jan 2026 16:09:37 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 164.130.1.60)
+ smtp.mailfrom=foss.st.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=foss.st.com;
+Received-SPF: Fail (protection.outlook.com: domain of foss.st.com does not
+ designate 164.130.1.60 as permitted sender) receiver=protection.outlook.com;
+ client-ip=164.130.1.60; helo=smtpO365.st.com;
+Received: from smtpO365.st.com (164.130.1.60) by
+ AM3PEPF0000A796.mail.protection.outlook.com (10.167.16.101) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9520.1 via Frontend Transport; Tue, 13 Jan 2026 16:09:37 +0000
+Received: from STKDAG1NODE2.st.com (10.75.128.133) by smtpO365.st.com
+ (10.250.44.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.29; Tue, 13 Jan
+ 2026 17:10:54 +0100
+Received: from [10.48.86.212] (10.48.86.212) by STKDAG1NODE2.st.com
+ (10.75.128.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.29; Tue, 13 Jan
+ 2026 17:09:36 +0100
+Message-ID: <8b3b6cb6-31d0-425e-9894-bf33f2ea3dda@foss.st.com>
+Date: Tue, 13 Jan 2026 17:09:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/11] drivers: bus: add the stm32 debug bus driver
+To: Jens Wiklander <jens.wiklander@linaro.org>
+CC: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan
+	<leo.yan@linux.dev>,
+        =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?=
+	<legoffic.clement@gmail.com>,
+        Linus Walleij <linusw@kernel.org>,
+        "Maxime
+ Coquelin" <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20260109-debug_bus-v1-0-8f2142b5a738@foss.st.com>
+ <20260109-debug_bus-v1-5-8f2142b5a738@foss.st.com>
+ <CAHUa44Gc+q0qJ0XJ8Y-OMT2t9o0W_WeDMHg_S0HPC5i2Zmxhiw@mail.gmail.com>
+Content-Language: en-US
+From: Gatien CHEVALLIER <gatien.chevallier@foss.st.com>
+In-Reply-To: <CAHUa44Gc+q0qJ0XJ8Y-OMT2t9o0W_WeDMHg_S0HPC5i2Zmxhiw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTEzMDEyOCBTYWx0ZWRfXyztVaSBImEd/
- D4FvQidU0gLmajs9MwTr1zgB6LfuxyvML8WsMCPaG2ffwRfJbPkDgn5p5Kiz80OoOiiljY2/Gsx
- 2/OvlCq6jvBHp6daYgI4Do5zELYTaKla5f3iMTWVgOhsQp5HOQ/NPgBK+JAoe9gMqAMe3pvv4qc
- tXIJa/AfTiBCuWc37hylh4044Riq8mNNkxrCfZP9xQubzV/zXVqdeJ/sxeWt+zJB/Y8RQgMjXZ5
- dOOR6TdzFWsKANPTVsYgyXwfiPKZQwspowQI9E/0aKs7Y8sddyS+btnwytOQ4w0DsuvH3FQygMX
- vi3k/hyh4SiAIZnV1Mp3XfkRYWjpnyFYJIB0iVXXv/Vl2Y8ugv1zyryr2kx1CDuVBw7HeGZjqAo
- v6l9UP8RjbirQEvzWEa05MWCbDqQi5Sq5Lxnmnw+sJmUdeSOUZw0c4z1X6Jp12BXTJjEkon/b45
- M7Y5M5sQVp1X3rpZkQQ==
-X-Proofpoint-GUID: hiJA3Ghk_YDykC-Xcuvms_liy2Yq89yl
-X-Proofpoint-ORIG-GUID: hiJA3Ghk_YDykC-Xcuvms_liy2Yq89yl
-X-Authority-Analysis: v=2.4 cv=XJQ9iAhE c=1 sm=1 tr=0 ts=696660e0 cx=c_pps
- a=ULNsgckmlI/WJG3HAyAuOQ==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=EUspDBNiAAAA:8 a=NLRfuka0KPNuh8cMbTIA:9 a=QEXdDO2ut3YA:10
- a=1WsBpfsz9X-RYQiigVTh:22
+X-ClientProxiedBy: STKCAS1NODE1.st.com (10.75.128.134) To STKDAG1NODE2.st.com
+ (10.75.128.133)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM3PEPF0000A796:EE_|AS8PR10MB6197:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0961b325-6353-4230-3d88-08de52be2680
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|36860700013|82310400026|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WHp3dWVSY0k2U1lqeGZKRW5Hb3J0WVJqb0hjc0tVSS80T0orb3JGMWdVQ0pE?=
+ =?utf-8?B?N2MxREJ6M0lwMzFXNHA2eTJ5RmZXeFR3NDFJQ1kxQWVKYWJBU0w4ZjZWKzdj?=
+ =?utf-8?B?RytyWElpaXFsejdKTUorM2hvWWpQY0tsSmdFbTBIOFZnRnVabVlGR1NINW9E?=
+ =?utf-8?B?dFNOYzVDYTFtNGdFK2lXZU9pYmVEbkpLMlczN0p2dVlhbUZ6ME9XaFJSU2ZY?=
+ =?utf-8?B?OFZsV0ZVK2NYT3BUK3ZaVmQvb1VKd0VzaXRKc0h4Z2ROdmEwdk9TRERiTzhz?=
+ =?utf-8?B?YXUreW92b09UV2tsblpPUlk0bjc3MDJvT0lzSHc0KzFWaE9rZUpPQUdZZGZi?=
+ =?utf-8?B?ckFuRndDOHdrZmZYZzNaNS96eVRFS2lhelpmN2F0WHd1NTdieVV1d1JsZk9h?=
+ =?utf-8?B?YkdGT0x3Q3pNbS96OWMvbFhlREtTOXRNMWdSL3ZtQi84QThTbmFhOWRYaGxD?=
+ =?utf-8?B?eDJwbTg5bnp3KzY5UXZzVkxkYTFPVW5IZFhDVWNzWVNTQmZWeU1DTXh5NEx5?=
+ =?utf-8?B?MmtKdEFubkJSckhoL3ZlNmhCZEVJL2dwTE9HVVl6L2ZmUkdDRTB1NHpzY2Uw?=
+ =?utf-8?B?cUNoa2pJUXYzWWVyRFc3TWlFWEVrNnRlS3RvUEZIQmFIODNNNnRrVFBHSFdn?=
+ =?utf-8?B?WmRhandBdGRxNFB2eVpQR3V0b1RERU9lK2hReGpWS2E1aUlub21UQXFaTk51?=
+ =?utf-8?B?S096TysrWllldG1odDRCeU13TFNJTGlncWRmd1ovZHBEWGxiZ3RWd2FjU2Ur?=
+ =?utf-8?B?Q0ZwTnF2L004RG00YzdsUjZ3VDlMUkk5Zkx1NlM2U0c4RlNweTdHLysyZkw5?=
+ =?utf-8?B?KzNrZmpOaFV5L2EwcHI3WDQyT0VJUUV0bWlMaThwSTBGN0xVcmY0cDFkY3VR?=
+ =?utf-8?B?L0xEeG5iYmEwQTRYb0czbTJyUmlZeFc1UDYySGRHL3lFWUM2bS9LV01PZVkw?=
+ =?utf-8?B?NlRqQXFNV2tMbWcvOHEvV0V3VWFLMlVpNXlLTElyM0JiUll3T1NaeC81dnE0?=
+ =?utf-8?B?Z1RhaFduakxIQm9uaGM2ZTdESXl2TXcwOFR4WXV6VVFwQ2FzWDdMOVM1Y0RH?=
+ =?utf-8?B?ZTBzNmttTHJxYU9YUWFpMVVrdXVLaEZLSThmL0NEeWJCMTlIWTVldnBJNUVr?=
+ =?utf-8?B?N3ZaTnIraEZ1dWN6L1VBcU8ydlU2TmE2VlNwVE55ZW5IdGJvbUlQSnJxQzRn?=
+ =?utf-8?B?dGpJWFh3TFhtbDBOTUlGUzUxNnk1WFBVcDMxNTNMSGhZcTh1bnR6RTduZjdP?=
+ =?utf-8?B?YTZLYjlkZ2d0eC9vMTJPbGlWS2tFY0dZUTdvTVRNRWxDWnF2cDlxZGdXZzdU?=
+ =?utf-8?B?WVp4TDdULzdzUzlNb1RyU1N0aXdoQ2lhREZ1Zm9kTkpudEw0eTRpT0szQ3Z3?=
+ =?utf-8?B?Z3hkMFZHUG9xNU15MGtPeVdsaElkTHB1QTFncTZ2U0EzUDcvK1FoazgwRHJ5?=
+ =?utf-8?B?aDkveTBzMXRrdnk4SFJVeDZZRDlsdmtic05hZEN0UU1yOHRWb0FuY0dicGtD?=
+ =?utf-8?B?dUVhTTE3OGJiSUlyeDRKa1NuSmYyN284NldjazVqYUxnbUhLcXZUcFBMaHBr?=
+ =?utf-8?B?ZnMxR3h2Q24wTmF6OFgrNmV2TzlCRTgycjNiL3M4dm5Gc21xbC93RUlvTU5p?=
+ =?utf-8?B?OVpKajJubEdhd0s1Q1Rwek0zcG82ZytxTnF2ck40c29oZjM4VjQwdDVhemk1?=
+ =?utf-8?B?RVYyamRUMU1Rem5nR2thSlg1ckRtTFZZWWRNNG5zc2pRWkZ0YmdWcEV1RmV6?=
+ =?utf-8?B?WVBLVWgzeit5aEdqQUFSWDNoeUNFSVRDT1NmcGtCeHk1Q2lFUmNMYVdEdVlR?=
+ =?utf-8?B?eHkvbHhZZXV4Nzg4SEV2L0lCZkE3QUpRaDNHamdiTVVOMWFSbUtvVlV2WmNV?=
+ =?utf-8?B?WjJPYk14Qi9ML0x5UDJnSS9PSVE0YXc2QWxJeFJyV21xbHJ0LzdDL3JBVjRa?=
+ =?utf-8?B?YjN6Nm1OeWRMbmVvdEJzbFk5cUR2TzVSdDQ3bWp0M1Uwb3c0U0tOWFUyNkU1?=
+ =?utf-8?B?c3VxNXpnS0tBd0xRK3k4YnJzMzdlcVZOck56amxQNnpTUXMvcURQNGxKQUsz?=
+ =?utf-8?B?TzJHQ0VKVlpxNVJsNDVsUGJibytrM2t4QnE1Rmh0UTlrR0tRZEJkWVdiU1Yz?=
+ =?utf-8?Q?XObQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:164.130.1.60;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(82310400026)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: foss.st.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2026 16:09:37.5632
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0961b325-6353-4230-3d88-08de52be2680
+X-MS-Exchange-CrossTenant-Id: 75e027c9-20d5-47d5-b82f-77d7cd041e8f
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=75e027c9-20d5-47d5-b82f-77d7cd041e8f;Ip=[164.130.1.60];Helo=[smtpO365.st.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM3PEPF0000A796.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR10MB6197
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTEzMDEzMyBTYWx0ZWRfX3+bHDwGd6jdS
+ 3GqFjoFWs7Jsi1OpErm9ma4BAd7tAWkrLyNYLruM4k2R0WtNDTAVU2oZiHjyE/mrGvS0SVq6NPz
+ bzfeuE81RPFDg2ZnNgrVkgyMgcV199ERUbyi4oF4TLAFvYBh/5ixHZJc4EcbT6qT86PFETJtFuc
+ UqGCPK19P964+SuvHB+pZpicvS56cqumyWyCfL8umpv2sPcjHDStEGqWFfuEQRyOzKmK+R7R8Cn
+ wnlonN5/0CG/iW/qwQlIBO0eqLJe+eRDgT3ZRF+a+c6i7n9B/d6eL51jLBoCUIUQAXTIAlAlDiS
+ XsdOHLWUcVBDTKX9oXPbdIvqdHGpaGqs/bbKv/pWmzX/5KBuVsHnukxVP5BL+xwsEePGN0gB8+P
+ DaNu1d/9EBozSNB4dqOJuYjMaXqOy69LVzSRoDGxywhKx33g5ecafGu6WTB73GdtvW4pBQNF0hK
+ aLyPd8bi8J3BWyycvvA==
+X-Proofpoint-ORIG-GUID: ICsK5xLa0A11BOQYmHjLth__5hZFIH-4
+X-Proofpoint-GUID: ICsK5xLa0A11BOQYmHjLth__5hZFIH-4
+X-Authority-Analysis: v=2.4 cv=atm/yCZV c=1 sm=1 tr=0 ts=69666e44 cx=c_pps
+ a=7E8kR0TPtiWwzUzoHzRCyA==:117 a=uCuRqK4WZKO1kjFMGfU4lQ==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=rg8MelPR9j8A:10 a=IkcTkHD0fZMA:10
+ a=vUbySO9Y5rIA:10 a=s63m1ICgrNkA:10 a=KrXZwBdWH7kA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=IpJZQVW2AAAA:8 a=8b9GpE9nAAAA:8
+ a=JUBgdCs-rIgSTqKGxAQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=IawgGOuG5U0WyFbmm1f5:22 a=T3LWEMljR5ZiDmsYVIUa:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-13_03,2026-01-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0 phishscore=0
- priorityscore=1501 suspectscore=0 clxscore=1015 adultscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2512120000 definitions=main-2601130128
+ definitions=2026-01-13_04,2026-01-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0
+ lowpriorityscore=0 bulkscore=0 clxscore=1015 priorityscore=1501
+ suspectscore=0 spamscore=0 malwarescore=0 impostorscore=0 phishscore=0
+ adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2512120000
+ definitions=main-2601130133
 
 
-On Tue, 13 Jan 2026 10:28:52 +0100, Bartosz Golaszewski wrote:
-> For lines with no name, chip_get_line_name() returns Py_None but does
-> not increment its reference count. Do it enough times and the following
-> error will occur with cpython before v3.12:
+
+On 1/13/26 15:45, Jens Wiklander wrote:
+> Hi,
 > 
->   Fatal Python error: none_dealloc: deallocating None: bug likely caused by a refcount error in a C extension
+> On Fri, Jan 9, 2026 at 11:57 AM Gatien Chevallier
+> <gatien.chevallier@foss.st.com> wrote:
+>>
+>> Add the stm32 debug bus driver that is responsible of checking the
+>> debug subsystem accessibility before probing the related peripheral
+>> drivers.
+>>
+>> This driver is OP-TEE dependent and relies on the STM32 debug access
+>> PTA.
+>>
+>> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
+>> ---
+>>   MAINTAINERS                 |   1 +
+>>   drivers/bus/Kconfig         |  10 ++
+>>   drivers/bus/Makefile        |   1 +
+>>   drivers/bus/stm32_dbg_bus.c | 285 ++++++++++++++++++++++++++++++++++++++++++++
+>>   4 files changed, 297 insertions(+)
+>>
 > 
-> Add the missing Py_INCREF(). It's safe to do even on python >= v3.12 as
-> Py_INCREF() has no effect on immortal objects in more recent versions.
+> [snip]
 > 
-> [...]
+>> +
+>> +static const struct tee_client_device_id optee_dbg_bus_id_table[] = {
+>> +       {UUID_INIT(0xdd05bc8b, 0x9f3b, 0x49f0,
+>> +                  0xb6, 0x49, 0x01, 0xaa, 0x10, 0xc1, 0xc2, 0x10)},
+>> +       {}
+>> +};
+>> +
+>> +static struct tee_client_driver stm32_optee_dbg_bus_driver = {
+>> +       .id_table = optee_dbg_bus_id_table,
+>> +       .driver = {
+>> +               .name = "optee_dbg_bus",
+>> +               .bus = &tee_bus_type,
+>> +               .probe = stm32_dbg_bus_probe,
+>> +               .remove = stm32_dbg_bus_remove,
+>> +       },
+>> +};
+> 
+> Just a heads up. With
+> https://lore.kernel.org/op-tee/cover.1765791463.git.u.kleine-koenig@baylibre.com/
+> we're switching to use bus methods instead of device_driver callbacks.
+> That plan is to merge that patch set in the next merge window.
+> 
+> Cheers,
+> Jens
+> 
 
-Applied, thanks!
+Hello Jens,
 
-[1/1] bindings: python: add missing Py_None reference increment
-      commit: 8a3058296d95c55f42578463e231693887fccbad
+Thank you for the link!
+Is it fine if I push on top on your "next" branch for the review along
+with the appropriate changes? I'm open to suggestions.
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Thanks,
+Gatien
+
+>> +
+>> +static int __init optee_dbg_bus_mod_init(void)
+>> +{
+>> +       int ret;
+>> +
+>> +       ret = driver_register(&stm32_optee_dbg_bus_driver.driver);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       ret = platform_driver_register(&stm32_dbg_bus_driver);
+>> +       if (ret)
+>> +               driver_unregister(&stm32_optee_dbg_bus_driver.driver);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +static void __exit optee_dbg_bus_mod_exit(void)
+>> +{
+>> +       platform_driver_unregister(&stm32_dbg_bus_driver);
+>> +       driver_unregister(&stm32_optee_dbg_bus_driver.driver);
+>> +}
+>> +
+>> +module_init(optee_dbg_bus_mod_init);
+>> +module_exit(optee_dbg_bus_mod_exit);
+>> +
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_AUTHOR("Gatien Chevallier <gatien.chevallier@foss.st.com>");
+>> +MODULE_DESCRIPTION("OP-TEE based STM32 debug access bus driver");
+>>
+>> --
+>> 2.43.0
+>>
+>>
+
 
