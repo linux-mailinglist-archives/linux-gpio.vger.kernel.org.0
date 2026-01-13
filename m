@@ -1,191 +1,204 @@
-Return-Path: <linux-gpio+bounces-30505-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30496-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E9EBD1A813
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 18:04:08 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9650CD19B89
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 16:07:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 80E3D309D9F7
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 17:00:28 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 95349302D1D2
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 15:01:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ADE12EDD50;
-	Tue, 13 Jan 2026 17:00:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B42D2D876A;
+	Tue, 13 Jan 2026 15:00:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b="KbaTvuQp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BKEaOIP3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from USG02-CY1-obe.outbound.protection.office365.us (mail-cy1usg02on0086.outbound.protection.office365.us [23.103.209.86])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF84B35029F
-	for <linux-gpio@vger.kernel.org>; Tue, 13 Jan 2026 17:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=23.103.209.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768323627; cv=fail; b=joIGLpFF7ZiBvlYWt3oMrUBafOP2NpCC3N6gs7bH30b8vsi/NUw019I8chQRYLF6DDWSAortpzGLMrNpE5aATGRzIWaGmnG1Avoyd/ZdFQTkJR7wAJuWw3Dy+e24umaVfW/Ofy+iE6TRrTa3s7jVWN66Pd248T+7AYcRDQTVbHY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768323627; c=relaxed/simple;
-	bh=KMGu9nepIjSV8rnf7wCrk1gPELTmagLLJuc9ZD4amAU=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=d+0yiAhPy4Bt8W1tMUhC9wmur42f9QqIYw2c1WSGtktzAv/UtGjm+gGetzQJdK2KkDEcIEn4jifMkbpFVlSnm+DYAb2klSVosf1l9g9GfhbIgCiBcgy9mIiVV45KzkEMeSYyDE6L8h39VKnxMaoDAQ0D1SXiRkTMYuR7umCtrH0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com; spf=pass smtp.mailfrom=xes-inc.com; dkim=pass (2048-bit key) header.d=xes-inc.com header.i=@xes-inc.com header.b=KbaTvuQp; arc=fail smtp.client-ip=23.103.209.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xes-inc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xes-inc.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector5401; d=microsoft.com; cv=none;
- b=fiwJkKmY6i+rgS3mOL29ztoevlrT8Rs6YIqRbAw0n5Wml1PD3NP5Dj0cdwASaZqoxod103H/+41Z2btYsnS1lyRqIHC16QStZmnafIY6z0MIm6xKyG5yMU1LGdvW446DuTuuqE4g5sXUE6PqrSjAs8XcOAUkTNQz5KQndxQjxHem9WhPEENpDBA+2KNLqEWRrV14NgL9IkoTUNp8Xlh5lh5jZ16eoShkWNcvqMzIynaTXosOI1OIDd0AuLhXYzUJAmCRU2yrf+Bov//LxShI0MkrNE+gErT+4OxQ3RexEbIgbq/NaEV6ivYIa27UAIYeXgzAv9nt1RNvuv8VvLOOnA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector5401;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=z8FBUmuwHbvhMgUr/oy5JRHlQ92Cz81y7bn1IBqSfJQ=;
- b=BGsr4n3cx3vaJjudXBvqrApTTCagz7uGJD7rUC3wiGKwkJNAU7oUwaYij3Qn31FhqiK6KuJKPAz9odfAZPgfCrcUpFr7a1XLJTE0YbZU9FX2V7ps6M6eltOKDBKJEQkcmC+8cebq0vrbCnkv+k952eBQiHL/eCrIO8px/nM5MX7rpXFTULLM86loepfX9VynxJjpuwIKF+aFmqecODlrfdM43c9ioRD8BqoB0W6S7Hx067Cayw01dWTZZcfbktPqH2KOmaKaz9thEG90bJP3coM/qz7blTh2NbKROfiVnpjBLfmWo+L5at3KyipPec6vthyIIsp5Vkz1y4LRHzBliA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xes-inc.com; dmarc=pass action=none header.from=xes-inc.com;
- dkim=pass header.d=xes-inc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xes-inc.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z8FBUmuwHbvhMgUr/oy5JRHlQ92Cz81y7bn1IBqSfJQ=;
- b=KbaTvuQpDh6LLU4sKRTrEvHwmJsmfvLHPAN4h8NiICccRLmiv2I4GrGyQzULm9Sp7GqGw7xx/fJ2VAawzdFdrKd3hYkcSNBwlAI7dttPoWxgkbYAO44rJJS/IPSi1rLz258lZW6kSZmCjEW4hhFWzaa5KVKSNPsZCDaZiZCfE06zcn44o/ORzvi8rT6GtjqpcbS0uOBQiVbsukT4ErgZWAzuIJHifEGtJLvD7DmCFU89O4t2ysMMnTMP457h+KzHuoqxV31I2y1d8EGNvVyFkH4+ao2TW08YhOT4tr8s03vzeZ2vxe/ScVnSFmw5xqwWyQUYLid5fKl0yl4JeiqFbw==
-Received: from PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM (2001:489a:200:18b::15)
- by BN2P110MB1430.NAMP110.PROD.OUTLOOK.COM (2001:489a:200:17f::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.6; Tue, 13 Jan
- 2026 12:25:38 +0000
-Received: from PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM
- ([fe80::71c7:106d:6bd3:fa2e]) by PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM
- ([fe80::71c7:106d:6bd3:fa2e%4]) with mapi id 15.20.9456.008; Tue, 13 Jan 2026
- 12:25:38 +0000
-From: Vincent Fazio <vfazio@xes-inc.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Linus Walleij
-	<linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
-CC: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Pierre Gramme
-	<pgramme@gmail.com>
-Subject: RE: [PATCH libgpiod] bindings: python: add missing Py_None reference
- increment
-Thread-Topic: [PATCH libgpiod] bindings: python: add missing Py_None reference
- increment
-Thread-Index: AdyEh0IlM09zSavNRceLsNONhxEFVQ==
-Date: Tue, 13 Jan 2026 12:25:38 +0000
-Message-ID:
- <PH1P110MB1603BF38D24A598205A0BCA49F8EA@PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=xes-inc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH1P110MB1603:EE_|BN2P110MB1430:EE_
-x-ms-office365-filtering-correlation-id: f7ac71e6-c918-47d1-b752-08de529edc05
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|41320700013|366016|38070700021;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?PQR+uMdx8p6CNB7ppVFrD2iGoVE34VStWQwkIjejRTdtyiQJF0dt5v9/tCkW?=
- =?us-ascii?Q?yZ4qXi0ivlFlLAIfCP30bKzPy1F3AejAZg6MFPr6kFRQ3WCyNmxTYSwAq4wl?=
- =?us-ascii?Q?al4pvVMB+lFnumdGGM4LqFinkFLKfHsR0n3u8wcPxTO4l6kPWC5ihGUwjEjy?=
- =?us-ascii?Q?4G+qudkkIykC+cjktEqvGUNBt46y0mrSYAkh5cUdC5EItTQdS+QCe8hDp4y1?=
- =?us-ascii?Q?giH+6u/NZxkchP72gkPaF1Wezu/6JP7O0EEjVzhGww+OQZNrUiRv+Ut0uL0S?=
- =?us-ascii?Q?E49BnGiakEXDYG4cXuwy8tGFnQQAuuCthMC2udNFmXX9xKgEAPLMbrSCkFqS?=
- =?us-ascii?Q?wbrLPG9okBA2LdRX77UzlSYFItKBxaaoOke3Z3f/GPsRKWNDo4+J5HZoHnWC?=
- =?us-ascii?Q?LPLCHmBuw9jTFzeFm4AcylY9QI37dWmZ8NhAaeKLu8JJQLqlXuh5Q7fpit4F?=
- =?us-ascii?Q?t9s+JR3ECk8fF4CU7L0Cgwtxa6nHMG0wxjmFjPMVwPeniVyGm9dT7OVFORQ0?=
- =?us-ascii?Q?P9AYQr0x1KoAzPRwsCyLQ5dL6whtz+PMbKseia+1ar2J86q1qdzve0aNRMQc?=
- =?us-ascii?Q?8SXu73DitQs9L0S8ACMbHuhQtT9izlHoIDXhMGKYUiaoublE28sE+HPFux3L?=
- =?us-ascii?Q?k/1jgEVKxPyftYu89KvSuYwfG5TRyFe8BrYUHDevPipP5Al2tpwXyOck9Pt9?=
- =?us-ascii?Q?ag6T0T3etyI1pQSmdwic3+hmEJU3slh/D2WRNI8AuZscpBvTV+ng1iIECAqS?=
- =?us-ascii?Q?xS/IF8BiMx53+JHJcaxvQGIu3/6Ggex6opO+aGqHJBstE0Dn/gaALFacceqU?=
- =?us-ascii?Q?E2r0vYUr9cWQxJs4XGn7qJq7EtGSh0IDX5Gj4lvLKOUVjWjaNXZOr34WVrmj?=
- =?us-ascii?Q?ohS/HNpCb9+7IUDZj9DAngqXWxWj/kwHvrVWHtP+WnYflBHegSyQ20Q8T9La?=
- =?us-ascii?Q?60lFJz2M0E0L3JUJMeMzyXQfgarMrkYYVVAJjuAw5aH1H2XeiNWu6E6cNnO5?=
- =?us-ascii?Q?xYrTHcRQENJ/p/Ligua9YqGpanBYEWw6FqARO/IW32XP+TaDEWlP0ZiTajD0?=
- =?us-ascii?Q?tKiYxlJ1sqWLkZS9Qm1iPYqFIbGy0BUJKWcUZKyrWOl5HHnLWFZj+V88a1kT?=
- =?us-ascii?Q?n/uiCOvRg83+WJU+cbHKt1WhkGGFmeX8IbWh0sUcSKCoob6oSu+WJqBxYn08?=
- =?us-ascii?Q?cIgk7icVp3HyqR1Q4mYHkWtoHdJqqyqegbgOfyqQ12LE0XUSIeRpmzhbzVGl?=
- =?us-ascii?Q?giNnN9KVMaPSFfI8su9qWnSfQdhaS+OSLjgqGl4vE/z4H5/BLMn4zryIC3PL?=
- =?us-ascii?Q?iE/GRcoiS+1I2Bsw6i4fU1up3hCfeBIYGEsVrab8U06cgXcBfTw6CJ1FxUi9?=
- =?us-ascii?Q?GbgSS9fE7OP36Mbn0BHuk7lnnCT1fMa2dZg7Eu03y2tIwIc9QHCNTgTaB8uQ?=
- =?us-ascii?Q?MBMmRId7oeTC/xV8FHtw2chsmhPbxqkyT2xEzhe9c62C7rpDOoulEEfAoW+2?=
- =?us-ascii?Q?lCQqtDN++vhikg0WXu8PMBlagLguqR9NMU2o?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(41320700013)(366016)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?QfZpEKtPAk7IsvSGxjrGfOGqZXaB8mwjuJm3ASgeQS2Q8SNm+f+OceSb3WbT?=
- =?us-ascii?Q?0sdVDk5Fo8Nb7rCPum2MxQlKAbt98CvKCI+AWiwWEpHwaj9/0p4s+MUtLvtm?=
- =?us-ascii?Q?jkLhxf12aYMEGl/4D+hkZhNS3KB9Pb/UrPbjCetXbckghpRYHZBuLD5KH1AG?=
- =?us-ascii?Q?LHrm452QfhE5D8swyFuPwVubaZ+6+0v8H2luOYHCGTuVCIUcIpQmkRE6nm+J?=
- =?us-ascii?Q?t1ttlba49brmHCUSNgv7WBEWLlmrEovgu+4zCgt6QZaF9dFTO/SNN80xMJzQ?=
- =?us-ascii?Q?xX10ItikVKleRQth34CxCfNXrCLKtyLG+tpYSXXi453jY5fWdgN0SM+l85Rw?=
- =?us-ascii?Q?hanMaVmI5nf4c9RomyM2cwhgclN9ryUFLElZQm5/9A8trkWDe1dAkpkCqpZ8?=
- =?us-ascii?Q?JRGTgBYYHLZ/CFYoXFI1qMNK2DVZpK2M696jfKVSMkEC1wSSc/CkNaQa51mb?=
- =?us-ascii?Q?YyrH+4IyHgjpVr+NNTuFkpGuhdC5Nft5Eymj9DJoHjYG1owxbY2TFh3dbcdA?=
- =?us-ascii?Q?gT7bSGARey0Tsu0FU3IdasWyjihPZofByXBMkQo5k1ileT7Uv3DdZaRQyz7E?=
- =?us-ascii?Q?5Q+hy0cIDw3SCtqdOhULjmfi8JGM0f+Nf+J6Zr6V1HvN1UXevUSuWO5YM/T8?=
- =?us-ascii?Q?6cODZ0sCGhQ7MBQ+MO4Af1QQfeIFIniR1NV5ZYj1u95Sjrti4Mbaw+o1/RaU?=
- =?us-ascii?Q?27nhGvij3NjNYTxovymID96zU3p1+CilB+fTc311dT+FhIixP9qnwolWyIUr?=
- =?us-ascii?Q?TDX0fP8uZZZCnG9jBc8sUBCULCTKqOUirJlOSj4Tz4jQV8Gz86hlCoPETO5f?=
- =?us-ascii?Q?1BkdKNegbvet1KT+41UQsUhjmY6g640WxPCK+nuY3TrcVA/IduLUKPxxZ0ek?=
- =?us-ascii?Q?jHC6cLFPaGgOUumDWCMy0FkxwgjznDevHnYZNjh2S6fPHD/DQpLFJz8l13SC?=
- =?us-ascii?Q?dWG4RCrTP+Mpa/SCYA84IVK3m8oABKURQ7rfAe6nQrw826uyYOj07+93eHWy?=
- =?us-ascii?Q?6AFH0MaKXCBEfgmDobuBe7z4DVbpzdNwaWI5hTSjB4SFHkxla7ZIBCYoNEvG?=
- =?us-ascii?Q?5omXgixbVbEpO8H72IjEDDRG5lKv5eFSE6jIhEZL81rEWxF4XNLAXbtEgTdF?=
- =?us-ascii?Q?5Vol3IksjtpkjOzkjUNSHYWkLJs/qqnPBU2Az13w/Nb6Y7ABFRRGaTibUOkK?=
- =?us-ascii?Q?K0YhlDz8XdGzIbN7WPPsihmCkwNoP0+MVDO3Q/QDNBoP6QzVZUU92TAFb00G?=
- =?us-ascii?Q?Hl6mwpjxUFKFlAfGuHaEyuVoSQnUL/Zv4VPo0UDamagB9iBqnhbC5rmaqUF7?=
- =?us-ascii?Q?wgv/n0U1wT7Q01vYdLLiDl+Xv29judBwHHLUc5OWw5phqhsGDJI8eYuheLYB?=
- =?us-ascii?Q?vq39Ye8csTWC6q3LfW0sHehUtjGBHqriLbpr+yTffkspMYxjrxeRoQLPRWO0?=
- =?us-ascii?Q?1E2TqB4BQdumOfbx0DFMUrSmTKcJZpu2lcm6p4w9qlAKJtK2OrcKFz51fa4Q?=
- =?us-ascii?Q?itmlGbwJiRZO2gk=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B8C2EA490;
+	Tue, 13 Jan 2026 15:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768316436; cv=none; b=HU43oe/ZwXsAmVV3e6NZD8zwKdADFfk8dk5gd4Lmebi/I8QwVbUNF1ERYLIViHmUFn0xvjJ8npS19Bp5ATQzMThlZGpZgGGx67Cwkzz0PB+aEGV0juy04+SikFslhlL//WzgiLXbnWWL4J1xIXQ4rbD7K0xjJzWSMZgZj5Zahso=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768316436; c=relaxed/simple;
+	bh=7IND1r7o6Wp7j2XEHAl4lxHLxu4x+EFEDnLYqL51V0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qpUxhyjyZOwTng9O/RmFGypRQy05uzSDPvgFp/i31KtQRf8CKezkFKu9S2crIS5buP2bRSkqwC6nsh4p6kfOwuBYhOwxDHn9BJLdfIOAkK2V1j9QPT33bsPslWs3hGLjZ6qocR+AfoO9jEPAuujMCOzptFXzK8cljeXANgh7d2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BKEaOIP3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B5FBC116C6;
+	Tue, 13 Jan 2026 15:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768316435;
+	bh=7IND1r7o6Wp7j2XEHAl4lxHLxu4x+EFEDnLYqL51V0s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BKEaOIP3NDy4TyyIXvNQy44XdcQ1Zofi/kLqNXszvG/ebMF/ypEIMu74C8u47DadY
+	 j1+KSEmvQi0W8IVyrgJpPX/5KvwEWTzJMprDI6e/A9lAs4PZJponcNBWSZtBj1Bs4x
+	 5+CutMZNmj5ZG5QbwVm0T2bTiN9EAbtq65T/ceEVy+HYkgkQquDjTSekSS9Prx/wVd
+	 dWSrtYrRewLv/p04TgDPEU2jAMrBKLInOC3HNok+OOmxqaXnLNN9CO9LYhQpFBq3xl
+	 z220S1ujX7ccB95Wi2vNye3KGltWKd2yh2vm6L71Xl8nk3J5+J0IbSencHSAxmV76z
+	 KO8VTh+WG/UQA==
+Date: Tue, 13 Jan 2026 09:00:32 -0600
+From: Bjorn Andersson <andersson@kernel.org>
+To: Gopikrishna Garmidi <gopikrishna.garmidi@oss.qualcomm.com>
+Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Rajendra Nayak <rajendra.nayak@oss.qualcomm.com>, Pankaj Patil <pankaj.patil@oss.qualcomm.com>, 
+	Sibi Sankar <sibi.sankar@oss.qualcomm.com>, Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] pinctrl: qcom: glymur: Add Mahua TLMM support
+Message-ID: <27acg4iq6mtmf6tkm4w2pl7qv23iudonjdm2h2tmy2sc6owjiv@oosa6d2a3pzh>
+References: <20260102-pinctrl-qcom-mahua-tlmm-v1-0-0edd71af08b2@oss.qualcomm.com>
+ <20260102-pinctrl-qcom-mahua-tlmm-v1-2-0edd71af08b2@oss.qualcomm.com>
+ <91d2e5f7-7d93-4909-9ed2-6b19abf0b448@oss.qualcomm.com>
+ <dayj662qu7tb3l2fuq4sfdxunvkk2rt777vm7dfvdazbwiwpzn@mysrwdbdptqt>
+ <adlhkus5gvum6fkd7bxjohwlsiumw7w6w4c36vzphjz7my2644@pmobztmgpdvx>
+ <zaf4uoms75wc7yvmrmqs53couefqsv5oie2hbiwvhitqonbs4u@aq6bcvf4nq3o>
+ <0d6f8f95-01be-4fa3-9fde-bc00cbb894f6@oss.qualcomm.com>
+ <025a8ba9-3889-4a8d-84ab-4f3f839f6003@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: xes-inc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH1P110MB1603.NAMP110.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7ac71e6-c918-47d1-b752-08de529edc05
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2026 12:25:38.2485
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 2925f1cd-bdc3-4a76-bb38-6159e20a17f1
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN2P110MB1430
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <025a8ba9-3889-4a8d-84ab-4f3f839f6003@oss.qualcomm.com>
 
+On Mon, Jan 12, 2026 at 01:16:37PM +0530, Gopikrishna Garmidi wrote:
+> 
+> 
+> On 1/7/2026 4:00 PM, Konrad Dybcio wrote:
+> > On 1/5/26 6:20 PM, Manivannan Sadhasivam wrote:
+> > > On Mon, Jan 05, 2026 at 09:31:03AM -0600, Bjorn Andersson wrote:
+> > > > On Mon, Jan 05, 2026 at 11:04:44AM +0530, Manivannan Sadhasivam wrote:
+> > > > > On Fri, Jan 02, 2026 at 01:40:22PM +0100, Konrad Dybcio wrote:
+> > > > > > On 1/2/26 12:07 PM, Gopikrishna Garmidi wrote:
+> > > > > > > Introduce support for the Mahua TLMM (Top Level Mode Multiplexer)
+> > > > > > > in the pinctrl-glymur driver. Mahua shares the same pin configuration
+> > > > > > > as Glymur but requires a different PDC wake IRQ mapping.
+> > > > > > > 
+> > > > > > > Changes include:
+> > > > > > > - Add mahua_pdc_map[] with Mahua-specific GPIO to PDC IRQ mappings
+> > > > > > > - Define mahua_tlmm msm_pinctrl_soc_data structure
+> > > > > > > - Update device match table to include "qcom,mahua-tlmm" compatible
+> > > > > > > - Modify probe function to use of_device_get_match_data() for dynamic
+> > > > > > >    SoC-specific data selection
+> > > > > > > 
+> > > > > > > Signed-off-by: Gopikrishna Garmidi <gopikrishna.garmidi@oss.qualcomm.com>
+> > > > > > > ---
+> > > > > > >   drivers/pinctrl/qcom/pinctrl-glymur.c | 43 ++++++++++++++++++++++++++++++++---
+> > > > > > >   1 file changed, 40 insertions(+), 3 deletions(-)
+> > > > > > > 
+> > > > > > > diff --git a/drivers/pinctrl/qcom/pinctrl-glymur.c b/drivers/pinctrl/qcom/pinctrl-glymur.c
+> > > > > > > index 335005084b6b..bf56a064d09c 100644
+> > > > > > > --- a/drivers/pinctrl/qcom/pinctrl-glymur.c
+> > > > > > > +++ b/drivers/pinctrl/qcom/pinctrl-glymur.c
+> > > > > > > @@ -1729,6 +1729,25 @@ static const struct msm_gpio_wakeirq_map glymur_pdc_map[] = {
+> > > > > > >   	{ 232, 206 }, { 234, 172 }, { 235, 173 }, { 242, 158 }, { 244, 156 },
+> > > > > > >   };
+> > > > > > > +static const struct msm_gpio_wakeirq_map mahua_pdc_map[] = {
+> > > > > > > +	{ 0, 116 },   { 2, 114 },   { 3, 115 },	  { 4, 175 },	{ 5, 176 },
+> > > > > > > +	{ 7, 111 },   { 11, 129 },  { 13, 130 },  { 15, 112 },	{ 19, 113 },
+> > > > > > > +	{ 23, 187 },  { 27, 188 },  { 28, 121 },  { 29, 122 },	{ 30, 136 },
+> > > > > > > +	{ 31, 203 },  { 32, 189 },  { 34, 174 },  { 35, 190 },	{ 36, 191 },
+> > > > > > > +	{ 39, 124 },  { 43, 192 },  { 47, 193 },  { 51, 123 },	{ 53, 133 },
+> > > > > > > +	{ 55, 125 },  { 59, 131 },  { 64, 134 },  { 65, 150 },	{ 66, 186 },
+> > > > > > > +	{ 67, 132 },  { 68, 195 },  { 71, 135 },  { 75, 196 },	{ 79, 197 },
+> > > > > > > +	{ 83, 198 },  { 84, 181 },  { 85, 199 },  { 87, 200 },	{ 91, 201 },
+> > > > > > > +	{ 92, 182 },  { 93, 183 },  { 94, 184 },  { 95, 185 },	{ 98, 202 },
+> > > > > > > +	{ 105, 157 }, { 113, 128 }, { 121, 117 }, { 123, 118 }, { 125, 119 },
+> > > > > > > +	{ 129, 120 }, { 131, 126 }, { 132, 160 }, { 133, 194 }, { 134, 127 },
+> > > > > > > +	{ 141, 137 }, { 144, 138 }, { 145, 139 }, { 147, 140 }, { 148, 141 },
+> > > > > > > +	{ 150, 146 }, { 151, 147 }, { 153, 148 }, { 154, 144 }, { 155, 159 },
+> > > > > > > +	{ 156, 149 }, { 157, 151 }, { 163, 142 }, { 172, 143 }, { 181, 145 },
+> > > > > > > +	{ 193, 161 }, { 196, 152 }, { 203, 177 }, { 208, 178 }, { 215, 162 },
+> > > > > > > +	{ 217, 153 }, { 220, 154 }, { 221, 155 }, { 228, 179 }, { 230, 180 },
+> > > > > > > +	{ 232, 206 }, { 234, 172 }, { 235, 173 }, { 242, 158 }, { 244, 156 },
+> > > > > > 
+> > > > > > Over the "common" base, Glymur has GPIO143 (PCIE3a_RST) and Mahua has GPIO155
+> > > > > > (PCIE3b_RST). Both SoCs GPIO maps seem to contain both, but Mahua has a _unused
+> > > > > > suffix for the missing 143, which makes sense given the bus isn't bifurcated
+> > > > > > there.
+> > > > > > 
+> > > > > > The _RST (PERST#) pin is driven by the SoC so I don't think it's useful to
+> > > > > > have it as a wakeup source, unless someone decides to connect something that's
+> > > > > > not PCIe to it (+Mani)
+> > > > > > 
+> > > > > 
+> > > > > PERST# by definition is an optional reset line, but on most of the *recent*
+> > > > > designs, OEMs always connect it to PERST# line. So practically, I don't think it
+> > > > > make sense to mark this GPIO as a wakeup source.
+> > > > > 
+> > > > 
+> > > > This assumes that all the OEMs uses the particular PCI instance. If they
+> > > > choose to route this GPIO to some other use case, they would have to
+> > > > figure out that we omitted one entry in this table and patch it with
+> > > > the appropriate data in order to have their GPIO wakeup capable.
+> > > > 
+> > > > Wouldn't it be better to put the correct information in this table at
+> > > > this time? If we have a concrete reason not to, I think we should
+> > > > include something useful in the commit message to help the poor engineer
+> > > > faced with this task...
+> > > > 
+> > > 
+> > > There is no concrete reason actually. I just mentioned that in practical
+> > > usecase, I never saw an OEM routing the PERST# signal to other wakeup capable
+> > > functionality. But the possibility still exists, so I'm not completely against
+> > > it.
+> > 
+> > I'm curious whether we can just describe the union of these sets as a
+> > common config, because as I've mentioned, IPCat says both of these platforms
+> > seem to have these interrupts wired up
+> > 
+> > Konrad
+> 
+> Hi Konrad Dybcio,
+> Thanks for the suggestion!
+> 
+> I tested using a single combined wake map (i.e., the union of both Mahua and
+> Glymur sets) on actual Glymur and Mahua hardware, and both platforms work
+> correctly without any errors.
+> 
+> Although both GPIOs are present in the wiring, only one of them is actually
+> wake-capable on each platform.
+> 
+> Glymur:
+> - GPIO 143: Supports wakeup
+> - GPIO 155: Does not support wakeup
+> Mahua:
+> - GPIO 143: Does not support wakeup
+> - GPIO 155: Supports wakeup
+> 
+> The combined map works functionally, but includes entries that don't match
+> hardware capabilities.
+> 
+> Could you please advise which approach I should follow for v3?
+> 1. Use a single combined map (union of both sets) with comments about wakeup
+> capability difference, or
+> 2. Keep separate maps for each SoC
+> 
 
+For the GPIOs with an entry in the pdc_map we delegate the interrupt
+handling to the PDC.
 
-> -----Original Message-----
-> From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> Sent: Tuesday, January 13, 2026 3:29 AM
-> To: Linus Walleij <linusw@kernel.org>; Bartosz Golaszewski
-> <brgl@kernel.org>; Vincent Fazio <vfazio@xes-inc.com>
-> Cc: linux-gpio@vger.kernel.org; Bartosz Golaszewski
-> <bartosz.golaszewski@oss.qualcomm.com>; Pierre Gramme
-> <pgramme@gmail.com>
-> Subject: [External] - [PATCH libgpiod] bindings: python: add missing Py_N=
-one
-> reference increment
->=20
-> For lines with no name, chip_get_line_name() returns Py_None but does
-> not increment its reference count. Do it enough times and the following
-> error will occur with cpython before v3.12:
->=20
->   Fatal Python error: none_dealloc: deallocating None: bug likely caused =
-by a
-> refcount error in a C extension
->=20
-> Add the missing Py_INCREF(). It's safe to do even on python >=3D v3.12 as
-> Py_INCREF() has no effect on immortal objects in more recent versions.
->=20
-> Fixes: 0c0993569c54 ("bindings: python: ext: add ability to query line na=
-me")
-> Reported-by: Pierre Gramme <pgramme@gmail.com>
-> Closes: https://github.com/brgl/libgpiod/issues/166
-> Signed-off-by: Bartosz Golaszewski
-> <bartosz.golaszewski@oss.qualcomm.com>
-> ---
+So with the union, I believe that when you on a Glymur device request
+GPIO 155, you will start getting interrupts from GPIO 143, and on Mahua
+the other way around.
 
-Reviewed-by: Vincent Fazio <vfazio@xes-inc.com>
+Perhaps I'm missing something, but I think we make the two GPIOs
+unusable by this "optimization".
 
+Regards,
+Bjorn
+
+> Happy to update v3 in whichever direction you prefer.
+> 
+> Best regards,
+> Gopikrishna Garmidi
+> 
 
