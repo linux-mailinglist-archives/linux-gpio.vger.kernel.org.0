@@ -1,66 +1,73 @@
-Return-Path: <linux-gpio+bounces-30485-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30486-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01706D18786
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 12:26:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0365BD18996
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 12:58:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5992030880A5
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 11:22:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6FF8C301D5BE
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 11:56:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21F4A38BDA4;
-	Tue, 13 Jan 2026 11:22:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD9A638E120;
+	Tue, 13 Jan 2026 11:56:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DgGZ20Jm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R0Lyvzm+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23DC350A1E;
-	Tue, 13 Jan 2026 11:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603FB38BF99;
+	Tue, 13 Jan 2026 11:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768303371; cv=none; b=j8BtUc5uHrUrucQhq5ksCAppKD9WiNgbVn7eeVs9D6L33YDOPGDxpdGkP/M7L55mtsmoG8GVAWmTYI8/mwDFly9k6KyObWAg1IxCnGNRyaAsZfQrE9IubHA/aMI6sTznF4Hg2z05CQj4LaVT1zHS8UNOetyp+DCXOdCW7Je7Weo=
+	t=1768305362; cv=none; b=Rs2+l2gGhai1vhScrg0Wlcw9Es79exlLFIIABNW9Hc2fKAm9sK5aop54lbES3i3Sru5hhCbj0FYdeMFHqcZPPJgwgkBZLgQt018P/OCTXwMayVZdpMXr6/Sdiu9tF7s7ufke9QuWSYBVb6XRdCeK7270nTClX4eeyALdcqAYOLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768303371; c=relaxed/simple;
-	bh=oc6rbIhLu0947i6MU1E3FFCo0BLhniry+Tepq+2kJZc=;
+	s=arc-20240116; t=1768305362; c=relaxed/simple;
+	bh=ZOB9DPK5xpIxS62g0gyG4XDZOzYJXXd0SZyUS3W2ZmM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HODvJrQSCju5mxOxChSwQRGbeAkpemcOjokShXT9RQlzjTDO5u5yB7zdwEjaY03C9038udVLXF7dEY1Azd94zIsYDvasTgrAlD6JnCJ6bNBDRskBP8ZqiPl7edGoENrQn29pkliafqkBytZNhcigTtt8fpyWsRZtfUBZP0oKH1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DgGZ20Jm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68C99C19425;
-	Tue, 13 Jan 2026 11:22:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768303371;
-	bh=oc6rbIhLu0947i6MU1E3FFCo0BLhniry+Tepq+2kJZc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DgGZ20JmLTJ8/zk/Kw8qsc1eANt3U8MbMDMef/Blvm0FEDIXdL32FN134RIv0gdFE
-	 cUOuhH4mZIbPaADniOY8Mg7APmE/sP3OXhsc1E33caaYLCdcubNuQWiMqc5c6nKMMC
-	 vx1Ii8ZaJz2L69dcybQPNcQ2lexf4EA7aWzUZ/c+5Q5loJklwH1vRuoUjXur0P1j5p
-	 7isIIp3u08K3cLosjcoeOThnLD1N0aCejeZthW0mXMsZ12VviitChatBFKXOeYlCbN
-	 zKWJHzDr4vIfbBwsPe6VU4uR8Ar5M94MBRrPLxlQdQVwuI+cYfJW89V53fq1CXJ2ii
-	 qIg0vbaVravig==
-Date: Tue, 13 Jan 2026 11:22:44 +0000
-From: Lee Jones <lee@kernel.org>
-To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	Will McVicker <willmcvicker@google.com>,
-	Juan Yescas <jyescas@google.com>, kernel-team@android.com,
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: Re: [PATCH v6 00/20] Samsung S2MPG10 regulator and S2MPG11 PMIC
- drivers
-Message-ID: <20260113112244.GE1902656@google.com>
-References: <20260105-s2mpg1x-regulators-v6-0-80f4b6d1bf9d@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ml9ZRirSHGs2jm94ATUtUXB2ZoeAlCRRNqh3cudAXFXk0Pf2a5oRkUFr7PXikC0pngXWnW/o1cHoDfhoxmojxf6LcwiCh0WdlOqIOHNKZQEj/sPT7uy2PtpETv9E22Lw39zcokWGp9TFeUf8L4n4YRoVdNichNhSvspb8uvvgD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R0Lyvzm+; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768305361; x=1799841361;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZOB9DPK5xpIxS62g0gyG4XDZOzYJXXd0SZyUS3W2ZmM=;
+  b=R0Lyvzm+8QXJCd1tGh2d5G9CJUNc/mROZ5AtfMl8OvMsvLEhyME5aVCl
+   G9N9hjSmDKMRB8gKFNJz7PnYD6tMTAt0n3hrlivAq7QtlYoOgrGJ+TZDX
+   j+SAnpqy8BWndxJNmaf6tB5mH/nDtJewBS3+MGxweoKF4Et56NlBc4wJd
+   Og6JIZN9RgiF20TvO1laxSsDpKaOMZthP587WdrsgTzCvn9nAdfSBjPck
+   DKaAmHrq9MXfvuPhNQAdR1Q4eN/w3TeEvf5yLpIXzNMwhcU5rAn43PRAm
+   QoMCqbdWP3Y8DpWyiYDeQ9wSIPsGvFmxEmgR5cgzPJUf0Ewj60RCWRp/0
+   w==;
+X-CSE-ConnectionGUID: 3bFXeh6XROWRI+3Hizsf/g==
+X-CSE-MsgGUID: VgzAJjmQSPyaO/6OpJ3+Bg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="79884217"
+X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
+   d="scan'208";a="79884217"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 03:56:01 -0800
+X-CSE-ConnectionGUID: mczsFnIFSwiJonRyqqfKqQ==
+X-CSE-MsgGUID: QBcT3S3ZQv+/pzpLSOvA+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
+   d="scan'208";a="204455377"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa008.jf.intel.com with ESMTP; 13 Jan 2026 03:55:59 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 7688098; Tue, 13 Jan 2026 12:55:58 +0100 (CET)
+Date: Tue, 13 Jan 2026 12:55:58 +0100
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linusw@kernel.org>
+Subject: Re: [PATCH v1 1/1] pinctrl: lynxpoint: Convert to use
+ intel_gpio_add_pin_ranges()
+Message-ID: <20260113115558.GY2275908@black.igk.intel.com>
+References: <20260113100726.136695-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -69,51 +76,13 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260105-s2mpg1x-regulators-v6-0-80f4b6d1bf9d@linaro.org>
+In-Reply-To: <20260113100726.136695-1-andriy.shevchenko@linux.intel.com>
 
-On Mon, 05 Jan 2026, André Draszik wrote:
+On Tue, Jan 13, 2026 at 11:07:26AM +0100, Andy Shevchenko wrote:
+> Driver is ready to use intel_gpio_add_pin_ranges() directly instead of
+> custom approach. Convert it now.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> This series extends the existing S2MPG10 PMIC driver to add support for
-> the regulators, and adds new S2MPG11 core and regulator drivers.
-> 
-> --- dependency note ---
-> This series must be applied in-order, due to the regulator drivers
-> depending on headers & definitions added by the bindings and core
-> drivers. I would expect them all to go via the MFD tree.
-> 
-> The MFD patches in this series also depend on my Samsung MFD patches
-> due to patch context:
-> https://lore.kernel.org/all/20251217-s5m-alarm-v2-0-b7bff003e94c@linaro.org/
-> 
-> While these patches compile, regulator probe will only be successful
-> with my deferrable regulators patches from
-> https://lore.kernel.org/r/20251227-regulators-defer-v1-0-3104b22d84cb@linaro.org
-> --- end ---
-> 
-> The patches are kept together in one series, due to S2MPG11 and its
-> regulators being very similar to S2MPG10.
-> 
-> The Samsung S2MPG11 PMIC is a Power Management IC for mobile
-> applications with buck converters, various LDOs, power meters, and
-> additional GPIO interfaces. It typically complements an S2MPG10 PMIC in
-> a main/sub configuration as the sub-PMIC and both are used on the
-> Google Pixel 6 and 6 Pro (oriole / raven).
-> 
-> A DT update for Oriole / Raven to enable these is required which I will
-> send out separately.
-> 
-> Cheers,
-> Andre'
-> 
-> Signed-off-by: André Draszik <andre.draszik@linaro.org>
-
-MFD pieces look okay to me.
-
-Once Mark provides his AB, I can merge the set.
-
-[...]
-
--- 
-Lee Jones [李琼斯]
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
