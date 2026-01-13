@@ -1,88 +1,91 @@
-Return-Path: <linux-gpio+bounces-30487-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30488-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 056D0D18990
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 12:57:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EBE8D18EF8
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 13:52:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id D9E863006E19
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 11:57:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2C0E0301A4AA
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 12:50:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A893538E12B;
-	Tue, 13 Jan 2026 11:57:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B5D538FEE3;
+	Tue, 13 Jan 2026 12:50:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f+A/LmAk"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Jh0Q9Kkg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F18438BF9A;
-	Tue, 13 Jan 2026 11:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DD938F933
+	for <linux-gpio@vger.kernel.org>; Tue, 13 Jan 2026 12:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768305453; cv=none; b=BfrGv0OgDY3EgnJBb/pVz9+yYc+y/oFam5AN/SrMKMjrQIYlvbt0BZseHf64NAIvMb5WNQo9nv+5EbIci1tDodwffm8rFQy95ivUnI4I5Hr4wqIS0HjB/EYZjS9F9LJbtYxnnZku1qL8r0hHzTGzt1aXXNteuRbcc4xVSGecC1E=
+	t=1768308636; cv=none; b=VJMbHSe4IMmG67PqwOPxI3NVSe7Yqumn5JQeyxbwUu/45uNKFBhCWLundf/n3a7h1zxdokpHAD6YpwNyFJDoKyErKQtZqHyzJ6M9pHnMnLaUy9FUynEQrLWRRzA7yILKILzRRMXP/jeNnpGS9FkcHvCDyIbmhj91J1IkqOM52w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768305453; c=relaxed/simple;
-	bh=/ojSBZPpJcuSlAY+mGdv6H7WIvQdD04RDuf18kBsclk=;
+	s=arc-20240116; t=1768308636; c=relaxed/simple;
+	bh=1DKmmAMrTMc/B32nL+XGjSAKOro5Gz96ACGi7IqMW9k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DC4Onn8Pqh398Lkgpu/bi1aGVZNgo8+JOdifQZDosO53SwqX9a+A88Pt+n72DnB+DQaaXLlOL3j5IAVv7RnJxYN1jam+7FI4SpntKk/EC1z17+ouc9BGber2he0r8jgx1m6ws6KrG7QPBw1OjXZ6sIxUCnQvYwdn+YuoNBCEFSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f+A/LmAk; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768305452; x=1799841452;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/ojSBZPpJcuSlAY+mGdv6H7WIvQdD04RDuf18kBsclk=;
-  b=f+A/LmAknR2NoQHf7grj4CbP256ahNsCYEWbM3UMF/2U/2woZ8cC2yhw
-   xr9AbnEUJjjNyuzU5ZLPcAUJXw6DfkgqlgoHuvdBT8/WCFf3xVrZYA/vE
-   ZHQhL73eyXY+nvZGR504xmeXAvtJWR3RRO2srzu5PtJgY1FbeYPGBgVm3
-   CbYm+c8Kbp2apAyHw80Xd17ILOUMJ2aar+Ehkb95n6/GK70ZY5vjEjcm1
-   ujm7TXpFeVmuomzHDkIX1TWMMcaHBeDowvUPkyIMbVjdvraPz5pNEKuSC
-   wQdvZG+gnNGlfl9XxTXbhnC6i4QlWAk12VfMCar2vE8kWMM02YhMRszo6
-   w==;
-X-CSE-ConnectionGUID: C/3DdeXxQ1OFnyWjxd50xA==
-X-CSE-MsgGUID: /T2USsyDTBmUyoZv+ZAHxA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="69496652"
-X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
-   d="scan'208";a="69496652"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2026 03:57:32 -0800
-X-CSE-ConnectionGUID: U9Qo896gQZW2w7lf3FrMXQ==
-X-CSE-MsgGUID: PeckAFmdQuK+jttFVWtw+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,222,1763452800"; 
-   d="scan'208";a="204971463"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa010.fm.intel.com with ESMTP; 13 Jan 2026 03:57:31 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 26BA098; Tue, 13 Jan 2026 12:57:29 +0100 (CET)
-Date: Tue, 13 Jan 2026 12:57:29 +0100
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linusw@kernel.org>
-Subject: Re: [PATCH v1 1/1] pinctrl: baytrail: Convert to use
- intel_gpio_add_pin_ranges()
-Message-ID: <20260113115729.GZ2275908@black.igk.intel.com>
-References: <20260113100734.136729-1-andriy.shevchenko@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qpGiBvg6gd9iY2SXrnBL8Q//a9rSWwUro6VwXFLDVC4PMZATR3tyUEBVXxD5weNtslQNK0tv+Ad5XJJBuZOmEQJtjLtQXsd5j/F2Cti7mXyAzZ3vMjip4l3cI5Lh2tc/RcZsoj5B+TIU54uRXig3v8db04ErXIIe3sQgyoO8PBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Jh0Q9Kkg; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=bgYz
+	Q023QCEOFph6EUgTHi0vVdD25uncinH1QX1E4EQ=; b=Jh0Q9Kkg9hoNCkqQXdhX
+	gcQkYx9o2x2ZvYqfkeWiPR4Rkaj1Zf3CajlD71h1nMVg0c+0U4UjtOWGqg/ZOPEX
+	/BTlcNWWF8rtomnudWesc7ZlFTxZBmXB1g7oavfNE1OPq3JejuM46kUz5UApMOir
+	5c+p8x6pM5dgbBnNjRjB7s/sydNLK/TL7Nyy5H6F0nb0XzI1esKAT0mKlBi2iktG
+	S4UawpvkqZ+Y7tSpLv/uy4aYQn0w82z6Ohw59LIuyUN6AkduqdwWrZLZsnl6+nEN
+	UEvaydNjnROjP+RQ9g8y3Vmupz74Mu64hEkIPhSzTbpzi0usr51RLyLOfM5wo/TI
+	6w==
+Received: (qmail 1683370 invoked from network); 13 Jan 2026 13:50:26 +0100
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Jan 2026 13:50:26 +0100
+X-UD-Smtp-Session: l3s3148p1@aJd4b0RI2soujnvx
+Date: Tue, 13 Jan 2026 13:50:24 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Robert Marko <robert.marko@sartura.hr>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev, herbert@gondor.apana.org.au,
+	davem@davemloft.net, vkoul@kernel.org, andi.shyti@kernel.org,
+	lee@kernel.org, andrew+netdev@lunn.ch, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, linusw@kernel.org,
+	Steen.Hegelund@microchip.com, daniel.machon@microchip.com,
+	UNGLinuxDriver@microchip.com, olivia@selenic.com,
+	radu_nicolae.pirea@upb.ro, richard.genoud@bootlin.com,
+	gregkh@linuxfoundation.org, jirislaby@kernel.org,
+	broonie@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+	lars.povlsen@microchip.com, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-clk@vger.kernel.org, luka.perkov@sartura.hr,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v3 06/15] dt-bindings: i2c: atmel,at91sam: add
+ microchip,lan9691-i2c
+Message-ID: <aWY_kMIX_G2iSltN@ninjato>
+References: <20251223201921.1332786-1-robert.marko@sartura.hr>
+ <20251223201921.1332786-7-robert.marko@sartura.hr>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260113100734.136729-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20251223201921.1332786-7-robert.marko@sartura.hr>
 
-On Tue, Jan 13, 2026 at 11:07:34AM +0100, Andy Shevchenko wrote:
-> Driver is ready to use intel_gpio_add_pin_ranges() directly instead of
-> custom approach. Convert it now.
+On Tue, Dec 23, 2025 at 09:16:17PM +0100, Robert Marko wrote:
+> Document Microchip LAN969x I2C compatible.
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Acked-by: Andi Shyti <andi.shyti@kernel.org>
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Applied to for-next, thanks!
+
 
