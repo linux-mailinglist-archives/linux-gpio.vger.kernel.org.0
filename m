@@ -1,126 +1,107 @@
-Return-Path: <linux-gpio+bounces-30502-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30503-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B0A4D1A34F
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 17:24:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 01281D1A358
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 17:25:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1F3BA300F8AE
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 16:20:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A359230AEEC0
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Jan 2026 16:21:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54C882E2852;
-	Tue, 13 Jan 2026 16:20:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B17092E8B78;
+	Tue, 13 Jan 2026 16:21:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bDEm4Xwg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KV3SosWT"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DB22609E3
-	for <linux-gpio@vger.kernel.org>; Tue, 13 Jan 2026 16:20:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC962E2852;
+	Tue, 13 Jan 2026 16:21:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768321242; cv=none; b=BFHTJpbdJKg2c1qtI96yZ45Qq0JzUy8IngPEi6t6FwpnjYXFvNp/JB+Wpn/tQlA/6CMdYhd7YQIyC9qnhMdJePCWvB00Jqncu7U9dHemPyhS1ncZqC/6IOzYxlHASLfJ9UvXYs3L3GtfK4e7jsLtGVcnnuzvLrtI9hMdJZ+q/QY=
+	t=1768321260; cv=none; b=s5/Ds2vKHT8e06cQ86ZunXXoPeNg5e+eP9w7TbKWHRl0Vqn3ykFu3OtB0lJmmjV/jLM9M4PrdXf8gLLRgxnZhEq49bM/dUw8OG/mbYZbgTMFj3BLT+biYSNCc/UUcWtVAWEsGYpvadTrL76Wplyd9Qc81PHpojKE2bHuihO9d18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768321242; c=relaxed/simple;
-	bh=QE50A6N74JiT1YTdsEYJNTdYhGay3rlU8StFdylcxes=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y7FSVfPrauXeikSmJNHB5SLxEjzB0WteyCaw45tbUyrJ6Bb2DvtuUJaI57rE0Qz7kz+E7khGyOc6wg2HMcjRHUFhVpi8H0yLfrvHNDD3rRcs91HVVeSHbdhYqb/ZTtSSQ6mM2qW8Qd/ng2+i2/pDpbUthKWnH/Fnn9Ska5ae7nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bDEm4Xwg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1BC3C19425
-	for <linux-gpio@vger.kernel.org>; Tue, 13 Jan 2026 16:20:41 +0000 (UTC)
+	s=arc-20240116; t=1768321260; c=relaxed/simple;
+	bh=mEatuWTFMJ7opE9HJSdwyGc6dGCQ/DdKDKcWkmz23oM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BN+8zDVNliWinRP5+kgSYKYK85wCzSg7TW/2nvoUsw6Ri/hcv0vnNJHgKFOtt75XvQq9SFJuFuLzDjSU6Lv89bIpUxKa/kNWtE+bIWg2UGtAq8kbqAXKxt1nVqea2RV/2tB6pKAOojAZM1XPzVtSIU1/yDRu9ryHcpVT1f+V9FQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KV3SosWT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74168C116C6;
+	Tue, 13 Jan 2026 16:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768321241;
-	bh=QE50A6N74JiT1YTdsEYJNTdYhGay3rlU8StFdylcxes=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bDEm4XwgpNAZmzD+VUgCx043Vg/3mH1mvI6DKH3Ik5iLztiG5FW5Hw5VdTlMrIjLr
-	 oV8ZiScEUQVVxZLhbv+QcXs0+dp68CAra0slXzwdx2M0Ho1ixkAnk0Agz6hvH/0U66
-	 LAFjCEqQpGVvyNgnKKwGXmieEJ8WnBGzhFLRz6dPrUKqI3rksPhG0v1rn5QslkYup7
-	 V37F6IYjCeDeh37ZGSx0pVVKza1UnQfZI7vc5PU9NahPfCyJEGrsmglwx2Tm8AL5NK
-	 bN+IwpFtDqsv6+AJKv8ii75GdspIR90fBou1YKDldwaHrv70wMwvv/+rTm6my2xvNN
-	 cCnCTkqSWkp+g==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-382fceabddfso54987191fa.1
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Jan 2026 08:20:41 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVkGXgee1/CsPsIwtcujypf18pd70zdVbuGeW4sVdj0Dvz4dI1rJ0/8m9NvBuxKasyOg21JFj0GCUDf@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlUz5enyG6HGuHOtDf8/b9VQykRWKCxEKK9jWetL1folw1q6rJ
-	47FBR1pXcvHmei1ce+nDqJbg0Qw/Z0kIb6xgtDZlp2enU7BjWme24yOfARCZ6qE5WgHPikCGTds
-	frg4Ha9nuFVlm6Ckn/iIZlM34zwTKY+PWHz2ijTzYig==
-X-Google-Smtp-Source: AGHT+IFKOWqwjZbxcFJ4zB9bqD7BCgyM4TegNTQdFs3Tw6rY/WlDFX8QLM4J11ke3ozfEdCS1YUM1V8Fvr0IJF85XXw=
-X-Received: by 2002:a05:651c:211b:b0:383:1b75:b9bf with SMTP id
- 38308e7fff4ca-3831b75c2a5mr47283781fa.28.1768321240439; Tue, 13 Jan 2026
- 08:20:40 -0800 (PST)
+	s=k20201202; t=1768321260;
+	bh=mEatuWTFMJ7opE9HJSdwyGc6dGCQ/DdKDKcWkmz23oM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KV3SosWT8JeFdPcEbo6t0sHaI6/MrFynZil+wdvBRH/e9ybAXcDK+HUiBqGQevaIO
+	 HItQFdBqE0bP9uxxGQEVLH6OziEw7by6gN+B3EpPXGpsDXd1UbK+xCW4sPxlrPYsX1
+	 bNtCDfLWJcYHK48WFRhSkHsD/8azi7Ro0cgaIe4YtDj87DPDvQ+dmJWsLCrjX3HdF9
+	 vdVZzfj/AFKGn7bd0TZ+wxrzwdqPtGmMBfR3cFkvYs13JHUzo/d0fYaX80qnFBj5e+
+	 PfudDhEF1f/zxJhZH2Wu6msqTxLjoJdHqU5FHp2cLckKGSA3YzLY9PSgSTe+hAq3Yl
+	 x+76XK9Kp28CA==
+Date: Tue, 13 Jan 2026 16:20:53 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Lee Jones <lee@kernel.org>
+Cc: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Will McVicker <willmcvicker@google.com>,
+	Juan Yescas <jyescas@google.com>, kernel-team@android.com,
+	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: Re: [PATCH v6 00/20] Samsung S2MPG10 regulator and S2MPG11 PMIC
+ drivers
+Message-ID: <6ace23c4-d858-4bdf-9987-104e706190cd@sirena.org.uk>
+References: <20260105-s2mpg1x-regulators-v6-0-80f4b6d1bf9d@linaro.org>
+ <20260113112244.GE1902656@google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260113161152.3688309-1-shorne@gmail.com> <20260113161152.3688309-2-shorne@gmail.com>
-In-Reply-To: <20260113161152.3688309-2-shorne@gmail.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Tue, 13 Jan 2026 17:20:28 +0100
-X-Gmail-Original-Message-ID: <CAMRc=MfLqoPvCiEtunvfidaRGAfZFbGM98y8vjj8R187ziUtdg@mail.gmail.com>
-X-Gm-Features: AZwV_QiWKv7qTHI37EWrS4Ims9IVvV6gH-K3n0gK_u90s8jQ4e7D9NtXWn5GUNY
-Message-ID: <CAMRc=MfLqoPvCiEtunvfidaRGAfZFbGM98y8vjj8R187ziUtdg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/6] dt-bindings: gpio-mmio: Add opencores GPIO
-To: Stafford Horne <shorne@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux OpenRISC <linux-openrisc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Yd7U/Fz06TPcBCPq"
+Content-Disposition: inline
+In-Reply-To: <20260113112244.GE1902656@google.com>
+X-Cookie: All models over 18 years of age.
 
-On Tue, Jan 13, 2026 at 5:15=E2=80=AFPM Stafford Horne <shorne@gmail.com> w=
-rote:
->
-> Add a device tree binding for the opencores GPIO controller.
->
-> On FPGA Development boards with GPIOs the OpenRISC architecture uses the
-> opencores gpio verilog rtl which is compatible with the MMIO GPIO driver.
->
-> Link: https://opencores.org/projects/gpio
-> Signed-off-by: Stafford Horne <shorne@gmail.com>
-> Reviewed-by: Linus Walleij <linusw@kernel.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Since v3:
->  - Removed example.
->  - Re-order this patch to be before adding compatible string to driver as=
- per
->    device tree binding patch rules.
->  - Add Reviewed-by's.
-> Since v2:
->  - Fixup (replace) patch to simply add opencores,gpio and add an example.
->    (It was incorrect to specifying opencores,gpio with brcm,bcm6345-gpio
->     as opencores,gpio is not the same hardware, its 8-bit vs 32-bit)
-> Since v1:
->  - Fix schema to actually match the example.
->
->  Documentation/devicetree/bindings/gpio/gpio-mmio.yaml | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml b/Docu=
-mentation/devicetree/bindings/gpio/gpio-mmio.yaml
-> index ee5d5d25ae82..a8823ca65e78 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
-> @@ -23,6 +23,7 @@ properties:
->        - ni,169445-nand-gpio
->        - wd,mbl-gpio # Western Digital MyBook Live memory-mapped GPIO con=
-troller
->        - intel,ixp4xx-expansion-bus-mmio-gpio
-> +      - opencores,gpio
->
->    big-endian: true
->
-> --
-> 2.51.0
->
 
-This is not a follow-up patch. Please rebase your fix on top of
-linux-next. I already have the previous patch in my tree and will not
-be rebasing the entire for-next branch.
+--Yd7U/Fz06TPcBCPq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Bartosz
+On Tue, Jan 13, 2026 at 11:22:44AM +0000, Lee Jones wrote:
+
+> MFD pieces look okay to me.
+
+> Once Mark provides his AB, I can merge the set.
+
+Given that the bulk of the series is regulator changes I'd been
+expecting to take it?
+
+--Yd7U/Fz06TPcBCPq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmlmcOQACgkQJNaLcl1U
+h9DkDAf/aXUdb/ij0NeG8LB1f9KJZA+1JBPDJ+37zcJtQxZa6HVv2KPIZzP6pd5v
+8v2VpOQJ9KvRq3TADwBeVrBDQdJFmG7C6+HN7BcgVsVXsF+0OCgCAyZ0XJaXpmct
+8eyl2jpvQyvtsKzfrMfDrIY2vDVoiqI4U90nfkHP2+HYuUCuym2JEogjTfNp8eHE
+GWEI8a3hBwph0Y334Z0oLZSvbAnV6UpAn/AWa3DBCNpWnOzH0uxuodJTKxg5uivj
+zpOTBhsBWjQ7vWc5ABMV+m2THd1K75xsXbnq5bPB+jTAnVfBp7D/G/o0oJTqmFQn
+xgEWkGl/QJol2+w9orGmnAd/2cJXfg==
+=zs0M
+-----END PGP SIGNATURE-----
+
+--Yd7U/Fz06TPcBCPq--
 
