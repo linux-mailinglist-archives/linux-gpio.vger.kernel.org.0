@@ -1,77 +1,78 @@
-Return-Path: <linux-gpio+bounces-30541-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30542-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2B55D1E2B9
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 11:44:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 33A9FD1E2C5
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 11:44:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6F58F309A5F9
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 10:39:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 416BC309DE2D
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 10:39:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44368392B95;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A81043939A3;
 	Wed, 14 Jan 2026 10:39:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="B8xKtRS/"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="XO36T9jN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013045.outbound.protection.outlook.com [40.107.201.45])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013012.outbound.protection.outlook.com [40.93.196.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABA239340A;
-	Wed, 14 Jan 2026 10:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5AE39281A;
+	Wed, 14 Jan 2026 10:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768387164; cv=fail; b=mwmWzvqgFQOkpkcJYL8DQPHoXaM2FjSAmfvryC9p0nGecYffEvJcReHoXvkFduOGhF8zMLtfxmNibLRwT+xa/wnG2LmOhoQdzdmHkshvS7m9WJUI3mMHVJ2f85QiJqgiYeVm6Khl9jfBEA5yaphF6qiQAqnStcYxNmlg6xcNc2Y=
+	t=1768387164; cv=fail; b=Mf+YdXxn6XhpnC22QZnsF+sa/qO5iHArhm0LkD7Cd+kv1DY4bZGmszMW6MdRCJ+W0TPsyJzFC7gTi92ccr2HBEGaFzerDEn/0vhHvpdD4L1EITCz9jlhWWhpGkHVjTavCcQFtIhvDpQ4BgRbloY4lhqn6Otu6kKWmFDajFyITbg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1768387164; c=relaxed/simple;
-	bh=nWtzEsZ3wY1YMMcGSJryr0aDOU3qqv2OSVcPfgWKluk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KlJQNgPUVXZcffpfYi5BaRCbCvd8G04oXSweHN0ZrqR7pyDJfynU9terkkiIlxpPMGQI9FeR3YLDibMX7qHOwd1B2/PJGIse2sGSMjO434XCMyFdzvKJDcWWXle0ChZRNzMvHJvBRHRF/O2SUCUmIeAj8eVioQPEdTqhMRfV3Vs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=B8xKtRS/; arc=fail smtp.client-ip=40.107.201.45
+	bh=9hQuVBGDZV2fTOMTfjE96TogCwc840dTBMNKIEYPc94=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vh1rE6sxDNbWeCsLyh6O6LDrfc/ZKwmhGXcv70BFM1FpLDYlUDrN84a8AgbirmVb884TJE0cqSAF1iGwM9Evso9imMJYEnt6Ew3VweGREklDGKAelJIEE6lorVq+foPSBIy88wSmkJWOfssjFVWVNMvI6RY9hfwp4SQJhHReCB0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=XO36T9jN; arc=fail smtp.client-ip=40.93.196.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QEqShmND8iW/WIKWh9DGG2wZgK2KClYe7JpIV944dvqQptnZiF2GO0mUGviT1QUS3Nrir4/uKiWWPCR1eOvWoJvTsqNxq7zuQNjxJZzITkytNXnG2M6e7FgGd8uxYTzBPywPOVoHx11mdkqKaDahZ0xggoTKOhk6uD0IKbC3TqJl22+4wUjFfvNbinjwWXxoZCPzQ80mJvJoTsBOLxm5COHg3oCmPrW/zn9BTYuFuefoFRVAA98xHZr6XHGp5VdfXWzpcKaFG1C+p7lYI/0x/oVVGmmC1P+KDzNcMsIr4YzZqpYpRN+klBOFZ4d2tV2ke0+lJzXx//jg3IlSYPm2Bg==
+ b=Q+CNE+GQD5wPiUbHnKCeIl0i3quZh0qOe9OA3Yw5DPmqE0SNU6SQf7t7XK0d41lnDFqvES2Ajgx2IVYA17k0nNhARC2JdhnqwyPX5nnrKniCvUQ/nS6lHOfPmxWrysT8oSayLUDpBTzlBZw0FsKvvKEbVc1LWhWsq4BwBje2zWewffZ87JRozQQLkv0AD8fwZdX72yWld9yL1AyDpnpzeDs0g6c7LtXptH30cbRScfnbIXJJmr4vdIGGGcNuf9tEzMsZEGGDwsMP7IFahmzldTNGlKtROS0FaO7xQj/r+9TMXVDbPH9s3irjWLGNuNpZ5WkZLXQ5K9xumIS7SIXeIQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EwSOdxwTyuZxmmnTw+5GKPg6Ks4BJUVwIeY4G3c8xhc=;
- b=plSNlHBa/h2twDZXwOHd3leIiwt1z1csow30R52m18fRjUJyZA5izmiDYkwVpsi9Se54vtzt9kFYFRltwwoLqiyjb4HuSz3mSVWGsOH7a0dZjpqmksVIdLfd9DAL1vfxsspXE6MI+iQOC8DPJbbt2JbYvvqgZagGbfvHthzujAfDxiaK89n8RIBlCy61YE7pACEyYYpYkBQ7piULqcf/O3hFayBZmN1pHddbt3J8s7KDjBUNCfGA/ZsR+E9amHbiOANhvnO1tF2QpnRX3yCaXOT+1POKMlBEi8wMkg4WI/jhpxfcNLGHQ4ujw/g987nxUxjXHmYbvmliGYuzHxhBvQ==
+ bh=AADHFR1/oxy1ZzhAlw0W/+IrUZ0Cwo5j9mFK8vlbVhI=;
+ b=Vlo4cE2h6Jlihkk1IdTIBMC0YL4LixZhVMsLq/oIK62Smvqu9xZ29BrRIUWYYKTWcHNbmuUfzXHMYoxPDwTG8MlPJShW7PJBPyM2i0IyZzSRc/LpHHjXDaxOK/R/q8AFo0MwhZ0IeXlfBW7P+2X9XAVotYPfbebt9zSpytA9f2WXGXE/jT1nXJCwKEZTuhy13fQvfgBzREgaUDnNW3ASHGrVoAlz1wVTeGJRE4WA6KMAcEUEWJEVPFNeLU98M2lHEZgYW9jE2VY5bwsFZRozlwLvPqX/ELG4YNPlnWVsEOwydNzzunGjUrREUPWz8d4NcZDr5lqXV3/SpnhpQXC3/Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EwSOdxwTyuZxmmnTw+5GKPg6Ks4BJUVwIeY4G3c8xhc=;
- b=B8xKtRS/hfA06Udwyj2zfb+Zz1R08UYdGGWOinA0IQPuCRn32Xk/9VBZngJ+q/LPY6DCb+DKMMQEIULe8Ll6m6xehc9ouZquBnzjbcKc+QKMZBINlVHXYz3g0lY7wjUigi7jpNsaObhYIiYYxvZKmEP50JI7NOzisznjoMTMnX3NCIvbch26fuFxmHTit1IkdTW9+YWx583+fKJgSN3c2grlCvDxY4PLvu8kzV3ebti29u5/boz/g0hLJSSIggpeQKEMcP5MSSfvbYTQNUNPgH+Brz3gIoR6SSus9YFY3npWWZWD+ZNsV5s5lrmbqEnUi/BLuYG8u/YWsrYGzhLI1g==
-Received: from BN0PR04CA0128.namprd04.prod.outlook.com (2603:10b6:408:ed::13)
- by MW4PR12MB5601.namprd12.prod.outlook.com (2603:10b6:303:168::13) with
+ bh=AADHFR1/oxy1ZzhAlw0W/+IrUZ0Cwo5j9mFK8vlbVhI=;
+ b=XO36T9jN9u4ZGg7PCd965ur2egBbc1+pDLKXaus/PPzaZbqYtEc+YIhKuWRSagn1MDct9hbQ0EvP8HEYe/ZaaJXtNFFqjtp6TaJ/O0O6wHRf62pLnvwxG8seo+xJ6pU3kKUxNHG8sKFPwrmxOX206lVaGKDlrSYwMHms9zgETQnI425Gs5nqyv/QrxToXccHFH/pvbFrTI0nwXY0Of6giNshtv8P2oMSWVKpEaXzhae3bltSav1p1zLSiwHBttf2McbfDeMIH/BN0V+x8/Ym0mTD/+Hj0/ZTwF0OnBbK2c7PZJZASW0bhyIgME4Uq8EUDlupqVCVbE/XONrg9d34Iw==
+Received: from SJ0PR03CA0064.namprd03.prod.outlook.com (2603:10b6:a03:331::9)
+ by MW4PR12MB5667.namprd12.prod.outlook.com (2603:10b6:303:18a::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Wed, 14 Jan
- 2026 10:39:13 +0000
-Received: from BN1PEPF00004682.namprd03.prod.outlook.com
- (2603:10b6:408:ed:cafe::24) by BN0PR04CA0128.outlook.office365.com
- (2603:10b6:408:ed::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.6 via Frontend Transport; Wed,
- 14 Jan 2026 10:39:13 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.5; Wed, 14 Jan
+ 2026 10:39:18 +0000
+Received: from SJ5PEPF000001D7.namprd05.prod.outlook.com
+ (2603:10b6:a03:331:cafe::9d) by SJ0PR03CA0064.outlook.office365.com
+ (2603:10b6:a03:331::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9499.7 via Frontend Transport; Wed,
+ 14 Jan 2026 10:39:06 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BN1PEPF00004682.mail.protection.outlook.com (10.167.243.88) with Microsoft
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SJ5PEPF000001D7.mail.protection.outlook.com (10.167.242.59) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9520.1 via Frontend Transport; Wed, 14 Jan 2026 10:39:12 +0000
+ 15.20.9520.1 via Frontend Transport; Wed, 14 Jan 2026 10:39:18 +0000
 Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 14 Jan
- 2026 02:38:56 -0800
-Received: from localhost (10.126.231.35) by rnnvmail201.nvidia.com
+ 2026 02:39:04 -0800
+Received: from localhost (10.126.230.35) by rnnvmail201.nvidia.com
  (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 14 Jan
- 2026 02:38:56 -0800
+ 2026 02:39:03 -0800
 From: Prathamesh Shete <pshete@nvidia.com>
 To: <linusw@kernel.org>, <brgl@kernel.org>, <krzk+dt@kernel.org>,
 	<conor+dt@kernel.org>, <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
@@ -79,10 +80,12 @@ To: <linusw@kernel.org>, <brgl@kernel.org>, <krzk+dt@kernel.org>,
 	<devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
 CC: <pshete@nvidia.com>
-Subject: [PATCH 1/3] dt-bindings: gpio: Add Tegra264 support
-Date: Wed, 14 Jan 2026 10:38:44 +0000
-Message-ID: <20260114103846.687338-1-pshete@nvidia.com>
+Subject: [PATCH 2/3] gpio: tegra186: Add support for Tegra264
+Date: Wed, 14 Jan 2026 10:38:45 +0000
+Message-ID: <20260114103846.687338-2-pshete@nvidia.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20260114103846.687338-1-pshete@nvidia.com>
+References: <20260114103846.687338-1-pshete@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -95,186 +98,198 @@ X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
  rnnvmail201.nvidia.com (10.129.68.8)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00004682:EE_|MW4PR12MB5601:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6094c355-b0af-48e8-23c6-08de53592879
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D7:EE_|MW4PR12MB5667:EE_
+X-MS-Office365-Filtering-Correlation-Id: b820d34e-1020-42a9-186b-08de53592bd2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|7416014|376014|921020;
+	BCL:0;ARA:13230040|1800799024|36860700013|7416014|376014|82310400026|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cv5pA6rbHX+u6jk5BQ0d0GW9TxfFYKqtUsvosomRAoYO6+D9LMWch06i1J8u?=
- =?us-ascii?Q?JI/W0tERimEDrNh48bgYOLp+8Y1JFAp033/xmk3syL0fTdgTtyxfQjVMxzmt?=
- =?us-ascii?Q?GpkUjdD6Tydcm5ZDW5s8L+L6H1n+R72jnxHasRYcd8Jk9aoB2DTXvYAj8Kny?=
- =?us-ascii?Q?K8iKLUtp2xnF/GJLll1EnT2Bm85e3aflh1R0lWGSYUkrBvQ9uO+++d9HaZhR?=
- =?us-ascii?Q?q2i0MnoyL3A5aXAj9gWgCNxCd68Goh5BGVPjpVvNAgD/OUY2HylLPiMsa8RZ?=
- =?us-ascii?Q?JkMaIHo6nSTZPknKaeF4SekGNhQuxaGKmxznYi9T2geQw3co06fMIuUN89PJ?=
- =?us-ascii?Q?gIgkMeXmeqUkxq5i0s8bKJzC7wUJzW3N4PrDTwlaMiidA+e3TkhAouY8HwzY?=
- =?us-ascii?Q?2QGcs0wNKPOv7E4ZxPt8OEyffDdjxOkJ2mLaQhtYxhFxWlEQsVRlz3upr8RI?=
- =?us-ascii?Q?b2f1DbOT8KR6zkWDo6UUtlsFrnwNTApYzzBKy4ZkzPLDOGL6OTBe+fVukW7l?=
- =?us-ascii?Q?hpjZvAZ2bWyFeOpIqGnvPaiu+MPkDCflSavOkgUg8IsKkPosHMsCXUa19QOW?=
- =?us-ascii?Q?bTcqu2EwyfGoVseYY1lRqijg0IVEjK+qlbcnPPnRZcFVmz2HMyvg6vEgpnHY?=
- =?us-ascii?Q?7NgEpdIiTnaMTi7NFhUZ3YitFxZFdCbUGXM150rvAcVXGPss12/Yo+PunlZO?=
- =?us-ascii?Q?mhk8fkHpoI8iK093F+GMEbaloCw5VRIoaZ/TBuSsyiXTEpRSxbsj32MgJtBq?=
- =?us-ascii?Q?fYQakRlBROosuLt8EeMU+uuevnU7w4WZcnmjI+LJ+owQ10l8/BiyUWcrVsL4?=
- =?us-ascii?Q?mbpSRzFHozy/9vP4f2LuOVJkkGykLDZMl4t4I0+OvtCfRmiTSNaSYJF0NE2c?=
- =?us-ascii?Q?jd+KZMvZaPNXMg21F3Mo+ojIjY3DqLNqYUnVI+K90AomQZ5Cg8UZKEuAVpjj?=
- =?us-ascii?Q?5p3MqAaHtNhwSzT0qI9U66e/1wxYIrTR9VzIm6GKCIqRB83eterL3L4FOmwI?=
- =?us-ascii?Q?7bnoTXB2NvDVr2CVz5yBoQ2RxJ+nWifls1OGKGG7pFSVJKQka1cnmTHC7jEj?=
- =?us-ascii?Q?YUscKQCNrRO7ThMVNysw7AtzkL5NsM7298zIdDfRqQwXmb5lcgKTaaq9NWCN?=
- =?us-ascii?Q?zR+Ma7K9ElBQSyo54ldeSqUODwVPHZ8Fj7AAa1lND5w7K4G/dYwpx0q0Tdgj?=
- =?us-ascii?Q?+TDMUqVCb4vFBCIrIv2Kw9HzIKAKCyf9L2IUN8BvMP3uQUvKuCpxX1i9j/bM?=
- =?us-ascii?Q?4+VZMZvp849+IjgF/C3tdwXrdFcmB8ABbE/0imwKWeWJnRkUYFY0s48KCCTc?=
- =?us-ascii?Q?i/bxZ7XOeZS3nGuMoEb27LmWOqpxxgZsidUPMl7TWbm+hWxzGJrlS09lxB5S?=
- =?us-ascii?Q?4P5WMMtdaciw5Ba+PvrnZTODzqTaAx0D7NjK0Y2W5pam+VZWqvytERjHcZBU?=
- =?us-ascii?Q?2qmtgMKQy2Uh8e7+2mZQXMOjS/nrKl5eRy1ADzYgfuJpCi+s7Gz21R33eACS?=
- =?us-ascii?Q?kAU4P7Z/VfTAQj+GhiK2Pkj5mlxtUnJ+udTG701UE3U7dYoGMVKCYA2uG07v?=
- =?us-ascii?Q?7aBHJSiAtYPQuaPvZZ8++Pa5z2I26N6+g0Kv0KN37QNmGdfXV5bVHItXC83z?=
- =?us-ascii?Q?dXM135F0hDoOXpA96Yi2nB9HXKpXWye5MPR25Xo9QRwASVPa9UkEnwK0jY/4?=
- =?us-ascii?Q?D3SqArAW4XXMRhgOB5IKCWOIQZM=3D?=
+	=?us-ascii?Q?EwGQ6g7Dk4sdHqfUe0qJZ4tDnXtt0/gSKcxx5qNH0BZqixu7dSPsZwG2erxQ?=
+ =?us-ascii?Q?NSBd6VKA1SbLCQd5VpVvuB2juMO2kno5sGZHoVIdI6nW/LbIAS6rmaEGT6z0?=
+ =?us-ascii?Q?8eHMCY+cNQ51BiFxc5J0x9cOfHI3CSDyP4VdKyHjwsPDMYUPGlc1WO6dp6Tf?=
+ =?us-ascii?Q?fgFx33kX0RwijwKPbubcp5xo9ROfLEOz0c+neW/tLzPHVQEW7hZ+v+LkQutX?=
+ =?us-ascii?Q?JrrmibPk69xN7emCz2WI24MhzaJ1D/lx9utfwYmYXdMuX3RUw+TUIWcipZq8?=
+ =?us-ascii?Q?q4yPg6Ohpj4r4j8SEuzH/qd0R+z7niCnAY3vRl8SSbYApOVjdZb1orQtubgo?=
+ =?us-ascii?Q?OiMesuuDW2kbTHPOrWF0hrqanL/Bsp8xak7S5TVgkh1aMD4JnrE9jIvojIyu?=
+ =?us-ascii?Q?J15KWtFx19Ns+hM1pmPCQhSN8IJIqeSNdP2N8lonDHCyR6dYVJT661QNZX00?=
+ =?us-ascii?Q?fmRRwVo6m/dX9TwajdltximcACbqBa/RH8lXc220ioAe/cxeTrz5gwT362Ru?=
+ =?us-ascii?Q?lKXH/WHeYCcX/ZmLNzwYKZ18XT2rffty/ztWRjixzGX2gr3mBUyThl+kJWF4?=
+ =?us-ascii?Q?tsCG900RbvGg2LT7zR9e7r/DjxgaGVOtf6RrRoo74INh0VZyu2Zkeb4QukZe?=
+ =?us-ascii?Q?5ICwzlVdSYal6WOHjg37wv5kwFqnzJPFVpbgwOiKTBR9uwFaf5L6nTOV/RaS?=
+ =?us-ascii?Q?0tILSbsMefDSOKB1ZhsF88lV0nmzR2pxgFTQjSP8t7onPrsKuYnSb0T6aOOP?=
+ =?us-ascii?Q?ul9EQMlLvBSGd9JUTojJPuppKUkBwm0qd1M9NkUIECWBsmzeTC6RUb23Ec3v?=
+ =?us-ascii?Q?L3OIjKEcxb7n5k3vr4n2YEJEujl+sElS0O0gxHasnFy+Z9f009VFJyBIatRf?=
+ =?us-ascii?Q?XPQdJ95x74TcRW0XAW5L6ROUG+d0/4jifiVNFELURh9IUnpjjUuBm50b+U3V?=
+ =?us-ascii?Q?yUGG4u4SauMN/MfW2IK4uJ75ONeuW8y1ZfNal9KEqrLdspi7FPcrvMVr0Qeq?=
+ =?us-ascii?Q?hOIlp2EmAlCXiRFL157fsrXhwP96/SdCrniwlucnHJRqTz7ncUabf816DvHW?=
+ =?us-ascii?Q?arAg7625y0MdAZqQZH16JEDbExPfAnmbASPYikT6DFfbyEhSoFFkQwBLWYqG?=
+ =?us-ascii?Q?MQkRe6yF4fbVQlGv0D59WWeY6NuX7QrqE8lcitFiWxRjzqDR+wsCxrACRpup?=
+ =?us-ascii?Q?iIkT4a1Avrd6BIrwiQGNdF0xw0xaqo1FWdvoKPyjqh5FXMk+uR4mzQ9Dw3kE?=
+ =?us-ascii?Q?ViAaiuewarrP6HS4BDFmL2hPiAfiYdhFS4AQ21P17acDSfOgK/1Rp4yettuG?=
+ =?us-ascii?Q?zXl25qKIy2/i2QptM7Y8HwHOkuk4nKZ3y0BIh5CaTSIb0FeiT74pX72IEhub?=
+ =?us-ascii?Q?E9WvBktd4l6bEHtGyeL5WWlL7xTWwG0SnrCUu1ut3mP9ihvB98HnATtg3MCk?=
+ =?us-ascii?Q?ltLfhFU0E6H10w5udxTjMgsr4GmsI6xKF7Ng/1FIVm+H1YX7Lh/g3xXXM37D?=
+ =?us-ascii?Q?vcvHW2VDdiW3cb4swlW/Bfcu7PkWCpTWXO6/lg+tOLNa5DTR+tZEc4HxpmxT?=
+ =?us-ascii?Q?nZieeHH1XgVtzWQVEjzDb6Po9bTacnjjYqTGoUDLW38DJo3PhS03B0vxgkeC?=
+ =?us-ascii?Q?zefEGdbrOFEvHd6QprcqcDQkiQXV/9mOlnXrWJ7q1bh963N7imbprPv+pUfl?=
+ =?us-ascii?Q?RjCuFA=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(7416014)(376014)(82310400026)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 10:39:12.7597
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 10:39:18.4931
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6094c355-b0af-48e8-23c6-08de53592879
+X-MS-Exchange-CrossTenant-Network-Message-Id: b820d34e-1020-42a9-186b-08de53592bd2
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00004682.namprd03.prod.outlook.com
+	SJ5PEPF000001D7.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB5601
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB5667
 
-Extend the existing Tegra186 GPIO controller device tree bindings with
-support for the GPIO controller found on Tegra264. The number of pins
-is slightly different, but the programming model remains the same.
+Extend the existing Tegra186 GPIO controller driver with support for the
+GPIO controller found on Tegra264.
 
-Add a new header, include/dt-bindings/gpio/tegra264-gpio.h,
-that defines port IDs as well as the TEGRA264_MAIN_GPIO() helper,
-both of which are used in conjunction to create a unique specifier
-for each pin.
-
-Document nvidia,pmc property referencing the PMC node providing the
-parent interrupt domain. GPIO driver uses this to select the correct
-PMC,falling back to compatible-based lookup only if the phandle is
-absent.
+Use the "nvidia,pmc" phandle from the GPIO device tree node to
+ensure the GPIO driver associates with the intended PMC device.
+Relying only on compatible-based lookup can select an unexpected
+PMC node, so fall back to compatible-based lookup when the phandle
+is not present.
 
 Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
 ---
- .../bindings/gpio/nvidia,tegra186-gpio.yaml   | 10 +++
- include/dt-bindings/gpio/tegra264-gpio.h      | 61 +++++++++++++++++++
- 2 files changed, 71 insertions(+)
- create mode 100644 include/dt-bindings/gpio/tegra264-gpio.h
+ drivers/gpio/gpio-tegra186.c | 90 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 88 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.yaml b/Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.yaml
-index 2bd620a1099b..93150504c03c 100644
---- a/Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.yaml
-@@ -86,6 +86,9 @@ properties:
-       - nvidia,tegra234-gpio
-       - nvidia,tegra234-gpio-aon
-       - nvidia,tegra256-gpio
-+      - nvidia,tegra264-gpio
-+      - nvidia,tegra264-gpio-uphy
-+      - nvidia,tegra264-gpio-aon
+diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+index b1498b59a921..b05cfa881f6f 100644
+--- a/drivers/gpio/gpio-tegra186.c
++++ b/drivers/gpio/gpio-tegra186.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (c) 2016-2025 NVIDIA Corporation
++ * Copyright (c) 2016-2026 NVIDIA Corporation
+  *
+  * Author: Thierry Reding <treding@nvidia.com>
+  *	   Dipen Patel <dpatel@nvidia.com>
+@@ -21,6 +21,7 @@
+ #include <dt-bindings/gpio/tegra234-gpio.h>
+ #include <dt-bindings/gpio/tegra241-gpio.h>
+ #include <dt-bindings/gpio/tegra256-gpio.h>
++#include <dt-bindings/gpio/tegra264-gpio.h>
  
-   reg-names:
-     items:
-@@ -110,6 +113,10 @@ properties:
-       ports, in the order the HW manual describes them. The number of entries
-       required varies depending on compatible value.
+ /* security registers */
+ #define TEGRA186_GPIO_CTL_SCR 0x0c
+@@ -1001,7 +1002,9 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
+ 	if (gpio->soc->num_irqs_per_bank > 1)
+ 		tegra186_gpio_init_route_mapping(gpio);
  
-+  nvidia,pmc:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: Phandle to the PMC node providing the parent interrupt domain.
-+
-   gpio-controller: true
+-	np = of_find_matching_node(NULL, tegra186_pmc_of_match);
++	np = of_parse_phandle(pdev->dev.of_node, "nvidia,pmc", 0);
++	if (!np)
++		np = of_find_matching_node(NULL, tegra186_pmc_of_match);
+ 	if (np) {
+ 		if (of_device_is_available(np)) {
+ 			irq->parent_domain = irq_find_host(np);
+@@ -1277,6 +1280,80 @@ static const struct tegra_gpio_soc tegra241_aon_soc = {
+ 	.has_vm_support = false,
+ };
  
-   gpio-ranges:
-@@ -157,6 +164,8 @@ allOf:
-               - nvidia,tegra194-gpio
-               - nvidia,tegra234-gpio
-               - nvidia,tegra256-gpio
-+              - nvidia,tegra264-gpio
-+              - nvidia,tegra264-gpio-uphy
-     then:
-       properties:
-         interrupts:
-@@ -171,6 +180,7 @@ allOf:
-               - nvidia,tegra186-gpio-aon
-               - nvidia,tegra194-gpio-aon
-               - nvidia,tegra234-gpio-aon
-+              - nvidia,tegra264-gpio-aon
-     then:
-       properties:
-         interrupts:
-diff --git a/include/dt-bindings/gpio/tegra264-gpio.h b/include/dt-bindings/gpio/tegra264-gpio.h
-new file mode 100644
-index 000000000000..d7baceace474
---- /dev/null
-+++ b/include/dt-bindings/gpio/tegra264-gpio.h
-@@ -0,0 +1,61 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright (c) 2026, NVIDIA CORPORATION. All rights reserved. */
++#define TEGRA264_MAIN_GPIO_PORT(_name, _bank, _port, _pins) \
++	TEGRA_GPIO_PORT(TEGRA264_MAIN, _name, _bank, _port, _pins)
 +
-+/*
-+ * This header provides constants for binding nvidia,tegra264-gpio*.
-+ *
-+ * The first cell in Tegra's GPIO specifier is the GPIO ID. The macros below
-+ * provide names for this.
-+ *
-+ * The second cell contains standard flag values specified in gpio.h.
-+ */
++static const struct tegra_gpio_port tegra264_main_ports[] = {
++	TEGRA264_MAIN_GPIO_PORT(F, 3, 0, 8),
++	TEGRA264_MAIN_GPIO_PORT(G, 3, 1, 5),
++	TEGRA264_MAIN_GPIO_PORT(H, 1, 0, 8),
++	TEGRA264_MAIN_GPIO_PORT(J, 1, 1, 8),
++	TEGRA264_MAIN_GPIO_PORT(K, 1, 2, 8),
++	TEGRA264_MAIN_GPIO_PORT(L, 1, 3, 8),
++	TEGRA264_MAIN_GPIO_PORT(M, 1, 4, 6),
++	TEGRA264_MAIN_GPIO_PORT(P, 2, 0, 8),
++	TEGRA264_MAIN_GPIO_PORT(Q, 2, 1, 8),
++	TEGRA264_MAIN_GPIO_PORT(R, 2, 2, 8),
++	TEGRA264_MAIN_GPIO_PORT(S, 2, 3, 2),
++	TEGRA264_MAIN_GPIO_PORT(T, 0, 0, 7),
++	TEGRA264_MAIN_GPIO_PORT(U, 0, 1, 8),
++	TEGRA264_MAIN_GPIO_PORT(V, 0, 2, 8),
++	TEGRA264_MAIN_GPIO_PORT(W, 0, 3, 8),
++	TEGRA264_MAIN_GPIO_PORT(X, 0, 7, 6),
++	TEGRA264_MAIN_GPIO_PORT(Y, 0, 5, 8),
++	TEGRA264_MAIN_GPIO_PORT(Z, 0, 6, 8),
++	TEGRA264_MAIN_GPIO_PORT(AL, 0, 4, 3),
++};
 +
-+#ifndef _DT_BINDINGS_GPIO_TEGRA264_GPIO_H
-+#define _DT_BINDINGS_GPIO_TEGRA264_GPIO_H
++static const struct tegra_gpio_soc tegra264_main_soc = {
++	.num_ports = ARRAY_SIZE(tegra264_main_ports),
++	.ports = tegra264_main_ports,
++	.name = "tegra264-gpio",
++	.instance = 0,
++	.num_irqs_per_bank = 8,
++	.has_vm_support = true,
++};
 +
-+#include <dt-bindings/gpio/gpio.h>
++#define TEGRA264_AON_GPIO_PORT(_name, _bank, _port, _pins) \
++	TEGRA_GPIO_PORT(TEGRA264_AON, _name, _bank, _port, _pins)
 +
-+/* GPIOs implemented by main GPIO controller */
-+#define TEGRA264_MAIN_GPIO_PORT_T  0
-+#define TEGRA264_MAIN_GPIO_PORT_U  1
-+#define TEGRA264_MAIN_GPIO_PORT_V  2
-+#define TEGRA264_MAIN_GPIO_PORT_W  3
-+#define TEGRA264_MAIN_GPIO_PORT_AL 4
-+#define TEGRA264_MAIN_GPIO_PORT_Y  5
-+#define TEGRA264_MAIN_GPIO_PORT_Z  6
-+#define TEGRA264_MAIN_GPIO_PORT_X  7
-+#define TEGRA264_MAIN_GPIO_PORT_H  8
-+#define TEGRA264_MAIN_GPIO_PORT_J  9
-+#define TEGRA264_MAIN_GPIO_PORT_K  10
-+#define TEGRA264_MAIN_GPIO_PORT_L  11
-+#define TEGRA264_MAIN_GPIO_PORT_M  12
-+#define TEGRA264_MAIN_GPIO_PORT_P  13
-+#define TEGRA264_MAIN_GPIO_PORT_Q  14
-+#define TEGRA264_MAIN_GPIO_PORT_R  15
-+#define TEGRA264_MAIN_GPIO_PORT_S  16
-+#define TEGRA264_MAIN_GPIO_PORT_F  17
-+#define TEGRA264_MAIN_GPIO_PORT_G  18
++static const struct tegra_gpio_port tegra264_aon_ports[] = {
++	TEGRA264_AON_GPIO_PORT(AA, 0, 0, 8),
++	TEGRA264_AON_GPIO_PORT(BB, 0, 1, 2),
++	TEGRA264_AON_GPIO_PORT(CC, 0, 2, 8),
++	TEGRA264_AON_GPIO_PORT(DD, 0, 3, 8),
++	TEGRA264_AON_GPIO_PORT(EE, 0, 4, 4)
++};
 +
-+#define TEGRA264_MAIN_GPIO(port, offset) \
-+	((TEGRA264_MAIN_GPIO_PORT_##port * 8) + (offset))
++static const struct tegra_gpio_soc tegra264_aon_soc = {
++	.num_ports = ARRAY_SIZE(tegra264_aon_ports),
++	.ports = tegra264_aon_ports,
++	.name = "tegra264-gpio-aon",
++	.instance = 1,
++	.num_irqs_per_bank = 8,
++	.has_vm_support = true,
++};
 +
-+/* GPIOs implemented by AON GPIO controller */
-+#define TEGRA264_AON_GPIO_PORT_AA  0
-+#define TEGRA264_AON_GPIO_PORT_BB  1
-+#define TEGRA264_AON_GPIO_PORT_CC  2
-+#define TEGRA264_AON_GPIO_PORT_DD  3
-+#define TEGRA264_AON_GPIO_PORT_EE  4
++#define TEGRA264_UPHY_GPIO_PORT(_name, _bank, _port, _pins) \
++	TEGRA_GPIO_PORT(TEGRA264_UPHY, _name, _bank, _port, _pins)
 +
-+#define TEGRA264_AON_GPIO(port, offset) \
-+	((TEGRA264_AON_GPIO_PORT_##port * 8) + (offset))
++static const struct tegra_gpio_port tegra264_uphy_ports[] = {
++	TEGRA264_UPHY_GPIO_PORT(A, 0, 0, 6),
++	TEGRA264_UPHY_GPIO_PORT(B, 0, 1, 8),
++	TEGRA264_UPHY_GPIO_PORT(C, 0, 2, 3),
++	TEGRA264_UPHY_GPIO_PORT(D, 1, 0, 8),
++	TEGRA264_UPHY_GPIO_PORT(E, 1, 1, 4),
++};
 +
-+#define TEGRA264_UPHY_GPIO_PORT_A  0
-+#define TEGRA264_UPHY_GPIO_PORT_B  1
-+#define TEGRA264_UPHY_GPIO_PORT_C  2
-+#define TEGRA264_UPHY_GPIO_PORT_D  3
-+#define TEGRA264_UPHY_GPIO_PORT_E  4
++static const struct tegra_gpio_soc tegra264_uphy_soc = {
++	.num_ports = ARRAY_SIZE(tegra264_uphy_ports),
++	.ports = tegra264_uphy_ports,
++	.name = "tegra264-gpio-uphy",
++	.instance = 2,
++	.num_irqs_per_bank = 8,
++	.has_vm_support = true,
++};
 +
-+#define TEGRA264_UPHY_GPIO(port, offset) \
-+	((TEGRA264_UPHY_GPIO_PORT_##port * 8) + (offset))
-+
-+#endif
+ #define TEGRA256_MAIN_GPIO_PORT(_name, _bank, _port, _pins) \
+ 	TEGRA_GPIO_PORT(TEGRA256_MAIN, _name, _bank, _port, _pins)
+ 
+@@ -1368,6 +1445,15 @@ static const struct of_device_id tegra186_gpio_of_match[] = {
+ 	}, {
+ 		.compatible = "nvidia,tegra256-gpio",
+ 		.data = &tegra256_main_soc
++	}, {
++		.compatible = "nvidia,tegra264-gpio",
++		.data = &tegra264_main_soc
++	}, {
++		.compatible = "nvidia,tegra264-gpio-aon",
++		.data = &tegra264_aon_soc
++	}, {
++		.compatible = "nvidia,tegra264-gpio-uphy",
++		.data = &tegra264_uphy_soc
+ 	}, {
+ 		/* sentinel */
+ 	}
 -- 
 2.25.1
 
