@@ -1,89 +1,84 @@
-Return-Path: <linux-gpio+bounces-30551-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30552-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F614D1F3EA
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 14:58:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C4140D1F48C
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 15:04:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D1B22302AF8E
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 13:54:31 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 055693059913
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 14:00:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19656276028;
-	Wed, 14 Jan 2026 13:54:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4A1029D27A;
+	Wed, 14 Jan 2026 14:00:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cvxhmlDB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FZWfpto9"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE9E272813
-	for <linux-gpio@vger.kernel.org>; Wed, 14 Jan 2026 13:54:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85430231A3B;
+	Wed, 14 Jan 2026 14:00:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768398870; cv=none; b=C6Y028Six396e34IwpAX86c6UYZVP0S6Nz0IEEq2vpHnZ5O5aFkrbLxKTz8+XYB76y8+aVw+zBvTOULjzaPeLilhqDq8OwXxRptQRbVGYsiaB4EBQQKnHFH7+GZ9q8yoTIY7/4rJa5pGbNeNxF0inkAMMDkJcbWLLq+DbqP1hFw=
+	t=1768399234; cv=none; b=V+kRZMu4R4kKnuAhtLRAZMR7aHPTYCRhOLFwCbFFg93dPCb+pJ8+VT2xFkJ8p3Sc2STwf98xVma3YJ95TPkKsgZ6WJl25tW8efYELRLqea1UTprvhUe0parW1rXnOJOYeZK+BcsAE+xDar6Yizpgq0yU4cnVxZdbf019uQ6dNVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768398870; c=relaxed/simple;
-	bh=pko9oW1g+IluAhY7M1qdOiwhwRkDyq9ZjyBhU9sgrLY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=idX3lnBT1YDamKFJbl4RSSQSDmi0OyQxf0SeUnqLgghmla1k1bhHxiKMZrz9j/7nSzze3ZlkgqtBOkRhBB4pbk1m07kSHQcInW87tyTlqJTFYqpOzvi0mcy/KQZaRgJH8wbly0I6+1epnmM7SG8teKxxOkZLKv+saf9M9GwsD7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cvxhmlDB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81AB5C2BC86
-	for <linux-gpio@vger.kernel.org>; Wed, 14 Jan 2026 13:54:30 +0000 (UTC)
+	s=arc-20240116; t=1768399234; c=relaxed/simple;
+	bh=2HymxH9qqUs8MT5fLN7/dIyVqcs6A7wLAkkU08CvOF0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=bqEy1Ap0+wkzb2D6qawAmY6OdwED5qTdz71xZJiyMZc1mhK8Sof+GSlCZTCcsV9uUZguqKKJKRhzKY1WhgNmUSp97huCya1VkuOyn3BL7afrcWETtdNDC9KC2jJVtth7PHL4+tAuxV0DAkkkKfP8Ve0z7TNo5s78fwJyY9ozBHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FZWfpto9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADA27C4CEF7;
+	Wed, 14 Jan 2026 14:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768398870;
-	bh=pko9oW1g+IluAhY7M1qdOiwhwRkDyq9ZjyBhU9sgrLY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cvxhmlDBIWz66KMgGJkZsiNg/kcCqFr1SH2ajz4Bvlp3FXF1JN9gkfEwuB94fgep1
-	 KS5DH+zPbowY5TrkhD/Zt5J/WdDPj7dWOv2cn/iyNDzs5idHyyp5AL02jAw5vU90wa
-	 Zv65yzYpKrdbVxK4cH3wJMcTIwAN88JY1bVrc5DyBMDw4syzWnhgJj7hObOk/jj9KM
-	 Dis0MQ7Wvhq5uQeNhfxgCSPCc3lUtg4hOBovQxeRBnMSdsJtfWm5grYPKc0WXD27Xv
-	 JmI7oGwHohvMSsppF/ppe1Xa0s7eSDHVlSCWWCymp53g0mCrR+7QSKuXVpQeNKhDkO
-	 Di5lkP5NfUR2Q==
-Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-6467ac59e16so6328465d50.1
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Jan 2026 05:54:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUOxv+8WfHEF7fZ9DtHSJZX4SD31jzWfUv9yryUUDLV6H3/KPvHoJfxE9tMlWpoIqwh12fFViw+XCi1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnCra6bGRNeCbJ29zrBdFpf518YM6qB/MzcQibJAQTxvBdgKCa
-	ThxX1D6iiFXlHnR1J9Hi8nCqpch0LWXT8CCztKzEdb3aJEyxlcvT1+oze5uRmZVzZydXysme2q+
-	pVyb0qhvhk33CalEKrJgr94Vu5blkJQo=
-X-Received: by 2002:a53:ac8b:0:b0:646:5019:f3f2 with SMTP id
- 956f58d0204a3-64901a9c702mr2454045d50.19.1768398869885; Wed, 14 Jan 2026
- 05:54:29 -0800 (PST)
+	s=k20201202; t=1768399234;
+	bh=2HymxH9qqUs8MT5fLN7/dIyVqcs6A7wLAkkU08CvOF0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=FZWfpto93vCLBPKHjtYMQqVR88gm55Y0G+wmGC7etSKwgxmVSQ9Fw2N0P8spMAstD
+	 e3yptJmNuXfU+wOKqoyKucv/asDpqU0IAE8OfRhRUS10/Sc/I1EOTuSfhzuL9v7jFi
+	 BWY3g8+92v2hA09hvQazDEwlGp0BfJqIG9qCISwF9NIg6kvmDTWbdUqwOwW0WnV+4E
+	 t/sN5cPD/nKbfAhScWS/mEnQ6CnW586rw6LU5LIR/GZQJ0Gmh6syWAbDBxYD1fuWYF
+	 iokDJp3/HP+7X0tRgtoVBs2PZkdVDJP7hCvuNnlbE+I1+vzNbVbO88iWfq9nRCjF73
+	 DpWHyLavJZj0A==
+From: Thomas Gleixner <tglx@kernel.org>
+To: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>, Wolfram
+ Sang <wsa+renesas@sang-engineering.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Geert Uytterhoeven
+ <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Saravana
+ Kannan <saravanak@kernel.org>, Herve Codina <herve.codina@bootlin.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Pascal
+ Eberhard <pascal.eberhard@se.com>, Miquel Raynal
+ <miquel.raynal@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v8 3/8] irqchip/ls-extirq: Use for_each_of_imap_item
+ iterator
+In-Reply-To: <20260114093938.1089936-4-herve.codina@bootlin.com>
+References: <20260114093938.1089936-1-herve.codina@bootlin.com>
+ <20260114093938.1089936-4-herve.codina@bootlin.com>
+Date: Wed, 14 Jan 2026 15:00:30 +0100
+Message-ID: <87cy3ci9a9.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260114-k3-pinctrl-io-doc-fix-v2-1-025b05f9e65a@gentoo.org>
-In-Reply-To: <20260114-k3-pinctrl-io-doc-fix-v2-1-025b05f9e65a@gentoo.org>
-From: Linus Walleij <linusw@kernel.org>
-Date: Wed, 14 Jan 2026 14:54:17 +0100
-X-Gmail-Original-Message-ID: <CAD++jLk-dg1Hh28QaTo+0nONAP1PiOQza1-L3Nn4XJEeEShmuw@mail.gmail.com>
-X-Gm-Features: AZwV_QgO7G4JdjPod5hP416XqHCDN-684za1JJpJPBU8JnvDVeq9VXheBatx4Aw
-Message-ID: <CAD++jLk-dg1Hh28QaTo+0nONAP1PiOQza1-L3Nn4XJEeEShmuw@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: pinctrl: spacemit: k3: fix drive-strength doc
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Guodong Xu <guodong@riscstar.com>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Wed, Jan 14, 2026 at 1:17=E2=80=AFAM Yixun Lan <dlan@gentoo.org> wrote:
-
-> Fix a typo in DT documentation, it should describe the 3.3V drive strengt=
-h
-> table of SpacemiT k3 SoC.
+On Wed, Jan 14 2026 at 10:39, Herve Codina wrote:
+> The ls-extirq driver parses the interrupt-map property. It does it using
+> open code.
 >
-> Fixes: 5adaa1a8c088 ("dt-bindings: pinctrl: spacemit: add K3 SoC support"=
-)
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> Recently for_each_of_imap_item iterator has been introduce to help
+> drivers in this parsing.
+>
+> Convert the ls-extirq driver to use the for_each_of_imap_item
+> iterator instead of open code.
+>
+> Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Patch applied.
-
-Yours,
-Linus Walleij
+Reviewed-by: Thomas Gleixner <tglx@kernel.org>
 
