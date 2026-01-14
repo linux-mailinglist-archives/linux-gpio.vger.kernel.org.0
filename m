@@ -1,111 +1,103 @@
-Return-Path: <linux-gpio+bounces-30527-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30528-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CE2CD1DD23
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 11:07:09 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDC08D1DD2D
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 11:07:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 004933028FCC
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 10:03:48 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id ECCEA3021942
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 10:06:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01A4738A29B;
-	Wed, 14 Jan 2026 10:03:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F58F38A73C;
+	Wed, 14 Jan 2026 10:06:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="hAqs1iwy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TKvu/uR9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF48E3876BA
-	for <linux-gpio@vger.kernel.org>; Wed, 14 Jan 2026 10:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4590738A716;
+	Wed, 14 Jan 2026 10:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768385026; cv=none; b=a5pP9pb2Pd1errxwzCFnS7Ffm64l0WZ2/ZUEDEg4+3HplCN2xf1Zc5wEwOxKBYhmlV1mFeGdEq2HMB2S4UGls6MmVek1LbkMyW1NttuEGL32lyv+sZhB47325BdjfGm2xNZE6XqNJGbCqFSQL9X9OABKY9xshqT80tXcP3/bd2U=
+	t=1768385179; cv=none; b=iNmkYrgoNC+lkXyCTed50x74247PpX85ufY2ScgD0sw1YJeAMqqFoMOTO7x5YJKoNTOe1/hT5PKyqpPghn8KYbWmoc66kHbqz1pJkeeT7ZJmP4hdTdHba0N7R/06epUM3/KBu8nou5x84oFHXJ85g2C5zwuK0TbTyf+tIXIOauM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768385026; c=relaxed/simple;
-	bh=xFXwXbndum4DM1yShsTEt0zwByD1YnmTZ7MG+j/+am8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=prkaVCUarff+NvQZ+8ttSqyJ6N5cDiwrqSO/CUYdEYRdLA65qT1aXoJqKAcShVSjoJc399aNoBF4D4fj/dwt4tkWAHbFBBnwftRPaPZy9BHGJGgBYkqaBinhhT5sdA/EPH3mw1F8sNw4GVPH5cUdIG6RLBAeql06sQ0tZCmmpps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=hAqs1iwy; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=xFXw
-	Xbndum4DM1yShsTEt0zwByD1YnmTZ7MG+j/+am8=; b=hAqs1iwy/dr87Ng3xI9E
-	lFaxr5OAm8LC+ZrlnPSCGKVBkOCrkxdCdOTrxMTTopaYICJL2hS9Lt0lXVd895LM
-	16nTkOpcwOW7/EbrH+P3ZyWhjeMdrdi/jqfeBEoyQQpwkvKEng2/HFfmEMzzoGVT
-	0weGSDbdj6xK1Nu0syIB7S2g5BMxlaP7g1QYZEBHo9usc6dmgICVmSJRS9lHMt/q
-	2pWx/7yb4ny+akwrhj0Gj4I8Hj5aqmSzrXW+QpEN3c2k9O+RCjMDQNLAoAshGfzd
-	fSbmIIP7fgiKRb+hMKtZDMsTLCRWN2IToSzGDG0YcGESXVi+zoHahU7KBKfobkch
-	6A==
-Received: (qmail 2072906 invoked from network); 14 Jan 2026 11:03:42 +0100
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 14 Jan 2026 11:03:42 +0100
-X-UD-Smtp-Session: l3s3148p1@9dYYOVZIaoEujnsM
-Date: Wed, 14 Jan 2026 11:03:42 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Saravana Kannan <saravanak@kernel.org>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Pascal Eberhard <pascal.eberhard@se.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v8 0/8] gpio: renesas: Add support for GPIO and related
- interrupts in RZ/N1 SoC
-Message-ID: <aWdp_jMVUBN04is3@ninjato>
-References: <20260114093938.1089936-1-herve.codina@bootlin.com>
+	s=arc-20240116; t=1768385179; c=relaxed/simple;
+	bh=YcAeYWHfFscLle3OO00E8RCrEqn+jccNkuGs5setBgw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G3Bc1+Ft71Cu4BJOk0iTX3gyKtujY7v7a2lIRsVp2eg0aa9KMCczLtawMNd0e6J+iOgtOHXM5EcQYZ9JPW2xkZysb4L6uq5FaLE7bCpQMfhXUFZZNMoNyen57kSPAnxyeA9Fbh0J1KfdXmCFrfnJWSh2AnolaVkWgyHMUiucoRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TKvu/uR9; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768385162; x=1799921162;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YcAeYWHfFscLle3OO00E8RCrEqn+jccNkuGs5setBgw=;
+  b=TKvu/uR9/jWVno5NC333BGqJ0hENaCalcj2DZIV2EDR4T1NS+RVCytS4
+   rgINrcWqo3gAacsDgvvdCzKjoWPVGof8jRcJZPz0Ic1Fcy02LcDZoQD3/
+   1b9Uh/OSyumMkrQEwF1dlXrYQlscgsbZcaXtbdE8KBOa7jJD/EQbPK5A3
+   3ayBKkmdBBYNke7GcZe4wQrHQIZ3x5c1ViuHt+tA77ePv94MOIeCzSiEP
+   lyEyCH2AwDBqC012kB2Obs26klX1bJAtHJndfmQj8UvbX+xwsv/XYFbTM
+   3Z7Sl1VFKlhsifMVhtwGhwWOoAcj/v5yepGLfFh41RLzeTg5/rTB6zama
+   A==;
+X-CSE-ConnectionGUID: 3IR8VWjcT0+NQxRARtL5Jg==
+X-CSE-MsgGUID: QHHCx4RaS4mGBFCyT5ca2A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11670"; a="69589621"
+X-IronPort-AV: E=Sophos;i="6.21,225,1763452800"; 
+   d="scan'208";a="69589621"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2026 02:06:02 -0800
+X-CSE-ConnectionGUID: HDfVmNXHSneEXp2BMXvUSw==
+X-CSE-MsgGUID: 524Lvp/ZSQGWfGHt/LXn+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,225,1763452800"; 
+   d="scan'208";a="205061717"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa009.fm.intel.com with ESMTP; 14 Jan 2026 02:06:00 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id E3E7E98; Wed, 14 Jan 2026 11:05:58 +0100 (CET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linusw@kernel.org>
+Subject: [PATCH v1 1/1] pinctrl: intel: platform: Add Nova Lake to the list of supported
+Date: Wed, 14 Jan 2026 11:05:55 +0100
+Message-ID: <20260114100555.277960-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="to7JUS+GYslzhu9x"
-Content-Disposition: inline
-In-Reply-To: <20260114093938.1089936-1-herve.codina@bootlin.com>
+Content-Transfer-Encoding: 8bit
 
+Intel Nova Lake is supported by the generic platform driver,
+so add it to the list of supported in Kconfig.
 
---to7JUS+GYslzhu9x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/intel/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/pinctrl/intel/Kconfig b/drivers/pinctrl/intel/Kconfig
+index 248c2e558ff3..e4dc9ba899bd 100644
+--- a/drivers/pinctrl/intel/Kconfig
++++ b/drivers/pinctrl/intel/Kconfig
+@@ -45,6 +45,7 @@ config PINCTRL_INTEL_PLATFORM
+ 	  of Intel PCH pins and using them as GPIOs. Currently the following
+ 	  Intel SoCs / platforms require this to be functional:
+ 	  - Lunar Lake
++	  - Nova Lake
+ 	  - Panther Lake
+ 
+ config PINCTRL_ALDERLAKE
+-- 
+2.50.1
 
-> Rob, Thomas, this series is blocked waiting for your feedback and your
-> acks if you are okay.
-
-This was a little hidden between the other text, so let me emphasize
-that these acks are needed. The other option is to send the irq stuff
-and the SoC stuff seperately.
-
-
---to7JUS+GYslzhu9x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmlnaf4ACgkQFA3kzBSg
-KbbtEQ/8C0Como31I09MrGQi4ij7SiPMAQ0vrzKs0HYlyyeot8oMboKH8gFT/x1L
-Igy+pl5xgGtR13xfVWytY2I46od0XdH/jIvTEAsZmaBcelbubyHAxxaIzA7SlMwT
-yJz103L5S/6wMQyS5q2m3Ms9/oN9eydwHdS/QNkV4umQPusK6zeqRVyfUqTakiDL
-KyfNR6AHeTrQEy/mrCCO54GPBzmF1/x7cD5MPoEOkINXC0xriWjJNp6pn/N7izVN
-9+vLRfylBZsVVBV/jTRjBv2zx9Op12m3smvo0ZxGDjRU3HeCkraE40854ZE9h5lC
-LxXyuEuKzACOey4tSy10OZs2Z3QeiDbi9GjzosyFzzJRei3TlViNmf0NxIR54pOU
-cfRqCKKQcDSwmORAWwtzY25o5cefRYJGnDWXw/axUG1nen/J2jqrV3AD3tGAf7uz
-Zzz4SQg0L9Z3r9+WdpAXl6doZgRPFMZanVbFpC9EZiw4ULotlvMYxVzJqQM2YLFy
-7ulh0irGDqiE0Qn8eXbVT+bI1mqWBe2HSa8AlBYdl/Fk1qhnGvYDEUJGvCEAAdv+
-fAnxXruyImXZgLT5DaNNeUQZu0Kb9GQo1Rru0toyvLWOZf/ggt4X7PTChBWH1uA9
-LI2RKlkgyB1LFz9U9BdApfHJW4/CG3q08g1iDWbRO+ZjzsXTlMw=
-=9qkV
------END PGP SIGNATURE-----
-
---to7JUS+GYslzhu9x--
 
