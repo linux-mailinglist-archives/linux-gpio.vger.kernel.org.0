@@ -1,122 +1,168 @@
-Return-Path: <linux-gpio+bounces-30510-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30511-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23D80D1BCA1
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 01:18:03 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CCAED1BCC8
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 01:27:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B7DFA3025F81
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 00:17:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E5F283025FA4
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 00:26:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F9D31C3BEB;
-	Wed, 14 Jan 2026 00:17:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69C081EE033;
+	Wed, 14 Jan 2026 00:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="J83zjl/g"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EFE3B2BA;
-	Wed, 14 Jan 2026 00:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768349879; cv=none; b=hg7m6ZzaQm0+YuajUEa+hjKeetQeOQhth5BaMMTjyFrvmRyK14ulC75x5ucMTx7YGaeSFjeH6dsqlyi16DPQP5QsVpQOiKrSIkEAq1p1tZx8rdBi9rmEvO/scXg5szeKCP0k+G389FDAdtMruIx7PZBK42oIrP+bF7mVHjlUHfQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768349879; c=relaxed/simple;
-	bh=orpaLPZIhB6o0YIirbSoKahJaSFWRpyVsDsGAJa9c/s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=f6wGa9ygOqw0hBSMR7Qhi3/pPuU/DQLxC42sQK2uNKnU49RIKJgdRcPx2LwC23uTBYDedpjtB6anr1jtUKy9hcEZwInmJK5brDv7LSfjIX6EtBnPO+xygUAfQIK8gaQyQYY5te5pFcgxpvMDKs9GiR7iWJM7KMVfK9IiWYfH3ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from ofovo.local (unknown [116.232.18.222])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id AAA5034102F;
-	Wed, 14 Jan 2026 00:17:52 +0000 (UTC)
-From: Yixun Lan <dlan@gentoo.org>
-Date: Wed, 14 Jan 2026 08:17:42 +0800
-Subject: [PATCH v2] dt-bindings: pinctrl: spacemit: k3: fix drive-strength
- doc
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2740A59;
+	Wed, 14 Jan 2026 00:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768350413; cv=pass; b=B/e5yqgEG7HLsgf9GY0ntx8pr76JGKkbNnBAulvKWXkLahe5Z0QHMgF/MhJhxd++vL8VYsCVGQehSx7b3Ld1trnQBd+FmDGXEHgfLnK8OpZvsBEnSpDcrw2hqg8gjTk4eYetClZdTGsKhArXo4K6kNRuZDNeAkfplNwlZ86iPv4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768350413; c=relaxed/simple;
+	bh=8GF8mdMqO42VpHXmcHhn6Rd2npsDpkhfv448ZcXuDOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fp5C9n5coHFtlU6vw9mfZrV9fJVX80Y+uVB4NURVx5gOqsmvk6rqtGIpLxuFCBOWKi/WieMyi/k1YMCdpd1bgiJpKWT4wz8HVLc9ZWJ9cwBj0q7TAPdbBVhlxRj7iWVHUjP6bXnXfFaXuxcYrqXmKaqJAP8hp2KUsMZQvOZ5fSU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=J83zjl/g; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1768350389; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=PZLFWYd0p8ZCUQbhq2E2e0G1rTnMvY70rbrX5ddbVjaVVUL3jmSlF6TCgB6ndDnxOHmldZA999g72uZxoDBKHbD8hQGQryW4nxcu8Cwaef7Syu2La5wsZAhcKNo+qVHApi3cC0MclSSrztYyOgbILVTDMwNCDON2tO6wyXFz9IQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1768350389; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=8GF8mdMqO42VpHXmcHhn6Rd2npsDpkhfv448ZcXuDOE=; 
+	b=S1Gl2gNo/QR7tV/HZLAvxu2uWFRRF583nMezuUtcD4B8U7lJD0j35OhbF6pUWCSFWT9fAeZmKXTStxEurqo1FFkJePair08A86l/4wNREydTHobUYMZSBxbMD60a/ROu77PDganRigyw6f0P9T6nH9FjpbuQQqcOUEc/c8oUEVw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1768350389;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=8GF8mdMqO42VpHXmcHhn6Rd2npsDpkhfv448ZcXuDOE=;
+	b=J83zjl/gr+Giru9ZrvebGie4XonpdcF69R/3yVnB6erNhSMiwGlCveLyiPbEX74G
+	kAZ3CaMqEPfBgF01RXP54TwMkHlmEEnC3k5Zqoglge8Q0xpcB6vb6IHFV5fH1OgxmnC
+	iuvL9cyCoEWK0eqjDYMcH4b+q1YQO8t4yCZZUFws=
+Received: by mx.zohomail.com with SMTPS id 1768350388284515.6380475328023;
+	Tue, 13 Jan 2026 16:26:28 -0800 (PST)
+Received: by venus (Postfix, from userid 1000)
+	id 00C2D181010; Wed, 14 Jan 2026 01:26:21 +0100 (CET)
+Date: Wed, 14 Jan 2026 01:26:21 +0100
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, 
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org, 
+	Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH RESEND v6 00/17] Support ROHM BD72720 PMIC
+Message-ID: <aWbg3PTf677Jt9rG@venus>
+References: <cover.1765804226.git.mazziesaccount@gmail.com>
+ <20260108172735.GK302752@google.com>
+ <63bc889a-b97e-43c3-9f46-9ca444873b70@gmail.com>
+ <20260109093831.GB1118061@google.com>
+ <aWRFs3CJvd37BaoH@venus>
+ <ebb14cef-9927-4211-94ef-2f209abeb406@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260114-k3-pinctrl-io-doc-fix-v2-1-025b05f9e65a@gentoo.org>
-X-B4-Tracking: v=1; b=H4sIAKbgZmkC/4WNTQqDMBBGryKz7pQkij9deY/iwsZJHFoykoi0i
- Hdv6gW6fA++9+2QKDIluBU7RNo4sYQM5lKAncfgCXnKDEaZWmmt8FniwsGu8YUsOIlFx28cu1F
- VJZmq1h3k7RIp67N7HzLPnFaJn/Nm0z/7r7hp1Ni0jXFUk3u0qvcUVpGrRA/DcRxfabMNz7sAA
- AA=
-X-Change-ID: 20260110-k3-pinctrl-io-doc-fix-a9a043e24619
-To: Linus Walleij <linusw@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Guodong Xu <guodong@riscstar.com>, 
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>, 
- Yixun Lan <dlan@gentoo.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1547; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=orpaLPZIhB6o0YIirbSoKahJaSFWRpyVsDsGAJa9c/s=;
- b=owEB6QIW/ZANAwAKATGq6kdZTbvtAcsmYgBpZuCtbNOFt9HYFmHL9qwVSgNlpjEqetUNg9x3H
- gGAVmMeiriJAq8EAAEKAJkWIQS1urjJwxtxFWcCI9wxqupHWU277QUCaWbgrRsUgAAAAAAEAA5t
- YW51MiwyLjUrMS4xMSwyLDJfFIAAAAAALgAoaXNzdWVyLWZwckBub3RhdGlvbnMub3BlbnBncC5
- maWZ0aGhvcnNlbWFuLm5ldEI1QkFCOEM5QzMxQjcxMTU2NzAyMjNEQzMxQUFFQTQ3NTk0REJCRU
- QACgkQMarqR1lNu+1uyw//T+tPDn0Hytjj/Xe+0H0zwyDbgdSccSl8FQSBfkZsQu6mX7h/MHcdx
- km4joFbr/IyCqdfXGJRuYZS0Ex4mUeCap/PM3x40sYp11cfdOmlElypq1s25wFKOUXyP2We1HQn
- VLzNbXwC1s4pki0lrtwqCHhRYdJGyqJsi6C1F5nVN2N5hYdQ7jc4TJMFm6EE4vqVz31F31MXea1
- jg1tZfp1qXqoZTjVljGXveEderwTvf9fB8JdNg0f/UF7C1FNDB0HD0RMImso8LTBmdWqvmLAr70
- fOhD4qMO4rjmphaGIUK+Zi1Xl+1TpPhTHgJlZFqL5nGQ+bExlhbFK7jcyAEXRoxbDefFBvknyfr
- /3QY4h+eHkCkyrjldWkQ+4F5Fpqmq8qkhi+5HIGQ5bMiTb3//3rivdoPnlQrX41hdQjoisN3gpK
- pXaiOXQRPABTaR3mOlu98bLac/fw6Y4hZRfFZ2y/Ws95i9yRCQhFCvmf78mWe8ynf6QXauxWkep
- CBTBmKueOubvgEqOieoepK5zf5OU3qRhyF1U5Aa5Z3VZtwEvjbU4LlYal87caZ+rUdcCvbfDW+V
- T1TnMpp9Ei32EqyVdkEiu5PsTFfwR8i2I+v+7r7E9dk27qzZDGRqpf6sezZvnBex32iRSeQA0EP
- QJ0yuJF7sVN5zNZQBlrve5SJmkZdYU=
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7npdp75ywl7qg3g2"
+Content-Disposition: inline
+In-Reply-To: <ebb14cef-9927-4211-94ef-2f209abeb406@gmail.com>
+X-Zoho-Virus-Status: 1
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.5.1/268.322.40
+X-ZohoMailClient: External
 
-Fix a typo in DT documentation, it should describe the 3.3V drive strength
-table of SpacemiT k3 SoC.
 
-Fixes: 5adaa1a8c088 ("dt-bindings: pinctrl: spacemit: add K3 SoC support")
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
----
-Hi Linus,
-  Can you also queue this for-next? thanks
----
-Changes in v2:
-- fix >75 lines of commit message
-- collect Ack tags
-- Link to v1: https://lore.kernel.org/r/20260110-k3-pinctrl-io-doc-fix-v1-1-7872fe6efb80@gentoo.org
----
- Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--7npdp75ywl7qg3g2
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH RESEND v6 00/17] Support ROHM BD72720 PMIC
+MIME-Version: 1.0
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
-index 9a76cffcbaee..f009fed87e6b 100644
---- a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
-@@ -87,7 +87,7 @@ patternProperties:
-                 description: For K3 SoC, 1.8V voltage output
- 
-               - enum: [ 3, 5, 7, 9, 11, 13, 15, 17, 25, 27, 29, 31, 33, 35, 37, 38 ]
--                description: For K3 SoC, 1.8V voltage output
-+                description: For K3 SoC, 3.3V voltage output
- 
-           input-schmitt:
-             description: |
+Hi,
 
----
-base-commit: 3f20bdf7151834547a85231c28538f49601481ee
-change-id: 20260110-k3-pinctrl-io-doc-fix-a9a043e24619
+On Mon, Jan 12, 2026 at 02:04:47PM +0200, Matti Vaittinen wrote:
+> On 12/01/2026 02:53, Sebastian Reichel wrote:
+> > On Fri, Jan 09, 2026 at 09:38:31AM +0000, Lee Jones wrote:
+> > > [...]
+> > > > > The MFD parts LGTM.
+> > > >=20
+> > > > Thanks Lee!
+> > > >=20
+> > > > > What Acks are you waiting on? What's the merge strategy?
+> > > >=20
+> > > > I think everything else has been acked by maintainers, except the
+> > > > power-supply parts. I think those have only been looked at by Andre=
+as and
+> > > > Linus W. Haven't heard anything from Sebastian :(
+> >=20
+> > Yes, I'm lacking behind quite a bit, sorry for that.
+> >=20
+> > > > I would love to see the patches 1 - 14 and 17 to be merged (via MFD=
+?). I
+> > > > could then re-spin the 15 and 16 to limited audience as I hope Seba=
+stian had
+> > > > time to take a look at them. However, I don't think any of the othe=
+r patches
+> > > > in the series depend on the last .
+> >=20
+> > Sounds good to me.
+>=20
+> Ah. Since the 15/17:
+> "[PATCH RESEND v6 15/17] power: supply: bd71828: Support wider register
+> addresses" was now acked by Sebastian, then it can also go via MFD?
+>=20
+> Also, if it is Ok to address all the "dev_err() + return ERRNO" =3D> "ret=
+urn
+> dev_err_probe(,ERRNO,)" conversions in a follow-up, then I guess the whole
+> series, including 16/17 is good to go? If this is the case, please just l=
+et
+> me know and I'll send the follow-up. Otherwise, I will re-spin the 16/17 =
+and
+> add a new patch for the remaining "dev_err() + return ERRNO" =3D> "return
+> dev_err_probe(,ERRNO,)" case(s)
 
-Best regards,
--- 
-Yixun Lan <dlan@gentoo.org>
+That's fine with me.
 
+Greetings,
+
+-- Sebastian
+
+--7npdp75ywl7qg3g2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmlm4qoACgkQ2O7X88g7
++ppD3A//R8n9hZADutZUgDRTVjqCd71YvQdLiff2FiW3L6d0QvZ46c9INcqhNLUQ
+ciUNNmgtac7YtIi7Lt7SXL1W3wgWfrnHY98jIrnUrZuGj+NSGrqxqK4PhlCyv1Jg
+iqO2wIC2EQey4Cc5qZlY1ajvvyfx06h8FOzliNZX/hmjXe9Mn6Xuy262yW84d6OR
+3wNtrje0geiPezOYHqF/9FtHuodaKAqaPNQdm1NvPjBFTwE/fzfLS2a0WGLLpq02
+DthCyaGj/N7+CnezA7jyJjB/1Oz6XelEvS2OkUwZnyD5l6frQhRaC1tkEOre4BX3
+UGBxQVd3mUGgLl7dkgvnwCEOs0wGnqzfR7tvYqXaSmuQktOcJ17HF+PsudCX1BGi
+S4hhWXW5XPIhJj1c7wZIiqz0ewyv9ZuKuov4w8oaMkdVqpLYxCMtKlN6tZdZfdFO
+fyK9E8DxmkjTl0/HwKNpOHO1BN+QEohnlAxCOI724seBoStdHpYMt0jUH+hoYkym
+7Hbfmg1+qi1Zx265b89yGW9cn325br79sZ1o1yFd3LIzPaTiRgiAO3UUiYRiqPiu
+NxMqGzU5wYZ2o8zR+bG/KXavXrzx/WDMzKU5QvSvPYUo3QJkTnqbZrfFrW8SmMeX
+Qqox+xoHhBekn9ZcIszzBS0j5JFs4+egcIzfT254DL5AJSDjQMU=
+=0iKX
+-----END PGP SIGNATURE-----
+
+--7npdp75ywl7qg3g2--
 
