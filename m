@@ -1,195 +1,233 @@
-Return-Path: <linux-gpio+bounces-30581-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30582-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CC7ED208DD
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 18:30:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 66576D213C2
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 21:54:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 22F7C304767C
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 17:29:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3D51D303751D
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 20:53:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A0D9303A35;
-	Wed, 14 Jan 2026 17:29:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD28C357A33;
+	Wed, 14 Jan 2026 20:53:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="jcwfwBoV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLfXn98i"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D692FFDD8;
-	Wed, 14 Jan 2026 17:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3003357735
+	for <linux-gpio@vger.kernel.org>; Wed, 14 Jan 2026 20:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768411793; cv=none; b=ekU8O85gfZ1XtFM+Vj4BhjZRNcwmwGmPMSEiOtxRF9yeMk2lzhWVd6/Kkdnov1BeBTBrhLTNqaJGxPx+2BMaataCdR40JVc6C5FIVxPGZ+ZbWCrK55OLyf1dLnKWUo8HlABbnjeYrTIO+sPHEcnrfRtamIaxXLn26VkBM7pJT1s=
+	t=1768424023; cv=none; b=GZeKegYwn5/z1+15xtA3/Mrvu5Vzb9tYbEjkKRLa/wjIBcfXUaCUe/osn6d0B13WOteHuzq63PlSxVE+KjvYNArlz4+Us0YbA4HU3yenqR9WjrnT5RfcPKC0ZObGpIjp/zjdSjEkTHVouMqtQ9eXscTqDf1WBOwa76mWkpmP1Is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768411793; c=relaxed/simple;
-	bh=XsdLxx8D0quXty9wKoTo+w0p2zZ2toIEhJldukXnxbs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D8KpYGyGK7VOkF0W5eHq8ja/46IkBVeGeFiIF2dNFeEOB/QXMxA0mQ9KlozduJXGdeYczKdQx9JnjDOA7Bauc327ebK+dRBu5HL1cMct7i3dGPfyYAjy67vrJe+2oTpnU4RCpEjXZEU5SP4uSMVBWV/USriwk5L8EMRnVHyNieM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=pass smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=jcwfwBoV; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yoseli.org
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3993E1F74D;
-	Wed, 14 Jan 2026 17:29:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-	t=1768411781;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tBEjvAxx+M0ZMA0mo2qlAa1X7I1foVNl3u9lyf67WhE=;
-	b=jcwfwBoVSJ3Woc89ORXyc7f0GKVO/k8OSxQ++k4B6LBOcFfC0p7nFswlJdIVU+B6twOJhS
-	igi2aAFK2v61uVQ3mU8YcG/8EVm5g2b1j0rPGMjbF/0VLxEWO/NtiO0BtMJFP9hzdJ313+
-	hk2bHj7Y0mMocluC+cqTEEkLVuHB4iyB+dDU6kApSirsasYGqM8HZi9aDHbRwQZ1B9WpuS
-	54BDDgNeWCb24EXQBs2dJTv2Ukl0T4hmaSrijh+r5SjQKg9yqyBlnnZmSIOT6I4iLhmaiC
-	FsMcl1RGoUHpmrnYSG5HlYPIZ1PG9Gz3FSfS6WX6lVA0HZ7mIpEs6ihkeUxZqw==
-From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-To: Linus Walleij <linusw@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-Subject:
- Re: [PATCH 2/2] dt-bindings: pinctrl: mcp23s08: Add multi-chip example
-Date: Wed, 14 Jan 2026 18:29:19 +0100
-Message-ID: <1987899.tdWV9SEqCh@jeanmichel-ms7b89>
-In-Reply-To:
- <CAD++jLmP13oeiZJx9_Y4oOCvFbJ=TaU_exHu9qqZjnCR9DGAbA@mail.gmail.com>
-References:
- <20260113-mcp23s17-multiple-addr-names-v1-0-f14b60f92c82@yoseli.org>
- <20260113-mcp23s17-multiple-addr-names-v1-2-f14b60f92c82@yoseli.org>
- <CAD++jLmP13oeiZJx9_Y4oOCvFbJ=TaU_exHu9qqZjnCR9DGAbA@mail.gmail.com>
+	s=arc-20240116; t=1768424023; c=relaxed/simple;
+	bh=eKw9hDJRFF4Qa8wkU+c+/6MTd3FcvApj72fDSoLnQ8U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iKm61stca+9XzhGQE5oLlPr/mFzLmn1ZPwWcQb2V6DcGYsAJmt1K474FZ3lCz5SaSjcZcxDlFIkcXpwh14bxzn1WKohSWZ7cts2/dEgoAdZDPSquNQvHvV2AdVKB2f0I5wbw1w1bdn0q9o7cJYFkAp4/sXKeyt2PFrMOMKQT6Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XLfXn98i; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-42fbc3056afso171487f8f.2
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Jan 2026 12:53:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768424020; x=1769028820; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GvrUZewEpeDC2Kxm8njWod4+e4/7eBCNdsquru7gClI=;
+        b=XLfXn98iCTBT+rutZa1O0FyYbgMbDE7COCXK/4MCzc4f0jbhGDG+uCbDtzHK54qgA4
+         fWkUxwXUXWRMrNcGgxy+KA68QLxx8fJtesVSZFRdRuI8OK+NiubY7me9gzTkOXEKm2Gf
+         BU9NX0vRhHlhd9KgANJ2BMRmnxS20l42I4E3auAVgcg7z3i+botrwNaPyypy7/7cFXTl
+         l3+EiS+lCujvrc0BF/kuDe0f/OzOLxF8ZCjaUfl6pCemoHcM1v+1JiNa35ARw8xRlEZM
+         sK6B/38F4aIU/qxaXjeNhnwWxncQ5a1eT0/0H4UaSaz21NngZwpiOGtBnq+5rrPKmVhz
+         G4XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768424020; x=1769028820;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=GvrUZewEpeDC2Kxm8njWod4+e4/7eBCNdsquru7gClI=;
+        b=milkpI4cwbeB8gGS5EWNmpOw2E4A0jRw4TvxGZsrmwdUbzPjqVVU3XiUfJrSis3I7D
+         nBX79HDA9lOfDEMbdgN5iwBapwwG6SDsQFIhjWZ9AiVgqtNkDEtTR15s9FXG/h58W3K4
+         10Qi6qisx35x24Y9xhsmwjEEUh2agUE95Evg26rE75y9iALyPTTZrJPAxBjVad1klPE8
+         PHu7aST2nfxa+rYa+owI1ScD83SIiyeFMunypm6WHw1aoWrKtPLn1QWRS5rXgilLv+fV
+         i5QGgJFyzizXGpepPFmH1G0am4fF2kDE7CKZuwmeX8uDfAutO3TpNMQYn1M8gRHZUvzz
+         AN0g==
+X-Forwarded-Encrypted: i=1; AJvYcCW2pV+nRbbO7q0JqHZi6c5Puhyg0B97yjeTIMH/mR+xpZ9kmvYY5FtZ3HDVwcjYzyE1bGbazOCoZP9w@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXU52X+fMiuiVPvI0gmsnRVZOSirz5BfyVVukBeg70pP7xrqKS
+	5Ks4m42FZacKfgZPwQmFoJChqIRs8JllsYXhvNqYRubVHL6/6tO3nNxhWiNg+deKIa0SvoLNTXU
+	C7fVIaSdCCXtdJ+d9jZKtwEGkXGoUTe0=
+X-Gm-Gg: AY/fxX7bX24ps7ggASPAm4eeEXdKDkqpLkVr08fNz0VJepWUxa/Hugjay10ygj3jA2E
+	dfir2ie8TPC6r/hZqC94K4xcQX8BLQUbGYBh+vjGpKzeOovjOBwoqjXbcGdYpjYokjuar6MNhhs
+	IyGwa5g/JGcW59DSEO/wR9NhcCyw1F3YhSX+KMnpBHFq5jHnVHv3i6tthlfjxU+/VDxpWzQW66x
+	WE+iVvLfq7is/SgnWJH4PBR8UsjvEcDNZicUneZPKZ1sHaWjC9oIUhfNVNc4lKdOu71Kp7pGdsO
+	fvrRgjOpWmrIg0g3ebtu6PiH3IJ1FvGcZmaGG6vZpu4/Eo7TObnUPqoB3A==
+X-Received: by 2002:a05:6000:40db:b0:430:f985:a7b2 with SMTP id
+ ffacd0b85a97d-4342c55f3b0mr4238015f8f.51.1768424019774; Wed, 14 Jan 2026
+ 12:53:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20251014191121.368475-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20251014191121.368475-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20251016-dimmed-affidavit-90bae7e162aa@spud> <CA+V-a8un1cF=acNjG=79_v7oaR8gzBQ+3z1As8AqrJnOnk-OUw@mail.gmail.com>
+ <CA+V-a8vq2EvTb_hXxRzW_Rbp+BPLSaLsEVkvaTjc1zRin-RV=Q@mail.gmail.com> <20251208-headgear-header-e17e162f0f52@spud>
+In-Reply-To: <20251208-headgear-header-e17e162f0f52@spud>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Wed, 14 Jan 2026 20:53:12 +0000
+X-Gm-Features: AZwV_QgkJ4nfZeMXY9G9zioU4AndT-7yDm9xyCWoiQKhNWRf1DfoJ-GzN1JFgns
+Message-ID: <CA+V-a8s0gPbe2ffmN1G_7ibVL4+=FKUEQZu3_CwQL=U0T3--DQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: renesas,r9a09g077: Document pin
+ configuration properties
+To: Conor Dooley <conor@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-GND-Sasl: jeanmichel.hautbois@yoseli.org
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduvdefjeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtqhertddttdejnecuhfhrohhmpeflvggrnhdqofhitghhvghlucfjrghuthgsohhishcuoehjvggrnhhmihgthhgvlhdrhhgruhhtsghoihhsseihohhsvghlihdrohhrgheqnecuggftrfgrthhtvghrnhepffevhfduvdeludeugfdtleduuedvhfeuvdevgfeiieefieevteektdettdeifeetnecukfhppedvrgdtudemvgdtrgemudeileemjedugedtmedvrgegtdemfhefrggrmeejudejvgemudefsgdvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmeduieelmeejudegtdemvdgrgedtmehffegrrgemjedujegvmedufegsvddphhgvlhhopehjvggrnhhmihgthhgvlhdqmhhsjegskeelrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehjvggrnhhmihgthhgvlhdrhhgruhhtsghoihhsseihohhsvghlihdrohhrghdpqhhiugepfeelleefgfduhfejgeffpdhmohguvgepshhmthhpohhuthdpnhgspghrtghpthhtohepkedprhgtphhtthhopehlihhnuhhsfieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrn
- hgvlhdrohhrghdprhgtphhtthhopehkrhiikheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhhimhgrnhhshhhurdgshhgrvhgrnhhisehsihhlihgtohhnshhighhnrghlshdrihhopdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhg
 
-Hi Linus, Krzysztof,
+Hi All,
 
-Le mercredi 14 janvier 2026, 14:52:00 heure normale d=E2=80=99Europe centra=
-le Linus=20
-Walleij a =C3=A9crit :
-> Hi Jean-Michel,
->=20
-> thanks for your patch!
+Sorry for the late reply.
 
-Thanks for reviewing !
+On Mon, Dec 8, 2025 at 6:01=E2=80=AFPM Conor Dooley <conor@kernel.org> wrot=
+e:
+>
+> On Mon, Dec 08, 2025 at 10:36:04AM +0000, Lad, Prabhakar wrote:
+> > Hi Conor,
+> >
+> > Sorry for the delayed response. Ive got feedback from the HW team.
+> >
+> > On Fri, Oct 17, 2025 at 4:33=E2=80=AFPM Lad, Prabhakar
+> > <prabhakar.csengg@gmail.com> wrote:
+> > >
+> > > Hi Conor,
+> > >
+> > > Thank you for the review.
+> > >
+> > > On Thu, Oct 16, 2025 at 5:41=E2=80=AFPM Conor Dooley <conor@kernel.or=
+g> wrote:
+> > > >
+> > > > On Tue, Oct 14, 2025 at 08:11:20PM +0100, Prabhakar wrote:
+> > > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > >
+> > > > > Document the pin configuration properties supported by the RZ/T2H=
+ pinctrl
+> > > > > driver. The RZ/T2H SoC supports configuring various electrical pr=
+operties
+> > > > > through the DRCTLm (I/O Buffer Function Switching) registers.
+> > > > >
+> > > > > Add documentation for the following standard properties:
+> > > > > - bias-disable, bias-pull-up, bias-pull-down: Control internal
+> > > > >   pull-up/pull-down resistors (3 options: no pull, pull-up, pull-=
+down)
+> > > > > - input-schmitt-enable, input-schmitt-disable: Control Schmitt tr=
+igger
+> > > > >   input
+> > > > > - slew-rate: Control output slew rate (2 options: slow/fast)
+> > > > >
+> > > > > Add documentation for the custom property:
+> > > > > - renesas,drive-strength: Control output drive strength using dis=
+crete
+> > > > >   levels (0-3) representing low, medium, high, and ultra high str=
+ength.
+> > > > >   This custom property is needed because the hardware uses fixed =
+discrete
+> > > > >   levels rather than configurable milliamp values.
+> > > > >
+> > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas=
+.com>
+> > > > > ---
+> > > > >  .../bindings/pinctrl/renesas,r9a09g077-pinctrl.yaml | 13 +++++++=
+++++++
+> > > > >  1 file changed, 13 insertions(+)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,r9=
+a09g077-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,r9=
+a09g077-pinctrl.yaml
+> > > > > index 36d665971484..9085d5cfb1c8 100644
+> > > > > --- a/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077=
+-pinctrl.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077=
+-pinctrl.yaml
+> > > > > @@ -72,6 +72,19 @@ definitions:
+> > > > >        input: true
+> > > > >        input-enable: true
+> > > > >        output-enable: true
+> > > > > +      bias-disable: true
+> > > > > +      bias-pull-down: true
+> > > > > +      bias-pull-up: true
+> > > > > +      input-schmitt-enable: true
+> > > > > +      input-schmitt-disable: true
+> > > > > +      slew-rate:
+> > > > > +        enum: [0, 1]
+> > > >
+> > > > What are the meanings of "0" and "1" for slew rate? Why isn't this =
+given
+> > > I'll add a description for it (0 =3D slow, 1 =3D fast) and the same v=
+alues
+> > > are programmed in the register to configure the slew rate.
+> > >
+> > > > as the actual rates? The docs surely give more detail than just "sl=
+ow"
+> > > > and "fast".
+> > > You mean to represent slew-rate in some sort of a unit?
+> > >
+> > Based on the comments from the HW team, there is no numerical
+> > definition to represent slow/fast It only defines a relative
+> > relationship.
+> > > >
+> > > > > +      renesas,drive-strength:
+> > > > > +        description:
+> > > > > +          Drive strength configuration value. Valid values are 0=
+ to 3, representing
+> > > > > +          increasing drive strength from low, medium, high and u=
+ltra high.
+> > > >
+I got the feedback from the HW team "The RZ/T2H drive strength
+(driving ability) is expressed using abstract levels such as Low,
+Middle, and High. These values do not correspond directly to specific
+mA units. To determine how much current the pin can actually drive,
+the engineer must refer to the electrical characteristics table.
+Therefore, the drive strength in RZ/T2H is a parameter that switches
+the internal output transistor mode rather than directly representing
+a physical drive current.
+Consequently, expressing RZ/T2H drive strength in milli- or
+micro-amps, as suggested by the reviewer, is inappropriate. To
+accurately reflect the SoC's hardware specification, introducing a
+custom property is essential."
 
->=20
-> On Tue, Jan 13, 2026 at 3:29=E2=80=AFPM Jean-Michel Hautbois via B4 Relay
->=20
-> <devnull+jeanmichel.hautbois.yoseli.org@kernel.org> wrote:
-> > +  gpio-line-names: true
->=20
-> I have a bit of similar concerns as Krzysztof, this is unlimited.
->=20
-> This is actually:
-> - 8 for microchip,mcp23008 and microchip,mcp23s08
-> - 16 for microchip,mcp23017, microchip,mcp23018, microchip,mcp23s17
-> and microchip,mcp23s18
->=20
-> (The "s" variants are just the SPI variants of the same chip...)
->=20
-> Make some fancy - if: clauses to decide the maxItems from the compatible.
-> Don't hesitate to ask for help if this gets complicated, I get a panic
-> every time I have to deal with it because of the whitespacing business.
->=20
+To elaborate more on this [0] has the tables which are extracted from
+the HW manual [1] (which needs login). For example, considering SDHI
+referring to table 58.39 in [0] the drive strength can be calculated
+for SD using  I =3D C =C3=97 (delta V / deltaT).
 
-Indeed, I was probably a bit optimistic :-).
-What about this:
- allOf:
-   - $ref: /schemas/spi/spi-peripheral-props.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - microchip,mcp23s08
-+              - microchip,mcp23008
-+    then:
-+      properties:
-+        gpio-line-names:
-+          maxItems: 32
-+        pinmux:
-+          properties:
-+            pins:
-+              maxItems: 32
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - microchip,mcp23s17
-+              - microchip,mcp23s18
-+              - microchip,mcp23017
-+              - microchip,mcp23018
-+    then:
-+      properties:
-+        gpio-line-names:
-+          maxItems: 128
-+        pinmux:
-+          properties:
-+            pins:
-+              maxItems: 128
-+
+For (SD) SDR104/ (eMMC)HS200 case C =3D 15pf, VDD1833 =3D 1.8 V and
+rise/fall time 1ns that would result to 27.000 mA
+For (SD) SDR50, SDR25, SDR12 (eMMC) High Speed SDR case C =3D 20pf,
+VDD1833 =3D 1.8 V and rise/fall time 2ns that would result to 18.000 mA
 
-This would allow up to 4 chips to be on the same CS. But in the=20
-microchip,mcp23s17 datasheet, it says:
-"Three Hardware Address Pins to Allow Up to Eight Devices On the Bus"
+As the drive strength is varying based on the speeds this cannot be
+tied up to the fixed value. Hence to simplify the Table 58.11 in [0]
+lists out the required drive strength and slew rate based on operating
+voltage levels.
 
-So, the maxItems could even be 256 for microchip,mcp23x17/18 family !
+[0] https://gist.github.com/prabhakarlad/026a73c3a3922da2b88d0578db68276c
+[1] https://www.renesas.com/en/document/mah/rzt2h-and-rzn2h-groups-users-ma=
+nual-hardware?language=3Den&r=3D25567515
 
-What do you think (sorry for the headache !) ?
-Thanks,
-JM
+Please share your thoughts.
 
->  +            /*
->=20
-> > +             * Names assigned sequentially in address order.
-> > +             * First 16 names for chip at address 0 (GPA0-7, GPB0-7).
-> > +             * Next 16 names for chip at address 1 (GPA0-7, GPB0-7).
-> > +             */
-> > +            gpio-line-names =3D
-> > +                "EXP0_GPA0", "EXP0_GPA1", "EXP0_GPA2", "EXP0_GPA3",
-> > +                "EXP0_GPA4", "EXP0_GPA5", "EXP0_GPA6", "EXP0_GPA7",
-> > +                "EXP0_GPB0", "EXP0_GPB1", "EXP0_GPB2", "EXP0_GPB3",
-> > +                "EXP0_GPB4", "EXP0_GPB5", "EXP0_GPB6", "EXP0_GPB7",
-> > +                "EXP1_GPA0", "EXP1_GPA1", "EXP1_GPA2", "EXP1_GPA3",
-> > +                "EXP1_GPA4", "EXP1_GPA5", "EXP1_GPA6", "EXP1_GPA7",
-> > +                "EXP1_GPB0", "EXP1_GPB1", "EXP1_GPB2", "EXP1_GPB3",
-> > +                "EXP1_GPB4", "EXP1_GPB5", "EXP1_GPB6", "EXP1_GPB7";
->=20
-> So we get this, and we already have this (from the example):
->=20
->             gpiopullups: pinmux {
->                 pins =3D "gpio0", "gpio1", "gpio2", "gpio3",
->                        "gpio4", "gpio5", "gpio6", "gpio7",
->                        "gpio8", "gpio9", "gpio10", "gpio11",
->                        "gpio12", "gpio13", "gpio14", "gpio15";
->                 bias-pull-up;
->             };
->=20
-> This is wild, we need some constraints I think.
->=20
-> Whatever we come up with to limit the number of items in gpio-line-names
-> should also be applied to the "pins" list in the pinmux node.
-
-
-
-> Yours,
-> Linus Walleij
-
-
-
-
+Cheers,
+Prabhakar
 
