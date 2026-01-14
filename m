@@ -1,215 +1,195 @@
-Return-Path: <linux-gpio+bounces-30580-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30581-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C179CD20820
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 18:21:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CC7ED208DD
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 18:30:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AA832301354C
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 17:19:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 22F7C304767C
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 17:29:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAFD72FDC4D;
-	Wed, 14 Jan 2026 17:19:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A0D9303A35;
+	Wed, 14 Jan 2026 17:29:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="SSJ3ifyS"
+	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="jcwfwBoV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013027.outbound.protection.outlook.com [40.107.162.27])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C912222A0;
-	Wed, 14 Jan 2026 17:19:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.27
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768411171; cv=fail; b=gTHaPNf3wBCiZFeuXrj8MERn3UWUXxtGmCHjtcl15d1ZQiIie4cKR/ilA+LcPGsnk09/MIR/ObPgMm1hwBHmeSjmPLiTzNfgtIudNB4UbFFMvHmEcd2KcWDjePm9AKkf/6NNoBn30iPD9jWrvSLqzj3dGNAFkImAQWl1Uc/Varg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768411171; c=relaxed/simple;
-	bh=byf0887oZQIgM8ulv3Izf/rVmnN7Ddt8nXLAh0FuRY8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qzna40DZeNqe1X+Y2FguLGo5m7yxt6BbeiNFxdqT4tm3TU06bISfhJwAgOXYRV4brh3ltZMqLNlPCimRuKyNWXH/XEsQEXg2YSHEQg2VmwnZMAj/h87W94IpncarvvUfcliKxKDt4/Ii2trE0tSLIgnrM04t7XtHMfgG+osL/BA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=SSJ3ifyS; arc=fail smtp.client-ip=40.107.162.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aN/oJMas+EtmGo+jsBisOZy7V9mPyRjMw0oCon/LAN63hFJOwrWcTxSQ+eaypB0zmSPQ960LOPNZs0yohpdJAcWS5AISglwnv11sxQ/9Bd+oZna1clFWyZVhQD+66l21d2hTwR5gbmyvqv7PKdMb76y5KnUfy+v+NE17xnWFt+A4tqCBlcI9SuxDSF24ELZWqedrANpGNU2O4Wm49xxJixXnGYeQZHxejnFIjlucxWPQ6FoafhDubQav3UkXveqrMMtjGYRcmbrB4uR+golJUvw6X0xjHcXipbr1/tGVeufOMWq0PqaUw2qW186mpQo847473XLYuZkAjPivbP5rTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EvWuWXWXjEUxNLU5czt6GUjFPl1XLAbh1E6O8lrPmX8=;
- b=p8HGdCWdsyr+Z/DGdJGzjNjM++fV9OL/biqFBIGyKv/gzcYReNAB7Bijkp5IeKswwA1yVgpMg7nL2PU3f0Ksn5UrRnvWwqeKJmFR1BcIKZGfqmUiIKMkmIfc4MB175PUAAEUyLLcVJTNEiz3N5eNENMP2fnC8oAD4bxcmS1JF5s4rRWYMB87FeHbyls17AY3cEqacUdwN7LwjZEDgSiStVT/sMsc6el3hXNtvo1vl5Hixrhii3hPjkzDq0KLF/M3TxzXYoFqHrscGK/moQabOvJtXg7/ZAFkwfiICk6rigbhJt5HASJugoUq90bRQU2Do4umCEvHGIshBqiH78Ypqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 164.130.1.60) smtp.rcpttodomain=oss.qualcomm.com smtp.mailfrom=foss.st.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=foss.st.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EvWuWXWXjEUxNLU5czt6GUjFPl1XLAbh1E6O8lrPmX8=;
- b=SSJ3ifyStutH3IR7GhpCTD1UCW3oBYFPkNMh8c6Ev1+R6vhbSewxVTUGogKIakcCAseaxd0F9erbxnDkkCNGe811W54m290haBQtRiv0YBv8rZeWLzAEPSv3PPUjpdSyWpdklwv0MKQKwCX3ADOfEiXBnOZ8VfWcNrU6N1ikI7SdVZ0vpS3mfAGuBPmgvGFIELr0E+uFlcuZVvRmwd6nvaIRtQcKACw8BHrs5gQ9fi9HhTmT+D8MeN+MzyB8x+OnxU4OOcVlTTUH1mE7vs2PfkxTGmcSpxhTu/iFCLzAvI2c+Yd/1sQnq7XrTGNntkdrhZfrFgtbyuWpm7jFmYSGGg==
-Received: from DUZPR01CA0246.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4b5::12) by DUZPR10MB8228.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:10:4b2::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.4; Wed, 14 Jan
- 2026 17:19:25 +0000
-Received: from DB3PEPF00008860.eurprd02.prod.outlook.com
- (2603:10a6:10:4b5:cafe::da) by DUZPR01CA0246.outlook.office365.com
- (2603:10a6:10:4b5::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.5 via Frontend Transport; Wed,
- 14 Jan 2026 17:19:53 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 164.130.1.60)
- smtp.mailfrom=foss.st.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=foss.st.com;
-Received-SPF: Fail (protection.outlook.com: domain of foss.st.com does not
- designate 164.130.1.60 as permitted sender) receiver=protection.outlook.com;
- client-ip=164.130.1.60; helo=smtpO365.st.com;
-Received: from smtpO365.st.com (164.130.1.60) by
- DB3PEPF00008860.mail.protection.outlook.com (10.167.242.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9520.1 via Frontend Transport; Wed, 14 Jan 2026 17:19:25 +0000
-Received: from STKDAG1NODE1.st.com (10.75.128.132) by smtpO365.st.com
- (10.250.44.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.29; Wed, 14 Jan
- 2026 18:20:42 +0100
-Received: from [10.48.87.93] (10.48.87.93) by STKDAG1NODE1.st.com
- (10.75.128.132) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.29; Wed, 14 Jan
- 2026 18:19:23 +0100
-Message-ID: <92b95ceb-3c99-4977-b467-7bc5ee39a4d8@foss.st.com>
-Date: Wed, 14 Jan 2026 18:19:22 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D692FFDD8;
+	Wed, 14 Jan 2026 17:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768411793; cv=none; b=ekU8O85gfZ1XtFM+Vj4BhjZRNcwmwGmPMSEiOtxRF9yeMk2lzhWVd6/Kkdnov1BeBTBrhLTNqaJGxPx+2BMaataCdR40JVc6C5FIVxPGZ+ZbWCrK55OLyf1dLnKWUo8HlABbnjeYrTIO+sPHEcnrfRtamIaxXLn26VkBM7pJT1s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768411793; c=relaxed/simple;
+	bh=XsdLxx8D0quXty9wKoTo+w0p2zZ2toIEhJldukXnxbs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D8KpYGyGK7VOkF0W5eHq8ja/46IkBVeGeFiIF2dNFeEOB/QXMxA0mQ9KlozduJXGdeYczKdQx9JnjDOA7Bauc327ebK+dRBu5HL1cMct7i3dGPfyYAjy67vrJe+2oTpnU4RCpEjXZEU5SP4uSMVBWV/USriwk5L8EMRnVHyNieM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=pass smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=jcwfwBoV; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yoseli.org
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3993E1F74D;
+	Wed, 14 Jan 2026 17:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
+	t=1768411781;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tBEjvAxx+M0ZMA0mo2qlAa1X7I1foVNl3u9lyf67WhE=;
+	b=jcwfwBoVSJ3Woc89ORXyc7f0GKVO/k8OSxQ++k4B6LBOcFfC0p7nFswlJdIVU+B6twOJhS
+	igi2aAFK2v61uVQ3mU8YcG/8EVm5g2b1j0rPGMjbF/0VLxEWO/NtiO0BtMJFP9hzdJ313+
+	hk2bHj7Y0mMocluC+cqTEEkLVuHB4iyB+dDU6kApSirsasYGqM8HZi9aDHbRwQZ1B9WpuS
+	54BDDgNeWCb24EXQBs2dJTv2Ukl0T4hmaSrijh+r5SjQKg9yqyBlnnZmSIOT6I4iLhmaiC
+	FsMcl1RGoUHpmrnYSG5HlYPIZ1PG9Gz3FSfS6WX6lVA0HZ7mIpEs6ihkeUxZqw==
+From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+Subject:
+ Re: [PATCH 2/2] dt-bindings: pinctrl: mcp23s08: Add multi-chip example
+Date: Wed, 14 Jan 2026 18:29:19 +0100
+Message-ID: <1987899.tdWV9SEqCh@jeanmichel-ms7b89>
+In-Reply-To:
+ <CAD++jLmP13oeiZJx9_Y4oOCvFbJ=TaU_exHu9qqZjnCR9DGAbA@mail.gmail.com>
+References:
+ <20260113-mcp23s17-multiple-addr-names-v1-0-f14b60f92c82@yoseli.org>
+ <20260113-mcp23s17-multiple-addr-names-v1-2-f14b60f92c82@yoseli.org>
+ <CAD++jLmP13oeiZJx9_Y4oOCvFbJ=TaU_exHu9qqZjnCR9DGAbA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/11] pinctrl: st: Annotate st_pinconf_dbg_show() as
- holding mutex
-To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>, Andrew Jeffery
-	<andrew@codeconstruct.com.au>, Linus Walleij <linusw@kernel.org>, "Joel
- Stanley" <joel@jms.id.au>, Emil Renner Berthing <kernel@esmil.dk>, Hal Feng
-	<hal.feng@starfivetech.com>, Chen Wang <unicorn_wang@outlook.com>, "Inochi
- Amaoto" <inochiama@gmail.com>, Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Bartosz Golaszewski
-	<brgl@kernel.org>, Steen Hegelund <Steen.Hegelund@microchip.com>, "Daniel
- Machon" <daniel.machon@microchip.com>, <UNGLinuxDriver@microchip.com>,
-	"Thierry Reding" <thierry.reding@gmail.com>, Jonathan Hunter
-	<jonathanh@nvidia.com>, Heiko Stuebner <heiko@sntech.de>
-CC: <linux-aspeed@lists.ozlabs.org>, <openbmc@lists.ozlabs.org>,
-	<linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <sophgo@lists.linux.dev>,
-	<linux-tegra@vger.kernel.org>, <linux-rockchip@lists.infradead.org>
-References: <20260114-pinctrl-cleanup-guard-v1-0-a14572685cd3@oss.qualcomm.com>
- <20260114-pinctrl-cleanup-guard-v1-11-a14572685cd3@oss.qualcomm.com>
-Content-Language: en-US
-From: Patrice CHOTARD <patrice.chotard@foss.st.com>
-In-Reply-To: <20260114-pinctrl-cleanup-guard-v1-11-a14572685cd3@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: STKCAS1NODE1.st.com (10.75.128.134) To STKDAG1NODE1.st.com
- (10.75.128.132)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB3PEPF00008860:EE_|DUZPR10MB8228:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9be893a2-de39-4b63-3129-08de539110fd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|32650700017|36860700013|7053199007|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aU52cXNUbUZBcktMc2ZRM2QxNll1RFlvZ3BFd01ldUdrQUdqY1kwZldoMWpm?=
- =?utf-8?B?anJUeXVFUkhqMTlxWXNwY2VKNkhMdDVoME1vd0tOcGc0UEExbFRWYWJsUU0x?=
- =?utf-8?B?dExEMDl5NU5DcmtCb0FuUzU3Z0pZWEI2NnBNUGhQL2RjNExGV0ZRNmpyNUhK?=
- =?utf-8?B?RDhDUkNjejcwQTdOYVJ5NktmYkpNUjVsQ29vQmtJOGxZdmZBZXdiVkZsaFQv?=
- =?utf-8?B?R2ZLTldxTFVSdUpyblFhUUNGMHZ5N2d0U0tRMTg1WHRUUDhKbmdxNEpkZ29H?=
- =?utf-8?B?dVZyZ0NTNEczWlc2VE8ybmtwNGNvcUZmNWdPalJteXA0SnA1ZU9rVCswZU5n?=
- =?utf-8?B?Qy9WWHdmbzlVcHlYa0dhc044SkpxRUR2c3B6MWRIVm5rNFMrc1Y5ZGVHbnY3?=
- =?utf-8?B?SzBGcTA3cVJla1RYcWdiMGkxdkszZ2RrOHozNFhhOG1FZzVBS2RzbnBhWUl0?=
- =?utf-8?B?RURjQnJoWm55OGloRlBsOTMvZnBIRldnSVkra2U1RUlXbVpWTGQvdEpwRytq?=
- =?utf-8?B?YlZCSTI0cXIwaUNvMHJ1RUw4c1NPNXI4ZXN2SkZDb0V2bkFYNFpDc2FKNGMw?=
- =?utf-8?B?Y0FwVU5FMER0d0R5VnV2eGFrM2V2TEdtQ05SZnZ4R1NJb0t0VWJFeUhSS2VJ?=
- =?utf-8?B?Uk9ZbjRQNkdwN2ZneTN1Y2xqcFVmMUR3ejdJN1NLaDVMdDhHTm4rVlMwTjZV?=
- =?utf-8?B?TjE5RTNHYVVtdHRrTmE4SmZDcjBUeFhwWTh0b05QeGdUZ1UyKzNzR3NzSXJ2?=
- =?utf-8?B?Q0V6cVYySkFjNW1obUE3Z21pVTJiTzhDOG1RbEVMQzNSRzR6aHZCS2hYR20z?=
- =?utf-8?B?RjNQTUJ4MXBrS2NSNmJqWXNuNERXU1RmY2JWQWY0Y1ZEVWJCZnQxUWx2UDlF?=
- =?utf-8?B?YkZWYzJEY1liWi9xTUN4cjNnUngzT3pPSFRvOUJWOWluZXpaT1hyVDF1SE9Y?=
- =?utf-8?B?M1lhT1VUZ1gyQjZGR0NyWHFpTkVHL3VMcUxxbjdjd2Y1aWV6cWN3TlRmYWJY?=
- =?utf-8?B?K0dXQUhUcEs0QTlnbU4ycmdNNm9UV2RiYjNlZCtteEZNRElKUHBtWnJvV0tl?=
- =?utf-8?B?ZEdoT284LzhiY09oWXhLUGIxbTM4dHNDZGlKdklkSXlnK3V0dGtJcGdiUDJL?=
- =?utf-8?B?bVVhUHpORVVOZlVGbmZ5R3kzMDZ6ekh6VFF1S3lLWnhDTjNjTDVEQjJXUFA3?=
- =?utf-8?B?VU5OZVV0dW5rajQyTHA2SmVyaVdQQWVJRmZGU0xhWFNCcEI4WlRVVXFuVGRJ?=
- =?utf-8?B?TW1kOTF3OHB5TEJHK1YrTUpudFB3UndudVZuSjV6YlVhK0dncTc1YS9jR0Ft?=
- =?utf-8?B?eStmaGQwOUlnNmdkdEo3aU85dDFTbWhxZ0V5aWZVNUJOTVp3R0hyMmo3Yndh?=
- =?utf-8?B?blZDbU9PTURCMWVDV2YwU1VmTmE5dFFkeEFRUk9Tc1dEV1BXY1o0b1VnM2xH?=
- =?utf-8?B?eVp4aHZFUnNhMXNRQkFLbEEvd1lzWlphOXgyUlRJMmhhMXpld2xtdGlhdDRF?=
- =?utf-8?B?REFITkRPb0pGY04xU1BaOG53a0dWSWV2Snk0c20rbkR0a0hVVnJ4WlBZWGJu?=
- =?utf-8?B?NXAyN0Y3TGVwLzM0UXB2TVE0cG9NdFpSUlpjR3NEVGh1N3JVTGd4RGprcmow?=
- =?utf-8?B?MFlEN1hOR05kaEZER0RnM2tCMjU5dmRuN20wZXJzQnQxaUdPTUJ2bXJOMTFU?=
- =?utf-8?B?c1I1T0k4MU1wdHhQaGZmcXM2Mkt3eWVnaVFTNGlPVjJIckMydE5mV3E2c3NP?=
- =?utf-8?B?b3NOdGp0UnRBK2wySFVBUjhzV0JxUVBUZHluNlA0YUQ3ZjBSZmxQR3ZWK2dS?=
- =?utf-8?B?RlAwVVZrc3FubU9adHNHZndNSkhiVWs1NWo4bVpGdXRQWEtvelFIL29GV3o0?=
- =?utf-8?B?YndKckdab2RPT1N5STJaei8xMmhmT05IeHpuR2xEYTBOc0t5UUVnWTFJT3li?=
- =?utf-8?B?dExNWUE5c1V2NjI4MzFLSCtFTHNLQ3ltVEVsWjZGNitodDBDeWwrNGJpb1la?=
- =?utf-8?B?UnJEcG5GTE93cklwcFMrSUNDc2hxanFhUlhUNXA5OHFvN3VEc1lIT3haS0hB?=
- =?utf-8?B?blowMy95UVpjaUJ1K2I5cUxPbFNzZjN1Z0xRVkJlMmpMQVZXUnQ4MUUyTzlO?=
- =?utf-8?B?MXBya0xVY29oYXlYZFVYYVYvQXZxejhNRGE2MGxGS1hydXA5enhoazI4aWx3?=
- =?utf-8?B?d3ZjMkZuT21qY1FxUXJRdE1CSXMyZEtHby9lLzBRT2JaZ3FHdmhoV0NVc2x0?=
- =?utf-8?Q?ktY4lbFiL5eI7gMy5g69JDtgDcU1GxcGTMK0B4ra6w=3D?=
-X-Forefront-Antispam-Report:
-	CIP:164.130.1.60;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(32650700017)(36860700013)(7053199007)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	A1bMcRBDS/lcQoSy1atY1UrHjea7eClkRqHv0eBCYATsFtlzmQxTF+1KUYUyMhF9CAqeqq7bumy9GP3SvwMoUVfDBbeoMDHGC7FM1aywJwT4pCv395XucmZjD7ySLBpPAjYm0UmhyxPTvvr9ksdXs56KPtULE7yoWnlcRiv4fx8ljgAkAphSCtoa9NzLm3Qyyds8qvW2A06CxNngIzNU0wjOw4ra4dFrZXiMK4Fzsg2uUaT7fBGNQx9iO7Jja/1bgCEIBDkBSvgD5cstUYH+EDz91Z7TA3lPLzuPOIfF38HAJ2oQZqukIXfZN/6w7mQnQtJJ6MS9EvOfCn3lk2WAakt51K7wV2NG85+l9j42t1S/TPJlpWEnThTUk7TZUZEV7YYPp5RBrI9WW8L7z1pRq7f1tM+PkSctfjsLvAwn0vyND3ZsndMxPTvnydsLhS9sHvXDPsi5hosQX5zkK7e1Aa6Xiik2Z2ot3JRVsWc5EEEfByi6wDp3/BkzUrfcj/qYaVZzC33qETncxKJ/T3slc3jCoYjaRJ9ghjT0cjaLyn1MC7DdEqfE++FQfOJhGW5sZh5hfG7B0mR4rQTysOniPpROK5XznrjrDRBrOWqJfWUlX1rn82tS7J71Z80gsdQsXAK/blGcB5gu8NKeiC8bN6Kmpjay2I7Vl2UgZNJuPRJUM934jhRk0T6zJ47y6uAp
-X-OriginatorOrg: foss.st.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2026 17:19:25.2514
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9be893a2-de39-4b63-3129-08de539110fd
-X-MS-Exchange-CrossTenant-Id: 75e027c9-20d5-47d5-b82f-77d7cd041e8f
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=75e027c9-20d5-47d5-b82f-77d7cd041e8f;Ip=[164.130.1.60];Helo=[smtpO365.st.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB3PEPF00008860.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR10MB8228
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-GND-Sasl: jeanmichel.hautbois@yoseli.org
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduvdefjeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtqhertddttdejnecuhfhrohhmpeflvggrnhdqofhitghhvghlucfjrghuthgsohhishcuoehjvggrnhhmihgthhgvlhdrhhgruhhtsghoihhsseihohhsvghlihdrohhrgheqnecuggftrfgrthhtvghrnhepffevhfduvdeludeugfdtleduuedvhfeuvdevgfeiieefieevteektdettdeifeetnecukfhppedvrgdtudemvgdtrgemudeileemjedugedtmedvrgegtdemfhefrggrmeejudejvgemudefsgdvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmeduieelmeejudegtdemvdgrgedtmehffegrrgemjedujegvmedufegsvddphhgvlhhopehjvggrnhhmihgthhgvlhdqmhhsjegskeelrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehjvggrnhhmihgthhgvlhdrhhgruhhtsghoihhsseihohhsvghlihdrohhrghdpqhhiugepfeelleefgfduhfejgeffpdhmohguvgepshhmthhpohhuthdpnhgspghrtghpthhtohepkedprhgtphhtthhopehlihhnuhhsfieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrn
+ hgvlhdrohhrghdprhgtphhtthhopehkrhiikheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhhimhgrnhhshhhurdgshhgrvhgrnhhisehsihhlihgtohhnshhighhnrghlshdrihhopdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhg
+
+Hi Linus, Krzysztof,
+
+Le mercredi 14 janvier 2026, 14:52:00 heure normale d=E2=80=99Europe centra=
+le Linus=20
+Walleij a =C3=A9crit :
+> Hi Jean-Michel,
+>=20
+> thanks for your patch!
+
+Thanks for reviewing !
+
+>=20
+> On Tue, Jan 13, 2026 at 3:29=E2=80=AFPM Jean-Michel Hautbois via B4 Relay
+>=20
+> <devnull+jeanmichel.hautbois.yoseli.org@kernel.org> wrote:
+> > +  gpio-line-names: true
+>=20
+> I have a bit of similar concerns as Krzysztof, this is unlimited.
+>=20
+> This is actually:
+> - 8 for microchip,mcp23008 and microchip,mcp23s08
+> - 16 for microchip,mcp23017, microchip,mcp23018, microchip,mcp23s17
+> and microchip,mcp23s18
+>=20
+> (The "s" variants are just the SPI variants of the same chip...)
+>=20
+> Make some fancy - if: clauses to decide the maxItems from the compatible.
+> Don't hesitate to ask for help if this gets complicated, I get a panic
+> every time I have to deal with it because of the whitespacing business.
+>=20
+
+Indeed, I was probably a bit optimistic :-).
+What about this:
+ allOf:
+   - $ref: /schemas/spi/spi-peripheral-props.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - microchip,mcp23s08
++              - microchip,mcp23008
++    then:
++      properties:
++        gpio-line-names:
++          maxItems: 32
++        pinmux:
++          properties:
++            pins:
++              maxItems: 32
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - microchip,mcp23s17
++              - microchip,mcp23s18
++              - microchip,mcp23017
++              - microchip,mcp23018
++    then:
++      properties:
++        gpio-line-names:
++          maxItems: 128
++        pinmux:
++          properties:
++            pins:
++              maxItems: 128
++
+
+This would allow up to 4 chips to be on the same CS. But in the=20
+microchip,mcp23s17 datasheet, it says:
+"Three Hardware Address Pins to Allow Up to Eight Devices On the Bus"
+
+So, the maxItems could even be 256 for microchip,mcp23x17/18 family !
+
+What do you think (sorry for the headache !) ?
+Thanks,
+JM
+
+>  +            /*
+>=20
+> > +             * Names assigned sequentially in address order.
+> > +             * First 16 names for chip at address 0 (GPA0-7, GPB0-7).
+> > +             * Next 16 names for chip at address 1 (GPA0-7, GPB0-7).
+> > +             */
+> > +            gpio-line-names =3D
+> > +                "EXP0_GPA0", "EXP0_GPA1", "EXP0_GPA2", "EXP0_GPA3",
+> > +                "EXP0_GPA4", "EXP0_GPA5", "EXP0_GPA6", "EXP0_GPA7",
+> > +                "EXP0_GPB0", "EXP0_GPB1", "EXP0_GPB2", "EXP0_GPB3",
+> > +                "EXP0_GPB4", "EXP0_GPB5", "EXP0_GPB6", "EXP0_GPB7",
+> > +                "EXP1_GPA0", "EXP1_GPA1", "EXP1_GPA2", "EXP1_GPA3",
+> > +                "EXP1_GPA4", "EXP1_GPA5", "EXP1_GPA6", "EXP1_GPA7",
+> > +                "EXP1_GPB0", "EXP1_GPB1", "EXP1_GPB2", "EXP1_GPB3",
+> > +                "EXP1_GPB4", "EXP1_GPB5", "EXP1_GPB6", "EXP1_GPB7";
+>=20
+> So we get this, and we already have this (from the example):
+>=20
+>             gpiopullups: pinmux {
+>                 pins =3D "gpio0", "gpio1", "gpio2", "gpio3",
+>                        "gpio4", "gpio5", "gpio6", "gpio7",
+>                        "gpio8", "gpio9", "gpio10", "gpio11",
+>                        "gpio12", "gpio13", "gpio14", "gpio15";
+>                 bias-pull-up;
+>             };
+>=20
+> This is wild, we need some constraints I think.
+>=20
+> Whatever we come up with to limit the number of items in gpio-line-names
+> should also be applied to the "pins" list in the pinmux node.
 
 
 
-On 1/14/26 16:30, Krzysztof Kozlowski wrote:
-> st_pinconf_dbg_show() unlocks and locks the pinctrl_dev mutex, so it
-> must be called by the pinctrl core with the mutex hold.  Annotate the
-> function with sparse __must_hold, so any changes in pinctrl locking will
-> be statically detected.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-> 
-> ---
-> 
-> I think this is still useful, although maybe a bit pointless if core
-> explicitly always locks every pin_config_dbg_show() call? Anyway,
-> pattern of unlock+lock feels to me like something worth annotating.
-> 
-> I left the patch at the end of the set so it can be nicely discarded.
-> ---
->  drivers/pinctrl/pinctrl-st.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
-> index d3cea3437d7f..8ce88e591f47 100644
-> --- a/drivers/pinctrl/pinctrl-st.c
-> +++ b/drivers/pinctrl/pinctrl-st.c
-> @@ -987,6 +987,7 @@ static int st_pinconf_get(struct pinctrl_dev *pctldev,
->  
->  static void st_pinconf_dbg_show(struct pinctrl_dev *pctldev,
->  				   struct seq_file *s, unsigned pin_id)
-> +	__must_hold(&pctldev->mutex)
->  {
->  	struct st_pio_control *pc;
->  	unsigned long config;
-> 
+> Yours,
+> Linus Walleij
 
-Hi Krzysztof
 
-Reviewed-by: Patrice Chotard <patrice.chotard@foss.st.com>
 
-Thanks
-Patrice
+
 
