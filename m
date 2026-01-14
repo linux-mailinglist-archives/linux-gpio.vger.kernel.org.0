@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-30520-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30521-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9721FD1D9FC
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 10:41:06 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 266CAD1DA1C
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 10:41:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id D89B3300699B
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 09:40:59 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5FD24304BB75
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 09:41:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A76A38A2A4;
-	Wed, 14 Jan 2026 09:40:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F90E389E0E;
+	Wed, 14 Jan 2026 09:40:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="1bAWNE8S"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MFdRkedO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6C138946D;
-	Wed, 14 Jan 2026 09:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517E5389DEE;
+	Wed, 14 Jan 2026 09:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768383649; cv=none; b=q0yhNTLn4NpM4wmewVX2LDhp1RVGJguCEZfAMXjeHsGbloayra2XB9sM/lrWEF2KJM5phfcWc/LDDPSVYyEujGHjEwhm7NADgf2PevDRJFqkE/GxCsJCA8+gMOo2W5L+zEtJ+0QEJmTpKYKcQeUH9jVS/Yhpewty0yZxFkHISKQ=
+	t=1768383649; cv=none; b=q/CGZ8AKPi8BHiaCn9KZdqbBQ7HDgNO8S5ZX0OWDCp7wR8tdpvyXAsaQSh9Ba93LlSPdbanwrxk9wBAe3RA5reXy/q8kz1ZpL+ZJW/qlJVxp0l4xHjfKGRIRBBwe10VlOkoTQlTMFGjo07YgaBGxnpcMyUSrh+YQSiLeo4aw9xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1768383649; c=relaxed/simple;
-	bh=0Xlyw1PR4o+6+vS2gGoZ78tBAwiolEXSxjFvlBUZ5HE=;
+	bh=pkHYFhneP/QcwzSSuUU2RRndmpCI+0dWRXesaXlZDg8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bdYT9KOipzJuJWcYm6fV53DmbD/y6on0Ltrmlwt0KIa3Pl11wQsI3BaDWZk9BUvqVZnCSmo6fVrPjXBZ+d6dJ9cqXzbEjWM0fu7NI9eyRI+OU3L83jU3mPZ43M//o9fy2jHe7s8ifi4JMYRlbEJ1OETlOmKvKsls3Lb2aGRrNUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=1bAWNE8S; arc=none smtp.client-ip=185.246.84.56
+	 MIME-Version; b=A+fz2VdXpVcUDZf3oJXwg9dCgs2MigE4VSQF6tDPJjOo5YPEV6oeYB4v8uNIEC14YYelCOnkpM+w6mpc7j2F7Ug1vJmHXAyR/cmvuulKxp0p7h9GVt4w3Xs+7xcT2cCjf026tQ7a5Rut1T2p8c5M/VQdqjmHQOSadbRSCzUb5Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MFdRkedO; arc=none smtp.client-ip=185.171.202.116
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id E186B1A2863;
-	Wed, 14 Jan 2026 09:40:43 +0000 (UTC)
+	by smtpout-04.galae.net (Postfix) with ESMTPS id F1003C1F1CF;
+	Wed, 14 Jan 2026 09:40:19 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id B7C526074A;
-	Wed, 14 Jan 2026 09:40:43 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2DAB6103C80C0;
-	Wed, 14 Jan 2026 10:40:41 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 96AB66074A;
+	Wed, 14 Jan 2026 09:40:46 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6B124103C8951;
+	Wed, 14 Jan 2026 10:40:43 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1768383642; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1768383645; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=T+NWUCrzZZE7w9WZkyVej7pOY9XsMvaBl3vuZX0qFVM=;
-	b=1bAWNE8SIg5vzHKx2jCq3mO2Feqk2wgahgfaYwa9S2eA+ySM7g0iY/aNld0eQ1WGbyQ18h
-	gY1dqReP+hq8vnh4ngjWqUE3WhYsRGPNT5QIzo8ux9LWxrM2eghHXPEV6ckv/cOnSt9kS/
-	lkbR2o3g2P122loLV48wW1PyqB2vNeJVEct7G4sD4pMH6bAeXOoeqNaYf2PfdNZvW26eJz
-	RmZfbvyqtlf4FvjBY2EI3y3SiivqauF1e75Y+siYSPLxq2e4yd4l8oFb2WJvLzuDKugF7I
-	R0f7EvbI/EXEZ1F6w50Nn6A3i+ieBiuMatKuMgEb0H0mNifsDqUyZnc1QMwuCg==
+	bh=uvqB8EXIwm8yUwJOSkCvzDM0SmaeJRSPO5ef2FNPe1I=;
+	b=MFdRkedOB2w72yhsGZqtMY5GGBZP3u3WajWGIFEcoF2zd0Gze8BuJZKUIVVaVkRCTdmuIc
+	P9DXSvAhdWzmblBrdyjZZouMxYdYNJ9S/4Xx7wWLBlGpK3TpckjBHfflcBtc/1dX2c4gQ9
+	728oUyViHf3eC9VUiQS0jFaX6NyoCx8DqmWecBAvyE7g0KuX/r4+oZ4GNFXojdRNMqx9fT
+	bPlnT7OCTDKNkUCwLfSyXFpkikN2sW5tPhSLf5ZuWYll5sRvoUw6IBW/8JGc7bI35HHDKB
+	C7F9kJQc4ovmYCT+V9mMLBKFK8BPNDdh2fo4pjw+UEAhaxyKpZ+MRpRYPMe43w==
 From: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>,
@@ -65,9 +65,9 @@ Cc: linux-gpio@vger.kernel.org,
 	Pascal Eberhard <pascal.eberhard@se.com>,
 	Miquel Raynal <miquel.raynal@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v8 2/8] of: unittest: Add a test case for for_each_of_imap_item iterator
-Date: Wed, 14 Jan 2026 10:39:31 +0100
-Message-ID: <20260114093938.1089936-3-herve.codina@bootlin.com>
+Subject: [PATCH v8 3/8] irqchip/ls-extirq: Use for_each_of_imap_item iterator
+Date: Wed, 14 Jan 2026 10:39:32 +0100
+Message-ID: <20260114093938.1089936-4-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260114093938.1089936-1-herve.codina@bootlin.com>
 References: <20260114093938.1089936-1-herve.codina@bootlin.com>
@@ -80,173 +80,88 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-Recently for_each_of_imap_item iterator has been introduce to help
-drivers in parsing the interrupt-map property.
+The ls-extirq driver parses the interrupt-map property. It does it using
+open code.
 
-Add a test case for this iterator.
+Recently for_each_of_imap_item iterator has been introduce to help
+drivers in this parsing.
+
+Convert the ls-extirq driver to use the for_each_of_imap_item
+iterator instead of open code.
 
 Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- .../of/unittest-data/tests-interrupts.dtsi    |   9 ++
- drivers/of/unittest.c                         | 116 ++++++++++++++++++
- 2 files changed, 125 insertions(+)
+ drivers/irqchip/irq-ls-extirq.c | 47 ++++++++++++---------------------
+ 1 file changed, 17 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/of/unittest-data/tests-interrupts.dtsi b/drivers/of/unittest-data/tests-interrupts.dtsi
-index 4ccb54f91c30..974f888c9b15 100644
---- a/drivers/of/unittest-data/tests-interrupts.dtsi
-+++ b/drivers/of/unittest-data/tests-interrupts.dtsi
-@@ -50,6 +50,15 @@ test_intmap1: intmap1 {
- 				interrupt-map = <0x5000 1 2 &test_intc0 15>;
- 			};
- 
-+			intmap2 {
-+				#interrupt-cells = <2>;
-+				#address-cells = <0>;
-+				interrupt-map = <1 11 &test_intc0 100>,
-+						<2 22 &test_intc1 200 201 202>,
-+						<3 33 &test_intc2 300 301>,
-+						<4 44 &test_intc2 400 401>;
-+			};
-+
- 			test_intc_intmap0: intc-intmap0 {
- 				#interrupt-cells = <1>;
- 				#address-cells = <1>;
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 388e9ec2cccf..d88a12f23ad5 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1654,6 +1654,121 @@ static void __init of_unittest_parse_interrupts_extended(void)
- 	of_node_put(np);
- }
- 
-+struct of_unittest_expected_imap_item {
-+	u32 child_imap_count;
-+	u32 child_imap[2];
-+	const char *parent_path;
-+	int parent_args_count;
-+	u32 parent_args[3];
-+};
-+
-+static const struct of_unittest_expected_imap_item of_unittest_expected_imap_items[] = {
-+	{
-+		.child_imap_count = 2,
-+		.child_imap = {1, 11},
-+		.parent_path = "/testcase-data/interrupts/intc0",
-+		.parent_args_count = 1,
-+		.parent_args = {100},
-+	}, {
-+		.child_imap_count = 2,
-+		.child_imap = {2, 22},
-+		.parent_path = "/testcase-data/interrupts/intc1",
-+		.parent_args_count = 3,
-+		.parent_args = {200, 201, 202},
-+	}, {
-+		.child_imap_count = 2,
-+		.child_imap = {3, 33},
-+		.parent_path = "/testcase-data/interrupts/intc2",
-+		.parent_args_count = 2,
-+		.parent_args = {300, 301},
-+	}, {
-+		.child_imap_count = 2,
-+		.child_imap = {4, 44},
-+		.parent_path = "/testcase-data/interrupts/intc2",
-+		.parent_args_count = 2,
-+		.parent_args = {400, 401},
-+	}
-+};
-+
-+static void __init of_unittest_parse_interrupt_map(void)
-+{
-+	const struct of_unittest_expected_imap_item *expected_item;
-+	struct device_node *imap_np, *expected_parent_np;
+diff --git a/drivers/irqchip/irq-ls-extirq.c b/drivers/irqchip/irq-ls-extirq.c
+index 50a7b38381b9..ed8755777349 100644
+--- a/drivers/irqchip/irq-ls-extirq.c
++++ b/drivers/irqchip/irq-ls-extirq.c
+@@ -125,45 +125,32 @@ static const struct irq_domain_ops extirq_domain_ops = {
+ static int
+ ls_extirq_parse_map(struct ls_extirq_data *priv, struct device_node *node)
+ {
+-	const __be32 *map;
+-	u32 mapsize;
 +	struct of_imap_parser imap_parser;
 +	struct of_imap_item imap_item;
-+	int count, ret, i;
-+
-+	if (of_irq_workarounds & (OF_IMAP_NO_PHANDLE | OF_IMAP_OLDWORLD_MAC))
-+		return;
-+
-+	imap_np = of_find_node_by_path("/testcase-data/interrupts/intmap2");
-+	if (!imap_np) {
-+		pr_err("missing testcase data\n");
-+		return;
-+	}
-+
-+	ret = of_imap_parser_init(&imap_parser, imap_np, &imap_item);
-+	if (unittest(!ret, "of_imap_parser_init(%pOF) returned error %d\n",
-+		     imap_np, ret))
-+		goto end;
-+
-+	expected_item = of_unittest_expected_imap_items;
-+	count = 0;
-+
+ 	int ret;
+ 
+-	map = of_get_property(node, "interrupt-map", &mapsize);
+-	if (!map)
+-		return -ENOENT;
+-	if (mapsize % sizeof(*map))
+-		return -EINVAL;
+-	mapsize /= sizeof(*map);
++	ret = of_imap_parser_init(&imap_parser, node, &imap_item);
++	if (ret)
++		return ret;
+ 
+-	while (mapsize) {
 +	for_each_of_imap_item(&imap_parser, &imap_item) {
-+		if (unittest(count < ARRAY_SIZE(of_unittest_expected_imap_items),
-+			     "imap item number %d not expected. Max number %zu\n",
-+			     count, ARRAY_SIZE(of_unittest_expected_imap_items) - 1)) {
+ 		struct device_node *ipar;
+-		u32 hwirq, intsize, j;
++		u32 hwirq;
++		int i;
+ 
+-		if (mapsize < 3)
+-			return -EINVAL;
+-		hwirq = be32_to_cpup(map);
+-		if (hwirq >= MAXIRQ)
++		hwirq = imap_item.child_imap[0];
++		if (hwirq >= MAXIRQ) {
 +			of_node_put(imap_item.parent_args.np);
-+			goto end;
+ 			return -EINVAL;
 +		}
-+
-+		expected_parent_np = of_find_node_by_path(expected_item->parent_path);
-+		if (unittest(expected_parent_np,
-+			     "missing dependent testcase data (%s)\n",
-+			     expected_item->parent_path)) {
-+			of_node_put(imap_item.parent_args.np);
-+			goto end;
-+		}
-+
-+		unittest(imap_item.child_imap_count == expected_item->child_imap_count,
-+			 "imap[%d] child_imap_count = %u, expected %u\n",
-+			 count, imap_item.child_imap_count,
-+			 expected_item->child_imap_count);
-+
-+		for (i = 0; i < expected_item->child_imap_count; i++)
-+			unittest(imap_item.child_imap[i] == expected_item->child_imap[i],
-+				 "imap[%d] child_imap[%d] = %u, expected %u\n",
-+				 count, i, imap_item.child_imap[i],
-+				 expected_item->child_imap[i]);
-+
-+		unittest(imap_item.parent_args.np == expected_parent_np,
-+			 "imap[%d] parent np = %pOF, expected %pOF\n",
-+			 count, imap_item.parent_args.np, expected_parent_np);
-+
-+		unittest(imap_item.parent_args.args_count == expected_item->parent_args_count,
-+			 "imap[%d] parent param_count = %d, expected %d\n",
-+			 count, imap_item.parent_args.args_count,
-+			 expected_item->parent_args_count);
-+
-+		for (i = 0; i < expected_item->parent_args_count; i++)
-+			unittest(imap_item.parent_args.args[i] == expected_item->parent_args[i],
-+				 "imap[%d] parent param[%d] = %u, expected %u\n",
-+				 count, i, imap_item.parent_args.args[i],
-+				 expected_item->parent_args[i]);
-+
-+		of_node_put(expected_parent_np);
-+		count++;
-+		expected_item++;
-+	}
-+
-+	unittest(count == ARRAY_SIZE(of_unittest_expected_imap_items),
-+		 "Missing items. %d parsed, expected %zu\n",
-+		 count, ARRAY_SIZE(of_unittest_expected_imap_items));
-+end:
-+	of_node_put(imap_np);
-+}
-+
- #if IS_ENABLED(CONFIG_OF_DYNAMIC)
- static void __init of_unittest_irq_refcount(void)
- {
-@@ -4395,6 +4510,7 @@ static int __init of_unittest(void)
- 	of_unittest_changeset_prop();
- 	of_unittest_parse_interrupts();
- 	of_unittest_parse_interrupts_extended();
-+	of_unittest_parse_interrupt_map();
- 	of_unittest_irq_refcount();
- 	of_unittest_dma_get_max_cpu_address();
- 	of_unittest_parse_dma_ranges();
+ 		priv->nirq = max(priv->nirq, hwirq + 1);
+ 
+-		ipar = of_find_node_by_phandle(be32_to_cpup(map + 2));
+-		map += 3;
+-		mapsize -= 3;
+-		if (!ipar)
+-			return -EINVAL;
+-		priv->map[hwirq].fwnode = &ipar->fwnode;
+-		ret = of_property_read_u32(ipar, "#interrupt-cells", &intsize);
+-		if (ret)
+-			return ret;
+-
+-		if (intsize > mapsize)
+-			return -EINVAL;
++		ipar = of_node_get(imap_item.parent_args.np);
++		priv->map[hwirq].fwnode = of_fwnode_handle(ipar);
+ 
+-		priv->map[hwirq].param_count = intsize;
+-		for (j = 0; j < intsize; ++j)
+-			priv->map[hwirq].param[j] = be32_to_cpup(map++);
+-		mapsize -= intsize;
++		priv->map[hwirq].param_count = imap_item.parent_args.args_count;
++		for (i = 0; i < priv->map[hwirq].param_count; i++)
++			priv->map[hwirq].param[i] = imap_item.parent_args.args[i];
+ 	}
+ 	return 0;
+ }
 -- 
 2.52.0
 
