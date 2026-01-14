@@ -1,85 +1,141 @@
-Return-Path: <linux-gpio+bounces-30553-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30554-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E626D1F4A4
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 15:05:02 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE5A3D1F5BA
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 15:17:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DC2B2306E2C4
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 14:01:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E26483055707
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Jan 2026 14:15:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36CD62BCF7F;
-	Wed, 14 Jan 2026 14:01:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 390DC2D8371;
+	Wed, 14 Jan 2026 14:15:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8CNGpz9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wv8GtboC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA7129A32D;
-	Wed, 14 Jan 2026 14:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26202D73B8
+	for <linux-gpio@vger.kernel.org>; Wed, 14 Jan 2026 14:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768399264; cv=none; b=gYwvcJ/4pwBt6yV28OBGFdU0Hk1tBwRY6GLSMPAFweYDcJF7h1MKZU7Jmbc6+2++CqF+QGiTVUof6dflFTFxxBnR7ikzmCTRAEg5uFRxXHcI/1fjmOM+kQNMuf9IErrTmiqX9Uu7LP6Je7FqhcRc6xYNKeqyxlvKkkpT8tcJWS4=
+	t=1768400108; cv=none; b=nOBw2KsK3dhADwBiQn2x4n4h39+Be5wP88BrDyC4RCTo7RtnbJzx3cxeUBVkcQW5TRWnGdC0ruTrE25Gsna05Zkwje6aepIIKfbPKk3lnus1M4Z+AgLi0vomG0MlXOtes1T/qNmm/kNzR2Fuizb5Kks1nL3pss3jb3pI1YnaQK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768399264; c=relaxed/simple;
-	bh=R1Wi6lmAo+W4QXzp9p43ECu4QfFcNjWMslxY69GOc1o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=LUu0WzVQ2dbU3jzWZ5iCS+Ct7xEGQs2bzlQkKYJRJhlJcmvzOHfofSYW4YL3g03PJc4CyIg2j50U8vG8NrD/GEUnPoMxn3rU6jn/vipdCPYedMZz6Tcan4rcf+n7TrpuX/IbhVjmTSBoYjilArLlTFqgYvUKY+y9qX2RAccehoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8CNGpz9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE4A9C4CEF7;
-	Wed, 14 Jan 2026 14:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768399263;
-	bh=R1Wi6lmAo+W4QXzp9p43ECu4QfFcNjWMslxY69GOc1o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=n8CNGpz9WFD2hg12NkCb1gpLqvFpyCc/sPFHIgJAAy/3oHL9+GwoXCCv/cZVa7cFO
-	 F1omMSXXy94gfJMKAnV6J+9LvkB0cEZ7EazSYLWc5DHalTukXEktmF0nO4HYfB+Wl8
-	 fi9Pq0H4ehpIfDBnUchdGQtG+V+6b6fbkelnX8Gi5qe2yKrNTpv7VSxK/fxaiU1jYN
-	 npts30lzMkfuqXE7i7I8N0tQ4OIk6YB88RPlMvykXY3+d+ksQ0DCXaADtg0nz6oU8u
-	 NPz5U7jUyGZoKswBU0vPVlG+Lm4pMgh52kVwryiZpIXfLFbsoLjqizcjqzTzW3kuPF
-	 3luEUaXw2enZA==
-From: Thomas Gleixner <tglx@kernel.org>
-To: "Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>, Wolfram
- Sang <wsa+renesas@sang-engineering.com>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Geert Uytterhoeven
- <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Saravana
- Kannan <saravanak@kernel.org>, Herve Codina <herve.codina@bootlin.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Pascal
- Eberhard <pascal.eberhard@se.com>, Miquel Raynal
- <miquel.raynal@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v8 4/8] irqchip/renesas-rza1: Use for_each_of_imap_item
- iterator
-In-Reply-To: <20260114093938.1089936-5-herve.codina@bootlin.com>
-References: <20260114093938.1089936-1-herve.codina@bootlin.com>
- <20260114093938.1089936-5-herve.codina@bootlin.com>
-Date: Wed, 14 Jan 2026 15:00:59 +0100
-Message-ID: <87a4ygi99g.ffs@tglx>
+	s=arc-20240116; t=1768400108; c=relaxed/simple;
+	bh=NKlOFQD6uXj0VWLLS8qWtWdchxZnwtrtwtRRdnryD+E=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dsyzzSH6RepnG0XW1qSaloVEd8oqUBIoZCF7FFiZiLY/BhS9tkj+cWo6s/5jT7Dqk0+rzEfvvADYxj3Bx0nqKeWKbturpEQrnzTf1Zz+JXbiE1+HXQYXOxwc37CyDx+BDxdvfslHIvbFxVAj5uSEVJ/NxkQusHVA0lW0F4HeId4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wv8GtboC; arc=none smtp.client-ip=209.85.210.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-7f89d0b37f0so511447b3a.0
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Jan 2026 06:15:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1768400106; x=1769004906; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NKlOFQD6uXj0VWLLS8qWtWdchxZnwtrtwtRRdnryD+E=;
+        b=wv8GtboCLQVEKX3PxvU0xn7QrVV8gNToyphPCAMqAL7T7WFhU8eTGxMoH+NDoFP8no
+         akGDuzs0wBcK+eJsp7Wk9d9l1M3gTdI2UNqHMQWablpOzka3O9zIV0SAiwsSzEMTkOg+
+         oYVE4Q/aaiFymr4zjme/8z8hkfklGGkVzVN6RElslZp7LjL3bqHmiLiedVDuUdS2/qZt
+         rTt1IlsBqcFZUHiVXgZkam0cHwnxa+A6itw71WYhgwXEErqkSBjtGLyew4JOzm3AfYn3
+         5gKhJwoyVlmZHsj+I4XWEuTU2CJXTr3A/tVO6SBs4cI3RX/RoZNjB+LPf19O+hvN5nO2
+         4AoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768400106; x=1769004906;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NKlOFQD6uXj0VWLLS8qWtWdchxZnwtrtwtRRdnryD+E=;
+        b=rOuwvfGNkxny/Xnr1/xBN8rdmq4XM/2cXYQ42QfTA0ZcuDII1jPQZGbOdbLFil8d3r
+         4yd2FHRu2qbhSbFdrKOD5yPoXPsMeveYV9WCFis8VoDFtXVixXgLcjzbUgL6SWXSGTZ+
+         DDDNRH3Zvn/kR5TMm5yk8TccOBLvzsZzwylTAKptyzuJW9ZvFHbziUJ6w+Cq4LL16rIC
+         ams3v0B9VMHu/D1TITMzlcClhMlJJNubFmdAKsFJR8+cvKtjNK/C5jf4UKdPWQoFd5NH
+         rF4U3badIU47I32jFVvxyZ1ejfGORR/G2/DrVCC1AAMqv7eRYLQPJ38kwqkqlpN1t1yJ
+         S40Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX9SJu0GEroN2Q0ZEWGF4e+5SSFP3mC4xkT5uIi8vVrODui5Q9OdU8JvaX/r6NWnXHcpc0qddeVSIwC@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpiZmaGkH3c56ekHUSJsZCZkxYpREfZDo6lUNFQckovUpwKbl3
+	rS/kYWaeCpAS+Vd6iWbctwR2BGc+ZzdUbkYuXrqMmNrDY29OBQDUsoexTkuHBX8F1yg=
+X-Gm-Gg: AY/fxX4lG3U9altZz1cvGC7aVWFb2u+P1WNmR+krobNQ7Yg+fjs8HaZkJJcU70+Fa0v
+	5q7cTF1fZuKsTgiPtfesz+uw7uZOUSwOSQo+XFja95JNzx89jI0EGwUahIBuq/hsjF/sh8kEDTu
+	WGn+wpHpMnOKukswuCczaMvf/+55+OKwTJKaP42l59k1YwUcT8hs/lohd+3VV0mVpTZHhnMR4y3
+	2Or09PDPAtBNKKtIHoZVLdoWXKbCM3SOFeTdw1Ut3FR/vbJ0iF+TCAkMBotukkUIhieAuInOpA2
+	Yf545CaX9v+KCT57cf2946MpKjq5pgcCoNR1cBjA6IjbPYaslDcpcdAZ6pHW5g97moZjx9SJtMa
+	5JP8gR37mRigTW1ngdoaFywTePTu2TJWE8QGxYPFfVHiD4M68d1Igs7RgrITI00bE/PSx8kYKY4
+	enuo72StNbUE6s6ZLK
+X-Received: by 2002:a05:6a20:430e:b0:366:57e1:3919 with SMTP id adf61e73a8af0-38bed3b0a3emr3088839637.26.1768400105900;
+        Wed, 14 Jan 2026 06:15:05 -0800 (PST)
+Received: from draszik.lan ([212.129.75.26])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-819c52f88casm23418638b3a.34.2026.01.14.06.14.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Jan 2026 06:15:05 -0800 (PST)
+Message-ID: <08a972c7a0fd17260a91f09ce0201167cb6ed7fd.camel@linaro.org>
+Subject: Re: [PATCH v6 00/20] Samsung S2MPG10 regulator and S2MPG11 PMIC
+ drivers
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Mark Brown <broonie@kernel.org>, Lee Jones <lee@kernel.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>,  Bartosz Golaszewski	 <brgl@bgdev.pl>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij	
+ <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Peter Griffin	
+ <peter.griffin@linaro.org>, Will McVicker <willmcvicker@google.com>, Juan
+ Yescas <jyescas@google.com>, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, 	linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, 	linux-gpio@vger.kernel.org, Bartosz
+ Golaszewski	 <bartosz.golaszewski@oss.qualcomm.com>
+Date: Wed, 14 Jan 2026 14:15:34 +0000
+In-Reply-To: <4502ece1dc8e949e23f971a93dc06dab2d4f0bf7.camel@linaro.org>
+References: <20260105-s2mpg1x-regulators-v6-0-80f4b6d1bf9d@linaro.org>
+		 <20260113112244.GE1902656@google.com>
+		 <6ace23c4-d858-4bdf-9987-104e706190cd@sirena.org.uk>
+	 <4502ece1dc8e949e23f971a93dc06dab2d4f0bf7.camel@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-2+build3 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
 
-On Wed, Jan 14 2026 at 10:39, Herve Codina wrote:
-> The renesas-rza1 driver parses the interrupt-map property. It does it
-> using open code.
->
-> Recently for_each_of_imap_item iterator has been introduce to help
-> drivers in this parsing.
->
-> Convert the renesas-rza1 driver to use the for_each_of_imap_item
-> iterator instead of open code.
->
-> Signed-off-by: Herve Codina (Schneider Electric) <herve.codina@bootlin.com>
-> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On Tue, 2026-01-13 at 17:28 +0000, Andr=C3=A9 Draszik wrote:
+> Hi Mark, Lee,
+>=20
+> On Tue, 2026-01-13 at 16:20 +0000, Mark Brown wrote:
+> > On Tue, Jan 13, 2026 at 11:22:44AM +0000, Lee Jones wrote:
+> >=20
+> > > MFD pieces look okay to me.
+> >=20
+> > > Once Mark provides his AB, I can merge the set.
+> >=20
+> > Given that the bulk of the series is regulator changes I'd been
+> > expecting to take it?
+>=20
+> Just FYI:
+> 1) I just noticed I have to rebase/resend this mainly due to
+> patch context of the binding updates.
 
-Reviewed-by: Thomas Gleixner <tglx@kernel.org>
+I take this back, I got mixed up with a different branch. This series
+doesn't need rebasing and is good to go.
+
+A.
+
+>=20
+> 2) this series depends on another MFD series of mine
+> https://lore.kernel.org/all/20260113-s5m-alarm-v3-0-855a19db1277@linaro.o=
+rg/
+> (again only due to patch context) which is still pending.
+>=20
+> I was under the (perhaps incorrect) impression that changes that touch
+> MFD always go via the MFD tree. I guess that's not the case. I'll update
+> the relevant phrasing in the cover letter with whatever you two decide :-=
+)
+>=20
+>=20
+> Cheers,
+> Andre'
 
