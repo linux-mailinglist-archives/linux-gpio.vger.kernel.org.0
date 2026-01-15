@@ -1,176 +1,87 @@
-Return-Path: <linux-gpio+bounces-30613-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30614-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id B925ED27371
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jan 2026 19:12:07 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E4F5D27E65
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jan 2026 20:01:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 83C1430F8549
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jan 2026 18:04:46 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 6818B300AB10
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jan 2026 19:01:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF9633D1CDA;
-	Thu, 15 Jan 2026 17:56:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69DD12BE02A;
+	Thu, 15 Jan 2026 19:01:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fybKxJu/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SzQdeiOR"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4F13D6667;
-	Thu, 15 Jan 2026 17:56:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B112E1799F;
+	Thu, 15 Jan 2026 19:01:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768499761; cv=none; b=E7rFuRYhmEuK4kx/U31g8u00Vs8n41VjudD0Nj6tRtvetqVfiLa4Z/GBRU+b018BaTtqhrXKi9RSQPAzMrpbxwGvEaEgdEbjePUdyPO9tlFpsOL0n8hQaZp7AwNuqeorf51YqfeVTKgiH7Ov6vCtbl8Kh89mjx25nm4e7jFvAqA=
+	t=1768503673; cv=none; b=Avz/gGRQUIcJ8Zx//PDpQshwKWWh0VE3rihuz9VnHXLBiAzY8Cqh6W6ec2IkENrwtFCHDce0ISXLLb2U9+9q2EIDpAR0Kx4Uo9Jg1OImmzvApgxr3k6rdVUNtTpxPA2rfqbAoZHKqU2+xFC9VIpUczljiTNGziqw9fHFYpqxqwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768499761; c=relaxed/simple;
-	bh=IvYoltmC+bI3hqLQd+e9UfhKIkh3JKTy2Fff9C7sJgU=;
+	s=arc-20240116; t=1768503673; c=relaxed/simple;
+	bh=kbDE4I87P0BVWxV+dNPffz+z+PAooAzag8YpvFHu/SE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tN4PHrgUzuKma/OZ6VnyZKFIhsI83ItffUz0sXKLyUsUbTt/t0diZyu5GMy4n3BBFzeVuK3ldW7qFbD48RCUGRClOSjYI8Oao551WpWCGy7h08vER5W2YV/aWyVD8iMHfVxbeiC9OOmAo/obq+7rh9hLm+S2KGghooqTOsKYwxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fybKxJu/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4315C116D0;
-	Thu, 15 Jan 2026 17:55:59 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=AHDXLw45+cm57RDtjGDBcjdznW3vqj/ijTWvFWOk34b+BMboPxwSbRM2qMfGIXsoz03Ol4m/F+R8H/E71I+Qcaji/rPQ7nmL3xjoKI1VtjwdMqHAcyLZLl7l7GQ1k3AucAxgPuocy3AZFHt5how8Jv9bT1/5WIhdVxqvo/tbD+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SzQdeiOR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AD8AC116D0;
+	Thu, 15 Jan 2026 19:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768499761;
-	bh=IvYoltmC+bI3hqLQd+e9UfhKIkh3JKTy2Fff9C7sJgU=;
+	s=k20201202; t=1768503673;
+	bh=kbDE4I87P0BVWxV+dNPffz+z+PAooAzag8YpvFHu/SE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fybKxJu/o1kIocFapw712vol7Q2wh4EGQk1nxS7SmROCWa6AJnlmSJrjkMv8nvR49
-	 3d+wV8qiojNkkJ55SIbrW8hslv94pEzcRMJ/Vgx0AQlmgQdJDyEFX8F7hE26Tzk5Hb
-	 KfsL3/zuXdMPj9D3RUEzvs+rzvJCjbEmOYCzWE6TClPzolTSgyV/8hr/LzI9ZfH2Bg
-	 FuMrafRBUNunjTarWTfRfAo60T7/qPDt0ll9P4aZPcGNAQB1wFTz5EPDPgRgUeC6FG
-	 WxGglwEiIl42VPvygw04SKINNJljo7VmU618CW+QeL8dsiUZfBBINZAQkzCINvrgeQ
-	 uXPLX7pV6XIvg==
-Date: Thu, 15 Jan 2026 17:55:57 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Linus Walleij <linusw@kernel.org>
-Cc: linus.walleij@linaro.org, Conor Dooley <conor.dooley@microchip.com>,
-	Rob Herring <robh@kernel.org>,
+	b=SzQdeiORsmFVr3W2xywsEeCDLaLp7l83NC37XK+pawV9POmYfLWH7j3bTeU0/Foav
+	 vh3KegliIHHQqPQC4/HVSBz9oh44YoXok+Zq8VSDfurZS/7WO/zx/S/I1GSiUUctIO
+	 6flNjhHYBt2Fb1Z5VBbO3NHHw7hWix2ub+kbz85TC1pU9NwMAMj3c0bB9hzwGVMtLD
+	 Ql2MWpIaeLI0OfoVyaGtefaA1v6Z7yBh2QUZKJiDVJ5aJuHVV5ySbhy5v6F/3ren1G
+	 tXmVmDAkFmN1ucJGeMP611PUCSSQbtOiFLkca+AlQmh1q4SqNzELMGaW799fr/2ik+
+	 NgIMAR8w1heHA==
+Date: Thu, 15 Jan 2026 13:01:12 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Gatien Chevallier <gatien.chevallier@foss.st.com>
+Cc: jens.wiklander@linaro.org, linux-stm32@st-md-mailman.stormreply.com,
+	Linus Walleij <linusw@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Leo Yan <leo.yan@linux.dev>,
+	=?iso-8859-1?Q?Cl=E9ment?= Le Goffic <legoffic.clement@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	coresight@lists.linaro.org, Conor Dooley <conor+dt@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, Valentina.FernandezAlanis@microchip.com
-Subject: Re: [RFC v2 3/5] pinctrl: add polarfire soc mssio pinctrl driver
-Message-ID: <20260115-wired-botanical-042f7cda4449@spud>
-References: <20251127-bogged-gauze-74aed9fdac0e@spud>
- <20251127-capped-prewar-99fd94faea24@spud>
- <CAD++jLkxLJRZocHenBASLzoUAbw=oPpMajNF6a5z-Lzds+5Ecw@mail.gmail.com>
+	linux-gpio@vger.kernel.org, Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH v2 02/11] dt-bindings: pinctrl: document
+ access-controllers property for stm32 HDP
+Message-ID: <176850367158.1015177.14103390194697312038.robh@kernel.org>
+References: <20260114-debug_bus-v2-0-5475c7841569@foss.st.com>
+ <20260114-debug_bus-v2-2-5475c7841569@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="8PiXYbBVoAfJA0rn"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD++jLkxLJRZocHenBASLzoUAbw=oPpMajNF6a5z-Lzds+5Ecw@mail.gmail.com>
+In-Reply-To: <20260114-debug_bus-v2-2-5475c7841569@foss.st.com>
 
 
---8PiXYbBVoAfJA0rn
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 14 Jan 2026 11:29:16 +0100, Gatien Chevallier wrote:
+> HDP being functional depends on the debug configuration on the platform
+> that can be checked using the access-controllers property, document it.
+> 
+> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/st,stm32-hdp.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
 
-On Fri, Dec 26, 2025 at 10:40:07AM +0100, Linus Walleij wrote:
-> On Thu, Nov 27, 2025 at 11:58=E2=80=AFAM Conor Dooley <conor@kernel.org> =
-wrote:
->=20
-> >  drivers/pinctrl/Kconfig              |   7 +-
-> >  drivers/pinctrl/Makefile             |   1 +
-> >  drivers/pinctrl/pinctrl-mpfs-mssio.c | 750 +++++++++++++++++++++++++++
->=20
-> Time to move the drivers to drivers/pinctrl/microchip
-> before it becomes an overpopulation problem?
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-Sure, no problem.
-
->=20
-> (The previous drivers can be moved in a separate patch.)
->=20
->=20
-> > +       select GENERIC_PINCTRL_GROUPS
-> > +       select GENERIC_PINMUX_FUNCTIONS
-> > +       select GENERIC_PINCTRL_BELLS_AND_WHISTLES
->=20
-> Just the bottom select will bring it all in, right?
-
-I'll make it do that if it's not already. Just didn't know if you were a
-"select everything you use" kinda guy or didn't mind selects selecting.
-
-> > +static int mpfs_pinctrl_pin_to_iocfg_reg(unsigned int pin)
-> > +{
-> > +       u32 reg =3D MPFS_PINCTRL_IOCFG01_REG;
-> > +
-> > +       if (pin >=3D MPFS_PINCTRL_BANK2_START)
-> > +               reg +=3D MPFS_PINCTRL_INTER_BANK_GAP;
-> > +
-> > +       // 2 pins per 32-bit register
-> > +       reg +=3D (pin / 2) * 0x4;
->=20
-> It's helpful with these nice comments that ease the reading of the code
-> quite a bit.
-
-Eh, I feel like sometimes a comment like this is just better than trying
-to insert silly defines to unmagic the numbers.
-
->=20
-> > +static int mpfs_pinctrl_set_mux(struct pinctrl_dev *pctrl_dev, unsigne=
-d int fsel,
-> > +                               unsigned int gsel)
-> > +{
-> > +       struct mpfs_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctrl_de=
-v);
-> > +       const struct group_desc *group;
-> > +       const char **functions;
-> > +
-> > +       group =3D pinctrl_generic_get_group(pctrl_dev, gsel);
-> > +       if (!group)
-> > +               return -EINVAL;
-> > +
-> > +       functions =3D group->data;
-> > +
-> > +       for (int i =3D 0; i < group->grp.npins; i++) {
-> > +               u32 function;
-> > +
-> > +               //TODO @Linus my new function being actually generic me=
-ans that
-> > +               // the mapping of function string to something the hard=
-ware
-> > +               // understands only happens at this point.
-> > +               // I think this is fine, because dt validation would wh=
-inge
-> > +               // about something invalid, but it's the "catch" with m=
-y approach.
-> > +               // The other option I considered was to provide a mappi=
-ng
-> > +               // function pointer that the driver can populate, but I=
- think
-> > +               // that's overkill.
-> > +               function =3D mpfs_pinctrl_function_map(functions[i]);
-> > +               if (function < 0) {
-> > +                       dev_err(pctrl->dev, "invalid function %s\n", fu=
-nctions[i]);
-> > +                       return function;
-> > +               }
->=20
-> This is fine with me.
->=20
-> Ideally I would like code that does a lot of string stacking and comparing
-> to be using Rust, but we cannot yet use that in core code so that is for
-> another day.
-
-Yeah, would be nice. My problem with it was more about the point in time
-where this happens rather than doing it in the first place though.
-
-
---8PiXYbBVoAfJA0rn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaWkqLQAKCRB4tDGHoIJi
-0p4kAQDz/vdrHeuN+fcuJHTqhEElz2W9rqbpW43B00tJ8jEPWQD+MQgReOM8TesV
-x1/4wrjnkb7Vu0QZNjZQv5m3ik0zHgU=
-=YGyr
------END PGP SIGNATURE-----
-
---8PiXYbBVoAfJA0rn--
 
