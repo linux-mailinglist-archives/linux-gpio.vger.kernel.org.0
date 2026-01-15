@@ -1,152 +1,196 @@
-Return-Path: <linux-gpio+bounces-30590-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30591-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0425BD241C6
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jan 2026 12:16:27 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BEC4D2438D
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jan 2026 12:40:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B74FA3025716
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jan 2026 11:14:53 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id A817230060CA
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jan 2026 11:40:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8670F378D8F;
-	Thu, 15 Jan 2026 11:14:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6D8637A4B7;
+	Thu, 15 Jan 2026 11:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b="Snj4H2ke"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-dl1-f65.google.com (mail-dl1-f65.google.com [74.125.82.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6293378D61
-	for <linux-gpio@vger.kernel.org>; Thu, 15 Jan 2026 11:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F0F3793C1
+	for <linux-gpio@vger.kernel.org>; Thu, 15 Jan 2026 11:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768475680; cv=none; b=K6gkLZsFFcHpUoOrmhvcv83sTJKcHD/hsn7MB/3cQ3/6NLzm3tbqjmZ+rsyE5t4mvuU8PlYZrolIk9zyC3FoVKZXLyYd0ACg0chS842fbo69MfmXfA+u4cbo6PWGIVZo/cPTZ3u/OBgcIlISeJsnG6ioNS3fQ/B/GJb5r89+Vw4=
+	t=1768477240; cv=none; b=c/+5NCa/Rn38DGL9Eu/unuDZU0Y7p+b/2iL2vPi7a67RFvSNBK2r5p+r+fzwsrKU/ZQalZOHsFQkEWhD+jcnBatlBSU4EUFfgb1FuOlfUDqixRgnQL6QhAWvRjqiP0RQHw/NwitfZ6UWd2bhRvTawBF7Jg+btU1tmS0XOlaJGuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768475680; c=relaxed/simple;
-	bh=4Xv+kiu1PsewV9Qo5HqVVMC1TkAVawqiz071ud8smLw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fZuZO80+fgYpqhfjLj+cGk6dFs4j2ys/ojhPyKGTg6TI2Bn3kRwoA8INyBsVkwRHCz+xlgPqGJNtY2hEbZTdFllbjgHoYQ1ygUIgF+Fie4Et1U4Y8NkTfN7ODZyHjIADUsUv4hlKnGreDCwXUX3/niBGDKJ0e8Q8T8nU6gaMBx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-5014e8a42aeso8080571cf.2
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Jan 2026 03:14:38 -0800 (PST)
+	s=arc-20240116; t=1768477240; c=relaxed/simple;
+	bh=PXS05RerQpUx4ctPGdnS/G+foMJ48Qj8aQtOAt7OSgE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g6AxXE+UZbEOAZFtfN+mW8gsGTY9NzqypWp7ql+8DTLNLrojd0PQvBCVQSzVkwY2qkhuoytZdpfJu93XDqCU1ij9g1Qwvh+/ukFthbCMK65dcnoCX3Ojbv4nazUCzTaubXIZxUmLdgCFlGq3rPs2Begp/CPju9oODay6ZI2I6xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr; spf=pass smtp.mailfrom=sartura.hr; dkim=pass (2048-bit key) header.d=sartura.hr header.i=@sartura.hr header.b=Snj4H2ke; arc=none smtp.client-ip=74.125.82.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sartura.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sartura.hr
+Received: by mail-dl1-f65.google.com with SMTP id a92af1059eb24-1233702afd3so943703c88.0
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Jan 2026 03:40:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura.hr; s=sartura; t=1768477238; x=1769082038; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cROdaZB2e3rP7WqjBdCtWuYMmHKRB0QhTDeH6xpIT5w=;
+        b=Snj4H2keuLGA7mBYNWNb7wLGKBThA06Y55uRRk5uCfCkPET0J6R0yz782x4EmHUDZU
+         x1phjNTKZcf6VkYqXdpdbDi/+/EQLAOJGxCX86tTBxCZrMwDoHCzeqzvWV3N6+PYPi6U
+         +cBfB2rdG5hiuqwBrwWBXXREREf4D7MgQTKd+fcBScJY+i+yhNR41iVUBtxtLu1Yr5Ra
+         HjdiID4koXPiVhsLA2rKtBxnOkK7YGzga0dcDPDV5T1lBaJvysqQVkVP8PicGWFOJLkT
+         XXaoeEv+/YFh4rmONO8a868tJ4eoQJVMmxgrsBMhru5hn0Mpbcj4SQWAeFdAvuHC/91g
+         Y6DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768475678; x=1769080478;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bt+YNNG27WZEvGUwZk4TYJG13mQxJAZnvV5f9yUtP/0=;
-        b=wXh0FcjD8dOZeRECWf9EBLjESPH+9genC7l/ZzRPqWRYFYnRhkojtwcfqfd/rDqaYL
-         N33zd2KmlxgK1omO2lVX3gDYKWBebLjlWsZK+iJOUn+OuG4TMZGqHeGtKpS2ibFdr9ro
-         YOKqsO1dBbQUNwqpzipgFQ1Bb9avxhVF6ZV+bsatib6JR2qpzA3LsW0QkflStmdKDzKR
-         JAIk00McglNQSC/pIKrYRVhUL/bc9xe5MyWItmgMPNWnOcA4anLrrtU/rck5b4zB5e6t
-         SYL8E/oTrMDf5s9q5ITikVvSkdmZoia5WeE/jU/75eGuo4ARbs+tLZ7Bm5+DqT2fOwXo
-         rGpA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkze/k2UQqlKHqjiY/wspj1bJaURGGvrekYKKj97PAtZrYviOLvqriJ1rov7DoO+qTQ/k1usIVzqvF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3hQQRMy3aR3ywXkKFs/DePdCwRpTC9ubvaa+lMN3bOP+jT3m0
-	TRMKpwfMvEe8AJHRsRycH6w4Y6FzVbJTBNCQ+Cfh6zbEvBPAgs3TWxKDHnfjh8xIBnk=
-X-Gm-Gg: AY/fxX6Z5HSnlij3RtMdiAQSGlKVgV+SiSVybxFoPJzng5QtnPZBIhH4dvR2CVW7icM
-	FXz4Yaw/rpk5JD1eiG3LZMAA94ymaaIl9iRhkIpwSguFkSeHwfAURvLhSxoKxFI7HXL59un+OFo
-	1Ngk0DL+qC1i5N2uZ5kyjtoyMk5gz5hLm2/w13dN1rkFF1dDeavGNF9qCQXSCcuV5lzbhMr9bi3
-	pb4jfJl1lcJZu4rxbLYL9rtHs9kabz7x3kJAG0wKWD1n6MjtOy6daSZFbLrP1kGD5hYtoQPMzNb
-	3LZTMkjbpAKF28ro83j4Jdr10wlrNt8MAd1HDS1cLkhX1k71bLgHrvUs5EDoxivc2Cc5MxeYwnO
-	SFvfetKoPdEwAaJPqNNfICCohX4dI7/ti0VSI/J3CAi4Mubb5CpY81K6EJG7yADLheUGaSyeoGV
-	ZXiwt4+vOiE0S5fiYE2C600j6uUnsq+ZXJhwYrdZxHAUxsgQ8imWMt9icn8ygFyIY=
-X-Received: by 2002:a05:622a:341:b0:4ed:b5d8:a192 with SMTP id d75a77b69052e-501484689b1mr76329121cf.38.1768475677762;
-        Thu, 15 Jan 2026 03:14:37 -0800 (PST)
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com. [209.85.222.174])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50148ebac91sm31933261cf.21.2026.01.15.03.14.37
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Jan 2026 03:14:37 -0800 (PST)
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-8c5320536bfso93235985a.1
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Jan 2026 03:14:37 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW+lwVHOvxE4+aLUvJ9yZSSDzMN2ImUHuw2Dom8VvDSeuNbAZDRjB3A016q9mZ5r2WN+8NxJgQf1PM5@vger.kernel.org
-X-Received: by 2002:a05:6102:3906:b0:5ef:b3da:1634 with SMTP id
- ada2fe7eead31-5f17f68f312mr2498241137.43.1768475230982; Thu, 15 Jan 2026
- 03:07:10 -0800 (PST)
+        d=1e100.net; s=20230601; t=1768477238; x=1769082038;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cROdaZB2e3rP7WqjBdCtWuYMmHKRB0QhTDeH6xpIT5w=;
+        b=bvyVx+rx+WXfgd0z4qi0PdGS7Xwfe8wNkk7FQvWMzVPLdm7sdn6svzPLmCUdBDd6bL
+         evhlsX04us12wqnDEnk2yYYngDbsceRKDtKzWjPUG0tu1QZ2jF6TAmpCUleYpUcWW2E/
+         xtPo+X8Xs5LpMyGhNf4pmzYDejvkif1jIG9SXYmN3KxRn+wlxM88v4feKN8HHy/VyLq6
+         bYRSqqkV2ppIX4lc08QrGz8nxGHl4GM4c0SFIkngGfjYjCNqIBfvQGD6a3AqROeqKP75
+         bkkiiFhNirpIH/kN7sf1LYsV6MCse8Of0xVslLMOw/28vVlLggMijBIP5yj4xi2j7veD
+         Vpew==
+X-Forwarded-Encrypted: i=1; AJvYcCXHwGWBBnOi8OkLIYLhXhMMb7bkeTDRmp6rqbNfOqkMoVKHKjAHZxKE9duBT0KCLkIyPahLvuxwMcoC@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVkgDEb8EBKlqgK2EqOuqOzQpZHQHZF6uUWGg/s0IxNidrIkWI
+	vYUwlxIo44fc+FRTtLRZ2eyLrtzjxEyKi9hcBdi9KoVZcH+U9lfpsshyyEdms7z83Bw=
+X-Gm-Gg: AY/fxX5OczO0KpIti/yIVELO3XHB8ymB8RJDoTZAIiwEHic8akIm7x3tn6NnaGV7gqK
+	cepRWiPe8/X48UrfKtFbcA7P8GNJf5ruMr94azpptc+l/z/9d1jviBwAoOv2Up6w7KkI9Yk+sZ2
+	/Xwi/bj9blLj5+NCRHsZtypvTCHD2llItU10c26PjHzLkEA5t8U/yXpnwAGuoldJHQrdLoY6EXT
+	qh7zJJdWDy2ZkxX7/Jll68n/+kQ4xF5b2hRb3cv9TcnnHpHPC4ZK9DOaMiriaoGX5W4AcjIls4Q
+	QKEu6kdrI4SpZZPrqMI8TH+y6jaqGYVq+9ndez2X1I9A6Qli3PX+skgQekEZtGpG9Of13cuA5G6
+	0JPHNDgP8Usi728neTuG9oE96ZtMsO/WGvN7BGGCWOEJJFicLljDfg4Rzp2e3SlZa16VKlOjd7p
+	jUAdGCcenKXWQ47WWLjocgN+6mPbi0GjM6wD4+WEMA+x49mxX67JSmGvSU5oKWIXL81tMC//3U4
+	uoabOM2
+X-Received: by 2002:a05:701b:2305:b0:123:2c7f:28cf with SMTP id a92af1059eb24-12336a23a4amr5794003c88.8.1768477237584;
+        Thu, 15 Jan 2026 03:40:37 -0800 (PST)
+Received: from fedora (dh207-14-52.xnet.hr. [88.207.14.52])
+        by smtp.googlemail.com with ESMTPSA id a92af1059eb24-123370a051esm4875347c88.15.2026.01.15.03.40.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jan 2026 03:40:36 -0800 (PST)
+From: Robert Marko <robert.marko@sartura.hr>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	nicolas.ferre@microchip.com,
+	alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	lee@kernel.org,
+	andrew+netdev@lunn.ch,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	Steen.Hegelund@microchip.com,
+	daniel.machon@microchip.com,
+	UNGLinuxDriver@microchip.com,
+	linusw@kernel.org,
+	olivia@selenic.com,
+	richard.genoud@bootlin.com,
+	radu_nicolae.pirea@upb.ro,
+	gregkh@linuxfoundation.org,
+	richardcochran@gmail.com,
+	horatiu.vultur@microchip.com,
+	Ryan.Wanner@microchip.com,
+	tudor.ambarus@linaro.org,
+	kavyasree.kotagiri@microchip.com,
+	lars.povlsen@microchip.com,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Cc: luka.perkov@sartura.hr,
+	Robert Marko <robert.marko@sartura.hr>
+Subject: [PATCH v5 00/11] Add support for Microchip LAN969x
+Date: Thu, 15 Jan 2026 12:37:25 +0100
+Message-ID: <20260115114021.111324-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260114093938.1089936-1-herve.codina@bootlin.com>
- <aWdp_jMVUBN04is3@ninjato> <CAMuHMdWkGevDsBuUs1k=r5yeKJZHvs93b2SDfPwKoF4fFr-3Ow@mail.gmail.com>
- <CAL_JsqJwGLXPCtSabkeD26Ct3MrzFBdU-3-gJbGEpRQcmL1LWw@mail.gmail.com>
-In-Reply-To: <CAL_JsqJwGLXPCtSabkeD26Ct3MrzFBdU-3-gJbGEpRQcmL1LWw@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 15 Jan 2026 12:06:59 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUuQmMKyg2oc6jw9Tgsct9ZimjkL5PYw1OyHAgODL==Og@mail.gmail.com>
-X-Gm-Features: AZwV_QgN5zpuxnXc64xxS7FKteaOjK3XvNGTF8daKF3483kVmVRKJhptLCCbWv4
-Message-ID: <CAMuHMdUuQmMKyg2oc6jw9Tgsct9ZimjkL5PYw1OyHAgODL==Og@mail.gmail.com>
-Subject: Re: [PATCH v8 0/8] gpio: renesas: Add support for GPIO and related
- interrupts in RZ/N1 SoC
-To: Rob Herring <robh@kernel.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	"Herve Codina (Schneider Electric)" <herve.codina@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Saravana Kannan <saravanak@kernel.org>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, Pascal Eberhard <pascal.eberhard@se.com>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, 14 Jan 2026 at 23:21, Rob Herring <robh@kernel.org> wrote:
-> On Wed, Jan 14, 2026 at 4:47=E2=80=AFAM Geert Uytterhoeven <geert@linux-m=
-68k.org> wrote:
-> > On Wed, 14 Jan 2026 at 11:03, Wolfram Sang
-> > <wsa+renesas@sang-engineering.com> wrote:
-> > > > Rob, Thomas, this series is blocked waiting for your feedback and y=
-our
-> > > > acks if you are okay.
-> > >
-> > > This was a little hidden between the other text, so let me emphasize
-> > > that these acks are needed. The other option is to send the irq stuff
-> > > and the SoC stuff seperately.
->
-> Reviewed-by > Acked-by
+This series adds support for the Microchip LAN969x switch SoC family.
 
-It does have different semantics...
+Series is a bit long since after discussions in previous versions, it was
+recommended[1][2] to add SoC specific compatibles for device nodes so it
+includes the required bindings updates.
 
-> And if it has either, I stop paying attention. So I was assuming this
-> all was going in via not-my-tree...
->
-> > The irq and SoC stuff depend on the of stuff, so doing so would
-> > delay the former by one cycle.
-> >
-> > On IRC, Rob sort of agreed to option A from my proposal (see v7 cover
-> > letter):
-> >
-> >   A. Rob takes the first two patches, and provides an immutable branch.
-> >      Then Thomas takes the irqchip patches, and I take the rest.
->
-> Until this...
->
-> > Unfortunately that part hasn't happened yet...
->
-> And then a new version came in... Why a new version only to add a
-> Tested-by tag? That sends you to the back of the queue in my normal
-> workflow (which this is turning into anything but).
->
-> Thomas has now provided a Reviewed-by. I think it is easiest if you
-> just take the whole series via Renesas tree.
+[1] https://lore.kernel.org/all/20251203-splendor-cubbyhole-eda2d6982b46@spud/
+[2] https://lore.kernel.org/all/173412c8-c2fb-4c38-8de7-5b1c2eebdbf9@microchip.com/
+[3] https://lore.kernel.org/all/20251203-duly-leotard-86b83bd840c6@spud/
+[4] https://lore.kernel.org/all/756ead5d-8c9b-480d-8ae5-71667575ab7c@kernel.org/
 
-OK doing so...
-Thanks!
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
 
-Gr{oetje,eeting}s,
+Changes in v5:
+* Picked Acked-by and Reviewed-by tags
+* Change clock header license to match the DTSI one
+* Alphabetize EV23X71A pin nodes
+* Remove the requirment for all ethernet-port nodes to have phys property
+as when RGMII is used there is no SERDES being used
+* Drop phys from RGMII port on EV23X71A
+* Drop USB, DMA, MIIM, SPI and I2C bindings as those were already picked
 
-                        Geert
+Changes in v4:
+* Pick Acked-by from Andi for I2C bindings
+* Move clock indexes from dt-bindings into a DTS header as suggested by
+Krzysztof[4]
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Changes in v3:
+* Pick Acked-by from Conor
+* Drop HWMON binding as it was picked into hwmon already
+* Document EV23X71A into AT91 binding
+* Drop SparX-5 and AT91 bindings merge
+* Apply remark from Conor on DMA binding regarding merging cases
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Changes in v2:
+* Change LAN969x wildcards to LAN9691 in patches
+* Split SoC DTSI and evaluation board patches
+* Add the suggested binding changes required for SoC specific compatibles
+* Merge SparX-5 and AT91 bindings as suggested[3]
+
+Robert Marko (11):
+  dt-bindings: mfd: atmel,sama5d2-flexcom: add microchip,lan9691-flexcom
+  dt-bindings: serial: atmel,at91-usart: add microchip,lan9691-usart
+  dt-bindings: rng: atmel,at91-trng: add microchip,lan9691-trng
+  dt-bindings: crypto: atmel,at91sam9g46-aes: add microchip,lan9691-aes
+  dt-bindings: crypto: atmel,at91sam9g46-sha: add microchip,lan9691-sha
+  dt-bindings: pinctrl: pinctrl-microchip-sgpio: add LAN969x
+  arm64: dts: microchip: add LAN969x clock header file
+  arm64: dts: microchip: add LAN969x support
+  dt-bindings: arm: AT91: document EV23X71A board
+  dt-bindings: net: sparx5: do not require phys when RGMII is used
+  arm64: dts: microchip: add EV23X71A board
+
+ .../devicetree/bindings/arm/atmel-at91.yaml   |   6 +
+ .../crypto/atmel,at91sam9g46-aes.yaml         |   1 +
+ .../crypto/atmel,at91sam9g46-sha.yaml         |   1 +
+ .../bindings/mfd/atmel,sama5d2-flexcom.yaml   |   1 +
+ .../bindings/net/microchip,sparx5-switch.yaml |  15 +-
+ .../pinctrl/microchip,sparx5-sgpio.yaml       |  20 +-
+ .../bindings/rng/atmel,at91-trng.yaml         |   1 +
+ .../bindings/serial/atmel,at91-usart.yaml     |   1 +
+ arch/arm64/boot/dts/microchip/Makefile        |   1 +
+ arch/arm64/boot/dts/microchip/clk-lan9691.h   |  24 +
+ arch/arm64/boot/dts/microchip/lan9691.dtsi    | 488 +++++++++++
+ .../boot/dts/microchip/lan9696-ev23x71a.dts   | 756 ++++++++++++++++++
+ 12 files changed, 1309 insertions(+), 6 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/microchip/clk-lan9691.h
+ create mode 100644 arch/arm64/boot/dts/microchip/lan9691.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/lan9696-ev23x71a.dts
+
+-- 
+2.52.0
+
 
