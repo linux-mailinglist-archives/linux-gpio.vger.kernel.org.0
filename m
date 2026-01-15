@@ -1,139 +1,158 @@
-Return-Path: <linux-gpio+bounces-30606-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30608-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93D20D24CEF
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jan 2026 14:49:56 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDBF2D252F5
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jan 2026 16:11:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 10F7C302653A
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jan 2026 13:49:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9EFA430194E8
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jan 2026 15:10:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02F573A0B25;
-	Thu, 15 Jan 2026 13:49:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 996893AE6EE;
+	Thu, 15 Jan 2026 15:10:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7e6QAJ4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JWvtb05M"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B660130EF95;
-	Thu, 15 Jan 2026 13:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550123ACA70
+	for <linux-gpio@vger.kernel.org>; Thu, 15 Jan 2026 15:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768484983; cv=none; b=MFnJ5269ePCELYGKSn2Zd7ABE58JFVdJQWsjVpfWyAQI25t9bFo8Eoa0hFqk0lZjUF8Xu6Fy7qkLbDouyNRzWJenyzMpiAEnrU+VPRU/lOAKI2wTaJQxhIjThafrYlVfyBY2EWsR4TfXUYGnw+9nLq7oijn5UwLBOaINh3gKcL8=
+	t=1768489840; cv=none; b=ZqWVWBNUyvfAJ27PoLOvg9lR3Jig+iSnW+0dKbCv/TPYGjOgxvpWhMC+nzqrp7fWLkE8+4HXzULwu5YZ62UuK6Xmx6PbaSkTksS/2gn/8WZp8Cdn1u7NCjkwcf8qFXWouzg9sOgIQP/kI7io0PpccSvImuZjGMvs9fqqjfCxBsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768484983; c=relaxed/simple;
-	bh=mLm6QqFggcSSbVGl21YSwdDfGF0CDC1QFc128taHR8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UcJbkkZErsXkElGBl80yYZBS7cAvD1duJ6Y487f+VD+vkoKxTXG67cq4Uj1nlydmGPGuaWZo8G/rXos242lNRjEU4xaLp0L6dqZfFzlpFpW3cQfVqlsJsM3dhHQ8XoG2x0av9voji1GkyUGKGA4YyRAWD00uKGXBwEZwnbYV3YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7e6QAJ4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E46A6C116D0;
-	Thu, 15 Jan 2026 13:49:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768484983;
-	bh=mLm6QqFggcSSbVGl21YSwdDfGF0CDC1QFc128taHR8c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i7e6QAJ44Bf2JaIwbYSBiJpGbCRthi2VIqme1Ke1ACn2O5pMFo2NNQIQRSedVmmnC
-	 4KRmtTWiuXjx+zMOqoflPZ7CIjshWguMaz0biDqMMujSveVX2Jp/xlQXZicZi2dwiw
-	 fa+G9LKOcSF9JgrPyf2X9FgxE2sN7N8MMkVsPn1SZoZqcjc54W5rudRiKPyYoOZAZC
-	 Sz7VayUPxIYPaO1ACAL99ztt1iBUUQ9tawYYDfsEnmbSZJutfz0mWGRnjR3NtSc6Jj
-	 0a6z10JdqG3JfovaLgaXg2zg5zD64tPyxVGTRrShfqI8iLsk+kwXper360+6MEiig2
-	 BxYKjFdkDiwBA==
-Date: Thu, 15 Jan 2026 13:49:35 +0000
-From: Lee Jones <lee@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
+	s=arc-20240116; t=1768489840; c=relaxed/simple;
+	bh=QL67zO2OXNn7d293fXZUWqsB5I5Tjghhi53EjdI7gqU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ph0XYxq1fYFcUiNo+ydbnMC1l3ittx2d4rustliniQudZ3KwUL73DpWZz0uxCBRFqz899wcss2tDMyt1vWfBRRjbcpA7XSpqkyIfe/3qr+Kj7vqJwrdr58kBMpeQEJDXr8ihlDY8cFDG7Qg1MalvZFIyYFmVJ7jAsfj/310Ex6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JWvtb05M; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-432da746749so492607f8f.0
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Jan 2026 07:10:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768489825; x=1769094625; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7KyUY1CKl3fCa1LRr33ngkD0vxuK8KXOZ0/VtJmlEFc=;
+        b=JWvtb05MBamycS/ROxb2C9GOaRTqsNyEzgj8yvxERVPpYjBxqHtssz43oGNrrHppK1
+         x+Hgz0A20Do5YsPM5ZKoPhBLNtMQSvfeBBu0MfGFrAxS6Iv4LSwve4YK1ytWVzDkijdp
+         m6kf6YxlgET7199gdWZgbryU4luh8QzQX7WIdtBWS7orgETvmkOmZjA/WuTnt7MCatTG
+         oUxiI6av+xCKhr/RYE7Xehk6pIr9sANw4u2/CBg3fKU9Xv4IXuIyNHnzRC2Ht5C4Yprz
+         fTNTyT8bw0DMXeyG55ZulzAn1XAWyxgv+WIXdX1LmLkQ8raLJwqms0QgMYURTau3BVdW
+         j0CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768489825; x=1769094625;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7KyUY1CKl3fCa1LRr33ngkD0vxuK8KXOZ0/VtJmlEFc=;
+        b=gV93Cn/TqXgSxvFXIhyWGibrf2J5cH8jOJIhc5i1naciq95HxO1yoq1EWPIchdCjWs
+         FMGRCjAt2i5uR8PK6KPx23LlUWBeu0RusciQb3qy+qjC8sCP2C5dA9LG05CO+qGHaFpO
+         3VplH3d352T17iG8Bzyl6g+O/BgW3zUUVkrJ2RJABNg7eB3q5ea8AJLxGm5w3kUT0GUf
+         U9vNNRpNkQj498yX834EVvwxTMX4VR9rr3rGsPIAGxF2D26DSsBvEYKJ7GrcOOpY/Kf+
+         GSxSFBWXBc8/sOClvqKY6eA3yLHLMaGvLD5kyZkFAA2N9jsQ1F1ylfuW8ZRq4z8Qv3os
+         TznQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZnle5SicisEa/qNSjSF/fDt+VyLB9jbe7v2OI75Ld9TfiTvLmZPwSM38R2tvwguQkGxmHPeyOwVB3@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAwGX0K8pToDfjxScaKnsyK4ZI0Ryha0RtWnt6mNqDruMPuH6C
+	aYfqMswTyIkiGu2jjojT+N34pOrqaG57t061ZaqXQUTgHOIzbKTbPgaO
+X-Gm-Gg: AY/fxX7W+YRamyGB/ZoLmilKiOPRebQgrktJsiHGX4CBOhiO92QLBZdY+TYbrzRzdMG
+	0JzsypSz+sVrrVK0ctnPEmEz754AXrcSdoIZ9s4iGEcJJwSVRj4pfqrGyILxaa9+KP3z8+BBKUt
+	mnGMQUGvXgEW9geSOUS/kZuZZ5ez8E0Vv+clJcddaYbPQVb/DyKqugNzruVGtkZeLgUYkSphFa9
+	bGMXvX/CaiJg+Fi68qcZkjvGEXsATvcr3gxLxq6cKD7EuRQFpNNIxKwKmEtipotknudd3dovEV3
+	a3wZMXagSNigJVt9DwIL3CDRCy8gDsg1Xq8y4tnRvPt2ESX14EvGtgwKQYCxCAe2+J9GWuoH/tQ
+	E4e5+Ip2quJuwyRAHHH/NfAvX7sHiLLCPqzs0gU6h7DzZdB7SH6sAecqIo6TJR2n/f94Dfx2DFu
+	k9H3BVmwRjGPV8lvFykR24Ej+rSeXlekPpKVNWsAcbAcJPL+eiefsrO2uP/t5bHEWc
+X-Received: by 2002:a05:6000:22ca:b0:432:8651:4071 with SMTP id ffacd0b85a97d-4342c4ff4e4mr7932953f8f.18.1768489825150;
+        Thu, 15 Jan 2026 07:10:25 -0800 (PST)
+Received: from localhost (brnt-04-b2-v4wan-170138-cust2432.vm7.cable.virginm.net. [94.175.9.129])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-434af64a6c0sm6528481f8f.5.2026.01.15.07.10.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jan 2026 07:10:24 -0800 (PST)
+From: Stafford Horne <shorne@gmail.com>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Linux OpenRISC <linux-openrisc@vger.kernel.org>,
+	devicetree <devicetree@vger.kernel.org>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linusw@kernel.org>,
+	Stafford Horne <shorne@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
+	Linus Walleij <linusw@kernel.org>,
 	Bartosz Golaszewski <brgl@kernel.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-rtc@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>
-Subject: [GIT PULL] Immutable branch between MFD, Clk, GPIO, Power, Regulator
- and RTC due for the v6.20 merge window
-Message-ID: <20260115134935.GD2842980@google.com>
-References: <cover.1765804226.git.mazziesaccount@gmail.com>
+	linux-gpio@vger.kernel.org
+Subject: [PATCH v6 1/6] dt-bindings: gpio-mmio: Correct opencores GPIO
+Date: Thu, 15 Jan 2026 15:09:57 +0000
+Message-ID: <20260115151014.3956805-2-shorne@gmail.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260115151014.3956805-1-shorne@gmail.com>
+References: <20260115151014.3956805-1-shorne@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1765804226.git.mazziesaccount@gmail.com>
 
-Enjoy!
+In commit f48b5e8bc2e1 ("dt-bindings: gpio-mmio: Add compatible string
+for opencores,gpio") we marked opencores,gpio to be allowed with
+brcm,bcm6345-gpio. This was wrong, opencores,gpio is not compatible with
+brcm,bcm6345-gpio. It has a different register map and is 8-bit vs
+Broadcom which is 32-bit. Change opencores,gpio to be a separate
+compatible string for MMIO GPIO.
 
-The following changes since commit 8f0b4cce4481fb22653697cced8d0d04027cb1e8:
+Also, as this change rewrote the entire enum, I took this opportunity to
+alphabetically sort the list.
 
-  Linux 6.19-rc1 (2025-12-14 16:05:07 +1200)
+Fixes: f48b5e8bc2e1 ("dt-bindings: gpio-mmio: Add compatible string for opencores,gpio")
+Signed-off-by: Stafford Horne <shorne@gmail.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+---
+Since v5:
+ - Updated comment based on comments from Krzysztof and Geert.
+ - Added reviewed-by's.
+ - Sorted the enum list and added not to commit message based on comment
+   from Krzysztof.
+Since v4:
+ - New patch.
+ - Rebased old patch and rewrote commit message.
 
-are available in the Git repository at:
+ .../devicetree/bindings/gpio/gpio-mmio.yaml      | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-clk-gpio-power-regulator-rtc-v6.20
-
-for you to fetch changes up to e39951f8ad500648b9ab132f8042d6e47da441cf:
-
-  MAINTAINERS: Add ROHM BD72720 PMIC (2026-01-13 12:50:37 +0000)
-
-----------------------------------------------------------------
-Immutable branch between MFD, Clk, GPIO, Power, Regulator and RTC due for the v6.20 merge window
-
-----------------------------------------------------------------
-Matti Vaittinen (17):
-      dt-bindings: regulator: ROHM BD72720
-      dt-bindings: battery: Clarify trickle-charge
-      dt-bindings: battery: Add trickle-charge upper limit
-      dt-bindings: battery: Voltage drop properties
-      dt-bindings: mfd: ROHM BD72720
-      dt-bindings: leds: bd72720: Add BD72720
-      mfd: rohm-bd71828: Use regmap_reg_range()
-      mfd: rohm-bd71828: Use standard file header format
-      mfd: rohm-bd71828: Support ROHM BD72720
-      regulator: bd71828: rename IC specific entities
-      regulator: bd71828: Support ROHM BD72720
-      gpio: Support ROHM BD72720 gpios
-      clk: clk-bd718x7: Support BD72720 clk gate
-      rtc: bd70528: Support BD72720 rtc
-      power: supply: bd71828: Support wider register addresses
-      power: supply: bd71828-power: Support ROHM BD72720
-      MAINTAINERS: Add ROHM BD72720 PMIC
-
- .../bindings/leds/rohm,bd71828-leds.yaml           |    7 +-
- .../devicetree/bindings/mfd/rohm,bd72720-pmic.yaml |  339 +++++++
- .../devicetree/bindings/power/supply/battery.yaml  |   33 +-
- .../bindings/regulator/rohm,bd72720-regulator.yaml |  148 +++
- MAINTAINERS                                        |    2 +
- drivers/clk/Kconfig                                |    4 +-
- drivers/clk/clk-bd718x7.c                          |   10 +-
- drivers/gpio/Kconfig                               |    9 +
- drivers/gpio/Makefile                              |    1 +
- drivers/gpio/gpio-bd72720.c                        |  281 ++++++
- drivers/mfd/Kconfig                                |   18 +-
- drivers/mfd/rohm-bd71828.c                         |  555 ++++++++++-
- drivers/power/supply/bd71828-power.c               |  160 ++-
- drivers/regulator/Kconfig                          |    8 +-
- drivers/regulator/bd71828-regulator.c              | 1025 +++++++++++++++++++-
- drivers/rtc/Kconfig                                |    3 +-
- drivers/rtc/rtc-bd70528.c                          |   21 +-
- include/linux/mfd/rohm-bd72720.h                   |  634 ++++++++++++
- include/linux/mfd/rohm-generic.h                   |    1 +
- 19 files changed, 3127 insertions(+), 132 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd72720-pmic.yaml
- create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd72720-regulator.yaml
- create mode 100644 drivers/gpio/gpio-bd72720.c
- create mode 100644 include/linux/mfd/rohm-bd72720.h
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml b/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
+index 7ee40b9bc562..1b2d253b19c1 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
++++ b/Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
+@@ -18,16 +18,12 @@ description:
+ 
+ properties:
+   compatible:
+-    oneOf:
+-      - enum:
+-          - brcm,bcm6345-gpio
+-          - ni,169445-nand-gpio
+-          - wd,mbl-gpio # Western Digital MyBook Live memory-mapped GPIO controller
+-          - intel,ixp4xx-expansion-bus-mmio-gpio
+-      - items:
+-          - enum:
+-              - opencores,gpio
+-          - const: brcm,bcm6345-gpio
++    enum:
++      - brcm,bcm6345-gpio
++      - intel,ixp4xx-expansion-bus-mmio-gpio
++      - ni,169445-nand-gpio
++      - opencores,gpio
++      - wd,mbl-gpio # Western Digital MyBook Live memory-mapped GPIO controller
+ 
+   big-endian: true
+ 
 -- 
-Lee Jones [李琼斯]
+2.51.0
+
 
