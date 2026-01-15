@@ -1,127 +1,99 @@
-Return-Path: <linux-gpio+bounces-30588-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30589-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2091CD238DF
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jan 2026 10:32:18 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B910D23B59
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jan 2026 10:51:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 037C23070D2A
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jan 2026 09:28:34 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 630CA30AB156
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Jan 2026 09:41:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E12935EDC3;
-	Thu, 15 Jan 2026 09:27:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3214935B12F;
+	Thu, 15 Jan 2026 09:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r/DRmCLc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7ZU/0sE"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDDD34DCF2
-	for <linux-gpio@vger.kernel.org>; Thu, 15 Jan 2026 09:27:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA46930BB85
+	for <linux-gpio@vger.kernel.org>; Thu, 15 Jan 2026 09:41:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768469253; cv=none; b=ndPMvpDXYV6pk8kEAk93MCpwA8YO2CMfawQLEtWoaFzaUVcrZ5LoWFP39ctTCyYnd/VF4CeFAYfBHTPZHOtWLfHWIAOGG+lJuiHR2Jx6QFiuvs88tIx4J0bLjD9z5lNUjvtVZmeiWlHNSIg90p2ILO8111sT9bx1bYR46FX0x/4=
+	t=1768470083; cv=none; b=B5H8g0aObdlBrpTHIGZA2DVZIFLKWhu+LFe6Z1aqIVoWvbkn7N2xQsTi8ZZxLo4eNrXls4vRZ5slZnH+NPYw/sgFkRH/FdLGupaPUVCklq+BedoB2IFCaoNUY0vG+DvKrnXgB2Q1of8ODTUy1HTjixbzTYAsMKrKuZZrrRq5Gig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768469253; c=relaxed/simple;
-	bh=IHOMnj/BJN95A/4L9YqNfuIpnb+bAMt2NrBpXun8idA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YIQ2bKNFcCDgGRYWf8yyrnQ7JTpYjksJQSgbGa7P1t8j9k3U1BuwY6YqeYQB3Gx6Ntz8OWW639sMScXjjJ1ndlJypgy0naeGnYKOYQ5At5w2/K3JzMYh2acVOe7V62EMp/ycm5nMWiZFEV3vzimYfR3j+sVXYUa0D/bEKQyqUUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r/DRmCLc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3469C4AF09
-	for <linux-gpio@vger.kernel.org>; Thu, 15 Jan 2026 09:27:32 +0000 (UTC)
+	s=arc-20240116; t=1768470083; c=relaxed/simple;
+	bh=yEGm9RFMlmgKJa8KW+APYhq854bMc9EZcrULIMlFx0o=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=PdlAhx9f3A44p5UKQa7JGpA312DR1fTCHDZN2CtQ6NHbG+zuh0MPbNiIwhzPJjrwCSQbDTjx4j8SGAf+/VN15LeFGlEX3m5bfEGvsjiOmMC9OiQWvd3eRkCbA2cPP3DGXqR8+rg9Y9xympt+CYva2uoql0SnsEQYM6NXXcmf51A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7ZU/0sE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91205C116D0
+	for <linux-gpio@vger.kernel.org>; Thu, 15 Jan 2026 09:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768469252;
-	bh=IHOMnj/BJN95A/4L9YqNfuIpnb+bAMt2NrBpXun8idA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=r/DRmCLcWBcGmsGBpCfKZ81eYL6mEmOJhUwUBjLAGTiXqLzKf5MOiWyC+unPiAMar
-	 AnZaY6pDQeiiYkIiN6SqeL0E9Ysaq/H4dgykcNr+06ETWvL+xyFoWE9FnpVIgHCeY5
-	 8OrtnbK6erAwgimfNgdCzmdzHevvFULdVolpVjgCLsOONOxFP8zcUd0unJsN3rFac6
-	 RanFHKwwwCYzZalbJyn2ctBVQeGEbu12U25gWwtPuE2qfLzAN8827+qMAQXEctJg7F
-	 rNn2LlZeyS66cqRGWIODCMwzcduXpzV91hQ+SRpZAHop9VygH9k3qgNecUrXy/NnGG
-	 Dyt2V3xpLmvBw==
-Received: by mail-yx1-f53.google.com with SMTP id 956f58d0204a3-64455a2a096so557339d50.3
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Jan 2026 01:27:32 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWzaSUzvckXlfCURAW++og+ZV0o1kY9IyIkdAS7I2oyNo8Pf3x4YIci3VnPYFm6Yry3xwoqXANr8xki@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgKyQZFsMy5DGaCRtwPsTIdsIcboi+oMLN/D9PqsIEsIK4nr/l
-	hcWklEzME+vimX4QfyfkYowWnp4HUPjZE1hTsck+IXanmpvyut5SPZIe2+CQvgMl2RxTViv0nj5
-	hv6/L6Tc9xLSow/uS0Cwe4S9+FoQ7dS0=
-X-Received: by 2002:a05:690c:45c6:b0:786:5afa:375c with SMTP id
- 00721157ae682-793a1dc2311mr98450177b3.67.1768469252018; Thu, 15 Jan 2026
- 01:27:32 -0800 (PST)
+	s=k20201202; t=1768470082;
+	bh=yEGm9RFMlmgKJa8KW+APYhq854bMc9EZcrULIMlFx0o=;
+	h=From:Date:Subject:To:From;
+	b=V7ZU/0sEPStPbRH5WyJY44K1yVpDEr09ePf4R517AA1i71UI2D2WIfGOlRfBz38Ss
+	 XLtgxXlxNetXmBaDe7Koso/HxTuuipfjhXRxWdYOHV45/1/WPS2lkS3ry+I1rmL8di
+	 tJYw+GaoCJe66O+SEZ8Nfy/zDOtFZrodIvSigWhaqKx12BAF4yBMar/d/zjdTtQ/UK
+	 ZHEik4kuKX9Cqb8lEFUdZAZKSaYs27kP/AFT5hfzeJFfIzrcKQsqJM48e4GIJI0RKx
+	 qkPcmO4ROcObJtgmcxFxv4861JKOJmEeeXRau+tQakrAm0qZ0evdXB75o2gQRJHfyv
+	 0+xICuRTBkAqA==
+Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-6467ac59e16so514620d50.1
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Jan 2026 01:41:22 -0800 (PST)
+X-Gm-Message-State: AOJu0YwB4fLTDmKQtwI+RuuWEQ8hViGvnAEoY0/wwzLi3t6HmNyGRvDY
+	0FPm+9Gurqm3OmCOGMv65ZG4P9BDGEvvDNNJRvWX9X3UdC/PwijKbc5xgXBnk0jpGKiKk9vaV6U
+	DHEn2OpCqUHvofpfMsZw5zSkimVe5Sb4=
+X-Received: by 2002:a05:690e:400f:b0:645:5b0e:c914 with SMTP id
+ 956f58d0204a3-64901b0fb91mr4114395d50.66.1768470081764; Thu, 15 Jan 2026
+ 01:41:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260114141352.103425-1-jie.i.li@nokia.com>
-In-Reply-To: <20260114141352.103425-1-jie.i.li@nokia.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 15 Jan 2026 10:27:21 +0100
-X-Gmail-Original-Message-ID: <CAD++jLkyTMXAE_M2JFF5jzzLZ2Z-CV89uEGh4xHopWrGoYncbA@mail.gmail.com>
-X-Gm-Features: AZwV_QgP9FTs53wCT-dFujSFa3UD-wgIUQGUY8O48v_mJXwT8i6vdX8Cb_ApmNg
-Message-ID: <CAD++jLkyTMXAE_M2JFF5jzzLZ2Z-CV89uEGh4xHopWrGoYncbA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] i2c: add support for forced SDA recovery
-To: Jie Li <lj29312931@gmail.com>
-Cc: wsa@kernel.org, linux-i2c@vger.kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org, 
-	linus.walleij@linaro.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <brgl@kernel.org>, Linux pin control <linux-gpio@vger.kernel.org>
+Date: Thu, 15 Jan 2026 10:41:11 +0100
+X-Gmail-Original-Message-ID: <CAD++jLkJfyhmpepkanMyvLc_C0v_XZeoEKj8XJ3bw5fJAqJYyQ@mail.gmail.com>
+X-Gm-Features: AZwV_QhbLnqGsXOwwI27BwqEcYZXxdB4cCSQ9QkbscWqfjHZvYAPj2LGsDZpgqc
+Message-ID: <CAD++jLkJfyhmpepkanMyvLc_C0v_XZeoEKj8XJ3bw5fJAqJYyQ@mail.gmail.com>
+Subject: GPIO direction problems in gpio-shared-proxy.c
+To: Linux pin control <linux-gpio@vger.kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Jie,
+Hi Bartosz, Andy,
 
-thanks for your patch!
+Andy is good with problems like this, so I explicitly address you!
 
-On Wed, Jan 14, 2026 at 3:13=E2=80=AFPM Jie Li <lj29312931@gmail.com> wrote=
-:
+A review of the I2C core brought this problem to my attention:
 
-> This series addresses a limitation in the I2C bus recovery mechanism when
-> dealing with certain open-drain GPIO configurations where the direction
-> cannot be automatically detected.
+we have the following confusion in gpio-shared-proxy.c:
 
-I'm sorry but I don't understand the premise. How can we even get here?
+dir = gpiod_get_direction(desc);
+(...)
 
-So the mechanism is about I2C that is using a regular I2C block, and
-the pins get re-muxed to GPIO to drive recovery using the I2C
-core GPIO-mode recovery mechanism with bridge->sda_gpiod
-which is retrieved in the core from "sda" which in DT is
-sda-gpios =3D <....>; (calong with similarly named SCL) for
-GPIO-mode recovery.
+This function from <linux/gpio/consumer.h>
 
-So if that is set in an input mode, such as during devm_gpiod_get()
-reading the initial direction of the line,
-so gpiod_get_direction(bri->sda_gpiod) =3D=3D 1.
-this patch set will go and write output values to the line
-*anyway* because "it works".
+if (dir == GPIO_LINE_DIRECTION_OUT) {
 
-This is how I understand the patch set.
+This define is from <linux/gpio/driver.h>
 
-In which scenario do you have a device tree where you can add
-"force-set-sda" to a DT node, but you *can't* just fix up the
-SCL/SDA flags like this:
+So we need to move the GPIO_LINE_DIRECTION_[IN|OUT] to
+consumer.h if you want to use it like that.
 
-#include <dt-bindings/gpio/gpio.h>
+But we don't want to include consumer.h into driver.h or explicitly
+into every driver.
 
-sda-gpios =3D <&gpio0 5 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-scl-gpios =3D <&gpio0 6 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
+The I2C core and any external direction user looks like this:
 
-?
+/* FIXME: add proper flag instead of '0' once available */
+if (gpiod_get_direction(bri->sda_gpiod) == 0)
 
-We should possibly also enforce it from the I2C recovery core,
-for SDA we are currently doing:
+So this needs a proper define too and it isn't a driver.
 
-gpiod =3D devm_gpiod_get(dev, "sda", GPIOD_IN);
-
-what happens if you patch i2c-core-base.c to simply do:
-
-gpiod =3D devm_gpiod_get(dev, "sda", GPIOD_OUT_HIGH_OPEN_DRAIN);
-
-(Based on SDA resting polarity being high.)
-I'm more uncertain about that one because I don't know exactly
-how hardware behaves in response to this, but can you test this
-first if you have to hack around in the core?
+Shall we create <linux/gpio/directions.h>
+with just these defines and include that into consumer.h and driver.h?
 
 Yours,
 Linus Walleij
