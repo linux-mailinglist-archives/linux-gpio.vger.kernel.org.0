@@ -1,106 +1,114 @@
-Return-Path: <linux-gpio+bounces-30668-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30669-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A45BD33338
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 16:32:02 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8D7ED3338C
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 16:36:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6782231641B0
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 15:27:42 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 275CF300B37D
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 15:35:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B589F339869;
-	Fri, 16 Jan 2026 15:27:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49D4933A9ED;
+	Fri, 16 Jan 2026 15:35:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LmWbvFDF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ORBQ1GE1"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BE4284890
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 15:27:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B758133987A;
+	Fri, 16 Jan 2026 15:35:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768577261; cv=none; b=CnwO+suSDk1d/dkK/h72fIuR2MuijJRzHNDWtf5FJf9i+PEIKoXot0VsgqHxfr9hWYrGVbikCWPPyIjQMgo7GPkUuFh/1T5h6j6EDIbXvUqr21eRbcbEc/mBkgk777UqYXWyWiDzpT/3OnIQwOQBdXriXbeZ89MDRm/FMz1tNRs=
+	t=1768577728; cv=none; b=GDY3CFuHLfeblCgCv6H/WDnYWi2I4pikTj2QW9vfIm1cuqCw1/VFMPGBrjaZjEH0OenfbD1mUdh8prUrKgKj61BuX71T5IH5W6BwL58mYFK+9zAv4PCWzlGubxc+stnFZrqKVTpvn/aIzNpm5jn3SyVKm8PvNCkHcq+RCcfntd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768577261; c=relaxed/simple;
-	bh=oy+oDQg69oRiKkw6u3e47Ejf8DbCCwkCscmr6o/Xmp4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aopiNtXDg8ZxSyn0VybIh0Rol2EDNf+38tn2/o81718g5SSHJfi2v61hBwix3cxHrivHLlFypSwCiil+uv7l5V7Q/ZU+lQDE58g4/IdWRYtWELTCaZK4I+PdVp6J2wyUqKscv5WYI+sbgZFWGZCzPOmiyi44x76l6gpdyDBOIXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LmWbvFDF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2856CC2BC87
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 15:27:41 +0000 (UTC)
+	s=arc-20240116; t=1768577728; c=relaxed/simple;
+	bh=4PoH/DebIJz2+Pz5XFGoXyTAH2jrdRT9HWeJf8Q8LJc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=I4xzYTLScO6Tmoy5FJguLyfxzkLY/rnbEXF9xQqFte7VQrvutaTHTAoeqi6F2zvCP68p/y7sMABRQFSCRwO4ospF0mhpRoGzAgjUVNjntAccb6FWqvAvNaJ0mstWjPRiODouDgYe8VAf2Vr4EGC/kD8BSm+9E8Rkqv3ju9+FxJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ORBQ1GE1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3A9EC116C6;
+	Fri, 16 Jan 2026 15:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768577261;
-	bh=oy+oDQg69oRiKkw6u3e47Ejf8DbCCwkCscmr6o/Xmp4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LmWbvFDFg5yW/RgaFNzhGXCBHIqLMNhGykiU/iYoYF4+7Egic2j45nEmpDSL0QPwL
-	 Gr2+US4VOnYTrscPU/tvN+6T3x9Dwa3lFrnpLD5FmBqWuMfQz2ltrMq/KHvbiNu2rg
-	 n6U0iPteIpnuR+wwvueWlkXVKkhpJ27jxgPlN2WqATUpXNZUxXo8WBoyQVg/7c5IAc
-	 kSoV0Gne9gmuBdEDyvojC1n0pkYfkNupmFkLAZgO1wi5qXDVLK3zDBeELHM1geToEZ
-	 TeocM6WFDdaPFn7G9z94w8aqdGpRhrweqmxcvGEQom/XKrtgVGT8hQcR2H2DFVHvep
-	 SF5LM7wJF3utQ==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-59b7bb3b913so2695802e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 07:27:41 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUF6++un2e6pT7AuYDwD2MmTn+E+F5E8+yF2/QYpL5mb/F4Ttsdw6nePp0ne91cyvvmFH/yQr6n9+HS@vger.kernel.org
-X-Gm-Message-State: AOJu0YyH48zsypZxWZR1Y4grdRgt4KdM/9VCBQwgtNxcVCcE45YO/FD7
-	ma+Bze0XDwEG9572lSfbXy24fCAGtcry4W8YnH4Oy4S6ln0GkSR8h87wJfuWfv8hSw3VvOHRQDk
-	RdKC2spN/0QcstzxOYyg4QxcvnlN8rpBeA6A/HpkM+g==
-X-Received: by 2002:a05:6512:2244:b0:59b:67cf:ac0c with SMTP id
- 2adb3069b0e04-59baf188751mr1188971e87.17.1768577259688; Fri, 16 Jan 2026
- 07:27:39 -0800 (PST)
+	s=k20201202; t=1768577728;
+	bh=4PoH/DebIJz2+Pz5XFGoXyTAH2jrdRT9HWeJf8Q8LJc=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=ORBQ1GE1PtqvGzR5OEr5zxCmarn/cEUxPYNtst4iZ4RsTY2Gt/FBoXJzyLeKTKuZB
+	 6IG3vLNlavrlVkgTSv1bftproTJvSswT8hDvhxHXIk+tgHnd0cGkM13+iSYDHdoeaE
+	 AHdQAYAjGlmH+yWXPEEuDPdMcr8WczSoBN1egcLr5TMSnJ8g/F3Toew8jw+VTclwqJ
+	 /PHkV0q+KH1QBIClIKDNDCesiQHqbNu0KTcQ3ckuxP29wZjGHTPPilYoJXN7OEfWRd
+	 +fX5NIY6NH3SbwcHIh+kUDa4s2qwDa9j1wP1JUkUcsTL6V8xEUJRWoZ1Jl8c4DzpFk
+	 O6mweEzxAZO/w==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260116080235.350305-1-tzungbi@kernel.org> <20260116080235.350305-2-tzungbi@kernel.org>
- <DFQ45FWO4XHC.2BW7I9LGC76WT@kernel.org>
-In-Reply-To: <DFQ45FWO4XHC.2BW7I9LGC76WT@kernel.org>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Fri, 16 Jan 2026 16:27:27 +0100
-X-Gmail-Original-Message-ID: <CAMRc=Medaqr5UPimc8o+VTy=9MgU5p8AXjArisQfBNqi7ktSGg@mail.gmail.com>
-X-Gm-Features: AZwV_QhexDGBLPur6KXBiX5v5UlgefBBx6UNCnW-Gys53WIr1Th56tAxsqbMKFE
-Message-ID: <CAMRc=Medaqr5UPimc8o+VTy=9MgU5p8AXjArisQfBNqi7ktSGg@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] revocable: Revocable resource management
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Tzung-Bi Shih <tzungbi@kernel.org>, Benson Leung <bleung@chromium.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	chrome-platform@lists.linux.dev, linux-kselftest@vger.kernel.org, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
-	Dan Williams <dan.j.williams@intel.com>, Jason Gunthorpe <jgg@nvidia.com>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 16 Jan 2026 16:35:23 +0100
+Message-Id: <DFQ4H9T3QMLK.3TNZF7ID6EJB6@kernel.org>
+Subject: Re: [PATCH v7 1/3] revocable: Revocable resource management
+Cc: "Tzung-Bi Shih" <tzungbi@kernel.org>, "Benson Leung"
+ <bleung@chromium.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, "Linus Walleij"
+ <linusw@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan"
+ <shuah@kernel.org>, <linux-doc@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <chrome-platform@lists.linux.dev>,
+ <linux-kselftest@vger.kernel.org>, "Laurent Pinchart"
+ <laurent.pinchart@ideasonboard.com>, "Wolfram Sang"
+ <wsa+renesas@sang-engineering.com>, "Simona Vetter"
+ <simona.vetter@ffwll.ch>, "Dan Williams" <dan.j.williams@intel.com>, "Jason
+ Gunthorpe" <jgg@nvidia.com>, <linux-gpio@vger.kernel.org>
+To: "Bartosz Golaszewski" <brgl@kernel.org>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20260116080235.350305-1-tzungbi@kernel.org>
+ <20260116080235.350305-2-tzungbi@kernel.org>
+ <DFQ45FWO4XHC.2BW7I9LGC76WT@kernel.org>
+ <CAMRc=Medaqr5UPimc8o+VTy=9MgU5p8AXjArisQfBNqi7ktSGg@mail.gmail.com>
+In-Reply-To: <CAMRc=Medaqr5UPimc8o+VTy=9MgU5p8AXjArisQfBNqi7ktSGg@mail.gmail.com>
 
-On Fri, Jan 16, 2026 at 4:20=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
-wrote:
+On Fri Jan 16, 2026 at 4:27 PM CET, Bartosz Golaszewski wrote:
+> On Fri, Jan 16, 2026 at 4:20=E2=80=AFPM Danilo Krummrich <dakr@kernel.org=
+> wrote:
+>>
+>> On Fri Jan 16, 2026 at 9:02 AM CET, Tzung-Bi Shih wrote:
+>> > diff --git a/MAINTAINERS b/MAINTAINERS
+>> > index a671e3d4e8be..fd683c62012a 100644
+>> > --- a/MAINTAINERS
+>> > +++ b/MAINTAINERS
+>> > @@ -22517,6 +22517,13 @@ F:   include/uapi/linux/rseq.h
+>> >  F:   kernel/rseq.c
+>> >  F:   tools/testing/selftests/rseq/
+>> >
+>> > +REVOCABLE RESOURCE MANAGEMENT
+>> > +M:   Tzung-Bi Shih <tzungbi@kernel.org>
+>> > +L:   linux-kernel@vger.kernel.org
+>> > +S:   Maintained
+>> > +F:   drivers/base/revocable.c
+>> > +F:   include/linux/revocable.h
+>>
+>> NIT: I think we should add this include to the DRIVER CORE entry as well=
+.
 >
-> On Fri Jan 16, 2026 at 9:02 AM CET, Tzung-Bi Shih wrote:
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index a671e3d4e8be..fd683c62012a 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -22517,6 +22517,13 @@ F:   include/uapi/linux/rseq.h
-> >  F:   kernel/rseq.c
-> >  F:   tools/testing/selftests/rseq/
-> >
-> > +REVOCABLE RESOURCE MANAGEMENT
-> > +M:   Tzung-Bi Shih <tzungbi@kernel.org>
-> > +L:   linux-kernel@vger.kernel.org
-> > +S:   Maintained
-> > +F:   drivers/base/revocable.c
-> > +F:   include/linux/revocable.h
->
-> NIT: I think we should add this include to the DRIVER CORE entry as well.
+> FWIW: I'm not even sure drivers/base/ is the right place for this.
+> Except for a few devm_ helpers, nothing here is inherently tied into
+> the driver model This could be useful outside of device drivers and I
+> would suggest to put it under lib/ with devres factored out into a
+> separate source file.
 
-FWIW: I'm not even sure drivers/base/ is the right place for this.
-Except for a few devm_ helpers, nothing here is inherently tied into
-the driver model This could be useful outside of device drivers and I
-would suggest to put it under lib/ with devres factored out into a
-separate source file.
+It is indeed correct that in the end revocable is more of a generic
+synchronization primitve.
 
-Bartosz
+In fact, the Revocable type in Rust is not listed under driver core
+infrastructure either. However, it was introduced for use with Devres (whic=
+h is
+still the only user).
+
+I think the, by far, most common use-case where a resource is revoked from =
+an
+entity are device resources revoked by devres.
+
+So, I'd say let's factor it out once we see interest by more users?
 
