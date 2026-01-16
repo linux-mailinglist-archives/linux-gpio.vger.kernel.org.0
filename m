@@ -1,121 +1,146 @@
-Return-Path: <linux-gpio+bounces-30618-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30619-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0949AD2D1EC
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 08:24:08 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A171D2DAEB
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 09:06:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 022E1308435D
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 07:22:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 725B530ACE49
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 08:03:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B7EE31282A;
-	Fri, 16 Jan 2026 07:22:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F2D52E92B7;
+	Fri, 16 Jan 2026 08:03:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="DOz03dJJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YAEE53Gr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F312F619D
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 07:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D491C2DEA80;
+	Fri, 16 Jan 2026 08:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768548145; cv=none; b=ciQQqvhrnQPd/yHA+y/Q7UMTjk1vhJrz2357OgpmpswT3Gw2UNT9v1JoO5Ae5/eCoZqGfQX9zdN8dt2kBrI7QtjLko6txHanrxh92OMnwWMhH1OjaukTJcIJszTEanZOGbvjlWt96tXBtogXYT5iJoF7R0AsQMPc0Q31JAtUFAs=
+	t=1768550597; cv=none; b=Mrql3niAhAYaR1BxJX74qQyEpPBRJI16m1rZk4tGPKFfttIn0M5PrJU2wPHLAHS6/JwHxgtPnB4OBewKAQ1FsL3OI9StJoDh2syP0IQco32aDeFmHMZarKbliY5RKyLBeH0Zu9ggVR0vudQ0fCydK9prNMzjf8xchfQLZ2m5248=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768548145; c=relaxed/simple;
-	bh=ZoZCxIZIxuNG7iiq7ouEpN8AOaGaswIYZVOM5BEKY0g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jGQ5b8rp9pYLxxiEE1+dYjIlbIk3qB1Gp+qt/0gQxomob2RCNxENep8WgwxuJgOCXW0duhbAIhpW00HRL+dpfaHBix3GpshseLVj0KVx38XZnr/Wl03PC6PYlRmL0z3NLxoYwQsvMG4cXOETj7H9VkWrbhLS+REAYYW769zcCLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=DOz03dJJ; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-43284ed32a0so920325f8f.3
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Jan 2026 23:22:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1768548141; x=1769152941; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=W95GN1V+oZI3tCyhJrWoqvfYp2X9bfUg8CvoDb5FSAs=;
-        b=DOz03dJJJrHhANTzRWfRIwG4CLx0lVlmsIjqaVXIAMhwfUkQMzxluDIvnt6G5tZvZr
-         4c0dlJQT35H7vKeQ2kACS7kFyjHOCBRMDhEqHMGjvAHO3J/KXmEMGQKVzcuA8Tkh5u4v
-         iSdLnjY0HoFbhIx7+jU9y4jcsGD5y9+L4A9Rbbfwe9Oajkr9Uy/QAO6wftMa4FTKMWiv
-         Xr2onvXDgcKQNOVRRMi3T/uSAL+HyazSQJuk5cqWgDP+C85At8mPoVxlZUnJY2INJNn6
-         NZOLFZwP31nUoRTSEM/hLvbT2rEi9re57qBnGAEmHczkC9DApHPsTcrZS0p+KjQiDy4r
-         ffNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768548141; x=1769152941;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=W95GN1V+oZI3tCyhJrWoqvfYp2X9bfUg8CvoDb5FSAs=;
-        b=vJfsE9Gr3aXFz+YjO8wr6gOXMs7CvTUnKncK0oAnLj1QvO+b+Cb91WKqH4qECJq/ny
-         FWkcSvarjHwkAwZJEeWoTqemjh2Q9LVrKa3gRyimWcg7+tM+MehyT0frUT/pzO1WnZWa
-         Xre/+uY+fsicYRg5UyI5+WadZS/2iVCeQFPWA2cSNszBQ4r8d1u5lSJSZheED9kJD8uN
-         NkH+BXaIVNwCz9bXoyeXsUtLKGrKpNPjrhMXGM2dhy4AUA/xqzGPU5s5M0TBDkY4NPWe
-         spne1kn6XeF5ow4jZqB6i9PCUFF06L6FoJ5kbBEP8qKf9/1HGnGwMuJ5QuvP7SoR65Nt
-         yAXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVCVgG8Rv1hNbHEQbmV62sTatK0jLviGCyA+KojR2Vm7YHgJ4VfueRibezmgWduJ4j/QoecWclUmfNn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxi6Bxk47vdd4OLhsnIJpOqsaKBgxnkdNXslZwUkABFhrE7R3/o
-	/14YRU2LWyfxJdvzaK0duEPVKKf2LIdPTzoxUff2L2aToxUe8MBKPy23u4xjjh4KeYM=
-X-Gm-Gg: AY/fxX7vRlRIt2FrxNua9fkV9Z2pqVTYAdutF188zWPAwE4p2bHdbdz5PVXDFxdzTti
-	Ov2dPvlTD1KOh8nNK6tA5jLDx5ey0mCa8Kyl8ONMBuguC/HqdTtRMYRn1+c7SpeQEdC4pHaKh9C
-	m+iRUo3nk2LFpGJ+LzE/mJShxOflwLYkPB1Y0kO/fiap7oPTyv0t7FlHriXDiZvE/2UOMydV12N
-	WOl240aAtwR036Gs4juaVXTAtxEsfO/cYm62mAiQPqMsJnW94rXCd5oERlJDpPhhGpKdhZmFSh0
-	oQMeJA+O3G/A3aFgwJf19UDy7qWwceLtMLoMJ6PJYBVkHxgNFjvNhYHjyCAjkfejlpp8R2aS2un
-	vLWZzrqsuVdjnlsE6oDXTDvMHZicOXooaJNWrGi9f3vKyQqGngZVXirkIlwXupgKPLyxzUzA594
-	mfylwTb3lqzpgqt2IxVQ==
-X-Received: by 2002:a5d:5d81:0:b0:431:752:672b with SMTP id ffacd0b85a97d-4356998a823mr1864994f8f.14.1768548140696;
-        Thu, 15 Jan 2026 23:22:20 -0800 (PST)
-Received: from [10.31.13.216] ([82.77.28.160])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435699982aasm3496749f8f.42.2026.01.15.23.22.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Jan 2026 23:22:20 -0800 (PST)
-Message-ID: <40b636b3-b1d3-4c67-bbfd-6f41a5b0b290@tuxon.dev>
-Date: Fri, 16 Jan 2026 09:22:16 +0200
+	s=arc-20240116; t=1768550597; c=relaxed/simple;
+	bh=XTkkLkWWQfZAahv1Z3KRyrnOTFGai1tByTwtfsSXFnE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J1JmQBP0u3bwm3D+lkXiq6MlQDZiUiFV7vSOVmVNcDWOFNrk+LkLuQ45S8tAbHDs+oyYfMA1/GNGtgBEBKRHWh3mEmgfnB/us1dWM2uoKPF88GwjKRSxhKiZGPTuzksft9GvFtfZ1+j87rxMqA1p1XhAhme/XZwEyu3zN+Z7zxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YAEE53Gr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C18A3C116C6;
+	Fri, 16 Jan 2026 08:03:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768550597;
+	bh=XTkkLkWWQfZAahv1Z3KRyrnOTFGai1tByTwtfsSXFnE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YAEE53GrsEgSNm8JVPHah6+acnZ3kl99lWQvtfK97wy9i2L6DAXNlUsGU22W6OZf7
+	 yhvWC+J23i/qOCX3yG3t9H9yAHLGtDBCLubaNVpOCUc/bJ/xXEYKxw053wXfm8Y+3R
+	 8QZeWiZ91ubO1mYKtZ9yKpvwDjk8QQXzm7WpFVIOuwdTuk8iAuwThzKan8ZoMHruY9
+	 zcgqX4iDdgUj7yPqmF6WMN99lymKCjT/wvkG3X5+NqgK2KJoW3ZzOYTExBOhEC6YAU
+	 q4Q5fYhePmQUwQf+TUS10AMq3MFvq4hbbn3M+2gAFx6I1YtlzPfPyTV2X6KafEudmh
+	 zwS1TWM7JaZVg==
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Benson Leung <bleung@chromium.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linusw@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chrome-platform@lists.linux.dev,
+	linux-kselftest@vger.kernel.org,
+	tzungbi@kernel.org,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH v7 0/3] drivers/base: Introduce revocable
+Date: Fri, 16 Jan 2026 08:02:32 +0000
+Message-ID: <20260116080235.350305-1-tzungbi@kernel.org>
+X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 07/11] arm64: dts: microchip: add LAN969x clock header
- file
-To: Robert Marko <robert.marko@sartura.hr>, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, nicolas.ferre@microchip.com,
- alexandre.belloni@bootlin.com, herbert@gondor.apana.org.au,
- davem@davemloft.net, lee@kernel.org, andrew+netdev@lunn.ch,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- Steen.Hegelund@microchip.com, daniel.machon@microchip.com,
- UNGLinuxDriver@microchip.com, linusw@kernel.org, olivia@selenic.com,
- richard.genoud@bootlin.com, radu_nicolae.pirea@upb.ro,
- gregkh@linuxfoundation.org, richardcochran@gmail.com,
- horatiu.vultur@microchip.com, Ryan.Wanner@microchip.com,
- tudor.ambarus@linaro.org, kavyasree.kotagiri@microchip.com,
- lars.povlsen@microchip.com, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-crypto@vger.kernel.org, netdev@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-serial@vger.kernel.org
-Cc: luka.perkov@sartura.hr
-References: <20260115114021.111324-1-robert.marko@sartura.hr>
- <20260115114021.111324-8-robert.marko@sartura.hr>
-Content-Language: en-US
-From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <20260115114021.111324-8-robert.marko@sartura.hr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+The series is separated from [1] to show the independency and compare
+potential use cases easier.  This is the revocable core part.  Use cases
+are in other series.
 
+The 1st patch introduces the revocable which is an implementation of ideas
+from the talk [2].
 
-On 1/15/26 13:37, Robert Marko wrote:
-> LAN969x uses hardware clock indexes, so document theses in a header to make
-> them humanly readable.
-> 
-> Signed-off-by: Robert Marko<robert.marko@sartura.hr>
+The 2nd and 3rd patches add test cases for revocable in Kunit and selftest.
 
-Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+[1] https://lore.kernel.org/chrome-platform/20251016054204.1523139-1-tzungbi@kernel.org
+[2] https://lpc.events/event/17/contributions/1627/
+
+v7:
+- Rebase onto next-20260115.
+
+v6: https://lore.kernel.org/chrome-platform/20251106152330.11733-1-tzungbi@kernel.org
+- Rebase onto next-20251106.
+- Separate revocable core and use cases.
+
+v5: https://lore.kernel.org/chrome-platform/20251016054204.1523139-1-tzungbi@kernel.org
+- Rebase onto next-20251015.
+- Add more context about the PoC.
+- Support multiple revocable providers in the PoC.
+
+v4: https://lore.kernel.org/chrome-platform/20250923075302.591026-1-tzungbi@kernel.org
+- Rebase onto next-20250922.
+- Remove the 5th patch from v3.
+- Add fops replacement PoC in 5th - 7th patches.
+
+v3: https://lore.kernel.org/chrome-platform/20250912081718.3827390-1-tzungbi@kernel.org
+- Rebase onto https://lore.kernel.org/chrome-platform/20250828083601.856083-1-tzungbi@kernel.org
+  and next-20250912.
+- The 4th patch changed accordingly.
+
+v2: https://lore.kernel.org/chrome-platform/20250820081645.847919-1-tzungbi@kernel.org
+- Rename "ref_proxy" -> "revocable".
+- Add test cases in Kunit and selftest.
+
+v1: https://lore.kernel.org/chrome-platform/20250814091020.1302888-1-tzungbi@kernel.org
+
+Tzung-Bi Shih (3):
+  revocable: Revocable resource management
+  revocable: Add Kunit test cases
+  selftests: revocable: Add kselftest cases
+
+ .../driver-api/driver-model/index.rst         |   1 +
+ .../driver-api/driver-model/revocable.rst     | 152 +++++++++++
+ MAINTAINERS                                   |   9 +
+ drivers/base/Kconfig                          |   8 +
+ drivers/base/Makefile                         |   5 +-
+ drivers/base/revocable.c                      | 242 ++++++++++++++++++
+ drivers/base/revocable_test.c                 | 139 ++++++++++
+ include/linux/revocable.h                     |  69 +++++
+ tools/testing/selftests/Makefile              |   1 +
+ .../selftests/drivers/base/revocable/Makefile |   7 +
+ .../drivers/base/revocable/revocable_test.c   | 136 ++++++++++
+ .../drivers/base/revocable/test-revocable.sh  |  39 +++
+ .../base/revocable/test_modules/Makefile      |  10 +
+ .../revocable/test_modules/revocable_test.c   | 195 ++++++++++++++
+ 14 files changed, 1012 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/driver-api/driver-model/revocable.rst
+ create mode 100644 drivers/base/revocable.c
+ create mode 100644 drivers/base/revocable_test.c
+ create mode 100644 include/linux/revocable.h
+ create mode 100644 tools/testing/selftests/drivers/base/revocable/Makefile
+ create mode 100644 tools/testing/selftests/drivers/base/revocable/revocable_test.c
+ create mode 100755 tools/testing/selftests/drivers/base/revocable/test-revocable.sh
+ create mode 100644 tools/testing/selftests/drivers/base/revocable/test_modules/Makefile
+ create mode 100644 tools/testing/selftests/drivers/base/revocable/test_modules/revocable_test.c
+
+-- 
+2.52.0.457.g6b5491de43-goog
 
 
