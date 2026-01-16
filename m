@@ -1,71 +1,71 @@
-Return-Path: <linux-gpio+bounces-30656-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30657-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42BA9D31B2D
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 14:19:09 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1011BD31C92
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 14:26:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B2FAB30F88CF
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 13:15:21 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 1548030127BD
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 13:26:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3128823C512;
-	Fri, 16 Jan 2026 13:15:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30F7327464F;
+	Fri, 16 Jan 2026 13:26:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XgcXouMJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G9ISgBeH"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC17124728F
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 13:15:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDC7274658
+	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 13:26:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768569320; cv=none; b=ZY+ValHNW6yxEksWqneyA305HhDWpdN+CcQ1fiOxVqnNwli+3SFiNXpeNfVBk8EXig0LnQ4CRisoNLqJKKCSthmsfa/h8ItQLUjF8qdnpeVHI+9zHBqOkwZivDkzhT4p52JBVoGD2xkRoSiR3RSNBD0uB7JEuXN87x75Bogu7mI=
+	t=1768569965; cv=none; b=ePZhDDWByJSNxwi3Z8GCWLVjW+xRFtKgjU81GbQxQgNfldDrNMO3Fzcowo9/Laz2j9D9cC8J3K2DbRiTHLXNBrfNWm4ug4UY5shhguEDZ7+BYnBVc44jGbhW1r/QH+7c2ymo7WJreKQ368i5tua6j0sQ3izgX20a0J0dLpd0VaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768569320; c=relaxed/simple;
-	bh=F0zejtQsFxq+RFGdR3iowVouDSNSub03rMOOO/DadmM=;
+	s=arc-20240116; t=1768569965; c=relaxed/simple;
+	bh=IR3KwNWNKGPtS44m5xlCPYzSAGbubcbp6zpZ8tb6nAo=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b3V8dbQuaEf7RA9dnV6Bhua5sIjaDdeLTLI8jxPibzn6N64HIsQUNGu32YzFjGV8Aof4QR35MyYV6YTdKV4y+DxeDwVMTDVgCpPvGbqvRTOAjR20izhpWUno6PkpM5mso8c6g4VSdf63ynVfymbNMKbWTWoQVKDvc8mUgf72O8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XgcXouMJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A06BDC16AAE
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 13:15:20 +0000 (UTC)
+	 To:Cc:Content-Type; b=jZ8gTkNVbB8SOrPouisIBLeHLu8IOVKD6UYZWZy+rDSugggdYAUpzAAavpeGxLN/wbkrS+jNLUCQvsvWosIqEX7yuHv+f8JngncoOM0kRGnbpPuOmw1pQPT5EyZWWkDSrqWreMJnZ1n2sKYBtFgcJ8InFDhnFcqaPNLL2P6Cltk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G9ISgBeH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5824C2BCB0
+	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 13:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768569320;
-	bh=F0zejtQsFxq+RFGdR3iowVouDSNSub03rMOOO/DadmM=;
+	s=k20201202; t=1768569964;
+	bh=IR3KwNWNKGPtS44m5xlCPYzSAGbubcbp6zpZ8tb6nAo=;
 	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=XgcXouMJNUoG6WpBiXxL9gT9CCq/mOISBP6ZpjC5wQxLiE1J5koGWpNtEjVRyWJbL
-	 DE9pVJJM607nFdFx7SfyyXD4DjGUZwbpPlIhA3Bsji+L+yhKzYQa5B/Pks/8JsIeY+
-	 GbR7PwJgiVlwN9n4REV6Vriu2Wptoop1OcQPJMTH5S4XpUtQ5LSGqkKr4CuaksRFLT
-	 lRnbhQxFmg+ebNYejENnbG8ecxX1v/ORJbesoD4Xk5fBFTvJx802KY8yYNdQ3RzNor
-	 b5yGG4pW7oae+1qbdONKqATe32iX/xjVKoY9zlsr1AkcnbNhTC0Hs28FN65XWIOB+m
-	 F3qHNnauKyWGA==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-59b6c905a46so2041982e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 05:15:20 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWXZvlIt33GNrmoacSE6eutPwhOsW35ekcFEnPl2DmAoCXFC3u74Y8xc6DNyiKGoQdPOto8vqJNaWqv@vger.kernel.org
-X-Gm-Message-State: AOJu0YyM57qm8L+TckMq0eKSArmIbrlFNme84pt+vdkbuQCqCcwxvhPZ
-	i97Ra6U48zrk32Id6YvDY5uTtilvc0CHbtTDJxBygmFX36rwfynw0RPLgRQg6AWtV9F63tFLfX+
-	C6o3kkul2yoMcFL+M7d6mBCm+FFgMwWGw+IxspT2gdQ==
-X-Received: by 2002:a05:6512:32c8:b0:598:eef2:e209 with SMTP id
- 2adb3069b0e04-59baeec26ebmr1143109e87.5.1768569318553; Fri, 16 Jan 2026
- 05:15:18 -0800 (PST)
+	b=G9ISgBeH8iyNsYYQXxnHbuiQa9xxaDmZa76j7YBGuWtUjZXFWtSltx+/fBfC4B3Zl
+	 PMcpgMnWQFn19cmPvXHw9+KdCBUhtPK/2B3AMpCi1cCbdwNW8XbZj8kLgMCEAg/mjT
+	 VIzNk1nJDRY6NKxGID7e5QlrBs7sm+Yw6PTzWwntoHfV52XgP6DQlaryMdDGwW53dd
+	 kksWm/yK9d8kbIkPwNJ8IsBK+AfgfbNDQMlnqZ78QIvdtlUP++ZxHFzhn9y5g6ieqo
+	 Ux/d0iFx87+lBKHrGU0MaNxEWHKFdQyuSoMhmIlZM1XWMe4QsPbmnXLEy04NdH93qs
+	 uofvgtfAeac5w==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-59b30275e69so2829713e87.1
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 05:26:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXpVCktS/hyOGCR2rHUTfQrUJcpmPJdS5nJ6H5y00ay7yzGtG8X/caoa6Cprj+JTGotD1xcnt1V6Oj8@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzLIWII/p+H0jm/2UQceDoX1i4PuybQi24o6x/+4y0bY7qBj0d
+	wo885twG64ud+K+cLVMh0XbcObk8IGyI0s21sIjTkNbrV2QNGCfCoTDnsPF+c6lPAqClkGA4pKt
+	1Moe2D6oYPmGHB7Ij7CZnzQGGlb5bYpHSH1yF4L98Mw==
+X-Received: by 2002:a05:6512:3f20:b0:59b:2670:aa5 with SMTP id
+ 2adb3069b0e04-59baffd29famr758352e87.37.1768569963190; Fri, 16 Jan 2026
+ 05:26:03 -0800 (PST)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 16 Jan 2026 13:15:17 +0000
+ HTTPREST; Fri, 16 Jan 2026 13:26:01 +0000
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 16 Jan 2026 13:15:17 +0000
+ HTTPREST; Fri, 16 Jan 2026 13:26:01 +0000
 From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260116081036.352286-2-tzungbi@kernel.org>
+In-Reply-To: <20260116081036.352286-5-tzungbi@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260116081036.352286-1-tzungbi@kernel.org> <20260116081036.352286-2-tzungbi@kernel.org>
-Date: Fri, 16 Jan 2026 13:15:17 +0000
-X-Gmail-Original-Message-ID: <CAMRc=MeiQho5mfxGsL1AZ60brCzfox64XQao=xWnxMsdHF2-vA@mail.gmail.com>
-X-Gm-Features: AZwV_QjtzprOMqG2qDnke0_Bxhon5JnActWvxaD629LTW7BB9RenENKWKCocUJE
-Message-ID: <CAMRc=MeiQho5mfxGsL1AZ60brCzfox64XQao=xWnxMsdHF2-vA@mail.gmail.com>
-Subject: Re: [PATCH 01/23] gpiolib: Correct wrong kfree() usage for `kobj->name`
+References: <20260116081036.352286-1-tzungbi@kernel.org> <20260116081036.352286-5-tzungbi@kernel.org>
+Date: Fri, 16 Jan 2026 13:26:01 +0000
+X-Gmail-Original-Message-ID: <CAMRc=Mc4UoXif=vwUQG1jYW8G3QziZwbdcfvZGquytdrd4SBpg@mail.gmail.com>
+X-Gm-Features: AZwV_QgiwcYDrwjaLeT09nufbHbwRGBProJRFcLW2Iu2MBC1N5SlHrenV-Bc4z4
+Message-ID: <CAMRc=Mc4UoXif=vwUQG1jYW8G3QziZwbdcfvZGquytdrd4SBpg@mail.gmail.com>
+Subject: Re: [PATCH 04/23] gpiolib: Fix resource leaks on errors in lineinfo_changed_notify()
 To: Tzung-Bi Shih <tzungbi@kernel.org>
 Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, 
@@ -78,51 +78,47 @@ Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, linux-doc@v
 	Danilo Krummrich <dakr@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linusw@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 16 Jan 2026 09:10:14 +0100, Tzung-Bi Shih <tzungbi@kernel.org> said:
-> `kobj->name` should be freed by kfree_const()[1][2].  Correct it.
+On Fri, 16 Jan 2026 09:10:17 +0100, Tzung-Bi Shih <tzungbi@kernel.org> said:
+> On error handling paths, lineinfo_changed_notify() doesn't free the
+> allocated resources which results leaks.  Fix it.
 >
-> [1] https://elixir.bootlin.com/linux/v6.18/source/lib/kasprintf.c#L41
-> [2] https://elixir.bootlin.com/linux/v6.18/source/lib/kobject.c#L695
->
-
-Please don't add links third-party groks to git commit messages.
-
 > Cc: stable@vger.kernel.org
-> Fixes: c351bb64cbe6 ("gpiolib: free device name on error path to fix kmemleak")
+> Fixes: d4cd0902c156 ("gpio: cdev: make sure the cdev fd is still active before emitting events")
 > Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
 > ---
->  drivers/gpio/gpiolib.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/gpio/gpiolib-cdev.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 5eb918da7ea2..ba9323432e3a 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1263,7 +1263,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
->  err_free_descs:
->  	kfree(gdev->descs);
->  err_free_dev_name:
-> -	kfree(dev_name(&gdev->dev));
-> +	kfree_const(dev_name(&gdev->dev));
->  err_free_ida:
->  	ida_free(&gpio_ida, gdev->id);
->  err_free_gdev:
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> index ba1eae15852d..6196aab5ed74 100644
+> --- a/drivers/gpio/gpiolib-cdev.c
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -2549,7 +2549,7 @@ static int lineinfo_changed_notify(struct notifier_block *nb,
+>  	ctx = kzalloc(sizeof(*ctx), GFP_ATOMIC);
+>  	if (!ctx) {
+>  		pr_err("Failed to allocate memory for line info notification\n");
+> -		return NOTIFY_DONE;
+> +		goto err_put_fp;
+>  	}
+>
+>  	ctx->chg.event_type = action;
+> @@ -2563,6 +2563,9 @@ static int lineinfo_changed_notify(struct notifier_block *nb,
+>  	queue_work(ctx->gdev->line_state_wq, &ctx->work);
+>
+>  	return NOTIFY_OK;
+> +err_put_fp:
+> +	fput(fp);
+> +	return NOTIFY_DONE;
+>  }
+>
+>  static int gpio_device_unregistered_notify(struct notifier_block *nb,
 > --
 > 2.52.0.457.g6b5491de43-goog
 >
 >
 
-I've never paid attention to this bit but it really looks broken. I understand
-that this string won't get freed until we initialize refcounting on the
-underlying kobject but reaching two abstraction layers below to get the string
-for freeing out of the kobject looks incorrect to me.
-
-It's also one of only two instances of doing kfree(dev_name(dev)), the other
-one being in drivers/scsi/hosts.c.
-
-It looks to me that the device name is not really used in
-gpiochip_add_data_with_key(). Can we move dev_set_name() after
-device_initialize()?
+There's only one place where you need this fput(), please do it directly in
+the error path of kzalloc() and drop the label.
 
 Bart
 
