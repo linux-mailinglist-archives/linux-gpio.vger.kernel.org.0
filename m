@@ -1,141 +1,128 @@
-Return-Path: <linux-gpio+bounces-30655-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30656-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26DE6D317BD
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 14:04:04 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42BA9D31B2D
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 14:19:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7A4DA301A4F9
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 13:03:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B2FAB30F88CF
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 13:15:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5F5823BD1F;
-	Fri, 16 Jan 2026 13:03:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3128823C512;
+	Fri, 16 Jan 2026 13:15:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u97JnkF8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XgcXouMJ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79BEE238171
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 13:03:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC17124728F
+	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 13:15:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768568600; cv=none; b=lxtEqiVpLX3OzuLy06DPHhmgb3GBR4dUNXobj0UTnM0lKboAEjoqYEydUtynzOREdyDaCEg99b2+0e+by3N+IADMClntZpIr6w9ErxEeBMf0KpF9QqJBArO3oi/9qCzBNwCVTJ0Ev6BZjRawV/zHfxl5v8t9QB6pM4Sr6TIKmiA=
+	t=1768569320; cv=none; b=ZY+ValHNW6yxEksWqneyA305HhDWpdN+CcQ1fiOxVqnNwli+3SFiNXpeNfVBk8EXig0LnQ4CRisoNLqJKKCSthmsfa/h8ItQLUjF8qdnpeVHI+9zHBqOkwZivDkzhT4p52JBVoGD2xkRoSiR3RSNBD0uB7JEuXN87x75Bogu7mI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768568600; c=relaxed/simple;
-	bh=ie4G4ur51A6e6k3vsTccGcKjtOGF6MpnoTbCUV6RqMY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XDHy6VhuIBkVXhy8UKDTREP3PIy9rB8y0fT8cy7G2mf+ylLpZNM66d+hdiiTPXiCc4VBiPIsID08saiqTqV4gZZyXNo2AHroIE2PnX/Wm976KOX8r9beQZDh7iWtHmQ8iCXJhq2J9pOJSaGt4cIvhu6KePN/fwLrlj3Xzd8pInU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u97JnkF8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22139C116C6
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 13:03:20 +0000 (UTC)
+	s=arc-20240116; t=1768569320; c=relaxed/simple;
+	bh=F0zejtQsFxq+RFGdR3iowVouDSNSub03rMOOO/DadmM=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b3V8dbQuaEf7RA9dnV6Bhua5sIjaDdeLTLI8jxPibzn6N64HIsQUNGu32YzFjGV8Aof4QR35MyYV6YTdKV4y+DxeDwVMTDVgCpPvGbqvRTOAjR20izhpWUno6PkpM5mso8c6g4VSdf63ynVfymbNMKbWTWoQVKDvc8mUgf72O8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XgcXouMJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A06BDC16AAE
+	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 13:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768568600;
-	bh=ie4G4ur51A6e6k3vsTccGcKjtOGF6MpnoTbCUV6RqMY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=u97JnkF82MXRfIPggqt4viRuC/EbQeGkWgvmFuwzI84Vu5P2r38OGaIk+NqYOY82K
-	 7DvyZQNOxk3BjoVX3sgfsInitrq5jOJQzfMqKTH2b/z90UCnSjmh6hiBeRcWo/cUVo
-	 ck9xAk0QycAMdMvpkmkHtZBVjGLLLh1S/3NC+Qt1TCrLxuCsovP0C3Pm9OfmQfjq6F
-	 nXjcz98yXEMr2afe3iYLmovyNN+MKLvodfque86MOA8ELB22dkOq0dos/F5R3HhZMF
-	 b3hL2CaWcAWyiOhrcPMduzE0bcL7t0vbFYD/LRp8o07RJvcjn3RZ/mgTDKXEbUUKhU
-	 fdZY43OlBQxzQ==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-59b6c89d302so1746279e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 05:03:20 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXKFNjTR4buchL8YgRKWBzxTURC7YbNdw9dv7eKvg6N96cR2yl80sS5LhakX2J1YWWLT3U1UPhmDvPX@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBHAcUbRaR8qBX18ws/CLnDIbVHevbJIckGi/rZ6tljHRyywvn
-	+k5NeIHe9boT4We6GN9U8VMlopAZKSL6jDw6HvztKEHabfsOuBkrvU8kchVs+qmYIdUM9Okz3L4
-	4GKKju3FrgkkPm7fW07Yxv5ZUrhq9ao2vTdZbsMEChQ==
-X-Received: by 2002:a05:6512:4015:b0:59b:b0f9:53ed with SMTP id
- 2adb3069b0e04-59bb0f9545fmr728142e87.3.1768568598697; Fri, 16 Jan 2026
- 05:03:18 -0800 (PST)
+	s=k20201202; t=1768569320;
+	bh=F0zejtQsFxq+RFGdR3iowVouDSNSub03rMOOO/DadmM=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
+	b=XgcXouMJNUoG6WpBiXxL9gT9CCq/mOISBP6ZpjC5wQxLiE1J5koGWpNtEjVRyWJbL
+	 DE9pVJJM607nFdFx7SfyyXD4DjGUZwbpPlIhA3Bsji+L+yhKzYQa5B/Pks/8JsIeY+
+	 GbR7PwJgiVlwN9n4REV6Vriu2Wptoop1OcQPJMTH5S4XpUtQ5LSGqkKr4CuaksRFLT
+	 lRnbhQxFmg+ebNYejENnbG8ecxX1v/ORJbesoD4Xk5fBFTvJx802KY8yYNdQ3RzNor
+	 b5yGG4pW7oae+1qbdONKqATe32iX/xjVKoY9zlsr1AkcnbNhTC0Hs28FN65XWIOB+m
+	 F3qHNnauKyWGA==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-59b6c905a46so2041982e87.1
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 05:15:20 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWXZvlIt33GNrmoacSE6eutPwhOsW35ekcFEnPl2DmAoCXFC3u74Y8xc6DNyiKGoQdPOto8vqJNaWqv@vger.kernel.org
+X-Gm-Message-State: AOJu0YyM57qm8L+TckMq0eKSArmIbrlFNme84pt+vdkbuQCqCcwxvhPZ
+	i97Ra6U48zrk32Id6YvDY5uTtilvc0CHbtTDJxBygmFX36rwfynw0RPLgRQg6AWtV9F63tFLfX+
+	C6o3kkul2yoMcFL+M7d6mBCm+FFgMwWGw+IxspT2gdQ==
+X-Received: by 2002:a05:6512:32c8:b0:598:eef2:e209 with SMTP id
+ 2adb3069b0e04-59baeec26ebmr1143109e87.5.1768569318553; Fri, 16 Jan 2026
+ 05:15:18 -0800 (PST)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 16 Jan 2026 13:15:17 +0000
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 16 Jan 2026 13:15:17 +0000
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260116081036.352286-2-tzungbi@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAD++jLkJfyhmpepkanMyvLc_C0v_XZeoEKj8XJ3bw5fJAqJYyQ@mail.gmail.com>
- <aWjlJTnrI8r0iIMR@smile.fi.intel.com>
-In-Reply-To: <aWjlJTnrI8r0iIMR@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Fri, 16 Jan 2026 14:03:06 +0100
-X-Gmail-Original-Message-ID: <CAMRc=Me4dMf2hV1R=aFrmOqH5=07JBHH68wjMdgUE79FQjNwGQ@mail.gmail.com>
-X-Gm-Features: AZwV_QgdSwOtKccJ-UBi3AYmHyExexUncON5DGqsqyE7bUw4Xlbu_EQyjdZc0bQ
-Message-ID: <CAMRc=Me4dMf2hV1R=aFrmOqH5=07JBHH68wjMdgUE79FQjNwGQ@mail.gmail.com>
-Subject: Re: GPIO direction problems in gpio-shared-proxy.c
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linusw@kernel.org>, Linux pin control <linux-gpio@vger.kernel.org>
+References: <20260116081036.352286-1-tzungbi@kernel.org> <20260116081036.352286-2-tzungbi@kernel.org>
+Date: Fri, 16 Jan 2026 13:15:17 +0000
+X-Gmail-Original-Message-ID: <CAMRc=MeiQho5mfxGsL1AZ60brCzfox64XQao=xWnxMsdHF2-vA@mail.gmail.com>
+X-Gm-Features: AZwV_QjtzprOMqG2qDnke0_Bxhon5JnActWvxaD629LTW7BB9RenENKWKCocUJE
+Message-ID: <CAMRc=MeiQho5mfxGsL1AZ60brCzfox64XQao=xWnxMsdHF2-vA@mail.gmail.com>
+Subject: Re: [PATCH 01/23] gpiolib: Correct wrong kfree() usage for `kobj->name`
+To: Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, 
+	linux-kselftest@vger.kernel.org, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
+	Dan Williams <dan.j.williams@intel.com>, Jason Gunthorpe <jgg@nvidia.com>, linux-gpio@vger.kernel.org, 
+	stable@vger.kernel.org, Benson Leung <bleung@chromium.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linusw@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 15, 2026 at 2:01=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Fri, 16 Jan 2026 09:10:14 +0100, Tzung-Bi Shih <tzungbi@kernel.org> said:
+> `kobj->name` should be freed by kfree_const()[1][2].  Correct it.
 >
-> On Thu, Jan 15, 2026 at 10:41:11AM +0100, Linus Walleij wrote:
-> > Hi Bartosz, Andy,
-> >
-> > Andy is good with problems like this, so I explicitly address you!
-> >
-> > A review of the I2C core brought this problem to my attention:
->
-> (and seems it's spreading:
->  drivers/tty/serial/mxs-auart.c:1522)
->
-> > we have the following confusion in gpio-shared-proxy.c:
-> >
-> > dir =3D gpiod_get_direction(desc);
-> > (...)
-> >
-> > This function from <linux/gpio/consumer.h>
-> >
-> > if (dir =3D=3D GPIO_LINE_DIRECTION_OUT) {
-> >
-> > This define is from <linux/gpio/driver.h>
-> >
-> > So we need to move the GPIO_LINE_DIRECTION_[IN|OUT] to
-> > consumer.h if you want to use it like that.
-> >
-> > But we don't want to include consumer.h into driver.h or explicitly
-> > into every driver.
-> >
-> > The I2C core and any external direction user looks like this:
-> >
-> > /* FIXME: add proper flag instead of '0' once available */
-> > if (gpiod_get_direction(bri->sda_gpiod) =3D=3D 0)
-> >
-> > So this needs a proper define too and it isn't a driver.
-> >
-> > Shall we create <linux/gpio/directions.h>
-> > with just these defines and include that into consumer.h and driver.h?
->
-> If we talking about header level of splitting, I would do it as gpio/type=
-s.h
-> (gpio/defs.h) as others usually do.
->
-> As for the particular problem, and I think Bart has better view on it,
-> I think the use cases should be revisit first to understand "whu?" do
-> we even need that in the code. Since we have two so far (or more?) we
-> can try to address each of them in a better way.
->
-> OTOH if we have _get_direction() in consumer.h, why don't we have defined
-> possible answers in the same header?
+> [1] https://elixir.bootlin.com/linux/v6.18/source/lib/kasprintf.c#L41
+> [2] https://elixir.bootlin.com/linux/v6.18/source/lib/kobject.c#L695
 >
 
-Because we also have the .get_direction() callback defined in struct
-gpio_chip in gpio/driver.h. :)
+Please don't add links third-party groks to git commit messages.
 
-This isn't a big problem. It can probably be fixed as Andy suggested:
-add gpio/defs.h, move these defines there and include it from
-consumer.h and driver.h. Possibly adding some more symbols to defs.h
-that are used both by drivers and consumers.
+> Cc: stable@vger.kernel.org
+> Fixes: c351bb64cbe6 ("gpiolib: free device name on error path to fix kmemleak")
+> Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
+> ---
+>  drivers/gpio/gpiolib.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 5eb918da7ea2..ba9323432e3a 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1263,7 +1263,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  err_free_descs:
+>  	kfree(gdev->descs);
+>  err_free_dev_name:
+> -	kfree(dev_name(&gdev->dev));
+> +	kfree_const(dev_name(&gdev->dev));
+>  err_free_ida:
+>  	ida_free(&gpio_ida, gdev->id);
+>  err_free_gdev:
+> --
+> 2.52.0.457.g6b5491de43-goog
+>
+>
 
-The bigger issue for me is the mix-up of the defines from dt-bindings
-and gpio/machine.h. Some of them share names but not values, others
-share both while some none. I have it on my list to start untangling
-it and provide interfaces for translating between OF and machine
-definitions. We already have that buried deep in gpiolib code but
-sometimes we need it externally - for instance: to translate
-properties between different types of fwnodes.
+I've never paid attention to this bit but it really looks broken. I understand
+that this string won't get freed until we initialize refcounting on the
+underlying kobject but reaching two abstraction layers below to get the string
+for freeing out of the kobject looks incorrect to me.
+
+It's also one of only two instances of doing kfree(dev_name(dev)), the other
+one being in drivers/scsi/hosts.c.
+
+It looks to me that the device name is not really used in
+gpiochip_add_data_with_key(). Can we move dev_set_name() after
+device_initialize()?
 
 Bart
 
