@@ -1,92 +1,104 @@
-Return-Path: <linux-gpio+bounces-30676-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30677-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1437AD339F1
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 18:01:58 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C927CD38425
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 19:20:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C7E1830469B5
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 17:00:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EB20630970BE
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 18:20:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63DF2369207;
-	Fri, 16 Jan 2026 17:00:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53AE339A7E7;
+	Fri, 16 Jan 2026 18:20:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BLJJjvkm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cts9ijlZ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E9D346A05;
-	Fri, 16 Jan 2026 17:00:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1432F340D93
+	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 18:20:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768582827; cv=none; b=hsKynySaMMYbJA1ce1/3BGtYCp0BlOMNxB6pMpRCbjtoV/eiEdogo8tdozkK6sYlskkd4j4J+t8/OE5UMGQLoS/nhZHRyc5NlO6XIr/FIRQebtnKLLifxhmjfeZ9ENdUYHqiikF8bGdHIvUbtdPo+BziNOum0lIzLc2b92Y/glw=
+	t=1768587605; cv=none; b=YjO80F3XNf5Rb6Mcve7iPabcgFhhu2SUmn0DqSEl3JN/yoXUe1CSHAiiMsNmNp9KwlRPLj29QcLDO7IP2XlXzcePSvpOQVb6bhWyklfL2dzSSzwee65WpTW6J0LJCByrtx/bsgSm+x/hvLfjiZbggaCXnE8v4C/k8TzNpgFwQck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768582827; c=relaxed/simple;
-	bh=cUHbTcgJAxojCEY9JsqBn/5z9xu/8gBW2Ewuq94yzRc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=UL5xZFujS8AxOipe15OCghG20AtOY2qKaZODlcWBchttGhOcMM/krUTZRTL2b/lpJxIKhzLiXgxViGq+IsI1cyeaMRL896Np55vaFOEr6mvWEcAx4rOg2rLetKxMDWUPkjdlEz8rn4c2CkIvZE7AFVOhE6C4ZuhiRx4L5MRKFVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BLJJjvkm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14F28C116C6;
-	Fri, 16 Jan 2026 17:00:22 +0000 (UTC)
+	s=arc-20240116; t=1768587605; c=relaxed/simple;
+	bh=A78PClFzhM6Qp6sOakTzG6TH9zXvYBnzmblGVUYvJJw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iBK/MIyGRLUOJSt4yODrtkWtGSQfGZ6pE+P73VGxhoXGO0AhsSjKYgnMgRuIwupb14Ed0BlU3w1Gj3oenbAy8l85v6kEUPLbJqvrtr3wFaF/lISqMfAD6UHKptOr0/wQAqFuchf+G+FBusWRfUtlLd2u5Duncwf0p6+01kKgvqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cts9ijlZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1CE8C2BC87
+	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 18:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768582826;
-	bh=cUHbTcgJAxojCEY9JsqBn/5z9xu/8gBW2Ewuq94yzRc=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=BLJJjvkmyFiYeAoUVSL86BZTMVcvt0LEYJkO6n1iG6LKfSjl8MD3ULm/XVl1aPUiC
-	 VWV23G607BrODNRFDyIM+tjPWPPtV6lgGNDIL+AcKWAga/9Ft2PUhCJCIyNUGxSUHh
-	 vb5ZlHwlfPsUTNiwC5wY4KMEyW5yNf5+MZl+80q22gw4/PKOVWwTJw6kB3XnZJwh8S
-	 m7cD43GvLH54Yg0KF5sXulfuiRGZUDv5aJtHhmDfLkL0ayzNznKZILZWI/qabkMX8w
-	 u9l8bZ4I6k3qyxl53BwvUE20n+enN/l+R+l2y5LrcQqtEHeboypfvZb+lPjndXBw0J
-	 c2+9Wd6bHHtNw==
+	s=k20201202; t=1768587604;
+	bh=A78PClFzhM6Qp6sOakTzG6TH9zXvYBnzmblGVUYvJJw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=cts9ijlZ1yT25U3a26EgSOKXC/jRd2SIQnKYPUzZxjaHzxkDI+suiYYe/SSFEimb4
+	 rGMgu0bDryQAPTPW297GXmM3xEkSGbMsJfzpmJV/29aGbwfdlZBrdP+2f/kYu/Igbx
+	 l5dvkifS95VfJZZ50FiDXCm8sCsUzriQ+TaBITCckO5nqdLZMZ5zIw1cLpx2rdeogq
+	 YM1J0/hai46xPfjG4G6VY/kd+7eVeXGJjJpZU0dg2FunB+8Kfz51BhSUadiHvjOzLY
+	 TC7TNKHBVLlqyFhuVjTIX7ltDJDPuE22hWcK7g3vrAmg0gSs7qGPPbE3af3J+HUd5N
+	 HdSZ8J9i3LBOQ==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-598f8136a24so2775037e87.3
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 10:20:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXTrMd08Hp6Vai19Ly3GOva9iMPvyjQMTqXs93O+z/glTh7Ifa9oEAW3xu7bUk8LwF432ABviVtlCI1@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaeLKb2/k9EzL9I3310imqOYg5LnashMCpwbwn5ukyvZ9C7gPE
+	tRiC/1KG18yZyDqIJ5iZruHi30QQCFlGAWxcT9gN+RzxGbPTOwbs4/0FhS88cPpALEgHFMwKqZv
+	rzZfXQyFF8MYPHlgpf5hqt7rD9fHLNlB82ateFtslPw==
+X-Received: by 2002:a05:6512:2513:b0:59b:b59e:5866 with SMTP id
+ 2adb3069b0e04-59bb59e5893mr265640e87.26.1768587603300; Fri, 16 Jan 2026
+ 10:20:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20260116080235.350305-1-tzungbi@kernel.org> <20260116080235.350305-2-tzungbi@kernel.org>
+ <DFQ45FWO4XHC.2BW7I9LGC76WT@kernel.org> <CAMRc=Medaqr5UPimc8o+VTy=9MgU5p8AXjArisQfBNqi7ktSGg@mail.gmail.com>
+ <20260116160424.GA14499@pendragon.ideasonboard.com> <DFQ5W41X6Z7S.3V6FRPXYMDJ1F@kernel.org>
+In-Reply-To: <DFQ5W41X6Z7S.3V6FRPXYMDJ1F@kernel.org>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Fri, 16 Jan 2026 19:19:50 +0100
+X-Gmail-Original-Message-ID: <CAMRc=MfAZxzd2hjqgDsXBR+UxgkaEQX0vR5nNZ=a+5WccUb4GQ@mail.gmail.com>
+X-Gm-Features: AZwV_QgZEwOQtGowmMJc-nCVnzez2lJWfnDDD9DSEfibkhEFIx5CfrKb_p3e-O8
+Message-ID: <CAMRc=MfAZxzd2hjqgDsXBR+UxgkaEQX0vR5nNZ=a+5WccUb4GQ@mail.gmail.com>
+Subject: Re: [PATCH v7 1/3] revocable: Revocable resource management
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tzung-Bi Shih <tzungbi@kernel.org>, 
+	Benson Leung <bleung@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Linus Walleij <linusw@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, linux-kselftest@vger.kernel.org, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
+	Dan Williams <dan.j.williams@intel.com>, Jason Gunthorpe <jgg@nvidia.com>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 16 Jan 2026 18:00:21 +0100
-Message-Id: <DFQ6ABRP8U2W.GZP8XMBPDO8Q@kernel.org>
-Subject: Re: [PATCH v7 0/3] drivers/base: Introduce revocable
-Cc: "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Tzung-Bi Shih"
- <tzungbi@kernel.org>, "Benson Leung" <bleung@chromium.org>, "Rafael J .
- Wysocki" <rafael@kernel.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>, "Linus
- Walleij" <linusw@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>, "Shuah
- Khan" <shuah@kernel.org>, <linux-doc@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <chrome-platform@lists.linux.dev>,
- <linux-kselftest@vger.kernel.org>, "Wolfram Sang"
- <wsa+renesas@sang-engineering.com>, "Simona Vetter"
- <simona.vetter@ffwll.ch>, "Dan Williams" <dan.j.williams@intel.com>,
- <linux-gpio@vger.kernel.org>
-To: "Jason Gunthorpe" <jgg@nvidia.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20260116080235.350305-1-tzungbi@kernel.org>
- <2026011607-canister-catalyst-9fdd@gregkh>
- <20260116160454.GN30544@pendragon.ideasonboard.com>
- <DFQ5D44A0348.PZJIGPL972N@kernel.org> <20260116165242.GO961588@nvidia.com>
-In-Reply-To: <20260116165242.GO961588@nvidia.com>
 
-On Fri Jan 16, 2026 at 5:52 PM CET, Jason Gunthorpe wrote:
-> The C code doesn't really work like that, it works on sync teardown
-> flows. If you want to write correct C code you need to think about all
-> the concurrency the driver has and ensure that removal undoes it
+On Fri, Jan 16, 2026 at 5:41=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
+wrote:
+>
+> On Fri Jan 16, 2026 at 5:04 PM CET, Laurent Pinchart wrote:
+> > Based on the discussions we had at LPC, the revocable resource manageme=
+nt API
+> > is not the right solution to handle races between device removal and us=
+erspace
+> > access.
+>
+> Please see: https://lore.kernel.org/all/DFQ5D44A0348.PZJIGPL972N@kernel.o=
+rg/
+>
+> > It is however a possibly useful tool for races between producers and co=
+nsumers
+> > *inside the kernel*.
+>
+> Do you have an example for such a case?
 
-Again, it depends: Sometimes a synchronized teardown is not possible. Iff a
-synchronized teardown is not possible by design, this is where revocable is
-useful instead.
+Isn't the GPIO use-case - which the series on top of it addresses - one?
 
-However, a synchronized teardown should of course always be preferred.
+With fw_devlink=3Doff it's quite easy to trigger all kinds of crashes
+with in-kernel users. I suggested using revocable in GPIO myself but I
+won't accept it as long as it impacts performance over "naked" SRCU.
 
-And just to clarify, since you said "the C code": The Rust code follows exa=
-ctly
-the the same principle, prefer synchronized teardown whenever possible.
-
-(The only difference with Rust is that we can always guard device resources=
- and
-iff synchronized teardown is ensured through the type system the guard beco=
-mes
-zero-cost for accesses.)
+Bart
 
