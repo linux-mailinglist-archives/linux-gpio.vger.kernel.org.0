@@ -1,148 +1,126 @@
-Return-Path: <linux-gpio+bounces-30659-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30660-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4534BD31D8C
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 14:30:55 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7293D324B9
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 15:04:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3CAD23015D3B
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 13:30:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 339CD30652AD
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 14:00:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C25E284672;
-	Fri, 16 Jan 2026 13:30:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12D3228C864;
+	Fri, 16 Jan 2026 14:00:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T6baq6J3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WeENGOUj"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166C42820C6
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 13:30:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB120287511
+	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 14:00:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768570248; cv=none; b=WNO7kJKzsg/bJGu600tP5t/YSGwo0zs/fn9AmAM4kc83rthG3sqO/skNjrNyMZczVsh5fUsGyFZfQAu3dmZkRWl3DIIo1qQdtr1ZqL+0Wpalqi9AMobyjCOo0Ej268Bly6A2rCrNCZnV/e8JsUe4Hi2aeABH/DL1brXDAMIkJho=
+	t=1768572008; cv=none; b=dQa8WEDe70ualtUo7/IW41H1lZH4CfUnjDt6dXlma88cxL6tac66NEEitN+dyqQHml/s9oFSY7FLfxYXAJovS4fvloWTmUWDzaMMxkL4s+2ExxY/HVrAIcJt4/mwPUuNdGBLmstvOnR498TcfQyRFVKmBPkZv6dpIjDaJsz2Mfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768570248; c=relaxed/simple;
-	bh=eGzB6OGr4m8+g8uVvAo6Ydy6NYM3NPFPawuIGPTHtRk=;
+	s=arc-20240116; t=1768572008; c=relaxed/simple;
+	bh=7bJWEVQ2MAfypxWKE2dScRRpRKUpqJ0WIWhC3xalUu4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VxC0q52vD4hehYu/fyHwmeMfEVx0CWHoEWjRKgQ8Ieio16saCpfg4TRbPt27qxcfpbuPrQ/PF+GW/7ZSfgUF6BEK6BPV3ubx9uACwCDydJwaai+oXOlENfGkuUxSuQF8t/yvihRiFni5X9mI1iDmByWiE2oVInjWM+Pq6RuJQMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T6baq6J3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C56C7C2BC87
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 13:30:47 +0000 (UTC)
+	 To:Cc:Content-Type; b=BEaqHbm6fDSGw4d9oTYJmd4YRUdWnIltcUGOajw/LUwOOWVtDLTIre0788wpmzQgnOtf+k7tTJQRPoGzY5LvxoCZYEAdKrcqe+w+WJMYdqVBx0zXX9qIorMHNSUiZgls+WJ1gqHPolpyOdw48bJedhXHyN+stZThImXkPEd8HvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WeENGOUj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEC05C19421
+	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 14:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768570247;
-	bh=eGzB6OGr4m8+g8uVvAo6Ydy6NYM3NPFPawuIGPTHtRk=;
+	s=k20201202; t=1768572008;
+	bh=7bJWEVQ2MAfypxWKE2dScRRpRKUpqJ0WIWhC3xalUu4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=T6baq6J35ev3l8kZcfx2qly83pUgbqVynqp7ELM4vdl3BB1gRw+xUsV68iZV+5s3Y
-	 Ydc7XekQVNrFOysAsb/3B3vsfGgBkPuBOPaAKyy0j/N5fzb4elCOlefyOtYxP9D7jw
-	 pgij0Jokga3jpRUDIB/ME8WXzAoKeQ1xqxbklRX+Y6DOtIHW48Vu5OfWjwDU0v+P6N
-	 HY9aM3sNy4SYTw9pwomcErDq3cOeSFigl60nVdmYirpRTFyHGUKSnHnH4D1aahyDFN
-	 HSSK0Xz/ZoHy+lSvOK3RMqEtcyNTh/LqHwS8Ob+qM8eSXMMg0RFM5C5xQgCjtDYYko
-	 o5hNQsoNUJeKQ==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-59b30275e69so2834142e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 05:30:47 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUlPeDfvXQQBP4SMJBJKDv9R/WpIaaTJaHVlK0KKvmbtSIbvb8oH25tg7XfS3S4kRnIoQd5Ggyikkct@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUtDJMYF0nEmUfEPZFky8bnwve9kpAEwOcxzwbxdtA0QAWUmcI
-	11pdmp9QCueBI0eIzApJi3o4s9Gwo5GAjwYcmr/RAFv6bgBHL7XDMpNqsj/lNFWlDGKC8tMD8pP
-	l3LvdHIc2aYtdPm86dibQjO7TrSBlhFzO5nkMA5zeSg==
-X-Received: by 2002:a05:6512:3e28:b0:59b:6ea9:6ece with SMTP id
- 2adb3069b0e04-59baffdcd6fmr789261e87.41.1768570246372; Fri, 16 Jan 2026
- 05:30:46 -0800 (PST)
+	b=WeENGOUjHHDQcddSX7OBrHH9e4TdqCWq1P9UFK+ESf+qOYrbJ3Lz57FW1NtZcbkD7
+	 0fvy59W2U51B3ga8gjez+dX64vdCJyROa0ih2uNiS6mtHDQSkHXWskwkxxMbAZe8vn
+	 4XSiyRNZi6Ag8jRwBETOO2f0OjsNfQe+c//Qxt7Rp56zmmk4OVi/a6QYz7yddxlBgX
+	 DixLkn2fVgmdwAqyECCNthVtcQKxV9ej5QdCvrWzL1LngSvYIV3eLKEj/2qtptODfS
+	 jFEQuDiiCgR5ZQg+LzCcrnteH6F5ZtWouPFgtonuy6AukAOXdX0WsTQOzAnZqnwadC
+	 b2CzzWnnUfhTg==
+Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-64472121ad5so1498281d50.0
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 06:00:08 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWFhOJSfB0JZ4o3pfxyZBQyz7ywX8IQ4f//LFEuW+DNkpGYfHWoEIGecQAJ56O7UrTueeLotlA712c3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzhnt84EXX4ACmyUXGeYNxGHW91ex7YkG3lVIpUnKq64T1XgRLw
+	Dbv23pqZa3mvzJHCUk2L85LeteWDPOgYbrUIuqdDKZ9+pklISPt26OVXCqM0xxYHu2K6vf2ssPi
+	ZODcNd+XW5Of2ymGYZPUMxCyFR6SXqBw=
+X-Received: by 2002:a05:690e:4191:b0:646:5127:ad97 with SMTP id
+ 956f58d0204a3-6491648f766mr2620228d50.28.1768572007984; Fri, 16 Jan 2026
+ 06:00:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260116081036.352286-1-tzungbi@kernel.org> <20260116081036.352286-2-tzungbi@kernel.org>
- <CAMRc=MeiQho5mfxGsL1AZ60brCzfox64XQao=xWnxMsdHF2-vA@mail.gmail.com> <2026011600-thirsty-troubling-dc76@gregkh>
-In-Reply-To: <2026011600-thirsty-troubling-dc76@gregkh>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Fri, 16 Jan 2026 14:30:33 +0100
-X-Gmail-Original-Message-ID: <CAMRc=Mc=So83ukL0t-UvQ2bntbpGuiBMa3zH4Bdi-XWEgMwnqQ@mail.gmail.com>
-X-Gm-Features: AZwV_Qj0zg3ZexZ9QZCtjYQVu6qiFXd_yXaDnIEZBuAnAK6JdVbjKDUdawvxezs
-Message-ID: <CAMRc=Mc=So83ukL0t-UvQ2bntbpGuiBMa3zH4Bdi-XWEgMwnqQ@mail.gmail.com>
-Subject: Re: [PATCH 01/23] gpiolib: Correct wrong kfree() usage for `kobj->name`
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Tzung-Bi Shih <tzungbi@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	chrome-platform@lists.linux.dev, linux-kselftest@vger.kernel.org, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
-	Dan Williams <dan.j.williams@intel.com>, Jason Gunthorpe <jgg@nvidia.com>, linux-gpio@vger.kernel.org, 
-	stable@vger.kernel.org, Benson Leung <bleung@chromium.org>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Linus Walleij <linusw@kernel.org>
+References: <20260114141352.103425-1-jie.i.li@nokia.com> <CAD++jLkyTMXAE_M2JFF5jzzLZ2Z-CV89uEGh4xHopWrGoYncbA@mail.gmail.com>
+ <CAO3NRJgNi88uhtN0RfbUUKPz_SSoceQyBTbScS-LV=9oYkDJqw@mail.gmail.com>
+In-Reply-To: <CAO3NRJgNi88uhtN0RfbUUKPz_SSoceQyBTbScS-LV=9oYkDJqw@mail.gmail.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Fri, 16 Jan 2026 14:59:56 +0100
+X-Gmail-Original-Message-ID: <CAD++jLmGMWjCD0gUcaJPuK0UzJa7nX1bdoVu-BA7aHAgcLTSpg@mail.gmail.com>
+X-Gm-Features: AZwV_QiUpV0ivqUg5M5deIVO1VpbgT7LlJ9eZW0zRn8C-PiMRUszJpWQSiHpkvM
+Message-ID: <CAD++jLmGMWjCD0gUcaJPuK0UzJa7nX1bdoVu-BA7aHAgcLTSpg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] i2c: add support for forced SDA recovery
+To: =?UTF-8?B?5p2O5p2w?= <lj29312931@gmail.com>
+Cc: wsa@kernel.org, linux-i2c@vger.kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org, 
+	linus.walleij@linaro.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@kernel.org>, Linux pin control <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 16, 2026 at 2:27=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Jan 16, 2026 at 01:15:17PM +0000, Bartosz Golaszewski wrote:
-> > On Fri, 16 Jan 2026 09:10:14 +0100, Tzung-Bi Shih <tzungbi@kernel.org> =
-said:
-> > > `kobj->name` should be freed by kfree_const()[1][2].  Correct it.
-> > >
-> > > [1] https://elixir.bootlin.com/linux/v6.18/source/lib/kasprintf.c#L41
-> > > [2] https://elixir.bootlin.com/linux/v6.18/source/lib/kobject.c#L695
-> > >
-> >
-> > Please don't add links third-party groks to git commit messages.
-> >
-> > > Cc: stable@vger.kernel.org
-> > > Fixes: c351bb64cbe6 ("gpiolib: free device name on error path to fix =
-kmemleak")
-> > > Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
-> > > ---
-> > >  drivers/gpio/gpiolib.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > > index 5eb918da7ea2..ba9323432e3a 100644
-> > > --- a/drivers/gpio/gpiolib.c
-> > > +++ b/drivers/gpio/gpiolib.c
-> > > @@ -1263,7 +1263,7 @@ int gpiochip_add_data_with_key(struct gpio_chip=
- *gc, void *data,
-> > >  err_free_descs:
-> > >     kfree(gdev->descs);
-> > >  err_free_dev_name:
-> > > -   kfree(dev_name(&gdev->dev));
-> > > +   kfree_const(dev_name(&gdev->dev));
-> > >  err_free_ida:
-> > >     ida_free(&gpio_ida, gdev->id);
-> > >  err_free_gdev:
-> > > --
-> > > 2.52.0.457.g6b5491de43-goog
-> > >
-> > >
-> >
-> > I've never paid attention to this bit but it really looks broken. I und=
-erstand
-> > that this string won't get freed until we initialize refcounting on the
-> > underlying kobject but reaching two abstraction layers below to get the=
- string
-> > for freeing out of the kobject looks incorrect to me.
-> >
-> > It's also one of only two instances of doing kfree(dev_name(dev)), the =
-other
-> > one being in drivers/scsi/hosts.c.
->
-> That one is wrong, I already rejected it :)
->
-> > It looks to me that the device name is not really used in
-> > gpiochip_add_data_with_key(). Can we move dev_set_name() after
-> > device_initialize()?
->
-> This should be cleaned up automatically by the driver core, no need to
-> free this on its own.
->
+Hi Jie,
 
-It will once we initiate kobject reference counting from
-device_initialize(). The code here still hasn't called it though. It
-doesn't look like it'll be freed to me on errors before
-device_initialize(). A later patch in this series seems to try to
-address it though so maybe this one's not even needed except for
-backporting to stable branches.
+On Thu, Jan 15, 2026 at 2:13=E2=80=AFPM =E6=9D=8E=E6=9D=B0 <lj29312931@gmai=
+l.com> wrote:
 
-Bartosz
+> Even if FLAG_OPEN_DRAIN is set, the function falls back to
+> gc->get_direction() if the FLAG_IS_OUT bit hasn't been established
+> yet. Crucially, some ASICs do not even implement a readable direction
+> bit in hardware.
+>
+> In many true open-drain hardware implementations, a line driven "high"
+> (high-impedance) is physically reported as an Input by the hardware
+> register.
+
+If this is the actual problem, then this is a Linux problem and not somethi=
+ng
+that should be solved by adding new flags to the OS-neutral device tree.
+So we can immediately stop trying to add stuff to device tree for this.
+
+What you would have to do is to augment the driver framework and
+code in Linux to deal with open drain modes better.
+
+> The function returns 1 because the line is currently high/floating or
+> the hardware lacks direction reporting.
+>
+> The I2C core then assumes the pin is "Input-only" and skips the
+> assignment of bri->set_sda.
+>
+> Bus recovery becomes impossible even though the hardware is fully
+> capable of driving the line low.
+
+So you need to think about what the framework needs to provide
+for the I2C recovery code to realize this line is open drain and
+can actually be driven high and low.
+
+You can't just rely on gpiod_get_direction() to be the only thing
+that will ever be provided just because it looks like that today.
+
+For example: if <linux/gpio/consumer.h> would provide
+gpiod_is_single_ended() (meaning it is open drain or open source)
+I think you could use this instead of special "force" flags.
+
+So implement something like that in the gpiolib code and
+headers instead. This avoid hacks like random DT flags.
+
+If the right open drain or open source flags are set on the line
+in the device tree then the gpiolib knows this and then you know
+you can also actively drive these lines and all you need is
+a way to query it.
+
+Yours,
+Linus Walleij
 
