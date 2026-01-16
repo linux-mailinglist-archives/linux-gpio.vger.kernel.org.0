@@ -1,71 +1,144 @@
-Return-Path: <linux-gpio+bounces-30664-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30665-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38424D32AFB
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 15:34:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BA2CCD32CC3
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 15:43:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6033630C5C90
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 14:31:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2AC413029C55
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 14:38:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DEBB392C53;
-	Fri, 16 Jan 2026 14:31:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AD6A3939BD;
+	Fri, 16 Jan 2026 14:38:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="b9jzi+wC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/srJcu2"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4193392C4B;
-	Fri, 16 Jan 2026 14:31:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6E139341A
+	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 14:38:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768573879; cv=none; b=irIK6zq6FiL4Ea7Lc19Kd4LaY8KhPB3i+dLwwVmMelGRw1LNDUT9XqA6fsevF6m9zsjh7hCBW/25wMrjb2TU1wOnzTcgzNd6ohwd4kKLOb/4A78S/RM3uywK/MYa95ie3EZ9ZOWa+W9m7ykb9NhF/Tn2glg7om3m6AFBw/UZimw=
+	t=1768574331; cv=none; b=flBi6ddsPoUK1FsE9ia0I9+WzOAiTMzKbLDWFc1ZK4IFI+k4NEHp2j21JbC33MT/aihTMu6BBAJSx4kjGxkjdC7i4mXORSgxEdXreJQZKZwSxREnk0Kn7GR2WJ2S5eaMlUuGLdECRtJAZddSjEcM43BycHprZaFvyBopRvbLnfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768573879; c=relaxed/simple;
-	bh=KDNG/2wpJQZeq8S5TLu0NWutXi3Q9wLLPog1R0POves=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oGXbFiBd0eEeh0Mn+1Zs1owxA3b5nqf56aqmn5fzfeflKDCsXewgGMjelbK/PnaF+EVZ9eJGCsTosG/TSLE8/YouqcY0Z986ptF6SFSGaltDSc2lEsHLCJk6TZ1dU52eupHQOGiT+v1EB1HDVP0zcTJEzftN6wG4/t0GG14pmW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=b9jzi+wC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34A47C16AAE;
-	Fri, 16 Jan 2026 14:31:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1768573879;
-	bh=KDNG/2wpJQZeq8S5TLu0NWutXi3Q9wLLPog1R0POves=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b9jzi+wCWQlxiZ5Mq7Ke0erqf5WTaAuABFSzCjtxFvMJ+HwhWYt6yB+YyLxcszCMX
-	 /9igWc5SBermqeswACuqvT+lf9ZWNJnSoh0zJuD8vBfp5+GOnRhKQGUKKsqbzWL0p0
-	 5CAVW3/NN95ywqTUd2+X68PhGl6uzS8DDuJQ2zUw=
-Date: Fri, 16 Jan 2026 15:31:16 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Linus Walleij <linusw@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] driver core: make pinctrl_bind_pins() private
-Message-ID: <2026011609-jeep-eatable-1d36@gregkh>
-References: <20260108125237.28092-1-bartosz.golaszewski@oss.qualcomm.com>
+	s=arc-20240116; t=1768574331; c=relaxed/simple;
+	bh=CeYWVW8VfM0P+9OVOOOqSKgq9221JvmOkwmMFowPykI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G1OV0TRknb7G3mDkEeQe9Vv1UWPBYKZY8A2fO6HRhYXT4AXZH9xfR/DB0r3Vk2DeYpX8+zg7y1NhVXc1GCPfJdyz/KjGRiN2JyNivYEfLsOuxFFuZ2dS3HXVGKPQLPEQ68VsaynrVUjQusppTRPEVFVGK9Kj+WwzAzrZOcm8q10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/srJcu2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41413C2BCB1
+	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 14:38:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768574331;
+	bh=CeYWVW8VfM0P+9OVOOOqSKgq9221JvmOkwmMFowPykI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=B/srJcu2r3cvdNI6HK8d6Kg+l8A/v0Bq/olfgH6KG4o4xi62a0HXFRi5TFQmV5H1e
+	 Lwi5/BvbmXsSS7NPOUaYqpumCEL4zeX6crZaRQD7MiDre21uViPRRmmffUkxIzV44b
+	 LpBtlAFE6FRI1B6MLnK9FQVcLCg/fadTDmAsh8vycF7ga6NY/js9LXphuCkn2lsuZJ
+	 sF6JvSaoZ5O5bV364tAHmRJEKNwHyyUkaWz6i7uua79W42zncyDuvWzR+b+AIcjfCg
+	 WttAs6nIuC81VUD48JLawqHW4N4IiIh1Fekt7D/S9sqtjKe7ey+awNDDL8iStuOnlC
+	 AlUXeDS+LReJA==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-59b6c89d302so1831332e87.1
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 06:38:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUcUhrRKo/UN8BwK8kW4f9hUXp5oM0s8P49+84LA8lNBd3C9G9hxz3nHfIlF9RMzdzThBsk8b8xbz9g@vger.kernel.org
+X-Gm-Message-State: AOJu0YyElDIR6bYomLZx1tcQeOXWeVajj2JPbcwbWLC4mcNfGNt48Ayx
+	KrdHqYmJS7Hi8EEdrxsudYtjy6rYiAhFtAKc8IGfBjHskuIs+1ybLnDdiKppR3i0LuJQOS0uroC
+	kOqkzIpI87wYWJFgK8ik0z1/147VpL8mv3W5mr5Q6Xw==
+X-Received: by 2002:a05:6512:2209:b0:595:910c:8eea with SMTP id
+ 2adb3069b0e04-59baeedb8d0mr1047903e87.32.1768574329704; Fri, 16 Jan 2026
+ 06:38:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260108125237.28092-1-bartosz.golaszewski@oss.qualcomm.com>
+References: <20260116081036.352286-1-tzungbi@kernel.org> <20260116081036.352286-2-tzungbi@kernel.org>
+ <20260116141356.GI961588@nvidia.com>
+In-Reply-To: <20260116141356.GI961588@nvidia.com>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Fri, 16 Jan 2026 15:38:37 +0100
+X-Gmail-Original-Message-ID: <CAMRc=MfNHuTYsZJ+_RqPN1TtLOHsenv2neD5wvhA18NH6m7XjA@mail.gmail.com>
+X-Gm-Features: AZwV_QgKGGwLD0w6o4kmw7zFNYd6T1XDEchQCsf09zNM0M9ftM2EdmkAv3QwV20
+Message-ID: <CAMRc=MfNHuTYsZJ+_RqPN1TtLOHsenv2neD5wvhA18NH6m7XjA@mail.gmail.com>
+Subject: Re: [PATCH 01/23] gpiolib: Correct wrong kfree() usage for `kobj->name`
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Tzung-Bi Shih <tzungbi@kernel.org>, Benson Leung <bleung@chromium.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Linus Walleij <linusw@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, linux-kselftest@vger.kernel.org, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
+	Dan Williams <dan.j.williams@intel.com>, linux-gpio@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 08, 2026 at 01:52:37PM +0100, Bartosz Golaszewski wrote:
-> pinctrl_bind_pins() is only used by driver core (as it should). Move it
-> out of the public header into base.h.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
->  drivers/base/base.h             | 9 +++++++++
->  drivers/base/pinctrl.c          | 2 ++
->  include/linux/pinctrl/devinfo.h | 6 ------
->  3 files changed, 11 insertions(+), 6 deletions(-)
+On Fri, Jan 16, 2026 at 3:14=E2=80=AFPM Jason Gunthorpe <jgg@nvidia.com> wr=
+ote:
+>
+> On Fri, Jan 16, 2026 at 08:10:14AM +0000, Tzung-Bi Shih wrote:
+> > `kobj->name` should be freed by kfree_const()[1][2].  Correct it.
+> >
+> > [1] https://elixir.bootlin.com/linux/v6.18/source/lib/kasprintf.c#L41
+> > [2] https://elixir.bootlin.com/linux/v6.18/source/lib/kobject.c#L695
+> >
+> > Cc: stable@vger.kernel.org
+> > Fixes: c351bb64cbe6 ("gpiolib: free device name on error path to fix km=
+emleak")
+> > Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
+> > ---
+> >  drivers/gpio/gpiolib.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > index 5eb918da7ea2..ba9323432e3a 100644
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -1263,7 +1263,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *=
+gc, void *data,
+> >  err_free_descs:
+> >       kfree(gdev->descs);
+> >  err_free_dev_name:
+> > -     kfree(dev_name(&gdev->dev));
+> > +     kfree_const(dev_name(&gdev->dev));
+> >  err_free_ida:
+> >       ida_free(&gpio_ida, gdev->id);
+> >  err_free_gdev:
+>         kfree(gdev);
+>
+> I don't think users should be open coding this, put_device() frees the
+> dev_name properly. The issue here is that the code doesn't call
+> device_initialize() before doing dev_set_name() and then tries to
+> fiddle a weird teardown sequence when it eventually does get initialized:
+>
+> err_remove_from_list:
+>         if (gdev->dev.release) {
+>                 /* release() has been registered by gpiochip_setup_dev() =
+*/
+>                 gpio_device_put(gdev);
+>                 goto err_print_message;
+>         }
+>
+> If gpiochip_add_data_with_key() is split into two functions, one that
+> does kzalloc(), some initialization and then ends with
+> device_initialize(), then a second function that calls the first and
+> does the rest of the initialization and error unwinds with
+> put_device() it will work a lot better.
+>
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In theory yes but you wouldn't be the first one to attempt to improve
+it. This code is very brittle when it comes to GPIO chips that need to
+be initialized very early into the boot process. I'm talking old
+drivers in arch which call this function without even an associated
+parent struct device. When I'm looking at it now, it does seem
+possible to call device_initialize() early but whether that will work
+correctly for all existing users is a bigger question.
+
+I'm open to trying it after v7.0-rc1 is tagged. This would give it
+enough time in linux-next to make sure it works.
+
+Bartosz
 
