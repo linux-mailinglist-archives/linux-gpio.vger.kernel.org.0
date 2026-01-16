@@ -1,132 +1,77 @@
-Return-Path: <linux-gpio+bounces-30679-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30680-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9676D38458
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 19:32:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BCA8CD38774
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 21:26:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 44A2A3040F2F
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 18:32:09 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 99879303EF8D
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Jan 2026 20:25:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33892230274;
-	Fri, 16 Jan 2026 18:32:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8522F3A4F29;
+	Fri, 16 Jan 2026 20:25:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b4SGA+/1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jzbN9C53"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7EC22836B1
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 18:32:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2168D3A4ABB;
+	Fri, 16 Jan 2026 20:25:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768588326; cv=none; b=VcOomRGKTRK6cr6nDn12YAFIjivoTEoAuJBz75u8bBp/eK5SERTyiiQ6aLzjqNkMYhh32XQDa3/8R56fqPXdMugirlgMdOE2r64UZDG6OFXcyFA+jKBsRvFNNeOVSsyLyyOVxWTYs24OEHnzZP1wR+ewTvZBCzxfZoR/fUBO260=
+	t=1768595120; cv=none; b=eRvq52BXZVOxjvKKL9MzCZiJW7r+/tF3d8i7LK+2/VNAfeFjyF6Q0RNFBTqK4Bru3h456fbjvD73FbWWzHMrujq5r8L7CGjjE/608lu6GJbd1ZqDkYa5X3UMhuHPHXl5XuTcEutDRrBVshK01b+FAkdtB0O8QbNYaUAs2bYl3fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768588326; c=relaxed/simple;
-	bh=Ss7qiRqTeuY+VD+9H9/ZWNCvERV6Dkawhl4DEc9LoVI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tX1CuzGDPUI1VsAvY/XmJbJQjJgVV2W1gpKx/PDVKKWX9vep3Wnv2+lH0FP7M5HqAgfafuIMOL/z6E9hzGWAPhgxITvMRzHsBjEWFCaQ7IYDjGzHtGVgiF5QQcFNBXs3fdl2iliwjNc8EirzXUsb6zf85zAy8K0E0nH2U9HO/sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b4SGA+/1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E2F8C2BCB0
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 18:32:05 +0000 (UTC)
+	s=arc-20240116; t=1768595120; c=relaxed/simple;
+	bh=/ZQkrJoYMooAg3gii1CM/DsZxUu9bh/TS5nDYrufRTo=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=HZUtg0io5aO4rLV/m5bHX6ZDfrSTiu+JsmhGA2QYgl0vx4OZ7W9O0J4tn46KGTyq2ETNz6sIk3cWOZ+SQ0FV8RI91UwkEUbi2BXA6KDEYJzbSz2nij82MaQ5cpaR+af2sUhcpou+mU5EntzBal4c8aQdu7bc8QZjy+WLQFJF/Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jzbN9C53; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49716C19423;
+	Fri, 16 Jan 2026 20:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768588325;
-	bh=Ss7qiRqTeuY+VD+9H9/ZWNCvERV6Dkawhl4DEc9LoVI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=b4SGA+/1MZXjRUOv6t/Nl8NtJ/OLE9LVuNugo9h6zdSvVvdEmabRufWLmKz2c+Vhy
-	 +bbjsOm4lhhi70Bb2IF6Am1apRaUIVDgVHhHFCf3miqVmjr8J0/X5JrpofEmx0fJ56
-	 u+r9m1oXG4y8YOHIhn/PcguhnDW1O4/mIF346Py2RNG8seasZ29/mxrCec6JtqAkUQ
-	 Fwvrlhpn9jJ6KJydXlQBRPSGu+wcOrk0fIWswrZ41m8XSG1KmGhjtxpqI4QMNfg3hD
-	 QPavFKm/WZDhd1vxAfUkpwj4YQYHogJJfPe5/6H4glBBPFVqo4FzMqC2XDS0QGbAKh
-	 BGxHq+jgsO3Jg==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-59b8466b4a8so1972569e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Jan 2026 10:32:05 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVE5sery5tHTzpTUEqKUAFx7WLHnSpfOWJ73fCoXX0ek6noOhX1TFjqDOgUjiNus8LQoCopC77axE3A@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8BvzS8xQZ/nwP/dr55j9hwvEC9ojFCaqzmg7eAaapb6EgJpSZ
-	eK+6MESki0Pf7rlHj1tExEV7jB4WVG8cG24GgFbrbKijY/l/2ZOYbBo5mjxwLVzFfP7ZZGR6wVo
-	u1n2KYsZ308hHEN+b6OUrhbh12n+BnLeCVtvWVdthLw==
-X-Received: by 2002:a05:6512:b81:b0:59b:9f92:301f with SMTP id
- 2adb3069b0e04-59bafdb63a8mr1058854e87.7.1768588324162; Fri, 16 Jan 2026
- 10:32:04 -0800 (PST)
+	s=k20201202; t=1768595118;
+	bh=/ZQkrJoYMooAg3gii1CM/DsZxUu9bh/TS5nDYrufRTo=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=jzbN9C53qWcXysyWW1qDa/VJjgCuuR9cPm59Zo91bOBQwsFM94D0A5tEhDGVsHFTN
+	 5IZlK8+6HqrPMLJ+KLNMShaHxAnmPNy8VodeaXj64/9Q0qlWZ0bR9Q4QzjV7BFns5u
+	 M7gtETAGPTUjblk74St7b1VlvVCokrg2nhtkYxoVwNcJPjnX+nkZSQZvi6Pf3uFwwu
+	 LhralM5kYdNUA91+Dot4tdzQ5Ux+hB0qFGI0eW487zTqmcpFjz5l8igwL/s5dcH4wQ
+	 bRiAppazx4x8HMhAfgXVGjQpZSEEl5ijl1IeaR9+X31BOFdicTH5FcD1z27qTC7HaU
+	 4tyGAMYbXKJtw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id F2B33380CED1;
+	Fri, 16 Jan 2026 20:21:50 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio fixes for v6.19-rc6
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20260116112608.11227-1-bartosz.golaszewski@oss.qualcomm.com>
+References: <20260116112608.11227-1-bartosz.golaszewski@oss.qualcomm.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20260116112608.11227-1-bartosz.golaszewski@oss.qualcomm.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.19-rc6
+X-PR-Tracked-Commit-Id: 471e998c0e31206ff0eac7202b2659698cf9b46e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c2a44a02d785b5dc06d68060079e2daf67a67e5a
+Message-Id: <176859490964.789588.11067370899538254018.pr-tracker-bot@kernel.org>
+Date: Fri, 16 Jan 2026 20:21:49 +0000
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260116080235.350305-1-tzungbi@kernel.org> <20260116080235.350305-2-tzungbi@kernel.org>
- <DFQ45FWO4XHC.2BW7I9LGC76WT@kernel.org> <CAMRc=Medaqr5UPimc8o+VTy=9MgU5p8AXjArisQfBNqi7ktSGg@mail.gmail.com>
- <20260116160424.GA14499@pendragon.ideasonboard.com> <DFQ5W41X6Z7S.3V6FRPXYMDJ1F@kernel.org>
- <CAMRc=MfAZxzd2hjqgDsXBR+UxgkaEQX0vR5nNZ=a+5WccUb4GQ@mail.gmail.com> <20260116182431.GA1134360@nvidia.com>
-In-Reply-To: <20260116182431.GA1134360@nvidia.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Fri, 16 Jan 2026 19:31:51 +0100
-X-Gmail-Original-Message-ID: <CAMRc=McsrthHS4kcV7UkmdVFS4nr9vXe8Z_kQODvMUYxVkE8KQ@mail.gmail.com>
-X-Gm-Features: AZwV_QhX6LG8DkljEPjMvfuFGbrj6wIYYufM6rhcWWImQbypzvqc5Ui2tF-rlh8
-Message-ID: <CAMRc=McsrthHS4kcV7UkmdVFS4nr9vXe8Z_kQODvMUYxVkE8KQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] revocable: Revocable resource management
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Tzung-Bi Shih <tzungbi@kernel.org>, Benson Leung <bleung@chromium.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	chrome-platform@lists.linux.dev, linux-kselftest@vger.kernel.org, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
-	Dan Williams <dan.j.williams@intel.com>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 16, 2026 at 7:24=E2=80=AFPM Jason Gunthorpe <jgg@nvidia.com> wr=
-ote:
->
-> On Fri, Jan 16, 2026 at 07:19:50PM +0100, Bartosz Golaszewski wrote:
-> > On Fri, Jan 16, 2026 at 5:41=E2=80=AFPM Danilo Krummrich <dakr@kernel.o=
-rg> wrote:
-> > >
-> > > On Fri Jan 16, 2026 at 5:04 PM CET, Laurent Pinchart wrote:
-> > > > Based on the discussions we had at LPC, the revocable resource mana=
-gement API
-> > > > is not the right solution to handle races between device removal an=
-d userspace
-> > > > access.
-> > >
-> > > Please see: https://lore.kernel.org/all/DFQ5D44A0348.PZJIGPL972N@kern=
-el.org/
-> > >
-> > > > It is however a possibly useful tool for races between producers an=
-d consumers
-> > > > *inside the kernel*.
-> > >
-> > > Do you have an example for such a case?
-> >
-> > Isn't the GPIO use-case - which the series on top of it addresses - one=
-?
-> >
-> > With fw_devlink=3Doff it's quite easy to trigger all kinds of crashes
-> > with in-kernel users.
->
-> Does this series solve that? It looked to me like it just replaces the
-> existing SRCU with a wrapper?
->
+The pull request you sent on Fri, 16 Jan 2026 12:26:08 +0100:
 
-SRCU already *did* solve it. Revocable *is* a wrapper around SRCU that
-generalizes the initial solution.
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.19-rc6
 
-Replacing SRCU with a generalized wrapper is fine but there are
-subsystems out there, where the problem is much less trivial. Take I2C
-for example: the struct device management is so broken that there
-isn't even anything *to revoke* yet. It'll take years of little
-reworks before we can even use revocable at all.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c2a44a02d785b5dc06d68060079e2daf67a67e5a
 
-I'm not against it as a library of functions. But TBH I looked at the
-series and - besides making the code run slower - it also kind of
-makes it harder to read. With *naked* SRCU it's very clear what's
-going on, when you start hiding the logic, it becomes needlessly
-obfuscated.
+Thank you!
 
-I want to first see revocable match current GPIO performance and then
-we can talk about accepting it.
-
-Bartosz
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
