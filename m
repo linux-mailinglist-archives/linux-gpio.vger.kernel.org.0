@@ -1,94 +1,108 @@
-Return-Path: <linux-gpio+bounces-30748-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30749-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65724D3BBFF
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 00:45:29 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38A38D3BC12
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 00:52:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4F46F303294D
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jan 2026 23:45:18 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8545D302A797
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jan 2026 23:52:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 611B32773E4;
-	Mon, 19 Jan 2026 23:45:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B845C29DB64;
+	Mon, 19 Jan 2026 23:52:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cs+jznJ7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p1fRNObD"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D9A287511
-	for <linux-gpio@vger.kernel.org>; Mon, 19 Jan 2026 23:45:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A019287511
+	for <linux-gpio@vger.kernel.org>; Mon, 19 Jan 2026 23:52:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768866317; cv=none; b=YqmITdX+oDG62YvhmhyAqU7sQ+htyLv2JlhPgNBgfOMiC5BRv8p52R0KBcmHT1Z39bl+nQSCgyJgBUSjq28tYL4w3NwuRNMfBLBuJxBGKzDSwNUQvyvIm469lRhq/A317+Bnt7pNXjeGPPeAabvisnoZMsrULH2My4GJ7RexZ4k=
+	t=1768866736; cv=none; b=ZRr43pgLsSXcQ7FRaBJf304UdrRr8gfptBAVt6mWS0lmZ27sIxZf/vNjhw0qKvHx45KzlUIdixQXg7fKk355Rv0OEQA0XjOdjst8YJZNsNN1ghHn3QnvfQRs7J2bGQBLpdoL99n6SXVrM9c4xsknwbKYelZjJ5irvfYQMkzq2ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768866317; c=relaxed/simple;
-	bh=/GJynEOLKSv7xkKVwHivTDhJGXb+Yk9wy0d8DLe3Axk=;
+	s=arc-20240116; t=1768866736; c=relaxed/simple;
+	bh=oEUu9/PDf523PRaQvLKq/iXwr4E9yKFjaIG8HW8PyjA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SdekWQC90E+DbWYiCkYGDQ6/a9uDSLZyuVRkFTAA3wsxklGDgmsIo7Kkz/9mkH/BnsiFnrFTyefRogYqDC8xIeFOHZ6aFb/w/vw+RtjWT3eTK8Pxo/S6JmV1oYRWFSq5ZC8fev215/KPNY5fw6uTVEyUrAIjb/sUcfZ6TK59ysM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cs+jznJ7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1BC9C19424
-	for <linux-gpio@vger.kernel.org>; Mon, 19 Jan 2026 23:45:16 +0000 (UTC)
+	 To:Cc:Content-Type; b=CYDadjMCwLLd0NRD4B3uPZlnjwhEd9bJ9FV47pW7Xd++dTSKTc+MMqvbWkRbfqukUQarOFObAlG5LAMweNzJegZrZ7lQF4aJV4rC1jCfGH3mbt0gGDX9lNdu3f33IFMVC/MB4x9gNFfkKUI8tNMyoppy01IACneId4CRC1ysOxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p1fRNObD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EA52C116C6
+	for <linux-gpio@vger.kernel.org>; Mon, 19 Jan 2026 23:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768866316;
-	bh=/GJynEOLKSv7xkKVwHivTDhJGXb+Yk9wy0d8DLe3Axk=;
+	s=k20201202; t=1768866736;
+	bh=oEUu9/PDf523PRaQvLKq/iXwr4E9yKFjaIG8HW8PyjA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Cs+jznJ7D/LinvIIi/HnoTSXtHiYT8iQgq8Hah/JjoitqhZTuosyynT4/YkP7VuHB
-	 KUpLuOrcxglhpxR0wnBjTchSzPaEjOcmJW6L2Et8zxFgsVmBNiMdWJBTJ9XOCR3kJa
-	 uwIP5R8QKupKR4Fgp6xqloCt4sHh5CivxwpPf9lXdau36QOK1Q4MO7JxJLs2COVAg9
-	 TPpQZUDCIiJ6vLwcFE+S1ePj5e5HHMmrBCAspmAr/MXg4XGuykqb1bc/AekZRYgBKa
-	 nTnI4bO56HZSIId3RwTKTnBqGu0x8+tbe+jheb1u5j+an2sSnebHpwB0qM1zWMGKWL
-	 eviRvOzzyhOiA==
-Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-64937edbc9eso717168d50.2
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Jan 2026 15:45:16 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV4Th+6uzwg+tAiEH1W9qXnYlusuyPof5Hu0C0cAjKd/dnvUs4Y3AV9OvVp+zMiSC0AtKxuaZPh2E+X@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFMegHwpJnzLyIu8JDvAGoK3ZaBvhJqmXPEAZfrNZkwqmILWEh
-	Yzb0tVs7w+OMo4S5B5o9yz12gHx7ToWWz79p6oEFklnGJZEYoHyBcjeWdsH3nOx1jMHZpF9qfxn
-	3kf03guzBs6W1W9afx2cFxbq7xK0sL+o=
-X-Received: by 2002:a05:690e:d57:b0:644:7398:6677 with SMTP id
- 956f58d0204a3-649176c5edcmr9915435d50.11.1768866316022; Mon, 19 Jan 2026
- 15:45:16 -0800 (PST)
+	b=p1fRNObD1fayH8hVIj8ARBKin7GncYXFtALKlfE99kRfDWhzb498K1nNL5Dfwj1kQ
+	 NC/3A0TQnWp9yzRURdIbLil3TnHKexA5uocZYaxRDjPQzUPSNqxnTpi7hQ226mRI4v
+	 TqCxUjz46PIi9IW9Wzj1xZ725hPrDY36RfJuidS3i9Xp88PentbwSaJshAdYkZiYp5
+	 cC1EyjzmIqdVIcANdtvrfhfeGuebPY5qn5doAJ5Dw0cFikX2oJtr6GxEaKvHCUMQfj
+	 NEkxZVnOs8epjbE7lsc3hfEIwHflA1mpUZUxS1h8VFhjldioE1n/wWypMRo7od0qOq
+	 94g+cnCfEBMgA==
+Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-6447743ce90so4160045d50.2
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jan 2026 15:52:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUS6fAfI78tAH1hcCd5Lgvxnv5X4KXpBw7BIcAOIih5b0yodb9p7GHOjfsMl2vSeOrqtQA+IiwS3cXW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+78itcXv4qDp6wupyIkQVYoR9mW0zd0VEW56nrbczsoBWdz3J
+	Du8//RcfsPEG1Uqwz8LwNoZ0jfqvEwdd0N+tUhrfYgnFByqRzZnfKwhLF7Q7GLL5gMZG78q4UHS
+	mUGDtcVS9tNPK/Y/cSmMQ7NElhYFD6bs=
+X-Received: by 2002:a05:690e:190b:b0:640:cc09:b7c8 with SMTP id
+ 956f58d0204a3-6493c7f3a3fmr116732d50.23.1768866735546; Mon, 19 Jan 2026
+ 15:52:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260119-rearrange-germproof-3e3096cc0da4@spud>
-In-Reply-To: <20260119-rearrange-germproof-3e3096cc0da4@spud>
+References: <20260108-kx-pinctrl-aib-io-pwr-domain-v2-0-6bcb46146e53@linux.spacemit.com>
+In-Reply-To: <20260108-kx-pinctrl-aib-io-pwr-domain-v2-0-6bcb46146e53@linux.spacemit.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Tue, 20 Jan 2026 00:45:05 +0100
-X-Gmail-Original-Message-ID: <CAD++jL=i5o5JbqD_7jhFY5cR-420Vb3hnNXv5nrTd6-FHon5Dw@mail.gmail.com>
-X-Gm-Features: AZwV_QjAUjnSzmlLmheKmZxyjX0zc-vt7I5JC5j7vG1h-pUwzK5RrmS9BNiifTw
-Message-ID: <CAD++jL=i5o5JbqD_7jhFY5cR-420Vb3hnNXv5nrTd6-FHon5Dw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] Microchip mpfs/pic64gx pinctrl part 2
-To: Conor Dooley <conor@kernel.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	Valentina.FernandezAlanis@microchip.com
+Date: Tue, 20 Jan 2026 00:52:04 +0100
+X-Gmail-Original-Message-ID: <CAD++jLnM=1iyb0-=Jzqq+jPKtSvR+dbb1w8BNNcr+evdQFg4Eg@mail.gmail.com>
+X-Gm-Features: AZwV_QgGDEeGRtBiw30NZCmvNLT-lDgyzgro6X2hF8bkv_0hnJ5tDvF5IEFLosE
+Message-ID: <CAD++jLnM=1iyb0-=Jzqq+jPKtSvR+dbb1w8BNNcr+evdQFg4Eg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] pinctrl: spacemit: support I/O power domain configuration
+To: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 19, 2026 at 12:04=E2=80=AFPM Conor Dooley <conor@kernel.org> wr=
-ote:
+On Thu, Jan 8, 2026 at 7:43=E2=80=AFAM Troy Mitchell
+<troy.mitchell@linux.spacemit.com> wrote:
 
-> v3 here, with the rfc dropped. I've still got the property checking
-> stuff in my todo-list but not tested it sufficiently after the changes
-> to add generic string properties yet.
-> I only moved my drivers into the microchip dir, I'll come along and do a
-> pass on the rest if you're happy with what's here.
+> This series adds support for configuring IO power domain voltage for
+> dual-voltage GPIO banks on the Spacemit K1 SoC.
+>
+> On K1, IO domain power control registers determine whether a GPIO bank
+> operates at 1.8V or 3.3V. These registers default to 3.3V operation,
+> which may lead to functional failures when GPIO banks are externally
+> supplied with 1.8V but internally remain configured for 3.3V.
+>
+> The IO power domain registers are implemented as secure registers and
+> require an explicit unlock sequence via the AIB Secure Access Register
+> (ASAR), located in the APBC register space.
+>
+> This series ensures that pin voltage configuration correctly reflects
+> hardware requirements.
+>
+> Signed-off-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 
-Looks good!
+Excellent work in this patch series Troy!
 
-I could not apply the patches because I have Johans patch removing
-the default y in my tree, could you rebase on my "devel" branch?
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/lo=
-g/?h=3Ddevel
+> Troy Mitchell (3):
+>       dt-bindings: pinctrl: spacemit: add syscon property
+>       pinctrl: spacemit: support I/O power domain configuration
 
-Pls make sure patch 1 does not re-introduce default y...
+These two patches applied to the pin control tree.
 
-Then I will apply the first 5 patches (patch 6 goes to the SoC tree).
+>       riscv: dts: spacemit: modify pinctrl node in dtsi
+
+Please funnel this one through the SoC tree.
 
 Yours,
 Linus Walleij
