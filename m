@@ -1,190 +1,136 @@
-Return-Path: <linux-gpio+bounces-30724-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30725-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A480D3A1FF
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jan 2026 09:46:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C3CBAD3A628
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jan 2026 12:05:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1B9B8303C9C3
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jan 2026 08:46:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ED24530484AB
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jan 2026 11:04:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE85A34D4D6;
-	Mon, 19 Jan 2026 08:46:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0470C358D39;
+	Mon, 19 Jan 2026 11:04:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mrWU2mgm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ps6pk6Cw"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A953E34D4F5
-	for <linux-gpio@vger.kernel.org>; Mon, 19 Jan 2026 08:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FD9276050;
+	Mon, 19 Jan 2026 11:04:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768812389; cv=none; b=TKhMN9dAeVUwCnfa44Syk32vteylQgAWmhIsC+Q3T5pb4IaFpYrOAIrWsXH5SoGgYNJR/vuP0TLP/nmQyL5/ITKwTpqXmXPQjrq2Qi+HaggTfcXVlbGPhui5tgZM0RQhv+XqDdIgv+Ii6VqgqBDttQPiVuDlsaHyUwpHyyGT4Fo=
+	t=1768820666; cv=none; b=spZBTftFxRhVrGyBIfMQa2e/MSK3q5Lls/oULzZVvao3qPrqK0Bh/7AcCiykf16UaKoocbTK6VcXRslqHfN2spmYlf0ATI2oQ627YLfvszu8AnoPNm/OIvNkBW2l1s22pFLxfgDaqI2eOtREkn/rxcz5cZjE7YQb+4mcvp7siIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768812389; c=relaxed/simple;
-	bh=+BMUh8L0o+7ThP9nhOP4cDMkmocufhkTcZxIfL6Mjbo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rjDI3WXoaOrcRwIfvpIl70PsNaPphekOFFxb93y9HEfmGpfRDrbsCzbET1cyDF5ClHYoCHsSx3N52oR/VFs33B3p34qKIeFLLsic3EV/aU4mAS6ANomex7RXxDprLiKMSa2PVpoUrYCmnVFbRv6PL/nPQS2DXNZiz+9ZLdbv+CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mrWU2mgm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3104C2BC87
-	for <linux-gpio@vger.kernel.org>; Mon, 19 Jan 2026 08:46:28 +0000 (UTC)
+	s=arc-20240116; t=1768820666; c=relaxed/simple;
+	bh=MR1PewTGnGp+fP1R8iq0n/khc0hb/z+MoOgdKDHz3dM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cWOhQWNxaYNCkQ8GckRTb/nHhVwArKLRKKn5HKbbQYCKBqdVJOF+jcBDkSeAkT+kiEtp8kUVXyHKGpVTNlp6NrYxQk9D9WKwkmQxLC+/SanncPy3W5VeCm3W9cxbJksT9XuJsGwsj6hLB/WVmXNd5VGHCFMjfdJZqsguUmnkLDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ps6pk6Cw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EB6BC19422;
+	Mon, 19 Jan 2026 11:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768812388;
-	bh=+BMUh8L0o+7ThP9nhOP4cDMkmocufhkTcZxIfL6Mjbo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mrWU2mgmyW1Y5GB+oqR2exVR4vGfIl8NCZWIPcTND6IcA//vd8ihU+h7giz5KICzj
-	 ZkZshzF61g/ucsRgulSreUK/cFmXkZVbkU3fZlb+l8juO9Gpng2wETgzT3RTCQH4Kv
-	 i5HmeB0dcZvUrbFEtJZ/w5WLRRnwmE9cKaV1gYmpkt9nKp8lQGsKTqPU98Nq9iBvfr
-	 4NwufRhqR2lkKZy6g4WRS7zRH58I3SdPyt+GMi1j1uA4QXyfC9ITeCFxYZCCJYSixT
-	 FU8Fwi6RL3hdGPSN+vWa9cgwtiD0j5B2gCvNwsC/moRVtZUY5BjeGpJzPKRg9OkxP/
-	 rjDROsGB6L3jg==
-Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-649295a4a5bso665389d50.2
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Jan 2026 00:46:28 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVPjo9f4HVgE0u+kZgxtun2flDZq6LJ9p9XsiQ3br8acXjsFLEyUaOnZeBaQWOGPXHyXfwz2vvFFuNL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4EbExIqmNpQreL3sjl0KzxFTlbdHAvEut78wAAFfBEsNILI9A
-	Da9yupszGnpGEIt0XmoUtHzC0HEtSPMxxrZW1+Gue6onYxc61lhXYkhAT3ZGJUUCfoZU6lceNhD
-	doEPwKhlPX2ipI4alHnY4jVxEIoePjK4=
-X-Received: by 2002:a05:690c:12:b0:789:2be7:ae80 with SMTP id
- 00721157ae682-793c53dd8fbmr189522497b3.54.1768812388165; Mon, 19 Jan 2026
- 00:46:28 -0800 (PST)
+	s=k20201202; t=1768820666;
+	bh=MR1PewTGnGp+fP1R8iq0n/khc0hb/z+MoOgdKDHz3dM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Ps6pk6CwvQvFXEFUzFsmV1pXameQnYwhs6Bwp4H+y44lT1S18fWy5EBFxHIHmMDrx
+	 au3/ALZLiaU6V643OpU27/+vyoLZHF7h8AnA/1K6D2AVX+C+6HTgDr4mo+LHb9hwGi
+	 OW9stYDCoPUHhbJSrVFlGR5cf6Vc5b3UbsTYqF0cq61k7xzqtd3LF7k/Sb+9hAhMq2
+	 PNCPa0hCFk7oFJMwtpvZZGw3pzBdCcFo7F6JQEI2WDPajJa60mhMQEUA4kOrxKXMQA
+	 e0ck6R6sG0oa5xwUk07rOqvPNPWBqnpCBdtyrqqMF6hkTdAdrPYwHlNxfTyo/aG/YQ
+	 m7qHLRx+Tet0A==
+From: Conor Dooley <conor@kernel.org>
+To: linusw@kernel.org
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Valentina.FernandezAlanis@microchip.com
+Subject: [PATCH v3 0/6] Microchip mpfs/pic64gx pinctrl part 2
+Date: Mon, 19 Jan 2026 11:03:51 +0000
+Message-ID: <20260119-rearrange-germproof-3e3096cc0da4@spud>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260113-mcp23s17-multiple-addr-names-v1-0-f14b60f92c82@yoseli.org>
- <1987899.tdWV9SEqCh@jeanmichel-ms7b89> <CAD++jLmBegkZyKoo2cgtgJt0-8Pn-H2XaAoqipgPp0hTmro+sQ@mail.gmail.com>
- <2818765.mvXUDI8C0e@jeanmichel-ms7b89>
-In-Reply-To: <2818765.mvXUDI8C0e@jeanmichel-ms7b89>
-From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 19 Jan 2026 09:46:16 +0100
-X-Gmail-Original-Message-ID: <CAD++jLkmOHF8sPa2OMW9QF3+MHaFWtmpsZje0UU2q0EaN4OExA@mail.gmail.com>
-X-Gm-Features: AZwV_QgDeyLEupibvPdMNnjxzOKw0sccMFeHAJvFJT88Sa8aqr0_KcU7Y0O9KBA
-Message-ID: <CAD++jLkmOHF8sPa2OMW9QF3+MHaFWtmpsZje0UU2q0EaN4OExA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: mcp23s08: Add multi-chip example
-To: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>, Lars Poeschel <poeschel@lemonage.de>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2923; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=Sd0pRUwsLZKvCSYByTCo6AUVIZc/dJjlRt45iBmxsjg=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJl5/Gus/hX0ChiZTnCd26QhKDHvwbS9xSsTCl2PzWyya ElOv7qno5SFQYyLQVZMkSXxdl+L1Po/Ljuce97CzGFlAhnCwMUpABPhMGZk2LBpse+UL7Mfn40S 2PF+443/rV0Xr3IwvI+4YdTzfAbXtXmMDLO+HWJnm3ri1MqWWyvX1Syu3v/TjfsWw0fXtVdqJgY fCuEBAA==
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
 
-Hi Jean-Michel,
+From: Conor Dooley <conor.dooley@microchip.com>
 
-paging in Lars Poeschel who might be able to shed some light on this!
+Hey Linus,
 
-On Mon, Jan 19, 2026 at 7:17=E2=80=AFAM Jean-Michel Hautbois
-<jeanmichel.hautbois@yoseli.org> wrote:
-> Le lundi 19 janvier 2026, 00:12:05 heure normale d=E2=80=99Europe central=
-e Linus
-> Walleij a =C3=A9crit :
-> > On Wed, Jan 14, 2026 at 6:29=E2=80=AFPM Jean-Michel Hautbois
+v3 here, with the rfc dropped. I've still got the property checking
+stuff in my todo-list but not tested it sufficiently after the changes
+to add generic string properties yet.
+I only moved my drivers into the microchip dir, I'll come along and do a
+pass on the rest if you're happy with what's here.
 
-> > <jeanmichel.hautbois@yoseli.org> wrote:
-> > > > Make some fancy - if: clauses to decide the maxItems from the
-> > > > compatible.
-> > > > Don't hesitate to ask for help if this gets complicated, I get a pa=
-nic
-> > > > every time I have to deal with it because of the whitespacing busin=
-ess.
-> > >
-> > > Indeed, I was probably a bit optimistic :-).
-> > >
-> > > What about this:
-> > >  allOf:
-> > >    - $ref: /schemas/spi/spi-peripheral-props.yaml#
-> > >
-> > > +  - if:
-> > > +      properties:
-> > > +        compatible:
-> > > +          contains:
-> > > +            enum:
-> > > +              - microchip,mcp23s08
-> > > +              - microchip,mcp23008
-> > > +    then:
-> > > +      properties:
-> > > +        gpio-line-names:
-> > > +          maxItems: 32
-> > > +        pinmux:
-> > > +          properties:
-> > > +            pins:
-> > > +              maxItems: 32
-> > > +  - if:
-> > > +      properties:
-> > > +        compatible:
-> > > +          contains:
-> > > +            enum:
-> > > +              - microchip,mcp23s17
-> > > +              - microchip,mcp23s18
-> > > +              - microchip,mcp23017
-> > > +              - microchip,mcp23018
-> > > +    then:
-> > > +      properties:
-> > > +        gpio-line-names:
-> > > +          maxItems: 128
-> > > +        pinmux:
-> > > +          properties:
-> > > +            pins:
-> > > +              maxItems: 128
-> > > +
-> > >
-> > > This would allow up to 4 chips to be on the same CS.
-> >
-> > Hm I don't get it why everything is multiplied by 4 here?
-> >
-> > Doesn't each chip have its own instance? And the instance is
-> > limited to 8 or 16 lines/pins?
-> >
-> > > But in the
-> > > microchip,mcp23s17 datasheet, it says:
-> > > "Three Hardware Address Pins to Allow Up to Eight Devices On the Bus"
-> >
-> > Doesn't each device have its own entry?
->
-> As far as I get it, for I2C variants, each chip has its own device node,
-> so gpio-line-names would be limited to 8/16 per node.
->
-> However, for SPI variants (mcp23s08/s17/s18), multiple chips can share
-> the same SPI chipselect via the 'microchip,spi-present-mask' property.
->
-> In this case, a single DT node represents multiple physical chips,
-> and gpio-line-names needs to cover all of them:
-> - mcp23s08: up to 4 chips =C3=97 8 GPIOs =3D 32 lines
-> - mcp23s17: up to 8 chips =C3=97 16 GPIOs =3D 128 lines
->
-> Should I split the conditionals to apply different limits for I2C vs SPI?
->
-> Or did I miss something which is totally possible too -_-' ?
+Cheers,
+Conor.
 
-Just that several chips share the same chip select does not
-mean they should have the same device instance.
+changes in v3:
+- drop the todos
+- rename the kconfig symbol
+- move my drivers into a microchip dir
+- use power-source instead of custom property
 
-You can also confirm that Linux instantiates one regmap
-and one gpio_chip per device node. The ngpio accumulated
-in pinctrl-mcp23s08_spi.c  mcp23s08_probe() is not used for
-anything, in fact it is garbage AFAICT and should be deleted.
+main changes in v2:
+- bank voltage is now controllable from dt
+- bank lockdown no longer controllable from dt
+- dt_node_to_map callback is now a(n attempt at a) new generic function
+- some schmitt properties now no longer supported
 
-Further, we apparently have no in-kernel device tree actually
-using this property. Just grep for microchip,spi-present-mask
-and mcp,spi-present-mask: no-one is using this property.
-No-one on the entire internet either. So I seriously wonder
-about this thing.
+CC: Linus Walleij <linus.walleij@linaro.org>
+CC: Rob Herring <robh@kernel.org>
+CC: Krzysztof Kozlowski <krzk+dt@kernel.org>
+CC: linux-kernel@vger.kernel.org
+CC: linux-gpio@vger.kernel.org
+CC: devicetree@vger.kernel.org
+CC: Valentina.FernandezAlanis@microchip.com
 
-Given that the code bails out for the SPI device if this property
-isn't present and we still have a bunch of SPI-based
-MCP23S08 in the tree I wonder what is going on. Are all of
-these broken?? They clearly never use more than 8/16
-lines/GPIOs anyway.
+Conor Dooley (6):
+  pinctrl: move microchip riscv pinctrl drivers to a folder
+  pinctrl: add generic functions + pins mapper
+  dt-bindings: pinctrl: document polarfire soc mssio pin controller
+  pinctrl: add polarfire soc mssio pinctrl driver
+  MAINTAINERS: add Microchip mpfs mssio driver/bindings to entry
+  riscv: dts: microchip: add pinctrl nodes for mpfs/icicle kit
 
-I think you can safely assume 8/16 lines for any device
-here.
+ .../pinctrl/microchip,mpfs-pinctrl-mssio.yaml | 109 +++
+ .../microchip,mpfs-mss-top-sysreg.yaml        |   4 +
+ MAINTAINERS                                   |   6 +-
+ .../dts/microchip/mpfs-icicle-kit-common.dtsi |   1 -
+ .../dts/microchip/mpfs-icicle-kit-fabric.dtsi |  63 ++
+ .../boot/dts/microchip/mpfs-pinctrl.dtsi      | 167 ++++
+ arch/riscv/boot/dts/microchip/mpfs.dtsi       |  16 +
+ drivers/pinctrl/Kconfig                       |  25 +-
+ drivers/pinctrl/Makefile                      |   4 +-
+ drivers/pinctrl/microchip/Kconfig             |  19 +
+ drivers/pinctrl/microchip/Makefile            |   5 +
+ .../{ => microchip}/pinctrl-mpfs-iomux0.c     |   8 +-
+ .../pinctrl/microchip/pinctrl-mpfs-mssio.c    | 737 ++++++++++++++++++
+ .../{ => microchip}/pinctrl-pic64gx-gpio2.c   |   2 +-
+ drivers/pinctrl/pinconf.h                     |  16 +
+ drivers/pinctrl/pinctrl-generic.c             | 189 +++++
+ 16 files changed, 1343 insertions(+), 28 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/microchip,mpfs-pinctrl-mssio.yaml
+ create mode 100644 arch/riscv/boot/dts/microchip/mpfs-pinctrl.dtsi
+ create mode 100644 drivers/pinctrl/microchip/Kconfig
+ create mode 100644 drivers/pinctrl/microchip/Makefile
+ rename drivers/pinctrl/{ => microchip}/pinctrl-mpfs-iomux0.c (98%)
+ create mode 100644 drivers/pinctrl/microchip/pinctrl-mpfs-mssio.c
+ rename drivers/pinctrl/{ => microchip}/pinctrl-pic64gx-gpio2.c (99%)
+ create mode 100644 drivers/pinctrl/pinctrl-generic.c
 
-I'd like to hear from someone using the MCP23S* devices
-over SPI if their device is actually working :/
+-- 
+2.51.0
 
-Yours,
-Linus Walleij
 
