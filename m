@@ -1,94 +1,154 @@
-Return-Path: <linux-gpio+bounces-30715-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30716-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35E2DD39B7B
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jan 2026 00:46:32 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88037D39B95
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jan 2026 01:10:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7C6163006A55
-	for <lists+linux-gpio@lfdr.de>; Sun, 18 Jan 2026 23:46:29 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 169AF3007881
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jan 2026 00:10:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 880AA323416;
-	Sun, 18 Jan 2026 23:46:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E88D8F48;
+	Mon, 19 Jan 2026 00:10:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F0QESCk8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZnRQzSo1"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADF831328B
-	for <linux-gpio@vger.kernel.org>; Sun, 18 Jan 2026 23:46:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59268F5B
+	for <linux-gpio@vger.kernel.org>; Mon, 19 Jan 2026 00:10:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768779988; cv=none; b=E67cIx2fB1ShwjYSDTMLDmRDgOuw9xq3Y8IZTmJMzFTGlzeoqNiMQRYfSSKa2ImEwfC/CmQJYa2UwzCtZBxzO/it0rmJ45OWuQpNms7uvKPDOOAGLIJCMpbdk9RcioHetbNkwvSK+CQ9fLHgElURENjJXQoSNKyOdp1PQEeBlYg=
+	t=1768781406; cv=none; b=Ds9nWtELpWw+IbWdGY2o7mkP5SJHIZqnIikanLNuB4qv3Kv0qK6JjGYMaxzp1Q/LIz0mQkgFqeT/mRNBUBZp66yKZ5aHx/zVuiH9bIet4AuU9WYQ0Jyn3XbhQU4filSYi4yK/PBD/UBQxJx1dJMxQPDUKBNORIv04cfGB3b2ye8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768779988; c=relaxed/simple;
-	bh=fmJuw03++MrtIEVUfe9zccVFflBW/PgCC0Emo6+ulTs=;
+	s=arc-20240116; t=1768781406; c=relaxed/simple;
+	bh=qTKLxffbvsRQtEokM8325JVSKPK/nqolGbWrdv4nhRk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T+YSM3QNRvDdulB90u0G88EsXdZQLpHMzkpKUoamAQhVUv2bhc7Wc7Ns15fZ4f25cKCzcn5Q3Gm0GlfIR02dMHj0amqm8ZGCxEcViqmT/IChcJ4narYKvic0zSVYnK/53yJKYmWt1+LzzyLJ9cow92A3erxCQP8DzcnNcUW+gaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F0QESCk8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF227C2BC86
-	for <linux-gpio@vger.kernel.org>; Sun, 18 Jan 2026 23:46:27 +0000 (UTC)
+	 To:Cc:Content-Type; b=VU5i5eKTn80d4461QdxfD3dI3qEB9yHx7MuOxdLg2H3GN622Nv/kwlHFFhwPwACXf1Tn+tVTRjHjubomZ1MzvgsJRhSy/QRzHDMvc2zOEQTzkS3JME8VbyZ4HLksUAyyD/12Kwfltn5JjHPa38GJ19StIpi8fQc80OyiXu8S/5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZnRQzSo1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66669C19424
+	for <linux-gpio@vger.kernel.org>; Mon, 19 Jan 2026 00:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768779987;
-	bh=fmJuw03++MrtIEVUfe9zccVFflBW/PgCC0Emo6+ulTs=;
+	s=k20201202; t=1768781406;
+	bh=qTKLxffbvsRQtEokM8325JVSKPK/nqolGbWrdv4nhRk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=F0QESCk8sIvqMm8FSVt1pds8W23KZcVncdTdZ6I2xZxBHSAq0b1EU4PG4p5/YzIks
-	 PuJVeeED/TRSWAKYsuhXjROsUZp3Hn0MN3pHIOXlwQ3VCBHmIUThCG42T98hb9sdEN
-	 bKOdcdfpiMCw2BfWd5FYaqPvu8bcq/Tig3zALy1GiqKOV6OlabXThaMS9tnGrj2M/p
-	 2+6jXcMCuFCJQTo4BysNCgKx1CalkcQIH1w1RD0S1KUI78abVDfcy7d2ClbqpYHupv
-	 1353m4+Ipt7TPFxscSja8aLDAWK/3IVYPwUA0aHJhVfsG13W+rm+Ke4QgtDs+yiZPu
-	 af+VGrySImrbA==
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-78d6a3c3b77so49377697b3.0
-        for <linux-gpio@vger.kernel.org>; Sun, 18 Jan 2026 15:46:27 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWwChaEXvRObmMNtffViYyPYMX5T7GKH/vjhr0AzCjlQKLZawdN8Tr6TfxwAxBd9SuQwkYSSYuGGrpt@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4/90sYuwsbe/2ok3tN4G0j/9zJukNFWEfNO0w2zaSuImIl5zG
-	bDap6K939p/jASViVTg0qYrwNGzwyVpkkj7/XVVzvLIhqc3qsZAqfLji/2PIARH8u/SqKulFh1j
-	EJJhJX7U4wKJG81V9rbruqiuRVwAxx4U=
-X-Received: by 2002:a05:690e:1883:b0:644:5166:3065 with SMTP id
- 956f58d0204a3-6491692f165mr7106290d50.21.1768779987241; Sun, 18 Jan 2026
- 15:46:27 -0800 (PST)
+	b=ZnRQzSo1C7ZQwqMFx3EEBM/RYdqpvdNxHOexf9vNYVRC7WIZNUjnI/Rwrc4R3Gohu
+	 cNaJmf3ym2DNDnmo6n31kCoGNEVDpur6xB+53C0Ny/XzgYCw47oji9xAe9Y/7FuRPb
+	 tM+U+fQEcUtnQJkba319YswAKhprWak5CP2rydUiNZPeAmvBWBSXe1wQ3QcPQYs6qh
+	 TBDcyVabKxp8f4wck9FejWOUm6flPd3EihxSO7ukpjS92+5b1qrMv6iaw6M18J7kLA
+	 XnzfW/0UsTDyrANSLOEEI/NS8sGMZRdfREjUYm32gV/UbTP3sIZD0e+u9CVBRQ6t1P
+	 bLNs+04/VpWKQ==
+Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-6446fcddf2fso3313311d50.0
+        for <linux-gpio@vger.kernel.org>; Sun, 18 Jan 2026 16:10:06 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW+HYgxMyBAK+Jne3WMO3jQeCrcrMfD3+HHAqcezhLtJErKc/9aEJ0rnKdUyvJ9VlAxfMzJdeRQxvYl@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCQm/smOppNpkFx5YCE9aLJU2Se0rUlvB+GTFVleElHsb/hmO0
+	9NL30MRQ7nSMgJXTDP3dPhRG4d5HD4WbMsqB8Mz0W11bTTywNoyLywlD67w0WuqMBB1yNrSD8Gq
+	HRS9LYtl+H+DWjqHE48R3sU1UMjH47Rc=
+X-Received: by 2002:a53:ac93:0:b0:646:c0b7:a893 with SMTP id
+ 956f58d0204a3-6491648c02bmr6820774d50.8.1768781405707; Sun, 18 Jan 2026
+ 16:10:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260117180615.10368-2-krzk@kernel.org>
-In-Reply-To: <20260117180615.10368-2-krzk@kernel.org>
+References: <20251014191121.368475-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20251014191121.368475-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20251016-dimmed-affidavit-90bae7e162aa@spud> <CA+V-a8un1cF=acNjG=79_v7oaR8gzBQ+3z1As8AqrJnOnk-OUw@mail.gmail.com>
+ <CA+V-a8vq2EvTb_hXxRzW_Rbp+BPLSaLsEVkvaTjc1zRin-RV=Q@mail.gmail.com>
+ <20251208-headgear-header-e17e162f0f52@spud> <CA+V-a8s0gPbe2ffmN1G_7ibVL4+=FKUEQZu3_CwQL=U0T3--DQ@mail.gmail.com>
+In-Reply-To: <CA+V-a8s0gPbe2ffmN1G_7ibVL4+=FKUEQZu3_CwQL=U0T3--DQ@mail.gmail.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 19 Jan 2026 00:46:16 +0100
-X-Gmail-Original-Message-ID: <CAD++jL=5q6gvy0OEG5H4VY6=NJwpdrFk6hyPbhc4vBRAD3hvEg@mail.gmail.com>
-X-Gm-Features: AZwV_QjiBOvy-Nk8tBAVu1rug7zhMUrm03mPDCdZcDEnZnlbNgNLxRql5ih_ybg
-Message-ID: <CAD++jL=5q6gvy0OEG5H4VY6=NJwpdrFk6hyPbhc4vBRAD3hvEg@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: samsung: drivers for v6.20/v7.0
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Sylwester Nawrocki <snawrocki@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Peter Griffin <peter.griffin@linaro.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Date: Mon, 19 Jan 2026 01:09:54 +0100
+X-Gmail-Original-Message-ID: <CAD++jL=J2UpxQSNrZhCMw2fJ0umM8NRtNys2zMBouAFBoK0m2A@mail.gmail.com>
+X-Gm-Features: AZwV_QiqsC1aFqkodB0QjH_7sM4XqD_P7m1ZaeWi3fJkgnm2Ynk4oH-rYO0N0Mw
+Message-ID: <CAD++jL=J2UpxQSNrZhCMw2fJ0umM8NRtNys2zMBouAFBoK0m2A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: renesas,r9a09g077: Document pin
+ configuration properties
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Conor Dooley <conor@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jan 17, 2026 at 7:06=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
+Hi Lad,
 
-> The following changes since commit 8f0b4cce4481fb22653697cced8d0d04027cb1=
-e8:
->
->   Linux 6.19-rc1 (2025-12-14 16:05:07 +1200)
->
-> are available in the Git repository at:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tag=
-s/samsung-pinctrl-6.20
->
-> for you to fetch changes up to 8c483209a6fc71a555fec4a0c99b05e46a5bd38c:
->
->   pinctrl: samsung: Add Exynos9610 pinctrl configuration (2026-01-11 12:1=
-0:29 +0100)
+I think this back-and-forth must be a bit stressful. Sorry about that.
 
-Pulled in!
+On Wed, Jan 14, 2026 at 9:53=E2=80=AFPM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+
+> > > > > > +      renesas,drive-strength:
+> > > > > > +        description:
+> > > > > > +          Drive strength configuration value. Valid values are=
+ 0 to 3, representing
+> > > > > > +          increasing drive strength from low, medium, high and=
+ ultra high.
+> > > > >
+
+> I got the feedback from the HW team "The RZ/T2H drive strength
+> (driving ability) is expressed using abstract levels such as Low,
+> Middle, and High. These values do not correspond directly to specific
+> mA units.
+
+But they do correspond to *something* electrical inside the
+silicon do they not? Then what is that?
+
+I think it is just 1, 2, 3 or 4 driver stages.
+
+> To determine how much current the pin can actually drive,
+> the engineer must refer to the electrical characteristics table.
+> Therefore, the drive strength in RZ/T2H is a parameter that switches
+> the internal output transistor mode rather than directly representing
+> a physical drive current.
+>
+> Consequently, expressing RZ/T2H drive strength in milli- or
+> micro-amps, as suggested by the reviewer, is inappropriate. To
+> accurately reflect the SoC's hardware specification, introducing a
+> custom property is essential."
+
+This is past my point. What is the maximum current dissapation?
+
+I am asking for the current flowing through the pin if it connected
+to ground and 1 second after the driver is turned on, or however
+long time it takes for any dynamic transients to die out.
+
+> To elaborate more on this [0] has the tables which are extracted from
+> the HW manual [1] (which needs login). For example, considering SDHI
+> referring to table 58.39 in [0] the drive strength can be calculated
+> for SD using  I =3D C =C3=97 (delta V / deltaT).
+
+This is so clearly about dynamic currents, I am asking for
+*static* *maximum* for each setting. In SI unit, milliamperes.
+
+The document says:
+
+  drive-strength-microamp:
+    description: sink or source at most X uA
+
+So *at most*.
+And low, middle, high isn't any SI unit.
+
+If you *really* want to make this complicated and related to
+an equation using capacitance, voltage and time, then you are
+perhaps looking for the slew-rate property:
+
+  slew-rate:
+    $ref: /schemas/types.yaml#/definitions/uint32
+    description: set the slew rate
+
+This we haven't defined, because it has exactly the dynamic
+properties you are talking about. It can be low/medium/high
+and depend on the load. It reflects something like
+V/s (voltage change per time unit) in the end.
 
 Yours,
 Linus Walleij
