@@ -1,44 +1,44 @@
-Return-Path: <linux-gpio+bounces-30727-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30728-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C27CD3A620
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jan 2026 12:04:45 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EEEED3A622
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jan 2026 12:04:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 709B730286C1
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jan 2026 11:04:32 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id AA63E302DB20
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jan 2026 11:04:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9D7A500945;
-	Mon, 19 Jan 2026 11:04:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 262063590CA;
+	Mon, 19 Jan 2026 11:04:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WMfVAmVS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gp4aI2+M"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D273590BF;
-	Mon, 19 Jan 2026 11:04:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76A5500945;
+	Mon, 19 Jan 2026 11:04:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768820671; cv=none; b=WFu1RdWXGuD/XyVjPDYutC7rgJT/RBHlDI0HNeVglN6w9NbM26b8xQLymiln8C6BWx/LX/injqPjKAXmdpt9kzMLptBc7yQrDdrNaFFDhYmekviD5YI/yC+plCPyqxc9RS3jlgagH5nhpimR9sxsIn8lsoxq1qDR8c4GPwVgYm8=
+	t=1768820673; cv=none; b=cwuek+okq638JgiC7gxmoRcuoEAdcd6N5M1vUJgszMKjZUBxxEBQJYmsr/BbBFSl+6Rwa0vBGD7Eq5Nbdz0TKyww7YTcjthMA3WnSMgyuCHohjSq+oWE5LV9oCGOQcun4xpPht808JjoKAODKFrOw3RldLPVScexmX+R8izoAl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768820671; c=relaxed/simple;
-	bh=qrE0iyx32CrlLykRMkHpplSrDxoo8JgPJRkbCoPqrWE=;
+	s=arc-20240116; t=1768820673; c=relaxed/simple;
+	bh=Aw4O/tAH2CFoL17mTtGgcACPbZ5HoHxw5W7CgBBZw4w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fohZkIIxKLx2FPtWzaD2hTHUnh48YHa4nkRH8Q4qaIiPmAZJ3elOiOXxz03F3IFIOGg4Azg6tIp3ao64hDVaToCPTdhAzKCPMR4iOR1XxGm7HOnOdq/0MqnZFmvHqQQz9WZSyCK30+XkhLbEjHMG14VXSVi0g1Dhk+4u50xrt1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WMfVAmVS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35777C116C6;
-	Mon, 19 Jan 2026 11:04:29 +0000 (UTC)
+	 MIME-Version; b=WPLgGjneQ7d58kBbTM5SLheLvYUR2SHf9rBQveXSymsMfWKVfLcsYdp+tbl3NIh3lIiO5LHUvM40JcCp0N+kVVt8cC6mYfzbY38oN4v5jGpzK/orIGkoQH/bQY7JRlhIGPG8aZxvL2PGTp5YHpvvNx+rVLXAkXMBSVPuUmLPu1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gp4aI2+M; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 929A4C19425;
+	Mon, 19 Jan 2026 11:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768820671;
-	bh=qrE0iyx32CrlLykRMkHpplSrDxoo8JgPJRkbCoPqrWE=;
+	s=k20201202; t=1768820673;
+	bh=Aw4O/tAH2CFoL17mTtGgcACPbZ5HoHxw5W7CgBBZw4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WMfVAmVSNSc+GuelgspJmRBi9+fcFw5KSD6qIL96ktHCfkqIKBrxt4oUJ4JfkwwQi
-	 k4DiYmhZzbQk11e46qUXXPMHVhyykran/FqXYpHGZeorSm3q9j9ogc9E0n8LptHFBx
-	 OYHX65HXQlsehcZpvwgNfseYlHr+m2hJxdxMk7ghD/Ypb1Av2BWmMMvrsSC+UHeiJb
-	 XIANzzUuibyu10mLskEZwRISzakRuhDnIL0RPgo19SysxmoSqXmixLIT9/VBbZ6Yyk
-	 qOgsct5zg32k8VQs1VRxHX8K/O+cqY9OMoyvnxtEPJdqP/uMGlxvVK0gDvzvkRsHdm
-	 GYcRxZJ8YpqAg==
+	b=gp4aI2+MnjEjqC7veAjVt1XEJSWEtE5ZiHotJM6zopQfgsnmkFZ7r8x/yp1Dzz2ls
+	 ch2nBPlzo3pQqIwbdOWEb4qEZ2bcWa1Mj68+cddLckv9uKktY1x9uMqTpHGFoDVWJR
+	 OVJRII3yt8bfxuG+DLIUSCn0Wo/LWqfDBPfNUKWsLev/h91donmodezK5UO80DXIex
+	 qE6ynsE6TWPS0VrQOtRw8fXsOhtej9T35K+SUsTFqJ2DIxa/1bSUXKpe4RqLCtUycY
+	 zw9z/Ru/INbEsfwGdPee0vyjkv0VD+4lvGvZsT4sb4pYQMFhI0RfeOkxpva9ngHtSt
+	 VOktaKuJIFrZQ==
 From: Conor Dooley <conor@kernel.org>
 To: linusw@kernel.org
 Cc: conor@kernel.org,
@@ -50,9 +50,9 @@ Cc: conor@kernel.org,
 	linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	Valentina.FernandezAlanis@microchip.com
-Subject: [PATCH v3 2/6] pinctrl: add generic functions + pins mapper
-Date: Mon, 19 Jan 2026 11:03:53 +0000
-Message-ID: <20260119-altitude-hardhead-dbf4fb6f1798@spud>
+Subject: [PATCH v3 3/6] dt-bindings: pinctrl: document polarfire soc mssio pin controller
+Date: Mon, 19 Jan 2026 11:03:54 +0000
+Message-ID: <20260119-selector-motto-506568614489@spud>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260119-rearrange-germproof-3e3096cc0da4@spud>
 References: <20260119-rearrange-germproof-3e3096cc0da4@spud>
@@ -62,275 +62,161 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8218; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=zZ8BxvgX6/g/itLznDT3+eEO8kxCEFsQrBjzmr/TzIY=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJl5/BuSP27/q1hj81I04JHegn/8cq9LlwtHZc32E/zxw t2zYOrjjlIWBjEuBlkxRZbE230tUuv/uOxw7nkLM4eVCWQIAxenAEzkojIjw4FjaywdKnT/5Jaa vqoPLFhwJLRRfMLqpW3hbQVn/l5zt2Nk2LRy+/SdXm6vD2h8+RbcIlBpmfz9hdPp9OI3O12r7/+ /xwcA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5136; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=4O8W1Kk5A/8Bu7EPK38qeO65/dXnbeqNTeICHehav8g=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJl5/Bvir+38yNlYxNC7ZdGbzgbfYB6TBR8eCp6zmuFwQ Mwha8/ejlIWBjEuBlkxRZbE230tUuv/uOxw7nkLM4eVCWQIAxenAEwk+hvDf78rBfnyijZH5m3+ qdz0sstQcHfvTyYd1Wn3gp3919va2TEyNNt0f3o71Vb75BSW6pXKASuTPv+8uyHU92Gd4zYvrbk nOQA=
 X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
 Content-Transfer-Encoding: 8bit
 
 From: Conor Dooley <conor.dooley@microchip.com>
 
-Add a generic function to allow creation of groups and functions at
-runtime based on devicetree content, before setting up mux mappings.
-It works similarly to pinconf_generic_dt_node_to_map(), and
-therefore parses pinconf properties and maps those too, allowing it
-to be used as the dt_node_to_map member of the pinctrl_ops struct.
+On Polarfire SoC, the Bank 2 and Bank 4 IOs connected to the
+Multiprocessor Subsystem (MSS) are controlled by IOMUX_CRs 1 through 6,
+which determine what function in routed to them, and
+MSSIO_BANK#_IO_CFG_CRs, which determine the configuration of each pin.
+
+Document it, including several custom configuration options that stem
+from MSS Configurator options (the MSS Configurator is part of the FPGA
+tooling for this device). "ibufmd" unfortunately is not a 1:1 mapping
+with an MSS Configurator option, unlike clamp-diode or lockdown, and I
+do not know the effect of any bits in the field. I have no been able to
+find an explanation for these bits in documentation.
 
 Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- drivers/pinctrl/Kconfig           |   6 +
- drivers/pinctrl/Makefile          |   1 +
- drivers/pinctrl/pinconf.h         |  16 +++
- drivers/pinctrl/pinctrl-generic.c | 189 ++++++++++++++++++++++++++++++
- 4 files changed, 212 insertions(+)
- create mode 100644 drivers/pinctrl/pinctrl-generic.c
+ .../pinctrl/microchip,mpfs-pinctrl-mssio.yaml | 109 ++++++++++++++++++
+ .../microchip,mpfs-mss-top-sysreg.yaml        |   4 +
+ 2 files changed, 113 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/microchip,mpfs-pinctrl-mssio.yaml
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index d2a414450c16..6cc5e214f4f3 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -25,6 +25,12 @@ config GENERIC_PINCONF
- 	bool
- 	select PINCONF
- 
-+config GENERIC_PINCTRL
-+	bool
-+	depends on GENERIC_PINCONF
-+	depends on GENERIC_PINCTRL_GROUPS
-+	depends on GENERIC_PINMUX_FUNCTIONS
-+
- config DEBUG_PINCTRL
- 	bool "Debug PINCTRL calls"
- 	depends on DEBUG_KERNEL
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index 05737b1afec9..f7d5d5f76d0c 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -7,6 +7,7 @@ obj-y				+= core.o pinctrl-utils.o
- obj-$(CONFIG_PINMUX)		+= pinmux.o
- obj-$(CONFIG_PINCONF)		+= pinconf.o
- obj-$(CONFIG_GENERIC_PINCONF)	+= pinconf-generic.o
-+obj-$(CONFIG_GENERIC_PINCTRL)	+= pinctrl-generic.o
- obj-$(CONFIG_OF)		+= devicetree.o
- 
- obj-$(CONFIG_PINCTRL_AMD)	+= pinctrl-amd.o
-diff --git a/drivers/pinctrl/pinconf.h b/drivers/pinctrl/pinconf.h
-index e1ae71610526..2880adef476e 100644
---- a/drivers/pinctrl/pinconf.h
-+++ b/drivers/pinctrl/pinconf.h
-@@ -160,3 +160,19 @@ pinconf_generic_parse_dt_pinmux(struct device_node *np, struct device *dev,
- 	return -ENOTSUPP;
- }
- #endif
-+
-+#if defined(CONFIG_GENERIC_PINCTRL) && defined (CONFIG_OF)
-+int pinctrl_generic_pins_function_dt_node_to_map(struct pinctrl_dev *pctldev,
-+						 struct device_node *np,
-+						 struct pinctrl_map **maps,
-+						 unsigned int *num_maps);
-+#else
-+static inline int
-+pinctrl_generic_pins_function_dt_node_to_map(struct pinctrl_dev *pctldev,
-+					     struct device_node *np,
-+					     struct pinctrl_map **maps,
-+					     unsigned int *num_maps)
-+{
-+	return -ENOTSUPP;
-+}
-+#endif
-diff --git a/drivers/pinctrl/pinctrl-generic.c b/drivers/pinctrl/pinctrl-generic.c
+diff --git a/Documentation/devicetree/bindings/pinctrl/microchip,mpfs-pinctrl-mssio.yaml b/Documentation/devicetree/bindings/pinctrl/microchip,mpfs-pinctrl-mssio.yaml
 new file mode 100644
-index 000000000000..efb39c6a6703
+index 000000000000..fe05196160f4
 --- /dev/null
-+++ b/drivers/pinctrl/pinctrl-generic.c
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/Documentation/devicetree/bindings/pinctrl/microchip,mpfs-pinctrl-mssio.yaml
+@@ -0,0 +1,109 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/microchip,mpfs-pinctrl-mssio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#define pr_fmt(fmt) "generic pinconfig core: " fmt
++title: Microchip Polarfire SoC MSSIO pinctrl
 +
-+#include <linux/array_size.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/slab.h>
++maintainers:
++  - Conor Dooley <conor.dooley@microchip.com>
 +
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinctrl.h>
++properties:
++  compatible:
++    oneOf:
++      - const: microchip,mpfs-pinctrl-mssio
++      - items:
++          - const: microchip,pic64gx-pinctrl-mssio
++          - const: microchip,mpfs-pinctrl-mssio
 +
-+#include "core.h"
-+#include "pinconf.h"
-+#include "pinctrl-utils.h"
-+#include "pinmux.h"
++  reg:
++    maxItems: 1
 +
-+static int pinctrl_generic_pins_function_dt_subnode_to_map(struct pinctrl_dev *pctldev,
-+							   struct device_node *parent,
-+							   struct device_node *np,
-+							   struct pinctrl_map **maps,
-+							   unsigned int *num_maps,
-+							   unsigned int *num_reserved_maps,
-+							   const char **group_names,
-+							   unsigned int ngroups)
-+{
-+	struct device *dev = pctldev->dev;
-+	const char **functions;
-+	const char *group_name;
-+	unsigned long *configs;
-+	unsigned int num_configs, pin, *pins;
-+	int npins, ret, reserve = 1;
++  pinctrl-use-default: true
 +
-+	npins = of_property_count_u32_elems(np, "pins");
++patternProperties:
++  '-cfg$':
++    type: object
++    additionalProperties: false
 +
-+	if (npins < 1) {
-+		dev_err(dev, "invalid pinctrl group %pOFn.%pOFn %d\n",
-+			parent, np, npins);
-+		return npins;
-+	}
++    patternProperties:
++      '-pins$':
++        type: object
++        additionalProperties: false
 +
-+	group_name = devm_kasprintf(dev, GFP_KERNEL, "%pOFn.%pOFn", parent, np);
-+	if (!group_name)
-+		return -ENOMEM;
++        allOf:
++          - $ref: pincfg-node.yaml#
++          - $ref: pinmux-node.yaml#
 +
-+	group_names[ngroups] = group_name;
++        properties:
++          pins:
++            description:
++              The list of IOs that properties in the pincfg node apply to.
 +
-+	pins = devm_kcalloc(dev, npins, sizeof(*pins), GFP_KERNEL);
-+	if (!pins)
-+		return -ENOMEM;
++          function:
++            description:
++              A string containing the name of the function to mux for these
++              pins. The "reserved" function tristates a pin.
++            enum: [ sd, emmc, qspi, spi, usb, uart, i2c, can, mdio, misc
++                    reserved, gpio, fabric-test, tied-low, tied-high, tristate ]
 +
-+	functions = devm_kcalloc(dev, npins, sizeof(*functions), GFP_KERNEL);
-+	if (!functions)
-+		return -ENOMEM;
++          bias-bus-hold: true
++          bias-disable: true
++          bias-pull-down: true
++          bias-pull-up: true
++          input-schmitt-enable: true
++          low-power-enable: true
 +
-+	for (int i = 0; i < npins; i++) {
-+		ret = of_property_read_u32_index(np, "pins", i, &pin);
-+		if (ret)
-+			return ret;
++          drive-strength:
++            enum: [ 2, 4, 6, 8, 10, 12, 16, 20 ]
 +
-+		pins[i] = pin;
++          power-source:
++            description:
++              Which bank voltage to use. This cannot differ for pins in a
++              given bank, the whole bank uses the same voltage.
++            enum: [ 1200000, 1500000, 1800000, 2500000, 3300000 ]
 +
-+		ret = of_property_read_string(np, "function", &functions[i]);
-+		if (ret)
-+			return ret;
-+	}
++          microchip,clamp-diode:
++            $ref: /schemas/types.yaml#/definitions/flag
++            description:
++              Reflects the "Clamp Diode" setting in the MSS Configurator for
++              this pin. This setting controls whether or not input voltage
++              clamping should be enabled.
 +
-+	ret = pinctrl_utils_reserve_map(pctldev, maps, num_reserved_maps, num_maps, reserve);
-+	if (ret)
-+		return ret;
++          microchip,ibufmd:
++            $ref: /schemas/types.yaml#/definitions/uint32
++            default: 0
++            description:
++              Reflects the "IBUFMD" bits in the MSS Configurator output files
++              for this pin.
 +
-+	ret = pinctrl_utils_add_map_mux(pctldev, maps, num_reserved_maps, num_maps, group_name,
-+					parent->name);
-+	if (ret < 0)
-+		return ret;
++        required:
++          - pins
++          - function
++          - power-source
 +
-+	ret = pinctrl_generic_add_group(pctldev, group_name, pins, npins, functions);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "failed to add group %s: %d\n",
-+				     group_name, ret);
++required:
++  - compatible
++  - reg
 +
-+	ret = pinconf_generic_parse_dt_config(np, pctldev, &configs, &num_configs);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to parse pin config of group %s\n",
-+			group_name);
++additionalProperties: false
 +
-+	if (num_configs == 0)
-+		return 0;
++examples:
++  - |
++    pinctrl@204 {
++      compatible = "microchip,mpfs-pinctrl-mssio";
++      reg = <0x204 0x7c>;
 +
-+	ret = pinctrl_utils_reserve_map(pctldev, maps, num_reserved_maps, num_maps, reserve);
-+	if (ret)
-+		return ret;
++      ikrd-spi1-cfg {
++        spi1-pins {
++          pins = <30>, <31>, <32>, <33>;
++          function = "spi";
++          bias-pull-up;
++          drive-strength = <8>;
++          power-source = <3300000>;
++          microchip,ibufmd = <0x1>;
++        };
++      };
++    };
++...
+diff --git a/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-mss-top-sysreg.yaml b/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-mss-top-sysreg.yaml
+index 39987f722411..44e4a50c3155 100644
+--- a/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-mss-top-sysreg.yaml
++++ b/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-mss-top-sysreg.yaml
+@@ -42,6 +42,10 @@ properties:
+     type: object
+     $ref: /schemas/pinctrl/microchip,mpfs-pinctrl-iomux0.yaml
+ 
++  pinctrl@204:
++    type: object
++    $ref: /schemas/pinctrl/microchip,mpfs-pinctrl-mssio.yaml
 +
-+	ret = pinctrl_utils_add_map_configs(pctldev, maps, num_reserved_maps, num_maps, group_name,
-+					    configs,
-+			num_configs, PIN_MAP_TYPE_CONFIGS_GROUP);
-+	kfree(configs);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+};
-+
-+/*
-+ * For platforms that do not define groups or functions in the driver, but
-+ * instead use the devicetree to describe them. This function will, unlike
-+ * pinconf_generic_dt_node_to_map() etc which rely on driver defined groups
-+ * and functions, create them in addition to parsing pinconf properties and
-+ * adding mappings.
-+ */
-+int pinctrl_generic_pins_function_dt_node_to_map(struct pinctrl_dev *pctldev,
-+						 struct device_node *np,
-+						 struct pinctrl_map **maps,
-+						 unsigned int *num_maps)
-+{
-+	struct device *dev = pctldev->dev;
-+	struct device_node *child_np;
-+	const char **group_names;
-+	unsigned int num_reserved_maps = 0;
-+	int ngroups = 0;
-+	int ret;
-+
-+	*maps = NULL;
-+	*num_maps = 0;
-+
-+	/*
-+	 * Check if this is actually the pins node, or a parent containing
-+	 * multiple pins nodes.
-+	 */
-+	if (!of_property_present(np, "pins"))
-+		goto parent;
-+
-+	group_names = devm_kcalloc(dev, 1, sizeof(*group_names), GFP_KERNEL);
-+	if (!group_names)
-+		return -ENOMEM;
-+
-+	ret = pinctrl_generic_pins_function_dt_subnode_to_map(pctldev, np, np,
-+							      maps, num_maps,
-+							      &num_reserved_maps,
-+							      group_names,
-+							      ngroups);
-+	if (ret) {
-+		pinctrl_utils_free_map(pctldev, *maps, *num_maps);
-+		return dev_err_probe(dev, ret, "error figuring out mappings for %s\n", np->name);
-+	}
-+
-+	ret = pinmux_generic_add_function(pctldev, np->name, group_names, 1, NULL);
-+	if (ret < 0) {
-+		pinctrl_utils_free_map(pctldev, *maps, *num_maps);
-+		return dev_err_probe(dev, ret, "error adding function %s\n", np->name);
-+	}
-+
-+	return 0;
-+
-+parent:
-+	for_each_available_child_of_node(np, child_np)
-+		ngroups += 1;
-+
-+	group_names = devm_kcalloc(dev, ngroups, sizeof(*group_names), GFP_KERNEL);
-+	if (!group_names)
-+		return -ENOMEM;
-+
-+	ngroups = 0;
-+	for_each_available_child_of_node_scoped(np, child_np) {
-+		ret = pinctrl_generic_pins_function_dt_subnode_to_map(pctldev, np, child_np,
-+								      maps, num_maps,
-+								      &num_reserved_maps,
-+								      group_names,
-+								      ngroups);
-+		if (ret) {
-+			pinctrl_utils_free_map(pctldev, *maps, *num_maps);
-+			return dev_err_probe(dev, ret, "error figuring out mappings for %s\n",
-+					     np->name);
-+		}
-+
-+		ngroups++;
-+	}
-+
-+	ret = pinmux_generic_add_function(pctldev, np->name, group_names, ngroups, NULL);
-+	if (ret < 0) {
-+		pinctrl_utils_free_map(pctldev, *maps, *num_maps);
-+		return dev_err_probe(dev, ret, "error adding function %s\n", np->name);
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pinctrl_generic_pins_function_dt_node_to_map);
+ required:
+   - compatible
+   - reg
 -- 
 2.51.0
 
