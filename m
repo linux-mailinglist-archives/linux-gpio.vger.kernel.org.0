@@ -1,188 +1,193 @@
-Return-Path: <linux-gpio+bounces-30798-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30799-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mK73IH12cWngHgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-30798-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 01:59:41 +0100
+	id ANtBOMQucGkEXAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-30799-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 02:41:24 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id E85DC6023D
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 01:59:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 742954F3C7
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 02:41:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 04178849C92
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 12:18:13 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7166D8856AF
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 12:27:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85416427A1E;
-	Tue, 20 Jan 2026 12:16:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E92BB423A71;
+	Tue, 20 Jan 2026 12:25:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGy40jut"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IIaZnQxv"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 432E7426ED2
-	for <linux-gpio@vger.kernel.org>; Tue, 20 Jan 2026 12:16:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E19235A939;
+	Tue, 20 Jan 2026 12:25:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768911392; cv=none; b=lx4fyzVmVJ3mJyGyZQnuQ/sul91o0UVCWoJk06QdnBRUC7vX/81cEiL/ObFKcfnVhVvwA3f8vqyy1aMs50xIzcGMCdmM21ES17fAP9DcES/ciG/cbhZtRqiuq5dUURNMZ1O51wqOhYLo6Om07Ofa4FR2qnJFzVxhAgftSzhf9bU=
+	t=1768911904; cv=none; b=fdca8y9gzxa7JFuyCqGOIBVcmzXRIuhmzl9Jybh3YA811rzPfsGt8PLhb1QeiS959elE/3yjQt2ATV5ut+yve88xJK1V/Ub0fT756l4kq9zadkaoUew8VT0JZlVhfEJkmb3+vE/elZNbQXUW/f7727nJ8Ij7NhRKNYghsWo3kuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768911392; c=relaxed/simple;
-	bh=f4SQu8TLteMQk418u5SbKNfQe6oAUTEfS0S5lAZ0Tcs=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W2x1pSllV7XIzjW1Eyca7qJ2o4YarBKdwLBSj2/O7Hw9DzhHcuZ8J071FQMeyUXHsyyBvRnPLoDBsf7pOl1dw+QDd+C8vIMz+UtXiBHQAScrswjEDW+VSX6MyzKEjL36xwle23L0YjOFe3F1FcG5iIv3V/mloA824aU3sxNfmwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGy40jut; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBC0EC2BC9E
-	for <linux-gpio@vger.kernel.org>; Tue, 20 Jan 2026 12:16:31 +0000 (UTC)
+	s=arc-20240116; t=1768911904; c=relaxed/simple;
+	bh=bLSG0tEveb+gncpwTtyqmY3n1fbc+iPmbTX/cVlIgjo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WoG7wY9292knOr3QfKh6thrLNObYgZ4/qPGvZA142Uxrj38IeTH1p6ZltyNdCBpN8GN6L/qJXqefA8p+qsIAMcvW2//ZKR0r5ffF1jRr9ChDI4B9oZZ2YzIzZ9EQ6CsOEdd4Q+VjN7xuAvAlVsQ0iEaR1B0GJtaUQcmYo5YQrHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IIaZnQxv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4669C16AAE;
+	Tue, 20 Jan 2026 12:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768911391;
-	bh=f4SQu8TLteMQk418u5SbKNfQe6oAUTEfS0S5lAZ0Tcs=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=dGy40jutA+5sYQr5rlYKmQj9WnJPyLnL4ZJG3v9OpoH+oRvnp79n9+vmrgRC6TtpK
-	 A+RlMg9yZKt7NzJh7s8hiHUm8ST7a1iWUhmFl1T6ZEeKE6/XHiTVzcbjABkUnpDK02
-	 zBpfdAx3JDw1muB6/iFa5mt2Rc8VIWQ5gPqCPj/1vG05pPx59hTJv76VeofYQTUD2t
-	 aYv53poCdGjDy0YPOydTDyyWx6+x3Vn/VPX/kMj2Pz5ZG759+DsaVUz2TE0rG9FcUY
-	 4a+ai3RFv8MR0fVpWwL+4zt7cfqZ8aKyHD6FoAsqOsM4yGJbqFbYor19FSbfPb996b
-	 gIDkULjjY+QYA==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-59b9fee282dso5338921e87.3
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Jan 2026 04:16:31 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU8R3jaCkD57imIYfKNNl5omiJF6d6LNVxt9VCWYNtmrlA38CL5V1A61N3sGnDcv3MyaBXGRYaSqCQ8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsjjGEGrHFCsheaVGu7ktpv7/GjJaZnLfaR7TfAPPWCONxuW/N
-	dtNLCK3LkYhAz1U4+pxF0G/9cgp/y7T9jlWWKctJi3RpJ84JV7VamH9Bnawb3LKWdTWLhsNqffi
-	eig/Zv8ot03A9nYde1ru/hyt1XpX2KBTnUze0sQfycw==
-X-Received: by 2002:a05:6512:2398:b0:55f:4633:7b2 with SMTP id
- 2adb3069b0e04-59baef01bf5mr5299465e87.46.1768911390457; Tue, 20 Jan 2026
- 04:16:30 -0800 (PST)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 20 Jan 2026 12:16:28 +0000
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 20 Jan 2026 12:16:28 +0000
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260120115923.3463866-8-khristineandreea.barbulescu@oss.nxp.com>
+	s=k20201202; t=1768911904;
+	bh=bLSG0tEveb+gncpwTtyqmY3n1fbc+iPmbTX/cVlIgjo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IIaZnQxvVk2+qt+Mlgp8OUNj0PN/kPCJgeWJPwt/wC9Tf91T9cMch3wsZDSUISe7N
+	 aJ/tUVy0ek8oZwyYaByCenkvW9fM3sCa5r2tt01VVYggu1iOccwcbfKRFs72MNUzSJ
+	 fp1enaMxHoy85UP291aH82jbFVSe44hpTRVqw7IFcGS1TCbsirqOj7caxvu6Tm3NYD
+	 K/muEe2rx2YnLbj44mIBGCFQkwNaqQhORFBWBzahjUSEEzM9bwz9g4x6sTioTHdbje
+	 dShHh+MtAglD4nEzVRLKqN3m7Rd5l73oFdXw7h+mmp3Xf6eJqpxCJgjKh8UclFPLXp
+	 E+E8Da302a5LQ==
+Message-ID: <f81c20f4-5e6a-4ec2-8946-a78bccc14e8f@kernel.org>
+Date: Tue, 20 Jan 2026 13:24:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260120115923.3463866-1-khristineandreea.barbulescu@oss.nxp.com> <20260120115923.3463866-8-khristineandreea.barbulescu@oss.nxp.com>
-Date: Tue, 20 Jan 2026 12:16:28 +0000
-X-Gmail-Original-Message-ID: <CAMRc=Md7+SWMpF20y-+-+Hn7ymkzuMeTxT2EsE3Cnb=B6YUG0w@mail.gmail.com>
-X-Gm-Features: AZwV_QiewUw2Hjrv10M89S0t63JoJsu7jxaj9pA-T120txrnOoBROFqPAhkrEn8
-Message-ID: <CAMRc=Md7+SWMpF20y-+-+Hn7ymkzuMeTxT2EsE3Cnb=B6YUG0w@mail.gmail.com>
-Subject: Re: [PATCH v8 07/10] pinctrl: s32cc: skip syscon child nodes when
- parsing funcs and groups
-To: Khristine Andreea Barbulescu <khristineandreea.barbulescu@oss.nxp.com>
-Cc: Alberto Ruiz <aruizrui@redhat.com>, Christophe Lizzi <clizzi@redhat.com>, devicetree@vger.kernel.org, 
-	Enric Balletbo <eballetb@redhat.com>, Eric Chanudet <echanude@redhat.com>, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, NXP S32 Linux Team <s32@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	"Vincent Guittot devicetree @ vger . kernel . org" <vincent.guittot@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>, 
-	Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>, Larisa Grigore <larisa.grigore@nxp.com>, 
-	Lee Jones <lee@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.54 / 15.00];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] dt-bindings: pinctrl: aspeed: Add support for
+ AST27xx
+To: Billy Tsai <billy_tsai@aspeedtech.com>, Lee Jones <lee@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>,
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
+Cc: Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+ linux-gpio@vger.kernel.org, bmc-sw@aspeedtech.com
+References: <20260120-upstream_pinctrl-v3-0-868fbf8413b5@aspeedtech.com>
+ <20260120-upstream_pinctrl-v3-2-868fbf8413b5@aspeedtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20260120-upstream_pinctrl-v3-2-868fbf8413b5@aspeedtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.46 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DATE_IN_PAST(1.00)[36];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[30];
-	FREEMAIL_CC(0.00)[redhat.com,vger.kernel.org,lists.linux.dev,lists.infradead.org,nxp.com,pengutronix.de,linaro.org,bgdev.pl,kernel.org,gmail.com,suse.com,linuxfoundation.org];
-	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-30799-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30798-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:helo,dfw.mirrors.kernel.org:rdns,mail.gmail.com:mid,nxp.com:email];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: E85DC6023D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[aspeedtech.com:email,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,12c02000:email]
+X-Rspamd-Queue-Id: 742954F3C7
 X-Rspamd-Action: no action
+X-Rspamd-Server: lfdr
 
-On Tue, 20 Jan 2026 12:59:19 +0100, Khristine Andreea Barbulescu
-<khristineandreea.barbulescu@oss.nxp.com> said:
-> The SIUL2 node contains child nodes for syscon
-> instances (SIUL2_0 and SIUL2_1) to expose register
-> ranges for SoC information. These nodes are not
-> part of the pinctrl configuration and should not
-> be treated as pinctrl functions or groups.
->
-> Signed-off-by: Khristine Andreea Barbulescu <khristineandreea.barbulescu@oss.nxp.com>
+On 20/01/2026 12:43, Billy Tsai wrote:
+> Add bindings for the pin controller found in ASPEED AST27xx SoCs.
+> 
+> The AST2700 SoC consists of two interconnected SoC instances, each
+> with its own pin controller register block managed by a separate
+> System Control Unit (SCU).
+> 
+> Introduce the "aspeed,ast2700-soc0-pinctrl" compatible string to
+> describe the SoC0 pin controller, which is not compatible with
+> existing ASPEED pinctrl bindings.
+> 
+> The SoC1 pin controller follows a regular and predictable register
+> layout and can be described using an existing generic pinctrl
+> binding, therefore no dedicated AST2700-specific compatible string
+> is introduced for it.
+> 
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
 > ---
->  drivers/pinctrl/nxp/pinctrl-s32cc.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pinctrl/nxp/pinctrl-s32cc.c b/drivers/pinctrl/nxp/pinctrl-s32cc.c
-> index cdd3a1cd4fe5..50d5a01107eb 100644
-> --- a/drivers/pinctrl/nxp/pinctrl-s32cc.c
-> +++ b/drivers/pinctrl/nxp/pinctrl-s32cc.c
-> @@ -2,7 +2,7 @@
->  /*
->   * Core driver for the S32 CC (Common Chassis) pin controller
->   *
-> - * Copyright 2017-2022,2024-2025 NXP
-> + * Copyright 2017-2022,2024-2025-2026 NXP
->   * Copyright (C) 2022 SUSE LLC
->   * Copyright 2015-2016 Freescale Semiconductor, Inc.
->   */
-> @@ -832,6 +832,9 @@ static int s32_pinctrl_parse_functions(struct device_node *np,
->
->  	dev_dbg(info->dev, "parse function(%u): %pOFn\n", index, np);
->
-> +	if (of_device_is_compatible(np, "syscon"))
-> +		return 0;
+>  .../bindings/mfd/aspeed,ast2x00-scu.yaml           |  27 +++++
+>  .../pinctrl/aspeed,ast2700-soc0-pinctrl.yaml       | 130 +++++++++++++++++++++
+>  2 files changed, 157 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml b/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml
+> index ff6cf8f63cbc..7eda8fddc560 100644
+> --- a/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml
+> @@ -164,4 +164,31 @@ examples:
+>              reg = <0x7c 0x4>, <0x150 0x8>;
+>          };
+>      };
 > +
->  	func = &info->functions[index];
->
->  	/* Initialise function */
-> @@ -941,7 +944,8 @@ static int s32_pinctrl_probe_dt(struct platform_device *pdev,
->  		return -ENODEV;
->
->  	for_each_child_of_node_scoped(np, child)
-> -		++nfuncs;
-> +		if (!of_device_is_compatible(child, "syscon"))
-> +			++nfuncs;
->  	if (nfuncs <= 0)
->  		return dev_err_probe(&pdev->dev, -EINVAL,
->  				     "No functions defined\n");
-> @@ -962,6 +966,9 @@ static int s32_pinctrl_probe_dt(struct platform_device *pdev,
->  		return -ENOMEM;
->
->  	for_each_child_of_node_scoped(np, child) {
-> +		if (of_device_is_compatible(child, "syscon"))
-> +			continue;
-> +
->  		ret = s32_pinctrl_parse_functions(child, info, i++);
->  		if (ret)
->  			return ret;
-> --
-> 2.50.1
->
->
+> +  - |
+> +    syscon@12c02000 {
+> +        compatible = "aspeed,ast2700-scu0", "syscon", "simple-mfd";
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+No changes in the binding, so please do not add unnecessary examples.
+
+Plus this makes little sense now in way you split patches :/. Either you
+keep separate MFD from pinctrl for merging or, if not separate, you
+squash patches.
+
+Best regards,
+Krzysztof
 
