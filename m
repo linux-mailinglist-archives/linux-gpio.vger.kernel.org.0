@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-30819-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30820-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QAtiDKjUb2mgMQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-30819-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 20:16:56 +0100
+	id SOouMObPb2mgMQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-30820-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 19:56:38 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 917434A269
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 20:16:55 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B5A149E16
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 19:56:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 69D32A0EEAD
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 18:18:07 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1DBCCA67165
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 18:18:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 773C945105E;
-	Tue, 20 Jan 2026 18:16:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AF06453491;
+	Tue, 20 Jan 2026 18:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g+GMykx9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X60bTRIp"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA89451056;
-	Tue, 20 Jan 2026 18:16:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF402451054;
+	Tue, 20 Jan 2026 18:16:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768932974; cv=none; b=T+N9oB56Z14ynuaTU63onw8hef9O53GYtB2bdI1zLnQAwCy98FSultjIvLBjKUfb8ff8oqvQTcVO2ztERb5oGqlhQnhvOqhmMRyRxcpdg+JykWLWPcKZuUzlaFOpFpJD4RUTKFssZ1+keaaGPFP+b9UPhB+ewcFdcwwzWtLBvTE=
+	t=1768932975; cv=none; b=kORqB+08jSlATTsYuzTTE3do00hGOrF+t6A0hLhYgfzIzyNxu2x/1myEmXKt/nOEJh+z9ggpoi1tPKF51YsHqWqNwtAir8YjnHLt6Ltuhwri5xz2qZgQUs0EuTWgNj08p8VP4E5Vr8TWjmrJ1QjKQSZfBWfNbboutimqm6W7r+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768932974; c=relaxed/simple;
-	bh=QhE7IgG3YaYV4J3d1geP3x2zMhRXUWVpXXqpJCRiJyE=;
+	s=arc-20240116; t=1768932975; c=relaxed/simple;
+	bh=qrE0iyx32CrlLykRMkHpplSrDxoo8JgPJRkbCoPqrWE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rJCi/3j7yezGq/imo94BegsREfEUrBP9MY33e+74TKdnxBqioiaAMxxSXf4yMSDPIShcfnI+7/Umkna1rX/G/WPyc2xeNNwasSTpj0TviXlC3t+r5sX7zClvJuf5rNUisD8bu7iEjRWAqaf89CBcvE9iI+nNkAj/Ei4t1GkWB/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g+GMykx9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D39CFC19421;
-	Tue, 20 Jan 2026 18:16:09 +0000 (UTC)
+	 MIME-Version; b=qXaCvUOdU35H3sOLCyw8ppWjplHSYxYDqERlvyjW8sMtQPavwjNl2QPnVBx+PnA1bgx36ctwpvprMuGqY8RmXPfMbRmg8qHmNOCEvm69ruJ5F7gwHlIczf9cHo8m98VRI0IMPYbrLm9PCS49D7EbGtnwa6y8mkI84u0Y8ae+VaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X60bTRIp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12C24C16AAE;
+	Tue, 20 Jan 2026 18:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768932971;
-	bh=QhE7IgG3YaYV4J3d1geP3x2zMhRXUWVpXXqpJCRiJyE=;
+	s=k20201202; t=1768932973;
+	bh=qrE0iyx32CrlLykRMkHpplSrDxoo8JgPJRkbCoPqrWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=g+GMykx9c2E3+/z019B53XywfS3OhbDxydCJQaRpATfZutk4n3m0fc/U3drbD+Ve+
-	 YoeXDv3buSskhRr3aKcUl09b2b/6SPEZid+Ncp9CfzjY/hAm1vmiFuGcS/IBwcsIK8
-	 DADOMfOZpQMqaX73xJoZIIkJhzrH/JBFRL0hRl7MZQcB5iejRxxLGbXoK5F/M/Cz6j
-	 yX4so76DJ2wJTtsnau82hJuASkSM8qxqYt9vhZrQUK4cmhxfvnbqEFRbVju7BFWzww
-	 +grytebv7TQpRqkFTNPowjDVmpqDOIpIIukFvsiqBGYrGCWDqtjQH7bfjrptL/aDm3
-	 d05S+xGthaabQ==
+	b=X60bTRIp6iBuYMCEmmE6ttaeDQ1DpsjYd/RErVlHlAwXwCdGrXLKFMRw6vdMQnW1I
+	 itm4eWufwADbx1/Ws41mI/N41OUfOUgvGPMr13kpCg3uwzJfSnV1P4B9qt0gGNyHpa
+	 0fcUiOKhf9ePqWTnNG9spgZiTPf2v39le9q8MSXKjd8vX9snKRkv3ynlSjUZEUk4Bl
+	 hKZbK7pPcKy8ubYIPFM5XX6yM0xpvIlRdK0PDNGyBxYAaD4wNlIsoGEAO/0m03Smjc
+	 BzlsoD6EgBv0qY41x9Fy3FBAbtK/JI9W9rH/kknGghqabmmEcdaJipHBu5ngENICdB
+	 Wl/jt5EMCepWA==
 From: Conor Dooley <conor@kernel.org>
 To: linusw@kernel.org
 Cc: conor@kernel.org,
@@ -56,9 +56,9 @@ Cc: conor@kernel.org,
 	linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	Valentina.FernandezAlanis@microchip.com
-Subject: [PATCH v4 1/5] pinctrl: move microchip riscv pinctrl drivers to a folder
-Date: Tue, 20 Jan 2026 18:15:39 +0000
-Message-ID: <20260120-placidly-agony-5b3d6153f741@spud>
+Subject: [PATCH v4 2/5] pinctrl: add generic functions + pins mapper
+Date: Tue, 20 Jan 2026 18:15:40 +0000
+Message-ID: <20260120-glucose-scary-de7fba2616b2@spud>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260120-elixir-salute-dd6ec3d9f5fe@spud>
 References: <20260120-elixir-salute-dd6ec3d9f5fe@spud>
@@ -68,7 +68,7 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6322; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=T6ZpfIeFj2gU5ICTb55BmLDk3XsKOzV0vQmxeqWTAW0=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJn5x7zsjOenBK6vnv2I8djP+Ecu6h+yul9Uxrd/+nQ3J Xz5kbb3HaUsDGJcDLJiiiyJt/tapNb/cdnh3PMWZg4rE8gQBi5OAZhIjyvD/2D7ZeJ7w0+FtB77 U9wcH/aZ66l8KvPv4uoLXK2PnkslRTEybKoNSrUIS4m2lBb+4nIz+UDV9nmh2x+aMDvrTAncmSH PDwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8218; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=zZ8BxvgX6/g/itLznDT3+eEO8kxCEFsQrBjzmr/TzIY=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJn5x7w+ztydr1ysXva09UrVde3NXDq7Em5d3uB55E7hg Zywxbn8HaUsDGJcDLJiiiyJt/tapNb/cdnh3PMWZg4rE8gQBi5OAZjIXXWG/1Er2kr1qp/vaZp4 KfnFzzVtikXnS37N/3pKkP1E5z2frN+MDCd/amTbyOaZyu+a5CJ9c7X9/12lEk9EtMwZDR9XOBZ FsQIA
 X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
 Content-Transfer-Encoding: 8bit
 X-Spamd-Result: default: False [-0.96 / 15.00];
@@ -82,12 +82,12 @@ X-Spamd-Result: default: False [-0.96 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
 	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	TAGGED_FROM(0.00)[bounces-30819-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-30820-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
@@ -97,181 +97,276 @@ X-Spamd-Result: default: False [-0.96 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[microchip.com:email,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: 917434A269
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,microchip.com:email]
+X-Rspamd-Queue-Id: 3B5A149E16
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Conor Dooley <conor.dooley@microchip.com>
 
-There's three of these drivers now for the same platforms, move them
-together with other microchip drivers to follow.
+Add a generic function to allow creation of groups and functions at
+runtime based on devicetree content, before setting up mux mappings.
+It works similarly to pinconf_generic_dt_node_to_map(), and
+therefore parses pinconf properties and maps those too, allowing it
+to be used as the dt_node_to_map member of the pinctrl_ops struct.
 
 Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- MAINTAINERS                                     |  4 ++--
- drivers/pinctrl/Kconfig                         | 17 +----------------
- drivers/pinctrl/Makefile                        |  3 +--
- drivers/pinctrl/microchip/Kconfig               | 17 +++++++++++++++++
- drivers/pinctrl/microchip/Makefile              |  4 ++++
- .../{ => microchip}/pinctrl-mpfs-iomux0.c       |  8 ++++----
- .../{ => microchip}/pinctrl-pic64gx-gpio2.c     |  2 +-
- 7 files changed, 30 insertions(+), 25 deletions(-)
- create mode 100644 drivers/pinctrl/microchip/Kconfig
- create mode 100644 drivers/pinctrl/microchip/Makefile
- rename drivers/pinctrl/{ => microchip}/pinctrl-mpfs-iomux0.c (98%)
- rename drivers/pinctrl/{ => microchip}/pinctrl-pic64gx-gpio2.c (99%)
+ drivers/pinctrl/Kconfig           |   6 +
+ drivers/pinctrl/Makefile          |   1 +
+ drivers/pinctrl/pinconf.h         |  16 +++
+ drivers/pinctrl/pinctrl-generic.c | 189 ++++++++++++++++++++++++++++++
+ 4 files changed, 212 insertions(+)
+ create mode 100644 drivers/pinctrl/pinctrl-generic.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5b11839cba9d..ff6084cb5797 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22472,8 +22472,8 @@ F:	drivers/gpio/gpio-mpfs.c
- F:	drivers/i2c/busses/i2c-microchip-corei2c.c
- F:	drivers/mailbox/mailbox-mpfs.c
- F:	drivers/pci/controller/plda/pcie-microchip-host.c
--F:	drivers/pinctrl/pinctrl-mpfs-iomux0.c
--F:	drivers/pinctrl/pinctrl-pic64gx-gpio2.c
-+F:	drivers/pinctrl/microchip/pinctrl-mpfs-iomux0.c
-+F:	drivers/pinctrl/microchip/pinctrl-pic64gx-gpio2.c
- F:	drivers/pwm/pwm-microchip-core.c
- F:	drivers/reset/reset-mpfs.c
- F:	drivers/rtc/rtc-mpfs.c
 diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 0ea117581bde..d2a414450c16 100644
+index d2a414450c16..6cc5e214f4f3 100644
 --- a/drivers/pinctrl/Kconfig
 +++ b/drivers/pinctrl/Kconfig
-@@ -486,14 +486,6 @@ config PINCTRL_PIC32MZDA
- 	def_bool y if PIC32MZDA
- 	select PINCTRL_PIC32
+@@ -25,6 +25,12 @@ config GENERIC_PINCONF
+ 	bool
+ 	select PINCONF
  
--config PINCTRL_PIC64GX
--	bool "pic64gx gpio2 pinctrl driver"
--	depends on ARCH_MICROCHIP || COMPILE_TEST
--	depends on OF
--	select GENERIC_PINCONF
--	help
--	  This selects the pinctrl driver for gpio2 on pic64gx.
--
- config PINCTRL_PISTACHIO
- 	bool "IMG Pistachio SoC pinctrl driver"
- 	depends on OF && (MIPS || COMPILE_TEST)
-@@ -505,14 +497,6 @@ config PINCTRL_PISTACHIO
- 	help
- 	  This support pinctrl and GPIO driver for IMG Pistachio SoC.
- 
--config PINCTRL_POLARFIRE_SOC
--	bool "Polarfire SoC pinctrl driver"
--	depends on ARCH_MICROCHIP || COMPILE_TEST
--	depends on OF
--	select GENERIC_PINCONF
--	help
--	  This selects the pinctrl driver for Microchip Polarfire SoC.
--
- config PINCTRL_RK805
- 	tristate "Pinctrl and GPIO driver for RK805 PMIC"
- 	depends on MFD_RK8XX
-@@ -707,6 +691,7 @@ source "drivers/pinctrl/freescale/Kconfig"
- source "drivers/pinctrl/intel/Kconfig"
- source "drivers/pinctrl/mediatek/Kconfig"
- source "drivers/pinctrl/meson/Kconfig"
-+source "drivers/pinctrl/microchip/Kconfig"
- source "drivers/pinctrl/mvebu/Kconfig"
- source "drivers/pinctrl/nomadik/Kconfig"
- source "drivers/pinctrl/nuvoton/Kconfig"
++config GENERIC_PINCTRL
++	bool
++	depends on GENERIC_PINCONF
++	depends on GENERIC_PINCTRL_GROUPS
++	depends on GENERIC_PINMUX_FUNCTIONS
++
+ config DEBUG_PINCTRL
+ 	bool "Debug PINCTRL calls"
+ 	depends on DEBUG_KERNEL
 diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index be5200c23e60..05737b1afec9 100644
+index 05737b1afec9..f7d5d5f76d0c 100644
 --- a/drivers/pinctrl/Makefile
 +++ b/drivers/pinctrl/Makefile
-@@ -48,9 +48,7 @@ obj-$(CONFIG_PINCTRL_OCELOT)	+= pinctrl-ocelot.o
- obj-$(CONFIG_PINCTRL_PALMAS)	+= pinctrl-palmas.o
- obj-$(CONFIG_PINCTRL_PEF2256)	+= pinctrl-pef2256.o
- obj-$(CONFIG_PINCTRL_PIC32)	+= pinctrl-pic32.o
--obj-$(CONFIG_PINCTRL_PIC64GX)	+= pinctrl-pic64gx-gpio2.o
- obj-$(CONFIG_PINCTRL_PISTACHIO)	+= pinctrl-pistachio.o
--obj-$(CONFIG_PINCTRL_POLARFIRE_SOC)	+= pinctrl-mpfs-iomux0.o
- obj-$(CONFIG_PINCTRL_RK805)	+= pinctrl-rk805.o
- obj-$(CONFIG_PINCTRL_ROCKCHIP)	+= pinctrl-rockchip.o
- obj-$(CONFIG_PINCTRL_RP1)       += pinctrl-rp1.o
-@@ -76,6 +74,7 @@ obj-y				+= freescale/
- obj-$(CONFIG_X86)		+= intel/
- obj-y				+= mediatek/
- obj-$(CONFIG_PINCTRL_MESON)	+= meson/
-+obj-y				+= microchip/
- obj-y				+= mvebu/
- obj-y				+= nomadik/
- obj-y				+= nuvoton/
-diff --git a/drivers/pinctrl/microchip/Kconfig b/drivers/pinctrl/microchip/Kconfig
+@@ -7,6 +7,7 @@ obj-y				+= core.o pinctrl-utils.o
+ obj-$(CONFIG_PINMUX)		+= pinmux.o
+ obj-$(CONFIG_PINCONF)		+= pinconf.o
+ obj-$(CONFIG_GENERIC_PINCONF)	+= pinconf-generic.o
++obj-$(CONFIG_GENERIC_PINCTRL)	+= pinctrl-generic.o
+ obj-$(CONFIG_OF)		+= devicetree.o
+ 
+ obj-$(CONFIG_PINCTRL_AMD)	+= pinctrl-amd.o
+diff --git a/drivers/pinctrl/pinconf.h b/drivers/pinctrl/pinconf.h
+index e1ae71610526..2880adef476e 100644
+--- a/drivers/pinctrl/pinconf.h
++++ b/drivers/pinctrl/pinconf.h
+@@ -160,3 +160,19 @@ pinconf_generic_parse_dt_pinmux(struct device_node *np, struct device *dev,
+ 	return -ENOTSUPP;
+ }
+ #endif
++
++#if defined(CONFIG_GENERIC_PINCTRL) && defined (CONFIG_OF)
++int pinctrl_generic_pins_function_dt_node_to_map(struct pinctrl_dev *pctldev,
++						 struct device_node *np,
++						 struct pinctrl_map **maps,
++						 unsigned int *num_maps);
++#else
++static inline int
++pinctrl_generic_pins_function_dt_node_to_map(struct pinctrl_dev *pctldev,
++					     struct device_node *np,
++					     struct pinctrl_map **maps,
++					     unsigned int *num_maps)
++{
++	return -ENOTSUPP;
++}
++#endif
+diff --git a/drivers/pinctrl/pinctrl-generic.c b/drivers/pinctrl/pinctrl-generic.c
 new file mode 100644
-index 000000000000..bdefe6541445
+index 000000000000..efb39c6a6703
 --- /dev/null
-+++ b/drivers/pinctrl/microchip/Kconfig
-@@ -0,0 +1,17 @@
-+# SPDX-License-Identifier: GPL-2.0-only
++++ b/drivers/pinctrl/pinctrl-generic.c
+@@ -0,0 +1,189 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +
-+config PINCTRL_PIC64GX
-+	bool "pic64gx gpio2 pinctrl driver"
-+	depends on ARCH_MICROCHIP || COMPILE_TEST
-+	depends on OF
-+	select GENERIC_PINCONF
-+	help
-+	  This selects the pinctrl driver for gpio2 on pic64gx.
++#define pr_fmt(fmt) "generic pinconfig core: " fmt
 +
-+config PINCTRL_POLARFIRE_SOC
-+	bool "Polarfire SoC pinctrl driver"
-+	depends on ARCH_MICROCHIP || COMPILE_TEST
-+	depends on OF
-+	select GENERIC_PINCONF
-+	help
-+	  This selects the pinctrl driver for Microchip Polarfire SoC.
-diff --git a/drivers/pinctrl/microchip/Makefile b/drivers/pinctrl/microchip/Makefile
-new file mode 100644
-index 000000000000..584d48e7be3b
---- /dev/null
-+++ b/drivers/pinctrl/microchip/Makefile
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0-only
++#include <linux/array_size.h>
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/slab.h>
 +
-+obj-$(CONFIG_PINCTRL_PIC64GX)	+= pinctrl-pic64gx-gpio2.o
-+obj-$(CONFIG_PINCTRL_POLARFIRE_SOC)	+= pinctrl-mpfs-iomux0.o
-diff --git a/drivers/pinctrl/pinctrl-mpfs-iomux0.c b/drivers/pinctrl/microchip/pinctrl-mpfs-iomux0.c
-similarity index 98%
-rename from drivers/pinctrl/pinctrl-mpfs-iomux0.c
-rename to drivers/pinctrl/microchip/pinctrl-mpfs-iomux0.c
-index cf5b2e4e8f5b..1b060a038920 100644
---- a/drivers/pinctrl/pinctrl-mpfs-iomux0.c
-+++ b/drivers/pinctrl/microchip/pinctrl-mpfs-iomux0.c
-@@ -15,10 +15,10 @@
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/pinctrl/pinmux.h>
- 
--#include "core.h"
--#include "pinctrl-utils.h"
--#include "pinconf.h"
--#include "pinmux.h"
-+#include "../core.h"
-+#include "../pinctrl-utils.h"
-+#include "../pinconf.h"
-+#include "../pinmux.h"
- 
- #define MPFS_IOMUX0_REG 0x200
- 
-diff --git a/drivers/pinctrl/pinctrl-pic64gx-gpio2.c b/drivers/pinctrl/microchip/pinctrl-pic64gx-gpio2.c
-similarity index 99%
-rename from drivers/pinctrl/pinctrl-pic64gx-gpio2.c
-rename to drivers/pinctrl/microchip/pinctrl-pic64gx-gpio2.c
-index f322bb5e6181..a0b3e839cf3b 100644
---- a/drivers/pinctrl/pinctrl-pic64gx-gpio2.c
-+++ b/drivers/pinctrl/microchip/pinctrl-pic64gx-gpio2.c
-@@ -14,7 +14,7 @@
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/pinctrl/pinmux.h>
- 
--#include "pinctrl-utils.h"
-+#include "../pinctrl-utils.h"
- 
- #define PIC64GX_PINMUX_REG 0x0
- 
++#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinctrl.h>
++
++#include "core.h"
++#include "pinconf.h"
++#include "pinctrl-utils.h"
++#include "pinmux.h"
++
++static int pinctrl_generic_pins_function_dt_subnode_to_map(struct pinctrl_dev *pctldev,
++							   struct device_node *parent,
++							   struct device_node *np,
++							   struct pinctrl_map **maps,
++							   unsigned int *num_maps,
++							   unsigned int *num_reserved_maps,
++							   const char **group_names,
++							   unsigned int ngroups)
++{
++	struct device *dev = pctldev->dev;
++	const char **functions;
++	const char *group_name;
++	unsigned long *configs;
++	unsigned int num_configs, pin, *pins;
++	int npins, ret, reserve = 1;
++
++	npins = of_property_count_u32_elems(np, "pins");
++
++	if (npins < 1) {
++		dev_err(dev, "invalid pinctrl group %pOFn.%pOFn %d\n",
++			parent, np, npins);
++		return npins;
++	}
++
++	group_name = devm_kasprintf(dev, GFP_KERNEL, "%pOFn.%pOFn", parent, np);
++	if (!group_name)
++		return -ENOMEM;
++
++	group_names[ngroups] = group_name;
++
++	pins = devm_kcalloc(dev, npins, sizeof(*pins), GFP_KERNEL);
++	if (!pins)
++		return -ENOMEM;
++
++	functions = devm_kcalloc(dev, npins, sizeof(*functions), GFP_KERNEL);
++	if (!functions)
++		return -ENOMEM;
++
++	for (int i = 0; i < npins; i++) {
++		ret = of_property_read_u32_index(np, "pins", i, &pin);
++		if (ret)
++			return ret;
++
++		pins[i] = pin;
++
++		ret = of_property_read_string(np, "function", &functions[i]);
++		if (ret)
++			return ret;
++	}
++
++	ret = pinctrl_utils_reserve_map(pctldev, maps, num_reserved_maps, num_maps, reserve);
++	if (ret)
++		return ret;
++
++	ret = pinctrl_utils_add_map_mux(pctldev, maps, num_reserved_maps, num_maps, group_name,
++					parent->name);
++	if (ret < 0)
++		return ret;
++
++	ret = pinctrl_generic_add_group(pctldev, group_name, pins, npins, functions);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "failed to add group %s: %d\n",
++				     group_name, ret);
++
++	ret = pinconf_generic_parse_dt_config(np, pctldev, &configs, &num_configs);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to parse pin config of group %s\n",
++			group_name);
++
++	if (num_configs == 0)
++		return 0;
++
++	ret = pinctrl_utils_reserve_map(pctldev, maps, num_reserved_maps, num_maps, reserve);
++	if (ret)
++		return ret;
++
++	ret = pinctrl_utils_add_map_configs(pctldev, maps, num_reserved_maps, num_maps, group_name,
++					    configs,
++			num_configs, PIN_MAP_TYPE_CONFIGS_GROUP);
++	kfree(configs);
++	if (ret)
++		return ret;
++
++	return 0;
++};
++
++/*
++ * For platforms that do not define groups or functions in the driver, but
++ * instead use the devicetree to describe them. This function will, unlike
++ * pinconf_generic_dt_node_to_map() etc which rely on driver defined groups
++ * and functions, create them in addition to parsing pinconf properties and
++ * adding mappings.
++ */
++int pinctrl_generic_pins_function_dt_node_to_map(struct pinctrl_dev *pctldev,
++						 struct device_node *np,
++						 struct pinctrl_map **maps,
++						 unsigned int *num_maps)
++{
++	struct device *dev = pctldev->dev;
++	struct device_node *child_np;
++	const char **group_names;
++	unsigned int num_reserved_maps = 0;
++	int ngroups = 0;
++	int ret;
++
++	*maps = NULL;
++	*num_maps = 0;
++
++	/*
++	 * Check if this is actually the pins node, or a parent containing
++	 * multiple pins nodes.
++	 */
++	if (!of_property_present(np, "pins"))
++		goto parent;
++
++	group_names = devm_kcalloc(dev, 1, sizeof(*group_names), GFP_KERNEL);
++	if (!group_names)
++		return -ENOMEM;
++
++	ret = pinctrl_generic_pins_function_dt_subnode_to_map(pctldev, np, np,
++							      maps, num_maps,
++							      &num_reserved_maps,
++							      group_names,
++							      ngroups);
++	if (ret) {
++		pinctrl_utils_free_map(pctldev, *maps, *num_maps);
++		return dev_err_probe(dev, ret, "error figuring out mappings for %s\n", np->name);
++	}
++
++	ret = pinmux_generic_add_function(pctldev, np->name, group_names, 1, NULL);
++	if (ret < 0) {
++		pinctrl_utils_free_map(pctldev, *maps, *num_maps);
++		return dev_err_probe(dev, ret, "error adding function %s\n", np->name);
++	}
++
++	return 0;
++
++parent:
++	for_each_available_child_of_node(np, child_np)
++		ngroups += 1;
++
++	group_names = devm_kcalloc(dev, ngroups, sizeof(*group_names), GFP_KERNEL);
++	if (!group_names)
++		return -ENOMEM;
++
++	ngroups = 0;
++	for_each_available_child_of_node_scoped(np, child_np) {
++		ret = pinctrl_generic_pins_function_dt_subnode_to_map(pctldev, np, child_np,
++								      maps, num_maps,
++								      &num_reserved_maps,
++								      group_names,
++								      ngroups);
++		if (ret) {
++			pinctrl_utils_free_map(pctldev, *maps, *num_maps);
++			return dev_err_probe(dev, ret, "error figuring out mappings for %s\n",
++					     np->name);
++		}
++
++		ngroups++;
++	}
++
++	ret = pinmux_generic_add_function(pctldev, np->name, group_names, ngroups, NULL);
++	if (ret < 0) {
++		pinctrl_utils_free_map(pctldev, *maps, *num_maps);
++		return dev_err_probe(dev, ret, "error adding function %s\n", np->name);
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(pinctrl_generic_pins_function_dt_node_to_map);
 -- 
 2.51.0
 
