@@ -1,142 +1,165 @@
-Return-Path: <linux-gpio+bounces-30817-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30818-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0Dl/Ib/Wb2mgMQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-30817-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 20:25:51 +0100
+	id 0IoVJgDcb2n8RwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-30818-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 20:48:16 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53ECF4A4AE
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 20:25:51 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A6144ABA2
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 20:48:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9ABD182E32E
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 18:07:23 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7022DA0E8A5
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 18:17:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AC9644B66D;
-	Tue, 20 Jan 2026 18:06:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96F6E44DB74;
+	Tue, 20 Jan 2026 18:16:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQkpfi0O"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rtzOStwi"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE6B43634B;
-	Tue, 20 Jan 2026 18:06:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD8E322C60;
+	Tue, 20 Jan 2026 18:16:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768932410; cv=none; b=MCDPJ0NdDCBF9WRLQ85X8q7r2Mk0WFnfXNUrz8ihMHWHE7SyunZ8IiStN8Nl63pmOSZwBb4OWnde61kX6noB7c5YvMsHkeKIsZHnoHaDLE6enmqyHs6tZteRmzmwDo9A9yTn64+JvDIxxpmKZPPseP2U5ydApFtKzXO7Gt/nfzM=
+	t=1768932968; cv=none; b=n4JxVo/tzDCH0hNW9NgtiClxIRlQDslwNj4Gy1barGkDCkJY6f1fWhjvSh/bWvWRD3dRQ/b03ozd8HTQ+wYGjCy9k/wryAuW5GwJCJF9NJYUwGYg6BZmIOojrkVE5v+xZ7y/cpDeRwcy1QjtyW7ioKq/0rMW88DKuqLzvVbPLwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768932410; c=relaxed/simple;
-	bh=7noY7dwvdtPUFXP+TRLnQO+n09UhiDtPbUSAVkbiet0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JbNdgKyPWTD5IBbGLmGUdQSGgBtajHsmZUkTM16GMqr5fm1GaIbaopmMpWH8Z4rnXd+rpKYbI/UxmAXR2nmUNhxEcgFVTA7ocq9jvXgKTQTtQCVpvCFmz8uI3teE2z8PO7ME/ruZVNxo7ZD9VYbDm6Aj3t2SWX96Lu/pjjkJQVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQkpfi0O; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBCE7C19422;
-	Tue, 20 Jan 2026 18:06:48 +0000 (UTC)
+	s=arc-20240116; t=1768932968; c=relaxed/simple;
+	bh=j3JpvGqguxAPX1OQ//mNrtvLuBi56hKXaPkifOBT7Vc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ITEVwfl8CVx3KTl4xukRYWJVUciXR20/lLGMB9yZ20BnJ8+Pg/u9L6bFgoqoIl1lFTlgg/7+puekwtZpwb7tlB/TakgXdJKZt3fXg24+WWOenOBsCC89ihVONFyf4AdxiuOT6HddNvPS6mTeELNbJe2LK4YdGNxmTUZYQVfO4Mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rtzOStwi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56FECC16AAE;
+	Tue, 20 Jan 2026 18:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768932409;
-	bh=7noY7dwvdtPUFXP+TRLnQO+n09UhiDtPbUSAVkbiet0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WQkpfi0OPLvOKJ/yAeKm3nJgUQ97DjOmFq8hBGZfHVEDqjoh2Y7LKSeJ8L5vYZwUh
-	 LVQiGBzhtrAKLEgbAElUxLL+yoYqJiRfXhUoHUrzhYtj1gZjuaszjkIvRSVOibMm8/
-	 YT4Z8io5nER4X5UmCndJDBlMOAnRm8hn4D3C2tNjWjDnkRqw2u1B8Iq+6ckaUAghnh
-	 kwxdLES+JeupHTokklIlIybAvj/r8WyNGJNVESdEQxi2vToWdxATkTd4KgRYzPVuMh
-	 Ulqe2QOUmzSnar9l+ks+aypt5NCYlhSy+vnxcLKvQUHKavOzDci4jiF5SD+vM+1y+d
-	 U4DZqG6iNMZWw==
-Date: Tue, 20 Jan 2026 19:06:46 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: linux-pwm@vger.kernel.org
-Cc: Linus Walleij <linusw@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Lee Jones <lee@kernel.org>, Daniel Thompson <danielt@kernel.org>, 
-	Jingoo Han <jingoohan1@gmail.com>, linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] pwm: Update MAINTAINER entry
-Message-ID: <vxft2haumyobyfq2kmvtisplvdw6bwuriw7ngghbrtbczewknl@bnc2ou553xm2>
-References: <20260115165055.1739004-2-ukleinek@kernel.org>
+	s=k20201202; t=1768932968;
+	bh=j3JpvGqguxAPX1OQ//mNrtvLuBi56hKXaPkifOBT7Vc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rtzOStwis8Cv7+96pEq9F0GcTJEXfn0GORDO9CUo/wuFegZW+ypFXI4AR6hl59kfw
+	 ADSfWj8lkWpG/N+pnkeYGA47CS743DBaFyslvMICg21AWasaJoUwN1zoZ54Jab2BuQ
+	 Ih8WJD5MErgIg/Jn5BqGNx5CYaA7zs8agX1A4BsDm4fKyqwOl6iXle6Lrbn4NUUaE9
+	 3U57r30f8Pfs4ZXd4r7A3nGlfCnudJgS50u+38XbtUBqxeMXBwUmVLdEbBNNNr5neN
+	 qs+iJJJvbhsss6NkTnyYXQS6qUhPa1BRwbf7mKD39MUBctLZt9VQFRNliSrxs7Y9e4
+	 6XWUBq8KzoofQ==
+From: Conor Dooley <conor@kernel.org>
+To: linusw@kernel.org
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Valentina.FernandezAlanis@microchip.com
+Subject: [PATCH v4 0/5] Microchip mpfs/pic64gx pinctrl part 2
+Date: Tue, 20 Jan 2026 18:15:38 +0000
+Message-ID: <20260120-elixir-salute-dd6ec3d9f5fe@spud>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ij2vdvowd2uioibd"
-Content-Disposition: inline
-In-Reply-To: <20260115165055.1739004-2-ukleinek@kernel.org>
-X-Spamd-Result: default: False [-3.56 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2330; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=uh2beolQ7KdyixRVrH5HrEuGNqoaOa03fytRzQEDSHQ=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJn5xzy5kh7tu+h+fqf8qfnZNw+ycF4xXjQ9p0WA0Vvu7 6FrVSbHOkpZGMS4GGTFFFkSb/e1SK3/47LDuectzBxWJpAhDFycAjCRshyG/y6ni81X78t4Wna7 RD8i3K3zfvPU0OQDV6X3z65k6p/bt4iR4f6ds2HPBB/p5WX3dvVfc7+7MqrgGDObTPss/sB11i1 qnAA=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.96 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
+	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-30817-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org,lists.freedesktop.org];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
 	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	TAGGED_FROM(0.00)[bounces-30818-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
 	TO_DN_SOME(0.00)[];
-	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: 53ECF4A4AE
+	DBL_BLOCKED_OPENRESOLVER(0.00)[microchip.com:email,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: 3A6144ABA2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+From: Conor Dooley <conor.dooley@microchip.com>
 
---ij2vdvowd2uioibd
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pwm: Update MAINTAINER entry
-MIME-Version: 1.0
+Hey Linus,
 
-Hello,
+Rebased as requested, with the dts patch that snuck in dropped.
 
-On Thu, Jan 15, 2026 at 05:50:54PM +0100, Uwe Kleine-K=F6nig wrote:
-> There is little sense in having gpio-mvebu and pwm-backlight explicitly
-> listed in the PWM entry. Drop these and add the keywords that actually
-> identify a driver as PWM related.
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
+Cheers,
+Conor.
 
-Applied to
-	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
--next
-with Bartosz's Ack for the next merge window.
+changes in v4:
+- rebase on devel
+- drop dts patch
 
-Best regards
-Uwe
+changes in v3:
+- drop the todos
+- rename the kconfig symbol
+- move my drivers into a microchip dir
+- use power-source instead of custom property
 
---ij2vdvowd2uioibd
-Content-Type: application/pgp-signature; name="signature.asc"
+main changes in v2:
+- bank voltage is now controllable from dt
+- bank lockdown no longer controllable from dt
+- dt_node_to_map callback is now a(n attempt at a) new generic function
+- some schmitt properties now no longer supported
 
------BEGIN PGP SIGNATURE-----
+CC: Rob Herring <robh@kernel.org>
+CC: Krzysztof Kozlowski <krzk+dt@kernel.org>
+CC: linux-kernel@vger.kernel.org
+CC: linux-gpio@vger.kernel.org
+CC: devicetree@vger.kernel.org
+CC: Valentina.FernandezAlanis@microchip.com
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlvxDQACgkQj4D7WH0S
-/k7OUAgAhsA97vWW9OMqru4+/CWnSRIx0z7mYpFmCjbyGSnc9v1j9A7ADXB3qjh5
-jwf15dvx7kHwzOaoeJ4qPexFFHpliT6lBMUZwHizPXwBnSOT5a/QPNp8TDbcee1U
-oZZMhRtv0edJ/wFm9YQU44sK2guyYiBurH+CbniL1qDTyEkWJna0hjEjV1M8l215
-2kkTw5nqa1SVJvNHhlEGgwgNQKDTKeuTuT9Y8r+2qNsTjle7EJ3oZLAPSAA55OhP
-kHHAEH4IsHVQWSBQyXZKllsamvCD4vdQdq8HFLaUAMkNPSMFlprevLZRwWNrixnI
-HAsQ0zHOaLM7hfKnyHcK6C33BgR9Zw==
-=YD/i
------END PGP SIGNATURE-----
+Conor Dooley (5):
+  pinctrl: move microchip riscv pinctrl drivers to a folder
+  pinctrl: add generic functions + pins mapper
+  dt-bindings: pinctrl: document polarfire soc mssio pin controller
+  pinctrl: add polarfire soc mssio pinctrl driver
+  MAINTAINERS: add Microchip mpfs mssio driver/bindings to entry
 
---ij2vdvowd2uioibd--
+ .../pinctrl/microchip,mpfs-pinctrl-mssio.yaml | 109 +++
+ .../microchip,mpfs-mss-top-sysreg.yaml        |   4 +
+ MAINTAINERS                                   |   6 +-
+ drivers/pinctrl/Kconfig                       |  23 +-
+ drivers/pinctrl/Makefile                      |   4 +-
+ drivers/pinctrl/microchip/Kconfig             |  17 +
+ drivers/pinctrl/microchip/Makefile            |   5 +
+ .../{ => microchip}/pinctrl-mpfs-iomux0.c     |   8 +-
+ .../pinctrl/microchip/pinctrl-mpfs-mssio.c    | 737 ++++++++++++++++++
+ .../{ => microchip}/pinctrl-pic64gx-gpio2.c   |   2 +-
+ drivers/pinctrl/pinconf.h                     |  16 +
+ drivers/pinctrl/pinctrl-generic.c             | 189 +++++
+ 12 files changed, 1095 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/microchip,mpfs-pinctrl-mssio.yaml
+ create mode 100644 drivers/pinctrl/microchip/Kconfig
+ create mode 100644 drivers/pinctrl/microchip/Makefile
+ rename drivers/pinctrl/{ => microchip}/pinctrl-mpfs-iomux0.c (98%)
+ create mode 100644 drivers/pinctrl/microchip/pinctrl-mpfs-mssio.c
+ rename drivers/pinctrl/{ => microchip}/pinctrl-pic64gx-gpio2.c (99%)
+ create mode 100644 drivers/pinctrl/pinctrl-generic.c
+
+-- 
+2.51.0
+
 
