@@ -1,127 +1,174 @@
-Return-Path: <linux-gpio+bounces-30776-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30777-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wOx/FHtFcGnXXAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-30776-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 04:18:19 +0100
+	id +LJlHNUrcGniWwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-30777-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 02:28:53 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADA5E50533
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 04:18:18 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEDB74F165
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 02:28:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B407858AB9A
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 11:21:40 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 7E8C08289FC
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 11:43:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DDB1423172;
-	Tue, 20 Jan 2026 11:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="buGNZcfM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1979742317D;
+	Tue, 20 Jan 2026 11:43:16 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD8837F0F5;
-	Tue, 20 Jan 2026 11:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19C2423172;
+	Tue, 20 Jan 2026 11:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768908005; cv=none; b=tKfg7LFmjl9b6GZWSFvZXfmSk3AxZFJHxLfUhAFmPUkU4JB0SVcivFLGkwrF7HNbEFHms4Ow6wEOrj2wuMY0NgL2eRB1ZUMnmtUEvR/JSlt0QmlG7rCdC3nQ4rKxDd03RbWHlmJV9Yjs70a1CbDQE+s5pjHxip07GjgwClImteo=
+	t=1768909395; cv=none; b=pBu7yp39b9ZpERQd9Y9XK+xLD857hin4Oh9j1cfTvONHeh6uzLTMzv3HE7b3Jby5R0idkpDAeqEGaUn58DREisE/FpNgM8AzdHrBGj1gJ7nb+Z37IAlsD6gBq4YekGhde50uvrzgin+Fk5d0mPheAdahr7Qn8gMhpZxHK2RLQfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768908005; c=relaxed/simple;
-	bh=3YKlT/h+DxJLaBffNDx3Q/aGuxwjTJ71ZS1Qx4cQWN8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zz04pFwtncdlUHgz2aDravXTtBndoIs8i/wTp/TnEAq5iXtVaHC0CPHkIjK11xdNi9R3LF3167CtI8lK/TbGpxRLLjuOyYR0NmS1p+4Shfznw4rfmtgSth2XdDVY5ZI9A33fam6Dqf39pgqWA/7vXTgcmPDJpQpPJOsOOzX07/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=buGNZcfM; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768908004; x=1800444004;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3YKlT/h+DxJLaBffNDx3Q/aGuxwjTJ71ZS1Qx4cQWN8=;
-  b=buGNZcfM0Kd4YmzQ4kndsNDx/fskWczaXiCjmsgTNXsLNR+GkShZ12yO
-   jlPYIcI47yq3o0gwk3nsJ/119/K8ViVAMS08rOT4/Aq2+gc0Z8w/Y2EN+
-   Xk0SjZd+eRwvTjAEI8BRRa+B8h7nIbsOFhDldKXsghihUawztQqbwlmST
-   sKZQLJfT46v1B3M5Jw321wjQBKK2sOWP28Da9X/DARNAh50hJOgOkWHVd
-   XoZURDlW/Dg1WGJMsVY1E22gjce8PPnPWIz+F8goHFvmHpqt1KXXf3kF+
-   9x7lTacTrRSYUVuBv/FpvsLv+jV+GpBiE6D+73jFwLaDj2AUny9c2lUB0
-   g==;
-X-CSE-ConnectionGUID: 0Gc+nh3PQmKjqtSoc8Kv+g==
-X-CSE-MsgGUID: HhtRqPYNQZqcX1k+8eJyoA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="69842096"
-X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
-   d="scan'208";a="69842096"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 03:20:03 -0800
-X-CSE-ConnectionGUID: uYf5AtNHQqyiJzC7Byer8g==
-X-CSE-MsgGUID: 1XfRVo1oREyKrsKNmhr7gQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
-   d="scan'208";a="205345683"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa010.jf.intel.com with ESMTP; 20 Jan 2026 03:20:02 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id AB2C499; Tue, 20 Jan 2026 12:20:00 +0100 (CET)
-Date: Tue, 20 Jan 2026 12:20:00 +0100
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: andriy.shevchenko@linux.intel.com, linusw@kernel.org,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, Guido Trentalancia <guido@trentalancia.com>
-Subject: Re: [PATCH] pinctrl: tigerlake: Add Alder Lake-P documentation
-Message-ID: <20260120112000.GI2275908@black.igk.intel.com>
-References: <20260120110042.1021199-1-raag.jadav@intel.com>
+	s=arc-20240116; t=1768909395; c=relaxed/simple;
+	bh=XQLWMm3YsOhtEHJ6iLz4rU8Uz2JmnALhlntXC1iQkvA=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=rJ3vu525KGPHnePfRHsoYbjMbv9qQ2V2gT+HM8o5eu6TzYYNSDO/iJZ3SxnHcPkP8PRvseEQ+8lCCsNb/L3br9DFwF9npJ6DMhNvlXiN+epAnwU8zanfuq9eMgw82ZwMHNa2vbCjmtSW1tggRfHf2b786PbVJOgj4eaf7BgaG6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 20 Jan
+ 2026 19:43:05 +0800
+Received: from [127.0.1.1] (192.168.10.13) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Tue, 20 Jan 2026 19:43:05 +0800
+From: Billy Tsai <billy_tsai@aspeedtech.com>
+Subject: [PATCH v3 0/3] Add pinctrl support for AST2700 SoC
+Date: Tue, 20 Jan 2026 19:43:04 +0800
+Message-ID: <20260120-upstream_pinctrl-v3-0-868fbf8413b5@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260120110042.1021199-1-raag.jadav@intel.com>
-X-Spamd-Result: default: False [-1.96 / 15.00];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEhqb2kC/z3MQQ7CIBBA0as0s5YGaEmpK+9hTIN0kEloSwCNp
+ undJS5cvsX/O2RMhBnOzQ4JX5RpWyu6UwPWm/WBjOZqkFwqIYViz5hLQrNMkVZbUmDaiVHNjpt
+ xUFCzmNDR+7e83qpd2hZWfG3+Iz7yXvCu56LVWuqBCXanED5TyYYuJkfEuaD1rd0WOI4vfEq54
+ KUAAAA=
+X-Change-ID: 20251215-upstream_pinctrl-8f195df0a975
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, "Joel
+ Stanley" <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>,
+	"Linus Walleij" <linusw@kernel.org>, Billy Tsai <billy_tsai@aspeedtech.com>,
+	"Bartosz Golaszewski" <brgl@kernel.org>
+CC: Andrew Jeffery <andrew@aj.id.au>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>,
+	<linux-kernel@vger.kernel.org>, <openbmc@lists.ozlabs.org>,
+	<linux-gpio@vger.kernel.org>, <bmc-sw@aspeedtech.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1768909385; l=3007;
+ i=billy_tsai@aspeedtech.com; s=20251118; h=from:subject:message-id;
+ bh=XQLWMm3YsOhtEHJ6iLz4rU8Uz2JmnALhlntXC1iQkvA=;
+ b=Gxi0bOC2k4CwxLCGJ3+75SuENKeJa42aygju/Eb16ieiH0uqpGEPvIX1fxidn3KU7k4v7A5Ps
+ XtN9gTyxx6EA2EG7f/Ajdtc5Z9m9A08NkB9awKP6WiVs6dQwixj8jxr
+X-Developer-Key: i=billy_tsai@aspeedtech.com; a=ed25519;
+ pk=/A8qvgZ6CPfnwKgT6/+k+nvXOkN477MshEGJvVdzeeQ=
+X-Spamd-Result: default: False [1.74 / 15.00];
+	DMARC_POLICY_QUARANTINE(1.50)[aspeedtech.com : No valid SPF, No valid DKIM,quarantine];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
-	DMARC_POLICY_ALLOW(0.00)[intel.com,none];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30776-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
 	TO_DN_SOME(0.00)[];
-	R_SPF_SOFTFAIL(0.00)[~all:c];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MID_RHS_MATCH_FROM(0.00)[];
+	R_DKIM_NA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mika.westerberg@linux.intel.com,linux-gpio@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,intel.com:dkim,ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: ADA5E50533
+	FROM_NEQ_ENVFROM(0.00)[billy_tsai@aspeedtech.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
+	TAGGED_FROM(0.00)[bounces-30777-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,aspeedtech.com:email,aspeedtech.com:mid]
+X-Rspamd-Queue-Id: BEDB74F165
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Jan 20, 2026 at 04:30:42PM +0530, Raag Jadav wrote:
-> Intel Alder Lake-P PCH reuses pinctrl IP from Tiger Lake-LP. Add user
-> friendly documentation for it.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 0e793a4e2834 ("pinctrl: tigerlake: Add Alder Lake-P ACPI ID")
-> Reported-by: Guido Trentalancia <guido@trentalancia.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220056
-> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+This series adds device tree bindings and a pinctrl driver for the
+ASPEED AST2700 SoC.
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+AST2700 is composed of two interconnected SoC instances, each providing
+its own pin control hardware. This series introduces bindings describing
+the AST2700 pinctrl architecture and adds pinctrl driver support for the
+SoC0 instance.
+
+The bindings document the AST2700 dual-SoC design and follow common
+pinctrl conventions, while the driver implementation builds upon the
+existing ASPEED pinctrl infrastructure.
+
+---
+Changes in v3:
+dt-bindings: pinctrl: aspeed: AST2700 pinctrl improvements
+- Improved binding descriptions for SoC0 and SoC1 to better explain the
+  AST2700 dual-SoC architecture with independent pin control blocks
+- Switched from additionalProperties to patternProperties using the
+  '-state$' suffix to restrict child node naming
+- Removed per-binding examples based on review feedback
+- Added additionalProperties: false at the top level for stricter schema
+  validation
+- Dropped the aspeed,ast2700-soc1-pinctrl binding, as the SoC1 pinctrl
+  registers follow a regular layout and can be described using an
+  existing generic pinctrl binding
+- Updated the function and group enum lists to match the definitions
+  used by the AST2700 pinctrl driver
+
+dt-bindings: mfd: aspeed: Add AST2700 SCU example with pinctrl
+- Added a complete AST2700 SCU0 example demonstrating pinctrl integration
+- Example covers both pin function/group configuration and pin
+  drive-strength settings
+- Updated child node naming to use the '-state' suffix, following common
+  pinctrl conventions
+
+pinctrl: aspeed: AST2700 SoC0 driver improvements
+- Refactored pin and signal declarations to use common ASPEED pinmux
+  macros (SIG_EXPR_LIST_DECL_SEMG, SIG_EXPR_LIST_DECL_SESG, PIN_DECL_*)
+- Added SCU010 register definition for hardware strap control
+- Reworked code structure to better align with existing ASPEED pinctrl
+  drivers
+
+- Link to v2: https://lore.kernel.org/r/20250904103401.88287-1-billy_tsai@aspeedtech.com
+
+Changes in v2:
+- Update pinctrl aspeed binding files.
+- Update the commit message for pinctrl binding patch.
+- Link to v1: https://lore.kernel.org/r/20250829073030.2749482-1-billy_tsai@aspeedtech.com
+
+---
+Billy Tsai (3):
+      Add compatible strings for AST2700 pinctrl to the SCU binding.
+      dt-bindings: pinctrl: aspeed: Add support for AST27xx
+      pinctrl: aspeed: add G7(AST2700) SoC0 pinctrl support
+
+ .../bindings/mfd/aspeed,ast2x00-scu.yaml           |  28 +
+ .../pinctrl/aspeed,ast2700-soc0-pinctrl.yaml       | 130 ++++
+ drivers/pinctrl/aspeed/Kconfig                     |   8 +
+ drivers/pinctrl/aspeed/Makefile                    |   1 +
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g7-soc0.c    | 683 +++++++++++++++++++++
+ 5 files changed, 850 insertions(+)
+---
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+change-id: 20251215-upstream_pinctrl-8f195df0a975
+
+Best regards,
+-- 
+Billy Tsai <billy_tsai@aspeedtech.com>
+
 
