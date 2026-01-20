@@ -1,99 +1,108 @@
-Return-Path: <linux-gpio+bounces-30750-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30751-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D47CD3BC1D
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 00:54:02 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 657CFD3BC67
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 01:32:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4184D3029EB6
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jan 2026 23:53:41 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0020F302BF56
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 00:32:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85F3E29E0E6;
-	Mon, 19 Jan 2026 23:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JrUlcXsW"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B81815E5BB;
+	Tue, 20 Jan 2026 00:31:58 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3253BB57
-	for <linux-gpio@vger.kernel.org>; Mon, 19 Jan 2026 23:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ADFAE54B;
+	Tue, 20 Jan 2026 00:31:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768866820; cv=none; b=eSndnisTefd2sdpKmsIAZpOhLgYQ2865lrpfjaZPlA/TYbjZ0U81HtsoVne0boJjw+LhwmSnDvI/InP+NW7S3zUc69X77FfEV7N2/BAKCiiy3NyiL5zJzsycYfEd1ZfYsdWfMHHD4eBMohBtKBNOeSNwjC/hnp9AtzjM/tPZ1/E=
+	t=1768869118; cv=none; b=hLdrT8STQorBIjatQIh7wBJjzYxse0RCSNCelcYI4XY7eOxCuFoJb8gecWRaIcbjYQJdLfkiipY9OcUUT7EQdCYrv/+WKuX/i7ynCm046fzXA2R+TVw97N4KV1vOdcVU9EbhaHc0GGNnXOtue0FZkG5QQ/xgBsrbq1XApFUIxEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768866820; c=relaxed/simple;
-	bh=cGakJU4QjXpVKqVk7iTfLklopa5iarhgK0sVfCXw2Zc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pXqamik9FlZl8CENBepHIgrIJIq4snkbcUU2A5YgTbDmySU3CzgKcjpgmeYiNBpUEzQ8zEHHFHz70Na+oLZs3VXJC1TzuwZtfbJCYHSdFfBxeaeUB6NrtBSK5yTEScaXHycGuSF2kv+0rQoz8N73/Vzf7sqplL2TfeBDLELT8ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JrUlcXsW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D9C2C2BCB0
-	for <linux-gpio@vger.kernel.org>; Mon, 19 Jan 2026 23:53:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768866820;
-	bh=cGakJU4QjXpVKqVk7iTfLklopa5iarhgK0sVfCXw2Zc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=JrUlcXsWcm3Gep3dMJbs+AmlhGfq4qhDeSk1ypl7KVINik2k7POZsc/6ubyGlAFF3
-	 wXvGJ78usnvU6Vs2JHoJWfqsKeRCt6KExuIdYokRSG8FDVupx+u3Mcf5x7LifTEzvq
-	 jz9mwLUX6eltjGfef+3JJV+/te/51TYUMhrBi76m7oStoXO7WJEeSIkIGRaOOQStBf
-	 9c+PL8npUVgkYCtUliwfFcsAhg/wuhnv/9FPD1Kg8JleEBEuaYqo8KfAE/mRStIFsD
-	 2V3M1ZzhJmd0KEylxYM+dQBKLWstjxsFUwJhsZBl+HZYzxQAcmwU/uEMYjsok7pij9
-	 tl493tMSjdKKg==
-Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-6493937c208so545177d50.2
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Jan 2026 15:53:40 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU9aUN8gLLN5wqXqXIZ3/j9ECckMmVfKz4PQ/Z53jSQyfI+sL7+rNma7jFPBSZ3HtiEf2A5181ljB5T@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTWHAGcRtm8d+t2YelSNePT8XGvyPOn6V+OsohQOLr1tCVqkS2
-	P+eL12WXla5pQBAVEyZT+QGvK6zXqNfV+AviVh4I6AlECdsBgnrxo4K9BdbhuSCs1j7nDOhlf97
-	itqQr7HCjsVhy32Y4m6dcaGRw3XqVrrw=
-X-Received: by 2002:a05:690e:1685:b0:643:2169:d6d3 with SMTP id
- 956f58d0204a3-64917736136mr8776075d50.69.1768866819491; Mon, 19 Jan 2026
- 15:53:39 -0800 (PST)
+	s=arc-20240116; t=1768869118; c=relaxed/simple;
+	bh=lPl6SOq9NXLoSBJb6nwjexvYAcO40lQytpLzAq9ZKsI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VHd7X6bgtXFy/l4/Z0vBQK4IKPQuvXnWes4c/gQVwbLJOGKZxyO6fQuqHrM6YECasmxDbCDN9P/s2LAStS6Eh2x5BTYw22iqMq5gek1tQ7NfiAO9vi/wWOhOHWBAibfL86iP7bhBJ1WLdzLDhSZdaL6AZvZQ1X0hZpxwTyprVpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.27.242])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 2CD9C340D4D;
+	Tue, 20 Jan 2026 00:31:54 +0000 (UTC)
+Date: Tue, 20 Jan 2026 08:31:50 +0800
+From: Yixun Lan <dlan@gentoo.org>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Troy Mitchell <troy.mitchell@linux.spacemit.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] pinctrl: spacemit: support I/O power domain
+ configuration
+Message-ID: <20260120003150-GYA56672@gentoo.org>
+References: <20260108-kx-pinctrl-aib-io-pwr-domain-v2-0-6bcb46146e53@linux.spacemit.com>
+ <CAD++jLnM=1iyb0-=Jzqq+jPKtSvR+dbb1w8BNNcr+evdQFg4Eg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260108-kx-pinctrl-aib-io-pwr-domain-v2-0-6bcb46146e53@linux.spacemit.com>
- <20260108-kx-pinctrl-aib-io-pwr-domain-v2-3-6bcb46146e53@linux.spacemit.com>
-In-Reply-To: <20260108-kx-pinctrl-aib-io-pwr-domain-v2-3-6bcb46146e53@linux.spacemit.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Tue, 20 Jan 2026 00:53:28 +0100
-X-Gmail-Original-Message-ID: <CAD++jLnmbGN1riUpXGa3kuwVQh2gQ8D9GZgtnJDs2yzouvBY6Q@mail.gmail.com>
-X-Gm-Features: AZwV_Qh_eDw0c-w4THoUkVrCkuqzPwqyf9Zz69eeTwoO5y4GUJtui-8WqMWvvzs
-Message-ID: <CAD++jLnmbGN1riUpXGa3kuwVQh2gQ8D9GZgtnJDs2yzouvBY6Q@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] riscv: dts: spacemit: modify pinctrl node in dtsi
-To: Troy Mitchell <troy.mitchell@linux.spacemit.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, Paul Walmsley <pjw@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	spacemit@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD++jLnM=1iyb0-=Jzqq+jPKtSvR+dbb1w8BNNcr+evdQFg4Eg@mail.gmail.com>
 
-On Thu, Jan 8, 2026 at 7:43=E2=80=AFAM Troy Mitchell
-<troy.mitchell@linux.spacemit.com> wrote:
+Hi Linus,
 
-> Change the size of the reg register to 0x1000 to match the hardware.
-> This register range covers the IO power domain's register addresses.
->
-> The IO power domain registers are protected. In order to access the
-> protected IO power domain registers, a valid unlock sequence must be
-> performed by writing the required keys to the AIB Secure Access Register
-> (ASAR).
->
-> The ASAR register resides within the APBC register address space.
-> A corresponding syscon property `spacemit,apbc` is added to allow
-> the pinctrl driver to access this register.
->
-> Signed-off-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+On 00:52 Tue 20 Jan     , Linus Walleij wrote:
+> On Thu, Jan 8, 2026 at 7:43 AM Troy Mitchell
+> <troy.mitchell@linux.spacemit.com> wrote:
+> 
+> > This series adds support for configuring IO power domain voltage for
+> > dual-voltage GPIO banks on the Spacemit K1 SoC.
+> >
+> > On K1, IO domain power control registers determine whether a GPIO bank
+> > operates at 1.8V or 3.3V. These registers default to 3.3V operation,
+> > which may lead to functional failures when GPIO banks are externally
+> > supplied with 1.8V but internally remain configured for 3.3V.
+> >
+> > The IO power domain registers are implemented as secure registers and
+> > require an explicit unlock sequence via the AIB Secure Access Register
+> > (ASAR), located in the APBC register space.
+> >
+> > This series ensures that pin voltage configuration correctly reflects
+> > hardware requirements.
+> >
+> > Signed-off-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+> 
+> Excellent work in this patch series Troy!
+> 
+> > Troy Mitchell (3):
+> >       dt-bindings: pinctrl: spacemit: add syscon property
+> >       pinctrl: spacemit: support I/O power domain configuration
+> 
+> These two patches applied to the pin control tree.
+> 
+> >       riscv: dts: spacemit: modify pinctrl node in dtsi
+> 
+> Please funnel this one through the SoC tree.
+> 
+Thanks, I will take care of this
 
-Acked-by: Linus Walleij <linusw@kernel.org>
+> Yours,
+> Linus Walleij
+> 
 
-I have applied patches 1 & 2 in the series.
-
-Yours,
-Linus Walleij
+-- 
+Yixun Lan (dlan)
 
