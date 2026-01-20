@@ -1,173 +1,142 @@
-Return-Path: <linux-gpio+bounces-30801-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30802-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OFT8MLtAcGnXXAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-30801-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 03:58:03 +0100
+	id qBTlF+tFcGnXXAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-30802-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 04:20:11 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69919501EC
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 03:58:03 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08AE05057E
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 04:20:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 2176544B482
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 12:28:59 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id BB2374CAF64
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 12:56:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C6C2426EA7;
-	Tue, 20 Jan 2026 12:27:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E05B7438FF4;
+	Tue, 20 Jan 2026 12:52:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hHyqsg7S"
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="WC2t/1U5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpdh20-1.aruba.it (smtpdh20-1.aruba.it [62.149.155.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257A6426D20;
-	Tue, 20 Jan 2026 12:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9567442EEC5
+	for <linux-gpio@vger.kernel.org>; Tue, 20 Jan 2026 12:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.155.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768912070; cv=none; b=DRPTdey8A2RzmfNVj5TcZbD4sof1UjDrrDVWBscmQb6w2WqXCf1IUa0kobYb3KZD9cAKXt7nryWD6WktAo8rUH68OJR6FleKx6st+7bIGsG1zRCxxcHEHXXBkhpmeeC0YdgHuaEGXBSjtdeGrEkRXSgbgFlKaalYy3cNRElqcPw=
+	t=1768913565; cv=none; b=MWeGuu93pPffg/1nrk8vNDQVp3nPgwB2/FBffoSgNdhcz6rdfddq5GOMQMIVUty59CCxXwxXcjeZRolWLSWyqZskkgHIvjSPDEAxeViW6vXZVfgBx3OH+wV1iARYYt3HmhK34LmKs3u0KGYrKfEKBoT625xALfq9N7z0mzGHWOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768912070; c=relaxed/simple;
-	bh=OBQa66E8qIIZZ+a5/f/YUB/uMB9Oa+5RXnBGA2tH1VA=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=s6xSfG9RlvjBPHn8UaWERSG5d5xu7EJWgMBhH/X913VdFrN+ssv4LjUgqAHFbb3Bdd8VtYixedlOhPGLG9DDEIDsLuB4UfKuL1rh9gb5WOFGc7oTKym/lglfLSsgcxrfQTZsH5w6J5i4Ah5844VUOS9NkddSszZn2Y6C6SV/e8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hHyqsg7S; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B855DC16AAE;
-	Tue, 20 Jan 2026 12:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768912069;
-	bh=OBQa66E8qIIZZ+a5/f/YUB/uMB9Oa+5RXnBGA2tH1VA=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=hHyqsg7SLKU6D/+NrFAwaN3MhGr5XHbaGDgQQaIQvl+t/iY5qBmfoYu4l8P1Lcgm2
-	 oqJ3zQmgw1zYfVFAqf8RWA870XZkWL9FQDro7p9evW2z0tw4c4/sBvgKaSQtE4S5hn
-	 CdQsPuEKhcpai1OKgQmiT+5ZVmFPe9frZIGN4ZfeuxtJ7DNvwhniQ85cZa9PK0IB8T
-	 LRTiByz0h8vDb+LxO4ccWKXYiOI8JKsTMY1lsJ9exLUtk9yiLYW4Mi8tjUvTgSQUVa
-	 U4O5JcFDH62U61e3HJyoNXKzJhwJ7VTiD1wcAU6iW1MKXr8WJHEzxlNP0uS3iWfgpB
-	 YOcSVoJ6njokA==
-Date: Tue, 20 Jan 2026 06:27:48 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1768913565; c=relaxed/simple;
+	bh=tzkYK4R3LsxT7YpLjSwoyXH/3Qa5Uwuf0440RYSVm4U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:Mime-Version; b=XMWYMurHc9RYK2q52d7a4TZoWCl1fMxfcMgcb2adpxynwJ2ontsNAkjoy0rmvOa65qKnkbn9H+qMlaSt3+lcVIY/uEdQz0qr5ocBEQoupUKtbC/Ts1IW4tCdTNsbGW0Mmb5z1+cLtGzHP8o6poC/ywjc5ki2M4M9DM5XW4NgTho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trentalancia.com; spf=pass smtp.mailfrom=trentalancia.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=WC2t/1U5; arc=none smtp.client-ip=62.149.155.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trentalancia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trentalancia.com
+Received: from [192.168.43.2] ([93.35.34.173])
+	by Aruba SMTP with ESMTPSA
+	id iBDovNy48iuHAiBDpvJxHT; Tue, 20 Jan 2026 13:52:38 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1768913558; bh=tzkYK4R3LsxT7YpLjSwoyXH/3Qa5Uwuf0440RYSVm4U=;
+	h=Subject:From:To:Date:Content-Type:Mime-Version;
+	b=WC2t/1U52vwtfzQQkO5HrJmCS1bmdJxgaYYLnKb+WLa6fC/o+ZcnwPtdx1HBnnTZQ
+	 V2L+U1NB09QsByYOop9unpBJO2gAjL3+hbMYgo78/bYx+nJhPpW4zqJomX2zd6MoAS
+	 JbpkZE71wB7fkjDiAGNQn/6TIJTHQt5fU8oo98siekJ1/tCdxKZ8L2+zWouz13agCS
+	 zdgIMc7i8gSUaYHdZLRsxebKVaATj/8tsQ5/KNn52cERR0pJbi8+3Oa6hb85LdiSNd
+	 FnqV8/40V15wg7Nh2d4/pCQ43HGh0JU7XXrsBLqW7ZEwIYcNXE1JWXmz/sbEGPtEa2
+	 CMadH398JIWZA==
+Message-ID: <1768913556.5518.15.camel@trentalancia.com>
+Subject: Re: [PATCH] pinctrl: tigerlake: Add Alder Lake-P documentation
+From: Guido Trentalancia <guido@trentalancia.com>
+To: Raag Jadav <raag.jadav@intel.com>, andriy.shevchenko@linux.intel.com, 
+	mika.westerberg@linux.intel.com, linusw@kernel.org
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Date: Tue, 20 Jan 2026 13:52:36 +0100
+In-Reply-To: <20260120110042.1021199-1-raag.jadav@intel.com>
+References: <20260120110042.1021199-1-raag.jadav@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: bmc-sw@aspeedtech.com, Andrew Jeffery <andrew@codeconstruct.com.au>, 
- Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, 
- Linus Walleij <linusw@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
- linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Bartosz Golaszewski <brgl@kernel.org>, Joel Stanley <joel@jms.id.au>, 
- Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org
-To: Billy Tsai <billy_tsai@aspeedtech.com>
-In-Reply-To: <20260120-upstream_pinctrl-v3-2-868fbf8413b5@aspeedtech.com>
-References: <20260120-upstream_pinctrl-v3-0-868fbf8413b5@aspeedtech.com>
- <20260120-upstream_pinctrl-v3-2-868fbf8413b5@aspeedtech.com>
-Message-Id: <176891206887.1610236.16662937885214497301.robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: pinctrl: aspeed: Add support for
- AST27xx
-X-Spamd-Result: default: False [0.54 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfE/hFUQL4Jy4Kpr7HIsfw2BYvCIeCRVLQLygetN9pejH3Mhvr5ic//yEJ0o0ZMMs0ndAkn31H1QkAHP1tmrRbVInwuy/Ah5rQ52hN4oy40sUiHjH3KQS
+ 1fsRIVifNPn16XIp8xVuQAr9mIBQkcu1VbJnEn1/OwJuaoom9nOir+kVEpqc5Ah8THAbWetvjcQTG9XtqTbtYwVxufK1Ze0O8MNvksOwEJ4HqhxOH2O0fUFJ
+ gU0tib7CpB0nPfTcr4Ij8T20tMdCsV+xXpUJLrhMM69I2W9qetIoGdy8ck9FGedhmq6DVnDig2ETdhBTnIGDmSfb2pxjosz2l5VtGZEFfL//I1cwHnzgKB3l
+ sYwWBToRN5CalkHPzUEF424g56yl+OLmPvBBk4m1ox9n11Fi2eVe2RiwhTT5U1astrumTpkgUG1jTCiWmBXtMcA0KRH/uw==
+X-Spamd-Result: default: False [1.04 / 15.00];
+	DMARC_POLICY_REJECT(2.00)[trentalancia.com : No valid SPF, DKIM not aligned (relaxed),reject];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	MV_CASE(0.50)[];
+	R_DKIM_ALLOW(-0.20)[aruba.it:s=a1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	TAGGED_FROM(0.00)[bounces-30801-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-30802-lists,linux-gpio=lfdr.de];
+	DKIM_TRACE(0.00)[aruba.it:+];
 	RCVD_COUNT_THREE(0.00)[4];
-	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	R_SPF_SOFTFAIL(0.00)[~all:c];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_PROHIBIT(0.00)[0.0.1.144:email];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: 69919501EC
+	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[guido@trentalancia.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
+	PRECEDENCE_BULK(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,intel.com:email,aruba.it:dkim]
+X-Rspamd-Queue-Id: 08AE05057E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Someone erroneously marked the bug as CLOSED INVALID, while only the
+proposed resolution was INVALID and not the bug itself.
 
-On Tue, 20 Jan 2026 19:43:06 +0800, Billy Tsai wrote:
-> Add bindings for the pin controller found in ASPEED AST27xx SoCs.
+This patch solves the issue because it informs the user on the correct
+driver to choose for Alder Lake-P.
+
+Acked-by: Guido Trentalancia <guido@trentalancia.com>
+
+On Tue, 20/01/2026 at 16.30 +0530, Raag Jadav wrote:
+> Intel Alder Lake-P PCH reuses pinctrl IP from Tiger Lake-LP. Add user
+> friendly documentation for it.
 > 
-> The AST2700 SoC consists of two interconnected SoC instances, each
-> with its own pin controller register block managed by a separate
-> System Control Unit (SCU).
-> 
-> Introduce the "aspeed,ast2700-soc0-pinctrl" compatible string to
-> describe the SoC0 pin controller, which is not compatible with
-> existing ASPEED pinctrl bindings.
-> 
-> The SoC1 pin controller follows a regular and predictable register
-> layout and can be described using an existing generic pinctrl
-> binding, therefore no dedicated AST2700-specific compatible string
-> is introduced for it.
-> 
-> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> Cc: stable@vger.kernel.org
+> Fixes: 0e793a4e2834 ("pinctrl: tigerlake: Add Alder Lake-P ACPI ID")
+> Reported-by: Guido Trentalancia <guido@trentalancia.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220056
+> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
 > ---
->  .../bindings/mfd/aspeed,ast2x00-scu.yaml           |  27 +++++
->  .../pinctrl/aspeed,ast2700-soc0-pinctrl.yaml       | 130 +++++++++++++++++++++
->  2 files changed, 157 insertions(+)
+>  drivers/pinctrl/intel/Kconfig | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/aspeed,ast2700-soc0-pinctrl.yaml: patternProperties:-state$: 'anyOf' conditional failed, one must be fixed:
-	'pins' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'dependentRequired', 'dependentSchemas', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
-	'type' was expected
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/aspeed,ast2700-soc0-pinctrl.yaml: patternProperties:-state$: 'anyOf' conditional failed, one must be fixed:
-	'drive-strength' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'dependentRequired', 'dependentSchemas', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
-	'type' was expected
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/aspeed,ast2700-soc0-pinctrl.yaml: patternProperties:-state$: 'pins' is not one of ['type', 'description', 'dependencies', 'dependentRequired', 'dependentSchemas', 'properties', 'patternProperties', 'additionalProperties', 'unevaluatedProperties', 'deprecated', 'required', 'not', 'if', 'else', 'then', 'allOf', 'anyOf', 'oneOf', '$ref']
-	from schema $id: http://devicetree.org/meta-schemas/nodes.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/aspeed,ast2700-soc0-pinctrl.yaml: patternProperties:-state$: 'drive-strength' is not one of ['type', 'description', 'dependencies', 'dependentRequired', 'dependentSchemas', 'properties', 'patternProperties', 'additionalProperties', 'unevaluatedProperties', 'deprecated', 'required', 'not', 'if', 'else', 'then', 'allOf', 'anyOf', 'oneOf', '$ref']
-	from schema $id: http://devicetree.org/meta-schemas/nodes.yaml
-Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.example.dts:63.13-50: Warning (ranges_format): /example-1/syscon@12c02000:ranges: "ranges" property has invalid length (16 bytes) (parent #address-cells == 1, child #address-cells == 1, #size-cells == 1)
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.example.dtb: syscon@12c02000 (aspeed,ast2700-scu0): reg: [[0, 314580992], [0, 4096]] is too long
-	from schema $id: http://devicetree.org/schemas/mfd/aspeed,ast2x00-scu.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.example.dtb: pinctrl@400 (aspeed,ast2700-soc0-pinctrl): 'reg' does not match any of the regexes: '-state$', '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/aspeed,ast2700-soc0-pinctrl.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.example.dtb: pinctrl@400 (aspeed,ast2700-soc0-pinctrl): emmcclk-driving-state: 'drive-strength', 'pins' do not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/aspeed,ast2700-soc0-pinctrl.yaml
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.kernel.org/project/devicetree/patch/20260120-upstream_pinctrl-v3-2-868fbf8413b5@aspeedtech.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+> diff --git a/drivers/pinctrl/intel/Kconfig
+> b/drivers/pinctrl/intel/Kconfig
+> index e4dc9ba899bd..045651fde31f 100644
+> --- a/drivers/pinctrl/intel/Kconfig
+> +++ b/drivers/pinctrl/intel/Kconfig
+> @@ -160,7 +160,9 @@ config PINCTRL_TIGERLAKE
+>  	select PINCTRL_INTEL
+>  	help
+>  	  This pinctrl driver provides an interface that allows
+> configuring
+> -	  of Intel Tiger Lake PCH pins and using them as GPIOs.
+> +	  PCH pins of the following platforms and using them as
+> GPIOs.
+> +	  - Tiger Lake
+> +	  - Alder Lake-P
+>  
+>  source "drivers/pinctrl/intel/Kconfig.tng"
+>  endmenu
 
