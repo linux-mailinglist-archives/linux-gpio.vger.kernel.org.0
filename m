@@ -1,150 +1,148 @@
-Return-Path: <linux-gpio+bounces-30758-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30759-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8AA7D3BE6C
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 05:31:07 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35E66D3BEEE
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 07:03:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A92334EADA6
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 04:30:30 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D4DCB4E8C36
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 06:03:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BAA2346A1D;
-	Tue, 20 Jan 2026 04:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oBSIMFob"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B85732BF26;
+	Tue, 20 Jan 2026 06:03:42 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160DE1F12E0;
-	Tue, 20 Jan 2026 04:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3872EC2EA;
+	Tue, 20 Jan 2026 06:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768883424; cv=none; b=mCSxjuDP6vNZ/Qaxy500MSjebrSNDT8Lzb1JyVy2I7/Iq06r3pa66KF6kSbhcQvxkQH0Z3J7CeHs20P3Z0mtMMJq2Ze+wfiby/r8ksVqr3mmLkf+v1gOCytfAksaUKMw5pP7sU5W+MqfZwjnZ1lKHwikEuyczVQJi9y7zlozrIY=
+	t=1768889021; cv=none; b=E0YC7DIaSoj71BZilaSwHKKLhfh3JthDNb4zAlcz9r1m3WF3mTE84gORYkw/V2UeLnXJgCZPZPowekGDvJC9isTQcMaAvf4Zlpy6P3fs6Fw86FgowcK6hZNS01O4QGeR4QrnZk5U++SgGu5KwTaIIPAHFYhaIfTVgMxro5Xzy14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768883424; c=relaxed/simple;
-	bh=HrTGxOIzAWOsG442JYWnxT5VLuB38BiL2DLjt2iHGC0=;
+	s=arc-20240116; t=1768889021; c=relaxed/simple;
+	bh=EPpoYfxx1tizPpYQl75tskQojeGcYOI3bMbcyeRn3PM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PAyXWI5UuYpLq5sV0XirRSj3iLJg+Wes0Ew3QQLVO7BqoVyIAQ/XjUN07667HVy7cSpEWocO5yidc7/bKFpoqUZY09OOSKXqNBmHu6zS2bwjelZICrHAjPzzgNoCNTNrPeNtapFohSkA8H1uTNk+ykuzhOvIXQ1+iG7w0W1/JV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oBSIMFob; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B01AC16AAE;
-	Tue, 20 Jan 2026 04:30:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768883419;
-	bh=HrTGxOIzAWOsG442JYWnxT5VLuB38BiL2DLjt2iHGC0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oBSIMFobJeA77Y+l8QTN3AbJFijrNmnr5lDh4TawZ3CvFV60KRDyx1E8s1jVb5Vrf
-	 ALL4yL6k8FxoklE4h4n6j+zrIBCtaxyxuFw/Xw6t6l5Vr2mEQx+1MpnD9GJwhdFqsk
-	 ra4zHUzFyrZiTkxxlHIOTdfCMuAWNqi9z9DMAVwdC9aR6Yqxwqo5lZutGiCVeiY/lP
-	 uRIbuRbe06cDopPqiuufc5BBqsEt5pSRA+SeTi4l/yhfzF56lI8pgOMpUv69wyyYve
-	 /MU6wR9BgMc/jO7UYPTV3BU+bBHoZ51afst/oumh+1zVZfLKvwnQhuHBkz+xMwIY8E
-	 Zuclt0UzSo7SQ==
-Date: Tue, 20 Jan 2026 04:30:14 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Benson Leung <bleung@chromium.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Linus Walleij <linusw@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
-	linux-kselftest@vger.kernel.org,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Dan Williams <dan.j.williams@intel.com>, linux-gpio@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 01/23] gpiolib: Correct wrong kfree() usage for
- `kobj->name`
-Message-ID: <aW8E1i6L7-fhORFA@google.com>
-References: <20260116081036.352286-1-tzungbi@kernel.org>
- <20260116081036.352286-2-tzungbi@kernel.org>
- <20260116141356.GI961588@nvidia.com>
- <CAMRc=MfNHuTYsZJ+_RqPN1TtLOHsenv2neD5wvhA18NH6m7XjA@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LfjDuYgYrryyzLI6x+OycG1wb34Ieo+B46Eoz3TsIOhzrM/iVDAS8+BF22XlalVvhVNdWvqYRsQyMKcxmXHFnuSLXdCktGGHYr3wDF3JY1fnnOeH+GqGPvTyhH52x9P/5Ktq2LbrndY3JYRNIYgtIMAIYIxQoGuiq7YYgGq0+FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn; spf=pass smtp.mailfrom=isrc.iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isrc.iscas.ac.cn
+Received: from duge-virtual-machine (unknown [223.160.206.31])
+	by APP-05 (Coremail) with SMTP id zQCowABn+w6sGm9psVe6BQ--.38261S2;
+	Tue, 20 Jan 2026 14:03:26 +0800 (CST)
+Date: Tue, 20 Jan 2026 14:03:24 +0800
+From: Jiayu Du <jiayu.riscv@isrc.iscas.ac.cn>
+To: linusw@kernel.org
+Cc: pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	alex@ghiti.fr, linux-gpio@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	gaohan@iscas.ac.cn, me@ziyao.cc
+Subject: Re: [PATCH v2] pinctrl: canaan: k230: Fix NULL pointer dereference
+ when parsing devicetree
+Message-ID: <aW8arOPzmpigRW+a@duge-virtual-machine>
+References: <20251228154947.194684-1-jiayu.riscv@isrc.iscas.ac.cn>
+ <aWiLFFnk9aAiMMJI@duge-virtual-machine>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfNHuTYsZJ+_RqPN1TtLOHsenv2neD5wvhA18NH6m7XjA@mail.gmail.com>
+In-Reply-To: <aWiLFFnk9aAiMMJI@duge-virtual-machine>
+X-CM-TRANSID:zQCowABn+w6sGm9psVe6BQ--.38261S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCw1UWr1rZryDZF4xGFWDXFb_yoW5Jw13pF
+	4fJa98Kr4UJr48W34jva1UZFya9an2y34fCw17t3s5K3Z8tryDJ3W5WrWUZ398Crs8CF1f
+	tr45tFya9r4DXr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvvb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l
+	c7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+	14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
+	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+	IFyTuYvjxU2VbyDUUUU
+X-CM-SenderInfo: 5mld534oul2uny6l223fol2u1dvotugofq/
 
-On Fri, Jan 16, 2026 at 03:38:37PM +0100, Bartosz Golaszewski wrote:
-> On Fri, Jan 16, 2026 at 3:14 PM Jason Gunthorpe <jgg@nvidia.com> wrote:
-> >
-> > On Fri, Jan 16, 2026 at 08:10:14AM +0000, Tzung-Bi Shih wrote:
-> > > `kobj->name` should be freed by kfree_const()[1][2].  Correct it.
-> > >
-> > > [1] https://elixir.bootlin.com/linux/v6.18/source/lib/kasprintf.c#L41
-> > > [2] https://elixir.bootlin.com/linux/v6.18/source/lib/kobject.c#L695
-> > >
-> > > Cc: stable@vger.kernel.org
-> > > Fixes: c351bb64cbe6 ("gpiolib: free device name on error path to fix kmemleak")
-> > > Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
-> > > ---
-> > >  drivers/gpio/gpiolib.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > > index 5eb918da7ea2..ba9323432e3a 100644
-> > > --- a/drivers/gpio/gpiolib.c
-> > > +++ b/drivers/gpio/gpiolib.c
-> > > @@ -1263,7 +1263,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
-> > >  err_free_descs:
-> > >       kfree(gdev->descs);
-> > >  err_free_dev_name:
-> > > -     kfree(dev_name(&gdev->dev));
-> > > +     kfree_const(dev_name(&gdev->dev));
-> > >  err_free_ida:
-> > >       ida_free(&gpio_ida, gdev->id);
-> > >  err_free_gdev:
-> >         kfree(gdev);
-> >
-> > I don't think users should be open coding this, put_device() frees the
-> > dev_name properly. The issue here is that the code doesn't call
-> > device_initialize() before doing dev_set_name() and then tries to
-> > fiddle a weird teardown sequence when it eventually does get initialized:
-> >
-> > err_remove_from_list:
-> >         if (gdev->dev.release) {
-> >                 /* release() has been registered by gpiochip_setup_dev() */
-> >                 gpio_device_put(gdev);
-> >                 goto err_print_message;
-> >         }
-> >
-> > If gpiochip_add_data_with_key() is split into two functions, one that
-> > does kzalloc(), some initialization and then ends with
-> > device_initialize(), then a second function that calls the first and
-> > does the rest of the initialization and error unwinds with
-> > put_device() it will work a lot better.
+On Thu, Jan 15, 2026 at 02:38:14PM +0800, Jiayu Du wrote:
+> On Sun, Dec 28, 2025 at 11:49:47PM +0800, Jiayu Du wrote:
+> > When probing the k230 pinctrl driver, the kernel triggers a NULL pointer
+> > dereference. The crash trace showed:
+> > [    0.732084] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000068
+> > [    0.740737] ...
+> > [    0.776296] epc : k230_pinctrl_probe+0x1be/0x4fc
+> > 
+> > In k230_pinctrl_parse_functions(), we attempt to retrieve the device
+> > pointer via info->pctl_dev->dev, but info->pctl_dev is only initialized
+> > after k230_pinctrl_parse_dt() completes.
+> > 
+> > At the time of DT parsing, info->pctl_dev is still NULL, leading to
+> > the invalid dereference of info->pctl_dev->dev.
+> > 
+> > Use the already available device pointer from platform_device
+> > instead of accessing through uninitialized pctl_dev.
+> > 
+> > Fixes: d94a32ac688f ("pinctrl: canaan: k230: Fix order of DT parse and pinctrl register")
+> > Signed-off-by: Jiayu Du <jiayu.riscv@isrc.iscas.ac.cn>
+> > ---
+> >  drivers/pinctrl/pinctrl-k230.c | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pinctrl/pinctrl-k230.c b/drivers/pinctrl/pinctrl-k230.c
+> > index d716f23d837f..20f7c0f70eb7 100644
+> > --- a/drivers/pinctrl/pinctrl-k230.c
+> > +++ b/drivers/pinctrl/pinctrl-k230.c
+> > @@ -65,6 +65,7 @@ struct k230_pmx_func {
+> >  };
+> >  
+> >  struct k230_pinctrl {
+> > +	struct device		*dev;
+> >  	struct pinctrl_desc	pctl;
+> >  	struct pinctrl_dev	*pctl_dev;
+> >  	struct regmap		*regmap_base;
+> > @@ -470,7 +471,7 @@ static int k230_pinctrl_parse_groups(struct device_node *np,
+> >  				     struct k230_pinctrl *info,
+> >  				     unsigned int index)
+> >  {
+> > -	struct device *dev = info->pctl_dev->dev;
+> > +	struct device *dev = info->dev;
+> >  	const __be32 *list;
+> >  	int size, i, ret;
+> >  
+> > @@ -511,7 +512,7 @@ static int k230_pinctrl_parse_functions(struct device_node *np,
+> >  					struct k230_pinctrl *info,
+> >  					unsigned int index)
+> >  {
+> > -	struct device *dev = info->pctl_dev->dev;
+> > +	struct device *dev = info->dev;
+> >  	struct k230_pmx_func *func;
+> >  	struct k230_pin_group *grp;
+> >  	static unsigned int idx, i;
+> > @@ -596,6 +597,8 @@ static int k230_pinctrl_probe(struct platform_device *pdev)
+> >  	if (!info)
+> >  		return -ENOMEM;
+> >  
+> > +	info->dev = dev;
+> > +
+> >  	pctl = &info->pctl;
+> >  
+> >  	pctl->name	= "k230-pinctrl";
+> > -- 
+> > 2.52.0
+> > 
+Hi Linus, sorry for bothering again. Could you please take a look at
+this patch? Thanks for your time.
 
-That's basically what the aggressive patch 03/23 tries to do without
-separating the first half to an indepedent function.
+Regards,
+Jiayu Du
+ 
 
-Generally, I think we can try to move device_initialize() earlier in the
-function.  On error handling paths, just put_device() for it.  In the
-.release() callback, free the resource iff it has initialized.
-
-> In theory yes but you wouldn't be the first one to attempt to improve
-> it. This code is very brittle when it comes to GPIO chips that need to
-> be initialized very early into the boot process. I'm talking old
-> drivers in arch which call this function without even an associated
-> parent struct device. When I'm looking at it now, it does seem
-> possible to call device_initialize() early but whether that will work
-> correctly for all existing users is a bigger question.
-
-FWIW: found a very early stage calling path when I was investigating
-`gpiolib_initialized`: start_kernel() -> init_IRQ() -> dove_init_irq() ->
-orion_gpio_init() -> gpiochip_add_data() -> gpiochip_add_data_with_key().
-
-Prior to aab5c6f20023 ("gpio: set device type for GPIO chips"),
-device_initialize() is also called in gpiochip_add_data_with_key().  It
-seems to me it's possible to move it back to gpiochip_add_data_with_key()
-as 03/23 does, and move it earlier in the function.
 
