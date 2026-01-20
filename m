@@ -1,138 +1,145 @@
-Return-Path: <linux-gpio+bounces-30823-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30775-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gMGSJh7Tb2mgMQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-30823-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 20:10:22 +0100
+	id gEf/M6gScGlyUwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-30775-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 00:41:28 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08E694A0D6
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 20:10:21 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6ED464DFBA
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 00:41:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 07A17A681D0
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 18:19:23 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id EE6AA5E90C6
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jan 2026 11:03:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A7974611F3;
-	Tue, 20 Jan 2026 18:16:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E97E413232;
+	Tue, 20 Jan 2026 11:03:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OOScFv6z"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m48fQEcT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFC844E039;
-	Tue, 20 Jan 2026 18:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2766C39903F;
+	Tue, 20 Jan 2026 11:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768932981; cv=none; b=cSl+ByYzQ+cPI/FtXzXC5il49L5fXOpEV93Ftpk9iOvlAHDr5XpHW4bhBA7iGhQqERp61gKyqUL01Hh7P1NntykKy4zjupD3JLa1aMkERyR8bz2fmTntcp/TzzYjHZHlRwXcmqlHA8rFUDyXYZqTr63g3CXOlU8zdaLfvXznM9Y=
+	t=1768906991; cv=none; b=mtS4et+oygB0Lhn7Ln7yfaM+BimYu+IbOm8xUxbwpyBNizYO/T7XBVr1QAg04QiU/ta+Jl6UyEGDgK8YPucVeA/xIdKu0BeOdczc9++13JbRh2MjgkjrROQviUslDNU2vA/IUjPhkmkjX2IpUrJUjluYeFv4vtlhG66ktInLQNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768932981; c=relaxed/simple;
-	bh=rOKk2X1qHw/UTNmPSVO4s0+3RfiIi4Jxi07TQreLKvk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IQhrOMR2J0LsN/xLXkgZnQNHFrxZgL4FdGECQz3gkWPRMnuVI7nTStu0j7dNBw3iYrD92M15q5UEvcTNpY2ATcnKy2L5ZDSPeBIQWzxwESCDud+7HhxEPYykNpBzUf0mBVPX1RpY/Typ+m6YpNYYB6bPsv4rIZwwTxq18yajuCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OOScFv6z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3359C19421;
-	Tue, 20 Jan 2026 18:16:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768932980;
-	bh=rOKk2X1qHw/UTNmPSVO4s0+3RfiIi4Jxi07TQreLKvk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OOScFv6zHxzeO2klcIVFFI5p5nn9CPtOE76HfXWpwiOKC87itRbjpoUsBWLzh1zfm
-	 XkqFAtPCd6jjE1xIr+lq4Hi1+9KqhccDphcGUPhE9gx0xdlHIImh+oce7V2PJk/P7O
-	 1EyeqAoMmcjf5saT1qPkjU3WtG8lyZtiBHzs+ADYwZG/e5DeftrTxsyuhc+/vMrmms
-	 QLvklnQcxQSpF02PZskP9wKmO3Q0khnYH13YuzvU7kApwfF9Zk2CdhlO7AiNz2JY5P
-	 eOMIOx/ngA36r3IYkKIIfTjM/28BWaM+hhZ1/onbVsHUHpbKJhGag5KYcfe+EVQGJ3
-	 NVPeiEA2+irDg==
-From: Conor Dooley <conor@kernel.org>
-To: linusw@kernel.org
-Cc: conor@kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	s=arc-20240116; t=1768906991; c=relaxed/simple;
+	bh=MOlVYHiV8U/xnwdcg+LjR5LC2vh7h/sh+K0ucqRyMF0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ubIXCsgWmBnMBS40zeqoJ5qQkF3+n7NSoO3nOBZn+OayU35anU2IEU8jUFRGyUVBkTm5SwyvcYGveC7BT046ptOHpfxCd5ep1yTKg4FabPIYDDdsAFV+2DlN0SOtAxogxaqAnNM+Ua2pV4BwuWMlMfNHQFcDnaThTL5pJ6BdMQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m48fQEcT; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768906990; x=1800442990;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MOlVYHiV8U/xnwdcg+LjR5LC2vh7h/sh+K0ucqRyMF0=;
+  b=m48fQEcT+QPF47qG3MX38vTjj6IjppqXP95G7RPGx6kWNRQxTD0ASCPX
+   zjnzKL8KMFwZfBmkpwtDzsoT3gVDPQ11oC4jrYUUEIrKyPYVFe3CB58m3
+   d+6Q2jkVPJVx/9yYUJ1wkzJWl5wYAiCZ+Mb8LPjr1g+UWWkFksLaOaEDE
+   Wl0RUAVygCrCEf/1sddyLXPZs90AJSXevY9dP33ziTBsR2R1Xg3DEvxGw
+   gO2vtGyAejworRNrhjZWPre1nzcQKwcIM7NUPwh/okU3FLbjTGCw3aY1C
+   mBRBYoZw5p1IibqroOKMsQ7NTJaNh6hrzgzqBQZ+sTifqthMSJ5yTnkNO
+   A==;
+X-CSE-ConnectionGUID: aaH+Ms/9RvO8mDow1xWXTg==
+X-CSE-MsgGUID: mLfRMpigQDymplDHuSj7tw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="70083855"
+X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
+   d="scan'208";a="70083855"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 03:03:10 -0800
+X-CSE-ConnectionGUID: AAuJRWxgR9ieh6HtNe8Hkw==
+X-CSE-MsgGUID: 6F0HU8VTSqaAGMae1wFccg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
+   d="scan'208";a="210237476"
+Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
+  by orviesa003.jf.intel.com with ESMTP; 20 Jan 2026 03:03:07 -0800
+From: Raag Jadav <raag.jadav@intel.com>
+To: andriy.shevchenko@linux.intel.com,
+	mika.westerberg@linux.intel.com,
+	linusw@kernel.org
+Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Valentina.FernandezAlanis@microchip.com
-Subject: [PATCH v4 5/5] MAINTAINERS: add Microchip mpfs mssio driver/bindings to entry
-Date: Tue, 20 Jan 2026 18:15:43 +0000
-Message-ID: <20260120-skilled-shrunk-1f4c8b674e09@spud>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260120-elixir-salute-dd6ec3d9f5fe@spud>
-References: <20260120-elixir-salute-dd6ec3d9f5fe@spud>
+	Raag Jadav <raag.jadav@intel.com>,
+	stable@vger.kernel.org,
+	Guido Trentalancia <guido@trentalancia.com>
+Subject: [PATCH] pinctrl: tigerlake: Add Alder Lake-P documentation
+Date: Tue, 20 Jan 2026 16:30:42 +0530
+Message-ID: <20260120110042.1021199-1-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1346; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=CgMQItntxM8Yf+X3K2Sq+0/VecyITjE5TqmhE4qUdU8=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJn5x7zfJ6RMe+23NUa/nI9Ne9aUk0/eyZ3p0k+zEN/9w f/GdNXujlIWBjEuBlkxRZbE230tUuv/uOxw7nkLM4eVCWQIAxenAExEbiIjw8cjVn9Nt25MebLx qHnfpKKi0MpgzynXyh98OnHL6qdWzB9Ghq0HmhOWXtgekayxynVf/d26yxsnX6lvOyDNrprew1n /nwUA
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.96 / 15.00];
+X-Spamd-Result: default: False [-0.46 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
-	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	TAGGED_FROM(0.00)[bounces-30823-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	TAGGED_FROM(0.00)[bounces-30775-lists,linux-gpio=lfdr.de];
+	DMARC_POLICY_ALLOW(0.00)[intel.com,none];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_NEQ_ENVFROM(0.00)[raag.jadav@intel.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,microchip.com:email]
-X-Rspamd-Queue-Id: 08E694A0D6
+	RCPT_COUNT_SEVEN(0.00)[8];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,intel.com:email,intel.com:dkim,intel.com:mid]
+X-Rspamd-Queue-Id: 6ED464DFBA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Conor Dooley <conor.dooley@microchip.com>
+Intel Alder Lake-P PCH reuses pinctrl IP from Tiger Lake-LP. Add user
+friendly documentation for it.
 
-Add the new mssio driver and bindings to the existing entry
-for Microchip RISC-V devices.
-
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+Cc: stable@vger.kernel.org
+Fixes: 0e793a4e2834 ("pinctrl: tigerlake: Add Alder Lake-P ACPI ID")
+Reported-by: Guido Trentalancia <guido@trentalancia.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220056
+Signed-off-by: Raag Jadav <raag.jadav@intel.com>
 ---
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pinctrl/intel/Kconfig | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ff6084cb5797..0cb24094aa1a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22458,6 +22458,7 @@ F:	Documentation/devicetree/bindings/i2c/microchip,corei2c.yaml
- F:	Documentation/devicetree/bindings/mailbox/microchip,mpfs-mailbox.yaml
- F:	Documentation/devicetree/bindings/net/can/microchip,mpfs-can.yaml
- F:	Documentation/devicetree/bindings/pinctrl/microchip,mpfs-pinctrl-iomux0.yaml
-+F:	Documentation/devicetree/bindings/pinctrl/microchip,mpfs-pinctrl-mssio.yaml
- F:	Documentation/devicetree/bindings/pinctrl/microchip,pic64gx-pinctrl-gpio2.yaml
- F:	Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
- F:	Documentation/devicetree/bindings/riscv/microchip.yaml
-@@ -22473,6 +22474,7 @@ F:	drivers/i2c/busses/i2c-microchip-corei2c.c
- F:	drivers/mailbox/mailbox-mpfs.c
- F:	drivers/pci/controller/plda/pcie-microchip-host.c
- F:	drivers/pinctrl/microchip/pinctrl-mpfs-iomux0.c
-+F:	drivers/pinctrl/microchip/pinctrl-mpfs-mssio.c
- F:	drivers/pinctrl/microchip/pinctrl-pic64gx-gpio2.c
- F:	drivers/pwm/pwm-microchip-core.c
- F:	drivers/reset/reset-mpfs.c
+diff --git a/drivers/pinctrl/intel/Kconfig b/drivers/pinctrl/intel/Kconfig
+index e4dc9ba899bd..045651fde31f 100644
+--- a/drivers/pinctrl/intel/Kconfig
++++ b/drivers/pinctrl/intel/Kconfig
+@@ -160,7 +160,9 @@ config PINCTRL_TIGERLAKE
+ 	select PINCTRL_INTEL
+ 	help
+ 	  This pinctrl driver provides an interface that allows configuring
+-	  of Intel Tiger Lake PCH pins and using them as GPIOs.
++	  PCH pins of the following platforms and using them as GPIOs.
++	  - Tiger Lake
++	  - Alder Lake-P
+ 
+ source "drivers/pinctrl/intel/Kconfig.tng"
+ endmenu
 -- 
-2.51.0
+2.43.0
 
 
