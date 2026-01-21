@@ -1,278 +1,197 @@
-Return-Path: <linux-gpio+bounces-30872-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30865-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aOS6GxP0cGmgbAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-30872-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 16:43:15 +0100
+	id SGrUCvPScGkOaAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-30865-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 14:21:55 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CC5359621
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 16:43:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C5FE357753
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 14:21:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E31367A0289
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 15:26:36 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 035796A154F
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jan 2026 13:08:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED40D4C0427;
-	Wed, 21 Jan 2026 15:05:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 438DC31A069;
+	Wed, 21 Jan 2026 13:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fybUcBEa";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="VjxfS7YS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07EB74C042E
-	for <linux-gpio@vger.kernel.org>; Wed, 21 Jan 2026 15:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BF229346F
+	for <linux-gpio@vger.kernel.org>; Wed, 21 Jan 2026 13:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769007947; cv=none; b=FD2zT+GOwFXofOeeE0gc/spBOISOU6PUKTif+KrXWcUJSSKZ7Fb/0YmkRxYNNC/EUUeRpCbG58jmKYfbfaHwigqkh4LILGHePmjjI6Ctp2F/PS6a3Ms94ousmKXqM7HzWjf1lQiT7s+t7glw5jcC70+faYrBQWofkB5+0Xntkys=
+	t=1769000825; cv=none; b=QsvWATF1t0tmPjq9DXhcmWPN1BS8TLMFskEMzCez5SkwrAwV+lORSw2ZAIszBU73JTTQXdhTN1uQ+pH+7c5diN29LH2GmjavHNYn+ez/vtil1l2GFSJvXHFVtWN/P7IbD5EN/q+n/E9/o5W/frsq8734r+TNTmno/zrGVAWmtKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769007947; c=relaxed/simple;
-	bh=VpzSOPPipZ7Wk3DVhXqnmZFKnblqi6knYh6FEjxvsEg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TIRcrrEhZGKItjrSF+rXPiGGJAtBijUkBI0hqO/RT5I2g7JsTXb8oQJepAyRXpKdlah8E25H2EaroF5zES3g+FeT0cF82ZV4VRSRmNZ0Y4QnHRdKP6pCSFxLvmZfdLgoMe0JnvO/q1gTdjcb84LHsP4bwmRaRNzEoKBu4hFZzQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-502acd495feso53916351cf.2
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Jan 2026 07:05:45 -0800 (PST)
+	s=arc-20240116; t=1769000825; c=relaxed/simple;
+	bh=igUfJtXFCoBZwqDGpBeH6TST+603l9TqH38snu6AyyM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fjrz0h2Mwz8lxdcj1X0yCRi80X3rvDFX6OvCEOkIUbpRIeFtZJdZfeIYicmuiD9+21zd++3yohM1xyDne1XPwxS+MZm1vPqpdGVvreu+H5y2ZF/Nqx51O1NvB34oORp/BmyQF4bGG1iFneHI8ScNyrcS/lPN1wdNA7oZT7k1GO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fybUcBEa; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=VjxfS7YS; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60LAf1q22818234
+	for <linux-gpio@vger.kernel.org>; Wed, 21 Jan 2026 13:07:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	mEKuP1k/JzkCVEjY7XCvCYBkin/z4TR/WyHur4iMN0I=; b=fybUcBEa+AY6Jw1a
+	b4vtAkWbdSvG2x9c8dEGZdragPRNpiZJ9Ampk3cio0M2zmasuzt90vJ9DJw+PzdF
+	cHfxLQAWzuMt7L6HD2G3CiXz1Mj+q8Jzvhv8PWj+eYdFLKy9YOlvm8kFMbNHGNur
+	tO1fesbMnO6MIHveydTnT7nQpuyL1L9b+YKAt0U7n7lw/tBEgEMMkA93N2PaYv1d
+	gETG91so868tvWc3Ql7gQHNMtQX0NZcgzxBO1rmxCOYSA1K1ebRqrT8OynVeEqab
+	xL2wAdYfxOIbyCHGTb/YNrHMPEcXy+ntqc7r4O1xii2jirRj2ELiabJ758MI7j4g
+	0INZlw==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4btw8kger5-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Wed, 21 Jan 2026 13:07:02 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-8c6ad709d8fso243534285a.1
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Jan 2026 05:07:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1769000822; x=1769605622; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mEKuP1k/JzkCVEjY7XCvCYBkin/z4TR/WyHur4iMN0I=;
+        b=VjxfS7YSDIe1HPo9ECeVRDRJVt3Fo8GIMeZo5Z62+rXkLxJgDjmNJERx42vj7cvrlL
+         q6ViBwzVRkYGuDVZdTm4qpY+EzIHPEiEFh14MQSOhX3fMooJc5nJjcoFtcNm+YgJpXRS
+         5aXTZAaI3J/X1GE3X93D+Cuz5/VBeabauo+o+Oc+g5cmvJcHjCM4ml4EiLEmG1uMdkAU
+         eoZyOLR5A3lG+D6cmLBuRhb/0L5IFt0Rjz18r54x7ET/mScV2pFJNeKgdVe5uwpgTckY
+         tICXMablH+NYgoTPogZWEJFyvkTxZBjsLvCs6BYjBtp9/UY0VactnNO6SZHorSHUMO8G
+         LR/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769007945; x=1769612745;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20230601; t=1769000822; x=1769605622;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=AF6Iy9dgsc5sPND1gabv+P1umCdITLLVFz5zc76lNNw=;
-        b=j7zZ8yUFa+ssdoUo7NDZ6AXZ7Cr2y43/x2BREq4+USJoOCC2OzdGULsZJslO8CM4N/
-         OOS3h5TwWnwKC17z23WA9DIup1JSbuB3hKiRfL0xsiy4KQO6KGKduc2l/+WkvCND+zeC
-         5LgZlfV+NbIkuzFiwg0bkWDxoO8aGHOnEAWiSFOmY4vT7IlNW+0KAu9m1ODfzWVNsbiS
-         8pjBrQX2PDs6b3GuvxPtdvbWV5JQGXpDrVeKDrfiVQgahmtG7epcyiYKwFSgTYMzsGdb
-         dmxyjbqgAUBNXZG6u9HFNvw6Dzjralh2UKbQ1GLSq60s4RLYi0gKyNjLgyn8srzD5wAu
-         vLbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUbJUO4Aou2ZQ4/w2fkOHLUbkecLtZUwJbeSzwvPDla1T4fRWJKxknAklprecTOjRVRf2Bgw3JJ11uE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzt0K7C0pob2nF2Ld9B6hhLRyzdo9rqEqmChYLcL1nnhcA3QGs
-	lAl8XjPY2mXeVTLTGZuH6x3Sz1gbnvhTzBvB/aMuVKuvhNP8/bp5mxVENLkafIRY
-X-Gm-Gg: AZuq6aJRsZ62aUFXtLQw/nzLjk9OS4mxKgol8WB93wiGx8k4ySdHb3dk3HuCDrDXVdv
-	Z7/DEViAYQGLUDpb91nv5zfWxPuTWkCX3fa3iLknUQRNKiIClsY/XacB6r89pEhlsoNvZcI/sY6
-	GhsbnGQcG0NFOiuGmItN+PrAJKPVF9l+IS9gXKkUrsEwY/BExC4Ids92bjX4C6VAXaAkROokhEz
-	LTQaJd0aIQihbZyF1VQmHqpAh8kGnSsuvgp7RfJvuPb/cpI38ENfe+YauAXPxvSRYDezHJweoxE
-	alH2NN3hJTj/e/JQ1JjyuIovd1lj8suq5Ms1i6p/lBh0wZ2i+q46AdHvMLpvP7CgOZIxdAanlHC
-	wundq7IifQpA1RYYzdUaaZQiXgcWFKjZzs4t8R3oYhfi48s+lYCkmrKqjxinA0lb5uXcur4zfd0
-	L3tpGqwoEKz02BX2yuM2QXr2PeqssboPOsVCC2jdkHA5qB0Q/u
-X-Received: by 2002:a05:690e:e8b:b0:647:fea:2955 with SMTP id 956f58d0204a3-649176d52bcmr13923278d50.25.1769000745396;
-        Wed, 21 Jan 2026 05:05:45 -0800 (PST)
-Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com. [74.125.224.48])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-649170d35dfsm7758682d50.23.2026.01.21.05.05.45
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Jan 2026 05:05:45 -0800 (PST)
-Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-6467ac59e16so4778134d50.1
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Jan 2026 05:05:45 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW3qBe9NO2cxvOBqEPyVBz5WmI/p3AfG9NDt7eJR58A0szRqae1vYFYvYNmSPmKVMUU3aQkRQ7BcEy0@vger.kernel.org
-X-Received: by 2002:a05:6102:3053:b0:5e5:66c6:d23e with SMTP id
- ada2fe7eead31-5f1a6fd7b8amr5292858137.1.1769000378213; Wed, 21 Jan 2026
- 04:59:38 -0800 (PST)
+        bh=mEKuP1k/JzkCVEjY7XCvCYBkin/z4TR/WyHur4iMN0I=;
+        b=lnJLIxxnCFMDGjIwybL55afdqq0E5XrzsyyVj5nXDjW5Eykv5fRRb3vmpGFQXNwO5z
+         0Vwx7EO+SJU0Ba6AidNtsvpcy6ubo1Yi60F8QhP3osebSBB7K/nO00eGOcUFCGUj0c1X
+         8flQuxqzGEV7sapvXCNBghN3qHj8BMldfJNJflc0j9rAVvMpdIVlssK3YZAyYijXVbYV
+         AJOOiavlfW/j4ZPr5v2EoioxJNe/4zocRqSpBMg2B8uWyWIJLugB7saQFH40g14NMtLQ
+         oYekZWjXhaCkawBwwV9PJw41leXm59cTrYW+xd1Bwf8Z54PSIzcROc7reoE59Vt2r5bp
+         AU+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWJpDtqxKYvQ/bWScLntvgL3r+zMmbN3o1wHx1uz5+srm0oY4k/v3MIm0v+svee7V9FkeAiptYDLzdK@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqSz8H7usRQbIzJk11Mqew7KD3hXQpbpgOtUjYLPnl85yfKYN/
+	zCZqLCd6txPFq5+HrVeZ8IFpmnY34O04WkvhU1I5leC7/x3lq0cAC+M5rPoMbmVFdjYDguB+Jt3
+	8BpCGFpcsII0ggOxzsO+61QziwfdTIe0C2gUx+e9FTxuJKEIRBG8T62764tdGvesA
+X-Gm-Gg: AZuq6aIwhhNtXwDWrM/Dmratho+tSohroT0rRx6g0GlDkmEpxatppfez5miaOpSzNH/
+	6agbuNG3PQy+1uUaUzEHM0F0Wr0I5YH2FT4XaCgnzNZ5GqRk1T0xDSzt9YIZcOjOlFa5NtUJ2xY
+	b1AlLAnT6KZtroURxRb9ugHUdmgFqZZ3F57WaF5DMuEq9DW+ZOMfjBOQp94HuXRYRinHPntXRfU
+	tZ4U/uRHnQP27LBq864D8gXSfRtp84ofBONiNrO+6dVC4/SCNrZBC/Y8j389UgT4hAxZfjw8rDv
+	STML633s2rqeE1mAXrWri769GjTkytasWrIYTx/tIox3MGigW4BIV0Bw6jCaXOVPHie8MEaHmbD
+	hpETT0rtltbNNnwG6eL9eLD/QhREgaHtFhjKHpg==
+X-Received: by 2002:a05:620a:1992:b0:8c6:aff3:5a79 with SMTP id af79cd13be357-8c6aff35b99mr1712821585a.44.1769000821937;
+        Wed, 21 Jan 2026 05:07:01 -0800 (PST)
+X-Received: by 2002:a05:620a:1992:b0:8c6:aff3:5a79 with SMTP id af79cd13be357-8c6aff35b99mr1712818085a.44.1769000821515;
+        Wed, 21 Jan 2026 05:07:01 -0800 (PST)
+Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:4e9f:7645:5b3:5a1c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43595609c8asm8798203f8f.34.2026.01.21.05.07.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Jan 2026 05:07:01 -0800 (PST)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Srinivas Kandagatla <srini@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mohammad Rafi Shaik <mohs@qti.qualcomm.com>,
+        Ravi Hothi <raviravi@qti.qualcomm.com>
+Subject: Re: [PATCH] gpio: shared: propagate configuration to pinctrl
+Date: Wed, 21 Jan 2026 14:06:59 +0100
+Message-ID: <176900081432.32732.12601231042951814892.b4-ty@oss.qualcomm.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260120154913.61991-1-bartosz.golaszewski@oss.qualcomm.com>
+References: <20260120154913.61991-1-bartosz.golaszewski@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251015071420.1173068-1-herve.codina@bootlin.com>
- <f74ab0a2-b74b-4b96-8469-a716c850e230@gmail.com> <CAL_JsqJDOYuzutMHMeFAogd5a_OX6Hwi8Gwz1Vy7HpXgNeYKsg@mail.gmail.com>
- <5cf2a12a-7c66-4622-b4a9-14896c6df005@gmail.com> <CAL_JsqJjm12LxpDg6LmpY=Ro_keHwnrWiYMLVnG=s_pSP4X2WQ@mail.gmail.com>
- <072dde7c-a53c-4525-83ac-57ea38edc0b5@gmail.com> <CAL_JsqKyG98pXGKpL=gxSc92izpzN7YCdq62ZJByhE6aFYs1fw@mail.gmail.com>
- <55076f4b-d523-4f8c-8bd4-0645b790737e@gmail.com> <20251202102619.5cd971cc@bootlin.com>
- <088af3ff-bd04-4bc9-b304-85f6ed555f2a@gmail.com> <20251202175836.747593c0@bootlin.com>
- <dc813fc2-28d2-4f2c-a2a3-08e33eec8ec7@gmail.com> <20251204083839.4fb8a4b1@bootlin.com>
- <CAMuHMdXdwf7La1EYBWTJadsTAJG3nKQVW6wtBn-bUqshA=XHRw@mail.gmail.com>
- <20251210132140.32dbc3d7@bootlin.com> <c50c40cc-69f6-436c-a94e-94a3a10f6727@gmail.com>
- <20251211132044.10f5b1ea@bootlin.com> <1b9fa77b-d74a-4fa7-b2e7-8b389d59a5a0@gmail.com>
- <20251211161902.11ef4248@bootlin.com>
-In-Reply-To: <20251211161902.11ef4248@bootlin.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 21 Jan 2026 13:59:26 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWGk5ig3v9tGy1cMOg1LmKu3KrxQq2HO1vcQeZPuRxWBQ@mail.gmail.com>
-X-Gm-Features: AZwV_QgoZry7Ux_LWaq66D8-Sle9_xFUD1BP9eHkYs41xWjINnCZsHwmSX1GiNQ
-Message-ID: <CAMuHMdWGk5ig3v9tGy1cMOg1LmKu3KrxQq2HO1vcQeZPuRxWBQ@mail.gmail.com>
-Subject: Re: [PATCH v4 01/29] Revert "treewide: Fix probing of devices in DT overlays"
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Rob Herring <robh@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Kalle Niemi <kaleposti@gmail.com>, linux-arm-kernel@lists.infradead.org, 
-	Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Wolfram Sang <wsa@kernel.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev, linux-clk@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
-	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
-	Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Saravana Kannan <saravanak@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [0.24 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTIxMDExMCBTYWx0ZWRfXw2wmMXmxF7fW
+ F8tSV+4zAWS0o0cPHnOyvUgIa+ggzpG/IwspVtblvYs4knOtZ5FV4/b5FpDR4hfFq6e7s5W7+Kh
+ N4dfW1wrhyBpp5T97gcaLrZI0p8PciH4fkOsUAjj1RgYclR2VzvEjXeFalWGbSuG6/PXHF/xepO
+ Zr3j3h8riowIb/86SXh0tHUPCO/UqoRdF3WMXiRPX0vrZDzXjIfgDuTz9JibDutP12KnNU0Fd5e
+ oARSTyCfG+g5LwBsjxNa6R+kmv4UVRsUHvfoRhY3d0elPo9Saq4pkNhKm8cw3Nm8c+h3IAHjJF9
+ 9mYS8DjhpOGWBfHADvZZkICU2jCMyoiQpwVgImVFtvewNmX+mOR4UMLWLs7qc5dRkNWNYgmHke7
+ Gjj7yW42Us71oRIuoSHWVuUsJXZmdK1qjKB24DpByr6rBUS7Pix0x82mFyvovGHq3RqwQaRZ55P
+ JSO5G4xjbN5gOMOvSJA==
+X-Proofpoint-GUID: mCXJl-Aq-y2KDJiiQkPuzZXwLk26Rykb
+X-Authority-Analysis: v=2.4 cv=BPW+bVQG c=1 sm=1 tr=0 ts=6970cf76 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=EUspDBNiAAAA:8 a=gsdG-Y0QoL_Z1tDjP14A:9 a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-ORIG-GUID: mCXJl-Aq-y2KDJiiQkPuzZXwLk26Rykb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.20,FMLib:17.12.100.49
+ definitions=2026-01-21_01,2026-01-20_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 spamscore=0 phishscore=0 bulkscore=0 malwarescore=0
+ suspectscore=0 clxscore=1015 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
+ definitions=main-2601210110
+X-Spamd-Result: default: False [-1.96 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,linaro.org,lists.infradead.org,lunn.ch,linuxfoundation.org,pengutronix.de,baylibre.com,sang-engineering.com,axentia.se,arndb.de,google.com,opensource.cirrus.com,cirrus.com,linux.intel.com,stgolabs.net,huawei.com,intel.com,vger.kernel.org,lists.linux.dev,microchip.com,bootlin.com];
-	TAGGED_FROM(0.00)[bounces-30872-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[qualcomm.com,reject];
 	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-30865-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[linux-m68k.org];
 	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
-	FROM_HAS_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,qualcomm.com:email,qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:dkim];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	R_DKIM_NA(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[60];
-	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,bootlin.com:email,linux-m68k.org:email,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 2CC5359621
+	R_SPF_SOFTFAIL(0.00)[~all:c];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: C5FE357753
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Herv=C3=A9,
 
-Revisiting his old thread (sorry for the delay)...
+On Tue, 20 Jan 2026 16:49:13 +0100, Bartosz Golaszewski wrote:
+> Just toggling the descriptor's "requested" flag is not enough. We need
+> to properly request it in order to potentially propagate any
+> configuration to pinctrl via the .request() callback.
+> 
+> We must not take the reference to the device at this point (the device
+> is not ready but we're also requesting the device's own descriptor) so
+> make the _commit() variants of request and free functions available to
+> GPIO core in order to use them instead of their regular counterparts.
+> 
+> [...]
 
-On Thu, 11 Dec 2025 at 16:19, Herve Codina <herve.codina@bootlin.com> wrote=
-:
-> On Thu, 11 Dec 2025 15:52:28 +0200
-> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> > On 11/12/2025 14:20, Herve Codina wrote:
-> > > On Thu, 11 Dec 2025 10:34:46 +0200
-> > > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> > > Do you see the same trace with:
-> > > - "pinctrl-0 =3D <&i2c1_pins>;" in your overlay
-> > > - fragment0 removed from the overlay (i2c1_pins definition removed fr=
-om
-> > >    the overlay.
-> > > - i2c1_pins node defined in your base DT.
-> >
-> > Just tested. The i2c1 appears and the test-overlay probe gets called,
-> > when the i2c1_pins is in the base-dt and not in the overlay.
->
-> Geert, do you expirement same results?
+Applied, thanks!
 
-Yes, after moving the pin control subnode from the overlay[1] to the
-base DTS, the SPI bus and FLASH work after loading the overlay for
-the first time.
+[1/1] gpio: shared: propagate configuration to pinctrl
+      commit: 4918cc05137cb347686462923ab3fd249ef7899d
 
-> > > In other word, is the issues related to adding a pinctrl sub-node (pi=
-nctrl
-> > > pins definition) in the overlay or is it something else?
-> >
-> > Seems to be related to the pinctrl.
->
-> I don't think that the issue is related to pinctrl itself.
->
-> IMHO, I think the issue is related to overlays and fw_devlink.
-> The distinction between "a new node is going to lead to a device" vs "a n=
-ew
-> node is just data and will never been attached to a new device" when an
-> overlay is applied is broken.
->
-> This is broken with the upstream "treewide: Fix probing of devices in DT
-> overlays" commit I've tried to revert. Indeed, on the LAN966x PCI device
-> use case devlinks created are not correct with this commit applied.
->
-> I am not sure also that devlinks created with a more complex overlay will=
- be
-> correct. For instance, Matti, with your overlay not sure that a phandle f=
-rom
-> the oscillator node referencing the pmic node will lead to a correct
-> provider/consumer devlink between the pmic device and the oscillator devi=
-ce.
->
-> On the other hand, this is broken with "of: dynamic: Fix overlayed device=
-s
-> not probing because of fw_devlink" works for the LAN966x PCI device use c=
-ase
-> an lead to correct devlinks but breaks your use cases.
-
-Loading my overlay[1] causes the following changes under
-/sys/class/devlink/:
-
-    + genpd_provider:ca53-cpu0--platform:e6e90000.spi ->
-../../devices/virtual/devlink/genpd_provider:ca53-cpu0--platform:e6e90000.s=
-pi
-    + platform:e6055000.gpio--platform:e6e90000.spi ->
-../../devices/virtual/devlink/platform:e6055000.gpio--platform:e6e90000.spi
-    + platform:e6060000.pinctrl--platform:e6e90000.spi ->
-../../devices/virtual/devlink/platform:e6060000.pinctrl--platform:e6e90000.=
-spi
-    - platform:e6060000.pinctrl--platform:keys ->
-../../devices/virtual/devlink/platform:e6060000.pinctrl--platform:keys
-    + platform:e6150000.clock-controller--platform:e6e90000.spi ->
-../../devices/virtual/devlink/platform:e6150000.clock-controller--platform:=
-e6e90000.spi
-    + platform:soc--platform:e6e90000.spi ->
-../../devices/virtual/devlink/platform:soc--platform:e6e90000.spi
-
-Note that these changes are exactly the same in the working and the
-non-working case.
-
-Removing the overlay again removes all added links, but does not
-restore the keys link:
-
-    - genpd_provider:ca53-cpu0--platform:e6e90000.spi ->
-../../devices/virtual/devlink/genpd_provider:ca53-cpu0--platform:e6e90000.s=
-pi
-    - platform:e6055000.gpio--platform:e6e90000.spi ->
-../../devices/virtual/devlink/platform:e6055000.gpio--platform:e6e90000.spi
-    - platform:e6060000.pinctrl--platform:e6e90000.spi ->
-../../devices/virtual/devlink/platform:e6060000.pinctrl--platform:e6e90000.=
-spi
-    - platform:e6150000.clock-controller--platform:e6e90000.spi ->
-../../devices/virtual/devlink/platform:e6150000.clock-controller--platform:=
-e6e90000.spi
-    - platform:soc--platform:e6e90000.spi ->
-../../devices/virtual/devlink/platform:soc--platform:e6e90000.spi
-
-Loading the overlay again causes no changes in the links, but the SPI
-bus and FLASH always work.
-
-[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drive=
-rs.git/commit/?h=3Dtopic/renesas-overlays&id=3D383285b905a20d6734bfcbf7bcf7=
-15c1c2b45395
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
