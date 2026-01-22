@@ -1,113 +1,113 @@
-Return-Path: <linux-gpio+bounces-30887-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30888-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4IEuOFnXcWk+MgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-30887-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 08:52:57 +0100
+	id 0Dq9KArYcWk+MgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-30888-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 08:55:54 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E0AC62AD9
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 08:52:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 58B6F62B56
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 08:55:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A20DE389BDE
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 07:45:42 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1C4CB447CBB
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 07:47:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59B1547A0A0;
-	Thu, 22 Jan 2026 07:45:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99DAA3446B7;
+	Thu, 22 Jan 2026 07:46:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NrWG3M+e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXgidiYG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CAF33C1A9
-	for <linux-gpio@vger.kernel.org>; Thu, 22 Jan 2026 07:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4CC47798B
+	for <linux-gpio@vger.kernel.org>; Thu, 22 Jan 2026 07:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769067935; cv=pass; b=sdI7tup9O+YF3uLwqOlel2RO3IvB9rsrob9MerAhq9ZlkpbZ5Y4+fePN/nEIyQfeoH3dP0SjafdW4hsjLratwen6eeb1lrlbskBm37dXSfObzLOb7JWMnGZykN9ow7/ItooxlcJvDUzQwcdDWXWZztQULo+kPK1BalGUbg0Orak=
+	t=1769068003; cv=pass; b=ERj9MmhBufp+qArbsapj3+lCdx0FViHoB8FvfohPfLVOjoSQy2alHlHd+vy9YrQJ0K/aLQR+Dk3t3zLM+mswdQpNtXEeCx3nZdkKXfwIuEqdaUKRTz7JVeLd+qDv3WV3QYWF2rIEpxnp8LwHlHkj/YdXLc40RrWKecbb+vg3Ltw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769067935; c=relaxed/simple;
-	bh=kcdMMEePmPWwsl/oQQMX7alOWF91Pg6xPOx+KB4E3RI=;
+	s=arc-20240116; t=1769068003; c=relaxed/simple;
+	bh=dJIzgMSqaGLqFQXTXP8HhJp8P8L/R0j7qJDUbBs4ffg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mEnL8qYNoK9w4QYJrMrXtX8z3DZ4L9palaDLWOuLCQJNZzEavE3m6MKrKmzXVhoYA7J92c+pJSTpYFMs6ZNVr1NH3WIxDGs3cz1FwCe2QcUqrrSsspQy/ukE2c5Xekpjm2unM98/Tju2ZuoGwnf0J0muwtakCEpO3r67uN34dks=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NrWG3M+e; arc=pass smtp.client-ip=209.85.208.52
+	 To:Cc:Content-Type; b=B5TrPLpfqsUHwnswXPAjRlRUGdSnJMee5rnVfQxLW71pcypMFZmXuXA/sq7Kj1Uqvl/2sGAB+DEe+1Lwt2nqlVCjSDJtfEl9h7NnIw2TnN2jN7p09Iy6PKfIuu8dgozFIhIuIQczoByM2MHgm3w+iTDXBgU2ha0DxjHwRWRbIH8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MXgidiYG; arc=pass smtp.client-ip=209.85.218.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-64d02c01865so1016288a12.1
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Jan 2026 23:45:30 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769067927; cv=none;
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b879d5c1526so128784766b.1
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Jan 2026 23:46:36 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769067994; cv=none;
         d=google.com; s=arc-20240605;
-        b=FwoBYXcUcaVl7GGvvpFmID4WQ9lAiszjQ67PMqIjAepXYcBoYIAXLyl2SBV08MbcMH
-         PXBqSTqg2JJnrli2YkgafmhSIXKSVeeVbmpVZW4xLvpxROb1TWpmFhpUKYA0m57Qn/yG
-         9Asl+sEku1bc+SwE2dypFvzTeuKJcc4C01NYeyUZvBEBfKzxfqM3v+A/CafgiDx62+xs
-         CiDf+fxRRtsRgGBwZKHns3mnLnxMRSVtiWVORSA/dfmIktw5OiyHbcAf8t9wNLPtf3dB
-         ipk+0IErH+k4biwOAqOHVkQTejV8TdAHibtq3D3SsKc9k9MSFwIiYhlmFZII5ckjirXw
-         oTpw==
+        b=iXR9Qj+MnJa3imD9Ow/BkgxXiQNLlyi7C1CRC1HefVBv0Iw4nkMx9a/HWJx+Oa67ty
+         2iNMavrq5N3g+owb56V2PXx164oeZyxJAqIlxNRAb5lG/7gPcnhlM/262ln+7SEWeieu
+         hpOAxyhJUh1i6/SCP+xMTmM8TOQ0ZtBTMiQs3TkRBIR475xX0jYMXf7TiblpRvKT1ttJ
+         ucyktp62RFkJjjFSntkP34TDYycJ/qDDjuo82ANPxzpuUYXPFMuExyIjcyT2ntRqL+1v
+         TEHjvCYxjShzZc9Odu7MQsIQqcP4xzWo44R36LwTLSULgT32bUtgnTtUXcWslDZ8V2qG
+         X58g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=EFGHcstC2p5i5Rnbgkl4MqcI8PeiMZ+c7LYfxJtXf7E=;
-        fh=kUVv2RybzjYSrmMzGhaoTvv+e61/wevU37JT5CRBepI=;
-        b=AuMD5xBJhs4HUdU/1yOh/bwnMrt6Ko1Vju1H7YLgjgmu+Vdgqiq2POI0W5ImbMqFjk
-         ixuU1Xq/Rb0Wr75Z17CMYFDBNiMEdeomp5GwREiCNvufuGkeWEUJ2f1lw2T+NP7DzUGo
-         GI1XucznjBVxIMUnqIFcvwq2PQtS/b2fHyAI6GoWwQbPPf/oFPbl8zwJsfWgwjpZBhjA
-         nQqj9PWqW5+sBuvvPEto8UZq3UuM1Pr9BiLkfXmU/kSycG9LejJH5whOO9rHx85wRKma
-         hBhflTTOCRaR7KQzVlVA9dgg0tBrPXmVj2LZbJjMTBkzaBl8r+Gn1hxLUQAbVYfbO6Qt
-         hF3Q==;
+        bh=FNL0d7QhHFBGNXNa6G1OZ6wYSQh8Cjk4oVuGSla53Lg=;
+        fh=dpUPrUTEI+q1d7brVmg3zCAkR3UuQZLvX/+sbi2ckTY=;
+        b=k91Z/J4wxqSMuOUR2onEF5Zm2+bE4rKho6iiadEhT00g2LF9iLnLq/kXL5/U0aQ6vV
+         X1RzF/zufYN7LNSQlo+IW6Ahlk0BadIo+FDfZaN6iIKHJOzk+5IhBkh45O1FgQZ8lmTz
+         EHnmadWBrzL4YVB4S1D0Q4KFb1LzIY0N4GssSQmgZhsmvxWRVzBYI5lvfhmw5rDkbZ2g
+         35eieva7JVmxT+I4wvXt83nhggzfjsDE8gAKfmRgWKPKzY0OIJ9FBlpyHFhz8B2DDSRA
+         MtDChAR77nkdcav3rvYFc1foswyULzOdLOORdQBlnYt53duztqLHlba4MQn+Pf7TAPM1
+         pnQA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769067927; x=1769672727; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1769067994; x=1769672794; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EFGHcstC2p5i5Rnbgkl4MqcI8PeiMZ+c7LYfxJtXf7E=;
-        b=NrWG3M+eJM7QrfZE6wKlBA3LwnRqeGBV4NH0vDH8ESG/mjpBEfhrPtKJhV3xy8sIQy
-         0ZDN4Ma49VbQWJZzpQYNPGTQEgMQxR85Xtobx8PE/5Cvf0cK2kSWimt8uSjY93kz++E9
-         +555HfrTeoBO7SF1zdB1gWBiGNnAw4QGr62HY0qsVzb6eAfYvLNVN7jLCL6ObKpEuz4i
-         qNQnhvcEhk6gEuy6t5V/zKYB0Lua+A66EROMI0ZJNMoe9nTkBNiLBuDiDp/vOgeluxzx
-         mvcUTE2mfjq5clDgZuVt11DeMPL2uYzAW0wefH2gTc65NdOWu3QPdmvJvEsCplwLBHsL
-         mCNA==
+        bh=FNL0d7QhHFBGNXNa6G1OZ6wYSQh8Cjk4oVuGSla53Lg=;
+        b=MXgidiYGiGJMhIa8SSu8N0JynpnYyezsyNwFOeZs1EsQxOYllDh42fQYHARTVclSVw
+         HQTDNfqGcJgYxmSiwJKPl3wN1nWB9TjQN6irkccQ7Dair3OwXcwi5XtYCr81tt6QyLtA
+         AezfLdjlTydKVZioF+cp/kCddz2Us/UACwDEqTqbgdL91buA8brjsMqPcAMuFiAwXBYU
+         xIWgMtuydxodwbDtun6NiyVBVufMaCm9GHPOXJulLADFBlEzIYcylr1+TPCFCc3UjFZh
+         gg82y49WOoKVURuRq3QY3qpKMrqfVTXbV6KuQD85IFbM+//qGB5hzVrJvfZARyxCcWGU
+         3riA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769067927; x=1769672727;
+        d=1e100.net; s=20230601; t=1769067994; x=1769672794;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=EFGHcstC2p5i5Rnbgkl4MqcI8PeiMZ+c7LYfxJtXf7E=;
-        b=UkNkVTxq5anfUISg9xZ/6nodJSbQjR5z0oFe0SMXkHwn7q1sPVfZ17FHb+L6qc73xf
-         5gQMdQ2m0RGtPsE0A1q0yfa9iCqByfbTzkgHaqcfpLPVZ89oeRIQDebv3LOSMgH3rlHM
-         hdQ5zBzp+R9jgjF4avshiuHGjK7CeJNT15n1vozLjLDUQB+oQlqdfTVlG/vwxJNEPcL0
-         OxVjXSmYPTBTg+2iZK1vRjTsnaVYjSXOeiTGyvnGR2m3b1VMSuQVbVXrYozqHT4xvlBM
-         40CwXLXqYBK4xyPwocXEwPgbzO4bWrzxRrUgjLhIMCTbekPvOs6Sev78Vav0/AGyb/Ou
-         R8Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMOA+AD86kufoiNW3cLIOW+KXe4zaBS+aoPRDkM0MYUKJI78WLoPlvVdcka6ZZvFDdth+KcHHTjImp@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRkix8nUavaq+BgHQayrer4wK2oDnk3xwTPPPLGuQqtwQLw1M4
-	phJNGa1n+Sh2E1A6H9xHNh1d1azDO9YVTZ2STKo8csYuhjYw5L1xrPX6YUYrBmuTfcOrPGoEZdw
-	Th71MDtYQVCOZ1J5+JORMBjjgcHDY9bg=
-X-Gm-Gg: AZuq6aIyPGIt/y6RU+1bWJOM3P/kBZ5YHeELv0seO4Os7pzAhKA76ao3B55l10FQJyv
-	zTBo1kTyuPkhZYHQmTfaGpNpYn7Yjw3HapQH6589WtCnF2ce+li7wURlfzgoEQaFNl/jRNjvq/s
-	MbnIVGifoDx0ovHl36g4kMfJZj57s0meZ8x8NzxxgkFyomNpae07e4dx7nbtAn7RvHocWWaruJd
-	p6bx9sMtuUZjtOvIrgwqlfAjU2bZS6WpedVzgpuYls4vO9S9b/vYR98sCSpdUgHkGwGw6A6Rb/R
-	oS5egyf2dwQaOuuJQKV1l/rRQrS3H9ML0U6+ZOLbHJsFg1gN9WDVcZSof5pRxh/j1iThgVSy6gW
-	IuFnrSw==
-X-Received: by 2002:a17:906:dc94:b0:b87:31b5:d68 with SMTP id
- a640c23a62f3a-b8796c137aemr1598800166b.65.1769067926666; Wed, 21 Jan 2026
- 23:45:26 -0800 (PST)
+        bh=FNL0d7QhHFBGNXNa6G1OZ6wYSQh8Cjk4oVuGSla53Lg=;
+        b=Rk0XqaLa4tIR9T67RED+GUyn2eL9fSF+XKBLddVeuBCzlRBfqKRGIg6ZW7fdYEo6KY
+         FSkBr1Bve9aMo9pWtTYPFYLiJKnDCCcA3cXrS4uBS5YPtorehrBDUheDQ2V7zIAa5iwa
+         Q9jdWTjgylaLnRbOhixDdf6uvyC7NE9/MbU0crGCB9V4+/TTxAE9WQ+qrdQtvUFdESJN
+         if6jUGCaWOVu5tKkjB8KS1nNLAf9mexRZlNCYFM/jMo9AG9jk057HZ7gyOSbl0RtxkQY
+         pbVDKe/WlDSEug724Bdzr2siwGhEAsfjC8YOUsXGgyM6oZVSZSXsaxtI5G7KNHbyBRvq
+         /J8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUOOl7hHpUJLGwhg2pWqSVcVMVfyPDT2EyBSfI7yNCINytNq2Led/bF90B0G9SrTMgG7U22tXQRzXv+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUolsLfA5f56tuNGoS/90SxAS3Twy6AJGfatmN2JH7oCNkEvG0
+	z/cvTQZp2DYvoHJJgvFax892m3XKn8WFyfa5rYMRsKgvdt2FF4DucuOmtjq8gj+S6bEwg9sNCIJ
+	wqKq1yJ0kaVLHst5XMRxMGGWh8Exwoz8=
+X-Gm-Gg: AZuq6aI6ouXyyUofbVS/9DZQApBCqCDSGBR4akq6SI1A6XSom+7oz3GRsvuy6MB2R4v
+	0qYSRCZWAzb0ee3SY3+xDIZG4iYos6JnMaydVLMs2rkvtWZeANu/M4D0iYt9cO9Qs26PvwPiGQz
+	opbNSIC6I7Xhr3zjnO0SMh4sAeiFUl4bZgY5JjFqdx3gGBNuCklBG97i9iAUmAi6gr3waY6ypeZ
+	c4pjco+4mBvY/Am9Yzz9w66DhrXn95DO7RoFMv+Vbl9aet4fl9GZR2u5SWJ+6A0SkZaTvOek/yR
+	tkODhKesb0lNPLFP/lmxkrcqCn4JuTxADTcf3vLvnQHzAHAyEW/uPDg2i+1A8OzYsVO+C2w=
+X-Received: by 2002:a17:907:3e93:b0:b87:2630:e67b with SMTP id
+ a640c23a62f3a-b8796b83edemr1815379466b.50.1769067993696; Wed, 21 Jan 2026
+ 23:46:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260122010516.1200630-1-florian.fainelli@broadcom.com> <20260122010516.1200630-4-florian.fainelli@broadcom.com>
-In-Reply-To: <20260122010516.1200630-4-florian.fainelli@broadcom.com>
+References: <20260122010516.1200630-1-florian.fainelli@broadcom.com>
+ <20260122010516.1200630-4-florian.fainelli@broadcom.com> <CAHp75Vdyfq_9sCY0t8TXst6XhcOM079y2zYprSZDX4_GTJL6AA@mail.gmail.com>
+In-Reply-To: <CAHp75Vdyfq_9sCY0t8TXst6XhcOM079y2zYprSZDX4_GTJL6AA@mail.gmail.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 22 Jan 2026 09:44:48 +0200
-X-Gm-Features: AZwV_Qgm_3igw06Hxix0lt5ONLXFKPF8H-PgfUJ9mf-T9zeen77Y_WpXql1l6r4
-Message-ID: <CAHp75Vdyfq_9sCY0t8TXst6XhcOM079y2zYprSZDX4_GTJL6AA@mail.gmail.com>
+Date: Thu, 22 Jan 2026 09:45:56 +0200
+X-Gm-Features: AZwV_QhyFWfg8ea6FhZDCZQ9gQRL963lr5eJZKYpigdLJ823CoaZ4X1140v_9r8
+Message-ID: <CAHp75VdrWp+RosNFP+S+1iSYrM9KmZ6hgn=bLV27+26C0GKH+g@mail.gmail.com>
 Subject: Re: [PATCH 3/3] gpio: brcmstb: allow parent_irq to wake
 To: Florian Fainelli <florian.fainelli@broadcom.com>
 Cc: linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>, 
@@ -126,7 +126,7 @@ X-Spamd-Result: default: False [-1.96 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30887-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-30888-lists,linux-gpio=lfdr.de];
 	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,broadcom.com,kernel.org,lists.infradead.org];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -145,47 +145,38 @@ X-Spamd-Result: default: False [-1.96 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:helo,ams.mirrors.kernel.org:rdns,mail.gmail.com:mid,broadcom.com:email]
-X-Rspamd-Queue-Id: 8E0AC62AD9
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:helo,ams.mirrors.kernel.org:rdns,broadcom.com:email,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 58B6F62B56
 X-Rspamd-Action: no action
 
-On Thu, Jan 22, 2026 at 3:06=E2=80=AFAM Florian Fainelli
-<florian.fainelli@broadcom.com> wrote:
-
-> The classic parent_wake_irq can only occur after the system has
-> been placed into a hardware managed power management state. This
-> prevents its use for waking from software managed suspend states
-> like s2idle.
->
-> By allowing the parent_irq to be enabled for wake enabled GPIO
-> during suspend, these GPIO can now be used to wake from these
-> states. The 'suspended' boolean is introduced to support wake
-> event accounting.
+On Thu, Jan 22, 2026 at 9:44=E2=80=AFAM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Thu, Jan 22, 2026 at 3:06=E2=80=AFAM Florian Fainelli
+> <florian.fainelli@broadcom.com> wrote:
 
 ...
 
-> -static void brcmstb_gpio_quiesce(struct device *dev, bool save)
-> +static void brcmstb_gpio_quiesce(struct brcmstb_gpio_priv *priv, bool sa=
-ve)
->  {
-> -       struct brcmstb_gpio_priv *priv =3D dev_get_drvdata(dev);
->         struct brcmstb_gpio_bank *bank;
->         u32 imask;
->
-> -       /* disable non-wake interrupt */
-> -       if (priv->parent_irq >=3D 0)
-> -               disable_irq(priv->parent_irq);
-> -
->         list_for_each_entry(bank, &priv->bank_list, node) {
->                 if (save)
->                         brcmstb_gpio_bank_save(priv, bank);
+> > -static void brcmstb_gpio_quiesce(struct device *dev, bool save)
+> > +static void brcmstb_gpio_quiesce(struct brcmstb_gpio_priv *priv, bool =
+save)
+> >  {
+> > -       struct brcmstb_gpio_priv *priv =3D dev_get_drvdata(dev);
+> >         struct brcmstb_gpio_bank *bank;
+> >         u32 imask;
+> >
+> > -       /* disable non-wake interrupt */
+> > -       if (priv->parent_irq >=3D 0)
+> > -               disable_irq(priv->parent_irq);
+> > -
+> >         list_for_each_entry(bank, &priv->bank_list, node) {
+> >                 if (save)
+> >                         brcmstb_gpio_bank_save(priv, bank);
 
->  static void brcmstb_gpio_shutdown(struct platform_device *pdev)
+> One more thing, how is "save" being used? I can't see it other than a dea=
+d code.
 
-One more thing, how is "save" being used? I can't see it other than a dead =
-code.
-
-
+Ah, it was a preexisted parameter, I was under the impression that it
+was just added without use. Sorry for the noise.
 
 --=20
 With Best Regards,
