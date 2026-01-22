@@ -1,98 +1,98 @@
-Return-Path: <linux-gpio+bounces-30951-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30953-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eDKPAoh5cmlSlQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-30951-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 20:24:56 +0100
+	id kK/IKRF6cmlSlQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-30953-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 20:27:13 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F4F66CFA2
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 20:24:55 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44A146D024
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 20:27:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7FF233014570
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 19:24:52 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 9E338300827C
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 19:27:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E57043921E4;
-	Thu, 22 Jan 2026 19:24:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0B6335D60F;
+	Thu, 22 Jan 2026 19:27:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="acWLR66u"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FkLnFaM+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f228.google.com (mail-pl1-f228.google.com [209.85.214.228])
+Received: from mail-pf1-f228.google.com (mail-pf1-f228.google.com [209.85.210.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C53B32826F
-	for <linux-gpio@vger.kernel.org>; Thu, 22 Jan 2026 19:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4878338BDAB
+	for <linux-gpio@vger.kernel.org>; Thu, 22 Jan 2026 19:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769109890; cv=none; b=uOloj6SOqJ44c17X1AwqI5u1y8uMjNNGrF30+H9of+I9yIkXNEtBa6q6wcjhpaNTrw7KbKpZslV7PCv2FW0B9dTqdFNCutOKA8a8LexSPiG6rfXanPSkU+sK3NNXozokiknSwT+NOoxCjqNAcaQtioku+9wXyi6XeLgRRy84AU8=
+	t=1769110029; cv=none; b=QLNbeGPZSXjyxTuMRvKW1WHR/lBMXxNwoKKCg5EyCV6JoiWqvNnvMb/Jvqr/PPJ+n/5IzmAsGjCl0j6b5GY6w4c33hj8rGP3kYRtDdhaoGJNuzhnJ2BNc8TvzJhqiPWwDCnT4naWhYHGWktWTtJFHmgvp5bCqFVVa+7u7hAjhQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769109890; c=relaxed/simple;
-	bh=GvXk4V9By1D5PBjofkvhUU4qulOtHL+4ytfRSMIiTwQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AQt49S1hxBCHxhISvZBQ6wKxS9QQtgIdwyEFnQJv/L5t2OLG6WSySxGzZYCMbbrnuZxjQWlu8TPWiYzOPOt+f+AQOX6Yk3YIv9kknZCIBsu/WApDiUFLYUSukx7MrYL9UJSLjc839uydmzc3QMSNcNVwFQ1anvitWZNojGbQazw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=acWLR66u; arc=none smtp.client-ip=209.85.214.228
+	s=arc-20240116; t=1769110029; c=relaxed/simple;
+	bh=Nw/nInipLCUu+jLQhKIbrMH/RHjA+u5/sde1eZX0c6M=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=C42E7YaRImIW97nGa5WrtgWvf9FI4z775CLyPFg03sX2dgI4asDda8qhVsgHg5pcwDxwQCAgEqoHbqXZMpQpZYFtNFLQTzHjd2xBFPY8pGTyyW3471TI8JtrzzgO7OgXq5CdNIP3sRbU6tSNtYbSdoIhBemsZFlQiGyc2I5TCLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=FkLnFaM+; arc=none smtp.client-ip=209.85.210.228
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pl1-f228.google.com with SMTP id d9443c01a7336-2a0c20ee83dso13295985ad.2
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Jan 2026 11:24:44 -0800 (PST)
+Received: by mail-pf1-f228.google.com with SMTP id d2e1a72fcca58-82310b74496so357675b3a.3
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Jan 2026 11:26:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769109881; x=1769714681;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:dkim-signature:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=R1gfDRebGX8h9HwfZ81icDjDx7dxW6g0V3ctKkIDrxQ=;
-        b=j4uzWmfMAmm+VnznQv5VC7mJ4NAmrr1s/Pb4JYdKpVgzUNbOYHG5DpEEy6jto0qTG9
-         wXKJCk5T+8C1EvNut2+4NbJhVS9exhRrX9NtEQ2fB2u94nO2pF6FL5F7m/Lxmcdv97sC
-         vRRmJD6h/j0C4uARhLFxpPL9OAS319kfqgd0HhpeApHO5UBew/xubGMXoljM8aN4MR9P
-         1XMu6mDm6RseESZpngiQHq+wEANCKnxCgkhuwmY+7rtpSZ8D1cQ1txEMKFmYqEiG3dLR
-         Zjp9kwDBLPEJHJlWtGddLO+t4MA6faEeaZcptuT08PZtSRP3xf+MxWaUNEvySNyONbzN
-         TGxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWbvy0gsGIqKrndN64HRs9U/c9iAAzTZkUYs21eNo+mkEyPuSFh/MH5nacOlya/OmXbap6hAGTDEuz@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLpiceMJHA6a8gUPX3NXwKh1KZ/E9slRadoiqWrNrG63Lvw3QB
-	xZvswOdo0fEVV40ezyJb7K9qdFk/Wexd649TaFBAFCGDgONWMKRX2WrB/5hXFDuV/pV2tEYY4j8
-	yjIoz8HWJirucNS9BFLih9lIqO9tgJ/Luo/C0A6RMzDFaH4lg8Yj3nKKfu6ACcZnzNsllE+u99N
-	+kXmAUR7oVTqC8+PJPJos7QEuaAz8CLhgN3tSg30OL8CQkoW4ciuOoRXFemPAuKM1x2Yqfc7kk3
-	WZL5LVXF2z68Gd1i4hcBQ==
-X-Gm-Gg: AZuq6aKo+aY5C+GO2ZDjAFH/dr9Jn1JCBHKv+qPLtJh6xG3FJIERqsa1P5MPnNXwEpU
-	FMroH6Ka9ufhlehF2J4gTCeL1EvLCNLiCDv4QTxH2bymxe89uTvSh28+zzTR0bYcUSY1Ej8PH8o
-	5e2aowKRhWRDhvxsC1OM9irXa5RfiMpVyFxBYCK1kWDO01g38aRTEVhlGOlgmWjHzlZqiQFR28H
-	dEVdH/flY5n+KI7KCZXLtjSuvO8ELOLovvfW3MzcTQHZYX+Dm40Ew4H5ulWirpkMMCkUNFdBiEL
-	mRunRzfoUaLTAPebZGcbyNMCdYuTHGOVKtOuv+5ge5Sf/ScnS5gE+8LY1KJBSXGjRUQ2xhSTEBB
-	DWvf/Ck+WV4TtMObpVamLO8tWKWOxXPfE3MwtD1vuQ55xP5C1OjLLy/MAOQcH5f/1XKGk6FoKnJ
-	EK60apKwfyK35SxiTkkQzlq+/8nRPShDRqhIy7nJ2TBNg2k18=
-X-Received: by 2002:a17:902:db09:b0:2a3:e76d:e8e with SMTP id d9443c01a7336-2a7fe732d80mr4186585ad.45.1769109881053;
-        Thu, 22 Jan 2026 11:24:41 -0800 (PST)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-2.dlp.protect.broadcom.com. [144.49.247.2])
-        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-2a802f8464asm29065ad.34.2026.01.22.11.24.40
+        d=1e100.net; s=20230601; t=1769110015; x=1769714815;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:dkim-signature:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4UUagfqRa3jCP2fBiA3Ur8fXwirA3RKoOMc660AuSI0=;
+        b=K1M7kwLXF3h0jXCvhmcQ94B4Z02RuAA+EeecCCv69BhJhiJngMT4pbmwZN0br1Wcgi
+         Qa4oxF0z6qLXzZHKsRmoSIRQcjadVcIgGTs654TtwDoD1myWk+qasNItLIEUytFW/x3D
+         mDqnVT9U3Vtha0tQRXdX6NEDffkYd3LM3CSeddJ0yVH1ozL/lBX4uTo9bbQHsCQF/ZGu
+         AKcTk1mTbPZo1RCl97XEMZnseNEykcPIteR+5iPjfOgjsfIwmeKK6RJpt617rAJobW09
+         OOFQVhVnhOorrj2iBUA65/2avEjYNDHW/WGBa7dG+b9uHPnH0eL06x4W3mHcTBpiQQ/X
+         KFUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUH7wJ2QsewX+jc3cNwbd9CO99itkw4xMx5YOKXoWH3r9rJO9cwHhMOUpd6avtxYZH8MvrkeobbWIxE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzx8DIrOheY2ebLYG/v+wgyR/PKgtFirbFglmAaQYvPxJeFemZG
+	5SWS8/yJnOb5xqykq7F8B7ph4USmibEPpkUlT4XdZHsZV3v7K3wh2/zffo/p0+KEK/yosOimlQm
+	sGYQRoWo1TfrpBWDmR9OGIMfjN+Uhs681C7HNMcq8R9FirhC0+vgFI8lr5uHYD603AHQt1ay03Z
+	PECLzh47OFjCm5PzRW63SCy342CEDVUu4YpDFGUMWV7Rqd0GDqPK+PYvax673Lpau7Ynyy+S/IY
+	1sOQHQ44UJvS9RjpkNfVQ==
+X-Gm-Gg: AZuq6aJGB2mVzEdiyQ+/sJQi2sWw80wIdNIlnJzWvfC6wlyuk9GV2TpKSmZZpW7wpmc
+	0bU7zfOTGnlbrRrnPLnJ24TZD3xUqXlg95XPC0mrqw0HXj2osP53u0O7SrMIwoE0IlRYkXFd8O3
+	zSq1XJdWoNRNVoHS5Bm5KxxABzKIOlGKSbRqWGUBiLN5qVk9jKEtnv4hehP+XG3Su0vZAphsYNC
+	ajfzDdcQpvQY4fQCysSYNkMQca5BV0z+Wvc4vOdv+JLR2owbc1RRKSF5iCeucpBaU5D+q+cMtqx
+	Li5p1S9ycWfWnda4A6SsGPUuCmI/XYAXq1xfvl8XD7m0YtPK/40zKRB+HHGPx5txkAGaKP/mScs
+	W5XeKSg0mFxULLNiW4JIetJvKSr6lzEekoBHkObw1I+tC4PJpkequGMEZvcJuCZgzF/nt5w/VNT
+	0Rw6h86aUhif0DbmfWIyScktMwymjuPI8qNnPhtng3XhatkmGJldrr
+X-Received: by 2002:a05:6a00:2d91:b0:821:81aa:ae3 with SMTP id d2e1a72fcca58-82317e7dbabmr328848b3a.68.1769110015077;
+        Thu, 22 Jan 2026 11:26:55 -0800 (PST)
+Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-118.dlp.protect.broadcom.com. [144.49.247.118])
+        by smtp-relay.gmail.com with ESMTPS id d2e1a72fcca58-8231854a66csm24060b3a.3.2026.01.22.11.26.54
         for <linux-gpio@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 22 Jan 2026 11:24:41 -0800 (PST)
+        Thu, 22 Jan 2026 11:26:55 -0800 (PST)
 X-Relaying-Domain: broadcom.com
 X-CFilter-Loop: Reflected
-Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-2b70c92f404so1870463eec.0
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Jan 2026 11:24:39 -0800 (PST)
+Received: by mail-dl1-f72.google.com with SMTP id a92af1059eb24-11b9786fb51so7957419c88.1
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Jan 2026 11:26:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1769109879; x=1769714679; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=R1gfDRebGX8h9HwfZ81icDjDx7dxW6g0V3ctKkIDrxQ=;
-        b=acWLR66umiz4/L3DVnvzJGBfd6x5y3GARY0Pu8gRMHZIFpkzez7ZqcENNPjETigZVI
-         m1Vv+nsJsSQv14qj7ziK6D2WKHBUH8eHDP1BrGhdA1MopuofYXmLG7BmPjVMihbfmar5
-         WzyzGJ+Fq8oLUt0Osb9Oh+D4L+trDeqHL2fNg=
-X-Forwarded-Encrypted: i=1; AJvYcCXjU2rExT0DDlKfwYPoOiNB2dBgalVKbw/dm8mW2U9C9fsgBq7ZN1e4QWd2U7VEjZZDSJ33+3plMhwY@vger.kernel.org
-X-Received: by 2002:a05:7022:fa3:b0:11a:6424:f40f with SMTP id a92af1059eb24-1247dbfece5mr232988c88.36.1769109878975;
-        Thu, 22 Jan 2026 11:24:38 -0800 (PST)
-X-Received: by 2002:a05:7022:fa3:b0:11a:6424:f40f with SMTP id a92af1059eb24-1247dbfece5mr232966c88.36.1769109878325;
-        Thu, 22 Jan 2026 11:24:38 -0800 (PST)
+        d=broadcom.com; s=google; t=1769110013; x=1769714813; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=4UUagfqRa3jCP2fBiA3Ur8fXwirA3RKoOMc660AuSI0=;
+        b=FkLnFaM+HuJCu9z3g8mqel4eNLXCnfzKOtM2RDb8vLOYW+rIRxF29ZR33yuJv9ZRBb
+         U4kdloWC46HvaZMW/Wtaksb40xuMTUMoaYNK+qsqRZcL1qvitN1P8wFw7SKM/S3NdPH3
+         jgluJc+aORb63pZDuGCKxpQ6honPCMX+uPnTk=
+X-Forwarded-Encrypted: i=1; AJvYcCWhEVO9BJilDWxv6+qVXCKqe5tz8S0ROuPcCaehdY4p366Z1ugVDql9Xl5ailxruQ2JYfz3TilJ0/QD@vger.kernel.org
+X-Received: by 2002:a05:7022:438e:b0:11d:fc72:e17f with SMTP id a92af1059eb24-1247dbbba5bmr270190c88.18.1769110013230;
+        Thu, 22 Jan 2026 11:26:53 -0800 (PST)
+X-Received: by 2002:a05:7022:438e:b0:11d:fc72:e17f with SMTP id a92af1059eb24-1247dbbba5bmr270169c88.18.1769110012532;
+        Thu, 22 Jan 2026 11:26:52 -0800 (PST)
 Received: from [10.63.25.133] ([12.75.221.34])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b73aa22707sm304637eec.29.2026.01.22.11.24.34
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1247d90ce0dsm597516c88.4.2026.01.22.11.26.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Jan 2026 11:24:37 -0800 (PST)
-Message-ID: <a7b2f013-965b-436d-95f0-8ce1e2ec0c41@broadcom.com>
-Date: Thu, 22 Jan 2026 11:24:35 -0800
+        Thu, 22 Jan 2026 11:26:51 -0800 (PST)
+Message-ID: <ba9005ab-f757-4018-96ed-a10bcef08165@broadcom.com>
+Date: Thu, 22 Jan 2026 11:26:47 -0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -100,7 +100,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] gpio: brcmstb: allow parent_irq to wake
+Subject: Re: [PATCH 2/3] gpio: brcmstb: implement irq_mask_ack
+From: Florian Fainelli <florian.fainelli@broadcom.com>
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
  Broadcom internal kernel review list
@@ -111,10 +112,10 @@ Cc: linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
  "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE"
  <linux-arm-kernel@lists.infradead.org>
 References: <20260122010516.1200630-1-florian.fainelli@broadcom.com>
- <20260122010516.1200630-4-florian.fainelli@broadcom.com>
- <CAHp75VfhEZ60F7ZHkjNDZ3JR6B6tNF5ORUDPoN8ZibbvF=js8w@mail.gmail.com>
+ <20260122010516.1200630-3-florian.fainelli@broadcom.com>
+ <CAHp75Vc=ejHPwA05MHBxJQdJWv49pcuTNax0VikXruvwVM+Y9A@mail.gmail.com>
+ <cb4ef2ed-ba94-4475-b02a-5b6e39943e81@broadcom.com>
 Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
  M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
@@ -147,7 +148,7 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <CAHp75VfhEZ60F7ZHkjNDZ3JR6B6tNF5ORUDPoN8ZibbvF=js8w@mail.gmail.com>
+In-Reply-To: <cb4ef2ed-ba94-4475-b02a-5b6e39943e81@broadcom.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
@@ -156,7 +157,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[broadcom.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[broadcom.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -166,97 +167,111 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30951-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-30953-lists,linux-gpio=lfdr.de];
 	DKIM_TRACE(0.00)[broadcom.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[florian.fainelli@broadcom.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_HAM(-0.00)[-0.995];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	NEURAL_HAM(-0.00)[-0.983];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 5F4F66CFA2
+X-Rspamd-Queue-Id: 44A146D024
 X-Rspamd-Action: no action
 
 
 
-On 1/21/2026 11:42 PM, Andy Shevchenko wrote:
-> On Thu, Jan 22, 2026 at 3:06 AM Florian Fainelli
-> <florian.fainelli@broadcom.com> wrote:
+On 1/22/2026 11:17 AM, Florian Fainelli wrote:
 > 
->> The classic parent_wake_irq can only occur after the system has
->> been placed into a hardware managed power management state. This
->> prevents its use for waking from software managed suspend states
->> like s2idle.
+> 
+> On 1/21/2026 11:36 PM, Andy Shevchenko wrote:
+>> On Thu, Jan 22, 2026 at 3:06 AM Florian Fainelli
+>> <florian.fainelli@broadcom.com> wrote:
+>>>
+>>> From: Doug Berger <opendmb@gmail.com>
+>>>
+>>> The irq_mask_ack operation is slightly more efficient than doing
+>>> irq_mask and irq_ack separately.
 >>
->> By allowing the parent_irq to be enabled for wake enabled GPIO
->> during suspend, these GPIO can now be used to wake from these
->> states. The 'suspended' boolean is introduced to support wake
->> event accounting.
+>> I would refer to the callbacks as
+>>
+>> .irq_mask()
+>> .irq_ack()
+>>
+>> et cetera.
 > 
->> Signed-off-by: Doug Berger <opendmb@gmail.com>
->> [florian: port changes after generic gpio chip conversion]
+> Ack.
 > 
-> Likewise in the previous patch I think this deserves the Co-developed-by tag.
+>>
+>>> More importantly for this driver it bypasses the check of
+>>> irqd_irq_masked ensuring a previously masked but still active
+>>> interrupt gets remasked if unmasked at the hardware level. This
+>>> allows the driver to more efficiently unmask the wake capable
+>>> interrupts when quiescing without needing to enable the irqs
+>>> individually to clear the irqd_irq_masked state.
+>>
+>> ...
+>>
+>>> -// Copyright (C) 2015-2017 Broadcom
+>>> +// Copyright (C) 2015-2026 Broadcom
+>>
+>> Shouldn't it be rather 2015-2017,2026 ? (In one case when I updated a
+>> driver for Intel, I went via Git history to gather the info.)
+> 
+> Ack.
+> 
+>>
+>> ...
+>>
+>>>   static void brcmstb_gpio_set_imask(struct brcmstb_gpio_bank *bank,
+>>> -               unsigned int hwirq, bool enable)
+>>> +               unsigned int hwirq, bool enable, bool ack)
+>>
+>> This type of interface is usually discouraged as it makes code harder
+>> to read and follow. Since there are a lot of duplication, I recommend
+>> to move the ack op to a separate helper.
+> 
+> Good point, knowing the order and what set in those parameters can be 
+> confusing.
+> 
+>>
+>> ...
+>>
+>>> -       gpio_generic_write_reg(&bank->chip,
+>>> -                              priv->reg_base + GIO_MASK(bank->id), 
+>>> imask);
+>>> +       if (ack)
+>>> +               gpio_generic_write_reg(&bank->chip,
+>>> +                                      priv->reg_base + 
+>>> GIO_MASK(bank->id),
+>>> +                                      imask);
+>>
+>> Id est this piece...
+>>
+>>
+>>
+>>> +static void brcmstb_gpio_irq_mask_ack(struct irq_data *d)
+>>> +{
+>>> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>>> +       struct brcmstb_gpio_bank *bank = gpiochip_get_data(gc);
+>>> +
+>>> +       brcmstb_gpio_set_imask(bank, d->hwirq, false, true);
+>>
+>> ...and call it here explicitly (seems the only place for it, so it can
+>> even be just moved here without an intermediate helper).
 
-OK.
-
-> 
->> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> 
-> ...
-> 
->> +               if (priv->suspended && bank->wake_active & (u32)status) {
-> 
-> Why casting?
-
-status is an unsigned long, which is what for_each_set_bit() expects, so 
-it is intended here to ensure the top bits are not participating in the 
-comparison, I think this is just being extra explicit with intent here.
-
-> 
->> +                       priv->suspended = false;
->> +                       pm_wakeup_event(&priv->pdev->dev, 0);
->> +               }
-> 
-> ...
-> 
->>   static void brcmstb_gpio_shutdown(struct platform_device *pdev)
->>   {
->> +       struct brcmstb_gpio_priv *priv = dev_get_drvdata(&pdev->dev);
-> 
->> +       /* disable interrupts */
-> 
-> A useless comment.
-
-Indeed.
-
-> 
->> +       if (priv->parent_irq > 0)
->> +               disable_irq(priv->parent_irq);
->> +
->>          /* Enable GPIO for S5 cold boot */
->> -       brcmstb_gpio_quiesce(&pdev->dev, false);
->> +       brcmstb_gpio_quiesce(priv, false);
->>   }
-> 
-> ...
-> 
->>   static const struct dev_pm_ops brcmstb_gpio_pm_ops = {
-> 
->> +       .suspend_noirq = pm_sleep_ptr(brcmstb_gpio_suspend_noirq),
->>          .resume_noirq = pm_sleep_ptr(brcmstb_gpio_resume),
-> 
-> May we use one of the PM macros for these two assignments?
-
-Sure, can do that!
--- 
+Actually we need it to be part of brcmsftb_gpio_set_imask() because this 
+is where the guard(gpio_generic_lock_irqsave) resides. I can't really 
+see a better alternative, short of create two implementations: of 
+brcmstb_gpio_set_imask() and brcmstb_gpio_set_imask_ack() which does not 
+feel any better than the proposed patch.
+--
 Florian
 
 
