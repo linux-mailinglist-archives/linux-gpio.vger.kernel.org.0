@@ -1,40 +1,40 @@
-Return-Path: <linux-gpio+bounces-30952-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30951-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OKRQBYt5cmlSlQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-30952-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 20:24:59 +0100
+	id eDKPAoh5cmlSlQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-30951-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 20:24:56 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C88F6CFB4
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 20:24:58 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F4F66CFA2
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 20:24:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id D5DFD300908B
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 19:24:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7FF233014570
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 19:24:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DC5936E482;
-	Thu, 22 Jan 2026 19:24:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E57043921E4;
+	Thu, 22 Jan 2026 19:24:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
 	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="acWLR66u"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f227.google.com (mail-pl1-f227.google.com [209.85.214.227])
+Received: from mail-pl1-f228.google.com (mail-pl1-f228.google.com [209.85.214.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C73F38A9DB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C53B32826F
 	for <linux-gpio@vger.kernel.org>; Thu, 22 Jan 2026 19:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.227
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769109893; cv=none; b=BWa7i0KbVVaTt5IJNHbDw6wlSMO3+c8zDHlBVuQqA9FQ3HXalZ+ivBzm6XJSWhAbmk7mnoagQMFM7bjc84P/po297MYIO0qjL6vqp/4Qm+ZSkQAGVnliz1V2OrjKFp0ktKRJX7QLCvX8DdMiJWOtqq3IECE2fdufCBg0hjnSLG4=
+	t=1769109890; cv=none; b=uOloj6SOqJ44c17X1AwqI5u1y8uMjNNGrF30+H9of+I9yIkXNEtBa6q6wcjhpaNTrw7KbKpZslV7PCv2FW0B9dTqdFNCutOKA8a8LexSPiG6rfXanPSkU+sK3NNXozokiknSwT+NOoxCjqNAcaQtioku+9wXyi6XeLgRRy84AU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769109893; c=relaxed/simple;
+	s=arc-20240116; t=1769109890; c=relaxed/simple;
 	bh=GvXk4V9By1D5PBjofkvhUU4qulOtHL+4ytfRSMIiTwQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WVX/FubnivL9iOiAxZe1ET/JhzqcGrpkahj8gg0zzBfkhhkdrEXUPoIsfWi4fyqfImVgxlpNm82OmLSy1tzElk2PBVJLXvC7NowK1NNlITAT4rvKtcxxTiz2sxlNqUqOg3YrcvwVTJj9HYgFXzVQANDWgS+nkSiUflr1GTZg2XM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=acWLR66u; arc=none smtp.client-ip=209.85.214.227
+	 In-Reply-To:Content-Type; b=AQt49S1hxBCHxhISvZBQ6wKxS9QQtgIdwyEFnQJv/L5t2OLG6WSySxGzZYCMbbrnuZxjQWlu8TPWiYzOPOt+f+AQOX6Yk3YIv9kknZCIBsu/WApDiUFLYUSukx7MrYL9UJSLjc839uydmzc3QMSNcNVwFQ1anvitWZNojGbQazw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=acWLR66u; arc=none smtp.client-ip=209.85.214.228
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pl1-f227.google.com with SMTP id d9443c01a7336-2a0c20ee83dso13295925ad.2
+Received: by mail-pl1-f228.google.com with SMTP id d9443c01a7336-2a0c20ee83dso13295985ad.2
         for <linux-gpio@vger.kernel.org>; Thu, 22 Jan 2026 11:24:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1769109881; x=1769714681;
@@ -43,35 +43,35 @@ X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
          :date:message-id:dkim-signature:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
         bh=R1gfDRebGX8h9HwfZ81icDjDx7dxW6g0V3ctKkIDrxQ=;
-        b=JfsVyyp+4tomA2jttyAFijceeCLDQQXTB9PeVxQVC4p+/0LyilaYoPJlemq7B0GzTJ
-         oCk9JGjH+VonP3DRr4+Uak1WdcEqZ5HiCsiuD8CW8LetJ+r1TCCx6OgmzMXA5IiT9tSJ
-         f9cmt2c5OsPNhoUrXcYj/TFzR3KYulRF2tYX/+WGbBpvfdRdAlAOflnVJAgoVlwB8qhY
-         KVtVVQ0qerNuot7aUbZu92xXWMDmx4980/CmYwqeMdnaM7r5WSSLXM2e3LfOrMt39uT6
-         ynVKWEBOaVAzEZIDFMDxKf7pR6XPEP6vVHe2aT+T20KqZTrY/CUN+lt698WCjHZtYUSP
-         3i1g==
-X-Forwarded-Encrypted: i=1; AJvYcCWfwQ2/eXWJ9Uvi35iZz/Md0A+TDbNVhHmD4MqmeGOehdfQrZE9tQhL/4Tgec8Ty9XjvvV5/CxTcvbx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2AyFTf/Y1/MyQ80YLCcfAMUMCcb1rOMe1Bo1dJ4dadaG2NY+0
-	JSdaewVt6P0AX2yVP8sBU/K5O2fo0WWSU4OHSgToy/F4FUj3tkJ8j6IAZQBtB6nkQNU21wnsffe
-	khd4cfkIRdLe/XQiF4IzJTZIz3rTAFtvAUjwb+GLKgqxGRgd/27pm7ENP4XhY4NV3ni5A9znCMN
-	D8KNWlhnKysT7anB70LoJwVKMh+EDHycIX7W0JY4TXjcubRElLfpivIG0POKeoHsGCOP8SgMKVV
-	sKOWjf0jT18mx6mtlP/yg==
-X-Gm-Gg: AZuq6aLqozlM8oThkjKOt5qpgSg9Tr4rl7V/ZZdW44R6fsYcJojUULljDmwDrCEsS/w
-	u1bPgp4mPqwz+aPWv+7nO9vFud0nCF05n3YmeGQ5JZAN6h7MzfiuCfSUWMV+c0JkPlC3ykec5PD
-	C2EINkqkQik+G1aZWzjFuurOiNxq+TQYOXAEFIxPT5R4e9RhdOHGnMuVtY9Nt4PfBOb+2pZKCxA
-	oWkRQNyM/7BlNzb5GaMm2ZNIEWraPDecPyeS85lJTYh1bEVzeAejgUFYA58iz5yZr1C8OmDvL/V
-	jIzuf8ZbyGmtW+A2Bc+MeFTdEJEe2VLdPGnoYDreeTb6xX8LCzkySJvxWC9ZkWy4z4sFfqNtFzc
-	cv6+kpdnfZw2KCBCdttO1sUuVMJE6ocuQuQGv89M3eO2tAG4JhVbMVhpHfgIAtSYIMWXE5wcyRd
-	r84xtqDqQSpib0/yxeTEPzGWqMsqsdrOi8ftSiENcHAhXBFV8G4Q==
-X-Received: by 2002:a17:903:124b:b0:2a0:abba:a2ee with SMTP id d9443c01a7336-2a7fe441eb5mr4114085ad.5.1769109880728;
-        Thu, 22 Jan 2026 11:24:40 -0800 (PST)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-11.dlp.protect.broadcom.com. [144.49.247.11])
-        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-2a802fa4e8asm29145ad.44.2026.01.22.11.24.40
+        b=j4uzWmfMAmm+VnznQv5VC7mJ4NAmrr1s/Pb4JYdKpVgzUNbOYHG5DpEEy6jto0qTG9
+         wXKJCk5T+8C1EvNut2+4NbJhVS9exhRrX9NtEQ2fB2u94nO2pF6FL5F7m/Lxmcdv97sC
+         vRRmJD6h/j0C4uARhLFxpPL9OAS319kfqgd0HhpeApHO5UBew/xubGMXoljM8aN4MR9P
+         1XMu6mDm6RseESZpngiQHq+wEANCKnxCgkhuwmY+7rtpSZ8D1cQ1txEMKFmYqEiG3dLR
+         Zjp9kwDBLPEJHJlWtGddLO+t4MA6faEeaZcptuT08PZtSRP3xf+MxWaUNEvySNyONbzN
+         TGxA==
+X-Forwarded-Encrypted: i=1; AJvYcCXWbvy0gsGIqKrndN64HRs9U/c9iAAzTZkUYs21eNo+mkEyPuSFh/MH5nacOlya/OmXbap6hAGTDEuz@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLpiceMJHA6a8gUPX3NXwKh1KZ/E9slRadoiqWrNrG63Lvw3QB
+	xZvswOdo0fEVV40ezyJb7K9qdFk/Wexd649TaFBAFCGDgONWMKRX2WrB/5hXFDuV/pV2tEYY4j8
+	yjIoz8HWJirucNS9BFLih9lIqO9tgJ/Luo/C0A6RMzDFaH4lg8Yj3nKKfu6ACcZnzNsllE+u99N
+	+kXmAUR7oVTqC8+PJPJos7QEuaAz8CLhgN3tSg30OL8CQkoW4ciuOoRXFemPAuKM1x2Yqfc7kk3
+	WZL5LVXF2z68Gd1i4hcBQ==
+X-Gm-Gg: AZuq6aKo+aY5C+GO2ZDjAFH/dr9Jn1JCBHKv+qPLtJh6xG3FJIERqsa1P5MPnNXwEpU
+	FMroH6Ka9ufhlehF2J4gTCeL1EvLCNLiCDv4QTxH2bymxe89uTvSh28+zzTR0bYcUSY1Ej8PH8o
+	5e2aowKRhWRDhvxsC1OM9irXa5RfiMpVyFxBYCK1kWDO01g38aRTEVhlGOlgmWjHzlZqiQFR28H
+	dEVdH/flY5n+KI7KCZXLtjSuvO8ELOLovvfW3MzcTQHZYX+Dm40Ew4H5ulWirpkMMCkUNFdBiEL
+	mRunRzfoUaLTAPebZGcbyNMCdYuTHGOVKtOuv+5ge5Sf/ScnS5gE+8LY1KJBSXGjRUQ2xhSTEBB
+	DWvf/Ck+WV4TtMObpVamLO8tWKWOxXPfE3MwtD1vuQ55xP5C1OjLLy/MAOQcH5f/1XKGk6FoKnJ
+	EK60apKwfyK35SxiTkkQzlq+/8nRPShDRqhIy7nJ2TBNg2k18=
+X-Received: by 2002:a17:902:db09:b0:2a3:e76d:e8e with SMTP id d9443c01a7336-2a7fe732d80mr4186585ad.45.1769109881053;
+        Thu, 22 Jan 2026 11:24:41 -0800 (PST)
+Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-2.dlp.protect.broadcom.com. [144.49.247.2])
+        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-2a802f8464asm29065ad.34.2026.01.22.11.24.40
         for <linux-gpio@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 22 Jan 2026 11:24:40 -0800 (PST)
+        Thu, 22 Jan 2026 11:24:41 -0800 (PST)
 X-Relaying-Domain: broadcom.com
 X-CFilter-Loop: Reflected
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-2b70c92f404so1870456eec.0
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-2b70c92f404so1870463eec.0
         for <linux-gpio@vger.kernel.org>; Thu, 22 Jan 2026 11:24:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google; t=1769109879; x=1769714679; darn=vger.kernel.org;
@@ -82,13 +82,13 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         b=acWLR66umiz4/L3DVnvzJGBfd6x5y3GARY0Pu8gRMHZIFpkzez7ZqcENNPjETigZVI
          m1Vv+nsJsSQv14qj7ziK6D2WKHBUH8eHDP1BrGhdA1MopuofYXmLG7BmPjVMihbfmar5
          WzyzGJ+Fq8oLUt0Osb9Oh+D4L+trDeqHL2fNg=
-X-Forwarded-Encrypted: i=1; AJvYcCX/8aa6M5Vgoew/tf64divjYs5gv2i4g9HylY4/Egko8Ol5mIaMwNivEdIphTVH7zY7WJQE7lt/jt0/@vger.kernel.org
-X-Received: by 2002:a05:7300:2150:b0:2b7:29f3:8db9 with SMTP id 5a478bee46e88-2b739bce1d7mr176228eec.40.1769109878776;
+X-Forwarded-Encrypted: i=1; AJvYcCXjU2rExT0DDlKfwYPoOiNB2dBgalVKbw/dm8mW2U9C9fsgBq7ZN1e4QWd2U7VEjZZDSJ33+3plMhwY@vger.kernel.org
+X-Received: by 2002:a05:7022:fa3:b0:11a:6424:f40f with SMTP id a92af1059eb24-1247dbfece5mr232988c88.36.1769109878975;
         Thu, 22 Jan 2026 11:24:38 -0800 (PST)
-X-Received: by 2002:a05:7300:2150:b0:2b7:29f3:8db9 with SMTP id 5a478bee46e88-2b739bce1d7mr176213eec.40.1769109878206;
+X-Received: by 2002:a05:7022:fa3:b0:11a:6424:f40f with SMTP id a92af1059eb24-1247dbfece5mr232966c88.36.1769109878325;
         Thu, 22 Jan 2026 11:24:38 -0800 (PST)
 Received: from [10.63.25.133] ([12.75.221.34])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b73a6c4a68sm400450eec.12.2026.01.22.11.24.34
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b73aa22707sm304637eec.29.2026.01.22.11.24.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
         Thu, 22 Jan 2026 11:24:37 -0800 (PST)
 Message-ID: <a7b2f013-965b-436d-95f0-8ce1e2ec0c41@broadcom.com>
@@ -156,7 +156,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[broadcom.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[broadcom.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -166,22 +166,22 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30952-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-30951-lists,linux-gpio=lfdr.de];
 	DKIM_TRACE(0.00)[broadcom.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[florian.fainelli@broadcom.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	NEURAL_HAM(-0.00)[-0.995];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 9C88F6CFB4
+X-Rspamd-Queue-Id: 5F4F66CFA2
 X-Rspamd-Action: no action
 
 
