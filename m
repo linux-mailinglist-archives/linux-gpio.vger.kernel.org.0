@@ -1,130 +1,128 @@
-Return-Path: <linux-gpio+bounces-30928-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30929-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WLOrAl5HcmnpfAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-30928-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 16:50:54 +0100
+	id QOrfLOxXcmkpiwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-30929-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 18:01:32 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8407B6940E
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 16:50:53 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA6F36A9B3
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 18:01:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4BDC13023379
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 15:48:31 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id BD94A3002F6C
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jan 2026 16:58:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1B02480DE8;
-	Thu, 22 Jan 2026 15:44:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74AAB4D90D2;
+	Thu, 22 Jan 2026 15:49:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q6eXGSeC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SLc348yH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00C745BD63
-	for <linux-gpio@vger.kernel.org>; Thu, 22 Jan 2026 15:43:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025874D90B6
+	for <linux-gpio@vger.kernel.org>; Thu, 22 Jan 2026 15:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769096647; cv=none; b=UAw1RgCWFB0DpfbWSO2rMQqF3/xbSTrv0Wh9EDNw48bPblT0wiBZaj0clMQTv2UowFYF2Ub6IL5yWPsy+3ruygyJPYcouS6cKrk+0fDC2TiutPda4Nx9n05FvTrqzoJ6Dn+nCtBHqYXejMAwQVZ3I7RQMfIrK63QjL9cZchtrwI=
+	t=1769096994; cv=none; b=PlCLCAnlKVUzk0X9bcBsks/WZJ12e+f+cAT9X2nINhWzbMUSu+38n1uBjXpC1ggO/5JB4bVKVIzDcVJBseRGpvj01QEMGgHkYt9i6D5DtKHp5ckBa7nKr+H/MHwKBepu4vrrlhCEe23/VqFqhH1ap7SInSup17/e3111tk3L34k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769096647; c=relaxed/simple;
-	bh=fvS/dFCro9ZHFc5w+Z6ZcYVzHaBeI4A1V0hAZLvZGMw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NsjXjV5EGAy+euyiFNlTKN0AIZ+M2fSjydRRdO0XRgkqd/YrzFslRUm3rXLjOZ2K6OhZmf4ptBhSxNDjp2su/drOQdsBNMnAMll6O2Wxq4QZ8GWkqQMbjO2/rlZvdg9sG4xaGF54WK67aQ69MS4Idj/hrrBHZTTjG+Jq5qo6KoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q6eXGSeC; arc=none smtp.client-ip=209.85.218.42
+	s=arc-20240116; t=1769096994; c=relaxed/simple;
+	bh=+e6wsl5d67gepE+dFjWdKbJ6vjQoBdZjQhDABfPMTsI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZRMHKYtN9CaB14Ja0JLCm0YPg+RQE8zjxUoYS4gOstIBnCO4B/a5e40Bq5a29gTVf+lCXY01LiLnnf2fm73xtJvPSsLRGG/TOaEvYFWh38QHAthFxY6NwfEHEFhWNh//3QchbpQgDqUVfeQCZTD1eajP6j/4zkVV6rzDkRJES8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SLc348yH; arc=none smtp.client-ip=209.85.128.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b879d5c1526so212129666b.1
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Jan 2026 07:43:54 -0800 (PST)
+Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-4801d98cf39so9051755e9.1
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Jan 2026 07:49:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1769096629; x=1769701429; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YHOuCyW6EXubWNPSSTKgH38OWUudqlrjbcjJqHW6R9g=;
-        b=q6eXGSeC6xQtTszI24s4UCfblfJr1UGkDEM5OfhYx2iKEskE6fHH5JaSKdz1Q+je47
-         1UuyErgGIpPxrpvXA1SaklTDNGGtlpUBR2+kVyOxA7KHEcZznyELDQ7apQP04cSqM14n
-         IJORFrwl+bqg0OPkX8IpCDBPCYK17DmZjxCyPIrORiL5IsMv/chmydL9xWmxCLQ4Tetm
-         //DIVXiJNVz6BoxiHM4yYUovkTUddK1jB9EhfwJNtAfAjYC+4060egsScebCh6y3qmwO
-         F6YiNOIoYCVngPxLz/zCqPbNSokUC7DCa2nKJ4Ke3eYM7mFePbrMK1L1cTpPZz9KP3Yu
-         YYBQ==
+        d=linaro.org; s=google; t=1769096985; x=1769701785; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+e6wsl5d67gepE+dFjWdKbJ6vjQoBdZjQhDABfPMTsI=;
+        b=SLc348yHoHg26UnNunRhyrescOI5qvVkN5xUjhfwkyu4I3hisalmDptiYWkPbuxWtJ
+         C6sFMS23VUuNv8VvLfd5eeMaCOk9lGo8crjO5IJx5T/+yoMItEl/hDWJMMn3w9vVJBXy
+         0vY/RrMvEzOZF5hq60fpAekJtXNJBP4zN7/RD/vaPBgPqGud3Ei06hRh4tLVABYgibaq
+         HaT14NjVQqYN5/DPr+o3jP/Z/bcAoJWDTYpajNx2/v6IBd+s138l4erRwnHkdXr3zVrR
+         gcSUTJvGKpn7e9W7PbIEw5b6Vb04jx5rpMZjTvglYNWkTg7Y7M8RdN3/B0Verz/IdpFO
+         ckew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769096629; x=1769701429;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=YHOuCyW6EXubWNPSSTKgH38OWUudqlrjbcjJqHW6R9g=;
-        b=nFd3QGJLGxPM8pIFy+tJx69MAUagRD6KuaoqnriHWRq1eazimhKKQRHDI46NRpJ9Ir
-         PUfS/DvO0gT/jdY02ShCrFuFFEQ1Q6uk1/UsrPfTP/QZ8/dWZtmqITLTwDlgjTNnkuQC
-         3TX+GpGtaAM+I122mHCcbHhReAVaz5+9eR4lOL3hXeowLxfJk6QpHtdUcz0oHFaZ/sR9
-         ZDRK2BKiwzC6VZJXAmB1SobyBm0d0cfR23qD8fbqg8MEYD+F0jc29ZUkZQBC7rGLX8Sv
-         jgqP+mjNR7iRoUHwlQ2Ofe+XD6VO0NgBS+Axpkg1ckus76mVHKf5KXgMSGiDeuUEyniu
-         im4A==
-X-Forwarded-Encrypted: i=1; AJvYcCXiOV4GwlRhBNmyudZZGcASUCOCXaIrdsHKF7c6FhJ9n6BjaZma7eu1EAcn8AZv6qJXGpZ3AchKdKGu@vger.kernel.org
-X-Gm-Message-State: AOJu0YznHDaYK2AXEKvhdDGeylo5z5dbf/bNP/qPWjS9cB/qRr8mPQeM
-	osr2tr3DWGg94iVic7bkmaLdMF9rWb33lFLPMerDGKJSTamIlKqIhN2WuhMqHqmON60=
-X-Gm-Gg: AZuq6aLave/Sr6z5ZmEo+8pQZIDDUhodymcKShoPqK13wzubjJWhWmVVWBSA1c5Z3lD
-	L9smrgziVC1hOSdoGuzv/SCVaI1NccM9iYxlUfYor0I3/8Nq58yaYDJt/iXpH2g/jl4ZLiuOvde
-	AMbeiXQASB48WOS627DcCtbI0Bbu7L9oKzgkrT4t8VP0YfQEif4Ga5AM+LM4BxiJk2KTwxWKU+5
-	rweGnWLQ1iktFEksT4zeSxUFwqk1WEkIPoImCcyktKoZMYfDut/2+5HPmiByJdk7fO4BRkWCnaf
-	znfwV7Jk1DoczActcgIkDv7phJTVz8cxmiBCGL5LUegY0LC5vIx3dw6DsUa9BRaao0K3A6SQL3u
-	/n9mTXy0wg0wf/YEBBB77SxsALBWuF9FGe/S8Fifp43IhEXGlDQ6Yns0tu2aaOqwlJxvo1bld6e
-	Uoea3QvDUfYR06zXYK9PU/dOCSgpJ1LeQOSfebvoVseNPvFE+7+iegVsGYB5B+38LmUzUV3lTmr
-	OT24w==
-X-Received: by 2002:a17:907:7ba8:b0:b87:6ce:1267 with SMTP id a640c23a62f3a-b8796bf624amr1670208066b.64.1769096628967;
-        Thu, 22 Jan 2026 07:43:48 -0800 (PST)
-Received: from puffmais2.c.googlers.com (244.175.141.34.bc.googleusercontent.com. [34.141.175.244])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-654535c49f4sm16334363a12.31.2026.01.22.07.43.48
+        d=1e100.net; s=20230601; t=1769096985; x=1769701785;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+e6wsl5d67gepE+dFjWdKbJ6vjQoBdZjQhDABfPMTsI=;
+        b=ZEPT7Uarv1ovZcQwbSUCYqXUmSZKyVztGtSEWOfYgPbbtlqCM5Y2+K9rfd4BLfI72M
+         ib7vDCItY9nYXmOgjl7is2IG+LrfK4mLzOEg6cH9hFF8km/gjyT2zbEPmYbh6yRxx8Zm
+         +RHj7KXku4sBriKxl3/U7xxTtX+NUHsr32uga0CBOxcOtYjvhE2Li94Ro0GtpfVpNEr2
+         7vr9OrcTrJ5vdEBiUWAHTyucPSzeQ+YREXCLLJhfgHkLrt6VNVRcsbXu1Gvspp62KpXS
+         1VO5pIAuLVc7PwEMiuRU1wQ+F9+aM8+JovQTNS7ui7NxLXPCn+/b2G2/q3FelfWNsP3g
+         K2Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZHj1M93ahnhIbQ4+QuQA9+V50kZhorLhxPQyWyvKV3igcWeX5JEgaQNt4mYWWbInyx32ra/Hgxs2r@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdzoxLNHoP88Ssf+Q+XlWG2dX1OivY3eN3vyrHj1TLFTLFJDV6
+	HVw+gJWi968LxukDUgD0+0TPsBfLg35JGPPtFyKG++cSJpb3ySNbhYeqfpyNikAFSGU=
+X-Gm-Gg: AZuq6aIjPIGoptgmKxR3BMTEyrOGbnpHdxRcAsX5fhrS8b1ZB3X612GkyT+S4XcfV4N
+	5F1unLyqDP2n3OOnfyPEzBltYZgatKGfEVx4eP4iWzvjJZz2jt+g0HWoaarhRCqTr3W/1jWcoHp
+	b+0V/kqMVO3GeW0dBhhZ7LD7dHmILAdv48BH56nf429FTztIT9wY7rjDBylAs/tevRwGw+3D6FN
+	bllaXFDZfQdnXbSnmIWrbSOBeYCzsq6pqeYGE62CLSrvGASFuscf24bHbc7jksXO7zTaMzAHVeK
+	ldcXhVgtDSFlpPpnFP9IQ5E+b2xQKa0AXaEPkFpvtF8FuNP4+jReKn39aPoSc2vMafk3dT5GGBH
+	YyJSVUU5WPBsuc9NLrs2FFe3V/plUr2h5lymtnFnJLX2tFOnyKeLdHGVz2YE/fIuDcXAaz5IfM1
+	MM2ZpQs1Lp+xPu3TokJmiAlAOFPikx
+X-Received: by 2002:a05:600c:8209:b0:480:1a9a:e571 with SMTP id 5b1f17b1804b1-4804c9aff3emr1043695e9.22.1769096985161;
+        Thu, 22 Jan 2026 07:49:45 -0800 (PST)
+Received: from draszik.lan ([212.129.87.109])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-480424d4912sm56957665e9.7.2026.01.22.07.49.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jan 2026 07:43:48 -0800 (PST)
-From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Thu, 22 Jan 2026 15:43:47 +0000
-Subject: [PATCH v7 20/20] regulator: s2mps11: more descriptive gpio
- consumer name
+        Thu, 22 Jan 2026 07:49:44 -0800 (PST)
+Message-ID: <d6f25eb87630f2ce6a155c8ba758a131187b5aa1.camel@linaro.org>
+Subject: Re: [PATCH v6 00/20] Samsung S2MPG10 regulator and S2MPG11 PMIC
+ drivers
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>,  Mark Brown <broonie@kernel.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Krzysztof Kozlowski	
+ <krzk+dt@kernel.org>, Linus Walleij <linusw@kernel.org>, Bartosz
+ Golaszewski	 <brgl@kernel.org>, Peter Griffin <peter.griffin@linaro.org>,
+ Will McVicker	 <willmcvicker@google.com>, Juan Yescas <jyescas@google.com>,
+ 	kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Bartosz Golaszewski	
+ <bartosz.golaszewski@oss.qualcomm.com>
+Date: Thu, 22 Jan 2026 15:49:44 +0000
+In-Reply-To: <20260122150634.GK3831112@google.com>
+References: <20260105-s2mpg1x-regulators-v6-0-80f4b6d1bf9d@linaro.org>
+	 <20260122150634.GK3831112@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-2+build3 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260122-s2mpg1x-regulators-v7-20-3b1f9831fffd@linaro.org>
-References: <20260122-s2mpg1x-regulators-v7-0-3b1f9831fffd@linaro.org>
-In-Reply-To: <20260122-s2mpg1x-regulators-v7-0-3b1f9831fffd@linaro.org>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Linus Walleij <linusw@kernel.org>, 
- Bartosz Golaszewski <brgl@kernel.org>
-Cc: Peter Griffin <peter.griffin@linaro.org>, 
- Will McVicker <willmcvicker@google.com>, Juan Yescas <jyescas@google.com>, 
- kernel-team@android.com, linux-kernel@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-gpio@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
- Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30928-lists,linux-gpio=lfdr.de];
-	FREEMAIL_TO(0.00)[linaro.org,kernel.org,gmail.com,bgdev.pl];
 	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	TAGGED_FROM(0.00)[bounces-30929-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
+	FREEMAIL_CC(0.00)[linaro.org,kernel.org,gmail.com,bgdev.pl,google.com,android.com,vger.kernel.org,oss.qualcomm.com];
+	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
@@ -134,39 +132,83 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,linaro.org:dkim,linaro.org:mid,qualcomm.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8407B6940E
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linaro.org:email,linaro.org:dkim,linaro.org:mid]
+X-Rspamd-Queue-Id: BA6F36A9B3
 X-Rspamd-Action: no action
 
-Currently, GPIOs claimed by this driver for external rail control
-all show up with "s2mps11-regulator" as consumer, which is not
-very informative.
+Hi Lee,
 
-Switch to using the regulator name via desc->name instead, using the
-device name as fallback.
+On Thu, 2026-01-22 at 15:06 +0000, Lee Jones wrote:
+> On Mon, 05 Jan 2026, Andr=C3=A9 Draszik wrote:
+>=20
+> > This series extends the existing S2MPG10 PMIC driver to add support for
+> > the regulators, and adds new S2MPG11 core and regulator drivers.
+> >=20
+> > --- dependency note ---
+> > This series must be applied in-order, due to the regulator drivers
+> > depending on headers & definitions added by the bindings and core
+> > drivers. I would expect them all to go via the MFD tree.
+> >=20
+> > The MFD patches in this series also depend on my Samsung MFD patches
+> > due to patch context:
+> > https://lore.kernel.org/all/20251217-s5m-alarm-v2-0-b7bff003e94c@linaro=
+.org/
+> >=20
+> > While these patches compile, regulator probe will only be successful
+> > with my deferrable regulators patches from
+> > https://lore.kernel.org/r/20251227-regulators-defer-v1-0-3104b22d84cb@l=
+inaro.org
+> > --- end ---
+> >=20
+> > The patches are kept together in one series, due to S2MPG11 and its
+> > regulators being very similar to S2MPG10.
+> >=20
+> > The Samsung S2MPG11 PMIC is a Power Management IC for mobile
+> > applications with buck converters, various LDOs, power meters, and
+> > additional GPIO interfaces. It typically complements an S2MPG10 PMIC in
+> > a main/sub configuration as the sub-PMIC and both are used on the
+> > Google Pixel 6 and 6 Pro (oriole / raven).
+> >=20
+> > A DT update for Oriole / Raven to enable these is required which I will
+> > send out separately.
+> >=20
+> > Cheers,
+> > Andre'
+> >=20
+> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+>=20
+> Applying patch(es)
+> Applying: dt-bindings: mfd: samsung,s2mps11: Split s2mpg10-pmic into sepa=
+rate file
+> Applying: dt-bindings: mfd: samsung,s2mpg10-pmic: Link to its regulators
+> Applying: dt-bindings: mfd: Add samsung,s2mpg11-pmic
+> Applying: mfd: sec: s2mpg10: reorder regulators for better probe performa=
+nce
+> Applying: mfd: sec: Add support for S2MPG11 PMIC via ACPM
+> error: invalid object 100644 11a56154d36d251d40b40e91da514db0faa15ae3 for=
+ 'drivers/mfd/sec-irq.c'
+> error: Repository lacks necessary blobs to fall back on 3-way merge.
+> Patch failed at 0005 mfd: sec: Add support for S2MPG11 PMIC via ACPM
+> hint: Use 'git am --show-current-patch=3Ddiff' to see the failed patch
+> hint: When you have resolved this problem, run "git am --continue".
+> hint: If you prefer to skip this patch, run "git am --skip" instead.
+> hint: To restore the original branch and stop patching, run "git am --abo=
+rt".
+> hint: Disable this message with "git config set advice.mergeConflict fals=
+e"
+>=20
+> Doesn't apply to `for-mfd-next` or `ib-mfd-rtc-v6.20`.
+>=20
+> Please rebase.
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Signed-off-by: André Draszik <andre.draszik@linaro.org>
----
- drivers/regulator/s2mps11.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Strange, git rebase onto for-mfd-next had no trouble. I presume you used b4=
+ am / shazam
+above? Just trying to understand why the difference.
 
-diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
-index 4a9d70947f17cb7520e0e820d3d1b9eb370ff600..2d5510acd0780ab6f9296c48ddcde5efe15ff488 100644
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -362,7 +362,8 @@ static int s2mps11_of_parse_gpiod(struct device_node *np,
- 	ena_gpiod = fwnode_gpiod_get_index(of_fwnode_handle(np), con_id, 0,
- 					   GPIOD_OUT_HIGH |
- 					   GPIOD_FLAGS_BIT_NONEXCLUSIVE,
--					   "s2mps11-regulator");
-+					   desc->name
-+					   ? : dev_name(config->dev));
- 	if (IS_ERR(ena_gpiod)) {
- 		ret = PTR_ERR(ena_gpiod);
- 
+Anyway, rebased v7 is
+ https://lore.kernel.org/r/20260122-s2mpg1x-regulators-v7-0-3b1f9831fffd@li=
+naro.org
 
--- 
-2.52.0.457.g6b5491de43-goog
-
+Cheers,
+Andre'
 
