@@ -1,135 +1,147 @@
-Return-Path: <linux-gpio+bounces-31016-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31017-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WA69DieDc2kDxAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-31016-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 15:18:15 +0100
+	id KJ6rKYaDc2kDxAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-31017-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 15:19:50 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6F9476E15
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 15:18:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F8A076E8D
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 15:19:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C1C36301C6E6
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 14:18:13 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 511EB301C940
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 14:19:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3277A2E8B67;
-	Fri, 23 Jan 2026 14:18:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2263D311C15;
+	Fri, 23 Jan 2026 14:19:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="G7bRNcwW"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PJEfFsnG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3BD22B8CB
-	for <linux-gpio@vger.kernel.org>; Fri, 23 Jan 2026 14:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCEF283FC5;
+	Fri, 23 Jan 2026 14:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769177893; cv=none; b=cT+yvNwkS5xZlWXUyLAt5aU4/xJyi28jTdxD52T056ljNiLPjXIe4WdbC4PM8M6kqTtqyY5d0xd9efWPH7iqMJgTk4hGcGMke3hjI/x4nidbR47hENl6UC1VJGoFsOnaL+vmoc+P4g9lli6EqjfqKpAGF6rRLFHQDC/DyGWBgwA=
+	t=1769177982; cv=none; b=OYpxNxeTswmcS/Xuf6a5modNozdoltSymRSXEb++0Sl3MJZgPHaME9K5scLQpSntLpszimYrJ4xqX821qaTxxOwDCbt4lV9GjKJbS+b5IVk6B4mPjDdhu2rQp1h4QGdfTxJ5mvM8blBbgrFkwwmX5uAM12l2bBqEwNpdry2KZ44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769177893; c=relaxed/simple;
-	bh=o4Vhy284nR60LjNdhm0XrTm9LZqyrbTcvMsIxeVZ0Tc=;
-	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID; b=lwZ/GDGjQWy13y29K0qYGEtwHCSPEXdePjSWVoC7ShQOEMBFD4pOE8WFonpTbcI94RADH3nS+mZ5yYcw+FlvUk6UabG9lqD4dOyRcZY3z7IDOxqJzetQZE617CUMXncMskTK677Z9F5fKJJrklBM1dN4TqchgnyUcJGyXPA8DP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=G7bRNcwW; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1769177886;
-	bh=o4Vhy284nR60LjNdhm0XrTm9LZqyrbTcvMsIxeVZ0Tc=;
-	h=From:To:Cc:Subject:Date;
-	b=G7bRNcwWWBhXKEhm+sE+pc4l/1pCNbEW1RyMoOAX/aFiKY8QPMug5jVTLKWlIAFnB
-	 Aer7Cdr3eSOxkVrhAOTu79XErLyTIi8hfKKP8KK6YaBqJqgExblw9LClLZGPV+fdr/
-	 5jgnIwSvRNQIaS/TGZPsM4ErA0hV3bFIuA7Cz0yY=
-X-QQ-XMRINFO: Mp0Kj//9VHAxzExpfF+O8yhSrljjwrznVg==
-X-QQ-XMAILINFO: MLrSp7HLXZWv9kZCUs3dZ7m4lru0tYYhJhsrsx5bzO+S+zgQCEWN4ZE0kl6DVX
-	 1s9rSbhw0pBNwieBx3Qy+tjTzGPj5smsS61s2+HmNcKKnv+6t5YSzGQ/fxrrnyZgfTqTXG/7PqFSh
-	 tWy59XizaROiQhsOC9t1o7JMbKf/jZDX5SFQMecyyEjct1huisqi4uGtiNQDEuKCy4ixJ7y4U+lLp
-	 3bWH2nZql30XZzrVn27TB2nH+eVpZUEfqcnFtgGTAMMyO3ZRF9OFyTc5nwHZ42oQp1cnDa7bHj+vv
-	 /6M8kKgQWAYt34lanKGO+Z3ZcaEb+dwi4G59izdcCtdh6o0Mq07GJkU5FFZ39WSVljtPK7w8el4/q
-	 ULGputnWYEW19roiHxCDd396G72ty6v7gJznY8MNd4P6tOT8vfG7KKuJ2CbDLaCN9vJqfhxq+pGy3
-	 ofdrWu1rTOw0oYgXPF0HVB9JJJ9KZ4/+zz5poPx2e+lFl0xQuVyePF7wTtQ/YDmBXdFi0pA3Hkd0Y
-	 nPx+Q/QtawIoQMfe6Pt0gk92JSZW0LSdb6+bp+zSw8uDAvRC7mW3EzCmHyRcQXIMPL0rCvwcyexoy
-	 ZoepbE/NlJ0kw8qNkUH0AD5chhBT00iYAbw6Du0P2JEpE0dKPwYaY0HPBM/3cQKYBAwgN9dGlP3Bc
-	 KQDlA7+iYp568tqXG8J5fhAWmYrNbvu3jTcE/YvxkWvMsN7RB4vj+bukiZ6jD+Dfg9BO3r3MKuqx/
-	 J7kCcrsWNmwMWQYjnHcwJmt0l3Sr1i4pdmZoB8rNvGw5jHNiQ1e7LvbUUmKiObrPLsoICmZ1uMFlg
-	 lXM08WGIvWyhm75uazh2TsCqzt7NUo35RD22d4xSgTI87IrSvCHZLuroHlMI4/4L4y9bPnJTpesEs
-	 SfrRy7ohlqSqyujmdxPM82GL6q/JAZrjH72EKqQyrU+iW/6lxaEzHkbjWlprlhfGDQtM4R7dHIidf
-	 qk7foBCjdgaYVGPyd4UEFBKEy0JEndvOG4rRzyPnf4sFHx+Lj1cHrO3GL0E6lNAKFTKKqGddAOy/q
-	 qErtG2+ShNOgCC/qLzMp4441vzbyh8D3GqDoaPsxpj5RPqIc=
-From: "=?utf-8?B?R2FyeSBMYXU=?=" <zgliu@foxmail.com>
-To: "=?utf-8?B?U3RhZmZvcmQgSG9ybmU=?=" <shorne@gmail.com>
-Cc: "=?utf-8?B?bGludXN3?=" <linusw@kernel.org>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?bGludXgtb3BlbnJpc2M=?=" <linux-openrisc@vger.kernel.org>, "=?utf-8?B?ZGV2aWNldHJlZQ==?=" <devicetree@vger.kernel.org>, "=?utf-8?B?cm9iaA==?=" <robh@kernel.org>, "=?utf-8?B?a3J6aytkdA==?=" <krzk+dt@kernel.org>, "=?utf-8?B?Y29ub3IrZHQ=?=" <conor+dt@kernel.org>, "=?utf-8?B?Z2VlcnQrcmVuZXNhcw==?=" <geert+renesas@glider.be>, "=?utf-8?B?a3J6eXN6dG9mLmtvemxvd3NraQ==?=" <krzysztof.kozlowski@oss.qualcomm.com>, "=?utf-8?B?YnJnbA==?=" <brgl@kernel.org>, "=?utf-8?B?bGludXgtZ3Bpbw==?=" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v6 1/6] dt-bindings: gpio-mmio: Correct opencores GPIO
+	s=arc-20240116; t=1769177982; c=relaxed/simple;
+	bh=N+NfZKQxM25HyaRd5dNRvdZ4oRLieFCo6keEF5bY3zg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YSp22gHBxMLtfu+0VYvrIXw/kNQpU6GPsP0vvWJgJH+KGcwnpWo6L52Waw1rDPNB+BUVyumx2hzjIgCr0BD/ohN51yM0O08FMSURuXTAsTuv1O5m3qj3ZmdfwbwYdMgUa+/KkFDOu8LurvdvZeJUGDFqYuM8kzlCYsjHGbxSSvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PJEfFsnG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1272CC4CEF1;
+	Fri, 23 Jan 2026 14:19:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1769177982;
+	bh=N+NfZKQxM25HyaRd5dNRvdZ4oRLieFCo6keEF5bY3zg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PJEfFsnG3Y5zKh450Oz7AabP5Sp9OEam12BX1dnAIsZ0YL2RV/N1GTEnSz31O4nvY
+	 NngKj8xFT01SCDYDbQdF0xhKM1Lp6NePwMGiveqIsMryEIk9ENoSx/3A3rgS2oXn8c
+	 SJdG7LiFILuPQ884IUCjqaDFSDoucUhqmb9ESpJQ=
+Date: Fri, 23 Jan 2026 15:19:39 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: rafael@kernel.org, broonie@kernel.org, will@kernel.org,
+	grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org,
+	linusw@kernel.org, brgl@kernel.org, driver-core@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] gpio: omap: do not register driver in probe()
+Message-ID: <2026012354-stinging-lapdog-2a54@gregkh>
+References: <20260123133614.72586-1-dakr@kernel.org>
+ <DFW0SC4QG4W8.C7BRHX02W3IK@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Date: Fri, 23 Jan 2026 22:18:04 +0800
-X-Priority: 3
-Message-ID: <tencent_F07E7380CFFB3A6A7480FDA42A636B7D290A@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-X-QQ-mid: xmseza62-0t1769177884tz3kmryk8
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DFW0SC4QG4W8.C7BRHX02W3IK@kernel.org>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [3.94 / 15.00];
-	CC_EXCESS_BASE64(1.50)[];
-	SUSPICIOUS_RECIPS(1.50)[];
-	TO_EXCESS_BASE64(1.50)[];
-	FAKE_REPLY(1.00)[];
+X-Spamd-Result: default: False [2.34 / 15.00];
+	MID_END_EQ_FROM_USER_PART(4.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MV_CASE(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[foxmail.com,none];
+	DMARC_POLICY_ALLOW(-0.50)[linuxfoundation.org,none];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[linuxfoundation.org:s=korg];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[foxmail.com:s=s201512];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31017-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_TO(0.00)[gmail.com];
+	SURBL_MULTI_FAIL(0.00)[linuxfoundation.org:query timed out];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	TO_DN_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	HAS_X_PRIO_THREE(0.00)[3];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zgliu@foxmail.com,linux-gpio@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-31016-lists,linux-gpio=lfdr.de];
-	FROM_EXCESS_BASE64(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	DKIM_TRACE(0.00)[linuxfoundation.org:+];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	FREEMAIL_FROM(0.00)[foxmail.com];
-	DKIM_TRACE(0.00)[foxmail.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,foxmail.com:dkim,qq.com:mid]
-X-Rspamd-Queue-Id: C6F9476E15
+	MISSING_XM_UA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[gregkh@linuxfoundation.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linuxfoundation.org:dkim]
+X-Rspamd-Queue-Id: 5F8A076E8D
 X-Rspamd-Action: no action
 
-SGkgU3RhZmZvcmQsDQoNCkkgc2hvdWxkIGNsYXJpZnkgbXkgc2V0dXA6IEknbSB1c2luZyBo
-YXJkd2FyZSBhZGRyZXNzIHRyYW5zbGF0aW9uIHRvIG1ha2UgdGhlDQpPcGVuQ29yZXMgOC1i
-aXQgR1BJTyBhcHBlYXIgYXMgMzItYml0IHRvIHRoZSBDUFUuIFNwZWNpZmljYWxseToNCg0K
-MS4gQWRkcmVzcyB0cmFuc2xhdGlvbjogVGhlIENQVSdzIDMyLWJpdCBhZGRyZXNzZXMgYXJl
-IHJpZ2h0LXNoaWZ0ZWQgYnkgMiBiaXRzDQrCoCDCoChhZHJfaVsyXSBpbiBWZXJpbG9nKSwg
-c28gZWFjaCAzMi1iaXQgQ1BVIGFjY2VzcyBtYXBzIHRvIHRoZSBjb3JyZWN0IDgtYml0DQrC
-oCDCoE9wZW5Db3JlcyByZWdpc3Rlci4NCg0KMi4gRGF0YSB3aWR0aCBhZGFwdGF0aW9uOiBP
-bmx5IGRhdF9pWzc6MF0gYW5kIGRhdF9vWzc6MF0gYXJlIGNvbm5lY3RlZCwgc28NCsKgIMKg
-MzItYml0IHdyaXRlcyBhcmUgdHJ1bmNhdGVkIHRvIDgtYml0LCBhbmQgcmVhZHMgYXJlIHpl
-cm8tZXh0ZW5kZWQuDQoNClRoaXMgaGFyZHdhcmUgd3JhcHBlciBtYWtlcyBicmNtLGJjbTYz
-NDUtZ3BpbyBkcml2ZXIgIndvcmsiIHdpdGggbXkgT3BlbkNvcmVzDQpHUElPLCBidXQgaXQn
-cyByZWFsbHkgYSBoYXJkd2FyZS1sZXZlbCBjb21wYXRpYmlsaXR5IGxheWVyLCBub3QgdHJ1
-ZSBzb2Z0d2FyZQ0KY29tcGF0aWJpbGl0eS4NCg0KU28geW91J3JlIGFic29sdXRlbHkgcmln
-aHQgdGhhdCB0aGUgbmF0aXZlIG9wZW5jb3JlcyxncGlvIGlzbid0IGNvbXBhdGlibGUNCndp
-dGggYnJjbSxiY202MzQ1LWdwaW8uIE15IHNldHVwIHdvcmtzIGJlY2F1c2Ugb2YgY3VzdG9t
-IGhhcmR3YXJlIHRyYW5zbGF0aW9uLA0Kbm90IGJlY2F1c2UgdGhlIElQIGNvcmVzIGFyZSBj
-b21wYXRpYmxlLg0KDQpCZXN0IHJlZ2FyZHMsDQpHYXJ5DQoNCg0KDQoNCg0KDQoNCg==
+On Fri, Jan 23, 2026 at 02:57:45PM +0100, Danilo Krummrich wrote:
+> On Fri Jan 23, 2026 at 2:31 PM CET, Danilo Krummrich wrote:
+> > diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+> > index e136e81794df..8db71a2db9ff 100644
+> > --- a/drivers/gpio/gpio-omap.c
+> > +++ b/drivers/gpio/gpio-omap.c
+> > @@ -800,9 +800,7 @@ static struct platform_device omap_mpuio_device = {
+> >  static inline void omap_mpuio_init(struct gpio_bank *bank)
+> >  {
+> >  	platform_set_drvdata(&omap_mpuio_device, bank);
+> > -
+> > -	if (platform_driver_register(&omap_mpuio_driver) == 0)
+> > -		(void) platform_device_register(&omap_mpuio_device);
+> > +	(void)platform_device_register(&omap_mpuio_device);
+> >  }
+> 
+> On a second look, it recognize that this did abuse the fact that
+> platform_driver_register() fails when attempting to register a driver multiple
+> times to avoid registering the same static device multiple times.
+> 
+> So, I guess this has to be changed to:
+> 
+> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+> index 8db71a2db9ff..3e1ac34994fb 100644
+> --- a/drivers/gpio/gpio-omap.c
+> +++ b/drivers/gpio/gpio-omap.c
+> @@ -799,8 +799,13 @@ static struct platform_device omap_mpuio_device = {
+> 
+>  static inline void omap_mpuio_init(struct gpio_bank *bank)
+>  {
+> +       static bool registered = false;
+> +
+>         platform_set_drvdata(&omap_mpuio_device, bank);
+> -       (void)platform_device_register(&omap_mpuio_device);
+> +       if (!registered) {
+> +               (void)platform_device_register(&omap_mpuio_device);
+> +               registered = true;
+> +       }
+>  }
 
+But there are no platform resources for this at all, shouldn't this be a
+faux device instead?
+
+That being said, ignoring the return value of platform_device_register()
+is probably not something we want to keep around.
+
+thanks,
+
+greg k-h
 
