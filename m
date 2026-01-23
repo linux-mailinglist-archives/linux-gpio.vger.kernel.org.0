@@ -1,228 +1,225 @@
-Return-Path: <linux-gpio+bounces-30960-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30961-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IOdeNRETc2lksAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-30960-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 07:20:01 +0100
+	id aOPuAdsWc2mwsAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-30961-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 07:36:11 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E1BC70D2A
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 07:20:01 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81CE2710B4
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 07:36:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id F3974301440E
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 06:19:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AACD63025D06
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 06:33:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9C0A3806D8;
-	Fri, 23 Jan 2026 06:19:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4000337692;
+	Fri, 23 Jan 2026 06:33:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="OIhlv61C"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="W5vjeQei"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010027.outbound.protection.outlook.com [52.101.69.27])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00649346795
-	for <linux-gpio@vger.kernel.org>; Fri, 23 Jan 2026 06:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.27
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769149193; cv=fail; b=LojdUlvx/LCjy4i61YiEJBW3G+w+nJOlUSbu6EBH90az7RKLAG8kNxQGvUUhvLQKnHpOTIGLDJKqRSSLZ5G27ZcMC1oeTn4rZ8dS7H7/IJwtoW2gShO5eHmkq+IIUifbdJSqGFLtE0oKc3rkTyH92oLzFObxTX+CJzzDXiOWO6s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769149193; c=relaxed/simple;
-	bh=j5epHkmwrqtSvqg2Zgnp+Pdq8cz3GKwUSdxu0OJ9Wis=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=WMje9yAoxSwsYtJDupCzAhT2xhBVVDsFfoX9ileer0gkjdkuOQNJ3tizEf0iJRHq3qVMcEfjPtZLMVf3x6VXp0W/ru/nEADaMKBfxxriWUCMFIA14iQbZyUI815gW7YY/Mq+mQ2QCtM5RG877OQjyvS7nj4dQzMkgggpSE8LFtA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=OIhlv61C; arc=fail smtp.client-ip=52.101.69.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kqAdkKDn2YUJFfl1tYD5UmvbauqNhENqQeaiQnB9G0rtHMhO8UOb4UzwyD3efYNUmst2/sQ2/1m2K1A7qbt65Pi14Shk1Dt2wdVofDMCy7mgLbounmK4Fl9cts1q7ziq6Pt/ffRGlsLXmrt71cYsJev7m0Yc5ivubaB0FRyZYjGsVG2YKXmvAuApWFsCuBMiaPrZk3X1iJN4yMmpCbMVOf9o7qcqOzzh79VS3TdqzOvn0xLfk64a07GEdvt5cvhg1i3CBbghz8engBld03HP3YFRfJgi3R9MHzRC+EPtgJye3xmCAS+gPugdSKBXzZP7quE2UKJu3bhAITbcBczZ0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JBfUtoDuCcsCrqrZKKzJronxIKPbWJkej0z0u1fLILg=;
- b=etCYdMowR2+0qwRgQeHqLneC1qYsQHsKaB6W1YVhv1srINUYqooQkk2L/MyGsp3t1TxAJ8G0a/03y/yeG/OTmKAzlImjDtQjL4cPA1ru+JQLefx4MvDg5HmlzuPGHLG8Q3/R2ph6RDGwRI0Xvkl31fumIzobKzgiI9i05GEe2M3SSCJ4MfLNwxtE2axn3nwhgu8PGwCn5iC5MNX4hOnwYH6s75+KNqE+zmZElp3ZMESWXOgcsac6iQ8jllhG8Zc2CT5LIfkNaqxnYt0nzUO5Cy8N0e8CiiKDQUp+S0PPtP95/NHuDWSv8FbcfFQVUIk4jQUy2UTomFlKQeqpgDVxBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JBfUtoDuCcsCrqrZKKzJronxIKPbWJkej0z0u1fLILg=;
- b=OIhlv61CyNoqc/UIxnWdp8bWY+/BrC2LerjV35kMfqTkmcfGWnuVXUzyu/Af3ft608X8ZjUvG0UuOzFXXlvZsId4NXrHtofTZfo9A3oVG0/AoTUEblYDiuDTimGQbAW9knRVEFHI5Cg3m92S5oL5qe2LFIKZJJcw8JHcze4r+1Tms6OLxrhGJXsE3hASpI4MulUcM6XZsM8qmvN1y4lq93XkjIxljjWwQveH/yeBmb26ZbADSLfJ+3HG8pb9z3nN6FQ9kMsr0xGYCwHoGy93hvXT5rFpo85YWelcYckTcG/eSeNdXzjbCfDTBgjppRAIshKGdXfuMnix2g+qkW4Luw==
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by GVXPR04MB9994.eurprd04.prod.outlook.com (2603:10a6:150:11a::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.11; Fri, 23 Jan
- 2026 06:19:41 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::4972:7eaa:b9f6:7b5e]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::4972:7eaa:b9f6:7b5e%5]) with mapi id 15.20.9542.009; Fri, 23 Jan 2026
- 06:19:34 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Shawn Guo <shawnguo@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frank Li
-	<frank.li@nxp.com>
-CC: Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
-	Linus Walleij <linusw@kernel.org>, "kernel@pengutronix.de"
-	<kernel@pengutronix.de>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>
-Subject: RE: [PATCH] MAINTAINERS: Replace Shawn with Frank as i.MX platform
- maintainer
-Thread-Topic: [PATCH] MAINTAINERS: Replace Shawn with Frank as i.MX platform
- maintainer
-Thread-Index: AQHciuSDHNZ2Q5qLAkeEvaIFAF5qgLVfSWeg
-Date: Fri, 23 Jan 2026 06:19:34 +0000
-Message-ID:
- <PAXPR04MB845967532BD6F03E525320578894A@PAXPR04MB8459.eurprd04.prod.outlook.com>
-References: <20260121142047.10887-1-shawnguo@kernel.org>
-In-Reply-To: <20260121142047.10887-1-shawnguo@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PAXPR04MB8459:EE_|GVXPR04MB9994:EE_
-x-ms-office365-filtering-correlation-id: b3ebbfb7-e379-4c88-6c9d-08de5a4760bb
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|19092799006|1800799024|376014|38070700021;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?22tWQdINWDYNuyHq1GZ/L0tnT2ZB6JksvtJ1qsACbsrmW1Ohw1cMdps9EI+1?=
- =?us-ascii?Q?0akNrvagfYF1roFsSZ1KGlW5lk2TZLHcAg1efRjZ/2F1oUXJ9gIX6q19ye+x?=
- =?us-ascii?Q?xyCYaDle6KswmKZ4PS1+l2XgJkiSwvWjWl9qwpirHS+MZaphEiZlDCsyvTWG?=
- =?us-ascii?Q?H5xlZTKXYYpdoCvMu/6SM7w4bcGudvUFrKh0shjoM/oTdLCvqx9zUGZ8XwH/?=
- =?us-ascii?Q?n+Vv1mazBzsFVO5OR30/M7ujZJSfgk+OHSHyKq3I6healeO+cnF6Wuwfkluf?=
- =?us-ascii?Q?Du88nDO3mJq/VtlJuj+/D7tvg43pNkV/pN72szsFTRtUY0Jcv/e5nEzvMCSo?=
- =?us-ascii?Q?DgMc/f/YavonkdwiMT5QEYRK5BiuGFAeVljyW/wm4vhNV8dysvGKkKQf09en?=
- =?us-ascii?Q?dVrBQHzRA34gADjzAZPYwuNmgCmFCWak5bNeS47eQZNUA6/jtHfg///eGqEy?=
- =?us-ascii?Q?V9HQBJ12QT+W+y7H7ziiPg965M1A2Vk+8oAyu9GjSn9T9xEewla5jycHdRgA?=
- =?us-ascii?Q?U4ijtb0MVlVu22DFX0RomHLzYRgBru/4kGIW6+tYGYRol44zLiZb5qaJ8xDQ?=
- =?us-ascii?Q?MngQyZovmT2ET9bSdjY6vidaquH2iNKT4abLzJ6CeH1gmdjzy4WyUUDSwMmo?=
- =?us-ascii?Q?f1AdiWNg5dJLBGe2ooWUbuOD9nnssA2SuBY1aegjPQmPkaqv2SPysXbsBwP/?=
- =?us-ascii?Q?qbblwld3WFOfELLGp+a3wmBdKTfOcOU+lUuGTwEXy9piy91pgURRW8TBQ+Bh?=
- =?us-ascii?Q?nZz76uGuFTKMsUfMS+VvmOuh50mmy9D8g+NMou2h1b2lRM/DswadxsCWx2iq?=
- =?us-ascii?Q?qBgPhZg8uqV3B/6xm2i3S0B7vL2jTNky9kX8fL8X6g3MJSsZJgE3l9Zikevz?=
- =?us-ascii?Q?V1IKjJG9+dL8rxgXGJZLz3i+aGsM/ubTGX32QdDE7dj9Aj7qeuKgEXZRVzls?=
- =?us-ascii?Q?njLaClzK1ODTuWuH1BQhT70q6WxqtqTmWcek7QsGsNWx+bKpBotRCa+E/LdE?=
- =?us-ascii?Q?dOIMNtKyy5Rh3f4I/jrHbMFhZKUYn7Cnz00GMESKa/+8HaN91X4TSyYmNmNK?=
- =?us-ascii?Q?4cZu7e5zjO9R5FRFJ83DLCmM77jEjRunWH4HQAk3njU8ts2Rud1MNATC6TWi?=
- =?us-ascii?Q?Orf7xtnfBURMkJdLsdSYPSIEQ7WGT8y23bUewUNGI4y+hvK1W1cDGhB36Jkw?=
- =?us-ascii?Q?793wy9qm8w4miUUEVLCiF+aatPg8xUYW9wWmVf8+Q2BnKrfcyTdBfSHWEglC?=
- =?us-ascii?Q?5/vtXdHejpL7AMIXFZIVnlyuxb9VVKacnAY0U4tE61FXG4k1WIETcEHivKQX?=
- =?us-ascii?Q?Tuy59fMdhXLstVDmdkX2Yg/TNRUpzmikbJaGBEfV4q8BNTCCXGKUNv67uMJ+?=
- =?us-ascii?Q?4zVp96nLAECzIwG9/iyxwlWiLcgYsh13VX09iu+GiGSgH2JCmbGgm8J8jos5?=
- =?us-ascii?Q?TT3p1yUno2QqJymbkygpc/SxGeXtC5USeH8a0US0fULD+FvY6E35LH6SfUQy?=
- =?us-ascii?Q?CHhBdgxjpkEhuTtFKNjbW8LAxLBTjIli/6YWd8ud8Cg/Vg/DfjeplVa6VbFA?=
- =?us-ascii?Q?6v3J2oc5rcf4gHqpBz+Ij6y7ijCDAfY/5PaKammMakIp7kRibW/ND0JJ85c5?=
- =?us-ascii?Q?CeVcL04ArMXISowXB5Frb8s=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(19092799006)(1800799024)(376014)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?vx71ERmIaTg7bfYv/vy0yLEWmJ+FT234Ps8NZHreot6zx8i6RFMgut7gBDNS?=
- =?us-ascii?Q?joKWXtKELoDC0oHag6UX2gotqiGTr6BwdO89f2YMVHAfKCIceaY+JjqEIlYB?=
- =?us-ascii?Q?ZIA/SWGDzJKBN6a/nZpTkUghPr0+9lTo/h2d3KGd/euqtxlNPKNrmI0SyQJP?=
- =?us-ascii?Q?R1VUlfM+G/1gb6WeBIyzzEdRR049NZfmCUy7W2f2UAteST8047u6eF9dh9NY?=
- =?us-ascii?Q?8IJzQv6A1Sfxh9tqK/WD1vtLP4uVNBTI42o6JSt+KJhknBOCvFDHopgCcBw2?=
- =?us-ascii?Q?0AzPagE4eFC58PUtz3S6C7iXtrXPYLQ/FbKcGxX/JqgCk0dFijMygImO5WBM?=
- =?us-ascii?Q?6yPUKP3YG82wuHslLJ0IFgGOe/UWegaxGUnox1Y07Xao9lRKsBaQXKyaECKF?=
- =?us-ascii?Q?IdvrBqYYly4pD0SGpGTXNt4PdibEfDvGADc+DusnqjlkesLS92AMkXCZbfCb?=
- =?us-ascii?Q?tof+KCAGP5TQu8bV3xxEh3EYZOHTJRYTpNdvHA/KoawfpUL8i+FnDWzlYUE0?=
- =?us-ascii?Q?93ubvM5sqJd6Yb0fnt36/CvSiCnx3x7VMIiIDrLQiR/9tG24rliVoFTpyCHq?=
- =?us-ascii?Q?cWPPMmyliVWkqT5IlYVRFuDSu/DmFksKP59ZS1tUj7xlxMYIlHnU9oMxcYVM?=
- =?us-ascii?Q?ygzlWZrTWDUO5k3VyvieeH3sLU7YDDXLeRjaxPbB9hilB+5UWASax+4F3jho?=
- =?us-ascii?Q?n/XOHZ9F+bqk5E4PwJQVput0BrObGPOHogvbYigjDGJNTDSiAcHC3TMNC16S?=
- =?us-ascii?Q?88RQWY828GvujUf30xcS/Syjx1CBuM5y0IQ62XbnGE90ZoOj2xo669oCPTb3?=
- =?us-ascii?Q?WocGs8ApN6KNXJIlG03RWG3EPDokoM8XMlMteB3eEHNhApvXhcaKFC5tKtbQ?=
- =?us-ascii?Q?uFQ3nlrs7GuASzU2Qu7OYlLRKgIxdAxUsoHKzG4tdaFmhzbzw5Na0UX4yVrY?=
- =?us-ascii?Q?RhQmQg9fEhozTn9KUlhe7oIA4CTX9J6wequKBX+wTdvxgbvEZq4obpRYdZbb?=
- =?us-ascii?Q?TBJyxAYQNoPGu6GxhD6z10R1xAP6QH/ILftNzB0t+ajibGtq4e+5Mfo6dEnh?=
- =?us-ascii?Q?ngTdIcyqW4/CbUufOF9erbOVnqEaIRhmjw+DlNrcbSOKiyRh/eRARc8RWdf3?=
- =?us-ascii?Q?wxQMCVgr6h3HpiBZiNqTeJhePb64wtfD7R0kHTZ19Fp8OFo1wZ1Vc+EaoqCP?=
- =?us-ascii?Q?3JDmoE8xVLAxnDBa6Tja03AXugvxhcTahHINE1XeKqEKyWEf59peTb4AVa3K?=
- =?us-ascii?Q?MVTDnqNOWV3jObfCHpGwIlj96nMOJBY2+s8FSDvGI5EF7B9vWP/M9rxNTHoX?=
- =?us-ascii?Q?Pb0b2wdRAMKBZhOkd5KQXSKtVoYXj6NLzNp0HGRY/giSTlUZJtVnR8OYtfDQ?=
- =?us-ascii?Q?40Ew35Q9CAHjC1upQ7Pf7BV0+aKFM/JyluIdsCdcEIsTCs5jwq0inwdcAW5x?=
- =?us-ascii?Q?EE5MWbGrN6dAj1UPQfR1Mn4TiNUzvuVWVmU7P1RS7PYJXVmN2PvgHXgu4mb+?=
- =?us-ascii?Q?wxvwb1J+2eLjLI3YBk037miBuvVT39gux8WrflEQEciJGml6jUxeh6q32kon?=
- =?us-ascii?Q?VrhjZ8DIVMxFxVkHd0Fq0E6sAC3OTVu1AUBH/mO3kSvLNL245JwpgiGmYKLG?=
- =?us-ascii?Q?xZrPkeV4P/ivTATJU0VlkBfPjx0G/r1sNJjhpe/aippU4o6SZifv4hxElblu?=
- =?us-ascii?Q?Ay4Fc+KZ2mbOBljsxzHxWAe0WblJJuzydE029EMqykGVM1HX?=
-Content-Type: text/plain; charset="us-ascii"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD889330648;
+	Fri, 23 Jan 2026 06:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769150034; cv=none; b=D11SpYaBlQDqEVWQPD9LFh5ojNetYRUGS2tsZU6PcKWe889DVcyEmWHQJIzDXXR8NCQ4IGVmLxJ6HkqS0v02WFTNC4pwteFBaov/tHYhk8W7D1uj9bVeNNxCjOyG8rRA/rikKGrccrD9jY0hQwCYNn2muuIOOPvqcAdU5f4Km5o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769150034; c=relaxed/simple;
+	bh=QFFRrTELDhUD03AliDXYn7XZCYs5D/6SyfCAbC7OphI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mGvezfl2Gr13x6/bwvFrG65RcF+83HjAgCTLtNM588ymrBtFnm0NkwR3FTzJBaBOwNtjcLFi2BhqLY6d/m7IYJjQ5H2MyWLE1RmYoYpTnHOHaHx9apUi3mbAiGpgskwvCoUy0wm0Fcn0bMKmhoOVx3aEIRp7TEDn81uK13udNMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=W5vjeQei; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1769150028;
+	bh=hnUiivgV1GJFcmOh4pDO9k/tTrjNiMK55wQcL+7/7RA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=W5vjeQeiU0ULdPQtUv9eAf70pYeEokLhFo21iZX0KDC3rHz4fGY+DMK2en6l6RbxT
+	 ubNmsduQCSihVOdVHiTEzDdHb9QYkr88QX2j8Y0dsp5YmXJvKLQrl7WwnQw6bNn8fH
+	 PrRjnuRiUpgy2WQhq7RlsVHnjb5Gj6ve3pEsB2sL0WEcSghQ9ardd/1JuYPoy0Uy6S
+	 81exLyxBAYf1P9Cn3jDbAvZdUypm1nCqymrQniDwLrO25Aq1RzDdM/uDWuLsFnFk0G
+	 P5eHOOXOhs8PCx8JHKccE5MSTsY4jKxFAN9y+R3P8g30Ll0zT6R2KNaIH1tCe8NzlQ
+	 tGFau5QEV+LXg==
+Received: from [192.168.68.117] (unknown [180.150.112.60])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 66DCE7C8E7;
+	Fri, 23 Jan 2026 14:33:44 +0800 (AWST)
+Message-ID: <459f84c56a5010910ecbf8b445c092674f060691.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v3 1/3] Add compatible strings for AST2700 pinctrl to
+ the SCU binding.
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Billy Tsai <billy_tsai@aspeedtech.com>, Lee Jones <lee@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley	 <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Linus Walleij
+	 <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
+Cc: Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, 
+	linux-gpio@vger.kernel.org, bmc-sw@aspeedtech.com
+Date: Fri, 23 Jan 2026 17:03:43 +1030
+In-Reply-To: <20260120-upstream_pinctrl-v3-1-868fbf8413b5@aspeedtech.com>
+References: <20260120-upstream_pinctrl-v3-0-868fbf8413b5@aspeedtech.com>
+	 <20260120-upstream_pinctrl-v3-1-868fbf8413b5@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-0+deb13u1 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3ebbfb7-e379-4c88-6c9d-08de5a4760bb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2026 06:19:34.5247
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vJherEZnQ/R7cKMVwekEVf4xACIhYyoVMh20d9ED/3tdNBQoyCmSFXzRva5Qz/T7O/c2MW8qUlufSQoumeI8tg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB9994
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[codeconstruct.com.au,none];
+	R_DKIM_ALLOW(-0.20)[codeconstruct.com.au:s=2022a];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[pengutronix.de,gmail.com,kernel.org,lists.linux.dev,lists.infradead.org,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-30960-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-30961-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[nxp.com:+];
-	MISSING_XM_UA(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[peng.fan@nxp.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.973];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,nxp.com:dkim,i.mx:url,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 1E1BC70D2A
+	NEURAL_HAM(-0.00)[-0.999];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andrew@codeconstruct.com.au,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[codeconstruct.com.au:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,aspeedtech.com:email]
+X-Rspamd-Queue-Id: 81CE2710B4
 X-Rspamd-Action: no action
 
-> Subject: [PATCH] MAINTAINERS: Replace Shawn with Frank as i.MX
-> platform maintainer
+On Tue, 2026-01-20 at 19:43 +0800, Billy Tsai wrote:
+> AST2700 consists of two interconnected SoC instances. Each SoC has
+> its own pinctrl register block, which needs to be described
+> independently in the device tree.
 >=20
-> Shawn is no longer interested in maintaining i.MX platform, and would
-> like to step down.  On the other hand, Frank seems to be the best
-> successor for this role.
+> Introduce "aspeed,ast2700-soc0-pinctrl" for the SoC0 pinctrl, which
+> follows the same usage model as the existing AST2600 pinctrl.
 >=20
->  - He has been one of the most outstanding contributors to i.MX
-> platform
->    in the recent years.
+> The SoC1 pinctrl registers follow a regular and predictable layout,
+> which allows describing them using an existing generic pinctrl
+> binding without introducing a new SoC-specific compatible string.
 >=20
->  - He has been actively working as a co-maintainer reviewing i.MX
->    patches and keep the platform support in good shape.
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> ---
+> =C2=A0Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml | 1 +
+> =C2=A01 file changed, 1 insertion(+)
 >=20
->  - He works for NXP and could be the bridge and coordinator between
->    NXP internal developers and community contributors.
->=20
-> Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+> diff --git a/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yam=
+l b/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml
+> index da1887d7a8fe..ff6cf8f63cbc 100644
+> --- a/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml
+> @@ -87,6 +87,7 @@ patternProperties:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+- aspeed,ast2400-pinctrl
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+- aspeed,ast2500-pinctrl
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+- aspeed,ast2600-pinctrl
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - asp=
+eed,ast2700-soc0-pinctrl
+> =C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0 required:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - compatible
 
-Great thanks for the maintenance work done by Shawn.=20
-Congratulations to Frank on becoming the new i.MX maintainer.
-Great job and well deserved!
+So, in addition to Krzysztof's concern about the patch subject, I think
+it's worth mulling over some further concerns that we might address
+with a clean break for the AST2700. Specifically, whether we can tidy
+up historical baggage by exploiting auxiliary bus[0] instead continuing
+to pretend the SCU is an simple-mfd.
 
-Acked-by: Peng Fan <peng.fan@nxp.com>
+[0]: https://docs.kernel.org/driver-api/auxiliary_bus.html
+
+The original AST2400 SCU bindings were cooked up in darker times and
+have been a regular source of regret (same for the LPC bindings - we
+can consider them later). The use of simple-mfd unnecessarily invokes a
+bunch of machinery in the driver core to avoid explicit iteration of
+subnodes in the driver(s), and causes tension between the need to
+specify regs and the typically haphazard register layout of the SCUs.
+
+Related, this entry from "DOs and DON=E2=80=99Ts for designing and writing
+Devicetree bindings"[1] stands out:
+
+ * DON=E2=80=99T create nodes just for the sake of instantiating drivers.
+   Multi-function devices only need child nodes when the child nodes
+   have their own DT resources. A single node can be multiple providers
+   (e.g. clocks and resets).
+
+[1]: https://docs.kernel.org/devicetree/bindings/writing-bindings.html#over=
+all-design
+
+We have a collection of all sorts of odd-ball bits of functionality,
+and all of it can largely be implied by the SCU compatible. Avoiding
+specifying things that are implied is also touched on by[2]:
+
+ * DON=E2=80=99T add properties to avoid a specific compatible. DON=E2=80=
+=99T add
+   properties if they are implied by (deducible from) the compatible.
+
+[2]: https://docs.kernel.org/devicetree/bindings/writing-bindings.html#prop=
+erties
+
+So, can we use auxiliary bus instead, and avoid extending the regret in
+the devicetree?
+
+Well, the interesting news is that auxiliary bus is already on the way
+by way of the AST2700 clock and reset drivers[3].
+
+[3]: https://lore.kernel.org/all/20250917020539.3690324-1-ryan_chen@aspeedt=
+ech.com/
+
+A noteworthy observation is the auxiliary bus approach for pinctrl was
+already used by (at least) the mobileye eyeq5 platform:
+
+- Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.yaml
+- arch/mips/boot/dts/mobileye/eyeq5.dtsi
+- arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi
+- drivers/clk/clk-eyeq.c
+- drivers/pinctrl/pinctrl-eyeq5.c
+
+So, we're not inventing anything new here.
+
+Going down this path for pinctrl to fix the SCU situation will require
+some rework of what's already merged for the AST2700. However, we've
+not yet merged either a DTS or DTSI using the compatibles (and by
+extension, aren't using the AST2700 support from the drivers), so I
+hope that allows us to do a course-correction without too much
+collateral damage.
+
+A possible path forward is to:
+
+ * Move AST2700 definitions out of mfd/aspeed,ast2x00-scu.yaml into one
+   of:
+    - soc/aspeed/aspeed,ast2700-scu.yaml: Follow the example of
+      mobileye,eyeq5-olb?
+    - arm/aspeed/aspeed,ast2700-scu.yaml: We already have e.g. the secure
+      boot controller documented under arm/aspeed
+ * Retain compatible strings but require simple-mfd is not specified
+ * Rework AST2700 support introduced in:
+    - drivers/irqchip/irq-aspeed-scu-ic.c
+    - drivers/soc/aspeed/aspeed-socinfo.c
+
+This is my preference, at least for the moment. The change to make the
+SoC0 pinctrl driver compatible with auxiliary bus shouldn't take much
+overall. Unwinding the binding situation is a little more involved, but
+not too much. I think it just needs consensus on the direction from the
+devicetree maintainers.
+
+Andrew
 
