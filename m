@@ -1,44 +1,45 @@
-Return-Path: <linux-gpio+bounces-30977-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-30978-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eF5vFKJEc2lEuQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-30977-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 10:51:30 +0100
+	id yDL6AKdEc2lEuQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-30978-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 10:51:35 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7A6773A02
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 10:51:29 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6190D73A09
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 10:51:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id A44373009568
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 09:51:28 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5D3873009F21
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 09:51:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30EC62F90C4;
-	Fri, 23 Jan 2026 09:51:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D2E737648E;
+	Fri, 23 Jan 2026 09:51:32 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38094376467
-	for <linux-gpio@vger.kernel.org>; Fri, 23 Jan 2026 09:51:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A509377576
+	for <linux-gpio@vger.kernel.org>; Fri, 23 Jan 2026 09:51:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769161882; cv=none; b=ZdyXEZ2dyJdkxDC+92O3lVJ1rx+1syWFD4A65ppQla21VIljYOjz8TWWMNfWlzwguCdulTHGKXlrVFP40rcBK6aHH18cyvFl8+KDSSCQg5hYkO2VKjJk6MilJvEsMh/q4jlEhirc8gSU9TpB/5paHZDCsGjxY0nhuCxDaZx3QsE=
+	t=1769161886; cv=none; b=oemvvL3VK1T+xQDsh3ZFFYiXn0tYD1gDadMuzbDRx8hZkjf3FWgnjessU8SKbCMD/++m1IWJV5VFXY25oJhVOkWut4EbdD8KOC3BzvAuq3OavfWL6bKt7qHSmww5B+xiGEDJSt19b8a6DyG/R7KUoXn2ZGBzTrftqidcIdzy9Js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769161882; c=relaxed/simple;
-	bh=k7nCVCN76BJkjjhLlmB3XfyG5x986SpFimxysg6JeAg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DjUz4D/kuG8xcc58+aP6LNZg5Ulmu9PHbwwRjw4h/yK1cuzLIcxCpDVoPIoNv5GaLXdsFjEQwzV/LqVeGgBVPrY1eL2hqcVM0ITSizqWWEYCrhwxDHNg1EeqE8+WfxO2OQnZ0Z+w4BbKAjkZdJG5wOKHdpgip8sDpONLOtBsrHs=
+	s=arc-20240116; t=1769161886; c=relaxed/simple;
+	bh=xG/SyNTXHnpNJ029Lls7rMWGTCQh0Ladw7IHu9fsCyo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Aoyl6yVbuox5JwBTNuNVqkLhWdFjJlWmaEgA/d46jCWdRCXVtVABKhI3t0e4YpT1YILoSCF/i0/8roD43k2OseLXOK0RBIs6iJR0j9kPJkgKZWsmi1Jf7P6dHV4Tosf8FLKcok1jDjIrAml3nh7i1DR+bOGgjoQAjGAOcsqPn4M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from dude05.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::54])
 	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
 	(envelope-from <m.tretter@pengutronix.de>)
-	id 1vjDoq-0000nr-GX; Fri, 23 Jan 2026 10:51:08 +0100
+	id 1vjDoq-0000nr-II; Fri, 23 Jan 2026 10:51:08 +0100
 From: Michael Tretter <m.tretter@pengutronix.de>
-Subject: [PATCH 0/2] gpiolib: introduce devm_fwnode_gpiod_get_optional
-Date: Fri, 23 Jan 2026 10:51:04 +0100
-Message-Id: <20260123-gpio-devm_fwnode_gpiod_get_optional-v1-0-fb49905452a6@pengutronix.de>
+Date: Fri, 23 Jan 2026 10:51:05 +0100
+Subject: [PATCH 1/2] gpiolib: introduce devm_fwnode_gpiod_get_optional()
+ wrapper
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -47,10 +48,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIhEc2kC/x2NUQqDMBAFryL73YBuwGKvUkpQ95kutElIxBbEu
- 5v2cx7Mm50KsqLQrdkpY9OiMVToLg3NzzF4GJXKxC33bcfW+KTRCLa3Wz4hCtxvEOexupjWao8
- vg6Fnvs5iBztRfUoZi37/lfvjOE4hgmK2dQAAAA==
-X-Change-ID: 20260123-gpio-devm_fwnode_gpiod_get_optional-e96227cd393b
+Message-Id: <20260123-gpio-devm_fwnode_gpiod_get_optional-v1-1-fb49905452a6@pengutronix.de>
+References: <20260123-gpio-devm_fwnode_gpiod_get_optional-v1-0-fb49905452a6@pengutronix.de>
+In-Reply-To: <20260123-gpio-devm_fwnode_gpiod_get_optional-v1-0-fb49905452a6@pengutronix.de>
 To: Linus Walleij <linusw@kernel.org>, 
  Bartosz Golaszewski <brgl@kernel.org>, 
  Matti Vaittinen <mazziesaccount@gmail.com>, 
@@ -66,19 +66,19 @@ X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30977-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-30978-lists,linux-gpio=lfdr.de];
 	DMARC_NA(0.00)[pengutronix.de];
 	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	FROM_HAS_DN(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	PRECEDENCE_BULK(0.00)[];
@@ -89,33 +89,50 @@ X-Spamd-Result: default: False [-1.46 / 15.00];
 	R_DKIM_NA(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,pengutronix.de:mid,pengutronix.de:email]
-X-Rspamd-Queue-Id: B7A6773A02
+X-Rspamd-Queue-Id: 6190D73A09
 X-Rspamd-Action: no action
 
-There are various helpers to simplify the handling of optional gpios.
-The devm_fwnode_gpiod_get() lacks the _optional variant, and drivers
-have to explicitly handle the error for optional gpios.
+From: Stefan Kerkmann <s.kerkmann@pengutronix.de>
 
-Introduce a devm_fwnode_gpiod_get_optional helper and simplify the
-BD71815 voltage regulator driver by using this helper.
+The helper makes it easier to handle optional GPIOs and simplifies the
+error handling code.
 
+Signed-off-by: Stefan Kerkmann <s.kerkmann@pengutronix.de>
 Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
 ---
-Michael Tretter (1):
-      regulator: bd71815: switch to devm_fwnode_gpiod_get_optional
+ include/linux/gpio/consumer.h | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Stefan Kerkmann (1):
-      gpiolib: introduce devm_fwnode_gpiod_get_optional() wrapper
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index cafeb7a40ad1..9328b67e26c0 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -607,6 +607,23 @@ struct gpio_desc *devm_fwnode_gpiod_get(struct device *dev,
+ 					   flags, label);
+ }
+ 
++static inline
++struct gpio_desc *devm_fwnode_gpiod_get_optional(struct device *dev,
++						 struct fwnode_handle *fwnode,
++						 const char *con_id,
++						 enum gpiod_flags flags,
++						 const char *label)
++{
++	struct gpio_desc *desc;
++
++	desc = devm_fwnode_gpiod_get_index(dev, fwnode, con_id, 0,
++					   flags, label);
++	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT)
++		return NULL;
++
++	return desc;
++}
++
+ struct acpi_gpio_params {
+ 	unsigned int crs_entry_index;
+ 	unsigned short line_index;
 
- drivers/regulator/bd71815-regulator.c | 15 ++++++---------
- include/linux/gpio/consumer.h         | 17 +++++++++++++++++
- 2 files changed, 23 insertions(+), 9 deletions(-)
----
-base-commit: c072629f05d7bca1148ab17690d7922a31423984
-change-id: 20260123-gpio-devm_fwnode_gpiod_get_optional-e96227cd393b
-
-Best regards,
 -- 
-Michael Tretter <m.tretter@pengutronix.de>
+2.47.3
 
 
