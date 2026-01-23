@@ -1,139 +1,207 @@
-Return-Path: <linux-gpio+bounces-31024-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31025-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MFjpFZzLc2nsygAAu9opvQ
-	(envelope-from <linux-gpio+bounces-31024-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 20:27:24 +0100
+	id yAUsLuDTc2kCywAAu9opvQ
+	(envelope-from <linux-gpio+bounces-31025-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 21:02:40 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0CFD7A251
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 20:27:23 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 349E57A738
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 21:02:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 09F433014C3A
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 19:27:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1AA653012CF0
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jan 2026 20:02:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0374D28853A;
-	Fri, 23 Jan 2026 19:27:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC5D02820A9;
+	Fri, 23 Jan 2026 20:02:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHnmOeOY"
+	dkim=pass (2048-bit key) header.d=cknow-tech.com header.i=@cknow-tech.com header.b="dlboqyds"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6541891A9
-	for <linux-gpio@vger.kernel.org>; Fri, 23 Jan 2026 19:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6325D21146C
+	for <linux-gpio@vger.kernel.org>; Fri, 23 Jan 2026 20:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769196439; cv=none; b=LtuokvavZ3ketU8oirpld60ocmZ3k62BEM54h9IkADde58eXk3ecMGW7Yxw8w6fwbz18eCzA9v95TP/tWGx1Net3RfYyO2mHG7y5yIxOsnogVzcBs1z/raMTHL/ko0DZupBh46NeQRPobq9Dwk/J7yCqGsohBhrb/EdPukhcaXA=
+	t=1769198557; cv=none; b=tXXIVK4tROH/9mKXIWhx7Z1sGMQTZWLzU5MpTJv2S33L41rwJR4jHOg1LCJXUzVpCSYKPVFWA1a1FX5y+N6v9i1s8zuatYVcwfXEhEHRlKT3+cDb5wXAGB6FjO2XEPySRuqoiCFjZfWWuaVhk5PTUJd6+fV5k/WUlkKueXylfLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769196439; c=relaxed/simple;
-	bh=pIOjdspmv4mVKi5jWqfseDeXVzFTwtYPpKoKsC16Joc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UClA+v2QIfN8insyn5AYxIOWBrVl1hK55sBXmA7attUikYqypzjzLOJnQU/jlOuar5ZiqV7pgOHafMR9eSoR3Qix4Zkidnk7eUJ0+9s7PWCYQnCa6AYJZr18UpVEv7BsRoCmf92tyS/kRS+xOELPUxKfE0SyTIfPBUEKaUXfvMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZHnmOeOY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88A1AC2BCAF
-	for <linux-gpio@vger.kernel.org>; Fri, 23 Jan 2026 19:27:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769196439;
-	bh=pIOjdspmv4mVKi5jWqfseDeXVzFTwtYPpKoKsC16Joc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZHnmOeOYRdh1IBJMz8YI6GASYt6es1tB5i3Utnma3wd0m9eb9pSB1pl/unxMCpCda
-	 ym0d0c5EPQRTQLS88HWNTlL7LnEE/rrlDJnWw2f2nJYB12uQcC5Dvc4NpJH0b3X6Wv
-	 22uA83fwgn62Z/5az8/HNo3Pt5pIdwknQvkA1jNT0/pJnViudxrEnhDI3yOPh0jJOP
-	 q1HV8xe9ymGJWeUXHYFd1I0WprLVeySEe2D0ublqs7CTL29VHjPZ8+qMMLJTYgw3Ty
-	 e/bWNk40/mQ8pX642IBjwph2LW1uXuBqydTb5oytTC4xkSmSXAchk4TdV7C61x2cM2
-	 jenPu/PTcjHZQ==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-382fb2bb83dso16659921fa.1
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jan 2026 11:27:19 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVkzfH/9pyHmxJ/gl/avmvxg0Kn9vIpilBZwVSDfHk/D4vgftjFsQCN3YDG9y5DD6qrQPBdbRUC6dd2@vger.kernel.org
-X-Gm-Message-State: AOJu0YyE9lctKrLMQPseqO7JX1xpAAJswUSwxrV89uHGjLhs+B9OXk4l
-	Tm3uS/UbG3WJzEc/2gWV5XrQ3m0CLVrInIxZK5Qomq0kOVn/bL6YtjKK0m4i8/viwmiXnuqqYyd
-	nirpUHrRYCPYtZJ5dhYO78Tw0UIf7+LUyjlYHP4lnmw==
-X-Received: by 2002:a2e:a884:0:b0:383:1704:2203 with SMTP id
- 38308e7fff4ca-385e1bbf407mr7131441fa.27.1769196438100; Fri, 23 Jan 2026
- 11:27:18 -0800 (PST)
+	s=arc-20240116; t=1769198557; c=relaxed/simple;
+	bh=0z92upF8xKOU/HaMYE1ZBiOd5Xi6AXhQNsyh8EwnhFU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=LXPu0aWdue/lOE5K0wfEJ6/WQAm8x/yUUmYu77045tMR69TXDrxnHZ6o3eNr/h71xRh2FIedlaJyINV03b3Cgb2i3SOWVHiR77/Pg9e53aQaUlfbRsayT4THUZ1FjzW0Mw4kZYva/g/g1vFpdNR8OU0QonpxXCcpA4M8xIXSB4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow-tech.com; spf=pass smtp.mailfrom=cknow-tech.com; dkim=pass (2048-bit key) header.d=cknow-tech.com header.i=@cknow-tech.com header.b=dlboqyds; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow-tech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow-tech.com
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow-tech.com;
+	s=key1; t=1769198542;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZZ1FOsHm/vGJer214zga1vzlRDmrTUC/1ttgjjuK9w4=;
+	b=dlboqydsKNghsrFWuPNRagiwi1t7kf6ZpeRDUYxpBOt5Bgm7i7dDMVbYEEIX5+Qjbu4zCY
+	Q3IcOju9We+KxQMeUxju3nidaGOXnZaCxjudffnb9viEsM4n5SMUxSpSmF9jhl/O7UzMrq
+	iO0N5qPRjJ0CUov460DoNxN9VPe7gerLszUgtU9fQ7ZcbAiPggSE0p+ws73LzRm3/9UFWP
+	vgpdRko+lhzXbFBi4D1At7e3AzWszyAjJ19GF+h90twaJh9MVqV3U6D1LmlNkinlPuFk+z
+	S5XJWTt3pdUBIn1eRSlcI0sXiQX7MFhhKhS6/ad4C3w85Y0Udd67CxOpp4LhEQ==
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 23 Jan 2026 21:02:19 +0100
+Message-Id: <DFW8JGOI41QK.2AFPP8SSK8TH1@cknow-tech.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <diederik@cknow-tech.com>
+To: "Robin Murphy" <robin.murphy@arm.com>, "Bartosz Golaszewski"
+ <brgl@kernel.org>, "Sebastian Reichel" <sebastian.reichel@collabora.com>
+Cc: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>, "Linus
+ Walleij" <linusw@kernel.org>, "Heiko Stuebner" <heiko@sntech.de>,
+ <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ <stable@vger.kernel.org>, "Marek Szyprowski" <m.szyprowski@samsung.com>
+Subject: Re: [PATCH] gpio: rockchip: mark the GPIO controller as sleeping
 References: <20260106090011.21603-1-bartosz.golaszewski@oss.qualcomm.com>
- <aWGSQYCXP4R08koQ@venus> <CAMRc=Mf0tRxRrh7tn5OaDn3a47N_qvUcjO=zqbTi-GhY-Y9hOg@mail.gmail.com>
+ <aWGSQYCXP4R08koQ@venus>
+ <CAMRc=Mf0tRxRrh7tn5OaDn3a47N_qvUcjO=zqbTi-GhY-Y9hOg@mail.gmail.com>
  <447e8d5a-916b-4d58-b39c-3467c152379c@arm.com>
 In-Reply-To: <447e8d5a-916b-4d58-b39c-3467c152379c@arm.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Fri, 23 Jan 2026 20:27:06 +0100
-X-Gmail-Original-Message-ID: <CAMRc=Md0h5b=N9CqV-9L9sOtCNbiL1-y6RE0x4+w9HYXE8=pEQ@mail.gmail.com>
-X-Gm-Features: AZwV_QjQbGS9oFegdz7_zzo5pejoUBgMNWZYbLLOHYRKiiTOeEXbzmNqH6cpZ_E
-Message-ID: <CAMRc=Md0h5b=N9CqV-9L9sOtCNbiL1-y6RE0x4+w9HYXE8=pEQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: rockchip: mark the GPIO controller as sleeping
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Linus Walleij <linusw@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Migadu-Flow: FLOW_OUT
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[cknow-tech.com,quarantine];
+	MV_CASE(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[cknow-tech.com:s=key1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-31025-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31024-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[cknow-tech.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_HAM(-0.00)[-0.999];
+	FROM_NEQ_ENVFROM(0.00)[diederik@cknow-tech.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:email,mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B0CFD7A251
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 349E57A738
 X-Rspamd-Action: no action
 
-On Fri, Jan 23, 2026 at 2:27=E2=80=AFPM Robin Murphy <robin.murphy@arm.com>=
- wrote:
+On Fri Jan 23, 2026 at 2:27 PM CET, Robin Murphy wrote:
+> On 2026-01-12 9:08 am, Bartosz Golaszewski wrote:
+>> On Sat, Jan 10, 2026 at 12:55=E2=80=AFAM Sebastian Reichel
+>> <sebastian.reichel@collabora.com> wrote:
+>>> On Tue, Jan 06, 2026 at 10:00:11AM +0100, Bartosz Golaszewski wrote:
+>>>> The GPIO controller is configured as non-sleeping but it uses generic
+>>>> pinctrl helpers which use a mutex for synchronization.
+>>>>
+>>>> This can cause the following lockdep splat with shared GPIOs enabled o=
+n
+>>>> boards which have multiple devices using the same GPIO:
+>>>>
+>>=20
+>> [snip]
+>>=20
+>>>>
+>>>> Fixes: 936ee2675eee ("gpio/rockchip: add driver for rockchip gpio")
+>>>> Cc: stable@vger.kernel.org
+>>>> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>> Closes: https://lore.kernel.org/all/d035fc29-3b03-4cd6-b8ec-001f93540b=
+c6@samsung.com/
+>>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.c=
+om>
+>>>> ---
+>>>>   drivers/gpio/gpio-rockchip.c | 1 +
+>>>>   1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip=
+.c
+>>>> index 47174eb3ba76..bae2061f15fc 100644
+>>>> --- a/drivers/gpio/gpio-rockchip.c
+>>>> +++ b/drivers/gpio/gpio-rockchip.c
+>>>> @@ -593,6 +593,7 @@ static int rockchip_gpiolib_register(struct rockch=
+ip_pin_bank *bank)
+>>>>        gc->ngpio =3D bank->nr_pins;
+>>>>        gc->label =3D bank->name;
+>>>>        gc->parent =3D bank->dev;
+>>>> +     gc->can_sleep =3D true;
+>>>
+>>> This means all operations are marked as can_sleep, even though
+>>> pinctrl operations are only used for the direction setting.
+>>> I.e. the common get/set operations always worked in atomic mode,
+>>> but now complain. See for example:
+>>>
+>>> https://lore.kernel.org/all/20260108-media-synopsys-hdmirx-fix-gpio-can=
+sleep-v1-1-3570518d8bab@kernel.org/
+>>>
+>>> It's not a big issue for the hdmirx driver specifically, but I wonder
+>>> how many more (less often tested) rockchip drivers use GPIOs from their
+>>> IRQ handler.
 >
-> >>
-> >> It's not a big issue for the hdmirx driver specifically, but I wonder
-> >> how many more (less often tested) rockchip drivers use GPIOs from thei=
-r
-> >> IRQ handler.
->
-> Yeah, seems this finally reached my distro kernel and now the kernel log
-> on one of my boards is totally flooded from gpio_ir_recv_irq()
+> Yeah, seems this finally reached my distro kernel and now the kernel log=
+=20
+> on one of my boards is totally flooded from gpio_ir_recv_irq()=20
 > (legitimately) calling gpio_get_value()... that's not really OK :/
+
+Yeah, I'm getting it too on several of my boards, like on Rock64:
+https://paste.sr.ht/~diederik/154c5023a3a50d77f1da2195e7bb9a96f6a88555
+(that's just a fraction as dmesg ran out of its buffer ...)
+Also mentioned here:
+https://lore.kernel.org/all/DFOEGOTI1AQ9.175GP7V1VK1XU@cknow-tech.com/
+
+Diederik
+
 >
+> Thanks,
+> Robin.
+>
+>>> Considering setting or getting the GPIO from atomic context is much
+>>> more common than changing the direction - is there some way to
+>>> describe the sleep behavior in a more specific way in the GPIO
+>>> controller?
+>>>
+>>=20
+>> No, there's no such switch at the moment. This is because there are
+>> paths that we can take, where we *do* end up setting direction from
+>> gpiod_set_value(). For instance:
+>>=20
+>> gpiod_set_value()
+>>    gpiod_set_value_nocheck()
+>>      gpio_set_open_drain_value_commit()
+>>        gpiochip_direction_output()
+>>=20
+>> I'm afraid, for correctness, it has to be either sleeping, or not. I
+>> would love - at some point - to make pinctrl mostly lockless with
+>> SRCU, like we did with GPIO. That would solve this issue correctly.
+>> But until then, I'm afraid we need to keep a chip-global switch for
+>> sleeping.
+>>=20
+>> Bartosz
+>>=20
+>> _______________________________________________
+>> Linux-rockchip mailing list
+>> Linux-rockchip@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
-This has always been a sleeping driver. The driver does not know the
-firmware configuration it'll be passed and - as I explained above -
-depending on the lookup flags, we may call .direction_output() and
-descend into pinctrl which uses mutexes. Ideally, we'd make
-GPIO-facing pinctrl operations not sleeping but this is a long-time
-project and quite complex. Telling the GPIO core that it cannot sleep
-is simply incorrect - even if it worked for this particular use-case -
-and has an impact on paths we're choosing.
-
-Can the GPIO reading in the gpio-ir-recv driver be done from a
-high-priority workqueue by any chance? Or can we make it a threaded
-interrupt?
-
-Bartosz
 
