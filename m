@@ -1,112 +1,167 @@
-Return-Path: <linux-gpio+bounces-31035-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31036-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qOpQHEredGkV+gAAu9opvQ
-	(envelope-from <linux-gpio+bounces-31035-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jan 2026 15:59:22 +0100
+	id GOELHtHxdGkM/QAAu9opvQ
+	(envelope-from <linux-gpio+bounces-31036-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jan 2026 17:22:41 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE5137DFE4
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jan 2026 15:59:21 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 240047E19C
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jan 2026 17:22:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 79960300D178
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jan 2026 14:58:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 81B65300AB04
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jan 2026 16:22:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEA7B319852;
-	Sat, 24 Jan 2026 14:58:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 627F923D297;
+	Sat, 24 Jan 2026 16:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQHxelOW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from torres.zugschlus.de (torres.zugschlus.de [81.169.166.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8481D8E10;
-	Sat, 24 Jan 2026 14:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.169.166.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137DA1B81D3
+	for <linux-gpio@vger.kernel.org>; Sat, 24 Jan 2026 16:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769266713; cv=none; b=sQDlOoS/1tAW91vjO9AtziATBK1dnEjkLqyzUi8fq4tQ0mtt+1S6kDRj2iWCG4QPSMVPTt6AABKrYXjpa9WbhXWxf9P3t8dnVhjc1/iC7PitcQH7pzclaLwcaH6BwpXEFOJL32nRj8YDbttoLlX8y96pDwV2DmkjYg3gLzBg1Uo=
+	t=1769271751; cv=none; b=n1CJOJcvI2cMSRoddbL6+I8ke864CdpViPwb39vA1Bbpscp5MEnmV5DOc5NGkAAuvyz9Yh2/7TpHGeHCZJWHkS2m3H0OOQ0jT08+AuIDXkKVQRdDVHPJfMq02B7HAjRaH7Yd9KjcrAAqC8dQS5yxku1samfDo5M70V4DNlF0F/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769266713; c=relaxed/simple;
-	bh=iAOxrdJIqP+eJnaRRQV2HSrllgrFBoj5zklub4xneuU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=unKEkcfoWx2J/nZmkRn2axbAjdEoQFsW1YiUtSkH/RgU/dVUCRrfBR8IqGKcu/8bCIAIshd0vuCUJkE9SF+Uu0KnDm4HYwUWU7YuCU6buoupnW2Fnf0EwwAjB5Z2ljiwJT3XJ52ylTwlofSAb4KXRdRWJk6/I0qkwoT/Z/yFw5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zugschlus.de; spf=pass smtp.mailfrom=zugschlus.de; arc=none smtp.client-ip=81.169.166.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zugschlus.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zugschlus.de
-Received: from mh by torres.zugschlus.de with local (Exim 4.98.2)
-	(envelope-from <mh+linux-kernel@zugschlus.de>)
-	id 1vjf5h-000000077dx-2x8A;
-	Sat, 24 Jan 2026 15:58:21 +0100
-Date: Sat, 24 Jan 2026 15:58:21 +0100
-From: Marc Haber <mh+linux-kernel@zugschlus.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: regression 6.18.>4 gpio-keys-polled: failed to get gpio state:
- -52
-Message-ID: <aXTeDb68H7ds93o6@torres.zugschlus.de>
-References: <aXNMSu0RnhTI4BZ1@torres.zugschlus.de>
+	s=arc-20240116; t=1769271751; c=relaxed/simple;
+	bh=TvT+65Txm4un20WFBIxb++POx0lG1dCNvUcsKeW1Aug=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l+qhNtla6vrBmUOfUwILknK2NP5ZR9pWnJCOps/rBCCvn886Vu+z3pWmCKWiT3jiH+6tyenPhDUpwm636T9I0w4hoaZfS6UWkq7GZQGnn6+4ns9FDCR865VrazqKP0SuuCf417NXNc3WO3cW/30BjPs6ILsQv8GoNEh4zWBQuiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gQHxelOW; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-c3e921afad1so1212343a12.1
+        for <linux-gpio@vger.kernel.org>; Sat, 24 Jan 2026 08:22:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769271749; x=1769876549; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xzqbs1GrytgzSMOd8OeslWj9jW5D/SjS+sxstTepNpk=;
+        b=gQHxelOW8zgzNh1l4VVekEMGZ+vP2wF4SARDx/F+fYxOS3dSTknwo6mm1oUsqFzgFt
+         GDRZKirl7oJmdBorbQ5JIXVNUypYapOCuIx7i20kmq7PMorr575GCJhW8qzvpTCeLTJX
+         V+jHr+Vvm/suhIuYpC4RAcK15VLjox2a/zDk8Y8Lxx4IoqhB4WgdFsuq+zu4EyN7yvvc
+         0RTAjVP6MrYZLRrQa/CtWEpJ3csFEI2Ock7+aPhFLOXxzo9TuOmFMqcs0p9gKyKtTvc9
+         uQG0aiagbI+rChtCT6sH+Rrh+EBR5FUAPtIODBoei62IJ1sYmxSjiO5sXkBXKx5xtU1Q
+         2Ntg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769271749; x=1769876549;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xzqbs1GrytgzSMOd8OeslWj9jW5D/SjS+sxstTepNpk=;
+        b=efaXPT4Kxszf3rwNEY6dFDg0e6xznnCmJReiQ7mU0un7hEf04VLloG/INZg0zjZAmY
+         7XuDKb6ikvCW2FQCcc0n9bEo88S3h1RjwVbu/YE2CDMF0GYmc8i/MeP3bjK9wS6T8/vd
+         4QZ4fgmrPKgpyDP8PGEO6eEDKTSmxPOhEec3MBH+8J/XN665edjcdDkxLetax1R3KBsx
+         PUOiQYCIcsTGyjlxBNaPEfRKfbhsNVeUJ/DQqN1y+CT6oESjipVL8O8a7nqurU7jjdRy
+         zqpqjgdV7S+R/B3v3CJu2bbg2w7WZiFsp3ei/ECgYwXNF3yzELqa6TWzWR0WyXnDX17X
+         4Y1w==
+X-Gm-Message-State: AOJu0Yysee2Z63gVrGujFEznUNIp9G0O8h6ja5t9tIpf3Bg+rBTxJo+i
+	HtdEOtOJji8aJNyEqzbzmrsdT0nKhcS8B9sm+WhKQ7lh0uH4wgmlTMjwNMvfBj+gGg==
+X-Gm-Gg: AZuq6aLu7uk8OwYN4/oaTJ3KjjnMneLhBjND1kSOPTXtU6AsLS5AfDM6qOHObBiFRjH
+	p5ap8qYqoIfe4ORsduo8wXjTa8ctubsXjeSKuRN8KY9q+0ap+EiHhQsl8CRYkhg23DZEAld526H
+	ybunsc+p0p4uSfFhOCQ3k8YAwzFziYI/q5Xts44uuZ4IQoNgPG+aJdOajYsD+730QIGfSKn76Xd
+	z7TyxhQ4JomdU+hbSs9V2+HjXvO9o4FrzkEtyoPPTtOQVC74pZ71g3SXiGzXAjYuBLY/div/mlx
+	MbwpoONq4d4NVgokp+qYGmBm98vJFIy1J/EOM2RzPnmUJHfKAbZiam9yzuhP4Ss192+uqCPqS0g
+	Lk93cg5wm53TkN8/uodrmAVuev9TQ7wykW1fCtPdoVdF/ojlV5UFlcyqSgDvQR6fHjxsW+9zWCV
+	V7RyxaGC69GyDSk/KjOsStaOlHgTr97rYooyWtrs4qZh/QSAH6uXhxzQa1x68=
+X-Received: by 2002:a17:90b:2ecc:b0:34a:adf1:677d with SMTP id 98e67ed59e1d1-35367027f06mr5738533a91.9.1769271748592;
+        Sat, 24 Jan 2026 08:22:28 -0800 (PST)
+Received: from pride-PowerEdge-R740.tailb307d0.ts.net ([115.156.141.150])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82318662de5sm5160184b3a.18.2026.01.24.08.22.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Jan 2026 08:22:28 -0800 (PST)
+From: Yuhao Huang <nekowong743@gmail.com>
+To: linux-gpio@vger.kernel.org
+Cc: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	linux-kernel@vger.kernel.org,
+	Yuhao Huang <nekowong743@gmail.com>
+Subject: [PATCH] gpio: virtuser: fix UAF in configfs release path
+Date: Sun, 25 Jan 2026 00:21:11 +0800
+Message-ID: <20260124162111.3945666-1-nekowong743@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <aXNMSu0RnhTI4BZ1@torres.zugschlus.de>
-User-Agent: Mutt/2.2.13 (2024-03-09)
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.46 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCVD_COUNT_THREE(0.00)[4];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,torres.zugschlus.de:mid];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_HAM(-0.00)[-0.999];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[linaro.org,bgdev.pl,vger.kernel.org,gmail.com];
+	TAGGED_FROM(0.00)[bounces-31036-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	R_DKIM_NA(0.00)[];
-	DMARC_NA(0.00)[zugschlus.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mh@zugschlus.de,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31035-lists,linux-gpio=lfdr.de,linux-kernel];
-	MID_RHS_MATCH_FROMTLD(0.00)[]
-X-Rspamd-Queue-Id: DE5137DFE4
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[nekowong743@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 240047E19C
 X-Rspamd-Action: no action
 
-Hi,
+The gpio-virtuser configfs release path uses guard(mutex) to protect
+the device structure. However, the device is freed before the guard
+cleanup runs, causing mutex_unlock() to operate on freed memory.
 
-the issue is still present in 6.18.7, and I only see that on my APU2 
-machine with an AMD GX-412TC SOC.
+Specifically, gpio_virtuser_device_config_group_release() destroys
+the mutex and frees the device while still inside the guard(mutex)
+scope. When the function returns, the guard cleanup invokes
+mutex_unlock(&dev->lock), resulting in a slab use-after-free.
 
-Greetings
-Marc
+Limit the mutex lifetime by using a scoped_guard() only around the
+activation check, so that the lock is released before mutex_destroy()
+and kfree() are called.
 
+Fixes: 91581c4b3f29 ("gpio: virtuser: new virtual testing driver for the GPIO API")
+Signed-off-by: Yuhao Huang <nekowong743@gmail.com>
+---
+ drivers/gpio/gpio-virtuser.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-On Fri, Jan 23, 2026 at 11:24:10AM +0100, Marc Haber wrote:
->@Bartosz, I have added you because you did some work on the gpio stuff 
->in 6.18.
->
->I run one APU box with latest gerne, and since I booted into 6.18.4 on 
->January 9, I get multiple entries per second like
->Jan 23 11:19:20 prom kernel: gpio-keys-polled gpio-keys-polled: failed to get gpio state: -52
->
->This also applies to 6.18.6. 6.18.3 was still fine.
->
->Do you have any idea what might be causing this and how to fix?
-
+diff --git a/drivers/gpio/gpio-virtuser.c b/drivers/gpio/gpio-virtuser.c
+index 37f2ce20f..6de5dcc97 100644
+--- a/drivers/gpio/gpio-virtuser.c
++++ b/drivers/gpio/gpio-virtuser.c
+@@ -1682,10 +1682,10 @@ static void gpio_virtuser_device_config_group_release(struct config_item *item)
+ {
+ 	struct gpio_virtuser_device *dev = to_gpio_virtuser_device(item);
+ 
+-	guard(mutex)(&dev->lock);
+-
+-	if (gpio_virtuser_device_is_live(dev))
+-		gpio_virtuser_device_deactivate(dev);
++    scoped_guard(mutex, &dev->lock) {
++        if (gpio_virtuser_device_is_live(dev))
++            gpio_virtuser_device_deactivate(dev);
++    }
+ 
+ 	mutex_destroy(&dev->lock);
+ 	ida_free(&gpio_virtuser_ida, dev->id);
 -- 
------------------------------------------------------------------------------
-Marc Haber         | "I don't trust Computers. They | Mailadresse im Header
-Leimen, Germany    |  lose things."    Winona Ryder | Fon: *49 6224 1600402
-Nordisch by Nature |  How to make an American Quilt | Fax: *49 6224 1600421
+2.43.0
+
 
