@@ -1,177 +1,214 @@
-Return-Path: <linux-gpio+bounces-31040-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31041-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EOcPDUkadmnXLgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31040-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 14:27:37 +0100
+	id uNQLA1hmdmkmQQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31041-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 19:52:08 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8474080B8B
-	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 14:27:36 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C3D481CFA
+	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 19:52:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7D11B3014947
-	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 13:23:43 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C09BB300566A
+	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 18:52:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7EAB31BC84;
-	Sun, 25 Jan 2026 13:23:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAC1E2EF67A;
+	Sun, 25 Jan 2026 18:52:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="GiRoqnVc"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="GUb3b+DY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8460C31A545;
-	Sun, 25 Jan 2026 13:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D8523EAB3
+	for <linux-gpio@vger.kernel.org>; Sun, 25 Jan 2026 18:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769347422; cv=none; b=OwWvvLtk5SDpouVXOZEwJ3FnKDzA9k0Idnsh/NNholkw/wP5WUd8hu6CxAtIOk0J8qfTKAqsYTAaFXjQ4x6DAf0oQ835Yve7wwzJb9h1m+gPc9QWcKAg+Uqgnnr7xK8loEtlI8I/OCJFXkrvOzbucQAknUAA02cy2O5ADMVJ87E=
+	t=1769367120; cv=none; b=TEh0HQDKCAmLMvAvhpzH2MS0Kr//FnDroLV8p3Hss9w9yHqSjpUbl7hl0ZaWyBUl3ZQzAlQuKWrlawTCULvQ/+4UazdhIQA39wfD4pxEqd/loqLGP6NV7SNCp/D4oJPM+RG55dEoeoTIsJ5E/lAzsqS6rbKUc+F1mkblyNu9EQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769347422; c=relaxed/simple;
-	bh=TBRhY9AF5qu6OZu3tvbqRi82R9C7eHmixGvNmoBOnZk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fiRW//I05ZVvqJO7kYecjsVfbEx0Pv6/sDUK/FaI/2vWuMqoVy1i9WFSHBOaI7ab2IcHF8f0CZ6JhSF9oJjXuQeRKhidAUxhiSDbnSyzSqXdW6VbgQhkYijqJxSjMDL80g329sDJFOLwcQiUF7B7hE9gHYIODwL4+wfN6Md8wrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=GiRoqnVc; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
-	bh=P8vete4FbKroUDiRsh85INSljLEWw5LQXDMx6H8GOzY=; b=GiRoqnVctapf8D73oIl+VcQoSK
-	6CiTaCejwRnjct4AodOKsGYEZJdeNllg4S7XvXd65TIIJukiJBfwvb0INXLJOKoxVUIQOwA7iix8s
-	bwiNySsDdPrQ5BW21njQnYa/jipQU1tpjTbqTB1lZRpePn7BVkQNNAf10olIK/KrbFCewYl+ga94o
-	G8opkJnPo7K44QbZpMCJvHpO1W3QYrlcdsRScz0ZPvG4AAsKzCpaWT4OVaCLu2vUEQfoVvWWAxmIL
-	UZKikeeEm5oxRzVE3fMcArnFqYN69ZeTdqq+fA+BEOx45JOlzH93BwlVMrXbsGEziERIkPZAImjrf
-	RI80mr8g==;
-Received: from i53875a33.versanet.de ([83.135.90.51] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1vk05L-004Jy1-0F; Sun, 25 Jan 2026 14:23:23 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Robin Murphy <robin.murphy@arm.com>, Bartosz Golaszewski <brgl@kernel.org>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>,
- Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
- Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Bartosz Golaszewski <brgl@kernel.org>
-Subject: Re: [PATCH] gpio: rockchip: mark the GPIO controller as sleeping
-Date: Sun, 25 Jan 2026 14:23:20 +0100
-Message-ID: <3204984.tdWV9SEqCh@diego>
-In-Reply-To:
- <CAMRc=MfUawHpDgxj=fP2OF_-qg1O+P3oM_cSvGsbvAdLRB=+hw@mail.gmail.com>
-References:
- <20260106090011.21603-1-bartosz.golaszewski@oss.qualcomm.com>
- <cb13c3df-be09-4cf3-b679-4431862d7264@arm.com>
- <CAMRc=MfUawHpDgxj=fP2OF_-qg1O+P3oM_cSvGsbvAdLRB=+hw@mail.gmail.com>
+	s=arc-20240116; t=1769367120; c=relaxed/simple;
+	bh=zMaEvU68BWlhZpxDtfLltxRySkbC44HvvmZ1IlohbuE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=piW3uFq3suTZJxKoTUbKQ8bu3XWmvTeq3HDCjw3wjtwWNQB3UHhoSPyjOlKVyTqe9f5aH8BxPwgVcDZL5/QsYizsOTVrDKMb++qd/YkJJRUZMlip4N9wZXl+wsFXLBmN4Q8beTES+t2qHHDo/8A3o3vmr7jcI79DL8bSFa43ygI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=GUb3b+DY; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:mime-version:content-transfer-encoding; s=k1; bh=1cYkOR6p+28OeK
+	pILTeDYy1YUmgndRIsJrSEImzjWWs=; b=GUb3b+DY+9mJpJ7B3Rk9AyWsPIlsID
+	gYiUHWLfH4MhylfpJpW6wK1EEp4qmRvMXufRAsUMyjw3n6a7jZTjlMDlAiAJeytr
+	PDYusfLDkbrdpScgSILsNpYpTv9wxWk3n8sIRRm98T1X5yszKvRP0oq5bX6qilP5
+	LjHLu7d1lAZJzkgT7s2l3Qa9JZdRes785y0OH4j4PHwtTrndA/aCfpLOjcH1lb4z
+	BtZ0JoJOhdKJB5uQXdN4teK3yDzq+Q8ww2MIjkXg7v93zhNt8uES1joQCXP5zbLl
+	u9kPE+ySeVYAst58JG+Fjj7CLKQTVDUGyLh4C9GbhtN1nhxaNB2QPgsw==
+Received: (qmail 2369426 invoked from network); 25 Jan 2026 19:51:47 +0100
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 25 Jan 2026 19:51:47 +0100
+X-UD-Smtp-Session: l3s3148p1@Xefl4TpJKhBtKXAW
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-renesas-soc@vger.kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Antonio Borneo <antonio.borneo@foss.st.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Chen-Yu Tsai <wens@kernel.org>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-omap@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-sunxi@lists.linux.dev,
+	Mark Brown <broonie@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Samuel Holland <samuel@sholland.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Wilken Gottwalt <wilken.gottwalt@posteo.net>,
+	Will Deacon <will@kernel.org>
+Subject: [RFC PATCH 0/4] hwspinlock: refactor headers into public provider/consumer pair
+Date: Sun, 25 Jan 2026 19:46:51 +0100
+Message-ID: <20260125184654.17843-6-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[sntech.de,none];
-	R_DKIM_ALLOW(-0.20)[sntech.de:s=gloria202408];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[sang-engineering.com:s=k1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	RCPT_COUNT_TWELVE(0.00)[44];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31040-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[12];
+	TAGGED_FROM(0.00)[bounces-31041-lists,linux-gpio=lfdr.de,renesas];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[heiko@sntech.de,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[sntech.de:+];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[sang-engineering.com];
+	DKIM_TRACE(0.00)[sang-engineering.com:+];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:email,sntech.de:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8474080B8B
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[sang-engineering.com,foss.st.com,kernel.org,arndb.de,linux.alibaba.com,gmail.com,baylibre.com,linuxfoundation.org,redhat.com,lwn.net,lists.infradead.org,vger.kernel.org,st-md-mailman.stormreply.com,lists.linux.dev,analog.com,infradead.org,sholland.org,posteo.net];
+	NEURAL_HAM(-0.00)[-0.995];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 6C3D481CFA
 X-Rspamd-Action: no action
 
-Am Samstag, 24. Januar 2026, 22:07:12 Mitteleurop=C3=A4ische Normalzeit sch=
-rieb Bartosz Golaszewski:
-> On Sat, 24 Jan 2026 00:45:25 +0100, Robin Murphy <robin.murphy@arm.com> s=
-aid:
-> > On 2026-01-23 9:52 pm, Heiko St=C3=BCbner wrote:
+TLDR: I want to create a hwspinlock provider outside of the hwspinlock
+directory. So, I refactored the headers into a provider/consumer pair.
+Which seems to me like a reasonable seperation anyhow. No functional
+changes. My build tests went fine and buildbots are happy, too.
 
-[ snip to get to the core question at the bottom ]
+Longer explanation:
 
-> > diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinct=
-rl-rockchip.c
-> > index e44ef262beec..2fc67aeafdb3 100644
-> > --- a/drivers/pinctrl/pinctrl-rockchip.c
-> > +++ b/drivers/pinctrl/pinctrl-rockchip.c
-> > @@ -3545,10 +3545,9 @@ static int rockchip_pmx_set(struct pinctrl_dev *=
-pctldev, unsigned selector,
-> >   	return 0;
-> >   }
-> >
-> > -static int rockchip_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
-> > -					   struct pinctrl_gpio_range *range,
-> > -					   unsigned offset,
-> > -					   bool input)
-> > +static int rockchip_pmx_gpio_request_enable(struct pinctrl_dev *pctlde=
-v,
-> > +					    struct pinctrl_gpio_range *range,
-> > +					    unsigned int offset)
-> >   {
-> >   	struct rockchip_pinctrl *info =3D pinctrl_dev_get_drvdata(pctldev);
-> >   	struct rockchip_pin_bank *bank;
-> > @@ -3562,7 +3561,7 @@ static const struct pinmux_ops rockchip_pmx_ops =
-=3D {
-> >   	.get_function_name	=3D rockchip_pmx_get_func_name,
-> >   	.get_function_groups	=3D rockchip_pmx_get_groups,
-> >   	.set_mux		=3D rockchip_pmx_set,
-> > -	.gpio_set_direction	=3D rockchip_pmx_gpio_set_direction,
-> > +	.gpio_request_enable	=3D rockchip_pmx_gpio_request_enable,
-> >   };
-> >
-> >   /*
-> >
->=20
-> I'm not sure what's going on here. You don't really need to call
-> pinctrl_gpio_direction_input/output()?
+There is a device (MFIS) in newer Renesas SoCs which combines various
+things like hwspinlocks, mailboxes and other stuff. Sadly, these are not
+strictly separated. Registers are kind of mixed and its register
+unprotection scheme will need one of its own locks. I tried various
+paths to handle this device (MFD, auxiliary bus) but I concluded that
+the sub-device dependencies give enough reasons for a single driver in
+drivers/soc/. So, this series will allow me to instantiate a hwspinlock
+provider from the other directory.
 
-No we actually don't.
+Patches 1+2 do the actual refactoring with a fallback being in place. I
+used '-B' with git-format-patch in this RFC, so the actual changes are
+more visible when the headers are moved.
 
-The current _set_direction function:
+Patch 3 converts all the users. There are not many. We could try to get
+all the acks for this single patch. Or I can break it into single
+patches and send them to subsystems. I don't mind.
 
-static int rockchip_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
-					   struct pinctrl_gpio_range *range,
-					   unsigned offset,
-					   bool input)
-{
-	struct rockchip_pinctrl *info =3D pinctrl_dev_get_drvdata(pctldev);
-	struct rockchip_pin_bank *bank;
+Patch 4 simply removes the fallback.
 
-	bank =3D pin_to_bank(info, offset);
-	return rockchip_set_mux(bank, offset - bank->pin_base, RK_FUNC_GPIO);
-}
+Looking forward to comments on this approach. If the hwspinlock
+maintainers like it as is, I would kindly propose to apply patches 1+2
+after 7.0-rc1 comes out. This might sound a bit hasty, but a) I want to
+avoid chasing a moving target and b) this would remove one dependency of
+the hwspinlock driver I originally intend to upstream, of course.
 
-really only ever touches the pinmux and has nothing to do with setting
-the direction, which is solely the task of the gpio-controller/-driver.
+I would take care of patches 3+4 as needed.
 
-So moving that to the request callback would likely solve all our current
-problems?
+A branch can be found here:
 
-Heiko
+git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/hwspinlock/refactor-includes
 
+Patches are based on linux-next as of 2026-01-21.
+
+Opinions?
+
+Thanks and happy hacking,
+
+   Wolfram
+
+
+Wolfram Sang (4):
+  hwspinlock: refactor existing headers into provider.h
+  hwspinlock: refactor existing headers into consumer.h
+  treewide: convert hwspinlock users to the new consumer header file
+  hwspinlock: remove old header file
+
+ Documentation/locking/hwspinlock.rst          |  2 +-
+ MAINTAINERS                                   |  2 +-
+ drivers/base/regmap/regmap.c                  |  2 +-
+ drivers/hwspinlock/hwspinlock_core.c          |  5 +--
+ drivers/hwspinlock/omap_hwspinlock.c          |  4 +-
+ drivers/hwspinlock/qcom_hwspinlock.c          |  4 +-
+ drivers/hwspinlock/sprd_hwspinlock.c          |  4 +-
+ drivers/hwspinlock/stm32_hwspinlock.c         |  4 +-
+ drivers/hwspinlock/sun6i_hwspinlock.c         |  4 +-
+ drivers/hwspinlock/u8500_hsem.c               |  5 +--
+ drivers/iio/adc/sc27xx_adc.c                  |  2 +-
+ drivers/irqchip/irq-stm32mp-exti.c            |  2 +-
+ drivers/mfd/syscon.c                          |  2 +-
+ drivers/nvmem/sc27xx-efuse.c                  |  2 +-
+ drivers/nvmem/sprd-efuse.c                    |  2 +-
+ drivers/pinctrl/stm32/pinctrl-stm32.c         |  2 +-
+ drivers/soc/qcom/smem.c                       |  2 +-
+ drivers/spi/spi-sprd-adi.c                    |  2 +-
+ .../{hwspinlock.h => hwspinlock/consumer.h}   | 22 ++--------
+ .../linux/hwspinlock/provider.h               | 40 ++++++++++++-------
+ 20 files changed, 49 insertions(+), 65 deletions(-)
+ rename include/linux/{hwspinlock.h => hwspinlock/consumer.h} (94%)
+ rename drivers/hwspinlock/hwspinlock_internal.h => include/linux/hwspinlock/provider.h (78%)
+
+-- 
+2.47.3
 
 
