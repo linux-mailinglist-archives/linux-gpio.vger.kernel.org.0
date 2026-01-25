@@ -1,161 +1,177 @@
-Return-Path: <linux-gpio+bounces-31039-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31040-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eC9WFvGPdWkcGQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31039-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 04:37:21 +0100
+	id EOcPDUkadmnXLgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31040-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 14:27:37 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5F147F9E5
-	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 04:37:20 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8474080B8B
+	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 14:27:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 760C83031319
-	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 03:35:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7D11B3014947
+	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 13:23:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF97522256F;
-	Sun, 25 Jan 2026 03:35:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7EAB31BC84;
+	Sun, 25 Jan 2026 13:23:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gfhp9fkd"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="GiRoqnVc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023A0220698;
-	Sun, 25 Jan 2026 03:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8460C31A545;
+	Sun, 25 Jan 2026 13:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769312149; cv=none; b=br4cjkICjQsoJQXvCHuWKXyEbeKzSCdHwUttZhvhjAGfW326u7X9d8NoYWdoVFpc98N+mEQuzCBEIBvHVlQbSuxhyKGBDgHkLHi3PTEgZuGorEtdbmeFkTn4akpufgNUUtZTG9nmua3/az3y6eNoyht6pWQzDNkoUtbGJWZybJo=
+	t=1769347422; cv=none; b=OwWvvLtk5SDpouVXOZEwJ3FnKDzA9k0Idnsh/NNholkw/wP5WUd8hu6CxAtIOk0J8qfTKAqsYTAaFXjQ4x6DAf0oQ835Yve7wwzJb9h1m+gPc9QWcKAg+Uqgnnr7xK8loEtlI8I/OCJFXkrvOzbucQAknUAA02cy2O5ADMVJ87E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769312149; c=relaxed/simple;
-	bh=JQsEoEhcC6Fa65vcPyk1EB2QxzTkYGIcCTd96/um7l8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GyFTLADDgg7jeTbvuY3tsNv5M9+GIqI43RarLFexs6fLHYS558g3y0ti+6bcCy/9fYgFJwpYEfYiQmBrBChQdRV0gAQera5FvNWfoEPi3Eq2KNnSH/9OYyaVnHIysf0nf0g94X/MtTRItGDKIIdgcwZMfITsyHGmJ+t9A4gl9mQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gfhp9fkd; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769312148; x=1800848148;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JQsEoEhcC6Fa65vcPyk1EB2QxzTkYGIcCTd96/um7l8=;
-  b=gfhp9fkdgCXgXZ/V9peFomz+I1gIqMn+X2QeNcVqUdD3athoO3F/4HQy
-   7afOND45XyzXqsZvamY3O3gmekqK2K5g1m7yEGi6Ubzlf/Iugvsz/OpyF
-   T9IOadA+JHvev6goVMrX+qUzCgrbyfdH2kY6S4bWX8+sqUS0IWv6BWfYt
-   AoWBPIT7DnhzRYil2mNrUjxrCtgCJgF5Yi4HbP18shu90SjFNB04wce7D
-   uE/+6gn2DrfTCbvhiysNrjmd0OJSgYABzX/7flR7t2gNDlWRykKd/xX0Y
-   cUyYKVNeUf26ompm7S1XV6M4y4eiZOfLaUUWdOcFNkzzz0YdfDshm8IqJ
-   w==;
-X-CSE-ConnectionGUID: /s+GfUDaQfuaguzjyKzcEQ==
-X-CSE-MsgGUID: 1oznLpuQRLG/tRYiqq7qxg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11681"; a="81887362"
-X-IronPort-AV: E=Sophos;i="6.21,252,1763452800"; 
-   d="scan'208";a="81887362"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2026 19:35:46 -0800
-X-CSE-ConnectionGUID: p9J6Em+ARi27w2zGUpiipw==
-X-CSE-MsgGUID: BcSlIp6QRVyQADtTe9wmkA==
-X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 24 Jan 2026 19:35:45 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vjqud-00000000Vis-0UMk;
-	Sun, 25 Jan 2026 03:35:43 +0000
-Date: Sun, 25 Jan 2026 11:35:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: Yuhao Huang <nekowong743@gmail.com>, linux-gpio@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linus.walleij@linaro.org, brgl@bgdev.pl,
-	linux-kernel@vger.kernel.org, Yuhao Huang <nekowong743@gmail.com>
-Subject: Re: [PATCH] gpio: virtuser: fix UAF in configfs release path
-Message-ID: <202601251126.ywFiWrat-lkp@intel.com>
-References: <20260124162111.3945666-1-nekowong743@gmail.com>
+	s=arc-20240116; t=1769347422; c=relaxed/simple;
+	bh=TBRhY9AF5qu6OZu3tvbqRi82R9C7eHmixGvNmoBOnZk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fiRW//I05ZVvqJO7kYecjsVfbEx0Pv6/sDUK/FaI/2vWuMqoVy1i9WFSHBOaI7ab2IcHF8f0CZ6JhSF9oJjXuQeRKhidAUxhiSDbnSyzSqXdW6VbgQhkYijqJxSjMDL80g329sDJFOLwcQiUF7B7hE9gHYIODwL4+wfN6Md8wrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=GiRoqnVc; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
+	bh=P8vete4FbKroUDiRsh85INSljLEWw5LQXDMx6H8GOzY=; b=GiRoqnVctapf8D73oIl+VcQoSK
+	6CiTaCejwRnjct4AodOKsGYEZJdeNllg4S7XvXd65TIIJukiJBfwvb0INXLJOKoxVUIQOwA7iix8s
+	bwiNySsDdPrQ5BW21njQnYa/jipQU1tpjTbqTB1lZRpePn7BVkQNNAf10olIK/KrbFCewYl+ga94o
+	G8opkJnPo7K44QbZpMCJvHpO1W3QYrlcdsRScz0ZPvG4AAsKzCpaWT4OVaCLu2vUEQfoVvWWAxmIL
+	UZKikeeEm5oxRzVE3fMcArnFqYN69ZeTdqq+fA+BEOx45JOlzH93BwlVMrXbsGEziERIkPZAImjrf
+	RI80mr8g==;
+Received: from i53875a33.versanet.de ([83.135.90.51] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1vk05L-004Jy1-0F; Sun, 25 Jan 2026 14:23:23 +0100
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Robin Murphy <robin.murphy@arm.com>, Bartosz Golaszewski <brgl@kernel.org>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+ Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Bartosz Golaszewski <brgl@kernel.org>
+Subject: Re: [PATCH] gpio: rockchip: mark the GPIO controller as sleeping
+Date: Sun, 25 Jan 2026 14:23:20 +0100
+Message-ID: <3204984.tdWV9SEqCh@diego>
+In-Reply-To:
+ <CAMRc=MfUawHpDgxj=fP2OF_-qg1O+P3oM_cSvGsbvAdLRB=+hw@mail.gmail.com>
+References:
+ <20260106090011.21603-1-bartosz.golaszewski@oss.qualcomm.com>
+ <cb13c3df-be09-4cf3-b679-4431862d7264@arm.com>
+ <CAMRc=MfUawHpDgxj=fP2OF_-qg1O+P3oM_cSvGsbvAdLRB=+hw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260124162111.3945666-1-nekowong743@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[sntech.de,none];
+	R_DKIM_ALLOW(-0.20)[sntech.de:s=gloria202408];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[lists.linux.dev,linaro.org,bgdev.pl,vger.kernel.org,gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31039-lists,linux-gpio=lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31040-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[heiko@sntech.de,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[sntech.de:+];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,intel.com:dkim,intel.com:mid,01.org:url,git-scm.com:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: D5F147F9E5
+	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:email,sntech.de:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 8474080B8B
 X-Rspamd-Action: no action
 
-Hi Yuhao,
+Am Samstag, 24. Januar 2026, 22:07:12 Mitteleurop=C3=A4ische Normalzeit sch=
+rieb Bartosz Golaszewski:
+> On Sat, 24 Jan 2026 00:45:25 +0100, Robin Murphy <robin.murphy@arm.com> s=
+aid:
+> > On 2026-01-23 9:52 pm, Heiko St=C3=BCbner wrote:
 
-kernel test robot noticed the following build warnings:
+[ snip to get to the core question at the bottom ]
 
-[auto build test WARNING on brgl/gpio/for-next]
-[also build test WARNING on linus/master v6.19-rc6 next-20260123]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinct=
+rl-rockchip.c
+> > index e44ef262beec..2fc67aeafdb3 100644
+> > --- a/drivers/pinctrl/pinctrl-rockchip.c
+> > +++ b/drivers/pinctrl/pinctrl-rockchip.c
+> > @@ -3545,10 +3545,9 @@ static int rockchip_pmx_set(struct pinctrl_dev *=
+pctldev, unsigned selector,
+> >   	return 0;
+> >   }
+> >
+> > -static int rockchip_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
+> > -					   struct pinctrl_gpio_range *range,
+> > -					   unsigned offset,
+> > -					   bool input)
+> > +static int rockchip_pmx_gpio_request_enable(struct pinctrl_dev *pctlde=
+v,
+> > +					    struct pinctrl_gpio_range *range,
+> > +					    unsigned int offset)
+> >   {
+> >   	struct rockchip_pinctrl *info =3D pinctrl_dev_get_drvdata(pctldev);
+> >   	struct rockchip_pin_bank *bank;
+> > @@ -3562,7 +3561,7 @@ static const struct pinmux_ops rockchip_pmx_ops =
+=3D {
+> >   	.get_function_name	=3D rockchip_pmx_get_func_name,
+> >   	.get_function_groups	=3D rockchip_pmx_get_groups,
+> >   	.set_mux		=3D rockchip_pmx_set,
+> > -	.gpio_set_direction	=3D rockchip_pmx_gpio_set_direction,
+> > +	.gpio_request_enable	=3D rockchip_pmx_gpio_request_enable,
+> >   };
+> >
+> >   /*
+> >
+>=20
+> I'm not sure what's going on here. You don't really need to call
+> pinctrl_gpio_direction_input/output()?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Yuhao-Huang/gpio-virtuser-fix-UAF-in-configfs-release-path/20260125-002359
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20260124162111.3945666-1-nekowong743%40gmail.com
-patch subject: [PATCH] gpio: virtuser: fix UAF in configfs release path
-config: m68k-randconfig-r073-20260125 (https://download.01.org/0day-ci/archive/20260125/202601251126.ywFiWrat-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 11.5.0
-smatch version: v0.5.0-8994-gd50c5a4c
+No we actually don't.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601251126.ywFiWrat-lkp@intel.com/
+The current _set_direction function:
 
-smatch warnings:
-drivers/gpio/gpio-virtuser.c:1685 gpio_virtuser_device_config_group_release() warn: inconsistent indenting
+static int rockchip_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
+					   struct pinctrl_gpio_range *range,
+					   unsigned offset,
+					   bool input)
+{
+	struct rockchip_pinctrl *info =3D pinctrl_dev_get_drvdata(pctldev);
+	struct rockchip_pin_bank *bank;
 
-vim +1685 drivers/gpio/gpio-virtuser.c
+	bank =3D pin_to_bank(info, offset);
+	return rockchip_set_mux(bank, offset - bank->pin_base, RK_FUNC_GPIO);
+}
 
-  1680	
-  1681	static void gpio_virtuser_device_config_group_release(struct config_item *item)
-  1682	{
-  1683		struct gpio_virtuser_device *dev = to_gpio_virtuser_device(item);
-  1684	
-> 1685	    scoped_guard(mutex, &dev->lock) {
-  1686	        if (gpio_virtuser_device_is_live(dev))
-  1687	            gpio_virtuser_device_deactivate(dev);
-  1688	    }
-  1689	
-  1690		mutex_destroy(&dev->lock);
-  1691		ida_free(&gpio_virtuser_ida, dev->id);
-  1692		kfree(dev);
-  1693	}
-  1694	
+really only ever touches the pinmux and has nothing to do with setting
+the direction, which is solely the task of the gpio-controller/-driver.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+So moving that to the request callback would likely solve all our current
+problems?
+
+Heiko
+
+
 
