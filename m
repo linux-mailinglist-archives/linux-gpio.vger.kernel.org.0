@@ -1,88 +1,95 @@
-Return-Path: <linux-gpio+bounces-31042-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31043-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YDATAl9mdmkmQQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31042-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 19:52:15 +0100
+	id TURRDkZ0dmmvQwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31043-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 20:51:34 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id E49A281D57
-	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 19:52:14 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 705A48242E
+	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 20:51:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id C38A53001448
-	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 18:52:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A2CD13004223
+	for <lists+linux-gpio@lfdr.de>; Sun, 25 Jan 2026 19:51:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5ADE2EF67A;
-	Sun, 25 Jan 2026 18:52:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC57A2FF153;
+	Sun, 25 Jan 2026 19:51:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="SMLgbxB1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fB8h54Um"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C855224A04A
-	for <linux-gpio@vger.kernel.org>; Sun, 25 Jan 2026 18:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8102FE59A
+	for <linux-gpio@vger.kernel.org>; Sun, 25 Jan 2026 19:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769367132; cv=none; b=aF4IOSkOtO2a+EZmjc+HA3ANZgsY272UAUXpTSAg3ZwvwsGDiBCd5r83oiPxxT0IRSeLIlsyk0YXb/6/tlViraSNpop4tLd3KsSqEF65HiXdwU6jODisfGb3C3+n/qrzLR5qYAxNWFW6qRtI0jFxDkiAq6DbRiGZh7hmekABQok=
+	t=1769370690; cv=none; b=HkXwC1S5QKTJV2IFTQEMmfxvgI91PKD6lXOpO1Khgb5ExUiYvrZwD8nrm988/qdsv6g1hcyB35IFiwhxQdOqYNa5p0FqyRwzKmR/Aj1bluE/w/ExiVh3mxHQFsd2lBitMbcQ9XPDWaboprIiBx9xjydXcaFsD32unm3YIp/GXtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769367132; c=relaxed/simple;
-	bh=VL247n96oRPcfuixpfOIb+O7qbGpBQQK2ECt48CpKvI=;
+	s=arc-20240116; t=1769370690; c=relaxed/simple;
+	bh=8w5lKmFR001loRTJivMKIdgWcBfSThm7VC0mocH3zFE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z9WiTUweSmbN4hDuvrNtZ0hPUicn+qGnWWL2fBuMqiupZdtwUSof0wwetvLS7y0zaGqhEsP/OgaPiz3brcOyagKtqA3ZjUPleumtQgus0r2f1ydIFUe2Yn2Zh+BSDCVJYBuom9nilauDiSsv3CPu/jiW9pbO45z5yMiOSzm939o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=SMLgbxB1; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:in-reply-to:references:mime-version:content-transfer-encoding;
-	 s=k1; bh=z4r+DipmsGc4TALWGuhn2ZwJzaRHArRzwqq3J+v552E=; b=SMLgbx
-	B1PEXNHJ5oir0k+1bSIbdpgScGfVkkJqi4T1aeQJNKLvxOiELtzrDIYETfuMTHrz
-	9nhfTkASTyg72yoIiSOEzmV88opLRXCuYnsNzg+ORzFMDBwOrHaDfsjHp1WBtz6T
-	Pr+ksqXw4UcNCrgibeE6AWs8dlhHokeFlklrQnT5DVl59U1h46ti8F8TffE2V9/5
-	w7voaGRF+dsySf1Lv4AzRv40XAR+6BM+9sxzXGKj34TCOext62ibuI2u349hMyU4
-	45iM+UbF9nng0Js/2oiM5Q6GHup0dd5jN62IVMLGKrbh0hyHI1A817GCrbdIgJqx
-	g6x26A0RPSKXRlcQ==
-Received: (qmail 2369640 invoked from network); 25 Jan 2026 19:51:54 +0100
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 25 Jan 2026 19:51:54 +0100
-X-UD-Smtp-Session: l3s3148p1@rcBK4jpJXzptKXAW
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: linux-renesas-soc@vger.kernel.org
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Lee Jones <lee@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Antonio Borneo <antonio.borneo@foss.st.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	linux-iio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
+	 MIME-Version; b=Kx4yUf23zpW0+p2EGNmz9c28dZik2aKmtrUjh3GEAXPyEy64hyiRo6fClx2UhigCj0SdS6wYoQ7A1lk6ZP4aHukdQaiiYWLe6oj/iWFd/eEVhzQGo5icY5PJ5Lk0ukOVBj7MMYZwVEOlAxN7EBUB7Ln6StPMq7ePgwjbdwkfytM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fB8h54Um; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-65813e3e215so7215330a12.0
+        for <linux-gpio@vger.kernel.org>; Sun, 25 Jan 2026 11:51:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769370688; x=1769975488; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=erE+uO6wlOkAnc1WeWGgsNOsOXXg2ec8Vg4q0viMQEU=;
+        b=fB8h54UmaChrSybNinw0MbVmo7u+0g2mHSmKkaDGxcxB+zclhzxDFiYWjcf/j8GmWg
+         8uVNCx51RZVSH1+pZqYwkzei16+LYgC2h643PSP6ZuQroFIJ9PFjAXK4lp1CphgNZVb/
+         uP7LMlX/h2BZVupUJO7ov5mzYGHP7JcZ9CLJ3pp7vZ/gtIKFPWsb5t4wf/A46OZbh4IT
+         PmjB3yNM34uVwDv/ZPvGLsyypqNeTHcEaizHQ1m+4DwEX3VAQ5t9DyylI85Aqorjrsv5
+         MzSW5oSlHWVHFudM//5Co2O95QtbSCgF1ZtMQuBGSoOrviUzyF7TxRTWrc4Ru5WvF7QP
+         azog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769370688; x=1769975488;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=erE+uO6wlOkAnc1WeWGgsNOsOXXg2ec8Vg4q0viMQEU=;
+        b=l/h3nqEZUoPWVrUGZfiR411y83WC69u88Eice8/FT9IPH5UYJP41vQ0tFNAcyBum0u
+         t+HhHDkYYsnnLEh/0uVorpWoE5s7eVBhZPa3WFBJ5PB+AV8JIMWuCaaOwgDFCw4QIFau
+         N3ljF6VyUmrFXtKF5yQ4PGk3UKBvDV/aTY2qGdmFOyfz1h1oV6g0eK6OfQcmTbqCKA88
+         T8vcx3C2hpgEAHPxqvoOB7hmslC/uX4/Mc6fDLhA8DhtKMVyl6E6WKooriyQ0ZAx0jTr
+         VrlSUhTL8Z+REEGlIC94zqDcvIIKTUiTdfDR8g5T31A57A2jZGdROHrzJUuXv+F8NimM
+         mGFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlyCWzuEEWv/yi0tqpsFeBMMdQU0d+VA3X+3QVdyfC0n5Y5CSFQ06nP8BP6B/fX4h8VqbK7753v89+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvP3Uk1RjunpFTUkAP5yjmpPXFo3J7CZ6BXBPeZVPoR2cKHU1Q
+	/oMejPJoFe/LQBfeVLILGOah3/UtxDLknCXrpGorWfnoIzQgmDDEzhmgOTCr4D70
+X-Gm-Gg: AZuq6aIzlSuUg0mBWdzn1f1BjOJs/daZuxdCgyCcMB0RILTJcRuI1h1sGOizR8mW477
+	HGQ0LsUES/0SvsdfjQyIjPCRMN33PhlvpMiPy3fVQqMlpgiusqwCKKnCmqHzvEZ782FfA09StHu
+	R+ko40QC1stHPJj/YT0PhA6eR/IAVIKI327JHyfmqPC/Bz0we9VZpBIZGkUUu20G3ibIYcvNPEb
+	1NpSrijBItbYiYAUoEXpprFv4xOPHqWjW4voeyA4aD5akryhcwJLUH2a5op0o/JcohpigD1rs8u
+	kUV9tRmDFn1GvseM4Vlnk0wVYsJGd5P4lZ+MpdM5qpWexI9xTQ3v7hmpN526XeOXUJZnz8NbvRo
+	t8Qg5JFIiYdJagjX5Nq7NAp4VBMFcnhUVa+aqk9NjbNk5602Gj/co/0Mnihpb5Qc700DSQ1DcF6
+	TSf53Wp4J38D6ZbYSnuGlVGc0=
+X-Received: by 2002:a05:6402:2351:b0:64b:588b:4375 with SMTP id 4fb4d7f45d1cf-65870690a9cmr1523024a12.2.1769370687586;
+        Sun, 25 Jan 2026 11:51:27 -0800 (PST)
+Received: from C-PF5D4647.localdomain ([147.161.248.108])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6584b965df4sm4010232a12.31.2026.01.25.11.51.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Jan 2026 11:51:27 -0800 (PST)
+From: Jie Li <lj29312931@gmail.com>
+X-Google-Original-From: Jie Li <jie.i.li@nokia.com>
+To: wsa@kernel.org,
+	linus.walleij@linaro.org
+Cc: linux-i2c@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-spi@vger.kernel.org
-Subject: [RFC PATCH 3/4] treewide: convert hwspinlock users to the new consumer header file
-Date: Sun, 25 Jan 2026 19:46:54 +0100
-Message-ID: <20260125184654.17843-9-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260125184654.17843-6-wsa+renesas@sang-engineering.com>
-References: <20260125184654.17843-6-wsa+renesas@sang-engineering.com>
+	linux-kernel@vger.kernel.org,
+	Jie Li <jie.i.li@nokia.com>
+Subject: [PATCH v2 0/2] i2c: improve bus recovery for single-ended GPIOs
+Date: Sun, 25 Jan 2026 20:51:21 +0100
+Message-ID: <20260125195123.248798-1-jie.i.li@nokia.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <CAD++jLmGMWjCD0gUcaJPuK0UzJa7nX1bdoVu-BA7aHAgcLTSpg@mail.gmail.com>
+References: <CAD++jLmGMWjCD0gUcaJPuK0UzJa7nX1bdoVu-BA7aHAgcLTSpg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -91,168 +98,70 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[sang-engineering.com:s=k1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[29];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-31042-lists,linux-gpio=lfdr.de,renesas];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[sang-engineering.com];
-	DKIM_TRACE(0.00)[sang-engineering.com:+];
-	TO_DN_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[sang-engineering.com,kernel.org,linuxfoundation.org,baylibre.com,analog.com,gmail.com,linux.alibaba.com,foss.st.com,arndb.de,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
-	NEURAL_HAM(-0.00)[-0.992];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
-	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31043-lists,linux-gpio=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: E49A281D57
+	FROM_NEQ_ENVFROM(0.00)[lj29312931@gmail.com,linux-gpio@vger.kernel.org];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_FIVE(0.00)[5];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nokia.com:mid]
+X-Rspamd-Queue-Id: 705A48242E
 X-Rspamd-Action: no action
 
-Point the drivers to the new header file. No functional changes.
+Greetings,
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- drivers/base/regmap/regmap.c          | 2 +-
- drivers/iio/adc/sc27xx_adc.c          | 2 +-
- drivers/irqchip/irq-stm32mp-exti.c    | 2 +-
- drivers/mfd/syscon.c                  | 2 +-
- drivers/nvmem/sc27xx-efuse.c          | 2 +-
- drivers/nvmem/sprd-efuse.c            | 2 +-
- drivers/pinctrl/stm32/pinctrl-stm32.c | 2 +-
- drivers/soc/qcom/smem.c               | 2 +-
- drivers/spi/spi-sprd-adi.c            | 2 +-
- 9 files changed, 9 insertions(+), 9 deletions(-)
+Apologies for the late reply, as things have been a bit hectic at work lately.
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index ae2215d4e61c..ec2348e199c1 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -16,7 +16,7 @@
- #include <linux/sched.h>
- #include <linux/delay.h>
- #include <linux/log2.h>
--#include <linux/hwspinlock.h>
-+#include <linux/hwspinlock/consumer.h>
- #include <linux/unaligned.h>
- 
- #define CREATE_TRACE_POINTS
-diff --git a/drivers/iio/adc/sc27xx_adc.c b/drivers/iio/adc/sc27xx_adc.c
-index 6209499c5c37..8a881d63b7dd 100644
---- a/drivers/iio/adc/sc27xx_adc.c
-+++ b/drivers/iio/adc/sc27xx_adc.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (C) 2018 Spreadtrum Communications Inc.
- 
--#include <linux/hwspinlock.h>
-+#include <linux/hwspinlock/consumer.h>
- #include <linux/iio/iio.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-diff --git a/drivers/irqchip/irq-stm32mp-exti.c b/drivers/irqchip/irq-stm32mp-exti.c
-index a24f4f1a4f8f..25d5aa67728a 100644
---- a/drivers/irqchip/irq-stm32mp-exti.c
-+++ b/drivers/irqchip/irq-stm32mp-exti.c
-@@ -6,7 +6,7 @@
-  */
- 
- #include <linux/bitops.h>
--#include <linux/hwspinlock.h>
-+#include <linux/hwspinlock/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/irq.h>
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index e5d5def594f6..49473669e84e 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -11,7 +11,7 @@
- #include <linux/cleanup.h>
- #include <linux/clk.h>
- #include <linux/err.h>
--#include <linux/hwspinlock.h>
-+#include <linux/hwspinlock/consumer.h>
- #include <linux/list.h>
- #include <linux/mutex.h>
- #include <linux/of.h>
-diff --git a/drivers/nvmem/sc27xx-efuse.c b/drivers/nvmem/sc27xx-efuse.c
-index 4e2ffefac96c..309090cd4ff0 100644
---- a/drivers/nvmem/sc27xx-efuse.c
-+++ b/drivers/nvmem/sc27xx-efuse.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (C) 2018 Spreadtrum Communications Inc.
- 
--#include <linux/hwspinlock.h>
-+#include <linux/hwspinlock/consumer.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-diff --git a/drivers/nvmem/sprd-efuse.c b/drivers/nvmem/sprd-efuse.c
-index 1a7e4e5d8b86..92e3092719ba 100644
---- a/drivers/nvmem/sprd-efuse.c
-+++ b/drivers/nvmem/sprd-efuse.c
-@@ -3,7 +3,7 @@
- 
- #include <linux/clk.h>
- #include <linux/delay.h>
--#include <linux/hwspinlock.h>
-+#include <linux/hwspinlock/consumer.h>
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/nvmem-provider.h>
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index 6a99708a5a23..17b2072d609e 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -10,7 +10,7 @@
- #include <linux/clk.h>
- #include <linux/export.h>
- #include <linux/gpio/driver.h>
--#include <linux/hwspinlock.h>
-+#include <linux/hwspinlock/consumer.h>
- #include <linux/io.h>
- #include <linux/irq.h>
- #include <linux/mfd/syscon.h>
-diff --git a/drivers/soc/qcom/smem.c b/drivers/soc/qcom/smem.c
-index 088b2bbee9e6..4cc65b6a7f24 100644
---- a/drivers/soc/qcom/smem.c
-+++ b/drivers/soc/qcom/smem.c
-@@ -4,7 +4,7 @@
-  * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
-  */
- 
--#include <linux/hwspinlock.h>
-+#include <linux/hwspinlock/consumer.h>
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/of.h>
-diff --git a/drivers/spi/spi-sprd-adi.c b/drivers/spi/spi-sprd-adi.c
-index e7d83c16b46c..04313e4a63dd 100644
---- a/drivers/spi/spi-sprd-adi.c
-+++ b/drivers/spi/spi-sprd-adi.c
-@@ -5,7 +5,7 @@
-  */
- 
- #include <linux/delay.h>
--#include <linux/hwspinlock.h>
-+#include <linux/hwspinlock/consumer.h>
- #include <linux/init.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
+Thank you very much for the guidance and the suggestion to move the logic into
+gpiolib. This is a far better approach than my initial one. As this is my first
+time submitting code to the Linux community, I am very grateful for your
+mentorship and support.
+
+This series (v2) addresses a limitation in the I2C bus recovery 
+mechanism where certain open-drain GPIOs are incorrectly identified 
+as input-only, preventing the recovery logic from functioning.
+
+Following the suggestion from Linus Walleij, this version drops the 
+previously proposed "force-set-sda" DT property. Instead, it 
+introduces a generic helper in the GPIO subsystem to identify 
+single-ended configurations. This allows the I2C core to reliably 
+enable recovery for open-drain lines regardless of the 
+instantaneous hardware direction reporting.
+
+Changes in v2:
+- Replaced DT-based "force-set-sda" with a gpiolib helper.
+- Added gpiod_is_single_ended() to drivers/gpio/gpiolib.c.
+- Updated i2c-core-base.c to use the new helper.
+
+Jie Li (2):
+  gpiolib: add gpiod_is_single_ended() helper
+  i2c: core: support recovery for single-ended GPIOs
+
+ drivers/gpio/gpiolib.c        | 22 ++++++++++++++++++++++
+ drivers/i2c/i2c-core-base.c   |  3 ++-
+ include/linux/gpio/consumer.h |  5 +++++
+ 3 files changed, 29 insertions(+), 1 deletion(-)
+
 -- 
-2.47.3
+2.43.0
 
 
