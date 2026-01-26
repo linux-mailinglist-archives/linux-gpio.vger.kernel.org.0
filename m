@@ -1,113 +1,104 @@
-Return-Path: <linux-gpio+bounces-31053-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31054-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GHVYKfY5d2mMdQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31053-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 10:55:02 +0100
+	id 2FYUHKg6d2mMdQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31054-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 10:58:00 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0AFF88641A
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 10:55:02 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D446A864DD
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 10:57:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0D4C4302D5E4
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 09:50:30 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C7F69302592F
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 09:52:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EE23329C66;
-	Mon, 26 Jan 2026 09:50:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F026A32D43F;
+	Mon, 26 Jan 2026 09:52:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jydJ5qqY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k1kYdPsC"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="A0MIjBon"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AA72F8BC3;
-	Mon, 26 Jan 2026 09:50:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2C426ED25;
+	Mon, 26 Jan 2026 09:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769421029; cv=none; b=GmtNo6TUvDnLdaOhUKj848U4goP2u1pKC2pNEP54Z6S5t4l7/7DqfIGoVq8stgw0DpuSNagA8Qr8tPCWhmGfKIVQHL/dV2Vd2jFYHrTHq1ZlgoUaxQRRKSU8/RVleRLfwSiuWR0Xz9QVe1YTmkqOBaWz3kToWfyH5fMKCjyWHx4=
+	t=1769421160; cv=none; b=fFYpYDaVa3mDjkrjokyokF9IMslNHDxda24EAjdu6IjJU82akZSlFGyTk/VDh7FShCWKCKRluIocdzT5eZbcMqy8k4JehGg3EWkt2bu+5JP1fXMq2qUhcQ15rnG6RahprF/6G0tlTboG2/GoC6ah2ktiGxKjLlyFGSnTQbgpP2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769421029; c=relaxed/simple;
-	bh=Mu6m9QB0eM7vSPNYNCZF3Fm9kINmVn2mIma3gaIdZeE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P6vWY3iH51K1hiahF7seTO3p2JMcQym6c0TMZDLA2hBF6oH4dMEJ/BYi6QzD1AlR7goY2XnWd/Tb8Px1wLSJpfyoixyX3reUmCU8bYxAm7+2dHym7XR6HLIYyDHK8PejwyM/zIvNDw/pqi901/aeghv8imS4C4j423gDQPWnrq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jydJ5qqY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k1kYdPsC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Date: Mon, 26 Jan 2026 10:50:24 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1769421026;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U1zpwCXWpiFq9ur3LirJYIjTFITUOuEAJu7sCEH1cy4=;
-	b=jydJ5qqYA8ASN+HraYHuoR0E0I8vFJI4yQzBOJSHFo1E32ZlwVXOnuJsX75i6PiXS/zowa
-	hMOLd8X2I+AorXFCnEOejXo1CQUELzocjlArKbJ38c5IZagxq1xuXqT/15soZOcJyOobYJ
-	svSp6DJg1lVh4NPxCW6+72P9DHQRMaFSv+DiTCPaL1ekBim6tLyIztUWu+5gXLtp3Hur0c
-	Bf/9LgxWVhsGjdFXq8TSDwQH0rYnuR08MG5HDsXapppskSlyJTWn48Bl8hFjgWLBJonnur
-	7zqVJrWvpW+yEBnZ8N4PGG7rfSL6+kHliZ3nr9WWqduc9RdquNd1YJW1vpx65Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1769421026;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U1zpwCXWpiFq9ur3LirJYIjTFITUOuEAJu7sCEH1cy4=;
-	b=k1kYdPsC7pizmpPbXYmCSis7cGgIV46iwOV3DiWSLP887dAPuulCVuKP6OL8kjlgv7NBPq
-	GzHNCjzQFSuSusAw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Xuewen Yan <xuewen.yan@unisoc.com>
-Cc: linusw@kernel.org, brgl@kernel.org, orsonzhai@gmail.com,
-	baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
-	clrkwllms@kernel.org, rostedt@goodmis.org,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev, ke.wang@unisoc.com,
-	wenhua.lin@unisoc.com, xuewen.yan94@gmail.com
-Subject: Re: [PATCH] gpio: sprd: Change sprd_gpio lock to raw_spin_lock
-Message-ID: <20260126095024.ZEEwNmlk@linutronix.de>
-References: <20260126094209.9855-1-xuewen.yan@unisoc.com>
+	s=arc-20240116; t=1769421160; c=relaxed/simple;
+	bh=a0Kzh2YIyDS2ZILwdccxSUSrHYD8Cch9PaTNytgpF6g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fpJpbbYoCEc9zpEg/NtnltPk30SyE9/nJEqbPrQMkv/xVOrtzzvYtBzCj76IpM2c79yjQ6JNq3DL/FifRP3z9SWUM4wtgWm5tWm7b14rSW2ez2KxCMIQtq9OKpkuq3U8zacUoBMP3PBWwFe+sis1/Fh4pY4JEYKqSf+QSKP7a9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=A0MIjBon; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1769421156; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=tZw98oYEIsqMY83f3/j0AD23/HAji059kNXT+C2Y2uU=;
+	b=A0MIjBonevvOmksTbaY/GWAvTW08kVYf879WirYUfzTSuV013BF0xGwBMUwsf6XFGmCZlloZ0pFACb5ST9G3W6DJsZUvljHmdP3Lsn9gkZsBbO0p5H5PGzIVirFkDjCwWJdlRGedJkfEWeAxu1Rm7OtUn1082L2BnPtWNYEX544=
+Received: from 30.74.144.138(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WxsgQI5_1769421155 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 26 Jan 2026 17:52:35 +0800
+Message-ID: <f9ab9762-97e1-4ff0-8284-5c22d54d1f2e@linux.alibaba.com>
+Date: Mon, 26 Jan 2026 17:52:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpio: sprd: Change sprd_gpio lock to raw_spin_lock
+To: Xuewen Yan <xuewen.yan@unisoc.com>, linusw@kernel.org, brgl@kernel.org,
+ orsonzhai@gmail.com, zhang.lyra@gmail.com
+Cc: bigeasy@linutronix.de, clrkwllms@kernel.org, rostedt@goodmis.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev, ke.wang@unisoc.com, wenhua.lin@unisoc.com,
+ xuewen.yan94@gmail.com
+References: <20260126094209.9855-1-xuewen.yan@unisoc.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
 In-Reply-To: <20260126094209.9855-1-xuewen.yan@unisoc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-7.66 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linutronix.de,none];
-	R_DKIM_ALLOW(-0.20)[linutronix.de:s=2020,linutronix.de:s=2020e];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31053-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[3];
+	TAGGED_FROM(0.00)[bounces-31054-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,linux.alibaba.com,goodmis.org,vger.kernel.org,lists.linux.dev,unisoc.com];
+	FREEMAIL_TO(0.00)[unisoc.com,kernel.org,gmail.com];
 	RCPT_COUNT_TWELVE(0.00)[14];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bigeasy@linutronix.de,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[linutronix.de:+];
+	FROM_NEQ_ENVFROM(0.00)[baolin.wang@linux.alibaba.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[linutronix.de,kernel.org,goodmis.org,vger.kernel.org,lists.linux.dev,unisoc.com,gmail.com];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[unisoc.com:email,linutronix.de:email,linutronix.de:dkim,linutronix.de:mid,c6:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 0AFF88641A
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[c6:email,unisoc.com:email,alibaba.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.alibaba.com:mid,linux.alibaba.com:dkim]
+X-Rspamd-Queue-Id: D446A864DD
 X-Rspamd-Action: no action
 
-On 2026-01-26 17:42:09 [+0800], Xuewen Yan wrote:
+
+
+On 1/26/26 5:42 PM, Xuewen Yan wrote:
 > There was a lockdep warning in sprd_gpio:
 > 
 > [    6.258269][T329@C6] [ BUG: Invalid wait context ]
@@ -161,23 +152,61 @@ On 2026-01-26 17:42:09 [+0800], Xuewen Yan wrote:
 > [    6.258407][T329@C6]  el0_svc+0x54/0x1c4
 > [    6.258409][T329@C6]  el0t_64_sync_handler+0x68/0xdc
 > [    6.258411][T329@C6]  el0t_64_sync+0x1c4/0x1c8
-
-This could be reduced to "BUG: Invalid wait context". The other bits
-provide to added value.
-
+> 
 > This is because the spin_lock would change to rt_mutex in PREEMPT_RT,
 > however the sprd_gpio->lock would use in hard-irq, this is unsafe.
 > 
 > So change the spin_lock to raw_spin_lock to use the spinlock
-
-spinlock_t to raw_spinlock_t
-
 > in hard-irq.
 > 
 > Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
 
-Other than that
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+LGTM. Thanks.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
-Sebastian
+> ---
+>   drivers/gpio/gpio-sprd.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
+> index 413bcd0a4240..2cc8abe705cd 100644
+> --- a/drivers/gpio/gpio-sprd.c
+> +++ b/drivers/gpio/gpio-sprd.c
+> @@ -35,7 +35,7 @@
+>   struct sprd_gpio {
+>   	struct gpio_chip chip;
+>   	void __iomem *base;
+> -	spinlock_t lock;
+> +	raw_spinlock_t lock;
+>   	int irq;
+>   };
+>   
+> @@ -54,7 +54,7 @@ static void sprd_gpio_update(struct gpio_chip *chip, unsigned int offset,
+>   	unsigned long flags;
+>   	u32 tmp;
+>   
+> -	spin_lock_irqsave(&sprd_gpio->lock, flags);
+> +	raw_spin_lock_irqsave(&sprd_gpio->lock, flags);
+>   	tmp = readl_relaxed(base + reg);
+>   
+>   	if (val)
+> @@ -63,7 +63,7 @@ static void sprd_gpio_update(struct gpio_chip *chip, unsigned int offset,
+>   		tmp &= ~BIT(SPRD_GPIO_BIT(offset));
+>   
+>   	writel_relaxed(tmp, base + reg);
+> -	spin_unlock_irqrestore(&sprd_gpio->lock, flags);
+> +	raw_spin_unlock_irqrestore(&sprd_gpio->lock, flags);
+>   }
+>   
+>   static int sprd_gpio_read(struct gpio_chip *chip, unsigned int offset, u16 reg)
+> @@ -236,7 +236,7 @@ static int sprd_gpio_probe(struct platform_device *pdev)
+>   	if (IS_ERR(sprd_gpio->base))
+>   		return PTR_ERR(sprd_gpio->base);
+>   
+> -	spin_lock_init(&sprd_gpio->lock);
+> +	raw_spin_lock_init(&sprd_gpio->lock);
+>   
+>   	sprd_gpio->chip.label = dev_name(&pdev->dev);
+>   	sprd_gpio->chip.ngpio = SPRD_GPIO_NR;
+
 
