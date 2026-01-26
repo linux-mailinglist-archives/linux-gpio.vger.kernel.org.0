@@ -1,176 +1,192 @@
-Return-Path: <linux-gpio+bounces-31047-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31048-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SG0KNrLndmmLYgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31047-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 05:04:02 +0100
+	id wNcfLyYVd2mHbwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31048-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 08:17:58 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35E4B83CFE
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 05:04:02 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F8D284C4F
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 08:17:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5E3D730056CE
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 04:03:59 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id AD2A130022D4
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 07:17:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8C51303C88;
-	Mon, 26 Jan 2026 04:03:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE70929A9FE;
+	Mon, 26 Jan 2026 07:17:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DjKVlQn2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MsO0SmG7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769142FE067
-	for <linux-gpio@vger.kernel.org>; Mon, 26 Jan 2026 04:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37062235045
+	for <linux-gpio@vger.kernel.org>; Mon, 26 Jan 2026 07:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769400238; cv=none; b=JEHRHTBCWjv64C0erRmwNR4yMBdsmy4BuIn/yRpem9dQkjxNdiwz/xQXbmkAv5aWHuszJI4GHIa7g5lKP5qds3dl8Qqz033cxMQFXqClCc/DwtwjEjNEMDsk1vaMFoAFEcxjd2PAklURyOmHvVOef9GPqtcJY/bnA9kY0FkoDxU=
+	t=1769411840; cv=none; b=qYp1nYYSE5Y/B66x83L8bfIQNPJnK1bdnofy+AI5MBvAq7HA+tVZOsx+YuDBDGlUBYtWAqjoWw1H9sYFjG07eBXRqfnt9SGSEz6cGJO6yywqQlHHsx3c9NDLivK6mcD3BmfQU7XVHe9dZNLikFcz9vm527wjlkBft0/yyuSUyKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769400238; c=relaxed/simple;
-	bh=u5ggP3SaLsBZ5fNtGAK69mMRVxGb/2HufTJafqtumgo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=prdrOTq38BrhLRcPIJvnEYgabVh2EWXPqZKQBO/xZ67805MH+RpZ0o7KAke/XoAeDsOokmsB+TmCh1D2S7e1dlLrJLrY33sMeEl3E3kv7Yqes0uWOlAGZjKE6a5xzuncfKn6GoG1Wz1vSR6I2ZrZ/v+XWTf9nV8spQn6bnx+F78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DjKVlQn2; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1769411840; c=relaxed/simple;
+	bh=nRKIyjN3ArKb8KbD+PUw29Tt98cUT5nKd2HtrkkytWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IVU5RzJPX2/Ezw1EvDVQl/DBXejJxmIOKZ5WoOF1Pwj9PZmaNfId7u7/6yJk5fTxtM2Q4yYcRpYWXYV5RnH93NOpbg7ESnaEgOySA/rsoiZikSc6fm2Go/9Gc7WbsBgFgxquMes39nI2sOsOaq1aCyqdLhG4akN72GWgk0dOeM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MsO0SmG7; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2a0d67f1877so26444555ad.2
-        for <linux-gpio@vger.kernel.org>; Sun, 25 Jan 2026 20:03:57 -0800 (PST)
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-59ddf02b00aso4499194e87.0
+        for <linux-gpio@vger.kernel.org>; Sun, 25 Jan 2026 23:17:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769400236; x=1770005036; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ToUPMBAe8KF/3v+CFujmR6mZU+BDeOfE0AmdHr1dMFg=;
-        b=DjKVlQn2XjY7gtZbPIFduzC0rDweeMKPeNWhRAj/SeN0A9/TreOqDxpuXbj5Viesh7
-         iD/WAkCOHv8XCOTed8unQtQo8Z+dD9SgyvNac/hA6jrszOitFXCpteFiSJ6RNwr+P1e5
-         9vIS3xBNVQbMn36gQ6YUgdDTV2v3bSVHjXfZ7Yxe56lsSmAfy9dWhAluaLsUqHofKNqb
-         mIVIiX/BfNxBQRSVW9qUilzfbyIqqVTVCG7tReDtJN6bNLGo2kCNcyzau0Ja0wwcH7ZZ
-         b3/hAWz65io5MtDtJ1rmUhBzYwhS3grBKWAKnQcWhSsdjmHolU7x2bswG9k2WelJx9qb
-         avaw==
+        d=gmail.com; s=20230601; t=1769411837; x=1770016637; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4pWc0GCD7/xkKAwOl2KWwb0Wzo977naoiOH75fPws/w=;
+        b=MsO0SmG71FQdSUlYdTXlPP0mQ15EyAqhOXRwgo5ZjfdD+L6APyw6ALdZRKNbk/64v5
+         JL3EYBdFuFOyfeRV8g8ZmGcXxuwM2z6kDjOVwN3Ue005Iv6gEv3dVabIwf2BoGrmUND2
+         gXeDj6p++SUaxVLRLOf5Khkc2LdE5UHiHIqoG/U+MlvybjO5Znp35vArM5T3eXxJisVb
+         Lo0E1OWyk963lPXXJPyjoeEak2AbALZ7/9ytJqPZkYvXPl+mk8hA7uHYXDBo16G48S6+
+         i7Wqgp8yJv5djRKwcOWXn9Z2eqZ2cTmwM8QXqxqzC/iT3qyXTmP3pjPDMAvKzznbJn3B
+         JuUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769400236; x=1770005036;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ToUPMBAe8KF/3v+CFujmR6mZU+BDeOfE0AmdHr1dMFg=;
-        b=eC01T0EE8H95L+8VR6D934yDVmRe0fsWALogXTEeHRh3bejiZoDKWw6KA4Za/Ok7ti
-         dMyhoDU6cS+i/L6kAxxGaaWizp7Xq0w7r47kIUV+FnCAvyVC0oRzjdnjaW0gTvbYGB8l
-         KQIOmPwA8MwMQwV03mzcnU/lFBmyi6Pc+8S3a60mxD9TgoQdo9m3JGWwG5f+vGJvyH8q
-         Ar1RCD2S3F1syTE84wPvtDwq0DuOoF5z0JYqunQQ29qWVXXco15OQa8NhvwcvZ/ayY+O
-         8HYhohPXZsDnFjuTL2gi/yRqJMdpGbhcdojVKuU3NPUBFgosIAroJ8gXGvnp7UYcBrdy
-         axzA==
-X-Gm-Message-State: AOJu0Yww+DCqxioIxx+bnWKJQKdPKuBtLX3GvCHfKBle73yLPGAbjHLH
-	8JmgEjh/BsRoSydEFD8k6jigG8C6vRTV10hr0tMIeSXKglENvxxZ/zKbjDxKfnFyLqxM
-X-Gm-Gg: AZuq6aKZ2h+MBjOHZXqgVwBTX5tjv3yezfLCp7ftwZcWsxXGqxL7V7Lw17reOSC+lYz
-	zA84ZU0o+Q6LgzlFL9J77MFssIAy5F2FDg7d5Ai/wYMpMbpzYCh9mNK5/H8KDBUb/G/0UDNQTWq
-	qC2U4FveGaKV2vW41lt8cjYyUfQsiTUNhY7BJ0UnccaM6sjyHbgs1GLoVCh7XI7msTQlC8g70Ui
-	konlxy9IpTvfrvnej/xSsYv1oXLE0eCsLoLu+sJ4gZElrCf5OrJy1iwmY52FLCBoxipsCUJh/jf
-	WQTvr9MrE8eBRUmsg0mDTm7gqWg0swO+FJrTdvSm9/dJDmMgdSFO1EEeRdXKmTSwVfgBnMVl1Ju
-	ch1XqGHKO2PKDUzfmqSazW1kPfvu5QEGDjLYo2xSYIgZSQ/6+y0fBlx7dac0i2PMDNlkZvKzVaI
-	nuANpVI2ks/+VgFgHOuFDgtr9OVPUfwm/SzZLZ+r5uVoR2t3KZA/Emh8k1D30R
-X-Received: by 2002:a17:903:40cc:b0:297:df4e:fdd5 with SMTP id d9443c01a7336-2a84523bcb6mr35639525ad.23.1769400236411;
-        Sun, 25 Jan 2026 20:03:56 -0800 (PST)
-Received: from localhost.localdomain ([115.156.144.176])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a802fb0262sm77563835ad.70.2026.01.25.20.03.54
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sun, 25 Jan 2026 20:03:56 -0800 (PST)
-From: Yuhao Huang <nekowong743@gmail.com>
-X-Google-Original-From: Yuhao Huang <yuhaohuang@YuhaodeMacBook-Pro.local>
-To: linux-gpio@vger.kernel.org
-Cc: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	linux-kernel@vger.kernel.org,
-	Yuhao Huang <nekowong743@gmail.com>
-Subject: [PATCH v2] gpio: virtuser: fix UAF in configfs release path
-Date: Mon, 26 Jan 2026 12:03:48 +0800
-Message-ID: <20260126040348.11167-1-yuhaohuang@YuhaodeMacBook-Pro.local>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260124162111.3945666-1-nekowong743@gmail.com>
-References: <20260124162111.3945666-1-nekowong743@gmail.com>
+        d=1e100.net; s=20230601; t=1769411837; x=1770016637;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4pWc0GCD7/xkKAwOl2KWwb0Wzo977naoiOH75fPws/w=;
+        b=DpcyokWUodZeKfYXTK6/336+m0F0bcAENhXiXNyAPcNqGAukGAz6Lo6Y/P7XC7T3iG
+         pjKa8sJl6VAU2bd+uTdJvIYGD968LS12FjwKsxm2MTmAv7kCiGaMJqK+Xvza6bRwSMq1
+         vQbKX5/74LiMC0VCTpwU00XDII4W3rGbCShFVsxEonfgkNZQexrDSGkZ/djxdrPFpOoo
+         vMnWD/ToyonsX1XjnqSmc8ZTHPLvVsPW1yL1uolVYg0yHpAeLCkx8EHNyz6SzA9QYVeN
+         tNYJDfRAtzvU5kBUD352jA/3tX6F2G1gt/m+/KesyWXL3YXhQ78uuprN+6iX1rvEKyvG
+         SfHA==
+X-Gm-Message-State: AOJu0YzDvUjJeAh2ZfxjlWf45eeygZ/D2ucheOctUsfVZg1BMsfXHnz7
+	MbKbZaYx1IeT4CPeccXYY7CDKAKMvYw4dV8p27B567og7+2znvut41kj
+X-Gm-Gg: AZuq6aKdzYqR0q3td3Xp6tjhfuXXfEaKvV4EgfbEbJ6tzSx1WjCVV5JhDs3U/bZZtAH
+	kop7ecsFn6CS48ywNdhuy04xbw9Fi26FAyl2/tXPYGnkbzmz9efd/0mauUymoTfiBaiHhibHHnJ
+	A0DTVPOgvAm3xBFd6jhBvTGfcWCk9WtwbrfwRdwqx7OdVpQBAmHAMPK5bVepnD1Fjrn+KgYb3OG
+	NVPzazmzvZ43KSN3tHHi1IjqnsPG4h4lm5UoggPv3lQsnG0TGeRyxsGaiIS/DYKHwV0ELn7NUCc
+	CxfyC3STIBhJgtnSj44ZXBQaRIQ7kFHGUoMHqnqHqTJMdnaJFccQuhoao+j+C8v1vr2l141Tqnh
+	BMdA0DFxrMgMaqoZqn3ZB7vW6vE9qDUvYAe6KSvjGNlwtNHNjgC2PTaVZ06Ru6miaMFPSqgxBD4
+	OdtaRlhw689J+6dLQkIKGWJJ0uYdfBj45B2T9NICY2A7JFOBWT9QYRcVMRzcL5hEYJgZ07drLsM
+	0sHRKI=
+X-Received: by 2002:a05:6512:3a82:b0:59d:e65e:b38d with SMTP id 2adb3069b0e04-59df3a33971mr1256229e87.45.1769411837087;
+        Sun, 25 Jan 2026 23:17:17 -0800 (PST)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59de491ec4esm2429495e87.67.2026.01.25.23.17.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 25 Jan 2026 23:17:16 -0800 (PST)
+Message-ID: <c694399e-4151-431f-9eec-cc006abdb968@gmail.com>
+Date: Mon, 26 Jan 2026 09:17:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] gpiolib: introduce devm_fwnode_gpiod_get_optional()
+ wrapper
+To: Michael Tretter <m.tretter@pengutronix.de>,
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: linux-gpio@vger.kernel.org, kernel@pengutronix.de,
+ Stefan Kerkmann <s.kerkmann@pengutronix.de>
+References: <20260123-gpio-devm_fwnode_gpiod_get_optional-v1-0-fb49905452a6@pengutronix.de>
+ <20260123-gpio-devm_fwnode_gpiod_get_optional-v1-1-fb49905452a6@pengutronix.de>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20260123-gpio-devm_fwnode_gpiod_get_optional-v1-1-fb49905452a6@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31047-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[linaro.org,bgdev.pl,vger.kernel.org,gmail.com];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-31048-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[pengutronix.de,kernel.org,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nekowong743@gmail.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mazziesaccount@gmail.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,YuhaodeMacBook-Pro.local:mid]
-X-Rspamd-Queue-Id: 35E4B83CFE
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[pengutronix.de:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 5F8D284C4F
 X-Rspamd-Action: no action
 
-From: Yuhao Huang <nekowong743@gmail.com>
+On 23/01/2026 11:51, Michael Tretter wrote:
+> From: Stefan Kerkmann <s.kerkmann@pengutronix.de>
+> 
+> The helper makes it easier to handle optional GPIOs and simplifies the
+> error handling code.
+> 
+> Signed-off-by: Stefan Kerkmann <s.kerkmann@pengutronix.de>
+> Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+> ---
+>   include/linux/gpio/consumer.h | 17 +++++++++++++++++
+>   1 file changed, 17 insertions(+)
+> 
+> diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+> index cafeb7a40ad1..9328b67e26c0 100644
+> --- a/include/linux/gpio/consumer.h
+> +++ b/include/linux/gpio/consumer.h
+> @@ -607,6 +607,23 @@ struct gpio_desc *devm_fwnode_gpiod_get(struct device *dev,
+>   					   flags, label);
+>   }
+>   
+> +static inline
+> +struct gpio_desc *devm_fwnode_gpiod_get_optional(struct device *dev,
+> +						 struct fwnode_handle *fwnode,
+> +						 const char *con_id,
+> +						 enum gpiod_flags flags,
+> +						 const char *label)
 
-The gpio-virtuser configfs release path uses guard(mutex) to protect
-the device structure. However, the device is freed before the guard
-cleanup runs, causing mutex_unlock() to operate on freed memory.
+I would like to see the kerneldoc for this. Other than that, it looks 
+great to me.
 
-Specifically, gpio_virtuser_device_config_group_release() destroys
-the mutex and frees the device while still inside the guard(mutex)
-scope. When the function returns, the guard cleanup invokes
-mutex_unlock(&dev->lock), resulting in a slab use-after-free.
+> +{
+> +	struct gpio_desc *desc;
+> +
+> +	desc = devm_fwnode_gpiod_get_index(dev, fwnode, con_id, 0,
+> +					   flags, label);
+> +	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT)
+> +		return NULL;
+> +
+> +	return desc;
+> +}
+> +
+>   struct acpi_gpio_params {
+>   	unsigned int crs_entry_index;
+>   	unsigned short line_index;
+> 
 
-Limit the mutex lifetime by using a scoped_guard() only around the
-activation check, so that the lock is released before mutex_destroy()
-and kfree() are called.
+Yours,
+	-- Matti
 
-Fixes: 91581c4b3f29 ("gpio: virtuser: new virtual testing driver for the GPIO API")
-Signed-off-by: Yuhao Huang <nekowong743@gmail.com>
----
-Changes in v2:
-- Fix indentation to match kernel coding style
----
- drivers/gpio/gpio-virtuser.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpio/gpio-virtuser.c b/drivers/gpio/gpio-virtuser.c
-index 37f2ce20f1ae7..098e67d70ffa5 100644
---- a/drivers/gpio/gpio-virtuser.c
-+++ b/drivers/gpio/gpio-virtuser.c
-@@ -1682,10 +1682,10 @@ static void gpio_virtuser_device_config_group_release(struct config_item *item)
- {
- 	struct gpio_virtuser_device *dev = to_gpio_virtuser_device(item);
- 
--	guard(mutex)(&dev->lock);
--
--	if (gpio_virtuser_device_is_live(dev))
--		gpio_virtuser_device_deactivate(dev);
-+	scoped_guard(mutex, &dev->lock) {
-+		if (gpio_virtuser_device_is_live(dev))
-+			gpio_virtuser_device_deactivate(dev);
-+	}
- 
- 	mutex_destroy(&dev->lock);
- 	ida_free(&gpio_virtuser_ida, dev->id);
 -- 
-2.43.0
+---
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
 
+~~ When things go utterly wrong vim users can always type :help! ~~
 
