@@ -1,169 +1,132 @@
-Return-Path: <linux-gpio+bounces-31071-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31072-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qICGD4Jwd2m8gAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31071-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 14:47:46 +0100
+	id 734QE8Jwd2mqggEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31072-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 14:48:50 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D30298911E
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 14:47:45 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id ECFF689146
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 14:48:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C05373065420
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 13:42:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E2FD63018C24
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 13:48:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76F9932825B;
-	Mon, 26 Jan 2026 13:42:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 222CA33A9F9;
+	Mon, 26 Jan 2026 13:48:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L49Nx+e5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KwstrhMi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F200433AD8E;
-	Mon, 26 Jan 2026 13:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D943133A714
+	for <linux-gpio@vger.kernel.org>; Mon, 26 Jan 2026 13:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769434963; cv=none; b=qYr3IceIDE6TEBsVo7O5uSKcOOtG/6BoJ+OTb/SpkyaYgBEcBEPh6aKZprpAc9bYJQqNipL0DKzQql1eFv6wgz5bmEhJCLiIlkGMwqvYmC3sazKa7osOenTMU+tN5xZuE7fDTiRnWH9yvxmFYd7BfpMUS+K3ilTfVKLBCNSYBk8=
+	t=1769435327; cv=none; b=gYb6V4CdroZEfZyiRoU8rKaSLSo/XtlmhJ0q9m1nOms2D5XHQ18KPIwsg3m8wiehsw+0HUir1iBH7TRnBDgGKHE0RLMdCZ7ojGYflHZ9kAy+2r9MOGz3KD93zQa6unadJgSBlqctt8e3bdVzSXLQbovyome7kPWceuYWo37/bBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769434963; c=relaxed/simple;
-	bh=GDAHXhSRQj0EBC5oOb2IAJ30dteZ5PgXCZacdEcLSNI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oMeaDT9h9W4Reg+BfmqwOv2lKdQ5HPRnSdjMxYHXNAXchrQ/5XE1wSPW4lXvzWhQ91QXgi7UJjh+ZnAPbNSheQKnsnLHTyoZC4yA6LihENC2+ywr/S29/heaB0SWQwK1r8f8kctHGFKz0/RW+ljEdq7qu+wb0zfk0mIrfvPTF6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L49Nx+e5; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769434956; x=1800970956;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=GDAHXhSRQj0EBC5oOb2IAJ30dteZ5PgXCZacdEcLSNI=;
-  b=L49Nx+e5NyfS/0jEwGPrPkixyZADK7X23pA8GT+YEXCRfxqSLYcmS7Mo
-   FCXbv8njlBdC7PKt3ayN4DxrY7+lc7dk9ul65rleCfyOR1iwH6JrzDpYq
-   oq8kGYsTujgRE3yxRFjEuqxnZ8K9CgXTppnRfM9UxC3FJlBEz+phEX97o
-   EP10L5twKoNQhrpwjwp+C5T4jzzpp6wOmONbUeBnqMzimE6+4XxqiJz9m
-   zC1MqzKqyQha1ATqXYlrjlKcAOxyFY/qWRC3kJpnI4Efl+HS/rIyCoIGD
-   NwdwXSKF3TqDW5xVxphzhi526TRtKWo/BaF/4UZAA6+epVISQ7j7SC0Lj
-   w==;
-X-CSE-ConnectionGUID: +yg/QC5hRmOArciZssG81w==
-X-CSE-MsgGUID: GGtV/8gOTge7BDKb/Kp0NQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="70514002"
-X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="70514002"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 05:42:36 -0800
-X-CSE-ConnectionGUID: Rg9mcOUNRK64OyVUSRQ39g==
-X-CSE-MsgGUID: SW7xGHSxRembUdfNx8ZO8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="207566550"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa006.fm.intel.com with ESMTP; 26 Jan 2026 05:42:33 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 70F4E95; Mon, 26 Jan 2026 14:42:32 +0100 (CET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Mika Westerberg <westeri@kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>
-Subject: [PATCH v1 1/1] gpiolib: acpi: Fix potential out-of-boundary left shift
-Date: Mon, 26 Jan 2026 14:42:26 +0100
-Message-ID: <20260126134226.3617924-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.50.1
+	s=arc-20240116; t=1769435327; c=relaxed/simple;
+	bh=YZiBoAKwxUPexmRiPzfvRsMZdbZ7xD4R5JqHHAEqDPM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Tc8+d4e7RG2lc9AC8KhquYDTcPPXPkZBwXnKn2VdR94EoWPmYDnqd3LxvWaWbqIfRjwcF5205E2Eq6kH+0dM6b9VO2ZsLuzW6FhWZEK6ZqqkxUXdhMJ8Q3nhsFv+CObapE1mWVVYRNskYPb8YUczk+hg21WmmKRBP/WVEJp8bGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KwstrhMi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81D01C116C6
+	for <linux-gpio@vger.kernel.org>; Mon, 26 Jan 2026 13:48:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769435327;
+	bh=YZiBoAKwxUPexmRiPzfvRsMZdbZ7xD4R5JqHHAEqDPM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KwstrhMiJXG/Z433FNjrW3OybV+DMaz9UuAVHZRhhTnCMeEAr/fFY0oj++gSHkC6g
+	 hwKnOVmCfzLqILJqDDUG+pRBg2u1RMPRYwkVjDOPKKj7yOxRcrN1muqEYX7Juv/s2s
+	 8IjrW5LtMPcpjtjGo3Cl8ZpWSEx7DyuQPkCgtsayRdDBXviXta3uhCAan/EO5r1kPN
+	 20yKvZdpPDiy8SVwRqp/YfozR6DDOTGkIH14/cdj/Xixwxn7qRyIbAhqw0gfbR0PhS
+	 bCnmXanDqA0SdlPMGWd7YB9gbbhy75tMlCJ94FYGMvCw8lVHiuNXTtNfndjOfAxAUC
+	 zOvuPKZqKUP6Q==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-59dcd9b89ecso5436973e87.1
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Jan 2026 05:48:47 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWzZtkm89akRYCErSc6jme5wgqnf8D9xgO2JHJMAReKLWbg6FLydpO7CVB0teM4NHylYOZEth7ai9MJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzw9vLklrF9xZD1YSUrtAByomHDGJ2OXAFtGqR/VrKOhDyWzv9m
+	kX7Vr8oc4co7HSQKm20U02ExTMZeG/r8yQ6F6axjVcHOtyRf3Nyw/1b7jzJ6QVLpEc2SzM1Z8q2
+	7aT+0FbVCpeVmZIsx5uYYrppupnciNkJpfnavIzMZ5A==
+X-Received: by 2002:a05:6512:224e:b0:59d:db30:8848 with SMTP id
+ 2adb3069b0e04-59df3608e97mr1612684e87.16.1769435326203; Mon, 26 Jan 2026
+ 05:48:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <bddc0469f25843ca5ae0cf578ab3671435ae98a7.1769429546.git.robin.murphy@arm.com>
+In-Reply-To: <bddc0469f25843ca5ae0cf578ab3671435ae98a7.1769429546.git.robin.murphy@arm.com>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Mon, 26 Jan 2026 14:48:33 +0100
+X-Gmail-Original-Message-ID: <CAMRc=MfQCrhgv7DcWrr3TWe8DtpZSRrkxb5KDHsGq1jPjUAHww@mail.gmail.com>
+X-Gm-Features: AZwV_QjNZHR2bvqedgSwwPYoVFPn0kS27NdFWXw0akxEKyqmIJSBPYeJs72yKbU
+Message-ID: <CAMRc=MfQCrhgv7DcWrr3TWe8DtpZSRrkxb5KDHsGq1jPjUAHww@mail.gmail.com>
+Subject: Re: [PATCH] gpio/rockchip: Stop calling pinctrl for set_direction
+To: Robin Murphy <robin.murphy@arm.com>, linusw@kernel.org
+Cc: heiko@sntech.de, sebastian.reichel@collabora.com, m.szyprowski@samsung.com, 
+	linux-rockchip@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31071-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[6];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31072-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[intel.com:+];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,intel.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.intel.com:mid]
-X-Rspamd-Queue-Id: D30298911E
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: ECFF689146
 X-Rspamd-Action: no action
 
-GPIO Address Space handler gets a pointer to the in or out value.
-This value is supposed to be at least 64-bit, but it's not limited
-to be exactly 64-bit. When ACPI tables are being parsed, for
-the bigger Connection():s ACPICA creates a Buffer instead of regular
-Integer object. The Buffer exists as long as Namespace holds
-the certain Connection(). Hence we can access the necessary bits
-without worrying. On the other hand, the left shift used in the
-code is limited by 31 (on 32-bit platforms) and otherwise considered
-to be Undefined Behaviour. Also the code uses only the first 64-bit
-address for the value, and anything bigger than	63 will be also
-subject to UB. Fix all this by modifying the code to correctly set or
-clear the respective bit in the bitmap constructed of 64-bit values.
+On Mon, Jan 26, 2026 at 1:12=E2=80=AFPM Robin Murphy <robin.murphy@arm.com>=
+ wrote:
+>
+> Marking the whole controller as sleeping due to the pinctrl calls in the
+> .direction_{input,output} callbacks has the unfortunate side effect that
+> legitimate invocations of .get and .set, which cannot themselves sleep,
+> in atomic context now spew WARN()s from gpiolib.
+>
+> However, as Heiko points out, the driver doing this is a bit silly to
+> begin with, as the pinctrl .gpio_set_direction hook doesn't even care
+> about the direction, the hook is only used to claim the mux. And sure
+> enough, the .gpio_request_enable hook exists to serve this very purpose,
+> so switch to that and remove the problematic business entirely.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 20cf2aed89ac ("gpio: rockchip: mark the GPIO controller as sleepin=
+g")
+> Suggested-by: Heiko Stuebner <heiko@sntech.de>
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib-acpi-core.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+Linus,
 
-diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
-index 83dd227dbbec..da0ab749b4dc 100644
---- a/drivers/gpio/gpiolib-acpi-core.c
-+++ b/drivers/gpio/gpiolib-acpi-core.c
-@@ -1104,6 +1104,7 @@ acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
- 		unsigned int pin = agpio->pin_table[i];
- 		struct acpi_gpio_connection *conn;
- 		struct gpio_desc *desc;
-+		u16 vala, valo;
- 		bool found;
- 
- 		mutex_lock(&achip->conn_lock);
-@@ -1158,10 +1159,17 @@ acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
- 
- 		mutex_unlock(&achip->conn_lock);
- 
--		if (function == ACPI_WRITE)
--			gpiod_set_raw_value_cansleep(desc, !!(*value & BIT(i)));
--		else
--			*value |= (u64)gpiod_get_raw_value_cansleep(desc) << i;
-+		vala = i / 64;
-+		valo = i % 64;
-+
-+		if (function == ACPI_WRITE) {
-+			gpiod_set_raw_value_cansleep(desc, value[vala] & BIT_ULL(valo));
-+		} else {
-+			if (gpiod_get_raw_value_cansleep(desc))
-+				value[vala] |= BIT_ULL(valo);
-+			else
-+				value[vala] &= ~BIT_ULL(valo);
-+		}
- 	}
- 
- out:
--- 
-2.50.1
+With your Ack I can queue this for v6.19-rc8.
 
+Bart
 
