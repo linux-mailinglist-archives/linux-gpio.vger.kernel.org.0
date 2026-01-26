@@ -1,69 +1,56 @@
-Return-Path: <linux-gpio+bounces-31063-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31064-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wFQzFyhBd2mMdQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31063-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 11:25:44 +0100
+	id wEbhK4BCd2mMdQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31064-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 11:31:28 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1980286DA1
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 11:25:44 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AA5986F72
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 11:31:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5DB7B302AF26
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 10:23:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 39B79302C936
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 10:29:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 644083161B5;
-	Mon, 26 Jan 2026 10:22:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94773330329;
+	Mon, 26 Jan 2026 10:29:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iDPdyFDV"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="jHX8+Wl7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833CE329E47;
-	Mon, 26 Jan 2026 10:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA01329E5C
+	for <linux-gpio@vger.kernel.org>; Mon, 26 Jan 2026 10:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769422979; cv=none; b=nBsPK87EuurebvYVO8aWTaLAPsOLEkpHlV7MjKQBqZUKfjWch6Y5CDfA+WX50O72E/pw131dg55qwKu/RpnHpVFjEsyycOUxJM6R1sXj+c1c9j9ml922uY1V86F+hIviOy/2K8BKO0ZFkwQzD6ConlOPsyJYPA0ARjL5y7VfiUg=
+	t=1769423372; cv=none; b=M3+zYRXBFXaQgyp3npa7gR5ymbCRSHU64BcnUydqFKXlUU+3LKqzy/nAXCbM11EW3BYXqETZot3eKwXT++D/S89VwoOi7eEusoU3Bl1TSy9lJKBIpyBq7//eMa39aNcAB3wY80fI2nArLgvymMC9PXoA/nicS6Z3zxOmSIl70Rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769422979; c=relaxed/simple;
-	bh=YmwLlwxCohpODw33KGlJTwGnb4/sXa4Sj0U7Xi4pE+8=;
+	s=arc-20240116; t=1769423372; c=relaxed/simple;
+	bh=Jh9DbPdyhqX1cvGDcyHJMZub+1uUsIMf6B/WAv++Rbo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NENhl7oAXaoJAsBwu0pei0fTe0YpuEBwb/xMfgE9oAjCmJ1SItG3EfdLN3KK9l9t+Mjdl3L13OylYhosEpe/HU8jhMTjJA1lbuA+rctO0w8OKpgmOnO2h/WzHLvMNOfpMf/m/qkyjTgl6OaZ0ZTXPumlDQWjrvg+H4TGnCkj9/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iDPdyFDV; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769422976; x=1800958976;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YmwLlwxCohpODw33KGlJTwGnb4/sXa4Sj0U7Xi4pE+8=;
-  b=iDPdyFDV8H+08iL6MqCowQusdUI9MKcYUUvplLDJO1euDlJA/6W29iBV
-   96hgyrtkZYMFB3olMbbV8KMh7gnz/PFWCH3cTlRqRZUV6WPVu7Vp5JyRb
-   QsF4yJOmaT4+1rTPc/BTBwPKz0CsK00SEhm0UfpmMy/7yxCWezR3WkFix
-   rjwzT30tB65flLos6qtOfOEG+bD1HfoYUoya7u49lEw/uI37eBEWZxhKJ
-   /scOqf1EAUaWvHomcNjLbkUQ9jjRfyCsRfI6YO8uGVbIsys1vSjnktkXF
-   jhgf1jZH6BdxrlX1ybyGtP5fyJOzHBuZyPVBqkx7Vd8h1dVnzOSvcA7bs
-   w==;
-X-CSE-ConnectionGUID: QdXfEyWQQW6w/3X2dLgxDA==
-X-CSE-MsgGUID: GqbN5pCRTI2KCSYHFeWUOg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11682"; a="70313146"
-X-IronPort-AV: E=Sophos;i="6.21,254,1763452800"; 
-   d="scan'208";a="70313146"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 02:22:56 -0800
-X-CSE-ConnectionGUID: dluJNQIKS+uO/wx/ncC5bw==
-X-CSE-MsgGUID: UbxLvLiVR+28CR/E2fga4A==
-X-ExtLoop1: 1
-Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.122])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 02:22:47 -0800
-Date: Mon, 26 Jan 2026 12:22:45 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Wilken Gottwalt <wilken.gottwalt@posteo.net>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-renesas-soc@vger.kernel.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=KMcJIG9Q4dAg5mX0uQkJI975GkBsHqCSXxIN7gt2Om+ceUwLsmsj6XS8eIZp1iFM+1gGYH8bOh0Tgd9rQCA0B3kN3hw5VeMtKiULDzc+G7Lc7TrUwMjscxBCnqEA1AtwsXa1OwBBlllP0MhBbj/maxiTbBAmxthCyq8B3yOcHpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=jHX8+Wl7; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=F2bF
+	S/uMFLgtEVC0YCnMXZC86wb3SDlDFVJk5gHDbHs=; b=jHX8+Wl7CjOEdsajEoyd
+	YLJSni1KMKFnTnF6HUkKy4i7hdARKm53juZzr7ZafJR47rtHoNyWJaaKdHJ/2sso
+	LqYQH5W3d0RaRaQ8Q8J1G9u4nNTashMNVexC1gLUhUwVMKjdwdx0vBnOcNj2BbqO
+	OzdLxlpS3qYwey2EMbughKgdVpyf2lbwjuTyiOgPikJmtfRlj0LYKeoBgjXrSvoV
+	mlK/IzdLZzcuzrQK6IypnN/vpPwAKgfyOgmhmg2cICJBgE71R+rc1lx8MlV6l5v8
+	F39Y7wqyE8Wvnw4+qlOC0DvLTWsXo+ZALNH34HFE5YzYV8NWVP6e4yVnRLb2de1H
+	6g==
+Received: (qmail 2710669 invoked from network); 26 Jan 2026 11:29:27 +0100
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 26 Jan 2026 11:29:27 +0100
+X-UD-Smtp-Session: l3s3148p1@tFg7+0dJFMUujnvz
+Date: Mon, 26 Jan 2026 11:29:26 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: linux-renesas-soc@vger.kernel.org,
 	Alexandre Torgue <alexandre.torgue@foss.st.com>,
 	Andy Shevchenko <andy@kernel.org>,
 	Antonio Borneo <antonio.borneo@foss.st.com>,
@@ -88,7 +75,7 @@ Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-sunxi@lists.linux.dev, Mark Brown <broonie@kernel.org>,
 	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>,
 	Orson Zhai <orsonzhai@gmail.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
@@ -96,13 +83,15 @@ Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Srinivas Kandagatla <srini@kernel.org>,
 	Thomas Gleixner <tglx@kernel.org>, Waiman Long <longman@redhat.com>,
+	Wilken Gottwalt <wilken.gottwalt@posteo.net>,
 	Will Deacon <will@kernel.org>
 Subject: Re: [RFC PATCH 0/4] hwspinlock: refactor headers into public
  provider/consumer pair
-Message-ID: <aXdAdZRBH7ZhZtju@smile.fi.intel.com>
+Message-ID: <aXdCBu6kzdw1NWay@ninjato>
 References: <20260125184654.17843-6-wsa+renesas@sang-engineering.com>
  <aXc7DxsqiCGdfzxi@smile.fi.intel.com>
- <20260126111440.67394323@posteo.net>
+ <aXc-Zxw05XQLb1Dy@ninjato>
+ <aXdAB2bLTy6u8G8c@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -111,106 +100,49 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260126111440.67394323@posteo.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <aXdAB2bLTy6u8G8c@smile.fi.intel.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[sang-engineering.com:s=k1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[sang-engineering.com,vger.kernel.org,foss.st.com,kernel.org,arndb.de,linux.alibaba.com,gmail.com,baylibre.com,linuxfoundation.org,redhat.com,lwn.net,lists.infradead.org,st-md-mailman.stormreply.com,lists.linux.dev,analog.com,infradead.org,sholland.org];
-	TAGGED_FROM(0.00)[bounces-31063-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	DMARC_NA(0.00)[sang-engineering.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31064-lists,linux-gpio=lfdr.de,renesas];
 	RCPT_COUNT_TWELVE(0.00)[44];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[sang-engineering.com:+];
 	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[smile.fi.intel.com:mid,intel.com:email,intel.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 1980286DA1
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[vger.kernel.org,foss.st.com,kernel.org,arndb.de,linux.alibaba.com,gmail.com,baylibre.com,linuxfoundation.org,redhat.com,lwn.net,lists.infradead.org,st-md-mailman.stormreply.com,lists.linux.dev,analog.com,infradead.org,sholland.org,posteo.net];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sang-engineering.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 5AA5986F72
 X-Rspamd-Action: no action
 
-On Mon, Jan 26, 2026 at 10:14:46AM +0000, Wilken Gottwalt wrote:
-> On Mon, 26 Jan 2026 11:59:43 +0200
-> Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
+
+> > Providers need it, especially the 'priv' member. Consumers won't see it.
 > 
-> > On Sun, Jan 25, 2026 at 07:46:51PM +0100, Wolfram Sang wrote:
-> > > TLDR: I want to create a hwspinlock provider outside of the hwspinlock
-> > > directory. So, I refactored the headers into a provider/consumer pair.
-> > > Which seems to me like a reasonable seperation anyhow. No functional
-> > > changes. My build tests went fine and buildbots are happy, too.
-> > > 
-> > > Longer explanation:
-> > > 
-> > > There is a device (MFIS) in newer Renesas SoCs which combines various
-> > > things like hwspinlocks, mailboxes and other stuff. Sadly, these are not
-> > > strictly separated. Registers are kind of mixed and its register
-> > > unprotection scheme will need one of its own locks. I tried various
-> > > paths to handle this device (MFD, auxiliary bus) but I concluded that
-> > > the sub-device dependencies give enough reasons for a single driver in
-> > > drivers/soc/. So, this series will allow me to instantiate a hwspinlock
-> > > provider from the other directory.
-> > > 
-> > > Patches 1+2 do the actual refactoring with a fallback being in place. I
-> > > used '-B' with git-format-patch in this RFC, so the actual changes are
-> > > more visible when the headers are moved.
-> > > 
-> > > Patch 3 converts all the users. There are not many. We could try to get
-> > > all the acks for this single patch. Or I can break it into single
-> > > patches and send them to subsystems. I don't mind.
-> > > 
-> > > Patch 4 simply removes the fallback.
-> > > 
-> > > Looking forward to comments on this approach. If the hwspinlock
-> > > maintainers like it as is, I would kindly propose to apply patches 1+2
-> > > after 7.0-rc1 comes out. This might sound a bit hasty, but a) I want to
-> > > avoid chasing a moving target and b) this would remove one dependency of
-> > > the hwspinlock driver I originally intend to upstream, of course.
-> > > 
-> > > I would take care of patches 3+4 as needed.
-> > > 
-> > > A branch can be found here:
-> > > 
-> > > git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/hwspinlock/refactor-includes
-> > > 
-> > > Patches are based on linux-next as of 2026-01-21.
-> > > 
-> > > Opinions?
-> > 
-> > I don't like the idea of sharing internal stuff. Why would we need to have
-> > a struct hwspinlock to be visible?
-> > 
+> But can't we make it opaque?
 > 
-> I see what Wolfram wants to achieve. It is the same issue I encounterd while I
-> wrote the sun6i hwspinlock driver. Currently it is impossible to write external
-> (out-of-kernel-tree) drivers because of internal structures. And it was a pain
-> in the ass for testing purposes. I prefer to be able to write external hwspinlock
-> drivers.
+> We may have getters and setters for the priv member...
 
-I am not against _that_. I'm against the implementation. At least I can't see
-the impediment in making that struct opaque. Maybe I missed something. That's
-why I'm asking why we need it to be visible to the entire world.
+I think we could do that.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+Two drivers use the bank member, but only for the device
+(lock->bank->dev). That can probably be refactored away, I'd guess.
 
 
