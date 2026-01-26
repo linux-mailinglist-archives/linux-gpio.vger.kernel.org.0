@@ -1,85 +1,83 @@
-Return-Path: <linux-gpio+bounces-31065-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31066-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aB4nOf1Dd2mMdQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31065-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 11:37:49 +0100
+	id kJoLFeVLd2msdwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31066-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 12:11:33 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CF308719D
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 11:37:49 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB84F8784F
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 12:11:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id EA73830054EF
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 10:37:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5713D3012C69
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 11:11:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5751F331209;
-	Mon, 26 Jan 2026 10:37:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB56B3321A5;
+	Mon, 26 Jan 2026 11:11:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXK02Q4B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PNAtPeSD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABA7330B07
-	for <linux-gpio@vger.kernel.org>; Mon, 26 Jan 2026 10:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521BA238C15
+	for <linux-gpio@vger.kernel.org>; Mon, 26 Jan 2026 11:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769423867; cv=none; b=b83aJjlH/O5LWs4v74u38TxrmuXVeUg/GWNdJrQVYTf2vOhBpQK4CP9LTs/kyuMj3u0gUetrvj18EL7Sc+EUOjt3ZcpVokkEAEwURII97gBze6xrzlgIkvNuD7cVVuuOkSjX6gTTiratrGFImaJJBLkMQPJ2w3Acgbqw7/3N0wk=
+	t=1769425878; cv=none; b=gqA6BMOQ7xsVdC3Qo6cgNWrIARdEVTOt6aQwQpFyc+nTP3H2bnm/9y7YcOGapbJ1PL5+1v/m1ktdIeLhaKZesOaNMZdMLWMCeAWF9USrSDqYZYOYSUzjCCDWJnBJ/21JBOme3XurcCSI2TUWt8HHJEGZraTcopvuhZHsgE9j8yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769423867; c=relaxed/simple;
-	bh=BJhb38isP/d1CZw93ApA2/iPTUfPcFPvoFHIZqdYKWc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bjgLHB6N74xSGkea71J2LjzxVotW8y7Ya9EVSdRuSBJwR0na8dUwPAZhJjWqSNFTphtJ33yYVkhUq3A/jFUKRkQQasqOfo8ZrFHicS7lcYa56lzFHlBRdlKPoaXpanuTrvN5KvBX50KWETqL7Og2oxy2+cFxBW3noGGiVh7sGic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XXK02Q4B; arc=none smtp.client-ip=209.85.128.42
+	s=arc-20240116; t=1769425878; c=relaxed/simple;
+	bh=6FB0arrczo1kAehTkyA/0p8mh0g59QVZvIExUPdL92c=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=u9FolSiAF/X9Qkjmkr7rUhUhhAuzSXBBX0OCyuDoK7KwFO2dcs+Pu46PJWsWI900ljn8oMGTgQXZs4kVPIJY7vMDtjQHWAckZmbfXTpC0VvQM14mC7Snfs7rUrMOa7q6AfrItMoUV/IlGSqvI7lGAVC0yxfULECPa1RnQdGkJXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PNAtPeSD; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-47fedb7c68dso43388775e9.2
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Jan 2026 02:37:43 -0800 (PST)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-47ee2715254so22209595e9.3
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Jan 2026 03:11:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769423862; x=1770028662; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xkux+EitG9JzPydAe2E8YwQFUS9lBx4JpjL6QxsZSNw=;
-        b=XXK02Q4BWaDEWlh7gRJ2nuZM4fsZ6uiT8AyZpv57Bo3gxExOza1aO5ta8GPokNf377
-         7vozkCfhIKIt4ysJPf+MJzYJjw9xhnrvXKQ5eVGP0xs4DvJB4T1TanBJufLr1FwxJabZ
-         wuGh6+2Q8hhwnbinR2diR3sCOsTx0+tDwfZ5iJDxSpXGw2RF6Wf1BRNpaf7z5uXkeiP9
-         AhrMnrIt6AsvNDHMyP7ZLv4X4reXexiX9/CSf4jobo665M6y4OzNchqDsSM0YGVxGdpd
-         7SkvB8DojII7MveE8/IMSZ6WQFcdwY8Rf6XeTj0RlEZD/1B2yMPIgw2AH7Sg5CAhd1wF
-         vt9w==
+        d=gmail.com; s=20230601; t=1769425874; x=1770030674; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=IMfQPmWBkGs6B3W9EZ66X9JXLz5zHb4VAsfmHmE9rV8=;
+        b=PNAtPeSD3LxqN+KPR4XS+dxBGmUNUhwyygSZNKB/UayMBt244cjLICKP2ES3F383Zq
+         wzzgLZwwqVhlh6ihQSomOdK+QhK8quVYLCduLdG9qZ7mgta5IuS9Np3R5MTmnRBcPRhu
+         laKTSrjWqax/pxLpLycvCm9ztwlYIbIWfUgbN8IsWjUBgWLN//dv2HVFNBdSI4iu9IdY
+         /4mK4LGRHG3O7XcP4N8NUhIRHmLaCjRyARXihabDHSu8p3Y+jsynKXMPWAIUwmqWJCMw
+         +o41JKcF8Uq5hgiUxRXPAW4QVOV//cbQTf9DYrYjuK2vLY3F9TQWYun4MgSV/YX8YFJ3
+         lwRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769423862; x=1770028662;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xkux+EitG9JzPydAe2E8YwQFUS9lBx4JpjL6QxsZSNw=;
-        b=U7vqgUM8aavfrL36vm3hN4aiwjJGGbdiF55N4frEaOSUvjuj+XL3CM4b2ttCUs0yH8
-         bOd9ILMNXQY+ewUoCaY3qpluUW937X4en1Nj/NxfgA7ZYFXcgieD02ewgZigbGb6Uivu
-         snOs2OCQfgOxjW6pRGeonoTLNmq1eecex8tQuv1mqCtpZW7fDxsP5KyMhPOIpowRMdJW
-         quGEJeBeea93DlnLmZS8jT9YFVhPy6zpChV7dsQ6xHGrvNU/9wZCk/pb57NR0Th4C2Jk
-         l63If2K8V2lFxm3wrmAlGi6d5ASyQugPRt4HWLR7C9G6eig2zK9VDnbzs4+Bf3HEufwC
-         51pg==
-X-Forwarded-Encrypted: i=1; AJvYcCVskLprZjhCVzR4HVJXOLJjlqG3pF/vRF70kVLpdPoGP/XN5Ne7id21CepQc1k5G9u9Pvg9YZXTsD4N@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYcz5l4QYxNiSk5UbG0h1S5gvkjNXVD9W7Jno0CdBMHoNI2lxN
-	4oMjkhe6ZfbTHXWjGidBgPWK9+4eQ1PyZmcc/0CxqR6tKAWgMZCVF+Z7
-X-Gm-Gg: AZuq6aL9QFIkHyR+7NG3IrBOKWRPbTbXIJZP8VrFvz7Y6F4rL63Xmau+lZI1ZUBqb+t
-	4EhUUeI4GjF4MEbycPtqh1BKCqofsV1PzVwcuPM+05LTrYGOc0/uKEyu8Eeu3389aXwJDJ4g5xJ
-	0/pKl6r6C/0cuApqJTYCohy+NISqPl+VayadIhgOjEI7ZQmmvcMmD11I+EPsh9Kg2WRKGrK4uUZ
-	z1Qt8iXrRZd2Z/5NCa1AINaP6HwC0t/hLHLCFIj2VARgcr8vIkKCxikYW095PH1XFum79xrDI4n
-	uVd+9DB/eBj5Z1hUiPdLyZZRx+9uiDmuiv/udlFFhx70McN9IWjF6QlNV/LOA+vKxkBDSZ9mv6f
-	qc3IKHgrn18MsM5UzINBZ3Dt8WmAy/3vJkVuVuk4gFwFEvTw5lG1e9je94kPMFwV3H15LmJSvdI
-	byhU39pS2DZO3uymTKKtFwy6/o76fq/qvyzAFwzFLK8mMBvGCU7UKanawIx7+CpwZPf28wHENZl
-	DoyVLc5URl/KGDwU3bXUX74vXTFB8qTDKV7gGAoTrq2a3JLVWQnMGPFryC+
-X-Received: by 2002:a05:600c:35c4:b0:47e:e9c9:23bc with SMTP id 5b1f17b1804b1-4805cf673f5mr69370895e9.30.1769423862239;
-        Mon, 26 Jan 2026 02:37:42 -0800 (PST)
-Received: from ?IPV6:2a02:8440:260e:5ad0:867f:b0c6:e80c:5b42? (2a02-8440-260e-5ad0-867f-b0c6-e80c-5b42.rev.sfr.net. [2a02:8440:260e:5ad0:867f:b0c6:e80c:5b42])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4804d6160d2sm104298055e9.2.2026.01.26.02.37.40
+        d=1e100.net; s=20230601; t=1769425874; x=1770030674;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IMfQPmWBkGs6B3W9EZ66X9JXLz5zHb4VAsfmHmE9rV8=;
+        b=q0KkLgoxvHov0vNpHuH+BJnWNEY13i4++3endm3GqFTaYyx8rGCEKM77YS9Mv9BkXK
+         A6YRih2SU4LCOYVmwUp1wN3b/DQejtsYCFx6JrjTv4EjZ8MbtOQXrIvzRY8jSFcMRcH4
+         eOq9DB4iN9/EGsYxNMlUo8pYkNClzQcHX2v6rzNZhSlfHl5e5BZfjfkGWRZ2TsAy4X/Z
+         sU8sG+FZ5H1H7ISJvY8rxG7VysCkGScYMdm7e84P5auUpkbEIvU4xgvGZ/NMgz04B4Uh
+         fme24TapaBsU3gswXR01U45f1TjJpQ70c9/IW0UBStWWghuIPuxGZnE2bhNzuz64mfSd
+         Y9hw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLAFI08YpFRi2aklGgKAXD5lU3DGPrZHt+ye3gXmC0TIGW1WMsYbDy0xFmhaslDpbhVLuIkv9EVIda@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfCfR/ASzF0crhrAsP1JE7miu2KwAYHOYucjACNXLVf0xRuYKw
+	oz5XhwftG3lnV1nCW6mLFSyBLv295oSgPV9NyIk+mFImFaBhHIpbJO3G
+X-Gm-Gg: AZuq6aKp0TU1GFcAryg6djzplRceScbP8kFvKEwK2qna+OgZ/16Im9e+3Duop7X5YM+
+	8FqQGJFRACr7HmTg/nd+ADsG2qqq8BOYmPM+JXvWvEE48PM2wPkfshtHaRgEgPneoGkwDJqNVbQ
+	2GjiIpreQtbst91PoEGNYEXCYZtHfHJcfyQfJwuAZ/1+Ez4vJatvNMfk2+AMssN5wSm84foGMnU
+	GLjIkveWU5Au5Bj8qE7fu6xhSKdPdn9T1lokx1yrhqR/DI/kh9ax8f0+jfnfY8lX1qJ0GUzluPv
+	h7jHV7vDMHgVXG6VQBAcI2zZxk7+USnA6PW3JIDZmxSeJyCm0/RXKnBCNZkal9drounPGMoOp8S
+	+rCxcF9SvHXlJu16JprATz41bVFWrhUW9r2ZGOZQwxvXw1pTMZ3r57TjuxfqApVJ+PdwNToSves
+	jFXABeZxkX7oBIyrQb21I6Sc2cdAzh
+X-Received: by 2002:a05:600c:8706:b0:465:a51d:d4 with SMTP id 5b1f17b1804b1-4805ce3ffdemr71874835e9.6.1769425873482;
+        Mon, 26 Jan 2026 03:11:13 -0800 (PST)
+Received: from [192.168.0.100] ([188.27.128.12])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435b1f742d6sm29305746f8f.30.2026.01.26.03.11.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Jan 2026 02:37:41 -0800 (PST)
-Message-ID: <ed300810-14c9-40de-b50b-f60cd4241bb7@gmail.com>
-Date: Mon, 26 Jan 2026 11:37:40 +0100
+        Mon, 26 Jan 2026 03:11:13 -0800 (PST)
+Message-ID: <edd6a420-9958-43a2-a761-bed5ec547591@gmail.com>
+Date: Mon, 26 Jan 2026 13:10:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -87,126 +85,345 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 12/12] pinctrl: stm32: add firewall checks before
- probing the HDP driver
-To: Gatien Chevallier <gatien.chevallier@foss.st.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>, Leo Yan <leo.yan@linux.dev>,
- Linus Walleij <linusw@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, jens.wiklander@linaro.org
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-References: <20260123-debug_bus-v5-0-90b670844241@foss.st.com>
- <20260123-debug_bus-v5-12-90b670844241@foss.st.com>
-Content-Language: en-US, fr
-From: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <legoffic.clement@gmail.com>
-In-Reply-To: <20260123-debug_bus-v5-12-90b670844241@foss.st.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Cosmin Tanislav <demonsingur@gmail.com>
+Subject: Re: [PATCH RESEND v8 17/21] media: i2c: maxim-serdes: add MAX9296A
+ driver
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Ceclan Dumitru <mitrutzceclan@gmail.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, dumitru.ceclan@analog.com,
+ Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Julien Massot <julien.massot@collabora.com>, Rob Herring <robh@kernel.org>,
+ =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-staging@lists.linux.dev
+References: <20251208-gmsl2-3_serdes-v8-0-7b8d457e2e04@analog.com>
+ <20251208-gmsl2-3_serdes-v8-17-7b8d457e2e04@analog.com>
+ <aW-EXiiKFLrXQeJG@kekkonen.localdomain>
+ <47ce1e14-5443-4d3e-a2c9-7d5be47012c9@gmail.com>
+ <20260126100153.GB593812@killaraus>
+Content-Language: en-US
+In-Reply-To: <20260126100153.GB593812@killaraus>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31065-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[foss.st.com,arm.com,linaro.org,kernel.org,linux.dev,gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
+	TAGGED_FROM(0.00)[bounces-31066-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FREEMAIL_TO(0.00)[ideasonboard.com,gmail.com];
 	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[legofficclement@gmail.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[demonsingur@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 8CF308719D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: DB84F8784F
 X-Rspamd-Action: no action
 
-Hi Gatien,
+Hi Laurent, Sakari. As this is code written by me I can provide some
+clarifications.
 
-Thank you for the patch
+On 1/26/26 12:01 PM, Laurent Pinchart wrote:
+> On Mon, Jan 26, 2026 at 11:55:47AM +0200, Ceclan Dumitru wrote:
+>>
+>>
+>> On 1/20/26 3:34 PM, Sakari Ailus wrote:
+>>> Hi Dumitru,
+>>>
+>>> On Mon, Dec 08, 2025 at 04:13:09PM +0200, Dumitru Ceclan via B4 Relay wrote:
+>>>> +	*ops = max9296a_common_ops;
+>>>> +
+>>>> +	ops->versions = priv->info->ops->versions;
+>>>> +	ops->modes = priv->info->ops->modes;
+>>>> +	ops->needs_single_link_version = priv->info->ops->needs_single_link_version;
+>>>> +	ops->needs_unique_stream_id = priv->info->ops->needs_unique_stream_id;
+>>>> +	ops->fix_tx_ids = priv->info->ops->fix_tx_ids;
+>>>> +	ops->num_phys = priv->info->ops->num_phys;
+>>>> +	ops->num_pipes = priv->info->ops->num_pipes;
+>>>> +	ops->num_links = priv->info->ops->num_links;
+>>>> +	ops->phys_configs = priv->info->ops->phys_configs;
+>>>> +	ops->set_pipe_enable = priv->info->ops->set_pipe_enable;
+>>>> +	ops->set_pipe_stream_id = priv->info->ops->set_pipe_stream_id;
+>>>> +	ops->set_pipe_tunnel_phy = priv->info->ops->set_pipe_tunnel_phy;
+>>>> +	ops->set_pipe_tunnel_enable = priv->info->ops->set_pipe_tunnel_enable;
+>>>> +	ops->use_atr = priv->info->ops->use_atr;
+>>>> +	ops->tpg_mode = priv->info->ops->tpg_mode;
+>>>
+>>> What's the reason for doing these assignments and a copy of the memory? Why
+>>> not to just keep a pointer to the struct memory instead? I think there's
+>>> another case of the same.
 
-On 1/23/26 11:39 AM, Gatien Chevallier wrote:
-> Because the HDP peripheral both depends on debug and firewall
-> configuration, when CONFIG_STM32_FIREWALL is present, use the
-> stm32 firewall framework to be able to check these configuration against
-> the relevant controllers.
-> 
-> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
-> ---
->   drivers/pinctrl/stm32/pinctrl-stm32-hdp.c | 14 ++++++++++++++
->   1 file changed, 14 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32-hdp.c b/drivers/pinctrl/stm32/pinctrl-stm32-hdp.c
-> index 0b1dff01e04c..cce477e86ef9 100644
-> --- a/drivers/pinctrl/stm32/pinctrl-stm32-hdp.c
-> +++ b/drivers/pinctrl/stm32/pinctrl-stm32-hdp.c
-> @@ -4,6 +4,7 @@
->    * Author: Clément Le Goffic <clement.legoffic@foss.st.com> for STMicroelectronics.
->    */
->   #include <linux/bits.h>
-> +#include <linux/bus/stm32_firewall_device.h>
->   #include <linux/clk.h>
->   #include <linux/gpio/driver.h>
->   #include <linux/gpio/generic.h>
-> @@ -46,9 +47,11 @@ struct stm32_hdp {
->   	void __iomem *base;
->   	struct clk *clk;
->   	struct pinctrl_dev *pctl_dev;
-> +	struct stm32_firewall *firewall;
->   	struct gpio_generic_chip gpio_chip;
->   	u32 mux_conf;
->   	u32 gposet_conf;
-> +	int nb_firewall_entries;
->   	const char * const *func_name;
->   };
->   
-> @@ -615,6 +618,13 @@ static int stm32_hdp_probe(struct platform_device *pdev)
->   		return -ENOMEM;
->   	hdp->dev = dev;
->   
-> +	if (IS_ENABLED(CONFIG_STM32_FIREWALL)) {
-> +		err = stm32_firewall_get_grant_all_access(dev, &hdp->firewall,
-> +							  &hdp->nb_firewall_entries);
-> +		if (err)
-> +			return err;
-> +	}
-> +
->   	platform_set_drvdata(pdev, hdp);
->   
->   	hdp->base = devm_platform_ioremap_resource(pdev, 0);
-> @@ -670,8 +680,12 @@ static int stm32_hdp_probe(struct platform_device *pdev)
->   static void stm32_hdp_remove(struct platform_device *pdev)
->   {
->   	struct stm32_hdp *hdp = platform_get_drvdata(pdev);
-> +	int i;
->   
->   	writel_relaxed(HDP_CTRL_DISABLE, hdp->base + HDP_CTRL);
-> +
-> +	for (i = 0; i < hdp->nb_firewall_entries; i++)
-> +		stm32_firewall_release_access(&hdp->firewall[i]);
->   }
->   
->   static int stm32_hdp_suspend(struct device *dev)
-> 
+Copy of the memory is to assign the common parts of the ops, while the
+assignments add the ops that need to be chip-specific on top.
 
-Reviewed-by: Clément Le Goffic <legoffic.clement@gmail.com>
+>>>
+>> Would this be alright:
+>> #define MAX9296A_COMMON_OPS					\
+>>
+>> 	.num_remaps_per_pipe = 16,				\
+>>
+>> 	.tpg_entries = { ... },					\
+>>
+>> 	.init = max9296a_init,					\
+>>
+>> 	.set_enable = max9296a_set_enable,			\
+>>
+>>
+>> static const struct max_des_ops max9296a_ops = {
+>>
+>> 	MAX9296A_COMMON_OPS,
+>>
+>> 	.versions = BIT(MAX_SERDES_GMSL_2_3GBPS) |
+>>
+>> 		    BIT(MAX_SERDES_GMSL_2_6GBPS),
+>> 	.modes = BIT(MAX_SERDES_GMSL_PIXEL_MODE),
+>> 	/* ... */
+>>
+>> 	};
+>>
+>>
+>>
+>> static int max9296a_probe(struct i2c_client *client)
+>>
+>> {
+>>
+>> 	/* ... */
+>>
+>> 	priv->des.ops = priv->info->ops;
+>>
+>> 	/* ... */
+>>
+>> }
+> 
+> That's still a copy. Why is a copy needed, why can't you write
+> 
+>   	priv->des.ops = &priv->info->ops;
+>
+
+priv->des.ops is a pointer, so is priv->info->ops, in the current code,
+so this would not be a copy of the ops, just a pointer assignment.
+
+See the struct definitions below.
+
+struct max_des {
+	struct max_des_priv *priv;
+
+	const struct max_des_ops *ops;
+	...
+};
+
+
+struct max9296a_chip_info {
+	const struct max_des_ops *ops;
+	...
+};
+
+
+struct max9296a_priv {
+	struct max_des des;
+	const struct max9296a_chip_info *info;
+	...
+};
+
+> or event replace priv->des.ops with priv->info->ops through the code ?
+
+max9296a_chip_info is the chip-specific struct for this driver, it's
+retrieved using device_get_match_data().
+
+max9296a_priv is the private driver data.
+
+max_des is the data available for both the core framework and the
+drivers implementing it.
+
+max_des_priv is the private data of the core framework, containing
+implementation details that are not really related to the chip itself
+but more about how to expose the chip capabilities to the user,
+eg. V4L2.
+
+Because of this, priv->info->ops cannot be used through out the code
+as priv is private to the driver, and so is info, while ops are used
+in the core framework.
+
+> Is there anything in the ops structure that needs to be modified at
+> runtime ?
+
+No, there is not. I think it would be fine for a MAX9296A_COMMON_OPS
+macro be added which contains all the common ops, and then place it
+as the first member of each instance of struct max_des_ops.
+
+I'm sending some code inline as a proof-of-concept, maybe it would be
+clearer how the current code will have to be changed. A similar thing
+would have to be done for the other chip drivers.
+
+Thank you for your feedback.
+
+diff --git a/drivers/media/i2c/maxim-serdes/max9296a.c b/drivers/media/i2c/maxim-serdes/max9296a.c
+index a67692b2f5ee0..e9d6322c302f0 100644
+--- a/drivers/media/i2c/maxim-serdes/max9296a.c
++++ b/drivers/media/i2c/maxim-serdes/max9296a.c
+@@ -1038,49 +1038,48 @@ static const struct max_serdes_tpg_entry max9296a_tpg_entries[] = {
+ 	MAX_TPG_ENTRY_1920X1080P60_RGB888,
+ };
+ 
+-static const struct max_des_ops max9296a_common_ops = {
+-	.num_remaps_per_pipe = 16,
+-	.tpg_entries = {
+-		.num_entries = ARRAY_SIZE(max9296a_tpg_entries),
+-		.entries = max9296a_tpg_entries,
+-	},
+-	.tpg_patterns = BIT(MAX_SERDES_TPG_PATTERN_CHECKERBOARD) |
+-			BIT(MAX_SERDES_TPG_PATTERN_GRADIENT),
+ #ifdef CONFIG_VIDEO_ADV_DEBUG
+-	.reg_read = max9296a_reg_read,
++#define MAX9296A_COMMON_OPS_DEBUG					\
++	.reg_read = max9296a_reg_read,					\
+ 	.reg_write = max9296a_reg_write,
++#else
++#define MAX9296A_COMMON_OPS_DEBUG
+ #endif
+-	.log_pipe_status = max9626a_log_pipe_status,
+-	.log_phy_status = max9296a_log_phy_status,
+-	.set_enable = max9296a_set_enable,
+-	.init = max9296a_init,
+-	.init_phy = max9296a_init_phy,
+-	.set_phy_mode = max9296a_set_phy_mode,
+-	.set_phy_enable = max9296a_set_phy_enable,
+-	.set_pipe_remap = max9296a_set_pipe_remap,
+-	.set_pipe_remaps_enable = max9296a_set_pipe_remaps_enable,
+-	.set_pipe_mode = max9296a_set_pipe_mode,
+-	.set_tpg = max9296a_set_tpg,
+-	.select_links = max9296a_select_links,
+-	.set_link_version = max9296a_set_link_version,
+-};
++
++#define MAX9296A_COMMON_OPS					\
++	MAX9296A_COMMON_OPS_DEBUG				\
++	.num_remaps_per_pipe = 16,				\
++	.tpg_entries = { 					\
++		.num_entries = ARRAY_SIZE(max9296a_tpg_entries),\
++		.entries = max9296a_tpg_entries,		\
++	},							\
++	.tpg_patterns = BIT(MAX_SERDES_TPG_PATTERN_CHECKERBOARD) |\
++			BIT(MAX_SERDES_TPG_PATTERN_GRADIENT),	\
++	.log_pipe_status = max9626a_log_pipe_status,		\
++	.log_phy_status = max9296a_log_phy_status,		\
++	.set_enable = max9296a_set_enable,			\
++	.init = max9296a_init,					\
++	.init_phy = max9296a_init_phy,				\
++	.set_phy_mode = max9296a_set_phy_mode,			\
++	.set_phy_enable = max9296a_set_phy_enable,		\
++	.set_pipe_remap = max9296a_set_pipe_remap,		\
++	.set_pipe_remaps_enable = max9296a_set_pipe_remaps_enable,\
++	.set_pipe_mode = max9296a_set_pipe_mode,		\
++	.set_tpg = max9296a_set_tpg,				\
++	.select_links = max9296a_select_links,			\
++	.set_link_version = max9296a_set_link_version
+ 
+ static int max9296a_probe(struct i2c_client *client)
+ {
+ 	struct regmap_config i2c_regmap = max9296a_i2c_regmap;
+ 	struct device *dev = &client->dev;
+ 	struct max9296a_priv *priv;
+-	struct max_des_ops *ops;
+ 	int ret;
+ 
+ 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
+-	ops = devm_kzalloc(dev, sizeof(*ops), GFP_KERNEL);
+-	if (!ops)
+-		return -ENOMEM;
+-
+ 	priv->info = device_get_match_data(dev);
+ 	if (!priv->info) {
+ 		dev_err(dev, "Failed to get match data\n");
+@@ -1110,24 +1109,7 @@ static int max9296a_probe(struct i2c_client *client)
+ 		usleep_range(4000, 5000);
+ 	}
+ 
+-	*ops = max9296a_common_ops;
+-
+-	ops->versions = priv->info->ops->versions;
+-	ops->modes = priv->info->ops->modes;
+-	ops->needs_single_link_version = priv->info->ops->needs_single_link_version;
+-	ops->needs_unique_stream_id = priv->info->ops->needs_unique_stream_id;
+-	ops->fix_tx_ids = priv->info->ops->fix_tx_ids;
+-	ops->num_phys = priv->info->ops->num_phys;
+-	ops->num_pipes = priv->info->ops->num_pipes;
+-	ops->num_links = priv->info->ops->num_links;
+-	ops->phys_configs = priv->info->ops->phys_configs;
+-	ops->set_pipe_enable = priv->info->ops->set_pipe_enable;
+-	ops->set_pipe_stream_id = priv->info->ops->set_pipe_stream_id;
+-	ops->set_pipe_tunnel_phy = priv->info->ops->set_pipe_tunnel_phy;
+-	ops->set_pipe_tunnel_enable = priv->info->ops->set_pipe_tunnel_enable;
+-	ops->use_atr = priv->info->ops->use_atr;
+-	ops->tpg_mode = priv->info->ops->tpg_mode;
+-	priv->des.ops = ops;
++	priv->des.ops = priv->info->ops;
+ 
+ 	ret = max9296a_reset(priv);
+ 	if (ret)
+@@ -1154,6 +1136,7 @@ static const struct max_serdes_phys_config max96714_phys_configs[] = {
+ };
+ 
+ static const struct max_des_ops max9296a_ops = {
++	MAX9296A_COMMON_OPS,
+ 	.versions = BIT(MAX_SERDES_GMSL_2_3GBPS) |
+ 		    BIT(MAX_SERDES_GMSL_2_6GBPS),
+ 	.modes = BIT(MAX_SERDES_GMSL_PIXEL_MODE),
+@@ -1181,6 +1164,7 @@ static const struct max9296a_chip_info max9296a_info = {
+ };
+ 
+ static const struct max_des_ops max96714_ops = {
++	MAX9296A_COMMON_OPS,
+ 	.versions = BIT(MAX_SERDES_GMSL_2_3GBPS) |
+ 		    BIT(MAX_SERDES_GMSL_2_6GBPS),
+ 	.modes = BIT(MAX_SERDES_GMSL_PIXEL_MODE) |
+@@ -1226,6 +1210,7 @@ static const struct max9296a_chip_info max96714_info = {
+ };
+ 
+ static const struct max_des_ops max96714f_ops = {
++	MAX9296A_COMMON_OPS,
+ 	.versions = BIT(MAX_SERDES_GMSL_2_3GBPS),
+ 	.modes = BIT(MAX_SERDES_GMSL_PIXEL_MODE) |
+ 		 BIT(MAX_SERDES_GMSL_TUNNEL_MODE),
+@@ -1254,6 +1239,7 @@ static const struct max9296a_chip_info max96714f_info = {
+ };
+ 
+ static const struct max_des_ops max96716a_ops = {
++	MAX9296A_COMMON_OPS,
+ 	.versions = BIT(MAX_SERDES_GMSL_2_3GBPS) |
+ 		    BIT(MAX_SERDES_GMSL_2_6GBPS),
+ 	.modes = BIT(MAX_SERDES_GMSL_PIXEL_MODE) |
+@@ -1286,6 +1272,7 @@ static const struct max9296a_chip_info max96716a_info = {
+ };
+ 
+ static const struct max_des_ops max96792a_ops = {
++	MAX9296A_COMMON_OPS,
+ 	.versions = BIT(MAX_SERDES_GMSL_2_3GBPS) |
+ 		    BIT(MAX_SERDES_GMSL_2_6GBPS) |
+ 		    BIT(MAX_SERDES_GMSL_3_12GBPS),
+
 
