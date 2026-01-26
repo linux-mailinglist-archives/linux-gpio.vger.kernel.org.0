@@ -1,148 +1,212 @@
-Return-Path: <linux-gpio+bounces-31064-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31065-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wEbhK4BCd2mMdQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31064-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 11:31:28 +0100
+	id aB4nOf1Dd2mMdQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31065-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 11:37:49 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AA5986F72
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 11:31:28 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CF308719D
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 11:37:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 39B79302C936
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 10:29:34 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id EA73830054EF
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jan 2026 10:37:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94773330329;
-	Mon, 26 Jan 2026 10:29:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5751F331209;
+	Mon, 26 Jan 2026 10:37:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="jHX8+Wl7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXK02Q4B"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA01329E5C
-	for <linux-gpio@vger.kernel.org>; Mon, 26 Jan 2026 10:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABA7330B07
+	for <linux-gpio@vger.kernel.org>; Mon, 26 Jan 2026 10:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769423372; cv=none; b=M3+zYRXBFXaQgyp3npa7gR5ymbCRSHU64BcnUydqFKXlUU+3LKqzy/nAXCbM11EW3BYXqETZot3eKwXT++D/S89VwoOi7eEusoU3Bl1TSy9lJKBIpyBq7//eMa39aNcAB3wY80fI2nArLgvymMC9PXoA/nicS6Z3zxOmSIl70Rc=
+	t=1769423867; cv=none; b=b83aJjlH/O5LWs4v74u38TxrmuXVeUg/GWNdJrQVYTf2vOhBpQK4CP9LTs/kyuMj3u0gUetrvj18EL7Sc+EUOjt3ZcpVokkEAEwURII97gBze6xrzlgIkvNuD7cVVuuOkSjX6gTTiratrGFImaJJBLkMQPJ2w3Acgbqw7/3N0wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769423372; c=relaxed/simple;
-	bh=Jh9DbPdyhqX1cvGDcyHJMZub+1uUsIMf6B/WAv++Rbo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KMcJIG9Q4dAg5mX0uQkJI975GkBsHqCSXxIN7gt2Om+ceUwLsmsj6XS8eIZp1iFM+1gGYH8bOh0Tgd9rQCA0B3kN3hw5VeMtKiULDzc+G7Lc7TrUwMjscxBCnqEA1AtwsXa1OwBBlllP0MhBbj/maxiTbBAmxthCyq8B3yOcHpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=jHX8+Wl7; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=F2bF
-	S/uMFLgtEVC0YCnMXZC86wb3SDlDFVJk5gHDbHs=; b=jHX8+Wl7CjOEdsajEoyd
-	YLJSni1KMKFnTnF6HUkKy4i7hdARKm53juZzr7ZafJR47rtHoNyWJaaKdHJ/2sso
-	LqYQH5W3d0RaRaQ8Q8J1G9u4nNTashMNVexC1gLUhUwVMKjdwdx0vBnOcNj2BbqO
-	OzdLxlpS3qYwey2EMbughKgdVpyf2lbwjuTyiOgPikJmtfRlj0LYKeoBgjXrSvoV
-	mlK/IzdLZzcuzrQK6IypnN/vpPwAKgfyOgmhmg2cICJBgE71R+rc1lx8MlV6l5v8
-	F39Y7wqyE8Wvnw4+qlOC0DvLTWsXo+ZALNH34HFE5YzYV8NWVP6e4yVnRLb2de1H
-	6g==
-Received: (qmail 2710669 invoked from network); 26 Jan 2026 11:29:27 +0100
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 26 Jan 2026 11:29:27 +0100
-X-UD-Smtp-Session: l3s3148p1@tFg7+0dJFMUujnvz
-Date: Mon, 26 Jan 2026 11:29:26 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Antonio Borneo <antonio.borneo@foss.st.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>, Chen-Yu Tsai <wens@kernel.org>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Konrad Dybcio <konradybcio@kernel.org>, Lee Jones <lee@kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-sunxi@lists.linux.dev, Mark Brown <broonie@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Samuel Holland <samuel@sholland.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, Waiman Long <longman@redhat.com>,
-	Wilken Gottwalt <wilken.gottwalt@posteo.net>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [RFC PATCH 0/4] hwspinlock: refactor headers into public
- provider/consumer pair
-Message-ID: <aXdCBu6kzdw1NWay@ninjato>
-References: <20260125184654.17843-6-wsa+renesas@sang-engineering.com>
- <aXc7DxsqiCGdfzxi@smile.fi.intel.com>
- <aXc-Zxw05XQLb1Dy@ninjato>
- <aXdAB2bLTy6u8G8c@smile.fi.intel.com>
+	s=arc-20240116; t=1769423867; c=relaxed/simple;
+	bh=BJhb38isP/d1CZw93ApA2/iPTUfPcFPvoFHIZqdYKWc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bjgLHB6N74xSGkea71J2LjzxVotW8y7Ya9EVSdRuSBJwR0na8dUwPAZhJjWqSNFTphtJ33yYVkhUq3A/jFUKRkQQasqOfo8ZrFHicS7lcYa56lzFHlBRdlKPoaXpanuTrvN5KvBX50KWETqL7Og2oxy2+cFxBW3noGGiVh7sGic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XXK02Q4B; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-47fedb7c68dso43388775e9.2
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Jan 2026 02:37:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769423862; x=1770028662; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xkux+EitG9JzPydAe2E8YwQFUS9lBx4JpjL6QxsZSNw=;
+        b=XXK02Q4BWaDEWlh7gRJ2nuZM4fsZ6uiT8AyZpv57Bo3gxExOza1aO5ta8GPokNf377
+         7vozkCfhIKIt4ysJPf+MJzYJjw9xhnrvXKQ5eVGP0xs4DvJB4T1TanBJufLr1FwxJabZ
+         wuGh6+2Q8hhwnbinR2diR3sCOsTx0+tDwfZ5iJDxSpXGw2RF6Wf1BRNpaf7z5uXkeiP9
+         AhrMnrIt6AsvNDHMyP7ZLv4X4reXexiX9/CSf4jobo665M6y4OzNchqDsSM0YGVxGdpd
+         7SkvB8DojII7MveE8/IMSZ6WQFcdwY8Rf6XeTj0RlEZD/1B2yMPIgw2AH7Sg5CAhd1wF
+         vt9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769423862; x=1770028662;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xkux+EitG9JzPydAe2E8YwQFUS9lBx4JpjL6QxsZSNw=;
+        b=U7vqgUM8aavfrL36vm3hN4aiwjJGGbdiF55N4frEaOSUvjuj+XL3CM4b2ttCUs0yH8
+         bOd9ILMNXQY+ewUoCaY3qpluUW937X4en1Nj/NxfgA7ZYFXcgieD02ewgZigbGb6Uivu
+         snOs2OCQfgOxjW6pRGeonoTLNmq1eecex8tQuv1mqCtpZW7fDxsP5KyMhPOIpowRMdJW
+         quGEJeBeea93DlnLmZS8jT9YFVhPy6zpChV7dsQ6xHGrvNU/9wZCk/pb57NR0Th4C2Jk
+         l63If2K8V2lFxm3wrmAlGi6d5ASyQugPRt4HWLR7C9G6eig2zK9VDnbzs4+Bf3HEufwC
+         51pg==
+X-Forwarded-Encrypted: i=1; AJvYcCVskLprZjhCVzR4HVJXOLJjlqG3pF/vRF70kVLpdPoGP/XN5Ne7id21CepQc1k5G9u9Pvg9YZXTsD4N@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYcz5l4QYxNiSk5UbG0h1S5gvkjNXVD9W7Jno0CdBMHoNI2lxN
+	4oMjkhe6ZfbTHXWjGidBgPWK9+4eQ1PyZmcc/0CxqR6tKAWgMZCVF+Z7
+X-Gm-Gg: AZuq6aL9QFIkHyR+7NG3IrBOKWRPbTbXIJZP8VrFvz7Y6F4rL63Xmau+lZI1ZUBqb+t
+	4EhUUeI4GjF4MEbycPtqh1BKCqofsV1PzVwcuPM+05LTrYGOc0/uKEyu8Eeu3389aXwJDJ4g5xJ
+	0/pKl6r6C/0cuApqJTYCohy+NISqPl+VayadIhgOjEI7ZQmmvcMmD11I+EPsh9Kg2WRKGrK4uUZ
+	z1Qt8iXrRZd2Z/5NCa1AINaP6HwC0t/hLHLCFIj2VARgcr8vIkKCxikYW095PH1XFum79xrDI4n
+	uVd+9DB/eBj5Z1hUiPdLyZZRx+9uiDmuiv/udlFFhx70McN9IWjF6QlNV/LOA+vKxkBDSZ9mv6f
+	qc3IKHgrn18MsM5UzINBZ3Dt8WmAy/3vJkVuVuk4gFwFEvTw5lG1e9je94kPMFwV3H15LmJSvdI
+	byhU39pS2DZO3uymTKKtFwy6/o76fq/qvyzAFwzFLK8mMBvGCU7UKanawIx7+CpwZPf28wHENZl
+	DoyVLc5URl/KGDwU3bXUX74vXTFB8qTDKV7gGAoTrq2a3JLVWQnMGPFryC+
+X-Received: by 2002:a05:600c:35c4:b0:47e:e9c9:23bc with SMTP id 5b1f17b1804b1-4805cf673f5mr69370895e9.30.1769423862239;
+        Mon, 26 Jan 2026 02:37:42 -0800 (PST)
+Received: from ?IPV6:2a02:8440:260e:5ad0:867f:b0c6:e80c:5b42? (2a02-8440-260e-5ad0-867f-b0c6-e80c-5b42.rev.sfr.net. [2a02:8440:260e:5ad0:867f:b0c6:e80c:5b42])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4804d6160d2sm104298055e9.2.2026.01.26.02.37.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Jan 2026 02:37:41 -0800 (PST)
+Message-ID: <ed300810-14c9-40de-b50b-f60cd4241bb7@gmail.com>
+Date: Mon, 26 Jan 2026 11:37:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aXdAB2bLTy6u8G8c@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 12/12] pinctrl: stm32: add firewall checks before
+ probing the HDP driver
+To: Gatien Chevallier <gatien.chevallier@foss.st.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+ Linus Walleij <linusw@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, jens.wiklander@linaro.org
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+References: <20260123-debug_bus-v5-0-90b670844241@foss.st.com>
+ <20260123-debug_bus-v5-12-90b670844241@foss.st.com>
+Content-Language: en-US, fr
+From: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <legoffic.clement@gmail.com>
+In-Reply-To: <20260123-debug_bus-v5-12-90b670844241@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.34 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[sang-engineering.com:s=k1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	DMARC_NA(0.00)[sang-engineering.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31064-lists,linux-gpio=lfdr.de,renesas];
-	RCPT_COUNT_TWELVE(0.00)[44];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-31065-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[sang-engineering.com:+];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FREEMAIL_TO(0.00)[foss.st.com,arm.com,linaro.org,kernel.org,linux.dev,gmail.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[vger.kernel.org,foss.st.com,kernel.org,arndb.de,linux.alibaba.com,gmail.com,baylibre.com,linuxfoundation.org,redhat.com,lwn.net,lists.infradead.org,st-md-mailman.stormreply.com,lists.linux.dev,analog.com,infradead.org,sholland.org,posteo.net];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[legofficclement@gmail.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sang-engineering.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 5AA5986F72
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 8CF308719D
 X-Rspamd-Action: no action
 
+Hi Gatien,
 
-> > Providers need it, especially the 'priv' member. Consumers won't see it.
+Thank you for the patch
+
+On 1/23/26 11:39 AM, Gatien Chevallier wrote:
+> Because the HDP peripheral both depends on debug and firewall
+> configuration, when CONFIG_STM32_FIREWALL is present, use the
+> stm32 firewall framework to be able to check these configuration against
+> the relevant controllers.
 > 
-> But can't we make it opaque?
+> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
+> ---
+>   drivers/pinctrl/stm32/pinctrl-stm32-hdp.c | 14 ++++++++++++++
+>   1 file changed, 14 insertions(+)
 > 
-> We may have getters and setters for the priv member...
+> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32-hdp.c b/drivers/pinctrl/stm32/pinctrl-stm32-hdp.c
+> index 0b1dff01e04c..cce477e86ef9 100644
+> --- a/drivers/pinctrl/stm32/pinctrl-stm32-hdp.c
+> +++ b/drivers/pinctrl/stm32/pinctrl-stm32-hdp.c
+> @@ -4,6 +4,7 @@
+>    * Author: Clément Le Goffic <clement.legoffic@foss.st.com> for STMicroelectronics.
+>    */
+>   #include <linux/bits.h>
+> +#include <linux/bus/stm32_firewall_device.h>
+>   #include <linux/clk.h>
+>   #include <linux/gpio/driver.h>
+>   #include <linux/gpio/generic.h>
+> @@ -46,9 +47,11 @@ struct stm32_hdp {
+>   	void __iomem *base;
+>   	struct clk *clk;
+>   	struct pinctrl_dev *pctl_dev;
+> +	struct stm32_firewall *firewall;
+>   	struct gpio_generic_chip gpio_chip;
+>   	u32 mux_conf;
+>   	u32 gposet_conf;
+> +	int nb_firewall_entries;
+>   	const char * const *func_name;
+>   };
+>   
+> @@ -615,6 +618,13 @@ static int stm32_hdp_probe(struct platform_device *pdev)
+>   		return -ENOMEM;
+>   	hdp->dev = dev;
+>   
+> +	if (IS_ENABLED(CONFIG_STM32_FIREWALL)) {
+> +		err = stm32_firewall_get_grant_all_access(dev, &hdp->firewall,
+> +							  &hdp->nb_firewall_entries);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+>   	platform_set_drvdata(pdev, hdp);
+>   
+>   	hdp->base = devm_platform_ioremap_resource(pdev, 0);
+> @@ -670,8 +680,12 @@ static int stm32_hdp_probe(struct platform_device *pdev)
+>   static void stm32_hdp_remove(struct platform_device *pdev)
+>   {
+>   	struct stm32_hdp *hdp = platform_get_drvdata(pdev);
+> +	int i;
+>   
+>   	writel_relaxed(HDP_CTRL_DISABLE, hdp->base + HDP_CTRL);
+> +
+> +	for (i = 0; i < hdp->nb_firewall_entries; i++)
+> +		stm32_firewall_release_access(&hdp->firewall[i]);
+>   }
+>   
+>   static int stm32_hdp_suspend(struct device *dev)
+> 
 
-I think we could do that.
-
-Two drivers use the bank member, but only for the device
-(lock->bank->dev). That can probably be refactored away, I'd guess.
-
+Reviewed-by: Clément Le Goffic <legoffic.clement@gmail.com>
 
