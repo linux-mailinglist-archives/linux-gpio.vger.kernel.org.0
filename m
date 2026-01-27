@@ -1,85 +1,104 @@
-Return-Path: <linux-gpio+bounces-31169-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31170-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uHO+FZX4eGkxuQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31169-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 18:40:37 +0100
+	id gB21AnoAeWmOuQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31170-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 19:14:18 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB82C98952
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 18:40:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D29898DC9
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 19:14:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6FC76303C621
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 17:39:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B06B03060579
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 18:13:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C012730C617;
-	Tue, 27 Jan 2026 17:39:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8093932570A;
+	Tue, 27 Jan 2026 18:13:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eb1E4br9"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ou/yhYGM";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="NnrjsuvK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-dl1-f43.google.com (mail-dl1-f43.google.com [74.125.82.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B2030E82B
-	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 17:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB18B322B80
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 18:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769535558; cv=none; b=mtKFwsH5iS0FPLWwe9o9J7AIzygBIle9ZwYhLIteVpcM8VbugJLsknLDMFEZDa7df5d2dKYQtW2jPyfn9F6Vl3hBJXYUSzRJjbAgsAsDWV8fl+EwfK9HLkzAegxROxiD83ANd2EwouLIXKMSxUekw7ttB0RQu6c8vbs/c1Ckodk=
+	t=1769537614; cv=none; b=bEO6PD+fSP3UyabFkQfy/TWLgYWF3rfw4WQN6OZEZUK8I754nzFhPHVqMWNa1U+JffHky0lsFO2TOfFdnWFmirLlq1R05r3FF7mAc9ZFhLIeg0EomLoJ1emvDJuWNc85lFTn3ckoRV1xYz6VTOqSBjr9ZOopikPHinQNt+4rUJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769535558; c=relaxed/simple;
-	bh=8UVLLIrsHUqOxlqfwM0sGO/TY65ZyUp+76xPFVVS7yQ=;
+	s=arc-20240116; t=1769537614; c=relaxed/simple;
+	bh=ZP9jD5oBd6p4cx2ft8JtLqpa/EzTPpDlX6uplfrO2XE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rsHJLNqOqxeAPS61bkVnP10XjjCKgqh1FfVyCHlo4L2HPyHM2BwxPuORg7sq7zGW3hsptZjjhJ0yjQ9VfW0NMOzVXHRLI9RFZpkheJRhI2QFQbA81eae8H6b7SZkcsF0ij9U1UwoqzWKeHadqU+kQs4g+s7wTuQtYmZUUNfqKkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eb1E4br9; arc=none smtp.client-ip=74.125.82.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dl1-f43.google.com with SMTP id a92af1059eb24-1233c155a42so8498915c88.1
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 09:39:16 -0800 (PST)
+	 In-Reply-To:Content-Type; b=N7ub876AkZU+HayJ0XwddqK5Bk/PZzz36QqyyBixz+upollQSyOa96SEGS3ded8QEuja3rbvywtUM0eiWXglvvNnScR/V4azZOTCNC+A3cH0x/Q38XPQtQmzlfnE07VSdxxuyxz2SKt1Kibt8Zs6/KjzpQRTuItKl6kBZMfRhLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ou/yhYGM; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=NnrjsuvK; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60RFL1rX621206
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 18:13:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	fVOW5CGJHEDR3nYWnM/7tFR0BEN89n9x3EXWGMv4peE=; b=ou/yhYGMRM4LwzGb
+	E4qvBiStIcXtWASzRfsdEFehMEKrw77cn4SPAbGGApt1J/psJCEzLjeKeC8JOIuq
+	kRL/N/+4Y9ZHSlGIVkBsmR1r2JgiRZPlvoNwacnq4Vo8PpCSyLQId/zSe9RIthol
+	CvnLd/Ns1MQ/HCGRdYsSngV1AGwEnp1JH3l8AAoP3YDBHQKAbO1FMnukAjMZYkkp
+	D1ktPADmCkTNeLDcGMkfAH6v3SGxzqbZtaYBgjBiTegm9V1uHlggsGeSEOzFCFKD
+	6CuzaMXPahrzKEqZeb+95/I/4jbY2PslhFlVcSLNVOBPIFvv8lU5Oyn82cXF6obc
+	7K1DLA==
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bxsjej0u6-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 18:13:31 +0000 (GMT)
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-81f3c36dd2cso4350337b3a.2
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 10:13:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1769535556; x=1770140356; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=kr+iveQN+RoO7r/9SZpPd7B6TCre3+xXPMNTBTcaVrg=;
-        b=eb1E4br9qfXoTQhb5RSfPn4iDWVdaWn0IXsxV0deyiy6XleMuMBIiRg1753yYFg3HQ
-         huPUHu/6un10eSik237teps958qM3uMIVlZoCWajQG0WNS8ad6FA/Zj+O8USXKiVae9J
-         lgKIWDAtnP3gZrAUD6P8atKOJhF60HumdYCayt13LKjBV0b7KaJ1d6M2ow8fh+UE84fZ
-         oR/Y9ERWeIJcl/eLK1KgBQk+hUNewyTXwp96BiU4V095yGeZtJmV3r5zbRfMHQKJgOi8
-         4joUKtxGC28FFBOO4qvN2MB4VD7SjVWoqXB1iL1UYbbO0HhnBdqORrvgrQJaOhlvdE2K
-         Buvg==
+        d=oss.qualcomm.com; s=google; t=1769537609; x=1770142409; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fVOW5CGJHEDR3nYWnM/7tFR0BEN89n9x3EXWGMv4peE=;
+        b=NnrjsuvKOFwpJEmlmnxMw+VZU8z3+45WX7RNK4qOw+N+DLxw0/yqw7w1c2ERXajQaq
+         u3yM24I6pCZeMHj/oUwpwlzvRhOdKEFACeejtluntJphWDbb4UoESXpsLSfojp2DYY2T
+         h160FLXhd1Zq0qxW6tk0cZcT/pqwWwKDa6c9q9RkVg0pD0CJxoU9czvoXiBH0oF4Uqpx
+         Uv8tFC03j289CKPZBkg0VpFhmP4RrDF6FBps3jqZ35nCu1YBPK+nGcwoT14RfAJH4cMQ
+         nEYNAwZftpVWF9uPmku7LM/pGGw3qNfWXiqQVncak4v+l+oimEn70TLVarSasxNX7CZW
+         rgvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769535556; x=1770140356;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kr+iveQN+RoO7r/9SZpPd7B6TCre3+xXPMNTBTcaVrg=;
-        b=iDaL2GfOngiS24UKuNIhD/1xB+IORB1+l0O01SN5r+D2ohpRr3qcS3KNYvtTt5dbsN
-         c8Wvw/bS58ICd0EgvLt6Mk9FlgTAfcuPstmPGpQi7DyUoFuKkqhWVTBEKAMcNMJeV8aG
-         teNswERp8ljxJyE04fOft0nZE5w1W3AhHb57j4nfAoa5UZwFAuFNYfvkQC6y0J9anNzN
-         vxKKZn4AvximXFXqQqcjA5Z2eBahJSbu0CwtLH4yo2VreSUAbPeHIW/kBtsyDeRpSeBl
-         4ev7vQWQnwt1ch1ojwCuET9a+qLsI9RmBU0dlnft4guG48vvrDXe/rEa9lJ/PgD3r5F1
-         utwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWX3kuiH+ayNyoSM2lE3xjJ4mQhcPcEmmynbmHUKMDZCg+ej/9N9bASEAVUKnp8HeDo8/tg8OKCAvQy@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4sVHaaEgMQR4vEc/EysZCWkn7kJwgeFOcZ8A4jCXv4w7dHq/c
-	x1FoUJj4yRSY4mDhsVtS40suLARxgYmpgNYhXCA6YptdJcUffoHIi0Nu
-X-Gm-Gg: AZuq6aKtBDLWZVrGrppTUZ6n5X/+BWCFXb6QhrP/mmp6xMSUfI5YwgFyfEh/5NV1XF3
-	7WmOEsAUdqDwusH5tbr4D0PoyZygivBHSfmb9pUtscHLBPzDqBA+B/0FSAnHnLwECUaYCcKQm0B
-	BKVtd3cYvfagiNhdAu1u6hmI/RfgrKpqOhFJTwfDxqB1/7FAUO80YhudIqkKfrngdPoScoi6XBV
-	ka5xUyUk36JHbTOY4i+r83M5ygFy44NkXU9+hR6guxasYR12jUtZeWU0PLU8XAANpHeavimrYZ8
-	eHuHwVud2jkcvHTKdjeNT/ymYDUmaF0xpFMqzWez09hXT6jjfnUouZHsxuOVsXoBs9alxUVVNRx
-	Um7g+Pb3obI5Y0j+6oFmVON/zmtfasp8zXeTK+r5wiUD3q1b+Lm5/vUyDmcbFEo6dindmEJhtZ5
-	lqZbunfNUs4FUGnAYlAnjwttXQMpeHWmIK77URbzjxsVEg57iiXChHb7ENTvYACqN9jR7oHr0=
-X-Received: by 2002:a05:7022:6ba5:b0:119:e56b:9899 with SMTP id a92af1059eb24-1249ffe4d33mr1398672c88.0.1769535555975;
-        Tue, 27 Jan 2026 09:39:15 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-124a7c62819sm339772c88.12.2026.01.27.09.39.13
+        d=1e100.net; s=20230601; t=1769537609; x=1770142409;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fVOW5CGJHEDR3nYWnM/7tFR0BEN89n9x3EXWGMv4peE=;
+        b=u20p8xV4gdeSVoxGnfCv+mh6y1C5OBwGMLl+2qi21nYplf7ai1EUd9OcwWN4cSsiPr
+         NLn4oLS8Ghv8+lvCgf3EgeHxOBSCt/FcmDP8AO0fsP/2exr3kRSp1gVZz14v/eUl7jXb
+         vQh/ZkZArq5YD58UrW3B490IdFSjS8jfim24tRg/oS2vl/up0eAWP33vqXzgsxmr1UhH
+         y+EtbrN4q2BfUow999dtdw6zkqTTZl1vEHKZQssWXMBqx50ahPpzcTI8Fs9S7gF01/7d
+         ZdgOil2SZntjEOl9XcSe5YON+K+ht0Lhx4h/STCmmCkJm+ars1Npu4GbuFI7iI/RWIgK
+         2SLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVgC2QSn2+PWz+XTDwbde1SyqvyrrnNENSvWjjq3OQw/r3OXicGLb/SAd2p4vznwipn29Lkv44LlGLF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yypx4JUcPD64Gl+Gs+VBja9eTLIE/h/0XccvQdSbdcbXjRDmePG
+	1riI0ez8kNdaIMeO0zhoWx3KpXwkao7xOO3i9I7pUqSJpOD+EJg8etojvlJeIaH1n6KVYrkpydq
+	Zbn4eK8v7VxZmzJsltX5Cy+2ndT2NGsCBkBCfBuObZ2Ui0pj6XjcLB9HrxRAHYSsJ
+X-Gm-Gg: AZuq6aJXzOXYhkAiPttF0sTF8ddFi1S2dWugq34v7v+DAJld790lmd/1A1tf1ZUtkQX
+	242H4pwjCjqJQ5YZ0pe4qi04f4iPyVoyqAMoeBKnZcP1156TfmYiezxP0sGBdxWpmWU9TFSAO/V
+	JBL9AmnsHe2fAYulYRnIEc/vhJRUaRFR5hLqSoLss++tZ/ftKP0y3kHZS7frCmfcnSDuloFq/VK
+	jyv8A2Fu3q2aR7ScwxGvF1O4QJ6gTXNHCXwNtI/mvCF+RSA1T4aU0nfEb8EwZuO2lfCkEgVJxtJ
+	IFwWjOZWRqWCxUvFBlexUjimtc0i5/vqZaOf5SNMbyPMolWYOXacNi5NENLt9NmxejH+uOrt/v9
+	jyPghe642MTcvMrkCAVRmg4iPbGagPbzcSA8Ii/Ys0GqZt1VL
+X-Received: by 2002:a05:6a00:8d94:b0:823:244f:1f91 with SMTP id d2e1a72fcca58-8236916b19fmr2106852b3a.11.1769537608921;
+        Tue, 27 Jan 2026 10:13:28 -0800 (PST)
+X-Received: by 2002:a05:6a00:8d94:b0:823:244f:1f91 with SMTP id d2e1a72fcca58-8236916b19fmr2106816b3a.11.1769537608266;
+        Tue, 27 Jan 2026 10:13:28 -0800 (PST)
+Received: from [192.168.1.5] ([106.212.237.20])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82379c226afsm217807b3a.49.2026.01.27.10.13.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Jan 2026 09:39:14 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <eed64bf1-93af-4b36-adf5-1476cb40edbb@roeck-us.net>
-Date: Tue, 27 Jan 2026 09:39:12 -0800
+        Tue, 27 Jan 2026 10:13:27 -0800 (PST)
+Message-ID: <9f5436df-fef7-4921-85b3-b6fe4e942779@oss.qualcomm.com>
+Date: Tue, 27 Jan 2026 23:43:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -87,173 +106,152 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/3] hwmon: Add support for the LTC4283 Hot Swap
- Controller
-To: nuno.sa@analog.com, linux-hwmon@vger.kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-doc@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>,
- Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, "Rob Herring (Arm)" <robh@kernel.org>,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
-References: <20251223-ltc4283-support-v5-0-1152bff59a61@analog.com>
+Subject: Re: [PATCH v3] dt-bindings: pinctrl: qcom,sm8450-lpass-lpi-pinctrl:
+ Add SA8775P and QCS8300 pinctrl
+To: Rob Herring <robh@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Linus Walleij
+ <linusw@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Srinivas Kandagatla <srini@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20260127105511.3917491-1-mohammad.rafi.shaik@oss.qualcomm.com>
+ <20260127141740.GA1574044-robh@kernel.org>
 Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <20251223-ltc4283-support-v5-0-1152bff59a61@analog.com>
+From: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+In-Reply-To: <20260127141740.GA1574044-robh@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDE0OCBTYWx0ZWRfX3/wlIJ0vgioB
+ hTb7w3PuV+QJ+1OqiIs9GeKrzw7U/xzjY1CD6CU9jmm66aIt7SwU8SOQNI5UdyIXabuZoB7kyiE
+ rw3BPYVLmEvI8DPZYwjsUtdbuWb+EiqY1qdpDVVbskfFCbZ4piZf3SKEB4ft4ScT58kCByJpjnI
+ 94XtMeRhdXKoJ1wFah+J/SjhQhnLuUgVFppNsVyQzf3PQTraqT1ZESuFxHWUiBhViOUplj73UwN
+ Ay//90PdWzGHSpvSh9SCK56qc+uCW0S75+/MR3XsrrJ9O4qid8fJ+7Hc+0e/VoOppYwWfdy6Yys
+ 4CMvT2SjUsP02q4EqwzbaQCgwL/9C/y9dISqqH5v9ScNuERYJpImSTngel3161TmiyrEQjYtpaT
+ iq4y/FFy8jsJgPUawyfX+ypkJi97eMFtR0Jy+6PJVeYjf1woVT5lNO+PgSJe8N4LGsMbOUU6duw
+ JinOG7yq3QLihNE/gLA==
+X-Authority-Analysis: v=2.4 cv=Qelrf8bv c=1 sm=1 tr=0 ts=6979004b cx=c_pps
+ a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=buDgOHdOW+2HB7N8kE10CA==:17
+ a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=HaOfPcbtI1sGS6EAhDsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=OpyuDcXvxspvyRM73sMx:22
+X-Proofpoint-ORIG-GUID: 7UTyxXTtw6PbouYRjOKLstLKIotwyqy_
+X-Proofpoint-GUID: 7UTyxXTtw6PbouYRjOKLstLKIotwyqy_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-01-27_04,2026-01-27_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 malwarescore=0 adultscore=0 phishscore=0 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 clxscore=1015 bulkscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2601270148
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31169-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[roeck-us.net];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31170-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FROM_NEQ_ENVFROM(0.00)[mohammad.rafi.shaik@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linux@roeck-us.net,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: EB82C98952
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 5D29898DC9
 X-Rspamd-Action: no action
 
-Hi Nuno,
 
-On 12/23/25 04:21, Nuno Sá via B4 Relay wrote:
-> This is v3 for the LTC4283 how swap controller. Main change is that I'm
-> now using the auxiliary bus for adding the GPIO device (done depending
-> on FW properties).
+
+On 1/27/2026 7:47 PM, Rob Herring wrote:
+> On Tue, Jan 27, 2026 at 04:25:11PM +0530, Mohammad Rafi Shaik wrote:
+>> Document compatible for Qualcomm SA8775P and QCS8300 SoC LPASS TLMM
+>> pin controller, fully compatible with previous SM8450 generation
+>> (same amount of pins and functions).
+>>
+>> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+>> ---
+>> changes in [v3]:
+>>   - Removed the duplicate driver code patch as suggested by Krzysztof.
+>>   - Reused the existing SM8490 pinctrl, which is fully compatible with SA8775P and QCS8300.
+>>   - Link to V2: https://lore.kernel.org/all/20260107192007.500995-1-mohammad.rafi.shaik@oss.qualcomm.com/
+>>
+>> changes in [v2]:
+>>   - Fixed dt-binding errors reported by Krzysztof and Rob.
+>>   - Added proper slew rate value for wsa2_swr_data GPIO, as suggested by Konrad.
+>>   - Documented Monaco compatible as suggested by Konrad.
+>>   - Link to V1: https://lore.kernel.org/all/20251116171656.3105461-1-mohammad.rafi.shaik@oss.qualcomm.com/
+>> ---
+>>   .../pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml         | 10 +++++++++-
+>>   1 file changed, 9 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
+>> index e7565592d..354629c38 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
+>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
+>> @@ -15,7 +15,15 @@ description:
+>>   
+>>   properties:
+>>     compatible:
+>> -    const: qcom,sm8450-lpass-lpi-pinctrl
+>> +    oneOf:
+>> +      - const: qcom,sm8450-lpass-lpi-pinctrl
+>> +      - items:
+>> +          - enum:
+>> +              - qcom,qcs8300-lpass-lpi-pinctrl
+>> +              - qcom,sa8775p-lpass-lpi-pinctrl
+>> +          - const: qcom,sm8450-lpass-lpi-pinctrl
+>> +        minItems: 1
+>> +        maxItems: 2
 > 
-> Similar to the LTC4282 device, we're clearing some fault logs in the
-> reset_history attributes.
+> No. You are either backwards compatible with sm8450 or you aren't. The
+> h/w is fixed.
 > 
 
-I ran the patch series through an AI review. Results are below.
-Please take a look.
+ACK,
 
-Thanks,
-Guenter
+Agree,
 
----
-# Deep Dive Regression Analysis Log
-Date: 2026-01-27
+Need backward compatibility with sm8450 for both sa8775p and qcs8300 as 
+they must fall back to the sm8450, so initially used enum to pick 
+between the sa8775p and qcs8300 compatibles. I see enum isn’t 
+appropriate here since fixed h/w.
 
-## Commit 5998c620fbd8: gpio: gpio-ltc4283: Add support for the LTC4283 Swap Controller
+will use the const instead of enum like below.
 
-**Context**:
-- Adds a new GPIO driver `drivers/gpio/gpio-ltc4283.c`.
-- Depends on `drivers/hwmon/ltc4283.c` for regmap and MFD instantiation.
+  properties:
+    compatible:
+-    const: qcom,sm8450-lpass-lpi-pinctrl
++    oneOf:
++      - const: qcom,sm8450-lpass-lpi-pinctrl
++      - items:
++          - const: qcom,sa8775p-lpass-lpi-pinctrl
++          - const: qcom,sm8450-lpass-lpi-pinctrl
++
++      - items:
++          - const: qcom,qcs8300-lpass-lpi-pinctrl
++          - const: qcom,sm8450-lpass-lpi-pinctrl
 
-**Findings**:
-1.  **Typo/Naming Issue**:
-     - File `drivers/gpio/gpio-ltc4283.c` uses `LTC42823_ADIO_CONFIG` definition.
-     - `LTC42823` appears to be a typo for `LTC4283`.
-     - `drivers/gpio/gpio-ltc4283.c:26`: `#define LTC42823_ADIO_CONFIG 0x12`
 
-2.  **Logic Verification**:
-     - GPIO direction and value setting logic appears consistent with bitmasks provided, assuming register `0x12` and `0x11` layout is correct as inferred.
+Thanks & Regards,
+Rafi
 
-3.  **Regressions**:
-     - No critical functional regressions found in this commit alone.
-     - Code quality: Typo in macro name.
-
-## Commit 82433332ce16: hwmon: ltc4283: Add support for the LTC4283 Swap Controller
-
-**Context**:
-- Adds core HWMON driver `drivers/hwmon/ltc4283.c`.
-- Handles I2C communication, regmap initialization, and MFD child creation.
-
-**Findings**:
-1.  **Critical Regression: DebugFS Use-After-Free**:
-     - `ltc4283_probe` calls `ltc4283_debugfs_init`.
-     - `ltc4283_debugfs_init` calls `debugfs_create_file_unsafe` creating files associated with `st`.
-     - `st` is allocated with `devm_kzalloc`.
-     - **Issue**: There is no explicit cleanup of debugfs entries (e.g., `debugfs_remove_recursive`) and no `devm_add_action` to handle it.
-     - **Consequence**: When the driver is unbound/unloaded, `st` is freed by devm. The debugfs entries remain. Accessing them triggers a Use-After-Free on `st`.
-     - **Fix Required**: Use `devm_add_action_or_reset` to remove debugfs directory/entries on driver detach.
-
-2.  **Typo**:
-     - `drivers/hwmon/ltc4283.c:1765`: `MODULE_DESCRIPTION("LTC4283 How Swap Controller driver");`
-     - "How Swap" should be "Hot Swap".
-
-3.  **Property Handling**:
-     - Driver respects "missing property" by keeping hardware/EEPROM defaults, while Bindings document specific defaults. This is a minor consistency issue but likely acceptable if EEPROM usually matches defaults.
-
-## Commit a175d04e5900: dt-bindings: hwmon: Document the LTC4283 Swap Controller
-
-**Context**:
-- Adds DT bindings.
-
-**Findings**:
-- Bindings appear correct and consistent with driver usage.
-- Dependencies logic (`adi,external-fault-retry-enable` requiring `adi,pgio4-func` to not be `gpio`) is enforced in both YAML and Driver.
-
-## Summary
-
-**Final Regressions Found**: 1 Major (DebugFS UAF), 2 Minor (Typos).
-
-1.  **Major**: `drivers/hwmon/ltc4283.c`: DebugFS entries are not removed on driver unload, leading to UAF.
-2.  **Minor**: `drivers/gpio/gpio-ltc4283.c`: `LTC42823_ADIO_CONFIG` typo.
-3.  **Minor**: `drivers/hwmon/ltc4283.c`: `MODULE_DESCRIPTION` "How Swap" typo.
+> Rob
 
 
