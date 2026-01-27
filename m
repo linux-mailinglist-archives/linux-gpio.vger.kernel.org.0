@@ -1,78 +1,63 @@
-Return-Path: <linux-gpio+bounces-31160-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31161-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GAdqMOPDeGmltAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31160-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 14:55:47 +0100
+	id wI21H73JeGmNtQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31161-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 15:20:45 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 645CC95320
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 14:55:47 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BF3E95893
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 15:20:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 858CF301D329
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 13:49:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D9D863085B28
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 14:17:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 468F735A954;
-	Tue, 27 Jan 2026 13:49:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BEC02BEFFB;
+	Tue, 27 Jan 2026 14:17:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mS1kKkdO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qjmw469Q"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1EB3491D5;
-	Tue, 27 Jan 2026 13:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C57284883;
+	Tue, 27 Jan 2026 14:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769521797; cv=none; b=RPIfGeCaHknAsX55GSuK9/q0MSJFf0oPT94aixde4icCPlW6xSUJspiffIsjERMh3gp8WHzPg8bMUesZxwzLaYkP8SZrfUZjvc8nfZNbvwforxFsbHhtwesbhdMfkCbpUplZlNSMMVsRGv3DfxyVMdz6aSzR7B5vddos0HSzBfQ=
+	t=1769523461; cv=none; b=UvucbLqOxQ8ZHhD5lPd1aXIZJMnieiEx8Y9YrTWM2Lb7KNVi7dOf/Y2TmlVxFy5MfF5s8mA3xHtR7XF9O9vbdchP6eLuX1PzElblX7QvEIaXOubE9/diQ2mi0CUz/44ZzRgXntgniSZVKNIMm+yhPTdGZ+MOvccXV+xB8DS1Zso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769521797; c=relaxed/simple;
-	bh=M+dntcc6sYA+irrxrwpFM1qTzSJ8RSVOJfJn/7W1E90=;
+	s=arc-20240116; t=1769523461; c=relaxed/simple;
+	bh=6RbS3lq83MUvqvXbpS/fqmTiQO3rUelLTxFVy+AhT9w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iHfvMCJcJ0LOSzFjctKj9X+Z5C0BSquG3cHcMOOrCYLCsk9D+Iy5LmptWr6CBA6Fu5S9IIx8ILTsxE1aCGrN1QMYJn+4wBWrbHh0GJnvlAM+PzlbIN/HNQZaj6abHVgJqF9tLMlWT0qhleUalyga0KpAL+gzKgmj45rJFtsZy5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mS1kKkdO; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769521796; x=1801057796;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=M+dntcc6sYA+irrxrwpFM1qTzSJ8RSVOJfJn/7W1E90=;
-  b=mS1kKkdOdFVRd/D56SEMRqzEuQK7Flm2BunWnIEBjmlHhnnAHu7x7VvI
-   tF87Kdr3WvPlC+EnzbEAH/x099+spahFeEMyt3Aca3axljpztQqeuckAU
-   TdBvUhQTFbjBv6RDFICNk92iTA7SiNWuIJTIEpVOO2bIHg6UHpUeUeeuu
-   uVxOY/BrRm+tQ+T6bg427cBSARxWPpkmTHPINg9uaoWpgZkIVitQU6KkW
-   eQ1HhkV3FpzUqeNuQ3OLH6oao+j5xfAzefDCIWBjQtz7UUUq/1sRXt0eV
-   IypwDTlpHVgGrXOW5wZ7eQwHLAoV6uaGEw0S7ENZZ6SoY0bl23fO8zuSN
-   w==;
-X-CSE-ConnectionGUID: pZlaA0WwQ7aGG7y53w50Qg==
-X-CSE-MsgGUID: tAYOHCmnTGys5YpVOTjb4g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11684"; a="81437888"
-X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
-   d="scan'208";a="81437888"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 05:49:55 -0800
-X-CSE-ConnectionGUID: O3mC/LOUSky0uH6P4wzQMA==
-X-CSE-MsgGUID: WohwQGcRQRmvV4OB2swYuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
-   d="scan'208";a="212841383"
-Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.245.248])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 05:49:53 -0800
-Date: Tue, 27 Jan 2026 15:49:51 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Mika Westerberg <westeri@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=sYDAqERyRWbx1h4419Fufmuuyov5y8QMUWfyCPF7YZMMtYOdA3/hILrltTqe4Cz3CHIj2wEfKlwyUmI+1zjkatdtQM74mnFJjfnBG8tr4BDbXcu3ktOqcxptxt9HnLlLIS861LuVRJ7YrsRLFKKVVz59IqPGSKkDlA4tqNx0NtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qjmw469Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 878A7C116C6;
+	Tue, 27 Jan 2026 14:17:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769523461;
+	bh=6RbS3lq83MUvqvXbpS/fqmTiQO3rUelLTxFVy+AhT9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qjmw469Qb8tRmK1hTgMyz5TmDgi2kY/hL8sEeYWOIYG4jrJeBle28BKtG/TuBC+Go
+	 eTSTVc8XnRjIc59p4lgv7geyu62HnwlQYS+ABiW0WtEx/7d7qnHjQfMrVRMl9VGXxi
+	 K9kCvkMEBBNARtpyTYIXQ6cXrEaOPUbX9K0jRCvlagc6q4rsv1XtjD7rsbHvH3yiID
+	 PdFnD63XkcOtbjpXnSh59ihd7BCxFahLg5JaIuGsg4Y+vjEUrjROebHQnvC36X7Pt8
+	 eLLWzKPk9hbs6lzKwsDu/tf26YQ52Deluy3LXaNAaeYlQG0B0648tAcoj6fx7osS2X
+	 KdRqplkHn5nJw==
+Date: Tue, 27 Jan 2026 08:17:40 -0600
+From: Rob Herring <robh@kernel.org>
+To: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
 	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>
-Subject: Re: [PATCH v2 1/1] gpiolib: acpi: Fix potential out-of-boundary left
- shift
-Message-ID: <aXjCfwnnASFZ1Ghh@smile.fi.intel.com>
-References: <20260127110824.4020130-1-andriy.shevchenko@linux.intel.com>
- <20260127134300.GK2275908@black.igk.intel.com>
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: pinctrl: qcom,sm8450-lpass-lpi-pinctrl:
+ Add SA8775P and QCS8300 pinctrl
+Message-ID: <20260127141740.GA1574044-robh@kernel.org>
+References: <20260127105511.3917491-1-mohammad.rafi.shaik@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -81,70 +66,80 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260127134300.GK2275908@black.igk.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20260127105511.3917491-1-mohammad.rafi.shaik@oss.qualcomm.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-31160-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31161-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,intel.com:dkim,smile.fi.intel.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 645CC95320
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 1BF3E95893
 X-Rspamd-Action: no action
 
-On Tue, Jan 27, 2026 at 02:43:00PM +0100, Mika Westerberg wrote:
-> On Tue, Jan 27, 2026 at 12:06:30PM +0100, Andy Shevchenko wrote:
-> > GPIO Address Space handler gets a pointer to the in or out value.
-> > This value is supposed to be at least 64-bit, but it's not limited
-> > to be exactly 64-bit. When ACPI tables are being parsed, for
-> > the bigger Connection():s ACPICA creates a Buffer instead of regular
-> > Integer object. The Buffer exists as long as Namespace holds
-> > the certain Connection(). Hence we can access the necessary bits
-> > without worrying. On the other hand, the left shift, used in
-> > the code, is limited by 31 (on 32-bit platforms) and otherwise
-> > considered to be Undefined Behaviour. Also the code uses only
-> > the first 64-bit word for the value, and anything bigger than 63
-> > will be also subject to UB. Fix all this by modifying the code
-> > to correctly set or clear the respective bit in the bitmap constructed
-> > of 64-bit words.
-> > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Tue, Jan 27, 2026 at 04:25:11PM +0530, Mohammad Rafi Shaik wrote:
+> Document compatible for Qualcomm SA8775P and QCS8300 SoC LPASS TLMM
+> pin controller, fully compatible with previous SM8450 generation
+> (same amount of pins and functions).
 > 
-> Perfect, thanks!
+> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+> ---
+> changes in [v3]:
+>  - Removed the duplicate driver code patch as suggested by Krzysztof.
+>  - Reused the existing SM8490 pinctrl, which is fully compatible with SA8775P and QCS8300.
+>  - Link to V2: https://lore.kernel.org/all/20260107192007.500995-1-mohammad.rafi.shaik@oss.qualcomm.com/
+> 
+> changes in [v2]:
+>  - Fixed dt-binding errors reported by Krzysztof and Rob.
+>  - Added proper slew rate value for wsa2_swr_data GPIO, as suggested by Konrad.
+>  - Documented Monaco compatible as suggested by Konrad.
+>  - Link to V1: https://lore.kernel.org/all/20251116171656.3105461-1-mohammad.rafi.shaik@oss.qualcomm.com/
+> ---
+>  .../pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml         | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
+> index e7565592d..354629c38 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
+> @@ -15,7 +15,15 @@ description:
+>  
+>  properties:
+>    compatible:
+> -    const: qcom,sm8450-lpass-lpi-pinctrl
+> +    oneOf:
+> +      - const: qcom,sm8450-lpass-lpi-pinctrl
+> +      - items:
+> +          - enum:
+> +              - qcom,qcs8300-lpass-lpi-pinctrl
+> +              - qcom,sa8775p-lpass-lpi-pinctrl
+> +          - const: qcom,sm8450-lpass-lpi-pinctrl
+> +        minItems: 1
+> +        maxItems: 2
 
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+No. You are either backwards compatible with sm8450 or you aren't. The 
+h/w is fixed.
 
-Thank you!
-
-Bart, since you picked up the patch in the same lines of code, feel free to
-take this one on top (I think it's your gpio/for-current branch).
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Rob
 
