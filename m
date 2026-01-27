@@ -1,191 +1,145 @@
-Return-Path: <linux-gpio+bounces-31124-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31125-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aNClJqmCeGmqqgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31124-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 10:17:29 +0100
+	id +BaKL9aCeGmqqgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31125-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 10:18:14 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AB0691962
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 10:17:29 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 539419198D
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 10:18:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 3A6CF30054D5
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 09:17:28 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E4850303A48C
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 09:18:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 857992D876A;
-	Tue, 27 Jan 2026 09:17:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4804B2D8DDB;
+	Tue, 27 Jan 2026 09:18:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="JFsZoGGX";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="ItUS3KBL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YdwzgVt2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCF1227BA4
-	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 09:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074A72D879C
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 09:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769505445; cv=none; b=SOWGXAUw0krexV34Qr84pa8pkZAycXhatzW2/JKPC+UDK6lZs026FgCyhx+q+eKw1vfsje/rCnkIlp4RLei2lGAc0tluITLjRtxSxkBre1ZGI5GkbP4t5GmoMAMmEzZCHTh56Uuqc/iRvSsu+jrNAw73I3NAdMlbk8PWrp4xGVM=
+	t=1769505486; cv=none; b=oJJsO7J4jmUD59GNaDCLecZWRf8ka3LCzk3MrHXjB57igxRZoszBVP5z+uJ/Xxyw5d3iNnfut4sH5p7s0/czV1UMmugmmGaLwkXwKhZK7Nig7dvsIGL137akRbUQZbQWuaGOfVTwXptWTreDisBlWlaX0twHZheKb/xwUBlqI00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769505445; c=relaxed/simple;
-	bh=lscktZ9dQIadEV+VqOMdr0Grnwc1OceO4vxIP0JnmBQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PbhJgpR+V4KI7yT8n8lmZml2bkRJeVp/6HaaPWkh3lKwdLSesrUO1QsY8wKsRIQd4yYpg8MYq9RrpPGBFpJO4dGDrpcJfcCYxEmFBC3dcW9DfVHv+GxHp2a9U+9wmYyYpfnYglJEI0wPV1WJbRM5Citkk2+FT5PxV7oqI9w+ha4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JFsZoGGX; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ItUS3KBL; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60R4UGkn184939
-	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 09:17:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	sXHR6MY7CFLSfA3JlEF1IVs8r25ADzVzBb/uqEQqBDA=; b=JFsZoGGXu6JlWFrB
-	U1btt3stAPXbsi7DRIcg3+qFoR1VSBgsiLh19JBBoUgN/3AkeMakg82UThyzHHow
-	ri1RdXi3AUVSPKou4PIgrjOAviEGOgI8O4fPL2OQWqlbpgV3IVrTfyUM0Uq/c9Wj
-	KWICi/R9h6RQJR54+HJ4Yt00VoIxRg3xJi3rh1dPOL7HUJDWIJIoRBziJqhKNbw5
-	6td28gEnFYEiXZ4LEEwpucmUM9vO9wpJljXSS6UJFhC92/KjyzC3Sf8iqt8wurSu
-	Vdz5fFy4PLuTdySYLKu3RHRf0IwEXmz7RCHvsl5DAFu7UuOezIjXfzRUwNq4G4/L
-	euKRTQ==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bxdv9je13-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 09:17:22 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8c5296c7e57so609637585a.1
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 01:17:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1769505442; x=1770110242; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sXHR6MY7CFLSfA3JlEF1IVs8r25ADzVzBb/uqEQqBDA=;
-        b=ItUS3KBL0ZRQIiQBARlNMJjnkl0jGWf4fsrbOCtSO4ZbivRJAWPWKYoNzp7nixLH8j
-         0qybhinA0TjJ5VpN3m8pnvJEDjTCUaOQtB/5Tu3mJknjs1Hs5qXFygdyAYiSKfOauPme
-         fsrdLRkiOsBQPFT/5xtW2ulYG4F9s+OAzeNbuXSp0Y6mHWKB/wbpGFzvLLIRCs1rzMqX
-         YAqbt4utB34qj9sPFvT/uwKkOJp1rDOnr7JZapk3uvjQvbx5s7dZOWjTD4HDNS1bVIIn
-         vRKPHqu7nThxUo17eW4UeDKnujz7dum38iREcjPLlc7EXwZzqIAQUxlmPju9Z2pJ1f1X
-         nxpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769505442; x=1770110242;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=sXHR6MY7CFLSfA3JlEF1IVs8r25ADzVzBb/uqEQqBDA=;
-        b=aI1ng+bRHi70GQ4Iy7EEuL/TY5BN0R7Bj2VqyzPtdnztYIF5/XWNyOvauuuBN1bOto
-         iHNV/sxQsvORKmr03I3Q+WVzRBxgyr0h814qdaSnoU329r/3w5Uylub6pag+8VpFVEwN
-         foC4Ucpl6WE4uDGYnf4G/SgHGbtBjbwELLeHoXwJF8JiExnUod9GDTVUiaKUdIfcjRuJ
-         0YX/nu0WlvbHdyb4HOwH7pOEKDL8XT3ROC3UCqBufm+VKNcFck6c31Ozvs6OwdIznArx
-         QLJuFvlxApsbasjfgq2TJpf6JvegX7Qzm/kuPB7PhGyLC0a5eQaEn8omeh6tJ24hG83m
-         5jeQ==
-X-Gm-Message-State: AOJu0YyxaoYP784EQOCSfRIpClXYhUv/SJuRAH90MCEIxp3AMblsxsdj
-	tMUGq/Nm3vZfVUlM6drPaYxaOiXTqt36FrDb4CjgFF0RLhhe1AHcjyjqdLtcyHeBWUUeGA3gRin
-	eeYDc1ubREVLPMhgkpQicOYfh2J+2zHxwCnOGGFOLGZdMnGndNH+xSpgRaTasir0b/XuGYcO7
-X-Gm-Gg: AZuq6aJBMZSyY4FQyiqrskjMIvtPis0YFA1x4xITs/MYxFk4yAngGGYcU60wa06EHxa
-	z/zisEdLQroTjNe9UnK2MQuqF7Jc4ku+rh7jSz/GzaZhymd/74WWOAhCHVRiQ/SqKff6oCWGbGH
-	8T1BHQsUdUfm33kK4fvi+gmBqAl0M30DNVnQXB5vQIxLLMR51uiB503mBdTUX40Y7H2xrGPwrG4
-	BHyZNMb/80uJ1rvSqKwJP7sUnDWip9+ZXACVzogBQ2//DeKmnKb/rQyoDecuHG6EY5pahfCYWIS
-	VelKSe7a7l7TCOIO3QHuoAsa95uq8Wf1DVoMMhYsHbSCovcORx800VwXp9p2b07qnaYk4g8SX8i
-	eYIPIyhcGPublHUEKHrOrLLRoIEBSjo1tN6MYjw==
-X-Received: by 2002:a05:620a:2585:b0:8c6:aeaa:8757 with SMTP id af79cd13be357-8c70b88dc84mr120659785a.36.1769505442313;
-        Tue, 27 Jan 2026 01:17:22 -0800 (PST)
-X-Received: by 2002:a05:620a:2585:b0:8c6:aeaa:8757 with SMTP id af79cd13be357-8c70b88dc84mr120658385a.36.1769505441957;
-        Tue, 27 Jan 2026 01:17:21 -0800 (PST)
-Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:262e:d32a:e347:8b74])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435b1f73855sm35856591f8f.29.2026.01.27.01.17.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jan 2026 01:17:21 -0800 (PST)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: linux-gpio@vger.kernel.org, Yuhao Huang <nekowong743@gmail.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, brgl@bgdev.pl,
-        linux-kernel@vger.kernel.org, Linus Walleij <linusw@kernel.org>
-Subject: Re: [PATCH v2] gpio: virtuser: fix UAF in configfs release path
-Date: Tue, 27 Jan 2026 10:17:16 +0100
-Message-ID: <176950538639.14023.10229567374455887978.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260126040348.11167-1-yuhaohuang@YuhaodeMacBook-Pro.local>
-References: <20260124162111.3945666-1-nekowong743@gmail.com> <20260126040348.11167-1-yuhaohuang@YuhaodeMacBook-Pro.local>
+	s=arc-20240116; t=1769505486; c=relaxed/simple;
+	bh=yQ966Njn+FfjMMlR6gQsKtYlPJxHyIq42u5ygQh+r/s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ddpfkUPTbThD5K30j7byPwHn7ily+rlpv8Lc63plfYmYjy8k7YHbBBj2mh5CUZ6m3j1BaoGYFbbbZpgZT4G5Aluds+xzkyVEISPjkDMBdJX8LaANQ3GoQWe4Vxtm5bNmGrMwkFZhQYjHOuBVYP0bq2Nl6dm4PD2HKVfI2sSSIgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YdwzgVt2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C20FC116C6
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 09:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769505485;
+	bh=yQ966Njn+FfjMMlR6gQsKtYlPJxHyIq42u5ygQh+r/s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YdwzgVt2AxlbYuTOspMFsTHS/4X8Mp0UFv72qD4KPLeL6kxPy8MuO5TavGiSsolp2
+	 /j10zvQ2CF8KVEjoL5nLxHAX4lqc1n2dKBvI2PWqKjjhbydTERJlUw+LxZ3DyAk8bI
+	 H3uHvi0xr0G6DYC2bBy6ENLy2dwZJf39/ioG6bylXKhrWmY80dmb2fAmM22G0hR7Nj
+	 P8gn7e9gxTJM+iUHamfexFDglK9QB/0dj+UqGBN5d3zQpu2lxdtPXpkdAMHQn24a26
+	 a9PX+TCcS6FvU+QSUtAibUYbxCNE0Z0zY+PqS5pFUR25xNwMI66pOEYPtuTduUS+5k
+	 Kn77ddULPA8pA==
+Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-64970870c0dso2075432d50.0
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 01:18:05 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUCW9YFdpmZiWLwJ7QVnZdGtlUvhDiF4Lx9VpxOlvcPBAu0+FwCrBEheBpayXaHOUa3vizftbPPtUpe@vger.kernel.org
+X-Gm-Message-State: AOJu0YxylhTpsVZgKNe1aVzfaPrdsyGDr4y/FuvEUTRVWrKYAxu8QYsX
+	DhgJsMdQIWg67b5U/lVl+eWlqPImiL8i0Vy7V/WOX+YTiv2HwJWRw6lQBLTFEtBSeV/li7eg7Au
+	nNnp1RbtvI+muWeFd1sZPx6Unig/HyH0=
+X-Received: by 2002:a05:690e:130c:b0:646:7a21:f03c with SMTP id
+ 956f58d0204a3-6498fc67a09mr562209d50.81.1769505484808; Tue, 27 Jan 2026
+ 01:18:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=OYOVzxTY c=1 sm=1 tr=0 ts=697882a3 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=EUspDBNiAAAA:8 a=49dCE_bbu2Yq34y5nY0A:9 a=QEXdDO2ut3YA:10
- a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-GUID: LC6ky1slViA4sTVI5ReBI9_BPGxaXb6_
-X-Proofpoint-ORIG-GUID: LC6ky1slViA4sTVI5ReBI9_BPGxaXb6_
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDA3NSBTYWx0ZWRfXyChQxSXe4eGz
- 6apgRo40Sqkh6s6vUlanGYZTGpsFTmdPi5nKsbN9waTb8FxNQyj0Xow+QkAxcg+ty9v8OJ0I+lg
- EiZIOvU5nI8cgbZho0VpYtS3hM54v6g31cd9hIINVQEqKaSTMhFoB1q0F7mC6m/fX50mhVffthF
- 524lgQki+l/Pvb1ol95bA9bDhsyBEdTmXDnCMq5AWyKyYdUtKbxt8BdK7zNKGRPVQsgOq0tETQd
- p+HX1c9eg/FGRolTSuG079hcUxMP2KTyTHdzMY5gejgo2LAGdwe8E7WXm0kMyEUGHjUucX/EZ1S
- GTk04il53JkjCbH2Ogwbc5xapD+duCT+H93BhwVnePl/8aOv6+dBrUQlRXdoyrjsGmpHfRhBRMt
- GRhXewa5mClkP/ioBlmPnHaBqhbtxQ78I+6p0VNaTfzJ+8rf74J/XliIQGNaj5K7c4fk+TGgjGh
- kMhTyWYVWQlhCmULAWw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.20,FMLib:17.12.100.49
- definitions=2026-01-27_01,2026-01-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 priorityscore=1501 adultscore=0 spamscore=0 impostorscore=0
- suspectscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2601270075
+References: <20260120115923.3463866-1-khristineandreea.barbulescu@oss.nxp.com> <20260120115923.3463866-10-khristineandreea.barbulescu@oss.nxp.com>
+In-Reply-To: <20260120115923.3463866-10-khristineandreea.barbulescu@oss.nxp.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Tue, 27 Jan 2026 10:17:54 +0100
+X-Gmail-Original-Message-ID: <CAD++jL=oAyWmP=2LhqK4rdQSOb5WJvCTGRUxSdEnttX6i5s5+g@mail.gmail.com>
+X-Gm-Features: AZwV_QgpziPUFNsf8KU23ZSvXoPFeeWSMMPX1f5j49l0bdt4rKMCsorpnxg7oYA
+Message-ID: <CAD++jL=oAyWmP=2LhqK4rdQSOb5WJvCTGRUxSdEnttX6i5s5+g@mail.gmail.com>
+Subject: Re: [PATCH v8 09/10] MAINTAINERS: add MAINTAINER for NXP SIUL2 MFD driver
+To: Khristine Andreea Barbulescu <khristineandreea.barbulescu@oss.nxp.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>, 
+	Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>, Larisa Grigore <larisa.grigore@nxp.com>, 
+	Lee Jones <lee@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Alberto Ruiz <aruizrui@redhat.com>, Christophe Lizzi <clizzi@redhat.com>, devicetree@vger.kernel.org, 
+	Enric Balletbo <eballetb@redhat.com>, Eric Chanudet <echanude@redhat.com>, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, NXP S32 Linux Team <s32@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	"Vincent Guittot devicetree @ vger . kernel . org" <vincent.guittot@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31124-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[vger.kernel.org,gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,oss.qualcomm.com:mid,oss.qualcomm.com:dkim,qualcomm.com:email,qualcomm.com:dkim];
-	RCPT_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-31125-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[linaro.org,bgdev.pl,kernel.org,gmail.com,suse.com,nxp.com,pengutronix.de,linuxfoundation.org,redhat.com,vger.kernel.org,lists.linux.dev,lists.infradead.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[30];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 3AB0691962
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,nxp.com:email,infradead.org:email]
+X-Rspamd-Queue-Id: 539419198D
 X-Rspamd-Action: no action
 
+Hi Khristine,
 
-On Mon, 26 Jan 2026 12:03:48 +0800, Yuhao Huang wrote:
-> The gpio-virtuser configfs release path uses guard(mutex) to protect
-> the device structure. However, the device is freed before the guard
-> cleanup runs, causing mutex_unlock() to operate on freed memory.
-> 
-> Specifically, gpio_virtuser_device_config_group_release() destroys
-> the mutex and frees the device while still inside the guard(mutex)
-> scope. When the function returns, the guard cleanup invokes
-> mutex_unlock(&dev->lock), resulting in a slab use-after-free.
-> 
-> [...]
+On Tue, Jan 20, 2026 at 1:01=E2=80=AFPM Khristine Andreea Barbulescu
+<khristineandreea.barbulescu@oss.nxp.com> wrote:
 
-Applied, thanks!
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f1b020588597..37d80ff0ea4f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3183,8 +3183,10 @@ R:       Ghennadi Procopciuc <ghennadi.procopciuc@=
+oss.nxp.com>
+>  R:     NXP S32 Linux Team <s32@nxp.com>
+>  L:     linux-arm-kernel@lists.infradead.org (moderated for non-subscribe=
+rs)
+>  S:     Maintained
+> +F:     Documentation/devicetree/bindings/mfd/nxp,s32g2-siul2.yaml
+>  F:     Documentation/devicetree/bindings/rtc/nxp,s32g-rtc.yaml
+>  F:     arch/arm64/boot/dts/freescale/s32g*.dts*
+> +F:     drivers/mfd/nxp-siul2.c
+>  F:     drivers/pinctrl/nxp/
+>  F:     drivers/rtc/rtc-s32g.c
 
-[1/1] gpio: virtuser: fix UAF in configfs release path
-      commit: 320ae0de18e16ad6ba45f4bbc493a3d141d3b94c
+Isn't this a good time to also add yourself as maintainer for s32g?
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Yours,
+Linus Walleij
 
