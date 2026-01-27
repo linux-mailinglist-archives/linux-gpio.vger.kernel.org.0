@@ -1,323 +1,155 @@
-Return-Path: <linux-gpio+bounces-31099-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31100-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MG5RC3FHeGnWpAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31099-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 06:04:49 +0100
+	id MI8wGhVheGmbpgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31100-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 07:54:13 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 998B58FF11
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 06:04:48 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B65D490876
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 07:54:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 8C98D302BA31
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 05:04:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C6D57300DDC0
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 06:53:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A0CC32861E;
-	Tue, 27 Jan 2026 05:04:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6774832BF52;
+	Tue, 27 Jan 2026 06:53:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="h6zE3QIl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLY61W84"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012012.outbound.protection.outlook.com [40.107.209.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B714A328608;
-	Tue, 27 Jan 2026 05:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769490280; cv=fail; b=VLrGzLjwo/A+5exope0sfUkkCciWrKZukIeByo0JnLg4mVZB+gVQlrmgtwFUNSwYT7tIEJuzvhorMyAfQQVzFmOms9V014OOQpIP4Gnh8ucXx5dL0kmNIZdc8rjmxH4tuVIaq/SmHbo+ztxlb8fV2R8yFMOg5U1fHv63rHtpfwQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769490280; c=relaxed/simple;
-	bh=044D9XlTxrs02Sy1EaPlOhDtVXdZOBC3pjVTahmY3E4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iFUYVmebJGP90dgGUJxt1I/T9sr5vTisuP8cDFKvNPjQ/2bk18gEMdoj/oME7UJQunmjB7mM2gLaZ8TJh6OJNuDXnWod11mzxk2z7v7Z3EzvD+cXoZFJ7/yn0zf7dPUjJ1NeBgobZF+SgyPGNPxJmHXg03fSEJ+EcTL0FNyRKZM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=h6zE3QIl; arc=fail smtp.client-ip=40.107.209.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=W2eiegZrIjLxCWWY2Bb5aDmxnuE+LjVVk9ORRrt1SS/lLQ1W4X/XlBLy5xyLoEDq6xTY5lBaHIfSnqNsyV2kR316mc3x0vvdy3Lyw5Sp8RrwScku9EIGnXXyA3Qh2Fzy4oB8FcHJEqggcJML/y6Bpz9EoyBGkXFrG8Tr3dV+BwXICbaoscOAzt8fF1kAmf2URR/71GzFhQaobiZMK2Lr4e+/fOnfQA1284B2Yiyg4hrgjh1XiLLYm4vZpo5ZDmCLTciV2BUvHz6N6gWFn+0ez4LVquvNHFnYhk8NYmCYkBlbshTb8TNSkidkZklmcblzMhLjCERChUx1hathz4eaCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=noqUG0bgzb0Mz26bny+vYut7xyNQTS0q20oZpC/B5Os=;
- b=Y5YXc2OIeUV9yLVdPPYTWmo7ble2jI5/7S1urjQqhQgKxIJl/r/XG9aVGvRPQtzregNln5a/PJnML8l1HllmNwSIBV2wTBEXK3JPI3woHgvirX5CF4DRwrQe5PkXrukKdlyJT7se0HqYNd+DPEDO5ccFgBg4fYN2dXLr6oCOGGXIMuOdz4QIbcVcsBVCY1V94CQquF+Sljvo3VOwxDY81v3JB8gVCOmnYQj3Q9xkmSUoFBxq5YM78SRSBOAJurKdKyLrVdBtJh13Et98ivSYdhIb2eL9VqIuuaVFyX8OBIF4UIo9Lk8cRvdIsXaKLETmUPdHBT4a3TwWoTExI7dJKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=noqUG0bgzb0Mz26bny+vYut7xyNQTS0q20oZpC/B5Os=;
- b=h6zE3QIlwhChXVcSp2oLhCfW4Bmj9OA3soMJBb+TK8lxLDfUgK0bPOh96o+MZgEiDNYB1FC1/8OMaO9DyqXNvIwh8gDsN34HYoqVcSQhqg8HMaAm3BtgWyJ/IIgSp2rNwBFOHYvtYFr2jP4mBYvOh57FJg0nvAXMOlA5w8PtU3gfv0cXEWqH5uAuGs7T68beHosmRZWZDE95YN7EOqeHRjer7I3NXyWHxEiF3aYgz/3Xqc1SMG9/FjPfVSp+B0WhbmEXyoBtTn34OmB91RTp4W+uZdB4EFPVzC++QAVsWZ1HSaJISG187oagX21tdlED7pnzyu612EWGCg8GdB7z3g==
-Received: from BLAPR03CA0068.namprd03.prod.outlook.com (2603:10b6:208:329::13)
- by SA0PR12MB4400.namprd12.prod.outlook.com (2603:10b6:806:95::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.7; Tue, 27 Jan
- 2026 05:04:34 +0000
-Received: from BN2PEPF000044AA.namprd04.prod.outlook.com
- (2603:10b6:208:329:cafe::a1) by BLAPR03CA0068.outlook.office365.com
- (2603:10b6:208:329::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9542.14 via Frontend Transport; Tue,
- 27 Jan 2026 05:04:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BN2PEPF000044AA.mail.protection.outlook.com (10.167.243.105) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9564.3 via Frontend Transport; Tue, 27 Jan 2026 05:04:34 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Mon, 26 Jan
- 2026 21:04:24 -0800
-Received: from localhost (10.126.230.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Mon, 26 Jan
- 2026 21:04:23 -0800
-From: Prathamesh Shete <pshete@nvidia.com>
-To: <linusw@kernel.org>, <brgl@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-	<robh@kernel.org>, <linux-gpio@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <pshete@nvidia.com>
-Subject: [PATCH v4 3/3] arm64: tegra: Add Tegra264 GPIO controllers
-Date: Tue, 27 Jan 2026 05:03:58 +0000
-Message-ID: <20260127050358.1136279-3-pshete@nvidia.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260127050358.1136279-1-pshete@nvidia.com>
-References: <20260127050358.1136279-1-pshete@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA81232BF5D
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 06:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769496833; cv=none; b=lgw8A3MMDQaZepZMiMslXkVlY7OhO5m6BRvnNnTVpFrpGyG+c2xPV09uZkUoH8Pzi5izwX/vV1U/wCY70aqPwF+Bg6P48ibWEFn+lIdHEVOp2LYsO1YQ+By2H5pgbg6mOUHp2Wbuy3sFVM3L8n/T6xc6rgPGZflBNLGJabP7xBQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769496833; c=relaxed/simple;
+	bh=rlH4pMRx4YCccUgiMnKNvSggZ8+Ar2o50DnD5yIzFPU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Jt0aZHIj3Xsi47L5BEHrtK2yk7EEgoowupYFLUKIQNuSS7FK/3svMofGhPeJDTYEQ+Jbtyyq8cL15H38QRib1nGaXoFGCZVQaTpiVHO/E3fnL6zFacYIwcmLaGDwIeIX6ss//0ZxYBxS4w95ClO0ZsKyBekZ+Bf/BsboJ3dL16s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iLY61W84; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3831ad8ae4eso47605251fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Jan 2026 22:53:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769496830; x=1770101630; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=w/M/tHXyYAIsXBAFgOBZW1gAQGfQie22hy7Z7epuhM8=;
+        b=iLY61W84iKJmXatnNbC8EcP4/2Zms3I7VnPOlRFGLspZG6tjIHetaZkPRLpQs6R3FK
+         fZ6oo93NJoBUrKnky26dghrPGwmR74hzf9OpsmjXZFbejdWBpYOjTVF3RQ7duOsV7Ubo
+         bxLgeItAWHbgC26IYY5a+DiLhhroBvBzZ89bRbBA45s77RHDEO5gBUNkqJBBQG1Tni6d
+         O9i+yUPtI0V1Aaz5MCqxLIoXroQ83+kpoz51r7GFYPPZL1o3c5QJs3IsquW6NXFxNsC0
+         URSFjd1OmDXNP4q6f1537NY5jehcMhd52zOLy+n0iP2zv0s/4y5KOmNWbx4FirevlY0M
+         TrbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769496830; x=1770101630;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w/M/tHXyYAIsXBAFgOBZW1gAQGfQie22hy7Z7epuhM8=;
+        b=NhUA6slMsQNAmkFZh0OvINNfStxrTYDnSa/msSrit5T2XREoXE/GvndJWdDCZXPEC5
+         bbrZYY29EaonGpRBImDVRs7HcdGdPnxJXfvho6i6PReboXvO/OwwkerWwY9WolxB+Hpj
+         zBXtaNCaRNp6fNmSwb0kk0owtoAcJLq7tFmwc/on9OC3uG0IIa/HZYchOTaG8XyPrpIU
+         tE3r3vfQC5T8i8KTK1Hj8lqBznQVCqkawhKHyOZxuSXD79xOUHI1GS/B10jMNiA4xh8Y
+         RX+8A41KNTD03TL6X6tD5e+jU56Xor8GU4LGXMDiPgXIIq/81JufqCkOdHGGP06p9rfr
+         mtzA==
+X-Gm-Message-State: AOJu0YyBYq2n6v0Xfw9fZ5cMith9Z8vNHBJuD23wE/xA/NlhctH++jS7
+	ZCvj02rI7pNNeb/sX/UHn29A/mrbeg9j2XXaDgQ4DK5ZE2Pf2X5EBnzB
+X-Gm-Gg: AZuq6aKoTzBTO540dEgQKci2xUoCCXvwK5Kw6I2HpW35sGEGEdMNGaJrsBkCO4vZ/Bl
+	ZclpDLu6ov7bxAk75LcGwNIv6Nxcno5TCI51asHGfe+C5Psm29anXUE+uQqsEsSWWhYPTum/Gcm
+	a/7UlOuNAp1WRxkO4sKaIPQa1+elXjMVq/fabT4WBTs7P8oqzbPYY3yeaPKr7ajkEHDIq+Z0pIT
+	9YSI/GxnIW6WY3BqqovE8SyIl/WicfaIh10Mjg6aEiWhNjQHJyh7z0ot48MS7o/EURQ+TvfL09L
+	QidCe4UZirHHfGNe9HC5wjk1u8xOIlYRyOi5d5GfwF0Rye8kiS0IokIFoie1aqzQwRKvmzKVPH2
+	dA5pBO/7tQS75jFUQkGkbMk+OoVWZHsnYhlLqzhS766XGVJiML4V8KO5blah3e/VR/AQoEej/gq
+	tl13k8QK6nXuTiDdl1LfHrqI54SelpnaAk281kPVcRiaWnYbAxXy/rHvLx7SFp8bpZgxqS
+X-Received: by 2002:a2e:be8a:0:b0:385:f235:51c5 with SMTP id 38308e7fff4ca-3861c94c519mr2569401fa.35.1769496829413;
+        Mon, 26 Jan 2026 22:53:49 -0800 (PST)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-385da1704desm29359291fa.23.2026.01.26.22.53.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Jan 2026 22:53:48 -0800 (PST)
+Message-ID: <33097246-9724-4e9f-a06d-efab2bb001cb@gmail.com>
+Date: Tue, 27 Jan 2026 08:53:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044AA:EE_|SA0PR12MB4400:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4ed4d0be-9bd0-4521-0c13-08de5d61900a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014|7416014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NDFqajRPejFPd2JCczNTMXFHQWtvVkxzV1hJTnBIMlFIRXZ3b2ora1gxMzhO?=
- =?utf-8?B?UU9XMTZBMVlYQ0hwZUpVM2JldCtYMVc3cXFGdUcxb1d2TGx2bnhscWw3bk9R?=
- =?utf-8?B?QkJaUEc5ZWt6WWNrTHRYOWZRUnhHcENycHhVZ1I0MS8vOHhCVitCVGJxUHly?=
- =?utf-8?B?NlVqOHBQU2dNSzBSZU9nUDdwZzBPM2UrRmh6RC9sNE9JUS8yaGZaRXpoZytZ?=
- =?utf-8?B?QUtpeVg5NFVGbmlBWDM0SEdMcTk2TXoxb0VWVUNDTzFhNExZNVdnbmhtUHF4?=
- =?utf-8?B?SDRvOXIrOElFMlNoY29pUElBRVVrSTJoVi83KzI5dEJUK0Vja0dJL1hQYmVw?=
- =?utf-8?B?ajE5dkJNSWE5QzJieklIWUNuYS9xY3RJeEttUHJMRFRnbVlGaU5VUWxTV3ZG?=
- =?utf-8?B?cXdMV2Q1cG9RZnpMWElITVYwUEtYaFJOQWZrNzZFcDlIUEMxQjMyWGFqVFFZ?=
- =?utf-8?B?dHVBeTFleS95bGFGdG9CQk5vL2RUWnJVVzRDMHdJbG1vZmdxalFKMGxZeS82?=
- =?utf-8?B?N3UxUUlJRGlSeWtZV2dpRHFIM1NoTlYyejFCMlIwODdjb0wyK0EybDIrbVBW?=
- =?utf-8?B?UzZjRTFEK2dTV0RSekNvajNlRk1RTUNzSjhOZWlsOTJSSG0vRmMrNGU2a0Rn?=
- =?utf-8?B?cGdMbklXcTk2L1NBNm5leStyV01xVXFsQWJSOGUwNStKT0JnVmlVNHB3Tk1F?=
- =?utf-8?B?NFBUL200SWVjaW16cVFkaVQvYmZueHBwZ0c1N0hDb2MzRVhPeXlHZi85ZldG?=
- =?utf-8?B?T0tnMmc0UExqbHdpZ0pZTGd5YWhISGkwdDVadzhLQ0RMQmxqbWIvZEpxSUZJ?=
- =?utf-8?B?UlNZSjlNUFhkd0NTZDdEcXZ2S1BaZDJFMk92c1hQcWlXdUJEUVBFaEJiWklv?=
- =?utf-8?B?eGpNR0xJR3FwbE4zeENWb0NyWEJ3eHR5aG9xVHRQeUpCK3Exa0hlVG9Ha1BJ?=
- =?utf-8?B?MXA1TWNFZWxYQXlGbDkzTzQzZGtaWXI4Z2dMRnB3YzlDL2pyTFR6bTZ1NXo1?=
- =?utf-8?B?T01GbFJTSkZZWE5Pa2N6QmxKSDV3SHZRWkxwSFZOOERrUU4xZkNjWno0Ny9p?=
- =?utf-8?B?UmVwaS9wRHRibWpMRTlGYVlQTzhTTkhtb0dzYkVIY3drN3lnVWxBMFIwQmxO?=
- =?utf-8?B?MUZqQkhMTkZZTlhrK2NjU01QNTBTaEg4VHNGczFFbFJJN2c5SVJCMGNGbnRW?=
- =?utf-8?B?cUhiNXFtMWIvSFR4OFV0L1B5TXNybkV3dlF0bXZGMVU5Wkl5UXVTa1I0LzB4?=
- =?utf-8?B?a29lQVJUS3FwbVFYV0YvUzJDUXk4ajlrZDRPOVVoOGpSR29PNU9hdTlUNnNs?=
- =?utf-8?B?QXlNY3VicTN6RGhTL1lyOWVYZWxNN0YrZlcvblhZZ2FYaHJ1bHpMN3pKbDV0?=
- =?utf-8?B?dkNhanF0ZG5RUWFmL1NYUlUwbEluTytyVmJDazNyUHE2MVc2NUxFNVRzMzZ6?=
- =?utf-8?B?RXk1N09Eb1dLTHJKL3plQlQyWXA1RzFydisvbDM3ZFhoakVXN1RLWkpTbnZ4?=
- =?utf-8?B?Mnl4dXU1WFJTeGs3dGFOdnBxbFpIeXpnb0hWYVlmNjJLaTBtT20xQzR3cEhQ?=
- =?utf-8?B?Y0FOWXlyOVBzMkVYNXpaQkNuTUJIZ1dwa0xVYVJYenZNQmVNSjZtdjJTcFVj?=
- =?utf-8?B?OGFTRGZoZG16RldlNnl4bUtFam1hZHl5YlI0ZkZFQkR2dmxHYU1XdTUxY0Va?=
- =?utf-8?B?VlRMZFh4Q1A0Vk11Mm0rdk5TQzRnMWdPWm5scHZSVnJPVjU4SnB3UkRPbGJl?=
- =?utf-8?B?ZWlMOXJOeWR2MWpyc0MydS9ETXRyV1FzVEwvMDVxdmJaemkyMFVDQllvN0Ux?=
- =?utf-8?B?VGVqSUY2ZjBaU2pwRGpTS1VHY1hFRmx4S1hoZVRnU2crME9kdktBQ0U0SGQ0?=
- =?utf-8?B?WkxCbjB4QXZxR284Y3QrbUY4OHBxNXgwbGlTcXNQaDVvR1F6UExpUklFdGE4?=
- =?utf-8?B?UkY2T2ZkQVR3MU96TzVMYXp0cVNnL3dUVVNrbGU0bzNnZ1NFNkNDZnFXNk8v?=
- =?utf-8?B?V1ZIcTNTaFgxUzN5eWR4dU5NUVF3L2xhbTNzY0pyTXEwRTc3R2d5cWk1c3pF?=
- =?utf-8?B?NVNkdGVPNkRuK2RTQ2lMYXpBZkdIdTVGanRIaWpqYkpMVjJ2ZXJqdzRrb04w?=
- =?utf-8?B?Uk1iS21IckxtTkRvajNHc0hydkRUSlBSSkZYd2c3Sk5OQU44eURhVGZKb0JM?=
- =?utf-8?B?TGtDdGIwVlRlSFBad0ZlTjkvV2Vic1B4MDk5MWtiTDdYVW83V0RCaWdSRU9h?=
- =?utf-8?Q?gH/ZLnAFfG4Reo+q/hB2DfEyDuvF7YuOfrTWzv8a64=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2026 05:04:34.1103
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ed4d0be-9bd0-4521-0c13-08de5d61900a
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000044AA.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] gpiolib: introduce
+ devm_fwnode_gpiod_get_optional() wrapper
+To: Michael Tretter <m.tretter@pengutronix.de>,
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: linux-gpio@vger.kernel.org, kernel@pengutronix.de,
+ Stefan Kerkmann <s.kerkmann@pengutronix.de>
+References: <20260126-gpio-devm_fwnode_gpiod_get_optional-v2-0-ec34f8e35077@pengutronix.de>
+ <20260126-gpio-devm_fwnode_gpiod_get_optional-v2-1-ec34f8e35077@pengutronix.de>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20260126-gpio-devm_fwnode_gpiod_get_optional-v2-1-ec34f8e35077@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.84 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31099-lists,linux-gpio=lfdr.de];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,nvidia.com,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-31100-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:mid,nvidia.com:email,Nvidia.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
+	FREEMAIL_TO(0.00)[pengutronix.de,kernel.org,gmail.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[pshete@nvidia.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[Nvidia.com:+];
-	TO_DN_NONE(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mazziesaccount@gmail.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_PROHIBIT(0.00)[0.126.165.224:email];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCVD_COUNT_SEVEN(0.00)[8]
-X-Rspamd-Queue-Id: 998B58FF11
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: B65D490876
 X-Rspamd-Action: no action
 
-Add device tree nodes for MAIN, AON and UPHY GPIO controller instances.
+On 26/01/2026 16:27, Michael Tretter wrote:
+> From: Stefan Kerkmann <s.kerkmann@pengutronix.de>
+> 
+> The helper makes it easier to handle optional GPIOs and simplifies the
+> error handling code.
+> 
+> Signed-off-by: Stefan Kerkmann <s.kerkmann@pengutronix.de>
+> Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
 
-Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+FWIW:
+Reviewed-by: Matti Vaittinen <mazziesaccount@gmail.com>
+
+Yours,
+   -- Matti
+
 ---
-Changes in v2:
-  * Update Tegra264 GPIO nodes to use “wakeup-parent”.
----
- arch/arm64/boot/dts/nvidia/tegra264.dtsi | 88 ++++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra264.dtsi b/arch/arm64/boot/dts/nvidia/tegra264.dtsi
-index f137565da804..cf4de2c517fa 100644
---- a/arch/arm64/boot/dts/nvidia/tegra264.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra264.dtsi
-@@ -3277,6 +3277,50 @@
- 			status = "disabled";
- 		};
- 
-+		gpio_main: gpio@c300000 {
-+			compatible = "nvidia,tegra264-gpio";
-+			reg = <0x00 0x0c300000 0x0 0x4000>,
-+			      <0x00 0x0c310000 0x0 0x4000>;
-+			reg-names = "security", "gpio";
-+			wakeup-parent = <&pmc>;
-+			interrupts =  <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
- 		serial@c4e0000 {
- 			compatible = "nvidia,tegra264-utc";
- 			reg = <0x0 0x0c4e0000 0x0 0x8000>,
-@@ -3347,6 +3391,22 @@
- 			#interrupt-cells = <2>;
- 			interrupt-controller;
- 		};
-+
-+		gpio_aon: gpio@cf00000 {
-+			compatible = "nvidia,tegra264-gpio-aon";
-+			reg = <0x0 0x0cf00000 0x0 0x10000>,
-+			      <0x0 0x0cf10000 0x0 0x1000>;
-+			reg-names = "security", "gpio";
-+			wakeup-parent = <&pmc>;
-+			interrupts = <GIC_SPI 538 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 539 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 540 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 541 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
- 	};
- 
- 	/* TOP_MMIO */
-@@ -3726,6 +3786,34 @@
- 
- 		ranges = <0x00 0x00000000 0xa8 0x00000000 0x40 0x00000000>, /* MMIO, ECAM, prefetchable memory, I/O */
- 			 <0x80 0x00000000 0x00 0x20000000 0x00 0x40000000>; /* non-prefetchable memory (32-bit) */
-+
-+		gpio_uphy: gpio@8300000 {
-+			compatible = "nvidia,tegra264-gpio-uphy";
-+			reg = <0x00 0x08300000 0x0 0x2000>,
-+			      <0x00 0x08310000 0x0 0x2000>;
-+			reg-names = "security", "gpio";
-+			wakeup-parent = <&pmc>;
-+			interrupts = <GIC_SPI 843 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 844 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 845 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 846 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 847 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 848 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 849 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 850 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 851 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 852 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 853 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 854 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 855 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 856 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 857 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 858 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
- 	};
- 
- 	cpus {
--- 
-2.17.1
-
+~~ When things go utterly wrong vim users can always type :help! ~~
 
