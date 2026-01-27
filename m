@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-31185-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31186-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WJgFFBk5eWkZwAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31185-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 23:15:53 +0100
+	id AMZOLFY5eWkZwAEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31186-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 23:16:54 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 648739AF35
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 23:15:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E3E779AF44
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 23:16:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7CE11302C6C6
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 22:15:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 813513013A94
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 22:16:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3FFC35B635;
-	Tue, 27 Jan 2026 22:15:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC289356A3A;
+	Tue, 27 Jan 2026 22:16:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VRFfMsiX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RR2aHX7p"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BF93570A0
-	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 22:15:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF84D276028
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 22:16:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769552138; cv=none; b=NeKXMo/+2REZH25exidFmPFwuCmpWyaySevg/o+4ZQgh8yHugRwOyh3M8YOq6igNyvuO77OgaobgTPKwLr8j/r/G+HZ+ejfzd/j339F2gPN5Aot14DeQxqV/6E64IEipFxHU/pnvyjX0vHvEBiiFlh5ZpVZCnb3DdATNBwPisfo=
+	t=1769552210; cv=none; b=SckJa3oJauzsUc1do4xNKkHj5+wJ2HT8fL+ttOX7OPQYDLH+mXNNQIZSV5XPdvgB0YPo0JjBQboSQCJ8a8hNmEBwuY02j96OL/MOb+uaPs+GkXtpZbA78pTLZcOdt8Xz9f696XYdtmjKAkm3i1WspaDNp1iWx63OViUaMdRX3Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769552138; c=relaxed/simple;
-	bh=TwMRVR4JPiCqluFN5GCDrX6bmKnCS/BpUIJaA9qie7o=;
+	s=arc-20240116; t=1769552210; c=relaxed/simple;
+	bh=STl2Nd+8C8kVbSoxZDbbBr4CfdlYXAHmLXHpMVDXU2A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c6UH8cFRhqepjrw6tj0PiWYmddqsVUbtL0Xy9b2IM0zTTWZQDMcnim4NtaOuLDyhK6v2wFXFI0w2cbvKixGJoCHsAEuUaTiQV/Ci9twDxCU/vbn6PZyVGxK4ML541/9o0mHHP6PGsPHijBIS2t12D4MXO24VZ3P2bhtbI41C2ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VRFfMsiX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ADA1C2BC9E
-	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 22:15:38 +0000 (UTC)
+	 To:Cc:Content-Type; b=DGbG3WXCJRsZmjIcJKxjPAGL2bPldkdiCaF1+ddha2DKEiHBv4fnXCV3Yhz0AMr7wj4sYY094OVF+wX+FBkUnex6saWYdRqoUyTWA5T1PQKMMoXPAdLyRlhM93Vpxq3fwbTi++KKp8mwalx1/Eqgzrcl6ZhP10oV6ck25HlEiD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RR2aHX7p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59771C4AF0C
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 22:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769552138;
-	bh=TwMRVR4JPiCqluFN5GCDrX6bmKnCS/BpUIJaA9qie7o=;
+	s=k20201202; t=1769552210;
+	bh=STl2Nd+8C8kVbSoxZDbbBr4CfdlYXAHmLXHpMVDXU2A=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VRFfMsiXlGrFgXEPj5uhScqB60qnBKXNWD58MRM3oINCFZfJ+FKflt4hbvURJWT4e
-	 aMpQ0uyHxvcJfF1BLjHe1I+/hQY0jn2R7YIgA7bcs1UwkL1/Cs6aO59QiBNgvJo8Ti
-	 3WGrYxKDMPIfP7CxoiVFPjbM5JA/MZ6A+oxVjhcJFR5VhDrVS6dm9gzLwPW7ILsb9E
-	 NDsUdjuER4IG1Nwqst2ZFq+x1rpRZNNfS/YPm/F/LY1RyNziqwHgQn4WfpyUDVI2AG
-	 o9iYg04fk/xGIOWKfCz4ZlNUydxaIEX03kfOzivbN2W4zUXMXYjd/9NNJblEP+zV2O
-	 ZD/fy7IksfPfg==
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-7945838691aso4336857b3.0
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 14:15:38 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVTG8/ntW3Twzi7DemN3DmTQhTDmmpkhqmp+Y3MMMykglwUnHSz4lYMtl+JpItCOx7nYYaS2VKCsMsJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzoKVeJOWPWTGW3eq2AEbMpsaqZ3Dp5BhjqhUQr6OV+susfdaq
-	nOAnUwdmbxtnBc+XxSiBhgQ5mDoFaiK+pPOT8ZkwZI9dM0NENUgpfD4o6MncrZkjsEMrCx5VKxh
-	OIuKiWYiZavP/GGqepavzq2Fr/2ObMAM=
-X-Received: by 2002:a05:690e:bc6:b0:649:60a9:bd74 with SMTP id
- 956f58d0204a3-6498fb29b23mr2176803d50.42.1769552137859; Tue, 27 Jan 2026
- 14:15:37 -0800 (PST)
+	b=RR2aHX7paHubKnV6HtXKbhKp+T/UGREZ5/MfYOmf3/8P7Ty0DoLwWcZiICLAEWxxg
+	 qZuojRBOkV/S8RZDU2SQ0+vifFnSOVDJVx24L9GyE+Vyc893J/fFHI76LZDP8ePbxZ
+	 ZkNIcHpZ+2yxbRwam9XStiuYF1CtKJVShO1H65LQmWfEr/Aq/tSTQYX+tmWNpqZG8f
+	 8ml5/7ucLM1isP4nKNsM8+cCDB5fCTDpjvDsJPqTSiDDHSNTlW99UzInq/cab80nSL
+	 5X/2QD6IpTkpN3S0nYZ/JfKdLXzIBf+SviQQBAiOuZQlyUVLD5xAvfZKnTjaut3k6k
+	 8q3CL6DDDvKkA==
+Received: by mail-yx1-f53.google.com with SMTP id 956f58d0204a3-6496804204cso3367934d50.3
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 14:16:50 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU5OEuuM4uQ7+eu2CbwSyRj8Cnn3unfHtbAl+SoDghFapZ7OOV+lzlOtc/rLUt2T8xCkec3LfH1jHF3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/q6DIsWKkZYDNAHZdf4iS3b4l4pdnngCL59WpzAX9yc5E6HC2
+	4kKogdg1O4JHC5C0a3vBWXdEBlvzZvsaemAU41ZBq/SJb39V20qFD1h3+E9PseXo0/XN+M+hOYM
+	3LFOajXGYhZYQutPIFtkVTxvRdMYxw5k=
+X-Received: by 2002:a05:690e:e85:b0:645:556b:62a4 with SMTP id
+ 956f58d0204a3-6498fbd9503mr2445332d50.7.1769552209753; Tue, 27 Jan 2026
+ 14:16:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260127214656.447333-1-florian.fainelli@broadcom.com> <20260127214656.447333-2-florian.fainelli@broadcom.com>
-In-Reply-To: <20260127214656.447333-2-florian.fainelli@broadcom.com>
+References: <20260127214656.447333-1-florian.fainelli@broadcom.com> <20260127214656.447333-3-florian.fainelli@broadcom.com>
+In-Reply-To: <20260127214656.447333-3-florian.fainelli@broadcom.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Tue, 27 Jan 2026 23:15:27 +0100
-X-Gmail-Original-Message-ID: <CAD++jLnH-A=nir6YSLnsEjLmF63D+kGV=JdYDQNy6QcHhx+J8A@mail.gmail.com>
-X-Gm-Features: AZwV_QgrUdPwMsQ3oS8gzJSozvL58RrBTgR4nkrOKICAx_ZJLz6HuLBvQIuQ4SU
-Message-ID: <CAD++jLnH-A=nir6YSLnsEjLmF63D+kGV=JdYDQNy6QcHhx+J8A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] gpio: brcmstb: correct hwirq to bank map
+Date: Tue, 27 Jan 2026 23:16:38 +0100
+X-Gmail-Original-Message-ID: <CAD++jLkCnWkuq8Sg6Jf_t1euYLN0PXtdmtQTFib6Cu--PAhPqw@mail.gmail.com>
+X-Gm-Features: AZwV_QjcX6Fq1BTf-DABgaLxE6ntCk6R2jLgUlhkHKHsGn9r4S8GfIZgM1YdP_A
+Message-ID: <CAD++jLkCnWkuq8Sg6Jf_t1euYLN0PXtdmtQTFib6Cu--PAhPqw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] gpio: brcmstb: implement irq_mask_ack
 To: Florian Fainelli <florian.fainelli@broadcom.com>
 Cc: linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>, 
 	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
@@ -89,7 +89,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,broadcom.com,kernel.org,lists.infradead.org];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31185-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31186-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
@@ -104,7 +104,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[broadcom.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 648739AF35
+X-Rspamd-Queue-Id: E3E779AF44
 X-Rspamd-Action: no action
 
 On Tue, Jan 27, 2026 at 10:47=E2=80=AFPM Florian Fainelli
@@ -112,20 +112,20 @@ On Tue, Jan 27, 2026 at 10:47=E2=80=AFPM Florian Fainelli
 
 > From: Doug Berger <opendmb@gmail.com>
 >
-> The brcmstb_gpio_hwirq_to_bank() function was designed to
-> accommodate the downward numbering of dynamic GPIOs by
-> traversing the bank list in the reverse order. However, the
-> dynamic numbering has changed to increment upward which can
-> produce an incorrect mapping.
+> The irq_mask_ack operation is slightly more efficient than doing
+> irq_mask and irq_ack separately.
 >
-> The function is modified to no longer assume an ordering of
-> the list to accommodate either option.
+> More importantly for this driver it bypasses the check of
+> irqd_irq_masked ensuring a previously masked but still active
+> interrupt gets remasked if unmasked at the hardware level. This
+> allows the driver to more efficiently unmask the wake capable
+> interrupts when quiescing without needing to enable the irqs
+> individually to clear the irqd_irq_masked state.
 >
-> Fixes: 7b61212f2a07 ("gpiolib: Get rid of ARCH_NR_GPIOS")
 > Signed-off-by: Doug Berger <opendmb@gmail.com>
+> Co-developed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 > Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
 
-This looks right.
 Reviewed-by: Linus Walleij <linusw@kernel.org>
 
 Yours,
