@@ -1,200 +1,174 @@
-Return-Path: <linux-gpio+bounces-31172-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31173-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wHhoIrsDeWkuugEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31172-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 19:28:11 +0100
+	id MB9mIvgKeWnyugEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31173-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 19:59:04 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED6D699056
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 19:28:10 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC74A99818
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 19:59:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A071F3013D70
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 18:28:09 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 833CF305201D
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 18:53:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1E6C326D44;
-	Tue, 27 Jan 2026 18:28:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8DA732B9A0;
+	Tue, 27 Jan 2026 18:53:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cd+58DKb"
+	dkim=pass (2048-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="qeVrGCcg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857AD2C0282
-	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 18:28:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E07E328B71;
+	Tue, 27 Jan 2026 18:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769538488; cv=none; b=aSH0cs2Ni/Fl/XhtzXaV1eOukSAO8ayQ4Imr5SWYFkGfNIWIRZQ24MK+9IMZDJ/WfrSYr9yu5ZDN5agco8kUobuOE2ah6W/tvMprz9L8NN3VYDbBCTOB+8kSDWBc0B0W4Ld1UaF9jvkwJcTEREhbsbamfwKhgfUI4vx6KBAslGY=
+	t=1769539986; cv=none; b=BbYG0TzPaEvY7PdX7CDfER+juZrf3VVhdKvDUBwi/CZFjruuRvJWpFq25xLVjMLprccx0m4b9D6qEkyM1BuBPzlxwLdJHGDLeypU+we9LFbLLktEKMg8f0kc3I58ajuVqn5YJnWqFHJ+S4Av9pzu2qM6Gn7lV33MhWFb54YU7uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769538488; c=relaxed/simple;
-	bh=W7/a56tUf3Lkr+2nWP3N9biS9HWxHhESOTwUsHEZtxE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZGWGy+HmvlqWC5a70AXTglexMwKbrVM6ewm6+a1FeDl+Axz3MysnZgfCrvATB2VgwHIGrlZ+s7hCqCvcauSPD6dvRxeIMjAU8OMdT5wgTiAtQZ7A/0Dk+SrS5WnD+u7kGX5G/AYli867x1av1dWpZHmVcvfRqpalxgBNc16BAEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cd+58DKb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56367C116C6
-	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 18:28:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769538488;
-	bh=W7/a56tUf3Lkr+2nWP3N9biS9HWxHhESOTwUsHEZtxE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cd+58DKbaWPU7AeqWOYvcEicYkScsgKVT5c8z+rQgA1RYHT/EZa0Q4sryRYQb2iMz
-	 7olyND3mML/1PJARHEeGCKe6N4eyVFWFtwXLL/VWI0N+TIQ1WBKxr0vf8+wJUfKhMT
-	 1BD5EUj0PA5Mdnva6TjguXn7AHH5HqRdQ975/jc5vxIvL9qoNo6grpgxjhtXPSnDEe
-	 HNNyBYgmA8G5NVVpvNlM9RMwjvhrCSy4N/GUkuPkkVmU4p5loekCFymhYWnvU+lpIW
-	 PD2kfYk23CdVVgBaW0QFIRhpABi6RNj/MvrfmBZpPz1qChDVi+zwpMe00ybc1QcLnS
-	 quNzIHIbQ6NAQ==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6580dbdb41eso8467900a12.0
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 10:28:08 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVJJ4jDJE9IAiWaTpfNC51/bJ8tqK6KMmyuYcXTJ+uQMvSmrCtYay6XQDtCOP9lyXQEPR39fJrFD+9B@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP+2BEvc+x4+pUaRIresKG7LJ1qOiGv1PTbsd7GAfBTMFB4BPZ
-	mAIOfV+6yZwRL5hhB4L9VmnjK6+WOpdWDlOkL8xLeaMwvrpVEm7PPN+3fOq7QvxxHNWQitilr5H
-	W+KSPjEwSfgBYd7qDQrA6GuGt1swYAA==
-X-Received: by 2002:a17:907:3e14:b0:b88:5002:50c0 with SMTP id
- a640c23a62f3a-b8dab305bf9mr203203466b.20.1769538486920; Tue, 27 Jan 2026
- 10:28:06 -0800 (PST)
+	s=arc-20240116; t=1769539986; c=relaxed/simple;
+	bh=nUUA37xD4ZUC780N/LEa+/KCl37A7KAkBtVsxe6xQeg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UnILICuVBVfBHZDJgbW7y7iLLNt1Bj7arhEEmB33oOHhYf4NYe1nS/rcK9NCqZMaSdFeuN00RCRp/EGPxMYDsCtEluoLxQDHZ9KzUKpF5NIbR3SKxKWm/9vfgHSoLaxKsRGeOVWtqq6Arb+Ws7xdQ//hdwoc4iFYalQOVi0HiXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (2048-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=qeVrGCcg; arc=none smtp.client-ip=193.136.128.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id CBEF3600025E;
+	Tue, 27 Jan 2026 18:52:58 +0000 (WET)
+X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
+Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
+ by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
+ with LMTP id 4w_SIb_PtS_a; Tue, 27 Jan 2026 18:52:56 +0000 (WET)
+Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [193.136.128.10])
+	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id 3DC316000870;
+	Tue, 27 Jan 2026 18:52:56 +0000 (WET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
+	s=mail2; t=1769539976;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=F+O0A8gzgvdYirAVTdcENc7lG8aqFZVcs1fick+I94g=;
+	b=qeVrGCcg/JK1UhTD9sUPGLPmGP7gjkARQnPXBMeyGevxt7SutInW9fxUOILcaUOoTfz/ne
+	S3Dt7VaiMdrqF/Ne8oe2ofOvCxEGblOdJfA89HO78iPmbbkUnCgSV2zeQMWWbxBUlSMltl
+	8sb/B7CI34hJboGZihQirp4st0+qJwc4n8bs/Jdy7+00PsEhDI+thlOseIDnC/646j7+Az
+	w18JwUIlh4jVsjby9CrjrrhQZr5XCoRJXiJ51HJLqEBISEpO/AY1fkT4ilgzn+qFq5WpjC
+	I9oZpq707QG6e/n2F7WOK+fcMXof7nH28jcfQB9HDs7kJzKMhkTaP1fUpXPFHw==
+Received: from [192.168.1.151] (unknown [IPv6:2001:8a0:57db:f00:3ee2:38aa:e2c9:7dde])
+	(Authenticated sender: ist187313)
+	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id 01D953600FB;
+	Tue, 27 Jan 2026 18:52:56 +0000 (WET)
+From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+Date: Tue, 27 Jan 2026 18:52:42 +0000
+Subject: [PATCH] gpio: max77620: Implement .get_direction() callback
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260127105511.3917491-1-mohammad.rafi.shaik@oss.qualcomm.com>
- <20260127141740.GA1574044-robh@kernel.org> <9f5436df-fef7-4921-85b3-b6fe4e942779@oss.qualcomm.com>
-In-Reply-To: <9f5436df-fef7-4921-85b3-b6fe4e942779@oss.qualcomm.com>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 27 Jan 2026 12:27:55 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+YYxWKaD-Xo7L3VUAJ=wvpbfW9GkKn0gcj3AOvMb=Uhg@mail.gmail.com>
-X-Gm-Features: AZwV_QjHB-GlP9dv8BmFRD-SF_vPG5R2x4sdb1do0pgOa5KST72t95IKMHbIpTk
-Message-ID: <CAL_Jsq+YYxWKaD-Xo7L3VUAJ=wvpbfW9GkKn0gcj3AOvMb=Uhg@mail.gmail.com>
-Subject: Re: [PATCH v3] dt-bindings: pinctrl: qcom,sm8450-lpass-lpi-pinctrl:
- Add SA8775P and QCS8300 pinctrl
-To: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linusw@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Srinivas Kandagatla <srini@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260127-smaug-spi_flash-v1-1-5fd334415118@tecnico.ulisboa.pt>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIzMDQyNz3eLcxNJ03eKCzPi0nMTiDF2TFOOkFDPT5GRzkxQloK6CotS0zAq
+ widGxtbUArS2No2EAAAA=
+X-Change-ID: 20260127-smaug-spi_flash-4d3bd65cc74d
+To: Linus Walleij <linusw@kernel.org>, 
+ Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1769539975; l=1793;
+ i=diogo.ivo@tecnico.ulisboa.pt; s=20240529; h=from:subject:message-id;
+ bh=nUUA37xD4ZUC780N/LEa+/KCl37A7KAkBtVsxe6xQeg=;
+ b=5px8J/U9xGoN+AZ0rDoj2gDF0NJmKgsLKQOIe7+DtrxXjsr5/Gud5rpIFl8BbQsK7xjafz/N9
+ JONdNxHw2ZHBMDsWjUuOfp22IHvwWtUR8IEAwmKb9v91CFuOM0sWAGr
+X-Developer-Key: i=diogo.ivo@tecnico.ulisboa.pt; a=ed25519;
+ pk=BRGXhMh1q5KDlZ9y2B8SodFFY8FGupal+NMtJPwRpUQ=
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[tecnico.ulisboa.pt,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[tecnico.ulisboa.pt:s=mail2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31172-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_FROM(0.00)[bounces-31173-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[tecnico.ulisboa.pt:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,ulisboa.pt:email];
+	RCPT_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[diogo.ivo@tecnico.ulisboa.pt,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: ED6D699056
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: DC74A99818
 X-Rspamd-Action: no action
 
-On Tue, Jan 27, 2026 at 12:13=E2=80=AFPM Mohammad Rafi Shaik
-<mohammad.rafi.shaik@oss.qualcomm.com> wrote:
->
->
->
-> On 1/27/2026 7:47 PM, Rob Herring wrote:
-> > On Tue, Jan 27, 2026 at 04:25:11PM +0530, Mohammad Rafi Shaik wrote:
-> >> Document compatible for Qualcomm SA8775P and QCS8300 SoC LPASS TLMM
-> >> pin controller, fully compatible with previous SM8450 generation
-> >> (same amount of pins and functions).
-> >>
-> >> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.c=
-om>
-> >> ---
-> >> changes in [v3]:
-> >>   - Removed the duplicate driver code patch as suggested by Krzysztof.
-> >>   - Reused the existing SM8490 pinctrl, which is fully compatible with=
- SA8775P and QCS8300.
-> >>   - Link to V2: https://lore.kernel.org/all/20260107192007.500995-1-mo=
-hammad.rafi.shaik@oss.qualcomm.com/
-> >>
-> >> changes in [v2]:
-> >>   - Fixed dt-binding errors reported by Krzysztof and Rob.
-> >>   - Added proper slew rate value for wsa2_swr_data GPIO, as suggested =
-by Konrad.
-> >>   - Documented Monaco compatible as suggested by Konrad.
-> >>   - Link to V1: https://lore.kernel.org/all/20251116171656.3105461-1-m=
-ohammad.rafi.shaik@oss.qualcomm.com/
-> >> ---
-> >>   .../pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml         | 10 ++++++++=
-+-
-> >>   1 file changed, 9 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpa=
-ss-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8450=
--lpass-lpi-pinctrl.yaml
-> >> index e7565592d..354629c38 100644
-> >> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-=
-pinctrl.yaml
-> >> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-=
-pinctrl.yaml
-> >> @@ -15,7 +15,15 @@ description:
-> >>
-> >>   properties:
-> >>     compatible:
-> >> -    const: qcom,sm8450-lpass-lpi-pinctrl
-> >> +    oneOf:
-> >> +      - const: qcom,sm8450-lpass-lpi-pinctrl
-> >> +      - items:
-> >> +          - enum:
-> >> +              - qcom,qcs8300-lpass-lpi-pinctrl
-> >> +              - qcom,sa8775p-lpass-lpi-pinctrl
-> >> +          - const: qcom,sm8450-lpass-lpi-pinctrl
-> >> +        minItems: 1
-> >> +        maxItems: 2
-> >
-> > No. You are either backwards compatible with sm8450 or you aren't. The
-> > h/w is fixed.
-> >
->
-> ACK,
->
-> Agree,
->
-> Need backward compatibility with sm8450 for both sa8775p and qcs8300 as
-> they must fall back to the sm8450, so initially used enum to pick
-> between the sa8775p and qcs8300 compatibles. I see enum isn=E2=80=99t
-> appropriate here since fixed h/w.
->
-> will use the const instead of enum like below.
->
->   properties:
->     compatible:
-> -    const: qcom,sm8450-lpass-lpi-pinctrl
-> +    oneOf:
-> +      - const: qcom,sm8450-lpass-lpi-pinctrl
-> +      - items:
-> +          - const: qcom,sa8775p-lpass-lpi-pinctrl
-> +          - const: qcom,sm8450-lpass-lpi-pinctrl
-> +
-> +      - items:
-> +          - const: qcom,qcs8300-lpass-lpi-pinctrl
-> +          - const: qcom,sm8450-lpass-lpi-pinctrl
+Add support for reporting the current GPIO line direction by implementing
+the .get_direction() callback for the MAX77620 GPIO controller.
 
-Sigh, no. The 2 entries can be combined like you had. Just drop
-minItems and maxItems from what you had.
+Signed-off-by: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+---
+ drivers/gpio/gpio-max77620.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-And test your binding before sending it.
+diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
+index 02eca400b307..e6c85411c695 100644
+--- a/drivers/gpio/gpio-max77620.c
++++ b/drivers/gpio/gpio-max77620.c
+@@ -132,6 +132,24 @@ static const struct irq_chip max77620_gpio_irqchip = {
+ 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+ 
++static int max77620_gpio_get_dir(struct gpio_chip *gc, unsigned int offset)
++{
++	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read(mgpio->rmap, GPIO_REG_ADDR(offset), &val);
++	if (ret < 0) {
++		dev_err(mgpio->dev, "CNFG_GPIOx read failed: %d\n", ret);
++		return ret;
++	}
++
++	if (val & MAX77620_CNFG_GPIO_DIR_MASK)
++		return GPIO_LINE_DIRECTION_IN;
++	else
++		return GPIO_LINE_DIRECTION_OUT;
++}
++
+ static int max77620_gpio_dir_input(struct gpio_chip *gc, unsigned int offset)
+ {
+ 	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
+@@ -308,6 +326,7 @@ static int max77620_gpio_probe(struct platform_device *pdev)
+ 
+ 	mgpio->gpio_chip.label = pdev->name;
+ 	mgpio->gpio_chip.parent = pdev->dev.parent;
++	mgpio->gpio_chip.get_direction = max77620_gpio_get_dir;
+ 	mgpio->gpio_chip.direction_input = max77620_gpio_dir_input;
+ 	mgpio->gpio_chip.get = max77620_gpio_get;
+ 	mgpio->gpio_chip.direction_output = max77620_gpio_dir_output;
 
-Rob
+---
+base-commit: de1901b57167aa8fa28cfe99d4c9cb181bad47d3
+change-id: 20260127-smaug-spi_flash-4d3bd65cc74d
+
+Best regards,
+-- 
+Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+
 
