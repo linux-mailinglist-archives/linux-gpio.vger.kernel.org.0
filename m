@@ -1,55 +1,55 @@
-Return-Path: <linux-gpio+bounces-31181-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31182-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MANTH2AyeWmNvwEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31181-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 22:47:12 +0100
+	id SGRYCmIyeWmNvwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31182-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 22:47:14 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC9E69ACD3
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 22:47:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A8A819ACDA
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 22:47:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3CDAB302A554
+	by tor.lore.kernel.org (Postfix) with ESMTP id CC94B302DE02
 	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 21:47:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F71632E128;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59B7232F749;
 	Tue, 27 Jan 2026 21:47:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="oHRqNqF+"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="vqcn10P4"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AC328A3FA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A5226ED37;
 	Tue, 27 Jan 2026 21:47:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769550427; cv=none; b=gLGLCQplJtGbqufbfIiupSpmhiMxghpSDeiddnCCjhIAR+w1TJGhjSY+YeBW5x9GFaZLOENn17nj86ibfr33Gy0RkQNAA3fk+osKKnuIfou9aa16LBK7Qz5aavzE5ydqdgQ8E/v0pCb7sf4ST2H2HoSrUrzo5M47TfeYCAb4Vf8=
+	t=1769550428; cv=none; b=iRivKBvjMm08k4+MsDnjzJd0vKa1vGV3hIpSC8AdCqP0rihjM3vqKT+l60kXazwqjXyg8CA648zZJ4F0RILgfH0tnBVk5qyMaI5dYoAcur2cFwIWmVNGcFzDuceV/d6XoRNhYwbKBSWTAKtr8B7g6l04UJZus4d/SXMIzz/F/yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769550427; c=relaxed/simple;
-	bh=L374EcJRAc/qEjuY/FVQi+JhFU4/ncCIa2WaXKx/r3M=;
+	s=arc-20240116; t=1769550428; c=relaxed/simple;
+	bh=Ka4+UYxp5f7tn9EB4qnSBjYo5BPsomks+xzYenlFE4M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dxQ85bG+AyBG98Ap66bdE7ywViJesF4Jnu8cCXjeOQCqOcCM+dNHZZzcPjIMWliyLiU1VrIV0UJngml15WHL1POPKNDhC/QkhkO3j8X8L6a9h+HUcHwf3+JM+pxbO2WM8MPFzD77eygwu38ucWNsfew7Vlb4N0mHxoEBSKZpakI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=oHRqNqF+; arc=none smtp.client-ip=192.19.166.231
+	 MIME-Version; b=HGjU6o1cvJOwdcg1+N5O7TgKV0WUUUEQ60yoo5D4/Gq49Zg1l/7KjEb2QIy08gTyV2Xm37kLsHeTMa800m22HnEN52WNJEAFUUtmOFjfVW/luW7NM4KxKfgYf0ZR244MTxCnqoCQeG1mB+XPEoQn2LiOJsU7sIFelniZpYI1ilU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=vqcn10P4; arc=none smtp.client-ip=192.19.166.231
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id B7644C000733;
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id D6A3EC000722;
 	Tue, 27 Jan 2026 13:46:59 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com B7644C000733
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com D6A3EC000722
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
 	s=dkimrelay; t=1769550419;
-	bh=L374EcJRAc/qEjuY/FVQi+JhFU4/ncCIa2WaXKx/r3M=;
+	bh=Ka4+UYxp5f7tn9EB4qnSBjYo5BPsomks+xzYenlFE4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oHRqNqF+tyTHzIkMeUB9UZc25HkYip9O6CkZnbM8l9jwsOw3W7/6DgUtc3ABp0Lro
-	 Z7GNoVn2am/w2ZNt0f6/qEVhS6sZuOIWuogId44csbP7CF2lkUfAsCM34uRRgrVBXb
-	 5KOcHb/haul/M3f7Ta63rDD+jEcnLZ+UJq7KTyC8=
+	b=vqcn10P4hl/UcLLszJTv6DdwArB8AI177dXMO5LnR4Y0iLUJ33eVdPUT1f7IJA9nF
+	 QRN+lPHrADum0vQN2EQKKayrc8rMB5Jf+4adue9NaTM4TYjluk9s4Nf2RKzrj9PJ16
+	 rfqXIX1p6X/h9Ai2Q1LQQ1LnuwpRkP1wCAP1BKrI=
 Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 9174D199D2;
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id BA467199D1;
 	Tue, 27 Jan 2026 13:46:59 -0800 (PST)
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 To: linux-kernel@vger.kernel.org
@@ -62,9 +62,9 @@ Cc: Doug Berger <opendmb@gmail.com>,
 	Christophe Leroy <chleroy@kernel.org>,
 	linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
 	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE)
-Subject: [PATCH v2 2/3] gpio: brcmstb: implement irq_mask_ack
-Date: Tue, 27 Jan 2026 13:46:55 -0800
-Message-ID: <20260127214656.447333-3-florian.fainelli@broadcom.com>
+Subject: [PATCH v2 3/3] gpio: brcmstb: allow parent_irq to wake
+Date: Tue, 27 Jan 2026 13:46:56 -0800
+Message-ID: <20260127214656.447333-4-florian.fainelli@broadcom.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260127214656.447333-1-florian.fainelli@broadcom.com>
 References: <20260127214656.447333-1-florian.fainelli@broadcom.com>
@@ -87,7 +87,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31181-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31182-lists,linux-gpio=lfdr.de];
 	FREEMAIL_CC(0.00)[gmail.com,broadcom.com,kernel.org,vger.kernel.org,lists.infradead.org];
 	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -97,106 +97,218 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[10];
-	NEURAL_HAM(-0.00)[-0.983];
+	NEURAL_HAM(-0.00)[-0.984];
 	DKIM_TRACE(0.00)[broadcom.com:+];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[broadcom.com:email,broadcom.com:dkim,broadcom.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: EC9E69ACD3
+X-Rspamd-Queue-Id: A8A819ACDA
 X-Rspamd-Action: no action
 
 From: Doug Berger <opendmb@gmail.com>
 
-The irq_mask_ack operation is slightly more efficient than doing
-irq_mask and irq_ack separately.
+The classic parent_wake_irq can only occur after the system has
+been placed into a hardware managed power management state. This
+prevents its use for waking from software managed suspend states
+like s2idle.
 
-More importantly for this driver it bypasses the check of
-irqd_irq_masked ensuring a previously masked but still active
-interrupt gets remasked if unmasked at the hardware level. This
-allows the driver to more efficiently unmask the wake capable
-interrupts when quiescing without needing to enable the irqs
-individually to clear the irqd_irq_masked state.
+By allowing the parent_irq to be enabled for wake enabled GPIO
+during suspend, these GPIO can now be used to wake from these
+states. The 'suspended' boolean is introduced to support wake
+event accounting.
 
 Signed-off-by: Doug Berger <opendmb@gmail.com>
-Co-developed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+[florian: port changes after generic gpio chip conversion]
 Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
- drivers/gpio/gpio-brcmstb.c | 29 ++++++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+ drivers/gpio/gpio-brcmstb.c | 90 +++++++++++++++++++++++++------------
+ 1 file changed, 62 insertions(+), 28 deletions(-)
 
 diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
-index 2352d099709c..bf0192b82276 100644
+index bf0192b82276..5489c3090aa1 100644
 --- a/drivers/gpio/gpio-brcmstb.c
 +++ b/drivers/gpio/gpio-brcmstb.c
-@@ -1,5 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
--// Copyright (C) 2015-2017 Broadcom
-+// Copyright (C) 2015-2017, 2026 Broadcom
+@@ -54,6 +54,7 @@ struct brcmstb_gpio_priv {
+ 	int parent_irq;
+ 	int num_gpios;
+ 	int parent_wake_irq;
++	bool suspended;
+ };
  
- #include <linux/bitops.h>
- #include <linux/gpio/driver.h>
-@@ -95,15 +95,13 @@ static int brcmstb_gpio_hwirq_to_offset(irq_hw_number_t hwirq,
- 	return hwirq - bank->chip.gc.offset;
- }
- 
--static void brcmstb_gpio_set_imask(struct brcmstb_gpio_bank *bank,
--		unsigned int hwirq, bool enable)
-+static void __brcmstb_gpio_set_imask(struct brcmstb_gpio_bank *bank,
-+				    unsigned int hwirq, bool enable)
+ #define MAX_GPIO_PER_BANK       32
+@@ -239,6 +240,9 @@ static int brcmstb_gpio_priv_set_wake(struct brcmstb_gpio_priv *priv,
  {
- 	struct brcmstb_gpio_priv *priv = bank->parent_priv;
- 	u32 mask = BIT(brcmstb_gpio_hwirq_to_offset(hwirq, bank));
- 	u32 imask;
+ 	int ret = 0;
  
--	guard(gpio_generic_lock_irqsave)(&bank->chip);
--
- 	imask = gpio_generic_read_reg(&bank->chip,
- 				      priv->reg_base + GIO_MASK(bank->id));
++	if (priv->parent_wake_irq == priv->parent_irq)
++		return ret;
++
  	if (enable)
-@@ -114,6 +112,13 @@ static void brcmstb_gpio_set_imask(struct brcmstb_gpio_bank *bank,
- 			       priv->reg_base + GIO_MASK(bank->id), imask);
- }
+ 		ret = enable_irq_wake(priv->parent_wake_irq);
+ 	else
+@@ -289,6 +293,11 @@ static void brcmstb_gpio_irq_bank_handler(struct brcmstb_gpio_bank *bank)
+ 	while ((status = brcmstb_gpio_get_active_irqs(bank))) {
+ 		unsigned int offset;
  
-+static void brcmstb_gpio_set_imask(struct brcmstb_gpio_bank *bank,
-+		unsigned int hwirq, bool enable)
-+{
-+	guard(gpio_generic_lock_irqsave)(&bank->chip);
-+	__brcmstb_gpio_set_imask(bank, hwirq, enable);
-+}
++		if (priv->suspended && bank->wake_active & status) {
++			priv->suspended = false;
++			pm_wakeup_event(&priv->pdev->dev, 0);
++		}
 +
- static int brcmstb_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- {
- 	struct brcmstb_gpio_priv *priv = brcmstb_gpio_gc_to_priv(gc);
-@@ -135,6 +140,19 @@ static void brcmstb_gpio_irq_mask(struct irq_data *d)
- 	brcmstb_gpio_set_imask(bank, d->hwirq, false);
- }
+ 		for_each_set_bit(offset, &status, 32) {
+ 			if (offset >= bank->width)
+ 				dev_warn(&priv->pdev->dev,
+@@ -462,18 +471,18 @@ static int brcmstb_gpio_irq_setup(struct platform_device *pdev,
+ 	}
  
-+static void brcmstb_gpio_irq_mask_ack(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct brcmstb_gpio_bank *bank = gpiochip_get_data(gc);
-+	struct brcmstb_gpio_priv *priv = bank->parent_priv;
-+	u32 mask = BIT(brcmstb_gpio_hwirq_to_offset(d->hwirq, bank));
-+
-+	guard(gpio_generic_lock_irqsave)(&bank->chip);
-+	__brcmstb_gpio_set_imask(bank, d->hwirq, false);
-+	gpio_generic_write_reg(&bank->chip,
-+			       priv->reg_base + GIO_STAT(bank->id), mask);
-+}
-+
- static void brcmstb_gpio_irq_unmask(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-@@ -471,6 +489,7 @@ static int brcmstb_gpio_irq_setup(struct platform_device *pdev,
+ 	if (of_property_read_bool(np, "wakeup-source")) {
++		/*
++		 * Set wakeup capability so we can process boot-time
++		 * "wakeups" (e.g., from S5 cold boot)
++		 */
++		device_set_wakeup_capable(dev, true);
++		device_wakeup_enable(dev);
+ 		priv->parent_wake_irq = platform_get_irq(pdev, 1);
+ 		if (priv->parent_wake_irq < 0) {
+-			priv->parent_wake_irq = 0;
++			priv->parent_wake_irq = priv->parent_irq;
+ 			dev_warn(dev,
+ 				"Couldn't get wake IRQ - GPIOs will not be able to wake from sleep");
+ 		} else {
+-			/*
+-			 * Set wakeup capability so we can process boot-time
+-			 * "wakeups" (e.g., from S5 cold boot)
+-			 */
+-			device_set_wakeup_capable(dev, true);
+-			device_wakeup_enable(dev);
+ 			err = devm_request_irq(dev, priv->parent_wake_irq,
+ 					       brcmstb_gpio_wake_irq_handler,
+ 					       IRQF_SHARED,
+@@ -484,6 +493,7 @@ static int brcmstb_gpio_irq_setup(struct platform_device *pdev,
+ 				goto out_free_domain;
+ 			}
+ 		}
++		priv->irq_chip.irq_set_wake = brcmstb_gpio_irq_set_wake;
+ 	}
+ 
  	priv->irq_chip.name = dev_name(dev);
- 	priv->irq_chip.irq_disable = brcmstb_gpio_irq_mask;
- 	priv->irq_chip.irq_mask = brcmstb_gpio_irq_mask;
-+	priv->irq_chip.irq_mask_ack = brcmstb_gpio_irq_mask_ack;
- 	priv->irq_chip.irq_unmask = brcmstb_gpio_irq_unmask;
+@@ -494,9 +504,6 @@ static int brcmstb_gpio_irq_setup(struct platform_device *pdev,
  	priv->irq_chip.irq_ack = brcmstb_gpio_irq_ack;
  	priv->irq_chip.irq_set_type = brcmstb_gpio_irq_set_type;
+ 
+-	if (priv->parent_wake_irq)
+-		priv->irq_chip.irq_set_wake = brcmstb_gpio_irq_set_wake;
+-
+ 	irq_set_chained_handler_and_data(priv->parent_irq,
+ 					 brcmstb_gpio_irq_handler, priv);
+ 	irq_set_status_flags(priv->parent_irq, IRQ_DISABLE_UNLAZY);
+@@ -519,16 +526,11 @@ static void brcmstb_gpio_bank_save(struct brcmstb_gpio_priv *priv,
+ 					priv->reg_base + GIO_BANK_OFF(bank->id, i));
+ }
+ 
+-static void brcmstb_gpio_quiesce(struct device *dev, bool save)
++static void brcmstb_gpio_quiesce(struct brcmstb_gpio_priv *priv, bool save)
+ {
+-	struct brcmstb_gpio_priv *priv = dev_get_drvdata(dev);
+ 	struct brcmstb_gpio_bank *bank;
+ 	u32 imask;
+ 
+-	/* disable non-wake interrupt */
+-	if (priv->parent_irq >= 0)
+-		disable_irq(priv->parent_irq);
+-
+ 	list_for_each_entry(bank, &priv->bank_list, node) {
+ 		if (save)
+ 			brcmstb_gpio_bank_save(priv, bank);
+@@ -546,8 +548,14 @@ static void brcmstb_gpio_quiesce(struct device *dev, bool save)
+ 
+ static void brcmstb_gpio_shutdown(struct platform_device *pdev)
+ {
++	struct brcmstb_gpio_priv *priv = dev_get_drvdata(&pdev->dev);
++
++	/* disable interrupts */
++	if (priv->parent_irq > 0)
++		disable_irq(priv->parent_irq);
++
+ 	/* Enable GPIO for S5 cold boot */
+-	brcmstb_gpio_quiesce(&pdev->dev, false);
++	brcmstb_gpio_quiesce(priv, false);
+ }
+ 
+ static void brcmstb_gpio_bank_restore(struct brcmstb_gpio_priv *priv,
+@@ -563,7 +571,32 @@ static void brcmstb_gpio_bank_restore(struct brcmstb_gpio_priv *priv,
+ 
+ static int brcmstb_gpio_suspend(struct device *dev)
+ {
+-	brcmstb_gpio_quiesce(dev, true);
++	struct brcmstb_gpio_priv *priv = dev_get_drvdata(dev);
++
++	if (priv->parent_irq > 0)
++		priv->suspended = true;
++
++	return 0;
++}
++
++static int brcmstb_gpio_suspend_noirq(struct device *dev)
++{
++	struct brcmstb_gpio_priv *priv = dev_get_drvdata(dev);
++
++	/* Catch any wakeup sources occurring between suspend and noirq */
++	if (!priv->suspended)
++		return -EBUSY;
++
++	/* disable interrupts while we save the masks */
++	if (priv->parent_irq > 0)
++		disable_irq(priv->parent_irq);
++
++	brcmstb_gpio_quiesce(priv, true);
++
++	/* Now that the masks have been saved re-enable interrupts */
++	if (priv->parent_wake_irq)
++		enable_irq(priv->parent_irq);
++
+ 	return 0;
+ }
+ 
+@@ -571,25 +604,26 @@ static int brcmstb_gpio_resume(struct device *dev)
+ {
+ 	struct brcmstb_gpio_priv *priv = dev_get_drvdata(dev);
+ 	struct brcmstb_gpio_bank *bank;
+-	bool need_wakeup_event = false;
+ 
+-	list_for_each_entry(bank, &priv->bank_list, node) {
+-		need_wakeup_event |= !!__brcmstb_gpio_get_active_irqs(bank);
+-		brcmstb_gpio_bank_restore(priv, bank);
+-	}
++	/* disable interrupts while we restore the masks */
++	if (priv->parent_wake_irq)
++		disable_irq(priv->parent_irq);
+ 
+-	if (priv->parent_wake_irq && need_wakeup_event)
+-		pm_wakeup_event(dev, 0);
++	priv->suspended = false;
++
++	list_for_each_entry(bank, &priv->bank_list, node)
++		brcmstb_gpio_bank_restore(priv, bank);
+ 
+-	/* enable non-wake interrupt */
+-	if (priv->parent_irq >= 0)
++	/* re-enable interrupts */
++	if (priv->parent_irq > 0)
+ 		enable_irq(priv->parent_irq);
+ 
+ 	return 0;
+ }
+ 
+ static const struct dev_pm_ops brcmstb_gpio_pm_ops = {
+-	.suspend_noirq = pm_sleep_ptr(brcmstb_gpio_suspend),
++	.suspend = pm_sleep_ptr(brcmstb_gpio_suspend),
++	.suspend_noirq = pm_sleep_ptr(brcmstb_gpio_suspend_noirq),
+ 	.resume_noirq = pm_sleep_ptr(brcmstb_gpio_resume),
+ };
+ 
 -- 
 2.43.0
 
