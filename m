@@ -1,73 +1,73 @@
-Return-Path: <linux-gpio+bounces-31128-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31129-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iHajK12EeGmqqgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31128-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 10:24:45 +0100
+	id iBGfK72EeGmqqgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31129-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 10:26:21 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31F0891A77
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 10:24:45 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21C9B91ADC
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 10:26:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 16A773014402
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 09:24:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1F1E5303B4D6
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 09:25:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B07F2DAFBA;
-	Tue, 27 Jan 2026 09:24:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91B3B2DC332;
+	Tue, 27 Jan 2026 09:25:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m5B4fFTR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xql7Hytj"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28BA2DA74C
-	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 09:24:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4814E2DC34E
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 09:25:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769505883; cv=none; b=BQZDjSj6FaZANYLO+bxDG9DiIL/r5Huh44128pLFnXrk9VHuSlapc3ct1sO8bF687KjiUHAky6tSIqN6eL2tEU6+shlZnTnshKgj7kYukjqmaAxFgMbtU9L6VJTe8vs6a2Kw4LmbqYBFmGP/I+QSllXOezfOs7Ib9gF/95B7MQ0=
+	t=1769505928; cv=none; b=EbhnTuGK2UnDFfqAtN1C6UYxzEvWJN5C4dmfao24daeqrDwdp6/Iheg9RMA50awmNM4ubxezjLcZSRjnfovznhrG9r7tGJTVXVh+lMEG7DcbV5AKslaqIOm3jdWxQ/nDxYhBYe7f+EQ16/YfimROzDMAJKADHiKBVTvnSDe5tn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769505883; c=relaxed/simple;
-	bh=IAlcWCtQdB6zFcgT1AEpGn9kuon/qBctbh//4Nuyblo=;
+	s=arc-20240116; t=1769505928; c=relaxed/simple;
+	bh=4fhNaoxeEqHkgipGOWq15FtPWpaf67z94Gjy73GwHac=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MORrVFipV6DlnErb22GTZGqs7DroooN03jbnDcSr8oSv1+awS+9UkrgQq3pzuzS9hhniX6GaBeuQ+Gy2VUieYm9QFHPDQtQYvzxEnPFZGek4p2jQwMBhxDiM+wXyqsXQOvISEnPNyNFrA8S275qGRF3MER740Z3cIQH6uTk5mQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m5B4fFTR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0BC6C2BCB8
-	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 09:24:42 +0000 (UTC)
+	 To:Cc:Content-Type; b=sjfJTpNxmnG1SVGbGOgFUtfMX3Sxhgp28+C1DbN55uCmuDqbaZhhqJ6rHDi1wGT3ShFVt8jk1XHjt4G26SHoIaIwU3hz+imHq1u19LUAKdx7xLQwlk/ilysS93lGA25bxZGgHMGkiqKSaa0kBy0cWcMJcQ//q4k/JIht0cY2Kh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xql7Hytj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E45D0C4AF0B
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 09:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769505882;
-	bh=IAlcWCtQdB6zFcgT1AEpGn9kuon/qBctbh//4Nuyblo=;
+	s=k20201202; t=1769505927;
+	bh=4fhNaoxeEqHkgipGOWq15FtPWpaf67z94Gjy73GwHac=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=m5B4fFTRykSx1iXEUZ9o6PvTZRS69FB882HHAz9VKjMB4EiGb1+Sjpt4v1YU+X2sJ
-	 iFcHLvFGJ9tcRarjXkzPGwmmgjOyp9eYPgR79CBtDuerf1x5yCMhvbnxenXuoi4CHX
-	 67vgFROGS4FNLu0cfQsesjaP/DXhZImHOy7OxNrQnT0kII4qslvsA2WlY5p4ABnUta
-	 O8KMX4J6OylXZehLVg0k/7CzLbM3YLqQQZ3KzO3nEeeHr4rzzugkF5s04CN8ENSv5T
-	 Q2cL9PWH71aewyr5fDuTzxdfgDVD2F9COfFaTobjUz8lV9nL3+Wzgvpz1waiKBRMAS
-	 YbI5GreoSvQnQ==
-Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-648ff033fb2so5012567d50.0
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 01:24:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXck65M2LDkv+N5HcSHI7ZFN2v7nliiYpRMLQTXxgudN904RFjT4k3uil/Pp2mDGTv8rTFAf428lF40@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+sREc8G1hTq4Qbj+n2V/+6/Z5A33LCdVwzi4ZA0PUSDlr+9yL
-	IHAUdGUu6M6gzTFU60B6s/a8WjwhJKA3cZWl+rIqVQTZmPda/sU79K/PsBerE/zLcCv++Tqs9BS
-	KP1JgQWdSrMtt6icnGcPCWrBdAlSfdmA=
-X-Received: by 2002:a05:690e:128d:b0:649:6ae3:59d8 with SMTP id
- 956f58d0204a3-6498fc1489bmr707379d50.16.1769505882102; Tue, 27 Jan 2026
- 01:24:42 -0800 (PST)
+	b=Xql7HytjIomnGYTsyU+yL/RmeJzSAwfYRCSswOLPckmrBUB9YIpSMUl/X9729DuGm
+	 8c5WR+EEN94vlIk1jb5NC0skDFoqLBPtDBJQN0ZEiQfESE2BosVrgh9iofMFGXKjXF
+	 4MXtweJh+rum68lIDMcNWgJDouo6o5xmfQSHq1ZnMTcsEY2+YrzntGz0M456rtHiJi
+	 K0dZvzBerdzbZ9icNgYQ8os6X/ru9bfIQFLRRASdx2DoiCamLH+2iqFa6PcfM0zKtV
+	 EuDwZXx/oTg0TgyZCBleRBowWqki1kd+WGxftWQnQhmDcO9LhfelvFcL+xaRohr4Je
+	 9WDl/ffGAHtDQ==
+Received: by mail-yx1-f51.google.com with SMTP id 956f58d0204a3-64942ebf1a3so5084470d50.3
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 01:25:27 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU0KS7fkBZWPbt47fRJH8l5Q5BqC2Q6l4Vqr89o10Gpsxn3hZXDkgTtVw6q31LAfV2QvaSPlqc6hpJK@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzbNAYA57kSJslPj/Ancf8DxLLx2ZpQfA6FyFSmbIsJ5vD3ZJL
+	orPxB2FN1dS6tPbfodq1SZLZmxr0L8zkSqMwC9jcbEZ/r5/8hSOqb4Y3xCDmarw70YSZM380WCe
+	wDjpM5Rd3/yhYw4YyzO4UoXQEKkj4xGQ=
+X-Received: by 2002:a05:690e:130c:b0:646:5127:9d14 with SMTP id
+ 956f58d0204a3-6498fc68930mr540909d50.79.1769505927330; Tue, 27 Jan 2026
+ 01:25:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260123-debug_bus-v5-0-90b670844241@foss.st.com> <20260123-debug_bus-v5-5-90b670844241@foss.st.com>
-In-Reply-To: <20260123-debug_bus-v5-5-90b670844241@foss.st.com>
+References: <20260123-debug_bus-v5-0-90b670844241@foss.st.com> <20260123-debug_bus-v5-12-90b670844241@foss.st.com>
+In-Reply-To: <20260123-debug_bus-v5-12-90b670844241@foss.st.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Tue, 27 Jan 2026 10:24:31 +0100
-X-Gmail-Original-Message-ID: <CAD++jL=MPPM5HWYJzc3ckbnP5GVjfvSobmKE1xx=5Ud6964NZg@mail.gmail.com>
-X-Gm-Features: AZwV_QhQdyIiz4UerqYl3hvl_Hh7MKvqx_tg7HoHtzwKBdCqkSeZ5Xn1a3ShfdI
-Message-ID: <CAD++jL=MPPM5HWYJzc3ckbnP5GVjfvSobmKE1xx=5Ud6964NZg@mail.gmail.com>
-Subject: Re: [PATCH v5 05/12] bus: stm32_firewall: add stm32_firewall_get_grant_all_access()
- API
+Date: Tue, 27 Jan 2026 10:25:16 +0100
+X-Gmail-Original-Message-ID: <CAD++jLm0vj7ODP6xq=YmCbF2WomKSnY7PAMiSL2zQ-DNUdKfYw@mail.gmail.com>
+X-Gm-Features: AZwV_QjVWNP4X4nR8KbNY0bXRJ0Tx9Nx3_diLL7W3D_y2HIVAXBmR108tXoT0LI
+Message-ID: <CAD++jLm0vj7ODP6xq=YmCbF2WomKSnY7PAMiSL2zQ-DNUdKfYw@mail.gmail.com>
+Subject: Re: [PATCH v5 12/12] pinctrl: stm32: add firewall checks before
+ probing the HDP driver
 To: Gatien Chevallier <gatien.chevallier@foss.st.com>
 Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
 	James Clark <james.clark@linaro.org>, Rob Herring <robh@kernel.org>, 
@@ -87,11 +87,11 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31128-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31129-lists,linux-gpio=lfdr.de];
 	FREEMAIL_CC(0.00)[arm.com,linaro.org,kernel.org,linux.dev,gmail.com,foss.st.com,lists.linaro.org,lists.infradead.org,vger.kernel.org,st-md-mailman.stormreply.com];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -108,24 +108,22 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,st.com:email,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 31F0891A77
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,st.com:email]
+X-Rspamd-Queue-Id: 21C9B91ADC
 X-Rspamd-Action: no action
 
-On Fri, Jan 23, 2026 at 11:40=E2=80=AFAM Gatien Chevallier
+On Fri, Jan 23, 2026 at 11:42=E2=80=AFAM Gatien Chevallier
 <gatien.chevallier@foss.st.com> wrote:
 
-> Add the stm32_firewall_get_grant_all_access() API to be able to fetch
-> all firewall references in an access-controllers property and try to gran=
-t
-> access to all of them.
+> Because the HDP peripheral both depends on debug and firewall
+> configuration, when CONFIG_STM32_FIREWALL is present, use the
+> stm32 firewall framework to be able to check these configuration against
+> the relevant controllers.
 >
 > Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
 
-Excellent, just what I wanted.
-Thanks Gatien!
-
+Lean and clean!
 Reviewed-by: Linus Walleij <linusw@kernel.org>
 
 Yours,
