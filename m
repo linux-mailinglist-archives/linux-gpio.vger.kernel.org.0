@@ -1,153 +1,137 @@
-Return-Path: <linux-gpio+bounces-31120-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31121-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eM+TOP2BeGkzqgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31120-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 10:14:37 +0100
+	id qBhbIBWCeGkzqgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31121-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 10:15:01 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51F3E918CA
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 10:14:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 15416918FF
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 10:15:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4C603301A165
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 09:14:36 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0EDB2301CC44
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jan 2026 09:15:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55C08332902;
-	Tue, 27 Jan 2026 09:14:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB564333440;
+	Tue, 27 Jan 2026 09:14:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lu6LiKLz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NerVTX5c"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E634331A71;
-	Tue, 27 Jan 2026 09:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2B0332902
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 09:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769505274; cv=none; b=SnmYj79KTVYolvFAU0qxxs3YUpvvRi7yfn7sEEH/X5NLXkgHtuac9vFNXiKPStqXZgCuvB/qt2aFIv+3XiEAuSREwFqbiOe/OWDUZGU3ZCmamREF3fixH+RWampltJ5Zd+QpTJTgq1bO54WBt0lBvVwZYs6yA0R6KADy+LOl7qQ=
+	t=1769505298; cv=none; b=XevHbjPnw0OkLWEtm58wp1XYdOhSNayNUS3MxB6ov6Fu83qMeC/euG2E6BjuSte5jp4R7w0lu+Lj2eVWGNm4PgY6RiZw/2b1duUWM8OmffQyhE0Lr8BjKR7lEdOZmoWOfXNGtGd2z8iR5OVgUv4KbYOO7X0swESaCiO0M7OIjGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769505274; c=relaxed/simple;
-	bh=wA5rbgiEwVVcceiEGmwj1C3uIIzfloDmcPxun/ZMq80=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GmseuPylGvAwd7Tv1S+YJlZubjYpccMlwpq6r207YFOi876Wn8yarMRDPZaXGVrT/w6w/OcdYchU0UjtPBRnIm5/Gtc45B2VradDqG2DR4uiDd3r/2h6KFGKndYARocY6H+/hh8iqgHS9cqr3IbLWFDQGJuil9bnBzInkP2T9ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lu6LiKLz; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769505273; x=1801041273;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=wA5rbgiEwVVcceiEGmwj1C3uIIzfloDmcPxun/ZMq80=;
-  b=lu6LiKLz2FAqdJ8qRl8wGNMUmYzx8bwBFUhk48E2vFPNdj/AjQaZKOdv
-   DNFupMFM9aM/isHPI67ADsKYw8B+M572J7Q5Jbx2Ts3klNn1trI55hblG
-   dRezsan8xCXjQuJMeRU58uzaz0/fp00Y3Px8Zc3w6t7w/8bvrbve/BYC2
-   oSc39rLMtYm7yp18Vc7kj7pR3mSPA3obE3mik8jeaYf/YqIP/krpTpTE6
-   VTY7MgDnKv05CyP2t1cxU7hpxbopJEf8BfUXV8ztPqK4SonvYx+sfkZkS
-   kHOwK62BRKhbB0cMsRuhuffpdZe6BjLCx9laiakUlUfMerVzlD10oNutr
-   Q==;
-X-CSE-ConnectionGUID: GCvdEQlTQvy4+YLMOYZF5A==
-X-CSE-MsgGUID: KKrWwR68RK+OrnIa6aQ96Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="82063815"
-X-IronPort-AV: E=Sophos;i="6.21,256,1763452800"; 
-   d="scan'208";a="82063815"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 01:14:33 -0800
-X-CSE-ConnectionGUID: eZ8T0zA0QuOuSlCk9I6C5g==
-X-CSE-MsgGUID: edZl9nkTR1mG1M50Et7Lhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,256,1763452800"; 
-   d="scan'208";a="207048789"
-Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.245.248])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 01:14:30 -0800
-Date: Tue, 27 Jan 2026 11:14:27 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Denis Sergeev <denserg.edu@gmail.com>, westeri@kernel.org,
-	linusw@kernel.org, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: Re: [PATCH] gpiolib: acpi: use BIT_ULL() for u64 mask in address
- space handler
-Message-ID: <aXiB80UJamq0oeDr@smile.fi.intel.com>
-References: <20260126035914.16586-1-denserg.edu@gmail.com>
- <20260127080759.GY2275908@black.igk.intel.com>
- <CAMRc=MdRQzgSNorb9rHtAGWYPOK7t2o6q2gP9FLB3ECsvgVrAQ@mail.gmail.com>
+	s=arc-20240116; t=1769505298; c=relaxed/simple;
+	bh=PetnM39e0LL4mZ/BY+88U8MSS+1uyIPhCOjYoVl/9eg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rpq7/gsObylRnb24S4EZvetAZg5JcVLbCEK47sTjrPSw4NBlh16ew29b2ZyhGYzaNnIyO0aWSzwZ+rmEVLr+NWTS1Oiec2pX56m+lFmw2qWRLeups/xsQI3AOLteEiNbCyAJayTZkhk2HnIZGHmUYVelmST+EmfjsV9qChxQS6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NerVTX5c; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53688C4AF12
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 09:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769505298;
+	bh=PetnM39e0LL4mZ/BY+88U8MSS+1uyIPhCOjYoVl/9eg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NerVTX5cLC7ok0CGMkPxR2psYo5CcDWkmRe0kjDrqH7jF0+VXXxi3ktv5eqrSwRN3
+	 WmhsFxynKOi5iM9ngE5MtCHdY7jFmWCaQxD1PK3+tjv2Vg9jfChOh5+Xy9JMEvpS1M
+	 bE+0jrVSM+ya6qEZVMHN7nFwcZoT5DpEqG3o0yDEEM+eNY/blCGKDNmgrJC7Aki283
+	 BwzINsEcFUplqEQP07KKGmlQeEwD+s8b4jnSQ9BgNpXB537XlSinfG3mHXbCdVxgqE
+	 YIGSS8oR9FdZUDXV77A/ZzGcHCBIQrAGZHiwGYAOdMuIgjKauCjU5bxUWirjcDXgKP
+	 +JnPLSPBPmw1w==
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-78f89501423so58089327b3.1
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Jan 2026 01:14:58 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVo2wkrcZqoPXQ4rrV9xFhn6VqNVggZcM9AU/O8UHVkEj3a3LqiPuV+wO6Y7jGS8a/1xIPoNcwSiChP@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTtLdO4UKzykv6Uh/o4CStjGvuhhvvxOHiSmAz1AMdejdw89bY
+	a/fnoTFqRSgj/hvGVT4Rrx1Q6cDFCMd5bajjRtVZwrVrVfE+HHELt36Mfun29R+565QSo/Y62yC
+	SeoyX4KBToJbQWPhq6IZCje71UQLPhNg=
+X-Received: by 2002:a05:690e:169b:b0:63e:34ed:a137 with SMTP id
+ 956f58d0204a3-6498fb11309mr617884d50.27.1769505297687; Tue, 27 Jan 2026
+ 01:14:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdRQzgSNorb9rHtAGWYPOK7t2o6q2gP9FLB3ECsvgVrAQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20260120115923.3463866-1-khristineandreea.barbulescu@oss.nxp.com> <20260120115923.3463866-8-khristineandreea.barbulescu@oss.nxp.com>
+In-Reply-To: <20260120115923.3463866-8-khristineandreea.barbulescu@oss.nxp.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Tue, 27 Jan 2026 10:14:46 +0100
+X-Gmail-Original-Message-ID: <CAD++jLmC8YJFz9wzPUqEGq2FW_B3U7LvdSpHMEV5ovAqc4WcWA@mail.gmail.com>
+X-Gm-Features: AZwV_QhQbgY6YvrIiO44oapfn9_eWa0H_41WHPqnhCEB-EYr7dzC31pzMR8W__M
+Message-ID: <CAD++jLmC8YJFz9wzPUqEGq2FW_B3U7LvdSpHMEV5ovAqc4WcWA@mail.gmail.com>
+Subject: Re: [PATCH v8 07/10] pinctrl: s32cc: skip syscon child nodes when
+ parsing funcs and groups
+To: Khristine Andreea Barbulescu <khristineandreea.barbulescu@oss.nxp.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>, 
+	Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>, Larisa Grigore <larisa.grigore@nxp.com>, 
+	Lee Jones <lee@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Alberto Ruiz <aruizrui@redhat.com>, Christophe Lizzi <clizzi@redhat.com>, devicetree@vger.kernel.org, 
+	Enric Balletbo <eballetb@redhat.com>, Eric Chanudet <echanude@redhat.com>, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, NXP S32 Linux Team <s32@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	"Vincent Guittot devicetree @ vger . kernel . org" <vincent.guittot@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[linux.intel.com,gmail.com,kernel.org,vger.kernel.org,linuxtesting.org];
-	TAGGED_FROM(0.00)[bounces-31120-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	URIBL_MULTI_FAIL(0.00)[nxp.com:server fail,tor.lore.kernel.org:server fail,mail.gmail.com:server fail];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[30];
+	TAGGED_FROM(0.00)[bounces-31121-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[linaro.org,bgdev.pl,kernel.org,gmail.com,suse.com,nxp.com,pengutronix.de,linuxfoundation.org,redhat.com,vger.kernel.org,lists.linux.dev,lists.infradead.org];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[smile.fi.intel.com:mid,linuxtesting.org:url,intel.com:email,intel.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 51F3E918CA
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid,nxp.com:email]
+X-Rspamd-Queue-Id: 15416918FF
 X-Rspamd-Action: no action
 
-On Tue, Jan 27, 2026 at 10:06:33AM +0100, Bartosz Golaszewski wrote:
-> On Tue, Jan 27, 2026 at 9:08 AM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> >
-> > On Mon, Jan 26, 2026 at 06:59:14AM +0300, Denis Sergeev wrote:
-> > > The BIT() macro uses unsigned long, which is 32 bits on 32-bit
-> > > architectures. When iterating over GPIO pins with index >= 32,
-> > > the expression (*value & BIT(i)) causes undefined behavior due
-> > > to shifting by a value >= type width.
-> > >
-> > > Since 'value' is a pointer to u64, use BIT_ULL() to ensure correct
-> > > 64-bit mask on all architectures.
-> > >
-> > > Found by Linux Verification Center (linuxtesting.org) with Svace.
-> > >
-> > > Fixes: 2c4d00cb8fc5 ("gpiolib: acpi: Use BIT() macro to increase readability")
-> > > Signed-off-by: Denis Sergeev <denserg.edu@gmail.com>
-> >
-> > Reviewed-by: Mika Westerberg <westeri@kernel.org>
-> 
-> I'll queue this for v6.19-rc8.
+On Tue, Jan 20, 2026 at 1:01=E2=80=AFPM Khristine Andreea Barbulescu
+<khristineandreea.barbulescu@oss.nxp.com> wrote:
 
-This is half-baked solution... But okay, let's shut up at least the stream of
-this type of "fixes" in this file.
+> The SIUL2 node contains child nodes for syscon
+> instances (SIUL2_0 and SIUL2_1) to expose register
+> ranges for SoC information. These nodes are not
+> part of the pinctrl configuration and should not
+> be treated as pinctrl functions or groups.
+>
+> Signed-off-by: Khristine Andreea Barbulescu <khristineandreea.barbulescu@=
+oss.nxp.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+Acked-by: Linus Walleij <linusw@kernel.org>
 
-
+Yours,
+Linus Walleij
 
