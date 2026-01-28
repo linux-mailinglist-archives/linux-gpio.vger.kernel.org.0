@@ -1,195 +1,232 @@
-Return-Path: <linux-gpio+bounces-31213-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31214-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yIzwFObZeWlI0AEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31213-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jan 2026 10:41:58 +0100
+	id YAdcMkDaeWlI0AEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31214-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jan 2026 10:43:28 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A68DF9EF20
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jan 2026 10:41:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A39E9EF70
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jan 2026 10:43:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7545C300E5FA
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jan 2026 09:41:56 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id F06FA300FB7B
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jan 2026 09:43:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A681F327C0F;
-	Wed, 28 Jan 2026 09:41:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B705E34A773;
+	Wed, 28 Jan 2026 09:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gH+SyO1e";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="DCV6oT4O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jADakhnf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A21330B3A
-	for <linux-gpio@vger.kernel.org>; Wed, 28 Jan 2026 09:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0111A33C539
+	for <linux-gpio@vger.kernel.org>; Wed, 28 Jan 2026 09:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769593315; cv=none; b=O8CUeLfG3dwfTXZ37wRPUD0aqA5K7pvoRJN9/FG46Df2dazl8+ZghNHZunIxLQ5yxrorKEevtcYvS+Flfel+ayrpGGnIRtMKpcZDVxB4UP0In8wLjTJSOM+SjIgTUGpcUsbRRQVTLT0OTwrZkvVwNyH4MHXMPEz9CQpSIHXTryU=
+	t=1769593403; cv=none; b=GtXZOLtKh1l7QmtBDTFTUtC6Etw7Fxit+8rHJuAQalLSrq/LHMzdNGdqqizDdOWxRHVRMnU155E7K1lWNitNBj2xbnY9Ew7Dkq1wzkUk6gdy41zIYvKvjMREvItPNJrVp8nTQYp3QJsGQ+t+OCKYaqmsZf1nDbMdRTyvZb1WTKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769593315; c=relaxed/simple;
-	bh=OFVKmxOPOSe4dwXY9+Q/mahXqXR9bxpSOVH3z95Rrkw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dtT1huvLHVpbnQ7pyXpL9JQNOW+pxJjT9GKgLeiBaA3qokCwDdfOSaO3E6OCqwcT/E1yXTUWBYV8Q3Ijqa7hT8eCJBPaKMctTdbGFhDJF8nEsmxYjy0oAJsfpU7XLjsWaHXvpHfWtDvs6qeSqct4XzEwh25wQRp/d901HrrQKJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gH+SyO1e; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=DCV6oT4O; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60S93KBd3255385
-	for <linux-gpio@vger.kernel.org>; Wed, 28 Jan 2026 09:41:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	85LiEtbp+zi+7uf3UPx9/LEQW4aYkFFdpd5AsmHIyDE=; b=gH+SyO1eAPIg1Dys
-	TTYgivMQJlYaU5DhyZ3kyCdqalNDxSAgvF7rdN84KxOIekidaPKJPPTZtXBaqNUY
-	4TawC+o2SMTZ68uJg28jX6CjFJtrn9PZNk7JfL6VJ8a3k+EYbjum7ibGgkuqVtBz
-	vHWkeRE7tNKOOkqdsIYI2QihIEIQoF/msdFfsA4PvwQ7wS4U56QBnapHLvP5YdrR
-	B4yCiQO5jOnluox9IQNSpXXw5z1hnrpVWPdbA5XICsPRqDm0zb1jLA0BNDv0fDWP
-	0vGmoEywqCUG60E0wECqHYS5NRzMRcu/uxkEfrH1+Hs/+hkt7Z3S4zQ3ygD4qA7P
-	HSZTKw==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bydfk0jyb-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Wed, 28 Jan 2026 09:41:53 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-8c70cff1da5so331581085a.2
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Jan 2026 01:41:53 -0800 (PST)
+	s=arc-20240116; t=1769593403; c=relaxed/simple;
+	bh=nMrCEc2j5DclRR0VL3fs98R4zeyzXJH4AdEhgbDC6pY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Wlyx+Vx7CklYkTzRhSlNMfQgyU174bTdwR7K6P9C5ZjYBlhkGXcRPJA/9bQpPMMLN6pXnQgEmzlSqgbSpWa031iJrjkn03fBoonEVwP3qBu8x3iviaH0qzmh7mPmIOxwobUzNvG22nwAzYciqHDQNEjAW/7t8hERFMX79Uo6www=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jADakhnf; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-432da746749so3687152f8f.0
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Jan 2026 01:43:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1769593312; x=1770198112; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=85LiEtbp+zi+7uf3UPx9/LEQW4aYkFFdpd5AsmHIyDE=;
-        b=DCV6oT4Om+D205NziMcBMwz5W/4+IEKSB5by++uE+gKeUp1A3WMjGCfHLlNGtcLMAI
-         6dT4bfJzxEGDOh1lsKZwcgkqwocs47K+vefVff515t5PBmMrgSsNJN36dXnfpwz31RVv
-         yCo5FQY2QdEbI8kiS15aSmhO6xtqQH4smIkSyUeAR1PvyOaCOiDfMVaDVxGDoFh7Xfzu
-         +egVEXeKX4IMJwyqjMGpXcQvepqJ7GQB1sQo3d54jQcMYKuOBTISjJxHOinixkYy2BYh
-         KO+/PuCBJ5YyGKSrOdKd5SBuwYdLVaj8HjsznfYPHH0MFbv80SPAUQl8IwzYZdJ3qO9d
-         7u/w==
+        d=gmail.com; s=20230601; t=1769593400; x=1770198200; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nMrCEc2j5DclRR0VL3fs98R4zeyzXJH4AdEhgbDC6pY=;
+        b=jADakhnfc0qcVxohGd46xY/Hp3hxsOp+AMTPJdcbVZTEzMusz072E4fkW/elIVKuE8
+         HyhslAvF0zxzucX3+ZvLd0sVZCKtHhKvSG5qlx41BiKtLEALZ4pR6e8YFAUEKxm/3B/s
+         dj2MVfJeKwoYo3vGr45VJBmpcCB6W/fPkYD54Wup2hMNJ7RTq7px2pfBfwqJfgp/JE3W
+         g/HAQETM4oxzKC7xyqHB3HJCHERYfQwZFb6diKni+rS98BF9ZUswwq7Mwj1lKYxo3dIb
+         H9GyzTaLjeyLa5/+LNQozO1Q44xOlB1/R3kxTNvJwHZZs8tiQHOgn1JmAdPWUFeGKe3Q
+         4hLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769593312; x=1770198112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=85LiEtbp+zi+7uf3UPx9/LEQW4aYkFFdpd5AsmHIyDE=;
-        b=KElyD3XMVeGJU3oN7bBv1Y4f0DjhvsVRCR5xO4c+fDOzlz8Z6o3WzA/phSUHUC1DT5
-         ZyX5nA3G6BgimBHhCzRMdKn0WhLRX7pOgZLw0PZcu6dAgZaJgxiUJ32ZUuMKkXVUwYY1
-         SVO7jYSWSsxCW25XcbhZvHkHYMZs4fxLFu7m9w2LWBCBe61iCicZ/xJtrieZu45BuKlX
-         z8R4riaTCZj8M6CP08wp0XhFGjXdl+C6NZIyydY1LgFni24dHQ6KJmP6Xd3GNNHZXAwb
-         WWXlu8iAY5MIuQ866mp9oNj25tJoi1RDZyaf4hWRL+t6pcPmrI78l87/oraAAXyD0DuK
-         48YA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqRkKI78xKVQptArIVCWZ8kvPK/kfNRC0VD6onCSdqV//5N1VFWJ/zBdkh/nTlKJ+f8ixByQ0pSm95@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3b06KaDhTplxDOX2ycBv0+BtpUV90buk7QCuxIRN248JVdxi+
-	SfBTGU1s98UmCQPlUnZqRurkHmO+WmoeITXBzOT5ZSh80r/vAetttpGSteTzCTl4ihTznc/5frV
-	dnewyBLyXPiV+fBw4zelFphQbnVcAvH/EIfxyazj0OkLHeEBG7vyhRTVM2qgkKpw5YRi7cKG5
-X-Gm-Gg: AZuq6aLNXq7OPZXH8wABjLJREJ2VgWaNqZB73AHmDZtnC3c3j69JibchSyLDyR1SFIT
-	0n4VfzHB3iGHWRIhXYzvD6B5JGDmQQXTrAsx19jVtH/XsTF23oEnzM22nyWkpP6SUGx2rXnP/hP
-	SBLp+J8RspF2p4KR5zo0ZlddqY2fa4KaESSabawU5FWvepGP0CjcUdBEzGp8MVVl4LXq63Ez/AB
-	081LD1GlfBHmcHiFna70KF3N9Et4ncq8QwMqiV404kB9HTCOiXydNs2O58vNQN4jHLIzVglvpAj
-	WvRqGRV4Sk3IDccyFb3kUrhx1Cf9e3bLW3rNFwJOqv5VAQ+5ZwdW7Uvrsc9UmU38E3Jj8xLB5G6
-	wIO02EoBDRJuxRKe/IY9jfeokbKEig5Xn88HCAqc=
-X-Received: by 2002:a05:620a:2588:b0:8c6:a734:2c00 with SMTP id af79cd13be357-8c70b82272amr555901185a.15.1769593312445;
-        Wed, 28 Jan 2026 01:41:52 -0800 (PST)
-X-Received: by 2002:a05:620a:2588:b0:8c6:a734:2c00 with SMTP id af79cd13be357-8c70b82272amr555899785a.15.1769593312025;
-        Wed, 28 Jan 2026 01:41:52 -0800 (PST)
-Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:6cbc:dfde:e62d:3195])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435e131cfc9sm5410095f8f.21.2026.01.28.01.41.50
+        d=1e100.net; s=20230601; t=1769593400; x=1770198200;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nMrCEc2j5DclRR0VL3fs98R4zeyzXJH4AdEhgbDC6pY=;
+        b=rvHy80wdXnYsi3IvaGyjgZvoMcXq1EY1yBWDr9VOS+EBoxKgILRLa8gv947yk1Mknp
+         C5JTGZdH+ZEkOPLJGDD7CP5cnyoP1yMyxeT1IMsLqyyiWMHRBV5OrzNZI2oZ28tVnPTj
+         ibmq15wQXMWw4ApEB9BVEqA9QdaQaqPtn4ZhOuOhMmO7Vt2Mn8qDGQUjBAafxAuY2Y7m
+         mxnRrunotKthV3VIYOUBbC8W/CxG77FL0EuyoN94LDvmkmXRCgQCL1n1BL6n/Icp7ULh
+         W6pxWAIFC5e5fY377m0VB2RaViUNGVjBV4Hkzdx1xXLGJYskmiOzPejQpqRLcXj14faa
+         1NdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXECq9ryTApBa60TOF1lmOCoaw6YNTwjEeWvkj4XW/UVJjd78Q2LBmDAau50VlgXZbn1t2JiV8G747B@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3cwaJAGefcgIaS3uaBIa0s27vPwFQHAfdfR/INv1j2h24GjiK
+	MzXKE7YUCT77kRA2bB8Lsp/WJHOM+3YRTPBWAcelcxBSmInxTt+IGuPZ
+X-Gm-Gg: AZuq6aIVbgv1ioRRhCA5vHRvdnBRInB1oCWORFZsaQzeFIZ3mIfGt407eN9aKlczyhZ
+	PZncjTCjD8dKcasIrZo5jMkL94q50wUvF6E5VETo9YrydYpKBmOuvkg6UxOve82eZqZ6SOnJ12I
+	PU6b6S/STiHbtrtdezDnYp0bdoU6Pj/fCmaIJ7Zj4Rwi8kBwbmg/lz5Rd/VBXIWQyyUdJWkmYbB
+	zHel0cdNPCho0Mqx43M+QMwyF895+yZKHHddlzyBH2FQ2nlrlTlW08VvvA+CBifPmdYAchADqig
+	oh5+/ebaqxO0kQ8n1fzeTx/0CFOCTnMsXxUyFKUManHUVxXfABlY3I+LZvOsrS3GsJib/z5cIng
+	jXMydvvJppHQUjgMjQBjzWleD+/XrMJE9x428B7wrhzTcfx8rK/dD3yuPe7VWTPUARIGYc3D/ak
+	eSLD0pMbPvPhSteZNAwmQ=
+X-Received: by 2002:a05:6000:2084:b0:435:8d02:b9cd with SMTP id ffacd0b85a97d-435dd05f1c5mr7512803f8f.26.1769593400162;
+        Wed, 28 Jan 2026 01:43:20 -0800 (PST)
+Received: from [192.168.1.187] ([148.63.225.166])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-435e1048a54sm5346836f8f.0.2026.01.28.01.43.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jan 2026 01:41:51 -0800 (PST)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
-        Yixun Lan <dlan@gentoo.org>, Alex Elder <elder@riscstar.com>,
-        Vivian Wang <wangruikang@iscas.ac.cn>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-        linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: spacemit-k1: Use PDR for pin direction, not SDR/CDR
-Date: Wed, 28 Jan 2026 10:41:49 +0100
-Message-ID: <176959330536.12707.18374071693115296433.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260127-gpio-spacemit-k1-pdr-v1-1-bb868a517dbc@iscas.ac.cn>
-References: <20260127-gpio-spacemit-k1-pdr-v1-1-bb868a517dbc@iscas.ac.cn>
+        Wed, 28 Jan 2026 01:43:19 -0800 (PST)
+Message-ID: <382e259ea3835ffbd2be9c36b529875f5a43f38b.camel@gmail.com>
+Subject: Re: [PATCH v5 0/3] hwmon: Add support for the LTC4283 Hot Swap
+ Controller
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Guenter Roeck <linux@roeck-us.net>, nuno.sa@analog.com, 
+	linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,  Jean Delvare <jdelvare@suse.com>, Jonathan Corbet
+ <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>,  Bartosz
+ Golaszewski	 <brgl@bgdev.pl>, "Rob Herring (Arm)" <robh@kernel.org>, Linus
+ Walleij	 <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
+Date: Wed, 28 Jan 2026 09:44:03 +0000
+In-Reply-To: <eed64bf1-93af-4b36-adf5-1476cb40edbb@roeck-us.net>
+References: <20251223-ltc4283-support-v5-0-1152bff59a61@analog.com>
+	 <eed64bf1-93af-4b36-adf5-1476cb40edbb@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI4MDA3NyBTYWx0ZWRfX/p7tBBRq/SbK
- bzzblxEFfrOQ8kg8iHS5+1Mpnbm1wVBSYUzE1hEGiYmROHSqdLoM5qQkrQWPBcBPvCIuMyhS+Ex
- rsh4eN1vo4QYG3iJQudLusEaUUBPYmOcIX+2gGBIj6F+uiDjkpQ7SUrb4tlehjv3PmdR/GhtigI
- MT+XXHwRKcKXQQAp0kxEWiuzhyZdzUiyY5OkhjLgHlgMB28/A3LQee2yrRVq14rNTgq0KUYdu2r
- HIV1EIZylYpinDQQQ4tVZOyPndQGiGlVD3vkFJ2tfmwL0KC8IpfH2clyed8M9IM4k3YgEe2tqF+
- /VgNFC0NXa6fX93a5v3Ng3vuizcvR18Zfyw9az+N52SDK4msLna4sXlzSB81wfSZhLMuWXCxc3L
- f7girJ3fGoNwRP+MuWBKdQGmRp6cIhlgv2D3zosG1iKt4j/4oZrbyulafDzxMD23Kr/sE6/d/bA
- hz4jGsLn74Os8QMWspA==
-X-Authority-Analysis: v=2.4 cv=XfWEDY55 c=1 sm=1 tr=0 ts=6979d9e1 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=gDi01W8oxqZMKvcAlA8A:9 a=QEXdDO2ut3YA:10
- a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-GUID: FTeKpte1X-MhaFIbZ5F1G9xiSBEx25bJ
-X-Proofpoint-ORIG-GUID: FTeKpte1X-MhaFIbZ5F1G9xiSBEx25bJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-01-28_02,2026-01-27_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 clxscore=1015 impostorscore=0 phishscore=0 priorityscore=1501
- suspectscore=0 adultscore=0 bulkscore=0 lowpriorityscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2601280077
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-31214-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31213-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:mid,oss.qualcomm.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	FROM_HAS_DN(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[nonamenuno@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: A68DF9EF20
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:url,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 8A39E9EF70
 X-Rspamd-Action: no action
 
+Hi Guenter,
 
-On Tue, 27 Jan 2026 10:58:49 +0800, Vivian Wang wrote:
-> On the SpacemiT GPIO controller, the direction control register PDR is
-> readable and writable [1]. Therefore, implement direction control by
-> using PDR as dirout, and don't mark it as unreadable.
-> 
-> The original implementation, using SDR as dirout and CDR as dirin, is
-> not actually a supported configuration by gpio-mmio. The hardware
-> supports changing the direction of some pins atomically by writing a
-> value with the corresponding bits set to SDR (set as output) or to CDR
-> (set as input). However, gpio-mmio does not actually handle this.
-> 
-> [...]
+On Tue, 2026-01-27 at 09:39 -0800, Guenter Roeck wrote:
+> Hi Nuno,
+>=20
+> On 12/23/25 04:21, Nuno S=C3=A1 via B4 Relay wrote:
+> > This is v3 for the LTC4283 how swap controller. Main change is that I'm
+> > now using the auxiliary bus for adding the GPIO device (done depending
+> > on FW properties).
+> >=20
+> > Similar to the LTC4282 device, we're clearing some fault logs in the
+> > reset_history attributes.
+> >=20
+>=20
+> I ran the patch series through an AI review. Results are below.
+> Please take a look.
+>=20
+> Thanks,
+> Guenter
+>=20
+> ---
+> # Deep Dive Regression Analysis Log
+> Date: 2026-01-27
+>=20
+> ## Commit 5998c620fbd8: gpio: gpio-ltc4283: Add support for the LTC4283 S=
+wap Controller
+>=20
+> **Context**:
+> - Adds a new GPIO driver `drivers/gpio/gpio-ltc4283.c`.
+> - Depends on `drivers/hwmon/ltc4283.c` for regmap and MFD instantiation.
+>=20
+> **Findings**:
+> 1.=C2=A0 **Typo/Naming Issue**:
+> =C2=A0=C2=A0=C2=A0=C2=A0 - File `drivers/gpio/gpio-ltc4283.c` uses `LTC42=
+823_ADIO_CONFIG` definition.
+> =C2=A0=C2=A0=C2=A0=C2=A0 - `LTC42823` appears to be a typo for `LTC4283`.
+> =C2=A0=C2=A0=C2=A0=C2=A0 - `drivers/gpio/gpio-ltc4283.c:26`: `#define LTC=
+42823_ADIO_CONFIG 0x12`
+>=20
+> 2.=C2=A0 **Logic Verification**:
+> =C2=A0=C2=A0=C2=A0=C2=A0 - GPIO direction and value setting logic appears=
+ consistent with bitmasks provided, assuming
+> register `0x12` and `0x11` layout is correct as inferred.
+>=20
+> 3.=C2=A0 **Regressions**:
+> =C2=A0=C2=A0=C2=A0=C2=A0 - No critical functional regressions found in th=
+is commit alone.
+> =C2=A0=C2=A0=C2=A0=C2=A0 - Code quality: Typo in macro name.
+>=20
+> ## Commit 82433332ce16: hwmon: ltc4283: Add support for the LTC4283 Swap =
+Controller
+>=20
+> **Context**:
+> - Adds core HWMON driver `drivers/hwmon/ltc4283.c`.
+> - Handles I2C communication, regmap initialization, and MFD child creatio=
+n.
+>=20
+> **Findings**:
+> 1.=C2=A0 **Critical Regression: DebugFS Use-After-Free**:
+> =C2=A0=C2=A0=C2=A0=C2=A0 - `ltc4283_probe` calls `ltc4283_debugfs_init`.
+> =C2=A0=C2=A0=C2=A0=C2=A0 - `ltc4283_debugfs_init` calls `debugfs_create_f=
+ile_unsafe` creating files associated with
+> `st`.
+> =C2=A0=C2=A0=C2=A0=C2=A0 - `st` is allocated with `devm_kzalloc`.
+> =C2=A0=C2=A0=C2=A0=C2=A0 - **Issue**: There is no explicit cleanup of deb=
+ugfs entries (e.g.,
+> `debugfs_remove_recursive`) and no `devm_add_action` to handle it.
+> =C2=A0=C2=A0=C2=A0=C2=A0 - **Consequence**: When the driver is unbound/un=
+loaded, `st` is freed by devm. The debugfs
+> entries remain. Accessing them triggers a Use-After-Free on `st`.
+> =C2=A0=C2=A0=C2=A0=C2=A0 - **Fix Required**: Use `devm_add_action_or_rese=
+t` to remove debugfs directory/entries on
+> driver detach.
 
-Applied, thanks!
+So actually a nice deduction from the agent but not accurate given that all=
+ the entries should be
+removed in [1]. If you want it to be explicit, I can add the action but giv=
+en that the dentry is
+given by i2c, I would argue it's fair to assume i2c will take care of the r=
+emoval. Thoughts?
 
-[1/1] gpio: spacemit-k1: Use PDR for pin direction, not SDR/CDR
-      https://git.kernel.org/brgl/c/aa7e37fd770bafaaf856ab77735296955b93e377
+I'm also planning to pick this up again but was caught by something else. S=
+o hopefully next week.=C2=A0
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+On another topic, I also (you questioned it in another thread) looked aroun=
+d and I do have a ltc4282
+board with me. Given that I just need to power up the digital parts to acce=
+ss the i2c bus, it should
+be pretty straight to get a register dump. So if you're still interested on=
+ that, I should be able
+to do it.
+
+[1]: https://elixir.bootlin.com/linux/v6.19-rc5/source/drivers/i2c/i2c-core=
+-base.c#L634
+
+- Nuno S=C3=A1
+>=20
 
