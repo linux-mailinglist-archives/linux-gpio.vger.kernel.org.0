@@ -1,133 +1,136 @@
-Return-Path: <linux-gpio+bounces-31244-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31245-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aONvK4sPemmS2AEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31244-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jan 2026 14:30:51 +0100
+	id EDTbKz0RemnH2AEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31245-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jan 2026 14:38:05 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E41DA22BA
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jan 2026 14:30:51 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DAE5A238C
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jan 2026 14:38:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9FF383006B42
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jan 2026 13:30:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0E9CD300795C
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jan 2026 13:38:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73023355034;
-	Wed, 28 Jan 2026 13:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BB04352C41;
+	Wed, 28 Jan 2026 13:38:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E7Vkt8u+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qWURFtou"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EECA3542DD;
-	Wed, 28 Jan 2026 13:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A98218A6DB;
+	Wed, 28 Jan 2026 13:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769607046; cv=none; b=KZpdY2OvBQyFd5qb+3gM0TozIbcVWBaJ7SHhE+rDfwlJKAXgMwg7oCDnyrwHgMInHquzm2X0TAcCfpS7BY8OwBc+vKhXPJIVdmjuRYSDRtDciXMiExnjecvKlSVSmpqftZWMsVP2PCs871bxALoGdE6fwTtl3S1IPZ63G034HeQ=
+	t=1769607482; cv=none; b=HkDhv5q+va9/6m264Ih5oe9ALDOoBw1/h/nYakdSX1sKC3nP89jk5HWA0HxJtiZITrLN0HZ5xkJKBSLtOWr8WTH0wOiCtB9DOc03XrwmHPrUUWCeZGDeJ3Va46l0VvXD6qBWuXJWN03SI/ifhBKkQVX7zvqSmZvSfv3wnWnKyno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769607046; c=relaxed/simple;
-	bh=IDYHDopI3+3e/DN4UhXY1TbLHXHicduyojfH6SkpXYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ICBy5GQCakP9OeKE+v1ASZ3gepcCDYOyYcuR1l2c1pkSRVaQmZ3FIa3nDf6tZV55gkw76pohA6Pzx2mIp3IL17c1ywiNbEGmM7fDbTKoShPM3rXN4U7xgnJVC40meTYefNC9VDfjnQEOoOqoSYh1BpFu+VVIOvZmPfImupL9Mhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E7Vkt8u+; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769607039; x=1801143039;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IDYHDopI3+3e/DN4UhXY1TbLHXHicduyojfH6SkpXYk=;
-  b=E7Vkt8u+iXF2LVX8dCcQyu6+forvyoYd59cEwWxBYB9eKSI6SIYn3TqZ
-   YsWNtMFwfyQXujKfvvwHbsk5w6oPbyrz39hMTmi5XtUtNC2hwXF6YJ8av
-   up0bx4wQ0loXATYIh1H+VkfBfkOXLgl4hEtiTbZBvCciONgbmhF7LJKvq
-   LPQ4ps3iObBalPqw8c5lzHBDmMXtcsR3iGFdy5DL/u0No85Rt5vBTCHsS
-   IeJd5Na1NgbNwh6Y3ji7c1jErZdopFQbq9IB3y1jcC/wxx6+rmi9+jFd9
-   8pWEi9+TG/kXptsJ6kMit/f21e7Aj0w5Ya/z6y9I2atQgiTuvBCXffynY
-   A==;
-X-CSE-ConnectionGUID: NJ1LPH49TEqFDM2D7l7Kbw==
-X-CSE-MsgGUID: rT7MkTKQSCWLWWmnYVAang==
-X-IronPort-AV: E=McAfee;i="6800,10657,11684"; a="82184984"
-X-IronPort-AV: E=Sophos;i="6.21,258,1763452800"; 
-   d="scan'208";a="82184984"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2026 05:30:33 -0800
-X-CSE-ConnectionGUID: pUF+UhNpQ7yTUx5Sc6mAxA==
-X-CSE-MsgGUID: DknCndgcQMyzHynYUUCfRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,258,1763452800"; 
-   d="scan'208";a="208336215"
-Received: from hrotuna-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.244.196])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2026 05:30:31 -0800
-Date: Wed, 28 Jan 2026 15:30:28 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Philipp Stanner <phasta@kernel.org>, Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>, driver-core@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v1 0/3] pinctrl: core: managed resource handling cleanup
-Message-ID: <aXoPdC3AM0L8Ozkj@smile.fi.intel.com>
-References: <20260127103325.3925173-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1769607482; c=relaxed/simple;
+	bh=W6Fc1Mu9+tpq58h5Q4y557wPm9Wi/+NTXKzdhMGz5TA=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=F0SR2M1Y01qBAJpLW/uCRJHcpiA6AfMdkR5PWHzo0mh5EVeh4gXNCZlbDxhgLrDsHPwb7nvo1oANDXMRZ5i+7Gz8Jj+zSLwg8xwpXMBOOYVCzoP1vXy+uuHqSdHuajfd4Tq0d5NHvbestkMWqKQQr6yRSmQ7LlVd0DqCelRA8sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qWURFtou; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB5B4C4CEF1;
+	Wed, 28 Jan 2026 13:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769607481;
+	bh=W6Fc1Mu9+tpq58h5Q4y557wPm9Wi/+NTXKzdhMGz5TA=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=qWURFtouvAO2vticWoVwmFcAWQpSYbqGkuGUOSfAvNN92AeIFS7/oxKWYbE6Jg9QY
+	 QZsLo0vh3KE3pYGOTUF29mAB1Gpgn+OYNuRxKuwNv+VRGWS5xd8CoaH9o+cebzsQna
+	 NzlLvFkdKF9JV6HYkR6sEqICqfH//gP7V6NQn64JTNdBXjsadeHbUiAp38u+EktAne
+	 rJtxzLLaRYTEX3yb+IhMXEelPymK7TvRs+4+qdQi8CCNJjiqGpcCFLaN9ygq2J+ewf
+	 pcP5S5J7UMsS7cKkSIfIwA6RDtzpenuT/eCqWWoq1PRVEkSGlYfqsm7PAyfqo3MpRK
+	 J38kmLtGEOx/g==
+Date: Wed, 28 Jan 2026 07:38:00 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260127103325.3925173-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ phone-devel@vger.kernel.org, Linus Walleij <linusw@kernel.org>, 
+ linux-gpio@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>
+To: Luca Weiss <luca.weiss@fairphone.com>
+In-Reply-To: <20260128-sm6350-lpi-tlmm-v1-1-36583f2a2a2a@fairphone.com>
+References: <20260128-sm6350-lpi-tlmm-v1-0-36583f2a2a2a@fairphone.com>
+ <20260128-sm6350-lpi-tlmm-v1-1-36583f2a2a2a@fairphone.com>
+Message-Id: <176960748074.1497503.9897313421386306393.robh@kernel.org>
+Subject: Re: [PATCH 1/5] dt-bindings: pinctrl: qcom: Add SM6350 LPI pinctrl
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	DKIM_TRACE(0.00)[intel.com:+];
-	TAGGED_FROM(0.00)[bounces-31244-lists,linux-gpio=lfdr.de];
-	HAS_ORG_HEADER(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31245-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[12];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[smile.fi.intel.com:mid,intel.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 3E41DA22BA
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,devicetree.org:url]
+X-Rspamd-Queue-Id: 2DAE5A238C
 X-Rspamd-Action: no action
 
-On Tue, Jan 27, 2026 at 11:32:05AM +0100, Andy Shevchenko wrote:
-> I have stumbled over low-level APIs used for managed API implementations.
-> Here is a clean up along with a drop of some duplicate messages.
 
-Thanks, Bart, for the prompt review!
+On Wed, 28 Jan 2026 13:26:49 +0100, Luca Weiss wrote:
+> Add bindings for pin controller in Low Power Audio SubSystem (LPASS).
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+>  .../pinctrl/qcom,sm6350-lpass-lpi-pinctrl.yaml     | 124 +++++++++++++++++++++
+>  1 file changed, 124 insertions(+)
+> 
 
-Linus, if you want this to take via my Intel PR, please tell me, otherwise
-I consider you take it via your tree directly. Whatever works for you!
+My bot found errors running 'make dt_binding_check' on your patch:
 
--- 
-With Best Regards,
-Andy Shevchenko
+yamllint warnings/errors:
 
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/qcom,sm6350-lpass-lpi-pinctrl.example.dtb: pinctrl@33c0000 (qcom,sm6350-lpass-lpi-pinctrl): Unevaluated properties are not allowed ('i2s1-active-pins' was unexpected)
+	from schema $id: http://devicetree.org/schemas/pinctrl/qcom,sm6350-lpass-lpi-pinctrl.yaml
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.kernel.org/project/devicetree/patch/20260128-sm6350-lpi-tlmm-v1-1-36583f2a2a2a@fairphone.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
 
