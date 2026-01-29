@@ -1,115 +1,133 @@
-Return-Path: <linux-gpio+bounces-31303-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31304-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MHTHDL53e2mMEgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-31303-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jan 2026 16:07:42 +0100
+	id KCKGAul5e2nWEwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-31304-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jan 2026 16:16:57 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 041E1B14E2
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jan 2026 16:07:41 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26882B15A0
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jan 2026 16:16:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EF4D7302170D
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jan 2026 15:06:35 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 9E235300443A
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jan 2026 15:16:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44FA02E7F29;
-	Thu, 29 Jan 2026 15:06:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0A3822156A;
+	Thu, 29 Jan 2026 15:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kiS3Pm5I"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpfb1-g21.free.fr (smtpfb1-g21.free.fr [212.27.42.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E7C42D060E;
-	Thu, 29 Jan 2026 15:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.9
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6393DBA34
+	for <linux-gpio@vger.kernel.org>; Thu, 29 Jan 2026 15:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769699195; cv=none; b=ooTw0XOnl3pc+yLErvONkPpXciUoghRQu8pd0HqZZSkL4Kp3Bn/I2vmsMLAGybDY5SyYrp4+Kiw6b7eZBk+HFSnXVHPdBovR0RAo/467h+RbVoT7mC/EWEXT8kx+XUN+xNDCPLklF2I60XLfzuTAi1fX63wrqXMKAH546FO1Qu4=
+	t=1769699809; cv=none; b=TdSaciw84UlhksA5A+cnBibmRw/hy8Sh+dBDA8Ri8k91RHHrSALzCyuO2jWy8ybqHuOuD0DpGB7rRFF2m48h6SH8PEvCcYAZiZbXhU5cV8TajSGf4AY0LT66oadCPzD8qZ5VX2qWxcniC1WCR6CA/iQEF042dolH30Bi8xxIsgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769699195; c=relaxed/simple;
-	bh=2Rv/AyVjYFCvVPvFYJigym7UrwpTpO94Yg+PekFJM3Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=A6esKZxUrFVR65X5OvHb46nP4bUqvHFUaII9KfVIgcizNn2jtmXTihs7oGm7iNtbB9hpZvc5MarqDJpRNcecxW0ui2MILgtADHNFYZkknFsW4jxgyNbBsCMv2OL+0/zZgk9sK9Y7ij7xebk0tsacNZCeIa0sL5zvngxEEUALQiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=lht.dlh.de; spf=pass smtp.mailfrom=free.fr; arc=none smtp.client-ip=212.27.42.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=lht.dlh.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
-Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
-	by smtpfb1-g21.free.fr (Postfix) with ESMTP id B6FDFDF8B12;
-	Thu, 29 Jan 2026 16:00:05 +0100 (CET)
-Received: from albans-vm.. (unknown [94.134.109.199])
-	(Authenticated sender: albeu@free.fr)
-	by smtp2-g21.free.fr (Postfix) with ESMTPSA id 4DDAC2003D3;
-	Thu, 29 Jan 2026 15:59:50 +0100 (CET)
-From: Alban Bedel <alban.bedel@lht.dlh.de>
-To: linux-gpio@vger.kernel.org
-Cc: Mika Westerberg <westeri@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alban Bedel <alban.bedel@lht.dlh.de>
-Subject: [PATCH] gpiolib: acpi: Fix gpio count with string references
-Date: Thu, 29 Jan 2026 15:59:44 +0100
-Message-Id: <20260129145944.3372777-1-alban.bedel@lht.dlh.de>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1769699809; c=relaxed/simple;
+	bh=O1tloW8gfVEMEcBPVggd9EMmWqLpPlFRfEzQCkil1HA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C5qRJuuzMSOnSw1sWcJgSciRkFCX1GcLUl1dIO0xouAvrnqei2jvtqc5scCM0mA1B7orLNFVT9GzC6RvDb/FJVLKhJahkBsvSxpigvN67g2jVi0vmA64nDgpWVsQKsOd2S2sz7rU5h5CI6FbEyMyFWS3A1dzbTRb5Jf/DevY+OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kiS3Pm5I; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 412AAC116D0
+	for <linux-gpio@vger.kernel.org>; Thu, 29 Jan 2026 15:16:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769699809;
+	bh=O1tloW8gfVEMEcBPVggd9EMmWqLpPlFRfEzQCkil1HA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=kiS3Pm5IueYJq5TmZqGrS7X7C+cWyG1KdjBU9oiug7eGGcyzr2O934EguWjN3FDjz
+	 gat2aSyrK4fKp5K+S6alGJQvo4aL5TDXGkyr1lEbH+drcNwr3BcQLLDTaNNvLcf0Xi
+	 Xww/zptlAVq99/UpW7eL3bzwdZjWV+ansPM7JM9JvgnyVm3cmmydMgusNtXysqT+t5
+	 i6bfvNdLW5qgYE0+CTzveGSBq6R2JV+1s8L8e1CvVBVR6xtcoFOP/+ee1u8/s4xTaU
+	 DCPzLxwKeW7M0TJja1ZFpyoUC/GEnxOwm9VoOjHuipk19xaZAmreQTZDvMVfbO7DbG
+	 FOXOUIoDAUB9w==
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b8871718b05so189399266b.2
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Jan 2026 07:16:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXoF+wQS6N/WFYTiy05HBqrE9fCyHSbEb5tIUxVxaCXFB0tqwBpV120+CzypFlvZZtGJkrSTbKX6Ryl@vger.kernel.org
+X-Gm-Message-State: AOJu0YznhClvwI9YiTDQScfzwfBcaidQjzFoVOfXSkarV7rxKO3GmC9c
+	owo3o6JBi0hrS4OsPXdMiuY25yTzAwqhAcaWGjZWcCJnUI1cQEQHQIpKKTmoQVMz07J7yEm8OJB
+	RyAZomDhj/Hbt9EHm/IcJ06PNDmcErw==
+X-Received: by 2002:a17:907:940a:b0:b87:65c5:603a with SMTP id
+ a640c23a62f3a-b8dab423ef5mr644045466b.39.1769699807795; Thu, 29 Jan 2026
+ 07:16:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251211-dev-dt-warnings-all-v1-0-21b18b9ada77@codeconstruct.com.au>
+ <20251211-dev-dt-warnings-all-v1-5-21b18b9ada77@codeconstruct.com.au>
+In-Reply-To: <20251211-dev-dt-warnings-all-v1-5-21b18b9ada77@codeconstruct.com.au>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 29 Jan 2026 09:16:35 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJxfVaLqzTwm7iEvc4maBzVvpc-i5uD6CZRtiv+V+7+1Q@mail.gmail.com>
+X-Gm-Features: AZwV_QgoP-01T8gPVg_GjRssieKZeDUA4_1M3p-JswAzI-a2M9jAVmrm9uPisdk
+Message-ID: <CAL_JsqJxfVaLqzTwm7iEvc4maBzVvpc-i5uD6CZRtiv+V+7+1Q@mail.gmail.com>
+Subject: Re: [PATCH RFC 05/16] ARM: dts: aspeed: Remove unspecified LPC host
+ controller node
+To: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Joel Stanley <joel@jms.id.au>, linux-hwmon@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	linux-iio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.54 / 15.00];
-	DMARC_POLICY_QUARANTINE(1.50)[lht.dlh.de : SPF not aligned (relaxed), No valid DKIM,quarantine];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31304-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31303-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alban.bedel@lht.dlh.de,linux-gpio@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
 	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	PRECEDENCE_BULK(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.992];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,dlh.de:email]
-X-Rspamd-Queue-Id: 041E1B14E2
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid,codeconstruct.com.au:email]
+X-Rspamd-Queue-Id: 26882B15A0
 X-Rspamd-Action: no action
 
-Since commit 9880702d123f2 ("ACPI: property: Support using strings in
-reference properties") it is possible to use strings instead of local
-references. This work fine with single GPIO but not with arrays as
-acpi_gpio_package_count() didn't handle this case. Update it to handle
-strings like local references to cover this case as well.
+On Thu, Dec 11, 2025 at 2:46=E2=80=AFAM Andrew Jeffery
+<andrew@codeconstruct.com.au> wrote:
+>
+> For the AST2500 the node was used for pinctrl purposes, and while the
+> hardware capability is also present in the AST2400 and AST2600, the
+> their pinctrl no relationship to it. Further, there's no corresponding
+> binding, remove the node for now to
+> eliminate the warnings.
 
-Signed-off-by: Alban Bedel <alban.bedel@lht.dlh.de>
----
- drivers/gpio/gpiolib-acpi-core.c | 1 +
- 1 file changed, 1 insertion(+)
+Odd line break.
 
-diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
-index 83dd227dbbecc..effc5ab6864b8 100644
---- a/drivers/gpio/gpiolib-acpi-core.c
-+++ b/drivers/gpio/gpiolib-acpi-core.c
-@@ -1346,6 +1346,7 @@ static int acpi_gpio_package_count(const union acpi_object *obj)
- 	while (element < end) {
- 		switch (element->type) {
- 		case ACPI_TYPE_LOCAL_REFERENCE:
-+		case ACPI_TYPE_STRING:
- 			element += 3;
- 			fallthrough;
- 		case ACPI_TYPE_INTEGER:
--- 
-2.39.5
+>
+> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+> ---
+>  arch/arm/boot/dts/aspeed/aspeed-g4.dtsi | 5 -----
+>  arch/arm/boot/dts/aspeed/aspeed-g5.dtsi | 6 ------
+>  arch/arm/boot/dts/aspeed/aspeed-g6.dtsi | 5 -----
+>  3 files changed, 16 deletions(-)
 
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
