@@ -1,131 +1,127 @@
-Return-Path: <linux-gpio+bounces-31320-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31319-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8KXaEd3fe2ljJAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-31320-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jan 2026 23:31:57 +0100
+	id ANdJG8vfe2ljJAIAu9opvQ
+	(envelope-from <linux-gpio+bounces-31319-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jan 2026 23:31:39 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80BAFB55B6
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jan 2026 23:31:56 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D035BB5586
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jan 2026 23:31:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A29A73002934
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jan 2026 22:31:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 85CCB3018587
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jan 2026 22:31:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E25F5366571;
-	Thu, 29 Jan 2026 22:31:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8596936920D;
+	Thu, 29 Jan 2026 22:31:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="icHfOnl6"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="maXuXDBD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from dispatch1-us1.ppe-hosted.com (dispatch1-us1.ppe-hosted.com [67.231.154.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5837F366DC6
-	for <linux-gpio@vger.kernel.org>; Thu, 29 Jan 2026 22:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.154.184
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769725902; cv=none; b=pSe0KIRr1eNZNHfhlJSWd86HxVYFq/PvmIj6DIBFVy5TNjMQuFE+vIx/1uDRPONTwF2qZINcmNuksA8aLXtgm+PkgDnbgfvj9Vc0BKt188qcyh7FPMCJTNcIvpMYZuLv+CQA5l3JqYcZ4Ub868RYX3rx4rdpOMHNJ9EtyTyKwtk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769725902; c=relaxed/simple;
-	bh=Behg+I8HPmy0cJZniRk22/Nqd7zJZd3A2xcPUeEodWg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pX+bdsMjEe9+43qbh8RvWpTA5LtQOBhS8EZXJC5PG023vRlhuWOxDnSDwyGdjFYIysJJUEsy22uHXxLLuHQEYbeW1VB0s7H7UAospdtwzioyXWIEqdoxcMl0j2XR/8AFTQIn91qB3/Q/p1OqLhedcp0fc6ro83Z1AqbZin+Y0/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com; spf=pass smtp.mailfrom=candelatech.com; dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b=icHfOnl6; arc=none smtp.client-ip=67.231.154.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=candelatech.com
-Received: from dispatch1-us1.ppe-hosted.com (ip6-localhost [127.0.0.1])
-	by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id E59A4519F8E
-	for <linux-gpio@vger.kernel.org>; Thu, 29 Jan 2026 22:22:02 +0000 (UTC)
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from mail3.candelatech.com (mail.candelatech.com [208.74.158.173])
-	by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id E49C880070;
-	Thu, 29 Jan 2026 22:21:54 +0000 (UTC)
-Received: from carkeek.candelatech.com (firewall.candelatech.com [50.251.239.81])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail3.candelatech.com (Postfix) with ESMTPSA id 5DDDA13C2B0;
-	Thu, 29 Jan 2026 14:21:52 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com 5DDDA13C2B0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
-	s=default; t=1769725312;
-	bh=Behg+I8HPmy0cJZniRk22/Nqd7zJZd3A2xcPUeEodWg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=icHfOnl699ZRoQzrgZM2f36AGzcROKrzMaFWx37Je1VlD7jAl8TPD2xmilBjRoVkV
-	 FytRqV5dqMY/LdD9hhAdwOwsqaVrzXgIzpZ2BPerGp+DXk/uPpC/MilZ3Ul3MDJrcE
-	 wmZRNgvg0p6PDMouWAj8XUy/Tz1SCqA0IqAMqGHs=
-From: Rory Little <rory@candelatech.com>
-To: Enrico Weigelt <info@metux.net>
-Cc: linux-gpio@vger.kernel.org
-Subject: [PATCH] gpio: amd-fch: Return 0-1 range for get operation
-Date: Thu, 29 Jan 2026 14:21:50 -0800
-Message-ID: <20260129222150.486419-1-rory@candelatech.com>
-X-Mailer: git-send-email 2.45.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB3E2C3256;
+	Thu, 29 Jan 2026 22:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769725891; cv=none; b=eLC4pqOnR0f3C+s4PmhZoMNzBb26z4OgCHPeNVUsjAutFlylHtuc5kAhudgqXLhGzonG8EqrhsRj2aip0q1I4z2KSCSC8YZpkdJcmDjpK+VHpWGUkfnrtKSNvCo/u9Sxjcgy58qYPZ9VGj/33tgYiVtaxRt5KU8rwvOAV7sJhEw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769725891; c=relaxed/simple;
+	bh=XeDMpJ65mp+98QISIa6zGzqYGRyHyE/0c63dQ1J//No=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=C6Xt06ye0+IDjsRH17jr2xSaEr3rN4gMzhUt28HFc0jvMyY2bhO68SJUgA1mqhEGvA1w4OzHdlmJwa/6tRi6XBgCM67xyUUeqbZvB4gCRgWYAY04HE1QwAdmppXQ4nn4P+pVfpgMt+9viYcw1JK5fYS0xbbY6j1aZn7RwgIQ/2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=maXuXDBD; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1769725886;
+	bh=XeDMpJ65mp+98QISIa6zGzqYGRyHyE/0c63dQ1J//No=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=maXuXDBDY5E82w+PEupDgyz4HMJpbKuw1UzO+dIkS5jxTm1C/okzqrlbeKVwP5/2u
+	 Qmlwe1QlE+tToivLA+Co71fnsoyIwW+7Ac7wb/oLse0BIQHmHL1b4kESpKUryAJSH5
+	 zz1AYVHdKrtJxdw68fXAgjGC3zdLRRl+DqEIzH7+zSxuwZgFryX4FpjGLfaHjLSBnh
+	 N4LG5nd9/2dhd4+30p/dIoCMLGZn24TWDGPOKEniU5PKzNcg2d1CNTXMLAUg1Az/hM
+	 20YqxQthcjTdbkupxPsQgS4k/x+Blm/TSTl02Q1sKw5XjzbabaZ9c7kQExTjo8WmXj
+	 K0yNxc7jhe70g==
+Received: from [192.168.68.117] (unknown [180.150.112.60])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 679D860035;
+	Fri, 30 Jan 2026 06:31:25 +0800 (AWST)
+Message-ID: <547396d9f2aaea032fa62e7adcafb423a9467446.camel@codeconstruct.com.au>
+Subject: Re: [PATCH RFC 05/16] ARM: dts: aspeed: Remove unspecified LPC host
+ controller node
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,  Linus Walleij <linusw@kernel.org>, Joel Stanley
+ <joel@jms.id.au>, linux-hwmon@vger.kernel.org, 	devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, 	linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, 	openbmc@lists.ozlabs.org,
+ linux-gpio@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-iio@vger.kernel.org
+Date: Fri, 30 Jan 2026 09:01:20 +1030
+In-Reply-To: <CAL_JsqJxfVaLqzTwm7iEvc4maBzVvpc-i5uD6CZRtiv+V+7+1Q@mail.gmail.com>
+References: 
+	<20251211-dev-dt-warnings-all-v1-0-21b18b9ada77@codeconstruct.com.au>
+	 <20251211-dev-dt-warnings-all-v1-5-21b18b9ada77@codeconstruct.com.au>
+	 <CAL_JsqJxfVaLqzTwm7iEvc4maBzVvpc-i5uD6CZRtiv+V+7+1Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2-0+deb13u1 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MDID: 1769725314-gf4wDZ1UeMTg
-X-PPE-STACK: {"stack":"us5"}
-X-MDID-O:
- us5;at1;1769725314;gf4wDZ1UeMTg;<rory@candelatech.com>;6a9381007e71e943313da1edcba0e07e
-X-PPE-TRUSTED: V=1;DIR=OUT;
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[candelatech.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[candelatech.com:s=default];
+	DMARC_POLICY_ALLOW(-0.50)[codeconstruct.com.au,none];
+	R_DKIM_ALLOW(-0.20)[codeconstruct.com.au:s=2022a];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31320-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWO(0.00)[2];
-	RCVD_COUNT_FIVE(0.00)[6];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31319-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FROM_NEQ_ENVFROM(0.00)[rory@candelatech.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
 	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[candelatech.com:+];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andrew@codeconstruct.com.au,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[codeconstruct.com.au:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,candelatech.com:email,candelatech.com:dkim,candelatech.com:mid]
-X-Rspamd-Queue-Id: 80BAFB55B6
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: D035BB5586
 X-Rspamd-Action: no action
 
-Now that gpiochip_get sanitizes the output of these calls, this old
-non-1 behavior was causing -EBADE to be returned when voltage high was
-read.
+On Thu, 2026-01-29 at 09:16 -0600, Rob Herring wrote:
+> On Thu, Dec 11, 2025 at 2:46=E2=80=AFAM Andrew Jeffery
+> <andrew@codeconstruct.com.au> wrote:
+> >=20
+> > For the AST2500 the node was used for pinctrl purposes, and while
+> > the
+> > hardware capability is also present in the AST2400 and AST2600, the
+> > their pinctrl no relationship to it. Further, there's no
+> > corresponding
+> > binding, remove the node for now to
+> > eliminate the warnings.
+>=20
+> Odd line break.
 
-Signed-off-by: Rory Little <rory@candelatech.com>
----
- drivers/gpio/gpio-amd-fch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ha. The preceding sentence is also a mess. Not sure what happened
+there. I've extracted the pinctrl-related patches to their own series
+locally, I'll send that out when I have a moment.
 
-diff --git a/drivers/gpio/gpio-amd-fch.c b/drivers/gpio/gpio-amd-fch.c
-index e6c6c3ec7656..37bf1842481d 100644
---- a/drivers/gpio/gpio-amd-fch.c
-+++ b/drivers/gpio/gpio-amd-fch.c
-@@ -125,7 +125,7 @@ static int amd_fch_gpio_get(struct gpio_chip *gc,
- 	void __iomem *ptr = amd_fch_gpio_addr(priv, offset);
- 
- 	spin_lock_irqsave(&priv->lock, flags);
--	ret = (readl_relaxed(ptr) & AMD_FCH_GPIO_FLAG_READ);
-+	ret = FIELD_GET(AMD_FCH_GPIO_FLAG_READ, readl_relaxed(ptr));
- 	spin_unlock_irqrestore(&priv->lock, flags);
- 
- 	return ret;
--- 
-2.52.0
-
+Andrew
 
