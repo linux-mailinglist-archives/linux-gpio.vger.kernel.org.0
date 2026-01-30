@@ -1,180 +1,179 @@
-Return-Path: <linux-gpio+bounces-31331-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31332-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gJFlGtDCfGmgOgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-31331-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jan 2026 15:40:16 +0100
+	id 4Am5OVjmfGlTPQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-31332-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jan 2026 18:11:52 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8F3BBBA7C
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jan 2026 15:40:15 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60576BCDFA
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jan 2026 18:11:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 6D223300B8DE
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jan 2026 14:38:46 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8B4C93042753
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jan 2026 17:11:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0C28376BD6;
-	Fri, 30 Jan 2026 14:38:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E64153587D7;
+	Fri, 30 Jan 2026 17:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BOm4AEZg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 948A0329E40;
-	Fri, 30 Jan 2026 14:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D7B357715;
+	Fri, 30 Jan 2026 17:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769783905; cv=none; b=Sp+fnFLzGlAACs4horA3lwN6bjd+0BbnhcHuGGZbwjUpseMJCEL7uL5Bb649mW76hZmW9EBVAMQ8/SgHelTGm1K5Ksz2BG4WRRbjeFYW0MYsVDi8PRa6AnBYCR+DdOWWIP8/MhOgmXp89ovQ1V0tqOXMiWyFtOWXjQ0lLW0mVq8=
+	t=1769793092; cv=none; b=LGbboe0RZ6R2tS+eNX/7h+UPZCWdURddOJWejYFFn6tlblF9TUl3a7fcDI/qI/8EyOwHnFhonnYMMFO+Ct/8iCsXJrCsgs8j/HfFZBfe/CvcwJvg7+Q9SuW//ELsqaCujR8SzpGvJXYpCWmrsVMapM1Kh5uxZfohHEFdqhd38ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769783905; c=relaxed/simple;
-	bh=JwWdTtXP6aYnY46cQ244PNUDxwPqzAMtK4NQiX4+FVM=;
+	s=arc-20240116; t=1769793092; c=relaxed/simple;
+	bh=aIOowKRbbtWXCBTrIHVIrdOUVd0KWK+9sOxeQrb9Ik0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kIuWLFlnvqvTggP/P41qqTpHYwBBeCEB45H/fsfUg/19yNprMkAHhqbpI3mdwwIs/5bUryWqaDLxrYkhivgeL1cISebyfViCv0sTyCegS+yJb1h9lgJNtICeljuhD1MXs8gF1OQDZnHZB7GJcV+0r30VpL+4BHxrIzPp40Nwzlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1vlpdb-0007Ev-00; Fri, 30 Jan 2026 15:38:19 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id C4CE7C0748; Fri, 30 Jan 2026 15:37:58 +0100 (CET)
-Date: Fri, 30 Jan 2026 15:37:58 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Brian Masney <bmasney@redhat.com>
-Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>, linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-	Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-rtc@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-serial@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v2 00/16] MIPS: move pic32.h header file from asm to
- platform_data
-Message-ID: <aXzCRgyHjG-NfiRw@alpha.franken.de>
-References: <20260112-mips-pic32-header-move-v2-0-927d516b1ff9@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=NmApT0FlKjB7iQpzTNbjmBHQGRxB63nU/crEJKXXPcvRIzI0kYHuQcU3TRDAkifcKnGqfQHMI/hNdxcsfozMEUZ5PAfwhtCCkIhGz1EFaZcd2mF0O+/hPU+RyV0r+BdQd+/nb1X4Z+1XjrePoSs/XTaBHO1cUesQiDG3TQcaiw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BOm4AEZg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2892C116C6;
+	Fri, 30 Jan 2026 17:11:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769793092;
+	bh=aIOowKRbbtWXCBTrIHVIrdOUVd0KWK+9sOxeQrb9Ik0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BOm4AEZgDq3BINv4ERUCFxnUo2rsm1AVJdfJIOgBhB4PmksARYScWcO6voVrPnYGg
+	 /7eI3N2vahljl5YNsTjZQn2EZwNKeKjisq99NTqFJEZhqsRIc9BrQRpZkL75Hqmm2p
+	 hUdXtLxoR2tOlNN0HW/ZEbWDrw8KMR1rJL4ojLBvoao5P27HgL6WlZZnsqvBFzIzxB
+	 RXSESCYXrPeHDoDgDDk8m7C0iYiogmPz67Zodg68N1Ru6bvVJ7gDI57LL/IiW3Xdci
+	 Sho7k1vNr+vu8KTk0YEbw/QkjNPrijCsU3b6hgJ0ut2OCu3RWzUAR57tLxgNKT98Hc
+	 c5vmb30d4Y6eQ==
+Date: Fri, 30 Jan 2026 17:11:27 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Yixun Lan <dlan@kernel.org>
+Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pinctrl: spacemit: fix drive-strength check
+ warning
+Message-ID: <20260130-outsmart-ether-73a7927b4c95@spud>
+References: <20260130-k3-pinctrl-io-drv-fix-v1-1-077aec3ba7ae@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="BXE3nMVoCCy1SEy/"
 Content-Disposition: inline
-In-Reply-To: <20260112-mips-pic32-header-move-v2-0-927d516b1ff9@redhat.com>
+In-Reply-To: <20260130-k3-pinctrl-io-drv-fix-v1-1-077aec3ba7ae@kernel.org>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.46 / 15.00];
+X-Spamd-Result: default: False [-2.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31331-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[franken.de];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TAGGED_FROM(0.00)[bounces-31332-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[tsbogend@alpha.franken.de,linux-gpio@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	R_DKIM_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,alpha.franken.de:mid]
-X-Rspamd-Queue-Id: B8F3BBBA7C
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,microchip.com:email]
+X-Rspamd-Queue-Id: 60576BCDFA
 X-Rspamd-Action: no action
 
-On Mon, Jan 12, 2026 at 05:47:54PM -0500, Brian Masney wrote:
-> There are currently some pic32 MIPS drivers that are in tree, and are
-> only configured to be compiled on the MIPS pic32 platform. There's a
-> risk of breaking some of these drivers when migrating drivers away from
-> legacy APIs. It happened to me with a pic32 clk driver.
-> 
-> Let's go ahead and move the pic32.h from the asm to the platform_data
-> include directory in the tree. This will make it easier, and cleaner to
-> enable COMPILE_TEST for some of these pic32 drivers. To do this requires
-> updating some includes, which I do at the beginning of this series.
-> 
-> This series was compile tested on a centos-stream-10 arm64 host in two
-> different configurations:
-> 
-> - native arm64 build with COMPILE_TEST (via make allmodconfig)
-> - MIPS cross compile on arm64 with:
->       ARCH=mips CROSS_COMPILE=mips64-linux-gnu- make pic32mzda_defconfig
-> 
-> Note that there is a separate MIPS compile error in linux-next, and I
-> reported it at https://lore.kernel.org/all/aWVs2gVB418WiMVa@redhat.com/
-> 
-> I included a patch at the end that shows enabling COMPILE_TEST for a
-> pic32 clk driver.
-> 
-> Merge Strategy
-> ==============
-> - Patches 1-15 can go through the MIPS tree.
-> - Patch 16 I can repost to Claudiu after patches 1-15 are in Linus's
->   tree after the next merge window. There is a separate patch set that
->   fixes a compiler error I unintentionally introduced via the clk tree.
->   https://lore.kernel.org/linux-clk/CABx5tq+eOocJ41X-GSgkGy6S+s+Am1yCS099wqP695NtwALTmg@mail.gmail.com/T/
-> 
-> Signed-off-by: Brian Masney <bmasney@redhat.com>
-> ---
-> Changes in v2:
-> - Fix native MIPS build by updating include files
-> - Link to v1: https://lore.kernel.org/r/20260109-mips-pic32-header-move-v1-0-99859c55783d@redhat.com
-> 
-> ---
-> Brian Masney (16):
->       MIPS: pic32: include linux/io.h header on several files
->       MIPS: pic32: include linux/types.h on pic32.h
->       MIPS: pic32: drop unused include linux/io.h from pic32.h
->       MIPS: copy pic32.h header file from asm/mach-pic32/ to include/platform-data/
->       MAINTAINERS: add include/linux/platform_data/pic32.h to MIPS entry
->       MIPS: update include to use pic32.h from platform_data
->       clk: microchip: core: update include to use pic32.h from platform_data
->       irqchip/irq-pic32-evic: update include to use pic32.h from platform_data
->       mmc: sdhci-pic32: update include to use pic32.h from platform_data
->       pinctrl: pic32: update include to use pic32.h from platform_data
->       rtc: pic32: update include to use pic32.h from platform_data
->       serial: pic32_uart: update include to use pic32.h from platform_data
->       watchdog: pic32-dmt: update include to use pic32.h from platform_data
->       watchdog: pic32-wdt: update include to use pic32.h from platform_data
->       MIPS: drop unused pic32.h header
->       clk: microchip: core: allow driver to be compiled with COMPILE_TEST
-> 
->  MAINTAINERS                                             |  1 +
->  arch/mips/pic32/common/reset.c                          |  3 ++-
->  arch/mips/pic32/pic32mzda/config.c                      |  3 +--
->  arch/mips/pic32/pic32mzda/early_clk.c                   |  3 ++-
->  arch/mips/pic32/pic32mzda/early_console.c               |  3 ++-
->  drivers/clk/microchip/Kconfig                           |  2 +-
->  drivers/clk/microchip/clk-core.c                        |  6 +++++-
->  drivers/irqchip/irq-pic32-evic.c                        |  2 +-
->  drivers/mmc/host/sdhci-pic32.c                          |  2 +-
->  drivers/pinctrl/pinctrl-pic32.c                         |  3 +--
->  drivers/rtc/rtc-pic32.c                                 |  3 +--
->  drivers/tty/serial/pic32_uart.c                         |  3 +--
->  drivers/watchdog/pic32-dmt.c                            |  3 +--
->  drivers/watchdog/pic32-wdt.c                            |  3 +--
->  .../mach-pic32 => include/linux/platform_data}/pic32.h  | 17 ++++++++++-------
->  15 files changed, 31 insertions(+), 26 deletions(-)
-> ---
-> base-commit: f417b7ffcbef7d76b0d8860518f50dae0e7e5eda
-> change-id: 20260109-mips-pic32-header-move-6ac9965aa70a
 
-series applied to mips-next
-Thomas.
+--BXE3nMVoCCy1SEy/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+On Fri, Jan 30, 2026 at 07:22:15PM +0800, Yixun Lan wrote:
+> The problem is that one value from drive-strength may match to more than
+> two different enum groups which lead to DT complaint, switch to use 'anyO=
+f'
+> to fix this kind warning.
+>=20
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+And I guess:
+Reported-by: Conor Dooley <conor.dooley@microchip.com>
+
+
+> Fixes: c3efac0592f8 ("dt-bindings: pinctrl: spacemit: convert drive stren=
+gth to schema format")
+> Signed-off-by: Yixun Lan <dlan@kernel.org>
+> ---
+> Doing DT check with command: make dtbs_check W=3D1, will get this kind
+> of warning message:
+>=20
+> arch/riscv/boot/dts/spacemit/k1-musepi-pro.dtb: pinctrl@d401e000 (spacemi=
+t,k1-pinctrl): gmac0-cfg:gmac0-pins:drive-strength: 21 is valid under each =
+of {'enum': [2, 4, 6, 7, 9, 11, 13, 14, 21, 23, 25, 26, 28, 30, 31, 33]}, {=
+'enum': [11, 21, 32, 42]}
+>=20
+> Instead of using more complicated minimum and maximum value of property
+> with constrains of compatibles, we decide to use 'anyOf' to fix this
+> warning.
+> ---
+>  Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctr=
+l.yaml b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+> index f009fed87e6b..5194fa92fe93 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
+> @@ -76,7 +76,7 @@ patternProperties:
+>            drive-strength:
+>              description:
+>                typical current (in mA) when the output at high level.
+> -            oneOf:
+> +            anyOf:
+>                - enum: [ 11, 21, 32, 42 ]
+>                  description: For K1 SoC, 1.8V voltage output
+> =20
+>=20
+> ---
+> base-commit: 3fcdb264b61a5bb0eb3fb7272717468aa376a74c
+> change-id: 20260130-k3-pinctrl-io-drv-fix-5b11752dae1f
+>=20
+> Best regards,
+> --=20
+> Yixun Lan <dlan@kernel.org>
+>=20
+
+--BXE3nMVoCCy1SEy/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaXzmPwAKCRB4tDGHoIJi
+0l9OAPwIZSVqA3HcerTZTYpElKg+7wSay+MnJcfS6DqQXii4XQD/XnTWlAiX3ZXJ
+XmLWxI52yWO62/AAzYhO6YGjdIbqOw0=
+=LlSc
+-----END PGP SIGNATURE-----
+
+--BXE3nMVoCCy1SEy/--
 
