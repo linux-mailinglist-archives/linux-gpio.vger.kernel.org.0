@@ -1,169 +1,267 @@
-Return-Path: <linux-gpio+bounces-31356-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31357-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QJG7MZgBgWlyDgMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31356-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 02 Feb 2026 20:57:12 +0100
+	id wP8AOogbgWm0EAMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31357-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 02 Feb 2026 22:47:52 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB48FD0E1A
-	for <lists+linux-gpio@lfdr.de>; Mon, 02 Feb 2026 20:57:11 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CA05D1C6C
+	for <lists+linux-gpio@lfdr.de>; Mon, 02 Feb 2026 22:47:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 7C27B30028D6
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Feb 2026 19:56:42 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 42BDD3012874
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Feb 2026 21:47:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03FF1309F0E;
-	Mon,  2 Feb 2026 19:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D15AE314B79;
+	Mon,  2 Feb 2026 21:47:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="aQl8NKT2";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="W2IQGRGP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RLa23lN+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99843EBF3D;
-	Mon,  2 Feb 2026 19:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933402D8DD1;
+	Mon,  2 Feb 2026 21:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770062200; cv=none; b=LVlIXF7ALiGkHct+Cdye94CKODGD1RkodoztlpMCporOcV6XUFGO3CyW3Jlu2lDo4xq+4lmHuPMzNhi8TApcMRqwocsJiKjTFOj5NCDn+BQAXVIGyYEmYBlav0sILdveazcteDFGZjT5tqB376Far9O2/jc0+Y4gmu1wrCHfFu0=
+	t=1770068821; cv=none; b=ezW68TyxcOOJ0M0Hi7/9/qcr0bXNUo6RTCnWrJDuzqup+pNq1XX/WwGPPwteuHddPrxe+I0wSGx3xXXVF7Uat6Rvb0rBSTs4bDizO6mUfc9ksSVBEIKUpSR1xk/5acFUOZt5CJCUmNFS1u/6Fw24nu//9Cw1wAAvPHAIOKuDvTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770062200; c=relaxed/simple;
-	bh=roeYpm4MhQfFQJp+e/xLatfKGDkuGQC+YASdP3M9qEQ=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=HPj+Z62ERWZix3icPwCIu4jdDD0t4Jbmnez2e/4vhLTPV3mnnf9O8ITX4Yyvtp3u5f6cnKHNtleFrXNtOu4jI1xBId2CPeJRjHqmreDv4SLU+FV5s3IIuNFDS9r3RXlE7ZJynfFz8dPc32NWrUR+XZSLv5hFJrKbaqbDGHnTwSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=aQl8NKT2; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=W2IQGRGP; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfout.phl.internal (Postfix) with ESMTP id CD3D2EC00A6;
-	Mon,  2 Feb 2026 14:56:37 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Mon, 02 Feb 2026 14:56:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1770062197;
-	 x=1770148597; bh=mWprXrBIGCplok+JlG5EU/oWJBgLlVTYLtKa7Z9iRbg=; b=
-	aQl8NKT20YFsT8gHkeSp3WJwkfvdWeQgN8XnwRFCC5px4W3B/Swd/YvHyvaohXk+
-	/n0ObWOo7+PhsN6+HD+bdQ225+yfwDVh8bmf+x75P95APfg5ACSnZCwsrAhH+QGI
-	IUuJSee0hDqnGtGZ/XzGFqQAnVJ/YMvmFCUa2223MzIj9l3wRFrpRFnde7eWAc9m
-	594q3ECJhqWdqEb+3J1tt8ujwV6y7ItEdg25BH2tZRRgsICNy0lraUMDuy8uCqyv
-	FpQlCVrpiOEuvcMmQfxWbOrKljpDoxXrCYo1hEz7kMhsBWrWZpdvlrqnBMaSf7AJ
-	U2MbNqkG5L2LxBgKsiSJGw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1770062197; x=
-	1770148597; bh=mWprXrBIGCplok+JlG5EU/oWJBgLlVTYLtKa7Z9iRbg=; b=W
-	2IQGRGPEWLiA86cY15B1JiAtHtJX5kCZ2LvLiQn05V+5z6ftsrJHzZqlsLJ4Fr1n
-	D1wC6KH8B9q7FUwF5Mc5ExddfJ0tHXeRlkWI1XwgBDotnrq6X3ICs8XHSV2kwPGF
-	Tc+Pfg+9lq4YtXMfiz0Ci+AIE1KIzErgUcOOQ63UF8vj6cUo52XIiJ7FrZHQr6RQ
-	+Tf1w9DXwLXwRTXn5ZjyNt1rYRaje4Odtr6B1Jbr6apfyHIEh6letNb4nerfDAA6
-	sd6ImZ+fgk6J3I+UIrnX30JZE5Kvi1u8LCBL3iADiXfZ0VUtfqT5y2pOprl3xR8u
-	nLc+3JiFeGbIp3lEP1Rew==
-X-ME-Sender: <xms:dQGBafyotjZA-Zi-UaMWmGyKcRy8eiF_4j6SUBQy6MAdIoTSX5u6Pw>
-    <xme:dQGBaSEvd5Pa9J0j2pcLFhvkBx3LhgVkDxj7La1eXuMJmf7BgObJLoEaPvpT14WIm
-    LdjXUBoseUT0dDL_YrWxTEzzWWVz1VDnWibdCjGHAjnFP9CC9MK330>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddujeekheegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhepfefhheetffduvdfgieeghfejtedvkeetkeejfeekkeelffejteevvdeghffhiefh
-    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgt
-    phhtthhopeeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrrhhnugeskhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtoheptghonhhorheskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtoheplhhinhhushifsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrrd
-    guohholhgvhiesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopehlihhnuhigqdhg
-    phhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvg
-    hrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:dQGBaTzkjOPRRWfZbVI85ww_QWC_30CsTXPphQxYg_MEGOqXsJ2acg>
-    <xmx:dQGBaWM0i3YwK-7Wj2P-PdpFAkMPSOScJsDEJJ10QvMUmm8dF9cxVA>
-    <xmx:dQGBacW2or2AtMY2p7Wy7kP1tsHOEVvz3Kt3GbgAwhwIfYNcYoX1SQ>
-    <xmx:dQGBaS3U5kCHMa_ma2Wb7PbA4-CAd8TsWsZ3pEaRc4uB9hjoebHbbA>
-    <xmx:dQGBaf3vaaF37IaqlnJPopa86Jh0J8VuLwkR4USh8ou1xAuBs0gFtCQt>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 94C29700065; Mon,  2 Feb 2026 14:56:37 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1770068821; c=relaxed/simple;
+	bh=qPSzOtnJs389fCRczvT042YaNEiHH6grHBp9Lv5PF60=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J2vcUm7THCfK4bzJ39aJGyeEU4UEXwyEghjgLergoD1hQbCmTPDcXRrbJfrJMKrUEzBjxpPmxp2pWiudh9vWaku1VR2bHYwRqMP1Qts0IN85m425/KFFMppb2S9mk3oqC5WwhFIWEIyEhX6rO6yyVHSlzD6Dq8Zbh1tYvaGqyKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RLa23lN+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22572C116C6;
+	Mon,  2 Feb 2026 21:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770068821;
+	bh=qPSzOtnJs389fCRczvT042YaNEiHH6grHBp9Lv5PF60=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=RLa23lN+Zpuq0fmt/qSY5PODlLfvtgvkWP5euQjo4nLIMuQr403OwwEuPIXXH3TPH
+	 nwuyAR94620PDR4ZsLw7hFMNl6XsFYxP47WeZRYGpwuBjhJILnAAbLI6mMgo4rpTwo
+	 wFos8+VmJVfvVi1yovE1jMbcIfgNcqjVn0ccyr7zXC8HHvbcnRFO6+P1/sMf5YPL2S
+	 3QV655FITYV3hmiUqWRefUnY4aYrjiJRZaTTY7oMYzMN0KTYoUqDmdxCTau8/CpxEX
+	 NlKl0W75TXvXiJNucMQEGbtF/71nXipej0U8IrOwmy5S6YXvM+FQbeqf80WR+KoRSG
+	 OwiiPv7fPuUWQ==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Xuewen Yan <xuewen.yan@unisoc.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Sasha Levin <sashal@kernel.org>,
+	linusw@kernel.org,
+	brgl@kernel.org,
+	orsonzhai@gmail.com,
+	clrkwllms@kernel.org,
+	rostedt@goodmis.org,
+	linux-gpio@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.18-5.10] gpio: sprd: Change sprd_gpio lock to raw_spin_lock
+Date: Mon,  2 Feb 2026 16:46:02 -0500
+Message-ID: <20260202214643.212290-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260202214643.212290-1-sashal@kernel.org>
+References: <20260202214643.212290-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AD9OnMuJ5n9w
-Date: Mon, 02 Feb 2026 20:56:12 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Conor Dooley" <conor@kernel.org>, "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Linus Walleij" <linusw@kernel.org>,
- "Conor.Dooley" <conor.dooley@microchip.com>,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <8ab38205-8d96-4735-b44a-5f22e89206ee@app.fastmail.com>
-In-Reply-To: <20260202-lushness-drier-ae0e40b56eee@spud>
-References: <20260202095809.1318785-1-arnd@kernel.org>
- <20260202-lushness-drier-ae0e40b56eee@spud>
-Subject: Re: [PATCH] pinctrl: polarfire: restore GENERIC_PINCONF dependency
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.18.8
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.15 / 15.00];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[arndb.de,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[arndb.de:s=fm2,messagingengine.com:s=fm3];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[unisoc.com,linux.alibaba.com,linutronix.de,oss.qualcomm.com,kernel.org,gmail.com,goodmis.org,vger.kernel.org,lists.linux.dev];
+	TAGGED_FROM(0.00)[bounces-31357-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-31356-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[arnd@arndb.de,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[arndb.de:+,messagingengine.com:+];
-	RCVD_COUNT_FIVE(0.00)[6];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_NEQ_ENVFROM(0.00)[sashal@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,messagingengine.com:dkim,arndb.de:email,arndb.de:dkim,app.fastmail.com:mid]
-X-Rspamd-Queue-Id: BB48FD0E1A
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,alibaba.com:email]
+X-Rspamd-Queue-Id: 8CA05D1C6C
 X-Rspamd-Action: no action
 
-On Mon, Feb 2, 2026, at 20:53, Conor Dooley wrote:
-> On Mon, Feb 02, 2026 at 10:58:03AM +0100, Arnd Bergmann wrote:
->> From: Arnd Bergmann <arnd@arndb.de>
->> 
->> Fixes: 488d704ed7b7 ("pinctrl: add polarfire soc mssio pinctrl driver")
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Does this show up with
-> https://lore.kernel.org/all/20260130-stoop-gleeful-29f2c525bd48@spud/
-> applied?
+From: Xuewen Yan <xuewen.yan@unisoc.com>
 
-I'm sure that's fine as well.
+[ Upstream commit 96313fcc1f062ba239f4832c9eff685da6c51c99 ]
 
-> I considered what you have here, went with what I linked cos it matches
-> the other pinctrl core options.
+There was a lockdep warning in sprd_gpio:
 
-Same here, I also thought about both options, but picked the other one ;-)
+[    6.258269][T329@C6] [ BUG: Invalid wait context ]
+[    6.258270][T329@C6] 6.18.0-android17-0-g30527ad7aaae-ab00009-4k #1 Tainted: G        W  OE
+[    6.258272][T329@C6] -----------------------------
+[    6.258273][T329@C6] modprobe/329 is trying to lock:
+[    6.258275][T329@C6] ffffff8081c91690 (&sprd_gpio->lock){....}-{3:3}, at: sprd_gpio_irq_unmask+0x4c/0xa4 [gpio_sprd]
+[    6.258282][T329@C6] other info that might help us debug this:
+[    6.258283][T329@C6] context-{5:5}
+[    6.258285][T329@C6] 3 locks held by modprobe/329:
+[    6.258286][T329@C6]  #0: ffffff808baca108 (&dev->mutex){....}-{4:4}, at: __driver_attach+0xc4/0x204
+[    6.258295][T329@C6]  #1: ffffff80965e7240 (request_class#4){+.+.}-{4:4}, at: __setup_irq+0x1cc/0x82c
+[    6.258304][T329@C6]  #2: ffffff80965e70c8 (lock_class#4){....}-{2:2}, at: __setup_irq+0x21c/0x82c
+[    6.258313][T329@C6] stack backtrace:
+[    6.258314][T329@C6] CPU: 6 UID: 0 PID: 329 Comm: modprobe Tainted: G        W  OE       6.18.0-android17-0-g30527ad7aaae-ab00009-4k #1 PREEMPT  3ad5b0f45741a16e5838da790706e16ceb6717df
+[    6.258316][T329@C6] Tainted: [W]=WARN, [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
+[    6.258317][T329@C6] Hardware name: Unisoc UMS9632-base Board (DT)
+[    6.258318][T329@C6] Call trace:
+[    6.258318][T329@C6]  show_stack+0x20/0x30 (C)
+[    6.258321][T329@C6]  __dump_stack+0x28/0x3c
+[    6.258324][T329@C6]  dump_stack_lvl+0xac/0xf0
+[    6.258326][T329@C6]  dump_stack+0x18/0x3c
+[    6.258329][T329@C6]  __lock_acquire+0x824/0x2c28
+[    6.258331][T329@C6]  lock_acquire+0x148/0x2cc
+[    6.258333][T329@C6]  _raw_spin_lock_irqsave+0x6c/0xb4
+[    6.258334][T329@C6]  sprd_gpio_irq_unmask+0x4c/0xa4 [gpio_sprd 814535e93c6d8e0853c45c02eab0fa88a9da6487]
+[    6.258337][T329@C6]  irq_startup+0x238/0x350
+[    6.258340][T329@C6]  __setup_irq+0x504/0x82c
+[    6.258342][T329@C6]  request_threaded_irq+0x118/0x184
+[    6.258344][T329@C6]  devm_request_threaded_irq+0x94/0x120
+[    6.258347][T329@C6]  sc8546_init_irq+0x114/0x170 [sc8546_charger 223586ccafc27439f7db4f95b0c8e6e882349a99]
+[    6.258352][T329@C6]  sc8546_charger_probe+0x53c/0x5a0 [sc8546_charger 223586ccafc27439f7db4f95b0c8e6e882349a99]
+[    6.258358][T329@C6]  i2c_device_probe+0x2c8/0x350
+[    6.258361][T329@C6]  really_probe+0x1a8/0x46c
+[    6.258363][T329@C6]  __driver_probe_device+0xa4/0x10c
+[    6.258366][T329@C6]  driver_probe_device+0x44/0x1b4
+[    6.258369][T329@C6]  __driver_attach+0xd0/0x204
+[    6.258371][T329@C6]  bus_for_each_dev+0x10c/0x168
+[    6.258373][T329@C6]  driver_attach+0x2c/0x3c
+[    6.258376][T329@C6]  bus_add_driver+0x154/0x29c
+[    6.258378][T329@C6]  driver_register+0x70/0x10c
+[    6.258381][T329@C6]  i2c_register_driver+0x48/0xc8
+[    6.258384][T329@C6]  init_module+0x28/0xfd8 [sc8546_charger 223586ccafc27439f7db4f95b0c8e6e882349a99]
+[    6.258389][T329@C6]  do_one_initcall+0x128/0x42c
+[    6.258392][T329@C6]  do_init_module+0x60/0x254
+[    6.258395][T329@C6]  load_module+0x1054/0x1220
+[    6.258397][T329@C6]  __arm64_sys_finit_module+0x240/0x35c
+[    6.258400][T329@C6]  invoke_syscall+0x60/0xec
+[    6.258402][T329@C6]  el0_svc_common+0xb0/0xe4
+[    6.258405][T329@C6]  do_el0_svc+0x24/0x30
+[    6.258407][T329@C6]  el0_svc+0x54/0x1c4
+[    6.258409][T329@C6]  el0t_64_sync_handler+0x68/0xdc
+[    6.258411][T329@C6]  el0t_64_sync+0x1c4/0x1c8
 
-Looking at both again, I agree that your version is better, so
-feel free to add
+This is because the spin_lock would change to rt_mutex in PREEMPT_RT,
+however the sprd_gpio->lock would use in hard-irq, this is unsafe.
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+So change the spin_lock_t to raw_spin_lock_t to use the spinlock
+in hard-irq.
 
-to that one.
+Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Link: https://lore.kernel.org/r/20260126094209.9855-1-xuewen.yan@unisoc.com
+[Bartosz: tweaked the commit message]
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
 
-       Arnd
+LLM Generated explanations, may be completely bogus:
+
+The driver has been present since kernel 4.14 (initial commit
+`9a3821c2bb47d`). The patch should apply cleanly to all stable versions
+as it's a simple lock type change with no dependencies.
+
+### 9. SIMILAR PRECEDENT
+
+This type of fix (spin_lock → raw_spin_lock for RT compatibility in IRQ
+context) is extremely common and well-understood. It's a standard
+pattern that has been applied to many drivers.
+
+### SUMMARY
+
+**Pros:**
+- Fixes a real lockdep warning/bug on PREEMPT_RT systems
+- Very small, mechanical, and obviously correct change
+- Reviewed by PREEMPT_RT maintainer (Sebastian Andrzej Siewior)
+- No functional change on non-RT kernels
+- Pattern has been applied many times before
+- Clean backport - no dependencies
+
+**Cons:**
+- Affects only PREEMPT_RT users (smaller user base)
+- The driver is for Spreadtrum/Unisoc hardware (embedded/mobile)
+
+**Risk vs Benefit:**
+- Risk: Negligible - the change is mechanical and well-understood
+- Benefit: Fixes potential deadlock/invalid context on RT systems
+
+This commit is an excellent candidate for stable backporting. It fixes a
+real bug (lockdep warning indicating invalid wait context), is small and
+contained (10 lines), has been reviewed by domain experts, and follows a
+well-established pattern. The change is a no-op on non-RT kernels and
+fixes the bug on RT kernels.
+
+**YES**
+
+ drivers/gpio/gpio-sprd.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
+index 413bcd0a42405..2cc8abe705cdb 100644
+--- a/drivers/gpio/gpio-sprd.c
++++ b/drivers/gpio/gpio-sprd.c
+@@ -35,7 +35,7 @@
+ struct sprd_gpio {
+ 	struct gpio_chip chip;
+ 	void __iomem *base;
+-	spinlock_t lock;
++	raw_spinlock_t lock;
+ 	int irq;
+ };
+ 
+@@ -54,7 +54,7 @@ static void sprd_gpio_update(struct gpio_chip *chip, unsigned int offset,
+ 	unsigned long flags;
+ 	u32 tmp;
+ 
+-	spin_lock_irqsave(&sprd_gpio->lock, flags);
++	raw_spin_lock_irqsave(&sprd_gpio->lock, flags);
+ 	tmp = readl_relaxed(base + reg);
+ 
+ 	if (val)
+@@ -63,7 +63,7 @@ static void sprd_gpio_update(struct gpio_chip *chip, unsigned int offset,
+ 		tmp &= ~BIT(SPRD_GPIO_BIT(offset));
+ 
+ 	writel_relaxed(tmp, base + reg);
+-	spin_unlock_irqrestore(&sprd_gpio->lock, flags);
++	raw_spin_unlock_irqrestore(&sprd_gpio->lock, flags);
+ }
+ 
+ static int sprd_gpio_read(struct gpio_chip *chip, unsigned int offset, u16 reg)
+@@ -236,7 +236,7 @@ static int sprd_gpio_probe(struct platform_device *pdev)
+ 	if (IS_ERR(sprd_gpio->base))
+ 		return PTR_ERR(sprd_gpio->base);
+ 
+-	spin_lock_init(&sprd_gpio->lock);
++	raw_spin_lock_init(&sprd_gpio->lock);
+ 
+ 	sprd_gpio->chip.label = dev_name(&pdev->dev);
+ 	sprd_gpio->chip.ngpio = SPRD_GPIO_NR;
+-- 
+2.51.0
+
 
