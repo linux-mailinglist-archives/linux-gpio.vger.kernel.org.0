@@ -1,169 +1,169 @@
-Return-Path: <linux-gpio+bounces-31355-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31356-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cK+BCUMBgWlyDgMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31355-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 02 Feb 2026 20:55:47 +0100
+	id QJG7MZgBgWlyDgMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31356-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 02 Feb 2026 20:57:12 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EF4DD0DE0
-	for <lists+linux-gpio@lfdr.de>; Mon, 02 Feb 2026 20:55:44 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB48FD0E1A
+	for <lists+linux-gpio@lfdr.de>; Mon, 02 Feb 2026 20:57:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 74F56304022F
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Feb 2026 19:53:31 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7C27B30028D6
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Feb 2026 19:56:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CB313090C2;
-	Mon,  2 Feb 2026 19:53:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03FF1309F0E;
+	Mon,  2 Feb 2026 19:56:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LOIYFPCc"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="aQl8NKT2";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="W2IQGRGP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C32403033F9;
-	Mon,  2 Feb 2026 19:53:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99843EBF3D;
+	Mon,  2 Feb 2026 19:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770062009; cv=none; b=ZwH7aiVrlP6HjIuCvq9ZnvEBpolUAM/PdfyVjvEycvt6boujWhkJHuw/7G0oEYJnjc7EZQaOrf3gkaVFIA6ZnAv8puZPxDyDWtuywkRk0/HGTCwpO0WBs7dUhKN+PsesPZeWh6s/vLspvsEqtnBubd4i0pu8IW0IaTnDOcc7k+U=
+	t=1770062200; cv=none; b=LVlIXF7ALiGkHct+Cdye94CKODGD1RkodoztlpMCporOcV6XUFGO3CyW3Jlu2lDo4xq+4lmHuPMzNhi8TApcMRqwocsJiKjTFOj5NCDn+BQAXVIGyYEmYBlav0sILdveazcteDFGZjT5tqB376Far9O2/jc0+Y4gmu1wrCHfFu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770062009; c=relaxed/simple;
-	bh=0spu46ssPKz3oPoW/17GGyrKFZ2kACMj8wzMUt35PoM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SIEO0hMpQivZbGvNOb/Z1gfdcbNZdycQ7ZrmiTjuKNsXxzJLk2EER9PyERoX0NALSJI5FE+49GfWBiUttYQbKLpACOGfhew7/Wv1KZf7BxVA1kJC1LsGLjMfzLMYy1YCgH3T2Pc7Hdy4zlGwPqq/uBdst0F97jQcSooTnLOLw5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LOIYFPCc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E024C116C6;
-	Mon,  2 Feb 2026 19:53:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770062009;
-	bh=0spu46ssPKz3oPoW/17GGyrKFZ2kACMj8wzMUt35PoM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LOIYFPCcusHQnO4lXB0dKdzfCHkEC0dyjVH+UKw/VfqcGsABFPG5tEBVsVBJgE8rs
-	 /AgObU6QGkMmmrfSRWSuT0/LXKhn0Q/1ksTWEjRmqlDu4sYTBDts0Zf6YezmP3JfQX
-	 Gi1GM0nFB3dJTFmZe/JxeNnwoRx8DWhwTIamE64oTxNlcByjSiDEBMMSbzHcZ7RX3G
-	 KDIDcTFT2JhoOED3nsoV5HaDNxgLk+aBjQYe5Kj5QyTdv9NZMA6Uw/11cFl1ENQItj
-	 iBUtDn0GROsVSiSNe53Yde4lzZ+DTREkVUJNvsXzN6OuZpWGBafmRjWuyfPcasMgVv
-	 G9f8XZr14q9wA==
-Date: Mon, 2 Feb 2026 19:53:25 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Linus Walleij <linusw@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: polarfire: restore GENERIC_PINCONF dependency
-Message-ID: <20260202-lushness-drier-ae0e40b56eee@spud>
-References: <20260202095809.1318785-1-arnd@kernel.org>
+	s=arc-20240116; t=1770062200; c=relaxed/simple;
+	bh=roeYpm4MhQfFQJp+e/xLatfKGDkuGQC+YASdP3M9qEQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=HPj+Z62ERWZix3icPwCIu4jdDD0t4Jbmnez2e/4vhLTPV3mnnf9O8ITX4Yyvtp3u5f6cnKHNtleFrXNtOu4jI1xBId2CPeJRjHqmreDv4SLU+FV5s3IIuNFDS9r3RXlE7ZJynfFz8dPc32NWrUR+XZSLv5hFJrKbaqbDGHnTwSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=aQl8NKT2; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=W2IQGRGP; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfout.phl.internal (Postfix) with ESMTP id CD3D2EC00A6;
+	Mon,  2 Feb 2026 14:56:37 -0500 (EST)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-04.internal (MEProxy); Mon, 02 Feb 2026 14:56:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1770062197;
+	 x=1770148597; bh=mWprXrBIGCplok+JlG5EU/oWJBgLlVTYLtKa7Z9iRbg=; b=
+	aQl8NKT20YFsT8gHkeSp3WJwkfvdWeQgN8XnwRFCC5px4W3B/Swd/YvHyvaohXk+
+	/n0ObWOo7+PhsN6+HD+bdQ225+yfwDVh8bmf+x75P95APfg5ACSnZCwsrAhH+QGI
+	IUuJSee0hDqnGtGZ/XzGFqQAnVJ/YMvmFCUa2223MzIj9l3wRFrpRFnde7eWAc9m
+	594q3ECJhqWdqEb+3J1tt8ujwV6y7ItEdg25BH2tZRRgsICNy0lraUMDuy8uCqyv
+	FpQlCVrpiOEuvcMmQfxWbOrKljpDoxXrCYo1hEz7kMhsBWrWZpdvlrqnBMaSf7AJ
+	U2MbNqkG5L2LxBgKsiSJGw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1770062197; x=
+	1770148597; bh=mWprXrBIGCplok+JlG5EU/oWJBgLlVTYLtKa7Z9iRbg=; b=W
+	2IQGRGPEWLiA86cY15B1JiAtHtJX5kCZ2LvLiQn05V+5z6ftsrJHzZqlsLJ4Fr1n
+	D1wC6KH8B9q7FUwF5Mc5ExddfJ0tHXeRlkWI1XwgBDotnrq6X3ICs8XHSV2kwPGF
+	Tc+Pfg+9lq4YtXMfiz0Ci+AIE1KIzErgUcOOQ63UF8vj6cUo52XIiJ7FrZHQr6RQ
+	+Tf1w9DXwLXwRTXn5ZjyNt1rYRaje4Odtr6B1Jbr6apfyHIEh6letNb4nerfDAA6
+	sd6ImZ+fgk6J3I+UIrnX30JZE5Kvi1u8LCBL3iADiXfZ0VUtfqT5y2pOprl3xR8u
+	nLc+3JiFeGbIp3lEP1Rew==
+X-ME-Sender: <xms:dQGBafyotjZA-Zi-UaMWmGyKcRy8eiF_4j6SUBQy6MAdIoTSX5u6Pw>
+    <xme:dQGBaSEvd5Pa9J0j2pcLFhvkBx3LhgVkDxj7La1eXuMJmf7BgObJLoEaPvpT14WIm
+    LdjXUBoseUT0dDL_YrWxTEzzWWVz1VDnWibdCjGHAjnFP9CC9MK330>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddujeekheegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhepfefhheetffduvdfgieeghfejtedvkeetkeejfeekkeelffejteevvdeghffhiefh
+    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgt
+    phhtthhopeeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrrhhnugeskhgvrh
+    hnvghlrdhorhhgpdhrtghpthhtoheptghonhhorheskhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtoheplhhinhhushifsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrrd
+    guohholhgvhiesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopehlihhnuhigqdhg
+    phhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvg
+    hrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:dQGBaTzkjOPRRWfZbVI85ww_QWC_30CsTXPphQxYg_MEGOqXsJ2acg>
+    <xmx:dQGBaWM0i3YwK-7Wj2P-PdpFAkMPSOScJsDEJJ10QvMUmm8dF9cxVA>
+    <xmx:dQGBacW2or2AtMY2p7Wy7kP1tsHOEVvz3Kt3GbgAwhwIfYNcYoX1SQ>
+    <xmx:dQGBaS3U5kCHMa_ma2Wb7PbA4-CAd8TsWsZ3pEaRc4uB9hjoebHbbA>
+    <xmx:dQGBaf3vaaF37IaqlnJPopa86Jh0J8VuLwkR4USh8ou1xAuBs0gFtCQt>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 94C29700065; Mon,  2 Feb 2026 14:56:37 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="+6xmGbO1cxA4h5rN"
-Content-Disposition: inline
-In-Reply-To: <20260202095809.1318785-1-arnd@kernel.org>
+X-ThreadId: AD9OnMuJ5n9w
+Date: Mon, 02 Feb 2026 20:56:12 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Conor Dooley" <conor@kernel.org>, "Arnd Bergmann" <arnd@kernel.org>
+Cc: "Linus Walleij" <linusw@kernel.org>,
+ "Conor.Dooley" <conor.dooley@microchip.com>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <8ab38205-8d96-4735-b44a-5f22e89206ee@app.fastmail.com>
+In-Reply-To: <20260202-lushness-drier-ae0e40b56eee@spud>
+References: <20260202095809.1318785-1-arnd@kernel.org>
+ <20260202-lushness-drier-ae0e40b56eee@spud>
+Subject: Re: [PATCH] pinctrl: polarfire: restore GENERIC_PINCONF dependency
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-3.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [-2.15 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[arndb.de,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[arndb.de:s=fm2,messagingengine.com:s=fm3];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31355-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
 	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-31356-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[arnd@arndb.de,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[arndb.de:+,messagingengine.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,arndb.de:email]
-X-Rspamd-Queue-Id: 8EF4DD0DE0
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,messagingengine.com:dkim,arndb.de:email,arndb.de:dkim,app.fastmail.com:mid]
+X-Rspamd-Queue-Id: BB48FD0E1A
 X-Rspamd-Action: no action
 
+On Mon, Feb 2, 2026, at 20:53, Conor Dooley wrote:
+> On Mon, Feb 02, 2026 at 10:58:03AM +0100, Arnd Bergmann wrote:
+>> From: Arnd Bergmann <arnd@arndb.de>
+>> 
+>> Fixes: 488d704ed7b7 ("pinctrl: add polarfire soc mssio pinctrl driver")
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Does this show up with
+> https://lore.kernel.org/all/20260130-stoop-gleeful-29f2c525bd48@spud/
+> applied?
 
---+6xmGbO1cxA4h5rN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm sure that's fine as well.
 
-On Mon, Feb 02, 2026 at 10:58:03AM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->=20
-> Changing over to the new CONFIG_GENERIC_PINCTRL dropped the GENERIC_PINCO=
-NF
-> option, causing a build failure:
->=20
-> WARNING: unmet direct dependencies detected for GENERIC_PINCTRL
->   Depends on [n]: PINCTRL [=3Dy] && GENERIC_PINCONF [=3Dy] && GENERIC_PIN=
-CTRL_GROUPS [=3Dn] && GENERIC_PINMUX_FUNCTIONS [=3Dn]
->   Selected by [y]:
->   - PINCTRL_POLARFIRE_SOC [=3Dy] && PINCTRL [=3Dy] && (ARCH_MICROCHIP [=
-=3Dy] || COMPILE_TEST [=3Dy]) && OF [=3Dy]
-> drivers/pinctrl/microchip/pinctrl-mpfs-mssio.c:296:29: error: 'pinctrl_ge=
-neric_get_group_count' undeclared here (not in a function)
->   296 |         .get_groups_count =3D pinctrl_generic_get_group_count,
->       |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->=20
-> Select both GENERIC_PINCTRL and GENERIC_PINCONF to address this.
->=20
-> Fixes: 488d704ed7b7 ("pinctrl: add polarfire soc mssio pinctrl driver")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> I considered what you have here, went with what I linked cos it matches
+> the other pinctrl core options.
 
-Does this show up with
-https://lore.kernel.org/all/20260130-stoop-gleeful-29f2c525bd48@spud/
-applied?
-I considered what you have here, went with what I linked cos it matches
-the other pinctrl core options.
+Same here, I also thought about both options, but picked the other one ;-)
 
-> ---
->  drivers/pinctrl/microchip/Kconfig | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/drivers/pinctrl/microchip/Kconfig b/drivers/pinctrl/microchi=
-p/Kconfig
-> index e8bc01946324..a4ae57725fdb 100644
-> --- a/drivers/pinctrl/microchip/Kconfig
-> +++ b/drivers/pinctrl/microchip/Kconfig
-> @@ -12,6 +12,9 @@ config PINCTRL_POLARFIRE_SOC
->  	bool "Polarfire SoC pinctrl drivers"
->  	depends on ARCH_MICROCHIP || COMPILE_TEST
->  	depends on OF
-> +	select GENERIC_PINCONF
->  	select GENERIC_PINCTRL
-> +	select GENERIC_PINCTRL_GROUPS
-> +	select GENERIC_PINMUX_FUNCTIONS
->  	help
->  	  This selects the pinctrl drivers for Microchip Polarfire SoC.
-> --=20
-> 2.39.5
->=20
+Looking at both again, I agree that your version is better, so
+feel free to add
 
---+6xmGbO1cxA4h5rN
-Content-Type: application/pgp-signature; name="signature.asc"
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
------BEGIN PGP SIGNATURE-----
+to that one.
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaYEAtQAKCRB4tDGHoIJi
-0nSQAQCsCEoEgfOQRq0YXUwzG7nreWY4VkwNQxv1n7zrRzTRoQEA9OXfetoHyMWN
-xhTqxum9QPzG5/RxIgk2nan3nsbeOQ8=
-=SrmQ
------END PGP SIGNATURE-----
-
---+6xmGbO1cxA4h5rN--
+       Arnd
 
