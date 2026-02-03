@@ -1,80 +1,83 @@
-Return-Path: <linux-gpio+bounces-31410-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31411-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eHYEOhqGgmmDVwMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31410-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 04 Feb 2026 00:34:50 +0100
+	id UDAOIWuIgmn/VwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31411-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 04 Feb 2026 00:44:43 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C2A5DFC4A
-	for <lists+linux-gpio@lfdr.de>; Wed, 04 Feb 2026 00:34:50 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3114ADFCF8
+	for <lists+linux-gpio@lfdr.de>; Wed, 04 Feb 2026 00:44:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B485A302EA9F
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Feb 2026 23:34:48 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id F1F94302DBC3
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Feb 2026 23:44:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F05632A3C0;
-	Tue,  3 Feb 2026 23:34:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D68A0330B0B;
+	Tue,  3 Feb 2026 23:44:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqtchg46"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ugcyN0Rq"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74F931ED8A
-	for <linux-gpio@vger.kernel.org>; Tue,  3 Feb 2026 23:34:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CAD32D0F0
+	for <linux-gpio@vger.kernel.org>; Tue,  3 Feb 2026 23:44:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770161687; cv=none; b=BIKL+xW9xg2wr5Eg3jlHuK+ZqscYUc44crOSTBp3E4K73ojJRqc5zDEuaxycQg7ZNiT9zN3LkX8PXu9CspqMA+U/3a1t0wUD3qaZonqfJwsMQ1ddGsFOkzfc9QeLBc4eMukLWCQ6ekJFg/lBpoqIwtngjRvB+damanUhvW1YwoE=
+	t=1770162280; cv=none; b=CSMDmsXWoxrAfyV4l4BaE/Bo1lVt19oXErogsOsfOc68Spv/+weLfl2ibqIwiUOQfN56kVRNmg7Kr4nb4Gn25Ccr9e7r/EdcpcekrynYN7oRDBIb7iMs8l19hX2Y8XP8Et3szAlu09y7Sd8sK5jKzfUq+CvDcwrnB1amVTVwbn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770161687; c=relaxed/simple;
-	bh=H3N6t3iT+lRw2Y3wcq0juSNfNc3ZLSsvKLjYx4BlJTM=;
+	s=arc-20240116; t=1770162280; c=relaxed/simple;
+	bh=MUtAEzuFZ3UXsgeYeGcULd0s9lsr291/wS31tUAYPQI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R0tjgv81+ehHkYVKiIlBjzXqfO6L5RMn9Yx9Cz8mZZpPvNFMg/4nuGVVah8nkzHbz40VyJ2zXiijzaXwJYQQtNq/Yt8uJRA+acY89fnLhno23HkFQqEh/z7lYI/DNRFEHNZrr9TtZO3k3QXHmHk79QIHLmFYMFql17DtbSEViF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqtchg46; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC4EBC2BCAF
-	for <linux-gpio@vger.kernel.org>; Tue,  3 Feb 2026 23:34:47 +0000 (UTC)
+	 To:Cc:Content-Type; b=PkQL90Z8x3jMzJvpM3L1iCk3+wUcY3A1jFWYSiXFoaUMJZ8aP7RMq6mebXTeeEX3vCETt6PWMRm620SeBGJMx5h1XvThlC8bhKvZaauTfvZRpUXPI5/Lyvf1cccBBBHTWoG6aAFFcS5WNR3ADDYzruRjFroMUASWhOOckzeZDOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ugcyN0Rq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54E80C2BCB3
+	for <linux-gpio@vger.kernel.org>; Tue,  3 Feb 2026 23:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770161687;
-	bh=H3N6t3iT+lRw2Y3wcq0juSNfNc3ZLSsvKLjYx4BlJTM=;
+	s=k20201202; t=1770162280;
+	bh=MUtAEzuFZ3UXsgeYeGcULd0s9lsr291/wS31tUAYPQI=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nqtchg46hJV6r1bQFLQT7aBrl24yYiUpMB5HgW9eCGF1JT/AyvItPIfcJRJxTC4A5
-	 C0CcRJov/r6C6UdEbHNQ+0GBUxZ/Kc99tCry5UO6nlDXm93PLJuMrp9ZRf1/0x2djE
-	 Uz9k49tDAjcnFpbt4vytBBRSxC2xDZmqx1YopK8OfLlbl8Uvd5Q078y1oa5RFDwncv
-	 Dt2ASczc/ILf0ZN6ez/txaG+HUebwqPiQcsiUZbriRUAQT8ePpOXFLIY7eb9HZ8HYJ
-	 54ISvN7+WcYtIrd9jA/MU/1iPGmvL4IHhm4Dp721CEaVKZlP6QUKKrx7EKwsPwzZ7C
-	 VyiMFb+TvNTKQ==
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-78f89501423so3753647b3.1
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Feb 2026 15:34:47 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU8JvXrgq+sbwoz65stpzE3m1XYDl6O/DQh598iqygkHNGnDPPRzzaMIJ4zDEP0z5X+Xr5ruDYWlw62@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQg8aocHE6uk00aIeaFlyxDWhzwHm9bUfl41SQlxLdGLHjZGu3
-	bzkZ/ohBint4MVZjXx6NaED/hzsc8LqLzS/4ZO6FIyhjJlNVXee5aU7vrNFA5q2JP6JL4ILkz0M
-	cWpJyrpkApqxYRy6oEufvTCzTil+x49w=
-X-Received: by 2002:a05:690e:dce:b0:649:ba22:58d0 with SMTP id
- 956f58d0204a3-649dbec902amr1077376d50.29.1770161687019; Tue, 03 Feb 2026
- 15:34:47 -0800 (PST)
+	b=ugcyN0RqC48lMQVC290mr54/cSG8mF5qG6qEw1bXtuEg1AHRMdgpEol4MTB4WYgbx
+	 2xgqlBNWqkJckBepT2lyA7KPKwAVTR7exlJt6+nKU49bLYyk6a32A0JXHEgkYdX0JW
+	 JdKy89rOSuHUxQGG36O3GomJnrxi8DRpkj9qqaL1u59b5X03z9pAKndSF27sExk6Mu
+	 e+wEhvO8nkNb10Lh7E62jU/jKYzK+2n8Cn3jkoSu8teRtumFaYuuD7lBca1tjzvYHH
+	 DNwMUzf8L2cy3eu0zdga38VJVA/+z07Ak3oWCQxVORf+z7cadCUrLBIMwDdqHvpyx/
+	 3Nl558QdYMMaA==
+Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-649bd1f08acso276713d50.1
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Feb 2026 15:44:40 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXv4xGwGW9ZD+FhQFjbVdxcsEClTra37CQQ8zInL4PNNRJVm0bkL/aTLupOSP2LA64drWRuQSI4lHsL@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHcriHWqOhGBBUOl+UAzvkBfUVl73bkE4GOpQ6ufipxolrCTnV
+	4NTbNsaCnQjgLuCZ7lAXcAZz93xUkCecRkvUFWBBTS2DnhE6/ekISnGONV1Mxw1bvysTmpoKIf3
+	O7g9su4bFr7asAtxMjaE+xpjIVWwkhZU=
+X-Received: by 2002:a53:d8c6:0:b0:645:68cf:2bf4 with SMTP id
+ 956f58d0204a3-649db4ac96bmr877835d50.77.1770162279637; Tue, 03 Feb 2026
+ 15:44:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260203-craftsman-battered-3491ff68f462@spud>
-In-Reply-To: <20260203-craftsman-battered-3491ff68f462@spud>
+References: <20260203-dev-b4-aaeon-mcu-driver-v3-0-0a19432076ac@bootlin.com> <20260203-dev-b4-aaeon-mcu-driver-v3-4-0a19432076ac@bootlin.com>
+In-Reply-To: <20260203-dev-b4-aaeon-mcu-driver-v3-4-0a19432076ac@bootlin.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Wed, 4 Feb 2026 00:34:36 +0100
-X-Gmail-Original-Message-ID: <CAD++jLn8WOobPaoSrMLitFgFZc_6CH9BQbRy_Gdqq3BLhDXWQg@mail.gmail.com>
-X-Gm-Features: AZwV_Qi7lxnWnjXussICca0lyIFaqwLa7DfHaZmiOVa6EJi8C3uLkn3H5EkvZDE
-Message-ID: <CAD++jLn8WOobPaoSrMLitFgFZc_6CH9BQbRy_Gdqq3BLhDXWQg@mail.gmail.com>
-Subject: Re: [RFC] pinctrl: pinconf-generic: move ..dt_node_to_map_pinmux() to
- amlogic-am4 driver
-To: Conor Dooley <conor@kernel.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>, Xianwei Zhao <xianwei.zhao@amlogic.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+Date: Wed, 4 Feb 2026 00:44:27 +0100
+X-Gmail-Original-Message-ID: <CAD++jLmsx885MteExK0NcS6aD3BVimK82Z3bosSpUvSs8p4Cag@mail.gmail.com>
+X-Gm-Features: AZwV_QjuysNBoHyalaty048gguXHT55tueRC1-zJSip9FADgZXaoN46HJGRIgaE
+Message-ID: <CAD++jLmsx885MteExK0NcS6aD3BVimK82Z3bosSpUvSs8p4Cag@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] gpio: aaeon: Add GPIO driver for SRG-IMX8P MCU
+To: "Thomas Perrot (Schneider Electric)" <thomas.perrot@bootlin.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, 
+	=?UTF-8?B?SsOpcsOpbWllIERhdXRoZXJpYmVz?= <jeremie.dautheribes@bootlin.com>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee@kernel.org>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
@@ -82,72 +85,56 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[microchip.com,amlogic.com,linaro.org,baylibre.com,googlemail.com,lists.infradead.org,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-31411-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,pengutronix.de,gmail.com,bootlin.com,linux-watchdog.org,roeck-us.net,vger.kernel.org,lists.linux.dev,lists.infradead.org];
 	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_FROM(0.00)[bounces-31410-lists,linux-gpio=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,microchip.com:email,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 6C2A5DFC4A
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 3114ADFCF8
 X-Rspamd-Action: no action
 
-On Tue, Feb 3, 2026 at 5:17=E2=80=AFPM Conor Dooley <conor@kernel.org> wrot=
-e:
+On Tue, Feb 3, 2026 at 5:21=E2=80=AFPM Thomas Perrot (Schneider Electric)
+<thomas.perrot@bootlin.com> wrote:
 
-> From: Conor Dooley <conor.dooley@microchip.com>
+> Add GPIO driver for the Aaeon SRG-IMX8P embedded controller. This
+> driver supports 7 GPO (General Purpose Output) pins and 12 GPIO pins
+> that can be configured as inputs or outputs.
 >
-> pinconf_generic_dt_node_to_map_pinmux() is not actually a generic
-> function, and really belongs in the amlogic-am4 driver. There are three
-> reasons why.
-(...)
-> The other dt_node_to_map implementations accept a being called for
-> either a node containing pin configuration properties or a node
-> containing child nodes that each contain the configuration properties.
-> IOW, they support the following two devicetree configurations:
+> The driver implements proper state management for GPO pins (which are
+> output-only) and full direction control for GPIO pins. During probe,
+> all pins are reset to a known state (GPOs low, GPIOs as inputs) to
+> prevent undefined behavior across system reboots, as the MCU does not
+> reset GPIO states on soft reboot.
 >
-> | cfg {
-> |       label: group {
-> |               pinmux =3D <asjhdasjhlajskd>;
-> |               config-item1;
-> |       };
-> | };
->
-> | label: cfg {
-> |       group1 {
-> |               pinmux =3D <dsjhlfka>;
-> |               config-item2;
-> |       };
-> |       group2 {
-> |               pinmux =3D <lsdjhaf>;
-> |               config-item1;
-> |       };
-> | };
->
-> pinconf_generic_dt_node_to_map_pinmux() only supports the latter.
+> Co-developed-by: J=C3=A9r=C3=A9mie Dautheribes (Schneider Electric) <jere=
+mie.dautheribes@bootlin.com>
+> Signed-off-by: J=C3=A9r=C3=A9mie Dautheribes (Schneider Electric) <jeremi=
+e.dautheribes@bootlin.com>
+> Signed-off-by: Thomas Perrot (Schneider Electric) <thomas.perrot@bootlin.=
+com>
 
-This alone is a good reason to apply the patch.
+Looks good to me!
 
-I have a strong urge to apply this already for v7.0 despite its RFC state.
-
-Anyone against?
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
 Yours,
 Linus Walleij
