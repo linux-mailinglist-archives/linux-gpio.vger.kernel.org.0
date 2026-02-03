@@ -1,49 +1,49 @@
-Return-Path: <linux-gpio+bounces-31377-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31378-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2NDEHu2SgWl/HAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31377-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 03 Feb 2026 07:17:17 +0100
+	id qLVtKhiTgWl/HAMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31378-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 03 Feb 2026 07:18:00 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC0CBD520D
-	for <lists+linux-gpio@lfdr.de>; Tue, 03 Feb 2026 07:17:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BE11D522C
+	for <lists+linux-gpio@lfdr.de>; Tue, 03 Feb 2026 07:18:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 44AD43114675
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Feb 2026 06:12:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AB9BC3132995
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Feb 2026 06:12:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E6D1214204;
-	Tue,  3 Feb 2026 06:12:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86B6536E483;
+	Tue,  3 Feb 2026 06:12:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iU/6X18K"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oNxCY7OD"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0FC36B04D;
-	Tue,  3 Feb 2026 06:12:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC70E36C0B4;
+	Tue,  3 Feb 2026 06:12:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770099130; cv=none; b=GkFQ5Yz9Iw1zsCL5ykCpwgpxZj4xrf/oYNGi4wDLCdtzVtDQ5Gr1YfEHykOfRKfBzfLKhFx0qYzsh8PrqbHexeXC0SLGWorh3wfyyjNv1eJZHhOTf0FPGqr8D5bxydDuOSEL5qzuUkGUx2fE4scVvJ1Z0sU/5YOk1mAJBAGa61A=
+	t=1770099133; cv=none; b=gwVAJK66SnYJCpUbHyiWB1dtsx4AETzWFNXpC68kwoOSZZAY9gQ340F3sbuiZh61mdn4oP8YfWKe9z4iWulbi5zC2igUOKBOQ0Na17v++2M0/+LWtLgCR71YmZx71M9z677w22/icbc6TATur7Gu7LYBcKv8bVqayBgaEyxN3N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770099130; c=relaxed/simple;
-	bh=GShNgLrfw5AGXnpJDchEQqstj+ZhEH+iv4NR8Iw7sOk=;
+	s=arc-20240116; t=1770099133; c=relaxed/simple;
+	bh=yQiJynIAbuFeeRMS6x1JyTsW8237/zPmWVWr/0DAPzU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i1/UCca0C+dMFqFU3uZ5zcWitQlk1N2Pnonb0cZJV7RxpDh5N1X0wiLAkrPHXP1Is3AWojPhQCVb0zrM7H1Z9BpUqfM9e4k5vkgAFh09ysv+T46oX5atA49tqsbmf9U8zXbgipVirdVskHr2E/nfuMz2izshKbdZmjTDdExtfps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iU/6X18K; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EBA2C19425;
-	Tue,  3 Feb 2026 06:12:07 +0000 (UTC)
+	 MIME-Version; b=t9mHp3tFuuS5P2AuilrSS/pNGTlg8rngx7b57t5+b38z/cBctKZY/akKHN+8KuNqdiMetYjtDjV1VsZ4O0ecieic64iVvQ0fwspFbVXQzjmXIz8tcxPc9iWiAGPUK4o5KrwgFfpGbz0OaABGlwK8J0gAGp16tz5IHoywAgPNyY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oNxCY7OD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19089C116D0;
+	Tue,  3 Feb 2026 06:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770099129;
-	bh=GShNgLrfw5AGXnpJDchEQqstj+ZhEH+iv4NR8Iw7sOk=;
+	s=k20201202; t=1770099132;
+	bh=yQiJynIAbuFeeRMS6x1JyTsW8237/zPmWVWr/0DAPzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iU/6X18KmXOgVfT+J0b8LVmdk5ir+wOYclDA55dWi8JyqqFvcoYf8LF4LPzmZhQLZ
-	 TeVdSWDRgPR38rgTGEDnrRquyj8IHzsvPHBnvXgonDTmQYNv+DW0VuoDjEqUteie7X
-	 9bPrJs5bVAkBQczBU7N+2ETunZaXAYp0tA6KeuKyYB7Jw2rqAkC6JegPESEwDddpEP
-	 DAUqG1iIbmHcyRWGmEf2sVLsEWqNZgdaSmbxu0Vpo6zIlIaj1M3ihYO270/Sig+yL3
-	 FPExWP3PDiWT06ze1RqJwYeuNw0uOvvYx/7dpCpnZiu8IE33zMs8BT03FbKu9jJ3Kr
-	 A4jcYllGZw1bQ==
+	b=oNxCY7OD/rcNlfOqxqyeEKrKEjgKPwe2bzveNeFWKBcmaxeVr4CsM87UPeZN8IUtW
+	 poPT581dLhXD++sPmqr4Ng9yw0rTmb7XKWhYF0T/Qi5Mda12glpmxKX5bWrENR8f5/
+	 3PdttxuXXSUhQfGoeZiS4+uB+Xg3j1R1agqlsM7O8EFMpfTGqvWKOrDUlwPQhsPQyv
+	 4kPrVDIXukCYhTx0wLs4CKPfkxdgN0Pi68PabF2Lh+y/gTqoD8Fu+xC4MbOf66WuoR
+	 7xj1ZEEsuZPFbFwhqAIX9v49ZXctKdZWRoUhMFTqXxmWgZyocpiOjh0gnzdm4VR7V9
+	 f3g7qJgRnocaA==
 From: Tzung-Bi Shih <tzungbi@kernel.org>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
@@ -62,9 +62,9 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	tzungbi@kernel.org,
 	Dan Williams <dan.j.williams@intel.com>,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH v2 07/11] gpio: Add revocable provider handle for struct gpio_chip
-Date: Tue,  3 Feb 2026 06:10:54 +0000
-Message-ID: <20260203061059.975605-8-tzungbi@kernel.org>
+Subject: [PATCH v2 08/11] gpio: cdev: Leverage revocable for accessing struct gpio_chip
+Date: Tue,  3 Feb 2026 06:10:55 +0000
+Message-ID: <20260203061059.975605-9-tzungbi@kernel.org>
 X-Mailer: git-send-email 2.53.0.rc2.204.g2597b5adb4-goog
 In-Reply-To: <20260203061059.975605-1-tzungbi@kernel.org>
 References: <20260203061059.975605-1-tzungbi@kernel.org>
@@ -88,7 +88,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[17];
-	TAGGED_FROM(0.00)[bounces-31377-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31378-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -104,118 +104,200 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: EC0CBD520D
+X-Rspamd-Queue-Id: 4BE11D522C
 X-Rspamd-Action: no action
 
-The underlying chip can be removed asynchronously.  `gdev->srcu` is used
-to ensure the synchronization before accessing `gdev->chip`.
-
-Revocable encapsulates the details.  Add revocable provider handle for
-the corresponding struct gpio_chip in struct gpio_device so that it can
-start to hide the synchronization details.
+Struct gpio_device now provides a revocable provider to the underlying
+struct gpio_chip.  Leverage revocable for accessing the struct
+gpio_chip.
 
 Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
 ---
 v2:
 - Change usages accordingly after applying
-  https://lore.kernel.org/all/20260129143733.45618-2-tzungbi@kernel.org.
-  - Add __rcu for `chip_rp`.
-  - Pass pointer of pointer to revocable_provider_revoke().
-- Rebase accordingly after applying
-  https://lore.kernel.org/all/20260203060210.972243-1-tzungbi@kernel.org.
+  https://lore.kernel.org/all/20260129143733.45618-4-tzungbi@kernel.org.
+  - Preserve a local storage for `struct revocable`.
+- Combine multiple patches (see "v1:").
 
-v1: https://lore.kernel.org/all/20260116081036.352286-13-tzungbi@kernel.org
+v1:
+- https://lore.kernel.org/all/20260116081036.352286-14-tzungbi@kernel.org
+- https://lore.kernel.org/all/20260116081036.352286-15-tzungbi@kernel.org
+- https://lore.kernel.org/all/20260116081036.352286-16-tzungbi@kernel.org
+- https://lore.kernel.org/all/20260116081036.352286-17-tzungbi@kernel.org
+- https://lore.kernel.org/all/20260116081036.352286-18-tzungbi@kernel.org
 
- drivers/gpio/gpiolib.c | 20 ++++++++++++++++++--
- drivers/gpio/gpiolib.h |  2 ++
- 2 files changed, 20 insertions(+), 2 deletions(-)
+ drivers/gpio/gpiolib-cdev.c | 70 ++++++++++++++++++-------------------
+ 1 file changed, 34 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 7885dcd1e49d..fdae10ec3a17 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index aaa5de814468..ca9c04765df4 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
 @@ -22,6 +22,7 @@
- #include <linux/nospec.h>
- #include <linux/of.h>
+ #include <linux/overflow.h>
  #include <linux/pinctrl/consumer.h>
+ #include <linux/poll.h>
 +#include <linux/revocable.h>
  #include <linux/seq_file.h>
- #include <linux/slab.h>
- #include <linux/srcu.h>
-@@ -1110,6 +1111,12 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 		goto err_put_device;
- 	}
+ #include <linux/spinlock.h>
+ #include <linux/string.h>
+@@ -210,10 +211,10 @@ static long linehandle_ioctl(struct file *file, unsigned int cmd,
+ 	DECLARE_BITMAP(vals, GPIOHANDLES_MAX);
+ 	unsigned int i;
+ 	int ret;
++	struct gpio_chip *gc;
  
-+	gdev->chip_rp = revocable_provider_alloc(gc);
-+	if (!gdev->chip_rp) {
-+		ret = -ENOMEM;
-+		goto err_put_device;
-+	}
-+
- 	gdev->can_sleep = gc->can_sleep;
- 	rwlock_init(&gdev->line_state_lock);
- 	RAW_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
-@@ -1139,7 +1146,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 			if (base < 0) {
- 				ret = base;
- 				base = 0;
--				goto err_put_device;
-+				goto err_free_rp;
- 			}
+-	guard(srcu)(&lh->gdev->srcu);
+-
+-	if (!rcu_access_pointer(lh->gdev->chip))
++	REVOCABLE_TRY_ACCESS_WITH(lh->gdev->chip_rp, gc);
++	if (!gc)
+ 		return -ENODEV;
  
- 			/*
-@@ -1159,7 +1166,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 		ret = gpiodev_add_to_list_unlocked(gdev);
- 		if (ret) {
- 			gpiochip_err(gc, "GPIO integer space overlap, cannot add chip\n");
--			goto err_put_device;
-+			goto err_free_rp;
- 		}
- 	}
+ 	switch (cmd) {
+@@ -1432,10 +1433,10 @@ static long linereq_ioctl(struct file *file, unsigned int cmd,
+ {
+ 	struct linereq *lr = file->private_data;
+ 	void __user *ip = (void __user *)arg;
++	struct gpio_chip *gc;
  
-@@ -1256,6 +1263,14 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	scoped_guard(mutex, &gpio_devices_lock)
- 		list_del_rcu(&gdev->list);
- 	synchronize_srcu(&gpio_devices_srcu);
-+err_free_rp:
-+	/*
-+	 * Unlike other allocated resources for `gdev` can be freed
-+	 * in gpiodev_release().  Call revocable_provider_revoke()
-+	 * here as it's designed to be called when the chip is gone
-+	 * (i.e., gpiochip_remove()).
-+	 */
-+	revocable_provider_revoke(&gdev->chip_rp);
- err_put_device:
- 	gpio_device_put(gdev);
- 	goto err_print_message;
-@@ -1302,6 +1317,7 @@ void gpiochip_remove(struct gpio_chip *gc)
- 	/* Numb the device, cancelling all outstanding operations */
- 	rcu_assign_pointer(gdev->chip, NULL);
- 	synchronize_srcu(&gdev->srcu);
-+	revocable_provider_revoke(&gdev->chip_rp);
- 	gpio_device_teardown_shared(gdev);
- 	gpiochip_irqchip_remove(gc);
- 	acpi_gpiochip_remove(gc);
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index 3abb90385829..cd136d5b52e9 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -52,6 +52,7 @@
-  * @device_notifier: used to notify character device wait queues about the GPIO
-  *                   device being unregistered
-  * @srcu: protects the pointer to the underlying GPIO chip
-+ * @chip_rp: revocable provider handle for the corresponding struct gpio_chip.
-  * @pin_ranges: range of pins served by the GPIO driver
-  *
-  * This state container holds most of the runtime variable data
-@@ -79,6 +80,7 @@ struct gpio_device {
- 	struct workqueue_struct	*line_state_wq;
- 	struct blocking_notifier_head device_notifier;
- 	struct srcu_struct	srcu;
-+	struct revocable_provider __rcu *chip_rp;
+-	guard(srcu)(&lr->gdev->srcu);
+-
+-	if (!rcu_access_pointer(lr->gdev->chip))
++	REVOCABLE_TRY_ACCESS_WITH(lr->gdev->chip_rp, gc);
++	if (!gc)
+ 		return -ENODEV;
  
- #ifdef CONFIG_PINCTRL
+ 	switch (cmd) {
+@@ -1463,10 +1464,10 @@ static __poll_t linereq_poll(struct file *file,
+ {
+ 	struct linereq *lr = file->private_data;
+ 	__poll_t events = 0;
++	struct gpio_chip *gc;
+ 
+-	guard(srcu)(&lr->gdev->srcu);
+-
+-	if (!rcu_access_pointer(lr->gdev->chip))
++	REVOCABLE_TRY_ACCESS_WITH(lr->gdev->chip_rp, gc);
++	if (!gc)
+ 		return EPOLLHUP | EPOLLERR;
+ 
+ 	poll_wait(file, &lr->wait, wait);
+@@ -1485,10 +1486,10 @@ static ssize_t linereq_read(struct file *file, char __user *buf,
+ 	struct gpio_v2_line_event le;
+ 	ssize_t bytes_read = 0;
+ 	int ret;
++	struct gpio_chip *gc;
+ 
+-	guard(srcu)(&lr->gdev->srcu);
+-
+-	if (!rcu_access_pointer(lr->gdev->chip))
++	REVOCABLE_TRY_ACCESS_WITH(lr->gdev->chip_rp, gc);
++	if (!gc)
+ 		return -ENODEV;
+ 
+ 	if (count < sizeof(le))
+@@ -1781,10 +1782,10 @@ static __poll_t lineevent_poll(struct file *file,
+ {
+ 	struct lineevent_state *le = file->private_data;
+ 	__poll_t events = 0;
++	struct gpio_chip *gc;
+ 
+-	guard(srcu)(&le->gdev->srcu);
+-
+-	if (!rcu_access_pointer(le->gdev->chip))
++	REVOCABLE_TRY_ACCESS_WITH(le->gdev->chip_rp, gc);
++	if (!gc)
+ 		return EPOLLHUP | EPOLLERR;
+ 
+ 	poll_wait(file, &le->wait, wait);
+@@ -1819,10 +1820,10 @@ static ssize_t lineevent_read(struct file *file, char __user *buf,
+ 	ssize_t bytes_read = 0;
+ 	ssize_t ge_size;
+ 	int ret;
++	struct gpio_chip *gc;
+ 
+-	guard(srcu)(&le->gdev->srcu);
+-
+-	if (!rcu_access_pointer(le->gdev->chip))
++	REVOCABLE_TRY_ACCESS_WITH(le->gdev->chip_rp, gc);
++	if (!gc)
+ 		return -ENODEV;
+ 
  	/*
+@@ -1901,10 +1902,10 @@ static long lineevent_ioctl(struct file *file, unsigned int cmd,
+ 	struct lineevent_state *le = file->private_data;
+ 	void __user *ip = (void __user *)arg;
+ 	struct gpiohandle_data ghd;
++	struct gpio_chip *gc;
+ 
+-	guard(srcu)(&le->gdev->srcu);
+-
+-	if (!rcu_access_pointer(le->gdev->chip))
++	REVOCABLE_TRY_ACCESS_WITH(le->gdev->chip_rp, gc);
++	if (!gc)
+ 		return -ENODEV;
+ 
+ 	/*
+@@ -2434,11 +2435,11 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 	struct gpio_chardev_data *cdev = file->private_data;
+ 	struct gpio_device *gdev = cdev->gdev;
+ 	void __user *ip = (void __user *)arg;
+-
+-	guard(srcu)(&gdev->srcu);
++	struct gpio_chip *gc;
+ 
+ 	/* We fail any subsequent ioctl():s when the chip is gone */
+-	if (!rcu_access_pointer(gdev->chip))
++	REVOCABLE_TRY_ACCESS_WITH(gdev->chip_rp, gc);
++	if (!gc)
+ 		return -ENODEV;
+ 
+ 	/* Fill in the struct and pass to userspace */
+@@ -2497,12 +2498,9 @@ static void lineinfo_changed_func(struct work_struct *work)
+ 		 * Pin functions are in general much more static and while it's
+ 		 * not 100% bullet-proof, it's good enough for most cases.
+ 		 */
+-		scoped_guard(srcu, &ctx->gdev->srcu) {
+-			gc = srcu_dereference(ctx->gdev->chip, &ctx->gdev->srcu);
+-			if (gc &&
+-			    !pinctrl_gpio_can_use_line(gc, ctx->chg.info.offset))
+-				ctx->chg.info.flags |= GPIO_V2_LINE_FLAG_USED;
+-		}
++		REVOCABLE_TRY_ACCESS_WITH(ctx->gdev->chip_rp, gc);
++		if (gc && !pinctrl_gpio_can_use_line(gc, ctx->chg.info.offset))
++			ctx->chg.info.flags |= GPIO_V2_LINE_FLAG_USED;
+ 	}
+ 
+ 	ret = kfifo_in_spinlocked(&ctx->cdev->events, &ctx->chg, 1,
+@@ -2583,10 +2581,10 @@ static __poll_t lineinfo_watch_poll(struct file *file,
+ {
+ 	struct gpio_chardev_data *cdev = file->private_data;
+ 	__poll_t events = 0;
++	struct gpio_chip *gc;
+ 
+-	guard(srcu)(&cdev->gdev->srcu);
+-
+-	if (!rcu_access_pointer(cdev->gdev->chip))
++	REVOCABLE_TRY_ACCESS_WITH(cdev->gdev->chip_rp, gc);
++	if (!gc)
+ 		return EPOLLHUP | EPOLLERR;
+ 
+ 	poll_wait(file, &cdev->wait, pollt);
+@@ -2606,10 +2604,10 @@ static ssize_t lineinfo_watch_read(struct file *file, char __user *buf,
+ 	ssize_t bytes_read = 0;
+ 	int ret;
+ 	size_t event_size;
++	struct gpio_chip *gc;
+ 
+-	guard(srcu)(&cdev->gdev->srcu);
+-
+-	if (!rcu_access_pointer(cdev->gdev->chip))
++	REVOCABLE_TRY_ACCESS_WITH(cdev->gdev->chip_rp, gc);
++	if (!gc)
+ 		return -ENODEV;
+ 
+ #ifndef CONFIG_GPIO_CDEV_V1
 -- 
 2.53.0.rc2.204.g2597b5adb4-goog
 
