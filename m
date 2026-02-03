@@ -1,201 +1,130 @@
-Return-Path: <linux-gpio+bounces-31382-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31383-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ADRhH6PCgWmjJgMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31382-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 03 Feb 2026 10:40:51 +0100
+	id GQq4KLzFgWk0JwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31383-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 03 Feb 2026 10:54:04 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECA78D6F17
-	for <lists+linux-gpio@lfdr.de>; Tue, 03 Feb 2026 10:40:50 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B545D724D
+	for <lists+linux-gpio@lfdr.de>; Tue, 03 Feb 2026 10:54:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1E575306EA60
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Feb 2026 09:35:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0D61D3075F8C
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Feb 2026 09:52:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4844C3101CE;
-	Tue,  3 Feb 2026 09:35:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7428C39902E;
+	Tue,  3 Feb 2026 09:52:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e9eEfn3W"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yh7zXQ74"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0D9396D07
-	for <linux-gpio@vger.kernel.org>; Tue,  3 Feb 2026 09:35:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34776393DF5;
+	Tue,  3 Feb 2026 09:51:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770111327; cv=none; b=cFVfiXq6zod7oPEQgmt2hiV96tqE6N+AZEqiCY4wfjcLF1p8ZO0+pbJqGNl27AXNhEoiPRWZB0i1ic1/21za00rXuYMgvd2n35CXGG2cnxpUR9klNfh9MLP/BGG9sb05mBwwOStMd1IeerTeQAYHndrNFvdGz2CRekEul8Cs+vo=
+	t=1770112320; cv=none; b=Fz8/+5TV5NaRHtVR520oZyiBDScEM726FfkP22h/AasnbT2RmAhZYfWu3yMvDOMI/bJE1ksFl0Azxvcs0AapYEBJZHNf7/Z/C20m3d+2AN/2B3jGB6ZBdwUSOFfO3Xxgp5a7i5AJFsiotlveggMe1EnnKzmrz6xFLCW74en7g/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770111327; c=relaxed/simple;
-	bh=md0MCLqSqXL0pe8mN6d/m5/nAWhddeTwgbwRMbWB5xo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KiG0PTbpayRvAoO5n7HB1iQtzDhKx2607su6at46irqDNgDCwLO59Gl/nKYUHohDPMJarYzrk5itYWhnBj6APf0AKD2sNptnVttS6UthpckmrLjQv0huRY9zyPM46/5BfZVq/LNUpswDpXEtFLPwGEe0m6IzEx8MpnpONkxmY64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e9eEfn3W; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF56AC19421
-	for <linux-gpio@vger.kernel.org>; Tue,  3 Feb 2026 09:35:26 +0000 (UTC)
+	s=arc-20240116; t=1770112320; c=relaxed/simple;
+	bh=JoSo1U6Ut8p2NIj9qp0jlb4l/KgJvCWtB/NubAXASxo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=flQ5V3zoRRriKpAfzwmglGj2CFqziYKEkpcqOf0FQsJY2zIH9PwkMhA9f1yy3gGTHxds5tXPS9YA1SHAmWe+fyXXsxkfoQ/J07rc/ZDq8Llp3Er8rzkZ/1CVUofj/Q3wOiYr45/CuoLValoNM5TZi+lBQT2itbZXPK2T7rB+tkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yh7zXQ74; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 672ADC116D0;
+	Tue,  3 Feb 2026 09:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770111326;
-	bh=md0MCLqSqXL0pe8mN6d/m5/nAWhddeTwgbwRMbWB5xo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=e9eEfn3WH9H2tfchjrR2kV+COQMnoGu8u8Be56Gr6IJKqj4FHB9qKW9uqsdEI63Jv
-	 c5jFFC61BZtC4hNOj6tOD09d2xYgqYg8XwHOKUfw+fJJVh8PoTGhm0rfJi5boMUyxT
-	 6fINywjF3BAlr+1GZvzLgUP42PeKrQDILlGAV1x0gAM0fH7l00096Y3FWQHAx+KftG
-	 YfAppIfIFXH1ZtiXuCqF94eO+3D34Df9Su4psMZmk8rkZUPRHT90LvVKLw36esc3VM
-	 SUpskeW/jxViSP/lTe6oOVq89IpNjVUywZ05vanxyDrT1YJhaeBE21T6FtAO+GSv5x
-	 RPqkz3brfaOwg==
-Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-649389b1cc5so5015420d50.1
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Feb 2026 01:35:26 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUZgbX3mqrmPxgGNCk01Ohlx863ofIV2JLo5gglUyM42TritDAInennIZI/De7asD8i3Gu+DMLzvfzk@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxkq9kuHVx+PohYdEC/Jkti4W1G0L27FMGMqpIetfEDKtPZrRUd
-	Y7iXtLD2WiORyumxAp5C02xIIHA8lfisNoXuL5T98vCfr4Tnc7QqouyLvWFhOPpk1kfO9bxtvVu
-	GUVIoqkH6XBb25kX4i8OKNe1l+XwSJ0o=
-X-Received: by 2002:a05:690e:1247:b0:649:cd21:ff2d with SMTP id
- 956f58d0204a3-649cd2205e8mr3145125d50.11.1770111325938; Tue, 03 Feb 2026
- 01:35:25 -0800 (PST)
+	s=k20201202; t=1770112319;
+	bh=JoSo1U6Ut8p2NIj9qp0jlb4l/KgJvCWtB/NubAXASxo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Yh7zXQ7443ey47b/4qL7hWhikaxa7wSLA9BvoIZd/S8NGfOpmskBo62jAFK1E0k1R
+	 M1u48wDhNaYfRQVYJP2cNktX6g77jpAKi1z3Hir9j82XX7fsALNQf+94U9RSyZPZIS
+	 FRs8+P3uJAYK0YhwQTTBthhNjBHY6uSRS8vn6rf5rmDHZk6RgotMcj3REsevjWsFEH
+	 6e462cyswn4UFcwfdIJy4h9qAuVex2BqOeJsVhCIKoT16cWyO72WmqV4MiTTtq146E
+	 342uCEEtFkQ5Odn+ZPo5PpGypDgY+LfrJhyL6Hz5XuAPSNb7FcrUEUvboSHSF4ZkKG
+	 ENu9tai4XJxkw==
+Date: Tue, 3 Feb 2026 09:51:55 +0000
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linusw@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Johan Hovold <johan@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	chrome-platform@lists.linux.dev,
+	Dan Williams <dan.j.williams@intel.com>, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 08/11] gpio: cdev: Leverage revocable for accessing
+ struct gpio_chip
+Message-ID: <aYHFO0TlXMP4Bli-@google.com>
+References: <20260203061059.975605-1-tzungbi@kernel.org>
+ <20260203061059.975605-9-tzungbi@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260203060210.972243-1-tzungbi@kernel.org>
-In-Reply-To: <20260203060210.972243-1-tzungbi@kernel.org>
-From: Linus Walleij <linusw@kernel.org>
-Date: Tue, 3 Feb 2026 10:35:14 +0100
-X-Gmail-Original-Message-ID: <CAD++jL=vkMYQSKxq+5LsEW7aQAkbvVf00gv64hYRjWwsqzSHZg@mail.gmail.com>
-X-Gm-Features: AZwV_Qj0aDwF1esc-LscvSNaGGP23O7sWpUmoDhseGYrLIdQd_6RleW2FssFXh0
-Message-ID: <CAD++jL=vkMYQSKxq+5LsEW7aQAkbvVf00gv64hYRjWwsqzSHZg@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: Fix resource leaks on errors in gpiochip_add_data_with_key()
-To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260203061059.975605-9-tzungbi@kernel.org>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31382-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31383-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[tzungbi@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: ECA78D6F17
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 2B545D724D
 X-Rspamd-Action: no action
 
-On Tue, Feb 3, 2026 at 7:02=E2=80=AFAM Tzung-Bi Shih <tzungbi@kernel.org> w=
-rote:
+On Tue, Feb 03, 2026 at 06:10:55AM +0000, Tzung-Bi Shih wrote:
+> ---
+> v2:
+> - Change usages accordingly after applying
+>   https://lore.kernel.org/all/20260129143733.45618-4-tzungbi@kernel.org.
+>   - Preserve a local storage for `struct revocable`.
+> - Combine multiple patches (see "v1:").
 
-> Since commit aab5c6f20023 ("gpio: set device type for GPIO chips"),
-> `gdev->dev.release` is unset.  As a result, the reference count to
-> `gdev->dev` isn't dropped on the error handling paths.
->
-> Drop the reference on errors.
->
-> Also reorder the instructions to make the error handling simpler.
-> Now gpiochip_add_data_with_key() roughly looks like:
->
->    >>> Some memory allocation.  Go to ERR ZONE 1 on errors.
->    >>> device_initialize().
->
->    (gpiodev_release() takes over the responsibility for freeing the
->     resources of `gdev->dev`.  The subsequent error handling paths
->     shouldn't go through ERR ZONE 1 again which leads to double free.)
+Forgot to mention it in the changelog:
+- v2 fixes a race condition reported in
+  https://lore.kernel.org/all/CAMRc=McDaipt85OHm0MksLkuf6E79dY1uNSqqbcJnoQTUs81Pw@mail.gmail.com/
+  and analyzed in
+  https://lore.kernel.org/all/aXEEUWwkxHZzCnaI@tzungbi-laptop/.
+  In v1, the blocking_notifier_chain_unregister() will be skipped if the
+  chip has been removed, leading an UAF in gpiolib_cdev_unregister().
+  In v2, it won't skip blocking_notifier_chain_unregister().
 
-This doesn't need to be parenthesized, it should be pointed out
-so people can follow it, also:
-
-> @@ -1048,71 +1052,67 @@ int gpiochip_add_data_with_key(struct gpio_chip *=
-gc, void *data,
->         int base =3D 0;
->         int ret;
->
-> -       /*
-> -        * First: allocate and populate the internal stat container, and
-> -        * set up the struct device.
-> -        */
->         gdev =3D kzalloc(sizeof(*gdev), GFP_KERNEL);
->         if (!gdev)
->                 return -ENOMEM;
-> -
-> -       gdev->dev.type =3D &gpio_dev_type;
-> -       gdev->dev.bus =3D &gpio_bus_type;
-> -       gdev->dev.parent =3D gc->parent;
-> -       rcu_assign_pointer(gdev->chip, gc);
-> -
->         gc->gpiodev =3D gdev;
->         gpiochip_set_data(gc, data);
->
-> -       device_set_node(&gdev->dev, gpiochip_choose_fwnode(gc));
-> -
->         ret =3D ida_alloc(&gpio_ida, GFP_KERNEL);
->         if (ret < 0)
->                 goto err_free_gdev;
->         gdev->id =3D ret;
->
-> -       ret =3D dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
-> +       ret =3D init_srcu_struct(&gdev->srcu);
->         if (ret)
->                 goto err_free_ida;
-> +       rcu_assign_pointer(gdev->chip, gc);
->
-> -       if (gc->parent && gc->parent->driver)
-> -               gdev->owner =3D gc->parent->driver->owner;
-> -       else if (gc->owner)
-> -               /* TODO: remove chip->owner */
-> -               gdev->owner =3D gc->owner;
-> -       else
-> -               gdev->owner =3D THIS_MODULE;
-> +       ret =3D init_srcu_struct(&gdev->desc_srcu);
-> +       if (ret)
-> +               goto err_cleanup_gdev_srcu;
-> +
-> +       ret =3D dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
-> +       if (ret)
-> +               goto err_cleanup_desc_srcu;
-> +
-> +       device_initialize(&gdev->dev);
-> +       gdev->dev.type =3D &gpio_dev_type;
-
-
-This is the point where, from this point on, gpiodev_release() will
-get called from the type.
-
-This is worth a comment in the code don't you think?
-
-Something like:
-
-/*
- * After this point any allocated resources will be free():d by
- * gpiodev_release(), if you add new resources then make sure
- * they get free():ed there.
- */
-gdev->dev.type =3D &gpio_dev_type;
-
-This helps developers to do the right thing.
-
-With that added comment:
-Reviewed-by: Linus Walleij <linusw@kernel.org>
-
-Yours,
-Linus Walleij
+> 
+> v1:
+> - https://lore.kernel.org/all/20260116081036.352286-14-tzungbi@kernel.org
+> - https://lore.kernel.org/all/20260116081036.352286-15-tzungbi@kernel.org
+> - https://lore.kernel.org/all/20260116081036.352286-16-tzungbi@kernel.org
+> - https://lore.kernel.org/all/20260116081036.352286-17-tzungbi@kernel.org
+> - https://lore.kernel.org/all/20260116081036.352286-18-tzungbi@kernel.org
 
