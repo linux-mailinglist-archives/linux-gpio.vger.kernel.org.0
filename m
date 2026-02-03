@@ -1,130 +1,145 @@
-Return-Path: <linux-gpio+bounces-31383-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31384-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GQq4KLzFgWk0JwMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31383-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 03 Feb 2026 10:54:04 +0100
+	id AF9oLkLZgWlYKgMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31384-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 03 Feb 2026 12:17:22 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B545D724D
-	for <lists+linux-gpio@lfdr.de>; Tue, 03 Feb 2026 10:54:04 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E7DCD826B
+	for <lists+linux-gpio@lfdr.de>; Tue, 03 Feb 2026 12:17:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0D61D3075F8C
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Feb 2026 09:52:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2757B30A3086
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Feb 2026 11:16:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7428C39902E;
-	Tue,  3 Feb 2026 09:52:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F4A2332EBC;
+	Tue,  3 Feb 2026 11:16:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yh7zXQ74"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ANM4LHK2"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34776393DF5;
-	Tue,  3 Feb 2026 09:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418632EBB8C
+	for <linux-gpio@vger.kernel.org>; Tue,  3 Feb 2026 11:16:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770112320; cv=none; b=Fz8/+5TV5NaRHtVR520oZyiBDScEM726FfkP22h/AasnbT2RmAhZYfWu3yMvDOMI/bJE1ksFl0Azxvcs0AapYEBJZHNf7/Z/C20m3d+2AN/2B3jGB6ZBdwUSOFfO3Xxgp5a7i5AJFsiotlveggMe1EnnKzmrz6xFLCW74en7g/k=
+	t=1770117365; cv=none; b=Ndc+6gEIlFs8Kk/UqHiAv4Ph9PgqU8Yjb101byzn5I4nj+CjtlDm0NIm+b2iCgZqpPys2tAfB/D3aFOD3NOXjBEGXlpFOVF46B34CogbuGjwDo+KpU7M8AkK2WTgZsjIR7sFMhGVirSeyrkVipo9E+/aHLl6oKibr+fvH2D+Koc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770112320; c=relaxed/simple;
-	bh=JoSo1U6Ut8p2NIj9qp0jlb4l/KgJvCWtB/NubAXASxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=flQ5V3zoRRriKpAfzwmglGj2CFqziYKEkpcqOf0FQsJY2zIH9PwkMhA9f1yy3gGTHxds5tXPS9YA1SHAmWe+fyXXsxkfoQ/J07rc/ZDq8Llp3Er8rzkZ/1CVUofj/Q3wOiYr45/CuoLValoNM5TZi+lBQT2itbZXPK2T7rB+tkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yh7zXQ74; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 672ADC116D0;
-	Tue,  3 Feb 2026 09:51:57 +0000 (UTC)
+	s=arc-20240116; t=1770117365; c=relaxed/simple;
+	bh=M+36pLPI1PCw6oakVdm76x4ZLR67Guu9hsS57Z1XcAk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WnWBgoonEJuK6x+y+trQ9HdhvSBXrbZM6dP+W3VG7eaaIESEZX4wR/NSAH4exXI+3Wg6cySSxspXFh2t+iB0lfivDajkUpY7NCluJJT/IBZYJNCINJLKIQoh7o1fhzgMat1EMrRzZ6saeHwpFx/L10G/dZwlK/7Hi+77oX48H1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ANM4LHK2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CAE0C2BCB4
+	for <linux-gpio@vger.kernel.org>; Tue,  3 Feb 2026 11:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770112319;
-	bh=JoSo1U6Ut8p2NIj9qp0jlb4l/KgJvCWtB/NubAXASxo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yh7zXQ7443ey47b/4qL7hWhikaxa7wSLA9BvoIZd/S8NGfOpmskBo62jAFK1E0k1R
-	 M1u48wDhNaYfRQVYJP2cNktX6g77jpAKi1z3Hir9j82XX7fsALNQf+94U9RSyZPZIS
-	 FRs8+P3uJAYK0YhwQTTBthhNjBHY6uSRS8vn6rf5rmDHZk6RgotMcj3REsevjWsFEH
-	 6e462cyswn4UFcwfdIJy4h9qAuVex2BqOeJsVhCIKoT16cWyO72WmqV4MiTTtq146E
-	 342uCEEtFkQ5Odn+ZPo5PpGypDgY+LfrJhyL6Hz5XuAPSNb7FcrUEUvboSHSF4ZkKG
-	 ENu9tai4XJxkw==
-Date: Tue, 3 Feb 2026 09:51:55 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linusw@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Johan Hovold <johan@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
-	Dan Williams <dan.j.williams@intel.com>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 08/11] gpio: cdev: Leverage revocable for accessing
- struct gpio_chip
-Message-ID: <aYHFO0TlXMP4Bli-@google.com>
-References: <20260203061059.975605-1-tzungbi@kernel.org>
- <20260203061059.975605-9-tzungbi@kernel.org>
+	s=k20201202; t=1770117365;
+	bh=M+36pLPI1PCw6oakVdm76x4ZLR67Guu9hsS57Z1XcAk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ANM4LHK2AHYsZMRkgGxze9xu58fiGkAXKEU0Vk91vkSP3zcMzIjtjax/cWBvzTwJ1
+	 /PoSqsgtUYyNujgKQTMIMPOaaRlsaflHl6grCbVpEs28R5BGUXgiboIX0R+630l/FL
+	 X0m3vUPjFDNUPL2AboH/FBcD50QMMjaQukRJfcivfKBO6JEZpI/5vKB1Z2aabt/jMk
+	 ucQqyoIDDiyFlljItspNoV+lyLt85YOTZPD6nk8H3WAwPkNTOSVms0CE/rh70gJC7t
+	 rkq+k5TW/t/bo7M2eLnHMEygr3Nwu3yEURxyghv+6IBXHvuR4eYc2dfEOj4mcRdm0u
+	 h3Y+/gNkyPQYw==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-386714da2a2so14691051fa.1
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Feb 2026 03:16:05 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVgAf7DnGIXCaYp7/KIW8NJmMIuE8Ln0cvOXwd9KfTj3WzYsWknHcQBsYLqhUvSpgV3gsgwRNJyEQjf@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZ4d4NB/OQOw1WdSCXZBDjPzg2rbLIacIHswDJDyvh1zS+djB8
+	BZO++ZrG/9DeQumxiUULWooDdcD1TNn90qbcCw0ON6yfaLR+PwRnJFPdg73JpPDnJr4zIAjBUgH
+	LYSPm8SyIZ4egDvjPd5d7yu7eVMUN3QB/sDSl2h+vmA==
+X-Received: by 2002:a05:6512:31ce:b0:59e:1880:2f01 with SMTP id
+ 2adb3069b0e04-59e188030d4mr4316313e87.9.1770117363567; Tue, 03 Feb 2026
+ 03:16:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260203061059.975605-9-tzungbi@kernel.org>
+References: <20260203061059.975605-1-tzungbi@kernel.org>
+In-Reply-To: <20260203061059.975605-1-tzungbi@kernel.org>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Tue, 3 Feb 2026 12:15:51 +0100
+X-Gmail-Original-Message-ID: <CAMRc=McKJmiWz-1o6qHbOva70J_SAdFwxngGFta31DDy5vU=Dg@mail.gmail.com>
+X-Gm-Features: AZwV_QjnrFqFq1xNP3hWNQDHJBBSneRRwu7M_Myg4co_V6k5Nb11nnuqn1tJT0o
+Message-ID: <CAMRc=McKJmiWz-1o6qHbOva70J_SAdFwxngGFta31DDy5vU=Dg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/11] gpio: Adopt revocable mechanism for UAF prevention
+To: Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Linus Walleij <linusw@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <shuah@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Johan Hovold <johan@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, chrome-platform@lists.linux.dev, 
+	Dan Williams <dan.j.williams@intel.com>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31383-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
+	TAGGED_FROM(0.00)[bounces-31384-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[tzungbi@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 2B545D724D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid,qualcomm.com:email]
+X-Rspamd-Queue-Id: 1E7DCD826B
 X-Rspamd-Action: no action
 
-On Tue, Feb 03, 2026 at 06:10:55AM +0000, Tzung-Bi Shih wrote:
-> ---
-> v2:
-> - Change usages accordingly after applying
->   https://lore.kernel.org/all/20260129143733.45618-4-tzungbi@kernel.org.
->   - Preserve a local storage for `struct revocable`.
-> - Combine multiple patches (see "v1:").
+On Tue, Feb 3, 2026 at 7:11=E2=80=AFAM Tzung-Bi Shih <tzungbi@kernel.org> w=
+rote:
+>
+> This series transitions the UAF prevention logic within the GPIO core
+> (gpiolib) to use the 'revocable' mechanism.
+>
+> The existing code aims to prevent UAF issues when the underlying GPIO
+> chip is removed.  This series replaces that custom logic with the
+> generic 'revocable' API, which is designed to handle such lifecycle
+> dependencies.  There should be no changes in behavior.
+>
+> The series applies after:
+> - https://lore.kernel.org/all/20260129143733.45618-1-tzungbi@kernel.org
+> - https://lore.kernel.org/all/20260203060210.972243-1-tzungbi@kernel.org
+>
+> Bartosz: the series was planned to send after -rc1 comes.  But I think
+> it'd be great to send out for your early review and testing if possible.
+> The series base on v6.19-rc8, driver-core-next, and gpio/for-next.
+> Please use the temporary integration testing branch
+> https://git.kernel.org/pub/scm/linux/kernel/git/tzungbi/chrome-platform.g=
+it/log/?h=3Dgpio_rev
+> if you'd like to.
+>
 
-Forgot to mention it in the changelog:
-- v2 fixes a race condition reported in
-  https://lore.kernel.org/all/CAMRc=McDaipt85OHm0MksLkuf6E79dY1uNSqqbcJnoQTUs81Pw@mail.gmail.com/
-  and analyzed in
-  https://lore.kernel.org/all/aXEEUWwkxHZzCnaI@tzungbi-laptop/.
-  In v1, the blocking_notifier_chain_unregister() will be skipped if the
-  chip has been removed, leading an UAF in gpiolib_cdev_unregister().
-  In v2, it won't skip blocking_notifier_chain_unregister().
+This is not a Reviewed-by yet but FWIW:
 
-> 
-> v1:
-> - https://lore.kernel.org/all/20260116081036.352286-14-tzungbi@kernel.org
-> - https://lore.kernel.org/all/20260116081036.352286-15-tzungbi@kernel.org
-> - https://lore.kernel.org/all/20260116081036.352286-16-tzungbi@kernel.org
-> - https://lore.kernel.org/all/20260116081036.352286-17-tzungbi@kernel.org
-> - https://lore.kernel.org/all/20260116081036.352286-18-tzungbi@kernel.org
+Tested-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+
+With this revision there's no impact on stability or performance and I
+haven't seen any KASAN splats or kmemleak reports.
+
+I'll try to review all the patches individually.
+
+Bartosz
 
