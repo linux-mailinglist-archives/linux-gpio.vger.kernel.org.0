@@ -1,141 +1,139 @@
-Return-Path: <linux-gpio+bounces-31411-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31412-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UDAOIWuIgmn/VwMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31411-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 04 Feb 2026 00:44:43 +0100
+	id ICPSNaeIgmn/VwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31412-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 04 Feb 2026 00:45:43 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3114ADFCF8
-	for <lists+linux-gpio@lfdr.de>; Wed, 04 Feb 2026 00:44:43 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D376DFD17
+	for <lists+linux-gpio@lfdr.de>; Wed, 04 Feb 2026 00:45:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id F1F94302DBC3
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Feb 2026 23:44:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0B3BE301A3B9
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Feb 2026 23:45:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D68A0330B0B;
-	Tue,  3 Feb 2026 23:44:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6416832FA38;
+	Tue,  3 Feb 2026 23:45:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ugcyN0Rq"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GvL2dlvr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CAD32D0F0
-	for <linux-gpio@vger.kernel.org>; Tue,  3 Feb 2026 23:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D632EF66E;
+	Tue,  3 Feb 2026 23:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770162280; cv=none; b=CSMDmsXWoxrAfyV4l4BaE/Bo1lVt19oXErogsOsfOc68Spv/+weLfl2ibqIwiUOQfN56kVRNmg7Kr4nb4Gn25Ccr9e7r/EdcpcekrynYN7oRDBIb7iMs8l19hX2Y8XP8Et3szAlu09y7Sd8sK5jKzfUq+CvDcwrnB1amVTVwbn4=
+	t=1770162339; cv=none; b=HBFWrKAndaqv7mDgiSom4PnSOwvNP9A3atRk6e2IZioTLa5dSWn8dsPAnzk9+bNsRUGxNXkDfEKI4aDPTmkGqipA3D8EGqVGBhgfIDnWjITkkBd97rKDHtM/OZtjs3ajoy4rlq3da10DEsU48IjrTDOEWf9DzVlwX+XcENvR8yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770162280; c=relaxed/simple;
-	bh=MUtAEzuFZ3UXsgeYeGcULd0s9lsr291/wS31tUAYPQI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PkQL90Z8x3jMzJvpM3L1iCk3+wUcY3A1jFWYSiXFoaUMJZ8aP7RMq6mebXTeeEX3vCETt6PWMRm620SeBGJMx5h1XvThlC8bhKvZaauTfvZRpUXPI5/Lyvf1cccBBBHTWoG6aAFFcS5WNR3ADDYzruRjFroMUASWhOOckzeZDOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ugcyN0Rq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54E80C2BCB3
-	for <linux-gpio@vger.kernel.org>; Tue,  3 Feb 2026 23:44:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770162280;
-	bh=MUtAEzuFZ3UXsgeYeGcULd0s9lsr291/wS31tUAYPQI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ugcyN0RqC48lMQVC290mr54/cSG8mF5qG6qEw1bXtuEg1AHRMdgpEol4MTB4WYgbx
-	 2xgqlBNWqkJckBepT2lyA7KPKwAVTR7exlJt6+nKU49bLYyk6a32A0JXHEgkYdX0JW
-	 JdKy89rOSuHUxQGG36O3GomJnrxi8DRpkj9qqaL1u59b5X03z9pAKndSF27sExk6Mu
-	 e+wEhvO8nkNb10Lh7E62jU/jKYzK+2n8Cn3jkoSu8teRtumFaYuuD7lBca1tjzvYHH
-	 DNwMUzf8L2cy3eu0zdga38VJVA/+z07Ak3oWCQxVORf+z7cadCUrLBIMwDdqHvpyx/
-	 3Nl558QdYMMaA==
-Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-649bd1f08acso276713d50.1
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Feb 2026 15:44:40 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXv4xGwGW9ZD+FhQFjbVdxcsEClTra37CQQ8zInL4PNNRJVm0bkL/aTLupOSP2LA64drWRuQSI4lHsL@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHcriHWqOhGBBUOl+UAzvkBfUVl73bkE4GOpQ6ufipxolrCTnV
-	4NTbNsaCnQjgLuCZ7lAXcAZz93xUkCecRkvUFWBBTS2DnhE6/ekISnGONV1Mxw1bvysTmpoKIf3
-	O7g9su4bFr7asAtxMjaE+xpjIVWwkhZU=
-X-Received: by 2002:a53:d8c6:0:b0:645:68cf:2bf4 with SMTP id
- 956f58d0204a3-649db4ac96bmr877835d50.77.1770162279637; Tue, 03 Feb 2026
- 15:44:39 -0800 (PST)
+	s=arc-20240116; t=1770162339; c=relaxed/simple;
+	bh=JppXUACS/8ytxWcZoC5tDRWNTGvKaGGNk6/gemc46sI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dY6CS4EW6SZYTWCFbTHz4bX/ozBQ4fxv5LqQxv8IyZxj5pwaoC9gs640Cm+0/CKoHMcaP1Tu8AqJWgKXfrQFeramxZnILMLFtX9CSvXELKN2ReBQZEAwmR9CVoD49hl6Nug2d52WfX4bpAJEoGnGTveTPFNwbNdgnaBvtCyk7Ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=GvL2dlvr; arc=none smtp.client-ip=192.19.166.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id CCE18C05219A;
+	Tue,  3 Feb 2026 15:45:30 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com CCE18C05219A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1770162330;
+	bh=JppXUACS/8ytxWcZoC5tDRWNTGvKaGGNk6/gemc46sI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GvL2dlvrwgC6SZOyc+4/txdIOPtJ99sj+z31FArIgoJd2YgyY0aib3FyRvmBJeaHI
+	 oHVWMzsxnhbdx7J5m90UjJW/W7mk+qopvZwLso/ZEQiVQKrND4umTQWw6Wsz/kaR2q
+	 6G0O6udkbfDvjBZzc48dOdz2mKqrkql1FyjBFGgA=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id AC5F417DFE;
+	Tue,  3 Feb 2026 15:45:30 -0800 (PST)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: linux-kernel@vger.kernel.org
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Doug Berger <opendmb@gmail.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Christophe Leroy <chleroy@kernel.org>,
+	linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
+	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE)
+Subject: [PATCH v4 0/3] gpio: brcmstb: wake-up interrupt improvements
+Date: Tue,  3 Feb 2026 15:45:26 -0800
+Message-ID: <20260203234529.1081148-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260203-dev-b4-aaeon-mcu-driver-v3-0-0a19432076ac@bootlin.com> <20260203-dev-b4-aaeon-mcu-driver-v3-4-0a19432076ac@bootlin.com>
-In-Reply-To: <20260203-dev-b4-aaeon-mcu-driver-v3-4-0a19432076ac@bootlin.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Wed, 4 Feb 2026 00:44:27 +0100
-X-Gmail-Original-Message-ID: <CAD++jLmsx885MteExK0NcS6aD3BVimK82Z3bosSpUvSs8p4Cag@mail.gmail.com>
-X-Gm-Features: AZwV_QjuysNBoHyalaty048gguXHT55tueRC1-zJSip9FADgZXaoN46HJGRIgaE
-Message-ID: <CAD++jLmsx885MteExK0NcS6aD3BVimK82Z3bosSpUvSs8p4Cag@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] gpio: aaeon: Add GPIO driver for SRG-IMX8P MCU
-To: "Thomas Perrot (Schneider Electric)" <thomas.perrot@bootlin.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, 
-	=?UTF-8?B?SsOpcsOpbWllIERhdXRoZXJpYmVz?= <jeremie.dautheribes@bootlin.com>, 
-	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee@kernel.org>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[broadcom.com,reject];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[broadcom.com:s=dkimrelay];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31411-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,pengutronix.de,gmail.com,bootlin.com,linux-watchdog.org,roeck-us.net,vger.kernel.org,lists.linux.dev,lists.infradead.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31412-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[broadcom.com,gmail.com,kernel.org,vger.kernel.org,lists.infradead.org];
 	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_NEQ_ENVFROM(0.00)[florian.fainelli@broadcom.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[broadcom.com:+];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 3114ADFCF8
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 4D376DFD17
 X-Rspamd-Action: no action
 
-On Tue, Feb 3, 2026 at 5:21=E2=80=AFPM Thomas Perrot (Schneider Electric)
-<thomas.perrot@bootlin.com> wrote:
+Changes in v4:
 
-> Add GPIO driver for the Aaeon SRG-IMX8P embedded controller. This
-> driver supports 7 GPO (General Purpose Output) pins and 12 GPIO pins
-> that can be configured as inputs or outputs.
->
-> The driver implements proper state management for GPO pins (which are
-> output-only) and full direction control for GPIO pins. During probe,
-> all pins are reset to a known state (GPOs low, GPIOs as inputs) to
-> prevent undefined behavior across system reboots, as the MCU does not
-> reset GPIO states on soft reboot.
->
-> Co-developed-by: J=C3=A9r=C3=A9mie Dautheribes (Schneider Electric) <jere=
-mie.dautheribes@bootlin.com>
-> Signed-off-by: J=C3=A9r=C3=A9mie Dautheribes (Schneider Electric) <jeremi=
-e.dautheribes@bootlin.com>
-> Signed-off-by: Thomas Perrot (Schneider Electric) <thomas.perrot@bootlin.=
-com>
+- Provide a leading patch that utilizes irqd_to_hwirq(d) to fetch the HW
+  IRQ number
+- Utilise .irq_mask and .irq_mask_ack notation in the commit message
 
-Looks good to me!
+Changes in v3:
 
-Reviewed-by: Linus Walleij <linusw@kernel.org>
+- added Linus' R-b tag
+- removed useless comments
 
-Yours,
-Linus Walleij
+Changes in v2:
+
+- corrected the patch implementing irq_mask_ack to write properly to the
+  STAT register, this was not the case
+- create a separate helper to write to the IMASK register to make the
+  code more readable
+- remove unnecessary cast of unsigned long to u32
+
+Doug Berger (2):
+  gpio: brcmstb: implement .irq_mask_ack
+  gpio: brcmstb: allow parent_irq to wake
+
+Florian Fainelli (1):
+  gpio: brcmstb: Utilize irqd_to_hwirq(d) instead of d->hwirq
+
+ drivers/gpio/gpio-brcmstb.c | 125 +++++++++++++++++++++++++-----------
+ 1 file changed, 87 insertions(+), 38 deletions(-)
+
+-- 
+2.43.0
+
 
