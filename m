@@ -1,113 +1,57 @@
-Return-Path: <linux-gpio+bounces-31450-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31451-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2CagBiyGg2niowMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31450-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 04 Feb 2026 18:47:24 +0100
+	id 0O2WLZ6Lg2lWpAMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31451-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 04 Feb 2026 19:10:38 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7B22EB201
-	for <lists+linux-gpio@lfdr.de>; Wed, 04 Feb 2026 18:47:23 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id D18D9EB725
+	for <lists+linux-gpio@lfdr.de>; Wed, 04 Feb 2026 19:10:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2BA693093EAD
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Feb 2026 17:43:01 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 1D25530302FF
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Feb 2026 18:06:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E188340A46;
-	Wed,  4 Feb 2026 17:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Pe75XLG7";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Cz+WMRf/"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00C0742981C;
+	Wed,  4 Feb 2026 18:05:45 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBB434BA3A
-	for <linux-gpio@vger.kernel.org>; Wed,  4 Feb 2026 17:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 047F7429813;
+	Wed,  4 Feb 2026 18:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770226977; cv=none; b=uD9RFuXHmkfYTaDNAx+smBBaVmPDtuROW2A9oxoJgx6NtV1wux45cXpWjko7QBzysgheOhzWQP0nVYp/jznedlafYzyHHmkStalT7k1PSr/YxvL9svMiVici5Ns3A0ixt7tLrPd9bq2nUMFG/Llpt0vW2g2TDQqGRihmhyqXXFk=
+	t=1770228344; cv=none; b=ui+q3xPC23rCi4Cap6zn4oYm5wRD72IFOFSATNIrsieHhiMr20fLDMjLhbtAH+8EI9T3V1arv3aeMMh4jSTLzwS8eKFkl8o/YH/S/SdfG08Fp3m7w+GS8LeOhbr8dEfcL3Q2YoJt6Chrp9n+JYu0YHz44Su2no00VVzfv1ae1mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770226977; c=relaxed/simple;
-	bh=rb9BQvsUgWnWi7NopoqFStPBl6AI4hwBSvA2JEwcNRY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bFRMQSZQWiRdLyggL5bryL28K82WY8dGhy9RccgQLPPakVafE0Gs6tpVwLLV+EkW4cFKOyTwCOZKnr1fB4znxpFFu5adQfCwkBQFyXDz0cCFoc6S4LNYOJae3+vS8bGSDMzZ3gaJU4ggzUQXvvkmGQCKdS2B9mbV5YdOd0RaWvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Pe75XLG7; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Cz+WMRf/; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 614CISj2096170
-	for <linux-gpio@vger.kernel.org>; Wed, 4 Feb 2026 17:42:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=XqNr53atLXa
-	WJ6+VAAAHezxKZyJzO3XsCkWLFOW5Q/E=; b=Pe75XLG76TdFkS+VcQ+I/JpgGU8
-	9B4KmyPIXVZUZVuTgXhryfY9GzeFjF/2SbsrsefJdnWA6Ac5pvWj7YaG8e+d4RFW
-	EIrtENsffJSZ7LjEEzwioffMlXFbQyaDx7W3fzvpVVEFIygs7w5nHNo4EWHNjvZD
-	o/6ri1gjAiOdI9taafAyq7Uj/9dYd+wm55G7nghJY12vOyVBB5IZL/flk7Km+Rel
-	5UmzUKMbXsntprIMefJ9n0iQwiYo7gB9CvagTv9dORMq+mGmkQfERN9aD6Pgu1XR
-	x30TIe7AO3J0O0VeZvlTsYqiRGhmg0q8ktVQCEoCTT8o+0xhNsw8Juun2Fw==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4c44kbha4q-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Wed, 04 Feb 2026 17:42:56 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-8c70cff1da5so1882452285a.2
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Feb 2026 09:42:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1770226976; x=1770831776; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XqNr53atLXaWJ6+VAAAHezxKZyJzO3XsCkWLFOW5Q/E=;
-        b=Cz+WMRf/afLcBB8JBXKfiJ19l8mC+1B/ah24y55/zco0rZJzfcb1X1+9A3iPzlSaQb
-         h9dF8ftdzU1jtimsIsQ1WFbK+FZGdlk4FKYmJ4CFOBj96Syc0+YRbAr9g5IptGycl6eo
-         SObFMvZDejJO7/bRpEiGHxdlMN8NXr+Rde4aDm4eU00m5QRmnbSErrpn82AgvG1Sz92s
-         kq47qcNwuH03o/cHDs0zHbB5HZakqclZvoB/sgGW5kIsniShNnjf52DdNm1hjxG7SjrR
-         +ZYCHhgkjWn6O6dD+du7O9lU4oQHVnvVveAdgJgrTeeEK0WNfEKrm6q4ZLCXUlOiiSIS
-         AMhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770226976; x=1770831776;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=XqNr53atLXaWJ6+VAAAHezxKZyJzO3XsCkWLFOW5Q/E=;
-        b=wxPrztX9vU3ndNzPdWbveG5FH04Jie6SBfnjjQHCNanH7zZnfzbptkqA8YML0loKxU
-         ktAAZVTFf/zzUyOI0LcFYdYdN9KjsIdau2FiqRM4RTTkhCPiiktiqFG644gWgJpCho4T
-         4vAdrLzW9CNDIf/FIjewAUISnaCnL7U/PxPmb8SrJvHnXPrKiwAHZ2IDEi0gFwbmVklF
-         WYQfdFcYNPjnIffczj96rsmE2v6DYvNqq1TJh5kRHw0KoH4iA+you29OmEOE3oM8FSMZ
-         a02zoCZ9jDdydeL2LrDY1PRdP1oSHrX3u3AJ0CWrjVSSPLi5NqTTz1/uAQlnw4SQPGH6
-         cXvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW96QdSEAli0vaxg5TUkaALYn1Up7UoCCBE22R8tuIjqTW/fFobPBRwo/pIh5KShL/1LsV0bjipZls8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFyfcow+T7p/w5vXoLYjd5B6N1bXiytMv4uZbFYMAEdmkZY6r6
-	IiXVdqfHQ64u083w8IxMNEH3Vzpvf+m5SnHnHnv6QWYBssEqRIS6z/crwDBdqNxY3HaqLWz119S
-	bSxcNyaqV7UYc4X6QWkS5HfSjC9611rZJt043KlgL4eAjcJ3QpZVu0aZk+v6NPDf9
-X-Gm-Gg: AZuq6aK7LEV/ejkUlBymvjcdxy4RgkDJYpWY3tu+e7cZ5D4+bM5B2Mg4l13F7a+eOk2
-	SnP+0rmRpcCpiGW211hvx9M3bVYjEu3vCU069pPPEwGxgJxwrqKnhK+KwXGTmT++Wi9Jx8V0aqI
-	mfi2awcgm1UCiNdG8q4YZHDZ8d33rscSfHigXAX1PLqHyzCAoQaxq/G6hxV27JrhiJ5A8iVFIbA
-	5urYw+s4b/POYOZUoxy2BRZUtFmTGuijhTmu8yr8Sq8W/HKn6Bz6IF3PSe9waBccQKhS0hXGXlA
-	/korPSivWB79LSO/57Vu+BBIokj/Px7HIn+6n/CY+WvXRVMKbB+SEBRv7Pzckdn/5bxUwfkfPcE
-	tLJ6viMckP7wGqSompHIHQXrPd1XlWfCP5te0yswGzWQ=
-X-Received: by 2002:a05:620a:2984:b0:8c7:d2b:b5b5 with SMTP id af79cd13be357-8ca2f9c067cmr507825185a.48.1770226975586;
-        Wed, 04 Feb 2026 09:42:55 -0800 (PST)
-X-Received: by 2002:a05:620a:2984:b0:8c7:d2b:b5b5 with SMTP id af79cd13be357-8ca2f9c067cmr507822185a.48.1770226975126;
-        Wed, 04 Feb 2026 09:42:55 -0800 (PST)
-Received: from localhost.localdomain ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483179dbdcfsm959985e9.0.2026.02.04.09.42.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Feb 2026 09:42:54 -0800 (PST)
-From: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-To: andersson@kernel.org
-Cc: linusw@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, konradybcio@kernel.org, srini@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-Subject: [PATCH 2/2] arm64: dts: qcom: monaco: add dt entry for lpass lpi pinctrl
-Date: Wed,  4 Feb 2026 12:42:37 -0500
-Message-ID: <20260204174237.2906-3-srinivas.kandagatla@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260204174237.2906-1-srinivas.kandagatla@oss.qualcomm.com>
-References: <20260204174237.2906-1-srinivas.kandagatla@oss.qualcomm.com>
+	s=arc-20240116; t=1770228344; c=relaxed/simple;
+	bh=pT4o1mgPI2G+9EijsmDovnmvI/n8xcF1ylZgs4OGlN0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A/5yssB8BhIPBdpqWW2ZL2t1tKaPh9JSN2lsti76V6/Q3oBQ3ZG16emTV7cRLVjwq5Md53K3xxlZdaRCpjSEdsrdEKvdfXm9qMiU14KyLj+XWVOUlS99LfXt6m+LDCxrZrPcTbDZ9P2xLmbbk8psKRmNEDHVKHWF78Ne9ZXbA6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+X-CSE-ConnectionGUID: nzZd/Y/gSUWKBVCrCRjDPA==
+X-CSE-MsgGUID: xsULi3QPRE2EWdI/VxqcYg==
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 05 Feb 2026 03:05:42 +0900
+Received: from demon-pc.localdomain (unknown [10.226.92.27])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 235EB405560F;
+	Thu,  5 Feb 2026 03:05:38 +0900 (JST)
+From: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linusw@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Subject: [PATCH] pinctrl: renesas: rzt2h: fix invalid wait context
+Date: Wed,  4 Feb 2026 20:04:48 +0200
+Message-ID: <20260204180448.529313-1-cosmin-gabriel.tanislav.xa@renesas.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -115,102 +59,180 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: kEIB8O97tHJqYOumeJQVUESxKkCm1vyH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjA0MDEzNSBTYWx0ZWRfX1/I9TV9f75S2
- WjR9YVbwLP8RufWaksbv9QcsvNiUPH7kr72b9cLs4EpnmXJKV3Z0eRd7Y9tiglKa9q4fk7x9/jW
- 5yCdJKdivzHnPKfP9Qk9YTSnAHZTIvvpj19og3VYq4oI1cxsIhl6SULdkOwgoC46FiRXEd/8Foy
- zfIk8uzgphA8bUK1ksHiHSyXtChexZXNlJgfq8ayw6YpLDnYuQ81FB/QI6eMQxpCpfohy/LU1RI
- eqRG6KgNQ1uF/KyVBy1hCkzApg5xb/Hayfp9G8wFKo0QZtdMGDPvVG3CKi6cYqPVYyPiMxKGNod
- THlhWqmqIq/JVqMJ6kB3F2k9ArEreET+ZX7Gk/AX/xGwNnkT38TCBwsmfon8jqDTJnshM6J1iKr
- 3ngEJ0G8d6jE6pK8m4foN2SdgZKoO5G0T9ta4Fyk9lfWwtM2OLPRAcxjCjn5q/rB+6SysvQrser
- yBhk5Iz32i+3i/k5zvQ==
-X-Proofpoint-GUID: kEIB8O97tHJqYOumeJQVUESxKkCm1vyH
-X-Authority-Analysis: v=2.4 cv=HN7O14tv c=1 sm=1 tr=0 ts=69838520 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=ZsC4DHZuhs/kKio7QBcDoQ==:17
- a=HzLeVaNsDn8A:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=EUspDBNiAAAA:8 a=UxGNenrRC82WP0KDhzIA:9 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-04_06,2026-02-04_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 suspectscore=0 phishscore=0 clxscore=1011 bulkscore=0
- spamscore=0 adultscore=0 malwarescore=0 priorityscore=1501 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602040135
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [1.64 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[renesas.com : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31450-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,3c40000:email,qualcomm.com:email,qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:dkim,0.52.125.128:email];
+	FROM_NEQ_ENVFROM(0.00)[cosmin-gabriel.tanislav.xa@renesas.com,linux-gpio@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FROM_NEQ_ENVFROM(0.00)[srinivas.kandagatla@oss.qualcomm.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31451-lists,linux-gpio=lfdr.de];
 	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.948];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: A7B22EB201
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: D18D9EB725
 X-Rspamd-Action: no action
 
-Add LPASS LPI pinctrl node used for setting MI2S and soundwire pin
-configs.
+The following invalid wait context BUG is observed when running with
+CONFIG_PROVE_LOCKING enabled.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
+This seems to stem from the fact that __setup_irq() takes a
+raw_spinlock_t, while we take a spinlock_t inside gpiod_get_direction().
+
+raw_spinlock_t is a strictly spinning lock, while spinlock_t can sleep
+if PREEMPT_RT is enabled.
+
+Switch to raw_spinlock_t to fix this.
+
+[   20.641809] =============================
+[   20.646336] [ BUG: Invalid wait context ]
+[   20.650964] 6.19.0-rc8-next-20260202+ #417 Not tainted
+[   20.656892] -----------------------------
+[   20.661517] (udev-worker)/235 is trying to lock:
+[   20.666842] ffff000182d4ab58 (&pctrl->lock){....}-{3:3}, at: rzt2h_gpio_get_direction+0x3c/0x150
+[   20.676928] other info that might help us debug this:
+[   20.682560] context-{5:5}
+[   20.685572] 4 locks held by (udev-worker)/235:
+[   20.690701]  #0: ffff000180b398f8 (&dev->mutex){....}-{4:4}, at: __driver_attach+0x10c/0x210
+[   20.700480]  #1: ffff000186f41a60 (request_class){+.+.}-{4:4}, at: __setup_irq+0x10c/0x740
+[   20.709952]  #2: ffff000186f418c8 (lock_class){....}-{2:2}, at: __setup_irq+0x12c/0x740
+[   20.719057]  #3: ffff000182d4a690 (&gdev->srcu){.+.+}-{0:0}, at: gpiod_get_direction+0x40/0x24c
+[   20.729135] stack backtrace:
+[   20.732450] CPU: 2 UID: 0 PID: 235 Comm: (udev-worker) Not tainted 6.19.0-rc8-next-20260202+ #417 PREEMPT
+[   20.732459] Hardware name: Renesas RZ/T2H EVK Board based on r9a09g077m44 (DT)
+[   20.732464] Call trace:
+[   20.732467]  show_stack+0x18/0x30 (C)
+[   20.732479]  dump_stack_lvl+0x70/0x98
+[   20.732489]  dump_stack+0x18/0x24
+[   20.732497]  __lock_acquire+0x910/0x1594
+[   20.732508]  lock_acquire+0x2f0/0x42c
+[   20.732517]  _raw_spin_lock_irqsave+0x5c/0x94
+[   20.732529]  rzt2h_gpio_get_direction+0x3c/0x150
+[   20.732538]  gpiochip_get_direction+0x34/0x90
+[   20.732547]  gpiod_get_direction+0xd8/0x24c
+[   20.732556]  gpiochip_lock_as_irq+0x68/0x144
+[   20.732565]  gpiochip_irq_domain_activate+0x18/0x30
+[   20.732574]  __irq_domain_activate_irq+0x60/0xb0
+[   20.732583]  irq_domain_activate_irq+0x34/0x5c
+[   20.732593]  irq_activate+0x2c/0x38
+[   20.732600]  __setup_irq+0x2d8/0x740
+[   20.732610]  request_threaded_irq+0xb0/0x180
+[   20.732620]  request_any_context_irq+0x58/0xac
+[   20.732629]  devm_request_any_context_irq+0x78/0x160
+[   20.732637]  gpio_keys_probe+0x344/0xb40 [gpio_keys]
+[   20.732657]  platform_probe+0x5c/0xa4
+[   20.732666]  really_probe+0xbc/0x2ac
+[   20.732675]  __driver_probe_device+0x78/0x118
+[   20.732684]  driver_probe_device+0x3c/0x170
+[   20.732693]  __driver_attach+0x118/0x210
+[   20.732701]  bus_for_each_dev+0x7c/0xdc
+[   20.732710]  driver_attach+0x24/0x3c
+[   20.732718]  bus_add_driver+0xe4/0x204
+[   20.732727]  driver_register+0x68/0x124
+[   20.732736]  __platform_driver_register+0x20/0x2c
+[   20.732746]  gpio_keys_init+0x20/0x1000 [gpio_keys]
+[   20.732758]  do_one_initcall+0x7c/0x530
+[   20.732770]  do_init_module+0x54/0x23c
+[   20.732780]  load_module+0x181c/0x1ed0
+[   20.732789]  init_module_from_file+0xd8/0xfc
+[   20.732797]  idempotent_init_module+0x1e0/0x2d0
+[   20.732806]  __arm64_sys_finit_module+0x60/0xa4
+[   20.732814]  invoke_syscall.constprop.0+0x40/0xf0
+[   20.732824]  el0_svc_common.constprop.0+0xb8/0xd8
+[   20.732832]  do_el0_svc+0x1c/0x28
+[   20.732839]  el0_svc+0x4c/0x2dc
+[   20.732850]  el0t_64_sync_handler+0xa0/0xe4
+[   20.732860]  el0t_64_sync+0x198/0x19c
+
+Fixes: 829dde3369a9 ("pinctrl: renesas: rzt2h: Add GPIO IRQ chip to handle interrupts")
+Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
 ---
- arch/arm64/boot/dts/qcom/monaco.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/pinctrl/renesas/pinctrl-rzt2h.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/monaco.dtsi b/arch/arm64/boot/dts/qcom/monaco.dtsi
-index 5d2df4305d1c..e1ea94d2f0f3 100644
---- a/arch/arm64/boot/dts/qcom/monaco.dtsi
-+++ b/arch/arm64/boot/dts/qcom/monaco.dtsi
-@@ -20,6 +20,7 @@
- #include <dt-bindings/power/qcom-rpmpd.h>
- #include <dt-bindings/soc/qcom,gpr.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
-+#include <dt-bindings/sound/qcom,q6dsp-lpass-ports.h>
- #include <dt-bindings/thermal/thermal.h>
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzt2h.c b/drivers/pinctrl/renesas/pinctrl-rzt2h.c
+index 9949108a35bb..d810dc0dae95 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzt2h.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzt2h.c
+@@ -85,7 +85,7 @@ struct rzt2h_pinctrl {
+ 	struct gpio_chip		gpio_chip;
+ 	struct pinctrl_gpio_range	gpio_range;
+ 	DECLARE_BITMAP(used_irqs, RZT2H_INTERRUPTS_NUM);
+-	spinlock_t			lock; /* lock read/write registers */
++	raw_spinlock_t			lock; /* lock read/write registers */
+ 	struct mutex			mutex; /* serialize adding groups and functions */
+ 	bool				safety_port_enabled;
+ 	atomic_t			wakeup_path;
+@@ -145,7 +145,7 @@ static void rzt2h_pinctrl_set_pfc_mode(struct rzt2h_pinctrl *pctrl,
+ 	u64 reg64;
+ 	u16 reg16;
  
- / {
-@@ -2866,6 +2867,21 @@ q6prmcc: clock-controller {
- 			};
- 		};
+-	guard(spinlock_irqsave)(&pctrl->lock);
++	guard(raw_spinlock_irqsave)(&pctrl->lock);
  
-+		lpass_tlmm: pinctrl@3440000 {
-+			compatible = "qcom,qcs8300-lpass-lpi-pinctrl",
-+					"qcom,sm8450-lpass-lpi-pinctrl";
-+			reg = <0x0 0x03440000 0x0 0x20000>,
-+			      <0x0 0x034D0000 0x0 0x10000>;
-+
-+			clocks = <&q6prmcc LPASS_HW_MACRO_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+				 <&q6prmcc LPASS_HW_DCODEC_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>;
-+			clock-names = "core", "audio";
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&lpass_tlmm 0 0 23>;
-+		};
-+
- 		lpass_ag_noc: interconnect@3c40000 {
- 			compatible = "qcom,qcs8300-lpass-ag-noc";
- 			reg = <0x0 0x03c40000 0x0 0x17200>;
+ 	/* Set pin to 'Non-use (Hi-Z input protection)'  */
+ 	reg16 = rzt2h_pinctrl_readw(pctrl, port, PM(port));
+@@ -474,7 +474,7 @@ static int rzt2h_gpio_request(struct gpio_chip *chip, unsigned int offset)
+ 	if (ret)
+ 		return ret;
+ 
+-	guard(spinlock_irqsave)(&pctrl->lock);
++	guard(raw_spinlock_irqsave)(&pctrl->lock);
+ 
+ 	/* Select GPIO mode in PMC Register */
+ 	rzt2h_pinctrl_set_gpio_en(pctrl, port, bit, true);
+@@ -487,7 +487,7 @@ static void rzt2h_gpio_set_direction(struct rzt2h_pinctrl *pctrl, u32 port,
+ {
+ 	u16 reg;
+ 
+-	guard(spinlock_irqsave)(&pctrl->lock);
++	guard(raw_spinlock_irqsave)(&pctrl->lock);
+ 
+ 	reg = rzt2h_pinctrl_readw(pctrl, port, PM(port));
+ 	reg &= ~PM_PIN_MASK(bit);
+@@ -509,7 +509,7 @@ static int rzt2h_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
+ 	if (ret)
+ 		return ret;
+ 
+-	guard(spinlock_irqsave)(&pctrl->lock);
++	guard(raw_spinlock_irqsave)(&pctrl->lock);
+ 
+ 	if (rzt2h_pinctrl_readb(pctrl, port, PMC(port)) & BIT(bit)) {
+ 		/*
+@@ -547,7 +547,7 @@ static int rzt2h_gpio_set(struct gpio_chip *chip, unsigned int offset,
+ 	u8 bit = RZT2H_PIN_ID_TO_PIN(offset);
+ 	u8 reg;
+ 
+-	guard(spinlock_irqsave)(&pctrl->lock);
++	guard(raw_spinlock_irqsave)(&pctrl->lock);
+ 
+ 	reg = rzt2h_pinctrl_readb(pctrl, port, P(port));
+ 	if (value)
+@@ -964,7 +964,7 @@ static int rzt2h_pinctrl_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	spin_lock_init(&pctrl->lock);
++	raw_spin_lock_init(&pctrl->lock);
+ 	mutex_init(&pctrl->mutex);
+ 	platform_set_drvdata(pdev, pctrl);
+ 
 -- 
-2.47.3
+2.52.0
 
 
