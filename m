@@ -1,138 +1,137 @@
-Return-Path: <linux-gpio+bounces-31436-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31437-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4N1gO+NHg2mMkwMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31436-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 04 Feb 2026 14:21:39 +0100
+	id MFCcKZRTg2mJlQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31437-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 04 Feb 2026 15:11:32 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D9E3E656C
-	for <lists+linux-gpio@lfdr.de>; Wed, 04 Feb 2026 14:21:39 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3113E6E49
+	for <lists+linux-gpio@lfdr.de>; Wed, 04 Feb 2026 15:11:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 61CE0301FFB6
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Feb 2026 13:21:01 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 688683001FA6
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Feb 2026 14:11:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28D4027AC54;
-	Wed,  4 Feb 2026 13:21:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7258340F8ED;
+	Wed,  4 Feb 2026 14:11:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NlHJMn3T"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e70dhP5C"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953BA1917F1;
-	Wed,  4 Feb 2026 13:20:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A3740F8D7;
+	Wed,  4 Feb 2026 14:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770211260; cv=none; b=fionq3FvwbCOE6Rs4VxLPW9oq2QOUsgLZp8yDiv8ZpR95oikTmAEo58WNLSC7AxpocwQxofDshLSJ+Jcq9Lv/R+zHRKwuqlpttCu0CpWGv47ReqX5kkzfKU394sQXdcnkQX8BbX6ERxcNh4n5XTKVfXXjIZP3uma/CeRTPILJ/4=
+	t=1770214285; cv=none; b=f3wbyLIKoTfnq5SFIPVWyHcw5UAY6JahPXUcNEYHjAYD2HLu6wlGlLdxWHku1H0/APJIjhwRSSzik+vEE0DB/s1nCtasoWQUYflPL9Lr5zdvHrq9os+LF0UOf80B6jG9meoSJ8SgzybbUP3VkJykL+tghOORZ0toEKe+gTNedyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770211260; c=relaxed/simple;
-	bh=NmU7gd8Ov3n/Mis8uX0V/ASb17cElZb1SGA1o+x/4C0=;
+	s=arc-20240116; t=1770214285; c=relaxed/simple;
+	bh=WH5QahUO7WVTbnWGYJja/z9xS/7meXJGhqhU/1bxuok=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qydzAJyJb9w0zTFtqaW3beSG83GL8++TN9PHFkpqKysOcQiauzQ3jFBCvh5EoJSUH7jucw0pFNh9ndsGI5kQZ7IR6ZN+hJPt/5Fxj5RCw+GVGXX1/89lkMGArDZuY8hvaw8nkdWNpAFnDJWXSA2r7bPIbBiaEP+dCzB9P4zhn1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NlHJMn3T; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770211260; x=1801747260;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NmU7gd8Ov3n/Mis8uX0V/ASb17cElZb1SGA1o+x/4C0=;
-  b=NlHJMn3Te41T7FGjWyS0RdLW4qkP7ksz6vcSjmi3FLFjiWw/67fKp2Px
-   JdLZOXMdHwdI/lw+ED6/NtijpV7jCqPakuyynYvSgkBksxg8KjwQWvH3Z
-   t0240kG2+4wyRsKpYSClqWa0+Lkps8gOzD0/nBJ2ZyNTLsY18I/0fcyqH
-   9Wdlkcxg9j8Z30gMG6ighFn8TQOIBYthXm7Z3j2kVmySaRcXBLlUtcrqp
-   3t+VkLBsU9b6Y4IAAtqiiWC4VQ58kAJqWYb528uIrWiV5SL9t+DpeFW3S
-   BAjNYwGrwwXIM8a6+Slk9XM9JGhUC1IfYwX044N3sZN9Et6yLJ3yS2wCi
-   g==;
-X-CSE-ConnectionGUID: Ak+TBAk/QIu3AbvwtNvN6Q==
-X-CSE-MsgGUID: dAyMd7ZtRqelpyx/tMSaoA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="75251269"
-X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="75251269"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 05:20:59 -0800
-X-CSE-ConnectionGUID: 22HD8Ba5Qom4QKs+F0Imbg==
-X-CSE-MsgGUID: vER8M9SVQyuD74lRo76Kqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="214650233"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.188])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 05:20:57 -0800
-Date: Wed, 4 Feb 2026 15:20:55 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linusw@kernel.org>
-Subject: Re: [PATCH v1 1/1] pinctrl: intel: Align Copyright note with
- corporate guidelines
-Message-ID: <aYNHtw7QumfvgeX8@smile.fi.intel.com>
-References: <20260204080122.2300224-1-andriy.shevchenko@linux.intel.com>
- <20260204123727.GP2275908@black.igk.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HSPuFRgOaIOSNCtYwBBORBQZfmNlQZk+wKS0nH9Bpt5u0+VGVwfgKYmHGRq7Kl7XDOzl98njodNFHcs0Mwg2kj7NrUR4NbmihKSTa8vPfWbzbqxMR4WHSQq3X4tcCp/jB/wUfnxipn8YPQ9stoRrqJ5srGd5NEi9wMvUzKHkbjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e70dhP5C; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01DABC19424;
+	Wed,  4 Feb 2026 14:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770214284;
+	bh=WH5QahUO7WVTbnWGYJja/z9xS/7meXJGhqhU/1bxuok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e70dhP5CPwYeTcgaf+EAe9PXl3GthoEElxicQBwIn1zimM81lqnxpEyYqBS2UZhhJ
+	 pAg7k0anT/V/3hIxzVpnV7OL1zI8yXzVrRIZyxSRVkGevzVl7RHg3zGZZ2GdK9pVks
+	 uDETtkjHc50NNZbm4O3Yo6haP8kdVGw0TG/e97c/+qN7CAOeBzoqYv507E5XxmFACV
+	 bpUTSxpvj94cMsNAuEflKlfGyYyltq/wUICXhgHhIjjP0AmndGqOoLjtb0aMEPmDy/
+	 ehVaUHq3oMJJ4PiBKsU64PsDkCaSjL9n3LulOznEOALfPXLNU2ByzJC6u/Xj++qN3M
+	 xsIx6VEakYydQ==
+Date: Wed, 4 Feb 2026 14:11:20 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [rfc 0/2] pinctrl property checks
+Message-ID: <20260204-twentieth-facedown-55eca3d3022c@spud>
+References: <20260203-device-unwashed-ed24f8592d79@spud>
+ <CAD++jLnz1r1gnE3B_0MCr0JrfEdT-74nM7wL3ErdrmzHOrnovQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1CSrqGD1uvf0jDND"
 Content-Disposition: inline
-In-Reply-To: <20260204123727.GP2275908@black.igk.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <CAD++jLnz1r1gnE3B_0MCr0JrfEdT-74nM7wL3ErdrmzHOrnovQ@mail.gmail.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-3.76 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31436-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_FROM(0.00)[bounces-31437-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_FIVE(0.00)[5]
-X-Rspamd-Queue-Id: 4D9E3E656C
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: A3113E6E49
 X-Rspamd-Action: no action
 
-On Wed, Feb 04, 2026 at 01:37:27PM +0100, Mika Westerberg wrote:
-> On Wed, Feb 04, 2026 at 09:01:22AM +0100, Andy Shevchenko wrote:
-> > The Copyright note must follow the
-> > 
-> > 	Copyright (C) <year(s)> Intel Corporation
-> > 
-> > template, where (C) is always capitalised and <year(s)> either
-> > a single year or a range. Update the Intel pin control drivers
-> > to follow.
-> > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Thank you!
-Lunus, can you apply this directly into your tree, please?
+--1CSrqGD1uvf0jDND
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-With Best Regards,
-Andy Shevchenko
+On Wed, Feb 04, 2026 at 12:30:30AM +0100, Linus Walleij wrote:
+> On Tue, Feb 3, 2026 at 6:30=E2=80=AFPM Conor Dooley <conor@kernel.org> wr=
+ote:
+>=20
+> > Finally got around to sending the property stuff that we were talking
+> > about. It's definitely not the best thing I have ever written, but I
+> > think it does an okay job of warning about setups that don't make sense
+> > while adding fairly little complexity wise.
+>=20
+> I like what I see and I think we should apply it for the v7.1 kernel cycle
+> post v7.0-rc1.
+>=20
+> Are you ready to send a non-RFC version by then?
 
+The rfc tag is was more because of the point in the cycle we are at than
+the question on the driver patch. Sending a non-rtc then should be no
+problem.
 
+--1CSrqGD1uvf0jDND
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaYNTiAAKCRB4tDGHoIJi
+0rO1AQDg2EjTzYP8wXL3AM47YYwKhhkjEFNhP7YVRUnka16L8AD/XkHcx6LuEzeF
+qVo9fhZVhLDlgsnridoejiLDPSQkLgo=
+=icK+
+-----END PGP SIGNATURE-----
+
+--1CSrqGD1uvf0jDND--
 
