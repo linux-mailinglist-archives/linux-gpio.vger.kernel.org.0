@@ -1,207 +1,338 @@
-Return-Path: <linux-gpio+bounces-31464-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31465-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kGuYJcRahGl92gMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31464-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Feb 2026 09:54:28 +0100
+	id 2FC7Kq9jhGkK2wMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31465-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Feb 2026 10:32:31 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 025BDF0196
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Feb 2026 09:54:27 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D221F0D04
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Feb 2026 10:32:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 78FAD30091ED
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Feb 2026 08:53:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D686E3034557
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Feb 2026 09:29:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FDFB36166C;
-	Thu,  5 Feb 2026 08:53:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DBFC392810;
+	Thu,  5 Feb 2026 09:29:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ki0Yfm2j";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="al0HOZAW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UF9hmW7y"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E575335971B
-	for <linux-gpio@vger.kernel.org>; Thu,  5 Feb 2026 08:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CC138E5D9;
+	Thu,  5 Feb 2026 09:29:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770281607; cv=none; b=rTWkaeQWmItatNcFHzXnfEqITE0bWuHk5FI/wQ8WoGaeXRT6ID0WtbMEpjxKVJhNeE60DDHTWldLdgmClXazDKGZ2Sd1CD9eyuNL7PZi6x9Wz38LKiPNoplkCpu07W7p5Eh6IaSowtDF8uacevTQ4HdITuFUnaKacNMRbu5+XDc=
+	t=1770283752; cv=none; b=dGZzDLmzkFAEj71J07kNoA7o+Nm+HP1iJ1KRQloy29x9zVRLPxIO1tlROuztbLFIniRjFzZ8zJQpOa/Wln3s62QOO3swnsB2v6K+J2GG1LOgLe0OtKfo19ezTh4PNtZvt5Z6iBt7iQzdPtsQHyA6C+sQUAmzgLka7OkEy6K+x3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770281607; c=relaxed/simple;
-	bh=jeRxW6NvArbsNamVoyEoTUZu2w80losl5bhdi2hXAM8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JT1x7K4WnzP0TIaDASKZVNJvbluvg3Kav4yoOQCjVL2nZgtI910nh5/SL/OJCRSzOO8RhxiWPtVzlHWLO3XwaAmdReGszteQT4szv1Mk8dyPhMyIV4EaO8fGffTrQ/gHAIX0Hd4jzCOnbzfQLZPsHFcP0CgxsdFPHbxQE010rpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ki0Yfm2j; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=al0HOZAW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6153dkj52639620
-	for <linux-gpio@vger.kernel.org>; Thu, 5 Feb 2026 08:53:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bPSSGnCIlHvKiwP/3XZmhF9BeEla2vdg3S2YBYcvhTE=; b=ki0Yfm2jmU9Z+59U
-	mkc6Jqrb9mTZI+dczY+MENE1MYRBlATcXVndj65uAkkG/Sxyr5TRgpigHWXLjXgK
-	PhsmLA5agdBnXBzG+VvZ4FyLLVTiX5x/We45YqbvR4ksCkLzEV/MFsR6lm/keCWH
-	OOBO+whoyR1bvcugOD+k/i3Uq/+RMOKtE+h9R6Dk7qwEb96P7Z6sunF4IQpgHD+X
-	ifiGnsUv5jKst5LGjg/1Mc46Nd/hQTcygJdjKSkdBRnaHEwrBu1396XO6EHBqVTt
-	xp1Ol5a6GY/o54p/EupbXr6Ysdsrq1As8ZWnxpponUiH5kxiAAFR8KKB7sZA7WTw
-	bMs4ZA==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4c47qvb2ud-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Thu, 05 Feb 2026 08:53:26 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-89496f5086dso2918726d6.3
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Feb 2026 00:53:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1770281605; x=1770886405; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bPSSGnCIlHvKiwP/3XZmhF9BeEla2vdg3S2YBYcvhTE=;
-        b=al0HOZAWOEb2HwqeA39MXdkPKEwua/B0hfuxVQMObhJlzYgAwKJ5ECPYTgoaQzIFYA
-         ujFHgf4kq77G9uyZQmTBtLT7a+nZAUDv37pARPoNO7S7gjmHrLtA5EvH/602xb/gNCRx
-         OIAlRldFji50ui2EIq7yXVhce7UZU89F26iGGuJulA1Lv+LhfZM/Zqu0NmNN97Ha7Un6
-         Gg37K0cICXe+lao3/wDJogdhRCsmiLM2qbci22Cy/nFlBYcR1+PY/7fM2c3lU42a2u36
-         e6dbUPcD11kMR6xoNVvyyrpvk46QmMN1+e0lIpfUC44EnVYAnfVulhbKd/Cb4hDSK1Ir
-         M/xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770281605; x=1770886405;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bPSSGnCIlHvKiwP/3XZmhF9BeEla2vdg3S2YBYcvhTE=;
-        b=C8zdY3lMTTuYWqsLgELFuhnUcG5h5OxGH1cbu2jhjc7PRqNs2u6lMfT7CAR9PgWFdN
-         9/2qFC1F4oAXuK48zEvpe/uBtoSNAGmmriJ/w0adVHANFjaPkz4TCf8YX7uE1a3KPEGm
-         HstxlgT6p5/qwTuV17MJYW2m9sLLfbDrbqB0ffiIIh1BzfjJkqIkArUYsCTukkl77Vqo
-         jcYE7YQWAQmzFWRmZGM6ZIGvbOr/JIAV5IYo0b3mvmDHwNAUS/pBK8k3Y8CSphKvWWwN
-         XuKBitN368eaqiFLtf0NZBN1uYkZAzkmaeyouN015nkFWNUk62PKqT4AEneSQLDrLX+u
-         2eyA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWZUWI01OM9tgHJyOQ9t9UBVKABi1fUPPkrIcClpToN8O30iYDwCmCPM8s7QzIo0WxSCIQlmRt6imu@vger.kernel.org
-X-Gm-Message-State: AOJu0YzybfrX7KUUTlVOJI+aKEaXiyyDLPpB7jX6Mu+L7asQK0ZcTqIU
-	8orOhLqHw1jj2Ohk+i/Jwodx2bjHl3QIqSY0vGLn0kz5JSmaded76WMSFdX/r2ktlwU0HXb5Rl5
-	BhLnW2cTdm/gdrTqWap9/y6iPCBRgDig2j+LzT5vWsMyYH5H8nN62Ra4TOyHwz2IZ
-X-Gm-Gg: AZuq6aKVG2E605NdXAH+YeyvU0/j7RuYdrWDrgMH6ogE3LZgudbzOMZm8545OtYz4Id
-	z2mnwYxuAozqBdhMIxt8wwitx4+arXW6Jaw+i/uvS8FEILk9aUMKWXRt34ltf9S4mf9R4R5boKL
-	S07P6SiAeIJsrj3zKYYcI6WKSjgIru/kH+LhM8JAx8fEzPToSSVMpggMH9lrsGqEsemJCHSpuQa
-	BV0nLGY7PwlMcN920Dqr0xo9MMsKfpt5nB/z6iSvg8RQ1sNBw6zhfOaa+zp4XLwD+w7h6bwiaBB
-	2SGaDNAymXeEqkJkcAotvtJS8IhuDv8sbjB6g4MRunvYpvq5pv0Pp7Erbf/EqnbgJA089XC/VYg
-	tdB7/1AjyVkJfAIrVcDu7iALnD5mUh7IcQ0i2idodiV2+0qAvs9mKmj/V2kU4BGgoZqI=
-X-Received: by 2002:a05:6214:4e90:b0:894:9d32:6160 with SMTP id 6a1803df08f44-895245ac304mr43939566d6.0.1770281605164;
-        Thu, 05 Feb 2026 00:53:25 -0800 (PST)
-X-Received: by 2002:a05:6214:4e90:b0:894:9d32:6160 with SMTP id 6a1803df08f44-895245ac304mr43939506d6.0.1770281604769;
-        Thu, 05 Feb 2026 00:53:24 -0800 (PST)
-Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-65949fd80a7sm1876774a12.14.2026.02.05.00.53.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Feb 2026 00:53:24 -0800 (PST)
-Message-ID: <aa0e8a75-969a-423c-a94f-fd8098fbeb48@oss.qualcomm.com>
-Date: Thu, 5 Feb 2026 09:53:21 +0100
+	s=arc-20240116; t=1770283752; c=relaxed/simple;
+	bh=DEyMEUPk136lRe1+oXjf7E/xgzmujjzXLznYtwyuRTU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e7c2xUCf44F8xEW9StkBY+X1SBnQoZDAS9l9ax+/4ejrfWeOw9i3llsTZOgbsryrmD7hnF+FXN6rKExMDQXxB7QLoQORTKKni/rcQmSK5IkU40l3JgqUrQRMuKjth4PW9ON4cSagT7be1ePe+hUUDUTv3dbwEzXBZPGyYd5BE6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UF9hmW7y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80E5FC4CEF7;
+	Thu,  5 Feb 2026 09:29:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770283751;
+	bh=DEyMEUPk136lRe1+oXjf7E/xgzmujjzXLznYtwyuRTU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=UF9hmW7ym4UvBc2PdHLX27wnkftTF9KCY70BRMNx5VCJPL3CEh543a/cR4OubxhD7
+	 cGSmss8J1TbGDp0c4QI40YqyjkuwDTxmCXv6P1ZOI6A8G6+sGf2/jnIRPaRNOa6D34
+	 7xX9LxT3DA67zjqAYfLCqC0yaOGWBk4Me56LXM7CS0U89Y3a1xKzX8/hUR9qVYx90K
+	 EGpIlC6/8JscRmNi6vw2uzzc/s81W4a1I3bTHwlPZYax2daFRM7Fdg+y0Dn/hFsoT2
+	 XyiZU/eNqiWba0drfG57+Vro5K7RC7rKIPOwgPUq+ZOdh+/NG4lrKCppNqoD3cKO5s
+	 TSZwTErnNB3CQ==
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	tzungbi@kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v3] gpio: Fix resource leaks on errors in gpiochip_add_data_with_key()
+Date: Thu,  5 Feb 2026 09:28:40 +0000
+Message-ID: <20260205092840.2574840-1-tzungbi@kernel.org>
+X-Mailer: git-send-email 2.53.0.rc2.204.g2597b5adb4-goog
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom,sm8450-lpass-lpi: add
- QCS8300 LPASS LPI
-To: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>,
-        andersson@kernel.org
-Cc: linusw@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, konradybcio@kernel.org, srini@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260204174237.2906-1-srinivas.kandagatla@oss.qualcomm.com>
- <20260204174237.2906-2-srinivas.kandagatla@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20260204174237.2906-2-srinivas.kandagatla@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=GaEaXAXL c=1 sm=1 tr=0 ts=69845a86 cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
- a=oKlzPlN8YpF2C1mTYpIA:9 a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22
-X-Proofpoint-GUID: Oialzp15hwjqQ51txfo6F402LdsueUPN
-X-Proofpoint-ORIG-GUID: Oialzp15hwjqQ51txfo6F402LdsueUPN
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjA1MDA2MyBTYWx0ZWRfX0wzGBNJs00D2
- TUkDDIiM91269Agy07+bbK7iXXlqpmRLozzY8z9sgodCZcpOaaP18J2akwD7CY9uwmqM3IkJCfq
- /CwhTzKD7VFv0CvwaoSL5tPZs4nGvtfipncEsYk0qillevo6Js1N8J5wVH1DxBFmIxNPgUZAfBW
- VpgH9REVBTnaeL89s/oENDVmzvciITyG/dLr0vcJPXh0dcxdPyK9P+3/z118UMeuh61DRkUe2HU
- 5ClUQS60ccUdQfsUNNO4SLR5YP65f5hAdFGApGHk4Qi2B+56nqMh2qTftZiRbHCGAXkLaCA59QP
- QU9iviqq3aI9dSQtknY7SiK2GGMDdIMd1/zWld/kflhx1YqVhpUizuIYzTgLzEHItYe7GexKK2T
- nGMdJqevE3hBctLDyKcY/2p9+UcdzOe/FjnPaA7/Mq1buJl0qbbZOV2TZmF6W08iz73MdF6dgbH
- TRTPIVV424r9XKu5QHg==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-05_01,2026-02-05_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 phishscore=0 impostorscore=0 malwarescore=0 spamscore=0
- suspectscore=0 clxscore=1015 lowpriorityscore=0 adultscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602050063
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31464-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31465-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[konrad.dybcio@oss.qualcomm.com,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[tzungbi@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 025BDF0196
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 0D221F0D04
 X-Rspamd-Action: no action
 
-On 2/4/26 6:42 PM, Srinivas Kandagatla wrote:
-> Document the Qualcomm QCS8300 SoC Low Power Audio SubSystem Low Power
-> Island (LPASS LPI) pin controller, compatible with earlier SM8450 model.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
-> ---
->  .../bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml     | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
-> index e7565592da86..c81038320c35 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml
-> @@ -15,7 +15,11 @@ description:
->  
->  properties:
->    compatible:
-> -    const: qcom,sm8450-lpass-lpi-pinctrl
-> +    oneOf:
-> +      - const: qcom,sm8450-lpass-lpi-pinctrl
-> +      - items:
-> +          - const: qcom,qcs8300-lpass-lpi-pinctrl
-> +          - const: qcom,sm8450-lpass-lpi-pinctrl
+Since commit aab5c6f20023 ("gpio: set device type for GPIO chips"),
+`gdev->dev.release` is unset.  As a result, the reference count to
+`gdev->dev` isn't dropped on the error handling paths.
 
-This patch conflicts with 
+Drop the reference on errors.
 
-https://lore.kernel.org/linux-arm-msm/20260127105511.3917491-1-mohammad.rafi.shaik@oss.qualcomm.com/
+Also reorder the instructions to make the error handling simpler.
+Now gpiochip_add_data_with_key() roughly looks like:
 
-Could you please consolidate the efforts?
+   >>> Some memory allocation.  Go to ERR ZONE 1 on errors.
+   >>> device_initialize().
 
-Konrad
+   gpiodev_release() takes over the responsibility for freeing the
+   resources of `gdev->dev`.  The subsequent error handling paths
+   shouldn't go through ERR ZONE 1 again which leads to double free.
+
+   >>> Some initialization mainly on `gdev`.
+   >>> The rest of initialization.  Go to ERR ZONE 2 on errors.
+   >>> Chip registration success and exit.
+
+   >>> ERR ZONE 2.  gpio_device_put() and exit.
+   >>> ERR ZONE 1.
+
+Cc: stable@vger.kernel.org
+Fixes: aab5c6f20023 ("gpio: set device type for GPIO chips")
+Reviewed-by: Linus Walleij <linusw@kernel.org>
+Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
+---
+v3:
+- Remove the parentheses in the commit message.
+- Add code comment before setting the device type.
+- Add R-b tag.
+
+v2: https://lore.kernel.org/all/20260203060210.972243-1-tzungbi@kernel.org
+- Reorder the instructions again to make the error handling simpler which
+  fixes https://lore.kernel.org/all/20260116081036.352286-2-tzungbi@kernel.org
+  too.
+- Modify the commit message slightly.
+
+v1: https://lore.kernel.org/all/20260116081036.352286-4-tzungbi@kernel.org
+
+ drivers/gpio/gpiolib.c | 101 ++++++++++++++++++++---------------------
+ 1 file changed, 48 insertions(+), 53 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index c52200eaaaff..5757c0475990 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -893,13 +893,15 @@ static const struct device_type gpio_dev_type = {
+ #define gcdev_unregister(gdev)		device_del(&(gdev)->dev)
+ #endif
+ 
++/*
++ * An initial reference count has been held in gpiochip_add_data_with_key().
++ * The caller should drop the reference via gpio_device_put() on errors.
++ */
+ static int gpiochip_setup_dev(struct gpio_device *gdev)
+ {
+ 	struct fwnode_handle *fwnode = dev_fwnode(&gdev->dev);
+ 	int ret;
+ 
+-	device_initialize(&gdev->dev);
+-
+ 	/*
+ 	 * If fwnode doesn't belong to another device, it's safe to clear its
+ 	 * initialized flag.
+@@ -965,9 +967,11 @@ static void gpiochip_setup_devs(void)
+ 	list_for_each_entry_srcu(gdev, &gpio_devices, list,
+ 				 srcu_read_lock_held(&gpio_devices_srcu)) {
+ 		ret = gpiochip_setup_dev(gdev);
+-		if (ret)
++		if (ret) {
++			gpio_device_put(gdev);
+ 			dev_err(&gdev->dev,
+ 				"Failed to initialize gpio device (%d)\n", ret);
++		}
+ 	}
+ }
+ 
+@@ -1048,71 +1052,72 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 	int base = 0;
+ 	int ret;
+ 
+-	/*
+-	 * First: allocate and populate the internal stat container, and
+-	 * set up the struct device.
+-	 */
+ 	gdev = kzalloc(sizeof(*gdev), GFP_KERNEL);
+ 	if (!gdev)
+ 		return -ENOMEM;
+-
+-	gdev->dev.type = &gpio_dev_type;
+-	gdev->dev.bus = &gpio_bus_type;
+-	gdev->dev.parent = gc->parent;
+-	rcu_assign_pointer(gdev->chip, gc);
+-
+ 	gc->gpiodev = gdev;
+ 	gpiochip_set_data(gc, data);
+ 
+-	device_set_node(&gdev->dev, gpiochip_choose_fwnode(gc));
+-
+ 	ret = ida_alloc(&gpio_ida, GFP_KERNEL);
+ 	if (ret < 0)
+ 		goto err_free_gdev;
+ 	gdev->id = ret;
+ 
+-	ret = dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
++	ret = init_srcu_struct(&gdev->srcu);
+ 	if (ret)
+ 		goto err_free_ida;
++	rcu_assign_pointer(gdev->chip, gc);
+ 
+-	if (gc->parent && gc->parent->driver)
+-		gdev->owner = gc->parent->driver->owner;
+-	else if (gc->owner)
+-		/* TODO: remove chip->owner */
+-		gdev->owner = gc->owner;
+-	else
+-		gdev->owner = THIS_MODULE;
++	ret = init_srcu_struct(&gdev->desc_srcu);
++	if (ret)
++		goto err_cleanup_gdev_srcu;
++
++	ret = dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
++	if (ret)
++		goto err_cleanup_desc_srcu;
++
++	device_initialize(&gdev->dev);
++	/*
++	 * After this point any allocated resources to `gdev` will be
++	 * free():ed by gpiodev_release().  If you add new resources
++	 * then make sure they get free():ed there.
++	 */
++	gdev->dev.type = &gpio_dev_type;
++	gdev->dev.bus = &gpio_bus_type;
++	gdev->dev.parent = gc->parent;
++	device_set_node(&gdev->dev, gpiochip_choose_fwnode(gc));
+ 
+ 	ret = gpiochip_get_ngpios(gc, &gdev->dev);
+ 	if (ret)
+-		goto err_free_dev_name;
++		goto err_put_device;
++	gdev->ngpio = gc->ngpio;
+ 
+ 	gdev->descs = kcalloc(gc->ngpio, sizeof(*gdev->descs), GFP_KERNEL);
+ 	if (!gdev->descs) {
+ 		ret = -ENOMEM;
+-		goto err_free_dev_name;
++		goto err_put_device;
+ 	}
+ 
+ 	gdev->label = kstrdup_const(gc->label ?: "unknown", GFP_KERNEL);
+ 	if (!gdev->label) {
+ 		ret = -ENOMEM;
+-		goto err_free_descs;
++		goto err_put_device;
+ 	}
+ 
+-	gdev->ngpio = gc->ngpio;
+ 	gdev->can_sleep = gc->can_sleep;
+-
+ 	rwlock_init(&gdev->line_state_lock);
+ 	RAW_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
+ 	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->device_notifier);
+-
+-	ret = init_srcu_struct(&gdev->srcu);
+-	if (ret)
+-		goto err_free_label;
+-
+-	ret = init_srcu_struct(&gdev->desc_srcu);
+-	if (ret)
+-		goto err_cleanup_gdev_srcu;
++#ifdef CONFIG_PINCTRL
++	INIT_LIST_HEAD(&gdev->pin_ranges);
++#endif
++	if (gc->parent && gc->parent->driver)
++		gdev->owner = gc->parent->driver->owner;
++	else if (gc->owner)
++		/* TODO: remove chip->owner */
++		gdev->owner = gc->owner;
++	else
++		gdev->owner = THIS_MODULE;
+ 
+ 	scoped_guard(mutex, &gpio_devices_lock) {
+ 		/*
+@@ -1128,7 +1133,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 			if (base < 0) {
+ 				ret = base;
+ 				base = 0;
+-				goto err_cleanup_desc_srcu;
++				goto err_put_device;
+ 			}
+ 
+ 			/*
+@@ -1148,14 +1153,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 		ret = gpiodev_add_to_list_unlocked(gdev);
+ 		if (ret) {
+ 			gpiochip_err(gc, "GPIO integer space overlap, cannot add chip\n");
+-			goto err_cleanup_desc_srcu;
++			goto err_put_device;
+ 		}
+ 	}
+ 
+-#ifdef CONFIG_PINCTRL
+-	INIT_LIST_HEAD(&gdev->pin_ranges);
+-#endif
+-
+ 	if (gc->names)
+ 		gpiochip_set_desc_names(gc);
+ 
+@@ -1249,25 +1250,19 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 	scoped_guard(mutex, &gpio_devices_lock)
+ 		list_del_rcu(&gdev->list);
+ 	synchronize_srcu(&gpio_devices_srcu);
+-	if (gdev->dev.release) {
+-		/* release() has been registered by gpiochip_setup_dev() */
+-		gpio_device_put(gdev);
+-		goto err_print_message;
+-	}
++err_put_device:
++	gpio_device_put(gdev);
++	goto err_print_message;
++
+ err_cleanup_desc_srcu:
+ 	cleanup_srcu_struct(&gdev->desc_srcu);
+ err_cleanup_gdev_srcu:
+ 	cleanup_srcu_struct(&gdev->srcu);
+-err_free_label:
+-	kfree_const(gdev->label);
+-err_free_descs:
+-	kfree(gdev->descs);
+-err_free_dev_name:
+-	kfree(dev_name(&gdev->dev));
+ err_free_ida:
+ 	ida_free(&gpio_ida, gdev->id);
+ err_free_gdev:
+ 	kfree(gdev);
++
+ err_print_message:
+ 	/* failures here can mean systems won't boot... */
+ 	if (ret != -EPROBE_DEFER) {
+-- 
+2.53.0.rc2.204.g2597b5adb4-goog
+
 
