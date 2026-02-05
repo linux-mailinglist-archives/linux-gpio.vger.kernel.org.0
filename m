@@ -1,193 +1,264 @@
-Return-Path: <linux-gpio+bounces-31473-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31476-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MI26Ci2XhGmh3gMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31473-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Feb 2026 14:12:13 +0100
+	id EBfwENSphGk14QMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31476-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Feb 2026 15:31:48 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8526F308C
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Feb 2026 14:12:12 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B4DBF4010
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Feb 2026 15:31:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7FEE83007F66
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Feb 2026 13:12:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9A945301C15E
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Feb 2026 14:30:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4247D3A9D87;
-	Thu,  5 Feb 2026 13:12:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC185221F24;
+	Thu,  5 Feb 2026 14:30:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=dev.tdt.de header.i=@dev.tdt.de header.b="npgLFoAW"
+	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="LaP5NXWm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011019.outbound.protection.outlook.com [52.101.125.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7BF4C97;
-	Thu,  5 Feb 2026 13:12:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770297123; cv=none; b=amSUqgJGPveXyFz2idFa0uN8t8bjNiuQ1iOT/yYx5h3SSclorsN6J10lC/Z0AKAcvZSCVpNYxKr6tzs1cuRDyaqk8TdDgEPInqiKkYyIOl3FSx7eagMZRuZgF2P284D2/4T+rP70mLOB0+YeJRtx8mpoPxHTiLLTlCDsR1BR5iw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770297123; c=relaxed/simple;
-	bh=qCXf7nKbLScwQy4osBXfLc9iP6E1Wr1KRNIyHXzudxE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:Cc; b=YjqLlxaVb2vPv92OWcH0n/J+cOhjmf/D7fJmrC8TAPpNFBfxnpSlnESL+h4ADFFvQXwSN4hh8gKMkGwtMuXNOpCXUWcq3emHqNmmCGfvhykj1hrZBi1bGqUQZe8npgEN9r4MSIreDkuNbRToAgEbgfTM9Y4bpYtxJfgdK3bPjMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; dkim=temperror (0-bit key) header.d=dev.tdt.de header.i=@dev.tdt.de header.b=npgLFoAW; arc=none smtp.client-ip=194.37.255.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dev.tdt.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
-Received: from [194.37.255.9] (helo=mxout.expurgate.net)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <prvs=451014665c=fe@dev.tdt.de>)
-	id 1vnytn-007WtQ-KX; Thu, 05 Feb 2026 13:55:55 +0100
-Received: from [195.243.126.94] (helo=securemail.tdt.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <fe@dev.tdt.de>)
-	id 1vnytn-000WoS-2x; Thu, 05 Feb 2026 13:55:55 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dev.tdt.de;
-	s=z1-selector1; t=1770296154;
-	bh=alup1cXmxDxE54p3dkBAW3FxBmWlZ8yuytC6oXz/m/I=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=npgLFoAWpTAVB+mYRvgpOmMhpm6rCrrbZD9tJyGR6FNjy9In5leEuJgX+JSGo5aaH
-	 a4v4kRib4g/d1DwjJrIUvMbmXAr9SaD4EMJvY5rhapY6+sHjw2ysfsJOY2nfjBgfX+
-	 ZLtVXbkjKzEMJQNPOoTsd4ggcwrCbwfWtTRT8aEetLspaj8OaE2dIa/iUA+Vj7SIio
-	 irte/YTTUgsxIn2XDJrCLU6n8qAfdn0CuCmjEo600TmO1KqjUADSpkB1YuF1D5dXKm
-	 pyfjtVj4Gi5emQIfZAyvKHNdeV37MwME0Ej7ZPnRmvp2Vjr7hDADnPie7GzMrU1cOp
-	 /wK3zlVeZMzaQ==
-Received: from securemail.tdt.de (localhost [127.0.0.1])
-	by securemail.tdt.de (Postfix) with ESMTP id A89BB240042;
-	Thu,  5 Feb 2026 13:55:54 +0100 (CET)
-Received: from mail.dev.tdt.de (unknown [10.2.4.42])
-	by securemail.tdt.de (Postfix) with ESMTP id A2B77240041;
-	Thu,  5 Feb 2026 13:55:54 +0100 (CET)
-Received: from [10.2.3.40] (unknown [10.2.3.40])
-	by mail.dev.tdt.de (Postfix) with ESMTPSA id 8373022826;
-	Thu,  5 Feb 2026 13:55:54 +0100 (CET)
-From: Florian Eckert <fe@dev.tdt.de>
-Date: Thu, 05 Feb 2026 13:55:46 +0100
-Subject: [PATCH 2/2] pinctrl: equilibrium: fix warning trace on load
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D05218845;
+	Thu,  5 Feb 2026 14:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770301844; cv=fail; b=s3RLQq6NmcrAWYpbLn/QA5UPIGJQYioLbXuJYNxLcIgL2TvFux2y6xh4bd/2RXVQemYHGUKTZCRD1psk4GWBN8OpTa9ne3qt7+L79UxrgmqSm6NCHT1s8delV8GeFO2kcaLxSGoupuliX6I4FG11bC6bu7qS7Itk2KRwOl7qDrk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770301844; c=relaxed/simple;
+	bh=TzkLbUMx6HjX+zkm1Dzd6ID88pGALxsETNE7rZzEaJA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=mJCd5+uVs2yNy2am29WenD4ZrUDp/Vhi5Y/UkUFhDkb7T0EeICpLIBJstfMFczceVKnptvejNS9YmlnXZO8uuZxpynjRL0VNEfeookres7roB9GJwi9RSh0tGyc55B8XqkUyNXgrB9UsRZ+Zz3laVkpcRvYLn666qMX8tsw8ArA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=LaP5NXWm; arc=fail smtp.client-ip=52.101.125.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yp3g+AzM5sZ8NddxXnbDAXEpib9lhAE+x2xiTb2EoRVWngyHDgj4rrKaF0/5nyeXwof5lGzYAqDXN6o5SoaX4gpVpsY4NFZ+evJThHDWpIBfwCRD6fQQpOfPZqDcf7DCfmotV7DI7iCN5ogcIONZwZT6hJC9yPLRgUb5lP1qqyRjc1P6aR6lgA622K1Rq/lOzf/s33jKRuwDe+Gt9Gwk15Q7WmrSdb02hsziv/L8L/SW3Z1YB1LcbZjZSJkfEUL88qzzDIVEHO83/UmaqM4fMgjudAM3AyKwtXSkaS+A0YbLMun5xQ45c0FsKLw7kl9syN9/RC1yCe2e9tyGx05Fog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TzkLbUMx6HjX+zkm1Dzd6ID88pGALxsETNE7rZzEaJA=;
+ b=y1EhbN1SnQ7bzZxrViiwxWFmLpEB+TdaZcveIQGBjxNOCGb6zBO2JOm6EdYl7/M5iXZAtJYaXC1ca1/+dsBaUFTAP0Cua+gM9dX+70SxCDuT3pH6PVZ0qhDKKS+5ggadznZJjA4yZbo8yELr52ilQew4KG3fP54KMDDV21keK1RXZVlzJn9pOx9dFzIw8PpAeLUPHQgDcAaXNFGgVC+Nl1GJZIq3CsZnEwxWpj6AAMR31byWY3Lu+p24SnEfsgHrMsDZBjbC/yy2hLNuqSTQ0zYh4DHpwwz7oqDmy4XBrTlo0YOcer2ti+L+WQYwqZgLU7/3Cb624KZsLR1m8/DGJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TzkLbUMx6HjX+zkm1Dzd6ID88pGALxsETNE7rZzEaJA=;
+ b=LaP5NXWmxaSpLnXI57yfi3sWgOO8vy8BqNi9v2d6sKJqdtOi8S33LAFuUeEg+a+Q37BNVJmZxHgZz/x5JFzOLAxGX5r+ILDdWsYg5mhNs+tLoEg/hQ+hMCBYkPFie/DqKJsKgVQ2na/iWhyG5Dh2Yc6g4ZeKoWcCE4KQzllao+8=
+Received: from TYRPR01MB15619.jpnprd01.prod.outlook.com
+ (2603:1096:405:29b::10) by TY3PR01MB12091.jpnprd01.prod.outlook.com
+ (2603:1096:400:3cc::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.16; Thu, 5 Feb
+ 2026 14:30:40 +0000
+Received: from TYRPR01MB15619.jpnprd01.prod.outlook.com
+ ([fe80::a68f:5c9:9de8:4fa4]) by TYRPR01MB15619.jpnprd01.prod.outlook.com
+ ([fe80::a68f:5c9:9de8:4fa4%5]) with mapi id 15.20.9587.013; Thu, 5 Feb 2026
+ 14:30:37 +0000
+From: Cosmin-Gabriel Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+CC: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij
+	<linusw@kernel.org>, Clark Williams <clrkwllms@kernel.org>, Steven Rostedt
+	<rostedt@goodmis.org>, Bartosz Golaszewski <brgl@kernel.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-rt-devel@lists.linux.dev" <linux-rt-devel@lists.linux.dev>
+Subject: RE: [PATCH v2] pinctrl: renesas: rzt2h: fix invalid wait context
+Thread-Topic: [PATCH v2] pinctrl: renesas: rzt2h: fix invalid wait context
+Thread-Index: AQHclovX67Ng6jf6IkClqFCQAxAm9rV0AhaAgAAI7cA=
+Date: Thu, 5 Feb 2026 14:30:36 +0000
+Message-ID:
+ <TYRPR01MB1561934DB60CE0C07D39264D78599A@TYRPR01MB15619.jpnprd01.prod.outlook.com>
+References: <20260205103930.666051-1-cosmin-gabriel.tanislav.xa@renesas.com>
+ <20260205120433.iKQIknOA@linutronix.de>
+In-Reply-To: <20260205120433.iKQIknOA@linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYRPR01MB15619:EE_|TY3PR01MB12091:EE_
+x-ms-office365-filtering-correlation-id: 76c0cc84-ad6e-45ca-c31a-08de64c32112
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700021;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?Uz31mcg+BlxD1LAfnJx0eor50LWJqTVVsL5B6P5RATylJWDkB0PqYsV+grRa?=
+ =?us-ascii?Q?GAZ50Qdxx+oQ2w9Biz5L7dJm/bNOsjVgSW+crkb65+PWueTsBET/pz0EHpyo?=
+ =?us-ascii?Q?EbD/vjSnHYOD1WP0aqsZF/L5F86THiBXsLjCdUPVe8JVonjNWPBzKlgPoo0q?=
+ =?us-ascii?Q?RiP8qKXOgRTkSKNhEGXyWD0g6d/l7R+lknjr9zdHPv3mbRN1YTxYQE1NJlSI?=
+ =?us-ascii?Q?y+atJdh8wkUicXK813uPSd/7MgOmgdh4bwbMun95jdjJ88tfnewTvg5F7Q1R?=
+ =?us-ascii?Q?TaOOYQjQ0DfGQgfAKEccLbRe8Ypf6p/1tnfDntnGWyCNINDeno4D0izHtB4O?=
+ =?us-ascii?Q?eN6M8Cc3p6W1iRF4giE54mxrhhQncWnP3vjrdSt61M6klA1B1e2INKbPMFpV?=
+ =?us-ascii?Q?3DhK1Pq2kvL9Ltx1atMR1GmLdCJVmPKuoC0jBoLKxiMIJy8zN+OGcy1m+gnu?=
+ =?us-ascii?Q?+8sUeM7E24mhpVuuXII7yr1cUxWwsujAgy/+98WitSgtjQRcApsExMxFXAqR?=
+ =?us-ascii?Q?i/6C6A1d/UHoOmbSjftdr9FuOJsmxMrC68CoEm79ryI0qH7Yki2lpiW0Pqeo?=
+ =?us-ascii?Q?nr5T1AjLg3NUrrAzIFy5UGWr6FngHrZixm4aCU6tFsm1n2MTe0UoXQtMi88z?=
+ =?us-ascii?Q?0jMWt7akPqz4zZOJ3aDIhTjmTTAVIipbrzgH8t6wn1i4COh9xW5UXXWrQmGM?=
+ =?us-ascii?Q?jNWh/CpKXoMCRScUuxsTMamFRYGweYOXTvEBg/bWZZFYwgpIW0C1ZWfyKHnn?=
+ =?us-ascii?Q?YJMhMN2g/SR5VVmG9C0Du9sbDck/H4X/xgZj23cDiW3ahE8hNB+6n9O1SrRJ?=
+ =?us-ascii?Q?mP7LAEThRo8mi8/jkCOwdRhvpRNGE5MxBkeujiC5NKdtjNtU/0X4dPCEsgTq?=
+ =?us-ascii?Q?d3Zp1LzWVO+pMxUNslHj6y3KIoQjUAFax6djozBMgb2/XrD5MuPMHE4kjhj8?=
+ =?us-ascii?Q?XqCJLFIO116n6FMZjfIfVn2/ri8jqM5H3MiEPgImoJk0ILYgqYZPTnIm5N6R?=
+ =?us-ascii?Q?xonGb/ASjmYKS6maKOTAJ44kInqhmUMOWGUzPJg2CoAynRNgNLCuN8Q/qZPO?=
+ =?us-ascii?Q?51PabwpXjpk44ssTi4sgMQ5W4rKj31NmzSYDpCUNMhkCC5+5rEtx7pp60svV?=
+ =?us-ascii?Q?K3kywMsejjXclnjQgJAx3JuWOzPiNvYAlPY2JDpjiZuiz744BeXdyFmsT9t2?=
+ =?us-ascii?Q?JdPi8bV2KdAvGupDMz4f+hdQLwzXd8lj2FaXyBG87wJfKbSTcV3IoP040Egu?=
+ =?us-ascii?Q?rU5+cnJ4FuSysBqCECqB/1YpWYjsdhHsKMeKluw5KSQnWXiuCxH2V0FaJ8Ww?=
+ =?us-ascii?Q?1KdmpSwA7CdwBwza3uR06hC5X6QQL7brY4AjiIPSHjK6Kfc5WFfaVvS+1CCf?=
+ =?us-ascii?Q?Nv3f1CrFONErkmzEq2b95pOaO6F5r8qxREVIPpN9tYISdRjdSNsA5vZ+mys8?=
+ =?us-ascii?Q?2M6eBOoKQHwO1PLLt2zESgEhua7WP5PPwzxcEowsj2K0gHm2knZ7Ru6lNKRa?=
+ =?us-ascii?Q?kq4vuTfCPw6VvDjxpZ43nrM1Cx2CSpWl8V3UtC6pTnTqVvvRs4smSbD4BX6A?=
+ =?us-ascii?Q?HJdhy3qUqrNSywFwa7IjJpJPXMhL/vX5bEAH7uozftlfVJgGwj0jiJKeDc6W?=
+ =?us-ascii?Q?gyjs7gV0mdIK+GkhQOcNi3M=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYRPR01MB15619.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?FlBfBA76QgDO324cto7hpuKNPvxdwNjYbcN1CVsvh9bDqmSSAGd825Xn3OjY?=
+ =?us-ascii?Q?USIxO4mdIBZrHiYdoGSB0FXTrj53jFTqV+s0SpRu6AdrUJ19ET5WKRsB7Fwf?=
+ =?us-ascii?Q?XndqGfE50qs4gf6+5LuGPG01bfWSA2q6ZqDRS8Cia1eWk+lDp0cMOzodckA+?=
+ =?us-ascii?Q?VivtSwTSzEjNgp1+6KoC40hk2o27TMHH3AvyOwsIskQjC3iwuSak5Ls/qmJb?=
+ =?us-ascii?Q?XA3+RCZROoSo2Rh83MrrYKJGJWUfx/Mi+4PSDEh1nFLlSw7+LhDIEfzV7VjM?=
+ =?us-ascii?Q?9yhvGmr3gHwD38ZubiU2r07ptjgY+InHlYorPs2deRZfL4Ak9SqHd+wr1OeV?=
+ =?us-ascii?Q?sznpjfozK3jscGUMVNcnXAz1QL1hBO0cuGIgwYAc2XcKE8smtEaWSnhrF8ys?=
+ =?us-ascii?Q?2i39vXQX13iE29QWue+YoAi8iMuUkgBUGCaErJu2neSNjKa+jv4mVgilbZo5?=
+ =?us-ascii?Q?s0L85cSYQk2ELWLrp3LctlfpyGXHTNPmWJZQW4x/wR9Ks3PYzbjpTNDNmFWi?=
+ =?us-ascii?Q?pqza6qJnbwS76TdUxNjdMbFnKin8YOulkh1mWrkJ33hWT7tlYOVPsuyxRLen?=
+ =?us-ascii?Q?HEHugZ1HTFryg+JeCXyQ8FzLg3K/ZEKua4vfnKb5Ftsg97v6b06WxpfmpRhM?=
+ =?us-ascii?Q?3YXrv77GLAyIbrvhFS/KCmjfZeuUL23UVEzTGgkKGVAyQpsz60e/1LEhPLzN?=
+ =?us-ascii?Q?J+NwmqLCRVhe2+CnLROtz9NlGSf7gi5a4VjdJRriJ5t6C0yOlHQDiwyme4RW?=
+ =?us-ascii?Q?V+De8VQWoIThvcaznInBpovqksL8YocdAtATuBse1MPfj5Yfg2Ex9qAynRP2?=
+ =?us-ascii?Q?fxYvPxIHU6KhEpbGJSDnEmeL8cyJAtGwngbPOIAxC3IFZpCcIfVgvWkuUJCV?=
+ =?us-ascii?Q?TXqyIfrhvaHfbWrnSmkiwNBwdKweewWN66A1v/iLZAvDXIkNxWglWe/+uIgT?=
+ =?us-ascii?Q?anw5t4B42G1+qlt6r9DaBhNEfgmj2IObmcT9YlJf+9vGpg3oJcuP2JFT5AWX?=
+ =?us-ascii?Q?DAmghD6tZqG7nb8nGYolkIWVoqEkCKVOnvvL1uT+FALozuIfd/xtMVQsXWM4?=
+ =?us-ascii?Q?jpJNaUluWBuAmbsgQoijHDEnU7Hpiv/suEI9r20UfaczuujnG4lJL70RylAn?=
+ =?us-ascii?Q?eulhogfAltiSyCL2g5OZIvK5j0vHlT1EzjrAD35etCq1/eHxVwkuoC4D8aHF?=
+ =?us-ascii?Q?An5Mqpgqm/lHZRcRHgYKTpiLjbd1AiRnDVFXIw75l2Y6orkcAGpepCwjW4ne?=
+ =?us-ascii?Q?UsasyLA8CDBjf7YoHq3t6gXdU+mfh61Ln3MfBwHe5+z/4IFmzIR+EPyNfHa/?=
+ =?us-ascii?Q?mFXOHbmezps1Dp0M9czonvWtkydHcD54wI+Rs7Gt/ZDWaKrRCojGDbgaaHEm?=
+ =?us-ascii?Q?wtPpuluunbRQ1L4OaMGK4AoE7J+ZkPRRNK2H9vQaX1F55Pb3N0jPeMATP8Ox?=
+ =?us-ascii?Q?HGDoD0OZMvGCmYLj6QudkGPTjbX+8MGldhBOY30REogTtBwOaV5LGRktJ7QP?=
+ =?us-ascii?Q?6aqfhlD1jWyDRT5QZHQcFNApu4k0XJvy0Ud7FbkDtpOiECVO8xGFoP0dMHcV?=
+ =?us-ascii?Q?UL9lkNOyvpE6zEq758KXWHYSQJbz4hIKe3hSsX7N7/HCTE/fuN0oHU+yaaiF?=
+ =?us-ascii?Q?cne8R/Qz9PIknoc+zoTjTcBsWvfFrIdlECir6eNUMvz9hfucne55aSFREIgU?=
+ =?us-ascii?Q?CMdua0EiGENOeYBRU+PZyxO1B+VTmUFNzb/yWsGZp58cGyd8czBiRI4LQ9Ci?=
+ =?us-ascii?Q?k8MXWRV3gG5VWNewSoakX+sNViVjvBrfA1lqStVK/LBB0/9CFTZJ?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20260205-pinctrl-equilibrium-v1-2-66909a3b0acb@dev.tdt.de>
-References: <20260205-pinctrl-equilibrium-v1-0-66909a3b0acb@dev.tdt.de>
-In-Reply-To: <20260205-pinctrl-equilibrium-v1-0-66909a3b0acb@dev.tdt.de>
-To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Florian Eckert <Eckert.Florian@gmail.com>,
-	Florian Eckert <fe@dev.tdt.de>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1770296154; l=3266;
- i=fe@dev.tdt.de; s=20260205; h=from:subject:message-id;
- bh=qCXf7nKbLScwQy4osBXfLc9iP6E1Wr1KRNIyHXzudxE=;
- b=FeqJ5Gtx96tgmNSu5H0o+AjDDtXXGdtlN/NkBG+F1ms0riN8cdqT1bFXVhsmc11rfOkaMlaSu
- w/+h/umafMfC6bmTCzZ1eVY1ShBLVaf73+4DhfLtpPyzA40QeoYxZOr
-X-Developer-Key: i=fe@dev.tdt.de; a=ed25519;
- pk=q7Pvv3Au2sAVRhBz5UF7ZqUPNxUwXQ78Jdqu8E6Negk=
-X-purgate: clean
-X-purgate-ID: 151534::1770296155-53DF9330-5582222A/0/0
-X-purgate-type: clean
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYRPR01MB15619.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76c0cc84-ad6e-45ca-c31a-08de64c32112
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2026 14:30:36.8823
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wB6Ra+s6uPo5ey06T+eAOykWs/g75KEPo80plROkS9/9P8KRDiFc2lHEj/Dr9EXOfgD1D/pJRRl1dOJgeWmS/ovDhKhnXpA/bjhWNC6/R5XVAENAp055LSOs6CQdtNzz
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3PR01MB12091
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[tdt.de,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[dev.tdt.de:s=z1-selector1];
+X-Spamd-Result: default: False [1.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[renesas.com,none];
+	R_DKIM_ALLOW(-0.20)[renesas.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,dev.tdt.de];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-31473-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[dev.tdt.de:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,dev.tdt.de:mid,dev.tdt.de:dkim,tdt.de:email];
-	RCPT_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[fe@dev.tdt.de,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-31476-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[8]
-X-Rspamd-Queue-Id: B8526F308C
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[renesas.com:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cosmin-gabriel.tanislav.xa@renesas.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linutronix.de:email,renesas.com:email,renesas.com:dkim]
+X-Rspamd-Queue-Id: 8B4DBF4010
 X-Rspamd-Action: no action
 
-The callback functions 'eqbr_irq_mask()' and 'eqbr_irq_ack()' are also
-called in the callback function 'eqbr_irq_mask_ack()'. This is done to
-avoid source code duplication. The problem, is that in the function
-'eqbr_irq_mask()' also calles the gpiolib function 'gpiochip_disable_irq()'
+> From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Sent: Thursday, February 5, 2026 2:05 PM
+>=20
+> On 2026-02-05 12:39:30 [+0200], Cosmin Tanislav wrote:
+> > The rzt2h_gpio_get_direction() function is called from
+> > gpiod_get_direction(), which ends up being used within the __setup_irq(=
+)
+> > call stack when requesting an interrupt.
+> >
+> > __setup_irq() holds a raw_spinlock_t with IRQs disabled, which creates
+> > an atomic context. spinlock_t cannot be used within atomic context
+> > when PREEMPT_RT is enabled, since it may become a sleeping lock.
+> >
+> > An "[ BUG: Invalid wait context ]" splat is observed when running with
+> > CONFIG_PROVE_LOCKING enabled, describing exactly the aforementioned cal=
+l
+> > stack.
+> >
+> > __setup_irq() needs to hold a raw_spinlock_t with IRQs disabled to
+> > serialize access against a concurrent hard interrupt.
+> >
+> > Switch to raw_spinlock_t to fix this.
+>=20
+> I don't like the reasoning here because it looks like "lockdep
+> complained lets switch the locks and everything is fine now".
+>=20
+> It is required to make the suggested change because the lock is used
+> in hardirq context and only while accessing the HW's register.
+>=20
+> I just don't want that a lockdep splat becomes a green card for these
+> kind of changes without understanding the consequences.
+>=20
 
-This generates the following warning trace in the log for every gpio on
-load.
+Hi Sebastian, thank you for your feedback.
 
-[    6.088111] ------------[ cut here ]------------
-[    6.092440] WARNING: CPU: 3 PID: 1 at drivers/gpio/gpiolib.c:3810 gpiochip_disable_irq+0x39/0x50
-[    6.097847] Modules linked in:
-[    6.097847] CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W          6.12.59+ #0
-[    6.097847] Tainted: [W]=WARN
-[    6.097847] RIP: 0010:gpiochip_disable_irq+0x39/0x50
-[    6.097847] Code: 39 c6 48 19 c0 21 c6 48 c1 e6 05 48 03 b2 38 03 00 00 48 81 fe 00 f0 ff ff 77 11 48 8b 46 08 f6 c4 02 74 06 f0 80 66 09 fb c3 <0f> 0b 90 0f 1f 40 00 c3 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40
-[    6.097847] RSP: 0000:ffffc9000000b830 EFLAGS: 00010046
-[    6.097847] RAX: 0000000000000045 RBX: ffff888001be02a0 RCX: 0000000000000008
-[    6.097847] RDX: ffff888001be9000 RSI: ffff888001b2dd00 RDI: ffff888001be02a0
-[    6.097847] RBP: ffffc9000000b860 R08: 0000000000000000 R09: 0000000000000000
-[    6.097847] R10: 0000000000000001 R11: ffff888001b2a154 R12: ffff888001be0514
-[    6.097847] R13: ffff888001be02a0 R14: 0000000000000008 R15: 0000000000000000
-[    6.097847] FS:  0000000000000000(0000) GS:ffff888041d80000(0000) knlGS:0000000000000000
-[    6.097847] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    6.097847] CR2: 0000000000000000 CR3: 0000000003030000 CR4: 00000000001026b0
-[    6.097847] Call Trace:
-[    6.097847]  <TASK>
-[    6.097847]  ? eqbr_irq_mask+0x63/0x70
-[    6.097847]  ? no_action+0x10/0x10
-[    6.097847]  eqbr_irq_mask_ack+0x11/0x60
+I agree that a lockdep splat should not warrant a spinlock_t to
+raw_spinlock_t conversion since that's not always the correct solution
+for it.
 
-In an other driver (drivers/pinctrl/starfive/pinctrl-starfive-jh7100.c) the
-interrupt is not disabled here.
+This driver delegates masking/unmasking to the parent IRQ chip, and none
+of the local irq_chip callbacks take the pctrl->lock.
 
-To fix this, do not call the 'eqbr_irq_mask()' and 'eqbr_irq_ack()'
-function. Implement instead this directly without disabling the interrupts.
+The pctrl->lock is taken in the gpio_chip->request, ->get_direction,
+->direction_input, ->direction_output, pinmux_ops->set_mux and
+gpio_irq_chip->child_to_parent_hwirq implementations.
 
-Fixes: 52066a53bd11 ("pinctrl: equilibrium: Convert to immutable irq_chip")
-Signed-off-by: Florian Eckert <fe@dev.tdt.de>
----
- drivers/pinctrl/pinctrl-equilibrium.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+My understanding is that the only issue is that ->get_direction takes a
+spinlock_t while being called from __setup_irq() which holds a
+raw_spinlock_t with IRQs disabled, rather than spinlock_t being taken
+inside a hardirq context, which is what I tried to describe in the
+commit message.
 
-diff --git a/drivers/pinctrl/pinctrl-equilibrium.c b/drivers/pinctrl/pinctrl-equilibrium.c
-index 99596236f4d2b1c0ea280a2bd2cf4be247bc5042..64a55913acf08ed5ce5b27a4d5bb17bf848a8122 100644
---- a/drivers/pinctrl/pinctrl-equilibrium.c
-+++ b/drivers/pinctrl/pinctrl-equilibrium.c
-@@ -64,8 +64,15 @@ static void eqbr_irq_ack(struct irq_data *d)
- 
- static void eqbr_irq_mask_ack(struct irq_data *d)
- {
--	eqbr_irq_mask(d);
--	eqbr_irq_ack(d);
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct eqbr_gpio_ctrl *gctrl = gpiochip_get_data(gc);
-+	unsigned int offset = irqd_to_hwirq(d);
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&gctrl->lock, flags);
-+	writel(BIT(offset), gctrl->membase + GPIO_IRNENCLR);
-+	writel(BIT(offset), gctrl->membase + GPIO_IRNCR);
-+	raw_spin_unlock_irqrestore(&gctrl->lock, flags);
- }
- 
- static inline void eqbr_cfg_bit(void __iomem *addr,
+Am I missing something?
 
--- 
-2.47.3
-
+> > Fixes: 829dde3369a9 ("pinctrl: renesas: rzt2h: Add GPIO IRQ chip to han=
+dle interrupts")
+> > Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+>=20
+> Sebastian
 
