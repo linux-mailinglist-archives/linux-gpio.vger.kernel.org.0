@@ -1,129 +1,125 @@
-Return-Path: <linux-gpio+bounces-31459-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31460-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wNmtOlJVhGkx2gMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31459-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Feb 2026 09:31:14 +0100
+	id 4H9YOHhahGl92gMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31460-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Feb 2026 09:53:12 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EC1AEFE8F
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Feb 2026 09:31:14 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FBDAF014B
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Feb 2026 09:53:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 550303011C47
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Feb 2026 08:31:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6EDDB300DE1B
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Feb 2026 08:51:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A2413624D7;
-	Thu,  5 Feb 2026 08:31:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7D4B35E535;
+	Thu,  5 Feb 2026 08:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KaTp2KwX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6722BE657;
-	Thu,  5 Feb 2026 08:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69EF435B644;
+	Thu,  5 Feb 2026 08:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770280263; cv=none; b=fxgHwq+A6SpjFiI5EEdK59wDEe5sWQR5Nr6Qv0BYjuUG5UNQuquBVwFoLPAxaLolboPT294+Q8iYdvjxdVjzZWAyAq6hbeVcd6ngGkG8chGiiLmP8sxAY7FQ+cp/Kq5RsUpmTchQVQxZiAS32jOkw/6nnpKyfRBZPiEn1qyA1VQ=
+	t=1770281499; cv=none; b=GrS8w8RQyP5oogclnHKElFcnEc+7A8iicBJTdFapreacuh1Bfrd1KJ9wbOqVuXtrTWplBRKMz2R8YhgCk41dQD4UjioeEHHYgKTx383c+J1zJwFBMKSrHlT5yD1W8mw1KoVrnwq8yoGWLFxa6NL9ExofwaeLxJKQk4Y7m9mLZfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770280263; c=relaxed/simple;
-	bh=yyxQ4xPUTLpRqssRMNluN7wt8FgekanvnEKoaVZvP9c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M7kZys6AhFPJvAJgLPvcDcscR8V47tVlMkg+ZgCevCu+i/PL9lBnI2zaxaAp8jQCLMLvHPqCqZ/xdYYaMo2YIHFz5zPWc/Bn7nvBxzUsmxjzSEBYi5MzyfUSJtNp2avkGn0WVd+JI7AcTbdNhP06hr6KQywfp4nZCkf7mEwv52g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowAAnC+I6VYRplwO7Bw--.17422S2;
-	Thu, 05 Feb 2026 16:30:50 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: zhuyinbo@loongson.cn,
-	linusw@kernel.org,
-	brgl@kernel.org,
-	ziyao@disroot.org,
-	chenhuacai@kernel.org
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] gpio: loongson-64bit: Fix NULL check after devm_kcalloc() in loongson_gpio_init_irqchip()
-Date: Thu,  5 Feb 2026 15:26:49 +0800
-Message-Id: <20260205072649.3271158-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1770281499; c=relaxed/simple;
+	bh=3gYcD8s2ae4bFtwEr9I/tEvXmqGVfIFmkeFLr6QDj08=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TPDXntiNkEJm9QjEqpY9+e+v4m6xLECXIOnT23RowFvssRwLBrsiYIkCME/f30U3KhTMXDwYDu4oSlImayD+T4+FDqXAmm4pAgdY7WL+TrUtE/VCBZqolDzn20LQbGvLOJ8lVOazKwEQdbkB9Ulz0os0Y+c6NyiNuzuLFN1j9Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KaTp2KwX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A291DC4CEF7;
+	Thu,  5 Feb 2026 08:51:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770281499;
+	bh=3gYcD8s2ae4bFtwEr9I/tEvXmqGVfIFmkeFLr6QDj08=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KaTp2KwXBnUoZ3XV4OhQXSc1+a4Pw+CXemtipPrLDP7c+dLI0nOTtxOG1Shof9TgU
+	 R/PpvvcSx5RYXtApZ0oQIV4XXIOTOhBOJQc5oKMImbgylGVRr0VN2zVs7hO+M+y4cK
+	 AkL9yhkGQIsaWLY+a6n1xRBPc36kk67mDW5jP5NDDB2M7tkQpviGXnuRmEogAR3Qcj
+	 rjJ5gS3jb2Okb582nFEeJtoXEGYwWUY1+TBf4r5Yw7FsS4mekWjUcAsf7jveE1XTH6
+	 rQQphAkK7XUw8yLYXaprjerdwzXg1/AM3WTO/MTT+cY2XJBcD0NOGtmmiZB0EsxenP
+	 7P+5qhL8vIycQ==
+Date: Thu, 5 Feb 2026 08:51:34 +0000
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Johan Hovold <johan@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	chrome-platform@lists.linux.dev,
+	Dan Williams <dan.j.williams@intel.com>, linux-gpio@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linusw@kernel.org>
+Subject: Re: [PATCH v2 03/11] gpio: sysfs: Remove redundant check for struct
+ gpio_chip
+Message-ID: <aYRaFs6DmjDQ6aHq@google.com>
+References: <20260203061059.975605-1-tzungbi@kernel.org>
+ <20260203061059.975605-4-tzungbi@kernel.org>
+ <CAMRc=Mf=gUMEaeExH6mVrhMSNWbCchRfkrugr492Ccp-j3V8Ag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAAnC+I6VYRplwO7Bw--.17422S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gr4xWrykZFyrZr1fJr18Zrb_yoWDJrgE9F
-	yIyrWkGF4DKFnF9a47Z3yfArW2v34DZF1FvF4qyFW5Xas8G3s5Zry7ur1agFnrWr98Zas8
-	WFZYgrWxAwnxCjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbs8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
-	1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
-	cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8Jw
-	ACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_JF0_
-	Jw1lc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI
-	8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
-	xVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI
-	8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280
-	aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43
-	ZEXa7VUjvD73UUUUU==
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mf=gUMEaeExH6mVrhMSNWbCchRfkrugr492Ccp-j3V8Ag@mail.gmail.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.04 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31460-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[iscas.ac.cn];
-	RCVD_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31459-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FROM_NEQ_ENVFROM(0.00)[nichen@iscas.ac.cn,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.935];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 7EC1AEFE8F
+	FROM_NEQ_ENVFROM(0.00)[tzungbi@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 4FBDAF014B
 X-Rspamd-Action: no action
 
-Fix incorrect NULL check in loongson_gpio_init_irqchip().
-The function checks chip->parent instead of chip->irq.parents.
+On Wed, Feb 04, 2026 at 04:33:50AM -0600, Bartosz Golaszewski wrote:
+> On Tue, 3 Feb 2026 07:10:50 +0100, Tzung-Bi Shih <tzungbi@kernel.org> said:
+> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > index a6dd07be126c..3137e6f1108a 100644
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -1281,7 +1281,7 @@ void gpiochip_remove(struct gpio_chip *gc)
+> >  	struct gpio_device *gdev = gc->gpiodev;
+> >
+> >  	/* FIXME: should the legacy sysfs handling be moved to gpio_device? */
+> > -	gpiochip_sysfs_unregister(gdev);
+> > +	gpiochip_sysfs_unregister(gdev, gc);
+> 
+> I understand the intention here but I really don't like passing both gc and
+> gdev here. We can get the address of the gpio_device from gpio_chip so why not
+> do this and pass only variable?
 
-Fixes: 03c146cb6cd1 ("gpio: loongson-64bit: Add support for Loongson-2K0300 SoC")
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/gpio/gpio-loongson-64bit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loongson-64bit.c
-index 77d07e31366f..0fdf15faa344 100644
---- a/drivers/gpio/gpio-loongson-64bit.c
-+++ b/drivers/gpio/gpio-loongson-64bit.c
-@@ -263,7 +263,7 @@ static int loongson_gpio_init_irqchip(struct platform_device *pdev,
- 	chip->irq.num_parents = data->intr_num;
- 	chip->irq.parents = devm_kcalloc(&pdev->dev, data->intr_num,
- 					 sizeof(*chip->irq.parents), GFP_KERNEL);
--	if (!chip->parent)
-+	if (!chip->irq.parents)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < data->intr_num; i++) {
--- 
-2.25.1
-
+Ack, will fix in the next version.
 
