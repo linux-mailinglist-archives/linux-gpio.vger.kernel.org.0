@@ -1,414 +1,201 @@
-Return-Path: <linux-gpio+bounces-31486-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31487-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oALIIfSzhWmbFQQAu9opvQ
-	(envelope-from <linux-gpio+bounces-31486-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 06 Feb 2026 10:27:16 +0100
+	id iH3mMau5hWmOFgQAu9opvQ
+	(envelope-from <linux-gpio+bounces-31487-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 06 Feb 2026 10:51:39 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A134FC037
-	for <lists+linux-gpio@lfdr.de>; Fri, 06 Feb 2026 10:27:16 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6065EFC3DB
+	for <lists+linux-gpio@lfdr.de>; Fri, 06 Feb 2026 10:51:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7B9AE300DCC8
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Feb 2026 09:27:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 729723038AC5
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Feb 2026 09:50:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 348FB35D5E5;
-	Fri,  6 Feb 2026 09:27:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D39A5361670;
+	Fri,  6 Feb 2026 09:50:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GDgmghiv"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RV7XudjP";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="amgks5z4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AF035CBC5;
-	Fri,  6 Feb 2026 09:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DEE3148D8
+	for <linux-gpio@vger.kernel.org>; Fri,  6 Feb 2026 09:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770370032; cv=none; b=ANuFayBkNNhM1ZAoZtR9m57zChmnQse5Gp/75AGuDY2YzBCwCntiBDaAWlUCJLLIUcmRULW0ufmW4hXi++tGTunP3w0mFCv/Ql4GUG0SA2BeSLMO7sPfSVOCxxAMi17m6jk/4fgkeb2e6rGLxnGOOuHe0QZ2HGCdAIVGLaLyxIM=
+	t=1770371408; cv=none; b=gTdNtxL5tuneTPcwiblPOLuJe70b5P0DiwGI0Ywwk3c/AqfohezJKPRUOpVTxDnq2HBpBtahCBxw/vwAEAmd8tL/pVXB7aoDXeDQGKIaweX6OfGOjLfv5SwEeELm9R7LDqCehgiAgOxou6sCh5cycTQINycCegn0UcajBSZf+m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770370032; c=relaxed/simple;
-	bh=nToHAuWiyK+8sdjvOIHy9y1on5iGem4d1XUOM/KIjps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SOzb+VYGr5bqVBxN2OtIz+dqhRh4/0JTY0M3mYVs6KYUNLBqSpUpvlRAYQdrbuG/IlmKMEGqzO2V30rt+2YGQ6zPqmgHXS/M0RHudMKYWJ6EnKt3nQW51impNRJWjDWBYgG+gx8WITGpYsk1ZjcyjqlaMe0KGzgbCHckbx6l2go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GDgmghiv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DA88C19421;
-	Fri,  6 Feb 2026 09:27:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770370031;
-	bh=nToHAuWiyK+8sdjvOIHy9y1on5iGem4d1XUOM/KIjps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GDgmghiv0jKW2w+oEn8vgHsjRlonoSg4PCYgpGRsCebLaGVcy+yVqFCXNBhxscIz6
-	 7wO9vm4jwr6cD7n73ncwPAPc6ekqdgHN4LLjUvilZftMWfQMqkpU4d7mxaXCxobBc3
-	 KwNZjTelX1t/+r9uLqiS9g/UTHKJ81gAvVazN4KvaTLZViD2Io75XEhQ/n2hhbN6sn
-	 S6VV+MMp7896kndjOJSbUL5dm0cGBALedLQsny/1IYVPftCiPdj2gwswBE1JxOvw13
-	 ToK4S26n7tq/zcgmOEsdnWa878fFgHhw7pkZaBQ7pWbLwNwqWglZWad+gtJfeYpW1O
-	 hTz8wb5ERvKFA==
-Date: Fri, 6 Feb 2026 10:27:09 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: 434779359@qq.com
-Cc: Linus Walleij <linusw@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, xuchen <bright.xu@faiot.com>
-Subject: Re: [PATCH] nfc: supply: Add PN7160 drivers =?utf-8?Q?=C2=A0_This?=
- =?utf-8?Q?_patch_adds_suppor?= =?utf-8?Q?t?= for the PN7160 ICs used in
- Qualcomm reference designs.
-Message-ID: <20260206-bulky-aardwark-of-examination-b056ee@quoll>
-References: <tencent_ACA99123220028D078B20189509FD204BC0A@qq.com>
+	s=arc-20240116; t=1770371408; c=relaxed/simple;
+	bh=jbVoKYU4ev5Petiyr7vG3/lbL8apzibfZBtyn9szs3I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=psyYP9mMGlA63L6YPN7TQFAo/QsWwbLpum5ac8t+UMUHy7z3UsDMQq//2EIlUadui28fOA6l2rN1+r3v1Fexj5IBsNOxKLSINexB97XLvB3D+U6ZEH9GCQMIXl7fJg7DDR2opOCV77qy0PgYwOo/V927RJKuh8sBprXEJbKi7kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RV7XudjP; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=amgks5z4; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6168ir942313831
+	for <linux-gpio@vger.kernel.org>; Fri, 6 Feb 2026 09:50:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=1krOuL/jVU7sMVCcsHy2/GSYSjNlVLzwVIC
+	HaUJdVHM=; b=RV7XudjPFtQaaWUUfCEL6s2+Jr/Ul5gtHQBgwRkA/NFSod6Tc4U
+	FRK2/LhsH1wZP76NZRvc2Yzv8LxlJ2j5yJOh4iMiIKRrsBas8wa5mx+mZp/NFWnj
+	ypfq5F0NzVHrYPWVgFoLTQ1rOfrRZP27cK+nnTCNvozGoVZ7UaxySAp5IPDhj1/M
+	hFp95W9NNjaTHcC+7Ppb6tnmVRGtDnb9XX6GbCrQxnKzVBB0FxRYxeuNypvX3HDx
+	HqLK7AxxY7RPZd89K8gfglGGs/PwjCCHSa6L/1ubh3Y8/zB0aIiCALI819CQYYiq
+	55dlaMkcELKM12f6Yb/3ox0oKywBxtP35yQ==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4c52mrjc6b-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Fri, 06 Feb 2026 09:50:07 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-8c882774f0dso122048285a.2
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Feb 2026 01:50:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1770371406; x=1770976206; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1krOuL/jVU7sMVCcsHy2/GSYSjNlVLzwVICHaUJdVHM=;
+        b=amgks5z48sotqb1RuZ9642quYN2UZmAaMzv8rRUky24P+NwloBDf24srl25z8/n2z/
+         xScwfXn1hqyHOiJ8GJpcUURNerqQJ+aDL/WC9fJK39vtNnOmDh9SljDEeFnXZxpWDd5Q
+         ZP9UVeAu2mFOtjPrlpF04zF/KtWaLXLH45/7t03cnRbBkSCf2Sdwdi84WRWmRgeubt1K
+         7Waf/4g2x17K3HA8Cn2+TBaP5tdaBrRBAwwCk2Qj08Ttg3w28Z1FMA+Yj+M44ttXE1NS
+         7o7IT/UldsTOeTvlatehuuH4CxRDANNFWAyu5y3EP6YH1anNJF2ttnBcti+J3zpmEDR3
+         HSVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770371406; x=1770976206;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1krOuL/jVU7sMVCcsHy2/GSYSjNlVLzwVICHaUJdVHM=;
+        b=BFdIvORe89wRSwBYwdA31weOLMzlvsYgUxCqMMOZuOXwxcHmb60XgPJRiZxp6XDVaE
+         Oqk6hXV3yCPSj3z5tNWnhZp1t90bv9jjC22S1SwtQF3r0i6QIN26TjVykMXVtD8uyLyi
+         y2JSXTM8tmMs12VEs0J6uELMjgvkeGgpCOaOlcjVAagkl+UFSAoKTq39wxlVB1/eLisZ
+         iumU22jMJuT0DVzprbJfg1w+JJokudCwITMud4g3/axOWFP7M8sHbmaKXQbiJ9jUO2YC
+         6USlmsnLnXQnm5ny/aTuzJOI73mA4sdv6cZxJT1E4PhZxo6YSHOzpMHSYalDgUfC6cm5
+         yvrA==
+X-Forwarded-Encrypted: i=1; AJvYcCWCwW8FhhhS42gHOiI2YFp18at9dBn8AA5c6ntGdEQaL6bSOSp3rGxtE609inqNyXVqGDwTA9HNNE+G@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxow570sTUsRFEGTKaf5ab3JVGXOkCjUnNLlPdSkE2Krdz5rRZs
+	zzLOMjmwRDhcUjtRGdOA2WsTldBs42dozDAqYSFe/9mJ/Ig7ju67YRHRm51xjVhto5+BPWZGD/o
+	zpZyFp6tMhS8vOHQFz9PJ2kV61p/x53+QEP20ILvBBn5uhC6mwrDPRLMnTykeCDknY5BgtxYy
+X-Gm-Gg: AZuq6aKRW/sIC2wmG5t/Khi9PIVLw9uhgQUvMPvLsiTV7WYuFYAF6NOPm0Fw2GUVO8w
+	HF2IkVK5hUjqIPZfzI7dILU9YzFokXQ196Qxx6crISdN2qPo+1FB/jg44WxZLlMueZ+nD3uN4hV
+	2SETEjrxfa2PhM1m9Bq0JSPkhJ/k6sS7XauLNf3Ow2HLHKcolO1zOdf5j/bkOA6qT4wyvvFK+ER
+	mUslJgDnoBOwbJE8sB8U2DZVUarHQkOTqx3/vEl29NakYET1sIK1JteODz57ALd8io1avwZQxVv
+	7G4nzQC1kXrkIqeGkf9gkHwWBoUgn05OqUDaChbxSrCar1yW83TQ2FVkOEC9U8c6LwjoBcuniMj
+	oXydbbti2py7/SiZnv1OH4BcQtMa4/7wha88aRQ==
+X-Received: by 2002:a05:620a:4494:b0:8ca:3d7c:e767 with SMTP id af79cd13be357-8caf0961959mr253715985a.52.1770371406180;
+        Fri, 06 Feb 2026 01:50:06 -0800 (PST)
+X-Received: by 2002:a05:620a:4494:b0:8ca:3d7c:e767 with SMTP id af79cd13be357-8caf0961959mr253713685a.52.1770371405725;
+        Fri, 06 Feb 2026 01:50:05 -0800 (PST)
+Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:fa9:b625:6a3a:d8c9])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4362974527fsm5012456f8f.31.2026.02.06.01.50.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Feb 2026 01:50:05 -0800 (PST)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: [GIT PULL] gpio fixes for v6.19
+Date: Fri,  6 Feb 2026 10:50:02 +0100
+Message-ID: <20260206095002.21317-1-bartosz.golaszewski@oss.qualcomm.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <tencent_ACA99123220028D078B20189509FD204BC0A@qq.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjA2MDA2NSBTYWx0ZWRfX9IgWuyRGnP2d
+ AqjXerTBJE0lOWc9bcRvVDwpB1ibvW3oHizD1SG0zEZ1iiF5yuJYK5VTbis4X/c4QkdcXD5k1GM
+ klEBiGe7HhnpKaXuwGS3eYw2NJL4v0t3YW6C0/nbOYxFTsvhpFzxT59GK9yz4c5Z0BEf+3o36Ai
+ RhASvBSs68FbsglFao4eR+VHBxJEvWxOBdP0uSCzSoGSn/JFQ01Jhy63mwVPJBIf3RTR59H5qPj
+ 9omj5FNaIhRcFUXrQqGSwsX9vizZj7tWHJkOOg7xzWHwB3aSKw7YPyLy4X2uuNAbc3GcG+vvPlZ
+ f60sGRYK5bvSSUba+lPMmKggJchsWymW1BkaFaQ65itzXDLm75V7VUIgqIXrx/9milQwLWyC2L2
+ 7/Xl3zON7HOaj6BWFiEpQSqlBMFIbKbkKrl9hxXFPueOY568dEb2Bm7QntcIpHRgdktQ8YClTNI
+ kOEHfsSybPwECrbH4WQ==
+X-Proofpoint-GUID: 6qZU9FFw7EqmHG3ePoPViiBCoCRSiOsO
+X-Authority-Analysis: v=2.4 cv=e4kLiKp/ c=1 sm=1 tr=0 ts=6985b94f cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=HzLeVaNsDn8A:10
+ a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22
+ a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8 a=lRp8J38LbmjWs85nxDYA:9
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-ORIG-GUID: 6qZU9FFw7EqmHG3ePoPViiBCoCRSiOsO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-06_03,2026-02-05_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 clxscore=1015 adultscore=0 malwarescore=0
+ bulkscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602060065
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31486-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-31487-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[qq.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:mid,oss.qualcomm.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:dkim];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qq.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,faiot.com:email]
-X-Rspamd-Queue-Id: 4A134FC037
+	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 6065EFC3DB
 X-Rspamd-Action: no action
 
-On Fri, Feb 06, 2026 at 01:31:10AM -0500, 434779359@qq.com wrote:
-> From: xuchen <bright.xu@faiot.com>
->=20
+Linus,
 
-This patch fails on so many levels that I am not going to provide any
-deep review. If you followed basic guidelines, basic patch submission
-guides (e.g. see Michael Opdenacker talk on this year FOSDEM), tutorials
-or docs, you would solve all of the trivialities.
+Please pull two more tiny GPIO fixes for this cycle.
 
-You did not read these basic docs, so do not be surprised if your
-contributions will be entirely ignored.
+Thanks,
+Bartosz
 
-Please use subject prefixes matching the subsystem. You can get them for
-example with 'git log --oneline -- DIRECTORY_OR_FILE' on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patch=
-es.html#i-for-patch-submitters
+The following changes since commit 18f7fcd5e69a04df57b563360b88be72471d6b62:
 
-There is no "supply" here.
+  Linux 6.19-rc8 (2026-02-01 14:01:13 -0800)
 
-Please run scripts/checkpatch.pl on the patches and fix reported
-warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
-patches and (probably) fix more warnings. Some warnings can be ignored,
-especially from --strict run, but the code here looks like it needs a
-fix. Feel free to get in touch if the warning is not clear.
+are available in the Git repository at:
 
-Please run standard kernel tools for static analysis, like coccinelle,
-smatch and sparse, and fix reported warnings. Also please check for
-warnings when building with W=3D1 for gcc and clang. Most of these
-commands (checks or W=3D1 build) can build specific targets, like some
-directory, to narrow the scope to only your code. The code here looks
-like it needs a fix. Feel free to get in touch if the warning is not
-clear.
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.19
 
-> Signed-off-by: xuchen <434779359@qq.com>
-> ---
->  drivers/nfc/pn7160/Kconfig    |  40 +++
->  drivers/nfc/pn7160/Makefile   |   6 +
->  drivers/nfc/pn7160/common.c   | 371 ++++++++++++++++++++++++
->  drivers/nfc/pn7160/common.h   |  36 +++
->  drivers/nfc/pn7160/i2c_drv.c  | 531 ++++++++++++++++++++++++++++++++++
->  drivers/nfc/pn7160/i2c_drv.h  |  26 ++
->  drivers/nfc/pn7160/platform.h | 164 +++++++++++
->  7 files changed, 1174 insertions(+)
->  create mode 100644 drivers/nfc/pn7160/Kconfig
->  create mode 100644 drivers/nfc/pn7160/Makefile
->  create mode 100644 drivers/nfc/pn7160/common.c
->  create mode 100644 drivers/nfc/pn7160/common.h
->  create mode 100644 drivers/nfc/pn7160/i2c_drv.c
->  create mode 100644 drivers/nfc/pn7160/i2c_drv.h
->  create mode 100644 drivers/nfc/pn7160/platform.h
->=20
-> diff --git a/drivers/nfc/pn7160/Kconfig b/drivers/nfc/pn7160/Kconfig
-> new file mode 100644
-> index 000000000000..fb497bc33059
-> --- /dev/null
-> +++ b/drivers/nfc/pn7160/Kconfig
-> @@ -0,0 +1,40 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +#
-> +# near field communication configuration
-> +#
-> +
-> +config NXP_NFC_I2C
-> +	tristate "NFC I2C Slave driver for NXP-NFCC"
-> +	depends on I2C
-> +	help
-> +	  This enables the NFC driver for PN71xx based devices.
-> +	  This is for I2C connected version. NCI protocol logic
-> +	  resides in the usermode and it has no other NFC dependencies.
-> +
-> +	  If unsure, say N.
-> +
-> +config NXP_NFC_SPI
-> +	tristate "NFC SPI Slave driver for NXP-NFCC"
-> +	depends on SPI
-> +	help
-> +	  This enables the NFC driver for PN71xx based devices.
-> +	  This is for SPI connected version. NCI protocol logic
-> +	  resides in the usermode and it has no other NFC dependencies.
-> +
-> +	  If unsure, say N.
-> +
-> +config NXP_NFC_RECOVERY
-> +	bool "NXP based NFC minimal FW update support"
-> +	depends on NXP_NFC_I2C && I2C
-> +	default y
-> +	help
-> +	  This enables NFC minimal FW update.
-> +	  This feature allows updating the firmware of NXP NFC controllers
-> +	  in recovery mode. It is required for field updates and bug fixes.
-> +	  The driver will handle the download mode and firmware transfer
-> +	  when this option is enabled.
-> +
-> +	  If unsure, say N.
-> +
-> +source "drivers/nfc/pn7160/Kconfig"
-> +endif
-> diff --git a/drivers/nfc/pn7160/Makefile b/drivers/nfc/pn7160/Makefile
-> new file mode 100644
-> index 000000000000..8c6f670eaa7a
-> --- /dev/null
-> +++ b/drivers/nfc/pn7160/Makefile
-> @@ -0,0 +1,6 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +#
-> +# Makefile for nfc devices
-> +#
-> +obj-m			+=3D nxpnfc_i2c.o
-> +nxpnfc_i2c-objs		:=3D common.o i2c_drv.o
-> diff --git a/drivers/nfc/pn7160/common.c b/drivers/nfc/pn7160/common.c
-> new file mode 100644
-> index 000000000000..cd433912764b
-> --- /dev/null
-> +++ b/drivers/nfc/pn7160/common.c
-> @@ -0,0 +1,371 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2015, The Linux Foundation. All rights reserved.
-> + * Copyright (C) 2019-2021 NXP
-> + */
-> +
-> +#include <linux/gpio.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/delay.h>
-> +#include <linux/module.h>
-> +#include <linux/fs.h>
-> +
-> +#include "common.h"
-> +
-> +int nfc_parse_dt(struct device *dev, struct platform_configs *nfc_config=
-s,
-> +		 uint8_t interface)
-> +{
-> +	struct device_node *np =3D dev->of_node;
-> +	struct platform_gpio *nfc_gpio =3D &nfc_configs->gpio;
-> +
-> +	if (!np) {
-> +		pr_err("%s: nfc of_node NULL\n", __func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	nfc_gpio->irq =3D -EINVAL;
-> +	nfc_gpio->dwl_req =3D -EINVAL;
-> +	nfc_gpio->ven =3D -EINVAL;
-> +
-> +	/* irq required for i2c based chips only */
-> +	if (interface =3D=3D PLATFORM_IF_I2C || interface =3D=3D PLATFORM_IF_SP=
-I) {
-> +		nfc_gpio->irq =3D of_get_named_gpio(np, DTS_IRQ_GPIO_STR, 0);
-> +		if ((!gpio_is_valid(nfc_gpio->irq))) {
-> +			pr_err("%s: irq gpio invalid %d\n", __func__,
-> +			       nfc_gpio->irq);
-> +			return -EINVAL;
-> +		}
-> +		pr_info("%s: irq %d\n", __func__, nfc_gpio->irq);
+for you to fetch changes up to e34f77b09080c86c929153e2a72da26b4f8947ff:
 
-Drivers use dev_xxx and there is no need to put __func__ everywhere.
+  gpio: loongson-64bit: Fix incorrect NULL check after devm_kcalloc() (2026-02-05 18:00:45 +0100)
 
-There is even no need for this debug print. Read coding style.
+----------------------------------------------------------------
+gpio fixes for v6.19
 
-This is such a poor code...
+- fix incorrect retval check in gpio-loongson-64bit
+- fix GPIO counting with ACPI
 
-> +	}
-> +	nfc_gpio->ven =3D of_get_named_gpio(np, DTS_VEN_GPIO_STR, 0);
-> +	if ((!gpio_is_valid(nfc_gpio->ven))) {
-> +		pr_err("%s: ven gpio invalid %d\n", __func__, nfc_gpio->ven);
-> +		return -EINVAL;
-> +	}
-> +	/* some products like sn220 does not required fw dwl pin */
-> +	nfc_gpio->dwl_req =3D of_get_named_gpio(np, DTS_FWDN_GPIO_STR, 0);
-> +	if ((!gpio_is_valid(nfc_gpio->dwl_req)))
-> +		pr_warn("%s: dwl_req gpio invalid %d\n", __func__,
-> +			nfc_gpio->dwl_req);
-> +
-> +	pr_info("%s: %d, %d, %d\n", __func__, nfc_gpio->irq, nfc_gpio->ven,
-> +		nfc_gpio->dwl_req);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(nfc_parse_dt);
+----------------------------------------------------------------
+Alban Bedel (1):
+      gpiolib: acpi: Fix gpio count with string references
 
-No, why the heck you export internal functions? This is not even needed.
+Chen Ni (1):
+      gpio: loongson-64bit: Fix incorrect NULL check after devm_kcalloc()
 
-=2E..
-
-
-> +void nfc_misc_unregister(struct nfc_dev *nfc_dev, int count)
-> +{
-> +	pr_debug("%s: entry\n", __func__);
-
-No, this is not accepted since long time.
-
-> +	device_destroy(nfc_dev->nfc_class, nfc_dev->devno);
-> +	cdev_del(&nfc_dev->c_dev);
-> +	class_destroy(nfc_dev->nfc_class);
-> +	unregister_chrdev_region(nfc_dev->devno, count);
-> +}
-> +EXPORT_SYMBOL(nfc_misc_unregister);
-> +
-> +int nfc_misc_register(struct nfc_dev *nfc_dev,
-> +		      const struct file_operations *nfc_fops, int count,
-> +		      char *devname, char *classname)
-> +{
-> +	int ret =3D 0;
-> +
-> +	ret =3D alloc_chrdev_region(&nfc_dev->devno, 0, count, devname);
-
-So you just added custom interface? No, NAK.
-
-
-> +	if (ret < 0) {
-> +		pr_err("%s: failed to alloc chrdev region ret %d\n", __func__,
-> +		       ret);
-> +		return ret;
-> +	}
-> +	nfc_dev->nfc_class =3D class_create(classname);
-> +	if (IS_ERR(nfc_dev->nfc_class)) {
-> +		ret =3D PTR_ERR(nfc_dev->nfc_class);
-> +		pr_err("%s: failed to register device class ret %d\n", __func__,
-> +		       ret);
-> +		unregister_chrdev_region(nfc_dev->devno, count);
-> +		return ret;
-> +	}
-> +	cdev_init(&nfc_dev->c_dev, nfc_fops);
-> +	ret =3D cdev_add(&nfc_dev->c_dev, nfc_dev->devno, count);
-> +	if (ret < 0) {
-> +		pr_err("%s: failed to add cdev ret %d\n", __func__, ret);
-> +		class_destroy(nfc_dev->nfc_class);
-> +		unregister_chrdev_region(nfc_dev->devno, count);
-> +		return ret;
-> +	}
-> +	nfc_dev->nfc_device =3D device_create(nfc_dev->nfc_class, NULL,
-> +					    nfc_dev->devno, nfc_dev, devname);
-> +	if (IS_ERR(nfc_dev->nfc_device)) {
-> +		ret =3D PTR_ERR(nfc_dev->nfc_device);
-> +		pr_err("%s: failed to create the device ret %d\n", __func__,
-> +		       ret);
-> +		cdev_del(&nfc_dev->c_dev);
-> +		class_destroy(nfc_dev->nfc_class);
-> +		unregister_chrdev_region(nfc_dev->devno, count);
-> +		return ret;
-> +	}
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(nfc_misc_register);
-> +
-> +/**
-> + * nfc_ioctl_power_states() - power control
-> + * @nfc_dev:    nfc device data structure
-> + * @arg:    mode that we want to move to
-> + *
-> + * Device power control. Depending on the arg value, device moves to
-> + * different states, refer platform.h for args
-> + *
-> + * Return: -ENOIOCTLCMD if arg is not supported, 0 in any other case
-> + */
-> +static int nfc_ioctl_power_states(struct nfc_dev *nfc_dev, unsigned long=
- arg)
-> +{
-> +	int ret =3D 0;
-> +	struct platform_gpio *nfc_gpio =3D &nfc_dev->configs.gpio;
-> +
-> +	if (arg =3D=3D NFC_POWER_OFF) {
-
-No. Look at other drivers how this is handled.
-
-NAK
-
-=2E..
-
-> diff --git a/drivers/nfc/pn7160/common.h b/drivers/nfc/pn7160/common.h
-> new file mode 100644
-> index 000000000000..2451db295fc8
-> --- /dev/null
-> +++ b/drivers/nfc/pn7160/common.h
-> @@ -0,0 +1,36 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2015, The Linux Foundation. All rights reserved.
-> + * Copyright (C) 2019-2021 NXP
-> + */
-> +
-> +#ifndef _COMMON_H_
-> +#define _COMMON_H_
-> +
-> +#include "platform.h"
-> +
-> +/* =E5=87=BD=E6=95=B0=E5=A3=B0=E6=98=8E */
-
-Super, to teraz b=C4=99dziemy pisa=C4=87 w naszych w=C5=82asnych j=C4=99zyk=
-ach? Uwa=C5=BCam to za
-niedopuszczalne.
-
-
-=2E..
-
-> +static const struct i2c_device_id nfc_i2c_dev_id[] =3D {
-> +	{ "nxpnfc", 0 },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, nfc_i2c_dev_id);
-> +
-> +static const struct of_device_id nfc_i2c_dev_match_table[] =3D {
-> +	{ .compatible =3D "nxp,nxpnfc" },
-
-Undocumented ABI. Really, you could have followed basic guidelines. This
-is not really acceptable.
-
-NAK
-
-Best regards,
-Krzysztof
-
+ drivers/gpio/gpio-loongson-64bit.c | 2 +-
+ drivers/gpio/gpiolib-acpi-core.c   | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
