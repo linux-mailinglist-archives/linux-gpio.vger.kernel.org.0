@@ -1,175 +1,138 @@
-Return-Path: <linux-gpio+bounces-31492-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31493-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GFA5CffjhWnCHwQAu9opvQ
-	(envelope-from <linux-gpio+bounces-31492-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 06 Feb 2026 13:52:07 +0100
+	id KC6DF4cGhmkRJQQAu9opvQ
+	(envelope-from <linux-gpio+bounces-31493-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 06 Feb 2026 16:19:35 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABB8BFDB98
-	for <lists+linux-gpio@lfdr.de>; Fri, 06 Feb 2026 13:52:06 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1E21FFA4D
+	for <lists+linux-gpio@lfdr.de>; Fri, 06 Feb 2026 16:19:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 46A883039305
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Feb 2026 12:50:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5B9B1304B828
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Feb 2026 15:16:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 142223B530D;
-	Fri,  6 Feb 2026 12:50:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B5393A0E8F;
+	Fri,  6 Feb 2026 15:16:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CxWs6Qdx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MIVIwEu6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7A63D3D0A
-	for <linux-gpio@vger.kernel.org>; Fri,  6 Feb 2026 12:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52273491C9;
+	Fri,  6 Feb 2026 15:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770382232; cv=none; b=m045zI27oavDdawNxZy3I0+KDF07Oz/3UiXZNGU8xfNovBrZzHOERJV6IBlTRnj9L/cPD1AAz8FPDk/9rGg/Im665KB7xet24ErDPfyy0c5v2axSu4H57JXkmIXXQOURwLtAHGLqEjVencZCClf7zCae9K41YplF7g44QXiOuLo=
+	t=1770390990; cv=none; b=ra6iCQce79Bn8BT7xBCK5m1vWUfn2weCCkOltd2LKFeZ6pUBYbwN6zqBXkZ861XgwRXoQM8ad4YI8+/cAin2hNP+BTRJlPWCC5xQTfR1x0ix+THxhhpfdOJ+mQXJ9v0VFeUW6W0rbBPB3m5o3bdIlAevBkE+VvsV+fDj3ygHRlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770382232; c=relaxed/simple;
-	bh=v/19RVbcpuTIGxbuXeb4ZtmU7F+LfHpGctBk8u5FM8A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d8yEekE13hb2z9DeVYkyfUmZYc4KQID49XbNsIf8swZx25MiE2spkj5bDjd7uopyfI7A9cox1r0DjhDWB7Mjs5NKy489GqvBUVdprubVCvkLhUch0Ph2FTYAfxu33Iff3OBLeqC0ybPcZ8z/oQa680Gu0crZZy4rVcQHSU5njIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CxWs6Qdx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8241AC116C6
-	for <linux-gpio@vger.kernel.org>; Fri,  6 Feb 2026 12:50:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770382232;
-	bh=v/19RVbcpuTIGxbuXeb4ZtmU7F+LfHpGctBk8u5FM8A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CxWs6QdxzudD+cADgI9kk72SezQfAEZu887Psbqkxq/9h9EtSPi0xz0EQHY+Me2aR
-	 G+caqMzOWs7+a5VY9Mq/L/iJ/fmxylOrWLefczBR76QI4/B8FxMFDO02u3bbh1AKnm
-	 0Kq7UeSAHZPS/8PpyqYqdEco8yD0D5TdXlXsS/a2uNgXtlWMDBgTRO9gzpZuUHeAb5
-	 eDXy58knIoq7MyqhxJtHMG47KZ8NfgvdiNnJx2KpQKPhGZQKNDrNKFHndEq4Ye2sDp
-	 zxJ5cOhaALpaBhtylTz8vMWCDWXSOVqNcJwUQANeTcFACvB7FRkAvw0/q8a/q579+a
-	 cp0RChCm7tO8A==
-Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-649ba412cd4so2043861d50.0
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Feb 2026 04:50:32 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWBCdExoCczXBxaT1+xrjgf4H/DLTl3kFyrxh5pat5+TRw3IiuQ94T3ebZlI1bnXO5HslWGr/Co28QN@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXNeSs+jRgset042RBra4YHbE6zLgPvb0CdA1/Pe0A9LY93J1o
-	xiqaIt1YoNVtzbsdaro6H43S7x3+4kjmYL4eN2rEmkNdVG3H8ZYXpkvZVht/LhbNF+sJQ73I+wu
-	M+9TwDMdAwrhTQnOFkZ/OxEM+XGfOA0U=
-X-Received: by 2002:a05:690e:40f:b0:649:c36a:a9d5 with SMTP id
- 956f58d0204a3-649f1ea5375mr1789712d50.32.1770382231852; Fri, 06 Feb 2026
- 04:50:31 -0800 (PST)
+	s=arc-20240116; t=1770390990; c=relaxed/simple;
+	bh=3vvmiiiE1VfjLapf/G5wUv8wgenri0Z6D3Oa265Bz5c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ICMX4R8MiB0qBI2V8jPK1wHMJs0x39jF/67PEaGE99/vL0qR/8AdFVKqlq+RckMM0jHiQP/ck2oDzOv/FXWK4FB2DKMNQErzmTz+sMNfUL6f81zXY4XmwIKaYwqRfaOJ/aomWYHvKoEtRh4qwAy2BE9OBKZja2ODSPwxPYKr9ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MIVIwEu6; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770390989; x=1801926989;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=3vvmiiiE1VfjLapf/G5wUv8wgenri0Z6D3Oa265Bz5c=;
+  b=MIVIwEu6dgdKbjY7cyOWCh87ewrV93XKodBnOzXeySbH7vgneHJkF20z
+   0me3LTTCRJSVEc9L51XQ+Pf7BgDcCZijTGfECAcNpFrRt7V+0WHNcnsqP
+   wmVM1SdT5bDr7bnmyaT63oZWCj6LkqEtUxYiH/T42iatFINu/Q7wdvp61
+   eEX9CFs/prUFiuyLwrCcDYafxLB8PaN9jaOIJ18p6j/6W73XHDNJfF18d
+   hBZgE8Al0+wzNHzCTD/zO4scmwONbjP4l9H4QUBm9qC55DUj2ZQn5ckWq
+   L8QZcb1M+WLzfn1SYojk1KCgoDVAxa7GOoIu4QLFQQP1Uz//DP1NNN7DU
+   Q==;
+X-CSE-ConnectionGUID: 6m7IJLvdSKeaJI4wRCvILw==
+X-CSE-MsgGUID: WTRdncTiSBWUYqANxFOD9Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11693"; a="89177121"
+X-IronPort-AV: E=Sophos;i="6.21,276,1763452800"; 
+   d="scan'208";a="89177121"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 07:16:29 -0800
+X-CSE-ConnectionGUID: Fdjqg5M9T4iFrp5X5sEhzQ==
+X-CSE-MsgGUID: zS31gO8bTcmrq2Y9ZTrNFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,276,1763452800"; 
+   d="scan'208";a="215415655"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.202])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2026 07:16:28 -0800
+Date: Fri, 6 Feb 2026 17:16:25 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andy@kernel.org>
+Subject: Re: [PATCH v1 1/1] pinctrl: intel: Align Copyright note with
+ corporate guidelines
+Message-ID: <aYYFyaNd8K4G9FTF@smile.fi.intel.com>
+References: <20260204080122.2300224-1-andriy.shevchenko@linux.intel.com>
+ <20260204123727.GP2275908@black.igk.intel.com>
+ <aYNHtw7QumfvgeX8@smile.fi.intel.com>
+ <CAD++jLnioN3Hb83Qf20PeQX=kpCKH4MQ1eLTeKuizm3tTHzUGw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260123-upstream_pinctrl_single-v2-0-40f8063cc5a2@aspeedtech.com>
- <CAD++jL=OXJdJZpjbo0_C03vcgPe5btum-J0uifvSJkMaUWG-=w@mail.gmail.com>
- <OSQPR06MB725257E71F0B7F7F1013263D8B98A@OSQPR06MB7252.apcprd06.prod.outlook.com>
- <20260206042215.GA5376@atomide.com> <OSQPR06MB7252ADEF2CB075BC40AD7DB68B66A@OSQPR06MB7252.apcprd06.prod.outlook.com>
- <CAD++jLm2a1-G7QQBb+u68DH_RT6kc4=vpqZWQcirvWrcRjw+5Q@mail.gmail.com> <OSQPR06MB7252D5BCD40BDF2A91FF41438B66A@OSQPR06MB7252.apcprd06.prod.outlook.com>
-In-Reply-To: <OSQPR06MB7252D5BCD40BDF2A91FF41438B66A@OSQPR06MB7252.apcprd06.prod.outlook.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 6 Feb 2026 13:50:21 +0100
-X-Gmail-Original-Message-ID: <CAD++jLkqpRrcgQ2JvbHJY3NQ=KHi8T91aOg2KvAmkVAXAEzH-A@mail.gmail.com>
-X-Gm-Features: AZwV_QjznRiO3R7PrXKwCTjHHZVk1DsnLknrKSsSuWnvcVQBwBcOJl2iW8ROiqE
-Message-ID: <CAD++jLkqpRrcgQ2JvbHJY3NQ=KHi8T91aOg2KvAmkVAXAEzH-A@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] pinctrl: single: bit-per-mux DT flexibility, probe
- robustness, and consistent pinconf offsets
-To: Billy Tsai <billy_tsai@aspeedtech.com>
-Cc: Tony Lindgren <tony@atomide.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>, BMC-SW <BMC-SW@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD++jLnioN3Hb83Qf20PeQX=kpCKH4MQ1eLTeKuizm3tTHzUGw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31493-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-31492-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	NEURAL_HAM(-0.00)[-0.999];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid,aspeedtech.com:email]
-X-Rspamd-Queue-Id: ABB8BFDB98
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[smile.fi.intel.com:mid,intel.com:email,intel.com:dkim]
+X-Rspamd-Queue-Id: D1E21FFA4D
 X-Rspamd-Action: no action
 
-On Fri, Feb 6, 2026 at 12:34=E2=80=AFPM Billy Tsai <billy_tsai@aspeedtech.c=
-om> wrote:
-> On Fri, Feb 6, 2026 at 8:24=E2=80=AFAM Billy Tsai <billy_tsai@aspeedtech.=
-com> wrote:
->
-> > > I understand the preference is to keep pinctrl-single minimal and mov=
-e
-> > > the bit-per-mux handling into a separate, more targeted driver built =
-on
-> > > top of the GENERIC_PINMUX/GENERIC_PINCONF helpers, rather than extend=
-ing
-> > > pinctrl-single itself.
-> > >
-> > > Based on that, I=E2=80=99ll look into refactoring this into a
-> > > pinctrl-single-bit style driver that covers bit-per-mux / bit-per-pin
-> > > layouts generically (including AST2700), while keeping pinctrl-single
-> > > focused on the simpler register models.
-> > >
-> > > One additional point I=E2=80=99d like to raise is the handling of pre=
--reserved
-> > > MMIO regions.
-> > >
-> > > On AST2700 systems, the SCU register range containing the pinctrl
-> > > registers is commonly reserved by a top-level syscon node or by firmw=
-are.
-> > > In this setup, devm_request_mem_region() can return -EBUSY even thoug=
-h the
-> > > registers are valid and intended to be shared, which currently causes=
- the
-> > > driver to fail probing and leaves pinmux unconfigured.
-> > >
-> > > When moving to a separate targeted driver, would the preferred approa=
-ch
-> > > be to treat this condition as a warning and continue probing, or is t=
-here
-> > > an alternative pattern you=E2=80=99d recommend for handling shared SC=
-U-style
-> > > register blocks in pinctrl drivers?
->
-> > Can't you just base this entire driver on syscon which uses regmap-mmio
-> > to abstract and solve this problem?
->
-> > The syscon is entirely designed as a singleton owning all registers
-> > and handing them out to subdrivers.
->
-> Agreed that syscon/regmap would be ideal. The main issue with
-> pinctrl-single is that it is fundamentally MMIO-based: it always
-> requests and ioremaps the register range and performs raw MMIO accesses,
-> with no regmap integration. Adapting it to act as a syscon consumer would
-> require a larger architectural rework of the driver.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
-rivers/pinctrl/pinctrl-single.c?h=3Dv6.19-rc6#n230
+On Fri, Feb 06, 2026 at 12:06:07PM +0100, Linus Walleij wrote:
+> On Wed, Feb 4, 2026 at 2:21 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Wed, Feb 04, 2026 at 01:37:27PM +0100, Mika Westerberg wrote:
 
-These comments were under the assumtion that you do what Tony & I
-suggested and create a completely new driver for these use cases.
+...
 
-Sorry if it was unclear.
+> > Lunus, can you apply this directly into your tree, please?
+> 
+> Yeah I just applied it!
 
-Yours,
-Linus Walleij
+Thank you!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
