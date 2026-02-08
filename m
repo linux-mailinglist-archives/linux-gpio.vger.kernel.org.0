@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-31512-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31513-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id HeZGLKFfiGkCpAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-31512-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 08 Feb 2026 11:04:17 +0100
+	id CESPLhBmiGnFpAQAu9opvQ
+	(envelope-from <linux-gpio+bounces-31513-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 08 Feb 2026 11:31:44 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A35D1084BB
-	for <lists+linux-gpio@lfdr.de>; Sun, 08 Feb 2026 11:04:17 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 609F81085F9
+	for <lists+linux-gpio@lfdr.de>; Sun, 08 Feb 2026 11:31:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2DDD43009B08
-	for <lists+linux-gpio@lfdr.de>; Sun,  8 Feb 2026 10:04:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0870C300B10A
+	for <lists+linux-gpio@lfdr.de>; Sun,  8 Feb 2026 10:31:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3E9133D6FA;
-	Sun,  8 Feb 2026 10:04:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13F2427510E;
+	Sun,  8 Feb 2026 10:31:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WfMKXudH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cMW9J1f3"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A454A38DF9;
-	Sun,  8 Feb 2026 10:04:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98A14086A;
+	Sun,  8 Feb 2026 10:31:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770545051; cv=none; b=sCEPLHLQSRclrxtEhu2OM3xg9ae+OkRrSv8/crtc+b63VH/0ktJghUav+qIb/+VHsBdl7A+yAiEOOZ09mdFCEo9XEmUToI522emccpyr1Zut4/QHjiR9VL2KZGnbrPxKjQen3Gzm4BACVKinFqtOApFEcnJDi3Xy4yMCyhXdTEY=
+	t=1770546699; cv=none; b=OwthnkqGeGIzxVnogtzFnJm4I2xAUn6ElaJa+U4D+Y3j9w1u+K9OYRcbuqUrqCMTUaQIBSQzJ+5On+lDSWw5M0N/vQ9gZvvyaDkuyjxCeWKgJg0WHNbgshuNzE50z8k6bjSrIGFVedb8XMjoXU21aW6m085V9b72LKHITdZCN8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770545051; c=relaxed/simple;
-	bh=Y2GVGXqeWViOcrFDuthfB/jCtTacj2goqd9wcyLkUqc=;
+	s=arc-20240116; t=1770546699; c=relaxed/simple;
+	bh=GUAXOcrm41ITrljNUEdNmAemB4EIj2N7q4Z7fBaiNO8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hcXbpzHhDZZMWbK3rcO521THFu1gbeliz3Im08qKZeKFSNI9J535pzb4y1HPdVeXHvS5um9Vb5F0iH554vusSJyuiwhzMCfRkoGd7F9h4jKtz/tqruWJLpKNYHJPfI6OWvwrdMltxT+sN/OxNhFdoXR8cM2vndZQ3GwHz6YP/Bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WfMKXudH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D223BC4CEF7;
-	Sun,  8 Feb 2026 10:04:08 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=m0WyEmXtD6gEJeeUBxSigCitM0Nas8PmBFoNb+dt0l/7jnpoYCm0S5mukjVMcdikk0iAoX78AXmDa50yhcpIpKWdkOa40R0gj9p28NGrGNHslOwNn6YF0aCBbuiIH8XtMUK7nAN4sEdtH6Re0QFVLclWbyaEg/VnmkMS6uz+FQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cMW9J1f3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DB49C4CEF7;
+	Sun,  8 Feb 2026 10:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770545051;
-	bh=Y2GVGXqeWViOcrFDuthfB/jCtTacj2goqd9wcyLkUqc=;
+	s=k20201202; t=1770546699;
+	bh=GUAXOcrm41ITrljNUEdNmAemB4EIj2N7q4Z7fBaiNO8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WfMKXudHw8+Bd4D/iEDodQozXVYF7ntUKohRMtxrhAk1suzuXBLwKMWOf+OSsXmNE
-	 maW4d5+46Cnh1BL8x22FnO2MLqt7QmA1SBko4YE2r9tPF/PeSymSdGkhINqhiC+aV0
-	 UTGA7Ln5kMIiN1/rHhl9CJdrDUcMCgQ6nqBCo16U9mLfRursLPtJHMxRE3sWN+67uk
-	 sJWR1fQXUWJAqKGTvBNEkfpIkz2EEmo5kJTFie/n3oaqvb2DBc2HITDjnRip91KO2y
-	 1mn7Ksy8BmDz9b8m6x9/RfluBVyMRtkviqbuNYzd970mu50Q4RaBFLRsdCnNuaC8Bw
-	 wBzmUbCrvcE9Q==
-Message-ID: <d15efd8e-079d-44e7-bc2e-63d21f219ade@kernel.org>
-Date: Sun, 8 Feb 2026 11:04:06 +0100
+	b=cMW9J1f39HYiWlkvSNw8muEYC99v3zB8fCt98m2AF4bS1RHuIaBoxB1iwdQmbI/Pz
+	 RswStGsi0Y0GXhMOfRZHCj01Tw0stq5JXpLVZTUEoBy6QaIyimCZWQssKYHeP5DuE3
+	 R2nn1C/Hu+a3vqAybQLNCEegdNHEdqzD1bwJHinEugAf8v6QHwn58FUlQ8TmfokVAc
+	 kk8a36xFCZqHoymsmUgfkC2nLtFoEeIJPcJB+t2JzhN3gLvJ0gAV9jtnDdHSzGyjRk
+	 ysaP+eeR1pJ+12hOm9m/pB1qhacEkZwBUX/qlj7XiLiuYE1PR0B4nbzgwsinEYf7kf
+	 EOOkFCKoGsKDg==
+Message-ID: <b9e275cf-7c16-47cf-9699-82bc79aa7f90@kernel.org>
+Date: Sun, 8 Feb 2026 11:31:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -53,20 +53,20 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: document the Eliza Top Level
- Mode Multiplexer
-To: Abel Vesa <abel.vesa@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Linus Walleij
- <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
+Subject: Re: [PATCH v4 7/7] ARM: dts: rockchip: rk3506: Add pinctrl and rmio
+ dtsi for rk3506
+To: Ye Zhang <ye.zhang@rock-chips.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260127-eliza-pinctrl-v2-0-1faf78efdc2e@oss.qualcomm.com>
- <20260127-eliza-pinctrl-v2-1-1faf78efdc2e@oss.qualcomm.com>
- <20260128-hot-camel-of-acumen-eef9f2@quoll>
- <5teqin7wl2n4spyqrt2glyeaxe5tm6zgk3tmzs2nhj4xedurrp@um3y6enwt7iz>
- <yhnnlbvcqgtaseoiarii4rfsmiem56hxsiuibf3kyux5ftebgy@dhkhij3qq7sk>
+ <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ tao.huang@rock-chips.com
+References: <20251227114957.3287944-1-ye.zhang@rock-chips.com>
+ <20251227114957.3287944-8-ye.zhang@rock-chips.com>
+ <ebb720f6-4756-437f-a71a-d94f45d732e8@kernel.org>
+ <543e7200-2126-490a-a7a8-4898362a910d@rock-chips.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -112,68 +112,65 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <yhnnlbvcqgtaseoiarii4rfsmiem56hxsiuibf3kyux5ftebgy@dhkhij3qq7sk>
+In-Reply-To: <543e7200-2126-490a-a7a8-4898362a910d@rock-chips.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31512-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31513-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.989];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 4A35D1084BB
+X-Rspamd-Queue-Id: 609F81085F9
 X-Rspamd-Action: no action
 
-On 29/01/2026 11:59, Abel Vesa wrote:
->>>
->>>> +
->>>> +  gpio-line-names:
->>>> +    maxItems: 185
->>>
->>> 186, your first GPIO is 0 and last is 185.
->>
->> Wait, are all of these wrong then?
->>
->> $ grep -r "gpio-line-names" Documentation/devicetree/bindings/pinctrl/qcom,sm8[3-7]50* -A 3 |grep maxItems:
->> Documentation/devicetree/bindings/pinctrl/qcom,sm8350-tlmm.yaml-    maxItems: 203
->> Documentation/devicetree/bindings/pinctrl/qcom,sm8450-tlmm.yaml-    maxItems: 210
->> Documentation/devicetree/bindings/pinctrl/qcom,sm8550-tlmm.yaml-    maxItems: 210
->> Documentation/devicetree/bindings/pinctrl/qcom,sm8650-tlmm.yaml-    maxItems: 210
->> Documentation/devicetree/bindings/pinctrl/qcom,sm8750-tlmm.yaml-    maxItems: 215
->> $ grep -r "UFS_RESET\"" drivers/pinctrl/qcom/pinctrl-sm8[3-7]50.c
->> drivers/pinctrl/qcom/pinctrl-sm8350.c:  PINCTRL_PIN(203, "UFS_RESET"),
->> drivers/pinctrl/qcom/pinctrl-sm8450.c:  PINCTRL_PIN(210, "UFS_RESET"),
->> drivers/pinctrl/qcom/pinctrl-sm8550.c:  PINCTRL_PIN(210, "UFS_RESET"),
->> drivers/pinctrl/qcom/pinctrl-sm8650.c:  PINCTRL_PIN(210, "UFS_RESET"),
->> drivers/pinctrl/qcom/pinctrl-sm8750.c:  PINCTRL_PIN(215, "UFS_RESET"),
+On 29/12/2025 10:00, Ye Zhang wrote:
+>>> +
+>>> +		/omit-if-no-ref/
+>>> +		rm_io28_sai0_sdi0: rm-io28-sai0-sdi0 {
+>>> +			rockchip,pins =
+>>> +				<1 RK_PC3 7 &pcfg_pull_none>;
+>>> +			rockchip,rmio-pins =
+>>> +				<0 28 54>;
+>>> +		};
+>> Why are you defining all pins? This is wrong, your driver has to do it,
+>> not DTS. All these definitions when not used are just pointless.
 > 
-> 185 is actually correct, because ufs_reset doesn't count.
+> This file is auto-generated to provide a complete set of RMIO configurations.   Our intention is to offer a generic library for all future board developers, so they can simply pick the needed nodes by phandle without manually looking up register values in the datasheet every time.   This improves usability and standardization.
+> 
+> We also used the /omit-if-no-ref/ tag, so this will strictly not increase the size of the compiled DTB binary at all.
+> 
+> Could you please reconsider if this  approach is acceptable given the usability benefits?
 
-But you wrote in other part you have 186 GPIOs. I don't mention here
-UFSRESET. If above is correct, then rest of your patch has some issue.
-Anyway, something needs fixing.
+What usability benefits? This is review and maintenance nightmare.
 
+> 
+> If you still consider the ~25k lines of source code bloat unacceptable for upstream, we will have to drop this generic dtsi file and let users (and ourselves) manually define only the required nodes when adding board support."
+> 
+
+I see no point in having such code. Upstream is not your SDK.
 
 Best regards,
 Krzysztof
