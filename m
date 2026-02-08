@@ -1,211 +1,634 @@
-Return-Path: <linux-gpio+bounces-31515-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31516-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gKFJOijBiGnHvgQAu9opvQ
-	(envelope-from <linux-gpio+bounces-31515-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 08 Feb 2026 18:00:24 +0100
+	id +EBlNAQaiWlW2gQAu9opvQ
+	(envelope-from <linux-gpio+bounces-31516-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Feb 2026 00:19:32 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58934109817
-	for <lists+linux-gpio@lfdr.de>; Sun, 08 Feb 2026 18:00:24 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id EAF7B10A968
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Feb 2026 00:19:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 479C030048D8
-	for <lists+linux-gpio@lfdr.de>; Sun,  8 Feb 2026 17:00:22 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 876D030015B8
+	for <lists+linux-gpio@lfdr.de>; Sun,  8 Feb 2026 23:19:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B76B92BEC57;
-	Sun,  8 Feb 2026 17:00:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A4F937BE71;
+	Sun,  8 Feb 2026 23:19:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="nOtLvGI+"
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="hXn9oCmS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013008.outbound.protection.outlook.com [52.101.83.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1B1224B15;
-	Sun,  8 Feb 2026 17:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770570018; cv=fail; b=jlpNEITlgSHolzrJ0KxQ/kKPYbRGkoKj/llHwJb3T5Wn6ZGRhCUg2zGhYvwtkZUNtyAQw49M2wslh89Zk96mPOdk59PMSstGvd9YayNl1I1LL49BcvhFalZU/lUucVtzDE5dwhUG5zDxh5FpR4qyd+7BvkM04Bx5QJKaVZ49Rd8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770570018; c=relaxed/simple;
-	bh=ZEUdxJZHXwED6XcI4MvS469dl57fSp9nVgOFz/79vPM=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=N4aNI63/Sdxun+I8no6zLLwirapejzbbt8iR0sqXauQXe7Obdch6hol5eMALxjcBljU1/js5AGrYU3y9u2duhEeL8WEuFTEwebXQpAvVd3HhJAJWn49LjDLp6VQMYGlZhzBpXNOGwkpS1Ztc4vobpySAeic4hgsY46HS1A6r5Vc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=nOtLvGI+; arc=fail smtp.client-ip=52.101.83.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VdVZ17SeIWrmXYaS3AfKK43ws1FeQNmisBno5+NAlz3a7JU8IxLZ8O1C6I0vRe/dS3k8v4pUleZ4bvHxxkp8zpRxRS68+bIKG9Mu3xEtXCsELdb6T+6bXaAZDAmJZy9TPy74tx4ScmoWAiYlUfSU23Yo9RX3CGfi7v6CUwpo61m1LlktBQZyvL9P2XDjrgbrtkb9Vlxt5P/05Dr604G2XvASExCKQQs+Fr6uWwbD/M+fdrY/foBvh/iYUktm8vhMdQU3JGaBCMNj4NJ6g8m3IbCpQ97muMHmTSvEa4f5GOHnwK3ivVkjG7UD83ilJyXX/KeLZ7dqFr2zKjvpD5cHxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZEUdxJZHXwED6XcI4MvS469dl57fSp9nVgOFz/79vPM=;
- b=Zk1sURcqUCYeaM6QiMxONkAl9RHJzCM9RUktEzgyU6N4YMzTb7fFju2KBM1KgoSIYcBmOaWw0YvSvpXmcb/wRxA60DTbpdvqlmK5unc4hl156rqOibh5fcXvYmL9bNHCZxVwjfQF80I/Pj0Kcr5XY4TgBf0lSiYVFbrnuzNJgJccop49ontT1yig98zqag6aObbEYHRpXIkHFP5KNBjMZzAYmZE/3M9WojPKUx9ltmbvbaj8aOkKLV8do+KAPh5U3eM388VLAhWoLC0RLaIt87YGwj1Dt73CW67fniiJg1AKZSEMkG+KSipWTZn5LNpEMP99a5PqQF1oALdRoXzbqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 195.60.68.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=axis.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZEUdxJZHXwED6XcI4MvS469dl57fSp9nVgOFz/79vPM=;
- b=nOtLvGI+ddbNv7gToTb7yIgDOj5gM21hxkukMv2uN8+o9hgetulDA9lH5B9/pzqyizS7ecS2GGfu9Jma1oLfDzNU5m5uK7knT37WudAWYy6+z7vIKgngXKS3vrpzMGyh1nml5vjOhzjx/ND7jxnrGrtxpjZI25B7utHEITrF2pI=
-Received: from DB7PR05CA0005.eurprd05.prod.outlook.com (2603:10a6:10:36::18)
- by MRWPR02MB12086.eurprd02.prod.outlook.com (2603:10a6:501:83::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.15; Sun, 8 Feb
- 2026 17:00:12 +0000
-Received: from DB5PEPF00014B97.eurprd02.prod.outlook.com
- (2603:10a6:10:36:cafe::e8) by DB7PR05CA0005.outlook.office365.com
- (2603:10a6:10:36::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9587.18 via Frontend Transport; Sun,
- 8 Feb 2026 17:00:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
- smtp.mailfrom=axis.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=axis.com;
-Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
- 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=195.60.68.100; helo=mail.axis.com; pr=C
-Received: from mail.axis.com (195.60.68.100) by
- DB5PEPF00014B97.mail.protection.outlook.com (10.167.8.235) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9587.10 via Frontend Transport; Sun, 8 Feb 2026 17:00:12 +0000
-Received: from pc52311-2249 (10.4.0.13) by se-mail10w.axis.com (10.20.40.10)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1748.39; Sun, 8 Feb
- 2026 18:00:11 +0100
-From: Waqar Hameed <waqar.hameed@axis.com>
-To: <434779359@qq.com>
-CC: Jonathan Cameron <jic23@kernel.org>, David Lechner
-	<dlechner@baylibre.com>, Nuno =?utf-8?Q?S=C3=A1?= <nuno.sa@analog.com>, Andy
- Shevchenko <andy@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
-	<broonie@kernel.org>, Linus Walleij <linusw@kernel.org>, "Bartosz
- Golaszewski" <brgl@kernel.org>, liufulin <frank.liu@faiot.com>,
-	<linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH] tof: Add VL53L4CX TOF drivers
-In-Reply-To: <tencent_326708D02875274DF25B10B91402B3828606@qq.com>
-	(434779359@qq.com's message of "Sat, 7 Feb 2026 17:42:35 +0800")
-References: <tencent_326708D02875274DF25B10B91402B3828606@qq.com>
-User-Agent: a.out
-Date: Sun, 8 Feb 2026 18:00:11 +0100
-Message-ID: <pnda4xj1884.a.out@axis.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A58C4086A
+	for <linux-gpio@vger.kernel.org>; Sun,  8 Feb 2026 23:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770592765; cv=none; b=l8pUi9s4k+Ool3DUX9G6fKdz87RShUoBNE/sf/zcAx3Qo2xo2Y+7lqA+84F/XRBh/YiYCAy5i5QFtWZTWFW7uTjkAJztvSVIO0JHCToEXFTmb7zVuQm211sbO6C5Rs3qa+9D2UGauigceeV+QfUA/7bj8eWpTwxT4GXpG4SDf8c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770592765; c=relaxed/simple;
+	bh=LRnuii2POXaY3gBTjCueGtwzVUhtQ2N1aQfKbUvIdys=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AFgdQ6orMxDdtU8jhQW7R1qkZ0U0pSPDmlZuq7dyqUb8toaBusoA9n4bqWLc99L2N5RPLheCUGuz4m/UOs9rv6gpzI03R+HN3/nHIc9rcxSrga+jpXVTQUBbMrqS1MVZTwndB+/dmkrs6wsHGTrkgtQ8+RN/ITRuuqvZRSztSqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=hXn9oCmS; arc=none smtp.client-ip=121.127.44.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1770592758;
+ bh=6DVcU5BMCxLiztutJKgnnqr8rLk1m/R23lPUOG4D52A=;
+ b=hXn9oCmSEWeCMKPZnJqi88oBDTHRMweaLz+CtF+F/bB1cD+13Fgv8dlJPT65Rs3+wIYMcOduD
+ RJ/XaXh8MCqjGFIdr2bgFFN2CEkc8qsb7By90ZIQ8k/LbfdX7KhskuAK+bqrKTUPnbMp3SmTECj
+ tStism7Wa6d46pCWcswY8ZeYJg8RWMJKwMGdbk1X5OM1qrGNSdxELVBKmTz71P/NLErEgkNk7t+
+ UOMoDn6vClxGR56v8kUFa51MRY1rU8H5XbqLP1EYG/RC+BHGUL6eucZ3aJKyDch4WeVuI4BZUyf
+ 0vUZ/KmiAUkayq5/yeDBT4JLrebfZB85z8DDgw2DQlEg==
+X-Forward-Email-ID: 698919f1a6487c2810b1e73c
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 121.127.44.73
+X-Forward-Email-Version: 2.6.2
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+Message-ID: <b2990fff-1b93-4a6a-9bfb-fae71ae72a33@kwiboo.se>
+Date: Mon, 9 Feb 2026 00:19:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: se-mail01w.axis.com (10.20.40.7) To se-mail10w.axis.com
- (10.20.40.10)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB5PEPF00014B97:EE_|MRWPR02MB12086:EE_
-X-MS-Office365-Filtering-Correlation-Id: bd8bba7c-baaf-4633-8af4-08de6733864d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|36860700013|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?UUDwUzBVK/2L5dgXLjvEXj8V+subOl+7w9BflfGV6keuADnKB5ROQRF6ObxW?=
- =?us-ascii?Q?BP7gwI4Xg54tkIfAPPY9E3EpQPAEyVFKHkKdmWHIUrNXbhJM1/jq+RidjGIS?=
- =?us-ascii?Q?9geLIohKlmLo46sD4XcDjmCIBgScDMoIxXDpmyHGzTUtxXX6i0+6f2aFtK03?=
- =?us-ascii?Q?CXMc8G13C42zW50i7eceMataKYxWNEqMgrmLNqiCzxdnR9nyaPFyhBw55pb4?=
- =?us-ascii?Q?4fX656T4H25O6uwu1OV6ROL6PyXJuXA/vbToqUHNZs3weNrX1qA/K8vofUip?=
- =?us-ascii?Q?txX/oqT0C/EBDkN9yC5idmiJCb+7jYJRTyX4ap+HzkqXhQ+ZMR/Fc8eFIfxs?=
- =?us-ascii?Q?VCQRKhBhoCnPOaFtlYoUW9jI9/iJyaq9axEDNhtvISTVTL0QvZLqyJGtyoQs?=
- =?us-ascii?Q?8nebwG+Ae9+B4bDOZY7C/AKklvsX5YwPuKTlUKQyKOFCoOxZY1sqApdIPVPX?=
- =?us-ascii?Q?J2u7p0i48iaHVbajld3tUVkOhk3MXky3OI5B+8Bx7Le7vqxjmIxnsteQgZHn?=
- =?us-ascii?Q?w5GmBVf8PuQ8pAF41YclYjCFeZAOOmTvx04Hr2uCr5ixE4AZUsy3YSalKw8u?=
- =?us-ascii?Q?BwVzk0Ff0cgvJrwYpuDQudr6Dy/eMFL3jX+I81jqo00V8mO6D3wN0sqscpr8?=
- =?us-ascii?Q?SNtLHqtuCACmZnM5neJRRIJgh8UdNrKboZZJLjU7pEU6oO4Pc51WpW/mtu4A?=
- =?us-ascii?Q?hp923vp/SOvpYlQk5YQQ7dQ28UsFdKuIdaZwbEyhnDAuz/bR2LsiM3XZHMPB?=
- =?us-ascii?Q?R+wU2qOX1YQ23tADnQZYKyimGQuid2/dlDu8F1C3oRL2GpjtNYvZdI59rwaN?=
- =?us-ascii?Q?o8CiJ9eHmmk02nN0eN5x6D+qS+uJFgD8t4X7KtlAuGRsayxizwuUNuykXiK5?=
- =?us-ascii?Q?axSKFRxmqbnay8oE17p0FY6uWiWXZOYmqcTyTy3EDI3HO/Tl4NE3RDxwzzTt?=
- =?us-ascii?Q?GfB/XbopR3kpzV7Fr4YPakHW9uBhF5F9rxoOPYVuOV1kVkOce/dxemTHeL5r?=
- =?us-ascii?Q?SV/jV8B1Aq+Ests2ZQbIj66sVqVH0mpDfiH+PUQ4OAxEplisu+hIgynLB44t?=
- =?us-ascii?Q?AdNDxkFsoxmZaFtRMJfk/MfjJec2hHxpfuBEESkQ7zi2zwPdtPNP3h2ewc7E?=
- =?us-ascii?Q?ztIetC0X2HaQypJq0BkoAsJqt7KArFc2CUxurNbAmdRhZa/K8crBmP5alD5C?=
- =?us-ascii?Q?bJLWKgKs58vRl8Vy+KzFC4AmTs0TRX7mPCJxVZgvyL8fp/QB2JfmMGBhHvuH?=
- =?us-ascii?Q?LvxRVA9uqbEq9HvqNvEMSdxAFP3UWlxSqGv++Xjwr8dnUFcSkaUVPuCPqiE8?=
- =?us-ascii?Q?iXH/MdwE3Io7T8LBQ/INGp9LzPZuZ5hY/IhhZePufbU2/Q8Psko7vUi0x07r?=
- =?us-ascii?Q?Snsm2AcvUwL9cm9Pew4Ohs3X/YJZuc6YPiUMM+mbRUsu+gmC0BThGWHTn014?=
- =?us-ascii?Q?xt1z7mojiofe4S+xYlbkQuf64B8QAuseu07VSmP8Ie3/wCRNZqtfR1bVpULg?=
- =?us-ascii?Q?2QQk90edFGb/nMZpmH8EJWoAzyHE/E3btl7WbmiSI4YoB620jNBvDRzeJTcS?=
- =?us-ascii?Q?y09qrbUfDvWV6AqIhYk7Cy50XE6aS2w26zWM0RFTyn3MHaBDEz30nuAfuqE/?=
- =?us-ascii?Q?8sHdOS12bju8gUxS+BdPOdMOAxkcXvdMntFnuhGL5OYo9SUi3ahblTBwbNFi?=
- =?us-ascii?Q?pgYWdA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	YQPDZM9+fLajjhFLUgonhMT5zKoYlPJV9gpNFWYhEuMOA1gS3UjRnLcoRbkkYVh7onfqD5iUAaLC5UwfRnNP3RJ6BximaCBXY4C9GXZJ8oZC0dr9XXP2ImZKk3phJa2GuhgP1Brhjfg9JAN74FzRR25K0WFOZ+F9TFeZ/5kbrORvojoR9IAhIYBzNqeU0AH7sR3X4loJZFYc4oMKQR/m/zMspSUlY0LTcP9m681Cf/+bDxpeEIrMi2rxUYp1GBlnxY7GOplbVg33evZx7VSb1uFuDFkmKx63Ndv93i00JfVLQ8ziubWIKSkMIp8JLoXmrWYYr8yB4qico7U5loeMC8mWoAbZRhuyknNce4At9HbnOSLY1NNrZAe76zEkPtuMmvAOh1Mo/oj+HmrbX8CmrmFRIxvJpT9GjWDFlyWA/N2ScyXt6Wh+N/BfKp8yQNdx
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2026 17:00:12.6921
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd8bba7c-baaf-4633-8af4-08de6733864d
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB5PEPF00014B97.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MRWPR02MB12086
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] pinctrl: rockchip: Add RV1103B pinctrl support
+To: Fabio Estevam <festevam@gmail.com>
+Cc: linusw@kernel.org, heiko@sntech.de, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, Fabio Estevam <festevam@nabladev.com>
+References: <20260207130642.2833312-1-festevam@gmail.com>
+ <20260207130642.2833312-2-festevam@gmail.com>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20260207130642.2833312-2-festevam@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.35 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[axis.com,none];
-	R_DKIM_ALLOW(-0.20)[axis.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kwiboo.se,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[kwiboo.se:s=fe-e1b5cab7be];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	TAGGED_FROM(0.00)[bounces-31515-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31516-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[qq.com];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FREEMAIL_CC(0.00)[kernel.org,baylibre.com,analog.com,gmail.com,faiot.com,vger.kernel.org];
-	DKIM_TRACE(0.00)[axis.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[waqar.hameed@axis.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.977];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jonas@kwiboo.se,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kwiboo.se:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 58934109817
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: EAF7B10A968
 X-Rspamd-Action: no action
 
-On Sat, Feb 07, 2026 at 17:42 +0800 434779359@qq.com wrote:
+Hi Fabio,
 
-> From: liufulin <frank.liu@faiot.com>
->
-> This patch adds support for the vl53l4cx tof ic
-> ICs used in Qualcomm reference designs
->
-> Signed-off-by: liufulin <frank.liu@faiot.com>
+On 2/7/2026 2:06 PM, Fabio Estevam wrote:
+> From: Fabio Estevam <festevam@nabladev.com>
+> 
+> Add pinctrl support for the RV1103B.
+> 
+> Based on the 5.10 Rockchip vendor kernel driver.
+> 
+> Signed-off-by: Fabio Estevam <festevam@nabladev.com>
+> ---
+> Changes since v1:
+>  - None.
+>  
+>  drivers/pinctrl/pinctrl-rockchip.c | 313 ++++++++++++++++++++++++++++-
+>  drivers/pinctrl/pinctrl-rockchip.h |   1 +
+>  2 files changed, 313 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+> index 2fc67aeafdb3..092ce4cac9cf 100644
+> --- a/drivers/pinctrl/pinctrl-rockchip.c
+> +++ b/drivers/pinctrl/pinctrl-rockchip.c
+> @@ -467,6 +467,22 @@ static const struct pinctrl_ops rockchip_pctrl_ops = {
+>   * Hardware access
+>   */
+>  
+> +static struct rockchip_mux_recalced_data rv1103b_mux_recalced_data[] = {
+> +	{
+> +		.num = 1,
+> +		.pin = 6,
+> +		.reg = 0x10024,
+> +		.bit = 8,
+> +		.mask = 0xf
+> +	}, {
+> +		.num = 1,
+> +		.pin = 7,
+> +		.reg = 0x10024,
+> +		.bit = 12,
+> +		.mask = 0xf
+> +	},
+> +};
+> +
+>  static struct rockchip_mux_recalced_data rv1108_mux_recalced_data[] = {
+>  	{
+>  		.num = 1,
+> @@ -1172,6 +1188,9 @@ static int rockchip_get_mux(struct rockchip_pin_bank *bank, int pin)
+>  	else
+>  		regmap = info->regmap_base;
+>  
+> +	if (ctrl->type == RV1103B && bank->bank_num == 2 && pin >= 12)
+> +		return 0;
 
-[...]
+There should not be any need for this special handling here, please use
+e.g. IOMUX_UNROUTED or IOMUX_GPIO_ONLY flags for the gpio2 bank.
 
-Many of my initial comments have already been stated by Jonathan and
-Andy. I still want to emphasize to run `scripts/checkpatch.pl` on your
-patches (this one has 6761 errors and 11804 warnings...) before sending
-them. (Shouldn't we have CI jobs for this?).
+It also only looks like up to 12 or 13 pins are usable/routed so that
+should also be properly described in the bank info.
 
-Some other general comments: please include a description of the device
-and the chosen driver design. The linked datasheet doesn't explain all
-the functionality used in this driver ([1] mentions some "host API"?).
-Moreover, it seems like this driver is not originally written by you (by
-looking at the copyright headers) and thus has some history that might
-need some explanation?
+> +
+>  	if (ctrl->type == RK3506) {
+>  		if (bank->bank_num == 1)
+>  			regmap = info->regmap_ioc1;
+> @@ -1298,6 +1317,9 @@ static int rockchip_set_mux(struct rockchip_pin_bank *bank, int pin, int mux)
+>  	else
+>  		regmap = info->regmap_base;
+>  
+> +	if (ctrl->type == RV1103B && bank->bank_num == 2 && pin >= 12)
+> +		return 0;
 
-[1] ch 3, p. 6, https://www.st.com/resource/en/datasheet/vl53l0x.pdf
+Same here, existing flags and/or limit the number of pins exposed for
+the bank.
+
+> +
+>  	if (ctrl->type == RK3506) {
+>  		if (bank->bank_num == 1)
+>  			regmap = info->regmap_ioc1;
+> @@ -1495,6 +1517,214 @@ static int px30_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
+>  	return 0;
+>  }
+>  
+> +#define RV1103B_DRV_BITS_PER_PIN		8
+> +#define RV1103B_DRV_PINS_PER_REG		2
+> +#define RV1103B_DRV_GPIO0_A_OFFSET		0x40100
+> +#define RV1103B_DRV_GPIO0_B_OFFSET		0x50110
+> +#define RV1103B_DRV_GPIO1_A01_OFFSET		0x140
+> +#define RV1103B_DRV_GPIO1_A67_OFFSET		0x1014C
+> +#define RV1103B_DRV_GPIO2_OFFSET		0x30180
+> +#define RV1103B_DRV_GPIO2_SARADC_OFFSET		0x3080C
+> +
+> +static int rv1103b_calc_drv_reg_and_bit(struct rockchip_pin_bank *bank,
+> +				       int pin_num, struct regmap **regmap,
+> +				       int *reg, u8 *bit)
+> +{
+> +	struct rockchip_pinctrl *info = bank->drvdata;
+> +	int ret = 0;
+> +
+> +	*regmap = info->regmap_base;
+> +	switch (bank->bank_num) {
+> +	case 0:
+> +		if (pin_num < 7)
+> +			*reg = RV1103B_DRV_GPIO0_A_OFFSET;
+> +		else if (pin_num > 7 && pin_num < 14)
+> +			*reg = RV1103B_DRV_GPIO0_B_OFFSET - 0x10;
+
+Why define a constant and then substract another constant from it?
+
+> +		else
+> +			ret = -EINVAL;
+> +		break;
+> +
+> +	case 1:
+> +		if (pin_num < 6)
+> +			*reg = RV1103B_DRV_GPIO1_A01_OFFSET;
+> +		else if (pin_num >= 6 && pin_num < 23)
+> +			*reg = RV1103B_DRV_GPIO1_A67_OFFSET - 0xc;
+> +		else if (pin_num >= 24 && pin_num < 30)
+> +			*reg = RV1103B_DRV_GPIO1_A67_OFFSET - 0xc;
+> +		else
+> +			ret = -EINVAL;
+
+The bank should probably only report up to 29 pins?
+
+> +		break;
+> +
+> +	case 2:
+> +		if (pin_num < 12) {
+> +			*reg = RV1103B_DRV_GPIO2_OFFSET;
+> +		} else if (pin_num >= 16) {
+> +			ret = -EINVAL;
+
+Similar here, gpio2 only seem to support up to 16 pins.
+
+> +		} else {
+> +			*reg = RV1103B_DRV_GPIO2_SARADC_OFFSET;
+> +			*bit = 10;
+> +
+> +			return 0;
+> +		}
+> +		break;
+> +
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	if (ret) {
+> +		dev_err(info->dev, "unsupported bank_num %d pin_num %d\n", bank->bank_num, pin_num);
+> +
+> +		return ret;
+> +	}
+> +
+> +	*reg += ((pin_num / RV1103B_DRV_PINS_PER_REG) * 4);
+> +	*bit = pin_num % RV1103B_DRV_PINS_PER_REG;
+> +	*bit *= RV1103B_DRV_BITS_PER_PIN;
+> +
+> +	return 0;
+> +}
+> +
+> +#define RV1103B_PULL_BITS_PER_PIN		2
+> +#define RV1103B_PULL_PINS_PER_REG		8
+> +#define RV1103B_PULL_GPIO0_A_OFFSET		0x40200
+> +#define RV1103B_PULL_GPIO0_B_OFFSET		0x50204
+> +#define RV1103B_PULL_GPIO1_A01_OFFSET		0x210
+> +#define RV1103B_PULL_GPIO1_A67_OFFSET		0x10210
+> +#define RV1103B_PULL_GPIO2_OFFSET		0x30220
+> +#define RV1103B_PULL_GPIO2_SARADC_OFFSET	0x3080C
+> +
+> +static int rv1103b_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
+> +					int pin_num, struct regmap **regmap,
+> +					int *reg, u8 *bit)
+> +{
+> +	struct rockchip_pinctrl *info = bank->drvdata;
+> +	int ret = 0;
+> +
+> +	*regmap = info->regmap_base;
+> +	switch (bank->bank_num) {
+> +	case 0:
+> +		if (pin_num < 7)
+> +			*reg = RV1103B_PULL_GPIO0_A_OFFSET;
+> +		else if (pin_num > 7 && pin_num < 14)
+> +			*reg = RV1103B_PULL_GPIO0_B_OFFSET - 0x4;
+> +		else
+> +			ret = -EINVAL;
+> +		break;
+> +
+> +	case 1:
+> +		if (pin_num < 6)
+> +			*reg = RV1103B_PULL_GPIO1_A01_OFFSET;
+> +		else if (pin_num >= 6 && pin_num < 23)
+> +			*reg = RV1103B_PULL_GPIO1_A67_OFFSET;
+> +		else if (pin_num >= 24 && pin_num < 30)
+> +			*reg = RV1103B_PULL_GPIO1_A67_OFFSET;
+> +		else
+> +			ret = -EINVAL;
+> +		break;
+> +
+> +	case 2:
+> +		if (pin_num < 12) {
+> +			*reg = RV1103B_PULL_GPIO2_OFFSET;
+> +		} else if (pin_num >= 16) {
+> +			ret = -EINVAL;
+> +		} else {
+> +			*reg = RV1103B_PULL_GPIO2_SARADC_OFFSET;
+> +			*bit = 13;
+> +
+> +			return 0;
+> +		}
+> +		break;
+> +
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	if (ret) {
+> +		dev_err(info->dev, "unsupported bank_num %d pin_num %d\n", bank->bank_num, pin_num);
+> +
+> +		return ret;
+> +	}
+> +
+> +	*reg += ((pin_num / RV1103B_PULL_PINS_PER_REG) * 4);
+> +	*bit = pin_num % RV1103B_PULL_PINS_PER_REG;
+> +	*bit *= RV1103B_PULL_BITS_PER_PIN;
+> +
+> +	return 0;
+> +}
+> +
+> +#define RV1103B_SMT_BITS_PER_PIN		1
+> +#define RV1103B_SMT_PINS_PER_REG		8
+> +#define RV1103B_SMT_GPIO0_A_OFFSET		0x40400
+> +#define RV1103B_SMT_GPIO0_B_OFFSET		0x50404
+> +#define RV1103B_SMT_GPIO1_A01_OFFSET		0x410
+> +#define RV1103B_SMT_GPIO1_A67_OFFSET		0x10410
+> +#define RV1103B_SMT_GPIO2_OFFSET		0x30420
+> +#define RV1103B_SMT_GPIO2_SARADC_OFFSET		0x3080C
+> +
+> +static int rv1103b_calc_schmitt_reg_and_bit(struct rockchip_pin_bank *bank,
+> +					   int pin_num,
+> +					   struct regmap **regmap,
+> +					   int *reg, u8 *bit)
+> +{
+> +	struct rockchip_pinctrl *info = bank->drvdata;
+> +	int ret = 0;
+> +
+> +	*regmap = info->regmap_base;
+> +	switch (bank->bank_num) {
+> +	case 0:
+> +		if (pin_num < 7)
+> +			*reg = RV1103B_SMT_GPIO0_A_OFFSET;
+> +		else if (pin_num > 7 && pin_num < 14)
+> +			*reg = RV1103B_SMT_GPIO0_B_OFFSET - 0x4;
+> +		else
+> +			ret = -EINVAL;
+> +		break;
+> +
+> +	case 1:
+> +		if (pin_num < 6)
+> +			*reg = RV1103B_SMT_GPIO1_A01_OFFSET;
+> +		else if (pin_num >= 6 && pin_num < 23)
+> +			*reg = RV1103B_SMT_GPIO1_A67_OFFSET;
+> +		else if (pin_num >= 24 && pin_num < 30)
+> +			*reg = RV1103B_SMT_GPIO1_A67_OFFSET;
+> +		else
+> +			ret = -EINVAL;
+> +		break;
+> +
+> +	case 2:
+> +		if (pin_num < 12) {
+> +			*reg = RV1103B_SMT_GPIO2_OFFSET;
+> +		} else if (pin_num >= 16) {
+> +			ret = -EINVAL;
+> +		} else {
+> +			*reg = RV1103B_SMT_GPIO2_SARADC_OFFSET;
+> +			*bit = 8;
+> +
+> +			return 0;
+> +		}
+> +		break;
+> +
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	if (ret) {
+> +		dev_err(info->dev, "unsupported bank_num %d pin_num %d\n", bank->bank_num, pin_num);
+> +
+> +		return ret;
+> +	}
+> +
+> +	*reg += ((pin_num / RV1103B_SMT_PINS_PER_REG) * 4);
+> +	*bit = pin_num % RV1103B_SMT_PINS_PER_REG;
+> +	*bit *= RV1103B_SMT_BITS_PER_PIN;
+> +
+> +	return 0;
+> +}
+> +
+>  #define RV1108_PULL_PMU_OFFSET		0x10
+>  #define RV1108_PULL_OFFSET		0x110
+>  #define RV1108_PULL_PINS_PER_REG	8
+> @@ -2982,6 +3212,9 @@ static int rockchip_get_drive_perpin(struct rockchip_pin_bank *bank,
+>  	u8 bit;
+>  	int drv_type = bank->drv[pin_num / 8].drv_type;
+>  
+> +	if (ctrl->type == RV1103B && pin_num >= 12)
+> +		drv_type = DRV_TYPE_IO_LEVEL_2_BIT;
+
+Why is this not properly handled with correct drv_type
+
+> +
+>  	ret = ctrl->drv_calc_reg(bank, pin_num, &regmap, &reg, &bit);
+>  	if (ret)
+>  		return ret;
+> @@ -3043,6 +3276,11 @@ static int rockchip_get_drive_perpin(struct rockchip_pin_bank *bank,
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (ctrl->type == RV1103B && bank->bank_num == 2 && pin_num >= 12) {
+> +		data = data >> 10;
+> +		return data & 0x3;
+
+This is only for gpio2 pin 12 and 13 if I read code correct.
+
+Maybe using drv_calc_reg ops and possible a new DRV_TYPE flag could
+remove all the soc-specific hacks/workarounds?
+
+> +	}
+> +
+>  	data >>= bit;
+>  	data &= (1 << rmask_bits) - 1;
+>  
+> @@ -3071,7 +3309,8 @@ static int rockchip_set_drive_perpin(struct rockchip_pin_bank *bank,
+>  		rmask_bits = RK3588_DRV_BITS_PER_PIN;
+>  		ret = strength;
+>  		goto config;
+> -	} else if (ctrl->type == RK3506 ||
+> +	} else if (ctrl->type == RV1103B ||
+> +		   ctrl->type == RK3506 ||
+>  		   ctrl->type == RK3528 ||
+>  		   ctrl->type == RK3562 ||
+>  		   ctrl->type == RK3568) {
+> @@ -3182,6 +3421,12 @@ static int rockchip_set_drive_perpin(struct rockchip_pin_bank *bank,
+>  			ret = strength;
+>  		}
+>  	}
+> +
+> +	if (ctrl->type == RV1103B && bank->bank_num == 2 && pin_num >= 12) {
+> +		rmask_bits = 2;
+> +		ret = strength;
+> +	}
+> +
+>  	/* enable the write to the equivalent lower bits */
+>  	data = ((1 << rmask_bits) - 1) << (bit + 16);
+>  	rmask = data | (data >> 16);
+> @@ -3236,6 +3481,7 @@ static int rockchip_get_pull(struct rockchip_pin_bank *bank, int pin_num)
+>  				? PIN_CONFIG_BIAS_PULL_PIN_DEFAULT
+>  				: PIN_CONFIG_BIAS_DISABLE;
+>  	case PX30:
+> +	case RV1103B:
+>  	case RV1108:
+>  	case RK3188:
+>  	case RK3288:
+> @@ -3251,6 +3497,9 @@ static int rockchip_get_pull(struct rockchip_pin_bank *bank, int pin_num)
+>  		pull_type = bank->pull_type[pin_num / 8];
+>  		data >>= bit;
+>  		data &= (1 << RK3188_PULL_BITS_PER_PIN) - 1;
+> +
+> +		if (ctrl->type == RV1103B && bank->bank_num == 2 && pin_num >= 12)
+> +			pull_type = 1;
+
+Please include comment similar to below descibing why these pins differs.
+
+>  		/*
+>  		 * In the TRM, pull-up being 1 for everything except the GPIO0_D3-D6,
+>  		 * where that pull up value becomes 3.
+> @@ -3297,6 +3546,7 @@ static int rockchip_set_pull(struct rockchip_pin_bank *bank,
+>  		ret = regmap_write(regmap, reg, data);
+>  		break;
+>  	case PX30:
+> +	case RV1103B:
+>  	case RV1108:
+>  	case RV1126:
+>  	case RK3188:
+> @@ -3312,6 +3562,8 @@ static int rockchip_set_pull(struct rockchip_pin_bank *bank,
+>  	case RK3576:
+>  	case RK3588:
+>  		pull_type = bank->pull_type[pin_num / 8];
+> +		if (ctrl->type == RV1103B && bank->bank_num == 2 && pin_num >= 12)
+> +			pull_type = 1;
+
+Same here as the RK3568 workaround, please include a comment why this is
+needed.
+
+>  		ret = -EINVAL;
+>  		for (i = 0; i < ARRAY_SIZE(rockchip_pull_list[pull_type]);
+>  			i++) {
+> @@ -3417,6 +3669,11 @@ static int rockchip_get_schmitt(struct rockchip_pin_bank *bank, int pin_num)
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (ctrl->type == RV1103B && bank->bank_num == 2 && pin_num >= 12) {
+> +		data >>= 8;
+> +		return data & 0x3;
+
+This workaround should probably be moved into the switch and use
+schmitt_calc_reg ops to return correct bit=8.
+
+> +	}
+> +
+>  	data >>= bit;
+>  	switch (ctrl->type) {
+>  	case RK3562:
+> @@ -3473,6 +3730,12 @@ static int rockchip_set_schmitt(struct rockchip_pin_bank *bank,
+>  		}
+>  	}
+>  
+> +	if (ctrl->type == RV1103B && bank->bank_num == 2 && pin_num >= 12) {
+> +		data = 0x3 << (bit + 16);
+> +		rmask = data | (data >> 16);
+> +		data |= ((enable ? 0x3 : 0) << bit);
+> +	}
+
+Similar here, please move to the switch.
+
+Looks like there are some RK3506 code that also should be cleaned up
+here :-)
+
+> +
+>  	return regmap_update_bits(regmap, reg, rmask, data);
+>  }
+>  
+> @@ -3579,6 +3842,7 @@ static bool rockchip_pinconf_pull_valid(struct rockchip_pin_ctrl *ctrl,
+>  	case RK3066B:
+>  		return pull ? false : true;
+>  	case PX30:
+> +	case RV1103B:
+>  	case RV1108:
+>  	case RV1126:
+>  	case RK3188:
+> @@ -4319,6 +4583,51 @@ static struct rockchip_pin_ctrl px30_pin_ctrl = {
+>  		.schmitt_calc_reg	= px30_calc_schmitt_reg_and_bit,
+>  };
+>  
+> +static struct rockchip_pin_bank rv1103b_pin_banks[] = {
+> +	PIN_BANK_IOMUX_FLAGS_OFFSET_DRV_FLAGS(0, 32, "gpio0",
+
+The code above and the 32 here does not seem to match, how many pins are
+routed? It does not seem to be more than 12-14.
+
+> +				    IOMUX_WIDTH_4BIT,
+> +				    IOMUX_WIDTH_4BIT,
+> +				    IOMUX_WIDTH_4BIT,
+> +				    IOMUX_WIDTH_4BIT,
+> +				    0x40000, 0x50008, 0x50010, 0x50018,
+> +				    DRV_TYPE_IO_LEVEL_8_BIT,
+> +				    DRV_TYPE_IO_LEVEL_8_BIT,
+> +				    DRV_TYPE_IO_LEVEL_8_BIT,
+> +				    DRV_TYPE_IO_LEVEL_8_BIT),
+> +	PIN_BANK_IOMUX_FLAGS_OFFSET_DRV_FLAGS(1, 32, "gpio1",
+
+Here it is possible all are routed but there are some checks for < 30
+above.
+
+> +				    IOMUX_WIDTH_4BIT,
+> +				    IOMUX_WIDTH_4BIT,
+> +				    IOMUX_WIDTH_4BIT,
+> +				    IOMUX_WIDTH_4BIT,
+> +				    0x20, 0x10028, 0x10030, 0x10038,
+> +				    DRV_TYPE_IO_LEVEL_8_BIT,
+> +				    DRV_TYPE_IO_LEVEL_8_BIT,
+> +				    DRV_TYPE_IO_LEVEL_8_BIT,
+> +				    DRV_TYPE_IO_LEVEL_8_BIT),
+> +	PIN_BANK_IOMUX_FLAGS_OFFSET_DRV_FLAGS(2, 32, "gpio2",
+
+This should likely only be 16 pins.
+
+Regards,
+Jonas
+
+> +				    IOMUX_WIDTH_4BIT,
+> +				    IOMUX_WIDTH_4BIT,
+> +				    IOMUX_WIDTH_4BIT,
+> +				    IOMUX_WIDTH_4BIT,
+> +				    0x30040, 0x30048, 0x30050, 0x30058,
+> +				    DRV_TYPE_IO_LEVEL_8_BIT,
+> +				    DRV_TYPE_IO_LEVEL_8_BIT,
+> +				    DRV_TYPE_IO_LEVEL_8_BIT,
+> +				    DRV_TYPE_IO_LEVEL_8_BIT),
+> +};
+> +
+> +static struct rockchip_pin_ctrl rv1103b_pin_ctrl __maybe_unused = {
+> +	.pin_banks		= rv1103b_pin_banks,
+> +	.nr_banks		= ARRAY_SIZE(rv1103b_pin_banks),
+> +	.label			= "RV1103B-GPIO",
+> +	.type			= RV1103B,
+> +	.iomux_recalced		= rv1103b_mux_recalced_data,
+> +	.niomux_recalced	= ARRAY_SIZE(rv1103b_mux_recalced_data),
+> +	.pull_calc_reg		= rv1103b_calc_pull_reg_and_bit,
+> +	.drv_calc_reg		= rv1103b_calc_drv_reg_and_bit,
+> +	.schmitt_calc_reg	= rv1103b_calc_schmitt_reg_and_bit,
+> +};
+> +
+>  static struct rockchip_pin_bank rv1108_pin_banks[] = {
+>  	PIN_BANK_IOMUX_FLAGS(0, 32, "gpio0", IOMUX_SOURCE_PMU,
+>  					     IOMUX_SOURCE_PMU,
+> @@ -4955,6 +5264,8 @@ static struct rockchip_pin_ctrl rk3588_pin_ctrl = {
+>  static const struct of_device_id rockchip_pinctrl_dt_match[] = {
+>  	{ .compatible = "rockchip,px30-pinctrl",
+>  		.data = &px30_pin_ctrl },
+> +	{ .compatible = "rockchip,rv1103b-pinctrl",
+> +		.data = &rv1103b_pin_ctrl },
+>  	{ .compatible = "rockchip,rv1108-pinctrl",
+>  		.data = &rv1108_pin_ctrl },
+>  	{ .compatible = "rockchip,rv1126-pinctrl",
+> diff --git a/drivers/pinctrl/pinctrl-rockchip.h b/drivers/pinctrl/pinctrl-rockchip.h
+> index 4f4aff42a80a..bb0e803e3b8a 100644
+> --- a/drivers/pinctrl/pinctrl-rockchip.h
+> +++ b/drivers/pinctrl/pinctrl-rockchip.h
+> @@ -185,6 +185,7 @@
+>  
+>  enum rockchip_pinctrl_type {
+>  	PX30,
+> +	RV1103B,
+>  	RV1108,
+>  	RV1126,
+>  	RK2928,
+
 
