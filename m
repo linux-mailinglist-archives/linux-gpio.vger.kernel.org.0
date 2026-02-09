@@ -1,166 +1,145 @@
-Return-Path: <linux-gpio+bounces-31532-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31533-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id PHCbF8briWk+EQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-31532-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 09 Feb 2026 15:14:30 +0100
+	id oA0cLIzyiWnGEgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-31533-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Feb 2026 15:43:24 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D62821101FF
-	for <lists+linux-gpio@lfdr.de>; Mon, 09 Feb 2026 15:14:29 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4347C110C68
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Feb 2026 15:43:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7884630022A9
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Feb 2026 14:14:24 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E72EA301751F
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Feb 2026 14:43:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E65A237A48B;
-	Mon,  9 Feb 2026 14:14:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4912837AA8A;
+	Mon,  9 Feb 2026 14:43:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SqTrQEMX"
+	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="MPb+5w+p"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C01376483;
-	Mon,  9 Feb 2026 14:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6FF36828A;
+	Mon,  9 Feb 2026 14:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770646462; cv=none; b=eEyrpBvdlmM4aNgGbW+9itqsaapXC+0LS7SSgirMlpgsnyuDYOPQUyeX8kYY+aKt3XcqqlrYkOgOyIp3+hFRCDP/1M+1119kQhWOhNuoV/dOMbAF0vOAuhVf2xQKm3VEFl8ZOV5O4m7s48HZfErfjzYo+YNkQEh97TSRaYlujM8=
+	t=1770648200; cv=none; b=cVwyOBZcr49pN9OgSH/fON0R2PnW+XufyMwC5uwPpJMSRHTY75Km7aQ5Grtb4+8sLJ9uU9h3KOWjWU8sYpGYfh5zjqWzYf5IyoWZL+61wM4B5kyS9IxtirdMxUoEevEw0xY5BQoc7z2CLoO3mGhshI6D5YJ6xYc/WiEeWdFQOU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770646462; c=relaxed/simple;
-	bh=TC8wOH//l5OFTeYZRZg4IyHUH1RXxBt9zgmVpvY5vJo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=riJFS0UTZnl+wEWbNkHjUc+4pd7NsdnBmRZIpAr5j85aBqsOLH0GwYUG1t8GAm4v8IfC+p1KBNHZ4HQZJE/NVNYQJFyKdUDy0h36rZ+lGLXtDnZRUIoMtJ8tx2nFKZSyYOhFelEP4RhEI2KoxlBwBGYplq6kxrLeIBOS1WzF5co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SqTrQEMX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7684AC116C6;
-	Mon,  9 Feb 2026 14:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770646462;
-	bh=TC8wOH//l5OFTeYZRZg4IyHUH1RXxBt9zgmVpvY5vJo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SqTrQEMXSd0B4S+abemY37dPl1FshRQenT+6i+qNwXLKJ1Xkicux8xG2qzyNBwwvM
-	 r+fAhBIcO5Nb9pxF197TSA4lga2iaN4ZLgIfo9H4i6YV+FNRVEldCeivXJ5Uxi9JdX
-	 VjD9Qca6Bn08Yb0fUDMheX7kIg4LlDLu8q06Y+feSsBuMt5uRzIFvhmc1VAgcufO/h
-	 5E7m2WeIFjxStdRIFi7g70zp2EHT8C2W58nJ0xo94uuGPYB3f73eXGYfDZg0ETEuUH
-	 nLkE7uLj9NaateBbQAdnxLcYvV62VT2Z2I1bQuJewBKkx8+ndWoYqDH1PrkMmcWh50
-	 qir+u78hGXQhA==
-Message-ID: <d9789fec-e27a-48ba-ab2f-334a49aee8a4@kernel.org>
-Date: Mon, 9 Feb 2026 15:14:17 +0100
+	s=arc-20240116; t=1770648200; c=relaxed/simple;
+	bh=CsthQDxMaqbHWoPY9LcM4B7QQkY7QXBkgFtYZobMS/c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lv02xj567F1R7xWporwo1nXepo3kVeYlvbKm4xFWzKal5J76cmfcJwWZkch3tO9xEDE47dR23JO3VusmeB6xw+aIqty0SbhJSphjcHWeEea5X4spfYJiotSju1E8d/chFoosOPe0jc+57P7YGtF2JGeRtHl1n4RbaDwqwr/TpFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=MPb+5w+p; arc=none smtp.client-ip=74.50.62.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+Received: from localhost (84-231-236-236.elisa-mobile.fi [84.231.236.236])
+	by mail5.25mail.st (Postfix) with ESMTPSA id 653A6617D6;
+	Mon,  9 Feb 2026 14:42:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
+	s=25mailst; t=1770648191;
+	bh=CsthQDxMaqbHWoPY9LcM4B7QQkY7QXBkgFtYZobMS/c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MPb+5w+p0ov7fKu9479y8r6ViGMAqbmyKP8Rbj+tw9o5rvAe2iWbOiKS12fkEwZVq
+	 +14ZwF8sqtMUSWMGGcO0kjXwMyBdpxA7fcS02OA13S7/MFlqneIHJxa5VbZFUcklqk
+	 IIRfFwoxI2Jv2Gfe3HTiWK7JxIJ4w0/YutSWgM4Xdxvtq+63MScVDJTT5a5sa/KagL
+	 WQmKdDSJIJ+a0Iu3XxP6EnCzcHTFp9zxq0Kf67KjiF3gr8NacMDxFLivNh42+gxkkZ
+	 y/vdtETnUeRouLV+JRk0AQBlg5x/K24NLkI+zm3vdYE6bb+btwObM/f11Detz8ziPD
+	 /Kg3+acK7mAJw==
+Date: Mon, 9 Feb 2026 16:42:50 +0200
+From: Tony Lindgren <tony@atomide.com>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Billy Tsai <billy_tsai@aspeedtech.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
+	BMC-SW <BMC-SW@aspeedtech.com>
+Subject: Re: [PATCH v2 0/3] pinctrl: single: bit-per-mux DT flexibility,
+ probe robustness, and consistent pinconf offsets
+Message-ID: <20260209144250.GC5376@atomide.com>
+References: <20260123-upstream_pinctrl_single-v2-0-40f8063cc5a2@aspeedtech.com>
+ <CAD++jL=OXJdJZpjbo0_C03vcgPe5btum-J0uifvSJkMaUWG-=w@mail.gmail.com>
+ <OSQPR06MB725257E71F0B7F7F1013263D8B98A@OSQPR06MB7252.apcprd06.prod.outlook.com>
+ <20260206042215.GA5376@atomide.com>
+ <OSQPR06MB7252ADEF2CB075BC40AD7DB68B66A@OSQPR06MB7252.apcprd06.prod.outlook.com>
+ <CAD++jLm2a1-G7QQBb+u68DH_RT6kc4=vpqZWQcirvWrcRjw+5Q@mail.gmail.com>
+ <OSQPR06MB7252D5BCD40BDF2A91FF41438B66A@OSQPR06MB7252.apcprd06.prod.outlook.com>
+ <CAD++jLkqpRrcgQ2JvbHJY3NQ=KHi8T91aOg2KvAmkVAXAEzH-A@mail.gmail.com>
+ <OSQPR06MB72520084144325D548E36AD78B65A@OSQPR06MB7252.apcprd06.prod.outlook.com>
+ <CAD++jLkB26XNAosUdD2BigLw+=Hd6+VBsmv0fHawQ25e8rQhrQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] dt-bindings: pinctrl: qcom,sm8450-lpass-lpi-pinctrl:
- Add SA8775P and QCS8300 pinctrl
-To: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>,
- Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linusw@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Srinivas Kandagatla <srini@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260209134529.725573-1-mohammad.rafi.shaik@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20260209134529.725573-1-mohammad.rafi.shaik@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD++jLkB26XNAosUdD2BigLw+=Hd6+VBsmv0fHawQ25e8rQhrQ@mail.gmail.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[atomide.com:s=25mailst];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31532-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	DMARC_NA(0.00)[atomide.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31533-lists,linux-gpio=lfdr.de];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[atomide.com:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[tony@atomide.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email]
-X-Rspamd-Queue-Id: D62821101FF
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,aspeedtech.com:email]
+X-Rspamd-Queue-Id: 4347C110C68
 X-Rspamd-Action: no action
 
-On 09/02/2026 14:45, Mohammad Rafi Shaik wrote:
-> Document compatible for Qualcomm SA8775P and QCS8300 SoC LPASS TLMM
-> pin controller, fully compatible with previous SM8450 generation
-> (same amount of pins and functions).
+* Linus Walleij <linusw@kernel.org> [260209 09:51]:
+> On Mon, Feb 9, 2026 at 3:25 AM Billy Tsai <billy_tsai@aspeedtech.com> wrote:
 > 
-> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-> ---
-> changes in [v4]:
->  - Fixed dt-binding errors reported by Rob.
->  - Link to V3: https://lore.kernel.org/all/176951636220.1230755.4335541729269457450.robh@kernel.org/
+> > To make sure I align with your expectations:
+> > 1) Would you prefer the new driver to be fully standalone (using the
+> >    GENERIC_PIN* helpers + syscon/regmap-mmio), rather than trying to
+> >    refactor/export helpers from pinctrl-single?
 > 
-> changes in [v3]:
->  - Removed the duplicate driver code patch as suggested by Krzysztof.
->  - Reused the existing SM8490 pinctrl, which is fully compatible with SA8775P and QCS8300.
+> Yes. Conor improved these helpers so now it should be possible
+> to use these to do a very simple and slim driver for what you
+> want to do.
+> 
+> >    Action item: Introduce a new pinctrl-single-bit.c driver and DT
+> >    binding, which can also cover the existing bit-per-mux logic currently
+> >    in pinctrl-single.c.
+> 
+> Sounds about right.
+> 
+> > 2) For the syscon/regmap hookup, is it acceptable to add a syscon phandle
+> >    property in DT (e.g. "syscon = <&scu>;") for the new driver to obtain
+> >    the regmap, or do you prefer a different binding/property name?
+> 
+> This works for me.
 
-Where did you explain dropping review tag? This is important and
-documented explicitly in submitting patches and Qualcomm internal guide.
+Great, sounds good to me too!
 
-If you silently drop it, what incentive I have to perform review now?
+Thanks,
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-
-Best regards,
-Krzysztof
+Tony
 
