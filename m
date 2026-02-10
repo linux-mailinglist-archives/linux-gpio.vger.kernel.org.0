@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-31544-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31545-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iOmTJzfhimlyOgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-31544-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Feb 2026 08:41:43 +0100
+	id CCouMYzhimlyOgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-31545-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Feb 2026 08:43:08 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEC09118024
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Feb 2026 08:41:42 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45B6311803C
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Feb 2026 08:43:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 37B1230095F2
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Feb 2026 07:41:40 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 118F4302F689
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Feb 2026 07:43:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A80703358A3;
-	Tue, 10 Feb 2026 07:41:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06D673358A3;
+	Tue, 10 Feb 2026 07:43:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pLOX7UcC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="roVAtPtB"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6781F19EED3;
-	Tue, 10 Feb 2026 07:41:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3F632C926;
+	Tue, 10 Feb 2026 07:43:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770709296; cv=none; b=c1NAxaLDOo+SPHXR+SIri5nssyv2LCSwq60/VcE7o3OrMARRJmvcsuEfNBz4/uc+q3Dyig1iMlWY/4IfbhAlIm9lplNFWN0SkRGczIGbWXR83gCRo4C7UQNQUr/lBNFg2jzJvtpzgg/jru7pZqx4uN/IDv4Trbrk+GBkXbNs/XE=
+	t=1770709383; cv=none; b=idu37XvMF1GNY8kVvV82lwCD7/gLjk1GmWfGIPZfAS2FXaqNWfKUg2l0k/qjIrX8qzZ9pEkiMYNj26opBACNQRh1hLHG7+mDSDko3LE96022Lf00ogXSRyEeWWCXLRxKaTq5UFanYoP5rglcVHIdaOxARrJCu8FBvarkanNi9G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770709296; c=relaxed/simple;
-	bh=10GKuEcAgkY0yWL5TN46kmxXr60I+AZNuhtIUxoWnSY=;
+	s=arc-20240116; t=1770709383; c=relaxed/simple;
+	bh=SuD40GTxhiLcBBjjT8Usds1jaokLubBZ9+YgUt6zCvQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=hM6GlRtTFwYoyWC+ae6J6T7iJiEzV9lM9yuxXgfdUqj5k3uts6XnbKqwenKbxl/ZQrFaOxQCbqDjMxVjjFe7j5n2nPOF6yZLEDIEl4SwAwj+mXDcMcy1uGVC4k2BCaqhH7fUfzlS8jJ+PDzUzTbENSdsF9kuZ4F1JMQSxi3oNyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pLOX7UcC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D101CC116C6;
-	Tue, 10 Feb 2026 07:41:33 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=rc1gWLoX6zbWBYwMQWS6KjczRnGkbAZbmcteAyKLVbPBmdt/n2VS4fB93kSaFKvqOwxL+naqi6r0aZcBJgEuxroSOJCStyGAo96mBwdtONuJYx6jV8kY1YZeDQG5CXhoZ/NZhmPh9SYYQUP+e/2ZCqI5BGSizJTYBdcMi+25ulo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=roVAtPtB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 542E7C116C6;
+	Tue, 10 Feb 2026 07:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770709296;
-	bh=10GKuEcAgkY0yWL5TN46kmxXr60I+AZNuhtIUxoWnSY=;
+	s=k20201202; t=1770709383;
+	bh=SuD40GTxhiLcBBjjT8Usds1jaokLubBZ9+YgUt6zCvQ=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=pLOX7UcCDkfj4rQ0GyytWdDnReigh3gIZyB+Dzo7MKGZ64NpUKhZRNQ36yC50P8px
-	 g3WAD7UzyGY+8j0rHHB/K4LDNpM6l09o2XfcYKDiOp/cuegxNZZmDMKAZ4RAchYlDi
-	 d/ySS6yKd+XZ6W6XxO+BNOI0gyTdZZNJvuZhfP2Pwk7M8bRh+O9OQ0mZJJLo35LT2A
-	 d/bbJKVBeAXn74AqWVbMxJXR2gAJzoW99rmSDuAixI8hPrXQGm/dqA7WeW/I8BuUll
-	 HWuZcocjofK0cYeaC5gNO8T3Y1AN34/KAmIS5AEdKLwdfr/OWM1buytwE5voj/jtJK
-	 Q0mt6pLaZV9Ow==
-Message-ID: <4f89cc2a-6e30-4ee3-bb95-f2df25b5b88f@kernel.org>
-Date: Tue, 10 Feb 2026 08:41:32 +0100
+	b=roVAtPtBgy2H/3B6R035WqI9dEHYhdyp4t7CdvjFse+Q4S4gTMDQa/V5Y9kOWqSJy
+	 Drzw/qHnVIdWMVCfnyjy/PoNd/EFXfIdripeoVzAGd1s9Mgbitl0EBss0ml7gt7S25
+	 HUAqz/5jm0z9KKXxyQtLxiyPHqVaaXFLnfUjOh1fIWUCMOuunmmXwsJYb9XQbxf1Yz
+	 UP46d3vbM/gWNrHEAwJTZaVgAFskBXcQCLu6JkPsc0ZRP3spUwles4OvYQkj8tr/JU
+	 Y4DGM8vq21aqXPF7WePZQyY/jAB5SurWnu/njjdYbu4HJRD/zNk/gIidV5lrX4oKwS
+	 7GV7DnB/fJVaA==
+Message-ID: <2b3d9528-56d0-407f-bd3f-e805cfdea5e3@kernel.org>
+Date: Tue, 10 Feb 2026 08:42:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: qcom: Add SDM670 LPI pinctrl
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: sdm670: add lpi pinctrl
 To: Richard Acayan <mailingradian@gmail.com>,
  Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linusw@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -61,7 +61,7 @@ To: Richard Acayan <mailingradian@gmail.com>,
  linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
  devicetree@vger.kernel.org
 References: <20260210021109.11906-1-mailingradian@gmail.com>
- <20260210021109.11906-2-mailingradian@gmail.com>
+ <20260210021109.11906-4-mailingradian@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -107,27 +107,27 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260210021109.11906-2-mailingradian@gmail.com>
+In-Reply-To: <20260210021109.11906-4-mailingradian@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31544-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31545-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_TO(0.00)[gmail.com,kernel.org,vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
@@ -136,68 +136,38 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: CEC09118024
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,17d43000:email,62b40000:email]
+X-Rspamd-Queue-Id: 45B6311803C
 X-Rspamd-Action: no action
 
 On 10/02/2026 03:11, Richard Acayan wrote:
-> Add the pin controller for the audio Low-Power Island (LPI) on SDM670.
-
-Subject: Missing "LPASS" before LPI. I really thought you just add TLMM...
-
+> The Snapdragon 670 has a separate TLMM for audio pins. Add the device
+> node for it.
 > 
 > Signed-off-by: Richard Acayan <mailingradian@gmail.com>
 > ---
->  .../qcom,sdm670-lpass-lpi-pinctrl.yaml        | 81 +++++++++++++++++++
->  1 file changed, 81 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdm670-lpass-lpi-pinctrl.yaml
+>  arch/arm64/boot/dts/qcom/sdm670.dtsi | 74 ++++++++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm670-lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sdm670-lpass-lpi-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..125f365d11fa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm670-lpass-lpi-pinctrl.yaml
-> @@ -0,0 +1,81 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/qcom,sdm670-lpass-lpi-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/arch/arm64/boot/dts/qcom/sdm670.dtsi b/arch/arm64/boot/dts/qcom/sdm670.dtsi
+> index b8a8dcbdfbe3..0da3e22ce402 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm670.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm670.dtsi
+> @@ -2273,5 +2273,79 @@ cpufreq_hw: cpufreq@17d43000 {
+>  
+>  			#freq-domain-cells = <1>;
+>  		};
 > +
-> +title: Qualcomm SDM670 SoC LPASS LPI TLMM
-> +
-> +maintainers:
-> +  - Richard Acayan <mailingradian@gmail.com>
-> +
-> +description:
-> +  Top Level Mode Multiplexer pin controller in the Low Power Audio SubSystem
-> +  (LPASS) Low Power Island (LPI) of Qualcomm SDM670 SoC.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,sdm670-lpass-lpi-pinctrl
-> +
-> +  reg:
-> +    items:
-> +      - description: LPASS LPI TLMM Control and Status registers
-> +
+> +		lpi_tlmm: pinctrl@62b40000 {
+> +			compatible = "qcom,sdm670-lpass-lpi-pinctrl";
+> +			reg = <0 0x62b40000 0 0x20000>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			gpio-ranges = <&lpi_tlmm 0 0 32>;
+> +			status = "disabled";
 
-Hm, no clocks? In most designs there has to be HW macro or HW codec
-vote. I see SDM660 does not have it either, but I think this might be
-exactly the same mistake.
-
-
-> +patternProperties:
-> +  "-state$":
-> +    oneOf:
-> +      - $ref: "#/$defs/qcom-sdm670-lpass-state"
-> +      - patternProperties:
-> +          "-pins$":
-> +            $ref: "#/$defs/qcom-sdm670-lpass-state"
-> +        additionalProperties: false
-> +
-
-
+Why is this disabled? We disable blocks needing external resources or
+being busses/connectors. This is not the case.
 
 Best regards,
 Krzysztof
