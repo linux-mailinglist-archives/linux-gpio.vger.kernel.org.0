@@ -1,152 +1,126 @@
-Return-Path: <linux-gpio+bounces-31555-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31556-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +CilKuRTi2kMUAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-31555-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Feb 2026 16:51:00 +0100
+	id UEm6FaRWi2lIUAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-31556-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Feb 2026 17:02:44 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65DE011CBD1
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Feb 2026 16:51:00 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE29911CE44
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Feb 2026 17:02:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 56F833014683
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Feb 2026 15:50:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2BE32301C15B
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Feb 2026 16:02:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E96573859C4;
-	Tue, 10 Feb 2026 15:50:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B46F6366DDE;
+	Tue, 10 Feb 2026 16:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVOIEg6+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1E3B1DF970;
-	Tue, 10 Feb 2026 15:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7787F15624B
+	for <linux-gpio@vger.kernel.org>; Tue, 10 Feb 2026 16:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770738650; cv=none; b=DiFigO+72GyCdq3zpeIOudQB+fkLHcDIHoe2tU9oorxsS6u2cyE1CoihdoOskD1+7cDBK0pCQIhVV0KfRCcJlyxMAERTNAUV56v8uIxWNxZ54l+6u8hma426p5bbFIirE8tKBct/plmVfmW3MRQWCQLXBK02jyeD/BgAo8sPel4=
+	t=1770739352; cv=none; b=Bk6C29p0AfTRkaTLLKHtgorjUOyb7KfCLp8/HAY4S0A/vvnd6cwrGftqZeTxWOAPkoNCx9eKIFpB2k+qCgerLuFDAPKCWa69MGgO/c3qwYWTf81pIfhJ97cyuzuY/ahxHDujFEpcg8X1Nf2bzlwh0pfqSRCPzHy+fs3Xj1ApQv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770738650; c=relaxed/simple;
-	bh=7JUi+OMO7WaXxsmWScbHoICpLOvTDMMszEg+PGE+fh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=af/5fJF/z9o13s6BDHiWFi/O/9WjpTZtPpFvNXwYJsQ/w4j7itDgqlNXwVdXB3Sl+ihlZIWaP4RzejpKS3BU6vnjynBKxhmC5UZbYCAF1DT9jkUZ78OzBejQHqUbuSQSktbttfCvNBR+udpjgbg/xHc+TNwXG+zRc6VvNduL4c4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1vpq0Z-0000iT-00; Tue, 10 Feb 2026 16:50:35 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 07982C0084; Tue, 10 Feb 2026 16:50:20 +0100 (CET)
-Date: Tue, 10 Feb 2026 16:50:20 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Brian Masney <bmasney@redhat.com>
-Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>, linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-	Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-rtc@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, linux-serial@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	linux-watchdog@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: Re: [PATCH v2 00/16] MIPS: move pic32.h header file from asm to
- platform_data
-Message-ID: <aYtTvEmuaaOxmdAR@alpha.franken.de>
-References: <20260112-mips-pic32-header-move-v2-0-927d516b1ff9@redhat.com>
- <aYsnsecPa8bWMbaA@redhat.com>
+	s=arc-20240116; t=1770739352; c=relaxed/simple;
+	bh=fec3McZNvmJ47b77yyWd0YxDuShcKCVYivhxRV31paQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Tu4TvvNupX+FyTugzYdfkFjw/hg3Ecd+IT/VZsiv16SxyV2ThKhz2RYhbGzteAamX9DAiESQWrBW4nctQ5DaaZEh7Dq+a6cKQ0Q8SEjhS/ZCFuromflgvB0NoLyi/2h3a8glOHeaeQ63QlgxQCIiDdSnKIhpRe3Rvp6KsIg5mmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVOIEg6+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D2ADC116C6;
+	Tue, 10 Feb 2026 16:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770739352;
+	bh=fec3McZNvmJ47b77yyWd0YxDuShcKCVYivhxRV31paQ=;
+	h=From:Date:Subject:To:Cc:From;
+	b=QVOIEg6+gMBzSIyTk2vLkdFeRAPNwNP4l9bm/Wvri9CaCcPQ8PdiOkPmwRuimHB7L
+	 7t8MnXdd25EqATAIGhxrdxwXzOcY7vjxw+UQlcc+rKXew1CuVJO1CoAfkDlEmqspGE
+	 bH/2ujiXDQbSrU4zcrIChc472FBVLmhlBe7TewYTKeX5qgS6r8jbE8ZJFoP3y2ZH0w
+	 o56BSm5ygRXq2F5udW76SuaB0hxsz8PU1hxW3ZX7oyyhfHltwN+tcGCQ4lLAfq8ogV
+	 Iw8W90LiOQhZXGWDvEsLTtcX84Oow5Vw2X7fGC3PnMdIJORM6Ybyglfhii/pF6qtTi
+	 VXFbr5KPWGn3w==
+From: Linus Walleij <linusw@kernel.org>
+Date: Tue, 10 Feb 2026 17:02:29 +0100
+Subject: [PATCH] pinctrl: Fix spelling problem
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aYsnsecPa8bWMbaA@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260210-speling-fix-v1-1-c980b9bf873c@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x2MQQqAIBAAvyJ7bkEtgvpKdDDdbCFMXIhA+nvSc
+ QZmKggVJoFZVSh0s/CVGphOgT9cioQcGoPVdtTWaJRMJ6eIOz+4ucl7E4bg+wCtyIWa/m/L+r4
+ fDYQSk10AAAA=
+X-Change-ID: 20260210-speling-fix-ba9cc1d4dc3d
+To: lijiazi <jqqlijiazi@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linusw@kernel.org>
+X-Mailer: b4 0.14.3
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.46 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-31556-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	RSPAMD_EMAILBL_FAIL(0.00)[linusw.kernel.org:query timed out];
+	RCPT_COUNT_THREE(0.00)[3];
 	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[tsbogend@alpha.franken.de,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31555-lists,linux-gpio=lfdr.de];
-	DMARC_NA(0.00)[franken.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[alpha.franken.de:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 65DE011CBD1
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: EE29911CE44
 X-Rspamd-Action: no action
 
-On Tue, Feb 10, 2026 at 07:42:25AM -0500, Brian Masney wrote:
-> Hi Thomas,
-> 
-> On Mon, Jan 12, 2026 at 05:47:54PM -0500, Brian Masney wrote:
-> > There are currently some pic32 MIPS drivers that are in tree, and are
-> > only configured to be compiled on the MIPS pic32 platform. There's a
-> > risk of breaking some of these drivers when migrating drivers away from
-> > legacy APIs. It happened to me with a pic32 clk driver.
-> > 
-> > Let's go ahead and move the pic32.h from the asm to the platform_data
-> > include directory in the tree. This will make it easier, and cleaner to
-> > enable COMPILE_TEST for some of these pic32 drivers. To do this requires
-> > updating some includes, which I do at the beginning of this series.
-> > 
-> > This series was compile tested on a centos-stream-10 arm64 host in two
-> > different configurations:
-> > 
-> > - native arm64 build with COMPILE_TEST (via make allmodconfig)
-> > - MIPS cross compile on arm64 with:
-> >       ARCH=mips CROSS_COMPILE=mips64-linux-gnu- make pic32mzda_defconfig
-> > 
-> > Note that there is a separate MIPS compile error in linux-next, and I
-> > reported it at https://lore.kernel.org/all/aWVs2gVB418WiMVa@redhat.com/
-> > 
-> > I included a patch at the end that shows enabling COMPILE_TEST for a
-> > pic32 clk driver.
-> > 
-> > Merge Strategy
-> > ==============
-> > - Patches 1-15 can go through the MIPS tree.
-> > - Patch 16 I can repost to Claudiu after patches 1-15 are in Linus's
-> >   tree after the next merge window. There is a separate patch set that
-> >   fixes a compiler error I unintentionally introduced via the clk tree.
-> >   https://lore.kernel.org/linux-clk/CABx5tq+eOocJ41X-GSgkGy6S+s+Am1yCS099wqP695NtwALTmg@mail.gmail.com/T/
-> 
-> Sorry about the duplicate message. I just wanted to reply to the series
-> with MIPS in the header so this message isn't lost.
-> 
-> Can you back out these two patches from your tree in linux-next, and not
-> send these to Linus?
-> 
-> clk: microchip: core: allow driver to be compiled with COMPILE_TEST
-> https://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/commit/?id=026d70dcfe5de1543bb8edb8e50d22dc16863e6b
-> 
-> clk: microchip: fix typo in reference to a config option
-> https://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/commit/?id=a6ab150deb4b740334721d18e02ad400a9d888f5
+The grammar is off. This fixes it.
 
-I've reverted both patches in mips-next.
+Fixes: 6e4f3db8dfcf ("pinctrl: just return if no valid maps")
+Signed-off-by: Linus Walleij <linusw@kernel.org>
+---
+ drivers/pinctrl/devicetree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thomas.
+diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+index 0b7f74beb6a6..5b3904d39e3b 100644
+--- a/drivers/pinctrl/devicetree.c
++++ b/drivers/pinctrl/devicetree.c
+@@ -175,7 +175,7 @@ static int dt_to_map_one_config(struct pinctrl *p,
+ 		 * return.
+ 		 */
+ 		dev_info(p->dev,
+-			 "there is not valid maps for state %s\n", statename);
++			 "there are no valid maps for state %s\n", statename);
+ 		return 0;
+ 	}
+ 
 
+---
+base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+change-id: 20260210-speling-fix-ba9cc1d4dc3d
+
+Best regards,
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Linus Walleij <linusw@kernel.org>
+
 
