@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-31587-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31588-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qDKjNqQ7jGlZjgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-31587-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 09:19:48 +0100
+	id KOwVKxM8jGlZjgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-31588-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 09:21:39 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8084B1222BC
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 09:19:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1619F1222F9
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 09:21:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 476513030118
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 08:17:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2D1A8303663C
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 08:19:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C27E3502A7;
-	Wed, 11 Feb 2026 08:17:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 722F534FF58;
+	Wed, 11 Feb 2026 08:19:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZgsvKljc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLtvOJVm"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF1634D939;
-	Wed, 11 Feb 2026 08:17:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3442A306480;
+	Wed, 11 Feb 2026 08:19:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770797876; cv=none; b=WMuFlKAyDJ8qRaeSHF9wAmohClogtFewX4ik8E4Z/XlXN8xz9IymqQEjOR0DJjZGNE1I+u1dvbQgf5vNcqwi1dZO8tZN3S+RsZV9AKyHn3Z9HCNetF+XXpBjNMFKDO3+zlF75kTlzZ49GTBlU8whrnqA4I2iZcgcC8Te7WaQCms=
+	t=1770797994; cv=none; b=caV+bdiTKxbFoFHuiUzEQ4FVhlVNVKoAWQnTLuluw/gUluJKSwsHauq/JlOQtZKgkyys7u/HDFkPxTDD1mFpd2ZKsQtJJeJraOIddyqEJrkuaPGJvuJZ/SWHx0S15C5FjA7Zsobxs6YjQ4tCeN5Z3ZG3FI/BBB/+M2xpVZklk7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770797876; c=relaxed/simple;
-	bh=Qo9WUcXMA2zOc0/OmQg8q++9zpdVzrLSy6Pr91Upbho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uv+W9UGo3S3eaTDLb9uT4wCO6EMcS3YhdQE2Ma2WdSvBnPECyvdfkhBP7QLf38apZ4zQRd7aposryCQ/fJFcZ1WoI7WYxVtQi5l52PBbHBvAiBU0A93sVhddy5cTEn6MN1mxl4WxSrpwEDTutH9B4ZaJsl5YSm9TKOA02IOB/po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZgsvKljc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D24DDC4CEF7;
-	Wed, 11 Feb 2026 08:17:53 +0000 (UTC)
+	s=arc-20240116; t=1770797994; c=relaxed/simple;
+	bh=oBSPxpvDCbbANnZAl19ikwUxqAX0UiYQR2KQthRXPCM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=tf29oDytB574l3sIFMK5GoiSLrbjJn8HvQLzXHViIegnYkJBe/ZmSa+Ou0PunjtRzxjteeBRVW9zOuOS5j61A2pw2diBpXcQHtlhtpIb7R6T2fXWh7QVSGhsus716nxv9QcheH/84llvj9wnNVZEmDPkPObvayM789Sg+AAH0UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLtvOJVm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45582C4CEF7;
+	Wed, 11 Feb 2026 08:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770797876;
-	bh=Qo9WUcXMA2zOc0/OmQg8q++9zpdVzrLSy6Pr91Upbho=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZgsvKljcEstnmXdaQAmmYb65KOhLJ1r08GAxYgybYaEq3yu6YwDm6B2SShOc8xWZR
-	 hxClOHCWjIduXS/qMqgnZzpq07ySfYyOYaXZA5L8t2QeoxEMWG3h+KYOGo0OMLn+cO
-	 lKmuD/RGwFe5RQ0Ma+ezCw8isRPPmQayZ/q03/GaeIVL7hzHPCJDgS/KObwN6zYqou
-	 JfH0g0dbo14dyfIBmm2Xw7irG3caG6qWyncyzzjWhXzOmgnDwoJQ9GrfniUKyQNotw
-	 J45SIGAc67rko6xUlStHgj13KfPKaq0XzY+AuZQsECxMFKltWfHucXpoKGPVdag8Oa
-	 VC0snpxmSskmw==
-Message-ID: <338e6575-ec44-4179-94af-9086a7ca79ac@kernel.org>
-Date: Wed, 11 Feb 2026 09:17:51 +0100
+	s=k20201202; t=1770797993;
+	bh=oBSPxpvDCbbANnZAl19ikwUxqAX0UiYQR2KQthRXPCM=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=SLtvOJVm7VDEkIUpx9sXivfQZtV0uahO1GSzzloq52QBwySdjpZMn+yyYmG9L2kxw
+	 x9Mr1Sdo4guAauL9XGSagf79hHLRoLqDBWfybjXWqXNwzfQxw/UvsPaygCtKEz22F0
+	 OGCcyHiYLYwbj0d1km/GmFV3edFWsA7bnh+Z7341aO7+XKWOzBJZllXBzxLvFGfcwu
+	 jygA/e3ycX4R5TjaG35zgLVfLJgJ1KXabbgkR2RCrD9u8WIbGLw/EHsxIfS8uHGU4l
+	 DOFf2PJjz6ChXILwv6If10aDwvQyZKrTswWpyEylrHYNwlVJ9h7iT+wERleIG6+mXv
+	 vJEsZtZXqSP2Q==
+Message-ID: <92359c6d-06ac-4f8d-baa5-6fa45a536455@kernel.org>
+Date: Wed, 11 Feb 2026 09:19:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -54,6 +54,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: add gpio-aggregator binding
+From: Krzysztof Kozlowski <krzk@kernel.org>
 To: James Hilliard <james.hilliard1@gmail.com>, linux-gpio@vger.kernel.org
 Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
  Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
@@ -61,7 +62,7 @@ Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
  Conor Dooley <conor+dt@kernel.org>, Alexander Stein <linux@ew.tq-group.com>,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20260211081355.3028947-1-james.hilliard1@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <338e6575-ec44-4179-94af-9086a7ca79ac@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -106,7 +107,7 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260211081355.3028947-1-james.hilliard1@gmail.com>
+In-Reply-To: <338e6575-ec44-4179-94af-9086a7ca79ac@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
@@ -119,7 +120,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31587-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31588-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -136,27 +137,31 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8084B1222BC
+X-Rspamd-Queue-Id: 1619F1222F9
 X-Rspamd-Action: no action
 
-On 11/02/2026 09:13, James Hilliard wrote:
-> Document the gpio-aggregator virtual GPIO controller with a dedicated
-> schema and compatible string.
+On 11/02/2026 09:17, Krzysztof Kozlowski wrote:
+> On 11/02/2026 09:13, James Hilliard wrote:
+>> Document the gpio-aggregator virtual GPIO controller with a dedicated
+>> schema and compatible string.
+>>
+>> Also extend the GPIO AGGREGATOR MAINTAINERS entry to cover the new
+>> binding file.
 > 
-> Also extend the GPIO AGGREGATOR MAINTAINERS entry to cover the new
-> binding file.
+> <form letter>
+> This is a friendly reminder during the review process.
+> 
+> It seems my or other reviewer's previous comments were not fully
+> addressed. Maybe the feedback got lost between the quotes, maybe you
+> just forgot to apply it. Please go back to the previous discussion and
+> either implement all requested changes or keep discussing them.
+> 
+> Thank you.
+> </form letter>
+> 
 
-<form letter>
-This is a friendly reminder during the review process.
-
-It seems my or other reviewer's previous comments were not fully
-addressed. Maybe the feedback got lost between the quotes, maybe you
-just forgot to apply it. Please go back to the previous discussion and
-either implement all requested changes or keep discussing them.
-
-Thank you.
-</form letter>
-
+First thing which was missing (I did not even check the rest in such
+case): missing rationale for this patch, missing hardware description.
 
 Best regards,
 Krzysztof
