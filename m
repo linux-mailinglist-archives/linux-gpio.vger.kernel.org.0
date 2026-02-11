@@ -1,157 +1,150 @@
-Return-Path: <linux-gpio+bounces-31573-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31574-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qALvAZmZi2k3XAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-31573-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Feb 2026 21:48:25 +0100
+	id oLTfNA3Mi2n7bAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-31574-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 01:23:41 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id A513011F1B9
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Feb 2026 21:48:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 776FA120485
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 01:23:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8FC5D30421E4
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Feb 2026 20:48:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CC1F7307240D
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 00:23:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 509F73346A5;
-	Tue, 10 Feb 2026 20:48:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0E4B1EA7CE;
+	Wed, 11 Feb 2026 00:23:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJzTyC+E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWj7nfxl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B91F331A53;
-	Tue, 10 Feb 2026 20:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3C71E1E16
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 00:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770756495; cv=none; b=f2eN8Ef9ALoYyd/PUSpO+VrTywKlpGKhb9+OYYkrMp0IgVRRBZLaMlcvmc9RGPWg7RlkH38SO+mTFOHWfNiAxHIdSn3RsA4MvDMK2O8zifdo/vwjB0zS4Z1EerRjuQ5QzS+W84xxXdP7mL54aHiItWRcnAPO7NgV6XZ0GYdYq5g=
+	t=1770769392; cv=none; b=qW+mlUQYU3a6fm/+U2UhemftyWa94bGDYY6ah/nkC/XXafhIRigV/mZMELdCv5mKljS0tryFy0g2Eu930iXgcLXbTrGYZTZy3s9X4buYkC5Mm6XgwCcZ3HtXN54g3MU7mNx22HmFnValWzGwmFjHOzfZhSb92kDlqlK0XBou5HI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770756495; c=relaxed/simple;
-	bh=8Jn1Y4izc0UX6TWuQOTgUa1Iqbm12Lpkc6uITFUi1Cw=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=c48ga/GjTJYGdFtPLi0ZxY7ZGAHjKVilN2kcwnseuVB+5K07j/w6c5wOI1gmrye2A0MqeGoFQ0jC96BDVaL2ZVo2bB+gAQZbhij4DUFfgJu3AGbmtrf49zDUz9lreoB2E11f/5rLttIRanJPZWO/TajQm8greMVbauNF4hKqtpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJzTyC+E; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76B62C116C6;
-	Tue, 10 Feb 2026 20:48:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770756494;
-	bh=8Jn1Y4izc0UX6TWuQOTgUa1Iqbm12Lpkc6uITFUi1Cw=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=YJzTyC+EC88DeDJ2ipytIEimaxRZK90PFnSBPqLRuFluQPRcILGA3rT4946x+/CBP
-	 5DJhvuFS9D8TKYRF8/Yr/SfCS6cDI1vy8Drnt+puEMBA/9Y+J4z07CBIt5/kKRLhuE
-	 giGpdE230iB1xeN9E8V8BmA7uw9UeG4vJ+I2FOZ79l8w+/pNRHA5ZSV/iAzyrGf8kD
-	 h5DOmtP/3DMZPgI3/BWI0A/K3HwUN1eIe1soEuZHzkXcxUFSBVyZHebZxO51tYXkl8
-	 1Z54TEuON0ZUYnc0NiTonod/3XuKJMUjf6Zq290c6jp0TamBcVgVcJiGfX1pIIzjpV
-	 lCMcmxDYe6N8Q==
-Date: Tue, 10 Feb 2026 14:48:13 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1770769392; c=relaxed/simple;
+	bh=C8WZi0z/u2y60Pf8uDacg4eZxEeOjHEhT72SWreY+Jg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AwDkOUobS1CaUhTADScr9ixapTFDy1gwA5jU5N+uv0yfy/oaEtbNgjsxMW4ZUlkmCDoDcQIOVu3eLUFFuF81UJrPEAJQboKoaevux8a+z5+Y8OibiEzPmhpAIaczDnJGjLFRLe4ez0a9Wy7hh2N+VovuukAoBJS7YIDP9K1PyHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kWj7nfxl; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-896f8feee14so32204166d6.0
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Feb 2026 16:23:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770769390; x=1771374190; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y9/MaZcyv8F5yh3X5VNhCYnJaIE/OuTNMR/VFAInu+s=;
+        b=kWj7nfxlLWjLA5LXqCA9TO3IzcsuojzY0pkehXBc+s3ZMsR2aRPPqFwHdMD+jxtfZ6
+         bHKapokHoh8vLznCw+fYNdT+2zdkzcVVI5MslJ5ewErXsScMbiP9KOoD/Wt46/JZVEY5
+         /kWlOnfK02LrFFPm43k3gLwImTpDKNL8/1O8MlS6uYh7Yvat5zgd/2PnVsQg8qpyQxgE
+         Kew2VSoeRlpmk6i23ziFBvGIxMO703cR/p+oPk9A+yT4RJfRcfhrmnrb/xfu4H4CFtMG
+         P2F0ejyGFdEJqkkuqRlvyqWNVFy8g2hqRyawL2PzSdkQ6Lo8RlL7Gk0umgnl0SuDJLgx
+         Ot5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770769390; x=1771374190;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y9/MaZcyv8F5yh3X5VNhCYnJaIE/OuTNMR/VFAInu+s=;
+        b=gFLlbAwfCKNYI5ilopvOmoARgjoqGGjal8ovYVsQX3C7PUg73/yP6cYLn+x1Zm4Ss/
+         l1g97My9P7p+Qw0sPlvrRQ323c++ie4I5rR/YyWmh+7AAObkLeS+tq4JZRU5ozgZxe39
+         3cjgFqK3JA0SfLNeWC9C7OLBKlPzpmbJ0B86BqeSLqdhfqAZgmtGRWTrBRwWct6YCuQ0
+         WwBoJAB+5ldAaMX0bcqe3JTes10WtEU/qACB7bFBlD0NgkvOCutIeNYz4sn1htqsJN++
+         0YBmsKOAG5UjRHTXOjThxKYPRjWli6BjDGdOjxbDvRF8atrsoogCVZTAVfp4rIukpjVR
+         0pJg==
+X-Forwarded-Encrypted: i=1; AJvYcCWLvnOYgO5LhO+2bzUlh8KffTTBPkgoVsbhE7cojUNoa8CYkMpZYnMOduCncfGw9Q7fyt7+vjwIl+vk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0e8H9xVygusus8HVAbVv6jzwrSk/guTE2h9Te+QSHMB9Zkqjg
+	SGNd3ffkANIj8u/GAlysa0F97sswFUr7bYxCBboJnVIoDHRB8pkCM41K
+X-Gm-Gg: AZuq6aLBn2H7CjBXFDMfciFK8vH73iRlRwuq+UY1mJFKSJuLlDi0n9COOcMv0WQvMh7
+	YnmTj5uxQtmIndDcpi86JR7mHMSnYKXdiV6IbpZOEOb7XKt0z0/f+V7ZUCRd8nsc1Q4+hf9Daxa
+	9xj5Bk1UjRmeBMGGpuyA5mdiRZXI+JuZepSCLeNnuef3sFlP8qHle0uM3kbQZBi2dTtm/hnGUJv
+	gWG+932OtS31GpXl6M1Jif+DvPsK0swiMnnq6NBI5xs48c1brMx9yOr7c/TgxOwDXpQoSVdlwv2
+	m3NUa4/oYU+0FgPN5LJuS3BoZo/YlsDVGZVfXnBsKtHYM0/3uo6H0WG0xD+2xD8Mr2ZeLSCkCUA
+	TvhD3PiKKrDD7W9a5kIXhMJAfP4198zfsTOl0remAHqf/KPVfkK8ZXu1yY/URLF9B76OthuPV5u
+	pG4ZuJcc9E1MWE+1S8nSFQF7dXT3kjsH1FaTYU
+X-Received: by 2002:a05:620a:4045:b0:8c7:fdc:e87c with SMTP id af79cd13be357-8cb1f6ebe1bmr530701885a.51.1770769390235;
+        Tue, 10 Feb 2026 16:23:10 -0800 (PST)
+Received: from localhost ([184.144.58.243])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8cb2965edb5sm27227785a.11.2026.02.10.16.23.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Feb 2026 16:23:09 -0800 (PST)
+Date: Tue, 10 Feb 2026 19:23:36 -0500
+From: Richard Acayan <mailingradian@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: sdm670: add lpi pinctrl
+Message-ID: <aYvMCCWxVPXQeRCZ@rdacayan>
+References: <20260210021109.11906-1-mailingradian@gmail.com>
+ <20260210021109.11906-4-mailingradian@gmail.com>
+ <2b3d9528-56d0-407f-bd3f-e805cfdea5e3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Bartosz Golaszewski <brgl@kernel.org>, linux-imx@nxp.com, 
- devicetree@vger.kernel.org, Linus Walleij <linusw@kernel.org>, 
- arnaud.pouliquen@foss.st.com, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
- linux-gpio@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- linux-arm-kernel@lists.infradead.org, linux-remoteproc@vger.kernel.org, 
- Peng Fan <peng.fan@nxp.com>, Conor Dooley <conor+dt@kernel.org>, 
- imx@lists.linux.dev, Jonathan Corbet <corbet@lwn.net>, 
- Mathieu Poirier <mathieu.poirier@linaro.org>, 
- Fabio Estevam <festevam@gmail.com>, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-To: Shenwei Wang <shenwei.wang@nxp.com>
-In-Reply-To: <20260210170814.406883-2-shenwei.wang@nxp.com>
-References: <20260210170814.406883-1-shenwei.wang@nxp.com>
- <20260210170814.406883-2-shenwei.wang@nxp.com>
-Message-Id: <177075649333.2817738.5507371747833844104.robh@kernel.org>
-Subject: Re: [PATCH v7 1/4] dt-bindings: remoteproc: imx_rproc: Add "rpmsg"
- subnode support
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b3d9528-56d0-407f-bd3f-e805cfdea5e3@kernel.org>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31573-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-31574-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	FREEMAIL_CC(0.00)[kernel.org,nxp.com,vger.kernel.org,foss.st.com,pengutronix.de,lists.infradead.org,lists.linux.dev,lwn.net,linaro.org,gmail.com];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mailingradian@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nxp.com:email]
-X-Rspamd-Queue-Id: A513011F1B9
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,62b40000:email]
+X-Rspamd-Queue-Id: 776FA120485
 X-Rspamd-Action: no action
 
-
-On Tue, 10 Feb 2026 11:08:11 -0600, Shenwei Wang wrote:
-> Remote processors may announce multiple GPIO controllers over an RPMSG
-> channel. These GPIO controllers may require corresponding device tree
-> nodes, especially when acting as providers, to supply phandles for their
-> consumers.
+On Tue, Feb 10, 2026 at 08:42:59AM +0100, Krzysztof Kozlowski wrote:
+> On 10/02/2026 03:11, Richard Acayan wrote:
+> > +		lpi_tlmm: pinctrl@62b40000 {
+> > +			compatible = "qcom,sdm670-lpass-lpi-pinctrl";
+> > +			reg = <0 0x62b40000 0 0x20000>;
+> > +			gpio-controller;
+> > +			#gpio-cells = <2>;
+> > +			gpio-ranges = <&lpi_tlmm 0 0 32>;
+> > +			status = "disabled";
 > 
-> Define an RPMSG node to work as a container for a group of RPMSG channels
-> under the imx_rproc node. Each subnode within "rpmsg" represents an
-> individual RPMSG channel. The name of each subnode corresponds to the
-> channel name as defined by the remote processor.
-> 
-> All remote devices associated with a given channel are defined as child
-> nodes under the corresponding channel node.
-> 
-> Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
-> ---
->  .../devicetree/bindings/gpio/gpio-rpmsg.yaml  | 55 +++++++++++++++++++
->  .../bindings/remoteproc/fsl,imx-rproc.yaml    | 53 ++++++++++++++++++
->  2 files changed, 108 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-rpmsg.yaml
-> 
+> Why is this disabled? We disable blocks needing external resources or
+> being busses/connectors. This is not the case.
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-
-
-doc reference errors (make refcheckdocs):
-Warning: Documentation/devicetree/bindings/gpio/gpio-rpmsg.yaml references a file that doesn't exist: Documentation/driver-api/gpio/gpio-rpmsg.rst
-Documentation/devicetree/bindings/gpio/gpio-rpmsg.yaml: Documentation/driver-api/gpio/gpio-rpmsg.rst
-
-See https://patchwork.kernel.org/project/devicetree/patch/20260210170814.406883-2-shenwei.wang@nxp.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+There are reserved GPIOs on the Pixel 3a. Since commit 4f0d22ec60ce
+("pinctrl: lpass-lpi: implement .get_direction() for the GPIO driver"),
+this can't be probed when the reserved GPIOs are unspecified.
 
