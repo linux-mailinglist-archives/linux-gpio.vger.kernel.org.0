@@ -1,176 +1,163 @@
-Return-Path: <linux-gpio+bounces-31586-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31587-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GMJzEWU6jGlZjgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-31586-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 09:14:29 +0100
+	id qDKjNqQ7jGlZjgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-31587-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 09:19:48 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5E371221E4
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 09:14:28 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8084B1222BC
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 09:19:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 386FC3018F3F
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 08:14:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 476513030118
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 08:17:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B2B1350D75;
-	Wed, 11 Feb 2026 08:14:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C27E3502A7;
+	Wed, 11 Feb 2026 08:17:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HmC4tRNy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZgsvKljc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4909350D42
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 08:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF1634D939;
+	Wed, 11 Feb 2026 08:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770797658; cv=none; b=SQDm3brCUC4DGuR6knPHVLvSs2fN1NZ2pHxRZFpYEnSjRrEc7BgLnZm1v1exVaJjQdWRV24iPsfHJeA3NEpBu2bUjwMeguYCaO4Z7F9X3gUDLzht2RlopUVpX2d63udOOoAC3SP8Qowfq/aobxcwrGANflhcBChp57ykeYqlmi8=
+	t=1770797876; cv=none; b=WMuFlKAyDJ8qRaeSHF9wAmohClogtFewX4ik8E4Z/XlXN8xz9IymqQEjOR0DJjZGNE1I+u1dvbQgf5vNcqwi1dZO8tZN3S+RsZV9AKyHn3Z9HCNetF+XXpBjNMFKDO3+zlF75kTlzZ49GTBlU8whrnqA4I2iZcgcC8Te7WaQCms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770797658; c=relaxed/simple;
-	bh=tqXXY5duIcwljLAHXHGNBSSfoC8NsDselCm3mncAnsk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aKJPjO+PBmXXh03UAXrQSNJ9mQCZ7itqqcBqUw7Sd6h27Z2kpKu5tV2/UoeBeS8aT6ptESq81f+xrOUuFPc76otyxRbpTG0e6FZFhiOK4l3+j/77nIVg3GgelvYyRjkw9PMHElB94n47fudaNxfJlTwVPMuexitXodLCtMa+rBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HmC4tRNy; arc=none smtp.client-ip=209.85.167.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-45f015a3259so1849225b6e.2
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 00:14:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770797656; x=1771402456; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pguu8MUXddF1NDD8QGGi3BFiPLSK8t0wKet5P/7CmbE=;
-        b=HmC4tRNyQy5GQjXKdLipBqaddW1zNLnO7aqqrVt+qwtUlTvNQPrbK+6Sla4a4U3nMi
-         6ZMlF5XElj1F5+alc9Ma0lH1mpMZSoOy+RSJ7XN7smUHVlyuRnmAHFzpc2MmbcM4NTmL
-         qi6YdBkoOrnd8etaJLur1Onj5ChbsLaF/TwjcOTO80Lq8iTYWxxDkX1jaOO12MdPgRx1
-         gGKy0T5FnHwkD1PRGlxbNc/dE90brSDr/mVMc/Zz3ps5wy0hQGjrwFacZ9Jv3wC0Cy1M
-         7MZ9MxV+d0PBBCoBT/dt9xKvIsXJlFKoCrcXkdSXCBFwAfHMUQB5QLsgc5J6bWPeFc7E
-         /Jyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770797656; x=1771402456;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Pguu8MUXddF1NDD8QGGi3BFiPLSK8t0wKet5P/7CmbE=;
-        b=C8t63PuW0VDiLKOFcaxf6hSuH+e8sJRfGfliTyEEblbFODGHMTg2pf0D2nC0XHBDtx
-         yZ2+gQH8bKG0GsrPPbJXgJU9Z6gny59iQlXkl6QxgebQ3mrdLcTDNZbbdV/2A2nONNXn
-         OwnIgdQBLnzKszI7tlSkY58NbzRcDrrt8iNHitjb1Y1z24SqbSZMVjRO1uY7CwzAfzqA
-         4sOJ9tSSCdHtlTVcsrwCrF4xPToh8tTqwsM1hg0zpmMOGAkGje9N6cqRyyfnP/xowdqX
-         8sjZrWK8NAGhi3XQLURHvGB0QIHoOyZNWXZk6PuhAPzaKNTj1jWG4gCZcf5WW2S6NJen
-         +Kng==
-X-Gm-Message-State: AOJu0YwAD/1XkUYBmYq7UGKWf8RW4pYhSiPjsNYoMQw2JvDLFsAXiNSK
-	K6mKve3mBL/GHm1U68eQQztAsqN2JFCrli53fyWCBk90fT0bSDbE69G2lEq/Ew==
-X-Gm-Gg: AZuq6aLcMaNHdaawvQ6zkXM3f2rADrV1CkHzRkbI1MjpkGVpfnLVWGyVEId/GSkM9zr
-	LW1tcxZNRhpeh++XxjebRgbnv5eD0AXq3Ey6wXmBjbUsVbP72jt2DdCOPSb6SoIsuolgS+8fAG2
-	X4xcA8P7XKNipQ6tWwqem1vTxXpcfkZ2ZHgs4uP01w6oJw0HCBMrSyk0TtiyP2SAbb5/+nkb+Cr
-	ti77vYls4LgXauZcZ8lJT7AGDXNuB4HRuxwQqkFeKzEF/FEmbsFW0VZIzemCD5oxMMRIOsuBWm9
-	R54Xz7guyEEUDaRlWy4DCOnPd62dB2BycuecO5xRtIU80dv7ScJNr8bY/Tk0+wedODLHb0MsNlc
-	3H4FB6ALgzsLnmu46ekSxRZ+guXC69h6/VmoiSU//Pc55f00wEakqdBDu/+ZrXN7693EzHdy9R3
-	6yipjRVFy/efMhZuwj8KTHkixOYGxluqy4i8G/LYF9f+Wyq2Q0hgiXcNgp35E+k15ZDaml1kYEM
-	0cybypHgDL0uSTg6U5stiGip9fC1icq5uPUK+ynyZ5Lg5GWwzH7L9kBhXYFSTRalQSl4udgbQ==
-X-Received: by 2002:a05:6808:150f:b0:44d:a817:2d72 with SMTP id 5614622812f47-46366633c0cmr910471b6e.60.1770797656445;
-        Wed, 11 Feb 2026 00:14:16 -0800 (PST)
-Received: from james-x399.localdomain (71-218-105-26.hlrn.qwest.net. [71.218.105.26])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4636b093ee1sm624852b6e.14.2026.02.11.00.14.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Feb 2026 00:14:15 -0800 (PST)
-From: James Hilliard <james.hilliard1@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: James Hilliard <james.hilliard1@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alexander Stein <linux@ew.tq-group.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] gpio: aggregator: add gpio-aggregator DT compatible
-Date: Wed, 11 Feb 2026 01:13:50 -0700
-Message-ID: <20260211081355.3028947-2-james.hilliard1@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260211081355.3028947-1-james.hilliard1@gmail.com>
-References: <20260211081355.3028947-1-james.hilliard1@gmail.com>
+	s=arc-20240116; t=1770797876; c=relaxed/simple;
+	bh=Qo9WUcXMA2zOc0/OmQg8q++9zpdVzrLSy6Pr91Upbho=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uv+W9UGo3S3eaTDLb9uT4wCO6EMcS3YhdQE2Ma2WdSvBnPECyvdfkhBP7QLf38apZ4zQRd7aposryCQ/fJFcZ1WoI7WYxVtQi5l52PBbHBvAiBU0A93sVhddy5cTEn6MN1mxl4WxSrpwEDTutH9B4ZaJsl5YSm9TKOA02IOB/po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZgsvKljc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D24DDC4CEF7;
+	Wed, 11 Feb 2026 08:17:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770797876;
+	bh=Qo9WUcXMA2zOc0/OmQg8q++9zpdVzrLSy6Pr91Upbho=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZgsvKljcEstnmXdaQAmmYb65KOhLJ1r08GAxYgybYaEq3yu6YwDm6B2SShOc8xWZR
+	 hxClOHCWjIduXS/qMqgnZzpq07ySfYyOYaXZA5L8t2QeoxEMWG3h+KYOGo0OMLn+cO
+	 lKmuD/RGwFe5RQ0Ma+ezCw8isRPPmQayZ/q03/GaeIVL7hzHPCJDgS/KObwN6zYqou
+	 JfH0g0dbo14dyfIBmm2Xw7irG3caG6qWyncyzzjWhXzOmgnDwoJQ9GrfniUKyQNotw
+	 J45SIGAc67rko6xUlStHgj13KfPKaq0XzY+AuZQsECxMFKltWfHucXpoKGPVdag8Oa
+	 VC0snpxmSskmw==
+Message-ID: <338e6575-ec44-4179-94af-9086a7ca79ac@kernel.org>
+Date: Wed, 11 Feb 2026 09:17:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: add gpio-aggregator binding
+To: James Hilliard <james.hilliard1@gmail.com>, linux-gpio@vger.kernel.org
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Alexander Stein <linux@ew.tq-group.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260211081355.3028947-1-james.hilliard1@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20260211081355.3028947-1-james.hilliard1@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31586-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[gmail.com,glider.be,kernel.org,ew.tq-group.com,vger.kernel.org];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-31587-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	FROM_NEQ_ENVFROM(0.00)[jameshilliard1@gmail.com,linux-gpio@vger.kernel.org];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
 	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: E5E371221E4
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 8084B1222BC
 X-Rspamd-Action: no action
 
-Add an OF match entry for "gpio-aggregator" to support plain GPIO
-forwarding from devicetree without delay semantics.
+On 11/02/2026 09:13, James Hilliard wrote:
+> Document the gpio-aggregator virtual GPIO controller with a dedicated
+> schema and compatible string.
+> 
+> Also extend the GPIO AGGREGATOR MAINTAINERS entry to cover the new
+> binding file.
 
-This allows exposing selected lines as a logical GPIO controller with
-stable aggregated offsets, so consumers can reference forwarded lines
-instead of physical controller offsets. It also allows creating bundled
-groups of named lines that can be exposed to userspace as a convenient
-virtual gpiochip interface. Using "gpio-delay" for this case is not
-suitable because it enables delay features and requires 3-cell GPIO
-specifiers.
+<form letter>
+This is a friendly reminder during the review process.
 
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
----
-Changes v1 -> v2:
-  - Split DT schema into a separate patch
-    (suggested by Krzysztof Kozlowski)
-  - Expand commit message rationale and use-case explanation
-    (suggested by Krzysztof Kozlowski)
-  - Clarify userspace use case with bundled named line groups
----
- drivers/gpio/gpio-aggregator.c | 3 +++
- 1 file changed, 3 insertions(+)
+It seems my or other reviewer's previous comments were not fully
+addressed. Maybe the feedback got lost between the quotes, maybe you
+just forgot to apply it. Please go back to the previous discussion and
+either implement all requested changes or keep discussing them.
 
-diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-index 416f265d09d0..a09752fc5fe2 100644
---- a/drivers/gpio/gpio-aggregator.c
-+++ b/drivers/gpio/gpio-aggregator.c
-@@ -1635,6 +1635,9 @@ static int gpio_aggregator_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id gpio_aggregator_dt_ids[] = {
-+	{
-+		.compatible = "gpio-aggregator",
-+	},
- 	{
- 		.compatible = "gpio-delay",
- 		.data = (void *)FWD_FEATURE_DELAY,
--- 
-2.43.0
+Thank you.
+</form letter>
 
+
+Best regards,
+Krzysztof
 
