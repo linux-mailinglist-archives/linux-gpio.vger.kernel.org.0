@@ -1,144 +1,186 @@
-Return-Path: <linux-gpio+bounces-31604-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31605-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CDkFLQtdjGmWlwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-31604-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 11:42:19 +0100
+	id AD+eGElejGmWlwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-31605-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 11:47:37 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B50E12384E
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 11:42:18 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCABD123930
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 11:47:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EBF35308D6D5
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 10:38:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0B7BC309D0D3
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 10:42:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62A53369207;
-	Wed, 11 Feb 2026 10:38:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C040B36996A;
+	Wed, 11 Feb 2026 10:42:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nz5fP4KJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qO2iHuTO"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255E635028E
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 10:38:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6A736922B;
+	Wed, 11 Feb 2026 10:42:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770806311; cv=none; b=f5+/qFK9ViJWUo6+sfA6uRIeyZYAWzSw2Fefeach46WiSExA0U8zegCFSw2XSVJkYZ7EdC62IrwCk59DR+cxCttoaxOOdOERx2GXgwjNqybByKhthFSqAE7agUPDrvPIASJyqq9gj8wY6AftOMsfS7QNAmnsLljsXsCEfj2dZHw=
+	t=1770806575; cv=none; b=mr+S3XVxS+6JzRe+bZyWgCYh4pmFpokfKDBBZ2OxXXX/cZLVXOGtDuGq2CsFcjs7FOC66M1QuB/Z9LJyMCFH5sZdKae1GNlb9jjqGdZQ27hVz5DuBqkH0s8jhiC5erhVtQ1OAq69H+v3aKUFAjwG3Zsj+VMTtcBxlK1+omTrhJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770806311; c=relaxed/simple;
-	bh=g4c/+hg4xfQ1QyXw/0chMr+4FZyH+lKINM8dtae1Pgg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U1ZfRuIwMclmOY+i5/sXS3Z9aIIDb1v2OfD07n5U/ATT+aOlSG/g681e03pfaTTqyJ2z51gf8DR6Z+aeOM1q74Raz3gglrL6WNpsdcOWFMcKt7/g1z2wPORn7dgmVHoYMhMm5Qj2yR8Ad+5JNP4RPaGjuHafW6EpeNsQ0IukRQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nz5fP4KJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F07AFC19424
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 10:38:30 +0000 (UTC)
+	s=arc-20240116; t=1770806575; c=relaxed/simple;
+	bh=+TJZD01KvelL4iwlD6N/evUSacmlYWza4z+Y3+fpu0w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jAsrHWMU0NkGRquTkaIRESl3lRJuAFfypwSbI0hGMzZGutJ2frZn67jLownMnq+MQyvtZRpkM0zSKATLAqnpXa+7NZ6OfEy0L+4URdJXpWpismubTqEb0gmnQB42/82Xkx3cIQC3pHaDq3+ppdHeelukwsjsgpQrX/7/mLI8izk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qO2iHuTO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76A54C19421;
+	Wed, 11 Feb 2026 10:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770806311;
-	bh=g4c/+hg4xfQ1QyXw/0chMr+4FZyH+lKINM8dtae1Pgg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nz5fP4KJWkSnfHKLAICOcJGEkth7XyvpQUpMQU9JmEROmJOy87h8ZZ/M0vcU/9j+h
-	 RTGFB0qdEwLBHBrbol+joMUSU5vYVr7WBq0XujTqmPXMEmujpUJO0KoRUOfqVeFylA
-	 5Onia7LjbvkVmmwKNFI9oX9L2r3LkoKt7mw6yO/mNvZ1QKtSl9LoSjQy7UAQZsARtN
-	 8QvwFYhHhb8xhtVVZi55hMOJY7FB8SgNN87+n1duNp6vbijMHEGGeB9IEftL68WfE2
-	 ByipEpYByC7ABGiHYMS+ZqjWwEQUdKvIYDqorwZv13dqO/rWA3iR5Dvvqr/0VtGD0l
-	 +hSvGd/BxE5+A==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-385cfc572f1so16532631fa.3
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 02:38:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXDjXDboB+cqnV24pOLpTDKqLbYMSAxbxWZzMcyQ4bczcruVc5K4QkxqMsvVxFcIpGVhQM25e0/r0ea@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx47n9lcCb7A3KoIyeQgpGsRar23mosReP593dWHa8YapbMcxXM
-	eZdTeWXPq6WRWsBfZXeYIQCEJft08UOnlTdU3zfBA33ZWOfCx4vU8JEvNtQCeW570Mfguih7oSk
-	QelXBQImOSYNmkOP1CCCeEGPCjIBW4smKiEGH5qel9A==
-X-Received: by 2002:ac2:51c3:0:b0:59e:71f:cc1c with SMTP id
- 2adb3069b0e04-59e45043866mr4818761e87.1.1770806309629; Wed, 11 Feb 2026
- 02:38:29 -0800 (PST)
+	s=k20201202; t=1770806575;
+	bh=+TJZD01KvelL4iwlD6N/evUSacmlYWza4z+Y3+fpu0w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qO2iHuTOoXcg6nNa9gR9vFtHuv4xJHQc6P1EOlVxxrz9EuXbqsgqYasc+/6wXE5JJ
+	 ZwQk7Ju3F3bwoUQf9oZjILu4MkUcssQ7A/1i9bJcURLdP+ltR0RVe+QX5UOyR2Z/39
+	 4Fj2J+V4DBI1B5Zm7dEgCExIOj1xnwUcxMiteCExzT7z+HQtp1faSLAsf90X8VdrrV
+	 3whAjVVI8fv+w4KHPUORbS0Pfdbb/bbu9oF0W0gEkhrOthry2fQ7vH01XmdgBf//oW
+	 aJ6OEMMhP4I0cvLi9s5FAW2AUv43BSifxlGe/PNUc0/3Vi0WgLk1SVMapXp4ARrTxO
+	 4GdCN+xfBwWBw==
+Message-ID: <7fd3256a-55c7-4867-a2ce-fd5be55efe9c@kernel.org>
+Date: Wed, 11 Feb 2026 11:42:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] gpio: aggregator: add gpio-aggregator DT
+ compatible
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: James Hilliard <james.hilliard1@gmail.com>, linux-gpio@vger.kernel.org,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alexander Stein <linux@ew.tq-group.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20260211081355.3028947-1-james.hilliard1@gmail.com>
- <20260211081355.3028947-2-james.hilliard1@gmail.com> <CAMRc=MfgoKmsNAmn3rO2jDL-ZArMX2Jh-n4SnV6rpzRY3KSwuA@mail.gmail.com>
- <CAMuHMdWS-ZaL1nLS=C=hjBVJeVtgNYX-XgWf-8Oy4cGt6OMGDg@mail.gmail.com>
-In-Reply-To: <CAMuHMdWS-ZaL1nLS=C=hjBVJeVtgNYX-XgWf-8Oy4cGt6OMGDg@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Wed, 11 Feb 2026 11:38:17 +0100
-X-Gmail-Original-Message-ID: <CAMRc=MdRn=791YHaGZ7s+rwftJ84PYRivOO8gPPbCMNF6MUH3w@mail.gmail.com>
-X-Gm-Features: AZwV_QgOPgzWmQKucamzjl1eNrb3mJ8VNnRF-yVHm3Vge-JPF_DwZLNVc38hba4
-Message-ID: <CAMRc=MdRn=791YHaGZ7s+rwftJ84PYRivOO8gPPbCMNF6MUH3w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: aggregator: add gpio-aggregator DT compatible
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: James Hilliard <james.hilliard1@gmail.com>, linux-gpio@vger.kernel.org, 
-	Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alexander Stein <linux@ew.tq-group.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <20260211081355.3028947-2-james.hilliard1@gmail.com>
+ <CAMRc=MfgoKmsNAmn3rO2jDL-ZArMX2Jh-n4SnV6rpzRY3KSwuA@mail.gmail.com>
+ <34a9b531-4f53-47ee-861e-1b18ff1a5752@kernel.org>
+ <CAMRc=MfwQ8J7eT_geEf7Kj230SOvmO-LDHz9a_YgfRY-QB5V8w@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <CAMRc=MfwQ8J7eT_geEf7Kj230SOvmO-LDHz9a_YgfRY-QB5V8w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,kernel.org,ew.tq-group.com];
+	TAGGED_FROM(0.00)[bounces-31605-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,glider.be,kernel.org,ew.tq-group.com];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31604-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid,glider.be:email]
-X-Rspamd-Queue-Id: 0B50E12384E
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: DCABD123930
 X-Rspamd-Action: no action
 
-On Wed, Feb 11, 2026 at 10:50=E2=80=AFAM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> > >
-> > >  static const struct of_device_id gpio_aggregator_dt_ids[] =3D {
-> > > +       {
-> > > +               .compatible =3D "gpio-aggregator",
-> > > +       },
-> > >         {
-> > >                 .compatible =3D "gpio-delay",
-> > >                 .data =3D (void *)FWD_FEATURE_DELAY,
-> > > --
-> > > 2.43.0
-> > >
-> >
-> > Regardless of the DT bindings - this change is perfectly fine. We do
-> > that for other "virtual" devices like gpio-sim, gpio-virtuser, etc. I
-> > would just ask you to document it under
-> > Documentation/admin-guide/gpio/gpio-aggregator.rst.
->
-> This is not a pure virtual device, but for use with actual hardware.
->
-> Nacked-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
+On 11/02/2026 11:36, Bartosz Golaszewski wrote:
+> On Wed, Feb 11, 2026 at 11:13 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>>>>
+>>>>  static const struct of_device_id gpio_aggregator_dt_ids[] = {
+>>>> +       {
+>>>> +               .compatible = "gpio-aggregator",
+>>>> +       },
+>>>>         {
+>>>>                 .compatible = "gpio-delay",
+>>>>                 .data = (void *)FWD_FEATURE_DELAY,
+>>>> --
+>>>> 2.43.0
+>>>>
+>>>
+>>> Regardless of the DT bindings - this change is perfectly fine. We do
+>>
+>> You cannot have compatible without DT bindings, so this alone is not
+>> "perfectly fine". Maybe you wanted platform_device_id entry for
+>> ACPI/legacy/MFD devices?
+>>
+> 
+> Sure you can, you just can't put it into upstream devicetree sources.
 
-Well, it is a virtual device in that there's no actual "aggregator"
-device on the board. It virtually aggregates GPIOs into a separate
-chip for user's convenience. While there's no such device as a
-gpio-aggregator - and so we must not put it into bindings nor into
-mainline devicetree sources - having a compatible matching in the
-driver is perfectly fine IMO. Just like gpio-sim.
+No, you cannot. You cannot have undocumented ABI. That's the rule and
+upstream DTS does not matter. ABI is also for non-upstream users.
 
-Bartosz
+> We have had a compatible for gpio-sim for testing purposes for years.
+
+And I fixed in it 2024...
+
+> Why would it be illegal to enable matching of platform drivers over DT
+> for testing purposes?
+
+You can match. You cannot have undocumented ABI. This is the rule.
+
+Best regards,
+Krzysztof
 
