@@ -1,58 +1,58 @@
-Return-Path: <linux-gpio+bounces-31603-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31604-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EDHmCstcjGmWlwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-31603-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 11:41:15 +0100
+	id CDkFLQtdjGmWlwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-31604-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 11:42:19 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2214123828
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 11:41:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B50E12384E
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 11:42:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 70215306EC9D
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 10:36:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EBF35308D6D5
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 10:38:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 488ED369217;
-	Wed, 11 Feb 2026 10:36:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62A53369207;
+	Wed, 11 Feb 2026 10:38:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tB/Ii21W"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nz5fP4KJ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09423331A5C
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 10:36:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255E635028E
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 10:38:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770806202; cv=none; b=Xyr2XPi64Y7jqGsG+J/fmOFXAIbbwsjFpxvf/tdlZRJPONE1EZW8Qupzu/YzaV1HmBj2cDpyNt5snr+8HnRf4NoDPL2oa1cGkKi+sTQnsTHHVtT2kitE8iIx10GjlhC/RAk99oNDreJjmIyaK9vxbe9VfQj1FucwJepSohgN1/o=
+	t=1770806311; cv=none; b=f5+/qFK9ViJWUo6+sfA6uRIeyZYAWzSw2Fefeach46WiSExA0U8zegCFSw2XSVJkYZ7EdC62IrwCk59DR+cxCttoaxOOdOERx2GXgwjNqybByKhthFSqAE7agUPDrvPIASJyqq9gj8wY6AftOMsfS7QNAmnsLljsXsCEfj2dZHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770806202; c=relaxed/simple;
-	bh=ih1V+A37D+uRjiAnbr4N+Ybx/RFaQHmXQ7DqGMqf/u4=;
+	s=arc-20240116; t=1770806311; c=relaxed/simple;
+	bh=g4c/+hg4xfQ1QyXw/0chMr+4FZyH+lKINM8dtae1Pgg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nz455tjYgm7wsa1ziuDW/EKF3MHXNdQC8NRJfJXlEjhHevpewjyQPmAR5AIFpdDh74rWq8oHEUVhAtUiyVH1wl2+aKSqd/K97NXLZwJCOoDVsujtEjEh/47l2xGMT6FUG/67c060nLvsDXGTzJHxhmSYRYxMZO8HSzY8Ro7P7rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tB/Ii21W; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB421C4AF09
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 10:36:41 +0000 (UTC)
+	 To:Cc:Content-Type; b=U1ZfRuIwMclmOY+i5/sXS3Z9aIIDb1v2OfD07n5U/ATT+aOlSG/g681e03pfaTTqyJ2z51gf8DR6Z+aeOM1q74Raz3gglrL6WNpsdcOWFMcKt7/g1z2wPORn7dgmVHoYMhMm5Qj2yR8Ad+5JNP4RPaGjuHafW6EpeNsQ0IukRQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nz5fP4KJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F07AFC19424
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 10:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770806201;
-	bh=ih1V+A37D+uRjiAnbr4N+Ybx/RFaQHmXQ7DqGMqf/u4=;
+	s=k20201202; t=1770806311;
+	bh=g4c/+hg4xfQ1QyXw/0chMr+4FZyH+lKINM8dtae1Pgg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tB/Ii21Wbm4vY9pOGVckwMzAvD6QYEZspVxSoeBDes6Ef1MlaNx9oV9BsWeKUsff0
-	 /9uRYagr5tFUjUz/7J7PYrriCKuySiHy0KWi5bgGeKeemUrUEKjXSQEAOa5GGWE0jl
-	 cd2RRjVba969EXyEcsWkGaZ5seYS30bIGu1Lp5LQHZlMpDFjbUQVpRpCsGPvcv340x
-	 hV1l5CQFbTeQ9X/H7nMxt+WBv9z/gupJsB0PmWVlzfAYW7tCDHiT+FlxBgXWx/R2K3
-	 +2FbNyUUE18SgcU+ALHv7x74rvHR0e8V2qrRN/kieytDYTkhkD3ua+H6oHKOaWqNZx
-	 +mMfhAof9tYjA==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-59e61e94e1bso177862e87.0
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 02:36:41 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUkcwpMbeLIXQ6VtXN+InOXXJmGJtQiJ5Kbvcz2a/YasZUnVACNTIoaGmVotXXqFlNOKqpwfCmtkO4Y@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRawF3rTrww3iMq/oQmnNVm9hgi7VBv7OqjhBhafSh3+WUZSRh
-	Tusw3f0BBSwx+KG6eyrBIyQxP+GErzK3o6CkAHySQ9H7OWCR9UUzCWyV8AYOYORSDpUiyrFSyAI
-	U0P+UQQuino1iJEsFNsqTLXK3uRJ6a1Y2IXobXfo5Cw==
-X-Received: by 2002:a2e:be1b:0:b0:385:f3b4:2df7 with SMTP id
- 38308e7fff4ca-3870705205cmr4475291fa.16.1770806200421; Wed, 11 Feb 2026
- 02:36:40 -0800 (PST)
+	b=nz5fP4KJWkSnfHKLAICOcJGEkth7XyvpQUpMQU9JmEROmJOy87h8ZZ/M0vcU/9j+h
+	 RTGFB0qdEwLBHBrbol+joMUSU5vYVr7WBq0XujTqmPXMEmujpUJO0KoRUOfqVeFylA
+	 5Onia7LjbvkVmmwKNFI9oX9L2r3LkoKt7mw6yO/mNvZ1QKtSl9LoSjQy7UAQZsARtN
+	 8QvwFYhHhb8xhtVVZi55hMOJY7FB8SgNN87+n1duNp6vbijMHEGGeB9IEftL68WfE2
+	 ByipEpYByC7ABGiHYMS+ZqjWwEQUdKvIYDqorwZv13dqO/rWA3iR5Dvvqr/0VtGD0l
+	 +hSvGd/BxE5+A==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-385cfc572f1so16532631fa.3
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 02:38:30 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXDjXDboB+cqnV24pOLpTDKqLbYMSAxbxWZzMcyQ4bczcruVc5K4QkxqMsvVxFcIpGVhQM25e0/r0ea@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx47n9lcCb7A3KoIyeQgpGsRar23mosReP593dWHa8YapbMcxXM
+	eZdTeWXPq6WRWsBfZXeYIQCEJft08UOnlTdU3zfBA33ZWOfCx4vU8JEvNtQCeW570Mfguih7oSk
+	QelXBQImOSYNmkOP1CCCeEGPCjIBW4smKiEGH5qel9A==
+X-Received: by 2002:ac2:51c3:0:b0:59e:71f:cc1c with SMTP id
+ 2adb3069b0e04-59e45043866mr4818761e87.1.1770806309629; Wed, 11 Feb 2026
+ 02:38:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -61,78 +61,84 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20260211081355.3028947-1-james.hilliard1@gmail.com>
  <20260211081355.3028947-2-james.hilliard1@gmail.com> <CAMRc=MfgoKmsNAmn3rO2jDL-ZArMX2Jh-n4SnV6rpzRY3KSwuA@mail.gmail.com>
- <34a9b531-4f53-47ee-861e-1b18ff1a5752@kernel.org>
-In-Reply-To: <34a9b531-4f53-47ee-861e-1b18ff1a5752@kernel.org>
+ <CAMuHMdWS-ZaL1nLS=C=hjBVJeVtgNYX-XgWf-8Oy4cGt6OMGDg@mail.gmail.com>
+In-Reply-To: <CAMuHMdWS-ZaL1nLS=C=hjBVJeVtgNYX-XgWf-8Oy4cGt6OMGDg@mail.gmail.com>
 From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Wed, 11 Feb 2026 11:36:28 +0100
-X-Gmail-Original-Message-ID: <CAMRc=MfwQ8J7eT_geEf7Kj230SOvmO-LDHz9a_YgfRY-QB5V8w@mail.gmail.com>
-X-Gm-Features: AZwV_QiomL6baAynjRs36so9UQsF-GX-PQUeQ1j5sLkPJa3mEjvkSsbpVW-xp9w
-Message-ID: <CAMRc=MfwQ8J7eT_geEf7Kj230SOvmO-LDHz9a_YgfRY-QB5V8w@mail.gmail.com>
+Date: Wed, 11 Feb 2026 11:38:17 +0100
+X-Gmail-Original-Message-ID: <CAMRc=MdRn=791YHaGZ7s+rwftJ84PYRivOO8gPPbCMNF6MUH3w@mail.gmail.com>
+X-Gm-Features: AZwV_QgOPgzWmQKucamzjl1eNrb3mJ8VNnRF-yVHm3Vge-JPF_DwZLNVc38hba4
+Message-ID: <CAMRc=MdRn=791YHaGZ7s+rwftJ84PYRivOO8gPPbCMNF6MUH3w@mail.gmail.com>
 Subject: Re: [PATCH v2 2/2] gpio: aggregator: add gpio-aggregator DT compatible
-To: Krzysztof Kozlowski <krzk@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
 Cc: James Hilliard <james.hilliard1@gmail.com>, linux-gpio@vger.kernel.org, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linusw@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
 	Alexander Stein <linux@ew.tq-group.com>, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,glider.be,kernel.org,ew.tq-group.com];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,kernel.org,ew.tq-group.com];
 	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_FROM(0.00)[bounces-31603-lists,linux-gpio=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31604-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: C2214123828
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid,glider.be:email]
+X-Rspamd-Queue-Id: 0B50E12384E
 X-Rspamd-Action: no action
 
-On Wed, Feb 11, 2026 at 11:13=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.o=
-rg> wrote:
+On Wed, Feb 11, 2026 at 10:50=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
 >
-> >>
-> >>  static const struct of_device_id gpio_aggregator_dt_ids[] =3D {
-> >> +       {
-> >> +               .compatible =3D "gpio-aggregator",
-> >> +       },
-> >>         {
-> >>                 .compatible =3D "gpio-delay",
-> >>                 .data =3D (void *)FWD_FEATURE_DELAY,
-> >> --
-> >> 2.43.0
-> >>
+> > >
+> > >  static const struct of_device_id gpio_aggregator_dt_ids[] =3D {
+> > > +       {
+> > > +               .compatible =3D "gpio-aggregator",
+> > > +       },
+> > >         {
+> > >                 .compatible =3D "gpio-delay",
+> > >                 .data =3D (void *)FWD_FEATURE_DELAY,
+> > > --
+> > > 2.43.0
+> > >
 > >
 > > Regardless of the DT bindings - this change is perfectly fine. We do
+> > that for other "virtual" devices like gpio-sim, gpio-virtuser, etc. I
+> > would just ask you to document it under
+> > Documentation/admin-guide/gpio/gpio-aggregator.rst.
 >
-> You cannot have compatible without DT bindings, so this alone is not
-> "perfectly fine". Maybe you wanted platform_device_id entry for
-> ACPI/legacy/MFD devices?
+> This is not a pure virtual device, but for use with actual hardware.
+>
+> Nacked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 >
 
-Sure you can, you just can't put it into upstream devicetree sources.
-We have had a compatible for gpio-sim for testing purposes for years.
-Why would it be illegal to enable matching of platform drivers over DT
-for testing purposes?
+Well, it is a virtual device in that there's no actual "aggregator"
+device on the board. It virtually aggregates GPIOs into a separate
+chip for user's convenience. While there's no such device as a
+gpio-aggregator - and so we must not put it into bindings nor into
+mainline devicetree sources - having a compatible matching in the
+driver is perfectly fine IMO. Just like gpio-sim.
 
 Bartosz
 
