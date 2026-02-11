@@ -1,182 +1,219 @@
-Return-Path: <linux-gpio+bounces-31597-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31598-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0Jj8DQdRjGmukgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-31597-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 10:51:03 +0100
+	id QO/bMNVRjGmukgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-31598-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 10:54:29 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C302F122F99
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 10:51:02 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14B09123067
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 10:54:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 53804303C4E3
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 09:50:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 16EA1300B9D9
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 09:54:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3236736655A;
-	Wed, 11 Feb 2026 09:50:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D7ED3570AD;
+	Wed, 11 Feb 2026 09:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dHF5ecxW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B6635EDB7
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 09:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4285354AE0
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 09:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770803436; cv=none; b=EtWWEIUWpglwwL1jbs9FKiZ0pnffC4gVeFE43S+Q0uKSsBXYUwYqNLF8Vqxpe3zgGqrJpbkdh55oBmZKgWNLBNgw1Ix/YWpuzj85f6F9fsReSRWokbvyJ9xwTu9lx5fs3nv39kQhcjKdHtSp/qZC02sKt+MK1NLjlBf21jcvRVk=
+	t=1770803663; cv=none; b=GgY5W0MOqD2fzVVwGLBz6WHoWt68tWOTBaC0r6xn8ngDD8MhgerRmFAoVJD2fFxLLCPAj+7EpakMHMfsxtQIx99pV85Mt0HV0rPk2k2S1OcHqITSfmcOMiKxMm8N/5j5GCkJMwgmb/dKOu8mJk5gPKLTUI1W6kKCpAee2r/ynZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770803436; c=relaxed/simple;
-	bh=VtrpV+5E2MYP2bSs7xhjfdUpfePxvZw2l3jpzf7ER7Q=;
+	s=arc-20240116; t=1770803663; c=relaxed/simple;
+	bh=/5pNhKzNp3gbK4Hmr3Rpar8H9OmvtwaUM/lc2peBhvE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LQypNUrtQHKfoblEOcUEgA80RgISDt9sbKi38gVP0b2eeE69e4dlIwl9eGR2Q5gQdLEPoeHhGpwByZ6nvD22sryoqfa2Ta8Cd5O1S5CDHx0HglVHLadSimTLgETDO7chAEK1tOJl0+amtTo03YDCO8/UNI1dKOHQ76wLhyQAjSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-56706fd623fso1459692e0c.3
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 01:50:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770803434; x=1771408234;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=BMZYeGG7ZG/yKFwxj0StAxiw1b41IOFw6Lfjb8iE8V8=;
-        b=lMxOMLkzsNGZh4LqjQ+nESocRX2vqrbytPsaQxdOgtdHIPxPOohq6ncS5u96P+e+KU
-         sV6Oti7sjOYMN+OBmEXQn0ttP3oPZz3l1NV2aHyn/pweUq9fTX/+F1QJtTGkjBMKzDLD
-         dCBa8cO9QHhbisHy04C7vJK7evBze7O8rA0C6P7LODhwuIw3lCiBI91oIoZOoCCEq5xt
-         TV+wIU2XVVnX9/dNoHtjIBnVt3bEJLUSSkgPNeeihf6iC06kLspvS2+K6J2NQAKUuJQ7
-         GdZJf6mafZ3+Tryc1uiEDMm8hvYTLJ378hgo4UKM9z9X2eJ++R55G18rDMZt0SrWs0TB
-         RG2w==
-X-Forwarded-Encrypted: i=1; AJvYcCXA9rlQEQseSzKTn2AOHaWOc78RMUaTIPhqEht8+/Xqu09Kt06V3D+S5qMgoyJh61rH7ZkiAr1VM8yZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcKuyS5xT1d+KuBYIpimvsJ9louKoVqD1GufztFG4wIrZ7/4z5
-	tVMks88b7OFGXcrrLuyzMZ7ASsUXa4NqwEFCSzhChPykkZtyt23+l8LaE1WeeByz584=
-X-Gm-Gg: AZuq6aIDFrLB8y0ylqPp7mSdW5PZg4QRRWl2y9jgiUW5E6SNMqWXfloz7fC+C6b+Tse
-	i7idtGqtHuobimyza/kIkWRRe6iq/VpUZe+q3kiTZzUC00WbK7lgwyqlftk5ZYxkxULKQpM7XzO
-	c8Coug/fk1zHvSDCDvzk83QUZIFirO3/2fsfCWTZKmIDDpkRz2bL6H60Jmwv1DVF4mJ1R7hOnh4
-	vUbYRAL+af3FfVLW4TV77iER4O8em3izxRPAmk0m292SYI4rLf4CxuA4/OhmJbF2+2wSVSRyJ07
-	SfK3uilwtgRxK0JvKuUijEuPch4kyco4kEUJScWEZyUxShPpP9cY3QuZ2HkF+KV70VQ2Z6gZ+vP
-	Sgz5EZdY5bFMeoQ7OBCrSjpqCOepPCZtYNv1j+xwPeVgjz6YiT9wfLeSTQzLwRmANc8t+y6eHO5
-	yMAazOSSMQJdyrH5b6NVZJo63i8lmqhH86ABzCj6TqqHSPlxOxXi0zcXskpf1i
-X-Received: by 2002:a05:6123:a7:b0:566:3c6d:b5a3 with SMTP id 71dfb90a1353d-56749ef7d90mr522656e0c.21.1770803433871;
-        Wed, 11 Feb 2026 01:50:33 -0800 (PST)
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5674c24aed4sm435979e0c.19.2026.02.11.01.50.32
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Feb 2026 01:50:33 -0800 (PST)
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-948a378b9deso1224538241.2
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 01:50:32 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUNtpEgoazZm8MCTPfE6dRNbwbSPtGdAzk+BK8FdWANLHq12zxAfgrb9NNN721FHnqGd8pJRMSliaI5@vger.kernel.org
-X-Received: by 2002:a05:6102:2ad3:b0:5f8:e3a9:4135 with SMTP id
- ada2fe7eead31-5fde41e3eafmr606108137.11.1770803432517; Wed, 11 Feb 2026
- 01:50:32 -0800 (PST)
+	 To:Cc:Content-Type; b=Zb9tN+u3nYQJYbNfAwxYOZpGmXsVORuoQANZHF6xJYw6l/PKsklebx9rwzD8u5tA+c8JjDFo/YewsXdUriAxqGnv3x4MDoRgT5XcmSYyddheCkF2Xl7Zbwr7z4NW4P91zT8esSFXb83ocobMCxHI10LlNJdo8PfKWbfGArwIsps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dHF5ecxW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66C9FC4AF09
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 09:54:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770803663;
+	bh=/5pNhKzNp3gbK4Hmr3Rpar8H9OmvtwaUM/lc2peBhvE=;
+	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
+	b=dHF5ecxW6MPWz6oIIdXjhEW/zYWCvnbowkPEaRjMlG2FC9zvKWlbAjKBkIlXtoOge
+	 JHXxd1CVleTVEfLnW2f1dkcvMfNE0V7x/qA4UJvHFxCU5TErwBPiGQF7/LMwrrfz8Z
+	 pAac32HubRGk6jL4vcIG3Q/tjrHxLXN1U90sDSu+R7Eu2arKY4bYjptO9+kIwza608
+	 pv2i2QDOJT9vs9XYwKjDXwm3honwSlRIES7eepetHRf8rLsItM/nhvHda6gOIIKcFy
+	 RwJyrivt+5VrDB0S2pa/MCZjlg6TWmb+HNrC8le/sHxXaXOmbxrzWMdPD+b2QXr5uO
+	 2a7Y5sIACOzWg==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-387097ae2e3so2227371fa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 01:54:23 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXwYpINuKeDRMLxX+K0I+JNrrXs3jRv4U0CER3hOCvmUoWMn92DG1JomFTf2i0neESixt5UAy2y0p/U@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRSk+dtJo0skqaT4LQ/CR49jaHqkhu25063pvTAI2DAvo+FrlL
+	mdd5iEL73k/ArIgeZPI23ZrRQJr4drLUCyA73UvB02LpwWpgiUfMgjoeAsrJax5XiG6qiCLTfqc
+	yUxfiv0h2OSqI8z10m8LMc627tbTij5I=
+X-Received: by 2002:a05:651c:f0f:b0:386:ec21:c87f with SMTP id
+ 38308e7fff4ca-38703200666mr4966961fa.42.1770803661719; Wed, 11 Feb 2026
+ 01:54:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260211081355.3028947-1-james.hilliard1@gmail.com>
- <20260211081355.3028947-2-james.hilliard1@gmail.com> <CAMRc=MfgoKmsNAmn3rO2jDL-ZArMX2Jh-n4SnV6rpzRY3KSwuA@mail.gmail.com>
-In-Reply-To: <CAMRc=MfgoKmsNAmn3rO2jDL-ZArMX2Jh-n4SnV6rpzRY3KSwuA@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 11 Feb 2026 10:50:19 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWS-ZaL1nLS=C=hjBVJeVtgNYX-XgWf-8Oy4cGt6OMGDg@mail.gmail.com>
-X-Gm-Features: AZwV_Qh4Ali32MTB40vjxThNcq8cyjeQWEBbHXHrLxcpziNvcXJ0ME6copCcDgU
-Message-ID: <CAMuHMdWS-ZaL1nLS=C=hjBVJeVtgNYX-XgWf-8Oy4cGt6OMGDg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: aggregator: add gpio-aggregator DT compatible
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: James Hilliard <james.hilliard1@gmail.com>, linux-gpio@vger.kernel.org, 
-	Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alexander Stein <linux@ew.tq-group.com>, devicetree@vger.kernel.org, 
+References: <20260211033249.2770281-1-james.hilliard1@gmail.com> <c78bd0c3-6889-46f8-8b5a-e3490ce7b9c5@arm.com>
+In-Reply-To: <c78bd0c3-6889-46f8-8b5a-e3490ce7b9c5@arm.com>
+Reply-To: wens@kernel.org
+From: Chen-Yu Tsai <wens@kernel.org>
+Date: Wed, 11 Feb 2026 17:54:09 +0800
+X-Gmail-Original-Message-ID: <CAGb2v663k0DBqodAUbdgbwbpb2k9qAkFowA_P0HpCUv_mCXG_Q@mail.gmail.com>
+X-Gm-Features: AZwV_Qi2y5CAMrmnItBBq7T6t5ZLzWkFIM0u2qt3VdP2YzsuTAzC8hcuXWxIqwA
+Message-ID: <CAGb2v663k0DBqodAUbdgbwbpb2k9qAkFowA_P0HpCUv_mCXG_Q@mail.gmail.com>
+Subject: Re: [PATCH 1/1] pinctrl: sunxi: add GPIO get_direction callback
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: James Hilliard <james.hilliard1@gmail.com>, linux-sunxi@lists.linux.dev, 
+	linux-gpio@vger.kernel.org, Linus Walleij <linusw@kernel.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, linux-arm-kernel@lists.infradead.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.46 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,kernel.org,ew.tq-group.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31597-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[gmail.com,lists.linux.dev,vger.kernel.org,kernel.org,sholland.org,lists.infradead.org];
 	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[linux-m68k.org];
 	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31598-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
+	HAS_REPLYTO(0.00)[wens@kernel.org];
+	RCVD_COUNT_FIVE(0.00)[5];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[wens@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_COUNT_FIVE(0.00)[6];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	RCPT_COUNT_SEVEN(0.00)[10];
-	R_DKIM_NA(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[glider.be:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux-m68k.org:email,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: C302F122F99
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,arm.com:email]
+X-Rspamd-Queue-Id: 14B09123067
 X-Rspamd-Action: no action
 
-Hi Bartosz,
+On Wed, Feb 11, 2026 at 5:08=E2=80=AFPM Andre Przywara <andre.przywara@arm.=
+com> wrote:
+>
+> Hi James,
+>
+> On 2/11/26 04:32, James Hilliard wrote:
+> > Implement sunxi_pinctrl_gpio_get_direction() and wire it into
+> > the sunxi gpio_chip setup.
+>
+> thanks for taking care and sending a patch! I am still scratching my
+> head what this warning is about exactly and why we only see this now? I
+> never saw this, so what caused that? libgpiod accesses from userland?
 
-On Wed, 11 Feb 2026 at 10:47, Bartosz Golaszewski <brgl@kernel.org> wrote:
-> On Wed, Feb 11, 2026 at 9:14=E2=80=AFAM James Hilliard
-> <james.hilliard1@gmail.com> wrote:
+For me it was `cat /sys/kernel/debug/gpio`.
+
+> Regardless, can we hold back this patch, please? As part of the A733
+> pinctrl support (and as LinusW asked kindly about that) I was reworking
+> our driver to use the generic gpio interface, and I have a feeling this
+> would solve this problem automatically?
+> The actual pinctrl conversion is done, I just need to plug in the IRQ
+> support. I ideally would have something in the next days to post, would
+> that be worth waiting for?
+
+We probably want something for the stable kernels though. The commit
+that adds the warning was merged sometime last year, so it's part
+of the latest LTS.
+
+
+ChenYu
+
+> Cheers,
+> Andre
+>
+>
+>
 > >
-> > Add an OF match entry for "gpio-aggregator" to support plain GPIO
-> > forwarding from devicetree without delay semantics.
-> >
-> > This allows exposing selected lines as a logical GPIO controller with
-> > stable aggregated offsets, so consumers can reference forwarded lines
-> > instead of physical controller offsets. It also allows creating bundled
-> > groups of named lines that can be exposed to userspace as a convenient
-> > virtual gpiochip interface. Using "gpio-delay" for this case is not
-> > suitable because it enables delay features and requires 3-cell GPIO
-> > specifiers.
+> > The new callback reads the pin mux register and compares the mux
+> > value against the pin descriptor gpio_in and gpio_out functions
+> > to report GPIO_LINE_DIRECTION_IN or GPIO_LINE_DIRECTION_OUT.
+> > If the pin is muxed to irq, report it as input.
 > >
 > > Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
-
-> > --- a/drivers/gpio/gpio-aggregator.c
-> > +++ b/drivers/gpio/gpio-aggregator.c
-> > @@ -1635,6 +1635,9 @@ static int gpio_aggregator_probe(struct platform_=
-device *pdev)
-> >  }
+> > ---
+> >   drivers/pinctrl/sunxi/pinctrl-sunxi.c | 32 ++++++++++++++++++++++++++=
++
+> >   1 file changed, 32 insertions(+)
 > >
-> >  static const struct of_device_id gpio_aggregator_dt_ids[] =3D {
-> > +       {
-> > +               .compatible =3D "gpio-aggregator",
-> > +       },
-> >         {
-> >                 .compatible =3D "gpio-delay",
-> >                 .data =3D (void *)FWD_FEATURE_DELAY,
-> > --
-> > 2.43.0
+> > diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/su=
+nxi/pinctrl-sunxi.c
+> > index 0fb057a07dcc..424f23be27b2 100644
+> > --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> > +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> > @@ -995,6 +995,37 @@ static int sunxi_pinctrl_gpio_direction_output(str=
+uct gpio_chip *chip,
+> >                                           chip->base + offset, false);
+> >   }
 > >
+> > +static int sunxi_pinctrl_gpio_get_direction(struct gpio_chip *chip,
+> > +                                         unsigned int offset)
+> > +{
+> > +     struct sunxi_pinctrl *pctl =3D gpiochip_get_data(chip);
+> > +     struct sunxi_desc_function *in, *out, *irq;
+> > +     u32 reg, shift, mask, val;
+> > +     u16 pin =3D chip->base + offset;
+> > +
+> > +     in =3D sunxi_pinctrl_desc_find_function_by_pin(pctl, pin, "gpio_i=
+n");
+> > +     out =3D sunxi_pinctrl_desc_find_function_by_pin(pctl, pin, "gpio_=
+out");
+> > +     if (!in || !out)
+> > +             return -EINVAL;
+> > +
+> > +     irq =3D sunxi_pinctrl_desc_find_function_by_pin(pctl, pin, "irq")=
+;
+> > +
+> > +     sunxi_mux_reg(pctl, offset, &reg, &shift, &mask);
+> > +     val =3D (readl(pctl->membase + reg) & mask) >> shift;
+> > +
+> > +     if (val =3D=3D in->muxval)
+> > +             return GPIO_LINE_DIRECTION_IN;
+> > +
+> > +     if (val =3D=3D out->muxval)
+> > +             return GPIO_LINE_DIRECTION_OUT;
+> > +
+> > +     /* IRQ function is effectively input. */
+> > +     if (irq && val =3D=3D irq->muxval)
+> > +             return GPIO_LINE_DIRECTION_IN;
+> > +
+> > +     return -EINVAL;
+> > +}
+> > +
+> >   static int sunxi_pinctrl_gpio_of_xlate(struct gpio_chip *gc,
+> >                               const struct of_phandle_args *gpiospec,
+> >                               u32 *flags)
+> > @@ -1603,6 +1634,7 @@ int sunxi_pinctrl_init_with_flags(struct platform=
+_device *pdev,
+> >       pctl->chip->set_config =3D gpiochip_generic_config;
+> >       pctl->chip->direction_input =3D sunxi_pinctrl_gpio_direction_inpu=
+t;
+> >       pctl->chip->direction_output =3D sunxi_pinctrl_gpio_direction_out=
+put;
+> > +     pctl->chip->get_direction =3D sunxi_pinctrl_gpio_get_direction;
+> >       pctl->chip->get =3D sunxi_pinctrl_gpio_get;
+> >       pctl->chip->set =3D sunxi_pinctrl_gpio_set;
+> >       pctl->chip->of_xlate =3D sunxi_pinctrl_gpio_of_xlate;
 >
-> Regardless of the DT bindings - this change is perfectly fine. We do
-> that for other "virtual" devices like gpio-sim, gpio-virtuser, etc. I
-> would just ask you to document it under
-> Documentation/admin-guide/gpio/gpio-aggregator.rst.
-
-This is not a pure virtual device, but for use with actual hardware.
-
-Nacked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
 
