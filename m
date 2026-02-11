@@ -1,202 +1,238 @@
-Return-Path: <linux-gpio+bounces-31592-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31593-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yO1lJX5BjGlYkAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-31592-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 09:44:46 +0100
+	id UP3LIo9DjGnYkAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-31593-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 09:53:35 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A0311225A9
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 09:44:46 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 379511226F9
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 09:53:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E5F2F3019449
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 08:44:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 40F5F302768B
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 08:53:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8240352958;
-	Wed, 11 Feb 2026 08:44:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 753723542C3;
+	Wed, 11 Feb 2026 08:53:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m5Tv11TW"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EK8IO9yE";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="L+vXxfyC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A962834846D;
-	Wed, 11 Feb 2026 08:44:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF0B306480
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 08:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770799482; cv=none; b=LL8eKbmpPkYmEQWL7qC9euh3c7V0ZU7eCHkt5nMlc1+x9mMsGgL7Zttj0ovFo11Fl4nNA1bKj3ICA8mu0v+oT3Os0kX2LOgOC+809Sm3GbvlwA4ET6x+OXlUg08hIv0URizVAyTpFCcYpDvXw4nWLqM3cGlQHzG4cjEfQp/UBpI=
+	t=1770800001; cv=none; b=ikgV5NTJk5/ySJFYtCGbveyoBrX7E03DAMbz7+RZe49mKWMJDc3ZlWbAWxPXX69uFRSoukf+HJYbgs4i0ucH+tAZfMHmDQdeKGNu1bHMjOoM3ZeSa+o6q+LwqWMEA8xwx7jdaocKVXtvQWggxssYNopzy79ASCGvBH50o/qKkGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770799482; c=relaxed/simple;
-	bh=2U+ptRsG3F1N+6DOP9Kp4NeIPR7wGkQ6h4Z6hgReQ1g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OuLNksdHWMtmZXYEMBmzy+OvDOY+6M+Xk04R50v1scPTcgo8g4z0C/VqRNjroZetDyfUGT4abCLlGbafhpPhFyTh0bEZEfXKkcbalySN932IXVxW2Ff3Z9VlOnQOtItycZA3ZYt81aSS96zrb5skHYpsPj6Dwdft0FB96y8kgvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m5Tv11TW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3022C4CEF7;
-	Wed, 11 Feb 2026 08:44:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770799482;
-	bh=2U+ptRsG3F1N+6DOP9Kp4NeIPR7wGkQ6h4Z6hgReQ1g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=m5Tv11TWtLahq/FaMOBIyU3hDZLssT5HWPD8dXkM2UmAwqHQpUMe9TlZ2P3Ecfql2
-	 IVVEhpwp+DeZyvlkWZPXYgJ4t9+hvDk4LNGA3jOiOzzVwdF1RZh/dRNMrjBNKTI2nv
-	 hrrJLCyjpNC0mINw5mV6O7pphSIX5sS8Iq4Oggw/KLwLDIQuq0P5OSlBGJvukVjHwz
-	 +BqqPevN++aLfiYWMKFWp1dqcFfUo4e+aj1oeiXCfhcXK9gGrcMmohBqe0LKvECXWd
-	 Fi1J4dxMk4e0IUVoU+JApxowU/VYJe3WHz5KrDredU1JMaWCVqCLPV/c3UmhqGZU8w
-	 5chZkaxhsbdTw==
-Message-ID: <30026ed7-cd19-4be2-adbb-e8bb155a75b8@kernel.org>
-Date: Wed, 11 Feb 2026 09:44:38 +0100
+	s=arc-20240116; t=1770800001; c=relaxed/simple;
+	bh=a/2liInywBiVyvZH5ZSy1dS+BQtS66ZsSM51lFDwn+A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aER78/inMkiaqGYcG0BDwcTpJjFKUZX25XsG2nbvWRcbOqTkp5pCw8Ti/n5JucBk/utzkaOucIl+4Ip37N3JTwPstNz7QH3Xyr7flVak4vacGfRB6BWp99B20PMiVCRkbnHUeau2wsiLwT+nOFsZ8Eg6FgNDxb3dhlvPR9OxwFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EK8IO9yE; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=L+vXxfyC; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61B8bpME4177319
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 08:53:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=RS3ATQIauI/NfFT2FuRblu0XJKn0tBFCAKh
+	Kp+3IEVY=; b=EK8IO9yEaUISZAP/8Hx+3MVpdMudQy9iNwnfn209xbur03M3zVf
+	l0ylx1ASlmbdDSs4l0c9SIywwwGHA1xtE9E/xSHiiddHpcgTpJhJQefeiDco188G
+	zWIRGWvklXPW+2rNS9Ta/zPwdJBYKX24IyCybqpZ8g+AWT/0emUlPo8oWBfA7smZ
+	/Dp5cYeCNFTMizCz3pm9S5WDJ3+WC5mgwkx+FJiBu4mPCOo/OT7FPvKH7bXA5h6m
+	c4q0Zape8+ZZ/+Vzgavp43StdOIAHDBUeP+TfmTfCrBv2xIMsYfR/oyZYfIU1QIv
+	COXV24C1Er2i4EYIp+mIcstloxBUUW9jGSw==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4c879mk1te-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 08:53:17 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-8c52f07fbd0so2115041185a.2
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 00:53:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1770799997; x=1771404797; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RS3ATQIauI/NfFT2FuRblu0XJKn0tBFCAKhKp+3IEVY=;
+        b=L+vXxfyCGfTpdkbZmdQE4xNC/g3vFNCere3a65U0cRbB+inMgKMfo/BbENfjoNgyX2
+         W5pZ8xkOzrI4X9dKrf6Q+TZkYEUXvz0MqK1r1r2yn9ArMsqa+LJQQUDdSMzC2N7J/++4
+         U5r+w19A7sg759TmJ8oNJRRB1FnUpjRgyYwxes5a13XsTpw6L2s6iyXvdxGQdRQaJkhT
+         8rCGUUeRDmvAp3uE4DJM2ZtC3ZHLz29HCzzq5KrfMQ6+w4OcgATnKcJtX1ROjYitncFP
+         6u9yL89XYYUQUDywiuPTcAZH2mOVss+l9IE5H8stA8z+zx1AyJipmlhavHiKlTC3AfLE
+         gAoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770799997; x=1771404797;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RS3ATQIauI/NfFT2FuRblu0XJKn0tBFCAKhKp+3IEVY=;
+        b=t9FZMw45BSVPrrc1kXglbkW4FCpld2PNQ31k8KD6UZ6rdnQ3oM0ocibALjuBrCT7jp
+         4TiMiPRKxfXOkmFgcVYzzQOK92JoutqG0QYXCCblZfEIjWE+6MIEmmrCvQSo3bNpoLMp
+         YIS5s3+QdJKqXmJGLYwotQJjyxZJCVldNvbMgPbGFRpT7iaKGBvjHr8RxJVUfEPB+C5O
+         7g+H9rdPA6Z/qNrxgL93ey0VOp6zs5I+MYZUrry+vHvruXklMJ/GzgDF20hqrsukfYFy
+         yBHT7yJouuSGM0kXhZmzBvarTkwN6h/3rNXRQj+Zs4N4f4a9L12y76ml4MNue+lP2HGS
+         XHnQ==
+X-Gm-Message-State: AOJu0Yy3DlYXfO1nqODHeZ+6p2X1fJDyTD8jrfidqYCZCnEvceC2tVT1
+	YNLFvJrdg2GzjpzNx+7iV/5/4XLKkyLlhhJcrAcTeuTT6l/0zpPVPEIZwJSqqxI72avaN/RRlh5
+	yLei+rufx22rBL0R+uphxsshhnwrKNQ5X3pYlJq4PKTIBKg8QTeqRUi8dqsf0QWwj
+X-Gm-Gg: AZuq6aJeY55B2f3n5NpQZUc2h2zA5g+J//XdVecSKktC7VjGOnxDc/HlUFEdugw+YNg
+	x4LKVdERZmIBQUO+0jTIKikQqPCPCUIlpA7GkeH8fo//DAONUpvAM5FxKhAk83dHjvJy/y73Hyv
+	Yl0zltE5VfbE0vk7m5JIzLhZguhrVCy7MJqbsg75tsPILN0O/0N1as9HpboGcIZY9NLIT9rVjlJ
+	KB89h+J6U2utaThiPduRhP6xUQZJn9ROBgvBsG6btfXw+8diQ2d8xT8i0ssPLqZhN90wAt/lbcd
+	HP9JEG/FldM9tIKWVmDFI+5mfGuP8xuJZR06gowrbqCwpu8wYyiFwCorhgeMhezAr7jyixq95D8
+	1OXVlv1cdqy1U0CNy+7XVCt3WfxgxTNVIdcla52oKalyN9OgL5eE=
+X-Received: by 2002:a05:620a:288c:b0:8cb:16:d936 with SMTP id af79cd13be357-8cb2808f823mr256761685a.77.1770799996889;
+        Wed, 11 Feb 2026 00:53:16 -0800 (PST)
+X-Received: by 2002:a05:620a:288c:b0:8cb:16:d936 with SMTP id af79cd13be357-8cb2808f823mr256759085a.77.1770799996369;
+        Wed, 11 Feb 2026 00:53:16 -0800 (PST)
+Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:d772:ba4c:782c:2fd6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43783e3a9acsm3100770f8f.30.2026.02.11.00.53.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Feb 2026 00:53:15 -0800 (PST)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Arnd Bergmann <arnd@kernel.org>, Hans de Goede <hansg@kernel.org>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+        stable@vger.kernel.org
+Subject: [PATCH v2] gpio: swnode: restore the swnode-name-against-chip-label matching
+Date: Wed, 11 Feb 2026 09:53:13 +0100
+Message-ID: <20260211085313.16792-1-bartosz.golaszewski@oss.qualcomm.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: add gpio-aggregator binding
-To: James Hilliard <james.hilliard1@gmail.com>
-Cc: linux-gpio@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Alexander Stein <linux@ew.tq-group.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260211081355.3028947-1-james.hilliard1@gmail.com>
- <338e6575-ec44-4179-94af-9086a7ca79ac@kernel.org>
- <92359c6d-06ac-4f8d-baa5-6fa45a536455@kernel.org>
- <CADvTj4q74H__JZftOiXkdsY3+E_Xmcx6Y6i70RQDJ0K09=XOHQ@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CADvTj4q74H__JZftOiXkdsY3+E_Xmcx6Y6i70RQDJ0K09=XOHQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=UKjQ3Sfy c=1 sm=1 tr=0 ts=698c437d cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=HzLeVaNsDn8A:10
+ a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22
+ a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=EUspDBNiAAAA:8
+ a=9y8YAwuLlfTazgfakgcA:9 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjExMDA3MSBTYWx0ZWRfX3BBkneFA06ca
+ QT0L+KTPa5GVAfuMhApcvczKTjKIfcNtL0Z7SVr9gVEyZ9S2msRo+fgwWuo21AKBLM46u4PFGuu
+ qnp7mjq0tl2X7UZ/+2c5D9/dB0FF+3rhy6Ywcob4mwrMBRpYuIN0F9kdBFO2C+qGZZr1qx7d46T
+ 1IJWSwANEmhHCWUjOZvcvAXYuMs457a/wk8cetw8wdXHd3mzlnP3498ReuiFo700gwMCfWm9sPL
+ No3vPRzmvzhuucwNHqshJLVYRXGtvIhQ79bf4z6jK+QVm8mJxyRAkrRJYJaJz2A6iLsgWGYRyJv
+ c9zuu2YPSdXtzSMZ6O0huCty6muNiGsrPHEkD+Wdax9DqQc5gYBML8d2cwWc4Ba7KEwg+jF/zg/
+ VHjLyIjUR8KUpgTKIm7+WfycwYSMKe/PFTq2KeR9Qt+bMflCCvd4yG4rskqmiEAfVyLlo5Tr7qL
+ FMtHj/qXlnMvuftYzNQ==
+X-Proofpoint-ORIG-GUID: JzX7NlzGwmO2uf3eDjhpz7a67klvo6KO
+X-Proofpoint-GUID: JzX7NlzGwmO2uf3eDjhpz7a67klvo6KO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-10_03,2026-02-10_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 spamscore=0 impostorscore=0 lowpriorityscore=0
+ clxscore=1015 bulkscore=0 phishscore=0 malwarescore=0 adultscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
+ definitions=main-2602110071
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31592-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[kernel.org,linux.intel.com,linuxfoundation.org,gmail.com,linaro.org];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-31593-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,qualcomm.com:dkim,intel.com:email];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 1A0311225A9
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 379511226F9
 X-Rspamd-Action: no action
 
-On 11/02/2026 09:28, James Hilliard wrote:
-> On Wed, Feb 11, 2026 at 1:19 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On 11/02/2026 09:17, Krzysztof Kozlowski wrote:
->>> On 11/02/2026 09:13, James Hilliard wrote:
->>>> Document the gpio-aggregator virtual GPIO controller with a dedicated
->>>> schema and compatible string.
->>>>
->>>> Also extend the GPIO AGGREGATOR MAINTAINERS entry to cover the new
->>>> binding file.
->>>
->>> <form letter>
->>> This is a friendly reminder during the review process.
->>>
->>> It seems my or other reviewer's previous comments were not fully
->>> addressed. Maybe the feedback got lost between the quotes, maybe you
->>> just forgot to apply it. Please go back to the previous discussion and
->>> either implement all requested changes or keep discussing them.
->>>
->>> Thank you.
->>> </form letter>
->>>
->>
->> First thing which was missing (I did not even check the rest in such
->> case): missing rationale for this patch, missing hardware description.
-> 
-> I added some more details to the commit message, this is a
+Using the remote firmware node for software node lookup is the right
+thing to do. The GPIO controller we want to resolve should have the
+software node we scooped out of the reference attached to it. However,
+there are existing users who abuse the software node API by creating
+dummy swnodes whose name is set to the expected label string of the GPIO
+controller whose pins they want to control and use them in their local
+swnode references as GPIO properties.
 
-No... Commit msg is exactly the same.
+This used to work when we compared the software node's name to the
+chip's label. When we switched to using a real fwnode lookup, these
+users broke down because the firmware nodes in question were never
+attached to the controllers they were looking for.
 
-> virtual gpio driver though so AFAIU it's not hardware specific.
+Restore the label matching as a fallback to fix the broken users but add
+a big FIXME urging for a better solution.
 
-You can give example of any hardware where this is useful. You need to
-make your case with actual arguments.
+Cc: stable@vger.kernel.org # v6.18, v6.19
+Fixes: 216c12047571 ("gpio: swnode: allow referencing GPIO chips by firmware nodes")
+Link: https://lore.kernel.org/all/aYkdKfP5fg6iywgr@jekhomev/
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+---
+Changes in v2:
+- check if gdev_node and gdev_node->name are not NULL before trying to
+  match the label (Hans & Dan)
+- use the right link
+- collect tags
 
-> 
-> Use case is I have a device with something like 300 gpio
-> lines...and I want to name/group a small subset of those
-> lines for delegation to a userspace app rather than trying
-> to set 300 or something gpio-line-names values, also I'm
+ drivers/gpio/gpiolib-swnode.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-So if I change the approach in user-space or use different user-space
-app then I change the DTS?
+diff --git a/drivers/gpio/gpiolib-swnode.c b/drivers/gpio/gpiolib-swnode.c
+index 21478b45c127d..0d7f3f09a0b4b 100644
+--- a/drivers/gpio/gpiolib-swnode.c
++++ b/drivers/gpio/gpiolib-swnode.c
+@@ -42,6 +42,25 @@ static struct gpio_device *swnode_get_gpio_device(struct fwnode_handle *fwnode)
+ 
+ fwnode_lookup:
+ 	gdev = gpio_device_find_by_fwnode(fwnode);
++	if (!gdev && gdev_node && gdev_node->name)
++		/*
++		 * FIXME: We shouldn't need to compare the GPIO controller's
++		 * label against the software node that is supposedly attached
++		 * to it. However there are currently GPIO users that - knowing
++		 * the expected label of the GPIO chip whose pins they want to
++		 * control - set up dummy software nodes named after those GPIO
++		 * controllers, which aren't actually attached to them. In this
++		 * case gpio_device_find_by_fwnode() will fail as no device on
++		 * the GPIO bus is actually associated with the fwnode we're
++		 * looking for.
++		 *
++		 * As a fallback: continue checking the label if we have no
++		 * match. However, the situation described above is an abuse
++		 * of the software node API and should be phased out and the
++		 * following line - eventually removed.
++		 */
++		gdev = gpio_device_find_by_label(gdev_node->name);
++
+ 	return gdev ?: ERR_PTR(-EPROBE_DEFER);
+ }
+ 
+-- 
+2.47.3
 
-Well, that's not a valid reason for a binding then.
-
-> supporting multiple board variants and want to be able to
-> better compose the gpio difference with device tree overlays
-> using these virtual gpio groups essentially.
-
-This also should not be used to differently organize DTS, for the sole
-purpose of composing gpio difference. The role of DTS is to represent
-here the hardware.
-
-
-Best regards,
-Krzysztof
 
