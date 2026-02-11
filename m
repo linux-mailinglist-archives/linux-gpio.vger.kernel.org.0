@@ -1,224 +1,196 @@
-Return-Path: <linux-gpio+bounces-31581-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31582-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4DjBJc8IjGl7fAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-31581-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 05:42:55 +0100
+	id ICozN0oajGn9ggAAu9opvQ
+	(envelope-from <linux-gpio+bounces-31582-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 06:57:30 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B24031213C4
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 05:42:54 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 113FC1218A0
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 06:57:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3202C3035D48
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 04:42:53 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 554973014F48
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Feb 2026 05:57:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74AA03542F7;
-	Wed, 11 Feb 2026 04:42:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 440BA349B04;
+	Wed, 11 Feb 2026 05:57:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8WzXhdS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NX2TBbv1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13758353EC7
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Feb 2026 04:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28B130EF94;
+	Wed, 11 Feb 2026 05:57:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770784971; cv=none; b=ECWHGy+H4XZ+xK449n+Ty47bjXZqI5E3mPNnu8KGzZu1NPFkG5soi7O+v81An5pP4bh11GPZZosgJi/0ov3kf1BwNarYCKeelMBjhoGeRpYDIDdD1GzSlqxlw3RLyzjBARjVpaFlwOr2AKr8qlnDVe/7aasWuevY7KyetzMjBE0=
+	t=1770789443; cv=none; b=D+sJTeaJrtyC3F6/Sb90sRtD+tZeLtnQCcPhjVGfxmKTfQbJe+0kojcUdxipx60HNij59j78R//jBrnwTx4Cxf2lxQ6+LvXvHFyG1ycpHeqjzkhGnhU7zFagE5t9py7Ts8YLpnRStHMMER3bc+YoSSB/wYCSSUU9sUB7V/KtnfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770784971; c=relaxed/simple;
-	bh=pQeaDOzPamoeAF5ooQECreYyUnj19b18eNZDNf80rdY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AtOxpEaYvad2Hlv4hddsxC1+2IPX/AHtCRAqe3b0xzaoL1uJubPKTEzS4qnVjuEzG2hG+f07TYEVhLCBSH9Rq0GzsqKenqMVxi7TfzF/ZTpz734ROEKiXotHnHkhVhNcUg+sbLe9IgnMtVmQem5cPOvsTBUX+ub5nH5tHvG3vvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P8WzXhdS; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-40438380b88so1013968fac.3
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Feb 2026 20:42:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770784969; x=1771389769; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/9Z7oU+P7jRFZrLVuDGug2HJhb2WxlffNp9qdHif4WU=;
-        b=P8WzXhdSNrCtQvg2wJwKfg9ksjHo0lM5YgzkQcCIhEBkk7swVEaCirvULCQPW07C7+
-         hoN0wgJiCAOYJMKNjuGxTrA3tGpZaltI5zypP85OYBp0u9LGx1fK9II82R5YHkNqcF91
-         GC3ebT3jaESWD5MXIaIkSXwnDptaY3xbXvtnh5D+ogmmYExrHQbYoE2/Pc0JMOzpoavs
-         0v2r1WcFQodziStJpaDXbipX7tbEbN8UjCx2YPQRVsxBKhy1Rp2K60KnglDSX4VEAZnJ
-         gR8Ko8oJfOHElCnZKLXyEpQb3KmpG3YvL4WI2FIAGDH/K1qqEWLKPDZ4AyzVFLpyJo0t
-         H8Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770784969; x=1771389769;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/9Z7oU+P7jRFZrLVuDGug2HJhb2WxlffNp9qdHif4WU=;
-        b=tnx42ZH5HLPIRQY5/jnT1hvwqgRB7nSUG+Cafsu/1Ck+0tPDdBbsEMa7A3+BjgZI+2
-         MFqKLXEikXWtkVBArRjuIP0MurSp4z5/MB21uBkMNC73ZzuDlIYggtx36qwK1DM35BiI
-         X2CGehSRrFoRvmCGPUyLB/hW4UUToY65s1lJrIy5nQNjjg+1N0Qs9wQ+X9FAPpZarcIU
-         2rogAfIobtEaKewmEZ3zwzqWkYBrB6pzJ84kNp8u+36Gk7CE2IvBfJp3346rCIIip8AW
-         8Jxqrp7GOJOj90Ob4n0spVAc8HYCRlLX5MmboEhrbtpNUsUTAcqsjbs6w8KiQbMNsoSK
-         DSZQ==
-X-Gm-Message-State: AOJu0YysoDSAAaCjA1fACkC4z9qaf1k6IrEHyMQaq4p9PzEVy+Fg7k09
-	tuYFQ/nhDcu5RWIyZRnZFYhL0Mz5hkouvDOMX2y18zsmOGnxhb3vF3vFdJUdcg==
-X-Gm-Gg: AZuq6aKEJEgVrA0rOgrGoVXxBhLq29n4T/Js9I+gCmeuKNEqPezO5PhnRs2OolR0oX7
-	5KRZP1MTCB3kXSEqUR+nn0XvTmFkgtRvFu4c4NWHvv4/Oz35ZA5ThPC+zQeVju7L4Sv7zEUvUVD
-	nuLuvpnkTrlYQtwxdfInOfvAZ6S7PEtPudcTFMm7sA2v5JFKZ0WURvOh67PY4s7IG98jr2K+9Tc
-	88pJwAKk57W3NtJZbUPwwTjcWnQQqJea7sRHEejdLJf2SGmeIWz6P/+o2Q1FGmfrLi4jypmQkx1
-	vObsQDBKRta3ocKo9I7sq6Qj/POooEVPQJDQVxMLB4TNyqdwBY9qevqbTR13PKeJWyOQU09QFsw
-	ImdLIOWF8nqbraR5w7FFm0N5j0iB302svgdmoxlL3E2hSVnjj6kQskGtX7ELt7jZu0izHHyfPJ/
-	uD+yLJvQc9f2IjZBV9NsvB4Xg6jsMR0p99jSx1uqBjyI/GFP3AKTeBo7sAZ4JCnma1rvvuhb+Nu
-	RvGxJdSeuxHziBCTPyIK52s6cg93eGVlXXRaJVhdOiOJoOxX4/b/fSpJPIZGuu24Q9Bw82DPQ==
-X-Received: by 2002:a05:6871:3401:b0:404:1525:10e6 with SMTP id 586e51a60fabf-40a970480c2mr7112051fac.49.1770784968730;
-        Tue, 10 Feb 2026 20:42:48 -0800 (PST)
-Received: from james-x399.localdomain (71-218-105-26.hlrn.qwest.net. [71.218.105.26])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-40eaf16c383sm541309fac.14.2026.02.10.20.42.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Feb 2026 20:42:48 -0800 (PST)
-From: James Hilliard <james.hilliard1@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: James Hilliard <james.hilliard1@gmail.com>,
-	Linus Walleij <linusw@kernel.org>,
+	s=arc-20240116; t=1770789443; c=relaxed/simple;
+	bh=WnpB/MHUvOu0MxaG9qXi+XunVyvMIMGcsZJjH30GK1s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nMVk7aV3ZQzQU9mVTph3JjoOH3X9RV39Wbm3sAvgF3sd6MTZUBfxGeJomRJ4gUsXKP4YCkId38EJkPsADLA3BBQ5GcitKKsCZD0uVQwg5Zqbh5cHQ22QpXmjzu+mD5WnjV/d6ihQPCrsQpWu+0WMlEOs8IyX3AJReoChI8w+wRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NX2TBbv1; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770789442; x=1802325442;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WnpB/MHUvOu0MxaG9qXi+XunVyvMIMGcsZJjH30GK1s=;
+  b=NX2TBbv1xhrHswGVJURVxU3XzgKWSE4ETUlYUuzHoK16HCXXjusbfQWB
+   Ajnx1SuFy/T+X9ks2aOT1BMoBADM9/I6s/tYWxHDItRtBM4XDzo3hdVwK
+   EWsKQY9G+xTLTtBC5KU9eEZKvMANa1MrwznzvkotZFO8idSYaAbco7ds6
+   2ELNtUyeAX83PSBHbX+Xx8djkSdk4hMmFrZ+HZlvYE+2vyQ0tOL0KxTST
+   bVQQyOKr4AzZf/1vQVaJ6Cc2UhALkKvhKudvLpKRVl2DlBRKQJ7TuHlD8
+   8eHfm7L+kmwSgSk2p0hroZZy5L1iTgYoB8TxfJffWuqLu9u6k9je1voTZ
+   g==;
+X-CSE-ConnectionGUID: UbHVe8RET1SbHgwpe0DJbw==
+X-CSE-MsgGUID: m3w9gAj+SNiM6IC3s0bS/A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11697"; a="94569681"
+X-IronPort-AV: E=Sophos;i="6.21,283,1763452800"; 
+   d="scan'208";a="94569681"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2026 21:57:21 -0800
+X-CSE-ConnectionGUID: Cp3x9V8wSLW7rubOh6WZ5A==
+X-CSE-MsgGUID: H3wgMnd3QcCarV66oRkcfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,283,1763452800"; 
+   d="scan'208";a="212176563"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 10 Feb 2026 21:57:15 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vq3Ds-00000000piq-4C4o;
+	Wed, 11 Feb 2026 05:57:13 +0000
+Date: Wed, 11 Feb 2026 13:56:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Shenwei Wang <shenwei.wang@nxp.com>, Linus Walleij <linusw@kernel.org>,
 	Bartosz Golaszewski <brgl@kernel.org>,
 	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Alexander Stein <linux@ew.tq-group.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] gpio: aggregator: add gpio-aggregator DT compatible
-Date: Tue, 10 Feb 2026 21:42:12 -0700
-Message-ID: <20260211044216.2885718-1-james.hilliard1@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Shenwei Wang <shenwei.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-imx@nxp.com,
+	arnaud.pouliquen@foss.st.com, Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v7 3/4] gpio: rpmsg: add generic rpmsg GPIO driver
+Message-ID: <202602111320.C3eHRtNV-lkp@intel.com>
+References: <20260210170814.406883-4-shenwei.wang@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260210170814.406883-4-shenwei.wang@nxp.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	RCPT_COUNT_TWELVE(0.00)[26];
+	FREEMAIL_CC(0.00)[lists.linux.dev,pengutronix.de,gmail.com,nxp.com,vger.kernel.org,lists.infradead.org,foss.st.com,lunn.ch];
+	TAGGED_FROM(0.00)[bounces-31582-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31581-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,glider.be,ew.tq-group.com,vger.kernel.org];
-	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FROM_NEQ_ENVFROM(0.00)[jameshilliard1@gmail.com,linux-gpio@vger.kernel.org];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B24031213C4
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,intel.com:mid,intel.com:dkim,intel.com:email,01.org:url]
+X-Rspamd-Queue-Id: 113FC1218A0
 X-Rspamd-Action: no action
 
-Add an OF match entry for gpio-aggregator so the forwarder can be
-instantiated without using the delay-specific compatible.
+Hi Shenwei,
 
-Add a minimal DT schema for gpio-aggregator documenting compatible.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
----
- .../bindings/gpio/gpio-aggregator.yaml        | 57 +++++++++++++++++++
- drivers/gpio/gpio-aggregator.c                |  3 +
- 2 files changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-aggregator.yaml
+[auto build test ERROR on brgl/gpio/for-next]
+[also build test ERROR on robh/for-next remoteproc/rproc-next linus/master v6.19 next-20260210]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-aggregator.yaml b/Documentation/devicetree/bindings/gpio/gpio-aggregator.yaml
-new file mode 100644
-index 000000000000..ec1d08f3db2c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-aggregator.yaml
-@@ -0,0 +1,57 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-aggregator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: GPIO aggregator controller
-+
-+maintainers:
-+  - Alexander Stein <linux@ew.tq-group.com>
-+
-+description: |
-+  This binding describes a GPIO forwarder that exposes selected GPIO
-+  lines as a virtual GPIO controller.
-+
-+properties:
-+  compatible:
-+    const: gpio-aggregator
-+
-+  "#gpio-cells":
-+    description: Specifies the line offset and GPIO flags.
-+    const: 2
-+
-+  gpios:
-+    description: Array of GPIOs to aggregate
-+    minItems: 1
-+    maxItems: 32
-+
-+  gpio-controller: true
-+
-+  gpio-line-names:
-+    minItems: 1
-+    maxItems: 32
-+
-+required:
-+  - compatible
-+  - "#gpio-cells"
-+  - gpio-controller
-+  - gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    gpio_agg: gpio-aggregator {
-+        compatible = "gpio-aggregator";
-+        #gpio-cells = <2>;
-+        gpio-controller;
-+        gpios = <&gpio0 3 GPIO_ACTIVE_LOW>,
-+                <&gpio3 1 GPIO_ACTIVE_HIGH>;
-+    };
-+
-+    consumer {
-+        enable-gpios = <&gpio_agg 0 GPIO_ACTIVE_LOW>;
-+    };
-diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-index 416f265d09d0..a09752fc5fe2 100644
---- a/drivers/gpio/gpio-aggregator.c
-+++ b/drivers/gpio/gpio-aggregator.c
-@@ -1635,6 +1635,9 @@ static int gpio_aggregator_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id gpio_aggregator_dt_ids[] = {
-+	{
-+		.compatible = "gpio-aggregator",
-+	},
- 	{
- 		.compatible = "gpio-delay",
- 		.data = (void *)FWD_FEATURE_DELAY,
+url:    https://github.com/intel-lab-lkp/linux/commits/Shenwei-Wang/dt-bindings-remoteproc-imx_rproc-Add-rpmsg-subnode-support/20260211-011505
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+patch link:    https://lore.kernel.org/r/20260210170814.406883-4-shenwei.wang%40nxp.com
+patch subject: [PATCH v7 3/4] gpio: rpmsg: add generic rpmsg GPIO driver
+config: nios2-randconfig-r054-20260211 (https://download.01.org/0day-ci/archive/20260211/202602111320.C3eHRtNV-lkp@intel.com/config)
+compiler: nios2-linux-gcc (GCC) 9.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260211/202602111320.C3eHRtNV-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602111320.C3eHRtNV-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   nios2-linux-ld: drivers/gpio/gpio-rpmsg.o: in function `rpmsg_get_channel_ofnode':
+>> drivers/gpio/gpio-rpmsg.c:473: undefined reference to `rproc_get_by_child'
+>> drivers/gpio/gpio-rpmsg.c:473:(.text+0x454): relocation truncated to fit: R_NIOS2_CALL26 against `rproc_get_by_child'
+   nios2-linux-ld: drivers/gpio/gpio-rpmsg.o: in function `rpmsg_get_rproc_node_name':
+   drivers/gpio/gpio-rpmsg.c:450: undefined reference to `rproc_get_by_child'
+   drivers/gpio/gpio-rpmsg.c:450:(.text+0x4e0): relocation truncated to fit: R_NIOS2_CALL26 against `rproc_get_by_child'
+
+
+vim +473 drivers/gpio/gpio-rpmsg.c
+
+   466	
+   467	static struct device_node *
+   468	rpmsg_get_channel_ofnode(struct rpmsg_device *rpdev, char *chan_name)
+   469	{
+   470		struct device_node *np_chan = NULL, *np;
+   471		struct rproc *rproc;
+   472	
+ > 473		rproc = rproc_get_by_child(&rpdev->dev);
+   474		if (!rproc)
+   475			return NULL;
+   476	
+   477		np = of_node_get(rproc->dev.of_node);
+   478		if (!np && rproc->dev.parent)
+   479			np = of_node_get(rproc->dev.parent->of_node);
+   480	
+   481		if (np) {
+   482			/* Balance the of_node_put() performed by of_find_node_by_name(). */
+   483			of_node_get(np);
+   484			np_chan = of_find_node_by_name(np, chan_name);
+   485			of_node_put(np);
+   486		}
+   487	
+   488		return np_chan;
+   489	}
+   490	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
