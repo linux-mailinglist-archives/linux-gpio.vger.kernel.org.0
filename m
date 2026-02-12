@@ -1,98 +1,98 @@
-Return-Path: <linux-gpio+bounces-31636-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31637-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 85s5C7EGjmkT+wAAu9opvQ
-	(envelope-from <linux-gpio+bounces-31636-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Feb 2026 17:58:25 +0100
+	id 0IVoADknjmlrAAEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31637-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Feb 2026 20:17:13 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7789B12FBA5
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Feb 2026 17:58:24 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4E53130A0D
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Feb 2026 20:17:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3A08930398A0
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Feb 2026 16:53:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4DF15303B4C2
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Feb 2026 19:17:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D39B35D611;
-	Thu, 12 Feb 2026 16:53:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF36B27EC80;
+	Thu, 12 Feb 2026 19:17:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HAz4l6rn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgWOb0on"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1248E35D5E9
-	for <linux-gpio@vger.kernel.org>; Thu, 12 Feb 2026 16:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E29246BB2
+	for <linux-gpio@vger.kernel.org>; Thu, 12 Feb 2026 19:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.47
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770915229; cv=pass; b=p6/VatNfqYFJksM0e9plIUACa6D/1tYyQCveoTlTksIxoZkhu9CkQnLAmKX6DAtfyVyI1NS49MpfW79udiN6fk4ufCMcI6LAETYYS2FTNbeW+dVO06K18iuEwN3IDf6moEuXk1Xf+hzK3MiKekaWI1WKv6wj0FPe5xfw7ENiEHg=
+	t=1770923826; cv=pass; b=RtZsTFMIhXct56889B6cuLVG5iAewSL90VfKf30B9oQDTN/k9/zmSyDWKVN9fBmthV7SvsjvtRdfY/0gOwEVGBpeWCW2uI4aR5/b6++BoDZ+YBiDbH9hJ6h8Byu3l+hPeVf5guizGyzjHuSq9hYyVSBuVcdLA8vQGv+MGyV3eeI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770915229; c=relaxed/simple;
-	bh=KRRuDH186O604x0X4TRhFKVbtELrQs8CvwIYr5dkakI=;
+	s=arc-20240116; t=1770923826; c=relaxed/simple;
+	bh=+5DH5ijzAvOtI7eX5+/+AuuQ4e/7LkgnyQJmj+MOH7M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N5aM0EKw/4wwfSbppw2Ztig12APyKqBPVEvYYvz9P36kbd1R4VCXW6pSe/kZASmVTrpkVsfdyGjs9uBDf9TtS9xpmK6MXp+Oe7Buyyuqql9gbZAsO9I5fWAfJ0gVU9cHnlBVnVivDPUYWhgGi6o3WcOlBS3d5om/zBFjZsH3LA4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HAz4l6rn; arc=pass smtp.client-ip=209.85.217.46
+	 To:Cc:Content-Type; b=W66uoGNX4oIwH84mA3VfDfs9EWadUbON4UshPTgnS2WOmMAKc3ols8HGmdfSut926kgotGJGlm4G6omGubKkb0ir0MxdsUDu9LDMxGpPgW3gS1ba+JgYB9QUt40cdqpJqaW2k6e4HEGf/WA3NU2jCEgvIsLZQE8fwQUClqUNDbQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bgWOb0on; arc=pass smtp.client-ip=209.85.222.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-5fe0959ae3dso14945137.1
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Feb 2026 08:53:47 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770915227; cv=none;
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-948a076d6ecso56459241.1
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Feb 2026 11:17:05 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770923824; cv=none;
         d=google.com; s=arc-20240605;
-        b=Z37n2K0jMQqBLS4mRuQ2UN/qh910SBIBlERTA+VWEH2dmimMywH3u7svAd5dcQsHhk
-         C4NHa0CbM7/L2Ned7gyEO77Zh0h/9p+ik1J5D5P0+rv/e1nmTd89JRzkgg7xTF1981gK
-         LSfQMvbkNnG0s9M3MhTaVnpAgkSZ7LDbc2e9Gi5PjnAzQ23/Vo7E99e5Crg80EK073fC
-         YyTX0QsM6rhfpv6AUZStFBF5jJXCpUNoAkybKkSLrM680W3cEG/7OPjv0paN1wtnJSeb
-         1iBNvnzwsVUlk52pb4VG/GNjwNAOdn1hvx2BiZunKVlPuUB3HHc4NzpHCr3uuVXZ1AvI
-         5jAQ==
+        b=K6js42OU74OzMDprJeAJ7tvOmjchvm6iOryjVR3gmKSUPvpt/d1b8y1/nT7oA8J4tD
+         1tA1jgMn9cPlVjqDg5I5AXX1TQpyyC1jmXH7LC1469RAQ78GWFz5ZcS6ioB7Vaw9heok
+         6FO6Z/KUF6JnkXqPdU1b1tCKpXWtQDuHzATUv2JajzWwHXhumEAaqUsVH9cbAPkQwU54
+         ecsVAZULTUVV/3gKCCve1828ZOxNrESLnRogeUzbnjmUYhJPzI+AOXCtoYPnJYVIhjcH
+         UqPqVNbMS49NTEnN8wsciQjnTzzmHiIljpSMIZtx0BrssyLZKifI6RLRxj8X/91OX1k4
+         C7YA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=k3NjKRq6iigwgiI1ey9uPZ+chcyfsZLM885ukY9EonI=;
-        fh=C9nFtywxuWIyPSl+rsP5Ed2wnznA6vP3rpexdwMp0TM=;
-        b=U/XnMsOIACmZnTg/ouLtQqtJp9VW/GUaj15UrTBa/7fIL5avALU15J+ZIeWaYBZKpt
-         HtvbHurCxrcyL7O32m634eJQwIIbNxitaKujPWAZ7NYuy1dBX0zZvtm5SduAfeiMPh1a
-         v56nRmB0gJYiyIaLRSQcOv8LTBR6Fd81rbgqJChtfzKOemC+bkH2PnOYU6KfgF17qiTe
-         VgWP8zEbIjO5FarEDnKKkabEs5rmJMGO2qsXuSdXOD6c7/1O3ECrQ7erOELbpaR6iqlF
-         vBPUwvctUEYwD9f8eKsOiCjLCRNBXof8Uo2h3N9lGh/zluo5Mq2XEkuCAhjOhgVShP7G
-         Dkbw==;
+        bh=+5DH5ijzAvOtI7eX5+/+AuuQ4e/7LkgnyQJmj+MOH7M=;
+        fh=Rt/7ayWIPxd2Qc+C83q5ytl0gwshWdwsCWduMYjRfp0=;
+        b=llcMhhagGZLC1ozwuB1zGdQS5Y9Sw0deAJjbRkRzBiHdvbyjFaApDtA1z3LI2b2HXX
+         wjdOAb0Dzrhd8xWFMKtTSGykuFiMUqxN/SsWkxuxmODvMkL2aQl734BcJTVuqMs115mD
+         TjN+4YDZQuMzktWOpsS/w0ovIk5VsExpaz9+v6LoWbklEJ0F0TpodMh1kRkIGdoG3uOJ
+         F0Z6tCIbtI+r70k4wBgrPG+U3DiOR6Gd2Ji9FSCOkGQ/K2uttkRcutKsYxn6OYBRh9jO
+         H7wyrJvJ3AhzG4cQfKogq6Hjyr1vCIZFeG/gHmYh69m3rdPJQPu+Dv9OHPopTlmSW2pb
+         ExDA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770915227; x=1771520027; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1770923824; x=1771528624; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=k3NjKRq6iigwgiI1ey9uPZ+chcyfsZLM885ukY9EonI=;
-        b=HAz4l6rntdy/I+RILkSEaM+m4aI+ALbE/gJur+wfAakWe+bNUcIG4ZxxXaoR7bsE9G
-         YzHymcqvOGaPGaUwTMCFGw4AH1LVQxHafEmKtgesusxttD6GfsiXw/hDe9JQqE1w2bUn
-         gFdDUrFRfX72Uyj3JcKE4kMteX6K2AsldZT6q2pvrcHvjrb/ncSm85EF1CFne6OfotNP
-         49nNPMdcUkqs7r0juBrk8EiTG+i2unk7NwENglIJPzcEBO2YkSDgdc7q0G8BU4tttQbF
-         24fI0quGFYK8/utmyQlYfDUxIaJVotUDhrSzkRmNL3tmRfrdOt9HtXZ2Rhqrg0XVNXM6
-         giNA==
+        bh=+5DH5ijzAvOtI7eX5+/+AuuQ4e/7LkgnyQJmj+MOH7M=;
+        b=bgWOb0ongsiTVcBqPgk82k9gFKb4Kdf11JY81uD91F99pkMhX5EiIZ6pGjbXPtTcaC
+         Ho5uApMMiSBCw0qSn690v6PZ6Yov3HeR9DWgvEBGsoBZwzgwomwrRwbEKqZkkhDUiunq
+         D2qHTlHgvyvH9Onew0b/21MOJL6rRMzhho1sbWd3K9Tp64hSHJUDoxLHElIwB4eaO4VO
+         V8umfn7RqcQDdYd+HvZgPrpXG2ImNvpkO+KUN6nStRv3lsXHuHTvItM8442wFyY072dd
+         Dz5YSLtNSE3k3BUlfmHrDy7XyV0lAe2QS3CocKExTXWU8K0rBCQAqax/3Pckz5zJWKQ9
+         i99g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770915227; x=1771520027;
+        d=1e100.net; s=20230601; t=1770923824; x=1771528624;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=k3NjKRq6iigwgiI1ey9uPZ+chcyfsZLM885ukY9EonI=;
-        b=Cm0dAfgv5pmfj1QmbbEGfdm3MldvCVASbCSCRbiIOFjIYtv7MH5BztxZ7j5mmdn8j3
-         HKgi8gsJBpxJbt7QS8iinlbNjePCUuFgSLp+DD/SgWbSBgKcllunvW4kuYtYHmXn94kE
-         pMELloE0HSPmVIm/fcOwxCEQ7AXEKemExntm8RAegCmCH6ngeVkFcdI+tt5ZS9WSXzC+
-         HWnFo46f1xMzTVFsrrmEo2VkedZTAZN5EUdDVzUbSkj6islzOCPALPTYCle93hFqpOCn
-         KrKexJG2eniXpVLZtWeUDAJgDqgxchVvsCfgOzE7TCUnBNI8a/kbiB00qrmmWTN+9zLl
-         Or9A==
-X-Forwarded-Encrypted: i=1; AJvYcCUimxAAbNzLHHhMBiQr7n08QSI7qjPqpEboS/vlk2/Y0fKLwxeUGqjDcp83shxRhhADmpczE+kaf84w@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVdcc5o0Vsowz2woyaWLZH6/7TXDFe1maphvu3INz8YEC4sscN
-	qaQyZ8VtXFewW++NT6GFpZdRoACcbIgKN8PjgENu+8U0OcNnAFBDpSwhFRojqhA/ObEfMZYX6sQ
-	53xFBEKWupz633Dn1AZatJM6t9QagVtc=
-X-Gm-Gg: AZuq6aIR0DIn5rVUrzCdjxK4WO56Cn3hkYxOb6OosF9uIyG7F6dm1wP2+N4YGLvVOEd
-	voS025LBRUbIqEQuqjLeegJvGyRqHA2uyerExjq/4xl/kY7ti12EOU/LYM8V5wtkRWkjXBT8IjV
-	MzcUpN2PtXNNLTEVpIyCyeh6240z9H2D82YigKDrwJaaGDyhGi//zAEzyi7pUV+/1jO5j2T0m8w
-	zNAtvPZtBt6dqS4lsHvILugwI5CqelWYSEkirhTZA48xDsl1ggOS3W+kVJkp8+gBY+7Uwano58x
-	EU9E6eB7EWCrSQ41qX/50ROLfi9Rw4HZ7Bc3NJ9apSQURvz/w6n0vu0lxaQVsnNg08KM
-X-Received: by 2002:a05:6102:a50:b0:5dd:c53b:75cc with SMTP id
- ada2fe7eead31-5fdfdc3aafamr1210516137.13.1770915226784; Thu, 12 Feb 2026
- 08:53:46 -0800 (PST)
+        bh=+5DH5ijzAvOtI7eX5+/+AuuQ4e/7LkgnyQJmj+MOH7M=;
+        b=H54KfjFGpM0OWsGy2BKK1LJ+IJmZVF0wWEUYPOl7ILjqIwLv3xnv2DK88DRAIZ+99j
+         50U63aWFaIX4A7EpHmEmr3C4ImWWL8huYNMFoxfbYyDiXM/D+Cf5Evb9R6TKSxoeYKCZ
+         hD+tbaIMheeV1mWpjrYIgedG6OBKRiQbgCu96T77CBuaQefEZA7oM+CVYaeve7j9RCkS
+         3gtjWrVHvxJgJX8GxnkVjMtCWpS0SRUBoqyAiJvXsKMqZLjsPw3FC1efQpr5QcL/ARDy
+         7PswDMsaGD/jrNZ1q1wAUaq/5Qu3e4Y9rETe6ei1KlyXPEGCtffSM5fFSf64Y1dz0ELt
+         w43A==
+X-Forwarded-Encrypted: i=1; AJvYcCXVarhAnRhR7iLfr2WVZnzRuBF17NRiBB68ncLJbesNYhoNjsSpcIVO4OQdmY5ipTpqg7W6e5HKdB5/@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxH8YK9dhcOi4lv6fo/Fa9KeVedJkjqGa+4idlm16+zjTx2G9+
+	4R4huNJm3ImvM9MGJ0F+oTFTmiGbxQnUJlsoPT28l+ySsFtV2xmuGyqKwy5Pcha+K1ef++LMzHL
+	ALpSXNdxXSRwxkh9M2nP8HRAVjC+rfXs=
+X-Gm-Gg: AZuq6aIwexxKxpFQNpWtiroFivwsq/CqKDTYQFgHXAsjRKa8VfJkZQ/t7a8BvJVwVdF
+	SMUWAvGtdqii92kgHCZmvDQx0rOtTcUjlfmVwZe7GO6nWJjT+ZmHu8y0bTDzkd0r3/Lr66I41JL
+	wLJE24vyUlsOXjrZV6uWxlHzTZf9mzPQlBUJJ6032gRegHMOs/fYZLixZXMU/Em2+7A4oTqVPWu
+	p/IQ9E2lX6wiAe+sPBioWE6ex/VnBeUxduA/LGfWiMIHG7r3d+TYUTBvyBuNEdEzYQG+bblxHRj
+	xR7RKC9z9v6lt9kfMUtZBrGuA3Tv8JF5DSvCxlpbpk27yg5D4+LkeyuxD9nGbklDG0Un
+X-Received: by 2002:a05:6102:160f:b0:5ee:a0de:65ea with SMTP id
+ ada2fe7eead31-5fdfbb9efc0mr1372507137.38.1770923824150; Thu, 12 Feb 2026
+ 11:17:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -100,21 +100,21 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20260211081355.3028947-1-james.hilliard1@gmail.com>
- <338e6575-ec44-4179-94af-9086a7ca79ac@kernel.org> <92359c6d-06ac-4f8d-baa5-6fa45a536455@kernel.org>
- <CADvTj4q74H__JZftOiXkdsY3+E_Xmcx6Y6i70RQDJ0K09=XOHQ@mail.gmail.com>
- <30026ed7-cd19-4be2-adbb-e8bb155a75b8@kernel.org> <CADvTj4oBtO0Yhib1rE8QQwgtJvy-x_hK46C63mjVAydtxHOV8g@mail.gmail.com>
- <CAMuHMdW4oNeGY4VP7zajOS17apnjqS050H5L+Pxqe9bqqt=WNQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdW4oNeGY4VP7zajOS17apnjqS050H5L+Pxqe9bqqt=WNQ@mail.gmail.com>
+ <20260211081355.3028947-2-james.hilliard1@gmail.com> <CAMRc=MfgoKmsNAmn3rO2jDL-ZArMX2Jh-n4SnV6rpzRY3KSwuA@mail.gmail.com>
+ <34a9b531-4f53-47ee-861e-1b18ff1a5752@kernel.org> <CAMRc=MfwQ8J7eT_geEf7Kj230SOvmO-LDHz9a_YgfRY-QB5V8w@mail.gmail.com>
+ <20260211214708.GA3947691-robh@kernel.org> <CADvTj4p-zHMrXW+GJstB2sKS-7Wij98JNJGoiPiYmaP5RHhNQg@mail.gmail.com>
+ <9afa52c1-b7de-4ccb-9114-a142567d21af@kernel.org>
+In-Reply-To: <9afa52c1-b7de-4ccb-9114-a142567d21af@kernel.org>
 From: James Hilliard <james.hilliard1@gmail.com>
-Date: Thu, 12 Feb 2026 09:53:35 -0700
-X-Gm-Features: AZwV_QiXDqffKgbN_n4Kb9EWjkuAa84A35C9mQaCYNZwP4RfgXLuGYOv1oTlqC4
-Message-ID: <CADvTj4qQii5+tLtVVmBBXqdOmHXwj5T+kuadOAppx=+9rRuy_w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: add gpio-aggregator binding
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org, 
-	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alexander Stein <linux@ew.tq-group.com>, devicetree@vger.kernel.org, 
+Date: Thu, 12 Feb 2026 12:16:54 -0700
+X-Gm-Features: AZwV_QjTJOnpuLDi2ZHGibY0A42KReJLVkc_FuXVhU2nbfu1jpgvU9PmIjUN8P8
+Message-ID: <CADvTj4pmAXo+KUMyB0=+x3HRdUdUq=baj_pnoa44oxnugZuTOg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] gpio: aggregator: add gpio-aggregator DT compatible
+To: Krzysztof Kozlowski <krzk@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org, 
+	Linus Walleij <linusw@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Alexander Stein <linux@ew.tq-group.com>, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, Herve Codina <herve.codina@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -123,12 +123,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31636-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31637-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -142,101 +142,78 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[jameshilliard1@gmail.com,linux-gpio@vger.kernel.org];
 	DKIM_TRACE(0.00)[gmail.com:+];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux-m68k.org:email,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 7789B12FBA5
+	DBL_BLOCKED_OPENRESOLVER(0.00)[glider.be:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid,bootlin.com:url]
+X-Rspamd-Queue-Id: B4E53130A0D
 X-Rspamd-Action: no action
 
-On Thu, Feb 12, 2026 at 7:50=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
+On Thu, Feb 12, 2026 at 12:18=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.o=
+rg> wrote:
 >
-> Hi James,
->
-> On Wed, 11 Feb 2026 at 18:01, James Hilliard <james.hilliard1@gmail.com> =
-wrote:
-> > On Wed, Feb 11, 2026 at 1:44=E2=80=AFAM Krzysztof Kozlowski <krzk@kerne=
-l.org> wrote:
-> > > On 11/02/2026 09:28, James Hilliard wrote:
-> > > > virtual gpio driver though so AFAIU it's not hardware specific.
-> > >
-> > > You can give example of any hardware where this is useful. You need t=
+> On 11/02/2026 22:49, James Hilliard wrote:
+> >>>>>
+> >>>>> Regardless of the DT bindings - this change is perfectly fine. We d=
 o
-> > > make your case with actual arguments.
+> >>>>
+> >>>> You cannot have compatible without DT bindings, so this alone is not
+> >>>> "perfectly fine". Maybe you wanted platform_device_id entry for
+> >>>> ACPI/legacy/MFD devices?
+> >>>>
+> >>>
+> >>> Sure you can, you just can't put it into upstream devicetree sources.
+> >>> We have had a compatible for gpio-sim for testing purposes for years.
+> >>> Why would it be illegal to enable matching of platform drivers over D=
+T
+> >>> for testing purposes?
+> >>
+> >> The primary issue is undocumented ones show up in 'make
+> >> dt_compatible_check'. I would like that to be warning free.
 > >
-> > The sunxi h616 board I have has hundreds of GPIOs, only
-> > a few of which are needed, I want to map them in device
-> > tree overlays since there's some minor variants with different
-> > hardware gpio configurations.
-> >
-> > Setting the gpio names on the parent controller is not practical
-> > since doing so would require setting hundreds of values for
-> > gpio-line-names, you also can't really combine sets of pin
-> > names across device tree overlays AFAIU.
-> >
-> > > > Use case is I have a device with something like 300 gpio
-> > > > lines...and I want to name/group a small subset of those
-> > > > lines for delegation to a userspace app rather than trying
-> > > > to set 300 or something gpio-line-names values, also I'm
-> > >
-> > > So if I change the approach in user-space or use different user-space
-> > > app then I change the DTS?
-> >
-> > The idea is to make it practical to set gpio-line-names for a
-> > subset of the GPIOs that are wired to peripheral boards.
-> >
-> > Say for example I have a control board connected to a few
-> > different peripheral boards, there may be different mixtures
-> > of peripheral boards, some of which can be used at the same
-> > time as they use different GPIOs.
-> >
-> > The idea is we load device tree overlays for the detected
-> > peripheral boards with detection done in uboot based on a
-> > GPIO pin strapping based detection.
+> > Would adding it here make sense?
+> > https://github.com/torvalds/linux/blob/v6.19/Documentation/devicetree/b=
+indings/incomplete-devices.yaml#L243-L245
 >
-> Sounds like the work being done in "[RFC PATCH 00/77] Add support for
-> dtb metadata and addon device-trees" [1] can be helpful for you, too.
+> What would you like to achieve with that? The binding patch did not have
+> rationale why do we want it and here is the same question - what sort of
+> problem is being solved by adding it to incomplete (so wrong) devices?
 
-I think I came across this as well, it did look potentially useful for
-moving hardware variant device detection out of uboot, but doesn't
-really seem to help with the gpio-line-names definition problem
-that I was trying to solve with the gpio-aggregator.
+See details for what I'm trying to accomplish with gpio-aggregator:
+https://lore.kernel.org/all/CADvTj4oBtO0Yhib1rE8QQwgtJvy-x_hK46C63mjVAydtxH=
+OV8g@mail.gmail.com/
 
-The hardware I'm working with isn't really designed for runtime
-hotplugging but the eeprom based detection could be useful
-it seems(currently that's mostly done in userspace logic for the
-peripheral boards). The line naming is more for dealing with
-control card variant detection so that I can pass line names to
-a username application via device tree.
+I'm basically trying to use it for the reasons described here:
+https://bootlin.com/blog/gpio-aggregator-a-virtual-gpio-chip/
 
-Even defining line names for boards without overlays or any
-runtime detection seems to require a ridiculous amount of ""
-placeholders at the moment, i.e.:
-https://github.com/torvalds/linux/blob/v6.19/arch/arm/boot/dts/allwinner/su=
-n7i-a20-bananapi.dts#L227-L276
+Is there a different device tree mechanism that can be used to
+name individual gpio lines on a gpiochip without having to name
+all of them for non-hog lines?
 
-Is there any work going on to allow offset based gpio-line-names
-definitions so that it's not required to set all gpio-line-names at the
-same time(essentially making individual line name overrides
-in either device tree includes/overlays impossible)?
+I'm confused why a "gpio-delay" compatible is allowed but one
+without the delay param is not?
 
+Or is the issue just with the name of the compatible I used being
+called "gpio-aggregator"?
 
+> This is not a pure virtual device, but for use with actual hardware.
 >
-> [1] https://lore.kernel.org/20260112142009.1006236-1-herve.codina@bootlin=
-.com
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
+> Nacked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+I'm trying to use this with actual hardware, I just called it "virtual"
+because that's how it was described in the bootlin blog post.
+
+I'm confused about what the issue is here as "gpio-delay" is also
+a virtual device in the same way.
+
+> Well, it is a virtual device in that there's no actual "aggregator"
+> device on the board. It virtually aggregates GPIOs into a separate
+> chip for user's convenience. While there's no such device as a
+> gpio-aggregator - and so we must not put it into bindings nor into
+> mainline devicetree sources - having a compatible matching in the
+> driver is perfectly fine IMO. Just like gpio-sim.
+
+There's no such "gpio-delay" device either right? I'm confused
+why that compatible can exist but one without the delay param can
+not in the mainline sources. Aren't they both virtual devices?
 
