@@ -1,139 +1,117 @@
-Return-Path: <linux-gpio+bounces-31631-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31632-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sIs7Gkm1jWl96AAAu9opvQ
-	(envelope-from <linux-gpio+bounces-31631-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Feb 2026 12:11:05 +0100
+	id YHwqA269jWnL6QAAu9opvQ
+	(envelope-from <linux-gpio+bounces-31632-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Feb 2026 12:45:50 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id F349112CE21
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Feb 2026 12:11:04 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66AFE12D1F1
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Feb 2026 12:45:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 12311300669B
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Feb 2026 11:11:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 67BA930D9A77
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Feb 2026 11:45:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0681F344D91;
-	Thu, 12 Feb 2026 11:11:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94B9F34A3AC;
+	Thu, 12 Feb 2026 11:45:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUGZtgnw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UMojFqL1"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE98B2D8DB9
-	for <linux-gpio@vger.kernel.org>; Thu, 12 Feb 2026 11:11:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86DB349B0F;
+	Thu, 12 Feb 2026 11:45:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770894660; cv=none; b=kft/OabfONS0OfNeuMu+vT7dstHasCWGvxO+9nZ9TxXKKt79Tn1JMbkAPseu90zp0hUmzpIB/sIU1h3DymNpAFpF8Z/By93i0hZpxBWJ/nJycLFwTJVYjVIOz9m9nQni9GVbK78pORoiretild47UOVQi/h8BqN6+by4eM400kU=
+	t=1770896703; cv=none; b=UXC65wVibQOlGDgDyntIe52yTRNQAIqmtwA5adGxgdy1mHzbUKnuUDe3tj44loHW9L0feerRE5xEIIQOHOiU1EUAy40MKz11ok7ggaI83vuj1h9sirB/i1nZqfRVmhwUvWQ6jS/xniqmusGFHK4uKT1ogY4XLPlg7bEK6m6r9pE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770894660; c=relaxed/simple;
-	bh=ziVBPZ/AwEVOdSr4+dpQ2YI80b7X5OiEw/eDokHFSG8=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O26YCH0UOWeAcgEds+Nu+wmu4s2UScVjt8209LR+27BiBM/RTdTCNJtoUNoaSF15F9V68HlFapsvW97jHH8oyqzSqHkPBGkMLCexMgyMYaFpT3kI/TvfA+8DKuCFhhJEY59FlT28UCMXRwNSSafzoQHL5DfAMlAsd9fu6QUQBUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUGZtgnw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FFB1C4CEF7
-	for <linux-gpio@vger.kernel.org>; Thu, 12 Feb 2026 11:11:00 +0000 (UTC)
+	s=arc-20240116; t=1770896703; c=relaxed/simple;
+	bh=GZslXHKhVABa//r0nZYc2MzLtfrMPSsOERvcnBRcLgU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b6NmmI8qxzrtj0na0Imo3DIuLxj3gr3EtOpmOjSqUuQs0XkyRx1YceMaqGkGBNXPubC9gKyRSvTXISIYHXRbYFNORleCCWLd/2zwToM5O6uNBx1Li1VQi2J2JEzyaY3RNKJnkNxkNHTCszrocacvtYUOUWPQERnaC8pT83l84ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UMojFqL1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E96AEC4CEF7;
+	Thu, 12 Feb 2026 11:45:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770894660;
-	bh=ziVBPZ/AwEVOdSr4+dpQ2YI80b7X5OiEw/eDokHFSG8=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=kUGZtgnwKc/pOVtcXCIUVRmm4KfI/9GxG1BovJsAN3gqFfDa/qWyUHOtp8H/ce3gw
-	 jsYNHKVBdV6Src/I14+QS4tkgzdNlQl0xC6PP2qHd6OHoWlPH8T6b9NO9pS8ojR6Zo
-	 vEooxh02i/8riPwEtTiXsB9yn+GsBHkq9s2ZYZXi2K0683O8czmqYjCb8ADuObYLKm
-	 Gp5hWX4f6MwDcW1Y/23WS4YUrcc1jlT1DWYQHqHB+IDGacykNbrM8QKWEHPY7Et9TO
-	 JF+7nDtHnHZe63BGjdLdzhE9ZWpQSar6W7eH1bG6KIlGpKcwBLMXYrwJAp+do5zRSp
-	 v4HbJSf2NsREA==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-59e6b7b11ebso43374e87.3
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Feb 2026 03:11:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX+s27BjXH0kPrCwVGDc2sDrCkqddu3GumOqHnOH+/Sjbm+Qn4bGDpBzGf2tT5KZgsmx9ek0prlRTnH@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc6qi4j4saEtItWsB8FKBH1ltNhg1NfZUV63IhQg9MqGqNxncm
-	zPr+tlaXy7u/ImtAaL3Kq8aN+4LOuADrFIPLXJsMNlI0L4x4ztYvuLMClDpu2VyrrQkI1CrZdnb
-	ZLNMbzSjZq33Lh6fybp/zLUiW0MO4z+mi00qowi5YOw==
-X-Received: by 2002:a05:6512:b84:b0:59e:429:932a with SMTP id
- 2adb3069b0e04-59e640136cbmr707293e87.1.1770894659241; Thu, 12 Feb 2026
- 03:10:59 -0800 (PST)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 12 Feb 2026 03:10:57 -0800
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 12 Feb 2026 03:10:57 -0800
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260212110905.52842-2-krzysztof.kozlowski@oss.qualcomm.com>
+	s=k20201202; t=1770896703;
+	bh=GZslXHKhVABa//r0nZYc2MzLtfrMPSsOERvcnBRcLgU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UMojFqL1M+MB8QERPV2uDjw4rnyyTSDyJ+3F246glTKqgw150Uy9lwYpZn0I+zvHL
+	 6bjIk9bOonRGN08bRtBs5DkdvAE+EcdfsE9LQte5GTwDUtDMpiXyieMByUUlMv52sf
+	 DPAZcqQ+m/QqgwDlNup96V4DmaU1yLPMx9qd1SjiDvd3BOwdAqOnEtOyR+UonxDYAv
+	 wIVxgb0RhBi0bB0Tm2pKfCy7Efpj+sRNA2gU44eU5pm0/Nr3M2yT5vxkFKy4I3P0A7
+	 GHqiGDPBhUSARiQZudTREwd2H17tmZO5RnYJEeak/6yA5sJMpp2URt5qyuutxuRA1g
+	 PpeqkLMYX5N3A==
+Date: Thu, 12 Feb 2026 12:45:00 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, 
+	Fabio Estevam <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, 
+	Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] dt-bindings: pinctrl: imx35: add compatible string
+ fsl,imx25-iomuxc
+Message-ID: <20260212-cuscus-of-perpetual-brotherhood-516caf@quoll>
+References: <20260211-imx2_iomux_warning-v1-0-1c5233771b32@nxp.com>
+ <20260211-imx2_iomux_warning-v1-2-1c5233771b32@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260212110905.52842-2-krzysztof.kozlowski@oss.qualcomm.com>
-Date: Thu, 12 Feb 2026 03:10:57 -0800
-X-Gmail-Original-Message-ID: <CAMRc=Me14BeYBgy5_bNk+2riQzGhfTu_5nQhU1R8sXMbO5s8TQ@mail.gmail.com>
-X-Gm-Features: AZwV_QiAycFds9iMkmUPOhoVO2zFeB4G1sWGDSofcF9fjoUL-ss16-faE7AV7jE
-Message-ID: <CAMRc=Me14BeYBgy5_bNk+2riQzGhfTu_5nQhU1R8sXMbO5s8TQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: gpio: gpio-delay: Use Alexander's email
-To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alexander Stein <alexander.stein@ew.tq-group.com>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260211-imx2_iomux_warning-v1-2-1c5233771b32@nxp.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74];
+	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,mail.gmail.com:mid,devicetree.org:url,tq-group.com:email];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_FROM(0.00)[bounces-31631-lists,linux-gpio=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-31632-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[nxp.com,gmail.com,pengutronix.de,kernel.org,vger.kernel.org,lists.linux.dev,lists.infradead.org];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: F349112CE21
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nxp.com:email,qualcomm.com:email]
+X-Rspamd-Queue-Id: 66AFE12D1F1
 X-Rspamd-Action: no action
 
-On Thu, 12 Feb 2026 12:09:06 +0100, Krzysztof Kozlowski
-<krzysztof.kozlowski@oss.qualcomm.com> said:
-> Group/anonymous mailboxes are not accepted for bindings maintainers, so
-> switch from such linux @TQ mailbox to Alexander's email.
->
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+On Wed, Feb 11, 2026 at 04:00:01PM -0500, Frank Li wrote:
+> Add compatible string fsl,imx25-iomuxc.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
->  Documentation/devicetree/bindings/gpio/gpio-delay.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-delay.yaml b/Documentation/devicetree/bindings/gpio/gpio-delay.yaml
-> index 1cebc4058e27..b99ceff6c5f6 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-delay.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-delay.yaml
-> @@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
->  title: GPIO delay controller
->
->  maintainers:
-> -  - Alexander Stein <linux@ew.tq-group.com>
-> +  - Alexander Stein <alexander.stein@ew.tq-group.com>
->
->  description: |
->    This binding describes an electrical setup where setting an GPIO output
-> --
-> 2.51.0
->
->
+>  Documentation/devicetree/bindings/pinctrl/fsl,imx35-pinctrl.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+
+Best regards,
+Krzysztof
+
 
