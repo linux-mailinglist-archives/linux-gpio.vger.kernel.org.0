@@ -1,187 +1,166 @@
-Return-Path: <linux-gpio+bounces-31653-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31654-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qDjGMObfjmluFgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31653-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 09:25:10 +0100
+	id GMQHHBnhjmluFgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31654-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 09:30:17 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C537133FD0
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 09:25:10 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15FDE1340DC
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 09:30:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id CA31E301D4C5
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 08:25:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A3F7730C4505
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 08:29:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C74A532548D;
-	Fri, 13 Feb 2026 08:25:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15D4932BF47;
+	Fri, 13 Feb 2026 08:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kX2tOZB6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101363246F3
-	for <linux-gpio@vger.kernel.org>; Fri, 13 Feb 2026 08:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6BC32B99D
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Feb 2026 08:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770971105; cv=none; b=qSoJFHbRoXpUtWfSmcJG0CBCRtHkFSeKs/kfaf1TiYdE4pr/oLSAzIR/nYNcflw4Zp5x/+1MpQt2BsmzuW/9k7+yn1Se1DT7REV3zbRu4hC4qJHn6VXynDGzcaw0jLBjT5Q701VtLuHyE1nM9WZPgVNvO4SN8ke+zIfMeFGHFBU=
+	t=1770971364; cv=none; b=n2RJ6se7x14pahoFXHDn9vnmGcLgiZG82/Z7qMy/o6rZFcrZYmKqcC3oOgBFz2rirvHX0DnkAf4ncaf1uDCGe62i7cI1eC2vhwxZW3ImakfVgKCFOrlcWJ3EAap1HGhf+e9yiYCsA8iUavIOpPlfepJj/Fm4kg9nrHLwvu8KquQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770971105; c=relaxed/simple;
-	bh=mVhhZ2s7kYJsSiv0eIBW+57cX6b0j781fbzS5qZx6XM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ThKbTmf38fxCna0VrgCLjqZnVNa4nmBvTxuhNL/q/nN+SOzQQcrjkCWGHcukS7soiqdLgBtcct9JMIH2KHg4DS579g2+ztMYvUXebN5ZLGoFZvBmIQxPgAUxuRljau5QgGreB+ytpQYj8rphHsSKq7hfP+Lib8AS9EaztSbdqaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-94ac8cbf3feso408300241.0
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Feb 2026 00:25:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770971103; x=1771575903;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=+kTjtkfSYQOjDBBpn/jYinopU/8qU/hKdS39gFwz0kg=;
-        b=lgJRMFuUNKFZrmb1LmTMtMVKR05UNOAc3aa0I8rj5inIWqdORTGi2YMDERr1AkBWYZ
-         0LuHm6bcCMoKyqLqBOQgn1mjq812j8ZezQBTYbK/cFP9Nga0r7jRSqQx/g/54IzOP2Pg
-         p6aQarENzZY/8WTFMmNW3OUvb5cu/XNMrOIcW8MM8qinXL7YOWGg8lCVTxRsRmmfY64U
-         KqrC9VMgw4NTPewtug/bFBuN/Dbc1xoU9AVQFw42xF8BRD271JX8NyTTDYr/80iZGHrQ
-         eFyzNWInCFicNW8lAEiJo9hmRe2Vr6WZKl/44u+WzKFYJHJRzDuPKTDmJYs2CFR96FWZ
-         xw5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVGzVmav+0NzfWxSDBFI9XrAg5b7zrqt3hV+5RrPDjKD5LT4ZOyB++pYtq8EyesVe4KXF1nOu3wpI0W@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOJnTXFx75xYheHtIlQTVN92wJbocQQLnIBq+viftG9VD2a+Sh
-	AqJSESlyid2j+KmpwFfsMQVwikq8LHAjusGpUiV8KeTRlrm7BuC5pya2eH5iNXsK
-X-Gm-Gg: AZuq6aJfKKIj7AyrjdWAVfMei5ASvj7kSNgrREfiF7szSN6mrM+4DP6ue2M+9ATixfs
-	W5n4w9pfnAVteMUD1QQY48BS4CD1P8iwNWaofBPQ6WYOc2ODOeJmaIMc3hM8f+YhZ5yVV0jMfg3
-	jZkhZCv5hYELB2gxKEmYJqSiBILd38GAMxUtoMar29X8mtStaZDvoJz9HSV2z3rBoYbyqwknTq8
-	XqtfKVZzUwQ9DAib57XZzIbheGevvi0ANjyC1cXI4H1bfmlGYU96D5Bj0LpjSO0wUqNFs/oIRfp
-	yKznZS6E3mm9D+i7MACHDOMuxeV0XdxIFYM1J68d6s4e1tTlJHVzuxmNIYj5lcPGdeu92YalW/u
-	97Hlvj5Jm1YV3lAQ8WKWpzAUQrOBm1/lKkTmnaMMCK7J2jEyAbrpgWiWArXofiRv+Gy+iPiVZYt
-	WMLU53FziWZAS78jXoLgPdY2NaEancr8ZNOUYq8yJpvoTO3DcwK+EzRpnCX0VM
-X-Received: by 2002:a05:6102:32c5:b0:5f5:48df:b85a with SMTP id ada2fe7eead31-5fe1afb5a6dmr315229137.40.1770971103014;
-        Fri, 13 Feb 2026 00:25:03 -0800 (PST)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-5fde8a845ddsm3057684137.10.2026.02.13.00.25.02
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Feb 2026 00:25:02 -0800 (PST)
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-94ac8cbf3feso408287241.0
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Feb 2026 00:25:02 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUq52zDPBIeB8DH53I14mdspuaQ0n0KTLtscNNHXfreXRBBIRL4tnygj6M4Um1nfOL8Q444y2kuhFPr@vger.kernel.org
-X-Received: by 2002:a05:6102:e0b:b0:5fd:a537:a777 with SMTP id
- ada2fe7eead31-5fe1acd55a1mr304471137.10.1770971101799; Fri, 13 Feb 2026
- 00:25:01 -0800 (PST)
+	s=arc-20240116; t=1770971364; c=relaxed/simple;
+	bh=RTo8u2Sedn1CnU8sFrvE0WSM41I0dJtuSDAEhq8+kRw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bTdqa81DCqSk3eLMRmE3OWfLmdwX0RzkwUMU8tQuYVxBVftSxjbLip6/i3DTH/PE9nNXopuFelPI4ZwWbCDNus/CYr74mZDCGEyNHCx4M82gp1HG/FftG3bZ77CL3Ns2GOUssSkUWMIc9QBPqWo0kjZ93uGm4V9r5cl+OEwav18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kX2tOZB6; arc=none smtp.client-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id E6B204E40C76;
+	Fri, 13 Feb 2026 08:29:20 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id B953F606CC;
+	Fri, 13 Feb 2026 08:29:20 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 815FD10368E05;
+	Fri, 13 Feb 2026 09:29:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1770971360; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=HTw/HXY0Gs/LRcdanaDRSbVGf28t6RLADO9IJc09aSQ=;
+	b=kX2tOZB6aHe0Ba7nQ8QVjJLwvpMCkA1F71AAYE8sXzdBhBSC85zwePyXhYgkNVEqqyRDdw
+	SGZgiCCGPDKvyNZxe8JZJd8d6YaWF5PpGcmmvM2PJfBG1pbl+0ztWbTJRD47amwkkwx2du
+	sXwkDfsNMciFmP0SiewlO5qNEg5B2Qul6bRCVzJNYFzg4UWXdseoWscyV7YCHFqOq4J1mm
+	BxJaHzr9H6aC5T7pGfXP/fOJDvfmpG6N3VJmP7BNkz2lhRqKpize45wGqZPguFyMa2W+z7
+	wobewpFhqkLTrNMfN2122VT/VECv6KfG3447Ve4ecdzzo/0s4jOaFQE/wb10PA==
+Date: Fri, 13 Feb 2026 09:29:14 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: James Hilliard <james.hilliard1@gmail.com>, Geert Uytterhoeven
+ <geert+renesas@glider.be>, Bartosz Golaszewski <brgl@kernel.org>, Rob
+ Herring <robh@kernel.org>, linux-gpio@vger.kernel.org, Linus Walleij
+ <linusw@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alexander Stein <linux@ew.tq-group.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] gpio: aggregator: add gpio-aggregator DT
+ compatible
+Message-ID: <20260213092914.79790cb9@bootlin.com>
+In-Reply-To: <89c0dd51-fdd5-4368-b5f5-615143ffd166@kernel.org>
+References: <20260211081355.3028947-1-james.hilliard1@gmail.com>
+	<20260211081355.3028947-2-james.hilliard1@gmail.com>
+	<CAMRc=MfgoKmsNAmn3rO2jDL-ZArMX2Jh-n4SnV6rpzRY3KSwuA@mail.gmail.com>
+	<34a9b531-4f53-47ee-861e-1b18ff1a5752@kernel.org>
+	<CAMRc=MfwQ8J7eT_geEf7Kj230SOvmO-LDHz9a_YgfRY-QB5V8w@mail.gmail.com>
+	<20260211214708.GA3947691-robh@kernel.org>
+	<CADvTj4p-zHMrXW+GJstB2sKS-7Wij98JNJGoiPiYmaP5RHhNQg@mail.gmail.com>
+	<9afa52c1-b7de-4ccb-9114-a142567d21af@kernel.org>
+	<CADvTj4pmAXo+KUMyB0=+x3HRdUdUq=baj_pnoa44oxnugZuTOg@mail.gmail.com>
+	<89c0dd51-fdd5-4368-b5f5-615143ffd166@kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260211081355.3028947-1-james.hilliard1@gmail.com>
- <338e6575-ec44-4179-94af-9086a7ca79ac@kernel.org> <92359c6d-06ac-4f8d-baa5-6fa45a536455@kernel.org>
- <CADvTj4q74H__JZftOiXkdsY3+E_Xmcx6Y6i70RQDJ0K09=XOHQ@mail.gmail.com>
- <30026ed7-cd19-4be2-adbb-e8bb155a75b8@kernel.org> <CADvTj4oBtO0Yhib1rE8QQwgtJvy-x_hK46C63mjVAydtxHOV8g@mail.gmail.com>
- <20260212195423.GA787785-robh@kernel.org> <CADvTj4rPq8D5piqEijCdAjkWmZtq3Bi_Kxv-4F0aU4xi_O5WKg@mail.gmail.com>
-In-Reply-To: <CADvTj4rPq8D5piqEijCdAjkWmZtq3Bi_Kxv-4F0aU4xi_O5WKg@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 13 Feb 2026 09:24:50 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXmMVgPJv=HhkfttiRnSwFC6c2PnFjYwmL2hu3ikv+t3g@mail.gmail.com>
-X-Gm-Features: AZwV_Qjoxr9Az1zq4BpOrNfOl9VLUp7v3Npa9ywvF4dfcw-40OWhLtOEdmQ9eKI
-Message-ID: <CAMuHMdXmMVgPJv=HhkfttiRnSwFC6c2PnFjYwmL2hu3ikv+t3g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: add gpio-aggregator binding
-To: James Hilliard <james.hilliard1@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org, 
-	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alexander Stein <linux@ew.tq-group.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Herve Codina <herve.codina@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.04 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31653-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[gmail.com,glider.be,kernel.org,vger.kernel.org,ew.tq-group.com];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31654-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[linux-m68k.org];
-	FREEMAIL_TO(0.00)[gmail.com];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	DKIM_TRACE(0.00)[bootlin.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[12];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[herve.codina@bootlin.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_COUNT_FIVE(0.00)[6];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 6C537133FD0
+X-Rspamd-Queue-Id: 15FDE1340DC
 X-Rspamd-Action: no action
 
-Hi James,
+Hi all,
 
-On Thu, 12 Feb 2026 at 22:22, James Hilliard <james.hilliard1@gmail.com> wr=
-ote:
-> On Thu, Feb 12, 2026 at 12:54=E2=80=AFPM Rob Herring <robh@kernel.org> wr=
-ote:
-> > Humm, peripheral boards! So there's a connector. You need a connector
-> > binding. And the one solved binding for such a thing is GPIO! The
-> > gpio-map property lets you remap GPIOs from one provider (the connector=
-)
-> > to a parent provider (soc_gpio). It would look something like this:
->
-> Well...some GPIOs are wired to peripheral board connectors...but
-> some are wired to things like built in LEDs and a few different
-> on-controller components as well which vary by controller hardware
-> revisions.
+On Fri, 13 Feb 2026 08:31:21 +0100
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-Different controller hardware revisions with different wiring mean
-different DTS/DTB files anyway, right?
+> > 
+> > Or is the issue just with the name of the compatible I used being
+> > called "gpio-aggregator"?  
+> 
+> No, the issue is that there is no hardware you are trying represent in DTS.
 
-> This gpio-map feature doesn't exist in the mainline kernel does it?
+Except if you have a piece of hardware that invert the gpio line.
 
-Yes it is.
+In that case you need to set GPIO_ACTIVE_LOW somewhere.
 
-> In my device everything I'm wanting to name is off the same gpiochip.
+The aggregator allows to describe this line inverter.
 
-That would depend on the SoC: some SoCs have a single bank,
-others have multiple banks. The more generic is supported, the better.
+Of course, if the gpio is connected to a hardware component handled by the
+kernel, the DT node describing this hardware can set the flag.
 
-> > conn_gpio: connector {
-> >         #gpio-cells =3D <1>;
-> >         gpio-map =3D <0 &soc_gpio 3>,
-> >                    <1 &soc_gpio 123>;
-> >         gpio-line-names =3D "GPIO0", "GPIO1";
-> >
-> >         /* in an overlay */
-> >         device {
-> >                 foo-gpios =3D <&conn_gpio 1>; /* soc_gpio 123 */
-> > };
->
-> I think in my case the entire connector would be in the overlay, as
-> the connector GPIO lines vary by control board hardware revisions.
-> Would that still work?
+The issue is for GPIOs that are just GPIOs and should by a user-space
+application as GPIOs.
 
-Why in the overlay? If the controller hardware differs in wiring,
-it needs a different DTS/DTB.
+Some bindings exist for GPIO and do not describe the hardware but the
+feature. For instance:
+https://elixir.bootlin.com/linux/v6.18/source/Documentation/devicetree/bindings/trigger-source/gpio-trigger.yaml
+https://elixir.bootlin.com/linux/v6.18/source/Documentation/devicetree/bindings/power/reset/gpio-poweroff.yaml
+https://elixir.bootlin.com/linux/v6.18/source/Documentation/devicetree/bindings/power/reset/gpio-restart.yaml
 
-Gr{oetje,eeting}s,
+Can we consider the gpio-aggregator describing the wires that should be
+grouped together.
 
-                        Geert
+Industrial board can have some GPIOs grouped together and used as inputs or
+ouputs of this industrial board.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+As output they command an external system. As input, they get feedback from
+this system.
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+gpio-aggregator describes those lines.
+
+In that sense, it describes hardware.
+Maybe the "gpio-aggregator" name doesn't reflect that and a compatible such as
+"gpio-equipment" could make sense.
+
+
+Best regards,
+Hervé
 
