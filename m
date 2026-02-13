@@ -1,49 +1,49 @@
-Return-Path: <linux-gpio+bounces-31658-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31659-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SGCHJX/vjmk5GAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31658-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 10:31:43 +0100
+	id EMf1LZvvjmk5GAEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31659-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 10:32:11 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 397591347C2
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 10:31:43 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D78D1347E7
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 10:32:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A7C4F307BD8E
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 09:31:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 927A630B94B8
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 09:31:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 634632D0C92;
-	Fri, 13 Feb 2026 09:31:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 591A0288B1;
+	Fri, 13 Feb 2026 09:31:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVdXgZ90"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rOnY1kvt"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A152222CB;
-	Fri, 13 Feb 2026 09:31:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABB32405E1;
+	Fri, 13 Feb 2026 09:31:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770975066; cv=none; b=OT5FBNO02NpIIHs0QOUn4kicVERolEYwr8xgleqS4wrG3cMo/+d7U+XJiu9W5BFrjVFhS6KwXXz3MPNKvX7lcIE9n49PquAVmEremxqIM3mHczdegFJY8t0mmEWiCsQP+4bho1bFym7AXelCB5mGcARQAjnEWkB9pEVIDE5Yqzs=
+	t=1770975069; cv=none; b=LHfO3YBhUGY9kh0usYJewAHX9La7HlxuwrM0efjKWHH573uCKTmTl1KEg5QgTLjczzKYjoU4qXFyHkWuSjHwC/c03Uo7ycBxmLjqur4eygiEN6ILZIoMd8RnGLIBWVI//LJA42rwYJ5/B2AQlTQcNcEYqdxUrN5GfAboNsrRKvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770975066; c=relaxed/simple;
-	bh=SyNkwYYpX1Qe4VcjL4R7jtbLw5u6+UPC9JTgSugQXxQ=;
+	s=arc-20240116; t=1770975069; c=relaxed/simple;
+	bh=3yaZTDOU24FAmuSSempbk58vZlgrqTM2zntQtT1Ib4E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mVMBhQL/cXmi9gHvLxUBmuaZaupJIDn4hwJW6Gu5r5rv/lgYnkG12Al8lYvkd76DsIJii3F9DsUMmlWIm49iyqQy9m/LELf+FTccJz+AyrbTmgZeKUsgN06wcPB5bZ5/wJVDSLabts/in0kLD9HH9vqKEive5HKTmpZVkKgSr90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVdXgZ90; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03B7FC2BC9E;
-	Fri, 13 Feb 2026 09:31:02 +0000 (UTC)
+	 MIME-Version; b=G+0IQKBUNMlVI5m8UOtWfnUhvv8+7Yq6YWAhy0GHi7IV6fvK+GvWnu82F6XI+AvVFujV+GmWPm3gCxTdhy6DpShf9qr9OfwwL4dg6cKi5g21Pxl4t/Dg6miSaxXSBrqzOgJR8oEvj3cbehuVT7qUzwGcKN4HtFQ+jECZWMfaqOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rOnY1kvt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03780C116C6;
+	Fri, 13 Feb 2026 09:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770975065;
-	bh=SyNkwYYpX1Qe4VcjL4R7jtbLw5u6+UPC9JTgSugQXxQ=;
+	s=k20201202; t=1770975068;
+	bh=3yaZTDOU24FAmuSSempbk58vZlgrqTM2zntQtT1Ib4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QVdXgZ90DeKdu6KTKSXiCf0MgPWIsb0UtSL3PYn03zsGNK4xyTHzGdAknI46/Pg5x
-	 2pCzhTRLan6XNXhw0eIzXUpspEa+Ee9S+ujPR9G9WV5PFBB3HcXHo40HsFbPI1LsUM
-	 jnoTz9FCb+Qda4tQIHWltNzqUSFcdzIcuOKcpBhX3vO7lHYsvYbhrHf9Wz7VpmA7FN
-	 tY/+SL8Q9UbrhO0Ef8akI4YamZ8qa2ChTGg+j3DsLn2bRTTiS32oIWiC4aVSlOOywU
-	 0cMembfGjDEJIUre1B75PlGgTQFEuHYDzsRxVOMYPF+UF4mi+Tbw0NtdSkhzDR1zTY
-	 7pEBe3FVuhHGw==
+	b=rOnY1kvtyzQdttQc8WZ7zlLqC0XJZb2WGgJU93EhUhrjx7vFftGlg0srUuv8tQPuz
+	 qwLWAiLVVEhtj8B3gM6l5jyGmK0wQA/S85CAUOHjVUuZ7kmqiISFcTvGpDtzsw9xfJ
+	 VY4/jdoYCkO6Jn2R8seaQcVxsqBrEKeyNkY+slousU/VPpVP6b05hXIL9UQo0B0b9F
+	 5aYIunzOx4g3PLurZTlJef5RzTSOOT5yeH9Wl4eqaxkOtlnMlxLgSwTBpMblgp/BMA
+	 smehyXSLLWvA8MTSsmG2G3QgNvravfw0RTUzyXnb7oBhJHOf5VMOli1v7GTYfI3t62
+	 YnYJPKYtuFFXg==
 From: Tzung-Bi Shih <tzungbi@kernel.org>
 To: Bartosz Golaszewski <brgl@kernel.org>,
 	Linus Walleij <linusw@kernel.org>
@@ -63,9 +63,9 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-gpio@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 01/11] gpio: Access `gpio_bus_type` in gpiochip_setup_dev()
-Date: Fri, 13 Feb 2026 09:29:48 +0000
-Message-ID: <20260213092958.864411-2-tzungbi@kernel.org>
+Subject: [PATCH v3 02/11] gpio: Remove redundant check for struct gpio_chip
+Date: Fri, 13 Feb 2026 09:29:49 +0000
+Message-ID: <20260213092958.864411-3-tzungbi@kernel.org>
 X-Mailer: git-send-email 2.53.0.310.g728cabbaf7-goog
 In-Reply-To: <20260213092958.864411-1-tzungbi@kernel.org>
 References: <20260213092958.864411-1-tzungbi@kernel.org>
@@ -83,13 +83,13 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[18];
-	TAGGED_FROM(0.00)[bounces-31658-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31659-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -102,59 +102,66 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 397591347C2
+X-Rspamd-Queue-Id: 1D78D1347E7
 X-Rspamd-Action: no action
 
-To make the intent clear, access `gpio_bus_type` only when it's ready in
-gpiochip_setup_dev().
+gpiolib_dbg_show() is only called by gpiolib_seq_show() which has
+ensured the struct gpio_chip.  Remove the redundant check in
+gpiolib_dbg_show().
 
 Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
 ---
 v3:
 - No changes.
 
-v2: https://lore.kernel.org/all/20260203061059.975605-2-tzungbi@kernel.org
+v2: https://lore.kernel.org/all/20260203061059.975605-3-tzungbi@kernel.org
 - No changes.
 
-v1: https://lore.kernel.org/all/20260116081036.352286-7-tzungbi@kernel.org
+v1: https://lore.kernel.org/all/20260116081036.352286-8-tzungbi@kernel.org
 
- drivers/gpio/gpiolib.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpio/gpiolib.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 5757c0475990..f4dad3e5b5a3 100644
+index f4dad3e5b5a3..1a3fd7600835 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -902,6 +902,8 @@ static int gpiochip_setup_dev(struct gpio_device *gdev)
- 	struct fwnode_handle *fwnode = dev_fwnode(&gdev->dev);
- 	int ret;
+@@ -5313,23 +5313,14 @@ core_initcall(gpiolib_dev_init);
  
-+	gdev->dev.bus = &gpio_bus_type;
-+
- 	/*
- 	 * If fwnode doesn't belong to another device, it's safe to clear its
- 	 * initialized flag.
-@@ -1083,7 +1085,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	 * then make sure they get free():ed there.
- 	 */
- 	gdev->dev.type = &gpio_dev_type;
--	gdev->dev.bus = &gpio_bus_type;
- 	gdev->dev.parent = gc->parent;
- 	device_set_node(&gdev->dev, gpiochip_choose_fwnode(gc));
+ #ifdef CONFIG_DEBUG_FS
  
-@@ -1221,8 +1222,8 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	 * we get a device node entry in sysfs under
- 	 * /sys/bus/gpio/devices/gpiochipN/dev that can be used for
- 	 * coldplug of device nodes and other udev business.
--	 * We can do this only if gpiolib has been initialized.
--	 * Otherwise, defer until later.
-+	 * We can do this only if gpiolib has been initialized
-+	 * (i.e., `gpio_bus_type` is ready).  Otherwise, defer until later.
- 	 */
- 	if (gpiolib_initialized) {
- 		ret = gpiochip_setup_dev(gdev);
+-static void gpiolib_dbg_show(struct seq_file *s, struct gpio_device *gdev)
++static void gpiolib_dbg_show(struct seq_file *s, struct gpio_chip *gc)
+ {
+ 	bool active_low, is_irq, is_out;
+ 	struct gpio_desc *desc;
+ 	unsigned int gpio = 0;
+-	struct gpio_chip *gc;
+ 	unsigned long flags;
+ 	int value;
+ 
+-	guard(srcu)(&gdev->srcu);
+-
+-	gc = srcu_dereference(gdev->chip, &gdev->srcu);
+-	if (!gc) {
+-		seq_puts(s, "Underlying GPIO chip is gone\n");
+-		return;
+-	}
+-
+ 	for_each_gpio_desc(gc, desc) {
+ 		guard(srcu)(&desc->gdev->desc_srcu);
+ 		flags = READ_ONCE(desc->flags);
+@@ -5442,7 +5433,7 @@ static int gpiolib_seq_show(struct seq_file *s, void *v)
+ 	if (gc->dbg_show)
+ 		gc->dbg_show(s, gc);
+ 	else
+-		gpiolib_dbg_show(s, gdev);
++		gpiolib_dbg_show(s, gc);
+ 
+ 	return 0;
+ }
 -- 
 2.53.0.310.g728cabbaf7-goog
 
