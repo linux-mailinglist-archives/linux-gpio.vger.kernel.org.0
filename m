@@ -1,49 +1,49 @@
-Return-Path: <linux-gpio+bounces-31667-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31668-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aKP3JIbwjmk5GAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31667-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 10:36:06 +0100
+	id gC6zL6/wjmk5GAEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31668-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 10:36:47 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F82D1348BE
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 10:36:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4318B1348D7
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 10:36:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8B16A31A20BC
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 09:31:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1089831B73F3
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Feb 2026 09:31:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 478972D9EC5;
-	Fri, 13 Feb 2026 09:31:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53DB134D917;
+	Fri, 13 Feb 2026 09:31:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMBJTlbQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PTeHzrz7"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054A6330B27;
-	Fri, 13 Feb 2026 09:31:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1501834D4F1;
+	Fri, 13 Feb 2026 09:31:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770975093; cv=none; b=lMuU3q2AyKp8k36+GrBMq6QPeZ2KzH5elRSW1SmgqI1idNsZ/TVMRA6N7arG3+IgUbIS8FNCv0dTtnWzaHHZJUKi+EOEgpEPxDuzOGGHY54E5Vi6KsLKMoV2e4didmCBrFhDISRp6b/XkzVGUiptaHdy+BTivOH5PDiFMMrgd+M=
+	t=1770975096; cv=none; b=eRK7bk6OFlyoPRCf9wQGMewX9dI+qmMZFIXwSEWhGE9iAxfEk5nbrRdDMinsAC2sA4jRMj4D/P+4KYVhYsjRpeVJmq4V/urlreLRJ4ykQhKa2FUpiVRQIMPwrEEwYT7Mh8A0LhKz2iHw1DLhmZOcPr7wHBJCkqIqrhhCIX9zF3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770975093; c=relaxed/simple;
-	bh=sc68Y2yfU7vJPsAs/fppEoHXv0dQsgkbHlyNAxyY/KQ=;
+	s=arc-20240116; t=1770975096; c=relaxed/simple;
+	bh=HELCfPtNvCvEoazpaboPAkrUFqcVe3WmgWs+WHvPHis=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RLFvViXWw5NgbOZRh7Jva5EqYlTRe390bhOWO6p8qi06mPYWmlC7+Z0wd9cSTI21GOWdMgCT7l/JyRy8ZGNfXlhzBwB++WSnYrJX8zlfwPSpQWBb4/NyDXh1omHGpdIqJlJqtgFyHRSvWNY4KOCInFP/urJd70QFp1tZrb0dhZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMBJTlbQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B14AC16AAE;
-	Fri, 13 Feb 2026 09:31:29 +0000 (UTC)
+	 MIME-Version; b=qoq4UdfYFZ0kNv55m4v2xNFwI8Y7rm4njQskaRZ7nrAXD/2NzxYf9wYdFaP7v0l41B4FgZ5j4XEUacOlssJ+gN+dU+VN/PNNTCuE4RCsbFQCbJpLDsj8iaQKdQ1BHAT1Gu2BJ78KjoHeMM9CWSVHScNX6E7yAhgjiA2AB91GdwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PTeHzrz7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1832EC2BC86;
+	Fri, 13 Feb 2026 09:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770975092;
-	bh=sc68Y2yfU7vJPsAs/fppEoHXv0dQsgkbHlyNAxyY/KQ=;
+	s=k20201202; t=1770975095;
+	bh=HELCfPtNvCvEoazpaboPAkrUFqcVe3WmgWs+WHvPHis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GMBJTlbQSoMbGuLvCNfO7N884adZYuIlKQDbzSiU0o0QVR9nSSFfFkPx3UCogq+Cn
-	 XfVQvFDnmcL7soAQnDHouOcYXVZj9vLWi6o/C5dPDbOkmAV8e1TEUeD6fV7Qj+7ZKg
-	 e6+Flw5JWGIplEsm/fjknKLfax9HvXiwosZgo9Lk+k3iWSciFPAac40Ft7F6TpuXxo
-	 fJXByL2vGxWf+nFpeCxRkw3FdSBOXcNgl40TdXxSobPLET9YD2sc5ls4X9cWBa0deF
-	 Nk/KvyZuCYE9fmkHfzEcxVC6KI0+IRN7DifOT/DZEB/Dro+wbdfO8iP/FXf0MiraVZ
-	 27JpTACoiU5Og==
+	b=PTeHzrz7fBmNzxotEJYS7hqWo2i21aU5yS451f2gH4/xkQC65J7JEaSfuZGwdEp5h
+	 qaRw7SH2+YHJ0Rk5gqCgL3oitiq+K51odE8tuTAeeEgp0d17UyPa0HZ8ae5wphzFaW
+	 lK+sU9wfAR3J5aTT+riG+cP75ynvcG2RU1WDeSQv+exRBfecv1A3VBDzrnN4sUCPi3
+	 i2lmYTCSj3ZBMF7fDJ2EZplvqZIUTErpa9VUGxj7axVVGeDT/Iy8GNjWPN2wynTXag
+	 AO7PGO4RDDfwNAOWi7Els9HNOtwzbfDr2Fs2QrmZ8tCRzve1DKP3RX4ohb0iPkfpDr
+	 FoBArUrhNA9Rw==
 From: Tzung-Bi Shih <tzungbi@kernel.org>
 To: Bartosz Golaszewski <brgl@kernel.org>,
 	Linus Walleij <linusw@kernel.org>
@@ -63,9 +63,9 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-gpio@vger.kernel.org,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 10/11] gpio: Leverage revocable for accessing struct gpio_chip
-Date: Fri, 13 Feb 2026 09:29:57 +0000
-Message-ID: <20260213092958.864411-11-tzungbi@kernel.org>
+Subject: [PATCH v3 11/11] gpio: Remove unused `chip` and `srcu` in struct gpio_device
+Date: Fri, 13 Feb 2026 09:29:58 +0000
+Message-ID: <20260213092958.864411-12-tzungbi@kernel.org>
 X-Mailer: git-send-email 2.53.0.310.g728cabbaf7-goog
 In-Reply-To: <20260213092958.864411-1-tzungbi@kernel.org>
 References: <20260213092958.864411-1-tzungbi@kernel.org>
@@ -89,7 +89,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[18];
-	TAGGED_FROM(0.00)[bounces-31667-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31668-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -104,175 +104,171 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 3F82D1348BE
+X-Rspamd-Queue-Id: 4318B1348D7
 X-Rspamd-Action: no action
 
-Struct gpio_device now provides a revocable provider to the underlying
-struct gpio_chip.  Leverage revocable for accessing the struct
-gpio_chip.
+`chip` and `srcu` in struct gpio_device are unused as their usages are
+replaced to use revocable.  Remove them.
 
 Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
 ---
 v3:
-- Change revocable API usages accordingly.
+- No changes.
 
-v2: https://lore.kernel.org/all/20260203061059.975605-11-tzungbi@kernel.org
-- Separate from v1(a) for excluding gpio_chip_guard and combine v1(b).
+v2: https://lore.kernel.org/all/20260203061059.975605-12-tzungbi@kernel.org
+- No changes.
 
-v1(a):
-- https://lore.kernel.org/all/20260116081036.352286-23-tzungbi@kernel.org
-v1(b):
-- https://lore.kernel.org/all/20260116081036.352286-19-tzungbi@kernel.org
+v1: https://lore.kernel.org/all/20260116081036.352286-24-tzungbi@kernel.org
 
- drivers/gpio/gpiolib.c | 60 +++++++++++++-----------------------------
- 1 file changed, 18 insertions(+), 42 deletions(-)
+ drivers/gpio/gpiolib.c | 26 +-------------------------
+ drivers/gpio/gpiolib.h |  4 ----
+ 2 files changed, 1 insertion(+), 29 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 34f2665a9311..2ba78add3417 100644
+index 2ba78add3417..01be9f6978f2 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -338,7 +338,10 @@ EXPORT_SYMBOL(gpio_device_get_label);
-  */
- struct gpio_chip *gpio_device_get_chip(struct gpio_device *gdev)
+@@ -423,8 +423,6 @@ static int gpiochip_get_direction(struct gpio_chip *gc, unsigned int offset)
  {
--	return rcu_dereference_check(gdev->chip, 1);
-+	struct gpio_chip *gc;
-+
-+	revocable_try_access_with(gdev->chip_rp, gc);
-+	return gc;
- }
- EXPORT_SYMBOL_GPL(gpio_device_get_chip);
- 
-@@ -556,9 +559,7 @@ static struct gpio_desc *gpio_name_to_desc(const char * const name)
- 
- 	list_for_each_entry_srcu(gdev, &gpio_devices, list,
- 				 srcu_read_lock_held(&gpio_devices_srcu)) {
--		guard(srcu)(&gdev->srcu);
--
--		gc = srcu_dereference(gdev->chip, &gdev->srcu);
-+		revocable_try_access_with(gdev->chip_rp, gc);
- 		if (!gc)
- 			continue;
- 
-@@ -972,9 +973,7 @@ static void gpiochip_setup_devs(void)
- 
- 	list_for_each_entry_srcu(gdev, &gpio_devices, list,
- 				 srcu_read_lock_held(&gpio_devices_srcu)) {
--		guard(srcu)(&gdev->srcu);
--
--		gc = srcu_dereference(gdev->chip, &gdev->srcu);
-+		revocable_try_access_with(gdev->chip_rp, gc);
- 		if (!gc) {
- 			dev_err(&gdev->dev, "Underlying GPIO chip is gone\n");
- 			continue;
-@@ -1378,11 +1377,11 @@ struct gpio_device *gpio_device_find(const void *data,
- 		if (!device_is_registered(&gdev->dev))
- 			continue;
- 
--		guard(srcu)(&gdev->srcu);
--
--		gc = srcu_dereference(gdev->chip, &gdev->srcu);
-+		revocable_try_access_with(gdev->chip_rp, gc);
-+		if (!gc)
-+			continue;
- 
--		if (gc && match(gc, data))
-+		if (match(gc, data))
- 			return gpio_device_get(gdev);
- 	}
- 
-@@ -3310,18 +3309,10 @@ static int gpio_chip_get_value(struct gpio_chip *gc, const struct gpio_desc *des
- 
- static int gpiod_get_raw_value_commit(const struct gpio_desc *desc)
- {
--	struct gpio_device *gdev;
- 	struct gpio_chip *gc;
- 	int value;
- 
--	/* FIXME Unable to use gpio_chip_guard due to const desc. */
--	gdev = desc->gdev;
--
--	guard(srcu)(&gdev->srcu);
--
--	gc = srcu_dereference(gdev->chip, &gdev->srcu);
--	if (!gc)
--		return -ENODEV;
-+	revocable_try_access_or_return(desc->gdev->chip_rp, gc);
- 
- 	value = gpio_chip_get_value(gc, desc);
- 	value = value < 0 ? value : !!value;
-@@ -3360,9 +3351,10 @@ static int gpio_chip_get_multiple(struct gpio_chip *gc,
- /* The 'other' chip must be protected with its GPIO device's SRCU. */
- static bool gpio_device_chip_cmp(struct gpio_device *gdev, struct gpio_chip *gc)
- {
--	guard(srcu)(&gdev->srcu);
-+	struct gpio_chip *chip;
- 
--	return gc == srcu_dereference(gdev->chip, &gdev->srcu);
-+	revocable_try_access_with(gdev->chip_rp, chip);
-+	return chip ? chip == gc : false;
- }
- 
- int gpiod_get_array_value_complex(bool raw, bool can_sleep,
-@@ -3385,11 +3377,7 @@ int gpiod_get_array_value_complex(bool raw, bool can_sleep,
- 		if (!can_sleep)
- 			WARN_ON(array_info->gdev->can_sleep);
- 
--		guard(srcu)(&array_info->gdev->srcu);
--		gc = srcu_dereference(array_info->gdev->chip,
--				      &array_info->gdev->srcu);
--		if (!gc)
--			return -ENODEV;
-+		revocable_try_access_or_return(array_info->gdev->chip_rp, gc);
- 
- 		ret = gpio_chip_get_multiple(gc, array_info->get_mask,
- 					     value_bitmap);
-@@ -3726,11 +3714,7 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
- 				return -EPERM;
- 		}
- 
--		guard(srcu)(&array_info->gdev->srcu);
--		gc = srcu_dereference(array_info->gdev->chip,
--				      &array_info->gdev->srcu);
--		if (!gc)
--			return -ENODEV;
-+		revocable_try_access_or_return(array_info->gdev->chip_rp, gc);
- 
- 		if (!raw && !bitmap_empty(array_info->invert_mask, array_size))
- 			bitmap_xor(value_bitmap, value_bitmap,
-@@ -4024,7 +4008,6 @@ EXPORT_SYMBOL_GPL(gpiod_is_shared);
-  */
- int gpiod_to_irq(const struct gpio_desc *desc)
- {
--	struct gpio_device *gdev;
- 	struct gpio_chip *gc;
- 	int offset;
  	int ret;
-@@ -4033,12 +4016,7 @@ int gpiod_to_irq(const struct gpio_desc *desc)
- 	if (ret <= 0)
- 		return -EINVAL;
  
--	gdev = desc->gdev;
--	/* FIXME Cannot use gpio_chip_guard due to const desc. */
--	guard(srcu)(&gdev->srcu);
--	gc = srcu_dereference(gdev->chip, &gdev->srcu);
--	if (!gc)
--		return -ENODEV;
-+	revocable_try_access_or_return(desc->gdev->chip_rp, gc);
- 
- 	offset = gpiod_hwgpio(desc);
- 	if (gc->to_irq) {
-@@ -5413,9 +5391,7 @@ static int gpiolib_seq_show(struct seq_file *s, void *v)
- 	if (priv->newline)
- 		seq_putc(s, '\n');
- 
--	guard(srcu)(&gdev->srcu);
+-	lockdep_assert_held(&gc->gpiodev->srcu);
 -
--	gc = srcu_dereference(gdev->chip, &gdev->srcu);
-+	revocable_try_access_with(gdev->chip_rp, gc);
- 	if (!gc) {
- 		seq_printf(s, "%s: (dangling chip)\n", dev_name(&gdev->dev));
- 		return 0;
+ 	if (WARN_ON(!gc->get_direction))
+ 		return -EOPNOTSUPP;
+ 
+@@ -875,7 +873,6 @@ static void gpiodev_release(struct device *dev)
+ 	ida_free(&gpio_ida, gdev->id);
+ 	kfree_const(gdev->label);
+ 	kfree(gdev->descs);
+-	cleanup_srcu_struct(&gdev->srcu);
+ 	kfree(gdev);
+ }
+ 
+@@ -1076,14 +1073,9 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 		goto err_free_gdev;
+ 	gdev->id = ret;
+ 
+-	ret = init_srcu_struct(&gdev->srcu);
+-	if (ret)
+-		goto err_free_ida;
+-	rcu_assign_pointer(gdev->chip, gc);
+-
+ 	ret = init_srcu_struct(&gdev->desc_srcu);
+ 	if (ret)
+-		goto err_cleanup_gdev_srcu;
++		goto err_free_ida;
+ 
+ 	ret = dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
+ 	if (ret)
+@@ -1276,8 +1268,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 
+ err_cleanup_desc_srcu:
+ 	cleanup_srcu_struct(&gdev->desc_srcu);
+-err_cleanup_gdev_srcu:
+-	cleanup_srcu_struct(&gdev->srcu);
+ err_free_ida:
+ 	ida_free(&gpio_ida, gdev->id);
+ err_free_gdev:
+@@ -1314,8 +1304,6 @@ void gpiochip_remove(struct gpio_chip *gc)
+ 	synchronize_srcu(&gpio_devices_srcu);
+ 
+ 	/* Numb the device, cancelling all outstanding operations */
+-	rcu_assign_pointer(gdev->chip, NULL);
+-	synchronize_srcu(&gdev->srcu);
+ 	revocable_revoke(gdev->chip_rp);
+ 	gpio_device_teardown_shared(gdev);
+ 	gpiochip_irqchip_remove(gc);
+@@ -2815,8 +2803,6 @@ static int gpiochip_direction_input(struct gpio_chip *gc, unsigned int offset)
+ {
+ 	int ret;
+ 
+-	lockdep_assert_held(&gc->gpiodev->srcu);
+-
+ 	if (WARN_ON(!gc->direction_input))
+ 		return -EOPNOTSUPP;
+ 
+@@ -2832,8 +2818,6 @@ static int gpiochip_direction_output(struct gpio_chip *gc, unsigned int offset,
+ {
+ 	int ret;
+ 
+-	lockdep_assert_held(&gc->gpiodev->srcu);
+-
+ 	if (WARN_ON(!gc->direction_output))
+ 		return -EOPNOTSUPP;
+ 
+@@ -2921,8 +2905,6 @@ static int gpiochip_set(struct gpio_chip *gc, unsigned int offset, int value)
+ {
+ 	int ret;
+ 
+-	lockdep_assert_held(&gc->gpiodev->srcu);
+-
+ 	if (WARN_ON(unlikely(!gc->set)))
+ 		return -EOPNOTSUPP;
+ 
+@@ -3270,8 +3252,6 @@ static int gpiochip_get(struct gpio_chip *gc, unsigned int offset)
+ {
+ 	int ret;
+ 
+-	lockdep_assert_held(&gc->gpiodev->srcu);
+-
+ 	/* Make sure this is called after checking for gc->get(). */
+ 	ret = gc->get(gc, offset);
+ 	if (ret > 1)
+@@ -3323,8 +3303,6 @@ static int gpiod_get_raw_value_commit(const struct gpio_desc *desc)
+ static int gpio_chip_get_multiple(struct gpio_chip *gc,
+ 				  unsigned long *mask, unsigned long *bits)
+ {
+-	lockdep_assert_held(&gc->gpiodev->srcu);
+-
+ 	if (gc->get_multiple) {
+ 		int ret;
+ 
+@@ -3668,8 +3646,6 @@ static int gpiochip_set_multiple(struct gpio_chip *gc,
+ 	unsigned int i;
+ 	int ret;
+ 
+-	lockdep_assert_held(&gc->gpiodev->srcu);
+-
+ 	if (gc->set_multiple) {
+ 		ret = gc->set_multiple(gc, mask, bits);
+ 		if (ret > 0)
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index a254a57f37f5..6a97d9726c20 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -28,7 +28,6 @@
+  * @chrdev: character device for the GPIO device
+  * @id: numerical ID number for the GPIO chip
+  * @owner: helps prevent removal of modules exporting active GPIOs
+- * @chip: pointer to the corresponding gpiochip, holding static
+  * data for this device
+  * @descs: array of ngpio descriptors.
+  * @valid_mask: If not %NULL, holds bitmask of GPIOs which are valid to be
+@@ -51,7 +50,6 @@
+  *                 process context
+  * @device_notifier: used to notify character device wait queues about the GPIO
+  *                   device being unregistered
+- * @srcu: protects the pointer to the underlying GPIO chip
+  * @chip_rp: revocable provider handle for the corresponding struct gpio_chip.
+  * @pin_ranges: range of pins served by the GPIO driver
+  *
+@@ -65,7 +63,6 @@ struct gpio_device {
+ 	struct cdev		chrdev;
+ 	int			id;
+ 	struct module		*owner;
+-	struct gpio_chip __rcu	*chip;
+ 	struct gpio_desc	*descs;
+ 	unsigned long		*valid_mask;
+ 	struct srcu_struct	desc_srcu;
+@@ -79,7 +76,6 @@ struct gpio_device {
+ 	rwlock_t		line_state_lock;
+ 	struct workqueue_struct	*line_state_wq;
+ 	struct blocking_notifier_head device_notifier;
+-	struct srcu_struct	srcu;
+ 	struct revocable	*chip_rp;
+ 
+ #ifdef CONFIG_PINCTRL
 -- 
 2.53.0.310.g728cabbaf7-goog
 
