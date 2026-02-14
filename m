@@ -1,280 +1,156 @@
-Return-Path: <linux-gpio+bounces-31681-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31682-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KJHlOKrKj2ntTgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31681-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Feb 2026 02:06:50 +0100
+	id gVQVDgT+j2mwUwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31682-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Feb 2026 05:45:56 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2BC013A71D
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Feb 2026 02:06:50 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E54C13B131
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Feb 2026 05:45:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7C7B23010B54
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Feb 2026 01:06:43 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 9F50D3006034
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Feb 2026 04:45:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07AC2221F24;
-	Sat, 14 Feb 2026 01:06:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09AA52F616B;
+	Sat, 14 Feb 2026 04:45:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVdBRpo+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vkjg9ed8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f49.google.com (mail-yx1-f49.google.com [74.125.224.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC651E1E12;
-	Sat, 14 Feb 2026 01:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC966299937
+	for <linux-gpio@vger.kernel.org>; Sat, 14 Feb 2026 04:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771031199; cv=none; b=k47fRIW1IHcLXoSEcKFZgMKrAhQ3v/YG1vLvw96wXQ1OdW2Ucm47aMZOl1LwaFWFvCoCgIHSkVxgDsA3WxvmEwXtadNpHEiOCU7//FPIhFgxtm88gc26LJQGNzhcGPjD/VicQ/YWo2HquoMTmsbdlQFhMrhhdDR6se1pqUfjMDQ=
+	t=1771044350; cv=none; b=FCv3r26nYv0PMvsDjzQ9SMpZudvxU7M4CPvQ23thJ5HA7CHyxqLjshfHeW1eEaz4boJghs0whqX4ef97nRdDJ363BlKGpz1SGaFmjNI6wFbyJtKCYmRiJpaAz+7OBKe9SFRP8i635VIYoBXYV1ZB0GM3AZjw3DBrQ4CEiT+J17Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771031199; c=relaxed/simple;
-	bh=n2tjqytbYdaj8GUv6LUY405Nq71IvZ/joeUBGpYTSkc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kaWlwugPfAZca7c5+funkZXuxEHdzzFvMp+jbgqzMAqgBKx9IJFU3UFRb5odtwkbkJcBXOSWjN20weXSMDMHYAs9A8ePktWRsMVn10u2IRk7hc+/797Rzxk3Xt3+IYS9Ms8yzQkA+8H1XkNhVRLVqBI45FZy+bTcc83cppHVDJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gVdBRpo+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80735C116C6;
-	Sat, 14 Feb 2026 01:06:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771031199;
-	bh=n2tjqytbYdaj8GUv6LUY405Nq71IvZ/joeUBGpYTSkc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gVdBRpo+6AgWjdkyb+1qf2ki6KigrLLTb8wzOK6X99dAOKb5XqBUnAmaijrEOFXut
-	 LAaCjhoZKJ+9sKvTPlYZzay074jMdmdPsqipQ7ClDARmqARag+b2odn48CLgIoA5Nm
-	 KqzLlTXvDIkSwijR42UPAnhmIcHexokvEqeTwywTPb8djEx9/JnXKi02gxccFcO4cp
-	 D7Vo/1+pznIr+ajxDoZibzbbQDnUrx81nBJDJ5KmL8rONGQPp24NOCUO+8rRVgP9fi
-	 xnQcxTsRnha7Yyd+HGqZma7fn6mRC1M4ue6yJCmUve+Sl9GQ5BWmsF15ih6V0KChKX
-	 CsL0Rbv/JMsQg==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
+	s=arc-20240116; t=1771044350; c=relaxed/simple;
+	bh=o/GV5jieQ1nfLMF3Kw74P6li2KB/ycvzwnF/hdIeyP0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qe09YTG6YJFaahP+iCT+S06IxTQrgqUWDQUbjJd+5ta/+/DVNWMvrN8gMP0CHINSwdESbwqSiC7bVU0nNY9UM8Ocm/vlvZlTLgwzlLOqcNjdQZJuqDjEYSe7wEJ59vLLykbZGnJPH55Amfe60raubxLw+hAV61txWYb3+X335lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vkjg9ed8; arc=none smtp.client-ip=74.125.224.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-64ad9238d8fso1598151d50.3
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Feb 2026 20:45:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771044349; x=1771649149; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=R43m5m1ez1GonWOxLG/dVD5h7A9CUwXvLk5pXGze70s=;
+        b=Vkjg9ed8CNNTXxgQ+ueU8tL2WddHUZ3dIR86GTMuuYRXSNMrQoENP1TomfwD+AKqmR
+         eAmdyf5ZqtCmfWHWKTtUmztOKeL4lX4qAFNcEhBP5Pnpg5j9hHRBnuvQcgweG7I8z3a4
+         TKDSUbI0gzvBTsczVQdrMIxfxVAUBDtoY08qTGGEPruNU2rnIgJnOTfRdP7ICdc5JtLY
+         JSI76AX3sm6W280/tDnaTLecOLhKBebfG6be3UwanAYyDE+TWXH0BHF8tCidEt0SYsC8
+         eFcqJSAcbRqJo3m/bH0m1jJmICGA/jP1+n2eRIZChigu9USecD0lPXjDnAKnuXpF5eq7
+         i+dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771044349; x=1771649149;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R43m5m1ez1GonWOxLG/dVD5h7A9CUwXvLk5pXGze70s=;
+        b=VpmBIAqViFamd3b++eUvjTo0LfOI0JygU5XTw4BvV4bGF9wQOr85USXT6U6urGXXTS
+         NUAO1RfKGp04VL3ZH5xRnD+u+2WP4v4fTaB7VmuZ7TZ8p2PVU7Qg1R8MH6FKstXozL7h
+         p6t503oOS4dBIQ8MnfvzJgiKr2CRp5C22cm9Jp+msQzXkWQiyWlyksm4ars8DicsLoha
+         Zv8bp34SkgC88+FU+aibR3uuJVia/vwzqHj9SeLXnXZ/g5FT0P/aeu8u3FdZulvcP7zi
+         QBQMjbnghw4f6Co2Xh6tNtE9ZyxtQrBsbyJnCRdnTevrdNb68KNgGv4OA46pQQw8jiR8
+         ty/w==
+X-Forwarded-Encrypted: i=1; AJvYcCXM9njaNl3R+fXUG1lUI28OP0HVqswqfTEIhUfDN21FvuHVtcJVREaKC1JbCEFP4+BDe91UW8sVTL5S@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLM/Vl3bZI8wCFz1QMijFLkK4K9AHWgHW5RLqf2n4S4sjlcMlT
+	HRh6/t8BxUecOnEzpPeKNI7Q62RpCdOlVTsAMtEiW75+pUayCADClKIY
+X-Gm-Gg: AZuq6aLjuYCP5Pde/yLmV0hEMga1XxmUtVWaTy0NlPYvkRsPXl9PHna7G8+cf4I+qj3
+	5iLIuihptKgzpOLsYZWSBBV93d9wWENS19PzKSZE3km36x0pn4OqbNb+NB4/irocUooqcusMgyb
+	LiQgZy8qnB3Cib3p71nz1OOZ3wnRgLLWRz7vwWHEdNeWg02Dte//XouNYogqOG3crIY2jDM4x4X
+	vdn9XBKrSDLNUrY7RFH3xjgGWqWTN6cE+SeCn2WaCdBp2LgMYogNYiSI1kSM884uu20YUQqYE/i
+	54b/CsDkzTCVAnPrttrems2QG/Cw7Ag7jyCRikIP3DzNMSfwHFJnK9kHBPsylIyRr8KHRHg/6AO
+	gitlSEzvaxP4+96YDbhZR1AJFMbeke5LUtJtqzJu0afKxnbrzYAly10ttMK7ozxQo8s84+BBd23
+	rUhiXK5vC63hB50LFn2+2pIYlnYuF3AzsTF+dcWeo1kp+kFq3X6DBS+7FOJweDn0R/CkdDLncVi
+	7NPUtEin6AjUp+vtsCoBQ2NzHH9t5PccNU0W2LYpcnBrQr/Roa+Pw==
+X-Received: by 2002:a05:690e:14c9:b0:64c:2114:17a2 with SMTP id 956f58d0204a3-64c211418c1mr1742970d50.62.1771044348735;
+        Fri, 13 Feb 2026 20:45:48 -0800 (PST)
+Received: from tux ([2601:7c0:c37c:4c00:e3a8:26f7:7e08:88e1])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-64c22eb2059sm570067d50.10.2026.02.13.20.45.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Feb 2026 20:45:48 -0800 (PST)
+From: Ethan Tidmore <ethantidmore06@gmail.com>
+To: Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ethan Tidmore <ethantidmore06@gmail.com>,
 	stable@vger.kernel.org
-Cc: Jan Remmet <j.remmet@phytec.de>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Sasha Levin <sashal@kernel.org>,
-	linusw@kernel.org,
-	brgl@kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.19-6.18] gpio: pca953x: Add support for TCAL6408 TCAL6416
-Date: Fri, 13 Feb 2026 19:59:39 -0500
-Message-ID: <20260214010245.3671907-99-sashal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260214010245.3671907-1-sashal@kernel.org>
-References: <20260214010245.3671907-1-sashal@kernel.org>
+Subject: [PATCH] gpio: nomadik: Add missing IS_ERR() check
+Date: Fri, 13 Feb 2026 22:45:31 -0600
+Message-ID: <20260214044531.43539-1-ethantidmore06@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.19
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31681-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashal@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,ti.com:url]
-X-Rspamd-Queue-Id: B2BC013A71D
+	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,gmail.com];
+	TAGGED_FROM(0.00)[bounces-31682-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ethantidmore06@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 4E54C13B131
 X-Rspamd-Action: no action
 
-From: Jan Remmet <j.remmet@phytec.de>
+The function gpio_device_get_desc() can return an error pointer and is
+not checked for one. Add check for error pointer.
 
-[ Upstream commit a30a9cb9bca4296d25f253619883e7013b6be158 ]
-
-TCAL6408 and TCAL6416 supports latchable inputs and maskable interrupt.
-Tested on a TCAL6416, checked datasheets for the TCAL6408.
-
-They use the same programming model ad the NXP PCAL64xx, but
-support a lower supply power (1.08V to 3.6V) compared to PCAL
-(1.65V to 5.5V)
-
-Datasheet: https://www.ti.com/lit/ds/symlink/tcal6408.pdf
-Datasheet: https://www.ti.com/lit/ds/symlink/tcal6416.pdf
-
-Signed-off-by: Jan Remmet <j.remmet@phytec.de>
-Link: https://lore.kernel.org/r/20251216-wip-jremmet-tcal6416rtw-v2-3-6516d98a9836@phytec.de
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: ddeb66d2cb10f ("gpio: nomadik: don't print out global GPIO numbers in debugfs callbacks")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ethan Tidmore <ethantidmore06@gmail.com>
 ---
+ drivers/gpio/gpio-nomadik.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-LLM Generated explanations, may be completely bogus:
-
-Good - there's no fallback compatible mechanism here. Each chip gets its
-own compatible string.
-
-## Complete Analysis
-
-### 1. Commit Message Analysis
-
-The commit message is clear and well-structured:
-- Explicitly states the chips use "the same programming model as the NXP
-  PCAL64xx"
-- Only difference is supply voltage range (1.08V-3.6V vs 1.65V-5.5V)
-- References both datasheets for verification
-- States it was "Tested on a TCAL6416" — author has real hardware
-- The author (from phytec.de, an embedded hardware company) has a clear
-  use case
-
-### 2. Code Change Analysis
-
-The changes are **purely table additions**:
-
-**I2C device ID table** (`pca953x_id[]`): Adds 2 entries:
-- `{ "tcal6408", 8 | PCA953X_TYPE | PCA_LATCH_INT, }` — 8-bit GPIO
-  expander with PCAL features
-- `{ "tcal6416", 16 | PCA953X_TYPE | PCA_LATCH_INT, }` — 16-bit GPIO
-  expander with PCAL features
-
-These use the exact same type flags (`PCA953X_TYPE | PCA_LATCH_INT`) as
-the already-supported `pcal6408` and `pcal6416`, confirming identical
-register layout handling.
-
-**OF match table** (`pca953x_dt_ids[]`): Adds 2 entries:
-- `{ .compatible = "ti,tcal6408", .data = OF_953X(8, PCA_LATCH_INT), }`
-- `{ .compatible = "ti,tcal6416", .data = OF_953X(16, PCA_LATCH_INT), }`
-
-**Kconfig**: Updates help text to list the new chip names (purely
-cosmetic).
-
-**No new code paths**, no new functions, no new registers, no new logic.
-The `PCA_LATCH_INT` flag (`PCA_PCAL | PCA_INT`) already enables all the
-extended PCAL register handling throughout the driver (input latching,
-interrupt masking, pull-up/down config, interrupt status).
-
-### 3. Classification
-
-This is a textbook **new device ID** addition to an existing driver. The
-analysis guidelines explicitly call this out:
-
-> NEW DEVICE IDs (Very Common): Adding PCI IDs, USB IDs, ACPI IDs, etc.
-to existing drivers. These are trivial one-line additions that enable
-hardware support. Rule: The driver must already exist in stable; only
-the ID is new.
-
-The `pca953x` driver exists in all stable trees (it's been in the kernel
-for over 15 years). The TCAL chips use the exact same PCAL register
-model that's already fully supported.
-
-### 4. Scope and Risk Assessment
-
-- **Lines changed**: ~10 lines across 2 files (Kconfig help text +
-  device tables)
-- **Files touched**: 2 (`Kconfig`, `gpio-pca953x.c`)
-- **Risk**: Essentially zero. Table entries can only affect systems with
-  these specific chips. No existing functionality is modified.
-- **Merge conflicts**: The entries are added at the end of their
-  respective groups, so conflicts are unlikely unless another chip was
-  added in the same spot.
-
-### 5. User Impact
-
-- Users with TCAL6408 or TCAL6416 on their boards (embedded systems,
-  industrial boards) cannot use these chips without this patch
-- Without this patch, the hardware is completely non-functional for
-  these users
-- Phytec (the author's company) ships embedded modules that likely use
-  these chips
-
-### 6. Dependencies
-
-- The DT binding YAML update (patch 1-2 of the series) is needed for
-  `dt_binding_check` but is NOT needed for the driver to function. A
-  device tree using `compatible = "ti,tcal6408"` or `compatible =
-  "ti,tcal6416"` will be matched by the driver with just this patch.
-- No code dependencies on other patches.
-
-### 7. Precedent
-
-The exact same pattern has been used many times for this driver. For
-example:
-- `82466bb622e92` "gpio: pca953x: Add support for TI TCA9535 variant" —
-  same pattern, same situation (lower voltage TI variant of NXP chip)
-- `6c99a046edfac` "gpio: pca953x: Add support for TI TCA6418"
-- `a9e49635e263b` "gpio: pca953xx: Add support for pca6408"
-
-### Summary
-
-This is a pure device ID addition to a well-established, widely-used
-GPIO expander driver. The TCAL6408/TCAL6416 are Texas Instruments chips
-that are register-compatible with the already-supported NXP
-PCAL6408/PCAL6416. The change adds only table entries (I2C device IDs
-and OF compatible strings) and zero new code logic. It enables real
-hardware for real users (tested on actual hardware), with effectively
-zero risk of regression to existing users. This is precisely the kind of
-"device ID addition" that stable kernel guidelines explicitly allow as
-an exception.
-
-**YES**
-
- drivers/gpio/Kconfig        | 4 ++--
- drivers/gpio/gpio-pca953x.c | 6 ++++++
- 2 files changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index bd185482a7fdf..3439e025ba1c6 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1193,11 +1193,11 @@ config GPIO_PCA953X
- 
- 	  8 bits:       max7310, max7315, pca6107, pca9534, pca9538, pca9554,
- 	                pca9556, pca9557, pca9574, tca6408, tca9554, xra1202,
--			pcal6408, pcal9554b, tca9538
-+			pcal6408, pcal9554b, tca9538, tcal6408
- 
- 	  16 bits:      max7312, max7313, pca9535, pca9539, pca9555, pca9575,
- 	                tca6416, pca6416, pcal6416, pcal9535, pcal9555a, max7318,
--			tca9539
-+			tca9539, tcal6416
- 
- 	  18 bits:	tca6418
- 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index f93a3dbb2daaf..52e96cc5f67bb 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -126,6 +126,9 @@ static const struct i2c_device_id pca953x_id[] = {
- 	{ "tca9539", 16 | PCA953X_TYPE | PCA_INT, },
- 	{ "tca9554", 8  | PCA953X_TYPE | PCA_INT, },
- 	{ "xra1202", 8  | PCA953X_TYPE },
+diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.c
+index 97c5cd33279d..e22b713166d7 100644
+--- a/drivers/gpio/gpio-nomadik.c
++++ b/drivers/gpio/gpio-nomadik.c
+@@ -430,6 +430,9 @@ void nmk_gpio_dbg_show_one(struct seq_file *s, struct pinctrl_dev *pctldev,
+ #ifdef CONFIG_PINCTRL_NOMADIK
+ 	if (mode == NMK_GPIO_ALT_C && pctldev) {
+ 		desc = gpio_device_get_desc(chip->gpiodev, offset);
++		if (IS_ERR(desc))
++			return;
 +
-+	{ "tcal6408", 8  | PCA953X_TYPE | PCA_LATCH_INT, },
-+	{ "tcal6416", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, pca953x_id);
-@@ -1469,6 +1472,9 @@ static const struct of_device_id pca953x_dt_ids[] = {
- 	{ .compatible = "ti,tca9538", .data = OF_953X( 8, PCA_INT), },
- 	{ .compatible = "ti,tca9539", .data = OF_953X(16, PCA_INT), },
- 
-+	{ .compatible = "ti,tcal6408", .data = OF_953X( 8, PCA_LATCH_INT), },
-+	{ .compatible = "ti,tcal6416", .data = OF_953X(16, PCA_LATCH_INT), },
-+
- 	{ .compatible = "onnn,cat9554", .data = OF_953X( 8, PCA_INT), },
- 	{ .compatible = "onnn,pca9654", .data = OF_953X( 8, PCA_INT), },
- 	{ .compatible = "onnn,pca9655", .data = OF_953X(16, PCA_INT), },
+ 		mode = nmk_prcm_gpiocr_get_mode(pctldev, desc_to_gpio(desc));
+ 	}
+ #endif
 -- 
-2.51.0
+2.53.0
 
 
