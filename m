@@ -1,177 +1,137 @@
-Return-Path: <linux-gpio+bounces-31730-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31731-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WMMrCfKMk2mK6QEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31730-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 22:32:34 +0100
+	id ON5RHweck2n56wEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31731-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 23:36:55 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BB32147BD4
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 22:32:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D6F18147F13
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 23:36:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 132B8301CF9A
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 21:32:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4DE8830075FD
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 22:36:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62BE61FDE14;
-	Mon, 16 Feb 2026 21:32:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A41E91EE00A;
+	Mon, 16 Feb 2026 22:36:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="dBtpiI0v"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vC6CD9i/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A66946C
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 21:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6664424291E
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 22:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771277551; cv=none; b=jpqzswDuiP4Xm9TietNZhGDGgYGr16d1p5u09kjENfCUrvXT28I1zRZBYEbVEY7K/g6YP4KO39NM9S0Qs8jKuz3e4K/waEFbV63oTNvBxgFovc5fcCCEO76Jdc+EIkK3EXpZkGnk9ranZxWVurft6iHwW2WZhZ9Yf4O89LO96sQ=
+	t=1771281400; cv=none; b=VjpK3OFVwJqSi99f16V8HeMWunq2LpoI68na45zVyjqm/F6iEjVdNTgeG0bgAtZhvoI9nLM3WC448Jn1c3ERPLNvh7VNYuvgMwaKKlRR+3TaIuIqBtj6HumuwfczL1iBQqwsfmCl3Z90SYGzq2mJCVTDhnLnDMnvD+exWkura/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771277551; c=relaxed/simple;
-	bh=lcuxvZqEEGSeY/Dl8OTDX3hSUxmdlaFclXh7Mg4h5KM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RfPDd3nhVD100fRmb6qobnqNSOumOs5An3xgFPTgG/qs9yNLuKYT1kVB0cR+c+jllKZYk9MKGidEhoU1hsshoR832XeUSYhnThoesCzgpWRcguFypDr6dyuNhNmVoLQS4PWZsVdima9GuQyn0xxxj2Wo9oPRU5qnY8gEom07fjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=dBtpiI0v; arc=none smtp.client-ip=209.85.167.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-46392972257so2405224b6e.2
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 13:32:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1771277548; x=1771882348; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sj+HAg3jozC3YBKX+d+Ru2M2CkEERrjBRV7v2yZznso=;
-        b=dBtpiI0vam+THtjXXI0I0c9FkeXIY8L/th9BIAXv9w3A2og4OusahTTFlkf+bUhJIV
-         hzBEUmgQ3Nd/2G9SuIRVKY042cXF3S7jqUtKtsckD3P+L4TPkTZ7cG2uOmOKEFgjxmXQ
-         1w8eD1+/pisSi0/WZhdD29oiv/hGEhdhwlKc8o9DaCfsQaxWbAGlBDZSSdsoheeBIeQ+
-         vUlwL+lvpNPvLtcu40VRjoyxDjLlgXvRpHWOgkBxt4SkmwH57U1Xc0cJM5JoPoWjJtyC
-         OGn5wjIKIifgWxXqtnw6O9ft3cHyjd2f3guevK7gEXlmK/Uyxo5Tmb6FydWOAMknZxTo
-         BLHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771277548; x=1771882348;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sj+HAg3jozC3YBKX+d+Ru2M2CkEERrjBRV7v2yZznso=;
-        b=ny/eQ8HZE4rQ84jWLlm8Rh6QnC/Zic56//ANskarl+Qr5V2/KnoxIe+1i2DqnKxVg+
-         lonS4dzHSc/R8+c920Pq0sHapET25oBSoo6ftKCWIKx2ivr/dZ7tHrnqU966VWlsDQb0
-         9esQBL4pKIkMspHs9ctiLW8QW01GvzI55VQ6cGvn86IOM298P4qVEGCZur6ODfNxFSmm
-         jgxMViSlZBvClN1ZUOjTAEO4X+lYtPS9CZjLsggmW02/nua8tiDvLTNsDQXyNntB5pGP
-         xSovRoE0YTPK18sZYZ/q8YWST5XmiPIW7E/BxiMHBMBn9szc4Aji+GfgTyhNQUCELoSf
-         nuMQ==
-X-Gm-Message-State: AOJu0Yzt7ZAnbeLkzqBmR9pDQqqDwhBarnHv30q6Uy9FKlWxOr42nF1W
-	EerhJgqDtQ+lc92cPWTfuMNNKdca3I7k3gJUCOV6pxVTT7LdR5cAIReuuwzSautk5rbDv0TVt+O
-	YeBs+
-X-Gm-Gg: AZuq6aLaHyZYjwxTd62elkNptcRZ7kc46XWtXQF3pLNCrnXBcUiLqSZV3q63ydewj9L
-	Ga349WR6DI7JEg2iV5QuIIUikmcwkFP0OlyxJYrdxPOsLpJf3RXbqh2t78MoFsMOsqzBbYtrvzg
-	v4Y1vaidK89OC8ZFJ7PjTFHdYb6M7F8SPhY/8op7UUDwNvhXgt2feEkuhrrH/99pz1XcjRwA08r
-	gfMc7SKJUJADL+bmbYeRjUbMBZzT206bJdDJbLOus1hCHtRMZQIEjqVVlreYLEK7RDLGR3/psHF
-	ZZz00u0V5xqaDQeZ5xtziPDrt9rfdghcj+2M8g9Fx/vo3vxzf2LUYRqzz9OgHAdDlJ/aEb7vd1Z
-	ZgOEeMBqZ9ETeb4CCW3627WSQzyB7y7aTTZ8RGi4mrEsuxtIIrqqu6ExqenKXajEA7wCsFq58cL
-	ZZYde3AvY6RW4pyIrzLAIa/dVXTbW9US3/FasH0O9glDx13/JPUg==
-X-Received: by 2002:a05:6808:f8f:b0:45e:a4c0:93b1 with SMTP id 5614622812f47-4639f191ab1mr5893058b6e.31.1771277548016;
-        Mon, 16 Feb 2026 13:32:28 -0800 (PST)
-Received: from freyr.tailscale.baylibre.com ([2600:8803:e7e4:500:2d75:8cf2:6289:6a96])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4636b0ccfe6sm10857151b6e.20.2026.02.16.13.32.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Feb 2026 13:32:27 -0800 (PST)
-From: David Lechner <dlechner@baylibre.com>
-To: linux-gpio@vger.kernel.org
-Cc: David Lechner <dlechner@baylibre.com>
-Subject: [libgpiod][PATCH] dbus/data: use prefix in gpio-manager.service
-Date: Mon, 16 Feb 2026 15:32:21 -0600
-Message-ID: <20260216213223.984050-1-dlechner@baylibre.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1771281400; c=relaxed/simple;
+	bh=n6mzMQlYwCosdp7sPTHeQmdtXI7vJYrza0mNgrfXASU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PhF8flWBS6O1JYa61/jnVKdVUxStXrsV4xfOg8nDO4TN9UD5dXOIMam9BCjxktis2RCVkVrCMyK4W0lhglaYEDvOSDSWAnb+8icbBAg7Uv1/31pkDnxdZqGRx/Nr0UZPuch9ZF1WjbJKWvWi32g4wl6aaKMUqLoa3Uxz0SoOP+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vC6CD9i/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 228B1C4AF09
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 22:36:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771281400;
+	bh=n6mzMQlYwCosdp7sPTHeQmdtXI7vJYrza0mNgrfXASU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=vC6CD9i/GF69AG52oQMHsirMlaYZLdl8hgW/t+OEMhTOztg0GfX6u4oDdcwbIh8FV
+	 z4v9ONxl0x5vMRF/FcnAbT8TVw/Sb6eAVS2CyoWGbjuudo53GtQ+lMwlKvf+SKraNc
+	 4ynbUdmjw2F2RrLUt3/x9Fodn97mEpRLH/tQejxln9x69iqmwpNg+/YQwWyqH8UPcn
+	 S47oMUQYVqmxcNhUAV+YRsfmn6EBinNZkG/pep2R2UkZ1C1SqDhh2EyYV21udsKCib
+	 5yBGlse0PYzm2Y/L2O+r4mUKF9zEwCie4re62LPhJQ6DbaP+0Eh6N2CZ2MWZTA85XY
+	 Mti/R3ZRA3pQg==
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-794f701a3e6so30491497b3.2
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 14:36:40 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXnjchW2SulBVZMQ++PY0LnsOGSMRPginjJ2tdoMc3oH5/86xXBIYbcNnTtdDecFz6uefgQXTBQQGmO@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsvaD26mfpBr3amYuib+gE3J9fesERtHRBC7S4b734iTygAEs9
+	rDOvZ5rr/x/1SEqBG9iFEamxmr69fh3SZKf+KW7DwSMfSjlE59/8rmwKmqRhyghtyarKXAm2NN5
+	qfxsWcjuHB8PuE0n7e1vvJvJi9lEL0yc=
+X-Received: by 2002:a05:690c:e3ce:b0:794:2fc8:8358 with SMTP id
+ 00721157ae682-797a0bd4349mr94993897b3.6.1771281399276; Mon, 16 Feb 2026
+ 14:36:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260205103930.666051-1-cosmin-gabriel.tanislav.xa@renesas.com>
+In-Reply-To: <20260205103930.666051-1-cosmin-gabriel.tanislav.xa@renesas.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Mon, 16 Feb 2026 23:36:28 +0100
+X-Gmail-Original-Message-ID: <CAD++jLmwij-tD5k+XtxtoRKzKasKnAdkG2CCzPVoEU5wGiL=yQ@mail.gmail.com>
+X-Gm-Features: AaiRm51aDtjLHR3s0vdfZKxoqoT_51wOkzrkrxp8tUVDONKVqGvf7RWeQVGKsUc
+Message-ID: <CAD++jLmwij-tD5k+XtxtoRKzKasKnAdkG2CCzPVoEU5wGiL=yQ@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: renesas: rzt2h: fix invalid wait context
+To: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Bartosz Golaszewski <brgl@kernel.org>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-rt-devel@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[baylibre-com.20230601.gappssmtp.com:s=20230601];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-31730-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[baylibre.com];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-31731-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	DKIM_TRACE(0.00)[baylibre-com.20230601.gappssmtp.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dlechner@baylibre.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,configure.ac:url,baylibre.com:mid,baylibre.com:email]
-X-Rspamd-Queue-Id: 6BB32147BD4
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: D6F18147F13
 X-Rspamd-Action: no action
 
-Change the gpio-manager.service file to gpio-manager.service.in template
-and use @prefix@ in the ExecStart line. This way, when `make install` is
-used to install the service file, it points to the same path where the
-binary is actually installed.
+On Thu, Feb 5, 2026 at 11:40=E2=80=AFAM Cosmin Tanislav
+<cosmin-gabriel.tanislav.xa@renesas.com> wrote:
 
-Closes: https://github.com/brgl/libgpiod/issues/173
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- configure.ac                                                | 1 +
- dbus/data/.gitignore                                        | 4 ++++
- dbus/data/{gpio-manager.service => gpio-manager.service.in} | 2 +-
- 3 files changed, 6 insertions(+), 1 deletion(-)
- create mode 100644 dbus/data/.gitignore
- rename dbus/data/{gpio-manager.service => gpio-manager.service.in} (96%)
+> The rzt2h_gpio_get_direction() function is called from
+> gpiod_get_direction(), which ends up being used within the __setup_irq()
+> call stack when requesting an interrupt.
+>
+> __setup_irq() holds a raw_spinlock_t with IRQs disabled, which creates
+> an atomic context. spinlock_t cannot be used within atomic context
+> when PREEMPT_RT is enabled, since it may become a sleeping lock.
+>
+> An "[ BUG: Invalid wait context ]" splat is observed when running with
+> CONFIG_PROVE_LOCKING enabled, describing exactly the aforementioned call
+> stack.
+>
+> __setup_irq() needs to hold a raw_spinlock_t with IRQs disabled to
+> serialize access against a concurrent hard interrupt.
+>
+> Switch to raw_spinlock_t to fix this.
+>
+> Fixes: 829dde3369a9 ("pinctrl: renesas: rzt2h: Add GPIO IRQ chip to handl=
+e interrupts")
+> Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
 
-diff --git a/configure.ac b/configure.ac
-index ffa712e..61a010f 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -325,6 +325,7 @@ if test "x$with_systemd" = xtrue
- then
- 	PKG_CHECK_VAR([systemdsystemunitdir], [systemd], [systemdsystemunitdir], [],
- 		      AC_MSG_ERROR([systemdsystemunitdir not found - needed to enable systemd support]))
-+	AC_CONFIG_FILES([dbus/data/gpio-manager.service])
- fi
- 
- if test "x$cross_compiling" = xno
-diff --git a/dbus/data/.gitignore b/dbus/data/.gitignore
-new file mode 100644
-index 0000000..94e73a8
---- /dev/null
-+++ b/dbus/data/.gitignore
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: CC0-1.0
-+# SPDX-FileCopyrightText: 2026 David Lechner <dlechner@baylibre.com>
-+
-+gpio-manager.service
-diff --git a/dbus/data/gpio-manager.service b/dbus/data/gpio-manager.service.in
-similarity index 96%
-rename from dbus/data/gpio-manager.service
-rename to dbus/data/gpio-manager.service.in
-index f93a6fa..f4270e1 100644
---- a/dbus/data/gpio-manager.service
-+++ b/dbus/data/gpio-manager.service.in
-@@ -7,7 +7,7 @@ Description=Centralized GPIO manager daemon
- [Service]
- Type=dbus
- BusName=io.gpiod1
--ExecStart=/usr/bin/gpio-manager
-+ExecStart=@prefix@/bin/gpio-manager
- Restart=always
- User=gpio-manager
- 
--- 
-2.43.0
+I'm waiting for Geert's verdict on this one, I can merge it directly
+for fixes unless Geert want to accumulate a few fixes first.
 
+Yours,
+Linus Walleij
 
