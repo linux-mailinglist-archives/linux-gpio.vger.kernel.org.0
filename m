@@ -1,194 +1,210 @@
-Return-Path: <linux-gpio+bounces-31711-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31712-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0FA+Bbv9kmkn0wEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31711-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 12:21:31 +0100
+	id aJmPBdb/kmlr0wEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31712-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 12:30:30 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D426142D47
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 12:21:30 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7105E142FEF
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 12:30:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7170F30138A6
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 11:21:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1C7E130131DE
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 11:30:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFA322D4816;
-	Mon, 16 Feb 2026 11:21:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50813301717;
+	Mon, 16 Feb 2026 11:29:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bRCtrV44";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="BHzgkBso"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="arQdawj1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7EF3EBF24
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 11:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136DF2C0299
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 11:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771240886; cv=none; b=ZZX1uqrfFuV1lO2PvJ4NCQQTyQR8AU5RZDEA4tikUyqcumxlNMiPuP62S/xkk6FRtFsraS5Ww4hcrA7vsEXT5V73iNTIIppCmS967les0AeyNdUDbfznjXkSy/X+IgXKdwaluvjoMOkd4B9YtpuoUCSfhvHxbjsBS3rSo48HoSk=
+	t=1771241399; cv=none; b=GOh2wGOqg3RXMNz/QUA3NIcRr1pul2PeUwaObJedSqejLDF5ct8AyOwYZGeN5KwUSvwDNXvz5YKKIYcXvvelh8v24nkdEpEwGT52OmJMXwoHGgt6KteZHlZjp4yCv3lREIjgVN0ujyEi689hUUfN4+LpuIYingCA+boKoMrz0J0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771240886; c=relaxed/simple;
-	bh=BX0pESXBVfwa/YbRdWSL3gO2EmUKlWPgEHL1RHd60ek=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gDMyXZ7TkkFGY3RXoo7e5Mw5s+kBY3Nh8ectk+jgTIXwqYQ+UuD6+rTg2wcDl8H4TCfHOHxb0KbzJwLBN7K/CjWqavJmZY4ucscTShwMHc3COVZeRl7WCTKp+t9VoCX6jFsXfq5HnhAypqoqytHf+FNWO8O1rbC3tsrUxC7w8ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bRCtrV44; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=BHzgkBso; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61G8geLN2803486
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 11:21:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UtNogbTkelkeVJxZ8aDQUG8mpqbiFBJlXGbcS7O0z3k=; b=bRCtrV44fA9Oz/WF
-	kk9BXGZ/IM5kc6DbjXRw3UCil3XFUTA319+PNieIxSiockm5CjdpvJbYu279JSml
-	fxoTedNnuYriFkriYU0K2djs1F2pdVttl1Y7h0mu3yInVK2Y4ktgaDKgC3DN1KDI
-	8xt3EIiQe7lzOU3G3MERlAxhYMefEwo1fE/vTrlIMdjyMM+HiZyPpx5i7IWKx9L0
-	jjaukPEdeq4+/TILhoyxTZhlBAz+QJHesGVvJDIkXmUaXAufvNueJoN1HMjTHSrM
-	daCh4Z9rB/o5scbrx0FMxz074rvLHJmEEdxALC9eazAhChuuCyC+WSivMXht07kf
-	iJt85Q==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cbyxugcve-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 11:21:24 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-8c7166a4643so1850531685a.0
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 03:21:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1771240884; x=1771845684; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UtNogbTkelkeVJxZ8aDQUG8mpqbiFBJlXGbcS7O0z3k=;
-        b=BHzgkBsoc9KDT+3jK7dmGKQ13S8wK6GwUSO8tQAdhPd7G9ybxdbltf1nfbvSTC3b3r
-         ReCgAYPVbW74AkjYgdrXVdltwJhcJW9BHvx2dQWqnoxuyRDFGH4QLVsspPy4S/Czp2zk
-         vhrCn2SmA+p28CWB19dJffnIEVHcKPdZONeIcVemvzXaoc5UKfaVc4RGUbDyXZXGgAIi
-         TXl1j3hLPKDp9tEISWNBclr2wl+0krTWIRINefTOYWNX2o7vznJ5qEnlRo978dl9d9U1
-         D1YvL47UjJvXfuura2Z7n3CyZF9si27woA/fwfrqEwyE7KWBm7Sa6rjws4X0OpzRB/73
-         zhQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771240884; x=1771845684;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=UtNogbTkelkeVJxZ8aDQUG8mpqbiFBJlXGbcS7O0z3k=;
-        b=hg3v13ulhBNuCUfoO6N+Qvftv0+Re0TkxxIJwNP53OSTbk8BAl2kssd6VKB24T/JAz
-         aGPK6OmiWV0qPyaIjrzoTXyoZS0DT6EJrO5rFRiT4TiJAGqvhSLgIxJ1ZZEihi2Pt3zT
-         SkF3zMbdQSVVXvtCb16TFjFQvQvx+1NRZFT5O/19ymM8nJqdwxsoKwFhAgzu2wg8cT6K
-         p+tRDJqh19QohCdpRAhwZydGMiK8umvDIsHaaQsAXL0zNz6O1SV80ptfq4bQzGYpqBry
-         TYYJbSx4HY/SumxUAjRE4AYRdbjhS/tTwS7hTPf2Ke/EZGNAw+F08S7Rz8Kt0zn1+Mrw
-         OfSg==
-X-Forwarded-Encrypted: i=1; AJvYcCVxw2kHs5PKsgD3Yi10G2fbYufRNJBMom/IK/NmcD63UWxLQouXPvRJU7MurWKWo47cERdqNn3x56Vq@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZIvtJLw+nyUTkItsuCNMm5MotQpX/4vzF8fyERTis610QpeY/
-	kWjAwt0PRwj9vHGHkpcC6rmhL8B3j49MZBcwiA9o2sQ8RAq/4IoxsSlUjZQ8297z7s9fG+m/8iD
-	3ke0qUZWtRXWf3lhWsVSbEB7/PeFY9p6q6mk3LpvDA8Ji8VGaTADq14gca7V3Gtvg
-X-Gm-Gg: AZuq6aKaqCDC2nGd+iT88TjHg4uDmRX/7Lukm7V7v1dYEYLGbHn1J3VFrGeb1ED8Xtx
-	TqsIc3X4FDzlRLkmNUqPQBJUbsZVJKz2r8owqBO3hihsAuiwikb6dDQ9p7yL1dfSh51+GGSA/i6
-	N9AwesSSTsEzcxgC9Wj2kfWOmQYdRTB+i9iG5XXAt8HUINxumCHNV3VsyzimdaeQqrv56gKbikp
-	r0m4t62+oAFZYXqL+W+NVkphL9xQbG0nOm4SjJzeZWRrUfWEU5cT7vR5I/bbjrxs4FBygTQul2K
-	hwUF8Z7YThXjfEt9plFNRUyqudq+GHZ71LxkwQsrBHQwp+yyQmxNXQjis2cWJlc1OYmrzxvjCVe
-	aks2G1xWixCfK0jczFrJbDql8ENV18CuZ4ch0cRnC7ewcMU1fLG4=
-X-Received: by 2002:a05:620a:4544:b0:8c7:f6e:29b7 with SMTP id af79cd13be357-8cb424873damr1127080685a.80.1771240883867;
-        Mon, 16 Feb 2026 03:21:23 -0800 (PST)
-X-Received: by 2002:a05:620a:4544:b0:8c7:f6e:29b7 with SMTP id af79cd13be357-8cb424873damr1127078085a.80.1771240883418;
-        Mon, 16 Feb 2026 03:21:23 -0800 (PST)
-Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:dc34:5caa:d44e:375d])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43796abc9b2sm24417811f8f.21.2026.02.16.03.21.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Feb 2026 03:21:22 -0800 (PST)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: Linus Walleij <linusw@kernel.org>, Christian Brauner <brauner@kernel.org>,
-        Bartosz Golaszewski <brgl@kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] gpio: Avoid NULL dereference in linehandle_create()
-Date: Mon, 16 Feb 2026 12:21:21 +0100
-Message-ID: <177124086810.19012.4668276234393319371.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260215120555.v2.1.I77c3eb563271c21870379eefd16ebbc4e09635bb@changeid>
-References: <20260215120555.v2.1.I77c3eb563271c21870379eefd16ebbc4e09635bb@changeid>
+	s=arc-20240116; t=1771241399; c=relaxed/simple;
+	bh=ffAZQU+7fwh3Tgv1vcT59hiUkdhyiDuXDwmVmN2sUKI=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DXE8CLFPrpG/yT6kDAggdtpU7yJmn9WxZvvpsYoK1S/VcDa81mKH/3o+/XCB40v0ACP5yvChcVPaEAp24SimFHQ14ADmuxJAzYAScoUcvE88AufvgNyiuY9B5Tka4CEi57azhcNg4n74YmfhUNKhNcllKY0ShOZevn4mGQuUQDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=arQdawj1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8AF9C2BC87
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 11:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771241398;
+	bh=ffAZQU+7fwh3Tgv1vcT59hiUkdhyiDuXDwmVmN2sUKI=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
+	b=arQdawj1zevZQlyxzyBu6mNVjS4touFotGhb9uWSLMvOKFDY+DbS76BNL5TKl+ev5
+	 xMwFFieyfb3G3tCpZntm73Yq07TA+sDxJ5Ag1gRU1cIp344FULE00ohP9JO9cOHae/
+	 YiKQpkX7gBeoo7SDt95w1wWqmXuxggVvgY4poe+67vf85EaAeYwb+oz541MybQ1Voa
+	 7K8Pm79V7tb6QHIYYIwgCcZU2Ql1gxYN8mwF8XFi8nJ2gB92nz0piQgeC8tUKlBL/F
+	 pL9uZWGdHoQsBrjjBAXjlBfw3lNCeOKBhfkfzS1ZxBFJqz3fAf0jBdQGF3WeB2YyjO
+	 eO/mR2eI8pxUg==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3871a08189aso23734301fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 03:29:58 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUgBpGVGbrd+VRkpqNmuzfx3pj6F1KjEhMvhAuY/n+kZoGV5Cievkb6jGeXenjQcCYG+G/BNhq6k9iV@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKGdqZp8mS67rO7ga4vUx8GhG/jFI9cJDOtPmyLjjd4HmoXvhY
+	hV3Oh7ZPEo68m9zB9hvSi7tTZnkLe+2WNj2c7fwiyEGVhMIzS/eFYmZS9Uj8tVUibwr0qiFjGhN
+	0CayXPi6Wgib1uOIRlRYV3GbvmkeRUIoKGldhCstysw==
+X-Received: by 2002:a05:651c:19a9:b0:386:7e61:5de1 with SMTP id
+ 38308e7fff4ca-388103f4306mr27361421fa.0.1771241397326; Mon, 16 Feb 2026
+ 03:29:57 -0800 (PST)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 16 Feb 2026 03:29:56 -0800
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 16 Feb 2026 03:29:56 -0800
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260216045842.1206350-1-pshete@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: kbCBRLKaXGqkIfDsN_Vq_PLfW_r22G4_
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjE2MDA5NiBTYWx0ZWRfX1VdYMLLJZp3C
- sOBVVehyJ2u/xjmaTEa58q7wmkEi0pszc/C9hv8aIGM4fcJd1p1mJmqxI6ZtxqjJUcEPd7GfrRi
- qIHBiAxkUq/xVKexQweCCqk63f+Aj4MAe2wSadAdG9b6A/YXpb/AQIXNFb5RiB/6j93AAxKnmpn
- fjgE4YBe0nHfwcVEX7GhmKlwxiHykK44tY/CcONaFvkj+Oi/rtppQO5Pom7a0fbHAfSjIKXbzMP
- NYJ+cziH5n4ZGyQ39XMZBhfn5I4ji5fQpycp8B7vMO2YSrff/fWeDAieCkNkfJYDE2ofT3Rnw1C
- zlGPT7nNpIV1nnfGFBiiMyHQcuLiMq5uPhSBV1BWtFOuSAhWsjlEH0KU+PUro8zNHxOfyliY6Ur
- 5wrbZFl0HRU/x9rUht/d2Mc7c+2ODU3Fhxk3zj5Qpb6SZaPb1tKTkiUTyq4Itix6MUWI+8L2Nq+
- 4meJZeiCAsiTgNSl2nA==
-X-Authority-Analysis: v=2.4 cv=BpuQAIX5 c=1 sm=1 tr=0 ts=6992fdb4 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=HzLeVaNsDn8A:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=VDUHgC0sO1EGD_lEDVwA:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-ORIG-GUID: kbCBRLKaXGqkIfDsN_Vq_PLfW_r22G4_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-16_04,2026-02-16_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 priorityscore=1501 adultscore=0 clxscore=1015 phishscore=0
- lowpriorityscore=0 suspectscore=0 spamscore=0 malwarescore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602160096
+References: <20260216045842.1206350-1-pshete@nvidia.com>
+Date: Mon, 16 Feb 2026 03:29:56 -0800
+X-Gmail-Original-Message-ID: <CAMRc=MdRL=_nRF5g4MukNjgeYGh=Bz3zN7bXEp7RPsLHHyq8xA@mail.gmail.com>
+X-Gm-Features: AaiRm50wNA8SFafoe1T907sBezYG1RY1RVOmUDX7ZwH1gEiMS6J53Evi1J47ZF0
+Message-ID: <CAMRc=MdRL=_nRF5g4MukNjgeYGh=Bz3zN7bXEp7RPsLHHyq8xA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: tegra186: Support multi-socket devices
+To: Prathamesh Shete <pshete@nvidia.com>
+Cc: linusw@kernel.org, brgl@kernel.org, thierry.reding@gmail.com, 
+	jonathanh@nvidia.com, linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-31711-lists,linux-gpio=lfdr.de];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,chromium.org];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,nvidia.com,vger.kernel.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nvidia.com:email];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-31712-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:mid,oss.qualcomm.com:dkim,qualcomm.com:email,qualcomm.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 7D426142D47
+X-Rspamd-Queue-Id: 7105E142FEF
 X-Rspamd-Action: no action
 
+On Mon, 16 Feb 2026 05:58:42 +0100, Prathamesh Shete <pshete@nvidia.com> said:
+> On Tegra platforms, multiple SoC instances may be present with each
+> defining the same GPIO name. For such devices, this results in
+> duplicate GPIO names.
+>
+> When the device has a valid NUMA node, prepend the NUMA node ID
+> to the GPIO name prefix. The node ID identifies each socket,
+> ensuring GPIO line names remain distinct across multiple sockets.
+>
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> ---
+>  drivers/gpio/gpio-tegra186.c | 26 +++++++++++++++++---------
+>  1 file changed, 17 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+> index 9c874f07be75..daf5aaffa28a 100644
+> --- a/drivers/gpio/gpio-tegra186.c
+> +++ b/drivers/gpio/gpio-tegra186.c
+> @@ -857,7 +857,8 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
+>  	struct device_node *np;
+>  	struct resource *res;
+>  	char **names;
+> -	int err;
+> +	char *instance = "";
+> +	int node, err;
+>
+>  	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
+>  	if (!gpio)
+> @@ -937,17 +938,21 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
+>  	if (!names)
+>  		return -ENOMEM;
+>
+> +	node = dev_to_node(&pdev->dev);
+> +	if (node >= 0) {
+> +		instance = devm_kasprintf(gpio->gpio.parent, GFP_KERNEL, "%d-", node);
 
-On Sun, 15 Feb 2026 12:05:55 -0800, Douglas Anderson wrote:
-> In linehandle_create(), there is a statement like this:
->   retain_and_null_ptr(lh);
-> 
-> Soon after, there is a debug printout that dereferences "lh", which
-> will crash things.
-> 
-> Avoid the crash by using handlereq.lines, which is the same value.
-> 
-> [...]
+I've never noticed it before (and it's not introduced by this patch) but I
+really dislike the child device registering devres nodes with its parent...
 
-Applied, thanks!
+> +		if (!instance)
+> +			return -ENOMEM;
+> +	}
+> +
+>  	for (i = 0, offset = 0; i < gpio->soc->num_ports; i++) {
+>  		const struct tegra_gpio_port *port = &gpio->soc->ports[i];
+>  		char *name;
+>
+>  		for (j = 0; j < port->pins; j++) {
+> -			if (gpio->soc->prefix)
+> -				name = devm_kasprintf(gpio->gpio.parent, GFP_KERNEL, "%s-P%s.%02x",
+> -						      gpio->soc->prefix, port->name, j);
+> -			else
+> -				name = devm_kasprintf(gpio->gpio.parent, GFP_KERNEL, "P%s.%02x",
+> -						      port->name, j);
+> +			name = devm_kasprintf(gpio->gpio.parent, GFP_KERNEL, "%s%sP%s.%02x",
+> +					      instance ?: "", gpio->soc->prefix ?: "",
 
-[1/1] gpio: Avoid NULL dereference in linehandle_create()
-      https://git.kernel.org/brgl/c/6af6be278e3ba2ffb6af5b796c89dfb3f5d9063e
+instance can't be NULL here, can it? Either print it unconditionally or
+initialize it to NULL.
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> +					      port->name, j);
+>  			if (!name)
+>  				return -ENOMEM;
+>
+> @@ -1373,6 +1378,9 @@ static const struct tegra_gpio_soc tegra256_main_soc = {
+>  	.has_vm_support = true,
+>  };
+>
+> +/* Macro to define GPIO name prefix with separator */
+> +#define TEGRA_GPIO_PREFIX(_x)	_x "-"
+> +
+
+This doesn't look like it belongs to this patch, why are you doing it?
+
+Bart
+
+>  #define TEGRA410_COMPUTE_GPIO_PORT(_name, _bank, _port, _pins)	\
+>  	TEGRA_GPIO_PORT(TEGRA410_COMPUTE, _name, _bank, _port, _pins)
+>
+> @@ -1388,7 +1396,7 @@ static const struct tegra_gpio_soc tegra410_compute_soc = {
+>  	.num_ports = ARRAY_SIZE(tegra410_compute_ports),
+>  	.ports = tegra410_compute_ports,
+>  	.name = "tegra410-gpio-compute",
+> -	.prefix = "COMPUTE",
+> +	.prefix = TEGRA_GPIO_PREFIX("COMPUTE"),
+>  	.num_irqs_per_bank = 8,
+>  	.instance = 0,
+>  };
+> @@ -1418,7 +1426,7 @@ static const struct tegra_gpio_soc tegra410_system_soc = {
+>  	.num_ports = ARRAY_SIZE(tegra410_system_ports),
+>  	.ports = tegra410_system_ports,
+>  	.name = "tegra410-gpio-system",
+> -	.prefix = "SYSTEM",
+> +	.prefix = TEGRA_GPIO_PREFIX("SYSTEM"),
+>  	.num_irqs_per_bank = 8,
+>  	.instance = 0,
+>  };
+> --
+> 2.43.0
+>
+>
 
