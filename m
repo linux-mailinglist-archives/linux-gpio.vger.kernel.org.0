@@ -1,156 +1,157 @@
-Return-Path: <linux-gpio+bounces-31721-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31722-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YAKdDyVAk2kg2wEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31721-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 17:04:53 +0100
+	id UHBWLwpBk2kg2wEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31722-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 17:08:42 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96DB3145E6B
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 17:04:52 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 372A5145F2D
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 17:08:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3D8D03007F75
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 16:04:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6003A3036D6E
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 16:07:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C132A318EE6;
-	Mon, 16 Feb 2026 16:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C29A3328F8;
+	Mon, 16 Feb 2026 16:07:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YkyzU9sU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s7bhGQ4i"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8409C3D544
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 16:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D2A28D8DB;
+	Mon, 16 Feb 2026 16:07:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771257879; cv=none; b=ei9DaDmnxI1ZCHTjNOIYM30bnhCPQktw2li2YkJwHatytG40Resg66/v8O+Z9ZstLkynTj8qvxlDCzsimXGCmp9GnrkJVskkt2TkEXX9Stimx6WJXIkCZWbOmQxhT4kVrLyKURCctgsrNmOCEEjII/TB1bZREXsUEXS8+lZ1s8M=
+	t=1771258039; cv=none; b=lUYmyNiQMPCsGvZTz34idD0vVgMf6Nm5xDeNCtxrbrHE+m7okKDSaDWK0NWCKDp9EXIVBDtnHbE0wxTXYaZP6uuddVuydQ3gPwJUqfD59Jcn7S/dlSVdekhXvTIkXbkSUgCSoLyRSb02j84dVjFwFNYqsQScRa+/oeFsEjy6Nkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771257879; c=relaxed/simple;
-	bh=wI0LWFy8ddddsWoIw3P+09cDx6ZTwqr3s7UfJFHnrQk=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=guOR70CUFeyB6e+/DDnTzVNLkWJEWaPZoTVVBhZ8eglSEi5sIuP7iPx6Bj5/yquZq/cLTu7jviquqrZbzmZ0tnKw+X1OujEJTLthFkGQg8qZf9H2tDeSVcHIqUdV33pN+0CouxHz/aSsF6llTdLi6ZMRU9n4QjhDwgGEQn8bSZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YkyzU9sU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57621C116C6
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 16:04:39 +0000 (UTC)
+	s=arc-20240116; t=1771258039; c=relaxed/simple;
+	bh=hEPLR8cnMpgueHZG50gYeR0KoXwhGhymV94A/W+Z2Pk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZKAsjtsxIUyX49tkuev7LfFCF+UCz9uwQ8QoRo+jUyNYXZZywNKiZ3dCW0WHFhY5MZFzFF2hKeMsLwoWwGQJubOTM+t2iWrGYh6vRLiVM61rkHlpxdCpoVRxEgW2ltz66VqnbGp2CC6bnpfZHyDYz72t1xHaGoUv4uA9ntJyClY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s7bhGQ4i; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2960C19425;
+	Mon, 16 Feb 2026 16:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771257879;
-	bh=wI0LWFy8ddddsWoIw3P+09cDx6ZTwqr3s7UfJFHnrQk=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=YkyzU9sUHK0/bNTMS6KqdIY6nGaGSBRNGd9tQPBEMMKRqhL8UN8Gy5pnlNKJxnm3u
-	 9LZNC3dq1o+kFsBEEfWrS0QDa2eqVRY1aB7sRCIucEAiPrSTZP2ySftxM7Jb3tlvbf
-	 KBhYLighwTj1ARJrUIHePFyxp2w35VVJItnw7DY4kEJjfpVJ+BTwwnuFAac1BM0QRK
-	 ptCNWfszdGE0GPr1PRUk4Q4ywe+spniIVfsgFDwBtubWL+MvDT5VLCp7hrb3OwmJyH
-	 +RVviUrn3BaenoOmWMSPrFqh2Rcg75oOqTwfOslsLcA4ehIfSRv5NXN6GM2Hb0N7g5
-	 9i5hmsLAsfgpQ==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-3870dec27f4so25516401fa.1
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 08:04:39 -0800 (PST)
-X-Gm-Message-State: AOJu0YwTsj+8gVZDS7GMmgan7zbJFPlN4UA9yCxMcALEf9omTe9lBZfv
-	RsWMO26NKA231gJyglf6cwAlBADGennf5R41kG7b+3cQU1mOGhjmxAMk3Gq/XqFCzxlgTbtyGPl
-	FC6aLfFjZ8jHAz7aAmipI1L5hHU9Uzl0x5XNOe+rQ9g==
-X-Received: by 2002:a05:651c:400f:b0:385:c236:33a2 with SMTP id
- 38308e7fff4ca-38819d78feemr20377051fa.16.1771257878023; Mon, 16 Feb 2026
- 08:04:38 -0800 (PST)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 16 Feb 2026 10:04:36 -0600
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 16 Feb 2026 10:04:36 -0600
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <3a32c32a-5f4b-4f7f-a7d0-c5b708be780c@baylibre.com>
+	s=k20201202; t=1771258038;
+	bh=hEPLR8cnMpgueHZG50gYeR0KoXwhGhymV94A/W+Z2Pk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s7bhGQ4iHc5VxfRhPoZKY2dwSlBIf7egpLYIQgCKHFuqypDasXrw2FJNLPVe1tehz
+	 Bb6abyCh4X8yjy+pJQqILtmAAGQQpP68mbn11T8fLDPR/+GaW9ujE7Nmfh0I6f+6Yd
+	 7GnkjwGy7p7u/An1ROb+kpAheOvzK6SLpdqKRsujbbSrgybdu7xGkDtPyakDyx1gr2
+	 aunERHIyXbyXkpWd09WaDGmffdeHBmSx8RGOW43INddzw8l/FjqOkOBZj8F0ernRwN
+	 0cVBhXurMlzXAogKLNBhhqEMq2GXPjNUW5S7okQ1erhe7ssnKpizafyfCHFdlokcXP
+	 2+lK8I52iV8Jw==
+Date: Mon, 16 Feb 2026 16:07:08 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun@kernel.org>, Waiman Long <longman@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Antonio Borneo <antonio.borneo@foss.st.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	linux-remoteproc@vger.kernel.org, linux-doc@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-iio@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-spi@vger.kernel.org
+Subject: Re: [RFC PATCH v2 13/13] hwspinlock: refactor consumer.h from public
+ header
+Message-ID: <97c1ffb9-e661-4021-8ebc-a5be1f650d42@sirena.org.uk>
+References: <20260215225501.6365-1-wsa+renesas@sang-engineering.com>
+ <20260215225501.6365-14-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260214003402.3851492-1-dlechner@baylibre.com>
- <CAMRc=Mf7LNW+3u9j97VwLpmXGgZAKZuqNiYNYUS7wd4oxsndeQ@mail.gmail.com>
- <3f763c4e-e57e-4282-80c9-7cbda8bb6926@baylibre.com> <3a32c32a-5f4b-4f7f-a7d0-c5b708be780c@baylibre.com>
-Date: Mon, 16 Feb 2026 10:04:36 -0600
-X-Gmail-Original-Message-ID: <CAMRc=MfRgFjxB2HQ262t7k1Robt3mDOddCAAZ6wRz5ONKwkFiw@mail.gmail.com>
-X-Gm-Features: AaiRm53AKqcher-1wq8qIgg4P6ikom7RhUPTIRZnMppgzH2TFgtT-ROANJZxKTE
-Message-ID: <CAMRc=MfRgFjxB2HQ262t7k1Robt3mDOddCAAZ6wRz5ONKwkFiw@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] dbus: add -c option to gpiocli-get/set commands
-To: David Lechner <dlechner@baylibre.com>
-Cc: linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="HvgiA0QUjJpkbfJw"
+Content-Disposition: inline
+In-Reply-To: <20260215225501.6365-14-wsa+renesas@sang-engineering.com>
+X-Cookie: Beware the one behind you.
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-2.76 / 15.00];
+	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31721-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,baylibre.com:email,mail.gmail.com:mid];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-31722-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[39];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FREEMAIL_CC(0.00)[vger.kernel.org,intel.com,lists.infradead.org,kernel.org,linux.alibaba.com,infradead.org,redhat.com,lwn.net,linuxfoundation.org,baylibre.com,analog.com,gmail.com,foss.st.com,arndb.de,lists.linux.dev,st-md-mailman.stormreply.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 96DB3145E6B
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[broonie@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sirena.org.uk:mid]
+X-Rspamd-Queue-Id: 372A5145F2D
 X-Rspamd-Action: no action
 
-On Mon, 16 Feb 2026 16:53:55 +0100, David Lechner <dlechner@baylibre.com> s=
-aid:
-> On 2/16/26 9:16 AM, David Lechner wrote:
->> On 2/16/26 4:30 AM, Bartosz Golaszewski wrote:
->>> On Sat, Feb 14, 2026 at 1:34=E2=80=AFAM David Lechner <dlechner@baylibr=
-e.com> wrote:
->>>>
->>>> Add the -c/--chip option to gpiocli-get/set to allow users to specify =
-a
->>>> chip and line number instead of a line name. This is useful when a lin=
-e
->>>> does not have a name.
->>>>
->>>> Signed-off-by: David Lechner <dlechner@baylibre.com>
->>>> ---
->>>
->>> Hi David!
->>>
->>> I did not accidentally omit the --chip option in gpiocli
->>> get/set/monitor. GetValues/SetValues are methods of the Request
->>> interface, not Chip. User can request lines with a chip specified but
->>> getting/setting values happens on the object implementing the Request
->>> interface. You can check what requests are currently managed with
->>> `gpiocli requests` and use the -r/--request to restrict the scope to a
->>> particular one.
->>>
->>> In other words, I don't think the client needs this.
->>>
->>> Bartosz
->>
->> OK. It just seems strange that the get/set commands have the offset and
->> name options too if the intention is to only use the request name and
->> not the line name or chip and offset specifiers.
->
-> I shouldn't reply to emails first thing in the morning. :-p
->
-> Now that my brain is working better, I get it that the offset/name
-> are needed because the request itself can contain multiple lines
-> and this is how the lines are identified in the request.
->
-> And if you need lines from two different chips in a single request,
-> then you need to do the gpio-aggregator thing to make them look like
-> they are all on a single chip.
->
 
-Yes, just as if you were using the library's C API.
+--HvgiA0QUjJpkbfJw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Bart
+On Sun, Feb 15, 2026 at 11:54:53PM +0100, Wolfram Sang wrote:
+> Factor out the entries only needed for consumers from the generic public
+> header. This allows for a clean separation between providers and
+> consumers.
+
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--HvgiA0QUjJpkbfJw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmmTQKwACgkQJNaLcl1U
+h9Dr4gf/dawn1jflZdEr4KfMA/MruyXk1IsoKKd6nHfm1oO8lk65Zor92E7Xmfx4
+fv2GB5hE6qadTOAvHqXE7x79fteb3IQklPN/wT3cu2aTI/rjEgZ0sRP8ppDwAFl8
+Y+uWW4fiu0/GF3r0JU+w0eUmNySB2x6iuzQYbSAt0kHRupCUL+7oMfkYUpFloTGP
+gXpYBXwh3vIHVbl82mqSr64E76why0OmoRZ742fRWj4PVB+Db4B928d6tVNMV2dq
+a1dzjyT+6l1OFHdgN7X4XZQbtdLAhmz6Dk++pV55q+WvAYKpU0jg21AXf9al99U6
+k/uHzg/1zB+99V44BT6S1tVSG7Udww==
+=dPJC
+-----END PGP SIGNATURE-----
+
+--HvgiA0QUjJpkbfJw--
 
