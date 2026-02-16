@@ -1,166 +1,112 @@
-Return-Path: <linux-gpio+bounces-31726-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31727-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KClcL2tlk2k44QEAu9opvQ
-	(envelope-from <linux-gpio+bounces-31726-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 19:43:55 +0100
+	id QJcZN3GAk2nm5wEAu9opvQ
+	(envelope-from <linux-gpio+bounces-31727-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 21:39:13 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED3F31470C8
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 19:43:54 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AE971477DF
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 21:39:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 8F7343003736
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 18:43:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7E2A2303A876
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Feb 2026 20:38:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 176CA2E54DE;
-	Mon, 16 Feb 2026 18:43:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C86D131D735;
+	Mon, 16 Feb 2026 20:38:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BxFhE6YB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m5112D8G"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6A31C69D
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 18:43:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5E42FF161;
+	Mon, 16 Feb 2026 20:38:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771267430; cv=none; b=AjLJlhNq4X0fHtUlQpsktZQEktRNVD6xLSv2HnStdBTuRj/vNdymLdxlzJMSbfGTkXrG7AExkW4/ra24omyQwXeEMxtnHRwLycnd5kSryeb23kZ7OBNO+3zo854he4Svkn/PmiU/lbkT+i0gF61b+17fgE3tfE+E5nAM4RYpNRg=
+	t=1771274304; cv=none; b=XV19cpSdEHUF8ecHX7Oe0piQ8WMV11pttoOHQUcwNhHrRPM7UEcNn/G9YrRC01IXXm1UNBFSbJbW0C76VO8rmOFrknyUKPrAOHVQJW7yJNitpssPlVjwt4alVTftdVk4KmCMAB9WBnDlT99OhaGa7WFomTEDvilhE1TlgJL+sX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771267430; c=relaxed/simple;
-	bh=5U/nbIhPWFBwE7xp+uuldB/s3R7u9EG2QpjZA6/dcP4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WasssLEO+swDYzPeOkhLkYz+tILuVUJi5JE0XqdouzQkAn5AvNoMfTHelIoDAcXjJbDhRTLsX8e/YaLYrhLeZv4GosLh9DM5wU2PxY1AxKE42mbudbRUIbbOz9DkWdXdEvKITOe6Kv8EplE2de9PvFekxc9z3+2LoEj3rXxOoek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BxFhE6YB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 981D4C19424
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 18:43:50 +0000 (UTC)
+	s=arc-20240116; t=1771274304; c=relaxed/simple;
+	bh=vGBLvU4ppJ77VrhLa32Z/pHBk1OK6abZqKJ5EBDZJRs=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=kHZuCkAXhjXpzBQmdkAanTD7+RASOGKTr+OykCMta8NA9BY1JvyUHLXHX0wXbgfJnRln65X3HDsaXhFc7MkCtzsXwlIS2ODyh9m0bx4X12eKzOSerRfDG5DY+yD1T9bxZHLy7pZLXNrnlB1nj1F9SqgTLHH17UvnW46LiWGG5Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m5112D8G; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45924C116C6;
+	Mon, 16 Feb 2026 20:38:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771267430;
-	bh=5U/nbIhPWFBwE7xp+uuldB/s3R7u9EG2QpjZA6/dcP4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BxFhE6YBUgwB0ShzV5/MkHkcqhSsYArYifQSWNaNekx82e81JuI2guH0o+EKY9v8i
-	 FANhRxspeYOd+TDIyatcjaBaPoPMbaKFxSpKom+JqjYRrQiWKU2dcEkAUljVOarnq0
-	 2hLPKWnNdZ607nnAUixasal4FIe6PEfa4B3+yrAF8u9xtm0uXCPvx2w5FqphIgTkFx
-	 ifpVsokN1zh7X09m9VGtVojofFgXTaY4lhVUhaKuK/tvXem+9UHdPwMZdjbx8fR12S
-	 7sBzfdH3l0z4zgFLWfFgwRnxCKeFPGCMiH7D7nxvmk2IXke9txbxY0ukmRze4HPqb3
-	 vCq0ijIlTQ+VQ==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-59b672f8ec4so3187317e87.1
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Feb 2026 10:43:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVJx/Bbix+sYR6nBngbNBU7QgHYEbQ9WqS+t01kGWG0OOowbXRC8ySWi4kJSVGfIQBhPBcWXSYaFwAC@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZgj+ZpvJQzo57KYQIDiKjTHHdaRdBmnud+7kXlPEm+/69IV81
-	izL4Uxyog/shYOu518Y6dQ/7quZFFa9dXw279mRqw15ilYKtIqAMbqVo0hykTy1jU5vd3/1GBn/
-	fbvrMdoNyfD9K9kcG+8xo38KbbTiEZS2eu+jX3V7d4g==
-X-Received: by 2002:a05:6512:3349:b0:59e:6006:62ca with SMTP id
- 2adb3069b0e04-59f69c661ecmr3670507e87.36.1771267429177; Mon, 16 Feb 2026
- 10:43:49 -0800 (PST)
+	s=k20201202; t=1771274304;
+	bh=vGBLvU4ppJ77VrhLa32Z/pHBk1OK6abZqKJ5EBDZJRs=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=m5112D8GmZaRT9dEjsBu9Htfc5lNOhkD0MRfWLVsGNhJrH2hoHk1dXFXc6wDzvKVg
+	 dhBZCJb0XpAx7P15OFW9vsDK9nL9G3CYAiGTimMwEyZakJ641u8Ew45IGuHJhqvdeo
+	 PvHNBFa0FizY+dZfbVeG7R+VIyrmhYJz3sXKVNbKq5zI/PL2ZQGzIfh/Nk1lVQoyoo
+	 aTGR+1RLZ1IY2WML/0xhU7N9RNjbWsnTLtNBkzRr2mtXDsMy9vxI/qrxjTavHeIVuo
+	 C72lAqYZeXQ4YyUar/MaVKIYhdX9tlqBmQjJwJHoGtXqjlaxk3cB4RUWKGznmFQQhF
+	 uuafA4N/Nawgw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id C268C39308C1;
+	Mon, 16 Feb 2026 20:38:17 +0000 (UTC)
+Subject: Re: [GIT PULL] pin control bulk changes for v7.0
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CAD++jL=AQZ3-SXjbHgHPvNppi0iMUHDG0S4uqaQXPs8rk3V5wg@mail.gmail.com>
+References: <CAD++jL=AQZ3-SXjbHgHPvNppi0iMUHDG0S4uqaQXPs8rk3V5wg@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAD++jL=AQZ3-SXjbHgHPvNppi0iMUHDG0S4uqaQXPs8rk3V5wg@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v7.0-1
+X-PR-Tracked-Commit-Id: 9c5a40f2922a5a6d6b42e7b3d4c8e253918c07a1
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 46a1daac56b3bf1bdbd8b37e6db811f015bc1f4b
+Message-Id: <177127429642.3994460.5510856463177338701.pr-tracker-bot@kernel.org>
+Date: Mon, 16 Feb 2026 20:38:16 +0000
+To: Linus Walleij <linusw@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux pin control <linux-gpio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260216045842.1206350-1-pshete@nvidia.com> <CAMRc=MdRL=_nRF5g4MukNjgeYGh=Bz3zN7bXEp7RPsLHHyq8xA@mail.gmail.com>
- <63919a9c-39f3-4cdd-8372-8d63929c49b4@nvidia.com>
-In-Reply-To: <63919a9c-39f3-4cdd-8372-8d63929c49b4@nvidia.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Mon, 16 Feb 2026 19:43:37 +0100
-X-Gmail-Original-Message-ID: <CAMRc=McLD3jkyiyrMfF2DNU=s0cj5U2H2U-1rEXwNzbLR8fqhQ@mail.gmail.com>
-X-Gm-Features: AaiRm53y3Wr5maLUCFpuArPepw1xZuaaIK9vr9zGaHnJVdSflS_jPdaqelf9mbk
-Message-ID: <CAMRc=McLD3jkyiyrMfF2DNU=s0cj5U2H2U-1rEXwNzbLR8fqhQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: tegra186: Support multi-socket devices
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Prathamesh Shete <pshete@nvidia.com>, linusw@kernel.org, thierry.reding@gmail.com, 
-	linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[nvidia.com,kernel.org,gmail.com,vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31727-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_FROM(0.00)[bounces-31726-lists,linux-gpio=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	TO_DN_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NO_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[pr-tracker-bot@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: ED3F31470C8
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 3AE971477DF
 X-Rspamd-Action: no action
 
-On Mon, Feb 16, 2026 at 6:22=E2=80=AFPM Jon Hunter <jonathanh@nvidia.com> w=
-rote:
->
->
-> On 16/02/2026 11:29, Bartosz Golaszewski wrote:
-> > On Mon, 16 Feb 2026 05:58:42 +0100, Prathamesh Shete <pshete@nvidia.com=
-> said:
-> >> On Tegra platforms, multiple SoC instances may be present with each
-> >> defining the same GPIO name. For such devices, this results in
-> >> duplicate GPIO names.
-> >>
-> >> When the device has a valid NUMA node, prepend the NUMA node ID
-> >> to the GPIO name prefix. The node ID identifies each socket,
-> >> ensuring GPIO line names remain distinct across multiple sockets.
-> >>
-> >> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
-> >> ---
-> >>   drivers/gpio/gpio-tegra186.c | 26 +++++++++++++++++---------
-> >>   1 file changed, 17 insertions(+), 9 deletions(-)
-> >>
-> >> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186=
-.c
-> >> index 9c874f07be75..daf5aaffa28a 100644
-> >> --- a/drivers/gpio/gpio-tegra186.c
-> >> +++ b/drivers/gpio/gpio-tegra186.c
-> >> @@ -857,7 +857,8 @@ static int tegra186_gpio_probe(struct platform_dev=
-ice *pdev)
-> >>      struct device_node *np;
-> >>      struct resource *res;
-> >>      char **names;
-> >> -    int err;
-> >> +    char *instance =3D "";
-> >> +    int node, err;
-> >>
-> >>      gpio =3D devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
-> >>      if (!gpio)
-> >> @@ -937,17 +938,21 @@ static int tegra186_gpio_probe(struct platform_d=
-evice *pdev)
-> >>      if (!names)
-> >>              return -ENOMEM;
-> >>
-> >> +    node =3D dev_to_node(&pdev->dev);
-> >> +    if (node >=3D 0) {
-> >> +            instance =3D devm_kasprintf(gpio->gpio.parent, GFP_KERNEL=
-, "%d-", node);
-> >
-> > I've never noticed it before (and it's not introduced by this patch) bu=
-t I
-> > really dislike the child device registering devres nodes with its paren=
-t...
->
-> While it looks a bit odd, the parent is initialised as ...
->
->   gpio->gpio.parent =3D &pdev->dev
->
+The pull request you sent on Mon, 16 Feb 2026 11:25:28 +0100:
 
-Right. Nevermind my comment then.
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v7.0-1
 
-Bart
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/46a1daac56b3bf1bdbd8b37e6db811f015bc1f4b
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
