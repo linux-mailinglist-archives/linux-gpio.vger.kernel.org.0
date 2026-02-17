@@ -1,204 +1,181 @@
-Return-Path: <linux-gpio+bounces-31748-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31749-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EFj0EXlZlGkXDAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-31748-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Feb 2026 13:05:13 +0100
+	id cP5pMX1clGm3DAIAu9opvQ
+	(envelope-from <linux-gpio+bounces-31749-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Feb 2026 13:18:05 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id B36E814BC1D
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Feb 2026 13:05:12 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72B0A14BDB4
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Feb 2026 13:18:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CA2B33028F42
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Feb 2026 12:05:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D181A3045010
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Feb 2026 12:17:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0559E3382D2;
-	Tue, 17 Feb 2026 12:05:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CB3433984B;
+	Tue, 17 Feb 2026 12:17:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Q2od4Spr";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="YWBuoyIk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fg/PMoq9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2E5337110
-	for <linux-gpio@vger.kernel.org>; Tue, 17 Feb 2026 12:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D22A33893D
+	for <linux-gpio@vger.kernel.org>; Tue, 17 Feb 2026 12:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771329904; cv=none; b=JQuGQ1xVSa4H/bwTXttbjbZyvp5bhJu8XzJDNCWro3Y9IDygbfLJTJ8/XpeOnlpHKfSXFlTIBWoD3i9zlzFC9OohnW0i3xpa9ve68AERcIQdbnJPobqOQJHXeaEtj3pTy50q6T5RsDeG6ktBfQN9psbuLNHqBESxgVwP7swAHAQ=
+	t=1771330643; cv=none; b=Ex1/IfkPloCueLjHXsOf6GrgIsd8ebrRckjFLK6+j/cC/Uf+/uxPJFzVDFdTGDLfj6g0LDg0AhiIXkKngrYEm8pReDBT8phQi+Bxg4B+PU9IgaIrWPSuZ4ykZMUbf1Z4ALYebQ/VQvyDxQz/AFOEXYWtkYgqC1eQDU28wwjpT60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771329904; c=relaxed/simple;
-	bh=aVUGa3RY796+baDvlhpqGowjESPg44gTPp21C56l+gw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sTQtEu9mlPagx0NuNmOCv/qLVMLnWuaedrqzCIgITwTooge7KQTsD1QkohvJwLw+lWmYDzUPStkEyNe11J54ZqvcNDRaTLq7khJSxye9G/sKVI11qy+pjnSzxXxiWP0nweXCklu+SmjcPM7r8q3iZjPE4GSSeV/uOyCq358Ej2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Q2od4Spr; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=YWBuoyIk; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61H6UjiZ3394972
-	for <linux-gpio@vger.kernel.org>; Tue, 17 Feb 2026 12:05:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=WN5A1Uh8FQbkVezplAg2+KPH
-	LHpsIMxAUayv8oRBN0g=; b=Q2od4Spr7BKqk1uarSY+TBtIpKjNszSwilu9idhj
-	WP9wPjOmr8vnvvA4VBNF55S3+B8ro8frtgHzTFMrqkuIFdhsTddPJOcureeoTSf2
-	YeW8gJ5EchSqPxZcLYs57L7K/vEImRd9gR+Z+wVGVtBsYMHe8l1Akt5CgpH8tj2q
-	GBZkICyotCFzOe/HQODrfJl3rS0Qfj26Vs1ooTwCX5HSZkLuqW/yd2gtgmLXlOpg
-	hKGdf14Wofv/S6R5NAbh8A1Fkj4YQ3LD086SU2UaxucLb+WUF9RrEL0rycLy/Rj5
-	+EHZPNx3V2cpE44ijH299VrAmwc/2MYP4VjvMMD4n9/Rtw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cc5khae1h-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Tue, 17 Feb 2026 12:05:03 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8cb413d0002so2697800985a.1
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Feb 2026 04:05:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1771329902; x=1771934702; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WN5A1Uh8FQbkVezplAg2+KPHLHpsIMxAUayv8oRBN0g=;
-        b=YWBuoyIkPvix1p9CnDQdgau5CaG9As8WmcU49uXe1YZ7m+5asoyiWEu4BnMUj8XRku
-         qNXgyuevUS6sDV4tekC7sgXUjICUYbpwKhLubvNd/Za8MRMW5bBUhVAHPCBBqfCHpBaJ
-         whKz5zySdd6RtfuQMhGF9rdDhoZ/6PKy+QChGIBQWFPo6lIiljVtK8QV9BGnRP8205/C
-         nAbOgwWX/zqWykDSTzXues7nvQLTMizZBjvU8yN3dMVA2okWplwBgO0sKs89O2XvGqgC
-         TV3+k0SfY7Qh3YqrNxj3GUy7zB1a/ZFwUGZ84idec9WyAOwF8puqlG8hlEhSXL+bDMA5
-         WScw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771329902; x=1771934702;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WN5A1Uh8FQbkVezplAg2+KPHLHpsIMxAUayv8oRBN0g=;
-        b=rueetruWjNacBWDeP9C5ITg1KO93s9PC1R+Xq3HnBmuh0vsrrVOTuV8+vxIJDuFzPS
-         z8F6Z+RUuEWYi3OaBHAVaLp8OupA5PMVfm5vEvlYsnvOS261Ivc8ixtqRy7It9sgc3r1
-         nzS7sJ5wyDoj7Ge77gFJERJuyADqUjDGTTr33xUo+XqxkHl9XxFHfrUsaMX+BLke+1BK
-         oSAxXla3sJYtl7A+HrST1qQIJ0ybOII8PZp6Zd8yp1g8l9BVmFYDiY8EYafFyJtVF68F
-         0r0xoKWUywQ04loAIO60JPFzPt+5koWpa1nMaihK++vp9FUliIcPSzMlgpXgLu5dWYB7
-         vRMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWUKTB3Dtjqe+BTaReb0tJE9jHbylzSA16YYFSwtd6ZifzIvRgnAkzimHX7lN8fg1F5dmUz4GVC1+aW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6clA4k4pNaDN3rahPgB//fxMBmW7TGqYJZ+pIZFO8ixSnWhbe
-	g0o5IStu+7WEekvhcqCTl1Rum0gVaYH/zWC4aPM93dNRv7hdlUOtKtVef91cPUWJs1gn/MlbrNA
-	+Px/Cztd1t1xcP1cuF5t6pOiY0RHu0Tux9rIVo6ww6EKTHpVYTzaHTF6YBzI0t1gA
-X-Gm-Gg: AZuq6aKjZsq/zB/VAYizrd4XKN2h2tl88pTht5+jfzQYIRYkKMWbrvYBTP3iYbxACTm
-	Ns+kmlktNccDrlH0f3WChNCVi2hQxBgnHebW+3Syhgy4eNlOdV+4t9j7ESuIhg5kVMX0nsMC03n
-	dUX+MegtFpZcOMQmVRNipp/7YwNYGqGDpxQSQ+W0bjQqpmuwxWGhCLifbpWDoGyXaNxldpgsTRA
-	VttVtte7aFJqLsXtOjnBb3PmieEfsZLn4N3bA08Z8tcxVbFyl2Dh/yAF7kTTmEB7CI6z5oeWP4I
-	uK4ZjdETVWcj9JUGWNUApxKKgRkctJsWveUvfvmmLMdD8SOR8aLDXE2BML87Ai9Xd8tpwl2Fm5L
-	suW1EwtVGj1eg9/q3GGzu7RiZQXSnStXQZww/
-X-Received: by 2002:a05:620a:7014:b0:8c7:3ff0:d472 with SMTP id af79cd13be357-8cb4ac01da8mr1242525585a.15.1771329901911;
-        Tue, 17 Feb 2026 04:05:01 -0800 (PST)
-X-Received: by 2002:a05:620a:7014:b0:8c7:3ff0:d472 with SMTP id af79cd13be357-8cb4ac01da8mr1242520585a.15.1771329901366;
-        Tue, 17 Feb 2026 04:05:01 -0800 (PST)
-Received: from oss.qualcomm.com ([86.121.162.109])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43796ac7d91sm34676995f8f.26.2026.02.17.04.04.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Feb 2026 04:05:00 -0800 (PST)
-Date: Tue, 17 Feb 2026 14:04:58 +0200
-From: Abel Vesa <abel.vesa@oss.qualcomm.com>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Konrad Dybcio <konradybcio@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-        Taniya Das <taniya.das@oss.qualcomm.com>,
-        Linus Walleij <linusw@kernel.org>,
-        Melody Olvera <quic_molvera@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>,
-        Jishnu Prakash <quic_jprakash@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-Subject: Re: [PATCH RFC 6/8] clk: qcom: Remove tcsrcc-sm8750
-Message-ID: <gazyoguari56n6t6eaxbfvgv6hsc5jaqtfkhlshkbijsilfuys@cggmczqpzbq2>
-References: <20260202-topic-8750_tcsr-v1-0-cd7e6648c64f@oss.qualcomm.com>
- <20260202-topic-8750_tcsr-v1-6-cd7e6648c64f@oss.qualcomm.com>
- <sxjrbxwi64ky6dcntpnnbi3y5ujtssz7uno22xiwiqjdhp7rxi@b2nsnmb74vnb>
- <270589cf-383c-4062-baad-d232f7eef3d5@oss.qualcomm.com>
+	s=arc-20240116; t=1771330643; c=relaxed/simple;
+	bh=Vr3S/NRZ+Gxmt2xKTLbKVQLfF3pD6Rdqfj9+2BcEPe4=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rhhmqROxaBj5cugvIP5trMMmvtrYUFCwO0PJ6nGjklsMY/v8xr+x27Izc92fA34VjWBm2hOHoXqFrTGF3Aen4lpzCZPTELeVSCG/uGHxF3pJlqBXTN2gvEb23uKEqvIWI2r/7cyCGyV7om1Ad1UlZcm46K1XBEfYrOERhIpN2/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fg/PMoq9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7923C19424
+	for <linux-gpio@vger.kernel.org>; Tue, 17 Feb 2026 12:17:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771330642;
+	bh=Vr3S/NRZ+Gxmt2xKTLbKVQLfF3pD6Rdqfj9+2BcEPe4=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
+	b=fg/PMoq9kKLwdQ7gaP4k3iwtSwh23cUoCYH88fd1ubxiJ2ZPKqsH6U+xnH8xzm9yQ
+	 1xaRQ+ccI0Qaf4xiMO+Rl8EJcyjxvxXkQkpeTDIvLf73Dl5f27U8dM0M2/kJUtWarO
+	 zhLrLO3h7Iaf7kdvdxtt87u2vZzH9iGj/trjd0erOezsBiKVGmIHwwA2xO6eroZmEe
+	 wwKYYbPmu/t8ygKa179DlkePkBLDRZeVB70PVxv3lvqJfDlOXnVRJ1IQcMZ+BuLq//
+	 k7w2Sj+uPaC4Pz/kOR13vXWJjKReGarYox2NPoyMyui34h02pGVXUZspklav++FX2Z
+	 mGJa0Hr4MYVLg==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-59e6c181402so5227878e87.3
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Feb 2026 04:17:22 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWfsZ1GIFUuLE+OTHOxBoRvjVOY6fXQZBbIQg379A2YwIHRuJMIl1FpjAKw7pKBc4GCDzkchl1i3i5H@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywm0nzy2Jw/av42/jf0qXy6FQQldRCxmP118fDAp1UZsw9zEqHs
+	RGGa0fiuKL1dklWhp26olo4EoTj5z/QTzXvfgN8j6yK07ZSmh45ypcALA6cY6xdeAIFFjNw8oNx
+	jb/lJ0D5gPhtMyETIW2xUqRlwj0ogXFut6Lu1/eNpVw==
+X-Received: by 2002:a05:6512:12d0:b0:59e:6111:7304 with SMTP id
+ 2adb3069b0e04-59f69c648f7mr5083995e87.31.1771330641602; Tue, 17 Feb 2026
+ 04:17:21 -0800 (PST)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 17 Feb 2026 04:17:20 -0800
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 17 Feb 2026 04:17:20 -0800
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260217081431.1208351-1-pshete@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <270589cf-383c-4062-baad-d232f7eef3d5@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=Coyys34D c=1 sm=1 tr=0 ts=6994596f cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=oauzzCmhM186DRC0Y2yWPg==:17
- a=kj9zAlcOel0A:10 a=HzLeVaNsDn8A:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22
- a=EUspDBNiAAAA:8 a=OsKXUHKqkhwHkHYPZh4A:9 a=CjuIK1q_8ugA:10
- a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-GUID: N9aqu7NA3Bdt1cnCFxFpFpAwCH7DG9vG
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjE3MDA5OSBTYWx0ZWRfX8OZ26Rh7/WLW
- +wmVfvb1QQwH6mtgw9lxLETxCZAA+5P6xSleCYPc6uHv9KzmZkW/E3iwuBjK8fwDdgVLisbXwEE
- QWCiUN3f1k3kB9JxvcbuC6zVtzWFhofCxTc27MizAhlSbn9UGbnYokOPFzMBQE2/OtCbDX3OD4b
- IYIGVmYfvzPSeJ3ZqShztBASDm3BpPouFIoT14t/ZbwZBvdXeJBGMtS0ja8b10hz7lOHT1jBSDb
- f7UKAwgLWnhrBc2sKkJWjn6hHsJ0XuNqUdM7UuQlyuQJQ5lJzE5odigP1e3/R6r0JVCCUgQ/8vu
- JCVEP6dyP7ujKKHkrIcTgoFOtiEY59U9ID6DsHoHsBoFsywjfymDqTkCs304+i1T6vrQMSeV9kW
- AKVcmhhQGdk+Aepgvr7fDDqLmH7QTkc+ZCVDMV/pfLM5GwNZ/I+X4k7ApDaOJ++OxVelPwliQeI
- PXvMCxVkzziiZnbdYoQ==
-X-Proofpoint-ORIG-GUID: N9aqu7NA3Bdt1cnCFxFpFpAwCH7DG9vG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-17_01,2026-02-16_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 impostorscore=0
- priorityscore=1501 clxscore=1015 phishscore=0 adultscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602170099
+References: <20260217081431.1208351-1-pshete@nvidia.com>
+Date: Tue, 17 Feb 2026 04:17:20 -0800
+X-Gmail-Original-Message-ID: <CAMRc=McfztA2kf2S_4R8KYVnVFvAL7x0n3_O9BHh709L8Op9Dg@mail.gmail.com>
+X-Gm-Features: AaiRm52J6lD5e8NE2zdA9lxwXIHqquar7R_7jfasbmJL2Edc9lJ1kEaMUERE_Ns
+Message-ID: <CAMRc=McfztA2kf2S_4R8KYVnVFvAL7x0n3_O9BHh709L8Op9Dg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: tegra186: Simplify GPIO line name prefix handling
+To: Prathamesh Shete <pshete@nvidia.com>
+Cc: linusw@kernel.org, brgl@kernel.org, thierry.reding@gmail.com, 
+	jonathanh@nvidia.com, linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,nvidia.com,vger.kernel.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,nvidia.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31748-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-31749-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:dkim,qualcomm.com:email,qualcomm.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[abel.vesa@oss.qualcomm.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: B36E814BC1D
+X-Rspamd-Queue-Id: 72B0A14BDB4
 X-Rspamd-Action: no action
 
-On 26-02-17 12:50:50, Konrad Dybcio wrote:
-> On 2/17/26 12:48 PM, Abel Vesa wrote:
-> > On 26-02-02 15:57:38, Konrad Dybcio wrote:
-> >> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> >>
-> >> This is now handled from within the pinctrl subsystem, since there is
-> >> no "CC" block inside SM8750's TCSR, as the corresponding hardware is
-> >> present within TLMM. Remove the leftovers.
-> >>
-> >> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> > 
-> > So bindings remain in then...
-> 
-> Yes, to limit the explosiveness I decided to reuse the existing
-> ones.. I think that's the reasonable way to go
+On Tue, 17 Feb 2026 09:14:30 +0100, Prathamesh Shete <pshete@nvidia.com> said:
+> Introduce TEGRA_GPIO_PREFIX() to define the Tegra SoC GPIO name
+> prefix in one place. Use it for the Tegra410 COMPUTE and SYSTEM
+> controllers so the prefix is "COMPUTE-" and "SYSTEM-" respectively.
+>
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> ---
+> Changes in v2:
+>   * Split the v1 patch into two; this one to simplify prefix handling.
+> ---
+>  drivers/gpio/gpio-tegra186.c | 15 +++++++--------
+>  1 file changed, 7 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+> index 9c874f07be75..f04cc240b5ec 100644
+> --- a/drivers/gpio/gpio-tegra186.c
+> +++ b/drivers/gpio/gpio-tegra186.c
+> @@ -942,12 +942,8 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
+>  		char *name;
+>
+>  		for (j = 0; j < port->pins; j++) {
+> -			if (gpio->soc->prefix)
+> -				name = devm_kasprintf(gpio->gpio.parent, GFP_KERNEL, "%s-P%s.%02x",
+> -						      gpio->soc->prefix, port->name, j);
+> -			else
+> -				name = devm_kasprintf(gpio->gpio.parent, GFP_KERNEL, "P%s.%02x",
+> -						      port->name, j);
+> +			name = devm_kasprintf(gpio->gpio.parent, GFP_KERNEL, "%sP%s.%02x",
+> +					      gpio->soc->prefix ?: "", port->name, j);
+>  			if (!name)
+>  				return -ENOMEM;
+>
+> @@ -1373,6 +1369,9 @@ static const struct tegra_gpio_soc tegra256_main_soc = {
+>  	.has_vm_support = true,
+>  };
+>
+> +/* Macro to define GPIO name prefix with separator */
+> +#define TEGRA_GPIO_PREFIX(_x)	_x "-"
+> +
+>  #define TEGRA410_COMPUTE_GPIO_PORT(_name, _bank, _port, _pins)	\
+>  	TEGRA_GPIO_PORT(TEGRA410_COMPUTE, _name, _bank, _port, _pins)
+>
+> @@ -1388,7 +1387,7 @@ static const struct tegra_gpio_soc tegra410_compute_soc = {
+>  	.num_ports = ARRAY_SIZE(tegra410_compute_ports),
+>  	.ports = tegra410_compute_ports,
+>  	.name = "tegra410-gpio-compute",
+> -	.prefix = "COMPUTE",
+> +	.prefix = TEGRA_GPIO_PREFIX("COMPUTE"),
+>  	.num_irqs_per_bank = 8,
+>  	.instance = 0,
+>  };
+> @@ -1418,7 +1417,7 @@ static const struct tegra_gpio_soc tegra410_system_soc = {
+>  	.num_ports = ARRAY_SIZE(tegra410_system_ports),
+>  	.ports = tegra410_system_ports,
+>  	.name = "tegra410-gpio-system",
+> -	.prefix = "SYSTEM",
+> +	.prefix = TEGRA_GPIO_PREFIX("SYSTEM"),
+>  	.num_irqs_per_bank = 8,
+>  	.instance = 0,
+>  };
+> --
+> 2.43.0
+>
+>
 
-Yeah, realized that after having another look.
+I'm perfectly fine with patch 2/2 but this one is giving me a hard time. What
+are we really gaining other than some questionable obfuscation? Keeping the
+dash in the format string makes more sense to me and if we ever reuse the
+prefix, we'll need to remember about it trimming it. I would drop this patch
+and keep just 2/2.
 
-Good work.
+Bartosz
 
