@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-31792-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31793-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qGJULc2TlWn1SQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-31792-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 11:26:21 +0100
+	id yCg9BEuUlWk1SgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-31793-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 11:28:27 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C8DA155626
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 11:26:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 78AD91556F6
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 11:28:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 834283019CB4
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 10:26:19 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5EB7C301C974
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 10:28:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70C39285074;
-	Wed, 18 Feb 2026 10:26:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1A072F90C5;
+	Wed, 18 Feb 2026 10:28:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nAvA2JWt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TSAHJ7SF"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327E5284694
-	for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 10:26:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922C82F549F
+	for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 10:28:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771410376; cv=none; b=mni0+ZEO1/GSNU1zLKTEOJl2+STL+KpMosBhAo7qRcLyaxv9woOcle/oyOfkJQ2yOy8f32cMLnZvpZvBFke0GmtZpjEBVp+1VYqcNe9NUww2ZUIbOU/8Bfv+iJ0XlNKCFR1l8b7hmBhX0Dt+2i7AHBPV2TwG6PcFyGtVYG9TFN8=
+	t=1771410502; cv=none; b=UnFEPKbb4zy3SneKVvmToSZ/xmsQlLjVmI9LzO8Ayr7JDIXjNJMt4+2SCUqwyppHH9qjkzBWBspk0338lqeQtnz+RTjSXShIy0cnAvqm0mlSVmiCEc8N5Ak9j6yypiRZCJv2C/0Y/La9Qa6ArMDHQJwYuVY9P4geKxRgcKyvXZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771410376; c=relaxed/simple;
-	bh=kTpNK5Uls22jdkIeIXDKmi8A8vUQjxKmxX+QdiP9Byo=;
+	s=arc-20240116; t=1771410502; c=relaxed/simple;
+	bh=j8IuF/E2/hmw/iyuluGgzkvbSOC0JIYRe9E9ozdoEqc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SWoRliGGtNnxV9JQoEgZ/Wu8CnEmAW9dwQPWkWQzAXF7g9nsX7mJRKfQMHMFNmulF6hJPfCuKZTEzX71aFeVgyVcBYodzrEgr6Kdwui6ZzK/VueykCvkJ581U2vbbWyJCZfoonCZnhcx1kbhEMwaJLzHJftSFx5zQdydLhq7G/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nAvA2JWt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E760AC2BC86
-	for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 10:26:15 +0000 (UTC)
+	 To:Cc:Content-Type; b=DBS/wxYCZNEGvgAtyBO2aOGKRDvhELNOSVjSwkWLtR31PofUot1tP34XFh2SXkiHLjMCAyts0KxvhaBD2+q02J56ByscJo54yV1Ptx5RFupzwCrhYF1YgkL+YuQmALyhNsF3fnavqOaW80cblWgyB6FG9ka1+qsdMDLKs9N9i1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TSAHJ7SF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49AE2C2BC86
+	for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 10:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771410375;
-	bh=kTpNK5Uls22jdkIeIXDKmi8A8vUQjxKmxX+QdiP9Byo=;
+	s=k20201202; t=1771410502;
+	bh=j8IuF/E2/hmw/iyuluGgzkvbSOC0JIYRe9E9ozdoEqc=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nAvA2JWtj1JiNNf2GKQEQW3BP09SfsLUKZsNMuMl0jGnfswE7UMQ9KsB3q70mGOtJ
-	 LvkU4msKqG9AY5lxEBgG5/rSuQVemApI3IqdjtgKeyOfxTxbafpR1oYdq0W4D23hV/
-	 1JcuhJGOJILlPmK/3eopI2NQefQlDV0T0kOsspBHUOL0bo9QGxpO6GPEPKFkMQs4iG
-	 gz3T9iFs6ktaNeIN6LkLmMzTyT611liurolKG8Gi7QKwBM1V0yjPxuNZekj+4Wt9z6
-	 tx6GXhuNEf4DaXCTKTGK49rsI6+k8m0ujYtOmuBboT2VorXTTY/Ei216TOF5FJ9dO1
-	 Sao0eIXTkzc4g==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-59e62834439so5834513e87.1
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 02:26:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV73Zp8gnD4w8M1pW5X/xDQUdWNcbRwWcCAHoFLrKjoLZgPA6JBXzoO+rb5st7BT9Nebli35b+c2ceF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/OX7grcfWK2uEGsF8g+YuUU0n4vakFZLQ6ZNRKuMOZVn9Lp/L
-	LdWdbZ/k9E6GCVYbFj/O45eYmmzVyZ1o2xmcWRjkzOduPOtLavVGgtFsZpnYKx6ZiEYpJt0sr0Q
-	ony4avfJIM520OnXT9T4TK2LAPonsx2bu4YoHqJzxOQ==
-X-Received: by 2002:a05:6512:239c:b0:59e:3934:fe38 with SMTP id
- 2adb3069b0e04-59f83bbf105mr525374e87.48.1771410374647; Wed, 18 Feb 2026
- 02:26:14 -0800 (PST)
+	b=TSAHJ7SFjEGyyxYOpIhc5vZ8bSXNJMNQvQdKzpcDbzJ2jjT62EnDv113LjKHt54bA
+	 kQVRsKnSzln6/ZBqZTW1iuRflgOkMENh0MPADSiIlIdhiXmmeQj85voYWXRTZbEKGg
+	 s0sbyCDhKtfV/lWBHcj1ToeNroIy3tEDLhDNDApY1RPucEzftAGF5JOknsZQjFW8M7
+	 TyrehZT002QBW8fHMNSeXkv56xxdHv3sC3HEY2yYCP7LW/01Fgy48GdqPDUgfOy3Nr
+	 aKTlk7pl5OcD/jJ5PyPOb5ur5KBc9iDqPidItPdnAGk4Gf2Sff/kfMdfYcSpm4aLFp
+	 r1o1m15E+/8rg==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-385e7cafef9so41831041fa.0
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 02:28:22 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWOyBlf4776SLwu5i2LQ4xWCr4FMDmLCoDVzYcAN6oYKMVQpAcZsLJUzOjYd+LBin0yB9djXHtBPTju@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWtJe15/Wdrutb1VpABcUGVKTsUUR8d2UAoPAdlNSxTMVQj2rT
+	6bmgRMcDbWCNPCXtlhnvkFxQwWUNx9o+Qc3VU090aE5i3ZTOowBJP/FEWcZFDGOnrhIdOgkLIF5
+	8Hvsm+nDOHqHlVRsEW9fP0qj4fUfF3aGyKfTw9V8FkA==
+X-Received: by 2002:a2e:a907:0:b0:383:3e5:2379 with SMTP id
+ 38308e7fff4ca-387ed8c7bd1mr55220001fa.27.1771410500925; Wed, 18 Feb 2026
+ 02:28:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260213092958.864411-1-tzungbi@kernel.org>
-In-Reply-To: <20260213092958.864411-1-tzungbi@kernel.org>
+References: <20260213092958.864411-1-tzungbi@kernel.org> <20260213092958.864411-8-tzungbi@kernel.org>
+In-Reply-To: <20260213092958.864411-8-tzungbi@kernel.org>
 From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Wed, 18 Feb 2026 11:26:00 +0100
-X-Gmail-Original-Message-ID: <CAMRc=MfQumD1ULx7yU4W2sx=35wyQf7-v4tSf44OqEu3JDBUAg@mail.gmail.com>
-X-Gm-Features: AaiRm50s_5yOYiMTA-IQER-1K05oUgtj1rsfNhuxVP-poaWxOx0gFtAG0Bv4_TA
-Message-ID: <CAMRc=MfQumD1ULx7yU4W2sx=35wyQf7-v4tSf44OqEu3JDBUAg@mail.gmail.com>
-Subject: Re: [PATCH v3 00/11] gpio: Adopt revocable mechanism for UAF prevention
+Date: Wed, 18 Feb 2026 11:28:08 +0100
+X-Gmail-Original-Message-ID: <CAMRc=McGmrA-YWSxfh--32WnYDqV3Dwrdgf8C6kP2kVMoXas5Q@mail.gmail.com>
+X-Gm-Features: AaiRm52DQc1ieZMH7Nooiv-lEB2Wcrxxy9vF45IVG6Y4h_W8ecqm7P9WI4sK9dI
+Message-ID: <CAMRc=McGmrA-YWSxfh--32WnYDqV3Dwrdgf8C6kP2kVMoXas5Q@mail.gmail.com>
+Subject: Re: [PATCH v3 07/11] gpio: Add revocable provider handle for struct gpio_chip
 To: Tzung-Bi Shih <tzungbi@kernel.org>
 Cc: Linus Walleij <linusw@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
 	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
@@ -88,7 +88,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31792-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31793-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -105,24 +105,45 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 2C8DA155626
+X-Rspamd-Queue-Id: 78AD91556F6
 X-Rspamd-Action: no action
 
 On Fri, Feb 13, 2026 at 10:31=E2=80=AFAM Tzung-Bi Shih <tzungbi@kernel.org>=
  wrote:
 >
-> This series transitions the UAF prevention logic within the GPIO core
-> (gpiolib) to use the 'revocable' mechanism.
+> The underlying chip can be removed asynchronously.  `gdev->srcu` is used
+> to ensure the synchronization before accessing `gdev->chip`.
 >
-> The existing code aims to prevent UAF issues when the underlying GPIO
-> chip is removed.  This series replaces that custom logic with the
-> generic 'revocable' API, which is designed to handle such lifecycle
-> dependencies.  There should be no changes in behavior.
+> Revocable encapsulates the details.  Add revocable provider handle for
+> the corresponding struct gpio_chip in struct gpio_device so that it can
+> start to hide the synchronization details.
 >
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index 3abb90385829..56643f40e87e 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -52,6 +52,7 @@
+>   * @device_notifier: used to notify character device wait queues about t=
+he GPIO
+>   *                   device being unregistered
+>   * @srcu: protects the pointer to the underlying GPIO chip
+> + * @chip_rp: revocable provider handle for the corresponding struct gpio=
+_chip.
+>   * @pin_ranges: range of pins served by the GPIO driver
+>   *
+>   * This state container holds most of the runtime variable data
+> @@ -79,6 +80,7 @@ struct gpio_device {
+>         struct workqueue_struct *line_state_wq;
+>         struct blocking_notifier_head device_notifier;
+>         struct srcu_struct      srcu;
+> +       struct revocable        *chip_rp;
 
-Patches 1-6 look good to me, I think they should go into linux-next
-after v7.0-rc1 is tagged to lessen the burden on the subsequent
-revocable work.
+I like it much better than with __rcu but see my comment under the
+revocable series: is there any reason why we can't do:
 
-Bart
+struct revocable chip_rp;
+
+?
+
+Bartosz
 
