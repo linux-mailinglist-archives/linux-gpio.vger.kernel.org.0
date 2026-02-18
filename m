@@ -1,190 +1,156 @@
-Return-Path: <linux-gpio+bounces-31794-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31795-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QFxWK0zClWmBUgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-31794-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 14:44:44 +0100
+	id cCP4AJfDlWmTUgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-31795-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 14:50:15 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EB17156CCF
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 14:44:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8907C156D8C
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 14:50:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D918D300D46F
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 13:44:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 73587300D335
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 13:50:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E9DE32721D;
-	Wed, 18 Feb 2026 13:44:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0140328626;
+	Wed, 18 Feb 2026 13:50:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lrPVXGe+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jEQOS/9M"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02ECC25F984;
-	Wed, 18 Feb 2026 13:44:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F72E32862F;
+	Wed, 18 Feb 2026 13:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771422282; cv=none; b=HUA9mrF0Fbs5brXosWZG5T9/QoJ+PGrvFiGo93ROIgjW0j8iUgLD1OYE6gr+4llxnbF4eWB+bJtuSE7teRcwsK+TMNtPR58CE0NdW2VT79RUxPrAAbVCuTQBdpIKI03s7y6WfFzOyoDl6/BbG+X3w0DreDTW8ItP9iJXV0YXWiI=
+	t=1771422600; cv=none; b=GSzpHug3HO1SjO1Qpgr/JYrjb60NmXTLNviah8W9Xfabifj0+TSz8Ak+HAdCCXy7qOHk3l/5t3fsSRRQtuDjhDtjvWABWvRDt1B3o7wkswE8+JJ7FMza7LgEPFv++R3P2aHSz/bqnCX1z8ATRvO47RCt8VukbIrKZvU4bNECGPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771422282; c=relaxed/simple;
-	bh=LRzf+tcHihPY5HIRGI/oAgg3YAIzSJscQ/e9XCC8eJY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=S+7FyaL2TKlPbgQfJcbhescKNbokZhNXmB2yV6Jynm3ALUTTJPdqsqekFPM5wdN1JPowQ5sILLC4qj5cRyj1BnkLUU6rLCCGm80wf8aRZlJVuN8HE7L6NMAU+W2bxVHEjw8C//yiI+wZ0n2OjDGw4SzTxn7B9vk0N0fBkSWOVuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lrPVXGe+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63DE1C19421;
-	Wed, 18 Feb 2026 13:44:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771422281;
-	bh=LRzf+tcHihPY5HIRGI/oAgg3YAIzSJscQ/e9XCC8eJY=;
-	h=From:Date:Subject:To:Cc:From;
-	b=lrPVXGe+RbFh9EYOXmJL5xXbuYXW1Q6+/aNlcf4FSk83DVoAQc/DDNLBUy3ePiuo2
-	 OoZJMa6j/TgaFfRg/H4HY8dGo6QqnYqaTtl41swVzR5KmqI5LQjpu+Fx2M1jsXLWIs
-	 7vkWjs4+iI3eWJfvgwXMxpobcmq5+4oFrWGctJHbGGzxgrxBcBU6oWV8FrYTet05el
-	 gUOpsgidBAQvS9M/QgsBPoRO5B22xfvNg/9vbAfnhFKrkbH/XiZPi0gA8cIkjewK75
-	 SX5DrprmyjWGH7ex26KBesxR82Ew+vtGOnkRdrooz+w0KuNVfO17ZkdUtnUxTU6E6Y
-	 ZVADNmw792ZGw==
-From: Linus Walleij <linusw@kernel.org>
-Date: Wed, 18 Feb 2026 14:44:38 +0100
-Subject: [PATCH] HID: mcp2221: Add module parameter to enfoce GPIO mode
+	s=arc-20240116; t=1771422600; c=relaxed/simple;
+	bh=W31iI7LLVILK7kkuE1ElHWcjo1PB1NNAmLYxWimCXC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MvquV6Mez9HjZS0XF1M7Q6/U4d/rKsl3jlMHm+12qFFvEsnktG9eh2xgHwZ6W+OG9WV969E7VPT0WviPW8FCT531s0sv3K7E3RtPRVS4vcq27/d2fPCEAIFjxoSD5G+Ps9g1y1YcImhf+W0cjVYCVQZe2oB60ubzaGrBKc3/dYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jEQOS/9M; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771422599; x=1802958599;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=W31iI7LLVILK7kkuE1ElHWcjo1PB1NNAmLYxWimCXC8=;
+  b=jEQOS/9MNPuaHWZ3eXRZkSf3S3Q1+dRlF8qYYjDZcFc2166vo6H8r5Mr
+   6FpSb0MAAuX7xDNqwfA5hM9/L/9tDQnyM115kgF1jHe3CXzVj5iefupIt
+   J7ewS1+Qj1lwU7a/iSPGDD65rBhIZLd+Ct7XRa0GXWkhXBCd7O74EEcTd
+   np+TDfVdkR9jjBQE7ZggbiuVUb5rEZlnpreDQqobTC7ZaUBIxBGmkWzaI
+   rxsO/9Oo5s+yV5FQYcUqUToLprg1+qXh3Mb6J0LQWEY4diQe7DDVRJDqV
+   ifWsgqXQxiP3w7wXB/dtgnLCI7QlgVtRCdFr4G6/Z2YmL7ZdIaU6I7ML9
+   w==;
+X-CSE-ConnectionGUID: o76mS4BiSDC0nkORfIGOTA==
+X-CSE-MsgGUID: BCgjWBHHSQOE3WBrCKLYiQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11704"; a="83120855"
+X-IronPort-AV: E=Sophos;i="6.21,298,1763452800"; 
+   d="scan'208";a="83120855"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2026 05:49:57 -0800
+X-CSE-ConnectionGUID: ZD8PmMrXRNyK6JJMyH8kfw==
+X-CSE-MsgGUID: IULIxgMpT5WculU9T9y3Yw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,298,1763452800"; 
+   d="scan'208";a="218040471"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 18 Feb 2026 05:49:54 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vshw7-000000012Oo-1N5a;
+	Wed, 18 Feb 2026 13:49:51 +0000
+Date: Wed, 18 Feb 2026 21:49:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linusw@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org, quic_vbadigan@quicinc.com,
+	quic_mrana@quicinc.com, sherry.sun@nxp.com,
+	driver-core@lists.linux.dev,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: Re: [PATCH v7 3/3] PCI: Add support for PCIe WAKE# interrupt
+Message-ID: <202602182100.CSUJWXc8-lkp@intel.com>
+References: <20260218-wakeirq_support-v7-3-0d4689830207@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260218-hid-mcp2221-gpio-v1-1-a2ba53867354@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MQQqAIBBA0avErBvQKUy6SrQIG2sWqShEIN09a
- fkW/1conIULzF2FzLcUiaFB9x24cwsHo+zNQIqMIm3xlB0vl4hI45Ek4mj85PRmButGaFnK7OX
- 5l8v6vh/yYELzYgAAAA==
-X-Change-ID: 20260218-hid-mcp2221-gpio-46f7c1a638c4
-To: Rishi Gupta <gupt21@gmail.com>, Jiri Kosina <jikos@kernel.org>, 
- Benjamin Tissoires <bentiss@kernel.org>
-Cc: linux-input@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Linus Walleij <linusw@kernel.org>
-X-Mailer: b4 0.14.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260218-wakeirq_support-v7-3-0d4689830207@oss.qualcomm.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org];
+	TAGGED_FROM(0.00)[bounces-31795-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31794-lists,linux-gpio=lfdr.de];
-	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 2EB17156CCF
+	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,01.org:url,intel.com:mid,intel.com:dkim,intel.com:email]
+X-Rspamd-Queue-Id: 8907C156D8C
 X-Rspamd-Action: no action
 
-Add a module parameter to MCP2221 to enfor GPIO mode on the
-general purpose pins GP0 thru GP3.
+Hi Krishna,
 
-If I plug a device of this type into my machine, it will use the
-GP0, GP1, GP2 and GP3 pins for IIO voltage readings by default
-if CONFIG_IIO is set.
+kernel test robot noticed the following build errors:
 
-However there may be cases where IIO is available but we want to
-use the GP0 thru GP3 lines for GPIO anyway.
+[auto build test ERROR on cee73b1e840c154f64ace682cb477c1ae2e29cc4]
 
-Example use:
+url:    https://github.com/intel-lab-lkp/linux/commits/Krishna-Chaitanya-Chundru/PM-sleep-wakeirq-Add-support-for-dedicated-shared-wake-IRQ-setup/20260218-162247
+base:   cee73b1e840c154f64ace682cb477c1ae2e29cc4
+patch link:    https://lore.kernel.org/r/20260218-wakeirq_support-v7-3-0d4689830207%40oss.qualcomm.com
+patch subject: [PATCH v7 3/3] PCI: Add support for PCIe WAKE# interrupt
+config: sparc-randconfig-001-20260218 (https://download.01.org/0day-ci/archive/20260218/202602182100.CSUJWXc8-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 14.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260218/202602182100.CSUJWXc8-lkp@intel.com/reproduce)
 
-insmode hid-mcp2221.ko gpio_mode_enforce=1
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602182100.CSUJWXc8-lkp@intel.com/
 
-Result in dmesg:
-mcp2221 0003:04D8:00DD.0005: GPIO 0 not in gpio mode
-mcp2221 0003:04D8:00DD.0005: GPIO 1 not in gpio mode
-mcp2221 0003:04D8:00DD.0005: GPIO 2 not in gpio mode
-mcp2221 0003:04D8:00DD.0005: GPIO 3 not in gpio mode
-mcp2221 0003:04D8:00DD.0005: Set GPIO mode for gpio pin 0!
-mcp2221 0003:04D8:00DD.0005: Set GPIO mode for gpio pin 1!
-mcp2221 0003:04D8:00DD.0005: Set GPIO mode for gpio pin 2!
-mcp2221 0003:04D8:00DD.0005: Set GPIO mode for gpio pin 3!
+All errors (new ones prefixed by >>):
 
-After this the gpiolib tools such as gpioset can be used to alter
-the GPIO line values successfully.
+   sparc64-linux-ld: drivers/pci/pci.o: in function `platform_pci_configure_wake':
+>> pci.c:(.text+0x5d0c): undefined reference to `pci_configure_of_wake_gpio'
+   sparc64-linux-ld: drivers/pci/pci.o: in function `platform_pci_remove_wake':
+>> pci.c:(.text+0x5d4c): undefined reference to `pci_remove_of_wake_gpio'
+   sparc64-linux-ld: drivers/pci/endpoint/functions/pci-epf-test.o: in function `pci_epf_test_add_cfs':
+   pci-epf-test.c:(.text+0xec): undefined reference to `config_group_init_type_name'
 
-Signed-off-by: Linus Walleij <linusw@kernel.org>
----
- drivers/hid/hid-mcp2221.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/hid/hid-mcp2221.c b/drivers/hid/hid-mcp2221.c
-index 33603b019f97..58695f3f9e9d 100644
---- a/drivers/hid/hid-mcp2221.c
-+++ b/drivers/hid/hid-mcp2221.c
-@@ -19,8 +19,15 @@
- #include <linux/gpio/driver.h>
- #include <linux/iio/iio.h>
- #include <linux/minmax.h>
-+#include <linux/moduleparam.h>
- #include "hid-ids.h"
- 
-+static bool gpio_mode_enforce;
-+
-+module_param(gpio_mode_enforce, bool, 0644);
-+MODULE_PARM_DESC(gpio_mode_enforce,
-+	 "Enfore GPIO mode for GP0 thru GP3 (default: false, will be used for IIO)");
-+
- /* Commands codes in a raw output report */
- enum {
- 	MCP2221_I2C_WR_DATA = 0x90,
-@@ -648,7 +655,7 @@ static int mcp2221_check_gpio_pinfunc(struct mcp2221 *mcp)
- 	int needgpiofix = 0;
- 	int ret;
- 
--	if (IS_ENABLED(CONFIG_IIO))
-+	if (IS_ENABLED(CONFIG_IIO) && !gpio_mode_enforce)
- 		return 0;
- 
- 	ret = mcp_gpio_read_sram(mcp);
-@@ -1043,7 +1050,8 @@ static void mcp2221_remove(struct hid_device *hdev)
- #if IS_REACHABLE(CONFIG_IIO)
- 	struct mcp2221 *mcp = hid_get_drvdata(hdev);
- 
--	cancel_delayed_work_sync(&mcp->init_work);
-+	if (!gpio_mode_enforce)
-+		cancel_delayed_work_sync(&mcp->init_work);
- #endif
- }
- 
-@@ -1317,8 +1325,10 @@ static int mcp2221_probe(struct hid_device *hdev,
- #endif
- 
- #if IS_REACHABLE(CONFIG_IIO)
--	INIT_DELAYED_WORK(&mcp->init_work, mcp_init_work);
--	schedule_delayed_work(&mcp->init_work, msecs_to_jiffies(100));
-+	if (!gpio_mode_enforce) {
-+		INIT_DELAYED_WORK(&mcp->init_work, mcp_init_work);
-+		schedule_delayed_work(&mcp->init_work, msecs_to_jiffies(100));
-+	}
- #endif
- 
- 	return 0;
-
----
-base-commit: 05f7e89ab9731565d8a62e3b5d1ec206485eeb0b
-change-id: 20260218-hid-mcp2221-gpio-46f7c1a638c4
-
-Best regards,
 -- 
-Linus Walleij <linusw@kernel.org>
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
