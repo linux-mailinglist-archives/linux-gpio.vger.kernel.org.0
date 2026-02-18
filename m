@@ -1,189 +1,194 @@
-Return-Path: <linux-gpio+bounces-31802-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31803-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 10SkDmH/lWlHYAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-31802-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 19:05:21 +0100
+	id oBhYOkUAlmlHYAIAu9opvQ
+	(envelope-from <linux-gpio+bounces-31803-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 19:09:09 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86B3B158814
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 19:05:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 953531588BA
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 19:09:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D77E13014660
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 18:05:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1AF123034669
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 18:08:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6112B330B04;
-	Wed, 18 Feb 2026 18:05:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86E78346A15;
+	Wed, 18 Feb 2026 18:08:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Ey6tV7lg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eA3dQ8Lh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61C82638BA
-	for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 18:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478553451CC
+	for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 18:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771437918; cv=none; b=SbcVX8xPWVNrbkW5X8LsNySg2QzRfjtmQgW2JlBml2EdzrfQ0hcBy6QwJLnXY0fUGICj1FDZWT+/WC8uHVWzyFqQbOyPEbYDNTtX99EWvxszjWnWpPksUZGud7VloIJbwk+E9AvExAyCeoI4ygtBb1MK3LPrbTc3vUeUeU/RIv0=
+	t=1771438118; cv=none; b=AH18z+5av3fricJ+OTj7Bcu0OdGlqeJYApy/8IkNJ3jDGkLWg8wI8T2pC0jcj7AmDETwEvSeEXmMijx2lgw3moDtHCh2QCC/jdz68CdhaJATnP5ZGP5BLGJCc0P5vR0bBv//snBaSYVXQzNeVqJIwQDy1eBDQ/OxwKBL4sVVAHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771437918; c=relaxed/simple;
-	bh=56jXtMLUDKd8sv9xvPYj+y2FcY6Uzz0bJzYJ6dMNuSI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qBxByg+Co7zwj6BrqGQiVfifQv0ZkB/k9D4RZA46q5f2FCLlZAhM7VjmYEYUhz5axXR5TBRdgWJ/ECXwY5VGWuSIxDELfiOxxny9psEn5mu8UnzE/gJ57GqedYAYNCgB603i1jn0d0DpW1HmJWtajAQMSfvHYHh83tSG8IWA5Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Ey6tV7lg; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-46391e91e16so41147b6e.3
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 10:05:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1771437914; x=1772042714; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sAkPY4XYtB58h+yIk4xO7Fk2pos/YipiQk239weGiGk=;
-        b=Ey6tV7lg3CZPryQ4UPx5uXScr2J+VJGYGs+0NnQE7DvOzYie1PE93dr2DQU0xLSYUx
-         /ZQGR6kczetlJEUzspw0UB7IYBBVnYb806Ui2AD+/hFmOjGExO5FbRpJGrfUAfZ255AZ
-         OA0Pc4HmbdzPyfydFI0G/JlliL8bOf2HkHPwLuXC2Juo+9g5yMCCd0DfBBp4nr917P5z
-         vvVug7xHpS/QtbcLSeLstlVUb8EgppystkLklPrIqfH/ovtBkRs/KhzVIeVv/skEwX59
-         mI8A5jyDd1m6N07DwIszvuTunmz8nC+gg62FpnNulCvqaOTh5QZjmX54n5r/UNRoTzh6
-         o/Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771437914; x=1772042714;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sAkPY4XYtB58h+yIk4xO7Fk2pos/YipiQk239weGiGk=;
-        b=nROT2sljjbiHBUPDfDAbx0LVZU+8tfHe1YLOJGhZp8ZS3Qla1QYW+Fl4A10THd5wJv
-         sv31nImsEXgiFT0mp2DsGAsSyyUJAiVVyRqciuMR6Q5bGNI6ewyEeasyBw77CE3OiPjs
-         9n0tYwvJyd1P7H2F/jQW+hikEt3f1OhIy0wfeG+ctAswfnHe/aIxpdm9slUqC7jo1pan
-         gVjMJQqOrPq+P42LkaZGUmUndNWNliLBdFN5+jYop1mxHYzHF+Q2WrkzN7IbjjBx6jHC
-         kRbBethMpQqjuXJD71I0QKyjy7wrlU5q7H+7q9ZVzHFDe2lSFYIc3uxMFT9/zbDF+RGB
-         AOyA==
-X-Gm-Message-State: AOJu0YwKBIvkuWZfUmdKMcFD5yChtj+Do5BDorntdjOKgbuGYXiHU6ef
-	bLiDR+C9Jmd2BcaF0psBmYrp6D+UPNWYTa5h+eAGdI7eRUfoFmLoxmKFdIRPKwi7Gi4=
-X-Gm-Gg: AZuq6aJPWyN4iAKRSeLhy3vwG7tqYzqexkAIHz2YjgygDUtEesnHj+4cTkFGKh6zM5U
-	tb5pjuaJFDAFL9w8r004Lq8mK2lWNYZwYfpdyBtKiCImY4hCQIUJsKuOe0QDdhaVGc3txeV84LZ
-	Y5SHpAsH5ygP5Z6aGJdIIukyu2gUNRblS3wCvu4f6Z89CUWne89MMwwSHXKA1ue3CI0Ql/Jiytu
-	/Mn/6HYtektbJnPfbDkXyywhtjMkHswentz5vQFAxLw1bhqAuTJv9LXywYlS1D9xOEj5AkdXjHF
-	gMVgWDjjt6ckq49BiTkBphV11ov2aATgUMf3ySTg8c6by5LBxdawoh5eEOdbVXBXeuVhf3xlan4
-	oniQhpG/9rMYNbIdIPdhr+5gA2vlH/qL8YEohw5UXCh0Os1gYWhVrpNKkfQ0564FrpYvLFunV0l
-	ysEQHrmwR/cpgeQfY83fkn2SCOL3uH+/9ypeJxGxpEzhaYkxTfqgsQeGkyOUm/K9W8b2Tut1y0
-X-Received: by 2002:a05:6808:181f:b0:45a:552f:cbc3 with SMTP id 5614622812f47-46410d3ff75mr1284891b6e.61.1771437914622;
-        Wed, 18 Feb 2026 10:05:14 -0800 (PST)
-Received: from ?IPV6:2600:8803:e7e4:500:ab87:97b2:3c7b:da2f? ([2600:8803:e7e4:500:ab87:97b2:3c7b:da2f])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-40eaf178c1fsm21455300fac.17.2026.02.18.10.05.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Feb 2026 10:05:12 -0800 (PST)
-Message-ID: <d63e251e-03cb-4c76-aa96-f8550a43c7d8@baylibre.com>
-Date: Wed, 18 Feb 2026 12:05:11 -0600
+	s=arc-20240116; t=1771438118; c=relaxed/simple;
+	bh=t9LLJ5ZLhg7RSq6Wov+CACF8jsXPmZ5bM8MaUkL9FAU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SWxwBMv2sNNqKb5EWJiiwOqDlw+RfhdQQYjL15DvL5e7GEDHdKownWt81TTlDsf87kk0QZlahj62/wHpC9c9Li4BgMT06JsTS9z7hY4TKv+KAtqFxGUpkUME7qf2viiLBV9hHDUEHyFB9FezuliC3bu6NXiKt+9eYF3GQlWnChI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eA3dQ8Lh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 136FAC2BC86
+	for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 18:08:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771438118;
+	bh=t9LLJ5ZLhg7RSq6Wov+CACF8jsXPmZ5bM8MaUkL9FAU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eA3dQ8LhFQ19qN13YZ02MxPzxlm5tKFx+g3fdxfVxBm2cyqylmhreDbXpqvnsGhNq
+	 Llwx5v/7n4vThpxSyaU4KpDJgQTjkUJQFFZj94VEWdL8phcf7lHt3Jp9xTZeBWP8ms
+	 aG768b95XzMk8boJLT623f253DthHq8OSlUgoVrSlM7DlvtJ9z1vaNeGXAFk5BHmYs
+	 hGXmqLmjV7qB//5Jdd3nGVFWzEX9DJj9E2uDwu5JeHwRoK6FGpMBwqXE+7qE6ftT3c
+	 FTzdp9dJj+5hzqN5qdtrJKyE0S9UODmQkHn+5vYzFW0g8tD4oot0Lknan1ucnzqPMe
+	 eIbL0CiE/QkkQ==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-3870c7479c0so1373281fa.3
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 10:08:37 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUVsEPjUeny8gyvgqInd1WbG54wpoVI6FmgDFUr2Go0L6KVmNk7V39hVeoTRcrRoEVXH2jQRUsxHTdG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyi4cZNPlOKEtrNjQO/P9f8IZVOOlg+IkPu9KJRUXUm5yOl/p4M
+	OpfFUKl2kSybJKd+qjSisHlgszmC/sXrOlVDU+RTEnf/d532nJECuVtVsutwc7+MLKkQRek9D+3
+	4vrzDAmYD3zxMdKLPQAvWG0VItv4ky+YBPRBmuif4Lw==
+X-Received: by 2002:a05:651c:542:b0:386:8f97:d0b5 with SMTP id
+ 38308e7fff4ca-38810572293mr53666421fa.29.1771438116448; Wed, 18 Feb 2026
+ 10:08:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH libgpiod] dbus: daemon: watch for "add"/"remove" uevents
- instead of "bind"/"unbind"
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
- Linus Walleij <linusw@kernel.org>
-Cc: linux-gpio@vger.kernel.org
-References: <20260218-gpio-manager-bind-vs-add-v1-1-0fb22c448de3@oss.qualcomm.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20260218-gpio-manager-bind-vs-add-v1-1-0fb22c448de3@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260211085313.16792-1-bartosz.golaszewski@oss.qualcomm.com>
+ <aZUIFiOYt6GOlDQx@google.com> <CAMRc=Md_x+DxmW742HRUW-jeg9_AW-stKkHUP9z13+M+POd4Tw@mail.gmail.com>
+ <aZXyPjIjIDKCBLvs@google.com>
+In-Reply-To: <aZXyPjIjIDKCBLvs@google.com>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Wed, 18 Feb 2026 19:08:22 +0100
+X-Gmail-Original-Message-ID: <CAMRc=MdQmR-_Yqdh4TiHSzjmGVJY+0guDpFEM6F1QD_SJ2+T0Q@mail.gmail.com>
+X-Gm-Features: AaiRm526hzwXVyE0IQxFLC-TydDiQbZv16nPl-C6QGKfc7fvaC3tQavu0gI2ubg
+Message-ID: <CAMRc=MdQmR-_Yqdh4TiHSzjmGVJY+0guDpFEM6F1QD_SJ2+T0Q@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: swnode: restore the swnode-name-against-chip-label
+ matching
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Linus Walleij <linusw@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@kernel.org>, 
+	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
-	R_DKIM_ALLOW(-0.20)[baylibre-com.20230601.gappssmtp.com:s=20230601];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[baylibre-com.20230601.gappssmtp.com:+];
-	TAGGED_FROM(0.00)[bounces-31802-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[baylibre.com];
-	RCPT_COUNT_THREE(0.00)[3];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31803-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dlechner@baylibre.com,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-0.999];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.998];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,baylibre-com.20230601.gappssmtp.com:dkim]
-X-Rspamd-Queue-Id: 86B3B158814
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,mail.gmail.com:mid,intel.com:email]
+X-Rspamd-Queue-Id: 953531588BA
 X-Rspamd-Action: no action
 
-On 2/18/26 2:50 AM, Bartosz Golaszewski wrote:
-> Linux has a stub driver for GPIO devices (the ones on the GPIO bus, not
-> their parent devices!) but it only actually *binds* to it those devices
-> that don't have a firmware node attached. This means that in some cases,
-> a "dynamic" GPIO controller can remain unnoticed by gpio-manager.
-> 
-> This behavior is related to fw_devlink handling and - even if we changed
-> the kernel to bind all GPIO devices to the stub driver - a fix in
-> gpio-manager is easier to distribute than a kernel fix.
-> 
-> Since an *added* GPIO device is considered functional, even without
-> binding to the stub driver, we can rely on the "add"/"remove" uevent
-> pair when detecting when GPIO chips come and go.
+On Wed, Feb 18, 2026 at 6:15=E2=80=AFPM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> On Wed, Feb 18, 2026 at 09:42:28AM +0100, Bartosz Golaszewski wrote:
+> > On Wed, Feb 18, 2026 at 1:31=E2=80=AFAM Dmitry Torokhov
+> > <dmitry.torokhov@gmail.com> wrote:
+> > >
+> > > On Wed, Feb 11, 2026 at 09:53:13AM +0100, Bartosz Golaszewski wrote:
+> > > > Using the remote firmware node for software node lookup is the righ=
+t
+> > > > thing to do. The GPIO controller we want to resolve should have the
+> > > > software node we scooped out of the reference attached to it. Howev=
+er,
+> > > > there are existing users who abuse the software node API by creatin=
+g
+> > > > dummy swnodes whose name is set to the expected label string of the=
+ GPIO
+> > > > controller whose pins they want to control and use them in their lo=
+cal
+> > > > swnode references as GPIO properties.
+> > > >
+> > > > This used to work when we compared the software node's name to the
+> > > > chip's label. When we switched to using a real fwnode lookup, these
+> > > > users broke down because the firmware nodes in question were never
+> > > > attached to the controllers they were looking for.
+> > > >
+> > > > Restore the label matching as a fallback to fix the broken users bu=
+t add
+> > > > a big FIXME urging for a better solution.
+> > > >
+> > > > Cc: stable@vger.kernel.org # v6.18, v6.19
+> > > > Fixes: 216c12047571 ("gpio: swnode: allow referencing GPIO chips by=
+ firmware nodes")
+> > > > Link: https://lore.kernel.org/all/aYkdKfP5fg6iywgr@jekhomev/
+> > > > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcom=
+m.com>
+> > > > ---
+> > > > Changes in v2:
+> > > > - check if gdev_node and gdev_node->name are not NULL before trying=
+ to
+> > > >   match the label (Hans & Dan)
+> > > > - use the right link
+> > > > - collect tags
+> > > >
+> > > >  drivers/gpio/gpiolib-swnode.c | 19 +++++++++++++++++++
+> > > >  1 file changed, 19 insertions(+)
+> > > >
+> > > > diff --git a/drivers/gpio/gpiolib-swnode.c b/drivers/gpio/gpiolib-s=
+wnode.c
+> > > > index 21478b45c127d..0d7f3f09a0b4b 100644
+> > > > --- a/drivers/gpio/gpiolib-swnode.c
+> > > > +++ b/drivers/gpio/gpiolib-swnode.c
+> > > > @@ -42,6 +42,25 @@ static struct gpio_device *swnode_get_gpio_devic=
+e(struct fwnode_handle *fwnode)
+> > > >
+> > > >  fwnode_lookup:
+> > > >       gdev =3D gpio_device_find_by_fwnode(fwnode);
+> > >
+> > > By the way, should we extend gpio_device_find_by_fwnode() to use both
+> > > primary and secondary nodes?
+> > >
+> >
+> > That's already done on a higher lever for all fwnodes in gpiod_fwnode_l=
+ookup().
+>
+> How exactly? I am not talking about checking secondary node for the
+> fwnode that is used in the reference, I am talking about secondary
+> fwnode that might be assigned to the gpio chip and you need to check
+> both primary and secondary if they match with the fwnode that you call
+> gpio_device_find_by_fwnode() with.
+>
 
-Would this also be true if a device was added at runtime using a dynamic
-devicetree overlay, i.e. it would still have to bind to a real driver and
-not the stub?
+Right, I didn't quite get it. I was surprised to find out
+device_match_fwnode() - which we use in gpiolib - does not do it
+already. I'm wondering if this is something we should change in device
+core or only locally.
 
-> 
-> Fixes: a5ab76da1e0a ("dbus: add the D-Bus daemon, command-line client and tests")
-> Reported-by: David Lechner <dlechner@baylibre.com>
-> Closes: https://github.com/brgl/libgpiod/issues/175
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
-> Resending with proper prefix.
-> ---
->  dbus/manager/daemon.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/dbus/manager/daemon.c b/dbus/manager/daemon.c
-> index 4627e8c96b420b8ad9e36bf7b884a702490d53f7..b9c295a55751d7d37d8a93033e9e1ad7ec8ac5af 100644
-> --- a/dbus/manager/daemon.c
-> +++ b/dbus/manager/daemon.c
-> @@ -785,9 +785,9 @@ static void gpiodbus_daemon_on_uevent(GUdevClient *udev G_GNUC_UNUSED,
->  	g_debug("uevent: %s action on %s device",
->  		action, g_udev_device_get_name(dev));
->  
-> -	if (g_strcmp0(action, "bind") == 0)
-> +	if (g_strcmp0(action, "add") == 0)
->  		gpiodbus_daemon_export_chip(self, dev);
-> -	else if (g_strcmp0(action, "unbind") == 0)
-> +	else if (g_strcmp0(action, "remove") == 0)
->  		gpiodbus_daemon_unexport_chip(self, dev);
-
-I supposed doing something like this to use the "bind" event if possible
-would be too fragile (since condition_exists_that_would_prevent_bind could
-be different depending on kernel version)?
-
-	if (condition_exists_that_would_prevent_bind ?
-	    action == "add" : action == "bind")
-
->  }
->  
-> 
-> ---
-> base-commit: ff267fb439b5c307fe75b47bed4db11148b29ff1
-> change-id: 20260218-gpio-manager-bind-vs-add-44450137603c
-> 
-> Best regards,
-
+Bartosz
 
