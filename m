@@ -1,476 +1,272 @@
-Return-Path: <linux-gpio+bounces-31774-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31775-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IFM3D55klWkvQQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-31774-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 08:05:02 +0100
+	id cJ26AIN0lWnDRgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-31775-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 09:12:51 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5C591538CB
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 08:05:01 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D362153E41
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 09:12:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6FD51304E7E7
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 07:04:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E20973019515
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 08:12:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E23C13093BA;
-	Wed, 18 Feb 2026 07:04:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60452317711;
+	Wed, 18 Feb 2026 08:12:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kDmciC/J"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SoudCh3i";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="GOitX+81"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA66F30EF6C
-	for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 07:04:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E608731352D
+	for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 08:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771398282; cv=none; b=MVJ+z0wR2W00RGxCj6veXwzkWBwxJTP7wklKdBQ7CNOvdytIwUaeCoBPE7cPY+9cLu9vrrLfgTX4wJFmLr2BoeG5TZwoAB5HEnrCmnEVOoe4DOib8834JTGwgWROtPE9UdySqVvOG3VIYm91is7auLyvM1L/DPrG8NZkEcf4+Uo=
+	t=1771402357; cv=none; b=qxQhUi/34nb4dzraOuypmhmesK4Dzbepb4jw2DGZWeC0FHS25WJ9ew1dsgbmg5V/U2DaC7gcEeDkvdWvnX00rc2Nt0N8Mzx0N8zZg9nYvN5qhqCffG6JurVs4BpsWjwoS09Nb6sd4H94xDtI8i1KQgM2/dwbkK4PPNICRAu5jV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771398282; c=relaxed/simple;
-	bh=8QM0CiQqRXMFjQj2gmC6qp/ge2FjojXmt399+6qiyoA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=l5WFKLhupPnFW/l0etXdvO06aKho6ltqt08K50UGclkrottoRyGwXCorDWdgvm7wkTuonEXlBr6+5JteJ1pU3O4eHmpRzNhm/dUSoQY20tHs6K/g8w2q+CVv4dJ9ty5fDUtKd3L3sC0TeGq8KkS5xvSiFykD+fCO1i/h96RQwxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kDmciC/J; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771398281; x=1802934281;
-  h=date:from:to:cc:subject:message-id;
-  bh=8QM0CiQqRXMFjQj2gmC6qp/ge2FjojXmt399+6qiyoA=;
-  b=kDmciC/JBdC2TsItl6Qz/M+pWPjrFukhWcKm+D88VembEFTcXc1jXPET
-   fiLIdX0Ycf04LjxrN5kIAxfDGDaEBI/DsclwW3Jy7oOa016NNiMqvdou7
-   Zy2pRpil29p8ov/6cmFDBgFnnTcTAxr4MPYibZgx1E6bnKkmPAtihjjKo
-   9GHJCPFF54f4nixQdrEF+FOD4PEc13FTfdrm+td0tWX7b6fvR8sJfZlPh
-   72nzBQYQCj4VeiJaLBQCi2SaL06wOhEmpBTNBNhAiKPECvaxTdGYEHOTV
-   RItNANJWKl84PDeFrbVvX7/iuuH7pfb9FYS9PAAHBXWLFsAAiiiO4yAMg
-   g==;
-X-CSE-ConnectionGUID: u8qAs9IFSoqIqpxLWLffMw==
-X-CSE-MsgGUID: OnLDNhTIRM+7Ytd713YskQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11704"; a="83919138"
-X-IronPort-AV: E=Sophos;i="6.21,297,1763452800"; 
-   d="scan'208";a="83919138"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2026 23:04:41 -0800
-X-CSE-ConnectionGUID: ZEgs85q4SEybeZLrkYOE4Q==
-X-CSE-MsgGUID: zE2bqHjUQVKD7+NzhaXU/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,297,1763452800"; 
-   d="scan'208";a="244707758"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 17 Feb 2026 23:04:39 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vsbbw-0000000128e-2CvD;
-	Wed, 18 Feb 2026 07:04:36 +0000
-Date: Wed, 18 Feb 2026 15:04:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- 6af6be278e3ba2ffb6af5b796c89dfb3f5d9063e
-Message-ID: <202602181516.pZOQJRZF-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1771402357; c=relaxed/simple;
+	bh=cn9bRtPL63s+L/kliS2QPtYEnu9wEkOpMMxQLo4/E2w=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=a+Axe4CqPwdPIlG5Xz/BviwRYI3RRi8+H1Yc6T8J82UcFvy+pLvrOL4qC7GJxeEKgOC0wsbYtfSYQ2VRXNvfB38fcm6xcP6RS4lLxlBm1/9rCI/NMumRDFjIcBSkq57iYITf7BgMFQPLjmQCOo0phseQRundJHaU3alXXuX7nLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SoudCh3i; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=GOitX+81; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61HKXSac3694545
+	for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 08:12:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=hKZlV/zjE2Jec2OpeZ2fnA
+	tbU0O5jNpjC5Zzj54JMio=; b=SoudCh3imLq2oU6ZjxDWGq5hV9LuNb8hMdba9z
+	ojq/3g7mEHZFFRrl7y4UDbtNPY/XiG64lwQ2k9BtGNwW5OYYBkE5QN1otE5j5jZT
+	BkRYQsdXmEH4MOvyGcvN62/T5T3HXp4PiqY9bF1nyek6QB4wBNL2Hf/57/G+wmtz
+	8yKPlODlzOCYDEU194hbfNTMPAPwpEWB5ISxRLg+4aDuhxBGneql9PnIiPd2xPYx
+	flTG5nDtiJ27GB4oe1E5m+ksN+faIlKBEMnTNpVRKP+s7fgKZlBA2kBrO5XMuaG2
+	KzvcyLTjUIiRrOgHtXNVqTPgrO+46Cvl6WDrKOWI7nnOIMkA==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ccyfb1j6t-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 08:12:34 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2a7b7f04a11so273260595ad.3
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 00:12:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1771402354; x=1772007154; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hKZlV/zjE2Jec2OpeZ2fnAtbU0O5jNpjC5Zzj54JMio=;
+        b=GOitX+81H93knGYFn+IPnoHSc77dudhUXucU7w2N2mbNtfEr5HkRiSaHlDfwcNOVfV
+         ITfEdU2KdruU2k7KTBU/60KqKL5KkWE2G6EtqH4wKR34WyD+a66mgPlZQQygA8y0c426
+         evweFfpyN1nigRxh8W+B/azn0plwiZ15+1kS1jshRpDYeCD+ro57mTg3rN95frLz1DvW
+         nij/kgT/cr8RfxtOZ3VepBXh7Gh/3j0QPCpF98Ott8/RhnaQF8L1YoCXraJlM0BjNfzn
+         hSQ2tPmLRr5UWlbh2aYpUhjifKJu+PEjqphxbw23D4JaH9EQqrrp4IK+pLAMoRV/OtnZ
+         CzEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771402354; x=1772007154;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hKZlV/zjE2Jec2OpeZ2fnAtbU0O5jNpjC5Zzj54JMio=;
+        b=XQ3FgnWuxqWjHLu7y+Mzwu59CbFKUQgZ6BEUn+nZFdIApjwW2cbj2Lc/pEQC5l4xIW
+         xU38DVmKvEmuscZY5ezq6xNZIIYbqoUzP44i8FlJBDUwQw+ZEHZoDk0nEU62yeJla1C6
+         woKKIhKHimLgHP8p5g0UqT/xGOkA8tp7tvzdzwnOD38h96p9mRrx0+wdgH+yr1/7eJJl
+         zswMcTg0L550b2GRbgy68UazBz2K6mpPhWfJ6gRyVgCpQoaC/lhTOKnyyoWpyZkumK8v
+         Vg6UZpWqfmrENgrejBxC1RLpATqE/o3fzfaoR01h6VnAuATVKbbhSwy0rggzxVufawf6
+         C3DA==
+X-Forwarded-Encrypted: i=1; AJvYcCXghjDTxNZuu2zUOqORaw21FZ1EQXCvboo/vg+31TCHuFL4MowCWYEC+NvM6dMj1hkGOtbJwRMhfr5E@vger.kernel.org
+X-Gm-Message-State: AOJu0YzH4L3G7pQx9m0Roxz1B5Q89CTHjtiBLgMktu3RxUZ/lSVMswuu
+	OgqYcfiGR9aJW5Q+VlNHu0Lzcuf+xCNjKhX/GjN2DbplrU8ecgLtKxgPq3WX8f35B7WXBfMVfYH
+	Fp8RshuMD1wESKSFT/rn0U9Y7xe24ku33fuIc8AeGVWG24zXcI1Iv/HH0WinW7u9A
+X-Gm-Gg: AZuq6aJPm/1kF+4HmS08vWDUL1tjdNfrppvIfVJlfceHnpMQgILtA4ytLsBERReYb3k
+	5Dg5//Bc5ulgPYaYoD8VwLq1D4cyAUx9hkGmDx1o621sEnGb9slK0zqnIArSxu/4AteLCR14yS1
+	9+NjfrpPEsitswx19vpNVtyV2UKBfmBXN0Kl2ffb0xhN5qHVZdYfNbD/0v2rKAANDIXpvhpJW+M
+	z5Eh2G+mR8QdMe1YwjPkCpKCxMApNZ/L7RFuEIyRDqsBxjtiOuMGQvd0wIWmjlfd5NHwGB3Ngjg
+	wmDBh9ZaJaL6WXkfKp0qaUsGQARMdNsg+wiULtFe2a49K5dE/QoHNXqvdF/R3lAyeUrICfhnJ8s
+	oI1RGD0EGBzOXiB8V18W4sBjdrbfRFd75uWw6b4tGmnR3jQ7N0kFXNaR/
+X-Received: by 2002:a17:903:2b05:b0:2aa:3b3:d633 with SMTP id d9443c01a7336-2ad50ff1164mr12524695ad.61.1771402353743;
+        Wed, 18 Feb 2026 00:12:33 -0800 (PST)
+X-Received: by 2002:a17:903:2b05:b0:2aa:3b3:d633 with SMTP id d9443c01a7336-2ad50ff1164mr12524395ad.61.1771402353204;
+        Wed, 18 Feb 2026 00:12:33 -0800 (PST)
+Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ad1a9d624esm118123685ad.49.2026.02.18.00.12.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Feb 2026 00:12:32 -0800 (PST)
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: [PATCH v7 0/3] PCI: Add support for PCIe WAKE# interrupt
+Date: Wed, 18 Feb 2026 13:42:22 +0530
+Message-Id: <20260218-wakeirq_support-v7-0-0d4689830207@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGZ0lWkC/23N0QrCIBSA4VcZXudQUbe62ntEhJm2Q21uulkx9
+ u65QRC0mwP/gfOdCQXjwQR0yCbkTYQArk1R7DKka9XeDIZrasQIE5QSjp/qbsD35zB2nfMDtoJ
+ rflGKllqgdNV5Y+G1isdT6hrC4Px7fRDFsv1axZ8VBSaYS25oYZlmRFcuhLwf1UO7psnTQAsZ5
+ Q/DNhiZGEmsKKndc0bEBjPP8wdTuRzb/AAAAA==
+X-Change-ID: 20251104-wakeirq_support-f54c4baa18c5
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+        Pavel Machek <pavel@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Danilo Krummrich <dakr@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linusw@kernel.org>,
+        Bartosz Golaszewski <brgl@kernel.org>,
+        Linus Walleij <linusw@kernel.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com, sherry.sun@nxp.com,
+        driver-core@lists.linux.dev,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1771402347; l=3933;
+ i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
+ bh=cn9bRtPL63s+L/kliS2QPtYEnu9wEkOpMMxQLo4/E2w=;
+ b=1NrTUTrlOuXkM10nOweTJb+5me+RqaT/bCS5HXsMXfsEdvuIFx663a7YJjaz1VTUelwNaOP1Q
+ nggN0JcfMQ3DKk5PZt6fd2/sIATbUJC/GcjnDkQjc++4i37OtQ/mhLg
+X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-Proofpoint-GUID: esoPzTzzxhLB6Z3ChX28DHOM_aW-X3oX
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjE4MDA3MSBTYWx0ZWRfX4aCO+0Gs2fv5
+ MjHxdKc7dF+zckAiwFjNm7Es4ZbNRHv+bmmIg3UzUMmjP04YeWD3aSU74jAMTf0UII6ZS3on0hf
+ 7IUInhqW0O5JvvlDyhHWJemola4wXbQ3QK/yC2JOZd6wfq90uptpYJDOrOMDs6RWIsDkb+e9mQp
+ SL44sr6CIdMS4vIybjVv/UJb/OcXXUSArxLhnpW+Q7VtmtJ8NgAryFvJw2urMc+WdUpkWuGKF09
+ MvUUn+EgAnJKfczupuvmizSBW2reG0W/i6genNZkrUX+RNPb5WO1YT++jW0pLwLid5963z7kcw8
+ mx9+KAgEehoB1e1rXcidRjSsX78+3EZP7saL9opKncN/5su/eTPw7xF/tpPyJ3YJxP3fDVJCMgR
+ ydzoz5V7zibBtqkH5rM0wDSWOK6Z7Dc34Ny7736Mqj+v4/lAY2E/cUvwdLUGHmi+E9QsPcyMGMP
+ GcVg28+dpq+WK7WHerw==
+X-Authority-Analysis: v=2.4 cv=JNo2csKb c=1 sm=1 tr=0 ts=69957472 cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22
+ a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=Ikd4Dj_1AAAA:8 a=s8YR1HE3AAAA:8
+ a=7FPx-eIICnbx9kjoaAIA:9 a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
+ a=jGH_LyMDp9YhSvY-UuyI:22
+X-Proofpoint-ORIG-GUID: esoPzTzzxhLB6Z3ChX28DHOM_aW-X3oX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-17_04,2026-02-16_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 malwarescore=0 priorityscore=1501 impostorscore=0 suspectscore=0
+ spamscore=0 clxscore=1011 bulkscore=0 phishscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602180071
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWO(0.00)[2];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krishna.chundru@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	PRECEDENCE_BULK(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31774-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[6];
-	DKIM_TRACE(0.00)[intel.com:+]
-X-Rspamd-Queue-Id: D5C591538CB
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31775-lists,linux-gpio=lfdr.de];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+]
+X-Rspamd-Queue-Id: 9D362153E41
 X-Rspamd-Action: no action
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: 6af6be278e3ba2ffb6af5b796c89dfb3f5d9063e  gpio: cdev: Avoid NULL dereference in linehandle_create()
+PCIe WAKE# interrupt is needed for bringing back PCIe device state from
+D3cold to D0.
 
-elapsed time: 1207m
+This is pending from long time, there was two attempts done previously to
+add WAKE# support[1], [2]. Those series tried to add support for legacy
+interrupts along with WAKE#. Legacy interrupts are already available in
+the latest kernel and we can ignore them. For the wake IRQ the series is
+trying to use interrupts property define in the device tree.
 
-configs tested: 353
-configs skipped: 5
+This series is using gpio property instead of interrupts, from
+gpio desc driver will allocate the dedicate IRQ.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+WAKE# is added in dts schema and merged based on this patch.
+https://lore.kernel.org/all/20250515090517.3506772-1-krishna.chundru@oss.qualcomm.com/
 
-tested configs:
-alpha                             allnoconfig    gcc-15.2.0
-alpha                            allyesconfig    gcc-15.2.0
-alpha                               defconfig    gcc-15.2.0
-arc                              allmodconfig    clang-16
-arc                              allmodconfig    gcc-15.2.0
-arc                               allnoconfig    gcc-15.2.0
-arc                              allyesconfig    clang-23
-arc                          axs101_defconfig    gcc-15.2.0
-arc                      axs103_smp_defconfig    gcc-15.2.0
-arc                                 defconfig    gcc-15.2.0
-arc                     haps_hs_smp_defconfig    clang-23
-arc                   randconfig-001-20260217    gcc-11.5.0
-arc                   randconfig-001-20260217    gcc-8.5.0
-arc                   randconfig-001-20260218    clang-23
-arc                   randconfig-002-20260217    gcc-11.5.0
-arc                   randconfig-002-20260217    gcc-9.5.0
-arc                   randconfig-002-20260218    clang-23
-arm                               allnoconfig    clang-23
-arm                               allnoconfig    gcc-15.2.0
-arm                              allyesconfig    clang-16
-arm                              allyesconfig    gcc-15.2.0
-arm                         bcm2835_defconfig    gcc-15.2.0
-arm                          collie_defconfig    gcc-15.2.0
-arm                                 defconfig    gcc-15.2.0
-arm                            dove_defconfig    gcc-15.2.0
-arm                          exynos_defconfig    clang-23
-arm                      footbridge_defconfig    clang-18
-arm                            hisi_defconfig    gcc-15.2.0
-arm                      jornada720_defconfig    gcc-15.2.0
-arm                        keystone_defconfig    clang-18
-arm                         lpc18xx_defconfig    gcc-15.2.0
-arm                        multi_v5_defconfig    gcc-15.2.0
-arm                        mvebu_v5_defconfig    clang-23
-arm                        mvebu_v5_defconfig    gcc-15.2.0
-arm                         orion5x_defconfig    clang-23
-arm                             pxa_defconfig    gcc-15.2.0
-arm                   randconfig-001-20260217    gcc-11.5.0
-arm                   randconfig-001-20260217    gcc-14.3.0
-arm                   randconfig-001-20260218    clang-23
-arm                   randconfig-002-20260217    gcc-11.5.0
-arm                   randconfig-002-20260218    clang-23
-arm                   randconfig-003-20260217    gcc-11.5.0
-arm                   randconfig-003-20260217    gcc-8.5.0
-arm                   randconfig-003-20260218    clang-23
-arm                   randconfig-004-20260217    gcc-11.5.0
-arm                   randconfig-004-20260217    gcc-13.4.0
-arm                   randconfig-004-20260218    clang-23
-arm                        realview_defconfig    gcc-15.2.0
-arm                         socfpga_defconfig    clang-23
-arm                          sp7021_defconfig    gcc-15.2.0
-arm                        spear6xx_defconfig    gcc-15.2.0
-arm                           spitz_defconfig    gcc-15.2.0
-arm                           u8500_defconfig    clang-23
-arm64                            allmodconfig    clang-23
-arm64                             allnoconfig    gcc-15.2.0
-arm64                               defconfig    gcc-15.2.0
-arm64                 randconfig-001-20260217    clang-23
-arm64                 randconfig-001-20260218    clang-23
-arm64                 randconfig-002-20260217    clang-23
-arm64                 randconfig-002-20260218    clang-23
-arm64                 randconfig-003-20260217    clang-23
-arm64                 randconfig-003-20260218    clang-23
-arm64                 randconfig-004-20260217    clang-23
-arm64                 randconfig-004-20260218    clang-23
-csky                             allmodconfig    gcc-15.2.0
-csky                              allnoconfig    gcc-15.2.0
-csky                                defconfig    gcc-15.2.0
-csky                  randconfig-001-20260217    clang-23
-csky                  randconfig-001-20260218    clang-23
-csky                  randconfig-002-20260217    clang-23
-csky                  randconfig-002-20260218    clang-23
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    gcc-15.2.0
-hexagon                           allnoconfig    clang-23
-hexagon                           allnoconfig    gcc-15.2.0
-hexagon                             defconfig    gcc-15.2.0
-hexagon               randconfig-001-20260217    clang-23
-hexagon               randconfig-001-20260218    clang-16
-hexagon               randconfig-002-20260217    clang-23
-hexagon               randconfig-002-20260218    clang-16
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    gcc-14
-i386                              allnoconfig    gcc-15.2.0
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20260217    clang-20
-i386        buildonly-randconfig-001-20260218    clang-20
-i386        buildonly-randconfig-002-20260217    clang-20
-i386        buildonly-randconfig-002-20260218    clang-20
-i386        buildonly-randconfig-003-20260217    clang-20
-i386        buildonly-randconfig-003-20260218    clang-20
-i386        buildonly-randconfig-004-20260217    clang-20
-i386        buildonly-randconfig-004-20260218    clang-20
-i386        buildonly-randconfig-005-20260217    clang-20
-i386        buildonly-randconfig-005-20260218    clang-20
-i386        buildonly-randconfig-006-20260217    clang-20
-i386        buildonly-randconfig-006-20260218    clang-20
-i386                                defconfig    gcc-15.2.0
-i386                  randconfig-001-20260217    gcc-14
-i386                  randconfig-001-20260218    clang-20
-i386                  randconfig-002-20260217    gcc-14
-i386                  randconfig-002-20260218    clang-20
-i386                  randconfig-003-20260217    clang-20
-i386                  randconfig-003-20260217    gcc-14
-i386                  randconfig-003-20260218    clang-20
-i386                  randconfig-004-20260217    gcc-14
-i386                  randconfig-004-20260218    clang-20
-i386                  randconfig-005-20260217    gcc-14
-i386                  randconfig-005-20260218    clang-20
-i386                  randconfig-006-20260217    gcc-14
-i386                  randconfig-006-20260218    clang-20
-i386                  randconfig-007-20260217    clang-20
-i386                  randconfig-007-20260217    gcc-14
-i386                  randconfig-007-20260218    clang-20
-i386                  randconfig-011-20260217    clang-20
-i386                  randconfig-011-20260218    gcc-14
-i386                  randconfig-012-20260217    clang-20
-i386                  randconfig-012-20260218    gcc-14
-i386                  randconfig-013-20260217    clang-20
-i386                  randconfig-013-20260218    gcc-14
-i386                  randconfig-014-20260217    clang-20
-i386                  randconfig-014-20260218    gcc-14
-i386                  randconfig-015-20260217    clang-20
-i386                  randconfig-015-20260218    gcc-14
-i386                  randconfig-016-20260217    clang-20
-i386                  randconfig-016-20260218    gcc-14
-i386                  randconfig-017-20260217    clang-20
-i386                  randconfig-017-20260218    gcc-14
-loongarch                        allmodconfig    clang-23
-loongarch                         allnoconfig    clang-23
-loongarch                         allnoconfig    gcc-15.2.0
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20260217    clang-23
-loongarch             randconfig-001-20260218    clang-16
-loongarch             randconfig-002-20260217    clang-23
-loongarch             randconfig-002-20260218    clang-16
-m68k                             allmodconfig    gcc-15.2.0
-m68k                              allnoconfig    gcc-15.2.0
-m68k                             allyesconfig    clang-16
-m68k                             allyesconfig    gcc-15.2.0
-m68k                                defconfig    clang-19
-m68k                       m5249evb_defconfig    gcc-15.2.0
-microblaze                       alldefconfig    gcc-15.2.0
-microblaze                        allnoconfig    gcc-15.2.0
-microblaze                       allyesconfig    gcc-15.2.0
-microblaze                          defconfig    clang-19
-mips                             allmodconfig    gcc-15.2.0
-mips                              allnoconfig    gcc-15.2.0
-mips                             allyesconfig    gcc-15.2.0
-mips                     cu1830-neo_defconfig    gcc-15.2.0
-mips                 decstation_r4k_defconfig    clang-23
-mips                          eyeq5_defconfig    gcc-15.2.0
-mips                          eyeq6_defconfig    gcc-15.2.0
-mips                            gpr_defconfig    clang-18
-mips                           ip22_defconfig    clang-18
-mips                           ip22_defconfig    gcc-15.2.0
-nios2                         3c120_defconfig    gcc-15.2.0
-nios2                            allmodconfig    clang-23
-nios2                             allnoconfig    clang-23
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    clang-19
-nios2                 randconfig-001-20260217    clang-23
-nios2                 randconfig-001-20260218    clang-16
-nios2                 randconfig-002-20260217    clang-23
-nios2                 randconfig-002-20260218    clang-16
-openrisc                         allmodconfig    clang-23
-openrisc                         allmodconfig    gcc-15.2.0
-openrisc                          allnoconfig    clang-23
-openrisc                          allnoconfig    gcc-15.2.0
-openrisc         de0_nano_multicore_defconfig    gcc-15.2.0
-openrisc                            defconfig    gcc-15.2.0
-parisc                           allmodconfig    gcc-15.2.0
-parisc                            allnoconfig    clang-23
-parisc                            allnoconfig    gcc-15.2.0
-parisc                           allyesconfig    clang-19
-parisc                           allyesconfig    gcc-15.2.0
-parisc                              defconfig    gcc-15.2.0
-parisc                generic-32bit_defconfig    gcc-15.2.0
-parisc                randconfig-001-20260217    clang-19
-parisc                randconfig-001-20260218    gcc-8.5.0
-parisc                randconfig-002-20260217    clang-19
-parisc                randconfig-002-20260218    gcc-8.5.0
-parisc64                            defconfig    clang-19
-powerpc                    adder875_defconfig    clang-18
-powerpc                     akebono_defconfig    gcc-15.2.0
-powerpc                          allmodconfig    gcc-15.2.0
-powerpc                           allnoconfig    clang-23
-powerpc                           allnoconfig    gcc-15.2.0
-powerpc                      chrp32_defconfig    clang-18
-powerpc                   currituck_defconfig    gcc-15.2.0
-powerpc                      ep88xc_defconfig    clang-23
-powerpc                     kmeter1_defconfig    clang-23
-powerpc                 linkstation_defconfig    gcc-15.2.0
-powerpc                      mgcoge_defconfig    gcc-15.2.0
-powerpc                 mpc8313_rdb_defconfig    clang-18
-powerpc                    mvme5100_defconfig    gcc-15.2.0
-powerpc                      pasemi_defconfig    clang-23
-powerpc                     ppa8548_defconfig    gcc-15.2.0
-powerpc               randconfig-001-20260217    clang-19
-powerpc               randconfig-001-20260218    gcc-8.5.0
-powerpc               randconfig-002-20260217    clang-19
-powerpc               randconfig-002-20260218    gcc-8.5.0
-powerpc                    sam440ep_defconfig    gcc-15.2.0
-powerpc                     stx_gp3_defconfig    clang-23
-powerpc                     tqm8540_defconfig    gcc-15.2.0
-powerpc                         wii_defconfig    clang-23
-powerpc                 xes_mpc85xx_defconfig    clang-23
-powerpc64             randconfig-001-20260217    clang-19
-powerpc64             randconfig-001-20260218    gcc-8.5.0
-powerpc64             randconfig-002-20260217    clang-19
-powerpc64             randconfig-002-20260218    gcc-8.5.0
-riscv                            allmodconfig    clang-23
-riscv                             allnoconfig    clang-23
-riscv                             allnoconfig    gcc-15.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    gcc-15.2.0
-riscv                 randconfig-001-20260217    gcc-10.5.0
-riscv                 randconfig-001-20260218    clang-23
-riscv                 randconfig-002-20260217    gcc-10.5.0
-riscv                 randconfig-002-20260217    gcc-14.3.0
-riscv                 randconfig-002-20260218    clang-23
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-23
-s390                             allyesconfig    gcc-15.2.0
-s390                          debug_defconfig    gcc-15.2.0
-s390                                defconfig    gcc-15.2.0
-s390                  randconfig-001-20260217    clang-23
-s390                  randconfig-001-20260217    gcc-10.5.0
-s390                  randconfig-001-20260218    clang-23
-s390                  randconfig-002-20260217    clang-23
-s390                  randconfig-002-20260217    gcc-10.5.0
-s390                  randconfig-002-20260218    clang-23
-s390                       zfcpdump_defconfig    gcc-15.2.0
-sh                               alldefconfig    clang-23
-sh                               allmodconfig    gcc-15.2.0
-sh                                allnoconfig    clang-23
-sh                                allnoconfig    gcc-15.2.0
-sh                               allyesconfig    clang-19
-sh                               allyesconfig    gcc-15.2.0
-sh                                  defconfig    gcc-14
-sh                          kfr2r09_defconfig    gcc-15.2.0
-sh                          landisk_defconfig    gcc-15.2.0
-sh                          lboxre2_defconfig    gcc-15.2.0
-sh                          polaris_defconfig    gcc-15.2.0
-sh                    randconfig-001-20260217    gcc-10.5.0
-sh                    randconfig-001-20260217    gcc-15.2.0
-sh                    randconfig-001-20260218    clang-23
-sh                    randconfig-002-20260217    gcc-10.5.0
-sh                    randconfig-002-20260218    clang-23
-sh                        sh7763rdp_defconfig    clang-23
-sh                        sh7785lcr_defconfig    gcc-15.2.0
-sh                          urquell_defconfig    clang-18
-sh                          urquell_defconfig    gcc-15.2.0
-sparc                             allnoconfig    clang-23
-sparc                             allnoconfig    gcc-15.2.0
-sparc                               defconfig    gcc-15.2.0
-sparc                 randconfig-001-20260217    gcc-12.5.0
-sparc                 randconfig-001-20260218    gcc-10.5.0
-sparc                 randconfig-002-20260217    gcc-12.5.0
-sparc                 randconfig-002-20260218    gcc-10.5.0
-sparc64                          alldefconfig    gcc-15.2.0
-sparc64                          allmodconfig    clang-23
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20260217    gcc-12.5.0
-sparc64               randconfig-001-20260218    gcc-10.5.0
-sparc64               randconfig-002-20260217    gcc-12.5.0
-sparc64               randconfig-002-20260218    gcc-10.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-23
-um                               allyesconfig    gcc-14
-um                               allyesconfig    gcc-15.2.0
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                             i386_defconfig    gcc-15.2.0
-um                    randconfig-001-20260217    gcc-12.5.0
-um                    randconfig-001-20260218    gcc-10.5.0
-um                    randconfig-002-20260217    gcc-12.5.0
-um                    randconfig-002-20260218    gcc-10.5.0
-um                           x86_64_defconfig    gcc-14
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                            allnoconfig    clang-23
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20260217    gcc-14
-x86_64      buildonly-randconfig-001-20260218    gcc-14
-x86_64      buildonly-randconfig-002-20260217    gcc-14
-x86_64      buildonly-randconfig-002-20260218    gcc-14
-x86_64      buildonly-randconfig-003-20260217    gcc-14
-x86_64      buildonly-randconfig-003-20260218    gcc-14
-x86_64      buildonly-randconfig-004-20260217    gcc-14
-x86_64      buildonly-randconfig-004-20260218    gcc-14
-x86_64      buildonly-randconfig-005-20260217    gcc-14
-x86_64      buildonly-randconfig-005-20260218    gcc-14
-x86_64      buildonly-randconfig-006-20260217    gcc-14
-x86_64      buildonly-randconfig-006-20260218    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20260217    clang-20
-x86_64                randconfig-001-20260218    gcc-14
-x86_64                randconfig-002-20260217    clang-20
-x86_64                randconfig-002-20260218    gcc-14
-x86_64                randconfig-003-20260217    clang-20
-x86_64                randconfig-003-20260218    gcc-14
-x86_64                randconfig-004-20260217    clang-20
-x86_64                randconfig-004-20260218    gcc-14
-x86_64                randconfig-005-20260217    clang-20
-x86_64                randconfig-005-20260218    gcc-14
-x86_64                randconfig-006-20260217    clang-20
-x86_64                randconfig-006-20260218    gcc-14
-x86_64                randconfig-011-20260217    gcc-14
-x86_64                randconfig-011-20260218    gcc-13
-x86_64                randconfig-012-20260217    gcc-14
-x86_64                randconfig-012-20260218    gcc-13
-x86_64                randconfig-013-20260217    gcc-14
-x86_64                randconfig-013-20260218    gcc-13
-x86_64                randconfig-014-20260217    gcc-14
-x86_64                randconfig-014-20260218    gcc-13
-x86_64                randconfig-015-20260217    gcc-14
-x86_64                randconfig-015-20260218    gcc-13
-x86_64                randconfig-016-20260217    gcc-14
-x86_64                randconfig-016-20260218    gcc-13
-x86_64                randconfig-071-20260217    clang-20
-x86_64                randconfig-071-20260217    gcc-14
-x86_64                randconfig-071-20260218    clang-20
-x86_64                randconfig-072-20260217    clang-20
-x86_64                randconfig-072-20260217    gcc-14
-x86_64                randconfig-072-20260218    clang-20
-x86_64                randconfig-073-20260217    clang-20
-x86_64                randconfig-073-20260217    gcc-14
-x86_64                randconfig-073-20260218    clang-20
-x86_64                randconfig-074-20260217    gcc-14
-x86_64                randconfig-074-20260218    clang-20
-x86_64                randconfig-075-20260217    clang-20
-x86_64                randconfig-075-20260217    gcc-14
-x86_64                randconfig-075-20260218    clang-20
-x86_64                randconfig-076-20260217    clang-20
-x86_64                randconfig-076-20260217    gcc-14
-x86_64                randconfig-076-20260218    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    clang-23
-xtensa                            allnoconfig    gcc-15.2.0
-xtensa                           allyesconfig    clang-23
-xtensa                randconfig-001-20260217    gcc-12.5.0
-xtensa                randconfig-001-20260218    gcc-10.5.0
-xtensa                randconfig-002-20260217    gcc-12.5.0
-xtensa                randconfig-002-20260218    gcc-10.5.0
-xtensa                    smp_lx200_defconfig    gcc-15.2.0
+[1]: https://lore.kernel.org/all/b2b91240-95fe-145d-502c-d52225497a34@nvidia.com/T/
+[2]: https://lore.kernel.org/all/20171226023646.17722-1-jeffy.chen@rock-chips.com/
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+---
+Changes in v7:
+- Updated the commit text (Mani).
+- Couple of nits like using pci_err instead of dev_err,
+  use platform_pci_configure_wake(), platform_pci_remove_wake() instead
+  of calling directly calling pci_configure_of_wake_gpio() & pci_remove_of_wake_gpio() etc (Mani).
+- Add a new fwnode_gpiod_get() API that wraps fwnode_gpiod_get_index(..0..), similar to
+  devm_fwnode_gpiod_get() (Mani).
+- Link to v6: https://lore.kernel.org/r/20251127-wakeirq_support-v6-0-60f581f94205@oss.qualcomm.com
+
+Changes in v6:
+- Change the name to dev_pm_set_dedicated_shared_wake_irq() and make the
+  changes pointed by (Rafael). 
+- Link to v5: https://lore.kernel.org/r/20251107-wakeirq_support-v5-0-464e17f2c20c@oss.qualcomm.com
+
+Changes in v5:
+- Enable WAKE# irq only when there is wake -gpios defined in its device
+  tree node (Bjorn).
+- For legacy bindings for direct atach check in root port if we haven't
+  find the wake in the endpoint node.
+- Instead of hooking wake in driver bound case, do it in the framework
+  irrespective of the driver state (Bjorn).
+- Link to v4: https://lore.kernel.org/r/20250801-wake_irq_support-v4-0-6b6639013a1a@oss.qualcomm.com
+
+Changes in v4:
+- Move wake from portdrv to core framework to endpoint (Bjorn).
+- Added support for multiple WAKE# case (Bjorn). But traverse from
+  endpoint upstream port to root port till you get WAKE#. And use
+  IRQF_SHARED flag for requesting interrupts.
+- Link to v3: https://lore.kernel.org/r/20250605-wake_irq_support-v3-0-7ba56dc909a5@oss.qualcomm.com
+
+Changes in v3:
+- Update the commit messages, function names etc as suggested by Mani.
+- return wake_irq if returns error (Neil).
+- Link to v2: https://lore.kernel.org/r/20250419-wake_irq_support-v2-0-06baed9a87a1@oss.qualcomm.com
+
+Changes in v2:
+- Move the wake irq teardown after pcie_port_device_remove
+  and move of_pci_setup_wake_irq before pcie_link_rcec (Lukas)
+- teardown wake irq in shutdown also.
+- Link to v1: https://lore.kernel.org/r/20250401-wake_irq_support-v1-0-d2e22f4a0efd@oss.qualcomm.com
+
+---
+Krishna Chaitanya Chundru (3):
+      PM: sleep: wakeirq: Add support for dedicated shared wake IRQ setup
+      gpio: Add fwnode_gpiod_get() helper
+      PCI: Add support for PCIe WAKE# interrupt
+
+ drivers/base/power/wakeirq.c  | 39 ++++++++++++++++++++++++++----
+ drivers/pci/of.c              | 55 +++++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.c             |  9 +++++++
+ drivers/pci/pci.h             |  8 +++++++
+ drivers/pci/probe.c           |  2 ++
+ drivers/pci/remove.c          |  1 +
+ include/linux/gpio/consumer.h |  9 +++++++
+ include/linux/pci.h           |  2 ++
+ include/linux/pm_wakeirq.h    |  6 +++++
+ 9 files changed, 126 insertions(+), 5 deletions(-)
+---
+base-commit: cee73b1e840c154f64ace682cb477c1ae2e29cc4
+change-id: 20251104-wakeirq_support-f54c4baa18c5
+
+Best regards,
+-- 
+Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+
 
