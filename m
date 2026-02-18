@@ -1,198 +1,196 @@
-Return-Path: <linux-gpio+bounces-31800-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31801-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iBIlJ+PvlWklXAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-31800-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 17:59:15 +0100
+	id cGcDIFn0lWlTWwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-31801-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 18:18:17 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2B97157FAE
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 17:59:14 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF5B015833D
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 18:18:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8443D300D324
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 16:59:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A83843033F81
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 17:15:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17181344DB0;
-	Wed, 18 Feb 2026 16:59:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA83F23909C;
+	Wed, 18 Feb 2026 17:15:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iVd1CVn9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ife33ZHP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f66.google.com (mail-dl1-f66.google.com [74.125.82.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8D533A9C5;
-	Wed, 18 Feb 2026 16:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EFB18DB0D
+	for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 17:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771433948; cv=none; b=Bj6wa9qgHIAhAQy03KzQ1UbtGx9koga0ucFhqT/yuwyXsFLn8l7YBEp0dmcg96Fw9AZiBxcDzra3ACvGDvBF1xVCp2bZSd16RVINNW8JMJgsIywnCkS9kFeUkwDl0jzZnMoD9FuoctRsharJjMT5gPZcNm1dfzoaDFttEpCd4To=
+	t=1771434935; cv=none; b=bFJGVck5d429ZiFKEuR97h1hDo58Q1qfvKorePmRpq/iwTaV5Bz79YNaND/Pus2sTkB8+UmEQrefibo66uF9YKqGXU+LUuXnmM0LI8ZZKg6/Y9EAIAvhFEHZtAPVldzNuK4M72wd+Gtha18XYb7EELqqSAkKD0SISjzov9oYO7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771433948; c=relaxed/simple;
-	bh=rv0N2rf5GatvQtHBquY8uQJtkNYnn9jlDezi83Fnk1w=;
+	s=arc-20240116; t=1771434935; c=relaxed/simple;
+	bh=Q9ooPQVTGTcVJezfW6R+eFguPYeeOCmuofwhzMEcloE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VpZVZRiiEVECXi9Cgb5CYgTNgOtfv1ia6vYjCudEHIP92EP64mf7XT24SI/nSVZgWJWJyWI9Gqnii9vnmb4lXlqPEzDWX99PHON+e3dxkalnFFGNVVXwECnhkS+0ooEUY4mIJt5/QJRS0wRyLQs8SlaSvcSJ03VgqbpATlJqyTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iVd1CVn9; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771433946; x=1802969946;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rv0N2rf5GatvQtHBquY8uQJtkNYnn9jlDezi83Fnk1w=;
-  b=iVd1CVn9BnXCiDkQjaOe7DhL7staLTqHY6jFPCMlGaeEMUfDrJkpOVT4
-   +iHIzFD0x+kIK4vxE251YMaimrebjbV00YFnig3IVLOP74cAqDhNVxjrW
-   ukp/bunmRvssV4tm6u5uk7azxo4YHmVbexgasQUSVLmyTZbSKOqSR5Vp8
-   AlEKnsrA0AFWdmNVUyeO5nVg2LOSxdaq+2hpTw2xNg6tEtlzDYCOyiqwc
-   kVfzQ4qNr5cQQJJsvPRcHAFR6mWCLVn0V/RGk/RhE79kGgM59+dbdbBLW
-   HC0HbJ2e0fPIMXwk1mTcbHfpEXw1ac9NKDT9oBBSfgBRLaQ1t0c/dDNPU
-   Q==;
-X-CSE-ConnectionGUID: qQ8AmmpzTG2kwfCmusdjow==
-X-CSE-MsgGUID: 8IIrChlFSV6dniMjkAajww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11705"; a="83964062"
-X-IronPort-AV: E=Sophos;i="6.21,298,1763452800"; 
-   d="scan'208";a="83964062"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2026 08:59:06 -0800
-X-CSE-ConnectionGUID: pDJla79oSkW0ateKXGfvvw==
-X-CSE-MsgGUID: cNlPIIxzRGO6mWXNNZtOgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,298,1763452800"; 
-   d="scan'208";a="218775369"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 18 Feb 2026 08:59:01 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vskt8-000000012Yu-3H6h;
-	Wed, 18 Feb 2026 16:58:58 +0000
-Date: Thu, 19 Feb 2026 00:58:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linusw@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, quic_vbadigan@quicinc.com,
-	quic_mrana@quicinc.com, sherry.sun@nxp.com,
-	driver-core@lists.linux.dev,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Subject: Re: [PATCH v7 3/3] PCI: Add support for PCIe WAKE# interrupt
-Message-ID: <202602190038.BHg9UcM5-lkp@intel.com>
-References: <20260218-wakeirq_support-v7-3-0d4689830207@oss.qualcomm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jjsGkvObX8U/GQG3xqknamc0o3+58TsDf0VopoTC79vaXEZ546hlCC5IU6+0TYLgrmn0OiUA+8mx7oc0lY698eIMPscc3LorcjfcgqPq948r2/m/stofk0LKFmRpNhM4g48pe3YVHdBPNGGdlzt8e8s+iZWDrs2X3owGT0PiHm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ife33ZHP; arc=none smtp.client-ip=74.125.82.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-dl1-f66.google.com with SMTP id a92af1059eb24-126ea4b77adso6906622c88.1
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 09:15:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771434934; x=1772039734; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wIZQJcadFJwIiNdmilqedpFYEso+tQwK1rGzbwDAdbY=;
+        b=ife33ZHPkD5m6DKy6IHlzY9LB4JkX/vc+CGk/BdG+1z4XKhv+Ta6JFhZ0mIQ6SPATX
+         TIyX2xJd4QxE/ttpq9cYQxcIuc0dHog0aDs98nsR2TI1Ed7WX0x0mmKo0MI/lbCAWGAJ
+         KINGMvdAt24qla8ESYnnc1NDRljOjYZKQaN6qWa/7k51WxBr349x/e/kdWcVf1ApKho5
+         QQ2g6nQMxOFp3Nq0QtWdsCzG3MvSkfKHGDmTWjtY1bfHcO82BKbd/eGlv5s7XVJ87es1
+         kLh5IKpkc5m1z5juTHcQlbnSiElAYOW+Kgbum96jiMDakDSTjhbeSIsV5C/fK0uMZJ5S
+         dYWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771434934; x=1772039734;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wIZQJcadFJwIiNdmilqedpFYEso+tQwK1rGzbwDAdbY=;
+        b=MEcWhTehs5xIqxCrCXQtVhzKq3JNzlYu2yTtXrLK5iYrNNHrapgf6tSMCDNE9X+Sch
+         UkqVLY9WiTPpWrFtp39HaQbuf/3VSviIB56HWQzx8Hw+q7mH0JUq8LrP7klgQyoMtOcr
+         OTa7Mnos+ZHZHWHYoq+qIbRKxXEhCrQ9SoZqhJl0qNTIPK1fyC7koK+g6l7r3CjgtlyZ
+         bYbwFVZ8nMuXPf7Hj/Vo4hPnAEOviJb2/3ZslQ1H1QT7JK4y24NwadmQzIbCk1FrTznT
+         XixLt7V91IYva81soNoYI4waM1RsolJDSuf+mDQzH7xhqRCll9Ueepl3PlncVuJqf+mx
+         HcLA==
+X-Forwarded-Encrypted: i=1; AJvYcCXlwr0jcvcaawar6bff/yQSZiAl0zJkwPDNYFIa+XZR4G2VZMHUYMaJkjfDjgFPGX1rl6y8Yc9Fos3J@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoOVM0V4//E94hOdi+s8u9F86vN2QQaepancDdbNvb/UEMDqdm
+	mKYSnmh5mRXhF1PRb+BJtPqHgQUAfSjo8ddpWYUNg2TGuVoVSu5xIJdz
+X-Gm-Gg: AZuq6aLN4qa24MXtk2Sbjpj+DfBJpzZI+iTVmfKaNUUptF81aPaqt/pp6/+CofKqddo
+	xkoKfbMzO6bbLb4MLSlYESvN+Fs98VlNPpCh8CaYhxymej+IqaiQyJfSMAwcRUM+b4hWuA4sBlA
+	QzTrodtYfsXCa1glf30/1DkknydOl0gRjaZG0xEw3ovCNCpY783uReRwh7IPBIDUlp3ayV2Qm0k
+	AqTAnsYyImPN54VK9tEVlu71i2gGE6p/RNQXOf81CmwYo6sZ9Z/BolhvFTgeZBxW2Yiza5iv+OE
+	9FfeP9Tl7l7JYr77zI7O9DN4Jw1cmHrT5EIILBDoRF+IhUTYF7ajexsJza++vWfwOVkxhIE5T40
+	lR0a4wWffhItbKmKMATBgF6GctLq/6rQ/p+mheJ9HH5GLdx2jWrQA/lypCFtkP16uLA9XGb+O+7
+	wgqmSx156GvePpKQnSUoYKSCVttwE2vWsbKxq7nhaiwkTfIUJsfu1RnLhfwvGkMI9o
+X-Received: by 2002:a05:7022:60b:b0:11b:9386:a37d with SMTP id a92af1059eb24-127398466d9mr5205084c88.44.1771434932895;
+        Wed, 18 Feb 2026 09:15:32 -0800 (PST)
+Received: from google.com ([2a00:79e0:2ebe:8:265b:f5ad:9e03:677e])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2bacb5622f2sm22285550eec.10.2026.02.18.09.15.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Feb 2026 09:15:32 -0800 (PST)
+Date: Wed, 18 Feb 2026 09:15:29 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
+	Linus Walleij <linusw@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@kernel.org>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] gpio: swnode: restore the
+ swnode-name-against-chip-label matching
+Message-ID: <aZXyPjIjIDKCBLvs@google.com>
+References: <20260211085313.16792-1-bartosz.golaszewski@oss.qualcomm.com>
+ <aZUIFiOYt6GOlDQx@google.com>
+ <CAMRc=Md_x+DxmW742HRUW-jeg9_AW-stKkHUP9z13+M+POd4Tw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260218-wakeirq_support-v7-3-0d4689830207@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Md_x+DxmW742HRUW-jeg9_AW-stKkHUP9z13+M+POd4Tw@mail.gmail.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-31801-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31800-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
-	RCVD_COUNT_FIVE(0.00)[6];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[dmitrytorokhov@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:mid,intel.com:dkim,intel.com:email,01.org:url]
-X-Rspamd-Queue-Id: F2B97157FAE
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,intel.com:email]
+X-Rspamd-Queue-Id: CF5B015833D
 X-Rspamd-Action: no action
 
-Hi Krishna,
+On Wed, Feb 18, 2026 at 09:42:28AM +0100, Bartosz Golaszewski wrote:
+> On Wed, Feb 18, 2026 at 1:31 AM Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+> >
+> > On Wed, Feb 11, 2026 at 09:53:13AM +0100, Bartosz Golaszewski wrote:
+> > > Using the remote firmware node for software node lookup is the right
+> > > thing to do. The GPIO controller we want to resolve should have the
+> > > software node we scooped out of the reference attached to it. However,
+> > > there are existing users who abuse the software node API by creating
+> > > dummy swnodes whose name is set to the expected label string of the GPIO
+> > > controller whose pins they want to control and use them in their local
+> > > swnode references as GPIO properties.
+> > >
+> > > This used to work when we compared the software node's name to the
+> > > chip's label. When we switched to using a real fwnode lookup, these
+> > > users broke down because the firmware nodes in question were never
+> > > attached to the controllers they were looking for.
+> > >
+> > > Restore the label matching as a fallback to fix the broken users but add
+> > > a big FIXME urging for a better solution.
+> > >
+> > > Cc: stable@vger.kernel.org # v6.18, v6.19
+> > > Fixes: 216c12047571 ("gpio: swnode: allow referencing GPIO chips by firmware nodes")
+> > > Link: https://lore.kernel.org/all/aYkdKfP5fg6iywgr@jekhomev/
+> > > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> > > ---
+> > > Changes in v2:
+> > > - check if gdev_node and gdev_node->name are not NULL before trying to
+> > >   match the label (Hans & Dan)
+> > > - use the right link
+> > > - collect tags
+> > >
+> > >  drivers/gpio/gpiolib-swnode.c | 19 +++++++++++++++++++
+> > >  1 file changed, 19 insertions(+)
+> > >
+> > > diff --git a/drivers/gpio/gpiolib-swnode.c b/drivers/gpio/gpiolib-swnode.c
+> > > index 21478b45c127d..0d7f3f09a0b4b 100644
+> > > --- a/drivers/gpio/gpiolib-swnode.c
+> > > +++ b/drivers/gpio/gpiolib-swnode.c
+> > > @@ -42,6 +42,25 @@ static struct gpio_device *swnode_get_gpio_device(struct fwnode_handle *fwnode)
+> > >
+> > >  fwnode_lookup:
+> > >       gdev = gpio_device_find_by_fwnode(fwnode);
+> >
+> > By the way, should we extend gpio_device_find_by_fwnode() to use both
+> > primary and secondary nodes?
+> >
+> 
+> That's already done on a higher lever for all fwnodes in gpiod_fwnode_lookup().
 
-kernel test robot noticed the following build errors:
+How exactly? I am not talking about checking secondary node for the
+fwnode that is used in the reference, I am talking about secondary
+fwnode that might be assigned to the gpio chip and you need to check
+both primary and secondary if they match with the fwnode that you call
+gpio_device_find_by_fwnode() with.
 
-[auto build test ERROR on cee73b1e840c154f64ace682cb477c1ae2e29cc4]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Krishna-Chaitanya-Chundru/PM-sleep-wakeirq-Add-support-for-dedicated-shared-wake-IRQ-setup/20260218-162247
-base:   cee73b1e840c154f64ace682cb477c1ae2e29cc4
-patch link:    https://lore.kernel.org/r/20260218-wakeirq_support-v7-3-0d4689830207%40oss.qualcomm.com
-patch subject: [PATCH v7 3/3] PCI: Add support for PCIe WAKE# interrupt
-config: sparc64-randconfig-002-20260218 (https://download.01.org/0day-ci/archive/20260219/202602190038.BHg9UcM5-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 12.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260219/202602190038.BHg9UcM5-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202602190038.BHg9UcM5-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   sparc64-linux-ld: drivers/pci/pci.o: in function `platform_pci_configure_wake':
->> drivers/pci/pci.c:1128:(.text+0x39c8): undefined reference to `pci_configure_of_wake_gpio'
-   sparc64-linux-ld: drivers/pci/pci.o: in function `platform_pci_remove_wake':
->> drivers/pci/pci.c:1133:(.text+0x39d4): undefined reference to `pci_remove_of_wake_gpio'
-
-
-vim +1128 drivers/pci/pci.c
-
-  1125	
-  1126	void platform_pci_configure_wake(struct pci_dev *dev)
-  1127	{
-> 1128		return pci_configure_of_wake_gpio(dev);
-  1129	}
-  1130	
-  1131	void platform_pci_remove_wake(struct pci_dev *dev)
-  1132	{
-> 1133		return pci_remove_of_wake_gpio(dev);
-  1134	}
-  1135	/**
-  1136	 * pci_update_current_state - Read power state of given device and cache it
-  1137	 * @dev: PCI device to handle.
-  1138	 * @state: State to cache in case the device doesn't have the PM capability
-  1139	 *
-  1140	 * The power state is read from the PMCSR register, which however is
-  1141	 * inaccessible in D3cold.  The platform firmware is therefore queried first
-  1142	 * to detect accessibility of the register.  In case the platform firmware
-  1143	 * reports an incorrect state or the device isn't power manageable by the
-  1144	 * platform at all, we try to detect D3cold by testing accessibility of the
-  1145	 * vendor ID in config space.
-  1146	 */
-  1147	void pci_update_current_state(struct pci_dev *dev, pci_power_t state)
-  1148	{
-  1149		if (platform_pci_get_power_state(dev) == PCI_D3cold) {
-  1150			dev->current_state = PCI_D3cold;
-  1151		} else if (dev->pm_cap) {
-  1152			u16 pmcsr;
-  1153	
-  1154			pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-  1155			if (PCI_POSSIBLE_ERROR(pmcsr)) {
-  1156				dev->current_state = PCI_D3cold;
-  1157				return;
-  1158			}
-  1159			dev->current_state = pmcsr & PCI_PM_CTRL_STATE_MASK;
-  1160		} else {
-  1161			dev->current_state = state;
-  1162		}
-  1163	}
-  1164	
+Thanks.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Dmitry
 
