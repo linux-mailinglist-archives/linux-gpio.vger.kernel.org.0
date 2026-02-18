@@ -1,186 +1,198 @@
-Return-Path: <linux-gpio+bounces-31799-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31800-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SBB8MBbulWlTWwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-31799-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 17:51:34 +0100
+	id iBIlJ+PvlWklXAIAu9opvQ
+	(envelope-from <linux-gpio+bounces-31800-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 17:59:15 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2668C157E5B
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 17:51:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F2B97157FAE
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 17:59:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B41F430075FD
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 16:51:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8443D300D324
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Feb 2026 16:59:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B1FF33FE2A;
-	Wed, 18 Feb 2026 16:51:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17181344DB0;
+	Wed, 18 Feb 2026 16:59:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gjg2CntO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iVd1CVn9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA84B3090C2
-	for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 16:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8D533A9C5;
+	Wed, 18 Feb 2026 16:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771433490; cv=none; b=NdT/+dNTtg9hm3x98c+l+yiS9eQwyZUc7MecA1sEjufP1KKubAIb4GzflWhkrdjKZOJhAWJ71trt7swOF2t451yqHqTgy0ZBbUCMndldC3vZawvS2nBNUarhy3Vv7j1tS+QRU6cnJSVQdBnAIXrD57VdP4tCYQTd/p59DhFVkmw=
+	t=1771433948; cv=none; b=Bj6wa9qgHIAhAQy03KzQ1UbtGx9koga0ucFhqT/yuwyXsFLn8l7YBEp0dmcg96Fw9AZiBxcDzra3ACvGDvBF1xVCp2bZSd16RVINNW8JMJgsIywnCkS9kFeUkwDl0jzZnMoD9FuoctRsharJjMT5gPZcNm1dfzoaDFttEpCd4To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771433490; c=relaxed/simple;
-	bh=T+ddj9uth8B1FutWkYbruKcbeWNS950unthpcpOU8Mc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=poG+cqiKhwbb8ubld7nxA/3gLA9s1SaaQGFWJz54m0JE/AhlXfAHApobm5hqBv+uvT2V9o4nQdmjzoLGSJXbVPZ6KNgE09+eiK6odDYaVF6bNZqA5nNDXoXxQ1VaOGoLhFC7jTocLvdGgDJ7E2TuKj+ygLBmI/siCwYyKBRkGM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gjg2CntO; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2aaf43014d0so39793595ad.2
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 08:51:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771433489; x=1772038289; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uxHzVkbJVuUf9PPiRw/JbF+frY9YqFQFTwH6XtexsFQ=;
-        b=Gjg2CntOtpi9QBPoe+xCpItVxsVDN9QCLphCVTKSsEK+0AROCaMslZPWoae4cOiA+a
-         eIDrLuxKbMHxxHWHQQP0gn7dYU/jLEarSSfCuvgUtnn+4hqEfWJZ3eikV5GUF2piI7bv
-         GAJHm18MSpbQY4lWy15AN6ioSqIF8t/58OKWzQDg01Gy+haNcUI7bBhMuwvc9VWlrIX4
-         G4wb+PupIlUf+NQu5gQ1relHQlouB0A2mEU9e79oPXBklm+fdG0y9caJ/n+0qUPpQOQ3
-         wHV47+yn+wyz4YPJF03GcxXwkBgxXC4w64n/0jYdQAsXwCL4WORuTxktfxrmlZGEI7hm
-         QsTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771433489; x=1772038289;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uxHzVkbJVuUf9PPiRw/JbF+frY9YqFQFTwH6XtexsFQ=;
-        b=Yxxw/+/hRWz8JR17XOLva4ylkp8CEQqr0vDyHSh+gp4IVuVQKVIaj40cJIj0o48/Ey
-         KWzz8BndxSQl65WYZN+7GWC2cn2SohBp4nqefgjQD6OCQYDWpr1pjSbVRzdfSHWl0dpY
-         GR5X6se2MRy8HtttKzFOyfCKWSKHodek9ItnTvNotD4sVhuYxSVrvDjB9CDLnI942HWs
-         XyjQVjNpN28V3cTwNlw+BNwqckXlx/jg783+xwl3ruHxQts+Tzizu/QZohczXCh5SUrW
-         ui2Vf7WwihVPxtuHCcXCcotdqEs6KFOoW+OR36MZAiAdpCd6d39wJOR5Ij0o8A+yocMY
-         bD7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU99ABh5J9n5G9XiUsOh1yRmTs9CsP/IQ7y3CNVF4YitACf0wbjo/Ly4BIfrZQ2ftJzWZ5MCdqAb4n5@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZA1RkFyG6LmN+0oAWnL7MHZ6ZyNPtyGEoyFMW3IVOSNCS7W9F
-	xks7j2VZXrAuhtKzlTDoUiwqcSBue1iP09h1rQj/gniOHDHzgvE0nNcf
-X-Gm-Gg: AZuq6aI0xL2yhEY2oWXw3ZmS9a2z0A98qFz/hnhXomVY2Ye2s06hdNRuQiilmSt1+Cv
-	u1vzU4+LiH0qsfQoGrFwWErVFf54DqclpKDdNU9IPJnhcpoGzQKx6vB8oWyCsBq3f1v1xTM36l3
-	xWocxidW6yXfPlac0pS3MDV2b8PqNTvVafAp/hUSlxr61j5O6Bk4tXi7ZC26Fc407curRF0hC9u
-	GjATCwcRxheG6CQewpNO7MMdjev6ppJ/QqE8hOULgjjhFxdlJz8i+2zj3NhtHv/jWyLduuD3rAY
-	FfdhphBQQrRiN8UCegT7y4Ty655DyNLGydXz8iGabIgooJvW0IJKhDnrS+ads5NhC42g7Yu8H3p
-	jp7Ejraor7lZJ1JsA97id+AoUuO27b4oxlG1t6Gow1Ma6UFJvcS1Jil6tj2pSq2QezQMUg4oYhn
-	0mKAZwjOcvairqu3ch6LiGc+GZsXaeIDL6vEGR
-X-Received: by 2002:a17:903:244a:b0:2ab:3cba:42fa with SMTP id d9443c01a7336-2ab4d06157dmr192384245ad.46.1771433489047;
-        Wed, 18 Feb 2026 08:51:29 -0800 (PST)
-Received: from junjungu-PC.localdomain ([2408:820c:9008:ba52:403:e988:3f54:236b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ad1a6fa5cbsm176996885ad.9.2026.02.18.08.51.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Feb 2026 08:51:28 -0800 (PST)
-From: Felix Gu <ustc.gu@gmail.com>
-Date: Thu, 19 Feb 2026 00:51:22 +0800
-Subject: [PATCH] pinctrl: meson: amlogic-a4: Fix device node reference leak
- in aml_dt_node_to_map_pinmux()
+	s=arc-20240116; t=1771433948; c=relaxed/simple;
+	bh=rv0N2rf5GatvQtHBquY8uQJtkNYnn9jlDezi83Fnk1w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VpZVZRiiEVECXi9Cgb5CYgTNgOtfv1ia6vYjCudEHIP92EP64mf7XT24SI/nSVZgWJWJyWI9Gqnii9vnmb4lXlqPEzDWX99PHON+e3dxkalnFFGNVVXwECnhkS+0ooEUY4mIJt5/QJRS0wRyLQs8SlaSvcSJ03VgqbpATlJqyTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iVd1CVn9; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771433946; x=1802969946;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rv0N2rf5GatvQtHBquY8uQJtkNYnn9jlDezi83Fnk1w=;
+  b=iVd1CVn9BnXCiDkQjaOe7DhL7staLTqHY6jFPCMlGaeEMUfDrJkpOVT4
+   +iHIzFD0x+kIK4vxE251YMaimrebjbV00YFnig3IVLOP74cAqDhNVxjrW
+   ukp/bunmRvssV4tm6u5uk7azxo4YHmVbexgasQUSVLmyTZbSKOqSR5Vp8
+   AlEKnsrA0AFWdmNVUyeO5nVg2LOSxdaq+2hpTw2xNg6tEtlzDYCOyiqwc
+   kVfzQ4qNr5cQQJJsvPRcHAFR6mWCLVn0V/RGk/RhE79kGgM59+dbdbBLW
+   HC0HbJ2e0fPIMXwk1mTcbHfpEXw1ac9NKDT9oBBSfgBRLaQ1t0c/dDNPU
+   Q==;
+X-CSE-ConnectionGUID: qQ8AmmpzTG2kwfCmusdjow==
+X-CSE-MsgGUID: 8IIrChlFSV6dniMjkAajww==
+X-IronPort-AV: E=McAfee;i="6800,10657,11705"; a="83964062"
+X-IronPort-AV: E=Sophos;i="6.21,298,1763452800"; 
+   d="scan'208";a="83964062"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2026 08:59:06 -0800
+X-CSE-ConnectionGUID: pDJla79oSkW0ateKXGfvvw==
+X-CSE-MsgGUID: cNlPIIxzRGO6mWXNNZtOgw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,298,1763452800"; 
+   d="scan'208";a="218775369"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 18 Feb 2026 08:59:01 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vskt8-000000012Yu-3H6h;
+	Wed, 18 Feb 2026 16:58:58 +0000
+Date: Thu, 19 Feb 2026 00:58:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linusw@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org, quic_vbadigan@quicinc.com,
+	quic_mrana@quicinc.com, sherry.sun@nxp.com,
+	driver-core@lists.linux.dev,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: Re: [PATCH v7 3/3] PCI: Add support for PCIe WAKE# interrupt
+Message-ID: <202602190038.BHg9UcM5-lkp@intel.com>
+References: <20260218-wakeirq_support-v7-3-0d4689830207@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260219-a4-v1-1-9666d6edbe2f@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAAnulWkC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzMDI0ML3UQTXWNzC6MUsyQDS5NkUyWgwoKi1LTMCrAh0bG1tQBDzA8VVAA
- AAA==
-X-Change-ID: 20260218-a4-3782d6b094c5
-To: Xianwei Zhao <xianwei.zhao@amlogic.com>, 
- Linus Walleij <linusw@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Felix Gu <ustc.gu@gmail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1771433485; l=1449;
- i=ustc.gu@gmail.com; h=from:subject:message-id;
- bh=T+ddj9uth8B1FutWkYbruKcbeWNS950unthpcpOU8Mc=;
- b=j/cNO7oUv8KJAFH9hBKE9Q7aZLY1Mc9Wed+OTyOZmsNOTm2f+C274WzqExLijzSUROkMgdDav
- o4mMxRI63ByAnFOh6LcG2J0gZRy7RUaJv0GeXAc9vcUSRSY7hbUR4BM
-X-Developer-Key: i=ustc.gu@gmail.com; a=ed25519;
- pk=fjUXwmjchVN7Ja6KGP55IXOzFeCl9edaHoQIEUA+/hw=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260218-wakeirq_support-v7-3-0d4689830207@oss.qualcomm.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31799-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[amlogic.com,kernel.org,linaro.org,baylibre.com,googlemail.com];
+	TAGGED_FROM(0.00)[bounces-31800-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,gmail.com];
-	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ustcgu@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 2668C157E5B
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:mid,intel.com:dkim,intel.com:email,01.org:url]
+X-Rspamd-Queue-Id: F2B97157FAE
 X-Rspamd-Action: no action
 
-The of_get_parent() function returns a device_node with an incremented
-reference count.
+Hi Krishna,
 
-Use the __free(device_node) cleanup attribute to ensure of_node_put()
-is automatically called when pnode goes out of scope, fixing a
-reference leak.
+kernel test robot noticed the following build errors:
 
-Fixes: 6e9be3abb78c ("pinctrl: Add driver support for Amlogic SoCs")
-Signed-off-by: Felix Gu <ustc.gu@gmail.com>
----
- drivers/pinctrl/meson/pinctrl-amlogic-a4.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+[auto build test ERROR on cee73b1e840c154f64ace682cb477c1ae2e29cc4]
 
-diff --git a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-index dfa32b11555c..e2293a872dcb 100644
---- a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-+++ b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-@@ -679,7 +679,6 @@ static int aml_dt_node_to_map_pinmux(struct pinctrl_dev *pctldev,
- 				     unsigned int *num_maps)
- {
- 	struct device *dev = pctldev->dev;
--	struct device_node *pnode;
- 	unsigned long *configs = NULL;
- 	unsigned int num_configs = 0;
- 	struct property *prop;
-@@ -693,7 +692,7 @@ static int aml_dt_node_to_map_pinmux(struct pinctrl_dev *pctldev,
- 		return -ENOENT;
- 	}
- 
--	pnode = of_get_parent(np);
-+	struct device_node *pnode __free(device_node) = of_get_parent(np);
- 	if (!pnode) {
- 		dev_info(dev, "Missing function node\n");
- 		return -EINVAL;
+url:    https://github.com/intel-lab-lkp/linux/commits/Krishna-Chaitanya-Chundru/PM-sleep-wakeirq-Add-support-for-dedicated-shared-wake-IRQ-setup/20260218-162247
+base:   cee73b1e840c154f64ace682cb477c1ae2e29cc4
+patch link:    https://lore.kernel.org/r/20260218-wakeirq_support-v7-3-0d4689830207%40oss.qualcomm.com
+patch subject: [PATCH v7 3/3] PCI: Add support for PCIe WAKE# interrupt
+config: sparc64-randconfig-002-20260218 (https://download.01.org/0day-ci/archive/20260219/202602190038.BHg9UcM5-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 12.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260219/202602190038.BHg9UcM5-lkp@intel.com/reproduce)
 
----
-base-commit: fe9e3edb6a215515d1148d32a5c445c5bdd7916f
-change-id: 20260218-a4-3782d6b094c5
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602190038.BHg9UcM5-lkp@intel.com/
 
-Best regards,
+All errors (new ones prefixed by >>):
+
+   sparc64-linux-ld: drivers/pci/pci.o: in function `platform_pci_configure_wake':
+>> drivers/pci/pci.c:1128:(.text+0x39c8): undefined reference to `pci_configure_of_wake_gpio'
+   sparc64-linux-ld: drivers/pci/pci.o: in function `platform_pci_remove_wake':
+>> drivers/pci/pci.c:1133:(.text+0x39d4): undefined reference to `pci_remove_of_wake_gpio'
+
+
+vim +1128 drivers/pci/pci.c
+
+  1125	
+  1126	void platform_pci_configure_wake(struct pci_dev *dev)
+  1127	{
+> 1128		return pci_configure_of_wake_gpio(dev);
+  1129	}
+  1130	
+  1131	void platform_pci_remove_wake(struct pci_dev *dev)
+  1132	{
+> 1133		return pci_remove_of_wake_gpio(dev);
+  1134	}
+  1135	/**
+  1136	 * pci_update_current_state - Read power state of given device and cache it
+  1137	 * @dev: PCI device to handle.
+  1138	 * @state: State to cache in case the device doesn't have the PM capability
+  1139	 *
+  1140	 * The power state is read from the PMCSR register, which however is
+  1141	 * inaccessible in D3cold.  The platform firmware is therefore queried first
+  1142	 * to detect accessibility of the register.  In case the platform firmware
+  1143	 * reports an incorrect state or the device isn't power manageable by the
+  1144	 * platform at all, we try to detect D3cold by testing accessibility of the
+  1145	 * vendor ID in config space.
+  1146	 */
+  1147	void pci_update_current_state(struct pci_dev *dev, pci_power_t state)
+  1148	{
+  1149		if (platform_pci_get_power_state(dev) == PCI_D3cold) {
+  1150			dev->current_state = PCI_D3cold;
+  1151		} else if (dev->pm_cap) {
+  1152			u16 pmcsr;
+  1153	
+  1154			pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+  1155			if (PCI_POSSIBLE_ERROR(pmcsr)) {
+  1156				dev->current_state = PCI_D3cold;
+  1157				return;
+  1158			}
+  1159			dev->current_state = pmcsr & PCI_PM_CTRL_STATE_MASK;
+  1160		} else {
+  1161			dev->current_state = state;
+  1162		}
+  1163	}
+  1164	
+
 -- 
-Felix Gu <ustc.gu@gmail.com>
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
