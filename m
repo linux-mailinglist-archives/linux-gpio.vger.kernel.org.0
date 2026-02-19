@@ -1,86 +1,83 @@
-Return-Path: <linux-gpio+bounces-31912-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31913-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IJWuI5yLl2n/0AIAu9opvQ
-	(envelope-from <linux-gpio+bounces-31912-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 23:15:56 +0100
+	id YBETMMaMl2lv0QIAu9opvQ
+	(envelope-from <linux-gpio+bounces-31913-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 23:20:54 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A966163153
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 23:15:56 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25ECA1631A8
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 23:20:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BB544304C4B2
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 22:14:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A50463026AB5
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 22:20:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6576132B982;
-	Thu, 19 Feb 2026 22:14:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8718E32ABF7;
+	Thu, 19 Feb 2026 22:20:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTWvn2SQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0OytsKo"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2472532ABCC
-	for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 22:14:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495B62D3A93
+	for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 22:20:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771539274; cv=none; b=G84AQKMHdz6+lVkkmOd6NoQU6ZnLcwUEWbtlObhM8WtMOlhsxvimAMP7SgYmuwWQXOFjydAGNmy2J7hdb51oUu9zywAN+C+6MwPLE2HFNBDDxH+iEPuj8L74PfkOgaO/Ec9FGGp23q4Y+FN//UwC0gZMAr5utfOtMi3qHI06kHk=
+	t=1771539649; cv=none; b=mQwx31BbhwWSvFmGndEqfet1B7GDryO8IHDbk8wPnj1LvGiNJ+5zPG8xa/9qGaiRiROdgR7afrYwmY0KuxlKNqiWntE0zvRN6s58khxM+Zu12ooQ5QsPnWIRVdvPbySdX63VeHDFnXPAc8+TKlfYylsgqUP4v70kpQyObTpZlo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771539274; c=relaxed/simple;
-	bh=pZQ583VWIpCm+1qSwcPK9PrgCD/82vpkrV358KAInOQ=;
+	s=arc-20240116; t=1771539649; c=relaxed/simple;
+	bh=7rG7l1d8wcnIU2PDqonrIOzyrgRE6wVd+m8ziks3L0Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uu08QkOyPhdIGGWx+5uLe3rZK4TEPuaxR5MVkMXKVVPQej6ygv+5nGlqDU08XtIJyQ7GxboHwOJb9Fx4/vmJ+XUrDhTkqZEWxg4wXORgR6ujo8E2KD0Hm/N2/bW4xtnWvU5G2iz9rTFgS4hTI5a1efX7hlhj2XCpGIBA6hEpI/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTWvn2SQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 065BFC2BC87
-	for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 22:14:34 +0000 (UTC)
+	 To:Cc:Content-Type; b=scny7mrktZ+lrYyux70AwyJId61vZey70AXi8LkoreWzgbFMipCu+kHqZCPSi1sk8zmbH06fxjgGpEnIOYG82cRwdL7Ui0O0SEBtoOUwz2hRCXMVTE8PWb1Mx1SsNz6Ge2pmIBmuOs0cC3g+WmczE/wCnYAqnCtohb7KZq4qswg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p0OytsKo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F36BC2BCB5
+	for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 22:20:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771539274;
-	bh=pZQ583VWIpCm+1qSwcPK9PrgCD/82vpkrV358KAInOQ=;
+	s=k20201202; t=1771539649;
+	bh=7rG7l1d8wcnIU2PDqonrIOzyrgRE6wVd+m8ziks3L0Y=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DTWvn2SQbvKHCLzfXXJEzwgYKffzHcU73OB7Y6/ajN9mxRm5ILfbfybXfmoVU+1w4
-	 R4w8og80/3CceuDrc7N2bUkbmYSc+YbzcwnqiWYF8fVv7xZrK+7cvU/amfQ/1NEpPQ
-	 py4ZXHyRHgFqtlQx0qvcoR5MdcaHGKEitLMVYcpZVR6nuESUoM+UBKLUoXjCSd0zPR
-	 uqts5v/LDOCikvEOSqm0EBYxUSdVrA0nVKG32eUH+izEpkQ3TpobLcxS4pLNPU9gZ0
-	 UGiT1N4Hymu/tonSOarj4yS8sPLZEgiP9a4CNrQBI0oXS/9VFSg8z9q3nwJERK7ocR
-	 sV1fxOwEtmhtw==
-Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-64ad9fabd08so1403471d50.2
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 14:14:33 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWs1S0Se9MERds6ypm/kG7KkO7d7qqkZOoGPUv0e5QyzImpTWoFQPUzxzXUQrIV+A/1TlAwoHzkasML@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlJaDMk1Tq8ljvmRT23d6Z6a+Al1bjTwgAKIx2VwLwa8KvRqjE
-	biMdZLJrluoLgJGelTGVdP6uYGBSSvkn7UEU2lKYc7/T7ruu7zaJivE3xu9mVkY3/gahcNTdoKj
-	6mQUAI8FlVvodSke2FoFSiLvoySFvCus=
-X-Received: by 2002:a53:e7c7:0:b0:64a:deb5:8807 with SMTP id
- 956f58d0204a3-64c14d3ae3amr14639088d50.48.1771539273269; Thu, 19 Feb 2026
- 14:14:33 -0800 (PST)
+	b=p0OytsKo9aM3h0I2mAzXD0d9QBuPUjESQz2hN5IxlVe0oyTYccDGkSw89sv2wisHV
+	 LtGXf/QYGh4XSeU8rPaMVFxD30tEN9H0y4JNf5E0PvIZRrT6UaUDXVj1nKKEkjcJXu
+	 eoG+W8TE5QTZYptGQGOebU4xNLBAkc3YRvSEM4D+nnyk5RzwO+ehrVkeo57n9OiZhg
+	 py+cd87+XtH+nbefwlGzpKL9fu2CcMbfHbzlPRqaRaBjs+4fLC1aimeQ9LpNOxkimh
+	 wANgYekA1SvSogHc29vGGf/TYzkBcZ2ePCYTj9sQe0/OHqGjNNXhRHaZBvkhgK57eK
+	 qFAln6ISZU1Vw==
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-79430ef54c3so12646647b3.2
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 14:20:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVQmYHsqYrioHzj/+Gd/lnFDqIfS/7yi+LF5plKPmfuGni6ydUag77LaEJYR2jUr9lCVEOAUfQMSpY7@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDU9ghSfum8hXDb3f8dDOnBJygKZgweisBbJ6oeKe5WMDqMo09
+	lGXfOfmbL883QRlHtEhMlvVyPxdtwmpiEqNmGHGR9UPj0N7RTz2tJmATAbBVbYybfT9LX9C4LrE
+	qvehzgyflOPA7sNCf3HCLMXBnAslJKhQ=
+X-Received: by 2002:a05:690c:4913:b0:797:a162:f7d7 with SMTP id
+ 00721157ae682-797ac668393mr155417627b3.62.1771539648217; Thu, 19 Feb 2026
+ 14:20:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260211081355.3028947-1-james.hilliard1@gmail.com>
- <338e6575-ec44-4179-94af-9086a7ca79ac@kernel.org> <92359c6d-06ac-4f8d-baa5-6fa45a536455@kernel.org>
- <CADvTj4q74H__JZftOiXkdsY3+E_Xmcx6Y6i70RQDJ0K09=XOHQ@mail.gmail.com>
- <30026ed7-cd19-4be2-adbb-e8bb155a75b8@kernel.org> <CADvTj4oBtO0Yhib1rE8QQwgtJvy-x_hK46C63mjVAydtxHOV8g@mail.gmail.com>
- <20260212195423.GA787785-robh@kernel.org> <CADvTj4rPq8D5piqEijCdAjkWmZtq3Bi_Kxv-4F0aU4xi_O5WKg@mail.gmail.com>
- <CAMuHMdXmMVgPJv=HhkfttiRnSwFC6c2PnFjYwmL2hu3ikv+t3g@mail.gmail.com>
- <CADvTj4r95E2rLA0ZhOYPeFYpFbj0EXfb=omCN2Mab-Dj4T-cYA@mail.gmail.com>
- <CAMuHMdXTg8w3R1BVq3JO2z=gvTdB=qXY=aXvC7Lb8FtkEqz9ow@mail.gmail.com>
- <CAD++jLmp+47f-Ah4YdFJ+9dU0OFrnQdOcVyrQ61p0-_P61eBrA@mail.gmail.com> <CAL_JsqJK7PwyB=NoM+uXOgQk-RT49h4emogvYAfUAbZUpnd6Vg@mail.gmail.com>
-In-Reply-To: <CAL_JsqJK7PwyB=NoM+uXOgQk-RT49h4emogvYAfUAbZUpnd6Vg@mail.gmail.com>
+References: <20260218083618.67805-1-christophe.roullier@foss.st.com>
+ <20260218083618.67805-3-christophe.roullier@foss.st.com> <aZV-b6TdLMdI8dm4@shell.armlinux.org.uk>
+ <CAD++jLnF=8MvW4CbXmPZR=w8tAUZiL9M3N73WB++DaYYwhToDQ@mail.gmail.com> <aZdjke4eOwF-wTZO@shell.armlinux.org.uk>
+In-Reply-To: <aZdjke4eOwF-wTZO@shell.armlinux.org.uk>
 From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 19 Feb 2026 23:14:21 +0100
-X-Gmail-Original-Message-ID: <CAD++jLkJE0ruzPeRMuVKJbJTjHoa-fTKn8djN+0es+hpqhELFw@mail.gmail.com>
-X-Gm-Features: AaiRm53FOc7ZhYYLZZe0NrqTkngiK-NiwwndU7yzK2q4iqB5Sit87XeqJrtxCYI
-Message-ID: <CAD++jLkJE0ruzPeRMuVKJbJTjHoa-fTKn8djN+0es+hpqhELFw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: add gpio-aggregator binding
-To: Rob Herring <robh@kernel.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, James Hilliard <james.hilliard1@gmail.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <brgl@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alexander Stein <linux@ew.tq-group.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Herve Codina <herve.codina@bootlin.com>
+Date: Thu, 19 Feb 2026 23:20:37 +0100
+X-Gmail-Original-Message-ID: <CAD++jLmkGtsr9jdzSeyRbHeh_abgz1osn2czEcBOzJ1n1JSh_A@mail.gmail.com>
+X-Gm-Features: AaiRm510EWGZUrBhAzIL44W1hn8wAZ_A5KLa10hcXdNoXBhGJk2lSRSIAxMNPUY
+Message-ID: <CAD++jLmkGtsr9jdzSeyRbHeh_abgz1osn2czEcBOzJ1n1JSh_A@mail.gmail.com>
+Subject: Re: [PATCH 2/3] net: stmmac: restore pinctrl when driver remove.
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Christophe Roullier <christophe.roullier@foss.st.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Maxime Chevallier <maxime.chevallier@bootlin.com>, Vladimir Oltean <vladimir.oltean@nxp.com>, 
+	netdev@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
@@ -89,16 +86,16 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31912-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[linux-m68k.org,gmail.com,kernel.org,vger.kernel.org,ew.tq-group.com,bootlin.com];
+	TAGGED_FROM(0.00)[bounces-31913-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[foss.st.com,lunn.ch,davemloft.net,google.com,kernel.org,redhat.com,gmail.com,bootlin.com,nxp.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	MISSING_XM_UA(0.00)[];
@@ -109,32 +106,51 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,netdev];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 3A966163153
+X-Rspamd-Queue-Id: 25ECA1631A8
 X-Rspamd-Action: no action
 
-On Thu, Feb 19, 2026 at 7:29=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
-:
-> On Thu, Feb 19, 2026 at 12:00=E2=80=AFPM Linus Walleij <linusw@kernel.org=
-> wrote:
+On Thu, Feb 19, 2026 at 8:25=E2=80=AFPM Russell King (Oracle)
+<linux@armlinux.org.uk> wrote:
+> On Thu, Feb 19, 2026 at 08:11:13PM +0100, Linus Walleij wrote:
 
-> > And as such it would be pretty half-baked wouldn't it...
-> >
-> > Probably Geert's suggestion to use the aggregator is a better
-> > idea.
+> > There is really no other cleanup that can happen: there is no
+> > before-default-or-init state we can revert to (that would be the
+> > power-on values), so there are just these states in some pointers
+> > that could be accessed by e.g. pinctrl_pm_select_sleep_state()
+> > that get free:ed up, and muxing and pin config that happened
+> > in the pin control hardware just stays around.
 >
-> I don't know what that is to comment. (Please don't reply with "you
-> reviewed it" unless it was more recent than last week. :) )
+> What we seem to end up with is that on probe failure, we set the pins
+> to init or default state.
 
-I only think it's half-baked if IRQs don't work and you say they
-do with the right interrupt-map so that's all fine.
+Indeed.
 
-I'd say James have a go at gpio-map + interrupt-map for external
-connectors and see how that works.
+> However, on remove, it's up to the driver to
+> decide whether to put the pins into sleep state or not.
+>
+> Shouldn't a driver be consistent, and place the pins into the same
+> state in both these scenarios?
 
-It will certainly be more lightweight.
+I think you're right. Just very few device trees define the "sleep"
+state (the infamous "so far so good...") so it has not been adressed.
+
+> Conversely, I'm slightly worried that putting pins into sleep state
+> when we're not powering down may be bad if they're allowed to then
+> float, which could cause the PHY to interfere on the network.
+
+That's a good point.
+
+It's perfectly legal to define any random state for the driver, such
+as "relaxed" or "unused". It had the only downside that the device
+driver core will not help out in looking up the state by default.
+
+I'd be happy to take a patch that e.g. looks for an "unused"
+state and put the pins into that state if probe fails, or when
+remove() is called, so we get something everyone can use for
+this.
 
 Yours,
 Linus Walleij
