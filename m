@@ -1,161 +1,257 @@
-Return-Path: <linux-gpio+bounces-31831-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31832-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iMcXDKtflmkTegIAu9opvQ
-	(envelope-from <linux-gpio+bounces-31831-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 01:56:11 +0100
+	id mKrOIKRwlmlqfQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-31832-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 03:08:36 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C37DC15B443
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 01:56:10 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 239DA15B873
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 03:08:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 34A76301E6F8
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 00:56:07 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 18188302E77B
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 02:06:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4275522D9E9;
-	Thu, 19 Feb 2026 00:56:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 042B22FE048;
+	Thu, 19 Feb 2026 02:04:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/w/Jay/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S3+Q8RSk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-dl1-f51.google.com (mail-dl1-f51.google.com [74.125.82.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F161EBFF7
-	for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 00:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81F7280A5A;
+	Thu, 19 Feb 2026 02:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771462566; cv=none; b=n4C9SbEkyfLvnYMVO0xXy9vnPR8zGFQZkU2tA7aHJqh4qerJ+yBB+3SVDGZpDv9B8wHxi1+hqlPIYzFOmLTaxadYJCanIKdZPieJY7r6ZtIdqgXK04y+fghZxKzk7WHZGW/5pC3PdAaHc+p5xUusdBwxtbHE6VDXMNwg1urR+GY=
+	t=1771466689; cv=none; b=rHpl1vVxSNe/ktfNlsCfBKgMmcHOPP6MaglYg3Kcdw3ZKSR9GP5cCYyjukhCWMUAc8huJuwy3PS26SuSr9vmW1/WwW/pi9ysErRn+QLu3zsU84RMQUIQzb5F6q3g7GZx1DJUr1k6F6l8C/3dBb0ec30PMxuo+QEydNHbuHQz1wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771462566; c=relaxed/simple;
-	bh=ArX//496bE2FskhpynLTmC6UDYXpDSzY0XjLm4x0EFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=OcNN50cyGSDXaxpR4razTvVKowvvw9+LxlFDoauud3x0JmcFF2sR2K9SGziEYsNryaBo8r/4CWJSzkw5GKxmR0/Tzql6efLUil8VA/NiY+aJ50cX5rSXMfjx4yWScb+wcMLBV4QVTbYSElgAEYMLI+5/XfUfgCMoJ0jVIx3LskM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S/w/Jay/; arc=none smtp.client-ip=74.125.82.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dl1-f51.google.com with SMTP id a92af1059eb24-1271195d2a7so325756c88.0
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 16:56:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771462564; x=1772067364; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HGgT8gl4BQs4As/G6azTBQb16A9Jfxh7/HDWdFmRLcI=;
-        b=S/w/Jay/t0W3W9uB4C8DAp9kQUvZjsm+j+7g+b2tzxSfl4Gm+iytx1UiR/6rzNGc9D
-         NsamUPXceAcpUx7DSefv/CxElhAGLPHB+Qk+5SKtbVbVk/zHYSCICn6JFfyvl0BxeaB9
-         Uyn6HtQx5uu9nayyfThKkfycm/+XjNkP7BEMJxRqNIwc1YJh6iO93chmnn3igpRG81ft
-         u6bLk8ZY2EsCxAefgOH+rE1rXt7uJOquFwgHUOQLgOuDnzOi5hNQrukGo6FJ37A9DYXE
-         MVfgSQfM9OAetvM3PjBA5Nnojop1jxeExB+MNkZWK/xdwQbdxNz5E4XPYx1RYsifgcbq
-         JzcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771462564; x=1772067364;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HGgT8gl4BQs4As/G6azTBQb16A9Jfxh7/HDWdFmRLcI=;
-        b=srARC4GbswUxhBma1vSICaYhwQSH5bcAbiI8+F0SgrokaRL+ki2oq3QjL71ht9KYzc
-         h9Ldg+v94H48rWVn/Rw6nKRsTFoOKZRet1p+GdiZqHdfeBXOVQ0Khy/MQXYfl4tU8sHy
-         OO3+emptmHDIeuGTAsxBlobkKZowRwAJX+LU1rT1T/Ea8S7V6+l1VWBh2Ip1coOCvOPw
-         FNBiKpgVWJxyD64yP1iLqM6+mIUo61YMmcw3Z18Xye73TGK/obV5wScnNFb0GCks7qq9
-         U6nyWYJvNct4l/i3RHbgu/hYclai+Ro1V6xfI8yf8vQjHEpubewSgzitW+55u1Xq4zhx
-         3sVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGHmIkqN9hFMMNSh9XmzzME2MGAvdOnrc5qkl2q+lBlnftQTLKzdlVxZUBCtwjBUIyTfmbjWoUsve+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJeqWpn9/iVWI5z8G5c0Tj75/uEan2iBT3cAPZ8djxjw/WQ+7P
-	7IJ4oPAGexkDHbI4zdTYz0Yuct5nHBkD1qanglcCfzJ5yrRPFr4sKpek
-X-Gm-Gg: AZuq6aIcdCOmD/ekGfBQBKpZo2ziMUL+Vxwqb92VzAAYjDNRk9OPqMDiUJm7s0cCUaG
-	O/eao8qnWJAAXn1GUNy8gzhEgkfig8nf+7RDC+iH3NYwhjPPKXoiH08f+oE1jH6lFBhK62hOwRW
-	wHBiQ7n36hEQUiN/0OiqI073clrG9g+RuvVWXUmZpOLJKgTDxec1/3c2W58xN+LrMYRc+PLyiL3
-	9jH6sQKfstZfirhCFVuZl3MUAdi5ucXkgDtRklyaV198DU7xScXAkz8EkQL832X73jvFUr/pQTW
-	NbuqbHMdnzuI5nrXY7b+nR4jvjpQk5W4xU9JvVKcryxDjX70LzPtd9VsQI7AZp88JJ087IYDAlU
-	wA6lOV3LP4DwYRlio6xHx3IpxdxJWUHc86tqbQ2NcoxM20I8cGwllmHjg6VA717YoqvcrGpQ40m
-	fIkzIqtypwutEOMmoBJM2BxHll89n8s4PkEzSOOtE0zEsrIl5Q3eYpL/hHf+gKQLql
-X-Received: by 2002:a05:7022:396:b0:11d:f440:b758 with SMTP id a92af1059eb24-12741bc0129mr7691550c88.25.1771462563993;
-        Wed, 18 Feb 2026 16:56:03 -0800 (PST)
-Received: from google.com ([2a00:79e0:2ebe:8:265b:f5ad:9e03:677e])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12742cbc900sm23969207c88.14.2026.02.18.16.56.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Feb 2026 16:56:03 -0800 (PST)
-Date: Wed, 18 Feb 2026 16:56:00 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, netdev@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH net v2] net: phy: qcom: qca807x: normalize return value of
- gpio_get
-Message-ID: <aZZeyr2ysqqk2GqA@google.com>
+	s=arc-20240116; t=1771466689; c=relaxed/simple;
+	bh=gHtcNRF3wMm1yv55zf4VRgDNe+lRp+wHBTVMtvKLo/M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EUxlXoJ0wWzS6Z6acX4rtAythSx9AO0z7MBCyhlqHrMqzNDWpPzv2lzjgE2kL/i4HpOGDD0MqSXNQP5LVDglmcEXJveDq2+7Tl6NKvZAGEE+pr+gfprPnFF4uADGiXV1gVHJqnCLte8lb80TvyyPE7Fsz2H42VrwvNXvnPSfWhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S3+Q8RSk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28D82C116D0;
+	Thu, 19 Feb 2026 02:04:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771466689;
+	bh=gHtcNRF3wMm1yv55zf4VRgDNe+lRp+wHBTVMtvKLo/M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=S3+Q8RSkcfOzGQcxkTtIhRD1twFLCYdW3OKzEp0IU9D8X4DrqUMGTMiSrd1xtW2tt
+	 8tpFXxxDrOEEBZ6ilcLFV5bCrSwnpVBr5RUImJa7hw7/NyhcOim5l63Tu34QkCojer
+	 Ldj5ut/t/1kOdgt5kV6BXDmM8IFT1FfMk5VnmvCs06CTykY13cTTZHFEYFGW/hCZyd
+	 Yt2/D6h/B7/5lW/AlunfziGzP3mOKM0iD2hqzzA5ak052vPJcSc5K0/sFqYTi9/BJ8
+	 HHTz5EKlTPys/iG3pX6YQCQ66anAAu6jdXbd7SzlUAnr/eM5ruzcudhsKX3yDPdBvZ
+	 xrxPpyQeGc7rw==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Liang Jie <liangjie@lixiang.com>,
+	fanggeng <fanggeng@lixiang.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	sean.wang@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	linux-mediatek@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.19-6.18] pinctrl: mediatek: make devm allocations safer and clearer in mtk_eint_do_init()
+Date: Wed, 18 Feb 2026 21:03:56 -0500
+Message-ID: <20260219020422.1539798-20-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260219020422.1539798-1-sashal@kernel.org>
+References: <20260219020422.1539798-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.19.2
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,davemloft.net,google.com,kernel.org,redhat.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-31831-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31832-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dmitrytorokhov@gmail.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[lixiang.com,kernel.org,gmail.com,collabora.com,lists.infradead.org,vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sashal@kernel.org,linux-gpio@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: C37DC15B443
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,lixiang.com:email]
+X-Rspamd-Queue-Id: 239DA15B873
 X-Rspamd-Action: no action
 
-The GPIO get callback is expected to return 0 or 1 (or a negative error
-code). Ensure that the value returned by qca807x_gpio_get() is
-normalized to the [0, 1] range.
+From: Liang Jie <liangjie@lixiang.com>
 
-Fixes: 86ef402d805d ("gpiolib: sanitize the return value of gpio_chip::get()")
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+[ Upstream commit 255b721c96046d4c57fa2268e4c72607868ce91f ]
+
+mtk_eint_do_init() allocates several pointer arrays which are then
+populated in a per-instance loop and freed on error. The arrays are
+currently allocated with devm_kmalloc(), so their entries are left
+uninitialised until the per-instance allocations succeed.
+
+On a failure in the middle of the loop, the error path iterates over
+the full nbase range and calls devm_kfree() on each element. For
+indices which were never initialised, the corresponding array entries
+contain stack garbage. If any of those happen to be non-zero,
+devm_kfree() will pass them to devres_destroy(), which will WARN
+because there is no matching devm_kmalloc() resource for such bogus
+pointers.
+
+Improve the robustness and readability by:
+
+  - Using devm_kcalloc() for the pointer arrays so that all entries
+    start as NULL, ensuring that only genuinely initialised elements
+    may be freed and preventing spurious WARN_ON()s in the error path.
+  - Switching the allocations to sizeof(*ptr) / sizeof(**ptr) forms,
+    avoiding hard-coded element types and making the code more resilient
+    to future type changes.
+  - Dropping the redundant NULL checks before devm_kfree(), as
+    devm_kfree() safely handles NULL pointers.
+
+The functional behaviour in the successful initialisation path remains
+unchanged, while the error handling becomes simpler and less
+error-prone.
+
+Reviewed-by: fanggeng <fanggeng@lixiang.com>
+Signed-off-by: Liang Jie <liangjie@lixiang.com>
+Signed-off-by: Linus Walleij <linusw@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
-v2: add correct netdev tree prefix and "fixes" tag.
+LLM Generated explanations, may be completely bogus:
 
- drivers/net/phy/qcom/qca807x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+So the buggy code is NOT in 6.12 or older LTS trees (as expected, since
+it was added in 6.15). This fix is only relevant for 6.15+ stable trees.
 
-diff --git a/drivers/net/phy/qcom/qca807x.c b/drivers/net/phy/qcom/qca807x.c
-index d8f1ce5a7128..6004da5741af 100644
---- a/drivers/net/phy/qcom/qca807x.c
-+++ b/drivers/net/phy/qcom/qca807x.c
-@@ -375,7 +375,7 @@ static int qca807x_gpio_get(struct gpio_chip *gc, unsigned int offset)
- 	reg = QCA807X_MMD7_LED_FORCE_CTRL(offset);
- 	val = phy_read_mmd(priv->phy, MDIO_MMD_AN, reg);
+### 7. Verification Summary
+
+**Verification:**
+- Read the current file (`mtk-eint.c` lines 520-622) — confirmed the
+  buggy `devm_kmalloc()` calls at lines 547, 551, 555 and the error path
+  at lines 598-606 that iterates over uninitialized entries.
+- `git log` confirmed `3ef9f710efcb5` ("Add EINT support for multiple
+  addresses") introduced the multi-base code with `nbase`, the loop, and
+  the error path — landed in v6.15.
+- `git tag --contains 3ef9f710efcb5` confirmed it's in `p-6.15`,
+  `p-6.16`, `p-6.17`.
+- `git log --oneline v6.18.12` confirmed the buggy commit is present in
+  the 6.18.y stable tree.
+- `git log --oneline v6.12` confirmed the buggy code is NOT in 6.12 or
+  older LTS trees (not applicable for those).
+- Verified the error path: loop at line 599 iterates `0..nbase-1`, but
+  if allocation fails at index `k`, indices `k+1..nbase-1` have
+  uninitialized pointer entries — confirmed in pre-patch code.
+- `devm_kfree(NULL)` is safe (no-op) — confirmed by kernel API
+  convention.
+- The patch is self-contained; no other patches are needed as
+  dependencies.
+
+### 8. Conclusion
+
+This commit fixes a real bug: **use of uninitialized memory in the error
+path** of `mtk_eint_do_init()`. When memory allocation fails partway
+through a loop, the cleanup code passes uninitialized (garbage) pointer
+values to `devm_kfree()`, which can trigger `WARN_ON()` in
+`devres_destroy()` and potentially cause memory corruption.
+
+The fix is small, surgical (3 `devm_kmalloc` → `devm_kcalloc` changes +
+removal of now-redundant NULL checks), well-understood, reviewed by a
+maintainer, and carries minimal risk. It only affects the error path —
+the successful path is functionally unchanged. The buggy code exists in
+stable trees 6.15+.
+
+**YES**
+
+ drivers/pinctrl/mediatek/mtk-eint.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+index c8c5097c11c4d..2a3c04eedc5f3 100644
+--- a/drivers/pinctrl/mediatek/mtk-eint.c
++++ b/drivers/pinctrl/mediatek/mtk-eint.c
+@@ -544,24 +544,32 @@ int mtk_eint_do_init(struct mtk_eint *eint, struct mtk_eint_pin *eint_pin)
+ 		}
+ 	}
  
--	return FIELD_GET(QCA807X_GPIO_FORCE_MODE_MASK, val);
-+	return !!FIELD_GET(QCA807X_GPIO_FORCE_MODE_MASK, val);
- }
+-	eint->pin_list = devm_kmalloc(eint->dev, eint->nbase * sizeof(u16 *), GFP_KERNEL);
++	eint->pin_list = devm_kcalloc(eint->dev, eint->nbase,
++				      sizeof(*eint->pin_list), GFP_KERNEL);
+ 	if (!eint->pin_list)
+ 		goto err_pin_list;
  
- static int qca807x_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
+-	eint->wake_mask = devm_kmalloc(eint->dev, eint->nbase * sizeof(u32 *), GFP_KERNEL);
++	eint->wake_mask = devm_kcalloc(eint->dev, eint->nbase,
++				       sizeof(*eint->wake_mask), GFP_KERNEL);
+ 	if (!eint->wake_mask)
+ 		goto err_wake_mask;
+ 
+-	eint->cur_mask = devm_kmalloc(eint->dev, eint->nbase * sizeof(u32 *), GFP_KERNEL);
++	eint->cur_mask = devm_kcalloc(eint->dev, eint->nbase,
++				      sizeof(*eint->cur_mask), GFP_KERNEL);
+ 	if (!eint->cur_mask)
+ 		goto err_cur_mask;
+ 
+ 	for (i = 0; i < eint->nbase; i++) {
+-		eint->pin_list[i] = devm_kzalloc(eint->dev, eint->base_pin_num[i] * sizeof(u16),
++		eint->pin_list[i] = devm_kzalloc(eint->dev,
++						 eint->base_pin_num[i] * sizeof(**eint->pin_list),
+ 						 GFP_KERNEL);
+ 		port = DIV_ROUND_UP(eint->base_pin_num[i], 32);
+-		eint->wake_mask[i] = devm_kzalloc(eint->dev, port * sizeof(u32), GFP_KERNEL);
+-		eint->cur_mask[i] = devm_kzalloc(eint->dev, port * sizeof(u32), GFP_KERNEL);
++		eint->wake_mask[i] = devm_kzalloc(eint->dev,
++						  port * sizeof(**eint->wake_mask),
++						  GFP_KERNEL);
++		eint->cur_mask[i] = devm_kzalloc(eint->dev,
++						 port * sizeof(**eint->cur_mask),
++						 GFP_KERNEL);
+ 		if (!eint->pin_list[i] || !eint->wake_mask[i] || !eint->cur_mask[i])
+ 			goto err_eint;
+ 	}
+@@ -597,12 +605,9 @@ int mtk_eint_do_init(struct mtk_eint *eint, struct mtk_eint_pin *eint_pin)
+ 
+ err_eint:
+ 	for (i = 0; i < eint->nbase; i++) {
+-		if (eint->cur_mask[i])
+-			devm_kfree(eint->dev, eint->cur_mask[i]);
+-		if (eint->wake_mask[i])
+-			devm_kfree(eint->dev, eint->wake_mask[i]);
+-		if (eint->pin_list[i])
+-			devm_kfree(eint->dev, eint->pin_list[i]);
++		devm_kfree(eint->dev, eint->cur_mask[i]);
++		devm_kfree(eint->dev, eint->wake_mask[i]);
++		devm_kfree(eint->dev, eint->pin_list[i]);
+ 	}
+ 	devm_kfree(eint->dev, eint->cur_mask);
+ err_cur_mask:
 -- 
-2.53.0.335.g19a08e0c02-goog
+2.51.0
 
-
--- 
-Dmitry
 
