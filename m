@@ -1,78 +1,77 @@
-Return-Path: <linux-gpio+bounces-31883-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31884-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yB7lCyNJl2m2wQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-31883-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 18:32:19 +0100
+	id aGtOHz9Jl2m2wQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-31884-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 18:32:47 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 887E016139B
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 18:32:18 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFEB01613B1
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 18:32:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 26F593009FA1
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 17:32:17 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5C64B30157E3
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 17:32:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C34634DCF3;
-	Thu, 19 Feb 2026 17:32:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2ADC34E750;
+	Thu, 19 Feb 2026 17:32:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="shFxprcD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bzMtlic4"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E82B326927
-	for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 17:32:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59AE34B1B6
+	for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 17:32:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771522336; cv=none; b=KCgoHxkDE5yaXVbSNKHHKIWsVGMB4MjQe9nSOObiomXwa7g6/hAT13shYllzPZMuosLcgc+OnUuRL0+Z3zUn9PaRGBBBBZ2slSCwwo0ELFxoIaiieJ9NK1DIwYguwjEfJRu62VyYbj1CAxUNq50uG8bvq9J9Mm7Im8dZhcrXvPs=
+	t=1771522361; cv=none; b=nJcAO9ddkFPeV+W7UCeVeAK5xGa+lpe7uCpa/PE8VL4eL2C+OyeVqjQjMuWXpbVp+EA/hkNi+fCpr5zNTbBA5tkhZ+bxQArZAVy8Ekoy2IEbgsyQ//9NX9J2vwt45y9TY/xtezS/by0itQxp+O1dHL7RhD0T0LgeusKDEoX2ReY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771522336; c=relaxed/simple;
-	bh=Vu3dc7VXhNo7YAZXUNlqsloaCwPp8S67KVxm6uCFDyU=;
+	s=arc-20240116; t=1771522361; c=relaxed/simple;
+	bh=Bb/7uka0raO5CVVj/T4WrXDnULjXxJE5UN2ijVO7yLE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FpUGcqZjUp+gdAVaV0M5/Z3fZBjCtYjC5jSoNxl+5vI2ezC/0VpnltTB0U+e2D50xPkEgDEeF4ggc7YC2sdhYTGwgVOXvfWK8yltzOixS/4fqg8Kdm9/zxi6V8FXA7T74uyQaHtszog/QgF8qZFurZHtayHqdv9NkYq5VYNxmfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=shFxprcD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17965C2BCAF
-	for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 17:32:16 +0000 (UTC)
+	 To:Cc:Content-Type; b=cXyfxZIARoFp5w803rzTD0bUxGkQLWk7gmrsywu+k+CXytUdL1JKjVj6taaU2SoazS581EDKGrkb07bRkmNmfvrBaYWGfkEXq3O5Bi9A4ckvLyASDMa6wgcH158czSktl7OoTTsjvvy/8Suz3EQgnTvvtlzkmtOg2/7+Qh9t8/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bzMtlic4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 839C5C19423
+	for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 17:32:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771522336;
-	bh=Vu3dc7VXhNo7YAZXUNlqsloaCwPp8S67KVxm6uCFDyU=;
+	s=k20201202; t=1771522361;
+	bh=Bb/7uka0raO5CVVj/T4WrXDnULjXxJE5UN2ijVO7yLE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=shFxprcD6RhrjfJMO7vm5yaC5FR9ci5aH9m/296gWuSHjXi8uBw5RQlH9y7YEy+QJ
-	 KC1OeWbElWHgFgSCLxrwROqXqocFxNJL1YK5WxHRNKvQ+ECkJB7tj8cOGRoj4Vgqpl
-	 snivMdSpBdbPo9hTqeIgncZFpBdCPyMGjbl9h1YZUmZ9TRLbwGo3lW5zXLHa9mbf6T
-	 dZq6EVmxokhhU1gEUdMaiS/CEB3jwp1ZXVOZzDYzhb2Zz90Z8w3dPesKqy9dhhLSbe
-	 lByBZL7QzV8MjTb7G5ba3Bgpy+SicBZPX3TEfiNmVjDJwcr2+TxmE6VBbUuiC4upqx
-	 JDWxd4GztXktw==
-Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-64ae5f0777dso933759d50.3
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 09:32:16 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUgMlXfQIL5FEosolNgfIxkMLI+hFbMVbcio3jgzaluXiTm9cyl89COhBkfPh8A1ZpCDoABmM8YiWjX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6jX/IQyrKD3Zkw006v8YuCcnCHBxQy2oC2tFH7m/UPBl/e7RQ
-	Na3F9iwxS/2bxG662nTZ5FgmNrmclAI4VMcACfNLfVUDFNcpSSpRdEbG1kXDYxVa36glWYVWcX6
-	jpENWIkp91lMTKeF9U5ykcSn1+hKtIO0=
-X-Received: by 2002:a05:690e:12c5:b0:64a:d294:e502 with SMTP id
- 956f58d0204a3-64c556d2cb8mr3920242d50.66.1771522335289; Thu, 19 Feb 2026
- 09:32:15 -0800 (PST)
+	b=bzMtlic4r+DBbiXowx+IsOWdlTf82QO3pZBJfCKTJF8x4M1Hs9lNh5maZFdpmJklh
+	 m1ByVUBzCRN5EonA4sZzv/+XpV3fi/9sxHUug22pG5GY4PMIRZ4vyVgvAfHt7Q8ow4
+	 0DEUfoNM0oi20VC3FW4kWjxTaBWzCptk/A5957uGpCec33pT4f9XUXFkH3xTKPBsHG
+	 ytI/EqaVQIx3Wdn/6+QVPbdeyaqBRbD0L7JpmyhKcllSn4OlK3ihHCAcguhVaIRg1a
+	 J0QwjCa5GQypXnaVE+CQjk4yqo/nuBdnQaGX5qjVmpWzxHgziySeOPkgzuaZGJaWGM
+	 tif6JiaX/FWLw==
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-79800183233so16172957b3.1
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 09:32:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW6htAdu/wuY0+HSoDsoJ+dGp4GQLAUF60WiOX70lpt/i+FHdLJm0eGMQIOyN4ynKPxobUHW283DxTJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6N+V+EZWCGz2FAo0akMIeF8mGoKgOLnBiKCbiIZgZH+eG/9oZ
+	ui7ToHHMCk0SiiYcj0YCRuh3p91qe5uscRkHp0QMs0GwLNuDiBSihFQzjez+1B+haeUoy3KTtpi
+	9/doBeZAgmjqyQ+u64uED2AWCe60sIuY=
+X-Received: by 2002:a05:690c:6303:b0:796:3858:a084 with SMTP id
+ 00721157ae682-79807cf462amr19793217b3.19.1771522360836; Thu, 19 Feb 2026
+ 09:32:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260219-device-match-secondary-fwnode-v1-0-a64e8d4754bc@oss.qualcomm.com>
-In-Reply-To: <20260219-device-match-secondary-fwnode-v1-0-a64e8d4754bc@oss.qualcomm.com>
+References: <20260219-gpiolib-set-normalize-v2-1-f84630e45796@oss.qualcomm.com>
+In-Reply-To: <20260219-gpiolib-set-normalize-v2-1-f84630e45796@oss.qualcomm.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 19 Feb 2026 18:32:03 +0100
-X-Gmail-Original-Message-ID: <CAD++jLn0L6CShJuC8eFjyXGhVyQ-3HPth-F9h8iiOgmaaJxuBw@mail.gmail.com>
-X-Gm-Features: AaiRm51KpSSnKkBgiDlHDuMcf7Hg9oSyJzscgWpJoCdTuDxDwtHztJAqT9eZhrM
-Message-ID: <CAD++jLn0L6CShJuC8eFjyXGhVyQ-3HPth-F9h8iiOgmaaJxuBw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] driver core: provide and use device_match_fwnode_ext()
+Date: Thu, 19 Feb 2026 18:32:30 +0100
+X-Gmail-Original-Message-ID: <CAD++jL=x1cYPQWL9VEv3ELR3wyBDY3FV-8MZ6m1gDb16hPNCUg@mail.gmail.com>
+X-Gm-Features: AaiRm51ySc8zVy0QGkwVpo7MjfK_OR1vBU1SHH-FoDbbCu-gpTY7cn0HLt6GeNc
+Message-ID: <CAD++jL=x1cYPQWL9VEv3ELR3wyBDY3FV-8MZ6m1gDb16hPNCUg@mail.gmail.com>
+Subject: Re: [PATCH v2] gpiolib: normalize the return value of gc->get() on
+ behalf of buggy drivers
 To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc: Bartosz Golaszewski <brgl@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
@@ -80,46 +79,50 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[linuxfoundation.org,kernel.org,gmail.com,linux.intel.com,lists.linux.dev,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-31884-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_FROM(0.00)[bounces-31883-lists,linux-gpio=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_TLS_LAST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 887E016139B
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid,qualcomm.com:email]
+X-Rspamd-Queue-Id: EFEB01613B1
 X-Rspamd-Action: no action
 
-On Thu, Feb 19, 2026 at 5:31=E2=80=AFPM Bartosz Golaszewski
+On Thu, Feb 19, 2026 at 10:51=E2=80=AFAM Bartosz Golaszewski
 <bartosz.golaszewski@oss.qualcomm.com> wrote:
 
-> In GPIOLIB, during fwnode lookup, after having resolved the consumer's
-> reference to a specific fwnode, we only match it against the primary
-> node of the controllers. Let's extend that to also the secondary node by
-> providing a new variant of device_match_fwnode() and using it in GPIO
-> core.
+> Commit 86ef402d805d ("gpiolib: sanitize the return value of
+> gpio_chip::get()") started checking the return value of the .get()
+> callback in struct gpio_chip. Now - almost a year later - it turns out
+> that there are quite a few drivers in tree that can break with this
+> change. Partially revert it: normalize the return value in GPIO core but
+> also emit a warning.
 >
-> Link: https://lore.kernel.org/all/aZUIFiOYt6GOlDQx@google.com/
+> Cc: stable@vger.kernel.org
+> Fixes: 86ef402d805d ("gpiolib: sanitize the return value of gpio_chip::ge=
+t()")
+> Reported-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Closes: https://lore.kernel.org/all/aZSkqGTqMp_57qC7@google.com/
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
-The concept (+/- code comments):
 Reviewed-by: Linus Walleij <linusw@kernel.org>
 
 Yours,
