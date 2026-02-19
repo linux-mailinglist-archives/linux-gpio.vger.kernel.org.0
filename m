@@ -1,292 +1,231 @@
-Return-Path: <linux-gpio+bounces-31838-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31839-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GCaTEP91lmkIfwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-31838-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 03:31:27 +0100
+	id +P8ZKiSylmmRjwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-31839-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 07:48:04 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E08EA15BBC4
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 03:31:26 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C8C715C77D
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 07:48:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1C1CC303B7CB
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 02:29:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4E43430721AC
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Feb 2026 06:46:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EB85280A5A;
-	Thu, 19 Feb 2026 02:29:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76FC830FC0B;
+	Thu, 19 Feb 2026 06:46:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="irb+B+g5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xsm7JLGX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
+Received: from mail-dl1-f53.google.com (mail-dl1-f53.google.com [74.125.82.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93B8278156
-	for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 02:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F060630E856
+	for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 06:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771468182; cv=none; b=diqRWJH0gC37L1QB8/cmfPw2jarLJNRT+BFZpbuuZwO7ZkobH7alFZzV4xWp+dnAyrYfHPHHfe/chOTvhvJr1WOcRHK1OXxXarzJrfQ6uM4K05MCQZvWjjjJVX3H73b7rbfNTmobFTfHhjXJcVNVb9unVrdpTc81RMYxYw7/4x4=
+	t=1771483569; cv=none; b=k8/EEAz/AqgIcihwgAXGnYlQJ9vUFIGxSjq3Z261WHUQBhkk6QztfYnRXXRU2hfCvxuoIxy9iayYzXZ626nXpVfo49uTeP+UrUWFJyNXDbj2huVjA3ILvTxTP/XPY3YriQ1Ke9tkFz5uC5qiAo37/Qt1pSlGK8MKfcghNEOLQtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771468182; c=relaxed/simple;
-	bh=kauiL/ONWk2RY4xVUjE4kT+PlTVn5lZxv/b4OFnIWtQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=blyI24HmpngXxZx4GeB/bTlrDHYLpHG7mObplbwA39lrapWe1dwzmy88qZbE4dmqRgBdRoqMMwwku7r3ScghyqJ6geeuloXEYDpCHFSXMgA2WhTJ7ssKoCm8tNsaCJMOE5dDTkeGscGKIwvCY7H/uPGj3mCRpKtBqM9zwba2K6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=irb+B+g5; arc=none smtp.client-ip=74.125.82.174
+	s=arc-20240116; t=1771483569; c=relaxed/simple;
+	bh=gbwOuCh6UyIObppR+ccmbnKrATlo0fExNZFy0T4F1A8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=au2DGrb2WmC0y4Z6Nfqw1HNTm09e2hC0Tx/j8ebXokywp9JpnS1ndQG0SH7JEEq241vSo8brxavflO1k06vyW0gKzqveG0eqEh2w2P9uZZCHxc6KEtkviUgu06CDO8bLQDMz5wh0xKOsXFK0pHYXm/FYPexDRb06JexXwnSrYc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xsm7JLGX; arc=none smtp.client-ip=74.125.82.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-2b6b0500e06so521801eec.1
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 18:29:40 -0800 (PST)
+Received: by mail-dl1-f53.google.com with SMTP id a92af1059eb24-12721cd256bso601601c88.1
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Feb 2026 22:46:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771468180; x=1772072980; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M1ZTHJlxuM3aGdOYJnVvaMVfaR/Kwe29wbgQ93rKb+E=;
-        b=irb+B+g5bq5qwaeDebSv+F7Bj1xwGldMkWuC4sXz422pLm0SzMem7PJCD2Db1XZx6A
-         5XdBeXxCCh4zrF21i9sNCuPPx4M//RjdIUWxwGFbUfI/bNr2W+DLirSlACbvdqHvhxvk
-         GKueIoU2nXMDL0EJsPqaA2Um0rYIgMUiD3HOFQW71RVx10wsy262odbZWa8bgFHMt6Xn
-         n4xKdvRp9ST4EyNX9yksq71cMwtcVPq2qRFhJ9S6F6V+bilS8CH7Oq7NaW1bvYGSTVOb
-         RFWbcJ18/uN5oum+TCvGnVCeSq7HeqIj1D45ImcpRREW+HO9Fw8GIUTPMeC3HBox1JbP
-         1KoQ==
+        d=gmail.com; s=20230601; t=1771483565; x=1772088365; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E70q3Kd5cdh+0sEnkLZNyFfZgY/oE3FN6dtixCcw/1Q=;
+        b=Xsm7JLGXe/J48l1agQgr36zfVIa7DKoW4uiySThf0ditmxQmAs7hyZhQR+gBdIR/DF
+         Jv8QyzwHre52TgPa5LQMA8+Cyt8WXk6opOUOzBRDaSDo+4WB9UpSI0MwsTWYo7ev3I8z
+         g9fgRKYKWKZK2vFSQ6Djd6sYv3k/A0TekZ1a1aOdkznQYviWVv+Diq6YT3IZZTgUch5Y
+         XVu1S1V4AqrFvA5NXKps02p6dAN6GmrT5T3c8ZQkZ6+wsfTjTnNN8nERrEC+1bzSf/7r
+         rPOLlY8Tio9LECAmeOplIL+ndstZGMvviqFmvQNKF6c9QsQNPsnArhoX4Qc1wVCHvLsb
+         NRTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771468180; x=1772072980;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=M1ZTHJlxuM3aGdOYJnVvaMVfaR/Kwe29wbgQ93rKb+E=;
-        b=vlV9sl3LIv6m3aWWw/ICXy8dtzCWcDiTC2BvKU03sXy4d0U2HavCTtJbb+gU7JVATV
-         v8MgAXrLL7IYupAtqZxXdMqYLXvH2EDMGL14f1NVm7bpiEdj5RbG36055rHTSSsAbWTi
-         3Ijp9/eca7p9IuHrEexo2q8tXXG0cSzSz67ja07tweOF54LTBgZlcaGFYaopOmslMoiH
-         XWz35bMoZYOeXQNuJbOoO9YroN2E10CF751Vp6SLbi1GdmfnzWiE+Yx+550Jw1Z5I2i5
-         1ZFMEnp5eOhe/B+piMYg+8aL6yzHyjEMithfheiyrWSmilOnAbn46jeQr2WC6hviRywC
-         duaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUoxPje4btmRG6tx7Pbie1l+jkB/JNLedLg8bN/5cgZV8QkX3WnoFcHOz6G7PvlPPwRf8Exzk9E13XR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFMNY12NnRTYhWZRVxLakFr+j6y/9ZDDS5EZv22tqriePleRXN
-	2NE0YHpcecohWghnzezG2l7DZNqJ/z9yrS5/E8iLPRn9H+a6aoz3oUl+
-X-Gm-Gg: AZuq6aLcJ/11f7bCxuxG+Szc/7AqdGwbErYIxWhAvV5FSVdBrTzo0uBqmYTWkWl8/5K
-	L4xeS1v0k/eBgtxSQBuDCRRkBotTSu0gAhfqbiG2dBrw1NWIRNfofRTLKFWXhsVIGe95BJeGDfR
-	5R9zHUrwmv7GLb7zWS9YXc41HwaisZQdf67U322YT18VXSL63m4on+Md2R/BW5R6BwDdFbkA6jI
-	TVObyV123u4EwpePDziWh/Nosy47QzcwvzNgE+lvjmpO5HG3BfThEvSwTPIkdQ5gH6KTcg5UrfP
-	t4cQdreInEZs7pia4nK9mQnwY44YyUvP7usmh2XWEOKv6yqasp8gq4njgjmEeXoS1nUY0UKJDge
-	VY0RWdscB60oH9Vtz7ZmG8bqW/+0dw/ZeFpwMSnAOsVepKlFnMDfegwTo2YNvbGCPdDy/3lcrGb
-	AUItal+PlHrcUSKvTjTTngRtqdKkm4hNakU6aAtf7q59ufy2KTjUh8oJusxosqQXsd/VR4k6ztP
-	2zeOpLzF9S9pF5ayG42BGqGyA==
-X-Received: by 2002:a05:7301:d19:b0:2ba:6d87:cf68 with SMTP id 5a478bee46e88-2baba05b5c2mr9113620eec.16.1771468179912;
-        Wed, 18 Feb 2026 18:29:39 -0800 (PST)
-Received: from dtor-ws.sjc.corp.google.com ([2a00:79e0:2ebe:8:265b:f5ad:9e03:677e])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2bacb577bcasm19609433eec.12.2026.02.18.18.29.39
+        d=1e100.net; s=20230601; t=1771483565; x=1772088365;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E70q3Kd5cdh+0sEnkLZNyFfZgY/oE3FN6dtixCcw/1Q=;
+        b=la4UWnZSlT4RLTnFSuzmHdNqx0b1aGuQ5bFcwFHDcfPsBSPzYV9iYSlJ9UpVqA6Jme
+         xadBgmNRuU0kJMJ233lc8sXCUzHFm2qA3zIa5q27IRUXo0bKspg4HVijIft9pbevv519
+         PvXn4FOaa4yX4H7R8UIbiJaXRo9YHLB3AeL2MCY4w6BOO6V8zPRt4uwZoW6PrL42DhBv
+         Nqz/h/EFx4/ZUmzZdNs6pG7QMJZihqjukFdXcbSPKMPU6S7i8Yz3CUaZI0F0g14yRCIQ
+         l6In0EjAk1whweIk7CDWfBBXazanyRmNBwSNJJjEEmNFu0pWTzOk7k5Dlo2G9LqCb+A6
+         /XWg==
+X-Forwarded-Encrypted: i=1; AJvYcCXg8K4FL9RziVkDckaGHyceMAZTU41JRh7SMjJaIlIZTc9lKHoKg5yXKCnFdeYEzlUufuqeEO3OjFwM@vger.kernel.org
+X-Gm-Message-State: AOJu0YwluN0tYJNoRgBiW52VkMr55xCHhncpCop/RNbX7CIa+Xdn9izR
+	3NAoWCYbA55LW3lMHgej3XLJ+lS0iuUOGawINbrvlz/NQM44mc9Fo63B
+X-Gm-Gg: AZuq6aKfV0+hnc8CQ+u7MyZHk+KcVMWWQfTdLpZn98ViRugZ13JQbXk04PYZTT+0eBD
+	wVIYMP0qH5YQE8afVsYV9zDoMCU09rxBUcljdisE7YDtZL6PTge95NdwCw6IRa/IHpX+Xq2b7fS
+	CqJaVi56LKx1eczmYkpBe+8/49IMwp2RaWXe5pRBTMPL3ZgolDzF+XgNUGLiaLJf/d5SQ1QE7it
+	1TnG1Zn06myO7K4i/lIkEgQwGur3xx3KPg3JFwA3YBWjaOeXhI2wb+IWnlHYWaMl4vQljDpleks
+	Hp4VzSo0tUpdEFvN9sDMojnmobpRDNIljRvO4PRfOVaEjZaWqA+10ibRVO1QevFW3ED/q/o1oGp
+	yjcQtVN/5mfEwJvZiZ3KMQmPrPw0brNgtkT12QfyLHE4OTne2i5hglv4mvDa6mL73WoURxUmpnD
+	/EZpHbKX06Y3ZfAJRMeX0Cy9F/+bTCmpjL+H0GeAZgcBptvLpLlbClZUzq5qE1MFbQ
+X-Received: by 2002:a05:7022:251f:b0:11a:37a7:3d2f with SMTP id a92af1059eb24-12741bd6599mr7766072c88.37.1771483564618;
+        Wed, 18 Feb 2026 22:46:04 -0800 (PST)
+Received: from google.com ([2a00:79e0:2ebe:8:265b:f5ad:9e03:677e])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12742aff32asm24395845c88.0.2026.02.18.22.46.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Feb 2026 18:29:39 -0800 (PST)
+        Wed, 18 Feb 2026 22:46:04 -0800 (PST)
+Date: Wed, 18 Feb 2026 22:46:01 -0800
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH v2 4/4] iio: adc: ti-ads7950: complete conversion to using managed resources
-Date: Wed, 18 Feb 2026 18:29:28 -0800
-Message-ID: <20260219022929.3558081-5-dmitry.torokhov@gmail.com>
-X-Mailer: git-send-email 2.53.0.335.g19a08e0c02-goog
-In-Reply-To: <20260219022929.3558081-1-dmitry.torokhov@gmail.com>
-References: <20260219022929.3558081-1-dmitry.torokhov@gmail.com>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Linus Walleij <linusw@kernel.org>, Tj <tj.iam.tj@proton.me>, 
+	"Enrico Weigelt, metux IT consult" <info@metux.net>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: amd-fch: switch to guard() notation
+Message-ID: <aZarCgDvMUta4Viq@google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31839-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31838-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[dmitrytorokhov@gmail.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_FIVE(0.00)[6];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: E08EA15BBC4
+X-Rspamd-Queue-Id: 2C8C715C77D
 X-Rspamd-Action: no action
 
-All resources that the driver needs have managed API now. Switch to
-using them to make code clearer and drop ti_ads7950_remove().
+guard() is more concise and ensures that lock is released at the end of
+the scope.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/iio/adc/ti-ads7950.c | 98 +++++++++++++++---------------------
- 1 file changed, 40 insertions(+), 58 deletions(-)
+ drivers/gpio/gpio-amd-fch.c | 22 +++++-----------------
+ 1 file changed, 5 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/iio/adc/ti-ads7950.c b/drivers/iio/adc/ti-ads7950.c
-index d31397f37ec4..1c53e000bdcc 100644
---- a/drivers/iio/adc/ti-ads7950.c
-+++ b/drivers/iio/adc/ti-ads7950.c
-@@ -528,19 +528,26 @@ static int ti_ads7950_init_hw(struct ti_ads7950_state *st)
- 	return 0;
- }
- 
-+static void ti_ads7950_power_off(void *data)
-+{
-+	struct ti_ads7950_state *st = data;
-+
-+	regulator_disable(st->reg);
-+}
-+
- static int ti_ads7950_probe(struct spi_device *spi)
+diff --git a/drivers/gpio/gpio-amd-fch.c b/drivers/gpio/gpio-amd-fch.c
+index 9f329938202b..9b9d75acf35a 100644
+--- a/drivers/gpio/gpio-amd-fch.c
++++ b/drivers/gpio/gpio-amd-fch.c
+@@ -48,13 +48,11 @@ static void __iomem *amd_fch_gpio_addr(struct amd_fch_gpio_priv *priv,
+ static int amd_fch_gpio_direction_input(struct gpio_chip *gc,
+ 					unsigned int offset)
  {
- 	struct ti_ads7950_state *st;
- 	struct iio_dev *indio_dev;
- 	const struct ti_ads7950_chip_info *info;
--	int ret;
-+	int error;
+-	unsigned long flags;
+ 	struct amd_fch_gpio_priv *priv = gpiochip_get_data(gc);
+ 	void __iomem *ptr = amd_fch_gpio_addr(priv, offset);
  
- 	spi->bits_per_word = 16;
- 	spi->mode |= SPI_CS_WORD;
--	ret = spi_setup(spi);
--	if (ret < 0) {
-+	error = spi_setup(spi);
-+	if (error) {
- 		dev_err(&spi->dev, "Error in spi setup\n");
--		return ret;
-+		return error;
- 	}
- 
- 	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-@@ -598,36 +605,36 @@ static int ti_ads7950_probe(struct spi_device *spi)
- 	mutex_init(&st->slock);
- 
- 	st->reg = devm_regulator_get(&spi->dev, "vref");
--	if (IS_ERR(st->reg)) {
--		ret = dev_err_probe(&spi->dev, PTR_ERR(st->reg),
-+	error = PTR_ERR_OR_ZERO(st->reg);
-+	if (error)
-+		return dev_err_probe(&spi->dev, error,
- 				     "Failed to get regulator \"vref\"\n");
--		goto error_destroy_mutex;
--	}
- 
--	ret = regulator_enable(st->reg);
--	if (ret) {
--		dev_err(&spi->dev, "Failed to enable regulator \"vref\"\n");
--		goto error_destroy_mutex;
--	}
-+	error = regulator_enable(st->reg);
-+	if (error)
-+		return dev_err_probe(&spi->dev, error,
-+				     "Failed to enable regulator \"vref\"\n");
- 
--	ret = iio_triggered_buffer_setup(indio_dev, NULL,
--					 &ti_ads7950_trigger_handler, NULL);
--	if (ret) {
--		dev_err(&spi->dev, "Failed to setup triggered buffer\n");
--		goto error_disable_reg;
--	}
-+	error = devm_add_action_or_reset(&spi->dev, ti_ads7950_power_off, st);
-+	if (error)
-+		return error;
- 
--	ret = ti_ads7950_init_hw(st);
--	if (ret) {
--		dev_err(&spi->dev, "Failed to init adc chip\n");
--		goto error_cleanup_ring;
--	}
-+	error = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev, NULL,
-+						&ti_ads7950_trigger_handler,
-+						NULL);
-+	if (error)
-+		return dev_err_probe(&spi->dev, error,
-+				     "Failed to setup triggered buffer\n");
- 
--	ret = iio_device_register(indio_dev);
--	if (ret) {
--		dev_err(&spi->dev, "Failed to register iio device\n");
--		goto error_cleanup_ring;
--	}
-+	error = ti_ads7950_init_hw(st);
-+	if (error)
-+		return dev_err_probe(&spi->dev, error,
-+				     "Failed to init adc chip\n");
-+
-+	error = devm_iio_device_register(&spi->dev, indio_dev);
-+	if (error)
-+		return dev_err_probe(&spi->dev, error,
-+				     "Failed to register iio device\n");
- 
- 	/* Add GPIO chip */
- 	st->chip.label = dev_name(&st->spi->dev);
-@@ -642,36 +649,12 @@ static int ti_ads7950_probe(struct spi_device *spi)
- 	st->chip.get = ti_ads7950_get;
- 	st->chip.set = ti_ads7950_set;
- 
--	ret = gpiochip_add_data(&st->chip, st);
--	if (ret) {
--		dev_err(&spi->dev, "Failed to init GPIOs\n");
--		goto error_iio_device;
--	}
-+	error = devm_gpiochip_add_data(&spi->dev, &st->chip, st);
-+	if (error)
-+		return dev_err_probe(&spi->dev, error,
-+				     "Failed to init GPIOs\n");
+-	spin_lock_irqsave(&priv->lock, flags);
++	guard(spinlock_irqsave)(&priv->lock);
+ 	writel_relaxed(readl_relaxed(ptr) & ~AMD_FCH_GPIO_FLAG_DIRECTION, ptr);
+-	spin_unlock_irqrestore(&priv->lock, flags);
  
  	return 0;
+ }
+@@ -62,12 +60,11 @@ static int amd_fch_gpio_direction_input(struct gpio_chip *gc,
+ static int amd_fch_gpio_direction_output(struct gpio_chip *gc,
+ 					 unsigned int gpio, int value)
+ {
+-	unsigned long flags;
+ 	struct amd_fch_gpio_priv *priv = gpiochip_get_data(gc);
+ 	void __iomem *ptr = amd_fch_gpio_addr(priv, gpio);
+ 	u32 val;
+ 
+-	spin_lock_irqsave(&priv->lock, flags);
++	guard(spinlock_irqsave)(&priv->lock);
+ 
+ 	val = readl_relaxed(ptr);
+ 	if (value)
+@@ -77,33 +74,28 @@ static int amd_fch_gpio_direction_output(struct gpio_chip *gc,
+ 
+ 	writel_relaxed(val | AMD_FCH_GPIO_FLAG_DIRECTION, ptr);
+ 
+-	spin_unlock_irqrestore(&priv->lock, flags);
 -
--error_iio_device:
--	iio_device_unregister(indio_dev);
--error_cleanup_ring:
--	iio_triggered_buffer_cleanup(indio_dev);
--error_disable_reg:
--	regulator_disable(st->reg);
--error_destroy_mutex:
--	mutex_destroy(&st->slock);
--
--	return ret;
--}
--
--static void ti_ads7950_remove(struct spi_device *spi)
--{
--	struct iio_dev *indio_dev = spi_get_drvdata(spi);
--	struct ti_ads7950_state *st = iio_priv(indio_dev);
--
--	gpiochip_remove(&st->chip);
--	iio_device_unregister(indio_dev);
--	iio_triggered_buffer_cleanup(indio_dev);
--	regulator_disable(st->reg);
--	mutex_destroy(&st->slock);
+ 	return 0;
  }
  
- static const struct spi_device_id ti_ads7950_id[] = {
-@@ -714,7 +697,6 @@ static struct spi_driver ti_ads7950_driver = {
- 		.of_match_table = ads7950_of_table,
- 	},
- 	.probe		= ti_ads7950_probe,
--	.remove		= ti_ads7950_remove,
- 	.id_table	= ti_ads7950_id,
- };
- module_spi_driver(ti_ads7950_driver);
+ static int amd_fch_gpio_get_direction(struct gpio_chip *gc, unsigned int gpio)
+ {
+ 	int ret;
+-	unsigned long flags;
+ 	struct amd_fch_gpio_priv *priv = gpiochip_get_data(gc);
+ 	void __iomem *ptr = amd_fch_gpio_addr(priv, gpio);
+ 
+-	spin_lock_irqsave(&priv->lock, flags);
++	guard(spinlock_irqsave)(&priv->lock);
+ 	ret = (readl_relaxed(ptr) & AMD_FCH_GPIO_FLAG_DIRECTION);
+-	spin_unlock_irqrestore(&priv->lock, flags);
+ 
+ 	return ret ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
+ }
+ 
+ static int amd_fch_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
+ {
+-	unsigned long flags;
+ 	struct amd_fch_gpio_priv *priv = gpiochip_get_data(gc);
+ 	void __iomem *ptr = amd_fch_gpio_addr(priv, gpio);
+ 	u32 mask;
+ 
+-	spin_lock_irqsave(&priv->lock, flags);
++	guard(spinlock_irqsave)(&priv->lock);
+ 
+ 	mask = readl_relaxed(ptr);
+ 	if (value)
+@@ -112,22 +104,18 @@ static int amd_fch_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
+ 		mask &= ~AMD_FCH_GPIO_FLAG_WRITE;
+ 	writel_relaxed(mask, ptr);
+ 
+-	spin_unlock_irqrestore(&priv->lock, flags);
+-
+ 	return 0;
+ }
+ 
+ static int amd_fch_gpio_get(struct gpio_chip *gc,
+ 			    unsigned int offset)
+ {
+-	unsigned long flags;
+ 	u32 val;
+ 	struct amd_fch_gpio_priv *priv = gpiochip_get_data(gc);
+ 	void __iomem *ptr = amd_fch_gpio_addr(priv, offset);
+ 
+-	spin_lock_irqsave(&priv->lock, flags);
++	guard(spinlock_irqsave)(&priv->lock);
+ 	val = readl_relaxed(ptr);
+-	spin_unlock_irqrestore(&priv->lock, flags);
+ 
+ 	return FIELD_GET(AMD_FCH_GPIO_FLAG_READ, val);
+ }
 -- 
 2.53.0.335.g19a08e0c02-goog
 
+
+-- 
+Dmitry
 
