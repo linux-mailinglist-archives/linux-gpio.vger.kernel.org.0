@@ -1,37 +1,37 @@
-Return-Path: <linux-gpio+bounces-31976-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31977-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QJRaDQadmGmWKAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31976-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 18:42:30 +0100
+	id AMxOF7udmGmWKAMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31977-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 18:45:31 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3269169C9B
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 18:42:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F3D0F169D1A
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 18:45:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 486A6304C97E
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 17:42:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 18830305147E
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 17:45:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FFB4366054;
-	Fri, 20 Feb 2026 17:42:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D03FC36654D;
+	Fri, 20 Feb 2026 17:45:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="i8sVh473"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="5FEKDlJe"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D7B3358D2;
-	Fri, 20 Feb 2026 17:42:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE88366066;
+	Fri, 20 Feb 2026 17:45:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771609340; cv=none; b=P50lHXxbn0qbEzD9wv0ojZnMRN0Q9kprdpLqJgFdfNOXc3RYWsSVboYW3N6LrCQKKhkf/2DVkSjPbUMItlTdPT1OMTGvHmO9sT31ds8K8HdWfCle9j0cLZiFfB+49l2uAdVrLBxqPOPLfvj+cGMAsP3EpgqOIYxVKk38D10iFnI=
+	t=1771609520; cv=none; b=oHr7ZIf0GXLph9cgzM4whbJ5ClWfMPZMKmlVIl6vI/U2tUiChHD1TDgBYyr9EfVj+oiJXOL+ff5eXjr7E4LxhgsASusaQhVI7HOuYkzGKcWVW2dKevgAByAUr9o/C5QcP6EIEqPdHuBcs15t+hHNfxYaIWaHQMytGYYaq/OJLxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771609340; c=relaxed/simple;
-	bh=Z/YROkrVmESRZ8RkdQlsESe9sZcMqjo+0c2DoGATHLo=;
+	s=arc-20240116; t=1771609520; c=relaxed/simple;
+	bh=jcGaWsVifNop1srAmjA1ecF0e/k9EKcP8TT5Z/b3N5Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fBtP8K9AbbtkCy8lBiUqvdoIh68zjmOof6p6sSaNPJUu3KS/Me4mQo+ElnM3h3SGZl/Hgy4FBvVuwqMbqRPxB7EM+TO7V7gnj8cdjDUFTP6NyBtqK2UJVBdSKWpRcQdkhkp0XsbrJ4mQX9jVdssYoOITd5Lm7RCnEKl56rDzsC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=i8sVh473; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=RW5p8tHBEl1hDoRkiQaJhx50PlSuagssrr+z3liQh/ptflSLmYT77fY+9nFPE6xDff1BjDdvSSna5jWEx/wpt/ymODRBv/JFOzAsafkL8bWD6RDqnLOL7Le9rHvmGWe9d0h5QtJVqjvV+kpZAb/XPNJ6o2Ll2TF3PzuOB0rPhLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=5FEKDlJe; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
@@ -39,14 +39,14 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=vdZF070E8JEKFJ0ME18+O+yF2DoTp5fyPreGsFn+SZ0=; b=i8
-	sVh473vtyNr0NN+4ABdvFxzHyvBLjizBTrtIxTnRKAjRoaWKMkWJHu463u8nW+OWkYS3tckuj74YM
-	uAKLnhkU90bukc0fg8jxUzzyKyBpfRlORCLdxZN1V4t1wHtvdvuD2p6pVW1EcjeUHrr5dEJSO2EVx
-	jdU0AIYbJQG9X1Q=;
+	In-Reply-To:References; bh=w0TjTxFVkXbghGljTqkZfKYDHy/ZtAlZzvuXowjjv78=; b=5F
+	EKDlJeHFLWetOCdH9ClCRDDSv8l1HLffHDLIISqf0mihQZb6QWxWOwOVv65iHDxxGqGyFey0RpAis
+	dJElx8ZeQu4s2kCG3lLpzyAniWsJI90OMrMco8vMARk+P5evnvbcwgax+1oiTVLiJI32rmwPGttAm
+	fhe7AG9wGINXWY0=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1vtUVx-008670-UJ; Fri, 20 Feb 2026 18:42:05 +0100
-Date: Fri, 20 Feb 2026 18:42:05 +0100
+	id 1vtUYv-00868J-V5; Fri, 20 Feb 2026 18:45:09 +0100
+Date: Fri, 20 Feb 2026 18:45:09 +0100
 From: Andrew Lunn <andrew@lunn.ch>
 To: Shenwei Wang <shenwei.wang@nxp.com>
 Cc: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>,
@@ -71,15 +71,14 @@ Cc: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>,
 	dl-linux-imx <linux-imx@nxp.com>,
 	Bartosz Golaszewski <brgl@bgdev.pl>
 Subject: Re: [PATCH v8 3/4] gpio: rpmsg: add generic rpmsg GPIO driver
-Message-ID: <68c5f96c-124f-4d81-9dda-8e4b6bacbeab@lunn.ch>
+Message-ID: <b21b9ee5-d84e-47f8-86b5-c111ecc3d43d@lunn.ch>
 References: <20260212213656.662437-1-shenwei.wang@nxp.com>
  <20260212213656.662437-4-shenwei.wang@nxp.com>
  <aae7c851-a93b-4d57-a118-43c6e68c4790@foss.st.com>
- <PAXPR04MB918582EE33F7BD5C26259BB2896BA@PAXPR04MB9185.eurprd04.prod.outlook.com>
- <7669d7dd-96a5-48a9-b051-875e9fbdad58@foss.st.com>
- <PAXPR04MB91858E7125B2A4F21DDB78FD8968A@PAXPR04MB9185.eurprd04.prod.outlook.com>
- <c9d73e40-ab27-4403-9ff6-a3503568fe3d@lunn.ch>
- <PAXPR04MB91851BF97AEF1C5B728865448968A@PAXPR04MB9185.eurprd04.prod.outlook.com>
+ <13f9d767-61d6-4e29-b36e-6dcc860ccb11@lunn.ch>
+ <fd257c80-d97f-45b0-a12f-3a1888ba81db@foss.st.com>
+ <396819f2-dd00-4c09-8bc7-c035a5282a56@lunn.ch>
+ <PAXPR04MB9185A908F5090F0CA4FF05F78968A@PAXPR04MB9185.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -89,7 +88,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <PAXPR04MB91851BF97AEF1C5B728865448968A@PAXPR04MB9185.eurprd04.prod.outlook.com>
+In-Reply-To: <PAXPR04MB9185A908F5090F0CA4FF05F78968A@PAXPR04MB9185.eurprd04.prod.outlook.com>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -100,7 +99,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31976-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31977-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
@@ -120,44 +119,15 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TO_DN_SOME(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: D3269169C9B
+X-Rspamd-Queue-Id: F3D0F169D1A
 X-Rspamd-Action: no action
 
-> > > struct msg_hdr {
-> > >     u8  id;
-> > >     u32 size;
-> > >     u8  flags;
-> > > };
-> > 
-> > That is just a bad design. The point of not allowing __packed is that it forces you
-> > to design your structures correctly. Maybe AI has no idea of taste, but Maintainer
-> > do and would not allow a u32 to be unaligned like this.
-> > 
-> 
-> Let’s keep the discussion technical instead of taste. 😊
-> 
-> My point with the earlier example was simply to illustrate how layout differences can 
-> happen across architectures or compilers. I’m more interested in understanding how 
-> you would prefer this specific structure to be defined so that it avoids unaligned fields 
-> while still maintaining a stable on‑wire format.
+> If there are concerns about specific design elements within the driver, I’m happy to address 
+> those, but redesigning the hardware/firmware interface is not something this series can solve.
 
-struct msg_hdr {
-    u32 size;
-    u8  id;
-    u8  flags;
-};
+Then i think you are limited to using the out of tree driver.
 
-The compiler will lay this out as you expect, it won't add any padding
-between the fields.
+Sorry.
 
-You need to be careful with sizeof(struct msg_hdr). On 8 and 16 bit
-machines, it is probably 6. On 32, or 64 bit machine it is probably 8.
-
-I would say having a 6 byte message is probably a bad design, and you
-should try to make the u32 a u16 if you can. Again, not using the
-__packed is making you think about the design, and probably makes the
-design better as a result.
-
-    Andrew
-
+	Andrew
 
