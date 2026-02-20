@@ -1,37 +1,37 @@
-Return-Path: <linux-gpio+bounces-31982-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31983-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cAp2BRXHmGlgMAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31982-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 21:41:57 +0100
+	id mOXWBjzLmGltMgMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31983-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 21:59:40 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B8AD16AB60
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 21:41:56 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77C1B16AD20
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 21:59:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 75C1A301A15F
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 20:41:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9F3003015D07
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 20:59:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EB6930C35F;
-	Fri, 20 Feb 2026 20:41:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C193832ED57;
+	Fri, 20 Feb 2026 20:59:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xXgw4y4a"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="yw1sgS3y"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FFA2FD1DA;
-	Fri, 20 Feb 2026 20:41:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9C52F6193;
+	Fri, 20 Feb 2026 20:59:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771620109; cv=none; b=Oncltdbw45DWMNW/MNuQ9YipeqvwPfsLbAoexTPzLnIHZC4PUpviV+5QptDPNurSq7wJyzFXbAxih3cHF9Xycufb0FDSg73+jc8ECD98ceYhq/i6cs9k/k3bxG4uvrOkUzoXBPCeG+dyOyspt59MkqMKR8HGqVgtsmtSrmtbUec=
+	t=1771621175; cv=none; b=S/dkJjVOyMKSZ+eDg+wF+aND1qXqUDfFKHa78K9Px1LU1ICiEIhjA/Rg11uSRjUlX3D9xlOOPFbLGD/kDSFMkLKchxlWzAd56yEinXmAkhGFjpnwfwXzW6rOtLGYqHUS3L77Z1iR8aZwVbI2vGigoy+Rz0NEg3F4+NjfZftKhDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771620109; c=relaxed/simple;
-	bh=EGdHmGSGcknQ7r7djb62HKQ32j5nWwlteQmbW/GFSJY=;
+	s=arc-20240116; t=1771621175; c=relaxed/simple;
+	bh=NF3RD8w2e+i2HbNI61LUPbQNGkgQShmXAQXzQTmBY9c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oP4fCtJOPjbK4da36e9/9W9Jlx5qSX00YfqRb+3CMRkMFS0UC60/9+HtST4DHr+Y+O72n24JWJzLNEvI6oMa73MVE9J3GHVrhtVj1mTO8J+1+owSCSg0HEFLWVWg56Rn5WrSWWaTgDjI+Pkn2Jly/8g9MnMCr58uVhB2pnbmnvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=xXgw4y4a; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=R15QRxG4Rw3+zhyjaAIe4dmoMLxLNY5kujf8c7vMNsSLWCa+UFwaXf1TidnHE2e+XEdzECDNjcm4SLkt/yLj0lyd2aXtbaZturTgeKnwP6tS2/O6ZZli5ka1nRRE0SBDKW4HrCgrGF6NergpebgWYN0hCEwIT3Hk2siyH+KQ+PY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=yw1sgS3y; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
@@ -39,14 +39,14 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=WGq4tc2/8FniW3HL/KDpLr/I4aSlyDmzecJ4IotE1Zo=; b=xX
-	gw4y4aYuoG+UhDMysddc3jSucegZHiQ6CKqHe4mdJBdsJH0obhlgqmsspJQc0u7kqLPiedzD69d8W
-	Ex00uFYICfzXAeft2VOGXP4ELCPAp90u69orQzqLarK46rSMMSwONrPUb5k332N92ungN/wegPkNa
-	GwMMJU6cTb92hEM=;
+	In-Reply-To:References; bh=Ln2swUO6OKNe/xut5byeHoDeC3Te1ToIYkmL42YPz7c=; b=yw
+	1sgS3y4FpeML578FE1nCmSlnikdcoAbwFPYalB1jrF17Y7jJD93y5nR2aImCat/3ern4PvADYVjVS
+	j75hj/aAhyLTimzqEn+OHf5hQU3+Pp+M+2BUXwjHKPFP8UnNv0+R0rRxp707T4mz6m+QjtGntYlzA
+	+zn8kl1dxcfslLY=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1vtXJg-0086rn-7Q; Fri, 20 Feb 2026 21:41:36 +0100
-Date: Fri, 20 Feb 2026 21:41:36 +0100
+	id 1vtXao-0086v1-Iw; Fri, 20 Feb 2026 21:59:18 +0100
+Date: Fri, 20 Feb 2026 21:59:18 +0100
 From: Andrew Lunn <andrew@lunn.ch>
 To: Shenwei Wang <shenwei.wang@nxp.com>
 Cc: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>,
@@ -71,17 +71,16 @@ Cc: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>,
 	dl-linux-imx <linux-imx@nxp.com>,
 	Bartosz Golaszewski <brgl@bgdev.pl>
 Subject: Re: [PATCH v8 3/4] gpio: rpmsg: add generic rpmsg GPIO driver
-Message-ID: <f12d44e5-c2ea-42e5-ba5d-10408fdf3835@lunn.ch>
+Message-ID: <72cc9040-f6a8-4b10-89d2-21b386d5553e@lunn.ch>
 References: <20260212213656.662437-1-shenwei.wang@nxp.com>
  <20260212213656.662437-4-shenwei.wang@nxp.com>
  <aae7c851-a93b-4d57-a118-43c6e68c4790@foss.st.com>
- <PAXPR04MB918582EE33F7BD5C26259BB2896BA@PAXPR04MB9185.eurprd04.prod.outlook.com>
- <7669d7dd-96a5-48a9-b051-875e9fbdad58@foss.st.com>
- <PAXPR04MB91858E7125B2A4F21DDB78FD8968A@PAXPR04MB9185.eurprd04.prod.outlook.com>
- <c9d73e40-ab27-4403-9ff6-a3503568fe3d@lunn.ch>
- <PAXPR04MB91851BF97AEF1C5B728865448968A@PAXPR04MB9185.eurprd04.prod.outlook.com>
- <68c5f96c-124f-4d81-9dda-8e4b6bacbeab@lunn.ch>
- <PAXPR04MB918503335D2349BCCFEC93848968A@PAXPR04MB9185.eurprd04.prod.outlook.com>
+ <13f9d767-61d6-4e29-b36e-6dcc860ccb11@lunn.ch>
+ <fd257c80-d97f-45b0-a12f-3a1888ba81db@foss.st.com>
+ <396819f2-dd00-4c09-8bc7-c035a5282a56@lunn.ch>
+ <PAXPR04MB9185A908F5090F0CA4FF05F78968A@PAXPR04MB9185.eurprd04.prod.outlook.com>
+ <b21b9ee5-d84e-47f8-86b5-c111ecc3d43d@lunn.ch>
+ <PAXPR04MB918576D67A268E59242964A08968A@PAXPR04MB9185.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -91,18 +90,18 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <PAXPR04MB918503335D2349BCCFEC93848968A@PAXPR04MB9185.eurprd04.prod.outlook.com>
+In-Reply-To: <PAXPR04MB918576D67A268E59242964A08968A@PAXPR04MB9185.eurprd04.prod.outlook.com>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[lunn.ch,none];
 	R_DKIM_ALLOW(-0.20)[lunn.ch:s=20171124];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31982-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31983-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
@@ -120,37 +119,23 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8B8AD16AB60
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,lunn.ch:mid,lunn.ch:dkim]
+X-Rspamd-Queue-Id: 77C1B16AD20
 X-Rspamd-Action: no action
 
-> Yes, most compilers will lay this out without inserting padding between the fields. 
-> However, for a communication packet, we cannot freely reorder or tweak members 
-> just to satisfy alignment rules—the field order itself becomes part of the protocol definition.
+> To clarify: is Linux moving toward supporting only fully open hardware platforms? I’m 
+> not aware of any rule that prevents a company from upstreaming a driver that implements 
+> support for an existing hardware/firmware interface.
 
-Notice i've been saying design. If the design is poor, the
-implementation has to jump through hoops to make it work, which is
-when __packed it useful, it allows you to implement a bad design.
+You are not the first to be requested to implement a clean generic
+interface which is vendor neutral for these sorts of peripherals, with
+firmware on the other side. Look back in the archives, there was a USB
+attached microcontroller offering GPIO, I2C, SPI, etc. In the end the
+vendor decided to keep with there out of tree driver. But if it had
+progressed, it might of been possible for you to implement that same
+protocol over rpmsg, rather than USB. They are similar. And there is
+also greybus, which is also a solution in this problem space.
 
-> Even within netdev, where you’re very familiar, the classic ethhdr still carries the packed annotation 
-> despite being naturally aligned:
-> 
-> struct ethhdr {
-> 	unsigned char	h_dest[ETH_ALEN];	/* destination eth addr	*/
-> 	unsigned char	h_source[ETH_ALEN];	/* source ether addr	*/
-> 	__be16		h_proto;		/* packet type ID field	*/
-> } __attribute__((packed));
-
-And a lot of engineers will agree that this header is badly
-designed. The network stack goes to a lot of trouble to ensure the
-Ethernet header is placed into an skbuf with an offset of 2 bytes, so
-the IP header is 4 byte aligned. This also makes the DMA engines more
-complex, having to do an unaligned transfer at the start. More hoops
-to jump though because of bad design.
-
-None of the IP, UDP, TCP headers etc have packed, because they are all
-well designed. The IETF did a better design job than IEEE.
-
-       Andrew
+	 Andrew
 
