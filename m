@@ -1,162 +1,180 @@
-Return-Path: <linux-gpio+bounces-31954-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31955-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MMIGKoRGmGngEwMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31954-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 12:33:24 +0100
+	id sL9bLzdImGnYFAMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31955-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 12:40:39 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 508201674E0
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 12:33:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 20EFD16753B
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 12:40:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C03E8302DF6E
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 11:33:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B692C3030B03
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 11:40:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E40C331204;
-	Fri, 20 Feb 2026 11:33:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D768E331220;
+	Fri, 20 Feb 2026 11:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDZkhtWH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bpxX5oLD"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C41330B04
-	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 11:33:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DF61BBBE5
+	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 11:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771587198; cv=none; b=svCQHCtcpFIzbiZs8oMkGtiHqTig5i7tmHlqqIrrRJ2dHizDXMMABOZmqYMHh8E7LxJ1eKV2s+1UpYHpaoq3RdoG/y9t1ntYa7wN9hwfWoA8Ehrx98yDwWc1yxjuIXA+I7nHeLsQb4DZ48M7T9itGjIDCrtePUfNsYGYU4pr/94=
+	t=1771587634; cv=none; b=pP8jW/5mwohF3fZ2hqKCj/9cy3/qkBlI1eOaBJz9PVTjTDlnyuItRVq406ePAFr9tOd8rUVTKmrrkjRz8yMi6VeATc1g3FtMFekhphk7ATHKhRHK2qqV9rNXXK5qjY9dHA4GDmXpaLGw7gJ5GENf4EWOFC9mKzyk2Q1hUlMe5Js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771587198; c=relaxed/simple;
-	bh=RMvAITejFrQByNG8OGkLYpPhIAJHs3b3Y0GVPaAKYeU=;
+	s=arc-20240116; t=1771587634; c=relaxed/simple;
+	bh=lWtEjlAAPVWq0gS3+MQtMEHmyPRs3bM96WHmgpzpEmk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SWprIanb7cLxWZX96/3YC61JyKUJGX4ym60XQ+lMt3HshlDzGgMWGXjWwf37qt6PRAvjHBP/PpoIoLSOkMlyroaggWSCwgNjvYEgEYm3Dbk3E4kRJcdhQzNLxhCDOkrivybdNVStA3V06DlmMkSx5Riw1YvQbsM41ZHPGRoyA68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDZkhtWH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 845E5C116D0
-	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 11:33:18 +0000 (UTC)
+	 To:Cc:Content-Type; b=kxkYEE6YMTY4Ev227zk9uE+ox8qBJrV37U9WOUDqoccxLTFnfj6g52tynSsPizbFAMvIpROOrgLe9jjGJvzYe3JcOD9zF2O3QZ/JOnAGZZIea4nPgspNa9ugSRSlBNTNn8Vwh3WeSr1iuWEcXPkA8SZys+jY7ghQz+FsWCkBUII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bpxX5oLD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 528BAC19425
+	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 11:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771587198;
-	bh=RMvAITejFrQByNG8OGkLYpPhIAJHs3b3Y0GVPaAKYeU=;
+	s=k20201202; t=1771587634;
+	bh=lWtEjlAAPVWq0gS3+MQtMEHmyPRs3bM96WHmgpzpEmk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WDZkhtWHTM3X2I5sjLziZALaSxVvdAubUUDiGye0qRHu9xhKMVKAhflfTg0nSf8Wg
-	 bbb68SnClTD96fioPez5BAuDGRYOK+BceRJ6MfxrcFfnapd1nWxK8oht94DRFR26ni
-	 PbDKNnNjWw5s/qUsKVLbUkZApqt1tNrc+TMaS6ufMV6VzBqUpTy5Gfems/6PtiJ4hL
-	 Zj0kEw42+7Uo8BLfxnSt+tzJjb2WodcZN52XN6YlkSi6bYEdi7arM/dL5cfsf7gQIn
-	 M66CrGVMvAF1voVDaz1Z9iUBqbMq8nkIeGjbSAPvfulxvkEegXCohzOUNL6vvUY9kL
-	 3a/8g9Y0o0KOg==
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-3870dec27f4so23507331fa.1
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 03:33:18 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUQPIAM2yfu0k2h5mcr0dAiq0nrp35597t4rVK5YgGdv8595MtZ7StvUT1+4At/72kDSB3wpBQYf2u/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4+6A8olAlUYyrFjazYFYwXR+amN+hvdtLAUGfXonMiFqSyCSy
-	bxyph5jh5D4AnQQnAYGmEGItuctQ6vZrj55ZHQZ8FjKYDrsDl2EdTQEeR6r7gRbbhpCFhgSLhwU
-	szc/DkJe1XIC3iY70WrHOEhhorMNiZuP/kok2spwJjQ==
-X-Received: by 2002:a05:651c:1991:b0:388:23e4:4705 with SMTP id
- 38308e7fff4ca-388c8821fe9mr5998621fa.14.1771587197057; Fri, 20 Feb 2026
- 03:33:17 -0800 (PST)
+	b=bpxX5oLDVRUB4Gb0AG6Gwx6ZypQFptsyq06ujLnMqdfXDu52Ghng14iHqRJl2iiaw
+	 7QO+gjcxJnyBTrJaORPsgHFHVyPw5GaU4JRzERXWeBfCWQjDS4pT6tUEGIlCojdMFP
+	 eVLDtuFPSoE4+zebP8yaVvcut62VRyjBzJsKCEXi1gRvZgKgZWJPOqQ8hqNbcC8nss
+	 d70neir9+UjmLBcNJggCycx/eSqFncOuyjvl1sGcbbrzNinxO7zUrzUid/ycNqprTk
+	 +nFuhNe7eyksCtYHNNgN5o6SGMD13pJcibrm8Pj0Ya+Gqmx6/+jZfsVAHRgLANGsTU
+	 Tea6SbCajN/PQ==
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-38700168abaso16792881fa.3
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 03:40:34 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW+cSlwexc7RGkFh2ykuNHcDAl0NaBIFp6I7zf577PljISkuDdPMS+w2PKQKROAoiqknZs4U8xRawz9@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiKXni9OAmY35aII8n8HCXC06O/Ixvns+mCAP767VcwBYa5ivc
+	NnD4XxsGVHgd344JjhOUFhTfH0y4N6FH1yRJLgmkl20r8CJOkweqg43VbncmoIKniUyx/8COBHK
+	nOyr0/oWQDvPuOcqP0C/OgH273XHoFNvytwjOl4+NUg==
+X-Received: by 2002:a05:651c:1546:b0:386:ff65:4409 with SMTP id
+ 38308e7fff4ca-3881b95ed9fmr64284981fa.40.1771587632811; Fri, 20 Feb 2026
+ 03:40:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260211081355.3028947-1-james.hilliard1@gmail.com>
- <338e6575-ec44-4179-94af-9086a7ca79ac@kernel.org> <92359c6d-06ac-4f8d-baa5-6fa45a536455@kernel.org>
- <CADvTj4q74H__JZftOiXkdsY3+E_Xmcx6Y6i70RQDJ0K09=XOHQ@mail.gmail.com>
- <30026ed7-cd19-4be2-adbb-e8bb155a75b8@kernel.org> <CADvTj4oBtO0Yhib1rE8QQwgtJvy-x_hK46C63mjVAydtxHOV8g@mail.gmail.com>
- <20260212195423.GA787785-robh@kernel.org> <CADvTj4rPq8D5piqEijCdAjkWmZtq3Bi_Kxv-4F0aU4xi_O5WKg@mail.gmail.com>
- <CAMuHMdXmMVgPJv=HhkfttiRnSwFC6c2PnFjYwmL2hu3ikv+t3g@mail.gmail.com>
- <CADvTj4r95E2rLA0ZhOYPeFYpFbj0EXfb=omCN2Mab-Dj4T-cYA@mail.gmail.com>
- <CAMuHMdXTg8w3R1BVq3JO2z=gvTdB=qXY=aXvC7Lb8FtkEqz9ow@mail.gmail.com>
- <CAD++jLmp+47f-Ah4YdFJ+9dU0OFrnQdOcVyrQ61p0-_P61eBrA@mail.gmail.com>
- <CAL_JsqJK7PwyB=NoM+uXOgQk-RT49h4emogvYAfUAbZUpnd6Vg@mail.gmail.com>
- <CAD++jLkJE0ruzPeRMuVKJbJTjHoa-fTKn8djN+0es+hpqhELFw@mail.gmail.com>
- <CADvTj4rd3jS5VAPK1wyC8wKqohZ4kAX4tAJ9CfnBk64+cqrMUw@mail.gmail.com>
- <CAL_JsqLyF71Jq2QuY9SL2RZ4OS5GAeZhVRbRfXngMjjHGob36Q@mail.gmail.com>
- <CADvTj4qt6ubU+9f-b8ZP5+=RPfTD9wZqOui-c08via6mHPy5yw@mail.gmail.com> <CAD++jL=b3RwgB9taGe1+o-u6kM3QMzmtcx8oenxDpfPmkbC3+w@mail.gmail.com>
-In-Reply-To: <CAD++jL=b3RwgB9taGe1+o-u6kM3QMzmtcx8oenxDpfPmkbC3+w@mail.gmail.com>
+References: <20260216211021.3019827-1-james.hilliard1@gmail.com> <CAD++jLnOouLSt324=iKVnYd5v3HMBaMG_U4=8k-ixoqkek5niQ@mail.gmail.com>
+In-Reply-To: <CAD++jLnOouLSt324=iKVnYd5v3HMBaMG_U4=8k-ixoqkek5niQ@mail.gmail.com>
 From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Fri, 20 Feb 2026 12:33:04 +0100
-X-Gmail-Original-Message-ID: <CAMRc=MerdgjNjdVVDrbqug-3124zLUJEUi=baw-zA0HNb5mjdQ@mail.gmail.com>
-X-Gm-Features: AaiRm50g0b04gVKPG5INa-NH4ssDGCOBiTJNzH6Hh_YijSAC-Wz2MSVqYvCmcik
-Message-ID: <CAMRc=MerdgjNjdVVDrbqug-3124zLUJEUi=baw-zA0HNb5mjdQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: add gpio-aggregator binding
+Date: Fri, 20 Feb 2026 12:40:20 +0100
+X-Gmail-Original-Message-ID: <CAMRc=MdWb1ym-6=k3gaH6uAC+gniTmKW=c+_s=ce_J47nGu-Vg@mail.gmail.com>
+X-Gm-Features: AaiRm53grk0SDPss9X0K0LADVSQisEy5T7jvaOaqTpFltE4XptNPpbCS67TZixo
+Message-ID: <CAMRc=MdWb1ym-6=k3gaH6uAC+gniTmKW=c+_s=ce_J47nGu-Vg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] gpiolib: of: add gpio-line node support
 To: Linus Walleij <linusw@kernel.org>
-Cc: James Hilliard <james.hilliard1@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alexander Stein <linux@ew.tq-group.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Herve Codina <herve.codina@bootlin.com>
+Cc: James Hilliard <james.hilliard1@gmail.com>, linux-gpio@vger.kernel.org, 
+	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31954-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,linux-m68k.org,vger.kernel.org,ew.tq-group.com,bootlin.com];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31955-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 508201674E0
+X-Rspamd-Queue-Id: 20EFD16753B
 X-Rspamd-Action: no action
 
-On Fri, Feb 20, 2026 at 9:24=E2=80=AFAM Linus Walleij <linusw@kernel.org> w=
+On Thu, Feb 19, 2026 at 6:44=E2=80=AFPM Linus Walleij <linusw@kernel.org> w=
 rote:
 >
-> On Fri, Feb 20, 2026 at 5:57=E2=80=AFAM James Hilliard
+> On Mon, Feb 16, 2026 at 10:10=E2=80=AFPM James Hilliard
 > <james.hilliard1@gmail.com> wrote:
 >
-> > Yeah, I did investigate adding gpio-line-names support to gpio-map,
-> > but there was no clear way that I saw to actually implement it in the
-> > kernel. Maybe there's some way I missed however.
+> > Allow GPIO controller child nodes marked with "gpio-line" to apply
+> > probe-time direction/flags without hogging the line.
+> >
+> > Extend OF gpiochip scanning and OF dynamic reconfiguration handling to
+> > process gpio-line nodes alongside gpio-hog nodes.
+> >
+> > Some boards need probe-time GPIO direction/value setup while still
+> > leaving lines available for later userspace or driver requests. GPIO
+> > hogs can initialize lines but reserve them permanently.
+> >
+> > Add gpiod_apply_line_init() as a core helper for one-shot line
+> > initialization and use it for gpio-line setup.
+> >
+> > Because gpio-line initialization does not reserve ownership, subsequent
+> > consumer requests remain normal requests and may reconfigure or release
+> > the line as usual.
+> >
+> > Support "gpio-line-name" for setting the visible line name. For
+> > gpio-hog nodes, keep "line-name" semantics as the hog consumer label.
+> >
+> > Some boards only need to name a small subset of GPIO lines. Doing this
+> > generally requires defining a full gpio-line-names array with empty
+> > placeholders for unrelated lines.
+> >
+> > In overlays, gpio-line-names replacement is all-or-nothing. Names from
+> > base DT and multiple overlays for the same gpiochip do not compose,
+> > because each update replaces the full property.
+> >
+> > Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
 >
-> Check commit bd6f2fd5a1d52198468c5cdc3c2472362dff5aaa
-> "of: Support parsing phandle argument lists through a nexus node"
+> I like this looks of this, there might be some minor code duplication
+> with hogs, but the core idea is sane and very similar to what has been
+> discussed in the past.
 >
-> of_parse_phandle_with_args_map() in drivers/of/base.c is where
-> the magic happens.
+> It's minimalist, it's elegant, it does the job.
 >
-> This is called from drivers/gpio/gpiolib-of.c, in of_get_named_gpiod_flag=
-s(),
-> so as you see mapping doesn't really happen until you use it.
-> There is no way we can assign the line name on the mapping
-> path itself.
+> If for nothing else, so for the sake of making the previous attempts
+> count for something, and because I personally align with this idea,
+> and because at least three (3!)  attempts in the past by different
+> people for the same idea:
+> Reviewed-by: Linus Walleij <linusw@kernel.org>
 >
-> What we would have to do is to add code to gpiolib-of.c to scan the
-> whole device tree whenever a new gpiochip from a gpio-controller
-> node is added and look for any "gpio-map" with phandles to the provider,
-> and if that exist, index and parse gpio-line-names from the nexus
-> node to override the default (if any) that is set for the gpio controller=
-.
+> ... and if we apply the patch in the end I would have their names
+> added to the commit as Co-developed-by:
 >
-> Not impossible just a bit quirky.
+> > Depends on:
+> >   - https://github.com/devicetree-org/dt-schema/pull/185
+>
+> That's the real trick isn't it?
+> FWIW I approved it.
 >
 
-Due to the fact that we are not allowed to investigate fw_devlinks
-from driver code (as confirmed by Greg KH to me) I implemented this
-kind of device-tree scanning in gpiolib-shared. It too checks phandles
-in order to detect shared pins. Maybe it makes sense to factor it out
-into a piece of common code and cover both use-cases.
+I'm noting this but I will insist on making it into "default state" -
+state to which we revert when the line is not used: be it initially or
+after a gpiod_put(). And it must not conflict with driver-specific
+behavior so the reverting to default state must happen after
+gpio_chip::free() returns.
 
-Bart
+And of course we need a DT binding.
+
+And as an unrelated mental node: there's nothing in gpio-hog binding
+that requires us to use of_ APIs. This should probably be ported to
+fwnode and put into gpiolib.c. The legacy GPIO_HOG macro is used in a
+single board file too and should be replaced with a software node once
+the former is done.
+
+Bartosz
 
