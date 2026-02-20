@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-31935-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31936-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gFi0BNMSmGmL/gIAu9opvQ
-	(envelope-from <linux-gpio+bounces-31935-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 08:52:51 +0100
+	id aN43Mc8SmGmL/gIAu9opvQ
+	(envelope-from <linux-gpio+bounces-31936-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 08:52:47 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A38B1656AE
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 08:52:50 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E89531656A7
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 08:52:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B0506301FF8A
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 07:52:05 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id D50BB300623F
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 07:52:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A33F18BBAE;
-	Fri, 20 Feb 2026 07:52:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 884483328E6;
+	Fri, 20 Feb 2026 07:52:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCmHBiWE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nhsB+300"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03631D555
-	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 07:52:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6D332C939
+	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 07:52:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771573924; cv=none; b=O5AP/30uz1cSOEaRYqbpQrUeJgOpGqfjqjks15KjM3HfGaaRLS4eb7rXkut/Ja6IWUUUoEfOBgCb8ad91/Ea3qqfu0bB5GYpNSPPNRk4dJGqd/gMJOUHMQqLMo1RIcFBWCcWNTH6Ad+D3g6O8X97hg6Sqs3gt541esj3xnZLCYo=
+	t=1771573962; cv=none; b=IFqfJ0NObvTSm1LC6kC1MZIswiqWwNSwDXmQ+ZRTVWtWVOZhDjfj0S9LE20dzlB1C+BFu70QrcEiTKNEOInhX4XprIQNIbUs+LxOSJr/7Wioxi6KerNwKSUv/ShE3DBTLCzqefvTJubbBoVDXMf0TH75IU0Dn3bxVn2zHpiQx20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771573924; c=relaxed/simple;
-	bh=QTanqqZ9R/o4VV9Z0PWcMC9w6NpgsBW34fGWnDXCvuU=;
+	s=arc-20240116; t=1771573962; c=relaxed/simple;
+	bh=ZvFkcJLivOp2iVAg0ZWGZsCmTD+LulZ19WaJ/Q/9qBM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=huwNE4pS7gkNC26f35b4sk6uqvs7+qRsjLM0GVe7Xdfwn/TodmhI8eojTbyCQajTbFRJl/j3LTHb+jCsTYwjQu2KQOpB4KgpgzUZ90K3vPYFH2F/zfDeXbOmM0Cq5U6uT05kJwsAvI0ZC339Uf+LCEbGkHhd4mg5CTWMVdxjgMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCmHBiWE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4976C19425
-	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 07:52:04 +0000 (UTC)
+	 To:Cc:Content-Type; b=WCIvSHfWl1ItOlRIrV603B32dG4vx/B1ufU69+sdwWto/ToosfriuS0ShZwYpV6WnXI0iVa3lMfLAX3e0nY9oGQCFQrE3R2C9cLxMWZgMIAVoPAOqoFsJ/ASsBcU66d1xOpYv/NSwfHQ4y5nffJblPNCCNkRJyOs1wBAbDJ0UWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nhsB+300; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 019F6C2BCB2
+	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 07:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771573924;
-	bh=QTanqqZ9R/o4VV9Z0PWcMC9w6NpgsBW34fGWnDXCvuU=;
+	s=k20201202; t=1771573962;
+	bh=ZvFkcJLivOp2iVAg0ZWGZsCmTD+LulZ19WaJ/Q/9qBM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WCmHBiWEFZfHkzDUtWIS1eIQ7ZEHXKHUOt7dvZn3SWVbz4EBtaFvTQFy1X9BMvZth
-	 lXYDf4F5tYIrXC5HYqRI0jIAICl91aJ8gQrTIqB7RIO1YABA18hIZUKMKcHmLXHuYV
-	 WUWFISwfrd9j8qoJUz5Hg+NTEboadrUpfCQZuog4FYzs1ZtpLyGh5K7vYk1E6E0nCP
-	 oR6u5jTFLe2BzCo+NHF+5i/4xlEMyrJjUsrCEUKV1e2uiRjZcf2DuLu/8vY2d/G83X
-	 LqeefsG+Wcw1XORcbvHh/LpJbBnJhVrw8v0EtQUO9mpIE1zP2ZyuJp7o/qoVDlS7XO
-	 9Ic7/UzCM0c1A==
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-7946a1f2430so16544057b3.1
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 23:52:04 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUEmAHrgRKwekc1iybjhB+RFptFj2fU1gDGqcKxfrJbDsyVqmFRUy2xbv433LzSISpUh8GDWshZ8RAr@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZvelltZoDeRkdddWkviVtuZd5gXP/Tr+2UI9mEZz4klCzXbQX
-	PgaFkAGIWx+EM0jck1Pa/vymXi0jdhp5XFmPQYdAm9A7ZZrNfjz9I2TsZEzYIkz/gQJhzokiOI4
-	njkwaotzjW5NzsiomGQ2lPKtd+ax1FGo=
-X-Received: by 2002:a05:690c:dd4:b0:798:1ac:8a6e with SMTP id
- 00721157ae682-79801ac8ef3mr46855417b3.5.1771573923814; Thu, 19 Feb 2026
- 23:52:03 -0800 (PST)
+	b=nhsB+3002I9S1G44TUNOHYOq/fB++64xJ+b0MTcgj9Zkjg7YSHaqvx6BzGMnkk27m
+	 7qcavhlTsf8x580QnGfpkoWP9pxnaWBMBGqsWBcZWRpH61r5UQFS9kVRJN30c+1tK7
+	 cEJF9FE6x1qnlst1zipXGpxYK9d4vhrcumdT0ILtINPgiJIjRyBPthSy81OwUytIH1
+	 4N13KEEh9a9B9y7GLrl9u8YaaU2fsgFjKpTxTRp8U5cc6TZ3WMIEJ5vAWBM9rxtXiA
+	 ZifVo4cQxZ0YPcwA7Kkix0IadETkuSYypGomG80FoU7D9i+/z9w3iMRs5VOeclMcqB
+	 XjdUGr/9bHM+Q==
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-7980ca83937so11057007b3.1
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 23:52:41 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV9qqgmF+4/Uuu3HUP70wNTmpqQ0OVANR2ObcirViUgtJMo86eqUT9pqApBTxYUNFkAVNtSXy76qT4S@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxe8HGeBLWtFhr0xt352f11dIKOo9bA4CeR/R8DfiOVpujX3bI0
+	HiJpbpgo5fKyJGh6Q0CXxb48RezFXj+NGK4AVJOJEKD1TQtL8CxBorWTczuUpgfU4Yv0D6kiTIF
+	oL5HRzQZkboQ8MiPjA+wFLnXWYaEU0Ac=
+X-Received: by 2002:a05:690c:e3ef:b0:794:8d58:cac8 with SMTP id
+ 00721157ae682-797f717afbcmr59640777b3.4.1771573961174; Thu, 19 Feb 2026
+ 23:52:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260213092958.864411-1-tzungbi@kernel.org> <20260213092958.864411-6-tzungbi@kernel.org>
-In-Reply-To: <20260213092958.864411-6-tzungbi@kernel.org>
+References: <20260213092958.864411-1-tzungbi@kernel.org> <20260213092958.864411-7-tzungbi@kernel.org>
+In-Reply-To: <20260213092958.864411-7-tzungbi@kernel.org>
 From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 20 Feb 2026 08:51:53 +0100
-X-Gmail-Original-Message-ID: <CAD++jL=vskCOH0nEr8zLV3Lsvs=D21w_dAH75MX73ne1uEHVXg@mail.gmail.com>
-X-Gm-Features: AaiRm538oemFdXlRpuoNSZX2wWqwZzZmgmeNXenBk6UM2SaN1LwEPbpvlKpdqXc
-Message-ID: <CAD++jL=vskCOH0nEr8zLV3Lsvs=D21w_dAH75MX73ne1uEHVXg@mail.gmail.com>
-Subject: Re: [PATCH v3 05/11] gpio: cdev: Don't check struct gpio_chip in gpio_chrdev_open()
+Date: Fri, 20 Feb 2026 08:52:30 +0100
+X-Gmail-Original-Message-ID: <CAD++jLnt4ZAotu-Y+cRfHC70xEWrA1ju6W+jcqqW0-F44jrsTA@mail.gmail.com>
+X-Gm-Features: AaiRm53edGRzCfqwU5UbQpWqL-jocagaezgjXnfOAwrpFDNQOjvLcwz4--ELe40
+Message-ID: <CAD++jLnt4ZAotu-Y+cRfHC70xEWrA1ju6W+jcqqW0-F44jrsTA@mail.gmail.com>
+Subject: Re: [PATCH v3 06/11] selftests: gpio: Add gpio-cdev-uaf tests
 To: Tzung-Bi Shih <tzungbi@kernel.org>
 Cc: Bartosz Golaszewski <brgl@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
 	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
@@ -84,18 +84,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31935-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31936-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[17];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
@@ -105,21 +105,20 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 7A38B1656AE
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: E89531656A7
 X-Rspamd-Action: no action
 
 On Fri, Feb 13, 2026 at 10:31=E2=80=AFAM Tzung-Bi Shih <tzungbi@kernel.org>=
  wrote:
 
-> It's harmless even if: chrdev_open() and cdev_device_del() run at the
-> same time, and gpio_chrdev_open() gets called after the underlying GPIO
-> chip has gone.  The subsequent file operations check the availability
-> of struct gpio_chip anyway.
->
-> Don't check struct gpio_chip in gpio_chrdev_open().
+> Add tests for gpiolib-cdev to make sure accessing to dangling resources
+> via the opening file descriptor won't crash the system after the
+> underlying resource providers have gone.
 >
 > Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
+
+Neat!
 
 Reviewed-by: Linus Walleij <linusw@kernel.org>
 
