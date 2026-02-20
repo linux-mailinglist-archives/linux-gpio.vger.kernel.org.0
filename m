@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-31949-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31950-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ANIuMeE0mGn/CgMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31949-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 11:18:09 +0100
+	id yDAEMGs1mGn/CgMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31950-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 11:20:27 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23381166C22
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 11:18:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 28253166C8A
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 11:20:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B73293069986
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 10:17:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A02113031836
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 10:18:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26CE933C50D;
-	Fri, 20 Feb 2026 10:17:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7442F33769B;
+	Fri, 20 Feb 2026 10:18:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uqJwOIzW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BI8ck/Nc"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D571233C1B6;
-	Fri, 20 Feb 2026 10:17:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355FC1DA60D;
+	Fri, 20 Feb 2026 10:18:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771582626; cv=none; b=U+u8dPTRlm9DUAHmAykzq5LffYGGvr2dXUBgI11AjeSbwvYJxNUd8eTXUl+hfQDHu3yOUE3n76AWaBvmPG1X0YMhOddc3E4Mf3qR1n9nmLGMhBUfpODqGMai+6vaskDf6MtcHVfZ2zKQT708VBFH9b+CqjUgzxuUprRPyZRSJxc=
+	t=1771582721; cv=none; b=TQhxyvbvqb5x+8LM29vzrS1HVFFykccypK/M/HsqZVCcfhqNZ8ieWgnm+iB1b5gJ7Bp1s9XyW+59HPYwBTYznES/Zd0XF3kh4uOkzFoLpmHCWgMIaRigCbE4dPnAepNfzkJDeK/qhn2mBm+CRDTh5IDThbOrH5zdQD3B6qmfe9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771582626; c=relaxed/simple;
-	bh=DwJRqwTIxPH4O6waaaWkmQc1GediIB0SchBhEhcUMf0=;
+	s=arc-20240116; t=1771582721; c=relaxed/simple;
+	bh=SiYOkd9Fdv3qiGtvX4sk+tU1WzcPDYY5T7RrkmzlBhU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DMcMpy4b+DAmOemEGEGbJT64NHcErw0iZB5Ue5Vi+A3arnvtIxHMftKdwaKDV3xyDSiYNykHAeYsRsNel/Bwz6zPzP6IVhcFBC7MUAwT7CSp/Vdf7Ri2tCxnIevnZT2IpG9i/PY1hYudeSse8KUQcL3sAsYt9QyL3B8VhhH2ams=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uqJwOIzW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67917C116D0;
-	Fri, 20 Feb 2026 10:17:00 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=XrqtaE87sP2JHekX8FH7O3OfAFMd000TWcAo24kLRkm5EXhw8P2tRYPYRfQZyG/Fmb7LHTcZkjAo2aAJHIUtU7Dm4LUQgxfvCclOOvdPyuQNC0H7EUi8jQCGCtWrLVN1vfVvGOTHAmIuFB5uYTthhlQh3CuF6DLAU2a0+Xlyly8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BI8ck/Nc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E4CAC116C6;
+	Fri, 20 Feb 2026 10:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771582626;
-	bh=DwJRqwTIxPH4O6waaaWkmQc1GediIB0SchBhEhcUMf0=;
+	s=k20201202; t=1771582721;
+	bh=SiYOkd9Fdv3qiGtvX4sk+tU1WzcPDYY5T7RrkmzlBhU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uqJwOIzWN+T6wPgd8AKTu2b9HuLG1WazY+eZbbLoQF4YGr9jtksWgUNv84WxT8uws
-	 2aL2TV6mrWsFt5LUdwnxL19wEz5mltZHnYAGgIVPP0GuorDih2fY1z2EzW2LCVPLhc
-	 Ntvs7TCFBE+VPdGvxq1GsRGNP13X+BP2IzT21I2+UbHzgfMoSHyp1hTOnH4xTjb4mL
-	 Qhw1hge6i0CxrqkQzqDfesNW6evho36iLwI8x7OoLPymOPdY3m1CSS/VwYqs5+uVs9
-	 /oPlMJLScpPxxjddiAq0XHhQlXW+HAscwFm+QzABg2SCnTu5K41aZIv7Npzhm9jYdJ
-	 GQXSsD/uWNnow==
-Message-ID: <edc3a63a-8117-476f-9582-97ae31fefa96@kernel.org>
-Date: Fri, 20 Feb 2026 11:16:58 +0100
+	b=BI8ck/NcdJKkCYx8J35dNnZdu1P3WcD2Rz8VxkA7KzVagSqtnFXpih7wZcJutMp8T
+	 3escshFqHSeE9m6TCr2LgLt+eKs55eSWPTs/7n9WZ39FBom8lV9KyE19P4/30A+/Iw
+	 DMHRYJL/gqmlOu2/vnCIpvON+IRtDs5Mj4sADdmG32pFUruQN6XyMV6atz1CZrXuqq
+	 MtN5aU6rVHbegW12w7Inwx9MGIpvu02CQaLwnO5rjjq+TJtlRvCV1chuEWBvqqQfgH
+	 3D3FZR2oa3QEYP35ls8djF6/C2wKONVoYei88KL/+Q765+kP85MzgoaSq4q3NOUypC
+	 mgOI/nt+t0oZA==
+Message-ID: <9949202e-7eaf-4072-a24c-6119e0eed493@kernel.org>
+Date: Fri, 20 Feb 2026 11:18:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -126,7 +126,7 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
 In-Reply-To: <e956750b-0333-4465-b37e-5f460b5e092f@oss.nxp.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -137,7 +137,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31949-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31950-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -145,151 +145,35 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_TWELVE(0.00)[30];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_PROHIBIT(0.00)[2.159.138.16:email];
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nxp.com:email,4009c000:email]
-X-Rspamd-Queue-Id: 23381166C22
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nxp.com:email]
+X-Rspamd-Queue-Id: 28253166C8A
 X-Rspamd-Action: no action
 
 On 19/02/2026 12:36, Khristine Andreea Barbulescu wrote:
->>
->>> +      reg:
->>> +        maxItems: 1
->>
->> You have 'reg' so the node name should have unit-address.
->>
->> However, there's not any real DT resources in this child node, so you 
->> should just drop it.
->>
+> Hello Rob,
 > 
-> For context, SIUL2 exposes a set of platform‑capability and SoC identification registers that are split across the two discontiguous ranges: SIUL2-0 and SIUL2-1. These registers are the source of SoC information (e.g. identification and capability flags) that other subsystems are expected to consume (e.g. PCI Express). Because those fields are physically divided between the two SIUL2 ranges, consumers need reliable access to both ranges to correctly discover and configure the platform.
-> 
-> Hence, my proposal is to keep the two 'syscon' child nodes.
+> On 1/21/2026 4:19 AM, Rob Herring wrote:
+>> On Tue, Jan 20, 2026 at 01:59:13PM +0200, Khristine Andreea Barbulescu wrote:
+>>> From: Andrei Stefanescu <andrei.stefanescu@oss.nxp.com>
+>>>
 
-Please wrap your replies correctly, so this will be easily parseable.
 
-I do not understand the reasoning. If you have two register ranges, you
-have two <reg> entries and having a child node has nothing to do with it.
+BTW, one more thing, replying one month after the review, which was
+given to you within one day, means entire context is gone, so actually
+we assume that you will agree with the review, not discuss it.
 
-> 
->>> +    required:
->>> +      - compatible
->>> +      - reg
->>> +
->>> +  "-hog(-[0-9]+)?$":
->>> +    required:
->>> +      - gpio-hog
->>> +
->>> +  "-pins$":
->>> +    type: object
->>> +    additionalProperties: false
->>> +
->>> +    patternProperties:
->>> +      "-grp[0-9]$":
->>> +        type: object
->>> +        allOf:
->>> +          - $ref: /schemas/pinctrl/pinmux-node.yaml#
->>> +          - $ref: /schemas/pinctrl/pincfg-node.yaml#
->>> +        description:
->>> +          Pinctrl node's client devices specify pin muxes using subnodes,
->>> +          which in turn use the standard properties below.
->>> +
->>> +        properties:
->>> +          pinmux:
->>> +            description: |
->>> +              An integer array for representing pinmux configurations of
->>> +              a device. Each integer consists of a PIN_ID and a 4-bit
->>> +              selected signal source(SSS) as IOMUX setting, which is
->>> +              calculated as: pinmux = (PIN_ID << 4 | SSS)
->>> +
->>> +          slew-rate:
->>> +            description: Supported slew rate based on Fmax values (MHz)
->>> +            enum: [83, 133, 150, 166, 208]
->>> +        required:
->>> +          - pinmux
->>> +
->>> +        unevaluatedProperties: false
->>> +
->>> +required:
->>> +  - compatible
->>> +  - gpio-controller
->>> +  - "#gpio-cells"
->>> +  - gpio-ranges
->>> +  - interrupts
->>> +  - interrupt-controller
->>> +  - "#interrupt-cells"
->>> +  - "#address-cells"
->>> +  - "#size-cells"
->>> +  - ranges
->>> +
->>> +additionalProperties: false
->>> +
->>> +examples:
->>> +  - |
->>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->>> +    #include <dt-bindings/interrupt-controller/irq.h>
->>> +
->>> +    pinctrl@4009c000 {
->>> +      compatible = "nxp,s32g2-siul2";
->>> +      gpio-controller;
->>> +      #gpio-cells = <2>;
->>> +      gpio-ranges = <&siul2 0 0 102>, <&siul2 112 112 79>;
->>> +      interrupt-controller;
->>> +      #interrupt-cells = <2>;
->>> +      interrupts = <GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>;
->>> +      #address-cells = <1>;
->>> +      #size-cells = <1>;
->>> +      ranges;
->>> +
->>> +      siul2_0: siul2_0@4009c000 {
->>> +        compatible = "syscon";
->>> +        reg = <0x0 0x4009c000 0x0 0x179c>;
->>> +      };
->>> +
->>> +      siul2_1: siul2_1@44010000 {
->>> +        compatible = "syscon";
->>> +        reg = <0x0 0x44010000 0x0 0x17b0>;
->>> +      };
->>> +
->>> +      jtag-pins {
->>> +        jtag-grp0 {
->>> +          pinmux = <0x0>;
->>> +          input-enable;
->>> +          bias-pull-up;
->>> +          slew-rate = <166>;
->>> +        };
->>> +      };
->>> +    };
->>> +...
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinctrl.yaml
->>> index a24286e4def6..332397a21394 100644
->>> --- a/Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinctrl.yaml
->>> +++ b/Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinctrl.yaml
->>> @@ -11,6 +11,8 @@ maintainers:
->>>    - Ghennadi Procopciuc <Ghennadi.Procopciuc@oss.nxp.com>
->>>    - Chester Lin <chester62515@gmail.com>
->>>  
->>> +deprecated: true
->>> +
->>
->> I don't really see why you can't just extend this binding with GPIO and 
->> interrupt provider properties.
-> 
-> The existing SIUL2 pinctrl binding only describes the MSCR/IMCR registers and treats SIUL2 as a standalone pinctrl block. This is incomplete and does not correctly represent the SIUL2 hardware, which also provides GPIO control, interrupt configuration, and MIDR identification registers across two register windows. Extending the old binding would require incompatible ABI changes and would result in carved-out subregions, which is discouraged.
-
-Can you just add missing register ranges to existing device? I really do
-not see how this is incompatible ABI or how does it result in carved-out
-regions.
-
+Otherwise, please wait one more month for our response to your response,
+before you post next version. :/
 
 Best regards,
 Krzysztof
