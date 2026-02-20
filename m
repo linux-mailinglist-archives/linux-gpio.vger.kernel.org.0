@@ -1,191 +1,276 @@
-Return-Path: <linux-gpio+bounces-31956-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31957-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KBcZEaJImGnYFAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31956-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 12:42:26 +0100
+	id gPIjCrBOmGmbFwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31957-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 13:08:16 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1483316755A
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 12:42:25 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88C881676E4
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 13:08:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 06A20300B544
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 11:42:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 15C9B304E83F
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 12:08:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5519733F8A0;
-	Fri, 20 Feb 2026 11:42:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BB7332FA10;
+	Fri, 20 Feb 2026 12:08:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Nn3peZzI";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="P9WzuP6j"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s8s/A32/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A34337BB3
-	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 11:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F96D3191CE
+	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 12:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771587741; cv=none; b=GGQrtCtHl+PtOWalF/EQUZcOBB18bIfecwF2spay7TWQkI485giGMHgxLqmLFZi0nNJ1jfwZ+LPdQLE8E++lM0XLF94iLEPmG+WlfLqVZDyNwGcHMJlcq808N3bAhH4w/GJ/HqcgtFc9DMS6yiamRFRmEmIIQzTwUpluUFL87YI=
+	t=1771589293; cv=none; b=EQs+Q9VWv7UruwLbfnPrU3hR3uM+8nDd9ZbezeIecT9uDEPyeyB39BaqiRDAe3u8meugxTl8XV33Fy+38A/457pB7G4d04kjqna4CN1uCsG3Atx6+IqTtYMv2YxG7Otw1/TYL4Vsda546vRuIhSAU6e33vNTHAJ11uTwJqAHEvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771587741; c=relaxed/simple;
-	bh=DpJf8VHsidM5VmsnMZbYSuJjI5PqQZ7AobB81NOsVtI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nAeatiBk7FIaRRsJlxvxy66NSxof/5KZ7Rl+a3yOPhye/VFwEzMChyUodRTWcAjKowthVUG9ry6G7JUdnMeGlxS5Y+nmvSRi966x8DiA3l8jDrZ31v/SV+aJF21Uvd4f1qfPBKVRbqDZfqB7LFii+wt0WtmelxAGOLolvW6Yw/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Nn3peZzI; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=P9WzuP6j; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61K5RnUU2431099
-	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 11:42:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	0ke+QoH3Wc4sT3kzzTDA4O6YqBotxBWH99Ib8EdvO5w=; b=Nn3peZzISdoeNPgs
-	4C8oTDMb+ThxRTXfNbq5Sow59w/rlFhuoqyI1Aiy/NPhbZt4k68OlFAtU9LqREPm
-	FjTWXGQW+p3uqQbKtIwg8PefcLrdJw9wHhlvFEl7Q33wLLR4nF875waD3BK8dY++
-	svjigrPQeKUt1FaiWRTRuhdejaoLj+ORr90a9p2lIuuCPpX1DUAVe6CD6q1e3zN/
-	J6/mS3powF0C4EJ0elt/KxSv68nyHerJXRvVCewYwPdkFXB9LIJoIAzriXe8a1dw
-	LVqsZFxlbL+/tfklAniTwqtZOxYHxWomtzewXk/gu53q9nzNThq4kLRkytGHzvBO
-	VbUkzQ==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ceh4j0wpg-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 11:42:18 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-8cb4b8e9112so157446485a.2
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 03:42:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1771587738; x=1772192538; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0ke+QoH3Wc4sT3kzzTDA4O6YqBotxBWH99Ib8EdvO5w=;
-        b=P9WzuP6jzutn9TB1ziM+jOfRpTosBxbNV8b8+3crwvLDIx5P8pVb1irNoYniLS9XEv
-         5XGRMhfcf4Y4iB/1qOe4PrQIdPJ6FZNvi28fqfG7PaKdGLe+6czRsnpzkCL31/c0NB5C
-         J53igeh32U117hH3DN+6DypANYldYAkQK5Wxrp5/tapjMXgPCcaJHJIuttGk/OBU5D/j
-         TRpUeNLA3jRCSSYkM7F4T0/8Vi7gRbB8k4uTDez/Mqrgqv9C77Cep6fYftzh03PtuIgq
-         atj5fmwlsOINVIPM4pZpGTa3ibmRWtrZCbWBXe1rC0zkQukPjyRdb41XP9cFZH3uVJts
-         DK4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771587738; x=1772192538;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0ke+QoH3Wc4sT3kzzTDA4O6YqBotxBWH99Ib8EdvO5w=;
-        b=E5QPooLkzifT7a86yz8QOsqfEJ7StRx5tgYMMQpXsjDc6WWtxhw1Si7rLLn74LGib1
-         WpXujEGqxZszWp1yEwokuFSE8CWdzA/LGXsAWNYS1z6RxQljO/vFVDKwmBrmG+sLToDc
-         JECf4PKyJlQah9L8eYcr3Iv7xLr2Y//kvIC9QB8pgz5PmHRJvcuoXJf5GQFyX3UCyohs
-         yHtVfYedTJ0fOpJhrWparlF3a/qTgm2Eke4vWcARf0ygq3dFfpXIvXGN0yc/tmkIODT6
-         WgLnIhspcV1SkF6saaZ4ZIpPKz6r2l8nZx57TDMquoUfhZyAvq+nVEXhQ+R+YwMpQnQb
-         tVBA==
-X-Gm-Message-State: AOJu0Yz0rhjhugpVl3KO1qe1MeZatpJ7pUjR9rg9IXUvCtHnpNUl7CSP
-	kSTa54cHAahp80Mw90PtzS7fR4TEL1zUMff+5Mv+P2U6ioezPML+4BTY/i1bD2vSxgLrJC5Iorw
-	H7P3tHDF4hq+BaIXTxpVs9Pg9jliVI0i8GbYNEzJCz56qr9IH+Zmet8Ve1tcZ2KWC
-X-Gm-Gg: AZuq6aIIzOL/El8XRwtZ/+PJZpdS72SOx6dBpKI5CJB+1azttModv00fpH6gPiI1a23
-	osMU8PaBRsHafrj1q6f0HSUzVNFW7mUV2jDqt1t4KeHHg8uSfFCgAKNFCjYIfS8i5qGStRvBQ0E
-	coMseJMI6pStbtm3eRQgkzu2ZvwaJ2WJqOB6mrpt0euEiWPocANG8q6F6QxLnPjp2ApDis9QH2r
-	yr9hRAeHn+a9HixpvwB1G8GkyK6rslFUnyLbMGViJuIbIHm4lKpP+dZRYrG8eYiw0MypGBYZ5Px
-	wZeT/H01iF13baNgjXHVFZrGlAz1HxWvfB2QI9nwknQxdCGWhCVYSQM7trpNLjvI45ZtJ0AfC7u
-	pCQPZZ/EP7J9iZFqTMUFXtGooKp/JqvMI0q+QktCoPFtF7ctd638=
-X-Received: by 2002:a05:620a:2807:b0:8b9:cf85:40a0 with SMTP id af79cd13be357-8cb740a682emr990084685a.57.1771587738010;
-        Fri, 20 Feb 2026 03:42:18 -0800 (PST)
-X-Received: by 2002:a05:620a:2807:b0:8b9:cf85:40a0 with SMTP id af79cd13be357-8cb740a682emr990080785a.57.1771587737544;
-        Fri, 20 Feb 2026 03:42:17 -0800 (PST)
-Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:6b8b:e905:1219:c668])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43796abd793sm54309461f8f.25.2026.02.20.03.42.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Feb 2026 03:42:16 -0800 (PST)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: David Lechner <dlechner@baylibre.com>, Linus Walleij <linusw@kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: linux-gpio@vger.kernel.org
-Subject: Re: [PATCH libgpiod] dbus: daemon: watch for "add"/"remove" uevents instead of "bind"/"unbind"
-Date: Fri, 20 Feb 2026 12:42:14 +0100
-Message-ID: <177158771758.8514.5894563647144625392.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260218-gpio-manager-bind-vs-add-v1-1-0fb22c448de3@oss.qualcomm.com>
-References: <20260218-gpio-manager-bind-vs-add-v1-1-0fb22c448de3@oss.qualcomm.com>
+	s=arc-20240116; t=1771589293; c=relaxed/simple;
+	bh=c9oZ5zoDWNcytFgezfRN71k5wvQNOK61n46yG0MPUoM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YCiCMDQ9P0gL9ABKJlUhdUyM4gPOBXy+9UB+9yeZpIIF9AUdvitzbR83yEv4t0HUFwyuQyk94OsSH79aZtLmzplAetKmEuJm0NVUJ4t3fqFkR415mnu37bQevsnc9QJLuTRP4IrwKjBN5Zu42QEp1FiJ4g+Pv8zccgbNKE3JbRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s8s/A32/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32E93C2BCB0
+	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 12:08:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771589293;
+	bh=c9oZ5zoDWNcytFgezfRN71k5wvQNOK61n46yG0MPUoM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=s8s/A32/ZDoHuZ5gNGYcXVGkQmaBeEYTx8NObC6/f/TJURPe5dJ6+99LAWGml1QZB
+	 wZxoHbEgEELCnImBADU6tEHOdwD771AziG9fneI6TCV5nnbTU4talnCgQ3OoGRxeHO
+	 OD0WxQpZpqC7AVGG2QOvAbJyXqSUSwh76TQ8nbXT0Lu40euMwMnULv/4uTXmOSJWL8
+	 /nSYm5LkMwZNFSliPaC4xicRUiUel5sQ7OtvQDxv730NYHQ32M+bEZFv2T8HvtnlOi
+	 9Q0ivUCaihZCtSTG0pe1ioewBiuUR0OmDc+ExqJLFbvydlFCxW1/GSnu/UVuQ1XLTk
+	 wjT55KC590euw==
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7d4cb7e10efso1714317a34.0
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 04:08:13 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXINDFHz+kB8ebhtQdYyn9u8PLJuYUlnhvd30jxYTdlttR21aXg++GhOZ7eeZlEKgWXBpkqGh8CNzZS@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxKENxOJZhha+Y6H+uawiAlo+lhdZhvFW/i2Enqnm1zeKxArNB
+	2IFZX6JX88P6Eebg7IMWtzqnJN48HZv/uyCxs8OuVGZ9vlxA6lbo3QcnUF2TOwsbDUIsjRYznEv
+	Y6q0AqtrhAs1F0CMSjWolUFa6EIQU4EQ=
+X-Received: by 2002:a05:6830:6686:b0:7c7:655c:7353 with SMTP id
+ 46e09a7af769-7d4d0adabe0mr14320252a34.12.1771589292150; Fri, 20 Feb 2026
+ 04:08:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjIwMDEwMiBTYWx0ZWRfX1DxPxv+VYg7A
- O35TSlj6BK/pUD/1TW2aQk9Z5oA0S0U+0jpIo4gphGd1bY3CAV12+BOjyMSWH6crMplaICRTaIc
- skY13yaBFbNjD7wP3XxITkv8OSsAMM+xadhamZ65Qo0HV9RhblJm7AANM47g5C/D7FrulUjor18
- bPuJGqZQXBjPuOFWkxsYIJg/Tiha2faBkLqiUNVzTx7HLs3NOMoF6A+1v4s4cFn0AUFwIMIWQ7w
- O+U3NCu7S39oEdIeB5FLj4z6KXsXC3xct50pDQDDFqiVCQH1j5yN+J9TvqjhxVFDFhIIpuLuknA
- iAmylOJKxfW9uFpNB841jYcX/iJjkAB8dohiLs4WqD7CJrVr/4x9qKYK7dt77k2BaYTH4zhoRks
- K6vssIZiOusKBf6j41/7hQlXYH9bqXLncyvzmeoacTCHGYrrZ9gk+vml5tjVu5a2KwShs7eGjXK
- mrjoOuawoeZ1D79zrIg==
-X-Authority-Analysis: v=2.4 cv=R/0O2NRX c=1 sm=1 tr=0 ts=6998489a cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=HzLeVaNsDn8A:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=dbhCAHqVBIOzxrNKzlYA:9 a=QEXdDO2ut3YA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-GUID: JNL47QDLZRFfcqelFFIr_sQo42pKW_qk
-X-Proofpoint-ORIG-GUID: JNL47QDLZRFfcqelFFIr_sQo42pKW_qk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-20_01,2026-02-20_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 lowpriorityscore=0 clxscore=1015 bulkscore=0 adultscore=0
- spamscore=0 phishscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602200102
+References: <20260219-device-match-secondary-fwnode-v1-0-a64e8d4754bc@oss.qualcomm.com>
+ <20260219-device-match-secondary-fwnode-v1-1-a64e8d4754bc@oss.qualcomm.com>
+ <aZdraIXlkAHwP-Pm@smile.fi.intel.com> <CAMRc=MdYcbO74sbjvKeg5k_E7EHfovFHHasDx2erWfcO39zBNA@mail.gmail.com>
+ <aZgPGndb-6FTlnyR@smile.fi.intel.com> <CAMRc=McUnsnVOVvxDwTKmchrvyh-_HCwEyJLnseE29d00Eicbw@mail.gmail.com>
+In-Reply-To: <CAMRc=McUnsnVOVvxDwTKmchrvyh-_HCwEyJLnseE29d00Eicbw@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 20 Feb 2026 13:08:01 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0gM08=Zq-VMHX-RT78L=HDacbayM7=SoQ2di-Hsc2SB0w@mail.gmail.com>
+X-Gm-Features: AaiRm51c-iLmB2rMSO5ksBHx2oFIQ0tQjadLI8r7Ve7cI-qSopYC9cSvWOGIuCY
+Message-ID: <CAJZ5v0gM08=Zq-VMHX-RT78L=HDacbayM7=SoQ2di-Hsc2SB0w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] driver core: provide device_match_fwnode_ext()
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Linus Walleij <linusw@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, driver-core@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31956-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,qualcomm.com:email,qualcomm.com:dkim,oss.qualcomm.com:mid,oss.qualcomm.com:dkim];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[linux.intel.com,linuxfoundation.org,kernel.org,gmail.com,lists.linux.dev,vger.kernel.org,oss.qualcomm.com];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-31957-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rafael@kernel.org,linux-gpio@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 1483316755A
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 88C881676E4
 X-Rspamd-Action: no action
 
+On Fri, Feb 20, 2026 at 12:25=E2=80=AFPM Bartosz Golaszewski <brgl@kernel.o=
+rg> wrote:
+>
+> On Fri, 20 Feb 2026 08:36:58 +0100, Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> said:
+> > On Thu, Feb 19, 2026 at 04:21:59PM -0500, Bartosz Golaszewski wrote:
+> >> On Thu, 19 Feb 2026 20:58:32 +0100, Andy Shevchenko
+> >> <andriy.shevchenko@linux.intel.com> said:
+> >> > On Thu, Feb 19, 2026 at 05:31:22PM +0100, Bartosz Golaszewski wrote:
+> >> >> Provide an extended variant of device_match_fwnode() that also trie=
+s to
+> >> >> match the device's secondary fwnode.
+> >
+> > ...
+> >
+> >> >> +int device_match_fwnode_ext(struct device *dev, const void *fwnode=
+)
+> >> >> +{
+> >> >> + struct fwnode_handle *dev_node =3D dev_fwnode(dev);
+> >> >
+> >> >> + if (!fwnode)
+> >> >
+> >> > IS_ERR_OR_NULL()
+> >> > If supplied @fwnode is secondary, it might be an error pointer.
+> >>
+> >> I mirrored existing device_match_fwnode(), should it be fixed too?
+> >
+> > The answer is "I don't know". Strictly speaking this should be done eve=
+rywhere
+> > in the generic code when we can't guarantee that fwnode that comes to t=
+he
+> > function is pure NULL or valid one.
+> >
+> >> >> +         return 0;
+> >> >
+> >> >> + if (dev_node =3D=3D fwnode)
+> >> >> +         return 1;
+> >> >> +
+> >> >> + return fwnode_is_primary(dev_node) && dev_node->secondary =3D=3D =
+fwnode;
+> >> >> +}
+> >> >
+> >> > I think we can refactor this.
+> >> >
+> >> >    struct fwnode_handle *node;
+> >> >
+> >> > // I would name it like this, because in 3 cases in drivers/base/pro=
+perty.c
+> >> > // 2 with node and 1 with dev_node when the same API is called.
+> >>
+> >> Haystack's node is "node" and the needle is "fwnode"? Seems confusing =
+to me.
+> >
+> > But we need some consistency. drivers/base/property.c is inconsistent t=
+o begin
+> > with and here the code chose the least used one for unknown reasons to =
+me.
+> >
+> > I'm fine with "node" that is inside the function.
+> >
+> >> >    if (IS_ERR(fwnode))
+> >> >            return 0;
+> >> >
+> >> >    if (device_match_fwnode(dev, fwnode)) // NULL check is inside
+> >> >            return 1;
+> >>
+> >> Yeah, and it too can be supplied a secondary fwnode. Let's say we reso=
+lve
+> >> a reference to a secondary software node and try to lookup a GPIO thro=
+ugh it,
+> >> we'll end up with an IS_ERR() fwnode with existing code, right?
+> >
+> > I'm not sure I understood the use case you are trying to describe here.
+> >
+> > The very first check guarantees that fwnode is either NULL or valid one=
+.
+> > When it's a valid one, the comparison with error pointer will be false.
+> > What did I miss?
+> >
+>
+> I mean: device_match_fwnode() has a NULL check but not an IS_ERR() check =
+and
+> can be passed a secondary fwnode as argument and that can be -ENODEV. It =
+will
+> probably not fail terribly but is still incorrect.
+>
+> I was speaking about the existing implementation, not addressing your com=
+ments.
+>
+> >> >    node =3D dev_fwnode(dev);
+> >> >
+> >> >    return fwnode_is_primary(node) && node->secondary =3D=3D fwnode; =
+// NULL check is inside
+> >> >
+> >> >
+> >> >> + if (!fwnode)
+> >> >> +         return 0;
+> >> >
+> >> >> + if (dev_node =3D=3D fwnode)
+> >> >> +         return 1;
+> >> >> +
+> >> >> + return fwnode_is_primary(dev_node) && dev_node->secondary =3D=3D =
+fwnode;
+> >> >> +}
+> >
+> > ...
+> >
+> >> >> +int device_match_fwnode_ext(struct device *dev, const void *fwnode=
+);
+> >> >
+> >> > Perhaps ext --> or_secondary ?
+> >>
+> >> I thought about it but it would make it sound like it only matches the
+> >> secondary to me. Maybe device_match_all_fwnodes()? Would be future-pro=
+of if
+> >> we end up doing the linked list approach.
+> >
+> > Danilo proposed _full, but in my opinion it's not better than _ext unle=
+ss you
+> > know very deep how fwnode structure is designed. Same with _all. It's c=
+onfusing.
+> >
+> > fwnode_or_secondary (the key part is "or") sounds more precise. But if =
+you come
+> > up with something else that makes less ambiguity I will be glad.
+> >
+>
+> device_match_fwnode_or_secondary() sounds good to me but shouldn't we try=
+ to
+> limit the propagation of the "secondary" token in namespaces if our goal =
+is to
+> get rid of the whole "secondary fwnode" concept?
 
-On Wed, 18 Feb 2026 09:50:44 +0100, Bartosz Golaszewski wrote:
-> Linux has a stub driver for GPIO devices (the ones on the GPIO bus, not
-> their parent devices!) but it only actually *binds* to it those devices
-> that don't have a firmware node attached. This means that in some cases,
-> a "dynamic" GPIO controller can remain unnoticed by gpio-manager.
-> 
-> This behavior is related to fw_devlink handling and - even if we changed
-> the kernel to bind all GPIO devices to the stub driver - a fix in
-> gpio-manager is easier to distribute than a kernel fix.
-> 
-> [...]
+I'm a bit late to this, but here's some background.
 
-Applied, thanks!
+Secondary fwnodes were not intended for device matching in the first
+place.  The idea was to use them as a secondary supply of device
+properties that may be missing from the primary node (think of an ACPI
+device object accompanied by a software node supplying properties that
+cannot be derived from the former).  They could be added by a driver
+after matching the primary node for the benefit of a generic
+framework.
 
-[1/1] dbus: daemon: watch for "add"/"remove" uevents instead of "bind"/"unbind"
-      https://git.kernel.org/brgl/c/80352a30a0271ff1485ff3b8fb3f00c6c26cc412
+IMV, the example with children inheriting the fwnode from their parent
+where the user wants to add a different secondary node to each child
+doesn't really match the picture described above.  At least it was not
+anticipated.  The idea was to allow the parent's fwnode to be extended
+and then (possibly) inherited.
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+That's why the secondary fwnode pointer is there under the primary one.
+
+So all of this goes beyond the original anticipated use of secondary
+fwnodes and it seems to be calling for a list of equivalent (not
+primary and secondary) fwnodes in struct device, but then of course
+there's the question about duplicate properties and whether or not the
+fwnode used for driver binding should be preferred (I don't see why
+not).
+
+Until all of this is resolved, I wouldn't even add a generic helper
+for matching secondary nodes.  I'd just put this code directly into
+gpio_chip_match_by_fwnode() along with a big fat comment explaining
+why exactly secondary nodes need to be taken into account there.
 
