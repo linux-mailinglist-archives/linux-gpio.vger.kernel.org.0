@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-31932-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31933-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8ONYHpkRmGmL/gIAu9opvQ
-	(envelope-from <linux-gpio+bounces-31932-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 08:47:37 +0100
+	id gI6pLscRmGmL/gIAu9opvQ
+	(envelope-from <linux-gpio+bounces-31933-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 08:48:23 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DADAB1655F8
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 08:47:36 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DD6A165606
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 08:48:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8439F30160C7
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 07:47:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 86C363013A41
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Feb 2026 07:48:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0106302742;
-	Fri, 20 Feb 2026 07:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0064309F1B;
+	Fri, 20 Feb 2026 07:48:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KPFpq6l3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9qpPid/"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638102EFDA4
-	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 07:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B64322A
+	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 07:48:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771573632; cv=none; b=iIwovx1Da7WyQUje+YHScOe67WW9GCVIQ8EVSwX9DI4jk1q+vfBgn7cjJjGThArZiZHJ6xuyVQz6UpUEQ0vaxZWB6Ov5K1nF7JcUQf7u4wfOzzgdMnN1zNwU7yzepd/Eaz7TJWhK1DdIAR9yBuwnKe60U8xtzOrRQ0rPE4e57Qw=
+	t=1771573700; cv=none; b=Z2i3YKsPzf9GkFrczb7H3tfPF50CMcqe+VlWkL01zeHkKg1BZVcQqVBOz7bw9AKIRlXNpzLl07/bqVSMVe1h+qklhkVHhozV2wLhjpoFkiYGQsfV+k+PaPATkscK+8xP4QlS3rsfjEWciGscBokE2QysEX1rzFdwNJ0e67hYBzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771573632; c=relaxed/simple;
-	bh=sdebDhDZnywd2uWMuS4f752/48HseCqlPT5fN8H53pk=;
+	s=arc-20240116; t=1771573700; c=relaxed/simple;
+	bh=v53LQV4Q3T9hChRDLZRrM4Ic/sOZcM0MQ57kKZHBTpk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=svXi2pPL4MAeaqKQ/H6wpGnjkAEEm7HknJ1rvoLek8GVmAWcIAyXBq8g2pM2uRweRyIsIe9qsUC6gepQ7MFMyhHnybqbG5DX68HzdYRILut3y+PKWvI0poxxJC8L0k8bOQvqRWGd99Qqb+zl9cPtyLfA+CzHbIUMq4/U05IA/0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KPFpq6l3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF24C116D0
-	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 07:47:12 +0000 (UTC)
+	 To:Cc:Content-Type; b=VRmOw+oegT00gcOi94i1VMoLTxcSg38drcuIb46H9+IFRHdcB8WD2ObDUW2WyzxWJDk2prmSfDymK4WY2uhQepV5jFm9D6ZR/AVYyXBvxfe5oUgdEdJ5BTvVuiDOd+3DmGWtQVqyRSCg6UaK9Kh8fV1di0puoa79oAktxbqBwTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9qpPid/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6511CC116C6
+	for <linux-gpio@vger.kernel.org>; Fri, 20 Feb 2026 07:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771573632;
-	bh=sdebDhDZnywd2uWMuS4f752/48HseCqlPT5fN8H53pk=;
+	s=k20201202; t=1771573700;
+	bh=v53LQV4Q3T9hChRDLZRrM4Ic/sOZcM0MQ57kKZHBTpk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KPFpq6l3FvkmOHmkB7hPif3s6YIvlBzfnichVkKETS3LnjCjdIZpTE7o7rShD+0/6
-	 8cblYMy52xFnJGxiM+RJcG+3iR+1v9moPNCSFIrW86YvMWp2ef7eD21mBrxlptl3GS
-	 U3QqGplD2300kxOlrKTCH3oA5V4XRKInVfL2BRHmy+CclfJ2vjFGi3/AWf+wjyCiou
-	 TvW5m3+gTyb8SomWyZcpmq+wRNP4GgJTMnLUWutdorpxQgkOXMkDecKM5YpgKA+/6K
-	 NKpjxAFVzFM1iAyIPO2I8O7ktGSKS97s0kBeTVCk1lQ9OvFyR+ZFy78SwQ8sBzLcN4
-	 bT7yvc7+Lc/xg==
-Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-649b1ca87ddso1501786d50.3
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 23:47:12 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU2PaF7YVa7ZOdb+gXZQxodO8jR0tgKM9Enq0hBzKlIqlxt1IsICA7W2hh+Y1gxT+R4//DoU3DE00Ue@vger.kernel.org
-X-Gm-Message-State: AOJu0YyR0ie+DqvSD7QLaDAY+FwwUj41n1SltUubBleagU+R22zc/dpy
-	1yVatLf1KD5ZwQE63hw/zIlW53OksJjDNV7PCGoinPaZMpPzuGFEguK2h4xY0FrqVBHy8DMU70E
-	7lQQ6bZC7NAaWq35E0u0NNRZ97gdD1RE=
-X-Received: by 2002:a05:690c:e3cd:b0:794:cea5:2ce with SMTP id
- 00721157ae682-797f716f8damr57561247b3.5.1771573631215; Thu, 19 Feb 2026
- 23:47:11 -0800 (PST)
+	b=R9qpPid/XoFAhyCcyuRAs1WN6wztt37YYmD0db05wMJ5wQ/4651vb9zMH7fN4Gqk2
+	 xETmRlucw6lPkJiFpKG2Pox8MWTt/Y0xJIpmCepL8S4mz4XSl1G7EbrVInHBbaaU3b
+	 i0uW9GMsEfdsUvaE4mKyOIClWOrjqgyikxQOtWeAuU+OkHZ+fENRYA85Ehzew/R2DM
+	 +hpJDKZTK0Q4VCGMj0YcyftEKEoWvkDmmcN4x8qz0G1cL3bmsfOrhxxOQRnaK6oZb3
+	 LwHY6xEUAaQdDpGwZ0w0sSwiEXwmPdq9k+LGnY0recm2e/qnF23jMqCcWdgpeYE05i
+	 L76YPYzt5Uv+w==
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-794fe16d032so16024017b3.3
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Feb 2026 23:48:20 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVk12hvJUKragfze6PyYFRNMGG132nZ7C3qOgXJXJ5iDX4SUML64xcnTp+0+rx9fBf/fyqRyuproTg5@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmdNfCFchjKphI9XcKhUvnVkuqZe/kirxCwkCnZrm8EgOg9UqA
+	EiSrMS5KvFmcmodKM2LEmsiVhlGejMaFWdJ0t+FUdVWTaQ30QEpkyhuEkGj6FIZXbUbUyjFwRS6
+	Gq7kzdwnp5sb1pmmGjbEcEZsR8GSxd50=
+X-Received: by 2002:a05:690c:c4e8:b0:796:32e3:7d70 with SMTP id
+ 00721157ae682-797f71c3cdfmr63361147b3.15.1771573699647; Thu, 19 Feb 2026
+ 23:48:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260213092958.864411-1-tzungbi@kernel.org> <20260213092958.864411-2-tzungbi@kernel.org>
-In-Reply-To: <20260213092958.864411-2-tzungbi@kernel.org>
+References: <20260213092958.864411-1-tzungbi@kernel.org> <20260213092958.864411-3-tzungbi@kernel.org>
+In-Reply-To: <20260213092958.864411-3-tzungbi@kernel.org>
 From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 20 Feb 2026 08:46:59 +0100
-X-Gmail-Original-Message-ID: <CAD++jLkaBPxPoMewbSeh=+GzFg8JTaBXQ-KsAXUgxgQZLcgQiw@mail.gmail.com>
-X-Gm-Features: AaiRm52CMlErlBEqpuELbwrw3FPYyKKjdMlNu0pHoeQnbWplSCYK8ppWOB41Q3c
-Message-ID: <CAD++jLkaBPxPoMewbSeh=+GzFg8JTaBXQ-KsAXUgxgQZLcgQiw@mail.gmail.com>
-Subject: Re: [PATCH v3 01/11] gpio: Access `gpio_bus_type` in gpiochip_setup_dev()
+Date: Fri, 20 Feb 2026 08:48:08 +0100
+X-Gmail-Original-Message-ID: <CAD++jLnwMys_UtK6q1BQrLUXtaJMB1LLGavFNeK9iUHycHh2_w@mail.gmail.com>
+X-Gm-Features: AaiRm53xMg_n2Y03o69iDiTYqfLxXGD63U_pCBqPoQwpkgBE7XaCz468RDhNwuk
+Message-ID: <CAD++jLnwMys_UtK6q1BQrLUXtaJMB1LLGavFNeK9iUHycHh2_w@mail.gmail.com>
+Subject: Re: [PATCH v3 02/11] gpio: Remove redundant check for struct gpio_chip
 To: Tzung-Bi Shih <tzungbi@kernel.org>
 Cc: Bartosz Golaszewski <brgl@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
 	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
@@ -84,18 +84,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31932-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31933-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[17];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
@@ -106,17 +106,19 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: DADAB1655F8
+X-Rspamd-Queue-Id: 1DD6A165606
 X-Rspamd-Action: no action
 
 On Fri, Feb 13, 2026 at 10:31=E2=80=AFAM Tzung-Bi Shih <tzungbi@kernel.org>=
  wrote:
 
-> To make the intent clear, access `gpio_bus_type` only when it's ready in
-> gpiochip_setup_dev().
+> gpiolib_dbg_show() is only called by gpiolib_seq_show() which has
+> ensured the struct gpio_chip.  Remove the redundant check in
+> gpiolib_dbg_show().
 >
 > Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
 
+That's a very nice patch, good observation!
 Reviewed-by: Linus Walleij <linusw@kernel.org>
 
 Yours,
