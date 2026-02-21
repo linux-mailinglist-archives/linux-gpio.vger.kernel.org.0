@@ -1,84 +1,85 @@
-Return-Path: <linux-gpio+bounces-31990-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31991-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8M7/ItbpmWlnXQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31990-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Feb 2026 18:22:30 +0100
+	id kIt5N7XsmWmcXQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31991-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Feb 2026 18:34:45 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 253BC16D5EB
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Feb 2026 18:22:29 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91E6516D647
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Feb 2026 18:34:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B1B093066422
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Feb 2026 17:21:47 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0FDEA3053BEE
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Feb 2026 17:34:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB0E92877CF;
-	Sat, 21 Feb 2026 17:21:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F62931690A;
+	Sat, 21 Feb 2026 17:34:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="1dMp0pvB"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="LM1nNJse"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC23618872A
-	for <linux-gpio@vger.kernel.org>; Sat, 21 Feb 2026 17:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F372B2C21F4
+	for <linux-gpio@vger.kernel.org>; Sat, 21 Feb 2026 17:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771694506; cv=none; b=CDHOJkr8W7IDYBs48jOMXwuTXVHbwQF+bx0bh9zs78fXbAsx9nr59IolBuMDVhvklot4Sv9fzbMRp3gf7slWgJOLBl5842PDvHJnuvUhp6R6MRfqB8KI7og55+sm0teHdscY4EJByBJmeMakYsCgGBMX6X1jGzIoJWDcVHZ0tnY=
+	t=1771695278; cv=none; b=XIMsKAdoFlgDqYqcXuV/0hrJAQX+pe8LkbjqP9cM4BJEQHpSYO63t63Ac9KxCnyEY47otI/03I3rsaGOUFpmM8EJbWw7xUhLtLK5HnTZ0GWArqvO+OHzAG90pJGZsYzGJ4Lu2wYtSzFNGOl28c2Hd9/lAo6tNA5jXIxiz8QSb24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771694506; c=relaxed/simple;
-	bh=HX8Wjejxs9SblZXe1zexUK/AgCbHBl2YK9FZzjvdrF8=;
+	s=arc-20240116; t=1771695278; c=relaxed/simple;
+	bh=8DFbuxXlD6z0qNEdWTHytsSIfG8aOT+FPC40zi222as=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YzdRjZozMuZQfTyZ5sIo460NjWi/jicnXPQn8Ocq3ApN4CapoGeKuSeZTih0YXp91vwkoQW+NejFkn8s9HH+fkBI+u6wD4QIeBo5UEJ9AmtC3ncnrtjvRSXa1XjKkcub43DNsz4lU6ANYX2A0gVAfyOVy5KM03ZYHi1mhd0JltA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=1dMp0pvB; arc=none smtp.client-ip=209.85.167.179
+	 In-Reply-To:Content-Type; b=UxuISlD+BWbVFC/E+HyB+Fu0Gn2W9Ri8Y+gtgEj1EzacqK9JbToLx+FuPUKUZcmod9astxrHVAVYKepByarzT2MlS/f4EJPsYRe0Wnouofp8Z3v4djP0cBQ+OB8PwliLAWDo6V5TCMAjDvtt5DkWg8X7S9CUz/k5v9J/Gv131aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=LM1nNJse; arc=none smtp.client-ip=209.85.210.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-45effa36208so1936691b6e.1
-        for <linux-gpio@vger.kernel.org>; Sat, 21 Feb 2026 09:21:44 -0800 (PST)
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-7d4c1d2123dso2957006a34.2
+        for <linux-gpio@vger.kernel.org>; Sat, 21 Feb 2026 09:34:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1771694504; x=1772299304; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1771695275; x=1772300075; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=FxXe4ilYefGxi3OGmxieGZpHIIMSFQ3LuTkepN5BPTs=;
-        b=1dMp0pvBBcT72yRVmnDpVDdmkyvFOhFe9V4klVqf6d2mk+UUQAZhYDMcCTF21ebmpt
-         z++ZqktLNWYodL72ZYcb914pgFJHgDZz0K08ucmQkxe0wTrhVtU+tEtHAENg1rgK4qtY
-         x9fx4q52HQBGw+793fo8nkuduB9kCtJ67wIuVsSMdnAFWBc8+MqnTEgYKbNUvEO9TxYN
-         KRrnG/bAWD09+P/4Nrr3QeMnmPV95Kl410bx7/KzeinLAPM5YDzPSg2othCqSfukGllm
-         rDVPcLPs0ItrlmIItJqxA9BcCthufi+tmsmmJ8vOvTug8NyVfyhsB8UMha5zpSuJ1yTF
-         5aEA==
+        bh=4NKhKWGEDkDoAduIGils44kzoIDiw/7usM5aB+9rdUI=;
+        b=LM1nNJseZvBpfR0w6MCnp8n2+IeVp4kL0P4GVbKmAf56qVJAeZg3zpFAxuyzF/48s3
+         uZ19UJhN8Q1lrqajfqJwve7wTPmEF7TDccyBZ4rCsiOO1YPJWkTGqrhoGjjV+12TntoG
+         p2pJc5DfMxdArI1Wz+wBQz1MFAPyV0hIk5cbahsGzQQtxDGhaX1nB+YR3R55qs2ok2gB
+         4x0aGuYz9UcJee7ODt2gYZjBQibo2WvCHfr4uN/rfjXJExA/uv/EpwGzDJU7VTEkg3ZU
+         s69Bky121fhzgsJgoyg0w63Vd60ANeMiME5rFASuMgbPFEeUvBOO6vYCxbueirhWmQaZ
+         rTeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771694504; x=1772299304;
+        d=1e100.net; s=20230601; t=1771695275; x=1772300075;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FxXe4ilYefGxi3OGmxieGZpHIIMSFQ3LuTkepN5BPTs=;
-        b=gx8A4Vw5NxShWnPbz8TBLUXIL4XJFNNZcyy8K/0gqJxnDBKa8X7TTgLwNxhWZC6wrc
-         RsaZusa4COPdgyLKgDNX+nPjhRaydQSPu1XEPJq053KBNHUTTOyfKp5SLOKrfmeaFluk
-         eSKkFbKdy/Ot2BukaJqaQ2/8zt2T4j4V79El5E3I/IxT2nF3Q1Ltimk02oXqqC+dIMrj
-         uiip8OY0x6S7oo+kKxNP4bcp6RE6SFGcXOR2aZ04MradVggcX7RO0Uc/SoLvqxxYoepm
-         Nz9db99Ie9E9qeEAUGPMgLu55t3e8avkbFCrRT4zj6YJYZgt1MSS7sa0SWo6RqpaW4ky
-         sSmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXbD6XETvJucuGHF9dXnksROm1wih5MS4wvkC/WQxykePdUGLGoa9cXFLtP1rP0VnVaYQxXX2FPGI7W@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuBenA/ZwtY/PS50XUoZMVbQVhvheSdlz5wd3A0JAxwYSDxdSV
-	DRjXCzUg+12y7vWv57rW/5usnaFe96oAZygTmUYTjWMXRUy8r1xrUp2NG9cSKuCBJN8=
-X-Gm-Gg: AZuq6aKtiZaP1D7HkPBweTtL9g1wDLrb5aeafOMEhJli84aG58fMn/nKu+0BXsXDB7N
-	a0u0UVlss95KFj/8z7JpmeLmfMH+6iViQnvOGQa5RNyisMc774IjYMEBh2vh7hY/hoepSYEs6aR
-	N8+jmI5UpXwjI/ZDefWq2gDmgqNSaNKtxEewOhRMhHdMGUxMrP1Uh51aj6ND8Sp4rooZMp20e9E
-	aEF03ldVz63jo4oOcvt7+MoRDGu+mIR5dQ3hTckjrEtSrnVHHTR5JxPlpaXkAS6XGrCQk1XMRA2
-	h+wVI7p8Hxngaode7Cj/3gKEgVzrPC1an0f4w8eVKiSuf9Uc4u9+xePpHHMNRzhROWxO8l2BJJJ
-	ENFZx4/91dc2dcdOf8geA3GjE5jmHgzTYtFaVK8/Z8jXHP4M/Q7Equr1w/6MQpxp0p1ZbUM19rq
-	zGy+xyknXrDq92+ue6ccdUnHvwteZ4QxDiiwhTQ/E6iYG+V6wofz2XfYNSKhVbGv+6qUBzUQ==
-X-Received: by 2002:a05:6808:23d1:b0:462:a915:31aa with SMTP id 5614622812f47-4644640b4c0mr2054950b6e.63.1771694503792;
-        Sat, 21 Feb 2026 09:21:43 -0800 (PST)
+        bh=4NKhKWGEDkDoAduIGils44kzoIDiw/7usM5aB+9rdUI=;
+        b=qq/7xZ5BYD99+E7pvuD6MAHeHx7049yVywye8CSo6beqKTqZWCBRY5S7o/HzQqH41d
+         2dQA4gpmTQSFHw/sFVcpfma3pF7sfgxEx8lvRVY370YgNK+ywyoARMUMP+V1/eYGsLEa
+         EMka9kbhLUVi0W5KCf4qvsFEPhe2FuzvM7eJp0YX/3HrxlmO4cJhwTyfesb4qTIQbOEw
+         32zUuF74zPFMJt3Uvhg1qOc4qinGx+fCgYomXDRWPavqqCwk0Bmdc/6Nn03zAOqm4Tm/
+         nM8buSOWKGYQaWxcgONPfHrP7PBePhgkaqXYZe1q3b0XT8ZRd4RE90dJ+cBWijpOWw5G
+         8Rqg==
+X-Forwarded-Encrypted: i=1; AJvYcCUV47GjWiazfv9ScyrpTVu92hPc2ICi5MBhB86ZNeeEfo0SLcFqC39EikRte6btIGhT84DAM8+hggux@vger.kernel.org
+X-Gm-Message-State: AOJu0YywiukrHlW7HPF8LtW6LI1cGBiOEQwkre3PdsZl5uE7OXUMw+76
+	r85E6YsD45C9O0hJXL4eHNC8Gk3bkhQIkfSweMLAeiDyDUfB8YAh/UwiKmWmR/Fl8AF+V0Y9LDJ
+	mxpdQ
+X-Gm-Gg: AZuq6aI/joxP2nTmkVX8JG+v03syQmGiVoLn+BKMPYIKB+mm5HLMEDbWHzHr3kp5EVa
+	1jZnK1Pu3m+5/47Cn3t1P/5t2DvgHRA7Cgd6VNlcmNktD9EiQSVcUJ0ZHimteZTi2Cs8Dncpm+P
+	QIVLxG1v2VE1TSy/ZamTyDds43zvRKhf9wcRoX+QMnMp1AozMaKEUeXFcdgEsAdUAXwfJYDoblb
+	N90TVMcxp7krz24iAK7Qj192adfxTSWfvEWIA7l17jSBc6sGnHIiXKr/ZAeoxOYkTadjoY/V5SF
+	g+YBQCO7iOhQbXf/QJQo88Sm8yz6BGbKNF7nUA2t6FN2F07dH3eCa2fN1FMJ4y3KY8i+OLdFbFo
+	jHVnZwgg3hzz0Knpg6ZT9Ua845QkXJ7CdKm3gsPwoPcQLeEu1YzUNMx9+NdDYHxIMarX2yg7PSq
+	amGBBPNku72Y2+OM3qmC+M1FWYQDttqtRcTuuH1+acyTANRqiNExocWWdv/nE0AkQJgZ1Amg==
+X-Received: by 2002:a05:6830:40c4:b0:7cf:d2f3:af8a with SMTP id 46e09a7af769-7d52bf5283amr3020274a34.28.1771695274820;
+        Sat, 21 Feb 2026 09:34:34 -0800 (PST)
 Received: from ?IPV6:2600:8803:e7e4:500:611:96af:f385:64bf? ([2600:8803:e7e4:500:611:96af:f385:64bf])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4644a012dc7sm1839578b6e.6.2026.02.21.09.21.43
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7d52cf7c4d5sm2827794a34.4.2026.02.21.09.34.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Feb 2026 09:21:43 -0800 (PST)
-Message-ID: <6c8809a2-04fd-4044-a07e-8b74c964ead6@baylibre.com>
-Date: Sat, 21 Feb 2026 11:21:42 -0600
+        Sat, 21 Feb 2026 09:34:34 -0800 (PST)
+Message-ID: <0b9e1c9d-9bee-4fc3-ac19-28d969f65ef2@baylibre.com>
+Date: Sat, 21 Feb 2026 11:34:33 -0600
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -86,8 +87,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] iio: adc: ti-ads7950: do not clobber gpio state in
- ti_ads7950_get()
+Subject: Re: [PATCH v2 3/4] iio: adc: ti-ads7950: switch to using guard()
+ notation
 To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
  Jonathan Cameron <jic23@kernel.org>
 Cc: =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
@@ -95,23 +96,23 @@ Cc: =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
  Bartosz Golaszewski <brgl@kernel.org>, linux-iio@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 References: <20260219022929.3558081-1-dmitry.torokhov@gmail.com>
- <20260219022929.3558081-3-dmitry.torokhov@gmail.com>
+ <20260219022929.3558081-4-dmitry.torokhov@gmail.com>
 Content-Language: en-US
 From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20260219022929.3558081-3-dmitry.torokhov@gmail.com>
+In-Reply-To: <20260219022929.3558081-4-dmitry.torokhov@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_DKIM_ALLOW(-0.20)[baylibre-com.20230601.gappssmtp.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[baylibre-com.20230601.gappssmtp.com:+];
-	TAGGED_FROM(0.00)[bounces-31990-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31991-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	DMARC_NA(0.00)[baylibre.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -123,76 +124,258 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[dlechner@baylibre.com,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-0.999];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	NEURAL_HAM(-0.00)[-0.998];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[baylibre.com:mid,baylibre.com:email,baylibre-com.20230601.gappssmtp.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 253BC16D5EB
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,baylibre.com:mid]
+X-Rspamd-Queue-Id: 91E6516D647
 X-Rspamd-Action: no action
 
 On 2/18/26 8:29 PM, Dmitry Torokhov wrote:
-> GPIO state was inadvertently overwritten by the result of sip_sync,
-> reuniting in ti_ads7950_get() only returning 0 as gpio state (or error).
+> guard() notation allows early returns when encountering errors, making
+> control flow more obvious. Use it.
 > 
-> Fix this by introducing a separate variable to hold the state.
+> Also variables that now only hold error codes (or 0) are renamed to
+> "error" to make their purpose clearer.
 > 
-> Reported-by: David Lechner <dlechner@baylibre.com>
-
-This should have a Fixes: tag since it is fixing a real bug.
-
-Also, fixes should come first in the series.
-
 > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 > ---
->  drivers/iio/adc/ti-ads7950.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+>  drivers/iio/adc/ti-ads7950.c | 105 ++++++++++++++++-------------------
+>  1 file changed, 48 insertions(+), 57 deletions(-)
 > 
 > diff --git a/drivers/iio/adc/ti-ads7950.c b/drivers/iio/adc/ti-ads7950.c
-> index b8cc39fc39fb..2a7d4a1d9fa9 100644
+> index 2a7d4a1d9fa9..d31397f37ec4 100644
 > --- a/drivers/iio/adc/ti-ads7950.c
 > +++ b/drivers/iio/adc/ti-ads7950.c
-> @@ -427,13 +427,14 @@ static int ti_ads7950_set(struct gpio_chip *chip, unsigned int offset,
->  static int ti_ads7950_get(struct gpio_chip *chip, unsigned int offset)
+> @@ -306,18 +306,17 @@ static irqreturn_t ti_ads7950_trigger_handler(int irq, void *p)
+>  	struct iio_poll_func *pf = p;
+>  	struct iio_dev *indio_dev = pf->indio_dev;
+>  	struct ti_ads7950_state *st = iio_priv(indio_dev);
+> -	int ret;
+> +	int error;
+>  
+> -	mutex_lock(&st->slock);
+> -	ret = spi_sync(st->spi, &st->ring_msg);
+> -	if (ret < 0)
+> -		goto out;
+> +	scoped_guard(mutex, &st->slock) {
+> +		error = spi_sync(st->spi, &st->ring_msg);
+> +		if (error)
+> +			break;
+
+I'm not a fan of scoped_guard() because of the hidden for loop in it.
+It hides the fact that the break; is breaking out of that for loop.
+
+It would be more clear/obvious written as:
+
+	do {
+		guard(mutex)(&st->slock);
+
+		ret = spi_sync(st->spi, &st->ring_msg);
+		if (ret)
+			break;
+
+		iio_push_to_buffers_with_timestamp(indio_dev, &st->rx_buf[2],
+						   iio_get_time_ns(indio_dev));
+	} while (0);
+
+>  
+> -	iio_push_to_buffers_with_timestamp(indio_dev, &st->rx_buf[2],
+> -					   iio_get_time_ns(indio_dev));
+> +		iio_push_to_buffers_with_timestamp(indio_dev, &st->rx_buf[2],
+> +						   iio_get_time_ns(indio_dev));
+> +	}
+>  
+> -out:
+> -	mutex_unlock(&st->slock);
+>  	iio_trigger_notify_done(indio_dev->trig);
+>  
+>  	return IRQ_HANDLED;
+> @@ -326,22 +325,19 @@ static irqreturn_t ti_ads7950_trigger_handler(int irq, void *p)
+>  static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
+>  {
+>  	struct ti_ads7950_state *st = iio_priv(indio_dev);
+> -	int ret, cmd;
+> +	int error;
+> +	int cmd;
+> +
+> +	guard(mutex)(&st->slock);
+>  
+> -	mutex_lock(&st->slock);
+>  	cmd = TI_ADS7950_MAN_CMD(TI_ADS7950_CR_CHAN(ch));
+>  	st->single_tx = cmd;
+>  
+> -	ret = spi_sync(st->spi, &st->scan_single_msg);
+> -	if (ret)
+> -		goto out;
+> -
+> -	ret = st->single_rx;
+> -
+> -out:
+> -	mutex_unlock(&st->slock);
+> +	error = spi_sync(st->spi, &st->scan_single_msg);
+> +	if (error)
+> +		return error;
+>  
+> -	return ret;
+> +	return st->single_rx;
+>  }
+>  
+>  static int ti_ads7950_get_range(struct ti_ads7950_state *st)
+> @@ -407,9 +403,9 @@ static int ti_ads7950_set(struct gpio_chip *chip, unsigned int offset,
+>  			  int value)
 >  {
 >  	struct ti_ads7950_state *st = gpiochip_get_data(chip);
 > -	int ret;
-> +	int ret = 0;
-> +	bool state;
+> +	int error;
 >  
->  	mutex_lock(&st->slock);
+> -	mutex_lock(&st->slock);
+> +	guard(mutex)(&st->slock);
+>  
+>  	if (value)
+>  		st->cmd_settings_bitmask |= BIT(offset);
+> @@ -417,47 +413,44 @@ static int ti_ads7950_set(struct gpio_chip *chip, unsigned int offset,
+>  		st->cmd_settings_bitmask &= ~BIT(offset);
+>  
+>  	st->single_tx = TI_ADS7950_MAN_CMD_SETTINGS(st);
+> -	ret = spi_sync(st->spi, &st->scan_single_msg);
+> -
+> -	mutex_unlock(&st->slock);
+> +	error = spi_sync(st->spi, &st->scan_single_msg);
+> +	if (error)
+> +		return error;
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  static int ti_ads7950_get(struct gpio_chip *chip, unsigned int offset)
+>  {
+>  	struct ti_ads7950_state *st = gpiochip_get_data(chip);
+> -	int ret = 0;
+>  	bool state;
+> +	int error;
+>  
+> -	mutex_lock(&st->slock);
+> +	guard(mutex)(&st->slock);
 >  
 >  	/* If set as output, return the output */
 >  	if (st->gpio_cmd_settings_bitmask & BIT(offset)) {
-> -		ret = (st->cmd_settings_bitmask & BIT(offset)) ? 1 : 0;
-> +		state = st->cmd_settings_bitmask & BIT(offset);
+>  		state = st->cmd_settings_bitmask & BIT(offset);
+> -		goto out;
+> +		return state;
 
-I agree it would be better to put...
+This can return directly instead of using local variable.
 
-		ret = 0;
-
-here.
-
->  		goto out;
 >  	}
 >  
-> @@ -444,7 +445,7 @@ static int ti_ads7950_get(struct gpio_chip *chip, unsigned int offset)
->  	if (ret)
->  		goto out;
+>  	/* GPIO data bit sets SDO bits 12-15 to GPIO input */
+>  	st->cmd_settings_bitmask |= TI_ADS7950_CR_GPIO_DATA;
+>  	st->single_tx = TI_ADS7950_MAN_CMD_SETTINGS(st);
+> -	ret = spi_sync(st->spi, &st->scan_single_msg);
+> -	if (ret)
+> -		goto out;
+> +	error = spi_sync(st->spi, &st->scan_single_msg);
+> +	if (error)
+> +		return error;
 >  
-> -	ret = ((st->single_rx >> 12) & BIT(offset)) ? 1 : 0;
-> +	state = (st->single_rx >> 12) & BIT(offset);
+>  	state = (st->single_rx >> 12) & BIT(offset);
 >  
 >  	/* Revert back to original settings */
 >  	st->cmd_settings_bitmask &= ~TI_ADS7950_CR_GPIO_DATA;
-> @@ -456,7 +457,7 @@ static int ti_ads7950_get(struct gpio_chip *chip, unsigned int offset)
->  out:
->  	mutex_unlock(&st->slock);
+>  	st->single_tx = TI_ADS7950_MAN_CMD_SETTINGS(st);
+> -	ret = spi_sync(st->spi, &st->scan_single_msg);
+> -	if (ret)
+> -		goto out;
+> -
+> -out:
+> -	mutex_unlock(&st->slock);
+> +	error = spi_sync(st->spi, &st->scan_single_msg);
+> +	if (error)
+> +		return error;
 >  
-> -	return ret;
-> +	return ret ?: state;>  }
+> -	return ret ?: state;
+> +	return state;
+>  }
 >  
 >  static int ti_ads7950_get_direction(struct gpio_chip *chip,
+> @@ -473,9 +466,9 @@ static int _ti_ads7950_set_direction(struct gpio_chip *chip, int offset,
+>  				     int input)
+>  {
+>  	struct ti_ads7950_state *st = gpiochip_get_data(chip);
+> -	int ret = 0;
+> +	int error;
+>  
+> -	mutex_lock(&st->slock);
+> +	guard(mutex)(&st->slock);
+>  
+>  	/* Only change direction if needed */
+>  	if (input && (st->gpio_cmd_settings_bitmask & BIT(offset)))
+> @@ -483,15 +476,14 @@ static int _ti_ads7950_set_direction(struct gpio_chip *chip, int offset,
+>  	else if (!input && !(st->gpio_cmd_settings_bitmask & BIT(offset)))
+>  		st->gpio_cmd_settings_bitmask |= BIT(offset);
+>  	else
+> -		goto out;
+> +		return 0;
+>  
+>  	st->single_tx = TI_ADS7950_GPIO_CMD_SETTINGS(st);
+> -	ret = spi_sync(st->spi, &st->scan_single_msg);
+> +	error = spi_sync(st->spi, &st->scan_single_msg);
+
+Can just return directly here now.
+
+> +	if (error)
+> +		return error;
+>  
+> -out:
+> -	mutex_unlock(&st->slock);
+> -
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  static int ti_ads7950_direction_input(struct gpio_chip *chip,
+> @@ -514,27 +506,26 @@ static int ti_ads7950_direction_output(struct gpio_chip *chip,
+>  
+>  static int ti_ads7950_init_hw(struct ti_ads7950_state *st)
+>  {
+> -	int ret = 0;
+> +	int error;
+>  
+> -	mutex_lock(&st->slock);
+> +	guard(mutex)(&st->slock);
+>  
+>  	/* Settings for Manual/Auto1/Auto2 commands */
+>  	/* Default to 5v ref */
+>  	st->cmd_settings_bitmask = TI_ADS7950_CR_RANGE_5V;
+>  	st->single_tx = TI_ADS7950_MAN_CMD_SETTINGS(st);
+> -	ret = spi_sync(st->spi, &st->scan_single_msg);
+> -	if (ret)
+> -		goto out;
+> +	error = spi_sync(st->spi, &st->scan_single_msg);
+> +	if (error)
+> +		return error;
+>  
+>  	/* Settings for GPIO command */
+>  	st->gpio_cmd_settings_bitmask = 0x0;
+>  	st->single_tx = TI_ADS7950_GPIO_CMD_SETTINGS(st);
+> -	ret = spi_sync(st->spi, &st->scan_single_msg);
+> -
+> -out:
+> -	mutex_unlock(&st->slock);
+> +	error = spi_sync(st->spi, &st->scan_single_msg);
+
+And can return directly here.
+
+> +	if (error)
+> +		return error;
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  static int ti_ads7950_probe(struct spi_device *spi)
 
 
