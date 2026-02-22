@@ -1,50 +1,50 @@
-Return-Path: <linux-gpio+bounces-31993-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-31994-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gC3OLrIMm2mjrAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-31993-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Feb 2026 15:03:30 +0100
+	id 2FRVLSkOm2lbrQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-31994-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Feb 2026 15:09:45 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1920416F489
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Feb 2026 15:03:30 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DF1716F4A7
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Feb 2026 15:09:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 80D543010156
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Feb 2026 14:03:26 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2D9413008984
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Feb 2026 14:09:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4994214F9FB;
-	Sun, 22 Feb 2026 14:03:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 840CD34F484;
+	Sun, 22 Feb 2026 14:09:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WsK5ZbJ5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k+jJNbiq"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFB21B808;
-	Sun, 22 Feb 2026 14:03:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A01255F57;
+	Sun, 22 Feb 2026 14:09:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771769005; cv=none; b=WOxj0Q8OROK3ye0gVBOV1t3Ft1sqrATBmOth3dk6aDq3iYgiZN2seIY1tPhqlx+SL6OWa7ZNqVfhCnDkTnsgvXU7e4R0emdBlByo1xv09d584Lo4632gEEymrGg+HlqT4AZLSS9zM3wROuH5YsmZBxfRsEHyA8pZaByTNXp/fK4=
+	t=1771769382; cv=none; b=RYhNnZqZNCTHNULcnOxuWMWcEtvV9kWvdX1R30p7bDJOjhM378Toh8Z6EeB4Gk4S2uvSwmKk7E1fktmSBrTTk5EnqRqDDoagQwADUhNqqXya8sjYIVqO8NvVDRW5IVvabBKyk86ONIS8713P/qvCjwIIEA9dbxLD0BNqdJvg7/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771769005; c=relaxed/simple;
-	bh=Api/KXx3CyA+l/V9RndsWfXqZ3HkT3hfiByk6SG7laI=;
+	s=arc-20240116; t=1771769382; c=relaxed/simple;
+	bh=BUJJWN8r851+HbTXeBPI/4ofaQUF/5/AaQuMbKrOvkI=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JGA7jaT8QE+F/LjEfN572Kx0YskwLPF3H2ZxUyysEn3kt6ulZoM/GD3SJ4x6qMdOm72QwRDatTIc4i8GrqjdQtoupHE5m+9zI9jEsN+oor1osYRNpa3wAvtHe913U52pd0v29h0CRLA3lOA2XOI2x1LPmOWq1mCV9k3XCOMuFHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WsK5ZbJ5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EEDBC116D0;
-	Sun, 22 Feb 2026 14:03:21 +0000 (UTC)
+	 MIME-Version:Content-Type; b=dHiyDzEqmZpcKGbxwLldcYghAg3olWbtM8UvsBgTtfGfv35RhZD9TYMDk8k+1QFYWfPN55W8Rln5zgSWQJayGJTDS33Ml9wvJk0UpolOoGWCBwsMIeXHX6LUySig6jFS6ryOU3dX9UpzR0EJLCj1pDPfYyRYNM4aOFHlDQev/6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k+jJNbiq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4FD9C116D0;
+	Sun, 22 Feb 2026 14:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771769004;
-	bh=Api/KXx3CyA+l/V9RndsWfXqZ3HkT3hfiByk6SG7laI=;
+	s=k20201202; t=1771769381;
+	bh=BUJJWN8r851+HbTXeBPI/4ofaQUF/5/AaQuMbKrOvkI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WsK5ZbJ5yuNUns3FvgD0OGA2XWT7V6BxwCn6JUMEBsx4N0U0tVQn8gVXD4trgog2W
-	 7p/AkEA6H6joA0WjfiLQs0AjpqM8q6hkVwf4kZppBVwvAhgwCt8b0Fw7XxNhC3jcJc
-	 mHCLZKu++Kuvn6Dv4jOFgzhSHXQJoGUDE3HLAx+QKspQiWwIWjm8kNg6txHDcoSxCe
-	 YyB0fSG6pwfau1bCcv9rh0SC1kT3ODGq2IDUVsk0aV2ova2m2C2DiYLyDKecqYBNi6
-	 iNMvqEw2B7MNT8sQk8UiGPPwhnyiGZAHgr8TXVvhpe5h9lC/X/n4YuSIqwWDae61S0
-	 ObEnQGxmllQBQ==
-Date: Sun, 22 Feb 2026 14:03:15 +0000
+	b=k+jJNbiqHnbUDCRpS/SZ0CUVqe8XMY1Pk3PKsBqZwNuFG+YQGqkeLh8yuUz82EDi1
+	 LGqReyBbjWOTZtoQTF50J5SEUwptwTli+9sIAE/Ro6BVhuL+bpuauhMml/Ktdc+oVv
+	 6Z1w8XypkHl6605V5OR98MkL+ISJmzozDpd7F3V6SGndwOT//R9n0zqYc+RaudYXeK
+	 +dDRQP81hS0GIfxRImQCjX2a+II60/fYxAdwU2ZU5EI2z7ql9LI2Vdg54ltjUfGg9j
+	 OEfzPszOhWqhtxui8nB+qkTBfIKwRkcxUkaPFeCOvHx/BvECM7SkLsA/LDExXfb/u0
+	 mM1AJd+W8MBOw==
+Date: Sun, 22 Feb 2026 14:09:23 +0000
 From: Jonathan Cameron <jic23@kernel.org>
 To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
@@ -52,12 +52,12 @@ Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
  <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
  linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] iio: adc: ti-ads7950: normalize return value of
- gpio_get
-Message-ID: <20260222140315.33e5e97c@jic23-huawei>
-In-Reply-To: <20260219022929.3558081-2-dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 4/4] iio: adc: ti-ads7950: complete conversion to
+ using managed resources
+Message-ID: <20260222140923.10bd9b7a@jic23-huawei>
+In-Reply-To: <20260219022929.3558081-5-dmitry.torokhov@gmail.com>
 References: <20260219022929.3558081-1-dmitry.torokhov@gmail.com>
-	<20260219022929.3558081-2-dmitry.torokhov@gmail.com>
+	<20260219022929.3558081-5-dmitry.torokhov@gmail.com>
 X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -74,12 +74,12 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31993-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31994-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_TO(0.00)[gmail.com];
@@ -94,39 +94,50 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 1920416F489
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 5DF1716F4A7
 X-Rspamd-Action: no action
 
-On Wed, 18 Feb 2026 18:29:25 -0800
+On Wed, 18 Feb 2026 18:29:28 -0800
 Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
 
-> The GPIO get callback is expected to return 0 or 1 (or a negative error
-> code). Ensure that the value returned by ti_ads7950_get() for output
-> pins is normalized to the [0, 1] range.
-Fixes?  I'm not quite sure with something that says 'expected'
-
-Jonathan
-
+> All resources that the driver needs have managed API now. Switch to
+> using them to make code clearer and drop ti_ads7950_remove().
 > 
 > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/iio/adc/ti-ads7950.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/ti-ads7950.c b/drivers/iio/adc/ti-ads7950.c
-> index bbe1ce577789..b8cc39fc39fb 100644
-> --- a/drivers/iio/adc/ti-ads7950.c
-> +++ b/drivers/iio/adc/ti-ads7950.c
-> @@ -433,7 +433,7 @@ static int ti_ads7950_get(struct gpio_chip *chip, unsigned int offset)
->  
->  	/* If set as output, return the output */
->  	if (st->gpio_cmd_settings_bitmask & BIT(offset)) {
-> -		ret = st->cmd_settings_bitmask & BIT(offset);
-> +		ret = (st->cmd_settings_bitmask & BIT(offset)) ? 1 : 0;
->  		goto out;
->  	}
->  
 
+Hi Dmitry
+
+One additional comment from me.
+
+>  static int ti_ads7950_probe(struct spi_device *spi)
+>  {
+
+>  	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+> @@ -598,36 +605,36 @@ static int ti_ads7950_probe(struct spi_device *spi)
+>  	mutex_init(&st->slock);
+>  
+>  	st->reg = devm_regulator_get(&spi->dev, "vref");
+> -	if (IS_ERR(st->reg)) {
+> -		ret = dev_err_probe(&spi->dev, PTR_ERR(st->reg),
+> +	error = PTR_ERR_OR_ZERO(st->reg);
+
+To me this reads worse than original IS_ERR() / PTR_ERR() pair.
+
+> +	if (error)
+> +		return dev_err_probe(&spi->dev, error,
+>  				     "Failed to get regulator \"vref\"\n");
+> -		goto error_destroy_mutex;
+> -	}
+>  
+> -	ret = regulator_enable(st->reg);
+> -	if (ret) {
+> -		dev_err(&spi->dev, "Failed to enable regulator \"vref\"\n");
+> -		goto error_destroy_mutex;
+> -	}
+> +	error = regulator_enable(st->reg);
+> +	if (error)
+> +		return dev_err_probe(&spi->dev, error,
+> +				     "Failed to enable regulator \"vref\"\n");
 
