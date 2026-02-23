@@ -1,239 +1,153 @@
-Return-Path: <linux-gpio+bounces-32072-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32073-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mGHpIfmfnGnqJgQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32072-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 19:44:09 +0100
+	id wMzdIVqhnGnqJgQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32073-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 19:50:02 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFD5E17BABC
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 19:44:08 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C74B17BD3F
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 19:50:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1047D30E5654
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 18:42:55 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 600F53016ACF
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 18:50:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EFAC36828B;
-	Mon, 23 Feb 2026 18:42:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32395369233;
+	Mon, 23 Feb 2026 18:49:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5T9CLQI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I6h5r4jV"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F53368279;
-	Mon, 23 Feb 2026 18:42:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8556366DD5
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Feb 2026 18:49:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771872173; cv=none; b=thTqU/XsnG8I2nezMqk0bxeLx/Nhaie8MpruGR5tl8ZAPQHUrBaAodOFJKFUeD13+mHom4omuW1B9j9umoMZumyBBStwh70tGpJyxIXylTU+WEX2442lvhr2K5jWD+E1gcNmnjWkb9ixBR1++OwcO1NYMm8LAoAHPw1KfViaF84=
+	t=1771872598; cv=none; b=m/QPzLsfs3Ua8D2IuxNvJ+osacU9oErZE4U+GRjKorAuXLUI18xbzjlj9Mdmc+CfZ0iw1gpowIa3u8+r1yLDCCpZFWdLzo/VLuvr1piUsooz+PSngygoV3shVKyFXnjRRDXFY0ayldTPuTHX/DabdcqDl7DBnewGncaFiYA+pKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771872173; c=relaxed/simple;
-	bh=cT3H/BWva655wpPwCwjSPUa7i99cwIZsZq5v7UNpNiU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ICZ3tLa4uMZ3MJ0iCwiSG37y1RP1DLzWtwYJeSliT8SGACaENNiyJBCJvAet+DMjcpOcPIgo0arD/R852M5/c96cOMEbLSvbCiawprU+4lfBT0sK4IFAZ4gh+cKajZ+pAEgdZkqpuP60yuFkevbgmphAk1vV+wdkaGwp8swf5ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j5T9CLQI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99A51C116D0;
-	Mon, 23 Feb 2026 18:42:53 +0000 (UTC)
+	s=arc-20240116; t=1771872598; c=relaxed/simple;
+	bh=7DaqiEUgibTsJqalZ4wGFzvtp5Xgz3X9JGL6Y760bBQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uMgBxNx9TkfDt96OIAaugNQ3F9lm6GX31MYlabjvKxjS9wFompj5TlkV0RG8UOZxu1KcOoHDGEA5g74mqE/STZx6JdnXte3Z5sOQzvP7UZii2H/Gdl/rTxUbdxbMm2jz+Sh13zD7uP7EDeZ6s+ph7hm4SMNtnUAt7SepETQtMWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I6h5r4jV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96E02C116C6
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Feb 2026 18:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771872173;
-	bh=cT3H/BWva655wpPwCwjSPUa7i99cwIZsZq5v7UNpNiU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j5T9CLQIi4r6hjxZV/gWPZoUAq+M2qHc2cQ30X6BEjIQJ32c5mIYOsAY5cuZil7Mo
-	 M7dMeymlrDMI1HefKWJQqkm5rMng83DMY1FxzER0jiUMNsBVc6B5DoDQFDL6YmZIa3
-	 hkdZhvsJ6H9hbFhKvcwFYqHUqPKfONQAxYLmc6Fz8ZMtGd4fpw/lZ1hmWJGZdXyIUW
-	 tWWssGb9LG5WYJOcApICbz5LOP6lSgc1Tm2CrJOOSjl6bZ9kABrpE8cDS+3QsX0SF0
-	 Bv4uBEz0VpF6rDwar1v/Erda7b1Fb3Mv16yc9hbaP48im+EpH3AHMYPvEqdzIuzJ4p
-	 QnOdV5X1bfTNw==
-Date: Mon, 23 Feb 2026 12:42:52 -0600
-From: Rob Herring <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Peter Rosin <peda@axentia.se>, Linus Walleij <linusw@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/5] dt-bindings: pinctrl: Add generic pinctrl for
- board-level mux chips
-Message-ID: <20260223184252.GA132202-robh@kernel.org>
-References: <20260219-pinctrl-mux-v1-0-678d21637788@nxp.com>
- <20260219-pinctrl-mux-v1-2-678d21637788@nxp.com>
+	s=k20201202; t=1771872597;
+	bh=7DaqiEUgibTsJqalZ4wGFzvtp5Xgz3X9JGL6Y760bBQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=I6h5r4jVv+b7cNEKyGOi0FtRe84O62nV9C+toE4O6is5hbWoK1vP5I60qXDFvo81q
+	 qlXsU8Z2DrWAB2AzuRkCoCpM7R0j+8FJmu97byHtdqHf7WXxvVi2VivtiArflh2rC1
+	 62lBs6U4CPWlQhdwmqSCB9gdgnpc9yjkSm+xwsd/YHcsVRMIDTwSQVK06LloI5EIm6
+	 68NDAJnvhDE9bVgyJaT0Je7TjTF4MjzIAwgT+OR78koVrJbYXPQbzBhm14OytKsNVZ
+	 vCjjg8zOTbjyU4j8uAXaJ51Cv9BJyJG+zv4vhE01xIfrl8/7uieM4P1oUDBTKw+Zzg
+	 0tdcdqNZfb6MQ==
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-7d4c3896e32so1728953a34.0
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Feb 2026 10:49:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWE7H3g3SYDeNI5OS/q4oOkUwfIPep3xN3nNVGZ9sxHFvUzzepbcWpHb3wu2UUXEj6TYRqOl58+KujP@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLc5k0rhlm1RxNxaBIJw3YJBgwrpu5+Uj5JLeOu5FRNpqS3AQW
+	A/USUTNNsRVlgTPOYyiWeULSNIskOy4I2dphUNwI1DEhCWrV/EDH2UP/9ro7JGU77cSDRnS2A0t
+	sf0Pi13GnNxCIOwiK7TY7TMKF2p0RY+o=
+X-Received: by 2002:a05:6820:150a:b0:676:6570:209c with SMTP id
+ 006d021491bc7-679c466f67dmr6020732eaf.10.1771872596714; Mon, 23 Feb 2026
+ 10:49:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260219-pinctrl-mux-v1-2-678d21637788@nxp.com>
+References: <20260223-device-match-secondary-fwnode-v2-0-966c00c9eeeb@oss.qualcomm.com>
+ <20260223-device-match-secondary-fwnode-v2-1-966c00c9eeeb@oss.qualcomm.com>
+ <aZyUY3ZsmrwHw4X_@smile.fi.intel.com> <CAMRc=MfpzgOPf4pkHd_tNQ4wBNMhfUBOh=ptajhhZwDpFUPGBQ@mail.gmail.com>
+In-Reply-To: <CAMRc=MfpzgOPf4pkHd_tNQ4wBNMhfUBOh=ptajhhZwDpFUPGBQ@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 23 Feb 2026 19:49:45 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0g_BfgFV1xyGfZWTi1OQwmH3pgChfsp9ry0-UAX-+QFxQ@mail.gmail.com>
+X-Gm-Features: AaiRm502Num48PMPO1JQfMnvo3vl_Oxj_rvuhaTNwdJvlG8-GDC8O80mapS98QY
+Message-ID: <CAJZ5v0g_BfgFV1xyGfZWTi1OQwmH3pgChfsp9ry0-UAX-+QFxQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] driver core: make fwnode_is_primary() public
+To: Bartosz Golaszewski <brgl@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Linus Walleij <linusw@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.34 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[axentia.se,kernel.org,milecki.pl,pengutronix.de,gmail.com,vger.kernel.org,lists.linux.dev,lists.infradead.org];
-	TAGGED_FROM(0.00)[bounces-32072-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-32073-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[oss.qualcomm.com,linuxfoundation.org,kernel.org,gmail.com,linux.intel.com,lists.linux.dev,vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,devicetree.org:url,nxp.com:email]
-X-Rspamd-Queue-Id: DFD5E17BABC
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rafael@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,intel.com:email]
+X-Rspamd-Queue-Id: 2C74B17BD3F
 X-Rspamd-Action: no action
 
-On Thu, Feb 19, 2026 at 05:23:42PM -0500, Frank Li wrote:
-> Add a generic pinctrl binding for board-level pinmux chips that are
-> controlled through the multiplexer subsystem.
-> 
-> On some boards, especially development boards, external mux chips are used
-> to switch SoC signals between different peripherals (e.g. MMC and UART).
-> The mux select lines are often driven by a GPIO expander over I2C,
-> as illustrated below:
-> 
-> 	┌──────┐      ┌─────┐
-> 	│ SOC  │      │     │    ┌───────┐
-> 	│      │      │     │───►│ MMC   │
-> 	│      │      │ MUX │    └───────┘
-> 	│      ├─────►│     │    ┌───────┐
-> 	│      │      │     │───►│ UART  │
-> 	│      │      └─────┘    └───────┘
-> 	│      │         ▲
-> 	│      │    ┌────┴──────────────┐
-> 	│ I2C  ├───►│ GPIO Expander     │
-> 	└──────┘    └───────────────────┘
-> 
-> Traditionally, gpio-hog is used to configure the onboard mux at boot.
-> However, the GPIO expander may probe later than consumer devices such as
-> MMC. As a result, the MUX might not be configured when the peripheral
-> driver probes, leading to initialization failures or data transfer errors.
-> 
-> Introduce a generic pinctrl binding that models the board-level MUX as a
-> pin control provider and builds proper device links between the MUX, its
-> GPIO controller, and peripheral devices. This ensures correct probe
-> ordering and reliable mux configuration.
-> 
-> The implementation leverages the standard multiplexer subsystem, which
-> provides broad support for onboard mux controllers and avoids the need for
-> per-driver custom MUX handling.
+On Mon, Feb 23, 2026 at 7:29=E2=80=AFPM Bartosz Golaszewski <brgl@kernel.or=
+g> wrote:
+>
+> On Mon, Feb 23, 2026 at 6:54=E2=80=AFPM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Mon, Feb 23, 2026 at 04:40:52PM +0100, Bartosz Golaszewski wrote:
+> > > Export fwnode_is_primary() in fwnode.h for use in driver code.
+> >
+> > ...
+> >
+> > > --- a/include/linux/fwnode.h
+> > > +++ b/include/linux/fwnode.h
+> > > @@ -230,4 +230,9 @@ void fwnode_links_purge(struct fwnode_handle *fwn=
+ode);
+> > >  void fw_devlink_purge_absent_suppliers(struct fwnode_handle *fwnode)=
+;
+> > >  bool fw_devlink_is_strict(void);
+> > >
+> > > +static inline bool fwnode_is_primary(struct fwnode_handle *fwnode)
+> > > +{
+> > > +     return fwnode && !IS_ERR(fwnode->secondary);
+> > > +}
+> >
+> > This is inconsistent. Please, split out fwnode stuff from device.h to
+> > device/fwnode.h and share it there.
+> >
+> > This reminds me to look what I have locally in development...
+> >
+> >
+> > (With your patch it will be in device.h and fwnode.h and in the latter
+> >  it's even not properly grouped with other non-fwdevlink related stuff.=
+)
+>
+> Please rephrase the entire email because I have no idea what you mean. :(
 
-Seems reasonable to me.
-
-> 
-> Allow pinctrl-* pattern as node name because this pinctrl device have not
-> reg property.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  .../bindings/pinctrl/pinctrl-multiplexer.yaml      | 54 ++++++++++++++++++++++
->  .../devicetree/bindings/pinctrl/pinctrl.yaml       |  2 +-
->  2 files changed, 55 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-multiplexer.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-multiplexer.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..31efffb3167cba724b1afe0d403a0dcae65582ee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-multiplexer.yaml
-> @@ -0,0 +1,54 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/pinctrl-multiplexer.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic Pin Control Driver for Board-Level Mux Chips
-> +
-> +maintainers:
-> +  - Frank Li <Frank.Li@nxp.com>
-> +
-> +description:
-> +  This binding describes a generic pinctrl driver that controls on-board
-
-Bindings don't describe drivers.
-
-> +  pinmux chips using the multiplexer subsystem.
-> +
-> +properties:
-> +  compatible:
-> +    const: pinctrl-multiplexer
-> +
-> +patternProperties:
-> +  '-grp$':
-> +    type: object
-
-       additionalProperties: false
-
-The tools should have caught this, I'll have to check why not...
-
-> +    properties:
-> +      mux-states:
-> +        maxItems: 1
-> +
-> +    required:
-> +      - mux-states
-> +
-> +required:
-> +  - compatible
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    pinctrl-mux {
-> +        compatible = "pinctrl-multiplexer";
-> +
-> +        uart-grp {
-> +            mux-states = <&mux 0>;
-> +        };
-> +
-> +        spi-grp {
-> +            mux-states = <&mux 1>;
-> +        };
-> +
-> +        i2c-grp {
-> +            mux-states = <&mux 2>;
-> +        };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl.yaml
-> index 290438826c507ec6725f486d18cf686aa7c35e67..20176bf3074757de30f208e69b968a6bd6125273 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl.yaml
-> @@ -27,7 +27,7 @@ description: |
->  
->  properties:
->    $nodename:
-> -    pattern: "^(pinctrl|pinmux)(@[0-9a-f]+)?$"
-> +    pattern: "^(pinctrl|pinmux)(@[0-9a-f]+|-[a-z0-9]+)?$"
->  
->    "#pinctrl-cells":
->      description: >
-> 
-> -- 
-> 2.43.0
-> 
+I thought Andy wanted fwnode_is_primary() to go into fwnode.h, but
+that's where it is already going.  Confused. :-/
 
