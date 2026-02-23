@@ -1,137 +1,201 @@
-Return-Path: <linux-gpio+bounces-32082-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32083-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iBR9O0+1nGkNKAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32082-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 21:15:11 +0100
+	id GG+DInu3nGkqKAQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32083-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 21:24:27 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1ADC917CC77
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 21:15:10 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36B2317CD4F
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 21:24:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 674EC300C576
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 20:15:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 27B573036758
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 20:24:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D74F376BD6;
-	Mon, 23 Feb 2026 20:15:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C69FB36BCCC;
+	Mon, 23 Feb 2026 20:24:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M3lFWuqe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.auroraos.dev (unknown [95.181.193.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F220D770FE
-	for <linux-gpio@vger.kernel.org>; Mon, 23 Feb 2026 20:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.181.193.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B8036F43D;
+	Mon, 23 Feb 2026 20:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771877707; cv=none; b=sYG7GzCLvYzlTavjU8glcZ4ckp645SKAu2CCvD8Kbai7NE7OfJ1OvwNDZFBtAQcMioN9/nGEpP7kc5YTsmcifs9HuuLprwLvkElyBi35HNWEs/ERtgOJi4qVJLaK0Ww3JTBLfDxE9bynIgn4KzLzxzQKBWPT3eODFm9HB7zI27w=
+	t=1771878263; cv=none; b=dLI9gXvjIm0vCPcE8l4Rztmjq32w1t6eejcJk/qfIQ/isrO5h7QMQ01zUEWx6wDa+ZsB5hE/NC1+676viFtOGIAcfACD22HMBqtsrQsPRy4/shgZnBeKEOUPoXT5dCt+M8eteTcJjy///fASqf3MjhEacXwulXL3A1ma++X2oMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771877707; c=relaxed/simple;
-	bh=yNGZODFRqec923/8NYKV0Le5vNL4tv5DssG4ay/hylw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eaiXEyigB1FhBK4Vyme2ZVLqyh9Fq63W1zuxU1vyTBtFjReWebk8yQJEpZvmVpgMALQlH5LZwMlnpBsB2jvPOUd9ThhCFOjZkVHi+T22WvOMh4qFjT/K/Y+m0UeQjEnZhws3xIXis98JgJUfO8ifsKKE1+GnFNgOl2Op9Z8/zYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=auroraos.dev; spf=pass smtp.mailfrom=auroraos.dev; arc=none smtp.client-ip=95.181.193.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=auroraos.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=auroraos.dev
-Received: from wasted (213.87.162.218) by exch16.corp.auroraos.dev
- (10.189.209.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Mon, 23 Feb
- 2026 23:15:01 +0300
-From: Sergey Shtylyov <s.shtylyov@auroraos.dev>
-To: Linus Walleij <linusw@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-	<linux-gpio@vger.kernel.org>, <linux-rockchip@lists.infradead.org>
-CC: Sergey Shtylyov <s.shtylyov@auroraos.dev>,
-	<linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH] pinctrl: rockchip: drop NULL check in rockchip_pinctrl_parse_groups()
-Date: Mon, 23 Feb 2026 23:14:10 +0300
-Message-ID: <20260223201412.20708-1-s.shtylyov@auroraos.dev>
-X-Mailer: git-send-email 2.53.0
+	s=arc-20240116; t=1771878263; c=relaxed/simple;
+	bh=UG4Ae2B1bf+fYvg+n7r+yfZdgjJr+7l0NYPIOp4X3q8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LXvetALXP9pb5IP/k5s2D9mjYzFIwelMj97HGUZ7CsnANzUowctqyYMrvlDMPececfjyD2ExfxvHjwM6/fOX2xp5rDZZvY+NfU9Yk/nm6bOrc8NtOZhxTgKJc6PVid4oDCb85BMsyqoM+Ksz6tdweTeCqCYyQcFt2lQzkGC2bGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M3lFWuqe; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771878262; x=1803414262;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=UG4Ae2B1bf+fYvg+n7r+yfZdgjJr+7l0NYPIOp4X3q8=;
+  b=M3lFWuqekQSLYpVrI9zjJURH/fhjvVSx1uszl0rc8AFrQ4M9531D5WFK
+   IoI1kO5+EIlUNl9s07mxGCT2JKxyENw24E0b85QrUrIhhnXMBJsgglhWL
+   SOWPWmPKOa5HPHkXQymobCaBv6MlZoafb0WVSyUKJ4EhmioUZmwGT1lKP
+   EReBIwvgoTcW/9r6R+455bsnht9ZLrEgmmpboY5fdeJdvNMastMlUdlCj
+   PzCYWuXhBNS8y+K42Fiw8W0UJ2/lMKofdGJJg4piuFt4MgQiXCFOnJywo
+   rrscV5zCHobp5vF0Ier99N55NSd6BoSTnen+n6lgcqLeyuDQGszrq2Pj4
+   Q==;
+X-CSE-ConnectionGUID: YB/QxLz0Rx+qZAUKXBQlRA==
+X-CSE-MsgGUID: 6ypsp40zTQCnIY21/sWweg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="71912461"
+X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
+   d="scan'208";a="71912461"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 12:24:21 -0800
+X-CSE-ConnectionGUID: pkaYP0i0TWeItj3eeahs/Q==
+X-CSE-MsgGUID: kmSDxVkkQpSq0BHmkuT8+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
+   d="scan'208";a="214747266"
+Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.222])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 12:24:17 -0800
+Date: Mon, 23 Feb 2026 22:24:14 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Bartosz Golaszewski <brgl@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Len Brown <lenb@kernel.org>, driver-core@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] driver core: make fwnode_is_primary() public
+Message-ID: <aZy3bu-W2KkFbJHO@smile.fi.intel.com>
+References: <20260223-device-match-secondary-fwnode-v2-0-966c00c9eeeb@oss.qualcomm.com>
+ <20260223-device-match-secondary-fwnode-v2-1-966c00c9eeeb@oss.qualcomm.com>
+ <aZyUY3ZsmrwHw4X_@smile.fi.intel.com>
+ <CAMRc=MfpzgOPf4pkHd_tNQ4wBNMhfUBOh=ptajhhZwDpFUPGBQ@mail.gmail.com>
+ <aZyrVWYQKT-JUYR3@smile.fi.intel.com>
+ <CAJZ5v0ivGazojW0BfSh7HzWyu+1ij6p=KbpwsmZPJ5YuTSahDw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: exch16.corp.auroraos.dev (10.189.209.38) To
- exch16.corp.auroraos.dev (10.189.209.38)
+In-Reply-To: <CAJZ5v0ivGazojW0BfSh7HzWyu+1ij6p=KbpwsmZPJ5YuTSahDw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.14 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[auroraos.dev : SPF not aligned (relaxed), No valid DKIM,quarantine,sampled_out];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	PRECEDENCE_BULK(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,oss.qualcomm.com,linuxfoundation.org,gmail.com,linux.intel.com,lists.linux.dev,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-32083-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32082-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[s.shtylyov@auroraos.dev,linux-gpio@vger.kernel.org];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.969];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[intel.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linuxtesting.org:url,auroraos.dev:mid,auroraos.dev:email]
-X-Rspamd-Queue-Id: 1ADC917CC77
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 36B2317CD4F
 X-Rspamd-Action: no action
 
-In rockchip_pinctrl_parse_groups(), even if the "rockchip,pins" property
-is absent in the DT node it parses and so of_get_property() returns NULL,
-the phandle pointer is checked for NULL amidst the *for* loop after the
-list pointer (from which it's copied) being already advanced (and even
-dereferenced), so it can't be NULL anymore (unless we have a wraparound);
-thus the NULL check seems pointless, and when we drop it, the variable
-phandle itself becomes pretty useless -- let's get rid of it as well...
+On Mon, Feb 23, 2026 at 08:45:42PM +0100, Rafael J. Wysocki wrote:
+> On Mon, Feb 23, 2026 at 8:32 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Feb 23, 2026 at 07:28:48PM +0100, Bartosz Golaszewski wrote:
+> > > On Mon, Feb 23, 2026 at 6:54 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Mon, Feb 23, 2026 at 04:40:52PM +0100, Bartosz Golaszewski wrote:
+> > > > > Export fwnode_is_primary() in fwnode.h for use in driver code.
 
-Found by Linux Verification Center (linuxtesting.org) with the Svace static
-analysis tool.
+...
 
-Signed-off-by: Sergey Shtylyov <s.shtylyov@auroraos.dev>
----
-The patch is against the for-next branch of Linus W.'s linux-pinctrl.git repo.
+> > > > > --- a/include/linux/fwnode.h
+> > > > > +++ b/include/linux/fwnode.h
+> > > > > @@ -230,4 +230,9 @@ void fwnode_links_purge(struct fwnode_handle *fwnode);
+> > > > >  void fw_devlink_purge_absent_suppliers(struct fwnode_handle *fwnode);
+> > > > >  bool fw_devlink_is_strict(void);
+> > > > >
+> > > > > +static inline bool fwnode_is_primary(struct fwnode_handle *fwnode)
+> > > > > +{
+> > > > > +     return fwnode && !IS_ERR(fwnode->secondary);
+> > > > > +}
+> > > >
+> > > > This is inconsistent. Please, split out fwnode stuff from device.h to
+> > > > device/fwnode.h and share it there.
+> > > >
+> > > > This reminds me to look what I have locally in development...
+> > > >
+> > > > (With your patch it will be in device.h and fwnode.h and in the latter
+> > > >  it's even not properly grouped with other non-fwdevlink related stuff.)
+> > >
+> > > Please rephrase the entire email because I have no idea what you mean. :(
+> >
+> > The primary/secondary and other device-fwnode related stuff is currently
+> > exposed via include/linux/device.h. The problem is that device.h is overloaded
+> > and starves for more splitting, which I'm doing (very slowly, though).
+> > The idea is to have all device-fwnode  (and maybe of_node) stuff to be gathered in
+> > include/linux/device/fwnode.h
+> 
+> I don't see "struct device" anywhere in fwnode_is_primary().  This
+> check is only about whether or not the given fwnode has a valid
+> secondary fwnode.
 
-Here's the prior patch adding the NULL check where it really belonged but
-eventually ignored by Linus:
+I am talking about splitting device-fwnode related API to
+include/linux/device/fwnode.h. The idea of primary/secondary comes from the
+upper layer (device) as struct fwnode_handle just defines a 'secondary' member
+for a single linked list. It doesn't seem to limit anyhow the list.
 
-https://lore.kernel.org/all/179c9e8c-8760-41e6-aad7-7a128df60984@omp.ru/
+My understanding is that the fwnode_is_primary() belongs to the device layer more
+than to fwnode one. fwnode layer doesn't (clearly?) define the use cases
+and in my opinion should not, fwnode_handle is more abstract and shouldn't
+be limited to primary/secondary division that is currently related to the
+device. Maybe I am missing something obvious... but to me spreading these
+APIs into fwnode.h sounds like layering violation (especially if we think
+of the future decoupling fwnode from struct device and making it a separate
+entity).
 
- drivers/pinctrl/pinctrl-rockchip.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+> > You, guys, missed the keyword 'device' in the pathname for the proposed
+> > [include/linux/device/]fwnode.h.
+> 
+> Why do you think we missed it?
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index 816823403e97..8e195f951b9f 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -3863,7 +3863,6 @@ static int rockchip_pinctrl_parse_groups(struct device_node *np,
- 		return -ENOMEM;
- 
- 	for (i = 0, j = 0; i < size; i += 4, j++) {
--		const __be32 *phandle;
- 		struct device_node *np_config;
- 
- 		num = be32_to_cpu(*list++);
-@@ -3874,11 +3873,7 @@ static int rockchip_pinctrl_parse_groups(struct device_node *np,
- 		grp->pins[j] = bank->pin_base + be32_to_cpu(*list++);
- 		grp->data[j].func = be32_to_cpu(*list++);
- 
--		phandle = list++;
--		if (!phandle)
--			return -EINVAL;
--
--		np_config = of_find_node_by_phandle(be32_to_cpup(phandle));
-+		np_config = of_find_node_by_phandle(be32_to_cpup(list++));
- 		ret = pinconf_generic_parse_dt_config(np_config, NULL,
- 				&grp->data[j].configs, &grp->data[j].nconfigs);
- 		of_node_put(np_config);
+Because of the previous comment that suggest that I wanted to move the code to
+fwnode.h, but I was talking about device/fwnode.h (which is currently absent).
+
 -- 
-2.53.0
+With Best Regards,
+Andy Shevchenko
+
 
 
