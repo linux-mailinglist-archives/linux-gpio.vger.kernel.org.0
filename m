@@ -1,184 +1,146 @@
-Return-Path: <linux-gpio+bounces-32064-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32071-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GF3CGEKZnGmKJgQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32064-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 19:15:30 +0100
+	id CP8NO8mcnGmyJgQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32071-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 19:30:33 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01EA317B602
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 19:15:29 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6899417B809
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 19:30:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C5E513100F28
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 18:09:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9BDD830A2806
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 18:29:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D984333D4E4;
-	Mon, 23 Feb 2026 18:09:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02C9D340A41;
+	Mon, 23 Feb 2026 18:29:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HEVXFN+7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iTELZAyA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BE633BBB9;
-	Mon, 23 Feb 2026 18:09:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA915340A49
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Feb 2026 18:29:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771870146; cv=none; b=CeFYYZxm/f5fzIEO3P4h7rfkTyi60ZA8UT+t/Of6dDF3qNydp2rhQa76GLdSWM745g7vb1qyF9Dkyho9dOPDByITkMti6Yl9rDjzGRQcuPbHQvFF/jH8uPYK1ptDP7lRoE55Ex6Zd8ucrcFcjZvjHDPFCHQhGKUTjxueY1clMq4=
+	t=1771871343; cv=none; b=hlKhhp1rhGAAfzDtMBcR4BtO5cONEPVeAlZOBi15U1ENfyWPmPq0ILH0zjMxBAYo2boEabn6zjtdkNuY4fF4SnFQiDevE+v9rQpesi2OEhTg+vvCt7evepDphHJLfbFdrE3CzFIUFbB62s83ElzEvuERgG5pgJrestKviAuI14I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771870146; c=relaxed/simple;
-	bh=kOB+dAnEOO05y6UZt1KP3bLWhO3E4YCvQWjyKGXAT4k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lzA+FA9iwIUdtGcc0WqFOlFoYetkhQ9wuNPW9tpiCg8sXqbs8AX+K9Fcffr+QL3CT1SOdf9Rq/pJkE81l+jFKvEea1oQHam1JrrXWsLPoQSNDeAa7unMEqNrb39iJCcvgOs2Y27LSEaG8autC7XEy3AwynXbSElkWJr1akOlgDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HEVXFN+7; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1771870145; x=1803406145;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=kOB+dAnEOO05y6UZt1KP3bLWhO3E4YCvQWjyKGXAT4k=;
-  b=HEVXFN+7YOsceE4+9KEsb6V/1EXeKIHdKbB3s0DWWI1bU+l1i8M9qwQS
-   OjLt0y5CCRsI7+v6JkvqZLaWOZSR30c69f+kpCH9XpUj/AAsuNQi955FI
-   4Vh3sIzomckiWGhiLa3zA0Mq+R9i8xnNNXK0hJnby5v7G8KUEwKhWbjl1
-   TjiLn2NhRvQDDI2jLPJ3P7xP7YM0JC03hPwrfdEvRJU84Br4FQt+jWi+V
-   Wu1EC6bV+IkUZldkoAfQK/64qLMwwcNhcRLfYN+JoFqQfAWy36AjfFd9d
-   7J8CZwys0ShNIH2D+4AbHJFyzy0rvtpxXdIEXIB/FaGbktqZ81n4pl7C8
-   g==;
-X-CSE-ConnectionGUID: kqGeYHH+S66YDJ3XohiJDg==
-X-CSE-MsgGUID: zsx3Ql/rTB+ogbHTEKYBKQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="72082657"
-X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
-   d="scan'208";a="72082657"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 10:09:05 -0800
-X-CSE-ConnectionGUID: Sy9SHbzGRAm6jLh2rURfwQ==
-X-CSE-MsgGUID: 2yUI6CCqTLK8H61+Ix3/Hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
-   d="scan'208";a="238599658"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa002.fm.intel.com with ESMTP; 23 Feb 2026 10:09:04 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 435E7A5; Mon, 23 Feb 2026 19:09:01 +0100 (CET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Patrick Rudolph <patrick.rudolph@9elements.com>,
-	Linus Walleij <linusw@kernel.org>
-Subject: [PATCH v1 8/8] pinctrl: cy8c95x0: Gather ID tables in one place
-Date: Mon, 23 Feb 2026 19:06:58 +0100
-Message-ID: <20260223180859.2845261-9-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20260223180859.2845261-1-andriy.shevchenko@linux.intel.com>
-References: <20260223180859.2845261-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1771871343; c=relaxed/simple;
+	bh=mzfCjS37q2cu7V2ENDhFi7Xh2Xke6aNT6a5HvYIrLb0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ujc9+EHabDIZBTrTCOHOo5FO9GdviBdWaV5/f1kxNLMb3IAydSnQWLFVgzGmElwJ+ckbikEpBn6B+0nXj+rjupcvPo6/nKvwhQUhp6Kz/+hG+nirVY8uUOjopUGGkilX4H3sxfwQSFVInYnY4szFxC4hJoUcSJM5Fegt6r55cws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iTELZAyA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EDBDC2BCB3
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Feb 2026 18:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771871343;
+	bh=mzfCjS37q2cu7V2ENDhFi7Xh2Xke6aNT6a5HvYIrLb0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=iTELZAyAPi5Fd2XI7t2BCcnfsxRr4r9ZzHNDzvDQzhU2dLMnYmLW2yBKndZDpCWli
+	 8Rdg1mtPSQKglFR2dx3YvugdxT3Dyg9f63oFI0SYJGIs//KFtxZEXnIh4IYIvT0StR
+	 1QfbEl6rCJk6BykHtJD7Pk4kIQ0Owmp/U1n9EEwzbh5EzARZLit9tUO1Oo0oWqaSzj
+	 M7bYSDXTC04eRu5xV2OsjJo2Xz5/d1nTJg6fhetLo6A8/AJSoqrs/PG9s1czDwSxK7
+	 6slN6qeaYTDN6z85IHeAAIb3c46aDhZxTAmwKfkt092l7TQ0YFA66Vs9ZQVqMb6Qph
+	 q27kyvsaJA7XA==
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-385c23b88e8so38590521fa.3
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Feb 2026 10:29:03 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUZJBBQ9aSMp3aZq7FydTmPEODKL35BvHaJ0x1aEE++1HozxVkJBSnKeElDKk2hXqfDImlbUlpv8dX1@vger.kernel.org
+X-Gm-Message-State: AOJu0YxE4WH6NtkKxHj1PIxHrPDTclquEVN3c56dJq/Qc7n/H3BBTKgh
+	wuL7wRcztmQ3VBZY6MUSSy9vtiFW7Ak9USQnJDPgy4dYONkkGqfUJmAiD5/wgZ1nudXWu2RucAy
+	pUJ0g/naKoN3dLGy2uKzq+rRS6pfBnjKuZlvoHefBYw==
+X-Received: by 2002:a05:651c:198c:b0:385:dd91:a6ce with SMTP id
+ 38308e7fff4ca-389a5c4c7a0mr35763781fa.38.1771871342013; Mon, 23 Feb 2026
+ 10:29:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260223-device-match-secondary-fwnode-v2-0-966c00c9eeeb@oss.qualcomm.com>
+ <20260223-device-match-secondary-fwnode-v2-1-966c00c9eeeb@oss.qualcomm.com> <aZyUY3ZsmrwHw4X_@smile.fi.intel.com>
+In-Reply-To: <aZyUY3ZsmrwHw4X_@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Mon, 23 Feb 2026 19:28:48 +0100
+X-Gmail-Original-Message-ID: <CAMRc=MfpzgOPf4pkHd_tNQ4wBNMhfUBOh=ptajhhZwDpFUPGBQ@mail.gmail.com>
+X-Gm-Features: AaiRm537I4oIfjLvMIcGhYYnIzZ2C1QZQmqaYwSbwb8V6Bm_JwM3OvKhUk5BeoY
+Message-ID: <CAMRc=MfpzgOPf4pkHd_tNQ4wBNMhfUBOh=ptajhhZwDpFUPGBQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] driver core: make fwnode_is_primary() public
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Linus Walleij <linusw@kernel.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32071-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[oss.qualcomm.com,linuxfoundation.org,kernel.org,gmail.com,linux.intel.com,lists.linux.dev,vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32064-lists,linux-gpio=lfdr.de];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
-	RCVD_COUNT_FIVE(0.00)[6];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,intel.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.intel.com:mid]
-X-Rspamd-Queue-Id: 01EA317B602
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 6899417B809
 X-Rspamd-Action: no action
 
-We have three ID tables spread over the driver code. Move all of them
-closer to the end of the file where the first user appears to be. With
-that done, drop unneeded trailing commas.
+On Mon, Feb 23, 2026 at 6:54=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Feb 23, 2026 at 04:40:52PM +0100, Bartosz Golaszewski wrote:
+> > Export fwnode_is_primary() in fwnode.h for use in driver code.
+>
+> ...
+>
+> > --- a/include/linux/fwnode.h
+> > +++ b/include/linux/fwnode.h
+> > @@ -230,4 +230,9 @@ void fwnode_links_purge(struct fwnode_handle *fwnod=
+e);
+> >  void fw_devlink_purge_absent_suppliers(struct fwnode_handle *fwnode);
+> >  bool fw_devlink_is_strict(void);
+> >
+> > +static inline bool fwnode_is_primary(struct fwnode_handle *fwnode)
+> > +{
+> > +     return fwnode && !IS_ERR(fwnode->secondary);
+> > +}
+>
+> This is inconsistent. Please, split out fwnode stuff from device.h to
+> device/fwnode.h and share it there.
+>
+> This reminds me to look what I have locally in development...
+>
+>
+> (With your patch it will be in device.h and fwnode.h and in the latter
+>  it's even not properly grouped with other non-fwdevlink related stuff.)
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/pinctrl-cy8c95x0.c | 38 +++++++++++++++---------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+Please rephrase the entire email because I have no idea what you mean. :(
 
-diff --git a/drivers/pinctrl/pinctrl-cy8c95x0.c b/drivers/pinctrl/pinctrl-cy8c95x0.c
-index 1d3e0617b235..0d295ebc33d1 100644
---- a/drivers/pinctrl/pinctrl-cy8c95x0.c
-+++ b/drivers/pinctrl/pinctrl-cy8c95x0.c
-@@ -72,24 +72,6 @@
- #define CY8C95X0_MUX_REGMAP_TO_OFFSET(x, p) \
- 	(CY8C95X0_VIRTUAL + (x) - CY8C95X0_PORTSEL + (p) * MUXED_STRIDE)
- 
--static const struct i2c_device_id cy8c95x0_id[] = {
--	{ "cy8c9520", 20, },
--	{ "cy8c9540", 40, },
--	{ "cy8c9560", 60, },
--	{ }
--};
--MODULE_DEVICE_TABLE(i2c, cy8c95x0_id);
--
--#define OF_CY8C95X(__nrgpio) ((void *)(__nrgpio))
--
--static const struct of_device_id cy8c95x0_dt_ids[] = {
--	{ .compatible = "cypress,cy8c9520", .data = OF_CY8C95X(20), },
--	{ .compatible = "cypress,cy8c9540", .data = OF_CY8C95X(40), },
--	{ .compatible = "cypress,cy8c9560", .data = OF_CY8C95X(60), },
--	{ }
--};
--MODULE_DEVICE_TABLE(of, cy8c95x0_dt_ids);
--
- static const struct acpi_gpio_params cy8c95x0_irq_gpios = { 0, 0, true };
- 
- static const struct acpi_gpio_mapping cy8c95x0_acpi_irq_gpios[] = {
-@@ -1478,8 +1460,26 @@ static int cy8c95x0_probe(struct i2c_client *client)
- 	return cy8c95x0_setup_gpiochip(chip);
- }
- 
-+static const struct i2c_device_id cy8c95x0_id[] = {
-+	{ "cy8c9520", 20 },
-+	{ "cy8c9540", 40 },
-+	{ "cy8c9560", 60 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, cy8c95x0_id);
-+
-+#define OF_CY8C95X(__nrgpio) ((void *)(__nrgpio))
-+
-+static const struct of_device_id cy8c95x0_dt_ids[] = {
-+	{ .compatible = "cypress,cy8c9520", .data = OF_CY8C95X(20) },
-+	{ .compatible = "cypress,cy8c9540", .data = OF_CY8C95X(40) },
-+	{ .compatible = "cypress,cy8c9560", .data = OF_CY8C95X(60) },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, cy8c95x0_dt_ids);
-+
- static const struct acpi_device_id cy8c95x0_acpi_ids[] = {
--	{ "INT3490", 40, },
-+	{ "INT3490", 40 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, cy8c95x0_acpi_ids);
--- 
-2.50.1
-
+Bart
 
