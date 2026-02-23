@@ -1,151 +1,199 @@
-Return-Path: <linux-gpio+bounces-32086-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32088-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6P1qGCrBnGmgKAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32086-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 22:05:46 +0100
+	id 4OGVObPSnGkJLAQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32088-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 23:20:35 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A091517D59D
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 22:05:45 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 630D117E34B
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 23:20:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 3A65C30299DF
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 20:53:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 384BE3166482
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 22:08:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FDF4369980;
-	Mon, 23 Feb 2026 20:53:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 880A537AA7B;
+	Mon, 23 Feb 2026 22:07:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dFbomPaX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mWWJKB7B"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228642BEFF6;
-	Mon, 23 Feb 2026 20:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8788637A49D;
+	Mon, 23 Feb 2026 22:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771879985; cv=none; b=DIy49EMxoX8O4oPM+MqLqQrRVGsx7vggoMvBrn3ZUSFrO59AGQrvLgA1fkeydmElPATiX7wT8llADYvozfmshqbQ9MbJxqaRUnB+3d1OtPJChaefT8VUBU9enQuFrDCpiaoKKAfqqJsof4LkONzZux5qmuZ6GoTNUQYH/TTR7oI=
+	t=1771884443; cv=none; b=nCZ2jXllruYz4V7Z1oQxRIMy5ZtU+QWkXG4JvIBhn7lT4AMb/sSBGkP5BdzgFZmAtKW1hMN9kiDdJctPbWSlf04P7c9i3k4xulY50AQCEs/fA4ArMybNlSYRl332bV76TGmRiLTB/NccYYq6nYkRSYgPqd+35XCpDHyCC3McGGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771879985; c=relaxed/simple;
-	bh=9ZwCRUkSygSWXdebgAt63Ndk3TSqeMDqho4QjUTbPeg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aPpsPvWl2LO3a22SNzDeB2hj4j2zqFSITlYUFYxdOQw7HgcXuAwXaYESqyiQ678cqmCX6S3P1eqYka3JP91hje1rj37LILcF2tImr5LCO/vCJ6LZW3HpILl+nrjG0N0LiSZsnCsa1fpNGKAxawlYgRF//fkA7FT7L6437mgK1g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dFbomPaX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C30E3C19421;
-	Mon, 23 Feb 2026 20:53:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771879984;
-	bh=9ZwCRUkSygSWXdebgAt63Ndk3TSqeMDqho4QjUTbPeg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dFbomPaXdm1lhsiCRGW4tHCyrO1zxgCcTPi/MDxnyMPCkNf3RBffybbw/qXjqk+CP
-	 xpth8RfSTShWo/87AJ7NTbvLjgO0oNvvB6o8Ujv9pgZYqMH6gZPTQ36szCplmgoMRw
-	 VsBcIZrsnIHZdZFBakvl6EOARXQszb/lyVMbMKkWBuZIoRh9xS0hv51VDmD6H/WwAe
-	 JWhjCMiph2crYJceBDyWSnlB3jmJEnFJue7aUqZXucHI5imdJ7NB1oB2I+zONFeoBg
-	 hhZnIPQJh1g2vEMDfXtnEQBlAHnHTJXjxl4A1WJ4nMKeODuQKyCnng8iPr9fy93EbR
-	 qkqkN/33uj18w==
-Date: Mon, 23 Feb 2026 20:52:54 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, David Lechner
- <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
- Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, Bartosz
- Golaszewski <brgl@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] iio: adc: ti-ads7950: complete conversion to
- using managed resources
-Message-ID: <20260223205254.472ee2b1@jic23-huawei>
-In-Reply-To: <aZtVEdFoGUMx4olM@smile.fi.intel.com>
-References: <20260219022929.3558081-1-dmitry.torokhov@gmail.com>
-	<20260219022929.3558081-5-dmitry.torokhov@gmail.com>
-	<aZbC51ezuaT5Nwq7@smile.fi.intel.com>
-	<aZj3deh1Em1rz3au@google.com>
-	<aZtVEdFoGUMx4olM@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1771884443; c=relaxed/simple;
+	bh=QLRt1ihCEGutlnY3VQn0B0BPbTeJrNzIfTdx0Vhb06U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t+dbVggXOQVDin9eg/8B/16YV6r7JdJlA9DCZmDCK7pbGfSaImlyXXDkC65prsyo0J4JnEwChRAvo/94y8l6y4JAuyY3MHR8VDVSBpsV/OON5ssQtrQOGagjDPREoidK2jn8Br+qacddnoolWcuEJfzqD8fdwz+7GUSu5SHpBag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mWWJKB7B; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771884442; x=1803420442;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=QLRt1ihCEGutlnY3VQn0B0BPbTeJrNzIfTdx0Vhb06U=;
+  b=mWWJKB7B44VU5zsW5268qiqZb7zFp8W+Z2pUPr8uLP6EFlnx9sFG/i2c
+   UrjLH48mPweXH40o7DGemf/RBq2VwcUVAsuPfL3bkKzVWfXvL3Z/2wEmz
+   nGN6WW3pZzFUjQmNI0f2w4kd7cwRhwZcxEFicTq+pF1uBN7D1nEQCdR8n
+   BsajphCXe2Pq3Ct6K6VvjX1JGXTUdX+M6PZD1NFH7uLso4250S6Ye8cHk
+   rAll12u2d0pLlufYPxea+n9nZ4CfVBXv2qgjPaPW34DY7P+66eHiTm5rT
+   3qO3c2FmoGJRB4IHQEAVNaQ7bP5sK1AIQJZpDn+gj2jH+YWw3bA3u/Eag
+   Q==;
+X-CSE-ConnectionGUID: CaWx/QkdQgGWBzyVJ0iIpw==
+X-CSE-MsgGUID: wgUoQ/QTQHiFGDmNJFUjkg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11710"; a="75498110"
+X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
+   d="scan'208";a="75498110"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 14:07:16 -0800
+X-CSE-ConnectionGUID: bZBxDYz7QnO7HwaONAAgpw==
+X-CSE-MsgGUID: 2d7dg5weRAWji89mBhuZzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,307,1763452800"; 
+   d="scan'208";a="215849310"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.61])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2026 14:07:12 -0800
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id C8D9C11FC4C;
+	Tue, 24 Feb 2026 00:07:37 +0200 (EET)
+Date: Tue, 24 Feb 2026 00:07:37 +0200
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Len Brown <lenb@kernel.org>, driver-core@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] gpiolib: match secondary fwnode too in
+ gpio_device_find_by_fwnode()
+Message-ID: <aZzPqbXH79Q6GvEn@kekkonen.localdomain>
+References: <20260223-device-match-secondary-fwnode-v2-0-966c00c9eeeb@oss.qualcomm.com>
+ <20260223-device-match-secondary-fwnode-v2-2-966c00c9eeeb@oss.qualcomm.com>
+ <aZyNErXB_acR3yYq@kekkonen.localdomain>
+ <CAJZ5v0ibXKiUNf5Fvj=q=f9JbHT=w3j3h=33ri_awzEHm_dBng@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0ibXKiUNf5Fvj=q=f9JbHT=w3j3h=33ri_awzEHm_dBng@mail.gmail.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-32086-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,baylibre.com,analog.com,kernel.org,vger.kernel.org];
+	FREEMAIL_CC(0.00)[linux.intel.com,oss.qualcomm.com,linuxfoundation.org,kernel.org,gmail.com,lists.linux.dev,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-32088-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[intel.com:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[sakari.ailus@linux.intel.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,intel.com:email]
-X-Rspamd-Queue-Id: A091517D59D
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,intel.com:email,intel.com:dkim,kekkonen.localdomain:mid]
+X-Rspamd-Queue-Id: 630D117E34B
 X-Rspamd-Action: no action
 
-On Sun, 22 Feb 2026 21:12:17 +0200
-Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
+Hi Rafael,
 
-> On Fri, Feb 20, 2026 at 04:09:47PM -0800, Dmitry Torokhov wrote:
-> > On Thu, Feb 19, 2026 at 09:59:35AM +0200, Andy Shevchenko wrote:  
-> > > On Wed, Feb 18, 2026 at 06:29:28PM -0800, Dmitry Torokhov wrote:  
+On Mon, Feb 23, 2026 at 06:46:38PM +0100, Rafael J. Wysocki wrote:
+> On Mon, Feb 23, 2026 at 6:23 PM Sakari Ailus
+> <sakari.ailus@linux.intel.com> wrote:
+> >
+> > Hi Bartosz,
+> >
+> > Thanks for the patch.
+> >
+> > On Mon, Feb 23, 2026 at 04:40:53PM +0100, Bartosz Golaszewski wrote:
+> > > In GPIOLIB, during fwnode lookup, after having resolved the consumer's
+> > > reference to a specific fwnode, we only match it against the primary
+> > > node of the controllers. Let's extend that to also the secondary node by
+> > > reworking gpio_chip_match_by_fwnode()
+> > >
+> > > Suggested-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> > > ---
+> > >  drivers/gpio/gpiolib.c | 12 +++++++++++-
+> > >  1 file changed, 11 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > > index c52200eaaaff82b12f22dd1ee8459bdd8ec10d81..7fe1d9ab1281d6c5022b9bdd8909fef2cb74122e 100644
+> > > --- a/drivers/gpio/gpiolib.c
+> > > +++ b/drivers/gpio/gpiolib.c
+> > > @@ -11,6 +11,7 @@
+> > >  #include <linux/errno.h>
+> > >  #include <linux/file.h>
+> > >  #include <linux/fs.h>
+> > > +#include <linux/fwnode.h>
+> > >  #include <linux/idr.h>
+> > >  #include <linux/interrupt.h>
+> > >  #include <linux/irq.h>
+> > > @@ -1395,7 +1396,16 @@ EXPORT_SYMBOL_GPL(gpio_device_find_by_label);
+> > >
+> > >  static int gpio_chip_match_by_fwnode(struct gpio_chip *gc, const void *fwnode)
+> > >  {
+> > > -     return device_match_fwnode(&gc->gpiodev->dev, fwnode);
+> > > +     struct device *dev = &gc->gpiodev->dev;
+> > > +     struct fwnode_handle *node = dev_fwnode(dev);
+> > > +
+> > > +     if (IS_ERR(fwnode))
+> > > +             return 0;
+> > > +
+> > > +     if (device_match_fwnode(dev, fwnode))
+> >
+> > Could device_match_fwnode() match secondary fwnode as well?
 > 
-> ...
-> 
-> > > > +	if (error) {
-> > > >  		dev_err(&spi->dev, "Error in spi setup\n");
-> > > > -		return ret;
-> > > > +		return error;
-> > > >  	}  
-> > > 
-> > > And since there is already dev_err_probe() in use, I would expect this
-> > > also be converted.  
-> > 
-> > But that would be unrelated change ;)  
-> 
-> I never told that this should be done here.
-> 
-> ...
-> 
-> > > Would be also nice to use
-> > > 
-> > > 	struct device *dev = &spi->dev;
-> > > 
-> > > to make less LoCs and/or make them shorter.  
-> > 
-> > I actually dislike introducing such temporaries in majority of the
-> > cases. It makes it hard to follow what device we are dealing with and
-> > does not make the code significantly shorter.  
-> 
-> May be, but my experience is telling me different story.
-> So we have a disagreement here, I leave it to Jonathan
-> to mediate.
-> 
-When there are multiple struct device isntances that we access
-in the driver I fully agree with Dmitry that it is helpful to
-fully enumerate them.  However, for IIO drivers we keep the
-one buried in struct iio_dev fairly well hidden so the confusion
-"opportunity" doesn't tend to occur.  As such I tend to come down just
-on the "have a local variable" side of things.
+> In the previous discussion on this, Andy was against doing that due to
+> the concern that it might introduce subtle bugs, which I agree with.
 
-Jonathan
+Could you elaborate or provide an example?
+
+The function has some 27 users although few are individual drivers.
+
+My understanding is that we only have the secondary fwnode for being able
+to attach objects from different backend to the same node. The fwnode API
+in the meantime generally tries to hide the existence of the secondary
+fwnode; a rewrite (which ideally would have happened perhaps a few years
+ago?) would probably make the fwnode a linked list instead so we'd lose
+that secondary pointer in the process.
+
+-- 
+Kind regards,
+
+Sakari Ailus
 
