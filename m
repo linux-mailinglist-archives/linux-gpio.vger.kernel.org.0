@@ -1,251 +1,381 @@
-Return-Path: <linux-gpio+bounces-32037-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32038-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AMymMvFSnGktDwQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32037-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 14:15:29 +0100
+	id eEolEzpfnGkUFQQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32038-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 15:07:54 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38A651769E9
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 14:15:28 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08152177C08
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 15:07:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 93434301DE03
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 13:14:48 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D745B300CC93
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 14:07:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0521366048;
-	Mon, 23 Feb 2026 13:14:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 669A527A133;
+	Mon, 23 Feb 2026 14:07:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oL+F96Vg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IPvGrBGV"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDEE364EB1;
-	Mon, 23 Feb 2026 13:14:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267F226ADC;
+	Mon, 23 Feb 2026 14:07:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771852487; cv=none; b=mLl6HKZs+ShqiUopxHb9Lt0Cy6CwR2AfvmYMUsbU2/QC/bDRKkchhmEI/8Jk/fSAccVB7+EG/7IK+KweBqmoVK5WlmSpFnim3+nTkC/S49f0qgLuKB9Agiw26H7sqDVPI3h26yJf64l7rJYr9zf8PKSw9V4eT+lxK6AbwsiXeiI=
+	t=1771855668; cv=none; b=MRMaobHGcmvJmlCXn7lg1TJ4fyJiZRMwKsRdHcRrJ0qv9ogQD1KylLs+wW/IJ8Xp5K/uap9mey4me33VIUlFKDOV6hfbQPp7eRrnzmOskDc9nwloYKR5kd322UAxn19HtXG5BjCLHuI9Ljll7RrD+Mr/kLfocod2qhiyW4HRdBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771852487; c=relaxed/simple;
-	bh=8DwFT3SzJIRBOZObvA0LRL2zBy3gdn77newiUsk86b8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=epOsDJFH/3dcCHbAQx3XqqiJLiMiqZlGn+MQaa9q8PC6hJEDdkgphKqkloTCQSvaEQpWZ92baPmixv8YfUP7Tq0j3PsWqhWnFHU5OuAJdJ+LWeKzeVlNdixloOXtWyocUyaav+0XZzo7nBFsSelLaSPyhnDJGjjpjhEuZXbI1K0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oL+F96Vg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BD52C19424;
-	Mon, 23 Feb 2026 13:14:41 +0000 (UTC)
+	s=arc-20240116; t=1771855668; c=relaxed/simple;
+	bh=dDYPhdIEdbDF1rBlpY/BXOms6MErEYtGXlLpzU7HHOg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h84yd4ao88Mhv7FtIYEGtFxInBCV2Nid89Wa2JFzSRHoFdUKnWwgnVd52+4ZZFMUEA+OnFD8w3Xcs4hJJwb8vXh1EEW9XACpu0KgCyzrGykSFC10bBVE7b2pZVUN0m5fG5MM+Tb1AJ7D54+cMfFIlm8r37JvQeXgR4f+4K+LC5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IPvGrBGV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AB57C116C6;
+	Mon, 23 Feb 2026 14:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771852487;
-	bh=8DwFT3SzJIRBOZObvA0LRL2zBy3gdn77newiUsk86b8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oL+F96VgfcBJOcHfWjY8OCc7DLRkYL7rvRqvfYaO4zTIWo1qqarm2/KV6YX7QAbox
-	 FM2GZNvfkXO4u1jSmYon1GBy3oC/yas5NKZob5V2/AehahvUA9cFfgFGH/dkGl8uK5
-	 wJujyp/6kO4AlGE7tYKZcnqhSvhqPDDWy/VjYEhPRsBKhT0rrGWgVUpjIVpwY42uQg
-	 THt3FZPxXS27POM6ejDcFCGJZY7H0OpaMrqJsezbDdELEbq8EBCdN2S7IpYLiBYGrh
-	 nCMy7lHyiFv07LSeUEFdq0J3knzGvrHNXO8stz1M37gY2C1+9WwzDjOR9vaI0pq2SL
-	 QCIdNPZWUYj8g==
-Message-ID: <fe755e85-1558-4272-bdd4-af7a2038ab1f@kernel.org>
-Date: Mon, 23 Feb 2026 14:14:39 +0100
+	s=k20201202; t=1771855667;
+	bh=dDYPhdIEdbDF1rBlpY/BXOms6MErEYtGXlLpzU7HHOg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IPvGrBGVF2v2yL4LlrsF4wTm4ZSPbuU5uhI4xZRidahK7i+xK2gFONhYyWixOSR7w
+	 uwR50Gu/pvCbYRwmTqqPvOm2cz87aC92HlGM5RhbrluJn5Ajm8MBI5ZbdTDs4Y6HG/
+	 weBTiPqXjogD9se7vo1/t6z5HglySBCLoQ0BAi1wo031yUGUvqgF1wc8OlLlB62711
+	 h/ezyUMJ5XU6tJm5D94aFY27d++FL4P4FuTjwiguSy/0l6vRVwjaDz7eJnjRtRUlc5
+	 rS3x9aMk4BiKlXGuNKP88zrkoFIlcwjBkDYwQuqJelUv+jTRfemBY8I88ZlPcgsve1
+	 evLYbqrm7U1cw==
+Date: Mon, 23 Feb 2026 19:37:34 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Pavel Machek <pavel@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org, quic_vbadigan@quicinc.com, 
+	quic_mrana@quicinc.com, sherry.sun@nxp.com, driver-core@lists.linux.dev
+Subject: Re: [PATCH v7 3/3] PCI: Add support for PCIe WAKE# interrupt
+Message-ID: <pjeee3vwggsrvp4kxarc46vjx2igk53xd6eoxjqh7ri5rf6fhi@5d3ccirqnxu6>
+References: <20260218-wakeirq_support-v7-0-0d4689830207@oss.qualcomm.com>
+ <20260218-wakeirq_support-v7-3-0d4689830207@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 01/10] dt-bindings: mfd: add support for the NXP SIUL2
- module
-To: Khristine Andreea Barbulescu <khristineandreea.barbulescu@oss.nxp.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>,
- Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
- Larisa Grigore <larisa.grigore@nxp.com>, Lee Jones <lee@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>,
- Jacky Bai <ping.bai@nxp.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Alberto Ruiz <aruizrui@redhat.com>, Christophe Lizzi <clizzi@redhat.com>,
- devicetree@vger.kernel.org, Enric Balletbo <eballetb@redhat.com>,
- Eric Chanudet <echanude@redhat.com>, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, NXP S32 Linux Team <s32@nxp.com>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- "Vincent Guittot devicetree @ vger . kernel . org"
- <vincent.guittot@linaro.org>, Rob Herring <robh@kernel.org>
-References: <20260120115923.3463866-1-khristineandreea.barbulescu@oss.nxp.com>
- <20260120115923.3463866-2-khristineandreea.barbulescu@oss.nxp.com>
- <20260121021913.GA1704619-robh@kernel.org>
- <e956750b-0333-4465-b37e-5f460b5e092f@oss.nxp.com>
- <edc3a63a-8117-476f-9582-97ae31fefa96@kernel.org>
- <7d200097-51bc-4404-be8b-f536d0ecfc25@oss.nxp.com>
- <21531cdd-5ab9-493e-a722-61b98117e2c4@kernel.org>
- <22a5a072-847e-4cfd-8abd-e37163f73265@oss.nxp.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <22a5a072-847e-4cfd-8abd-e37163f73265@oss.nxp.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260218-wakeirq_support-v7-3-0d4689830207@oss.qualcomm.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[linaro.org,bgdev.pl,kernel.org,gmail.com,suse.com,nxp.com,pengutronix.de,linuxfoundation.org,redhat.com,vger.kernel.org,lists.linux.dev,lists.infradead.org];
-	TAGGED_FROM(0.00)[bounces-32037-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[30];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	DBL_PROHIBIT(0.00)[2.159.138.16:email];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-32038-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mani@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	REDIRECTOR_URL(0.00)[aka.ms];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[aka.ms:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,4009c000:email]
-X-Rspamd-Queue-Id: 38A651769E9
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,qualcomm.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 08152177C08
 X-Rspamd-Action: no action
 
-On 23/02/2026 12:51, Khristine Andreea Barbulescu wrote:
-> On 2/20/2026 4:41 PM, Krzysztof Kozlowski wrote:
->> On 20/02/2026 15:36, Khristine Andreea Barbulescu wrote:
->>> Hello Krzysztof,
->>>
->>> On 2/20/2026 12:16 PM, Krzysztof Kozlowski wrote:
->>>> [You don't often get email from krzk@kernel.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
->>>>
->>>> On 19/02/2026 12:36, Khristine Andreea Barbulescu wrote:
->>>>>>
->>>>>>> +      reg:
->>>>>>> +        maxItems: 1
->>>>>>
->>>>>> You have 'reg' so the node name should have unit-address.
->>>>>>
->>>>>> However, there's not any real DT resources in this child node, so you
->>>>>> should just drop it.
->>>>>>
->>>>>
->>>>> For context, SIUL2 exposes a set of platform‑capability and SoC identification registers that are split across the two discontiguous ranges: SIUL2-0 and SIUL2-1. These registers are the source of SoC information (e.g. identification and capability flags) that other subsystems are expected to consume (e.g. PCI Express). Because those fields are physically divided between the two SIUL2 ranges, consumers need reliable access to both ranges to correctly discover and configure the platform.
->>>>>
->>>>> Hence, my proposal is to keep the two 'syscon' child nodes.
->>>>
->>>> Please wrap your replies correctly, so this will be easily parseable.
->>>>
->>>> I do not understand the reasoning. If you have two register ranges, you
->>>> have two <reg> entries and having a child node has nothing to do with it.
->>>>
->>>
->>> I’ve reorganized the SIUL2 node with two syscon subnodes for the two
->>> register regions used to read system info, and a separate
->>> pinctrl/GPIO child (as discussed in the v8 06/10 thread [0]). The parent
->>> SIUL2 node now carries the bus addressing and ranges:
->>
->> That's not the answer to the comment. Read again:
->>
->> 1. Reviewer: No resources, so no separate node.
->> 2. Your answer: some soc capability and two address spaces
->> 3. Reviewer: Does not matter, address spaces can go again to original place
->> 4. Irrelevant reply.
->>
->> So again, read the first comment - do you have dedicated resources in
->> children?
->>
->>>  
->>>     siul2: siul2@4009c000 {
->>>         compatible = "nxp,s32g3-siul2", "nxp,s32g2-siul2";
->>>         #address-cells = <1>;
->>>         #size-cells = <1>;
->>>         ranges = <0x4009c000 0x4009c000 0x179c>,
->>> 		 <0x44010000 0x44010000 0x17b0>;
->>>  
->>>         siul20: siul20@4009c000 {
->>>             compatible = "nxp,s32g-siul2-syscfg", "syscon";
->>>             reg = <0x4009c000 0x179c>;
->>
->> 0x179c is odd size. Looks fake.
->>
->>
->>>         };
->>>  
->>>         siul21: siul21@44010000 {
->>>             compatible = "nxp,s32g-siul2-syscfg", "syscon";
->>
->> And two same devices with same compatible proof it.
->>
->> Best regards,
->> Krzysztof
+On Wed, Feb 18, 2026 at 01:42:25PM +0530, Krishna Chaitanya Chundru wrote:
+> According to the PCI Express specification (PCIe r7.0, Section 5.3.3.2),
+> two link wakeup mechanisms are defined: Beacon and WAKE#. Beacon is a
+> hardware-only mechanism and is invisible to software (PCIe r7.0,
+> Section 4.2.7.8.1). This change adds support for the WAKE# mechanism in
+> the PCI core.
 > 
-> We don’t have dedicated resources for children. In particular,
-
-Then previous comments/review stay.
-
-> there are no resources allocated specifically for nodes like
-> "nxp,s32g-siul2-syscfg". Their consumers are the pinctrl/gpio
-> driver and other drivers that read SoC‑specific information from
-> those shared registers.
+> According to the PCIe specification, multiple WAKE# signals can exist in
+> a system or each component in the hierarchy could share a single WAKE#
+> signal. In configurations involving a PCIe switch, each downstream port
+> (DSP) of the switch may be connected to a separate WAKE# line, allowing
+> each endpoint to signal WAKE# independently. From figure 5.4 in sec
+> 5.3.3.2, WAKE# can also be terminated at the switch itself. To support
+> this, the WAKE# should be described in the device tree node of the
+> endpoint/bridge. If all endpoints share a single WAKE# line, then each
+> endpoint node should describe the same WAKE# signal or a single WAKE# in
+> the Root Port node.
+> 
+> In pci_device_add(), PCI framework will search for the WAKE# in device
+> node, If not found, it searches in its upstream port only if upstream port
+> is Root Port. Once found, register for the wake IRQ in shared mode, as the
+> WAKE# may be shared among multiple endpoints.
+> 
+> When a device asserts WAKE#, PM core will wakeup the system, resume the
+> device and its parent(s) in the hierarchy, which will cause the restoration
+> of power and refclk to the device.
+> 
+> WAKE# is added in dts schema and merged based on below links.
+> 
+> Link: https://lore.kernel.org/all/20250515090517.3506772-1-krishna.chundru@oss.qualcomm.com/
+> Link: https://github.com/devicetree-org/dt-schema/pull/170
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>  drivers/pci/of.c     | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pci.c    |  9 +++++++++
+>  drivers/pci/pci.h    |  8 ++++++++
+>  drivers/pci/probe.c  |  2 ++
+>  drivers/pci/remove.c |  1 +
+>  include/linux/pci.h  |  2 ++
+>  6 files changed, 77 insertions(+)
+> 
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index 9bb5f258759be3f1e23496f083353600a4ef6743..23248900253faafaf9509d87c531b454fca41798 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -7,6 +7,7 @@
+>  #define pr_fmt(fmt)	"PCI: OF: " fmt
 >  
-> My alternative is to keep two separate syscon providers for the
+>  #include <linux/cleanup.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/kernel.h>
+>  #include <linux/pci.h>
+> @@ -15,6 +16,7 @@
+>  #include <linux/of_address.h>
+>  #include <linux/of_pci.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_wakeirq.h>
+>  #include "pci.h"
+>  
+>  #ifdef CONFIG_PCI
+> @@ -586,6 +588,59 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
+>  	return irq_create_of_mapping(&oirq);
+>  }
+>  EXPORT_SYMBOL_GPL(of_irq_parse_and_map_pci);
+> +
+> +static void pci_configure_wake_irq(struct pci_dev *pdev, struct gpio_desc *wake)
+> +{
+> +	int ret, wake_irq;
+> +
+> +	wake_irq = gpiod_to_irq(wake);
+> +	if (wake_irq < 0) {
+> +		pci_err(pdev, "Failed to get wake irq: %d\n", wake_irq);
+> +		return;
+> +	}
+> +
+> +	device_init_wakeup(&pdev->dev, true);
+> +
+> +	ret = dev_pm_set_dedicated_shared_wake_irq(&pdev->dev, wake_irq,
+> +						   IRQ_TYPE_EDGE_FALLING);
+> +	if (ret < 0) {
+> +		pci_err(pdev, "Failed to set wake IRQ: %d\n", ret);
+> +		device_init_wakeup(&pdev->dev, false);
+> +	}
+> +}
+> +
+> +void pci_configure_of_wake_gpio(struct pci_dev *dev)
+> +{
+> +	struct device_node *dn = pci_device_to_OF_node(dev);
+> +	struct pci_dev *upstream;
+> +	struct gpio_desc *gpio;
+> +
+> +	if (!dn)
+> +		return;
+> +
+> +	gpio = fwnode_gpiod_get(of_fwnode_handle(dn), "wake",
+> +				GPIOD_IN | GPIOD_FLAGS_BIT_NONEXCLUSIVE, NULL);
+> +	if (IS_ERR(gpio)) {
+> +		/*
+> +		 * In case the entire topology shares a single WAKE# signal, look for it
+> +		 * in the upstream bridge node. But if it is not Root Port, then skip it.
+> +		 */
 
-You got review already.
+This comment need to be a bit more verbose. Something like,
 
-Best regards,
-Krzysztof
+"The devices in a hierarchy expose wakeup capability through the 'wake-gpios'
+property defined either in the device node or in the Slot node. So first check
+for the property in device node and if not available, check in the Slot node."
+
+Also, move it above fwnode_gpiod_get().
+
+> +		upstream = pci_upstream_bridge(dev);
+> +		if (upstream && pci_is_root_bus(upstream->bus) && upstream->wake)
+
+Check directly in the Root Port (Slot) node.
+
+> +			pci_configure_wake_irq(dev, upstream->wake);
+
+I don't think we need to request an IRQ in the fallback case. Let's assume that
+there is a single device in hierarchy and the wake-gpios property is defined in
+the Slot node. So here, we should just let the PCI/PM core know that this device
+supports wakeup and PME_EN needs to be set (if the device is also capable of
+generating PME#).
+
+And then we should call pci_configure_wake_irq() from platform_pci_set_wakeup()
+to setup the IRQ handler only for the device which has the wake-gpios property.
+
+So the flow would be:
+
+pci_device_add()->platform_pci_init_wakeup()->of_pci_init_wakeup():
+Request fwnode_gpiod_get() and call device_init_wakeup()
+and set 'dev->wake' if WAKE# is available in the device node. If not, then check
+the Root Port (Slot) node and if WAKE# is available, then just call
+device_init_wakeup() to indicate the PCI and PM cores that this device *may*
+support wakeup.
+
+pci_enable_wake()->platform_pci_set_wakeup()->of_pci_set_wakeup():
+Request WAKE# IRQ only if the device has the wake-gpios property ie., dev->wake
+set. If only the Slot supports wakeup, then the IRQ should be requested for the
+Root Port device. This will allow us to keep both the ACPI and OF platform code
+in sync to some extent.
+
+Then once the WAKE# is asserted, the platform will wakeup with the help of the
+above wakeup event and the host controller driver will apply power to the
+hierarchy.
+
+But you do not seem to call pci_pme_wakeup_bus() after resume...
+
+> +	} else {
+> +		dev->wake = gpio;
+> +		pci_configure_wake_irq(dev, gpio);
+> +	}
+> +}
+> +
+> +void pci_remove_of_wake_gpio(struct pci_dev *dev)
+> +{
+
+Missing of_node check.
+
+> +	dev_pm_clear_wake_irq(&dev->dev);
+> +	device_init_wakeup(&dev->dev, false);
+> +	gpiod_put(dev->wake);
+> +	dev->wake = NULL;
+> +}
+>  #endif	/* CONFIG_OF_IRQ */
+>  
+>  static int pci_parse_request_of_pci_ranges(struct device *dev,
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index f3244630bfd05b15d52f866d80a015ed21f98f49..225cb861b3425700fc0d9d4805f5d9efcaab6f56 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1123,6 +1123,15 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
+>  	return acpi_pci_bridge_d3(dev);
+>  }
+>  
+> +void platform_pci_configure_wake(struct pci_dev *dev)
+> +{
+> +	return pci_configure_of_wake_gpio(dev);
+> +}
+> +
+> +void platform_pci_remove_wake(struct pci_dev *dev)
+> +{
+> +	return pci_remove_of_wake_gpio(dev);
+> +}
+
+As mentioned above, these should go away and be part of
+platform_pci_set_wakeup().
+
+>  /**
+>   * pci_update_current_state - Read power state of given device and cache it
+>   * @dev: PCI device to handle.
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 13d998fbacce6698514d92500dfea03cc562cdc2..22709573e41caf0ed45b20ee7ded5963f55aa9fe 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -282,6 +282,8 @@ void pci_msix_init(struct pci_dev *dev);
+>  bool pci_bridge_d3_possible(struct pci_dev *dev);
+>  void pci_bridge_d3_update(struct pci_dev *dev);
+>  int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type);
+> +void platform_pci_configure_wake(struct pci_dev *dev);
+> +void platform_pci_remove_wake(struct pci_dev *dev);
+>  
+>  static inline bool pci_bus_rrs_vendor_id(u32 l)
+>  {
+> @@ -1195,6 +1197,9 @@ void pci_release_of_node(struct pci_dev *dev);
+>  void pci_set_bus_of_node(struct pci_bus *bus);
+>  void pci_release_bus_of_node(struct pci_bus *bus);
+>  
+> +void pci_configure_of_wake_gpio(struct pci_dev *dev);
+> +void pci_remove_of_wake_gpio(struct pci_dev *dev);
+> +
+>  int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge);
+>  bool of_pci_supply_present(struct device_node *np);
+>  int of_pci_get_equalization_presets(struct device *dev,
+> @@ -1240,6 +1245,9 @@ static inline int devm_of_pci_bridge_init(struct device *dev, struct pci_host_br
+>  	return 0;
+>  }
+>  
+> +static inline void pci_configure_of_wake_gpio(struct pci_dev *dev) { }
+> +static inline void pci_remove_of_wake_gpio(struct pci_dev *dev) { }
+> +
+
+You've added function definitions under CONFIG_OF_IRQ, but stubs under
+CONFIG_OF. This is why kernel robot also barks at you.
+
+Move the stubs to include/linux/of_pci.h under CONFIG_OF_IRQ guard.
+
+- Mani
+
+>  static inline bool of_pci_supply_present(struct device_node *np)
+>  {
+>  	return false;
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 2975974f35e88b5025701d2b721df8386419de8d..7f5132c0c8de36a6ec2775468a3d4e5156a046d0 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2771,6 +2771,8 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
+>  	/* Establish pdev->tsm for newly added (e.g. new SR-IOV VFs) */
+>  	pci_tsm_init(dev);
+>  
+> +	platform_pci_configure_wake(dev);
+> +
+>  	pci_npem_create(dev);
+>  
+>  	pci_doe_sysfs_init(dev);
+> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+> index e9d519993853f92f1810d3eff9f44ca7e3e1abd9..d781b41e57c4444077075690cec926a9fe15334f 100644
+> --- a/drivers/pci/remove.c
+> +++ b/drivers/pci/remove.c
+> @@ -35,6 +35,7 @@ static void pci_destroy_dev(struct pci_dev *dev)
+>  	if (pci_dev_test_and_set_removed(dev))
+>  		return;
+>  
+> +	platform_pci_remove_wake(dev);
+>  	pci_doe_sysfs_teardown(dev);
+>  	pci_npem_remove(dev);
+>  
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 1c270f1d512301de4d462fe7e5097c32af5c6f8d..d1e08df8a8deaa87780589f23242767fdcdba541 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -586,6 +586,8 @@ struct pci_dev {
+>  	/* These methods index pci_reset_fn_methods[] */
+>  	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
+>  
+> +	struct gpio_desc *wake; /* Holds WAKE# gpio */
+> +
+>  #ifdef CONFIG_PCIE_TPH
+>  	u16		tph_cap;	/* TPH capability offset */
+>  	u8		tph_mode;	/* TPH mode */
+> 
+> -- 
+> 2.34.1
+> 
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
