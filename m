@@ -1,209 +1,132 @@
-Return-Path: <linux-gpio+bounces-32006-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32007-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id q8FONVqbm2lo3QMAu9opvQ
-	(envelope-from <linux-gpio+bounces-32006-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 01:12:10 +0100
+	id oGfwGxDxm2kI+AMAu9opvQ
+	(envelope-from <linux-gpio+bounces-32007-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 07:17:52 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 291FB170E64
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 01:12:10 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF71E172036
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 07:17:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B8836300BD86
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 00:12:08 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D4B15301BA67
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 06:17:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73B303A1CD;
-	Mon, 23 Feb 2026 00:12:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EA573446C6;
+	Mon, 23 Feb 2026 06:17:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="X9xzzv/7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F2zlRSA4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5141D3EBF38
-	for <linux-gpio@vger.kernel.org>; Mon, 23 Feb 2026 00:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021051534EC;
+	Mon, 23 Feb 2026 06:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771805527; cv=none; b=RFOP2ZhYj4C9R7F0HbQAisEU2z4MjSyUpMF8Jzhx9TxQKMKfowTf6cggCDxfNuFnbMw5kQmQLLw1D5PPqIXuWcg19EkxwxV34fy5vfOh+kwIojcwS+qJD6MbkBVV85XOpkjzEpO4qnKe3ySSa8RA9JtNUbdl5ZN4k8eRqK7Ubh4=
+	t=1771827466; cv=none; b=Wjr38Ci+GOkTBuMD7XfjwwRmseDHj6HQupldJbGthO0tu+InfNoxJ7YmJoFHnm0WsxghsjyHg7qvSB68MGTEafciYUpVYWudQ2FHuoDB9ilPzAun8NYRTVbTnDrXBdKpJUTF3F5J+3RQ49Fk29c7txNE9yhFelMm2fjuZb+OQvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771805527; c=relaxed/simple;
-	bh=8Q5y8U7qqQeIu9CIhdT2hDo15btgbsbWGqFIvIoUBDM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=POQH3y0XTzktZ+7egbqmEY8RcXMBWMwfpI6VipPnryzR8vGddq7NiQnfAFO6LIBlo57WCoJNA4G9brCMYP+Mrmjkgu5Pr/gAFcxDDI/OKbOfX2E2v94s7NFVOLFrvh0ScNzv0qZDbH686j5hnXGI++HtP9uB+8a1yvM/W9dLRoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=X9xzzv/7; arc=none smtp.client-ip=209.85.160.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-414ffb4c0a0so3236786fac.2
-        for <linux-gpio@vger.kernel.org>; Sun, 22 Feb 2026 16:12:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1771805524; x=1772410324; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=f/cjh3P6a7yxOJcaGA1eGYzRpZFWZsrKDRxEVGR8r7c=;
-        b=X9xzzv/72fYyctuKzLyyvXQMtxVQw9h4CR8rvuGExyrFRH6L8oqor1dVrrzvcvMDgL
-         DTHqqfIx60037AmiVUfBOt7jIr1nzWT5gjZxR3uSWgERASYFMLYOOJHr7Yd2dT1C+xDn
-         Z5uTwmvG9v1dV/pPMYEHzoKralsQIVFb1FdZKlttB4XLRjvkR+T346dgqwOnIbHTArq8
-         8zGsWVwTWdi9oce4+QpmXhjjxmrIP2LIwdOaX+JMJolOcTn8FjdpvEH6cRf9+4Duihbl
-         mFNchiAz8VTyeCt96CLrqPFaRfuly2fJclRIOeIdwD8l3FbLk1OP6Cs1YiqNX4Vc1Zp/
-         0Bkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771805524; x=1772410324;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=f/cjh3P6a7yxOJcaGA1eGYzRpZFWZsrKDRxEVGR8r7c=;
-        b=XcLFSKdA+wqfawm2yAOsiNT/PzVwqX5rc2T1zhgq47Th1cqx1vxAv4+wrrcHBofvRY
-         tibby12t/HXBo6p3/Ue2DZ11c2sXi+ZwjI0NhZrO6M0033AmzVVX7pEwzOdOjON1OcNK
-         /+j/WytcKgLmxUMiu1cD5ZLziPqpAWe/SwUkxaA6HbhjeG4FeKcEt7AgoIEN6wLQSb2c
-         Acl6JlNOXAtK9Gkrnvd5IYvSkcD3iETj0BxTVzL+HEQqxWLqGuIeftTtygUsvMuCm/Pl
-         VjjA7MG2X8IN74chRL6mltj/ROf/giXtZqMH2o69hOhl7vMegL3K8X9v6Cu+614Anrn7
-         cJLA==
-X-Forwarded-Encrypted: i=1; AJvYcCWuZXAgpc4JnacYtLXY1Ala74gNlWwaLt/4+MiOxLTRt4xSyhBuxEmDHh+lTPlnyIe5Ht94bITnEfiX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/bebYpWwdICDqVBPEZkXITGpK9ktCojwR3eA37lB8iH00uRNQ
-	4suvvWJHyI6TsLu758Wm2/1In8WD2sBeZEF3HcyHftPmRIglZfzgXpoBI1vmPTU8xTo=
-X-Gm-Gg: AZuq6aKdhgDMJZUoVzx9kmlLUA1syrSw5pFT5GeXJucEbx00+LVRcwT3JegkSqJk/kb
-	Nw9RyyUaubUuCYJ5HcPQbGyCttlts4PY/Nyle/UgdqeC+yB+h5STW1hRumspws+O9WSgmdSfiFT
-	VhcwpJrI6VLawQyv9CeVS2wTKLnzkn/dkxRHj4jsD49eYKCg9UDkgss5bItkzjRT38s4YCkbdfH
-	klClD2rzgns6SSsG23paosUK+V+a93rAymNubPWPh5lm1qQPCO4jJEFF+lOxjLrKJbYhpR70KLk
-	IVJReOhQDunneH3a/EyuRenuJI5mu07GqHPy3pQXj4ZCMBHwb6lko2nfVQ+WKRGqvOMtRrRpfUg
-	d6we/2hYqhGuT0A4sK+U9SU6SW1lsDQqtJWCYp5MOILF9KNsKibbZrvFwg7UMImFhqOwJtPKTjE
-	DJvKrznakxpCQJhdzNkfJKsdt7SRHQT8WrxDGdZ/Juy5ZR5ygbhGmeyim2ylBoNjv7fpy+OYc=
-X-Received: by 2002:a05:6870:f61b:b0:409:794e:fe9 with SMTP id 586e51a60fabf-4157b1b3fd3mr3557313fac.54.1771805524220;
-        Sun, 22 Feb 2026 16:12:04 -0800 (PST)
-Received: from ?IPV6:2600:8803:e7e4:500:e37:2309:3937:4469? ([2600:8803:e7e4:500:e37:2309:3937:4469])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4157ca3df7fsm6409978fac.0.2026.02.22.16.12.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Feb 2026 16:12:02 -0800 (PST)
-Message-ID: <f5b38942-a584-4e78-a893-de4a219070b2@baylibre.com>
-Date: Sun, 22 Feb 2026 18:12:00 -0600
+	s=arc-20240116; t=1771827466; c=relaxed/simple;
+	bh=5mu2lG/TPZq+JANR8vD2Ti3EHOwL+IC8LbP2bAxxHtU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rKT9gwXybkyDyxPYFUl82ZP5Ne+RF0dFuKY0VEGc7lmmQ6bivH5hxTBVdV86NdY2CHfkf4EIZxxVyRiOIpsHa7hpZko3J9SWghdY4t+gNwzB8R82dtlSXQoZvD1lycuf5wMznYB8QfKeHCkbHPEtkXc0cV/jRySuIARBHixofJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F2zlRSA4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C163C116C6;
+	Mon, 23 Feb 2026 06:17:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771827465;
+	bh=5mu2lG/TPZq+JANR8vD2Ti3EHOwL+IC8LbP2bAxxHtU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=F2zlRSA4bx4vmBXZOm8NnqgYq8Truw8yELYFUgJnm1mU4/yvyBIAoDQPCNS7sPYHR
+	 oJaGnuQe6WYLmS7YwLYmiiX8T9k1k9fYb3miXP3khl9Eh6ytUUtFTdDKz6PDb7qles
+	 H1h7VzjVgq0qQfnzr810mtfanPWQg5DYqg26se34FswUZBwavsaFnCuLflkxw6qbi7
+	 YJYWXjjDDH/rOJisSgOl2sEevUDBtd8NPri6y7kUv5JeTluif80oyV4jpfAcNk0PMA
+	 h4XTINDG2G45R+j8o2M0XzRSk9jHddFnpCNIp13B5uqXRwmzJCg1+vAYtgp+9B5/1Q
+	 VKSP2KhS+RPyw==
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Bartosz Golaszewski <brgl@kernel.org>,
+	Linus Walleij <linusw@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	tzungbi@kernel.org
+Subject: [PATCH v4 0/6] gpio: Refactor and add selftest
+Date: Mon, 23 Feb 2026 14:17:20 +0800
+Message-ID: <20260223061726.82161-1-tzungbi@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 10/11] pinctrl: rockchip: Simplify locking with
- scoped_guard()
-To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
- Andrew Jeffery <andrew@codeconstruct.com.au>,
- Linus Walleij <linusw@kernel.org>, Joel Stanley <joel@jms.id.au>,
- Emil Renner Berthing <kernel@esmil.dk>, Hal Feng
- <hal.feng@starfivetech.com>, Chen Wang <unicorn_wang@outlook.com>,
- Inochi Amaoto <inochiama@gmail.com>,
- Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Bartosz Golaszewski <brgl@kernel.org>,
- Steen Hegelund <Steen.Hegelund@microchip.com>,
- Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com,
- Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>, Heiko Stuebner <heiko@sntech.de>,
- Patrice Chotard <patrice.chotard@foss.st.com>
-Cc: linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
- linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, sophgo@lists.linux.dev,
- linux-tegra@vger.kernel.org, linux-rockchip@lists.infradead.org
-References: <20260118-pinctrl-cleanup-guard-v2-0-bd36f681bdc0@oss.qualcomm.com>
- <20260118-pinctrl-cleanup-guard-v2-10-bd36f681bdc0@oss.qualcomm.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20260118-pinctrl-cleanup-guard-v2-10-bd36f681bdc0@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[baylibre-com.20230601.gappssmtp.com:s=20230601];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-32006-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[oss.qualcomm.com,codeconstruct.com.au,kernel.org,jms.id.au,esmil.dk,starfivetech.com,outlook.com,gmail.com,amd.com,microchip.com,nvidia.com,sntech.de,foss.st.com];
+	TAGGED_FROM(0.00)[bounces-32007-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[baylibre.com];
-	RCPT_COUNT_TWELVE(0.00)[26];
+	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[baylibre-com.20230601.gappssmtp.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dlechner@baylibre.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[tzungbi@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.997];
+	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,baylibre-com.20230601.gappssmtp.com:dkim,baylibre.com:mid,qualcomm.com:email]
-X-Rspamd-Queue-Id: 291FB170E64
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: CF71E172036
 X-Rspamd-Action: no action
 
-On 1/18/26 12:09 PM, Krzysztof Kozlowski wrote:
-> Simplify error handling by removing two mutex_unlock() calls with
-> scoped_guard().
-> 
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-> ---
->  drivers/pinctrl/pinctrl-rockchip.c | 19 +++++++++----------
->  1 file changed, 9 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-> index e44ef262beec..bbe1cf712965 100644
-> --- a/drivers/pinctrl/pinctrl-rockchip.c
-> +++ b/drivers/pinctrl/pinctrl-rockchip.c
-> @@ -3640,17 +3640,16 @@ static int rockchip_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+The series is separated from v3 to lessen the burden on the subsequent
+revocable work per suggestion in
+https://lore.kernel.org/all/CAMRc=MfQumD1ULx7yU4W2sx=35wyQf7-v4tSf44OqEu3JDBUAg@mail.gmail.com/.
 
-Filling in some context from the existing code...
+The series is based on v7.0-rc1 and applies after
+https://lore.kernel.org/all/20260205092840.2574840-1-tzungbi@kernel.org.
 
-	for (i = 0; i < num_configs; i++) {
-		param = pinconf_to_config_param(configs[i]);
-		arg = pinconf_to_config_argument(configs[i]);
+---
+v4:
+- Separate the first 6 patches from v3.
 
-		if (param == PIN_CONFIG_LEVEL || param == PIN_CONFIG_INPUT_ENABLE) {
-			/*
-			 * Check for gpio driver not being probed yet.
+v3: https://lore.kernel.org/all/20260213092958.864411-1-tzungbi@kernel.org
 
->  			 * The lock makes sure that either gpio-probe has completed
->  			 * or the gpio driver hasn't probed yet.
->  			 */
-> -			mutex_lock(&bank->deferred_lock);
-> -			if (!gpio || !gpio->direction_output) {
-> -				rc = rockchip_pinconf_defer_pin(bank, pin - bank->pin_base, param,
-> -								arg);
-> -				mutex_unlock(&bank->deferred_lock);
-> -				if (rc)
-> -					return rc;
-> -
-> -				break;
-> +			scoped_guard(mutex, &bank->deferred_lock) {
-> +				if (!gpio || !gpio->direction_output) {
-> +					rc = rockchip_pinconf_defer_pin(bank,
-> +									pin - bank->pin_base,
-> +									param, arg);
-> +					if (rc)
-> +						return rc;
-> +					break;
+Tzung-Bi Shih (6):
+  gpio: Access `gpio_bus_type` in gpiochip_setup_dev()
+  gpio: Remove redundant check for struct gpio_chip
+  gpio: sysfs: Remove redundant check for struct gpio_chip
+  gpio: Ensure struct gpio_chip for gpiochip_setup_dev()
+  gpio: cdev: Don't check struct gpio_chip in gpio_chrdev_open()
+  selftests: gpio: Add gpio-cdev-uaf tests
 
-I think there is an unintentional change here.
+ drivers/gpio/gpiolib-cdev.c                   |  20 +-
+ drivers/gpio/gpiolib-cdev.h                   |   2 +-
+ drivers/gpio/gpiolib-sysfs.c                  |  32 +-
+ drivers/gpio/gpiolib-sysfs.h                  |   8 +-
+ drivers/gpio/gpiolib.c                        |  46 +--
+ tools/testing/selftests/gpio/Makefile         |   5 +-
+ tools/testing/selftests/gpio/gpio-cdev-uaf.c  | 292 ++++++++++++++++++
+ tools/testing/selftests/gpio/gpio-cdev-uaf.sh |  63 ++++
+ 8 files changed, 402 insertions(+), 66 deletions(-)
+ create mode 100644 tools/testing/selftests/gpio/gpio-cdev-uaf.c
+ create mode 100755 tools/testing/selftests/gpio/gpio-cdev-uaf.sh
 
-scoped_guard() is implemented by a for loop. So the break statement is now
-breaking out of the scoped_guard() scope rather than breaking out of the
-outer for loop.
-
-> +				}
->  			}
-> -			mutex_unlock(&bank->deferred_lock);
->  		}
->  
->  		switch (param) {
-> 
+-- 
+2.51.0
 
 
