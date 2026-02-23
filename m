@@ -1,132 +1,167 @@
-Return-Path: <linux-gpio+bounces-32049-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32046-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uG1NKEB5nGlfIAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32049-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 16:58:56 +0100
+	id +IibKXx2nGmwHwQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32046-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 16:47:08 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80B73179364
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 16:58:56 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5072A179008
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 16:47:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 6F033303CB29
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 15:58:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 489FA3051C83
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 15:44:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1DDD2F25F4;
-	Mon, 23 Feb 2026 15:58:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB9692FDC53;
+	Mon, 23 Feb 2026 15:43:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="kKsGpa6K"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DjAJuDvk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-m3298.qiye.163.com (mail-m3298.qiye.163.com [220.197.32.98])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC9E307AD5;
-	Mon, 23 Feb 2026 15:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2F82FDC30
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Feb 2026 15:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771862307; cv=none; b=EfIXPGCmE6wFFjIp0HN6h58At0/lFcoE+7dWhiHBA20x9/DbtBg6CVZ2H35LAln1wYhJV51T3Xs6kSocXoo2EWkutgU6fJWVOW1CYOtXBJ/zoNpnafHKKOBDxnBWZ7UQCTdY2HKLDn3k6qM9FhqzqtZJqc12sQpWwMXSzNDgnJs=
+	t=1771861439; cv=none; b=SraSGUyLBXlaGUwsl+pnKOCzRxaMPXV+AHRTGNrYN5YUpvl7/6JFAvWI4MV06J1lkmEVY5H9VyURI20d6OYNa3vNOk4N/YavsPWbmz7zaE+4SUHTKyHxfN90U9Qfn3ZSmRYBx+eWdeC3TpCMFcQ79u02NNsZLv2k4t7htinNP6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771862307; c=relaxed/simple;
-	bh=yhn4umOHX/qL3rQ2lLDL3Spna4O/g5RwNXae27JUG8I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=C+C2Z8k3WOmFDu2pf3W+bZqZGkYoAvk4b+Dp57R3qFW0+9PLzghWOhcbe2hKSvoUbhG7MLIeqmUbMzW+CorqXFc1lu8VcfWvFsV1qQktlBlyCWO150OzomdzVmpRI1+FFERl4c13HAew/nmu5fdOur1XjJbjawg0Vyu8MYQD/x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=kKsGpa6K; arc=none smtp.client-ip=220.197.32.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 34b3c91a9;
-	Mon, 23 Feb 2026 23:43:05 +0800 (GMT+08:00)
-From: Shawn Lin <shawn.lin@rock-chips.com>
-To: Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>
-Cc: Andy Shevchenko <andy@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Stanner <phasta@kernel.org>,
-	linux-pci@vger.kernel.org,
-	Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH 04/37] gpio: merrifield: Replace pci_alloc_irq_vectors() with pcim_alloc_irq_vectors()
-Date: Mon, 23 Feb 2026 23:42:56 +0800
-Message-Id: <1771861376-85311-1-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
-X-HM-Tid: 0a9c8b2b1fb809cckunm1621ec01987012
-X-HM-MType: 1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGR8aGFZJGUlJQkpCGElJSk1WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-DKIM-Signature: a=rsa-sha256;
-	b=kKsGpa6Ka1kKfCIGsDzptshsrEnrXt/ps2ob0XOOfykSrQgimIDr0k0eX7PJxibT8yNZjcrZgyxlSGVXGo4ZosjVZj/jZX8Tx+7i/u+y3C1ixUbczEEVRkBHijSxDzyExe/9ez+j1PqkIuDEMv1yVuNh3gS4I9qtAsYeM7GV6f4=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=DEZLiJ5kZT1iX68qIn873ULjQuOthsi0jZy8Dwt+PA0=;
-	h=date:mime-version:subject:message-id:from;
+	s=arc-20240116; t=1771861439; c=relaxed/simple;
+	bh=8czFU0PFFNeLe2IHOwuuzhSptFPBTzYTIl1RudgyFRA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MJoreu6xJEv/ah4eyOQvpPwXmwfCMFp7WLamN2ZusQQNH7ncgsT3cXKbqY6P0rKVA7Gq/s1oPWxOj4+8s6SFxpyCaDTtyhiH6SpUZWqFH498ewDhQmWl9TQWXhfJGLYskplS0deteml+MO7XsBLQxDBtFCtsVJgD8K6MjDLWe88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DjAJuDvk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34597C2BCB2
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Feb 2026 15:43:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771861439;
+	bh=8czFU0PFFNeLe2IHOwuuzhSptFPBTzYTIl1RudgyFRA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DjAJuDvkqNHSjOn5nNkghdD/i+xpyzQbKfobxta1Fspj06QC/r6NIotfXTWpbbtqf
+	 KB85X4UvjVt0ntKC0R22jsyPGQQqsEe3bmgkcb32zWvz0Kwy64k80lBGiH9KCZWwFV
+	 IoRWQmrFnM/RJLP27o97AXtky0yJtT7UoRI1dcvjDFC/9Ee92Ff9EWt0iOWoMpyP+p
+	 lypThoJ9dw6pay2gOWC8w1eEZoY9JVAp8B8kDRAgJ/Ml43yu9GfUw9MAjtehvKvrGU
+	 evKbrXtANRF1LsElAEE8WicMIrpgjjVfoLLZfbR7ykjzePK6QtzdSXMwrGKbbRqqbx
+	 q0+EwA4fxBNRg==
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-6786b13984fso2906130eaf.2
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Feb 2026 07:43:59 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVlFkpAiJy0IW2tCcUQ3RZ1EyeldDK/AhvqsLqKqfF4Kk6YzO0rOvqBkbCANtW53OUBW7xLlGVs6B7f@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk3kg+L1NidD/KN3r6XaIGVNeSjmIdMdDlHWpqQNVkncK+FCpi
+	s6/TLSJtT/Gjk7oiDSLbNIjuzSCxa6SEYmOnsaIsAryudjq/Mf0RZm7WYtBWgQdhfZZAwQ9Al3y
+	0Q4Mj+iVwx00gqoM0K1buRQy17pN2qmI=
+X-Received: by 2002:a05:6820:2229:b0:668:d715:109c with SMTP id
+ 006d021491bc7-679c47082fcmr5113172eaf.65.1771861438273; Mon, 23 Feb 2026
+ 07:43:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260223-device-match-secondary-fwnode-v2-0-966c00c9eeeb@oss.qualcomm.com>
+ <20260223-device-match-secondary-fwnode-v2-2-966c00c9eeeb@oss.qualcomm.com>
+In-Reply-To: <20260223-device-match-secondary-fwnode-v2-2-966c00c9eeeb@oss.qualcomm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 23 Feb 2026 16:43:46 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0hS2g5fBUs3_fnwCMahureKbUz0dvjF=ceqmWo1deSzTg@mail.gmail.com>
+X-Gm-Features: AaiRm526O19x_rkXpkbBT67XI2NrKB_3flBkNcd2XNq78uzF7DQrf0MxaeBiifY
+Message-ID: <CAJZ5v0hS2g5fBUs3_fnwCMahureKbUz0dvjF=ceqmWo1deSzTg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] gpiolib: match secondary fwnode too in gpio_device_find_by_fwnode()
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[rock-chips.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[rock-chips.com:s=default];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32049-lists,linux-gpio=lfdr.de];
-	DKIM_TRACE(0.00)[rock-chips.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[shawn.lin@rock-chips.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[linuxfoundation.org,kernel.org,gmail.com,linux.intel.com,lists.linux.dev,vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32046-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	FROM_NEQ_ENVFROM(0.00)[rafael@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[rock-chips.com:mid,rock-chips.com:dkim,rock-chips.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 80B73179364
+	RCPT_COUNT_TWELVE(0.00)[16];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 5072A179008
 X-Rspamd-Action: no action
 
-pcim_enable_device() no longer automatically manages IRQ vectors via devres.
-Drivers must now manually call pci_free_irq_vectors() for cleanup. Alternatively,
-pcim_alloc_irq_vectors() should be used.
+On Mon, Feb 23, 2026 at 4:41=E2=80=AFPM Bartosz Golaszewski
+<bartosz.golaszewski@oss.qualcomm.com> wrote:
+>
+> In GPIOLIB, during fwnode lookup, after having resolved the consumer's
+> reference to a specific fwnode, we only match it against the primary
+> node of the controllers. Let's extend that to also the secondary node by
+> reworking gpio_chip_match_by_fwnode()
+>
+> Suggested-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
-Cc: Andy Shevchenko <andy@kernel.org>
-To: Linus Walleij <linusw@kernel.org>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-gpio@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Philipp Stanner <phasta@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
----
+Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
 
- drivers/gpio/gpio-merrifield.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-merrifield.c b/drivers/gpio/gpio-merrifield.c
-index 4335a5d..9272474 100644
---- a/drivers/gpio/gpio-merrifield.c
-+++ b/drivers/gpio/gpio-merrifield.c
-@@ -108,7 +108,7 @@ static int mrfld_gpio_probe(struct pci_dev *pdev, const struct pci_device_id *id
- 	priv->info.ngpio = MRFLD_NGPIO;
- 	priv->info.first = irq_base;
- 
--	retval = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_ALL_TYPES);
-+	retval = pcim_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_ALL_TYPES);
- 	if (retval < 0)
- 		return retval;
- 
--- 
-2.7.4
-
+> ---
+>  drivers/gpio/gpiolib.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index c52200eaaaff82b12f22dd1ee8459bdd8ec10d81..7fe1d9ab1281d6c5022b9bdd8=
+909fef2cb74122e 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/errno.h>
+>  #include <linux/file.h>
+>  #include <linux/fs.h>
+> +#include <linux/fwnode.h>
+>  #include <linux/idr.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irq.h>
+> @@ -1395,7 +1396,16 @@ EXPORT_SYMBOL_GPL(gpio_device_find_by_label);
+>
+>  static int gpio_chip_match_by_fwnode(struct gpio_chip *gc, const void *f=
+wnode)
+>  {
+> -       return device_match_fwnode(&gc->gpiodev->dev, fwnode);
+> +       struct device *dev =3D &gc->gpiodev->dev;
+> +       struct fwnode_handle *node =3D dev_fwnode(dev);
+> +
+> +       if (IS_ERR(fwnode))
+> +               return 0;
+> +
+> +       if (device_match_fwnode(dev, fwnode))
+> +               return 1;
+> +
+> +       return fwnode_is_primary(node) && node->secondary =3D=3D fwnode;
+>  }
+>
+>  /**
+>
+> --
+> 2.47.3
+>
+>
 
