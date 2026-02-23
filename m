@@ -1,175 +1,151 @@
-Return-Path: <linux-gpio+bounces-32085-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32086-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UADzERXAnGmgKAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32085-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 22:01:09 +0100
+	id 6P1qGCrBnGmgKAQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32086-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 22:05:46 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61A2B17D509
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 22:01:08 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A091517D59D
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 22:05:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 4160A300C7C8
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 20:49:09 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 3A65C30299DF
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Feb 2026 20:53:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E722378D6B;
-	Mon, 23 Feb 2026 20:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FDF4369980;
+	Mon, 23 Feb 2026 20:53:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fhoaT+ij"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dFbomPaX"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE7F378805
-	for <linux-gpio@vger.kernel.org>; Mon, 23 Feb 2026 20:46:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228642BEFF6;
+	Mon, 23 Feb 2026 20:53:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771879588; cv=none; b=ugCguSwlVv2EwHve4AJghcGS+/tCfU6gqk9pLi8SgRW/xhi6fLZJLebPgfon1pfbIL7YucYeaExqJoZyf6j4Vh/jRESOuHvrNZQcY2rsfMpFDzuKCmgfOSvrRkwTcoUT9sLojHzlsf9GORDuI7Zl+LvSR0qptV0P3zRKZ+7EzE4=
+	t=1771879985; cv=none; b=DIy49EMxoX8O4oPM+MqLqQrRVGsx7vggoMvBrn3ZUSFrO59AGQrvLgA1fkeydmElPATiX7wT8llADYvozfmshqbQ9MbJxqaRUnB+3d1OtPJChaefT8VUBU9enQuFrDCpiaoKKAfqqJsof4LkONzZux5qmuZ6GoTNUQYH/TTR7oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771879588; c=relaxed/simple;
-	bh=jBLcyP02/sek7zk4NqxV5S1bZCQap/LZYHzTBfHrwTU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rjLAIG3k4tl/T5ol+NmZ2wLz2t43OFNe3CXu/AGAVXvUaAQs+HYgIopyorgqSV05MWZX2hoHZsHF/hBEs8jWhNvxf98pl9UDmxyRsmHOdC+LlCkbfLyMB95fMB8Fsv420lIFFfjLGhjofqUjnIL0WuqYfro04A/rvOFZ/wrDdFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fhoaT+ij; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4465C2BCB2
-	for <linux-gpio@vger.kernel.org>; Mon, 23 Feb 2026 20:46:28 +0000 (UTC)
+	s=arc-20240116; t=1771879985; c=relaxed/simple;
+	bh=9ZwCRUkSygSWXdebgAt63Ndk3TSqeMDqho4QjUTbPeg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aPpsPvWl2LO3a22SNzDeB2hj4j2zqFSITlYUFYxdOQw7HgcXuAwXaYESqyiQ678cqmCX6S3P1eqYka3JP91hje1rj37LILcF2tImr5LCO/vCJ6LZW3HpILl+nrjG0N0LiSZsnCsa1fpNGKAxawlYgRF//fkA7FT7L6437mgK1g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dFbomPaX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C30E3C19421;
+	Mon, 23 Feb 2026 20:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771879588;
-	bh=jBLcyP02/sek7zk4NqxV5S1bZCQap/LZYHzTBfHrwTU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fhoaT+ij5oMRcYXaq+w8wFWGRoQwgDZeg5WYEVYFm995Dz5HH5fJI5bK+H2hK7N0O
-	 P1rQhoYJqKAy0ya+CvvGpiSiqh+f91Yu1pZARCV5EHpmZDiOvpA7Xt3imYEeOSNbbL
-	 sOiggXe7+97uwPLnyAxVmncmWLNGL5g6zdk/5FdU6027it/YLoSIOi3j0vSf3YsHr4
-	 yJgTJuRCEJPUxBMBKINkpGpXAXN9B/2TNYLjji+JHPDA+l3ds0a+l5+AWwfNowMvCE
-	 EtPEeM3jsaKisuJHd1LTeDs6KQDjTQEWC90jTQ4K3NP419zYGPe2z0++ZhN8lI9aBw
-	 W3GiKZb3KsFNw==
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-662f9aeb765so1737027eaf.3
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Feb 2026 12:46:28 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUewgzVr9wRGPS2wq2I6qA6xYW2NQXxNYed1vgTXJ9YJfqLEL1eXezSWBID4ZkipNm3M0c3xDVQjo5e@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzx5A3bdaqlbKRj09M11e9C14lbttEelcVO2HtXzmw5ohWIMUvO
-	B7Ux4LmJtI1X03XFjjyGVcW0OcuNM98Km+LL0ObfJKE5G1ijWDyTYYtrdopyh7LAIIp0yJu/ZQO
-	VyPI1Z+hYIykk4L2OgwLGsEZ0FbJ30dU=
-X-Received: by 2002:a05:6820:460a:b0:679:8b1d:ba00 with SMTP id
- 006d021491bc7-679c470f3f0mr3886821eaf.55.1771879587668; Mon, 23 Feb 2026
- 12:46:27 -0800 (PST)
+	s=k20201202; t=1771879984;
+	bh=9ZwCRUkSygSWXdebgAt63Ndk3TSqeMDqho4QjUTbPeg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dFbomPaXdm1lhsiCRGW4tHCyrO1zxgCcTPi/MDxnyMPCkNf3RBffybbw/qXjqk+CP
+	 xpth8RfSTShWo/87AJ7NTbvLjgO0oNvvB6o8Ujv9pgZYqMH6gZPTQ36szCplmgoMRw
+	 VsBcIZrsnIHZdZFBakvl6EOARXQszb/lyVMbMKkWBuZIoRh9xS0hv51VDmD6H/WwAe
+	 JWhjCMiph2crYJceBDyWSnlB3jmJEnFJue7aUqZXucHI5imdJ7NB1oB2I+zONFeoBg
+	 hhZnIPQJh1g2vEMDfXtnEQBlAHnHTJXjxl4A1WJ4nMKeODuQKyCnng8iPr9fy93EbR
+	 qkqkN/33uj18w==
+Date: Mon, 23 Feb 2026 20:52:54 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, David Lechner
+ <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
+ Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, Bartosz
+ Golaszewski <brgl@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] iio: adc: ti-ads7950: complete conversion to
+ using managed resources
+Message-ID: <20260223205254.472ee2b1@jic23-huawei>
+In-Reply-To: <aZtVEdFoGUMx4olM@smile.fi.intel.com>
+References: <20260219022929.3558081-1-dmitry.torokhov@gmail.com>
+	<20260219022929.3558081-5-dmitry.torokhov@gmail.com>
+	<aZbC51ezuaT5Nwq7@smile.fi.intel.com>
+	<aZj3deh1Em1rz3au@google.com>
+	<aZtVEdFoGUMx4olM@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260223-device-match-secondary-fwnode-v2-0-966c00c9eeeb@oss.qualcomm.com>
- <20260223-device-match-secondary-fwnode-v2-2-966c00c9eeeb@oss.qualcomm.com>
-In-Reply-To: <20260223-device-match-secondary-fwnode-v2-2-966c00c9eeeb@oss.qualcomm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 23 Feb 2026 21:46:16 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0hgjGinrM_SMTAv27No=b__HUQ-9W18rHzNNiM-TnpQmA@mail.gmail.com>
-X-Gm-Features: AaiRm51MQYy4860EILV63_T3N_-5AgKrlcj9pG9QN8uuwuEr3GzncbmkDDBN4X0
-Message-ID: <CAJZ5v0hgjGinrM_SMTAv27No=b__HUQ-9W18rHzNNiM-TnpQmA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpiolib: match secondary fwnode too in gpio_device_find_by_fwnode()
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Linus Walleij <linusw@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Len Brown <lenb@kernel.org>, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-32085-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[linuxfoundation.org,kernel.org,gmail.com,linux.intel.com,lists.linux.dev,vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rafael@kernel.org,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-32086-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,baylibre.com,analog.com,kernel.org,vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,qualcomm.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 61A2B17D509
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,intel.com:email]
+X-Rspamd-Queue-Id: A091517D59D
 X-Rspamd-Action: no action
 
-On Mon, Feb 23, 2026 at 4:41=E2=80=AFPM Bartosz Golaszewski
-<bartosz.golaszewski@oss.qualcomm.com> wrote:
->
-> In GPIOLIB, during fwnode lookup, after having resolved the consumer's
-> reference to a specific fwnode, we only match it against the primary
-> node of the controllers. Let's extend that to also the secondary node by
-> reworking gpio_chip_match_by_fwnode()
->
-> Suggested-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
->  drivers/gpio/gpiolib.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index c52200eaaaff82b12f22dd1ee8459bdd8ec10d81..7fe1d9ab1281d6c5022b9bdd8=
-909fef2cb74122e 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -11,6 +11,7 @@
->  #include <linux/errno.h>
->  #include <linux/file.h>
->  #include <linux/fs.h>
-> +#include <linux/fwnode.h>
->  #include <linux/idr.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
-> @@ -1395,7 +1396,16 @@ EXPORT_SYMBOL_GPL(gpio_device_find_by_label);
->
->  static int gpio_chip_match_by_fwnode(struct gpio_chip *gc, const void *f=
-wnode)
->  {
-> -       return device_match_fwnode(&gc->gpiodev->dev, fwnode);
-> +       struct device *dev =3D &gc->gpiodev->dev;
-> +       struct fwnode_handle *node =3D dev_fwnode(dev);
-> +
-> +       if (IS_ERR(fwnode))
-> +               return 0;
-> +
-> +       if (device_match_fwnode(dev, fwnode))
-> +               return 1;
-> +
-> +       return fwnode_is_primary(node) && node->secondary =3D=3D fwnode;
+On Sun, 22 Feb 2026 21:12:17 +0200
+Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
 
-Actually, you can replace the above statement with
+> On Fri, Feb 20, 2026 at 04:09:47PM -0800, Dmitry Torokhov wrote:
+> > On Thu, Feb 19, 2026 at 09:59:35AM +0200, Andy Shevchenko wrote:  
+> > > On Wed, Feb 18, 2026 at 06:29:28PM -0800, Dmitry Torokhov wrote:  
+> 
+> ...
+> 
+> > > > +	if (error) {
+> > > >  		dev_err(&spi->dev, "Error in spi setup\n");
+> > > > -		return ret;
+> > > > +		return error;
+> > > >  	}  
+> > > 
+> > > And since there is already dev_err_probe() in use, I would expect this
+> > > also be converted.  
+> > 
+> > But that would be unrelated change ;)  
+> 
+> I never told that this should be done here.
+> 
+> ...
+> 
+> > > Would be also nice to use
+> > > 
+> > > 	struct device *dev = &spi->dev;
+> > > 
+> > > to make less LoCs and/or make them shorter.  
+> > 
+> > I actually dislike introducing such temporaries in majority of the
+> > cases. It makes it hard to follow what device we are dealing with and
+> > does not make the code significantly shorter.  
+> 
+> May be, but my experience is telling me different story.
+> So we have a disagreement here, I leave it to Jonathan
+> to mediate.
+> 
+When there are multiple struct device isntances that we access
+in the driver I fully agree with Dmitry that it is helpful to
+fully enumerate them.  However, for IIO drivers we keep the
+one buried in struct iio_dev fairly well hidden so the confusion
+"opportunity" doesn't tend to occur.  As such I tend to come down just
+on the "have a local variable" side of things.
 
-      return node && node->secondary =3D=3D fwnode;
-
-because fwnode_is_primary(node) expands to (node &&
-!IS_ERR(node->secondary)), but since you compare node->secondary to
-fwnode, the IS_ERR() check on it is redundant (fwnode is known to be
-non-error already at this point).
-
-That would allow you to avoid exporting fwnode_is_primary() (which is
-kind of useful given the review comments).
-
->  }
->
->  /**
->
-> --
+Jonathan
 
