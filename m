@@ -1,134 +1,206 @@
-Return-Path: <linux-gpio+bounces-32128-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32129-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +AgnMlV1nWmAQAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32128-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 10:54:29 +0100
+	id cA8FMBJ+nWk/QQQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32129-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 11:31:46 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36DB1184FB2
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 10:54:29 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE663185642
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 11:31:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5F0623069D49
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 09:52:36 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 6AFD1304B958
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 10:31:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC5DB37107D;
-	Tue, 24 Feb 2026 09:52:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66DA3379964;
+	Tue, 24 Feb 2026 10:31:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRe05JmO"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="oKvIyHka"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E14637106A
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 09:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5DA36B05A;
+	Tue, 24 Feb 2026 10:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771926755; cv=none; b=R1JBoM14JfY+Shq/Cj6kRei2TClkUigcIAzZPXqLO5bZN4RujIkNZWBmpKNMfqIDGIbhncea/RJyCiX6kHJ0gQUKU0+tRJ2DoDKmcfnq/Ks0cxw7fQu6KQo14/CK2uLTPiWFtqPdDWpiTkfOFns0GAGu3QUQtSVhdfm7tPEJn8w=
+	t=1771929071; cv=none; b=OLVTFFyl4+E4Zghd82ow6BUOfe/43qb7kD/4VL3IJPFOzHSL+uO6lFIqZAe69O8iqHUAmde/lUJEd4zPw7A4C1y6KVeWZ7gy9FWseXn0Vxs4uNR9jlt/6PKfrs20szbR63E7PyRP1Yx0dmeMFeLelc0yITK16vHObzjDE/s49Z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771926755; c=relaxed/simple;
-	bh=m8HVzWzouKm2cXoM/hnZEz9vy29hL3PfIfqqpzFCC/o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oUYnbeD1mei/1oo5eA4KOtjNDyANZVXfg79wHndqA86MpbLB1sM0BO5oJIPrje0LTDpwgYdKGyG6TiX5wEuBMmZtJQ/T0Z5bzLKZwX+w5S08fboL/6fUF2w6JgDKfUKE1SijqLIxH+52M858onYcqzdkFU9ONQCaZ1Mt3kGP+2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRe05JmO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FA0AC2BC87
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 09:52:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771926755;
-	bh=m8HVzWzouKm2cXoM/hnZEz9vy29hL3PfIfqqpzFCC/o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=TRe05JmOj0zrjkSzFH05uNJmpKrg9ivJSnNZidMu2MnVIUKZF2E8qd5SAYZSngaoY
-	 O8vAPho2SoADBUurJnXaYQXTbwAs3BDM/1FyCQJRti9EE+T6XzDiKFI5obf+Kg+X3t
-	 XxWheObEfdxROoSp6FAspV52lwIO7siyrt+q+VrDk/Ubp6/DpoE4jG0h0VGtGXMHOr
-	 ot3zk8ELoOgk40t1EzX3B802yz94IAaFlz3R6aUQf11S+whbKxHnzKlO/9PsUtuYuB
-	 67GU4vmMijyDU8a2MtR+3fW4D8MnvGrTnc7bjoj2cPaE3OeRz8B9v8+7nH24XsKtVN
-	 jEXsifY9fwq+A==
-Received: by mail-yx1-f51.google.com with SMTP id 956f58d0204a3-64ad79dfb7cso5013565d50.2
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 01:52:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXeeuBrjHBTw/xgMq8YP9Xcwrr4Qa2SeNlV4FYHVWT8CysD6aa2ajWHma1QeoHjevFxZJ41y8bZDyob@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSnmXrb6kum0fHYHgPOtO0JDY/54QgQDPemPyez20cKT2nS/QR
-	U/8sNiziR7HgKZcSjmack/DfOaR/RUpQucf2Ewa08hwA0bNxssG0a9Fqedgq98jJO6lJhVp4xMR
-	qM9+r7a1lh6Q2qpN1k2I7UsOkXd6+Bs8=
-X-Received: by 2002:a53:c94e:0:b0:64a:df24:813a with SMTP id
- 956f58d0204a3-64c78ace3b7mr7721765d50.29.1771926754578; Tue, 24 Feb 2026
- 01:52:34 -0800 (PST)
+	s=arc-20240116; t=1771929071; c=relaxed/simple;
+	bh=Xkb2MDt6xGYtR4mFfmU26Ues6I+i7U04Zx4BHV01rL4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mOPDpzWBI3TmKfZezm9PgCfYHi1te630UCuf0zPBXdsuWLYGQqcPLKbFAs1ZWjj9MvtrUZJhTgcOebVX8DDCsL2lQw6Kd/6YVwGf4v7eLob9HRkXrJPpRMxQg2Mb3PxIR8tzuJ3DXPRBDTB2Qe9z+CS5l9oJjsw5N3+p3gNZJIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=oKvIyHka; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4fKvBw4sPGz9vVL;
+	Tue, 24 Feb 2026 11:31:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1771929064; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xkb2MDt6xGYtR4mFfmU26Ues6I+i7U04Zx4BHV01rL4=;
+	b=oKvIyHkagUt14YjcbYzCVNDJBTWvjXhzWlALbZZ6Lw0fPfmU2t4YpBcyc2Qdi+4KzuI8TV
+	PjvG94lhGB3d4tDbhN17up+D5FZdjhr7Eh1RuLqgokQP0yhg0vn3xjpuF4oElqvj77ZKNu
+	uegXUTacyzp1TOx6rlp6O2U8X1QWdS9tD4xfi3YzpmsWUuiAO19VrBdX1JYDjqskBsAe26
+	7ZrmtEb59iLMfke4uJ9HpLJf18h82NcDhAuMAtTl7ubBJmU3SnbXScrAQtdjXn85JSKagc
+	9zeQm+tEOXbVSneuae/jh1kiLSnfiulfgc1bIwLohIi+JMrl0dUDX04SszIMag==
+Message-ID: <48297cc524736e7452def05448ece84260a4fd83.camel@mailbox.org>
+Subject: Re: [PATCH 0/37] PCI/MSI: Enforce explicit IRQ vector management by
+ removing devres auto-free
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, phasta@kernel.org
+Cc: Simon Richter <Simon.Richter@hogyros.de>, Shawn Lin
+ <shawn.lin@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>, "Vaibhaav
+ Ram T . L" <vaibhaavram.tl@microchip.com>, Kumaravel Thiagarajan
+ <kumaravel.thiagarajan@microchip.com>,  Even Xu <even.xu@intel.com>,
+ Xinpeng Sun <xinpeng.sun@intel.com>, Srinivas Pandruvada
+ <srinivas.pandruvada@linux.intel.com>, Jiri Kosina <jikos@kernel.org>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, Zhou Wang
+ <wangzhou1@hisilicon.com>, Longfang Liu <liulongfang@huawei.com>, Vinod
+ Koul <vkoul@kernel.org>, Lee Jones <lee@kernel.org>, Jijie Shao
+ <shaojijie@huawei.com>, Jian Shen <shenjian15@huawei.com>, Sunil Goutham
+ <sgoutham@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Heiner
+ Kallweit <hkallweit1@gmail.com>, "David S . Miller" <davem@davemloft.net>,
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>, Oded Gabbay <ogabbay@kernel.org>,
+ Maciej Falkowski <maciej.falkowski@linux.intel.com>,  Karol Wachowski
+ <karol.wachowski@linux.intel.com>, Min Ma <mamin506@gmail.com>, Lizhi Hou
+ <lizhi.hou@amd.com>,  Andreas Noever <andreas.noever@gmail.com>, Mika
+ Westerberg <westeri@kernel.org>, Tomasz Jeznach <tjeznach@rivosinc.com>,
+ Will Deacon <will@kernel.org>, Xinliang Liu <xinliang.liu@linaro.org>, Tian
+ Tao <tiantao6@hisilicon.com>, Davidlohr Bueso <dave@stgolabs.net>, Jonathan
+ Cameron <jonathan.cameron@huawei.com>, Srujana Challa
+ <schalla@marvell.com>, Bharat Bhushan <bbhushan2@marvell.com>, Antoine
+ Tenart <atenart@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Raag
+ Jadav <raag.jadav@intel.com>, Hans de Goede <hansg@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+ <jirislaby@kernel.org>, Andy Shevchenko <andy@kernel.org>, Manivannan
+ Sadhasivam <mani@kernel.org>, Mika Westerberg
+ <mika.westerberg@linux.intel.com>, Andi Shyti <andi.shyti@kernel.org>, 
+ Robert Richter <rric@kernel.org>, Mark Brown <broonie@kernel.org>, Nirmal
+ Patel <nirmal.patel@linux.intel.com>, Kurt Schwemmer
+ <kurt.schwemmer@microsemi.com>,  Logan Gunthorpe <logang@deltatee.com>,
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Bingbu Cao
+ <bingbu.cao@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann
+ <arnd@arndb.de>, Benjamin Tissoires <bentiss@kernel.org>,
+ linux-input@vger.kernel.org,  linux-i3c@lists.infradead.org,
+ dmaengine@vger.kernel.org, netdev@vger.kernel.org,  nic_swsd@realtek.com,
+ linux-arm-msm@vger.kernel.org,  dri-devel@lists.freedesktop.org,
+ linux-usb@vger.kernel.org,  iommu@lists.linux.dev,
+ linux-riscv@lists.infradead.org, David Airlie <airlied@gmail.com>, Simona
+ Vetter <simona@ffwll.ch>, linux-cxl@vger.kernel.org, 
+ linux-crypto@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-serial@vger.kernel.org, mhi@lists.linux.dev, Jan Dabros
+ <jsd@semihalf.com>,  linux-i2c@vger.kernel.org, Daniel Mack
+ <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>,
+ linux-spi@vger.kernel.org, Jonathan Derrick <jonathan.derrick@linux.dev>,
+ linux-pci@vger.kernel.org,  linux-gpio@vger.kernel.org, Mauro Carvalho
+ Chehab <mchehab@kernel.org>,  linux-media@vger.kernel.org,
+ linux-mmc@vger.kernel.org
+Date: Tue, 24 Feb 2026 11:30:28 +0100
+In-Reply-To: <aZ1rb8zoqmQmakDP@smile.fi.intel.com>
+References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+	 <6223f3cb-693f-42e7-9147-30f659f08563@hogyros.de>
+	 <7ca512d133f7a3bcfe00e9b0b2af5fe5f147ad77.camel@mailbox.org>
+	 <aZ1rb8zoqmQmakDP@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260224092419.1275016-1-wens@kernel.org>
-In-Reply-To: <20260224092419.1275016-1-wens@kernel.org>
-From: Linus Walleij <linusw@kernel.org>
-Date: Tue, 24 Feb 2026 10:52:23 +0100
-X-Gmail-Original-Message-ID: <CAD++jLnKxDi1GCp94zAUKhwBvQwVAdT8bgNyw5XM2+PTOhxq1Q@mail.gmail.com>
-X-Gm-Features: AaiRm52BGBXQpCSo4y3loUoixsBJESk5D9jZK8HxDIglW3gm2oXSHNiHQK0JrJg
-Message-ID: <CAD++jLnKxDi1GCp94zAUKhwBvQwVAdT8bgNyw5XM2+PTOhxq1Q@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: sunxi: Implement gpiochip::get_direction()
-To: Chen-Yu Tsai <wens@kernel.org>
-Cc: Jernej Skrabec <jernej@kernel.org>, Samuel Holland <samuel@sholland.org>, 
-	James Hilliard <james.hilliard1@gmail.com>, aprizel@wens.tw, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MBO-RS-ID: 60f04246675bc741d14
+X-MBO-RS-META: yon5wtfjc3h8rjostgzzw3ydtwwsf3ne
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[mailbox.org,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[mailbox.org:s=mail20150812];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,sholland.org,gmail.com,wens.tw,vger.kernel.org,lists.infradead.org,lists.linux.dev,oss.qualcomm.com];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32129-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_FROM(0.00)[bounces-32128-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[hogyros.de,rock-chips.com,google.com,microchip.com,intel.com,linux.intel.com,kernel.org,bootlin.com,hisilicon.com,huawei.com,marvell.com,lunn.ch,gmail.com,davemloft.net,oss.qualcomm.com,amd.com,rivosinc.com,linaro.org,stgolabs.net,gondor.apana.org.au,linuxfoundation.org,microsemi.com,deltatee.com,arndb.de,vger.kernel.org,lists.infradead.org,realtek.com,lists.freedesktop.org,lists.linux.dev,ffwll.ch,semihalf.com,zonque.org,linux.dev];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[88];
+	NEURAL_HAM(-0.00)[-0.997];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[phasta@mailbox.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[mailbox.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,netdev];
+	HAS_REPLYTO(0.00)[phasta@kernel.org];
 	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 36DB1184FB2
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mailbox.org:mid,mailbox.org:dkim]
+X-Rspamd-Queue-Id: EE663185642
 X-Rspamd-Action: no action
 
-On Tue, Feb 24, 2026 at 10:24=E2=80=AFAM Chen-Yu Tsai <wens@kernel.org> wro=
-te:
+On Tue, 2026-02-24 at 11:12 +0200, Andy Shevchenko wrote:
+> On Tue, Feb 24, 2026 at 08:39:43AM +0100, Philipp Stanner wrote:
+> > On Tue, 2026-02-24 at 13:14 +0900, Simon Richter wrote:
+> > > On 2/24/26 12:29 AM, Shawn Lin wrote:
+>=20
+> > > > When such a driver also uses `pcim_enable_device()`, the devres fra=
+mework may
+> > > > attempt to free the IRQ vectors a second time upon device release, =
+leading to
+> > > > a double-free. Analysis of the tree shows this hazardous pattern ex=
+ists widely,
+> > > > while 35 other drivers correctly rely solely on the implicit cleanu=
+p.
+> > >=20
+> > > Would it make sense to have a function pcim_free_irq_vectors(), to al=
+low=20
+> > > explicit freeing even if the device is otherwise managed, analogous t=
+o=20
+> > > pcim_iounmap()?
+> >=20
+> > We used to add those. In part because it is easier to port old users.
+> >=20
+> > Nowadays I tend to think that those APIs were more on the too-complex
+> > than too-simple side for a long time. As an expert or as the API
+> > designer you wouldn't expect it, but there are actually far too many
+> > users who came to believe they always have to use pcim_iounmap() and
+> > counter parts.
+> >=20
+> > If I could design it from scratch I would probably try to tell users to
+> > use the unmanaged versions instead of revoking the devres consequence.
+>=20
+> +many.
 
-> After commit 471e998c0e31 ("gpiolib: remove redundant callback check"),
-> a warning will be printed if the gpio driver does not implement this
-> callback. The warning was added in commit e623c4303ed1 ("gpiolib:
-> sanitize the return value of gpio_chip::get_direction()"), but was
-> masked by the "redundant" check.
->
-> The warning can be triggered by any action that calls the callback,
-> such as dumping the GPIO state from /sys/kernel/debug/gpio.
->
-> Implement it for the sunxi driver. This is simply a matter of reading
-> out the mux value from the registers, then checking if it is one of
-> the GPIO functions and which direction it is.
->
-> Signed-off-by: Chen-Yu Tsai <wens@kernel.org>
-> Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+hm?
 
-Pulled out v1 of my tree and put in this one instead!
+>=20
+> > Devres is actually about your consequence always happening whenever the
+> > driver unloads, for whatever reason.
+>=20
+> I believe you meant "unbinds". The device<-->driver link can be broken
+> without unloading the driver.
 
-Yours,
-Linus Walleij
+Yes, thx for pointing that out. Greg KH AFAIK always calls it "driver
+detach".
+
+P.
 
