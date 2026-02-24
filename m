@@ -1,143 +1,198 @@
-Return-Path: <linux-gpio+bounces-32100-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32101-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8OS1C3denWmxOgQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32100-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 09:16:55 +0100
+	id gNtxDz5gnWkDPAQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32101-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 09:24:30 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80AE51837DF
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 09:16:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DA4261839A5
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 09:24:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id ED0043107963
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 08:13:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D7C7430848D1
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 08:21:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AF97366554;
-	Tue, 24 Feb 2026 08:13:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6378436682C;
+	Tue, 24 Feb 2026 08:21:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KvoQ/gME"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="OtokF0pM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m21471.qiye.163.com (mail-m21471.qiye.163.com [117.135.214.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D53364E8F;
-	Tue, 24 Feb 2026 08:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF21366806;
+	Tue, 24 Feb 2026 08:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.214.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771920827; cv=none; b=cKtUkHdsS40QwcM2AWSkBeXezo89SfHzynGAAvGlT5RR2QG7IP4XX8pWnSAXPfynvkrQAYZ2tgX9J99A1sSJN/PH4nGeed5Q4FYT77h4uwfohVzlFvmn0uggiBxdh0KVsMTH1h6Q/yWevutTTJfg2ViPoABG+tNbgpDqHibxkgw=
+	t=1771921292; cv=none; b=c7wSE4hYou+7htxkKBpX3x3ocowippH+kD0AHV630QVegc3x/ERtAn8OA3Oel0DJtvfMIC0vYCKEJEMDvzzd9AKvH2xPCpXeFUhSCQlCD6CgXjPeyqlEYsHFpG9Z1r+MtvZBmXzHdQWfvm8J416A8wJavRiTV4od5pcnmpD4CIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771920827; c=relaxed/simple;
-	bh=Gg+RXtOcR0DYpMZ9ChetNvxgvGLU4ili+KJ+Dxx7nFU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hb6oESfubT+N3KyA6UWHHGor7pYApP9S+JTJEz/Ih3LqLXu3MIXzzUpeTjRZBZ0SoD4lEdzRtdefGNO74j1nyAbzYObno4eJRYGI344mVTIOzrXAqjmZIMkf86F5Avs1jyzUJkRga5OPUfZi3V00pHg7BIyqKP84FN+vXuerW5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KvoQ/gME; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AD28C116D0;
-	Tue, 24 Feb 2026 08:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771920826;
-	bh=Gg+RXtOcR0DYpMZ9ChetNvxgvGLU4ili+KJ+Dxx7nFU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KvoQ/gMEOxCf62Y3lZL83ldy7+xKDPw5aHxGgacDwD6aJw6gW+lCeh6nTO7zHmHy9
-	 AF3ECTYr/LY6cHr1sb0SUo6kv9LSU87qFVl+qUCXBMuewv6WLJ48ylunfHG4h1hkXl
-	 iOQIXU3aJmQP2mKC+2Nich1uN67XjGuoFEexJKaO0C7l3VA55uPK7LxzsesEH1Mh+r
-	 BBUquYsybNh2/ApPz4MFmY9iA1D/09AsaQUxZW9s0KKW0HnljWbmJP7aEbuFb4wkTt
-	 rjRCDB8omTb91xEKRpv7pEU+8rsP0ptqcWsW2ga4YNiv31IWZvVWRXmHz1nY4RvMDy
-	 CV9Cpibrr/sMQ==
-Received: by wens.tw (Postfix, from userid 1000)
-	id C59095FAAF; Tue, 24 Feb 2026 16:13:43 +0800 (CST)
-Date: Tue, 24 Feb 2026 16:13:43 +0800
-From: Chen-Yu Tsai <wens@kernel.org>
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linusw@kernel.org>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, quic_vbadigan@quicinc.com,
-	quic_mrana@quicinc.com, sherry.sun@nxp.com,
-	driver-core@lists.linux.dev
-Subject: Re: [PATCH v7 0/3] PCI: Add support for PCIe WAKE# interrupt
-Message-ID: <aZ1dt626iivieo5r@wens.tw>
-References: <20260218-wakeirq_support-v7-0-0d4689830207@oss.qualcomm.com>
- <CAMRc=MdF92kriuT_-Fbk3pj6YeJiNv6RSiDE7aB0AKL9oFZg5w@mail.gmail.com>
+	s=arc-20240116; t=1771921292; c=relaxed/simple;
+	bh=jGNKoKMtgp1RUDE0JUj9nl9DZtqZbHM10+ockHI/Lug=;
+	h=Cc:Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=P/KLlkIQh9Dl90OQ+njg4dzOQ/zbf6CwFmP9It6h0RhyWjK/3EXYe9AekiMM0lxaRmdjynzjbFU5jYbWCcidYa2PE4pu52hu0aHvhB6SjVYfsmaV+Xr6aKQ54mGMD/gmQNFz+kHJf6eoRokSfL5o6sVlnBBq/TV3sXJUrkplKUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=OtokF0pM; arc=none smtp.client-ip=117.135.214.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Received: from [172.16.12.14] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 34c7e7f42;
+	Tue, 24 Feb 2026 16:21:13 +0800 (GMT+08:00)
+Cc: shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>,
+ "Vaibhaav Ram T . L" <vaibhaavram.tl@microchip.com>,
+ Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
+ Even Xu <even.xu@intel.com>, Xinpeng Sun <xinpeng.sun@intel.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Jiri Kosina <jikos@kernel.org>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Zhou Wang <wangzhou1@hisilicon.com>, Longfang Liu <liulongfang@huawei.com>,
+ Vinod Koul <vkoul@kernel.org>, Lee Jones <lee@kernel.org>,
+ Jijie Shao <shaojijie@huawei.com>, Jian Shen <shenjian15@huawei.com>,
+ Sunil Goutham <sgoutham@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ "David S . Miller" <davem@davemloft.net>,
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>, Oded Gabbay <ogabbay@kernel.org>,
+ Maciej Falkowski <maciej.falkowski@linux.intel.com>,
+ Karol Wachowski <karol.wachowski@linux.intel.com>,
+ Min Ma <mamin506@gmail.com>, Lizhi Hou <lizhi.hou@amd.com>,
+ Andreas Noever <andreas.noever@gmail.com>,
+ Mika Westerberg <westeri@kernel.org>, Tomasz Jeznach
+ <tjeznach@rivosinc.com>, Will Deacon <will@kernel.org>,
+ Xinliang Liu <xinliang.liu@linaro.org>, Tian Tao <tiantao6@hisilicon.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Srujana Challa <schalla@marvell.com>, Bharat Bhushan
+ <bbhushan2@marvell.com>, Antoine Tenart <atenart@kernel.org>,
+ Herbert Xu <herbert@gondor.apana.org.au>, Raag Jadav <raag.jadav@intel.com>,
+ Hans de Goede <hansg@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Andy Shevchenko <andy@kernel.org>,
+ Manivannan Sadhasivam <mani@kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Robert Richter <rric@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Nirmal Patel
+ <nirmal.patel@linux.intel.com>, Kurt Schwemmer
+ <kurt.schwemmer@microsemi.com>, Logan Gunthorpe <logang@deltatee.com>,
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Bingbu Cao <bingbu.cao@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Arnd Bergmann <arnd@arndb.de>, Benjamin Tissoires <bentiss@kernel.org>,
+ linux-input@vger.kernel.org, linux-i3c@lists.infradead.org,
+ dmaengine@vger.kernel.org, netdev@vger.kernel.org, nic_swsd@realtek.com,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-usb@vger.kernel.org, iommu@lists.linux.dev,
+ linux-riscv@lists.infradead.org, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, linux-cxl@vger.kernel.org,
+ linux-crypto@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-serial@vger.kernel.org, mhi@lists.linux.dev,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Jan Dabros <jsd@semihalf.com>, linux-i2c@vger.kernel.org,
+ Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>,
+ linux-spi@vger.kernel.org, Jonathan Derrick <jonathan.derrick@linux.dev>,
+ linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+ linux-mmc@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH 01/37] PCI/MSI: Add Devres managed IRQ vectors allocation
+To: phasta@kernel.org
+References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
+ <1771860581-82092-2-git-send-email-shawn.lin@rock-chips.com>
+ <20260223160402.3ad8f079@kernel.org>
+ <ec226aa1-5cc8-855f-8f90-1d7f89efe766@rock-chips.com>
+ <07fc896007d86b731cbfb3cf6bbdf4e5315d7a77.camel@mailbox.org>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Message-ID: <d601ec05-ef38-5e8e-c643-c05010717ebe@rock-chips.com>
+Date: Tue, 24 Feb 2026 16:21:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <07fc896007d86b731cbfb3cf6bbdf4e5315d7a77.camel@mailbox.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdF92kriuT_-Fbk3pj6YeJiNv6RSiDE7aB0AKL9oFZg5w@mail.gmail.com>
+X-HM-Tid: 0a9c8ebcf01809cckunma66e3c5da3898b
+X-HM-MType: 1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkwYT1ZIQ05NT00aQhpOTEpWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEtKTE
+	tVSktLVUtZBg++
+DKIM-Signature: a=rsa-sha256;
+	b=OtokF0pM0Rdmb7CoOmlCq/zfLcm40+tPTFk2ZLwxQS10TLzJue4pNlrDVsSPzZGK7GjnZ03zAIHAn5VDRN2uAWAEjdInG9Pdls9n5NtKIAxCt/aoY8MRgy7icqkMUtp0jEjJ+naa5XLLsJTKYxzikINqVGIROqqbjer5tDm2ofg=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=NX1TqWCCjq6xu1hXTAQXpYiiKKus6llHeXoiHdmvBy4=;
+	h=date:mime-version:subject:message-id:from;
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	DMARC_POLICY_ALLOW(-0.50)[rock-chips.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_DKIM_ALLOW(-0.20)[rock-chips.com:s=default];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-32100-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_TWELVE(0.00)[17];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32101-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[rock-chips.com,google.com,microchip.com,intel.com,linux.intel.com,kernel.org,bootlin.com,hisilicon.com,huawei.com,marvell.com,lunn.ch,gmail.com,davemloft.net,oss.qualcomm.com,amd.com,rivosinc.com,linaro.org,stgolabs.net,gondor.apana.org.au,linuxfoundation.org,microsemi.com,deltatee.com,arndb.de,vger.kernel.org,lists.infradead.org,realtek.com,lists.freedesktop.org,lists.linux.dev,ffwll.ch,semihalf.com,zonque.org,linux.dev];
+	FROM_HAS_DN(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[88];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wens@kernel.org,linux-gpio@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_NEQ_ENVFROM(0.00)[shawn.lin@rock-chips.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[rock-chips.com:+];
 	NEURAL_HAM(-0.00)[-0.999];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,wens.tw:mid]
-X-Rspamd-Queue-Id: 80AE51837DF
+	TAGGED_RCPT(0.00)[linux-gpio,netdev];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[rock-chips.com:mid,rock-chips.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: DA4261839A5
 X-Rspamd-Action: no action
 
-On Wed, Feb 18, 2026 at 11:01:23AM +0100, Bartosz Golaszewski wrote:
-> On Wed, Feb 18, 2026 at 9:12 AM Krishna Chaitanya Chundru
-> <krishna.chundru@oss.qualcomm.com> wrote:
-> >
-> > PCIe WAKE# interrupt is needed for bringing back PCIe device state from
-> > D3cold to D0.
-> >
-> > This is pending from long time, there was two attempts done previously to
-> > add WAKE# support[1], [2]. Those series tried to add support for legacy
-> > interrupts along with WAKE#. Legacy interrupts are already available in
-> > the latest kernel and we can ignore them. For the wake IRQ the series is
-> > trying to use interrupts property define in the device tree.
-> >
-> > This series is using gpio property instead of interrupts, from
-> > gpio desc driver will allocate the dedicate IRQ.
-> >
-> > WAKE# is added in dts schema and merged based on this patch.
-> > https://lore.kernel.org/all/20250515090517.3506772-1-krishna.chundru@oss.qualcomm.com/
-> >
-> > [1]: https://lore.kernel.org/all/b2b91240-95fe-145d-502c-d52225497a34@nvidia.com/T/
-> > [2]: https://lore.kernel.org/all/20171226023646.17722-1-jeffy.chen@rock-chips.com/
-> >
-> > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> > ---
+在 2026/02/24 星期二 15:47, Philipp Stanner 写道:
+> On Tue, 2026-02-24 at 10:08 +0800, Shawn Lin wrote:
+>> 在 2026/02/24 星期二 8:04, Jakub Kicinski 写道:
+>>> On Mon, 23 Feb 2026 23:29:40 +0800 Shawn Lin wrote:
+>>>> pcim_alloc_irq_vectors() and pcim_alloc_irq_vectors_affinity() are created for
+>>>> pci device drivers which rely on the devres machinery to help cleanup the IRQ
+>>>> vectors.
+>>>
+>>> If you can please add this API with just a few users, and then convert
+>>> remaining users via the subsystem trees in the next cycle.
+>>> There's no need to risk wasting maintainer time on conflicts with
+>>> conversions like this.
+>>
+>> Thanks for the suggestion, Jakub. I have little experience with
+>> cross-subsystem cleanups like this, so your suggestion is very helpful.
 > 
-> This spans three subsystems, how do you want to get it upstream?
+> 
+> When I removed the hybrid nature of pci_request_region() et al., I
+> concluded that there were so few users that doing them all in one run
+> was sufficient.
+> 
+> For larger reworks, like removing pcim_iomap_table(), a slower step-by-
+> step strategy is necessary for the reasons that Jakub details.
+> 
+> It is then smart to omit an easy to port subsystem / driver for the
+> ultimate patch series where one then removes the hybrid behavior from
+> PCI itself, after porting the last driver.
+> 
+> In general,  as Jakub details, those step-by-step cleanups are a bit
+> safer, since you can proof valid behavior early on and in case of an
+> explosion they are very easy to revert.
+> 
 
-FWIW, I'm interested in using fwnode_gpiod_get() in the net subsystem
-for the same reasons as the author. I could just use
-fwnode_gpiod_get_index() and convert later though.
+Thank you, Philipp. I wish I had attended your talk at FOSDEM 2025 on
+removing pcim_iomap_table earlier. This first version was perhaps a bit 
+too aggressive. For v2, I think the plan should start with addressing 
+the switchtec and vmd drivers, since both of those, along with the new 
+API additions, can be handled entirely within the PCI subsystem scope.
 
-
-ChenYu
-
-
-> Bartosz
+> 
+> P.
+> 
 
