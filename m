@@ -1,81 +1,82 @@
-Return-Path: <linux-gpio+bounces-32118-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32119-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eCbFI7BqnWnhPwQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32118-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 10:09:04 +0100
+	id +KIfNkJrnWnhPwQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32119-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 10:11:30 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29BB0184467
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 10:09:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 34F7C1844E5
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 10:11:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6D848310795B
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 09:04:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BF90F3051867
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 09:08:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 922EB36998F;
-	Tue, 24 Feb 2026 09:04:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19455369988;
+	Tue, 24 Feb 2026 09:08:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KsvtQJdz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJTwKXw3"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CC436996A
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 09:04:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF33336606A
+	for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 09:08:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771923868; cv=none; b=bAZ8NejaIUJJkRTg09l/8YuLYs8CPJTzIfN9T+EZfsdhb7CVzEbj0ZMzgSPbOhyRgroz5h6UGzwQlqg4iOBAOMyKMsH1qvfMz5FGZQSMV3ZV9foI86pwkxDfKpKtnH9opRXN3bySN3K3IWbzAbEfwYmy5awhc+XY7INev1OVge8=
+	t=1771924117; cv=none; b=AfjK8Rf4yfCY85nnuMuJuX+N9fFVFDuZr8lM3eOqyKzWupWG8+crbL08x59krJO0JLdS4Ubv/KpBxFOzAXb13y/KQz7ypdEn5dBfRtv9oynRCmoqETj9DaqlgVow65Ot1jECHxsCRlCiPMCzQ2xuYCRyrH6vU7LhicDKUTYli48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771923868; c=relaxed/simple;
-	bh=bQYgmnn8sOYlUFg/9V0yJqhIzqXBbMQU2rAHg1qohEU=;
+	s=arc-20240116; t=1771924117; c=relaxed/simple;
+	bh=Q9i5oBBNkQGmveB8LXq2i2SLSNV9fZ3TzjUBnqX7p78=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fpaOdRBONiiwRraYVtRKHGiDoShGz9EQGm50OHEHBU0QSnVd3JFzAuevn648SiSZFHzWjrMBX3u7jKeGBkgRg8LDHZ95fUQlP1hkBGPVpwoCBX+XTM6bidFpudYkJODmY1vvt8kmeeDt+zQNsCpyE3QNVf4NjkZkGBcbu2PB8Q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KsvtQJdz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF1F5C2BC86
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 09:04:27 +0000 (UTC)
+	 To:Cc:Content-Type; b=Jjo+r36ckhY1IY9BJmsJN+ovyoxtyVB/gA2prZs/k6KNafSo/s0NiOT+OCJFoFO8wcLBMsj8QF+zksWt+TMjo2hLGFFH9fyd+hEoOTn1QE7vx90vjM3k5Jp3wiAo3fr8wVoM33Dn88Adoi3YH8nY2l4zAS0ZkIYCY/WBxFp/MNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJTwKXw3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EE27C4AF0B
+	for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 09:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771923868;
-	bh=bQYgmnn8sOYlUFg/9V0yJqhIzqXBbMQU2rAHg1qohEU=;
+	s=k20201202; t=1771924117;
+	bh=Q9i5oBBNkQGmveB8LXq2i2SLSNV9fZ3TzjUBnqX7p78=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KsvtQJdzn3KFvmSoN1gUDA9p8jtBuzteEtJg3Z8YolPE3Dq4Uy8Bd8VoPkLO12L5H
-	 mM/mM7ll8joM7abb0jX/2A46asBQUle6HccE23DjmG+ShxEX4z+ibNUEBlJxPTKp4F
-	 sx673+/j33puviSlS6+6mlqQnnLkQnd+H7elYy8eGDltZD6kumMQwD8wj5VqR8jYta
-	 cuh3grk/URTAnSZiTerm49sBreZ34paHQ/tjtoSOse7J29I6JyzOrnKR6NKoFXEP2C
-	 cc/PA9XJt4EmbsAX/8wKJLmvhx+Jag3lXhmYilpJacEKrvE33s4trSz3j1OqVjTghV
-	 h6Or3ax6omYWQ==
-Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-64aea64bf15so5109899d50.2
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 01:04:27 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWlnkobnJjfGf3/8WmAB179sh4nxt9UmH9cZh/ZY6PJxGVJl9eGh9abrsmmy7uvVgJkYqNlAAwKrQLh@vger.kernel.org
-X-Gm-Message-State: AOJu0YymxkCRX7c29DiM+0w1RT1n8ZfLKH0b3Os+QMsfWHIEGkOInT0w
-	iKtTfzhkSw8HW5VYlCVLFDkcBFaupncB7iOF8yiT3wiQlad7xrTM/lgdOrsb7z46XB6F99KgSPy
-	XvEAgxPAnIfoOhRN16CCiAltE++P5c2M=
-X-Received: by 2002:a53:d007:0:b0:64a:d312:47ca with SMTP id
- 956f58d0204a3-64c79072dacmr8416529d50.77.1771923867291; Tue, 24 Feb 2026
- 01:04:27 -0800 (PST)
+	b=YJTwKXw34O+Wqua0RWL/aMV9BsRMcwBA5KpyFOn8jxYjbpA6GqjXw3K9vfxsK/C8X
+	 SKg9lXB/uyIjFLDkGJw5iaQY014rXs0eP4uvIS1b93/bswppjr6z7b8G4TpH2Zz9En
+	 oPpyqtKSzfz7Z9IHZy4JoSgbUSUi6Kq/P7t4wPjC9sC5otRlVpdKvd4c1ZRBfofLbM
+	 +yL4RlGm1zxQITbfxgltEMUxxoVKi3drZy9+MzgZf3Un7Z1E/pXw+CwcOLvlq/qmaz
+	 pwITrW2E/Q/FLvHVuYdO19Y0Qy5eC0TrgdQJon23qt8al/M5uhm2fgrLAVM85kXntr
+	 E2l2n0sEA+vLw==
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-78fc4425b6bso46712727b3.1
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 01:08:37 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXj7SUQScoxG+va26+0ZqyU2mjanWO/7qMtp4GjGmIsrzyOzeBVKpM9CWNWCkuBsVkh+QINV82/HAsv@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywg/radCkK6raW6Gvtkn65qH2UO/+EXf0rdtHhJPOGyZEpYdqoJ
+	tSegI8kqmMA5+YJEQugAvSTynnjqvoEfKf1zMMg2sEa8hrWy6fg9llhmkyshadRSY5dCabbYeJf
+	XTx1hjDIIf4R7b1Y6mdBULjO2R1E1iDM=
+X-Received: by 2002:a05:690c:3390:b0:798:6042:12f8 with SMTP id
+ 00721157ae682-798604216bdmr799927b3.55.1771924116974; Tue, 24 Feb 2026
+ 01:08:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aZYnyl-Nf4S1U2yj@google.com>
-In-Reply-To: <aZYnyl-Nf4S1U2yj@google.com>
+References: <20260218151925.1104098-1-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20260218151925.1104098-1-claudiu.beznea.uj@bp.renesas.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Tue, 24 Feb 2026 10:04:15 +0100
-X-Gmail-Original-Message-ID: <CAD++jLmvck+_UG5cNKLCVs2PJb2zynvhr8EbVbB6cYU9925+Vg@mail.gmail.com>
-X-Gm-Features: AaiRm51uKefiPMUGTC2iK4ftF5TGZPurxc4swtyqTTKWnBbTWws6yw-RnAyZMSc
-Message-ID: <CAD++jLmvck+_UG5cNKLCVs2PJb2zynvhr8EbVbB6cYU9925+Vg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: rza1: normalize return value of gpio_get
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Marek Vasut <marek.vasut+renesas@mailbox.org>, 
+Date: Tue, 24 Feb 2026 10:08:26 +0100
+X-Gmail-Original-Message-ID: <CAD++jL=7WAdsXu0FEqMtH5_BhCEHdkFT=9jw9AFd9LD=qvX8Gg@mail.gmail.com>
+X-Gm-Features: AaiRm508KnJDrZsc8mpEevIY_lXIv05mpcGdwG_GATsrRW7vePmDNcyZVoA28pI
+Message-ID: <CAD++jL=7WAdsXu0FEqMtH5_BhCEHdkFT=9jw9AFd9LD=qvX8Gg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Add GPIO set_config
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: geert+renesas@glider.be, brgl@kernel.org, 
 	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
@@ -84,12 +85,11 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32119-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32118-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
@@ -97,26 +97,25 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_HAM(-0.00)[-0.998];
+	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 29BB0184467
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid,renesas.com:email]
+X-Rspamd-Queue-Id: 34F7C1844E5
 X-Rspamd-Action: no action
 
-On Wed, Feb 18, 2026 at 9:58=E2=80=AFPM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
+On Wed, Feb 18, 2026 at 4:19=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> =
+wrote:
 
-> The GPIO get callback is expected to return 0 or 1 (or a negative error
-> code). Ensure that the value returned by rza1_gpio_get() is normalized
-> to the [0, 1] range.
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Add GPIO set_config to allow setting GPIO specific functionalities.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
+Excellent use of the generic pinctrl backend facility.
 Reviewed-by: Linus Walleij <linusw@kernel.org>
-
-I expect Geert will pick this up, else tell me & I'll queue it.
 
 Yours,
 Linus Walleij
