@@ -1,154 +1,162 @@
-Return-Path: <linux-gpio+bounces-32139-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32140-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gCXzL9rPnWn4SAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32139-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 17:20:42 +0100
+	id KOupAVzRnWn4SAQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32140-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 17:27:08 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 847D8189B80
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 17:20:42 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BA68189C9B
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 17:27:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 58F4930B40BA
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 16:20:16 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 687353046090
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 16:27:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 103C23A7F4E;
-	Tue, 24 Feb 2026 16:20:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 712773A7834;
+	Tue, 24 Feb 2026 16:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WMOg/b0S"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289643806B8;
-	Tue, 24 Feb 2026 16:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3B01799F
+	for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 16:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771950009; cv=none; b=a/3p31JN+Ln/iVhYClMUdHR3BEsDFxCHW96XzI3tyXtY5LCkp2vrLjg86/BEWyjuipZvFv2s1Y0cqe8joQM+E2YLtk7p5dsjrQ890aFqnxiJG1LiGX7PXqsqORj6ZDEm+02lyVU/bnFW4xDNumuejjzP9warqWLYpTsupDig0IA=
+	t=1771950423; cv=none; b=D9d/Rp0Wgqv8V3WgPht3pwDFH7GLT0ZYmVHlg+/YBz63FwOaCfxlZ8nl0oh3sLzgfEyqAFYqcdAR1QieZJgA6nQMYm4Ya4uwEXDF7dKBfZOJ4C7664qUp4y6iCbORTb8hqN3tSLzQ9MfttgaQVMf7zetTIj/RX+SrPbaZMG3WMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771950009; c=relaxed/simple;
-	bh=6G91BbTqFSYq68w6yhfkl+JDGrXisXHtlEgCseE/wwo=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=USqOVO1G8thfgen45iXNVM6Ww1j0fmbiTNzRg5c7dxMz8bF4y4wQ0aLX+j9GyfK2JA3wIrVqkYLQdlrzBkNRCizxSSmBL4mlSz2rAAu5ju1vSO5mAI3PlnyzZd0LFo3AZFrEeaA2khoswtV2yxqdIflZTG4g0REjoy8UHhwRGjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fL2xC01QGzJ46C2;
-	Wed, 25 Feb 2026 00:19:43 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id C0C2D40570;
-	Wed, 25 Feb 2026 00:20:04 +0800 (CST)
-Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 24 Feb
- 2026 16:20:01 +0000
-Date: Tue, 24 Feb 2026 16:20:00 +0000
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-CC: Bjorn Helgaas <bhelgaas@google.com>, "Vaibhaav Ram T . L"
-	<vaibhaavram.tl@microchip.com>, Kumaravel Thiagarajan
-	<kumaravel.thiagarajan@microchip.com>, Even Xu <even.xu@intel.com>, Xinpeng
- Sun <xinpeng.sun@intel.com>, Srinivas Pandruvada
-	<srinivas.pandruvada@linux.intel.com>, Jiri Kosina <jikos@kernel.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Zhou Wang
-	<wangzhou1@hisilicon.com>, Longfang Liu <liulongfang@huawei.com>, "Vinod
- Koul" <vkoul@kernel.org>, Lee Jones <lee@kernel.org>, Jijie Shao
-	<shaojijie@huawei.com>, Jian Shen <shenjian15@huawei.com>, Sunil Goutham
-	<sgoutham@marvell.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "Heiner
- Kallweit" <hkallweit1@gmail.com>, "David S . Miller" <davem@davemloft.net>,
-	Jeff Hugo <jeff.hugo@oss.qualcomm.com>, Oded Gabbay <ogabbay@kernel.org>,
-	Maciej Falkowski <maciej.falkowski@linux.intel.com>, Karol Wachowski
-	<karol.wachowski@linux.intel.com>, Min Ma <mamin506@gmail.com>, Lizhi Hou
-	<lizhi.hou@amd.com>, Andreas Noever <andreas.noever@gmail.com>, "Mika
- Westerberg" <westeri@kernel.org>, Tomasz Jeznach <tjeznach@rivosinc.com>,
-	Will Deacon <will@kernel.org>, Xinliang Liu <xinliang.liu@linaro.org>, Tian
- Tao <tiantao6@hisilicon.com>, Davidlohr Bueso <dave@stgolabs.net>, Srujana
- Challa <schalla@marvell.com>, Bharat Bhushan <bbhushan2@marvell.com>, Antoine
- Tenart <atenart@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Raag
- Jadav <raag.jadav@intel.com>, "Hans de Goede" <hansg@kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
-	<jirislaby@kernel.org>, Andy Shevchenko <andy@kernel.org>, Manivannan
- Sadhasivam <mani@kernel.org>, Mika Westerberg
-	<mika.westerberg@linux.intel.com>, Andi Shyti <andi.shyti@kernel.org>, Robert
- Richter <rric@kernel.org>, Mark Brown <broonie@kernel.org>, "Nirmal Patel"
-	<nirmal.patel@linux.intel.com>, Kurt Schwemmer
-	<kurt.schwemmer@microsemi.com>, Logan Gunthorpe <logang@deltatee.com>, Linus
- Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Sakari
- Ailus <sakari.ailus@linux.intel.com>, Bingbu Cao <bingbu.cao@intel.com>, Ulf
- Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin
- Tissoires <bentiss@kernel.org>, <linux-input@vger.kernel.org>,
-	<linux-i3c@lists.infradead.org>, <dmaengine@vger.kernel.org>, Philipp Stanner
-	<phasta@kernel.org>, <netdev@vger.kernel.org>, <nic_swsd@realtek.com>,
-	<linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-usb@vger.kernel.org>, <iommu@lists.linux.dev>,
-	<linux-riscv@lists.infradead.org>, David Airlie <airlied@gmail.com>, Simona
- Vetter <simona@ffwll.ch>, <linux-cxl@vger.kernel.org>,
-	<linux-crypto@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
-	<linux-serial@vger.kernel.org>, <mhi@lists.linux.dev>, Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>, Jan Dabros <jsd@semihalf.com>,
-	<linux-i2c@vger.kernel.org>, Daniel Mack <daniel@zonque.org>, "Haojian
- Zhuang" <haojian.zhuang@gmail.com>, <linux-spi@vger.kernel.org>, "Jonathan
- Derrick" <jonathan.derrick@linux.dev>, <linux-pci@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>,
-	<linux-media@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-Subject: Re: [PATCH 01/37] PCI/MSI: Add Devres managed IRQ vectors
- allocation
-Message-ID: <20260224162000.000001a5@huawei.com>
-In-Reply-To: <1771860581-82092-2-git-send-email-shawn.lin@rock-chips.com>
-References: <1771860581-82092-1-git-send-email-shawn.lin@rock-chips.com>
-	<1771860581-82092-2-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1771950423; c=relaxed/simple;
+	bh=YS/sXiuj2czShLDQXAAPbRvZRuP6Pa4lzIjqWXq2+0Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BakKQar8yXjw3YZYU8efj3iKld/AuVQ7Y0r7u2HtyZxP63iBSY8QSzaVoduuK8G8Pqg/tn71/FQb3tg9c2r3axXgcAclIfcq8DVFjAAUVl2Bt7d58pbeaWy/bQAxmQJ80JbcdMxhFNc2o8slOohFW6U/aDNhPmNPWLX9ohO2ztg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WMOg/b0S; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2aaf43014d0so39366565ad.2
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 08:27:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771950421; x=1772555221; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q8MyfCwShsdn38owSIBBapSosmGxnp1Wb39JER6IFqU=;
+        b=WMOg/b0SY2ozb+reowOKhegALN6K3sc+iPqaYRe5Kl3b3gTUDotbNoNEp4EIZEl9e/
+         SpYzifGrIXZu1sMMqYJxgojVMzJJvzojOwNZJM7R2Pw9YdygzULvCkPRb4/AQsWmSR9p
+         ot4oIcsMvtjOihvmUS3loWtjNNIVsAcHtk/N8p0xtjyLd0Qdqyf9p6gkukWFu8Ojpd9H
+         J73cvM5D1mMenNsbCXH1Sjsf6SLcFhvp8UKmnWjFjbfbyFJmuEljVURfINUy4JS97LWR
+         L77VTPXeNGi2L3yLcxDnl6ulcHFT3bMR71W7dEkPVsZIc6k/kYiBMGl/q/KIN0WTOhI0
+         u3VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771950421; x=1772555221;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q8MyfCwShsdn38owSIBBapSosmGxnp1Wb39JER6IFqU=;
+        b=niRUdJ6ItqdWsulOsjF1Fnabqueky5n0wZXMhW8NM15bWelbpJLBG3M/E98Q29qcE+
+         ObhJ14rh5nprXfVZg5EKwMX4uXtykRh6G3Qt+nC3eybIfDqoubDC37kIMA4Zv4m4gnJN
+         HVo3vwSuITKh7YLpn5M62ui4yEYyCvGeTUtUUlIR7k+OJLGgPWtZOHBLMQ/wfI/58Bz7
+         KHqy8e2q/9RVdiQt7j2ApGh5bnlHBk4z1IhO2PvMOYfZQ4oZFAJX7rRhSW5fZlqBpggZ
+         sWd4C7Kr1xHatEOm25xFxVod5u0AffTRb24s0AgPqjbvNIGvLxoRAVAppPQOhPWn+hZJ
+         w+IA==
+X-Gm-Message-State: AOJu0Yww28Rs9zgI185ti3lLfMv5p1xpscVHkO5ZZ7e2NtcIw3D1X7xW
+	8XeHGqsoEyNMxktItYbkB+Xxnc08ikAnqBQCvkyQDXsT46lNfNABqwaL
+X-Gm-Gg: ATEYQzzRLFQB5aVtTU4XMHEQmDlaRl1hEg1ohsiG/wXvw0rNyFFhpqLeQwOmrNW379v
+	4efICLSiv9N04Wujc78lddyuupLMyTpcse0Df7BFI6b5on4iD2ML6e8P2Z4yKiLbwxhP5cAcvIb
+	tRx6GoXXCi7gMIk+HyNnfY203J/blBNAD5qHsWiKIPoLlTlVYTrYGlQqEHQazCdQzQeM7MEXr4Q
+	iALZ8i8eBTgA4isUvC+9vXe/j+6n0DxYSSUTiMV/MPm9G0Xu0HHS2Enujzb3rPsvQgv5eYZbPyA
+	bY6L8nziAPdm+91q8Qv4SumxIYyxxcVpkWex32NlAavcVT1ECr5S4runRSD0iceJIumHNUJFy/y
+	iHyY9FzTg5BF7f624Iz/XipLKl2HlK9un8FB+POC6mejvku/+NRv+8190kVty4gfNhbWNj3aFNB
+	povfhozWb7jCtj0+3aWnV+rvBiqhfUFrNOwLrPlfn2TqbmdI6wpBiLSvr3wUMvIsGjm5Fsbum9N
+	IBNpREyjA1XIUWkpAjMI0mp
+X-Received: by 2002:a17:902:d2d2:b0:2ad:ad65:7df1 with SMTP id d9443c01a7336-2adad658681mr15815115ad.19.1771950421329;
+        Tue, 24 Feb 2026 08:27:01 -0800 (PST)
+Received: from pranav.. ([223.228.39.154])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ad74f5ee0asm111721345ad.34.2026.02.24.08.26.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Feb 2026 08:27:00 -0800 (PST)
+From: Pranav Kharche <pranavkharche7@gmail.com>
+To: linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org,
+	Pranav Kharche <pranavkharche7@gmail.com>
+Subject: [PATCH] gpio: gpiolib-swnode: Remove deprecated label fallback for GPIO device lookup
+Date: Tue, 24 Feb 2026 21:56:06 +0530
+Message-Id: <20260224162606.645147-1-pranavkharche7@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.54 / 15.00];
-	DMARC_POLICY_QUARANTINE(1.50)[huawei.com : SPF not aligned (relaxed), No valid DKIM,quarantine];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[google.com,microchip.com,intel.com,linux.intel.com,kernel.org,bootlin.com,hisilicon.com,huawei.com,marvell.com,lunn.ch,gmail.com,davemloft.net,oss.qualcomm.com,amd.com,rivosinc.com,linaro.org,stgolabs.net,gondor.apana.org.au,linuxfoundation.org,microsemi.com,deltatee.com,arndb.de,vger.kernel.org,lists.infradead.org,realtek.com,lists.freedesktop.org,lists.linux.dev,ffwll.ch,semihalf.com,zonque.org,linux.dev];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32139-lists,linux-gpio=lfdr.de];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,netdev];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jonathan.cameron@huawei.com,linux-gpio@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[86];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.953];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,rock-chips.com:email,huawei.com:mid]
-X-Rspamd-Queue-Id: 847D8189B80
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32140-lists,linux-gpio=lfdr.de];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCPT_COUNT_THREE(0.00)[3];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[pranavkharche7@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	NEURAL_HAM(-0.00)[-1.000];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 7BA68189C9B
 X-Rspamd-Action: no action
 
-On Mon, 23 Feb 2026 23:29:40 +0800
-Shawn Lin <shawn.lin@rock-chips.com> wrote:
+Signed-off-by: Pranav Kharche <pranavkharche7@gmail.com>
+---
+ drivers/gpio/gpiolib-swnode.c | 18 +-----------------
+ 1 file changed, 1 insertion(+), 17 deletions(-)
 
-> pcim_alloc_irq_vectors() and pcim_alloc_irq_vectors_affinity() are created for
-> pci device drivers which rely on the devres machinery to help cleanup the IRQ
-> vectors.
-
-It might be worth adding some details on why we need the is_msi_managed
-flag in the first place vs just doing conventional devm_add_action_or_reset()
-with pci_free_irq_vectors().
-
+diff --git a/drivers/gpio/gpiolib-swnode.c b/drivers/gpio/gpiolib-swnode.c
+index 0d7f3f09a0b4..d6ab5bf0d2f1 100644
+--- a/drivers/gpio/gpiolib-swnode.c
++++ b/drivers/gpio/gpiolib-swnode.c
+@@ -43,23 +43,7 @@ static struct gpio_device *swnode_get_gpio_device(struct fwnode_handle *fwnode)
+ fwnode_lookup:
+ 	gdev = gpio_device_find_by_fwnode(fwnode);
+ 	if (!gdev && gdev_node && gdev_node->name)
+-		/*
+-		 * FIXME: We shouldn't need to compare the GPIO controller's
+-		 * label against the software node that is supposedly attached
+-		 * to it. However there are currently GPIO users that - knowing
+-		 * the expected label of the GPIO chip whose pins they want to
+-		 * control - set up dummy software nodes named after those GPIO
+-		 * controllers, which aren't actually attached to them. In this
+-		 * case gpio_device_find_by_fwnode() will fail as no device on
+-		 * the GPIO bus is actually associated with the fwnode we're
+-		 * looking for.
+-		 *
+-		 * As a fallback: continue checking the label if we have no
+-		 * match. However, the situation described above is an abuse
+-		 * of the software node API and should be phased out and the
+-		 * following line - eventually removed.
+-		 */
+-		gdev = gpio_device_find_by_label(gdev_node->name);
++		
+ 
+ 	return gdev ?: ERR_PTR(-EPROBE_DEFER);
+ }
+-- 
+2.34.1
 
 
