@@ -1,120 +1,128 @@
-Return-Path: <linux-gpio+bounces-32123-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32124-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uK9rNr5wnWmAQAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32123-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 10:34:54 +0100
+	id kKwBKxBxnWmAQAQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32124-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 10:36:16 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14241184AE2
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 10:34:54 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1432184B2C
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 10:36:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 5B7E8306804F
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 09:29:46 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B59343077344
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Feb 2026 09:31:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B26A036C0B7;
-	Tue, 24 Feb 2026 09:29:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F4E436C5A0;
+	Tue, 24 Feb 2026 09:30:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LsHy57iB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mIdQGvEN"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7503436BCF2
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 09:29:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CC136C584
+	for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 09:30:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771925384; cv=none; b=B7qr4/M7yKKPoyxeTAdN0IyKPtpiGnx+TCb+u1LKzDZxECr7T41Puts3rrJi6WcSGOr2JFndWKD2dEMkhFxTrxwhxd7x3zAJmW0k/SE2+T0kfjM0pjw0L1U8qe1oQzkYxyzUAP8DJBxOm72at/VBasBewE5YSNqM0UcYEGkNFJg=
+	t=1771925459; cv=none; b=RTUbp2YGEI5ZeHCE6wxz/yN769Pi19Hzh7mIGjUFS3mx1eYXeQlzMFWonJ7K7cVErP2YqhJya1MzhibKBPoaR9ICBqRF9kDrHp+jnTq3bCfaIwQsg7AZQx4QdSx9CApOacSQGmUD4G2tFuXEYbyVXMrktkuW9nYXODf1pBc9dIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771925384; c=relaxed/simple;
-	bh=h6KKRUfDW566ul4h6cXZgCRbTIiUl8O0y3KUv9cSNeg=;
+	s=arc-20240116; t=1771925459; c=relaxed/simple;
+	bh=qFoSCUCgWPxot+zyIzeYtu7f0ut9mFHpqgCHWGjjgGM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GAy6N6o4IOQzrvOfkp/h2ni/WE+C8qlUThcR89Km8fYd6TodcCkAehqlgpyIL4gtvYp19FyTYOl4lTHYyhdgM9JG/VGpte8+rukbgCkhAclhawVOos6uyAGQdJjuRqO4oVkS8VXgVUsOoa1txQ4mcd6gz8YWjUfRiC3X+1lJZU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LsHy57iB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BC00C2BCB1
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 09:29:44 +0000 (UTC)
+	 To:Cc:Content-Type; b=rf0obqOo/Fn4Gtb6LJluX4YrXNuMAsyn7TX8BFtWJiYqtOeU1Pbxq1UAy0FUxh8L512VZA9Q0IM1fz+uWud/9/KT8u5ZXps0FiM5PRwKY6VROAER3AakoUTraaXxCDTlHolZspZ+VNUdAE3mV0q7tCjHB2YMwktkrfWD5NwMPjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mIdQGvEN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1737C2BC86
+	for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 09:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771925384;
-	bh=h6KKRUfDW566ul4h6cXZgCRbTIiUl8O0y3KUv9cSNeg=;
+	s=k20201202; t=1771925458;
+	bh=qFoSCUCgWPxot+zyIzeYtu7f0ut9mFHpqgCHWGjjgGM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LsHy57iBMpo013UlQtALDRRVdykGnh1kRilOVuXxeXD9MLhQuHhBaJ/Yl2mE5695V
-	 I1QFvxxqZIbMJyBczZ5jQNNCL0aOM2Onl8kZtj+91SNAqsa6iD5ESTex4MJ39UbmTc
-	 yD6xDQIiFJ+fd0g52I/VdLQf6zQ+urTVv6iGiy8e6QoMhPRrtsSG4K3T8GZFjc7KDf
-	 +dVmv2asnE4ONHSwrMUG3Wh1+uVk1wE5Zyk9Ni5cYUIfe9LswbU05vACKja9jDX9Tn
-	 klpkqkGFSFFdDiKuK6iRkXPlwPqoPhXe2PEMeBOreN8pOvo7MHDeIGR3lN2PYGR+HN
-	 V3gHZ54sz4wdQ==
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-794719afcd4so54182337b3.1
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 01:29:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX1LYAZ80Yh7w7PcdFLcAjhlYQAGUpkspLwaa43epTP3aqpjl8VTKzo1WSgnpVzq1iPtezX1ei/cfxV@vger.kernel.org
-X-Gm-Message-State: AOJu0YzG/UDPMSXWQc7/pv/2dxiLuznZonswS4NZgzxkQIWpXBv9mbtL
-	zSnq/WmzG5pSXVWOSuJ9tZPsy1sxFKDO9R61SNXripD2FEzwB63a0a/QMNjbty2YIbH918v5vot
-	HEDlLtwcAvwn4ZHssRhSsnKxHcXJFXQU=
-X-Received: by 2002:a05:690c:387:b0:797:d386:44e3 with SMTP id
- 00721157ae682-7982d4d880amr98624577b3.25.1771925383461; Tue, 24 Feb 2026
- 01:29:43 -0800 (PST)
+	b=mIdQGvENKyirm0I0WbhQANOO+Z0g5OknRWpF+j5J1bW0bYVbY2b57HH5fyJi15/yN
+	 iekaDjeGMnDnx5eMOKOQF3S4VCE5O0eLumRtHBW2QFyOBwau0DApAQspVvdjvVmFvQ
+	 Gf5DNTW95ovOUWqHDYU0B6vudj6h0PeECfX/fnMqU7WH5DFSrLEboKW/fjZKOwe2iB
+	 +b5Jse5UWkDXGlfq1yruRFq9QtW6tx2/7jmnzOL3ZYN9aCwkmBPBhkVkA6rMEmx/8J
+	 XXRZdK1pclyWrd3j/aBxiO7mqoipsfC1JgPYdl41wA4fnLCWGj4o43kdTiKpuNr93p
+	 rEZucbdiVpEOA==
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-79860421382so539757b3.0
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Feb 2026 01:30:58 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVMbZTgjebl1RKo3BAhLz+6Yw8p3Jx8sbN3H2naRt+aSm8crp6OyI90rwSI10tj1JQequ9/BA9u8R0p@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMcIurPfdNBeZgdfp2EkHqYbhZvjbk7a5/YHDNfyE9cvcWqM3C
+	s5Jvdar0ECqxqHn7nJeG6ysJ8YWKHIvIhGxWZMskY3bg4G8YWCtUdiUL0jivlTaeVmHGEXp/HpW
+	QF1YVewAhF6O0ufbQTuheTgMZaNUynZY=
+X-Received: by 2002:a05:690c:2701:b0:794:7866:263a with SMTP id
+ 00721157ae682-79828ef26a8mr110201917b3.10.1771925458159; Tue, 24 Feb 2026
+ 01:30:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260223-cs42-v1-1-431b01a6f537@gmail.com>
-In-Reply-To: <20260223-cs42-v1-1-431b01a6f537@gmail.com>
+References: <20260223105717.48779-2-krzysztof.kozlowski@oss.qualcomm.com>
+In-Reply-To: <20260223105717.48779-2-krzysztof.kozlowski@oss.qualcomm.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Tue, 24 Feb 2026 10:29:32 +0100
-X-Gmail-Original-Message-ID: <CAD++jL=Niqy2u6stTbgDUgv5byafS=KCV4evc8vkLbZtdXKRKw@mail.gmail.com>
-X-Gm-Features: AaiRm528PqLfsivU1lCwG1PzrRQA8pS2qMyI7VmlAhF7-qiOU1-s43Rny_INO5w
-Message-ID: <CAD++jL=Niqy2u6stTbgDUgv5byafS=KCV4evc8vkLbZtdXKRKw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: cirrus: cs42l43: Fix double-put in cs42l43_pin_probe()
-To: Felix Gu <ustc.gu@gmail.com>
-Cc: David Rhodes <david.rhodes@cirrus.com>, Richard Fitzgerald <rf@opensource.cirrus.com>, 
-	Charles Keepax <ckeepax@opensource.cirrus.com>, Haotian Zhang <vulab@iscas.ac.cn>, 
-	linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 24 Feb 2026 10:30:47 +0100
+X-Gmail-Original-Message-ID: <CAD++jLmow3f-_W9hCRDHBjxUkVbS96ssnPchPfGxXNbSgrJyWg@mail.gmail.com>
+X-Gm-Features: AaiRm50enX858ywcuPInWGfUc9Lmz7V_abesy4_4DNC9RBPnw7kMzwtulXV191A
+Message-ID: <CAD++jLmow3f-_W9hCRDHBjxUkVbS96ssnPchPfGxXNbSgrJyWg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: rockchip: Fix configuring a deferred pin
+To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, David Lechner <dlechner@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-32123-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32124-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.997];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 14241184AE2
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,qualcomm.com:email,mail.gmail.com:mid,baylibre.com:email]
+X-Rspamd-Queue-Id: D1432184B2C
 X-Rspamd-Action: no action
 
-On Mon, Feb 23, 2026 at 10:39=E2=80=AFAM Felix Gu <ustc.gu@gmail.com> wrote=
-:
+On Mon, Feb 23, 2026 at 11:57=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@oss.qualcomm.com> wrote:
 
-> devm_add_action_or_reset() already invokes the action on failure,
-> so the explicit put causes a double-put.
+> Commit e2c58cbe3aff ("pinctrl: rockchip: Simplify locking with
+> scoped_guard()") added a scoped_guard() over existing code containing a
+> "break" instruction.  That "break" was for the outer (existing)
+> for-loop, which now exits inner, scoped_guard() loop.  If GPIO driver
+> did not probe, then driver will not bail out, but instead continue to
+> configure the pin.
 >
-> Fixes: 9b07cdf86a0b ("pinctrl: cirrus: Fix fwnode leak in cs42l43_pin_pro=
-be()")
-> Signed-off-by: Felix Gu <ustc.gu@gmail.com>
+> Fix the issue by simplifying the code - the break in original code was
+> leading directly to end of the function returning 0, thus we can simply
+> return here rockchip_pinconf_defer_pin status.
+>
+> Reported-by: David Lechner <dlechner@baylibre.com>
+> Closes: https://lore.kernel.org/r/f5b38942-a584-4e78-a893-de4a219070b2@ba=
+ylibre.com/
+> Fixes: e2c58cbe3aff ("pinctrl: rockchip: Simplify locking with scoped_gua=
+rd()")
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 
 Patch applied for fixes!
 
