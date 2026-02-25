@@ -1,318 +1,265 @@
-Return-Path: <linux-gpio+bounces-32192-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32193-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yNDGJ25jn2lRagQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32192-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Feb 2026 22:02:38 +0100
+	id GFstIwSMn2nYcgQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32193-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 00:55:48 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAFCA19D8DF
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Feb 2026 22:02:35 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DADF019F2C3
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 00:55:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DDB84303E6AA
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Feb 2026 21:02:28 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AE43A304565B
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Feb 2026 23:55:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B0ED30E834;
-	Wed, 25 Feb 2026 21:02:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3422387364;
+	Wed, 25 Feb 2026 23:55:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a23zWkRX"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="n5Vjs3ay"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011034.outbound.protection.outlook.com [40.107.130.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AF530B52A;
-	Wed, 25 Feb 2026 21:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772053345; cv=none; b=lE0Jtvg/TEHTNLsh2ucDE7odT43h9S2IsmJxyRLrEusSAsv4FQV3XZy4NT3vs/7RvPD/+TTNB/WiEUe/w+9BeZs1DImHhijwhSoP0SAe2kzYkTNC04pSDg9an6t5e04BRCgLnhUrY6VRntUEiB3TPbmVHghr7DZ0UGIozY1RKvI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772053345; c=relaxed/simple;
-	bh=Jy6N4IhDvASBtWTrPNraJpD5E/n58S/X9rF10vWsGxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KLnqgjL3pEiG8X0TzwXgG8epLV8LrwxZfbpVRa5hMeMHZP9F1WGNaqNu9kkmzk4rX9ANa2dyRLnW+fkie+ThiFgTSw/HmuTIFDLqaeGWz6rPzNtnsCLZUcXNzw+xGT9vysGFfGWKruDxFjAJs0psRmdiPnV7rCAzIN6hGFO5SH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a23zWkRX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12D99C116D0;
-	Wed, 25 Feb 2026 21:02:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772053344;
-	bh=Jy6N4IhDvASBtWTrPNraJpD5E/n58S/X9rF10vWsGxo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a23zWkRXy8vl9KpsWM3WnIQDHv5KYZxIkD9EzaTAuYeMVllHnEtvD7eDFZIOvpovG
-	 NyT3pHLz6vBKDacWjPBF2Y7YLvtK+UpcOHVeAlr6IVFmUMqOKUyLUHoxeLCIefGe/4
-	 KDA1ElBAy3D3WtzRCmMr1IRZmeKwexlOtSozi568vaUtgwtjjov2SRc8vLAmc5upa8
-	 fpy5OHgptojo/HYMS3m2GA6hFJcObfwfN0rCVE7s9b9LwjKgcEot1q8FAEhsyU6svv
-	 huy/XM8X573n77N53VjBQ3iJdQ/gcaCcs++iMY0V9TjMjmLkJ5YpeyAvbI0yX0qepC
-	 WUD4dpEJBnxZw==
-Date: Wed, 25 Feb 2026 15:02:18 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Shenwei Wang <shenwei.wang@nxp.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, 
-	Mathieu Poirier <mathieu.poirier@linaro.org>, Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>, 
-	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Frank Li <frank.li@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Shuah Khan <skhan@linuxfoundation.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v8 3/4] gpio: rpmsg: add generic rpmsg GPIO driver
-Message-ID: <l7vmhr5rg444pqp47x2k5ejamjnisx5rqwfmfr6m2tjazxpbm6@wq2vd4hcxco2>
-References: <CANLsYkxAwgG1WkMRr8EJZuSUnN_jKVnsWhWTakVqhvtMBO365A@mail.gmail.com>
- <PAXPR04MB91851D3DA6A92669CB5926A18974A@PAXPR04MB9185.eurprd04.prod.outlook.com>
- <CANLsYkw-8ERXy3v8Sv55Cpq=+41Toez3EjLMbENAkavvr8STeQ@mail.gmail.com>
- <PAXPR04MB9185B68BC640D940534E44098974A@PAXPR04MB9185.eurprd04.prod.outlook.com>
- <d4c8f7dd-c0a8-4721-9750-47429637d8c1@lunn.ch>
- <PAXPR04MB9185BB6443B9E1E407F409D68974A@PAXPR04MB9185.eurprd04.prod.outlook.com>
- <ndozoc6qdrpv3xuktumsah56im5rbtg6iwerq3xi2xkcuyewpx@szswqvojleg3>
- <AS8PR04MB917652D63DB090D22129D3D78975A@AS8PR04MB9176.eurprd04.prod.outlook.com>
- <2b72kkgwe5hio4uwrxj5oi72llkxhx7egw442fugq6unv7unah@5bfve7k3mvky>
- <PAXPR04MB918508A39832000D786E8F938975A@PAXPR04MB9185.eurprd04.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F173859E9;
+	Wed, 25 Feb 2026 23:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.34
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772063722; cv=fail; b=GMvNICo/+nmMvHPCySpZHTCDaDXFpcwk7ezXgdUml8nUlMEV0Me5sWJUQV+rT9/zC18qmZaG2bznRGsdP4xxHjkBT5hgTUbHQdepinSqgquLnwu2No0WtSv5/7uoLvcZke8SsGjfbJH9k6IBi8pcK4RhQelVboZ+vjpSdIXer+E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772063722; c=relaxed/simple;
+	bh=VR87HbuZL75C8pD3gZf5avwhDW6o9pp8eG1fppmoNmE=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=JudnWrWH84Kf0wcloOePYJph2gcb3APst92apvK+6UFik3BLCii6oLY8CFAVd0nE2l3t/DIamlciPdxhLoJs+2etccpjA7UinW8lPebkKDjSmuMjAklTzX97Cy+jYD/E1g4sgD6KRUZEo20KT0e1vfiU9wsktNmSx31zihTTR8Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=n5Vjs3ay; arc=fail smtp.client-ip=40.107.130.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=W/Stx3+lzdtUgZ3SsWvInxxl8tTlN2Ux60oYcIqOJhBhw12xLBm7zE3Kr/lrN6PwXBvk8bNk+C8EHFTjcqkw1ZtEaNHhny57ZLdjDol3SnPX51xudk8DZTSzGJRLY/eQOlmjsOeitzLM/9WjxkueLoo3YdInqM5NN/qbpHQUIGoLPRgE4xCwXmtH6utwY2aFgFNvltmr5EKOuU4mFhCE0XbJGvHl/WygNUWeDjn8taAobLwF41UFwTCotEI3TqWKsOK74jrjEwiNtc8dJvIrKQEfjLmbkkAL1okk0iUswTl88aiGPTK/U/cLd3++NcNCKUsjPVsFQOeEJI9grnELPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=g0sdwGUTTKKqpinwFep+q0F9vtbeo/zP8nEEcCYnVhE=;
+ b=A6tE1PWfD7MvKi04VmF2e8szLTr4tBSNMlIXk0CbQSS27BHHAR+/yIrq2jjtpD39ZvhQ2S0xX6q4yb5Z71fbalqOG1Ew/2nyMXdpnQ53urH0TVFThSuoBu7F85ClIv88UGZHAv4UP83Z1h4Ezwmv3weJeNyIKZtEg4iVjQeIurKw+CqVFiKbCzKGpmgGkuktBUhH2baXyE4T8hQ/lpKScgM53bM0+Af7IYWKSUJPZeqioQXD9R2chaWDiqQs2Yo48eY78AmzZ99WGRmFGtRW/7AW+EZQdhCmkCzPmbDtHs+ln30Dwu+3Zfy7/Al53AkJX3BmRimoDjPpfCHRVng3eA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g0sdwGUTTKKqpinwFep+q0F9vtbeo/zP8nEEcCYnVhE=;
+ b=n5Vjs3ay9aOeHWc/dWiDNHxFIVBAXktV17P13aa2w7P1X7KjaZ2HpazLJMdYKWzWCyjaYl0s3qwHl0fpzLLRttQSepyOacVJcs79L8S06ASj2Hix+Uy5a0yUQBeV5mzZAhLhuDg5dM1BrDbbXrYXtqgIQi+EZAxWLUuOHv+YMnSA0ztAWWMid2Z3zf/ZvimWbu2Z6SZq8iAA2axOgkKnY8al1wbN5FJfAypZGyXB61jbbb59eHfGAE+x9PZOOOZTOKizZWhBjLGDJZ/1yvhogVoTTZUAQV97gsAe5ipTV68cvAp4qTdOnVVxht0ES8YRrd76jQev6Mlru8jRXmInPg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
+ by AS8PR04MB8771.eurprd04.prod.outlook.com (2603:10a6:20b:42c::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.13; Wed, 25 Feb
+ 2026 23:55:16 +0000
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9632.017; Wed, 25 Feb 2026
+ 23:55:16 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v2 0/6] pinctrl: Add generic pinctrl for board-level mux
+ chips
+Date: Wed, 25 Feb 2026 18:55:04 -0500
+Message-Id: <20260225-pinctrl-mux-v2-0-1436a25fa454@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIANiLn2kC/1XMQQ7CIBRF0a00fywGqAXqyH2YDpRS+xMLBCrBN
+ OxdbOLA4X3JOxtEE9BEODcbBJMworM1+KEBPd/swxAcawOnXFDOWuLR6jU8yfLKZJx63d2FYN2
+ JQn34YCbMu3Ydas8YVxfeO57Yd/05/Z+TGKFESDVyJloplbrY7I/aLTCUUj5fz9tIpAAAAA==
+X-Change-ID: 20260213-pinctrl-mux-df9c5b661540
+To: Peter Rosin <peda@axentia.se>, Linus Walleij <linusw@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, Haibo Chen <haibo.chen@nxp.com>, 
+ Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1772063713; l=3512;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=VR87HbuZL75C8pD3gZf5avwhDW6o9pp8eG1fppmoNmE=;
+ b=74GRmhWVwGZ7KCpa5VtCibFbNvTK6uQVBM6CSGTK0ANEwkzMmDmeWPTKT72fcZT+0EdjbHs4K
+ W92rAqSI8YFCzrBcztT++BbKq8C6JYYKTZnJLUKXaukkU4TUG3TJ7wT
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: PH8PR02CA0020.namprd02.prod.outlook.com
+ (2603:10b6:510:2d0::9) To PA4PR04MB9366.eurprd04.prod.outlook.com
+ (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <PAXPR04MB918508A39832000D786E8F938975A@PAXPR04MB9185.eurprd04.prod.outlook.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|AS8PR04MB8771:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1bba6405-98c7-48d6-6359-08de74c9532c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|19092799006|376014|7416014|52116014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	lED/tRYRbXFFSWJ3s4B01/iWZyrV9btgM7S1K+nreY95+lSHQDzsztW2cvk+H0pQxpOFE05TgAVFinyKAc19NltfvByqiwD1G/yOeX8HTTtDkrgCT/GdwznpvHpyYr2extxSHQURpHQ623Xnpj66YBIxQv4bmrOVFLM/BVLPL4fmFBceI5ABefIKit3hYU7Ymw11JAeH1lZPUS/5+I6sWKpFB52gCvxd6s/pGRwmuLgG1LZniOF6JiOd/SctOOy9OWmj2NHXFm19Wh/jvLptpkUsBgm24eVcIEhCNOJzr1zoCxxsg71IfoXXDsu0qaj1hn/9B/Z9r3a2rSB7I+qC4junftkZMoGqbVv+ImxX84tloBsJDzwoO2dRsmhK3VrrOIc8+lYxpnIHNrUTosQKRFl6uMzrOz208hMr6xTM5pfhLhm3HqGR05Z881OqjEvPpbH7Bh8AfOPCynD4jdqpaf9PQOp8oI83evS3egtgl9CZQeCEBiYV9lUsQRWExC/jS8VWhfuqvMNzCZdoY2isIMH0t/WDsjAVQ4fHq9uczwI+5Uix6HfVjk1IGpfj7cwKaTDJHsYcf35qGOESPSRyvSR+uA7daQgkXo33Ita74KEKAo5l8QB2FspIwLxGXVJjeQr1MV9xcICGjyvwojzl2Nmw0PS68xRTxqTjUK786eG3trdROAJEEyHsg5+6uzIEuFyM8Rmd1rSmtHgjjwetP2vC+aGzMK0fk2o3NqSA57QXfjsoQ6R1SfqORR4ch3Tl+mU+oZedDHG367is3mfwvAFYeq9puOhKCKGWNRsIcZ8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(376014)(7416014)(52116014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZXhoRVpRcTZ2LzdEVzZxZFdJV0lXR3RIL2JzS2ZUV3BKMHIwV1V5WWxETEho?=
+ =?utf-8?B?N0t4UmZmZm5xMWJGM0QwSEhTTjZ0SlduYjZmMldoMTdmT3VXdTFCYkZPVHNs?=
+ =?utf-8?B?bmVFR3pwNlkyUlh0bWl1cjZLYVV6ZDN1anlOTEw3RW81UExnbHFDS3EzSGVM?=
+ =?utf-8?B?Nk1BSEZxbVM1M25jSHVqZndzRlhtUjVZbmU2SnJaNHJaMlVEWVZxZmkzdlJp?=
+ =?utf-8?B?NW5iSUt1SnRkMXdaY3lGVnRWdnEwTHdTUmJRSFYzaERINEVvcklJTXhqWWNu?=
+ =?utf-8?B?OWRaeCtTamMwTmZjdFh5UFNPWENEQjkyeXJZbFg3OGFyZjArSDhyYzJySy9Z?=
+ =?utf-8?B?eVRwQ0VoejdiTENKN082MW4wLytpTXVVU0orK2RjQzNyM1Z5M3VyRUZQcW1j?=
+ =?utf-8?B?S3RTUUlMdmpYQy94cVVseGRKNFNRTmJpbW1xWXVZMHV2eFdESkFKRVNwL2hG?=
+ =?utf-8?B?YjFSbjRaakRvVE1SNVhQZ3dCSy85SGRmN1U0TUR6RDJyeHRZdmhoTGpnd0ww?=
+ =?utf-8?B?YlEwTGt3OEU1WU11NmQ0YmJadFM0SlRST1NvUTVNVkorNXJNRDh0NW05M0hQ?=
+ =?utf-8?B?ZWRURkVVcktNc2ZsN2pkdmRqdG1NaFN0OExjNm40d000dGQyMS84YmNBM2NW?=
+ =?utf-8?B?Q0xiOENQQW90bjI3WS9wclV5WkdCNlN4UGtWQlhhdll0WUFYMTdPZlRBRlc5?=
+ =?utf-8?B?YlV0NWNoL0hUdmFhY204Zk1TV29IUUljc05FWHAvYmFZS2pkb09FOUtNZ1dr?=
+ =?utf-8?B?eHptL3JaR0FqY0xsaXd6L1ZEUms5cHFEQnhwSmdnRHZpd2RFWE1LNHYyK09I?=
+ =?utf-8?B?T3Y4U0RQSUF1T3M2S1V1QTFQaFI1a3B3M2xqVW41MTJhWmdKWjFST0JLOHZh?=
+ =?utf-8?B?RWdQQ3lOYTlZN2hBeXhveGRZRE1Nb2FEeEJMdCs2K1dtMHM4LzkvK3pRTzNl?=
+ =?utf-8?B?VGZIY1NsL2YxU1Jjc0p2Mk5sSXBxVGlkS09OaE1RS0FzZ0VqQVhIRXl4OXVi?=
+ =?utf-8?B?SHdkeUFNNm9CUXFRQW9tVzhzRkZ2ZWhCK3NZd3dpNU5aQ0FMYVRzT2J0RDNB?=
+ =?utf-8?B?c0pTZGFqTzNmckh3SjdEa3pNOXJTTXhYeDgvUjZLVHd2VFFaOFlDTXE3VjN1?=
+ =?utf-8?B?N2QyK014MEFSekUyZzdOTVcxQkxtb2JyaWJMY3d6eUNpTGJkTTZrbE9ZQVNJ?=
+ =?utf-8?B?OUthbGJMMVRRckJwdUI1UHFaOWJ2SnNuMTVKVnZJQkZLM3k4aThUV3BIOSsy?=
+ =?utf-8?B?b1EweERzcmg1RFR6b3pBN0VyRVhjMGpMTWQ1Nm95V1FaVDk5TUhFMDNZcUgw?=
+ =?utf-8?B?Mzd0YXdLZGpBMkFEWVRKM1NVMGJ2SE5MRTVob3d6MzgxY254WjhRZFpkdEhF?=
+ =?utf-8?B?MWhGQXFNSHQ1WEFLWllJaHpjalpjVWdCRmZYenFXMUd1bGtoWERpbUZOYXha?=
+ =?utf-8?B?b0xGNTJkSi94eXRGUEo5TU84N0ZOK0plcEErWjNPZ3dDcXZXRjRMSzRRVlg0?=
+ =?utf-8?B?MTN1Q0l6Mll4TFdKc25ETGUwVjFScWJLSGZxMmp0dVBIcE5waVJNSXpDcm1B?=
+ =?utf-8?B?cy82MU0yWlJNeUhjcElaVkFEeG5abnRKbUJsWCtEWlB5ZWJxeGx4ZjBlZElM?=
+ =?utf-8?B?amhZRGppUk1sR2VkYVlsbG9oZW5TR1hkcVFUN2VQbThTT05BYzBOdlRiNTlU?=
+ =?utf-8?B?eDRBVTJ3K1N4bktaL0s5QllUK2tqbDVTTEFLQ01Ka3I0d1NzSWY2TCtCdTNO?=
+ =?utf-8?B?QzNBUDZxb1RVSmVielMyS3ppcVRNS0hEQjJ5UjJiUUsySDNITkxBazVIOVpM?=
+ =?utf-8?B?Qk1NaXl0c0hmSkNGbTFKK1BZQ2NlbUtickZCVjhnNFl6c3krMzRGcURqSkl2?=
+ =?utf-8?B?VUFiZnB3YUhYMm5tSXZaOHdZYkZnZnFFOTl0YnZIVVowMjNxWG0rMm5iYk9a?=
+ =?utf-8?B?Q2hNUU9GSCtxNnpVaDVML1NJU0ZLc3B6OWg0MThKbVo2bHhNTFZYS2dNYlh6?=
+ =?utf-8?B?T0EzbnBvNjFlUlNKWmtMalNsekRyVE43Mklib2o5aDBZcVplUCt5RG5oTWNP?=
+ =?utf-8?B?NXhnSEU0MG1tSkxCQWxwWk5MTnhlK1lnNDhHa1lpYkZUS3M5dEtFd3oveU5H?=
+ =?utf-8?B?MStuMzdpOGtXZkQ3OTFaNm9ZbURsNU5tN2k1RjFZWnRWWjJIa2F1N080eXBZ?=
+ =?utf-8?B?ZVlyd25kSDhBLy8va0N6SEl4cUJyVmQ1ZTkrNmdQNGIwa05iRU1mZ0ZKRFZj?=
+ =?utf-8?B?M09yanVITUNqWjdqa3Z0R1NERVR5emdBamd0QzVXaTBEb2wrcWpENldqYUND?=
+ =?utf-8?Q?bi2hX4G77uWcEi2pex?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1bba6405-98c7-48d6-6359-08de74c9532c
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2026 23:55:16.7442
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6XKHAiJ3kdnh3Lm8ZbFV3PGfiHbDHRwDEPnglDBI/EbG5kiwLBI1Rxw49m8pezWEKxUOyhI8XiCT6MZpuqRL6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8771
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
+	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-32192-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-32193-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[lunn.ch,linaro.org,foss.st.com,kernel.org,lwn.net,nxp.com,pengutronix.de,linuxfoundation.org,vger.kernel.org,gmail.com,lists.linux.dev,lists.infradead.org,bgdev.pl];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[axentia.se,kernel.org,milecki.pl,pengutronix.de,gmail.com];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-0.996];
-	FROM_NEQ_ENVFROM(0.00)[andersson@kernel.org,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	BLOCKLISTDE_FAIL(0.00)[172.232.135.74:server fail];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: CAFCA19D8DF
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[Frank.Li@nxp.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[nxp.com:+];
+	NEURAL_HAM(-0.00)[-0.997];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:mid,nxp.com:dkim,nxp.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: DADF019F2C3
 X-Rspamd-Action: no action
 
-On Wed, Feb 25, 2026 at 08:31:33PM +0000, Shenwei Wang wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Bjorn Andersson <andersson@kernel.org>
-> > Sent: Wednesday, February 25, 2026 1:44 PM
-> > To: Shenwei Wang <shenwei.wang@nxp.com>
-> > Cc: Andrew Lunn <andrew@lunn.ch>; Mathieu Poirier
-> > <mathieu.poirier@linaro.org>; Arnaud POULIQUEN
-> > <arnaud.pouliquen@foss.st.com>; Linus Walleij <linusw@kernel.org>; Bartosz
-> > Golaszewski <brgl@kernel.org>; Jonathan Corbet <corbet@lwn.net>; Rob Herring
-> > <robh@kernel.org>; Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor Dooley
-> > <conor+dt@kernel.org>; Frank Li <frank.li@nxp.com>; Sascha Hauer
-> > <s.hauer@pengutronix.de>; Shuah Khan <skhan@linuxfoundation.org>; linux-
-> > gpio@vger.kernel.org; linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > Pengutronix Kernel Team <kernel@pengutronix.de>; Fabio Estevam
-> > <festevam@gmail.com>; Peng Fan <peng.fan@nxp.com>;
-> > devicetree@vger.kernel.org; linux-remoteproc@vger.kernel.org;
-> > imx@lists.linux.dev; linux-arm-kernel@lists.infradead.org; dl-linux-imx <linux-
-> > imx@nxp.com>; Bartosz Golaszewski <brgl@bgdev.pl>
-> > Subject: [EXT] Re: [PATCH v8 3/4] gpio: rpmsg: add generic rpmsg GPIO driver
-> > 
-> > Caution: This is an external email. Please take care when clicking links or opening
-> > attachments. When in doubt, report the message using the 'Report this email'
-> > button
-> > 
-> > 
-> > On Wed, Feb 25, 2026 at 05:54:00PM +0000, Shenwei Wang wrote:
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Bjorn Andersson <andersson@kernel.org>
-> > > > Sent: Wednesday, February 25, 2026 9:53 AM
-> > > > To: Shenwei Wang <shenwei.wang@nxp.com>
-> > > > Cc: Andrew Lunn <andrew@lunn.ch>; Mathieu Poirier
-> > > > <mathieu.poirier@linaro.org>; Arnaud POULIQUEN
-> > > > <arnaud.pouliquen@foss.st.com>; Linus Walleij <linusw@kernel.org>;
-> > > > Bartosz Golaszewski <brgl@kernel.org>; Jonathan Corbet
-> > > > <corbet@lwn.net>; Rob Herring <robh@kernel.org>; Krzysztof Kozlowski
-> > > > <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>; Frank Li
-> > > > <frank.li@nxp.com>; Sascha Hauer <s.hauer@pengutronix.de>; Shuah
-> > > > Khan <skhan@linuxfoundation.org>; linux- gpio@vger.kernel.org;
-> > > > linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org; Pengutronix
-> > > > Kernel Team <kernel@pengutronix.de>; Fabio Estevam
-> > > > <festevam@gmail.com>; Peng Fan <peng.fan@nxp.com>;
-> > > > devicetree@vger.kernel.org; linux-remoteproc@vger.kernel.org;
-> > > > imx@lists.linux.dev; linux-arm-kernel@lists.infradead.org;
-> > > > dl-linux-imx <linux- imx@nxp.com>; Bartosz Golaszewski
-> > > > <brgl@bgdev.pl>
-> > > > Subject: [EXT] Re: [PATCH v8 3/4] gpio: rpmsg: add generic rpmsg
-> > > > GPIO driver On Tue, Feb 24, 2026 at 10:43:06PM +0000, Shenwei Wang
-> > wrote:
-> > > > >
-> > > > >
-> > > > > > -----Original Message-----
-> > > > > > From: Andrew Lunn <andrew@lunn.ch>
-> > > > > > Sent: Tuesday, February 24, 2026 4:15 PM
-> > > > > > To: Shenwei Wang <shenwei.wang@nxp.com>
-> > > > > > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>; Bjorn
-> > > > > > Andersson <andersson@kernel.org>; Arnaud POULIQUEN
-> > > > > > <arnaud.pouliquen@foss.st.com>; Linus Walleij
-> > > > > > <linusw@kernel.org>; Bartosz Golaszewski <brgl@kernel.org>;
-> > > > > > Jonathan Corbet <corbet@lwn.net>; Rob Herring <robh@kernel.org>;
-> > > > > > Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor Dooley
-> > > > > > <conor+dt@kernel.org>; Frank Li <frank.li@nxp.com>; Sascha Hauer
-> > > > > > <s.hauer@pengutronix.de>; Shuah Khan
-> > > > > > <skhan@linuxfoundation.org>; linux- gpio@vger.kernel.org;
-> > > > > > linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > > > > > Pengutronix Kernel Team <kernel@pengutronix.de>; Fabio Estevam
-> > > > > > <festevam@gmail.com>; Peng Fan <peng.fan@nxp.com>;
-> > > > > > devicetree@vger.kernel.org; linux-remoteproc@vger.kernel.org;
-> > > > > > imx@lists.linux.dev; linux-arm-kernel@lists.infradead.org;
-> > > > > > dl-linux-imx <linux- imx@nxp.com>; Bartosz Golaszewski
-> > > > > > <brgl@bgdev.pl>
-> > > > > > Subject: [EXT] Re: [PATCH v8 3/4] gpio: rpmsg: add generic rpmsg
-> > > > > > GPIO driver
-> > > > > > > Please explain how you would design your generic rpmsg-gpio
-> > > > > > > driver which is derived From gpio-virtio?
-> > > > > >
-> > > > > > We have already seen the virtio commands are pretty much
-> > > > > > identical to what i suggested.
-> > > > > >
-> > > > > > You could just replace virtqueue_add_sgs() with rpmsg_sendto()
-> > > > > > and reimplement
-> > > > > > virtio_gpio_request_vq() to be the callback registered with
-> > > > rpmsg_create_ept().
-> > > > > > The rest of basic GPIO handling should not need any changes at all.
-> > > > > >
-> > > > >
-> > > > > Creating endpoints and calling rpmsg_sendto() is only a small part
-> > > > > of the picture. You also need to manage the service announcement
-> > > > > from the remote side and handle asynchronous notification
-> > > > > messages. That entire flow is already implemented in the existing
-> > virtio_rpmsg_bus driver.
-> > > > > Re‑implementing those pieces just to mimic gpio‑virtio over RPMSG
-> > > > > would
-> > > > essentially mean reinventing the wheel without any real benefit.
-> > > > >
-> > > >
-> > > > I can absolutely see a benefit to this, there are multiple different
-> > > > rpmsg backends supported in Linux, so a gpio-rpmsg driver could be used by
-> > any one of them.
-> > > >
-> > > > I don't see this to be a case of "reinventing the wheel". Instead we
-> > > > copy what looks to be a very functional wheel and make it fit rpmsg.
-> > > > This will result in some "duplication", but rpmsg already provide
-> > > > the life cycle management and has a clean send/callback interface,
-> > > > so there shouldn't be any inventing...
-> > > >
-> > >
-> > > Interesting — could you walk me through how you’d structure the driver
-> > > with the new proposal? I’d like to see how you would layer it conceptually.
-> > >
-> > > The current RPMSG solution:
-> > >
-> > >      On Remoteprc                      On Linux
-> > > GPIOs -> RPMSG -> VIRTIO == VIRTIO -> RPMSG -> GPIO-RPMSG drivers
-> > >
-> > > The VIRTIO solution:
-> > >
-> > >      On Remoteprc                     On Linux
-> > >           GPIO -> VIRTIO == VIRTIO -> GPIO-VIRTIO driver
-> > >
-> > > Your proposal:
-> > >
-> > >      On Remoteprc                     On Linux
-> > > GPIOs -> RPMSG -> VIRTIO == VIRTIO -> ???
-> > 
-> > What I'm suggesting is the following:
-> > 
-> > GPIOs -> RPMSG -> VIRTIO == VIRTIO -> RPMSG -> GPIO-RPMSG
-> >        ^                                    ^
-> >        \-----+------------------------------/
-> >              |
-> >              |
-> > With this interface on being directly derived from the existing protocol (and likely
-> > the implementation as well) using gpio-virtio.
-> > 
-> > You can have multiple "GPIOs" (presumably a "bank" each) instances and that
-> > will be reflected in having multiple "GPIO-RPMSG" instances.
-> > 
-> > I haven't made any attempts at implementing this, but it looks very similar to
-> > gpio-virtio in concept and it looks very similar to the exiting RPMSG tty in the
-> > sense of being a generic implementation.
-> > 
-> > To reach something functional on the Linux side it seems to be a matter of taking
-> > the gpio-virtio driver, register a rpmsg_driver instead, change _virtio_gpio_req()
-> > to use rpmsg_send(), and perform the actions of virtio_gpio_event_vq() in the
-> > rpmsg_driver callback function.
-> > 
-> 
-> Thanks for the explanation. If I’m understanding correctly, what you’re suggesting is 
-> essentially a driver that merges the roles of a virtio_driver and an rpmsg_driver into a 
-> single source file. There may be opportunities for a few function reuse, but overall it 
-> would still result in a fairly distinct codebase.
-> 
+Add a generic pinctrl binding for board-level pinmux chips that are
+controlled through the multiplexer subsystem.
 
-Most of the non-boilerplate code in gpio-virtio would be impacted by
-differences between rpmsg and virtio. So combining the two
-implementations in a single source file would add complexity to an
-otherwise straightforward driver, only with trivial parts reused.
+On some boards, especially development boards, external mux chips are used
+to switch SoC signals between different peripherals (e.g. MMC and UART).
+The mux select lines are often driven by a GPIO expander over I2C,
+as illustrated below:
 
-My expectation is that it will be better to just have two separate
-drivers - but reuse all the design-work done in the gpio-virtio.
+        ┌──────┐      ┌─────┐
+        │ SOC  │      │     │    ┌───────┐
+        │      │      │     │───►│ MMC   │
+        │      │      │ MUX │    └───────┘
+        │      ├─────►│     │    ┌───────┐
+        │      │      │     │───►│ UART  │
+        │      │      └─────┘    └───────┘
+        │      │         ▲
+        │      │    ┌────┴──────────────┐
+        │ I2C  ├───►│ GPIO Expander     │
+        └──────┘    └───────────────────┘
 
-Regards,
-Bjorn
+Traditionally, gpio-hog is used to configure the onboard mux at boot.
+However, the GPIO expander may probe later than consumer devices such as
+MMC. As a result, the MUX might not be configured when the peripheral
+driver probes, leading to initialization failures or data transfer errors.
 
-> Thanks,
-> Shenwei
-> 
-> > Regards,
-> > Bjorn
-> > 
-> > >
-> > > Thanks,
-> > > Shenwei
-> > >
-> > > > Similarly, I'm guessing that there's a firmware-side implementation
-> > > > of virtio-gpio in Zephyr, it should be straightforward to transplant this to the
-> > rpmsg interface.
-> > > >
-> > > > Regards,
-> > > > Bjorn
-> > > >
-> > > > > Thanks,
-> > > > > Shenwei
-> > > > >
-> > > > > > Interrupt support does however need some changes. The
-> > > > > > virtio_gpio_request_vq() replacement would need to see if the
-> > > > > > received message indicates an interrupt and call the equivalent
-> > > > > > of virtio_gpio_event_vq(), since rpmsg does not have a separate
-> > > > > > mechanism to
-> > > > deliver interrupts, unlike rpmsg.
-> > > > > >
-> > > > > > At a guess, 90% of the code would stay the same?
-> > > > > >
-> > > > > >    Andrew
+Introduce a generic pinctrl binding that models the board-level MUX as a
+pin control provider and builds proper device links between the MUX, its
+GPIO controller, and peripheral devices. This ensures correct probe
+ordering and reliable mux configuration.
+
+The implementation leverages the standard multiplexer subsystem, which
+provides broad support for onboard mux controllers and avoids the need for
+per-driver custom MUX handling
+
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Changes in v2:
+- Add release_mux callback,
+  test insmod/rmmod, mux_state_(de)select() called.
+- Link to v1: https://lore.kernel.org/r/20260219-pinctrl-mux-v1-0-678d21637788@nxp.com
+
+---
+Frank Li (6):
+      mux: add devm_mux_control_get_from_np() to get mux from child node
+      dt-bindings: pinctrl: Add generic pinctrl for board-level mux chips
+      pinctrl: add optional .release_mux() callback
+      pinctrl: add generic board-level pinctrl driver using mux framework
+      arm64: dts: imx8mp-evk: add board-level mux for CAN2 and MICFIL
+      arm64: dts: imx8mp-evk: add flexcan2 overlay file
+
+ .../bindings/pinctrl/pinctrl-multiplexer.yaml      |  57 +++++
+ .../devicetree/bindings/pinctrl/pinctrl.yaml       |   2 +-
+ arch/arm64/boot/dts/freescale/Makefile             |   4 +
+ .../boot/dts/freescale/imx8mp-evk-flexcan2.dtso    |  15 ++
+ arch/arm64/boot/dts/freescale/imx8mp-evk.dts       |  23 +-
+ drivers/mux/core.c                                 |  40 ++--
+ drivers/pinctrl/Kconfig                            |   9 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-generic-mux.c              | 241 +++++++++++++++++++++
+ drivers/pinctrl/pinmux.c                           |   5 +
+ include/linux/mux/consumer.h                       |  16 +-
+ include/linux/pinctrl/pinmux.h                     |   5 +
+ 12 files changed, 395 insertions(+), 23 deletions(-)
+---
+base-commit: ff76d257e86235eb07ef33db8644a517c48d1c3f
+change-id: 20260213-pinctrl-mux-df9c5b661540
+
+Best regards,
+--
+Frank Li <Frank.Li@nxp.com>
+
 
