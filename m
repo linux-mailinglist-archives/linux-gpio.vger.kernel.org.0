@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-32214-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32215-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MDPOHj4hoGkDfwQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32214-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 11:32:30 +0100
+	id sOVoECwhoGkDfwQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32215-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 11:32:12 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4FEA1A450E
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 11:32:29 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 941881A44EA
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 11:32:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 915403028079
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 10:31:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EDF9030957B8
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 10:31:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 612223A783A;
-	Thu, 26 Feb 2026 10:31:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C08E3A783A;
+	Thu, 26 Feb 2026 10:31:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="e9pSowpL"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="XbPR2OUO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013048.outbound.protection.outlook.com [52.101.72.48])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011033.outbound.protection.outlook.com [52.101.65.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11183921C3;
-	Thu, 26 Feb 2026 10:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D04D1946C8;
+	Thu, 26 Feb 2026 10:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.33
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772101870; cv=fail; b=cxfDotmfK8aW0h4uCFx8l8eSrMjs7ZXmeUcyjyK4PQdzVZvqVrsnvTP6JeHTTfV2V6AftjdR/4358UwLIfsXqlbWfKvkrtcG2iiUTKXaZjgP4GEsLDh3Rmur043F3XJbRTR0EOv2gBCMwN379cZNZRY8f8CwtFcTpK0KhaUVKxI=
+	t=1772101885; cv=fail; b=PSuGysCil8VuS/Fo/rq1Z11kM9ihArZ/BZQZWcCFIMslVyS5phYJ9+gS+4sGSRwiX8+4MwugJGKelKaBCuFWlLr61PKSe/6jtsumUHQAZe1rm6swCAMtw+fUFbWbny4isLf7wp8ucjAb9bG/zRUdLEBhrdNhZ8u7h1gHcmioVh0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772101870; c=relaxed/simple;
-	bh=gasJ4wp05ecZjpZOI+s8AzkqVLnWLbhhK6NGrLZN2PM=;
+	s=arc-20240116; t=1772101885; c=relaxed/simple;
+	bh=XxXmuJunmmI7TQJrJJeUE6HI3hXEt4Bjw4ry0mHYzAI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=Ahx5jKt/u6DYZPRUBTsbRRuPI5u55naQrUwly+lvAPaBRAoY9ltBXyAu6fETHpkou+yDtUZ/50Dey5zgJyxSR2xBODZ44oTRsS4FL5rwCbXoDRwlJCMoBNmCgYPoph8A51KKCAskHBwb4BydikyjocWFXZNModnzuBBulkCuvaA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=e9pSowpL; arc=fail smtp.client-ip=52.101.72.48
+	 In-Reply-To:To:CC; b=j6qa3iZKUsAYm2q9KpkpIUnVooqOs8Dl4auGi8iB3X/DgiwC1yx7P1O8xYHNsl0q8z16F2m/VESC1PNHDozGb72cGvKOSMQ11PWJpxOivDKvBWPtmEps2s9JU8dk6pjc+ymVvGQDtQrQoJQUhIpzk/Xs83XqlmnKSb1CgNaVZXs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=XbPR2OUO; arc=fail smtp.client-ip=52.101.65.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=V4r5YMlYUOXe+9CeJUYT93euKKCEaPcNGNe6xGx4+NVCO9Tunrx+Nxw8pkemvxtksrUyJcTCaKLf3NBXHU0qYSET4OuGCEGpdfR8JqKKZKb3jxJIea9G5JOVX08m7d84zYSOwKnaH2AF4cXOj60G3B/DWpd6dmJkLfx0wgD3Uk0xRhhbQfi3K3WHEiJhThEQkF8frMArYup4E3cXmDJZwlOZDRcZ1YGYijg6XG37zc5wkAwBLNJptgtQyHZ1ZtYVSP4Js5ZMt5g/C+f6fhFckRlmcjaqV/CCwFSRuIp9RdZpoxnF071aPVTKE2G247Vk4+6mUnSQlq4KZor/BZ+ZFg==
+ b=P9NJRDpzOTU563nIPdSVPlpsXGeIEFtIx1m4wPnnUqeqq9w5AI0LcT+9lrXqDDH1xueinqIclZD7XxRZDRz5B+3k0z0zOIwh9fDfbC0S9rVFMp0nTDM7dtyjkFDouDyumDL6udrXX68c3Zmc2cKBnwXgvkJ9goxn6qtNUOgRW+Bfu6JGQRIIRct9+nAQLa7XOgAY+dAPGkBY23cXPjKFhCmX01e0ilwykLYOBRDCEjWVZpyuaKGy2op7gBXXjQHsrSKS7HVPVSJl3X9M11tt2q7QlMRcWePNiFu+7PiT0B9D/rbTgSy1593t4xZ1JUO6I5JBoU8lOIeDvwuClIx5/A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cnp+WbmrpjbSYXP4bPIS18SJNcmQ7PlBkN1d3WO5f7c=;
- b=UCMq6pfv6r62eTB2rHvrEFBd/YTWCciQSvvyDjHX/bVFdMoZo6ueuMt9ahzWiYQ5jNpRTyYtlVqvYWEj5XD0IgdKoWiOwtP650aUcM/STy9wsboXse5VBlyjHi6FZP2JL6AAZ5G9O21XfBquV51a/S4DU7bSAIOvZTt9M0EcRmuJS+jx9iuTOXyuJPSeyjp7MJsoCJXM2ioHZnhyMAWzI7S7r7QFm3E2vAfCFGwkacdWhd8LIbk/c9gyAz8R2oU/JmUvzRW/9zeNRjB17uBtiWc1Lk0BkwIA8cqAM82RC7kUezC6ovOdWWHOhEML4gZnxiMxFbl3qWTjW10w0FOJlw==
+ bh=YTxY4vaHvPhGf09cw3rqjyoTFV1wj4Y/GHYfrTd165I=;
+ b=wp0MOvLMquGaqalWRCGKwTdpD+CubY8fdzKfC/x24+6gCLXQU5GlfrB+iDYvXPkxTOGZtpsQf6uMiNvmtfeFA0O4lx2ogd1cbHUci/kuxYv3St1iwtlwVjYd/ao7/E1vnepjMkavP1YDXTdT4yBvtmkYaMCZUV3eaBpE+H8W0hrc85dx7v5gx4ByrA+jU885NPlI76X2yGWXd/2rMhDQz5cs+ot0wNlbSPdZFy7bAhNWrJBwSDky50NIwKf5qokxl6DoGbu+yW2NuvDyPlvY3RYNMFY89/WStizBhfUNZ6l3dN6ZBWcccxwCAsf71C+j8P+6pTbBo1VdCNAnkEFC4Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
  164.130.1.60) smtp.rcpttodomain=st-md-mailman.stormreply.com
  smtp.mailfrom=foss.st.com; dmarc=fail (p=none sp=none pct=100) action=none
@@ -48,18 +48,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cnp+WbmrpjbSYXP4bPIS18SJNcmQ7PlBkN1d3WO5f7c=;
- b=e9pSowpLVGhL96G+yVe7QhGqgMj+oJ2YqSfTrlnThvmzwk/t1vguYQP2uFttcmU1VC1/ogtU4r7xrGXrDbWJunth7HpeS69vftHxrzqanEtyP+z8Alq91IUbGdFmNLBSHWiemqAbhpalKov9QR8YoPLZA5qgnFY4T53HBWQ3Dez+R0jYLbniMsQd87Bi/vDLNaiV6r9ozVKy1BdpJrsuPl6OJZ1HEKiMEk9mMxeJT7e1g++QRSc4SPKuG9Z/wO/K0eK6qufMvdDolPyMF53c5ndzx8pd3cNhlH6ap0aIAfTCfjZ4Oabz2oX6FMoEfC+OBaD2KyfOOl7GUb+9KlIStw==
-Received: from AM0PR10CA0006.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:17c::16)
- by VI0PR10MB9125.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:800:23a::12) with
+ bh=YTxY4vaHvPhGf09cw3rqjyoTFV1wj4Y/GHYfrTd165I=;
+ b=XbPR2OUOQFS3pkHvHmkyyZZvQ12fO21zHPov7Uyav+mUvzKjfAy540bUBftFiJ2XQQBFq3XgtwMfb+behFuKCpJle8cqXBQ62PtFDDvNbnN4QKfHEWbSZ+i+VTMcOuLFFpGfocUiFSPKv9B33Hqn/RqwQVwGy6JWsGL4YUmX9O0L9EfOEDTwl81/TFYvdp+lDghU0CzKGQJ+5ojA9fSk+bij3/xq+1dNKCcdYnJkD/OCUglEqc+w1mHgXoGWIsz/7k68FEJEEFK9GIPRTTLoMLAMWLHmbLDtSfPni0Valnb551IjZK0orTKSHDJeomt42TCClmrUuqlrqgz4moR3WQ==
+Received: from AS4P190CA0018.EURP190.PROD.OUTLOOK.COM (2603:10a6:20b:5d0::11)
+ by PAVPR10MB7418.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:300::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.13; Thu, 26 Feb
- 2026 10:31:05 +0000
-Received: from AM3PEPF00009BA2.eurprd04.prod.outlook.com
- (2603:10a6:208:17c:cafe::c) by AM0PR10CA0006.outlook.office365.com
- (2603:10a6:208:17c::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.24 via Frontend Transport; Thu,
- 26 Feb 2026 10:30:45 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.24; Thu, 26 Feb
+ 2026 10:31:17 +0000
+Received: from AM3PEPF00009BA0.eurprd04.prod.outlook.com
+ (2603:10a6:20b:5d0:cafe::72) by AS4P190CA0018.outlook.office365.com
+ (2603:10a6:20b:5d0::11) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.25 via Frontend Transport; Thu,
+ 26 Feb 2026 10:31:18 +0000
 X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 164.130.1.60)
  smtp.mailfrom=foss.st.com; dkim=none (message not signed)
  header.d=none;dmarc=fail action=none header.from=foss.st.com;
@@ -67,21 +67,21 @@ Received-SPF: Fail (protection.outlook.com: domain of foss.st.com does not
  designate 164.130.1.60 as permitted sender) receiver=protection.outlook.com;
  client-ip=164.130.1.60; helo=smtpO365.st.com;
 Received: from smtpO365.st.com (164.130.1.60) by
- AM3PEPF00009BA2.mail.protection.outlook.com (10.167.16.27) with Microsoft
+ AM3PEPF00009BA0.mail.protection.outlook.com (10.167.16.25) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9632.12 via Frontend Transport; Thu, 26 Feb 2026 10:31:05 +0000
+ 15.20.9632.12 via Frontend Transport; Thu, 26 Feb 2026 10:31:15 +0000
 Received: from STKDAG1NODE2.st.com (10.75.128.133) by smtpO365.st.com
  (10.250.44.72) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.29; Thu, 26 Feb
- 2026 11:33:12 +0100
+ 2026 11:33:23 +0100
 Received: from localhost (10.48.86.212) by STKDAG1NODE2.st.com (10.75.128.133)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.29; Thu, 26 Feb
- 2026 11:31:04 +0100
+ 2026 11:31:15 +0100
 From: Gatien Chevallier <gatien.chevallier@foss.st.com>
-Date: Thu, 26 Feb 2026 11:30:19 +0100
-Subject: [PATCH v6 04/12] bus: stm32_firewall: allow check on different
- firewall controllers
+Date: Thu, 26 Feb 2026 11:30:20 +0100
+Subject: [PATCH v6 05/12] bus: stm32_firewall: add
+ stm32_firewall_get_grant_all_access() API
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -90,7 +90,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20260226-debug_bus-v6-4-5d794697798d@foss.st.com>
+Message-ID: <20260226-debug_bus-v6-5-5d794697798d@foss.st.com>
 References: <20260226-debug_bus-v6-0-5d794697798d@foss.st.com>
 In-Reply-To: <20260226-debug_bus-v6-0-5d794697798d@foss.st.com>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
@@ -112,48 +112,48 @@ X-ClientProxiedBy: STKCAS1NODE1.st.com (10.75.128.134) To STKDAG1NODE2.st.com
  (10.75.128.133)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM3PEPF00009BA2:EE_|VI0PR10MB9125:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4eb216ec-6eea-406f-cf35-08de7522257b
+X-MS-TrafficTypeDiagnostic: AM3PEPF00009BA0:EE_|PAVPR10MB7418:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2516629a-1593-4799-a2e4-08de75222be3
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|7416014|376014|82310400026|921020;
+	BCL:0;ARA:13230040|376014|1800799024|7416014|82310400026|36860700013|921020;
 X-Microsoft-Antispam-Message-Info:
-	+zC2QTfIX7mf5snqaXQXTnP2+gSJkS9uQyTWpcw38Jj0Qg9sP2cDuahS+iRDH7vPG5QIfZCQiYLpcc4hDvhAGYOBjFWYhov8TrBAR2i5C7foGlYlCNZAhWspCdzvFnt1q781TvvGCN8+Yud7hitEsZEABteIC4MtTivAVi1Z6PYh5btp/b4gN4NcDAST6bblLL3yGzlxYVdv4XQtDN1xbY3k/wH4V1NZIW11Qf8J7kBvUWUI66xLvoqud24fQx+5CNjBBK3dx9WCYsnEfH2NEQdgp686i5BWDNhTU/qBxEFwG42nyUtDnxfu7TyJXqYfzOdx9itqN4w8tkVvHFcSErgqELFdK0m4QkRpNIZzySwaCvymmauMyaxYDqG7Os50NSM8JsMwooAbUodmOpuPGkJUg10OVdY1RitxlX8Fz0FZnuUuBqUNE5hlc3933sFtvkmhIgAgSIODLMMNv6Pz/m654bFLwNwt9gHqAMbHnDAPYj/F6he5iKw5sbPGzF88udUgQoyzYZzXdmhdmnzVriRV1j/bzmceN8yrgYNF9eUKTRgroxRDmLIauUksuTw8pK498YwYapodfi+vaKeu7AQLS5FKBGQoK5rEM+7k2Sr6a19nglysFZRXxamML40ct2ro65geONCFY7eioafvgRLV79KQ8/AEUswQJX1vE8o6TXFLhXGMn+8rb7OzRlZdcAT6kBDURDt4FpGuVYrXQT6+m1KTU4mjzMsdZO8wDg0YJOmFlfFj1GlQJxoMNx4v0OlFEzw0fJCKvZTLLbzqyhlWD8eqe7qcd2O5wkQ2pJCfP3TmGHFDv8Fl3I6Y3okVf4UxclR8zC5FGaVt93rlP5OusBdq3WOc9KXpBpvqP/k=
+	+gdz2V0pZutdm2PFVZVcU7lMYjOGcAae6KsfpQA85PPxadI6x97rswqcueWkebEE46p8ed0EeyPIP/bmMW498SSqQI4Q+uVuP78EVn4BBYaLB8yKBlfNt64Cl8F7paAjbflsbpquU86AsUSG9P2My6nG68Tv5E7GDTlyc+rPDThTAYx4qpeCJFoZ4nipIEPAOPnc1F7jdG0gibUJqU45ffh8nAH39ylFp2vmvTO8LFcglsRAysX78d95/la9NnazFIeCPHYcIo1BvJIDC2Ks12kMMmmqnu43RI+9HfvtSUZJhr7VX1qwQfR54VY5XnGlUhxvg+GVFPuC9kwGkXHH5IOMTUcwIBec/vHzQA7xTx6Q9pQvGWCz2lsei7+vZGAT81eirWPIoldfPFNqB8qpzB7jegnWEiN5E/Wb85FZrOGba9MbUNb6bNdL7/zlvE6J5e5GLgJWZD6KYlxVj4d8dSp5yUJCYWwxudZ8kdkn9Vzw2n/wttdFllQKOgxrvCIcS3gyRk0KomsyeQ/3jFSi6NAAVgEEmxWG2pqMuDhULbXTjV42ddorpGLLGePHZl+rT9rnBnAZEHKntu1HrB2yExCQF8FWpAP0qmHGpwfF8G+6w0N6ue2uwCinZH46EBIU3EZaeawlY+FNP20BsruHhl8ovSrNuAjKr+dAqFI4boX43qlFA+lNbI8kIvx0a3QCVtc6he4x+2wkbETK6OExwVZHRm70pu+pyMg/ou/74ZUKIdLT8MTi489sr6zBJ81PARfDsOgvoPVOyCUViFSSgZZaYJGVDm6ecSuS3OVDTv7Pw1JrqHm1FhfZ64opVasX+IHiXUW9Pg4N0/FkrzSRMN0P6/cfBQ5/npmkutbYzmg=
 X-Forefront-Antispam-Report:
-	CIP:164.130.1.60;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(7416014)(376014)(82310400026)(921020);DIR:OUT;SFP:1101;
+	CIP:164.130.1.60;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(82310400026)(36860700013)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	+/FcO7gNwGU7me/sYKJnnDxw7HJPxdD5TIf05BzjdwKOF59BY8Vyj1SYUVp9dkOwRTTlOLyZaM4BshbWmx6zLMa0YqSTnoSn2vjN/J9zpSE/Gx4oiyLYYO6j601x7UHf3BZ0ELML2C66jjS5rkgioztdftTMJL1bgSmDxmCnUAnj+opwkB/tlq2pO1W5rBlDNEKY9pBfEB+G4c3IW5tts8Ok/4CY+EZFDU4eLLYEbz8fSFR0VeFoldgVAnb9B1kf0V19IDb2Jkg6AoSMKP7uYJWzgdIbk8dcYHrGW9vXSNpVzDSZIOBKBO9M/2s7XqiDgVsN6wlq75zkj+8IYHeA1OJoQ4Y5nBI8ZJEG6WDUx+TdXcj4WTgVq07/N8dtfYGer4QmMhR4+2mrDTVhXsZoRobwKhu6QBZiDnYV1C+YT9KDI/0nIPPualynmL7sfcSO
+	KEei1739pH0oF16S+OcR9h0kOgEMcQxS4sVv8oIjsmeXpEVkPazClK4QkjpXrEaYyVrFbEX3t1blvLFDeRhkzEOtEXWQlmvdYGjRExG+SSVv9iO2c/NtuxE0PYPN7Uc5bI17Xa3Rau33MroL7brQMnhYe+mhXRrd/Zks+o2N9e+kgbIkW3N5mRLmz1o3nkDTgsR0e0K2YaNw3a0O00xMPaaKo9Kzukd1jnI7JeyZCWRhzHelhH845WvUYb6Vm2advwtr5oJbU2cd2/Qwar3c1d+dih4hR1nnz+SEv9clKghqodrWa0pWrJv2RliKhjXtlEn72VHrPBg9lNlnRCaB+kUA6ieDW3l+PRNv5exej/IZJOXVC+acvQ7Jwo4m1vj7wOX5d6OkDxRCMoK7nw1A2vzJtpqSQ1xSvvrCkrRxKrpEISIZuNQyopkNF7/kB2cD
 X-OriginatorOrg: foss.st.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2026 10:31:05.0509
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2026 10:31:15.8022
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4eb216ec-6eea-406f-cf35-08de7522257b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2516629a-1593-4799-a2e4-08de75222be3
 X-MS-Exchange-CrossTenant-Id: 75e027c9-20d5-47d5-b82f-77d7cd041e8f
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=75e027c9-20d5-47d5-b82f-77d7cd041e8f;Ip=[164.130.1.60];Helo=[smtpO365.st.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	AM3PEPF00009BA2.eurprd04.prod.outlook.com
+	AM3PEPF00009BA0.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR10MB9125
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR10MB7418
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[foss.st.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[foss.st.com:s=selector2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32214-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-32215-lists,linux-gpio=lfdr.de];
 	FREEMAIL_TO(0.00)[arm.com,linaro.org,kernel.org,linux.dev,gmail.com,foss.st.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[23];
 	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[foss.st.com:mid,foss.st.com:dkim,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,st.com:email];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[foss.st.com:mid,foss.st.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,st.com:email];
 	DKIM_TRACE(0.00)[foss.st.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -163,33 +163,118 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[8]
-X-Rspamd-Queue-Id: E4FEA1A450E
+X-Rspamd-Queue-Id: 941881A44EA
 X-Rspamd-Action: no action
 
-Current implementation restricts the check on the firewall controller
-being the bus parent. Change this by using the controller referenced
-in each firewall queries.
+Add the stm32_firewall_get_grant_all_access() API to be able to fetch
+all firewall references in an access-controllers property and try to grant
+access to all of them.
 
 Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 ---
- drivers/bus/stm32_firewall.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/bus/stm32_firewall.c              | 42 +++++++++++++++++++++++++++++++
+ include/linux/bus/stm32_firewall_device.h | 26 +++++++++++++++++++
+ 2 files changed, 68 insertions(+)
 
 diff --git a/drivers/bus/stm32_firewall.c b/drivers/bus/stm32_firewall.c
-index 7e7afe8007db..41cc1e7190ed 100644
+index 41cc1e7190ed..0b22b8e2fdf2 100644
 --- a/drivers/bus/stm32_firewall.c
 +++ b/drivers/bus/stm32_firewall.c
-@@ -274,7 +274,7 @@ int stm32_firewall_populate_bus(struct stm32_firewall_controller *firewall_contr
- 		}
+@@ -185,6 +185,48 @@ void stm32_firewall_release_access_by_id(struct stm32_firewall *firewall, u32 su
+ }
+ EXPORT_SYMBOL_GPL(stm32_firewall_release_access_by_id);
  
- 		for (i = 0; i < len; i++) {
--			if (firewall_controller->grant_access(firewall_controller,
-+			if (firewall_controller->grant_access(firewalls[i].firewall_ctrl,
- 							      firewalls[i].firewall_id)) {
- 				/*
- 				 * Peripheral access not allowed or not defined.
++int stm32_firewall_get_grant_all_access(struct device *dev, struct stm32_firewall **firewall,
++					int *nb_firewall)
++{
++	struct stm32_firewall *loc_firewall;
++	int err;
++	int i;
++
++	*nb_firewall = of_count_phandle_with_args(dev->of_node, "access-controllers",
++						  "#access-controller-cells");
++	if (*nb_firewall < 0)
++		return *nb_firewall;
++
++	if (!*nb_firewall) {
++		*firewall = NULL;
++		return 0;
++	}
++
++	loc_firewall = devm_kcalloc(dev, *nb_firewall, sizeof(*loc_firewall), GFP_KERNEL);
++	if (!loc_firewall)
++		return -ENOMEM;
++
++	/* Get stm32 firewall information */
++	err = stm32_firewall_get_firewall(dev->of_node, loc_firewall, *nb_firewall);
++	if (err)
++		return err;
++
++	for (i = 0; i < *nb_firewall; i++) {
++		err = stm32_firewall_grant_access(&loc_firewall[i]);
++		if (err) {
++			while (i--)
++				stm32_firewall_release_access(&loc_firewall[i]);
++
++			return err;
++		}
++	}
++
++	*firewall = loc_firewall;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(stm32_firewall_get_grant_all_access);
++
+ /* Firewall controller API */
+ 
+ int stm32_firewall_controller_register(struct stm32_firewall_controller *firewall_controller)
+diff --git a/include/linux/bus/stm32_firewall_device.h b/include/linux/bus/stm32_firewall_device.h
+index eaa7a3f54450..6c878f3ca86f 100644
+--- a/include/linux/bus/stm32_firewall_device.h
++++ b/include/linux/bus/stm32_firewall_device.h
+@@ -112,6 +112,25 @@ int stm32_firewall_grant_access_by_id(struct stm32_firewall *firewall, u32 subsy
+  */
+ void stm32_firewall_release_access_by_id(struct stm32_firewall *firewall, u32 subsystem_id);
+ 
++/**
++ * stm32_firewall_get_grant_all_access - Allocate and get all the firewall(s) associated to given
++ *					 device. Then, try to grant access rights for each element.
++ *					 This function is basically a helper function that wraps
++ *					 both stm32_firewall_get_firewall() and
++ *					 stm32_firewall_grant_access() on all firewall references of
++ *					 a device along with the allocation of the array.
++ *					 Realease access using stm32_firewall_release_access* APIs
++ *					 when done.
++ *
++ * @dev:			Device performing the checks
++ * @firewall:			Pointer to the array of firewall references to be allocated
++ * @nb_firewall:		Number of allocated elements in @firewall
++ *
++ * Returns 0 on success, or appropriate errno code if error occurred.
++ */
++int stm32_firewall_get_grant_all_access(struct device *dev, struct stm32_firewall **firewall,
++					int *nb_firewall);
++
+ #else /* CONFIG_STM32_FIREWALL */
+ 
+ static inline int stm32_firewall_get_firewall(struct device_node *np,
+@@ -141,5 +160,12 @@ static inline void stm32_firewall_release_access_by_id(struct stm32_firewall *fi
+ {
+ }
+ 
++static inline int stm32_firewall_get_grant_all_access(struct device *dev,
++						      struct stm32_firewall **firewall,
++						      int *nb_firewall)
++{
++	return -ENODEV;
++}
++
+ #endif /* CONFIG_STM32_FIREWALL */
+ #endif /* STM32_FIREWALL_DEVICE_H */
 
 -- 
 2.43.0
