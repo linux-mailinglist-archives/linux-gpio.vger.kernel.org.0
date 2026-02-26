@@ -1,145 +1,125 @@
-Return-Path: <linux-gpio+bounces-32246-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32247-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wPPDBT1ToGnriAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32246-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 15:05:49 +0100
+	id 2LjyF3aNoGkokwQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32247-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 19:14:14 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44E961A7346
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 15:05:48 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 079121AD67D
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 19:14:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 886F732157E7
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 13:57:14 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 893403006B61
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 18:05:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AC563C1983;
-	Thu, 26 Feb 2026 13:53:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 743733603E0;
+	Thu, 26 Feb 2026 18:05:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hYXx2d/p"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96323C1984
-	for <linux-gpio@vger.kernel.org>; Thu, 26 Feb 2026 13:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A61B946C;
+	Thu, 26 Feb 2026 18:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772114005; cv=none; b=fcxJssMgVbD3IL9hRQ2beZey+wPj5qFyEc4U9gd5NLAsGAGCXYeBgawtxLWbpH0v4UK58FGBXMa9JvwDvoHpZ0qO3W88ZgRfGucKlR9hois4GePnT1EcgI7mpcAk6h+0wH0DOjKQSOC2I14jx+bZ5lDiNIGLS1S5As87/RWMXxM=
+	t=1772129147; cv=none; b=VBlAUj7DHnXFohjORW1W3lYZHFG1nHYSw9O7KXIN3JyaIViLWpibbO4j2z9fHeKZoHtQorgIaBvTbCUUjhXapNVLi7r1+aTPPhH2+lgbLxsfUAF491ItpSdNpyyRSjUOSmoFVpzMRu1dvVpt+h8uF08oRSyg/h9QBP9kkgeJIlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772114005; c=relaxed/simple;
-	bh=JfcaP+q1iJfCTanNOmnDbwr7hlfj95p3bo6fjnx2s4U=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FHe2gWSHcVFjQg643eJXtuuT1utHAxagPmfRkcdB1AnYlT6E/BaXZhYsg6P7HunChCkCyvffKnSRc1hP5nOdSUEAN9tAq097Q0aDZOZgW/cLLwhsI10zrhlgiNjudP2VXtafvLMmZ2R3/ZmM3WOHO9PIvvyJXP5pcWDMcSUH6V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vvbna-0006qH-Vi; Thu, 26 Feb 2026 14:53:02 +0100
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vvbnY-002juK-3A;
-	Thu, 26 Feb 2026 14:53:02 +0100
-Received: from pza by lupine with local (Exim 4.98.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vvbna-00000000CvY-0yce;
-	Thu, 26 Feb 2026 14:53:02 +0100
-Message-ID: <9b98fd53f7ef580e4264dd69d94963a966f4b938.camel@pengutronix.de>
-Subject: Re: [PATCH v3 04/13] reset: eyeq: Add Mobileye EyeQ6Lplus OLB
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: =?ISO-8859-1?Q?Beno=EEt?= Monin <benoit.monin@bootlin.com>, Vladimir
- Kondratiev <vladimir.kondratiev@mobileye.com>, Gregory CLEMENT
- <gregory.clement@bootlin.com>,  =?ISO-8859-1?Q?Th=E9o?= Lebrun	
- <theo.lebrun@bootlin.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,  Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij
- <linusw@kernel.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk
-	 <tawfik.bayouk@mobileye.com>, linux-mips@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
-Date: Thu, 26 Feb 2026 14:53:02 +0100
-In-Reply-To: <20260226-eyeq6lplus-v3-4-9cbeb59268b0@bootlin.com>
-References: <20260226-eyeq6lplus-v3-0-9cbeb59268b0@bootlin.com>
-	 <20260226-eyeq6lplus-v3-4-9cbeb59268b0@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-0+deb13u1 
+	s=arc-20240116; t=1772129147; c=relaxed/simple;
+	bh=FXHYBbqbyQJvXr779FbE0V42MyWUxyz52aXt9CzkWSE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lX5jvss9OSHXyHU7qTjog3H5Xj4S6eCd9ThSRDOk+Yeh6AhOlWpjR4zBrHyBe4rcZPoQLdfNRuzywaH3t5vGwclLWXp9m91142oOjNkrdxFPGxH/52dyjPmcFP7FZO1AABEWqKk/tVKOWyKanTE4xT0eMErRxW1c21PLMfiVpow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hYXx2d/p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5CB6C116C6;
+	Thu, 26 Feb 2026 18:05:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772129146;
+	bh=FXHYBbqbyQJvXr779FbE0V42MyWUxyz52aXt9CzkWSE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hYXx2d/po9WcXnY/p0QyTY4LM286jmFyy4wDEIE1edsfNcSQ5KRcG+YNze1noXDW4
+	 zDkpWSCVGmIME7yswd572XI95JX9YYLGYZD/BmXvp98qyfanuFNsu9zXZEi0KOjQhL
+	 8QawFWhhKkfc1xQooYI+4ZXv9lDA8BMUIXov9LZaY7Zn4Y0vbBt+Dk8hoDvlsoyxPk
+	 lJkfs+z+iNcAsUICB0VQxPNfUqvlxi92Tpxw+5afk0X6EvthJ99ifxoD9U1BQFCj7G
+	 zJDVQD23w44SG+/G1+GP7wRX5KL8fnZS2J+Wfjgm94fdxebl5TyA8lj6khazX8X47H
+	 yx2477rWofFFA==
+From: Conor Dooley <conor@kernel.org>
+To: linusw@kernel.org,
+	Conor Dooley <conor@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Valentina.FernandezAlanis@microchip.com
+Subject: Re: (subset) [PATCH v3 0/6] Microchip mpfs/pic64gx pinctrl part 2
+Date: Thu, 26 Feb 2026 18:05:36 +0000
+Message-ID: <20260226-passover-doubling-4404f4314b70@spud>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260119-rearrange-germproof-3e3096cc0da4@spud>
+References: <20260119-rearrange-germproof-3e3096cc0da4@spud>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=640; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=1PJXFrKgqDoVzDD7Vldh1cWt61RnAZzMwRyK9t2R/LA=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJkLuvPzr5onTkpg1X7TeODNxLoJrBf0y7SrBK+XCWzN4 tif2SDYUcrCIMbFICumyJJ4u69Fav0flx3OPW9h5rAygQxh4OIUgIl0cTIyrCljFH2cPPNdypH3 YRb73upPSRKbcWlpKod1jetj92uPXjP8Uw5Jn3mvPfJc7oHcpoxp19n3bWwJSo7Oer5mM1fStiO fOQE=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.04 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32246-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[pengutronix.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_FROM(0.00)[bounces-32247-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[p.zabel@pengutronix.de,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.995];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,pengutronix.de:mid,pengutronix.de:email,bootlin.com:email]
-X-Rspamd-Queue-Id: 44E961A7346
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,microchip.com:email]
+X-Rspamd-Queue-Id: 079121AD67D
 X-Rspamd-Action: no action
 
-On Do, 2026-02-26 at 14:33 +0100, Beno=C3=AEt Monin wrote:
-> Declare the two reset domains found in the EyeQ6Lplus OLB and add
-> them to the data matched by 'mobileye,eyeq6lplus-olb' compatible.
->=20
-> Those reset domains are identical to those present in the EyeQ5
-> OLB, so no changes are needed to support them.
->=20
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Signed-off-by: Beno=C3=AEt Monin <benoit.monin@bootlin.com>
-> ---
->  drivers/reset/Kconfig      |  4 ++--
->  drivers/reset/reset-eyeq.c | 31 +++++++++++++++++++++++++++++++
->  2 files changed, 33 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 7ce151f6a7e4..0cf49495d814 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -85,9 +85,9 @@ config RESET_EIC7700
-> =20
->  config RESET_EYEQ
->  	bool "Mobileye EyeQ reset controller"
-> -	depends on MACH_EYEQ5 || MACH_EYEQ6H || COMPILE_TEST
-> +	depends on MACH_EYEQ5 || MACH_EYEQ6H || MACH_EYEQ6LPLUS || COMPILE_TEST
->  	select AUXILIARY_BUS
-> -	default MACH_EYEQ5 || MACH_EYEQ6H
-> +	default MACH_EYEQ5 || MACH_EYEQ6H || MACH_EYEQ6LPLUS
+From: Conor Dooley <conor.dooley@microchip.com>
 
-How about replacing "MACH_EYEQ5 || MACH_EYEQ6H" with just "EYEQ"
-instead?
+On Mon, 19 Jan 2026 11:03:51 +0000, Conor Dooley wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+> 
+> Hey Linus,
+> 
+> v3 here, with the rfc dropped. I've still got the property checking
+> stuff in my todo-list but not tested it sufficiently after the changes
+> to add generic string properties yet.
+> I only moved my drivers into the microchip dir, I'll come along and do a
+> pass on the rest if you're happy with what's here.
+> 
+> [...]
 
+Applied to riscv-dt-for-next, thanks!
 
-regards
-Philipp
+[6/6] riscv: dts: microchip: add pinctrl nodes for mpfs/icicle kit
+      https://git.kernel.org/conor/c/7982b62bedbb
+
+Thanks,
+Conor.
 
