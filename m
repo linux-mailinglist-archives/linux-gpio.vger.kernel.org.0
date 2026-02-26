@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-32216-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32217-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AV60GnchoGkWfwQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32216-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 11:33:27 +0100
+	id gOupIYUhoGkDfwQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32217-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 11:33:41 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C71A71A454E
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 11:33:26 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0CA9A1A456B
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 11:33:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 644E43047428
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 10:31:37 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 65487304B398
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 10:31:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0261389E09;
-	Thu, 26 Feb 2026 10:31:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F6163A783C;
+	Thu, 26 Feb 2026 10:31:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="AzLk2tvs"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Fhy58ojY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010025.outbound.protection.outlook.com [52.101.84.25])
+Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013010.outbound.protection.outlook.com [52.101.83.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7B6396D24;
-	Thu, 26 Feb 2026 10:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F163A0B25;
+	Thu, 26 Feb 2026 10:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.10
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772101896; cv=fail; b=pVDWrt/AbnigciROu7Xq1DIA3h3UmyTdRpvFUWw6FPSQHupNYwf5s71L3yMRUZ2v08fCXYiKonwhi4aYzDS9M6MBvLmFMmPFDt8dmZ5vHeDBNQ29zPw2F1FkoDvJXJE9RDnWsx9dHq3Y95yJpxc1CTfQrPz+zcsQHOt0CnB6Imo=
+	t=1772101904; cv=fail; b=fp61XBXg36mGTwfPG6bnRotDIE5UquY6ulXZNwqtb7sBVyktlMOgrfT4TgkWbJe4GPpcOpybTUqcsU61e5AturM+CqMbqJu47azQZP/rCHkQsceo4Yrl7QoOKC7GRLDuRoCHtEzdMXsCzgD9G5ZFopFB9VfrFMpr2F7WwZI3FWQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772101896; c=relaxed/simple;
-	bh=voNT67P45cV3ggKCcpPghz1Q8QpjdbNHu/dJejF8RX4=;
+	s=arc-20240116; t=1772101904; c=relaxed/simple;
+	bh=Zx3fD3TmQa50ZDcT398GmmjoVZFZhk6CyRQGscQIcWM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=CI2F6Pdb0my+q+hUX/3SfQnbrPtP9LPPjrH04qokq7YZN7gk8AtmjLw8E5CYWFeIgThcWIMDV6g9yZP+cRHALZP9XaZKwUvca03wIm4OxqD9uPf9yPwiFIhmELKhpnOvy8hLlMGq6ejR7cXlWQsWiBPnjAU6eBGUqAsf8+5nPgo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=AzLk2tvs; arc=fail smtp.client-ip=52.101.84.25
+	 In-Reply-To:To:CC; b=AdZJkm8xlp1DLtA0f0LYtJymmYZhG+GaESdsiLXHXH1kuTJVR2pb+aKyenP7EFBWqubMfYxZXd1rYQi4LhVaxMsGE3NtsP3TDEPoO/Eb0K1vIcE9pth1ns4OsB+WBKIZUTLPC8jPPJq34kKc3DaOviegFMcMmfidpRi67z/8wbQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Fhy58ojY; arc=fail smtp.client-ip=52.101.83.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ox+IXZO/3i0NrPhY3uphHaP4bNpGISvXBQLfgdT17uu2UAGirGIsf14ICE6OdLhZOY9VNsCSe5UuVJK3j/qnbWQYiawkqBujhV8kFQlI9pC1+3rI0yZ6T4Mz50v60G2A4pkQhRbTYB6sZam06H4aCsJMYpn8uRxwwBFKgR3ZKeDC+TWh4BnciasSZXupj8zseb5Q8CZJjC5Kx5RDaj/hxSpucY4C9DAEr/SW/M4WSUQSU3aEczrOg4jsGRhahSTrtJ5FPHV9BS0M9waPh9DAcpCHWAw50NjBOemHFoyFESuLhSTrSWX/+MgoKiPTzWekRv1//HI/vZcW3yDx2+9WjA==
+ b=Y+a7alI6j85IezULFDKn/s8TzPicE4J90ymLIpw/MwjiM8jg+Xjrp7awZybF8UzwwjWvIjs0QNibVts/QSKbfyRK7nOHhXpdD1pB53eLSuG17VJUVANFEMXASuBFh6kSlZd9URslT8ZBDeSLeV3zwdczgO5mEvcN/Q1MRmaM5kK4NkA8fMrDgPOtmLiHcStTuU9LPL+DEON5nO9dhf4hVlncz6J63vaNUkPb+cOC+O+2KM+OLdDLtpmGzHR10fDkidnm8IYyuZ5reQIag8993+WdtuhcAIfy9B6m8aSw2MgVS7pzuxwnBqP6mcM0V9Pe0lpgsgVh1HClrQ7IYz0cgw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SdKIhk7U3sLJJE2iThCG5Dd6q29oLaiE8wGlfuAPuAo=;
- b=lx/IpzjFmdscUDRkozD3qdBoAa5+IS+EP/waqAOSsqAJ7f8PQpnroYlOWUpsp1rWYeti2VwLIX4TUPRll9DxvsnVIjF3+8sjPNNs4Pm+xqDm3peY3VlfaVFFSuoMWJwbDZA4boshrJWh68bq09Vis1J9tnmWH6XxnrcBJidAzeP2EjuhIf4RzDAhCCVzKBgTIAyfY+w0OmWExvRi+49k1pHHbhHc9w6DBYzwB+3zm2Kn5OKb7UKLOwCf6Ejg1WtkmWsWlPIR1XoEdTVQiMIPnBM8u9ws412A58e/ftEOjaa7tKFE3d/pzeZZBeFvXHabThExzuDaXHSLWCYAcY3LRQ==
+ bh=ernEp7KlB6dLKXwg2+8felSrDfFfiqskUyyRlMO8ybY=;
+ b=R+5YEvtI9sW/sQYHGkSyv3oAVzBy+rHF6uyunDAfGjeEQBz+v2lXm/OZ46Y+2fcsSfb1AdKKa35542VTBA1VL5o2ClD3FZv4muXqaiucldmXc6XDyJctiSGDDZA7DXqVT5jhzesayOhRzdOmSf2bVR34Dwqr31QykgYpXHHPDbREO+Q6myXM6Ys/FlAymsjwSJxrxoXd1v2M/MtSL9+XxcKTyXeeXyvcg5RONN61D626nnBXEW+VV3ZD9tulmkql5QMb8qtDCretvVEvIsQvuONKtnDZONa1mcrH/mSugcU2jn4AsKdHEQG/R/6WKdZcYmh25vwnrf99xq9zCuI9Cg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
  164.130.1.60) smtp.rcpttodomain=st-md-mailman.stormreply.com
  smtp.mailfrom=foss.st.com; dmarc=fail (p=none sp=none pct=100) action=none
@@ -48,18 +48,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SdKIhk7U3sLJJE2iThCG5Dd6q29oLaiE8wGlfuAPuAo=;
- b=AzLk2tvsNGKOM3ZmAoFShRf44Oux4KYFli/Sz9zG0g+y6c33y/Z4Ge4fKaH499p1uLgJpwh7Wjg0WLIlYj1CRkhWlxusAh0cFCi4+yrIwzoTsom6TZONXj+PTzC8vK7dSfLOTvAShtQ2dDD6OSmq0mCXdNBQ90PpkBFjr2CeoRommRocqYGQtb30RYQGeW6DgbOK3/0KUbMY4lVhz9TAfTLJlBFfszkwowYkupM+4TfEY/BxXc9aqQ5Fif8FiUtkNvdopBVKlAI8SeBnUcBJ+2dOVhW9P2RUdGoWt6Zlp0wPQ9kS2zpCZDxKRKpE33YFDkDX3E9V5V0Asyg9wSf3Pw==
-Received: from AS4P250CA0026.EURP250.PROD.OUTLOOK.COM (2603:10a6:20b:5e3::14)
- by VI0PR10MB8335.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:800:238::19) with
+ bh=ernEp7KlB6dLKXwg2+8felSrDfFfiqskUyyRlMO8ybY=;
+ b=Fhy58ojYcHo8bBkMgUHekQQtoM7ZZ3Bj8rY0PWcDfN6gPv2bkyAQV0wgiBRphuV4WWi+fVOKlWAleV2VXlEUhgsxy1VecO10SDdC70YVyf0V87weFa5wlJu1LrczupLin69DM1Tx9tdUe7qzJFl+KWNM0yUbpTfv14jEl8g5T4Sy5/UvfwS5q76D40sRhE42wzrz+VrNRsl4CSZZIqTDtcI2MFirPztxC1WBR9W5Zydp3fFLCmtQOKA3FXlSOsxVcg07NLUnrobnW6u4NDJ2Ut9qz8RrUvtteslt/Can5f6visYpsmfKLeAooV8u8rbOWay4DL2oRMxciq0Nv38ifg==
+Received: from AS4P250CA0016.EURP250.PROD.OUTLOOK.COM (2603:10a6:20b:5e3::8)
+ by AM7PR10MB3543.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:137::24) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.13; Thu, 26 Feb
- 2026 10:31:26 +0000
+ 2026 10:31:37 +0000
 Received: from AM3PEPF00009B9B.eurprd04.prod.outlook.com
- (2603:10a6:20b:5e3:cafe::45) by AS4P250CA0026.outlook.office365.com
- (2603:10a6:20b:5e3::14) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10a6:20b:5e3:cafe::a6) by AS4P250CA0016.outlook.office365.com
+ (2603:10a6:20b:5e3::8) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9632.26 via Frontend Transport; Thu,
- 26 Feb 2026 10:31:23 +0000
+ 26 Feb 2026 10:31:36 +0000
 X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 164.130.1.60)
  smtp.mailfrom=foss.st.com; dkim=none (message not signed)
  header.d=none;dmarc=fail action=none header.from=foss.st.com;
@@ -69,18 +69,19 @@ Received-SPF: Fail (protection.outlook.com: domain of foss.st.com does not
 Received: from smtpO365.st.com (164.130.1.60) by
  AM3PEPF00009B9B.mail.protection.outlook.com (10.167.16.20) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9632.12 via Frontend Transport; Thu, 26 Feb 2026 10:31:26 +0000
+ 15.20.9632.12 via Frontend Transport; Thu, 26 Feb 2026 10:31:37 +0000
 Received: from STKDAG1NODE2.st.com (10.75.128.133) by smtpO365.st.com
  (10.250.44.72) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.29; Thu, 26 Feb
- 2026 11:33:34 +0100
+ 2026 11:33:44 +0100
 Received: from localhost (10.48.86.212) by STKDAG1NODE2.st.com (10.75.128.133)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.29; Thu, 26 Feb
- 2026 11:31:25 +0100
+ 2026 11:31:36 +0100
 From: Gatien Chevallier <gatien.chevallier@foss.st.com>
-Date: Thu, 26 Feb 2026 11:30:21 +0100
-Subject: [PATCH v6 06/12] drivers: bus: add the stm32 debug bus driver
+Date: Thu, 26 Feb 2026 11:30:22 +0100
+Subject: [PATCH v6 07/12] arm: dts: stm32: introduce the debug bus for
+ stm32mp1x platforms
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -89,7 +90,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20260226-debug_bus-v6-6-5d794697798d@foss.st.com>
+Message-ID: <20260226-debug_bus-v6-7-5d794697798d@foss.st.com>
 References: <20260226-debug_bus-v6-0-5d794697798d@foss.st.com>
 In-Reply-To: <20260226-debug_bus-v6-0-5d794697798d@foss.st.com>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
@@ -105,54 +106,55 @@ To: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
 CC: <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
 	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-gpio@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-	Gatien Chevallier <gatien.chevallier@foss.st.com>
+	Gatien Chevallier <gatien.chevallier@foss.st.com>, Antonio Borneo
+	<antonio.borneo@foss.st.com>
 X-Mailer: b4 0.14.3
 X-ClientProxiedBy: STKCAS1NODE1.st.com (10.75.128.134) To STKDAG1NODE2.st.com
  (10.75.128.133)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM3PEPF00009B9B:EE_|VI0PR10MB8335:EE_
-X-MS-Office365-Filtering-Correlation-Id: b3e80991-0e32-4960-48ea-08de75223246
+X-MS-TrafficTypeDiagnostic: AM3PEPF00009B9B:EE_|AM7PR10MB3543:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3e23c5a9-cbe8-434a-73a8-08de752238a2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|82310400026|36860700013|921020;
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014|7416014|921020;
 X-Microsoft-Antispam-Message-Info:
-	8L+2oe0g64fIbiK91pv4sf+DGiokeG5S3pYcLMdtiumxmN62dMgpPlEUXOp2BSGqvGMrYcHO54dQa9aAbTNN7Umlm6hzAcpq3N7vfjlhC20BPfDA8GsnMyyvMLdY+UYMa6QK7H0clGLsUlvKKfQdtpKIlh1aqsH3Gjf9XplWDr+nV60jb8nhHS7MmQBiCsvCdeXdRk8zofh0YwkIuSDVHUvTyNrmRpjEkggJkZth5tdDXENc49knp9uPFhxIj88z8JvPEeEv2jaic2YdE7kJWUzwOVlwzFaSoA5Ra1oiUXKOYlWLJeRWJ8NZiA15bXc0oF5zt5MiIcQ+O/hCQs+Vwc60fc2cv2HVTQBoCprpF0XwAyHHw8VBGklz06eAkuO41w4O2Yalc5pE1+iM2ZSFXL+xnZ4p9zRwMBE8W7t5U3QasncGCAeBIyK0Gynlfl+UBSB+S30fQdbwiA6uZ6GjOur+bZv5pMS8lrOYHZBJxINc1K/rSTMEXSO+HvkFpcOTBirDzlgx5B7tm2V8AAtxpRby4uRAlW70fNVqB2fK7ojy44yTcQmxnGFOhbUkEJFB217JTvUuV9BYUmgp8UP9PowRaGPxWAmsIlqT2rP7cKdpcjmu2Lo2DsDCOcQJrZy3RHKyaxTRSVKDpsfcfUTGBbU6WlS05UnOc2SEONJ0b3aFpw8XgpjFGsLxwe8bgcFJ031YMq/nW3f5YI8wJ07AR4xopcrWNu+Tav2In+8uB+Y7JKtv1ljNRWGPVzNlBgcUpnlajXi8s7yAV9lHZoDf6GEbPSdAfP243g6Za1PoGUVgrUmJydrtgYXl1mJHEkBqleCpWUc6O9qxQ1wbrOXVgWyMXuMdErZlWbsyS23diIE=
+	UD3DvZrDkLnuih9pgZ5xQp+Hh7iTNFX0XYSQKX/+0ubkMWdfp/mhRU/sOfmbvscpCirE4F7ZeATxfDGUUVR6f6zmoB07nc0TUcuQELhzInr4atNGJGVRQtc9E6pb7dT0Qxq4md5Ni9ERFyWn+bdIycZ5TuG6rDFbdyL5s0N+0fvTMMnIR1mdExOVtXWRwoEy5yvcVUZBnlJq/BouUeaPH5D+rg79i7m733621l0VyXeqU1ESYVYv0ujbVRJTjg9qpIQGpBaBjYUg7KVkvBmcCsU+ZGfo6/ZUr6HjlTarmEn+FNKyHEGES/GuV+C/fycJE5X3Qp93WfYZxGV7eWgttPaQ0ocybLLDFJqScbJgYlYB44riIpFKRvjrTxMmYKtK0XxbQ0wEGsK54TOSd92DoBiReFj7eZw8N2mrzM50Klx4GgcS6j4pEifqlA1bKL28VFXpk7Ktwt3ueDrSJTAy76F8b8kObVTsNSabAEry54ZA89TGHtUdRF0QyV0Rhl6rfGpoCjg6KJE3xW2ogK53pIw8tch+9VXKPFHzJks1i0xGvkQGtUUNA+cfiDXcygQKPeGKm6jOzGqoyvL9W9hONw2t1Ko2IAWDy/vPQCiYLKLrnGNoSHe49jye0CzU7kuxPVrvSeSdmL8VKkFtxkC5uditSaeqHyGEk1lSYTCrLbhAGgDusg7geZ6Qt+xqYckyYuNORWChKa4hxWgVhkbI7CCX1n39JEHHvgS+AQ7hNl527z1KS8M9QBcH+TakYwRX49OjW9TV05B4OkAskb8WUCLmt+wC5Pds7OZYRclh0opEFmgWI4LVXbs9bxRCOyPV8CGb4FgfyS5OrY/VGUQzzBxFq7Kta8oczzaXh3oPIgQ=
 X-Forefront-Antispam-Report:
-	CIP:164.130.1.60;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(82310400026)(36860700013)(921020);DIR:OUT;SFP:1101;
+	CIP:164.130.1.60;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	i4Z4+UXp0X0pJWUAL1p9IdRuNrQP+2NOSuG3ZxqqFoM1CYd9JeHb5kHwzwO16AEXsqMJ9pWw7BHjBqDzvXdPQL+vKBnqyY4L0zdmaZBLb1TQ3Gn9gr7PKIFr9fyfpD103pLZe/yAahrAmpJBifEgRUW3IverHtAdfNmqIhXEWotG0VwYEE7pSUahX68Om70L25Qgog4vkSv+gnU3kn7Mf/SmUPxe0CFtkPlVjXcnUDA2Cma6t2xH5Ce9/a8fUovqL1ZdYsmHU+fNMTFEQg+oOFojtNoNyUlaaoiwP7t9XyVRGBKtFEBcV3VkSh0fWSXPFkakQg9C4WaDmSS8yej8Kcw08DHTsd+1H6epK+mNNGkpKS4h8bq+1NFL0HAhxFcCddxBi/91QdXglXpuREdYMt8YqFGKVWLFQmYwFIYP/hsFOMmhpa4JFFaUY/jqZiVd
+	PcZ7IuXPgOazb1ffBNDlC1eoqyqhD4bnHIjneq/9wFDAfm0uxJKnaL1HkWKFmeXLua9AD+uF3s1vFEvq06GUFUk4NCz2RhX7QM6RFZ4aPNcKrG7bwLuGFPaIq/Dh4kzxKPEco69AT+7BZKa4IZddQXTZG3SJUwhdEXcCbkCQwZuBf8y2qZE26f/F27DSHQMZhZew7sZn8JBwDRWqoHwD+KgoY8dbuF6ku/BvQrbLAQ+z/IFJQ+aw4mlDszDxute4z6afrm+DY9mX5L42kUEzbv4BQwGsgENL1xxCMsrpqF1lu3RNpJqwdNlBByAwZfQjcWwhwNhAjJWR1XyXQaZ1ihOTirOAPN1XCVZAzye0TJaS/03VuKOiRdPJCB4IlLUrj1oGVMa2ow8vN1Fq6ygsICB5Qj1F9sP25pLgqOS9Ih/LBRRiFex63Gs13njEhEzo
 X-OriginatorOrg: foss.st.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2026 10:31:26.5235
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2026 10:31:37.1844
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3e80991-0e32-4960-48ea-08de75223246
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e23c5a9-cbe8-434a-73a8-08de752238a2
 X-MS-Exchange-CrossTenant-Id: 75e027c9-20d5-47d5-b82f-77d7cd041e8f
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=75e027c9-20d5-47d5-b82f-77d7cd041e8f;Ip=[164.130.1.60];Helo=[smtpO365.st.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	AM3PEPF00009B9B.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR10MB8335
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR10MB3543
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[foss.st.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[foss.st.com:s=selector2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32216-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-32217-lists,linux-gpio=lfdr.de];
 	FREEMAIL_TO(0.00)[arm.com,linaro.org,kernel.org,linux.dev,gmail.com,foss.st.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[23];
+	RCPT_COUNT_TWELVE(0.00)[24];
 	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[foss.st.com:mid,foss.st.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,st.com:email];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
 	DKIM_TRACE(0.00)[foss.st.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -162,328 +164,437 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[8]
-X-Rspamd-Queue-Id: C71A71A454E
+X-Rspamd-Queue-Id: 0CA9A1A456B
 X-Rspamd-Action: no action
 
-Add the stm32 debug bus driver that is responsible of checking the
-debug subsystem accessibility before probing the related peripheral
-drivers.
+Some peripherals cannot be probed if a debug configuration is not set
+in the BSEC.
+Introduce a debug bus that will check the debug subsystem accessibility
+before probing these peripheral drivers.
 
-This driver is OP-TEE dependent and relies on the STM32 debug access
-PTA.
+Add Coresight peripheral nodes under this bus and add the appropriate
+access-controllers property to the HDP node.
 
+Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
 Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
 ---
- MAINTAINERS                 |   1 +
- drivers/bus/Kconfig         |  10 ++
- drivers/bus/Makefile        |   1 +
- drivers/bus/stm32_dbg_bus.c | 251 ++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 263 insertions(+)
+ arch/arm/boot/dts/st/stm32mp131.dtsi | 117 ++++++++++++++++++++++++
+ arch/arm/boot/dts/st/stm32mp151.dtsi | 172 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/st/stm32mp153.dtsi |  68 ++++++++++++++
+ 3 files changed, 357 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 55af015174a5..63f59748d661 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -25009,6 +25009,7 @@ F:	drivers/hwmon/pmbus/stef48h28.c
- ST STM32 FIREWALL
- M:	Gatien Chevallier <gatien.chevallier@foss.st.com>
- S:	Maintained
-+F:	drivers/bus/stm32_dbg_bus.c
- F:	drivers/bus/stm32_etzpc.c
- F:	drivers/bus/stm32_firewall.c
- F:	drivers/bus/stm32_rifsc.c
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 2a1b46f07080..7a1b04007efb 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -169,6 +169,16 @@ config QCOM_SSC_BLOCK_BUS
- 	  i2c/spi/uart controllers, a hexagon core, and a clock controller
- 	  which provides clocks for the above.
+diff --git a/arch/arm/boot/dts/st/stm32mp131.dtsi b/arch/arm/boot/dts/st/stm32mp131.dtsi
+index b9657ff91c23..a2513d55499f 100644
+--- a/arch/arm/boot/dts/st/stm32mp131.dtsi
++++ b/arch/arm/boot/dts/st/stm32mp131.dtsi
+@@ -3,6 +3,7 @@
+  * Copyright (C) STMicroelectronics 2021 - All Rights Reserved
+  * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
+  */
++#include <dt-bindings/arm/coresight-cti-dt.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/stm32mp13-clks.h>
+ #include <dt-bindings/reset/stm32mp13-resets.h>
+@@ -964,9 +965,125 @@ hdp: pinctrl@5002a000 {
+ 			compatible = "st,stm32mp131-hdp";
+ 			reg = <0x5002a000 0x400>;
+ 			clocks = <&rcc HDP>;
++			access-controllers = <&dbg_bus 1>;
+ 			status = "disabled";
+ 		};
  
-+config STM32_DBG_BUS
-+	tristate "OP-TEE based debug access bus"
-+	depends on OPTEE && STM32_FIREWALL
-+	depends on ARCH_STM32 || COMPILE_TEST
-+	help
-+	  Select this to get the support for the OP-TEE based STM32 debug bus
-+	  driver that is used to handle debug-related peripherals on STM32
-+	  platforms when the debug configuration is not accessible by the
-+	  normal world.
++		dbg_bus: bus@50080000 {
++			compatible = "st,stm32mp131-dbg-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			#access-controller-cells = <1>;
++			ranges = <0x50080000 0x50080000 0x3f80000>;
++			status = "disabled";
 +
- config STM32_FIREWALL
- 	bool "STM32 Firewall framework"
- 	depends on (ARCH_STM32 || COMPILE_TEST) && OF
-diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
-index 8e693fe8a03a..799724cfc2df 100644
---- a/drivers/bus/Makefile
-+++ b/drivers/bus/Makefile
-@@ -27,6 +27,7 @@ obj-$(CONFIG_OMAP_INTERCONNECT)	+= omap_l3_smx.o omap_l3_noc.o
- obj-$(CONFIG_OMAP_OCP2SCP)	+= omap-ocp2scp.o
- obj-$(CONFIG_QCOM_EBI2)		+= qcom-ebi2.o
- obj-$(CONFIG_QCOM_SSC_BLOCK_BUS)	+= qcom-ssc-block-bus.o
-+obj-$(CONFIG_STM32_DBG_BUS)	+= stm32_dbg_bus.o
- obj-$(CONFIG_STM32_FIREWALL)	+= stm32_firewall.o stm32_rifsc.o stm32_etzpc.o
- obj-$(CONFIG_SUN50I_DE2_BUS)	+= sun50i-de2.o
- obj-$(CONFIG_SUNXI_RSB)		+= sunxi-rsb.o
-diff --git a/drivers/bus/stm32_dbg_bus.c b/drivers/bus/stm32_dbg_bus.c
-new file mode 100644
-index 000000000000..fe4828d2f223
---- /dev/null
-+++ b/drivers/bus/stm32_dbg_bus.c
-@@ -0,0 +1,251 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2026, STMicroelectronics - All Rights Reserved
-+ */
++			cs_etf: etf@50092000 {
++				compatible = "arm,coresight-tmc", "arm,primecell";
++				reg = <0x50092000 0x1000>;
++				clocks = <&rcc CK_DBG>;
++				clock-names = "apb_pclk";
++				access-controllers = <&dbg_bus 0>;
++				status = "disabled";
 +
-+#include <linux/bus/stm32_firewall_device.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/tee_drv.h>
-+#include <linux/types.h>
++				in-ports {
++					port {
++						etf_in_port: endpoint {
++							remote-endpoint = <&etm0_out_port>;
++						};
++					};
++				};
 +
-+#include "stm32_firewall.h"
++				out-ports {
++					port {
++						etf_out_port: endpoint {
++							remote-endpoint = <&tpiu_in_port>;
++						};
++					};
++				};
++			};
 +
-+enum stm32_dbg_profile {
-+	PERIPHERAL_DBG_PROFILE	= 0,
-+	HDP_DBG_PROFILE		= 1,
++			cs_tpiu: tpiu@50093000 {
++				compatible = "arm,coresight-tpiu", "arm,primecell";
++				reg = <0x50093000 0x1000>;
++				clocks = <&rcc CK_DBG>, <&rcc CK_TRACE>;
++				clock-names = "apb_pclk", "atclk";
++				access-controllers = <&dbg_bus 0>;
++				status = "disabled";
++
++				in-ports {
++					port {
++						tpiu_in_port: endpoint {
++							remote-endpoint = <&etf_out_port>;
++						};
++					};
++				};
++			};
++
++			cs_cti_trace: cti@50094000 {
++				compatible = "arm,coresight-cti", "arm,primecell";
++				reg = <0x50094000 0x1000>;
++				clocks = <&rcc CK_DBG>;
++				clock-names = "apb_pclk";
++				access-controllers = <&dbg_bus 0>;
++				status = "disabled";
++			};
++
++			cs_cti_cpu0: cti@500d8000 {
++				compatible = "arm,coresight-cti", "arm,primecell";
++				reg = <0x500d8000 0x1000>;
++				clocks = <&rcc CK_DBG>;
++				clock-names = "apb_pclk";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				access-controllers = <&dbg_bus 0>;
++				status = "disabled";
++
++				trig-conns@0 {
++					reg = <0>;
++					arm,trig-in-sigs = <0 4 5>;
++					arm,trig-in-types = <PE_DBGTRIGGER
++							     GEN_IO
++							     GEN_IO>;
++					arm,trig-out-sigs = <0 7>;
++					arm,trig-out-types = <PE_EDBGREQ
++							      PE_DBGRESTART>;
++					cpu = <&cpu0>;
++				};
++
++				trig-conns@2 {
++					reg = <2>;
++					arm,trig-in-sigs = <2 3 6>;
++					arm,trig-in-types = <ETM_EXTOUT
++							     ETM_EXTOUT
++							     ETM_EXTOUT>;
++					arm,trig-out-sigs = <1 2 3 4>;
++					arm,trig-out-types = <ETM_EXTIN
++							      ETM_EXTIN
++							      ETM_EXTIN
++							      ETM_EXTIN>;
++					arm,cs-dev-assoc = <&cs_etm0>;
++				};
++			};
++
++			cs_etm0: etm@500dc000 {
++				compatible = "arm,coresight-etm3x", "arm,primecell";
++				reg = <0x500dc000 0x1000>;
++				cpu = <&cpu0>;
++				clocks = <&rcc CK_DBG>, <&rcc CK_TRACE>;
++				clock-names = "apb_pclk", "atclk";
++				access-controllers = <&dbg_bus 0>;
++				status = "disabled";
++
++				out-ports {
++					port {
++						etm0_out_port: endpoint {
++							remote-endpoint = <&etf_in_port>;
++						};
++					};
++				};
++			};
++		};
++
+ 		mdma: dma-controller@58000000 {
+ 			compatible = "st,stm32h7-mdma";
+ 			reg = <0x58000000 0x1000>;
+diff --git a/arch/arm/boot/dts/st/stm32mp151.dtsi b/arch/arm/boot/dts/st/stm32mp151.dtsi
+index b1b568dfd126..1580fdcfb772 100644
+--- a/arch/arm/boot/dts/st/stm32mp151.dtsi
++++ b/arch/arm/boot/dts/st/stm32mp151.dtsi
+@@ -3,6 +3,7 @@
+  * Copyright (C) STMicroelectronics 2017 - All Rights Reserved
+  * Author: Ludovic Barre <ludovic.barre@st.com> for STMicroelectronics.
+  */
++#include <dt-bindings/arm/coresight-cti-dt.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/stm32mp1-clks.h>
+ #include <dt-bindings/reset/stm32mp1-resets.h>
+@@ -274,9 +275,180 @@ hdp: pinctrl@5002a000 {
+ 			compatible = "st,stm32mp151-hdp";
+ 			reg = <0x5002a000 0x400>;
+ 			clocks = <&rcc HDP>;
++			access-controllers = <&dbg_bus 1>;
+ 			status = "disabled";
+ 		};
+ 
++		dbg_bus: bus@50080000 {
++			compatible = "st,stm32mp151-dbg-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			#access-controller-cells = <1>;
++			ranges = <0x50080000 0x50080000 0x3f80000>,
++				 <0x90000000 0x90000000 0x1000000>;
++			status = "disabled";
++
++			cs_funnel: funnel@50091000 {
++				compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
++				reg = <0x50091000 0x1000>;
++				clocks = <&rcc CK_DBG>, <&rcc CK_TRACE>;
++				clock-names = "apb_pclk", "atclk";
++				access-controllers = <&dbg_bus 0>;
++				status = "disabled";
++
++				in-ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					port@0 {
++						reg = <0>;
++						funnel_in_port0: endpoint {
++							remote-endpoint = <&stm_out_port>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++						funnel_in_port1: endpoint {
++							remote-endpoint = <&etm0_out>;
++						};
++					};
++				};
++
++				out-ports {
++					port {
++						funnel_out_port: endpoint {
++							remote-endpoint = <&etf_in_port>;
++						};
++					};
++				};
++			};
++
++			cs_etf: etf@50092000 {
++				compatible = "arm,coresight-tmc", "arm,primecell";
++				reg = <0x50092000 0x1000>;
++				clocks = <&rcc CK_DBG>;
++				clock-names = "apb_pclk";
++				access-controllers = <&dbg_bus 0>;
++				status = "disabled";
++
++				in-ports {
++					port {
++						etf_in_port: endpoint {
++							remote-endpoint = <&funnel_out_port>;
++						};
++					};
++				};
++
++				out-ports {
++					port {
++						etf_out_port: endpoint {
++							remote-endpoint = <&tpiu_in_port>;
++						};
++					};
++				};
++			};
++
++			cs_tpiu: tpiu@50093000 {
++				compatible = "arm,coresight-tpiu", "arm,primecell";
++				reg = <0x50093000 0x1000>;
++				clocks = <&rcc CK_DBG>, <&rcc CK_TRACE>;
++				clock-names = "apb_pclk", "atclk";
++				access-controllers = <&dbg_bus 0>;
++				status = "disabled";
++
++				in-ports {
++					port {
++						tpiu_in_port: endpoint {
++							remote-endpoint = <&etf_out_port>;
++						};
++					};
++				};
++			};
++
++			cs_cti_trace: cti@50094000 {
++				compatible = "arm,coresight-cti", "arm,primecell";
++				reg = <0x50094000 0x1000>;
++				clocks = <&rcc CK_DBG>;
++				clock-names = "apb_pclk";
++				access-controllers = <&dbg_bus 0>;
++				status = "disabled";
++			};
++
++			cs_stm: stm@500a0000 {
++				compatible = "arm,coresight-stm", "arm,primecell";
++				reg = <0x500a0000 0x00001000>,
++				      <0x90000000 0x01000000>;
++				reg-names = "stm-base", "stm-stimulus-base";
++				clocks = <&rcc CK_DBG>, <&rcc CK_TRACE>;
++				clock-names = "apb_pclk", "atclk";
++				access-controllers = <&dbg_bus 0>;
++				status = "disabled";
++
++				out-ports {
++					port {
++						stm_out_port: endpoint {
++							remote-endpoint = <&funnel_in_port0>;
++						};
++					};
++				};
++			};
++
++			cs_cti_cpu0: cti@500d8000 {
++				compatible = "arm,coresight-cti", "arm,primecell";
++				reg = <0x500d8000 0x1000>;
++				clocks = <&rcc CK_DBG>;
++				clock-names = "apb_pclk";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				access-controllers = <&dbg_bus 0>;
++				status = "disabled";
++
++				trig-conns@0 {
++					reg = <0>;
++					arm,trig-in-sigs = <0 4 5>;
++					arm,trig-in-types = <PE_DBGTRIGGER
++							     GEN_IO
++							     GEN_IO>;
++					arm,trig-out-sigs = <0 7>;
++					arm,trig-out-types = <PE_EDBGREQ
++							      PE_DBGRESTART>;
++					cpu = <&cpu0>;
++				};
++
++				trig-conns@2 {
++					reg = <2>;
++					arm,trig-in-sigs = <2 3 6>;
++					arm,trig-in-types = <ETM_EXTOUT
++							     ETM_EXTOUT
++							     ETM_EXTOUT>;
++					arm,trig-out-sigs = <1 2 3 4>;
++					arm,trig-out-types = <ETM_EXTIN
++							      ETM_EXTIN
++							      ETM_EXTIN
++							      ETM_EXTIN>;
++					arm,cs-dev-assoc = <&cs_etm0>;
++				};
++			};
++
++			cs_etm0: etm@500dc000 {
++				compatible = "arm,coresight-etm3x", "arm,primecell";
++				reg = <0x500dc000 0x1000>;
++				cpu = <&cpu0>;
++				clocks = <&rcc CK_DBG>, <&rcc CK_TRACE>;
++				clock-names = "apb_pclk", "atclk";
++				access-controllers = <&dbg_bus 0>;
++				status = "disabled";
++
++				out-ports {
++					port {
++						etm0_out: endpoint {
++							remote-endpoint = <&funnel_in_port1>;
++						};
++					};
++				};
++			};
++		};
++
+ 		mdma1: dma-controller@58000000 {
+ 			compatible = "st,stm32h7-mdma";
+ 			reg = <0x58000000 0x1000>;
+diff --git a/arch/arm/boot/dts/st/stm32mp153.dtsi b/arch/arm/boot/dts/st/stm32mp153.dtsi
+index 92794b942ab2..17d52d93695e 100644
+--- a/arch/arm/boot/dts/st/stm32mp153.dtsi
++++ b/arch/arm/boot/dts/st/stm32mp153.dtsi
+@@ -30,6 +30,74 @@ timer {
+ 	};
+ };
+ 
++&cs_funnel {
++	in-ports {
++		port@2 {
++			reg = <2>;
++			funnel_in_port2: endpoint {
++				remote-endpoint = <&etm1_out>;
++			};
++		};
++	};
 +};
 +
-+enum stm32_dbg_pta_command {
-+	/*
-+	 * PTA_CMD_GRANT_DBG_ACCESS - Verify the debug configuration against the given debug profile
-+	 * and grant access or not
-+	 *
-+	 * [in]     value[0].a  Debug profile to grant access to.
-+	 */
-+	PTA_CMD_GRANT_DBG_ACCESS,
++&dbg_bus {
++	cs_cti_cpu1: cti@500d9000 {
++		compatible = "arm,coresight-cti", "arm,primecell";
++		reg = <0x500d9000 0x1000>;
++		clocks = <&rcc CK_DBG>;
++		clock-names = "apb_pclk";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		access-controllers = <&dbg_bus 0>;
++		status = "disabled";
++
++		trig-conns@0 {
++			reg = <0>;
++			arm,trig-in-sigs = <0 4 5>;
++			arm,trig-in-types = <PE_DBGTRIGGER
++					     GEN_IO
++					     GEN_IO>;
++			arm,trig-out-sigs = <0 7>;
++			arm,trig-out-types = <PE_EDBGREQ
++					      PE_DBGRESTART>;
++			cpu = <&cpu1>;
++		};
++
++		trig-conns@2 {
++			reg = <2>;
++			arm,trig-in-sigs = <2 3 6>;
++			arm,trig-in-types = <ETM_EXTOUT
++					     ETM_EXTOUT
++					     ETM_EXTOUT>;
++			arm,trig-out-sigs = <1 2 3 4>;
++			arm,trig-out-types = <ETM_EXTIN
++					      ETM_EXTIN
++					      ETM_EXTIN
++					      ETM_EXTIN>;
++			arm,cs-dev-assoc = <&cs_etm1>;
++		};
++	};
++
++	cs_etm1: etm@500dd000 {
++		compatible = "arm,coresight-etm3x", "arm,primecell";
++		reg = <0x500dd000 0x1000>;
++		cpu = <&cpu1>;
++		clocks = <&rcc CK_DBG>, <&rcc CK_TRACE>;
++		clock-names = "apb_pclk", "atclk";
++		access-controllers = <&dbg_bus 0>;
++		status = "disabled";
++
++		out-ports {
++			port {
++				etm1_out: endpoint {
++					remote-endpoint = <&funnel_in_port2>;
++				};
++			};
++		};
++	};
 +};
 +
-+/**
-+ * struct stm32_dbg_bus - OP-TEE based STM32 debug bus private data
-+ * @dev: STM32 debug bus device.
-+ * @ctx: OP-TEE context handler.
-+ */
-+struct stm32_dbg_bus {
-+	struct device *dev;
-+	struct tee_context *ctx;
-+};
-+
-+/* Expect at most 1 instance of this driver */
-+static struct stm32_dbg_bus *stm32_dbg_bus_priv;
-+
-+static int stm32_dbg_pta_open_session(u32 *id)
-+{
-+	struct tee_client_device *dbg_bus_dev = to_tee_client_device(stm32_dbg_bus_priv->dev);
-+	struct tee_ioctl_open_session_arg sess_arg;
-+	int ret;
-+
-+	memset(&sess_arg, 0, sizeof(sess_arg));
-+	export_uuid(sess_arg.uuid, &dbg_bus_dev->id.uuid);
-+	sess_arg.clnt_login = TEE_IOCTL_LOGIN_REE_KERNEL;
-+
-+	ret = tee_client_open_session(stm32_dbg_bus_priv->ctx, &sess_arg, NULL);
-+	if (ret < 0 || sess_arg.ret) {
-+		dev_err(stm32_dbg_bus_priv->dev, "Failed opening tee session, err: %#x\n",
-+			sess_arg.ret);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	*id = sess_arg.session;
-+
-+	return 0;
-+}
-+
-+static void stm32_dbg_pta_close_session(u32 id)
-+{
-+	tee_client_close_session(stm32_dbg_bus_priv->ctx, id);
-+}
-+
-+static int stm32_dbg_bus_grant_access(struct stm32_firewall_controller *ctrl, u32 dbg_profile)
-+{
-+	struct tee_ioctl_invoke_arg inv_arg = {0};
-+	struct tee_param param[1] = {0};
-+	u32 session_id;
-+	int ret;
-+
-+	if (dbg_profile != PERIPHERAL_DBG_PROFILE && dbg_profile != HDP_DBG_PROFILE)
-+		return -EOPNOTSUPP;
-+
-+	ret = stm32_dbg_pta_open_session(&session_id);
-+	if (ret)
-+		return ret;
-+
-+	inv_arg.func = PTA_CMD_GRANT_DBG_ACCESS;
-+	inv_arg.session = session_id;
-+	inv_arg.num_params = 1;
-+	param[0].attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT;
-+	param[0].u.value.a = dbg_profile;
-+
-+	ret = tee_client_invoke_func(stm32_dbg_bus_priv->ctx, &inv_arg, param);
-+	if (ret < 0 || inv_arg.ret != 0) {
-+		dev_dbg(stm32_dbg_bus_priv->dev,
-+			"When invoking function, err %x, TEE returns: %x\n", ret, inv_arg.ret);
-+		if (!ret)
-+			ret = -EACCES;
-+	}
-+
-+	stm32_dbg_pta_close_session(session_id);
-+
-+	return ret;
-+}
-+
-+/* Implement mandatory release_access ops even if it does nothing*/
-+static void stm32_dbg_bus_release_access(struct stm32_firewall_controller *ctrl, u32 dbg_profile)
-+{
-+}
-+
-+static int stm32_dbg_bus_plat_probe(struct platform_device *pdev)
-+{
-+	struct stm32_firewall_controller *dbg_controller;
-+	int ret;
-+
-+	/* Defer if OP-TEE service is not yet available */
-+	if (!stm32_dbg_bus_priv)
-+		return -EPROBE_DEFER;
-+
-+	dbg_controller = devm_kzalloc(&pdev->dev, sizeof(*dbg_controller), GFP_KERNEL);
-+	if (!dbg_controller)
-+		return dev_err_probe(&pdev->dev, -ENOMEM, "Couldn't allocate debug controller\n");
-+
-+	dbg_controller->dev = &pdev->dev;
-+	dbg_controller->mmio = NULL;
-+	dbg_controller->name = dev_driver_string(dbg_controller->dev);
-+	dbg_controller->type = STM32_PERIPHERAL_FIREWALL;
-+	dbg_controller->grant_access = stm32_dbg_bus_grant_access;
-+	dbg_controller->release_access = stm32_dbg_bus_release_access;
-+
-+	ret = stm32_firewall_controller_register(dbg_controller);
-+	if (ret) {
-+		dev_err(dbg_controller->dev, "Couldn't register as a firewall controller: %d", ret);
-+		return ret;
-+	}
-+
-+	ret = stm32_firewall_populate_bus(dbg_controller);
-+	if (ret) {
-+		dev_err(dbg_controller->dev, "Couldn't populate debug bus: %d", ret);
-+		stm32_firewall_controller_unregister(dbg_controller);
-+		return ret;
-+	}
-+
-+	pm_runtime_enable(&pdev->dev);
-+
-+	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-+	if (ret) {
-+		dev_err(dbg_controller->dev, "Couldn't populate the node: %d", ret);
-+		stm32_firewall_controller_unregister(dbg_controller);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id stm32_dbg_bus_of_match[] = {
-+	{ .compatible = "st,stm32mp131-dbg-bus", },
-+	{ .compatible = "st,stm32mp151-dbg-bus", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, stm32_dbg_bus_of_match);
-+
-+static struct platform_driver stm32_dbg_bus_driver = {
-+	.probe = stm32_dbg_bus_plat_probe,
-+	.driver = {
-+		.name = "stm32-dbg-bus",
-+		.of_match_table = stm32_dbg_bus_of_match,
-+	},
-+};
-+
-+static int optee_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
-+{
-+	return (ver->impl_id == TEE_IMPL_ID_OPTEE);
-+}
-+
-+static void stm32_dbg_bus_remove(struct tee_client_device *tee_dev)
-+{
-+	tee_client_close_context(stm32_dbg_bus_priv->ctx);
-+	stm32_dbg_bus_priv = NULL;
-+
-+	of_platform_depopulate(&tee_dev->dev);
-+}
-+
-+static int stm32_dbg_bus_probe(struct tee_client_device *tee_dev)
-+{
-+	struct device *dev = &tee_dev->dev;
-+	struct stm32_dbg_bus *priv;
-+	int ret = 0;
-+
-+	if (stm32_dbg_bus_priv)
-+		return dev_err_probe(dev, -EBUSY,
-+				     "A STM32 debug bus device is already initialized\n");
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	/* Open context with TEE driver */
-+	priv->ctx = tee_client_open_context(NULL, optee_ctx_match, NULL, NULL);
-+	if (IS_ERR_OR_NULL(priv->ctx))
-+		return dev_err_probe(dev, PTR_ERR_OR_ZERO(priv->ctx), "Cannot open TEE context\n");
-+
-+	stm32_dbg_bus_priv = priv;
-+	stm32_dbg_bus_priv->dev = dev;
-+
-+	return ret;
-+}
-+
-+static const struct tee_client_device_id optee_dbg_bus_id_table[] = {
-+	{UUID_INIT(0xdd05bc8b, 0x9f3b, 0x49f0,
-+		   0xb6, 0x49, 0x01, 0xaa, 0x10, 0xc1, 0xc2, 0x10)},
-+	{}
-+};
-+
-+static struct tee_client_driver stm32_optee_dbg_bus_driver = {
-+	.id_table = optee_dbg_bus_id_table,
-+	.probe = stm32_dbg_bus_probe,
-+	.remove = stm32_dbg_bus_remove,
-+	.driver = {
-+		.name = "optee_dbg_bus",
-+	},
-+};
-+
-+static void __exit stm32_optee_dbg_bus_driver_exit(void)
-+{
-+	platform_driver_unregister(&stm32_dbg_bus_driver);
-+	tee_client_driver_unregister(&stm32_optee_dbg_bus_driver);
-+}
-+module_exit(stm32_optee_dbg_bus_driver_exit);
-+
-+static int __init stm32_optee_dbg_bus_driver_init(void)
-+{
-+	int err;
-+
-+	err = tee_client_driver_register(&stm32_optee_dbg_bus_driver);
-+	if (err)
-+		return err;
-+
-+	err = platform_driver_register(&stm32_dbg_bus_driver);
-+	if (err)
-+		tee_client_driver_unregister(&stm32_optee_dbg_bus_driver);
-+
-+	return err;
-+}
-+module_init(stm32_optee_dbg_bus_driver_init);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Gatien Chevallier <gatien.chevallier@foss.st.com>");
-+MODULE_DESCRIPTION("OP-TEE based STM32 debug access bus driver");
+ &etzpc {
+ 	m_can1: can@4400e000 {
+ 		compatible = "bosch,m_can";
 
 -- 
 2.43.0
