@@ -1,71 +1,72 @@
-Return-Path: <linux-gpio+bounces-32253-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32254-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AH8VNKnQoGmTmwQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32253-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 00:00:57 +0100
+	id oFpIJjbRoGmTmwQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32254-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 00:03:18 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E3EC1B0B37
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 00:00:57 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C3961B0B68
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 00:03:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id CA56C3014FC9
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 23:00:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 01FC5302AC13
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 23:03:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77712313523;
-	Thu, 26 Feb 2026 23:00:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23B0832862C;
+	Thu, 26 Feb 2026 23:03:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/itnBvW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="okzGFR0x"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3917C218AC4
-	for <linux-gpio@vger.kernel.org>; Thu, 26 Feb 2026 23:00:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671E33EDAC5
+	for <linux-gpio@vger.kernel.org>; Thu, 26 Feb 2026 23:03:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772146855; cv=none; b=Ikqf/q1hzpEX2bpBMSks1jiNDi5tSuqmCFe6CsuzSpQsyOvOrzfkhnda4U0kR4hnQympeGfcTB/8QHrIsTf4EtkLbldb8kgGoajeoHcYkb2U4JToLlrhpqTwFhm8yBJsvUZEvCRKqSTnu/iXXvObnyoVZHcJg0zSKZB0B0oe1NU=
+	t=1772146985; cv=none; b=oEyq52eOS65FkqDrN7uN2v7kzIspW4ClDoYn1nsPPGBrIFy8zoAEtI8vrsxac+7nv5dTP3b91VmxO81nbIgj/GY7LfRR3sJtmbFhGvC+NscVW1sgoNGxTGXW45UZqZhbbvR+L7NLesCIqV0qgfs32hz/kQgb0q8OcKnlPZDbZYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772146855; c=relaxed/simple;
-	bh=8NfYHIs2u8PYfKkw4JpNbu7c/jRe8VpjpEv1ZVGuM/8=;
+	s=arc-20240116; t=1772146985; c=relaxed/simple;
+	bh=juifvj4TPoDeapwISPtY4UqLPTbzAjLKpVQX30ShM4k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HveCTtUXGmFKjlP6q2s7Oy9Hb5MvPF9F8QGPS7Cw0ishKnXVkpmFqX4zNp1jFSTnrPnAHgqk88VMMFVqavIo3enrdxWW59X8Hmyd5wcnJnIB+nDMSfm4M8yoGE2DDDcmHQxPJb2ro1JcKAh8sJqCu6Osq6440hfUreBUJAbOSh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/itnBvW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E625AC2BCAF
-	for <linux-gpio@vger.kernel.org>; Thu, 26 Feb 2026 23:00:54 +0000 (UTC)
+	 To:Cc:Content-Type; b=Zen3lX9ZRoge2Fjb9pDaD+HvxvZkC1+zDPNxBw/7mKBEPtkCj6rG/iDbmF1MDTnWbj2m8VCM2UQEtwHbHkSNtuseccLmnW22ZGJswDlVNnEhpEy7cJYPBciCmGSXo+nkZNfJuNABxrdTvHtn28Xb7V2OmAhrJsHHBt0kEvTMzyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=okzGFR0x; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04491C2BCB1
+	for <linux-gpio@vger.kernel.org>; Thu, 26 Feb 2026 23:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772146854;
-	bh=8NfYHIs2u8PYfKkw4JpNbu7c/jRe8VpjpEv1ZVGuM/8=;
+	s=k20201202; t=1772146985;
+	bh=juifvj4TPoDeapwISPtY4UqLPTbzAjLKpVQX30ShM4k=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=B/itnBvW2Z5XflU3hz8kop32RTtw7zbafsmciu8bA00tJbl0nsKjMYOsLjr5z/3zz
-	 DmAKG1bwZ5xYkF1hfMovC4qvMJ/wWhRlNy8Az2v0vpTQLBmg2vj6OVUU0Un17UF9tO
-	 14mKCu7wfADzBDM4EUDKWYm7PbVzqiFmD07+6ArArulcJEjos+okD4bvid2eUi9fAp
-	 kVaD8AF0cCzHTF+SEduiypJloXtcsuERmvfsP7Z1Z2gAFSxNA9jBXle7XJMx1kdNq9
-	 zR8vKlvbJ1ZijGGfkB5Hp/p2LMdECgMJdTYwaqyQPo5I45jM9kJ0eJARZhsFi+7TAo
-	 /gAgBUAmpCbaQ==
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-79827d28feaso13947927b3.3
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Feb 2026 15:00:54 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWQZzEqmkIVuM/GybGASQSc3WZVzvIBu1Q7W/HuESYs6V77SOlCAhOor96pgXXQBEO2U12HgvOm6Jnc@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeYd/ONcH0dxa7T8iIQmOxiP9K5w4ja20jKuEEqXnI1DHji9E8
-	fF+MYOtg5tyZDhN+IibjF42Igr0QBQ2DQ0MFYhuvmY8VMUwEa3sZq26TMnmDCj8I+Eedr5OwKIa
-	MpsA1TKx4mka0fj+/UppzJFSkTp48CYM=
-X-Received: by 2002:a05:690c:3506:b0:798:71e8:3e3c with SMTP id
- 00721157ae682-798855a43eamr9121307b3.40.1772146854204; Thu, 26 Feb 2026
- 15:00:54 -0800 (PST)
+	b=okzGFR0xcitNDIaK+Sfd2x5eMMKsPj0bLBWXUPkFB2xlN38R5d7aLHGyFmVITrjgn
+	 hwM51aJ41Sz0mKs8jWyp3U8LfrRY/QLA6DLJRLgj4GtMQPbyhwVLg/Fm9tp79ggMjL
+	 eTi0dzVX/vKIpEutaGtnTwFgMKvMtUq3ce3Mj0CczJGTNSQHdLQ1mbt0vkoa9qv++d
+	 0uKSRsfNT6Pkc/OR0MvLwPMk4oS2RA6epeu6FJSQJGNTKQ54zV87vsPyRxUkwFLJK3
+	 LCqN/jbn+UEZeq9ub02j+gSV7Xdmo+r93rfd/PDfRCAAD8+FAm183QaJ92pZ//pkRY
+	 wKz6PhCAbuWWA==
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-78fc4425b6bso13935637b3.1
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Feb 2026 15:03:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXXlkEBdbdVK8gOMy66BSB3FadT6jAoTs+2WZ7vgCLEJGgLH270NjQOyxauQJSBc+tarOJHmJdGLkBT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxljp7+B2G7c1siq6ffSFqosURr7nVs3hxLKuDQetsC7yWcmKIi
+	jC5asGMlKcjvCBtmkM4geywxXNV1IGeGcNQdGpNIZ00+9l+t7X0KYdlDX0WB589qj3pxodYcJRQ
+	qhXYCWaLzlmvJM1ujG6kFn2WvQcmiXMA=
+X-Received: by 2002:a05:690c:338c:b0:797:a75e:3676 with SMTP id
+ 00721157ae682-798850e67damr11323337b3.0.1772146984322; Thu, 26 Feb 2026
+ 15:03:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260225171545.1980385-1-o.rempel@pengutronix.de> <20260225171545.1980385-4-o.rempel@pengutronix.de>
-In-Reply-To: <20260225171545.1980385-4-o.rempel@pengutronix.de>
+References: <20260225171545.1980385-1-o.rempel@pengutronix.de>
+ <20260225171545.1980385-4-o.rempel@pengutronix.de> <CAD++jLnkfcgme27DbAUOKn60HJbJuBghetEqpC8dhGnuMPk=Kw@mail.gmail.com>
+In-Reply-To: <CAD++jLnkfcgme27DbAUOKn60HJbJuBghetEqpC8dhGnuMPk=Kw@mail.gmail.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 27 Feb 2026 00:00:43 +0100
-X-Gmail-Original-Message-ID: <CAD++jLnkfcgme27DbAUOKn60HJbJuBghetEqpC8dhGnuMPk=Kw@mail.gmail.com>
-X-Gm-Features: AaiRm50m6oV6TlZxbQPsC6-EQt93_b_JUZykrqE8gN-rjOqdfnJE3otrxdt5BrE
-Message-ID: <CAD++jLnkfcgme27DbAUOKn60HJbJuBghetEqpC8dhGnuMPk=Kw@mail.gmail.com>
+Date: Fri, 27 Feb 2026 00:02:53 +0100
+X-Gmail-Original-Message-ID: <CAD++jL=PKnAa6CrzGOwPoS_kJJjiHEvztgAFdEoYpHDPj6WT9Q@mail.gmail.com>
+X-Gm-Features: AaiRm527bB0wtLGWuo0Xk8LO1jx9HQPkG4r12CRWYS1uUw0P8KGWnA1y3Zvx38o
+Message-ID: <CAD++jL=PKnAa6CrzGOwPoS_kJJjiHEvztgAFdEoYpHDPj6WT9Q@mail.gmail.com>
 Subject: Re: [PATCH v1 3/8] dt-bindings: pinctrl: add NXP MC33978/MC34978 pinctrl
 To: Oleksij Rempel <o.rempel@pengutronix.de>
 Cc: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, 
@@ -81,18 +82,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-32253-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-32254-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[13];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
@@ -102,69 +103,25 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,protonic.nl:email]
-X-Rspamd-Queue-Id: 6E3EC1B0B37
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,pengutronix.de:email]
+X-Rspamd-Queue-Id: 3C3961B0B68
 X-Rspamd-Action: no action
 
-Hi Oleksij,
+On Fri, Feb 27, 2026 at 12:00=E2=80=AFAM Linus Walleij <linusw@kernel.org> =
+wrote:
+> On Wed, Feb 25, 2026 at 6:16=E2=80=AFPM Oleksij Rempel <o.rempel@pengutro=
+nix.de> wrote:
 
-thanks for your patch for this very interesting hardware!
-
-On Wed, Feb 25, 2026 at 6:16=E2=80=AFPM Oleksij Rempel <o.rempel@pengutroni=
-x.de> wrote:
-
-> Add device tree binding documentation for the pin control and GPIO block
-> of the NXP MC33978/MC34978 Multiple Switch Detection Interface (MSDI).
+> > +  - Pins 14-21: SP0-SP7 (Programmable inputs, can be SG or SB)
 >
-> This block manages 22 switch detection inputs (14 Switch-to-Ground,
-> 8 Programmable) and acts as a GPIO controller.
->
-> Additionally, it supports pin configuration for hardware-specific feature=
-s
-> required for long-term contact maintenance in harsh environments, such as
-> adjusting the continuous/pulsed wetting current to penetrate oxide layers
-> on mechanical switches.
->
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> What is SB now? Please explain :)
 
-Are the hardware-specific pin configurations for oxide layer
-penetration (!) and stuff excluded from these bindings? (It looks
-like.)
+Oh I see in the driver that this is Switch-to-battery. So document that her=
+e
+in the bindings too.
 
-> +++ b/Documentation/devicetree/bindings/pinctrl/nxp,mc33978-pinctrl.yaml
-> @@ -0,0 +1,66 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/nxp,mc33978-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP MC33978/MC34978 Pinctrl/GPIO Driver
-> +
-> +maintainers:
-> +  - David Jander <david@protonic.nl>
-> +  - Oleksij Rempel <o.rempel@pengutronix.de>
-> +
-> +description: |
-> +  Pin control and GPIO driver for the MC33978/MC34978 MSDI device.
-> +
-> +  Pin numbering:
-> +  - Pins 0-13: SG0-SG13 (Switch-to-Ground inputs)
-
-I don't know what a switch-to-ground input is, but I talked to an AI
-about it.
-
-It appears to be directly incorrect to use such a line without
-flagging it as GPIO_ACTIVE_LOW in the consumer so this should
-be mentioned here, GPIO lines 0-13 *must* be flagged
-GPIO_ACTIVE_LOW. (I don't know a good way to enforce it
-in schema, sadly, maybe Conor has ideas.)
-
-> +  - Pins 14-21: SP0-SP7 (Programmable inputs, can be SG or SB)
-
-What is SB now? Please explain :)
-
-Other than that it looks good to me!
+Also it seems that something configured as switch-to-batter must be
+flagged GPIO_ACTIVE_HIGH.
 
 Yours,
 Linus Walleij
