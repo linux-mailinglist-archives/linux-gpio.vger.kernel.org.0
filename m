@@ -1,59 +1,59 @@
-Return-Path: <linux-gpio+bounces-32243-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32245-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AENDLshMoGnvhwQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32243-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 14:38:16 +0100
+	id iN89BfJMoGnvhwQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32245-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 14:38:58 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65FA61A6B82
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 14:38:16 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 916431A6BF0
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 14:38:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D56A3312295E
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 13:36:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ED99531377A2
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Feb 2026 13:36:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC4A536AB7F;
-	Thu, 26 Feb 2026 13:34:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10EB9387346;
+	Thu, 26 Feb 2026 13:34:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UhVFa0nj"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AH1l4KLL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4117A36E488;
-	Thu, 26 Feb 2026 13:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F9D36EAA4
+	for <linux-gpio@vger.kernel.org>; Thu, 26 Feb 2026 13:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772112879; cv=none; b=U6Or79jGx1WNgSxxfdSVYnpw90FpNxESMiN1ADcePbp1vbWp4ITKKPedLgKTvCbtxG2pRXhDHEuOCKPNWehUuUZ97d2aaSKgpmAc1ioviI08FYnA6oL1XertQaFDgscLnw7mCRLK/sZAKPyF/qMnfrAJiWDmlbghjiPMu3IWTrE=
+	t=1772112881; cv=none; b=X7ipGC1PP2OwlVHEwMqQ9kkqYXRlmBbLKV9JX8ryYV80cOF8HHR4XS/Xsp6yttA/RC0Gnjvztnim5qS6OUWVTHWk6iS1aPiHEV4i+RGVauMEpl9oZZ0h+pqAou3CsWq5RJGx1N2JUzQUwps+Z/2o/1jSVmrZZtISO5x2H5k14r0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772112879; c=relaxed/simple;
-	bh=RhC9nQTjuM1c6KM2njaLTbGCv79R48+DtMxYZo0IQ8c=;
+	s=arc-20240116; t=1772112881; c=relaxed/simple;
+	bh=HiF5B4Bc73eHsZAl9unZvix8uUjE2fsep39CeE6Z6ok=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GMw7oUhpQUq2AuOyIQ8iqovh1bK5ESieIU+QH/4Aq0YQTjCn31zSjolZf7VztV0nl+bRU+3PBJASr0IfQlXLUlWHIJmOr8xmu3ROaojg/16UwL/rGF0RO6y5MCBuScDtU51wLJnlo8TLDFcIABNtC0ohR8Q3+U4GuxjGWSFoGY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UhVFa0nj; arc=none smtp.client-ip=185.171.202.116
+	 In-Reply-To:To:Cc; b=alPYUtvf+8T3WTxIoAYHpDtsS+4+10rdrn8udAJy/so3H5QM3Bk/JxIkSdqZLvZUHekDAfF/Z+CY+Skq4P9nER2EiDxueRGXmnepdgojd8fldsA4rXbfpggTPDaKzhuQr/pLQ+tWcA9pc1tagMj6KZuvoTGOwwZC2lfNqdGloKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AH1l4KLL; arc=none smtp.client-ip=185.246.84.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 6538AC40697;
-	Thu, 26 Feb 2026 13:34:46 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id C1F391A1537;
+	Thu, 26 Feb 2026 13:34:32 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id ED9A45FDEB;
-	Thu, 26 Feb 2026 13:34:30 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 858ED10369391;
-	Thu, 26 Feb 2026 14:34:28 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 958ED5FDEB;
+	Thu, 26 Feb 2026 13:34:32 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4FF6410369392;
+	Thu, 26 Feb 2026 14:34:30 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1772112870; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1772112871; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=DMNcbL6zBp+PTc5h/KNHwWosR3kMnkkAB0mP2EbbEFc=;
-	b=UhVFa0nj6izVWhO/kFf1F90FW2CK8/OLjZ78Uu28/MdTcYDPjVrHt3r5Zj07pnibAYaAL1
-	qe/5fW2Sc9+XRNb8j+btnoAVZXfORD74Tp/zBGqU8rVtNV/z/zai73u6HLUyco5ULslK2a
-	lVQhAFed09OMJjROel76XzT9mdUP57aZzdMOSKxFoKBJ6aDBJPY0VdXvXWdpIS4+Ra6cjv
-	3YkhEkrOPjK0PfayR9FGriMvZmPW8guGbHsSs++knxZJQEneiDvrwyh7zhls17KKBJgw6/
-	RhoNnUpkqAMqmNy5ummrMbA/dpQvfnMLRV5HtJAXVAybQ6eH9pTSXm+5r83zcw==
+	bh=t13fTL38ybBnjcJkpfx+K3cUGVZwn08bqofOvp3rY/E=;
+	b=AH1l4KLLPMyktOFWZ+2Z6SPEKJBn6p/HlIp7zSpNTfFZn+eh+Pt++DX3IdwN9Wn5EaNnXw
+	4MahGo6lCSqWQ3Zv47u7h5NgFKeStmbKZuZX9ZVJnoC+p/FT5lAwGSncTVq61+zozrGV+U
+	X2llSZdMjYiisEBU4Yy8DitwSbTI7q7UNPrPiRYfFsQqzIK5G3RIjyjgKoeq9sR4Jk9jXb
+	0pIVEZDrHq6pdouRtmGeHK65EW6TYak8UFEQUnWawTXFzn+GP8MolGdfi7yDzkBFPWIoc1
+	XSOysRW7hwJl4cuPYiqjXEDw7RRNROWzH8IxNsvB/iG4pgep2Z+iTws1JkMk6g==
 From: =?utf-8?q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>
-Date: Thu, 26 Feb 2026 14:33:56 +0100
-Subject: [PATCH v3 12/13] MIPS: config: add eyeq6lplus_defconfig
+Date: Thu, 26 Feb 2026 14:33:57 +0100
+Subject: [PATCH v3 13/13] MAINTAINERS: Mobileye: Add EyeQ6Lplus files
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260226-eyeq6lplus-v3-12-9cbeb59268b0@bootlin.com>
+Message-Id: <20260226-eyeq6lplus-v3-13-9cbeb59268b0@bootlin.com>
 References: <20260226-eyeq6lplus-v3-0-9cbeb59268b0@bootlin.com>
 In-Reply-To: <20260226-eyeq6lplus-v3-0-9cbeb59268b0@bootlin.com>
 To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
@@ -87,11 +87,11 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
 	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-32243-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-32245-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -99,150 +99,58 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCPT_COUNT_TWELVE(0.00)[19];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[bootlin.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[benoit.monin@bootlin.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	NEURAL_HAM(-0.00)[-0.998];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bootlin.com:mid,bootlin.com:dkim,bootlin.com:email]
-X-Rspamd-Queue-Id: 65FA61A6B82
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bootlin.com:mid,bootlin.com:dkim,bootlin.com:email,mobileye.com:email]
+X-Rspamd-Queue-Id: 916431A6BF0
 X-Rspamd-Action: no action
 
-Add a default configuration for Mobileye EyeQ6Lplus evaluation board.
+Use wildcard to match all EyeQ defconfigs under arch/mips. This covers
+the newly added defconfig, and the EyeQ5 and EyeQ6H ones. Add an entry
+for the dt-bindings header of the EyeQ6Lplus clocks.
+
+While at it, add myself to the maintainers of Mobileye MIPS SoCs.
 
 Signed-off-by: Benoît Monin <benoit.monin@bootlin.com>
 ---
- arch/mips/configs/eyeq6lplus_defconfig | 117 +++++++++++++++++++++++++++++++++
- 1 file changed, 117 insertions(+)
+ MAINTAINERS | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/configs/eyeq6lplus_defconfig b/arch/mips/configs/eyeq6lplus_defconfig
-new file mode 100644
-index 000000000000..39430ebf8e60
---- /dev/null
-+++ b/arch/mips/configs/eyeq6lplus_defconfig
-@@ -0,0 +1,117 @@
-+CONFIG_SYSVIPC=y
-+CONFIG_NO_HZ_IDLE=y
-+CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_BPF_SYSCALL=y
-+CONFIG_TASKSTATS=y
-+CONFIG_IKCONFIG=y
-+CONFIG_IKCONFIG_PROC=y
-+CONFIG_MEMCG=y
-+CONFIG_BLK_CGROUP=y
-+CONFIG_CFS_BANDWIDTH=y
-+CONFIG_RT_GROUP_SCHED=y
-+CONFIG_CGROUP_PIDS=y
-+CONFIG_CGROUP_FREEZER=y
-+CONFIG_CPUSETS=y
-+CONFIG_CGROUP_DEVICE=y
-+CONFIG_CGROUP_CPUACCT=y
-+CONFIG_NAMESPACES=y
-+CONFIG_USER_NS=y
-+CONFIG_SCHED_AUTOGROUP=y
-+CONFIG_BLK_DEV_INITRD=y
-+CONFIG_EXPERT=y
-+CONFIG_EYEQ=y
-+CONFIG_MACH_EYEQ6LPLUS=y
-+CONFIG_MIPS_CPS=y
-+CONFIG_CPU_HAS_MSA=y
-+CONFIG_NR_CPUS=16
-+CONFIG_MIPS_RAW_APPENDED_DTB=y
-+CONFIG_JUMP_LABEL=y
-+CONFIG_PAGE_SIZE_16KB=y
-+CONFIG_COMPAT_32BIT_TIME=y
-+CONFIG_MODULES=y
-+CONFIG_MODULE_UNLOAD=y
-+CONFIG_TRIM_UNUSED_KSYMS=y
-+# CONFIG_COMPAT_BRK is not set
-+CONFIG_USERFAULTFD=y
-+CONFIG_NET=y
-+CONFIG_PACKET=y
-+CONFIG_UNIX=y
-+CONFIG_INET=y
-+CONFIG_IP_PNP=y
-+CONFIG_IP_PNP_DHCP=y
-+CONFIG_NETFILTER=y
-+CONFIG_CAN=y
-+CONFIG_PCI=y
-+CONFIG_PCI_MSI=y
-+CONFIG_PCI_DEBUG=y
-+CONFIG_PCI_ENDPOINT=y
-+CONFIG_DEVTMPFS=y
-+CONFIG_DEVTMPFS_MOUNT=y
-+CONFIG_CONNECTOR=y
-+CONFIG_MTD=y
-+CONFIG_MTD_SPI_NAND=y
-+CONFIG_MTD_UBI=y
-+CONFIG_MTD_UBI_BLOCK=y
-+CONFIG_SCSI=y
-+CONFIG_NETDEVICES=y
-+CONFIG_MACVLAN=y
-+CONFIG_IPVLAN=y
-+CONFIG_MACB=y
-+CONFIG_MARVELL_PHY=y
-+CONFIG_MICREL_PHY=y
-+CONFIG_CAN_M_CAN=y
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_8250_DW=y
-+CONFIG_HW_RANDOM=y
-+CONFIG_I2C=y
-+CONFIG_I2C_CHARDEV=y
-+CONFIG_I2C_DESIGNWARE_CORE=y
-+CONFIG_SPI=y
-+CONFIG_SPI_CADENCE_QUADSPI=y
-+CONFIG_SPI_DESIGNWARE=y
-+CONFIG_SPI_DW_MMIO=y
-+CONFIG_SPI_SPIDEV=y
-+CONFIG_SPI_SLAVE=y
-+# CONFIG_PTP_1588_CLOCK is not set
-+CONFIG_PINCTRL=y
-+CONFIG_GPIOLIB=y
-+CONFIG_GPIO_DWAPB=y
-+CONFIG_MFD_SYSCON=y
-+CONFIG_HID_A4TECH=y
-+CONFIG_HID_BELKIN=y
-+CONFIG_HID_CHERRY=y
-+CONFIG_HID_CYPRESS=y
-+CONFIG_HID_EZKEY=y
-+CONFIG_HID_ITE=y
-+CONFIG_HID_KENSINGTON=y
-+CONFIG_HID_REDRAGON=y
-+CONFIG_HID_MICROSOFT=y
-+CONFIG_HID_MONTEREY=y
-+CONFIG_MMC=y
-+CONFIG_MMC_SDHCI=y
-+CONFIG_MMC_SDHCI_PLTFM=y
-+CONFIG_MMC_SDHCI_CADENCE=y
-+# CONFIG_IOMMU_SUPPORT is not set
-+CONFIG_RESET_CONTROLLER=y
-+# CONFIG_NVMEM is not set
-+CONFIG_EXT4_FS=y
-+CONFIG_EXT4_FS_POSIX_ACL=y
-+CONFIG_EXT4_FS_SECURITY=y
-+CONFIG_FS_ENCRYPTION=y
-+CONFIG_FUSE_FS=y
-+CONFIG_CUSE=y
-+CONFIG_MSDOS_FS=y
-+CONFIG_VFAT_FS=y
-+CONFIG_TMPFS=y
-+CONFIG_TMPFS_POSIX_ACL=y
-+CONFIG_UBIFS_FS=y
-+CONFIG_NFS_FS=y
-+CONFIG_NFS_V3_ACL=y
-+CONFIG_NFS_V4=y
-+CONFIG_NFS_V4_2=y
-+CONFIG_ROOT_NFS=y
-+CONFIG_FRAME_WARN=1024
-+CONFIG_DEBUG_FS=y
-+# CONFIG_RCU_TRACE is not set
-+# CONFIG_FTRACE is not set
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 55af015174a5..63048d5ede7d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17802,6 +17802,7 @@ F:	drivers/media/dvb-frontends/mn88473*
+ 
+ MOBILEYE MIPS SOCS
+ M:	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
++M:	Benoît Monin <benoit.monin@bootlin.com>
+ M:	Gregory CLEMENT <gregory.clement@bootlin.com>
+ M:	Théo Lebrun <theo.lebrun@bootlin.com>
+ L:	linux-mips@vger.kernel.org
+@@ -17809,12 +17810,13 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/mips/mobileye.yaml
+ F:	Documentation/devicetree/bindings/soc/mobileye/
+ F:	arch/mips/boot/dts/mobileye/
+-F:	arch/mips/configs/eyeq5_defconfig
++F:	arch/mips/configs/eyeq*_defconfig
+ F:	arch/mips/mobileye/board-epm5.its.S
+ F:	drivers/clk/clk-eyeq.c
+ F:	drivers/pinctrl/pinctrl-eyeq5.c
+ F:	drivers/reset/reset-eyeq.c
+ F:	include/dt-bindings/clock/mobileye,eyeq5-clk.h
++F:	include/dt-bindings/clock/mobileye,eyeq6lplus-clk.h
+ 
+ MODULE SUPPORT
+ M:	Luis Chamberlain <mcgrof@kernel.org>
 
 -- 
 2.53.0
