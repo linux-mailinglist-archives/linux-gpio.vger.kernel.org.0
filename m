@@ -1,91 +1,91 @@
-Return-Path: <linux-gpio+bounces-32334-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32335-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WBTsBi0TomnQywQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32334-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 22:57:01 +0100
+	id +K0+NDgTomnQywQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32335-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 22:57:12 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 907BC1BE538
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 22:57:00 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F8CF1BE54F
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 22:57:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E1A29306966B
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 21:56:53 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id BF9043043DBD
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 21:56:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E57E47A0CD;
-	Fri, 27 Feb 2026 21:56:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2032A47AF40;
+	Fri, 27 Feb 2026 21:56:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a8kxxp+3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BYcDo7Ze"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yx1-f45.google.com (mail-yx1-f45.google.com [74.125.224.45])
+Received: from mail-yx1-f41.google.com (mail-yx1-f41.google.com [74.125.224.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235523451CC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EE8472792
 	for <linux-gpio@vger.kernel.org>; Fri, 27 Feb 2026 21:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772229409; cv=none; b=VKXxBxIDkplFeloDqa4r+1Lnbq/JodvQyFPHJa6esw8sLX1eMwfuuGycCpUpeV6UiQBZ+pTH0NGcl+Mhpa4DzuO/SsgczcpXwppoN+MW9w3Mo2NOoV35z4MBSowmxf4rXzkbsqRn/MonXlz9hYlkT/aqeXH384yj36ENXBATNWU=
+	t=1772229409; cv=none; b=VilePfDOem4PdXbN4nf+4AUYYP6aMzx2a4mlokIxZY60Yq49PDJUOvrna0G5vhlDMfbvZWoXZnhrLxZOcQ+vqhxAU49dXaen5VUVQNLzBKnSoO5kgjVOvWLdpc9HM1Ro4AOMrETb4ymWFx6O3ONn9dQxChYU87TtW9hUkxFKsK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1772229409; c=relaxed/simple;
-	bh=GQDN1R2s9mM921F8hqC+JQetSAhVPiZawRGbiievuNw=;
+	bh=jAdRiOc6eHNnrcaLppBpsAksw3gqq4WhjHpdzYZdmkE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d2w9daDDWnstHetadwYoB2yUXQ9qFyqIH7RN6wUSf2DeGx3ukwO5vLesilqfOBWCq4Nw7ZBPrCk1xIhmpIPnHXn+1df+wXgkMrGc+pljduiLzG4CzYAtDFZvzvN5ht3r59jF54Da6GU7YnOWGdMLdwqtbaLYxn/b7uYpgdXFrxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a8kxxp+3; arc=none smtp.client-ip=74.125.224.45
+	 MIME-Version; b=H5njbypsVPvqF2mpp4pXf0nYHZD3rOaV+NlwVw1/8mbQkkPxqfwJQSUftK3BmEizygfRBcwn3dJpZzDJzcOLJh1pF9vIKfvsn6aokpYVh3euznYhrrxC1W7u3NaPfhT431xO7C0xPmdmHZ8kcYkQ9u10kH+oUDPjEUMi8DTZcgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BYcDo7Ze; arc=none smtp.client-ip=74.125.224.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-64aea64bf15so2253949d50.2
+Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-64acd19e1dfso2452669d50.0
         for <linux-gpio@vger.kernel.org>; Fri, 27 Feb 2026 13:56:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772229407; x=1772834207; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1772229408; x=1772834208; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=b/E4mXwswRGJTxuG0f6Dlg/ntBjWKWPl5F6qxEETdII=;
-        b=a8kxxp+3mQs36q2WcTPuyJZvM5LR83EWWI77/h6QUcf4L/vOlG2edVn9tcPigWqp/y
-         JoK3WNZPifxgqzeizEA83VD4V5HW72zjtCMBK3FYiBE1JVfKMGxHREBTGbEnp8p7TGCP
-         ufh2HhZQ9q7X8y/pOuND+n1G1hiLs6EvXLABNSdLZ8firoagLpaXows2nq21n60Q/dGz
-         WyWIS9WnCVUlRp+TkmnhyXrvuK/falfnGkWyzdsXHf0S9B1+6PFDbigROcagHF9rLv2d
-         QP4bm7i1fx1tfXmAgisAyvEashz+VSFAvjLKnWoYrm4KJ9qmJJWF4kBbVOA3DduuuHxA
-         CT7Q==
+        bh=ICpWNGc9t/1ds7tN5GBFPqCGmQCh607eDV5V6BgRP2o=;
+        b=BYcDo7ZeAq7JxJW+8g8uGxJM7/n8fYRKAeQJFoZp1l8mazQtQ+/GzvXgAezRrq5cgw
+         ljgVSq4ucBgmAVK85e5iKTqhE3igQhosI3+Ce5AoxdDutHW/sHacka5SyNFhsn33v5QD
+         zq/7pokGBV0EEQ1pDUKmRGRt48Z25jXJvkUxslUusnAmXVApGfxqYKS1UPg304lQphrF
+         P7i+f/VG2HOj0hDPo3Ns801a3+KvYJDxBWHhrB1Cz+4v1FtoXzNcwp9gb/2ekv55hHr5
+         2gnVJV8Y71r+5m+G/2VbofkRg0PRep+3vTRIuaxyb6PUymX7XHOnYfAc3sv6HzZ8nyGJ
+         1QJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772229407; x=1772834207;
+        d=1e100.net; s=20230601; t=1772229408; x=1772834208;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=b/E4mXwswRGJTxuG0f6Dlg/ntBjWKWPl5F6qxEETdII=;
-        b=DQsmrtLfUReOFGZzQhkQF5P+CK73wyXIuyhVW+36692dMeDvkeIkEzd8ag6kAgRzDy
-         2pVMR+5cOn1N6WkGHAA2rUwN2HCortVQFUCr+vM+exnWVmEuT8fw4ZqVOg1q5oTV0Zyh
-         Ds8OHtzddsU6GhefyFXa5hW3mHQkpBl3JMriK5Ulq2I1HukIwz5+6LQgPTjrzhGVBtiL
-         ksN5d772pnjJXf5ZPauDL/5U1XKWtMSq95hn1t1zIUBEakQ0ujUNzYxQfv0JiQ/pMyW1
-         6ZFwPUZ5MgmE7YB4w9d2xnBURl9PcNGyGrKzxv+NPpMyvGzwQWJ+PEUdShWmgDwJjI8r
-         Vm2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXe7O/s3eKXk8QTQaEd/wslGnr4CaBp/F6kSlPuOQz4vCyGwspV9bJhTrGbeG51lu3/Xes3GSdktXhA@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywi2VNB/4kYV0hHarRWZhF+9/7Puj+oMicTuT3FXwdvQLuVV2mT
-	Q3ecRsypWgQ+6NOJ+aTBAdbxPy4aHeYpjE8NvZ1FbZArqb5lVR/wrZNz4HcTapOW3nA=
-X-Gm-Gg: ATEYQzwOlOYEcarLkQaRz2F3qQgZ3wLOXqF2j0ocG/vxA5vmPGkY0/RyIHfKCes1mbU
-	uEG4fqL71pr5LLUkC80FGu5XMOSxA/RqcefP+3/110KV70oX34GSFXXHzqPWq17O4zsH3pvpUpm
-	kRn5qt8sBiioTSyqW5egEvFogRDXRiMUygOGbo/iCz5zayBHnXVFvfA1UJu5yPV6lB78awWF3yT
-	NrgW/GEd/a2xVPJa651ahRgWUfCQg5fnebMtfY4fGotYJycUPQfr1l3O4B4GfvmCpBKQz5yIusr
-	IzAIlPiU38tY86rDi+8uyg7HxSJFM4Q4WrKR4m2FQy6GZptLlGFzFgQEeXYrGC2ttU97fYguVSb
-	DDStfIx/wiu6ck1aD20zvmcZPrwD9Dwc0iytm0+VUmA5QybrPzFyqaUbUsAS1VX0yUWtooFkbbe
-	rTZXONHYfcti3ld1XgAMQbBVoaYU1vsRjIh1BzCohkvDGsxclBKFMlO8zjg2gYbCP1IuiHtrsgW
-	USTA9+e0lK8XIhBr9yMJG00
-X-Received: by 2002:a53:e02f:0:b0:64a:d74f:2580 with SMTP id 956f58d0204a3-64cc2082d28mr2750707d50.1.1772229407133;
+        bh=ICpWNGc9t/1ds7tN5GBFPqCGmQCh607eDV5V6BgRP2o=;
+        b=E0ex8mcRBe9u4o30ignvebQGVeu36S6y8DoETsrgGnQRsm6FodwuF0ngOk/2IOrGVY
+         eJW2Fpcmv343lSyVZKDjibXaIrj/RN5+GNPNr54kAGnS1Rkd8zJy1ahVPO/TXr1twX4q
+         7s2Iawm3PpajsvhaOviqOGSGS1V/0oZlUPQbj1oczFQWBYiyBZ4syfN2HT0DGUlryMY9
+         AMw/n1zyd9RzB8P/OVFkKPajAMk9L4bKQ/+WBc8KS0wEOoKQo0NSTqOSXvQT3tS19inP
+         NWo3+NeNbkP2xJh8REm1EeM5vJQzH0zw59blgaqW16eBxB04LE2hIHbist7mba2gB8lx
+         TxzA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+fMHKV/tdtzs5WgYnEufKwUrrDa8e5+5gUpO1AGYoy5/RqzXAcQqxZcyHYy6YYruxTbw5+TN99vGf@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywk5wkCUSVLw5oGkrLbMPNTqlSFMQ4n2RoW5E2k5kLVoZeEIdEo
+	UwUJHZugqMbLsCGT9czSNoksAQBuiq3kiOrBeFp2LpevJQ6QM1dgt+70dxN2UAjDp90=
+X-Gm-Gg: ATEYQzzaPtPJendfcfhCe672bhjCrO+7kD1c77DtoZsuI9IcmcyT2x4DetqLOLrm/9x
+	IJaPtc+GmUJ8/Sqsfh0KMnWqqDc0OSPztzKdcGT01EcZPg/0fcRFw2ILj7e1NOmRrl1AlDHuFq5
+	ejYS0RIycv4X7b7L7B6PkZ6cULKEMeIjLPGt5dLlYzoRWvm9eca7iKiWDmGJC+7SWeDL+Gxu+vg
+	/aw+UFqgvJxASuw7p7mylOfVkNiSpiCx/PKZ/gJOwENsVYKn9samjvb277ucIu6RVNM/NcjaxjT
+	KCBKCaeMPdhfLji7EnKyI4DP9Ks2e/3b1FN4uSK62SRhXUo4NspeeyQfjUCUYfg1Nq8YsV+7sze
+	xf4eWW7s9HanCUP0noSm61x5Pxw5/QnMEv1T0+uFmMOEMkX8VPqIUeod1Z+fQ/3TF/e+YLweQLU
+	9yN12ehys2U60iuGpb8W6q+5G9u4YdCQTdiaTjGQ5j9Rj8teLapcCAQIr0mF2RHYg9ALpEH+TeV
+	aH+upUC1icy0ecXRqXkPlQQ
+X-Received: by 2002:a53:c943:0:b0:64a:e222:d3fa with SMTP id 956f58d0204a3-64cc22107a1mr3305068d50.58.1772229407863;
         Fri, 27 Feb 2026 13:56:47 -0800 (PST)
 Received: from tux ([2601:7c0:c37c:4c00::5c0b])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-64cb75a1157sm2948509d50.6.2026.02.27.13.56.46
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-64cb75a1157sm2948509d50.6.2026.02.27.13.56.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Feb 2026 13:56:46 -0800 (PST)
+        Fri, 27 Feb 2026 13:56:47 -0800 (PST)
 From: Ethan Tidmore <ethantidmore06@gmail.com>
 To: Linus Walleij <linusw@kernel.org>
 Cc: Joshua Henderson <joshua.henderson@microchip.com>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Ethan Tidmore <ethantidmore06@gmail.com>
-Subject: [PATCH v2 1/2] pinctrl: pinctrl-pic32: Fix resource leak
-Date: Fri, 27 Feb 2026 15:56:23 -0600
-Message-ID: <20260227215624.1094832-2-ethantidmore06@gmail.com>
+Subject: [PATCH v2 2/2] pinctrl: pinctrl-pic32: Use devres version of gpiochip_add_data()
+Date: Fri, 27 Feb 2026 15:56:24 -0600
+Message-ID: <20260227215624.1094832-3-ethantidmore06@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260227215624.1094832-1-ethantidmore06@gmail.com>
 References: <20260227215624.1094832-1-ethantidmore06@gmail.com>
@@ -103,18 +103,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	FREEMAIL_CC(0.00)[microchip.com,vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-32334-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-32335-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[ethantidmore06@gmail.com,linux-gpio@vger.kernel.org];
@@ -125,71 +125,35 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCPT_COUNT_FIVE(0.00)[5];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 907BC1BE538
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 2F8CF1BE54F
 X-Rspamd-Action: no action
 
-Fix three possible resource leaks by using the devres version of
-clk_prepare_enable(). Also, update error message accordingly.
+Convert gpiochip_add_data() to devm_gpiochip_add_data() to use devres
+style cleanup across entire driver.
 
-Detected by Smatch:
-drivers/pinctrl/pinctrl-pic32.c:2211 pic32_pinctrl_probe() warn:
-'pctl->clk' from clk_prepare_enable() not released on lines: 2208.
-
-drivers/pinctrl/pinctrl-pic32.c:2274 pic32_gpio_probe() warn:
-'bank->clk' from clk_prepare_enable() not released on lines: 2264,2272.
-
-Fixes: 2ba384e6c3810 ("pinctrl: pinctrl-pic32: Add PIC32 pin control driver")
+Suggested-by: Linus Walleij <linusw@kernel.org>
 Signed-off-by: Ethan Tidmore <ethantidmore06@gmail.com>
 ---
 v2:
-- Use devres instead of manual cleanup.
+- Made this a series, added this patch.
 
- drivers/pinctrl/pinctrl-pic32.c | 20 ++++----------------
- 1 file changed, 4 insertions(+), 16 deletions(-)
+ drivers/pinctrl/pinctrl-pic32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/pinctrl-pic32.c b/drivers/pinctrl/pinctrl-pic32.c
-index eb438c9d9667..d185fe48dc0d 100644
+index d185fe48dc0d..07a24e17d35b 100644
 --- a/drivers/pinctrl/pinctrl-pic32.c
 +++ b/drivers/pinctrl/pinctrl-pic32.c
-@@ -2174,16 +2174,10 @@ static int pic32_pinctrl_probe(struct platform_device *pdev)
- 	if (IS_ERR(pctl->reg_base))
- 		return PTR_ERR(pctl->reg_base);
- 
--	pctl->clk = devm_clk_get(&pdev->dev, NULL);
-+	pctl->clk = devm_clk_get_enabled(&pdev->dev, NULL);
- 	if (IS_ERR(pctl->clk)) {
- 		ret = PTR_ERR(pctl->clk);
--		dev_err(&pdev->dev, "clk get failed\n");
--		return ret;
--	}
--
--	ret = clk_prepare_enable(pctl->clk);
--	if (ret) {
--		dev_err(&pdev->dev, "clk enable failed\n");
-+		dev_err(&pdev->dev, "Failed to get and enable clock\n");
- 		return ret;
- 	}
- 
-@@ -2239,16 +2233,10 @@ static int pic32_gpio_probe(struct platform_device *pdev)
- 	if (irq < 0)
- 		return irq;
- 
--	bank->clk = devm_clk_get(&pdev->dev, NULL);
-+	bank->clk = devm_clk_get_enabled(&pdev->dev, NULL);
- 	if (IS_ERR(bank->clk)) {
- 		ret = PTR_ERR(bank->clk);
--		dev_err(&pdev->dev, "clk get failed\n");
--		return ret;
--	}
--
--	ret = clk_prepare_enable(bank->clk);
--	if (ret) {
--		dev_err(&pdev->dev, "clk enable failed\n");
-+		dev_err(&pdev->dev, "Failed to get and enable clock\n");
- 		return ret;
- 	}
- 
+@@ -2253,7 +2253,7 @@ static int pic32_gpio_probe(struct platform_device *pdev)
+ 	girq->default_type = IRQ_TYPE_NONE;
+ 	girq->handler = handle_level_irq;
+ 	girq->parents[0] = irq;
+-	ret = gpiochip_add_data(&bank->gpio_chip, bank);
++	ret = devm_gpiochip_add_data(&pdev->dev, &bank->gpio_chip, bank);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Failed to add GPIO chip %u: %d\n",
+ 			id, ret);
 -- 
 2.53.0
 
