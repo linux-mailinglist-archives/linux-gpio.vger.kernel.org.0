@@ -1,206 +1,151 @@
-Return-Path: <linux-gpio+bounces-32307-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32308-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SGNCJhSnoWmivQQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32307-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 15:15:48 +0100
+	id iJ5FAsCmoWmivQQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32308-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 15:14:24 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 847401B8984
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 15:15:48 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AEB71B891B
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 15:14:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 32B8D30F78E4
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 14:08:24 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8B8D9305DD67
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 14:10:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88AB042DFF1;
-	Fri, 27 Feb 2026 14:03:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A661410D29;
+	Fri, 27 Feb 2026 14:06:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UJTMWavT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V++Ip3OX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147E9332618;
-	Fri, 27 Feb 2026 14:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD0B3F074B
+	for <linux-gpio@vger.kernel.org>; Fri, 27 Feb 2026 14:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772200993; cv=none; b=tdiBaWm2jAV0MRLTTltE2FIec+oA0V0fXUVqUY4VnkuHBdgHjpgHWbn06HwXivN/HgBowssfIeLeZrUbjkBFrx9ExaXLNtPA6EC9Tnv/Fj0KSZKya9GZKpt1Ma57IfAdi24L8nS5U17oRWsMVSuyATFlCcCx0FQJ+T4vNQC0khc=
+	t=1772201185; cv=none; b=d/P2k/hlFcKRVB6cYRstndhZI2zGMtRuphGFhTk3Kr1I6fuIj85d99bwNt1U9ELzh6RhSVYrgkUARmMJQspeJUiS6Z/Og8U8N27ijOd4EuqWC+2wZueAFyayhf6zPZIe8DNzo+Aire6cr94Q5mnNt5Lib3a5FdOvUFO/GNVJHaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772200993; c=relaxed/simple;
-	bh=jT14jpW+74aFxWT5k0JsiKiyPP15AQVRZS7/5fdgNS0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uP71fvleiXly7fmRLuqZg5xRqwlLPEYH4uTnNrW7/I26Vg2q9tqqgMnaY5K5mVFKtlVDg6mCEw2wUgLOWCHUt25ZIW1reZrwxw9AG6lcw3GvheOBiakSAxGWx+iBVGQiYbezr/KA0ak9qVgpbQe+jNEDcWzYWO8fs9/Y5kfX3jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UJTMWavT; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 014EC1A1B17;
-	Fri, 27 Feb 2026 14:03:10 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id C97065FE46;
-	Fri, 27 Feb 2026 14:03:09 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 13EAB1036946C;
-	Fri, 27 Feb 2026 15:02:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1772200986; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=JD+Fs5XfMyLydBRoehNihG/5lsm5NM0S4zMf8NGpirs=;
-	b=UJTMWavTrQZj4uGo3x/IOTThbijDw6KGvh6HO1NhCQpo0ef2dKJiWyO39VTLHbjFI+WpRH
-	P0RqrvS8K+KANgpm1dFbGQ/wxc8J1RWrupAlddncc7UaeVgIGrwyY/F7k+3Gdh0L7K50sG
-	aCTcm+PD9mPPXfbCBsR3iUp/SCfl1rAlJAp3Y/uLsSHS0WgfLhX0U/ngFZHJBLbFDtxHCS
-	JAYU93X/n4HJYHW+iRGTXMI7x10nVff6ZA18dXf+W6c3JsE+3pGsyh6XV750WwoJicJ8pS
-	mZ3hcO4ci2o0IBN3qGnB6KXLT3yMJCn4hqAZCHHou+kR4LsTaE2yy+MC4vFMDw==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Kalle Niemi <kaleposti@gmail.com>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Shawn Guo <shawnguo@kernel.org>
-Cc: Wolfram Sang <wsa@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	driver-core@lists.linux.dev,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com,
-	linux-gpio@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v5 28/28] misc: lan966x_pci: Add drivers needed to support SFPs in Kconfig help
-Date: Fri, 27 Feb 2026 14:54:25 +0100
-Message-ID: <20260227135428.783983-29-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260227135428.783983-1-herve.codina@bootlin.com>
-References: <20260227135428.783983-1-herve.codina@bootlin.com>
+	s=arc-20240116; t=1772201185; c=relaxed/simple;
+	bh=V78swCMBy0EDVp9Z1/BFEbZQ/NnZfBxBXJqwi1WkAhM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bmiQLTSCOctdoBFfH0WviFa8Tp+JZp8i1q26sMR5qHluvRw3on+0yuMYLlYQT6OTUcvhfeDHVsyFEo13noEVr0efgEoW0cCyD9RYU1P94pppcoTB0NCLwHM30u5ZiRvOs/297nhxPl6oCoX/yQcnWJGmlaPZsL5z0/fnOiJ7az0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V++Ip3OX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2DF9C2BCB5
+	for <linux-gpio@vger.kernel.org>; Fri, 27 Feb 2026 14:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772201184;
+	bh=V78swCMBy0EDVp9Z1/BFEbZQ/NnZfBxBXJqwi1WkAhM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=V++Ip3OX2lWSVYl+UKTzyeUmdSrFatdp+k2+qy4eFUD7MzxT9mkVQqePLqTkUzSrf
+	 fMntO/fdX4am5X7SNNlup9mAoxbJJx4eR6xIHZIKj836a7PlqR36HALSZ/ih86OhNk
+	 s4x9aUMpjQ8Ig3rfAiBn7truj22aFW5ea1ABxulXos97kAY6qI1gcrQ84O6Gsnlfaw
+	 6ZmVckbU8EMkSIG/bhuzpgsR6tq56ghcLpl3oqCu1uTsLmP7BjYcjs/FFRZ7A+7BbL
+	 3tlSisqdhgjKUKu5f3rttMzBHpKwl7QcN6RE/hOkTVAPxY6fK+1BVjh2VfapZzEMVh
+	 9EhoynmkBHMFg==
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-7986e0553bdso19108437b3.2
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Feb 2026 06:06:24 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXGUP4/HT0tlQLbkVz/wu6U0uuYAMO996o79UVAc9Xbxq/Ntv5EhIHskcuUAqb1ZxfV5FXDuFZzmZUv@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnKY2d7BsKuISA9kPEAABLqO1F2pPvtnhn8+A82iNwsgM2LotC
+	r7EuArJtMCInMcX+aH2e9r4LkvBhIcvlCaqLtV97F0g/Gy+s4/8PrihlHxor8Jlfpl4TiwAk4OR
+	DZXRKNF7kmtIFt8na3eNj9wcsWpKvoFc=
+X-Received: by 2002:a05:690c:385:b0:798:6c28:dd57 with SMTP id
+ 00721157ae682-7988554de07mr26608357b3.28.1772201184043; Fri, 27 Feb 2026
+ 06:06:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20260225171545.1980385-1-o.rempel@pengutronix.de>
+ <20260225171545.1980385-4-o.rempel@pengutronix.de> <CAD++jLnkfcgme27DbAUOKn60HJbJuBghetEqpC8dhGnuMPk=Kw@mail.gmail.com>
+ <CAD++jL=PKnAa6CrzGOwPoS_kJJjiHEvztgAFdEoYpHDPj6WT9Q@mail.gmail.com> <aaF0xNKzz74h0gBA@pengutronix.de>
+In-Reply-To: <aaF0xNKzz74h0gBA@pengutronix.de>
+From: Linus Walleij <linusw@kernel.org>
+Date: Fri, 27 Feb 2026 15:06:12 +0100
+X-Gmail-Original-Message-ID: <CAD++jLkq2HCkJKwt4xwX8PwKzxSGVtLLnWw5i8U9vCga2a8uPQ@mail.gmail.com>
+X-Gm-Features: AaiRm532RrAcBAWmH56RMS5aBEUtuVLfNf8FT583QGTAch2yS1YtJvupXbZzHlY
+Message-ID: <CAD++jLkq2HCkJKwt4xwX8PwKzxSGVtLLnWw5i8U9vCga2a8uPQ@mail.gmail.com>
+Subject: Re: [PATCH v1 3/8] dt-bindings: pinctrl: add NXP MC33978/MC34978 pinctrl
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Peter Rosin <peda@axentia.se>, kernel@pengutronix.de, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, David Jander <david@protonic.nl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.84 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[lunn.ch,kernel.org,glider.be,gmail.com,linuxfoundation.org,nxp.com,pengutronix.de,baylibre.com,sang-engineering.com,axentia.se,arndb.de,bootlin.com,google.com,opensource.cirrus.com,cirrus.com,linaro.org,linux.intel.com,stgolabs.net,huawei.com,intel.com];
-	TAGGED_FROM(0.00)[bounces-32307-lists,linux-gpio=lfdr.de];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[bootlin.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[herve.codina@bootlin.com,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-32308-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_GT_50(0.00)[63];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:mid,bootlin.com:dkim,bootlin.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 847401B8984
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[pengutronix.de:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 6AEB71B891B
 X-Rspamd-Action: no action
 
-Recently, new device-tree nodes were added in the overlay to add support
-for SFPs on LAN966x PCI device.
+On Fri, Feb 27, 2026 at 11:41=E2=80=AFAM Oleksij Rempel <o.rempel@pengutron=
+ix.de> wrote:
+> On Fri, Feb 27, 2026 at 12:02:53AM +0100, Linus Walleij wrote:
+> > On Fri, Feb 27, 2026 at 12:00=E2=80=AFAM Linus Walleij <linusw@kernel.o=
+rg> wrote:
+> > > On Wed, Feb 25, 2026 at 6:16=E2=80=AFPM Oleksij Rempel <o.rempel@peng=
+utronix.de> wrote:
+> >
+> > > > +  - Pins 14-21: SP0-SP7 (Programmable inputs, can be SG or SB)
+> > >
+> > > What is SB now? Please explain :)
+>
+> > Oh I see in the driver that this is Switch-to-battery. So document that=
+ here
+> > in the bindings too.
+> >
+> > Also it seems that something configured as switch-to-batter must be
+> > flagged GPIO_ACTIVE_HIGH.
+>
+> Actually, the active polarity depends entirely on the external circuit,
+> especially since these pins can also be used as controllable current
+> outputs.
+>
+> For example, we attach LEDs directly to the pins. If an LED is
+> attached to an SG pin (or an SP pin operating in SG mode), the pin sinks
+> current to ground to turn the LED on, making it GPIO_ACTIVE_HIGH from
+> the LED consumer's perspective.
 
-The LAN966X Kconfig help section mentions drivers related to devices
-added based on the overlay description.
+Aha OK I see.
 
-Add drivers related to devices described by those new nodes in the
-already existing driver list.
+My main input to the bindings and the driver design is a second pass
+at polarity handling and how consumers in the device tree should
+be flagged with GPIO_ACTIVE_LOW and/or GPIO_OPEN_DRAIN
+and similar settings and how the Operating System (any operating
+system) is supposed to react to that.
 
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
----
- drivers/misc/Kconfig | 5 +++++
- 1 file changed, 5 insertions(+)
+My main concern is the semantics with these flags.
 
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 9c285a7c88ba..69825dc0f85e 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -635,13 +635,18 @@ config MCHP_LAN966X_PCI
- 	  Even if this driver does not depend on those other drivers, in order
- 	  to have a fully functional board, the following drivers are needed:
- 	    - fixed-clock (COMMON_CLK)
-+	    - i2c-mux-pinctrl (I2C_MUX_PINCTRL)
- 	    - lan966x-cpu-syscon (MFD_SYSCON)
-+	    - lan966x-gck (COMMON_CLK_LAN966X)
- 	    - lan966x-miim (MDIO_MSCC_MIIM)
- 	    - lan966x-oic (LAN966X_OIC)
- 	    - lan966x-pinctrl (PINCTRL_OCELOT)
- 	    - lan966x-serdes (PHY_LAN966X_SERDES)
- 	    - lan966x-switch (LAN966X_SWITCH)
- 	    - lan966x-switch-reset (RESET_MCHP_SPARX5)
-+	    - sam9x60-i2c (I2C_AT91)
-+	    - sama5d2-flexcom (MFD_ATMEL_FLEXCOM)
-+	    - sfp (SFP)
- 
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
--- 
-2.53.0
-
+Yours,
+Linus Walleij
 
