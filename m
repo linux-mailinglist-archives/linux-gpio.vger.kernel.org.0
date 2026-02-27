@@ -1,137 +1,266 @@
-Return-Path: <linux-gpio+bounces-32268-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32269-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oConGIdfoWmksQQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32268-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 10:10:31 +0100
+	id MJAoA+thoWnIsQQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32269-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 10:20:43 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22AF11B4F23
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 10:10:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C6C51B5351
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 10:20:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 18BAE303C86F
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 09:10:27 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id EC05B3016D13
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 09:20:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D56863C196A;
-	Fri, 27 Feb 2026 09:10:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 274AF38B7A8;
+	Fri, 27 Feb 2026 09:20:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aTLQOjgF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fqs6Y0J9"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954343AE703
-	for <linux-gpio@vger.kernel.org>; Fri, 27 Feb 2026 09:10:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC5534404B
+	for <linux-gpio@vger.kernel.org>; Fri, 27 Feb 2026 09:20:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772183424; cv=none; b=l82duU4cu8XQyL/6nt9XF4IQ/DG2EpmrnruwdY5x0OlsIrGjlIdHCPUn2uxFD9P46fNSbSLy1J4kkVIxNrZfo/Fh7Y99htJdOREk5UG94lY1I3htu6+4VY9Fvb8AukJP1pFR/sXOimsIQAKxWvGXxdHkmgn2KSWbrzNiFg0oIAw=
+	t=1772184026; cv=none; b=FGiE3WRWXZL2FRPh0Pz3CLNjnDYyti21zDTooPJs+JGdxR1AuHG1lWxOYmEeS1Doyqh3ET39xKUpxZLIf433s5Sd4Pbwxjq4RgXSqLxyWG1eSfemuAXxq4hyc4ALNmwVH9OvJGZ5g+6Tjt+d/Mq1uiZ7Gpytrw/J2Qbx7cgUudU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772183424; c=relaxed/simple;
-	bh=bjBai5VMBRxINe2gSxt0OFxPY+LNhi/qFeai/omC4rU=;
+	s=arc-20240116; t=1772184026; c=relaxed/simple;
+	bh=S1nQyU+OxaqI2tjVc/itA3ceL+9l9+iwZz8vzA2HlYA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ps3AYg/hZFxB19ptAneSwE6W+sU8RVeKqtljR6pqsj4aV+d5hVoezLjUC+mtWfZPGYVk6ICgwv75KXZgsQMVbGCelWIh7MdwiKBe/C18stu3zsapDxuKkGsmbZ5OLxvXJayjEAQWT4c4reKXnQv1+zNh0v+ZV6pZpo0ZzFI4Vng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aTLQOjgF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CADFC19425
-	for <linux-gpio@vger.kernel.org>; Fri, 27 Feb 2026 09:10:24 +0000 (UTC)
+	 To:Cc:Content-Type; b=EQSZfv036u36hOt4/YIhUeWktNHuG9S1fPLUQiNZPt7GTD69zET6pJuwpHdskcYKeRpq+el4LmcTDCmEqq+ZhMrLyAuJqnOqMjTgQ4urqW+t5BR8juin4unxvQd0tiUOS0D+wlNUILkoQCI/1fuwRf90ZZyEK1KFT3emVMPRZbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fqs6Y0J9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 948C8C19425
+	for <linux-gpio@vger.kernel.org>; Fri, 27 Feb 2026 09:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772183424;
-	bh=bjBai5VMBRxINe2gSxt0OFxPY+LNhi/qFeai/omC4rU=;
+	s=k20201202; t=1772184026;
+	bh=S1nQyU+OxaqI2tjVc/itA3ceL+9l9+iwZz8vzA2HlYA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=aTLQOjgF+Izt58NrMO8+3KvJInX5pEKucIn/DhuFgt2iPOTbslM3BzxiMcO9nrbA7
-	 g2XuAt5Dfbz3Bamcrz7OvvmY1EhVYxp+OI84VaVYz6JMzzDy+H+TpaqA3XgqHr/GJK
-	 OEr5XJT6VpMFSpPJSvrtbmK+rgnhcZsfWtGNx7apLJbomalaroHg8F6ZeeqGmbJi05
-	 Q747vTmBajhZcAMuj22G9WR+l0i3q3IW5f9RoxQfusCFTRRY/hmPT3TEdTqDu2irrr
-	 GXdDU9u9HBlGj6ttwpuO4N0OzW9kh5jAw/buC8wf3H02JtsSTWRVzaAaebY5zkhsOj
-	 ptkf6iktJPAjg==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-389ee8efedeso18443651fa.3
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Feb 2026 01:10:24 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUquHYMnxFK/jYtu/5lpIru2Ei2EPG2WygOJfH3aCq7ZkKm+efOUXRLoFESSTW0QW6yAembZ+UrKJYs@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLbyoRGK0TtO1GqI/mm3UmgZm403n1/2tnmhjXVFB2TcaNV7CB
-	KQP9eCAR4q8H7MkRYMDqPttU8ne3oe33ayKA//rsMRPmqypSUp5Y/3iBavT9buMXV3mhkTkRm/W
-	fJHj6ooznjQsE/uZkbBLIWuAb6J+k5BlM+3bous02Eg==
-X-Received: by 2002:a2e:9b19:0:b0:385:9b50:91a8 with SMTP id
- 38308e7fff4ca-389ff13b8a2mr8360891fa.15.1772183422910; Fri, 27 Feb 2026
- 01:10:22 -0800 (PST)
+	b=fqs6Y0J99hDAK5/9IL3Jc+BV1ftykSYk2DNp4qZSZokW12vdYHifa+mDgDkNTN0+n
+	 1nAVBNl/MuJHUH7TE0erioPA8+LUjzvXsXgnu9623fjE+u7uukdAZuUVVOuIdXcvAU
+	 Zb7xLSCB8hdlwOuD/MvHRJK9e/9weEWYSr/vePjWTHVpAFl+ZZu6IfaJ6OfkDVw3Pb
+	 +PY9qMvvQnD4Ayiuir1jjwPwRqd3cyNcOpVgR0+3b9hNJNToqdjg8Zi5yRgpI94/6U
+	 +y05i577oifpw3DvWrVggvebPgYCsnz7fKxyAyNZwn999VDUngzqhyYAkqefYf8Zn5
+	 SZ9NGNAmVMU7A==
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-79827d28fc4so17984867b3.1
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Feb 2026 01:20:26 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW8bpmYcJ/oDfwqWJoFqRqJlebuBkrCBKWAYXsl6x+1QnGlL+CuFV3CB93TEpmsAX9BP0NzcdO2FP7V@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlMRDhtZzLekAheXElHAC2mZbo+jgdQwhMrX0H8OgtcIWhFQnZ
+	NpHLqRPbLoXOtXXY/iJIFo9J1gIp6X8A9vgfojq6gqJS12wdfPwbOvESnOUgY8C+j0HZ6RJDaL3
+	VslJIRywnyM5JJgPxSf5kDDUSNKbg6TY=
+X-Received: by 2002:a05:690c:62c4:b0:796:3917:7291 with SMTP id
+ 00721157ae682-7988560f22dmr18735227b3.58.1772184025950; Fri, 27 Feb 2026
+ 01:20:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260223061726.82161-1-tzungbi@kernel.org> <CAMRc=MdU_1WW82imNHPFVktn0HVSdY7kkGScEXmi+JaKRNTMuQ@mail.gmail.com>
- <aaBAN7OOFNIpb6Wl@tzungbi-laptop>
-In-Reply-To: <aaBAN7OOFNIpb6Wl@tzungbi-laptop>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Fri, 27 Feb 2026 10:10:08 +0100
-X-Gmail-Original-Message-ID: <CAMRc=MfDR4G9pLgfMOP6MeAS5aOZbuueQXZ3q8-cd0a769MCeQ@mail.gmail.com>
-X-Gm-Features: AaiRm527EpsJXo-EefYHuwf7JrfrkmJAWlDHFNjnFafq_knYOjBbLmBLM9lPAOk
-Message-ID: <CAMRc=MfDR4G9pLgfMOP6MeAS5aOZbuueQXZ3q8-cd0a769MCeQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/6] gpio: Refactor and add selftest
-To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Linus Walleij <linusw@kernel.org>
+References: <20260225-pinctrl-mux-v2-0-1436a25fa454@nxp.com> <20260225-pinctrl-mux-v2-4-1436a25fa454@nxp.com>
+In-Reply-To: <20260225-pinctrl-mux-v2-4-1436a25fa454@nxp.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Fri, 27 Feb 2026 10:20:14 +0100
+X-Gmail-Original-Message-ID: <CAD++jLkT83xz+PSzZZv_Mv+Mqx_+W30d_xk68EDG-sdmFF3x3A@mail.gmail.com>
+X-Gm-Features: AaiRm508vRiGuZWaxCw9uIk2jsJypknsSz-JUmqErGl52ejGnezFiN87PTsKfa8
+Message-ID: <CAD++jLkT83xz+PSzZZv_Mv+Mqx_+W30d_xk68EDG-sdmFF3x3A@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] pinctrl: add generic board-level pinctrl driver
+ using mux framework
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, Haibo Chen <haibo.chen@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-32268-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32269-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[axentia.se,kernel.org,milecki.pl,pengutronix.de,gmail.com,vger.kernel.org,lists.linux.dev,lists.infradead.org,nxp.com];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TO_DN_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCPT_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.998];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 22AF11B4F23
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,nxp.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 7C6C51B5351
 X-Rspamd-Action: no action
 
-On Thu, Feb 26, 2026 at 1:44=E2=80=AFPM Tzung-Bi Shih <tzungbi@kernel.org> =
-wrote:
->
-> On Wed, Feb 25, 2026 at 02:26:19AM -0800, Bartosz Golaszewski wrote:
-> > On Mon, 23 Feb 2026 07:17:20 +0100, Tzung-Bi Shih <tzungbi@kernel.org> =
-said:
-> > > The series is separated from v3 to lessen the burden on the subsequen=
-t
-> > > revocable work per suggestion in
-> > > https://lore.kernel.org/all/CAMRc=3DMfQumD1ULx7yU4W2sx=3D35wyQf7-v4tS=
-f44OqEu3JDBUAg@mail.gmail.com/.
-> > >
-> > > The series is based on v7.0-rc1 and applies after
-> > > https://lore.kernel.org/all/20260205092840.2574840-1-tzungbi@kernel.o=
-rg.
-> [...]
-> >
-> > This no longer applies on top of current linux-next. Could you please r=
-abase
-> > and resend?
->
-> Did you try to apply the series after applying "[PATCH v3] gpio: Fix reso=
-urce
-> leaks on errors in gpiochip_add_data_with_key()" (link above)?
->
-> Tried on next-20260225; the 1+6 patches apply.
+Hi Frank,
 
-Sorry for the noise, I should have reread the cover letter.
+thanks for your patch!
 
-Bart
+On Thu, Feb 26, 2026 at 12:55=E2=80=AFAM Frank Li <Frank.Li@nxp.com> wrote:
+
+> Many boards use on-board mux chips (often controlled by GPIOs from an I2C
+> expander) to switch shared signals between peripherals.
+>
+> Add a generic pinctrl driver built on top of the mux framework to
+> centralize mux handling and avoid probe ordering issues. Keep board-level
+> routing out of individual drivers and supports boot-time only mux
+> selection.
+>
+> Ensure correct probe ordering, especially when the GPIO expander is probe=
+d
+> later.
+>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+(...)
+
+> +static int
+> +mux_pinmux_dt_node_to_map(struct pinctrl_dev *pctldev,
+> +                         struct device_node *np_config,
+> +                         struct pinctrl_map **map, unsigned int *num_map=
+s)
+> +{
+> +       struct mux_pinctrl *mpctl =3D pinctrl_dev_get_drvdata(pctldev);
+> +       struct mux_pin_function *function;
+> +       struct device *dev =3D mpctl->dev;
+> +       const char **pgnames;
+> +       int selector;
+> +       int group;
+> +       int ret;
+> +
+> +       *map =3D devm_kcalloc(dev, 1, sizeof(**map), GFP_KERNEL);
+> +       if (!*map)
+> +               return -ENOMEM;
+> +
+> +       *num_maps =3D 0;
+> +
+> +       function =3D devm_kzalloc(dev, sizeof(*function), GFP_KERNEL);
+> +       if (!function) {
+> +               ret =3D -ENOMEM;
+> +               goto err_func;
+> +       }
+> +
+> +       pgnames =3D devm_kzalloc(dev, sizeof(*pgnames), GFP_KERNEL);
+> +       if (!pgnames) {
+> +               ret =3D -ENOMEM;
+> +               goto err_pgnames;
+> +       }
+> +
+> +       pgnames[0] =3D np_config->name;
+> +
+> +       guard(mutex)(&mpctl->lock);
+> +
+> +       selector =3D pinmux_generic_add_function(mpctl->pctl, np_config->=
+name,
+> +                                              pgnames, 1, function);
+> +       if (selector < 0) {
+> +               ret =3D selector;
+> +               goto err_add_func;
+> +       }
+> +
+> +       group =3D pinctrl_generic_add_group(mpctl->pctl, np_config->name,=
+ NULL, 0, mpctl);
+> +       if (group < 0) {
+> +               ret =3D group;
+> +               goto err_add_group;
+> +       }
+> +
+> +       function->mux_state =3D devm_mux_state_get_from_np(pctldev->dev, =
+NULL, np_config);
+> +       if (IS_ERR(function->mux_state)) {
+> +               ret =3D PTR_ERR(function->mux_state);
+> +               goto err_mux_state_get;
+> +       }
+> +
+> +       (*map)->type =3D PIN_MAP_TYPE_MUX_GROUP;
+> +       (*map)->data.mux.group =3D np_config->name;
+> +       (*map)->data.mux.function =3D np_config->name;
+> +
+> +       *num_maps =3D 1;
+> +
+> +       return 0;
+> +
+> +err_mux_state_get:
+> +       pinctrl_generic_remove_group(mpctl->pctl, group);
+> +err_add_group:
+> +       pinmux_generic_remove_function(mpctl->pctl, selector);
+> +err_add_func:
+> +       devm_kfree(dev, pgnames);
+> +err_pgnames:
+> +       devm_kfree(dev, function);
+> +err_func:
+> +       devm_kfree(dev, *map);
+> +
+> +       return ret;
+> +}
+
+This is so close to the pinctrl-internal helpers that you better work with
+those instead.
+
+Can't you just use pinctrl_generic_pins_function_dt_node_to_map()?
+It was added in the last merge window in
+commit 43722575e5cdcc6c457bfe81fae9c3ad343ea031
+"pinctrl: add generic functions + pins mapper"
+
+There are problems with the above, for example this is only called
+on the probe() path so you would not need any devm_*free calls,
+as you can see in the generic helpers.
+
+I think you need to look into using or extending the existing helpers for t=
+his,
+
+> +static void
+> +mux_pinmux_dt_free_map(struct pinctrl_dev *pctldev, struct pinctrl_map *=
+map,
+> +                      unsigned int num_maps)
+> +{
+> +       struct mux_pinctrl *mpctl =3D pinctrl_dev_get_drvdata(pctldev);
+> +
+> +       devm_kfree(mpctl->dev, map);
+> +}
+
+Just use pinctrl_utils_free_map().
+
+> +static void mux_pinmux_release_mux(struct pinctrl_dev *pctldev,
+> +                                  unsigned int func_selector,
+> +                                  unsigned int group_selector)
+> +{
+> +       struct mux_pinctrl *mpctl =3D pinctrl_dev_get_drvdata(pctldev);
+> +       const struct function_desc *function;
+> +       struct mux_pin_function *func;
+> +
+> +       guard(mutex)(&mpctl->lock);
+> +
+> +       function =3D pinmux_generic_get_function(pctldev, func_selector);
+> +       func =3D function->data;
+> +
+> +       mux_state_deselect(func->mux_state);
+> +
+> +       mpctl->cur_select =3D -1;
+> +}
+
+As mentioned I have my doubts about this, explain why this hardware
+is so different that this is needed.
+
+Other than that I like the concept!
+
+Yours,
+Linus Walleij
 
