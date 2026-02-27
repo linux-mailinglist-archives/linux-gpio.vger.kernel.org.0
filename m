@@ -1,200 +1,172 @@
-Return-Path: <linux-gpio+bounces-32311-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32312-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8ZiMI6KqoWkEvgQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32311-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 15:30:58 +0100
+	id wM/aF9eqoWkEvgQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32312-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 15:31:51 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BAB31B8FB7
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 15:30:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BC9691B8FEC
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 15:31:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DF1A6302BB97
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 14:16:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3AC8830B61CA
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 14:23:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C222280CC1;
-	Fri, 27 Feb 2026 14:16:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15DD221771C;
+	Fri, 27 Feb 2026 14:23:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AWrHQyLj"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WFH06/Qf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07442265623
-	for <linux-gpio@vger.kernel.org>; Fri, 27 Feb 2026 14:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473CC265623;
+	Fri, 27 Feb 2026 14:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772201779; cv=none; b=F8+vIwr2v9u/j8tgTiCACzO5wJx8L8FuN+AmlCG/WbQhIU20O/p63+9xhmJAW10Kymaf+05nnRM0KD/eLeFyBR9PLmWi19DxVX4A8ESaUXlcPjpuxs508zujsU/7MYMZHs8T+CfVgK6HIZnrqnKL1aS9FhRiXXeAc63AahOWy8c=
+	t=1772202196; cv=none; b=dOhKDft5ur3ID5YiXVtbIJd58B3swUC4OmWULn5eWlgRYFgW6JGs000OFJ+0wNvbNAB856ZIyMz4dv3b62zHHR6fbdhOQ9Srf+xiD7v0PCA6Y90xfVDq0y3YLueSAsFy7aVlZMgU8/DSG5k0xip7XR/Z/EZDADieYOK/UG47euI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772201779; c=relaxed/simple;
-	bh=heMywz+NZuo0faU9QgJgxlL7cA1s8uzmx8vmz10hwl0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XI3FMQRZvU6ue12ymxWXsz186icfBhAU9Jl6JVYXNcW4FiTMbE7BA3lySBVB//9QIUgxouNVKZkRdGtF5RuEroxKv6nIjD26VfKU4+ffAUq6LzXdoUPT7EskYeZhQWklEbBf/KP49e24cZHifnNutaD4GXrWpEHKGu09Od4yN3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AWrHQyLj; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-4398ebdf520so2013229f8f.0
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Feb 2026 06:16:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772201776; x=1772806576; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+rLsrw3ubV2kNdM73F5QrzKGVLuRmUa0KmVONDyY8Mw=;
-        b=AWrHQyLjI7QKw3hXFMdVfUNlDsSSDpS3+x3UeuIDtNhtiV7mvsJDuBpnu/Q+OE3/IJ
-         5Blqqr4f2wmK6ZY8lfbEPf4rGzT33sRqx3Uox+sat7puw8jjvH0aig6H6wCEHV5J8OU/
-         YyIN8t5eC+Eat+fGUxmOTBUEKRjz+r0iOL5B+g/5Hrj5dKbfv8LLfr0N2h+tuTsbLtGU
-         ztCRwlhlc+HoXI2wZcg7+jufeITqVK/mnvAge2wryeW706p1SCfO+IgMDFIjCQ4dRLsW
-         kgPRyErswL+APYwa1hOMWU/aE80j3kA6DpU0ECtODPOVE9lgOHTinXEqrKZXqa9t4NOI
-         KAOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772201776; x=1772806576;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+rLsrw3ubV2kNdM73F5QrzKGVLuRmUa0KmVONDyY8Mw=;
-        b=RSn0VY4p8ygSPv/zUC8mKpo+ItV4fpOv5moGFwc7DTy5M+ezkAwSfpMwp5hAdDvQ+C
-         XAmiVyw7KUPmN+w53K+i8IA2VljtMfwmJHo4jlZz8I0DARTVZbWn1FE4SHKvMAZF87cQ
-         5/cQyKxCriu2VQZ1n0ssAk8EBi9SjX+OLcQdO3Q/OKCqqALSrwlE0egcZz5VdIZZ82lW
-         D1c8HO7vG4PCo8Ys+hg5T+BZJSZAYDaVMEAU291I1vsFTL8A7FZE/gboFX9f15HLS5Qu
-         0vKawGLncTgQ8/8Rc88mSo419FZ0+kEyweNrP0VA2ElXSoh22WplD2yNiivzxz1EN8+5
-         O7MA==
-X-Gm-Message-State: AOJu0Yx8f/y3bhXtw4T+p/b8pIS/ndotgP5xVOv559zDXwuvju76XbQS
-	++lf5IqiNwOSanq41yHuA4D+6IJU5vb53tQ5VsOoEGiYSO+6ppz32eGA
-X-Gm-Gg: ATEYQzyHnEQnLJ01MRQpH1u7V2Sko9ltQtHlaEyFrJGZTrbs0YxbohHGBb6OfjF8JCd
-	ESRpExDp3H5W+Jstqb3YKy/fkEXzLVoNiM9W8GJ7UJY2FsmrcLH13DlA2EIdQrk4vLoUp9bGWij
-	nIgWGX6nADueiUX3sSqQxCwf/GgFAXhQBeuDwcEB3ZkybQEsSeIk47Ui63K2UTKZpPjwqpHHVXP
-	fDmee0nNsESenkq8nx4SVQGvtu8CnWIz+81OTrRbo+ut+0llvI6scXXtK4Q+4HOrBCo3Clee9NU
-	au67ItWdv0FFSgJKIHExaaZj91QEiuXUhZwFTlcnVZo4ZjYK6jbxkEOxBODZma3QX8jlnyCPE70
-	CiCIdYPIj9FLzKyf77DdTJfcb8e/JMokx6TcquMNYHtwNWa0cWr8sx/slzZ7gW2sul9Lzvn0wEp
-	a1V9W4X4KBJvIFRPuawlDO6eYR7dE7CsJUjNDXdF2z2Yf60hLkZbdglQ==
-X-Received: by 2002:a05:600c:1503:b0:477:a71c:d200 with SMTP id 5b1f17b1804b1-483c33e4e47mr72293415e9.11.1772201776006;
-        Fri, 27 Feb 2026 06:16:16 -0800 (PST)
-Received: from [192.168.20.124] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-483bfcb9b97sm102379055e9.7.2026.02.27.06.16.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Feb 2026 06:16:15 -0800 (PST)
-From: Gabor Juhos <j4g8y7@gmail.com>
-Date: Fri, 27 Feb 2026 15:15:54 +0100
-Subject: [PATCH] dt-bindings: pinctrl: marvell,armada3710-xb-pinctrl: add
- missing items keyword
+	s=arc-20240116; t=1772202196; c=relaxed/simple;
+	bh=ZOnoAzi/tWVfolm0QJOYymbD2sqoiY/nc8c+jGVTzlg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mySGh7o3ENhjDvW+erf6NU6A4TD65mpT96qOMtDOZEitkLMriF+RhEfInM+qIwC+SyN7fiDW7nXtLxUz/xoo8CRBBbhnVlM7ZlqTZ2YzpBpJBf4jfmhmkJp0AOwPLs0b/fFufxbYyEo8eI/CHMS0HZV/6sx+OX2PnDZQy6aHYyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WFH06/Qf; arc=none smtp.client-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 02B664E41912;
+	Fri, 27 Feb 2026 14:23:13 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id AC2B55FE74;
+	Fri, 27 Feb 2026 14:23:12 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6E8D510369462;
+	Fri, 27 Feb 2026 15:22:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1772202189; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=lqzD5+ZPd8kdWYW4RLHy/8j3RJjJSDBxD1vSEHspz5w=;
+	b=WFH06/QfLF52gB4Dx6oioPbPIasxGEk0G1Iq9QmtfWj1x3WwdIwDWACf6H4Uat8FGt8OOV
+	plcnvfGV4RPMR3GMrjCmPGd+2KRDTmCa3JfG7TM2JuI7tWrUZJG50rnv/WPLpCASYhu0il
+	hI9axC/FGtCYcMt57uc47mhFx9oF1YKxiI9WJaIF2fis+UghfcTHW1lt3WLVeQp+eBRGzR
+	0jYxamo2R3d/r1ojZPUXWuk43W5Ywd/vidK0bpFe1dOuF18Y7rO86OzFF6DyW6o99ZXOZ4
+	0jaxwwXbqUVUxSCJPUlSS0T9Qsakta6ebrF3+Z+TDVZdktijo3WWvV2BEWHHqw==
+Date: Fri, 27 Feb 2026 15:22:49 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, Kalle Niemi <kaleposti@gmail.com>,
+ Matti Vaittinen <mazziesaccount@gmail.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Frank Li <Frank.Li@nxp.com>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
+ Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Arnd
+ Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@kernel.org>, Bjorn
+ Helgaas <bhelgaas@google.com>, Charles Keepax
+ <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
+ <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Ulf
+ Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Len
+ Brown <lenb@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang
+ <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Shawn Guo <shawnguo@kernel.org>,
+ Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org,
+ driver-core@lists.linux.dev, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+ patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 09/28] pinctrl: cs42l43: Use fw_devlink_set_device()
+Message-ID: <20260227152249.7c6c40f5@bootlin.com>
+In-Reply-To: <CAD++jLmbg1FVGxv_7Lq4rOEbLAGh72YPTppOBcdpcsdLDo8B_A@mail.gmail.com>
+References: <20260227135428.783983-1-herve.codina@bootlin.com>
+	<20260227135428.783983-10-herve.codina@bootlin.com>
+	<CAD++jLmbg1FVGxv_7Lq4rOEbLAGh72YPTppOBcdpcsdLDo8B_A@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260227-a3720-pinctlr-missing-items-v1-1-e476e4df1ad6@gmail.com>
-X-B4-Tracking: v=1; b=H4sIABmnoWkC/x3MQQqDMBAF0KvIrDsQRzTSq0gXIY76QVPJSCmId
- ze4fJt3kmmGGr2rk7L+YPimgvpVUVxCmpUxFpM46ZyI59B4cbwjxWPNvMEMaWYcuhm3ru2k6aM
- Pk6cy7Fkn/J99+FzXDRcBwettAAAA
-X-Change-ID: 20260227-a3720-pinctlr-missing-items-5056238c7af7
-To: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Richard Cochran <richardcochran@gmail.com>, 
- Gregory CLEMENT <gregory.clement@bootlin.com>, 
- =?utf-8?q?Marek_Beh=C3=BAn?= <kabel@kernel.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- Gabor Juhos <j4g8y7@gmail.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32311-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,bootlin.com];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[lunn.ch,kernel.org,glider.be,gmail.com,linuxfoundation.org,nxp.com,pengutronix.de,baylibre.com,sang-engineering.com,axentia.se,arndb.de,google.com,opensource.cirrus.com,cirrus.com,linaro.org,linux.intel.com,stgolabs.net,huawei.com,intel.com,vger.kernel.org,lists.linux.dev,lists.infradead.org,microchip.com,bootlin.com];
+	TAGGED_FROM(0.00)[bounces-32312-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[j4g8y7@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	HAS_ORG_HEADER(0.00)[];
+	DKIM_TRACE(0.00)[bootlin.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[herve.codina@bootlin.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[62];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[devicetree.org:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,0.0.53.232:email]
-X-Rspamd-Queue-Id: 2BAB31B8FB7
+	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:mid,bootlin.com:dkim,bootlin.com:email,intel.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: BC9691B8FEC
 X-Rspamd-Action: no action
 
-Even though the type of the 'groups' property of a pinmux node is
-specified as string-array in pinmux-node.yaml, but trying to use
-multiple strings causes dtbs_check warnings.
+Hi Linus,
 
-For example, checking the following dts ...
+On Fri, 27 Feb 2026 15:11:13 +0100
+Linus Walleij <linusw@kernel.org> wrote:
 
-  $ cat arch/arm64/boot/dts/marvell/armada-3720-test.dts
-  /dts-v1/;
+> On Fri, Feb 27, 2026 at 2:57 PM Herve Codina <herve.codina@bootlin.com> wrote:
+> 
+> > The code set directly fwnode->dev field.
+> >
+> > Use the dedicated fw_devlink_set_device() helper to perform this
+> > operation.
+> >
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>  
+> 
+> Acked-by: Linus Walleij <linusw@kernel.org>
+> 
+> Tell me if I should apply this directly to the pinctrl tree, right
+> now I'm under the impression that all patches need to go in
+> together?
 
-  #include "armada-372x.dtsi"
+This patch depends on patch 7.
 
-  &pinctrl_nb {
-          pwm-gpio-pins {
-                  groups = "pwm0", "pwm1", "pwm2", "pwm3";
-                  function = "gpio";
-          };
-  };
-
-... results in this warning:
-
-  arch/arm64/boot/dts/marvell/armada-3720-test.dtb: pinctrl@13800 (marvell,armada3710-nb-pinctrl): pwm-gpio-pins:groups: ['pwm0', 'pwm1', 'pwm2', 'pwm3'] is too long
-	  from schema $id: http://devicetree.org/schemas/pinctrl/marvell,armada3710-xb-pinctrl.yaml
-
-Add the missing 'items' keyword to the schema to allow using multiple
-strings without such warnings. Also adjust the indentation of the next
-statements accordingly.
-
-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
----
- .../bindings/pinctrl/marvell,armada3710-xb-pinctrl.yaml       | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,armada3710-xb-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/marvell,armada3710-xb-pinctrl.yaml
-index 4f9013d36874997d208e1d07e35ab4e1e4bdef91..727da7fb490cef44959ccf5da9d42c4b2577e391 100644
---- a/Documentation/devicetree/bindings/pinctrl/marvell,armada3710-xb-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/marvell,armada3710-xb-pinctrl.yaml
-@@ -84,11 +84,12 @@ patternProperties:
- 
-     properties:
-       groups:
--        enum: [ emmc_nb, i2c1, i2c2, jtag, mii_col, onewire, pcie1,
--                pcie1_clkreq, pcie1_wakeup, pmic0, pmic1, ptp, ptp_clk,
--                ptp_trig, pwm0, pwm1, pwm2, pwm3, rgmii, sdio0, sdio_sb, smi,
--                spi_cs1, spi_cs2, spi_cs3, spi_quad, uart1, uart2,
--                usb2_drvvbus1, usb32_drvvbus0 ]
-+        items:
-+          enum: [ emmc_nb, i2c1, i2c2, jtag, mii_col, onewire, pcie1,
-+                  pcie1_clkreq, pcie1_wakeup, pmic0, pmic1, ptp, ptp_clk,
-+                  ptp_trig, pwm0, pwm1, pwm2, pwm3, rgmii, sdio0, sdio_sb,
-+                  smi, spi_cs1, spi_cs2, spi_cs3, spi_quad, uart1, uart2,
-+                  usb2_drvvbus1, usb32_drvvbus0 ]
- 
-       function:
-         enum: [ drvbus, emmc, gpio, i2c, jtag, led, mii, mii_err, onewire,
-
----
-base-commit: a901e8705f89f3616fad3bb6aeddba33be86b08a
-change-id: 20260227-a3720-pinctlr-missing-items-5056238c7af7
+I think it could make sense to have patches 7 to 12 applied by the same
+maintainer.
 
 Best regards,
--- 
-Gabor Juhos <j4g8y7@gmail.com>
-
+Hervé
 
