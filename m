@@ -1,172 +1,201 @@
-Return-Path: <linux-gpio+bounces-32312-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32313-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wM/aF9eqoWkEvgQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32312-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 15:31:51 +0100
+	id kAEbIdqvoWk3vgQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32313-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 15:53:14 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC9691B8FEC
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 15:31:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D93A11B944C
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 15:53:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3AC8830B61CA
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 14:23:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9554230774D6
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 14:53:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15DD221771C;
-	Fri, 27 Feb 2026 14:23:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94D06410D17;
+	Fri, 27 Feb 2026 14:53:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WFH06/Qf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VeSyfGtR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473CC265623;
-	Fri, 27 Feb 2026 14:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E51F41B340;
+	Fri, 27 Feb 2026 14:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772202196; cv=none; b=dOhKDft5ur3ID5YiXVtbIJd58B3swUC4OmWULn5eWlgRYFgW6JGs000OFJ+0wNvbNAB856ZIyMz4dv3b62zHHR6fbdhOQ9Srf+xiD7v0PCA6Y90xfVDq0y3YLueSAsFy7aVlZMgU8/DSG5k0xip7XR/Z/EZDADieYOK/UG47euI=
+	t=1772203989; cv=none; b=sMUpVvlTUDV4sMe6kjfjA5tWGUaKqEnq05NIz5apNxZtHsoHwpPGHjV30PbR/hXgNCmKvFFhjfdb+Y8fvQSHbqyDo06Geudwtk9Nvgptif917WLY1iH3+mJjmuMm+nWU14D5PBIg1X4N86fiWxIhEfjUurI+Rq9R+pAxHzx877M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772202196; c=relaxed/simple;
-	bh=ZOnoAzi/tWVfolm0QJOYymbD2sqoiY/nc8c+jGVTzlg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mySGh7o3ENhjDvW+erf6NU6A4TD65mpT96qOMtDOZEitkLMriF+RhEfInM+qIwC+SyN7fiDW7nXtLxUz/xoo8CRBBbhnVlM7ZlqTZ2YzpBpJBf4jfmhmkJp0AOwPLs0b/fFufxbYyEo8eI/CHMS0HZV/6sx+OX2PnDZQy6aHYyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WFH06/Qf; arc=none smtp.client-ip=185.246.85.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 02B664E41912;
-	Fri, 27 Feb 2026 14:23:13 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id AC2B55FE74;
-	Fri, 27 Feb 2026 14:23:12 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6E8D510369462;
-	Fri, 27 Feb 2026 15:22:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1772202189; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=lqzD5+ZPd8kdWYW4RLHy/8j3RJjJSDBxD1vSEHspz5w=;
-	b=WFH06/QfLF52gB4Dx6oioPbPIasxGEk0G1Iq9QmtfWj1x3WwdIwDWACf6H4Uat8FGt8OOV
-	plcnvfGV4RPMR3GMrjCmPGd+2KRDTmCa3JfG7TM2JuI7tWrUZJG50rnv/WPLpCASYhu0il
-	hI9axC/FGtCYcMt57uc47mhFx9oF1YKxiI9WJaIF2fis+UghfcTHW1lt3WLVeQp+eBRGzR
-	0jYxamo2R3d/r1ojZPUXWuk43W5Ywd/vidK0bpFe1dOuF18Y7rO86OzFF6DyW6o99ZXOZ4
-	0jaxwwXbqUVUxSCJPUlSS0T9Qsakta6ebrF3+Z+TDVZdktijo3WWvV2BEWHHqw==
-Date: Fri, 27 Feb 2026 15:22:49 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Linus Walleij <linusw@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Kalle Niemi <kaleposti@gmail.com>,
- Matti Vaittinen <mazziesaccount@gmail.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Frank Li <Frank.Li@nxp.com>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
- Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Arnd
- Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@kernel.org>, Bjorn
- Helgaas <bhelgaas@google.com>, Charles Keepax
- <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
- <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Ulf
- Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Len
- Brown <lenb@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang
- <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Shawn Guo <shawnguo@kernel.org>,
- Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org,
- driver-core@lists.linux.dev, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v5 09/28] pinctrl: cs42l43: Use fw_devlink_set_device()
-Message-ID: <20260227152249.7c6c40f5@bootlin.com>
-In-Reply-To: <CAD++jLmbg1FVGxv_7Lq4rOEbLAGh72YPTppOBcdpcsdLDo8B_A@mail.gmail.com>
-References: <20260227135428.783983-1-herve.codina@bootlin.com>
-	<20260227135428.783983-10-herve.codina@bootlin.com>
-	<CAD++jLmbg1FVGxv_7Lq4rOEbLAGh72YPTppOBcdpcsdLDo8B_A@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1772203989; c=relaxed/simple;
+	bh=jX6WmKtuN6T2VpqyIezKKD+/Ad5MsTZIssF/fg+tWn8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EXuP2l71vAZMMQjSAXD1dty7xjfov4lKndkSwfNCD/ai4fx85RdWxkLqPdrJY+uggN64kLL1zp1126nZHETGPIe7AWUhcXPZsjDzWEIFl9qqKgIJxcGrTMHrdbC5YHbXdwC3kP2SySDhSdo4dYu4znqMSGS1K8KMlg4wvLT8LqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VeSyfGtR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 961FCC116C6;
+	Fri, 27 Feb 2026 14:53:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772203988;
+	bh=jX6WmKtuN6T2VpqyIezKKD+/Ad5MsTZIssF/fg+tWn8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VeSyfGtRm1j7SmiqAAty+SxdjG62YxV/HCIdWW4nOuwDqUnmzdR0N1I8BI+AsDOeA
+	 59KLm0CXu4Qd+g7VaHjOpD6oE3QOtu9+3knRhhrFvsZ/C1SE1V6kcQI8XcHPqvcQDO
+	 4Px6DS4hYTqUiqnLOj891BESEM3hdlNXXzapDoME+y8FFOuRt9fgRwC1BV+jkwOPcJ
+	 QNdnKVcPRd4hw0n+8mRkOxu3vWF6UtohsWNA9ugcFQN2LP+FYNkP72ZP+RxLsSytDP
+	 AYWj41DNWnOizEI+3jSeBgjG8wCdyHfRhw6SqVj/nJkx61BmFMdv2p/BdFGDk7L781
+	 IBbPojHJbe1ng==
+From: Conor Dooley <conor@kernel.org>
+To: linux-gpio@vger.kernel.org
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC v11 0/4] PolarFire SoC GPIO interrupt support
+Date: Fri, 27 Feb 2026 14:52:26 +0000
+Message-ID: <20260227-ajar-wolverine-7ce1ebd79821@spud>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4301; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=mfPuD7/X4c6UDjnGwLM+ANCIFBHCdBf6P3/wkC/hOA8=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJkL16/5e3/7XX6jBovpz84ILtj94QY/y2mG171X9SceL dp3O8UuoaOUhUGMi0FWTJEl8XZfi9T6Py47nHvewsxhZQIZwsDFKQATcRRnZLg6T9ZQRfhEwNOj 554tXGTX7p7FpxQik1pwk+PXrNetE/4zMnTWK/63vO9wVWY2X5dt4bUFL48ZnkwwXXNhT6K9bWq hNh8A
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[lunn.ch,kernel.org,glider.be,gmail.com,linuxfoundation.org,nxp.com,pengutronix.de,baylibre.com,sang-engineering.com,axentia.se,arndb.de,google.com,opensource.cirrus.com,cirrus.com,linaro.org,linux.intel.com,stgolabs.net,huawei.com,intel.com,vger.kernel.org,lists.linux.dev,lists.infradead.org,microchip.com,bootlin.com];
-	TAGGED_FROM(0.00)[bounces-32312-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32313-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	HAS_ORG_HEADER(0.00)[];
-	DKIM_TRACE(0.00)[bootlin.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[herve.codina@bootlin.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[62];
-	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:mid,bootlin.com:dkim,bootlin.com:email,intel.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: BC9691B8FEC
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: D93A11B944C
 X-Rspamd-Action: no action
 
-Hi Linus,
+From: Conor Dooley <conor.dooley@microchip.com>
 
-On Fri, 27 Feb 2026 15:11:13 +0100
-Linus Walleij <linusw@kernel.org> wrote:
+In 2024 I sent a v7 of adding support for the GPIOs on PolarFire SoC,
+which relied on an irqchip driver for a mux sitting between the GPIO
+controllers and the main interrupt controller on the chip:
+https://lore.kernel.org/all/20240723-flatworm-cornflake-8023212f6584@wendy/
 
-> On Fri, Feb 27, 2026 at 2:57 PM Herve Codina <herve.codina@bootlin.com> wrote:
-> 
-> > The code set directly fwnode->dev field.
-> >
-> > Use the dedicated fw_devlink_set_device() helper to perform this
-> > operation.
-> >
-> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>  
-> 
-> Acked-by: Linus Walleij <linusw@kernel.org>
-> 
-> Tell me if I should apply this directly to the pinctrl tree, right
-> now I'm under the impression that all patches need to go in
-> together?
+Some feedback I got from Thomas there ended up being a complete black
+hole for time spent, and I never managed to make the change he wanted,
+as a house of cards collapsed whenever I tried it. I eventually
+abandoned my attempt to upstream the GPIO driver with interrupt support
+and cut it out of the driver to make progress. I've been carrying what
+Thomas deemed incorrect downstream since.
 
-This patch depends on patch 7.
+Recently Hervé upstreamed a patchset for a Renesas chip that deals with
+a mux sitting between a GPIO controller and the platform interrupt
+controller by way of interrupt-map. I saw the opportunity to copy what
+he did, so have gone from an irqchip driver that read the mux setting
+that firmware had configured, to trivial driver that reads the mux
+configuration from devicetree and sets the hardware up to match.
 
-I think it could make sense to have patches 7 to 12 applied by the same
-maintainer.
+This gets rid entirely of the irqchip driver, so resolves Thomas'
+complaint, but I don't love how the GPIO side of things turned out quite
+as much. The hardware has 41 interrupts but 70 GPIO lines. 38 of these
+are 1:1, direct connections to a dedicated line on the interrupt
+controller and 3 are shared.
+With the parent mux driver, the GPIO driver's interrupt handler was only
+called either for specific direct interrupt or for only the subset that
+are fed into the shared interrupt for that controller. Without the
+parent irqchip from mux driver, and using interrupt-map, I lost the
+ability to use mux driver to selectively call the handler, so now the
+GPIO controller attempts to handle interrupts on all lines.
+Probably this is ultimately not a big deal, it just feels bad to do.
 
-Best regards,
-Hervé
+Going RFC here, since it's an entirely different approach. The version
+number is a continuation from before, since the patchset linked above
+got merged at v10 when I stripped the interrupt support.
+
+The mux driver has moved from irqchip to soc, since that's where Hervé's
+ended up.
+
+Cheers,
+Conor.
+
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Herve Codina <herve.codina@bootlin.com>
+CC: Conor Dooley <conor.dooley@microchip.com>
+CC: Daire McNamara <daire.mcnamara@microchip.com>
+CC: Rob Herring <robh@kernel.org>
+CC: Krzysztof Kozlowski <krzk+dt@kernel.org>
+CC: Paul Walmsley <pjw@kernel.org>
+CC: Palmer Dabbelt <palmer@dabbelt.com>
+CC: Albert Ou <aou@eecs.berkeley.edu>
+CC: Alexandre Ghiti <alex@ghiti.fr>
+CC: Linus Walleij <linusw@kernel.org>
+CC: Bartosz Golaszewski <brgl@kernel.org>
+CC: linux-riscv@lists.infradead.org
+CC: devicetree@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-gpio@vger.kernel.org
+
+Conor Dooley (4):
+  gpio: mpfs: Add interrupt support
+  dt-bindings: soc: microchip: document PolarFire SoC's gpio interrupt
+    mux
+  soc: microchip: add mpfs gpio interrupt mux driver
+  riscv: dts: microchip: update mpfs gpio interrupts to better match the
+    SoC
+
+ .../soc/microchip/microchip,mpfs-irqmux.yaml  |  76 ++++++++
+ .../microchip,mpfs-mss-top-sysreg.yaml        |   4 +
+ MAINTAINERS                                   |   2 +-
+ .../boot/dts/microchip/mpfs-beaglev-fire.dts  |  29 +++
+ .../boot/dts/microchip/mpfs-disco-kit.dts     |  43 +++--
+ .../dts/microchip/mpfs-icicle-kit-common.dtsi |  37 +++-
+ .../boot/dts/microchip/mpfs-m100pfsevp.dts    |  41 +++--
+ .../boot/dts/microchip/mpfs-polarberry.dts    |  29 +++
+ .../riscv/boot/dts/microchip/mpfs-sev-kit.dts |  37 +++-
+ .../riscv/boot/dts/microchip/mpfs-tysom-m.dts |  35 +++-
+ arch/riscv/boot/dts/microchip/mpfs.dtsi       |  37 +++-
+ drivers/gpio/Kconfig                          |   1 +
+ drivers/gpio/gpio-mpfs.c                      | 125 ++++++++++++-
+ drivers/soc/microchip/Kconfig                 |  11 ++
+ drivers/soc/microchip/Makefile                |   1 +
+ drivers/soc/microchip/mpfs-irqmux.c           | 167 ++++++++++++++++++
+ 16 files changed, 620 insertions(+), 55 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-irqmux.yaml
+ create mode 100644 drivers/soc/microchip/mpfs-irqmux.c
+
+-- 
+2.51.0
+
 
