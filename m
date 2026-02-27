@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-32298-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32299-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +OpzJryloWmivQQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32298-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 15:10:04 +0100
+	id QMJdJ+mloWmivQQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32299-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 15:10:49 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF6B61B86DB
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 15:10:03 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 183591B873F
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 15:10:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id ABA8F3032F74
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 14:01:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6AD5A3058B8E
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Feb 2026 14:02:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D911E4218B8;
-	Fri, 27 Feb 2026 14:00:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15BBC421A1B;
+	Fri, 27 Feb 2026 14:00:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fFN1Mr7T"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="R8PR1GRd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6442C42189F;
-	Fri, 27 Feb 2026 14:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A50141B35A;
+	Fri, 27 Feb 2026 14:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772200831; cv=none; b=XRvI3e/kIXTBmPEZzvCMm2xWs50KWlW2KR+FMQTlrs28jV4x5T4bpZwzgtMJcJ1S28HYEmcY9ZkhDGvdODkidL4odn+waXtlKExocw5KFX86nzRBd516qhChVj2VXvYQbrJXbi9Vx2L/EeuWEXVvjKBy1YBPGEznsN+C2/4LxS8=
+	t=1772200848; cv=none; b=NCMkA8p2En3REYHmGijvGB7NNpOhyyKbfqXH7Q2aWRb/WrCBEKqIkHnckj9DmAuUE3PMmcQYjxS4EDBPVNqn5hGyIjtQhJQBJLPf0Af0h25owoNF4hs4B1qctjxXQAL15nWI9/LEJ5TQQ4vyHDRMIheWozs+jk2hZ4ScEabrYYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772200831; c=relaxed/simple;
-	bh=t4S3Im2Q9VHd65b1LNW0YeMdFBvQQnKTQdoHV0TNdoM=;
+	s=arc-20240116; t=1772200848; c=relaxed/simple;
+	bh=z5qo+njxOq59cfnMFpWRPyGgRlTcviG2FIatZoRwOvA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xfsu21Rb53udGaMO9jHi9T2PqdB3ktHgSBVQnAWGObGpPlbwHBNqW9dk2xas4ZDMa10bfvQg2Ip4gaEbka7kgLAppN+EdtHrYfJqQq2qrtxxWqMnewD3sz+2cPafZ36EKGdImQc0OtMugEhJYnmD0/UDfDNBEirUoOB+4EfypL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fFN1Mr7T; arc=none smtp.client-ip=185.171.202.116
+	 MIME-Version; b=R3gPI9vxYQFzDJk51qOYPc+hgbEkrHiGj5IgHp/bcTdgHA9ObyMOniOjL1LO5bZjKcsShX/IwQVcrhgqYOcl9h0W1cvyNjBoGHvKc2QE+e1ZbcEu/pGlRzOMB0RSXHixYX2PjGST9Hdu3pfm+J7HMwIlGmu+8Ao1zsmObhMOBS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=R8PR1GRd; arc=none smtp.client-ip=185.246.84.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 17ECAC406A8;
-	Fri, 27 Feb 2026 14:00:45 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 66EFE1A1B17;
+	Fri, 27 Feb 2026 14:00:46 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 2D25F5FE46;
-	Fri, 27 Feb 2026 14:00:29 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B1DF51036946B;
-	Fri, 27 Feb 2026 15:00:04 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 3CC915FE46;
+	Fri, 27 Feb 2026 14:00:46 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5F60A1036946F;
+	Fri, 27 Feb 2026 15:00:25 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1772200823; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1772200842; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=yjXgFwtIgYgLY+NqzIdKN5xDoSSBCrFHV69qZDYtiog=;
-	b=fFN1Mr7TgwZdDKmtKNAjCJMQWiyfFwr/M+zlCiuLD+TAIphnCVpCqBUz4GjqUVLgLcVMiN
-	iWjy1Jq/0syaYQTgtz7ZYl3uuT0hB9V6DgB26shloy6rnEfDcpOhEo3C6mJ+uRLP5W8La5
-	ciDEdeWtxn0vhNhdf1cdiTvRPTOKhmLPQP11W5WkJg5K498ddhrRJHCQX5e7+psNfGJ7Bj
-	pVfPN+S/X7w8Wxd8KEKeK9iQ9OJzG+PCXEhLJqN2ewcbKC//T2iwVq9WHQW7nUBbFU/FfA
-	bB7c2KSxF5B0l9NMRic4bFjYzWqw0C2TY5jup1wa6MrG6KcCAVmS9wY+jx1xwg==
+	bh=+z4Mrq3/T+2B2/cuOhiNyTSuL/eh3kHVXp5z8mKO858=;
+	b=R8PR1GRdilUpqqOvhhGPsRZnaqHC6zNY1SPSac42QkHa1KE18j1aSj3wQDpDzOvAZSE9Oh
+	Guj6PLsenxC3g9HSGqej2ADbLkIlHtAoN6BHNhHTAmy+WFZJ7asIbuX5F/RPfoWtsSnmNc
+	v9kud2Jw6vWmzu/pztvGKuQ94UEeq6EMbgxsB+agzxgpOd4aDODpCckdGhJMjdiSqIa5Ph
+	eEsrfaXugkZnXD6SrZWzCnCZGmr4c+fKDN/WeAczQC/EaM3d/DI2EbTwapsWZpVNpltqVQ
+	h2BLP/aXo61HdPcVjGbiFe0OrV6MDgylpAxlxk3Guw13l9YovaZrckn997mAqw==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Andrew Lunn <andrew@lunn.ch>,
 	Rob Herring <robh@kernel.org>,
@@ -115,9 +115,9 @@ Cc: Wolfram Sang <wsa@kernel.org>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v5 19/28] clk: lan966x: Add MCHP_LAN966X_PCI dependency
-Date: Fri, 27 Feb 2026 14:54:16 +0100
-Message-ID: <20260227135428.783983-20-herve.codina@bootlin.com>
+Subject: [PATCH v5 20/28] i2c: busses: at91: Add MCHP_LAN966X_PCI dependency
+Date: Fri, 27 Feb 2026 14:54:17 +0100
+Message-ID: <20260227135428.783983-21-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260227135428.783983-1-herve.codina@bootlin.com>
 References: <20260227135428.783983-1-herve.codina@bootlin.com>
@@ -136,7 +136,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -144,11 +144,11 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[lunn.ch,kernel.org,glider.be,gmail.com,linuxfoundation.org,nxp.com,pengutronix.de,baylibre.com,sang-engineering.com,axentia.se,arndb.de,bootlin.com,google.com,opensource.cirrus.com,cirrus.com,linaro.org,linux.intel.com,stgolabs.net,huawei.com,intel.com];
-	TAGGED_FROM(0.00)[bounces-32298-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-32299-lists,linux-gpio=lfdr.de];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[bootlin.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[herve.codina@bootlin.com,linux-gpio@vger.kernel.org];
@@ -159,35 +159,34 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCPT_COUNT_GT_50(0.00)[63];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:mid,bootlin.com:dkim,bootlin.com:email]
-X-Rspamd-Queue-Id: EF6B61B86DB
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bootlin.com:mid,bootlin.com:dkim,bootlin.com:email]
+X-Rspamd-Queue-Id: 183591B873F
 X-Rspamd-Action: no action
 
-The lan966x clock controller depends on the LAN969x architecture or the
-LAN966x SoC.
+The AT91 I2C driver depends on ARCH_MICROCHIP.
 
-This clock controller can be used by the LAN966x PCI device and so it
-needs to be available when the LAN966x PCI device is enabled.
+This I2C controller can be used by the LAN966x PCI device and so
+it needs to be available when the LAN966x PCI device is enabled.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Acked-by: Andi Shyti <andi.shyti@kernel.org>
 ---
- drivers/clk/Kconfig | 2 +-
+ drivers/i2c/busses/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 3d803b4cf5c1..0231dd449134 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -278,7 +278,7 @@ config COMMON_CLK_LAN966X
- 	tristate "Generic Clock Controller driver for LAN966X SoC"
- 	depends on HAS_IOMEM
- 	depends on OF
--	depends on SOC_LAN966 || ARCH_LAN969X || COMPILE_TEST
-+	depends on SOC_LAN966 || ARCH_LAN969X || MCHP_LAN966X_PCI || COMPILE_TEST
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index e11d50750e63..f43b3e8ca317 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -417,7 +417,7 @@ config I2C_ASPEED
+ 
+ config I2C_AT91
+ 	tristate "Atmel AT91 I2C Two-Wire interface (TWI)"
+-	depends on ARCH_MICROCHIP || COMPILE_TEST
++	depends on ARCH_MICROCHIP || MCHP_LAN966X_PCI || COMPILE_TEST
  	help
- 	  This driver provides support for Generic Clock Controller(GCK) on
- 	  LAN966X SoC. GCK generates and supplies clock to various peripherals
+ 	  This supports the use of the I2C interface on Atmel AT91
+ 	  processors.
 -- 
 2.53.0
 
