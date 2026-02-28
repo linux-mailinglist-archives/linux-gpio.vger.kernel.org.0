@@ -1,187 +1,226 @@
-Return-Path: <linux-gpio+bounces-32347-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32348-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KNKvGShKo2nW/AQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32347-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Feb 2026 21:03:52 +0100
+	id aDLTABZfo2myBQUAu9opvQ
+	(envelope-from <linux-gpio+bounces-32348-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Feb 2026 22:33:10 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDE741C7DA7
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Feb 2026 21:03:51 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 365401C9238
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Feb 2026 22:33:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3531032FB23B
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Feb 2026 19:49:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 34D0A3445890
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Feb 2026 19:54:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29A02377033;
-	Sat, 28 Feb 2026 18:00:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF84235DA4B;
+	Sat, 28 Feb 2026 18:42:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iCgsxGg+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JrelRZHA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C372237702F
-	for <linux-gpio@vger.kernel.org>; Sat, 28 Feb 2026 18:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.177
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772301639; cv=pass; b=mUbARcKyA/TVHKi51qblIhnEARdbMMkDU4woriSkCusK8PTjfdmJQwxGNVHMGJWEbFqBDhzjQtrwHgU8PQdG562GE59dlyQi5i4iJNvJwTEBTHxXpFOZng21RjrlKZ6EUivqPiGOM46m50cS+MnqyEzKuX2hWRuCsmSdWpwBxE4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772301639; c=relaxed/simple;
-	bh=hlSsWByQbTxjiPEqkfTj4A5N00y7errpXNbjwQ/eL74=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cGA2QvNCzn3keA/z9nFVXXoaeyYd8TyOjl9V3GkGH+ase3kES4ZcT5wQ2qPBsr3avw+0Ntrhs8fqOch26E+w6P2Puy3owz7OIJ97vclV9rE4DNMl1Qp3wBuRay8OYsVRezkUdCd5nfjMmaU8tv5KhkjzQvFGztas9RZUJmYV+4Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iCgsxGg+; arc=pass smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D85135DA54
+	for <linux-gpio@vger.kernel.org>; Sat, 28 Feb 2026 18:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772304128; cv=none; b=SRVpWFM2QIhfUZfq5ZPT5khCn8dBEX/EcOexzuEa1BbGXvIXrxvIjkoF0l3cHDe85GZJbH/eH5pavQtdrjfNAA4IkxeXS++14f2C2BPzr53GeBYFKBXv5e4zQw03vgSn371VmJ4tCWRLPcYn/hBAWJ3TtZ3C7bJAs6FsPVD2EEw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772304128; c=relaxed/simple;
+	bh=8hvzeHo22aHtICDHOH8Cme06uhRerQ1Gyi3U2O1Dam0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lu9uCMFLVBbf5YCbNgHDi0zZ/lyRcz0HdSXxYGUA0zbUnoJkkolwuLNWeNpSe6lyC0an3OQHFtXyzM6Ch1hP3T0u5xgYu9qz/UIj+/YVg6omUCcCPGN1kqN7GB4Q9f1S8Z0Fnjt6GgucWq6KFZU3smRgmAzkFye2OFliXUuNalo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JrelRZHA; arc=none smtp.client-ip=209.85.167.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-506a019a7f3so39945751cf.3
-        for <linux-gpio@vger.kernel.org>; Sat, 28 Feb 2026 10:00:38 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772301638; cv=none;
-        d=google.com; s=arc-20240605;
-        b=LPtAeo4FAyo5uTYoT9DLyXv6SFwLV3X5NdeLDi3aIWVZVRi6S6H+kCw4rjB6w9YE31
-         h7gl8+tfGzTb5eYWUWRsnn0PKFCKud8Xuz57We9fdwbP7pDp1y+PsLnioPeyjzf5Yavk
-         dGfCT2H1GyeAHpS5oe1HUs8xMuz6bMo3apelvcggvhJ0j8w/inAfwP2TPSQjjcGT8kA5
-         t+I+ZaFVSS1Y1i2LZJzFnlLpI2wLPwmh3Qyjij4QXJdxAc26JP5tLr5Wph6Jp3QEaQdS
-         +oJbv1kiQp3jI1tjBTts13dkxRr1QgjLyCwKFpv+kT1MJXf2bNt3R5uKfmCZsz6I4IiU
-         /Fgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=CzbAnz6T/IhzT60BwbsGo7FPW25EednVTt62Gcqnlt4=;
-        fh=xJVUQi3DxnjJhCzi24/ESMO7673O9tRMc/ELO8Md/eU=;
-        b=LApEk30xkXUDDM7jAmjaV95kncnqD0MSD7lF59z1xP81CbOSPtSckKbuEpYf0z9qZk
-         BeRCouWAow7B7r5q3gnTwnkLqhKmK/h8jeDqkQl6GzGXlhwhwKPZsWaVk89fdldSMvYL
-         cvhNOveofdFZ5HrirRmweunr48VzGZqklqcev9eHPn7OpkIqpyYRv+6HfVrZrLkWyvCA
-         LacMUMG8QDAcIG/P/Mh0mUqMpNX+z0gGU9xChKbJZFV3wIegUqgjUuPX0Y690N2F90KZ
-         kAe9pr1VEJI8VX6HaWO33uh4HIqpRmkks6lpDgT6+tFyLUMChZe0OLlb166lTeT0Slyw
-         MylA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-464ba2bb3aeso2222702b6e.1
+        for <linux-gpio@vger.kernel.org>; Sat, 28 Feb 2026 10:42:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772301638; x=1772906438; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CzbAnz6T/IhzT60BwbsGo7FPW25EednVTt62Gcqnlt4=;
-        b=iCgsxGg+tT1SyuKv8XUbyGWtJcgrqE2sG6t4W2kiANh7CrxiFbAoiJc/FnUi07xZiK
-         cu6b2hXnWhYUF+cCX4dQgrvstEVMkj/Jf9DpICsP21QdVSz/liS8L1V8zdCiAqKrCjqb
-         TsZgH2SRsfMxh9MIeWWp6JJ/A88VzAlwM6AQ70idPNra/mrOiM/ywRHl7/4/0PFjgCA5
-         F9rZ8Flb69li3k7Kemax7OE10LMq/jZdomb7m7I5mkfXQJdQnKCoGIAzePtF4DZu+A9i
-         IBt79xWyIHuBvmdX50wfuDwGNTJlQE1NOA8iD0oZiKyauCGKnnykgzCY6xZ8ti61nEVT
-         X2LQ==
+        d=gmail.com; s=20230601; t=1772304126; x=1772908926; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uuLlgbaYWUOdkb7DZYWP5GMwu+RZWLLAl58g+Wnzaeg=;
+        b=JrelRZHAH0biazE3zuUCLxYCP+d2oJI5tDBHzw5dNBO98Ohz/wjea+fpPtw2cW6ln5
+         EZNxCsrxRQgIrMmh1wckZYbrjKDf0M+HEQhaLpb++4nPew8VQcIG267XuFM0qPnsMosC
+         1n/ZLJ+z8bG4l1nj3luauxq08lpYtvU6G8SQ0ggt9FeeQz7X++ljZ00IZTDL9yDIY3IE
+         daOatLsu9GHtV/OTItiAxfoIzkLa0ZFYz0RPayit36ihVQKNW1lFB49/YOkxVsIjgMR2
+         QxNSrvGYFS+Ls31QkCrjsxFpVfnuHYNMGIcnqdJqiyPa+CHb2l1fwfK51MyDCluqfcn+
+         Mmdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772301638; x=1772906438;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=CzbAnz6T/IhzT60BwbsGo7FPW25EednVTt62Gcqnlt4=;
-        b=hgnDEUGlgrmJZKL+DuK1cZL3fiP4D8Efg4kCjiHoXtlDNscnC6owRQaLHKWrjItHKs
-         xCM9+yOemLJzccSqzni3BCitWKHtGy0dBhmSUxInPLnWF3HJSs66nn1zqNJh5A6zrKIG
-         HFwYYpZCLGDWaxAQTgiAwsLy26pwTIEEVJXT76ighPHYEpFbWU0+wJcgHU6izw4gIHYy
-         M2dl/MFmkdRj2ATTNCm0tUNHRAK4uTdGK7pkU/wvZqmZqTjdFO0RuPwGHhIqltYZkJV2
-         Na1JaB3s7ivk/Sma/xLIqcIotrYWuf+EYjRWG8PgaUbvkFDuVsCuP0fchh0FY1Ll8axw
-         NuYg==
-X-Forwarded-Encrypted: i=1; AJvYcCWRiyhItVmd9oaRsFhtms2WftsTS6ImI1UEamSkCKEgrMl3v7oBE7ob3HlvYSvXQ7n8yPPu1m7KhAmc@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJRWLwqhGJiHVVCWLzh84Gz10tBxCGj5RqORNjgFHGt/qzs8y4
-	bHjQepQ16TpZDz5dmrHCOEyQLFskOxLVUqa6T51LG2Ct2o+fMC4HGer33bNIOPbYjLGuZxepOh0
-	/qbJyscPaO3MBh8ijfjM1enb//2+Izr8=
-X-Gm-Gg: ATEYQzzg7gQY9WMggYU1Z5ngTlzRfZPH77zch5YMM4khSfp2gqEenGTboG6zjTkkeMz
-	cqexbIcEa9uc+eaw4X+aUd3qARWir6hqZolQarVgmJjHVTOR8HQI3XEQViGgfgKAdMotZJrhUmF
-	SXt1jkUDmQ0G+1fNgzRyc84xfAXFRzMSEznU5NZk0qqraucDnSdK8/SP9fm/kfE9GmB8MoO2Dyw
-	IHKbxY8YgGuxBYa4aAKdjBtMPQjCuAZYMDSpFQ4QKNCzRpmlf8ILWSaPoHxJE9RU/+A8gezV3ZM
-	Qk42TSV0YVTy1QM3Bs4ImUVt
-X-Received: by 2002:ac8:5f4c:0:b0:4ff:b211:6aa6 with SMTP id
- d75a77b69052e-50752796176mr90990561cf.27.1772301637636; Sat, 28 Feb 2026
- 10:00:37 -0800 (PST)
+        d=1e100.net; s=20230601; t=1772304126; x=1772908926;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uuLlgbaYWUOdkb7DZYWP5GMwu+RZWLLAl58g+Wnzaeg=;
+        b=oXiZGonWsgBl5RnrUMXsy2mlAihgzT57OYOqmNSii0iXqBHKh5Amc31u3WOdzbpabD
+         Xf9+PmjrMDcuxFcYJjFmM3iqEkiRcktQdzf/AcoyaWsdU3wTxsBbfFgHYUE7QpE2tFXt
+         6B0Wob+e04sEcQT3Mv93+3vYwqMf1LGuOaJfmH7ZGEWyUWeHc0/4L+XyJjpR6JnWbvm8
+         wCWcfLG2KlbmDl9joAA+QgHnu/S23WTYvcBqxo+9Dn9FPra88ZWCQ7C4Y2gm6JRjJ44Z
+         UPDit12jBBmaQPIixVIoomMMkblO/WM/bz0MNjhhzCY6PYH2p8uf12V+w87SzOKwiepO
+         667Q==
+X-Gm-Message-State: AOJu0YzaTTYWu2/29ApREugvYZqGWOgAPBWrT79NgE9RBjJ8gVaiofR8
+	FodIKypZsTc8vRum81UWnP8qhmXcViATPi8sJpeon0b7dYi2EG9gbjfj6ZHRBQ==
+X-Gm-Gg: ATEYQzzeBdab+vm27vX7I3/bYzdj8+0RmLxo7TirnFTpBddZrwP2iOcEBFZ0Nrr74p4
+	cqZcLqAXSu49SeUqJX7AIxLATvMtowFCBCuHV3uk97ZKwurHW4okzYmUPAcgsSJMHGkE1EtOK7e
+	Pw0nwphTERpF/uGjgdOmmFVWQpZSHK/R40UQKjQyxYcL2YdXs7Z89brAnhLMVMVTxRYEjp9jZJw
+	66LCZ2+o1Wu3cMr8IhyLg3shzqlmIweTe/DbW8Pnu6ziaRshlzPBFZdaZRkC2lItQ3+QTWXaGP8
+	Hg5V3w2GYaXVtzSe/OjlU5GNhnuoqKP8J5JUgrbEVOW5xLfnWoOKSAnns8pNun7SaeZtW5lKIen
+	Q52PIeiX5U32XGVWwHGC+2GO0h9n+4b6KwhebI/T5wUCh9QoSQHIyVL70/mItPbn2MER+kN+AaL
+	ZWFbf4c3Ti53oEl4ni1qLXypiJEk74TeXlcFe4ge5DStBHxbsCkUgOAhY1aNN17Q==
+X-Received: by 2002:a05:6808:1a21:b0:450:1eae:96e9 with SMTP id 5614622812f47-464a5d7adb1mr5346029b6e.7.1772304125824;
+        Sat, 28 Feb 2026 10:42:05 -0800 (PST)
+Received: from Zephyrus.localdomain ([131.93.209.211])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7d5866541fcsm6964875a34.21.2026.02.28.10.42.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Feb 2026 10:42:05 -0800 (PST)
+From: Vincent Fazio <vfazio@gmail.com>
+To: linux-gpio@vger.kernel.org
+Cc: Vincent Fazio <vfazio@gmail.com>
+Subject: [libgpiod][PATCH] bindings: python: copy the license into distributions
+Date: Sat, 28 Feb 2026 12:41:58 -0600
+Message-ID: <20260228184158.25003-1-vfazio@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260111092833.466263-1-akkun11.open@gmail.com> <6a499e1a-80fe-4fc3-af77-b5d31f689d7f@collabora.com>
-In-Reply-To: <6a499e1a-80fe-4fc3-af77-b5d31f689d7f@collabora.com>
-From: Akari Tsuyukusa <akkun11.open@gmail.com>
-Date: Sun, 1 Mar 2026 03:00:26 +0900
-X-Gm-Features: AaiRm512V9E6SYs2_Yyac0rJXDDdrcUO_TD7gqKE_u9D1yEofE0XT1GKOLrzGEk
-Message-ID: <CAKr_iV40A8=8e4Bqez-mbq6Jt+ZVNH=Vbvk1mQPZq1Z_feu+ng@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: common-v1: introduce per-function
- multibase control
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Sean Wang <sean.wang@kernel.org>, Linus Walleij <linusw@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	"moderated list:PIN CONTROLLER - MEDIATEK" <linux-mediatek@lists.infradead.org>, 
-	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
-	"open list:ARM/Mediatek SoC support" <linux-kernel@vger.kernel.org>, 
-	"moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-32347-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,lists.infradead.org,vger.kernel.org];
-	TO_DN_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-32348-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[akkun11open@gmail.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWO(0.00)[2];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[vfazio@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,collabora.com:email]
-X-Rspamd-Queue-Id: BDE741C7DA7
+	NEURAL_HAM(-0.00)[-1.000];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,pypa.io:url]
+X-Rspamd-Queue-Id: 365401C9238
 X-Rspamd-Action: no action
 
-On Mon, Jan 12, 2026 at 5:31=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
-> Thanks for the patch!
-> What you're saying here makes a lot of sense, but there's one big questio=
-n for you.
->
-> Have you considered migrating those pinctrl drivers to use a PIN_FIELD_BA=
-SE()
-> like it's being done for all other(/newer) MediaTek SoCs?
->
-> Why would this not be applicable for those old ones?
+Previously, the bindings called out the SPDX license identifier in the
+pyproject.toml but did not include a copy of the license in either the
+source or binary distributions.
 
-Hi Angelo,
+This can be problematic for tools that rely on extracting license
+information, such as Buildroot or other license auditing mechanisms.
 
-Thanks for your review and sorry for the too late response.
+Now, when distributions are built, the license is copied out of the
+libgpiod source tarball and into the target distribution.
 
-I am developing the pinctrl driver for MT6589 and initially based
-it on the MT8135 driver, because those two SoCs are very similar.
-However, I realized that the hard-coded multi-base settings in v1
-are not compatible with MT6589, which led me to create this patch.
+Closes: https://github.com/brgl/libgpiod/issues/162
+Signed-off-by: Vincent Fazio <vfazio@gmail.com>
+---
+ bindings/python/setup.py | 52 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 51 insertions(+), 1 deletion(-)
 
-After looking at v2, it seems likely compatible with MT6589 as well,
-so I will proceed with my development based on v2.
+diff --git a/bindings/python/setup.py b/bindings/python/setup.py
+index 9555e54..7bf9246 100644
+--- a/bindings/python/setup.py
++++ b/bindings/python/setup.py
+@@ -2,7 +2,7 @@
+ # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+ 
+ from os import getenv, path, unlink
+-from shutil import copytree, rmtree
++from shutil import copy, copytree, rmtree
+ 
+ from setuptools import Extension, setup
+ from setuptools.command.build_ext import build_ext as orig_build_ext
+@@ -17,6 +17,7 @@ SRC_BASE_URL = "https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/"
+ TAR_FILENAME = "libgpiod-{version}.tar.gz"
+ ASC_FILENAME = "sha256sums.asc"
+ SHA256_CHUNK_SIZE = 2048
++LICENSE_FILE = "LICENSE"
+ 
+ 
+ def sha256(filename):
+@@ -129,6 +130,53 @@ def fetch_tarball(command):
+             copytree(path.join(base_dir, "include"), "./include")
+             copytree(path.join(base_dir, "lib"), "./lib")
+ 
++            # Since the license file is not in the bindings directory, we cannot
++            # use the PEP-639 `license-files` property since the `Distribution`
++            # class is constructed during `setup`, parses pyproject.toml, and
++            # searches for the license file before we can copy files in to the
++            # directory*. If the file is not there, we get an error.
++            #
++            # To work around this, we manually copy the license file to the
++            # current directory and insert the license file into the metadata of
++            # the `Distribution` prior to the cmdclass building the distribution.
++            #
++            # Copying the file as `LICENSE` allows wheels built off of the sdist
++            # to automatically include the LICENSE, see:
++            # https://setuptools.pypa.io/en/latest/userguide/miscellaneous.html
++            #
++            # *Note: this is not technically true, but it would require doing
++            # something more complex like a custom build backend or to wrap
++            # `setup` or the `Distrubtion` object which get invoked/created
++            # multiple times and could fetch the tarball sources multiple times.
++            # Further, we only really care about the license file when building
++            # the released distribution files (sdist and wheels).
++
++            # Read the SPDX license identifier from pyproject.toml
++            license_file = None
++            with open("pyproject.toml", "rb") as f:
++                if sys.version_info >= (3, 11):
++                    import tomllib
++
++                    license_file = tomllib.load(f).get("project").get("license")
++                else:  # tomllib isn't standard, fall back to parsing by line
++                    for line in f.readlines():
++                        _line = line.decode()
++                        if _line.startswith("license = "):
++                            license_file = _line.split("=")[1].strip(' \r\n"')
++                            break
++
++            if license_file:  # Do not allow empty string or None
++                _path = path.join(base_dir, "LICENSES", f"{license_file}.txt")
++                if path.isfile(_path):
++                    # manually set the license list for the distribution after
++                    # the license file has been copied into the build directory.
++                    #
++                    # Note: that this must be in place prior to `egg_info.run`.
++                    # For further details, see `egg_info.find_sources` and
++                    # `manifest_maker.add_license_files`
++                    copy(_path, LICENSE_FILE)
++                    self.distribution.metadata.license_files = [LICENSE_FILE]
++
+         # Save the libgpiod version for sdist
+         open("libgpiod-version.txt", "w").write(LIBGPIOD_VERSION)
+ 
+@@ -136,6 +184,8 @@ def fetch_tarball(command):
+         command(self)
+ 
+         # Clean up the build directory
++        if path.exists(LICENSE_FILE):
++            unlink(LICENSE_FILE)
+         rmtree("./lib", ignore_errors=True)
+         rmtree("./include", ignore_errors=True)
+         unlink("libgpiod-version.txt")
+-- 
+2.43.0
 
-Also, this patch has two flaws:
-
-- It hard-codes the behavior of mt8365_set_clr_mode, which would
-  cause issues if there are other SoCs similar to MT8365.
-- spec_ies_smt_set expects the IES and SMT registers to be on the same
-  base; if an SoC does not follow this, additional handling will be require=
-d.
-
-Please ignore this patch for now.
-
-Best regards,
-Akari
 
