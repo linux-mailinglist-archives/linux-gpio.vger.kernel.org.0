@@ -1,132 +1,160 @@
-Return-Path: <linux-gpio+bounces-32342-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32343-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eNdME8y/omk+5QQAu9opvQ
-	(envelope-from <linux-gpio+bounces-32342-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Feb 2026 11:13:32 +0100
+	id uCGLBFrqomlG8AQAu9opvQ
+	(envelope-from <linux-gpio+bounces-32343-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Feb 2026 14:15:06 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A80351C1E96
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Feb 2026 11:13:31 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 816CF1C32EE
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Feb 2026 14:15:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EAE30302C6DA
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Feb 2026 10:13:26 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E871330205DC
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Feb 2026 13:14:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 219DF413239;
-	Sat, 28 Feb 2026 10:13:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA50443E9C1;
+	Sat, 28 Feb 2026 13:14:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pv9vWs4r"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GFmmrMAj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A759D41322E;
-	Sat, 28 Feb 2026 10:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5EC43E499;
+	Sat, 28 Feb 2026 13:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772273604; cv=none; b=uAsRMd6+cev8i+vv34zSRRX7qAUur59eX1FGvq919twIOHO7lIvVUg4CxnvycMXppyHQKKMxdNpNkCkXATPM0+cTH5b5pODumfjMkbMpZjYO5+yB4uQGZ1NGKWmsw6WtHFo7ZXrxgWJKJHjL+5b0J1NleIn9GC/LAYOKYy91twY=
+	t=1772284495; cv=none; b=g8O7f0LQU/VgnJlvmqS/e+znnYgc0mvqBaKIMZCGKHYZcQyxPGMj6YAhcc5RnLrixnKmgdYu7kP6TITk/31XsPnf3tTNMIQSp/ghYF0W5/Aqv2CrAopHW9fQnH1bYmsHVdUQ3t3aJ3vJZ4db/J8+VzNBat6wvKn99SF23QxOIO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772273604; c=relaxed/simple;
-	bh=KKTIGqwOfr+WXF8iU3KjQXNHBmBhV1xK4/8tfjKIJgU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EK33ANIpvaOID6BBBuwrfw2Mf5sc1xAyxGopSxlHuFtVBeuGs1hNy2xkH0XcQc+Bso4dRhZHQXXS5R/xlWIWUxKxxlxmRhsonlUl6eyoprPG3TSzBk4ahd4B0Fy/jKUXOGWfHuoOM1ybGQW/oHyBty/dLimrqbPnhdKD3nIqodo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pv9vWs4r; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772273603; x=1803809603;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KKTIGqwOfr+WXF8iU3KjQXNHBmBhV1xK4/8tfjKIJgU=;
-  b=Pv9vWs4rMr0P1AzhZ/kv5G1LRsnegcbqp7mhq/k3rVpoeACUq7qkogaO
-   zGjvY6iesNK8MbizISRJx549LgOzJZqARw4R5gUNzGgBTA9r4RQEVqGg1
-   hPNJhlPUEJE4nT53cKE+4dpgnqpw825wWpeTncOLmARInajEce1qs2/RJ
-   eIFP2cBIk9XkrsmV4Bbdz1qGC10V70rHvzGaQ/dflsIe6+8tcBPCQ+YVD
-   nS9SBMHLHRZQXFCig+Jitf/hI2Xrs7LD82t1ZSbu4mMO94Za0RsShCvZN
-   ExW8uH47l8cMwqSHzVlomU8bNjaEQZa8UT9ft/9eREkl7qAOsJ9+hLMUE
-   A==;
-X-CSE-ConnectionGUID: k2iJ7Vh3SxamzGeBzTlo+g==
-X-CSE-MsgGUID: Z4UkgiJQRVKPnvF7Qj/WwA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11714"; a="77191866"
-X-IronPort-AV: E=Sophos;i="6.21,315,1763452800"; 
-   d="scan'208";a="77191866"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2026 02:13:23 -0800
-X-CSE-ConnectionGUID: DZNJR3teTU2199G6JjxgjA==
-X-CSE-MsgGUID: fulAKX9kSSG9ftEuhrikyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,315,1763452800"; 
-   d="scan'208";a="217246577"
-Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.224])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2026 02:13:21 -0800
-Date: Sat, 28 Feb 2026 12:13:19 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Ethan Tidmore <ethantidmore06@gmail.com>
-Cc: Patrick Rudolph <patrick.rudolph@9elements.com>,
-	Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: cy8c95x0: Use proper error code
-Message-ID: <aaK_v2sSCRe9CVYL@ashevche-desk.local>
-References: <20260228020538.1103307-1-ethantidmore06@gmail.com>
+	s=arc-20240116; t=1772284495; c=relaxed/simple;
+	bh=qA8U8SexRG4+N0RJnGy3EmK6kVD0iSiu4oBY0ZzsegQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=awik+ka/UkzSK4IfUNiRoTO3U9wMGlZOpOe58aAdTIMfclmemTSNku2YE1L3TwFlvz1oY4SI8gMdVF9ls2XmawNhMWqKx9rIrsiiOq4bfQV2o2cPrmGQrwpaimoQAytOx1qHpG8veAxoPpW5JUPtGD1gOtbfFbTAOxtihCo7r74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GFmmrMAj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43166C116D0;
+	Sat, 28 Feb 2026 13:14:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772284495;
+	bh=qA8U8SexRG4+N0RJnGy3EmK6kVD0iSiu4oBY0ZzsegQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GFmmrMAjfk3dyBbORZGyzyxFR2GxEm3+vCJYeO3vdyE/CBh83D6iSnIAO/uJT49+2
+	 JQRUaRt2L4xDX1gdoWpxOZE2VqjrqAchG0Sl+J5xSxSCAv2lb4mW6DIYHE9z7Q+r2K
+	 7919WvDABaRzZrAuj1t7RqhUFOJllaz+zBkZrAAbL9hD7kme8JHTORo5CFkBeikHjj
+	 3cSigtNXExw/AaYqCT9etNq1NKyXT6Rw/QiGS5zq5QDgXlOfdTOgBNe+1VRst6AhdP
+	 pHDaRxSiGhW5z0uJZ/0Zxmt7eUc2zyw3JXZzUd3rd6HrKpM/PJIUtw6ZCwLPsMCDMQ
+	 AgNLoYjUNdS9w==
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Bartosz Golaszewski <brgl@kernel.org>,
+	Linus Walleij <linusw@kernel.org>
+Cc: tzungbi@kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH] gpio: Fix lockdep warnings in gpiolib_{cdev,sysfs}_register()
+Date: Sat, 28 Feb 2026 21:14:30 +0800
+Message-ID: <20260228131430.102388-1-tzungbi@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260228020538.1103307-1-ethantidmore06@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	HAS_ORG_HEADER(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-32342-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32343-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
+	FROM_NEQ_ENVFROM(0.00)[tzungbi@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_FIVE(0.00)[5];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:dkim]
-X-Rspamd-Queue-Id: A80351C1E96
+	RCPT_COUNT_FIVE(0.00)[6];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,samsung.com:email]
+X-Rspamd-Queue-Id: 816CF1C32EE
 X-Rspamd-Action: no action
 
-On Fri, Feb 27, 2026 at 08:05:38PM -0600, Ethan Tidmore wrote:
-> The function cy8c95x0_irq_pending() returns type bool not an error code.
-> 
-> Use error code -EIO if cy8c95x0_irq_pending() fails.
-> 
-> Detected by Smatch:
-> drivers/pinctrl/pinctrl-cy8c95x0.c:1303 cy8c95x0_irq_setup() warn:
-> passing positive error code '1' to 'dev_err_probe'
+A lockdep warning is reported in gpiolib-cdev driver:
 
-I sent already a patch and the code is -EBUSY, because if we ever get non-zero
-here, it means that IO was fine, the interrupt status was not cleared.
+  WARNING: drivers/gpio/gpiolib-cdev.c:2735 at
+  gpiolib_cdev_register+0x114/0x140, CPU#1: swapper/0/1
+  Modules linked in:
+  CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted
+  7.0.0-rc1-next-20260227-00065-g6af4b9cfeded #12259 PREEMPT
+  Hardware name: Samsung Exynos (Flattened Device Tree)
+  Call trace:
+    unwind_backtrace from show_stack+0x10/0x14
+    show_stack from dump_stack_lvl+0x68/0x88
+    dump_stack_lvl from __warn+0x94/0x210
+    __warn from warn_slowpath_fmt+0x1b0/0x1bc
+    warn_slowpath_fmt from gpiolib_cdev_register+0x114/0x140
+    gpiolib_cdev_register from gpiochip_setup_dev+0x4c/0xd0
+    gpiochip_setup_dev from gpiochip_add_data_with_key+0x960/0xad4
+    gpiochip_add_data_with_key from devm_gpiochip_add_data_with_key+0x20/0x5c
 
+This is because the SRCU wasn't held in gpiolib_cdev_register() when the
+caller is from gpiochip_add_data_with_key() instead of
+gpiochip_setup_devs().  gpiochip_sysfs_register() shares the similar
+concern.
+
+Given that both gpiolib_cdev_register() and gpiochip_sysfs_register()
+are only called from gpiolib but no external users.  Remove the lockdep
+checks to fix the warnings.
+
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Closes: https://lore.kernel.org/all/506ce9b3-d492-4fce-9d02-330e411911e2@samsung.com/
+Fixes: cf674f1a0c98 ("gpio: Ensure struct gpio_chip for gpiochip_setup_dev()")
+Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
+---
+ drivers/gpio/gpiolib-cdev.c  | 2 --
+ drivers/gpio/gpiolib-sysfs.c | 2 --
+ 2 files changed, 4 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index 7ebdb4993a74..f36b7c06996d 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -2732,8 +2732,6 @@ int gpiolib_cdev_register(struct gpio_chip *gc, dev_t devt)
+ 	struct gpio_device *gdev = gc->gpiodev;
+ 	int ret;
+ 
+-	lockdep_assert_held(&gdev->srcu);
+-
+ 	cdev_init(&gdev->chrdev, &gpio_fileops);
+ 	gdev->chrdev.owner = THIS_MODULE;
+ 	gdev->dev.devt = MKDEV(MAJOR(devt), gdev->id);
+diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+index 748a3eb1bf35..fc06b0c2881b 100644
+--- a/drivers/gpio/gpiolib-sysfs.c
++++ b/drivers/gpio/gpiolib-sysfs.c
+@@ -990,8 +990,6 @@ int gpiochip_sysfs_register(struct gpio_chip *gc)
+ 	struct device *parent;
+ 	int err;
+ 
+-	lockdep_assert_held(&gdev->srcu);
+-
+ 	/*
+ 	 * Many systems add gpio chips for SOC support very early,
+ 	 * before driver model support is available.  In those cases we
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.51.0
 
 
