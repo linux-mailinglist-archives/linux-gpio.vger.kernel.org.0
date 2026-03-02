@@ -1,66 +1,66 @@
-Return-Path: <linux-gpio+bounces-32362-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32363-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8M3TGEbtpGngvwUAu9opvQ
-	(envelope-from <linux-gpio+bounces-32362-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 02 Mar 2026 02:52:06 +0100
+	id oKmqEDrtpGngvwUAu9opvQ
+	(envelope-from <linux-gpio+bounces-32363-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 02 Mar 2026 02:51:54 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF4C91D25F8
-	for <lists+linux-gpio@lfdr.de>; Mon, 02 Mar 2026 02:52:05 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3886F1D25EF
+	for <lists+linux-gpio@lfdr.de>; Mon, 02 Mar 2026 02:51:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8520B3006B6E
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Mar 2026 01:51:41 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E05A730060A5
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Mar 2026 01:51:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA47D242D72;
-	Mon,  2 Mar 2026 01:51:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC66D274FE8;
+	Mon,  2 Mar 2026 01:51:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="X+8Tz68w"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Y5U6RvRi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BD0238159;
-	Mon,  2 Mar 2026 01:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10122242D72;
+	Mon,  2 Mar 2026 01:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772416300; cv=none; b=VjjaI2QpjspqdkqBp2x2xbABGgJ9DbS/8DfXgdl9cNXZt3kAq++10mGJBAggdE8y7PsyFQsrBSQg/pvhvh91yAt/b5LzQb9hd0msxfvJjDZ+WYSI1J2tlzhwshmJe2r7Kkz9S2IuaWRhlUscjy3/rZEbmZ2evy5/Rg310uknpWY=
+	t=1772416307; cv=none; b=f7Lcu2T3y3UQBg8HMNv8uEbBaZVoDud5BXpk8rcF00y+7oTybLo6oqRrt/SdJ8HcFs+m1i0zgKYmNsdWWeTLe/xSq0Nq+c/QzrVY0Q/hsD+DhJgZzgMUA/dFbUhL3gym9D+VAOsK+wfwgu+WMFmWpL9UvIRkg+1bQknHEl5qkTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772416300; c=relaxed/simple;
-	bh=qXSgpmdCfX6GFrIDtEBeOmSoB+zavqryaBubEMoXq8E=;
+	s=arc-20240116; t=1772416307; c=relaxed/simple;
+	bh=ceW7k2pxRcB/OKjz6uHOAXadA4Pg6fK6iXrE+5pqDdg=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=cNM1T2iFUc8f2QC1KLorvrTJ2VHIfRF6tW9Kjuh+fIxazcB5PXXjoVu432kvSBDwmZu1dI5R8SYgxIFZdOsGXXtg4rVB25jtE+dZBeeA0CQY8lzwhC0r4lkKd3I67lQail7hWPZot1k9UDxCUGjClIN+IAZCq5iBkiwVRc8/SmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=X+8Tz68w; arc=none smtp.client-ip=162.62.57.49
+	 MIME-Version; b=QvpPOjjNY1hUvJbegsF8OWRFm5hxLWrgztsV+37drjL6akcKcp2kpTPAO945cMLYCbf7WLPpYuef120/qV1ZyfA9xrlfBZKSJN4+mKzAcCv3a6bNqrQdEV2YPqEgsHGpIAXADLqS+B/W0cTgLJ+d+n6bzOhUiGTMtRULXQ37dTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Y5U6RvRi; arc=none smtp.client-ip=162.62.57.137
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1772416293; bh=fZyLrC2oup488EseAPblsb/9t+IlcNhcGnHWrpeWk+k=;
+	t=1772416293; bh=YBQN5kqOLVovZ/BXTkxUIZSpnaii9caloRqkGwzP20s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=X+8Tz68wn5Q5Pp7W7N/72fpLU3TOyX1YMUCSMyCm1zP0r25uPuilW9ctRm6t+qPla
-	 YwV3tF3TpfbcuxQx5oPZFV7cvIk/1m+zAnxt6iHPjlOvA9K9rsq20uMqyUMtJnsukg
-	 XV7cTnv9o6+JkKu7Ow+FYuooht8GQwaPg7lE41jo=
+	b=Y5U6RvRigQLQKSwlcJFUm7wCKiwJfD8Nw93w56ymCUJ20PejvVsifyE5u64EVWUFh
+	 llQEFPQS1wOGt+A8ZluBr4CKOLw5T/dp09Lr1w+8/AMEoWPdXBjr62zE7UyXxWxcRx
+	 RStpn9JRMd0dwxHUdYDNWfhp/PkdVF5XGJQ9xmzI=
 Received: from WIN-B62RPRBL2BM.localdomain ([218.76.62.144])
 	by newxmesmtplogicsvrszb51-0.qq.com (NewEsmtp) with SMTP
 	id C0CB9282; Mon, 02 Mar 2026 09:48:12 +0800
-X-QQ-mid: xmsmtpt1772416094t0xi5jq58
-Message-ID: <tencent_CF911C5343732C6B9F925B1AAE4B10198C08@qq.com>
-X-QQ-XMAILINFO: MKFQA+k1yb/2Kow46lj8WKllpn9Yr4EqZ0nwTozPNwUgwMoIaIZW0IdquQnCrs
-	 fOCSa5rp7iXfy1H4PYPHcUH41MhDtALuRvmp304liv0PaH/d49ZYXmsUQC+ROjQPYHljZchId2ze
-	 X/XPSE4K3cqCflsbO7ytBp2Ab7FAZBzzITi8L5JYaps1LdOkgG6XYOy3b4hk2f27DWMdjKt9T+SV
-	 p5aw3w0yI++94ybkPTaplCaSa6gayRcBD8Tzli+sNgoQ+fBv15wMnunEz402vlMNHNVMLc7MGswE
-	 NXmCOo9lRRtwjT6nmRIbg3YXeXtbjxxhIHZRpzOd2TVWWvglxiyE7QZB6zl4plXA5c0w4kEvCHYz
-	 /Fr2NTBr4+SDr/kEkPjHM9EhKE7HdxyVJIKIuzK32qzGe3i0PlwO+MRZLcIdIDvBYYf9W6A01pxA
-	 KBT+xOKc4zdtggxewaJwoUd5/C89eY8lBK5WPGb1kbpHgQ0N0jT87lGY+qjkcqSrmhMT6/BGlWor
-	 KGViGPtCxg79IfOlnyQbZC8sNmIwa6bFxYOP+UQzgCBoOZuzWwhYz+7uIwTyN1NQahqQupHEqAwb
-	 5ElvGtUsCwe3WFTkpuIqG9dj9Vfva6rLtTxFvAKueBNEnyXe+G9W8cCHUZctShX6/v1SyQZlDThg
-	 BeGzugPYlxB8Gw1d+dwIcVWF4LQobBDMEwRpM8o3yYIPZiUdL4PIwBLkX02VIE932wZd3jmSSb5+
-	 mCJucp55I/xOIPr2yie0aVwxPYZR7MZgHoSJaM+QX9GRBBgx54Yr55YiF0EAjkY9efAumAMS+xXQ
-	 POcVDDP1EuaahZwDNyiBo8/rWUhn8taNCHHnkPMbiw9o5pupYDguSVbVHvEp5e4cMbremt1NXswo
-	 sj0BWkKNpZkaTvactALd3LLu5Cp1nhWyrjDyAgaeWjV8PkJmXkF4yuRaDmz6R+I13PpokjOA/qSd
-	 HadZufhOk0eZxvU5bHmKrqAkuUPKSc4VIn4bY3TXCNneQ6y9q+DUcuCJ+9Y7gxwU6WuSLdSZSMXn
-	 3/2xq3quZ7UOuJlDcU
-X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
+X-QQ-mid: xmsmtpt1772416095t1f9sgjzx
+Message-ID: <tencent_4668247735FC9754324C22C7A6BEE78AD609@qq.com>
+X-QQ-XMAILINFO: NDitEPzmrU8G0PJ4INinzsN0D8P0y4kM48WPUwy0OWn8NTtRIyL70P7tegmJ5w
+	 BpWaOD0/ke/ysrE6LsWLH+lA4Nr4QQzaG1J/eXlGlSR+hSSKrPi+ycROQIWdkkAVn5UiQuz1f7e6
+	 MA03k1QpGKtpPsHUKTgARgyruf5xvUE/1gHtYJ+EKUm9TK2BnqxDyJf0cO9klW0yqjQ3CI68Ln1H
+	 MQ8JLLYPHc8vXmMLkDPrdpxrMSG71mcw3RyEcP9JsN18nvSSG4Lmra7/iB1AieNgdlCLV6a2OA4s
+	 sOmQo9zWctn3788yHoaorUXIgGvnjVbACCz2Ykxf8gmlW5/IeDDGr9RIjJqcCvLp5++Q8fRbDdvo
+	 n6FZobdZRguqlus5PuDNcU03QoaO3wlXnqt6falnUEJF/WLv5dLOiVcnj+vtLxWh9bhEaZWogs7L
+	 Te4H4E/1zv1S1wfz8JsJW+1JW6hnBP6JtnhVaBtla3ZxAoX2ktmHIG3uwZsIzkAds0X6ThN8hCKX
+	 TxsJw70X5ZHq7pA7zrARLBPQm929LMryKIb5/ztUGDXnJkZ0kIIY1eCHc9HO2F3kkGEVwVxauetM
+	 UsGKorM+RGo4c+48A0g+L9o1Wt+Tu6S7AIXbOPxSEkEz9qscSYBRt7xCLFv97VtBowgUgwx1Kpjm
+	 95NhpohQvV1Z4Ybc+o6gSt8+k43R4+WqB4lBqBaDlwM0tcJEjiWSN5hy98ljtZ4NGuo6fOeYy3J+
+	 viqxQOOgNHwVdRAVfqxky0gUONd4Y3JdqxQqoSdbh5HTD6Cwsga5Bo3GrKK9/zmMybY/pE9hm9uN
+	 It3l4ms7+49aS2ETAMoo95zVqTchkcGLpfA7IwVGAy/KFTwQa9A2rxUQw5F85camm3F/335A2vMu
+	 TgcCKw5D2ydTHopSDWc0NvIIDyPG+RBLeZhpx4HX5EGFtWPunn+APl41BL3YOQ3Z9Kl3DguDEaLk
+	 KQtvcW4aA4GG8NEjKo//3jkxJ4LuTztbFwtmfZzZ8lXLWI/5Iib6VxQsgr2sc9USZ2ch4DbPQW4r
+	 2SzomtjGSVNX3zr6ql
+X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
 From: Zhu Ling <1536943441@qq.com>
 To: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -68,9 +68,9 @@ Cc: linus.walleij@linaro.org,
 	brgl@bgdev.pl,
 	chenbaozi@phytium.com.cn,
 	Zhu Ling <1536943441@qq.com>
-Subject: [PATCH v1 1/4] gpio: phytium: improve core IRQ and wake handling
-Date: Mon,  2 Mar 2026 09:48:09 +0800
-X-OQ-MSGID: <20260302014812.9649-2-1536943441@qq.com>
+Subject: [PATCH v1 2/4] gpio: phytium: switch platform driver to immutable irq_chip
+Date: Mon,  2 Mar 2026 09:48:10 +0800
+X-OQ-MSGID: <20260302014812.9649-3-1536943441@qq.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260302014812.9649-1-1536943441@qq.com>
 References: <20260302014812.9649-1-1536943441@qq.com>
@@ -87,13 +87,13 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[qq.com,quarantine];
 	R_DKIM_ALLOW(-0.20)[qq.com:s=s201512];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_FROM(0.00)[qq.com];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32362-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-32363-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_COUNT_THREE(0.00)[4];
 	TO_DN_SOME(0.00)[];
@@ -108,296 +108,167 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qq.com:mid,qq.com:dkim,qq.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: BF4C91D25F8
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qq.com:mid,qq.com:dkim,qq.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 3886F1D25EF
 X-Rspamd-Action: no action
 
-Refactor the core GPIO IRQ path to better match gpiolib IRQ chip
-expectations and suspend/resume behavior.
+Use a static immutable irq_chip and gpio_irq_chip_set_chip() in the
+platform frontend.
 
-This updates the core to:
-- add IRQ chip print and wake hooks
-- handle both single and multi-parent IRQ routing
-- fix wake IRQ lookup by checking valid parent IRQs
-- use GPIO clear/version macros shared by frontends
-- track resume state while restoring IRQ registers
-
-The change also keeps direction/output programming order consistent
-with other GPIO controllers.
+Also initialize and restore interrupt state more explicitly for suspend
+and resume, and accept both ngpios and nr-gpios child properties when
+probing GPIO ports.
 
 Signed-off-by: Zhu Ling <1536943441@qq.com>
 ---
- drivers/gpio/gpio-phytium-core.c | 114 +++++++++++++++++++++++++------
- drivers/gpio/gpio-phytium-core.h |   8 ++-
- 2 files changed, 102 insertions(+), 20 deletions(-)
+ drivers/gpio/gpio-phytium-platform.c | 55 ++++++++++++++++++----------
+ 1 file changed, 35 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/gpio/gpio-phytium-core.c b/drivers/gpio/gpio-phytium-core.c
-index 7d7695acc..df7755ad7 100644
---- a/drivers/gpio/gpio-phytium-core.c
-+++ b/drivers/gpio/gpio-phytium-core.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
+diff --git a/drivers/gpio/gpio-phytium-platform.c b/drivers/gpio/gpio-phytium-platform.c
+index 4925b45c9..182b6480c 100644
+--- a/drivers/gpio/gpio-phytium-platform.c
++++ b/drivers/gpio/gpio-phytium-platform.c
+@@ -2,7 +2,7 @@
  /*
+  * Support functions for Phytium GPIO
+  *
 - * Copyright (c) 2019-2023, Phytium Phytium Technology Co., Ltd.
 + * Copyright (c) 2019-2023, Phytium Technology Co., Ltd.
-  */
+  *
+  * Derived from drivers/gpio/gpio-pl061.c
+  *   Copyright (C) 2008, 2009 Provigent Ltd.
+@@ -33,6 +33,20 @@ static const struct acpi_device_id phytium_gpio_acpi_match[] = {
+ };
+ MODULE_DEVICE_TABLE(acpi, phytium_gpio_acpi_match);
  
- #include <linux/err.h>
-@@ -8,11 +8,13 @@
- #include <linux/irq.h>
- #include <linux/module.h>
- #include <linux/bitops.h>
-+#include <linux/seq_file.h>
-+#include <linux/interrupt.h>
- 
- #include "gpio-phytium-core.h"
- 
- static int get_pin_location(struct phytium_gpio *gpio, unsigned int offset,
--		     struct pin_loc *pl)
-+			    struct pin_loc *pl)
++static const struct irq_chip phytium_gpio_irq_chip = {
++	.irq_ack		= phytium_gpio_irq_ack,
++	.irq_mask		= phytium_gpio_irq_mask,
++	.irq_unmask		= phytium_gpio_irq_unmask,
++	.irq_set_type		= phytium_gpio_irq_set_type,
++	.irq_print_chip		= phytium_gpio_irq_print_chip,
++	.irq_enable		= phytium_gpio_irq_enable,
++	.irq_disable		= phytium_gpio_irq_disable,
++	.irq_set_wake		= phytium_gpio_irq_set_wake,
++	.irq_set_affinity	= phytium_gpio_irq_set_affinity,
++	.flags			= IRQCHIP_IMMUTABLE,
++	GPIOCHIP_IRQ_RESOURCE_HELPERS,
++};
++
+ static int phytium_gpio_probe(struct platform_device *pdev)
  {
- 	int ret;
- 
-@@ -32,7 +34,7 @@ static int get_pin_location(struct phytium_gpio *gpio, unsigned int offset,
- }
- 
- static void phytium_gpio_toggle_trigger(struct phytium_gpio *gpio,
--				 unsigned int offset)
-+					unsigned int offset)
- {
- 	struct gpio_chip *gc;
- 	u32 pol;
-@@ -128,14 +130,13 @@ int phytium_gpio_direction_output(struct gpio_chip *gc, unsigned int offset,
- 		return -EINVAL;
- 	ddr = gpio->regs + GPIO_SWPORTA_DDR + (loc.port * GPIO_PORT_STRIDE);
- 
-+	phytium_gpio_set(gc, offset, value);
- 	raw_spin_lock_irqsave(&gpio->lock, flags);
- 
- 	writel(readl(ddr) | BIT(loc.offset), ddr);
- 
- 	raw_spin_unlock_irqrestore(&gpio->lock, flags);
- 
--	phytium_gpio_set(gc, offset, value);
--
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(phytium_gpio_direction_output);
-@@ -171,6 +172,8 @@ void phytium_gpio_irq_mask(struct irq_data *d)
- 	writel(val, gpio->regs + GPIO_INTMASK);
- 
- 	raw_spin_unlock(&gpio->lock);
-+
-+	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
- }
- EXPORT_SYMBOL_GPL(phytium_gpio_irq_mask);
- 
-@@ -184,6 +187,8 @@ void phytium_gpio_irq_unmask(struct irq_data *d)
- 	if (irqd_to_hwirq(d) >= gpio->ngpio[0])
- 		return;
- 
-+	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
-+
- 	raw_spin_lock(&gpio->lock);
- 
- 	val = readl(gpio->regs + GPIO_INTMASK);
-@@ -267,10 +272,14 @@ void phytium_gpio_irq_enable(struct irq_data *d)
- 	unsigned long flags;
- 	u32 val;
- 
-+	if (gpio->is_resuming)
-+		return;
- 	/* Only port A can provide interrupt source */
- 	if (irqd_to_hwirq(d) >= gpio->ngpio[0])
- 		return;
- 
-+	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
-+
- 	raw_spin_lock_irqsave(&gpio->lock, flags);
- 
- 	val = readl(gpio->regs + GPIO_INTEN);
-@@ -278,6 +287,8 @@ void phytium_gpio_irq_enable(struct irq_data *d)
- 	writel(val, gpio->regs + GPIO_INTEN);
- 
- 	raw_spin_unlock_irqrestore(&gpio->lock, flags);
-+
-+	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
- }
- EXPORT_SYMBOL_GPL(phytium_gpio_irq_enable);
- 
-@@ -302,6 +313,14 @@ void phytium_gpio_irq_disable(struct irq_data *d)
- }
- EXPORT_SYMBOL_GPL(phytium_gpio_irq_disable);
- 
-+void phytium_gpio_irq_print_chip(struct irq_data *data, struct seq_file *p)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+
-+	seq_printf(p, dev_name(gc->parent));
-+}
-+EXPORT_SYMBOL_GPL(phytium_gpio_irq_print_chip);
-+
- void phytium_gpio_irq_handler(struct irq_desc *desc)
- {
- 	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-@@ -309,19 +328,36 @@ void phytium_gpio_irq_handler(struct irq_desc *desc)
- 	struct irq_chip *irqchip = irq_desc_get_chip(desc);
- 	unsigned long pending;
- 	int offset;
-+	int index = -1;
-+	unsigned int index_found = 0;
- 
- 	chained_irq_enter(irqchip, desc);
- 
- 	pending = readl(gpio->regs + GPIO_INTSTATUS);
-+
-+	if (gc->irq.num_parents > 1) {
-+		for (index = 0 ; index < gc->irq.num_parents; index++) {
-+			if (gc->irq.parents[index] == desc->irq_data.irq) {
-+				index_found = 1;
-+				break;
-+			}
-+		}
-+		if (index_found == 0) {
-+			pr_err("Can't find index for this gpio interrupt.\n");
-+			index = -1;
-+		}
-+	}
-+
- 	if (pending) {
- 		for_each_set_bit(offset, &pending, gpio->ngpio[0]) {
--			int gpio_irq = irq_find_mapping(gc->irq.domain,
--							offset);
--			generic_handle_irq(gpio_irq);
--
--			if ((irq_get_trigger_type(gpio_irq) &
--			    IRQ_TYPE_SENSE_MASK) == IRQ_TYPE_EDGE_BOTH)
--				phytium_gpio_toggle_trigger(gpio, offset);
-+			if (index == -1 || offset == index) {
-+				int gpio_irq = irq_find_mapping(gc->irq.domain,
-+						offset);
-+				generic_handle_irq(gpio_irq);
-+				if ((irq_get_trigger_type(gpio_irq) &
-+					IRQ_TYPE_SENSE_MASK) == IRQ_TYPE_EDGE_BOTH)
-+					phytium_gpio_toggle_trigger(gpio, offset);
-+			}
+ 	struct device *dev = &pdev->dev;
+@@ -64,8 +78,10 @@ static int phytium_gpio_probe(struct platform_device *pdev)
+ 			return -EINVAL;
  		}
+ 
+-		if (fwnode_property_read_u32(fwnode, "ngpios",
+-					     &gpio->ngpio[idx])) {
++		if ((fwnode_property_read_u32(fwnode, "ngpios",
++					      &gpio->ngpio[idx])) &&
++		    (fwnode_property_read_u32(fwnode, "nr-gpios",
++					      &gpio->ngpio[idx]))) {
+ 			dev_info(dev,
+ 				 "failed to get number of gpios for Port%c\n",
+ 				 idx ? 'B' : 'A');
+@@ -74,18 +90,11 @@ static int phytium_gpio_probe(struct platform_device *pdev)
  	}
  
-@@ -343,13 +379,54 @@ int phytium_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
- }
- EXPORT_SYMBOL_GPL(phytium_gpio_get_direction);
- 
--#if CONFIG_SMP
--int
--phytium_gpio_irq_set_affinity(struct irq_data *d, const struct cpumask *mask_val, bool force)
-+int phytium_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
- {
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct phytium_gpio *gpio = gpiochip_get_data(gc);
-+	struct phytium_gpio_ctx *ctx = &gpio->ctx;
-+	irq_hw_number_t bit = irqd_to_hwirq(d);
-+	unsigned long flags;
-+	int ret;
-+
-+	if (gpio->irq[bit] >= 0)
-+		ret = irq_set_irq_wake(gpio->irq[bit], enable);
-+	else
-+		ret = irq_set_irq_wake(gpio->irq[0], enable);
-+
-+	if (ret < 0)
-+		dev_err(gc->parent, "set gpio irq wake failed!\n");
-+
-+	raw_spin_lock_irqsave(&gpio->lock, flags);
-+
-+	if (enable) {
-+		ctx->wake_en |= BIT(bit);
-+		if (gpio->is_resuming == 1) {
-+			writel(~ctx->wake_en, gpio->regs + GPIO_INTMASK);
-+			writel(ctx->wake_en, gpio->regs + GPIO_INTEN);
-+		}
-+	} else {
-+		ctx->wake_en &= ~BIT(bit);
-+	}
-+
-+	raw_spin_unlock_irqrestore(&gpio->lock, flags);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(phytium_gpio_irq_set_wake);
-+
-+int phytium_gpio_irq_set_affinity(struct irq_data *d,
-+				  const struct cpumask *mask_val, bool force)
-+{
-+	int hwirq = irqd_to_hwirq(d);
- 	struct gpio_chip *chip_data = irq_data_get_irq_chip_data(d);
--	struct irq_chip *chip = irq_get_chip(chip_data->irq.num_parents);
--	struct irq_data *data = irq_get_irq_data(chip_data->irq.num_parents);
-+	struct irq_chip *chip;
-+	struct irq_data *data;
-+
-+	if (chip_data->irq.num_parents == 1)
-+		hwirq = 0;
-+
-+	chip = irq_get_chip(chip_data->irq.parents[hwirq]);
-+	data = irq_get_irq_data(chip_data->irq.parents[hwirq]);
- 
- 	if (chip && chip->irq_set_affinity)
- 		return chip->irq_set_affinity(data, mask_val, force);
-@@ -357,7 +434,6 @@ phytium_gpio_irq_set_affinity(struct irq_data *d, const struct cpumask *mask_val
- 	return -EINVAL;
- }
- EXPORT_SYMBOL_GPL(phytium_gpio_irq_set_affinity);
+ 	/* irq_chip support */
+-	gpio->irq_chip.name = dev_name(dev);
+-	gpio->irq_chip.irq_ack = phytium_gpio_irq_ack;
+-	gpio->irq_chip.irq_mask = phytium_gpio_irq_mask;
+-	gpio->irq_chip.irq_unmask = phytium_gpio_irq_unmask;
+-	gpio->irq_chip.irq_set_type = phytium_gpio_irq_set_type;
+-	gpio->irq_chip.irq_enable = phytium_gpio_irq_enable;
+-	gpio->irq_chip.irq_disable = phytium_gpio_irq_disable;
+-#ifdef CONFIG_SMP
+-	gpio->irq_chip.irq_set_affinity = phytium_gpio_irq_set_affinity;
 -#endif
+ 	raw_spin_lock_init(&gpio->lock);
+ 
++	writel(0, gpio->regs + GPIO_INTEN);
++	writel(GPIO_CLEAR_IRQ, gpio->regs + GPIO_PORTA_EOI);
++
+ 	gpio->gc.base = -1;
+ 	gpio->gc.get_direction = phytium_gpio_get_direction;
+ 	gpio->gc.direction_input = phytium_gpio_direction_input;
+@@ -101,20 +110,20 @@ static int phytium_gpio_probe(struct platform_device *pdev)
+ 	girq->handler = handle_bad_irq;
+ 	girq->default_type = IRQ_TYPE_NONE;
+ 
+-	for (irq_count = 0; irq_count < gpio->ngpio[0]; irq_count++) {
++	for (irq_count = 0; irq_count < platform_irq_count(pdev); irq_count++) {
+ 		gpio->irq[irq_count] = -ENXIO;
+ 		gpio->irq[irq_count] = platform_get_irq(pdev, irq_count);
+ 		if (gpio->irq[irq_count] < 0) {
+ 			dev_warn(dev, "no irq is found.\n");
+ 			break;
+ 		}
+-	};
++	}
+ 
+ 	girq->num_parents = irq_count;
+ 	girq->parents = gpio->irq;
+ 	girq->parent_handler = phytium_gpio_irq_handler;
+ 
+-	girq->chip = &gpio->irq_chip;
++	gpio_irq_chip_set_chip(girq, &phytium_gpio_irq_chip);
+ 
+ 	err = devm_gpiochip_add_data(dev, &gpio->gc, gpio);
+ 	if (err)
+@@ -122,7 +131,7 @@ static int phytium_gpio_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, gpio);
+ 	dev_info(dev, "Phytium GPIO controller @%pa registered\n",
+-		&res->start);
++		 &res->start);
+ 
+ 	return 0;
+ }
+@@ -144,11 +153,14 @@ static int phytium_gpio_suspend(struct device *dev)
+ 	gpio->ctx.ext_portb = readl(gpio->regs + GPIO_EXT_PORTB);
+ 
+ 	gpio->ctx.inten = readl(gpio->regs + GPIO_INTEN);
++	gpio->is_resuming = 1;
+ 	gpio->ctx.intmask = readl(gpio->regs + GPIO_INTMASK);
+ 	gpio->ctx.inttype_level = readl(gpio->regs + GPIO_INTTYPE_LEVEL);
+ 	gpio->ctx.int_polarity = readl(gpio->regs + GPIO_INT_POLARITY);
+ 	gpio->ctx.debounce = readl(gpio->regs + GPIO_DEBOUNCE);
+ 
++	writel(~gpio->ctx.wake_en, gpio->regs + GPIO_INTMASK);
++	writel(gpio->ctx.wake_en, gpio->regs + GPIO_INTEN);
+ 	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ 
+ 	return 0;
+@@ -169,13 +181,15 @@ static int phytium_gpio_resume(struct device *dev)
+ 	writel(gpio->ctx.swportb_ddr, gpio->regs + GPIO_SWPORTB_DDR);
+ 	writel(gpio->ctx.ext_portb, gpio->regs + GPIO_EXT_PORTB);
+ 
+-	writel(gpio->ctx.inten, gpio->regs + GPIO_INTEN);
+ 	writel(gpio->ctx.intmask, gpio->regs + GPIO_INTMASK);
+ 	writel(gpio->ctx.inttype_level, gpio->regs + GPIO_INTTYPE_LEVEL);
+ 	writel(gpio->ctx.int_polarity, gpio->regs + GPIO_INT_POLARITY);
+ 	writel(gpio->ctx.debounce, gpio->regs + GPIO_DEBOUNCE);
+ 
+-	writel(0xffffffff, gpio->regs + GPIO_PORTA_EOI);
++	writel(GPIO_CLEAR_IRQ, gpio->regs + GPIO_PORTA_EOI);
++
++	writel(gpio->ctx.inten, gpio->regs + GPIO_INTEN);
++	gpio->is_resuming = 0;
+ 
+ 	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ 
+@@ -198,6 +212,7 @@ static struct platform_driver phytium_gpio_driver = {
+ 
+ module_platform_driver(phytium_gpio_driver);
  
 -MODULE_LICENSE("GPL v2");
 +MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("Phytium GPIO Controller core");
-diff --git a/drivers/gpio/gpio-phytium-core.h b/drivers/gpio/gpio-phytium-core.h
-index 5a99e1fd6..bb3f5af26 100644
---- a/drivers/gpio/gpio-phytium-core.h
-+++ b/drivers/gpio/gpio-phytium-core.h
-@@ -32,6 +32,9 @@
- #define NGPIO_DEFAULT		8
- #define NGPIO_MAX		32
- #define GPIO_PORT_STRIDE	(GPIO_EXT_PORTB - GPIO_EXT_PORTA)
-+#define GPIO_CLEAR_IRQ		0xffffffff
-+
-+#define PHYTIUM_GPIO_DRIVER_VERSION "1.1.2"
- 
- struct pin_loc {
- 	unsigned int port;
-@@ -54,6 +57,7 @@ struct phytium_gpio_ctx {
- 	u32 raw_intstatus;
- 	u32 ls_sync;
- 	u32 debounce;
-+	u32 wake_en;
- };
- #endif
- 
-@@ -61,9 +65,9 @@ struct phytium_gpio {
- 	raw_spinlock_t		lock;
- 	void __iomem		*regs;
- 	struct gpio_chip	gc;
--	struct irq_chip		irq_chip;
- 	unsigned int		ngpio[2];
- 	int			irq[32];
-+	int			is_resuming;
- #ifdef CONFIG_PM_SLEEP
- 	struct phytium_gpio_ctx	ctx;
- #endif
-@@ -80,8 +84,10 @@ void phytium_gpio_irq_ack(struct irq_data *d);
- void phytium_gpio_irq_mask(struct irq_data *d);
- void phytium_gpio_irq_unmask(struct irq_data *d);
- int phytium_gpio_irq_set_type(struct irq_data *d, unsigned int flow_type);
-+void phytium_gpio_irq_print_chip(struct irq_data *data, struct seq_file *p);
- void phytium_gpio_irq_enable(struct irq_data *d);
- void phytium_gpio_irq_disable(struct irq_data *d);
- void phytium_gpio_irq_handler(struct irq_desc *desc);
-+int phytium_gpio_irq_set_wake(struct irq_data *d, unsigned int enable);
- int phytium_gpio_irq_set_affinity(struct irq_data *d, const struct cpumask *mask_val, bool force);
- #endif
+ MODULE_AUTHOR("Chen Baozi <chenbaozi@phytium.com.cn>");
+ MODULE_DESCRIPTION("Phytium GPIO driver");
++MODULE_VERSION(PHYTIUM_GPIO_DRIVER_VERSION);
 -- 
 2.34.1
 
