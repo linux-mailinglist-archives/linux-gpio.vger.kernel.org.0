@@ -1,169 +1,140 @@
-Return-Path: <linux-gpio+bounces-32358-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32361-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CCvQIoVtpGmqggUAu9opvQ
-	(envelope-from <linux-gpio+bounces-32358-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 01 Mar 2026 17:47:01 +0100
+	id QJE6CH/spGmnvwUAu9opvQ
+	(envelope-from <linux-gpio+bounces-32361-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 02 Mar 2026 02:48:47 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D56F11D0B49
-	for <lists+linux-gpio@lfdr.de>; Sun, 01 Mar 2026 17:47:00 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 100321D25B2
+	for <lists+linux-gpio@lfdr.de>; Mon, 02 Mar 2026 02:48:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2009D300BC87
-	for <lists+linux-gpio@lfdr.de>; Sun,  1 Mar 2026 16:46:58 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id D473630095D8
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Mar 2026 01:48:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F2F130B517;
-	Sun,  1 Mar 2026 16:46:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 582F4284690;
+	Mon,  2 Mar 2026 01:48:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=mmpsystems.pl header.i=@mmpsystems.pl header.b="nTXqggsk"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="OAuBQPZT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from s106b.cyber-folks.pl (s106b.cyber-folks.pl [195.78.66.88])
+Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145EA1F1932;
-	Sun,  1 Mar 2026 16:46:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.78.66.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC6F1EEA3C;
+	Mon,  2 Mar 2026 01:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772383616; cv=none; b=DM4fVKFPTRk/B5K7IxAPD/ds7+PGWNH12cbetU7vuttn7KIvly9MySE3QWQZQuRcWNmDyZYLvnL0RVqr00JewQla3OynxY3GsIaV7wlKUpyq/6ugpF3pcruMNWRxG98YrMjx2uGXh9QHOTaWGoqQhRDqjWQWgzRb86Dkpem0zGA=
+	t=1772416106; cv=none; b=pl/Kaak08RfbHTHuJRoXL/Xhxv3c35p8ywM1xZ4rHEwBPmkHIYqDMuk6WuoH2LOi+Wy5AeIU0PcGM/D4HMwJ/XfZw7r/ZkmfdgdocTajjQpjv/fSThRr+VCJHcPjENGvi8L/Al23RcdalHvhDR5WoLXhMS9ffx6WxlLiMW9oZDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772383616; c=relaxed/simple;
-	bh=qsbCEDLgAC513AjtmknCrNPOfk9MWTiWgh9/aIl5RD0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=gJRm/mpIpG7JUzRwrvmdZzGU5q4GmfkNXLIA+o1qG9nckBH3mvZphPe4faSbRwnq0cPuQ4hNPBwm/0o4A87uGIU7wfaHEGxd7FfBIsQxCSkAd9SRxkkypxbDCcoTucj/CtxMfSa3r2KclxLMAuHghxQWwwzpBmQomqa6T27gt4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mmpsystems.pl; spf=pass smtp.mailfrom=mmpsystems.pl; dkim=pass (2048-bit key) header.d=mmpsystems.pl header.i=@mmpsystems.pl header.b=nTXqggsk; arc=none smtp.client-ip=195.78.66.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mmpsystems.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mmpsystems.pl
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=mmpsystems.pl; s=x; h=Cc:To:Message-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Subject:Date:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=dFpyuUi08ipfETxMTzbuKYKiIg5L8MRQA8qtmO2cGZY=; b=nTXqggskY2lifr4KMh/ededtc3
-	pPOpyjDWtJL2Cy4yUczza7GQxN2PB/DyXg8sLnDgdPp8txZRwn8fPsZSAMTNJ2aIx7XnwW8/YOdv5
-	AbhsnocIBKvEsuk5QXJ48uhookKdPTdWOdqYx1xgXs8V/dbKqHNLXUvCw5r9aKrWNrlNZMIoK5wy0
-	Te3kXifN+kjHndNdAXPMN4KL7szFpQBzav944XZ9r1plUCa761yyO9vHpzL42Wai01CVB8vg8Wdvz
-	v/ywHuLGl9X7uDG82a1ly3L/l53/WrnIlpJT2Vsj8LIYWALnuBN48U/jjLZrcDEgDJ3t1zTU2e8Ux
-	xTI5/k5g==;
-Received: from user-5-173-212-70.play-internet.pl ([5.173.212.70] helo=localhost)
-	by s106.cyber-folks.pl with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <michal.piekos@mmpsystems.pl>)
-	id 1vwjwR-00000005Jvn-2gmF;
-	Sun, 01 Mar 2026 17:46:51 +0100
-From: Michal Piekos <michal.piekos@mmpsystems.pl>
-Date: Sun, 01 Mar 2026 17:46:31 +0100
-Subject: [PATCH] pinctrl: core: use dev_err_probe() when applying state
+	s=arc-20240116; t=1772416106; c=relaxed/simple;
+	bh=QZhF+qgQ4Pl3QoZ34rhwgRDMWPaVbM4WW2N6h02fTN0=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=YhoesYf8fLABQEsWVUJOYeWy6x4JAbT/gRKXLLbEqkHxja/VOSKI9B8tcbyywlEVWQQiBV2V12bOLZ8g28TbTMTr6Y2rdzvX44GKRuXQHdv/cGnTFksZ14h8hyc/ZQ2EpDE4AZQMFnA5TK76Pfmkw/CBSaYOMbRdJhWU+2qajKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=OAuBQPZT; arc=none smtp.client-ip=203.205.221.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1772416095; bh=0F/TALQeGdQvO7Ni2Nm1Db1m0TwKWhjswTikRaNXVwM=;
+	h=From:To:Cc:Subject:Date;
+	b=OAuBQPZTYrMGvVnXyp+DK4wDB1eSkWcMg7zFfTlG1On7Lt6UeKTMDtnR04IQ6i++P
+	 XwfHf7YbllXiMB63zJBxBHz7ZHuzkQoYi+v4QoHi777SN4NWNe6veipoPOXv/NGS2D
+	 ZncdackyQEQA920kJEAmpVJAuiGhAkmzounJnMQA=
+Received: from WIN-B62RPRBL2BM.localdomain ([218.76.62.144])
+	by newxmesmtplogicsvrszb51-0.qq.com (NewEsmtp) with SMTP
+	id C0CB9282; Mon, 02 Mar 2026 09:48:12 +0800
+X-QQ-mid: xmsmtpt1772416092t210ubnfp
+Message-ID: <tencent_3649448DE1A5A80CABC8A0A9C23982B51107@qq.com>
+X-QQ-XMAILINFO: OKOirRU4nj6h1dRInmKP8hogqARKPUn8QIggM+Mp21ZByprKvIMHleXZEyvAAs
+	 3XSqeYcJy1abw6WnPXI1qFA6jpgWi4+Hf/8ZdP0F69mkDsKzEHhoVpc/nOZbGDxPUI/Jy05TOSDL
+	 1TWrVDouwHWbkUlMKfCU/x+FjrRhwn76vzL/LJZkK9lWPOMO4EplJON8XDpwJEyS17Ay64GVPSb1
+	 K/V3OMjE8+KDy216cyCIuOvGrM8iZuiswYjyXN0/2O9CmtCdu/IsuQ7ngaN59lDtlHFn4KlxIEn+
+	 dBH2f1suxB3zuJf94bmPwSrKvFPszo8F62RCM83XN37EO2kFJIbnEHjPbKP36C1mmO32EwhXbTXq
+	 /9iRIMTUmweDnj2sgPE53T93AX65oPCLFiuwrBCIwZA8rsRqls6HsiPuDMDcVlMUOO2ajMSgghXt
+	 DFLfR9Bsv7o3Polko9qprXUBWxN7V2m06VMqLDEW8yNLWcsdwQ7ZKYvyGy8fGQXrykvUSfZYzrIF
+	 lI77lya06Xfrvzi7CbgxMjqPc4H5g22vIxgi7DJeFqvFMgQ16cAYrCCRnTEQINAtv7zRarRflCM/
+	 iBincgS8dwSuIEWbKLonE39BAMf3q6VpA/6GZ0YD0WBpXeoOOjihtiwSE0NfYdAs+0RIclJf8GXV
+	 g53FcW8O52ZQXbws0+ZYDUfj4pE2VX7LU3QLAv0aJ4e0GtEgyRkti3yizc7LJtiKQ2qou4VgdmX5
+	 5TGA3/N7bWQtr7fvy0I9e02OeKf5QqoquvUAHft+lzgro/OLUTdkQMncQ1s1d6DDZKeohvRAD6Xi
+	 Cf07CZQt+bsq1Cc90hOYD0QmrI6DutKL/hRfic+bBOLz1+IkmCo2yHZ7pL1bzDSg29BumNArsPei
+	 oKaDA/+Gqaml6NzZniaPxw6y0HbX1yVCUkbnT2Qd3Vz3YPBfKczhPysdos+qwBytCPwyXqbQ9bs/
+	 k91KruioDQbzS7Q76bzvopEGch3Y2XbW5f794Mk29aV5uP4FWXKfY265Yf0SrDIcAElg3yIkHwVK
+	 ZQGK71iuUiVU7E4iTd
+X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
+From: Zhu Ling <1536943441@qq.com>
+To: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	chenbaozi@phytium.com.cn,
+	Zhu Ling <1536943441@qq.com>
+Subject: [PATCH v1 0/4] gpio: phytium: improve IRQ integration and add SGPIO ACPI support
+Date: Mon,  2 Mar 2026 09:48:08 +0800
+X-OQ-MSGID: <20260302014812.9649-1-1536943441@qq.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260301-pinctrl-dev-err-probe-v1-1-94a0a2cecc6c@mmpsystems.pl>
-X-B4-Tracking: v=1; b=H4sIAGZtpGkC/x2MQQqAMAzAviI9W+gUZPgV8TC3TgsyRyciiH93e
- AwkeaCwChcYmweULylypAqmbcBvLq2MEipDR91APRnMkvypOwa+kFUx67EwEgVL0VbLDVDbrBz
- l/r/T/L4fXTXN1mcAAAA=
-X-Change-ID: 20260301-pinctrl-dev-err-probe-00d80f8202a6
-To: Linus Walleij <linusw@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Michal Piekos <michal.piekos@mmpsystems.pl>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1772383594; l=1805;
- i=michal.piekos@mmpsystems.pl; s=20260301; h=from:subject:message-id;
- bh=qsbCEDLgAC513AjtmknCrNPOfk9MWTiWgh9/aIl5RD0=;
- b=TSuK0fm8kSJHEw1pjbYWDzdRDqPBTVnfAJcx3mVOLUOnqVpM9P4AbxrUs2p0Ewmy3e+92RWw5
- 0pE20kfOD8jCNYkxG7/RrqW4IAXt2XOg88sfglN8fr2+QUIy/SUoJgb
-X-Developer-Key: i=michal.piekos@mmpsystems.pl; a=ed25519;
- pk=Aixyx03If7ZDamiKKN0lsa+0mtA+WjIuIf2ZQVYNBqg=
-X-Authenticated-Id: michal.piekos@mmpsystems.pl
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.36 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_REJECT(1.00)[mmpsystems.pl:s=x];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[qq.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[qq.com:s=s201512];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[mmpsystems.pl : SPF not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-32358-lists,linux-gpio=lfdr.de];
+	FREEMAIL_FROM(0.00)[qq.com];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[mmpsystems.pl:-];
+	TAGGED_FROM(0.00)[bounces-32361-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_COUNT_THREE(0.00)[4];
 	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[michal.piekos@mmpsystems.pl,linux-gpio@vger.kernel.org];
-	PRECEDENCE_BULK(0.00)[];
+	FREEMAIL_CC(0.00)[linaro.org,bgdev.pl,phytium.com.cn,qq.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[1536943441@qq.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[qq.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: D56F11D0B49
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qq.com:mid,qq.com:dkim]
+X-Rspamd-Queue-Id: 100321D25B2
 X-Rspamd-Action: no action
 
-When applying a pinctrl state, -EPROBE_DEFER may be returned if
-dependencies are not ready and the consumer will retry probing.
+This series updates Phytium GPIO drivers with irq_chip integration and
+power-management flow cleanup across common, platform, and PCI paths, and
+adds ACPI support for the SGPIO frontend.
 
-This is normal probe ordering behaviour and not a real error.
-However, pinctrl core currently logs:
+The first three patches switch to immutable irq_chip usage and tighten IRQ
+routing/wake handling. The last patch adds SGPIO ACPI matching and ACPI clock
+property handling while keeping DT clock handling unchanged.
 
-  "Error applying setting, reverse things back"
+checkpatch --strict:
+  0 errors, 0 warnings
 
-even when the return value is -EPROBE_DEFER, resulting in noisy
-boot-time error messages.
+Zhu Ling (4):
+  gpio: phytium: improve core IRQ and wake handling
+  gpio: phytium: switch platform driver to immutable irq_chip
+  gpio: phytium: switch PCI driver to immutable irq_chip
+  gpio: phytium: add ACPI support for SGPIO
 
-Replace dev_err() with dev_err_probe() to handle -EPROBE_DEFER
-consistently and suppress error logging for deferred probes.
+ drivers/gpio/gpio-phytium-core.c     | 114 ++++++++++++++++++++++-----
+ drivers/gpio/gpio-phytium-core.h     |   8 +-
+ drivers/gpio/gpio-phytium-pci.c      |  43 ++++++----
+ drivers/gpio/gpio-phytium-platform.c |  55 ++++++++-----
+ drivers/gpio/gpio-phytium-sgpio.c    |  44 ++++++++---
+ 5 files changed, 199 insertions(+), 65 deletions(-)
 
-No functional change intended.
-
-Signed-off-by: Michal Piekos <michal.piekos@mmpsystems.pl>
----
-This series contains a single patch to suppress spurious
-boot-time error messages when applying pinctrl states during
-normal probe deferral.
-
-Currently, pinctrl core logs an error even when
--EPROBE_DEFER is returned, which is expected probe-ordering
-behaviour.
-
-Switch to dev_err_probe() so deferred probes do not emit
-misleading error logs.
-
-No functional change intended.
----
- drivers/pinctrl/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index b5e97689589f..2edc9bdad183 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -1350,7 +1350,8 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
- 	goto restore_old_state;
- 
- unapply_new_state:
--	dev_err(p->dev, "Error applying setting, reverse things back\n");
-+	dev_err_probe(p->dev, ret,
-+		      "Error applying setting, reverse things back\n");
- 
- 	/*
- 	 * All we can do here is pinmux_disable_setting.
-
----
-base-commit: eb71ab2bf72260054677e348498ba995a057c463
-change-id: 20260301-pinctrl-dev-err-probe-00d80f8202a6
-
-Best regards,
 -- 
-Michal Piekos <michal.piekos@mmpsystems.pl>
+2.34.1
 
 
