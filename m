@@ -1,154 +1,307 @@
-Return-Path: <linux-gpio+bounces-32379-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32380-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cCPICARepWkL+wUAu9opvQ
-	(envelope-from <linux-gpio+bounces-32379-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 02 Mar 2026 10:53:08 +0100
+	id uKh3DlNfpWlc+QUAu9opvQ
+	(envelope-from <linux-gpio+bounces-32380-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 02 Mar 2026 10:58:43 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27A771D5CD6
-	for <lists+linux-gpio@lfdr.de>; Mon, 02 Mar 2026 10:53:07 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37E661D5D64
+	for <lists+linux-gpio@lfdr.de>; Mon, 02 Mar 2026 10:58:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 2658E3009E1F
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Mar 2026 09:52:14 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 2CC763006917
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Mar 2026 09:58:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24EE33939AC;
-	Mon,  2 Mar 2026 09:52:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F1F138D01E;
+	Mon,  2 Mar 2026 09:58:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="cCaz4vQa"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Bx8avbq7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010A438F65B;
-	Mon,  2 Mar 2026 09:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78A03B7A8;
+	Mon,  2 Mar 2026 09:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772445126; cv=none; b=ghzb8kxeACZvr6cJwOJ2ve0zoKMKzu8doAnhDzCB2ib2FsuCMeHukqD96Xpkg97hjJiiMJnRf2uopMxpJmYGOXQ2Ccz7YRLd0kry6ItsDVz7xTv1WaK73DR86lnGP0PUfI8k92y+Wgw/VN/oqlY8eDgz6nZsSrQdTKo0so9TtAU=
+	t=1772445517; cv=none; b=KjYhEWR+QooHbz/Yj6xmDjFQd0JNaOmklSHn3QylDWe/oOg+mBfO0s/MKDuo9BOPXeUQ1ow8huckOlqQAyx1zoU7ZHmlErLSuAB0roQGaFYUq9fRHFUyMDOoVHG4+zc7bLCQv+es9f/Rola7hZU+1hdgBY2zJcKqQpdmEd6aw3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772445126; c=relaxed/simple;
-	bh=lKoF/wcHDIjNaYmYBLQBoVUwBC9gPMzuq7kD/juQ81s=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=uN3AZaRrEaUv4+4n9Rs+0owhZwdbnKXUJU2VDYFcLPotTElh8Uf6C7+tmB2aAbnQ1JvNlxwq9QJROpYEvjcqkJuomGCFBkHdfeWzU5pRqwV8yubLp2vR4mCBB4RuDFXDGbQ0Zx+sT4L7+meZ2JSIF+MfMukDPPiKS+iNjqRKSpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=cCaz4vQa; arc=none smtp.client-ip=162.62.57.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1772445114; bh=DudSbMsg3N5XTgGas95Iv9I8hs1PbVkuMzNhI+MXRZA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=cCaz4vQaj0/EeJIHwIv3PLtjolHKngAnFVWpQRtjU7hb0JOdiSBX+WKeAj1S1doqZ
-	 SIvqfSQv49Pr6U9xd3NXt6We7zB9HVReT5fLwfipQU+8s9Cc5YGQHtJ05OazwWIHxz
-	 0Q4wVA7fuDAoOLFpJ/hGl/ze1Mi5HO5ci7+12GcE=
-Received: from WIN-B62RPRBL2BM.localdomain ([218.76.62.144])
-	by newxmesmtplogicsvrsza63-0.qq.com (NewEsmtp) with SMTP
-	id CEF2F43C; Mon, 02 Mar 2026 17:51:47 +0800
-X-QQ-mid: xmsmtpt1772445112tgixxzezd
-Message-ID: <tencent_C5AC554BD66AA42D2165B044CA4EF1CC8D0A@qq.com>
-X-QQ-XMAILINFO: OUycJhUUya+/hFky0sKC0DCZA0tbHo3qSAT01aWYYL/ACvFrY4a8DUevvSsvnK
-	 b6vTrgNHbUa71N5HXeTYvkTmcHhfYRGcj1HLAP7XJ92aHiUbS1fBMgcJY1szjAp06j5qz4tDZcqv
-	 OcuqyTjGJDZEPY5cxxg8Q9S+oimYbBGC6yuwr41oXU+aWDW1R14HrQeA4Tvm5ISwHJgUQ9B1YhIb
-	 Tt0w52DBZYTsauNHFxg2xTC11OTSMOk7B8ro9oMNPPRDaDMbSepyxitWnHO/b0fRpzSlvqfElMzm
-	 QmEhp5jw9/SpCSAbdPQAGBmzmFmLlhapWdyaXzjCnMHnZI/dxeOA9NDzK/5RZ4rU9mEX5xKrtJ/4
-	 Eup+foITnNInC6m09ZUi26nwJbGAjJ4//1i5wYl4BNTiT/68NXIL8W17W+pAHXFAC/VRUJy1frnp
-	 MqKbQf76PjQrY3Qu6qHgtJjHU4ElYK9VvmJyJfIRkmPcla9AEz1wvvqL3CFM7gM3HmauQOi9GWdG
-	 FtHnPC1ds48ALW+j2CGspJU4lfF2XQTxNHt6KkMlOWhFk0//pXaCcxBdU2OrGVCATcUNt5yrxgxA
-	 OtX9s50z9848FE+1UjllhInwJwbUlYIhRkCWV/st89LVBbkwcHx2WFM6m3bozME11PMtmJfbdLD4
-	 JUy0GjPG5cPlofkpe4ZQrID5P+2z7/CnxU1VBl5VWyoTJLZd+KXahR9m9HFZERcVRAnXaOI1wvRW
-	 sQYIEVR6w4/5MolZAgivwW0R0RvFKgiV5XJFy9d/oDhcAyjvfXactMpUqIShbOqT4qQ0wt4WkD3q
-	 1Y29neQYwtUo23OjntrNDR7pKjPLuFud4+a10F7deEd5EEXI66/jp5U2cPWoKvQjZWnPqRDVC98s
-	 jvUpv6m4N0RM+YwKDhWWCq+ZxG+MWGYWnV6niiO7I+/fOzG2rFASQ2cRTkurLMhCJ2rRiEToenzv
-	 CKWV5oDy1F+tC90ifmxYOdgD1pCrtK6tqvuOV09ns1RUDV0tkpVFovSs34Q+ftyQbbKDPS9vJy6U
-	 YSpcol2GcZXTAQ7VpWoGDrdwHoN+i18Zh2XMzltg==
-X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
-From: Zhu Ling <1536943441@qq.com>
-To: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	andy@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	chenbaozi@phytium.com.cn,
-	Zhu Ling <1536943441@qq.com>
-Subject: [PATCH v1 3/3] MAINTAINERS: add entry for Phytium platform GPIO driver
-Date: Mon,  2 Mar 2026 17:51:47 +0800
-X-OQ-MSGID: <20260302095147.2483-4-1536943441@qq.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260302095147.2483-1-1536943441@qq.com>
-References: <20260302095147.2483-1-1536943441@qq.com>
+	s=arc-20240116; t=1772445517; c=relaxed/simple;
+	bh=ervvysCEd8cOIl5h8mlgyhiDmmnkn6l/quiCDWX+pw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QLx61CTIWJwn7tyNjFAW4Hl10OgD04iukHcT+vmcztQKp6hZlkfz4eMENf4diTX5Hw+PmJmkXuRzBwUTXL+JTYNNE88O/7E1MgASNLJ1D/hEwFuGRG40Gnysa1DXpybltUJb7t+xssSzEqAigtAY3aTzbqPDA+el8tSh/XaQkvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Bx8avbq7; arc=none smtp.client-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 60B524E424DA;
+	Mon,  2 Mar 2026 09:58:34 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 3414D5FE89;
+	Mon,  2 Mar 2026 09:58:34 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 53D22102F1C60;
+	Mon,  2 Mar 2026 10:58:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1772445513; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=iwiEelWhER4t/r6sMqYxG5Tn4/kBZkljoQa9dHWraG0=;
+	b=Bx8avbq7O2QjyfWCKDige+h5z6avm9Hn+oW8VyBuWAp146RJvoz2j36FaZxWyr2s2bpzAt
+	gc6wPz0ry+CYsFVFKZjh/zfGOJLQlnqvYG9BJqZR8LTu/Izql7WToJ+UoxbU5ZhNwICWjy
+	ZuCAWu/4e9DR7GlTHvVlOOUgJ1k5h8HloF9nCNHi+GI+6d0LmN8PbBiQvbLlYfCvJH5/Wu
+	aRv4W7Ib71+KuEGiQdr7+sczm4aHDgECw9dCQlwEtCWiaZzZ7JCytanTqtiYCi+jpoqlQX
+	rQR1wwDeS1kvV5S1zzoQvHkHv7EYV0wadGeklDekf20hSIGMme4+JxluKVhqCQ==
+Date: Mon, 2 Mar 2026 10:58:24 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-gpio@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Daire McNamara
+ <daire.mcnamara@microchip.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+ Ghiti <alex@ghiti.fr>, Linus Walleij <linusw@kernel.org>, Bartosz
+ Golaszewski <brgl@kernel.org>, linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC v11 3/4] soc: microchip: add mpfs gpio interrupt mux
+ driver
+Message-ID: <20260302105824.21b5c7d6@bootlin.com>
+In-Reply-To: <20260227-flashing-overcast-85ff59b2e82c@spud>
+References: <20260227-ajar-wolverine-7ce1ebd79821@spud>
+	<20260227-flashing-overcast-85ff59b2e82c@spud>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[qq.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[qq.com:s=s201512];
+	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	HAS_ORG_HEADER(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32380-lists,linux-gpio=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32379-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[vger.kernel.org,linaro.org,bgdev.pl,kernel.org,phytium.com.cn,qq.com];
-	RCVD_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DKIM_TRACE(0.00)[bootlin.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[1536943441@qq.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[herve.codina@bootlin.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[qq.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RCVD_COUNT_FIVE(0.00)[6];
 	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_FROM(0.00)[qq.com];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,phytium.com.cn:email,qq.com:mid,qq.com:dkim,qq.com:email]
-X-Rspamd-Queue-Id: 27A771D5CD6
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:mid,bootlin.com:dkim,microchip.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 37E661D5D64
 X-Rspamd-Action: no action
 
-Add maintainer contacts and file patterns for the Phytium platform
-GPIO binding and driver files.
+Hi Conor,
 
-Signed-off-by: Zhu Ling <1536943441@qq.com>
----
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+On Fri, 27 Feb 2026 14:52:29 +0000
+Conor Dooley <conor@kernel.org> wrote:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 61bf550fd..164553f86 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10963,6 +10963,16 @@ K:	(devm_)?gpio_(request|free|direction|get|set)
- K:	GPIOD_FLAGS_BIT_NONEXCLUSIVE
- K:	devm_gpiod_unhinge
- 
-+PHYTIUM GPIO DRIVERS
-+M:	Zhu Ling <1536943441@qq.com>
-+M:	Chen Baozi <chenbaozi@phytium.com.cn>
-+L:	linux-gpio@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/gpio/phytium,gpio.yaml
-+F:	drivers/gpio/gpio-phytium-core.c
-+F:	drivers/gpio/gpio-phytium-core.h
-+F:	drivers/gpio/gpio-phytium-platform.c
-+
- GPIO UAPI
- M:	Bartosz Golaszewski <brgl@kernel.org>
- R:	Kent Gibson <warthog618@gmail.com>
--- 
-2.34.1
+> From: Conor Dooley <conor.dooley@microchip.com>
+> 
+> On PolarFire SoC there are more GPIO interrupts than there are interrupt
+> lines available on the PLIC, and a runtime configurable mux is used to
+> decide which interrupts are assigned direct connections to the PLIC &
+> which are relegated to sharing a line.
+> 
+> Add a driver so that Linux can set the mux based on the interrupt
+> mapping in the devicetree.
+> 
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+...
 
+> --- a/drivers/soc/microchip/Kconfig
+> +++ b/drivers/soc/microchip/Kconfig
+> @@ -1,3 +1,14 @@
+> +config POLARFIRE_SOC_IRQ_MUX
+> +	bool "Microchip PolarFire SoC's GPIO IRQ Mux"
+> +	depends on ARCH_MICROCHIP
+> +	select REGMAP
+> +	select REGMAP_MMIO
+> +	default y
+> +	help
+> +	  Support for the interrupt mux on Polarfire SoC. It sits between
+> +	  the GPIO controllers and the PLIC, as only 35 interrupts are shared
+> +	  between 3 GPIO controllers with 32 interrupts each.
+
+35 interrupts ?
+
+Previously (other patches) you mentionned 41 (38 + 3).
+
+Also 32 interrutps on each (3 * 32 = 96) but you talked about 70 on previous
+patches.
+
+Can you double check or clarify those numbers ?
+
+...
+> +++ b/drivers/soc/microchip/mpfs-irqmux.c
+> @@ -0,0 +1,167 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Largely copied from rzn1_irqmux.c
+> + */
+> +
+> +#include <linux/bitmap.h>
+> +#include <linux/bitops.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#define MPFS_IRQMUX_CR		0x54
+> +#define MPFS_IRQMUX_NUM_OUTPUTS	70
+
+Is 70 really the outputs ?
+
+According to previous patches, I would say 41 (38+3).
+
+...
+> +static int mpfs_irqmux_probe(struct platform_device *pdev)
+> +{
+> +	DECLARE_BITMAP(line_done, MPFS_IRQMUX_NUM_OUTPUTS) = {};
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct of_imap_parser imap_parser;
+> +	struct of_imap_item imap_item;
+> +	struct regmap *regmap;
+> +	int ret, direct_mode, line, controller, gpio;
+
+Reverse Xmas tree.
+
+> +	u32 tmp, val = 0, old;
+
+...
+> +	for_each_of_imap_item(&imap_parser, &imap_item) {
+> +
+> +		direct_mode = mpfs_irqmux_is_direct_mode(dev, &imap_item.parent_args);
+> +		if (direct_mode < 0) {
+> +			of_node_put(imap_item.parent_args.np);
+> +			return direct_mode;
+> +		}
+> +
+> +		line = imap_item.child_imap[0];
+> +		gpio = line % 32;
+> +		controller = line / 32;
+> +
+> +		if (controller > 2) {
+> +			of_node_put(imap_item.parent_args.np);
+> +			dev_err(dev, "child interrupt number too large: %d\n", line);
+> +			return -EINVAL;
+> +		}
+> +
+> +		if (test_and_set_bit(line, line_done)) {
+
+Your bitmap size is MPFS_IRQMUX_NUM_OUTPUTS but you your line variable can
+have values from 0 to 95.
+
+Maybe some checks on imap_item.child_imap[0] or line could be added in
+order to be be sure that line value will fit in the bitmap.
+
+
+> +			of_node_put(imap_item.parent_args.np);
+> +			dev_err(dev, "Mux output line %d already defined in interrupt-map\n",
+> +				line);
+
+line is computed from imap_item.child_imap[0]. It is the input and not the
+output.
+
+In rzn1-irqmux.c, the bitmap is used to avoid multiple input lines using the same
+output line. Bitmap bits represent outputs.
+
+> +			return -EINVAL;
+> +		}
+> +
+> +		/*
+> +		 * There are 41 interrupts assigned to GPIOs, of which 38 are "direct". Since the
+> +		 * mux has 32 bits only, 6 of these exclusive/"direct" interrupts remain. These
+> +		 * are used by GPIO controller 1's lines 18 to 23. Nothing needs to be done
+> +		 * for these interrupts.
+> +		 */
+> +		if (controller == 1 && gpio >= 18)
+> +			continue;
+> +
+> +		/*
+> +		 * The mux has a single register, where bits 0 to 13 mux between GPIO controller
+> +		 * 1's 14 GPIOs and GPIO controller 2's first 14 GPIOs. The remaining bits mux
+> +		 * between the first 18 GPIOs of controller 1 and the last 18 GPIOS of
+> +		 * controller 2. If a bit in the mux's control register is set, the
+> +		 * corresponding interrupt line for GPIO controller 0 or 1 will be put in
+> +		 * "non-direct" mode. If cleared, the "fabric" controller's will.
+> +		 *
+> +		 * Register layout:
+> +		 *    GPIO 1 interrupt line 17 | mux bit 31 | GPIO 2 interrupt line 31
+> +		 *    ...                      | ...        | ...
+> +		 *    ...                      | ...        | ...
+> +		 *    GPIO 1 interrupt line  0 | mux bit 14 | GPIO 2 interrupt line 14
+> +		 *    GPIO 0 interrupt line 13 | mux bit 13 | GPIO 2 interrupt line 13
+> +		 *    ...                      | ...        | ...
+> +		 *    ...                      | ...        | ...
+> +		 *    GPIO 0 interrupt line  0 | mux bit  0 | GPIO 2 interrupt line  0
+> +		 *
+> +		 * As the binding mandates 70 items, one for each GPIO line, there's no need to
+> +		 * handle anything for GPIO controller 2, since the bit will be set for the
+> +		 * corresponding line in GPIO controller 0 or 1.
+
+Hum, what happen if the interrupts property is set in the GPIO controller 2 and not
+GPIO controllers 0 or 1.
+
+Is it legit ?
+
+If so, should lines coming from GPIO controller 2 be took into account ?
+
+Maybe my comment is not relevant due to some misunderstanding in the not
+so obvious mapping.
+
+> +		 */
+> +		if (controller == 2)
+> +			continue;
+> +
+> +		/*
+> +		 * If in direct mode, the bit is cleared, nothing needs to be done as val is zero
+> +		 * initialised and that's the direct mode setting for GPIO controller 0 and 1.
+> +		 */
+> +		if (direct_mode)
+> +			continue;
+> +
+> +		if (controller == 0)
+> +			val |= 1U << gpio;
+> +		else
+> +			val |= 1U << (gpio + 14);
+> +	}
+> +
+> +	regmap_read(regmap, MPFS_IRQMUX_CR, &old);
+> +	regmap_write(regmap, MPFS_IRQMUX_CR, val);
+> +
+> +	if (val != old)
+> +		dev_info(dev, "firmware mux setting of 0x%x overwritten to 0x%x\n", old, val);
+> +
+> +	return 0;
+> +}
+> +
+
+Best regards,
+Hervé
 
