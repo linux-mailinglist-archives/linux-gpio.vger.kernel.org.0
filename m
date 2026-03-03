@@ -1,180 +1,314 @@
-Return-Path: <linux-gpio+bounces-32406-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32408-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GPKlMQc9pmkZNAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-32406-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 03 Mar 2026 02:44:39 +0100
+	id IB1YC3CEpmlQQwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-32408-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 03 Mar 2026 07:49:20 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id B26AD1E7C91
-	for <lists+linux-gpio@lfdr.de>; Tue, 03 Mar 2026 02:44:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C14D21E9C8C
+	for <lists+linux-gpio@lfdr.de>; Tue, 03 Mar 2026 07:49:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2826B3016893
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Mar 2026 01:44:39 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F231D30470FA
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Mar 2026 06:49:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CD8B1A682C;
-	Tue,  3 Mar 2026 01:44:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FEF62E8DEB;
+	Tue,  3 Mar 2026 06:49:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nfbHi1Yr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f+LWKQXK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B76F25F994
-	for <linux-gpio@vger.kernel.org>; Tue,  3 Mar 2026 01:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D680C38D;
+	Tue,  3 Mar 2026 06:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772502278; cv=none; b=cLCyz12qzlhw0B0Mfz4Y4EzHl6kHFDwSuo5R0wHAL6waX57Tz2BIVk21YdC2zT1hO8ARHnTdvzYHzgtpz2kNKgrBz9jeQDlBHTkjJ5Y6zZRqVFC2HBMtU1hGKhR433lfAumEq5RnkKoSmUuLIXJwrBhy51ucAVG/tJ72ZRwPrBE=
+	t=1772520552; cv=none; b=fI+zygRkyitOjskR2YOXDihNnmLFljgkBl+SC+9hwmSSRYWMV08gmK4XqDuRjxTd47wdIJoI66IxyS+pzybGxTw9UxXuNQv+LWvyjjKZQEn9K6CN0hjkIL8mYsdo+3rkwECZwCvg7befEF4/OIGKlqWF7VGATLaZxjnAn9BXVZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772502278; c=relaxed/simple;
-	bh=0xzDdtivaCG7q89sL+7LJjhdwcX9viAV9ymPZ9vIWGU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Dd9ReBujIhog/MUvNDn8apEmriSkvGp2tPLoGo/tNyI69o6cIAHj7rQD7ZozFHb8DzgGw8QLk8N94ctCmCp/BwtLBlG+9tZsu9bE6r8HTCnnTKjYLuBvFeAmc3MN4ClHQHrsy5V8uPYc6KgbxD7WeWJq4ah47eXe6u95Zkhq/yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nfbHi1Yr; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1772502276; x=1804038276;
-  h=date:from:to:cc:subject:message-id;
-  bh=0xzDdtivaCG7q89sL+7LJjhdwcX9viAV9ymPZ9vIWGU=;
-  b=nfbHi1YrjCeD9yMRquSLr3GGXnn7HLKT//lyelus1AEFlrFu6QzEewaO
-   hgNb8AEzJ/nBOFnkJrWVYKLLHCNjeZ2GODbUq3Sc0A6taS3bJpAveINNd
-   xrMmy/mDLAc0YcxtwIdDZyvydrNFRTilUBksyaRTuN8F8KiTlOZzRMbBm
-   fMZzh3PmynmHRExijc4iCII94bzLS09c7bblZAsaEU/m3Yh/w2374+P7q
-   0Xr1dG4OC6q0EqAfwSQenq1oDlhHwgZFZpEyEIx6AordAkmtUadP2rxRH
-   yMIa/WiG3UnG62mqtiqqjBY2zLz3cvOthksc9tLLTtSYJKDpN/zXqZhlJ
-   A==;
-X-CSE-ConnectionGUID: h1FWcSZmRKq/E21n1P+jhw==
-X-CSE-MsgGUID: L773A9+sS1yXTV4mOOSKFQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11717"; a="73567726"
-X-IronPort-AV: E=Sophos;i="6.21,321,1763452800"; 
-   d="scan'208";a="73567726"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2026 17:44:35 -0800
-X-CSE-ConnectionGUID: mlK7INUMR1e3RlfDi6JiDw==
-X-CSE-MsgGUID: oYCCFbTzTnGzTtizfpfWNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,321,1763452800"; 
-   d="scan'208";a="222822708"
-Received: from lkp-server01.sh.intel.com (HELO f27a57aa7a36) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 02 Mar 2026 17:44:34 -0800
-Received: from kbuild by f27a57aa7a36 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vxEoJ-000000001cL-0tZE;
-	Tue, 03 Mar 2026 01:44:31 +0000
-Date: Tue, 03 Mar 2026 09:44:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linusw@kernel.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- f08061d267d2061f64d514c1ecbe441a063a6fad
-Message-ID: <202603030909.VbGjDp08-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1772520552; c=relaxed/simple;
+	bh=iwVy5g4bzG4pXkbhYjkENjYmwo6a5YAySJbmeH8yvOU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tjkGviQ/YdEhl/OD8OW7qusU4KiAQiZCZoGPtY2nfL3q2vbTXpbedjhMOBji8bOkKG7NDENtzI2aYWYjFy+HXr2Yc7dZFNveYIn2OZH2LBRovAIKfGfTF4irlVi5zKzht52qR93rBXF6jsTveK6oroMd9HwAN1NWgqmHxhrILSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f+LWKQXK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 089DEC116C6;
+	Tue,  3 Mar 2026 06:49:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772520552;
+	bh=iwVy5g4bzG4pXkbhYjkENjYmwo6a5YAySJbmeH8yvOU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f+LWKQXKI5ZK8EgGMHbJ5NCvyCNomA+MyA+6/6BRkwIGWkY7tUdPCxfXuPRp7XM0V
+	 v5/qupq6Uxrha3Buzkui1uIfMMieFWxtgynd+H1n+0aCqnifILiBwwvA894VsZsUqj
+	 yxVcOsbYke+o3mtbxd4bkNAQwBlvR8PcKjw4/+p7aXJN7RO+MF3lMwwXb+vC7ZqI5v
+	 Fbu5mkfDKh1/VcwvGVpy+0/Kirscr3/9fgGVxZfg8hofiLbOhLkttfGTMiDD3sWws2
+	 oxOaALc0oFeHVWDbf3hzHt9vBJ/xd8+Pz8ieF1pdITNq1pFaV4r/Qf3A5JabA1xGiv
+	 QbdA4IbUU9HaQ==
+Date: Tue, 3 Mar 2026 07:49:10 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Zhu Ling <1536943441@qq.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	chenbaozi@phytium.com.cn
+Subject: Re: [PATCH v1 1/3] dt-bindings: gpio: add Phytium GPIO controller
+Message-ID: <20260303-dashing-cricket-of-lightning-1dba54@quoll>
+References: <20260302095147.2483-1-1536943441@qq.com>
+ <tencent_0BC92A632DD26F0A684E608D427244637905@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-X-Rspamd-Queue-Id: B26AD1E7C91
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <tencent_0BC92A632DD26F0A684E608D427244637905@qq.com>
+X-Rspamd-Queue-Id: C14D21E9C8C
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWO(0.00)[2];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32406-lists,linux-gpio=lfdr.de];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-32408-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[qq.com];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_PROHIBIT(0.00)[0.0.0.1:email,1.171.78.160:email];
 	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	RCVD_COUNT_FIVE(0.00)[6];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.997];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[0.0.0.0:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,devicetree.org:url,qq.com:email]
 X-Rspamd-Action: no action
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: f08061d267d2061f64d514c1ecbe441a063a6fad  pinctrl: pinctrl-pic32: Use devres version of gpiochip_add_data()
+On Mon, Mar 02, 2026 at 05:51:45PM +0800, Zhu Ling wrote:
+> Add the devicetree binding schema for the Phytium platform GPIO
+> controller.
 
-elapsed time: 918m
+What is Phytium platform?
 
-configs tested: 55
-configs skipped: 0
+> 
+> Register the "phytium" vendor prefix used by the compatible string.
+> 
+> Use ngpios as the preferred child-node property and keep nr-gpios as
+> deprecated for compatibility with existing firmware descriptions.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+NAK, you cannot add new deprecated properties. "existing firmware" does
+not matter, because this is the first posting, thus the firmware starts
+existing from now.
 
-tested configs:
-alpha         allnoconfig    gcc-15.2.0
-alpha        allyesconfig    gcc-15.2.0
-arc          allmodconfig    gcc-15.2.0
-arc           allnoconfig    gcc-15.2.0
-arc          allyesconfig    gcc-15.2.0
-arm           allnoconfig    clang-23
-arm          allyesconfig    gcc-15.2.0
-arm64        allmodconfig    clang-19
-arm64         allnoconfig    gcc-15.2.0
-csky         allmodconfig    gcc-15.2.0
-csky          allnoconfig    gcc-15.2.0
-hexagon      allmodconfig    clang-17
-hexagon       allnoconfig    clang-23
-i386         allmodconfig    gcc-14
-i386          allnoconfig    gcc-14
-i386         allyesconfig    gcc-14
-loongarch    allmodconfig    clang-19
-loongarch     allnoconfig    clang-23
-m68k         allmodconfig    gcc-15.2.0
-m68k          allnoconfig    gcc-15.2.0
-m68k         allyesconfig    gcc-15.2.0
-microblaze    allnoconfig    gcc-15.2.0
-microblaze   allyesconfig    gcc-15.2.0
-mips         allmodconfig    gcc-15.2.0
-mips          allnoconfig    gcc-15.2.0
-mips         allyesconfig    gcc-15.2.0
-nios2        allmodconfig    gcc-11.5.0
-nios2         allnoconfig    gcc-11.5.0
-openrisc     allmodconfig    gcc-15.2.0
-openrisc      allnoconfig    gcc-15.2.0
-parisc       allmodconfig    gcc-15.2.0
-parisc        allnoconfig    gcc-15.2.0
-parisc       allyesconfig    gcc-15.2.0
-powerpc      allmodconfig    gcc-15.2.0
-powerpc       allnoconfig    gcc-15.2.0
-riscv        allmodconfig    clang-23
-riscv         allnoconfig    gcc-15.2.0
-riscv        allyesconfig    clang-16
-s390         allmodconfig    clang-18
-s390          allnoconfig    clang-23
-s390         allyesconfig    gcc-15.2.0
-sh           allmodconfig    gcc-15.2.0
-sh            allnoconfig    gcc-15.2.0
-sh           allyesconfig    gcc-15.2.0
-sparc         allnoconfig    gcc-15.2.0
-sparc64      allmodconfig    clang-23
-um           allmodconfig    clang-19
-um            allnoconfig    clang-23
-um           allyesconfig    gcc-14
-x86_64       allmodconfig    clang-20
-x86_64        allnoconfig    clang-20
-x86_64       allyesconfig    clang-20
-x86_64      rhel-9.4-rust    clang-20
-xtensa        allnoconfig    gcc-15.2.0
-xtensa       allyesconfig    gcc-15.2.0
+> 
+> Signed-off-by: Zhu Ling <1536943441@qq.com>
+> ---
+>  .../bindings/gpio/phytium,gpio.yaml           | 134 ++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+>  2 files changed, 136 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/phytium,gpio.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/phytium,gpio.yaml b/Documentation/devicetree/bindings/gpio/phytium,gpio.yaml
+> new file mode 100644
+> index 000000000..1b9200c57
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/phytium,gpio.yaml
+> @@ -0,0 +1,134 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/phytium,gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Phytium GPIO controller
+> +
+> +description: |
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Do not need '|' unless you need to preserve formatting.
+
+> +  Phytium GPIO controllers expose one GPIO/interrupt controller and up to
+> +  two configurable ports. Child nodes describe per-port configuration.
+> +
+> +maintainers:
+> +  - Chen Baozi <chenbaozi@phytium.com.cn>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^gpio@[0-9a-f]+$"
+
+Drop
+
+> +
+> +  compatible:
+> +    const: phytium,gpio
+
+This is way too generic. Phytium made or will ever make only one controller?
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  gpio-controller: true
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +  '#gpio-cells':
+> +    const: 2
+
+Why do you need cells here and in the children?
+
+> +
+> +  interrupts:
+> +    description: |
+> +      The interrupts to the parent controller raised when GPIOs generate
+> +      the interrupts. If the controller provides one combined interrupt
+> +      for all GPIOs, specify a single interrupt. If the controller provides
+> +      one interrupt for each GPIO, provide a list of interrupts that
+> +      correspond to each of the GPIO pins.
+> +    minItems: 1
+> +    maxItems: 32
+
+Why is this flexible? You have one fixed device, no?
+
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +patternProperties:
+> +  "^gpio-port@[0-9a-f]+$":
+> +    type: object
+> +    properties:
+> +      compatible:
+> +        const: phytium,gpio-port
+
+Drop compatible
+
+> +
+> +      reg:
+> +        maxItems: 1
+> +
+> +      gpio-controller: true
+
+So what is the controller exactly?
+
+> +
+> +      '#gpio-cells':
+> +        const: 2
+> +
+> +      ngpios:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: The number of GPIO pins exported by the port.
+> +        default: 32
+> +        minimum: 1
+> +        maximum: 32
+> +
+> +      nr-gpios:
+
+Drop, why do you create duplicated properties for everything?
+
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: The number of GPIO pins exported by the port.
+> +        deprecated: true
+> +        default: 32
+> +        minimum: 1
+> +        maximum: 32
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +      - gpio-controller
+> +      - '#gpio-cells'
+> +
+> +    additionalProperties: false
+> +
+> +additionalProperties: false
+
+This goes after required: block
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - gpio-controller
+> +  - "#gpio-cells"
+> +  - interrupts
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    gpio: gpio@28004000 {
+
+Drop unused label
+
+> +      compatible = "phytium,gpio";
+> +      reg = <0x28004000 0x1000>;
+> +      gpio-controller;
+> +      #gpio-cells = <2>;
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+> +      interrupt-controller;
+> +      #interrupt-cells = <2>;
+> +
+> +      porta: gpio-port@0 {
+> +        compatible = "phytium,gpio-port";
+> +        reg = <0>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        ngpios = <8>;
+> +      };
+> +
+> +      portb: gpio-port@1 {
+> +        compatible = "phytium,gpio-port";
+> +        reg = <1>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        ngpios = <8>;
+> +      };
+> +    };
+> +...
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index ee7fd3cfe..2c3f9777d 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -1265,6 +1265,8 @@ patternProperties:
+>      description: PHICOMM Co., Ltd.
+>    "^phontech,.*":
+>      description: Phontech
+> +  "^phytium,.*":
+
+Keep proper sorting.
+
+> +    description: Phytium Technology Co., Ltd.
+>    "^phytec,.*":
+>      description: PHYTEC Messtechnik GmbH
+>    "^picochip,.*":
+> -- 
+> 2.34.1
+> 
 
