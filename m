@@ -1,168 +1,236 @@
-Return-Path: <linux-gpio+bounces-32426-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32427-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SKM9LHv0pmmgawAAu9opvQ
-	(envelope-from <linux-gpio+bounces-32426-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 03 Mar 2026 15:47:23 +0100
+	id oCSlGPT4pmk7bgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-32427-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 03 Mar 2026 16:06:28 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3A1F1F1C0E
-	for <lists+linux-gpio@lfdr.de>; Tue, 03 Mar 2026 15:47:22 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D45B51F2032
+	for <lists+linux-gpio@lfdr.de>; Tue, 03 Mar 2026 16:06:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 108663150949
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Mar 2026 14:41:01 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 95E7330EB09F
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Mar 2026 14:59:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A654450902;
-	Tue,  3 Mar 2026 14:40:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B6D7480DC0;
+	Tue,  3 Mar 2026 14:58:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JF/a2Udt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LveiTJjN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0170439012;
-	Tue,  3 Mar 2026 14:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECBD47F2E8
+	for <linux-gpio@vger.kernel.org>; Tue,  3 Mar 2026 14:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772548856; cv=none; b=RPOFyGR2p6X8K+LOfs4ixmJedKpvGh+ZVR4lzDI3+SzNQIJt2HeWyd2G2IAjvZz59LDwpxwvkVFHPzpxJZOuzWztYcI5uqZTfX+makm/Yj13ITCsTYQxcSZE1R0AqlHzJGkNCN4BHTZsxbM5pF0DXJwYC9sKC1FNtQ1yuF2EepM=
+	t=1772549930; cv=none; b=Z3yOTJAqfwrxd6lywmaVHc9V5FsgVwpxP6maFUIh/TIGtSEfFExftjMCzYCPDdRCa/zxyt2ZsJqkTWjQB8B3axL009KKaRjRqHZBBtlAAJxU7PBx3aKcJmoZxn9Yb5yWBtU//qUa1s9kF5sPoSLowjCixCzbMCsCFxJCoUPsbM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772548856; c=relaxed/simple;
-	bh=+Pr9CEDrZX6PYZmvlsYDBhSFokHFEKrUhQ1+t5IfA6A=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Hu7FMsmATPFZ45AYz7kaA/CSDSXwi1xY28M3lJaW84QLvWp6/YYJXF6hGRgDnPiU3GTuq717rpH7c+JvBLqemXws96Ksc7u3gY/Js25cQFcciWLAw06h60A8AZL6NRQ+UHU3zkoWbm1YGDzBVQEyjuMG6dw1WLl1zcAZax9tcsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JF/a2Udt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0028C116C6;
-	Tue,  3 Mar 2026 14:40:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772548856;
-	bh=+Pr9CEDrZX6PYZmvlsYDBhSFokHFEKrUhQ1+t5IfA6A=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=JF/a2Udt8z09Y22wRejAGIy6oeH/a8MP2ow7vQQ0yuTqbUFsy9Dj1limX9PP7MC/R
-	 ic9vyMgajzsvTWHIkbyV23SdTBQicoiRTJyi2O8Wgntt8tkNzslC9NuSnlWd0WEUkW
-	 kMEU6+QWnqWid6mwsyacty/iQyFRRnZ2LT1Z4noeY7ZGht18B0oRHuJ74iP1Vr3m9D
-	 PFKDt2iOONPAzH5qp3YQXwqAzGR9UP4eyzSg/go9yKUe/8TfuFNWz5dQzND7V/wD3I
-	 O9Mfd/A4i6Z3chCt2rMtlZuSGsIGFMoXOltgVDiay4qBA7z84/pzedlz9zaFuZzzvt
-	 2Ek+cBjoAwbVg==
-Date: Tue, 03 Mar 2026 08:40:55 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1772549930; c=relaxed/simple;
+	bh=oGjc1yjeiIqz4fk/uBDQWtGhcY0iItbRMgLP4C00KAw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=JQZQotkkk/3gQFvXM9sE96Y3lHiVDdhYR1RGm8DS5bUDWCP923ccg4D8iJMbym/2pDsq7F6RBJSzC/79m8/heTWdQsDmQLEkjgEkEfcLDrzL0ljWsAAOLlbhj3DLCeQ/1eTcX60HdwuUEvHxNeNB+E37agRiLVIBucvfDi85opo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LveiTJjN; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-389f2c46d80so84067191fa.3
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Mar 2026 06:58:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772549924; x=1773154724; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oGjc1yjeiIqz4fk/uBDQWtGhcY0iItbRMgLP4C00KAw=;
+        b=LveiTJjNXx5hPNvBlBSnvouKNtULsS930y+9lYTIz0ur59YAQK7guIOg6a0J4M4toT
+         awLTA2i7sR8LN9EhZvoi5ZnVNxcpk4B1ck1z9aOvPluM1ywHwjMLcmN8FC7lQsu6w4zI
+         xTu1DidaNqIdXgj8C3RAERdLJLmjDd8PVaZY3pF3KuQR95d60HDUA4NozaDCq/1NgoZc
+         V3uiyI8EaJ172xFb8kc9+L1xswUS2mByrvyuIJqfsTKiP1QMsbtVzL6mpAt9yYnsr8+c
+         2r1AEd2/cQhW1bg5BdXdgFy4+dobuUmpoHmRy/aVb1M6h5N7e5dNZViz+9tNR6Z35+CY
+         LdZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772549924; x=1773154724;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oGjc1yjeiIqz4fk/uBDQWtGhcY0iItbRMgLP4C00KAw=;
+        b=gyB90m958qS3O+MHLxK+LHnxmYrLXK/s21x4RM6iQkGTTFS1g0uLgkB8ZSc2OAzDjO
+         Fvd5dyWODk0/gKx1cRdPxFgP3gdLon8Q/hV5ZfgH+vVaFZ0Vp8EvOeyG8TAwJYDtugy5
+         BXpjLR8NWAbVnzEO5eK25jFpRrTE96clISb3+OpodcRzEL4iyY9LpL2TNl+dozf+Pkvr
+         8XWA74NckthXZTbxtiOhvbC1++1NDOyqBZMOJYPH79/gINHIP4zVY2da4by96kGOnZIK
+         O6/Hmjk1o2zRxQjtL98lbhzrXs3ySsxwX/kxVO4t2Y/a6FOYJYirLR6ffTRWP+PFxxbp
+         jw+w==
+X-Forwarded-Encrypted: i=1; AJvYcCVhaEYfmn272Er+G0iD6mZJ26WgpUjomG1U7KTeh0lKIiNz1xOPf4FukRhBQNZBrCHCn+HbZGvtOmio@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8CldrX1e7d2BN4UJm3RejoothRItkzPjH/ZEyLA5AN6ewkYVx
+	Le/xmiQCr0HhCc9BIz7OhpFQ4CMDPLxcYGyOKX9WTXGdwrAkzvRSAR0Q
+X-Gm-Gg: ATEYQzwjp2hAGfuVo+FirRMCnr+siDpXufw5InkNsLrkAdqNwK22XewyDisXs2abWFA
+	PSoZyjQ+uh/JjLrcrQSQTdPCnaWudWw8WyZJyURqgtniWgIA5QuXfMCr1guOhligNacwLhTY1b0
+	LbrHcmyrwrOAyrQeB1Lu4wpPZsp/sG6U9ADWycQN7yXbw21nTnNTpHe9PrhKJqaTExAs8zgeLGz
+	zrKOfYmX4EiwCxAQdhdn4xSEdAq5tMRHcL/6tMRHgc4+C9r1k+Hk75A7ph1qQwYpC6xwhhvW4Zi
+	FdF4ne/h+Z3CTDzl5Cvb6uw2DdVNUQdtm+jtRsv+BjOV+wSqYQzZ2H7j9XBBCVYZunRnNUjkqo8
+	bTxpFQhmNXFKtavGqR66Wk5KsX7KVVwrpK7hk6/PP7Om/0VKmg9iXQSgdiefEE03M7l0XsPGGgf
+	hCb1/aIh4TVnFtpaxughdcPmcv9r7TQG2cF0ZY6gdW4KpgjorvU+hhsDbX2cRPzgplDObdtwX+2
+	NmzHZAIknzYABl7KDvdtIzd82IT/UTz03itcpI5o/G46Go=
+X-Received: by 2002:a2e:80cf:0:b0:37b:aaf7:f022 with SMTP id 38308e7fff4ca-389ff3644bemr93473051fa.35.1772549923580;
+        Tue, 03 Mar 2026 06:58:43 -0800 (PST)
+Received: from smtpclient.apple (2001-14ba-437-c00-1991-9ef0-d3f1-621a.rev.dnainternet.fi. [2001:14ba:437:c00:1991:9ef0:d3f1:621a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a124d7fd31sm359172e87.68.2026.03.03.06.58.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Mar 2026 06:58:43 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Peter Rosin <peda@axentia.se>, 
- kernel@pengutronix.de, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, David Jander <david@protonic.nl>, 
- Lee Jones <lee@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
- Linus Walleij <linusw@kernel.org>, linux-hwmon@vger.kernel.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-In-Reply-To: <20260303133947.1123575-2-o.rempel@pengutronix.de>
-References: <20260303133947.1123575-1-o.rempel@pengutronix.de>
- <20260303133947.1123575-2-o.rempel@pengutronix.de>
-Message-Id: <177254885509.3251575.14819823286886805862.robh@kernel.org>
-Subject: Re: [PATCH v2 1/6] dt-bindings: mfd: add NXP MC33978/MC34978 MSDI
-X-Rspamd-Queue-Id: B3A1F1F1C0E
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.400.21\))
+Subject: Re: [PATCH v5 03/28] of: dynamic: Fix overlayed devices not probing
+ because of fw_devlink
+From: Kalle Niemi <kaleposti@gmail.com>
+In-Reply-To: <20260227135428.783983-4-herve.codina@bootlin.com>
+Date: Tue, 3 Mar 2026 16:58:30 +0200
+Cc: Andrew Lunn <andrew@lunn.ch>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Matti Vaittinen <mazziesaccount@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Frank Li <Frank.Li@nxp.com>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>,
+ Andi Shyti <andi.shyti@kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Peter Rosin <peda@axentia.se>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Saravana Kannan <saravanak@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Charles Keepax <ckeepax@opensource.cirrus.com>,
+ Richard Fitzgerald <rf@opensource.cirrus.com>,
+ David Rhodes <david.rhodes@cirrus.com>,
+ Linus Walleij <linusw@kernel.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Mark Brown <broonie@kernel.org>,
+ Len Brown <lenb@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Shawn Guo <shawnguo@kernel.org>,
+ Wolfram Sang <wsa@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ driver-core@lists.linux.dev,
+ imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org,
+ linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org,
+ linux-sound@vger.kernel.org,
+ patches@opensource.cirrus.com,
+ linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org,
+ linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org,
+ linux-cxl@vger.kernel.org,
+ Allan Nielsen <allan.nielsen@microchip.com>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>,
+ Steen Hegelund <steen.hegelund@microchip.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Saravana Kannan <saravanak@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E7575FC9-7D0D-43E8-A477-4DEE79101C13@gmail.com>
+References: <20260227135428.783983-1-herve.codina@bootlin.com>
+ <20260227135428.783983-4-herve.codina@bootlin.com>
+To: Herve Codina <herve.codina@bootlin.com>
+X-Mailer: Apple Mail (2.3864.400.21)
+X-Rspamd-Queue-Id: D45B51F2032
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.34 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FREEMAIL_CC(0.00)[lunn.ch,kernel.org,glider.be,gmail.com,linuxfoundation.org,nxp.com,pengutronix.de,baylibre.com,sang-engineering.com,axentia.se,arndb.de,google.com,opensource.cirrus.com,cirrus.com,linaro.org,linux.intel.com,stgolabs.net,huawei.com,intel.com,vger.kernel.org,lists.linux.dev,lists.infradead.org,microchip.com,bootlin.com];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-32426-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32427-lists,linux-gpio=lfdr.de];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_GT_50(0.00)[63];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[kaleposti@gmail.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	APPLE_MAILER_COMMON(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	TO_DN_SOME(0.00)[]
+	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,bootlin.com:email]
 X-Rspamd-Action: no action
 
+On 27. Feb 2026, at 15.54, Herve Codina <herve.codina@bootlin.com> =
+wrote:
+>=20
+> From: Saravana Kannan <saravanak@google.com>
+>=20
+> When an overlay is applied, if the target device has already probed
+> successfully and bound to a device, then some of the fw_devlink logic
+> that ran when the device was probed needs to be rerun. This allows =
+newly
+> created dangling consumers of the overlayed device tree nodes to be
+> moved to become consumers of the target device.
+>=20
+> Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT =
+overlays")
+> Reported-by: Herve Codina <herve.codina@bootlin.com>
+> Closes: =
+https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgyo8x6=3D9F9r=
+Z+-KzjOg@mail.gmail.com/
+> Closes: =
+https://lore.kernel.org/all/20240221095137.616d2aaa@bootlin.com/
+> Closes: =
+https://lore.kernel.org/lkml/20240312151835.29ef62a0@bootlin.com/
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> Link: =
+https://lore.kernel.org/lkml/20240411235623.1260061-3-saravanak@google.com=
+/
+> [Herve: Rebase on top of recent kernel and use =
+get_device_from_fwnode()]
+> [Herve: Add the call to driver_deferred_probe_trigger()]
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+>=20
 
-On Tue, 03 Mar 2026 14:39:41 +0100, Oleksij Rempel wrote:
-> Add device tree binding documentation for the NXP MC33978 and MC34978
-> Multiple Switch Detection Interface (MSDI) devices.
-> 
-> These ICs monitor up to 22 mechanical switch contacts in automotive and
-> industrial environments. They provide configurable wetting currents to
-> break through contact oxidation and feature extensive hardware
-> protection against thermal overload and voltage transients (load
-> dumps/brown-outs).
-> 
-> The device interfaces via SPI and provides multiple functions. To
-> accurately represent the hardware without unnecessary DT overhead, the
-> binding is structured as follows:
-> - pinctrl: A dedicated child node managing the 22 switch inputs (SG/SP
->   pins) and their GPIO configurations.
-> - hwmon: Integrated into the parent node, exposing critical hardware
->   faults (OT, OV, UV) and static voltage/temperature thresholds.
-> - mux: Integrated into the parent node, controlling the 24-to-1 analog
->   multiplexer to route pin voltages, internal temperature, or battery
->   voltage to an external SoC ADC.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
-> changes v2:
-> - Squashed MFD, pinctrl, hwmon, and mux bindings into a single patch
-> - Removed the empty hwmon child node
-> - Folded the mux-controller node into the parent MFD node
-> - Added vbatp-supply and vddq-supply to the required properties block
-> - Changed the example node name from mc33978@0 to gpio@0
-> - Removed unnecessary literal block scalars (|) from descriptions
-> - Documented SG, SP, and SB pin acronyms in the pinctrl description
-> - Added consumer polarity guidance (GPIO_ACTIVE_LOW/HIGH) for SG/SB
->   inputs, with a note on output circuit dependency
-> - Updated commit message
-> ---
->  .../devicetree/bindings/mfd/nxp,mc33978.yaml  | 114 ++++++++++++++++++
->  .../bindings/pinctrl/nxp,mc33978-pinctrl.yaml |  82 +++++++++++++
->  2 files changed, 196 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/nxp,mc33978.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,mc33978-pinctrl.yaml
-> 
+Hello Herv=C3=A9,
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Tested this patch series with BeagleBone Black and all tests pass. =
+bd718x7 driver probes.
 
-yamllint warnings/errors:
+Tested-by: Kalle Niemi <kaleposti@gmail.com>
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/nxp,mc33978.example.dtb: gpio@0 (nxp,mc33978): $nodename:0: 'gpio@0' does not match '^mux-controller(@.*|-([0-9]|[1-9][0-9]+))?$'
-	from schema $id: http://devicetree.org/schemas/mux/mux-controller.yaml
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.kernel.org/project/devicetree/patch/20260303133947.1123575-2-o.rempel@pengutronix.de
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+BR
+Kalle=
 
