@@ -1,203 +1,138 @@
-Return-Path: <linux-gpio+bounces-32465-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32466-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iIOqJgkKqGn2nQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-32465-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 04 Mar 2026 11:31:37 +0100
+	id iD7WK2kKqGn2nQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-32466-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 04 Mar 2026 11:33:13 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44E9B1FE5FD
-	for <lists+linux-gpio@lfdr.de>; Wed, 04 Mar 2026 11:31:37 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id B62131FE637
+	for <lists+linux-gpio@lfdr.de>; Wed, 04 Mar 2026 11:33:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2FF343050A01
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Mar 2026 10:26:16 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 17F1D301A6B1
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Mar 2026 10:32:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F05473A2558;
-	Wed,  4 Mar 2026 10:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="rxQg0s9M"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB7F63A2578;
+	Wed,  4 Mar 2026 10:32:14 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp28.bhosted.nl (smtp28.bhosted.nl [94.124.121.40])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180EC3A1D1C
-	for <linux-gpio@vger.kernel.org>; Wed,  4 Mar 2026 10:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.124.121.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937A2386C36;
+	Wed,  4 Mar 2026 10:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772619975; cv=none; b=KONEbAD6PjjN0v/fK1LW8Q6ZD2q8rL0AyJprze2eT5AUp/QLRq7nNR0HI3SU2sfdUdV6nH1L9pVQUJgKSky+OWbVmRS73jfCCSlmm5AGILS6PUMRrWN416tTLyyAItbj9jQP3GTRUkPiCVtziS1Cs7NnmkpqnULNZG1VLZhxePs=
+	t=1772620334; cv=none; b=ijDFPAhqwS93kugrkubvMO7wTRf+dxAj/PyWwZqpxEnQNPqSwhcAmIhRkpKF2G/wOXPY+jQojVpScxa8dAGifRmMW1dyQWQnZF8d44OMj8WATnwjkxddxfgU4xkN5yCxYl9/SYAXauD0eD1obiuRJ4mwoxpG7/+vHoxZXu7vw5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772619975; c=relaxed/simple;
-	bh=iaoKu1YAbCoudL14l3Rwg8N48l6zL3jjv2BcSRhzbo0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E1P+mNejl1TT5VPjgmBKdpzg+a1t8ZFTcg0nJut7T9oW5iM6o7SpJ/zhcEMh+lY7tO5bR1eLyea7SdMo1q1PIYMBI5hqI+muz9YJJJrrkp0jvVogH1E4FSM5tfwmyQH3mFEZA8r09/oiplmEEPWvNXU1mhQin0sDAWq8EngKImk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl; spf=pass smtp.mailfrom=protonic.nl; dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b=rxQg0s9M; arc=none smtp.client-ip=94.124.121.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=protonic.nl; s=202111;
-	h=content-transfer-encoding:content-type:mime-version:references:in-reply-to:
-	 message-id:subject:cc:to:from:date:from;
-	bh=w6F9EZJVS8+TF1xyzyXSI4fM3c5Dtg3XikqZDLJUQME=;
-	b=rxQg0s9M7zsl29LETTXvuEN2hLbg7fHyi7KWCFsfIibM4SdvaeotGKAcJvJLdtpWmY02EHyKO2IcJ
-	 jSjkE/blulrRpemUlqg5mDYXA9IyYZwbhn8XfkX0eqxE2mo0H92PtLIIQvFGHJ3SAYGt/hoTTWimWY
-	 NnPfzJJsCBabFtdedNTtaRYO9ex26bEw+7qjDyTv+wPMIs/WK+8nQ9HS7OakRBBA7sRV8/gA9rhlNQ
-	 gyC4OetacoqxSyAO22YZV9oFybgny7sx0zfBQPjRKJaJoTmdY4LDrNjqXQ/817UrDycxwn64xcZgWf
-	 lFZWNcM1OLp6MFVXxNEoLk6bDXKu/og==
-X-MSG-ID: 66bae932-17b4-11f1-b532-0050568164d1
-Date: Wed, 4 Mar 2026 11:25:00 +0100
-From: David Jander <david@protonic.nl>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, "Rob Herring (Arm)"
- <robh@kernel.org>, devicetree@vger.kernel.org, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Peter Rosin
- <peda@axentia.se>, kernel@pengutronix.de, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, Lee Jones <lee@kernel.org>, Guenter Roeck
- <linux@roeck-us.net>, Linus Walleij <linusw@kernel.org>,
- linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] dt-bindings: mfd: add NXP MC33978/MC34978 MSDI
-Message-ID: <20260304112500.4766f21b@erd003.prtnl>
-In-Reply-To: <4d4c6ebc-698b-44c2-9a91-607381d6ece1@kernel.org>
-References: <20260303133947.1123575-1-o.rempel@pengutronix.de>
-	<20260303133947.1123575-2-o.rempel@pengutronix.de>
-	<177254885509.3251575.14819823286886805862.robh@kernel.org>
-	<aacH7NmkOzZued0Y@pengutronix.de>
-	<20260304-graceful-sweet-bittern-98efdb@quoll>
-	<20260304100642.44d00b99@erd003.prtnl>
-	<4d4c6ebc-698b-44c2-9a91-607381d6ece1@kernel.org>
-Organization: Protonic Holland
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1772620334; c=relaxed/simple;
+	bh=ApS699SwuVsjgZhmflKmCvPXwrp9pk096BMvaFpM65s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ilQT3YjF2gE0nLiIkZuCKAIv+lgv+9KHpl15nqqiXZoQ/ovMt2jxJbylelXkGFyUXzEJeYbQrzeU4V8ucrtA58ctn+vYwBELqtdL7QgARtvmadQgl5R/V3+M/QTMc15gqcG8uPnquB2BX2gAHhZW6qim2myfuPfpr9AWiWC4Dsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vimux.org; spf=none smtp.mailfrom=vimux.org; arc=none smtp.client-ip=52.59.177.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vimux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=vimux.org
+X-QQ-mid: esmtpgz10t1772620308t2f6c94b0
+X-QQ-Originating-IP: 4GpzGVlb8kYgocIForgl8MRQKjILJcl3D6A1Zy270hk=
+Received: from localhost.localdomain ( [119.167.27.218])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 04 Mar 2026 18:31:45 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 6474584774209314028
+EX-QQ-RecipientCnt: 8
+From: Jialu Xu <xujialu@vimux.org>
+To: linusw@kernel.org
+Cc: brgl@kernel.org,
+	kees@kernel.org,
+	krzk@kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	xujialu@vimux.org
+Subject: Re: [PATCH 1/3] nfc: s3fwrn5: convert to gpio descriptors
+Date: Wed,  4 Mar 2026 18:29:50 +0800
+Message-ID: <56D7C16189347663+20260304103140.519252-1-xujialu@vimux.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <CAD++jL=FCRvj_mz_E-JVnyUBV3SOidQQ7zp=ogcRqirjvphpTg@mail.gmail.com>
+References: <CAD++jL=FCRvj_mz_E-JVnyUBV3SOidQQ7zp=ogcRqirjvphpTg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 44E9B1FE5FD
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpgz:vimux.org:qybglogicsvrsz:qybglogicsvrsz3b-0
+X-QQ-XMAILINFO: MObEYWafgTHoZx474OiLtkTLcU3DE+Jzz2hkDkhw/HLgCJQO/N5IBOf9
+	iyG70lIIZuaYOBhrEE9JnjqYNYlVNrptJjsym3I6iYOTrcg48X9CWZxt0qyH7T6XrM9IUi8
+	qhTTmf+v6EidyDHaErkBXpny2l4oqRI3PdkEQRvQYpS5BJz+ZqeOzWqsd9iV63aZnD9LUlU
+	FlCbLJqvGDVxZ1p6xQCbWeWV4Y1tjtbtZqEeKRPsRACOLtXtRBeyOtxaZfEoZhxtXRIiQ4q
+	NML97GB8qBkt5oFfeb3ZVG84f8ip0kWjXnbggFKZRgOya40UnmjVrl5iATvJrYgIIGlxJxa
+	S5goEUdieGg99UNmFgrgE3wCrMnc00BrF8QVq4QIP1QPlOEc/smMRN7KJiSHbwwPKoNHASx
+	1RYlQfOjZ08WRgMeL/T9lApQa+486XpYDOAFkzDjFjZDRew4oiYx+n34SdpE3EglN0QhL0e
+	PCd8jgPm1vDa576n6RXl63LJMddTsyz6zwdb+4HM/o+3ywd986McFgJZYfZiSk97zMJEhfQ
+	JFLykErH0+YFPWO4gwcXeezY/A+6UAXWPPAGzxWdTHltbvXHOwADgBouyH010TWMSQ1a7oN
+	hN/AHKzn+pVmFaKw+gv6qR6k7NEN+J0HK61aomlAItFDgPZhE7ESw9nu2EPbSBP/SKEpO3x
+	rCp5MVZptLrupQg5SctXLqdSFbNiUmM4wwO5l+M2dLIROwOvyfC0gh6s8eof35SNn7e+lPO
+	12H2vfHCLhhaji/Bj4TOe3qCDRquwgXnsXKN3fc1sEY/ejk3hYCA4O59U3s5Bg8c+kfGH4B
+	/Z+Nm2rI8sNEt3dVi6CDykK8aCRLNvuuW0UVNlnBlxm6b4nN0yaGtZhGJlyhuniBMI+zJXE
+	NtNSr94ORo1ka63yl6v3+9N/+vPaihJZr/HNchVfnNl3xMntKSP7i9lyX0k1GsNTFpNgRc8
+	N8v7nrpIAnFkCsnI7HZLSVrDQAMHVRSAg5hxmMXDiTiwG8ynWJYeAPTIhyBjeIP7Hmw+hXH
+	Ly1pkZfA==
+X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
+X-QQ-RECHKSPAM: 0
+X-Rspamd-Queue-Id: B62131FE637
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-0.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[protonic.nl:s=202111];
+	MID_CONTAINS_FROM(1.00)[];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	DMARC_NA(0.00)[protonic.nl];
-	HAS_ORG_HEADER(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32465-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vimux.org:mid,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[david@protonic.nl,linux-gpio@vger.kernel.org];
+	NEURAL_HAM(-0.00)[-0.976];
+	RCVD_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	DMARC_NA(0.00)[vimux.org: no valid DMARC record];
+	MIME_TRACE(0.00)[0:+];
+	FROM_NEQ_ENVFROM(0.00)[xujialu@vimux.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[protonic.nl:+];
+	R_DKIM_NA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[0.0.0.0:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,devicetree.org:url,erd003.prtnl:mid,nxp.com:url,protonic.nl:dkim]
+	TAGGED_FROM(0.00)[bounces-32466-lists,linux-gpio=lfdr.de];
+	TO_DN_NONE(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[]
 X-Rspamd-Action: no action
 
-On Wed, 4 Mar 2026 10:49:06 +0100
-Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>> -       phy->common.gpio_en = of_get_named_gpio(np, "en-gpios", 0);
+>> -       if (!gpio_is_valid(phy->common.gpio_en)) {
+>> -               /* Support also deprecated property */
+>> -               phy->common.gpio_en = of_get_named_gpio(np,
+>> -                                                       "s3fwrn5,en-gpios",
+>(...)
+>
+>> -       phy->common.gpio_fw_wake = of_get_named_gpio(np, "wake-gpios", 0);
+>> -       if (!gpio_is_valid(phy->common.gpio_fw_wake)) {
+>> -               /* Support also deprecated property */
+>> -               phy->common.gpio_fw_wake = of_get_named_gpio(np,
+>> -                                                            "s3fwrn5,fw-gpios",
+>(...)
+>
+>old code supports the deprecated property too...
 
-> On 04/03/2026 10:06, David Jander wrote:
-> > 
-> > Hi Krzysztof,
-> > 
-> > On Wed, 4 Mar 2026 09:05:11 +0100
-> > Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >   
-> >> On Tue, Mar 03, 2026 at 05:10:20PM +0100, Oleksij Rempel wrote:  
-> >>> Hi Krzysztof and Rob,
-> >>>
-> >>> On Tue, Mar 03, 2026 at 08:40:55AM -0600, Rob Herring (Arm) wrote:    
-> >>>>>  .../devicetree/bindings/mfd/nxp,mc33978.yaml  | 114 ++++++++++++++++++
-> >>>>>  .../bindings/pinctrl/nxp,mc33978-pinctrl.yaml |  82 +++++++++++++
-> >>>>>  2 files changed, 196 insertions(+)
-> >>>>>  create mode 100644 Documentation/devicetree/bindings/mfd/nxp,mc33978.yaml
-> >>>>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,mc33978-pinctrl.yaml
-> >>>>>     
-> >>>>
-> >>>> My bot found errors running 'make dt_binding_check' on your patch:
-> >>>>
-> >>>> yamllint warnings/errors:
-> >>>>
-> >>>> dtschema/dtc warnings/errors:
-> >>>> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/nxp,mc33978.example.dtb: gpio@0 (nxp,mc33978): $nodename:0: 'gpio@0' does not match '^mux-controller(@.*|-([0-9]|[1-9][0-9]+))?$'
-> >>>> 	from schema $id: http://devicetree.org/schemas/mux/mux-controller.yaml
-> >>>>     
-> >>>
-> >>> Folding the mux node into the parent as suggested [1] causes this error.
-> >>> Because the parent now has #mux-control-cells, the generic
-> >>> mux-controller.yaml forces the node name to be mux-controller. Since
-> >>> this chip is primarily a switch/GPIO controller, naming the parent SPI
-> >>> node mux-controller@0 is misleading.
-> >>>
-> >>> What is the preferred way to go here?    
-> >>
-> >> https://www.nxp.com/products/interfaces/multi-switch-detection-interface/22-i-o-msdi-programmable-current-analog-mux:MC33978
-> >>
-> >> Name of the mc33978 device is "programmable analog mux" and further
-> >> description says "analog multiplexer for reading analog inputs ", so I
-> >> don't find "mux-controller" a confusing name. It is EXACTLY a
-> >> mux, so mux-controller.  
-> > 
-> > Sorry to chime in here. I'm afraid the NXP description on that link you posted
-> > is a typo. It is not correct. This chip is primarily a "Switch Detection
-> > Interface", or in other wordt a switch input interface. Wee here for the same
-> > page for the MC34978, which is the exact same chip:
-> > 
-> > https://www.nxp.com/products/interfaces/multi-switch-detection-interface/switch-detection-interface-22-i-os-programmable-wetting-current-temp-sensor-3-3-v-5-0-v-spi:MC34978  
-> 
-> That's MC34978 and I commented on MC33978.
-> 
-> What is the primary function of MC33978 being described here as the base?
+Thanks for the review!
 
-The MC34978 and MC33978 are the exact same part (except for the temperature
-range). The fact that NXP has two different web-pages with two different
-descriptions of it certainly doesn't help, but you can also check the
-datasheet[1] description: "MC33978: 22-channel multiple switch detection
-interface with programmable wetting current"
+I'm sorry for the oversight — I only checked the existing in-tree
+device trees and assumed that was sufficient. I'll add rename quirks
+in gpiolib-of.c to handle the deprecated properties. Will send v2
+with this fixed.
 
-Further down in the description it says: "It also features a 24-to-1 analog
-multiplexer for reading inputs as analog."
-IMHO this makes it clear that this is NOT primarily a MUX.
-
-Actually, I doubt many users of this chip will use the analog MUX function at
-all since it has quite a few limitations that make it not very practical to
-use.
-
-The most fitting Linux framework for this chip's primary funtcion IMHO is
-pinctrl/gpio, but there are some caveats unfortunately.
-
-[1] https://www.nxp.com/docs/en/data-sheet/MC33978.pdf
-
-Best regards,
-
-> > It has an additional function that can be used as an analog MUX, but it is an
-> > extra feature and definitely NOT its primary function.
-> > 
-> > Not sure if this is relevant, but I fear there might be some confusion.
-> > 
-> > Best regards,
-> >   
-> >> Anyway if you want gpio, then please add a patch extending the pattern
-> >> in mux-controller.yaml to allow "gpio".
-> >>
-> >> Alternative, because it is rather a mux than a controller of a mux,
-> >> would be to call it just "mux" or "io-mux" (maybe the latter, since we
-> >> have "i2c-mux" in the spec) and allow that pattern to be in
-> >> mux-controller.
-
-
--- 
-David Jander
 
