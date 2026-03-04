@@ -1,45 +1,45 @@
-Return-Path: <linux-gpio+bounces-32471-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32469-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eA7QDVkPqGk8ngAAu9opvQ
-	(envelope-from <linux-gpio+bounces-32471-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 04 Mar 2026 11:54:17 +0100
+	id IJsvODgPqGk8ngAAu9opvQ
+	(envelope-from <linux-gpio+bounces-32469-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 04 Mar 2026 11:53:44 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 832DB1FE956
-	for <lists+linux-gpio@lfdr.de>; Wed, 04 Mar 2026 11:54:16 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AB781FE939
+	for <lists+linux-gpio@lfdr.de>; Wed, 04 Mar 2026 11:53:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B14BF303F04D
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Mar 2026 10:53:56 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7A879303BCF2
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Mar 2026 10:53:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F8763A1D10;
-	Wed,  4 Mar 2026 10:53:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78F9C3A872B;
+	Wed,  4 Mar 2026 10:53:08 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A70873A0B3D;
-	Wed,  4 Mar 2026 10:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E4C327C13;
+	Wed,  4 Mar 2026 10:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772621635; cv=none; b=e6osC6EakzYnFtap93TIyo5POjD77dSkGkqA0uO4uBuD9ufo4+LWVAns0PuHErK0CfNLg0emmleu57ekzV/quXFUQj+YB68+XyG8D78OQfvKZ44DjdFf9TJGl+UTD1FgMsgaaXNcz9y+qinJXpgfGOBY9sxnPOPNsXDhiixq7+U=
+	t=1772621588; cv=none; b=j3jHsqUqOBAYxh7gJ6KG6vrezKEjMMneyS+l7wc0u4SknW2BRjzEJTBme/BirXDzpyKTuKk/RpC0F87RqYv5f84OEvIpzEixwxWBsOfxcspd53sJHuxcHk8tqBTUbfXUruk+yxPL7TCJDEEXMUBNF2v4YnGb19s3IlrfNYj9d20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772621635; c=relaxed/simple;
-	bh=mej+Jd60NcwX96dJsQ6I0J0MKqwoHQki+5lc7cwcncc=;
+	s=arc-20240116; t=1772621588; c=relaxed/simple;
+	bh=tcV49X/JAb34urSmnDTKf/4IDOMPf5hDp28Mv3t7iK0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=peMLtl0zznogHhPLzJY6aToHz+ig8s+DxXWk5z40Ire8eVHnQSvS+lcMSs/eEDNpghVyNF/SKpzh8OYsJPPjdgvtLUJKbsQ7f9zWwZnkrxCZKdgtD7ssCiLhvvKCVBcDxrWw+JtZ9G5uZUFkicJpMKeBzlU6jymJyUQL5XGJKvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vimux.org; spf=none smtp.mailfrom=vimux.org; arc=none smtp.client-ip=54.254.200.92
+	 MIME-Version; b=KmCZYprpZ7a7WmXObgY4kB1WVy8w/4E+U6sFPss0EYe01XcdUxxD0/gNV+55nGX7QSXz0XVpL+2LUkZZmVTpewZEgl25O7CvBMq8yAZTqNYqRGe4goBKYztKWYrLNXmB/1Gc813JtY0VGGmyab7Yd3YMpJSO7IblHdPyHbXo0lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vimux.org; spf=none smtp.mailfrom=vimux.org; arc=none smtp.client-ip=54.243.244.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vimux.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=vimux.org
-X-QQ-mid: esmtpgz13t1772621569t42882ecb
-X-QQ-Originating-IP: ElOmFFYXOp/Hf2EkFm5oFyQZ7VI2zAY0qVzB/Fw21OA=
+X-QQ-mid: esmtpgz13t1772621574t43f1ba0e
+X-QQ-Originating-IP: bF95SnyJPhpCU+vPEfPOX3r0ID2Gdk3VtDgP43UV918=
 Received: from localhost.localdomain ( [219.147.0.82])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 04 Mar 2026 18:52:33 +0800 (CST)
+	id ; Wed, 04 Mar 2026 18:52:50 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 775489432918910945
+X-BIZMAIL-ID: 1907336305703571190
 EX-QQ-RecipientCnt: 8
 From: Jialu Xu <xujialu@vimux.org>
 To: xujialu@vimux.org
@@ -50,9 +50,9 @@ Cc: brgl@kernel.org,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: [PATCH 1/3] nfc: s3fwrn5: convert to gpio descriptors
-Date: Wed,  4 Mar 2026 18:52:13 +0800
-Message-ID: <0F63C4FC246814C0+20260304105215.536399-2-xujialu@vimux.org>
+Subject: [PATCH 2/3] nfc: nfcmrvl: convert to gpio descriptors
+Date: Wed,  4 Mar 2026 18:52:14 +0800
+Message-ID: <CA580932FEA8793A+20260304105215.536399-3-xujialu@vimux.org>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260304105215.536399-1-xujialu@vimux.org>
 References: <7187C401290C256B+20260304084808.440955-1-xujialu@vimux.org>
@@ -66,38 +66,38 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: esmtpgz:vimux.org:qybglogicsvrsz:qybglogicsvrsz3b-0
-X-QQ-XMAILINFO: OLX7ejGwdBBz1OElv18QWDYJun9ThnTAQhIDrA7a7IY0Np2DJY7GPU04
-	HtIHS/SLmhY3fPsuUGjlemCBCEYuKKSd5ijdLL7ThsQrLfH5BLqMbY4ChXYVJ9JoJu57GPc
-	McyMa2UBrAmVHozPy++pHlYL6YaFPLxG6GyeaFdYomXz+PKaU9L7R2436qmHe5sbJoCed4O
-	KUgugwvfzMfiiTgRXZVJI1t1ppzwWOozEUIDhigm8ACkOQthH6OYMYc1iapmegAR4JS2yx0
-	MdCHoA9HUGgJ/f8rr5hfRGKMmzj6au6yA0I5TME1jsZwPibCNzootwAj7ZW0dFfBlIGI9i7
-	OCVlYGnP+zRtnCk5zazMCIMTQpoYAfJ8b2b0Mo4AWNNPzlYuTJEos1iF1DRLVGlCqYwgxZC
-	quOOknPEuMNSDQWl6nqbLZytcpYRrgCZhKGnqW9RWsdjRTc+7aO3t6w/miWvDC/82A+VqDa
-	abAK677/6KAwvUSChdCKa0gppVt1mbxNzHgUodfEvYo1kBOKTtQdnZe1tcy7vzUnkIcJxyM
-	1U8rIa32Hvon2ij6bARdGFiNtJkzhs7koQPvjPckV3UX8NZllPCkZzVvmkMHVRamXQhdP2m
-	+oUc7tif7mFMFMvnhLorq2zRYgR7fbHh2ZCsFwF63057W3C/Iaekbs2ShAutPjS2Uu+Fyou
-	8h8hZaaiSjfVgovj2s5bKQEnEXZpoUwNKLsrlbfxbBJPfRzG8/lKvtMLf3JbxYNa0wn1sDK
-	Pk+eoLSDXNckX4rZwhZ2k9h5oyplAtLaMm43jzaZQriniw9pC9vFfpgEaBmOVjEuoOUnumv
-	GA65OcjzAi3gJN3npu0a9iBpKOeKerHsxOJ86VbFeZQZ06ezgXsYV47tzHDPkD9VX37lT9h
-	I6cfoP02LPARLyJ2JXQivof+QWeuJAcZxadd21ri6//PTwVjM85XHCfJ5aEzqUcoRU4ZcR2
-	uBOLVK2J618qjd98pRNW3VLBBBnNQFeasoD8UOV/LJarx3V+e44eU3Yxp01LswDxtB6WE6C
-	3iuSGgd8QW1McPfDSqfuVCUouzXNXAYGiWXK7aHNSmdCsjCwVzMfHAMtGRWYo=
-X-QQ-XMRINFO: Mp0Kj//9VHAxzExpfF+O8yhSrljjwrznVg==
+X-QQ-XMAILINFO: MHoF0S2/etBdG3LifaSEN9sNzl0kFaHr2TfLCB46PGojc6q47TG2k3cH
+	vKrPYgX7YnQgDqGRPA4d8A222B5fgQSjbqs9i03mME8bRxnoOqJj7AOiitULwKPktyUJAz3
+	V7MQaneB3HSPbnE0BS2ugo3J9gRXRds4+1TXXPRG3uJHB0smWOK60Ymi3dVmWInLiX2/bRe
+	+BBxCim1KyQkAUVsbux2vLUcRmAuEWcDzwhobhQUa82tiGx0CKYB/VYal2nmur3hjs2l5Um
+	LFpcOmS1h1O0A58D0qvxK42/iPIbvM9h4d2agG8xFV2U74T0YFoIZS/k193nr80T5bJRv7L
+	maMw8R7AIDxf/ykXMuBHbhZDBy2KtBUGp/CnpezeU2v12KwT2aiTITvQsg9D6rtKoTJiXqQ
+	PXOqb+V/Zjr4My5btco2sFr/id2KHB2lwOZIWQFztdZ8nQj09uY1y7IPuwn/f971NjgsNMe
+	6cug1WmDsnVrEMZc2nlugnp7dJIQUohZsEiAiwleQ4kR+YfEVjVw1K/z2yMB+APhRLNtar7
+	SCBbSVteVNTXm9VKN4Fznnp1qKr5LKPM5Y0MzN8MdD6cCIPOdKEQrsr0SyxuRkMbStalvk9
+	jvW5xDq9YMEU1WAKSQ8hdqOd+QzqEieJgTn6u5MXBHXucvrnOB7T93bZeAiZ8DY2AGd5oEa
+	NulA4bGbg69YwKOnKIxAdZSzryrDLby20vavInNp/0mQs5ilwVupNob/Ye9+SbxdwMKYmi0
+	QrgfMyAt/bzlA9gZ5/H3PPVbv4yHtb6d8QingsjCBF7MR3A3VKQj11oWSjNW9AkYraGHYxl
+	QkPsOGsVJLKG2h56bt/KA6O43MsQIK5Av9ZOF/v3+E8QuhMvQAeYZJdfqNOuVB7earz70dd
+	t+3IYZxn6SjJX9sxKaXm22pMp8eFmtf4hg+9b6PIruZdwj/OSqLQCtz2+swzGP+4o7ky1bk
+	3R0LCDKt17NvjRXF15mc1wQqYNJKOiPThCUmZGrx3jZE5Adtycw4J+NrQ/mzuD931/AzVzs
+	1vknUM//atFU8jJA676s/eQVOkSMGfL7BxH+3dViJ39LiMoZMo77xdfkGYSOk=
+X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
 X-QQ-RECHKSPAM: 0
-X-Rspamd-Queue-Id: 832DB1FE956
+X-Rspamd-Queue-Id: 1AB781FE939
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.04 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32471-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-32469-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	DMARC_NA(0.00)[vimux.org: no valid DMARC record];
@@ -107,260 +107,236 @@ X-Spamd-Result: default: False [0.04 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-0.992];
+	NEURAL_HAM(-0.00)[-0.993];
 	TO_DN_NONE(0.00)[];
 	R_DKIM_NA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vimux.org:mid,vimux.org:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vimux.org:mid,vimux.org:email]
 X-Rspamd-Action: no action
 
 Use <linux/gpio/consumer.h> instead of <linux/of_gpio.h>.
 
 Signed-off-by: Jialu Xu <xujialu@vimux.org>
 ---
- drivers/gpio/gpiolib-of.c        |  4 +++
- drivers/nfc/s3fwrn5/i2c.c        | 55 +++++---------------------------
- drivers/nfc/s3fwrn5/phy_common.c | 11 +++----
- drivers/nfc/s3fwrn5/phy_common.h |  5 +--
- drivers/nfc/s3fwrn5/uart.c       | 45 +++++++-------------------
- 5 files changed, 32 insertions(+), 88 deletions(-)
+ drivers/nfc/nfcmrvl/main.c    | 46 ++++++++++++-----------------------
+ drivers/nfc/nfcmrvl/nfcmrvl.h |  4 ++-
+ drivers/nfc/nfcmrvl/uart.c    | 23 ++++++++++++------
+ drivers/nfc/nfcmrvl/usb.c     |  2 +-
+ 4 files changed, 35 insertions(+), 40 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index ef1ac68b94b78..3bdd9af674474 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -542,6 +542,10 @@ static struct gpio_desc *of_find_gpio_rename(struct device_node *np,
- 		{ "reset",	"reset-n-io",	"marvell,nfc-uart" },
- 		{ "reset",	"reset-n-io",	"mrvl,nfc-uart" },
- #endif
-+#if IS_ENABLED(CONFIG_NFC_S3FWRN5_I2C)
-+		{ "en",		"s3fwrn5,en-gpios",	"samsung,s3fwrn5-i2c" },
-+		{ "wake",	"s3fwrn5,fw-gpios",	"samsung,s3fwrn5-i2c" },
-+#endif
- #if IS_ENABLED(CONFIG_PCI_LANTIQ)
- 		/* MIPS Lantiq PCI */
- 		{ "reset",	"gpio-reset",	"lantiq,pci-xway" },
-diff --git a/drivers/nfc/s3fwrn5/i2c.c b/drivers/nfc/s3fwrn5/i2c.c
-index 110d086cfe5ba..3f508b5fbf06b 100644
---- a/drivers/nfc/s3fwrn5/i2c.c
-+++ b/drivers/nfc/s3fwrn5/i2c.c
-@@ -8,10 +8,8 @@
- 
- #include <linux/clk.h>
- #include <linux/i2c.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/delay.h>
--#include <linux/of_gpio.h>
--#include <linux/of_irq.h>
- #include <linux/module.h>
- 
- #include <net/nfc/nfc.h>
-@@ -146,37 +144,6 @@ static irqreturn_t s3fwrn5_i2c_irq_thread_fn(int irq, void *phy_id)
- 	return IRQ_HANDLED;
- }
- 
--static int s3fwrn5_i2c_parse_dt(struct i2c_client *client)
--{
--	struct s3fwrn5_i2c_phy *phy = i2c_get_clientdata(client);
--	struct device_node *np = client->dev.of_node;
--
--	if (!np)
--		return -ENODEV;
--
--	phy->common.gpio_en = of_get_named_gpio(np, "en-gpios", 0);
--	if (!gpio_is_valid(phy->common.gpio_en)) {
--		/* Support also deprecated property */
--		phy->common.gpio_en = of_get_named_gpio(np,
--							"s3fwrn5,en-gpios",
--							0);
--		if (!gpio_is_valid(phy->common.gpio_en))
--			return -ENODEV;
--	}
--
--	phy->common.gpio_fw_wake = of_get_named_gpio(np, "wake-gpios", 0);
--	if (!gpio_is_valid(phy->common.gpio_fw_wake)) {
--		/* Support also deprecated property */
--		phy->common.gpio_fw_wake = of_get_named_gpio(np,
--							     "s3fwrn5,fw-gpios",
--							     0);
--		if (!gpio_is_valid(phy->common.gpio_fw_wake))
--			return -ENODEV;
--	}
--
--	return 0;
--}
--
- static int s3fwrn5_i2c_probe(struct i2c_client *client)
- {
- 	struct s3fwrn5_i2c_phy *phy;
-@@ -193,20 +160,14 @@ static int s3fwrn5_i2c_probe(struct i2c_client *client)
- 	phy->i2c_dev = client;
- 	i2c_set_clientdata(client, phy);
- 
--	ret = s3fwrn5_i2c_parse_dt(client);
--	if (ret < 0)
--		return ret;
--
--	ret = devm_gpio_request_one(&phy->i2c_dev->dev, phy->common.gpio_en,
--				    GPIOF_OUT_INIT_HIGH, "s3fwrn5_en");
--	if (ret < 0)
--		return ret;
-+	phy->common.gpio_en = devm_gpiod_get(&client->dev, "en", GPIOD_OUT_HIGH);
-+	if (IS_ERR(phy->common.gpio_en))
-+		return PTR_ERR(phy->common.gpio_en);
- 
--	ret = devm_gpio_request_one(&phy->i2c_dev->dev,
--				    phy->common.gpio_fw_wake,
--				    GPIOF_OUT_INIT_LOW, "s3fwrn5_fw_wake");
--	if (ret < 0)
--		return ret;
-+	phy->common.gpio_fw_wake = devm_gpiod_get(&client->dev, "wake",
-+						   GPIOD_OUT_LOW);
-+	if (IS_ERR(phy->common.gpio_fw_wake))
-+		return PTR_ERR(phy->common.gpio_fw_wake);
- 
- 	/*
- 	 * S3FWRN5 depends on a clock input ("XI" pin) to function properly.
-diff --git a/drivers/nfc/s3fwrn5/phy_common.c b/drivers/nfc/s3fwrn5/phy_common.c
-index deb2c039f0fd6..39a60e34136c5 100644
---- a/drivers/nfc/s3fwrn5/phy_common.c
-+++ b/drivers/nfc/s3fwrn5/phy_common.c
-@@ -8,7 +8,6 @@
-  * Bongsu Jeon <bongsu.jeon@samsung.com>
+diff --git a/drivers/nfc/nfcmrvl/main.c b/drivers/nfc/nfcmrvl/main.c
+index c51d22e4579c1..46cc1386ad3bc 100644
+--- a/drivers/nfc/nfcmrvl/main.c
++++ b/drivers/nfc/nfcmrvl/main.c
+@@ -6,9 +6,9 @@
   */
  
--#include <linux/gpio.h>
- #include <linux/delay.h>
  #include <linux/module.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/delay.h>
+-#include <linux/of_gpio.h>
++#include <linux/of.h>
+ #include <linux/nfc.h>
+ #include <net/nfc/nci.h>
+ #include <net/nfc/nci_core.h>
+@@ -112,13 +112,12 @@ struct nfcmrvl_private *nfcmrvl_nci_register_dev(enum nfcmrvl_phy phy,
  
-@@ -19,7 +18,7 @@ void s3fwrn5_phy_set_wake(void *phy_id, bool wake)
- 	struct phy_common *phy = phy_id;
+ 	memcpy(&priv->config, pdata, sizeof(*pdata));
  
- 	mutex_lock(&phy->mutex);
--	gpio_set_value(phy->gpio_fw_wake, wake);
-+	gpiod_set_value(phy->gpio_fw_wake, wake);
- 	if (wake)
- 		msleep(S3FWRN5_EN_WAIT_TIME);
- 	mutex_unlock(&phy->mutex);
-@@ -33,14 +32,14 @@ bool s3fwrn5_phy_power_ctrl(struct phy_common *phy, enum s3fwrn5_mode mode)
- 
- 	phy->mode = mode;
- 
--	gpio_set_value(phy->gpio_en, 1);
--	gpio_set_value(phy->gpio_fw_wake, 0);
-+	gpiod_set_value(phy->gpio_en, 1);
-+	gpiod_set_value(phy->gpio_fw_wake, 0);
- 	if (mode == S3FWRN5_MODE_FW)
--		gpio_set_value(phy->gpio_fw_wake, 1);
-+		gpiod_set_value(phy->gpio_fw_wake, 1);
- 
- 	if (mode != S3FWRN5_MODE_COLD) {
- 		msleep(S3FWRN5_EN_WAIT_TIME);
--		gpio_set_value(phy->gpio_en, 0);
-+		gpiod_set_value(phy->gpio_en, 0);
- 		msleep(S3FWRN5_EN_WAIT_TIME);
+-	if (gpio_is_valid(priv->config.reset_n_io)) {
+-		rc = gpio_request_one(priv->config.reset_n_io,
+-				      GPIOF_OUT_INIT_LOW,
+-				      "nfcmrvl_reset_n");
+-		if (rc < 0) {
+-			priv->config.reset_n_io = -EINVAL;
+-			nfc_err(dev, "failed to request reset_n io\n");
++	if (!priv->config.reset_gpio) {
++		priv->config.reset_gpio =
++			devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
++		if (IS_ERR(priv->config.reset_gpio)) {
++			priv->config.reset_gpio = NULL;
++			nfc_err(dev, "failed to get reset gpio\n");
+ 		}
  	}
  
-diff --git a/drivers/nfc/s3fwrn5/phy_common.h b/drivers/nfc/s3fwrn5/phy_common.h
-index 9cef25436bf90..871bec53dd0a9 100644
---- a/drivers/nfc/s3fwrn5/phy_common.h
-+++ b/drivers/nfc/s3fwrn5/phy_common.h
-@@ -12,6 +12,7 @@
- #define __NFC_S3FWRN5_PHY_COMMON_H
+@@ -144,7 +143,7 @@ struct nfcmrvl_private *nfcmrvl_nci_register_dev(enum nfcmrvl_phy phy,
+ 	if (!priv->ndev) {
+ 		nfc_err(dev, "nci_allocate_device failed\n");
+ 		rc = -ENOMEM;
+-		goto error_free_gpio;
++		goto error_free;
+ 	}
  
- #include <linux/mutex.h>
-+#include <linux/gpio/consumer.h>
- #include <net/nfc/nci_core.h>
+ 	rc = nfcmrvl_fw_dnld_init(priv);
+@@ -171,9 +170,7 @@ struct nfcmrvl_private *nfcmrvl_nci_register_dev(enum nfcmrvl_phy phy,
+ 	nfcmrvl_fw_dnld_deinit(priv);
+ error_free_dev:
+ 	nci_free_device(priv->ndev);
+-error_free_gpio:
+-	if (gpio_is_valid(priv->config.reset_n_io))
+-		gpio_free(priv->config.reset_n_io);
++error_free:
+ 	kfree(priv);
+ 	return ERR_PTR(rc);
+ }
+@@ -189,9 +186,6 @@ void nfcmrvl_nci_unregister_dev(struct nfcmrvl_private *priv)
  
- #include "s3fwrn5.h"
-@@ -21,8 +22,8 @@
- struct phy_common {
- 	struct nci_dev *ndev;
+ 	nfcmrvl_fw_dnld_deinit(priv);
  
--	int gpio_en;
--	int gpio_fw_wake;
-+	struct gpio_desc *gpio_en;
-+	struct gpio_desc *gpio_fw_wake;
- 
- 	struct mutex mutex;
- 
-diff --git a/drivers/nfc/s3fwrn5/uart.c b/drivers/nfc/s3fwrn5/uart.c
-index 9c09c10c2a464..5977a6b58f6fb 100644
---- a/drivers/nfc/s3fwrn5/uart.c
-+++ b/drivers/nfc/s3fwrn5/uart.c
-@@ -10,13 +10,12 @@
- 
- #include <linux/device.h>
- #include <linux/kernel.h>
-+#include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/nfc.h>
- #include <linux/netdevice.h>
--#include <linux/of.h>
- #include <linux/serdev.h>
--#include <linux/gpio.h>
--#include <linux/of_gpio.h>
-+#include <linux/gpio/consumer.h>
- 
- #include "phy_common.h"
- 
-@@ -88,25 +87,6 @@ static const struct of_device_id s3fwrn82_uart_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, s3fwrn82_uart_of_match);
- 
--static int s3fwrn82_uart_parse_dt(struct serdev_device *serdev)
--{
--	struct s3fwrn82_uart_phy *phy = serdev_device_get_drvdata(serdev);
--	struct device_node *np = serdev->dev.of_node;
+-	if (gpio_is_valid(priv->config.reset_n_io))
+-		gpio_free(priv->config.reset_n_io);
 -
--	if (!np)
--		return -ENODEV;
--
--	phy->common.gpio_en = of_get_named_gpio(np, "en-gpios", 0);
--	if (!gpio_is_valid(phy->common.gpio_en))
--		return -ENODEV;
--
--	phy->common.gpio_fw_wake = of_get_named_gpio(np, "wake-gpios", 0);
--	if (!gpio_is_valid(phy->common.gpio_fw_wake))
--		return -ENODEV;
--
--	return 0;
--}
--
- static int s3fwrn82_uart_probe(struct serdev_device *serdev)
+ 	nci_free_device(ndev);
+ 	kfree(priv);
+ }
+@@ -233,34 +227,24 @@ void nfcmrvl_chip_reset(struct nfcmrvl_private *priv)
+ 	/* Reset possible fault of previous session */
+ 	clear_bit(NFCMRVL_PHY_ERROR, &priv->flags);
+ 
+-	if (gpio_is_valid(priv->config.reset_n_io)) {
++	if (priv->config.reset_gpio) {
+ 		nfc_info(priv->dev, "reset the chip\n");
+-		gpio_set_value(priv->config.reset_n_io, 0);
++		gpiod_set_value(priv->config.reset_gpio, 0);
+ 		usleep_range(5000, 10000);
+-		gpio_set_value(priv->config.reset_n_io, 1);
++		gpiod_set_value(priv->config.reset_gpio, 1);
+ 	} else
+ 		nfc_info(priv->dev, "no reset available on this interface\n");
+ }
+ 
+ void nfcmrvl_chip_halt(struct nfcmrvl_private *priv)
  {
- 	struct s3fwrn82_uart_phy *phy;
-@@ -140,20 +120,19 @@ static int s3fwrn82_uart_probe(struct serdev_device *serdev)
+-	if (gpio_is_valid(priv->config.reset_n_io))
+-		gpio_set_value(priv->config.reset_n_io, 0);
++	if (priv->config.reset_gpio)
++		gpiod_set_value(priv->config.reset_gpio, 0);
+ }
  
- 	serdev_device_set_flow_control(serdev, false);
- 
--	ret = s3fwrn82_uart_parse_dt(serdev);
--	if (ret < 0)
--		goto err_serdev;
+ int nfcmrvl_parse_dt(struct device_node *node,
+ 		     struct nfcmrvl_platform_data *pdata)
+ {
+-	int reset_n_io;
 -
--	ret = devm_gpio_request_one(&phy->ser_dev->dev, phy->common.gpio_en,
--				    GPIOF_OUT_INIT_HIGH, "s3fwrn82_en");
--	if (ret < 0)
-+	phy->common.gpio_en = devm_gpiod_get(&serdev->dev, "en",
-+					      GPIOD_OUT_HIGH);
-+	if (IS_ERR(phy->common.gpio_en)) {
-+		ret = PTR_ERR(phy->common.gpio_en);
- 		goto err_serdev;
-+	}
+-	reset_n_io = of_get_named_gpio(node, "reset-n-io", 0);
+-	if (reset_n_io < 0) {
+-		pr_info("no reset-n-io config\n");
+-	} else if (!gpio_is_valid(reset_n_io)) {
+-		pr_err("invalid reset-n-io GPIO\n");
+-		return reset_n_io;
+-	}
+-	pdata->reset_n_io = reset_n_io;
+ 	pdata->hci_muxed = of_property_read_bool(node, "hci-muxed");
  
--	ret = devm_gpio_request_one(&phy->ser_dev->dev,
--				    phy->common.gpio_fw_wake,
--				    GPIOF_OUT_INIT_LOW, "s3fwrn82_fw_wake");
--	if (ret < 0)
-+	phy->common.gpio_fw_wake = devm_gpiod_get(&serdev->dev, "wake",
-+						   GPIOD_OUT_LOW);
-+	if (IS_ERR(phy->common.gpio_fw_wake)) {
-+		ret = PTR_ERR(phy->common.gpio_fw_wake);
- 		goto err_serdev;
-+	}
+ 	return 0;
+diff --git a/drivers/nfc/nfcmrvl/nfcmrvl.h b/drivers/nfc/nfcmrvl/nfcmrvl.h
+index f61a99e553db0..62fa77d587b2b 100644
+--- a/drivers/nfc/nfcmrvl/nfcmrvl.h
++++ b/drivers/nfc/nfcmrvl/nfcmrvl.h
+@@ -10,6 +10,8 @@
  
- 	ret = s3fwrn5_probe(&phy->common.ndev, phy, &phy->ser_dev->dev,
- 			    &uart_phy_ops);
+ #include "fw_dnld.h"
+ 
++struct gpio_desc;
++
+ /* Define private flags: */
+ #define NFCMRVL_NCI_RUNNING			1
+ #define NFCMRVL_PHY_ERROR			2
+@@ -54,7 +56,7 @@ struct nfcmrvl_platform_data {
+ 	 */
+ 
+ 	/* GPIO that is wired to RESET_N signal */
+-	int reset_n_io;
++	struct gpio_desc *reset_gpio;
+ 	/* Tell if transport is muxed in HCI one */
+ 	bool hci_muxed;
+ 
+diff --git a/drivers/nfc/nfcmrvl/uart.c b/drivers/nfc/nfcmrvl/uart.c
+index 2037cd6d4f4f4..6ea28340bb58e 100644
+--- a/drivers/nfc/nfcmrvl/uart.c
++++ b/drivers/nfc/nfcmrvl/uart.c
+@@ -8,6 +8,7 @@
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/err.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/printk.h>
+@@ -20,7 +21,6 @@
+ static unsigned int hci_muxed;
+ static unsigned int flow_control;
+ static unsigned int break_control;
+-static int reset_n_io = -EINVAL;
+ 
+ /*
+  * NFCMRVL NCI OPS
+@@ -62,9 +62,11 @@ static const struct nfcmrvl_if_ops uart_ops = {
+ };
+ 
+ static int nfcmrvl_uart_parse_dt(struct device_node *node,
+-				 struct nfcmrvl_platform_data *pdata)
++				 struct nfcmrvl_platform_data *pdata,
++				 struct device *dev)
+ {
+ 	struct device_node *matched_node;
++	struct gpio_desc *reset_gpio;
+ 	int ret;
+ 
+ 	matched_node = of_get_compatible_child(node, "marvell,nfc-uart");
+@@ -84,6 +86,16 @@ static int nfcmrvl_uart_parse_dt(struct device_node *node,
+ 	pdata->flow_control = of_property_read_bool(matched_node, "flow-control");
+ 	pdata->break_control = of_property_read_bool(matched_node, "break-control");
+ 
++	reset_gpio = devm_fwnode_gpiod_get_optional(dev,
++					of_fwnode_handle(matched_node),
++					"reset", GPIOD_OUT_LOW,
++					"nfcmrvl_reset_n");
++	if (IS_ERR(reset_gpio)) {
++		of_node_put(matched_node);
++		return PTR_ERR(reset_gpio);
++	}
++	pdata->reset_gpio = reset_gpio;
++
+ 	of_node_put(matched_node);
+ 
+ 	return 0;
+@@ -107,13 +119,13 @@ static int nfcmrvl_nci_uart_open(struct nci_uart *nu)
+ 	 */
+ 
+ 	if (dev && dev->parent && dev->parent->of_node)
+-		if (nfcmrvl_uart_parse_dt(dev->parent->of_node, &config) == 0)
++		if (nfcmrvl_uart_parse_dt(dev->parent->of_node, &config, dev) == 0)
+ 			pdata = &config;
+ 
+ 	if (!pdata) {
+ 		pr_info("No platform data / DT -> fallback to module params\n");
+ 		config.hci_muxed = hci_muxed;
+-		config.reset_n_io = reset_n_io;
++		config.reset_gpio = NULL;
+ 		config.flow_control = flow_control;
+ 		config.break_control = break_control;
+ 		pdata = &config;
+@@ -201,6 +213,3 @@ MODULE_PARM_DESC(break_control, "Tell if UART driver must drive break signal.");
+ 
+ module_param(hci_muxed, uint, 0);
+ MODULE_PARM_DESC(hci_muxed, "Tell if transport is muxed in HCI one.");
+-
+-module_param(reset_n_io, int, 0);
+-MODULE_PARM_DESC(reset_n_io, "GPIO that is wired to RESET_N signal.");
+diff --git a/drivers/nfc/nfcmrvl/usb.c b/drivers/nfc/nfcmrvl/usb.c
+index ea73094530968..ac62358445bf8 100644
+--- a/drivers/nfc/nfcmrvl/usb.c
++++ b/drivers/nfc/nfcmrvl/usb.c
+@@ -294,7 +294,7 @@ static int nfcmrvl_probe(struct usb_interface *intf,
+ 
+ 	/* No configuration for USB */
+ 	memset(&config, 0, sizeof(config));
+-	config.reset_n_io = -EINVAL;
++	config.reset_gpio = NULL;
+ 
+ 	nfc_info(&udev->dev, "intf %p id %p\n", intf, id);
+ 
 -- 
 2.47.3
 
