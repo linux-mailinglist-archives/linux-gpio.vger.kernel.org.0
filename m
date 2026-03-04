@@ -1,151 +1,164 @@
-Return-Path: <linux-gpio+bounces-32461-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32462-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IAgKI1v5p2mtmwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-32461-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 04 Mar 2026 10:20:27 +0100
+	id mEr8GxT/p2nUnAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-32462-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 04 Mar 2026 10:44:52 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 374D11FD7BD
-	for <lists+linux-gpio@lfdr.de>; Wed, 04 Mar 2026 10:20:27 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 184ED1FDCF4
+	for <lists+linux-gpio@lfdr.de>; Wed, 04 Mar 2026 10:44:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8EC0A30B5994
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Mar 2026 09:18:34 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 1165C3053C12
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Mar 2026 09:44:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFDDF39768E;
-	Wed,  4 Mar 2026 09:18:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A6D139F18E;
+	Wed,  4 Mar 2026 09:44:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BnWrIXro"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RcfiT+Cb"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22FC395DA3;
-	Wed,  4 Mar 2026 09:18:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DDEE396593
+	for <linux-gpio@vger.kernel.org>; Wed,  4 Mar 2026 09:44:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772615908; cv=none; b=mBs8l9BpgVotw2P1TwxNjO7IBwVa8E3WOTH8iYerdbHiXJ75M4rvxnvbSEJryJLxfsy3ryv8/ugwTp+/Vz41gp1cZyE1XBV3pjUQt0+h1IBPi26WD7R/rvr/Zp8NhWerKn6ZPSJRcbAHFByWMp5LlTvrd7hQtpIefgtMGvvL3oc=
+	t=1772617441; cv=none; b=BsAyyKJ1+xRbIPI+EmKyxV9jSOBXcypWxyAgPCeuzAHt5BNTdo9BxEWk6AhX/ZkAA/+H5SgKvEot8e90hXwgtedkH4AXDDqNDH6crS6o7LlJI4PYqRXy35cdkcztLVyn2uQnMSdzj/wzGIulpE2OH+0Mugq0u/IQ1iylbnxsO20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772615908; c=relaxed/simple;
-	bh=DqQFigDJ368Z5nPS5m9Q7Nq+wqG5hNprsu/1QDUlhA8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c1TXIfqhXL5rApicYjGBTObX5zkwESv4oFjfWmBAbjZTSdoElX+C0eS+07ecLUt+ckH74giM6jL1Ew9dDdaGGh0D1NQW69nRdJmHc0ehSm6PMQ3L04XZ62hfLULaXWRdRPL6sKhmYg0WxiIOvvsZlKY8aZuSOyri1rveLYn7IUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BnWrIXro; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8D60C19425;
-	Wed,  4 Mar 2026 09:18:18 +0000 (UTC)
+	s=arc-20240116; t=1772617441; c=relaxed/simple;
+	bh=8+rSrSJcs/fP61bPdboLaJ6pJ7+GkOXQuVKywbc0GCk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ctaOemt0Q/lz6gDK3wWUOPtYkzlFazMDl+47X3x43jasVvd7pRIRanMxKe9LmXbtCiSXECSpJtFoNFdUg16FIhVb++O5ZiKHzycTazFv3XCokjimm7Hl9hGuQ5D7u4evI9G6aNsqcy1toJKZs4GSszgqgQhh3ciglRNxV1YEFIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RcfiT+Cb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7339C2BCB0
+	for <linux-gpio@vger.kernel.org>; Wed,  4 Mar 2026 09:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772615907;
-	bh=DqQFigDJ368Z5nPS5m9Q7Nq+wqG5hNprsu/1QDUlhA8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BnWrIXroRr6DGO6COgDOsecmpa7x+fF4yHx2u2k5WsZ+BLWzvzUUV7uMfNIoE+iQs
-	 mdoGPSlZc5kn466gYE/XfSeyng33oXkMDsg0aemnWoU6RYpNSCTaHml0kjxL8q74MP
-	 SGXt4SuWVja8WXGIX2YM+yHvI/BtWxlwFxtniqrT2FTrVITiI0mSIOQzGxB40qTb4t
-	 01cuZXikRWIUb+pX7EDFNBbWVCDy1Hz6X++yupk9wfbTs0+Fa6FiLXxi0KaGhO19NR
-	 DHp8BPZqYYB7ADvmkyvU/D4747R18C1Chuzd92zyNH3hQnNTSLQ8HWJskm8ahAhvXP
-	 ElVD3LF0lvU+w==
-Message-ID: <d9e9703f-8166-41a9-a927-5bcd7ad4a8db@kernel.org>
-Date: Wed, 4 Mar 2026 10:18:16 +0100
+	s=k20201202; t=1772617440;
+	bh=8+rSrSJcs/fP61bPdboLaJ6pJ7+GkOXQuVKywbc0GCk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RcfiT+CbhA5N32spmPfxrEhljqGZBQ60fAlClkBvvhst/61qltnhlydaOXRe56LAC
+	 Fep900wxE57RKIQ/G4UB18SmNywGMgpqEaHtbEfTdTZ+fU+MKsOnGvM7eLWJ07qCOr
+	 cUwHXvrodPLmsufV/2VNR7tELRFonlmGhgrnfO/kb/PYTy2GKfU8rsiFigieE/3bVs
+	 2Xvmd4uU5AsZ0QVkAEz9TeJoK3rPtQVIJscvJ8R5pS5Gzrzg8N2BcC2hq0lqG/GQzH
+	 MWU/JLfXQ1bWzeZaZT1dlO40zEqrydOa/PP0F/7HK9HR8DIuXqL9ZRvYaX06rJ0lWv
+	 +pv2gvJYCD1CQ==
+Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-64acd19e1dfso5745344d50.0
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Mar 2026 01:44:00 -0800 (PST)
+X-Gm-Message-State: AOJu0YxcTZpwuJH3J4NNq2rF6hqbhdv1O9pGQaB3M5NWWkrmMBv2gJHX
+	mYF2xumENOvAjjzp1EcVIt81GiyfJ4smdoj3CicPYHlFVZJ5q7Di4VrN3F/tsd+Qsk+s63EhZal
+	Bqiy0/nUlSAVyw6AYklARfl1U/32hjyY=
+X-Received: by 2002:a05:690e:e26:b0:64c:a5f9:9b2d with SMTP id
+ 956f58d0204a3-64cf9b4dfaamr883263d50.21.1772617440138; Wed, 04 Mar 2026
+ 01:44:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/14] powerpc: drop unneeded dependency on OF_GPIO
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Alexey Brodkin <abrodkin@synopsys.com>, Vineet Gupta <vgupta@kernel.org>,
- Scott Wood <oss@buserror.net>, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- Russell King <linux@armlinux.org.uk>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>,
- Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck
- <wim@linux-watchdog.org>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sebastian Reichel <sre@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-snps-arc@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-amlogic@lists.infradead.org, linux-leds@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-watchdog@vger.kernel.org,
- linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
- linux-pm@vger.kernel.org
-References: <20260304-gpio-of-kconfig-v1-0-d597916e79e7@oss.qualcomm.com>
- <20260304-gpio-of-kconfig-v1-3-d597916e79e7@oss.qualcomm.com>
-Content-Language: fr-FR
-From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
-In-Reply-To: <20260304-gpio-of-kconfig-v1-3-d597916e79e7@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 374D11FD7BD
+References: <20260304084808.440955-1-xujialu@vimux.org> <7D8A09EB5A988115+20260304084808.440955-2-xujialu@vimux.org>
+In-Reply-To: <7D8A09EB5A988115+20260304084808.440955-2-xujialu@vimux.org>
+From: Linus Walleij <linusw@kernel.org>
+Date: Wed, 4 Mar 2026 10:43:48 +0100
+X-Gmail-Original-Message-ID: <CAD++jL=FCRvj_mz_E-JVnyUBV3SOidQQ7zp=ogcRqirjvphpTg@mail.gmail.com>
+X-Gm-Features: AaiRm522NQIq2xqWFZ06jce3apy8wKQbz7KFc_V7_Vt72Ls_gfhCHo5PLgJpfYk
+Message-ID: <CAD++jL=FCRvj_mz_E-JVnyUBV3SOidQQ7zp=ogcRqirjvphpTg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] nfc: s3fwrn5: convert to gpio descriptors
+To: Jialu Xu <xujialu@vimux.org>
+Cc: linux-gpio@vger.kernel.org, netdev@vger.kernel.org, brgl@kernel.org, 
+	krzk@kernel.org, kees@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 184ED1FDCF4
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32461-lists,linux-gpio=lfdr.de];
-	FREEMAIL_TO(0.00)[oss.qualcomm.com,arm.com,kernel.org,synopsys.com,buserror.net,linux.ibm.com,ellerman.id.au,gmail.com,lunn.ch,armlinux.org.uk,davemloft.net,google.com,redhat.com,linaro.org,baylibre.com,googlemail.com,tibbo.com,roeck-us.net,linux-watchdog.org,linuxfoundation.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[46];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[chleroy@kernel.org,linux-gpio@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32462-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qualcomm.com:email]
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,mail.gmail.com:mid,vimux.org:email]
 X-Rspamd-Action: no action
 
+Hi Jialu,
 
+thanks for your patch!
 
-Le 04/03/2026 à 10:02, Bartosz Golaszewski a écrit :
-> OF_GPIO is automatically enabled on all OF systems. There's no need to
-> select it explicitly.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+It's *very* appreciated that you are driving this work forward!
 
-Reviewed-by: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
+On Wed, Mar 4, 2026 at 9:48=E2=80=AFAM Jialu Xu <xujialu@vimux.org> wrote:
 
-> ---
->   arch/powerpc/platforms/85xx/Kconfig | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/platforms/85xx/Kconfig b/arch/powerpc/platforms/85xx/Kconfig
-> index 604c1b4b6d45c11dc3149ee8b9adabe593882c8e..6805c19ac8a915dae1bd24b13010a56cf1948ad4 100644
-> --- a/arch/powerpc/platforms/85xx/Kconfig
-> +++ b/arch/powerpc/platforms/85xx/Kconfig
-> @@ -217,7 +217,6 @@ config GE_IMP3A
->   config SGY_CTS1000
->   	tristate "Servergy CTS-1000 support"
->   	select GPIOLIB
-> -	select OF_GPIO
->   	depends on CORENET_GENERIC
->   	help
->   	  Enable this to support functionality in Servergy's CTS-1000 systems.
-> 
+> Use <linux/gpio/consumer.h> instead of <linux/of_gpio.h>.
+>
+> Signed-off-by: Jialu Xu <xujialu@vimux.org>
+(...)
 
+> -       phy->common.gpio_en =3D of_get_named_gpio(np, "en-gpios", 0);
+> -       if (!gpio_is_valid(phy->common.gpio_en)) {
+> -               /* Support also deprecated property */
+> -               phy->common.gpio_en =3D of_get_named_gpio(np,
+> -                                                       "s3fwrn5,en-gpios=
+",
+(...)
+
+> -       phy->common.gpio_fw_wake =3D of_get_named_gpio(np, "wake-gpios", =
+0);
+> -       if (!gpio_is_valid(phy->common.gpio_fw_wake)) {
+> -               /* Support also deprecated property */
+> -               phy->common.gpio_fw_wake =3D of_get_named_gpio(np,
+> -                                                            "s3fwrn5,fw-=
+gpios",
+(...)
+
+old code supports the deprecated property too...
+
+> -       ret =3D devm_gpio_request_one(&phy->i2c_dev->dev, phy->common.gpi=
+o_en,
+> -                                   GPIOF_OUT_INIT_HIGH, "s3fwrn5_en");
+> -       if (ret < 0)
+> -               return ret;
+> +       phy->common.gpio_en =3D devm_gpiod_get(&client->dev, "en", GPIOD_=
+OUT_HIGH);
+> +       if (IS_ERR(phy->common.gpio_en))
+> +               return PTR_ERR(phy->common.gpio_en);
+
+Maybe make a second try with
+devm_gpiod_get(&client->dev, "s3fwrn5,en", GPIOD_OUT_HIGH);
+so we don't change the semantics?
+
+> +       phy->common.gpio_fw_wake =3D devm_gpiod_get(&client->dev, "wake",
+> +                                                  GPIOD_OUT_LOW);
+> +       if (IS_ERR(phy->common.gpio_fw_wake))
+> +               return PTR_ERR(phy->common.gpio_fw_wake);
+
+Dito.
+
+Other than that it looks pretty straight-forward and correct!
+
+So +/- the fallback properties:
+Reviewed-by: Linus Walleij <linusw@kernel.org>
+
+Yours,
+Linus Walleij
 
