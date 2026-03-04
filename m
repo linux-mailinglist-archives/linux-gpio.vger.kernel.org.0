@@ -1,259 +1,158 @@
-Return-Path: <linux-gpio+bounces-32470-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32472-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6IB1K2UPqGk8ngAAu9opvQ
-	(envelope-from <linux-gpio+bounces-32470-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 04 Mar 2026 11:54:29 +0100
+	id UAPwB2MSqGm/ngAAu9opvQ
+	(envelope-from <linux-gpio+bounces-32472-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 04 Mar 2026 12:07:15 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39FC11FE96D
-	for <lists+linux-gpio@lfdr.de>; Wed, 04 Mar 2026 11:54:28 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id B59AD1FEADA
+	for <lists+linux-gpio@lfdr.de>; Wed, 04 Mar 2026 12:07:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D610330A02C4
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Mar 2026 10:53:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A72803079BA6
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Mar 2026 11:05:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0FCE3A8726;
-	Wed,  4 Mar 2026 10:53:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 264A93AE181;
+	Wed,  4 Mar 2026 11:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iZTR737A"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 684283A873D;
-	Wed,  4 Mar 2026 10:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ECD0371CF1;
+	Wed,  4 Mar 2026 11:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772621592; cv=none; b=eqI14mYW17rs3dOvglwLb0tcsoRdeZeL/MzEyMVQkNCX3RlVp7mEIkNNIqfbo3KKWJaXwJiIV58jG0l7cM9tIndT+NQrKxjonCMpntQlkRGJr7T914G0/uF/aY8rxQbVoVybKXKRD6GcZgIoHIkyVvz3lOBLXtFsBTASTyEE4DM=
+	t=1772622333; cv=none; b=TW7iMzfyZ1COz+ghwCFjBEMXnpLrc3PWUJgB9r4ODG53HWLXk1qt06Oywoguv7FgOOwZqCKgxcDjZWzE12K/vsp5kMkKTZuhPY1vmnraAPdLbc8vPiYkFGspwtoBYK+UPS1TAYO7spLYh7CGiAkI5nC2SpGSJ3ioEXHwhlKW6Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772621592; c=relaxed/simple;
-	bh=seolZAi9wS9AkLegqxuIIYBfkjQgFK23TvsRT6jiP70=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b00PyQHTKYo6H1TjO0oAi1IXjCvOjwdZrIM6l+84DKLgxdG57+e83jYQvLv/RD9iZpGepHVY+r2IOE2byO9SRNFg3Quyy46aX4XDIRFn+Z/KixltJB2guGxGDp6+J5e1OTRB/8fQykD4rAJ/XlfudRv6Q5Y/pO2Yr2iJK8VRFgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vimux.org; spf=none smtp.mailfrom=vimux.org; arc=none smtp.client-ip=18.132.163.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vimux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=vimux.org
-X-QQ-mid: esmtpgz13t1772621579t2dcbf07d
-X-QQ-Originating-IP: 1bKHHpPITr/E07eNJX+HyNCDOkzeK3cYeCwu8yiSK4s=
-Received: from localhost.localdomain ( [219.147.0.82])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 04 Mar 2026 18:52:55 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 73543249924356061
-EX-QQ-RecipientCnt: 8
-From: Jialu Xu <xujialu@vimux.org>
-To: xujialu@vimux.org
-Cc: brgl@kernel.org,
-	kees@kernel.org,
-	krzk@kernel.org,
-	linusw@kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH 3/3] gpio: remove of_get_named_gpio() and <linux/of_gpio.h>
-Date: Wed,  4 Mar 2026 18:52:15 +0800
-Message-ID: <DBC78F9A5471852F+20260304105215.536399-4-xujialu@vimux.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260304105215.536399-1-xujialu@vimux.org>
-References: <7187C401290C256B+20260304084808.440955-1-xujialu@vimux.org>
- <20260304105215.536399-1-xujialu@vimux.org>
+	s=arc-20240116; t=1772622333; c=relaxed/simple;
+	bh=/Pp8xd0MR53jkbmdo8SmhG/HDAzp5ECtWSf22t4Ir9Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h7dtzVm8lLlraooazlgiokiAsy8V4A0NDXiltUlhresfTKXiWFepacYkVXBUKGjTHkMzdSNIcYeu03j+btw5z6Fr+eJ6eIDhG0lhbjkAsC8CbME3nN+gOYuxazXehkWDKwe3COo6KpkovE3cpLDq2K+tqrS0TlGCuWGoGz90zrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iZTR737A; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772622331; x=1804158331;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/Pp8xd0MR53jkbmdo8SmhG/HDAzp5ECtWSf22t4Ir9Q=;
+  b=iZTR737AbBow32u27dy4kK+89mXzFd1UukxzyPnK9mG2NKUKW0QReCZx
+   pZ4w8fS32Tc0NNB4JEhEKUT9brjAY5sAU6ayxGscDj6oJ3xD0jfMhYDTq
+   uFNTFQgXTEx1MQMSXyZvd2KvbbnTdgFPXsZzmIJZvUSppxH5vIz0/Notp
+   PkymIdIO2BuFCWU7xPX7wTk8IzatJKgtgZRSRVIMx9c2qeVIfnOpSt7z5
+   gdkBE5gmim3PfRGFNPuFDEhE2DJ8oCrXd9kln2JS7eOWFZ59T0Td0AJde
+   k2vxB3VKAoiz1gGgRU6boTHd6iMcTzPSgphEyFM9rvtPpooo58rABhr3B
+   w==;
+X-CSE-ConnectionGUID: IePeBvWLSsSXFK1VNhNzdg==
+X-CSE-MsgGUID: otAfXvRZSJmkpTF9l7Ko2Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11718"; a="76281171"
+X-IronPort-AV: E=Sophos;i="6.21,323,1763452800"; 
+   d="scan'208";a="76281171"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2026 03:05:30 -0800
+X-CSE-ConnectionGUID: ChR8CHo2Rjma9c6r6eCz2w==
+X-CSE-MsgGUID: kQr/68s/S6W37euO0DGe1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,323,1763452800"; 
+   d="scan'208";a="216624885"
+Received: from igk-lkp-server01.igk.intel.com (HELO 9958d990ccf2) ([10.211.93.152])
+  by fmviesa008.fm.intel.com with ESMTP; 04 Mar 2026 03:05:27 -0800
+Received: from kbuild by 9958d990ccf2 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vxk2f-000000001fp-3THD;
+	Wed, 04 Mar 2026 11:05:25 +0000
+Date: Wed, 4 Mar 2026 12:05:00 +0100
+From: kernel test robot <lkp@intel.com>
+To: Nuno =?iso-8859-1?Q?S=E1?= via B4 Relay <devnull+nuno.sa.analog.com@kernel.org>,
+	linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Guenter Roeck <linux@roeck-us.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Subject: Re: [PATCH v6 2/3] hwmon: ltc4283: Add support for the LTC4283 Swap
+ Controller
+Message-ID: <202603041109.HFnPWnj8-lkp@intel.com>
+References: <20260303-ltc4283-support-v6-2-efe11502fad2@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:vimux.org:qybglogicsvrsz:qybglogicsvrsz3b-0
-X-QQ-XMAILINFO: N5OohOZOOOruGsFhU/Ute3kVn3GNPmzuY4pkD53RhJBcjHjCLai8ByXt
-	8KjpzEOlVmoROrNrn16p7yGCtPskgNjXJLP026f/ZVnQAi/JBTIijW2hHjbZupR2UlLa0K7
-	qAuRxGoULubNcMMD24FYipGjjyFH21lh+dxgzAPg1Sg23vSCXT5JMGqxCcaalslDU4a8ape
-	IEqOzhtg+Bg8l1rrjHgyHqcEoBIZuFeDQPuNyb15y3RKy/srnhbSv2f20ODG2YjjXWWNKA9
-	TXtCi1it5imoTX4TFC4vBUvAH31EEB87nHmZC1Q8cmLE5rMweF9wG1nenM9aMXrEHE5oQJc
-	Ll25Z49H07dL79c8zrYsRqzAE8OnOVXOpSYWvsMX0jz9FUMloM6f/d3zFNo1Kvdz6vm8SuL
-	HTmmObcRkQfkvff/QDOxb3qo5xkaBnikOjQhkWHFfF6mbF8AosAqjXzUUXkUiFatJz2nEt8
-	ZhZvfy6IXcZK2MDa3IT+z21jm8Tu0QMayBCgA/JaOfQzrfgtLtvwpEfI0i+VMbpsyxih/xX
-	KlgIShMWte8LsM8wqbWqPBwzkiWOo1HzmT5c2Y81aM85K774LsyXHRK6rWo+opGFBS5EYhP
-	Uq5CWY81kCVEEhp7PFmG7cAeM+ULfYuRjZ486chLJsr/aZn4ipShSCDoHyO1rDq5O7BChHZ
-	nRdiWgvsW8mUVmkWimi0A5n1OjoHnPP0phW4UtYURnmjaxK36xN4p59wt9CiHAd9Y6XyyRn
-	2AIjllAkhZEQmOzMElwE/TqLOn0DA+DjB29DqpxUanClKqyvozvowt18e6oR8lYfrdoeuFI
-	BjS6ORk+Ab/XRwaYDltRKO/Tk1wmE7czn5W5g7xyvsCMjp1TlJaQwsJle0OIoJcjaVUKDUZ
-	LAtU+/hbetx8ciZQkxu8b4V/1thWTuYzDewSSazF1dnlHNiY/C1mvbBbcoAJwxZy771bmEy
-	BZglCLnn30pnUWy8wFq1usFl4I63pr/Gwq8jp0bieHuHPVD2bW4VsRDuWLW2M3eFOBDkvuK
-	ZxgbZU4ueHEwvVJMIP6yx/tbabrTSX5BXU+8xEkIZHMRCUWJJoOXaQ7a4kN14=
-X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
-X-QQ-RECHKSPAM: 0
-X-Rspamd-Queue-Id: 39FC11FE96D
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260303-ltc4283-support-v6-2-efe11502fad2@analog.com>
+X-Rspamd-Queue-Id: B59AD1FEADA
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.04 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32470-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	DMARC_NA(0.00)[vimux.org: no valid DMARC record];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FROM_NEQ_ENVFROM(0.00)[xujialu@vimux.org,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32472-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-0.991];
-	TO_DN_NONE(0.00)[];
-	R_DKIM_NA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,mvista.com:email,vimux.org:mid,vimux.org:email]
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,nuno.sa.analog.com,dt];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,01.org:url]
 X-Rspamd-Action: no action
 
-All in-tree consumers have been converted to the descriptor-based API.
-Remove the deprecated of_get_named_gpio() helper and delete the
-<linux/of_gpio.h> header.
+Hi Nuno,
 
-Signed-off-by: Jialu Xu <xujialu@vimux.org>
----
- drivers/gpio/TODO         | 28 ----------------------------
- drivers/gpio/gpiolib-of.c | 27 ---------------------------
- include/linux/of_gpio.h   | 38 --------------------------------------
- 3 files changed, 93 deletions(-)
- delete mode 100644 include/linux/of_gpio.h
+kernel test robot noticed the following build warnings:
 
-diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
-index 5acaeab029ec6..7ce80fde1f17e 100644
---- a/drivers/gpio/TODO
-+++ b/drivers/gpio/TODO
-@@ -58,34 +58,6 @@ Work items:
- 
- -------------------------------------------------------------------------------
- 
--Get rid of <linux/of_gpio.h>
--
--This header and helpers appeared at one point when there was no proper
--driver infrastructure for doing simpler MMIO GPIO devices and there was
--no core support for parsing device tree GPIOs from the core library with
--the [devm_]gpiod_get() calls we have today that will implicitly go into
--the device tree back-end. It is legacy and should not be used in new code.
--
--Work items:
--
--- Change all consumer drivers that #include <linux/of_gpio.h> to
--  #include <linux/gpio/consumer.h> and stop doing custom parsing of the
--  GPIO lines from the device tree. This can be tricky and often involves
--  changing board files, etc.
--
--- Pull semantics for legacy device tree (OF) GPIO lookups into
--  gpiolib-of.c: in some cases subsystems are doing custom flags and
--  lookups for polarity inversion, open drain and what not. As we now
--  handle this with generic OF bindings, pull all legacy handling into
--  gpiolib so the library API becomes narrow and deep and handle all
--  legacy bindings internally. (See e.g. commits 6953c57ab172,
--  6a537d48461d etc)
--
--- Delete <linux/of_gpio.h> when all the above is complete and everything
--  uses <linux/gpio/consumer.h> or <linux/gpio/driver.h> instead.
--
---------------------------------------------------------------------------------
--
- Collect drivers
- 
- Collect GPIO drivers from arch/* and other places that should be placed
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 3bdd9af674474..c512d735e85ff 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -14,7 +14,6 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
--#include <linux/of_gpio.h>
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/slab.h>
- #include <linux/string.h>
-@@ -446,32 +445,6 @@ static struct gpio_desc *of_get_named_gpiod_flags(const struct device_node *np,
- 	return desc;
- }
- 
--/**
-- * of_get_named_gpio() - Get a GPIO number to use with GPIO API
-- * @np:		device node to get GPIO from
-- * @propname:	Name of property containing gpio specifier(s)
-- * @index:	index of the GPIO
-- *
-- * **DEPRECATED** This function is deprecated and must not be used in new code.
-- *
-- * Returns:
-- * GPIO number to use with Linux generic GPIO API, or one of the errno
-- * value on the error condition.
-- */
--int of_get_named_gpio(const struct device_node *np, const char *propname,
--		      int index)
--{
--	struct gpio_desc *desc;
--
--	desc = of_get_named_gpiod_flags(np, propname, index, NULL);
--
--	if (IS_ERR(desc))
--		return PTR_ERR(desc);
--	else
--		return desc_to_gpio(desc);
--}
--EXPORT_SYMBOL_GPL(of_get_named_gpio);
--
- /* Converts gpio_lookup_flags into bitmask of GPIO_* values */
- static unsigned long of_convert_gpio_flags(enum of_gpio_flags flags)
- {
-diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-deleted file mode 100644
-index d0f66a5e1b2a7..0000000000000
---- a/include/linux/of_gpio.h
-+++ /dev/null
-@@ -1,38 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0+ */
--/*
-- * OF helpers for the GPIO API
-- *
-- * Copyright (c) 2007-2008  MontaVista Software, Inc.
-- *
-- * Author: Anton Vorontsov <avorontsov@ru.mvista.com>
-- */
--
--#ifndef __LINUX_OF_GPIO_H
--#define __LINUX_OF_GPIO_H
--
--#include <linux/compiler.h>
--#include <linux/gpio/driver.h>
--#include <linux/gpio.h>		/* FIXME: Shouldn't be here */
--#include <linux/of.h>
--
--struct device_node;
--
--#ifdef CONFIG_OF_GPIO
--
--extern int of_get_named_gpio(const struct device_node *np,
--			     const char *list_name, int index);
--
--#else /* CONFIG_OF_GPIO */
--
--#include <linux/errno.h>
--
--/* Drivers may not strictly depend on the GPIO support, so let them link. */
--static inline int of_get_named_gpio(const struct device_node *np,
--                                   const char *propname, int index)
--{
--	return -ENOSYS;
--}
--
--#endif /* CONFIG_OF_GPIO */
--
--#endif /* __LINUX_OF_GPIO_H */
+[auto build test WARNING on 78558965440b27814592ec82d8f3668395953b1b]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Nuno-S-via-B4-Relay/dt-bindings-hwmon-Document-the-LTC4283-Swap-Controller/20260304-010255
+base:   78558965440b27814592ec82d8f3668395953b1b
+patch link:    https://lore.kernel.org/r/20260303-ltc4283-support-v6-2-efe11502fad2%40analog.com
+patch subject: [PATCH v6 2/3] hwmon: ltc4283: Add support for the LTC4283 Swap Controller
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+docutils: docutils (Docutils 0.21.2, Python 3.13.5, on linux)
+reproduce: (https://download.01.org/0day-ci/archive/20260304/202603041109.HFnPWnj8-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202603041109.HFnPWnj8-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   =======================         ========================================== [docutils]
+>> Documentation/hwmon/ltc4283.rst:258: WARNING: Blank line required after table. [docutils]
+   Documentation/mm/memfd_preservation:7: ./mm/memfd_luo.c:13: ERROR: Unexpected section title.
+
+
+vim +258 Documentation/hwmon/ltc4283.rst
+
+   256	
+   257	=======================		==========================================
+ > 258	power1_failed_fault_log		Set to 1 by a power1 fault occurring.
+
 -- 
-2.47.3
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
