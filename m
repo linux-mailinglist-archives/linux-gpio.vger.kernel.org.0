@@ -1,153 +1,189 @@
-Return-Path: <linux-gpio+bounces-32561-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32562-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id vvGMNi51qWnl7wAAu9opvQ
-	(envelope-from <linux-gpio+bounces-32561-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 13:21:02 +0100
+	id sHMbILt2qWl77wAAu9opvQ
+	(envelope-from <linux-gpio+bounces-32562-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 13:27:39 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id DABBF21180D
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 13:21:01 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 433D4211A19
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 13:27:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E59A2301E73A
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Mar 2026 12:15:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D51FB3075A83
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Mar 2026 12:23:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1416B39A066;
-	Thu,  5 Mar 2026 12:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DABEB39E166;
+	Thu,  5 Mar 2026 12:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PaER0a5f"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB87386C20
-	for <linux-gpio@vger.kernel.org>; Thu,  5 Mar 2026 12:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE453988F6;
+	Thu,  5 Mar 2026 12:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772712938; cv=none; b=tbjcelKXzAHfpNBzwLKHTvcI2jbZDOSYZU7+l3td7VVaz0Uqoe2JWuUIwV4+8jcRvK2KA41ctNyzKe92tU+wJ8l5qktHYSOdzotFNsIC1w6PA3FlWEaPrMDHtUrH+KnnhyIDtFwa79Aw5sx0KmfZVsqnBd664kMPOnUogZn8Qb4=
+	t=1772713415; cv=none; b=lftklv5ynVZ+nUOYVhVXHQKHBOwEKoe3ScaemADU4hmyt5xg7yPFQzRLgg48lqnX6ZrG3VlOp46GKp/y6QJEYpoK9wXxAInmNx9GayQ0DM4fMxxNwR1TW1Cb53/lk5NSkwL6ueum7hs58sGjuKxnP4AZ6wijouQ4kyAzAs22mPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772712938; c=relaxed/simple;
-	bh=1N9rpptCfEGuKF24I3MO+ctQKVCjB9J9sj4YNN7+SI8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hOKoCycoWmwu9YZq2ign1pcsRz/mCExFU+WDKI15aL/2N6NTwrmfMYktHuI6KoTGt9+RX6nieTGmzrkSKZmu/vwmas70yT95WKu0AOm9ro0Dyi5sJuNiYPHJdhgAwlW3S/Ajc2uWq6O0IRGxSpFd2nalAhwPjRj/SEzKzjDiFVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3599019ae92so2353764a91.0
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Mar 2026 04:15:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772712934; x=1773317734;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yS764krKV6WfB8kOxjvP29bXooB1nm1bNBDNiujlO4g=;
-        b=a8TbdLK10G4WVyJ3x9ShhykX+B6mF2C8BUqrprqLAgXTih2VqnVcBoe+XOdpWLr1Na
-         6d6K2FU5L5txalIdRSVjr27H9HljQlXtMiNubX3xIjl2R0GXXFRs4Uid+sZH8XTNAd9K
-         K/nVYWuf7+2Mlxc/C8QJ4xDNK2kiLoj+D+wNzKzJh2ZMECw0OvMxlLecVTokJNI89vNn
-         reB7mryYbY+NhWglKMht26RDuTVQ2dFd2HZE9cSDvjRKWeHuEF1ejC/PPHNECvvIdt6a
-         wWK2DEFxX4l7IFOdi42MwyENIyC0UwrzdqBzMETOnPkDdxL6zesz+dHMwV0cE+C2gwXZ
-         PnSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVO+cgsDkDDUx4XEP3ycpQ7f8j7vBgOreAp1jYLsEzjYD+/CxWdtdTKSpB+BXhZXKG4gXK3PEb2Rcdb@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjgRwJ0aReLDtcAIeaNt67j5rL/ByglGEcptOnUZ0evyfmybsa
-	xuJDfziNnDsxT/nqeLEMtR0+9/q/+68D7MngSlI7vO5MEXIl+9NmJ1Is
-X-Gm-Gg: ATEYQzzducpdPY1kSsMfWrxzlT0uCp2mGVf2hs0H+nTK+wzl26O1c6ABLxsESqLcoJC
-	BCyV/2evCgCcf9hF8ixaBEYt/sidKmCtdQNq/8ELo7ZRAP1ZqugwuZn3HOi4VgVkQf3EpGEltNC
-	V7h7MFdjRXeCHrW/PGTqrxzRwYkRPLiLosQ1wfsrD9UZw2V/PZkaFffbBW88PiuaUMSnGgPdGpY
-	TQSv02eGX1egyJINfX4QDMmo5PYbH4nCKiAqlQ5f0RjB474FJ5wywBShM6Mhpu6teC6z9p9o3o6
-	qC6MctAIc4YZPQv3aaE1IIjPhw9uLQPErhNz8KL/+rP+yF+PET4NNF2vVMiUBFG/XuxF6pu3Zq9
-	1me1LXkgFp1TOD/NfZeoTTO8zENoZkit5w0p/UuR7jMsr1RlC5jXtG6aRyo8rpcuMBbk/nM9h3g
-	Vi3Z/BkoQCc8o6DecDVUxdPOe2+zDMlrCtVhSSV+7cYR3Ttv0Htqmlutb0OeEx3Zm7ACJKly5f/
-	j/QFrTl/2OlkSu1A/MROh9ioGJYM3dcMP5W8e6ucUNUHwW7gIVBUE1X68EWEQ==
-X-Received: by 2002:a17:90a:d44b:b0:34e:630c:616c with SMTP id 98e67ed59e1d1-359a6a92750mr4210979a91.31.1772712934483;
-        Thu, 05 Mar 2026 04:15:34 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-359b2c1daa6sm2391359a91.0.2026.03.05.04.15.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2026 04:15:33 -0800 (PST)
-Date: Thu, 5 Mar 2026 21:15:32 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: Joe Perches <joe@perches.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	linux-phy@lists.infradead.org, Vinod Koul <vkoul@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-can@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, linux-sunxi@lists.linux.dev,
-	linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
-	netdev@vger.kernel.org, spacemit@lists.linux.dev,
-	UNGLinuxDriver@microchip.com
-Subject: Re: [PATCH phy-next 22/22] MAINTAINERS: add regex for linux-phy
-Message-ID: <20260305121532.GA1649635@rocinante>
-References: <20260304175735.2660419-1-vladimir.oltean@nxp.com>
- <20260304175735.2660419-23-vladimir.oltean@nxp.com>
- <a8fee1cd-1e69-4a9e-8533-c0988c480fb9@oss.qualcomm.com>
- <20260305085148.7cwo3yflp7vcfldf@skbuf>
- <f3a5aa3df78553ffc0fd0024f5fd36a4e2158c88.camel@perches.com>
- <20260305114352.2f7btqixg4tu5bzl@skbuf>
+	s=arc-20240116; t=1772713415; c=relaxed/simple;
+	bh=GU7IYmfFkVf9LKnTBKrEhEIX0CYJNEH8lftpyqFdpwc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aLHy7zO8yLmlCHyfebKU7iVTOlMU0ZzulqeHhswEwMDV3FBsgMNbrta1FoR6b3baUx/1GhQOiiv83rkqyixdyQJ64+DK9iohELbxQo5KbarrOQ1sxHC7ObBescgHydO0uSrEceDLMjlRtLGDt5sKwKuTF7Ih0EJ48HFr3CIkIxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PaER0a5f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2BF69C116C6;
+	Thu,  5 Mar 2026 12:23:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772713415;
+	bh=GU7IYmfFkVf9LKnTBKrEhEIX0CYJNEH8lftpyqFdpwc=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=PaER0a5fuxkTxKv14afwqvMWGPVG3SYfani77x12cJIPlU2vKiYs5zFl+QL7tEENM
+	 oQXuhQlqjn3VBfVPskMjRcePQ8yNSYvqSgXJukfA5QWixXU3jAOdK+OlWeEKF+dn7B
+	 R2KiV0mpyDZEpABOvcV42i0fQhq5TlrF9qpVeJJepoe8eza9r751SX6aYdJrsmXjVb
+	 oj0Ny993+4G2YGfFr9YzS7dInX72KHpQOkTrCghcWR2knwfWZ3Ougs3fbgJqCdhq/1
+	 xkprORX4BlDh9JIxo2z0mjXSkjKHe0hcfexqEhL3g38/SfxWDctYV1YAnLzqRqLqnz
+	 lLdQvM7XWN0tQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13727F3092C;
+	Thu,  5 Mar 2026 12:23:35 +0000 (UTC)
+From: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
+Subject: [PATCH 0/4] iio: adc: ad4691: add driver for AD4691 multichannel
+ SAR ADC family
+Date: Thu, 05 Mar 2026 14:23:26 +0200
+Message-Id: <20260305-ad4692-multichannel-sar-adc-driver-v1-0-336229a8dcc7@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260305114352.2f7btqixg4tu5bzl@skbuf>
-X-Rspamd-Queue-Id: DABBF21180D
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAL51qWkC/x2NQQ6CQAxFr0K6pslQGxSuQlyMtGoTGEhHiQnh7
+ o4u38/LfztkddMMfbWD62bZllSgqSsYnzE9FE0KAwVqwykQRuG2I5zf08t+RtIJc/Syjyhumzq
+ eL8rCLMQ3gnK0ut7t848M1+P4Atc0p7h0AAAA
+X-Change-ID: 20260302-ad4692-multichannel-sar-adc-driver-78e4d44d24b2
+To: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, Radu Sabau <radu.sabau@analog.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1772713413; l=2732;
+ i=radu.sabau@analog.com; s=20260220; h=from:subject:message-id;
+ bh=GU7IYmfFkVf9LKnTBKrEhEIX0CYJNEH8lftpyqFdpwc=;
+ b=cQc9Kvw+BUYKQkx0T+kNtJWVcKc/VF/EXt4HxpoWTyDR1r2FotoX8J8Hd6hyYwOS8F5iP0tdN
+ bJ/0spzUY+5CRaDPgwA1D5pWF6s2wkkVnZX6yzo3q5fb7lZSvuDr7Wz
+X-Developer-Key: i=radu.sabau@analog.com; a=ed25519;
+ pk=lDPQHgn9jTdt0vo58Na9lLxLaE2mb330if71Cn+EvFU=
+X-Endpoint-Received: by B4 Relay for radu.sabau@analog.com/20260220 with
+ auth_id=642
+X-Original-From: Radu Sabau <radu.sabau@analog.com>
+Reply-To: radu.sabau@analog.com
+X-Rspamd-Queue-Id: 433D4211A19
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.86 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[linux.com : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32561-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-32562-lists,linux-gpio=lfdr.de,radu.sabau.analog.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com];
 	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	FROM_HAS_DN(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kw@linux.com,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-0.997];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	R_DKIM_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	HAS_REPLYTO(0.00)[radu.sabau@analog.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,analog.com:replyto,analog.com:email,analog.com:url,analog.com:mid]
 X-Rspamd-Action: no action
 
-Hello,
+This series adds support for the Analog Devices AD4691 family of
+high-speed, low-power multichannel successive approximation register
+(SAR) ADCs with an SPI-compatible serial interface.
 
-> K:	\b(?:__)?(?:devm_)?(?:of_)?phy_(?:create|destroy|provider_(?:un)?register)\b
-> K:	\bphy_(?:create|remove)_lookup\b
-> K:	\bphy_(?:get|set)?_drvdata\b
-> K:	\b(?:devm_)?(?:of_)?phy_(?:optional_)?(?:get|put)(?:_by_index)?\b
-> K:	\bphy_pm_runtime_(?:get|put)(?:_sync)?\b
-> K:	\bphy_(?:init|exit|power_(?:on|off))\b
-> K:	\bphy_|(?:get|set)_(?:mode(?:_ext)?|media|speed|bus_width|max_link_rate)\b
-> K:	\bphy_(?:reset|configure|validate|calibrate)\b
-> K:	\bphy_notify_(?:connect|disconnect|state)\b
-> K:	(?:struct\s+)?phy(?:_ops|_attrs|_lookup|_provider)?\b
-> K:	(?:linux/phy/phy\.h|phy-props\.h|phy-provider\.h)
+The family includes:
+  - AD4691: 16-channel, 500 kSPS
+  - AD4692: 16-channel, 1 MSPS
+  - AD4693: 8-channel, 500 kSPS
+  - AD4694: 8-channel, 1 MSPS
 
-What about
+The devices support five operating modes:
+  - CNV Clock Mode:    external PWM drives CNV, samples at PWM rate
+  - CNV Burst Mode:    PWM triggers bursts, internal oscillator drives
+                       conversions within each burst
+  - Autonomous Mode:   internal oscillator drives conversions,
+                       software starts/stops via register write
+  - SPI Burst Mode:    similar to Autonomous Mode but optimised for
+                       SPI burst reads
+  - Manual Mode:       CNV tied to SPI CS; each SPI transfer triggers
+                       a conversion and returns the previous result
+                       (pipelined);
 
-  F:	drivers/*/*phy*
+The series is structured as follows:
 
-or something along these lines.
+  1/4 - DT bindings (YAML schema + dt-bindings header) and
+        MAINTAINERS entry
+  2/4 - Initial driver: register map via custom regmap callbacks,
+        IIO read_raw/write_raw, all five operating modes, direct
+        single-channel reads
+  3/4 - Triggered buffer support: IRQ-driven (DATA_READY / BUSY on
+        GP0) for non-Manual modes; hrtimer-based trigger for Manual
+        Mode to handle the pipelined SPI protocol
+  4/4 - SPI Engine offload support: DMA-backed high-throughput
+        capture path using the SPI offload subsystem
 
-	Krzysztof
+Datasheets:
+  https://www.analog.com/en/products/ad4691.html
+  https://www.analog.com/en/products/ad4692.html
+  https://www.analog.com/en/products/ad4693.html
+  https://www.analog.com/en/products/ad4694.html
+
+Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+---
+Radu Sabau (4):
+      dt-bindings: iio: adc: add bindings for AD4691 family
+      iio: adc: ad4691: add initial driver for AD4691 family
+      iio: adc: ad4691: add triggered buffer support
+      iio: adc: ad4691: add SPI offload support
+
+ .../devicetree/bindings/iio/adc/adi,ad4691.yaml    |  278 +++
+ MAINTAINERS                                        |    9 +
+ drivers/iio/adc/Kconfig                            |   14 +
+ drivers/iio/adc/Makefile                           |    1 +
+ drivers/iio/adc/ad4691.c                           | 2031 ++++++++++++++++++++
+ include/dt-bindings/iio/adc/adi,ad4691.h           |   13 +
+ 6 files changed, 2346 insertions(+)
+---
+base-commit: 11439c4635edd669ae435eec308f4ab8a0804808
+change-id: 20260302-ad4692-multichannel-sar-adc-driver-78e4d44d24b2
+
+Best regards,
+-- 
+Radu Sabau <radu.sabau@analog.com>
+
+
 
