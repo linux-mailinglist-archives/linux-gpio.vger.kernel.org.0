@@ -1,147 +1,138 @@
-Return-Path: <linux-gpio+bounces-32601-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32602-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CCrtJrjTqWl3FwEAu9opvQ
-	(envelope-from <linux-gpio+bounces-32601-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 20:04:24 +0100
+	id sN6nHkrUqWmaFwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-32602-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 20:06:50 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7B54217351
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 20:04:23 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2A9A2173AB
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 20:06:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id BA6B130131EB
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Mar 2026 19:04:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CA63C30E786B
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Mar 2026 19:06:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 935372F747A;
-	Thu,  5 Mar 2026 19:04:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BF6C2FE591;
+	Thu,  5 Mar 2026 19:06:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="7xp6uLN/"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="EcVy/bhL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from polaris.svanheule.net (polaris.svanheule.net [84.16.241.116])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D08C2ED843
-	for <linux-gpio@vger.kernel.org>; Thu,  5 Mar 2026 19:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.241.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA463033DA
+	for <linux-gpio@vger.kernel.org>; Thu,  5 Mar 2026 19:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772737459; cv=none; b=qUgSj1yIpCNVgPtlnmSGGelhVG5xNUr8hSCCBonlHwXVLDzvKODUKBKMCIYeSb3xJFsXNIxyYOxSbglPC4/Y/aamNVQU9FKjymN4IOUFuTmfZfwg5suBGDl9s5uL/5n6aWBdzoVSpfFlX2PJ9f1DlC8OpX13h3bl+UxUWo2rh/Q=
+	t=1772737561; cv=none; b=QNh16gzqKBBcdOnXGHNc3GZuJbFrdGQjrCjlGMsu9lcIUFLpDRqaS+l63G8PGkZsI/n0dGoVRC8S+AtddneivFYkjLNjFvpxLWQ4X+nC2pCGbJ8fa9qLUm9i/FrPYJRF+3ihNJ5FUK8fWpWb2kKiOURaO4lJB1HUGOOHKjp5/hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772737459; c=relaxed/simple;
-	bh=0cMkxm7dpZ1xmN+oxuhZ+J5McF8TzcD3plfxWOZH13E=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BdGbiq+YdpqDqmycGiqFIR/jW+ymvZoJExlbw3xryGTWx8QfvdQOyGX8MAJWPDhD5ROi1pEKDjCnXIHMG9LdOjjn8Lwac0obCLj+9Ng6AjIfX7Sp6sviwNdO/oPfnpi4KXXJk2UoGsKx0puHAWoqZvTDCI/sLGH4oAjLQhYGryA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=7xp6uLN/; arc=none smtp.client-ip=84.16.241.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svanheule.net
-Received: from [IPv6:2a02:1812:162c:8f00:19d9:5e35:1cd7:5d5d] (2a02-1812-162c-8f00-19d9-5e35-1cd7-5d5d.ip6.access.telenet.be [IPv6:2a02:1812:162c:8f00:19d9:5e35:1cd7:5d5d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	(Authenticated sender: sander@svanheule.net)
-	by polaris.svanheule.net (Postfix) with ESMTPSA id 2DCB96F2F33;
-	Thu,  5 Mar 2026 20:04:15 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
-	s=mail1707; t=1772737455;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t3JlO9jkrcoFYhcSoRZPlkrxeap+txhaWKtFXzrqp/A=;
-	b=7xp6uLN/2jgIUVF5DrHjwCUicbxEi0UEnH2lixV/dH25/QbVJvZXlfZbsp+3N+53JExDmR
-	A20VQypE3lHos49PcaVXLjGIIQDc+IvX0z5VQifjp86+pX2IPZfziBeaRh4Ec6n5CJuzDr
-	HKvy9VVdLHvjG7X4ZTEEaOCDfEuhPXSyQmLfSR/TFpVLcvcCcQZHiXUcFpOgdJrfIwtUUw
-	UcgGHC4FEUxgiZwZ3fXnaV5b68Mn0te3A49nsXV8ASBINHWt2PiXqdMSuS8aPL5JahbAff
-	vT22eHH2UZQcIHcrKvamcGAY3HaDJFlFVNzpC5gPmhsrfE4gxyi65jGqS7l9jA==
-Message-ID: <f92a2a8558ebff7a145ece97c2bc44f1f7aafd26.camel@svanheule.net>
-Subject: Re: [PATCH 2/2] gpio: realtek-otto: add rtl9607 support
-From: Sander Vanheule <sander@svanheule.net>
-To: Rustam Adilov <adilov@disroot.org>, Linus Walleij <linusw@kernel.org>, 
- Bartosz Golaszewski
-	 <brgl@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bert Vermeulen
-	 <bert@biot.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Thu, 05 Mar 2026 20:04:14 +0100
-In-Reply-To: <20260305161106.15999-3-adilov@disroot.org>
-References: <20260305161106.15999-1-adilov@disroot.org>
-	 <20260305161106.15999-3-adilov@disroot.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	s=arc-20240116; t=1772737561; c=relaxed/simple;
+	bh=PoZhjt3uQ53hew80uagXcdFkYbFd19jlnF8DaZB6F8M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IplWqCtkvSjE9SZi6mUsKc69jcrRFojOeZf6hlx7TzdA+aCPNjNB4SDs7hAG1QAQgFlM+3y9Eo5qi+pja9NhcPusJHoDdaVM4vjer7CdgI/roknJ/ZU7peQaXv4JPieAZwR2zojKJznTHYcIv5AUvSnVXtMKsSABlNz+lYnLbKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=EcVy/bhL; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=PoZh
+	jt3uQ53hew80uagXcdFkYbFd19jlnF8DaZB6F8M=; b=EcVy/bhLK2eBwgExPMJ3
+	1rbX27cmhWjc3rjGsjxF5dRov7fUUDlpNwgi9pngCGqJG5rKUq+J2C7p8l7IBa1n
+	wAix8At/9KEPwT6JYyilYtj2K1NUn9Fe6iLpr+kWvIBDV6i4EuUfuN6Gi8/pycHE
+	4vAwn6qRsLPrTXt0uIMwoQrYoe5V27+qZp4xfOoSuWX7fTIVZ0s80690f6qBtlHQ
+	aykgx+mmEG8fCS2XDtombi/a32mAZGwytbmjpk8rnYFTpCSaNVHVEBXYPEPH+iwl
+	s9fnwEBco4uAbN1zFVh8Nns87WyRd1m0ExV4cifwtmIFoWYBRJWERmLoh5POBXHa
+	bA==
+Received: (qmail 1304730 invoked from network); 5 Mar 2026 20:05:54 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 5 Mar 2026 20:05:54 +0100
+X-UD-Smtp-Session: l3s3148p1@FM0uoEtMkO4ujns5
+Date: Thu, 5 Mar 2026 20:05:53 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-renesas-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Antonio Borneo <antonio.borneo@foss.st.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Boqun Feng <boqun@kernel.org>, Chen-Yu Tsai <wens@kernel.org>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Lechner <dlechner@baylibre.com>, driver-core@lists.linux.dev,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Konrad Dybcio <konradybcio@kernel.org>, Lee Jones <lee@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-sunxi@lists.linux.dev, Mark Brown <broonie@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Samuel Holland <samuel@sholland.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Waiman Long <longman@redhat.com>,
+	Wilken Gottwalt <wilken.gottwalt@posteo.net>,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 00/15] hwspinlock: move device alloc into core and
+ refactor includes
+Message-ID: <aanUEX9jq0Y9iNIe@shikoro>
+References: <20260303192600.7224-17-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: A7B54217351
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260303192600.7224-17-wsa+renesas@sang-engineering.com>
+X-Rspamd-Queue-Id: D2A9A2173AB
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[svanheule.net,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[svanheule.net:s=mail1707];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[sang-engineering.com:s=k1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32601-lists,linux-gpio=lfdr.de];
-	DKIM_TRACE(0.00)[svanheule.net:+];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[sang-engineering.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32602-lists,linux-gpio=lfdr.de,renesas];
+	RCPT_COUNT_TWELVE(0.00)[45];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[sang-engineering.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sander@svanheule.net,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	FROM_NEQ_ENVFROM(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[vger.kernel.org,foss.st.com,kernel.org,arndb.de,linux.alibaba.com,gmail.com,baylibre.com,lists.linux.dev,linuxfoundation.org,redhat.com,lwn.net,lists.infradead.org,st-md-mailman.stormreply.com,analog.com,infradead.org,sholland.org,posteo.net];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,svanheule.net:dkim,svanheule.net:mid,disroot.org:email]
+	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sang-engineering.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-Hi,
 
-On Thu, 2026-03-05 at 21:11 +0500, Rustam Adilov wrote:
-> The RTL9607C SoC has support for 3 GPIO banks with 32 GPIOs each and
-> the port order is reversed just like in RTL930x.
->=20
-> Signed-off-by: Rustam Adilov <adilov@disroot.org>
-> ---
-> =C2=A0drivers/gpio/gpio-realtek-otto.c | 4 ++++
-> =C2=A01 file changed, 4 insertions(+)
->=20
-> diff --git a/drivers/gpio/gpio-realtek-otto.c b/drivers/gpio/gpio-realtek=
--
-> otto.c
-> index 4cf91528f547..5e3152c2e51a 100644
-> --- a/drivers/gpio/gpio-realtek-otto.c
-> +++ b/drivers/gpio/gpio-realtek-otto.c
-> @@ -351,6 +351,10 @@ static const struct of_device_id realtek_gpio_of_mat=
-ch[]
-> =3D {
-> =C2=A0	{
-> =C2=A0		.compatible =3D "realtek,rtl9310-gpio",
-> =C2=A0	},
-> +	{
-> +		.compatible =3D "realtek,rtl9607-gpio",
-> +		.data =3D (void *)GPIO_PORTS_REVERSED,
-> +	},
-> =C2=A0	{}
-> =C2=A0};
-> =C2=A0MODULE_DEVICE_TABLE(of, realtek_gpio_of_match);
+I need to fix __iomem annotations. Sorry, I didn't know I have to update
+to top-of-tree sparse which is now required for v7.0-rc1...
 
-If I'm not mistaken, this SoC has a MIPS InterAptiv CPU like the RTL931x So=
-C
-series. Were you able to validate that the interrupts are functioning as
-expected?
-
-Best,
-Sander
 
