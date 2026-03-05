@@ -1,381 +1,198 @@
-Return-Path: <linux-gpio+bounces-32544-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32545-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wDi1EEBQqWmd4gAAu9opvQ
-	(envelope-from <linux-gpio+bounces-32544-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 10:43:28 +0100
+	id QFLiDVtRqWmd4gAAu9opvQ
+	(envelope-from <linux-gpio+bounces-32545-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 10:48:11 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 986D420EC1C
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 10:43:27 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2D5120EE47
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 10:48:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2847430CC7A3
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Mar 2026 09:36:58 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 33A983016D09
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Mar 2026 09:47:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED56B3793BD;
-	Thu,  5 Mar 2026 09:36:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3E753793BD;
+	Thu,  5 Mar 2026 09:47:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="r8n3aZlu"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="E46wSqLX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011044.outbound.protection.outlook.com [40.107.130.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510EE378813
-	for <linux-gpio@vger.kernel.org>; Thu,  5 Mar 2026 09:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772703397; cv=none; b=VUemOsagOe12ur4NfT99Sl1X7GRlwI6M6eU2hsW4800rqhHc63J3fxBnnAjyu+EBsijPgQtBYK5rqUg9En7iw2s9MvRGMnX5oCpl40NbcC1mChaWDu4JPF8h7IL6s16avgtEFWniGIgWieDhtp3qjDE6FeZPkEXDwi+qhHQNjTw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772703397; c=relaxed/simple;
-	bh=CMgXM6u7309Wn3e+oqvoc7hX9vYREWTZOtF5JH1MCY8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=hzosIzW44mKH9tkPvj6C/BcqwWb95njnMoHEMxuN5wV4RPSR3JKNIlfuiBnOou8Px72AY+LF2o9CM6ADdmInLbyGyNfuRLDFvAkONBjJG6lKvQyQhdXhnKCaYaoOEZhAF0+XArxOeoai7XC/2Ag6MzePNG/31SWhxEIJ5jClB6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=r8n3aZlu; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-439cb5af25bso1294572f8f.1
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Mar 2026 01:36:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1772703385; x=1773308185; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mbidr/A9XxccdAFsJsVKLL2bBtmGRz8XUrt7LUMLgOs=;
-        b=r8n3aZluVhBTCfb7BQuBR7rtMDtwMt/hhUveTeZDZQAO4wJxkqYdVnWInamwTvoasd
-         njRsc4y1mlFqY6e8h+MrxsQmTwUtFPEr4bGcC2jwn78y+TT5X2hBUAy+EkXK3GfkPnMc
-         efI7YRWZmXX4iWMH3mdtVwJdLQgh9b+NgkxQAUiokU1kYqlHFgrFqn8X6Kh54oqNRJvL
-         W9KF9PgfXi06d+0sZ2isvDvqnFTaI47uFjf39desDXwhsR9fNqaB6S1RhpTym+6cBpi7
-         37SVpkS6dpjv/ggxoqRfyQPvFp9lVwc3QY78bUWB4dZgVEV/oWO3UY/ChIwfz5zMSHTu
-         wMIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772703385; x=1773308185;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mbidr/A9XxccdAFsJsVKLL2bBtmGRz8XUrt7LUMLgOs=;
-        b=ehUBHeIg7vK6yCjQ1wy3egXzXx3heHUzewiBu7/XulXfOYDa/nE78NNemSEZkJckOb
-         44olBoyMYexF9avTfvrATXQVyEtlXKZfB/KUUBJQHNCUHFGIT+I0m62d2VcNL78CAJ82
-         qORrvyTwEtPlp91yfBybB+8DaLYUw+6dM++jU/RUnCp80s0bwU0lYeFpLclqOe94+Ep5
-         ylNjj8tDwvYUQuBnMzUXHrw28grfmtQOrUvqdKz4PNV7okP4tT94nDFPQnCOe9vPFl0F
-         To6BQem3Z0kseaKF6LhvopVvnl2+13/eeWZO1BKoZz0L2Ye1FcJNON7LeZS9ZjUbyBu1
-         r8Sw==
-X-Forwarded-Encrypted: i=1; AJvYcCUcb8UVBFz5sVPIbp8fxipMB3No7kI3NT7JP/yBMy61TvYNCOgStwLdlTs6j/enTCSGTW+1nlRO30Ns@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlIai4kl9Vzn04CX8+PEC+k+EMDO752SRGupx+OeqncdI0Y08n
-	fcq+Q3Aq1aVADKScjj3aYe4tT6bLIO/bQiBAmtB3FUIaX1qYmBvgum7EoQ8QaONp+1A=
-X-Gm-Gg: ATEYQzx8X3iwtSkedDtkNHEIuGUkvInhrRu6d9N03VlDZnUgY7UDBJuCIzrjVYD9rPW
-	ppYM6x0tYi0QwP++50TkrcBIzDVM5tDTxyRuKBnRB1oUzB5W79BOu5CFbXHJ691YZuopoTtPzTQ
-	8XmDkl3YP21Zndi2WaFVkcIqd3McQ4ulo8M6ypvPaFlUqAKf9llg+HfBVuLMCb9q6wE2MOiHAuU
-	XY1cTf0CuXWQZ4F2ywcGMMwwbpuK+eriDYx1rNRi1m2v6J/ml1sFCMUDZEBKOlF3gwmnbcWF6mm
-	C9VfEH9pvhjQq9mKXNKzNPv9SSH2bZNfnRVK2g8FVnD0Gu8JCAfv4sq5egWD8GuVdsdX7XFY3gG
-	6KOt37iThY8cXa1CPYqxPcNpmkYS9f3ecSWX9CUGBj6twPAJXzY8iYWCnDQPHsStis+M0gDNYhv
-	qmS17hNAPzeubR/2M=
-X-Received: by 2002:a05:6000:144f:b0:439:b564:7a6c with SMTP id ffacd0b85a97d-439c7f6a2c9mr9158913f8f.4.1772703384539;
-        Thu, 05 Mar 2026 01:36:24 -0800 (PST)
-Received: from localhost ([195.52.25.213])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439c2f7eca1sm14966458f8f.11.2026.03.05.01.36.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2026 01:36:22 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4BD377547;
+	Thu,  5 Mar 2026 09:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772704069; cv=fail; b=CzJMEbgdpSMAQy5h2K9WnAj+QPapcvx0wqJ0vrzyABWFJyh4o4xxADsKBPfD17Pm3yiQj0kqeZGD1E8CuUWCFREcFB/l43cu2T4o4PqFntR6GmSmPsDSYGC8CH16qrRI1+bsOteW5qClg4RP5Pv5ZiN5vQjV/tKm0g5PunIQTVQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772704069; c=relaxed/simple;
+	bh=SElxhSndhNrZIo746nRK7HWTE0URnaXabyCkj670QDU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ksy6MEdojIQHrkANJEDUKzGLaE736m4rtNZr24PAEq6D5Gb93zddvKPxXcSkljDfS8hflrD/Y7Bk2+npNGik8GcX5nnwPCVup370Xi4pICh9TdDGyPmRIsjfWMRo1h07U0QS+dnMnZK3vW0mhW8DZSjuC13f0OVGqTZT0p3ZQ+s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=E46wSqLX; arc=fail smtp.client-ip=40.107.130.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mxCBVzbaYfAnf0RKMlIZgd9H+G1x44jRn2JAHFw4OYUPFWnEB3o15sfc2biIuNEx/HAKV/vUDkCwrHW5k+B9R1nySMCMqWb2j7n9SbpMf91JpdKdFMqJZcaRDNat9o97Id3wec68T7v07Mfb0IcPPHx3vSVa/iqkSXs1yOha0vy4GkLi5nN/zVFYIXVikgWqh7VxSZEvBtigxAsbctjjLQ9hUbfxUXonZ4xLTmmWYDhAsJNgVuP67JQSVlkYeOV7Batdt4stfYOd/IUTRZM3GGczx8KcG9AlotX4K6MC2c3lihOBFbonbT2Z94N+x7LpeBEG3x78xIR0iS+48ZbpWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SElxhSndhNrZIo746nRK7HWTE0URnaXabyCkj670QDU=;
+ b=tN1gjOos2sP9Fp8KOIZeKdldyp/vYP1/e2ocCeK1wnbw7TcpzUSTSfGRFNSNcd1Cy5mpAtGncQK4buOlAtoSQoIzk2gvs8lMb3HA7r6KZGweXLvhDLCEPwwEB6DivFtvD14ziGWLB7RD9IdL9pghwn2IMccx6n91vDVcDfp/96HgTwQvn4b7dLNFMqjAFR9iqZ77+6UJdZxIhy+BWsjOxQ6wn9cLIfAWNBKT7JH+3sm9jueAC6ynxfmtCtzYlKPbrWuWeKoRalfGkJ7yASn3oWi/JQrODJzngPKXrA8WKVtxkUJfRlPgLbeCXsA7h/gSXNFmPMUnajkcIaCT0wOWzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SElxhSndhNrZIo746nRK7HWTE0URnaXabyCkj670QDU=;
+ b=E46wSqLXxPLRtkSubh+26PJ5V3zzlBwDBMkuqUVdcvwToEjcPtHFWU7XT2tY9UzYudqU52omZNsi7vkYR4ma2MN5nSLr/JeAlrbReYSCqKfd6Nw/WCF2AnSBmH7sreNSSYX5GTvpA3GAZ42m3vb8z9hu4qeK4eDwLZD3yy0Q1sh3aA2+55/HNUPUDllFUaNhG9NtZdm0dXvd5d9tluhJUt0WzMh/+D/0G+R5KKrQyVTC7WxQCtpSrVbVTtQoKIBRc3lAt57Vn6Al4Tts5syV+QRE5ANB7r6mV8ourv3Wf838MQRXRY1lzT02lbEgfy7fmjc+Nrq4Fx6lrXvTHebieg==
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by FRWPR04MB11150.eurprd04.prod.outlook.com (2603:10a6:d10:173::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.22; Thu, 5 Mar
+ 2026 09:47:42 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::4972:7eaa:b9f6:7b5e]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::4972:7eaa:b9f6:7b5e%7]) with mapi id 15.20.9678.017; Thu, 5 Mar 2026
+ 09:47:42 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Aisheng Dong
+	<aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, Frank Li
+	<frank.li@nxp.com>, Jacky Bai <ping.bai@nxp.com>, Linus Walleij
+	<linusw@kernel.org>, Sudeep Holla <sudeep.holla@kernel.org>, Cristian Marussi
+	<cristian.marussi@arm.com>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+	dl-S32 <S32@nxp.com>
+CC: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] pinctrl: imx: PINCTRL_IMX_SCMI should depend on
+ ARCH_MXC
+Thread-Topic: [PATCH v2] pinctrl: imx: PINCTRL_IMX_SCMI should depend on
+ ARCH_MXC
+Thread-Index: AQHcrH8zn/nsy8P4xkW8wBLU/36NjbWfsPnw
+Date: Thu, 5 Mar 2026 09:47:42 +0000
+Message-ID:
+ <PAXPR04MB84594FE554D46CC2F995C1E7887DA@PAXPR04MB8459.eurprd04.prod.outlook.com>
+References:
+ <d5aff6931bbc95a16f049163c682ad08d1f0f04b.1772701307.git.geert+renesas@glider.be>
+In-Reply-To:
+ <d5aff6931bbc95a16f049163c682ad08d1f0f04b.1772701307.git.geert+renesas@glider.be>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR04MB8459:EE_|FRWPR04MB11150:EE_
+x-ms-office365-filtering-correlation-id: 6023b9e4-9589-4c97-bcab-08de7a9c3ed5
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|19092799006|376014|1800799024|921020|38070700021;
+x-microsoft-antispam-message-info:
+ v82yZvJ4HUfj+svK3pPPZObkmZx1cz5dWjHsUPom39ljJoGptlKL6wR0IHFemUG9axywGSnYVkuJrqdcpeHDJaKdH26o1qZVl6Wc4jj4vlOssIAtnTc4IWRxOF0HA2A1PUV9nI9YLDb6IUYXKfZKrjo2lQKyoFogo80qu3OXA7ZnoZvhtYeDj86nvSkQf8AH4bRWDDznu4UuvhIpVPQN0/XzoQEfODBsyVDogBqj/CRVeofisEBLmNQYyi0zDk+w/MQYyJNv/MO8E1NLYB8Aq0YzAoKmVAgj6osgdf1eg+qo5CbCqECz9xw/Z/q8+LftNKGA5gJZBac6qgDQIRHLI6w+PhSr2r++3AVUQ/H9xM5zfRFZK/IYvUgjjeoJU0E+6kTwyV6NYyi1FkW0YxuYWkw0YEQLK/ZQoEcMDqZfSekPQgUNZEeWCGMJQ1QOEbn8fLH+JnTVoic07Ai01oxNCGCAhiHsNMv9OH4BtvRGhCgq03HGu4CmiY0Bu6p5iCUKvzNkDP7mMDG0xLdLMbVo8BYMhby7PBMv0sMbr7IDNxYxP1AZ6JIyTcWpsRZqTMEHysvYRgRWJta3C4zr80j+VDDWNKXkMoJ02Z1AOEGNZ67rxmtUZbhsLrIju7+d4eErwbLZu67J5h084xRgUnSCxx8jD54Ju2Sa9G2MUbz+mo+RXhciGpHUqP+/JwXBFxXSOMbzg1TYqk6RJWd1sjuyls3LRIlEd9Zi4LSHgR68nnauyH8Dz2h/3Ohcui9RsvYrBiuZtg6oiM1mpdByp/nbV5OoYs3GlA6nW9VdyJP2a9iqke06EIA/BPxslh159KGN
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(19092799006)(376014)(1800799024)(921020)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?SXkYdxLW5zogkTYt8O6E0RSx1QA8EuuzrUHYxs3xQsbD90oLLMjyWcfsF04x?=
+ =?us-ascii?Q?Ik2xTchOhciY3QwoEN5grbDEt4A7GTdrfDvaOq13bGN+O0d/47jqWj19dx73?=
+ =?us-ascii?Q?Wq/8fsUGfn3BOGUjIlCOWJGoXMnqzZB41jx6d14SqDk2TOcLWMewOdO2Buz5?=
+ =?us-ascii?Q?HviX5oqSrn/4lSb/w2xFE6WijA3Artwa/l2KKwz2CTV+lzjmYsuz/Pm2pULe?=
+ =?us-ascii?Q?mDHO6OFb9IsCkxVc42l9L1BO/KWjm6Lcg+nVr6Vs2SBu93DZyY/8TxOorniH?=
+ =?us-ascii?Q?/JSCPi6GzuZM5Fz69qa6ylDD5bDuqjczaMX85V67pDXob7vv0yHc9xlO9VJz?=
+ =?us-ascii?Q?lrcsAzJG9Iqi11ENtLBoa1w05+0ID9WpqioB/NCYSw8OcN2O8xiXZZLrIP3t?=
+ =?us-ascii?Q?/ka59eMolnG3PCSfZ6dmIObcCZGY+wpMRYBso5J4fVw8NyLk5meeHe1AS8hQ?=
+ =?us-ascii?Q?5jTMSO5BeLxc7RCwGW+6dMBqJsjmIfSaPsGk5AmuknO5i7XpH7mD4+PHHjDg?=
+ =?us-ascii?Q?USeu3cZIhnrC7MGo1YDFdBZp8chEjfdGS3aL8INnjE3tU2Fl4WX6FHLv9gBq?=
+ =?us-ascii?Q?Zrc1/XIDq81shDib9yQ+Vif35XEbOWP+BPAfyuzhVVU/8F7k/5Zjoa8tkNQk?=
+ =?us-ascii?Q?GTFbVwc6CkmTqflciHr6denKT4SJmBCwwMjoB5Qz/DVQKCsWmL9h0ZbJugxt?=
+ =?us-ascii?Q?N05+jsMysdA9smA8Gh7hSyy4zBy8t4nCr3MP+9Q9y/f85UefDMaSGsoR/HKW?=
+ =?us-ascii?Q?L971PPl5LG5TKMOnC+FX7BptLJvhKW+OJ+ikr8rP7OzGsCASro1wgZu4SQZC?=
+ =?us-ascii?Q?aid2Xiec8gYtIJVWFBzhoLDh0pHyOdnnn0v2xRyaWORLt96/cIv6rhHdpdI6?=
+ =?us-ascii?Q?Er/0CEfIBFmNWaS1f7Cmp8obVVTyIXVruomekBBTG3QIV5S2Jicv5Tv7LSL+?=
+ =?us-ascii?Q?Cbqst65TYNnLCz7GsGx76AQneT2dqtQ31iD72C3DBgWXNwedxUYBmZnX2vJH?=
+ =?us-ascii?Q?CCDCQivmpOIUXyKEOVhH3DMyxbTpjWhFzMQM3qFtXeKrCL++8ZvMKunHXa/x?=
+ =?us-ascii?Q?Q+qNehUImBvZB0pWculVvjM1qWJdWFo/ZpLQow7hQuSvCEmPailtql65blUM?=
+ =?us-ascii?Q?v4NDjqXlMWNAZzClyq8QWvsEnn2qLHaQDBMY5TryOO/GmmLDnQkZZSzbyq0u?=
+ =?us-ascii?Q?Hgdwbb+fGJTGYca6GLYruqnUXUgxVIeLoJ+oAAuK3YzWLfYPKhUB4lFHxlzc?=
+ =?us-ascii?Q?c7DJFseUKfURzJKf4C4Cxzsz3xXvMhB6VVIu4v++0ABx3JP5IfdvXTlx1bId?=
+ =?us-ascii?Q?+cgUw17/CyTppj6fsrpBbsJgExP7R2xX7A1j5u36L86qPniMc2TZbVdt0fDC?=
+ =?us-ascii?Q?e+dW4yX9vBGznNaa8hOxpozQH+WE7/98WqkATOeabgbmlu9DBkn1l0bncXPd?=
+ =?us-ascii?Q?Psjjxo39cmyzbnHWNFU6P5kN0/t8cdtVhANTnzOQe1KVfg9/LIpBH6aO1ZQS?=
+ =?us-ascii?Q?4MzcCuiT4GlroDNuamdz6cUXIoP00GrJieVgysN++KzoOp4v3Y53DYFhUN42?=
+ =?us-ascii?Q?eccT5RoKoxLOCb32TiOwpTq9mmrdLlcto6k3/HDZYLlX6iRsOR3cgHxowjiC?=
+ =?us-ascii?Q?2PScAnQTuew2cGyXlzjDNI4UDIlLboQ8ojgzVotw492P4kYh3+BSQaGt1j81?=
+ =?us-ascii?Q?+6AvU0IoFA+SfcjDyeLXjD5VNYzC8oHQeobylvctVHenA2xp?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=b895f1e89350da7f8491f35b99d431866030fe6df54b62358155e9918430;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Thu, 05 Mar 2026 10:36:14 +0100
-Message-Id: <DGUQWFYCPRQZ.17SO07GXW2DYA@baylibre.com>
-From: "Markus Schneider-Pargmann" <msp@baylibre.com>
-To: "Vladimir Oltean" <vladimir.oltean@nxp.com>,
- <linux-phy@lists.infradead.org>
-Cc: "Vinod Koul" <vkoul@kernel.org>, "Neil Armstrong"
- <neil.armstrong@linaro.org>, <dri-devel@lists.freedesktop.org>,
- <freedreno@lists.freedesktop.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-arm-msm@vger.kernel.org>, <linux-can@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-ide@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
- <linux-riscv@lists.infradead.org>, <linux-rockchip@lists.infradead.org>,
- <linux-samsung-soc@vger.kernel.org>, <linux-sunxi@lists.linux.dev>,
- <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
- <netdev@vger.kernel.org>, <spacemit@lists.linux.dev>,
- <UNGLinuxDriver@microchip.com>, "Andrzej Hajda" <andrzej.hajda@intel.com>,
- "Robert Foss" <rfoss@kernel.org>, "Laurent Pinchart"
- <Laurent.pinchart@ideasonboard.com>, "Jonas Karlman" <jonas@kwiboo.se>,
- "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>, "David Airlie"
- <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Andy Yan"
- <andy.yan@rock-chips.com>, "Marc Kleine-Budde" <mkl@pengutronix.de>,
- "Vincent Mailhol" <mailhol@kernel.org>, "Nicolas Ferre"
- <nicolas.ferre@microchip.com>, "Alexandre Belloni"
- <alexandre.belloni@bootlin.com>, "Claudiu Beznea"
- <claudiu.beznea@tuxon.dev>, "Markus Schneider-Pargmann" <msp@baylibre.com>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>, "Magnus Damm"
- <magnus.damm@gmail.com>
-Subject: Re: [PATCH phy-next 13/22] phy: introduce phy_get_max_link_rate()
- helper for consumers
-X-Mailer: aerc 0.21.0
-References: <20260304175735.2660419-1-vladimir.oltean@nxp.com>
- <20260304175735.2660419-14-vladimir.oltean@nxp.com>
-In-Reply-To: <20260304175735.2660419-14-vladimir.oltean@nxp.com>
-X-Rspamd-Queue-Id: 986D420EC1C
+MIME-Version: 1.0
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6023b9e4-9589-4c97-bcab-08de7a9c3ed5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2026 09:47:42.0533
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vRvAPKyAqbbKbIder6NgdjDKBKJY0JNMZTpBwiYxU/Ww2rBNdPXxShA2uyrqZzpfHv/d34Ol6UfQf9KwbYpf1g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: FRWPR04MB11150
+X-Rspamd-Queue-Id: A2D5120EE47
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [1.94 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MV_CASE(0.50)[];
-	R_DKIM_ALLOW(-0.20)[baylibre-com.20230601.gappssmtp.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	R_DKIM_ALLOW(-0.20)[NXP1.onmicrosoft.com:s=selector1-NXP1-onmicrosoft-com];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[43];
+	TAGGED_FROM(0.00)[bounces-32545-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32544-lists,linux-gpio=lfdr.de];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	DMARC_NA(0.00)[baylibre.com];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[glider.be,nxp.com,gmail.com,kernel.org,arm.com,pengutronix.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FREEMAIL_CC(0.00)[kernel.org,linaro.org,lists.freedesktop.org,lists.infradead.org,vger.kernel.org,lists.linux.dev,microchip.com,intel.com,ideasonboard.com,kwiboo.se,gmail.com,linux.intel.com,suse.de,ffwll.ch,rock-chips.com,pengutronix.de,bootlin.com,tuxon.dev,baylibre.com,glider.be];
-	DKIM_TRACE(0.00)[baylibre-com.20230601.gappssmtp.com:+];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[msp@baylibre.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
-	NEURAL_HAM(-0.00)[-1.000];
 	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[peng.fan@oss.nxp.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[NXP1.onmicrosoft.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	NEURAL_HAM(-0.00)[-0.993];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,nxp.com:email,NXP1.onmicrosoft.com:dkim]
 X-Rspamd-Action: no action
 
---b895f1e89350da7f8491f35b99d431866030fe6df54b62358155e9918430
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+> Subject: [PATCH v2] pinctrl: imx: PINCTRL_IMX_SCMI should depend on
+> ARCH_MXC
+>=20
+> i.MX95 SCMI firmware is only present on NXP i.MX94 and i.MX95 SoCs.
+> Hence add a dependency on ARCH_MXC, to prevent asking the user
+> about this driver when configuring a kernel without NXP i.MX SoC
+> family support.
+>=20
+> While at it, relax the dependencies on ARM_SCMI_PROTOCOL and OF
+> when compile-testing.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Hi,
-
-On Wed Mar 4, 2026 at 6:57 PM CET, Vladimir Oltean wrote:
-> Consumer drivers shouldn't dereference struct phy, not even to get to
-> its attributes.
->
-> We have phy_get_bus_width() as a precedent for getting the bus_width
-> attribute, so let's add phy_get_max_link_rate() and use it in DRM and
-> CAN drivers.
->
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
-> Cc: Andrzej Hajda <andrzej.hajda@intel.com>
-> Cc: Neil Armstrong <neil.armstrong@linaro.org>
-> Cc: Robert Foss <rfoss@kernel.org>
-> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> Cc: Jonas Karlman <jonas@kwiboo.se>
-> Cc: Jernej Skrabec <jernej.skrabec@gmail.com>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: David Airlie <airlied@gmail.com>
-> Cc: Simona Vetter <simona@ffwll.ch>
-> Cc: Andy Yan <andy.yan@rock-chips.com>
-> Cc: Marc Kleine-Budde <mkl@pengutronix.de>
-> Cc: Vincent Mailhol <mailhol@kernel.org>
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-> Cc: Markus Schneider-Pargmann <msp@baylibre.com>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Magnus Damm <magnus.damm@gmail.com>
-> ---
->  drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c | 4 ++--
->  drivers/gpu/drm/bridge/synopsys/dw-dp.c             | 2 +-
->  drivers/net/can/at91_can.c                          | 2 +-
->  drivers/net/can/flexcan/flexcan-core.c              | 2 +-
->  drivers/net/can/m_can/m_can_platform.c              | 2 +-
->  drivers/net/can/rcar/rcar_canfd.c                   | 2 +-
->  drivers/phy/phy-core.c                              | 6 ++++++
->  include/linux/phy/phy.h                             | 6 ++++++
->  8 files changed, 19 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c b/driver=
-s/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
-> index a8b6ae58cb0a..ed7ed82ddb64 100644
-> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
-> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
-> @@ -1300,7 +1300,7 @@ static u32 cdns_mhdp_get_training_interval_us(struc=
-t cdns_mhdp_device *mhdp,
-> =20
->  static void cdns_mhdp_fill_host_caps(struct cdns_mhdp_device *mhdp)
->  {
-> -	unsigned int link_rate;
-> +	u32 link_rate;
-> =20
->  	/* Get source capabilities based on PHY attributes */
-> =20
-> @@ -1308,7 +1308,7 @@ static void cdns_mhdp_fill_host_caps(struct cdns_mh=
-dp_device *mhdp)
->  	if (!mhdp->host.lanes_cnt)
->  		mhdp->host.lanes_cnt =3D 4;
-> =20
-> -	link_rate =3D mhdp->phy->attrs.max_link_rate;
-> +	link_rate =3D phy_get_max_link_rate(mhdp->phy);
->  	if (!link_rate)
->  		link_rate =3D drm_dp_bw_code_to_link_rate(DP_LINK_BW_8_1);
->  	else
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-dp.c b/drivers/gpu/drm/br=
-idge/synopsys/dw-dp.c
-> index 4ab6922dd79c..79c72ee8e263 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-dp.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-dp.c
-> @@ -536,7 +536,7 @@ static int dw_dp_link_parse(struct dw_dp *dp, struct =
-drm_connector *connector)
-> =20
->  	link->revision =3D link->dpcd[DP_DPCD_REV];
->  	link->rate =3D min_t(u32, min(dp->plat_data.max_link_rate,
-> -				    dp->phy->attrs.max_link_rate * 100),
-> +				    phy_get_max_link_rate(dp->phy) * 100),
->  			   drm_dp_max_link_rate(link->dpcd));
->  	link->lanes =3D min_t(u8, phy_get_bus_width(dp->phy),
->  			    drm_dp_max_lane_count(link->dpcd));
-> diff --git a/drivers/net/can/at91_can.c b/drivers/net/can/at91_can.c
-> index 58da323f14d7..b56db253f02d 100644
-> --- a/drivers/net/can/at91_can.c
-> +++ b/drivers/net/can/at91_can.c
-> @@ -1126,7 +1126,7 @@ static int at91_can_probe(struct platform_device *p=
-dev)
->  	can_rx_offload_add_timestamp(dev, &priv->offload);
-> =20
->  	if (transceiver)
-> -		priv->can.bitrate_max =3D transceiver->attrs.max_link_rate;
-> +		priv->can.bitrate_max =3D phy_get_max_link_rate(transceiver);
-> =20
->  	if (at91_is_sam9263(priv))
->  		dev->sysfs_groups[0] =3D &at91_sysfs_attr_group;
-> diff --git a/drivers/net/can/flexcan/flexcan-core.c b/drivers/net/can/fle=
-xcan/flexcan-core.c
-> index f5d22c61503f..3a4307bc1d61 100644
-> --- a/drivers/net/can/flexcan/flexcan-core.c
-> +++ b/drivers/net/can/flexcan/flexcan-core.c
-> @@ -2211,7 +2211,7 @@ static int flexcan_probe(struct platform_device *pd=
-ev)
->  	priv->transceiver =3D transceiver;
-> =20
->  	if (transceiver)
-> -		priv->can.bitrate_max =3D transceiver->attrs.max_link_rate;
-> +		priv->can.bitrate_max =3D phy_get_max_link_rate(transceiver);
-> =20
->  	if (priv->devtype_data.quirks & FLEXCAN_QUIRK_NR_IRQ_3) {
->  		priv->irq_boff =3D platform_get_irq(pdev, 1);
-> diff --git a/drivers/net/can/m_can/m_can_platform.c b/drivers/net/can/m_c=
-an/m_can_platform.c
-> index 56da411878af..73525be6566b 100644
-> --- a/drivers/net/can/m_can/m_can_platform.c
-> +++ b/drivers/net/can/m_can/m_can_platform.c
-> @@ -132,7 +132,7 @@ static int m_can_plat_probe(struct platform_device *p=
-dev)
->  	}
-> =20
->  	if (transceiver)
-> -		mcan_class->can.bitrate_max =3D transceiver->attrs.max_link_rate;
-> +		mcan_class->can.bitrate_max =3D phy_get_max_link_rate(transceiver);
-> =20
->  	priv->base =3D addr;
->  	priv->mram_base =3D mram_addr;
-> diff --git a/drivers/net/can/rcar/rcar_canfd.c b/drivers/net/can/rcar/rca=
-r_canfd.c
-> index eaf8cac78038..645d5671705d 100644
-> --- a/drivers/net/can/rcar/rcar_canfd.c
-> +++ b/drivers/net/can/rcar/rcar_canfd.c
-> @@ -1885,7 +1885,7 @@ static int rcar_canfd_channel_probe(struct rcar_can=
-fd_global *gpriv, u32 ch,
->  	priv->channel =3D ch;
->  	priv->gpriv =3D gpriv;
->  	if (transceiver)
-> -		priv->can.bitrate_max =3D transceiver->attrs.max_link_rate;
-> +		priv->can.bitrate_max =3D phy_get_max_link_rate(transceiver);
->  	priv->can.clock.freq =3D fcan_freq;
->  	dev_info(dev, "can_clk rate is %u\n", priv->can.clock.freq);
-> =20
-> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> index a1aff00fba7c..89f7410241aa 100644
-> --- a/drivers/phy/phy-core.c
-> +++ b/drivers/phy/phy-core.c
-> @@ -640,6 +640,12 @@ void phy_set_bus_width(struct phy *phy, int bus_widt=
-h)
->  }
->  EXPORT_SYMBOL_GPL(phy_set_bus_width);
-> =20
-> +u32 phy_get_max_link_rate(struct phy *phy)
-> +{
-
-All of the can drivers that would use this function are checking phy
-before assigning the max_link_rate:
-
-  if (transceiver)
-          priv->can.bitrate_max =3D transceiver->attrs.max_link_rate;
-
-Would it be reasonable to have
-
-  if (!phy)
-          return 0;
-
-in this function to be able to drop these individual checks of the
-drivers? This would be similar to clk_get_rate() which does the same
-check and return 0 for convenience.
-
-Best
-Markus
-
-> +	return phy->attrs.max_link_rate;
-> +}
-> +EXPORT_SYMBOL_GPL(phy_get_max_link_rate);
-> +
->  /**
->   * _of_phy_get() - lookup and obtain a reference to a phy by phandle
->   * @np: device_node for which to get the phy
-> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-> index 36307e47760d..af9c3e795786 100644
-> --- a/include/linux/phy/phy.h
-> +++ b/include/linux/phy/phy.h
-> @@ -57,6 +57,7 @@ int phy_notify_disconnect(struct phy *phy, int port);
->  int phy_notify_state(struct phy *phy, union phy_notify state);
->  int phy_get_bus_width(struct phy *phy);
->  void phy_set_bus_width(struct phy *phy, int bus_width);
-> +u32 phy_get_max_link_rate(struct phy *phy);
->  #else
->  static inline struct phy *phy_get(struct device *dev, const char *string=
-)
->  {
-> @@ -256,6 +257,11 @@ static inline int phy_get_bus_width(struct phy *phy)
->  static inline void phy_set_bus_width(struct phy *phy, int bus_width)
->  {
->  }
-> +
-> +static inline u32 phy_get_max_link_rate(struct phy *phy)
-> +{
-> +	return 0;
-> +}
->  #endif /* IS_ENABLED(CONFIG_GENERIC_PHY) */
-> =20
->  #endif /* __PHY_CONSUMER_H */
-
-
---b895f1e89350da7f8491f35b99d431866030fe6df54b62358155e9918430
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKMEABYKAEsWIQSJYVVm/x+5xmOiprOFwVZpkBVKUwUCaalOjxsUgAAAAAAEAA5t
-YW51MiwyLjUrMS4xMSwyLDIRHG1zcEBiYXlsaWJyZS5jb20ACgkQhcFWaZAVSlPc
-SwEAt3Fg0ly9qnS+HJQv96JGhcc9ssPHPspnN0LcoiUH76oBAJJ1UWuuXcnIsBb3
-namewJQN1U0nDnFUFRtJbSq49LcK
-=6g8b
------END PGP SIGNATURE-----
-
---b895f1e89350da7f8491f35b99d431866030fe6df54b62358155e9918430--
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
 
