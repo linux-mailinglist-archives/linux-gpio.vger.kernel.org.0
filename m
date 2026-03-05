@@ -1,235 +1,157 @@
-Return-Path: <linux-gpio+bounces-32613-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32614-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6O5AFdfZqWmaGQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-32613-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 20:30:31 +0100
+	id qKMRJZzfqWm4GgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-32614-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 20:55:08 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D96C72178DA
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 20:30:30 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5A66217D40
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 20:55:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DFD3A304437D
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Mar 2026 19:26:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1C4AE3089795
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Mar 2026 19:54:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 173EA39C64C;
-	Thu,  5 Mar 2026 19:26:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DBEF3EB7EF;
+	Thu,  5 Mar 2026 19:54:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t808lmHO"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="B9l2QOJz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA72037D11F;
-	Thu,  5 Mar 2026 19:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15143EB7E6;
+	Thu,  5 Mar 2026 19:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772738811; cv=none; b=Bndw+rD1U+gR85+j4q7sQmEcgTShXOZ3l8FBpWKPVTUaRMmmocpkjkbvzwyWgQUZllW/ppb2o2NvOIfF1HvgyZScPXacFZKFURpZQRs1HqkI8pzj3ahCphHG1uIM7N1x+cpR2mKpbWxtfBCUy02E+AKPyGdrP92kOoZ3NjnwpVc=
+	t=1772740458; cv=none; b=KV9x1EZRP6dbIE++G7drbpSHyZsU8SjW2M8lDGmPvtoDGGlXcRfHzBePR/EBxzUVAv3h0FpyOCCqgHqwaVn8+7Y0FTVqu7YUVhvP63OdWCas1Zd7ajJY0uQ/J3Cqv4FhVCHbdJNA7kVfrk9rRoVp4b8yRwLR/Q3zqoKDuheqUkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772738811; c=relaxed/simple;
-	bh=Fl+xG8f3V1m4AHOqnKP1lKLxgOPU2ocJ0lJuwUzAE00=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dyx+8G1wKC7cljFk+0oqZ0fq5MYJAO9qlCRYIhyCbiS/KRraGAdJ4X/KwkD/ZRrE7tC3LyVQhKKrq1MjGWWEE99EyMUzi+c0pDg+RKjB1YswY0aVQUKeK8tGvXAEcQj1gYvg9zSe4CGxQ/8EzGLS6CyYi9FJwqprfD+kbQIvd5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t808lmHO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76FADC19425;
-	Thu,  5 Mar 2026 19:26:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772738811;
-	bh=Fl+xG8f3V1m4AHOqnKP1lKLxgOPU2ocJ0lJuwUzAE00=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=t808lmHOtJGp+XoEZMeQIZVg7/0o/3HSErU+RY/5F+5J0NqG1L34Jvj0iBBc/+DDE
-	 r/7MIgLiyGYStNkVQBdbqZEoD5M4CaLlHQqoKGZyFu0nd51YpqzNkTRhCL/TasAH+G
-	 7fpNxcQgiZVNXgdMt+0N7wyvqwwfGU6epofo3YLOaP64x8TyoZtUoDwLMbsmi5VXTP
-	 8yWCdKrfSiNdn5/Jl2hhYxnqTNDqVrogglSvo0IJcBJn2B39nbudvyT3Ihfm5G+HUQ
-	 Lw/I37tWB1s/cOI8nrxDwqppsyUoGECSHCrw4hkFCiq0UrNmgsgHWMM8Cj4fEbALBB
-	 ixTfHC06jvDIg==
-Date: Thu, 5 Mar 2026 19:26:41 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
-Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, David Lechner
- <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
- Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linus Walleij
- <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 4/4] iio: adc: ad4691: add SPI offload support
-Message-ID: <20260305192641.3c7c653f@jic23-huawei>
-In-Reply-To: <20260305-ad4692-multichannel-sar-adc-driver-v1-4-336229a8dcc7@analog.com>
-References: <20260305-ad4692-multichannel-sar-adc-driver-v1-0-336229a8dcc7@analog.com>
-	<20260305-ad4692-multichannel-sar-adc-driver-v1-4-336229a8dcc7@analog.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1772740458; c=relaxed/simple;
+	bh=XBqM4bs5J6Hv72N2/p1rqCsh6vwggkjVOiUcTcGYUjA=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=FKSp0Qbnwev8L/9MkDi3f3SJ5bMH3QrE1pC0EFdRmPFR661QN6DeXvPQiDuTGJOLpviAFh9Nj/RfIjpseRSsJHgBWJOjfNA4Gp3Or52vQWM1IJ0U3vi5Yn3d4M7bcmrqh9gMNwEDQZpEOPmak2Az93E2c1Ldo+t9s7xtzmb6eYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=B9l2QOJz; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 6F4922710D;
+	Thu,  5 Mar 2026 20:54:08 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 5UdGDb1XIa3m; Thu,  5 Mar 2026 20:54:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1772740447; bh=XBqM4bs5J6Hv72N2/p1rqCsh6vwggkjVOiUcTcGYUjA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=B9l2QOJzOh2QxV7//mVBInca6X2rCtKZkyLwnonVyvrhxZfZgJORGB2bXL6Mhia0u
+	 2s1bD2Wq7VknWP9qKR+TGbDmNHcgADwfvh4Xh/q0J39Ab4xnai80rRDU3JH0Uz0kgI
+	 tSTHRZzjmX9RwoCxkVIkI77lORHwRc19XwwGPy6OLSypc+J5gYCShDQ+oXHeAOrS/8
+	 MYduAQcMuwCXsSWtg0+YN2RbKnC7KsNG6pSHyu4OWArl4PU02D3mA5Voct6TssU58T
+	 b570i6UP6wBIErFoeZLHPGWiev3J78PVQ21Hon9NHXPuEMiOXlVnzMlxfSWSUdoJOR
+	 /Vdd7Lvvl8J/g==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: D96C72178DA
+Date: Thu, 05 Mar 2026 19:54:07 +0000
+From: adilov <adilov@disroot.org>
+To: Sander Vanheule <sander@svanheule.net>
+Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski
+ <brgl@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bert Vermeulen
+ <bert@biot.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] gpio: realtek-otto: add rtl9607 support
+In-Reply-To: <f92a2a8558ebff7a145ece97c2bc44f1f7aafd26.camel@svanheule.net>
+References: <20260305161106.15999-1-adilov@disroot.org>
+ <20260305161106.15999-3-adilov@disroot.org>
+ <f92a2a8558ebff7a145ece97c2bc44f1f7aafd26.camel@svanheule.net>
+Message-ID: <6a8538a1990dc02a6a0bdbf60ebd747f@disroot.org>
+X-Sender: adilov@disroot.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: E5A66217D40
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[disroot.org,reject];
+	R_DKIM_ALLOW(-0.20)[disroot.org:s=mail];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-32613-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
+	TAGGED_FROM(0.00)[bounces-32614-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[analog.com,metafoo.de,baylibre.com,kernel.org,gmail.com,vger.kernel.org];
-	TAGGED_RCPT(0.00)[linux-gpio,radu.sabau.analog.com,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[disroot.org:+];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,analog.com:email]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[adilov@disroot.org,linux-gpio@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-On Thu, 05 Mar 2026 14:23:30 +0200
-Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org> wrote:
-
-> From: Radu Sabau <radu.sabau@analog.com>
+On 2026-03-05 19:04, Sander Vanheule wrote:
+> Hi,
 > 
-> Add SPI offload support to the AD4691 family driver to enable
-> DMA-based RX stream acquisition. When an SPI offload is available,
-> the driver switches to a pre-built SPI message with 32-bit transfers
-> (4-byte frames aligned to DMA width) and registers a periodic
-> offload trigger for autonomous, CPU-independent sampling.
+> On Thu, 2026-03-05 at 21:11 +0500, Rustam Adilov wrote:
+>> The RTL9607C SoC has support for 3 GPIO banks with 32 GPIOs each and
+>> the port order is reversed just like in RTL930x.
+>> 
+>> Signed-off-by: Rustam Adilov <adilov@disroot.org>
+>> ---
+>>  drivers/gpio/gpio-realtek-otto.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>> 
+>> diff --git a/drivers/gpio/gpio-realtek-otto.c 
+>> b/drivers/gpio/gpio-realtek-
+>> otto.c
+>> index 4cf91528f547..5e3152c2e51a 100644
+>> --- a/drivers/gpio/gpio-realtek-otto.c
+>> +++ b/drivers/gpio/gpio-realtek-otto.c
+>> @@ -351,6 +351,10 @@ static const struct of_device_id 
+>> realtek_gpio_of_match[]
+>> = {
+>>  	{
+>>  		.compatible = "realtek,rtl9310-gpio",
+>>  	},
+>> +	{
+>> +		.compatible = "realtek,rtl9607-gpio",
+>> +		.data = (void *)GPIO_PORTS_REVERSED,
+>> +	},
+>>  	{}
+>>  };
+>>  MODULE_DEVICE_TABLE(of, realtek_gpio_of_match);
 > 
-> The offload path implements its own buffer setup ops
-> (ad4691_offload_buffer_postenable/predisable) that enable the
-> offload trigger and wire the DMAengine buffer, while the existing
-> software triggered buffer path is retained as a fallback for
-> non-offload configurations.
+> If I'm not mistaken, this SoC has a MIPS InterAptiv CPU like the 
+> RTL931x SoC
+> series. Were you able to validate that the interrupts are functioning 
+> as
+> expected?
 > 
-> Offload channel specs use a 32-bit storage/repeat with a 16-bit
-> shift to extract ADC data from the MSBytes of each DMA word,
-> matching the wire format in Manual Mode where SDO outputs ADC data
-> directly without a command echo.
-> 
-> Kconfig gains a dependency on IIO_BUFFER_DMAENGINE.
-> 
-> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+> Best,
+> Sander
 
-Just a few really quick comments as I'm out of time for today.
+Hi Sander,
 
-J
-
-> diff --git a/drivers/iio/adc/ad4691.c b/drivers/iio/adc/ad4691.c
-> index ab48f336e46c..7ec0a2555a4b 100644
-> --- a/drivers/iio/adc/ad4691.c
-> +++ b/drivers/iio/adc/ad4691.c
-> @@ -8,6 +8,7 @@
->  #include <linux/clk.h>
->  #include <linux/delay.h>
->  #include <linux/device.h>
-> +#include <linux/dmaengine.h>
->  #include <linux/err.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/hrtimer.h>
-> @@ -21,11 +22,15 @@
->  #include <linux/regmap.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/spi/spi.h>
-> +#include <linux/spi/offload/consumer.h>
-> +#include <linux/spi/offload/provider.h>
-
-This is a provider and a consumer?
-
->  #include <linux/util_macros.h>
->  #include <linux/units.h>
->  #include <linux/unaligned.h>
-
-> @@ -719,7 +871,9 @@ static int ad4691_set_sampling_freq(struct iio_dev *indio_dev, unsigned int freq
->  		 * count. The exact period is refined at buffer enable time when
->  		 * the active channel count is known.
->  		 */
-> -		period_ns = ad4691_cnv_burst_period_ns(st, st->chip->num_channels);
-> +		period_ns = ad4691_cnv_burst_period_ns(st,
-> +							st->chip->num_channels,
-Check for reformatting like occurred for 1st two lines here and try and
-tweak earlier patches to reduce the churn.
-> +							false);
-
-> +
-> +static int ad4691_offload_buffer_predisable(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4691_state *st = iio_priv(indio_dev);
-> +	struct spi_offload_trigger *trigger;
-> +	int ret = 0, tmp;
-> +
-> +	trigger = (st->adc_mode == AD4691_MANUAL_MODE) ?
-> +		  st->offload_trigger_periodic : st->offload_trigger;
-> +
-> +	spi_offload_trigger_disable(st->offload, trigger);
-> +	spi_unoptimize_message(&st->offload_msg);
-> +
-> +	/* Stop conversions and reset sequencer state (not needed for MANUAL_MODE) */
-> +	if (st->adc_mode != AD4691_MANUAL_MODE) {
-> +		tmp = ad4691_sampling_enable(st, false);
-> +		if (!ret)
-> +			ret = tmp;
-> +
-> +		tmp = regmap_write(st->regmap, AD4691_STD_SEQ_CONFIG,
-> +				   AD4691_SEQ_ALL_CHANNELS_OFF);
-> +		if (!ret)
-
-If that failed, all bets are off.  May be better to just return the error.
-
-> +			ret = tmp;
-> +
-> +		tmp = regmap_write(st->regmap, AD4691_STATE_RESET_REG,
-> +				   AD4691_STATE_RESET_ALL);
-> +		if (!ret)
-> +			ret = tmp;
-> +	}
-> +
-> +	return ret;
-> +}
-
->  static irqreturn_t ad4691_irq(int irq, void *private)
->  {
->  	struct iio_dev *indio_dev = private;
-> @@ -1353,10 +1802,17 @@ static void ad4691_setup_channels(struct iio_dev *indio_dev,
->  				  struct ad4691_state *st)
->  {
->  	if (st->adc_mode == AD4691_MANUAL_MODE) {
-> -		if (st->chip->num_channels == 8)
-> -			indio_dev->channels = ad4693_manual_channels;
-> -		else
-> -			indio_dev->channels = ad4691_manual_channels;
-> +		if (st->offload) {
-
-Add more pointers to channel arrays to the chip_info structures and just look them
-up from there.
-
-> +			if (st->chip->num_channels == 8)
-> +				indio_dev->channels = ad4693_manual_offload_channels;
-> +			else
-> +				indio_dev->channels = ad4691_manual_offload_channels;
-> +		} else {
-> +			if (st->chip->num_channels == 8)
-> +				indio_dev->channels = ad4693_manual_channels;
-> +			else
-> +				indio_dev->channels = ad4691_manual_channels;
-> +		}
+Yes, this is correct. I played around with gpio-keys in OpenWrt (though 
+it
+has its own gpio-button-hotplug but it should not change things) and can
+verify that button presses and releases are working. I think this should
+confirm that interrupts are functional.
 
