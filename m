@@ -1,154 +1,129 @@
-Return-Path: <linux-gpio+bounces-32585-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32586-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UBRDEut/qWkd9gAAu9opvQ
-	(envelope-from <linux-gpio+bounces-32585-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 14:06:51 +0100
+	id GAIWEQ2AqWkd9gAAu9opvQ
+	(envelope-from <linux-gpio+bounces-32586-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 14:07:25 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF18021262C
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 14:06:50 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84D9C21264B
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 14:07:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3042830ADB96
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Mar 2026 13:01:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 40B8F30F7FF4
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Mar 2026 13:02:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6CF73A0EA5;
-	Thu,  5 Mar 2026 13:01:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E32643A1A3D;
+	Thu,  5 Mar 2026 13:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gUQBtpc4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD6F39659E
-	for <linux-gpio@vger.kernel.org>; Thu,  5 Mar 2026 13:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A481A346FC4
+	for <linux-gpio@vger.kernel.org>; Thu,  5 Mar 2026 13:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772715713; cv=none; b=nzHBCiTiI9H6n9NCkJQLzCtmjK5XERmVQEsL7Fu2AjJQMekIStS+1LKFTenNTYAku75fw+/Svs05Gq6jXPKSO12nSC/GJiSrtR2rnFZAKEcQoBspoPzDWLHM5Sk4OT1dTXjJO9SWWgvcnpT9xkXnJcTc9hT+etBfTkW6kSPwW9o=
+	t=1772715730; cv=none; b=ZVoVNRU40++er+AOWbFSarXJbVN+FyWA3NSF9B1ZSklDjjwqdkytW48MeltN6pS/hIljPHsMrh75Ef5JqJ0QFTy5eAeBqN9LRm+h+4Ld2nZOk7kIB8Dxm53eb+nPuxWdO0iAODByqOBB0a2xnhS4YWJd+zz4OXcBEGn00jevUKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772715713; c=relaxed/simple;
-	bh=mzxuHFEBJ8rIbeR5gmZexUBLMULkEpRVqRmwwCFyU/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SdXfxmNg5b3UesVlPAvwn18zFUYQ5l1HPFeEbB/eCEkZYWA92Hu7BemczR8n1KQ/AUGevbJuVRyeqLHoPG/Pxa8VPEy9J3JqIgNj7SI41QpXWn4eWryIGhp7MBxsdycUQv5jwI8gFBJv5yQahqShyxs1WCoyUC/+D3VENxCV8ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2aaf43014d0so59794035ad.2
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Mar 2026 05:01:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772715712; x=1773320512;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7IxpxVkGnClS/pzWnTPcTEx+bl+pPZR21vGpLksfVXc=;
-        b=QHsX9Dexma4/HxD7sgtuCz48x6yPZz7AAnrJ51z1lPayt6H8jBhNHUtgTuzyP4UJ6U
-         /onfNFN0CIEb2IvVJkn9ZuleTCy3k+wF1Sl5/+HJy7hkWElJHtXZk+aRkDW5P8syRLuq
-         vpxe/s3eZvhlrBCk5VaqYC8oX4n6gSVVit9OJiod8VBTpWy3gFE9AqAt6h3xCRZIrHJX
-         Le2sOII0drI/F/tHy5FZiVEVcKyBcNv6yDLI0jytQMDSxxIuAAKiX75z1aktM0RfppJx
-         iqsr1dgv0nRZw0x+gEBcPQ33LpNf6dNkZn02lbEHNcJ7kxgv8DY5khEsTCsDdRRvOKy3
-         RifQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6xXRKWhjFQa+lF1ymrTJJO/bFg8QTmwr1IU+6/I2fDpGA89YYsrJupAtn1k/ZmpoQZdwyWYXvCpe2@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYgzKv5BJNNtsD6CVYWY+IquGUlxgbklsYF058CpaGu6eHRxli
-	AGX8YqyFP04UBvsBK20b4Tb7mSXr/eFqFs/YbsYKcZQazQ+TZTtw6k1Z
-X-Gm-Gg: ATEYQzzP3PIoZbiuM6io7iuRCnm6orQVj69eYuA0YVbM63YOyEZrIziAOu5es5qESZP
-	ZYbDKE96Ic/FkswwGXHhwR/6D3oyHNt2hQwuEebg8wHqoBdfY30KC0HhpW65KwuhQ597hznEQ30
-	WYDcocherz/TZWdUXud89aaEtvCt5pNx0+TDoXJj/CO+8UzdiK+VxiJVXoZSMR3qzrrU6/YBdPU
-	fzZwW6/A6d2G2IQpUuGaA2Uy0LItwgrGnXu8V3BXnSyQ7GwN+39EtP6p4XvtI/EUDNQ+hhKhoIu
-	PgGW9E/oR2q0tCY32YLdmEMwrVPBkDRpwygt/sOG7pJcI7+loZGGHaNaH03cdioaEAGEH5MM/7O
-	uS9JpFTJJGVXczQdGeD6q85b3XNqKkxt8F4ZHFLZgFMsy1S59jmUslHuYTVbBN7eR9pIgDyWg5x
-	WBR9H0HmvJtw92fBiqrDizalVNweqD4/xIj9mcL7wVlyfw62EZKpbz0dcrGuIWegfyYbQucMhzC
-	rcM8LTMBC/nUYXJT2WJG0uctJDoZp4ajkyIqTzlWOwI+z3QSLKTaIThAHjvCQ==
-X-Received: by 2002:a17:902:ce03:b0:2ae:5b52:3818 with SMTP id d9443c01a7336-2ae6a9deb2amr60551085ad.8.1772715711782;
-        Thu, 05 Mar 2026 05:01:51 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae54136b28sm115696425ad.73.2026.03.05.05.01.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2026 05:01:50 -0800 (PST)
-Date: Thu, 5 Mar 2026 22:01:49 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Joe Perches <joe@perches.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	linux-phy@lists.infradead.org, Vinod Koul <vkoul@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-can@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, linux-sunxi@lists.linux.dev,
-	linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
-	netdev@vger.kernel.org, spacemit@lists.linux.dev,
-	UNGLinuxDriver@microchip.com
-Subject: Re: [PATCH phy-next 22/22] MAINTAINERS: add regex for linux-phy
-Message-ID: <20260305130149.GA1659133@rocinante>
-References: <20260304175735.2660419-1-vladimir.oltean@nxp.com>
- <20260304175735.2660419-23-vladimir.oltean@nxp.com>
- <a8fee1cd-1e69-4a9e-8533-c0988c480fb9@oss.qualcomm.com>
- <20260305085148.7cwo3yflp7vcfldf@skbuf>
- <f3a5aa3df78553ffc0fd0024f5fd36a4e2158c88.camel@perches.com>
- <20260305114352.2f7btqixg4tu5bzl@skbuf>
- <20260305121532.GA1649635@rocinante>
- <20260305122957.GA1652563@rocinante>
- <20260305123956.ojkt4k3ly64xz7fu@skbuf>
- <aal6kWDx_3XRGB4K@shell.armlinux.org.uk>
+	s=arc-20240116; t=1772715730; c=relaxed/simple;
+	bh=Y3PQBbklIoBSVs1Uf2NtADUm7Wrj/63rh2E73LlCo6M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FSFYlMaRDi+L9XzBL+9lRqCIbMb+QSXU1UNm5SXeW+4xljxS+oKr7QrbyNH1Q7umM98+BEuIKEsKo5iuhF1iOXQZO1UrcxmL/BQLcB03Ad9cLQKeSpkB9/bdPQEs2plc+j8g2tDl9cDAUA7tTXX6biRBhXzZgQb4pVqrpCcdCNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUQBtpc4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 850A1C2BC9E
+	for <linux-gpio@vger.kernel.org>; Thu,  5 Mar 2026 13:02:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772715730;
+	bh=Y3PQBbklIoBSVs1Uf2NtADUm7Wrj/63rh2E73LlCo6M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gUQBtpc4AVHgDACLeg6f/Qu9tYym9mDpMpfFAt++bfyM4b7g8GNRJN+oKvhUL+ZdN
+	 MRXvR/coeidbwzWpGQa0hmjBJ+lBoWzv9Dg6dlMihJs+yNcAlGwvrCYTv+anr1eclw
+	 zbFWvqiyXYHn3klxyHm3xLT9yita5t6r8Dnx4kCEjswvK9Rx+aRT36oVBkPtEDMMp/
+	 12JeEQgqYRN+wGdx8Ih5PijNfVQtqi4NLPI/kCqww69uu2Q0MiX22L36Pi+fqEpL62
+	 b70kAj3IaF4mb941ZyB0//BtVIJQmIoNh+B1XGXPeFsM+xELi2DoY4LbOz42ha9G5Q
+	 gvrfcUTqGCZVA==
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-79801df3e21so73642027b3.2
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Mar 2026 05:02:10 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUV4/BpvQDcWU2hvGuuIjxhlJEdGT3nprWLPyuSWhYIXDjtcNrWnzKXXGl/17vUH41uzc7a29zUk5PO@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDvXn2QBF7IyVf1bz9fw8u8ctzjr6bVS1SOVlXq56lGAT87ZZI
+	jdQCBXTwgkkkcQWyMjaAjphlCN1MO6+MIYMCgL0+2f8PP7qV8sMdj8GTTmkJ2k0I8XxQ6nSqXU0
+	Lr4vP+y4k4OBuQGnlJvDkQKzaDaqx3wU=
+X-Received: by 2002:a05:690c:f09:b0:794:dac2:89de with SMTP id
+ 00721157ae682-798c6be38f0mr48176717b3.17.1772715729820; Thu, 05 Mar 2026
+ 05:02:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aal6kWDx_3XRGB4K@shell.armlinux.org.uk>
-X-Rspamd-Queue-Id: DF18021262C
+References: <20260305-gpio-hog-fwnode-v1-0-97d7df6bbd17@oss.qualcomm.com> <20260305-gpio-hog-fwnode-v1-6-97d7df6bbd17@oss.qualcomm.com>
+In-Reply-To: <20260305-gpio-hog-fwnode-v1-6-97d7df6bbd17@oss.qualcomm.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Thu, 5 Mar 2026 14:01:57 +0100
+X-Gmail-Original-Message-ID: <CAD++jL=cZ59F1X6Yz_9cOvBLq+Vc4_OZWN+tTUqpStS5PXbV7w@mail.gmail.com>
+X-Gm-Features: AaiRm528EaLwv_KXrf5uesPMaGbWTVKCJzU5xf6797RKygLsnD1f1zGkjbql-ms
+Message-ID: <CAD++jL=cZ59F1X6Yz_9cOvBLq+Vc4_OZWN+tTUqpStS5PXbV7w@mail.gmail.com>
+Subject: Re: [PATCH 6/6] gpio: sim: allow to define the active-low setting of
+ a simulated hog
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Bartosz Golaszewski <brgl@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Frank Rowand <frowand.list@gmail.com>, Mika Westerberg <westeri@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>, Tony Lindgren <tony@atomide.com>, 
+	Russell King <linux@armlinux.org.uk>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 84D9C21264B
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.86 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[linux.com : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32585-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[27];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32586-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,glider.be,gmail.com,linux.intel.com,iki.fi,atomide.com,armlinux.org.uk,lwn.net,linuxfoundation.org,vger.kernel.org,lists.infradead.org];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[kw@linux.com,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-0.997];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	R_DKIM_NA(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qualcomm.com:email,mail.gmail.com:mid]
 X-Rspamd-Action: no action
 
-Hello,
+On Thu, Mar 5, 2026 at 10:52=E2=80=AFAM Bartosz Golaszewski
+<bartosz.golaszewski@oss.qualcomm.com> wrote:
 
-> > > For content match, it could also be:
-> > > 
-> > >   K:    phy
-> > > 
-> > > I believe this would match everything of interest?
-> > 
-> > Yeah, and way more. Think USB PHY, network PHY, etc. Don't want to drown
-> > the linux-phy mailing list in unrelated patches, either.
-> 
-> Also phylink, any memory management / DMA stuff that happens to mention
-> "physical", and probably numerous other examples.
+> Add a new configfs attribute to the hog group allowing to configure the
+> active-low lookup flag for hogged lines.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
-Makes sense!  Sorry for the commotion here, then. :)
+If you add an explanation to why this is needed (I can think
+of a few) then:
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
-	Krzysztof
+Yours,
+Linus Walleij
 
