@@ -1,148 +1,418 @@
-Return-Path: <linux-gpio+bounces-32574-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32575-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0DxHC+B6qWkg8gAAu9opvQ
-	(envelope-from <linux-gpio+bounces-32574-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 13:45:20 +0100
+	id QPQgFNd7qWkg8gAAu9opvQ
+	(envelope-from <linux-gpio+bounces-32575-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 13:49:27 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5678211F79
-	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 13:45:19 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7F3B212114
+	for <lists+linux-gpio@lfdr.de>; Thu, 05 Mar 2026 13:49:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 54BFE306640F
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Mar 2026 12:44:22 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2FE1730CB942
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Mar 2026 12:44:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C09B539F17B;
-	Thu,  5 Mar 2026 12:44:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0587E39F166;
+	Thu,  5 Mar 2026 12:44:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="l50LaDmj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LDxIZTHJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125DF340D91;
-	Thu,  5 Mar 2026 12:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91A639B4A9;
+	Thu,  5 Mar 2026 12:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772714660; cv=none; b=H9Nyg5hjyBu0iALnFK3A27SV06zxRC4ClK4bjExQDCFGh4NYVo/tz4F7N4DS90avPIQTBZIh8W6jWGWQqrlcTdIdlVGr+uBF10Q96xX+XPW9m32B/fVQyt4WEAdnPNJl4SrLJk9fWvfcfNrWf+jYc9BG0mowMmYA+3GDTM1H6wU=
+	t=1772714668; cv=none; b=rYCIaF0iWB2jJLB34MX8Leaij/+QFhcG4wk59dhb35BycVKNcIwCS+FKIHtYnq1heJswqdLza3FgR5Nlrd51e++Ew+ryR/7BYdtO2K/Tu5dw2oYqkZc8NdmwBseGocdxbjwTruii3YilqhYiQm4p2/UegYquLTXjfh4bcUgCgSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772714660; c=relaxed/simple;
-	bh=VvhCTWZ3793M6/O335k62TbJTkcqRXxJQLzgve7zKlE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gHFb7ag/EIjOVpk61ktGn5LzjTRP4lqDdotNFQUFTBkipYFidbclnYQLTWXpKzSAfYXNg3NhiltUVgiMg9tA8Iimj5hKpY65i4n0ZGAtZTGIHYNGG7HnecmioBemI72Fu6Bchm2pqFj6T3cqiq6zbhehAJPBJG3jf2JOfAMXorA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=l50LaDmj; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=L3RgJ7ay7e4JV2CizcjZPXE74NAx+EJwuTVFkQMPa0A=; b=l50LaDmjwGawLaPx5tzHoFyGj9
-	uGN8SEcW1FWI6giSjN9Agdyb79Tf3OMhQXp/1gLi0v88hElChCRRTsLpqVYtIZK+paqMnlyltD32A
-	LQ0AhdD22P4ujgDapZgRXFYGLCZrA45NiSH8me9Kg1PaTgCmj/ZWbGhtviqwB04DVbNPwnLa8dKI9
-	9mxRpqIu1HtkdGIRvZLX3sD9iAPjMIC43yTRproxomlma7C/XuD/8yQmfeCSYHF/SWDmMp1a0l3AJ
-	wMvKbs4k9v54egyciEG7tZ4AAqzht7nPQY0ActrFtJhzqMRqqOw4aTsCQSik4pbjnzIjQ7ivxUwR2
-	mURwhBjQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54444)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1vy83h-000000007wT-3LTg;
-	Thu, 05 Mar 2026 12:44:05 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.98.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1vy83d-000000000Sp-2FwN;
-	Thu, 05 Mar 2026 12:44:01 +0000
-Date: Thu, 5 Mar 2026 12:44:01 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Joe Perches <joe@perches.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	linux-phy@lists.infradead.org, Vinod Koul <vkoul@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-can@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, linux-sunxi@lists.linux.dev,
-	linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
-	netdev@vger.kernel.org, spacemit@lists.linux.dev,
-	UNGLinuxDriver@microchip.com
-Subject: Re: [PATCH phy-next 22/22] MAINTAINERS: add regex for linux-phy
-Message-ID: <aal6kWDx_3XRGB4K@shell.armlinux.org.uk>
-References: <20260304175735.2660419-1-vladimir.oltean@nxp.com>
- <20260304175735.2660419-23-vladimir.oltean@nxp.com>
- <a8fee1cd-1e69-4a9e-8533-c0988c480fb9@oss.qualcomm.com>
- <20260305085148.7cwo3yflp7vcfldf@skbuf>
- <f3a5aa3df78553ffc0fd0024f5fd36a4e2158c88.camel@perches.com>
- <20260305114352.2f7btqixg4tu5bzl@skbuf>
- <20260305121532.GA1649635@rocinante>
- <20260305122957.GA1652563@rocinante>
- <20260305123956.ojkt4k3ly64xz7fu@skbuf>
+	s=arc-20240116; t=1772714668; c=relaxed/simple;
+	bh=1w1RB447ldnhlv8Hxu9zjeDMNtNYv/NPl51WMASJdHA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tGcSQVLaLf6PoU9KSijosV1RXLeVCHeDXSmeD8EPGnyu2VCi2urciYYPhYHp5PSDKWDwzr1VJi/Vb+OH6ZGtsjfbM49TS2TVW8wag2Nib2yJ3qns3e1XDyLgJqLkBtYzV5o5iQ1OHSS2zz5V0NNevmviXCrLrIjpEOjtrCKf+VU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LDxIZTHJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DB4FC116C6;
+	Thu,  5 Mar 2026 12:44:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772714668;
+	bh=1w1RB447ldnhlv8Hxu9zjeDMNtNYv/NPl51WMASJdHA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LDxIZTHJ2mYAqUYUpM4rqzZqtOy9udLdU1nPT/u3StPVOAxHfd1HkkpzQVNBSMNCH
+	 tHAAbXHXvchUiXKghhZ/gTWDIczkMPjXTj5SXEg2l6KA5uZ9T7SNE2pTHnkOPGiC/N
+	 R+jvYfQZkT5R0zYOrUApdyIuMpJE2gaQKcjZiWS0aIapVW/Gl7pvBkItwBaJNBWaqY
+	 DspG8lnPxmxXQfJlwIaAI4BIe1+2wKsNdNXPNfblQVleHP6DcEQPVv0LznMOrZKC6L
+	 i1iJ3VLPsiU1NRIuHz9lNYrs/PLJjveniEzGFvjojTShf9jVCLI39Fudl1ICZ2sB7K
+	 1RYQ3uYn/pX2A==
+Message-ID: <d77de930-d988-40ad-9b29-9bfe8f4584df@kernel.org>
+Date: Thu, 5 Mar 2026 13:44:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260305123956.ojkt4k3ly64xz7fu@skbuf>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Rspamd-Queue-Id: C5678211F79
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] dt-bindings: iio: adc: add bindings for AD4691 family
+To: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
+ Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+References: <20260305-ad4692-multichannel-sar-adc-driver-v1-0-336229a8dcc7@analog.com>
+ <20260305-ad4692-multichannel-sar-adc-driver-v1-1-336229a8dcc7@analog.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20260305-ad4692-multichannel-sar-adc-driver-v1-1-336229a8dcc7@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: C7F3B212114
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.36 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_REJECT(1.00)[armlinux.org.uk:s=pandora-2019];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[armlinux.org.uk : SPF not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[27];
-	DKIM_TRACE(0.00)[armlinux.org.uk:-];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32574-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32575-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[analog.com,metafoo.de,kernel.org,baylibre.com,gmail.com];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[linux@armlinux.org.uk,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
 	PRECEDENCE_BULK(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-0.086];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,shell.armlinux.org.uk:mid,armlinux.org.uk:url]
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Action: no action
 
-On Thu, Mar 05, 2026 at 02:39:56PM +0200, Vladimir Oltean wrote:
-> On Thu, Mar 05, 2026 at 09:29:57PM +0900, Krzysztof Wilczyński wrote:
-> > For content match, it could also be:
-> > 
-> >   K:    phy
-> > 
-> > I believe this would match everything of interest?
+On 05/03/2026 13:23, Radu Sabau via B4 Relay wrote:
+> From: Radu Sabau <radu.sabau@analog.com>
 > 
-> Yeah, and way more. Think USB PHY, network PHY, etc. Don't want to drown
-> the linux-phy mailing list in unrelated patches, either.
+> Add YAML bindings and dt-bindings header for the Analog Devices AD4691
 
-Also phylink, any memory management / DMA stuff that happens to mention
-"physical", and probably numerous other examples.
+There are no such thing as YAML bindings. DT bindings.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+
+> family of multichannel SAR ADCs (AD4691, AD4692, AD4693, AD4694).
+> 
+> The binding describes five operating modes selectable via the
+
+No, describe the hardware, not binding.
+
+
+A nit, subject: drop second/last, redundant "bindings". The
+"dt-bindings" prefix is already stating that these are bindings.
+See also:
+https://elixir.bootlin.com/linux/v6.17-rc3/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+
+
+> adi,spi-mode property, optional PWM/clock for CNV Clock and CNV Burst
+> modes, GPIO pins, voltage supplies and the trigger-source interface for
+> SPI Engine offload operation.
+> 
+> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+> ---
+>  .../devicetree/bindings/iio/adc/adi,ad4691.yaml    | 278 +++++++++++++++++++++
+>  MAINTAINERS                                        |   8 +
+>  include/dt-bindings/iio/adc/adi,ad4691.h           |  13 +
+>  3 files changed, 299 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
+> new file mode 100644
+> index 000000000000..b0d8036184b0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
+> @@ -0,0 +1,278 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4691.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD4691 Family Multichannel SAR ADCs
+> +
+> +maintainers:
+> +  - Radu Sabau <radu.sabau@analog.com>
+> +
+> +description: |
+> +  The AD4691 family are high-speed, low-power, multichannel successive
+> +  approximation register (SAR) analog-to-digital converters (ADCs) with
+> +  an SPI-compatible serial interface. The family supports multiple operating
+> +  modes including CNV Clock Mode, CNV Burst Mode, Autonomous Mode, SPI Burst
+> +  Mode, and Manual Mode.
+> +
+> +  The driver supports both standard SPI and SPI Engine (offload) operation.
+
+Driver is irrelevant. If you change mode, you change bindings?
+
+> +
+> +  Datasheets:
+> +    * https://www.analog.com/en/products/ad4692.html
+> +    * https://www.analog.com/en/products/ad4691.html
+> +    * https://www.analog.com/en/products/ad4694.html
+> +    * https://www.analog.com/en/products/ad4693.html
+> +
+> +$ref: /schemas/spi/spi-peripheral-props.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad4691
+> +      - adi,ad4692
+> +      - adi,ad4693
+> +      - adi,ad4694
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    maximum: 40000000
+> +
+> +  spi-cpol: true
+> +  spi-cpha: true
+> +
+> +  adi,spi-mode:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+
+Nope. You already have such property, so you cannot redefine it. Look at
+other sources.
+
+...
+
+
+> +  clocks:
+> +    description: Reference clock for PWM timing in CNV Clock and CNV Burst modes.
+> +    maxItems: 1
+> +
+> +  clock-names:
+
+Drop clock-names. Not useful if you call it just ref.
+
+> +    items:
+> +      - const: ref_clk
+> +
+> +  pwms:
+> +    description:
+> +      PWM connected to the CNV pin. Required for CNV Clock Mode and CNV Burst
+> +      Mode to control conversion timing.
+> +    maxItems: 1
+> +
+> +  pwm-names:
+> +    items:
+> +      - const: cnv
+> +
+> +  interrupts:
+> +    description:
+> +      Interrupt from the GP0 pin configured as DATA_READY or BUSY. Required
+> +      for non-offload operation in all modes except Manual Mode (mode 4),
+> +      where CNV is tied to CS and no DATA_READY signal is generated.
+> +    maxItems: 1
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: DRDY
+
+Lowercase. Or actually drop names...
+
+> +
+> +  '#trigger-source-cells':
+> +    description: |
+> +      For SPI Engine offload operation, this node acts as a trigger source.
+> +      Two cells are required:
+> +        - First cell: Trigger event type (0 = BUSY, 1 = DATA_READY)
+> +        - Second cell: GPIO pin number (only 0 = GP0 is supported)
+> +
+> +      Macros are available in dt-bindings/iio/adc/adi,ad4691.h:
+> +        AD4691_TRIGGER_EVENT_BUSY, AD4691_TRIGGER_EVENT_DATA_READY
+> +        AD4691_TRIGGER_PIN_GP0
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - adi,spi-mode
+> +  - vio-supply
+> +  - reset-gpios
+> +
+> +allOf:
+> +  # vref-supply and vrefin-supply are mutually exclusive, one is required
+> +  - oneOf:
+> +      - required:
+> +          - vref-supply
+> +      - required:
+> +          - vrefin-supply
+> +
+> +  # AD4694 (20-bit) does not support Manual Mode
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          const: adi,ad4694
+> +    then:
+> +      properties:
+> +        adi,spi-mode:
+> +          enum: [0, 1, 2, 3]
+> +
+> +  # CNV Clock Mode and CNV Burst Mode require PWM and clock
+> +  - if:
+> +      properties:
+> +        adi,spi-mode:
+> +          enum: [0, 1]
+> +    then:
+> +      required:
+> +        - clocks
+> +        - clock-names
+> +        - pwms
+> +        - pwm-names
+> +
+> +  # Non-Manual modes (0-3) without SPI offload require a DRDY interrupt.
+> +  # Offload configurations expose '#trigger-source-cells' instead.
+> +  - if:
+> +      properties:
+> +        adi,spi-mode:
+> +          enum: [0, 1, 2, 3]
+> +      not:
+> +        required:
+> +          - '#trigger-source-cells'
+> +    then:
+> +      required:
+> +        - interrupts
+> +        - interrupt-names
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/iio/adc/adi,ad4691.h>
+> +
+> +    /* Example: AD4692 in CNV Clock Mode with standard SPI */
+> +    spi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        adc@0 {
+> +            compatible = "adi,ad4692";
+> +            reg = <0>;
+> +            spi-cpol;
+> +            spi-cpha;
+> +            spi-max-frequency = <40000000>;
+> +
+> +            adi,spi-mode = <0>; /* CNV Clock Mode */
+> +
+> +            vio-supply = <&vio_supply>;
+> +            vref-supply = <&vref_5v>;
+> +
+> +            reset-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
+> +            gp0-gpios = <&gpio 11 GPIO_ACTIVE_HIGH>;
+> +
+> +            clocks = <&ref_clk>;
+> +            clock-names = "ref_clk";
+> +
+> +            pwms = <&pwm_gen 0 0>;
+> +            pwm-names = "cnv";
+> +
+> +            interrupts = <12 4>;
+> +            interrupt-names = "DRDY";
+> +        };
+> +    };
+> +
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/iio/adc/adi,ad4691.h>
+> +
+> +    /* Example: AD4692 in Manual Mode with SPI Engine offload */
+> +    spi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        adc@0 {
+> +            compatible = "adi,ad4692";
+> +            reg = <0>;
+> +            spi-cpol;
+> +            spi-cpha;
+> +            spi-max-frequency = <31250000>;
+> +
+> +            adi,spi-mode = <4>; /* Manual Mode */
+> +
+> +            vio-supply = <&vio_supply>;
+> +            vrefin-supply = <&vrefin_supply>;
+> +
+> +            reset-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
+> +        };
+> +    };
+> +
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/iio/adc/adi,ad4691.h>
+
+Where do you use the header?
+
+Anyway, drop example, two are enough.
+
+
+Best regards,
+Krzysztof
 
