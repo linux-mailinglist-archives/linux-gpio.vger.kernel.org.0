@@ -1,80 +1,80 @@
-Return-Path: <linux-gpio+bounces-32683-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32684-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WJDLD5bZqmkZXwEAu9opvQ
-	(envelope-from <linux-gpio+bounces-32683-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 14:41:42 +0100
+	id 8N2UKTzYqmn2XgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-32684-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 14:35:56 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAD4D221F0F
-	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 14:41:41 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 888C2221C7A
+	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 14:35:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C6E41306D8EB
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2026 13:34:52 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2B5BF3046D29
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2026 13:35:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DEAC311946;
-	Fri,  6 Mar 2026 13:34:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 587773126B9;
+	Fri,  6 Mar 2026 13:34:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFUDe1kd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RARZgury"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C3F30DEC4
-	for <linux-gpio@vger.kernel.org>; Fri,  6 Mar 2026 13:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC7730EF87
+	for <linux-gpio@vger.kernel.org>; Fri,  6 Mar 2026 13:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772804064; cv=none; b=C0Mrr/UiM+Ona2FuvCscWmsQzLUro7BCbsStOdrR/+SWl8hVpXSsFv9Ir+VVUdxRWsqIbp+2uy63bco5pYyXaCUdqpkNYCpDKsX2D5MRRtXwsmk8IlRAByO601AI+L3GM3z2hlTweWMRmHx0U65OV3ALnvKt6i8iSt57q13Ft8Y=
+	t=1772804066; cv=none; b=bhaTvSNJWCHO2qEMg4bw7YIVU7MyIDeX4gtkp4KZXYxK4DQhgXcWGUkXcnny1aamH22Zpbr955x29URIn1sDHVAlshfByx/I4vx/DWmhzJys85CkXIQmzxhplRw8GKWGFfCY6aDR3mp2obdRJX587auZaAxHPKYRXL6jBT5jF2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772804064; c=relaxed/simple;
-	bh=sQMuxREvI14xCKQr+ivPy4kgzqxvGsoREnyqbhHL524=;
+	s=arc-20240116; t=1772804066; c=relaxed/simple;
+	bh=OCqMqTV3Fk0GHlGjVJ0UFzNI1DHV1XFUgzJgSRR9AZA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ArCYAYaaGrKgSAHxKKAKJ+QgDgeTehII/kFLAs4t6BS5OrmfmtlKWbvyPh00g6dzHCrw0eEFUGcaF2NM2B228TYTQb8bLdX/8lH6h5/dtASSSvYuLXl6tbqxRPDvkx9kX6bM5uqEHleROSucFPTePDigNwJM5bjKH2LZ8+EASP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YFUDe1kd; arc=none smtp.client-ip=209.85.221.44
+	 MIME-Version; b=f71EEh0nErhqIuFLpilnatWJD4zVbRPLKHzu+HcwPtUiELyzjEV/GIl0ZiUqnmGdGMiLDSlSTpDJozY9coymN6MGZmDI4mWATc1Vu/a8kzBF9HhbkHWp7TRUuvg62xE3Q5YuSOtq7iJXBJpIF1T3DXUwR93BSdKU2aTRLX3qJew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RARZgury; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-439af7d77f0so5452959f8f.0
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Mar 2026 05:34:22 -0800 (PST)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4806bf39419so75346325e9.1
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Mar 2026 05:34:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772804061; x=1773408861; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1772804063; x=1773408863; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CMYqmIcoIdZ/7uRWwTU4Z40LsDbT8y6/p6+mjdfeyBI=;
-        b=YFUDe1kdAh5BUzJm95SlbvEjrWMA7kFTutlYeMjc8EHdrs75BLE2c3ZUIVrsF6kK2D
-         BhNACTsYr7mAFRt/YQ4IpwxEdR1CGVmsPBxU5Vg+5FRm3ZeBMMrHrM66zrTnjZdk+lmw
-         6zp3ybRxK5xJYyFOVcCmiaJT1PpVDjeiz3WkKf7BIY4AoNaBzEiCBn1MwCHHRjRoR9x4
-         AuzJErommwOz/6tCdM0mc3bl7X0BuoHIwe1tofWcebeO30k9+dE0EjADEtTpeI8X8BlY
-         wF/ZcbTF44HNdCqfhDzyPAcczaG80hMxkPLiIz9/TWjQPYzwjS/h3JRervtuY3bxYoDG
-         9X9w==
+        bh=+87770G0UGJrf+jBGNAZwy7BjuGZ53X0m5gpUF71N68=;
+        b=RARZguryO4ErVuxUbv/YdeAplJY3bpibccbpThpiYNLNRwG17J7VE6S8BWBeHmR2+Z
+         QsOd/YFpG1NSzx10htZk3tk8pUE/2MddazrvFOOLieHn2F6YNNttrGzAhaDvKrSsACus
+         2Rj064GoDsgbyztWp/zEtYSfDc8UiE/zZw4FoPjuMWPyyjcIJYN6tde83x4mzxO74EWl
+         WBMUFcdgoyX2O/zOHO/ThiSqt4QpT3XTwKV8psQdwGA9k6LlGtTF3vAvuagO0l93VjZj
+         xGS2eS66/n/N2fpWR6P80IDA1IIwgAsEKk1rlE68oEO+iOlJ4k4SFwm1QSppgwgEvou1
+         l5ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772804061; x=1773408861;
+        d=1e100.net; s=20230601; t=1772804063; x=1773408863;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=CMYqmIcoIdZ/7uRWwTU4Z40LsDbT8y6/p6+mjdfeyBI=;
-        b=mVtv0kAz+ZbBJ6QEzhafXkLScJNNMHZX9+BkVJjxlLT3TrFmfpti3vReJF2KkcOaSX
-         oCBxd1ZHXDWCEj7SjSO7uUgS6bcl39q4GX7DvilhYsA55ObnjBZWRbivaFvQptn/F/0E
-         eeK6gdVbJQp4h+HXYXovqGCmdqd39wtMguKueMZI4N7OqT6umo1aYmmCDy48ezfuRtXN
-         9v+fUNk6/ki1dhBVkHAr6Fzc3eWtI1E1MyrkBPEnMaQY8dhV6M+wTjxPqY+aWMbl5HNi
-         Oa33BbAhMoEq65lpPWyjK+gAP/ME9rZYdbbmv48cBB1Xvsr2B5h13IwGrtzn0q/t4SrY
-         uqbg==
-X-Gm-Message-State: AOJu0Yxxs0HrubfMKJ4vYO+Np/WmptbueBM6X5donXAQTHfo05IGZOVP
-	SasXjybsUe4BNS+lhbKf58hPCMlD6M/DGNsQOpYZ/NxIvP6kRhYdbMqD
-X-Gm-Gg: ATEYQzy5vYEvElmfsqpGA7axqFmfi++MdNZ6vNMxDmJWU0zCPZWHJmAxSTXnuLJ9QZb
-	X0S32YjI5gvRkkhZoOitoxz9pMHXsDOBa7bsPpKiArm2XbNluuxt+rlsNtmYxUxXSX/Ka/3OVzQ
-	PCQF7gZlcGQ+oRNzibjAuF/BJBTX/LwyszyPWmEZ6bDtu2nEqW5PsWY4F2APUV+buEbCuWgikyk
-	OEGWF8CewLBxpefOsZAsFSkHRyszmiueW+UXmxl+nG4OebJyzHG78fQ43zdZ/DySUuNSktsEWaO
-	RvKBlazlvnwKqm1t+t4HSbl9gyQChDFuf4phqnJN3jDinfvvcWI/0F8xhj5Tln5jP58rF8R7oh3
-	Z70bpXY6KPsKPgWr47XB+n2ac/SIxXQfJ6cCz6lCPQ+wPT2ghFxnuQceO58bvvvzcFNxLE4orpc
-	c07SCjQE3CGir5
-X-Received: by 2002:a05:600c:1c1f:b0:47e:e20e:bbbe with SMTP id 5b1f17b1804b1-48526967ce8mr36182365e9.25.1772804061356;
-        Fri, 06 Mar 2026 05:34:21 -0800 (PST)
+        bh=+87770G0UGJrf+jBGNAZwy7BjuGZ53X0m5gpUF71N68=;
+        b=ThBqYXHVoyKxCXAimosJ7aVlhJjaJ3uzQ/KUh6/d/2kp4zuQ/R3CMx8wFIUb6Y4Dz+
+         y0U+WxGgf+dlPlvZfiTM1exzbf7SoCOYs4cVN2+qLDEBxk4dmYQjPwIds0Yw841XzeJ8
+         MHf4G8dXx3sVrJkMSUk7cNbvyJGTGM9R9zqEcCSfs5c2lU8ee6caFK/TCI8DKmWguhJN
+         5sA04imUgcO7hYCi3m4YcMUd1yqAGjVpsuHhGT9XssjX7izYllyLdYPexIV2b/tYLhWJ
+         JzBgvqHJ0cJO5uNRHFshCUm7jkaQS22KNgWb1BIfJO5r/rF3Rab1n/o9gnSnOCzlMBYe
+         bNtA==
+X-Gm-Message-State: AOJu0YxZ9dy20tsosM3H+NP74y+aj3kq1kcVEUicTl7UWtnlo++Zzxr5
+	nBhUVvb9TLWa548o1i4BnqvvHbcknLLeBc5AErTVvD56h+rMw8ghL/Lb
+X-Gm-Gg: ATEYQzwLgHJhf3rPVTjdorK6QAh7Gk16Jv9tQh7fxWEBkdFtDGqp5TegCfj7UuLOPXq
+	sTF2uk4anXaERqLuOBqfXXcRmquKpxKBSZv+o+67awJ6ub+uigkWIvxFMhdZtALt5xC9P4OYvwq
+	8EwkJjzJbqaTkSs2slaszHo8hVbzJJp11WrrEwRlbPnXC4AGLb0492nnwqeRE+LhS9Ks8p12xA0
+	12H6K6i5RbibysfZD1BLQNatN+H/l45NgvAAVyI//hinJrSxSov45y9V+PhdeHJq5sRoA5kAD+/
+	uxS400Is/RY8TJdbO98JsHHaMpDgHvDBZudpDRXiZ4tT4Bm3rpFe5u0DHDniVEWwexAHLHBmlll
+	1BFM96/1Ar580NdBneNWfVCMxjjnMn0idmr4d5+gCSZwkd6X6BXlDpbBNnWKitAwgy7lgu7DeaC
+	+j1Yu/JJujN+bB
+X-Received: by 2002:a05:600c:3147:b0:481:a662:b3f3 with SMTP id 5b1f17b1804b1-4852671cbebmr31770145e9.7.1772804062705;
+        Fri, 06 Mar 2026 05:34:22 -0800 (PST)
 Received: from xeon ([188.163.112.72])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48527681a3esm80856735e9.4.2026.03.06.05.34.20
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48527681a3esm80856735e9.4.2026.03.06.05.34.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2026 05:34:21 -0800 (PST)
+        Fri, 06 Mar 2026 05:34:22 -0800 (PST)
 From: Svyatoslav Ryhel <clamor95@gmail.com>
 To: Linus Walleij <linusw@kernel.org>,
 	Bartosz Golaszewski <brgl@kernel.org>,
@@ -96,9 +96,9 @@ Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pm@vger.kernel.org,
 	linux-rtc@vger.kernel.org
-Subject: [PATCH v3 5/6] dt-bindings: mfd: max77620: document optional RTC address for MAX77663
-Date: Fri,  6 Mar 2026 15:33:50 +0200
-Message-ID: <20260306133351.31589-6-clamor95@gmail.com>
+Subject: [PATCH v3 6/6] rtc: max77686: convert to i2c_new_ancillary_device
+Date: Fri,  6 Mar 2026 15:33:51 +0200
+Message-ID: <20260306133351.31589-7-clamor95@gmail.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260306133351.31589-1-clamor95@gmail.com>
 References: <20260306133351.31589-1-clamor95@gmail.com>
@@ -109,7 +109,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: AAD4D221F0F
+X-Rspamd-Queue-Id: 888C2221C7A
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -117,7 +117,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -125,7 +125,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-32683-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-32684-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[20];
 	FREEMAIL_TO(0.00)[kernel.org,gmail.com,intel.com,arm.com,samsung.com,bootlin.com];
@@ -138,60 +138,63 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-Document an optional second I2C address for the MAX77663 PMIC's RTC
-device, to be used if the MAX77663 RTC is located at a non-default I2C
-address.
+Convert RTC I2C device creation from devm_i2c_new_dummy_device() to
+i2c_new_ancillary_device() to enable the use of a device tree-specified
+RTC address instead of a hardcoded value. If the device tree does not
+provide an address, use hardcoded values as a fallback.
+
+This addresses an issue with the MAX77663 PMIC, which can have the RTC at
+different I2C positions (either 0x48, like the MAX77714, or 0x68, like
+the MAX77620). The MAX77620 value is used as the default. The I2C position
+of the MAX77663 is factory-set and cannot be detected from the chip
+itself.
 
 Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
 ---
- .../bindings/mfd/maxim,max77620.yaml          | 22 ++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ drivers/rtc/rtc-max77686.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/maxim,max77620.yaml b/Documentation/devicetree/bindings/mfd/maxim,max77620.yaml
-index 42cbad56595f..246c7f9e572d 100644
---- a/Documentation/devicetree/bindings/mfd/maxim,max77620.yaml
-+++ b/Documentation/devicetree/bindings/mfd/maxim,max77620.yaml
-@@ -17,7 +17,17 @@ properties:
-       - maxim,max77663
+diff --git a/drivers/rtc/rtc-max77686.c b/drivers/rtc/rtc-max77686.c
+index 69ea3ce75b5a..3cdfd78a07cc 100644
+--- a/drivers/rtc/rtc-max77686.c
++++ b/drivers/rtc/rtc-max77686.c
+@@ -686,6 +686,11 @@ static int max77686_rtc_init_reg(struct max77686_rtc_info *info)
+ 	return ret;
+ }
  
-   reg:
--    maxItems: 1
-+    description:
-+      Can contain an optional second I2C address pointing to the PMIC's
-+      RTC device. If no RTC address is provided, a default address specific
-+      to this PMIC will be used.
-+    minItems: 1
-+    maxItems: 2
++static void max77686_rtc_release_dev(void *client)
++{
++	i2c_unregister_device(client);
++}
 +
-+  reg-names:
-+    items:
-+      - const: pmic
-+      - const: rtc
+ static int max77686_init_rtc_regmap(struct max77686_rtc_info *info)
+ {
+ 	struct device *parent = info->dev->parent;
+@@ -713,12 +718,17 @@ static int max77686_init_rtc_regmap(struct max77686_rtc_info *info)
+ 		goto add_rtc_irq;
+ 	}
  
-   interrupts:
-     maxItems: 1
-@@ -192,6 +202,16 @@ allOf:
-                 maxim,suspend-fps-time-period-us:
-                   enum: [40, 80, 160, 320, 640, 1280, 2560, 5120]
+-	client = devm_i2c_new_dummy_device(info->dev, parent_i2c->adapter,
+-					   info->drv_data->rtc_i2c_addr);
++	client = i2c_new_ancillary_device(parent_i2c, "rtc",
++					  info->drv_data->rtc_i2c_addr);
+ 	if (IS_ERR(client))
+ 		return dev_err_probe(info->dev, PTR_ERR(client),
+ 				     "Failed to allocate I2C device for RTC\n");
  
-+  - if:
-+      properties:
-+        compatible:
-+          not:
-+            contains:
-+              const: maxim,max77663
-+    then:
-+      properties:
-+        reg-names: false
++	ret = devm_add_action_or_reset(info->dev, max77686_rtc_release_dev,
++				       client);
++	if (ret)
++		return ret;
 +
- required:
-   - compatible
-   - reg
+ 	info->rtc_regmap = devm_regmap_init_i2c(client,
+ 						info->drv_data->regmap_config);
+ 	if (IS_ERR(info->rtc_regmap))
 -- 
 2.51.0
 
