@@ -1,74 +1,92 @@
-Return-Path: <linux-gpio+bounces-32691-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32692-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ELhOKqfkqmkTYAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-32691-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 15:28:55 +0100
+	id IKmCDlPmqmkTYAEAu9opvQ
+	(envelope-from <linux-gpio+bounces-32692-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 15:36:03 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55014222AE8
-	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 15:28:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D078F222C4C
+	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 15:36:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4D90F301F33D
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2026 14:24:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EA1123058708
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2026 14:33:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB45138E5CD;
-	Fri,  6 Mar 2026 14:24:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C01C34A794;
+	Fri,  6 Mar 2026 14:33:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="V98CLCO4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H/VOkmsT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AD933689C;
-	Fri,  6 Mar 2026 14:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E3F271A94;
+	Fri,  6 Mar 2026 14:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772807080; cv=none; b=YF+8Vpti1CibUkhuOzC5C0j1ik2+Z1z37Q7ocIlE4fI+/V12MBkfDg81wm7vpSvMnoibnqHJdowUnVIlOfaimZtJ2NdoEe4JShKhKfPkZLcr165ShYbwhhQCShtQSVswVa9rd7+8Qj5uWJeMjIwY/MR3nUIKVrX3YmGwyJWh+eg=
+	t=1772807592; cv=none; b=MhiJcfTERLv/RksU/yRBsY91kIfOYTA4uag2QP+XDIbJeIBfMPnZM5YvLoh7aDCMe0pEOOfvvrRfreXcsexgZe4LrrcALvJZF9VqijeNTw9GlLPOOZj3UY6BfF73v5MyRLV1mudWo+mA48ffC1CQnFsS2G/2abUs2ggaH0lGu/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772807080; c=relaxed/simple;
-	bh=6OkOqGrqWkYWaIXzcQ5bM3nvX8EDOg+UKgImTbdpC3A=;
+	s=arc-20240116; t=1772807592; c=relaxed/simple;
+	bh=6bpb8U4o1pj6JShYNq2ftR3yy8sMU1tPrbz8tpbfjDw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lICIwWjXRBF3gFLmieYeino+Ly1oOo4T+96oTZ4HlbtK83kNx+vjdgacgJaHmCD9bMNr5F1z9M7DqDOxoyBSoLS2wHTs2SdEeBMUKqJy19BPgNV450XlWdiOyVgxgM03N/ZS0GtKEd5DlfmUbGBFqAaKI2hUnj/BUaBZ3tz/T/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=V98CLCO4; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=iP/+KyLFxcqxA5l9rU9MI9S/9G1X3GO+0l1FGXNsyfQ=; b=V98CLCO4f2BlxzFF7j27+NDGzP
-	MUHc4RU4Jp2NxDPKV4Jt9hhoyRvN/Rbb2yOJ4xgG/pJes5IaA1WhQA2j4YiL6pIxjBvB0S/JHeS6N
-	UX+2NYTNArBvFyhwuaiFUfSZrboOr+yJolcZD6CfsVnqJsNO0kqGRSXAvhaY+h/GRuRY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1vyW6O-00AUTM-NT; Fri, 06 Mar 2026 15:24:28 +0100
-Date: Fri, 6 Mar 2026 15:24:28 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Shenwei Wang <shenwei.wang@nxp.com>
-Cc: Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=T8pmTt2tljy6MtgyryvXPs3lTnqzfueD0nAbp0Pdtt/WreQGrvobbdoReGtMNyMuJT7ygFzXQHDf/b/FtwXH3u4gDfX+OQUyguFPKEuZzyUdMl6+i9A7p1MwLbvXz9hGNfUmbMDGW01UjuDFxJgekMq4ytng3FmvBaCyJ3477+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H/VOkmsT; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1772807591; x=1804343591;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6bpb8U4o1pj6JShYNq2ftR3yy8sMU1tPrbz8tpbfjDw=;
+  b=H/VOkmsTRzdgOWf0yJoj0dA1/DLqOAE9fOSZuZu4qHOf5jfDfh7K3/b7
+   DYiYLUg3dLyTCowv15f4dj0+fIdG0dJgrj67DNSI/LbnPNhxYoDzbo6Rq
+   ROUIDkjTzmiCc1sq7rl3KA9cYysZZY7Z/XNAjJnNn9xXAmjBccFVlhB5J
+   ihmZYhvgTZDuVCCQRpDne5EX2n+qdytE2I2NLnFSzPU1TLV4TLzyoZCfO
+   n6sJCl0I6ZB+aucZGBWAXXDBTKEErMCPwSqqlTZ4we4XKvqVmiPysVv9+
+   1jK/L3lgY7kUxXXWFlY8tXiW3nEIo0IX5k6H4zcsq1HRIKMBRrM2tzQSM
+   A==;
+X-CSE-ConnectionGUID: 5DrlXQoLT9+m15QXptD/aw==
+X-CSE-MsgGUID: GThIlJLjSW+jLtF+jFoZOA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11721"; a="84627349"
+X-IronPort-AV: E=Sophos;i="6.23,105,1770624000"; 
+   d="scan'208";a="84627349"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2026 06:33:09 -0800
+X-CSE-ConnectionGUID: Ky+8fPOMQrC10urVEQ+gjg==
+X-CSE-MsgGUID: pUyz7LejTYaWQilWDsiUNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,105,1770624000"; 
+   d="scan'208";a="223510755"
+Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.1])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2026 06:33:04 -0800
+Date: Fri, 6 Mar 2026 16:33:01 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	"Hennerich, Michael" <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	"Sa, Nuno" <Nuno.Sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Frank Li <Frank.Li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
-	arnaud.pouliquen@foss.st.com,
-	Shuah Khan <skhan@linuxfoundation.org>, linux-gpio@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
-	devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-imx@nxp.com
-Subject: Re: [PATCH v9 4/5] gpio: rpmsg: add support for NXP legacy firmware
- protocol
-Message-ID: <676cee35-b5ba-4a3c-a6d4-b9e06e0886dc@lunn.ch>
-References: <20260304211808.1437846-1-shenwei.wang@nxp.com>
- <20260304211808.1437846-5-shenwei.wang@nxp.com>
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 0/4] iio: adc: ad4691: add driver for AD4691 multichannel
+ SAR ADC family
+Message-ID: <aarlnZUR984DH98V@ashevche-desk.local>
+References: <20260305-ad4692-multichannel-sar-adc-driver-v1-0-336229a8dcc7@analog.com>
+ <aarDJicasFlUnOkx@ashevche-desk.local>
+ <LV9PR03MB84149EAE41DE73C61B81091FF77AA@LV9PR03MB8414.namprd03.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,63 +95,66 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260304211808.1437846-5-shenwei.wang@nxp.com>
-X-Rspamd-Queue-Id: 55014222AE8
+In-Reply-To: <LV9PR03MB84149EAE41DE73C61B81091FF77AA@LV9PR03MB8414.namprd03.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Rspamd-Queue-Id: D078F222C4C
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[lunn.ch,none];
-	R_DKIM_ALLOW(-0.20)[lunn.ch:s=20171124];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32691-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,lwn.net,linaro.org,nxp.com,pengutronix.de,foss.st.com,linuxfoundation.org,vger.kernel.org,gmail.com,lists.linux.dev,lists.infradead.org];
-	RCPT_COUNT_TWELVE(0.00)[24];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andrew@lunn.ch,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[lunn.ch:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	TAGGED_FROM(0.00)[bounces-32692-lists,linux-gpio=lfdr.de];
+	HAS_ORG_HEADER(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	NEURAL_HAM(-0.00)[-0.999];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,ashevche-desk.local:mid]
 X-Rspamd-Action: no action
 
-> +static struct rpmsg_gpio_fixed_up imx_fixed_up_data = {
-> +	.recv_fixed_up = rpmsg_gpio_imx_recv_fixed_up,
-> +	.send_fixed_up = rpmsg_gpio_imx_send_fixed_up,
-> +};
-> +
->  static int rpmsg_gpio_send_message(struct rpmsg_gpio_port *port,
->  				   struct rpmsg_gpio_packet *msg,
->  				   bool sync)
-> @@ -572,6 +711,10 @@ static const struct of_device_id rpmsg_gpio_dt_ids[] = {
->  
->  static struct rpmsg_device_id rpmsg_gpio_channel_id_table[] = {
->  	{ .name = "rpmsg-io" },
-> +	{
-> +		.name   = "rpmsg-io-channel",
-> +		.driver_data = (kernel_ulong_t)(uintptr_t)&imx_fixed_up_data
-> +	},
+On Fri, Mar 06, 2026 at 12:39:30PM +0000, Sabau, Radu bogdan wrote:
+> > -----Original Message-----
+> > From: Andy Shevchenko <andriy.shevchenko@intel.com>
+> > Sent: Friday, March 6, 2026 2:06 PM
+> > On Thu, Mar 05, 2026 at 02:23:26PM +0200, Radu Sabau via B4 Relay wrote:
 
-Its not clear to me how this gets applied. Don't you need a different
-compatible? fsl,rpmsg-gpio-legacy or something?
+...
 
-I would also put it behind a CONFIG_ option, and in a different
-module. Nobody needs this code other than your legacy products. You
-don't need the bloat for your new devices and other vendors don't need
-it.
+> > This cover letter doesn't answer to the first important question: Why a brand
+> > new driver? Do your homework and check what is already in the kernel and
+> > explain in the next version why no other existing driver can be reused (refactored).
+> 
+> Indeed at first glance I thought about adding support for these parts in the existing
+> AD4965 driver. The registers indeed are a bit similar between them, but the
+> channel specific registers are completely different, and more than this the
+> conversion modes are different.
+> With this being said, I will try and make things more clear by answering this
+> question in the cover letter of the next patch. Thank you for pointing this out.
 
-    Andrew
+Good, the summary of the above will fulfil the request, thanks.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
