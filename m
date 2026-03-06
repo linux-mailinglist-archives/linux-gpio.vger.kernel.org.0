@@ -1,137 +1,221 @@
-Return-Path: <linux-gpio+bounces-32695-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32696-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IKXPJGYHq2kMZgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-32695-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 17:57:10 +0100
+	id ANfjKykRq2kRZwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-32696-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 18:38:49 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D2B42258D8
-	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 17:57:10 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C99822656B
+	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 18:38:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D19A1301AB89
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2026 16:57:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AE3D330F57FB
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2026 17:30:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8781F3ED5D2;
-	Fri,  6 Mar 2026 16:56:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2C4E40F8DA;
+	Fri,  6 Mar 2026 17:30:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="EnZ7nDp6"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="QGLQh2OH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE97C39E6D6;
-	Fri,  6 Mar 2026 16:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505E13ED10E;
+	Fri,  6 Mar 2026 17:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772816218; cv=none; b=pQo3YmO1rgfjNLjoJTETifVHf2X/dDpfzCCq0q9u7w3+AkP8LeU3CnwR7yjvXFB7ISex2aIyYblx5BLblUqtLhFCF8HbiES8t+O9N0z7EmU5mS1PVJ9fIGAyNr9NmZXRvc2KuAiPTA5TB8zA9WEi4oAg+JQi+bDnPSWA2uQ8fFc=
+	t=1772818239; cv=none; b=PPB1hd0Z9fVM9OdBc0Bq8qgUEaPyegY6Ysu6bYfFg1Zh6sPN66eFV7tSXRSIqLgXJtNrezqD4LVWbVBH/1CdkAwb3GsMn9nBiC73q4cfRSjZywMBgCxJDu6TIsX3zraiVFaC7LxemGfyZ46H0BFCmpqYYN/PSQ07DNANrfz/tOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772816218; c=relaxed/simple;
-	bh=ICmXdsuRx9SCp63uA3rtTqclNutbwaaYpNgkn73RSRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TLxvVLSCsJN47WmeaHqDmTpEtmQR9CZ31AN48CzmRw7YKySuNN/VoJIyzeculT8qAYCF4doi2+dGO/XJjL+LqH1IR0ZuK6hBjqTy+Ds2NyQAFN4svEJhkjslf40+tTrA3jy9GHns64pPbQK28VqiechzOhCJLpAPFs5dJ4k7wLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=EnZ7nDp6; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=WshcvYtkXXe1rUX6+z4QlVhkmQAJ3iSCBEssBtgD1BA=; b=EnZ7nDp6Vhm1GkvWzTfn4nSwP4
-	mvy9s71m8Cs6pMx1IfA1XvwYAqK6/kE2I9a2dvQEdd8snSHf7S6XwypDUc5YHR/HCEC/3cqhV3/Km
-	tyZCeMQkwyu4NMLtloJ/XsLkhVXfb8//uCGLIMSr86y/atlcUay6U7O21y2nOUA0bPXI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1vyYTl-00AVkK-Sf; Fri, 06 Mar 2026 17:56:45 +0100
-Date: Fri, 6 Mar 2026 17:56:45 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Shenwei Wang <shenwei.wang@nxp.com>
-Cc: Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Frank Li <frank.li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
-	"arnaud.pouliquen@foss.st.com" <arnaud.pouliquen@foss.st.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v9 4/5] gpio: rpmsg: add support for NXP legacy firmware
- protocol
-Message-ID: <8f83ba5c-bda0-485c-bf9b-052f1fc33879@lunn.ch>
-References: <20260304211808.1437846-1-shenwei.wang@nxp.com>
- <20260304211808.1437846-5-shenwei.wang@nxp.com>
- <676cee35-b5ba-4a3c-a6d4-b9e06e0886dc@lunn.ch>
- <AS8PR04MB91764DFDA8D3BEF64F583969897AA@AS8PR04MB9176.eurprd04.prod.outlook.com>
+	s=arc-20240116; t=1772818239; c=relaxed/simple;
+	bh=iirW3cdvIjMtLct2LQyILKWs+AkDGPwYr9osifxyzJQ=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=Ge+/8EQd9pijYto7QDo2Pxovhq5qhy8mbKLrznc0k9z9Lc4WNHRYV52G1cOK3OBaDEhM94Dxjzz1WXt2BmFYEcJDypjEeCk7Kcbup+QosUuI615OO8rHpBL+6SfEtXEpPOgixmOEet/YdqX+reXWZZxI6FrMrR6avJlpfMiyfZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=QGLQh2OH; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1772818234; x=1773423034; i=markus.elfring@web.de;
+	bh=aCvQlpXDz260BMbgYOCBaTLrk1IVxt/fe+l+8eDa07Q=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=QGLQh2OH6Rh5r7Ex4NTinAPjbRk0y+T7lEstWDiKPsLbb9KUrxD3Pg3nYpZRhaH1
+	 sZZ4lCJnrlb4ymw+QrxeI5MgXNDlBfsKufzocyTpk0NjEuWXjBqnaI2XZnLmVWnBl
+	 WOLDIDLoAP50+QR5DPNshU3LuqPSFEq6Tx4m7A11AYEldPpPTUQx64p3WWQKduhnz
+	 SxlB80bgMGC9PwiC2Tt/iG08i6lI4hRhDB9VratE6aoWhd6LBGovss3sdyk2GrPG2
+	 1CHV+/gJTnHhOl58++UuW8r95A1yCqCGD2dERX0wf5CtMx0UbQlbLob44z9AdV8b9
+	 pR9Qmzf+RH76DlKn9w==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from client.hidden.invalid by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M7Nig-1w1rr4224i-003kHq; Fri, 06
+ Mar 2026 18:30:34 +0100
+Message-ID: <7f2787b1-c176-4c30-b1c0-211461c93673@web.de>
+Date: Fri, 6 Mar 2026 18:30:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AS8PR04MB91764DFDA8D3BEF64F583969897AA@AS8PR04MB9176.eurprd04.prod.outlook.com>
-X-Rspamd-Queue-Id: 4D2B42258D8
+User-Agent: Mozilla Thunderbird
+To: Radu Sabau <radu.sabau@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-pwm@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+ Bartosz Golaszewski <brgl@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ David Lechner <dlechner@baylibre.com>, Jonathan Cameron <jic23@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>, Liam Girdwood <lgirdwood@gmail.com>,
+ Linus Walleij <linusw@kernel.org>, Mark Brown <broonie@kernel.org>,
+ Michael Hennerich <michael.hennerich@analog.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, Rob Herring
+ <robh@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20260305-ad4692-multichannel-sar-adc-driver-v1-2-336229a8dcc7@analog.com>
+Subject: Re: [PATCH 2/4] iio: adc: ad4691: add initial driver for AD4691
+ family
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20260305-ad4692-multichannel-sar-adc-driver-v1-2-336229a8dcc7@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:hqobFGqgeFmUhj8+QTtFaZhtp+EHaNRODlPpFs84hdCGIm3Yhjn
+ o4gqFFeLizyI3bnVGdarAApggE2VPfusplml0n7t+5ecGSAxMCccB/W5LDRv9P/ycHhShZE
+ u65pfU2gntVJ1VZytX2k6dTKGi8+XktK8BAJbOPSGLAFEqhlXWmcEd2/dxSyj8yFvnPSXQB
+ oJtAQ4fsR56rdBgOdBoGw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:0FqIr29Ofqk=;2c8394JyzZhP5s0weGhz7AVT6vn
+ 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
+ eYcKZHig=
+X-Rspamd-Queue-Id: 5C99822656B
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[lunn.ch,none];
-	R_DKIM_ALLOW(-0.20)[lunn.ch:s=20171124];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[web.de,quarantine];
+	R_DKIM_ALLOW(-0.20)[web.de:s=s29768273];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-32695-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,lwn.net,linaro.org,nxp.com,pengutronix.de,foss.st.com,linuxfoundation.org,vger.kernel.org,gmail.com,lists.linux.dev,lists.infradead.org];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-32696-lists,linux-gpio=lfdr.de];
+	FREEMAIL_TO(0.00)[analog.com,vger.kernel.org,kernel.org,baylibre.com,metafoo.de,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andrew@lunn.ch,linux-gpio@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[lunn.ch:+];
-	NEURAL_HAM(-0.00)[-0.989];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_FROM(0.00)[web.de];
+	NEURAL_HAM(-0.00)[-0.909];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[Markus.Elfring@web.de,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[web.de:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,lunn.ch:dkim,lunn.ch:mid]
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Action: no action
 
-> Other vendors may add fixed up handlers in the same way to support
-> their existing products.
+=E2=80=A6
+> +++ b/drivers/iio/adc/ad4691.c
+> @@ -0,0 +1,1196 @@
+=E2=80=A6
+> +static int ad4691_reg_access(struct iio_dev *indio_dev, unsigned int re=
+g,
+> +			     unsigned int writeval, unsigned int *readval)
+> +{
+=E2=80=A6
+> +	mutex_lock(&st->lock);
+> +	if (readval) {
+=E2=80=A6
+> +	ret =3D regmap_write(st->regmap, reg, writeval);
+> +
+> +mutex_unlock:
+> +	mutex_unlock(&st->lock);
+> +	return ret;
+> +}
+=E2=80=A6
 
-But that is exactly what we don't want. Why bother adding a generic
-protocol, if vendors then hack it around to make it compatible with
-whatever their legacy systems have? We want to discourage such bad
-behaviour.
+Under which circumstances would you become interested to apply a statement
+like =E2=80=9Cguard(mutex)(&st->lock);=E2=80=9D?
+https://elixir.bootlin.com/linux/v7.0-rc1/source/include/linux/mutex.h#L25=
+3
 
-How do we discourage this? We add the label 'legacy' everywhere we
-can, so it looks bad. We put the legacy code into a module, behind a
-symbol with LEGACY in its name, which is disabled by default.
-
-The messaging i've seen from ST is that they will use the generic
-protocol. We reward them for doing this by not bloating the code they
-need with legacy support for other vendors...
-
-     Andrew
+Regards,
+Markus
 
