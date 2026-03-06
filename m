@@ -1,213 +1,231 @@
-Return-Path: <linux-gpio+bounces-32701-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32703-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MJkQJkhjq2mmcgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-32701-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 07 Mar 2026 00:29:12 +0100
+	id 0C2rGoRkq2kWcwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-32703-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 07 Mar 2026 00:34:28 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C951228B04
-	for <lists+linux-gpio@lfdr.de>; Sat, 07 Mar 2026 00:29:12 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C40DC228C00
+	for <lists+linux-gpio@lfdr.de>; Sat, 07 Mar 2026 00:34:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3B46C3046086
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2026 23:29:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D763B30917A2
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2026 23:33:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96807378829;
-	Fri,  6 Mar 2026 23:29:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C75353803E9;
+	Fri,  6 Mar 2026 23:33:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DjVHqHXk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PtqlJnxO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD7337418B
-	for <linux-gpio@vger.kernel.org>; Fri,  6 Mar 2026 23:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8590E37FF6D;
+	Fri,  6 Mar 2026 23:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772839746; cv=none; b=ECX0084mzZnODViHnroQKRyp79ks/1TcqK71ro8Trf+tDmtSs7ZXqYLBPtWK/LyAD8Hm3g7seplhe+Ily1X4CmqrWpigDlVr9BygRHSuWA//OozsGSefvmZ4xS0sQRRSJCm/nUttIH7Qp5ZltHUkxGSBNHc+gQlJls+6f2NHqYk=
+	t=1772840021; cv=none; b=rUHdHI44xvT8LmP+iorqHooiiyh605VgQAzvsXpr/gprR6JL9jA38VSWUb8fVufsxFz3pBwu4KKVwKNJCGma1ffIUkApK+9PW15NjTwKKr5ZelmzvcljDd4NxpzD9Y9z811rXSkk2SX4Jt7uL140iV9AJNrtqR+endk7OMRiGUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772839746; c=relaxed/simple;
-	bh=UPz/1qsRdJyWIaGxAjf5OdGUVOKPj4+OWW8N2wpx+5A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d2gqOM50Ll+3QCOfWB3dZEBJ2q998nXVaOey+HXntLyHy1jEF3IyHVxZ1tSZV09gpXBIg2J393MRy6MlfcFBA9AZiGlPpkAbQQepg7bFVQIDwCB2ZP4i8aqg+xfa8zJSXPRntAgj6sIKOMO3cIgdsrXoKIRZhcOn1gK4MKqV9wA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DjVHqHXk; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-823c56765fdso5042050b3a.1
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Mar 2026 15:29:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772839741; x=1773444541; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jmuJidMV1Wwe0qpdw07DaES1yYrCFjR7mRIMJgUWNXw=;
-        b=DjVHqHXkitQOgeTCFIgY1UBwagDbOg0hzzUmH5zkATA4k0xEPq7OLMlqy06EFf7SLM
-         DRUlFsNujF9SCMe91CjSRtswTjxREeuvCzDnmOD/g8DIdB7pVB3aolUkj4GjgQeZrYwz
-         yiXBN1T5uiV0scYxH9WZwweKQQ4dgZwaBatAy3x/abym6TDsrnw99Y7db1gP45MaNHgK
-         hyzsRs9m5+2HF+ZBbgOrpNsRNxzyj6JoUHkUJa81EnXKQ3UBnprP7e3pxNdStaMiMGUe
-         ZtgNKAcGiZLJrrbK51+Qge5PvmA9BQtUFvNXiM9GuUVeBVAzs/0+hUld+kWh73RAfhG2
-         A/kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772839741; x=1773444541;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jmuJidMV1Wwe0qpdw07DaES1yYrCFjR7mRIMJgUWNXw=;
-        b=Okfb7exB6MzmojI5Rm/TbmvOEQ/omlHA47PI6emaE2WDq41EnhDrh493E2TvSPY4x9
-         mq77OsQpAscxCdYJeJlHEc8+TmqHO2ZzdY7/ohHrBr3le1CgSfJTa4IoumhlJDyTZLKf
-         IIgeJnW6z/4/ulSLsKfMv5Kw9vq1h0pfTPPTEaG6WACeaeCH94J0WiN1B+ezY0CnVgUc
-         qNaevFO/ka53BezOpEJx5LcYCprL/9ShwVzDH1104ou/0b1UctHIPsTqCQIGyn9eXtlM
-         GiM5T9hQQg5K4UFnNAhZHEG7Zmj1bQ7otc6ZH5X9qLIcO/Z4T+EmUo6T0ns8znOZxTTr
-         kWdA==
-X-Forwarded-Encrypted: i=1; AJvYcCXKQQ7aDYukDvOIJYLpMm6HCiz9cEqaxOCpOZzCBiFVUfA4SpGjaD3/8jqIneC0Txs/g3/QmLt+ZDyC@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywj2Q5Xd6KzN4G53CUmmjgYfsmhXablej1oO1lyXAXyOcO/gC/6
-	1bcxtqOD2I4+gZPvMAo7MYiJaUhxWdxX2zjlgSzDfZ7F79+LxYrA8Itf
-X-Gm-Gg: ATEYQzz1tPGyQ5bps3wcSCsMSgMIfJwSn1h6jFd+wyaaq7Hain/xF5OQAGRg3/qCkxF
-	ja5vuJEQjufTrCG6zQQ7iZXorzwLIZAA4MYhfhbTZ8PZ/CQq1Fzgzhl3mEtDYkWR+nZzJ1yUvJW
-	HvgDPV3Wny1SS/j/iR8utxUYVV6FrEY9Gr3Rq340rCGCs6U3TJGLWNIohvCOpLWmjATLTxCBJXj
-	vKoOlxTgzkFHzly3mUtmU32wdVVVxQlFvAnBKT1tURRoqGErpGFpgVQhbthsOuPIf+CtC61j5WR
-	N4qQVrhXD6oP17Hg4KoDrrwIk2QCsAvdCsAA+gM/i8TmQXl3U4ZRt42KBbTFWmPJa0beNxJ2BN9
-	ZCpcmGs0nrUKdmn93eyDMNw+NP90CQP9i/q0+ULY7Gj6h6194hLIjirb5UF7eCnPizlSv103XEx
-	rK4uvO6gUe4ag93bDsyBVmMMf7ahaCz6WTvvJb
-X-Received: by 2002:a05:6a00:9510:b0:829:8942:2c93 with SMTP id d2e1a72fcca58-829a2d86b43mr3749707b3a.9.1772839741072;
-        Fri, 06 Mar 2026 15:29:01 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-829a48d3621sm3213092b3a.62.2026.03.06.15.29.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2026 15:29:00 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Fri, 6 Mar 2026 15:28:59 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Alexey Brodkin <abrodkin@synopsys.com>,
-	Vineet Gupta <vgupta@kernel.org>, Scott Wood <oss@buserror.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>,
-	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sebastian Reichel <sre@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-amlogic@lists.infradead.org, linux-leds@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-watchdog@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH 10/14] watchdog: convert the Kconfig dependency on
- OF_GPIO to OF
-Message-ID: <2c6ad0ca-fd72-4bf5-9180-f45c20e60d37@roeck-us.net>
-References: <20260304-gpio-of-kconfig-v1-0-d597916e79e7@oss.qualcomm.com>
- <20260304-gpio-of-kconfig-v1-10-d597916e79e7@oss.qualcomm.com>
+	s=arc-20240116; t=1772840021; c=relaxed/simple;
+	bh=7UOHp0koFKWsMOVPOsKMr6xxO6qySG5YPfuI/lloL+A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kxD/VFHQD5AWWDO92W92UC/Re2/DPyeNn3l2r78r1eWqIWui95XKuMprnqUzN637gQ88EJ3gjTIfwlFE9mdSDJVVuBAHNTfxMiEcDvRHI+UUARNjAIly8tT9sllJrBir7J04Mv5xAMg5ZyCU9mNwKoi4kCKwCSozOtaBlK75ko4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PtqlJnxO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 861ADC2BCB6;
+	Fri,  6 Mar 2026 23:33:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772840021;
+	bh=7UOHp0koFKWsMOVPOsKMr6xxO6qySG5YPfuI/lloL+A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PtqlJnxOsVXUMnVHMJLwFlzx0PDjDXhZdKLSjSDvvhaIOiOa4Y174vbJqw60jRXGZ
+	 ZjENzdautpl2cE5Aj8qdQl1LDidR62CjxAaaGC7AbG6SvuOGxq2pW33UdXXtoJJWWH
+	 13r/Ahn3RnSw0OD2yuON50UkxpRTy+C+H7HlcxVPcCfopTSDgIPGEqEdbzYEqkfQsl
+	 R4d1+YS2lgNh1YKRw3SGrgzyluylh124eTIH09lRQtd4QOCWfNXFG10WKPmqiqbbdr
+	 xHz0cnB+Qv23cH6Vy8saoXQGfZRAWF6TfKbLqfS981g0e3WjKJOAYop4glfhve2G0u
+	 eOEk1szZJrCNw==
+From: Jakub Kicinski <kuba@kernel.org>
+To: xujialu@vimux.org
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	netdev@vger.kernel.org,
+	kees@kernel.org,
+	linux-kernel@vger.kernel.org,
+	krzk@kernel.org,
+	linusw@kernel.org,
+	linux-gpio@vger.kernel.org,
+	brgl@kernel.org
+Subject: Re: [v3,2/3] nfc: nfcmrvl: convert to gpio descriptors
+Date: Fri,  6 Mar 2026 15:33:35 -0800
+Message-ID: <20260306233335.1056182-1-kuba@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <A3CB5E4EB1A5B1D5+20260306035909.2447844-5-xujialu@vimux.org>
+References: <A3CB5E4EB1A5B1D5+20260306035909.2447844-5-xujialu@vimux.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260304-gpio-of-kconfig-v1-10-d597916e79e7@oss.qualcomm.com>
-X-Rspamd-Queue-Id: 0C951228B04
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: C40DC228C00
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32701-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[roeck-us.net];
+	TAGGED_FROM(0.00)[bounces-32703-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[arm.com,kernel.org,synopsys.com,buserror.net,linux.ibm.com,ellerman.id.au,gmail.com,lunn.ch,armlinux.org.uk,davemloft.net,google.com,redhat.com,linaro.org,baylibre.com,googlemail.com,tibbo.com,linux-watchdog.org,linuxfoundation.org,lists.infradead.org,vger.kernel.org,lists.ozlabs.org,lists.linux.dev];
-	RCPT_COUNT_TWELVE(0.00)[46];
+	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linux@roeck-us.net,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[kuba@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.988];
+	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	NEURAL_HAM(-0.00)[-0.983];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[roeck-us.net:mid,roeck-us.net:email]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-On Wed, Mar 04, 2026 at 10:02:31AM +0100, Bartosz Golaszewski wrote:
-> OF_GPIO is selected automatically on all OF systems. Any symbols it
-> controls also provide stubs so there's really no reason to select it
-> explicitly. We could simply remove the dependency but in order to avoid
-> a new symbol popping up for everyone in make config - just convert it to
-> requiring CONFIG_OF.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> ---
->  drivers/watchdog/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index dc78729ba2a5d6e035ed3cbe5c2b631d11b76b20..ef200339a22a6f9c51a46c9c0b8466add74313e2 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -250,7 +250,7 @@ config DA9062_WATCHDOG
->  
->  config GPIO_WATCHDOG
->  	tristate "Watchdog device controlled through GPIO-line"
-> -	depends on OF_GPIO
-> +	depends on OF
+This is an AI-generated review of your patch. The human sending this
+email has considered the AI review valid, or at least plausible.
 
-AI feedback:
+For local reproduction steps see https://netdev-ai.bots.linux.dev/ai-local.html
+---
+nfc: nfcmrvl: convert to gpio descriptors
 
-  Could this change inadvertently allow the driver to be selected when GPIOLIB
-  is disabled?
+This commit replaces the legacy GPIO API (of_get_named_gpio() /
+gpio_request_one() / gpio_set_value()) with the descriptor-based API
+(devm_gpiod_get_optional() / gpiod_set_value()) from
+<linux/gpio/consumer.h>, removing the dependency on <linux/of_gpio.h>.
 
-  In drivers/gpio/Kconfig, OF_GPIO is defined inside the "if GPIOLIB" block,
-  so it implicitly depends on GPIOLIB. By changing the dependency directly to
-  OF, the GPIOLIB dependency is lost.
+> diff --git a/drivers/nfc/nfcmrvl/main.c b/drivers/nfc/nfcmrvl/main.c
+> index c51d22e4579c..46cc1386ad3b 100644
+> --- a/drivers/nfc/nfcmrvl/main.c
+> +++ b/drivers/nfc/nfcmrvl/main.c
 
-  If GPIOLIB is disabled, the driver will still compile because of the stubs
-  in include/linux/gpio/consumer.h, but devm_gpiod_get() will unconditionally
-  return -ENOSYS, causing the probe to fail. Since the driver's sole purpose
-  is to control a watchdog via a GPIO line, should it be prevented from being
-  configured without GPIOLIB by using something like:
+[ ... ]
 
-	depends on OF && GPIOLIB
+> @@ -112,13 +112,12 @@ struct nfcmrvl_private *nfcmrvl_nci_register_dev(enum nfcmrvl_phy phy,
+>
+>  	memcpy(&priv->config, pdata, sizeof(*pdata));
+>
+> -	if (gpio_is_valid(priv->config.reset_n_io)) {
+> -		rc = gpio_request_one(priv->config.reset_n_io,
+> -				      GPIOF_OUT_INIT_LOW,
+> -				      "nfcmrvl_reset_n");
+> -		if (rc < 0) {
+> -			priv->config.reset_n_io = -EINVAL;
+> -			nfc_err(dev, "failed to request reset_n io\n");
+> +	if (!priv->config.reset_gpio) {
+> +		priv->config.reset_gpio =
+> +			devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+> +		if (IS_ERR(priv->config.reset_gpio)) {
+> +			priv->config.reset_gpio = NULL;
+> +			nfc_err(dev, "failed to get reset gpio\n");
+>  		}
+>  	}
 
-It has a point. Please update.
+Does the I2C and SPI paths properly initialize reset_gpio? Looking at the
+I2C path (nfcmrvl_i2c_probe -> nfcmrvl_i2c_parse_dt), the function declares
+'struct nfcmrvl_platform_data config' on the stack without zeroing and calls
+nfcmrvl_parse_dt() which now only sets hci_muxed:
 
-Thanks,
-Guenter
+drivers/nfc/nfcmrvl/main.c:nfcmrvl_parse_dt() {
+	pdata->hci_muxed = of_property_read_bool(node, "hci-muxed");
+	return 0;
+}
 
->  	select WATCHDOG_CORE
->  	help
->  	  If you say yes here you get support for watchdog device
+The reset_gpio field is left uninitialized with stack garbage. The same
+issue affects SPI (nfcmrvl_spi_probe -> nfcmrvl_spi_parse_dt).
+
+When the uninitialized config is passed to nfcmrvl_nci_register_dev(), the
+check 'if (!priv->config.reset_gpio)' may evaluate to false (garbage
+non-NULL pointer), causing the code to skip devm_gpiod_get_optional() and
+later use the garbage pointer in gpiod_set_value():
+
+nfcmrvl_chip_halt() {
+	if (priv->config.reset_gpio)
+		gpiod_set_value(priv->config.reset_gpio, 0);
+}
+
+Can this cause a kernel crash? The UART path was updated in this patch to
+initialize the field properly, and the USB path already uses memset to zero
+the config, so only I2C and SPI are affected.
+
+[ ... ]
+
+> @@ -233,34 +227,24 @@ void nfcmrvl_chip_reset(struct nfcmrvl_private *priv)
+>  	/* Reset possible fault of previous session */
+>  	clear_bit(NFCMRVL_PHY_ERROR, &priv->flags);
+>
+> -	if (gpio_is_valid(priv->config.reset_n_io)) {
+> +	if (priv->config.reset_gpio) {
+>  		nfc_info(priv->dev, "reset the chip\n");
+> -		gpio_set_value(priv->config.reset_n_io, 0);
+> +		gpiod_set_value(priv->config.reset_gpio, 0);
+>  		usleep_range(5000, 10000);
+> -		gpio_set_value(priv->config.reset_n_io, 1);
+> +		gpiod_set_value(priv->config.reset_gpio, 1);
+>  	} else
+>  		nfc_info(priv->dev, "no reset available on this interface\n");
+>  }
+>
+>  void nfcmrvl_chip_halt(struct nfcmrvl_private *priv)
+>  {
+> -	if (gpio_is_valid(priv->config.reset_n_io))
+> -		gpio_set_value(priv->config.reset_n_io, 0);
+> +	if (priv->config.reset_gpio)
+> +		gpiod_set_value(priv->config.reset_gpio, 0);
+>  }
+
+Are the GPIO polarity values inverted here? The DT binding documentation
+(Documentation/devicetree/bindings/net/nfc/marvell,nci.yaml) specifies
+GPIO_ACTIVE_LOW for the reset-n-io property:
+
+reset-n-io = <&gpio3 19 GPIO_ACTIVE_LOW>;
+
+With the gpiod API, gpiod_set_value() respects the active-low flag:
+  - gpiod_set_value(desc, 1) = assert (physically LOW for active-low)
+  - gpiod_set_value(desc, 0) = deassert (physically HIGH for active-low)
+
+The old gpio_set_value() ignored polarity flags and drove raw physical
+levels directly.
+
+The patch keeps the same raw values (0 then 1) but with gpiod_set_value()
+this inverts the actual behavior:
+
+nfcmrvl_chip_reset() now does:
+  - gpiod_set_value(gpio, 0) = deassert reset (chip running)
+  - usleep_range(5000, 10000)
+  - gpiod_set_value(gpio, 1) = assert reset (chip in reset)
+
+This is backwards - it leaves the chip stuck in reset after a "reset"
+operation.
+
+Similarly, nfcmrvl_chip_halt() calls gpiod_set_value(gpio, 0) which
+deasserts reset (chip runs) instead of asserting it (chip halted).
+
+Also, the GPIOD_OUT_LOW initial state in devm_gpiod_get_optional() means
+"deasserted" (physically HIGH) rather than the old GPIOF_OUT_INIT_LOW
+(physically LOW).
+
+Should the values be inverted to work correctly with the descriptor API?
+
+  - chip_reset: gpiod_set_value(gpio, 1) then gpiod_set_value(gpio, 0)
+  - chip_halt: gpiod_set_value(gpio, 1)
+  - initial state: GPIOD_OUT_HIGH
+-- 
+pw-bot: cr
 
