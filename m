@@ -1,120 +1,159 @@
-Return-Path: <linux-gpio+bounces-32649-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32650-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8InlCcOhqmlLUgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-32649-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 10:43:31 +0100
+	id UGs4B2Glqml6UwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-32650-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 10:58:57 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8423E21E23C
-	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 10:43:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 88FE721E52A
+	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 10:58:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D38713108957
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2026 09:39:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 58D1F301FD7F
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2026 09:58:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 125CB346ACF;
-	Fri,  6 Mar 2026 09:39:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3781834DB59;
+	Fri,  6 Mar 2026 09:56:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y9nx1fic"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="zKN16av/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C83AD346A0D
-	for <linux-gpio@vger.kernel.org>; Fri,  6 Mar 2026 09:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE0734D915;
+	Fri,  6 Mar 2026 09:56:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772789947; cv=none; b=YCwaO0HMYS7Y5y2U5RlwtaK8x+574jgXKh+u6z/dQfsECt6AKtu96ipgyRuW8XwaiAsg58uqamKvlB3QdFCjf2F/2076WrBQGdR+u9kNBUTtn/7LBhXLgPMB+5rT2R7ZbTEeurlUFPzTJ+KQG9K0aJUS4CZdhvD2j+F8k4SFzQo=
+	t=1772791007; cv=none; b=V9QSwx5EPstEGFXJb3PgZ3Ol+T3rY9qusyFA1CbKcriN/uoCsdaDzA4bP+LvJS+RaOjNzN8MM/F6HdXARZ4Ej+0cQeYh/p4RdXekk7+fOBTvi8cs12pJmI4O7r/oXXeTFaDwgbW1KBued60E9H7fxqVfzBpA6X1NND6N1pLzTG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772789947; c=relaxed/simple;
-	bh=rYSOOXpkoFJdrL1NPSf5rkoWzV92gzYi669jEpsYvls=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NdrLKCpNuxnp4BOqkykCgCccjV6wcvdTpavUgUl3HvQjmslMsSjqf9rPb/q63bWumcQVfpiO7Dn0SJo/U+S2+fVMujk2GJm5SwK2t3AVp2Dq2SibxfkdRKQyb3wlkbB4ZCyQZINGB7shPhDSB8AkC1c5SHLHcaO670KQQq0+DRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y9nx1fic; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D606C4AF0B
-	for <linux-gpio@vger.kernel.org>; Fri,  6 Mar 2026 09:39:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772789947;
-	bh=rYSOOXpkoFJdrL1NPSf5rkoWzV92gzYi669jEpsYvls=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Y9nx1ficr4tLVAJpDIwbmxaDuvFATOp8+NdNFrfTIhSeRBmfa86WxRCQ2yQ5WiciP
-	 E8pfJCGslVsjSoBdlR91Sw6Uy6pSrA/mAxCyAni1UdetJ3cXC5S4o7CSWMT9XB7gZR
-	 +YbBDcQc0WkXDPKV9vrgfmj/5ZboMyQas8OWq5W2AQTFq3Rd+bAbvvaLHCxn0C0YFr
-	 1yPRPOVqMI3I7wExc6JgnCfIY9Sg6EoBspfHkd8RwC+wU1EZ/43xXNAxFI8MkJQ2Iz
-	 9nDRSBOG+z57sYKpBt5KeJHIeersx2fjsGAPi5SfRXFhZkyy7r/kx2rrZCD6WB8Jqj
-	 GHs99goVQhvxg==
-Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-64ad9238d8fso8868228d50.3
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Mar 2026 01:39:07 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX5lGRJ5clmiK7IWK8kNijnMY+R/Y8LZ4v8r7EK3wrCGkJ9X0uKiVuHw4KUSVD2NZ9jlBgqhUKmw7j8@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7sP/fMZLTppuQB9MGacREJrVqxGHSGmJqk3NrYCp3v1aYKXOR
-	IkiCCaUaatwjQNhecKzfw4La3QkVYbVpILrw6G4+4jn3zehel8GCr522YxBERfMWnJp310KZIdb
-	r2m4nRqONCmYjw/LAmL7+NXbbp7+T7kA=
-X-Received: by 2002:a53:ee57:0:b0:64c:b098:8046 with SMTP id
- 956f58d0204a3-64d1418ee0emr1203778d50.32.1772789946680; Fri, 06 Mar 2026
- 01:39:06 -0800 (PST)
+	s=arc-20240116; t=1772791007; c=relaxed/simple;
+	bh=M0XofkcuBdV1zkdsuj7RJ1maZEJbks9g3VqYv60iJnU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ea1+hzL+QxNHhc4NtkXjce7NRYEPUt7SEScJMnDDVSgt1WO7VwDxTfQZ6lC+uKKm7Mapo8x3lUsbLwvvFmKw+/+ksx5Ntnsb66twL7erxoY5VVCbkSx3L/C64b1yDTIUUFY5Y5asIiMHZ5I1Xlj6vhhvqoLzq3Gw6Om8WSMTLY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=zKN16av/; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1772791005; x=1804327005;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=M0XofkcuBdV1zkdsuj7RJ1maZEJbks9g3VqYv60iJnU=;
+  b=zKN16av/YcO/gYHjYaU16mSlJXQ6p8l1+9SLEVylGTpIj/UUfrvtXmdU
+   tIDzYrUw2kzuJQUrZxG6H0zx3Tu7WgCu/QWT4ns5+NNhGFoN66mZrPBow
+   I3/Siw34DF23sIXntNqI43ZmqpI9T4ZM5TvEyZ6ZwfhOdkwyZCHAlm93t
+   ARqOmyQnDoje5m8zxU4ltfRHWqOaZDj1KEdIMcrBCIGjSQted+Gbb3M7w
+   2rpcnbqrQMG9iLcisYRqkaXdNT+KC5bI8IUNnH2pLhTDa4oYgycdBWYO1
+   5COuiQr+77VAHpvbv09JIVJiBN9H+vkuVmRzCfa97IrV9/qGKW3hr2WEf
+   Q==;
+X-CSE-ConnectionGUID: kkklftjzTt+tmC5CjQykRw==
+X-CSE-MsgGUID: y9hzzWGpTbWY5hyCt1eJ5w==
+X-IronPort-AV: E=Sophos;i="6.23,104,1770620400"; 
+   d="scan'208";a="54313383"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 06 Mar 2026 02:56:43 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.58; Fri, 6 Mar 2026 02:56:27 -0700
+Received: from DEN-DL-M70577 (10.10.85.11) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.58 via Frontend
+ Transport; Fri, 6 Mar 2026 02:56:22 -0700
+Date: Fri, 6 Mar 2026 10:56:22 +0100
+From: Daniel Machon <daniel.machon@microchip.com>
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+CC: <linux-phy@lists.infradead.org>, Vinod Koul <vkoul@kernel.org>, "Neil
+ Armstrong" <neil.armstrong@linaro.org>, <dri-devel@lists.freedesktop.org>,
+	<freedreno@lists.freedesktop.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-arm-msm@vger.kernel.org>, <linux-can@vger.kernel.org>,
+	<linux-gpio@vger.kernel.org>, <linux-ide@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+	<linux-riscv@lists.infradead.org>, <linux-rockchip@lists.infradead.org>,
+	<linux-samsung-soc@vger.kernel.org>, <linux-sunxi@lists.linux.dev>,
+	<linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <spacemit@lists.linux.dev>,
+	<UNGLinuxDriver@microchip.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Steen Hegelund
+	<Steen.Hegelund@microchip.com>
+Subject: Re: [PATCH phy-next 07/22] net: lan969x: include missing <linux/of.h>
+Message-ID: <20260306095622.rh3sje3wnexbdsqb@DEN-DL-M70577>
+References: <20260304175735.2660419-1-vladimir.oltean@nxp.com>
+ <20260304175735.2660419-8-vladimir.oltean@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <7187C401290C256B+20260304084808.440955-1-xujialu@vimux.org> <D5F95320CE72E20A+20260306035539.2443355-2-xujialu@vimux.org>
-In-Reply-To: <D5F95320CE72E20A+20260306035539.2443355-2-xujialu@vimux.org>
-From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 6 Mar 2026 10:38:55 +0100
-X-Gmail-Original-Message-ID: <CAD++jL=sj=DCuRvOveVeUo1RWmS9ZvA6YqXNjOQf3qhvyRzL+A@mail.gmail.com>
-X-Gm-Features: AaiRm53NeM6JXBaMsHRX5zNF9kdjR-GGQovZIV0Smv7jXgjQSEjIMK3Gzrx3URo
-Message-ID: <CAD++jL=sj=DCuRvOveVeUo1RWmS9ZvA6YqXNjOQf3qhvyRzL+A@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Remove <linux/of_gpio.h>
-To: Jialu Xu <xujialu@vimux.org>
-Cc: brgl@kernel.org, kees@kernel.org, krzk@kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 8423E21E23C
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20260304175735.2660419-8-vladimir.oltean@nxp.com>
+X-Rspamd-Queue-Id: 88FE721E52A
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[microchip.com,reject];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[microchip.com:s=mchp];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-32650-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32649-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[microchip.com:+];
 	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_TWELVE(0.00)[30];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[daniel.machon@microchip.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	TAGGED_RCPT(0.00)[linux-gpio,netdev];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vimux.org:email,mail.gmail.com:mid]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Action: no action
 
-n Fri, Mar 6, 2026 at 4:56=E2=80=AFAM Jialu Xu <xujialu@vimux.org> wrote:
-
-> Convert the last three NFC consumers of <linux/of_gpio.h> to the
-> GPIO descriptor API, then remove the deprecated header entirely.
+> This file is calling of_property_read_u32() without including the proper
+> header for it. It is provided by <linux/phy/phy.h>, which wants to get
+> rid of it.
+> 
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> ---
+> Cc: Daniel Machon <daniel.machon@microchip.com>
+> Cc: Andrew Lunn <andrew+netdev@lunn.ch>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Steen Hegelund <Steen.Hegelund@microchip.com>
+> ---
+>  drivers/net/ethernet/microchip/sparx5/lan969x/lan969x_rgmii.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/net/ethernet/microchip/sparx5/lan969x/lan969x_rgmii.c b/drivers/net/ethernet/microchip/sparx5/lan969x/lan969x_rgmii.c
+> index 4e422ca50828..249114b40c42 100644
+> --- a/drivers/net/ethernet/microchip/sparx5/lan969x/lan969x_rgmii.c
+> +++ b/drivers/net/ethernet/microchip/sparx5/lan969x/lan969x_rgmii.c
+> @@ -4,6 +4,7 @@
+>   * Copyright (c) 2024 Microchip Technology Inc. and its subsidiaries.
+>   */
+> 
+> +#include <linux/of.h>
+>  #include "lan969x.h"
+> 
+>  /* Tx clock selectors */
+> --
+> 2.43.0
 >
-> Changes in v3:
 
-v3 looks great to me.
-
-The NFC subsystem is orphaned, so I suggest Bartosz simply
-merge this to the GPIO tree at his earliest convenicence.
-
-Yours,
-Linus Walleij
+Acked-by: Daniel Machon <daniel.machon@microchip.com>
 
