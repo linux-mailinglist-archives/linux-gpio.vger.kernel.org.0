@@ -1,188 +1,198 @@
-Return-Path: <linux-gpio+bounces-32629-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32630-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cM2UBcF+qmlhSgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-32629-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 08:14:09 +0100
+	id gICIJt2DqmmaSwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-32630-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 08:35:57 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB11E21C4F4
-	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 08:14:08 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00E7221C819
+	for <lists+linux-gpio@lfdr.de>; Fri, 06 Mar 2026 08:35:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 0ED4D302490D
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2026 07:14:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ACD0730480E9
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2026 07:35:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98F9A372B32;
-	Fri,  6 Mar 2026 07:14:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7327829B799;
+	Fri,  6 Mar 2026 07:35:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="YdO0GjZt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EM40PIl3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012019.outbound.protection.outlook.com [52.101.66.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DE5EEBA;
-	Fri,  6 Mar 2026 07:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772781244; cv=fail; b=Zo9K2VnPBbNUpHfDi2d09eJpMsCXAeyH79mK7ww0fO1tS9Jz7U+w1OWPAJMM96fTHbb9cR1ynBdgC//I/Sgwu5py5W3AJUh3uwxkMitOhEHgksPg+YPfcXVWGZXIAd+h0PZvImEMDrNwJvdzuktkgwtSM6I8ml5+mk6RyX0/nNc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772781244; c=relaxed/simple;
-	bh=c8RERvrNFVXu+J+2v69DAU5iMgqAPJFJjxX2TKt/Opk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=U7XIdp3XStYHASm86J5OBBzsZ8n3SojEsp8G0Q6ekTkbxFMwK1JijYoxu2dkuiIqbtIHJs2wGJzeJgwR+y+vJgIh4pyPCGFDjtmFLBw9i2bv9DGUjIMgroWxVmmKt01EKVgX6+89i2IeM8yG79TEW8P5WQTbrLST9arwY2ZMnsM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=YdO0GjZt; arc=fail smtp.client-ip=52.101.66.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=d1AP5a4Njb/J5AvAydjuGirZEYVbsR1Kia0JsgSF0vhdlLnY8NQa0fkjobjYmKEwjdrg5SystxDWVUZYD6B3taY6epnNDyrW2ZemCtbeeRWDMiac4zaL8rvAD1PgbwI1918d9wucM2G+P9APApn3KYmM/7EAna+WTdsGnOoPieFVXyFf5BO0EPHLz7axHHPlcbkqJJigE2pfuetIRzLxHcsi/zyu+o9Ok8rvNmbVz6ahDImUhOPGCOQqb4mBe8iRLj43YEfuw+GNN0BvHrLJvCQLQFLi7HYayEWAIHwUW3+/I/jatrtl1ag5BDvWMibo2TKlbaAzqDjdYZypWTK8BQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=c8RERvrNFVXu+J+2v69DAU5iMgqAPJFJjxX2TKt/Opk=;
- b=pHXc2JAiNdR9mpY1EM9GVCKghx86cn+aDmmp9toCDvBRYVoah+WFvDvZh8VzyCk76pL3YRZMzqlM3Cn7ItLRDhQ7Bq7Mz/ujcloeHajtPisPu0IxpXuqnM6iFTAPWRedqPYjs5EN0p+9/DJM1t907slus7oC0PctjBUzqubdzqX4JCoMEGJSCcpL4MjVlDKPhKfgJNoZsX9PgddIcn/X6bqYIoYQp3P9Dq8G2zVwiqSSTHj4isni84wSuFOfOk1XaDKUumG30umUdY6uWp7BNt4P5lt1prFvOgZbtDevPaGZFyNqJK79+6GERLcGd45ZvGtaqH8L2wG4HbmEw/dHew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c8RERvrNFVXu+J+2v69DAU5iMgqAPJFJjxX2TKt/Opk=;
- b=YdO0GjZtEzK7qSMfFv0xNFTLw0SZlgfY+3/JBDt4rfEOdihf86hakKpk4uVYNlGCdDsEn+CDZcF33ebs/NLm0T+Ovhs2WIYL5tofthEo9/TijYCy0ZSm19S0Db40Al5jUhbCT7bs3pbh9OMA+jnb/a1bp1ObsbN0u7JLReQ6TUDMuDZzXrMuJAYwasA0hOuNRjNic2A+x2wN8P3yLFOgR1rHmjfBv6VvYjOnNbksEFXolj4x6rZ6ueWYnouNrTxJdkAUn1txsPlz6G3gyVpQD9bz0n7ozlH7geWtKb6A1iJOQeyr9jIHaQoMJsjKqdZ4YqxxRlz3viXUn4CQRIf7Wg==
-Received: from DU0PR04MB9299.eurprd04.prod.outlook.com (2603:10a6:10:356::7)
- by AM0PR04MB11996.eurprd04.prod.outlook.com (2603:10a6:20b:6fd::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9678.18; Fri, 6 Mar
- 2026 07:13:59 +0000
-Received: from DU0PR04MB9299.eurprd04.prod.outlook.com
- ([fe80::43b2:647b:5320:225a]) by DU0PR04MB9299.eurprd04.prod.outlook.com
- ([fe80::43b2:647b:5320:225a%6]) with mapi id 15.20.9678.017; Fri, 6 Mar 2026
- 07:13:59 +0000
-From: Aisheng Dong <aisheng.dong@nxp.com>
-To: Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Jacky
- Bai <ping.bai@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>,
-	dl-S32 <S32@nxp.com>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, Linus Walleij <linusw@kernel.org>
-Subject: RE: [PATCH RESEND] pinctrl: s32: correct kernel-doc bad line warning
-Thread-Topic: [PATCH RESEND] pinctrl: s32: correct kernel-doc bad line warning
-Thread-Index: AQHcrTNBYPJjVMuAl0iT2+OjSQqZm7WhFwzw
-Date: Fri, 6 Mar 2026 07:13:59 +0000
-Message-ID:
- <DU0PR04MB929989AC3592BAF25298F213807AA@DU0PR04MB9299.eurprd04.prod.outlook.com>
-References: <20260306063411.2041232-1-rdunlap@infradead.org>
-In-Reply-To: <20260306063411.2041232-1-rdunlap@infradead.org>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9299:EE_|AM0PR04MB11996:EE_
-x-ms-office365-filtering-correlation-id: 16b58468-1eb7-4808-8d48-08de7b4ff004
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|19092799006|38070700021;
-x-microsoft-antispam-message-info:
- HBvjxRb6BofNRlQU0q+IOMU2XRHouwuV6u/7cKPduePJuYJu+Vr5tPWksKrb6yWv9y5BJwzgcoQ3N5foXjrxiVXzTrV7H2KwT48iu4C+6cXCOXxqtH3L2E67cg+YwpkSewDHQuOg9Yv+its59gzXy1l9xChYU12Olu+GOKNA7iVWKkzVmgI79TUR7ZeQl/3TRwthtMFGrydCfFwQeoEwLULjXPEKFFsenXVYEEdEr9O0jk9f4IAvRsnoxq7SBSLsQO+Q8kym0KL6SCCDlDmQiXGwN91QhdFPqB8bLIhoE8afeUPwTVoUycgbJQ5h5rF+ygqpm98og81xQYD+ry1y2EGlllffFX8V2MEYkcaTzmoXhEp8LIVc1CtXfijfiyaRjvQqr2+tLtPNinEX6Q3zLdIzNrB4URrmILrZ0wlIADV24g8OP2nSoVKiu+SR77OyRH3hdHRkdXiAjxNXojtxEtqlXFYAPCmi+SRknguVGRvgDZ4IXOR93WKm3lPg/W9wRMwEOa2Rb4w0r2i9/ifAk6vvx1/qWS4I0mPkyitw5zd0RN7b9J+/1Z1BnenVF8wAQpDmu79UnF4FUaW3RJSGj85aNCXu2fMzJNdgqwHVXHh0FETkWs6kPHBXLJaMJgJOUBqS9EnHp7Ktm1ITqsjzgGxCbV1NwA8Lw55ZbtFUmdKVFsUJia7ZC2clC7ZGdR+WIcw347pptrWnd2sdyn1euly2sI4dOnVpC1JLBS4xkBbJlKu4uykQMAydn9y1Bz2zN80xqdnK9yzyhdA9HAisEAvbnPzfioBNAhb+vr0lTxc=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9299.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(19092799006)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?yDDQkSxc7HLw/Ps8KXMg+BvZG9SbnkPbKVVj3DVc4GOSBo1Cb49i418trNd6?=
- =?us-ascii?Q?YX2SRv2mC37zYGe9movwHtVsptcjuiDBYvSs8e/vnuarIaVFGXj5TDMgfhCt?=
- =?us-ascii?Q?lr67HjffD9HNti1i5UZSLx2wHB0V+wUwmNwk3YNmupvtnS8fxp8mvI9ng8Ng?=
- =?us-ascii?Q?l14l/g8qeNHkwMrRGZIkU/BEs9GcBw4DlngLJCHPF0WSjYfG2FC6d/TVvLpR?=
- =?us-ascii?Q?4tCMWSmU4hPz9hwWvzBNIxITNrndzrphIEMumdS61fix9XGbgKl+EuuZGmsn?=
- =?us-ascii?Q?7N5JGYO5VhCglhABu7hwCtu7EAymqmkCdto3TTfxB6tc/mfojorEdia9F9Mw?=
- =?us-ascii?Q?ATorTlJ4Gnpb6dvw/U3Lf/zdCAV9p5yZVkLUknInPJy9FhloQ6SHh2+u17FN?=
- =?us-ascii?Q?OANl+wvXXRMn1j4U1wgNnkeXxPK+VrjzSM9Hkx/U+WO6PhRTtBVdmVE6y7nq?=
- =?us-ascii?Q?u8gWHsBfCaoo9WmyzNJvebIsQq+82GQtFfuOCMBrsYL2mMtfy9etsN+75PCG?=
- =?us-ascii?Q?3pIWzU2IDvnOU87RhrhY15eZ40MKAN4agc00xv8e1+7Lv/srpcZHYf6cqY4N?=
- =?us-ascii?Q?5YS8d2L1iX95HjJ0nMRc3mZ7YB2ZYSTBYDugO84as3JW7ilDv7h+0DZZpni4?=
- =?us-ascii?Q?/NdVIn0OWzXRDwJeiflT0Uxls5j12dnhnwCyIfcDjx3GF8eXm5MDRvJjIi3N?=
- =?us-ascii?Q?8DUcRMngaOS/7L2xLybW7yfpQd0WWIFKtmntSkKN9xcXyUtN6sQeuGX3K91R?=
- =?us-ascii?Q?ekGMlsPqCQ9D9QcIlh7MktsjxBPsb2zZqUp4/3GR8gKJbhtUaY2qsXNWU5io?=
- =?us-ascii?Q?FrXEgOxVY7ChfSiK9PBikjr7arJpL/52Z8YDNkpphIF3wZD9+J8rF34d4OC+?=
- =?us-ascii?Q?q3aZL13VNynjLGG8Bb877Rkn05FsURvlHnqy3Ys/UAoDFp02qs9XylvTnTvq?=
- =?us-ascii?Q?5iyAy5mRvpwu6EuQ4bH0ULKAipmil9K8tW0cLLNA/f6UIJBd6x1FSkmOCQ4x?=
- =?us-ascii?Q?LpNvpWlJAsCFm/kkG5FkVeMeQMak8Q07YZgk/T+hG6j45TLNfOHk1PJu/Hvd?=
- =?us-ascii?Q?admBJMXhWGZ9pJ9PwlKuzRgmNdRzPvR9IOT9q5j2x+LojLQWR0W9QBK2Hq32?=
- =?us-ascii?Q?cC2WloHNKGmylh03X9OifFA0T5tU22Yj5cDoPWNxtZFjUqKo3ZgqEOvJzE6b?=
- =?us-ascii?Q?j4TCEslb9oUUST6uR6oXyGxmaBBGd8ddVmHGv4yOQVTMAz//qkSzPufo9UO8?=
- =?us-ascii?Q?JP1uYYePvx6GE1TvbUw7x63YElmDgfYzIrW5ZP7e03owkVeqrw7V0zmiWILo?=
- =?us-ascii?Q?GGZ4U7eVZkwO3/y8plqBjQZvwsTDNBDMiFMDjyHOkw8TAE+DaUWoHZe/AY/x?=
- =?us-ascii?Q?rZX4kr3B2xOGDvChJQ4Rak0C2DoMX1sv5oWkqmNR2+52mmSPdh+7Y+1hXDXa?=
- =?us-ascii?Q?1NmkVx2i8EHwgHod3LTAbzoPff0DpNQjbU+9xm4rbv1UF4C/MTV5riyys16k?=
- =?us-ascii?Q?gH/4K5G/id+gygFb8Is58oMbxjDtaI6rZB2G1aOfhMtuQyfUqYyKHgT+v0Mb?=
- =?us-ascii?Q?RnCAt/B9NBMoT6W3U9IXM+3ZdT7+xliQBJNmEQOxECPeQlyFu/aDhyBqGzvZ?=
- =?us-ascii?Q?OctYwBRvNFleIllBpzfVNn3ol1t/owUGXgWpj/3lwyBP2z0oQH/qpJMNhOhI?=
- =?us-ascii?Q?dJ13q2d7H3InHPK0OTqbKSOWEn9AOtpsxb+vz3BtExX8gd03?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB3B374178
+	for <linux-gpio@vger.kernel.org>; Fri,  6 Mar 2026 07:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772782516; cv=none; b=UI2hQNgKYSNh5+XYQC+VH8WEDuOk4xWs3Aym3jGvHv9ZMPwNhV7Gi4yWFGeT2KA9EILOBBAq/2n8nX9kBREX7tnQy3ePWKDNtSZLzOizV0ZOaBFOQiy0k9NTwrr6bHdNv4WWE6yCgMMInaXcWtYC69a2QNnO9ZtYDd2jirn4R3k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772782516; c=relaxed/simple;
+	bh=6UStxTN0ltHJ/GkEo7bx/EfcLlbOuCrV481hg4emXsc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=s+0Bk5kBeSXXyiHGiD9Dd/vXgNQ5aZb1MfN9xORQRBAJ6aE2PlJgZ9dPtPFMq2kLWwQMAaj9fDeTKQ/LSVUFIEm+JT1e8gjZv5hWH+8QeE6739UJ/KrRw7WKVrxPaja+AG0LjHcrAZmBEeEIqj/bQtV82XqypwjiKTdoD7L9hIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EM40PIl3; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4806ce0f97bso78064765e9.0
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Mar 2026 23:35:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1772782513; x=1773387313; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y6XoprPGy2obVCQE2uQgSeOts5auhhet8rC7x7T+9nI=;
+        b=EM40PIl3oC8AvBM9s2nfJZo4h6hSmBkn1M3E60cXyupESAl/YpD9NcmBBp9xHqzvXP
+         cVg1ms4rFDZH2YdNEIGFWeHchjBTPrg5aLsWX3Ix+UhXFKUOEcOcYzs1eZzPTdaoL/7+
+         DWMn1/qN031qigecNUIXfnelZwDK1HTweTTcFkFd8oqbLH2Lk9sIn7uPwVCMAS9LhOot
+         Gjr27j8tye7Ku02D94lqefFgmF3UniDvYfOvGYTTRJ0Ap8QZJNC2oohC6hpGZ78bP4n0
+         ATCoCadkhQThOTpioqDYEA8qsE6xvakPTRBV+DQm9ah9MSEld+m+F1JBNEFwwtM8AvXI
+         bQQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772782513; x=1773387313;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y6XoprPGy2obVCQE2uQgSeOts5auhhet8rC7x7T+9nI=;
+        b=ebNI/rdit0M97qfIZDaU36zvjjopDjxqhdLHmoZ42o+6I9PtPshmAbl+QCbLzwQDYR
+         T1OuSiiZ2KfBb4jjhsPsknRf8qcI85SqEkYeDKafW4kkWStAZ6mE/JWZIYPsMKB0nA7l
+         sdfM8THpET6MlzPVShGpZFLizo+QpBOZKX1TJIS9+M92NUEisDr/u965A3/KahFna6RP
+         hX7a8X5ev3MCjWD5fXReP97YU57g5eA/Ctar5D1XLSO5sc3AHu6qv1Y/2R77z5VX0zro
+         QJRFFMhs2ialrg7X7JlN5UQj5JqlLQNV2lmfubS7k7+IJphhiIZw60fYfVmqNcyFrLCB
+         SWug==
+X-Forwarded-Encrypted: i=1; AJvYcCVZqp558V39oEYHUleTx156UrcWigliIM0c4QUpHSJ8Roq3ft5ncRRX3S6pGptnHUeQW1KlrtyCmZsY@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqV1xfUIc9+vChg169GRvJ8uqBCh0LxWeDI0Ckvk+c45TDLnY/
+	bfu+h3YaglU1whmjSZeaE7UfyEKWvvibOS+rjGjFfnOi1RIoSFXVWrIs1xnaRD1Rd88=
+X-Gm-Gg: ATEYQzwCEouM+tAJVxbjiOm87xSmDMubOFAec+Io3nW1s+uaV4pec0xF33tdS5FMnP5
+	p6Qlr4/6Rpx2Mi8taKHSbAyP3Ny5Dhd1WjXhuzvd1oaGFw9iFVr5ueRZp2dZHR3UCRjoSLotXiU
+	qCQ/K9ToC5GgyDCzIw41inkOE7a0c5PVAMA2LGLhOrho0bnwAtIUo0BHbrjar41gkMvm50umOfW
+	OCIj0vjsi8FwmzEsxFisPwvnliQh5wqXDvRdmPLB4nOInH/bp34u1mvxZKKhMV5mnIqvVSzeylo
+	JAoPKwlnqo9+OEakbmEMH4BHBjKuGmLrUzrBu1Of6qIrbhwUeEOPaip4l8NT6uMMVCHqy1hk1um
+	iTq1dmzVwuEciyvyY3uMjgvf4vD6PQWNcfYXAZJlu6aBoLnltEv572tC43HGiAVwJONQm6mVR2p
+	spzO/m15LLWaZ7xRv5DR1Lv8sYfdtFwx2P47CxBXc=
+X-Received: by 2002:a05:600c:4e89:b0:45d:d97c:236c with SMTP id 5b1f17b1804b1-48526951430mr16785555e9.21.1772782512990;
+        Thu, 05 Mar 2026 23:35:12 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439dae2bdf8sm1953812f8f.25.2026.03.05.23.35.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2026 23:35:12 -0800 (PST)
+Date: Fri, 6 Mar 2026 10:35:09 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Shenwei Wang <shenwei.wang@nxp.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Frank Li <Frank.Li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
+	arnaud.pouliquen@foss.st.com
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	Shuah Khan <skhan@linuxfoundation.org>, linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Shenwei Wang <shenwei.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+	devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-imx@nxp.com
+Subject: Re: [PATCH v9 4/5] gpio: rpmsg: add support for NXP legacy firmware
+ protocol
+Message-ID: <202603060910.Q5zBquzF-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9299.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16b58468-1eb7-4808-8d48-08de7b4ff004
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2026 07:13:59.2314
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dgn6FsrWaqaNeh5xw3IrB/M2x4gF54h9CVIgcL1zkWQ4qxI0Mqu3a6rfI+AIXLRdZDK/y0JQZhkvBVVCl7XOcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB11996
-X-Rspamd-Queue-Id: AB11E21C4F4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260304211808.1437846-5-shenwei.wang@nxp.com>
+X-Rspamd-Queue-Id: 00E7221C819
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
+	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,nxp.com,pengutronix.de,lists.infradead.org,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-32629-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32630-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[nxp.com:+];
-	MISSING_XM_UA(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[intel.com,lists.linux.dev,linuxfoundation.org,vger.kernel.org,pengutronix.de,gmail.com,nxp.com,lists.infradead.org];
+	RCPT_COUNT_TWELVE(0.00)[28];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[aisheng.dong@nxp.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dan.carpenter@linaro.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[linaro.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,nxp.com:dkim,nxp.com:email,DU0PR04MB9299.eurprd04.prod.outlook.com:mid]
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:mid,intel.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,01.org:url,linaro.org:dkim,linaro.org:email,git-scm.com:url,imx_msg.id:url]
 X-Rspamd-Action: no action
 
-> From: Randy Dunlap <rdunlap@infradead.org>
-> Sent: Friday, March 6, 2026 2:34 PM
-> To: linux-kernel@vger.kernel.org
->=20
-> Insert a "*" in the kernel-doc line to resolve a warning:
->=20
-> Warning: drivers/pinctrl/nxp/pinctrl-s32.h:18 bad line: this group.
->=20
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Hi Shenwei,
 
-Acked-by: Dong Aisheng <Aisheng.dong@nxp.com>
+kernel test robot noticed the following build warnings:
 
-Regards
-Aisheng
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Shenwei-Wang/docs-driver-api-gpio-rpmsg-gpio-driver-over-rpmsg-bus/20260305-052440
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+patch link:    https://lore.kernel.org/r/20260304211808.1437846-5-shenwei.wang%40nxp.com
+patch subject: [PATCH v9 4/5] gpio: rpmsg: add support for NXP legacy firmware protocol
+config: x86_64-randconfig-161-20260306 (https://download.01.org/0day-ci/archive/20260306/202603060910.Q5zBquzF-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+smatch: v0.5.0-9004-gb810ac53
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202603060910.Q5zBquzF-lkp@intel.com/
+
+smatch warnings:
+drivers/gpio/gpio-rpmsg.c:188 rpmsg_gpio_imx_send_fixed_up() error: buffer overflow 'imx_std_cmd_map' 7 <= 27
+
+vim +/imx_std_cmd_map +188 drivers/gpio/gpio-rpmsg.c
+
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  176  static int rpmsg_gpio_imx_send_fixed_up(struct rpmsg_gpio_info *info,
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  177  				   struct rpmsg_gpio_packet *msg)
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  178  {
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  179  	struct rpmsg_gpio_nxp_packet imx_msg;
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  180  
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  181  	if (msg->cmd >= sizeof(imx_std_cmd_map))
+
+This looks like a sizeof() vs ARRAY_SIZE() bug.
+
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  182  		return -EINVAL;
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  183  
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  184  	imx_msg.id = IMX_RPMSG_ID;
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  185  	imx_msg.vendor = IMX_RPMSG_VENDOR;
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  186  	imx_msg.version = IMX_RPMSG_VERSION;
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  187  	imx_msg.type = msg->type;
+49a0cb20cd49a59 Shenwei Wang 2026-03-04 @188  	imx_msg.cmd = imx_std_cmd_map[msg->cmd];
+                                                                              ^^^^^^^^
+Out of bounds.
+
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  189  	imx_msg.port_idx = msg->port_idx;
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  190  	imx_msg.line = msg->line;
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  191  	imx_msg.val1 = msg->val1;
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  192  	imx_msg.val2 = msg->val2;
+49a0cb20cd49a59 Shenwei Wang 2026-03-04  193  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
 
