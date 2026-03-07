@@ -1,264 +1,180 @@
-Return-Path: <linux-gpio+bounces-32723-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32724-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uBnpOq4jrGlHlwEAu9opvQ
-	(envelope-from <linux-gpio+bounces-32723-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 07 Mar 2026 14:10:06 +0100
+	id CPhrL2QkrGlHlwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-32724-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 07 Mar 2026 14:13:08 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A68722BD79
-	for <lists+linux-gpio@lfdr.de>; Sat, 07 Mar 2026 14:10:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2936722BDD0
+	for <lists+linux-gpio@lfdr.de>; Sat, 07 Mar 2026 14:13:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DEDE6301FA75
-	for <lists+linux-gpio@lfdr.de>; Sat,  7 Mar 2026 13:10:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8A45B3037EEF
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Mar 2026 13:12:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3847D3A0E82;
-	Sat,  7 Mar 2026 13:10:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A36EA3A1A4B;
+	Sat,  7 Mar 2026 13:12:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YNkLqo07"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NJ5dp/pr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98C33A0B37;
-	Sat,  7 Mar 2026 13:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772889001; cv=none; b=bZglE3lxOB8O016UAlrXvUD1bMm1QEn8fdKqagF/wE9nZ9g+O5HGIvbFIuJLgxAlQufYGVz19Q7AIJDgbmepXC9VdTnp98eUklhU1N0VoGjY1AZLpfjL4B2wOrakaf2MXab99uGZxC1nujUIld3JOi4PHO+tkGUwyUhJcI75qOE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772889001; c=relaxed/simple;
-	bh=CsR7XjNewZ3NQCE6y0mxkCJ0kBswMv6pLNJLWrjMwZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jTLMiLKzWfGq8+eSgAzM28sGz9S67PZSirZhZp5q8ZOAuOGJfwh1+8JIoBFh+IzR/Uu42xQtZDl0bd59Tp3AGg93UlrLn/kjZIBO+aFhbYTscWhkpRV5cyQXVHrumz1V64jUh28oCCUEquVqD3qWwEctlQOgewc643mAxirECz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YNkLqo07; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E2B3C2BC86;
-	Sat,  7 Mar 2026 13:10:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772889000;
-	bh=CsR7XjNewZ3NQCE6y0mxkCJ0kBswMv6pLNJLWrjMwZM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YNkLqo07CG75uNpB+lKu0fcol5AQ8E38PYtLyeJfvza+M7BK1RH8aU5Wkmofi+53o
-	 CV71xU0doe5AqxDLEdW2y/dQIV68ghcd+hE1M1kSpOnUHvc3C10S6EDbl0KY57xuX2
-	 8E1kTYmlScQTCS/MIROUqAhrCfC+BXoy+as390MJhdnJFhdYb7xFH8Gic/TneVkNuc
-	 exXfmc45w0gjvthhtII9dbcgN5pv6aMv4MWX/wC9wGN7lsocFQVM+AmWSvwaesv14Z
-	 C1pNTPDTiKS5eoACKvXx0xPuhATiUX3ynfKe8cI5TPBgsNU4AU/3M0UzrBGMOs8uiE
-	 8lOlKl573/kdQ==
-Date: Sat, 7 Mar 2026 14:09:58 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Yu-Chun Lin <eleanor.lin@realtek.com>
-Cc: linusw@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, bartosz.golaszewski@oss.qualcomm.com, afaerber@suse.com, 
-	james.tai@realtek.com, cy.huang@realtek.com, stanley_chang@realtek.com, 
-	tychang@realtek.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-realtek-soc@lists.infradead.org
-Subject: Re: [PATCH v2 11/14] dt-bindings: pinctrl: realtek: Add RTD1625
- pinctrl binding
-Message-ID: <20260307-large-wondrous-coot-4f4ee7@quoll>
-References: <20260306075244.1170399-1-eleanor.lin@realtek.com>
- <20260306075244.1170399-12-eleanor.lin@realtek.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B41927E06C
+	for <linux-gpio@vger.kernel.org>; Sat,  7 Mar 2026 13:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772889133; cv=pass; b=SJCFDGli6Uxl5FwSsZ4kfOCQKskOpljUX1yIeFfsyfvUQZBZ2ZjHN1o7bI/S/fO2MDSvIKJnkc4qt4xm+SVnkKO8tnrqhQlqPBZWDu6FYwqP3/I6sVDzWeNsBgpsVGMTuC5crWsxTO4SR3wGboCsE0Hwy+2qsyd87PgI/t2bky0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772889133; c=relaxed/simple;
+	bh=VIWFI1y5VRLZ373RQL/JnbZVRkgBAGhKPHT1hx5Q3QU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q+y2dLVZmCBr8wAJ0gfB9DhT84LlJZ8GdBmODh8RiYeRKzGuil4oUKrLAEdBQUOzu8fz9UEPIn9A/xMrizow38QvfvWOFOCgOP3nWzMldKIl/TXUJCg1USjdGzPK+QFnwNX6wtGSsH1G4oHxG0dgpRFgSfzG5AeWFBvZ4fJW+sE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NJ5dp/pr; arc=pass smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-439af00d33cso7003530f8f.1
+        for <linux-gpio@vger.kernel.org>; Sat, 07 Mar 2026 05:12:11 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1772889130; cv=none;
+        d=google.com; s=arc-20240605;
+        b=A/7E1IT1GhRTy6+S9NBMKWm0oIfQlKumqX4gHXIO0F6FhbCpk4Mrnjuw17SOYHcrDe
+         xnL9jTBifTpbmuUTqnpFrDzry3qlpVFUaxIlKb9PKMRZhWKNNA7Luf+08GTmbjVblIz0
+         d6HAg104qBCQhaJyNLkDpbQ+jyWaDloZxcTOAycsG7BLu+YNqpXilz7ZhDAgUTl6h+ZS
+         2bV/TgzPSgaF9ki21jAqGUNDeiHzDbmVJu5R/EyqN6KbldV1rxvZQYR5czL9RZSoigvY
+         YS9kV4qibD1SZK0yVzxyjNuY+QvykpwRvd9uW7JW3Rg1okcwGk67TycmDlo6O3HELKOl
+         1cug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=jwpJkt0avwp9jkgkDYYA37vOWQ50nBFUmOdRhI9vm4g=;
+        fh=NzBGOD+V6YAJXaCPlUEeyUBk/ICmork0PpmZDJmgwgo=;
+        b=kd9szjE8GJJNLcMCyJC0RyxzYW1XNcS0gb2r23eRwyUT76sm45QLu+nzr1fYBvD7P8
+         0CuDowlKF+0xhzQ94mcExIYb2ctgwPlijxRR7KetT/sb5yU6Rx7nu6AboVfbfC31uUwC
+         +/R7Bv7kpspt42uiw4XGo1wliNAQAQjrkS3riWWQwGieQRjV5xWMWaDbtCQD52M2jOew
+         9t2RFCzpDRJCNYXbUQSn+aF2afbJpKe8NpA8wgQW/zYZDK9RIBteUfBe2p6XAfosU2Wb
+         23X2GHJl18gVFX+uxMEGyHek0j0Go0nHDldy5K7Zj1fBiT99nI6/4AmBGklRr+lDNjKU
+         74PQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772889130; x=1773493930; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jwpJkt0avwp9jkgkDYYA37vOWQ50nBFUmOdRhI9vm4g=;
+        b=NJ5dp/pr8J6GiCRh5o4uhYUrKCGUSZQzU6KQ2fdqE51GxWIADL5d2+iq1PlF4m3iFx
+         xPLpX1/++m89Atunk0PZpshSbhUiP7NHGZ3H45uM19lskys4UdlgmxKPvRAIIaZU3i2A
+         PM77oNh4Hf28RXz/B9v40eZDsJA1W5vaSuyj1mriAhSpwLvpbnsfrMnZKUVsiXyQ55YI
+         YDOLeQNc7p4bA+nZi+TihsGKxuSX3tXrkua8sFEQBpbmDnKjtjYoHi9VTN9QRdngOezK
+         9UL/Ndn/QhsCtmsFzhCVKhckESk6MprtmVFXgUyqMqIrmnvb/VHmIMssb/++L0iLcCZx
+         Vu7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772889130; x=1773493930;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=jwpJkt0avwp9jkgkDYYA37vOWQ50nBFUmOdRhI9vm4g=;
+        b=VpQu8nI3pnbc9Tb1qhb2VuVbBwTtI4m+a3qMDPGu5Mnt8hYkRHjsVMl3IC3Xcd7UTO
+         NF+2lhtU9treNZ1C9WkqyU5rGkJzr5jilqVXggCOUsgJSDPG5rYB7vdq7Lm2oPRoWZ3C
+         qPCy0s4NDMdS2IDceYlw02GEk43T7xSHLksU0gJKOaoIL36tV3e7ZlStcsONKHFgTIkZ
+         fzCv+sXsxiwizOe6qcRlNlt3UF8ghpu4ITPj46O1/c9h5jl+FSNX4CS6QKK0jrnI+5DL
+         7yEss0rw9V3SBLNNCgDqVItdtbtFQtOnnSQoLNbwmI0gSuUwHnr7Pon4dEPN+svacT/r
+         w0zg==
+X-Forwarded-Encrypted: i=1; AJvYcCXjkYMNiciNTpabm582MtyJzUhbUQKp+F8fYB2yVNWfC2x0STWbBtl62ttFRE50eKW8Ja2oAfmis0t1@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPVn2XR8zDFMl5Mrh8rLnPSVkWTi5fjcIfld4+/u0FaDNyXoeC
+	X6/0ETyQPn7NhNDmDb/Pslx4CfQH2UIf4bAGvik2UQAzR6mG1G/TeS/K7OZd8BkYCWhf1ZvqN4s
+	/1ltSwvL8kkSjbnNiUcIO4otezszU8vY=
+X-Gm-Gg: ATEYQzxVggUc3MsFMJSUYNhsyj+SHSh+w3lpX0tvWj6bvJratBhy4wzaTSKaBxNDmZK
+	wpJtVCfroT4UljG4jR8+pTOKHK4blN4hRD21jfS2IgDdJiGkRudm9pFLhJSH2doxecuky73d88S
+	QVex80ojshpmj0P8NANsy8EoGXhqUGiH1m/wP+ipy6mOtjW1w249Iy/k+rd49zEHwwKbUCTkcxk
+	wJbbm8QgziHtLcbQyoaTsxxg5DXC4UklObkTQ6YGsPczmOcEjbVoagM5Rd4TGqEt/dv0oYj9tDA
+	vBM/k6iC
+X-Received: by 2002:a05:6000:258a:b0:439:cbb7:3c19 with SMTP id
+ ffacd0b85a97d-439da880b24mr9456804f8f.27.1772889130119; Sat, 07 Mar 2026
+ 05:12:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260306075244.1170399-12-eleanor.lin@realtek.com>
-X-Rspamd-Queue-Id: 8A68722BD79
+References: <20260306133351.31589-1-clamor95@gmail.com> <20260306133351.31589-4-clamor95@gmail.com>
+ <20260307-azure-quokka-of-abracadabra-cebde4@quoll>
+In-Reply-To: <20260307-azure-quokka-of-abracadabra-cebde4@quoll>
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+Date: Sat, 7 Mar 2026 15:11:58 +0200
+X-Gm-Features: AaiRm52JT8p_3rf_HqGYMWaWzNT7LpzzUhIeETfJmIKaZ646udUvob7af9WUE-w
+Message-ID: <CAPVz0n3Qj78B9Ga=p5wixu5umY+uVP=Fs7K3nwix1NT2eNgtrg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/6] dt-bindings: gpio: trivial-gpio: remove max77620 compatible
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
+	Chanwoo Choi <cw00.choi@samsung.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 2936722BDD0
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32723-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
+	TAGGED_FROM(0.00)[bounces-32724-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[172.234.253.10:from];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,intel.com,arm.com,samsung.com,bootlin.com,vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.984];
+	NEURAL_HAM(-0.00)[-0.976];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[clamor95@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[100.90.174.1:received];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,mail.gmail.com:mid]
 X-Rspamd-Action: no action
 
-On Fri, Mar 06, 2026 at 03:52:41PM +0800, Yu-Chun Lin wrote:
-> +      input-voltage-microvolt:
-> +        description: |
-> +          Select the input receiver voltage domain for the pin.
-> +          Valid arguments are:
-> +          - 1800000: 1.8V input logic level
-> +          - 3300000: 3.3V input logic level
-> +        enum: [1800000, 3300000]
-> +
-> +      drive-push-pull: true
-> +
-> +      power-source:
-> +        description: |
-> +          Valid arguments are described as below:
-> +          0: power supply of 1.8V
-> +          1: power supply of 3.3V
-> +        enum: [0, 1]
+=D1=81=D0=B1, 7 =D0=B1=D0=B5=D1=80. 2026=E2=80=AF=D1=80. =D0=BE 14:43 Krzys=
+ztof Kozlowski <krzk@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
+>
+> On Fri, Mar 06, 2026 at 03:33:48PM +0200, Svyatoslav Ryhel wrote:
+> > Binding for MAX77620 GPIO function is covered by the MAX77620 schema. G=
+PIO
+> > controller function in MAX77620 has no dedicated node and is folded int=
+o
+> > the parent node itself.
+> >
+> > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/gpio/trivial-gpio.yaml | 2 --
+> >  1 file changed, 2 deletions(-)
+>
+> This should be squashed with the converting patch for this compatible.
+>
 
-Isn't this duplicating input-voltage-microvolt? Where do you use it in
-the driver?
+Acknowledged. Thank you.
 
-> +
-> +      slew-rate:
-> +        description: |
-> +          Valid arguments are described as below:
-> +            0: ~1ns falling time
-> +            1: ~10ns falling time
-> +            2: ~20ns falling time
-> +            3: ~30ns falling time
-> +        enum: [0, 1, 2, 3]
-
-If you have specific values, why not using 1/10/20/30?
-
-> +
-> +      realtek,drive-strength-p:
-> +        description: |
-> +          Some of pins can be driven using the P-MOS and N-MOS transistor to
-> +          achieve finer adjustments. The block-diagram representation is as
-> +          follows:
-> +                         VDD
-> +                          |
-> +                      ||--+
-> +               +-----o||     P-MOS-FET
-> +               |      ||--+
-> +          IN --+          +----- out
-> +               |      ||--+
-> +               +------||     N-MOS-FET
-> +                      ||--+
-> +                          |
-> +                         GND
-> +          The driving strength of the P-MOS/N-MOS transistors impacts the
-> +          waveform's rise/fall times. Greater driving strength results in
-> +          shorter rise/fall times. Each P-MOS and N-MOS transistor offers
-> +          8 configurable levels (0 to 7), with higher values indicating
-> +          greater driving strength, contributing to achieving the desired
-> +          speed.
-> +
-> +          The realtek,drive-strength-p is used to control the driving strength
-> +          of the P-MOS output.
-> +
-> +          This value is not a simple count of transistors. Instead, it
-> +          represents a weighted configuration. There is a base driving
-> +          capability (even at value 0), and each bit adds a different weight to
-> +          the total strength. The resulting current is non-linear and varies
-> +          significantly based on the IO voltage (1.8V vs 3.3V) and the specific
-> +          pad group.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        minimum: 0
-> +        maximum: 7
-> +
-> +      realtek,drive-strength-n:
-> +        description: |
-> +          Similar to the realtek,drive-strength-p, the realtek,drive-strength-n
-> +          is used to control the driving strength of the N-MOS output.
-> +
-> +          This property uses the same weighted configuration logic where values
-> +          0-7 represent non-linear strength adjustments rather than a transistor
-> +          count.
-> +
-> +          Higher values indicate greater driving strength, resulting in shorter
-> +          fall times.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        minimum: 0
-> +        maximum: 7
-> +
-> +      realtek,pulse-width-adjust:
-> +        description: |
-> +          An integer describing the level to adjust the output pulse width, it
-> +          provides a fixed nanosecond-level adjustment to the rising/falling
-> +          edges of an existing signal. It is used for Signal Integrity tuning
-> +          (adding/subtracting delay to fine-tune the high/low duration), rather
-> +          than generating a specific PWM frequency.
-> +
-> +          Valid arguments are described as below:
-> +          0: 0ns
-> +          2: + 0.25ns
-> +          3: + 0.5ns
-> +          4: -0.25ns
-> +          5: -0.5ns
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        enum: [0, 2, 3, 4, 5]
-> +
-> +      realtek,high-vil-microvolt:
-> +        description: |
-> +          The threshold value for the input receiver's LOW recognition (VIL).
-> +
-> +          This property is used to address specific HDMI I2C compatibility
-> +          issues where some sinks (TVs) have weak pull-down capabilities and
-> +          fail to pull the bus voltage below the standard VIL threshold
-> +          (~0.7V).
-> +
-> +          Setting this property to 1100000 (1.1V) enables a specialized input
-> +          receiver mode that raises the effective VIL threshold to improve
-> +          detection.
-> +        enum: [1100000]
-> +
-> +    required:
-> +      - pins
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pinctrl@4e000 {
-> +        compatible = "realtek,rtd1625-iso-pinctrl";
-> +        reg = <0x4e000 0x130>;
-> +
-> +        emmc-hs200-pins {
-> +            pins = "emmc_clk",
-> +                   "emmc_cmd",
-> +                   "emmc_data_0",
-> +                   "emmc_data_1",
-> +                   "emmc_data_2",
-> +                   "emmc_data_3",
-> +                   "emmc_data_4",
-> +                   "emmc_data_5",
-> +                   "emmc_data_6",
-> +                   "emmc_data_7";
-> +            function = "emmc";
-> +            realtek,drive-strength-p = <0x2>;
-> +            realtek,drive-strength-n = <0x2>;
-
-These are not hex, but simple decimals
-
-> +        };
-> +
-> +        i2c-0-pins {
-> +            pins = "gpio_12",
-> +                   "gpio_13";
-> +            function = "i2c0";
-> +            drive-strength = <4>;
-> +        };
-> +    };
-> -- 
-> 2.34.1
-> 
+> Best regards,
+> Krzysztof
+>
 
