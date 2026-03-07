@@ -1,85 +1,85 @@
-Return-Path: <linux-gpio+bounces-32739-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32740-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4PMPOnxprGnPpQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-32739-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 07 Mar 2026 19:07:56 +0100
+	id aFqOOxNzrGkQpwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-32740-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 07 Mar 2026 19:48:52 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DE4A22D292
-	for <lists+linux-gpio@lfdr.de>; Sat, 07 Mar 2026 19:07:56 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9891922D45D
+	for <lists+linux-gpio@lfdr.de>; Sat, 07 Mar 2026 19:48:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4F0D7301ECEE
-	for <lists+linux-gpio@lfdr.de>; Sat,  7 Mar 2026 18:07:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 83F993019068
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Mar 2026 18:48:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E361B36BCE4;
-	Sat,  7 Mar 2026 18:07:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 555E238BF99;
+	Sat,  7 Mar 2026 18:48:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="YvnOzOXT"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="yUgq4Yl+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA88C36B06F
-	for <linux-gpio@vger.kernel.org>; Sat,  7 Mar 2026 18:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED7A1ADC83
+	for <linux-gpio@vger.kernel.org>; Sat,  7 Mar 2026 18:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772906865; cv=none; b=NpSrVDdkI6kXDVbQyWjXRl30qrj6dCLK+i1J5bysoOuquWjdkBf7PTPFf2CTv5Oj1o0zkj7ClfQ5F8yX5+UQF8hOrm23BcI6nVEbM/v0bRAX+qOsFvI0p0Hrb9FWooUyUig1clPo4vOwqSkvrDTbF0SXK3QLprM9J9KUTbggTwA=
+	t=1772909327; cv=none; b=inp/qBKfUWUKDxv9cCMOsc45EldPTTdfE2BqEmiYIXzhbJol7wNaaeNN8xF+KeH+AIYLJBrdE1Nc4vHYfJx3NAoe/jH5xVAU0QQCw2sJH3bYczFJsezr+5s6MSScOkZAtlITzMdi6kcGzZA0PrK8zUjLMczgVLQjD3EWeypztIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772906865; c=relaxed/simple;
-	bh=AjLmyyV1IqIcyjL94dLV+Q8gDTyZ2Fibz1qd//sD39I=;
+	s=arc-20240116; t=1772909327; c=relaxed/simple;
+	bh=bvfLL6leUe4v0YQLR29E1NV0KASf+WoG0ivWe/d+DYE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SepbD+jVkGPagO1GuoZ6buGGB8CFLINZHPtAZSSzsFFy3KQBj06vyQKNGhihF+t4vK8J/J8nZ3yEg0iyNgk8eU30QmtG8A+t+kPozX9oXqqQbO/Fh+UIAjG9+IKnzq+Dg2y0q4libhHqa/LxIlZqCqBWh82RS3KtxesWgJAKDYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=YvnOzOXT; arc=none smtp.client-ip=209.85.210.50
+	 In-Reply-To:Content-Type; b=ozaN3cuUoeAYD5CnFQdZia1r2BfWMfSI3P39iqHhuudX6ECV+jAEUJYdCoRmNRZ5Hm2iwPCQXP6sfJwdCkNSd3xFnqqV3ymN8nAwXe/FUePIbjldnNEJ4dMgX+hMrFkdWANJ+UjHsXLEcUttwU0Vn5JJCpplSORNbFS2OJZbuGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=yUgq4Yl+; arc=none smtp.client-ip=209.85.210.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-7d4c7d04890so8767132a34.3
-        for <linux-gpio@vger.kernel.org>; Sat, 07 Mar 2026 10:07:42 -0800 (PST)
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-7d596a5be31so9248614a34.3
+        for <linux-gpio@vger.kernel.org>; Sat, 07 Mar 2026 10:48:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1772906862; x=1773511662; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1772909323; x=1773514123; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=J6QvxCwB+7fa0QyFkBuDXBSyOMIgNW/h6j55oZ+anGw=;
-        b=YvnOzOXT0lF6IVBeCMAnopIOYk4uHBRJIAeaTxGK39TPdjCPODGgFXvJMsKfRWM5E4
-         6au/CiBvW7WL21ZntcX8nkiOASxQWr9yn9Vi4l/yqr+qFKiuzJb97gz+3uHTeC5+iaBB
-         a+t/fQ3qFvqUthKCvZa/AK78VC4GU+V5n+USVeleQDdqLKhjm3eHWsXxKLzFt3aW2+K1
-         fpeCFSnirUQO19nX4hBGfhVLGdKVQsnBgbztAs8yVFuMTy10/Jtsj9Pr1nAYf3ktzcb6
-         SY55UZm6c0w9Lm//9jH4pQ1+AAzne4W4s8hd79g9hm/kWm0BOUhFFh/yrkndBcRAhmYR
-         mMUw==
+        bh=QlZl3jF6Nh0Vyp4ww6yN7e366IjMVaugVNe/3eEWvKY=;
+        b=yUgq4Yl+l5N9hLx0mBM11VFPHyeNqV7JRkiWhEj6Uycm35A75C2tNpO3R58XL99OgN
+         ZOc/oDSYY7aWwegtq/9S/3K+g+Sr6aYeeuBRhw8oJlZs0RlkoDXgV39W9PUWUX3kN3MX
+         z4XkS/HhYTS2u8DaGYAxRIDKaMig8H4MPcympxkK7IK76k2bz1ySiGYXFe/fIWYOqO/t
+         sd5Oe2ewRa5lUyhuj9loPeXdgavZ4QMnPS4/LXM2Ic1MF28iBc6tCv9jNEEDdCPIiWwT
+         Zpczsz8lb5xjIpeJK8OCwFCuosC57RoDriTwIuZ8ToF/typXPt/WfFbxWOD9RNixh0bJ
+         TmyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772906862; x=1773511662;
+        d=1e100.net; s=20230601; t=1772909323; x=1773514123;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=J6QvxCwB+7fa0QyFkBuDXBSyOMIgNW/h6j55oZ+anGw=;
-        b=POfP6vtnoc8q6o1zSzIIwondN/JrkaLtRHBKMUDwwqoFmOFHWlmhTKC4WJ8Aj0JETZ
-         wZRVwO2cPqjRn3SSxReIXL+MpQ8ULyEGBF42tTVcsh9uqdCHKQ3ckAnBsoM3Xhp3KxUP
-         gw2aMcKkBDzhzf/F+dX7MM69pi42oUOawDiSJPLRkGSseiBndY2G1gKFXPs22e8ifrGd
-         9UEqLrXPyHKLQi31rn/tTQV1wJkFaVTbuX+0FqoM8hiXgZ8tgpFO0ZWbRy4c5W0CwaZn
-         wQYf6rg6/ZS3NBToGF9O82x+HorT2bZ0X3fGGgC1+2wG24H9crfuQEidbYmmsnVw0LzB
-         fU1w==
-X-Forwarded-Encrypted: i=1; AJvYcCXJGLSKkmO5pskOyRpSTxHBENG+pDH1oNgkQOcx/RWwGJY5ueJWUkAz1IeupW2DCWz61rFBCXoJvpcW@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywttf0Lyvemekc31U6Fi4ONPADkRFwxCmxCTHpi7SwCnlWMTFXD
-	lJ8GGLRg8NdNN/FpjhWlK5zJtmBdsXdczm+WsIM+FeVLn5+W11OTFcB7+b4Wt2r4hCo=
-X-Gm-Gg: ATEYQzwogzBhiY6wp3TJrvUomcouhT160VR/zLPIABsqWC66WdNwYU3Gb/9lcpnkwew
-	/QcP9xJxLykq9LdzmU5qalVViPZ/y5d+EfX/GWsm/QT6RY2nV+6nJF4x0Slz0edYkN7p4y5aPLJ
-	PepWL3XKpW4OYDw25Wr52cImw0cVC5VIgQqec2JFuhblqiH0k/EJjGXWjB31gMcdli0ojwLz2qg
-	kHYu35ztuWF4su8kD+yjIkpO7CgUhOh2HZgjf1zoC983mzNOG0089qc8ErnNOtPmPp4FQ2KiVtk
-	DDkA5CGZlmozrjAWj5TfddvLOIDb8I5Z8DSuDqGxP97MsnSdDmGjLgQgGX6m2PlV5ddVxU8TyWZ
-	bzfs3aWQz8cT75SySH+sS7aEFXC3v4AnT7Uso/F6SnHfsEh9LgnVlhwZKNds+/KY0dPZazEnorh
-	CdXUhr4PR134x4s9qEowTf3CGZgwFl7tL5Mv6orgb4DXyPdXsQnAyJZnKL2mXPCM1Hw8o3OcOGB
+        bh=QlZl3jF6Nh0Vyp4ww6yN7e366IjMVaugVNe/3eEWvKY=;
+        b=uoWacfPu4LI1chQVATDYefSisJApUZngKEZ4nLFErAhvsyWhHdOHgSfhh6jlXyVRUN
+         TMDyGtnqRaQBALH8JEAqWSmLtSNw9klf94iiL5ReqQOcpX/YeSaGjJHhBQVAXR+Uk72P
+         u5VlkFFft6G0e0QKSgBknKTG+4mYWjaPuRNRVydLFprjVB7jH9/nN4+G2q8enZk9V0Tg
+         Nvq8kDRlvonlzum0AigWg8ENIMHwUwP3MjQCUHpZLEjXf/c7XU5mFQu7p7fOjhfiPUrR
+         kruNACWQSuPMtOLn58AyFJr/1g9fBKx8ORPKWDX8ogxIHedwgPPM0rCvWaTwOuDCngQb
+         ijDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWHvrHpaJ1ZOUW3FTVVKmJP+1rZbr7/jROEW3+5EmUcZ74H/li3UTSXPrMHBA9cqolP92wutWnNwEWT@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgW8+DvICQj4DFlVFjsZVCPAX/6z8ywyQrEfwiAEWmW//CiFGX
+	8RNCkittq7HbKHjaylPnrJ/2uFH0MFk2tq676EMNQs4QGD7Tnl70qFOtOUWD5eOyt3M=
+X-Gm-Gg: ATEYQzxImYrp8pP2XM5ndV8oXscFFqcGCpKsl5lbsy92NXHTPICALCDekaHCGsIk87u
+	FfB3swqkyloyNXBHBJxj9+ZnM8VSFvms/uhHfkYwoxQwdFVNMG80xg1n5WgkMx0RkCVOkZynLle
+	8YKiIAE5azXlxR6xZeFkal0ms7DFJxAcLPDnrEFImpHbN33PcSnqJH50nC23XhDF3pUHiEj3/og
+	OU5qV1+ea/RyYzk4VJMuNQXCKw18MDX2caxzwPi17aa5CuRicjkHzc9f4GU4eWv1Nm8lVUc18Mk
+	4kDzqsEhC5xfGEkSo+evzviEv6XoSN4Ur8/2PcSH10gjNtQMmP7edg0bvaWt71LYvlpXcsoN7v2
+	aVcuBLFVFkX2tECVOkw0iFVOhcMMDuwYTUfJjLGyt2BTei1Mxl+TCRcQg4DfGNMbTn1pMUJtzFW
+	OTqleL3OEFDM3jMKMl5MmDTaynmvAZsfjAqLUzz0jm92LxEHL76theL0Y6d5myE0q2Gax4fW3bd
 	Q==
-X-Received: by 2002:a05:6830:6d13:b0:7cf:d168:1ef3 with SMTP id 46e09a7af769-7d726f8dbdamr4635225a34.23.1772906861727;
-        Sat, 07 Mar 2026 10:07:41 -0800 (PST)
+X-Received: by 2002:a05:6808:830d:b0:466:ee4c:6f13 with SMTP id 5614622812f47-466ee4cb6a3mr844147b6e.2.1772909322858;
+        Sat, 07 Mar 2026 10:48:42 -0800 (PST)
 Received: from ?IPV6:2600:8803:e7e4:500:cccf:5174:fa72:c520? ([2600:8803:e7e4:500:cccf:5174:fa72:c520])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7d728d2eef0sm3351152a34.24.2026.03.07.10.07.40
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-466df96b093sm2925084b6e.5.2026.03.07.10.48.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Mar 2026 10:07:41 -0800 (PST)
-Message-ID: <9b63f0d2-24e6-4215-958c-42cb9d2e5536@baylibre.com>
-Date: Sat, 7 Mar 2026 12:07:40 -0600
+        Sat, 07 Mar 2026 10:48:42 -0800 (PST)
+Message-ID: <08717cd6-a732-4f06-a6f1-8cbdaa755b78@baylibre.com>
+Date: Sat, 7 Mar 2026 12:48:39 -0600
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -87,151 +87,171 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/6] iio: adc: ti-ads7950: switch to using
- devm_regulator_get_enable_read_voltage()
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20260305-ti-ads7950-facelift-v3-0-a23fdd1a079e@gmail.com>
- <20260305-ti-ads7950-facelift-v3-5-a23fdd1a079e@gmail.com>
- <20260307114947.0b946dfb@jic23-huawei>
- <27ffa24d-a388-46eb-8df7-04624cd32ea1@baylibre.com>
- <aaxoIWL7NIa-2VkU@google.com>
+Subject: Re: [PATCH 1/4] dt-bindings: iio: adc: add bindings for AD4691 family
+To: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>,
+ Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+ "Sa, Nuno" <Nuno.Sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
+ Bartosz Golaszewski <brgl@kernel.org>,
+ "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <20260305-ad4692-multichannel-sar-adc-driver-v1-0-336229a8dcc7@analog.com>
+ <20260305-ad4692-multichannel-sar-adc-driver-v1-1-336229a8dcc7@analog.com>
+ <20260305174559.1ded5173@jic23-huawei>
+ <LV9PR03MB84149F32D4CABA4D2827D85BF77AA@LV9PR03MB8414.namprd03.prod.outlook.com>
 Content-Language: en-US
 From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <aaxoIWL7NIa-2VkU@google.com>
+In-Reply-To: <LV9PR03MB84149F32D4CABA4D2827D85BF77AA@LV9PR03MB8414.namprd03.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 8DE4A22D292
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 9891922D45D
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[baylibre-com.20230601.gappssmtp.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-32739-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[baylibre.com];
-	FREEMAIL_TO(0.00)[gmail.com];
-	DKIM_TRACE(0.00)[baylibre-com.20230601.gappssmtp.com:+];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	FREEMAIL_CC(0.00)[metafoo.de,analog.com,kernel.org,gmail.com,vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[baylibre.com];
+	TAGGED_FROM(0.00)[bounces-32740-lists,linux-gpio=lfdr.de];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[baylibre-com.20230601.gappssmtp.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[dlechner@baylibre.com,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_HAM(-0.00)[-0.972];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_COUNT_FIVE(0.00)[5];
 	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-0.990];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,baylibre-com.20230601.gappssmtp.com:dkim,baylibre.com:mid,baylibre.com:email]
+	TAGGED_RCPT(0.00)[linux-gpio,radu.sabau.analog.com,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-On 3/7/26 12:04 PM, Dmitry Torokhov wrote:
-> On Sat, Mar 07, 2026 at 11:43:32AM -0600, David Lechner wrote:
->> On 3/7/26 5:49 AM, Jonathan Cameron wrote:
->>> On Thu, 05 Mar 2026 11:21:56 -0800
->>> Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
->>>
->>>> The regulator is enabled for the entire time the driver is bound to the
->>>> device, and we only need to access it to fetch voltage, which can be
->>>> done at probe time.
->>>>
->>>> Switch to using devm_regulator_get_enable_read_voltage() which
->>>> simplifies probing and unbinding code.
->>>>
->>>> Suggested-by: David Lechner <dlechner@baylibre.com>
->>>> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->>> Hi.
->>>
->>> I think this broke the ACPI case (where regulator isn't available).
+On 3/6/26 5:55 AM, Sabau, Radu bogdan wrote:
 > 
-> Oh, you're right.
 > 
->>>
->>> Jonathan
->>>
->>>> ---
->>>>  drivers/iio/adc/ti-ads7950.c | 45 +++++++++++---------------------------------
->>>>  1 file changed, 11 insertions(+), 34 deletions(-)
->>>>
->>>> diff --git a/drivers/iio/adc/ti-ads7950.c b/drivers/iio/adc/ti-ads7950.c
->>>> index 273c35e03185..847e83baa876 100644
->>>> --- a/drivers/iio/adc/ti-ads7950.c
->>>> +++ b/drivers/iio/adc/ti-ads7950.c
->>>> @@ -341,19 +341,9 @@ static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
->>>>  	return st->single_rx;
->>>>  }
->>>>  
->>>> -static int ti_ads7950_get_range(struct ti_ads7950_state *st)
->>>> +static unsigned int ti_ads7950_get_range(struct ti_ads7950_state *st)
->>>>  {
->>>> -	int vref;
->>>> -
->>>> -	if (st->vref_mv) {
->>>> -		vref = st->vref_mv;
->>>> -	} else {
->>>> -		vref = regulator_get_voltage(st->reg);
->>>> -		if (vref < 0)
->>>> -			return vref;
->>>> -
->>>> -		vref /= 1000;
->>>> -	}
->>>> +	unsigned int vref = st->vref_mv;
->>>>  
->>>>  	if (st->cmd_settings_bitmask & TI_ADS7950_CR_RANGE_5V)
->>>>  		vref *= 2;
->>>> @@ -382,11 +372,7 @@ static int ti_ads7950_read_raw(struct iio_dev *indio_dev,
->>>>  
->>>>  		return IIO_VAL_INT;
->>>>  	case IIO_CHAN_INFO_SCALE:
->>>> -		ret = ti_ads7950_get_range(st);
->>>> -		if (ret < 0)
->>>> -			return ret;
->>>> -
->>>> -		*val = ret;
->>>> +		*val = ti_ads7950_get_range(st);
->>>>  		*val2 = (1 << chan->scan_type.realbits) - 1;
->>>>  
->>>>  		return IIO_VAL_FRACTIONAL;
->>>> @@ -580,30 +566,24 @@ static int ti_ads7950_probe(struct spi_device *spi)
->>>>  	spi_message_init_with_transfers(&st->scan_single_msg,
->>>>  					st->scan_single_xfer, 3);
->>>>  
->>>> +	ret = devm_regulator_get_enable_read_voltage(&spi->dev, "vref");
->>>> +	if (ret < 0)
->>>
->>> I think you need to check for -ENODEV and if you see than then
->>> see if the acpi route below applies.  Otherwise on ACPI this will fail
->>> and we'll fail the probe.
->>>
+>> -----Original Message-----
+>> From: Jonathan Cameron <jic23@kernel.org>
+>> Sent: Thursday, March 5, 2026 7:46 PM
+>> To: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
+>> Cc: Sabau, Radu bogdan <Radu.Sabau@analog.com>; Lars-Peter Clausen <lars@metafoo.de>; Hennerich, Michael
+>> <Michael.Hennerich@analog.com>; David Lechner <dlechner@baylibre.com>; Sa, Nuno <Nuno.Sa@analog.com>; Andy Shevchenko
+>> <andy@kernel.org>; Rob Herring <robh@kernel.org>; Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>;
+>> Uwe Kleine-König <ukleinek@kernel.org>; Liam Girdwood <lgirdwood@gmail.com>; Mark Brown <broonie@kernel.org>; Linus Walleij
+>> <linusw@kernel.org>; Bartosz Golaszewski <brgl@kernel.org>; linux-iio@vger.kernel.org; devicetree@vger.kernel.org; linux-
+>> kernel@vger.kernel.org; linux-pwm@vger.kernel.org; linux-gpio@vger.kernel.org
+>> Subject: Re: [PATCH 1/4] dt-bindings: iio: adc: add bindings for AD4691 family
 >>
->> Or do something like:
+>> [External]
 >>
->> 	if (ACPI_COMPANION(&spi->dev)) {
->> 		ret = devm_regulator_get_enable(&spi->dev, "vref");
->> 		if (ret)
->> 			return dev_err_probe(&spi->dev, ret,
->> 					     "Failed to get regulator \"vref\"\n");
+>> On Thu, 05 Mar 2026 14:23:27 +0200
+>> Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org> wrote:
 >>
->>  		st->vref_mv = TI_ADS7950_VA_MV_ACPI_DEFAULT;
+>>> From: Radu Sabau <radu.sabau@analog.com>
+>>>
+>>> Add YAML bindings and dt-bindings header for the Analog Devices AD4691
+>>> family of multichannel SAR ADCs (AD4691, AD4692, AD4693, AD4694).
+>>>
+>>> The binding describes five operating modes selectable via the
+>>> adi,spi-mode property, optional PWM/clock for CNV Clock and CNV Burst
+>>> modes, GPIO pins, voltage supplies and the trigger-source interface for
+>>> SPI Engine offload operation.
+>>>
+>>> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+>>
+>> Hi Radu, I'm going to focus on mode... Mostly because things called
+>> mode are usually a sign of mixing up different aspects of the board
+>> design...
+>>
+> Hi Jonathan, Krysztof,
 > 
-> We know that concept of regulators is not exposed on ACPI systems, and
-> we'd get a dummy here, so maybe just store st->vref_mv and not bother
-> with acquiring and enabling the dummy regulator?
+> Thank you guys so much for your review.
 > 
-> Thanks.
+> Regarding 'mode', I agree that it should be something that could be modified
+> at run-time, especially since all register modes (CNV_CLOCK, CNV_BURST,
+> AUTONOMOUS and SPI_BURST) rely on the same principles of reading the
+> ADC result from the registers, the main difference being that PWM on the
+> CNV pin is required for CNV_CLOCK and CNV_BURST, but the board design
+> stays the same. Perhaps this PWM can be initialized at start-time and only
+> be used when CNV modes are being used. This would mean mode can
+> become an IIO attribute that could be set by the user at run-time.
+
+More likely, it would be two different ways of doing a buffered read,
+so maybe two different buffers? Or just pick the "best" one and only
+implement that mode.
+
+> 
+> However for MANUAL, modifications of jumper resistors on the physical
+> board is required for proper functionality, since the CNV pin needs to be
+> tied to CS in this mode. Would it be preferred if bindings would have a
+> 'register-mode' attribute (the name could be better) which can have values
+> like 1(register modes are used) and 1(manual mode is used), and for
+> register modes, have a global IIO attribute that can switch between
+> them?
 > 
 
-Sounds OK to me.
+The binding should describe how the chip is wired up. So rather than thinking
+about modes, try thinking in terms of connections. Based on what the devicetree
+says is connected, the driver can then infer which modes are actually possible.
+
+Bringing back some context that was trimmed:
+
++  adi,spi-mode:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [0, 1, 2, 3, 4]
++    description: |
++      Selects the ADC operating mode:
++        0 - CNV Clock Mode: External PWM drives CNV pin, samples at PWM rate.
++        1 - CNV Burst Mode: PWM triggers burst cycles, internal oscillator
++            drives conversions within each burst.
++        2 - Autonomous Mode: Internal oscillator drives conversions, software
++            starts/stops via register write.
++        3 - SPI Burst Mode: Similar to Autonomous Mode but optimized for
++            SPI burst reads.
++        4 - Manual Mode: CNV is directly tied to SPI CS. Each SPI transfer
++            triggers a conversion and returns previous result (pipelined).
+
+
+It sounds like there are 3 ways that the CNV pin could be wired up:
+
+1. Wired to PWM
+2. Not connected
+3. Wired to CS
+
+On some other chips we've seen where CNV could be wired up different ways,
+"not connected" was not an option. In those cases, we could infer that if
+that no other properties indicated what CNV was connected to, then we would
+assume CNV was connected to SPI CS.
+
+In this case, if "not connected" is an option, we might need a bool/flag
+property adi,cnv-is-cs to describe that the CNV pin is wired to the CS pin.
+And we already have the pwms property to know when CNV is connected to a
+PWM.
+
+
+> Please let me know your thoughts on this before addressing the other
+> Comments and preparing other patches.
+> 
+> Best regards,
+> Radu
+> 
 
