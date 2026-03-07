@@ -1,66 +1,63 @@
-Return-Path: <linux-gpio+bounces-32720-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32721-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4N8HLrQerGkRlAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-32720-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 07 Mar 2026 13:48:52 +0100
+	id mI8XIJ8frGlXlQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-32721-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 07 Mar 2026 13:52:47 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id C313422BC56
-	for <lists+linux-gpio@lfdr.de>; Sat, 07 Mar 2026 13:48:51 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B68E22BC92
+	for <lists+linux-gpio@lfdr.de>; Sat, 07 Mar 2026 13:52:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id DCAF6300E4BF
-	for <lists+linux-gpio@lfdr.de>; Sat,  7 Mar 2026 12:48:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2E9CE3024C9B
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Mar 2026 12:52:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34E0739C62B;
-	Sat,  7 Mar 2026 12:48:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE5E739E167;
+	Sat,  7 Mar 2026 12:52:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qK/Xbsuh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AyLd1gk2"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6311E531;
-	Sat,  7 Mar 2026 12:48:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EF939C64A;
+	Sat,  7 Mar 2026 12:52:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772887727; cv=none; b=gZv+xKgnMCRIc+wgbSnCM5p9j++Vrb3AYC5FImT2u28q6eFc05XuOMpWWqm0h9+DFpU1u68Q+9uOb7WrCBjhd2ytYZZa4i3hjmKhUsdPMn/hJbXbZdfKZisYTrGNX36VGyQk7B+wT4vhNHibeoAtKpGgSHjchhwCOG0F2ZPXwbM=
+	t=1772887920; cv=none; b=QSScoaTxZIiwrjz/Xdhcl270nY+LsugtU7fCRATaJlUxFl/QII6kElrTGk9jD/F+8pTzPt0CM1FbQDbSYTuYOxcJnLZEmrzMU0T1FfzHXVMj78d48XjBWThogWrVTlF9XYb9qKT0InIsunVfmluu8a+Y5TtqoCOrP3rb9Hw+ZFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772887727; c=relaxed/simple;
-	bh=Bsc5vDjhsHepkmaxrBA9X0GZmghTH5YYu0FXiXaJ8F0=;
+	s=arc-20240116; t=1772887920; c=relaxed/simple;
+	bh=d/WZmS/jGQFo2oynjtVtCDYfFONQIOxP/6Kxpn9q9rs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SUEMBRf0TE6WskXjDMdL8O0iiL/r2NFXjJSUGNDBQgrE9y9LPuiAemuwDyvfMEPCV2uIRSK3x2nHePzYegdDJmTAyTFZlnXTd/5IFWrhNfb5lhV2VxWWwBCYycNqzO84Q8zCz+PYn1oJeIonQtsScY7AUtwpTk3xTWmNz9/QgIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qK/Xbsuh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 067B0C19422;
-	Sat,  7 Mar 2026 12:48:45 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=HXFDL99nBNbkRtn+Co7SzwpeRsfBbIh1N+6UdgDFaXwBv5D58kv7+LTeudzkgjicegqMDPZMyZ/kJGG+AhpjFZ/4c2VTW+/d9Y9Knwb5kG3CUljDiQcoSJr9K1j77Ez7ap9o1XXPwgy+pGVjY20L/raq4HJAplJ7LxrKzQEnLOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AyLd1gk2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA746C2BC86;
+	Sat,  7 Mar 2026 12:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772887726;
-	bh=Bsc5vDjhsHepkmaxrBA9X0GZmghTH5YYu0FXiXaJ8F0=;
+	s=k20201202; t=1772887920;
+	bh=d/WZmS/jGQFo2oynjtVtCDYfFONQIOxP/6Kxpn9q9rs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qK/XbsuhCgn/oNsQ8jaU1rY2k01ID5ymGX9XVgBCfdZC8cUmUboJGxUMuiGY8mB5a
-	 zIe1e3x+/ibjwwhsk2lKIxEXhpf0NzPHPfnNkGIqg6yUgwEjXZ6glk5xN8XA8Pnv+r
-	 SNtRVEL2p2xcH3xXJXX5I66QEl7+djFkkwPcl8nsrduY/UsEiQpJX0KYuH8PI0gGSa
-	 LrSCg9WNtSm7Hu5/w2D1PeC2ixxw765GSivMaehMxDbHuPrlq0XKBD5DezBmw5fnS+
-	 FazXqD0VxvsKStPmpCMyhqVXDQ9Uy11LutyZT/SzO2PR42nh9HEHkzCSYg47YZtUTp
-	 vFkdmjjPPFh/Q==
-Date: Sat, 7 Mar 2026 13:48:44 +0100
+	b=AyLd1gk2G7AgRX+tHUPjl8pOGW3VWz8v+q8cMc5Q+FBjxt2/znpJYZeXhdkk6pj2l
+	 vNne6JdEavw/XvdRyUqZ9Lor7ho8Ahqnwe4epOuX2LiOuCku9zCLig1GOV8qvS4gbZ
+	 xwiMpEl4bisydDiyf3UubEra0Z4pV5Ys59Fd7vxQJ4zayDN6xtuHuOeWzGT6X/fCUy
+	 mxu9o5lAHXxh14vHwb9Uve65DdVgIk3cw3YJx2vJhE1bMgpBWsiJ6oox/14IDim9ak
+	 3XBJ3+ZI09FJXttxqm6RqA/Z1/8iM81QxWBNEfyfCTrCf5UINvk/PSgPQZjIuqaQ64
+	 gEo+sfg5xjffA==
+Date: Sat, 7 Mar 2026 13:51:57 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: Linus Walleij <linusw@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Chanwoo Choi <cw00.choi@samsung.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] dt-binding: pinctrl: pinctrl-max77620: convert to
- DT schema
-Message-ID: <20260307-smiling-coyote-of-economy-317afe@quoll>
-References: <20260306133351.31589-1-clamor95@gmail.com>
- <20260306133351.31589-3-clamor95@gmail.com>
+To: Yu-Chun Lin <eleanor.lin@realtek.com>
+Cc: linusw@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, bartosz.golaszewski@oss.qualcomm.com, afaerber@suse.com, 
+	james.tai@realtek.com, cy.huang@realtek.com, stanley_chang@realtek.com, 
+	tychang@realtek.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-realtek-soc@lists.infradead.org
+Subject: Re: [PATCH v2 07/14] dt-bindings: pincfg-node: Add
+ input-voltage-microvolt property
+Message-ID: <20260307-astonishing-helpful-grouse-b7e968@quoll>
+References: <20260306075244.1170399-1-eleanor.lin@realtek.com>
+ <20260306075244.1170399-8-eleanor.lin@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -69,87 +66,72 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260306133351.31589-3-clamor95@gmail.com>
-X-Rspamd-Queue-Id: C313422BC56
+In-Reply-To: <20260306075244.1170399-8-eleanor.lin@realtek.com>
+X-Rspamd-Queue-Id: 0B68E22BC92
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32720-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-32721-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.985];
+	NEURAL_HAM(-0.00)[-0.964];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,intel.com,arm.com,samsung.com,bootlin.com,vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[realtek.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-On Fri, Mar 06, 2026 at 03:33:47PM +0200, Svyatoslav Ryhel wrote:
-> Convert pinctrl-max77620 devicetree bindings for the MAX77620 PMIC from
-> TXT to YAML format. This patch does not change any functionality; the
-> bindings remain the same.
+On Fri, Mar 06, 2026 at 03:52:37PM +0800, Yu-Chun Lin wrote:
+> From: Tzuyi Chang <tychang@realtek.com>
 > 
-> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> Add a generic pin configuration property "input-voltage-microvolt" to
+> specify the input voltage level of a pin in microvolts.
+
+Why?
+
+> 
+> Signed-off-by: Tzuyi Chang <tychang@realtek.com>
+> Co-developed-by: Yu-Chun Lin <eleanor.lin@realtek.com>
+> Signed-off-by: Yu-Chun Lin <eleanor.lin@realtek.com>
 > ---
->  .../pinctrl/maxim,max77620-pinctrl.yaml       |  97 +++++++++++++
->  .../bindings/pinctrl/pinctrl-max77620.txt     | 127 ------------------
->  2 files changed, 97 insertions(+), 127 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/maxim,max77620-pinctrl.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt
+>  Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/maxim,max77620-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/maxim,max77620-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..7364a8bdd7d3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/maxim,max77620-pinctrl.yaml
-> @@ -0,0 +1,97 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/maxim,max77620-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Pinmux controller function for Maxim MAX77620 Power management IC
-> +
-> +maintainers:
-> +  - Svyatoslav Ryhel <clamor95@gmail.com>
-> +
-> +description:
-> +  Device has 8 GPIO pins which can be configured as GPIO as well as the
-> +  special IO functions.
-> +
-> +allOf:
-> +  - $ref: /schemas/pinctrl/pincfg-node.yaml
-> +  - $ref: /schemas/pinctrl/pinmux-node.yaml
-> +
-> +patternProperties:
-> +  "^(pin_gpio|gpio)[0-7_]+$":
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+> index a916d0fc79a9..da182c8a1d00 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+> @@ -162,6 +162,10 @@ properties:
+>        this affects the expected delay in ps before latching a value to
+>        an output pin.
+>  
+> +  input-voltage-microvolt:
+> +    description: Specifies the input voltage level of the pin in microvolts.
+> +      This defines the reference for VIH/VIL.
 
-Underscores are not allowed in general, so pattern needs fixes. Does
-anything actually rely on this name? Is this ABI? I don't see old
-binding and driver using the name, thus this should be just ^pin-[0-7]$
-(+ is also not correct if you have max 8 gpios)
+What is VIH/VIL? Why generic binding would define the voltage of pins
+for pin control?
 
+This patch misses actual background why you are doing it and what sort
+of common/typical pinctrl setup you describe.
 
 Best regards,
 Krzysztof
