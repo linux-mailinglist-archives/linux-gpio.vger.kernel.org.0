@@ -1,166 +1,124 @@
-Return-Path: <linux-gpio+bounces-32785-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32786-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2YbhFGz4rWlK+QEAu9opvQ
-	(envelope-from <linux-gpio+bounces-32785-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 08 Mar 2026 23:30:04 +0100
+	id 8FcPNSIJrmkN/AEAu9opvQ
+	(envelope-from <linux-gpio+bounces-32786-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 00:41:22 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id B18B02326E0
-	for <lists+linux-gpio@lfdr.de>; Sun, 08 Mar 2026 23:30:03 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E142232C42
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 00:41:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5AAF03009F24
-	for <lists+linux-gpio@lfdr.de>; Sun,  8 Mar 2026 22:22:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B3C11301B721
+	for <lists+linux-gpio@lfdr.de>; Sun,  8 Mar 2026 23:40:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C29F3502A6;
-	Sun,  8 Mar 2026 22:22:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 018B035BDD7;
+	Sun,  8 Mar 2026 23:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KJG7p9s2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1B51DE8BE;
-	Sun,  8 Mar 2026 22:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B930F35B650
+	for <linux-gpio@vger.kernel.org>; Sun,  8 Mar 2026 23:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773008545; cv=none; b=XiPQ897q5YcKhwCBWmWXV8ph3Aid/93nf7n5QspfGzVLVFyJ/5JVw8tVy9J1opydiemuGpcMFfkOLPBJgPr7zNBYBOi7WDhg2sU3JbhCa04V/rmbKlRzAC+p0SaMf2HJc7iIUg8aMwwJJ22XAkuUFKABJuKEdpWvsFDqOzdQKH4=
+	t=1773013253; cv=none; b=Km6mJIbEy2M77zXpdzZGb6sENICr6hxQYBSL5YUnLhpiCu4kMbMTWBosXwUVO0+CasfMzrwo6b0Q5Yzx47R+EQo+1YY+ay7yR74o9NtFeBDpH6z/4MF9zfNJ1gen2BGY3KF7BKg25MPzq9CV/u1ISDbapo3h+nGeMcQ2h8l5UV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773008545; c=relaxed/simple;
-	bh=n8fdsNpksQMyzDLZEkSIk2mSFJWH1PAnAyRdAAkVywk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=CMgBcMVhsuOLuwMxHF54Ytpp1e+83IjoZ62tEipsmr/13AbztmpOxwvt53sKRW1xQZHHB+joRtvphzzSRahATe/CPQdh+op/9FvQd9XbKXIlDU8FXpTD0G21edL8cL6+vpeMa+2Fra8odSRkPK1Vyd849vKOrxTepFiTEbrbYAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 42DD81B91B3;
-	Sun,  8 Mar 2026 22:22:21 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf03.hostedemail.com (Postfix) with ESMTPA id BD6C56000E;
-	Sun,  8 Mar 2026 22:22:14 +0000 (UTC)
-Message-ID: <9fd14d166e860f26febfbc9061a6dcae6a166961.camel@perches.com>
-Subject: Re: [PATCH v2 phy-next 24/24] MAINTAINERS: add regexes for linux-phy
-From: Joe Perches <joe@perches.com>
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: linux-phy@lists.infradead.org, Vinod Koul <vkoul@kernel.org>, Neil
- Armstrong <neil.armstrong@linaro.org>, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-can@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-ide@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-sunxi@lists.linux.dev, 
-	linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
- netdev@vger.kernel.org, 	spacemit@lists.linux.dev,
- UNGLinuxDriver@microchip.com
-Date: Sun, 08 Mar 2026 15:22:13 -0700
-In-Reply-To: <20260308205623.5trrqdmdrzj744hi@skbuf>
-References: <20260308114009.2546587-1-vladimir.oltean@nxp.com>
-	 <20260308114009.2546587-25-vladimir.oltean@nxp.com>
-	 <ca170cbaf2f8bcbc89bbda68914d8e0d7640f0e7.camel@perches.com>
-	 <20260308191017.kcyi7ka5pktq5jl4@skbuf>
-	 <8c4c5d0c5d014d5cc19eb10906ca1bd83ffb3ce5.camel@perches.com>
-	 <20260308205623.5trrqdmdrzj744hi@skbuf>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	s=arc-20240116; t=1773013253; c=relaxed/simple;
+	bh=886yOsmgMr03UfDw77dZfLDvbC5Q93qvbfwF3WDyRFE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hslG8q3J9fbyrs8D1YB5162lV2KNsKs8HK9F9Yex3eHAnF/wn4AnTLDn6zwX3oEYwKykWUoUuwkhjnpicTIebKtmuCU9IGxbOSQHxz3q4KIM6GjbPxFack7qV4LK6rlKtKTa7g3YQtgz+PTWqmofT8WQdlK4Z5neIBq0Ro151ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KJG7p9s2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A401C116C6
+	for <linux-gpio@vger.kernel.org>; Sun,  8 Mar 2026 23:40:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773013253;
+	bh=886yOsmgMr03UfDw77dZfLDvbC5Q93qvbfwF3WDyRFE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KJG7p9s2e95DG65rsuy3fpE59sjy0m4Nli6U54WKx1+uAR7Pw6RE6UupWm+5VKEUQ
+	 JRmErT+F5PR77oJyHiRgLAxSErT7RsZodfuQFTuuJ674j+i5HgaGQ8zoekcClUZRMv
+	 Tt/2h7cqulZjBVQUe6OpNC+CxNz85ivcC9DC/kczvB4r1Vd0BT6rmflTG715+JCLx3
+	 DATgREW3YQHoot6X/A7mo0YHtT/VuxPL3vQKheNZHLEudu8kTnf8u1vC6i3Sj8WWhB
+	 +y+Ao4YaYMW+b+AkPo1ZjVZ3cPF7O1Hqlgn4iRzftSmjZJZ03e0m6HAFyDg8hr9zPh
+	 5x+xp9UkNhP2g==
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-798527f822cso108680477b3.3
+        for <linux-gpio@vger.kernel.org>; Sun, 08 Mar 2026 16:40:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWpW0RZbblpPgEIC/nHA0zhFjwXQb92mtZLFCtQPCgkB1QZa+u9FYtZIVDfCgimMC/jo9c1zwHzVPSM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0MpE0fBhE97+ppeBDKtzabUy5IOkOPu9sYX0QjFfjkEFM6zfZ
+	BGY8hZDYBclmoelEQ8ZZLF383e/+td3QPhhXicUIGDdQPz3DA8H5i3Xnnw0atq73xVgAMR+AhTb
+	H+EKunulMu4musBlov515FxT6xSvQCuQ=
+X-Received: by 2002:a05:690c:ed6:b0:798:78cc:3e59 with SMTP id
+ 00721157ae682-798dd6444f1mr97812207b3.11.1773013252777; Sun, 08 Mar 2026
+ 16:40:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Stat-Signature: zgtxuwsb3363ai68tf6p7s8zp8seinzy
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX19wsONHcaef5rI729O90pckRr9dLrQEYXs=
-X-HE-Tag: 1773008534-677296
-X-HE-Meta: U2FsdGVkX19zIqgNUKb+c+5Mu7Q3C+Gpl/B+X8eI5i6bGv7WE3zpj355qMm6YCbRSW7Vrhs2aumEBIt791syA8wOI3oaCj+46xwg3qNvWJkp2gLycZfqNtZEDdNuGCB0y349Wog5E09dSEbmxlYo3wEry6L0kQTHpHQi1eemnMz3eHRJ8lW0g+PBe0pZnw/seBVjwauSFyG+tNp9GhFkZXlt5WBWbJRv4eXsvXAwTvZLp/ToUvk9BlaA2J9NhuyWc4djQ+wNnPyIbjEf3YbjCt97pmlbZeZatO9Oxpnpbki4SgQq7YX4GOxv15JoA/1s08cXIoR5CaQiUuDxwOWahT02urVywBVxEzsYACoHDQg9R+OY8J92EbaYAELi/zOh
-X-Rspamd-Queue-Id: B18B02326E0
+References: <20260305124945.10781-1-johan@kernel.org>
+In-Reply-To: <20260305124945.10781-1-johan@kernel.org>
+From: Linus Walleij <linusw@kernel.org>
+Date: Mon, 9 Mar 2026 00:40:41 +0100
+X-Gmail-Original-Message-ID: <CAD++jLk0QCZRbA4NWJ+sBDD8WsBk1zN5MD_iVUCFzcj9xQQucw@mail.gmail.com>
+X-Gm-Features: AaiRm50c9N_rKWeiHHuIfIadQCWrCsBx7jtt--5v3RNL_54PJOZNzCIJCUhp8SA
+Message-ID: <CAD++jLk0QCZRbA4NWJ+sBDD8WsBk1zN5MD_iVUCFzcj9xQQucw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mpsse: drop redundant device reference
+To: Johan Hovold <johan@kernel.org>
+Cc: Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 3E142232C42
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [7.34 / 15.00];
-	URIBL_BLACK(7.50)[perches.com:mid];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
-	BAD_REP_POLICIES(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[perches.com];
-	TAGGED_FROM(0.00)[bounces-32785-lists,linux-gpio=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FROM_HAS_DN(0.00)[];
-	GREYLIST(0.00)[pass,body];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-32786-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	MIME_TRACE(0.00)[0:+];
-	NEURAL_SPAM(0.00)[0.279];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[joe@perches.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	R_DKIM_NA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-0.963];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	R_SPF_ALLOW(0.00)[+ip4:172.105.105.114:c];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[perl.org:url,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,perches.com:mid]
-X-Rspamd-Action: add header
-X-Spam: Yes
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Action: no action
 
-On Sun, 2026-03-08 at 22:56 +0200, Vladimir Oltean wrote:
-> On Sun, Mar 08, 2026 at 12:25:32PM -0700, Joe Perches wrote:
-> > On Sun, 2026-03-08 at 21:10 +0200, Vladimir Oltean wrote:
-> On Sun, Mar 08, 2026 at 11:40:44AM -0700, Joe Perches wrote:
-> > > Perhaps if matching only the include uses:
-> > > > (/ is escaped because get_maintainer is stupid)
-> > > > something like:
-> > > >=20
-> > > > K:	include\s*\<linux\/phy\/phy(?:-common-props|-provider)?\.h\>
->=20
-> > > Why is get_maintainer stupid?
-> >=20
-> > The get_maintainer code used to match keywords is
-> >=20
-> 	    foreach my $line (keys %keyword_hash) {
-> 		if ($text =3D~ m/$keyword_hash{$line}/x) {
-> >=20
-> > so it seems the first / in the K: <foo> regex would terminate
-> > the match.
-> >=20
-> > It might have been better to use a different delimiter.
-> > Maybe:
-> >=20
-> 		if ($text =3D~ m{$keyword_hash{$line}}/x
->=20
-> So why does it match in my example?
+On Thu, Mar 5, 2026 at 1:49=E2=80=AFPM Johan Hovold <johan@kernel.org> wrot=
+e:
 
-Not sure really.  But it does match exactly.
-Maybe the regex code scans forward until the last /
-as the / character is not a "real" metacharacter.
+> Driver core holds a reference to the USB interface and its parent USB
+> device while the interface is bound to a driver and there is no need to
+> take additional references unless the structures are needed after
+> disconnect.
+>
+> Drop the redundant device reference to reduce cargo culting, make it
+> easier to spot drivers where an extra reference is needed, and reduce
+> the risk of memory leaks when drivers fail to release it.
+>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
 
-I added some test code and it produced:
+Looks right to me.
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
-line:	<+#include <linux/phy/phy.h>>
-kw:	<(?:linux/phy/phy\.h|phy-props\.h|phy-provider\.h)>
-test:	<^[+-].*(?:linux/phy/phy\.h|phy-props\.h|phy-provider\.h)>
-match:	<+#include <linux/phy/phy.h>
-
-From https://perldoc.perl.org/perlrequick
-
-Not all characters can be used 'as is' in a match.
-Some characters, called metacharacters, are considered special,
-and reserved for use in regex notation. The metacharacters are
-
-{}[]()^$.|*+?\
-
-A metacharacter can be matched literally by putting a backslash before it:
-
-"2+2=3D4" =3D~ /2+2/;    # doesn't match, + is a metacharacter
-"2+2=3D4" =3D~ /2\+2/;   # matches, \+ is treated like an ordinary +
-'C:\WIN32' =3D~ /C:\\WIN/;                       # matches
-"/usr/bin/perl" =3D~ /\/usr\/bin\/perl/;  # matches
-
-In the last regex, the forward slash '/' is also backslashed, because it is=
- used to delimit the regex.
+Yours,
+Linus Walleij
 
