@@ -1,189 +1,154 @@
-Return-Path: <linux-gpio+bounces-32799-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32800-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0IILGjKQrmnVGAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-32799-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 10:17:38 +0100
+	id GEpRGrGQrmk7GQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-32800-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 10:19:45 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2CA6236004
-	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 10:17:37 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C36DA2360AB
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 10:19:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6ED4B301991E
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2026 09:15:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 14994301B734
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2026 09:17:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58F5933B6E3;
-	Mon,  9 Mar 2026 09:15:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50C5B377ED7;
+	Mon,  9 Mar 2026 09:17:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="N7fFowUQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5Qe0xmw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AFE24DCF9;
-	Mon,  9 Mar 2026 09:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13020146D53
+	for <linux-gpio@vger.kernel.org>; Mon,  9 Mar 2026 09:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773047750; cv=none; b=YAWjxQNgB5xR/ZoC9dYrJ9b80mICrEetlSYAMFTbVrywGRulZdA/vSY3q2DnALDWMgWZFa4zfcl8BQcaHHoxmxmp6tQMiJ5sLJTqj/XglNf3+WGdP3beS5WHUeJFAXyxgw+7d9WOo88A8SZp3uvcXr836RhL6qjO/h0JieZNx/k=
+	t=1773047864; cv=none; b=NaBNWytlpPDqGpLjFMgGokA+GMLWs9ahaOCgQd3rkMAlPI8LvC4hiCtVLMgzSS/Y3putlAn9CkI65KVF7AtSyNcU5K1Suy8qNm7z59isVwMCjkTeIQOucVhOZdzcP690FRDl+noWvS4h3eZ+5PGZeACDUcnWlpLA0EZUIageVg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773047750; c=relaxed/simple;
-	bh=JgjMfWaODspJLnY+C6cx+a77p1z5R63MX8u70I4pM70=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=atoqchGddGnBlOI+Rd3AAKH/g6mqHm1lI9314YQGvgUwJYDA9WdUrEknGQAKlZni09eUctWKbfumPoEff47ONKLL+ULZyEwIJvqjy1KvFTETtjtr2h81zG438NrSi64GgMPVb/z25gT8f5JrSyq2oBfU7cH9jJFxrHWRCgobKDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=N7fFowUQ; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 6299CnnvE261338, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1773047569; bh=JgjMfWaODspJLnY+C6cx+a77p1z5R63MX8u70I4pM70=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=N7fFowUQ3mQeqTSFgo4jQBDcSvxnLdDmNjiqxUPqdZxOGBW8q2R9i46IraMQjxdTp
-	 NpBStgYteoqLJsAwJamsiGjjWt9b0jFj/8gNwMe0XQwIankiytgqwd41+nDIyzDR1Z
-	 0Q1KGkFujUdNpZu9Mo57pUOubFvY8lHOLXkS2ZlsmJb03PF8tjBnjWV4A98dFqTe1c
-	 VKc14SMyapJvxN8oQ4dCY40lrNORNYxj9oeoHoX+uhmczlbmN8PW0QlOelWVJafPee
-	 K+DURJbggU6TW9i4XWdYnF93PmguecBWz2vhEmQJ9md8VesMlL7Db8jodUA1x7p7m4
-	 OhkTDDyYYe5Bw==
-Received: from mail.realtek.com (rtkexhmbs04.realtek.com.tw[10.21.1.54])
-	by rtits2.realtek.com.tw (8.15.2/3.21/5.94) with ESMTPS id 6299CnnvE261338
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 9 Mar 2026 17:12:49 +0800
-Received: from RTKEXHMBS01.realtek.com.tw (172.21.6.40) by
- RTKEXHMBS04.realtek.com.tw (10.21.1.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Mon, 9 Mar 2026 17:12:50 +0800
-Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
- RTKEXHMBS01.realtek.com.tw (172.21.6.40) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Mon, 9 Mar 2026 17:12:49 +0800
-Received: from RTKEXHMBS06.realtek.com.tw ([fe80::4cbd:6c6c:b92b:3913]) by
- RTKEXHMBS06.realtek.com.tw ([fe80::4cbd:6c6c:b92b:3913%10]) with mapi id
- 15.02.1748.010; Mon, 9 Mar 2026 17:12:49 +0800
-From: =?utf-8?B?WXUtQ2h1biBMaW4gW+ael+elkOWQm10=?= <eleanor.lin@realtek.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: "linusw@kernel.org" <linusw@kernel.org>,
-        "robh@kernel.org"
-	<robh@kernel.org>,
-        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-        "conor+dt@kernel.org" <conor+dt@kernel.org>,
-        "bartosz.golaszewski@oss.qualcomm.com"
-	<bartosz.golaszewski@oss.qualcomm.com>,
-        "afaerber@suse.com"
-	<afaerber@suse.com>,
-        =?utf-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?=
-	<james.tai@realtek.com>,
-        =?utf-8?B?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?=
-	<cy.huang@realtek.com>,
-        =?utf-8?B?U3RhbmxleSBDaGFuZ1vmmIzogrLlvrdd?=
-	<stanley_chang@realtek.com>,
-        =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?=
-	<tychang@realtek.com>,
-        "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-        "linux-realtek-soc@lists.infradead.org"
-	<linux-realtek-soc@lists.infradead.org>
-Subject: RE: [PATCH v2 07/14] dt-bindings: pincfg-node: Add
- input-voltage-microvolt property
-Thread-Topic: [PATCH v2 07/14] dt-bindings: pincfg-node: Add
- input-voltage-microvolt property
-Thread-Index: AQHcrT45a/bUsKCH9kyRea3Awrcd97WigcSAgANtK/A=
-Date: Mon, 9 Mar 2026 09:12:49 +0000
-Message-ID: <74152b7e8de7470dac6555ef22e6bc64@realtek.com>
-References: <20260306075244.1170399-1-eleanor.lin@realtek.com>
- <20260306075244.1170399-8-eleanor.lin@realtek.com>
- <20260307-astonishing-helpful-grouse-b7e968@quoll>
-In-Reply-To: <20260307-astonishing-helpful-grouse-b7e968@quoll>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1773047864; c=relaxed/simple;
+	bh=YLXhNGCsQCx1qS2BiicwkZEbN+zda8ZNiRoTS2x/QoA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O6wreWfS5lOIrNTHLC5y1THGYzzQ/Yi61Ck6B0+6vGBmC527eE+W1Akt7rtZiSYqXFI0hk+ca4goeVWaKbINJCnia+nNkdsZjNmTC8yRzn20azZPwR1APgF47t6NFaohO18D3YynN7LVXA7vRUFD/ra3xrFB70BF3Lx7yR3I8b8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5Qe0xmw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB8C8C4CEF7
+	for <linux-gpio@vger.kernel.org>; Mon,  9 Mar 2026 09:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773047864;
+	bh=YLXhNGCsQCx1qS2BiicwkZEbN+zda8ZNiRoTS2x/QoA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=k5Qe0xmw2AEmGlrgD5DUDGQ6NskjA3NK6aRG73abYPJe/iG8w1UyPOywZyNif1YLf
+	 HCV6SMw8H41nKiARvAe/IVazL8tOjO2LtckOujmZoCLfa5BuG1gxtSeULJc8gN7+hP
+	 FJaqcjhFSjwOuA3R6dfbTJu/RgNTxUbTB7v4e6yMlLKInY0svaNb2/90cbsC8ipD+Y
+	 DdAdlX7oEs/ETp9ZxxydSt6h03+b1fQzYebVsAatNpnkliv8Nv9ZBc1O7L5vA31tUK
+	 UaJYfOq3VwwRA8RR9vYdpe1LYYEYkZnTPjZZVqlWTnhvIm2nck952hHpdvQ8CD8e8z
+	 5m+mGXTCe3Fpw==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-38a46657a9fso15282041fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Mar 2026 02:17:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXHmPNgBNpIQDfoALlKHcacIULoAKdhh3PbYArlgJl2lleaBGD3mNo7Iqffu69WBuSKh58Srn1C7H6a@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/bxiG8usVqXG0/YgEUbE0aWMZ0mxykT9A42Vcg+c+Blu4Q2Yd
+	178dwxZ4WVMXUrZi/pmEveHiBqJMnxcVInfHmYYxRhPL3V52aU/VBXI4uDuoqzLBZyOz+DAKRM5
+	Ya+uRWVV24n60U9JfGdhbBTUgmWyKKFTp9zPbDFNhnw==
+X-Received: by 2002:a2e:a991:0:b0:38a:4d20:3f7c with SMTP id
+ 38308e7fff4ca-38a4d2042eemr18701111fa.36.1773047862657; Mon, 09 Mar 2026
+ 02:17:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: E2CA6236004
+References: <20260212110905.52842-2-krzysztof.kozlowski@oss.qualcomm.com>
+ <CAMRc=Me14BeYBgy5_bNk+2riQzGhfTu_5nQhU1R8sXMbO5s8TQ@mail.gmail.com> <20260305234528.GA796613-robh@kernel.org>
+In-Reply-To: <20260305234528.GA796613-robh@kernel.org>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Mon, 9 Mar 2026 10:17:29 +0100
+X-Gmail-Original-Message-ID: <CAMRc=Mcv+LWK_skGTB0_Y0XXDNa8F19t+Pxev4iYgWFSUcv=8A@mail.gmail.com>
+X-Gm-Features: AaiRm53jgViOFPs1FPMLNJ5L0WqZqaBREnjWwRr7yfZjFgiKllRvrB0IvqdS-gg
+Message-ID: <CAMRc=Mcv+LWK_skGTB0_Y0XXDNa8F19t+Pxev4iYgWFSUcv=8A@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: gpio: gpio-delay: Use Alexander's email
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>, Linus Walleij <linusw@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alexander Stein <alexander.stein@ew.tq-group.com>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: C36DA2360AB
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.44 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MIME_BASE64_TEXT_BOGUS(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[realtek.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[realtek.com:s=dkim];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
-	MIME_BASE64_TEXT(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-32799-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[realtek.com:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[eleanor.lin@realtek.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32800-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_HAM(-0.00)[-0.979];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,devicetree.org:url,mail.gmail.com:mid,qualcomm.com:email,tq-group.com:email]
 X-Rspamd-Action: no action
 
-PiBPbiBGcmksIE1hciAwNiwgMjAyNiBhdCAwMzo1MjozN1BNICswODAwLCBZdS1DaHVuIExpbiB3
-cm90ZToNCj4gPiBGcm9tOiBUenV5aSBDaGFuZyA8dHljaGFuZ0ByZWFsdGVrLmNvbT4NCj4gPg0K
-PiA+IEFkZCBhIGdlbmVyaWMgcGluIGNvbmZpZ3VyYXRpb24gcHJvcGVydHkgImlucHV0LXZvbHRh
-Z2UtbWljcm92b2x0IiB0bw0KPiA+IHNwZWNpZnkgdGhlIGlucHV0IHZvbHRhZ2UgbGV2ZWwgb2Yg
-YSBwaW4gaW4gbWljcm92b2x0cy4NCj4gDQo+IFdoeT8NCj4gDQo+ID4NCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBUenV5aSBDaGFuZyA8dHljaGFuZ0ByZWFsdGVrLmNvbT4NCj4gPiBDby1kZXZlbG9wZWQt
-Ynk6IFl1LUNodW4gTGluIDxlbGVhbm9yLmxpbkByZWFsdGVrLmNvbT4NCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBZdS1DaHVuIExpbiA8ZWxlYW5vci5saW5AcmVhbHRlay5jb20+DQo+ID4gLS0tDQo+ID4g
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmNmZy1ub2RlLnlh
-bWwgfCA0ICsrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+
-ID4gZGlmZiAtLWdpdA0KPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bp
-bmN0cmwvcGluY2ZnLW5vZGUueWFtbA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3BpbmN0cmwvcGluY2ZnLW5vZGUueWFtbA0KPiA+IGluZGV4IGE5MTZkMGZjNzlhOS4u
-ZGExODJjOGExZDAwIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9waW5jdHJsL3BpbmNmZy1ub2RlLnlhbWwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9waW5jZmctbm9kZS55YW1sDQo+ID4gQEAgLTE2
-Miw2ICsxNjIsMTAgQEAgcHJvcGVydGllczoNCj4gPiAgICAgICAgdGhpcyBhZmZlY3RzIHRoZSBl
-eHBlY3RlZCBkZWxheSBpbiBwcyBiZWZvcmUgbGF0Y2hpbmcgYSB2YWx1ZSB0bw0KPiA+ICAgICAg
-ICBhbiBvdXRwdXQgcGluLg0KPiA+DQo+ID4gKyAgaW5wdXQtdm9sdGFnZS1taWNyb3ZvbHQ6DQo+
-ID4gKyAgICBkZXNjcmlwdGlvbjogU3BlY2lmaWVzIHRoZSBpbnB1dCB2b2x0YWdlIGxldmVsIG9m
-IHRoZSBwaW4gaW4gbWljcm92b2x0cy4NCj4gPiArICAgICAgVGhpcyBkZWZpbmVzIHRoZSByZWZl
-cmVuY2UgZm9yIFZJSC9WSUwuDQo+IA0KPiBXaGF0IGlzIFZJSC9WSUw/IFdoeSBnZW5lcmljIGJp
-bmRpbmcgd291bGQgZGVmaW5lIHRoZSB2b2x0YWdlIG9mIHBpbnMgZm9yIHBpbg0KPiBjb250cm9s
-Pw0KPiANCj4gVGhpcyBwYXRjaCBtaXNzZXMgYWN0dWFsIGJhY2tncm91bmQgd2h5IHlvdSBhcmUg
-ZG9pbmcgaXQgYW5kIHdoYXQgc29ydCBvZg0KPiBjb21tb24vdHlwaWNhbCBwaW5jdHJsIHNldHVw
-IHlvdSBkZXNjcmliZS4NCj4gDQo+IEJlc3QgcmVnYXJkcywNCj4gS3J6eXN6dG9mDQoNCkFncmVl
-ZCwgdGhlIGNvbW1pdCBtZXNzYWdlIGFuZCBkZXNjcmlwdGlvbiBsYWNrZWQgc3VmZmljaWVudCBj
-b250ZXh0LiBJDQp3aWxsIGltcHJvdmUgdGhlIGV4cGxhbmF0aW9uIGluIHYzLg0KDQpWSUggaXMg
-SW5wdXQgSGlnaCBWb2x0YWdlLCBhbmQgVklMIGlzIElucHV0IExvdyBWb2x0YWdlLg0KDQpUaGUg
-cmVhc29uIGZvciBpbnRyb2R1Y2luZyAnaW5wdXQtdm9sdGFnZS1taWNyb3ZvbHQnIGluICdwaW5j
-Zmctbm9kZS55YW1sJyBpcw0KdG8gc3VwcG9ydCBoYXJkd2FyZSBkZXNpZ25zIHdoZXJlIHRoZSAi
-SW5wdXQgTG9naWMgVGhyZXNob2xkIiBpcyBkZWNvdXBsZWQNCmZyb20gdGhlICJQb3dlciBTdXBw
-bHkgVm9sdGFnZSIuDQoNCkZvciBleGFtcGxlLCBhIHBpbiBtaWdodCBiZSBwb3dlcmVkIGJ5IGEg
-Zml4ZWQgMy4zViBzdXBwbHkgYnV0IG5lZWRzIHRvIGJlDQpjb25maWd1cmVkIHRvIGFjY2VwdCAx
-LjhWIGxvZ2ljIHNpZ25hbHMuIFRoaXMgcHJvcGVydHkgYWxsb3dzIHRoZSBwaW5jdHJsDQpkcml2
-ZXIgdG8gc2V0IHRoZSBjb3JyZWN0IGludGVybmFsIHJlZmVyZW5jZS4NCg0KVGhpcyBjaGFuZ2Ug
-Zm9sbG93cyB0aGUgc3VnZ2VzdGlvbiBmcm9tIExpbnVzIFdhbGxlaWogWzFdIHRvIG1ha2UgdGhl
-IHByb3BlcnR5DQpnZW5lcmljIGluc3RlYWQgb2YgdmVuZG9yLXNwZWNpZmljICgncmVhbHRlayxp
-bnB1dC12b2x0YWdlJyksIGFzIHRoZSBjb25jZXB0DQpvZiBzZWxlY3RpbmcgaW5wdXQgdGhyZXNo
-b2xkcyBpcyBub3QgdW5pcXVlIHRvIFJlYWx0ZWsuDQoNClsxXTogaHR0cHM6Ly9sb3JlLmtlcm5l
-bC5vcmcvYWxsL2Q1YmUzNTdjMTRiODQxNTVhZGZhOGE5ZjAwYTY0ZDgzQHJlYWx0ZWsuY29tLw0K
-DQpCZXN0IHJlZ2FyZHMsDQpZdS1DaHVuDQo=
+On Fri, Mar 6, 2026 at 12:45=E2=80=AFAM Rob Herring <robh@kernel.org> wrote=
+:
+>
+> On Thu, Feb 12, 2026 at 03:10:57AM -0800, Bartosz Golaszewski wrote:
+> > On Thu, 12 Feb 2026 12:09:06 +0100, Krzysztof Kozlowski
+> > <krzysztof.kozlowski@oss.qualcomm.com> said:
+> > > Group/anonymous mailboxes are not accepted for bindings maintainers, =
+so
+> > > switch from such linux @TQ mailbox to Alexander's email.
+> > >
+> > > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.=
+com>
+> > > ---
+> > >  Documentation/devicetree/bindings/gpio/gpio-delay.yaml | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/gpio/gpio-delay.yaml b=
+/Documentation/devicetree/bindings/gpio/gpio-delay.yaml
+> > > index 1cebc4058e27..b99ceff6c5f6 100644
+> > > --- a/Documentation/devicetree/bindings/gpio/gpio-delay.yaml
+> > > +++ b/Documentation/devicetree/bindings/gpio/gpio-delay.yaml
+> > > @@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml=
+#
+> > >  title: GPIO delay controller
+> > >
+> > >  maintainers:
+> > > -  - Alexander Stein <linux@ew.tq-group.com>
+> > > +  - Alexander Stein <alexander.stein@ew.tq-group.com>
+> > >
+> > >  description: |
+> > >    This binding describes an electrical setup where setting an GPIO o=
+utput
+> > > --
+> > > 2.51.0
+> > >
+> > >
+> >
+> > Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+>
+> Are you going to pick this up?
+>
+
+Yes, queued now.
+
+Bart
 
