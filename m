@@ -1,236 +1,156 @@
-Return-Path: <linux-gpio+bounces-32795-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32796-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sDXRNJiDrmlwFgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-32795-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 09:23:52 +0100
+	id oHokOV6KrmmqFwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-32796-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 09:52:46 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73D5123577B
-	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 09:23:52 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 728A9235B02
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 09:52:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1220E3016C84
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2026 08:23:39 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 66D21301469F
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2026 08:52:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8877636BCD7;
-	Mon,  9 Mar 2026 08:23:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18C3033A70F;
+	Mon,  9 Mar 2026 08:52:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d9WOR2OA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fpv5tnZe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73FD36D4EA
-	for <linux-gpio@vger.kernel.org>; Mon,  9 Mar 2026 08:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDDC1DF74F;
+	Mon,  9 Mar 2026 08:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773044618; cv=none; b=f9Syj6W69v/VJG8dPMNRXUSkMrnxP1/+xEA6R1uWLe+k7GacDRVRkMDj8ItEGEwVKo4pTBLHVRclErwHC95ba8vKtOqme4rpRdpB/dnLMrA5j9GXYLjk/7bXq6uEOus7+QgGmbjZtSDeitW0Vtj09B2+c0dnLjBbZI7TTlo5Tvw=
+	t=1773046358; cv=none; b=V2URLAm9P2eQpKbO/Q3Tz5RZOH2Flf7WO5mQbLyXpXO+NRvV9ntCI/pcMGcJEXEI8O2JY3sqDaSddY+asZO1KdhtQZd0QnqsmQx1Bllb7Ggrp80AjCGfnJwcERu6av1SNOlQd9R07asY0KcUk5xsNc42aKmAoJyrEYcfR8Xor5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773044618; c=relaxed/simple;
-	bh=97GzRB0jXduRhHegNCSRNpHmwNXg1M8yUOuodzFGCYs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jK4mbUce3VTCyMv8iPfwkb4M2NB0CTBrdTt+dizYxRaXjLLfN3W+Mv/e29ZUP0Og1x8S4EjyZm8ijXxt7uz5i/kZmKVLPsMi4zAyQODBADZQ8hlu7OMvSMYACA6Jym0VIQobf091kDhGAVgnAXSegrNdenMBdZwbF6s5ZAbqg2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d9WOR2OA; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-82984c077b2so1799157b3a.1
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Mar 2026 01:23:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773044615; x=1773649415; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wUXA77gyyGjfEb0uEClVpk8YIE6PesFqfd39D9DI5sw=;
-        b=d9WOR2OAxFyIhsvCILgdqRe+/JC8SJkbFTDiCQNrRnWIikE1eHsdkmgQFVzJVKOoy+
-         tkRhGCY38yHCdnSHbffFOq5v94+qA70X9+182fYnsHYbPU2W56e9YwJJVV9iNUcIKjiF
-         zou4UUdNIXXBpQ1hJPcq2Y7aRirBFhpBMsiEK/sSBWi2rL34P++wpfsNtDbp0kqLeXff
-         IN46s8doBc2te1eTA89FmG9B9YsOPMOLGodimyHfMqDsNVmdeydwcw4D487hOCczPz1+
-         6aU7O51FrzZa2BbAVjM7IA/vo9/hbuFmSmzPO/Dhfb1hqKgTF6Rw1Z7dJmPCnOiqjLgM
-         eNuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773044615; x=1773649415;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wUXA77gyyGjfEb0uEClVpk8YIE6PesFqfd39D9DI5sw=;
-        b=oMn7/BPJh9lliVbLwCGLOPhwP5lBPa9zTQ7x7CydTtTCiWiWkll9yPJ+6QUsOjKKDF
-         S8X4lCJe3ruPbyxkBYoVLhVss+1GCox0C7MgzcIP/OHpResNIF/zs6QVHmq12hVsehVw
-         eyZ++TrThEAxtSIDx7AtHhIVxcdGlu4u21owJQvzcrMz1BnUaKp/E8In8i4dR+WGO9TL
-         l2idZdHOFW2k656WuP2/NjbjDrCX2OqOEHWtdhhiSyKuIyqMFx5ZDJOf4h+gHzu+G70t
-         EUH+w7fszcwRN5FItLuuBFaLnDj9nymedDxjIwCAP18j7pChCD7//uDsrMKT82olORNQ
-         9zIA==
-X-Forwarded-Encrypted: i=1; AJvYcCX9Sdm9v40U4l1iDWC8AP6KX/KkaOr09pIhPDiCCXNKT8bc/Az6w/NiFOIPjl98yxGMlHVHx/vamE5Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpWQHaBDObacAY7c3Mj2Xjf5jM2wcb+Fydkqx6VrpvVwWaXvzD
-	BhXn0dP4UZP45LRyDnO9RiyJk/nhbJSAlFy+3iTLaqZOYfDWrXoujg+Y
-X-Gm-Gg: ATEYQzxY1mtI0qDOpaT2jATEgsfVe/jbA8LkKyQySP17EoSyCjth3+cUX4Ria8VBDeu
-	c934mvfN4atdAjCO0sipzww5zo78BGpLKR/CnrDEOEaYMR1QEEKI3IsCDLlp6a68kIpNdm0cvd+
-	hRDA63AKXu+u9qHf5w0wCix7l2Y1aiqd0TzF13r1Y/3D6cKj0Y8UfIT21V6EK3Yfkk5dM1jvh4d
-	ZkKGLfm2oikQnHXaASS8J1yh5JupsjG4HIEstrh8M2oNG2AtwImDCcvWWIYeXTpeRK/shQ/WEcm
-	KyV+ZNB9oXWncOZ6bAGHyTAz+cFcuxtlwR13LAR254Boc21pszTk7UFp1li/LflAb7Ucm3d4aHL
-	hIfJun/B1FGZPO9Ietm5mOdLiWANmkTvhwt9e3EPntX4+pvg76PnweKOoh+TaPzSEjLiMDcJ2n+
-	oyGdG2OxPiwXlTf7D5F6vMUSOm
-X-Received: by 2002:a05:6a00:66c4:b0:829:a3ed:9749 with SMTP id d2e1a72fcca58-829a3ed9af8mr7947643b3a.57.1773044614992;
-        Mon, 09 Mar 2026 01:23:34 -0700 (PDT)
-Received: from fedora ([2401:4900:1f32:2ea1:a1a7:f2aa:545b:3c1e])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-829a4657445sm9804383b3a.17.2026.03.09.01.23.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2026 01:23:34 -0700 (PDT)
-From: Shi Hao <i.shihao.999@gmail.com>
-To: linusw@kernel.org
-Cc: brgl@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	i.shihao.999@gmail.com
-Subject: [PATCH] dt-bindings: gpio: convert Cavium ThunderX GPIO binding to YAML
-Date: Mon,  9 Mar 2026 13:52:52 +0530
-Message-ID: <20260309082252.34384-1-i.shihao.999@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	s=arc-20240116; t=1773046358; c=relaxed/simple;
+	bh=HeqU8ro+uPeQp9tslIJnU33XdwI9Tosl5JY8WQmrTss=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U+yryNBiVB5a6oGiKidGtg866yiqR0R7DbkdlQVuKKHUqT/XCnxrx5F/Wak/A2UYM19drrvfKMER7fRaiN/Xj+5mMOU/2zjzNFCohZhSfwqKDEFVMi3DZmIWDF8mDBKIznx1K09Wm46lxYfTuYu9Vlb+uqtf7fWONYAZ+uwPh24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fpv5tnZe; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773046357; x=1804582357;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HeqU8ro+uPeQp9tslIJnU33XdwI9Tosl5JY8WQmrTss=;
+  b=fpv5tnZeST5lS1pmOOHXeilMAACTO+QGYGFCDEp6D3OFQcfwaKV1BwCr
+   mOPQO/cpDKKWLvCV7bIL5hUoMiM/x+zXZLKmzaV+3waGOrbYmlZ3PMIMH
+   bK1maajMC3gnFKOvDoUMIonZv7LeTbFbb39Skb3EQFnWKCEsct8YuSK6W
+   3+w6N7/6QyZH7JPmg3n5QfVLQPpwTp7RQlt7hjkSkTp47d5lEyhp0BjLr
+   MJ5fEXSipaXxZcg0juDpGSkRpj5+hx50TuNKJ0Lx6Jh3usDvyam0nLmTM
+   3pDoWmXOOr1mXUp+Sjk6GmDUqhRBOPaqP2yRZrSGz2uQzSifmEReCWqZM
+   Q==;
+X-CSE-ConnectionGUID: RPiwYULNRe2xg8kiO706aQ==
+X-CSE-MsgGUID: f9MJNc8ETTG+t9qQYHSRQw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11723"; a="96681652"
+X-IronPort-AV: E=Sophos;i="6.23,109,1770624000"; 
+   d="scan'208";a="96681652"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 01:52:37 -0700
+X-CSE-ConnectionGUID: R/u4TXgFSTqLUw6P9ZV2+g==
+X-CSE-MsgGUID: pRIAbBSGTieHzk2m3e3Dnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,109,1770624000"; 
+   d="scan'208";a="257609604"
+Received: from rvuia-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.181])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 01:52:33 -0700
+Date: Mon, 9 Mar 2026 10:52:31 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v3 5/6] iio: adc: ti-ads7950: switch to using
+ devm_regulator_get_enable_read_voltage()
+Message-ID: <aa6KT-tzzEclXCA3@ashevche-desk.local>
+References: <20260305-ti-ads7950-facelift-v3-0-a23fdd1a079e@gmail.com>
+ <20260305-ti-ads7950-facelift-v3-5-a23fdd1a079e@gmail.com>
+ <20260307114947.0b946dfb@jic23-huawei>
+ <aa3czXB9tzLQgwha@ashevche-desk.local>
+ <aa5ZA-CiIZuVkAdS@google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 73D5123577B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aa5ZA-CiIZuVkAdS@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Rspamd-Queue-Id: 728A9235B02
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,gmail.com];
-	FROM_NEQ_ENVFROM(0.00)[ishihao999@gmail.com,linux-gpio@vger.kernel.org];
-	TO_DN_NONE(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32795-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32796-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FREEMAIL_TO(0.00)[gmail.com];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-0.985];
+	DKIM_TRACE(0.00)[intel.com:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[0.0.0.6:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,devicetree.org:url]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.997];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-Convert Cavium ThunderX GPIO text based device tree
-node to YAML schema format, ensuring validation and
-consistency across Device Tree.
+On Mon, Mar 09, 2026 at 05:35:58AM +0000, Dmitry Torokhov wrote:
+> On Sun, Mar 08, 2026 at 10:32:13PM +0200, Andy Shevchenko wrote:
+> > On Sat, Mar 07, 2026 at 11:49:47AM +0000, Jonathan Cameron wrote:
+> > > On Thu, 05 Mar 2026 11:21:56 -0800
+> > > Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
 
-Signed-off-by: Shi Hao <i.shihao.999@gmail.com>
----
- .../gpio/cavium-thunder-8890-gpio.yaml        | 52 +++++++++++++++++++
- .../bindings/gpio/gpio-thunderx.txt           | 27 ----------
- 2 files changed, 52 insertions(+), 27 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/cavium-thunder-8890-gpio.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-thunderx.txt
+...
 
-diff --git a/Documentation/devicetree/bindings/gpio/cavium-thunder-8890-gpio.yaml b/Documentation/devicetree/bindings/gpio/cavium-thunder-8890-gpio.yaml
-new file mode 100644
-index 000000000000..16d7c347f913
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/cavium-thunder-8890-gpio.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/cavium-thunder-8890-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cavium ThunderX GPIO controller
-+
-+description: |
-+  Device Tree binding for the GPIO controller found in
-+  Cavium ThunderX and OCTEON-TX SoCs.
-+
-+maintainers:
-+  - Linus Walleij <linusw@kernel.org>
-+  - Rob Herring <robh@kernel.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - cavium,thunder-8890-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - '#gpio-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    gpio_6_0: gpio@6,0 {
-+      compatible = "cavium,thunder-8890-gpio";
-+      reg = <0x3000 0x100>; /*  DEVFN = 0x30 (6:0) */
-+      gpio-controller;
-+      #gpio-cells = <2>;
-+      interrupt-controller;
-+      #interrupt-cells = <2>;
-+    };
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-thunderx.txt b/Documentation/devicetree/bindings/gpio/gpio-thunderx.txt
-deleted file mode 100644
-index 3f883ae29d11..000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-thunderx.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--Cavium ThunderX/OCTEON-TX GPIO controller bindings
--
--Required Properties:
--- reg: The controller bus address.
--- gpio-controller: Marks the device node as a GPIO controller.
--- #gpio-cells: Must be 2.
--  - First cell is the GPIO pin number relative to the controller.
--  - Second cell is a standard generic flag bitfield as described in gpio.txt.
--
--Optional Properties:
--- compatible: "cavium,thunder-8890-gpio", unused as PCI driver binding is used.
--- interrupt-controller: Marks the device node as an interrupt controller.
--- #interrupt-cells: Must be present and have value of 2 if
--                    "interrupt-controller" is present.
--  - First cell is the GPIO pin number relative to the controller.
--  - Second cell is triggering flags as defined in interrupts.txt.
--
--Example:
--
--gpio_6_0: gpio@6,0 {
--	compatible = "cavium,thunder-8890-gpio";
--	reg = <0x3000 0 0 0 0>; /*  DEVFN = 0x30 (6:0) */
--	gpio-controller;
--	#gpio-cells = <2>;
--	interrupt-controller;
--	#interrupt-cells = <2>;
--};
---
-2.53.0
+> > > > +	ret = devm_regulator_get_enable_read_voltage(&spi->dev, "vref");
+> > > > +	if (ret < 0)
+> > > 
+> > > I think you need to check for -ENODEV and if you see than then
+> > > see if the acpi route below applies.  Otherwise on ACPI this will fail
+> > > and we'll fail the probe.
+> > 
+> > Yep, just make it default without even checking the fwnode type.
+> > No need to bring the whole acpi.h into the mix.
+> 
+> I do not think this would be correct behavior. On non-ACPI systems the
+> regulator is mandatory, and the driver should not blindly apply scale
+> from ACPI systems just because regulator is missing in the DTS.
+
+I mistakenly thought that original code doesn't have that cneck. Yes, the
+ACPI_COMPANION() should be preserved.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
