@@ -1,34 +1,34 @@
-Return-Path: <linux-gpio+bounces-32821-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32820-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UO2kIlXQrmnEIwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-32821-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 14:51:17 +0100
+	id kPnBNv3RrmlhJAIAu9opvQ
+	(envelope-from <linux-gpio+bounces-32820-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 14:58:21 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7206623A0C5
-	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 14:51:17 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D3A323A2BF
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 14:58:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id BF59C302BBE9
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2026 13:50:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B65123265FB5
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2026 13:50:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B17A3C2792;
-	Mon,  9 Mar 2026 13:49:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51F193BED23;
+	Mon,  9 Mar 2026 13:49:50 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDFD03D331A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1A03C3BF1
 	for <linux-gpio@vger.kernel.org>; Mon,  9 Mar 2026 13:49:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773064190; cv=none; b=mf84yRrchUyxQ0F9MXNbdHTnqz+DIiB93n/Isn2VWe6XMO/9mTkglnE59geWMIx/SSvCThv7J54fjoepNKPsdWiaIylr58BtVBpFxq9B5xO+ElSW1hvFDj0RvKK35NYft1yQxmOMp2oAOrgWKYWKLKM3cs/X44znVikNbG8GcXg=
+	t=1773064189; cv=none; b=lt09ka+CLwIf3Ppf6n4E0PjxmedJ5ibZX+55wkGDYE6nx/tDegrcVinS+Z9k8uuOhWYjx6wIUpxuSvV0bBDvaw1OFx8zh8JhIgkRxJ2FZbFDHQyjTRQrGueMenqdnflLE3WxBX75gVETtYF4R/ITCGwaGa4vg4pjqNHHOwGZF30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773064190; c=relaxed/simple;
-	bh=gy8l2lL+Z5L6+L3bCnUiyEnUG2dums5CMBTKcXWUsz4=;
+	s=arc-20240116; t=1773064189; c=relaxed/simple;
+	bh=edic6BPHPs4rzzaANWW2/y9R7HvSKfZcrDg1tvRbWn0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B2wmSh3MLe48SCkGYL1UT9W05baNoOY0zaSj4qO08Vzm2/8ltPXiFy678JQbVLChhsfKtEF01Htv3Lu4+1WBJRXLIgxtdDy4EF7PHLKmWrLPCAlJpzmy4ZmLNirdlojSf3MO+goTdsZO986K8Yd35KHxVTl+mojcHTczuZba06o=
+	 MIME-Version; b=N8oHvvMfM2SAz+hiBFYQ6s/tDDKVBbUc6J7glqtyjopxPw4cgzTno+amDdmHStYotAeLHJ2ECG5nD4igc0DinOdEAnugxwUlKE3/uNvFnntnlTa9OF5vu0VT6WMU0sFNPgSeLvpwn/J+ybCIzKQY/avLi0B+HFz9Cjh7X3nVev4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -36,16 +36,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1vzaz5-0006fh-Ed; Mon, 09 Mar 2026 14:49:23 +0100
+	id 1vzaz5-0006fi-Ed; Mon, 09 Mar 2026 14:49:23 +0100
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac] helo=dude04)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1vzaz2-004XYe-1i;
+	id 1vzaz2-004XYg-1u;
 	Mon, 09 Mar 2026 14:49:21 +0100
 Received: from ore by dude04 with local (Exim 4.98.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1vzaz3-00000008340-3ODJ;
+	id 1vzaz3-0000000834A-3Ubt;
 	Mon, 09 Mar 2026 14:49:21 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: Guenter Roeck <linux@roeck-us.net>,
@@ -62,9 +62,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	linux-hwmon@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	David Jander <david@protonic.nl>
-Subject: [PATCH v3 3/7] pinctrl: core: Make pin group callbacks optional
-Date: Mon,  9 Mar 2026 14:49:14 +0100
-Message-ID: <20260309134920.1918294-4-o.rempel@pengutronix.de>
+Subject: [PATCH v3 4/7] gpio: gpiolib: fix allocation order in hierarchical IRQ domains
+Date: Mon,  9 Mar 2026 14:49:15 +0100
+Message-ID: <20260309134920.1918294-5-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260309134920.1918294-1-o.rempel@pengutronix.de>
 References: <20260309134920.1918294-1-o.rempel@pengutronix.de>
@@ -79,14 +79,14 @@ X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Rspamd-Queue-Id: 7206623A0C5
+X-Rspamd-Queue-Id: 5D3A323A2BF
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [1.54 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -94,140 +94,94 @@ X-Spamd-Result: default: False [1.54 / 15.00];
 	DMARC_NA(0.00)[pengutronix.de];
 	RCVD_COUNT_FIVE(0.00)[6];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-32821-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-32820-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[14];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.578];
+	NEURAL_HAM(-0.00)[-0.615];
 	FROM_NEQ_ENVFROM(0.00)[o.rempel@pengutronix.de,linux-gpio@vger.kernel.org];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,pengutronix.de:mid,pengutronix.de:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,pengutronix.de:mid,pengutronix.de:email]
 X-Rspamd-Action: no action
 
-Currently, the pinctrl core strictly requires all drivers to implement
-.get_groups_count and .get_group_name callbacks in their pinctrl_ops.
+In gpiochip_hierarchy_irq_domain_alloc(), calling irq_domain_set_info()
+before irq_domain_alloc_irqs_parent() causes a NULL pointer dereference
+for slow-bus (SPI/I2C) IRQ chips.
 
-However, for simple pinctrl drivers that act purely as GPIO controllers
-and pin-specific configuration proxies (without any concept of muxing or
-pin groups), this strict requirement forces the implementation of dummy
-callbacks just to satisfy pinctrl_check_ops().
+irq_domain_set_info() locks the child descriptor, triggering .irq_bus_lock.
+If the child proxies this lock to the parent, it crashes because
+parent->chip is not yet allocated.
 
-Relax this requirement by making the group callbacks optional. Update
-the core and debugfs (pinconf) functions to check for the existence of
-these callbacks before invoking them, allowing simple drivers to omit
-group boilerplate entirely.
+Fix this by allocating the parent IRQs first, ensuring parent->chip is
+populated before the child's .irq_bus_lock is invoked.
 
-Suggested-by: Linus Walleij <linusw@kernel.org>
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
-changes v3:
-- no changes
+changes v3
+- new patch
 ---
- drivers/pinctrl/core.c    | 25 ++++++++++++++++++++-----
- drivers/pinctrl/pinconf.c | 18 +++++++++++++-----
- 2 files changed, 33 insertions(+), 10 deletions(-)
+ drivers/gpio/gpiolib.c | 32 +++++++++++++++++---------------
+ 1 file changed, 17 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index b5e97689589f..920e025622d6 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -621,8 +621,13 @@ static int pinctrl_generic_group_name_to_selector(struct pinctrl_dev *pctldev,
- 						  const char *function)
- {
- 	const struct pinctrl_ops *ops = pctldev->desc->pctlops;
--	int ngroups = ops->get_groups_count(pctldev);
- 	int selector = 0;
-+	int ngroups;
-+
-+	if (!ops->get_groups_count || !ops->get_group_name)
-+		return -EINVAL;
-+
-+	ngroups = ops->get_groups_count(pctldev);
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index ada572aaebd6..1ea9531934cc 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1628,19 +1628,6 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
+ 	}
+ 	gpiochip_dbg(gc, "found parent hwirq %u\n", parent_hwirq);
  
- 	/* See if this pctldev has this group */
- 	while (selector < ngroups) {
-@@ -737,8 +742,15 @@ int pinctrl_get_group_selector(struct pinctrl_dev *pctldev,
- 			       const char *pin_group)
- {
- 	const struct pinctrl_ops *pctlops = pctldev->desc->pctlops;
--	unsigned int ngroups = pctlops->get_groups_count(pctldev);
- 	unsigned int group_selector = 0;
-+	unsigned int ngroups;
-+
-+	if (!pctlops->get_groups_count || !pctlops->get_group_name) {
-+		dev_err(pctldev->dev, "does not support pin groups\n");
-+		return -EINVAL;
+-	/*
+-	 * We set handle_bad_irq because the .set_type() should
+-	 * always be invoked and set the right type of handler.
+-	 */
+-	irq_domain_set_info(d,
+-			    irq,
+-			    hwirq,
+-			    gc->irq.chip,
+-			    gc,
+-			    girq->handler,
+-			    NULL, NULL);
+-	irq_set_probe(irq);
+-
+ 	/* This parent only handles asserted level IRQs */
+ 	ret = girq->populate_parent_alloc_arg(gc, &gpio_parent_fwspec,
+ 					      parent_hwirq, parent_type);
+@@ -1657,12 +1644,27 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
+ 	 */
+ 	if (irq_domain_is_msi(d->parent) && (ret == -EEXIST))
+ 		ret = 0;
+-	if (ret)
++	if (ret) {
+ 		gpiochip_err(gc,
+ 			     "failed to allocate parent hwirq %d for hwirq %lu\n",
+ 			     parent_hwirq, hwirq);
++		return ret;
 +	}
+ 
+-	return ret;
++	/*
++	 * We set handle_bad_irq because the .set_type() should
++	 * always be invoked and set the right type of handler.
++	 */
++	irq_domain_set_info(d,
++			    irq,
++			    hwirq,
++			    gc->irq.chip,
++			    gc,
++			    girq->handler,
++			    NULL, NULL);
++	irq_set_probe(irq);
 +
-+	ngroups = pctlops->get_groups_count(pctldev);
++	return 0;
+ }
  
- 	while (group_selector < ngroups) {
- 		const char *gname = pctlops->get_group_name(pctldev,
-@@ -1769,6 +1781,11 @@ static int pinctrl_groups_show(struct seq_file *s, void *what)
- 
- 	mutex_lock(&pctldev->mutex);
- 
-+	if (!ops->get_groups_count || !ops->get_group_name) {
-+		mutex_unlock(&pctldev->mutex);
-+		return 0;
-+	}
-+
- 	ngroups = ops->get_groups_count(pctldev);
- 
- 	seq_puts(s, "registered pin groups:\n");
-@@ -2050,9 +2067,7 @@ static int pinctrl_check_ops(struct pinctrl_dev *pctldev)
- {
- 	const struct pinctrl_ops *ops = pctldev->desc->pctlops;
- 
--	if (!ops ||
--	    !ops->get_groups_count ||
--	    !ops->get_group_name)
-+	if (!ops)
- 		return -EINVAL;
- 
- 	return 0;
-diff --git a/drivers/pinctrl/pinconf.c b/drivers/pinctrl/pinconf.c
-index dca963633b5d..feab87e8530d 100644
---- a/drivers/pinctrl/pinconf.c
-+++ b/drivers/pinctrl/pinconf.c
-@@ -273,10 +273,13 @@ void pinconf_show_setting(struct seq_file *s,
- 			   setting->data.configs.group_or_pin);
- 		break;
- 	case PIN_MAP_TYPE_CONFIGS_GROUP:
--		seq_printf(s, "group %s (%d)",
--			   pctlops->get_group_name(pctldev,
--					setting->data.configs.group_or_pin),
--			   setting->data.configs.group_or_pin);
-+		if (pctlops->get_group_name)
-+			seq_printf(s, "group %s (%d)",
-+				   pctlops->get_group_name(pctldev,
-+						setting->data.configs.group_or_pin),
-+				   setting->data.configs.group_or_pin);
-+		else
-+			seq_printf(s, "group (%d)", setting->data.configs.group_or_pin);
- 		break;
- 	default:
- 		break;
-@@ -348,8 +351,13 @@ static int pinconf_groups_show(struct seq_file *s, void *what)
- {
- 	struct pinctrl_dev *pctldev = s->private;
- 	const struct pinctrl_ops *pctlops = pctldev->desc->pctlops;
--	unsigned int ngroups = pctlops->get_groups_count(pctldev);
- 	unsigned int selector = 0;
-+	unsigned int ngroups;
-+
-+	if (!pctlops->get_groups_count || !pctlops->get_group_name)
-+		return 0;
-+
-+	ngroups = pctlops->get_groups_count(pctldev);
- 
- 	seq_puts(s, "Pin config settings per pin group\n");
- 	seq_puts(s, "Format: group (name): configs\n");
+ static unsigned int gpiochip_child_offset_to_irq_noop(struct gpio_chip *gc,
 -- 
 2.47.3
 
