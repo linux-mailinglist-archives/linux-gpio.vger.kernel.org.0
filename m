@@ -1,218 +1,164 @@
-Return-Path: <linux-gpio+bounces-32791-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32792-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eFGRJ/RarmkMCgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-32791-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 06:30:28 +0100
+	id WAA3AklcrmkMCgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-32792-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 06:36:09 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id A02FB233E9D
-	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 06:30:27 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5135233F3E
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 06:36:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 900E83004425
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2026 05:30:24 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id ECBB8300F120
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2026 05:36:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 234AB30C37E;
-	Mon,  9 Mar 2026 05:30:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AFC9318EE7;
+	Mon,  9 Mar 2026 05:36:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=mmpsystems.pl header.i=@mmpsystems.pl header.b="f0eOdXQy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QjFeYRdL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from s106b.cyber-folks.pl (s106b.cyber-folks.pl [195.78.66.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64B230594F;
-	Mon,  9 Mar 2026 05:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.78.66.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1604021D3F3
+	for <linux-gpio@vger.kernel.org>; Mon,  9 Mar 2026 05:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773034221; cv=none; b=leaG4oDs17pKzYv6rKH+Kc/+rTtHH73pGv9vvuGZ40mftZw6jibFWReVZldMeIHEaWtB/RnpAm/4qE2ci2ZY1hY1Kqgc/aZ/XNx8yr9uOLGfD5tOLym6lkVa8ndjjG8VOG/Kb0z8/sHoKNnTcxUPshmTirPcIi9s9TsAW8Y32ks=
+	t=1773034564; cv=none; b=fzsvakqUQLVZ97FFcOgqeFH8gIqHNy3u68tpTeAmy1YfPI9pnHszzZGKmpWAioK8Aua85JSXdpy4wRTsn15k2Hjdur2J1MeAlcZkfQjjKJcaR5ON3/GgkEC2TcYVLn2cfttRTDwW5CrmBdkid11fBESIjcrIKfJJteYRVxbhsJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773034221; c=relaxed/simple;
-	bh=Q+Nwq0h7TopR9fYpyp/EIJoXFyGHQQf1i093ZvQvGBE=;
+	s=arc-20240116; t=1773034564; c=relaxed/simple;
+	bh=TstdYjs2JOslSfUoiNOZQUESbqPut/9hmyHHSOydmBA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=udk5PYeGnh7EpBC8XggDdrsR0HLm/soWiixg29SAmvCs3GKdRKwsYPii5vGNeeZAOeaODlQi2MeiyjkbkoLhF1USpSYWrWLnkFebSahrIMw2IeHfZ31CRnOyRZrwXZINzJD5PBGYiPlCpDV/YQN/q0VXQuXq+IThBOnTepBEHV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mmpsystems.pl; spf=pass smtp.mailfrom=mmpsystems.pl; dkim=pass (2048-bit key) header.d=mmpsystems.pl header.i=@mmpsystems.pl header.b=f0eOdXQy; arc=none smtp.client-ip=195.78.66.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mmpsystems.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mmpsystems.pl
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=mmpsystems.pl; s=x; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=PNeD+GDRfvfC163fk97XXvGbw+Jo2OUnbtzurN4RsaA=; b=f0eOdXQyFKMkguvkn34E3Xua0g
-	Bb1HoHUvOp6/i0mokX4C1D2tti8SZSeNi/F8NVTGZtj9uQBnydmZ2mVd4TbKXdCnZTCbngSj3tBAX
-	DhnRXbNsdmi1RzlCSshHcHo3OhkrcddJLsyxmP+WUKGB7n6o4zIukG9CaUT+tRCeC6OQYh2lursuZ
-	gqcXU43yidC6ZrXTQ/dXtXtJS2bdoWNKqEZyTLOUCpvlC5tUBIPcPcPk5JuJkIedMrs6zUm++tlB0
-	hYfPxgsDLaQiY+QOIF5w8UZFuHrK8qgE6iVezAUE9LlBbFdmPLc78lAUq0Hk5IitGGu66gVdY1wY0
-	EM8EpBrA==;
-Received: from user-5-173-16-20.play-internet.pl ([5.173.16.20] helo=localhost)
-	by s106.cyber-folks.pl with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <michal.piekos@mmpsystems.pl>)
-	id 1vzTC4-00000009tKp-24g7;
-	Mon, 09 Mar 2026 06:30:16 +0100
-Date: Mon, 9 Mar 2026 06:29:38 +0100
-From: Michal Piekos <michal.piekos@mmpsystems.pl>
-To: Chen-Yu Tsai <wens@kernel.org>
-Cc: Linus Walleij <linusw@kernel.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Andrey Skvortsov <andrej.skvortzov@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Andre Przywara <andre.przywara@arm.com>, devicetree@vger.kernel.org, 
-	Bartosz Golaszewski <brgl@kernel.org>
-Subject: Re: [PATCH v2] pinctrl: sunxi: fix gpiochip_lock_as_irq() failure
- when pinmux is unknown
-Message-ID: <jbxovdxkqgg7jnbryzvtrk2df4cgtzee3f6deqxu47nruotaau@254vefkw2gxk>
-References: <20260308-rc2-boot-hang-v2-1-516fdb820953@mmpsystems.pl>
- <CAGb2v67FO1bt3yee2SXn1LTt7O10z1EHHw7F0xQ0bKbpUqch4w@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ByoqeCP1D4vakL9Zl8wY2iOKv91o4tfQRIHq3UtsA2PmaPeCjw9O2p0WfZBVzCVO7xY/wXEaVyGpbYdewDVVhqPtIgqzPeR3He9qd0eFkNFk7Xj7gp0BZSoPtkpmBSryz6j6JKFUNaqeTsX2/27u0htLoXZw5gcaSqyJFH4Tqp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QjFeYRdL; arc=none smtp.client-ip=74.125.82.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-2be4781d2baso5986214eec.0
+        for <linux-gpio@vger.kernel.org>; Sun, 08 Mar 2026 22:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773034562; x=1773639362; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Skm7jjW3gGTyeCMhcxvy+Ck9FxS/iCqJX+/k6WAJO7g=;
+        b=QjFeYRdLaVWSC47+W45iJZlr2RkgAZByPUnlxQWhsMA91TdgE6m+kK6EwDNXkmnceE
+         pKXvgbtXBMz5JnJ2cikHcvFplbwVDucSH1X28Keqh2ZppBbFNRhDM0TGyybhRMKpCx4y
+         vxMrZtFZI9mk4j5ktA0ItsJj9TpcDm7yvfJqyGk9KA+qzI6/1IwVUUtbHkn6mRFaYMqW
+         vQgHRzYrqQXePjFPA9j6RPtwVgTnfrTmUnNx5N7wbgGnJK/HyPImWPX5fnXZSVB4c+0W
+         84lTjMavxrSAwdo84x+8RqYeOzDGctdRb++rS2rBC0ZGLWNIUZgTTZkfIulHg90gc30V
+         m1cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773034562; x=1773639362;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Skm7jjW3gGTyeCMhcxvy+Ck9FxS/iCqJX+/k6WAJO7g=;
+        b=bpmH6tg1tDntEwKWTZ3E7zeSQ/hpvQLak+m13g1tM5E0TzoUVPvqo1LG6V7EClskHw
+         0AEds5omRwjsPWwp0MQ5pyop4/hyElRlhrnURLkcT9zUTQ9h2uY5ZGGmeqol5E7uK56s
+         ssBgYI0EMG2yh23k+GO5tdWeIPyUvBJ3wZqctC9Ms7h2jkZSyNuWi79/ndlXRHmGyg1T
+         s4Fuu1B3+hFRTyIxa02DxOXbCtqU9haqmFi3hTdhj747Jm4DuLuIEkQ8HPCTZY6NGKDA
+         Wow1CQ5rzt+1rvS/k7bsjAQ9pm78inOTr3v2vqq/AHPSdrqfuJdC20QQE4X6aD3MIKIt
+         OB2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVha2NJZ5nXDkKVfv1wyxlfGI0uubm48qiJ3FS6xZ482u50F2JXzfg6z0Ewi4T4ExH1UYYbHj8/tNW3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzrjtf/VAWkdsKauJzpMf2nYmF1KPskO9OYx6iv/36rpBYWkkQp
+	jShmL7archFTzYWEHi1JbGUeuo0OJA/8nubMzinRZUNlyKO0m6n9fiiX
+X-Gm-Gg: ATEYQzxIeuAOjdMS0SQi8Q8uuA0OT611bHRk5G8LLVrn4nTRL0csPDTXbmxLZHfnlRk
+	TxqJ5TtOfv6Xn6s/vdXrSvYfTXEBpCZfFC2HqyVCG5CVr+jeG+8lp4ZVuu4jh/cTNQnAinUJVUk
+	/Dfo5TAurAsskxvCq11s/v/FAKFTSKvSnCbBJX7zNBJ+8zWmdUQCrss3wY5sqL5wddJECFfZkBl
+	OM5/6Pojvc2fYwrY9o/HFuWTqi6lhzfWM3SKGohT9BX7GV+o+yKcNqoq4VPTE6t5JxTHneSIRuR
+	aXQXZnr0ZXYonGvJ71B5bdlDz044uliRDVooCK85897DRM0opehUQkoP4YbtYyUIzhxUkGtINyf
+	7aFoxpUc1h8wr3tsIOJYWbPtBvkvtPJGwYlQ/cfJDu+WJMt4nd+jv20GEtIuwksnEIkp4AK5jca
+	RyBD4BbJyY+s3DGG61Bx71ZA8TnToM0Z8=
+X-Received: by 2002:a05:7300:a883:b0:2be:2798:177f with SMTP id 5a478bee46e88-2be4e0672d8mr4132718eec.20.1773034562186;
+        Sun, 08 Mar 2026 22:36:02 -0700 (PDT)
+Received: from google.com ([2601:647:5e00:4acd:af9:a43b:9d9e:841c])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2be4f807a30sm7490039eec.6.2026.03.08.22.36.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Mar 2026 22:36:01 -0700 (PDT)
+Date: Mon, 9 Mar 2026 05:35:58 +0000
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v3 5/6] iio: adc: ti-ads7950: switch to using
+ devm_regulator_get_enable_read_voltage()
+Message-ID: <aa5ZA-CiIZuVkAdS@google.com>
+References: <20260305-ti-ads7950-facelift-v3-0-a23fdd1a079e@gmail.com>
+ <20260305-ti-ads7950-facelift-v3-5-a23fdd1a079e@gmail.com>
+ <20260307114947.0b946dfb@jic23-huawei>
+ <aa3czXB9tzLQgwha@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGb2v67FO1bt3yee2SXn1LTt7O10z1EHHw7F0xQ0bKbpUqch4w@mail.gmail.com>
-X-Authenticated-Id: michal.piekos@mmpsystems.pl
-X-Rspamd-Queue-Id: A02FB233E9D
+In-Reply-To: <aa3czXB9tzLQgwha@ashevche-desk.local>
+X-Rspamd-Queue-Id: A5135233F3E
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.64 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	R_DKIM_REJECT(1.00)[mmpsystems.pl:s=x];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[mmpsystems.pl : SPF not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-32791-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[mmpsystems.pl:-];
-	NEURAL_HAM(-0.00)[-0.226];
-	FROM_NEQ_ENVFROM(0.00)[michal.piekos@mmpsystems.pl,linux-gpio@vger.kernel.org];
-	PRECEDENCE_BULK(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,sholland.org,vger.kernel.org,lists.infradead.org,lists.linux.dev,arm.com];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-32792-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mmpsystems.pl:email,arm.com:email,infradead.org:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dmitrytorokhov@gmail.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-0.861];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-On Sun, Mar 08, 2026 at 10:06:42PM +0800, Chen-Yu Tsai wrote:
-> On Sun, Mar 8, 2026 at 9:42 PM Michal Piekos
-> <michal.piekos@mmpsystems.pl> wrote:
-> >
-> > Fixes kernel hang during boot due to inability to set up IRQ on AXP313a.
-> >
-> > The issue is caused by gpiochip::get_direction() which was returning
-> > -ENODEV when gpio is in unitialized state.
-> >
-> > Instead of failing when the current muxval is at default value, report
-> > the line as input.
+On Sun, Mar 08, 2026 at 10:32:13PM +0200, Andy Shevchenko wrote:
+> On Sat, Mar 07, 2026 at 11:49:47AM +0000, Jonathan Cameron wrote:
+> > On Thu, 05 Mar 2026 11:21:56 -0800
+> > Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
 > 
-> I don't really like this "fix". It's really lying.
+> ...
 > 
-> Also, this problem only occurs if the interrupt is taken directly using
-> the DT "interrupts" property, as that mostly bypasses the GPIO subsystem,
-> especially the gpio request part.
+> > I think this broke the ACPI case (where regulator isn't available).
 > 
-> If the consumer does gpiod_request() followed by gpiod_to_irq(), then
-> the pin is already muxed to either one of the GPIO functions and this
-> won't error out.
+> Right, and I even have an HW to test (if required).
 > 
-> I also found that if the interrupt is taken directly through the device
-> tree, the pin itself is not locked out (like for GPIOs, on sunxi we also
-> don't do pinctrl settings for pins used for interrupts).
+> ...
 > 
-> I think the proper fix would be to somehow be able to request the pin
-> as GPIO if it hasn't been requested already. And then either
-> sunxi_pinctrl_irq_request_resources() can use that to request the pin
-> and mux the pin before calling gpiochip_lock_as_irq().
+> > > +	ret = devm_regulator_get_enable_read_voltage(&spi->dev, "vref");
+> > > +	if (ret < 0)
+> > 
+> > I think you need to check for -ENODEV and if you see than then
+> > see if the acpi route below applies.  Otherwise on ACPI this will fail
+> > and we'll fail the probe.
 > 
-> Hope Linus and Bartosz have some suggestions.
-> 
-> 
-> Thanks
-> ChenYu
-> 
+> Yep, just make it default without even checking the fwnode type.
+> No need to bring the whole acpi.h into the mix.
 
-I will prepare new version with your suggestion.
+I do not think this would be correct behavior. On non-ACPI systems the
+regulator is mandatory, and the driver should not blindly apply scale
+from ACPI systems just because regulator is missing in the DTS.
 
-Michal
+Thanks.
 
-> 
-> > Tested on Orange Pi Zero 3.
-> >
-> > Signed-off-by: Michal Piekos <michal.piekos@mmpsystems.pl>
-> > Suggested-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
-> > ---
-> > This fixes a kernel hang during boot on the Orange Pi Zero 3 caused by
-> > inability to set up interrupt for the AXP313A PMIC.
-> >
-> > The issue is caused by gpiochip::get_direction() which was returning
-> > -ENODEV when gpio is in unitialized state and its muxval is at default
-> > value.
-> >
-> > Instead of failing, report the line as input.
-> >
-> > To: Rob Herring <robh@kernel.org>
-> > To: Krzysztof Kozlowski <krzk+dt@kernel.org>
-> > To: Conor Dooley <conor+dt@kernel.org>
-> > To: Chen-Yu Tsai <wens@kernel.org>
-> > To: Jernej Skrabec <jernej.skrabec@gmail.com>
-> > To: Samuel Holland <samuel@sholland.org>
-> > To: Andre Przywara <andre.przywara@arm.com>
-> > To: Linus Walleij <linusw@kernel.org>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-sunxi@lists.linux.dev
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: linux-gpio@vger.kernel.org
-> >
-> > Changes in v2:
-> > - Dropped the previous faulty solution which was forcing the axp313 to
-> >   use r_pio as interrupt controller as pointed out by Jernej Škrabec.
-> > - Implemented suggestion from Andrey Skvortsov to return default
-> >   direction as input
-> > - Link to v1: https://lore.kernel.org/r/20260308-rc2-boot-hang-v1-0-d792d1a78dfd@mmpsystems.pl
-> > ---
-> >  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> > index c990b6118172..e438cf35ff28 100644
-> > --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> > +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-> > @@ -971,7 +971,7 @@ static int sunxi_pinctrl_gpio_get_direction(struct gpio_chip *chip,
-> >
-> >         func = sunxi_pinctrl_desc_find_function_by_pin_and_mux(pctl, pin, muxval);
-> >         if (!func)
-> > -               return -ENODEV;
-> > +               return GPIO_LINE_DIRECTION_IN;
-> >
-> >         if (!strcmp(func->name, "gpio_out"))
-> >                 return GPIO_LINE_DIRECTION_OUT;
-> >
-> > ---
-> > base-commit: 4ae12d8bd9a830799db335ee661d6cbc6597f838
-> > change-id: 20260308-rc2-boot-hang-269e8546635b
-> >
-> > Best regards,
-> > --
-> > Michal Piekos <michal.piekos@mmpsystems.pl>
-> >
-> >
+-- 
+Dmitry
 
