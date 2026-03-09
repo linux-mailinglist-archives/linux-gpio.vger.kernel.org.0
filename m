@@ -1,164 +1,209 @@
-Return-Path: <linux-gpio+bounces-32792-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32793-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WAA3AklcrmkMCgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-32792-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 06:36:09 +0100
+	id fdOBNL10rmm+EwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-32793-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 08:20:29 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5135233F3E
-	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 06:36:08 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB4A1234B81
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 08:20:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id ECBB8300F120
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2026 05:36:07 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7144F3002518
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2026 07:20:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AFC9318EE7;
-	Mon,  9 Mar 2026 05:36:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FF3836404E;
+	Mon,  9 Mar 2026 07:20:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QjFeYRdL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YiFmNSR2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1604021D3F3
-	for <linux-gpio@vger.kernel.org>; Mon,  9 Mar 2026 05:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A0F18DF9D;
+	Mon,  9 Mar 2026 07:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773034564; cv=none; b=fzsvakqUQLVZ97FFcOgqeFH8gIqHNy3u68tpTeAmy1YfPI9pnHszzZGKmpWAioK8Aua85JSXdpy4wRTsn15k2Hjdur2J1MeAlcZkfQjjKJcaR5ON3/GgkEC2TcYVLn2cfttRTDwW5CrmBdkid11fBESIjcrIKfJJteYRVxbhsJ4=
+	t=1773040823; cv=none; b=cBYmJ8TFXDYV6xK5UAsbPubb7fMyy8yt1hpuzOuTw5SVK1adXUiRExv1Ap3wZ0rz3x74T5XzfCiAaVkIAXHMf1+HKOXl6KyfVPn43KpmxwW78XLOAUMzOEqSDIkAhkUni1ZzN0C2pSymGQIEZUlAC1hqdArtwKBSORKMUvsGtNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773034564; c=relaxed/simple;
-	bh=TstdYjs2JOslSfUoiNOZQUESbqPut/9hmyHHSOydmBA=;
+	s=arc-20240116; t=1773040823; c=relaxed/simple;
+	bh=Vj0jq5cYyjfWlkHmUfUSF75TTMqZrSCWk+45cWxCNb0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ByoqeCP1D4vakL9Zl8wY2iOKv91o4tfQRIHq3UtsA2PmaPeCjw9O2p0WfZBVzCVO7xY/wXEaVyGpbYdewDVVhqPtIgqzPeR3He9qd0eFkNFk7Xj7gp0BZSoPtkpmBSryz6j6JKFUNaqeTsX2/27u0htLoXZw5gcaSqyJFH4Tqp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QjFeYRdL; arc=none smtp.client-ip=74.125.82.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-2be4781d2baso5986214eec.0
-        for <linux-gpio@vger.kernel.org>; Sun, 08 Mar 2026 22:36:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773034562; x=1773639362; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Skm7jjW3gGTyeCMhcxvy+Ck9FxS/iCqJX+/k6WAJO7g=;
-        b=QjFeYRdLaVWSC47+W45iJZlr2RkgAZByPUnlxQWhsMA91TdgE6m+kK6EwDNXkmnceE
-         pKXvgbtXBMz5JnJ2cikHcvFplbwVDucSH1X28Keqh2ZppBbFNRhDM0TGyybhRMKpCx4y
-         vxMrZtFZI9mk4j5ktA0ItsJj9TpcDm7yvfJqyGk9KA+qzI6/1IwVUUtbHkn6mRFaYMqW
-         vQgHRzYrqQXePjFPA9j6RPtwVgTnfrTmUnNx5N7wbgGnJK/HyPImWPX5fnXZSVB4c+0W
-         84lTjMavxrSAwdo84x+8RqYeOzDGctdRb++rS2rBC0ZGLWNIUZgTTZkfIulHg90gc30V
-         m1cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773034562; x=1773639362;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Skm7jjW3gGTyeCMhcxvy+Ck9FxS/iCqJX+/k6WAJO7g=;
-        b=bpmH6tg1tDntEwKWTZ3E7zeSQ/hpvQLak+m13g1tM5E0TzoUVPvqo1LG6V7EClskHw
-         0AEds5omRwjsPWwp0MQ5pyop4/hyElRlhrnURLkcT9zUTQ9h2uY5ZGGmeqol5E7uK56s
-         ssBgYI0EMG2yh23k+GO5tdWeIPyUvBJ3wZqctC9Ms7h2jkZSyNuWi79/ndlXRHmGyg1T
-         s4Fuu1B3+hFRTyIxa02DxOXbCtqU9haqmFi3hTdhj747Jm4DuLuIEkQ8HPCTZY6NGKDA
-         Wow1CQ5rzt+1rvS/k7bsjAQ9pm78inOTr3v2vqq/AHPSdrqfuJdC20QQE4X6aD3MIKIt
-         OB2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVha2NJZ5nXDkKVfv1wyxlfGI0uubm48qiJ3FS6xZ482u50F2JXzfg6z0Ewi4T4ExH1UYYbHj8/tNW3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzrjtf/VAWkdsKauJzpMf2nYmF1KPskO9OYx6iv/36rpBYWkkQp
-	jShmL7archFTzYWEHi1JbGUeuo0OJA/8nubMzinRZUNlyKO0m6n9fiiX
-X-Gm-Gg: ATEYQzxIeuAOjdMS0SQi8Q8uuA0OT611bHRk5G8LLVrn4nTRL0csPDTXbmxLZHfnlRk
-	TxqJ5TtOfv6Xn6s/vdXrSvYfTXEBpCZfFC2HqyVCG5CVr+jeG+8lp4ZVuu4jh/cTNQnAinUJVUk
-	/Dfo5TAurAsskxvCq11s/v/FAKFTSKvSnCbBJX7zNBJ+8zWmdUQCrss3wY5sqL5wddJECFfZkBl
-	OM5/6Pojvc2fYwrY9o/HFuWTqi6lhzfWM3SKGohT9BX7GV+o+yKcNqoq4VPTE6t5JxTHneSIRuR
-	aXQXZnr0ZXYonGvJ71B5bdlDz044uliRDVooCK85897DRM0opehUQkoP4YbtYyUIzhxUkGtINyf
-	7aFoxpUc1h8wr3tsIOJYWbPtBvkvtPJGwYlQ/cfJDu+WJMt4nd+jv20GEtIuwksnEIkp4AK5jca
-	RyBD4BbJyY+s3DGG61Bx71ZA8TnToM0Z8=
-X-Received: by 2002:a05:7300:a883:b0:2be:2798:177f with SMTP id 5a478bee46e88-2be4e0672d8mr4132718eec.20.1773034562186;
-        Sun, 08 Mar 2026 22:36:02 -0700 (PDT)
-Received: from google.com ([2601:647:5e00:4acd:af9:a43b:9d9e:841c])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2be4f807a30sm7490039eec.6.2026.03.08.22.36.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Mar 2026 22:36:01 -0700 (PDT)
-Date: Mon, 9 Mar 2026 05:35:58 +0000
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v3 5/6] iio: adc: ti-ads7950: switch to using
- devm_regulator_get_enable_read_voltage()
-Message-ID: <aa5ZA-CiIZuVkAdS@google.com>
-References: <20260305-ti-ads7950-facelift-v3-0-a23fdd1a079e@gmail.com>
- <20260305-ti-ads7950-facelift-v3-5-a23fdd1a079e@gmail.com>
- <20260307114947.0b946dfb@jic23-huawei>
- <aa3czXB9tzLQgwha@ashevche-desk.local>
+	 Content-Type:Content-Disposition:In-Reply-To; b=iq6vttQ9tWEYGAZWp6dvBK8Arwu/1iu/xLvvunyvCrn4b5kDhEq4ZVNHf/1FOdwyn3Azw1o2U/EyszBCkw8RhLE3v54cGZHjZ5CTFwB+bCCEMCapPeeIGJuejLR1T4y70D/yDG8jIQnPDCAVKdxCUHPZFZPSsu8GsifGiQsECRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YiFmNSR2; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773040821; x=1804576821;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Vj0jq5cYyjfWlkHmUfUSF75TTMqZrSCWk+45cWxCNb0=;
+  b=YiFmNSR2X7jGCd17OxtWTQIQSKyDiqrvP0b1lVhpXFoojTl6sBPsuf6E
+   xqkbdZCzAnBpNUagzJ6XXAPdW8VaV3Dov4zut8rR78v46ASFnmlvWl32o
+   2W1RfweXyULXL9y3x+BZuRI6ROJtb8/XeX7r/+dcONDUShoJ8JEyxe5oN
+   hZiI0YsrfOhIQcUXjmkvNcULpSEJNiqEgHyF002CgtvwlZkzupDgIaWz9
+   8ktSQUAfiev1xtKPe73DcNx0c7hd3vTmmg/aehUepVPdO62fOgMm1gok9
+   Kt4K7762iTxauSVrinEdO06LVRkRMDY1IEjrkCQ9Qb4s4PCRX567OAZch
+   w==;
+X-CSE-ConnectionGUID: g7vauGkETHSFuLSTKfFNBA==
+X-CSE-MsgGUID: ty5pPoFdRESljof0olqRog==
+X-IronPort-AV: E=McAfee;i="6800,10657,11723"; a="76659646"
+X-IronPort-AV: E=Sophos;i="6.23,109,1770624000"; 
+   d="scan'208";a="76659646"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 00:19:12 -0700
+X-CSE-ConnectionGUID: VOFcNaWCScyrO9JgtgP1PQ==
+X-CSE-MsgGUID: qjIC3nC2QLSrP52gsJvdlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,109,1770624000"; 
+   d="scan'208";a="224365233"
+Received: from vpanait-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.148])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2026 00:19:09 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id DC54D11FA60;
+	Mon, 09 Mar 2026 09:19:40 +0200 (EET)
+Date: Mon, 9 Mar 2026 09:19:40 +0200
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Rosen Penev <rosenp@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Lixu Zhang <lixu.zhang@intel.com>,
+	linux-hardening@vger.kernel.org, gustavoars@kernel.org,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] gpio: ljca: reduce struct allocation
+Message-ID: <aa50jIM0Xexg1hiQ@kekkonen.localdomain>
+References: <20260308021201.47820-1-rosenp@gmail.com>
+ <aa1pZdYEU8QkI_8x@kekkonen.localdomain>
+ <CAKxU2N9WCtyoEhdZk=GY=3kuYkv3NKrRZ6kNE8-feGYp5AXTbQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aa3czXB9tzLQgwha@ashevche-desk.local>
-X-Rspamd-Queue-Id: A5135233F3E
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKxU2N9WCtyoEhdZk=GY=3kuYkv3NKrRZ6kNE8-feGYp5AXTbQ@mail.gmail.com>
+X-Rspamd-Queue-Id: CB4A1234B81
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-32792-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_FROM(0.00)[bounces-32793-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	HAS_ORG_HEADER(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dmitrytorokhov@gmail.com,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-0.861];
+	FROM_NEQ_ENVFROM(0.00)[sakari.ailus@linux.intel.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.995];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,intel.com:dkim,intel.com:email]
 X-Rspamd-Action: no action
 
-On Sun, Mar 08, 2026 at 10:32:13PM +0200, Andy Shevchenko wrote:
-> On Sat, Mar 07, 2026 at 11:49:47AM +0000, Jonathan Cameron wrote:
-> > On Thu, 05 Mar 2026 11:21:56 -0800
-> > Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-> 
-> ...
-> 
-> > I think this broke the ACPI case (where regulator isn't available).
-> 
-> Right, and I even have an HW to test (if required).
-> 
-> ...
-> 
-> > > +	ret = devm_regulator_get_enable_read_voltage(&spi->dev, "vref");
-> > > +	if (ret < 0)
-> > 
-> > I think you need to check for -ENODEV and if you see than then
-> > see if the acpi route below applies.  Otherwise on ACPI this will fail
-> > and we'll fail the probe.
-> 
-> Yep, just make it default without even checking the fwnode type.
-> No need to bring the whole acpi.h into the mix.
+Hi Rosen,
 
-I do not think this would be correct behavior. On non-ACPI systems the
-regulator is mandatory, and the driver should not blindly apply scale
-from ACPI systems just because regulator is missing in the DTS.
+On Sun, Mar 08, 2026 at 11:54:07AM -0700, Rosen Penev wrote:
+> On Sun, Mar 8, 2026 at 5:19 AM Sakari Ailus
+> <sakari.ailus@linux.intel.com> wrote:
+> >
+> > Hi Rosen,
+> >
+> > Thanks or the patch.
+> >
+> > On Sat, Mar 07, 2026 at 06:12:01PM -0800, Rosen Penev wrote:
+> > > Convert connect_mode to a flexible array member to avoid calling
+> > > kcalloc and to combine the allocations.
+> > >
+> > > Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> > > ---
+> > >  drivers/gpio/gpio-ljca.c | 16 +++++++---------
+> > >  1 file changed, 7 insertions(+), 9 deletions(-)
+> > >
+> > > diff --git a/drivers/gpio/gpio-ljca.c b/drivers/gpio/gpio-ljca.c
+> > > index f32d1d237795..a531aaa0425f 100644
+> > > --- a/drivers/gpio/gpio-ljca.c
+> > > +++ b/drivers/gpio/gpio-ljca.c
+> > > @@ -63,7 +63,6 @@ struct ljca_gpio_dev {
+> > >       DECLARE_BITMAP(enabled_irqs, LJCA_MAX_GPIO_NUM);
+> > >       DECLARE_BITMAP(reenable_irqs, LJCA_MAX_GPIO_NUM);
+> > >       DECLARE_BITMAP(output_enabled, LJCA_MAX_GPIO_NUM);
+> > > -     u8 *connect_mode;
+> > >       /* protect irq bus */
+> > >       struct mutex irq_lock;
+> > >       struct work_struct work;
+> > > @@ -72,6 +71,8 @@ struct ljca_gpio_dev {
+> > >
+> > >       u8 obuf[LJCA_GPIO_BUF_SIZE];
+> > >       u8 ibuf[LJCA_GPIO_BUF_SIZE];
+> > > +
+> > > +     u8 connect_mode[];
+> > >  };
+> > >
+> > >  static int ljca_gpio_config(struct ljca_gpio_dev *ljca_gpio, u8 gpio_id,
+> > > @@ -400,22 +401,19 @@ static int ljca_gpio_probe(struct auxiliary_device *auxdev,
+> > >                          const struct auxiliary_device_id *aux_dev_id)
+> > >  {
+> > >       struct ljca_client *ljca = auxiliary_dev_to_ljca_client(auxdev);
+> > > +     struct ljca_gpio_info *gpio_info;
+> > >       struct ljca_gpio_dev *ljca_gpio;
+> > >       struct gpio_irq_chip *girq;
+> > >       int ret;
+> > >
+> > > -     ljca_gpio = devm_kzalloc(&auxdev->dev, sizeof(*ljca_gpio), GFP_KERNEL);
+> > > +     gpio_info = dev_get_platdata(&auxdev->dev);
+> >
+> > You can do this assignment in variable declaration.
+> I avoided doing so to keep reverse christmas tree order. I can still
+> do so if desired.
 
-Thanks.
+How does that affect it? There doesn't seem to be a dependency here -- and
+even if there was, the dependency obviously has priority.
+
+> >
+> > > +     ljca_gpio = devm_kzalloc(&auxdev->dev, struct_size(ljca_gpio, connect_mode, gpio_info->num),
+> >
+> > This line is a bit long, I'd wrap it.
+> Will fix.
+> >
+> > > +                              GFP_KERNEL);
+> > >       if (!ljca_gpio)
+> > >               return -ENOMEM;
+> > >
+> > >       ljca_gpio->ljca = ljca;
+> > > -     ljca_gpio->gpio_info = dev_get_platdata(&auxdev->dev);
+> > > -     ljca_gpio->connect_mode = devm_kcalloc(&auxdev->dev,
+> > > -                                            ljca_gpio->gpio_info->num,
+> > > -                                            sizeof(*ljca_gpio->connect_mode),
+> > > -                                            GFP_KERNEL);
+> > > -     if (!ljca_gpio->connect_mode)
+> > > -             return -ENOMEM;
+> > > +     ljca_gpio->gpio_info = gpio_info;
+> > >
+> > >       ret = devm_mutex_init(&auxdev->dev, &ljca_gpio->irq_lock);
+> > >       if (ret)
+> >
 
 -- 
-Dmitry
+Kind regards,
+
+Sakari Ailus
 
