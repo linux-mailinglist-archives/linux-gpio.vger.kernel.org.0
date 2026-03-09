@@ -1,241 +1,233 @@
-Return-Path: <linux-gpio+bounces-32858-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32859-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6Ph+O540r2kPQQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-32858-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 21:59:10 +0100
+	id +H7BHERAr2mYSwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-32859-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 22:48:52 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C9562413F4
-	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 21:59:09 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D13F1241DBD
+	for <lists+linux-gpio@lfdr.de>; Mon, 09 Mar 2026 22:48:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A1AFD301B939
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2026 20:56:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B226830DA1D5
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2026 21:48:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E42B33ECBDB;
-	Mon,  9 Mar 2026 20:56:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 643B036C0A0;
+	Mon,  9 Mar 2026 21:48:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZA9TegaH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HL+c+KDm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011011.outbound.protection.outlook.com [40.107.130.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BEB3EDAA6;
-	Mon,  9 Mar 2026 20:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD68F36C580
+	for <linux-gpio@vger.kernel.org>; Mon,  9 Mar 2026 21:48:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.47
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773089790; cv=fail; b=BEntQ37gYl5JEAXwMrA0P8i+J3YyCfoTKxVGVcWFLcyfVHNvff9ctQWpXXfqiByTHSl+gDxrWGaORlfWrMbHZZDICvs0e1SFS1ge0L5eZDBK8KA79cniv8+NX0RRvdqCil2yDSUpUIp1PZtm11j7FJCVD15HnTUiIPc9Gxg8qEw=
+	t=1773092900; cv=pass; b=YM7+coXICD3TFGCWerSWFur3VLotW8+hIrlakSFnKPuk0tMnpg4IxXDHPptR0jSGhxyDf0XdZ+rGT3rc3e64yxHMhxCyBURwLbcWiE7EC82lHCuOTMY2jCBFCTqtdhZCBY7oaFRDMe7QYGgFtZ6kFIa940dY9i6QV+evRUo9Lf0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773089790; c=relaxed/simple;
-	bh=6GPsFy9zCNA4aOGX5lsr4ft8T8IqZh9Ce5RCYwC8o6Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=F/pq9V4r8sCIh9XazvuTChn4rhRgSuUHiE+rLZMQcawRVOJ7M9mckxZSG8lQgtyfwe0AygRkIg4M7GSgupHeHgUuaIgc67zlXwZxcC+mWcKFx1O9nBprW1coHUUHKcEZjqo3Wh0J1z/hDS31s7rml0DS85mWT8cA8q0Rf+NDVnk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=ZA9TegaH; arc=fail smtp.client-ip=40.107.130.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=V4xsw/OF5l3vSp3wDY9Zclm73cw8Ipklm43BnysamGQTQF2eZ56/dRuUOir1X6m0f5y9ov7YRo+MGz3YSj9E5AKkNafZqcRVXFOT8FT4hgUCA8cscgfn6ZjHo1iQqUpdht8hIaG94IyIiOFGPRZq2aL8AEc93hTRxcNtHJStQNMJwq1+p00uV91pRHcCa0yq5mJZbw0aivfrGoBG2whcVA5ZoQinsvN2jA8YK45nNiGyirk0/Yvvj8n7HJ+2a1MOtm6hThzRzpQ8Beq3NScNQ8e1+WxoUdSRO+URmJH7zKd+uEAoqQFufoUSsfchOL7uKpmMO3mlJ3nEh7bi7LYPkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RC93O/9B2LylJvMbACxtTRweB3sixPckboUTpa+OTAc=;
- b=ANKaGeaeSTUu44D0tj2mtjgde6/zK6u2vbK/a2tESHZtDMtsmbzpO9jHX+frsfgT8ajqoHpBb3vnbuJ3s9OhyH0cnemzRiKIVxdiZDZbSDWIVXPqhoeQkLxyfhkBO2Ym2oU7ifejVJXxhM0ddwzsVlovon88oRxnNbageSGKSpcfGnXsKwm41BBZ5SsiC4fxUW4K8eWfzn77NIdIUrqgAbdCrkUSxSeZgniOOTzPGEgCu2l4GNK2Vr/l3mL105cSIkOQSBKNTkYNIiEF7vcmgPT1Fx125xvynrIbCi5sJaRT2Mr8s8OGMRshGL0YUngD4UivgxICvfjkLNec2LLlcA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RC93O/9B2LylJvMbACxtTRweB3sixPckboUTpa+OTAc=;
- b=ZA9TegaHh4I+7lkygHuYT6GTqqR/G/Y3J3p9cBOOj7np2XsIU2C1JvnQl0rMUqjEOhe+6vPsfaNVQLHU9M5K9RjKNXxEU9M5XmDeFUPyQ8NDehL4MIOiB6xTq2FevSDrTmfDWMeFHKYnWl9DyghIw06Yn/fqD1niwTKMLtLgjTwST0yxCW/4xE0hNliHWdmgzLCoLM+iPE8pLYe6l+GcxwUqAOe1lxp4zE+w66TWhGfKrL2RuoIbGMx0srCsm/bmwG1uqsp5hoUybcrU8BeYweHUUlD/s4Gnv2i88JnIy95HDCcamZ/NnyKUQyDrKtAdD7C9ioDnOCL6Q0iCW1R7nw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9185.eurprd04.prod.outlook.com (2603:10a6:102:231::11)
- by DBAPR04MB7335.eurprd04.prod.outlook.com (2603:10a6:10:1b1::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9678.25; Mon, 9 Mar
- 2026 20:56:26 +0000
-Received: from PAXPR04MB9185.eurprd04.prod.outlook.com
- ([fe80::b4c0:6119:2228:2ceb]) by PAXPR04MB9185.eurprd04.prod.outlook.com
- ([fe80::b4c0:6119:2228:2ceb%4]) with mapi id 15.20.9678.024; Mon, 9 Mar 2026
- 20:56:26 +0000
-From: Shenwei Wang <shenwei.wang@nxp.com>
-To: Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	arnaud.pouliquen@foss.st.com
-Cc: Shuah Khan <skhan@linuxfoundation.org>,
-	linux-gpio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Shenwei Wang <shenwei.wang@nxp.com>,
-	Peng Fan <peng.fan@nxp.com>,
-	devicetree@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-imx@nxp.com
-Subject: [PATCH v10 5/5] arm64: dts: imx8ulp: Add rpmsg node under imx_rproc
-Date: Mon,  9 Mar 2026 15:55:32 -0500
-Message-ID: <20260309205532.1794202-6-shenwei.wang@nxp.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260309205532.1794202-1-shenwei.wang@nxp.com>
-References: <20260309205532.1794202-1-shenwei.wang@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SN6PR08CA0031.namprd08.prod.outlook.com
- (2603:10b6:805:66::44) To PAXPR04MB9185.eurprd04.prod.outlook.com
- (2603:10a6:102:231::11)
+	s=arc-20240116; t=1773092900; c=relaxed/simple;
+	bh=reB98/yRVFc8H7HxCp3Xcemlmnv0aKaA9sTYRsUfEyA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XqlBa113okYeludLh9DQ3OwZkEXDA7BnALq5+QmnrJYTEsgdTOhf9BB9aclexH9Lzlf8tlTzpGf9Y9/PwYxvriTjEY8lmkjWrXL8UXDniuLibS5V3M5F847uApAff9MXdLPFfwfOZL+YnfimOYsPghJgjB+o6NidexeWzu8SAyM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HL+c+KDm; arc=pass smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b95c0fc928bso437664666b.0
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Mar 2026 14:48:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773092897; cv=none;
+        d=google.com; s=arc-20240605;
+        b=R78dT2l5klFTIU8818qEOQW5B+sJQSTQggZA6TvXB4tkYc1Ciw6CyshwSP+6KuvftF
+         agnW6vvVq/X3VBgWJOniBt2w2FguFsJ6euyInC1AUvHxLDhFQ5/H3mmRpcrQxEROlEP4
+         T2oD0+fBwf3necPZHO6dDn4XdaLDZfzofy3+SF7MONtm8yJDkzGm4FtNl7Y6uUoOraJg
+         PLKKhuSMaoXlsKu2tjQNj0a2Ozd26S9/k+Q0itaFjoskdP37Vu1sJYY/KQCo6ELyX91K
+         SAiNdPAIcK6UB2dRhPE4iCFAZkiyoRYI/FMHh/wzd0EwMGLSoQxkacE2qWjLW6opilIP
+         wMeA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=+RW4Bksv15WvnsXHAkZ2+BYLVycvOxPzx1oOl5MaTG4=;
+        fh=MRNynJIPG+tvPcwaa1XRlIKuklb8WBxjoNCAgykpB8g=;
+        b=NVVBhmH9sFZvBEh2t2UmWlfShrk1apb8ndmv9mm1pEViKJ66Q1cpJEG1e+DjFEZfw4
+         fqiGyQt8Ozd/vyKVEjsJUYcpmmV7LtgcZ0PljcqMd7+cf38zjHyxCTO+boiRFIs67KTQ
+         tMlL8Ym4p5rESn2K0elsTj/eySoUy5VfHvfPollBscHideehsUsTvX9q4snG4m7tLSKA
+         X63UecIvQknkvV+tmrjZjNVRJM6xCIhXnhFpDAob79OsptrxXnPWKgexerSJiv8HGq54
+         5u/1/9P8w06UKcxmkVR2iKesQnGcpKWddyTx5JOjwrgedbkzWa/Q7j8Lhoo7FvYDpJPK
+         gS2g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773092897; x=1773697697; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+RW4Bksv15WvnsXHAkZ2+BYLVycvOxPzx1oOl5MaTG4=;
+        b=HL+c+KDmW6RROoYegpsQPGH16Jv2jXdYubq/ZbLerdGPvHm6E3pNukVDbsW/ilcmYt
+         rbHQC2p2Ax2l6/s4UYnUP96u/IN+fDWV6WUjkF81TbdfEg6iCj/mxx76955oojL0SXr4
+         kl9Ur/Y6aHet+lIIHbmrSd4+HVQx8UeI/Ab42le7Ko0paqKB0Dpjl2ZzRDtUAChQg/Ki
+         C4Qq23SS1M1PH7e7rh5ROvvomRcEeuRG1KRfpkjsOZUStSOW0b6pnY1SCkl6znHQYUo8
+         QRdBns+l3bKeCK1DP0fB+gFb+ZNR5+Vrc/q69swtpn98ittqRyv1ZIgUVraCm69s7uif
+         B2VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773092897; x=1773697697;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+RW4Bksv15WvnsXHAkZ2+BYLVycvOxPzx1oOl5MaTG4=;
+        b=cF/jjbWN09uupx3XzXOIn/y+ZBq5y1k6Sn5a+Cvz8QOGMhb9LdNMhKPuM2MKiS2Rh9
+         Jr2iK+3iMKQoiUi/WCNSL+U9O+A14yivymsoDm/3CclPJMRF7AIYdrTU1HLKv7vWiJm8
+         0kqK2ybDh4Xv8BYgFdFlZroBxDg2lSPQXJkgRw8fcJQnvvy1uZpyc8GRlYFXQB/mAsa2
+         njN5C+zExiZmz5BfE17avKQWL99OjNgTsT7/Xc2iCUaAtc4VrRxeLuf+Gs0yhlvVMRj6
+         7TWZA4YoG/aSK2LoFLwqsCWTjtdhw4f2QABCVa45As8swKcwRESYah7Uggq8vR+f8LrC
+         6Zgg==
+X-Gm-Message-State: AOJu0Yw3pdbk3zde/O1KLS20836TYDm9Nm0g2Y4IYsvPTXBIqLMDPD6S
+	va1o0ObnJqEJ2RAJD4buPAC4+/CqrC6N1lrWRt+zO81nACrl+Y23wU/dJwzQEfr+QbJ9NSoSoIS
+	TYbT9tNroi+Jv3iuGiU4HNpf3NihUR2A=
+X-Gm-Gg: ATEYQzzID/dbw0nJyn/UedirK/o9WjznlgEe3VVavi92z0/WJnCk3MdSotA89fom1J7
+	IxMyxKfnbiQCNpIubz1+3MpPtQeLeG2mP3+I7KwHdSZ4wXIMXyugjeK31eCjQf+aQ40MiDXVArg
+	2Cp5oMushXRXpJ1rb3F76gYBfaOrtLuTjzQthIpyCXyf5iAkRuni0gCpYNnaeFo6FIt+kO8v5Aj
+	YDP9Cqcbuh2wWsQVtO0Rk9iRj34pOBUyOzppKDBzbclT1AQEsRglLc0PNPNAToRTIn+Cp1WewsQ
+	qPxlt7RWvB0DlBKH6LL8km/snt1Kjh+1Z8iTUKUmdcstuBnsjcQmHmuI3qI+yqDFWOWU0BSCXS1
+	9IRRH0dTFsRtgU7HZ
+X-Received: by 2002:a17:907:7ba6:b0:b94:1d92:7e8 with SMTP id
+ a640c23a62f3a-b942de06f52mr753184366b.27.1773092896698; Mon, 09 Mar 2026
+ 14:48:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9185:EE_|DBAPR04MB7335:EE_
-X-MS-Office365-Filtering-Correlation-Id: 266dbdf8-ca80-4088-3efb-08de7e1e5440
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|376014|7416014|19092799006|1800799024|366016|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	tsF1DaDu9CU/7mBqE+AMBd60Lsb4KDdDakK0NkI3adHUgce38K8Ur54goT/YXKpMfnXFQSV63yLBN/dVI53Qx+L6tHx/RVT/z278B/wRGRL36frADmzsc1u0fZe7BBBGYXrLKAydgFiYD0mUY6mmDShtmhyPvWZOkXjEmWce3BOTwAe3I//qyErzjCPZnEdwK9OxCetVLIwZ9eApan7kYMhtEfcLQkAQt4hLZ1ytCug2ImHdJUHa1jUI3l96xB5mIYQP8qBWBch9okMTV7W6TegUns5k40aLZ6Oc/JpOu0EiCEog5WSflcKg60CbswJplOg+zAS8Y9EMyjBn+iTKcsbk3pXHpqQMXcfmIDSEkpCHsgV3UiAU881UCNgBH9qvxMiZHp0geTGlp9r6iN9D4QMqt2azo7fm+bDIm8MYy75ThoaKLNMCFMPoqwbIZyxLauy76JOwmKgFn7cze1BQkl/qEBg91Bmmnclphf8jwkYqxywlmKSXP4LtCOsGLhrrXBZNnCScI+u3IQQPvDOQCS3GcZxibcHNDW8gqIZrlQwnjMqbSel4kaTXSESUdXwm/BMiYZFExPUrtFuiymqlCkaW9v6E/piQFSgWodY/bIjZvV7BOF7Dlypg2gInZ4OTW1muc1Xorck9MZOkzcqsHaLbkbOYd3uNwvotdA7hx8TCmSV6LewG+J8HRuFiJUs8JB2IowDvZkNYQA+w5goOcQYJiNa5iksSCT/3TbbENIqpqRnUE4Rgny9KUEJ+xZ/enKUeCL4A90bsUUs+5/9XqJ27dWNXdfBy4dmJ0wu3UjROXZuicjbD4sDZKq3JQLlZ
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9185.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(7416014)(19092799006)(1800799024)(366016)(38350700014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?yYBWqXnMqP9KChauIS3tC7+ySwo7M1ZeV+A/exsJ6G9byOGvvmHlIq2t2ruw?=
- =?us-ascii?Q?vixBVO8SmdcizhaTTLovdXCSdZWaFW83XuZ7sw49xkgkoIXzJ5EgBwjlzC+N?=
- =?us-ascii?Q?Rh366AhvT2wrg3mhoQPt6WilUbkhFCWnytHROHCZ1QLCEQYu7WPWEIv8OH5q?=
- =?us-ascii?Q?YItau4HlCGQdbKLIoTa9mL8bvFPFxQOBToASeiiSJSfQ6uXXOJR6JVkqCCsV?=
- =?us-ascii?Q?D1fJOKGXF2OSAP1NOKHHQ237ier+0GuPuhFre5+sqEw66KisTaa0OYJ8AFbD?=
- =?us-ascii?Q?I8Mvt+Kak1H8IRsaKOw/NeBmfFMn0jZUMW7ggXVAcNRFghbYtU5cmvGPHbQH?=
- =?us-ascii?Q?VxfJdkXN+VmntNNcs3QUD3fz98wxURExIgvkyR/vVkDrsG4PLdrortnkF5Kj?=
- =?us-ascii?Q?oO27fZQaEtuKXGUeY8zviamPWYzr4bT4TwBZf9fZzhMddUnoulytMJObVibe?=
- =?us-ascii?Q?JGWuF+ap+dCCgifmaqNKljXpWAc3SV27v8IVxbam2bdrHbMfsikwk/QS4hHO?=
- =?us-ascii?Q?ANMaSfPOczmbfh51iELw4NrvaCG4oHfqzY1zDDGvkmnBoKtpQnFPU7cQ8PTX?=
- =?us-ascii?Q?ni5ElWv7q5sfrNj0P5Vu4oQVdkkxUKD0b+ZiuTUOk3lRVRAgVTy4kI+AwRh3?=
- =?us-ascii?Q?YTHgAYUFk31dn+j1unS8jMa+6JEdTaKSa+Y1BgkzyTootov/ZT/LYVrRnTgd?=
- =?us-ascii?Q?QZLa2DZMYbHRlTduqziGSnhB//XNsZsCCM3eYX2rYPaHv+poGOJzOqPC7AHW?=
- =?us-ascii?Q?ZZm1xMxciOI3IulUM3G9qj0wAHfA3mnngfiJkjx52k+RdwcPJR2uzB6Ndoiy?=
- =?us-ascii?Q?7h+1292UzRK0AByadk6TT8DuK7ND/YE/C/YCqSPQkOEUl7XIn2N5Ozv5aOGj?=
- =?us-ascii?Q?5zLisRcBzusxgMiQhVrQcjmBSadl734s4LqBJ4oEHdMNr0JSytKhMiYu/aB3?=
- =?us-ascii?Q?Rr1azbaPtuPeYyEwryvm7tPsTi9E3LOLzElmSBcFlrl5FlFUWgs6icRluofb?=
- =?us-ascii?Q?AUkq9rPE5Ccv6H/USVSikNNRFPjgikJAUV2NFS0X20QSRZKzkITWAB5rpo0t?=
- =?us-ascii?Q?H7WLeFGgwsQRFs81f6wBYh19G7vdY6O9PlUZZLrY7z7Pg6NjMGS89RIzDjVN?=
- =?us-ascii?Q?QR40ngBr4HNiD0M9krA8QNtVdZEAlg5K6akcWAwJTvxCITbHNBoJ8d7m2cRX?=
- =?us-ascii?Q?XPTuXt7jb7ykuAYvixzSsu7aNUx3mEJI4fVseXr00hhqfVUeu7m5guNRCC3r?=
- =?us-ascii?Q?qf7rmhNBW7gJmeIx76XBiii3ul2i6/CwnSyZ1FvzifuEKSqTWtQHOFvSd9rL?=
- =?us-ascii?Q?KRxz/9bA0RD7rFlptO4hRtCtwt3oUU5zFlDTni6LubbVyuXgyMlNYJo6Ex5O?=
- =?us-ascii?Q?JttRVOBGPXjXy8ZNXGDlGWAiBQ3YwSVI19hWFRBg/A30e4UMcqVlu6gStVTW?=
- =?us-ascii?Q?Mn93DFWNtTK8i6HTEYXilK/B84YqgnW+6JTvbZZCpdlAllwNqq8Ai+7xxzvk?=
- =?us-ascii?Q?HgVcUj8WSow+WXqpmChnsx2myxOe/wHgrHXHJid+3IUch+xKFKI4gpK1rRAa?=
- =?us-ascii?Q?nDNTo6WkLQa5mg8WWc7Kb6QCpXzxXcEyW6scwElcYvHtlsY4ajMZzPnit9Bx?=
- =?us-ascii?Q?gq9bBTHWfXY6cKSUM/P9agf2vqBlDZxTFRgXFZxdiXe+tvqVYIa3S6UuRc3g?=
- =?us-ascii?Q?uGaqE9Bo8E92M6nwy+cZzL2v9r6lVrEWCFUEUgfmy/NGrHNkUIYZ28jJqFE/?=
- =?us-ascii?Q?01YC7yhOjw=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 266dbdf8-ca80-4088-3efb-08de7e1e5440
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9185.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2026 20:56:26.2465
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oZtBKmQcSt2791tdaUYq0oofZMznitcLL2tc/p2dlFSpJNBowXWrafXTN4XIS3GIcHrJTVbqvy/DquVxNcxj2g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7335
-X-Rspamd-Queue-Id: 0C9562413F4
+References: <20260308021201.47820-1-rosenp@gmail.com> <CAMRc=MfGkVpk9rBLvwxndjveXemY6t7nWOBX9wqZxc+Qe7aOCg@mail.gmail.com>
+In-Reply-To: <CAMRc=MfGkVpk9rBLvwxndjveXemY6t7nWOBX9wqZxc+Qe7aOCg@mail.gmail.com>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Mon, 9 Mar 2026 14:48:04 -0700
+X-Gm-Features: AaiRm531jvLGP3p0QNkfjPaWbYM9v3XkvbwhlEnwIJao5lsqtECDEEmPxAwb-OM
+Message-ID: <CAKxU2N8Zm6Hg-pr14RS9SCsOWGu2kF3gy4RVuQThMvM1CfLEtQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: ljca: reduce struct allocation
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-gpio@vger.kernel.org, Lixu Zhang <lixu.zhang@intel.com>, 
+	linux-hardening@vger.kernel.org, gustavoars@kernel.org, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Linus Walleij <linusw@kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: D13F1241DBD
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [2.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[linuxfoundation.org,vger.kernel.org,pengutronix.de,gmail.com,nxp.com,lists.linux.dev,lists.infradead.org];
-	TAGGED_FROM(0.00)[bounces-32858-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[shenwei.wang@nxp.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[nxp.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_FROM(0.00)[bounces-32859-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_PROHIBIT(0.00)[0.0.0.15:email];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:dkim,nxp.com:email,nxp.com:mid,i.mx:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,0.0.0.0:email,0.0.0.1:email]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-Add the RPMSG bus node along with its GPIO subnodes to the device
-tree.
+On Mon, Mar 9, 2026 at 2:22=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.org=
+> wrote:
+>
+> On Sun, Mar 8, 2026 at 3:12=E2=80=AFAM Rosen Penev <rosenp@gmail.com> wro=
+te:
+> >
+> > Convert connect_mode to a flexible array member to avoid calling
+> > kcalloc and to combine the allocations.
+> >
+> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> > ---
+> >  drivers/gpio/gpio-ljca.c | 16 +++++++---------
+> >  1 file changed, 7 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-ljca.c b/drivers/gpio/gpio-ljca.c
+> > index f32d1d237795..a531aaa0425f 100644
+> > --- a/drivers/gpio/gpio-ljca.c
+> > +++ b/drivers/gpio/gpio-ljca.c
+> > @@ -63,7 +63,6 @@ struct ljca_gpio_dev {
+> >         DECLARE_BITMAP(enabled_irqs, LJCA_MAX_GPIO_NUM);
+> >         DECLARE_BITMAP(reenable_irqs, LJCA_MAX_GPIO_NUM);
+> >         DECLARE_BITMAP(output_enabled, LJCA_MAX_GPIO_NUM);
+> > -       u8 *connect_mode;
+> >         /* protect irq bus */
+> >         struct mutex irq_lock;
+> >         struct work_struct work;
+> > @@ -72,6 +71,8 @@ struct ljca_gpio_dev {
+> >
+> >         u8 obuf[LJCA_GPIO_BUF_SIZE];
+> >         u8 ibuf[LJCA_GPIO_BUF_SIZE];
+> > +
+> > +       u8 connect_mode[];
+>
+> Please use __counted_by().
+Counted by what?
 
-Enable remote device communication and GPIO control via RPMSG on
-the i.MX platform.
-
-Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8ulp.dtsi | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8ulp.dtsi b/arch/arm64/boot/dts/freescale/imx8ulp.dtsi
-index 9b5d98766512..ad1ef00a1e3d 100644
---- a/arch/arm64/boot/dts/freescale/imx8ulp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8ulp.dtsi
-@@ -191,6 +191,31 @@ scmi_sensor: protocol@15 {
- 	cm33: remoteproc-cm33 {
- 		compatible = "fsl,imx8ulp-cm33";
- 		status = "disabled";
-+
-+		rpmsg {
-+			rpmsg-io-channel {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				rpmsg_gpioa: gpio@0 {
-+					compatible = "rpmsg-gpio";
-+					reg = <0>;
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					#interrupt-cells = <2>;
-+					interrupt-controller;
-+				};
-+
-+				rpmsg_gpiob: gpio@1 {
-+					compatible = "rpmsg-gpio";
-+					reg = <1>;
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					#interrupt-cells = <2>;
-+					interrupt-controller;
-+				};
-+			};
-+		};
- 	};
- 
- 	soc: soc@0 {
--- 
-2.43.0
-
+__counted_by(gpio_info->num); does not work.
+> >  };
+> >
+> >  static int ljca_gpio_config(struct ljca_gpio_dev *ljca_gpio, u8 gpio_i=
+d,
+> > @@ -400,22 +401,19 @@ static int ljca_gpio_probe(struct auxiliary_devic=
+e *auxdev,
+> >                            const struct auxiliary_device_id *aux_dev_id=
+)
+> >  {
+> >         struct ljca_client *ljca =3D auxiliary_dev_to_ljca_client(auxde=
+v);
+> > +       struct ljca_gpio_info *gpio_info;
+> >         struct ljca_gpio_dev *ljca_gpio;
+> >         struct gpio_irq_chip *girq;
+> >         int ret;
+> >
+> > -       ljca_gpio =3D devm_kzalloc(&auxdev->dev, sizeof(*ljca_gpio), GF=
+P_KERNEL);
+> > +       gpio_info =3D dev_get_platdata(&auxdev->dev);
+> > +       ljca_gpio =3D devm_kzalloc(&auxdev->dev, struct_size(ljca_gpio,=
+ connect_mode, gpio_info->num),
+>
+> I'm surprised to learn that there's no devm_kzalloc_flex() yet. I
+> wanted to ask you to use it but it doesn't exist.
+I'm sure a treewide commit will be applied when it gets introduced.
+>
+> Bart
+>
+> > +                                GFP_KERNEL);
+> >         if (!ljca_gpio)
+> >                 return -ENOMEM;
+> >
+> >         ljca_gpio->ljca =3D ljca;
+> > -       ljca_gpio->gpio_info =3D dev_get_platdata(&auxdev->dev);
+> > -       ljca_gpio->connect_mode =3D devm_kcalloc(&auxdev->dev,
+> > -                                              ljca_gpio->gpio_info->nu=
+m,
+> > -                                              sizeof(*ljca_gpio->conne=
+ct_mode),
+> > -                                              GFP_KERNEL);
+> > -       if (!ljca_gpio->connect_mode)
+> > -               return -ENOMEM;
+> > +       ljca_gpio->gpio_info =3D gpio_info;
+> >
+> >         ret =3D devm_mutex_init(&auxdev->dev, &ljca_gpio->irq_lock);
+> >         if (ret)
+> > --
+> > 2.53.0
+> >
 
