@@ -1,66 +1,66 @@
-Return-Path: <linux-gpio+bounces-32996-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32997-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6CTYJCMfsGmCgAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-32996-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 14:39:47 +0100
+	id iGzuA/0ssGlHgwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-32997-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 15:38:53 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F0A225092F
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 14:39:47 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id F30082522E7
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 15:38:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id F3C253150BD7
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 13:09:29 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 128EF3126497
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 13:09:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46A3A3E6397;
-	Tue, 10 Mar 2026 12:45:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F27D3E8043;
+	Tue, 10 Mar 2026 12:45:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SsfDmMyy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lAx2Cju4"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF313E63B9;
-	Tue, 10 Mar 2026 12:45:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017DB3E8041;
+	Tue, 10 Mar 2026 12:45:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773146730; cv=none; b=OrKEf7/uu4rguNpGXzBxkZPDyfb7RJZHaEdt2FdAuogNfVutsfLx/Z3d9sTQNn8mSxa5i7CwJpulffGh+4Ng8eupTRsS7VO222Qmgq6RcpJZKkedOamGyTZiuDy9urawY4mP8cpKCvDHz2R6vqOv6s1pUYpfAU9RnXwRyI6ldEE=
+	t=1773146736; cv=none; b=ec6Ot0NfJKnK2geL8J8cNXW0qUAh8Rnc3gMHDBOlEqmSv73u3E4Vdc1+OzgRzAzQuJ4VnqGl3jYbIpjX7dxKlghn5L0XHsBk2Kl1s28kT9ZwDoGBymHLtCXB3TE2aHa/9JMOab9IJE3/KF00ZdN/293gR8Sl+cRngLBijdG3Z98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773146730; c=relaxed/simple;
-	bh=1pDp3Qkly2VVJyn5uS1f5Qf9t0lTLCceyj74xLhq9BM=;
+	s=arc-20240116; t=1773146736; c=relaxed/simple;
+	bh=tN03Ua8cWGsA+NSmKC8Zbhm98icOQ5fcOhlqL+PjwTo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DDSpRJ5p/apovDleOVDDeyJg3nOkeymp+ufgJ0FLYARQA8UkoyQ9E8hSEzdT/OIBBcip7WgX29PwjlSWhxgp8IOvA/KFM+Ng7lvyuB47fT5kUwSeXknbFWGKrMflyZbtfjx7yFEyUKmtkjjqOTVioFkBuPe9a+9b38KJF31Zdrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SsfDmMyy; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version; b=FMSmlkX3x3B96Y/Ngp7L0NQpvc9wbTfaWl88AALVD4oZp635tFbwgxVZOr9b9mwqhNSTI834djQULp5UnQwirz0KCfh07nzFqOp3sxKvnf9yAaqIHOJJyw6XixYnuDwdZna+gK4298H5iyXZij7W1q/P7s/WFmHjTU8uphmot4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lAx2Cju4; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773146729; x=1804682729;
+  t=1773146735; x=1804682735;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=1pDp3Qkly2VVJyn5uS1f5Qf9t0lTLCceyj74xLhq9BM=;
-  b=SsfDmMyyQZui5n92ZiFRjIr2GBJ4rmPn5mkESfc77mkpzC39wTG+7GEU
-   m2iJHLLvjes2INSCj/Yp+Y6Acr7Vh5zSqyXnbokzp+XYsaPCOnV8kV590
-   kexVEqGBaO54yjQOFxhxfX2qq5WetGRhVV7MciIo+SNnirUjAJIhuCjV9
-   d587cLchGsYmNcrhLsVKs76fdzh+XgM5+YUp9Pd0CBwsG9ZjrR/u9KNma
-   Bqzml7KFU98qUaXpzYD1kLqhsVg4ddW4vIy+8LWqTEi8RXE4VKXEuurCw
-   FJXeQMxnRnrJd+JXI4Wbrbcw/DdOgjbE9fCWm2iTQ7JCylRbVy6PRL1Il
+  bh=tN03Ua8cWGsA+NSmKC8Zbhm98icOQ5fcOhlqL+PjwTo=;
+  b=lAx2Cju4ZKk4fwZ+1IggXmo2ESen23Wc8VjU3ZkqQcC8S0gQCZn7FQTS
+   QnhEUM9S0yMDWW5fuZMpVRUT7AnoF7QINg/RNj0lklEdZ4SC/eYD/JLA1
+   vMhAHnN5xqIaU3mUvDEavJGB6rSMwcnrO5UXoGdnO0Kt0JB9nDjMs4wQN
+   wBi+MdJ2VPl/ceaeRhuT+HEER+cLXtJm1fBBjXxagSomhW12kp7OYNmrn
+   CxPgbmsvgBuEM7J+NEfP9Fbqc+K/ARbSnAdKXI4x8xVdaqfKladRbtGvh
+   gEKqx2V/ByI9BG42U0SSxYEciR/pm/r43hlXHUOU/LLEIrBOt0DuZPrDM
    w==;
-X-CSE-ConnectionGUID: 4JB3aOucS7+rRZPmD3w4zQ==
-X-CSE-MsgGUID: 2r4bhMYSS6qxlPILqncLig==
-X-IronPort-AV: E=McAfee;i="6800,10657,11724"; a="74268953"
+X-CSE-ConnectionGUID: iikKAxMqQMmZM6HJ09VdhA==
+X-CSE-MsgGUID: oSh6zKcyQ6GpRfsRfpS0NQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11724"; a="74268969"
 X-IronPort-AV: E=Sophos;i="6.23,112,1770624000"; 
-   d="scan'208";a="74268953"
+   d="scan'208";a="74268969"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 05:45:29 -0700
-X-CSE-ConnectionGUID: c51sHKIOTzGhiEjpaRNb7Q==
-X-CSE-MsgGUID: DPpL6UDMRDmj5McuKSlZ0w==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 05:45:35 -0700
+X-CSE-ConnectionGUID: dR14lY+ATVqzMmAjTzTJeg==
+X-CSE-MsgGUID: M5oRJc/rTEOduIzLV4DDuw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,112,1770624000"; 
-   d="scan'208";a="225040250"
+   d="scan'208";a="225040264"
 Received: from kniemiec-mobl1.ger.corp.intel.com (HELO alaakso-DESK.kioski) ([10.245.246.41])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 05:45:23 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 05:45:29 -0700
 From: Antti Laakso <antti.laakso@linux.intel.com>
 To: linux-media@vger.kernel.org
 Cc: linux-gpio@vger.kernel.org,
@@ -80,9 +80,9 @@ Cc: linux-gpio@vger.kernel.org,
 	miguel.vadillo@intel.com,
 	kees@kernel.org,
 	ribalda@chromium.org
-Subject: [PATCH 4/5] gpio: tps68470: Add i2c daisy chain support
-Date: Tue, 10 Mar 2026 14:44:26 +0200
-Message-ID: <20260310124427.693625-5-antti.laakso@linux.intel.com>
+Subject: [PATCH 5/5] platform: int3472: Add MSI prestige board data
+Date: Tue, 10 Mar 2026 14:44:27 +0200
+Message-ID: <20260310124427.693625-6-antti.laakso@linux.intel.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260310124427.693625-1-antti.laakso@linux.intel.com>
 References: <20260310124427.693625-1-antti.laakso@linux.intel.com>
@@ -93,7 +93,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 3F0A225092F
+X-Rspamd-Queue-Id: F30082522E7
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -102,12 +102,12 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32996-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-32997-lists,linux-gpio=lfdr.de];
 	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -120,73 +120,146 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[18];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:email,linux.intel.com:mid,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,linux.intel.com:mid]
 X-Rspamd-Action: no action
 
-The tps68470 daisy chain make use of gpio 1 and 2. When in use, these
-gpios must be configured as inputs without pull-up.
+Define regulators and gpios for MSI Prestige 14 AI EVO+ laptop.
 
 Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
 ---
- drivers/gpio/gpio-tps68470.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ .../x86/intel/int3472/tps68470_board_data.c   | 97 +++++++++++++++++++
+ 1 file changed, 97 insertions(+)
 
-diff --git a/drivers/gpio/gpio-tps68470.c b/drivers/gpio/gpio-tps68470.c
-index d4fbdf90e190..729ad8e397fc 100644
---- a/drivers/gpio/gpio-tps68470.c
-+++ b/drivers/gpio/gpio-tps68470.c
-@@ -14,6 +14,7 @@
- #include <linux/gpio/driver.h>
- #include <linux/mfd/tps68470.h>
- #include <linux/module.h>
-+#include <linux/platform_data/tps68470.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
+diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+index 71357a036292..fe7c23e72d66 100644
+--- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
++++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+@@ -232,6 +232,73 @@ static const struct tps68470_regulator_platform_data dell_7212_tps68470_pdata =
+ 	},
+ };
  
-@@ -120,6 +121,17 @@ static int tps68470_gpio_input(struct gpio_chip *gc, unsigned int offset)
- 				   TPS68470_GPIO_MODE_MASK, 0x00);
- }
++/* Settings for MSI Prestige 14 laptop. */
++
++static struct regulator_consumer_supply ovti5675_avdd_consumer_supplies[] = {
++	REGULATOR_SUPPLY("avdd", "i2c-OVTI5675:00"),
++};
++
++static struct regulator_consumer_supply ovti5675_dovdd_consumer_supplies[] = {
++	REGULATOR_SUPPLY("dovdd", "i2c-OVTI5675:00"),
++};
++
++static struct regulator_consumer_supply ovti5675_dvdd_consumer_supplies[] = {
++	REGULATOR_SUPPLY("dvdd", "i2c-OVTI5675:00"),
++};
++
++static const struct regulator_init_data msi_p14_ai_evo_tps68470_core_reg_init_data = {
++	.constraints = {
++		.min_uV = 1200000,
++		.max_uV = 1200000,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++	.num_consumer_supplies = ARRAY_SIZE(ovti5675_dvdd_consumer_supplies),
++	.consumer_supplies = ovti5675_dvdd_consumer_supplies,
++};
++
++static const struct regulator_init_data msi_p14_ai_evo_tps68470_ana_reg_init_data = {
++	.constraints = {
++		.min_uV = 2815200,
++		.max_uV = 2815200,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++	.num_consumer_supplies = ARRAY_SIZE(ovti5675_avdd_consumer_supplies),
++	.consumer_supplies = ovti5675_avdd_consumer_supplies,
++};
++
++static const struct regulator_init_data msi_p14_ai_evo_tps68470_vio_reg_init_data = {
++	.constraints = {
++		.min_uV = 1800600,
++		.max_uV = 1800600,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++	.num_consumer_supplies = 0,
++	.consumer_supplies = NULL,
++};
++
++static const struct regulator_init_data msi_p14_ai_evo_tps68470_vsio_reg_init_data = {
++	.constraints = {
++		.min_uV = 1800600,
++		.max_uV = 1800600,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++	.num_consumer_supplies = ARRAY_SIZE(ovti5675_dovdd_consumer_supplies),
++	.consumer_supplies = ovti5675_dovdd_consumer_supplies,
++};
++
++static const struct tps68470_regulator_platform_data msi_p14_ai_evo_tps68470_pdata = {
++	.reg_init_data = {
++		[TPS68470_CORE] = &msi_p14_ai_evo_tps68470_core_reg_init_data,
++		[TPS68470_ANA]  = &msi_p14_ai_evo_tps68470_ana_reg_init_data,
++		[TPS68470_VIO]  = &msi_p14_ai_evo_tps68470_vio_reg_init_data,
++		[TPS68470_VSIO] = &msi_p14_ai_evo_tps68470_vsio_reg_init_data,
++	},
++};
++
+ static struct gpiod_lookup_table surface_go_int347a_gpios = {
+ 	.dev_id = "i2c-INT347A:00",
+ 	.table = {
+@@ -258,6 +325,19 @@ static struct gpiod_lookup_table dell_7212_int3479_gpios = {
+ 	}
+ };
  
-+static int tps68470_enable_i2c_daisy_chain(struct gpio_chip *gc)
-+{
-+	int ret;
++static struct gpiod_lookup_table msi_p14_ai_evo_ovti5675_gpios = {
++	.dev_id = "i2c-OVTI5675:00",
++	.table = {
++		GPIO_LOOKUP_IDX("tps68470-gpio", 9, "reset", 0, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("tps68470-gpio", 7, "reset", 1, GPIO_ACTIVE_LOW),
++		{ }
++	}
++};
 +
-+	ret = tps68470_gpio_input(gc, 1);
-+	if (ret)
-+		return ret;
++static const struct tps68470_gpio_platform_data msi_p14_ai_evo_tps68470_gpio_pdata = {
++	.daisy_chain_enable = true,
++};
 +
-+	return tps68470_gpio_input(gc, 2);
-+}
-+
- static const char *tps68470_names[TPS68470_N_GPIO] = {
- 	"gpio.0", "gpio.1", "gpio.2", "gpio.3",
- 	"gpio.4", "gpio.5", "gpio.6",
-@@ -129,6 +141,8 @@ static const char *tps68470_names[TPS68470_N_GPIO] = {
- static int tps68470_gpio_probe(struct platform_device *pdev)
- {
- 	struct tps68470_gpio_data *tps68470_gpio;
-+	struct tps68470_gpio_platform_data *pdata = dev_get_platdata(&pdev->dev);
-+	int ret = 0;
+ static const struct int3472_tps68470_board_data surface_go_tps68470_board_data = {
+ 	.dev_name = "i2c-INT3472:05",
+ 	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
+@@ -287,6 +367,16 @@ static const struct int3472_tps68470_board_data dell_7212_tps68470_board_data =
+ 	},
+ };
  
- 	tps68470_gpio = devm_kzalloc(&pdev->dev, sizeof(*tps68470_gpio),
- 				     GFP_KERNEL);
-@@ -149,7 +163,14 @@ static int tps68470_gpio_probe(struct platform_device *pdev)
- 	tps68470_gpio->gc.base = -1;
- 	tps68470_gpio->gc.parent = &pdev->dev;
- 
--	return devm_gpiochip_add_data(&pdev->dev, &tps68470_gpio->gc, tps68470_gpio);
-+	ret = devm_gpiochip_add_data(&pdev->dev, &tps68470_gpio->gc, tps68470_gpio);
-+	if (ret)
-+		return ret;
++static const struct int3472_tps68470_board_data msi_p14_ai_evo_tps68470_board_data = {
++	.dev_name = "i2c-INT3472:06",
++	.tps68470_regulator_pdata = &msi_p14_ai_evo_tps68470_pdata,
++	.tps68470_gpio_pdata = &msi_p14_ai_evo_tps68470_gpio_pdata,
++	.n_gpiod_lookups = 1,
++	.tps68470_gpio_lookup_tables = {
++		&msi_p14_ai_evo_ovti5675_gpios,
++	},
++};
 +
-+	if (pdata && pdata->daisy_chain_enable)
-+		ret = tps68470_enable_i2c_daisy_chain(&tps68470_gpio->gc);
-+
-+	return ret;
- }
+ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+ 	{
+ 		.matches = {
+@@ -316,6 +406,13 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+ 		},
+ 		.driver_data = (void *)&dell_7212_tps68470_board_data,
+ 	},
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Prestige 14 AI+ Evo C2VMG"),
++		},
++		.driver_data = (void *)&msi_p14_ai_evo_tps68470_board_data,
++	},
+ 	{ }
+ };
  
- static struct platform_driver tps68470_gpio_driver = {
 -- 
 2.53.0
 
