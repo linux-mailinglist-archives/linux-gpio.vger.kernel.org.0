@@ -1,175 +1,124 @@
-Return-Path: <linux-gpio+bounces-32981-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32921-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EJyEBjAXsGmUfgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-32981-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 14:05:52 +0100
+	id gBQ7IWwGsGlregIAu9opvQ
+	(envelope-from <linux-gpio+bounces-32921-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 12:54:20 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C613C24F830
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 14:05:51 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06F0B24BBED
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 12:54:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B5422317CF0F
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 12:39:03 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6C94530B220A
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 11:52:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6571E402450;
-	Tue, 10 Mar 2026 11:56:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 654F338BF85;
+	Tue, 10 Mar 2026 11:52:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="SoumYKRr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBKvcVRa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.avm.de (mail.avm.de [212.42.244.119])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE9B4A13B0;
-	Tue, 10 Mar 2026 11:55:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275B2314D13
+	for <linux-gpio@vger.kernel.org>; Tue, 10 Mar 2026 11:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773143764; cv=none; b=pgz7cKJmEnitHFVUFfueG5oMRFM6jlZKI5+Cewvkv6UNeriItPgv79oNe0XIOJaoH3ou13aOYmXF41a3iLT8dVIPK8LYeTUeVsERehcE9QFzJoz84j28TtCxB7Ze9SvBAxX4/AbsJhGEFbKEE9q9FxMd1BZnxjN3BnsSnNh708s=
+	t=1773143561; cv=none; b=iVB+2khYK7xeE27CXnvpKG1Te+Cssi4yfGV++fCkLzWezngmFqqJcd1MqLBt012lOLHH0a1OBVXjFKRS6VH3IxjNkbpMqyvTCR80iLRRs4Tm3zJZxHS2sMsgEM1x9UT0AA8keRUF/UlKaswj19ATxkNlAuaXx31d1uvZVxdD6UY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773143764; c=relaxed/simple;
-	bh=BZdZKAXpTi8WGNXN2fiMzetM/noYEEE0kBAl+EzvNzY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=m3fVLUR1Y1Vwiq4hym9NRRVwKHbJuEhHSQm9zRZ/3xWyEHom8TLqMYc5IqQU02YJ48I2zz7bndMFgOwMJQMjBYRkIrQkHlCYjuO/obPX2S1hhz7RJ3m2PsFTpHcNsk501cMHgwnwExkICRKo2K3IEqhZJBlgAiZjWE+aVXhSOeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=SoumYKRr; arc=none smtp.client-ip=212.42.244.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-	t=1773143730; bh=BZdZKAXpTi8WGNXN2fiMzetM/noYEEE0kBAl+EzvNzY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=SoumYKRreG/py1h5mHUmmcf5MNhTA0IWVyuhwVtBQDsB3zjLeFZGYUpB8dmBQK885
-	 8zp8zOhWINTswvz/8Dpb4sCQeiaM8MeFzyXeYCejwMtQ6v6ZBfw76CXpeNeZINOkH+
-	 x4yAkEpkA6PhpBthZhWBkiZQBi3374fgQonGrnmw=
-Received: from [212.42.244.71] (helo=mail.avm.de)
-	by mail.avm.de with ESMTP (eXpurgate 4.55.2)
-	(envelope-from <phahn-oss@avm.de>)
-	id 69b006b1-2367-7f0000032729-7f000001ca68-1
-	for <multiple-recipients>; Tue, 10 Mar 2026 12:55:29 +0100
-Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
-	by mail.avm.de (Postfix) with ESMTPS;
-	Tue, 10 Mar 2026 12:55:29 +0100 (CET)
-From: Philipp Hahn <phahn-oss@avm.de>
-Date: Tue, 10 Mar 2026 12:49:27 +0100
-Subject: [PATCH 61/61] file: Drop unlikely() around IS_ERR_OR_NULL()
+	s=arc-20240116; t=1773143561; c=relaxed/simple;
+	bh=6LFCZqvL3posu43TLCQlBHu1tQWOrRwNMdOPAUK1Hsw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jbA/p5aMIgu9zh8ISQt93qTWnjRforI4LEakGz+S+ye1W8YUmNfe2WLpUwYnEneunTorOcQL5e9LvYxwX0iMruBoy97QwCIZryLomgFjEOpaUCo+/dB+bUMenFSgDyVRS6pve5qZ4hYKArg3gIcKUfoBddZyxqtZ/TFu5AsOygA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBKvcVRa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D50C7C2BC9E
+	for <linux-gpio@vger.kernel.org>; Tue, 10 Mar 2026 11:52:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773143560;
+	bh=6LFCZqvL3posu43TLCQlBHu1tQWOrRwNMdOPAUK1Hsw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=cBKvcVRaBVvVqwYxjm82tMvt+e/sck5zuD98LGFTHA4TVh60TbbpIuXQq/eaRtxuK
+	 H7EIfRF6MbiQSmFewaxaIolZIRG9ajLgQCX7cQb7VKJ77wDP6LKZyKpwVW4MUKrvvV
+	 DNcYD/5YCT7/FbcAE0oXeT1ZK1/161sqiEWjebst1RD12Ttq5S0AIod0IGeoskjmM4
+	 zC5Cn6BYsdG4LVvPUR2H2pmwLmAGNaeV6/fkX1q9N5+bX/75iqf/kfrL1drC9G1m7q
+	 UYTIFYNl1pojubFcY06EvyAcnWz2BTRNiio622ESheoQOB/YdkIjgcWM/vLdE8qJNW
+	 SRTBDDcrdA34A==
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-7982c3b7dfcso129768837b3.0
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Mar 2026 04:52:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUiVtbAKOWhA9Jxd2B7JRQCJqckrxIosIEuNeZrRapTebgxZJRNM5NLLjNUbvDHvyvT1D12U4yFUWwD@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZGMMQs6SUfQYuEmLrwTKv/C3M1y0/MfyrFDwp2DsMMRlK+xF0
+	jFzdc27oxecYPnONNC1hEXsMz6i9zF77t+BycxnOhi3UENNRxz0wP5ekDWk9qY3Takli7m8Chxo
+	Q6FIPMhs/FG4Rx5K2+o10bCkMM6jGevc=
+X-Received: by 2002:a05:690c:4c02:b0:798:99ae:765 with SMTP id
+ 00721157ae682-798dd788971mr134205317b3.46.1773143560187; Tue, 10 Mar 2026
+ 04:52:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260310-b4-is_err_or_null-v1-61-bd63b656022d@avm.de>
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
-In-Reply-To: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
-To: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com, 
- bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr, 
- dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org, 
- gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org, 
- intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev, 
- kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
- linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
- linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org, 
- linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org, 
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-leds@vger.kernel.org, linux-media@vger.kernel.org, 
- linux-mips@vger.kernel.org, linux-mm@kvack.org, 
- linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org, 
- linux-phy@lists.infradead.org, linux-pm@vger.kernel.org, 
- linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org, 
- linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org, 
- linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org, 
- linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
- linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
- ntfs3@lists.linux.dev, samba-technical@lists.samba.org, 
- sched-ext@lists.linux.dev, target-devel@vger.kernel.org, 
- tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev, 
- Philipp Hahn <phahn-oss@avm.de>
-Cc: Christian Brauner <brauner@kernel.org>, 
- Jeff Layton <jlayton@kernel.org>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1020; i=phahn-oss@avm.de;
- h=from:subject:message-id; bh=BZdZKAXpTi8WGNXN2fiMzetM/noYEEE0kBAl+EzvNzY=;
- b=owEBbQGS/pANAwAKATQtBlPRrKzbAcsmYgBpsAamjmr2YH1D6NIv4bWMOoOgSjqlNw1AkTnEk
- z4zblGz3BCJATMEAAEKAB0WIQQ5bPBtrWDUcDQCppg0LQZT0ays2wUCabAGpgAKCRA0LQZT0ays
- 24dkB/9I2IH2WVtNuAbc4pN8k/UWfzfn7IBk5SYldKbG4a3vAt2BCQOMLY6KBgHTT+SL+30NFE0
- eqhT72U09tRMvyWUaeodCCSJABvxL6Unq+gQWaX6/P1+X8+kVa/Fa0v8GHtiYqiopntbOsAjZBr
- sS0Bbptn0GuVsdoMNke4vQD0A9rA3xW5nWOgDpK1U8FjC9uaXfz1Bfzn2XQq/Me0fZtcNCJpNlZ
- qjNOLRSw3BZGb7IPqnUrcjHIuuNd6dYbs6wYHOgbyiibTqQrj6tp6SnoDxHnYU93V6GBh2lMfHt
- 9qSEynUbZNIYOnoqI2ah9KWLVKFkMsTrddsdp5JisL6z2WZS
-X-Developer-Key: i=phahn-oss@avm.de; a=openpgp;
- fpr=58AF7C2E007CDBE62C59E078F50EFDCF8AD04B1A
-X-purgate-ID: 149429::1773143729-96CB1E1F-80912B69/0/0
-X-purgate-type: clean
-X-purgate-size: 1022
-X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
-X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
-X-purgate: clean
-X-Rspamd-Queue-Id: C613C24F830
+References: <20260308021201.47820-1-rosenp@gmail.com> <CAMRc=MfGkVpk9rBLvwxndjveXemY6t7nWOBX9wqZxc+Qe7aOCg@mail.gmail.com>
+ <CAKxU2N8Zm6Hg-pr14RS9SCsOWGu2kF3gy4RVuQThMvM1CfLEtQ@mail.gmail.com>
+In-Reply-To: <CAKxU2N8Zm6Hg-pr14RS9SCsOWGu2kF3gy4RVuQThMvM1CfLEtQ@mail.gmail.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Tue, 10 Mar 2026 12:52:28 +0100
+X-Gmail-Original-Message-ID: <CAD++jLnD2Rgre+JD6VmtihW+JQ89hB-K4bd1dANWFmnCX8C2qg@mail.gmail.com>
+X-Gm-Features: AaiRm51FtdF84mkYV7pgCl2oDehSOxKmBTbBBGjzPZ_i8P-wOpN6m_HDfDiO0ic
+Message-ID: <CAD++jLnD2Rgre+JD6VmtihW+JQ89hB-K4bd1dANWFmnCX8C2qg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: ljca: reduce struct allocation
+To: Rosen Penev <rosenp@gmail.com>
+Cc: Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
+	Lixu Zhang <lixu.zhang@intel.com>, linux-hardening@vger.kernel.org, 
+	gustavoars@kernel.org, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 06F0B24BBED
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[avm.de,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[avm.de:s=mail];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[avm.de:+];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32921-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32981-lists,linux-gpio=lfdr.de];
 	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[phahn-oss@avm.de,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCPT_COUNT_GT_50(0.00)[56];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[avm.de:dkim,avm.de:email,avm.de:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,mail.gmail.com:mid]
 X-Rspamd-Action: no action
 
-IS_ERR_OR_NULL() already uses likely(!ptr) internally. checkpatch does
-not like nesting it:
-> WARNING: nested (un)?likely() calls, IS_ERR_OR_NULL already uses
-> unlikely() internally
-Remove the explicit use of unlikely().
+On Mon, Mar 9, 2026 at 10:48=E2=80=AFPM Rosen Penev <rosenp@gmail.com> wrot=
+e:
 
-Change generated with coccinelle.
+> > > +       u8 connect_mode[];
+> >
+> > Please use __counted_by().
+> Counted by what?
+>
+> __counted_by(gpio_info->num); does not work.
 
-To: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
----
- include/linux/file.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+As with the other patch (IIRC) just add a new member to the struct
+to hold the count.
 
-diff --git a/include/linux/file.h b/include/linux/file.h
-index 27484b444d3155685cdbb89f546f26ef66e3e1b4..007b9b9d365a052c1c056e12571eaf4f8ef5a45c 100644
---- a/include/linux/file.h
-+++ b/include/linux/file.h
-@@ -163,7 +163,7 @@ static inline void class_fd_prepare_destructor(const struct fd_prepare *fdf)
- {
- 	if (unlikely(fdf->__fd >= 0))
- 		put_unused_fd(fdf->__fd);
--	if (unlikely(!IS_ERR_OR_NULL(fdf->__file)))
-+	if (!IS_ERR_OR_NULL(fdf->__file))
- 		fput(fdf->__file);
- }
- 
-
--- 
-2.43.0
-
+Yours,
+Linus Walleij
 
