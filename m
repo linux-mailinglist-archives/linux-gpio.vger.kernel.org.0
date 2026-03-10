@@ -1,142 +1,149 @@
-Return-Path: <linux-gpio+bounces-32991-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32992-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aHyWFnwZsGlAfwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-32991-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 14:15:40 +0100
+	id 2JeDIMIksGk/ggIAu9opvQ
+	(envelope-from <linux-gpio+bounces-32992-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 15:03:46 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2D3C24FD33
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 14:15:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FDE925143D
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 15:03:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 3D02531A66DD
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 13:08:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0080133281A6
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 13:09:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 795623E1CE7;
-	Tue, 10 Mar 2026 12:44:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D4763E317A;
+	Tue, 10 Mar 2026 12:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kcuIkrw1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE3D3E0254
-	for <linux-gpio@vger.kernel.org>; Tue, 10 Mar 2026 12:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6341E38AC82;
+	Tue, 10 Mar 2026 12:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773146659; cv=none; b=KbD1UuP+s/lO4B3F73Rs6abg2pA8FYd0XndA8SwqgH40AaY5Ts1w44fAcPxSWOMHRQS1fe6GU9tJZShKovntUTA9+dQuV1EjI5IEpxX2o/aCTZOjyAjT0vXvybc9kgExQidns5YbKl4or/qOof5a9OqCQd1c7aaZyERr5wZTh8E=
+	t=1773146706; cv=none; b=GpyxX3DBeYww6QPXgwDvbZgt1aB5uAdJ7EeKbaIVqUCQ+nx5FPcJzoLQxYEUuPiTOUaIX7Wpw6mXxbO8BSv00qJEBFtQr0pJf2NlGurr7UFA59fT1j5GKz/OXrFrnIOaCQ7L0EwLnHySd/5wq19zfN8AInA6Nig2yzFf1NdQVts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773146659; c=relaxed/simple;
-	bh=9nwSoyBFb/J+scDlmZ8YZ+1mFs6NH+0TsiNWJNlzMqA=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SG+LCPTZmwCW1YQAkbzre1LQ7lmZK4Rajni9MFCrP8rbqbaCj5Dep/geUUivzXvZm9IwgyXOZf+b8lfnqOl1NG816cp8+5lSNEe+5MMRcKLz1FYc5gTRyidrFwIJ1YpT9PJqCouxjMrkQq2IAfR/WcXI4NeuSJ+F9qhYThdjFF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vzwQv-0006Oq-0m; Tue, 10 Mar 2026 13:43:33 +0100
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vzwQr-004hMj-0z;
-	Tue, 10 Mar 2026 13:43:30 +0100
-Received: from pza by lupine with local (Exim 4.98.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1vzwQs-0000000081v-2556;
-	Tue, 10 Mar 2026 13:43:30 +0100
-Message-ID: <ddaacda48df23fb2c009a8727518300ed2b82cb2.camel@pengutronix.de>
-Subject: Re: [PATCH 57/61] reset: Prefer IS_ERR_OR_NULL over manual NULL
- check
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Philipp Hahn <phahn-oss@avm.de>, amd-gfx@lists.freedesktop.org, 
-	apparmor@lists.ubuntu.com, bpf@vger.kernel.org, ceph-devel@vger.kernel.org,
- 	cocci@inria.fr, dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
- 	gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org, 
-	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
- kvm@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org,
- linux-block@vger.kernel.org, 	linux-bluetooth@vger.kernel.org,
- linux-btrfs@vger.kernel.org, 	linux-cifs@vger.kernel.org,
- linux-clk@vger.kernel.org, 	linux-erofs@lists.ozlabs.org,
- linux-ext4@vger.kernel.org, 	linux-fsdevel@vger.kernel.org,
- linux-gpio@vger.kernel.org, 	linux-hyperv@vger.kernel.org,
- linux-input@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, 	linux-media@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
- ntfs3@lists.linux.dev, 	samba-technical@lists.samba.org,
- sched-ext@lists.linux.dev, 	target-devel@vger.kernel.org,
- tipc-discussion@lists.sourceforge.net, 	v9fs@lists.linux.dev
-Date: Tue, 10 Mar 2026 13:43:30 +0100
-In-Reply-To: <20260310-b4-is_err_or_null-v1-57-bd63b656022d@avm.de>
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
-	 <20260310-b4-is_err_or_null-v1-57-bd63b656022d@avm.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-0+deb13u1 
+	s=arc-20240116; t=1773146706; c=relaxed/simple;
+	bh=V/tjGRK2XwfIHYXozIh+ONiswzwZY6ml6Vm7sXIhbeo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LVO+Ia8EDa7N0p1qZ2K9cQm/1A2EMbk4LP0/QXkLdKS5eaU37kAVxQPx1Mv+zx+f2rqz5QC2wZmRlpZaAaYiQw7ZxJ161Thm+ajMHlcJ3dD1SdgqFc8gc8uMCA+MhoGJQv0Cc7xxSOn+r24MnREsMGAa70Wo8lViHhEdPXwBQc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kcuIkrw1; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773146705; x=1804682705;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=V/tjGRK2XwfIHYXozIh+ONiswzwZY6ml6Vm7sXIhbeo=;
+  b=kcuIkrw1WfI0flgj/1R7UirbthJUklHEdk/uFwpS2tJrwKQ0IlA3CfMa
+   GBnMa2V68ViOY8vCgCALS1wGHiLxUPgt+gab/IsPCUhdctrDC93aMjvno
+   R5vc/aj72cQJxn0JUC4Gg7STmXNSnhf5/SgA3E/GA4QYzJl6Du/smpFM+
+   RxvTp+GmcaKCzjawf8xWq7JMPGr9W65QFcG5yZdfx11iDtD7vRlBvdMSX
+   /FS9xwHqt+0cjYBaOuqS7TPyCap7AnyfVQuE7XcIMOTcWLIxUpzbzcCgI
+   h41XpzndT06X9HvkeLB9V6NXjsXvXYvquEVIJql/xXAI8Q2ySx77eY20r
+   A==;
+X-CSE-ConnectionGUID: MddQbK+ETqqQ1fbSyimYaQ==
+X-CSE-MsgGUID: j6JxUlgUT5ijx9o2E3SKRw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11724"; a="74268916"
+X-IronPort-AV: E=Sophos;i="6.23,112,1770624000"; 
+   d="scan'208";a="74268916"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 05:45:05 -0700
+X-CSE-ConnectionGUID: 3leC/Ll2SQSy2JT5fYwCwA==
+X-CSE-MsgGUID: WrAGrw+MTrSMqSyhrAl+6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,112,1770624000"; 
+   d="scan'208";a="225040186"
+Received: from kniemiec-mobl1.ger.corp.intel.com (HELO alaakso-DESK.kioski) ([10.245.246.41])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2026 05:44:59 -0700
+From: Antti Laakso <antti.laakso@linux.intel.com>
+To: linux-media@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linusw@kernel.org,
+	brgl@kernel.org,
+	sakari.ailus@linux.intel.com,
+	mchehab@kernel.org,
+	dan.scally@ideasonboard.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	hverkuil+cisco@kernel.org,
+	sre@kernel.org,
+	hao.yao@intel.com,
+	jason.z.chen@intel.com,
+	jimmy.su@intel.com,
+	miguel.vadillo@intel.com,
+	kees@kernel.org,
+	ribalda@chromium.org
+Subject: [PATCH 0/5] platform: int3472: Add MSI prestige 14 AI EVO data
+Date: Tue, 10 Mar 2026 14:44:22 +0200
+Message-ID: <20260310124427.693625-1-antti.laakso@linux.intel.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Rspamd-Queue-Id: F2D3C24FD33
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 2FDE925143D
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.04 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-32992-lists,linux-gpio=lfdr.de];
+	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32991-lists,linux-gpio=lfdr.de];
-	DMARC_NA(0.00)[pengutronix.de];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[antti.laakso@linux.intel.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio,cisco];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[p.zabel@pengutronix.de,linux-gpio@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	NEURAL_HAM(-0.00)[-0.733];
-	RCPT_COUNT_GT_50(0.00)[54];
-	R_DKIM_NA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,pengutronix.de:mid]
+	RCPT_COUNT_TWELVE(0.00)[18];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,linux.intel.com:mid,intel.com:dkim]
 X-Rspamd-Action: no action
 
-Hi Philipp,
+This adds camera support for the MSI Prestige 14 AI EVO laptop, which uses
+a TPS68470 PMIC to power an OV5675 sensor.
 
-On Di, 2026-03-10 at 12:49 +0100, Philipp Hahn wrote:
-> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
-> check.
->
-> Semantich change: Previously the code only printed the warning on error,
-> but not when the pointer was NULL. Now the warning is printed in both
-> cases!
+If ok, including a GPIO patch to this series. The GPIO patch enables the
+TPS68470's I2C daisy chain functionality.
 
-No, rstc =3D=3D NULL is valid (for optional reset controls) and must not
-throw a warning.
+Antti Laakso (5):
+  media: i2c: ov5675: Wait for endpoint
+  media:ipu-bridge: Add ov5675 sensor
+  platform: int3472: Add gpio platform data
+  gpio: tps68470: Add i2c daisy chain support
+  platform: int3472: Add MSI prestige board data
 
+ drivers/gpio/gpio-tps68470.c                  | 23 ++++-
+ drivers/media/i2c/ov5675.c                    | 16 ++-
+ drivers/media/pci/intel/ipu-bridge.c          |  2 +
+ drivers/platform/x86/intel/int3472/tps68470.c |  2 +
+ drivers/platform/x86/intel/int3472/tps68470.h |  1 +
+ .../x86/intel/int3472/tps68470_board_data.c   | 97 +++++++++++++++++++
+ include/linux/platform_data/tps68470.h        |  4 +
+ 7 files changed, 135 insertions(+), 10 deletions(-)
 
-regards
-Philipp
+-- 
+2.53.0
+
 
