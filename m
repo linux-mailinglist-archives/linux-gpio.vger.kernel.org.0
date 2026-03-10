@@ -1,183 +1,232 @@
-Return-Path: <linux-gpio+bounces-32878-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32879-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +DghCMq3r2mKbwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-32878-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 07:18:50 +0100
+	id qAsqLLDOr2lkcgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-32879-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 08:56:32 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CD68245C80
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 07:18:49 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E55F246BD8
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 08:56:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DD274303B165
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 06:18:39 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0CB38305ACA3
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 07:56:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE0152E285C;
-	Tue, 10 Mar 2026 06:18:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6BC3364EBA;
+	Tue, 10 Mar 2026 07:56:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UAgVhH6+"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="grFET2Q/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A78F31D726
-	for <linux-gpio@vger.kernel.org>; Tue, 10 Mar 2026 06:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF72364E86
+	for <linux-gpio@vger.kernel.org>; Tue, 10 Mar 2026 07:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773123518; cv=none; b=PjcfVbZa7zmtf+LjqE9ZOSMkX7xzcQVOemAI81x46btXw8Yvik0Ag6Suhtr4RAVS2eMTXQa+61H79xZpn6+Hzqf1hxtT5WHLW3xJuCgixb/b6f78GXUo+k2fwF+wQY13OgCiVXqBgxlu/8FjtndhQdU/QHYgp0iq6LRAhi3iKNQ=
+	t=1773129363; cv=none; b=DRuTkX4Lz0NpV6bQrjlXxy7/RFVHkw1YftLw9JO4BAwNoAT4lvrN6SaRjESJdBYrUxCG3g+rj6J7kh2/Ar+xG7Zkk1yflcPKCjW70C0f9K6wigZp0upfkxshuuA1bFw4XDU9nLz3IWChNRkze0CX3P8fhLKiXsEvfxDSPZchf5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773123518; c=relaxed/simple;
-	bh=VlgOLU/SAL8F0zd+At1U9RW8a1ngZacbFmBgI40qeF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BMjaph/JkMmd11d3Q02Cv2yjjruTrmmt36JMS6z6gFqH3wm88URfuBuA81meymmXJPM4y/gnr57IDIDaJq72VSxKrFQdfFRKxWN2Db3goA5L1hYkfIBrS41lZ1LSeqSybEdEv4HvrvM2nlNtZtHD6BI6hDRgnEbsg67uK45rvB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UAgVhH6+; arc=none smtp.client-ip=74.125.82.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-2b4520f6b32so15017887eec.0
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Mar 2026 23:18:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773123517; x=1773728317; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jjtQZnmo8Gwc+dKRjcrzPdJaL+KCrJVCb46smQt/ILU=;
-        b=UAgVhH6+2GarzBsrOc8PA8/PZu7drUyKWT3wijPecI1XHM9hH1Y9DP+kZKSke2LnMC
-         yY1yOHcX4mlkHHfZEobjK5g+6QLVV4fqkpq4OxlP9ti1Yj9sPeJ4i2Xoa1uatL/kG9he
-         eci7vzkhykTu/G8yCkPzEiOFITJttNWAMy0qcbIF4Uo/cY0NfGvg4GfYmfiiY9rLvBO2
-         K8faDuKDsoHAdhbHDFECN3hvynrSTx9Nn5gMCP6MSj11uK0xkZUPexJlTbRJtPGqm42K
-         bg2aDyxPx/NEYTfdYowe97fd6BijtxcrhuwA1vhOxhBCDWVG/Cuu7Q+Q6KnXpPixhHVI
-         f5jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773123517; x=1773728317;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jjtQZnmo8Gwc+dKRjcrzPdJaL+KCrJVCb46smQt/ILU=;
-        b=chxo2wd/EbmqtdfQMYjkBYfUQINAauWPaGdikCvmfIru/6UholiU+/qnT1olcfHweo
-         klPJLfkPryUQAABuJx5AEBrka1htKKcc+bTcAnvMkMdJ0Zpabh5WJQ+e7L+2IWbA9RN8
-         ckzR6bWV2DckV0z/3N/sWxX5T3fttIz5J7DAUpRK3XtH4O0CZ3KCld+NVPItqMH18+Po
-         H1VWso/5r52vrx4cHh/d86a9Ir78DMnNH2KoUgP49ZpDPHhwq88g1vRCkPTb/7WxHwe8
-         gmh7ao4qRpkDUqynfbSqjzFoXDZcDB3hpYpAUql0qLm8Xa9+yDTh2rC7dQSBIdKfzwCf
-         4J7w==
-X-Forwarded-Encrypted: i=1; AJvYcCXpfvUxKis+ZJn+sarLThZ3javgYgaJKk95amovriE79Wi+E7N7+sQV5MRlf5fzDYB5Z6efB4zOL5df@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw90jMQajBmmRyBy+wi1WBRX4fF2s20DwQGnqvxLVvemxgLWMVP
-	QpuihR5I53mgHaDIwERfbDvgkTQudHuTLhtAbkfQouWjKujMc28QjhEs
-X-Gm-Gg: ATEYQzwZTVT7iY8hnR4uAY0dnRdbc+ussjgVgBqQy3dbmo1ih9kjLzBhTdH4r7klFlx
-	ZYQfXINuLjcZM6ihlNuK46kVbNYkUhggT/C/ur7x+RfjJ/8dp2FBK/jYpV643v0RCFfPJQOR2B8
-	ThRWcZTj1BgvAFuigX5VMOpOrO7xNKATBuUoQOqQzuHwytQZ+JXgPYtGcERjKDHj3LaQhK8VKUC
-	7i+jAhCGC6zaME++EF5CeUDfNPGROjSPmnsIaeotP3wtPrPXdg0hSj2LD6sY98fTdZdJ7ZIhe2F
-	CDog94nAur98hO24MI4iqTzfSi3biL2wkHbaqUupE3iOPV4z4QKTl5IeYkrPTJyBrKdeb0aykCF
-	zzhWl3ZFJfsoyWBecj2OcZZJ9VYBR4P7R9at85t659HOShwZ0M4sfvN3MMqSbach4QhSIVOvs1l
-	fR4JNW4Ac2KD22StV5ms9LpIzNoVno++nku56PreEwe91zz/D9o6DE+zn+wYeSoW/qv4YWJcaU3
-	ao=
-X-Received: by 2002:a05:7300:1489:b0:2b8:6ae5:79c3 with SMTP id 5a478bee46e88-2be4e090105mr5356857eec.38.1773123516637;
-        Mon, 09 Mar 2026 23:18:36 -0700 (PDT)
-Received: from google.com ([2a00:79e0:2ebe:8:2a0a:17c2:21e7:dcfb])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2be4f984cf5sm13202342eec.33.2026.03.09.23.18.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2026 23:18:35 -0700 (PDT)
-Date: Mon, 9 Mar 2026 23:18:33 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Santosh Kumar Yadav <santoshkumar.yadav@barco.com>, 
-	Peter Korsgaard <peter.korsgaard@barco.com>, Hans de Goede <hansg@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: barco-p50-gpio: normalize return value of
- gpio_get
-Message-ID: <aa-3e_Wjh5J5XFi3@google.com>
-References: <aZYn_xDxBXn_Ijem@google.com>
- <5d561d59-1691-fcd0-868c-fc44db1dac92@linux.intel.com>
+	s=arc-20240116; t=1773129363; c=relaxed/simple;
+	bh=FMS4BVUajKAUxKcjzcddBgaLVt+yOxMuuGFj9UUkSaM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h61hy4QoPb/j0Kbgzr0TZkk0CHAZE3nV5MXCtFM4opygcodGu2D5ZGU8scWjXVBFk1Vh7ql6c/oyxoJFBYnGF4y+E7poVomca/RxR2iwiFjy83tXrFyAgeF6o1dT44dJBFHO/iFpxpeK+d2HIYLkHk0PDu8512tWP2uUFrtu7Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=grFET2Q/; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:mime-version:content-transfer-encoding; s=k1; bh=/a0tRwE4WB1N7m
+	bM38o7pQ2y610kAMXzD8AqisAnlgU=; b=grFET2Q/L5BDbD2xTndWCxfWXxtyl2
+	MrNW6Nu3qAN1EmBl/MYyb9CKwe54CLj7IvlqLMC5IMLgb11+UnMtwsIpNOpeZHWa
+	GVPU+ybqbKsVtIcDblhf8AAmfEvK69zbgwZTCdiSqJFfuZQ3G9lnG2U3m4tzAMVJ
+	QnwiFLc/jqMR9GpmUHV3igEQ4pjuUCRsM0Hm2OZQ1Li9cwvsXq2py2+kvdhFHYP2
+	jC6TKSVnNybFyfIppa6NtLkCKTYZrYUqHsFkz7SYD5URwCS66vb5yN0vG/p3qKDq
+	87t1xNh8zF1QjL/xdXPPlibUyKgxw31YNVsxPQuxV575FpunGlhflHgw==
+Received: (qmail 3112474 invoked from network); 10 Mar 2026 08:55:47 +0100
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 10 Mar 2026 08:55:47 +0100
+X-UD-Smtp-Session: l3s3148p1@UTnb2KZMmJAujntP
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-renesas-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Antonio Borneo <antonio.borneo@foss.st.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Boqun Feng <boqun@kernel.org>,
+	Chen-Yu Tsai <wens@kernel.org>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	driver-core@lists.linux.dev,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-omap@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org,
+	linux-spi@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-sunxi@lists.linux.dev,
+	Mark Brown <broonie@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Samuel Holland <samuel@sholland.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Wilken Gottwalt <wilken.gottwalt@posteo.net>,
+	Will Deacon <will@kernel.org>
+Subject: [PATCH v4 00/15] hwspinlock: move device alloc into core and refactor includes
+Date: Tue, 10 Mar 2026 08:55:15 +0100
+Message-ID: <20260310075539.11701-1-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5d561d59-1691-fcd0-868c-fc44db1dac92@linux.intel.com>
-X-Rspamd-Queue-Id: 8CD68245C80
+X-Rspamd-Queue-Id: 3E55F246BD8
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[sang-engineering.com:s=k1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-32878-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32879-lists,linux-gpio=lfdr.de,renesas];
+	DMARC_NA(0.00)[sang-engineering.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[46];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[vger.kernel.org,sang-engineering.com,foss.st.com,kernel.org,arndb.de,linux.alibaba.com,gmail.com,baylibre.com,lists.linux.dev,linuxfoundation.org,redhat.com,lwn.net,lists.infradead.org,st-md-mailman.stormreply.com,analog.com,infradead.org,sholland.org,posteo.net];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dmitrytorokhov@gmail.com,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[wsa@sang-engineering.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[sang-engineering.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sang-engineering.com:dkim,sang-engineering.com:mid]
 X-Rspamd-Action: no action
 
-On Mon, Feb 23, 2026 at 04:11:10PM +0200, Ilpo Järvinen wrote:
-> On Wed, 18 Feb 2026, Dmitry Torokhov wrote:
-> 
-> > The GPIO get callback is expected to return 0 or 1 (or a negative error
-> > code). Ensure that the value returned by p50_gpio_get() is normalized
-> > to the [0, 1] range.
-> > 
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > ---
-> >  drivers/platform/x86/barco-p50-gpio.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/platform/x86/barco-p50-gpio.c b/drivers/platform/x86/barco-p50-gpio.c
-> > index 6f13e81f98fb..360ffd8505d6 100644
-> > --- a/drivers/platform/x86/barco-p50-gpio.c
-> > +++ b/drivers/platform/x86/barco-p50-gpio.c
-> > @@ -275,8 +275,11 @@ static int p50_gpio_get(struct gpio_chip *gc, unsigned int offset)
-> >  	mutex_lock(&p50->lock);
-> >  
-> >  	ret = p50_send_mbox_cmd(p50, P50_MBOX_CMD_READ_GPIO, gpio_params[offset], 0);
-> > -	if (ret == 0)
-> > +	if (ret == 0) {
-> >  		ret = p50_read_mbox_reg(p50, P50_MBOX_REG_DATA);
-> > +		if (ret >= 0)
-> > +			ret = !!ret;
-> > +	}
-> >  
-> >  	mutex_unlock(&p50->lock);
-> 
-> A simpler flow would be preferrable over all that nesting. Is this 
-> logically correct:
-> 
-> 	guard(mutex)(p50->lock);
-> 	ret = p50_send_mbox_cmd(p50, P50_MBOX_CMD_READ_GPIO, gpio_params[offset], 0);
-> 	if (ret < 0)
-> 		return ret;
-> 
-> 	ret = p50_read_mbox_reg(p50, P50_MBOX_REG_DATA);
-> 	if (ret < 0)
-> 		return ret;
-> 
-> 	return !!ret;
+Changes since v3:
 
-Yes, but I wanted to minimize the amount of change. Maybe I should send
-a followup patch converting to guard()?
+* removed useless __iomem annotations (Thanks, sparse + buildbots)
+  So, the newly introduced callback only operates on void* and doesn't
+  use __iomem annotations now. Note that most of the drivers will still
+  trigger a sparse warning because they use an __iomem pointer in
+  .con_priv. But they also did so before this series, so it keeps
+  current behaviour. Fixing these sparse warnings should be done
+  independently IMO.
+* rebased to 7.0-rc3
+* added tags (Thanks!)
 
-Thanks.
+My ultimate goal is to allow hwspinlock provider drivers outside of the
+subsystem directory. It turned out that a simple split of the headers
+files into a public provider and a public consumer header file is not
+enough because core internal structures need to stay hidden. Even more,
+their opaqueness could and should even be increased. That would also
+allow the core to handle the de-/allocation of the hwspinlock device
+itself.
+
+This series does all that. Patches 1-2 remove the meanwhile unused
+platform_data to ease further refactoring. Patches 3-9 abstract access
+to internal structures away using helpers. Patch 10 then moves
+hwspinlock device handling to the core, simplifying drivers. The
+remaining patches refactor the headers until the internal one is gone
+and the public ones are divided into provider and consumer parts. More
+details are given in the patch descriptions.
+
+One note about using a callback to initialize hwspinlock priv: I also
+experimented with a dedicated 'set_priv' helper function. It felt a bit
+clumsy to me. Drivers would need to save the 'bank' pointer again and
+iterate over it. Because most drivers will only have a simple callback
+anyhow, it looked leaner to me.
+
+This series has been tested on a Renesas SparrowHawk board (R-Car V4H)
+with a yet-to-be-upstreamed hwspinlock driver for the MFIS IP core. A
+branch can be found here (without the MFIS driver currently):
+
+git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/hwspinlock/refactor-alloc-buildtest
+
+Happy hacking,
+
+   Wolfram
+
+
+Wolfram Sang (15):
+  hwspinlock: u8500: delete driver
+  hwspinlock: remove now unused pdata from header file
+  hwspinlock: add helpers to retrieve core data
+  hwspinlock: add callback to fill private data of a hwspinlock
+  hwspinlock: omap: use new callback to initialize hwspinlock priv
+  hwspinlock: qcom: use new callback to initialize hwspinlock priv
+  hwspinlock: sprd: use new callback to initialize hwspinlock priv
+  hwspinlock: stm32: use new callback to initialize hwspinlock priv
+  hwspinlock: sun6i: use new callback to initialize hwspinlock priv
+  hwspinlock: handle hwspinlock device allocation in the core
+  hwspinlock: move entries from internal to public header
+  hwspinlock: remove internal header
+  hwspinlock: sort include and update copyright
+  hwspinlock: refactor provider.h from public header
+  hwspinlock/treewide: refactor consumer.h from public header
+
+ Documentation/locking/hwspinlock.rst          |   2 +-
+ MAINTAINERS                                   |   3 +-
+ drivers/base/regmap/regmap.c                  |   2 +-
+ drivers/hwspinlock/Kconfig                    |  10 --
+ drivers/hwspinlock/Makefile                   |   1 -
+ drivers/hwspinlock/hwspinlock_core.c          | 129 +++++++++++----
+ drivers/hwspinlock/hwspinlock_internal.h      |  72 --------
+ drivers/hwspinlock/omap_hwspinlock.c          |  27 ++-
+ drivers/hwspinlock/qcom_hwspinlock.c          |  69 ++++----
+ drivers/hwspinlock/sprd_hwspinlock.c          |  39 ++---
+ drivers/hwspinlock/stm32_hwspinlock.c         |  26 +--
+ drivers/hwspinlock/sun6i_hwspinlock.c         |  36 ++--
+ drivers/hwspinlock/u8500_hsem.c               | 155 ------------------
+ drivers/iio/adc/sc27xx_adc.c                  |   2 +-
+ drivers/irqchip/irq-stm32mp-exti.c            |   2 +-
+ drivers/mfd/syscon.c                          |   2 +-
+ drivers/nvmem/sc27xx-efuse.c                  |   2 +-
+ drivers/nvmem/sprd-efuse.c                    |   2 +-
+ drivers/pinctrl/stm32/pinctrl-stm32.c         |   2 +-
+ drivers/soc/qcom/smem.c                       |   2 +-
+ drivers/spi/spi-sprd-adi.c                    |   2 +-
+ .../{hwspinlock.h => hwspinlock/consumer.h}   |  57 +------
+ include/linux/hwspinlock/provider.h           |  60 +++++++
+ 23 files changed, 260 insertions(+), 444 deletions(-)
+ delete mode 100644 drivers/hwspinlock/hwspinlock_internal.h
+ delete mode 100644 drivers/hwspinlock/u8500_hsem.c
+ rename include/linux/{hwspinlock.h => hwspinlock/consumer.h} (87%)
+ create mode 100644 include/linux/hwspinlock/provider.h
 
 -- 
-Dmitry
+2.47.3
+
 
