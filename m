@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-32952-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-32939-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GM7XAFEMsGl4ewIAu9opvQ
-	(envelope-from <linux-gpio+bounces-32952-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 13:19:29 +0100
+	id 8KhqLmgQsGlxfAIAu9opvQ
+	(envelope-from <linux-gpio+bounces-32939-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 13:36:56 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABF5924D364
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 13:19:28 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7D6A24E315
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 13:36:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E2E96312FC34
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 12:13:18 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7DF5C303AB4D
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 12:08:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5070B3BF682;
-	Tue, 10 Mar 2026 11:56:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0106A3A6B97;
+	Tue, 10 Mar 2026 11:56:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="QeZmxS4Y"
+	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="dw1nuFFW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.avm.de (mail.avm.de [212.42.244.119])
+Received: from mail.avm.de (mail.avm.de [212.42.244.94])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD0048A2BE;
-	Tue, 10 Mar 2026 11:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711A3478E55;
+	Tue, 10 Mar 2026 11:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773143759; cv=none; b=QUkIwche64xqrDUe1yGvHUZYZ0k9xf5O6S2J8vGd1sDmRj9STP5dvFRMFkcxDrV08ZopqZVLJul3w8Hk/f77mfAaXRP0UshCP3wKN2jHpMj6y/I5aO/2WplheWmH3wDs7h5ou42uzjOQLfGKy8dH58QyDaOf4SlQJcLQbnOoABk=
+	t=1773143755; cv=none; b=CHN5mTXzjWK8beXo8LM3vdPhMQqklpmlJ13cOYHgQbfzFXF7PODDUjIw2HMhO6lFCRsKJaIOgrZzn0Rgbw9+zo3armWOie6nwScVD4+8jnynTJ2Cb9xyw6AIyKW/2w13ituLxphg6XbLXxj122Hw58xLGsmC4U42xvwQinpuIiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773143759; c=relaxed/simple;
-	bh=w6c4PA3VGZ44yyLt8mghr+WTJ9TxkFa/GQpFHp0jaRg=;
+	s=arc-20240116; t=1773143755; c=relaxed/simple;
+	bh=ObADPYZ6pJh7dF4ZtW/umhCREHwhUDWMyq9N6rBcVwQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IyAUM1y9FdBccfCk153rUGJ/DdtIyXIAsl5Up361VoTZBnG1Dg2dJ8Z59kqwTb4441ob+DdiR4/Vab2RHRsm3Z+HJmM9BKs+ed7iMwzXXtMjH2TxeKGeH3qZb8WcOZQ91cczkk6xobExAzDfqO91hUtfhl4ZKgjeFGJtPq8VJZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=QeZmxS4Y; arc=none smtp.client-ip=212.42.244.119
+	 In-Reply-To:To:Cc; b=Jj7ks/TRHDMxqqKeuaNsanlGxqX7GrmejISKr6O0vcrZcNW1rG5pQlkIm+3AneAEeIMl25t9XpLwAvNVBiceV783RTnMXE/KCe4VgVAJpuaqZpBy9IzL5Q3QW8E1eW/GmQ11awUbF0pwFFL/kyi7xDmeM40w4XOMqxgDSZmYnh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=dw1nuFFW; arc=none smtp.client-ip=212.42.244.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-	t=1773143726; bh=w6c4PA3VGZ44yyLt8mghr+WTJ9TxkFa/GQpFHp0jaRg=;
+	t=1773143726; bh=ObADPYZ6pJh7dF4ZtW/umhCREHwhUDWMyq9N6rBcVwQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=QeZmxS4Y9ZxzJ1P+c7PyBalRHGdguYBtzjQZ1WHuqnNfndJHBOWadzXneNpIO/Cpe
-	 WtbDE01JXbjsGwDZW/SJl+0F8SgXDtITpS9jrWOZKuA2MxhvXL4esHAjK0cxyNxT8g
-	 cX9nlCS2vI2XLhpV0lZEIvKvUcBSNRY+QxXEviZg=
-Received: from [212.42.244.71] (helo=mail.avm.de)
+	b=dw1nuFFWpVVdrKOfBC8Dj4wKZMjU9ddsg9cir5xT91Je3Qc4zdD9Tv9d84zEGU77U
+	 bneXu7o4d3sJr/YNLcP9VRF/8FE25ShEW6LPrPIHkFN36JlEXF0VOvnj++ND2duaOC
+	 CYWW988mCr9Su8D1d7S5dskAeFMN3TEqL7EVGhxg=
+Received: from [2001:bf0:244:244::71] (helo=mail.avm.de)
 	by mail.avm.de with ESMTP (eXpurgate 4.55.2)
 	(envelope-from <phahn-oss@avm.de>)
-	id 69b006ad-2367-7f0000032729-7f0000019da4-1
+	id 69b006ad-e21d-7f0000032729-7f000001da1a-1
 	for <multiple-recipients>; Tue, 10 Mar 2026 12:55:25 +0100
-Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
+Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [IPv6:2001:bf0:244:244::71])
 	by mail.avm.de (Postfix) with ESMTPS;
 	Tue, 10 Mar 2026 12:55:25 +0100 (CET)
 From: Philipp Hahn <phahn-oss@avm.de>
-Date: Tue, 10 Mar 2026 12:48:56 +0100
-Subject: [PATCH 30/61] net/sunrpc: Prefer IS_ERR_OR_NULL over manual NULL
+Date: Tue, 10 Mar 2026 12:48:57 +0100
+Subject: [PATCH 31/61] net/tipc: Prefer IS_ERR_OR_NULL over manual NULL
  check
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260310-b4-is_err_or_null-v1-30-bd63b656022d@avm.de>
+Message-Id: <20260310-b4-is_err_or_null-v1-31-bd63b656022d@avm.de>
 References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
 In-Reply-To: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
 To: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com, 
@@ -90,37 +90,33 @@ To: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com,
  sched-ext@lists.linux.dev, target-devel@vger.kernel.org, 
  tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev, 
  Philipp Hahn <phahn-oss@avm.de>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2551; i=phahn-oss@avm.de;
- h=from:subject:message-id; bh=w6c4PA3VGZ44yyLt8mghr+WTJ9TxkFa/GQpFHp0jaRg=;
- b=owEBbQGS/pANAwAKATQtBlPRrKzbAcsmYgBpsAY7O6x5f/jrEOlM2kM2YjYC7Xq22wW3Mikry
- 9AY9ISieLCJATMEAAEKAB0WIQQ5bPBtrWDUcDQCppg0LQZT0ays2wUCabAGOwAKCRA0LQZT0ays
- 24W7CACaVIegavbFPh1+6gPSjqv5T1Ou5hQU0OcaZ20nx5fdOimad+jK3UuGfZrC9Vgv0QMm0ym
- 3OSuSluEWbuIv6zcFp3UbdEj9aI7TM7en4Ha7pCkmDfNfPts09fhhi9VrPo390VGOMeNWeVMtD/
- CQde1U2q7DKI3QtGXyjY9I//uCPpAfeRw/e0X1QSKZ9eOdV+c4uWgQhNCPrPJZrHvycJx2lFn3Q
- ZNRGEplISNXY/bb/iuclRgqFYvGWnoUgBYQkpTrGJqDvFREwT8LcHN3+0nwKoz0xIqQbO7gBWgt
- +Dgbc3vk23keeP8aHFv6AZ7K16GCQyMm+zwDBr92eUq+pHvN
+Cc: Jon Maloy <jmaloy@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1121; i=phahn-oss@avm.de;
+ h=from:subject:message-id; bh=ObADPYZ6pJh7dF4ZtW/umhCREHwhUDWMyq9N6rBcVwQ=;
+ b=owEBbQGS/pANAwAKATQtBlPRrKzbAcsmYgBpsAY/UcXAwJovG6A4nB7YjchfS8dWMTKJR/2Zu
+ MZwvRUzfSuJATMEAAEKAB0WIQQ5bPBtrWDUcDQCppg0LQZT0ays2wUCabAGPwAKCRA0LQZT0ays
+ 2xl9CAC38JfIZK13/o0jdZIM8Gu3hUV57MgGCpPmPgAkgZQzEtBGs2FDO8Fx54b796heUI6C17z
+ ZbGY2wRKWGjXSBCngfD+Y2a/1jCSzGEuQ4jVEtxbgFKGiVGPc8zPo3j7RIqGt+XkDfXhUJV/WGs
+ +J2xRVA9B3RKAYgO58tDVBDDKVuZmX4cu+ETIaOpu3+o52epJyZqzezdrVwvwMz+c005iQpPVgY
+ LKvEVu+vfw1C/S2Bm6+j0K7soEoH7Q1wM0z8TR821F0SvZ3KgnganCVQOD062Ix1eouKRv0CD2a
+ gtvYCJFRo6JoTu9p/1jJVnIebiN1A5uUYXaP+Bibs/sNVbrI
 X-Developer-Key: i=phahn-oss@avm.de; a=openpgp;
  fpr=58AF7C2E007CDBE62C59E078F50EFDCF8AD04B1A
-X-purgate-ID: 149429::1773143725-8A498E1F-7900509A/0/0
+X-purgate-ID: 149429::1773143725-2FBCCF2F-19F0E4AB/0/0
 X-purgate-type: clean
-X-purgate-size: 2553
+X-purgate-size: 1123
 X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
 X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
 X-purgate: clean
-X-Rspamd-Queue-Id: ABF5924D364
+X-Rspamd-Queue-Id: B7D6A24E315
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[avm.de,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[avm.de:s=mail];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -130,19 +126,19 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32952-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-32939-lists,linux-gpio=lfdr.de];
 	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[phahn-oss@avm.de,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCPT_COUNT_GT_50(0.00)[67];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCPT_COUNT_GT_50(0.00)[60];
 	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[talpey.com:email,davemloft.net:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[avm.de:dkim,avm.de:email,avm.de:mid,davemloft.net:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
 Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
@@ -150,70 +146,33 @@ check.
 
 Change generated with coccinelle.
 
-To: Trond Myklebust <trondmy@kernel.org>
-To: Anna Schumaker <anna@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-To: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neil@brown.name>
-To: Olga Kornievskaia <okorniev@redhat.com>
-To: Dai Ngo <Dai.Ngo@oracle.com>
-To: Tom Talpey <tom@talpey.com>
+To: Jon Maloy <jmaloy@redhat.com>
 To: "David S. Miller" <davem@davemloft.net>
 To: Eric Dumazet <edumazet@google.com>
 To: Jakub Kicinski <kuba@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>
 To: Simon Horman <horms@kernel.org>
-Cc: linux-nfs@vger.kernel.org
 Cc: netdev@vger.kernel.org
+Cc: tipc-discussion@lists.sourceforge.net
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
 ---
- net/sunrpc/xprtrdma/svc_rdma_transport.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ net/tipc/socket.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-index 9b623849723ed0eb74b827881c6f32d3434c891b..b4d03e59a8202f20360cff1e2e79b1e325396517 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-@@ -578,7 +578,7 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
-  errout:
- 	/* Take a reference in case the DTO handler runs */
- 	svc_xprt_get(&newxprt->sc_xprt);
--	if (newxprt->sc_qp && !IS_ERR(newxprt->sc_qp))
-+	if (!IS_ERR_OR_NULL(newxprt->sc_qp))
- 		ib_destroy_qp(newxprt->sc_qp);
- 	rdma_destroy_id(newxprt->sc_cm_id);
- 	rpcrdma_rn_unregister(dev, &newxprt->sc_rn);
-@@ -608,7 +608,7 @@ static void svc_rdma_free(struct svc_xprt *xprt)
- 	might_sleep();
+diff --git a/net/tipc/socket.c b/net/tipc/socket.c
+index 4c618c2b871db681e69f7aec8f660d6130a13346..0d9cb21ffbf1539b7740e76521e3aac5fde322e3 100644
+--- a/net/tipc/socket.c
++++ b/net/tipc/socket.c
+@@ -2971,7 +2971,7 @@ void tipc_sk_reinit(struct net *net)
+ 	do {
+ 		rhashtable_walk_start(&iter);
  
- 	/* This blocks until the Completion Queues are empty */
--	if (rdma->sc_qp && !IS_ERR(rdma->sc_qp))
-+	if (!IS_ERR_OR_NULL(rdma->sc_qp))
- 		ib_drain_qp(rdma->sc_qp);
- 	flush_workqueue(svcrdma_wq);
- 
-@@ -619,16 +619,16 @@ static void svc_rdma_free(struct svc_xprt *xprt)
- 	svc_rdma_recv_ctxts_destroy(rdma);
- 
- 	/* Destroy the QP if present (not a listener) */
--	if (rdma->sc_qp && !IS_ERR(rdma->sc_qp))
-+	if (!IS_ERR_OR_NULL(rdma->sc_qp))
- 		ib_destroy_qp(rdma->sc_qp);
- 
--	if (rdma->sc_sq_cq && !IS_ERR(rdma->sc_sq_cq))
-+	if (!IS_ERR_OR_NULL(rdma->sc_sq_cq))
- 		ib_free_cq(rdma->sc_sq_cq);
- 
--	if (rdma->sc_rq_cq && !IS_ERR(rdma->sc_rq_cq))
-+	if (!IS_ERR_OR_NULL(rdma->sc_rq_cq))
- 		ib_free_cq(rdma->sc_rq_cq);
- 
--	if (rdma->sc_pd && !IS_ERR(rdma->sc_pd))
-+	if (!IS_ERR_OR_NULL(rdma->sc_pd))
- 		ib_dealloc_pd(rdma->sc_pd);
- 
- 	/* Destroy the CM ID */
+-		while ((tsk = rhashtable_walk_next(&iter)) && !IS_ERR(tsk)) {
++		while (!IS_ERR_OR_NULL((tsk = rhashtable_walk_next(&iter)))) {
+ 			sock_hold(&tsk->sk);
+ 			rhashtable_walk_stop(&iter);
+ 			lock_sock(&tsk->sk);
 
 -- 
 2.43.0
