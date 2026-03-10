@@ -1,679 +1,248 @@
-Return-Path: <linux-gpio+bounces-33024-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33025-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OP8ANv8zsGl2hAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33024-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 16:08:47 +0100
+	id oBMLBT8+sGmohQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33025-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 16:52:31 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76409252EEF
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 16:08:47 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11693254001
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 16:52:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 171AC33AA946
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 14:32:43 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 36C8E3211B9B
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 14:33:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15EE82F25F0;
-	Tue, 10 Mar 2026 14:32:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68A622F3600;
+	Tue, 10 Mar 2026 14:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSI6FPYv"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Irki6hZy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10182E889C;
-	Tue, 10 Mar 2026 14:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8532EC562;
+	Tue, 10 Mar 2026 14:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773153149; cv=none; b=Ff411v8xPZZ/HgicSoJrekhPsY+vqt6wgpZ/ErP3U1yQhtc5GlpFrum2dVnhc+f5R9VbagKh47GaZsxtkyHC9qrMYAzuEn/2Nju3+xg3lp/gq+vvTD2/2LoXE/Dmw+pWrU9cA1S/cGeqvFm2n2fjnZTCjLz/4yqhcUXBNhp2s8w=
+	t=1773153183; cv=none; b=Le7wanm6uYJiUkRK3ayhPr1hFg4Z492unyA0bzkTiP7hcQkXxmiSPdVviia+z0powXysNy/bAlxsLogUQpTeLwI/QpeLgAkuQa0034oFQcMJGrtA2bEQvP2nOvl7gP1zT2kc3EIi5WHQKvmsM5W0pHZT7fXBkIUOagwJzWAGp0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773153149; c=relaxed/simple;
-	bh=6ehyyMN+Vttl2/dmkN2/Dpo2Hk5GuIV7SClRqfw7fbM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Hm/YehU+cmToo90V77D4/Vn0ewD0uVRxQ1IZLg54ZFUv5qF9BzuevwhpL376sX6Sz5bO15U8U2TEBbHariFw+xeGft+ncI13Zdu+sDBEXQ5BOqbp+6o18eboTXlSP2WHHqpn1uJIaU7BuG+0kqhmArIevwY0sIf9iWo/veyz2lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSI6FPYv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 37F64C2BCB1;
-	Tue, 10 Mar 2026 14:32:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773153149;
-	bh=6ehyyMN+Vttl2/dmkN2/Dpo2Hk5GuIV7SClRqfw7fbM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=GSI6FPYvEtSbQ0qv85y7wAbZ85FYP595Fh36ongxEaGGLn4LbYR0LauxCl6ZwsVIV
-	 Vx65h/mtzjWdzLfVlHbsrSWjIvD5Bcs3dMfxC1Y9zP2Di6BV/nh3EL5vvrtH6Tzg6S
-	 4y1nmZ0mUxTIatvaBL8qEnTg5MwjvBh/VE+syIQ9bg/Whyp6PuPTD39PPct83AZwiY
-	 mrGbrf/4dtScKaMj/YfjKgbX7rUoNiDSOG5U+ct8yNUE9DsAT8bcvM2jB6tLDHpaJr
-	 FbQn3Tnhmtlz3gxBpRVUEBWPUP1i1IEFAU2Z/eSEFziiDzcrMJ0FQPVbqVfxlVSVht
-	 aGNb2BUKgRNPw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D15EB1060;
-	Tue, 10 Mar 2026 14:32:29 +0000 (UTC)
-From: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
-Date: Tue, 10 Mar 2026 16:32:25 +0200
-Subject: [PATCH v2 4/4] iio: adc: ad4691: add SPI offload support
+	s=arc-20240116; t=1773153183; c=relaxed/simple;
+	bh=tyPlqVoMdHp8hj8vOFa9QVD3tcexWKEchvFfLl/zht0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eFlvl9KKlp5ycMiUHLR0wG8EjgMUhyzS13yRU7Y0P85pMgMKAutP+6PuwoFv8o/MRXDW2uHmCL7ilPHEqhI3rPnvaa76zB2ut53peeZjVDjOgugNRCXJybB0k1dbVEtaMQBtcVHkszFWbcovoE97LojSbskbrxWQX0xtJatg6aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Irki6hZy; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 12A36250;
+	Tue, 10 Mar 2026 15:31:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1773153112;
+	bh=tyPlqVoMdHp8hj8vOFa9QVD3tcexWKEchvFfLl/zht0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Irki6hZy0ek7Tuep1wtlw/DC+NaNLMiY1ZlX69Ozhx6jM6Xwvw1qS47FWaD6USypy
+	 1fV8v7fPqqrOdospxJUu1Xi+H5kS0ru6C0SICz+K6dkBih3k2+EuADIlA8OX7K2dya
+	 01/J1yq/dvE9L8oJV42FV6U+wnDyF2hP4+m7xclc=
+Message-ID: <db7b4eeb-1054-4b7c-9f91-810be504124d@ideasonboard.com>
+Date: Tue, 10 Mar 2026 14:32:56 +0000
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] platform: int3472: Add MSI prestige board data
+To: Antti Laakso <antti.laakso@linux.intel.com>, linux-media@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linusw@kernel.org, brgl@kernel.org, sakari.ailus@linux.intel.com,
+ mchehab@kernel.org, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+ hverkuil+cisco@kernel.org, sre@kernel.org, hao.yao@intel.com,
+ jimmy.su@intel.com, miguel.vadillo@intel.com, kees@kernel.org,
+ ribalda@chromium.org
+References: <20260310124427.693625-1-antti.laakso@linux.intel.com>
+ <20260310124427.693625-6-antti.laakso@linux.intel.com>
+Content-Language: en-US
+From: Dan Scally <dan.scally@ideasonboard.com>
+In-Reply-To: <20260310124427.693625-6-antti.laakso@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260310-ad4692-multichannel-sar-adc-driver-v2-4-d9bb8aeb5e17@analog.com>
-References: <20260310-ad4692-multichannel-sar-adc-driver-v2-0-d9bb8aeb5e17@analog.com>
-In-Reply-To: <20260310-ad4692-multichannel-sar-adc-driver-v2-0-d9bb8aeb5e17@analog.com>
-To: Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
- linux-gpio@vger.kernel.org, Radu Sabau <radu.sabau@analog.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773153147; l=18450;
- i=radu.sabau@analog.com; s=20260220; h=from:subject:message-id;
- bh=BHgIa8pe6A8XMJvEo+AxZy5Cw3LLOU1NleJ4RT2NNoA=;
- b=Q/yPNk0DAT4z68vxkEwQKoqZtxKG/l6e454OJkJ78fAiEt5plSzXcuxnJxD2/GMlX8fxEZnVt
- BZuhR63eSzOAlIYW6gr6/F7JOjeSl94/KqIscOPilyGe1cRNpNTmIcC
-X-Developer-Key: i=radu.sabau@analog.com; a=ed25519;
- pk=lDPQHgn9jTdt0vo58Na9lLxLaE2mb330if71Cn+EvFU=
-X-Endpoint-Received: by B4 Relay for radu.sabau@analog.com/20260220 with
- auth_id=642
-X-Original-From: Radu Sabau <radu.sabau@analog.com>
-Reply-To: radu.sabau@analog.com
-X-Rspamd-Queue-Id: 76409252EEF
+X-Rspamd-Queue-Id: 11693254001
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[ideasonboard.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[ideasonboard.com:s=mail];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33024-lists,linux-gpio=lfdr.de,radu.sabau.analog.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
+	TAGGED_FROM(0.00)[bounces-33025-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	DKIM_TRACE(0.00)[ideasonboard.com:+];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	HAS_REPLYTO(0.00)[radu.sabau@analog.com];
+	FROM_NEQ_ENVFROM(0.00)[dan.scally@ideasonboard.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,analog.com:replyto,analog.com:email,analog.com:mid]
+	NEURAL_HAM(-0.00)[-0.999];
+	TAGGED_RCPT(0.00)[linux-gpio,cisco];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,intel.com:email,ideasonboard.com:dkim,ideasonboard.com:mid]
 X-Rspamd-Action: no action
 
-From: Radu Sabau <radu.sabau@analog.com>
+Hi Antti
 
-Add SPI offload support to enable DMA-based, CPU-independent data
-acquisition using the SPI Engine offload framework.
+On 10/03/2026 12:44, Antti Laakso wrote:
+> Define regulators and gpios for MSI Prestige 14 AI EVO+ laptop.
+> 
+> Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
+> ---
+>   .../x86/intel/int3472/tps68470_board_data.c   | 97 +++++++++++++++++++
+>   1 file changed, 97 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> index 71357a036292..fe7c23e72d66 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> @@ -232,6 +232,73 @@ static const struct tps68470_regulator_platform_data dell_7212_tps68470_pdata =
+>   	},
+>   };
+>   
+> +/* Settings for MSI Prestige 14 laptop. */
+> +
+> +static struct regulator_consumer_supply ovti5675_avdd_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("avdd", "i2c-OVTI5675:00"),
+> +};
+> +
+> +static struct regulator_consumer_supply ovti5675_dovdd_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("dovdd", "i2c-OVTI5675:00"),
+> +};
+> +
+> +static struct regulator_consumer_supply ovti5675_dvdd_consumer_supplies[] = {
+> +	REGULATOR_SUPPLY("dvdd", "i2c-OVTI5675:00"),
+> +};
+> +
+> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_core_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1200000,
+> +		.max_uV = 1200000,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(ovti5675_dvdd_consumer_supplies),
+> +	.consumer_supplies = ovti5675_dvdd_consumer_supplies,
+> +};
+> +
+> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_ana_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 2815200,
+> +		.max_uV = 2815200,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(ovti5675_avdd_consumer_supplies),
+> +	.consumer_supplies = ovti5675_avdd_consumer_supplies,
+> +};
+> +
+> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vio_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1800600,
+> +		.max_uV = 1800600,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = 0,
+> +	.consumer_supplies = NULL,
+> +};
+> +
+> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vsio_reg_init_data = {
+> +	.constraints = {
+> +		.min_uV = 1800600,
+> +		.max_uV = 1800600,
+> +		.apply_uV = 1,
+> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+> +	},
+> +	.num_consumer_supplies = ARRAY_SIZE(ovti5675_dovdd_consumer_supplies),
+> +	.consumer_supplies = ovti5675_dovdd_consumer_supplies,
+> +};
+> +
+> +static const struct tps68470_regulator_platform_data msi_p14_ai_evo_tps68470_pdata = {
+> +	.reg_init_data = {
+> +		[TPS68470_CORE] = &msi_p14_ai_evo_tps68470_core_reg_init_data,
+> +		[TPS68470_ANA]  = &msi_p14_ai_evo_tps68470_ana_reg_init_data,
+> +		[TPS68470_VIO]  = &msi_p14_ai_evo_tps68470_vio_reg_init_data,
+> +		[TPS68470_VSIO] = &msi_p14_ai_evo_tps68470_vsio_reg_init_data,
+> +	},
+> +};
+> +
+>   static struct gpiod_lookup_table surface_go_int347a_gpios = {
+>   	.dev_id = "i2c-INT347A:00",
+>   	.table = {
+> @@ -258,6 +325,19 @@ static struct gpiod_lookup_table dell_7212_int3479_gpios = {
+>   	}
+>   };
+>   
+> +static struct gpiod_lookup_table msi_p14_ai_evo_ovti5675_gpios = {
+> +	.dev_id = "i2c-OVTI5675:00",
+> +	.table = {
+> +		GPIO_LOOKUP_IDX("tps68470-gpio", 9, "reset", 0, GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX("tps68470-gpio", 7, "reset", 1, GPIO_ACTIVE_LOW),
 
-When an SPI offload is available (devm_spi_offload_get() succeeds),
-the driver registers a DMA engine IIO buffer and uses dedicated buffer
-setup operations. If no offload is available the existing software
-triggered buffer path is used unchanged.
+The ov5675 driver seems only to look for a single gpio, so I think the second entry would never be 
+accessed here...should there be an accompanying driver change?
 
-Both CNV Clock Mode and Manual Mode support offload, but use different
-trigger mechanisms:
+Thanks
+Dan
 
-CNV Clock Mode: the SPI Engine is triggered by the ADC's DATA_READY
-signal on GP0. For this mode the driver acts as both an SPI offload
-consumer (DMA RX stream, message optimization) and a trigger source
-provider: it registers the GP0/DATA_READY output via
-devm_spi_offload_trigger_register() so the offload framework can
-match the '#trigger-source-cells' phandle from the device tree and
-automatically fire the SPI Engine DMA transfer at end-of-conversion.
-The pre-built SPI message reads all active channels from the AVG_IN
-accumulator registers (2-byte address + 2-byte data per channel,
-one 4-byte transfer each) followed by a state reset word to re-arm
-the accumulator for the next cycle.
-
-Manual Mode: the SPI Engine is triggered by a periodic trigger at
-the configured sampling frequency. The pre-built SPI message uses
-the pipelined CNV-on-CS protocol: N+1 4-byte transfers are issued
-for N active channels (the first result is discarded as garbage from
-the pipeline flush) and the remaining N results are captured by DMA.
-
-All offload transfers use 32-bit frames (bits_per_word=32, len=4) for
-DMA word alignment. In Manual Mode the 4-byte DMA word layout is
-[dummy(8), data_hi(8), data_lo(8), extra(8)]; the channel scan type
-storagebits=32, shift=8, realbits=16 correctly extracts the 16-bit
-ADC result from the middle two bytes.
-
-Kconfig gains a dependency on IIO_BUFFER_DMAENGINE.
-
-Signed-off-by: Radu Sabau <radu.sabau@analog.com>
----
- drivers/iio/adc/Kconfig  |   1 +
- drivers/iio/adc/ad4691.c | 398 +++++++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 389 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index d498f16c0816..93f090e9a562 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -144,6 +144,7 @@ config AD4691
- 	depends on SPI
- 	select IIO_BUFFER
- 	select IIO_TRIGGERED_BUFFER
-+	select IIO_BUFFER_DMAENGINE
- 	select REGMAP
- 	help
- 	  Say yes here to build support for Analog Devices AD4691 Family MuxSAR
-diff --git a/drivers/iio/adc/ad4691.c b/drivers/iio/adc/ad4691.c
-index 8b3caf0334ba..2ed384cfc1b9 100644
---- a/drivers/iio/adc/ad4691.c
-+++ b/drivers/iio/adc/ad4691.c
-@@ -9,6 +9,7 @@
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/device.h>
-+#include <linux/dmaengine.h>
- #include <linux/err.h>
- #include <linux/gpio/consumer.h>
- #include <linux/hrtimer.h>
-@@ -22,11 +23,15 @@
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <linux/spi/spi.h>
-+#include <linux/spi/offload/consumer.h>
-+#include <linux/spi/offload/provider.h>
- #include <linux/util_macros.h>
- #include <linux/units.h>
- #include <linux/unaligned.h>
- 
- #include <linux/iio/buffer.h>
-+#include <linux/iio/buffer-dma.h>
-+#include <linux/iio/buffer-dmaengine.h>
- #include <linux/iio/iio.h>
- 
- #include <linux/iio/trigger.h>
-@@ -47,6 +52,7 @@
-  */
- #define AD4691_MANUAL_MODE_STD_FREQ(x, y)	((y) / (36 * ((x) + 1)))
- #define AD4691_BITS_PER_XFER			24
-+#define AD4691_OFFLOAD_BITS_PER_WORD		32
- #define AD4691_CNV_DUTY_CYCLE_NS		380
- #define AD4691_MAX_CONV_PERIOD_US		800
- 
-@@ -252,6 +258,16 @@ struct ad4691_state {
- 	struct hrtimer			sampling_timer;
- 	ktime_t				sampling_period;
- 
-+	struct spi_offload		*offload;
-+	struct spi_offload_trigger	*offload_trigger;
-+	struct spi_offload_trigger	*offload_trigger_periodic;
-+	u64				offload_trigger_hz;
-+	struct spi_message		offload_msg;
-+	/* Max 16 channel transfers + 1 state reset or NOOP */
-+	struct spi_transfer		offload_xfer[17];
-+	/* TX commands for manual and accumulator modes */
-+	u32				offload_tx_cmd[17];
-+	u32				offload_tx_reset;
- 	/*
- 	 * DMA (thus cache coherency maintenance) may require the
- 	 * transfer buffers to live in their own cache lines.
-@@ -265,6 +281,65 @@ struct ad4691_state {
- 	} scan __aligned(IIO_DMA_MINALIGN);
- };
- 
-+static const struct spi_offload_config ad4691_offload_config = {
-+	.capability_flags = SPI_OFFLOAD_CAP_TRIGGER |
-+			    SPI_OFFLOAD_CAP_RX_STREAM_DMA,
-+};
-+
-+static bool ad4691_offload_trigger_match(struct spi_offload_trigger *trigger,
-+					 enum spi_offload_trigger_type type,
-+					 u64 *args, u32 nargs)
-+{
-+	if (type != SPI_OFFLOAD_TRIGGER_DATA_READY)
-+		return false;
-+
-+	/*
-+	 * Requires 2 args:
-+	 * args[0] is the trigger event (BUSY or DATA_READY).
-+	 * args[1] is the GPIO pin number (only GP0 supported).
-+	 */
-+	if (nargs != 2)
-+		return false;
-+
-+	if (args[0] != AD4691_TRIGGER_EVENT_BUSY &&
-+	    args[0] != AD4691_TRIGGER_EVENT_DATA_READY)
-+		return false;
-+
-+	if (args[1] != AD4691_TRIGGER_PIN_GP0)
-+		return false;
-+
-+	return true;
-+}
-+
-+static int ad4691_offload_trigger_request(struct spi_offload_trigger *trigger,
-+					  enum spi_offload_trigger_type type,
-+					  u64 *args, u32 nargs)
-+{
-+	/*
-+	 * GP0 is configured as DATA_READY or BUSY in ad4691_config()
-+	 * based on the ADC mode. No additional configuration needed here.
-+	 */
-+	if (nargs != 2)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int ad4691_offload_trigger_validate(struct spi_offload_trigger *trigger,
-+					   struct spi_offload_trigger_config *config)
-+{
-+	if (config->type != SPI_OFFLOAD_TRIGGER_DATA_READY)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static const struct spi_offload_trigger_ops ad4691_offload_trigger_ops = {
-+	.match = ad4691_offload_trigger_match,
-+	.request = ad4691_offload_trigger_request,
-+	.validate = ad4691_offload_trigger_validate,
-+};
-+
- static void ad4691_disable_pwm(void *data)
- {
- 	struct pwm_device *pwm = data;
-@@ -442,6 +517,9 @@ static int ad4691_transfer(struct ad4691_state *st, int command,
- static int ad4691_get_sampling_freq(struct ad4691_state *st)
- {
- 	if (st->adc_mode == AD4691_MANUAL_MODE) {
-+		/* Offload uses periodic trigger, non-offload uses hrtimer */
-+		if (st->offload)
-+			return st->offload_trigger_hz;
- 		return DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC,
- 					     ktime_to_ns(st->sampling_period));
- 	}
-@@ -497,6 +575,7 @@ static int ad4691_pwm_get(struct spi_device *spi, struct ad4691_state *st)
- static int ad4691_set_sampling_freq(struct iio_dev *indio_dev, unsigned int freq)
- {
- 	struct ad4691_state *st = iio_priv(indio_dev);
-+	int ret;
- 
- 	IIO_DEV_ACQUIRE_DIRECT_MODE(indio_dev, claim);
- 
-@@ -506,12 +585,31 @@ static int ad4691_set_sampling_freq(struct iio_dev *indio_dev, unsigned int freq
- 	guard(mutex)(&st->lock);
- 
- 	if (st->adc_mode == AD4691_MANUAL_MODE) {
--		if (!freq || freq > st->chip->max_rate)
--			return -EINVAL;
--
--		st->sampling_period = ns_to_ktime(DIV_ROUND_CLOSEST_ULL
--			(NSEC_PER_SEC, freq));
--		return 0;
-+		/* For offload mode, validate and store frequency for periodic trigger */
-+		if (st->offload) {
-+			struct spi_offload_trigger_config config = {
-+				.type = SPI_OFFLOAD_TRIGGER_PERIODIC,
-+				.periodic = {
-+					.frequency_hz = freq,
-+				},
-+			};
-+
-+			ret = spi_offload_trigger_validate(st->offload_trigger_periodic,
-+							   &config);
-+			if (ret)
-+				return ret;
-+
-+			st->offload_trigger_hz = config.periodic.frequency_hz;
-+			return 0;
-+		} else {
-+			/* Non-offload: update hrtimer sampling period */
-+			if (!freq || freq > st->chip->max_rate)
-+				return -EINVAL;
-+
-+			st->sampling_period = ns_to_ktime(DIV_ROUND_CLOSEST_ULL
-+				(NSEC_PER_SEC, freq));
-+			return 0;
-+		}
- 	}
- 
- 	if (!st->conv_trigger)
-@@ -787,6 +885,224 @@ static const struct iio_buffer_setup_ops ad4691_buffer_setup_ops = {
- 	.postdisable = &ad4691_buffer_postdisable,
- };
- 
-+static int ad4691_offload_buffer_postenable(struct iio_dev *indio_dev)
-+{
-+	struct ad4691_state *st = iio_priv(indio_dev);
-+	struct spi_offload_trigger_config config = { };
-+	struct spi_offload_trigger *trigger;
-+	struct spi_transfer *xfer = st->offload_xfer;
-+	int ret, num_xfers = 0;
-+	int active_chans[16];
-+	unsigned int bit;
-+	int n_active = 0;
-+	int i;
-+
-+	memset(xfer, 0, sizeof(st->offload_xfer));
-+
-+	/* Collect active channels in scan order */
-+	iio_for_each_active_channel(indio_dev, bit)
-+		active_chans[n_active++] = bit;
-+
-+	ret = ad4691_enter_conversion_mode(st);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * MANUAL_MODE uses a periodic (PWM) trigger and reads directly from
-+	 * the ADC. CNV_CLOCK_MODE uses the DATA_READY trigger and reads from
-+	 * accumulators.
-+	 */
-+	if (st->adc_mode == AD4691_MANUAL_MODE) {
-+		config.type = SPI_OFFLOAD_TRIGGER_PERIODIC;
-+		config.periodic.frequency_hz = st->offload_trigger_hz;
-+		trigger = st->offload_trigger_periodic;
-+		if (!trigger)
-+			return -EINVAL;
-+	} else {
-+		ret = regmap_write(st->regmap, AD4691_STATE_RESET_REG,
-+				   AD4691_STATE_RESET_ALL);
-+		if (ret)
-+			return ret;
-+
-+		/* Configure accumulator masks - 0 = enabled, 1 = masked */
-+		ret = regmap_write(st->regmap, AD4691_ACC_MASK1_REG,
-+				   ~(*indio_dev->active_scan_mask) & 0xFF);
-+		if (ret)
-+			return ret;
-+
-+		ret = regmap_write(st->regmap, AD4691_ACC_MASK2_REG,
-+				   ~(*indio_dev->active_scan_mask >> 8) & 0xFF);
-+		if (ret)
-+			return ret;
-+
-+		/* Configure sequencer with active channels */
-+		ret = regmap_write(st->regmap, AD4691_STD_SEQ_CONFIG,
-+				   *indio_dev->active_scan_mask);
-+		if (ret)
-+			return ret;
-+
-+		iio_for_each_active_channel(indio_dev, bit) {
-+			ret = regmap_write(st->regmap, AD4691_ACC_COUNT_LIMIT(bit),
-+					   AD4691_ACC_COUNT_VAL);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		config.type = SPI_OFFLOAD_TRIGGER_DATA_READY;
-+		trigger = st->offload_trigger;
-+	}
-+
-+	if (st->adc_mode == AD4691_MANUAL_MODE) {
-+		/*
-+		 * Manual mode with CNV tied to CS: Each CS toggle triggers a
-+		 * conversion AND reads the previous conversion result (pipeline).
-+		 */
-+		for (i = 0; i < n_active; i++) {
-+			st->offload_tx_cmd[num_xfers] = AD4691_ADC_CHAN(active_chans[i]) << 24;
-+			xfer[num_xfers].tx_buf = &st->offload_tx_cmd[num_xfers];
-+			xfer[num_xfers].len = 4;
-+			xfer[num_xfers].bits_per_word = 32;
-+			xfer[num_xfers].speed_hz = st->spi->max_speed_hz;
-+			xfer[num_xfers].cs_change = 1;
-+			xfer[num_xfers].cs_change_delay.value = 1000;
-+			xfer[num_xfers].cs_change_delay.unit = SPI_DELAY_UNIT_NSECS;
-+			/* First transfer RX is garbage - don't capture it */
-+			if (num_xfers)
-+				xfer[num_xfers].offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
-+			num_xfers++;
-+		}
-+
-+		/* Final NOOP to flush pipeline and get last channel's data */
-+		st->offload_tx_cmd[num_xfers] = AD4691_NOOP << 24;
-+		xfer[num_xfers].tx_buf = &st->offload_tx_cmd[num_xfers];
-+		xfer[num_xfers].len = 4;
-+		xfer[num_xfers].bits_per_word = 32;
-+		xfer[num_xfers].speed_hz = st->spi->max_speed_hz;
-+		xfer[num_xfers].cs_change = 0;
-+		xfer[num_xfers].offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
-+		num_xfers++;
-+	} else {
-+		/*
-+		 * CNV_CLOCK_MODE: single transfer per channel (2-byte cmd +
-+		 * 2-byte data = 4 bytes, one 32-bit SPI Engine DMA word).
-+		 * AVG_IN registers are used; RX layout: [cmd_hi, cmd_lo, d_hi, d_lo]
-+		 */
-+		for (i = 0; i < n_active; i++) {
-+			unsigned int reg;
-+			int ch = active_chans[i];
-+
-+			reg = AD4691_AVG_IN(ch);
-+			st->offload_tx_cmd[ch] =
-+				((reg >> 8) | 0x80) << 24 |
-+				(reg & 0xFF) << 16;
-+			xfer[num_xfers].tx_buf = &st->offload_tx_cmd[ch];
-+			xfer[num_xfers].len = 4;
-+			xfer[num_xfers].bits_per_word = 32;
-+			xfer[num_xfers].speed_hz = st->spi->max_speed_hz;
-+			xfer[num_xfers].offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
-+			xfer[num_xfers].cs_change = 1;
-+			num_xfers++;
-+		}
-+
-+		/*
-+		 * State reset: clear accumulator so DATA_READY can fire again.
-+		 * With bits_per_word=32, SPI engine transmits MSB first.
-+		 */
-+		st->offload_tx_reset = ((AD4691_STATE_RESET_REG >> 8) << 24) |
-+				       ((AD4691_STATE_RESET_REG & 0xFF) << 16) |
-+				       (0x01 << 8);
-+
-+		xfer[num_xfers].tx_buf = &st->offload_tx_reset;
-+		xfer[num_xfers].len = 4;
-+		xfer[num_xfers].bits_per_word = 32;
-+		xfer[num_xfers].speed_hz = st->spi->max_speed_hz;
-+		xfer[num_xfers].cs_change = 0;
-+		num_xfers++;
-+	}
-+
-+	if (num_xfers == 0)
-+		return -EINVAL;
-+
-+	/*
-+	 * For MANUAL_MODE, validate that the trigger frequency is low enough
-+	 * for all SPI transfers to complete. Each transfer is 32 bits.
-+	 * Add 50% margin for CS setup/hold and other overhead.
-+	 */
-+	if (st->adc_mode == AD4691_MANUAL_MODE) {
-+		u64 min_period_ns;
-+		u64 trigger_period_ns;
-+
-+		/* Time for all transfers in nanoseconds, with 50% overhead margin */
-+		min_period_ns = div64_u64((u64)num_xfers * AD4691_OFFLOAD_BITS_PER_WORD *
-+					  NSEC_PER_SEC * 3,
-+					  st->spi->max_speed_hz * 2);
-+
-+		trigger_period_ns = div64_u64(NSEC_PER_SEC, st->offload_trigger_hz);
-+
-+		if (trigger_period_ns < min_period_ns)
-+			return -EINVAL;
-+	}
-+
-+	spi_message_init_with_transfers(&st->offload_msg, xfer, num_xfers);
-+	st->offload_msg.offload = st->offload;
-+
-+	ret = spi_optimize_message(st->spi, &st->offload_msg);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * For CNV_CLOCK_MODE, start conversions before enabling the trigger.
-+	 * If the trigger is enabled first, the SPI engine blocks waiting for
-+	 * DATA_READY, and any subsequent SPI write times out.
-+	 *
-+	 * MANUAL_MODE: CNV is tied to CS; conversion starts with each transfer.
-+	 */
-+	if (st->adc_mode == AD4691_CNV_CLOCK_MODE) {
-+		ret = ad4691_sampling_enable(st, true);
-+		if (ret)
-+			goto err_unoptimize_message;
-+	}
-+
-+	ret = spi_offload_trigger_enable(st->offload, trigger, &config);
-+	if (ret)
-+		goto err_sampling_disable;
-+
-+	return 0;
-+
-+err_sampling_disable:
-+	if (st->adc_mode == AD4691_CNV_CLOCK_MODE)
-+		ad4691_sampling_enable(st, false);
-+err_unoptimize_message:
-+	spi_unoptimize_message(&st->offload_msg);
-+	return ret;
-+}
-+
-+static int ad4691_offload_buffer_predisable(struct iio_dev *indio_dev)
-+{
-+	struct ad4691_state *st = iio_priv(indio_dev);
-+	struct spi_offload_trigger *trigger;
-+	int ret;
-+
-+	trigger = (st->adc_mode == AD4691_MANUAL_MODE) ?
-+		  st->offload_trigger_periodic : st->offload_trigger;
-+
-+	spi_offload_trigger_disable(st->offload, trigger);
-+	spi_unoptimize_message(&st->offload_msg);
-+
-+	if (st->adc_mode == AD4691_CNV_CLOCK_MODE) {
-+		ret = ad4691_sampling_enable(st, false);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return ad4691_exit_conversion_mode(st);
-+}
-+
-+static const struct iio_buffer_setup_ops ad4691_offload_buffer_setup_ops = {
-+	.postenable = &ad4691_offload_buffer_postenable,
-+	.predisable = &ad4691_offload_buffer_predisable,
-+};
-+
- static irqreturn_t ad4691_irq(int irq, void *private)
- {
- 	struct iio_dev *indio_dev = private;
-@@ -981,6 +1297,54 @@ static int ad4691_config(struct ad4691_state *st)
- 	return regmap_write(st->regmap, AD4691_GPIO_MODE1_REG, AD4691_ADC_BUSY);
- }
- 
-+static int ad4691_setup_offload(struct iio_dev *indio_dev,
-+				struct ad4691_state *st)
-+{
-+	struct device *dev = &st->spi->dev;
-+	struct dma_chan *rx_dma;
-+	int ret;
-+
-+	if (st->adc_mode == AD4691_MANUAL_MODE) {
-+		st->offload_trigger_periodic = devm_spi_offload_trigger_get(dev,
-+				st->offload, SPI_OFFLOAD_TRIGGER_PERIODIC);
-+		if (IS_ERR(st->offload_trigger_periodic))
-+			return dev_err_probe(dev,
-+				PTR_ERR(st->offload_trigger_periodic),
-+				"failed to get periodic offload trigger\n");
-+
-+		st->offload_trigger_hz = AD4691_MANUAL_MODE_STD_FREQ(st->chip->num_channels,
-+								      st->spi->max_speed_hz);
-+	} else {
-+		struct spi_offload_trigger_info trigger_info = {
-+			.fwnode = dev_fwnode(dev),
-+			.ops = &ad4691_offload_trigger_ops,
-+			.priv = st,
-+		};
-+
-+		ret = devm_spi_offload_trigger_register(dev, &trigger_info);
-+		if (ret)
-+			return dev_err_probe(dev, ret,
-+					     "failed to register offload trigger\n");
-+
-+		st->offload_trigger = devm_spi_offload_trigger_get(dev,
-+				st->offload, SPI_OFFLOAD_TRIGGER_DATA_READY);
-+		if (IS_ERR(st->offload_trigger))
-+			return dev_err_probe(dev, PTR_ERR(st->offload_trigger),
-+					     "failed to get offload trigger\n");
-+	}
-+
-+	rx_dma = devm_spi_offload_rx_stream_request_dma_chan(dev, st->offload);
-+	if (IS_ERR(rx_dma))
-+		return dev_err_probe(dev, PTR_ERR(rx_dma),
-+				     "failed to get offload RX DMA\n");
-+
-+	indio_dev->modes = INDIO_DIRECT_MODE | INDIO_BUFFER_HARDWARE;
-+	indio_dev->setup_ops = &ad4691_offload_buffer_setup_ops;
-+
-+	return devm_iio_dmaengine_buffer_setup_with_handle(dev, indio_dev,
-+			rx_dma, IIO_BUFFER_DIRECTION_IN);
-+}
-+
- static int ad4691_setup_triggered_buffer(struct iio_dev *indio_dev,
- 					 struct ad4691_state *st)
- {
-@@ -1064,6 +1428,14 @@ static int ad4691_probe(struct spi_device *spi)
- 		return dev_err_probe(dev, PTR_ERR(st->regmap),
- 				     "Failed to initialize regmap\n");
- 
-+	st->offload = devm_spi_offload_get(dev, spi, &ad4691_offload_config);
-+	if (IS_ERR(st->offload)) {
-+		if (PTR_ERR(st->offload) != -ENODEV)
-+			return dev_err_probe(dev, PTR_ERR(st->offload),
-+					     "failed to get SPI offload\n");
-+		st->offload = NULL;
-+	}
-+
- 	st->chip = spi_get_device_match_data(spi);
- 	if (!st->chip)
- 		return dev_err_probe(dev, -ENODEV, "Could not find chip info\n");
-@@ -1088,10 +1460,15 @@ static int ad4691_probe(struct spi_device *spi)
- 		? st->chip->manual_channels : st->chip->channels;
- 	indio_dev->num_channels = st->chip->num_channels;
- 
--	ret = ad4691_setup_triggered_buffer(indio_dev, st);
--	if (ret)
--		return ret;
--
-+	if (st->offload) {
-+		ret = ad4691_setup_offload(indio_dev, st);
-+		if (ret)
-+			return ret;
-+	} else {
-+		ret = ad4691_setup_triggered_buffer(indio_dev, st);
-+		if (ret)
-+			return ret;
-+	}
- 	return devm_iio_device_register(dev, indio_dev);
- }
- 
-@@ -1126,3 +1503,4 @@ module_spi_driver(ad4691_driver);
- MODULE_AUTHOR("Radu Sabau <radu.sabau@analog.com>");
- MODULE_DESCRIPTION("Analog Devices AD4691 Family ADC Driver");
- MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("IIO_DMA_BUFFER");
-
--- 
-2.43.0
-
+> +		{ }
+> +	}
+> +};
+> +
+> +static const struct tps68470_gpio_platform_data msi_p14_ai_evo_tps68470_gpio_pdata = {
+> +	.daisy_chain_enable = true,
+> +};
+> +
+>   static const struct int3472_tps68470_board_data surface_go_tps68470_board_data = {
+>   	.dev_name = "i2c-INT3472:05",
+>   	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
+> @@ -287,6 +367,16 @@ static const struct int3472_tps68470_board_data dell_7212_tps68470_board_data =
+>   	},
+>   };
+>   
+> +static const struct int3472_tps68470_board_data msi_p14_ai_evo_tps68470_board_data = {
+> +	.dev_name = "i2c-INT3472:06",
+> +	.tps68470_regulator_pdata = &msi_p14_ai_evo_tps68470_pdata,
+> +	.tps68470_gpio_pdata = &msi_p14_ai_evo_tps68470_gpio_pdata,
+> +	.n_gpiod_lookups = 1,
+> +	.tps68470_gpio_lookup_tables = {
+> +		&msi_p14_ai_evo_ovti5675_gpios,
+> +	},
+> +};
+> +
+>   static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+>   	{
+>   		.matches = {
+> @@ -316,6 +406,13 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+>   		},
+>   		.driver_data = (void *)&dell_7212_tps68470_board_data,
+>   	},
+> +	{
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Prestige 14 AI+ Evo C2VMG"),
+> +		},
+> +		.driver_data = (void *)&msi_p14_ai_evo_tps68470_board_data,
+> +	},
+>   	{ }
+>   };
+>   
 
 
