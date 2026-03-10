@@ -1,300 +1,273 @@
-Return-Path: <linux-gpio+bounces-33018-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33017-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QM+CHWwwsGkShAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33018-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 15:53:32 +0100
+	id GIh8H6UwsGkShAIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33017-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 15:54:29 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDD4025294B
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 15:53:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EC1F12529D3
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 15:54:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2E00F32EB1CA
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 14:24:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 991D9329EC2E
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2026 14:24:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E1352DA759;
-	Tue, 10 Mar 2026 14:24:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7661C2DB7B7;
+	Tue, 10 Mar 2026 14:24:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="F6C5rtqO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uk79Lry0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3FC22DB7B5
-	for <linux-gpio@vger.kernel.org>; Tue, 10 Mar 2026 14:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D472D9484;
+	Tue, 10 Mar 2026 14:24:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773152683; cv=none; b=JkgLAqLsI9JOd2MjbTlsAFSKOvy3ZrstoVfNLUrX0HwsjZEGZTI7bopBCI8f7ATEQiBaJPkPHLJqo+KeG3lJ9l3mL9mp086aDInMIg/EvFt2ESdEc7EsUVj70/JQz9BPskXy73jd4dzWe/Ba4RSp72JU1bsfCQX2FmIWqjew3N4=
+	t=1773152673; cv=none; b=D/qD2bkpNgDnZW0CwifZv7b5S/581ZoM/uC37w5jTc9fRRuK3onjt+tFirEXZMj6IVGTyBUD4mnizhknG/wH0I/faAGQ5cg0KpyjeJJqlvc8kN6KzDIelshvJetGj91vVct2eQPh0X73ymfUHTZ+5hYnoBoMyZJ12vLhDZA2xwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773152683; c=relaxed/simple;
-	bh=XwidptKIhvR+UF4aaOLrgKMULsgr14IRJkHhby+ViXQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jP2yE7MLjGjzPHkfTq+mCUC5q+GD9wfoVy1YLQWVEINnh3FVzvAHO5mL04qHZO5sSX73yrGfJQnc49eza7J/dKsNGeLCxxzlR4rBE6M6+OYtjpLio4D/5lXO6AD6aXEceP92kmyNMzxnJHUwKXEzPa2mFAS4myLVk+glAsb4cOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=F6C5rtqO; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from macsyma.thunk.org (pool-173-48-117-133.bstnma.fios.verizon.net [173.48.117.133])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 62AENmx0023256
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Mar 2026 10:23:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1773152637; bh=4/p8AtxdJ3b4aYgpRIBgOOPVM9R5HZLzlaxPPsEZ2Q4=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=F6C5rtqODrQpEwdwVTgFCawAhLv3gwk1txjCpTf9qYEhws10oNToQIbXrBSiNnSGn
-	 HKzLPM0wlhbQz5hd3KNNbDsKNUIOcLP5D+4J1qJhv/m9AJCmBvmBntSwPXXBcrZ48c
-	 UG5I74ocwzVwmg9UHdT0hLejm00ahwJz4Tby2LgiJXvFIYDaYDAoayC1G2vaNRdttd
-	 dnaccWPVwGwuO0YYJTFV0/A1hSU2yI/onO0qlICZ11ISIKYrG0S38XY0XZ07wXHuQf
-	 SRLcsUXeYesD2NrtHf5Vg5nqM+e/voDzSfyx+6EAL02kYRxR5zwo7A3kwnstvVAN1a
-	 N4dmfF0o4YLWg==
-Received: by macsyma.thunk.org (Postfix, from userid 15806)
-	id 96A8A5C4FCED; Tue, 10 Mar 2026 10:23:48 -0400 (EDT)
-Date: Tue, 10 Mar 2026 10:23:48 -0400
-From: "Theodore Tso" <tytso@mit.edu>
-To: Philipp Hahn <phahn-oss@avm.de>
-Cc: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com,
-        bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr,
-        dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
-        gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org,
-        intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-mm@kvack.org,
-        linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
-        sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev,
-        Julia Lawall <Julia.Lawall@inria.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>, Ilya Dryomov <idryomov@gmail.com>,
-        Alex Markuze <amarkuze@redhat.com>,
-        Viacheslav Dubeyko <slava@dubeyko.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>,
-        Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-        Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-        Bharath SM <bharathsm@microsoft.com>,
-        Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-        Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Sandeep Dhavale <dhavale@google.com>,
-        Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>, Kees Cook <kees@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Jan Kara <jack@suse.com>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
-        Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>,
-        Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
-        Daniel Gomez <da.gomez@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Aaron Tomlin <atomlin@atomlin.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Max Filippov <jcmvbkbc@gmail.com>, Paolo Bonzini <pbonzini@redhat.com>,
-        John Johansen <john.johansen@canonical.com>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Benjamin Marzinski <bmarzins@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Ahern <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-        Simon Horman <horms@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Stanislav Fomichev <sdf@fomichev.me>,
-        Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>, Trond Myklebust <trondmy@kernel.org>,
-        Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
-        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@armlinux.org.uk>, John Crispin <john@phrozen.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Zhenyu Wang <zhenyuw.linux@gmail.com>,
-        Zhi Wang <zhi.wang.linux@gmail.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tursulin@ursulin.net>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        Pavan Chebbi <pavan.chebbi@broadcom.com>,
-        Michael Chan <mchan@broadcom.com>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-        Keyur Chudgar <keyur@os.amperecomputing.com>,
-        Quan Nguyen <quan@os.amperecomputing.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Linus Walleij <linusw@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Eduardo Valentin <edubezval@gmail.com>, Keerthy <j-keerthy@ti.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Alex Williamson <alex@shazbot.org>,
-        Mark Greer <mgreer@animalcreek.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, Lee Jones <lee@kernel.org>,
-        Pavel Machek <pavel@kernel.org>, Dave Penkler <dpenkler@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
-        Justin Sanders <justin@coraid.com>, Jens Axboe <axboe@kernel.dk>,
-        Georgi Djakov <djakov@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 00/61] treewide: Use IS_ERR_OR_NULL over manual NULL
- check - refactor
-Message-ID: <20260310142348.GA41218@macsyma-wired.lan>
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
+	s=arc-20240116; t=1773152673; c=relaxed/simple;
+	bh=CFoCR118i40wo7sBqnnZfsTax4L/eF3uiyirmp+0F24=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=njGn6pCSlDB2teaNR6l9k2jRMntBoS6UfbuVudqNtdBbs/LwW46zhsd7BZ9PrhNFd4ixq1f5mcGO7SdOR01FrdsB8a30GxHHxbCcJGFEaCC5wQdr3PsmsGT0qaCltpoxWmt+M3KxdancvxttIlBeJlJd5smYD/TzM+q4DoMNc/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uk79Lry0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F8C1C19423;
+	Tue, 10 Mar 2026 14:24:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773152672;
+	bh=CFoCR118i40wo7sBqnnZfsTax4L/eF3uiyirmp+0F24=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Uk79Lry0Dyh33YaiSBz9t2xFwAdJITm3m5JzDLYAaQMEn8tZCMDtvS0sIJeymR++y
+	 rITQj3ciseZmKjEyfoe4N+euE/F2zf30VC9ahJ8cOr3Y28GPOQaRq4yQDT+TxhnRB8
+	 scAcfHB7sW+qVcI7yIn7GcmT4K5GdDv5mHv15R0qJFcbhJ8JWfXzZeIQtBhV7agTEm
+	 t+k+lO2wmT2jjWahziKazNO74eu8SbUpTIFLLoSy/USqZBEItlrE+FGC1S2eyCtKVE
+	 XkZbs6+9RdpBOorNY4c2WkG7lbrbD7YNdKvt2L1GwWLDnAwnOK+NKjJHPEEhhUrgAH
+	 HpD4LnCm99S1g==
+Message-ID: <54ed9147-e5e8-4419-9bb5-63e77de34fda@kernel.org>
+Date: Tue, 10 Mar 2026 15:24:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
-X-Rspamd-Queue-Id: EDD4025294B
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/5] platform: int3472: Add MSI prestige board data
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Antti Laakso <antti.laakso@linux.intel.com>, linux-media@vger.kernel.org,
+ linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linusw@kernel.org, brgl@kernel.org, mchehab@kernel.org,
+ dan.scally@ideasonboard.com, ilpo.jarvinen@linux.intel.com,
+ hverkuil+cisco@kernel.org, sre@kernel.org, hao.yao@intel.com,
+ jason.z.chen@intel.com, jimmy.su@intel.com, miguel.vadillo@intel.com,
+ kees@kernel.org, ribalda@chromium.org
+References: <20260310124427.693625-1-antti.laakso@linux.intel.com>
+ <20260310124427.693625-6-antti.laakso@linux.intel.com>
+ <8a197d9b-bec1-4c8f-be53-ee35c8bbb2dc@kernel.org>
+ <abAZ3ZJk3jpoKG8m@kekkonen.localdomain>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <abAZ3ZJk3jpoKG8m@kekkonen.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: EC1F12529D3
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[mit.edu,none];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[mit.edu:s=outgoing];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[lists.freedesktop.org,lists.ubuntu.com,vger.kernel.org,inria.fr,lists.linux.dev,lists.osuosl.org,lists.infradead.org,lists.ozlabs.org,kvack.org,st-md-mailman.stormreply.com,lists.samba.org,lists.sourceforge.net,imag.fr,fb.com,suse.com,gmail.com,redhat.com,dubeyko.com,dilger.ca,samba.org,manguebit.org,microsoft.com,talpey.com,kernel.org,ionkov.net,codewreck.org,crudebyte.com,linux.alibaba.com,google.com,huawei.com,vivo.com,szeredi.hu,paragon-software.com,intel.com,igalia.com,squashfs.org.uk,zeniv.linux.org.uk,suse.cz,goodmis.org,efficios.com,manifault.com,nvidia.com,infradead.org,linaro.org,arm.com,suse.de,atomlin.com,samsung.com,perex.cz,canonical.com,paul-moore.com,namei.org,hallyn.com,linux-foundation.org,davemloft.net,holtmann.org,iogearbox.net,fomichev.me,mojatatu.com,resnulli.us,oracle.com,brown.name,sipsolutions.net,armlinux.org.uk,phrozen.org,alpha.franken.de,users.sourceforge.jp,libc.org,physik.fu-berlin.de,ideasonboard.com,kwiboo.se,linux.intel.com,ffwll.c
- h,ursulin.net,amd.com,rock-chips.com,sntech.de,marvell.com,lunn.ch,broadcom.com,chelsio.com,plvision.eu,foss.st.com,os.amperecomputing.com,bootlin.com,linux.ibm.com,ti.com,shazbot.org,animalcreek.com,nod.at,linuxfoundation.org,8bytes.org,coraid.com,kernel.dk,baylibre.com,pengutronix.de,alien8.de,zytor.com];
-	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33018-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33017-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[mit.edu:+];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	FROM_HAS_DN(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[tytso@mit.edu,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[247];
-	TAGGED_RCPT(0.00)[linux-gpio,netdev];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hansg@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,cisco];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,macsyma-wired.lan:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,msi.com:url]
 X-Rspamd-Action: no action
 
-On Tue, Mar 10, 2026 at 12:48:26PM +0100, Philipp Hahn wrote:
-> While doing some static code analysis I stumbled over a common pattern,
-> where IS_ERR() is combined with a NULL check. For that there is
-> IS_ERR_OR_NULL().
+Hi,
+
+On 10-Mar-26 14:17, Sakari Ailus wrote:
+> Hi Hans,
 > 
-> I've written a Coccinelle patch to find and patch those instances.
-> The patches follow grouped by subsystem.
+> On Tue, Mar 10, 2026 at 02:09:54PM +0100, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 10-Mar-26 13:44, Antti Laakso wrote:
+>>> Define regulators and gpios for MSI Prestige 14 AI EVO+ laptop.
+>>>
+>>> Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
+>>> ---
+>>>  .../x86/intel/int3472/tps68470_board_data.c   | 97 +++++++++++++++++++
+>>>  1 file changed, 97 insertions(+)
+>>>
+>>> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+>>> index 71357a036292..fe7c23e72d66 100644
+>>> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+>>> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+>>> @@ -232,6 +232,73 @@ static const struct tps68470_regulator_platform_data dell_7212_tps68470_pdata =
+>>>  	},
+>>>  };
+>>>  
+>>> +/* Settings for MSI Prestige 14 laptop. */
+>>> +
+>>> +static struct regulator_consumer_supply ovti5675_avdd_consumer_supplies[] = {
+>>> +	REGULATOR_SUPPLY("avdd", "i2c-OVTI5675:00"),
+>>> +};
+>>> +
+>>> +static struct regulator_consumer_supply ovti5675_dovdd_consumer_supplies[] = {
+>>> +	REGULATOR_SUPPLY("dovdd", "i2c-OVTI5675:00"),
+>>> +};
+>>> +
+>>> +static struct regulator_consumer_supply ovti5675_dvdd_consumer_supplies[] = {
+>>> +	REGULATOR_SUPPLY("dvdd", "i2c-OVTI5675:00"),
+>>> +};
+>>> +
+>>> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_core_reg_init_data = {
+>>> +	.constraints = {
+>>> +		.min_uV = 1200000,
+>>> +		.max_uV = 1200000,
+>>> +		.apply_uV = 1,
+>>> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+>>> +	},
+>>> +	.num_consumer_supplies = ARRAY_SIZE(ovti5675_dvdd_consumer_supplies),
+>>> +	.consumer_supplies = ovti5675_dvdd_consumer_supplies,
+>>> +};
+>>> +
+>>> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_ana_reg_init_data = {
+>>> +	.constraints = {
+>>> +		.min_uV = 2815200,
+>>> +		.max_uV = 2815200,
+>>> +		.apply_uV = 1,
+>>> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+>>> +	},
+>>> +	.num_consumer_supplies = ARRAY_SIZE(ovti5675_avdd_consumer_supplies),
+>>> +	.consumer_supplies = ovti5675_avdd_consumer_supplies,
+>>> +};
+>>> +
+>>> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vio_reg_init_data = {
+>>> +	.constraints = {
+>>> +		.min_uV = 1800600,
+>>> +		.max_uV = 1800600,
+>>> +		.apply_uV = 1,
+>>> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+>>> +	},
+>>> +	.num_consumer_supplies = 0,
+>>> +	.consumer_supplies = NULL,
+>>> +};
+>>> +
+>>> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vsio_reg_init_data = {
+>>> +	.constraints = {
+>>> +		.min_uV = 1800600,
+>>> +		.max_uV = 1800600,
+>>> +		.apply_uV = 1,
+>>> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
+>>> +	},
+>>> +	.num_consumer_supplies = ARRAY_SIZE(ovti5675_dovdd_consumer_supplies),
+>>> +	.consumer_supplies = ovti5675_dovdd_consumer_supplies,
+>>> +};
+>>> +
+>>> +static const struct tps68470_regulator_platform_data msi_p14_ai_evo_tps68470_pdata = {
+>>> +	.reg_init_data = {
+>>> +		[TPS68470_CORE] = &msi_p14_ai_evo_tps68470_core_reg_init_data,
+>>> +		[TPS68470_ANA]  = &msi_p14_ai_evo_tps68470_ana_reg_init_data,
+>>> +		[TPS68470_VIO]  = &msi_p14_ai_evo_tps68470_vio_reg_init_data,
+>>> +		[TPS68470_VSIO] = &msi_p14_ai_evo_tps68470_vsio_reg_init_data,
+>>> +	},
+>>> +};
+>>> +
+>>>  static struct gpiod_lookup_table surface_go_int347a_gpios = {
+>>>  	.dev_id = "i2c-INT347A:00",
+>>>  	.table = {
+>>> @@ -258,6 +325,19 @@ static struct gpiod_lookup_table dell_7212_int3479_gpios = {
+>>>  	}
+>>>  };
+>>>  
+>>> +static struct gpiod_lookup_table msi_p14_ai_evo_ovti5675_gpios = {
+>>> +	.dev_id = "i2c-OVTI5675:00",
+>>> +	.table = {
+>>> +		GPIO_LOOKUP_IDX("tps68470-gpio", 9, "reset", 0, GPIO_ACTIVE_LOW),
+>>> +		GPIO_LOOKUP_IDX("tps68470-gpio", 7, "reset", 1, GPIO_ACTIVE_LOW),
+>>> +		{ }
+>>> +	}
+>>> +};
+>>> +
+>>> +static const struct tps68470_gpio_platform_data msi_p14_ai_evo_tps68470_gpio_pdata = {
+>>> +	.daisy_chain_enable = true,
+>>> +};
+>>> +
+>>>  static const struct int3472_tps68470_board_data surface_go_tps68470_board_data = {
+>>>  	.dev_name = "i2c-INT3472:05",
+>>>  	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
+>>> @@ -287,6 +367,16 @@ static const struct int3472_tps68470_board_data dell_7212_tps68470_board_data =
+>>>  	},
+>>>  };
+>>>  
+>>> +static const struct int3472_tps68470_board_data msi_p14_ai_evo_tps68470_board_data = {
+>>> +	.dev_name = "i2c-INT3472:06",
+>>> +	.tps68470_regulator_pdata = &msi_p14_ai_evo_tps68470_pdata,
+>>> +	.tps68470_gpio_pdata = &msi_p14_ai_evo_tps68470_gpio_pdata,
+>>> +	.n_gpiod_lookups = 1,
+>>> +	.tps68470_gpio_lookup_tables = {
+>>> +		&msi_p14_ai_evo_ovti5675_gpios,
+>>> +	},
+>>> +};
+>>> +
+>>>  static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+>>>  	{
+>>>  		.matches = {
+>>> @@ -316,6 +406,13 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+>>>  		},
+>>>  		.driver_data = (void *)&dell_7212_tps68470_board_data,
+>>>  	},
+>>> +	{
+>>> +		.matches = {
+>>> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
+>>> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Prestige 14 AI+ Evo C2VMG"),
+>>
+>> I think this match might be a bit too specific, e.g. there also is a C1M model where
+>> this might also apply? See:
+>>
+>> https://www.msi.com/Business-Productivity/Prestige-14-AI-Evo-C1MX
+>>
+>> or maybe these are really different ?
+>>
+>> If you can look into that somehow that would be great. If you cannot find
+>> out if other models are compatible we should probably play it safe and
+>> keep the specific match you've above for now.
+> 
+> This one is MTL whereas Antti's patch adds support for an LNL laptop. It'd
+> be great if we could get a confirmation from MSI the PMIC configuration in
+> these models would match Presige 14 AI+ (or that it's different). There's
+> also a very similar model with a 13" display... Without a confirmation I
+> wouldn't relax the DMI check.
+> 
+> That being said, the risk of smoke being released might be small on a wrong
+> regulator (or GPIO) configuration but it can't be ruled out.
 
-I'm going to gently suggest that you *not* try to do this as a
-tree-wide change, since we don't need to change some interface
-requiring a global, flag day change.  This is instead a cleanup, which
-maybe makes the code slightly better, but which also has a the
-downside of breaking lots of inflight development patches by
-potentially causing merge or patch conflicts.
-
-So why don't you send it to each subsystem as a separate patch or
-small patch series, instead of spamming a dozen-plus mailing lists,
-are probably hundreds of developers, most of whom aren't going to
-care about changs in some far flung part of the kernel?
+Ack, lets keep the match as is for now then.
 
 Regards,
 
-						- Ted
+Hans
+
+
+
 
