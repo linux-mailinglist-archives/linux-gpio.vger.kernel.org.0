@@ -1,139 +1,197 @@
-Return-Path: <linux-gpio+bounces-33082-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33083-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UOkWHvQrsWkBrgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33082-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 09:46:44 +0100
+	id 4C6sDZMwsWm0rwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33083-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 10:06:27 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D197225F9F1
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 09:46:43 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EF9F25FF92
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 10:06:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 34B633402CFD
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 08:39:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E2EDC33DEB17
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 08:46:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F332C3B52FE;
-	Wed, 11 Mar 2026 08:34:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E17A93BE147;
+	Wed, 11 Mar 2026 08:46:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AapW1OL7"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="C0kUWn+j";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Rve8oArn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293C33B4EA9
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 08:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6849F3BF669
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 08:46:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773218070; cv=none; b=Z3Y6y36uKxs7M44errdemtnXyfpgj62Ub8+napCiwZY+Mtw2S6m5+eTsmjAaFFK4X6jX5ha51TdsEjQ2AaWvJiBl+hG4LPN5/VgAU1lhB7EsDeXRID2LViVlSf5skzmtOVaKCEeLBlHjmj0jENBMCvQLytHgJbo7TGNJKKoTTp0=
+	t=1773218783; cv=none; b=Xa3W3XQCn5q2fvGUufe3vaAeglOkM07tK1VM8acioCHEiea6Pn+OmNE8Oqg9V4iEGaVSLw22BBKGyOhcPgHCqyLbHb+3y8KqTEAmnqeXqdNrQ65RF1XVRMKl4fmR531PlSTs8nCE8jqaW08xNSu60YqJ1O/GOemyRR+6Nam+MvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773218070; c=relaxed/simple;
-	bh=EnMyS8+szDAa/RpTVWOfIkKuA1sX9RBaQVKPN5+DF6o=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fBciqPOBc/B/dNHNH75/OUf+ZKdAVheioUHlJJ/R5t84ZPMh5BEZ4TMP9m/Ja4G2jSCy8IEaOrA8XnObYtjge09wnZz5kp4Em9Rr458O8EmVlSpeb2lLtLc2lVY04n1U2crDNrSxs4F7b8UBgg8zg6SAo8dcWeOBpqygrY1p8bA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AapW1OL7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 999FAC4CEF7
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 08:34:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773218069;
-	bh=EnMyS8+szDAa/RpTVWOfIkKuA1sX9RBaQVKPN5+DF6o=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=AapW1OL76do1jS5S6GXEGLJhpGmV5MhKTmqMvVWSQMmX5TlTn0e9s29M8XldBxK+X
-	 mEon+CPd5ds94yWu7/Kftb22CujaZ1jrzEIDQERQXo7cmR32UAETTYPGvP0Lw3ziRE
-	 cQ/2AkVcb/72/NkCDDEFH2ASHpqs/kixSjoT95q6vXQAQKg8NMSvckj0H+I1+4p7KI
-	 rxHeo4DhiVyLSXMfnoBNZIqtF97GZsz9tIrmVFU//qRGR9X1GbcEuPa5dnq2yE4gbS
-	 lNujK49YHoECgIu6Mbc7+20p9WPYT5kC6BQo7dIkYo7WUni9iMG5JzuDUMsuU6y5ft
-	 H2/4syuXWBngA==
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-38a2544b52bso82950671fa.3
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 01:34:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVQ78jtpqxPCufisTAXTITEkCQsQ1nOJyFJKXsGQm4pUZiwFm3sDLSnIRHUdFgIeb1n/ytZP8JSCrMM@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywr+hcfiO43A4cObAg8gMnFEcnc0+/sP5noBowIzuTlmld5FlNT
-	kmG21ifs45qIo8o8a2aJ3f/DhKTH36PhvwOKPI2ra56Wc5jvdo+yBixUS/Acl1Ay8UH+Xgq0boI
-	AJ9f9l4FKZDxpRb8qafLJSKAzrC4q17v8BHYfyfM0iw==
-X-Received: by 2002:a05:651c:4214:b0:38a:3dcb:910 with SMTP id
- 38308e7fff4ca-38a67dc916emr5170611fa.7.1773218068301; Wed, 11 Mar 2026
- 01:34:28 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 11 Mar 2026 01:34:26 -0700
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 11 Mar 2026 01:34:26 -0700
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260311031134.14218-1-richard.lyu@suse.com>
+	s=arc-20240116; t=1773218783; c=relaxed/simple;
+	bh=KcBBn14EnBGiMW8fGtck7ytZ2j6VGoFJsjejrPDO9dM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H/RFY178ni1TZooJfuoiYk0DiBUHyjbRjWqZu/xbWPGX+IUqZX5v4CKlZMKTr6L2rg2zFpny/P60gyO5OJGliGPLssM++OFx9j8HDaswMW4tYPW0uGuyPUyKuuKb2aBJMIR1ktXz5CULild5yqYjSqa+FFoVSmU06s5/oaXtJUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=C0kUWn+j; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Rve8oArn; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62B3VA9K613996
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 08:46:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	unTGgoVWUMk5eUcsaRXhcn5zZKpeq+dp2FcR+QUVi+Y=; b=C0kUWn+ja6EKnfEx
+	Ssvmi54AlnPGZih4GO7YQACwjYf9gev2XJpKmjNg2LLTkAi8Gox8skH6D/q1kbfH
+	YPM/YlT3mkJw0ektRGRg007ef/Pg2iZX+76EXpnLr0W+vH+2gd4N5CC6P0d+emfN
+	c2j9ZEwfLeE7/xHkxT7BJl4uFsRXezaDfUws3gXQ9O9SRuzvWYy/rNUEnuNjlLlv
+	oUxjBc7UGasQ0n5pHD+rIyvs3ccTWW6e5TSViibc20yDbxcP7/Q7DLXbq7BZ4wNp
+	y6fHzeD1OaP7n+l8CT2MgDsVSBWB4STALBCiFmvY5qVtjvCnoLu2UBkx2AaDPqnK
+	q5yNZQ==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cu0jf10fb-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 08:46:15 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-8cd773dd409so529838785a.1
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 01:46:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1773218774; x=1773823574; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=unTGgoVWUMk5eUcsaRXhcn5zZKpeq+dp2FcR+QUVi+Y=;
+        b=Rve8oArnOVYj0Qb88em0r+/gohzm4kyn2E8PuUxJnq4fCySScbni/ft/CaXP/Bwc/w
+         UuWFA7RexC/DQvY5DvmGE75MURwpbGR2HbeQoq9JRHWUGQT0QSWjzb7RD0DbnNHdEQF/
+         TzlZ2rI5ncn+yosop+SHFvEywReM7JdTXucstj36AF2dLGEEZ34PkOuLoBjETha6S6b0
+         URjpdKArznyWxTZ8e5iCu0fizHAT8ANOWWLluhGvHUyu25oGzBuzBdGCv8pi7i3psTa+
+         y5AiO9qUQC7ZaImTBac0FroEVW+YFAKpimUfvIOevJORZCGxpahCurU3n/0qHlHRp3Sj
+         4K9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773218774; x=1773823574;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=unTGgoVWUMk5eUcsaRXhcn5zZKpeq+dp2FcR+QUVi+Y=;
+        b=NNoN3GusZRqN5muQNX7cRliQMSrbMPk4Bwv8GliDF1o3zK3p3/lHg1UR/zuyfEojvG
+         AVRYRPQnpg7eyNjMVIVqXpzhxGHM7WMRFUwX8PneIP9pv30E6eVPzLQiDnVBpHth0FWH
+         WM4RJL1GfafOLvZt35svKxSb/HoaE8Yi63lVUSuvzK9Gsuv59vYj9LRO9EpxcpMkkXW8
+         wGUD0ZzzuCOhPQGyDFAvQ2c3EHLBp35NP21D04L65NcON+cYDdmr1Qg0PebtuVN4XOLx
+         /2vqeRKMCMwpiC/4fH2Nm5zPIgail8JHpz9RRqW/hY7Acgti3t568jKMaNysCqBusOXS
+         SehA==
+X-Gm-Message-State: AOJu0Yw7UkVqfkLCUk1GFpqJntAZSCLNHCTiTFp8/e2v0J1vWnRCBGAk
+	9NkJjAE8ivqc759go7tDaDunEXbBhqDb/hVUuZQmEcrawpMJ94uSfplKOGiGYJPaIaUIcg72Z8n
+	+1ImvGDnenkdwO4N5JKhPigDMjr2lXqOJ5EflaF41bg2Tv2xzjWk8lGnc5ztO4F+eYI3KaPAb
+X-Gm-Gg: ATEYQzxh2rHrlBBkAEheIu9IO5yBqlKkN6b02DhnGKEfEPdUPw4wgN9U2HORiOG4i6v
+	GPq76FEhuyMqTh0fEOkfNLe4ddoSQ4kI2D21BAN3T0dPAmXO72eUDmZad/z3LJuGZa4LpVUNJJF
+	HO+AaAPYOGkGu/DZ6YCARw9+Dg9SBY2NdsD4QhO+SX2NQ2aNKfg4CUGbPxUAJ3NonB1kRK8QD92
+	BZKAUpn/LdoO51n/s9X6WwKXXLs5f+GvtAl1pul7jB3RpibriRK6/ce3Ax1ggp1PxXzgLtB3eAN
+	tWQnBlH5GIdtBxW9VFLJm3R6D39l6qd+ihJ0NVnSE6x6gqEeMb0XeOMUluu8SWE0UJVSLW6NoZo
+	EWrKQUSLo6wIq0Vjwv5UVzfxYpQhZyNqENcUWZnEE7gzFHuyh7b4=
+X-Received: by 2002:a05:620a:4009:b0:8c7:a53:4d17 with SMTP id af79cd13be357-8cda1955188mr216964385a.21.1773218774476;
+        Wed, 11 Mar 2026 01:46:14 -0700 (PDT)
+X-Received: by 2002:a05:620a:4009:b0:8c7:a53:4d17 with SMTP id af79cd13be357-8cda1955188mr216961785a.21.1773218774031;
+        Wed, 11 Mar 2026 01:46:14 -0700 (PDT)
+Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:1f4c:200b:aaaf:c666])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439f81fcd65sm5503816f8f.26.2026.03.11.01.46.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2026 01:46:13 -0700 (PDT)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+To: linux-gpio@vger.kernel.org, Rosen Penev <rosenp@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+        Linus Walleij <linusw@kernel.org>,
+        Bartosz Golaszewski <brgl@kernel.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] gpio: bcm-kona: remove kcalloc
+Date: Wed, 11 Mar 2026 09:46:07 +0100
+Message-ID: <177321876119.6763.661602970741238772.b4-ty@oss.qualcomm.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260311003431.31881-1-rosenp@gmail.com>
+References: <20260311003431.31881-1-rosenp@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260311031134.14218-1-richard.lyu@suse.com>
-Date: Wed, 11 Mar 2026 01:34:26 -0700
-X-Gmail-Original-Message-ID: <CAMRc=MfioFeJD=s_w0PQ2jD4npHr9y7nMhu3bXUwrr0D8roPgQ@mail.gmail.com>
-X-Gm-Features: AaiRm514Db_crc0d05_lPJLEhb6WWLUMLVMwdIhIph2Pz_zObryo9vAXiAIcwnw
-Message-ID: <CAMRc=MfioFeJD=s_w0PQ2jD4npHr9y7nMhu3bXUwrr0D8roPgQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: max732x: use guard(mutex) to simplify locking
-To: Richard Lyu <richard.lyu@suse.com>
-Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Rspamd-Queue-Id: D197225F9F1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: IHi8VJnQUdY_v0ynxTX2HJ9CoyCfhZIa
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzExMDA3MyBTYWx0ZWRfX91n8NlTvsqhM
+ KZ9qPmEblIrIWrroMdrEC2FJuJLv7sRSNMKC4Ndak6fUO97c37ZKu2GiTpx+FjdyHXniZlBVEPi
+ 7bqqa9lpH846Kiy77JPUE1/byJ/MLUynlhEjqG0+6dHF9D8mOpAU9OeETis6dsuuZIVOwkdBxfB
+ CWxgYyWCXKxJl+mSgc3HoijesA6Mmcl7hs8tURG/PTsJN59TrRZT/qXmCnfOtzkNa7XKYGzOU2v
+ Zjdk8/hz0Oh1Ov7tZNP6MK6fJVIaYllXkHJ/33+YYNNhPeJb9r5WBcfOMVvvPeyJ7DggGMSF98C
+ 1oVeixCjNHulWBQTp43Rnl0j9EH7dPJYikbhr12WsR7vaGzxPO7N3Ek1GQmkfZumxKU+g+VFmWI
+ KBFLnU9C4q+D/WZERwidjovgFZp49zqZKZaSsM9IZvVoQYGoKAax5leQPGRFb/2K47YG7yAH2UA
+ pzuBm2uxOZhpnJG8yRQ==
+X-Authority-Analysis: v=2.4 cv=FMMWBuos c=1 sm=1 tr=0 ts=69b12bd7 cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=YMgV9FUhrdKAYTUUvYB2:22 a=VwQbUJbxAAAA:8
+ a=EUspDBNiAAAA:8 a=1LwNWVZHs5xAXWCdWcsA:9 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-ORIG-GUID: IHi8VJnQUdY_v0ynxTX2HJ9CoyCfhZIa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-11_01,2026-03-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501 bulkscore=0
+ adultscore=0 clxscore=1015 impostorscore=0 suspectscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603110073
+X-Rspamd-Queue-Id: 7EF9F25FF92
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33082-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33083-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,mail.gmail.com:mid];
+	FREEMAIL_TO(0.00)[vger.kernel.org,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:dkim,qualcomm.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,oss.qualcomm.com:dkim,oss.qualcomm.com:mid];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
 X-Rspamd-Action: no action
 
-On Wed, 11 Mar 2026 04:12:12 +0100, Richard Lyu <richard.lyu@suse.com> said:
-> Convert the max732x driver to use the RAII-based guard(mutex) macro from
-> <linux/cleanup.h>. This change replaces manual mutex_lock() and
-> mutex_unlock() calls, allowing the chip lock to be managed automatically
-> based on function scope.
->
-> Refactor max732x_gpio_set_mask() and max732x_irq_update_mask() to
-> improve code readability. This allows for direct returns and removes
-> the redundant 'out' label in the set_mask function, resulting in
-> cleaner and more maintainable code.
->
-> Signed-off-by: Richard Lyu <richard.lyu@suse.com>
-> ---
->  drivers/gpio/gpio-max732x.c | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
-> index a61d670ceeda..8930f49576ed 100644
-> --- a/drivers/gpio/gpio-max732x.c
-> +++ b/drivers/gpio/gpio-max732x.c
-> @@ -18,6 +18,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/i2c.h>
->  #include <linux/platform_data/max732x.h>
-> +#include <linux/cleanup.h>
->
 
-While touching this, could you please also order includes alphabetically and
-add linux/mutex.h which seems to be missing?
+On Tue, 10 Mar 2026 17:34:31 -0700, Rosen Penev wrote:
+> Simplify allocation by using a flexible array member.
+> 
+> Use __counted_by for extra runtime analysis.
+> 
+> Shuffle some code as __counted_by requires the counting variable to be
+> set right after allocation.
+> 
+> [...]
 
-Bart
+Applied, thanks!
+
+[1/1] gpio: bcm-kona: remove kcalloc
+      https://git.kernel.org/brgl/c/0258fe8721f541bbd3949cac2f4971b98e1fe4ed
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
