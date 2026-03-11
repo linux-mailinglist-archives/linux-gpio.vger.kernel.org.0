@@ -1,117 +1,130 @@
-Return-Path: <linux-gpio+bounces-33129-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33130-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ICdoD6dmsWnsugIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33129-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 13:57:11 +0100
+	id 6PA5JM1nsWnsugIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33130-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 14:02:05 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9723E263F90
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 13:57:10 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FF7B2640EE
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 14:02:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9DF2E304226A
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 12:57:05 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 92CCD302E116
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 13:01:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3445B22A1D4;
-	Wed, 11 Mar 2026 12:57:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F130E2F5474;
+	Wed, 11 Mar 2026 13:01:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F7rl74z1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NI7ClO74"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA616280338
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 12:57:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EC82E612E
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 13:01:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773233824; cv=none; b=OYhZBWLDMpbAUuHhXLDMwvGmThe71n7kctd6i/hzQsPppVveRCj7dwjZX4ulSHHPy9d/6Q4yG+e5yhnE8XJ+GrJdPFB48W/zRLjPfPvP+uL0/PtXzYVjsVsfbo1LgzJga4MlCbOlbiEOigFYpQdt+1NocNy8uIkEq6Gl4Bdt49w=
+	t=1773234113; cv=none; b=EwomEFMot23s4+gI3O6/EjdaHj9ehI+jGqkiNyWhe65QhAyog4tSs4Nd/eEB/bSocUx3Fa47vWB1ElkZf6fQ5uE6o2j+38eTJAJDBc0EmI9V/sTJ7+cThGqGunIPzOdcIoHY/XHD5m92t5yOS2MkznAeHyhLCPcN7ZNbufcfBXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773233824; c=relaxed/simple;
-	bh=gTnf+8uCYqVV2sxyuJawFOVZpo55IObZKErFcPla61A=;
+	s=arc-20240116; t=1773234113; c=relaxed/simple;
+	bh=cOdofdA9uxeFswZkahSYK7BRxl91B+cEYHK/tWphMDY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UzoYE+CaaF7SSzc4T4DO+56cTiacD+OtZkVUV70d9uBKIjTxQ/Ameq2dpNLzBQDtaJLTJ62c8Imnm2w3TsYah3UgPdrPKaZqb/v9hsGf1LnDNDRAemQbOl5VPimqMLX7WNEiPk4jjGaSXY7n08nzoB3oEj5aDTHv38poAn8z+pY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F7rl74z1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6B17C4CEF7
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 12:57:03 +0000 (UTC)
+	 To:Cc:Content-Type; b=KI8m3m7SWvjTe7njeYZXs+5p7gkne/oX15vlg4vxYZoKTX6kGPQiZHVZOuE4FCWzwGbpYogAjDK2bFGDTQtFDOgxZSq8vtFwS8GItqL2wGOV+ES7JGFoAEtHEAZOKPE0qD5tZDP9Ue61/k2JRYKYkJuqWTnUYN0EIJSPgExpq+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NI7ClO74; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A8C8C2BC9E
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 13:01:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773233823;
-	bh=gTnf+8uCYqVV2sxyuJawFOVZpo55IObZKErFcPla61A=;
+	s=k20201202; t=1773234113;
+	bh=cOdofdA9uxeFswZkahSYK7BRxl91B+cEYHK/tWphMDY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=F7rl74z1HIIvmWnJDjTX0cAXPw2wBeYbTLOYNlwftLHPNzMKwAH6U4elDEJ6kdwR1
-	 26ShWSc25+fcBCt5iUTtGyqT3hdAjMaUlybEZiciZyXPaQSpcMJxk0nXPHwjq+pLar
-	 zt0a4jIB9Gy1qnkAlre3VLyXAz2dtku68thz5OrsfUr+hpqXr7UfOqr5Aarw2kguWb
-	 oRHJKZp2romgIacH1icqw1aZ9Aj4KTkcekw5kU/PQnOynayMzRK9tBHyZyQxIpg1mu
-	 4C64jTbr4FMTRHO3z+TlnLP3Y/MO3UnUGuAkGj0rtF7R/FGTiVYwBe2hSH03vWIv5x
-	 uSbA821h8EnxA==
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-79885f4a8ffso115476547b3.3
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 05:57:03 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yx+IrhP59ye7Cnk8mlPT0OTRfjsYtS82EOfUMJpjMYEss3JtGxi
-	8MuhAkzBzHFoSSMZP3gP9S5ekxl02gZNKSkOdy5igK7iN4w9XEtiMXe7NrC/WUzkPKC7sUf8yNE
-	5b9BWh0kEzof59j1mFCOwknhW1p8NhnQ=
-X-Received: by 2002:a05:690c:e694:20b0:798:980f:66f0 with SMTP id
- 00721157ae682-79917f69fd8mr15993927b3.33.1773233823073; Wed, 11 Mar 2026
- 05:57:03 -0700 (PDT)
+	b=NI7ClO74gRHvMrgk0qQ4jwb/kGCbUcNcMdDsTteav/31BBCZe9qNwBbqG0jWe+0x8
+	 jcE+9JIf9sELxodZwKmvA5z6GBEi8kfgF5vwmW85qbznDrAPvycK0Q6AYVwLIPPmWA
+	 cZvGCwvlicAO2ZYwRhP+KwZhjaHbPzJYHxu+jZsnNhddSvNI42IJHwnzR93+bJAlLr
+	 PxiYQU5Azl3LtCzbQyxvm2vHk/ud+eE1afc0tQ65lL35Ek2qDwSh0JyzFLBPzDwzpK
+	 muuB2D8r8P5ntTAXPtb+rH7mEjNrtj6++UYtPRm1SaxtJkH1TsO1qIfTmkRxOVyrex
+	 v49wPLTvKoWtw==
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-79801df3e42so13121387b3.0
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 06:01:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVginUwPobB28Dc5B6WCP0lzSoi78aVNn3YRXFB8aZ2GfKQqP07/ZEHwYbUopZIOQ+wySvjy63gfrcG@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcteAqYhWYBIMKciFJAGd8snDLuyj+N93ChONnNC+zzx0OG42L
+	DeO8F2lXUAgY/7vhgbGc40sClyET4Ta5qS5fCfQO+/q8VBHsOoLeOIImv1XhLcQkgh0ua/pJtzs
+	dSmlgPLXMVIbRaTri61cISl4kZh0LHdI=
+X-Received: by 2002:a05:690c:6f02:b0:796:37bb:9eb1 with SMTP id
+ 00721157ae682-7990a8ce666mr69440887b3.29.1773234112878; Wed, 11 Mar 2026
+ 06:01:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260310222040.10324-1-rosenp@gmail.com>
-In-Reply-To: <20260310222040.10324-1-rosenp@gmail.com>
+References: <20260311-ipq5210_boot_to_shell-v1-0-fe857d68d698@oss.qualcomm.com>
+In-Reply-To: <20260311-ipq5210_boot_to_shell-v1-0-fe857d68d698@oss.qualcomm.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Wed, 11 Mar 2026 13:56:51 +0100
-X-Gmail-Original-Message-ID: <CAD++jLmR8TZHMbiSBaUmUvPYvP9bPOmr0a=yq4M7FNRFF4EzcQ@mail.gmail.com>
-X-Gm-Features: AaiRm52zv2GLSL3fuEtbvEF3rCO8gpgv-QzUHQQI-EAm6dz5UlysklzPKtQCLbw
-Message-ID: <CAD++jLmR8TZHMbiSBaUmUvPYvP9bPOmr0a=yq4M7FNRFF4EzcQ@mail.gmail.com>
-Subject: Re: [PATCHv2] gpio: ljca: reduce struct allocation
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-gpio@vger.kernel.org, Lixu Zhang <lixu.zhang@intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Date: Wed, 11 Mar 2026 14:01:41 +0100
+X-Gmail-Original-Message-ID: <CAD++jL=P+0nY3yVM9MCrRfG5xLtg=R6Xgpi1xrbzzLPD-Y8KKQ@mail.gmail.com>
+X-Gm-Features: AaiRm53di8hZ7D-oR6Q7wA5Pyxd8PUFmpi5mGlcqDizSLxmOe_2ndnsU2oyjceM
+Message-ID: <CAD++jL=P+0nY3yVM9MCrRfG5xLtg=R6Xgpi1xrbzzLPD-Y8KKQ@mail.gmail.com>
+Subject: Re: [PATCH 0/9] Add minimal boot support for Qualcomm IPQ5210
+To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Robert Marko <robimarko@gmail.com>, 
+	Guru Das Srinagesh <linux@gurudas.dev>, linux-arm-msm@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-mmc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 9723E263F90
+X-Rspamd-Queue-Id: 8FF7B2640EE
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33129-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33130-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,baylibre.com,pengutronix.de,linaro.org,gmail.com,gurudas.dev,vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,qualcomm.com:email,mail.gmail.com:mid]
 X-Rspamd-Action: no action
 
-On Tue, Mar 10, 2026 at 11:21=E2=80=AFPM Rosen Penev <rosenp@gmail.com> wro=
-te:
+Hi Kathiravan,
 
-> +       size_t num;
+thanks for your patches!
 
-What about naming it num_connect_modes?
-(and unsigned in as Sakari says.)
+On Wed, Mar 11, 2026 at 10:45=E2=80=AFAM Kathiravan Thirumoorthy
+<kathiravan.thirumoorthy@oss.qualcomm.com> wrote:
+
+>       dt-bindings: pinctrl: qcom: add IPQ5210 pinctrl
+>       pinctrl: qcom: Introduce IPQ5210 TLMM driver
+
+Can you send these two separately?
+
+It seems I can just apply them to the pinctrl tree after review,
+no dependency on the other patches, right?
 
 Yours,
 Linus Walleij
