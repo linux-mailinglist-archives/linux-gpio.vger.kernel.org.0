@@ -1,267 +1,193 @@
-Return-Path: <linux-gpio+bounces-33119-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33120-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0GnQJyhQsWlCtAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33119-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 12:21:12 +0100
+	id IJ3cKe9VsWmGtwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33120-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 12:45:51 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7AC5262D95
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 12:21:11 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24BCC2630FA
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 12:45:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E0059303A485
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 11:21:10 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0E497304276A
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 11:44:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C01A31E82A;
-	Wed, 11 Mar 2026 11:21:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qv5OWEjP"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37D533DD524;
+	Wed, 11 Mar 2026 11:44:47 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9608D3D88F9;
-	Wed, 11 Mar 2026 11:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95403CFF7B
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 11:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773228068; cv=none; b=CUGQsXTzD7UDIxYgvc/ECN4qR+kIdrBp6Y+sP5yexgnDL6lfZO4U4LEKyF81uqkwkO8tVsc7tcStCQCgU/ZbRfwAiZg4TYdh0J9KcbO5ixzxi6Z2ligcr62lTRjg2la37FQ3UOwqyveOoId52iTEehLsmJnR2cOcwPkeqOUjUnY=
+	t=1773229487; cv=none; b=L2v4GGnMIMcPHb58IQ6Ou7mvB1SpoTsfUhgbMY0HdWTmTx2xnUHPy6Iqt22UOOsW+f2u3+h1whB5GibyuaFKP/bHM97UsfObpynGt8z0j6mdkH8KmdoRapsIN+sylpvOgQIOKPSoP66eeC1x9wKCbhmX3rxqPP4ShWfGeCYfXBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773228068; c=relaxed/simple;
-	bh=G8zRjBWbNVr1Sm3VXmHyMLo9tRzQK8H7TzgK2IGArw0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jz/53Wuqb7Kz5iw+srUgJWrgE9zmDu1RUPYF2j7CouDCar/yjmwL/dyPXuqa4vLSWzFfOfgbKpVx4VMKsQwRMNw3Fo9xb9RY95SnVFawPnbiH42m6hy4t7E1GQFg3v1SovSIINuQTFzFU/zxeGjisj+lfkUMjeyFt8E519W/2Lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qv5OWEjP; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773228066; x=1804764066;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=G8zRjBWbNVr1Sm3VXmHyMLo9tRzQK8H7TzgK2IGArw0=;
-  b=Qv5OWEjPc9QpBvHkwAbQMqSyO7LBG0gumxaa+16WCgUz26l+pwhVFQF+
-   68x6cNLP3m/3e/Q1q5kCgdoNXsm15fD+YfInyIYLNYkCupGZW6sc/cykw
-   Ue8eeleKx9eWvgu64TA/hRff7ggP6E6ho+TzAEmRyJD6x7otrgmIw1ybc
-   RLoY1h1DoiGTwcsyrRElUIqOf/pNPuq/cme8LwVWUrea6KN2BeE6JWFpe
-   cqLTZWQPUzAx7Cjee+ZuxepOundcYdTqHPFWM0yGZshVVtg9tgw8PUdRv
-   ETmYxCGtWTIjgTdfaLNMm20Sqa6ac5Bmf+csyNNWlskE1iSvh4CCwxL/B
-   g==;
-X-CSE-ConnectionGUID: A/T3nB6URaOewFDNPOIDyg==
-X-CSE-MsgGUID: gmeq6KQmRqeLYoBfRDkCcQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11725"; a="85646369"
-X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
-   d="scan'208";a="85646369"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 04:21:05 -0700
-X-CSE-ConnectionGUID: 5naTzg3WTgaFUHtfxzPYOA==
-X-CSE-MsgGUID: 1trlYXxBSxamGbxjdVQQiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
-   d="scan'208";a="217110086"
-Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO alaakso-DESK) ([10.245.246.81])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 04:21:00 -0700
-Date: Wed, 11 Mar 2026 13:20:56 +0200
-From: Antti Laakso <antti.laakso@linux.intel.com>
-To: Dan Scally <dan.scally@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, linux-gpio@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, linusw@kernel.org,
-	brgl@kernel.org, sakari.ailus@linux.intel.com, mchehab@kernel.org,
-	hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
-	hverkuil+cisco@kernel.org, sre@kernel.org, hao.yao@intel.com,
-	jimmy.su@intel.com, miguel.vadillo@intel.com, kees@kernel.org,
-	ribalda@chromium.org
-Subject: Re: [PATCH 5/5] platform: int3472: Add MSI prestige board data
-Message-ID: <abFQGE0N3Ulgcn1I@alaakso-DESK>
-References: <20260310124427.693625-1-antti.laakso@linux.intel.com>
- <20260310124427.693625-6-antti.laakso@linux.intel.com>
- <db7b4eeb-1054-4b7c-9f91-810be504124d@ideasonboard.com>
+	s=arc-20240116; t=1773229487; c=relaxed/simple;
+	bh=91YPfEButMB4Dd2zOu5KgfkAt2bAzw+tFr6ttZBOtAQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PwyJCHzeAcMFMZmzoVhEvtG7s0lgO/phj9EICB8VAEc/04kkVhcaRidpCf2XgayC3V3ZpmlmGNBKaVTInz8UqCiPmK3aIm767WWfuw3ICgJCERu2+gIZK7amJh0PiKa+Y5DR9G5AcjihAwIarjdeKEnnN5rJcfPoB8A5Vz3q3jI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-5ffe68892efso3444522137.1
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 04:44:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773229485; x=1773834285;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+7KfcYBgSfUu6P1T8nEVd1qT43qw4ZZIvyTvKKhSf7M=;
+        b=OesvL/CWINooWfErQh70waL0xIb1ZUViK1mcNJzMYe0Mmj3gum+mkQ7GAt1A6TwI2T
+         yoUNHu78U0u5rHb45PUJFZCtTFyArTh59mnCoWQ/0WObjQZHvf0haAnVK1eUniUqhn7s
+         xZ8Vh7CrO5W6As9HhdFokT8h8utR0C87hLRPeDSlILtaONUXSAz7TFy8tAexMVwUmT42
+         AS4q3xeEtMeUMYjmMYq53oqU2CvOt9MnTAo7b5t8dkJJFkDgKF3XYkagK261jc/QU/r0
+         5ge1RGpOs9NJA7wURb0opTA8uKtmLPOUdX/8/k8+Yq7s8gAMxeWfVcgdMz1yroWfpyvF
+         iLCw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSqqsFzcMov8NInilVgNdpx1X58IlodNVybOC7sW5pT9APAU+pFLt2BXs5I4Y9DhgLtuwCEOKiHhEP@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBol7F2LUlEIxd39POzHlwgPQwjdi7Kde1mXppiU85mIWhcdpa
+	OM38PAhuVMynhzTrozjXs1FAo7QSyZQA6QZN2SwJQcguQZ0kEVEsAGtIW12uHsTp
+X-Gm-Gg: ATEYQzxGf282cJZlKfeJcWxQ+voBl5ATT8ifUBGI8mijmUoILFjY3Mnu9Cgq7x5mRND
+	OnttNJFKfIRpz30HEczPQuqLawvXvOPaJKnvshgFeeuXRwiTZuN9zIvseJo19wl3oqe5AoG5jpo
+	3wnI2T3LG/9HgW6DTraoUMDQfwhmNl29HE0tNryQJ6ByNm7zVaRDhnvrGOoae2ToqKi2CakQ42G
+	aAhSDgHmyVzAAotZUpCgkQp4Wys4sJ+VL3/b18Ga17LD28XQ7A6di1CMjcVcQakU9eP57r7CyrC
+	CQNWFCWwqA8CJjOeqK+jSFMHcC6ph5qs9CqVZpcTV9s2GXutUyd4BZYo9VMYp1ZxrHR5/LgWofY
+	TH4T9C6wHZInOzZWrgvMrTU8mbKgFChh8WYZAUDwzw8BiT84om55TIX9vRmZe4bttbo4GKNm1Gc
+	jnpjbOkC/0KZ5SQddTUiYm+Wevn+i0WxtzO/9LHJlrlJg7kBHyY6oWleJCgtCx47Pg
+X-Received: by 2002:a05:6102:390c:b0:600:d0f:bad2 with SMTP id ada2fe7eead31-601deb258cfmr1002042137.2.1773229484853;
+        Wed, 11 Mar 2026 04:44:44 -0700 (PDT)
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com. [209.85.221.172])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-601de74a9a5sm610118137.5.2026.03.11.04.44.44
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2026 04:44:44 -0700 (PDT)
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-56a86f0a23bso10847414e0c.0
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 04:44:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVssEBRxCxEvYU/Xjjj9a+Iahuv7l6Z2gXkalMYj+1fBLYKtI88JVKGElVnZDdIa5JrqPA4OJvJPWGN@vger.kernel.org
+X-Received: by 2002:a05:6102:2aca:b0:600:20:74f8 with SMTP id
+ ada2fe7eead31-601deb937d1mr897288137.13.1773229483828; Wed, 11 Mar 2026
+ 04:44:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <db7b4eeb-1054-4b7c-9f91-810be504124d@ideasonboard.com>
-X-Rspamd-Queue-Id: E7AC5262D95
+References: <20260223061726.82161-1-tzungbi@kernel.org> <20260223061726.82161-2-tzungbi@kernel.org>
+In-Reply-To: <20260223061726.82161-2-tzungbi@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 11 Mar 2026 12:44:31 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdU0Xb=Moca5LUex+VxyHQa2-uYJgYf4hzHiSEjDCQQT=Q@mail.gmail.com>
+X-Gm-Features: AaiRm526CPdI3xsQIkHSFIKuUm3bmXqbgoDrLhuyzTn4LwLbPOLadWtxPY6y_FQ
+Message-ID: <CAMuHMdU0Xb=Moca5LUex+VxyHQa2-uYJgYf4hzHiSEjDCQQT=Q@mail.gmail.com>
+Subject: Re: [PATCH v4 1/6] gpio: Access `gpio_bus_type` in gpiochip_setup_dev()
+To: Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: Bartosz Golaszewski <brgl@kernel.org>, Linus Walleij <linusw@kernel.org>, Shuah Khan <shuah@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Rspamd-Queue-Id: 24BCC2630FA
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33119-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[antti.laakso@linux.intel.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,cisco];
+	TAGGED_FROM(0.00)[bounces-33120-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	DMARC_NA(0.00)[linux-m68k.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,intel.com:dkim,intel.com:email]
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	NEURAL_HAM(-0.00)[-0.849];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,mail.gmail.com:mid,linux-m68k.org:email]
 X-Rspamd-Action: no action
 
-Thanks for review Dan,
-On Tue, Mar 10, 2026 at 02:32:56PM +0000, Dan Scally wrote:
-> Hi Antti
-> 
-> On 10/03/2026 12:44, Antti Laakso wrote:
-> > Define regulators and gpios for MSI Prestige 14 AI EVO+ laptop.
-> > 
-> > Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
-> > ---
-> >   .../x86/intel/int3472/tps68470_board_data.c   | 97 +++++++++++++++++++
-> >   1 file changed, 97 insertions(+)
-> > 
-> > diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> > index 71357a036292..fe7c23e72d66 100644
-> > --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> > +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> > @@ -232,6 +232,73 @@ static const struct tps68470_regulator_platform_data dell_7212_tps68470_pdata =
-> >   	},
-> >   };
-> > +/* Settings for MSI Prestige 14 laptop. */
-> > +
-> > +static struct regulator_consumer_supply ovti5675_avdd_consumer_supplies[] = {
-> > +	REGULATOR_SUPPLY("avdd", "i2c-OVTI5675:00"),
-> > +};
-> > +
-> > +static struct regulator_consumer_supply ovti5675_dovdd_consumer_supplies[] = {
-> > +	REGULATOR_SUPPLY("dovdd", "i2c-OVTI5675:00"),
-> > +};
-> > +
-> > +static struct regulator_consumer_supply ovti5675_dvdd_consumer_supplies[] = {
-> > +	REGULATOR_SUPPLY("dvdd", "i2c-OVTI5675:00"),
-> > +};
-> > +
-> > +static const struct regulator_init_data msi_p14_ai_evo_tps68470_core_reg_init_data = {
-> > +	.constraints = {
-> > +		.min_uV = 1200000,
-> > +		.max_uV = 1200000,
-> > +		.apply_uV = 1,
-> > +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-> > +	},
-> > +	.num_consumer_supplies = ARRAY_SIZE(ovti5675_dvdd_consumer_supplies),
-> > +	.consumer_supplies = ovti5675_dvdd_consumer_supplies,
-> > +};
-> > +
-> > +static const struct regulator_init_data msi_p14_ai_evo_tps68470_ana_reg_init_data = {
-> > +	.constraints = {
-> > +		.min_uV = 2815200,
-> > +		.max_uV = 2815200,
-> > +		.apply_uV = 1,
-> > +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-> > +	},
-> > +	.num_consumer_supplies = ARRAY_SIZE(ovti5675_avdd_consumer_supplies),
-> > +	.consumer_supplies = ovti5675_avdd_consumer_supplies,
-> > +};
-> > +
-> > +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vio_reg_init_data = {
-> > +	.constraints = {
-> > +		.min_uV = 1800600,
-> > +		.max_uV = 1800600,
-> > +		.apply_uV = 1,
-> > +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-> > +	},
-> > +	.num_consumer_supplies = 0,
-> > +	.consumer_supplies = NULL,
-> > +};
-> > +
-> > +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vsio_reg_init_data = {
-> > +	.constraints = {
-> > +		.min_uV = 1800600,
-> > +		.max_uV = 1800600,
-> > +		.apply_uV = 1,
-> > +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-> > +	},
-> > +	.num_consumer_supplies = ARRAY_SIZE(ovti5675_dovdd_consumer_supplies),
-> > +	.consumer_supplies = ovti5675_dovdd_consumer_supplies,
-> > +};
-> > +
-> > +static const struct tps68470_regulator_platform_data msi_p14_ai_evo_tps68470_pdata = {
-> > +	.reg_init_data = {
-> > +		[TPS68470_CORE] = &msi_p14_ai_evo_tps68470_core_reg_init_data,
-> > +		[TPS68470_ANA]  = &msi_p14_ai_evo_tps68470_ana_reg_init_data,
-> > +		[TPS68470_VIO]  = &msi_p14_ai_evo_tps68470_vio_reg_init_data,
-> > +		[TPS68470_VSIO] = &msi_p14_ai_evo_tps68470_vsio_reg_init_data,
-> > +	},
-> > +};
-> > +
-> >   static struct gpiod_lookup_table surface_go_int347a_gpios = {
-> >   	.dev_id = "i2c-INT347A:00",
-> >   	.table = {
-> > @@ -258,6 +325,19 @@ static struct gpiod_lookup_table dell_7212_int3479_gpios = {
-> >   	}
-> >   };
-> > +static struct gpiod_lookup_table msi_p14_ai_evo_ovti5675_gpios = {
-> > +	.dev_id = "i2c-OVTI5675:00",
-> > +	.table = {
-> > +		GPIO_LOOKUP_IDX("tps68470-gpio", 9, "reset", 0, GPIO_ACTIVE_LOW),
-> > +		GPIO_LOOKUP_IDX("tps68470-gpio", 7, "reset", 1, GPIO_ACTIVE_LOW),
-> 
-> The ov5675 driver seems only to look for a single gpio, so I think the
-> second entry would never be accessed here...should there be an accompanying
-> driver change?
-> 
-> Thanks
-> Dan
+Hi Tzung-Bi,
 
-Yes, the gpio 7 is not needed. I'll fix it for v2.
- 
-> > +		{ }
-> > +	}
-> > +};
-> > +
-> > +static const struct tps68470_gpio_platform_data msi_p14_ai_evo_tps68470_gpio_pdata = {
-> > +	.daisy_chain_enable = true,
-> > +};
-> > +
-> >   static const struct int3472_tps68470_board_data surface_go_tps68470_board_data = {
-> >   	.dev_name = "i2c-INT3472:05",
-> >   	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
-> > @@ -287,6 +367,16 @@ static const struct int3472_tps68470_board_data dell_7212_tps68470_board_data =
-> >   	},
-> >   };
-> > +static const struct int3472_tps68470_board_data msi_p14_ai_evo_tps68470_board_data = {
-> > +	.dev_name = "i2c-INT3472:06",
-> > +	.tps68470_regulator_pdata = &msi_p14_ai_evo_tps68470_pdata,
-> > +	.tps68470_gpio_pdata = &msi_p14_ai_evo_tps68470_gpio_pdata,
-> > +	.n_gpiod_lookups = 1,
-> > +	.tps68470_gpio_lookup_tables = {
-> > +		&msi_p14_ai_evo_ovti5675_gpios,
-> > +	},
-> > +};
-> > +
-> >   static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
-> >   	{
-> >   		.matches = {
-> > @@ -316,6 +406,13 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
-> >   		},
-> >   		.driver_data = (void *)&dell_7212_tps68470_board_data,
-> >   	},
-> > +	{
-> > +		.matches = {
-> > +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
-> > +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Prestige 14 AI+ Evo C2VMG"),
-> > +		},
-> > +		.driver_data = (void *)&msi_p14_ai_evo_tps68470_board_data,
-> > +	},
-> >   	{ }
-> >   };
-> 
+On Mon, 23 Feb 2026 at 07:17, Tzung-Bi Shih <tzungbi@kernel.org> wrote:
+> To make the intent clear, access `gpio_bus_type` only when it's ready in
+> gpiochip_setup_dev().
+>
+> Reviewed-by: Linus Walleij <linusw@kernel.org>
+> Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
+
+Thanks for your patch, which is now commit cc11f4ef666fbca0 ("gpio:
+Access `gpio_bus_type` in gpiochip_setup_dev()") in gpio/gpio/for-next.
+
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -901,6 +901,8 @@ static int gpiochip_setup_dev(struct gpio_device *gdev)
+>         struct fwnode_handle *fwnode = dev_fwnode(&gdev->dev);
+>         int ret;
+>
+> +       gdev->dev.bus = &gpio_bus_type;
+> +
+>         /*
+>          * If fwnode doesn't belong to another device, it's safe to clear its
+>          * initialized flag.
+> @@ -1082,7 +1084,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>          * then make sure they get free():ed there.
+>          */
+>         gdev->dev.type = &gpio_dev_type;
+> -       gdev->dev.bus = &gpio_bus_type;
+>         gdev->dev.parent = gc->parent;
+>         device_set_node(&gdev->dev, gpiochip_choose_fwnode(gc));
+>
+
+Postponing this assignment does have an impact on early
+messages. E.g. on RBTX4927:
+
+    -gpio gpiochip0: Static allocation of GPIO base is deprecated, use
+dynamic allocation.
+    + gpiochip0: Static allocation of GPIO base is deprecated, use
+dynamic allocation.
+
+Or with CONFIG_DEBUG_GPIO=y, e.g. on BeagleBone black:
+
+    -gpio gpiochip0: (gpio-0-31): created GPIO range 0->7 ==>
+44e10800.pinmux PIN 0->7
+    -gpio gpiochip0: (gpio-0-31): created GPIO range 8->11 ==>
+44e10800.pinmux PIN 90->93
+    -gpio gpiochip0: (gpio-0-31): created GPIO range 12->27 ==>
+44e10800.pinmux PIN 12->27
+    -gpio gpiochip0: (gpio-0-31): created GPIO range 28->31 ==>
+44e10800.pinmux PIN 30->33
+    + gpiochip0: (gpio-0-31): created GPIO range 0->7 ==>
+44e10800.pinmux PIN 0->7
+    + gpiochip0: (gpio-0-31): created GPIO range 8->11 ==>
+44e10800.pinmux PIN 90->93
+    + gpiochip0: (gpio-0-31): created GPIO range 12->27 ==>
+44e10800.pinmux PIN 12->27
+    + gpiochip0: (gpio-0-31): created GPIO range 28->31 ==>
+44e10800.pinmux PIN 30->33
+     [...]
+
+Note the spaces at the beginning of the printed lines.
+Reverting the commit re-adds the "gpio" prefix.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
