@@ -1,48 +1,49 @@
-Return-Path: <linux-gpio+bounces-33161-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33162-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id xh+IKNmHsWnkDAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33161-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 16:18:49 +0100
+	id cPlEH9KHsWmjCwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33162-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 16:18:42 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F7A62664C6
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 16:18:49 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C1492664B0
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 16:18:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D7570305936F
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 15:17:55 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8FB843014F7C
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 15:18:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49EDF29DB86;
-	Wed, 11 Mar 2026 15:17:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D51B63DEFF4;
+	Wed, 11 Mar 2026 15:17:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hhSHk6EY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AgIWTC+k"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF8B3DD519;
-	Wed, 11 Mar 2026 15:17:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E1A3DB63C;
+	Wed, 11 Mar 2026 15:17:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773242272; cv=none; b=RwMDD3SxharMzD8JYWvtkZNSwVHVNiOJ0AovGVef3f0g9dLsHo++1l32cecnr7cjlQSk/qYVf9nFFz7yf5QrKaOSdyudyW2vqDcEpBwjza+SoidK3SXrpTVZSTo6p+9aLmQTxmzSK3yXi4opzu/rk6ojBL40vwdDvTogj/u4YF8=
+	t=1773242275; cv=none; b=C0Fb7tO0zKpJHs4rlFpaOxqi6ew53UECspPAgZJYzqW7tdn7VaSTo4UT2OdVC9xZ0TD0hxnS4ecKkFbj15KPwUEMpVL3cImzzFwRQsfv02mh6GDCBjCzaz2tncoeNJ5mutf02qV0Q+I3BEzb2u/Uhs8NrUZWFm/ia12BH9RVTZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773242272; c=relaxed/simple;
-	bh=baGI29/X7J6RtGJtVe0l5LK6JDkPCmJCS4gpO+nhxmg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JSovphpTL6PHlbpDeT+mHty3KeI+Uh1xBTPETFuYnbwQib2TqP27F9osAoMO4itlLqY6tXMdR1SfqRhmHfE6Rh/tJSfk/wF/5FdtXX8KTDg9ZgZOtfCoG1gmzTahFzU/6HZhH42qNr3Pb32N6ITyvFJz2SD0xhmuNBNHgFgDfCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hhSHk6EY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86EFFC2BC9E;
-	Wed, 11 Mar 2026 15:17:48 +0000 (UTC)
+	s=arc-20240116; t=1773242275; c=relaxed/simple;
+	bh=XnBr/Pa9pCsJNH/DLGqHVg8IGm5p35+wH/kjo0aCQG4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hwd9ew8itq/mD58ARfCCREagJezU4UPpdvbPFemlzLuJej3DnXQK0HUmf8+N8JIohBQZ68zmbCgRb23xm2Mti8vOkqlErKHz3vKgCAxw7aIZd0KTGyajEhJQExAAn3mYGe52QUX2TZeXSrqLuBU++sDy5CY0YuDPkZy3LfOE2ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AgIWTC+k; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FDEBC19425;
+	Wed, 11 Mar 2026 15:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773242271;
-	bh=baGI29/X7J6RtGJtVe0l5LK6JDkPCmJCS4gpO+nhxmg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hhSHk6EYTGzgb/xT8oW9SKKV7LScUDUABKlBuJvOlkZ2hyg70rUiebLevNzTl770j
-	 Y9Tb0x9U7wijlBmywpTEtuIyHZ7qn/fQuoLB5IcYguvESex0nsKtSr6QhXm03MG9x4
-	 +QazaXcRnlzim1W+ManE2DNq7mrERXGTBYGFWsVrWmURV14fclpqIz/CUDGOef61f1
-	 ZjzvG19sQvgKvrM77A+HFVgPmjZ/XC4NPJtW2YKRdgHzi/LocIE+MWt2O7Hq1o8XTr
-	 w10W12JoVs/NDIjMwFvYKNPLPJoG/hvlxyFTGhxKHr5njTtyPRm6yo7i/oZUnEXe5z
-	 LKYLQH6786LjQ==
+	s=k20201202; t=1773242275;
+	bh=XnBr/Pa9pCsJNH/DLGqHVg8IGm5p35+wH/kjo0aCQG4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AgIWTC+ktR5Xqs1oEZRf9AzzWpwu10P5aw7vS57T7ivGJmHqQs0GwPSfqTW3AUIJn
+	 l6QA/zgjZVzBe4VKemOm0qt8I7A3h9uBv2A1MGtpSww942eZIWj9BxMJRwpfi8eMeB
+	 ktXYmk8reSkC8g2GizzpnWlvhR1uhXeqLNaOp+uCOutyPwZ6DwAk5XsrAzXYRo6DYG
+	 t0DZMgKj9TwOkk9kMS7jMIsPnX4ry+zR3kO2Nov30T2lij5Ap8DKm6hBcMOAUHau22
+	 DYCfP4DpgW+ENJjxYFjIvamuGoMLOr0M7GbwsgvL1JSfAjZ2XrwqM8s8/X24efKZ0T
+	 wvJbGyO2ZL0Uw==
 From: Conor Dooley <conor@kernel.org>
 To: linux-gpio@vger.kernel.org
 Cc: conor@kernel.org,
@@ -61,149 +62,251 @@ Cc: conor@kernel.org,
 	linux-riscv@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v12 0/4] PolarFire SoC GPIO interrupt support
-Date: Wed, 11 Mar 2026 15:17:37 +0000
-Message-ID: <20260311-tasting-friend-eae39148fb96@spud>
+Subject: [PATCH v12 1/4] gpio: mpfs: Add interrupt support
+Date: Wed, 11 Mar 2026 15:17:38 +0000
+Message-ID: <20260311-mandolin-sprang-9b9bee9f5a04@spud>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260311-tasting-friend-eae39148fb96@spud>
+References: <20260311-tasting-friend-eae39148fb96@spud>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4646; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=iroIE3VF1VJ9LtNRmplgK16+lCoduSIXkqDPMvxuhjA=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJkb26epBy3ZdvmJ4vckO/sz7IdSsnn2asl+VGO5XeU3N 0ksKVy7o5SFQYyLQVZMkSXxdl+L1Po/Ljuce97CzGFlAhnCwMUpABNRzmP4zRJnKy/k9bHr49+E id8mhm/dvFHigZEI5+4XBvqudc5pBowMP2MirqdMv35piZXQnPzD0ktuuDPfWbJzfvV0mWXr2+S W8QMA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6297; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=SW0NQMIPNrJC2tahHXMpad7fckvgFs9dSDepowJfIRU=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJkb26evlTGesf0N4+y5eREXPbrubbkmdCplU+W9PU3Hf y0QYpkp0lHKwiDGxSArpsiSeLuvRWr9H5cdzj1vYeawMoEMYeDiFICJbJBm+J/n8ZMnzjx5ZsIP iYma899uPbU1NsAx1Oqq9hkeq/KzHwUZ/vvH3lml7fW+7LVlem3+xC+pk+/eMnM+vsz04cU519w ObOABAA==
 X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
+	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33161-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33162-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[17];
-	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 1F7A62664C6
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,microchip.com:email]
+X-Rspamd-Queue-Id: 3C1492664B0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Conor Dooley <conor.dooley@microchip.com>
 
-In 2024 I sent a v7 of adding support for the GPIOs on PolarFire SoC,
-which relied on an irqchip driver for a mux sitting between the GPIO
-controllers and the main interrupt controller on the chip:
-https://lore.kernel.org/all/20240723-flatworm-cornflake-8023212f6584@wendy/
+Add support for interrupts to the PolarFire SoC GPIO driver. Each GPIO
+has an independent interrupt that is wired to an interrupt mux that sits
+between the controllers and the PLIC. The SoC has more GPIO lines than
+connections from the mux to the PLIC, so some GPIOs must share PLIC
+interrupts. The configuration is not static and is set at runtime,
+conventionally by the platform's firmware. CoreGPIO, the version
+intended for use in the FPGA fabric has two interrupt output ports, one
+is IO_NUM bits wide, as is used in the hardened cores, and the other is
+a single bit with all lines ORed together.
 
-Some feedback I got from Thomas there ended up being a complete black
-hole for time spent, and I never managed to make the change he wanted,
-as a house of cards collapsed whenever I tried it. I eventually
-abandoned my attempt to upstream the GPIO driver with interrupt support
-and cut it out of the driver to make progress. I've been carrying what
-Thomas deemed incorrect downstream since.
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ drivers/gpio/Kconfig     |   1 +
+ drivers/gpio/gpio-mpfs.c | 122 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 120 insertions(+), 3 deletions(-)
 
-Recently Hervé upstreamed a patchset for a Renesas chip that deals with
-a mux sitting between a GPIO controller and the platform interrupt
-controller by way of interrupt-map. I saw the opportunity to copy what
-he did, so have gone from an irqchip driver that read the mux setting
-that firmware had configured, to trivial driver that reads the mux
-configuration from devicetree and sets the hardware up to match.
-
-This gets rid entirely of the irqchip driver, so resolves Thomas'
-complaint, but I don't love how the GPIO side of things turned out quite
-as much. The hardware has 41 interrupts but 70 GPIO lines. 38 of these
-are 1:1, direct connections to a dedicated line on the interrupt
-controller and 3 are shared.
-With the parent mux driver, the GPIO driver's interrupt handler was only
-called either for specific direct interrupt or for only the subset that
-are fed into the shared interrupt for that controller. Without the
-parent irqchip from mux driver, and using interrupt-map, I lost the
-ability to use mux driver to selectively call the handler, so now the
-GPIO controller attempts to handle interrupts on all lines.
-Probably this is ultimately not a big deal, it just feels bad to do.
-
-The mux driver has moved from irqchip to soc, since that's where Hervé's
-ended up.
-
-I assume the merging strategy is going to be the kinda expected split
-into three, and it's worth noting that this may lead to some issues with
-the gpio interrupt support, depending on how the existing devicetrees
-are written. Of course, it'll come good in linux-next and in Linus'
-tree.
-
-Cheers,
-Conor.
-
-v12:
-- Implemented mux driver feedback from Hervé.
-- Reworked the gpio interrupt stuff per Linus' feedback, so didn't pick
-  up Hervés tag.
-- Modified the binding description to cover the 6 always "direct mode"
-  interrupts on gpio controller 1.
-
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Herve Codina <herve.codina@bootlin.com>
-CC: Conor Dooley <conor.dooley@microchip.com>
-CC: Daire McNamara <daire.mcnamara@microchip.com>
-CC: Rob Herring <robh@kernel.org>
-CC: Krzysztof Kozlowski <krzk+dt@kernel.org>
-CC: Paul Walmsley <pjw@kernel.org>
-CC: Palmer Dabbelt <palmer@dabbelt.com>
-CC: Albert Ou <aou@eecs.berkeley.edu>
-CC: Alexandre Ghiti <alex@ghiti.fr>
-CC: Linus Walleij <linusw@kernel.org>
-CC: Bartosz Golaszewski <brgl@kernel.org>
-CC: linux-riscv@lists.infradead.org
-CC: devicetree@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-CC: linux-gpio@vger.kernel.org
-
-Conor Dooley (4):
-  gpio: mpfs: Add interrupt support
-  dt-bindings: soc: microchip: document PolarFire SoC's gpio interrupt
-    mux
-  soc: microchip: add mpfs gpio interrupt mux driver
-  riscv: dts: microchip: update mpfs gpio interrupts to better match the
-    SoC
-
- .../soc/microchip/microchip,mpfs-irqmux.yaml  |  77 ++++++++
- .../microchip,mpfs-mss-top-sysreg.yaml        |   4 +
- MAINTAINERS                                   |   2 +-
- .../boot/dts/microchip/mpfs-beaglev-fire.dts  |  29 +++
- .../boot/dts/microchip/mpfs-disco-kit.dts     |  43 +++--
- .../dts/microchip/mpfs-icicle-kit-common.dtsi |  37 +++-
- .../boot/dts/microchip/mpfs-m100pfsevp.dts    |  41 ++--
- .../boot/dts/microchip/mpfs-polarberry.dts    |  29 +++
- .../riscv/boot/dts/microchip/mpfs-sev-kit.dts |  37 +++-
- .../riscv/boot/dts/microchip/mpfs-tysom-m.dts |  35 +++-
- arch/riscv/boot/dts/microchip/mpfs.dtsi       |  37 +++-
- drivers/gpio/Kconfig                          |   1 +
- drivers/gpio/gpio-mpfs.c                      | 122 +++++++++++-
- drivers/soc/microchip/Kconfig                 |  11 ++
- drivers/soc/microchip/Makefile                |   1 +
- drivers/soc/microchip/mpfs-irqmux.c           | 181 ++++++++++++++++++
- 16 files changed, 632 insertions(+), 55 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-irqmux.yaml
- create mode 100644 drivers/soc/microchip/mpfs-irqmux.c
-
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index b45fb799e36c1..1d1239323f615 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -572,6 +572,7 @@ config GPIO_PL061
+ config GPIO_POLARFIRE_SOC
+ 	bool "Microchip FPGA GPIO support"
+ 	select REGMAP_MMIO
++	select GPIOLIB_IRQCHIP
+ 	help
+ 	  Say yes here to support the GPIO controllers on Microchip FPGAs.
+ 
+diff --git a/drivers/gpio/gpio-mpfs.c b/drivers/gpio/gpio-mpfs.c
+index 9468795b96348..1a4cf213c723c 100644
+--- a/drivers/gpio/gpio-mpfs.c
++++ b/drivers/gpio/gpio-mpfs.c
+@@ -9,8 +9,9 @@
+ #include <linux/device.h>
+ #include <linux/errno.h>
+ #include <linux/gpio/driver.h>
+-#include <linux/init.h>
++#include <linux/interrupt.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/of_irq.h>
+ #include <linux/platform_device.h>
+ #include <linux/property.h>
+ #include <linux/regmap.h>
+@@ -18,7 +19,7 @@
+ 
+ #define MPFS_GPIO_CTRL(i)		(0x4 * (i))
+ #define MPFS_MAX_NUM_GPIO		32
+-#define MPFS_GPIO_EN_INT		3
++#define MPFS_GPIO_EN_INT		BIT(3)
+ #define MPFS_GPIO_EN_OUT_BUF		BIT(2)
+ #define MPFS_GPIO_EN_IN			BIT(1)
+ #define MPFS_GPIO_EN_OUT		BIT(0)
+@@ -52,6 +53,7 @@ static const struct regmap_config mpfs_gpio_regmap_config = {
+ 	.reg_bits = 32,
+ 	.reg_stride = 4,
+ 	.val_bits = 32,
++	.use_raw_spinlock = true,
+ };
+ 
+ static int mpfs_gpio_direction_input(struct gpio_chip *gc, unsigned int gpio_index)
+@@ -114,13 +116,98 @@ static int mpfs_gpio_set(struct gpio_chip *gc, unsigned int gpio_index, int valu
+ 	return ret;
+ }
+ 
++static int mpfs_gpio_irq_set_type(struct irq_data *data, unsigned int type)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
++	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
++	int gpio_index = irqd_to_hwirq(data) % 32;
++	u32 interrupt_type;
++
++	switch (type) {
++	case IRQ_TYPE_EDGE_BOTH:
++		interrupt_type = MPFS_GPIO_TYPE_INT_EDGE_BOTH;
++		break;
++	case IRQ_TYPE_EDGE_FALLING:
++		interrupt_type = MPFS_GPIO_TYPE_INT_EDGE_NEG;
++		break;
++	case IRQ_TYPE_EDGE_RISING:
++		interrupt_type = MPFS_GPIO_TYPE_INT_EDGE_POS;
++		break;
++	case IRQ_TYPE_LEVEL_HIGH:
++		interrupt_type = MPFS_GPIO_TYPE_INT_LEVEL_HIGH;
++		break;
++	case IRQ_TYPE_LEVEL_LOW:
++		interrupt_type = MPFS_GPIO_TYPE_INT_LEVEL_LOW;
++		break;
++	}
++
++	regmap_update_bits(mpfs_gpio->regs, MPFS_GPIO_CTRL(gpio_index),
++			   MPFS_GPIO_TYPE_INT_MASK, interrupt_type);
++
++	return 0;
++}
++
++static void mpfs_gpio_irq_unmask(struct irq_data *data)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
++	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
++	int gpio_index = irqd_to_hwirq(data) % 32;
++
++	gpiochip_enable_irq(gc, gpio_index);
++	mpfs_gpio_direction_input(gc, gpio_index);
++	regmap_update_bits(mpfs_gpio->regs, MPFS_GPIO_CTRL(gpio_index),
++			     MPFS_GPIO_EN_INT, MPFS_GPIO_EN_INT);
++}
++
++static void mpfs_gpio_irq_mask(struct irq_data *data)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
++	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
++	int gpio_index = irqd_to_hwirq(data) % 32;
++
++	regmap_update_bits(mpfs_gpio->regs, MPFS_GPIO_CTRL(gpio_index),
++			   MPFS_GPIO_EN_INT, 0);
++	gpiochip_disable_irq(gc, gpio_index);
++}
++
++static const struct irq_chip mpfs_gpio_irqchip = {
++	.name = "MPFS GPIO",
++	.irq_set_type = mpfs_gpio_irq_set_type,
++	.irq_mask = mpfs_gpio_irq_mask,
++	.irq_unmask = mpfs_gpio_irq_unmask,
++	.flags = IRQCHIP_IMMUTABLE | IRQCHIP_MASK_ON_SUSPEND,
++	GPIOCHIP_IRQ_RESOURCE_HELPERS,
++};
++
++static void mpfs_gpio_irq_handler(struct irq_desc *desc)
++{
++	struct irq_chip *irqchip = irq_desc_get_chip(desc);
++	struct mpfs_gpio_chip *mpfs_gpio = irq_desc_get_handler_data(desc);
++	unsigned long status;
++	u32 val;
++	int i;
++
++	chained_irq_enter(irqchip, desc);
++
++	regmap_read(mpfs_gpio->regs, MPFS_IRQ_REG, &val);
++	status = val;
++	for_each_set_bit(i, &status, MPFS_MAX_NUM_GPIO) {
++		regmap_write(mpfs_gpio->regs, MPFS_IRQ_REG, BIT(i));
++		generic_handle_domain_irq(mpfs_gpio->gc.irq.domain, i);
++	}
++
++	chained_irq_exit(irqchip, desc);
++}
++
+ static int mpfs_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	struct device_node *node = dev->of_node;
+ 	struct mpfs_gpio_chip *mpfs_gpio;
++	struct gpio_irq_chip *girq;
+ 	struct clk *clk;
+ 	void __iomem *base;
+-	int ngpios;
++	int ngpios, nirqs, ret;
+ 
+ 	mpfs_gpio = devm_kzalloc(dev, sizeof(*mpfs_gpio), GFP_KERNEL);
+ 	if (!mpfs_gpio)
+@@ -157,6 +244,35 @@ static int mpfs_gpio_probe(struct platform_device *pdev)
+ 	mpfs_gpio->gc.parent = dev;
+ 	mpfs_gpio->gc.owner = THIS_MODULE;
+ 
++	nirqs = of_irq_count(node);
++	if (nirqs > MPFS_MAX_NUM_GPIO)
++		return -ENXIO;
++
++	if (nirqs) {
++		girq = &mpfs_gpio->gc.irq;
++
++		gpio_irq_chip_set_chip(girq, &mpfs_gpio_irqchip);
++
++		girq->num_parents = nirqs;
++		girq->parents = devm_kcalloc(&pdev->dev, girq->num_parents,
++					     sizeof(*girq->parents), GFP_KERNEL);
++		if (!girq->parents)
++			return -ENOMEM;
++
++		for (int i = 0; i < nirqs; i++) {
++			ret = platform_get_irq(pdev, i);
++			if (ret < 0)
++				return ret;
++
++			girq->parents[i] = ret;
++			girq->parent_handler_data = mpfs_gpio;
++			girq->parent_handler = mpfs_gpio_irq_handler;
++		}
++
++		girq->handler = handle_level_irq;
++		girq->default_type = IRQ_TYPE_NONE;
++	}
++
+ 	return devm_gpiochip_add_data(dev, &mpfs_gpio->gc, mpfs_gpio);
+ }
+ 
 -- 
 2.51.0
 
