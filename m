@@ -1,257 +1,187 @@
-Return-Path: <linux-gpio+bounces-33179-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33180-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iKIwNmfCsWmdFAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33179-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 20:28:39 +0100
+	id qIMuKKXEsWniFAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33180-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 20:38:13 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D38E269519
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 20:28:39 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEB322696CB
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 20:38:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 962063053CE4
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 19:27:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D1F933073FA6
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 19:38:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C959D359A8B;
-	Wed, 11 Mar 2026 19:27:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0481832B9A8;
+	Wed, 11 Mar 2026 19:38:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="IsqUInMh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E5ATBm9g"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA28345CAF;
-	Wed, 11 Mar 2026 19:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43285305962
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 19:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773257261; cv=none; b=VnY0OAGGfxYQKoO30FvaEX6/N4YaNcCozZMhx3jtbHw/bxT5Wk39JdjOJPcdvYyFV3k1jI6cDZccWtATQUXFVra1cS8aZdd//M3kCsb/kya6Vaa+JDdtKZGMwjQ0p0xvlvUy2RmTDvLzkNjVwiCspNsXlPhqLqprWG1MilHYi3E=
+	t=1773257886; cv=none; b=bbTSn9t3JCSt1rbCK0PMciElSH1e8szZPauMSkFwHNTZCpvRYVSoh/lfHag3SJuQnRV37Asu0NA9QJ5S1/jqYQn8FDpa47ePUF0Z2d4HuTInpFeerCgZt+15m7QY0CXcVT811Q8hKAESeJInHL1bXzQK63Oqt3R2lVRRlrA5stg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773257261; c=relaxed/simple;
-	bh=Gwaqyz2ZSEtNcqHgakltVwmbWiRAxzDt2UVSabEo+JI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AlhXQXeotNbwK1IXfQyxD4tCeZyUMpcP9Php+9XvEFCOesSsg8CDmJTnDbrWEes7u7bcXhzRU5xzwMxO+DXW2rGb6owyVU6yaa2YsYm7uF/SS9+HY5tzQjfKNRLu1hX5SYrvfc9chkzfG/huoLbITrFLX6nOJXj55BTSghcmu5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=IsqUInMh; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C3FC282A;
-	Wed, 11 Mar 2026 20:26:29 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1773257190;
-	bh=Gwaqyz2ZSEtNcqHgakltVwmbWiRAxzDt2UVSabEo+JI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IsqUInMh1kgMEnu7Uel/jvDoRRxYFpIv3+L2Hswvyc+DTPR4LkRw86D8UMdKY/KYQ
-	 c3Ip7qOovi04dCrv/JOaQRpwiIqpoYDxy6+1FE0uSthhkIxxqT6LEAqURwa1tzBl4B
-	 hbxcL14JKQb0gUTMgXN1sz50c+N1nZm4zs359blA=
-Message-ID: <81c7c94f-8d97-4311-b879-d46ffd972f52@ideasonboard.com>
-Date: Wed, 11 Mar 2026 19:27:34 +0000
+	s=arc-20240116; t=1773257886; c=relaxed/simple;
+	bh=uk+w+sTtMCxK5SSLAnjnJ8LuG+64ZZOSctjkGQ2I/K0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=rWdmPUFcJyodjW5zidwgraO8tT5dOKBPY79vqnc/Dav/81dov4Ykt2EtbUsinyNyt6F1/Jx9H3xe6bVtyAAUn4Xo+fHk1vxrMxU+GmTgOk/kGcp0G+UKHFOzzEmeJu5EvCcpfvPVJIjZHinkG1njD9OKnueQSZpkV8l8iyrR4Vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E5ATBm9g; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-439c6fc2910so189456f8f.0
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 12:38:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1773257883; x=1773862683; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E+AkwVqaWf8hy65M6kQXD8z5ogodn290MdxFGjaBkgY=;
+        b=E5ATBm9gH+pn7du6rh6hllyL+wj/XBoB9c86m2W94wTGwRnsHBTD4Y3oFFGzqux1v4
+         H0+18KNUOU7DiOj30VbkZObJCaBfjlEiSgLX4GgaPQAxFy/gKK5QCIWxe7GltJZfjrxu
+         8U0Gn2J+1/8jWzA6LFULWxkNraKUZM3quO398k4+s5xpUlvvwbHGMQJ/UcmrEFtdcOTw
+         I9TkkJ/KuPpDBUWxHoF/g6HUUv+ZQKR7dRmCpJ50OrtEdIxC5ZTJv2DYZ0Ui77DENU5Y
+         7vIp6vodT28GANPPvkBoJ0KkH+4/WBBCOLlMtPngxkX8cGv33GRb77B+qpsp10b2aTdj
+         OOYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773257883; x=1773862683;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E+AkwVqaWf8hy65M6kQXD8z5ogodn290MdxFGjaBkgY=;
+        b=pL3YW0fovmj3a0BN7P8xzIvKTtSfo135CSK0tMpC9niBTBR3xsWM+7GfxiAlBzS2eH
+         4Jo4jHcNuee0UNpj+sAS5lIxHTX2Pl1+FadMuNasXh0vI1cHCyoymazDTjFHvFOEJpYU
+         rUjejjV7UbuidQqio9ui3iRiGNunWw76FQhHgyXxotap57xRFQwcAqAuruK2bqNAJl7j
+         V5OOVpwRNx/Shg3+cE6u9jSgn++yBpuUluI8dxKx2PVQ957jBfyrQ3lODV/CD8ZMTeAg
+         JOx3EOiMq4hQ2q1fS4isgwHt+wYZzV5KAnUyh54McFUYJ8qkOnD4ULAeq2h8WF1BRA3I
+         atNg==
+X-Forwarded-Encrypted: i=1; AJvYcCWs8WCTeq/Z/PYkGH3s1+JQO3nVANprIvEYXEngtTlIzcFMyJwV3W4AZHtyrygot4XAsd+mgScNSghD@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY/xOJo4jd/KsEV3ODCuknU9fYdl8/qg5Rg3AmWO4SRCPOcYHb
+	JsjErEnQEQu0hMZPeD12qGXFVnyMZoYDZlgzOgmy9rZiYbjN1E19t2Yj3gjjg+1a5A8=
+X-Gm-Gg: ATEYQzylC9hpAKQJVIdf667vxcmWWt74zBAarU4ga9Kz8hJmbWVFGG2rZViOhlFOppL
+	7AOuKqskDIoBBKtftwgwqXNY6AstyIjHW7NwwNaf4S4YqyDUcwgebHW9ULe3oKglBaDOMTMyGBy
+	i6WtnwqC3umW8MMKHR12zJMYA+m+jpeynUWvS2JCxsWpnWKxf/x+BvmCUHXiKWZz5rkTOFHIWxy
+	e4NWgVcCKX7xXn3iKdMw4bvKHVJTe9BEr5qOQDDzWXLOHYLNrk9cVu9onIcIKNyz5R0Cntd1WCY
+	RrqMutMuiTa33410eLnMbDpyhGD4zvQb1KgRI3GXf837Vxd7AXQ91QJqdiJn3Gkj2a+C7UwnOsV
+	dY/wqKgmtgGCLJMhzDQ8fwSvjxd3rR8aBTCfsSysEPhppsFsf3WRoQgGFaBPUuCjoRbNhEHTbd2
+	xwGmZDezqdzWgBRqZvKKR/OYTaJPgn
+X-Received: by 2002:a05:6000:1a8f:b0:439:bdd7:425d with SMTP id ffacd0b85a97d-439f8200089mr7617923f8f.23.1773257883423;
+        Wed, 11 Mar 2026 12:38:03 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439fe1a76e5sm1426159f8f.12.2026.03.11.12.38.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2026 12:38:02 -0700 (PDT)
+Date: Wed, 11 Mar 2026 22:37:59 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Linus Walleij <linusw@kernel.org>,
+	AKASHI Takahiro <akashi.tkhro@gmail.com>
+Cc: arm-scmi@vger.kernel.org, Bartosz Golaszewski <brgl@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Dan Carpenter <dan.carpenter@linaro.og>, devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+	Sudeep Holla <sudeep.holla@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Michal Simek <michal.simek@amd.com>
+Subject: [PATCH v3 0/7] gpio: introduce a gpio driver for SCMI
+Message-ID: <cover.1773150895.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] platform: int3472: Add MSI prestige board data
-To: Antti Laakso <antti.laakso@linux.intel.com>, linux-media@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linusw@kernel.org, brgl@kernel.org, sakari.ailus@linux.intel.com,
- mchehab@kernel.org, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
- hverkuil+cisco@kernel.org, sre@kernel.org, hao.yao@intel.com,
- jimmy.su@intel.com, miguel.vadillo@intel.com, kees@kernel.org,
- ribalda@chromium.org
-References: <20260311131910.835513-1-antti.laakso@linux.intel.com>
- <20260311131910.835513-6-antti.laakso@linux.intel.com>
-Content-Language: en-US
-From: Dan Scally <dan.scally@ideasonboard.com>
-In-Reply-To: <20260311131910.835513-6-antti.laakso@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ideasonboard.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[ideasonboard.com:s=mail];
+	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33179-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-33180-lists,linux-gpio=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	DKIM_TRACE(0.00)[ideasonboard.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dan.scally@ideasonboard.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dan.carpenter@linaro.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[linaro.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,cisco];
-	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ideasonboard.com:dkim,ideasonboard.com:email,ideasonboard.com:mid,intel.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8D38E269519
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:dkim,linaro.org:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: EEB322696CB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+This basically abandons my earlier attempts and goes back to Takahiro
+Akashi's driver.  Here is the link to Takahiro's patchset:
 
+https://lore.kernel.org/all/20231005025843.508689-1-takahiro.akashi@linaro.org/
 
-On 11/03/2026 13:19, Antti Laakso wrote:
-> Define regulators and gpio for ov5675 in MSI Prestige 14 AI EVO+ laptop.
-> 
-> Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
-> ---
+In the review comments, to that patchset we had discussed putting the
+gpio section inside the pinctrl section.  The ordering problems are a
+bit tricky because you want the pinctrl driver to finish probing before
+you start probing the gpio driver.  To me it seems nicer to put the
+pinctrl things such as pinmuxing in the pinctrl block and the gpio things
+in the gpio block.
 
-Looks good to me:
+I updated Takahiro's patch to work on current kernels.  I've had added a
+few other patches to make things work on current kernels.  The most
+noteworthy change is that instead of calculating the ngpios, I changed
+it so you have to specify the ngpios in the device tree.
 
-Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
+I updated the device tree spec file to address review comments.  I
+changed the compatible to scmi-pinctrl-gpio.  I also updated the
+examples to show how pinmuxing works.  I didn't know how to include all
+the potential GPIO configuration options so I set
+"additionalProperties: true".  Hopefully, that's okay.
 
->   .../x86/intel/int3472/tps68470_board_data.c   | 101 ++++++++++++++++++
->   1 file changed, 101 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> index 71357a036292..6892d6e98072 100644
-> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> @@ -12,6 +12,7 @@
->   #include <linux/dmi.h>
->   #include <linux/gpio/machine.h>
->   #include <linux/platform_data/tps68470.h>
-> +#include <linux/property.h>
->   #include <linux/regulator/machine.h>
->   #include "tps68470.h"
->   
-> @@ -232,6 +233,72 @@ static const struct tps68470_regulator_platform_data dell_7212_tps68470_pdata =
->   	},
->   };
->   
-> +/* Settings for MSI Prestige 14 AI+ Evo C2VMG laptop. */
-> +static struct regulator_consumer_supply ovti5675_avdd_consumer_supplies[] = {
-> +	REGULATOR_SUPPLY("avdd", "i2c-OVTI5675:00"),
-> +};
-> +
-> +static struct regulator_consumer_supply ovti5675_dovdd_consumer_supplies[] = {
-> +	REGULATOR_SUPPLY("dovdd", "i2c-OVTI5675:00"),
-> +};
-> +
-> +static struct regulator_consumer_supply ovti5675_dvdd_consumer_supplies[] = {
-> +	REGULATOR_SUPPLY("dvdd", "i2c-OVTI5675:00"),
-> +};
-> +
-> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_core_reg_init_data = {
-> +	.constraints = {
-> +		.min_uV = 1200000,
-> +		.max_uV = 1200000,
-> +		.apply_uV = 1,
-> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-> +	},
-> +	.num_consumer_supplies = ARRAY_SIZE(ovti5675_dvdd_consumer_supplies),
-> +	.consumer_supplies = ovti5675_dvdd_consumer_supplies,
-> +};
-> +
-> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_ana_reg_init_data = {
-> +	.constraints = {
-> +		.min_uV = 2815200,
-> +		.max_uV = 2815200,
-> +		.apply_uV = 1,
-> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-> +	},
-> +	.num_consumer_supplies = ARRAY_SIZE(ovti5675_avdd_consumer_supplies),
-> +	.consumer_supplies = ovti5675_avdd_consumer_supplies,
-> +};
-> +
-> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vio_reg_init_data = {
-> +	.constraints = {
-> +		.min_uV = 1800600,
-> +		.max_uV = 1800600,
-> +		.apply_uV = 1,
-> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-> +	},
-> +	.num_consumer_supplies = 0,
-> +	.consumer_supplies = NULL,
-> +};
-> +
-> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vsio_reg_init_data = {
-> +	.constraints = {
-> +		.min_uV = 1800600,
-> +		.max_uV = 1800600,
-> +		.apply_uV = 1,
-> +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-> +	},
-> +	.num_consumer_supplies = ARRAY_SIZE(ovti5675_dovdd_consumer_supplies),
-> +	.consumer_supplies = ovti5675_dovdd_consumer_supplies,
-> +};
-> +
-> +static const struct tps68470_regulator_platform_data msi_p14_ai_evo_tps68470_pdata = {
-> +	.reg_init_data = {
-> +		[TPS68470_CORE] = &msi_p14_ai_evo_tps68470_core_reg_init_data,
-> +		[TPS68470_ANA]  = &msi_p14_ai_evo_tps68470_ana_reg_init_data,
-> +		[TPS68470_VIO]  = &msi_p14_ai_evo_tps68470_vio_reg_init_data,
-> +		[TPS68470_VSIO] = &msi_p14_ai_evo_tps68470_vsio_reg_init_data,
-> +	},
-> +};
-> +
->   static struct gpiod_lookup_table surface_go_int347a_gpios = {
->   	.dev_id = "i2c-INT347A:00",
->   	.table = {
-> @@ -258,6 +325,23 @@ static struct gpiod_lookup_table dell_7212_int3479_gpios = {
->   	}
->   };
->   
-> +static struct gpiod_lookup_table msi_p14_ai_evo_ovti5675_gpios = {
-> +	.dev_id = "i2c-OVTI5675:00",
-> +	.table = {
-> +		GPIO_LOOKUP("tps68470-gpio", 9, "reset", GPIO_ACTIVE_LOW),
-> +		{ }
-> +	}
-> +};
-> +
-> +static const struct property_entry msi_p14_ai_evo_gpio_props[] = {
-> +	PROPERTY_ENTRY_BOOL("daisy-chain-enable"),
-> +	{ }
-> +};
-> +
-> +static const struct software_node msi_p14_ai_evo_tps68470_gpio_swnode = {
-> +	.properties = msi_p14_ai_evo_gpio_props,
-> +};
-> +
->   static const struct int3472_tps68470_board_data surface_go_tps68470_board_data = {
->   	.dev_name = "i2c-INT3472:05",
->   	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
-> @@ -287,6 +371,16 @@ static const struct int3472_tps68470_board_data dell_7212_tps68470_board_data =
->   	},
->   };
->   
-> +static const struct int3472_tps68470_board_data msi_p14_ai_evo_tps68470_board_data = {
-> +	.dev_name = "i2c-INT3472:06",
-> +	.tps68470_regulator_pdata = &msi_p14_ai_evo_tps68470_pdata,
-> +	.tps68470_gpio_swnode = &msi_p14_ai_evo_tps68470_gpio_swnode,
-> +	.n_gpiod_lookups = 1,
-> +	.tps68470_gpio_lookup_tables = {
-> +		&msi_p14_ai_evo_ovti5675_gpios,
-> +	},
-> +};
-> +
->   static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
->   	{
->   		.matches = {
-> @@ -316,6 +410,13 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
->   		},
->   		.driver_data = (void *)&dell_7212_tps68470_board_data,
->   	},
-> +	{
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Prestige 14 AI+ Evo C2VMG"),
-> +		},
-> +		.driver_data = (void *)&msi_p14_ai_evo_tps68470_board_data,
-> +	},
->   	{ }
->   };
->   
+AKASHI Takahiro (3):
+  pinctrl: introduce pinctrl_gpio_get_config()
+  dt-bindings: gpio: Add bindings for pinctrl based generic gpio driver
+  gpio: add pinctrl based generic gpio driver
+
+Dan Carpenter (4):
+  pinctrl: scmi: Add SCMI_PIN_INPUT_VALUE
+  pinctrl: Delete PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS support
+  pinctrl-scmi: ignore PIN_CONFIG_PERSIST_STATE
+  arm_scmi: pinctrl: allow PINCTRL_REQUEST to return EOPNOTSUPP
+
+ .../bindings/gpio/pin-control-gpio.yaml       |  70 ++++++++++
+ drivers/firmware/arm_scmi/pinctrl.c           |   2 +
+ drivers/gpio/Kconfig                          |   7 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-by-pinctrl.c                | 124 ++++++++++++++++++
+ drivers/pinctrl/core.c                        |  30 +++++
+ drivers/pinctrl/pinctrl-scmi.c                |  46 +++++--
+ include/linux/pinctrl/consumer.h              |   9 ++
+ 8 files changed, 276 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/pin-control-gpio.yaml
+ create mode 100644 drivers/gpio/gpio-by-pinctrl.c
+
+-- 
+2.51.0
 
 
