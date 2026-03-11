@@ -1,176 +1,176 @@
-Return-Path: <linux-gpio+bounces-33142-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33143-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gKh9BJt4sWk2vgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33142-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 15:13:47 +0100
+	id GE7CDjd6sWk2vgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33143-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 15:20:39 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B4262652D1
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 15:13:46 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B840F265517
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 15:20:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 48887301ECC6
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 14:13:45 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2D2E8301347C
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 14:20:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E75CA36C0D6;
-	Wed, 11 Mar 2026 14:13:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98FB0374752;
+	Wed, 11 Mar 2026 14:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZiPDXr3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00883382E1
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 14:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5849936CDE2
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 14:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773238423; cv=none; b=tSA43xASCq9pAkUILPIxYFSjqzAU5L53cpBtu1oTyGiAoMXRIUiD4KqGVenfKztjiVV9Gnw79cKQYRSX8z9tEGEPWwYhC0JpnfBNAEXfuRpMSBRUwzQ3RJwNzy2gCAFJBueIYWd+MzQBsYfSzEebzvfNgqCrdISkNRTvWwfDf5I=
+	t=1773238834; cv=none; b=rJZpNntMMDvnAmJR57J6+SZGcyX6Lx5wDryMTp8x+vn76wOu/ldBRMoAKOp/d6ozcXuR85I2wjFmo4CeIRQHC5nIS7a2kjB58sgDYfYVqSgISJvZ5TqpSFsdVL94yCAwP/LtoL3xrvu+DjPIofJ4dCZX1cc+yQ5le4CJ0BBFBAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773238423; c=relaxed/simple;
-	bh=POUJjzeRhBIXfPGojdZfC417KH92loTKx1KmDpRcfoc=;
+	s=arc-20240116; t=1773238834; c=relaxed/simple;
+	bh=cnh6CAbbnR9WAaj+M1JYgtVpVT2ZQw3pWuzndGy6i4M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RnEGET2TxXgeIxWBQx1IzSUAzxm4yzoUZiwwsBwGTisojh+xTy0buWBjEdxAhUZnaKXmr8wjtg2TzOrJbSmWhY+yb/dLmh7olBhpO3zZA0hulO9/4RuaPLswBKT08Mlx8RmVfVLPoGKdke/P/zrQR+/FVHFzdO62j13ecOZcBZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b9423d62cbbso151405466b.1
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 07:13:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773238419; x=1773843219;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wIz9Fr5w5J45ZN4rxwvT/0kjXMGfLP1VpB2aKPOax7k=;
-        b=Sq+vp8shQvC+g890pCi/EZMMfQgOK5gtqvnUZ6u7OCbHB2fMo5VGTmEWuQ6117qf8f
-         6qPrVyHBMNQ9kilHc7eS07rTznOUTQ19K10jpU/taSPohp7LJYd3eBHgvfMGNgBDrLRt
-         a2FziU90ahYOY3Pw/orDs7pH9TG0pPDDzBSUCcz+pMlWuuK3p0vnJQ06CC3dOD8vENE/
-         ESBHKWmoh6JtMunZ44hOBmaQf+QR1yLhyj1GzSZ3H1I98EhE9IbFiUa7a3f8H54eMq0/
-         iRn/XQRUWq3slicho6RtzKLunHY/r6Fglqauhq07Jk691b8tdvrRxpttg5gI+dfFcMGY
-         k8Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCVczGPOEaUgwozJcBYEFTNvs1U3/zwRU/BB1xIKoHgQEsLWkYT+chLkQPDzde0BP0XyAGHWiUV8s6Fs@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHtoYGZlunKM+D8b+9KLGW2AH4J1aWxe4X9/hIhxOyL7D/8APj
-	7z2eDtKadk4SbCphVfyKtWFWQ6SRhaXQvGplFUxidYoaV0dmyjCH2DhuZ683lj+tVQ+fyg==
-X-Gm-Gg: ATEYQzwFqSfTjDKgAcLT4527Uum9Vf9RqIke85/VmDh38+Q6Bw+CaJ4RlPM9XLewKew
-	y1y7FVeqG5vYOmbFKC8VVBAOh1HVyyMMiXLE+Q3C+NvFb2QmxmuOLoxdZME4FOUlOczEokGj0iJ
-	d+rW1Pq/XqMnX7AodxImrTgz8KlThdeILLGlasjza9CTFxyxz96zCNvg5SvkfE/DvlDSRReU7PA
-	zX6ZN9xs5F09Mu0eTcDASZwB5MCkFZ7U8fVt4Yj/HKXicAFOUPYlAFbhXULCCqfGpQawHJiuHGy
-	Oy+RWMYohGHVNKIZZmhccdIpIQOIaumt89AXjpwFUXNJU8J8x1n5Mv7WpawLpTPpWv5VUdx2fpH
-	EkIKQG9cggwbIjvDvh8WE9kGmug0GYIP1kmBtYISxmbxlsupbQDDkQYg12x+YEgt6XBRv9e6Ctt
-	tcQ27KdGKMOfdySkzJS7QtlMKeBJPWXcJi3pK4ZD6NvqMOX504mDXUxzG+cgTYHIo605YOO7c=
-X-Received: by 2002:a17:906:2081:b0:b97:34e7:ea69 with SMTP id a640c23a62f3a-b9734e837e3mr67272466b.16.1773238418660;
-        Wed, 11 Mar 2026 07:13:38 -0700 (PDT)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b972e18e435sm60471066b.53.2026.03.11.07.13.37
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2026 07:13:38 -0700 (PDT)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-b942b36de08so190744266b.1
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 07:13:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVgwKHlPJ+GalBlLEKpw2VlTEMY/Dk4jqgEjs219pojLRaqHywr5Q7mXDpGboa/znM2sVIvN5XImqqU@vger.kernel.org
-X-Received: by 2002:a17:907:6d16:b0:b88:4f25:81da with SMTP id
- a640c23a62f3a-b97113ff0b9mr462021166b.0.1773237981235; Wed, 11 Mar 2026
- 07:06:21 -0700 (PDT)
+	 To:Cc:Content-Type; b=DWd0Xf1XmF5alBNw1qoyc7oUYdF+okK9fM8OQUDAuuhqyxPyBNFiZK04RWuQg/I9DCQtYaFcxm353aNZggtPjtFV1psquQmkb8jHy/tnS/S3CqyQNZ8K90ArPgArOyAr7dpuVG8XsJSmrpgoAPatDGdB218siI/2bVE4KvR0uVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZiPDXr3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F0F7C2BCAF
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 14:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773238834;
+	bh=cnh6CAbbnR9WAaj+M1JYgtVpVT2ZQw3pWuzndGy6i4M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HZiPDXr3ObuN+g40hAZceJtNQgYW9t4sYhNagcVv+yBljgzsl52nxZwqbQSZpgp0a
+	 VhiqYZAgZMg+t1ZloYWduUgAXnqt42G/E/KAFQFQqUf5HnfQbo2OY5Xsz4j/lY7mns
+	 DWOSPd5gvDhcvet0ziMEflW3/kYmIbrXpgj8bjt0o4NUJTVr5CXdG+5MYD+0Ulw51H
+	 qc8mRG0L72X22JKII8AkD6vf80r/ht7tAg2lTtD/jYFgd3gzaS+Vg19gmdrX2MnQUO
+	 howkXkbxSKSQH+FXfRwe3efN2iAG4kk1lCK2bX76uptbXY+ADXk+fVrywp5Ppz4L8s
+	 /buUPdLRCnhyA==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-38a26b4d830so90104951fa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 07:20:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWdgzfo7IJrgipccJebenxg3NOt92R2q1V3ys4KX3Nr9mzqK1YP0n1l1l/xkuD9BF2Bk1gRB1roWwgE@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaGIwzWhTKQSEmbPEygXwdWvIAqdxGCNNyAY2bTOUE7XkxN+/2
+	RHtyfmx9A8a6FrVQ6s8rfJ/KQbPZcl6cUapYnGNUW5LzlTkYir0+fIhMUWhD0jr9NjOab7zkhYn
+	vTN0ct+DYYTWNgQ2TWeyl1foQNw09KrgX+JoKeH3jEA==
+X-Received: by 2002:a2e:bd16:0:b0:38a:6acb:eb31 with SMTP id
+ 38308e7fff4ca-38a6acc1835mr7139591fa.26.1773238832610; Wed, 11 Mar 2026
+ 07:20:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
- <20260310-b4-is_err_or_null-v1-15-bd63b656022d@avm.de> <20260310100750.303af303@gandalf.local.home>
- <20260311141332.b611237d36b61b2409e66cb3@kernel.org> <20260311100332.6a2ce4b1@gandalf.local.home>
-In-Reply-To: <20260311100332.6a2ce4b1@gandalf.local.home>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 11 Mar 2026 15:06:07 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX4kRGLaKMzPuhS1Pmxh609eiqQW-cAS_jWBBbt-vE6SA@mail.gmail.com>
-X-Gm-Features: AaiRm53WEGMMLW4z34e7P-lM1qFvsCJGZ_o4JNL5NPWbhJPKmcqz6k9bJcyL--8
-Message-ID: <CAMuHMdX4kRGLaKMzPuhS1Pmxh609eiqQW-cAS_jWBBbt-vE6SA@mail.gmail.com>
-Subject: Re: [PATCH 15/61] trace: Prefer IS_ERR_OR_NULL over manual NULL check
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Philipp Hahn <phahn-oss@avm.de>, amd-gfx@lists.freedesktop.org, 
-	apparmor@lists.ubuntu.com, bpf@vger.kernel.org, ceph-devel@vger.kernel.org, 
-	cocci@inria.fr, dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org, 
-	gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org, 
-	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, linux-btrfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, ntfs3@lists.linux.dev, 
-	samba-technical@lists.samba.org, sched-ext@lists.linux.dev, 
-	target-devel@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
-	v9fs@lists.linux.dev, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+References: <20260309134920.1918294-1-o.rempel@pengutronix.de>
+ <20260309134920.1918294-5-o.rempel@pengutronix.de> <CAD++jL=3GeHNirtN9diGc8R2rxczo4UUL9_ON28jOj_DPP2Sjg@mail.gmail.com>
+ <CAMRc=Mdutv6TyU5SG2uzCgRuvYVmfFB0kwXgj45Qajet+TdBhw@mail.gmail.com>
+ <CAMRc=Me5Yb_H3oQ7XtWVs+KViL6pkr0b1Qyb7WW1wtxyGkGhAg@mail.gmail.com> <abFwxtDWvkXHx9KS@pengutronix.de>
+In-Reply-To: <abFwxtDWvkXHx9KS@pengutronix.de>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Wed, 11 Mar 2026 15:20:20 +0100
+X-Gmail-Original-Message-ID: <CAMRc=Mc=9+74MZFztduJygEJuTdsY32sJhLFey8N2GQRSR1G-Q@mail.gmail.com>
+X-Gm-Features: AaiRm51e9HWwdTlKOtm5LOCmEm_pMxwZ_8uBBDvSjeOinyaMSLlG3MqXK3ow_Sg
+Message-ID: <CAMRc=Mc=9+74MZFztduJygEJuTdsY32sJhLFey8N2GQRSR1G-Q@mail.gmail.com>
+Subject: Re: [PATCH v3 4/7] gpio: gpiolib: fix allocation order in
+ hierarchical IRQ domains
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Thomas Gleixner <tglx@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Peter Rosin <peda@axentia.se>, kernel@pengutronix.de, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, David Jander <david@protonic.nl>, 
+	Linus Walleij <linusw@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Rspamd-Queue-Id: 8B4262652D1
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: B840F265517
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.04 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33142-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33143-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[linux-m68k.org];
-	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	NEURAL_HAM(-0.00)[-0.999];
-	RCPT_COUNT_GT_50(0.00)[57];
-	R_DKIM_NA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-m68k.org:email,goodmis.org:email,mail.gmail.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,pengutronix.de:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-Hi Steven,
-
-On Wed, 11 Mar 2026 at 15:03, Steven Rostedt <rostedt@goodmis.org> wrote:
-> On Wed, 11 Mar 2026 14:13:32 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Wed, Mar 11, 2026 at 2:40=E2=80=AFPM Oleksij Rempel <o.rempel@pengutroni=
+x.de> wrote:
 >
-> > Hmm, now IS_ERR_OR_NULL() is an inline function, so it is safe.
-> > But if you want to use IS_ERR_OR_NULL() here, it will be better something like
+> On Wed, Mar 11, 2026 at 02:18:05AM -0700, Bartosz Golaszewski wrote:
+> > On Tue, 10 Mar 2026 10:14:59 +0100, Bartosz Golaszewski <brgl@kernel.or=
+g> said:
+> > > On Tue, Mar 10, 2026 at 10:05=E2=80=AFAM Linus Walleij <linusw@kernel=
+.org> wrote:
+> > >>
+> > >> On Mon, Mar 9, 2026 at 2:49=E2=80=AFPM Oleksij Rempel <o.rempel@peng=
+utronix.de> wrote:
+> > >>
+> > >> > In gpiochip_hierarchy_irq_domain_alloc(), calling irq_domain_set_i=
+nfo()
+> > >> > before irq_domain_alloc_irqs_parent() causes a NULL pointer derefe=
+rence
+> > >> > for slow-bus (SPI/I2C) IRQ chips.
+> > >> >
+> > >> > irq_domain_set_info() locks the child descriptor, triggering .irq_=
+bus_lock.
+> > >> > If the child proxies this lock to the parent, it crashes because
+> > >> > parent->chip is not yet allocated.
+> > >> >
+> > >> > Fix this by allocating the parent IRQs first, ensuring parent->chi=
+p is
+> > >> > populated before the child's .irq_bus_lock is invoked.
+> > >> >
+> > >> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > >> > ---
+> > >> > changes v3
+> > >> > - new patch
+> > >>
+> > >> Bartosz, tglx: is this something we should apply for fixes?
+> > >>
+> > >> I think it needs to go into gpiolib for next at minimum, unless
+> > >> there is some semantic problem with the patch.
+> > >>
+> > >
+> > > Looks good to me. I can take it into v7.0-rc4 via the GPIO tree and
+> > > tglx can pull the tag once it's out as a base for the rest of the
+> > > series?
+> > >
+> > > Bart
+> > >
 > >
-> > node = rhashtable_walk_next(&iter);
-> > while (!IS_ERR_OR_NULL(node)) {
-> >       fprobe_remove_node_in_module(mod, node, &alist);
-> >       node = rhashtable_walk_next(&iter);
-> > }
+> > Oleksij: it doesn't look like there are any dependencies for this patch=
+, is
+> > it ok if I queue it for the next RC?
 >
-> But now you need to have a duplicate code in order to acquire "node"
+> ACK, there are no dependencies.
 >
-> I think the patch just makes the code worse.
+> > Could you add the Fixes tag as well?
+>
+> Fixes: fdd61a013a24 ("gpio: Add support for hierarchical IRQ domains")
+>
+> Should add it in the next round? There are some pending comments for
+> this patch set.
+>
 
-Obviously we need a new for_each_*() helper hiding all the gory internals?
+No, you can drop it, I'll send it for v7.0-rc4.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Bart
 
