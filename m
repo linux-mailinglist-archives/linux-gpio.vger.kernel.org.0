@@ -1,192 +1,217 @@
-Return-Path: <linux-gpio+bounces-33086-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33087-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8A+AOcQwsWm0rwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33086-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 10:07:16 +0100
+	id IIwpL6YxsWm0rwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33087-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 10:11:02 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4AD9225FFCF
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 10:07:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 23600260107
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 10:11:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6AACA321F3C8
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 08:47:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1A75732FCB28
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 08:59:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 484C43B6C06;
-	Wed, 11 Mar 2026 08:47:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 800B93C3437;
+	Wed, 11 Mar 2026 08:59:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Gs0d/uix";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="NOy8recS"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FANwrZ/o"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6479F2DAFBB
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 08:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74B53C062F
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 08:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773218866; cv=none; b=fyC4GLeCX3vdS/TgTQvm5lw6s7nP1D4/hcVIoF4NVSoej2JItkCZL9mwWzEHQjLhmIFT29VDxCGzn+lWaGDIjWJKuCqS2VXVsWLsatNZSZotwpRAr8vPS6mYt/8rYGCcKTD9RIlFm3QMyZSSBGUtfyLxbxln3dNZRuc3G9KYUDg=
+	t=1773219589; cv=none; b=EAR53TgsLnFxq04ORufZxH5lJ17gc3+5tyrHie41/RgazhLfoyKOP3KCD4oWu04lzwqmVhw+cLkMk9QRh6F/vu9s0z1xZ0UjqRL/fdfWchEh83OSRNZ21QzRrc6G6tQ0kAxM85/SnESNiqPLrpPMSuDXI10VpPoPU//aWGT2obE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773218866; c=relaxed/simple;
-	bh=cvQ5T3+2wTfnSq06+h/IR1ZvYYi4yHYUeA8xrjodRQE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o6a8xz8rfgpT2oZd+AgGIntO2otx18iBnJooq7x9IZtRyusNtQcj8cwxMVMvehy5u5Moed3WLsghk/cjNZbE3dm1Er4a57k2CTtoF3lrbMvS7nTtQ3YTDYOT8R2XUbUMiGxlWZ52BkRnnHAeV9k7f0Aeaa4OlaSNj/L4DWp9pKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Gs0d/uix; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=NOy8recS; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62B7Q9rL2030923
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 08:47:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	wtF4Mfb0F7x4PLcg6I9RzGmn/9e+thYE6Y867zWiDQI=; b=Gs0d/uixNpc7TGeG
-	lEluPZjvqVkefx0vXFlaHN9v5ZUu8nmpRFy3HEwYgC6rIGPQRvMimdOa2c+CIuD7
-	xrHZaQ0780XwxNIdwFEdA7CdwLZvZacfC2KHxyBCnDzDfM+o+5sMOcThdnPVWGFN
-	PGElShP5vMJn8N0aTjZF0gDOM96oAUtIhPBE5akTkzIaeF9ma/uFawl2BOsF0mTC
-	Bt5CuDMz8nFtY0msTz/hNUPnXZFGpn1BF3hSD+HqONSIEKMraxF74COjdHACvO92
-	5y4ouQo7aDkmCpUdTDgu5mbiL4YFKTzfa2A2Z8OcGeLAL7ssHm094+ZeCH12bJn4
-	iK9Oew==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cu40h09fm-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 08:47:38 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-8cb6291d95aso5701998685a.1
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 01:47:38 -0700 (PDT)
+	s=arc-20240116; t=1773219589; c=relaxed/simple;
+	bh=4HRczWwf+idD5YLdFOtxKhZolR3r0ySv0HVp0ZcqQKk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=V9aeNcb4LzSYCdYxTiDNum4VilS+dagFKueG8pI3JUTZySiLNLbzc7KGHID/r/FCholOFXIb/C6LvBC6clTWzca4M/kDmDmKwFVUti5Ro4emF+27h4yLmPsmEu1OCyt1UOZH8KniZOUez6H1LcMvvag3VWTt7GXHpz2mNkk+xgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FANwrZ/o; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-48534e9076fso25821915e9.0
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 01:59:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1773218857; x=1773823657; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wtF4Mfb0F7x4PLcg6I9RzGmn/9e+thYE6Y867zWiDQI=;
-        b=NOy8recS7ZxASuJTjB56+096g5EJybHfVjMGeUf6H0kTr64pjo746054AWUCH5PGwi
-         EpvUqA4/fOwFmuXg/uhiFvhr+SMG61hA8+G93Je+sBzDw3t2WQDHqbL9ZrIvNm3bRqpk
-         WKE43HexHyubhov1dietplAjKx8Qw6UP1mClk8IZGdqWlceor99Rq9y17GJ/cBjf8gJp
-         keF9ClPVtN9cw7Wrc4k0f2SXz7y5/kWlZvAFUzvkuaTteVyZ3TRgNDZP/j/lr+/Zr6ut
-         6X/8wEoHBjgPShhxdYGSuAWZiiWzfr7frD877wMhnWCV8QG8Yf+asL35fFhkYSIYWGyn
-         FMqQ==
+        d=suse.com; s=google; t=1773219584; x=1773824384; darn=vger.kernel.org;
+        h=user-agent:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zkM4bGnCAz6GhYRTPSestmLq7baCdGcGpIWjoPgO3YA=;
+        b=FANwrZ/oL5qdO7k7z0jekmidjT9UZ1vmNnRoFJKLBA7NOGqljCA4SW1cB80O5HfM5O
+         Fa3oeZN29LItLaZfXgQrWe5RB2hDiRVuzf4K0gWD5v8b5P8T5aw+6DrQf9e6OAWpEHn0
+         2o7TAgLTGWgRoT/AZAsXOl6Y1SQdgfpLU8MWs80lwZbz91AtTmTE16DESNaxUNJ4CxQx
+         +JYahmdBnvr/el6ZYqcrqJcFvrbqOAW9AnneawxdfKt+mPZC5tKWW6HG1mHpsrIn7TA6
+         mJuE3+qfhwOmdYkfMV9tr9++kLoG4iyTu4LvSX/YNxJogpn4k5fSsZoYA4sVE7HQ/L33
+         EiPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773218857; x=1773823657;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=wtF4Mfb0F7x4PLcg6I9RzGmn/9e+thYE6Y867zWiDQI=;
-        b=eC5oOIZqkhuBhmMnbdxMHAwG9rhriIC6pb/nl4g4D5MGhvb2uWetN+n/liJIDNK7F/
-         BUlIU38rKdARZFXOeVCwbJpfoTUPDrWdEqS1i5FkGp2CESTAgNnvwO6XcOVUeTSRrsxs
-         JN3D+72z98g/1p8Gt1dDtRwH3tT9JCIyI88bH1KiI8xwU9YmPbzXWrbzHmbg+to1nrBi
-         AfHqCjXRdFyTecMYvak06+lcnibQbE393pOKKhBtDcI3rAJIe9gC7HZ8/25FRuxTdlza
-         7OXBhGt94ovx8trhbmj564jYaorPGJdo+wZwoXUUOCjV6lEnJRy+OelQVG8K3vZHLAEC
-         NaAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXQgYTP5MsKLiQdNJD7ZBar5ymTEnIPZR5SFrIMUqKI288nET2ocIVTREBwE9xZ1BOKG4JH8tI2ozNm@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMztfd/lyv2D1+F17VtGMASTCjLDRsdx0KXME3oXk5Cf0a7eNA
-	swoTQeRrjg+JBPUdGbt7hXI1yZ+ab6gqj0nXkEe6UH2Jh93rc6KynU4ndjtGKjPPhuZHu93rnid
-	CcoMRi4BLv+1jQGQqc18FZxD1TvaWnvyAaPaf7x08ZXWIWh9TmslAA/HZxZWC5bw6
-X-Gm-Gg: ATEYQzzcAfOMVVNRTAjQWH19amKkgUZP3ndly9dkwtt7j5UTaQYbnx9PPNOcNSHF1Il
-	V0o6Slx55ah5gZQMN7VyMibjJRdzqr31j4Umlqo7Ma4zij6Oo9kxUC3oDtHwwfL/COqmmAOXNJo
-	Ca3RuKWQ7XV1dKrZoQV2BZhhdryjgcSeLYbN6n6+wJiCI1hN7xCPZ3eJeVwN+R4rF58ZcaphXi6
-	F5n3dTS9OOGRwxWnG6EKrIJdh+Zoy9vNp/Seagma5xFpH8gXHTR1NeowlbmEC9kYW+gTyD3P/H6
-	KcDoTyFSWZ7n3rprHLThnylZD+0HL8VAGqlkNJCTN8AjRnRhQ113UgLTaXIWnZb50x+R5ECyGms
-	RLV3s2MQ8+SFTLXT7xUVlHXq/XrN9Xd4rYHH91bwezOxP0lGE/MU=
-X-Received: by 2002:a05:620a:1aa4:b0:8ca:105a:f5d1 with SMTP id af79cd13be357-8cda1a002eemr192880485a.30.1773218857378;
-        Wed, 11 Mar 2026 01:47:37 -0700 (PDT)
-X-Received: by 2002:a05:620a:1aa4:b0:8ca:105a:f5d1 with SMTP id af79cd13be357-8cda1a002eemr192878685a.30.1773218857008;
-        Wed, 11 Mar 2026 01:47:37 -0700 (PDT)
-Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:1f4c:200b:aaaf:c666])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439f821e32csm4695881f8f.35.2026.03.11.01.47.35
+        d=1e100.net; s=20230601; t=1773219584; x=1773824384;
+        h=user-agent:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zkM4bGnCAz6GhYRTPSestmLq7baCdGcGpIWjoPgO3YA=;
+        b=Ve6l3FCmyAs2+aLDBAGo4z6U41HGRG5gDwo4MSeexZZjC66/lxFkv6kL9YYiuwfTgA
+         r+V6VmFYRYQJz7AXuBnK1uI1Lh4Q1o7SCIdIpveS+2vmeUbx+SqfuihBgvsaeL2y1urB
+         BittPW5fQ5OxpT7LZCRarVUX9215Z+6idrOxY5iIftHpDALsTp7rZL9wp15S1h6MChZw
+         Pd+6J3xlm2vPP4Cjd7DE0WNr8mJB35eFaBA3NKQaM18QbLsbOaTVNpli34l9aHi+tvHx
+         lx0M0xu7B76iZn/adJyB7m9A7wNHiIeWOp3sIWUyXBCQcKVKt6Zks0RGA0SBFJ2kdLUX
+         WqUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUwVb/t5LMVVKeDVyZIcLg7qZkoQwmWA/LNAca6FAS9spM3sjiTnaD8+1TToIC54KK2sm9YgZMRqV2B@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsiNGvq3sAhgXk5m4r55Cn4MsCXa6jqUwe0BtMuqnmWO+6nTC2
+	BQW5Kug5k/+NKjMiyiphi/rDqDbfgsh9BayJh++iLv+udigO/vBS286f+DftKVXZ0go=
+X-Gm-Gg: ATEYQzwFrafy6OpnL6r/d8aBMUXDSeURmS88/OICuEFG4kB1p1HzvfYpNop4GcRD+Ea
+	/tjGngem0ksfZIimL2QHLQt+T49xEHeZMLsEkvAvVGgYNTIStOvJjyCOu5PyxcKR2xkpNvYhBtp
+	mzVLaJ5gfF6zM+ElAz+S7g2xJBjuU36rsR2D+pX2IhafWYxX3ikTwvG2BtIlS6H8W9i8IWndK9L
+	rL6ZckuTYHErE6VzwXZEkwG5raVUcXT2njrkAwB4opyJdjY/QRYmIg6hJhGuwvJKqdyPt7JwExc
+	5S6Ugjjs4EziF6yt7cXkR98kzLm8HJc2ZCJJtwoi/xVXUcrcGagpXPm5nIHBS3o5nQgfW5MH53k
+	6ZBW7+/i9CJGqJ6yGy715F1OnNsUT1YqU/wXwin0UNR7Zc9+4UKL5C6vJbsiU/6sRFlqh7xzkPR
+	q7kSWbOJF/bsW08yJxzoX1tl+8dwpWchhPkSnWXS4sG0pui3SMWW8EDYQ=
+X-Received: by 2002:a05:600c:1f10:b0:485:3f58:da6 with SMTP id 5b1f17b1804b1-4854b0a55efmr32579185e9.2.1773219583737;
+        Wed, 11 Mar 2026 01:59:43 -0700 (PDT)
+Received: from r1chard (36-228-122-64.dynamic-ip.hinet.net. [36.228.122.64])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35a03005f7fsm1492215a91.15.2026.03.11.01.59.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2026 01:47:36 -0700 (PDT)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
-        Matti Vaittinen <mazziesaccount@gmail.com>, linux-gpio@vger.kernel.org,
-        =?UTF-8?q?Barnab=C3=A1s=20P=C5=91cze?= <pobrn@protonmail.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: Re: [PATCH v1] gpiolib: clear requested flag if line is invalid
-Date: Wed, 11 Mar 2026 09:47:32 +0100
-Message-ID: <177321885040.7051.16593773301143018668.b4-ty@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260310204359.1202451-1-pobrn@protonmail.com>
-References: <20260310204359.1202451-1-pobrn@protonmail.com>
+        Wed, 11 Mar 2026 01:59:42 -0700 (PDT)
+Date: Wed, 11 Mar 2026 16:59:26 +0800
+From: Richard Lyu <richard.lyu@suse.com>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Richard Lyu <richard.lyu@suse.com>
+Subject: [PATCH v2] gpio: max732x: use guard(mutex) to simplify locking
+Message-ID: <20260311085924.191288-1-richard.lyu@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzExMDA3NCBTYWx0ZWRfX7NzjAahrK6vT
- BsY2OR+xYEzj9lyrAxQNmH2E/3IrTw/LbqkV5zvfW7CoXJw65IJA+W4FIvrFt997TJDWKRpz29Q
- NRbdzib7xeyY7UCaLlI13Iyjr1UUpshvW3XAFcnWaM9c723tMXxQPkPXEd/Ymj0KXPCLC7qIXzn
- U3QnWZBN9M9pM9/pV0Nok23ShlJBU9Ou569qjFJ78QIWWiJRREiamT4OHLSH+V7iwIaKUxdbrSA
- maKJ5Im0OGpNusvuXsu9ZHN/j7+WFX6Qj0+rLivgZ3B2+9jOvHvRHm38T/09omj3pJOACQWLp9f
- 4AKKpMTkPx8QHdCRxYFiJVc7APWKMXQqqxNnK/JmnlWaIuuMscZqiOfwS8vIwDJekiDACwzms9q
- lMg6hrioXORYqvTnrYWJi2AZ4RbN4DBKST0hfdm/G9jl3KqwRQB3HjOlu0VL0rn41/fc44uv6VG
- ugO3jznfUz9OJ4EvN5A==
-X-Proofpoint-ORIG-GUID: GW2XyziP156Y5uSF67sibdd59RJFxw1a
-X-Authority-Analysis: v=2.4 cv=YJ+SCBGx c=1 sm=1 tr=0 ts=69b12c2a cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=eoimf2acIAo5FJnRuUoq:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=2ciBQeYZ9U1VSMm8pLwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=ZXulRonScM0A:10 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-GUID: GW2XyziP156Y5uSF67sibdd59RJFxw1a
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-11_01,2026-03-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0 adultscore=0
- spamscore=0 bulkscore=0 priorityscore=1501 malwarescore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603110074
-X-Rspamd-Queue-Id: 4AD9225FFCF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.51.0
+User-Agent: Mutt/2.2.13 (2024-03-09)
+X-Rspamd-Queue-Id: 23600260107
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33086-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,vger.kernel.org,protonmail.com];
+	TAGGED_FROM(0.00)[bounces-33087-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	RCVD_TLS_LAST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,qualcomm.com:dkim,qualcomm.com:email,oss.qualcomm.com:dkim,oss.qualcomm.com:mid];
-	RCPT_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[richard.lyu@suse.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,suse.com:dkim,suse.com:email,suse.com:mid]
 X-Rspamd-Action: no action
 
+Convert the max732x driver to use the RAII-based guard(mutex) macro from
+<linux/cleanup.h>. This change replaces manual mutex_lock() and
+mutex_unlock() calls, allowing the chip lock to be managed automatically
+based on function scope.
 
-On Tue, 10 Mar 2026 20:44:03 +0000, Barnabás Pőcze wrote:
-> If `gpiochip_line_is_valid()` fails, then `-EINVAL` is returned, but
-> `desc->flags` will have `GPIOD_FLAG_REQUESTED` set, which will result
-> in subsequent calls misleadingly returning `-EBUSY`.
-> 
-> Fix that by clearing the flag in case of failure.
-> 
-> 
-> [...]
+Refactor max732x_gpio_set_mask() and max732x_irq_update_mask() to
+improve code readability. This allows for direct returns and removes
+the redundant 'out' label in the set_mask function, resulting in
+cleaner and more maintainable code.
 
-Applied, thanks!
+Signed-off-by: Richard Lyu <richard.lyu@suse.com>
+---
+v2:
+- Sort includes alphabetically as requested by Bartosz.
+- Add missing include <linux/mutex.h>.
+- Link: https://lore.kernel.org/all/CAMRc=MfioFeJD=s_w0PQ2jD4npHr9y7nMhu3bXUwrr0D8roPgQ@mail.gmail.com/
+---
+ drivers/gpio/gpio-max732x.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-[1/1] gpiolib: clear requested flag if line is invalid
-      https://git.kernel.org/brgl/c/6df6ea4b3d1567dbe6442f308735c23b63007c7f
-
-Best regards,
+diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
+index a61d670ceeda..257742f95949 100644
+--- a/drivers/gpio/gpio-max732x.c
++++ b/drivers/gpio/gpio-max732x.c
+@@ -10,14 +10,16 @@
+  *  Derived from drivers/gpio/pca953x.c
+  */
+ 
+-#include <linux/module.h>
+-#include <linux/init.h>
+-#include <linux/slab.h>
+-#include <linux/string.h>
++#include <linux/cleanup.h>
+ #include <linux/gpio/driver.h>
+-#include <linux/interrupt.h>
+ #include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
+ #include <linux/platform_data/max732x.h>
++#include <linux/slab.h>
++#include <linux/string.h>
+ 
+ /*
+  * Each port of MAX732x (including MAX7319) falls into one of the
+@@ -207,22 +209,20 @@ static void max732x_gpio_set_mask(struct gpio_chip *gc, unsigned off, int mask,
+ 	uint8_t reg_out;
+ 	int ret;
+ 
+-	mutex_lock(&chip->lock);
++	guard(mutex)(&chip->lock);
+ 
+ 	reg_out = (off > 7) ? chip->reg_out[1] : chip->reg_out[0];
+ 	reg_out = (reg_out & ~mask) | (val & mask);
+ 
+ 	ret = max732x_writeb(chip, is_group_a(chip, off), reg_out);
+ 	if (ret < 0)
+-		goto out;
++		return;
+ 
+ 	/* update the shadow register then */
+ 	if (off > 7)
+ 		chip->reg_out[1] = reg_out;
+ 	else
+ 		chip->reg_out[0] = reg_out;
+-out:
+-	mutex_unlock(&chip->lock);
+ }
+ 
+ static int max732x_gpio_set_value(struct gpio_chip *gc, unsigned int off,
+@@ -329,7 +329,7 @@ static void max732x_irq_update_mask(struct max732x_chip *chip)
+ 	if (chip->irq_features == INT_NO_MASK)
+ 		return;
+ 
+-	mutex_lock(&chip->lock);
++	guard(mutex)(&chip->lock);
+ 
+ 	switch (chip->irq_features) {
+ 	case INT_INDEP_MASK:
+@@ -342,8 +342,6 @@ static void max732x_irq_update_mask(struct max732x_chip *chip)
+ 		max732x_writeb(chip, 1, (uint8_t)msg);
+ 		break;
+ 	}
+-
+-	mutex_unlock(&chip->lock);
+ }
+ 
+ static void max732x_irq_mask(struct irq_data *d)
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+2.51.0
+
 
