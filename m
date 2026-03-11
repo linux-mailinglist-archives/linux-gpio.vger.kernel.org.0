@@ -1,216 +1,154 @@
-Return-Path: <linux-gpio+bounces-33050-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33051-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oL7eJkn6sGkRpQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33050-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 06:14:49 +0100
+	id IG6lMC8FsWmypwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33051-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 07:01:19 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46BEF25C552
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 06:14:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A75825CA07
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 07:01:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 454B431A514C
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 05:13:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 242E731715CE
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 06:01:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4291633C197;
-	Wed, 11 Mar 2026 05:13:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B4B31F1932;
+	Wed, 11 Mar 2026 06:01:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBD8jk+A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DtPKDNWG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8F63009D4;
-	Wed, 11 Mar 2026 05:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AA520D4E9
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 06:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773206020; cv=none; b=Cc7hQV9GgodxTlVcTtxHKIymC1Xg4S0sMHu/0bcoaO7Gq27+PQp0tT1IwvetCitf5qCuu9qpBN0dKefptjwkA/5DWg59iRKEdggDTw4Lv2QAqPrnjj4R2yP2TCu8J12b1em5zrfekZXLbZMFLLQqd8QLr5zreiqjWd6sPmjjd9c=
+	t=1773208875; cv=none; b=OsaX/hJQZcoIWmDDHi+bW2fky35Hn0Abw/RSUxnYBJJrIIHbuQ48oKyGLu4ixC2iVi8G668iuL5OP3nS1PUeW9K52VUYFRFQLx7Dc0Qd4udiIIw3+RiMaaXgeKLgd0zQ7zCIFDQTDPDP3ixcppYSHxTCLrEyV0yY39nyvcqK8B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773206020; c=relaxed/simple;
-	bh=28by/08L5sQfVInnpnws13wBN8rSRzXkYuFZbXIDejE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=HwyY7YfRAzZm5jwvgo6Fo7N57zCkXx+eASOsgnSNAfyEpcRa/Zi77VD7VkcFsy7idT0U2jjdLC1UDxvKJONFTEB5zDzVxAZXKHq3TvPq0HeGTwIq4E4CIbMxJ1eJxMogQGbEpJsXyqSURpVwuGgH4vFyNA37VgX9rlYgK49cw9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBD8jk+A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B290C4CEF7;
-	Wed, 11 Mar 2026 05:13:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773206020;
-	bh=28by/08L5sQfVInnpnws13wBN8rSRzXkYuFZbXIDejE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fBD8jk+Az9XLzjQybetTno+W1ryvU+pJL+N7BKChPP4rEV9IYqgPEFF2K1MPy7V+I
-	 icuIUfL/Dg5/kgC+Hmy6YXnokVmu1zBps2v+geMH037tafu9KbfbPBt55PGuheVQJI
-	 z4qBbYgbztbgPszs8uOt3DWOo4BLsomiZb502AAVr8RGodlkXenJkrZoPQ7T4PM4Oz
-	 vrK0XegnvMjvVzXWSmVe1LK/JeGbm1OZeYQWd07yKlzuY4gn+/WuMImks+j3fST4ms
-	 212iplG27c78T1c+7zhxUp3BWeQ6jYmUF3g5aNFDkxAetR3pCSSickOn/0/x8U56nb
-	 McVwjAbkgnZAA==
-Date: Wed, 11 Mar 2026 14:13:32 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Philipp Hahn <phahn-oss@avm.de>, amd-gfx@lists.freedesktop.org,
- apparmor@lists.ubuntu.com, bpf@vger.kernel.org, ceph-devel@vger.kernel.org,
- cocci@inria.fr, dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
- gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org,
- intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
- kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org,
- linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
- linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
- linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
- ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
- sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
- tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH 15/61] trace: Prefer IS_ERR_OR_NULL over manual NULL
- check
-Message-Id: <20260311141332.b611237d36b61b2409e66cb3@kernel.org>
-In-Reply-To: <20260310100750.303af303@gandalf.local.home>
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
-	<20260310-b4-is_err_or_null-v1-15-bd63b656022d@avm.de>
-	<20260310100750.303af303@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1773208875; c=relaxed/simple;
+	bh=FHv5CcvGElrMvmEHMUvhtPhr2308VdCmghoTlQx6D/s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=uqp32qIrahL3mGkNCWbLJuaUwcYUv0+SjXw1C4Vfy8Dh9Uyohnujm2zvj/IFQZ7yzabuBVMjTnab1pM5fXv7Yi4S+2ddp0+vHUsRX7FbUqZHvG18pkhG3il9xlXS1MYqz0pkb1vX1DbNzc10dXabU4Ap5y0QrxXp1Pyzzobj/ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DtPKDNWG; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-38a46657a9fso38035981fa.1
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Mar 2026 23:01:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773208872; x=1773813672; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=aSaRj1cZBzRTfaPBYAkuYcLeDYu3NPNEr6xQzwupwK0=;
+        b=DtPKDNWGX0Bb322tp5HVhPWjRvKV1Wxwdqlx98G48vjoGUoqBoz8VU+jcO1RsgJKIV
+         ec2fR5hN9omThylma+kBz1x6gv+8UkNtRcanFGIzE7oiMyROOTbqL06JpqEzCSbVezqK
+         E66pgicydG7bn+6xEg48PGh6SPLUPYY2n66qdqvPnGo3QAFzGq4lgQ6H1VX6F2BQV3Ji
+         bbanp6fryW6wxO4vVR8MSWeF6wbHyLnHUxiPcGIoKJHVisRbP8nXK2mPKp+Jjl5sIyrH
+         z+iqVtIdXKBKBWevfvI3a9E1rNb29GLaFu+1D+ppHQHQF+ZkKZClFyf3JxzgjjOaSKRk
+         N9zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773208872; x=1773813672;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aSaRj1cZBzRTfaPBYAkuYcLeDYu3NPNEr6xQzwupwK0=;
+        b=DOmN6gfKVH8v/6lZkLta8LJuVII3qHykjyGo5j342/rlNOQE1i4nSt/CSSPm22Lzgv
+         am8wq9yXphhO1HmXc91fhzc9RGsLlVHA3bpFXOhrJzWO89DreF7Os5smeHUE2lXbZxpk
+         UyhG1ssXwd+ZkJ2ekllEYRi3L55MBK06mm76wFp28+e0hAXR8yWiC3bo59vpMBo58k9e
+         gf38u9dVPb5Mx6VT3aMyQKw9+HTFl9UBrCywnNOq92/41tv+hEP/y4Qa5yANxQ/M03iS
+         mqk6imrxvtsNxFzwSi4GbTX9CZXX1dKb/yYwMtKIxXtgFjQPZlXe6auUl8bDLV7wZ565
+         U1Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCULuZCdEfLPZC47hIVAWGok9Q6yO7TkHcoGyVN4GkAHPDSk9agPd+evCswYfAnKTefD/yq3Xgx7eatR@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNyhtSstXoB8y5S/XpLvCr1kGaLmEpL6wrlcKbKMckcXabVKOJ
+	6UhSNaZgDJ3P12+ixEmFu1bkjCjBSkBMHWkny2bdIiJOK35rtES7Zo7q
+X-Gm-Gg: ATEYQzyV5eajc1rVnXif/vLOdjq37m5C5jygjUbnKD6nlfr2cQgu1XbFEZvH++s1IbP
+	VmdSUkLMgTOjnNGhAYngE5VvzFZJGGRVoS1I50jwpnrfMI+3iZ2UzjuEDlaSHc7rIocDpGECCoJ
+	o2i5cS+TJJ7Wf0rx2Tzl8FPK/kCS1PvmAci/i5hDXcBfCgLGLAFfIvVJd6W/79AR8vZwU8nMdZ2
+	RZqloX9fE4saF80uqb7w86PFR80RgoU9fXTERIOhLQ2k03aK6OgjDEg8bhq+OS8yTQCx+4r1hJt
+	uIuhA2sgRCkcM8eUTde4KUEJNE8C3q7Hu/ZhOxaG72gw7CMkqQPQkXq16bj1ZVj0WtsKH3AhdFx
+	WWodhssBWSY2B6ZyBrzvTXpjwIepJx3VL1P/y8+zbtazamiSMDBW9jrGpjxxjdQ+Kku0yTRwKWo
+	KKUuAenqPTTnYoO4pa6eqH+wAoa9Lrjk4ZcKYE9hDmaYalOFJob0I9NtdzG4eDLaCXZW+5KcIqn
+	1A3TqRW
+X-Received: by 2002:a05:651c:1544:b0:383:26ac:4fd8 with SMTP id 38308e7fff4ca-38a67ab7436mr4685301fa.0.1773208871805;
+        Tue, 10 Mar 2026 23:01:11 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-38a67d5fab0sm2023341fa.8.2026.03.10.23.01.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2026 23:01:10 -0700 (PDT)
+Message-ID: <38053082-5cbf-48fa-b724-cac822d1e5ec@gmail.com>
+Date: Wed, 11 Mar 2026 08:01:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 46BEF25C552
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] gpiolib: clear requested flag if line is invalid
+To: =?UTF-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>,
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+ linux-gpio@vger.kernel.org
+References: <20260310204359.1202451-1-pobrn@protonmail.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20260310204359.1202451-1-pobrn@protonmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 2A75825CA07
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MV_CASE(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_FROM(0.00)[bounces-33050-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33051-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[protonmail.com,kernel.org,vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[57];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mhiramat@kernel.org,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mazziesaccount@gmail.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_THREE(0.00)[4];
 	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[avm.de:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,efficios.com:email,goodmis.org:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-On Tue, 10 Mar 2026 10:07:50 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi!
 
-> On Tue, 10 Mar 2026 12:48:41 +0100
-> Philipp Hahn <phahn-oss@avm.de> wrote:
-> 
-> > Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
-> > check.
-> 
-> Why?
-> 
-> > 
-> > Change generated with coccinelle.
-> > 
-> > To: Steven Rostedt <rostedt@goodmis.org>
-> > To: Masami Hiramatsu <mhiramat@kernel.org>
-> > To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: linux-trace-kernel@vger.kernel.org
-> > Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
-> > ---
-> >  kernel/trace/fprobe.c                | 2 +-
-> >  kernel/trace/kprobe_event_gen_test.c | 2 +-
-> >  kernel/trace/trace_events_hist.c     | 2 +-
-> >  3 files changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > index dcadf1d23b8a31f571392d0c49cbd22df1716b4f..a94ce810d83b90f55d1178a9bd29c78fd068df4c 100644
-> > --- a/kernel/trace/fprobe.c
-> > +++ b/kernel/trace/fprobe.c
-> > @@ -607,7 +607,7 @@ static int fprobe_module_callback(struct notifier_block *nb,
-> >  	do {
-> >  		rhashtable_walk_start(&iter);
-> >  
-> > -		while ((node = rhashtable_walk_next(&iter)) && !IS_ERR(node))
-> > +		while (!IS_ERR_OR_NULL((node = rhashtable_walk_next(&iter))))
-> 
-> Ug, No!
-> 
-> That looks so much worse than the original.
+Well spotted, thanks!
 
-Hmm, now IS_ERR_OR_NULL() is an inline function, so it is safe.
-But if you want to use IS_ERR_OR_NULL() here, it will be better something like
-
-node = rhashtable_walk_next(&iter);
-while (!IS_ERR_OR_NULL(node)) {
-	fprobe_remove_node_in_module(mod, node, &alist);
-	node = rhashtable_walk_next(&iter);
-}
-
-Thanks,
-
+On 10/03/2026 22:44, Barnabás Pőcze wrote:
+> If `gpiochip_line_is_valid()` fails, then `-EINVAL` is returned, but
+> `desc->flags` will have `GPIOD_FLAG_REQUESTED` set, which will result
+> in subsequent calls misleadingly returning `-EBUSY`.
 > 
-> -- Steve
+> Fix that by clearing the flag in case of failure.
 > 
-> >  			fprobe_remove_node_in_module(mod, node, &alist);
-> >  
-> >  		rhashtable_walk_stop(&iter);
-> > diff --git a/kernel/trace/kprobe_event_gen_test.c b/kernel/trace/kprobe_event_gen_test.c
-> > index 5a4b722b50451bfdee42769a6d3be39c055690d1..a1735ca273f0b756aa1fcfcdab30ddad9bc51c5f 100644
-> > --- a/kernel/trace/kprobe_event_gen_test.c
-> > +++ b/kernel/trace/kprobe_event_gen_test.c
-> > @@ -75,7 +75,7 @@ static struct trace_event_file *gen_kretprobe_test;
-> >  
-> >  static bool trace_event_file_is_valid(struct trace_event_file *input)
-> >  {
-> > -	return input && !IS_ERR(input);
-> > +	return !IS_ERR_OR_NULL(input);
-> >  }
-> >  
-> >  /*
-> > diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> > index 73ea180cad555898693e92ee397a1c9493c7c167..59df215e1dfd9349eca1c0823ed709ec7285f766 100644
-> > --- a/kernel/trace/trace_events_hist.c
-> > +++ b/kernel/trace/trace_events_hist.c
-> > @@ -3973,7 +3973,7 @@ trace_action_create_field_var(struct hist_trigger_data *hist_data,
-> >  	 */
-> >  	field_var = create_target_field_var(hist_data, system, event, var);
-> >  
-> > -	if (field_var && !IS_ERR(field_var)) {
-> > +	if (!IS_ERR_OR_NULL(field_var)) {
-> >  		save_field_var(hist_data, field_var);
-> >  		hist_field = field_var->var;
-> >  	} else {
-> > 
-> 
+> Fixes: a501624864f3 ("gpio: Respect valid_mask when requesting GPIOs")
+> Signed-off-by: Barnabás Pőcze <pobrn@protonmail.com>
 
+Reviewed-by: Matti Vaittinen <mazziesaccount@gmail.com>
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
+
+~~ When things go utterly wrong vim users can always type :help! ~~
 
