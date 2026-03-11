@@ -1,276 +1,171 @@
-Return-Path: <linux-gpio+bounces-33139-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33140-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IMlpNFttsWlVvAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33139-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 14:25:47 +0100
+	id yOUfIwJysWlVvAIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33140-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 14:45:38 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75770264787
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 14:25:47 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89CA0264C7E
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 14:45:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2CE1932075F4
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 13:20:11 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 724593018E23
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 13:40:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B79031327A;
-	Wed, 11 Mar 2026 13:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DI80JJAa"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2507231E845;
+	Wed, 11 Mar 2026 13:40:40 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514AC313520;
-	Wed, 11 Mar 2026 13:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2BF13148B4
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 13:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773235210; cv=none; b=m+4Fl/PlEjSw9gZfPAFsbQAHBudcuG+qNlD8KTfk2HWSnZtFAvSMiCP2a7zn8xj9+vv7FmxaZge9M+3Vr+Bdr0FXixkCOajVFlU8Bs/AoJUrTyOkoqhKqsaK1NopZNN3LVtQAfGyiobEBqHf3AQPKoEXarF6fLfJ5wNkKiWQ5+M=
+	t=1773236440; cv=none; b=Q9IhJD5tEoNqUmW1q7AUfuzU7LK8qUrMx5h3Kn6+I/VFyyB0RlkGYEZcOgiKksiCAGzBh2mGb1+YrfyiGT+HjLth/3dAaeghK3xEBysDK544jU/lk/ipYV5pIsfeXXxZFOBkyEhiPedeDFnDNX99T3E+DDALo8RtudKq1NgeScs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773235210; c=relaxed/simple;
-	bh=CQ8Cm5vR63jWP3/NDOVeQAOYgMxpGV7BYmnp92v/zeU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a8JtdctDLYClMc0QdzbjaGTZXSOKI+zN+al8+6RlkCr4jToWacdSwVu0HsMk5QoP5HxR+Fo7YmBvqJH1UnC5Hvq+UfyBNRWRQyjr76sIiA9fE9M/Tas03dG+MWGueA62Zd4gQ76bJWdQ2WaFW79qdAhDJ+ow5gwDup+xAwO3Awc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DI80JJAa; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773235208; x=1804771208;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=CQ8Cm5vR63jWP3/NDOVeQAOYgMxpGV7BYmnp92v/zeU=;
-  b=DI80JJAaZYPYTAOz6xASCjxxpdR+en05XxJtCTla++bsslZVNEIINEjn
-   L+NDSZG3qWdER5ImhVE5BXoLMGG9C0A+UU1imaAKI1IeQWgSWZBSuP/X2
-   uCuHuVPVEnB7H9PtzUbJyohvNd2JwguurcR7JnwcNgx2HsPC+BgGp+kVF
-   vq0PKpsR00BnmGYWx5oWELgbqigDmrAEdmwV7UhSfjem/MvyNSgCGTMY3
-   2Uh87eMY8CttLa/pbNBfOeNCf6/gsaagLHOPXj8/tMbV/pZfgmHMW9ALQ
-   Zxc2XRReQdTJ9Vquakp96ntAb0vSXJt4n2y8LEYR2sCP1ofvkR945ANtd
-   Q==;
-X-CSE-ConnectionGUID: iaMx9xeeSlqp53PS6GYYFw==
-X-CSE-MsgGUID: g9yjclQGRtG23e0WU8Sw4w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11726"; a="74211598"
-X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
-   d="scan'208";a="74211598"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 06:20:08 -0700
-X-CSE-ConnectionGUID: wWIPPsqITC2IUMFNhJ+KBQ==
-X-CSE-MsgGUID: wY1TjB17RvGMovcHlVK7Ng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,113,1770624000"; 
-   d="scan'208";a="217131307"
-Received: from jkrzyszt-mobl2.ger.corp.intel.com (HELO alaakso-DESK.intel.com) ([10.245.246.81])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2026 06:20:03 -0700
-From: Antti Laakso <antti.laakso@linux.intel.com>
-To: linux-media@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linusw@kernel.org,
-	brgl@kernel.org,
-	sakari.ailus@linux.intel.com,
-	mchehab@kernel.org,
-	dan.scally@ideasonboard.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	hverkuil+cisco@kernel.org,
-	sre@kernel.org,
-	hao.yao@intel.com,
-	jimmy.su@intel.com,
-	miguel.vadillo@intel.com,
-	kees@kernel.org,
-	ribalda@chromium.org
-Subject: [PATCH v2 5/5] platform: int3472: Add MSI prestige board data
-Date: Wed, 11 Mar 2026 15:19:10 +0200
-Message-ID: <20260311131910.835513-6-antti.laakso@linux.intel.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260311131910.835513-1-antti.laakso@linux.intel.com>
-References: <20260311131910.835513-1-antti.laakso@linux.intel.com>
+	s=arc-20240116; t=1773236440; c=relaxed/simple;
+	bh=P8/F88WI/ZbIkPfS0vzqYssdeRxxEz5wUC4N+aKwM30=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZOSOM34P6OY7tnSvXFn7TixXV2hom8e9WLtxtnduWNa6qjbqrVkiLWPVOnLRbQgBY5Q2+ZQBwOSk0tx2ZZU6Kz/lK0E4d1DXWcIdTQ+MkxhiTJ3mFwlZ0f5kvJU1TkyiXfpKx33IUkxGzmt4ZPRlsMR4Lwvh8qOPZFInfdlKkVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1w0JnT-0005WA-Vo; Wed, 11 Mar 2026 14:40:23 +0100
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1w0JnQ-004rpJ-2d;
+	Wed, 11 Mar 2026 14:40:22 +0100
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.98.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1w0JnS-0000000DNSb-0Bq1;
+	Wed, 11 Mar 2026 14:40:22 +0100
+Date: Wed, 11 Mar 2026 14:40:22 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Thomas Gleixner <tglx@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+	Peter Rosin <peda@axentia.se>, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org,
+	David Jander <david@protonic.nl>, Linus Walleij <linusw@kernel.org>
+Subject: Re: [PATCH v3 4/7] gpio: gpiolib: fix allocation order in
+ hierarchical IRQ domains
+Message-ID: <abFwxtDWvkXHx9KS@pengutronix.de>
+References: <20260309134920.1918294-1-o.rempel@pengutronix.de>
+ <20260309134920.1918294-5-o.rempel@pengutronix.de>
+ <CAD++jL=3GeHNirtN9diGc8R2rxczo4UUL9_ON28jOj_DPP2Sjg@mail.gmail.com>
+ <CAMRc=Mdutv6TyU5SG2uzCgRuvYVmfFB0kwXgj45Qajet+TdBhw@mail.gmail.com>
+ <CAMRc=Me5Yb_H3oQ7XtWVs+KViL6pkr0b1Qyb7WW1wtxyGkGhAg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 75770264787
+In-Reply-To: <CAMRc=Me5Yb_H3oQ7XtWVs+KViL6pkr0b1Qyb7WW1wtxyGkGhAg@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Rspamd-Queue-Id: 89CA0264C7E
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.84 / 15.00];
+X-Spamd-Result: default: False [0.04 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33139-lists,linux-gpio=lfdr.de];
-	TO_DN_NONE(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[antti.laakso@linux.intel.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio,cisco];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	TAGGED_FROM(0.00)[bounces-33140-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	DMARC_NA(0.00)[pengutronix.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,linux.intel.com:mid,intel.com:dkim,intel.com:email]
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[o.rempel@pengutronix.de,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-0.997];
+	MID_RHS_MATCH_FROM(0.00)[];
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-Define regulators and gpio for ov5675 in MSI Prestige 14 AI EVO+ laptop.
+On Wed, Mar 11, 2026 at 02:18:05AM -0700, Bartosz Golaszewski wrote:
+> On Tue, 10 Mar 2026 10:14:59 +0100, Bartosz Golaszewski <brgl@kernel.org> said:
+> > On Tue, Mar 10, 2026 at 10:05 AM Linus Walleij <linusw@kernel.org> wrote:
+> >>
+> >> On Mon, Mar 9, 2026 at 2:49 PM Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+> >>
+> >> > In gpiochip_hierarchy_irq_domain_alloc(), calling irq_domain_set_info()
+> >> > before irq_domain_alloc_irqs_parent() causes a NULL pointer dereference
+> >> > for slow-bus (SPI/I2C) IRQ chips.
+> >> >
+> >> > irq_domain_set_info() locks the child descriptor, triggering .irq_bus_lock.
+> >> > If the child proxies this lock to the parent, it crashes because
+> >> > parent->chip is not yet allocated.
+> >> >
+> >> > Fix this by allocating the parent IRQs first, ensuring parent->chip is
+> >> > populated before the child's .irq_bus_lock is invoked.
+> >> >
+> >> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> >> > ---
+> >> > changes v3
+> >> > - new patch
+> >>
+> >> Bartosz, tglx: is this something we should apply for fixes?
+> >>
+> >> I think it needs to go into gpiolib for next at minimum, unless
+> >> there is some semantic problem with the patch.
+> >>
+> >
+> > Looks good to me. I can take it into v7.0-rc4 via the GPIO tree and
+> > tglx can pull the tag once it's out as a base for the rest of the
+> > series?
+> >
+> > Bart
+> >
+> 
+> Oleksij: it doesn't look like there are any dependencies for this patch, is
+> it ok if I queue it for the next RC?
 
-Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
----
- .../x86/intel/int3472/tps68470_board_data.c   | 101 ++++++++++++++++++
- 1 file changed, 101 insertions(+)
+ACK, there are no dependencies.
 
-diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-index 71357a036292..6892d6e98072 100644
---- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-+++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-@@ -12,6 +12,7 @@
- #include <linux/dmi.h>
- #include <linux/gpio/machine.h>
- #include <linux/platform_data/tps68470.h>
-+#include <linux/property.h>
- #include <linux/regulator/machine.h>
- #include "tps68470.h"
- 
-@@ -232,6 +233,72 @@ static const struct tps68470_regulator_platform_data dell_7212_tps68470_pdata =
- 	},
- };
- 
-+/* Settings for MSI Prestige 14 AI+ Evo C2VMG laptop. */
-+static struct regulator_consumer_supply ovti5675_avdd_consumer_supplies[] = {
-+	REGULATOR_SUPPLY("avdd", "i2c-OVTI5675:00"),
-+};
-+
-+static struct regulator_consumer_supply ovti5675_dovdd_consumer_supplies[] = {
-+	REGULATOR_SUPPLY("dovdd", "i2c-OVTI5675:00"),
-+};
-+
-+static struct regulator_consumer_supply ovti5675_dvdd_consumer_supplies[] = {
-+	REGULATOR_SUPPLY("dvdd", "i2c-OVTI5675:00"),
-+};
-+
-+static const struct regulator_init_data msi_p14_ai_evo_tps68470_core_reg_init_data = {
-+	.constraints = {
-+		.min_uV = 1200000,
-+		.max_uV = 1200000,
-+		.apply_uV = 1,
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+	},
-+	.num_consumer_supplies = ARRAY_SIZE(ovti5675_dvdd_consumer_supplies),
-+	.consumer_supplies = ovti5675_dvdd_consumer_supplies,
-+};
-+
-+static const struct regulator_init_data msi_p14_ai_evo_tps68470_ana_reg_init_data = {
-+	.constraints = {
-+		.min_uV = 2815200,
-+		.max_uV = 2815200,
-+		.apply_uV = 1,
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+	},
-+	.num_consumer_supplies = ARRAY_SIZE(ovti5675_avdd_consumer_supplies),
-+	.consumer_supplies = ovti5675_avdd_consumer_supplies,
-+};
-+
-+static const struct regulator_init_data msi_p14_ai_evo_tps68470_vio_reg_init_data = {
-+	.constraints = {
-+		.min_uV = 1800600,
-+		.max_uV = 1800600,
-+		.apply_uV = 1,
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+	},
-+	.num_consumer_supplies = 0,
-+	.consumer_supplies = NULL,
-+};
-+
-+static const struct regulator_init_data msi_p14_ai_evo_tps68470_vsio_reg_init_data = {
-+	.constraints = {
-+		.min_uV = 1800600,
-+		.max_uV = 1800600,
-+		.apply_uV = 1,
-+		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-+	},
-+	.num_consumer_supplies = ARRAY_SIZE(ovti5675_dovdd_consumer_supplies),
-+	.consumer_supplies = ovti5675_dovdd_consumer_supplies,
-+};
-+
-+static const struct tps68470_regulator_platform_data msi_p14_ai_evo_tps68470_pdata = {
-+	.reg_init_data = {
-+		[TPS68470_CORE] = &msi_p14_ai_evo_tps68470_core_reg_init_data,
-+		[TPS68470_ANA]  = &msi_p14_ai_evo_tps68470_ana_reg_init_data,
-+		[TPS68470_VIO]  = &msi_p14_ai_evo_tps68470_vio_reg_init_data,
-+		[TPS68470_VSIO] = &msi_p14_ai_evo_tps68470_vsio_reg_init_data,
-+	},
-+};
-+
- static struct gpiod_lookup_table surface_go_int347a_gpios = {
- 	.dev_id = "i2c-INT347A:00",
- 	.table = {
-@@ -258,6 +325,23 @@ static struct gpiod_lookup_table dell_7212_int3479_gpios = {
- 	}
- };
- 
-+static struct gpiod_lookup_table msi_p14_ai_evo_ovti5675_gpios = {
-+	.dev_id = "i2c-OVTI5675:00",
-+	.table = {
-+		GPIO_LOOKUP("tps68470-gpio", 9, "reset", GPIO_ACTIVE_LOW),
-+		{ }
-+	}
-+};
-+
-+static const struct property_entry msi_p14_ai_evo_gpio_props[] = {
-+	PROPERTY_ENTRY_BOOL("daisy-chain-enable"),
-+	{ }
-+};
-+
-+static const struct software_node msi_p14_ai_evo_tps68470_gpio_swnode = {
-+	.properties = msi_p14_ai_evo_gpio_props,
-+};
-+
- static const struct int3472_tps68470_board_data surface_go_tps68470_board_data = {
- 	.dev_name = "i2c-INT3472:05",
- 	.tps68470_regulator_pdata = &surface_go_tps68470_pdata,
-@@ -287,6 +371,16 @@ static const struct int3472_tps68470_board_data dell_7212_tps68470_board_data =
- 	},
- };
- 
-+static const struct int3472_tps68470_board_data msi_p14_ai_evo_tps68470_board_data = {
-+	.dev_name = "i2c-INT3472:06",
-+	.tps68470_regulator_pdata = &msi_p14_ai_evo_tps68470_pdata,
-+	.tps68470_gpio_swnode = &msi_p14_ai_evo_tps68470_gpio_swnode,
-+	.n_gpiod_lookups = 1,
-+	.tps68470_gpio_lookup_tables = {
-+		&msi_p14_ai_evo_ovti5675_gpios,
-+	},
-+};
-+
- static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
- 	{
- 		.matches = {
-@@ -316,6 +410,13 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
- 		},
- 		.driver_data = (void *)&dell_7212_tps68470_board_data,
- 	},
-+	{
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Prestige 14 AI+ Evo C2VMG"),
-+		},
-+		.driver_data = (void *)&msi_p14_ai_evo_tps68470_board_data,
-+	},
- 	{ }
- };
- 
+> Could you add the Fixes tag as well?
+
+Fixes: fdd61a013a24 ("gpio: Add support for hierarchical IRQ domains")
+
+Should add it in the next round? There are some pending comments for
+this patch set.
+
+Best Regards,
+Oleksij
 -- 
-2.53.0
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
