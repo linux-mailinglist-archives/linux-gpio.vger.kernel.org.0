@@ -1,90 +1,101 @@
-Return-Path: <linux-gpio+bounces-33104-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33105-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WL/GEmQ4sWmesgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33104-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 10:39:48 +0100
+	id YMkaB+k6sWkLswIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33105-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 10:50:33 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC246260D42
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 10:39:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F04F02613B0
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 10:50:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 49A48304DEA2
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 09:38:25 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 24F5830BF4E1
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 09:44:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F6013C8702;
-	Wed, 11 Mar 2026 09:29:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C51D3F54C2;
+	Wed, 11 Mar 2026 09:32:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F0UoSS6H"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JfVWEI4z"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CEF43C6A43
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 09:29:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146303C9EE1
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 09:32:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773221351; cv=none; b=Sc55ic3Ru4FE9dTBzKMFRntFwNr4R7mNrqwSiFrWgGm1mu9ZLq0sSMD+/0fUBr2e9R5dTJtWd/Pc7rPUyy11FCRAp504ipzfRul/ALkqjp2F2Hqa5FCeo4R/VRmSOopnY4A9CMhSI3pdqYAKZQGrMDQA8eyml1JG0uYR5OFmcSQ=
+	t=1773221546; cv=none; b=kefWfG04ZEWLrFt355ty9msnULu6pVq0OFSgTQg/x4g/XgyHrldo/FLOHub6mEjHtSxSHKMUeCfIsZBq7iUiwfNbFTIei0JpPse34r8eYtsrSKZvhKjQIS6uDjGtKQM3Ib3xfKv8fXkFbvCO8raiEpUCW1hNJS4LzY1w/w/Ft/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773221351; c=relaxed/simple;
-	bh=ZLpTE+Y/R0Tdv9vswPnMcKu+W093lttl1jCB5Rb2dPo=;
+	s=arc-20240116; t=1773221546; c=relaxed/simple;
+	bh=JGYhPK256pxU9EiY8jbQSSjgozqR8V5kd9EUseD+GRo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JD4OUOVOTEPhaHn8NAT4aISGZj+xtEBmGIyLqa2OAjAqbzauBLNdzp37i4ng7qoNZHqpynP3dP8CWHue/vovuFOTYINBX8R1xIpD9meL1qdH8+c63x7KY0w8gxwHVjtjCplPosPeWVWYlJKpIbgKGDHgZpMx2dwBM0EOT9x/opM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F0UoSS6H; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30B60C2BC86
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 09:29:11 +0000 (UTC)
+	 To:Cc:Content-Type; b=lDPbIJX30/OfdLsE2BHzTX7jbYMiPXOpA5j6nZZN0URtgNrQnRggRxPparRQodJln6PKo0iETdOrUjfDMLAU6+mt52wlIj51GDRWbeyEWHKG6nftPOXTd1tMgwd1Ubeyd3mhnJ+hfZD/E/jaONTblzUxAJdIQu923r0pSmwOvoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JfVWEI4z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9212C2BC86
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 09:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773221351;
-	bh=ZLpTE+Y/R0Tdv9vswPnMcKu+W093lttl1jCB5Rb2dPo=;
+	s=k20201202; t=1773221545;
+	bh=JGYhPK256pxU9EiY8jbQSSjgozqR8V5kd9EUseD+GRo=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=F0UoSS6HeTeib+b99NgLUia+OyIhq3d974Aaz/MUtDwtuUEhhCks7o29mfOMjAVKX
-	 g4uzGajiuIujzHTAQG2mA2a756hkcje6PBx9L7ejmnbdBtG24PCHfWqqllyFhml1ef
-	 r7UmSxCrN/ZzCnAyj7mOocSqVm4PRXRyR9zHiUaHi1iTuO2rD3QxaNEs6dH5wMcLSx
-	 j5fJu2sglWpDCXdVDVnd/6YktG/5jvPa4Iu+duoFPHRIcI9VQ18cdOSO/fFER+sa11
-	 awiguuyqGhaomMJgXyyy/vixRpx+Z9ONK1cEEOXXE5oNJKJ/3T9+FwBV/RmSJjo2Jg
-	 ex8YQGMIDgbgQ==
-Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-64937edbc9eso12733965d50.2
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 02:29:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVTSVEQRdHYhQG1M5g3Y0qf0wvK+1rivJz+VwQbB231ppxabJDagLO5I5tdF6moVf8JCeRTlmXlroLk@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBFdCcQwgqn7xmVAjOWxtbHoIYfoEdeyaf71JgNqwzil+Hh2Xm
-	ZAo1oVvo0ocZ1Hoo7uiUOI8PSgDOtDrHvP4wE+ffou7ad1pJ+MOBpNmNaJHo9CgqT9Oavfz/Dyv
-	p8QiX0tTmtrAWF3yYlDkiKLc7YcsT4bo=
-X-Received: by 2002:a53:c751:0:b0:64a:d479:bfbd with SMTP id
- 956f58d0204a3-64d6568df17mr1064855d50.7.1773221350597; Wed, 11 Mar 2026
- 02:29:10 -0700 (PDT)
+	b=JfVWEI4zDrh3iHX+1r4cle8Phcf0RBN0zERjJ8PQNA3EYWSATJ9h5lha/xBvVFGnI
+	 lElqdFOyu5rUcg336ldY8JBHZo/CNZ6A5HFkXurPLCqwCA7763w9Gzh1MrCiovz1O6
+	 4/dhditNlUPPz/o6nb1awN/pC+8W+SveVLbbW1M3XSJ0LknHbar0z1P9mnX5NF58yX
+	 1Uj5dsDyxTrkO1DJZv/qpV8j6iPNzVVJVRqNM1MXMlgjgqpNnn65QlcqD5KydSFEzI
+	 yLns3+tdmVfBsvgohk6ekX61JLdkJkatIbZorvb97Pbamw8/hcF79oQl43JkoSoDtA
+	 x5H4ornHcPhQg==
+Received: by mail-yx1-f43.google.com with SMTP id 956f58d0204a3-64ae2ce2fe1so13016795d50.1
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 02:32:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV9MAGlEQKybjad8vZlWBd9Lt8FvibI2rVxDHB4vLu3RjFxjehJEkNkWuYUW4LoL5xuK3jtlUpsqjo0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIUNu9ZW0dpGUWYua8CeYrOoLD2ThiZSuduuunQjVoEUOAE19H
+	pSzG4MuTgAHl5ua9fnnsVn7xNMUwqQJredfrN8Uery6W/VwLq7ZBlswgHaqrwCA1qkdCjjyNbmG
+	kREKOrVmsUdJQcJ6hv6lu4GgEUsSLPmQ=
+X-Received: by 2002:a05:690e:144d:b0:64c:e890:fbb9 with SMTP id
+ 956f58d0204a3-64d656f696dmr1649157d50.20.1773221544775; Wed, 11 Mar 2026
+ 02:32:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260226-debug_bus-v6-0-5d794697798d@foss.st.com> <ed019efc-d1e0-4e77-bf9c-79da40f0c707@foss.st.com>
-In-Reply-To: <ed019efc-d1e0-4e77-bf9c-79da40f0c707@foss.st.com>
+References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de> <20260310-b4-is_err_or_null-v1-41-bd63b656022d@avm.de>
+In-Reply-To: <20260310-b4-is_err_or_null-v1-41-bd63b656022d@avm.de>
 From: Linus Walleij <linusw@kernel.org>
-Date: Wed, 11 Mar 2026 10:28:59 +0100
-X-Gmail-Original-Message-ID: <CAD++jLkkVcRrT=NRyFD6s9=MYaOQSWun0v4z3z01BZoQ2tTvDA@mail.gmail.com>
-X-Gm-Features: AaiRm52uciv83L8ui1qjVsq1iiproIcpV5iHuMJHrm82sToGHhfR4T4DzXQs8RY
-Message-ID: <CAD++jLkkVcRrT=NRyFD6s9=MYaOQSWun0v4z3z01BZoQ2tTvDA@mail.gmail.com>
-Subject: Re: [PATCH v6 00/12] bus: add stm32 debug bus and coresight support
- for stm32mp1x platforms
-To: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-Cc: Gatien Chevallier <gatien.chevallier@foss.st.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	James Clark <james.clark@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Mathieu Poirier <mathieu.poirier@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	=?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <legoffic.clement@gmail.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, cristian.marussi@arm.com, 
-	jens.wiklander@linaro.org, etienne.carriere@foss.st.com, 
-	Sudeep Holla <sudeep.holla@kernel.org>, coresight@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, 
-	Antonio Borneo <antonio.borneo@foss.st.com>
+Date: Wed, 11 Mar 2026 10:32:12 +0100
+X-Gmail-Original-Message-ID: <CAD++jLnDv00ErgVdQ4EBpKH9KMWrPD8ODrQ6m846zyQ=wNzCzQ@mail.gmail.com>
+X-Gm-Features: AaiRm52aI8z_G2E4qYaKWPEA43RhLektjwMDQXSLwHd-Xy_BYcin-6heFFY4jM4
+Message-ID: <CAD++jLnDv00ErgVdQ4EBpKH9KMWrPD8ODrQ6m846zyQ=wNzCzQ@mail.gmail.com>
+Subject: Re: [PATCH 41/61] pinctrl: Prefer IS_ERR_OR_NULL over manual NULL check
+To: Philipp Hahn <phahn-oss@avm.de>
+Cc: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com, 
+	bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr, 
+	dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org, 
+	gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org, 
+	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev, kvm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org, 
+	linux-bluetooth@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+	linux-cifs@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org, 
+	linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, ntfs3@lists.linux.dev, 
+	samba-technical@lists.samba.org, sched-ext@lists.linux.dev, 
+	target-devel@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
+	v9fs@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: EC246260D42
+X-Rspamd-Queue-Id: F04F02613B0
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -95,36 +106,40 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33104-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[foss.st.com,arm.com,linaro.org,kernel.org,linux.dev,gmail.com,lists.linaro.org,lists.infradead.org,vger.kernel.org,st-md-mailman.stormreply.com];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[23];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33105-lists,linux-gpio=lfdr.de];
 	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCPT_COUNT_GT_50(0.00)[54];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,st.com:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,mail.gmail.com:mid]
 X-Rspamd-Action: no action
 
-On Tue, Mar 10, 2026 at 10:07=E2=80=AFAM Alexandre TORGUE
-<alexandre.torgue@foss.st.com> wrote:
+On Tue, Mar 10, 2026 at 12:55=E2=80=AFPM Philipp Hahn <phahn-oss@avm.de> wr=
+ote:
 
-> Patch 1 to 11 applied on stm32-next. Linus, let me know if I take the
-> pinctrl one or you prefer to take it.
+> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
+> check.
+>
+> Change generated with coccinelle.
+>
+> To: Linus Walleij <linusw@kernel.org>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
 
-AFAIU you *have* to take it because there are compile-time dependencies?
-
-I provided my Reviewed-by so go ahead and apply it!
+Patch applied to the pinctrl tree as obviously correct.
 
 Yours,
 Linus Walleij
