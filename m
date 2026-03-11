@@ -1,223 +1,245 @@
-Return-Path: <linux-gpio+bounces-33042-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33043-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8MqPGbS4sGn0mQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33042-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 01:35:00 +0100
+	id CLUgLFLPsGmLnQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33043-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 03:11:30 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0DE5259D1D
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 01:34:59 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A09625ABB2
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 03:11:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 538433055563
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 00:34:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 532783240252
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 02:07:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D72E836495E;
-	Wed, 11 Mar 2026 00:34:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AA1E371888;
+	Wed, 11 Mar 2026 02:07:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iAItiUIW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SqpOgAb4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958163644B6
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 00:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773189291; cv=none; b=b4i2WPkDHj9bBwR3VG1wjnK5Xi5j1nxwKk/sPREMhufWYDJtMJTT0E2C5qml+8jUDbKimvKpbaKv1egMZRdcwcqbyX1Fb/I8h74DQNGyd9ob8tPzaP8DyKaNQZxktBsvQtp7frdH5ui2O/ZAY4HnXnkjqKcckmcytM9StDj3Nl8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773189291; c=relaxed/simple;
-	bh=B/tqumodIgkuXLcIDjCvC+BGzbRSoaLzvllGIMZTIfo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FRnPs7izivCSbEa3AuaT8KTFLXmysa4Ed176CYYKpzJ/gHMqu+0welkGA0Xj6wtrSTP4pqQZ+xS9tnpSQG1l8JOFjI3S9Q4e+ypa+MFduCCw9L5w/jv+MqVWtlx46oDSW6nmfDNVetUgsqNEgYg/0TSvzUXuPxNwEwFj2/O2VBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iAItiUIW; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-358d80f60ccso7436616a91.3
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Mar 2026 17:34:50 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFB731691A
+	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 02:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773194859; cv=pass; b=CFAhi7xGcE64zUeY8HO3nY7/mt/+N9XARfK+vyaf5P+ls16HlWgnBV9MknzHdg7MUHV9vJDLM4gJsANLCqd3okJD/IHIaB2Fq7HiyXKlW4YdgiwUn44OZoY3dsrZ0s2fXMLD5Y7NlDdKOoxBVR2jusrQvULZ9BTwgGTkI8EUAgk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773194859; c=relaxed/simple;
+	bh=8UJnLa/DDQ+b65RDSHa97nR/Rm6zetnRjswOkVb13wc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l2g2yzZ4Dybh6kuhvcBULVguDYhdrEOCm8tFVHG5HxZiMK4r1ieV3XC7DvFbBP/+LmMwsbfu65u9ArSpCtaVdbPZteok84/rVMReHCYXmpmbYEy9zrdrliUY8eD89Ecnaq3KiIRSp5NcaBqhT+HUD7Ww+h1VR8ou9i4C8J9QSO4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SqpOgAb4; arc=pass smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5a13d1c6f25so4703797e87.3
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Mar 2026 19:07:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773194852; cv=none;
+        d=google.com; s=arc-20240605;
+        b=IAZe7rqUHIDG6WA9xVZM4WQAJg663J8CfgZhzetNxwlZ9MC2UCuMFEHRw2bg6dTxqH
+         mNkePQ2vzta2CD2/C8Fqg37RSDbd9lbmwEjIaj4K6PdU8f21TSnl6O5jjb+RRGDj/47A
+         fpbiTKYlg7KneQIpSQpmKHPPI8hysxiVfC3KSRdQ73XL6Gkn43LlQ19kdFrfr5O0ACrp
+         tt2A/RaFGit29HFgB80AVyRskjdIybon2UtlIUClDCt1WTASn3P4v5Rp9MopYiObHzl5
+         YUflASLgy6P/CAkAG2L0I60RVuDDtkfDiahbe28ojOh9Vhbq2Iub7LvBTev3wx6HrbTD
+         eY7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=+zLBLQzKjcztDlxJqoLP6w+B6xnZmfHibV4jlBQCebA=;
+        fh=i4oTTeMsKjdDNvnlrbAUk1kRTa88FOO0gg2ONBMpRf8=;
+        b=dwIbnNMtkAajD5WddwEVWtH50UZBJua/IvyxAxQpv01nAoylTObwk9xqL3LwLeHuzM
+         VTjb97oGlTVWMhM/aZbW7ipITL9+DS41qNk7ALCAPLeq1DwBVdYMPrriUuUbh3n0EkTw
+         PqmTUp/dLy506HU46l3oZGF3iMHh7D8F62RaAoXbQ8CPr4ndcc3FOAwVKibt6a8yl0np
+         VctDHST6oIlXJvcLbNqzo1l5oNW245bvRRzUyv0OZ8CIZZ4L7DbNbmPjmhb1mjwF1Hf9
+         c1Md7nSJW+BtwKJSB61evcws6ww8qAj5TNWspDHdX8hZ6fPiMDdP9A3NkYulACsdoTLs
+         Yksw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773189290; x=1773794090; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7YSc98IcO6Pk8M+lzdgpoqKTHGos+KZeMXffp4drDJs=;
-        b=iAItiUIWFQgw8znFg8qrBVT10D4LqM75DMGoXScjIeeYHsJFdjgKXP8tGLkOHj0PBW
-         Mbry8oajIw8MV9/skM+YgvDf63yK8/7IL6UlMVld7aRXy3g5+CPX/oBspE33lRe+74hW
-         UH6YsFeFvtTTJgnS1ria04b/tRMhd4Vws1zVN4ljLX/goDpo4wABwB9/dYRCY3ndoK/8
-         cy/yWvi4TKqL87ETU5FYPivHN8+6Q2ydw0mdPok3g0WR6lKVydOXiFr3og+5D5mdVsWM
-         GFNoddLDpkpMCO5A6e8Pk1Cwn3XbOwDHc6zzdo7+dniVm/9iEQ0jGt5DdUwqA+8zmEO6
-         hMFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773189290; x=1773794090;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1773194852; x=1773799652; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7YSc98IcO6Pk8M+lzdgpoqKTHGos+KZeMXffp4drDJs=;
-        b=ABlUB7aue5CsAbMMKqQpLbt/XDs/pkcih4A+AOTqOlIY8ma6oDqxZDh15D9Efv/caE
-         vO77N1gLrwznIsHlCXqtc9MxOpxg6wXx1TeKHUwt2lA1gN7efVEEixIzIV/96fmIBeQF
-         5XvUpYi8wa1rZasgWT9EguVLJOWqsdwH8fo4bB33QRLWxvIHtJ6WmtFJnErejQG98fmd
-         EHLKqnA31U3iV2CYCpQ3+mtluRzm08H68zd7JXx2JVzl8TCgsrq6QnjuFL0LMc0YbmI/
-         M9BcwJTEppSVWBUKfYKWj3Ku9NcRsCetKMXhLrZmAomn3XERmYzMhjsYQ1hCKhaj/Fu3
-         qcLA==
-X-Gm-Message-State: AOJu0Yxbe+cvtofIHgAwB8W8HWDFWkLRfduhlb7ZHYTnHitTMNnkDpGR
-	jTp9Ubltw2veyTcQHVwpIMXM/ilCIpBV8pN7EQnWs3jFYY2XU9FHaG6NNz/Foe2P
-X-Gm-Gg: ATEYQzx3plW80supMRD9DZvjkghhTzsKL7Fei3sYa8bR3pRkgyrZgrlrp954oKCORmM
-	VCfMGj7CCeIpILe4WnSqWHAh2Gipj7hM6avJmRNT6dhtjJV0dbEhkLUcpuGb4yXjgrLkU2gNgkx
-	nlsH5TMx5iTSAn5lFp189uCwmIWBlR5t+WYR3HvOeJaNIh8ofKoh1NSJOVuymZZ3O12Vc21JFfw
-	U7EtUhN0Ynurcl9LdNCao84TwnIpmHW2FDxWMRCNoYurnAl+gIKBK0DVdddjW/sbHTbz4moSpVh
-	8BK1e5rvdxapuBkQVJZokN354Fa/nRMVdqlXkgXX5ONkTJIZnuz4FwXh7VaiibKV2Hh5wcQ5G/0
-	HsPOhEgJpVI46Vi5LwsbipleSAkY9Dd8TKocJvXih7DRUWyFAlrDv/ef4pen5j6WuIs6pYQQ9RJ
-	UkJvGXJyt9PS4p3jrZiaaQZjoVyds3FvpscKXCvTFmRHvNQ1jN/qlIXw==
-X-Received: by 2002:a17:90b:5111:b0:359:d54:846f with SMTP id 98e67ed59e1d1-35a011d0b9cmr793085a91.7.1773189289448;
-        Tue, 10 Mar 2026 17:34:49 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c73cdf0e48dsm330349a12.1.2026.03.10.17.34.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Mar 2026 17:34:48 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: Ray Jui <rjui@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] gpio: bcm-kona: remove kcalloc
-Date: Tue, 10 Mar 2026 17:34:31 -0700
-Message-ID: <20260311003431.31881-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+        bh=+zLBLQzKjcztDlxJqoLP6w+B6xnZmfHibV4jlBQCebA=;
+        b=SqpOgAb4CQOCp6QT1IhDiJXNOENCCAthmmQiQ2Xm1LqdH6AuNnr9pWEOxoaM6J2EHp
+         TaZvrNsWvEAAdeAh3rGZCGLrxzU767HUy57VJt43+079ae3+2kuAr2+JBVbU8T9+l/BT
+         vjjO+GANIyds0bGFgUhdgNG0FnF3NJi/nWQH4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773194852; x=1773799652;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+zLBLQzKjcztDlxJqoLP6w+B6xnZmfHibV4jlBQCebA=;
+        b=nVFwV1kmTgB3basTVyXM0YImWrCMfO81tvHJtYrrY9M77AaVJT4UYjpdBe/jrDX5Jz
+         UYG1yWBwtonyBDaebW/GuV7nuen1AkXuZgk5Lp0+5TQ6mK34B6bwduxCqNb0XWKrqZky
+         Je615VVw4c/9ycKXGHU/2MQGQeMIH4p5V8Xu5BzGjM1vLpc0cJUOZH7D7fBgeufhzGwi
+         SG+Rk1QnMx2mX9dMJVtfow+YoRDVkys26QK5eEzCieQGSaNUnx06NaQxE3tJJtddIJT4
+         kQVySe9jBYXWMxoXzZWHrHbGS9JRwZelqjqmpmJA/vOJSApxgOLwKwT/2pTabIFaJ+FR
+         OAMg==
+X-Forwarded-Encrypted: i=1; AJvYcCVczcQbqrzVKL8zTsA493jME4AjE9cp6qzGBY8Z/8HU1jcB5sTn7kCjxSbuoi9o4NzSG6AXQwXKxYgx@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf/sP7zyOEYGB48H1PSkl3rPfTuoWyfOTvPy8r2bwfouO9CxG8
+	bI9DeXQzzBl+kvXE6k78JAHZrYzImFtMbLVTEOM4hqheyb7RCETTMaru4D0firkM47lFIy2Hcvd
+	HGUfMDFq7m8ximeDmzLWom/IOxYTPIXShC3ul74PF
+X-Gm-Gg: ATEYQzzpDt8rlLMZ5T6/PvTKVqcbRcm1Jm8hOSofmYCR7HWG7Y2dogamlpolBoYqE5i
+	eq9rX98pVeurXDmgi+A1NYjU5gGlYcXRmaPDyMRbW2BSnqu36sWFzXJ1jZRoFR/Y7dWYczLRloT
+	WRstXAMFXU2GAo5gs7XTSMqEkR53awXgNAVRFX4Uqvv3k6Lyfji7UOUT7X25wO4IyTsZbDpOTi+
+	XaDhsjS5uM7QV9I4QaLfxZhBtPyWCO4p/CcNSOKZaV9w+oL6XHHJhp8c4WjXaWNiGx2xGnwkW98
+	Ex8HmDZpKg==
+X-Received: by 2002:ac2:4427:0:b0:5a1:3134:9bac with SMTP id
+ 2adb3069b0e04-5a156cbd1bbmr169453e87.28.1773194852284; Tue, 10 Mar 2026
+ 19:07:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: F0DE5259D1D
+References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de> <20260310-b4-is_err_or_null-v1-56-bd63b656022d@avm.de>
+In-Reply-To: <20260310-b4-is_err_or_null-v1-56-bd63b656022d@avm.de>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Wed, 11 Mar 2026 11:07:21 +0900
+X-Gm-Features: AaiRm5028PWt8n-JnveiRgn8oYMksdR_-_nk4JOkvxMfplWs-GDr7RRk-OxICyw
+Message-ID: <CAGXv+5FQAVaJjqhv+Xq-ysOc4SHQn2mCNTgCAp8XocmWBWGGoA@mail.gmail.com>
+Subject: Re: [PATCH 56/61] clk: Prefer IS_ERR_OR_NULL over manual NULL check
+To: Philipp Hahn <phahn-oss@avm.de>
+Cc: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com, 
+	bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr, 
+	dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org, 
+	gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org, 
+	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev, kvm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org, 
+	linux-bluetooth@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+	linux-cifs@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org, 
+	linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, ntfs3@lists.linux.dev, 
+	samba-technical@lists.samba.org, sched-ext@lists.linux.dev, 
+	target-devel@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
+	v9fs@lists.linux.dev, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
+	Thomas Gleixner <tglx@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 4A09625ABB2
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[chromium.org,none];
+	R_DKIM_ALLOW(-0.20)[chromium.org:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33042-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-33043-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[chromium.org:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_NEQ_ENVFROM(0.00)[wenst@chromium.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[58];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,baylibre.com:email,avm.de:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,chromium.org:dkim]
 X-Rspamd-Action: no action
 
-Simplify allocation by using a flexible array member.
+On Tue, Mar 10, 2026 at 9:57=E2=80=AFPM Philipp Hahn <phahn-oss@avm.de> wro=
+te:
+>
+> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
+> check.
+>
+> Semantich change: Previously the code only printed the warning on error,
+> but not when the pointer was NULL. Now the warning is printed in both
+> cases!
+>
+> Change found with coccinelle.
+>
+> To: Michael Turquette <mturquette@baylibre.com>
+> To: Stephen Boyd <sboyd@kernel.org>
+> To: Daniel Lezcano <daniel.lezcano@kernel.org>
+> To: Thomas Gleixner <tglx@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
+> ---
+>  drivers/clk/clk.c               | 4 ++--
+>  drivers/clocksource/timer-pxa.c | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index 47093cda9df32223c1120c3710261296027c4cd3..35146e3869a7dd93741d10b72=
+23d4488a9216ed1 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -4558,7 +4558,7 @@ void clk_unregister(struct clk *clk)
+>         unsigned long flags;
+>         const struct clk_ops *ops;
+>
+> -       if (!clk || WARN_ON_ONCE(IS_ERR(clk)))
+> +       if (WARN_ON_ONCE(IS_ERR_OR_NULL(clk)))
+>                 return;
+>
+>         clk_debug_unregister(clk->core);
+> @@ -4744,7 +4744,7 @@ void __clk_put(struct clk *clk)
+>  {
+>         struct module *owner;
+>
+> -       if (!clk || WARN_ON_ONCE(IS_ERR(clk)))
+> +       if (WARN_ON_ONCE(IS_ERR_OR_NULL(clk)))
 
-Use __counted_by for extra runtime analysis.
+clk_get_optional() returns NULL if the clk isn't present.
 
-Shuffle some code as __counted_by requires the counting variable to be
-set right after allocation.
+Drivers would just pass this to clk_put(). Your change here would cause
+this pattern to emit a very big warning.
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/gpio/gpio-bcm-kona.c | 37 ++++++++++++++++--------------------
- 1 file changed, 16 insertions(+), 21 deletions(-)
+I don't think this change should be landed.
 
-diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
-index 208b71c59d58..b1d32d590cf8 100644
---- a/drivers/gpio/gpio-bcm-kona.c
-+++ b/drivers/gpio/gpio-bcm-kona.c
-@@ -58,15 +58,6 @@
- #define LOCK_CODE				0xffffffff
- #define UNLOCK_CODE				0x00000000
- 
--struct bcm_kona_gpio {
--	void __iomem *reg_base;
--	int num_bank;
--	raw_spinlock_t lock;
--	struct gpio_chip gpio_chip;
--	struct irq_domain *irq_domain;
--	struct bcm_kona_gpio_bank *banks;
--};
--
- struct bcm_kona_gpio_bank {
- 	int id;
- 	int irq;
-@@ -90,6 +81,15 @@ struct bcm_kona_gpio_bank {
- 	struct bcm_kona_gpio *kona_gpio;
- };
- 
-+struct bcm_kona_gpio {
-+	void __iomem *reg_base;
-+	int num_bank;
-+	raw_spinlock_t lock;
-+	struct gpio_chip gpio_chip;
-+	struct irq_domain *irq_domain;
-+	struct bcm_kona_gpio_bank banks[] __counted_by(num_bank);
-+};
-+
- static inline void bcm_kona_gpio_write_lock_regs(void __iomem *reg_base,
- 						int bank_id, u32 lockcode)
- {
-@@ -584,12 +584,6 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
- 	int ret;
- 	int i;
- 
--	kona_gpio = devm_kzalloc(dev, sizeof(*kona_gpio), GFP_KERNEL);
--	if (!kona_gpio)
--		return -ENOMEM;
--
--	kona_gpio->gpio_chip = template_chip;
--	chip = &kona_gpio->gpio_chip;
- 	ret = platform_irq_count(pdev);
- 	if (!ret) {
- 		dev_err(dev, "Couldn't determine # GPIO banks\n");
-@@ -597,6 +591,11 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
- 	} else if (ret < 0) {
- 		return dev_err_probe(dev, ret, "Couldn't determine GPIO banks\n");
- 	}
-+
-+	kona_gpio = devm_kzalloc(dev, struct_size(kona_gpio, banks, ret), GFP_KERNEL);
-+	if (!kona_gpio)
-+		return -ENOMEM;
-+
- 	kona_gpio->num_bank = ret;
- 
- 	if (kona_gpio->num_bank > GPIO_MAX_BANK_NUM) {
-@@ -604,13 +603,9 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
- 			GPIO_MAX_BANK_NUM);
- 		return -ENXIO;
- 	}
--	kona_gpio->banks = devm_kcalloc(dev,
--					kona_gpio->num_bank,
--					sizeof(*kona_gpio->banks),
--					GFP_KERNEL);
--	if (!kona_gpio->banks)
--		return -ENOMEM;
- 
-+	kona_gpio->gpio_chip = template_chip;
-+	chip = &kona_gpio->gpio_chip;
- 	chip->parent = dev;
- 	chip->ngpio = kona_gpio->num_bank * GPIO_PER_BANK;
- 
--- 
-2.53.0
 
+ChenYu
+
+>                 return;
+>
+>         clk_prepare_lock();
+> diff --git a/drivers/clocksource/timer-pxa.c b/drivers/clocksource/timer-=
+pxa.c
+> index 7ad0e5adb2ffac4125c34710fc67f4b45f30331d..f65fb0b7fc318b766227e5e7a=
+4c0fb08ba11c8f9 100644
+> --- a/drivers/clocksource/timer-pxa.c
+> +++ b/drivers/clocksource/timer-pxa.c
+> @@ -218,7 +218,7 @@ void __init pxa_timer_nodt_init(int irq, void __iomem=
+ *base)
+>
+>         timer_base =3D base;
+>         clk =3D clk_get(NULL, "OSTIMER0");
+> -       if (clk && !IS_ERR(clk)) {
+> +       if (!IS_ERR_OR_NULL(clk)) {
+>                 clk_prepare_enable(clk);
+>                 pxa_timer_common_init(irq, clk_get_rate(clk));
+>         } else {
+>
+> --
+> 2.43.0
+>
+>
 
