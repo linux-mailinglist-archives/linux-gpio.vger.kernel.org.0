@@ -1,154 +1,349 @@
-Return-Path: <linux-gpio+bounces-33051-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33052-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IG6lMC8FsWmypwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33051-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 07:01:19 +0100
+	id 6MCKAzQRsWmYqQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33052-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 07:52:36 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A75825CA07
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 07:01:19 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0929B25D10A
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 07:52:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 242E731715CE
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 06:01:16 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 583B8303189F
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 06:51:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B4B31F1932;
-	Wed, 11 Mar 2026 06:01:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D977131197B;
+	Wed, 11 Mar 2026 06:51:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DtPKDNWG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jsL+5bKx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AA520D4E9
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 06:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973D92BE043;
+	Wed, 11 Mar 2026 06:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773208875; cv=none; b=OsaX/hJQZcoIWmDDHi+bW2fky35Hn0Abw/RSUxnYBJJrIIHbuQ48oKyGLu4ixC2iVi8G668iuL5OP3nS1PUeW9K52VUYFRFQLx7Dc0Qd4udiIIw3+RiMaaXgeKLgd0zQ7zCIFDQTDPDP3ixcppYSHxTCLrEyV0yY39nyvcqK8B8=
+	t=1773211902; cv=none; b=Er+py1Q/Pv0WuTRNcDbKO4HHWjvQtkYH4vWVpqPvPWhRblrqnnIV5gZwgwllNoOkocaVkZPvv/r/ZTwAr6crwGfvzeCRr2lEFteT3dCU8a1kHXBHT9J6lt7thcsbEdySd/ppGyY1927Bpsatd9xghFIWX6eE6Qkafgtc5ysvHUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773208875; c=relaxed/simple;
-	bh=FHv5CcvGElrMvmEHMUvhtPhr2308VdCmghoTlQx6D/s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=uqp32qIrahL3mGkNCWbLJuaUwcYUv0+SjXw1C4Vfy8Dh9Uyohnujm2zvj/IFQZ7yzabuBVMjTnab1pM5fXv7Yi4S+2ddp0+vHUsRX7FbUqZHvG18pkhG3il9xlXS1MYqz0pkb1vX1DbNzc10dXabU4Ap5y0QrxXp1Pyzzobj/ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DtPKDNWG; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-38a46657a9fso38035981fa.1
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Mar 2026 23:01:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773208872; x=1773813672; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=aSaRj1cZBzRTfaPBYAkuYcLeDYu3NPNEr6xQzwupwK0=;
-        b=DtPKDNWGX0Bb322tp5HVhPWjRvKV1Wxwdqlx98G48vjoGUoqBoz8VU+jcO1RsgJKIV
-         ec2fR5hN9omThylma+kBz1x6gv+8UkNtRcanFGIzE7oiMyROOTbqL06JpqEzCSbVezqK
-         E66pgicydG7bn+6xEg48PGh6SPLUPYY2n66qdqvPnGo3QAFzGq4lgQ6H1VX6F2BQV3Ji
-         bbanp6fryW6wxO4vVR8MSWeF6wbHyLnHUxiPcGIoKJHVisRbP8nXK2mPKp+Jjl5sIyrH
-         z+iqVtIdXKBKBWevfvI3a9E1rNb29GLaFu+1D+ppHQHQF+ZkKZClFyf3JxzgjjOaSKRk
-         N9zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773208872; x=1773813672;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aSaRj1cZBzRTfaPBYAkuYcLeDYu3NPNEr6xQzwupwK0=;
-        b=DOmN6gfKVH8v/6lZkLta8LJuVII3qHykjyGo5j342/rlNOQE1i4nSt/CSSPm22Lzgv
-         am8wq9yXphhO1HmXc91fhzc9RGsLlVHA3bpFXOhrJzWO89DreF7Os5smeHUE2lXbZxpk
-         UyhG1ssXwd+ZkJ2ekllEYRi3L55MBK06mm76wFp28+e0hAXR8yWiC3bo59vpMBo58k9e
-         gf38u9dVPb5Mx6VT3aMyQKw9+HTFl9UBrCywnNOq92/41tv+hEP/y4Qa5yANxQ/M03iS
-         mqk6imrxvtsNxFzwSi4GbTX9CZXX1dKb/yYwMtKIxXtgFjQPZlXe6auUl8bDLV7wZ565
-         U1Ig==
-X-Forwarded-Encrypted: i=1; AJvYcCULuZCdEfLPZC47hIVAWGok9Q6yO7TkHcoGyVN4GkAHPDSk9agPd+evCswYfAnKTefD/yq3Xgx7eatR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNyhtSstXoB8y5S/XpLvCr1kGaLmEpL6wrlcKbKMckcXabVKOJ
-	6UhSNaZgDJ3P12+ixEmFu1bkjCjBSkBMHWkny2bdIiJOK35rtES7Zo7q
-X-Gm-Gg: ATEYQzyV5eajc1rVnXif/vLOdjq37m5C5jygjUbnKD6nlfr2cQgu1XbFEZvH++s1IbP
-	VmdSUkLMgTOjnNGhAYngE5VvzFZJGGRVoS1I50jwpnrfMI+3iZ2UzjuEDlaSHc7rIocDpGECCoJ
-	o2i5cS+TJJ7Wf0rx2Tzl8FPK/kCS1PvmAci/i5hDXcBfCgLGLAFfIvVJd6W/79AR8vZwU8nMdZ2
-	RZqloX9fE4saF80uqb7w86PFR80RgoU9fXTERIOhLQ2k03aK6OgjDEg8bhq+OS8yTQCx+4r1hJt
-	uIuhA2sgRCkcM8eUTde4KUEJNE8C3q7Hu/ZhOxaG72gw7CMkqQPQkXq16bj1ZVj0WtsKH3AhdFx
-	WWodhssBWSY2B6ZyBrzvTXpjwIepJx3VL1P/y8+zbtazamiSMDBW9jrGpjxxjdQ+Kku0yTRwKWo
-	KKUuAenqPTTnYoO4pa6eqH+wAoa9Lrjk4ZcKYE9hDmaYalOFJob0I9NtdzG4eDLaCXZW+5KcIqn
-	1A3TqRW
-X-Received: by 2002:a05:651c:1544:b0:383:26ac:4fd8 with SMTP id 38308e7fff4ca-38a67ab7436mr4685301fa.0.1773208871805;
-        Tue, 10 Mar 2026 23:01:11 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-38a67d5fab0sm2023341fa.8.2026.03.10.23.01.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2026 23:01:10 -0700 (PDT)
-Message-ID: <38053082-5cbf-48fa-b724-cac822d1e5ec@gmail.com>
-Date: Wed, 11 Mar 2026 08:01:09 +0200
+	s=arc-20240116; t=1773211902; c=relaxed/simple;
+	bh=Oc2x3ElYrjUwgmDviA0P5KAGFhDwqTHN0y27sRC7lR8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CBBSC7PjC778A58Ia7hw7KIlM8ROXj9akPotW+9uWUWjx7qL0I4AzaEQ8t4L9EzsAcPG1dXr+Iz4FAe07TU6rh1Mx8vI7vUriF5CzxrSXIjThlOsVX4SQxLosMrZt466UVsgVo1YgMjLdUXLyehoxvhbX+o0kn1f51V38OGRwr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jsL+5bKx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4025C4CEF7;
+	Wed, 11 Mar 2026 06:51:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773211902;
+	bh=Oc2x3ElYrjUwgmDviA0P5KAGFhDwqTHN0y27sRC7lR8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jsL+5bKxgNsi/48zPwMoDvq7iH/riRJGMq1T9F0TL9FP6jo7qIelqRRE/WIgyaJZs
+	 EM+Sdd4dy4FfnxWUoSLuO/DF5v35BKcnC3vc+n0kTD+LPsrVdLvpDkeN8IyZASON7K
+	 92rYjdOpwbw+jQ+wFPvkN8VtFaBKuq6zJY7wJEOE+C4WNOaY78SNJkX5eIt6iIlCrw
+	 XDoIRX7HvHnr9LXFOvyzborf81bqd+627nf4hoxLDhhD/2y5oyVv6QoJaTzgIVK8Cx
+	 SJO6FFtarpkfmUvu0xWn5DLjfscwdV8vPUdLjs426Agghl9a5Dmy/ro3RtC27PI8Mi
+	 E3Zj74CnTEMeQ==
+Date: Wed, 11 Mar 2026 07:51:39 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Peter Rosin <peda@axentia.se>, Linus Walleij <linusw@kernel.org>, kernel@pengutronix.de, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, David Jander <david@protonic.nl>
+Subject: Re: [PATCH v3 1/7] dt-bindings: mfd: add NXP MC33978/MC34978 MSDI
+Message-ID: <20260311-icy-dove-of-endurance-ab2bbe@quoll>
+References: <20260309134920.1918294-1-o.rempel@pengutronix.de>
+ <20260309134920.1918294-2-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] gpiolib: clear requested flag if line is invalid
-To: =?UTF-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
- linux-gpio@vger.kernel.org
-References: <20260310204359.1202451-1-pobrn@protonmail.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20260310204359.1202451-1-pobrn@protonmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 2A75825CA07
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260309134920.1918294-2-o.rempel@pengutronix.de>
+X-Rspamd-Queue-Id: 0929B25D10A
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33051-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[protonmail.com,kernel.org,vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33052-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_PROHIBIT(0.00)[0.0.0.0:email];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mazziesaccount@gmail.com,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[4];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[devicetree.org:url,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,protonic.nl:email,pengutronix.de:email]
 X-Rspamd-Action: no action
 
-Hi!
-
-Well spotted, thanks!
-
-On 10/03/2026 22:44, Barnabás Pőcze wrote:
-> If `gpiochip_line_is_valid()` fails, then `-EINVAL` is returned, but
-> `desc->flags` will have `GPIOD_FLAG_REQUESTED` set, which will result
-> in subsequent calls misleadingly returning `-EBUSY`.
+On Mon, Mar 09, 2026 at 02:49:12PM +0100, Oleksij Rempel wrote:
+> Add device tree binding documentation for the NXP MC33978 and MC34978
+> Multiple Switch Detection Interface (MSDI) devices.
 > 
-> Fix that by clearing the flag in case of failure.
+> These ICs monitor up to 22 mechanical switch contacts in automotive and
+> industrial environments. They provide configurable wetting currents to
+> break through contact oxidation and feature extensive hardware
+> protection against thermal overload and voltage transients (load
+> dumps/brown-outs).
 > 
-> Fixes: a501624864f3 ("gpio: Respect valid_mask when requesting GPIOs")
-> Signed-off-by: Barnabás Pőcze <pobrn@protonmail.com>
+> The device interfaces via SPI and provides multiple functions. To
+> accurately represent the hardware without unnecessary DT overhead, the
+> binding is structured as follows:
+> - pinctrl: A dedicated child node managing the 22 switch inputs (SG/SP
+>   pins) and their GPIO configurations.
+> - hwmon: Integrated into the parent node, exposing critical hardware
+>   faults (OT, OV, UV) and static voltage/temperature thresholds.
+> - mux: Integrated into the parent node, controlling the 24-to-1 analog
+>   multiplexer to route pin voltages, internal temperature, or battery
+>   voltage to an external SoC ADC.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+> changes v3:
+> - Drop regular expression pattern from pinctrl child node and define
+>   it as a standard property
+> - Reorder required properties list in MFD binding
+> - Remove stray blank line from the MFD binding devicetree example
+> - Replace unevaluatedProperties with additionalProperties in the pinctrl
+>   binding
+> changes v2:
+> - Squashed MFD, pinctrl, hwmon, and mux bindings into a single patch
+> - Removed the empty hwmon child node
+> - Folded the mux-controller node into the parent MFD node
+> - Added vbatp-supply and vddq-supply to the required properties block
+> - Changed the example node name from mc33978@0 to gpio@0
+> - Removed unnecessary literal block scalars (|) from descriptions
+> - Documented SG, SP, and SB pin acronyms in the pinctrl description
+> - Added consumer polarity guidance (GPIO_ACTIVE_LOW/HIGH) for SG/SB
+>   inputs, with a note on output circuit dependency
+> - Updated commit message
+> ---
+>  .../devicetree/bindings/mfd/nxp,mc33978.yaml  | 112 ++++++++++++++++++
+>  .../bindings/pinctrl/nxp,mc33978-pinctrl.yaml |  82 +++++++++++++
+>  2 files changed, 194 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/nxp,mc33978.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,mc33978-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/nxp,mc33978.yaml b/Documentation/devicetree/bindings/mfd/nxp,mc33978.yaml
+> new file mode 100644
+> index 000000000000..23520315d484
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/nxp,mc33978.yaml
+> @@ -0,0 +1,112 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/nxp,mc33978.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP MC33978/MC34978 Multiple Switch Detection Interface
+> +
+> +maintainers:
+> +  - David Jander <david@protonic.nl>
+> +  - Oleksij Rempel <o.rempel@pengutronix.de>
+> +
+> +description:
+> +  The MC33978 and MC34978 are Multiple Switch Detection Interface (MSDI)
+> +  devices with 22 switch inputs, integrated fault detection, and analog
+> +  multiplexer (AMUX) for voltage/temperature monitoring.
+> +
+> +allOf:
+> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^gpio(@.*)?$"
 
-Reviewed-by: Matti Vaittinen <mazziesaccount@gmail.com>
+@.+, because it is not optional, or just drop the nodename completely.
 
----
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
+> +
+> +  compatible:
+> +    enum:
+> +      - nxp,mc33978
+> +      - nxp,mc34978
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: SPI chip select number
+> +
+> +  spi-max-frequency:
+> +    maximum: 8000000
+> +    description: Maximum SPI clock frequency (up to 8 MHz)
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description:
+> +      INT_B pin interrupt. Active-low, indicates pin state changes or
+> +      fault conditions.
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +    description:
+> +      First cell is the IRQ number (0-21 for pins, 22 for faults).
+> +      Second cell is the trigger type (IRQ_TYPE_* from interrupt-controller.h).
+> +
+> +  '#mux-control-cells':
+> +    const: 0
+> +    description:
+> +      Present if the device AMUX selector is used as a mux provider.
+> +      Consumers (e.g. io-channel-mux) must provide settle-time-us for the
+> +      external ADC sampling path.
+> +
+> +  vddq-supply:
+> +    description: Digital supply voltage
+> +
+> +  vbatp-supply:
+> +    description: Battery/power supply
+> +
+> +  pinctrl:
+> +    type: object
+> +    $ref: /schemas/pinctrl/nxp,mc33978-pinctrl.yaml#
+> +    description:
+> +      Pinctrl and GPIO controller child node for the 22 switch inputs.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +  - vddq-supply
+> +  - vbatp-supply
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    spi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        msdi: gpio@0 {
+> +            compatible = "nxp,mc33978";
+> +            reg = <0>;
+> +            spi-max-frequency = <4000000>;
+> +
+> +            interrupt-parent = <&gpiog>;
+> +            interrupts = <9 IRQ_TYPE_LEVEL_LOW>;
+> +            interrupt-controller;
+> +            #interrupt-cells = <2>;
+> +
+> +            vddq-supply = <&reg_3v3>;
+> +            vbatp-supply = <&reg_12v>;
+> +
+> +            #mux-control-cells = <0>;
+> +
+> +            pinctrl {
+> +                compatible = "nxp,mc33978-pinctrl";
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
 
-~~ When things go utterly wrong vim users can always type :help! ~~
+pin grp nodes should be here
+
+
+> +            };
+> +        };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/pinctrl/nxp,mc33978-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nxp,mc33978-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..ba946906557c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/nxp,mc33978-pinctrl.yaml
+> @@ -0,0 +1,82 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/nxp,mc33978-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP MC33978/MC34978 Pinctrl/GPIO Driver
+
+s/Driver// because otherwise it sounds like "pinctrl driver" and you
+cannot drive pin controls.
+
+> +
+> +maintainers:
+> +  - David Jander <david@protonic.nl>
+> +  - Oleksij Rempel <o.rempel@pengutronix.de>
+> +
+> +description: |
+> +  Pin control and GPIO driver for the MC33978/MC34978 MSDI device.
+> +
+> +  Pin numbering:
+> +  - Pins 0-13: SG0-SG13 (Switch-to-Ground inputs). These pins monitor
+> +    contacts closed to ground and typically require GPIO_ACTIVE_LOW
+> +    flags when used as digital inputs.
+> +  - Pins 14-21: SP0-SP7 (Programmable inputs). These can be configured
+> +    as SG (Switch-to-Ground) or SB (Switch-to-Battery) inputs. SB
+> +    inputs monitor contacts closed to the battery voltage and typically
+> +    require GPIO_ACTIVE_HIGH flags when used as digital inputs.
+> +
+> +  Output Emulation:
+> +  The hardware lacks standard push-pull output drivers. Outputs are emulated
+> +  by toggling the programmable wetting current sources (acting as pull-ups or
+> +  pull-downs) and the hardware tri-state registers. Because of this physical
+> +  constraint:
+> +  - Consumers using pins as outputs MUST flag them with GPIO_OPEN_DRAIN or
+> +    GPIO_OPEN_SOURCE in the device tree.
+> +  - Push-pull configurations are physically unsupported.
+> +  - The active polarity depends entirely on the external circuit (e.g., how an
+> +    LED is wired) and must be flagged accordingly by the consumer.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - nxp,mc33978-pinctrl
+> +      - nxp,mc34978-pinctrl
+
+I did not raise it before, but now I think these compatibles are
+pointless. MC33978 is a one, specific (as in fixed) device, so its
+pinctrl/gpio part won't be taken and used in some other device. They
+should be dropped. That way entire schema would fit parent one, although
+its placement is odd - it's not really MFD device.
+
+
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  ngpios:
+> +    const: 22
+> +
+> +patternProperties:
+> +  "^.*-grp$":
+
+Keep consistent quotes, either ' or "
+
+Best regards,
+Krzysztof
+
 
