@@ -1,156 +1,142 @@
-Return-Path: <linux-gpio+bounces-33300-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33301-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yHpNBuwos2ksSwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33300-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 21:58:20 +0100
+	id UEGXIqYus2nYSwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33301-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 22:22:46 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBFD0279A2D
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 21:58:19 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AB00279F49
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 22:22:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 58D5E302FB3D
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 20:58:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B4C2430B9C9E
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 21:22:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDA10398900;
-	Thu, 12 Mar 2026 20:58:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 178723C6A39;
+	Thu, 12 Mar 2026 21:22:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PkM434Hz"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h7EhDaTl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C0F386C04;
-	Thu, 12 Mar 2026 20:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5AF140DFAB;
+	Thu, 12 Mar 2026 21:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773349095; cv=none; b=DCVu2JJDvPyB3KTWTG+aCGW2Vu6hK2MSSydDbW6McJ+LmNDj+88d54/NDalVUvZFosZo9DSYBmcueKhoST39zcfzHvMEW5lzlTt8azdn2v2Gfb9gL7q7fMEcxvdjtQFC2cCvuEse3OacH2uzIe45RVesr7QsN2lUI4Hf+xq9euM=
+	t=1773350555; cv=none; b=iN1UueB+ot6Yqd/4oY8kZaEgLU6I3C6wfBlS9EEbKfjB7ug4rSpkuRYPRX7dHUuGEFb4o2uP219+hYvXMNmbAC95SN5bhOekyKihEKGzgHin3xPILMfu1UN7IKew7l+UsUMEzzCbKve9yaj/yMFVQ/ICUNn+sqqi7aKFQ8Cv5OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773349095; c=relaxed/simple;
-	bh=vhOYrw/DVA2RJTCv7jox3hLnZDAXlifzBNUjQ3RzxEY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rEQF4ZJmjpMNvUXhHzIcpRxePBOoTd0G90XA8lkiTd/nqp4Mo9vpMGTamDlvw1cbUffBVVrJpXeV3UFhhOjojz1JhlsIUsoSM5U6g+xv8wM1jTxrV/xmJ8KDAucF1MoA8Nv7ZdhmwpVB5TnPmxMtl5PlBxBJE1dT4o6thsm9tcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PkM434Hz; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773349094; x=1804885094;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vhOYrw/DVA2RJTCv7jox3hLnZDAXlifzBNUjQ3RzxEY=;
-  b=PkM434HzQlrhLUFzJheAZyrnQIeLEGYduXU3HooUFV+5zgBkKtqgDaMq
-   dOIdA2kEnJYtDSsYZujfkICpbEyJPgrUFx/gCTN17VdgBcpjNWZpvgSzZ
-   88DHm3vBapAvjCFW7T0DGNh2HPhHcs1hNN5rFROzePcz+8t0fRrfdi7mr
-   N5mgwDBvaBOmMIByqLT32w2MlIPp65KTmTpJQNjyn5ZxLRNuhRH6nbLHt
-   8dUZDgH+YqgtZ4eilcHTJ3I07t/pK1GCMGePB7BiQPKx5xFkWxpAY/5p3
-   yLdu+SmmY3jRy+zGCWt/LL7Aa7qlkvFXuUKFNke2m1cIcZ+vPfs+6D7/z
-   w==;
-X-CSE-ConnectionGUID: vVc4Uz4ERWSgYysdNK/enA==
-X-CSE-MsgGUID: ieXVVdHuT1WGiQegEzohYA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11727"; a="78059313"
-X-IronPort-AV: E=Sophos;i="6.23,116,1770624000"; 
-   d="scan'208";a="78059313"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 13:58:14 -0700
-X-CSE-ConnectionGUID: CxUCfibIQBeOYVMw/D3uLA==
-X-CSE-MsgGUID: BA9fVZzwQhyvjPI767iWPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,116,1770624000"; 
-   d="scan'208";a="225640039"
-Received: from fpallare-mobl4.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.184])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2026 13:58:09 -0700
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 57EC1120E92;
-	Thu, 12 Mar 2026 23:00:06 +0200 (EET)
-Date: Thu, 12 Mar 2026 23:00:06 +0200
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Antti Laakso <antti.laakso@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-gpio@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, linusw@kernel.org,
-	brgl@kernel.org, mchehab@kernel.org, dan.scally@ideasonboard.com,
-	ilpo.jarvinen@linux.intel.com, hverkuil+cisco@kernel.org,
-	sre@kernel.org, hao.yao@intel.com, jimmy.su@intel.com,
-	miguel.vadillo@intel.com, kees@kernel.org, ribalda@chromium.org
-Subject: Re: [PATCH v2 5/5] platform: int3472: Add MSI prestige board data
-Message-ID: <abMpVo1eCvtBObv_@kekkonen.localdomain>
-References: <20260311131910.835513-1-antti.laakso@linux.intel.com>
- <20260311131910.835513-6-antti.laakso@linux.intel.com>
- <dc7f24b2-ec57-4937-92f1-f80b1f1e785a@kernel.org>
+	s=arc-20240116; t=1773350555; c=relaxed/simple;
+	bh=/zvtEPkxlEgdmnFalEG1U3RoR4ZCdTxr1BmmuBoEV4k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ch00F50x8RTfZ35KvjNuN/m9e2MGt6/iNbq24fp7JLyTYHDcL1hehsQmtRgO1K9vYFVuyB/WyYBSJkeGee4x0Ae4P4bm0CM9gTWfTLVAC86cktUxLeWh3BZPwjbR6+yaK9IMi3gl7f7t6fBFE8doqod3y0rU+lP5xggGeS9O91c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=h7EhDaTl; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=VaKdAPIhRe7hUwa3N1bm3F+VQZ/SJ2cN2wS/xw5qz0k=; b=h7EhDaTljoHRTEjOZc23S/5KX1
+	67fuWmr68q4OpVVEWejRDeGdUwEubyfUX3WGmb6LNbRFZ8FNgnMT52AbcszdNLZk5dPNinuLVIkZd
+	ls00q1AqcLhKFTrjeXMUS06rIFeVT6Ow3mMSyQ9nwNcvEzwyeGh+T1an87tZz0pfjisySSMsFsQAW
+	Bw7VVIPwGb9xyP16iOBQSyocTX8Ps57n+aTQQuJQhcql65gMeeZfDIQ50d1++RF3xeX2UObuDighS
+	Uojif8vfPU8i28PkCfsvr+/3xilstFm+t7lqo7HoDp6Dda+gnNuWJ66hBE27RvQ777VpRda0Jd/UN
+	NOsTHncg==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1w0nUE-0000000FRw7-1uEG;
+	Thu, 12 Mar 2026 21:22:30 +0000
+Message-ID: <b60ce38c-e4c8-4fd3-b1cd-6b1b5cd04cfc@infradead.org>
+Date: Thu, 12 Mar 2026 14:22:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dc7f24b2-ec57-4937-92f1-f80b1f1e785a@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 1/5] docs: driver-api: gpio: rpmsg gpio driver over
+ rpmsg bus
+To: Shenwei Wang <shenwei.wang@nxp.com>, Linus Walleij <linusw@kernel.org>,
+ Bartosz Golaszewski <brgl@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Frank Li <Frank.Li@nxp.com>,
+ Sascha Hauer <s.hauer@pengutronix.de>, arnaud.pouliquen@foss.st.com
+Cc: Shuah Khan <skhan@linuxfoundation.org>, linux-gpio@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
+ devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com
+References: <20260312192957.1978329-1-shenwei.wang@nxp.com>
+ <20260312192957.1978329-2-shenwei.wang@nxp.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20260312192957.1978329-2-shenwei.wang@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33300-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
 	MIME_TRACE(0.00)[0:+];
-	HAS_ORG_HEADER(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	FROM_NEQ_ENVFROM(0.00)[sakari.ailus@linux.intel.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[linuxfoundation.org,vger.kernel.org,pengutronix.de,gmail.com,nxp.com,lists.linux.dev,lists.infradead.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-33301-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_COUNT_FIVE(0.00)[6];
-	TAGGED_RCPT(0.00)[linux-gpio,cisco];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rdunlap@infradead.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[infradead.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	RCPT_COUNT_TWELVE(0.00)[24];
 	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: EBFD0279A2D
+X-Rspamd-Queue-Id: 2AB00279F49
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Hans, others,
 
-On Wed, Mar 11, 2026 at 03:35:28PM +0100, Hans de Goede wrote:
-> > +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vio_reg_init_data = {
-> > +	.constraints = {
-> > +		.min_uV = 1800600,
-> > +		.max_uV = 1800600,
-> > +		.apply_uV = 1,
-> > +		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
-> > +	},
-> 
-> > +	.num_consumer_supplies = 0,
-> > +	.consumer_supplies = NULL,
-> 
-> Nit (no need to fix unless you need to do a v3 for other reasons),
-> these 2 explicit foo = 0 initializers are not necessary and can
-> be dropped.
 
-I can fix this while applying...
+On 3/12/26 12:29 PM, Shenwei Wang wrote:
+> diff --git a/Documentation/driver-api/gpio/gpio-rpmsg.rst b/Documentation/driver-api/gpio/gpio-rpmsg.rst
+> new file mode 100644
+> index 000000000000..b2daa387143d
+> --- /dev/null
+> +++ b/Documentation/driver-api/gpio/gpio-rpmsg.rst
+> @@ -0,0 +1,266 @@
+> +.. SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +GPIO RPMSG (Remote Processor Messaging) Protocol
+> +===================
 
-> 
-> Otherwise this looks good to me:
-> 
-> Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+'make htmldocs' build warning:
 
-...assuming everyone is fine with merging these via the media tree. Let me
-know if there are concerns.
+Documentation/driver-api/gpio/gpio-rpmsg.rst:4: WARNING: Title underline too short.
 
-Thank you for the reviews.
+GPIO RPMSG (Remote Processor Messaging) Protocol
+=================== [docutils]
+
+The "underline" must be at least as long as the heading text line.
+
+> +
+> +The GPIO RPMSG transport protocol is used for communication and interaction
+> +with GPIO controllers located on remote cores on the RPMSG bus.
 
 -- 
-Kind regards,
+~Randy
 
-Sakari Ailus
 
