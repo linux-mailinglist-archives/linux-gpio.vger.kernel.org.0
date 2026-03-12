@@ -1,89 +1,89 @@
-Return-Path: <linux-gpio+bounces-33288-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33289-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4Ad5ISELs2nURwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33288-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 19:51:13 +0100
+	id 0OSbIgkLs2kMRwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33289-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 19:50:49 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85663277594
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 19:51:12 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D601277585
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 19:50:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 756403033E44
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 18:50:26 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id EA03E303EDB8
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 18:50:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27629401A0C;
-	Thu, 12 Mar 2026 18:50:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7D1B3FFAD8;
+	Thu, 12 Mar 2026 18:50:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eYI+S1kl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="we9yLuMf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012026.outbound.protection.outlook.com [40.93.195.26])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013032.outbound.protection.outlook.com [40.93.196.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02643FF8B1;
-	Thu, 12 Mar 2026 18:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.26
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18F83FE670;
+	Thu, 12 Mar 2026 18:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773341408; cv=fail; b=Q3DogBkueuQJM4GLD5/AMKEWeSHLEuLCGB+8H2mQtj/uco08hKstcQofux73QIMEsyftgosdfEJc9ZSRYMow00wS6IKGWQmhlLKsGfo5uUCREtjQk71WYZkZuP3JMY9OaqXReEfD7bgJRR73kv3jjPH2sWYeSwmvbyyLswYyLMM=
+	t=1773341414; cv=fail; b=tquKhvaSPopS5u4bE3pPWENXI+SKeYpN6TUAcNcbPLix1VsvPRG+X5QVPd0KXYHvD3wNIfyVwlHWEX6Ep3JwmeyBIj1Ma5MtxBMqlM65gKZgtpQ6Y33J4KPP0bD/bm78vfEu9uOsqz0MIbscuVKj/MwJEOf4vC4KH7DrAF24A9g=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773341408; c=relaxed/simple;
-	bh=LubNzviG3Tlfra/SjmlRVHhu/0hx8iEZCj9/KgoInDg=;
+	s=arc-20240116; t=1773341414; c=relaxed/simple;
+	bh=LUdPtCitH6uDjZxeug1NqsJbsyqvscB/3pvNl8fRUn0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DsdK7mDNHtUkCnYHQxf0HNX+ii7dAfQlk4henoKPVcK3Xhvp7ug3t4boVgBNvZNmKk+6VBijXg9aGY/edybT3w7jKJCvj3KWZOe1hAtHInYl5m39Hzqz3Rhe+i/MygLKdp5cI3xzDAfvbZ2pEv/ugph0Ld6w8sZ76KTYYNv8+AY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=eYI+S1kl; arc=fail smtp.client-ip=40.93.195.26
+	 MIME-Version:Content-Type; b=C2SJnc/TFqgnxUca9mcROxlAN8paxfKhhNfJXJZi+c5olOKPfvYbhGT2GAxGh9NMxBMNOw0WWbs9uabuRm+QJxRxUnEF8EniPogTomKYxP+yLFP7LJNxy3U+dDpfjwdNgmzOPpGNTtKs0FtvFqL4KZJO2fWlYnfkKn3Cf0hAVxo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=we9yLuMf; arc=fail smtp.client-ip=40.93.196.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZH7tz/S8FqIZU9TLZu5k1WG5N4XjYhk7EDz2WjDOynTXcaT9xhESMTk0IK61v+FMK4DcHEOIL5nphaaCxNVJYn7M2ktgAZUBs4YROTL7rTGn2kTNnhudptPiDTxpE2PnvUW8gTYceDlmu14xAaHZvsfUELE2vZin2YyVlp6/UbOJ2p8rW5zr4NdsylY/NRFrln8KQuGsd8exUYIv7HQiW+LZ4Z2r+q/ysmUEq7EM4fZKfnBxGntM6an8qlP1/enC88Vx0u8aLFGrxoj6aDg3y57Nc1uFrudwsx//c82RXpQa1mRV7f+xt6vNTli9EOOdxDcoP4JF0PC1wYzKPYuIcg==
+ b=abJ0Jbi5bXJD54VBtL4Dh7GjTyT0Xc/Sm7ATNrlxbQ/Jthuxcn6TiLxxkc0SO2lB2FMmGPTKsvdPV0rspn5ZtOxaUsfUgSMWZwmrntqXsLjowyljU1//bVk/U5UgbR6MN9OW8FLbA8L1GeUfpLaFbtDyq9njo24te1jdhCcSrxPEDS9FnWJlzZtwbWpzwKBhRz+VRXwWqoAGfHI1o1p3506PugqZ3KFB0sfDr/NVbwE3Qx3TYT34DGuS8sutFaRhzNej0FFnOgLqX4GWYRaR0Sh1ZlfcmQcS3y+euNWeDtEpkqg+0vZGAySK5Vlh8DQsSdGCA7dfq9+z9uTQUUb1Wg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eV7iEgDIY5aMwwGgR+sNsiROQVL0Rx0ezCcJWPboYZY=;
- b=UP1fEz2goLx+lenAuMzjsbT4HLZIbwez6MurlZI9xz/iFvY21x8XsvysGi+dira2vLxJuqXQ62kL2BAJXf3MZ70Bg/1KBJp+dZEi8a4Vq5RKBq+43Q6t+eBlUtcv6qCW03W2MEA1znvs4n3agvww14NU3vdPhgwNYbUkpH/EIbz7fkELNU+cdcMXM9gNXJq1GOocSlDdqFrPFJYdU1YQsWfUx7tsRr60X8JbuQU1ec+/szwyJsG5Vmv3iGSZk4JH4RmHnlRrU9eVjzcpYD+kLVqGeJrdT4V1wlqr4ipmYmjup7Z/AwsfzfbcBzvI37r6Vuc0oe4CRI+RDolKvxZ4ig==
+ bh=5RMaD2+b8qsGtexuyWj6cVjRcBvbirMtQBQyBAa46ng=;
+ b=wiArxixu3QifrR+Jk8UzIFcdOrPMX+k1eoCLMFaKm1LFD5gdUbAGI+4H8LBb0N8eR/pqfHg5JUWcF7TAOa1Ntkhvg3F5DQXhquxtzxKhuzLgd96Y3ResXr4ttt/0e12Sj5lBceCyEW6JLpCcDSe5W4+9/S6UAnedSsoY8aD/hxyMB5Uo2rS+htSDR+s4k9b2xRRiRFIOdyZg+dRVTeYHXIajiVSSskRdrz07lgBQitSssuQ7gr4HHRm93ImFmh4dW30nR/MolbztjdgKSvssw6OehZVr9gPexDKlCcr4FSCajZVv7z7/0EGfhlPI7SBDjX/yznqjiywMT0+toTtY0A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.21.194) smtp.rcpttodomain=tipi-net.de smtp.mailfrom=ti.com; dmarc=pass
+ 198.47.21.195) smtp.rcpttodomain=tipi-net.de smtp.mailfrom=ti.com; dmarc=pass
  (p=quarantine sp=none pct=100) action=none header.from=ti.com; dkim=none
  (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eV7iEgDIY5aMwwGgR+sNsiROQVL0Rx0ezCcJWPboYZY=;
- b=eYI+S1klHgC8giT9qh0IT4LAkKyOuIsIh1AQn39XbPsyL1+2A1dubpTohc6cdLW/vPEBvF0yhRvySzqGKZ7nkeP38kAIpZZpjGzRRTXlM1BbpZTq3b9PxG9605AqSePFYcpm2+PEJgcRqZ6t7Qk+2vQ7pQW0/0e7InLM8ey29ko=
-Received: from CH0PR04CA0043.namprd04.prod.outlook.com (2603:10b6:610:77::18)
- by CO6PR10MB5651.namprd10.prod.outlook.com (2603:10b6:303:14e::15) with
+ bh=5RMaD2+b8qsGtexuyWj6cVjRcBvbirMtQBQyBAa46ng=;
+ b=we9yLuMfc0iqZUbS5wvECUVw4h99/h24ugWLtBfKmoAWZmbNi9LjGBi/SlVlJ7oywy6BcoWuJAxChvWgfazQpv6Xh0iLU277vhGEHp0IRioS52HQSF53oAAxGa/d365J7t7yCJ861+ALL0rFJ5huacB8XBFSVUjKFp0JXRn1Lao=
+Received: from SJ0PR05CA0190.namprd05.prod.outlook.com (2603:10b6:a03:330::15)
+ by DS7PR10MB7191.namprd10.prod.outlook.com (2603:10b6:8:e3::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.12; Thu, 12 Mar
- 2026 18:49:57 +0000
-Received: from CH2PEPF0000009D.namprd02.prod.outlook.com
- (2603:10b6:610:77:cafe::35) by CH0PR04CA0043.outlook.office365.com
- (2603:10b6:610:77::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9678.29 via Frontend Transport; Thu,
- 12 Mar 2026 18:49:39 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.194)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.16; Thu, 12 Mar
+ 2026 18:49:59 +0000
+Received: from SJ1PEPF00002325.namprd03.prod.outlook.com
+ (2603:10b6:a03:330:cafe::3f) by SJ0PR05CA0190.outlook.office365.com
+ (2603:10b6:a03:330::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9678.23 via Frontend Transport; Thu,
+ 12 Mar 2026 18:49:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.195)
  smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
  action=none header.from=ti.com;
 Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.21.194 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.21.194; helo=flwvzet200.ext.ti.com; pr=C
-Received: from flwvzet200.ext.ti.com (198.47.21.194) by
- CH2PEPF0000009D.mail.protection.outlook.com (10.167.244.25) with Microsoft
+ 198.47.21.195 as permitted sender) receiver=protection.outlook.com;
+ client-ip=198.47.21.195; helo=flwvzet201.ext.ti.com; pr=C
+Received: from flwvzet201.ext.ti.com (198.47.21.195) by
+ SJ1PEPF00002325.mail.protection.outlook.com (10.167.242.88) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9678.18 via Frontend Transport; Thu, 12 Mar 2026 18:49:55 +0000
-Received: from DFLE211.ent.ti.com (10.64.6.69) by flwvzet200.ext.ti.com
- (10.248.192.31) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.9678.18 via Frontend Transport; Thu, 12 Mar 2026 18:49:58 +0000
+Received: from DFLE210.ent.ti.com (10.64.6.68) by flwvzet201.ext.ti.com
+ (10.248.192.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 12 Mar
- 2026 13:49:51 -0500
-Received: from DFLE208.ent.ti.com (10.64.6.66) by DFLE211.ent.ti.com
- (10.64.6.69) with Microsoft SMTP Server (version=TLS1_2,
+ 2026 13:49:58 -0500
+Received: from DFLE210.ent.ti.com (10.64.6.68) by DFLE210.ent.ti.com
+ (10.64.6.68) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 12 Mar
- 2026 13:49:50 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE208.ent.ti.com
- (10.64.6.66) with Microsoft SMTP Server (version=TLS1_2,
+ 2026 13:49:57 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE210.ent.ti.com
+ (10.64.6.68) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Thu, 12 Mar 2026 13:49:50 -0500
+ Transport; Thu, 12 Mar 2026 13:49:57 -0500
 Received: from LTPW0EX92E.dhcp.ti.com ([10.249.135.133])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 62CIn54q2829533;
-	Thu, 12 Mar 2026 13:49:45 -0500
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 62CIn54r2829533;
+	Thu, 12 Mar 2026 13:49:52 -0500
 From: Niranjan H Y <niranjan.hy@ti.com>
 To: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
 	<linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>
@@ -92,9 +92,9 @@ CC: <lee@kernel.org>, <linusw@kernel.org>, <lgirdwood@gmail.com>,
 	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <niranjan.hy@ti.com>,
 	<nb@tipi-net.de>, <navada@ti.com>, <v-hampiholi@ti.com>, <sandeepk@ti.com>,
 	<baojun.xu@ti.com>, <shenghao-ding@ti.com>
-Subject: [PATCH v1 6/8] pinctrl: pinctrl-tac5x1x: Add TI TAC5x1x pinctrl driver
-Date: Fri, 13 Mar 2026 00:18:31 +0530
-Message-ID: <20260312184833.263-7-niranjan.hy@ti.com>
+Subject: [PATCH v1 7/8] ASoC: tac5x1x: Add TI TAC5x1x codec driver
+Date: Fri, 13 Mar 2026 00:18:32 +0530
+Message-ID: <20260312184833.263-8-niranjan.hy@ti.com>
 X-Mailer: git-send-email 2.33.0.windows.2
 In-Reply-To: <20260312184833.263-1-niranjan.hy@ti.com>
 References: <20260312184833.263-1-niranjan.hy@ti.com>
@@ -109,42 +109,42 @@ Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF0000009D:EE_|CO6PR10MB5651:EE_
-X-MS-Office365-Filtering-Correlation-Id: 33e0295d-dcce-4d7b-dfc1-08de8068276d
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002325:EE_|DS7PR10MB7191:EE_
+X-MS-Office365-Filtering-Correlation-Id: b8076956-a0e9-44f6-a871-08de80682914
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700016|7416014|1800799024|376014|18002099003|56012099003|22082099003;
+	BCL:0;ARA:13230040|36860700016|82310400026|1800799024|376014|7416014|22082099003|18002099003|56012099003|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	vcZWWSoNHyrz1lvqtA0A2mu9S+VGAIi/fousyheDnJueNVGFHrJZ45mjSpZdgqiCuMnsdU4e2wRjBsofQoDLbh6YPJ/t8VM/PAzfCRIHSLWMyq2u0V7/4xegQR6aPBCmRgaaxmbMe6BgK1zx7WGsojDK/PVEuxy9yewu5H5fUk//Sne8S66F9i/+s1gjj54N4UhNdh06/RKf2g2yZRMht8T6jgh91BM0j1rnB+FIbXuVZ7nXT8mwf03S9OsKypn0ddksEdhLKWrFeg+KE157ZqbxxYiZ4N5IT3Rn2pjaKNy1lWiJdvz4zT/zGfSHB8YCOlcIQNZQc08TOPAC2v66+dcRdrfu4ULqxr2wL4jGjRlwyJ9Ba/KUWJMh8/02PuusdZV63mGnQDTiQGdF42b8dQA7kkokbvruxY54FX5cjPRBVLVu7cJefKIclmP8tWnh9RM8x8/yHtgA8MSKuoMDQV0vOwK8cNo4YOzUVvxwOWlgqFXScMt7Bt9zOCSpLY4auDrVaSUKf32kGgnfCySohlsllM5TW0gAoYrOddV20lujGNH7FpzF87DI7u5HCUYsXduJcpi3kP8ZRl5hn/+karMWv7aDLil/X4dihZRaQZN0mYpjEaw6nUqn1tHwutvt31DjGOK8W4AI7qQy7tcWxPYmRlgeLZzK/k2xGAyF6nL0w8Y4Dy1j2b2svI1VJvABR2WEvS9Dh8Tn9sL5g9Wfkg==
+	qLwz0spJO8sCkJgwuww2u7HR11nD5bkGRCfkeOAUsJvIxInT4EjzEMFDrBk8sCv47V/8eWNS3khS7E5G4/HCyJVYUMvXmOmXxkFpv+/CLZIE1pq7BQn/a11LLLZS2iBFxWSQtvuJYx+S+U9O3xSRA2RA5XSijIi6Zyy7fohmkkx7PhazsM2nArgU0ajKuuqqUbIEs34LCp0bpszltc8us5YR49cVYXDaT1e+CN6qAVLbm+IKYl+PpyLNoKwJ+kt21nNitjmpt+ml68WD4Letlfxs4Rgo9CB1tDAo3320WkaSUl6mUe5JcqYQbH9/gVg38IL/JhUMuKiCd6V+YpYooyYZnwdEg0lvIOoVzr8riMqHXPwwHADw60KCiwLadR9bLL1PFsmAmiKJroZ9Gvvrdf+m0kIg76HuL7Xy3b5OlAxRDHqCO08/3U2wmbrvnNFFvmK3Km/T8kHWdA6EHYuuIuxrzIcvBo4/QfsOrTy1R/SIkR5aZ44YLdYhXD/oeJy1vCUKS4Nf0XJEQksS6DfRq8p2z5Quyz2fi9UVh8g75oNaQD6HeH9sCVQG3/7v2/EadAf2W3tDlbTiJS2u2UZblLJp6YWQGu/0oFGFLKrbYZf4yRG/1HxEVuctYSj8MknvCMItj562OpSP2zR1289ladTeiJlDJeF7INZ67eKDkYUfafFL6RPRS7Vj9wW/rsibxPRnvN78fPfZkXKPEeF9VA==
 X-Forefront-Antispam-Report:
-	CIP:198.47.21.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet200.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(7416014)(1800799024)(376014)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1101;
+	CIP:198.47.21.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet201.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(36860700016)(82310400026)(1800799024)(376014)(7416014)(22082099003)(18002099003)(56012099003)(13003099007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	pAvPO9k1jj90IGFLNpV2KhxIpupaeXOV0uWoGFUrMYRWHPeppQgxctmIQ0Ua+38jkEfZ0lU3LTX97CWkq7qpcu/cYaYlSaBzn+ZRHQ+FF5w2gTW1bG49zDKbnB4+w+pY+rHutEX96W5fKhfvQgBpJ3cFVIOMRgQeRhJYMMJ24HKD53Gk0h8O5ugR8e7Pv/psE22g9kyLz7dR8yZb6q/1mII8YhezLKBwGqS+G8he9Hu2BHYxvS0POzXpxoMRLF5WxT7B+8MI90Ez9uEaaUEaRRtit1/yY28WXrytveehs+xbreDiZYf8Z7Ey+MdFzoATwxfGVpNi1W1lIUu5M2Yl2f78CcSQhB54BYWVm1HOJGiFILq5t3Yg1dxHuauQRuU2TWPdRiKiG0gHA+gudS06j96oaEEfAHou48SkGYx4TkZ2MR+RPvfuDRa5bWHwIBDJ
+	rWkjmOQRudcyFL6AR574P2RlP/5QXlfP48+D77HUGUQ0jb/gDT1CcV2dGeVVEpU6Wq3EpdmhD82w778bxUBTS4yHHjITUsv/bG1lRAwBTaI500u2td0WnC7m57+SmsGE0xi33Lgk+ArSEV69FPxTwY2tgqEev8f+0P83cXfJ4eV5bSZbzZZVw29RqQT6uq0JiN6oHm9CPd1aY803xDVD8iojEBq9nT9Nvtx5FP4WRbhwMSkmobGYknnHchw0p4BxpGLqJEu5Sf2YuQ3v9kOa9F43S/FR/RTB/0lhX4LItYJ753/z97r8Ioa0fqvw5yPaAoXtCA2wB7ZZcJFQs3dVp6Vu1H9WMr2JA1pRHxXYraWdwIKe/9KelGdPZLX0JE8RV7dWUVM3T0xoYtFr+dlBcBW2RXuQ3za6CUyhN/fXhQt+EGRi9pdcSJqORKBjWUap
 X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2026 18:49:55.8726
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2026 18:49:58.6023
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33e0295d-dcce-4d7b-dfc1-08de8068276d
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8076956-a0e9-44f6-a871-08de80682914
 X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.194];Helo=[flwvzet200.ext.ti.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.195];Helo=[flwvzet201.ext.ti.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF0000009D.namprd02.prod.outlook.com
+	SJ1PEPF00002325.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR10MB5651
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB7191
 X-Spamd-Result: default: False [2.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[ti.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[ti.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33288-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33289-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[kernel.org,gmail.com,perex.cz,suse.com,ti.com,tipi-net.de];
 	MIME_TRACE(0.00)[0:+];
@@ -158,957 +158,2214 @@ X-Spamd-Result: default: False [2.84 / 15.00];
 	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[10]
-X-Rspamd-Queue-Id: 85663277594
+X-Rspamd-Queue-Id: 5D601277585
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add the Texas Instruments TAC5x1x pin controller driver. This driver
-provides GPIO control for 5 configurable pins (GPIO1, GPIO2, GPO1, GPI1,
-GPI2A) with support for GPIO, PDM, and IRQ functions.
+Add the Texas Instruments TAC5x1x ALSA SoC codec driver. This driver
+provides audio capture and playback functionality for the TAC5x1x family
+of audio codecs.
 
-The pinctrl driver handles:
-- GPIO input/output operations
-- Pin multiplexing between GPIO, PDM, and IRQ functions
+The codec driver implements:
+- ADC for audio capture
+- DAC for audio playback
+- PDM input support
+- DAPM with optimized power gating
+- Multiple sample rates and audio formats
+- Device-specific routing for TAC/TAA/TAD variants
+- MICBIAS and reference voltage control
+- Mixer controls for volume, source selection, and configuration
 
 Signed-off-by: Niranjan H Y <niranjan.hy@ti.com>
 ---
- drivers/pinctrl/Kconfig           |  11 +
- drivers/pinctrl/Makefile          |   1 +
- drivers/pinctrl/pinctrl-tac5x1x.c | 889 ++++++++++++++++++++++++++++++
- 3 files changed, 901 insertions(+)
- create mode 100644 drivers/pinctrl/pinctrl-tac5x1x.c
+ sound/soc/codecs/Kconfig   |   11 +
+ sound/soc/codecs/Makefile  |    2 +
+ sound/soc/codecs/tac5x1x.c | 2082 ++++++++++++++++++++++++++++++++++++
+ sound/soc/codecs/tac5x1x.h |   35 +
+ 4 files changed, 2130 insertions(+)
+ create mode 100644 sound/soc/codecs/tac5x1x.c
+ create mode 100644 sound/soc/codecs/tac5x1x.h
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index afecd9407f53..2054e9998880 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -585,6 +585,17 @@ config PINCTRL_SX150X
- 	  - 8 bits:  sx1508q, sx1502q
- 	  - 16 bits: sx1509q, sx1506q
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index adb3fb923be3..cdfbd9105bb5 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -264,6 +264,7 @@ config SND_SOC_ALL_CODECS
+ 	imply SND_SOC_STA529
+ 	imply SND_SOC_STAC9766
+ 	imply SND_SOC_STI_SAS
++	imply SND_SOC_TAC5X1X
+ 	imply SND_SOC_TAS2552
+ 	imply SND_SOC_TAS2562
+ 	imply SND_SOC_TAS2764
+@@ -2130,6 +2131,16 @@ config SND_SOC_STAC9766
+ config SND_SOC_STI_SAS
+ 	tristate "codec Audio support for STI SAS codec"
  
-+config PINCTRL_TI_TAC5X1X
-+	tristate "TAC5X1X pin control driver"
-+	depends on OF && (MFD_TAC5X1X || COMPILE_TEST)
-+	select GENERIC_PINCTRL_GROUPS
-+	select GENERIC_PINMUX_FUNCTIONS
-+	select GENERIC_PINCONF
++config SND_SOC_TAC5X1X
++	tristate "Texas Instruments TAC5X1X family driver based on I2C"
++	depends on MFD_TAC5X1X
 +	help
-+	  TAC5X1X family may have 1 or more configurable GPIO pins
-+	  which can be grouped and configured to function as PDM, GPIOs
-+	  or interrupt outputs.
++	  Enable support for Texas Instruments TAC5X1X family Audio chips.
++	  The family consists mono/stereo audio codecs, DACs and ADCs.
++	  Includes support for TAC5311-Q1, TAC5411-Q1, TAC5111, TAC5211,
++	  TAA5212, TAA5412-Q1, TAD5112, TAD5212, TAC5312, TAC5412-Q1,
++	  TAC5112, TAC5212, TAC5301
 +
- config PINCTRL_TB10X
- 	bool "Pinctrl for TB10X" if COMPILE_TEST
- 	depends on OF && ARC_PLAT_TB10X || COMPILE_TEST
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index f7d5d5f76d0c..1fe6b0e8a666 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -58,6 +58,7 @@ obj-$(CONFIG_PINCTRL_SINGLE)	+= pinctrl-single.o
- obj-$(CONFIG_PINCTRL_ST) 	+= pinctrl-st.o
- obj-$(CONFIG_PINCTRL_STMFX) 	+= pinctrl-stmfx.o
- obj-$(CONFIG_PINCTRL_SX150X)	+= pinctrl-sx150x.o
-+obj-$(CONFIG_PINCTRL_TI_TAC5X1X)+= pinctrl-tac5x1x.o
- obj-$(CONFIG_PINCTRL_TB10X)	+= pinctrl-tb10x.o
- obj-$(CONFIG_PINCTRL_TPS6594)	+= pinctrl-tps6594.o
- obj-$(CONFIG_PINCTRL_TH1520)	+= pinctrl-th1520.o
-diff --git a/drivers/pinctrl/pinctrl-tac5x1x.c b/drivers/pinctrl/pinctrl-tac5x1x.c
+ config SND_SOC_TAS2552
+ 	tristate "Texas Instruments TAS2552 Mono Audio amplifier"
+ 	depends on I2C
+diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
+index 3ddee5298721..64c99cb61cd1 100644
+--- a/sound/soc/codecs/Makefile
++++ b/sound/soc/codecs/Makefile
+@@ -313,6 +313,7 @@ snd-soc-sta350-y := sta350.o
+ snd-soc-sta529-y := sta529.o
+ snd-soc-stac9766-y := stac9766.o
+ snd-soc-sti-sas-y := sti-sas.o
++snd-soc-tac5x1x-y := tac5x1x.o
+ snd-soc-tas5086-y := tas5086.o
+ snd-soc-tas571x-y := tas571x.o
+ snd-soc-tas5720-y := tas5720.o
+@@ -745,6 +746,7 @@ obj-$(CONFIG_SND_SOC_STA350)   += snd-soc-sta350.o
+ obj-$(CONFIG_SND_SOC_STA529)   += snd-soc-sta529.o
+ obj-$(CONFIG_SND_SOC_STAC9766)	+= snd-soc-stac9766.o
+ obj-$(CONFIG_SND_SOC_STI_SAS)	+= snd-soc-sti-sas.o
++obj-$(CONFIG_SND_SOC_TAC5X1X)	+= snd-soc-tac5x1x.o
+ obj-$(CONFIG_SND_SOC_TAS2552)	+= snd-soc-tas2552.o
+ obj-$(CONFIG_SND_SOC_TAS2562)	+= snd-soc-tas2562.o
+ obj-$(CONFIG_SND_SOC_TAS2764)	+= snd-soc-tas2764.o
+diff --git a/sound/soc/codecs/tac5x1x.c b/sound/soc/codecs/tac5x1x.c
 new file mode 100644
-index 000000000000..4e59501f3f78
+index 000000000000..f3ce21464f47
 --- /dev/null
-+++ b/drivers/pinctrl/pinctrl-tac5x1x.c
-@@ -0,0 +1,889 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/sound/soc/codecs/tac5x1x.c
+@@ -0,0 +1,2082 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * TAC5X1X Pinctrl and GPIO driver
++ * tac5x1x.c -- Codec driver for TAC5x1x
 + *
-+ * Copyright (C) 2023-2025 Texas Instruments Incorporated - https://www.ti.com
++ * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com
++ *
++ * Author: Niranjan H Y <niranjan.hy@ti.com>
 + */
-+
-+#include <linux/array_size.h>
-+#include <linux/bits.h>
-+#include <linux/bitfield.h>
-+#include <linux/build_bug.h>
-+#include <linux/err.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/mfd/tac5x1x/registers.h>
-+#include <linux/mfd/tac5x1x/core.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
++#include <linux/types.h>
++#include <linux/of_irq.h>
 +#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+#include <linux/string_choices.h>
++#include <linux/i2c.h>
++#include <sound/soc.h>
++#include <sound/pcm_params.h>
++#include <sound/tlv.h>
++#include <linux/mfd/tac5x1x/registers.h>
++#include "tac5x1x.h"
 +
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/pinctrl/pinmux.h>
-+
-+#include "pinctrl-utils.h"
-+
-+/* 2 pins can be gpio */
-+#define TAC5X1X_NUM_GPIO_PINS 5
-+#define TAC5X1X_MAX_PINS 5
-+
-+struct tac5x1x_pin {
-+	struct gpio_chip gpio_chip;
-+	struct regmap *regmap;
-+	struct device *dev;
-+	struct tac5x1x *parent;
++struct mask_to_txt {
++	u8 mask;
++	const char *const name;
 +};
 +
-+static const struct pinctrl_pin_desc tac5x1x_pin_pins[] = {
-+	/* naming as per data sheet */
-+	PINCTRL_PIN(0, "GPIO_1"),
-+	PINCTRL_PIN(1, "GPIO_2"),
-+	PINCTRL_PIN(2, "GPO_1"), /* same as GPO1A*/
-+	PINCTRL_PIN(3, "GPI_1"), /* same as GPI1A*/
-+	PINCTRL_PIN(4, "GPI_2A")
-+};
-+
-+/* pin control registers */
-+static const u32 pin_to_reg[] = {
-+	TAC5X1X_GPIO1,
-+	TAC5X1X_GPIO2,
-+	TAC5X1X_GPO1,
-+	TAC5X1X_GPI1,
-+	TAC5X1X_GPI1,
-+};
-+
-+static_assert(ARRAY_SIZE(tac5x1x_pin_pins) == ARRAY_SIZE(pin_to_reg));
-+
-+enum tac5x1x_gpio_pins {
-+	PIN_GPIO1 = 0,
-+	PIN_GPIO2,
-+	PIN_GPO1,
-+	PIN_GPI1,
-+	PIN_GPI2A,
-+};
-+
-+enum tac5x1x_pin_funcs {
-+	TAC5X1X_FUNC_GPIO,
-+	TAC5X1X_FUNC_PDM,
-+	TAC5X1X_FUNC_IRQ,
-+	TAC5X1X_FUNC_MAX
-+};
-+
-+struct tac5x1x_config {
++struct interrupt_info {
 +	u32 reg;
-+	u32 mask;
-+	u32 val;
++	u32 count;
++	const struct mask_to_txt *mask_str_map;
 +};
 +
-+static const unsigned int tac5x1x_pin_gpio1_pins[] = { PIN_GPIO1 };
-+static const unsigned int tac5x1x_pin_gpio2_pins[] = { PIN_GPIO2 };
-+static const unsigned int tac5x1x_pin_gpo1_pins[] = { PIN_GPO1 };
-+static const unsigned int tac5x1x_pin_gpi1_pins[] = { PIN_GPI1 };
-+static const unsigned int tac5x1x_pin_gpi2a_pins[] = { PIN_GPI2A };
++#define TAC5X1X_EVENT(bit, evt_txt) ( \
++	(struct mask_to_txt){             \
++	.mask = BIT((bit)),           \
++	.name = evt_txt})
 +
-+/* pdm pins for - clk, data in */
-+static const unsigned int tac5x1x_pin_pdm01_pins[] = { PIN_GPIO1, PIN_GPIO2 };
-+static const unsigned int tac5x1x_pin_pdm03_pins[] = { PIN_GPIO1, PIN_GPI1 };
-+static const unsigned int tac5x1x_pin_pdm04_pins[] = { PIN_GPIO1, PIN_GPI2A };
-+static const unsigned int tac5x1x_pin_pdm10_pins[] = { PIN_GPIO2, PIN_GPIO1 };
-+static const unsigned int tac5x1x_pin_pdm13_pins[] = { PIN_GPIO2, PIN_GPI1 };
-+static const unsigned int tac5x1x_pin_pdm14_pins[] = { PIN_GPIO2, PIN_GPI2A };
-+static const unsigned int tac5x1x_pin_pdm20_pins[] = { PIN_GPO1, PIN_GPIO1 };
-+static const unsigned int tac5x1x_pin_pdm21_pins[] = { PIN_GPO1, PIN_GPIO2 };
-+static const unsigned int tac5x1x_pin_pdm23_pins[] = { PIN_GPO1, PIN_GPI1 };
-+static const unsigned int tac5x1x_pin_pdm24_pins[] = { PIN_GPO1, PIN_GPI2A };
-+
-+#define TAC5X1X_CFG_ENTRY(_reg, _mask, _val) \
-+	{				\
-+		.reg = TAC5X1X_##_reg,	\
-+		.mask = TAC5X1X_##_mask,\
-+		.val = TAC5X1X_##_val	\
-+	}
-+
-+static const struct tac5x1x_config pdm_cfgs[] = {
-+	/* pdm01 */
-+	TAC5X1X_CFG_ENTRY(GPIO1, GPIOX_CFG_MASK, GPIO_PDMCLK),
-+	TAC5X1X_CFG_ENTRY(GPIO2, GPIOX_CFG_MASK, GPIO_GPI),
-+	TAC5X1X_CFG_ENTRY(INTF4, PDM_DIN12_SEL_MASK, PDM_DIN_GPI02),
-+
-+	/* pdm03 */
-+	TAC5X1X_CFG_ENTRY(GPIO1, GPIOX_CFG_MASK, GPIO_PDMCLK),
-+	TAC5X1X_CFG_ENTRY(GPI1, GPI1_CFG_MASK, GPIO_GPI),
-+	TAC5X1X_CFG_ENTRY(INTF4, PDM_DIN12_SEL_MASK, PDM_DIN_GPI1),
-+
-+	/* pdm04 */
-+	TAC5X1X_CFG_ENTRY(GPIO1, GPIOX_CFG_MASK, GPIO_PDMCLK),
-+	TAC5X1X_CFG_ENTRY(GPI1, GPI2A_CFG_MASK, GPIO_GPI),
-+	TAC5X1X_CFG_ENTRY(INTF4, PDM_DIN12_SEL_MASK, PDM_DIN_GPI2A),
-+
-+	/* pdm10 */
-+	TAC5X1X_CFG_ENTRY(GPIO2, GPIOX_CFG_MASK, GPIO_PDMCLK),
-+	TAC5X1X_CFG_ENTRY(GPIO1, GPIOX_CFG_MASK, GPIO_GPI),
-+	TAC5X1X_CFG_ENTRY(INTF4, PDM_DIN12_SEL_MASK, PDM_DIN_GPI01),
-+
-+	/* pdm13 */
-+	TAC5X1X_CFG_ENTRY(GPIO2, GPIOX_CFG_MASK, GPIO_PDMCLK),
-+	TAC5X1X_CFG_ENTRY(GPI1, GPI1_CFG_MASK, GPIO_GPI),
-+	TAC5X1X_CFG_ENTRY(INTF4, PDM_DIN12_SEL_MASK, PDM_DIN_GPI1),
-+
-+	/* pdm14 */
-+	TAC5X1X_CFG_ENTRY(GPIO2, GPIOX_CFG_MASK, GPIO_PDMCLK),
-+	TAC5X1X_CFG_ENTRY(GPI1, GPI2A_CFG_MASK, GPIO_GPI),
-+	TAC5X1X_CFG_ENTRY(INTF4, PDM_DIN12_SEL_MASK, PDM_DIN_GPI2A),
-+
-+	/* pdm20 */
-+	TAC5X1X_CFG_ENTRY(GPO1, GPIOX_CFG_MASK, GPIO_PDMCLK),
-+	TAC5X1X_CFG_ENTRY(GPIO1, GPIOX_CFG_MASK, GPIO_GPI),
-+	TAC5X1X_CFG_ENTRY(INTF4, PDM_DIN12_SEL_MASK, PDM_DIN_GPI01),
-+
-+	/* pdm21 */
-+	TAC5X1X_CFG_ENTRY(GPO1, GPIOX_CFG_MASK, GPIO_PDMCLK),
-+	TAC5X1X_CFG_ENTRY(GPIO2, GPIOX_CFG_MASK, GPIO_GPI),
-+	TAC5X1X_CFG_ENTRY(INTF4, PDM_DIN12_SEL_MASK, PDM_DIN_GPI02),
-+
-+	/* pdm23 */
-+	TAC5X1X_CFG_ENTRY(GPO1, GPIOX_CFG_MASK, GPIO_PDMCLK),
-+	TAC5X1X_CFG_ENTRY(GPI1, GPI1_CFG_MASK, GPIO_GPI),
-+	TAC5X1X_CFG_ENTRY(INTF4, PDM_DIN12_SEL_MASK, PDM_DIN_GPI1),
-+
-+	/* pdm24 */
-+	TAC5X1X_CFG_ENTRY(GPO1, GPIOX_CFG_MASK, GPIO_PDMCLK),
-+	TAC5X1X_CFG_ENTRY(GPI1, GPI2A_CFG_MASK, GPIO_GPI),
-+	TAC5X1X_CFG_ENTRY(INTF4, PDM_DIN12_SEL_MASK, PDM_DIN_GPI2A),
++static const struct mask_to_txt int_chx_latch[] = {
++	TAC5X1X_EVENT(7, "Input Channel1 fault"),
++	TAC5X1X_EVENT(6, "Input Channel2 fault"),
++	TAC5X1X_EVENT(5, "Output Channel1 fault"),
++	TAC5X1X_EVENT(4, "Output Channel2 fault"),
++	TAC5X1X_EVENT(3, "Short to VBAT_IN"),
 +};
 +
-+static const struct tac5x1x_config irq_cfgs[] = {
-+	TAC5X1X_CFG_ENTRY(GPIO1, GPIOX_CFG_MASK, GPIO_IRQ),
-+	TAC5X1X_CFG_ENTRY(GPIO2, GPIOX_CFG_MASK, GPIO_IRQ),
-+	TAC5X1X_CFG_ENTRY(GPO1, GPIOX_CFG_MASK, GPIO_IRQ),
++static const struct mask_to_txt in_ch1_latch[] = {
++	TAC5X1X_EVENT(7, "IN_CH1 open Input"),
++	TAC5X1X_EVENT(6, "IN_CH1 Input shorted"),
++	TAC5X1X_EVENT(5, "IN_CH1 INP shorted to GND"),
++	TAC5X1X_EVENT(4, "IN_CH1 INM shorted to GND"),
++	TAC5X1X_EVENT(3, "IN_CH1 INP shorted to MICBIAS"),
++	TAC5X1X_EVENT(2, "IN_CH1 INM shorted to MICBIAS"),
++	TAC5X1X_EVENT(1, "IN_CH1 INP shorted to VBAT_IN"),
++	TAC5X1X_EVENT(0, "IN_CH1 INM shorted to VBAT_IN"),
 +};
 +
-+struct tac5x1x_pingroup {
-+	const char *name;
-+	const unsigned int *pins;
-+	const struct tac5x1x_config *regdata;
-+	size_t npins; /* number of pins */
-+	size_t nregdata; /* number of regdata */
++static const struct mask_to_txt in_ch2_latch[] = {
++	TAC5X1X_EVENT(7, "IN_CH2 open Input"),
++	TAC5X1X_EVENT(6, "IN_CH2 Input shorted"),
++	TAC5X1X_EVENT(5, "IN_CH2 INP shorted to GND"),
++	TAC5X1X_EVENT(4, "IN_CH2 INM shorted to GND"),
++	TAC5X1X_EVENT(3, "IN_CH2 INP shorted to MICBIAS"),
++	TAC5X1X_EVENT(2, "IN_CH2 INM shorted to MICBIAS"),
++	TAC5X1X_EVENT(1, "IN_CH2 INP shorted to VBAT_IN"),
++	TAC5X1X_EVENT(0, "IN_CH2 INM shorted to VBAT_IN"),
 +};
 +
-+#define TAC5X1X_PINCTRL_PINGROUP(_name, _pins, _npins, _regdata, _nregdata) \
-+((struct tac5x1x_pingroup) {		\
-+	.name = (_name),		\
-+	.pins = (_pins),		\
-+	.npins = (_npins),		\
-+	.regdata = (_regdata),		\
-+	.nregdata = (_nregdata),	\
++static const struct mask_to_txt out_ch1_latch[] = {
++	TAC5X1X_EVENT(7, "OUT_CH1 OUT1P Short circuit Fault"),
++	TAC5X1X_EVENT(6, "OUT_CH1 OUT1M Short circuit Fault"),
++	TAC5X1X_EVENT(5, "OUT_CH1 DRVRP Virtual Ground Fault"),
++	TAC5X1X_EVENT(4, "OUT_CH1 DRVRM Virtual ground Fault"),
++	/* masks */
++	TAC5X1X_EVENT(3, "OUT_CH1 ADC CH1 Mask"),
++	TAC5X1X_EVENT(2, "OUT_CH1 ADC CH2 MASK"),
++};
++
++static const struct mask_to_txt out_ch2_latch[] = {
++	TAC5X1X_EVENT(7, "OUT_CH2 OUT2P Short circuit Fault"),
++	TAC5X1X_EVENT(6, "OUT_CH2 OUT2M Short circuit Fault"),
++	TAC5X1X_EVENT(5, "OUT_CH2 DRVRP Virtual Ground Fault"),
++	TAC5X1X_EVENT(4, "OUT_CH2 DRVRM Virtual ground Fault"),
++	/* mask */
++	TAC5X1X_EVENT(1, "AREG SC Fault Mask"),
++	TAC5X1X_EVENT(0, "AREG SC Fault"),
++};
++
++static const struct mask_to_txt int_latch1[] = {
++	TAC5X1X_EVENT(7, "CH1 INP Over Voltage"),
++	TAC5X1X_EVENT(6, "CH1 INM Over Voltage"),
++	TAC5X1X_EVENT(5, "CH2 INP over Voltage"),
++	TAC5X1X_EVENT(4, "CH2 INM Over Voltage"),
++	TAC5X1X_EVENT(3, "Headset Insert Detection"),
++	TAC5X1X_EVENT(2, "Headset Remove Detection"),
++	TAC5X1X_EVENT(1, "Headset Hook"),
++	TAC5X1X_EVENT(0, "MIPS Overload"),
++};
++
++static const struct mask_to_txt int_latch2[] = {
++	TAC5X1X_EVENT(7, "GPA Up threashold Fault"),
++	TAC5X1X_EVENT(6, "GPA low threashold Fault"),
++	TAC5X1X_EVENT(5, "VAD Power up detect"),
++	TAC5X1X_EVENT(4, "VAD power down detect"),
++	TAC5X1X_EVENT(3, "Micbias short circuit"),
++	TAC5X1X_EVENT(2, "Micbias high current fault"),
++	TAC5X1X_EVENT(1, "Micbias low current fault"),
++	TAC5X1X_EVENT(0, "Micbias Over voltage fault"),
++};
++
++static const struct mask_to_txt int_latch_0[] = {
++	TAC5X1X_EVENT(7, "Clock Error"),
++	TAC5X1X_EVENT(6, "PLL Lock"),
++	TAC5X1X_EVENT(5, "Boost Over Temperature"),
++	TAC5X1X_EVENT(4, "Boost Over Current"),
++	TAC5X1X_EVENT(3, "Boost MO"),
++};
++
++#define LTCH_TO_MASK_STR_MAP(latch_reg, str_map, map_size) ( \
++	(struct interrupt_info){                                 \
++	.reg = (latch_reg),                                  \
++	.count = (map_size),                                 \
++	.mask_str_map = (str_map),                           \
 +})
 +
-+static const struct tac5x1x_pingroup tac5x1x_pin_groups[] = {
-+	TAC5X1X_PINCTRL_PINGROUP("gpio1", tac5x1x_pin_gpio1_pins,
-+				 ARRAY_SIZE(tac5x1x_pin_gpio1_pins), 0, 0),
-+	TAC5X1X_PINCTRL_PINGROUP("gpio2", tac5x1x_pin_gpio2_pins,
-+				 ARRAY_SIZE(tac5x1x_pin_gpio2_pins), 0, 0),
-+	TAC5X1X_PINCTRL_PINGROUP("gpo1", tac5x1x_pin_gpo1_pins,
-+				 ARRAY_SIZE(tac5x1x_pin_gpo1_pins), 0, 0),
-+	TAC5X1X_PINCTRL_PINGROUP("gpi1", tac5x1x_pin_gpi1_pins,
-+				 ARRAY_SIZE(tac5x1x_pin_gpi1_pins), 0, 0),
-+	TAC5X1X_PINCTRL_PINGROUP("gpi2a", tac5x1x_pin_gpi2a_pins,
-+				 ARRAY_SIZE(tac5x1x_pin_gpi2a_pins), 0, 0),
-+	TAC5X1X_PINCTRL_PINGROUP("pdm_gpio1_gpio2", tac5x1x_pin_pdm01_pins,
-+				 ARRAY_SIZE(tac5x1x_pin_pdm01_pins),
-+				 &pdm_cfgs[0], 3),
-+	TAC5X1X_PINCTRL_PINGROUP("pdm_gpio1_gpi1", tac5x1x_pin_pdm03_pins,
-+				 ARRAY_SIZE(tac5x1x_pin_pdm03_pins),
-+				 &pdm_cfgs[3], 3),
-+	TAC5X1X_PINCTRL_PINGROUP("pdm_gpio1_gpi2a", tac5x1x_pin_pdm04_pins,
-+				 ARRAY_SIZE(tac5x1x_pin_pdm04_pins),
-+				 &pdm_cfgs[6], 3),
-+	TAC5X1X_PINCTRL_PINGROUP("pdm_gpio2_gpio1", tac5x1x_pin_pdm10_pins,
-+				 ARRAY_SIZE(tac5x1x_pin_pdm10_pins),
-+				 &pdm_cfgs[9], 3),
-+	TAC5X1X_PINCTRL_PINGROUP("pdm_gpio2_gpi1", tac5x1x_pin_pdm13_pins,
-+				 ARRAY_SIZE(tac5x1x_pin_pdm13_pins),
-+				 &pdm_cfgs[12], 3),
-+	TAC5X1X_PINCTRL_PINGROUP("pdm_gpio2_gpi2a", tac5x1x_pin_pdm14_pins,
-+				 ARRAY_SIZE(tac5x1x_pin_pdm14_pins),
-+				 &pdm_cfgs[15], 3),
-+	TAC5X1X_PINCTRL_PINGROUP("pdm_gpo1_gpio1", tac5x1x_pin_pdm20_pins,
-+				 ARRAY_SIZE(tac5x1x_pin_pdm20_pins),
-+				 &pdm_cfgs[18], 3),
-+	TAC5X1X_PINCTRL_PINGROUP("pdm_gpo1_gpio2", tac5x1x_pin_pdm21_pins,
-+				 ARRAY_SIZE(tac5x1x_pin_pdm21_pins),
-+				 &pdm_cfgs[21], 3),
-+	TAC5X1X_PINCTRL_PINGROUP("pdm_gpo1_gpi1", tac5x1x_pin_pdm23_pins,
-+				 ARRAY_SIZE(tac5x1x_pin_pdm23_pins),
-+				 &pdm_cfgs[24], 3),
-+	TAC5X1X_PINCTRL_PINGROUP("pdm_gpo1_gpi2a", tac5x1x_pin_pdm24_pins,
-+				 ARRAY_SIZE(tac5x1x_pin_pdm24_pins),
-+				 &pdm_cfgs[27], 3),
++static const struct interrupt_info intr_info_list[] = {
++	LTCH_TO_MASK_STR_MAP(TAC5X1X_REG_CHX_LTCH, int_chx_latch,
++			     ARRAY_SIZE(int_chx_latch)),
++	LTCH_TO_MASK_STR_MAP(TAC5X1X_REG_IN_CH1_LTCH, in_ch1_latch,
++			     ARRAY_SIZE(in_ch1_latch)),
++	LTCH_TO_MASK_STR_MAP(TAC5X1X_REG_IN_CH2_LTCH, in_ch2_latch,
++			     ARRAY_SIZE(in_ch2_latch)),
++	LTCH_TO_MASK_STR_MAP(TAC5X1X_REG_OUT_CH1_LTCH, out_ch1_latch,
++			     ARRAY_SIZE(out_ch1_latch)),
++	LTCH_TO_MASK_STR_MAP(TAC5X1X_REG_OUT_CH2_LTCH, out_ch2_latch,
++			     ARRAY_SIZE(out_ch2_latch)),
++	LTCH_TO_MASK_STR_MAP(TAC5X1X_REG_INT_LTCH1, int_latch1,
++			     ARRAY_SIZE(int_latch1)),
++	LTCH_TO_MASK_STR_MAP(TAC5X1X_REG_INT_LTCH2, int_latch2,
++			     ARRAY_SIZE(int_latch2)),
++	/* This should be the last entry */
++	LTCH_TO_MASK_STR_MAP(TAC5X1X_REG_INT_LTCH0, int_latch_0,
++			     ARRAY_SIZE(int_latch_0)),
 +};
 +
-+static int tac5x1x_pin_get_groups_count(struct pinctrl_dev *pctldev)
++static void process_one_interrupt(struct tac5x1x_priv *tac5x1x, s32 index,
++				  s32 value)
 +{
-+	return ARRAY_SIZE(tac5x1x_pin_groups);
-+}
++	u32 map_count, i;
++	const struct mask_to_txt *map_items;
++	struct device *dev = tac5x1x->tac5x1x->dev;
 +
-+static const char *tac5x1x_pin_get_group_name(struct pinctrl_dev *pctldev,
-+					      unsigned int group)
-+{
-+	return tac5x1x_pin_groups[group].name;
-+}
++	map_count = intr_info_list[index].count;
++	map_items = intr_info_list[index].mask_str_map;
 +
-+static int tac5x1x_pin_get_group_pins(struct pinctrl_dev *pctldev,
-+				      unsigned int group,
-+				      const unsigned int **pins,
-+				      unsigned int *num_pins)
-+{
-+	*pins = tac5x1x_pin_groups[group].pins;
-+	*num_pins = tac5x1x_pin_groups[group].npins;
-+	return 0;
-+}
-+
-+static const struct pinctrl_ops tac5x1x_pin_group_ops = {
-+	.get_groups_count = tac5x1x_pin_get_groups_count,
-+	.get_group_name = tac5x1x_pin_get_group_name,
-+	.get_group_pins = tac5x1x_pin_get_group_pins,
-+#if IS_ENABLED(CONFIG_OF)
-+	.dt_node_to_map = pinconf_generic_dt_node_to_map_all,
-+	.dt_free_map = pinconf_generic_dt_free_map,
-+#endif
-+};
-+
-+static const char *const tac5x1x_pin_funcs[] = {
-+	"gpio", "pdm", "irq"
-+};
-+
-+static const char * const tac5x1x_pin_gpio_groups[] = {
-+	"gpio1", "gpio2", "gpo1", "gpi1", "gpi2a"
-+};
-+
-+static const char * const tac5x1x_pin_pdm_groups[] = {
-+	"pdm_gpio1_gpio2",
-+	"pdm_gpio1_gpi1",
-+	"pdm_gpio1_gpi2a",
-+	"pdm_gpio2_gpio1",
-+	"pdm_gpio2_gpi1",
-+	"pdm_gpio2_gpi2a",
-+	"pdm_gpo1_gpio1",
-+	"pdm_gpo1_gpio2",
-+	"pdm_gpo1_gpi1",
-+	"pdm_gpo1_gpi2a"
-+};
-+
-+static const char * const tac5x1x_pin_irq_groups[] = {
-+	"gpio1", "gpio2", "gpo1"
-+};
-+
-+static const struct pinfunction tac5x1x_pin_func_groups[] = {
-+	PINCTRL_PINFUNCTION("gpio", tac5x1x_pin_gpio_groups,
-+			    ARRAY_SIZE(tac5x1x_pin_gpio_groups)),
-+	PINCTRL_PINFUNCTION("pdm",  tac5x1x_pin_pdm_groups,
-+			    ARRAY_SIZE(tac5x1x_pin_pdm_groups)),
-+	PINCTRL_PINFUNCTION("irq",  tac5x1x_pin_irq_groups,
-+			    ARRAY_SIZE(tac5x1x_pin_irq_groups)),
-+};
-+
-+static_assert(ARRAY_SIZE(tac5x1x_pin_funcs) == TAC5X1X_FUNC_MAX);
-+static_assert(ARRAY_SIZE(tac5x1x_pin_func_groups) == TAC5X1X_FUNC_MAX);
-+
-+static int tac5x1x_pin_get_func_count(struct pinctrl_dev *pctldev)
-+{
-+	return ARRAY_SIZE(tac5x1x_pin_funcs);
-+}
-+
-+static const char *tac5x1x_pin_get_func_name(struct pinctrl_dev *pctldev,
-+					     unsigned int func_idx)
-+{
-+	return tac5x1x_pin_funcs[func_idx];
-+}
-+
-+static int tac5x1x_pin_get_func_groups(struct pinctrl_dev *pctldev,
-+				       unsigned int func_idx,
-+				       const char * const **groups,
-+				       unsigned int * const num_groups)
-+{
-+	*groups = tac5x1x_pin_func_groups[func_idx].groups;
-+	*num_groups = tac5x1x_pin_func_groups[func_idx].ngroups;
-+
-+	return 0;
-+}
-+
-+static int tac5x1x_setup_pdm(struct pinctrl_dev *pinctrl, u32 group)
-+{
-+	int ret = 0, i;
-+	u32 val;
-+	size_t reg_count;
-+	const struct tac5x1x_config *regdata;
-+	struct tac5x1x_pin *priv;
-+	const struct tac5x1x_pingroup *grp = &tac5x1x_pin_groups[group];
-+
-+	regdata = grp->regdata;
-+	reg_count = grp->nregdata;
-+	priv = pinctrl_dev_get_drvdata(pinctrl);
-+
-+	/*
-+	 * PDM pin groups use naming convention: pdm_<clk_pin>_<data_pin>
-+	 * First pin in the group is PDM Clock (output)
-+	 * Second pin in the group is PDM Data (input)
-+	 */
-+	if (grp->npins >= 2) {
-+		dev_dbg(priv->dev, "PDM config: %s CLK=%s DATA=%s\n", grp->name,
-+			tac5x1x_pin_pins[grp->pins[0]].name,
-+			tac5x1x_pin_pins[grp->pins[1]].name);
++	for (i = 0; i < map_count; i++) {
++		if (value & map_items[i].mask)
++			dev_dbg(dev, "Interrupt %s detected\n",
++				map_items[i].name);
 +	}
-+
-+	for (i = 0; i < reg_count; i++) {
-+		val = (regdata[i].val << (ffs(regdata[i].mask) - 1)) & regdata[i].mask;
-+		ret = regmap_update_bits(priv->regmap, regdata[i].reg,
-+					 regdata[i].mask, val);
-+		if (ret) {
-+			dev_err(priv->dev, "pdm setup failed, reg=%x err=%d",
-+				regdata[i].reg, ret);
-+			break;
-+		}
-+	}
-+
-+	/* Mark PDM as enabled in parent structure for codec driver */
-+	if (!ret)
-+		priv->parent->pdm_enabled = true;
-+
-+	return ret;
 +}
 +
-+/* configure a gpio pin to generate HW interrupt */
-+static int tac5x1x_setup_irq(struct pinctrl_dev *pinctrl, u32 group)
++static irqreturn_t irq_thread_func(s32 irq, void *dev_id)
 +{
-+	struct tac5x1x_pin *priv = pinctrl_dev_get_drvdata(pinctrl);
-+	const struct tac5x1x_config *const cfg = &irq_cfgs[group];
-+	u32 val;
++	u8 latch_set = 0;
++	u32 latch_count;
++	s32 i, ret;
++	struct tac5x1x_priv *tac5x1x = (struct tac5x1x_priv *)dev_id;
++	struct device *dev = tac5x1x->tac5x1x->dev;
 +
-+	dev_dbg(priv->dev, "Configuring %s as IRQ output\n",
-+		tac5x1x_pin_groups[group].name);
-+	val = (cfg->val << (ffs(cfg->mask) - 1)) & cfg->mask;
-+	return regmap_update_bits(priv->regmap, cfg->reg, cfg->mask, val);
-+}
++	latch_count = ARRAY_SIZE(intr_info_list);
 +
-+static int tac5x1x_pin_set_mux(struct pinctrl_dev *pinctrl,
-+			       unsigned int func_idx, unsigned int group)
-+{
-+	int ret;
-+	struct tac5x1x_pin *priv = pinctrl_dev_get_drvdata(pinctrl);
-+
-+	dev_dbg(priv->dev, "%s Setting %s(%d) to %s(%d)\n", __func__,
-+		tac5x1x_pin_groups[group].name, group,
-+		tac5x1x_pin_funcs[func_idx], func_idx);
-+
-+	switch (func_idx) {
-+	case TAC5X1X_FUNC_GPIO:
-+		ret = 0;
-+		break;
-+	case TAC5X1X_FUNC_PDM:
-+		ret = tac5x1x_setup_pdm(pinctrl, group);
-+		break;
-+	case TAC5X1X_FUNC_IRQ:
-+		ret = tac5x1x_setup_irq(pinctrl, group);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static int tac5x1x_gpio_set_direction(struct pinctrl_dev *pctldev,
-+				      struct pinctrl_gpio_range *range,
-+				      unsigned int offset, bool input)
-+{
-+	int ret;
-+	u32 val;
-+	struct tac5x1x_pin *priv;
-+	struct device *parent;
-+
-+	priv = pinctrl_dev_get_drvdata(pctldev);
-+	parent = priv->dev->parent;
-+
-+	dev_dbg(priv->dev, "Setting gpio offset=%s to %s\n",
-+		tac5x1x_pin_pins[offset].name, input ? "input" : "output");
-+
-+	ret = pm_runtime_resume_and_get(parent);
++	ret = regmap_multi_reg_read(tac5x1x->tac5x1x->regmap,
++				    tac5x1x->irqinfo.latch_regs,
++				    tac5x1x->irqinfo.latch_data, latch_count);
 +	if (ret) {
-+		dev_err(priv->dev, "Failed to resume for direction: %d\n", ret);
-+		return ret;
++		dev_err(dev,
++			"interrupt: latch register read failed");
++		return IRQ_NONE;
 +	}
 +
-+	val = (input ? TAC5X1X_GPIO_GPI : TAC5X1X_GPIO_GPO) <<
-+		TAC5X1X_GPIOX_CFG_SHFT;
-+
-+	switch (offset) {
-+	case PIN_GPIO1:
-+	case PIN_GPIO2:
-+		ret = regmap_update_bits(priv->regmap,
-+					 pin_to_reg[offset],
-+					 TAC5X1X_GPIOX_CFG_MASK,
-+					 val);
-+		break;
-+	case PIN_GPO1:
-+		if (input) {
-+			ret = -EOPNOTSUPP;
-+			break;
-+		}
-+		ret = regmap_update_bits(priv->regmap, pin_to_reg[offset],
-+					 TAC5X1X_GPIOX_CFG_MASK, val);
-+		break;
-+	case PIN_GPI1:
-+		if (!input) {
-+			ret = -EOPNOTSUPP;
-+			break;
-+		}
-+		ret = regmap_update_bits(priv->regmap, pin_to_reg[offset],
-+					 TAC5X1X_GPI1_EN_MASK, TAC5X1X_GPI1_EN_MASK);
-+		break;
-+	case PIN_GPI2A:
-+		if (!input) {
-+			ret = -EOPNOTSUPP;
-+			break;
-+		}
-+		ret = regmap_update_bits(priv->regmap, pin_to_reg[offset],
-+					 TAC5X1X_GPI2_EN_MASK, TAC5X1X_GPI2_EN_MASK);
-+		break;
-+	default:
-+		ret = -EOPNOTSUPP;
-+		break;
++	for (i = 0; i < latch_count; i++) {
++		dev_dbg(dev, "reg=0x%0x, val=0x%02x",
++			tac5x1x->irqinfo.latch_regs[i],
++			tac5x1x->irqinfo.latch_data[i]);
++		latch_set |= tac5x1x->irqinfo.latch_data[i] & 0xff;
 +	}
-+	if (ret)
-+		dev_err(priv->dev, "Failed to set gpio%d direction: %d\n",
-+			offset + 1, ret);
 +
-+	pm_runtime_mark_last_busy(parent);
-+	pm_runtime_put_autosuspend(parent);
++	if (!latch_set)
++		return IRQ_NONE;
 +
-+	return ret;
++	for (i = 0; i < latch_count; i++) {
++		if (!tac5x1x->irqinfo.latch_data[i])
++			continue;
++		process_one_interrupt(tac5x1x, i,
++				      tac5x1x->irqinfo.latch_data[i]);
++		tac5x1x->irqinfo.latch_data[i] = 0;
++	}
++
++	return IRQ_HANDLED;
 +}
 +
-+static int tac5x1x_gpio_request_enable(struct pinctrl_dev *pctldev,
-+				       struct pinctrl_gpio_range *range,
-+				       unsigned int offset)
++static s32 tac5x1x_register_interrupt(struct tac5x1x_priv *tac5x1x)
 +{
-+	return tac5x1x_pin_set_mux(pctldev, TAC5X1X_FUNC_GPIO, offset);
-+}
++	struct device_node *np;
++	s32 ret, latch_count, i;
++	u32 *latch_regs;
++	u8 *latch_data;
++	struct device *dev;
 +
-+static void tac5x1x_gpio_disable_free(struct pinctrl_dev *pctldev,
-+				      struct pinctrl_gpio_range *range,
-+				      unsigned int offset)
-+{
-+	struct tac5x1x_pin *priv = pinctrl_dev_get_drvdata(pctldev);
-+	struct device *parent = priv->dev->parent;
-+	int ret;
++	dev = tac5x1x->tac5x1x->dev;
++	np = dev->of_node;
++	latch_count = ARRAY_SIZE(intr_info_list);
 +
-+	/* Ensure parent device is resumed before register access */
-+	ret = pm_runtime_resume_and_get(parent);
-+	if (ret) {
-+		dev_warn(priv->dev, "PM resume failed for gpio_disable_free: %d (ignoring)\n", ret);
-+		return;
++	tac5x1x->irqinfo.irq = of_irq_get(np, 0);
++	if (tac5x1x->irqinfo.irq < 0) {
++		dev_dbg(dev, "No IRQ configured, running without interrupts\n");
++		return 0; /* Not an error - interrupts are optional */
 +	}
 +
-+	regmap_update_bits(priv->regmap, pin_to_reg[offset],
-+			   TAC5X1X_GPIOX_CFG_MASK, 0);
-+
-+	pm_runtime_mark_last_busy(parent);
-+	pm_runtime_put_autosuspend(parent);
-+}
-+
-+static const struct pinmux_ops tac5x1x_pin_mux_ops = {
-+	.get_functions_count	= tac5x1x_pin_get_func_count,
-+	.get_function_name	= tac5x1x_pin_get_func_name,
-+	.get_function_groups	= tac5x1x_pin_get_func_groups,
-+
-+	.set_mux		= tac5x1x_pin_set_mux,
-+
-+	.gpio_request_enable	= tac5x1x_gpio_request_enable,
-+	.gpio_disable_free	= tac5x1x_gpio_disable_free,
-+	.gpio_set_direction	= tac5x1x_gpio_set_direction,
-+
-+	.strict			= true,
-+};
-+
-+static int tac5x1x_pin_config_get(struct pinctrl_dev *pctldev,
-+				  u32 pin, unsigned long *config)
-+{
-+	struct tac5x1x_pin *priv = pinctrl_dev_get_drvdata(pctldev);
-+	struct device *parent = priv->dev->parent;
-+	u32 param = pinconf_to_config_param(*config);
-+	u32 reg, value, drive_mode;
-+	int ret;
-+
-+	ret = pm_runtime_resume_and_get(parent);
-+	if (ret) {
-+		dev_err(priv->dev, "Failed to resume for config: %d\n", ret);
-+		return ret;
-+	}
-+
-+	if (pin >= TAC5X1X_MAX_PINS) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	dev_dbg(priv->dev, "Get config for %s, param=%d\n",
-+		tac5x1x_pin_pins[pin].name, param);
-+
-+	reg = pin_to_reg[pin];
-+	ret = regmap_read(priv->regmap, reg, &value);
-+	if (ret) {
-+		dev_err(priv->dev, "Failed to get config: %d\n", ret);
-+		goto out;
-+	}
-+
-+	drive_mode = (value & TAC5X1X_GPIOX_DRV_MASK) >> TAC5X1X_GPIOX_DRV_SHFT;
-+	switch (drive_mode) {
-+	case TAC5X1X_GPIO_DRV_HIZ:
-+		*config = pinconf_to_config_packed(PIN_CONFIG_BIAS_HIGH_IMPEDANCE, 1);
-+		break;
-+	case TAC5X1X_GPIO_DRV_ALAH:
-+		*config = pinconf_to_config_packed(PIN_CONFIG_DRIVE_PUSH_PULL, 1);
-+		break;
-+	case TAC5X1X_GPIO_DRV_ALWH:
-+		*config = pinconf_to_config_packed(PIN_CONFIG_BIAS_PULL_UP, 1);
-+		break;
-+	case TAC5X1X_GPIO_DRV_ALHIZ:
-+		*config = pinconf_to_config_packed(PIN_CONFIG_DRIVE_OPEN_DRAIN, 1);
-+		break;
-+	case TAC5X1X_GPIO_DRV_WLAH:
-+		*config = pinconf_to_config_packed(PIN_CONFIG_BIAS_PULL_DOWN, 1);
-+		break;
-+	case TAC5X1X_GPIO_DRV_HIZAH:
-+		*config = pinconf_to_config_packed(PIN_CONFIG_DRIVE_OPEN_SOURCE, 1);
-+		break;
-+	default:
-+		ret = -EOPNOTSUPP;
-+		goto out;
-+	}
-+	ret = 0;
-+out:
-+	pm_runtime_mark_last_busy(parent);
-+	pm_runtime_put_autosuspend(parent);
-+	return ret;
-+}
-+
-+static int tac5x1x_pin_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
-+				  unsigned long *configs, unsigned int num_configs)
-+{
-+	struct tac5x1x_pin *priv = pinctrl_dev_get_drvdata(pctldev);
-+	unsigned int val, param;
-+	int ret = 0;
-+
-+	/*
-+	 * push-pull	-> active low, active high
-+	 * pull up	-> active low, weak high (on-chip pullup)
-+	 * pull down	-> weak low, active high (on-chip pulldown)
-+	 * open-drain	-> active low, hiz
-+	 * open-source	-> hiz active low
-+	 */
-+	while (num_configs) {
-+		val = pinconf_to_config_argument(*configs);
-+		param = pinconf_to_config_param(*configs);
-+		dev_dbg(priv->dev,
-+			"set config for name=%s (pin=%d), param=%u val=%u\n",
-+			tac5x1x_pin_pins[pin].name, pin, param, val);
-+
-+		switch (param) {
-+		case PIN_CONFIG_DRIVE_PUSH_PULL:
-+			val = TAC5X1X_GPIO_DRV_ALAH << TAC5X1X_GPIOX_DRV_SHFT;
-+			break;
-+		case PIN_CONFIG_BIAS_PULL_UP:
-+			val = TAC5X1X_GPIO_DRV_ALWH << TAC5X1X_GPIOX_DRV_SHFT;
-+			break;
-+		case PIN_CONFIG_BIAS_PULL_DOWN:
-+			val = TAC5X1X_GPIO_DRV_WLAH << TAC5X1X_GPIOX_DRV_SHFT;
-+			break;
-+		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-+			val = TAC5X1X_GPIO_DRV_ALHIZ << TAC5X1X_GPIOX_DRV_SHFT;
-+			break;
-+		case PIN_CONFIG_DRIVE_OPEN_SOURCE:
-+			val = TAC5X1X_GPIO_DRV_HIZAH << TAC5X1X_GPIOX_DRV_SHFT;
-+			break;
-+		case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
-+			val = TAC5X1X_GPIO_DRV_HIZ << TAC5X1X_GPIOX_DRV_SHFT;
-+			break;
-+		default:
-+			ret = -EOPNOTSUPP;
-+			break;
-+		}
-+
-+		/* input pin can't have driver strength */
-+		if (pin != PIN_GPI1 && pin != PIN_GPI2A) {
-+			ret = regmap_update_bits(priv->regmap, pin_to_reg[pin],
-+						 TAC5X1X_GPIOX_DRV_MASK, val);
-+			if (ret)
-+				dev_err(priv->dev,
-+					"pinconfig error for %s(%x), err=%d",
-+					tac5x1x_pin_pins[pin].name,
-+					pin_to_reg[pin], ret);
-+		}
-+
-+		if (ret)
-+			break;
-+
-+		configs++;
-+		num_configs--;
-+	}
-+
-+	return ret;
-+}
-+
-+static int tac5x1x_pin_config_group_get(struct pinctrl_dev *pctldev,
-+					unsigned int selector, unsigned long *config)
-+{
-+	int i, ret = 0;
-+
-+	for (i = 0; i < tac5x1x_pin_groups[selector].npins; ++i) {
-+		ret = tac5x1x_pin_config_get(pctldev,
-+					     tac5x1x_pin_groups[selector].pins[i],
-+					     config);
-+		if (ret)
-+			break;
-+	}
-+
-+	return ret;
-+}
-+
-+static int tac5x1x_pin_config_group_set(struct pinctrl_dev *pctldev,
-+					unsigned int selector,
-+					unsigned long *configs,
-+					unsigned int num_configs)
-+{
-+	int i, ret = 0;
-+
-+	for (i = 0; i < tac5x1x_pin_groups[selector].npins; ++i) {
-+		ret = tac5x1x_pin_config_set(pctldev,
-+					     tac5x1x_pin_groups[selector].pins[i],
-+					     configs, num_configs);
-+		if (ret)
-+			break;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pinconf_ops tac5x1x_pin_conf_ops = {
-+	.is_generic		= true,
-+
-+	.pin_config_get		= tac5x1x_pin_config_get,
-+	.pin_config_set		= tac5x1x_pin_config_set,
-+	.pin_config_group_get	= tac5x1x_pin_config_group_get,
-+	.pin_config_group_set	= tac5x1x_pin_config_group_set,
-+};
-+
-+static const struct pinctrl_desc tac5x1x_pin_desc = {
-+	.name		= "tac5x1x-pinctrl",
-+	.owner		= THIS_MODULE,
-+
-+	.pins		= tac5x1x_pin_pins,
-+	.npins		= ARRAY_SIZE(tac5x1x_pin_pins),
-+
-+	.pctlops	= &tac5x1x_pin_group_ops,
-+	.pmxops		= &tac5x1x_pin_mux_ops,
-+	.confops	= &tac5x1x_pin_conf_ops,
-+};
-+
-+static int tac5x1x_gpio_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct tac5x1x_pin *priv = gpiochip_get_data(chip);
-+	struct device *parent = priv->dev->parent;
-+	unsigned int val;
-+	int ret;
-+
-+	ret = pm_runtime_resume_and_get(parent);
-+	if (ret) {
-+		dev_err(priv->dev, "Failed to resume for get: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = regmap_read(priv->regmap, TAC5X1X_GPIOVAL, &val);
-+	if (ret) {
-+		dev_err(priv->dev, "Failed to get gpio%d: %d\n", offset + 1, ret);
-+		goto done_gpio_get;
-+	}
-+
-+	switch (offset) {
-+	case PIN_GPIO1:
-+	case PIN_GPIO2:
-+		ret = !!(val & BIT(3 - offset));
-+		break;
-+	case PIN_GPI1:
-+		ret = !!(val & BIT(1));
-+		break;
-+	case PIN_GPI2A:
-+		ret = !!(val & BIT(2));
-+		break;
-+	case PIN_GPO1:
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+done_gpio_get:
-+	pm_runtime_mark_last_busy(parent);
-+	pm_runtime_put_autosuspend(parent);
-+
-+	return ret;
-+}
-+
-+static int tac5x1x_gpio_set(struct gpio_chip *chip, unsigned int offset,
-+			    int value)
-+{
-+	struct tac5x1x_pin *priv = gpiochip_get_data(chip);
-+	struct device *parent = priv->dev->parent;
-+	u32 mask, val;
-+	int ret;
-+
-+	dev_dbg(priv->dev, "setting %s to %d\n",
-+		tac5x1x_pin_pins[offset].name, value);
-+
-+	ret = pm_runtime_resume_and_get(parent);
-+	if (ret)
-+		return ret;
-+
-+	switch (offset) {
-+	case PIN_GPIO1:
-+	case PIN_GPIO2:
-+	case PIN_GPO1:
-+		mask = BIT(7 - offset);
-+		val = value ? mask : 0;
-+		ret = regmap_update_bits(priv->regmap, TAC5X1X_GPIOVAL, mask,
-+					 val);
-+		break;
-+	case PIN_GPI1:
-+	case PIN_GPI2A:
-+		dev_err(priv->dev, "gpi1/2a are input only, set not supported\n");
-+		ret = -EINVAL;
-+		break;
-+	default:
-+		ret = -EOPNOTSUPP;
-+		break;
-+	}
-+
-+	pm_runtime_mark_last_busy(parent);
-+	pm_runtime_put_autosuspend(parent);
-+
-+	return ret;
-+}
-+
-+static int tac5x1x_gpio_direction_in(struct gpio_chip *chip,
-+				     unsigned int offset)
-+{
-+	struct tac5x1x_pin *priv = gpiochip_get_data(chip);
-+
-+	dev_dbg(priv->dev, "setting %s to input",
-+		tac5x1x_pin_pins[offset].name);
-+
-+	/* input is not supported in GPO1 pin */
-+	if (offset == PIN_GPO1) {
-+		dev_err(priv->dev, "gpo1 is output only, read is not supported\n");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return pinctrl_gpio_direction_input(chip, offset);
-+}
-+
-+static int tac5x1x_gpio_direction_out(struct gpio_chip *chip,
-+				      unsigned int offset, int value)
-+{
-+	int ret;
-+
-+	ret = tac5x1x_gpio_set(chip, offset, value);
-+	if (ret)
-+		return ret;
-+
-+	return pinctrl_gpio_direction_output(chip, offset);
-+}
-+
-+static int tac5x1x_gpio_add_pin_ranges(struct gpio_chip *chip)
-+{
-+	struct tac5x1x_pin *priv = gpiochip_get_data(chip);
-+	int ret;
-+
-+	dev_dbg(priv->dev, "gpio add range");
-+	ret = gpiochip_add_pin_range(&priv->gpio_chip, priv->gpio_chip.label,
-+				     0, 0, TAC5X1X_NUM_GPIO_PINS);
-+	if (ret)
-+		dev_err(priv->dev, "Failed to add GPIO pin range: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int tac5x1x_pin_probe(struct platform_device *pdev)
-+{
-+	struct tac5x1x *tac5x1x = dev_get_drvdata(pdev->dev.parent);
-+	struct tac5x1x_pin *priv;
-+	struct pinctrl_dev *pctldev;
-+	struct fwnode_handle *fwnode = dev_fwnode(tac5x1x->dev);
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
++	latch_regs = devm_kzalloc(dev, latch_count * sizeof(u32),
++				  GFP_KERNEL);
++	latch_data = devm_kzalloc(dev, latch_count * sizeof(u8),
++				  GFP_KERNEL);
++	if (!latch_data || !latch_regs)
 +		return -ENOMEM;
 +
-+	priv->dev = &pdev->dev;
-+	priv->regmap = tac5x1x->regmap;
-+	priv->parent = tac5x1x;
++	for (i = 0; i < latch_count; i++)
++		latch_regs[i] = intr_info_list[i].reg;
 +
-+	priv->gpio_chip.request = gpiochip_generic_request;
-+	priv->gpio_chip.free = gpiochip_generic_free;
-+	priv->gpio_chip.direction_input = tac5x1x_gpio_direction_in;
-+	priv->gpio_chip.direction_output = tac5x1x_gpio_direction_out;
-+	priv->gpio_chip.add_pin_ranges = tac5x1x_gpio_add_pin_ranges;
-+	priv->gpio_chip.get = tac5x1x_gpio_get;
-+	priv->gpio_chip.set = tac5x1x_gpio_set;
-+	priv->gpio_chip.label = dev_name(priv->dev);
-+	priv->gpio_chip.parent = priv->dev;
-+	priv->gpio_chip.can_sleep = true;
-+	priv->gpio_chip.base = -1; /* no base*/
-+	priv->gpio_chip.ngpio = TAC5X1X_NUM_GPIO_PINS;
++	tac5x1x->irqinfo.latch_regs = latch_regs;
++	tac5x1x->irqinfo.latch_data = latch_data;
++	/* Clear any pending interrupts before enabling */
++	regmap_write(tac5x1x->tac5x1x->regmap, TAC5X1X_INT, 0x11);
 +
-+	if (is_of_node(fwnode)) {
-+		fwnode = fwnode_get_named_child_node(fwnode, "pinctrl");
++	ret = devm_request_threaded_irq(dev, tac5x1x->irqinfo.irq,
++					NULL, irq_thread_func,
++					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
++					"tac5x1x-irq", tac5x1x);
++	if (ret)
++		dev_err(dev, "Failed to request IRQ %d: %d\n",
++			tac5x1x->irqinfo.irq, ret);
 +
-+		if (fwnode && !fwnode->dev)
-+			fwnode->dev = priv->dev;
++	return ret;
++}
++
++#define IS_DAC_CH(ch)	((ch) & 0x0f)
++#define IS_ADC_CH(ch)	((ch) & 0xf0)
++
++/* Delay in ms before adjusting power state after last channel change */
++#define TAC5X1X_POWER_SETTLE_MS	100
++
++/*
++ * Delayed work function that handles power state adjustments.
++ *
++ * This function is scheduled after any channel enable/disable event.
++ * It waits for the hardware to settle, then adjusts power state based
++ * on which channels are currently enabled. Using mod_delayed_work()
++ * ensures the timer is reset on each new event.
++ */
++static void post_powerup_work(struct work_struct *work)
++{
++	u8 mask;
++	u8 pwr_cfg;
++	u32 input_mode = 0;
++	bool ch1_is_pdm, ch2_is_pdm;
++	struct tac5x1x_priv *tac5x1x =
++		container_of(work, struct tac5x1x_priv, powerup_work.work);
++	struct snd_soc_component *component = tac5x1x->component;
++
++	dev_dbg(component->dev, "POST_POWERUP_WORK ch_enabled=0x%02x\n",
++		tac5x1x->ch_enabled);
++
++	mutex_lock(&tac5x1x->ch_lock);
++
++	/* Clear the power-up flag so next power event can write PWR_CFG */
++	tac5x1x->pwr_up_done = false;
++
++	/* Write the current channel enable state */
++	snd_soc_component_write(component, TAC5X1X_CH_EN, tac5x1x->ch_enabled);
++
++	/* Check if PDM mode is selected via INTF4 register */
++	regmap_read(tac5x1x->tac5x1x->regmap, TAC5X1X_INTF4, &input_mode);
++	ch1_is_pdm = !!(input_mode & BIT(7));
++	ch2_is_pdm = !!(input_mode & BIT(6));
++
++	dev_dbg(component->dev, "INTF4=0x%02x ch1_pdm=%d ch2_pdm=%d\n",
++		input_mode, ch1_is_pdm, ch2_is_pdm);
++
++	mask = TAC5X1X_PWR_CFG_ADC_PDZ | TAC5X1X_PWR_CFG_MICBIAS |
++	       TAC5X1X_PWR_CFG_DAC_PDZ;
++	pwr_cfg = mask;
++
++	if (IS_DAC_CH(tac5x1x->ch_enabled) == 0)
++		pwr_cfg &= ~TAC5X1X_PWR_CFG_DAC_PDZ;
++
++	/*
++	 * Only disable MICBIAS if ALL enabled ADC channels are in PDM mode
++	 */
++	bool ch1_enabled = !!(tac5x1x->ch_enabled &
++			      (TAC5X1X_CH_EN_ADC_CH1 | TAC5X1X_CH_EN_DAC_CH1));
++	bool ch2_enabled = !!(tac5x1x->ch_enabled &
++			      (TAC5X1X_CH_EN_ADC_CH2 | TAC5X1X_CH_EN_DAC_CH2));
++	bool need_micbias = false;
++
++	if ((tac5x1x->ch_enabled & TAC5X1X_CH_EN_ADC_CH1) && !ch1_is_pdm)
++		need_micbias = true;
++	if ((tac5x1x->ch_enabled & TAC5X1X_CH_EN_ADC_CH2) && !ch2_is_pdm)
++		need_micbias = true;
++
++	if (!need_micbias && ((ch1_is_pdm && ch1_enabled) || (ch2_is_pdm && ch2_enabled))) {
++		/* PDM mode for enabled channels - no MICBIAS needed */
++		pwr_cfg &= ~TAC5X1X_PWR_CFG_MICBIAS;
++	}
++	if (IS_ADC_CH(tac5x1x->ch_enabled) == 0) {
++		/* No ADC channels enabled - disable ADC power and MICBIAS */
++		pwr_cfg &= ~TAC5X1X_PWR_CFG_ADC_PDZ;
++		pwr_cfg &= ~TAC5X1X_PWR_CFG_MICBIAS;
 +	}
 +
-+	priv->gpio_chip.fwnode = fwnode;
++	dev_dbg(component->dev, "PWR_CFG mask=0x%02x val=0x%02x\n", mask, pwr_cfg);
++	snd_soc_component_update_bits(component, TAC5X1X_PWR_CFG, mask, pwr_cfg);
++	mutex_unlock(&tac5x1x->ch_lock);
++}
 +
-+	device_set_node(priv->dev, fwnode);
++static int tac5x1x_enable_channel_unlocked(struct snd_soc_component *comp,
++					   bool is_adc, s32 right)
++{
++	s32 ret;
++	u8 mask_dev;
++	u8 mask;
++	struct tac5x1x_priv *tac5x1x;
 +
-+	pctldev = devm_pinctrl_register(priv->dev, &tac5x1x_pin_desc, priv);
-+	if (IS_ERR(pctldev))
-+		return dev_err_probe(priv->dev, PTR_ERR(pctldev),
-+				     "Failed to register pinctrl\n");
++	tac5x1x = snd_soc_component_get_drvdata(comp);
++	if (right) {
++		mask_dev = TAC5X1X_CH_EN_ADC_CH2 | TAC5X1X_CH_EN_DAC_CH2;
++		mask = is_adc ? TAC5X1X_CH_EN_ADC_CH2 : TAC5X1X_CH_EN_DAC_CH2;
++	} else {
++		mask_dev = TAC5X1X_CH_EN_ADC_CH1 | TAC5X1X_CH_EN_DAC_CH1;
++		mask = is_adc ? TAC5X1X_CH_EN_ADC_CH1 : TAC5X1X_CH_EN_DAC_CH1;
++	}
++	tac5x1x->ch_enabled |= mask;
++	ret = snd_soc_component_update_bits(comp, TAC5X1X_CH_EN,
++					    mask_dev, mask_dev);
 +
-+	ret = devm_gpiochip_add_data(priv->dev, &priv->gpio_chip, priv);
-+	if (ret)
-+		return dev_err_probe(priv->dev, ret,
-+				     "Failed to register gpiochip\n");
++	return ret;
++}
++
++static int tac5x1x_disable_channel_unlocked(struct snd_soc_component *comp,
++					    bool is_adc, s32 right)
++{
++	u8 mask;
++	s32 ret;
++	struct tac5x1x_priv *tac5x1x;
++
++	tac5x1x = snd_soc_component_get_drvdata(comp);
++	mask = is_adc ?
++		(right ? TAC5X1X_CH_EN_ADC_CH2 : TAC5X1X_CH_EN_ADC_CH1) :
++		(right ? TAC5X1X_CH_EN_DAC_CH2 : TAC5X1X_CH_EN_DAC_CH1);
++	tac5x1x->ch_enabled &= ~mask;
++	ret = snd_soc_component_update_bits(comp, TAC5X1X_CH_EN, mask, 0);
++
++	return ret;
++}
++
++/*
++ * When ADC and DAC are enabled with time delay between them
++ * the one which is started latter doesn't work because of HW bug.
++ * So DAC and ADC events with delayed work is added to follow a
++ * particular powerup sequence.
++ *
++ * Power-up: Immediately power up both ADC and DAC blocks together.
++ * Power-down: Defer to delayed work to avoid races with quick on/off cycles.
++ *
++ * Using mod_delayed_work() ensures the timer is reset on each event,
++ * so rapid on/off cycles are handled correctly.
++ */
++static int tac5x1x_dac_event(struct snd_soc_dapm_widget *w,
++			     struct snd_kcontrol *kcontrol, int event)
++{
++	u8 pwr_cfg;
++	int right = w->shift;
++	int ret = 0;
++	struct snd_soc_component *component =
++		snd_soc_dapm_to_component(w->dapm);
++	struct tac5x1x_priv *tac5x1x = snd_soc_component_get_drvdata(component);
++
++	dev_dbg(component->dev, "DAC_EVENT event=%d right=%d\n", event, right);
++
++	mutex_lock(&tac5x1x->ch_lock);
++
++	switch (event) {
++	case SND_SOC_DAPM_POST_PMU:
++		ret = tac5x1x_enable_channel_unlocked(component, false, right);
++		if (ret < 0) {
++			dev_err(component->dev,
++				"Failed to update enable DAC channels\n");
++			break;
++		}
++
++		/* Power up both ADC and DAC together due to HW bug */
++		if (!tac5x1x->pwr_up_done) {
++			pwr_cfg = TAC5X1X_PWR_CFG_DAC_PDZ |
++				TAC5X1X_PWR_CFG_ADC_PDZ |
++				TAC5X1X_PWR_CFG_MICBIAS;
++			ret = snd_soc_component_write(component,
++						      TAC5X1X_PWR_CFG,
++						      pwr_cfg);
++			if (ret) {
++				dev_err(component->dev,
++					"Failed to power up DAC\n");
++				tac5x1x_disable_channel_unlocked(component,
++								 false, right);
++				/* Mark done even on error to prevent retry loop */
++				tac5x1x->pwr_up_done = true;
++				break;
++			}
++			tac5x1x->pwr_up_done = true;
++		}
++		mod_delayed_work(system_wq, &tac5x1x->powerup_work,
++				 msecs_to_jiffies(TAC5X1X_POWER_SETTLE_MS));
++		break;
++
++	case SND_SOC_DAPM_PRE_PMD:
++		tac5x1x_disable_channel_unlocked(component, false, right);
++		tac5x1x->pwr_up_done = false;
++		/*
++		 * Don't power down immediately - schedule delayed work to
++		 * handle power state. This avoids races with quick on/off.
++		 */
++		mod_delayed_work(system_wq, &tac5x1x->powerup_work,
++				 msecs_to_jiffies(TAC5X1X_POWER_SETTLE_MS));
++		break;
++	}
++	mutex_unlock(&tac5x1x->ch_lock);
++
++	return ret;
++}
++
++static int tac5x1x_adc_event(struct snd_soc_dapm_widget *w,
++			     struct snd_kcontrol *kcontrol, int event)
++{
++	u8 pwr_cfg;
++	u32 right = w->shift;
++	s32 ret = 0;
++	struct snd_soc_component *c = snd_soc_dapm_to_component(w->dapm);
++	struct tac5x1x_priv *tac5x1x = snd_soc_component_get_drvdata(c);
++
++	dev_dbg(c->dev, "ADC_EVENT event=%d right=%d\n", event, right);
++
++	mutex_lock(&tac5x1x->ch_lock);
++	switch (event) {
++	case SND_SOC_DAPM_POST_PMU:
++		ret = tac5x1x_enable_channel_unlocked(c, true, right);
++		if (ret < 0) {
++			dev_err(c->dev,
++				"Failed to enable ADC/PDM channel\n");
++			break;
++		}
++
++		/* Power up ADC, MICBIAS, and DAC together */
++		/* Only write if not already done by a previous event */
++		if (!tac5x1x->pwr_up_done) {
++			pwr_cfg = TAC5X1X_PWR_CFG_ADC_PDZ |
++				  TAC5X1X_PWR_CFG_MICBIAS |
++				  TAC5X1X_PWR_CFG_DAC_PDZ;
++			ret = snd_soc_component_write(c, TAC5X1X_PWR_CFG, pwr_cfg);
++			if (ret) {
++				dev_err(c->dev, "Failed to power up\n");
++				tac5x1x_disable_channel_unlocked(c, true, right);
++				/* Mark done even on error to prevent retry loop */
++				tac5x1x->pwr_up_done = true;
++				break;
++			}
++			tac5x1x->pwr_up_done = true;
++		}
++
++		mod_delayed_work(system_wq, &tac5x1x->powerup_work,
++				 msecs_to_jiffies(TAC5X1X_POWER_SETTLE_MS));
++		break;
++
++	case SND_SOC_DAPM_PRE_PMD:
++		tac5x1x_disable_channel_unlocked(c, true, right);
++		/* Clear power-up flag when disabling channels */
++		tac5x1x->pwr_up_done = false;
++		/* Power down ADC if no ADC channels active */
++		if (IS_ADC_CH(tac5x1x->ch_enabled) == 0)
++			snd_soc_component_update_bits(c, TAC5X1X_PWR_CFG,
++						      TAC5X1X_PWR_CFG_ADC_PDZ |
++						      TAC5X1X_PWR_CFG_MICBIAS,
++						      0);
++		break;
++	}
++	mutex_unlock(&tac5x1x->ch_lock);
++
++	return ret;
++}
++
++/*
++ * ADC full-scale selection
++ * 2/10-VRMS is for TAX52xx/TAX51xx devices
++ * 4/5-VRMS is for TAX54xx/TAX53xx devices
++ */
++static const char *const tac5x1x_adc_fscale_text[] = {"2/10-VRMS",
++	"4/5-VRMS"};
++
++static SOC_ENUM_SINGLE_DECL(tac5x1x_adc1_fscale_enum, TAC5X1X_ADCCH1C0, 1,
++		tac5x1x_adc_fscale_text);
++static SOC_ENUM_SINGLE_DECL(tac5x1x_adc2_fscale_enum, TAC5X1X_ADCCH2C0, 1,
++		tac5x1x_adc_fscale_text);
++
++static const struct snd_kcontrol_new tac5x1x_dapm_adc1_fscale_control[] = {
++	SOC_DAPM_ENUM("ADC1 FSCALE MUX", tac5x1x_adc1_fscale_enum),
++};
++
++static const struct snd_kcontrol_new tac5x1x_dapm_adc2_fscale_control[] = {
++	SOC_DAPM_ENUM("ADC2 FSCALE MUX", tac5x1x_adc2_fscale_enum),
++};
++
++static const char *const pdmclk_text[] = {
++	"2.8224 MHz or 3.072 MHz", "1.4112 MHz or 1.536 MHz",
++	"705.6 kHz or 768 kHz", "5.6448 MHz or 6.144 MHz"};
++
++static SOC_ENUM_SINGLE_DECL(pdmclk_select_enum, TAC5X1X_CNTCLK0, 6,
++		pdmclk_text);
++
++/* Digital Volume control. From -80 to 47 dB in 0.5 dB steps */
++static DECLARE_TLV_DB_SCALE(record_dig_vol_tlv, -8000, 50, 0);
++
++/* Gain Calibration control. From -0.8db to 0.7db dB in 0.1 dB steps */
++static DECLARE_TLV_DB_MINMAX(record_gain_cali_tlv, -80, 70);
++
++/* Analog Level control. From -12 to 24 dB in 6 dB steps */
++static DECLARE_TLV_DB_SCALE(playback_analog_level_tlv, -1200, 600, 0);
++
++/* Digital Volume control. From -100 to 27 dB in 0.5 dB steps */
++static DECLARE_TLV_DB_SCALE(dac_dig_vol_tlv, -10000, 50, 0); // mute ?
++
++/* Gain Calibration control. From -0.8db to 0.7db dB in 0.1 dB steps */
++static DECLARE_TLV_DB_MINMAX(playback_gain_cali_tlv, -80, 70);
++
++/* Output Source Selection */
++static const char *const tac5x1x_output_source_text[] = {
++	"Disabled",
++	"DAC Input",
++	"Analog Bypass",
++	"DAC + Analog Bypass Mix",
++	"DAC -> OUTxP, INxP -> OUTxM",
++	"INxM -> OUTxP, DAC -> OUTxM",
++};
++
++static SOC_ENUM_SINGLE_DECL(tac5x1x_out1_source_enum, TAC5X1X_OUT1CFG0, 5,
++		tac5x1x_output_source_text);
++static SOC_ENUM_SINGLE_DECL(tac5x1x_out2_source_enum, TAC5X1X_OUT2CFG0, 5,
++		tac5x1x_output_source_text);
++
++static const struct snd_kcontrol_new tac5x1x_dapm_out1_source_control[] = {
++	SOC_DAPM_ENUM("OUT1X MUX", tac5x1x_out1_source_enum),
++};
++
++static const struct snd_kcontrol_new tac5x1x_dapm_out2_source_control[] = {
++	SOC_DAPM_ENUM("OUT2X MUX", tac5x1x_out2_source_enum),
++};
++
++/* Output Config Selection */
++static const char *const tac5x1x_output_config_text[] = {
++	"Differential",
++	"Stereo Single-ended",
++	"Mono Single-ended at OUTxP only",
++	"Mono Single-ended at OUTxM only",
++	"Pseudo differential with OUTxM as VCOM",
++	"Pseudo differential with OUTxM as external sensing",
++	"Pseudo differential with OUTxP as VCOM",
++};
++
++static const char *const tac5x1x_output2_config_text[] = {
++	"Differential",
++	"Stereo Single-ended",
++	"Mono Single-ended at OUTxP only",
++	"Mono Single-ended at OUTxM only",
++	"Pseudo differential with OUTxM as VCOM",
++	"Pseudo differential with OUTxP as VCOM",
++};
++
++static const s32 tac5x1x_output2_config_values[] = {
++	0, 1, 2, 3, 4, 6
++};
++
++static SOC_ENUM_SINGLE_DECL(tac5x1x_out1_config_enum, TAC5X1X_OUT1CFG0, 2,
++			tac5x1x_output_config_text);
++static SOC_VALUE_ENUM_SINGLE_DECL(tac5x1x_out2_config_enum,
++				  TAC5X1X_OUT2CFG0, 2, 0x7,
++				  tac5x1x_output2_config_text,
++				  tac5x1x_output2_config_values);
++
++static const struct snd_kcontrol_new tac5x1x_dapm_out1_config_control[] = {
++	SOC_DAPM_ENUM("OUT1X Config MUX", tac5x1x_out1_config_enum),
++};
++
++static const struct snd_kcontrol_new tac5x1x_dapm_out2_config_control[] = {
++	SOC_DAPM_ENUM("OUT2X Config MUX", tac5x1x_out2_config_enum),
++};
++
++static const char *const tac5x1x_wideband_text[] = {
++	"Audio BW 24-kHz",
++	"Wide BW 96-kHz",
++};
++
++static SOC_ENUM_SINGLE_DECL(tac5x1x_adc1_wideband_enum, TAC5X1X_ADCCH1C0, 0,
++		tac5x1x_wideband_text);
++static SOC_ENUM_SINGLE_DECL(tac5x1x_adc2_wideband_enum, TAC5X1X_ADCCH2C0, 0,
++		tac5x1x_wideband_text);
++static SOC_ENUM_SINGLE_DECL(tac5x1x_dac1_wideband_enum, TAC5X1X_OUT1CFG1, 0,
++		tac5x1x_wideband_text);
++static SOC_ENUM_SINGLE_DECL(tac5x1x_dac2_wideband_enum, TAC5X1X_OUT2CFG1, 0,
++		tac5x1x_wideband_text);
++
++static const char *const tac5x1x_tolerance_text[] = {
++	"AC Coupled with 100mVpp",
++	"AC/DC Coupled with 1Vpp",
++	"AC/DC Coupled with Rail-to-rail",
++};
++
++static SOC_ENUM_SINGLE_DECL(tac5x1x_adc1_tolerance_enum, TAC5X1X_ADCCH1C0, 2,
++		tac5x1x_tolerance_text);
++static SOC_ENUM_SINGLE_DECL(tac5x1x_adc2_tolerance_enum, TAC5X1X_ADCCH2C0, 2,
++		tac5x1x_tolerance_text);
++
++/* Output Drive Selection */
++static const char *const tac5x1x_output_driver_text[] = {
++	"Line-out",
++	"Headphone",
++	"4 ohm",
++	"FD Receiver/Debug",
++};
++
++static SOC_ENUM_SINGLE_DECL(out1p_driver_enum, TAC5X1X_OUT1CFG1, 6,
++		tac5x1x_output_driver_text);
++
++static SOC_ENUM_SINGLE_DECL(out2p_driver_enum, TAC5X1X_OUT2CFG1, 6,
++		tac5x1x_output_driver_text);
++
++static const struct snd_kcontrol_new tac5x1x_dapm_out1_driver_control[] = {
++	SOC_DAPM_ENUM("OUT1 driver MUX", out1p_driver_enum),
++};
++
++static const struct snd_kcontrol_new tac5x1x_dapm_out2_driver_control[] = {
++	SOC_DAPM_ENUM("OUT2 driver MUX", out2p_driver_enum),
++};
++
++/* Decimation Filter Selection */
++static const char *const decimation_filter_text[] = {
++	"Linear Phase", "Low Latency", "Ultra-low Latency"};
++
++static SOC_ENUM_SINGLE_DECL(decimation_filter_record_enum, TAC5X1X_DSP0, 6,
++			decimation_filter_text);
++static SOC_ENUM_SINGLE_DECL(decimation_filter_playback_enum, TAC5X1X_DSP1, 6,
++			    decimation_filter_text);
++
++static const struct snd_kcontrol_new tx_ch1_asi_switch =
++	SOC_DAPM_SINGLE("Capture Switch", TAC5X1X_PASITXCH1, 5, 1, 0);
++static const struct snd_kcontrol_new tx_ch2_asi_switch =
++	SOC_DAPM_SINGLE("Capture Switch", TAC5X1X_PASITXCH2, 5, 1, 0);
++static const struct snd_kcontrol_new tx_ch3_asi_switch =
++	SOC_DAPM_SINGLE("Capture Switch", TAC5X1X_PASITXCH3, 5, 1, 0);
++static const struct snd_kcontrol_new tx_ch4_asi_switch =
++	SOC_DAPM_SINGLE("Capture Switch", TAC5X1X_PASITXCH4, 5, 1, 0);
++
++static const struct snd_kcontrol_new rx_ch1_asi_switch =
++	SOC_DAPM_SINGLE("Switch", TAC5X1X_PASIRXCH1, 5, 1, 0);
++static const struct snd_kcontrol_new rx_ch2_asi_switch =
++	SOC_DAPM_SINGLE("Switch", TAC5X1X_PASIRXCH2, 5, 1, 0);
++
++static const char *const rx_ch5_asi_cfg_text[] = {
++	"Disable",
++	"DAC channel data",
++	"ADC channel output loopback",
++};
++
++static const char *const rx_ch6_asi_cfg_text[] = {
++	"Disable",
++	"DAC channel data",
++	"ADC channel output loopback",
++	"Channel Input to ICLA device",
++};
++
++static const char *const tx_ch5_asi_cfg_text[] = {
++	"Tristate",
++	"Input Channel Loopback data",
++	"Echo reference Channel data",
++};
++
++static const char *const tx_ch7_asi_cfg_text[] = {
++	"Tristate",
++	"Vbat_Wlby2,Temp_Wlby2",
++	"echo_ref_ch1,echo_ref_ch2",
++};
++
++static const char *const tx_ch8_asi_cfg_text[] = {
++	"Tristate",
++	"ICLA data",
++};
++
++static const char *const diag_cfg_text[] = {
++	"0mv", "30mv", "60mv", "90mv",
++	"120mv", "150mv", "180mv", "210mv",
++	"240mv", "270mv", "300mv", "330mv",
++	"360mv", "390mv", "420mv", "450mv",
++};
++
++static const char *const diag_cfg_gnd_text[] = {
++	"0mv", "60mv", "120mv", "180mv",
++	"240mv", "300mv", "360mv", "420mv",
++	"480mv", "540mv", "600mv", "660mv",
++	"720mv", "780mv", "840mv", "900mv",
++};
++
++static const char *const tac5x1x_tdm_slot_text[] = {
++	"Slot0", "Slot1", "Slot2", "Slot3",
++	"Slot4", "Slot5", "Slot6", "Slot7",
++	"Slot8", "Slot9", "Slot10", "Slot11",
++	"Slot12", "Slot13", "Slot14", "Slot15",
++	"Slot16", "Slot17", "Slot18", "Slot19",
++	"Slot20", "Slot21", "Slot22", "Slot23",
++	"Slot24", "Slot25", "Slot26", "Slot27",
++	"Slot28", "Slot29", "Slot30", "Slot31",
++};
++
++static SOC_ENUM_SINGLE_DECL(tx_ch5_asi_cfg_enum, TAC5X1X_PASITXCH5, 5,
++		tx_ch5_asi_cfg_text);
++static SOC_ENUM_SINGLE_DECL(tx_ch6_asi_cfg_enum, TAC5X1X_PASITXCH6, 5,
++		tx_ch5_asi_cfg_text);
++static SOC_ENUM_SINGLE_DECL(tx_ch7_asi_cfg_enum, TAC5X1X_PASITXCH7, 5,
++		tx_ch7_asi_cfg_text);
++static SOC_ENUM_SINGLE_DECL(tx_ch8_asi_cfg_enum, TAC5X1X_PASITXCH8, 5,
++		tx_ch8_asi_cfg_text);
++static SOC_ENUM_SINGLE_DECL(rx_ch5_asi_cfg_enum, TAC5X1X_PASIRXCH5, 5,
++		rx_ch5_asi_cfg_text);
++static SOC_ENUM_SINGLE_DECL(rx_ch6_asi_cfg_enum, TAC5X1X_PASIRXCH6, 5,
++		rx_ch6_asi_cfg_text);
++static SOC_ENUM_SINGLE_DECL(rx_ch7_asi_cfg_enum, TAC5X1X_PASIRXCH7, 5,
++		rx_ch6_asi_cfg_text);
++static SOC_ENUM_SINGLE_DECL(rx_ch8_asi_cfg_enum, TAC5X1X_PASIRXCH8, 5,
++		rx_ch6_asi_cfg_text);
++static SOC_ENUM_SINGLE_DECL(diag_cfg1_sht_term_enum, TAC5X1X_DIAG_CFG1, 4,
++		diag_cfg_text);
++static SOC_ENUM_SINGLE_DECL(diag_cfg1_vbat_in_enum, TAC5X1X_DIAG_CFG1, 0,
++		diag_cfg_text);
++static SOC_ENUM_SINGLE_DECL(diag_cfg2_sht_gnd_enum, TAC5X1X_DIAG_CFG2, 4,
++		diag_cfg_gnd_text);
++static SOC_ENUM_SINGLE_DECL(diag_cfg2_micbias, TAC5X1X_DIAG_CFG2, 0,
++		diag_cfg_text);
++
++static SOC_ENUM_SINGLE_DECL(rx_ch1_slot_enum, TAC5X1X_PASIRXCH1, 0,
++		tac5x1x_tdm_slot_text);
++static SOC_ENUM_SINGLE_DECL(rx_ch2_slot_enum, TAC5X1X_PASIRXCH2, 0,
++		tac5x1x_tdm_slot_text);
++static SOC_ENUM_SINGLE_DECL(rx_ch3_slot_enum, TAC5X1X_PASIRXCH3, 0,
++		tac5x1x_tdm_slot_text);
++static SOC_ENUM_SINGLE_DECL(rx_ch4_slot_enum, TAC5X1X_PASIRXCH4, 0,
++		tac5x1x_tdm_slot_text);
++static SOC_ENUM_SINGLE_DECL(tx_ch1_slot_enum, TAC5X1X_PASITXCH1, 0,
++		tac5x1x_tdm_slot_text);
++static SOC_ENUM_SINGLE_DECL(tx_ch2_slot_enum, TAC5X1X_PASITXCH2, 0,
++		tac5x1x_tdm_slot_text);
++static SOC_ENUM_SINGLE_DECL(tx_ch3_slot_enum, TAC5X1X_PASITXCH3, 0,
++		tac5x1x_tdm_slot_text);
++static SOC_ENUM_SINGLE_DECL(tx_ch4_slot_enum, TAC5X1X_PASITXCH4, 0,
++		tac5x1x_tdm_slot_text);
++
++/* Record */
++/* ADC Analog/PDM Selection */
++static const char *const tac5x1x_input_source_text[] = {"Analog", "PDM"};
++
++static SOC_ENUM_SINGLE_DECL(tac5x1x_in1_source_enum, TAC5X1X_INTF4, 7,
++		tac5x1x_input_source_text);
++static SOC_ENUM_SINGLE_DECL(tac5x1x_in2_source_enum, TAC5X1X_INTF4, 6,
++		tac5x1x_input_source_text);
++
++static const struct snd_kcontrol_new tac5x1x_dapm_in1_source_control[] = {
++	SOC_DAPM_ENUM("CH1 Source MUX", tac5x1x_in1_source_enum),
++};
++
++static const struct snd_kcontrol_new tac5x1x_dapm_in2_source_control[] = {
++	SOC_DAPM_ENUM("CH2 Source MUX", tac5x1x_in2_source_enum),
++};
++
++static const char *const tad5x1x_input_source_text[] = {"Disable", "PDM"};
++static SOC_ENUM_SINGLE_DECL(tad5x1x_in1_source_enum, TAC5X1X_INTF4, 7,
++		tad5x1x_input_source_text);
++static SOC_ENUM_SINGLE_DECL(tad5x1x_in2_source_enum, TAC5X1X_INTF4, 6,
++		tad5x1x_input_source_text);
++
++static const struct snd_kcontrol_new tad5x1x_dapm_in1_source_control[] = {
++	SOC_DAPM_ENUM("CH1 Source MUX", tad5x1x_in1_source_enum),
++};
++
++static const struct snd_kcontrol_new tad5x1x_dapm_in2_source_control[] = {
++	SOC_DAPM_ENUM("CH2 Source MUX", tad5x1x_in2_source_enum),
++};
++
++/* ADC Analog source Selection */
++static const char *const tac5x1x_input_analog_sel_text[] = {
++	"Differential",
++	"Single-ended",
++	"Single-ended mux INxP",
++	"Single-ended mux INxM",
++};
++
++static const char *const tac5x1x_input_analog2_sel_text[] = {
++	"Differential",
++	"Single-ended",
++};
++
++static SOC_ENUM_SINGLE_DECL(tac5x1x_adc1_config_enum, TAC5X1X_ADCCH1C0, 6,
++		tac5x1x_input_analog_sel_text);
++static SOC_ENUM_SINGLE_DECL(tac5x1x_adc2_config_enum, TAC5X1X_ADCCH2C0, 6,
++		tac5x1x_input_analog2_sel_text);
++
++static const struct snd_kcontrol_new tac5x1x_dapm_adc1_config_control[] = {
++	SOC_DAPM_ENUM("ADC1 Analog MUX", tac5x1x_adc1_config_enum),
++};
++
++static const struct snd_kcontrol_new tac5x1x_dapm_adc2_config_control[] = {
++	SOC_DAPM_ENUM("ADC2 Analog MUX", tac5x1x_adc2_config_enum),
++};
++
++static const struct snd_kcontrol_new taa5x1x_controls[] = {
++	SOC_ENUM("Record Decimation Filter",
++		 decimation_filter_record_enum),
++	SOC_ENUM("ADC1 Audio BW", tac5x1x_adc1_wideband_enum),
++
++	SOC_SINGLE_TLV("ADC1 Digital Capture Volume", TAC5X1X_ADCCH1C2,
++		       0, 0xff, 0, record_dig_vol_tlv),
++
++	SOC_SINGLE_TLV("ADC1 Fine Capture Volume", TAC5X1X_ADCCH1C3,
++		       0, 0xff, 0, record_gain_cali_tlv),
++
++	SOC_SINGLE_RANGE("ADC1 Phase Capture Volume", TAC5X1X_ADCCH1C4,
++			 2, 0, 63, 0),
++
++	SOC_ENUM("ASI_TX_CH5_CFG", tx_ch5_asi_cfg_enum),
++	SOC_ENUM("ASI_TX_CH6_CFG", tx_ch6_asi_cfg_enum),
++	SOC_ENUM("ASI_TX_CH7_CFG", tx_ch7_asi_cfg_enum),
++	SOC_ENUM("ASI_TX_CH8_CFG", tx_ch8_asi_cfg_enum),
++	SOC_SINGLE("IN_CH1_EN Capture Switch", TAC5X1X_CH_EN, 7, 1, 0),
++	SOC_SINGLE("IN_CH2_EN Capture Switch", TAC5X1X_CH_EN, 6, 1, 0),
++	SOC_SINGLE("IN_CH3_EN Capture Switch", TAC5X1X_CH_EN, 5, 1, 0),
++	SOC_SINGLE("IN_CH4_EN Capture Switch", TAC5X1X_CH_EN, 4, 1, 0),
++};
++
++static const struct snd_kcontrol_new tac5x1x_tdm_slot_controls[] = {
++	SOC_ENUM("ASI_RX_CH1 Slot", rx_ch1_slot_enum),
++	SOC_ENUM("ASI_RX_CH2 Slot", rx_ch2_slot_enum),
++	SOC_ENUM("ASI_RX_CH3 Slot", rx_ch3_slot_enum),
++	SOC_ENUM("ASI_RX_CH4 Slot", rx_ch4_slot_enum),
++	SOC_ENUM("ASI_TX_CH1 Slot", tx_ch1_slot_enum),
++	SOC_ENUM("ASI_TX_CH2 Slot", tx_ch2_slot_enum),
++	SOC_ENUM("ASI_TX_CH3 Slot", tx_ch3_slot_enum),
++	SOC_ENUM("ASI_TX_CH4 Slot", tx_ch4_slot_enum),
++};
++
++static const struct snd_kcontrol_new tad5x1x_controls[] = {
++	SOC_ENUM("Playback Decimation Filter",
++		 decimation_filter_playback_enum),
++	SOC_ENUM("DAC1 Audio BW", tac5x1x_dac1_wideband_enum),
++	SOC_SINGLE_TLV("OUT1P Analog Level Playback Volume", TAC5X1X_OUT1CFG1,
++		       3, 6, 1, playback_analog_level_tlv),
++	SOC_SINGLE_TLV("OUT1M Analog Level Playback Volume", TAC5X1X_OUT1CFG2,
++		       3, 6, 1, playback_analog_level_tlv),
++	SOC_SINGLE_TLV("DAC1 CHA Digital Playback Volume", TAC5X1X_DACCH1A0,
++		       0, 0xff, 0, dac_dig_vol_tlv),
++	SOC_SINGLE_TLV("DAC1 CHB Digital Playback Volume", TAC5X1X_DACCH1B0,
++		       0, 0xff, 0, dac_dig_vol_tlv),
++	SOC_SINGLE_TLV("DAC1 CHA Gain Calibration Playback Volume",
++		       TAC5X1X_DACCH1A1, 4, 0xf, 0,
++		       playback_gain_cali_tlv),
++	SOC_SINGLE_TLV("DAC1 CHB Gain Calibration Playback Volume",
++		       TAC5X1X_DACCH1B1, 4, 0xf, 0,
++		       playback_gain_cali_tlv),
++
++	SOC_SINGLE("ASI_RX_CH3_EN Playback Switch",
++		   TAC5X1X_PASIRXCH3, 5, 1, 0),
++	SOC_SINGLE("ASI_RX_CH4_EN Playback Switch",
++		   TAC5X1X_PASIRXCH4, 5, 1, 0),
++	SOC_ENUM("ASI_RX_CH5_EN Playback", rx_ch5_asi_cfg_enum),
++	SOC_ENUM("ASI_RX_CH6_EN Playback", rx_ch6_asi_cfg_enum),
++	SOC_ENUM("ASI_RX_CH7_EN Playback", rx_ch7_asi_cfg_enum),
++	SOC_ENUM("ASI_RX_CH8_EN Playback", rx_ch8_asi_cfg_enum),
++	SOC_SINGLE("OUT_CH1_EN Playback Switch", TAC5X1X_CH_EN, 3, 1, 0),
++	SOC_SINGLE("OUT_CH2_EN Playback Switch", TAC5X1X_CH_EN, 2, 1, 0),
++	SOC_SINGLE("OUT_CH3_EN Playback Switch", TAC5X1X_CH_EN, 1, 1, 0),
++	SOC_SINGLE("OUT_CH4_EN Playback Switch", TAC5X1X_CH_EN, 0, 1, 0),
++};
++
++static const struct snd_kcontrol_new tac5x11_controls[] = {
++	SOC_ENUM("ADC1 Common-mode Tolerance", tac5x1x_adc1_tolerance_enum),
++};
++
++static const struct snd_kcontrol_new tad5x12_controls[] = {
++	SOC_SINGLE_TLV("OUT2P Analog Level Playback Volume", TAC5X1X_OUT2CFG1,
++		       3, 6, 1, playback_analog_level_tlv),
++	SOC_SINGLE_TLV("OUT2M Analog Level Playback Volume", TAC5X1X_OUT2CFG2,
++		       3, 6, 1, playback_analog_level_tlv),
++	SOC_SINGLE_TLV("DAC2 CHA Digital Playback Volume", TAC5X1X_DACCH2A0,
++		       0, 0xff, 0, dac_dig_vol_tlv),
++	SOC_SINGLE_TLV("DAC2 CHB Digital Playback Volume", TAC5X1X_DACCH2B0,
++		       0, 0xff, 0, dac_dig_vol_tlv),
++	SOC_SINGLE_TLV("DAC2 CHA Gain Calibration Playback Volume",
++		       TAC5X1X_DACCH2A1, 4, 0xf, 0,
++			playback_gain_cali_tlv),
++	SOC_SINGLE_TLV("DAC2 CHB Gain Calibration Playback Volume",
++		       TAC5X1X_DACCH2B1, 4, 0xf, 0,
++			playback_gain_cali_tlv),
++	SOC_ENUM("DAC2 Audio BW", tac5x1x_dac2_wideband_enum),
++};
++
++static const struct snd_kcontrol_new taa5x12_controls[] = {
++	SOC_ENUM("ADC2 Audio BW", tac5x1x_adc2_wideband_enum),
++
++	SOC_SINGLE_TLV("ADC2 Digital Capture Volume", TAC5X1X_ADCCH2C2,
++		       0, 0xff, 0, record_dig_vol_tlv),
++
++	SOC_SINGLE_TLV("ADC2 Fine Capture Volume", TAC5X1X_ADCCH2C3,
++		       0, 0xff, 0, record_gain_cali_tlv),
++
++	SOC_SINGLE_RANGE("ADC2 Phase Capture Volume", TAC5X1X_ADCCH2C4,
++			 2, 0, 63, 0),
++};
++
++static const struct snd_kcontrol_new tolerance_ctrls[] = {
++	SOC_ENUM("ADC1 Common-mode Tolerance", tac5x1x_adc1_tolerance_enum),
++	SOC_ENUM("ADC2 Common-mode Tolerance", tac5x1x_adc2_tolerance_enum),
++};
++
++static const struct snd_kcontrol_new tac5x1x_pdm_controls[] = {
++	SOC_ENUM("PDM Clk Divider", pdmclk_select_enum),
++
++	SOC_SINGLE_TLV("PDM1 Digital Capture Volume", TAC5X1X_ADCCH1C2,
++		       0, 0xff, 0, record_dig_vol_tlv),
++	SOC_SINGLE_TLV("PDM2 Digital Capture Volume", TAC5X1X_ADCCH2C2,
++		       0, 0xff, 0, record_dig_vol_tlv),
++	SOC_SINGLE_TLV("PDM1 Fine Capture Volume", TAC5X1X_ADCCH1C3,
++		       0, 0xff, 0, record_gain_cali_tlv),
++	SOC_SINGLE_TLV("PDM2 Fine Capture Volume", TAC5X1X_ADCCH2C3,
++		       0, 0xff, 0, record_gain_cali_tlv),
++	SOC_SINGLE_RANGE("PDM1 Phase Capture Volume", TAC5X1X_ADCCH1C4,
++			 2, 0, 63, 0),
++	SOC_SINGLE_RANGE("PDM2 Phase Capture Volume", TAC5X1X_ADCCH2C4,
++			 2, 0, 63, 0),
++	SOC_SINGLE_TLV("PDM3 Digital Capture Volume", TAC5X1X_ADCCH3C2,
++		       0, 0xff, 0, record_dig_vol_tlv),
++	SOC_SINGLE_TLV("PDM4 Digital Capture Volume", TAC5X1X_ADCCH4C2,
++		       0, 0xff, 0, record_dig_vol_tlv),
++	SOC_SINGLE_TLV("PDM3 Fine Capture Volume", TAC5X1X_ADCCH3C3,
++		       0, 0xff, 0, record_gain_cali_tlv),
++	SOC_SINGLE_TLV("PDM4 Fine Capture Volume", TAC5X1X_ADCCH4C3,
++		       0, 0xff, 0, record_gain_cali_tlv),
++	SOC_SINGLE_RANGE("PDM3 Phase Capture Volume", TAC5X1X_ADCCH3C4,
++			 2, 0, 63, 0),
++	SOC_SINGLE_RANGE("PDM4 Phase Capture Volume", TAC5X1X_ADCCH4C4,
++			 2, 0, 63, 0),
++};
++
++static const struct snd_kcontrol_new taa_ip_controls[] = {
++	SOC_ENUM("DIAG_SHT_TERM", diag_cfg1_sht_term_enum),
++	SOC_ENUM("DIAG_SHT_VBAT_IN", diag_cfg1_vbat_in_enum),
++	SOC_ENUM("DIAG_SHT_GND", diag_cfg2_sht_gnd_enum),
++	SOC_ENUM("DIAG_SHT_MICBIAS", diag_cfg2_micbias),
++};
++
++static const struct snd_soc_dapm_widget taa5x1x_dapm_widgets[] = {
++	/* ADC1 */
++	SND_SOC_DAPM_INPUT("AIN1"),
++	SND_SOC_DAPM_MUX("ADC1 Full-Scale", SND_SOC_NOPM, 0, 0,
++			 tac5x1x_dapm_adc1_fscale_control),
++	SND_SOC_DAPM_MUX("ADC1 Config", SND_SOC_NOPM, 0, 0,
++			 tac5x1x_dapm_adc1_config_control),
++	SND_SOC_DAPM_ADC_E("CH1_ADC_EN", "CH1 Capture", SND_SOC_NOPM, 0, 0,
++			   tac5x1x_adc_event,
++			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
++	SND_SOC_DAPM_SWITCH("ASI_TX_CH1_EN", SND_SOC_NOPM, 0, 0,
++			    &tx_ch1_asi_switch),
++	SND_SOC_DAPM_MICBIAS("Mic Bias", SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_SWITCH("ASI_TX_CH2_EN", SND_SOC_NOPM, 0, 0,
++			    &tx_ch2_asi_switch),
++};
++
++static const struct snd_soc_dapm_widget tad5xx_dapm_widgets[] = {
++	/* pdm capture */
++	SND_SOC_DAPM_SWITCH("ASI_TX_CH1_EN", SND_SOC_NOPM, 0, 0,
++			    &tx_ch1_asi_switch),
++	SND_SOC_DAPM_SWITCH("ASI_TX_CH2_EN", SND_SOC_NOPM, 0, 0,
++			    &tx_ch2_asi_switch),
++};
++
++static const struct snd_soc_dapm_widget tad5x1x_dapm_widgets[] = {
++	/* DAC1 */
++	SND_SOC_DAPM_AIF_IN("ASI IN1", "ASI Playback", 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_OUTPUT("OUT1"),
++	SND_SOC_DAPM_MUX("OUT1x Source", SND_SOC_NOPM, 0, 0,
++			 tac5x1x_dapm_out1_source_control),
++	SND_SOC_DAPM_MUX("OUT1x Config", SND_SOC_NOPM, 0, 0,
++			 tac5x1x_dapm_out1_config_control),
++	SND_SOC_DAPM_MUX("OUT1x Driver", SND_SOC_NOPM, 0, 0,
++			 tac5x1x_dapm_out1_driver_control),
++	SND_SOC_DAPM_DAC_E("Left DAC Enable", "ASI Playback", SND_SOC_NOPM, 0, 0,
++			   tac5x1x_dac_event,
++			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
++	SND_SOC_DAPM_SWITCH("ASI_RX_CH1_EN", SND_SOC_NOPM, 0, 0,
++			    &rx_ch1_asi_switch),
++};
++
++static const struct snd_soc_dapm_widget taa5x12_dapm_widgets[] = {
++	/* ADC2 */
++	SND_SOC_DAPM_INPUT("AIN2"),
++	SND_SOC_DAPM_MUX("ADC2 Full-Scale", SND_SOC_NOPM, 0, 0,
++			 tac5x1x_dapm_adc2_fscale_control),
++	SND_SOC_DAPM_MUX("ADC2 Config", SND_SOC_NOPM, 0, 0,
++			 tac5x1x_dapm_adc2_config_control),
++	SND_SOC_DAPM_ADC_E("CH2_ADC_EN", "CH2 Capture", SND_SOC_NOPM, 1, 0,
++			   tac5x1x_adc_event,
++			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
++};
++
++static const struct snd_soc_dapm_widget tad5x12_dapm_widgets[] = {
++	/* DAC2 */
++	SND_SOC_DAPM_OUTPUT("OUT2"),
++
++	SND_SOC_DAPM_AIF_IN("ASI IN2", "ASI Playback", 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_MUX("OUT2x Source", SND_SOC_NOPM, 0, 0,
++			 tac5x1x_dapm_out2_source_control),
++	SND_SOC_DAPM_MUX("OUT2x Config", SND_SOC_NOPM, 0, 0,
++			 tac5x1x_dapm_out2_config_control),
++	SND_SOC_DAPM_MUX("OUT2x Driver", SND_SOC_NOPM, 0, 0,
++			 tac5x1x_dapm_out2_driver_control),
++	SND_SOC_DAPM_DAC_E("Right DAC Enable", "ASI Playback", SND_SOC_NOPM, 1, 0,
++			   tac5x1x_dac_event,
++			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
++	SND_SOC_DAPM_SWITCH("ASI_RX_CH2_EN", SND_SOC_NOPM, 0, 0,
++			    &rx_ch2_asi_switch),
++};
++
++static const struct snd_soc_dapm_widget tac5x1x_pdm_widgets[] = {
++	/* PDM - no event handler, power is managed via adc_event + post_powerup_work */
++	SND_SOC_DAPM_INPUT("DIN1"),
++	SND_SOC_DAPM_INPUT("DIN2"),
++	SND_SOC_DAPM_INPUT("DIN3"),
++	SND_SOC_DAPM_INPUT("DIN4"),
++
++	SND_SOC_DAPM_ADC_E("CH1_PDM_EN", "PDM CH1 Capture", SND_SOC_NOPM, 0, 0,
++			   tac5x1x_adc_event,
++			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
++	SND_SOC_DAPM_ADC_E("CH2_PDM_EN", "PDM CH2 Capture", SND_SOC_NOPM, 1, 0,
++			   tac5x1x_adc_event,
++			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
++	SND_SOC_DAPM_ADC_E("CH3_PDM_EN", "PDM CH3 Capture", SND_SOC_NOPM, 2, 0,
++			   tac5x1x_adc_event,
++			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
++	SND_SOC_DAPM_ADC_E("CH4_PDM_EN", "PDM CH4 Capture", SND_SOC_NOPM, 3, 0,
++			   tac5x1x_adc_event,
++			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
++
++	SND_SOC_DAPM_SWITCH("ASI_TX_CH3_EN", SND_SOC_NOPM, 0, 0,
++			    &tx_ch3_asi_switch),
++	SND_SOC_DAPM_SWITCH("ASI_TX_CH4_EN", SND_SOC_NOPM, 0, 0,
++			    &tx_ch4_asi_switch),
++};
++
++static const struct snd_soc_dapm_widget tac5x1x_common_widgets[] = {
++	SND_SOC_DAPM_MUX("IN1 Source Mux", SND_SOC_NOPM, 0, 0,
++			 tac5x1x_dapm_in1_source_control),
++	SND_SOC_DAPM_MUX("IN2 Source Mux", SND_SOC_NOPM, 0, 0,
++			 tac5x1x_dapm_in2_source_control),
++	SND_SOC_DAPM_AIF_OUT("AIF OUT", "ASI Capture", 0, SND_SOC_NOPM, 0, 0),
++};
++
++static const struct snd_soc_dapm_widget tad_common_widgets[] = {
++	SND_SOC_DAPM_MUX("IN1 Source Mux", SND_SOC_NOPM, 0, 0,
++			 tad5x1x_dapm_in1_source_control),
++	SND_SOC_DAPM_MUX("IN2 Source Mux", SND_SOC_NOPM, 0, 0,
++			 tad5x1x_dapm_in2_source_control),
++	SND_SOC_DAPM_AIF_OUT("AIF OUT", "ASI Capture", 0, SND_SOC_NOPM, 0, 0),
++};
++
++static const struct snd_soc_dapm_route taa5x1x_dapm_routes[] = {
++	/*
++	 * ADC channel1
++	 * ADC path: AIN1 -> CH1_ADC_EN -> ADC1 Config ->
++	 *           ADC1 Full-Scale -> Mic Bias -> IN1 Source Mux (Analog) ->
++	 *           ASI_TX_CH1_EN -> AIF OUT
++	 * PDM path: DIN1 -> IN1 Source Mux (PDM) ->
++	 *           ASI_TX_CH1_EN -> CH1_PDM_EN -> AIF OUT
++	 *
++	 * Note: The route {"IN1 Source Mux", "Analog", "Mic Bias"} is in
++	 * tac_common_routes because IN1 Source Mux widget is created later.
++	 */
++	{"CH1_ADC_EN", NULL, "AIN1"},
++	{"ADC1 Config", "Differential", "CH1_ADC_EN"},
++	{"ADC1 Config", "Single-ended", "CH1_ADC_EN"},
++	{"ADC1 Config", "Single-ended mux INxP", "CH1_ADC_EN"},
++	{"ADC1 Config", "Single-ended mux INxM", "CH1_ADC_EN"},
++
++	{"ADC1 Full-Scale", "2/10-VRMS", "ADC1 Config"},
++	{"ADC1 Full-Scale", "4/5-VRMS", "ADC1 Config"},
++	{"Mic Bias", NULL, "ADC1 Full-Scale"},
++
++};
++
++static const struct snd_soc_dapm_route tad5x1x_dapm_routes[] = {
++	/* Left Output */
++	{"ASI_RX_CH1_EN", "Switch", "ASI IN1"},
++
++	{"OUT1x Source", "DAC + Analog Bypass Mix", "ASI_RX_CH1_EN"},
++	{"OUT1x Source", "DAC -> OUTxP, INxP -> OUTxM", "ASI_RX_CH1_EN"},
++	{"OUT1x Source", "INxM -> OUTxP, DAC -> OUTxM", "ASI_RX_CH1_EN"},
++
++	{"OUT1x Config", "Differential", "OUT1x Source"},
++	// {"OUT1x Config", "Stereo Single-ended", "OUT1x Source"},
++	{"OUT1x Config", "Mono Single-ended at OUTxP only", "OUT1x Source"},
++	{"OUT1x Config", "Mono Single-ended at OUTxM only", "OUT1x Source"},
++	{"OUT1x Config", "Pseudo differential with OUTxM as VCOM",
++		"OUT1x Source"},
++	{"OUT1x Config", "Pseudo differential with OUTxM as external sensing",
++		"OUT1x Source"},
++	{"OUT1x Config", "Pseudo differential with OUTxP as VCOM",
++		"OUT1x Source"},
++
++	{"OUT1x Driver", "Line-out", "OUT1x Config"},
++	{"OUT1x Driver", "Headphone", "OUT1x Config"},
++
++	{"Left DAC Enable", NULL, "OUT1x Driver"},
++	{"OUT1", NULL, "Left DAC Enable"},
++};
++
++static const struct snd_soc_dapm_route taa5x12_dapm_routes[] = {
++	/*
++	 * ADC channel2
++	 * Same design as ADC channel1.
++	 * Note: The route {"IN2 Source Mux", "Analog", "Mic Bias"} is in
++	 * tac_common_routes because IN2 Source Mux widget is created later.
++	 */
++	{"CH2_ADC_EN", NULL, "AIN2"},
++	{"ADC2 Config", "Differential", "CH2_ADC_EN"},
++	{"ADC2 Config", "Single-ended", "CH2_ADC_EN"},
++	{"ADC2 Full-Scale", "2/10-VRMS", "ADC2 Config"},
++	{"ADC2 Full-Scale", "4/5-VRMS", "ADC2 Config"},
++
++	{"Mic Bias", NULL, "ADC2 Full-Scale"},
++};
++
++static const struct snd_soc_dapm_route tad5x12_dapm_routes[] = {
++	/* Right Output */
++	{"ASI_RX_CH2_EN", "Switch", "ASI IN2"},
++
++	{"OUT2x Source", "DAC + Analog Bypass Mix", "ASI_RX_CH1_EN"},
++	{"OUT2x Source", "DAC -> OUTxP, INxP -> OUTxM", "ASI_RX_CH1_EN"},
++	{"OUT2x Source", "INxM -> OUTxP, DAC -> OUTxM", "ASI_RX_CH1_EN"},
++
++	{"OUT2x Config", "Differential", "OUT2x Source"},
++	// {"OUT2x Config", "Stereo Single-ended", "OUT2x Source"},
++	{"OUT2x Config", "Mono Single-ended at OUTxP only", "OUT2x Source"},
++	{"OUT2x Config", "Mono Single-ended at OUTxM only", "OUT2x Source"},
++	{"OUT2x Config", "Pseudo differential with OUTxM as VCOM",
++		"OUT2x Source"},
++	{"OUT2x Config", "Pseudo differential with OUTxP as VCOM",
++		"OUT2x Source"},
++	{"OUT2x Driver", "Line-out", "OUT2x Config"},
++	{"OUT2x Driver", "Headphone", "OUT2x Config"},
++	{"Right DAC Enable", NULL, "OUT2x Driver"},
++	{"OUT2", NULL, "Right DAC Enable"},
++};
++
++static const struct snd_soc_dapm_route tac5x1x_pdm_routes[] = {
++	/* PDM channel1 & Channel2
++	 * PDM path directly from inputs through source mux
++	 */
++	{"IN1 Source Mux", "PDM", "DIN1"},
++	{"IN2 Source Mux", "PDM", "DIN2"},
++
++	{"ASI_TX_CH1_EN", "Capture Switch", "IN1 Source Mux"},
++	{"ASI_TX_CH2_EN", "Capture Switch", "IN2 Source Mux"},
++
++	{"CH1_PDM_EN", NULL, "ASI_TX_CH1_EN"},
++	{"CH2_PDM_EN", NULL, "ASI_TX_CH2_EN"},
++
++	{"AIF OUT", NULL, "CH1_PDM_EN"},
++	{"AIF OUT", NULL, "CH2_PDM_EN"},
++
++	/* PDM channel3 & Channel4 */
++	{"ASI_TX_CH3_EN", "Capture Switch", "DIN3"},
++	{"ASI_TX_CH4_EN", "Capture Switch", "DIN4"},
++
++	{"CH3_PDM_EN", NULL, "ASI_TX_CH3_EN"},
++	{"CH4_PDM_EN", NULL, "ASI_TX_CH4_EN"},
++
++	{"AIF OUT", NULL, "CH3_PDM_EN"},
++	{"AIF OUT", NULL, "CH4_PDM_EN"},
++};
++
++static const struct snd_soc_dapm_route tac_common_routes[] = {
++	/*
++	 * Analog ADC path - routed through Source Mux
++	 * These routes must be here because IN1/IN2 Source Mux widgets
++	 * are created in tac5x1x_common_widgets which is added after
++	 * device-specific routes. The Analog path is already gated by
++	 * CH1_Enable/CH2_Enable through the ADC routes in device-specific files.
++	 */
++	{"IN1 Source Mux", "Analog", "Mic Bias"},
++	{"IN2 Source Mux", "Analog", "Mic Bias"},
++
++	/* Connect Source Mux to ASI_TX_EN for ADC capture */
++	{"ASI_TX_CH1_EN", "Capture Switch", "IN1 Source Mux"},
++	{"ASI_TX_CH2_EN", "Capture Switch", "IN2 Source Mux"},
++
++	/*
++	 * Direct routes from ASI_TX_CHx_EN to AIF OUT for ADC path.
++	 * PDM path goes through CHx_PDM_EN widgets which have their own
++	 * routes to AIF OUT. This allows ADC and PDM to share ASI_TX_CHx_EN
++	 * while maintaining separate event handlers.
++	 */
++	{"AIF OUT", NULL, "ASI_TX_CH1_EN"},
++	{"AIF OUT", NULL, "ASI_TX_CH2_EN"},
++};
++
++/* TAD routes - PDM only, no ADC/Mic Bias */
++static const struct snd_soc_dapm_route tad_common_routes[] = {
++	/* Connect Source Mux to ASI_TX_EN for PDM capture */
++	{"ASI_TX_CH1_EN", "Capture Switch", "IN1 Source Mux"},
++	{"ASI_TX_CH2_EN", "Capture Switch", "IN2 Source Mux"},
++
++	/* Routes from ASI_TX_CHx_EN to AIF OUT for PDM path */
++	{"AIF OUT", NULL, "ASI_TX_CH1_EN"},
++	{"AIF OUT", NULL, "ASI_TX_CH2_EN"},
++};
++
++static bool is_stereo_device(struct tac5x1x *tac5x1x)
++{
++	switch (tac5x1x->codec_type) {
++	case TAA5212:
++	case TAA5412:
++	case TAC5112:
++	case TAC5212:
++	case TAC5312:
++	case TAC5412:
++	case TAD5112:
++	case TAD5212:
++		return true;
++	default:
++		return false;
++	}
++}
++
++static s32 tac5x1x_pwr_ctrl(struct snd_soc_component *component,
++			    bool power_state)
++{
++	struct tac5x1x_priv *tac5x1x_priv =
++		snd_soc_component_get_drvdata(component);
++	struct tac5x1x *tac5x1x = tac5x1x_priv->tac5x1x;
++	struct device *parent = component->dev->parent;
++	s32 active_ctrl, ret;
++	s32 pwr_ctrl = 0;
++
++	/* Ensure parent device is active before accessing registers */
++	ret = pm_runtime_resume_and_get(parent);
++	if (ret < 0) {
++		dev_err(component->dev,
++			"Failed to resume parent: %d\n", ret);
++		return ret;
++	}
++
++	if (power_state) {
++		active_ctrl = TAC5X1X_VREF_SLEEP_ACTIVE_MASK;
++		snd_soc_component_update_bits(component, TAC5X1X_VREFCFG,
++					      TAC5X1X_VREFCFG_MICBIAS_VAL_MASK,
++					      tac5x1x->micbias_vg << 2);
++		snd_soc_component_update_bits(component, TAC5X1X_VREFCFG,
++					      TAC5X1X_VREFCFG_VREF_FSCALE_MASK,
++					      tac5x1x->vref_vg);
++
++		if (tac5x1x->uad_en)
++			pwr_ctrl |= TAC5X1X_PWR_CFG_UAD_EN;
++		if (tac5x1x->vad_en)
++			pwr_ctrl |= TAC5X1X_PWR_CFG_VAD_EN;
++		if (tac5x1x->uag_en)
++			pwr_ctrl |= TAC5X1X_PWR_CFG_UAG_EN;
++	} else {
++		active_ctrl = 0x0;
++	}
++
++	ret = snd_soc_component_update_bits(component, TAC5X1X_VREF,
++					    TAC5X1X_VREF_SLEEP_EXIT_VREF_EN |
++					    TAC5X1X_VREF_SLEEP_ACTIVE_MASK,
++					    active_ctrl);
++	if (ret < 0) {
++		dev_err(tac5x1x->dev,
++			"%s, device active or sleep failed!, ret %d/n",
++			__func__, ret);
++		goto out;
++	}
++
++	ret = snd_soc_component_update_bits(component, TAC5X1X_PWR_CFG,
++					    TAC5X1X_PWR_CFG_UAD_EN |
++					    TAC5X1X_PWR_CFG_UAG_EN |
++					    TAC5X1X_PWR_CFG_VAD_EN, pwr_ctrl);
++	if (ret < 0)
++		dev_err(tac5x1x->dev,
++			"%s, Power control set failed!, ret %d/n",
++			__func__, ret);
++
++out:
++	/* Release parent PM reference, autosuspend will handle delay */
++	pm_runtime_mark_last_busy(parent);
++	pm_runtime_put_autosuspend(parent);
++
++	return ret;
++}
++
++static s32 tac5x1x_set_dai_fmt(struct snd_soc_dai *codec_dai, u32 fmt)
++{
++	struct snd_soc_component *component = codec_dai->component;
++	s32 iface_reg_1 = 0;
++	s32 iface_reg_2 = 0;
++	s32 iface_reg_3 = 0;
++	s32 clk_pol = 0;
++	bool set_slot_positions = false;
++	int right_slot = 1;
++
++	switch (fmt & SND_SOC_DAIFMT_CLOCK_PROVIDER_MASK) {
++	case SND_SOC_DAIFMT_CBP_CFP:
++		iface_reg_1 |= TAC5X1X_PASI_MODE_MASK;
++		break;
++	case SND_SOC_DAIFMT_CBC_CFC:
++		break;
++	default:
++		dev_err(component->dev,
++			"%s: invalid DAI master/slave interface\n",
++			__func__);
++		return -EINVAL;
++	}
++
++	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
++	case SND_SOC_DAIFMT_I2S:
++		iface_reg_2 |= TAC5X1X_PASI_FMT_I2S;
++		right_slot = 16;
++		set_slot_positions = true;
++		break;
++	case SND_SOC_DAIFMT_DSP_A:
++		iface_reg_2 |= TAC5X1X_PASI_FMT_TDM;
++		iface_reg_3 |= BIT(0); /* add offset 1 */
++		break;
++	case SND_SOC_DAIFMT_DSP_B:
++		iface_reg_2 |= TAC5X1X_PASI_FMT_TDM;
++		break;
++	case SND_SOC_DAIFMT_LEFT_J:
++		iface_reg_2 |= TAC5X1X_PASI_FMT_LJ;
++		right_slot = 16;
++		set_slot_positions = true;
++		break;
++	default:
++		dev_err(component->dev,
++			"%s: invalid DAI interface format\n", __func__);
++		return -EINVAL;
++	}
++
++	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
++	case SND_SOC_DAIFMT_NB_NF:
++		break;
++	case SND_SOC_DAIFMT_NB_IF:
++		clk_pol |= TAC5X1X_PASI_FSYNC_POL;
++		break;
++	case SND_SOC_DAIFMT_IB_NF:
++		clk_pol |= TAC5X1X_PASI_BCLK_POL;
++		break;
++	case SND_SOC_DAIFMT_IB_IF:
++		clk_pol |= TAC5X1X_PASI_BCLK_POL | TAC5X1X_PASI_FSYNC_POL;
++		break;
++	default:
++		dev_err(component->dev,
++			"%s: invalid DAI clock polarity\n", __func__);
++		return -EINVAL;
++	}
++
++	/* Clock provider mode */
++	snd_soc_component_update_bits(component, TAC5X1X_CNTCLK2,
++				      TAC5X1X_PASI_MODE_MASK, iface_reg_1);
++
++	/* ASI format */
++	snd_soc_component_update_bits(component, TAC5X1X_PASI0,
++				      TAC5X1X_PASI_FMT_MASK, iface_reg_2);
++
++	/* BCLK/FSYNC polarity */
++	snd_soc_component_update_bits(component, TAC5X1X_PASI0,
++				      TAC5X1X_PASI_BCLK_POL |
++				      TAC5X1X_PASI_FSYNC_POL, clk_pol);
++
++	/* TX slot offset */
++	snd_soc_component_update_bits(component, TAC5X1X_PASITX1,
++				      TAC5X1X_PASITX_OFFSET_MASK, iface_reg_3);
++
++	/* RX slot offset */
++	snd_soc_component_update_bits(component, TAC5X1X_PASIRX0,
++				      TAC5X1X_PASIRX_OFFSET_MASK, iface_reg_3);
++
++	/* Set slot positions only for I2S mode (left=0, right=16) */
++	if (set_slot_positions) {
++		snd_soc_component_update_bits(component, TAC5X1X_PASIRXCH1,
++					      TAC5X1X_PASIRX_OFFSET_MASK, 0);
++		snd_soc_component_update_bits(component, TAC5X1X_PASITXCH1,
++					      TAC5X1X_PASITX_OFFSET_MASK, 0);
++		snd_soc_component_update_bits(component, TAC5X1X_PASIRXCH2,
++					      TAC5X1X_PASIRX_OFFSET_MASK, right_slot);
++		snd_soc_component_update_bits(component, TAC5X1X_PASITXCH2,
++					      TAC5X1X_PASITX_OFFSET_MASK, right_slot);
++	}
 +
 +	return 0;
 +}
 +
-+static const struct platform_device_id tac5x1x_pin_id_table[] = {
-+	{ "tac5x1x-pinctrl", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(platform, tac5x1x_pin_id_table);
++static s32 tac5x1x_hw_params(struct snd_pcm_substream *substream,
++			     struct snd_pcm_hw_params *params,
++			     struct snd_soc_dai *dai)
++{
++	struct snd_soc_component *component = dai->component;
++	s32 sample_rate, word_length = 0;
 +
-+static struct platform_driver tac5x1x_pin_driver = {
++	switch (params_rate(params)) {
++	case 24000:
++		sample_rate = 25;
++		break;
++	case 32000:
++		sample_rate = 23;
++		break;
++	case 44100:
++	case 48000:
++		sample_rate = 20;
++		break;
++	case 64000:
++		sample_rate = 18;
++		break;
++	case 96000:
++		sample_rate = 15;
++		break;
++	case 192000:
++		sample_rate = 10;
++		break;
++	default:
++		/* Auto detect sample rate */
++		sample_rate = 0;
++		break;
++	}
++
++	switch (params_physical_width(params)) {
++	case 16:
++		word_length |= TAC5X1X_WORD_LEN_16BITS;
++		break;
++	case 20:
++		word_length |= TAC5X1X_WORD_LEN_20BITS;
++		break;
++	case 24:
++		word_length |= TAC5X1X_WORD_LEN_24BITS;
++		break;
++	case 32:
++		word_length |= TAC5X1X_WORD_LEN_32BITS;
++		break;
++	default:
++		dev_err(component->dev, "%s, set word length failed\n",
++			__func__);
++		return -EINVAL;
++	}
++
++	dev_dbg(component->dev, "sample rate: %d, word length: %d\n",
++		sample_rate, word_length);
++
++	snd_soc_component_update_bits(component, TAC5X1X_PASI0,
++				      TAC5X1X_PASI_DATALEN_MASK, word_length);
++
++	tac5x1x_pwr_ctrl(component, true);
++	return 0;
++}
++
++static s32 tac5x1x_set_bias_level(struct snd_soc_component *component,
++				  enum snd_soc_bias_level level)
++{
++	s32 ret = 0;
++
++	switch (level) {
++	case SND_SOC_BIAS_ON:
++		ret = tac5x1x_pwr_ctrl(component, true);
++		if (ret < 0)
++			dev_err(component->dev,
++				"%s, power up failed!\n", __func__);
++		break;
++	case SND_SOC_BIAS_PREPARE:
++		break;
++	case SND_SOC_BIAS_STANDBY:
++		break;
++	case SND_SOC_BIAS_OFF:
++		ret = tac5x1x_pwr_ctrl(component, false);
++		if (ret < 0)
++			dev_err(component->dev,
++				"%s, power down failed!\n", __func__);
++		break;
++	}
++
++	return ret;
++}
++
++static const struct snd_soc_dai_ops tac5x1x_ops = {
++	.hw_params = tac5x1x_hw_params,
++	.set_fmt = tac5x1x_set_dai_fmt,
++	.no_capture_mute = 1,
++};
++
++static struct snd_soc_dai_driver tac5x1x_dai = {
++	.name = "tac5x1x-hifi",
++	.playback = {
++			.stream_name = "ASI Playback",
++			.channels_min = 1,
++			.channels_max = 4,
++			.rates = TAC5X1X_RATES,
++			.formats = TAC5X1X_FORMATS,},
++	.capture = {
++			.stream_name = "ASI Capture",
++			.channels_min = 1,
++			.channels_max = 4,
++			.rates = TAC5X1X_RATES,
++			.formats = TAC5X1X_FORMATS,
++			},
++	.ops = &tac5x1x_ops,
++	.symmetric_rate = 1,
++};
++
++static struct snd_soc_dai_driver taa5x1x_dai = {
++	.name = "taa5x1x-hifi",
++	.capture = {
++			.stream_name = "ASI Capture",
++			.channels_min = 1,
++			.channels_max = 4,
++			.rates = TAC5X1X_RATES,
++			.formats = TAC5X1X_FORMATS,
++			},
++	.ops = &tac5x1x_ops,
++};
++
++static struct snd_soc_dai_driver tad5x1x_dai = {
++	.name = "tad5x1x-hifi",
++	.playback = {
++			.stream_name = "ASI Playback",
++			.channels_min = 1,
++			.channels_max = 4,
++			.rates = TAC5X1X_RATES,
++			.formats = TAC5X1X_FORMATS,
++			},
++	.capture = {
++			.stream_name = "ASI Capture",
++			.channels_min = 1,
++			.channels_max = 4,
++			.rates = TAC5X1X_RATES,
++			.formats = TAC5X1X_FORMATS,
++			},
++	.ops = &tac5x1x_ops,
++	.symmetric_rate = 1,
++};
++
++static s32 tac5x1x_add_ip_diag_controls(struct snd_soc_component *component)
++{
++	struct tac5x1x_priv *tac5x1x_priv =
++	    snd_soc_component_get_drvdata(component);
++	struct tac5x1x *tac5x1x = tac5x1x_priv->tac5x1x;
++	struct tac5x1x_input_diag_config *input_diag_config =
++	    &tac5x1x_priv->tac5x1x->input_diag_config;
++	s32 ret = 0;
++
++	switch (tac5x1x->codec_type) {
++	case TAA5212:
++		break;
++	case TAA5412:
++	case TAC5301:
++	case TAC5311:
++	case TAC5312:
++	case TAC5411:
++	case TAC5412:
++		if (input_diag_config->in_ch_en) {
++			ret = snd_soc_add_component_controls(component,
++							     taa_ip_controls,
++							     ARRAY_SIZE(taa_ip_controls));
++			if (ret)
++				return ret;
++			snd_soc_component_update_bits(component,
++						      TAC5X1X_DIAG_CFG0,
++						      TAC5X1X_IN_CH_DIAG_EN_MASK,
++						      TAC5X1X_IN_CH_DIAG_EN_MASK);
++		}
++		if (input_diag_config->out_ch_en)
++			snd_soc_component_update_bits(component, TAC5X1X_DIAG_CFG0,
++						      TAC5X1X_OUT1P_DIAG_EN_MASK,
++						      TAC5X1X_OUT1P_DIAG_EN_MASK);
++
++		if (input_diag_config->incl_se_inm)
++			snd_soc_component_update_bits(component, TAC5X1X_DIAG_CFG0,
++						      TAC5X1X_INCL_SE_INM_MASK,
++						      TAC5X1X_INCL_SE_INM_MASK);
++		if (input_diag_config->incl_ac_coup)
++			snd_soc_component_update_bits(component, TAC5X1X_DIAG_CFG0,
++						      TAC5X1X_INCL_AC_COUP_MASK,
++						      TAC5X1X_INCL_AC_COUP_MASK);
++
++		if (tac5x1x->micbias_thr[0] > 0 && tac5x1x->micbias_thr[1] > 0) {
++			snd_soc_component_update_bits(component, TAC5X1X_DIAG_CFG7,
++						      0xff,
++						      tac5x1x->micbias_thr[0]);
++			snd_soc_component_update_bits(component, TAC5X1X_DIAG_CFG6,
++						      0xff,
++						      tac5x1x->micbias_thr[1]);
++		}
++
++		ret = tac5x1x_register_interrupt(tac5x1x_priv);
++		if (ret < 0)
++			dev_warn(tac5x1x->dev,
++				 "ignore IRQ registration failure\n");
++
++		fallthrough;
++	case TAC5111:
++	case TAC5112:
++	case TAC5211:
++	case TAC5212:
++	case TAD5112:
++	case TAD5212:
++		snd_soc_component_update_bits(component, TAC5X1X_DIAG_CFG9,
++					      0xff, tac5x1x->gpa_threshold[0]);
++		snd_soc_component_update_bits(component, TAC5X1X_DIAG_CFG8,
++					      0xff, tac5x1x->gpa_threshold[1]);
++		break;
++	default:
++		break;
++	}
++
++	return ret;
++};
++
++static s32 tac5x1x_add_controls(struct snd_soc_component *component)
++{
++	struct tac5x1x_priv *tac5x1x =
++		snd_soc_component_get_drvdata(component);
++	s32 ret;
++
++	switch (tac5x1x->tac5x1x->codec_type) {
++	case TAA5212:
++		fallthrough;
++	case TAA5412:
++		ret =
++		    snd_soc_add_component_controls(component, tolerance_ctrls,
++						   ARRAY_SIZE(tolerance_ctrls));
++		if (ret)
++			return ret;
++		ret =
++		    snd_soc_add_component_controls(component,
++						   taa_ip_controls,
++						   ARRAY_SIZE(taa_ip_controls));
++		if (ret)
++			return ret;
++		break;
++	case TAC5111:
++	case TAC5211:
++		ret =
++		    snd_soc_add_component_controls(component,
++						   tac5x11_controls,
++						   ARRAY_SIZE(tac5x11_controls));
++		if (ret)
++			return ret;
++		fallthrough;
++	case TAC5301:
++	case TAC5311:
++	case TAC5411:
++		ret =
++		    snd_soc_add_component_controls(component, tad5x1x_controls,
++						   ARRAY_SIZE(tad5x1x_controls));
++		if (ret)
++			return ret;
++		break;
++	case TAC5112:
++	case TAC5212:
++		fallthrough;
++	case TAC5312:
++	case TAC5412:
++		ret =
++		    snd_soc_add_component_controls(component, tolerance_ctrls,
++						   ARRAY_SIZE(tolerance_ctrls));
++		if (ret)
++			return ret;
++		ret =
++		    snd_soc_add_component_controls(component, tad5x1x_controls,
++						   ARRAY_SIZE(tad5x1x_controls));
++		if (ret)
++			return ret;
++
++		/* Only add stereo ADC controls for stereo devices
++		 * Mono devices should not have CH2 ADC controls
++		 */
++		if (is_stereo_device(tac5x1x->tac5x1x)) {
++			ret =
++			    snd_soc_add_component_controls(component, taa5x12_controls,
++							   ARRAY_SIZE(taa5x12_controls));
++			if (ret)
++				return ret;
++		}
++
++		ret =
++		    snd_soc_add_component_controls(component, tad5x12_controls,
++						   ARRAY_SIZE(tad5x12_controls));
++		if (ret)
++			return ret;
++		break;
++	case TAD5212:
++	case TAD5112:
++		ret = snd_soc_add_component_controls(component, tad5x12_controls,
++						     ARRAY_SIZE(tad5x12_controls));
++		if (ret)
++			return ret;
++		break;
++	default:
++		break;
++	}
++
++	/* Always add PDM controls - Source Mux controls handle routing */
++	ret = snd_soc_add_component_controls(component,
++					     tac5x1x_pdm_controls,
++					     ARRAY_SIZE(tac5x1x_pdm_controls));
++	if (ret)
++		return ret;
++
++	ret = snd_soc_add_component_controls(component, tac5x1x_tdm_slot_controls,
++					     ARRAY_SIZE(tac5x1x_tdm_slot_controls));
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static s32 tac5x1x_add_widgets(struct snd_soc_component *component)
++{
++	struct tac5x1x_priv *tac5x1x_priv =
++	    snd_soc_component_get_drvdata(component);
++	struct tac5x1x *tac5x1x = tac5x1x_priv->tac5x1x;
++	struct snd_soc_dapm_context *dapm =
++	    snd_soc_component_to_dapm(component);
++	s32 ret;
++
++	switch (tac5x1x->codec_type) {
++	case TAC5111:
++	case TAC5211:
++	case TAC5301:
++	case TAC5311:
++	case TAC5411:
++		ret =
++		    snd_soc_dapm_new_controls(dapm, tad5x1x_dapm_widgets,
++					      ARRAY_SIZE(tad5x1x_dapm_widgets));
++		if (ret)
++			return ret;
++		ret = snd_soc_dapm_add_routes(dapm, tad5x1x_dapm_routes,
++					      ARRAY_SIZE(tad5x1x_dapm_routes));
++		if (ret)
++			return ret;
++		break;
++	case TAC5112:
++	case TAC5212:
++	case TAC5312:
++	case TAC5412:
++		ret =
++		    snd_soc_dapm_new_controls(dapm, tad5x1x_dapm_widgets,
++					      ARRAY_SIZE(tad5x1x_dapm_widgets));
++		if (ret)
++			return ret;
++		ret = snd_soc_dapm_add_routes(dapm, tad5x1x_dapm_routes,
++					      ARRAY_SIZE(tad5x1x_dapm_routes));
++		if (ret)
++			return ret;
++		ret =
++		    snd_soc_dapm_new_controls(dapm, tad5x12_dapm_widgets,
++					      ARRAY_SIZE(tad5x12_dapm_widgets));
++		if (ret)
++			return ret;
++		ret = snd_soc_dapm_add_routes(dapm, tad5x12_dapm_routes,
++					      ARRAY_SIZE(tad5x12_dapm_routes));
++		if (ret)
++			return ret;
++		fallthrough;
++	case TAA5212:
++	case TAA5412:
++		/* Add stereo ADC widgets/routes for stereo devices */
++		if (is_stereo_device(tac5x1x)) {
++			ret =
++			    snd_soc_dapm_new_controls(dapm, taa5x12_dapm_widgets,
++						      ARRAY_SIZE(taa5x12_dapm_widgets));
++			if (ret)
++				return ret;
++			ret = snd_soc_dapm_add_routes(dapm, taa5x12_dapm_routes,
++						      ARRAY_SIZE(taa5x12_dapm_routes));
++			if (ret)
++				return ret;
++		}
++		break;
++	case TAD5212:
++	case TAD5112:
++		ret =
++		    snd_soc_dapm_new_controls(dapm, tad5xx_dapm_widgets,
++					      ARRAY_SIZE(tad5xx_dapm_widgets));
++		if (ret)
++			return ret;
++
++		ret =
++		    snd_soc_dapm_new_controls(dapm, tad5x12_dapm_widgets,
++					      ARRAY_SIZE(tad5x12_dapm_widgets));
++		if (ret)
++			return ret;
++		ret = snd_soc_dapm_add_routes(dapm, tad5x12_dapm_routes,
++					      ARRAY_SIZE(tad5x12_dapm_routes));
++		if (ret)
++			return ret;
++
++		break;
++	default:
++		break;
++	}
++
++	switch (tac5x1x->codec_type) {
++	case TAD5212:
++	case TAD5112:
++		ret =
++		    snd_soc_dapm_new_controls(dapm, tad_common_widgets,
++					      ARRAY_SIZE(tad_common_widgets));
++		if (ret)
++			return ret;
++		/* TAD devices only have PDM capture, use PDM-only routes */
++		ret = snd_soc_dapm_add_routes(dapm, tad_common_routes,
++					      ARRAY_SIZE(tad_common_routes));
++		if (ret)
++			return ret;
++		break;
++	default:
++		ret =
++		    snd_soc_dapm_new_controls(dapm, tac5x1x_common_widgets,
++					      ARRAY_SIZE(tac5x1x_common_widgets));
++		if (ret)
++			return ret;
++
++		ret = snd_soc_dapm_add_routes(dapm, tac_common_routes,
++					      ARRAY_SIZE(tac_common_routes));
++		if (ret)
++			return ret;
++		break;
++	}
++
++	/* Always add PDM widgets - Source Mux controls handle routing */
++	ret = snd_soc_dapm_new_controls(dapm, tac5x1x_pdm_widgets,
++					ARRAY_SIZE(tac5x1x_pdm_widgets));
++	if (ret)
++		return ret;
++
++	ret = snd_soc_dapm_add_routes(dapm, tac5x1x_pdm_routes,
++				      ARRAY_SIZE(tac5x1x_pdm_routes));
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int tac5x1x_setup_adc_impedance(struct device *dev,
++				       struct tac5x1x_priv *tac5x1x_priv)
++{
++	struct tac5x1x *tac5x1x = tac5x1x_priv->tac5x1x;
++
++	if (tac5x1x->adc_impedance[0] != -1)
++		snd_soc_component_update_bits(tac5x1x_priv->component,
++					      TAC5X1X_ADCCH1C0,
++					      TAC5X1X_ADCCH1C0_IMPEDANCE_MASK,
++					      tac5x1x->adc_impedance[0] << 4);
++
++	if (tac5x1x->adc_impedance[1] != -1)
++		snd_soc_component_update_bits(tac5x1x_priv->component,
++					      TAC5X1X_ADCCH2C0,
++					      TAC5X1X_ADCCH2C0_IMPEDANCE_MASK,
++					      tac5x1x->adc_impedance[1] << 4);
++
++	return 0;
++}
++
++static s32 tac5x1x_component_probe(struct snd_soc_component *component)
++{
++	s32 ret;
++	struct tac5x1x_priv *tac5x1x_priv =
++				snd_soc_component_get_drvdata(component);
++	struct tac5x1x *tac5x1x = dev_get_drvdata(component->dev->parent);
++	struct device *dev = tac5x1x->dev;
++
++	snd_soc_component_init_regmap(component, tac5x1x->regmap);
++	tac5x1x_priv->component = component;
++
++	/* Initialize power sequence handling */
++	mutex_init(&tac5x1x_priv->ch_lock);
++	tac5x1x_priv->pwr_up_done = false;
++	INIT_DELAYED_WORK(&tac5x1x_priv->powerup_work, post_powerup_work);
++
++	ret = tac5x1x_add_controls(component);
++	if (ret < 0) {
++		dev_err(dev, "create control failed\n");
++		return ret;
++	}
++
++	ret = tac5x1x_add_widgets(component);
++	if (ret < 0) {
++		dev_err(dev, "device widget addition failed\n");
++		return ret;
++	}
++
++	tac5x1x_setup_adc_impedance(dev, tac5x1x_priv);
++
++	ret = tac5x1x_add_ip_diag_controls(component);
++	if (ret < 0)
++		dev_warn(dev, "add diag control failed\n");
++
++	return 0;
++}
++
++static int tac5x1x_soc_suspend(struct snd_soc_component *component)
++{
++	struct tac5x1x_priv *tac5x1x = snd_soc_component_get_drvdata(component);
++
++	/* Cancel any pending power management work before suspend */
++	cancel_delayed_work_sync(&tac5x1x->powerup_work);
++
++	return 0;
++}
++
++static int tac5x1x_soc_resume(struct snd_soc_component *component)
++{
++	return 0;
++}
++
++static const struct snd_soc_component_driver component_tac5x1x = {
++	.probe = tac5x1x_component_probe,
++	.set_bias_level = tac5x1x_set_bias_level,
++	.suspend = tac5x1x_soc_suspend,
++	.resume = tac5x1x_soc_resume,
++	.controls = taa5x1x_controls,
++	.num_controls = ARRAY_SIZE(taa5x1x_controls),
++	.dapm_widgets = taa5x1x_dapm_widgets,
++	.num_dapm_widgets = ARRAY_SIZE(taa5x1x_dapm_widgets),
++	.dapm_routes = taa5x1x_dapm_routes,
++	.num_dapm_routes = ARRAY_SIZE(taa5x1x_dapm_routes),
++	.suspend_bias_off = 1,
++	.idle_bias_on = 0,
++	.use_pmdown_time = 1,
++	.endianness = 1,
++};
++
++static const struct snd_soc_component_driver component_taa5x1x = {
++	.probe = tac5x1x_component_probe,
++	.set_bias_level = tac5x1x_set_bias_level,
++	.suspend = tac5x1x_soc_suspend,
++	.resume = tac5x1x_soc_resume,
++	.controls = taa5x1x_controls,
++	.num_controls = ARRAY_SIZE(taa5x1x_controls),
++	.dapm_widgets = taa5x1x_dapm_widgets,
++	.num_dapm_widgets = ARRAY_SIZE(taa5x1x_dapm_widgets),
++	.dapm_routes = taa5x1x_dapm_routes,
++	.num_dapm_routes = ARRAY_SIZE(taa5x1x_dapm_routes),
++	.suspend_bias_off = 1,
++	.idle_bias_on = 0,
++	.use_pmdown_time = 1,
++	.endianness = 1,
++};
++
++static const struct snd_soc_component_driver component_tad5x1x = {
++	.probe = tac5x1x_component_probe,
++	.set_bias_level = tac5x1x_set_bias_level,
++	.suspend = tac5x1x_soc_suspend,
++	.resume = tac5x1x_soc_resume,
++	.controls = tad5x1x_controls,
++	.num_controls = ARRAY_SIZE(tad5x1x_controls),
++	.dapm_widgets = tad5x1x_dapm_widgets,
++	.num_dapm_widgets = ARRAY_SIZE(tad5x1x_dapm_widgets),
++	.dapm_routes = tad5x1x_dapm_routes,
++	.num_dapm_routes = ARRAY_SIZE(tad5x1x_dapm_routes),
++	.suspend_bias_off = 1,
++	.idle_bias_on = 0,
++	.use_pmdown_time = 1,
++	.endianness = 1,
++};
++
++static int tac5x1x_probe(struct platform_device *pdev)
++{
++	s32 ret;
++	struct tac5x1x_priv *tac5x1x_priv;
++	struct device *dev = &pdev->dev;
++	struct i2c_client *i2c = to_i2c_client(dev->parent);
++	struct snd_soc_dai_driver *dai;
++
++	tac5x1x_priv = devm_kzalloc(&pdev->dev, sizeof(struct tac5x1x_priv),
++				    GFP_KERNEL);
++	if (!tac5x1x_priv)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, tac5x1x_priv);
++	tac5x1x_priv->tac5x1x = dev_get_drvdata(pdev->dev.parent);
++
++	/* Allocate unique DAI for each codec instance to avoid naming conflicts */
++	dai = devm_kzalloc(dev, sizeof(*dai), GFP_KERNEL);
++	if (!dai)
++		return -ENOMEM;
++
++	switch (tac5x1x_priv->tac5x1x->codec_type) {
++	case TAA5212:
++	case TAA5412:
++		/* Copy from TAA template */
++		memcpy(dai, &taa5x1x_dai, sizeof(*dai));
++		dai->name = devm_kasprintf(dev, GFP_KERNEL, "taa5x1x-hifi-%d-%02x",
++					   i2c->adapter->nr, i2c->addr);
++		if (!dai->name)
++			return -ENOMEM;
++		ret = devm_snd_soc_register_component(dev, &component_taa5x1x,
++						      dai, 1);
++		break;
++	case TAC5111:
++	case TAC5112:
++	case TAC5211:
++	case TAC5212:
++	case TAC5301:
++	case TAC5311:
++	case TAC5312:
++	case TAC5411:
++	case TAC5412:
++		/* Copy from TAC template */
++		memcpy(dai, &tac5x1x_dai, sizeof(*dai));
++		dai->name = devm_kasprintf(dev, GFP_KERNEL, "tac5x1x-hifi-%d-%02x",
++					   i2c->adapter->nr,
++					   i2c->addr);
++		if (!dai->name)
++			return -ENOMEM;
++		ret = devm_snd_soc_register_component(dev, &component_tac5x1x,
++						      dai, 1);
++		break;
++	case TAD5112:
++	case TAD5212:
++		/* Copy from TAD template */
++		memcpy(dai, &tad5x1x_dai, sizeof(*dai));
++		dai->name = devm_kasprintf(dev, GFP_KERNEL, "tad5x1x-hifi-%d-%02x",
++					   i2c->adapter->nr, i2c->addr);
++		if (!dai->name)
++			return -ENOMEM;
++		ret = devm_snd_soc_register_component(dev, &component_tad5x1x,
++						      dai, 1);
++		break;
++	default:
++		ret = -EINVAL;
++	}
++
++	if (ret)
++		dev_err(dev, "Failed to register component\n");
++
++	return ret;
++}
++
++static void tac5x1x_remove(struct platform_device *pdev)
++{
++	struct tac5x1x_priv *tac5x1x_priv = platform_get_drvdata(pdev);
++
++	/* Cancel any pending power management work before removal */
++	cancel_delayed_work_sync(&tac5x1x_priv->powerup_work);
++}
++
++static struct platform_driver tac5x1x_codec_driver = {
 +	.driver = {
-+		.name	= "tac5x1x-pinctrl",
++		.name = "tac5x1x-codec",
 +	},
-+	.probe		= tac5x1x_pin_probe,
-+	.id_table	= tac5x1x_pin_id_table,
++	.probe = tac5x1x_probe,
++	.remove = tac5x1x_remove,
 +};
-+module_platform_driver(tac5x1x_pin_driver);
++module_platform_driver(tac5x1x_codec_driver);
 +
-+MODULE_DESCRIPTION("TAC5X1X Pinctrl Driver");
++MODULE_DESCRIPTION("ASoC tac5x1x driver");
 +MODULE_AUTHOR("Niranjan H Y <niranjan.hy@ti.com>");
 +MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:tac5x1x-codec");
++MODULE_SOFTDEP("pre: tac5x1x-pinctrl");
+diff --git a/sound/soc/codecs/tac5x1x.h b/sound/soc/codecs/tac5x1x.h
+new file mode 100644
+index 000000000000..c89a2fb54283
+--- /dev/null
++++ b/sound/soc/codecs/tac5x1x.h
+@@ -0,0 +1,35 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Header file for tac5x1x codec driver
++ *
++ * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com
++ *
++ * Author: Niranjan H Y <niranjan.hy@ti.com>
++ */
++#ifndef __TAC5X1X_H__
++
++#include <sound/pcm.h>
++#include <linux/mfd/tac5x1x/core.h>
++#include <linux/workqueue.h>
++#include <linux/mutex.h>
++
++#define TAC5X1X_RATES SNDRV_PCM_RATE_8000_192000
++#define TAC5X1X_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE | \
++			 SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S24_3LE | \
++			 SNDRV_PCM_FMTBIT_S32_LE)
++
++struct tac5x1x_priv {
++	struct tac5x1x *tac5x1x;
++	struct snd_soc_component *component;
++	struct tac5x1x_irqinfo irqinfo;
++	u32 ch_enabled;
++	/* Flag to prevent duplicate power-up writes.
++	 * Protected by ch_lock mutex. Used to ensure only one event
++	 * (ADC or DAC) writes PWR_CFG during power-up sequence.
++	 */
++	struct mutex ch_lock;
++	bool pwr_up_done;
++	struct delayed_work powerup_work;
++};
++
++#endif //__TAC5X1X_H__
 -- 
 2.34.1
 
