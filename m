@@ -1,138 +1,180 @@
-Return-Path: <linux-gpio+bounces-33252-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33253-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4OBvLnOysmmYOwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33252-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 13:32:51 +0100
+	id AIAUB3m4smmYOwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33253-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 13:58:33 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67D37271D1B
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 13:32:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B999F2721B2
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 13:58:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9F73C30166CD
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 12:32:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0E0573126345
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 12:57:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5D272C11C6;
-	Thu, 12 Mar 2026 12:32:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66A313C555E;
+	Thu, 12 Mar 2026 12:57:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="G0STWHdq"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fHqxjqGD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA4213D539;
-	Thu, 12 Mar 2026 12:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99A93C4546
+	for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2026 12:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773318767; cv=none; b=YzeJfIRo8IItc6bxtnT6UbCKf/xJ4lvhBFjDpDdiyeL3h5jMEdyV8SbiPeByVT2zTT1/Q0ogeDSZIPwct8bN8Jj9+RK2VI+xMyROTFaTKnsAF5Jmcfudpe8SKCEqvbsRqqK8beLvjDx/BZXPrFJzj3BJnh3yN1sktD9t40mf5ag=
+	t=1773320256; cv=none; b=FBBZyoNrggxVHykfFHv0kWmioNh8cOPJZjZiQfUJvEuzgY2WuMM44gx8Gd8Nr22K73QXmkpOg7AYRMhT1eO+H2U3A3/oVJROx4yIM2vKbnc9vUvwHmH/YiP/8ledLZG4yr9DXpagaOlz0BEy4rA00XcEdNfTcRjcnE2gJBaM/T8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773318767; c=relaxed/simple;
-	bh=o2UthO2WXzmSPYdwO0w/waxNRhhzupLP6L1ZNdbYEYE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=CF2Gl7JqL24nonMEPQ/xEVvW4futb+RvIqwCpCvAXtm9XOEojsHJeC7WlVWQSWUTz+5Jsn4ULOadXV3n3Hh1HyTzpDbinfsxRxrjuGOCqnDIvQZSKMNiWNaLHhyX4ipCPYzpjsLqVQuuZ2J/DvfKdu3PMyQMo306EhmPG/32sXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=G0STWHdq; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1773318764;
-	bh=o2UthO2WXzmSPYdwO0w/waxNRhhzupLP6L1ZNdbYEYE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=G0STWHdqnJMF17OLN9SHIkyTCwRJMshhFVor33igF9UbKgMbSXRj6a07H4kmcB/nH
-	 QvEJEwwTRLaeq1UnbZ+TMFjOK18j1AGkRptVxhVCJNt3DkQ34+D7m2+x9QsuXOqS0z
-	 0Yqz4tTWIvJj7MR22SPc9bh77yjmFs5KZEDfpCCT63BDJBTloTgLZnD2iy59oj9Dug
-	 GFp6A+4gZLEHkBiiB1R7mN0xCkemziqDr0MiBffLXGwGbYa8kQcmIe2biEXHDAl1E4
-	 trVNlbuoTKODkdX+2T5nCX9PFEpkF8OuOMoPp//lUAue1bJIk4BtbO4yu+TC9yLZDW
-	 Z0tYcVs9NlLHQ==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id EBCEA17E05B5;
-	Thu, 12 Mar 2026 13:32:43 +0100 (CET)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
- matthias.bgg@gmail.com, sean.wang@kernel.org, linusw@kernel.org, 
- Akari Tsuyukusa <akkun11.open@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- linux-gpio@vger.kernel.org, hui.liu@mediatek.com, nfraprado@collabora.com, 
- mars.cheng@mediatek.com, andy.teng@mediatek.com, hanks.chen@mediatek.com, 
- sam.shih@mediatek.com, rafal@milecki.pl, ben.ho@mediatek.com, 
- erin.lo@mediatek.com, zhiyong.tao@mediatek.com, Jason-ch.Chen@mediatek.com, 
- amergnat@baylibre.com, seiya.wang@mediatek.com, tinghan.shen@mediatek.com, 
- Linus Walleij <linusw@kernel.org>
-In-Reply-To: <20260312041533.187553-1-akkun11.open@gmail.com>
-References: <20260312041533.187553-1-akkun11.open@gmail.com>
-Subject: Re: (subset) [PATCH 0/6] pinctrl: mediatek: Fix gpio-ranges and
- include guard issues
-Message-Id: <177331876391.53170.11935383567217800525.b4-ty@collabora.com>
-Date: Thu, 12 Mar 2026 13:32:43 +0100
+	s=arc-20240116; t=1773320256; c=relaxed/simple;
+	bh=Rr1jkAP22lZkLvo3o90a9fRSWh9+kilNKtAarSScWFY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X8iLYNc38LRyuAioF1Zr3IXCcJ827DKOuO8rCt7LTMoR59Fn39gEdKSn66EzdfmFanmsB2rNHNw4eLs4YP0n/9P5200GplH5Rm84LkjEIRH+BCoiIoxkblQUOEXBcjx8XyGeBmhYVR6Ov2uWnIooo3WT9+eL3JkBzLcWexzoivI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=fHqxjqGD; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-506a6cf8242so8849441cf.1
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2026 05:57:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1773320252; x=1773925052; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=J1SF1XBHkHR0j7NZVucv0LxpGoGXl67PUefLsfwpAbo=;
+        b=fHqxjqGD7mReR8MT2yBowt9MuNKPAKQc++mWcb4ZOttX6YldICO+OnnxWIQjO0C8L5
+         wjOw0Gg7MqV4U+G9pES+s6h1NtZIjaKrBXMW81hrLyc8SxWYHtvQK3FlTjqiyroZskXE
+         jYj0kUENL7Yhu5zg+0UQ91XYlYYlozX9U8uAqBEFaih0fSnDo8kprjTDRYJ58gzKRExo
+         MSUW+Q+e0P2WpZGotx0DuVRaUqq4vGsUUSX1YbPnOxmRUKlXFY/aNRmXMXDbAEfx0Lnn
+         e41FpuPSZjTSuTkWfTMW8e1MvewVXC2p6zLd4GrSZjvSKS4Q06nDQYaSimUW3qR5RhoY
+         JV6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773320252; x=1773925052;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J1SF1XBHkHR0j7NZVucv0LxpGoGXl67PUefLsfwpAbo=;
+        b=wcaX9Q/aQJggQLXadwdw3mFuEYvikPm5Inuirm1OraAWMOmQ1v4CaIKRcXn5ZJRQi4
+         Idg4B47ryiw7cAhfKmcUgUc6WvOpEIiIHVvMoGrmA1E7gBurUbClVocyVo3pxIirIUms
+         AKYMa+BM/QUJN4dAWaEmietoq9tqrbMEHzYD84OiU5f61Vv3Bic7uhtgqbsWry4DeoSK
+         D/KbnxZTUojFH3VGzNTtWr/BnI4kQ7Q69JBndpOUoNuwtDMIz1IJkfFNANcIDNWPFJSF
+         XsJpSaTOkQp0IH7fE53PE4RiB53RqkPne8cBB/DGJ+V9d8pLSRC/2YQM98e2PgTqNMYA
+         adzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPFIqzvSiCwiK5jImByvBxPRX5XG6+uc2FiB6xUYOgfqbb5Ypz48jyF118OfCanIfyUw3XCsheU1j4@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzl6r6Jt+OOnyfWU/w25DmdKzTeOt3Xgpeoe0CeT/bYSvr6gfny
+	lzAHJPAG9qj9Z8apWg/lr0hElYyQw582GdJ0T0n3P2se/XA8QazFnrncxXwu8MhY3DI=
+X-Gm-Gg: ATEYQzzKeAEpF5U/0jBv43OEAm6W7n2X6jZhUYpQ5Xwv/VjYEHEMHjkbEbqHn+vHLvJ
+	UT0qweiLXWlxz5usKr498HjAksSWo4GT3pM4qFpVeiphAD5WOBowN966pvzpHdF/wc/QU0K3Tzw
+	+1Jv1IvDbsfcogL5EpkAx67fyFtSPNoTk8nRP9ViTvSyBt6KTw84JmbOJgH0V4AMJMbAJzaT1aw
+	2J5Xe/VSVNk/FAx92zSfvCeTr+IqxfhL56PwUAfSgK2pbOOv/0qrKD2lvSqow6UDNluGktcSoJq
+	DjR1WMvRPRee7xJtsbzxGSpl8xhrpX1FBk0oXhy+QeDNw3EO4erEBC1U3tAycytcu7hSdn9CwgR
+	YqkGqbqbTTTm/QPDZCPXfJZZUTKmHnhPqFviOADL6bD6+BkX9EkFM5SW5itKwGYmUS57t8BweMO
+	AGIxaML28qGv6a6OhcHUoZfPhsfnQkrtRvqWidmK51Y3LMr4XZRiQrMviFsOq55g7OgTW93SIM4
+	VwJPdDX
+X-Received: by 2002:ac8:5d4d:0:b0:509:cbc:127b with SMTP id d75a77b69052e-5093a1bd58fmr77950521cf.60.1773320251710;
+        Thu, 12 Mar 2026 05:57:31 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89a65bd318fsm33341196d6.8.2026.03.12.05.57.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2026 05:57:31 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1w0fbW-00000006fKD-1POa;
+	Thu, 12 Mar 2026 09:57:30 -0300
+Date: Thu, 12 Mar 2026 09:57:30 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: Philipp Hahn <phahn-oss@avm.de>, amd-gfx@lists.freedesktop.org,
+	apparmor@lists.ubuntu.com, bpf@vger.kernel.org,
+	ceph-devel@vger.kernel.org, cocci@inria.fr,
+	dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
+	gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org,
+	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
+	kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+	linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+	linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org,
+	linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+	ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
+	sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
+	tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev
+Subject: Re: [PATCH 00/61] treewide: Use IS_ERR_OR_NULL over manual NULL
+ check - refactor
+Message-ID: <20260312125730.GI1469476@ziepe.ca>
+References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
+ <abBlpGKO842B3yl9@google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <abBlpGKO842B3yl9@google.com>
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[collabora.com,none];
-	R_DKIM_ALLOW(-0.20)[collabora.com:s=mail];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[ziepe.ca:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33252-lists,linux-gpio=lfdr.de];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[27];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[ziepe.ca:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[ziepe.ca];
+	TAGGED_FROM(0.00)[bounces-33253-lists,linux-gpio=lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[angelogioacchino.delregno@collabora.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[collabora.com:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FROM_NEQ_ENVFROM(0.00)[jgg@ziepe.ca,linux-gpio@vger.kernel.org];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,collabora.com:dkim,collabora.com:mid]
-X-Rspamd-Queue-Id: 67D37271D1B
+	RCPT_COUNT_GT_50(0.00)[55];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ziepe.ca:dkim,ziepe.ca:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: B999F2721B2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, 12 Mar 2026 13:15:27 +0900, Akari Tsuyukusa wrote:
-> While looking at MediaTek's Pinctrl driver and device tree, I discovered
-> that on some SoCs, the gpio-ranges count was a little less than the pins
-> defined. This means that the last pin will no longer be available.
-> 
-> And fixing this issue, I also discovered that the #endif comment in the
-> include guard for some header files was different from the macro name at
-> the beginning. These issues do not affect the compiled kernel, but they
-> affect the readability and consistency of the code.
-> 
-> [...]
+On Wed, Mar 11, 2026 at 02:40:36AM +0800, Kuan-Wei Chiu wrote:
 
-Applied to v7.0-next/dts64, thanks!
+> IMHO, the necessity of IS_ERR_OR_NULL() often highlights a confusing or
+> flawed API design. It usually implies that the caller is unsure whether
+> a failure results in an error pointer or a NULL pointer. 
 
-[1/6] arm64: dts: mediatek: mt6795: Fix gpio-ranges pin count
-      commit: c4c4823c8a5baa10b8100b01f49d7c3f4a871689
-[2/6] arm64: dts: mediatek: mt7981b: Fix gpio-ranges pin count
-      commit: b62a927f4a46a7f58d88ba3d5fb6e88e1a4b4603
-[3/6] arm64: dts: mediatek: mt7986a: Fix gpio-ranges pin count
-      commit: 820ed0c1a13c5fafb36232538d793f99a0986ef3
++1
 
-Cheers,
-Angelo
+IS_ERR_OR_NULL() should always be looked on with suspicion. Very
+little should be returning some tri-state 'ERR' 'NULL' 'SUCCESS'
+pointer. What does the middle condition even mean? IS_ERR_OR_NULL()
+implies ERR and NULL are semanticly the same, so fix the things to
+always use ERR.
 
+If you want to improve things work to get rid of the NULL checks this
+script identifies. Remove ERR or NULL because only one can ever
+happen, or fix the source to consistently return ERR.
 
+Jason
 
