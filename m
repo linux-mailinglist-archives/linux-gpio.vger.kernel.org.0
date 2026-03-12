@@ -1,50 +1,113 @@
-Return-Path: <linux-gpio+bounces-33211-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33212-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IPSDKz4xsmmzJQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33211-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 04:21:34 +0100
+	id uHXPIAs+smk6KQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33212-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 05:16:11 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13B7A26CC18
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 04:21:34 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DA1E26CFC0
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 05:16:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7CE6C302F38E
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 03:20:08 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 4A4A9301F3AD
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 04:16:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B8A038836A;
-	Thu, 12 Mar 2026 03:20:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B22C53932FB;
+	Thu, 12 Mar 2026 04:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LVnf3XYp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CBD388E68
-	for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2026 03:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFCB33F596
+	for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2026 04:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773285607; cv=none; b=iSJUcAZIuOVohrkFSVmNlwQlLcqLnIw5FBiUh1WfyzGo2qrTm2uKih7QXJkK3i+DB3Qe2KrSHfD3WViv/PJ7Hecx8MYdvkz5NjrFeZC2dEUaMHjbeBi1KEZCFCygQc1H02/HukWtd0G7VbyC0ArRiTo/Qcatg9/Unhe/9+mtH30=
+	t=1773288966; cv=none; b=mS5t3++AEK6tZs6Ekzb2OATZDiamrhrAWBrNAKRYOt57EvnYsHUJDo7d6KGCHtLcopAs8BrTHYJHoV+QDtfWMZmrC+9PeXjI+6cUQpf1Uy79Hw6pLxdbgHewgwUbm+81FnrZR28lJ6QhsUDDWLmWWVQ1XBlNEAVBLksGV3lOWoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773285607; c=relaxed/simple;
-	bh=nUIFkJOcDm1Y7555ix05egCMXdeOd7itfivpo2q26Kc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rXIOKnPqfk9Dz9N3w0snQhpvOnWeUQMb9fPHcDhhs7maM4AgPTulPkrqbWZnb/TKIEeHOb2uMRVoZpMEmUlR1qoHgI1srYIjIHk/gact4eDAZCxhLgd6rk26Z2kReicfEd28BUiwGFgE7kNjjkK0z82E9ZPlSR9avG+03HPGM3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowABnhdzdMLJpfaBqCg--.11995S2;
-	Thu, 12 Mar 2026 11:19:57 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: linusw@kernel.org
-Cc: eleanor.lin@realtek.com,
-	bartosz.golaszewski@oss.qualcomm.com,
-	tychang@realtek.com,
+	s=arc-20240116; t=1773288966; c=relaxed/simple;
+	bh=cC+zW/Sj9PJ7nLrSakL9rgqT9FTttPmJVG/fATkFEO8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I4CEIq0Fs1HoEFIRRA9e7s4QZo0leRkApX261Ca+1zHZt+sdOsT8o97QC6VF7S2qZhpgkZ4v/H+vKC+ov5YvUkH5ALtH4YBLEtoDcXFhm2kdKCe70fKxZF9eaRZMoSwj3fUHVUIBsD4lHw4YNs6+G2hVOo128Qb2Wmyq11c7aNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LVnf3XYp; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3567e2b4159so255399a91.0
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 21:16:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773288965; x=1773893765; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/CLgwAizLdgwnVah8slW2Wa5Fqh07xJoE9OJwqSRCXM=;
+        b=LVnf3XYpZwL26vx6/rSfkI5dHpHWNFcRQmOfmcmBw+fmXeSvOTrxA6dWKZ6dAusVN9
+         Bd7LCCcfHKbO8arCpA5Rl2706pzE2A2R/Tnns8Tx3g4Cs/6pDEjhDnEg7/5Pu7Et/hn+
+         QfBWn4gorzuDlurq7dv2f+nb1nvJ5WmFpFnYy+pkzrTCsjXIA2AlmGjxl9lM6An71cat
+         Jo6pOvm+cLmOanRGtlKCquirntlJb76omw4TPMXG8gVLqGDfhGmrxQ7Q3IEJKr5O3jsi
+         QkEJN/0H7Q4IkbQQ8SXj5elwcEXOgaR/yFbB4yvFx7sTgiBBjyt8VdC69WiW3hOyQUuc
+         OK+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773288965; x=1773893765;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/CLgwAizLdgwnVah8slW2Wa5Fqh07xJoE9OJwqSRCXM=;
+        b=aQv7p6zg8t8IysA1hRATnsyOnEiF/R78jzDd0g8Oq+w5kDSAljc1WCkVRt51TZ79Y3
+         fUvvj8uE1FPWSy+arbK35OI4rVEMUKha22NKWWrkug2yb0vgaE7/DN9XqfmtV0EQovXH
+         Mop0ZBY7fj4gYQ3tcE/fY1sG1h8xNHv+TF1AY99bHMeq8vMHMU6w2Ln+F4Mux7fVzLzk
+         lj50rtaAu5kiM0QWOPJjs2ZVPG5klN5tK5lfKpKaWczjZ2wPHeavc6j9RznBkqmqp0iG
+         E7hklukL3PL1FRL5L6QSDG32e9qTQVoE/hV2XgWcnsbybi7tclfZvzKcx2SiEWIxKVuj
+         wFsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXsaQpsOKsl8/8AIXnFK/xDhN/xJLNqJDDlWxJu9zzOQoRF1dup8yv6aD0YEF2kUAQtkzDWgH2YXcgv@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLFzI2f4IBTwYvEY7hechlDzx3+2SiAG1a4azdZr9m5kSTF5LS
+	ffsuCJLX3FqvryUFs7PS2YU6QtphTkRR+sI89YgRTvJdff7/SDEPzHBx
+X-Gm-Gg: ATEYQzyVCGOlzdWVoGhb8nomiEMHigzkLSYD33DZMkKFv9UuRgcamDP0Ue6UgAr1GZ7
+	ymP/5M1aq9XxGjLI7vE3g/+yTMFTFX+B9Id+QtIyW9FBo/k5tTsWiqfm2F3ouKQNMW1hf1+eLQJ
+	Bi1JRdtROIKU/K7CuCACfNqyPc5GH+gvWWZMFTefr4J/gSgdDCwor/iivxzck/pR6129GUbxG5h
+	RhFlT6inXXWPCj0Sb2ww8xHERd6HhWn8XKp3MWtBp3rFXWFcmrppn5BhHU3DC63qYOXCRDXnnjY
+	s2TAl+nl5YhlKTwzpwxNRcXKpAI7WG1N0xDMwdMcRKJiNAyJI0swCTVnJHsFUi3/qUMPpXny0uA
+	pJTsDfpqg80nECJc00igFt1Yq7QH04kpRNEuQ/an0jKofD+9QVyEKHNFUzij9vxBu+YXHZ0/E9l
+	opf2J1FVM82LXXy6eCyve5CQju2KpkgyNMafadl5UVaYYA19aTDjrqz/iF1S5yvbgy8T4J8dRVo
+	qTOo5w=
+X-Received: by 2002:a17:90b:5445:b0:359:7a1f:1b83 with SMTP id 98e67ed59e1d1-35a01323909mr4580458a91.26.1773288964582;
+        Wed, 11 Mar 2026 21:16:04 -0700 (PDT)
+Received: from buffalo-ssd.taila54753.ts.net (M014013071096.v4.enabler.ne.jp. [14.13.71.96])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35a02fca40bsm5018229a91.10.2026.03.11.21.16.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2026 21:16:04 -0700 (PDT)
+From: Akari Tsuyukusa <akkun11.open@gmail.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	sean.wang@kernel.org,
+	linusw@kernel.org
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
 	linux-gpio@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] pinctrl: realtek: Fix error check for devm_platform_ioremap_resource()
-Date: Thu, 12 Mar 2026 11:18:20 +0800
-Message-Id: <20260312031820.3007962-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	hui.liu@mediatek.com,
+	nfraprado@collabora.com,
+	linus.walleij@linaro.org,
+	mars.cheng@mediatek.com,
+	andy.teng@mediatek.com,
+	hanks.chen@mediatek.com,
+	sam.shih@mediatek.com,
+	rafal@milecki.pl,
+	ben.ho@mediatek.com,
+	erin.lo@mediatek.com,
+	zhiyong.tao@mediatek.com,
+	Jason-ch.Chen@mediatek.com,
+	amergnat@baylibre.com,
+	seiya.wang@mediatek.com,
+	tinghan.shen@mediatek.com,
+	Akari Tsuyukusa <akkun11.open@gmail.com>
+Subject: [PATCH 0/6] pinctrl: mediatek: Fix gpio-ranges and include guard issues
+Date: Thu, 12 Mar 2026 13:15:27 +0900
+Message-ID: <20260312041533.187553-1-akkun11.open@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -52,81 +115,108 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowABnhdzdMLJpfaBqCg--.11995S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrKw48Jw1rtFykur4xJryrWFg_yoWDKrX_ua
-	y09ry3JFyUCw1vqr1qkw4SvFyIyF4qgr1kKwnIqFyakryDXw17ury8Wr4DWas7WrsFyry8
-	WryUXrZ3Z34fAjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbskFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	JF0_Jw1lc2xSY4AK67AK6r48MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
-	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-	67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
-	x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
-	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73Uj
-	IFyTuYvjfUbiSdDUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
-X-Spamd-Result: default: False [0.04 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[28];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-33212-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,mediatek.com,collabora.com,linaro.org,milecki.pl,baylibre.com,gmail.com];
 	MIME_TRACE(0.00)[0:+];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33211-lists,linux-gpio=lfdr.de];
-	DMARC_NA(0.00)[iscas.ac.cn];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_NEQ_ENVFROM(0.00)[nichen@iscas.ac.cn,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com,collabora.com];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.958];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,iscas.ac.cn:email,iscas.ac.cn:mid]
-X-Rspamd-Queue-Id: 13B7A26CC18
+	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[akkun11open@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 2DA1E26CFC0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Replace NULL check with IS_ERR() for devm_platform_ioremap_resource()
-return value. Use dev_err_probe() for error handling to maintain
-consistency with the rest of the probe function.
+While looking at MediaTek's Pinctrl driver and device tree, I discovered
+that on some SoCs, the gpio-ranges count was a little less than the pins
+defined. This means that the last pin will no longer be available.
 
-Fixes: b7f698b22b8b ("pinctrl: realtek: Switch to use devm functions")
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/pinctrl/realtek/pinctrl-rtd.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+And fixing this issue, I also discovered that the #endif comment in the
+include guard for some header files was different from the macro name at
+the beginning. These issues do not affect the compiled kernel, but they
+affect the readability and consistency of the code.
 
-diff --git a/drivers/pinctrl/realtek/pinctrl-rtd.c b/drivers/pinctrl/realtek/pinctrl-rtd.c
-index 60dfb39bc986..7836a15afe44 100644
---- a/drivers/pinctrl/realtek/pinctrl-rtd.c
-+++ b/drivers/pinctrl/realtek/pinctrl-rtd.c
-@@ -574,8 +574,9 @@ int rtd_pinctrl_probe(struct platform_device *pdev, const struct rtd_pinctrl_des
- 		return -ENOMEM;
- 
- 	data->base = devm_platform_ioremap_resource(pdev, 0);
--	if (!data->base)
--		return -ENOMEM;
-+	if (IS_ERR(data->base))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(data->base),
-+				     "Failed to ioremap resource\n");
- 
- 	data->dev = &pdev->dev;
- 	data->info = desc;
+This series addresses the cases that can be confirmed correct without
+requiring datasheet verification:
+
+- mt6795 : gpio-ranges 196 -> 197
+- mt7981b: gpio-ranges 56 -> 57
+- mt7986a: gpio-ranges 100 -> 101
+- mt6779 : include guard #endif comment fix
+- mt8188 : include guard #endif comment fix (two files)
+
+The following additional issues were identified during this investigation
+but are not included in this series as they require further analysis
+or datasheet confirmation:
+
+MT6779: gpio-ranges = <&pio 0 0 210>;
+    This matches the number of pins, but GPIO203 to 209 don't have
+    GPIO function, and the driver also has no control over those pins.
+    Probably needs to be fixed to "gpio-ranges = <&pio 0 0 203>;"
+
+MT8183: gpio-ranges = <&pio 0 0 192>;
+    This seems correct because it matches "pinctrl-mtk-mt8183.h".
+    But, mode/dir/di/do are defined from pin 0 to 192.
+    "pinctrl-mt8183.c" looks wrong.
+
+MT8188: gpio-ranges = <&pio 0 0 176>;
+    According to "pinctrl-mtk-mt8188.h", GPIO0 to 176 have GPIO function,
+    and GPIO177 to 189 are EINT only pin, but mode/dir/di/do are defined
+    from pin 0 to 177. "pinctrl-mt8188.c" is likely to be wrong.
+    At least "176" is wrong, probably "gpio-ranges = <&pio 0 0 177>;"
+
+MT8192: gpio-ranges = <&pio 0 0 220>;
+    "pinctrl-mtk-mt8192.h" defines GPIO0 to 227 which have GPIO function,
+    but mode/dir/di/do are defined from pin 0 to 228.
+    "pinctrl-mt8192.c" looks wrong.
+    Also, probably "gpio-ranges = <&pio 0 0 229>;"
+
+MT8195: gpio-ranges = <&pio 0 0 144>;
+    Like MT8188, GPIO144 to 164 don't have GPIO function,
+    but mode/dir/di/do are defined from pin 0 to pin 144.
+    "pinctrl-mt8195.c" is likely to be wrong.
+
+
+Akari Tsuyukusa (6):
+  arm64: dts: mediatek: mt6795: Fix gpio-ranges pin count
+  arm64: dts: mediatek: mt7981b: Fix gpio-ranges pin count
+  arm64: dts: mediatek: mt7986a: Fix gpio-ranges pin count
+  pinctrl: mediatek: mt6779: Fix include guard comment in the header
+  pinctrl: mediatek: mt8188: Fix include guard comment in the header
+  dt-bindings: pinctrl: mediatek: mt8188: Fix include guard comment
+
+ arch/arm64/boot/dts/mediatek/mt6795.dtsi              | 2 +-
+ arch/arm64/boot/dts/mediatek/mt7981b.dtsi             | 2 +-
+ arch/arm64/boot/dts/mediatek/mt7986a.dtsi             | 2 +-
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt6779.h         | 2 +-
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt8188.h         | 2 +-
+ include/dt-bindings/pinctrl/mediatek,mt8188-pinfunc.h | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
+
 -- 
-2.25.1
+2.53.0
 
 
