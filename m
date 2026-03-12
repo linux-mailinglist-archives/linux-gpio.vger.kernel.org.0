@@ -1,239 +1,198 @@
-Return-Path: <linux-gpio+bounces-33275-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33276-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MLnDKmvqsmnBQwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33275-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 17:31:39 +0100
+	id QMtYMjbwsmnAQwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33276-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 17:56:22 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8A99275A12
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 17:31:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CC7B9276191
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 17:56:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E82253045A35
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 16:27:25 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 542143022441
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 16:55:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B24C3F7ABB;
-	Thu, 12 Mar 2026 16:27:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B05973FCB09;
+	Thu, 12 Mar 2026 16:54:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NPxyPH1U"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="TCUycPJz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0253F7E98
-	for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2026 16:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773332837; cv=pass; b=IGS26Cp/SFZVlysX4Vm0pMY3cuCdTj6YI+ZRNEqniWlRilue6YRttNIfmtZdAHuJX/IyRqXUstVWC+Iw5/YDkFU5b19tPBXVGIVZvgvI5ZTwQ1q1TfbHSfcg2oq4ZHuTChAVq3sPluo4Xew1COh9PcGPQcPvS0pzxf9aE4dgL1s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773332837; c=relaxed/simple;
-	bh=uJhH0lI1sVgit2CkGLU8u1v8dwsbJYGM2kBA3mKuxJ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IhuZoQlqekcCCv93f5/JUIgKdtR22jVoaLnVcQQj8IJfyDwreIwBg7Lcesv8X9qGXHorc+AidxI+iV2WUYHli5lRN2Hkas/IiwmBWEmjTPIENJSGsnagh8w/WwMom1DVUIwL/MX2f5hng9ca3gGFyhSvlaJXD34y1Hu0cHPskQ0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NPxyPH1U; arc=pass smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-439b78b638eso1368125f8f.2
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2026 09:27:11 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773332830; cv=none;
-        d=google.com; s=arc-20240605;
-        b=S69WIJYsvlGBHtcT8NV2zrhapB75fY/nyo3HrpIautLCUjp857RndzDk23I+y37uSa
-         wbdVrxsAGr7kOruXjsLq0lm54WTKEybf4QKcomxL23KRUx6Wq0t//mpGtfhI6q+x6AhN
-         B9MJsERKO9/GvR5/9K1Tq+yVfsg5WHwg04U14pNvt9fqq60uRE0tMZYZ8TACSyL+LcCh
-         u4f99zZkWjYm/59PsOeJyb+flPz/szOPTybRzKS9pdOzJu0OkrgRHr3BI/WX95Zsu82s
-         saFwQx3N1TFXcyzgMpOqoZXBOHhucmFNvrS+KgWBTCv+c+2BpLmZGvqDsWZ4SwBDPKbf
-         8sQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=I7Vb1PKX3Lf9CJi8XSxHNY/kA1vBSZWZueHJy5RvI9M=;
-        fh=sBn4ZJ/oQ2cFRgGhEemJ5h/m/aPSFPa/pfqMsvskImk=;
-        b=dU3hUa00USRMUG2My0QWkfg611zKsMU8iJvzODUM4eB/S9U2JItHbl3SXvyMwaWPHB
-         uhirX9OeAeyuA/iBcZiG65RqRJOp3x9H9lhG4J6MmspPJ/a4mZ7JJLJ73Tj+sAhhXO4f
-         Eo8CpL3eajiHmxTuVJLp1U9eJ/OvvMjS77vAYjyg6cCZ/aL5tGoAZxjFpApoizUvIBw9
-         Vn2IyD3aTVuM1kwTgd7rkRAbn9Th8t0UCVKs2wbTvvkPWhCjN5LKMrlf9mGfLmM2g6Fp
-         lL999HySJHlmo61yK926XwU0SGBlIDvhmjvgT7xZmLRgVWLgBOJH+7L0wBia6pwx/HBv
-         sEEQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4DA53FBEB8
+	for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2026 16:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773334494; cv=none; b=orQczuN98bYknbiZVufXb0clth7QpxCnZYqtLIOfnoBz0xffvHQ7x6VXwWm8Yc7RdNrKi/x+7sKqsaKvBk/PN9aIvuw/UgRb2xwGR6IpcurQEYTqvInos3ywP+8PlDxe0kXykHqNexqX5vxTaRXkmXDpYdA4vworMRrxTAo0zog=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773334494; c=relaxed/simple;
+	bh=ENv0+4bH9YdpFLGeURNwJ3+rEUsnNn74RNCtOl26SEA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Re8DwSbBRFrERFcDTIeNUWiTDUKAMchgWnf64eJWGQaaUo8h58ENQpTeANaPZX56LQf9Ao3wy9A9GxILSnD7PRnUbdb2LNUCJoDCyzssZRpRleO+bXsf+k5McxraNhi4e9r/jDXPy6NqyiRMa32zMPOqFnr8U3A5nwGGptxTiyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=TCUycPJz; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-509006c070eso10771471cf.0
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2026 09:54:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773332830; x=1773937630; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I7Vb1PKX3Lf9CJi8XSxHNY/kA1vBSZWZueHJy5RvI9M=;
-        b=NPxyPH1UQiE56iO1J+Krg8QUq3kWeZN7ewAXlAKDSXLmD9rc8hiJXV6zw0tU7/4eTb
-         7K2JV4eNu1HVViAEQvcpPHamtWMW9R/RN8dUfZRT/xFaWFh9ziB0R5y2vk9d81IG3Wql
-         edW3lf6vaRoQETYACb7EsiIPOLgLy+DXqMWa/ba0Ly/gq0fFrd4Fe251t/u+qF2R0qAx
-         WlxFEbxFqV3HI7hNcrpjKS/KmbHQAInOSmxq7YsBwBCt9UwCRd33E91N2vZYjjCu+I2n
-         vM/xSlfa1htcXHU0nvfP4y6p4mEtMIFjElfxdykA5Ty1zJkkklrZKn+EyInyIw2oLdX5
-         IGUA==
+        d=ziepe.ca; s=google; t=1773334491; x=1773939291; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VQXCfPVu6b6dIVECzm0C8AUD7IL7VvpSkD5+M4S95sw=;
+        b=TCUycPJzE2fI+UEqk7FktReSuNB+qmtoLxCPQIhObf2GoM3FGGUoUzmOL4EcJ8nqrV
+         31wLWw0iuRrm5q/A3vl9oGJab4nkcB5GgE9L87TaBE5zWVhGKUEWMOYZrC4hQkz7+K+y
+         MdSN9PZxg9+VlLOffdwRmQphGTW7UoGABbBRu3CtgROAhKqAusDMmmrNFgCXGsGgS+um
+         4b3n9KF8H9mgZuxtPx/c84lVtPd3kX8R2XT1vLZ+RjANCZT5FGS44RpBGA5cN1JRJXTn
+         oCOtB2FnqO56y3+c6Fos0prISIneHSMHrQ7vAs2p/teTVBOn2DfneDCxuRpkTU9D9cja
+         6IGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773332830; x=1773937630;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=I7Vb1PKX3Lf9CJi8XSxHNY/kA1vBSZWZueHJy5RvI9M=;
-        b=V3BCdhc2FDvRsKUpu/sddHKdmpHDsT4I4DSKoyPae1PKAw70OoXjWeeaDwVNjHVYGm
-         0KAsLm0YNqc4bGbutp2zYTHSCo7gWt737KMx8y1GZB8RuuheBNY6PKvKpBs+UcvgrMLc
-         vR+3inaqAjxG4X7K5hrU7uYQI69XAQFEEuDCs/mG6aFsM+HaPyKZ9X3F9oxePk3bDrld
-         dd//mgSxRZS6EJvwDIaBH6m/tYK/joib2wMfRAoHZH6smQIHH8wxuyEgm7xp/3jAGOZa
-         0+PHX41gQwKg/fDryhIMM89sw7LPsg8R8Ya0V203vKpu5MWGLPB2sKQWXlOrAydVbChp
-         CkIw==
-X-Forwarded-Encrypted: i=1; AJvYcCWQvfYuxb1nKdhjchoPt8SP9R70fS6OSjm3TooeHbvVjlpWVHyoU4CSI3Q320YAkntZmm0ymBSx3Qfv@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEtO+j9tbS1thh30O+HZCt+jAGJySp0Y/Rc9vQDk+KK4loxVuD
-	XsoH2QxCHOBCwgb1ypOjob2cMHEySoCaVmbgpzh7HxQrSGJXE4oCPXJzUkrhbp5FoCeQbtFY4b5
-	nNciQO3rUblRhJXRbv5psYurqTlaWNhQ=
-X-Gm-Gg: ATEYQzzhB7wTPzIz65M0AeznJWH6iB4YfmYLHaO6AB9IOyoCcv6uBw01FOixUL933pd
-	KC24IeyIye9/r8Jci6/eBWl/sxa3jkxusMu4/m6h8z1Mx/tRKfd2jME0XlBzEPWeSRlFCei9a0U
-	j1kK8dX1ceID7YZEWxsgPBMkyYSOREhnh0ug5aV5aV/kDDczctg8+8dIKIeC1BjdcAgRn3AUe8S
-	4CpxCdAruSVIvOGMafjjxSP0HPzJYJoryGxJyV7IuHTj+/GC90OdIG4yyDFsFoeemFy5hpdDBpg
-	+VLmTT1Z
-X-Received: by 2002:a5d:5f88:0:b0:439:b671:1d8f with SMTP id
- ffacd0b85a97d-43a04dc0ba5mr539681f8f.45.1773332829453; Thu, 12 Mar 2026
- 09:27:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1773334491; x=1773939291;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VQXCfPVu6b6dIVECzm0C8AUD7IL7VvpSkD5+M4S95sw=;
+        b=lOO+9XNwEdqkPexx/nFAZFQZbt4O6iuVIu1n++1Mg8MJEn7wI5huTxXhGCDRMAc9Bk
+         rtsG6ZcaW4o5NdqIyiAyzZ0hQvjfVU59ThCcT8hb/8OOm06zLYQUcIVGYlPnDdQT2buv
+         cWiTCL4a1j/l4QPUcQd00AmUS0F7Hf2qap5tLDspp07DSkIdZj/VC+ivgzXFcLFOPqR9
+         eb//Yt6YHDXfFF5EUJ7mgdjCKqpqo/S1WXD/pGgduakKp+erRlhFfeglqRLSxtSq8KLz
+         0Yb8ccqg4sonOktyMTCloZGvRaHx4P/FnFGSvko8jEK1YjRiKcDbEcWOs82SIEqI4tCL
+         oKxw==
+X-Forwarded-Encrypted: i=1; AJvYcCW84jeVnT5EM2S3bwJvODxxgtmnXXBo9gagwqdDpXTp3fSa4G87dPsIe3vNERdhjsxE2aV78wPsXRgc@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywdrm2WQA7/vltlrxwS5236kBJMQzJ+XdCf/l3RtoYQxu52xHbm
+	eq+N4miOuZnlPM1KB9Qz86//npM17tNLrrFVZxuZ8G/XB7mn9yFHpkhZnnHhkCphDJY=
+X-Gm-Gg: ATEYQzymHMvQgmR0qssZRN4RVhsY4H+aervGOz/b6RKyDvxiXMZMWfM84MTxSdgtfJK
+	ePXYaeew6bwbMR8HLNc0mIG8iJsIqxXdqniiH9hCFf6W2Zz7MLLksRBfajQlZUvKAepqGgrFBP+
+	CLOGF1ygFePIIruajbQU+IbElqUc8DGeHedGyRS961fXNMx87Kc+QaJyugjAwoc3pNBYse/dDp+
+	5vDTH/p2EUNFt3OQP2v9elB24LW9r24UUEyaA4cbvyTx4VqxNoYD2q3765HilsG2dwOWgwxScMF
+	1qIweI0CLCncF/X5gm1p50tEfwbrrTnruOB/Xnz/KBb7m0cXp39TtFgIXw/E9ev13J0o/QQvd7+
+	op60frw/SJ5G44XozHRJsqQknod18cRhwgd8Mb4TnkWblcSG7YHNXO/El/fEbocpC/sq13w90H6
+	DafTaumFoyONXNWSQJbmuptR1dsdPo9TeIdsPqM8iilrNS2+RFfDJgj/Rhte61bkRfhD5ZzwrkQ
+	J3kvBqIfVuVWVpLvvA=
+X-Received: by 2002:a05:622a:289:b0:509:44c3:5ffa with SMTP id d75a77b69052e-50957e10673mr1403911cf.52.1773334490530;
+        Thu, 12 Mar 2026 09:54:50 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-112-119.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.112.119])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5093a119602sm36658181cf.28.2026.03.12.09.54.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2026 09:54:49 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1w0jJA-00000006i8N-40X9;
+	Thu, 12 Mar 2026 13:54:48 -0300
+Date: Thu, 12 Mar 2026 13:54:48 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Kuan-Wei Chiu <visitorckw@gmail.com>, Philipp Hahn <phahn-oss@avm.de>,
+	amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com,
+	bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr,
+	dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
+	gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org,
+	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
+	kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+	linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+	linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org,
+	linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+	ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
+	sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
+	tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev
+Subject: Re: [PATCH 00/61] treewide: Use IS_ERR_OR_NULL over manual NULL
+ check - refactor
+Message-ID: <20260312165448.GN1469476@ziepe.ca>
+References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
+ <abBlpGKO842B3yl9@google.com>
+ <20260312125730.GI1469476@ziepe.ca>
+ <f5688b895eaebabae6545a0d9baf8f1404e8454e.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260312085258.11431-1-clamor95@gmail.com> <20260312085258.11431-3-clamor95@gmail.com>
- <20260312152057.GA3156966-robh@kernel.org> <CAPVz0n2GFgsrqo4_MkvNwd9t=DMU4ZGQzrpNjU+PZ4_Ysx_jcg@mail.gmail.com>
- <CAL_JsqKP-uYZf3MLFd5JrrsZ1+pxj-y+te_3uiM9N+5Xu4phUQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqKP-uYZf3MLFd5JrrsZ1+pxj-y+te_3uiM9N+5Xu4phUQ@mail.gmail.com>
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-Date: Thu, 12 Mar 2026 18:26:57 +0200
-X-Gm-Features: AaiRm51Esg3lleAiftngJqOtXTsbfFUPZvmyUsPO32KC3v38pJrGNn7u4Fa_N7g
-Message-ID: <CAPVz0n0aTEkmb6tFn72f7O=BvJzvkJ6ri+_TmQbnroNrWQppzQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] dt-bindings: pinctrl: pinctrl-max77620: convert to
- DT schema
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Chanwoo Choi <cw00.choi@samsung.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f5688b895eaebabae6545a0d9baf8f1404e8454e.camel@HansenPartnership.com>
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[ziepe.ca:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33275-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,intel.com,arm.com,samsung.com,bootlin.com,vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[19];
+	FREEMAIL_CC(0.00)[gmail.com,avm.de,lists.freedesktop.org,lists.ubuntu.com,vger.kernel.org,inria.fr,lists.linux.dev,lists.osuosl.org,lists.infradead.org,lists.ozlabs.org,kvack.org,st-md-mailman.stormreply.com,lists.samba.org,lists.sourceforge.net];
+	DKIM_TRACE(0.00)[ziepe.ca:+];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	DMARC_NA(0.00)[ziepe.ca];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33276-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[clamor95@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: A8A99275A12
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jgg@ziepe.ca,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCPT_COUNT_GT_50(0.00)[56];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,ziepe.ca:dkim,ziepe.ca:mid]
+X-Rspamd-Queue-Id: CC7B9276191
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-=D1=87=D1=82, 12 =D0=B1=D0=B5=D1=80. 2026=E2=80=AF=D1=80. =D0=BE 17:39 Rob =
-Herring <robh@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
->
-> On Thu, Mar 12, 2026 at 10:34=E2=80=AFAM Svyatoslav Ryhel <clamor95@gmail=
-.com> wrote:
-> >
-> > =D1=87=D1=82, 12 =D0=B1=D0=B5=D1=80. 2026=E2=80=AF=D1=80. =D0=BE 17:20 =
-Rob Herring <robh@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
-> > >
-> > > On Thu, Mar 12, 2026 at 10:52:55AM +0200, Svyatoslav Ryhel wrote:
-> > > > Convert pinctrl-max77620 devicetree bindings for the MAX77620 PMIC =
-from
-> > > > TXT to YAML format. This patch does not change any functionality; t=
-he
-> > > > bindings remain the same.
-> > > >
-> > > > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> > > > ---
-> > > >  .../pinctrl/maxim,max77620-pinctrl.yaml       |  97 +++++++++++++
-> > > >  .../bindings/pinctrl/pinctrl-max77620.txt     | 127 --------------=
-----
-> > > >  2 files changed, 97 insertions(+), 127 deletions(-)
-> > > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/maxim=
-,max77620-pinctrl.yaml
-> > > >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinct=
-rl-max77620.txt
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/pinctrl/maxim,max776=
-20-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/maxim,max77620-=
-pinctrl.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..4e5f997317ca
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/pinctrl/maxim,max77620-pinc=
-trl.yaml
-> > > > @@ -0,0 +1,97 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/pinctrl/maxim,max77620-pinctrl.=
-yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Pinmux controller function for Maxim MAX77620 Power managem=
-ent IC
-> > > > +
-> > > > +maintainers:
-> > > > +  - Svyatoslav Ryhel <clamor95@gmail.com>
-> > > > +
-> > > > +description:
-> > > > +  Device has 8 GPIO pins which can be configured as GPIO as well a=
-s the
-> > > > +  special IO functions.
-> > > > +
-> > > > +allOf:
-> > > > +  - $ref: /schemas/pinctrl/pincfg-node.yaml
-> > > > +  - $ref: /schemas/pinctrl/pinmux-node.yaml
-> > >
-> > > Don't these properties apply to the child nodes?
-> > >
-> >
-> > They do, but not all properties defined in those schema files are
-> > applicable for this binding. I have marked those which can be applied
-> > in the node patterns.
->
-> Then additionalProperties is appropriate.
->
-> > > > +
-> > > > +patternProperties:
-> > > > +  "^(pin|gpio).":
-> > > > +    type: object
-> > >
-> > >        additionalProperties: false
-> >
-> > I will move additionalProperties here then.
->
-> No, moving it is wrong. You need it here AND in the parent node.
->
+On Thu, Mar 12, 2026 at 11:32:37AM -0400, James Bottomley wrote:
+> On Thu, 2026-03-12 at 09:57 -0300, Jason Gunthorpe wrote:
+> > On Wed, Mar 11, 2026 at 02:40:36AM +0800, Kuan-Wei Chiu wrote:
+> > 
+> > > IMHO, the necessity of IS_ERR_OR_NULL() often highlights a
+> > > confusing or flawed API design. It usually implies that the caller
+> > > is unsure whether a failure results in an error pointer or a NULL
+> > > pointer. 
+> > 
+> > +1
+> > 
+> > IS_ERR_OR_NULL() should always be looked on with suspicion. Very
+> > little should be returning some tri-state 'ERR' 'NULL' 'SUCCESS'
+> > pointer. What does the middle condition even mean? IS_ERR_OR_NULL()
+> > implies ERR and NULL are semanticly the same, so fix the things to
+> > always use ERR.
+> 
+> Not in any way supporting the original patch.  However, the pattern
+> ERR, NULL, PTR is used extensively in the dentry code of filesystems. 
+> See the try_lookup..() set of functions in fs/namei.c
+> 
+> The meaning is
+> 
+> PTR - I found it
+> NULL - It definitely doesn't exist
+> ERR - something went wrong during the lookup.
+> 
+> So I don't think you can blanket say this pattern is wrong.
 
-Oh, yes, you are right, it seems that I did not notice while
-converting from txt. Thanks!
+Lots of places also would return ENOENT, I'd argue that is easier to
+use..
 
-> Rob
+But yes, I did use the word "suspicion" not blanket wrong :)
+
+Jason
 
