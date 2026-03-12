@@ -1,162 +1,132 @@
-Return-Path: <linux-gpio+bounces-33210-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33211-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ICkBLnb4sWl7HQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33210-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 00:19:18 +0100
+	id IPSDKz4xsmmzJQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33211-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 04:21:34 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80FD726B4F7
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 00:19:18 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13B7A26CC18
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 04:21:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DF8FF3023174
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2026 23:19:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7CE6C302F38E
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 03:20:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A77F23A381F;
-	Wed, 11 Mar 2026 23:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cR6X86Qw"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B8A038836A;
+	Thu, 12 Mar 2026 03:20:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207DD2FC01B
-	for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 23:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773271154; cv=pass; b=JAuLcbeRn6AQgX4WYsK7xNZVEqi/NB9hu99w2VuNSheG2yqqHn2FTOPoeZ1g1fnvvX643Oc/gW3LF/Y8G7PBLBTEfE/i07r5Sr/+zWAK1MvGN++I4kvqJ+IipvSCr0ztW69bqTS74Z6dGCuuDtsxjEX4VLCcY3AALqZHxbhYeNE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773271154; c=relaxed/simple;
-	bh=S0Kwnud5iFtwr69z8VPCi5ftaPUGlvLcKnXUDXdBOFI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i8XX6RK5qgq4xcy+IBt8mSApjXnNFZl3UoebaAbqkJqv599vT9QoP8+03TVmJVhHxyzLmGOA3Rfc6n3FffJ/u5DHPK8VjL7xaP5J944NzEaH04Tdx6e/yXDP/7/Lnc28bf8xaRniYAzwBjmd1ufMTjCggHHWMf7jySAmm/vgck8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cR6X86Qw; arc=pass smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b940f962a82so52887466b.2
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2026 16:19:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773271151; cv=none;
-        d=google.com; s=arc-20240605;
-        b=MP/LAD7TrX/ofkahG9KvB6MHfjN+rrg/gw2nheNk3C0wNSgN+yVrtKbK/fu70GqT3A
-         CrVcSPAooFIt7+EU1hXvKm/BrGgrTyDcvDZSAigB3AG3CfseahXD6JDqJjCDd6ckHp45
-         Rq2XXNB0Y5whNxBuokZdP2ynNmM6iri3fLQXGAPibYr75kVVSIKQ2fs6pOXWf0et/3ba
-         L7meaZZp4dEPsVGVvhKO/U0ElO1I0S2yZs84uDWdL2IyO8+6A8MPi/U0g/mEJUkaOMiq
-         S9jwncdWSC+wAwVSoJgyQir6ZIqWkQlpfVgJ3DWgCska18H7Yw0deNhTc71LkOcxDjwn
-         9FxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=p2a6wuOjf/7CEde44gCvKjhE0f4d1bD1oCKGRhA0Nds=;
-        fh=XFKb5gqGKpE3dBHzmx3L4GpIfnwniqk7IUzetpli8+A=;
-        b=P/1FHBisxk5S0CIN2RU3j8slB1c8o7fBsm86BlHzjD4enyXaBy03NzcI8WrStV5rKk
-         dao6jad1zrhWTXE5iMnutROHkISPYWwIoA5qGUspTVKCZiy3yB2NhRsNeeCWHHKLzG4S
-         cJpIU4h2C5+jFRJRISCMCefBrrESc9uKqVlQ51ugjRs0vXJhGApnYEkXox6G+Ujwz8aX
-         9tRTSNF5ifc+buF/383HJZgMUkwvqUAr3KAlgZXmHEKQ1K7d8F54IO2KFHr5yJbhFllP
-         +0ps9B6GMZnh2vZAjkwLrThqRDmt4xt0nTr9/bFGpWQMus9uCcLDgsxnIfJ/SfPuwDMX
-         VNSw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773271151; x=1773875951; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p2a6wuOjf/7CEde44gCvKjhE0f4d1bD1oCKGRhA0Nds=;
-        b=cR6X86Qw+tvhbwCWZryMP33vE3ID5yNEhPeJ9uDPyp3jmfbOEC/zfGnBAUOv4ccqee
-         2S7CdhAjVVm/9nfFDN9vUuw3tMZmWC4Nx5WhA1WshPPZOuPX6so3IM/6Zlxb/hAtc5Ht
-         7uKX0244lcNW1mgz2vJlfTrJcAeilYMPGMH11iS0L/YnShPoGFReBp9utk8FFdtN4WM1
-         DxSUNopaqcn04xV14HHHgqkAZGKL60Qx9XiTdW3vcaxRZXCwxhIuwPOP80EfqMIQzfCY
-         TA37K3/1QO95Poad4Xg4Rdwn3Ki8GC35rNvNuZsD4afsaQL4DxPOn1Pu+nogV1/FdoX3
-         d4Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773271151; x=1773875951;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=p2a6wuOjf/7CEde44gCvKjhE0f4d1bD1oCKGRhA0Nds=;
-        b=TTLsoWP+FBvXXwdlVGcIkkLSQVJIYqA3f+taKegXmvfmbPApK6q+FkKbBHI1ZdxPMm
-         wWE/d6EDnS4x6WC92t/Z2P9G6ocydKosHjcHYmIQJYwZ46RkCug6DFE2gVe5NVpVgLFT
-         9RFfoNhRpCP7TcJS3ogxX/DzKNtHY+5Zn8RZShG/MGgdzobSxfzU6V7kM8VeusuuEc6Z
-         zxaVUj9xy0LLrg0od5RB5F8kK8B5saZrIPeocNo/FmGk7FP6Gnw2zLms5uH5cx3GXjzm
-         2F/gvlksM9v/RHvQ3bXOj+6PCm3UF+yiimfBqTxT5Ru6R1g9ls2/ZMFfS1MX7COqP+/U
-         cJDA==
-X-Gm-Message-State: AOJu0Yw63KK7gk/qm9ZhAhkobl9luDGOKG8GvZZtluegOEQsk+HTOB09
-	i4+I/Gpt6IbCMDGT7zAaVjZcUdqB/vmRiqcVMQzIpicOvkIwGX1/TCFBZvQMFzMH3SJ0dKh7yko
-	dIIf5LopatgpTaP1BRZjusPk53LYJjTI=
-X-Gm-Gg: ATEYQzxQz7RunSAeEyvxjazXbEs01r0wXr9mk86rFnHowqY89X3+1qvzjwki4vz/Yxs
-	nLeCSeE8PQvVdxXxDV50w4rVrd7XoOz2Rj/X/OjZ21VTmn++Ptu7CGOwDvqTXA1nEpdPeFnX3K7
-	ECnebUoBH2t/dUestTklShkPL0vjnbQ5OsLWhtExRudt5g6XmHXs+0FM2q/J/7hpRbZ8ASdLFLH
-	sCDB6avbivE/5MR3n6uCUDErDdGC8F9XO37iaG7ZHzhH0l9YL+r4DkDPzbO8zB0NE4seO3WoItB
-	EZwtoBO/Dmts2M8Mqy5i+oTs3VeNMaoDf82pEwlWwiDe5XWh4vE5gCddPQtwK0nX/E+L3Fr+bPx
-	Yeq9MLJMC5OC4FqUl
-X-Received: by 2002:a17:907:2d0e:b0:b94:b5b:4370 with SMTP id
- a640c23a62f3a-b972e158c2emr286633466b.2.1773271151254; Wed, 11 Mar 2026
- 16:19:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CBD388E68
+	for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2026 03:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773285607; cv=none; b=iSJUcAZIuOVohrkFSVmNlwQlLcqLnIw5FBiUh1WfyzGo2qrTm2uKih7QXJkK3i+DB3Qe2KrSHfD3WViv/PJ7Hecx8MYdvkz5NjrFeZC2dEUaMHjbeBi1KEZCFCygQc1H02/HukWtd0G7VbyC0ArRiTo/Qcatg9/Unhe/9+mtH30=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773285607; c=relaxed/simple;
+	bh=nUIFkJOcDm1Y7555ix05egCMXdeOd7itfivpo2q26Kc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rXIOKnPqfk9Dz9N3w0snQhpvOnWeUQMb9fPHcDhhs7maM4AgPTulPkrqbWZnb/TKIEeHOb2uMRVoZpMEmUlR1qoHgI1srYIjIHk/gact4eDAZCxhLgd6rk26Z2kReicfEd28BUiwGFgE7kNjjkK0z82E9ZPlSR9avG+03HPGM3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowABnhdzdMLJpfaBqCg--.11995S2;
+	Thu, 12 Mar 2026 11:19:57 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: linusw@kernel.org
+Cc: eleanor.lin@realtek.com,
+	bartosz.golaszewski@oss.qualcomm.com,
+	tychang@realtek.com,
+	linux-gpio@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] pinctrl: realtek: Fix error check for devm_platform_ioremap_resource()
+Date: Thu, 12 Mar 2026 11:18:20 +0800
+Message-Id: <20260312031820.3007962-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260310222040.10324-1-rosenp@gmail.com> <CAD++jLmR8TZHMbiSBaUmUvPYvP9bPOmr0a=yq4M7FNRFF4EzcQ@mail.gmail.com>
-In-Reply-To: <CAD++jLmR8TZHMbiSBaUmUvPYvP9bPOmr0a=yq4M7FNRFF4EzcQ@mail.gmail.com>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Wed, 11 Mar 2026 16:19:00 -0700
-X-Gm-Features: AaiRm51bcB2GD8hEt0KZsTqrJJEU2s6nszH4kDHUKTkax9rvTUDLGCQS6er_THc
-Message-ID: <CAKxU2N9fExr=72E6ZPs+VqCe+eSzyxS8zbcCU2PPcqKjvqiO_g@mail.gmail.com>
-Subject: Re: [PATCHv2] gpio: ljca: reduce struct allocation
-To: Linus Walleij <linusw@kernel.org>
-Cc: linux-gpio@vger.kernel.org, Lixu Zhang <lixu.zhang@intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowABnhdzdMLJpfaBqCg--.11995S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrKw48Jw1rtFykur4xJryrWFg_yoWDKrX_ua
+	y09ry3JFyUCw1vqr1qkw4SvFyIyF4qgr1kKwnIqFyakryDXw17ury8Wr4DWas7WrsFyry8
+	WryUXrZ3Z34fAjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbskFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1lc2xSY4AK67AK6r48MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73Uj
+	IFyTuYvjfUbiSdDUUUU
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+X-Spamd-Result: default: False [0.04 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33210-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33211-lists,linux-gpio=lfdr.de];
+	DMARC_NA(0.00)[iscas.ac.cn];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_NEQ_ENVFROM(0.00)[nichen@iscas.ac.cn,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.958];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 80FD726B4F7
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,iscas.ac.cn:email,iscas.ac.cn:mid]
+X-Rspamd-Queue-Id: 13B7A26CC18
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Mar 11, 2026 at 5:57=E2=80=AFAM Linus Walleij <linusw@kernel.org> w=
-rote:
->
-> On Tue, Mar 10, 2026 at 11:21=E2=80=AFPM Rosen Penev <rosenp@gmail.com> w=
-rote:
->
-> > +       size_t num;
->
-> What about naming it num_connect_modes?
-> (and unsigned in as Sakari says.)
-Too long IMO. Makes the most sense to match variable names.
->
-> Yours,
-> Linus Walleij
+Replace NULL check with IS_ERR() for devm_platform_ioremap_resource()
+return value. Use dev_err_probe() for error handling to maintain
+consistency with the rest of the probe function.
+
+Fixes: b7f698b22b8b ("pinctrl: realtek: Switch to use devm functions")
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/pinctrl/realtek/pinctrl-rtd.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pinctrl/realtek/pinctrl-rtd.c b/drivers/pinctrl/realtek/pinctrl-rtd.c
+index 60dfb39bc986..7836a15afe44 100644
+--- a/drivers/pinctrl/realtek/pinctrl-rtd.c
++++ b/drivers/pinctrl/realtek/pinctrl-rtd.c
+@@ -574,8 +574,9 @@ int rtd_pinctrl_probe(struct platform_device *pdev, const struct rtd_pinctrl_des
+ 		return -ENOMEM;
+ 
+ 	data->base = devm_platform_ioremap_resource(pdev, 0);
+-	if (!data->base)
+-		return -ENOMEM;
++	if (IS_ERR(data->base))
++		return dev_err_probe(&pdev->dev, PTR_ERR(data->base),
++				     "Failed to ioremap resource\n");
+ 
+ 	data->dev = &pdev->dev;
+ 	data->info = desc;
+-- 
+2.25.1
+
 
