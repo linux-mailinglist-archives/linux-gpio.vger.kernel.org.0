@@ -1,375 +1,274 @@
-Return-Path: <linux-gpio+bounces-33290-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33291-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MP2yJDkMs2nURwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33290-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 19:55:53 +0100
+	id sM7gDlwUs2mDSAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33291-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 20:30:36 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE2E4277667
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 19:55:52 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE16D277F4B
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 20:30:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5C4F731FBAAF
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 18:50:33 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id AB6B03046D99
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2026 19:30:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA57D4014B2;
-	Thu, 12 Mar 2026 18:50:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8CD23AB29A;
+	Thu, 12 Mar 2026 19:30:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iyEjXZBV"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="dlIPYi8M"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011056.outbound.protection.outlook.com [40.107.208.56])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011007.outbound.protection.outlook.com [52.101.65.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AD53FFADE;
-	Thu, 12 Mar 2026 18:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF1D38B7A5;
+	Thu, 12 Mar 2026 19:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.7
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773341415; cv=fail; b=Fhqegoqwv7B3/thZZ/yBiFYSIwmmVZ44tElQ+ggqWBOjULHP0S8b7+mv68TY+8e1H6AGFoYD2E5s7fUt+4s5mZUaGyhAU78QRL/XaifKjAk7Rt74eLxnmr/AEE2WkBnbmlMXB74p2ma7bGID5RxQR9q3ke9t1/U0HcmV2S6lsok=
+	t=1773343829; cv=fail; b=ItKuT5++zA4nqFKcymowewdj58lqm68A7n04bXFjMsBfQcCy5dR0dbbwaZxNs6LgM8spNXhrPxKKsFnFp0mgPpmkJ+Rh9mCdLWrU0+mN2Smzl3HlFSy3wIN96OwfceHJ4HRGARVlLiHdSdnFxGlq1f7IK6LpSbSaq4G+F9AmKA8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773341415; c=relaxed/simple;
-	bh=YGAMufwsWgQFuNaTGHqJjCTQx8AgrPAbI6ZfBwi+8W4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sT7PhxCEspnjx6JCetR2DJxdca+kfUVzs648aSpTbJ8YWN0L3GBiaMaNhk0DkSRfuRh5TjKLjKRQNHwHfe4H0PknNTi6a97NFQ2ZVB0drrSTykfFvNAQ1CgO7gIpBO7jFsYk9qZOVf56QCN8dtgs04L5U4k5EFSTPjFo1I/zHAY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=iyEjXZBV; arc=fail smtp.client-ip=40.107.208.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1773343829; c=relaxed/simple;
+	bh=cjqBbWcdCMuhUuVqiwOpSUhXMq2WzDp/CE/JpGxcnN8=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=gsJB5/IrPtbmhqMEQxP31QNZXADBpuSX4WGeraOri2xh/rCsCmcryQSN+juoNcay4xTvEf3kNh3tTGQNr2kFjzq/E28bpNDohBvMjOan/GQ6fiFpk/Ve5/a7+TTKYcmRMH+nFpjLTRNIsgJI6WwY33l5xSaN0wY3DQZJtydocyk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=dlIPYi8M; arc=fail smtp.client-ip=52.101.65.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MFsAI5Jb5L3mUJRW2sV9yMc9numamqPtFhuNPs8ow8xPGnLAuNj1lPScbSsejVH74VLazFSiEn8x2Ej/qW4mN5g+iE9I/aPgfrjQ0+76U7OKKqv6k55odKq8XPVkx9uv09FxhElqnFScBbVBdIuLuVw7/REIIOY0aFlZcXaycts9cuIS7vA3RdgI/pi2RYwDNKOg4ST2mKVbuIoPSYaJ5/SaWvi/26f0iIAAdsVCnR9RIfFQPYJoiLp/tGZ+4ZOUn7fg6QbxSAEwFKEoQlDDDFqbYaVnxhNW1Sq1/dqIaz6jgbNfnXW6p6XqYVCkPHNLU2NQEy9Tqs901cUqcpedtg==
+ b=ym1M8GMGSvIvyizOgDBiIvALxge9DtwA7WDWWj4Wd9C6r1O3JwatXc6323Zru2P9Y6Rb9XrpZLzRK1JK5+UPTd1CGZ+ulbSFBGHQrQU0UilTKc7L5vMsPfhF0BwrGzdFCucXHKqQAOAdzVETy6fa0EHdBt9qTmX6EDF8Xl/eWuhi9Eoc6jJPBntOLQE+244hfbGaDk8n+EzlAmTawfcecqvCdRGUX3+HVicUT38afoqbmLX8HUdMPqMvoF63j4cAtZfK4mOxSioCPxr/Tpdt1HInku1lW6sqvceMhdG93niztcxLcuCMFrcvmDFDMawqam9/8ptxZaHGmGiumMLE4g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=laOvCfLAi1HzWDEwzmcRorckvmhKXrYhhW9NlpJ4EQM=;
- b=V8KAsOm8SKvqi9WfYpk9tmQwA6UIuE6dgMlCkKGCH4SDJSAR/fJrMNXw+hg5dknMO/LyteATBj0ai10zWtmkTo/gVfh2Z2k0wYsy8+qy8KGq4xhnaITzm6FNvFFX18m1r7urGpP+f4U4JLzcoA6rF9eHb1HTuq60ra4JyTkWRvbhViBot/lxx/IBid2LtAoQFoLeoNPo062Rk6TdAz6xVx0fLunOs7am76VmLxD7O2uHwgJAfqjyxbiUmiHt3ooyBkqFmSWZJT8oU/BjYnrVqx12G/QWxLXiY27X+bo1XNxdJ93LWqOJCb6pSFnh5etN+GbRcPnEZKDYduDu7YVf4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.21.194) smtp.rcpttodomain=tipi-net.de smtp.mailfrom=ti.com; dmarc=pass
- (p=quarantine sp=none pct=100) action=none header.from=ti.com; dkim=none
- (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
+ bh=EPlZrz9Dy904P9cBe9G3YYavqJB7sgrkzDcRXC7e01k=;
+ b=c2EHblUBdZF/qHVpqytcFALH1Yc/EEFqD6C2CbVMdYvMUG2iGUzJOfLyab4dkNd021tKbatV+SxDATHEe6adpaPgg6GyoSVTe6mZXbvvwtHt+uJA/gL3g8LfiY4sB6iTiE5u+sIedg7p/sIbPLjZvCb5ufQjdEku0QPv/oa93ZTHPS1hCddw62VzvIAEHskoTJ+4Lq68R3UG6NOpSLC0XXJADay0GshxEUAYpo/VXLeU6b9vUeXD1T4MoIK3T4Rq6L6NUSWMXZE+W+KL3/wVQ3TeY2+4BJfDoZYi+RMWhRd4a0WZBnwiMC6QU5LPKmKamfrJRxC/3awIvaxP89jhlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=laOvCfLAi1HzWDEwzmcRorckvmhKXrYhhW9NlpJ4EQM=;
- b=iyEjXZBV6szk5PtFXWpTt75ovJTnY8l8U2ZnTwuCL8qC2UtLLSYbNvnzhHKWG5D/07zsiNkrWuHYPNfehTXlhxsBN4T+x+G9Zjkc53Yhtlg4hMJIaFas+/RGWfht2V+3llC67zPxW7FvGvfGtquH4V0bUTfVdBSHyNEPabc1jtg=
-Received: from CH0PR03CA0286.namprd03.prod.outlook.com (2603:10b6:610:e6::21)
- by CYXPR10MB7973.namprd10.prod.outlook.com (2603:10b6:930:dd::17) with
+ bh=EPlZrz9Dy904P9cBe9G3YYavqJB7sgrkzDcRXC7e01k=;
+ b=dlIPYi8Mmr07w1w8rRslDYfEEpF30eUJ9JHVlhM7Bwquqv26Jie8R2/E9UjlzdlWNlGtFDOat8EZ8q9AouiaOWotHw86mewtY/7qj8wAV+SpjWlbcOQi46R8kJWLPWCcqd6sXPnR/WIou35BajVMGmCQQYimMAxiLxPKw6/7Zw9ebvX/DQS8k61UxROMSK4JWs+CGgrSHPOSyuNTEHIccXBJKFmdAyb5TLFuQHWEibuiaYVGphA6hxa9lfltnXPo0xftDVjsnzzGNqSgLCMgK7BF7x+2FJjuI8t4z5JheiGePK0fnjqRzhzhOArsNGHTUXlMl9KMKEaXfrNcepdy9A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9185.eurprd04.prod.outlook.com (2603:10a6:102:231::11)
+ by PR3PR04MB7468.eurprd04.prod.outlook.com (2603:10a6:102:8d::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.15; Thu, 12 Mar
- 2026 18:50:09 +0000
-Received: from CH2PEPF0000009B.namprd02.prod.outlook.com
- (2603:10b6:610:e6:cafe::e8) by CH0PR03CA0286.outlook.office365.com
- (2603:10b6:610:e6::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9678.28 via Frontend Transport; Thu,
- 12 Mar 2026 18:49:58 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.194)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.21.194 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.21.194; helo=flwvzet200.ext.ti.com; pr=C
-Received: from flwvzet200.ext.ti.com (198.47.21.194) by
- CH2PEPF0000009B.mail.protection.outlook.com (10.167.244.23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9678.18 via Frontend Transport; Thu, 12 Mar 2026 18:50:07 +0000
-Received: from DFLE207.ent.ti.com (10.64.6.65) by flwvzet200.ext.ti.com
- (10.248.192.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 12 Mar
- 2026 13:50:04 -0500
-Received: from DFLE201.ent.ti.com (10.64.6.59) by DFLE207.ent.ti.com
- (10.64.6.65) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 12 Mar
- 2026 13:50:04 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE201.ent.ti.com
- (10.64.6.59) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Thu, 12 Mar 2026 13:50:04 -0500
-Received: from LTPW0EX92E.dhcp.ti.com ([10.249.135.133])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 62CIn54s2829533;
-	Thu, 12 Mar 2026 13:49:59 -0500
-From: Niranjan H Y <niranjan.hy@ti.com>
-To: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC: <lee@kernel.org>, <linusw@kernel.org>, <lgirdwood@gmail.com>,
-	<broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <niranjan.hy@ti.com>,
-	<nb@tipi-net.de>, <navada@ti.com>, <v-hampiholi@ti.com>, <sandeepk@ti.com>,
-	<baojun.xu@ti.com>, <shenghao-ding@ti.com>
-Subject: [PATCH v1 8/8] ASoC: pcm6240: remove support for taac5x1x family
-Date: Fri, 13 Mar 2026 00:18:33 +0530
-Message-ID: <20260312184833.263-9-niranjan.hy@ti.com>
-X-Mailer: git-send-email 2.33.0.windows.2
-In-Reply-To: <20260312184833.263-1-niranjan.hy@ti.com>
-References: <20260312184833.263-1-niranjan.hy@ti.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.12; Thu, 12 Mar
+ 2026 19:30:19 +0000
+Received: from PAXPR04MB9185.eurprd04.prod.outlook.com
+ ([fe80::b4c0:6119:2228:2ceb]) by PAXPR04MB9185.eurprd04.prod.outlook.com
+ ([fe80::b4c0:6119:2228:2ceb%4]) with mapi id 15.20.9700.013; Thu, 12 Mar 2026
+ 19:30:22 +0000
+From: Shenwei Wang <shenwei.wang@nxp.com>
+To: Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	arnaud.pouliquen@foss.st.com
+Cc: Shuah Khan <skhan@linuxfoundation.org>,
+	linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Shenwei Wang <shenwei.wang@nxp.com>,
+	Peng Fan <peng.fan@nxp.com>,
+	devicetree@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-imx@nxp.com
+Subject: [PATCH v11 0/5] Enable Remote GPIO over RPMSG on i.MX Platform
+Date: Thu, 12 Mar 2026 14:29:52 -0500
+Message-ID: <20260312192957.1978329-1-shenwei.wang@nxp.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SN6PR16CA0054.namprd16.prod.outlook.com
+ (2603:10b6:805:ca::31) To PAXPR04MB9185.eurprd04.prod.outlook.com
+ (2603:10a6:102:231::11)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF0000009B:EE_|CYXPR10MB7973:EE_
-X-MS-Office365-Filtering-Correlation-Id: 98ab4eb4-4608-4551-0202-08de80682e22
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9185:EE_|PR3PR04MB7468:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5f8e6862-92ef-40dd-93fc-08de806dcdc4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|82310400026|36860700016|56012099003|22082099003|18002099003;
+	BCL:0;ARA:13230040|366016|1800799024|19092799006|52116014|7416014|376014|921020|38350700014|56012099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	kzcE6pRnRFRrcI4AUHUnvG/BF8Rh4oJd8PuYOwMXKycup8WzO3EU/iqnLft2qBksLk4QpOsMd6rPP3CeXvZuP+uXCf46isbTaQguwK1h7xk+4QknIjVsbtRfOoPoI1Cocb2kn9uJbMsjnurBmwS0mDsPzoiZwkva3J9KxX5ZVxG8/rV+dbxefxE7Lpq3WNr+yvm4iuiuN3Z7mxTWM56J4gY2ckTJYDiRuZSH5cIPe08aoz4C6Q6o5sbSoj0uen9eUxueIrOZlH+uxy7QlpYGhlClJWm3MdvAaAIl1khi28zsFgrLstt+VWAadnIShzzj9/i+z0dvblYgVzaXbZoVZzBotAnSxihnW1YcNOoHshzO20bfjwKFLjsZyOh6RME1CCgx/RhKaLec2vWU2OWq/y+hi1iq2y44BrrtPkAAOTQ65Aa6210U51tY9Hb49xW41IlON8z3eK8fhHskmUtWKXVElkd6P4R/qLV6Har3a0aOq4T9bpCsQ2X3nKWHKYTFeRaKWUfdpcoref160GC6UQMfGh1MNiHXrRojsX6zbCD1ytFkLoqGn7EASnf4CDBluavXO6cP2dGudwKR5IqdLPEHj1s/Am1Xi1flRy63ggcePS91V5R+tKECon2O8+J7pKU+TESrqIrI0nP+nk4538mrIVZd4mH3s3AnS8u90uy1UPXCnn9z3ab/neo7W03YPmAYR+kxZkCUMotb9dx37jXzoWZbHICCrIXTmDdj0t3obEepkaxOb+Qirjo4KZkcg/UD7WdVipKCV16XWqzgBg==
+	oqen2ZjfL4XjHPbgELsGWh5ayRD5iTuOCYWFD3sOF1pvFURC1yD6T9jCPWHcdu9xMBLROZlR1v0aZyjvvo7xX8lgQc2RGxH/sNJ+0CyTU6RlB4gorbsGbB3qYdOSePL7+CGHFYhhUb0xR3rYK2Ai3AcYEe9RyFjl8KX3glcwK7GWhqrrlpy1navG91ntHwPSQCiyy6rlb4PNCjuTUYuEYCddhhvEHrQ/DQLix2V1so1XhHMyzJK7JtaMN4mNIoE1LHY9YZewWPXsEtQxKhBre+unqHnD4tKSKAo3+Ns2bauwDR06ZeDbN/4IPT6E+lIbBAaq+CgUfl5nqOuGdiKSo7xAOU31BLt2L/NkQ4b/CSiYO0ks57VJi9eiIjyImjPDxekG1+e/1JbG2Y0c879lAhQ56kR60G8sWg+F8aJVigwz7hies9NlRdSkIkp6f21qjCqd79LjZhhTjjcMF4R2vdqPpocUaNbz+TveNHobYpRrdghreHveZUPCiPvib4+MpiKvdAmVELJ7oURL41JSgqoJ7mTopqUX8S7e4Ap+vLjLih0NSJucYycO7lhDIl2DbxNTCcAN+8eZDH0PT2MrgR2zXd1bEXI34YR5s75PTi0/waHQpa2g3b6CKVV8ulFV/zyiUiJWtUNPQDCRocnoEcBtkE5I9mmgcfBWx9tPDFNd0iJUJs5eZNcW56Z6005aamCj4Z3CRQOlOVehZyNB44I94VPiMLixX7oYGPjtqa9M/1EOgX1GpQcnOXLKFZH4C28WZlKIShR+ej7d7Ui6ORlBhdwp5qTXXIB6mtWGsbe6oyNbWh0p94tejDweUWTH
 X-Forefront-Antispam-Report:
-	CIP:198.47.21.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet200.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(82310400026)(36860700016)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9185.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(19092799006)(52116014)(7416014)(376014)(921020)(38350700014)(56012099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	eanXGPj8/DaLIQPPT22rtrC1r/UgZPKw6tovT/y5cve+cwHQAHmJ4gj38BrGQOn/Zk3fO98AYIxQX6J2w7Ym12TqqBSMewxHstkxeOwe04btqPJ3wloe5DPMe2WhG3ii9MRr0MQrgCWz/tnMzYPFSszPlo6CEac0J5hWvSJT/VZH1EUObN/52CB3y74WVic/KFCV6lSo3vJ3DPWkkAw/Rsa/pmE0IIeMgUf0xFNzJ5kFLQyk3guZ4vya4bdvlWDURZfUtHZsoLSXJzpBocujzt/w8H4kLr/weyyxX/VwwLC+QExUom8fRhoznIZu2XB3KigUtpwWzS6ZVgdSSwaKxSO7yGVGFkHIR6BiKgL/SRerGNHqB62CyoAk0OGym4Q2n/l2+Krx2tffqGOkoaCpcqaLA8wOX2baVCuVYakk6LwruUdkuSnIZ84SawFcBflQ
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2026 18:50:07.1074
+	=?us-ascii?Q?hWutPH13jbd+leiDQAqWcetrYkGyJcMkyCvwjfzVWY1TxI7H7BpgmoOLtJ92?=
+ =?us-ascii?Q?sWu/4K/HxJ+x5RoTb/xR/hjO1ZSRDcrvFAtpm4MEpansJ2EPXUMRtUIdart8?=
+ =?us-ascii?Q?FlYYZ8YVgcd89xYKTEpXK2GS8wkWTwaVY7m+GlJssx66k2VO6KdJ1lNNEl5L?=
+ =?us-ascii?Q?uirU125RZwOt+b4IF8G3xfuXaB/umgKE1pDJkqpeqJO8cvGPtGDV5i9oWxyj?=
+ =?us-ascii?Q?3pDzyIKVqS7omTb+f/8qq7rB/7AZjH5h6WRmN278C8AFyvcDc5sZFVb1Zv1i?=
+ =?us-ascii?Q?kQNdAu+37UkeXpP08Z96FZDj6srxborgZsOwHzMB0VnlCew8S6Dk3NrLqS91?=
+ =?us-ascii?Q?R/mrIVir366qpZDuxCcBU1fhTEB/gM0Nt3PS36XbEHyNdIapuHfloVhC9+Gc?=
+ =?us-ascii?Q?n7GYZXxU7AKo2Bl3VcsxGW5R2beOC456XYFb/nRSazsCZMZptxIkQP96LjqN?=
+ =?us-ascii?Q?h+DmEhmmaabyOkZCF0Fr2zTebq+vu5e5HWVgk2OaYB8uNsvD8HBpCsGKJ10N?=
+ =?us-ascii?Q?8EB+dJyO9ucs0djbn5piWZxNhBAT6qZ1THCJPnW0gKvYVkxY8ivKnC129I16?=
+ =?us-ascii?Q?NmtyJkmmruysB2NvjH9zHA2MHNnALtucJ2fjDk+8DaT6WJ3xJi1zUVy/X+nd?=
+ =?us-ascii?Q?mnUYH+z9SaZSKb3mkf76yeFEMqQ4J70h224CI6Xj/FWvj/jiMMEQdpcV4ZvI?=
+ =?us-ascii?Q?0vZB5xhVIemb9/XPHwiPl901XebKnMvc7iC/1gGKaRw28W3hZOx2PNQ/IM+V?=
+ =?us-ascii?Q?ijtRs8dthPShCvSSUnA97fyq9z9v8xyI6CiPaHa9X2wSBg/2bRJtjEK4kWGO?=
+ =?us-ascii?Q?8ZHAfbp8rVc31uYCtdbsVmHfPOXBv4GT1v31WmHkY2hZrYLdNL1gwUghqYCG?=
+ =?us-ascii?Q?z8LzYJFkp8vndEJ7BT+VJrrbem6iuKM6bFPgFXZXkvehV6eJJrMrtOPMh9Z9?=
+ =?us-ascii?Q?PsN+9wamVN9YAMCFFkz2Uj0BPIw3jXuXc3aNOPXX+3/CAViu5dB+oLmOQUEz?=
+ =?us-ascii?Q?dZZ94ksyrvTAPSyw/ml8xDIgu+yKVjHel2UPWe1hL0L9bxD53cxZ7W6UsYi4?=
+ =?us-ascii?Q?VU+WavTql9IWKHjelOQ5ZFNPxdnnponB9amQYke2K05fVMk3yNDoNQj4GnOz?=
+ =?us-ascii?Q?2k+jMnD8Hacjr3skDQjhD/9L1wToxQ22Lmn4zmFMT7V1E6laGb94jW9Tm4W9?=
+ =?us-ascii?Q?nP/WjI8d4kb6NQPfQgBmzLW8WrpHbQZsRA0BWRMPVuNUEElDUnqXqZVyBxDd?=
+ =?us-ascii?Q?tUoMN2RwxLkBKZgw0+lCNDcsEvjgmumVD6ofzy66818EdbECSisDAEmcdgKG?=
+ =?us-ascii?Q?NSr/LDvrl6nL/XlzCxovvYgI+zPDXGQ4G7F+HhpfwhG9SU6ptLs69jWgjmGS?=
+ =?us-ascii?Q?3iYh22Am2MjnJAqAwX/vbyExWh9yQQtUJ2xTtymxhJ3JZkUktFdhZLrExae1?=
+ =?us-ascii?Q?9vrvauGLP8/G86Q08P3+T9qREjC88y3VXKI2poD6fc6ZqR6FSPZp9MLAKLZu?=
+ =?us-ascii?Q?TluD+GPZoLHqbu6EjTSzFS0bQgi1WAz5IHEG2p7lIhOfIB/idHbtmRpjbZft?=
+ =?us-ascii?Q?62tfP51RZ3SuomtUpwO9K4Yn3rb7CbL+sONoOvTNgNIT6YjFR/1hQCl3Ix85?=
+ =?us-ascii?Q?qyz5vKNxlSjtgraRGSgfFMMXBI+3Qp42p21URCEOPST4sfDa+tNc9dR7KB5M?=
+ =?us-ascii?Q?dMW8THD6n7ehDiMfj7HYn9W3p2r8u1CY+zG71ypa9IWsurWBKpHmlohSfQCd?=
+ =?us-ascii?Q?jE/t0XyjSA=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f8e6862-92ef-40dd-93fc-08de806dcdc4
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9185.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2026 19:30:22.7632
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 98ab4eb4-4608-4551-0202-08de80682e22
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.194];Helo=[flwvzet200.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF0000009B.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR10MB7973
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3Udz/nEMZqSvJKrBAJDC/r/Zf9idkTGXSN+/XSxO2LMOMHdBG6qJksse9E99RADj6Op12OpRT+kzm9FXqN91DQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7468
 X-Spamd-Result: default: False [2.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[ti.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[ti.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FREEMAIL_CC(0.00)[linuxfoundation.org,vger.kernel.org,pengutronix.de,gmail.com,nxp.com,lists.linux.dev,lists.infradead.org];
+	RCPT_COUNT_TWELVE(0.00)[24];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,perex.cz,suse.com,ti.com,tipi-net.de];
-	TAGGED_FROM(0.00)[bounces-33290-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33291-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[nxp.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[niranjan.hy@ti.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[shenwei.wang@nxp.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[ti.com:+];
-	TO_DN_NONE(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ti.com:dkim,ti.com:email,ti.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCVD_COUNT_SEVEN(0.00)[10]
-X-Rspamd-Queue-Id: EE2E4277667
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,nxp.com:dkim,nxp.com:mid]
+X-Rspamd-Queue-Id: EE16D277F4B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Remove TAC5X1X support from the legacy pcm6240 codec driver. The TAC5X1X
-family now uses a dedicated MFD-based driver for better code organization
-and maintainability.
+Support the remote devices on the remote processor via the RPMSG bus on
+i.MX platform.
 
-Signed-off-by: Niranjan H Y <niranjan.hy@ti.com>
----
- sound/soc/codecs/pcm6240.c | 126 +------------------------------------
- sound/soc/codecs/pcm6240.h |   4 --
- 2 files changed, 3 insertions(+), 127 deletions(-)
+Changes in v11:
+ - Expand RPMSG for the first time per Shuah's review comment.
 
-diff --git a/sound/soc/codecs/pcm6240.c b/sound/soc/codecs/pcm6240.c
-index 78b21fbfad50..b1902b9e9f32 100644
---- a/sound/soc/codecs/pcm6240.c
-+++ b/sound/soc/codecs/pcm6240.c
-@@ -44,10 +44,6 @@ static const struct i2c_device_id pcmdevice_i2c_id[] = {
- 	{ "pcmd3140", PCMD3140 },
- 	{ "pcmd3180", PCMD3180 },
- 	{ "pcmd512x", PCMD512X },
--	{ "taa5212",  TAA5212  },
--	{ "taa5412",  TAA5412  },
--	{ "tad5212",  TAD5212  },
--	{ "tad5412",  TAD5412  },
- 	{}
- };
- MODULE_DEVICE_TABLE(i2c, pcmdevice_i2c_id);
-@@ -442,60 +438,6 @@ static const struct pcmdevice_mixer_control pcmd3180_fine_gain_ctl[] = {
- 	}
- };
- 
--static const struct pcmdevice_mixer_control taa5412_digi_vol_ctl[] = {
--	{
--		.shift = 0,
--		.reg = TAA5412_REG_CH1_DIGITAL_VOLUME,
--		.max = 0xff,
--		.invert = 0,
--	},
--	{
--		.shift = 0,
--		.reg = TAA5412_REG_CH2_DIGITAL_VOLUME,
--		.max = 0xff,
--		.invert = 0,
--	},
--	{
--		.shift = 0,
--		.reg = TAA5412_REG_CH3_DIGITAL_VOLUME,
--		.max = 0xff,
--		.invert = 0,
--	},
--	{
--		.shift = 0,
--		.reg = TAA5412_REG_CH4_DIGITAL_VOLUME,
--		.max = 0xff,
--		.invert = 0,
--	}
--};
--
--static const struct pcmdevice_mixer_control taa5412_fine_gain_ctl[] = {
--	{
--		.shift = 4,
--		.reg = TAA5412_REG_CH1_FINE_GAIN,
--		.max = 0xf,
--		.invert = 0,
--	},
--	{
--		.shift = 4,
--		.reg = TAA5412_REG_CH2_FINE_GAIN,
--		.max = 0xf,
--		.invert = 0,
--	},
--	{
--		.shift = 4,
--		.reg = TAA5412_REG_CH3_FINE_GAIN,
--		.max = 0xf,
--		.invert = 4,
--	},
--	{
--		.shift = 0,
--		.reg = TAA5412_REG_CH4_FINE_GAIN,
--		.max = 0xf,
--		.invert = 4,
--	}
--};
--
- static const DECLARE_TLV_DB_MINMAX_MUTE(pcmd3140_dig_gain_tlv,
- 	-10000, 2700);
- static const DECLARE_TLV_DB_MINMAX_MUTE(pcm1690_fine_dig_gain_tlv,
-@@ -510,9 +452,7 @@ static const DECLARE_TLV_DB_LINEAR(adc5120_chgain_tlv, 0, 4200);
- static const DECLARE_TLV_DB_MINMAX_MUTE(pcm6260_fgain_tlv,
- 	-10000, 2700);
- static const DECLARE_TLV_DB_LINEAR(pcm6260_chgain_tlv, 0, 4200);
--static const DECLARE_TLV_DB_MINMAX_MUTE(taa5412_dig_vol_tlv,
--	-8050, 4700);
--static const DECLARE_TLV_DB_LINEAR(taa5412_fine_gain_tlv,
-+static const DECLARE_TLV_DB_LINEAR(pcmd31x0_fine_gain_tlv,
- 	-80, 70);
- 
- static int pcmdev_change_dev(struct pcmdevice_priv *pcm_priv,
-@@ -981,7 +921,7 @@ static const struct pcmdev_ctrl_info pcmdev_gain_ctl_info[][2] = {
- 	// PCMD3140
- 	{
- 		{
--			.gain = taa5412_fine_gain_tlv,
-+			.gain = pcmd31x0_fine_gain_tlv,
- 			.pcmdev_ctrl = pcmd3140_fine_gain_ctl,
- 			.ctrl_array_size = ARRAY_SIZE(pcmd3140_fine_gain_ctl),
- 			.get = pcmdevice_get_volsw,
-@@ -1000,7 +940,7 @@ static const struct pcmdev_ctrl_info pcmdev_gain_ctl_info[][2] = {
- 	// PCMD3180
- 	{
- 		{
--			.gain = taa5412_fine_gain_tlv,
-+			.gain = pcmd31x0_fine_gain_tlv,
- 			.pcmdev_ctrl = pcmd3180_fine_gain_ctl,
- 			.ctrl_array_size = ARRAY_SIZE(pcmd3180_fine_gain_ctl),
- 			.get = pcmdevice_get_volsw,
-@@ -1025,62 +965,6 @@ static const struct pcmdev_ctrl_info pcmdev_gain_ctl_info[][2] = {
- 			.ctrl_array_size = 0,
- 		},
- 	},
--	// TAA5212
--	{
--		{
--			.gain = taa5412_fine_gain_tlv,
--			.pcmdev_ctrl = taa5412_fine_gain_ctl,
--			.ctrl_array_size = ARRAY_SIZE(taa5412_fine_gain_ctl),
--			.get = pcmdevice_get_volsw,
--			.put = pcmdevice_put_volsw,
--			.pcmdev_ctrl_name_id = 2,
--		},
--		{
--			.gain = taa5412_dig_vol_tlv,
--			.pcmdev_ctrl = taa5412_digi_vol_ctl,
--			.ctrl_array_size = ARRAY_SIZE(taa5412_digi_vol_ctl),
--			.get = pcmdevice_get_volsw,
--			.put = pcmdevice_put_volsw,
--			.pcmdev_ctrl_name_id = 1,
--		},
--	},
--	// TAA5412
--	{
--		{
--			.gain = taa5412_fine_gain_tlv,
--			.pcmdev_ctrl = taa5412_fine_gain_ctl,
--			.ctrl_array_size = ARRAY_SIZE(taa5412_fine_gain_ctl),
--			.get = pcmdevice_get_volsw,
--			.put = pcmdevice_put_volsw,
--			.pcmdev_ctrl_name_id = 2,
--		},
--		{
--			.gain = taa5412_dig_vol_tlv,
--			.pcmdev_ctrl = taa5412_digi_vol_ctl,
--			.ctrl_array_size = ARRAY_SIZE(taa5412_digi_vol_ctl),
--			.get = pcmdevice_get_volsw,
--			.put = pcmdevice_put_volsw,
--			.pcmdev_ctrl_name_id = 1,
--		},
--	},
--	// TAD5212
--	{
--		{
--			.ctrl_array_size = 0,
--		},
--		{
--			.ctrl_array_size = 0,
--		},
--	},
--	// TAD5412
--	{
--		{
--			.ctrl_array_size = 0,
--		},
--		{
--			.ctrl_array_size = 0,
--		},
--	},
- };
- 
- static int pcmdev_dev_bulk_write(struct pcmdevice_priv *pcm_dev,
-@@ -1998,10 +1882,6 @@ static const struct of_device_id pcmdevice_of_match[] = {
- 	{ .compatible = "ti,pcmd3140" },
- 	{ .compatible = "ti,pcmd3180" },
- 	{ .compatible = "ti,pcmd512x" },
--	{ .compatible = "ti,taa5212"  },
--	{ .compatible = "ti,taa5412"  },
--	{ .compatible = "ti,tad5212"  },
--	{ .compatible = "ti,tad5412"  },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, pcmdevice_of_match);
-diff --git a/sound/soc/codecs/pcm6240.h b/sound/soc/codecs/pcm6240.h
-index 2d8f9e798139..86b1ef734a3d 100644
---- a/sound/soc/codecs/pcm6240.h
-+++ b/sound/soc/codecs/pcm6240.h
-@@ -33,10 +33,6 @@ enum pcm_device {
- 	PCMD3140,
- 	PCMD3180,
- 	PCMD512X,
--	TAA5212,
--	TAA5412,
--	TAD5212,
--	TAD5412,
- 	MAX_DEVICE,
- };
- 
--- 
-2.34.1
+Changes in v10:
+ - Update gpio-rpmsg.rst according to Daniel Baluta's review comments.
+ - Add a kernel CONFIG for fixed up handlers and only enable it on
+   i.MX products.
+ - Fixed bugs reported by kernel test robot.
+
+Changes in v9:
+ - Reuse the gpio-virtio design for command and IRQ type definitions.
+ - Remove msg_id, version, and vendor fields from the generic protocol.
+ - Add fixed-up handlers to support legacy firmware.
+
+Changes in v8:
+ - Add "depends on REMOTEPROC" in Kconfig to fix the build error reported
+   by the kernel test robot.
+ - Move the .rst patch before the .yaml patch.
+ - Handle the "ngpios" DT property based on Andrew's feedback.
+
+Changes in v7:
+ - Reworked the driver to use the rpmsg_driver framework instead of
+   platform_driver, based on feedback from Bjorn and Arnaud.
+ - Updated gpio-rpmsg.yaml and imx_rproc.yaml according to comments from
+   Rob and Arnaud.
+ - Further refinements to gpio-rpmsg.yaml per Arnaud's feedback.
+
+Changes in v6:
+ - make the driver more generic with the actions below:
+     rename the driver file to gpio-rpmsg.c
+     remove the imx related info in the function and variable names
+     rename the imx_rpmsg.h to rpdev_info.h
+     create a gpio-rpmsg.yaml and refer it in imx_rproc.yaml
+ - update the gpio-rpmsg.rst according to the feedback from Andrew and
+   move the source file to driver-api/gpio
+ - fix the bug reported by Zhongqiu Han
+ - remove the I2C related info
+
+Changes in v5:
+ - move the gpio-rpmsg.rst from admin-guide to staging directory after
+   discussion with Randy Dunlap.
+ - add include files with some code improvements per Bartosz's comments.
+
+Changes in v4:
+ - add a documentation to describe the transport protocol per Andrew's
+   comments.
+ - add a new handler to get the gpio direction.
+
+Changes in v3:
+ - fix various format issue and return value check per Peng 's review
+   comments.
+ - add the logic to also populate the subnodes which are not in the
+   device map per Arnaud's request. (in imx_rproc.c)
+ - update the yaml per Frank's review comments.
+
+Changes in v2:
+ - re-implemented the gpio driver per Linus Walleij's feedback by using
+   GPIOLIB_IRQCHIP helper library.
+ - fix various format issue per Mathieu/Peng 's review comments.
+ - update the yaml doc per Rob's feedback
+
+Shenwei Wang (5):
+  docs: driver-api: gpio: rpmsg gpio driver over rpmsg bus
+  dt-bindings: remoteproc: imx_rproc: Add "rpmsg" subnode support
+  gpio: rpmsg: add generic rpmsg GPIO driver
+  gpio: rpmsg: add support for NXP legacy firmware protocol
+  arm64: dts: imx8ulp: Add rpmsg node under imx_rproc
+
+ .../devicetree/bindings/gpio/gpio-rpmsg.yaml  |  55 ++
+ .../bindings/remoteproc/fsl,imx-rproc.yaml    |  53 ++
+ Documentation/driver-api/gpio/gpio-rpmsg.rst  | 266 +++++++
+ Documentation/driver-api/gpio/index.rst       |   1 +
+ arch/arm64/boot/dts/freescale/imx8ulp.dtsi    |  25 +
+ drivers/gpio/Kconfig                          |  32 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-rpmsg.c                     | 743 ++++++++++++++++++
+ 8 files changed, 1176 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-rpmsg.yaml
+ create mode 100644 Documentation/driver-api/gpio/gpio-rpmsg.rst
+ create mode 100644 drivers/gpio/gpio-rpmsg.c
+
+--
+2.43.0
 
 
