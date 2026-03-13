@@ -1,177 +1,203 @@
-Return-Path: <linux-gpio+bounces-33343-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33344-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gEswCcDys2nYdgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33343-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 12:19:28 +0100
+	id sJKRCEPzs2nYdgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33344-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 12:21:39 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8B492821FD
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 12:19:27 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2138282299
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 12:21:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D08823153C5F
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 11:14:52 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5B023307BB55
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 11:21:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 073813845D6;
-	Fri, 13 Mar 2026 11:14:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E396038CFFE;
+	Fri, 13 Mar 2026 11:21:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F0xgkwNu"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Do+K6n/K"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66079277CA5;
-	Fri, 13 Mar 2026 11:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8AC38F245;
+	Fri, 13 Mar 2026 11:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773400490; cv=none; b=oVzZkX80SmsnwaegzB76z/n4k1Gw0+k9/bTzhgfBLSLOU8Smo4HrTFJ53x3yDNAPCLFvNA6CnuucCjkG2yG9rYXJqXX3AdyHtrNl4UYp6yNhchD7y2BbXXKllbJi55IwzlY5YxegdX5xX7bP04UgUNCoMWgYK8ofCrX/M9segKo=
+	t=1773400867; cv=none; b=l180lgtodE+8+4INPYVSPy1Ggp0ye/37edzMWpK/VuHxKtKHJq1WFjimqmxmauYuSRiKj9/aSzJx4Sg/qVMINKenFD5ZclpRIdrra0TOUpJL1dSjTsEppe5p1egNOR08tea3ygGJIcv2JSSTk66xGlXATAcGLePPhm9vjgUclaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773400490; c=relaxed/simple;
-	bh=FOhFLuYIDC5nE7S+I1a4NS42j6o6UyInYAIpt7jfvUs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TvjZvGZV6GnsBzqfw7dsoLIxshjrUGWpdtksM9kfSTyIUi6/1MrZNBNh4Jk6+Pqzi6lFEBTusDVdOc20cldq77l9mkYnw3BCtpFHj5x+VQHXCuHXMiB1gCdMGCrK/ck4n4pVBjLgavPp70N2nrVl7Gf1N9hYYNZSE6AoELSjCaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F0xgkwNu; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773400489; x=1804936489;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=FOhFLuYIDC5nE7S+I1a4NS42j6o6UyInYAIpt7jfvUs=;
-  b=F0xgkwNuf6AxNcIV9KnOhtc4+Iy6D6arWx8UCJTIe+DnkDaSXoHHTH/Z
-   CfqGf9tGfif2NBrDCNDUoDrRACxocvcIA0D4/o+eWEzF9HZU/iJZyD66b
-   Rs6KI9pHjLJF80PSE9+Zp6XflMuVl4pTWCxUwkd9jhG81N4Xd2o4Kk2A+
-   TicwpNRE7ibsXEMpZxb6RSYcGGWM6ZdeVCJg1DeMSh/OdfPpXO7rF13a3
-   3Oesq+UtpJXw/0HElXAnvvBNkVKQHOAqB9zi9f3HWVxtzUDDzLqqYQG33
-   bg2faaCMNklN10hACbqGwe17+VGCzgftvG6g/aLXs+uoG3QhjIEXzXoIu
-   A==;
-X-CSE-ConnectionGUID: BVxXfiViS6SOA04aDbv7yw==
-X-CSE-MsgGUID: ZCFESVImQaC+Dgxl8IeXFQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11727"; a="78356748"
-X-IronPort-AV: E=Sophos;i="6.23,118,1770624000"; 
-   d="scan'208";a="78356748"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2026 04:14:48 -0700
-X-CSE-ConnectionGUID: 29XU/dBMSeKiinHG2o/jWQ==
-X-CSE-MsgGUID: v5c8/l0YRmiK7epatjCS9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,118,1770624000"; 
-   d="scan'208";a="225255649"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.246])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2026 04:14:44 -0700
-Date: Fri, 13 Mar 2026 13:14:41 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: radu.sabau@analog.com
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] iio: adc: ad4691: add driver for AD4691
- multichannel SAR ADC family
-Message-ID: <abPxocHDvBt3rIVL@ashevche-desk.local>
-References: <20260313-ad4692-multichannel-sar-adc-driver-v3-0-b4d14d81a181@analog.com>
+	s=arc-20240116; t=1773400867; c=relaxed/simple;
+	bh=iThDtlWFRXyqELPZgOTDTFG9GPUgz6TLe2DwswpTBng=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=leuDkaTHsIo9GHbKLg1E+cVcplyidfmDRfj9aXamVuU8wHr8WaFe6UlbjRppsnWK/d7oFMBAqF15YGLM4RlbmTkux/f0jXkQH8fzD/dWfzNOWGbAUrD9yaFBtlgtf8vyfCW9SXUqxmI+4WiVwH+Evm2NMUjJce5l7n6TczalvJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Do+K6n/K; arc=none smtp.client-ip=185.246.84.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id C71B41A2E1C;
+	Fri, 13 Mar 2026 11:20:58 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 91EB46002C;
+	Fri, 13 Mar 2026 11:20:58 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0812210369E37;
+	Fri, 13 Mar 2026 12:20:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1773400854; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=TViEBJxH/6t08moT1Cupd+GoZoxMid++9M6KSZfI+c8=;
+	b=Do+K6n/KnMT6sRzJjxkeDTXj5gTe6Hx27Z4GI42adJKl10t0UbUB71h1hkyXitEwWH6T2i
+	ltPrtpPGlMRvMhlKdD86qjGAeIZiwe4BSbPsxfLCAtDLLn+QW5HhBnSacBq7w+rkUIZ0J1
+	BNvT7C0jWhklauOjM3AmXTLanlZcFUFy0LLfL80GGk3rI4FrO46yzHOgH6gOlCPWimIWuu
+	bnfxU3ILpTwq5ezxehZ4D3Vzr3CkDosx+2OTafb29osULMFwoJZ2G901V6rpsJr7Jh4Xeb
+	Bvtu0CHib7D6D9nhSPgx5/0hloz3s/0DI814tsG5pLaTxNMnMFKKCQ+0Ohk+mg==
+Date: Fri, 13 Mar 2026 12:20:27 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Andrew Lunn <andrew@lunn.ch>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Kalle Niemi <kaleposti@gmail.com>, Matti Vaittinen
+ <mazziesaccount@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Danilo
+ Krummrich <dakr@kernel.org>, Frank Li <Frank.Li@nxp.com>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi Shyti
+ <andi.shyti@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>, Saravana
+ Kannan <saravanak@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Charles
+ Keepax <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
+ <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
+ Walleij <linusw@kernel.org>, Mark Brown <broonie@kernel.org>, Len Brown
+ <lenb@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Daniel Scally <djrscally@gmail.com>, Heikki Krogerus
+ <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang
+ <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Shawn Guo <shawnguo@kernel.org>,
+ Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org,
+ driver-core@lists.linux.dev, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+ patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Saravana Kannan
+ <saravanak@google.com>, Bartosz Golaszewski
+ <bartosz.golaszewski@oss.qualcomm.com>
+Subject: Re: [PATCH v5 02/28] driver core: Rename get_dev_from_fwnode()
+ wrapper to get_device_from_fwnode()
+Message-ID: <20260313122027.498ff15f@bootlin.com>
+In-Reply-To: <CAPDyKFpX3A3r4s72PNjBz5QaZUsq1xaGhn5vXwegue7Tyh_Zew@mail.gmail.com>
+References: <20260227135428.783983-1-herve.codina@bootlin.com>
+	<20260227135428.783983-3-herve.codina@bootlin.com>
+	<CAMuHMdVVsEB-xb8Jz4ujBam2NxtxAOb7byYa3VR_eHsbTD5rXw@mail.gmail.com>
+	<2026031242-debug-aviation-19b8@gregkh>
+	<CAPDyKFpX3A3r4s72PNjBz5QaZUsq1xaGhn5vXwegue7Tyh_Zew@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260313-ad4692-multichannel-sar-adc-driver-v3-0-b4d14d81a181@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Last-TLS-Session-Version: TLSv1.3
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-33343-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[intel.com:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[linuxfoundation.org,linux-m68k.org,lunn.ch,kernel.org,gmail.com,nxp.com,pengutronix.de,baylibre.com,sang-engineering.com,axentia.se,arndb.de,google.com,opensource.cirrus.com,cirrus.com,linux.intel.com,stgolabs.net,huawei.com,intel.com,vger.kernel.org,lists.linux.dev,lists.infradead.org,microchip.com,bootlin.com,oss.qualcomm.com];
+	TAGGED_FROM(0.00)[bounces-33344-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	HAS_ORG_HEADER(0.00)[];
+	DKIM_TRACE(0.00)[bootlin.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[herve.codina@bootlin.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	RCPT_COUNT_GT_50(0.00)[64];
+	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ashevche-desk.local:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:dkim]
-X-Rspamd-Queue-Id: B8B492821FD
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linuxfoundation.org:email,intel.com:email,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid,linaro.org:email]
+X-Rspamd-Queue-Id: D2138282299
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Mar 13, 2026 at 12:07:24PM +0200, Radu Sabau via B4 Relay wrote:
-> This series adds support for the Analog Devices AD4691 family of
-> high-speed, low-power multichannel successive approximation register
-> (SAR) ADCs with an SPI-compatible serial interface.
-> 
-> The family includes:
->   - AD4691: 16-channel, 500 kSPS
->   - AD4692: 16-channel, 1 MSPS
->   - AD4693: 8-channel, 500 kSPS
->   - AD4694: 8-channel, 1 MSPS
-> 
-> The devices support two operating modes, auto-detected from the device
-> tree:
->   - CNV Clock Mode: external PWM drives CNV independently of SPI;
->                     DATA_READY on GP0 signals end of conversion
->   - Manual Mode: CNV tied to SPI CS; each SPI transfer reads
->                  the previous conversion result and starts the
->                  next (pipelined N+1 scheme)
-> 
-> A new driver is warranted rather than extending ad4695: the AD4691
-> data path uses an accumulator-register model — results are read from
-> AVG_IN registers, with ACC_MASK, ADC_SETUP, DEVICE_SETUP, and
-> GPIO_MODE registers controlling the sequencer — none of which exist
-> in AD4695. CNV Clock Mode (PWM drives CNV independently of SPI) and
-> Manual Mode (pipelined N+1 transfers) also have no equivalent in
-> AD4695's command-embedded single-cycle protocol.
-> 
-> The series is structured as follows:
->   1/4 - DT bindings (YAML schema + dt-bindings header) and
->         MAINTAINERS entry
->   2/4 - Initial driver: register map via custom regmap callbacks,
->         IIO read_raw/write_raw, both operating modes, single-channel
->           reads via internal oscillator (Autonomous Mode)
->   3/4 - Triggered buffer support: IRQ-driven (DATA_READY on GP0) for
->         CNV Clock Mode; hrtimer-based trigger for Manual Mode to
->         handle the pipelined N+1 SPI protocol
->   4/4 - SPI Engine offload support: DMA-backed high-throughput
->         capture path using the SPI offload subsystem
+Hi Greg, Ulf,
 
-I stopped review where I stopped because I have a feeling that you ignored some
-of my comments from the previous version. Why? What's going on?
+On Fri, 13 Mar 2026 10:43:33 +0100
+Ulf Hansson <ulf.hansson@linaro.org> wrote:
 
--- 
-With Best Regards,
-Andy Shevchenko
+> On Thu, 12 Mar 2026 at 16:27, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Mar 10, 2026 at 04:03:42PM +0100, Geert Uytterhoeven wrote:  
+> > > Hi Hervé,
+> > >
+> > > On Fri, 27 Feb 2026 at 14:55, Herve Codina <herve.codina@bootlin.com> wrote:  
+> > > > get_dev_from_fwnode() calls get_device() and so it acquires a reference
+> > > > on the device returned.
+> > > >
+> > > > In order to be more obvious that this wrapper is a get_device() variant,
+> > > > rename it to get_device_from_fwnode().
+> > > >
+> > > > Suggested-by: Mark Brown <broonie@kernel.org>
+> > > > Link: https://lore.kernel.org/lkml/CAGETcx97QjnjVR8Z5g0ndLHpK96hLd4aYSV=iEkKPNbNOccYmA@mail.gmail.com/
+> > > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > Reviewed-by: Saravana Kannan <saravanak@google.com>
+> > > > Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> > > > Acked-by: Ulf Hansson <ulf.hansson@linaro.org>  
+> > >
+> > > FTR, one more user of get_dev_from_fwnode() appeared in commit
+> > > 9035073d0ef1de81 ("reset: convert reset core to using firmware nodes")
+> > > in reset/next.  
+> >
+> > Ick, that's going to make this hard to land anywhere.  This is a rough
+> > series, perhaps it should be split up to make it easier somehow?
+> >
+> > thanks,
+> >
+> > greg k-h  
+> 
+> I fully agree with the above. Renaming the function isn't necessary
+> for the $subject series.
+> 
+> I suggest we simply drop this patch from the series - and if the
+> renaming really makes sense in the end, we can deal with that
+> separately later on.
+> 
+> So withdrawing my ack from this one.
+> 
+> Kind regards
+> Uffe
 
+Also agree on my side. I will fully remove this function renaming part from
+this series in its next iteration.
+
+Best regards,
+Hervé
 
 
