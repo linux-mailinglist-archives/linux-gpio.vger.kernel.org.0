@@ -1,143 +1,148 @@
-Return-Path: <linux-gpio+bounces-33383-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33384-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2J9qHfsatGlLhQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33383-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 15:11:07 +0100
+	id 4P6+IPYbtGlLhQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33384-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 15:15:18 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DC4C2849E0
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 15:11:06 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29684284B6C
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 15:15:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3F76331FD635
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 14:05:57 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 447D93050C96
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 14:08:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E375333434;
-	Fri, 13 Mar 2026 14:05:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A9BF35AC37;
+	Fri, 13 Mar 2026 14:08:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qYIitWVQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y8thyPr3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9C3332EB1
-	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 14:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DB2330330;
+	Fri, 13 Mar 2026 14:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773410756; cv=none; b=Nh5iMScZY3O1+oT5Dvppl7Q7kRl8mv3XbKliwWeGbCd5xZ/E0KN/KpV0DtfocwHG7JTeObLN0fZvlehrbwh3l6kxPRArBgRjWzUQr54RqACC0IuVpye0kiwNTu0qeUNfRyRmPbE+VNp53C/cCAWfxWfKjuB5YP/98aFfycUJebE=
+	t=1773410921; cv=none; b=rzfMuZhX9sX+1C3AY9svNTxsVEHp3V5gQhF2d71eaQsEXLz6gY6erTpB7Xhju+QYwoGhHU9TtXfRG5QbPYgmbNAfUC+N4zZVKzd8Ro/QUnttAgQePSwqBdcRJJZcTA7ALdCI3+r8yTVdtfNiRNRXSruzwNK9HfOWx6+F5DXLAis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773410756; c=relaxed/simple;
-	bh=BqKrd9MGPnv+gQCWHNNUS2UMAZc7FKqpV0JE5XjCDw0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mT3bboIAm65RUQCxXDSsnH3++Nwp9/+SLOydN/wd2Hs0ePtkDK4bcHeRJUtYYClOb/AaKl7QmrGyVoj2eBt4lNoXxo1aQx1ADKpc2sFKT6VtWI+rHG/TWvtL9J6dVP/kkfkhj0otfv9mo8aQV2mzhzgneMWPWWD9rRWxyXQSJGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qYIitWVQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D32F6C4AF09
-	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 14:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773410755;
-	bh=BqKrd9MGPnv+gQCWHNNUS2UMAZc7FKqpV0JE5XjCDw0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qYIitWVQe5Q8nbcwDKbjNsZkXGT+7nCsErw4C849brpLvV8NNnIi4iGTcwMejdUiU
-	 g5LfhhBULDlg4EJyTt5OdIqMouWPDK0aX5fbWY4sSMVw54yQzc7UzmGns1WWLGeP0Z
-	 lALgqlmr8D2p2UCll8qLKnAZpBIfvyaEI79vKdG8Vn5quqdkj2M38V5Ge0u1SQmk67
-	 WEvWzHg5etGWAyURjSkeQIOppO7nEKZeN1i/BaeCiEBp1JHjSpNPHO4sHO+TcJkqyh
-	 c8fwycoVPMMPgL/p/pgX34J1p2EE+xKyY909/Zz4h8OFvIm8BLFfO3pibLGD1JXx8y
-	 xtoar1IqmGAZg==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-38a4234f91dso19141501fa.2
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 07:05:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX3vMNzzqkyWLfZnbTrG48bsQn8KR5suUcKtQw+GhLofF6RQwGmjuAPOaqlotxt8HAE10e5xYg8ZVCM@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCrAcRzh4HV+DNeIbTw+A8tFf/QP48yf1NXhmvVKkZLLLBSa+A
-	gphGb7Q7Wjge3+WyjrRn0BL0Glf0hYbj4iLc2u5/G30WTOIk6q4DXg9wjdH/XJf4aDs0LQdF4ze
-	maIqfwwhloXD9QILFxMXtb+NTP3eMbNvwNMNGJ4yLjw==
-X-Received: by 2002:a05:651c:2115:b0:37f:c5ca:a6d4 with SMTP id
- 38308e7fff4ca-38a89666433mr11202931fa.6.1773410754347; Fri, 13 Mar 2026
- 07:05:54 -0700 (PDT)
+	s=arc-20240116; t=1773410921; c=relaxed/simple;
+	bh=bsX14uDwqAq1tuVHvovcv5glC+linVe1r2klFkGwZuM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iDO3HBLL1gmC6v6PhKiO9Y4VTm0x5hjW921REPjKdnY8pMnEE3gzHWykbJgrQU7unDNF/aOWILti5D4/UsBTyKiTzDWMGcV0UxEXwGKlvs6wqd5gGNGKsB/afE4M1f2HbKw/LVDqXsPvYzSVSo+NqBIRx8alRPkS+owNwqxg5Rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y8thyPr3; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773410920; x=1804946920;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=bsX14uDwqAq1tuVHvovcv5glC+linVe1r2klFkGwZuM=;
+  b=Y8thyPr3Tp84yaq1utMdUWegTQf5MSfpm+mO1unNB0giTtDMr290lWga
+   jbHq2KNcdyxsaFRHFxvP51hylg4oDnGfiznuQsBZf+Yx6JCROx03H6XEe
+   fKS1C63MvFVWdNz6WnmNUD0N+5JkhmwhzOw4cqRbv+cIvlYK/g4SL2sdS
+   8976jNNDjqH0BJD1Nj/B7uvGRUCfA3nNHsbR09Y81ZBmSe/i4at/ZKjku
+   UqLTM+qhaFG7j9fJXXA9C1rPIh9lTQbH7O7jVPUTuq0sKEMOnkiOgh3Uz
+   M81wy7G1EZqn/5N7k5n9m2l3eM6eKdJApEzbfVh8YlQci85RWhIWKS/Rn
+   Q==;
+X-CSE-ConnectionGUID: R7ZzP0s1RQOureP4+0AJkA==
+X-CSE-MsgGUID: IBqN/+EkRjO0QaHsh0fsTA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11728"; a="74554359"
+X-IronPort-AV: E=Sophos;i="6.23,118,1770624000"; 
+   d="scan'208";a="74554359"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2026 07:08:40 -0700
+X-CSE-ConnectionGUID: qDBxMoE7Q3CKSra/16WiaQ==
+X-CSE-MsgGUID: z7p95gTgRc6K6MYkpLrasQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,118,1770624000"; 
+   d="scan'208";a="216079471"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.246])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2026 07:08:37 -0700
+Date: Fri, 13 Mar 2026 16:08:35 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Lee Jones <lee@kernel.org>, Linus Walleij <linusw@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 2/3] gpio: timberdale: use device properties
+Message-ID: <abQaY7V74Zc80GaE@ashevche-desk.local>
+References: <20260313-gpio-timberdale-swnode-v1-0-4df2e9b1dab5@oss.qualcomm.com>
+ <20260313-gpio-timberdale-swnode-v1-2-4df2e9b1dab5@oss.qualcomm.com>
+ <abPlPQMPZyOL_byn@ashevche-desk.local>
+ <CAMRc=McJy2Fo4xarGmBtNpDi+7J8mvu_Q3G9wqddUaPhq8rbaQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260312-k1-gpio-set-config-v1-0-8c3541da16b1@pigmoral.tech> <20260312-k1-gpio-set-config-v1-2-8c3541da16b1@pigmoral.tech>
-In-Reply-To: <20260312-k1-gpio-set-config-v1-2-8c3541da16b1@pigmoral.tech>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Fri, 13 Mar 2026 15:05:41 +0100
-X-Gmail-Original-Message-ID: <CAMRc=MdvvqboLa5_EF3Y3Eh7GSu=_eMpJed8mCLQR7upf2oV6Q@mail.gmail.com>
-X-Gm-Features: AaiRm51DxUd0y3wL7awnbPV8W9Fol2pS5cjKcnSSZQnGox51VBH0_3jXriBoQSI
-Message-ID: <CAMRc=MdvvqboLa5_EF3Y3Eh7GSu=_eMpJed8mCLQR7upf2oV6Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: spacemit-k1: Add set_config callback support
-To: Junhui Liu <junhui.liu@pigmoral.tech>
-Cc: Linus Walleij <linusw@kernel.org>, Yixun Lan <dlan@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=McJy2Fo4xarGmBtNpDi+7J8mvu_Q3G9wqddUaPhq8rbaQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33384-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33383-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,pigmoral.tech:email,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 8DC4C2849E0
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ashevche-desk.local:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,intel.com:dkim,intel.com:email]
+X-Rspamd-Queue-Id: 29684284B6C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Mar 12, 2026 at 9:43=E2=80=AFAM Junhui Liu <junhui.liu@pigmoral.tec=
-h> wrote:
->
-> Assign gpiochip_generic_config() to the set_config() callback to support
-> pin configuration through the GPIO subsystem. This allows users to
-> configure GPIO pin attributes like pull-up/down when specifying a GPIO
-> line in the Device Tree.
->
-> Signed-off-by: Junhui Liu <junhui.liu@pigmoral.tech>
-> ---
->  drivers/gpio/gpio-spacemit-k1.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/gpio-spacemit-k1.c b/drivers/gpio/gpio-spacemit=
--k1.c
-> index dbd2e81094b9..5fe813b7f9bb 100644
-> --- a/drivers/gpio/gpio-spacemit-k1.c
-> +++ b/drivers/gpio/gpio-spacemit-k1.c
-> @@ -228,6 +228,7 @@ static int spacemit_gpio_add_bank(struct spacemit_gpi=
-o *sg,
->         gc->label               =3D dev_name(dev);
->         gc->request             =3D gpiochip_generic_request;
->         gc->free                =3D gpiochip_generic_free;
-> +       gc->set_config          =3D gpiochip_generic_config;
->         gc->ngpio               =3D SPACEMIT_NR_GPIOS_PER_BANK;
->         gc->base                =3D -1;
->         gc->of_gpio_n_cells     =3D 3;
->
-> --
-> 2.53.0
->
+On Fri, Mar 13, 2026 at 02:27:36PM +0100, Bartosz Golaszewski wrote:
+> On Fri, Mar 13, 2026 at 11:21 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Fri, Mar 13, 2026 at 11:04:49AM +0100, Bartosz Golaszewski wrote:
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+...
 
-Linus, please take it through the pinctrl tree.
+> > > +     err = device_property_read_u32(dev, "intel,gpio-base", &gc->base);
+> >
+> > In drivers/mfd/intel_quark_i2c_gpio.c we use 'gpio-base' and I prefer to have
+> > it common since it's Linux only property for now. Alternatively patch that to
+> > have a snps prefix.
+> 
+> So "gpio-base" and "snps,irq-base" for the properties?
 
-Bart
+Either 'gpio-base' in all drivers that use it only as Linux property
+(currently 2 + potentially this one), OR fixing _there_ (in two drivers)
+by having 'snps,gpio-base' _there_, not in this driver.
+
+And if you choose the former (dropping the vendor prefix here), the 'irq-base'
+with it (vendor prefix) will look inconsistent.
+
+> > > +     if (err)
+> > > +             return err;
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
