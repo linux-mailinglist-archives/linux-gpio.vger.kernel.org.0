@@ -1,703 +1,346 @@
-Return-Path: <linux-gpio+bounces-33338-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33339-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eP1kBz7os2nZcwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33338-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 11:34:38 +0100
+	id yH1zCnDqs2nadAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33339-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 11:44:00 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7F5528180D
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 11:34:37 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07A92281A9F
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 11:44:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1D7E332364D7
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 10:31:40 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 70C83302D9CF
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 10:43:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55774317173;
-	Fri, 13 Mar 2026 10:31:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 754C7388388;
+	Fri, 13 Mar 2026 10:43:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="op0cAmC2"
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="f6I1//u8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011046.outbound.protection.outlook.com [52.101.125.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB5A3563FB;
-	Fri, 13 Mar 2026 10:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773397899; cv=none; b=dhnHAFnf3vBHlUbTFCQfbrRmInsSJyhz9wg+noT7iJ0sQBt4+lMu/E0VOhhsbClRvc9eS/EHBJKsLj6iBtIufsUNKLfvEGRwVuvBkP07EffURKv61roEwyJ6HySFcmDrYvEnRS72LV+SGsZVvqNqhnyLMvmfg1KqgLrYXEE384g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773397899; c=relaxed/simple;
-	bh=eZkcszx939Ywl2Ard9DWN1ZbdG1gP1UYuVN/rQweZaY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YDjaD7rNBBokPnpuj0RhN4wHY5LmicU/dYtf6IQfeFxUJrsPdIYRDQn2gunws6D0yulN/boMQALcShYxVuKNzaSa77h7ZOQUxd4Mx1Htx7Nd6b88dVPIOemkCm8PdVeXxFZzj5S5PUcdxZ0VO+mxm6rR3APHcHDOab5Z0Pxquqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=op0cAmC2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB0EDC2BCB2;
-	Fri, 13 Mar 2026 10:31:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773397898;
-	bh=eZkcszx939Ywl2Ard9DWN1ZbdG1gP1UYuVN/rQweZaY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=op0cAmC22BPh7aPm0TjgpV34tU4+IfCOjfPKWBCOcJXILVUfseDfTLUsudnn+ejir
-	 i3iTb+yPaTiUkaerg7/UmbtK1qBckjL8spRCOITD9BxwhXfPkjyg3f0AheWgsOqAo6
-	 jXt07D9YeNUbffpVOP5KgpKICQIvXp/eayfPaxlv/Pvv4TKIXfeLjQZ+MeEb4M0kvG
-	 WRtTVm0qwlO422DKttKW0+eaFyvpps47hRXuU+xNdN8H4tygh0swxm0u/HRlSk8nif
-	 hWbk4xFsNsUaOpT8GXDkdFKWm3LSNrvpo6dXsdeow7oeYDByTOSzHJUim+IWdZSaHv
-	 TJ4O0ZSyvetnQ==
-Date: Fri, 13 Mar 2026 11:31:35 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: radu.sabau@analog.com
-Cc: Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] iio: adc: ad4691: add initial driver for AD4691
- family
-Message-ID: <abPa8r8XjOd9AoMB@monoceros>
-References: <20260310-ad4692-multichannel-sar-adc-driver-v2-0-d9bb8aeb5e17@analog.com>
- <20260310-ad4692-multichannel-sar-adc-driver-v2-2-d9bb8aeb5e17@analog.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E4E277CA5;
+	Fri, 13 Mar 2026 10:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773398635; cv=fail; b=dzidBdkYTdWJ+Xr9nio8KUVfwYPp9EPA0HD7k+l5vvdnuvytuOVWDL0Aqx8HzUATw6vHbk13jbDSAGB11ppTjVCRCx53hxqnuAA8NB941dxIk0RgrKj/cF5JSTnXE0H0zkAfyAWdeapWZEseYSU2X3SFaKStCw+SsXTb795bjxQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773398635; c=relaxed/simple;
+	bh=FXaGwhAmcinLlRqGZL7nXE8FbaenCAyO1cv2G0rYQVk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=VDlqjrKuXIcgwKsxsmA2gJMyX0kfH3nH1Xd2z1FDw+C4ZhYgHoVhtNgSKf39TKYmnXCEMXCh5qwmybkQrmTdij0tzLwh+NNwRsGWICc42PKu89+WPfGDH723g6uGp4Ts1J5otoCxi4OevcIor0iAtOlH6FpW+B7TS7knJ8HkYq4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=f6I1//u8; arc=fail smtp.client-ip=52.101.125.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=G4tAa0rCMFGY4yawJHxbPERcBF5CmucOnTFtv0JS+92wCpfhjEf+Wi3IFsS6+5UOnpE5Psg8srlAIqdYWeb2tzqKYAf/SaKOEyQMQ7qX9+r7Nm8PQkobqzKtqfncfHEz2Q/h80BYawamTnJuxpAHJ7nDGBsl+Y4QOom3rDE8M5RW/sMMOSRL1uZtq6EQQW52HofyBQDjrAdw32EzBv/MxBWzWuSoNVf5qtZ9jvfJJicgAqjSQwr6N0etgUmgJIhcHggzKnC5Bkmy0LcucniON+aZvFNsQkSliuiCG0oFfNz1bcgeiGd9mYOqjAoTc1ETCs1G+o1aJZ7RIRyLvnNa2w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uqwklELkW71XHAxls4/I7K8NUBNwEd/+s9L6b2VZIfk=;
+ b=N/RLX2hLfgKWJThwCMkfHFSMYgbtYiTd69gMeWAkLVvUuxq3z4CEtYcVGRlH8CQ+34StMRWiOiWn73EFspmuQX8XC+6DjRqS9eBv1NXY8Opu2NSz672cpfniFxjL+o2V25nOGMb21ySMsJkk9dFdfVLbCwB9ZK3ETw/IsAMpHzesvDMqINRwOK0X3ig0GVntCj1sC7BO/JYMpqoIOjRrbEs2TWT59iDTjRlPJlEKnbIYHn2EBtTfPz+5udEkwC59XbmFWRnBsRhTOyCY+0160YcD0bmpELYbCyZwWXvSIHbW6qGj3F349Z9SJ1O33CAORHRcOOxDYlz+UkRZU+q9Iw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uqwklELkW71XHAxls4/I7K8NUBNwEd/+s9L6b2VZIfk=;
+ b=f6I1//u8115yQj62nZj5seTV0PIR0fN0ZHRqrdMvKGzXdGHRJqP8GOES17VPP+arutY+JFJoyZXQ/sJOZxZizolQ85pd6U/6drdhFMet8KIJfZds8rFJMiDBd4TKPlNS27+HTEcD7N/MzV7Rymo775kjgfKaiqF0JM9v8VbSqkk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+Received: from TYCPR01MB11947.jpnprd01.prod.outlook.com (2603:1096:400:3e1::6)
+ by TYYPR01MB12451.jpnprd01.prod.outlook.com (2603:1096:405:f6::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.15; Fri, 13 Mar
+ 2026 10:43:40 +0000
+Received: from TYCPR01MB11947.jpnprd01.prod.outlook.com
+ ([fe80::33f1:f7cd:46be:e4d8]) by TYCPR01MB11947.jpnprd01.prod.outlook.com
+ ([fe80::33f1:f7cd:46be:e4d8%5]) with mapi id 15.20.9700.017; Fri, 13 Mar 2026
+ 10:43:27 +0000
+Date: Fri, 13 Mar 2026 11:42:34 +0100
+From: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+	Peter Rosin <peda@axentia.se>, Linus Walleij <linusw@kernel.org>,
+	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-gpio@vger.kernel.org, David Jander <david@protonic.nl>,
+	biju.das.jz@bp.renesas.com, tomm.merciai@gmail.com
+Subject: Re: [PATCH v3 4/7] gpio: gpiolib: fix allocation order in
+ hierarchical IRQ domains
+Message-ID: <abPqGvy5FqJ0a0ug@tom-desktop>
+References: <20260309134920.1918294-1-o.rempel@pengutronix.de>
+ <20260309134920.1918294-5-o.rempel@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260309134920.1918294-5-o.rempel@pengutronix.de>
+X-ClientProxiedBy: MR1P264CA0208.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:501:56::8) To TY3PR01MB11948.jpnprd01.prod.outlook.com
+ (2603:1096:400:409::5)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="amwkcpt2w7rk5qj2"
-Content-Disposition: inline
-In-Reply-To: <20260310-ad4692-multichannel-sar-adc-driver-v2-2-d9bb8aeb5e17@analog.com>
-X-Spamd-Result: default: False [-2.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYCPR01MB11947:EE_|TYYPR01MB12451:EE_
+X-MS-Office365-Filtering-Correlation-Id: 17de5af7-257d-4d31-b0a4-08de80ed5e2a
+X-LD-Processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|52116014|7416014|366016|38350700014|22082099003|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	IHTxUUa17okWfFf7/DssuIye+gEa1EYdbJCHDNJq9i7AuSQAnlH4qEI3jUSvwGSXQtWLBBgzbDcUCddjQia3ZlhJuQRxAdr/STrTxjaamO7ooXfHsSYyEum5AKtIG+LB01znah5zVBpE5XAIJ2sQbdDL6S+bhvnr9Bkm0bt9kBRjTMxWxA7Ut/vF3lUX+hwAEnaaqGHWQYxtWauNACa1QCGSyybOyFZSiJy607UHwvTuCHj9c5RsIJlIjgz9z5cWaSnAN2AT6ijnbXqpCC71j25uhCAvM6p8P9kvdIBZsBpcGCkExr013Rf+A6dNlEB/oZgncJob6VJoC45cRf7PHoNLJf7ZgShfN2Q7iR3fWUvD2Rmc13Bh2IlBZ9f9tQIpPui2TIK4sURiOsiztIrTL0qY6ekoP2GsHAea/EpFAT8aWXqUCQkmG0PYGi6Uu9KAu7NkKAgTrMcQ5xc1Dv2hTcTyqiKGs2sN0sf/haoDNGdrbufyzZe9u0qT1wUDrW0wZf+QjD9/Bi/NWTKq323Q7frpukTqHrpMWreodxb4OGXGxN+JoDKT6fEIBbaWhl7dRdSiwXEfTcTqwE4LDdI7Xr6K6UYL8a/75jTahUzI1JpLp+rkXpBDhhwiBFo1GPvHO+zv4FqOk5lhXbe0jLxg2CMgIMR5oYk1u6TnDS3PI5g6A0uermNFPHWS0C9UEPlEcx5znjXPxpqhIMcR65YtiZ7rIQGwmwgAWIOK5mLTuVNat4Va5vp1/+Ht6U8bs33ZIuPGElcrsqkmH7Dl+VHNqsQxUrgrkcb9ovEscS7rhKw=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB11947.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(7416014)(366016)(38350700014)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?w9dQRv0WYbW5VxrRTLiUEzFt8hX7mRo90nfrHdrLRz5pOOH+zDxVPxuiKPPy?=
+ =?us-ascii?Q?eFtSnGH5J9MvxT3pFPJSFnuw019+L9XV5yurw8w4aVl/vzPXKPGzIN7ZrPwM?=
+ =?us-ascii?Q?+PVDFPKwTMSc5XEwskZCaHm2NHe+hWpQmTcUEJ/cfff9JIj4rotiArOtfeiw?=
+ =?us-ascii?Q?fA7WMeUtOsH/Gvlnb61j3RtbbNIPbGDwQqdZlkX1ET0prFsuQLgVGdVah38w?=
+ =?us-ascii?Q?0PyXRvt9U8xGFYP7Pk2Up6HtaXsskei0GN+v4zbGodnm08fZRyxGKGCXfOHl?=
+ =?us-ascii?Q?EEQHfRQCv0HnV9BQIDJCDM97UevaxK23kaA2AqPyo3hZNepuihC4vKQIMWxH?=
+ =?us-ascii?Q?yLNhKszdME8WhT9wyCVkfcYR57hhks2G2NkHpW+Q2WrShcWSKScIGZBU1nSz?=
+ =?us-ascii?Q?TUMAvRbto+UCdRl2zDTcKcp/pbPB1domezL/hh++Z9V6egM2NbaW+ogboQRW?=
+ =?us-ascii?Q?KMrlQlSwmPam4Bg39alXAtfyGiFsSLywcqmQRFoVJvlPcmrcoYhN2fmkGx6x?=
+ =?us-ascii?Q?QYP689tBJSsRFV+bVrWxGM2sUXhhn/Am0j4sHLHC2KEau6R7FTQ3wNwnpYTb?=
+ =?us-ascii?Q?dBl6g1WIDB4SW/uO4RICVKSTMb0dVWn8eBK3bEazBwHWWV2cwmJOG9wgVLq9?=
+ =?us-ascii?Q?bGix1ui+G3uoaQwPSPNFQvHciJkNIb8o3ujYakTph1g/U+Z3QuXtxAR37HEi?=
+ =?us-ascii?Q?HY46hPL9IdhNeNs3SH7znV7coNQ7IgjYvfA3waEhO/1HGbhRU7mQZmGG+Lnc?=
+ =?us-ascii?Q?K3o+AR0TOm5AoaOOF6MfmIBr3YQYHoeiKMrIIV2b/1hCO7OByUqnwhLE3Aei?=
+ =?us-ascii?Q?AESzP4GoxOSS8ksUVqN3vt7gJxm7dgbC2wEBNevy7Me3fLINSdDEHzFfGUTq?=
+ =?us-ascii?Q?GPUVLg23awD497M6EMR1BE1E2V20fOxrraWfIGFjPCfTOlMshlGQ/3CF2tFF?=
+ =?us-ascii?Q?dbwbsDbXylrCr4MAQ+xtltkfjvzDTyetpbFUgNlmnV7xijNAmnfjxN86jnf9?=
+ =?us-ascii?Q?V//NjjPvusZ4E/VCll41HFKx18SkIS2QCFEEvCDugIEIqb47z20Ztf0IjhUZ?=
+ =?us-ascii?Q?eVjWAcMSKcmRakDgN/dcTdtSdcy9A7C+wsBLjdibVAvk1ZTzwRRih4IMZcTO?=
+ =?us-ascii?Q?hY082zqoqhFxvhskjFlYKKJ//W+Gsz0beNaiEaRYpPDHHkGmTruhBfcUBysf?=
+ =?us-ascii?Q?h7tcHzPTyhMP2wR12MdvkMkpSVtByzy9Rut1LZTysOvxdgDRzW9GjU9W530p?=
+ =?us-ascii?Q?bZP+y2L2Fj1CpemNUVDHip2dMnYlAc2nZByOGy7jgkiie7kUtTHZ1m94Bkne?=
+ =?us-ascii?Q?ZPwYGcnMvXVo6fllwro0fZ180GX2+UuMOXjcd1KY6R3U8hLH8YxdhvAErODA?=
+ =?us-ascii?Q?NdHZ4Ucb6IRZKBd8iv8tNry+dPW/8M6OidnEbKGhx+S6AZiOTcur/3DlxMs/?=
+ =?us-ascii?Q?pe5wg0g/i23rPz6zOkaVnl9h508AUZkfqAcGshVYtYV1nKhjPNkdSEHJttgJ?=
+ =?us-ascii?Q?BPcUA53TZqawgiWByKtfw5WgjnHFeAIkPPbu5eyBbWHVwFd0n0h8xz6V4XZJ?=
+ =?us-ascii?Q?zP2Yusy/MBUFa1NvWmFCwALqPZSM+KeBfnKvLe+nGbtK6SmRQ81xQv7fCEYI?=
+ =?us-ascii?Q?rUmuubuxzzqyNfgCXvazka4B7kuNk9w30CkLGro0WTSCIIUZryc0zJ7RfwQX?=
+ =?us-ascii?Q?YxPW0BlAsADyGYnw5LfBAVUgTTg6etMHA8k37TkTfx4KQeD5ADi7CdtXZumW?=
+ =?us-ascii?Q?1PmUZdyqWD5BIi4DGVcUsEIA6a0FM2GvoAo6N4KJ3iuN9ZglmaKJ?=
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17de5af7-257d-4d31-b0a4-08de80ed5e2a
+X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11948.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2026 10:43:27.1965
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3ESp6KV6fwQ6YR4zaKR0hgyYL7EWO8p0FxTKbvxpcqKGkuVfyE9Lj6le8i9YXedPNMQQ5TJGgRvtnxy0Y6PJ7vo/2TQL/cpPO5Sx7CEw67hPGZXvgNblqInmITH8tpMe
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYYPR01MB12451
+X-Spamd-Result: default: False [1.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	ARC_REJECT(1.00)[cv is fail on i=2];
 	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[renesas.com,none];
+	R_DKIM_ALLOW(-0.20)[bp.renesas.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-33339-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33338-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	FREEMAIL_CC(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FREEMAIL_CC(0.00)[roeck-us.net,kernel.org,axentia.se,pengutronix.de,vger.kernel.org,protonic.nl,bp.renesas.com,gmail.com];
+	DKIM_TRACE(0.00)[bp.renesas.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[tommaso.merciai.xr@bp.renesas.com,linux-gpio@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:email,analog.com:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B7F5528180D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,pengutronix.de:email]
+X-Rspamd-Queue-Id: 07A92281A9F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Hi Oleksij,
+Thanks for your patch.
 
---amwkcpt2w7rk5qj2
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 2/4] iio: adc: ad4691: add initial driver for AD4691
- family
-MIME-Version: 1.0
+I'm working on DSI support for RZ/G3E
 
-On Tue, Mar 10, 2026 at 04:32:23PM +0200, Radu Sabau via B4 Relay wrote:
-> From: Radu Sabau <radu.sabau@analog.com>
->=20
-> Add support for the Analog Devices AD4691 family of high-speed,
-> low-power multichannel SAR ADCs: AD4691 (16-ch, 500 kSPS),
-> AD4692 (16-ch, 1 MSPS), AD4693 (8-ch, 500 kSPS) and
-> AD4694 (8-ch, 1 MSPS).
->=20
-> The driver implements a custom regmap layer over raw SPI to handle the
-> device's mixed 1/2/3/4-byte register widths and uses the standard IIO
-> read_raw/write_raw interface for single-channel reads.
->=20
-> Two buffered operating modes are supported, auto-detected from the
-> device tree:
->=20
->     - CNV Clock Mode:  an external PWM drives the CNV pin; the sampling
->                        rate is controlled via the PWM period. Requires a
->                        reference clock and a DATA_READY interrupt.
->=20
->     - Manual Mode:     CNV is tied to SPI CS; each SPI transfer triggers
->                        a conversion and returns the previous result
->                        (pipelined). No external clock or interrupt needed.
->=20
-> In both modes the chip idles in Autonomous Mode so that single-shot
-> read_raw can use the internal oscillator without disturbing the
-> hardware configuration.
->=20
-> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+from this morning rebasing on top of next-20260312 I'm seeing
+the following:
+
+
+[   19.230966] [drm] Initialized rzg2l-du 1.0.0 for 16490000.display on minor 2
+[   19.240377] rzg2l-du 16490000.display: [drm] Device 16490000.display probed
+[   19.250504] irq 165, desc: 000000004f0a321f, depth: 0, count: 0, unhandled: 0
+[   19.257630] ->handle_irq():  00000000a74f5df5, handle_bad_irq+0x0/0x25c
+[   19.264223] ->irq_data.chip(): 0000000057261646, rzg2l_gpio_irqchip+0x0/0x118
+[   19.271328] ->action(): 0000000027be85a3
+[   19.275227] ->action->handler(): 00000000e5c70c61, irq_default_primary_handler+0x0/0x8
+[   20.645894] ov5645 0-003c: ov5645_write_reg: write reg error -110: reg=300e, val=58
+[   40.257787] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+[   40.263915] rcu:     (detected by 2, t=5253 jiffies, g=3325, q=241 ncpus=4)
+[   40.270632] rcu: All QSes seen, last rcu_preempt kthread activity 5255 (4294902363-4294897108), jiffies_till_next_fqs=1, root ->qsmask 0x0
+[   40.283054] rcu: rcu_preempt kthread timer wakeup didn't happen for 5257 jiffies! g3325 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x200
+[   40.294351] rcu:     Possible timer handling issue on cpu=0 timer-softirq=1342
+[   40.301309] rcu: rcu_preempt kthread starved for 5262 jiffies! g3325 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x200 ->cpu=0
+[   40.311657] rcu:     Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
+[   40.320771] rcu: RCU grace-period kthread stack dump:
+[   40.325821] task:rcu_preempt     state:R stack:0     pid:15    tgid:15    ppid:2      task_flags:0x208040 flags:0x00000010
+[   40.336886] Call trace:
+[   40.339345]  __switch_to+0xec/0x1a8 (T)
+[   40.343236]  __schedule+0x360/0xe18
+[   40.346763]  schedule+0x34/0x110
+[   40.350029]  schedule_timeout+0x84/0x100
+[   40.353997]  rcu_gp_fqs_loop+0x114/0x420
+[   40.357963]  rcu_gp_kthread+0x100/0x114
+[   40.361843]  kthread+0x118/0x124
+[   40.365122]  ret_from_fork+0x10/0x20
+[   40.368740] rcu: Stack dump where RCU GP kthread last ran:
+[   40.374223] Sending NMI from CPU 2 to CPUs 0:
+[  113.405786] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+[  113.411908] rcu:     (detected by 3, t=23540 jiffies, g=3325, q=259 ncpus=4)
+[  113.418711] rcu: All QSes seen, last rcu_preempt kthread activity 23542 (4294920650-4294897108), jiffies_till_next_fqs=1, root ->qsmask 0x0
+[  113.431220] rcu: rcu_preempt kthread timer wakeup didn't happen for 23544 jiffies! g3325 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x200
+[  113.442606] rcu:     Possible timer handling issue on cpu=0 timer-softirq=1342
+[  113.449564] rcu: rcu_preempt kthread starved for 23549 jiffies! g3325 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x200 ->cpu=0
+[  113.459998] rcu:     Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
+[  113.469112] rcu: RCU grace-period kthread stack dump:
+[  113.474163] task:rcu_preempt     state:R stack:0     pid:15    tgid:15    ppid:2      task_flags:0x208040 flags:0x00000010
+[  113.485229] Call trace:
+[  113.487688]  __switch_to+0xec/0x1a8 (T)
+[  113.491581]  __schedule+0x360/0xe18
+[  113.495109]  schedule+0x34/0x110
+[  113.498374]  schedule_timeout+0x84/0x100
+[  113.502342]  rcu_gp_fqs_loop+0x114/0x420
+[  113.506308]  rcu_gp_kthread+0x100/0x114
+[  113.510188]  kthread+0x118/0x124
+[  113.513466]  ret_from_fork+0x10/0x20
+[  113.517082] rcu: Stack dump where RCU GP kthread last ran:
+[  113.522566] Sending NMI from CPU 3 to CPUs 0:
+[  186.553784] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+[  186.559904] rcu:     (detected by 3, t=41827 jiffies, g=3325, q=268 ncpus=4)
+[  186.566706] rcu: All QSes seen, last rcu_preempt kthread activity 41829 (4294938937-4294897108), jiffies_till_next_fqs=1, root ->qsmask 0x0
+[  186.579213] rcu: rcu_preempt kthread timer wakeup didn't happen for 41831 jiffies! g3325 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x200
+[  186.590599] rcu:     Possible timer handling issue on cpu=0 timer-softirq=1342
+[  186.597556] rcu: rcu_preempt kthread starved for 41836 jiffies! g3325 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x200 ->cpu=0
+[  186.607990] rcu:     Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
+[  186.617105] rcu: RCU grace-period kthread stack dump:
+[  186.622155] task:rcu_preempt     state:R stack:0     pid:15    tgid:15    ppid:2      task_flags:0x208040 flags:0x00000010
+[  186.633219] Call trace:
+
+
+I found out the the issue is related to the interrupt of the adv7535
+bridge:
+
+        adv7535: hdmi1@3d {
+                compatible = "adi,adv7535";
+                ...
+                ...
+                interrupts-extended = <&pinctrl RZG3E_GPIO(L, 4) IRQ_TYPE_EDGE_FALLING>;
+
+RZ/G3E is using:
+ - drivers/pinctrl/renesas/pinctrl-rzg2l.c
+
+Reverting this patch fix the issue.
+(git revert a23463beb3d5)
+
+I'm wondering if someone else get the same.
+Thanks in advance.
+
+Kind Regards,
+Tommaso
+
+
+On Mon, Mar 09, 2026 at 02:49:15PM +0100, Oleksij Rempel wrote:
+> In gpiochip_hierarchy_irq_domain_alloc(), calling irq_domain_set_info()
+> before irq_domain_alloc_irqs_parent() causes a NULL pointer dereference
+> for slow-bus (SPI/I2C) IRQ chips.
+> 
+> irq_domain_set_info() locks the child descriptor, triggering .irq_bus_lock.
+> If the child proxies this lock to the parent, it crashes because
+> parent->chip is not yet allocated.
+> 
+> Fix this by allocating the parent IRQs first, ensuring parent->chip is
+> populated before the child's .irq_bus_lock is invoked.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 > ---
->  MAINTAINERS              |   1 +
->  drivers/iio/adc/Kconfig  |  11 +
->  drivers/iio/adc/Makefile |   1 +
->  drivers/iio/adc/ad4691.c | 773 +++++++++++++++++++++++++++++++++++++++++=
-++++++
->  4 files changed, 786 insertions(+)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 9994d107d88d..5325f7d3b7f4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1490,6 +1490,7 @@ L:	linux-iio@vger.kernel.org
->  S:	Supported
->  W:	https://ez.analog.com/linux-software-drivers
->  F:	Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
-> +F:	drivers/iio/adc/ad4691.c
->  F:	include/dt-bindings/iio/adc/adi,ad4691.h
-> =20
->  ANALOG DEVICES INC AD4695 DRIVER
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 60038ae8dfc4..3685a03aa8dc 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -139,6 +139,17 @@ config AD4170_4
->  	  To compile this driver as a module, choose M here: the module will be
->  	  called ad4170-4.
-> =20
-> +config AD4691
-> +	tristate "Analog Devices AD4691 Family ADC Driver"
-> +	depends on SPI
-> +	select REGMAP
-> +	help
-> +	  Say yes here to build support for Analog Devices AD4691 Family MuxSAR
-> +	  SPI analog to digital converters (ADC).
-> +
-> +	  To compile this driver as a module, choose M here: the module will be
-> +	  called ad4691.
-> +
->  config AD4695
->  	tristate "Analog Device AD4695 ADC Driver"
->  	depends on SPI
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index c76550415ff1..4ac1ea09d773 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -16,6 +16,7 @@ obj-$(CONFIG_AD4080) +=3D ad4080.o
->  obj-$(CONFIG_AD4130) +=3D ad4130.o
->  obj-$(CONFIG_AD4134) +=3D ad4134.o
->  obj-$(CONFIG_AD4170_4) +=3D ad4170-4.o
-> +obj-$(CONFIG_AD4691) +=3D ad4691.o
->  obj-$(CONFIG_AD4695) +=3D ad4695.o
->  obj-$(CONFIG_AD4851) +=3D ad4851.o
->  obj-$(CONFIG_AD7091R) +=3D ad7091r-base.o
-> diff --git a/drivers/iio/adc/ad4691.c b/drivers/iio/adc/ad4691.c
-> new file mode 100644
-> index 000000000000..528c37a9a383
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad4691.c
-> @@ -0,0 +1,773 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2024-2026 Analog Devices, Inc.
-> + * Author: Radu Sabau <radu.sabau@analog.com>
-> + */
-> +#include <linux/bitfield.h>
-> +#include <linux/bitops.h>
-> +#include <linux/cleanup.h>
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/math.h>
-> +#include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/property.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/util_macros.h>
-> +#include <linux/units.h>
-> +#include <linux/unaligned.h>
-> +
-> +#include <linux/iio/iio.h>
-> +
-> +#include <dt-bindings/iio/adc/adi,ad4691.h>
-> +
-> +#define AD4691_VREF_MIN				2400000
-> +#define AD4691_VREF_MAX				5250000
-> +
-> +/*
-> + * Default sampling frequency for MANUAL_MODE.
-> + * Each sample needs (num_channels + 1) SPI transfers of 24 bits.
-> + * The factor 36 =3D 24 * 3/2 folds in a 50% scheduling margin:
-> + *   freq =3D spi_hz / (24 * 3/2 * (num_channels + 1))
-> + *        =3D spi_hz / (36 * (num_channels + 1))
-> + */
-> +#define AD4691_MANUAL_MODE_STD_FREQ(x, y)	((y) / (36 * ((x) + 1)))
-> +#define AD4691_BITS_PER_XFER			24
-> +#define AD4691_CNV_DUTY_CYCLE_NS		380
-> +#define AD4691_MAX_CONV_PERIOD_US		800
-> +
-> +#define AD4691_SEQ_ALL_CHANNELS_OFF		0x00
-> +#define AD4691_STATE_RESET_ALL			0x01
-> +
-> +#define AD4691_REF_CTRL_MASK			GENMASK(4, 2)
-> +
-> +#define AD4691_DEVICE_MANUAL			0x14
-> +#define AD4691_DEVICE_REGISTER			0x10
-> +#define AD4691_AUTONOMOUS_MODE_VAL		0x02
-> +
-> +#define AD4691_NOOP				0x00
-> +#define AD4691_ADC_CHAN(ch)			((0x10 + (ch)) << 3)
-> +
-> +#define AD4691_STATUS_REG			0x14
-> +#define AD4691_CLAMP_STATUS1_REG		0x1A
-> +#define AD4691_CLAMP_STATUS2_REG		0x1B
-> +#define AD4691_DEVICE_SETUP			0x20
-> +#define AD4691_REF_CTRL				0x21
-> +#define AD4691_OSC_FREQ_REG			0x23
-> +#define AD4691_STD_SEQ_CONFIG			0x25
-> +#define AD4691_SPARE_CONTROL			0x2A
-> +
-> +#define AD4691_OSC_EN_REG			0x180
-> +#define AD4691_STATE_RESET_REG			0x181
-> +#define AD4691_ADC_SETUP			0x182
-> +#define AD4691_ACC_MASK1_REG			0x184
-> +#define AD4691_ACC_MASK2_REG			0x185
-> +#define AD4691_ACC_COUNT_LIMIT(n)		(0x186 + (n))
-> +#define AD4691_ACC_COUNT_VAL			0x3F
-> +#define AD4691_GPIO_MODE1_REG			0x196
-> +#define AD4691_GPIO_MODE2_REG			0x197
-> +#define AD4691_GPIO_READ			0x1A0
-> +#define AD4691_ACC_STATUS_FULL1_REG		0x1B0
-> +#define AD4691_ACC_STATUS_FULL2_REG		0x1B1
-> +#define AD4691_ACC_STATUS_OVERRUN1_REG		0x1B2
-> +#define AD4691_ACC_STATUS_OVERRUN2_REG		0x1B3
-> +#define AD4691_ACC_STATUS_SAT1_REG		0x1B4
-> +#define AD4691_ACC_STATUS_SAT2_REG		0x1BE
-> +#define AD4691_ACC_SAT_OVR_REG(n)		(0x1C0 + (n))
-> +#define AD4691_AVG_IN(n)			(0x201 + (2 * (n)))
-> +#define AD4691_AVG_STS_IN(n)			(0x222 + (3 * (n)))
-> +#define AD4691_ACC_IN(n)			(0x252 + (3 * (n)))
-> +#define AD4691_ACC_STS_DATA(n)			(0x283 + (4 * (n)))
-> +
-> +enum ad4691_adc_mode {
-> +	AD4691_CNV_CLOCK_MODE,
-> +	AD4691_MANUAL_MODE,
-> +};
-> +
-> +enum ad4691_gpio_mode {
-> +	AD4691_ADC_BUSY =3D 4,
-> +	AD4691_DATA_READY =3D 6,
-> +};
-> +
-> +enum ad4691_ref_ctrl {
-> +	AD4691_VREF_2P5 =3D 0,
-> +	AD4691_VREF_3P0,
-> +	AD4691_VREF_3P3,
-> +	AD4691_VREF_4P096,
-> +	AD4691_VREF_5P0,
-> +};
-> +
-> +struct ad4691_chip_info {
-> +	const struct iio_chan_spec *channels;
-> +	const struct iio_chan_spec *manual_channels;
-> +	const char *name;
-> +	int num_channels;
-> +	int max_rate;
-> +};
-> +
-> +#define AD4691_CHANNEL(chan, index, real_bits, storage_bits, _shift)	\
-> +	{								\
-> +		.type =3D IIO_VOLTAGE,					\
-> +		.indexed =3D 1,						\
-> +		.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW),		\
-> +		.info_mask_shared_by_all =3D BIT(IIO_CHAN_INFO_SAMP_FREQ)	\
-> +					   | BIT(IIO_CHAN_INFO_SCALE),	\
-> +		.channel =3D chan,					\
-> +		.scan_index =3D index,					\
-> +		.scan_type =3D {						\
-> +			.sign =3D 'u',					\
-> +			.realbits =3D real_bits,				\
-> +			.storagebits =3D storage_bits,			\
-> +			.shift =3D _shift,				\
-> +		},							\
+> changes v3
+> - new patch
+> ---
+>  drivers/gpio/gpiolib.c | 32 +++++++++++++++++---------------
+>  1 file changed, 17 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index ada572aaebd6..1ea9531934cc 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1628,19 +1628,6 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
+>  	}
+>  	gpiochip_dbg(gc, "found parent hwirq %u\n", parent_hwirq);
+>  
+> -	/*
+> -	 * We set handle_bad_irq because the .set_type() should
+> -	 * always be invoked and set the right type of handler.
+> -	 */
+> -	irq_domain_set_info(d,
+> -			    irq,
+> -			    hwirq,
+> -			    gc->irq.chip,
+> -			    gc,
+> -			    girq->handler,
+> -			    NULL, NULL);
+> -	irq_set_probe(irq);
+> -
+>  	/* This parent only handles asserted level IRQs */
+>  	ret = girq->populate_parent_alloc_arg(gc, &gpio_parent_fwspec,
+>  					      parent_hwirq, parent_type);
+> @@ -1657,12 +1644,27 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
+>  	 */
+>  	if (irq_domain_is_msi(d->parent) && (ret == -EEXIST))
+>  		ret = 0;
+> -	if (ret)
+> +	if (ret) {
+>  		gpiochip_err(gc,
+>  			     "failed to allocate parent hwirq %d for hwirq %lu\n",
+>  			     parent_hwirq, hwirq);
+> +		return ret;
 > +	}
-> +
-> +static const struct iio_chan_spec ad4691_channels[] =3D {
-> +	AD4691_CHANNEL(0, 0, 16, 32, 0),
-> +	AD4691_CHANNEL(1, 1, 16, 32, 0),
-> +	AD4691_CHANNEL(2, 2, 16, 32, 0),
-> +	AD4691_CHANNEL(3, 3, 16, 32, 0),
-> +	AD4691_CHANNEL(4, 4, 16, 32, 0),
-> +	AD4691_CHANNEL(5, 5, 16, 32, 0),
-> +	AD4691_CHANNEL(6, 6, 16, 32, 0),
-> +	AD4691_CHANNEL(7, 7, 16, 32, 0),
-> +	AD4691_CHANNEL(8, 8, 16, 32, 0),
-> +	AD4691_CHANNEL(9, 9, 16, 32, 0),
-> +	AD4691_CHANNEL(10, 10, 16, 32, 0),
-> +	AD4691_CHANNEL(11, 11, 16, 32, 0),
-> +	AD4691_CHANNEL(12, 12, 16, 32, 0),
-> +	AD4691_CHANNEL(13, 13, 16, 32, 0),
-> +	AD4691_CHANNEL(14, 14, 16, 32, 0),
-> +	AD4691_CHANNEL(15, 15, 16, 32, 0)
-> +};
-> +
-> +static const struct iio_chan_spec ad4693_channels[] =3D {
-> +	AD4691_CHANNEL(0, 0, 16, 32, 0),
-> +	AD4691_CHANNEL(1, 1, 16, 32, 0),
-> +	AD4691_CHANNEL(2, 2, 16, 32, 0),
-> +	AD4691_CHANNEL(3, 3, 16, 32, 0),
-> +	AD4691_CHANNEL(4, 4, 16, 32, 0),
-> +	AD4691_CHANNEL(5, 5, 16, 32, 0),
-> +	AD4691_CHANNEL(6, 6, 16, 32, 0),
-> +	AD4691_CHANNEL(7, 7, 16, 32, 0)
-> +};
-> +
-> +static const struct iio_chan_spec ad4691_manual_channels[] =3D {
-> +	AD4691_CHANNEL(0, 0, 16, 24, 8),
-> +	AD4691_CHANNEL(1, 1, 16, 24, 8),
-> +	AD4691_CHANNEL(2, 2, 16, 24, 8),
-> +	AD4691_CHANNEL(3, 3, 16, 24, 8),
-> +	AD4691_CHANNEL(4, 4, 16, 24, 8),
-> +	AD4691_CHANNEL(5, 5, 16, 24, 8),
-> +	AD4691_CHANNEL(6, 6, 16, 24, 8),
-> +	AD4691_CHANNEL(7, 7, 16, 24, 8),
-> +	AD4691_CHANNEL(8, 8, 16, 24, 8),
-> +	AD4691_CHANNEL(9, 9, 16, 24, 8),
-> +	AD4691_CHANNEL(10, 10, 16, 24, 8),
-> +	AD4691_CHANNEL(11, 11, 16, 24, 8),
-> +	AD4691_CHANNEL(12, 12, 16, 24, 8),
-> +	AD4691_CHANNEL(13, 13, 16, 24, 8),
-> +	AD4691_CHANNEL(14, 14, 16, 24, 8),
-> +	AD4691_CHANNEL(15, 15, 16, 24, 8)
-> +};
-> +
-> +static const struct iio_chan_spec ad4693_manual_channels[] =3D {
-> +	AD4691_CHANNEL(0, 0, 16, 24, 8),
-> +	AD4691_CHANNEL(1, 1, 16, 24, 8),
-> +	AD4691_CHANNEL(2, 2, 16, 24, 8),
-> +	AD4691_CHANNEL(3, 3, 16, 24, 8),
-> +	AD4691_CHANNEL(4, 4, 16, 24, 8),
-> +	AD4691_CHANNEL(5, 5, 16, 24, 8),
-> +	AD4691_CHANNEL(6, 6, 16, 24, 8),
-> +	AD4691_CHANNEL(7, 7, 16, 24, 8)
-> +};
-> +
-> +static const struct ad4691_chip_info ad4691_ad4691 =3D {
-> +	.channels =3D ad4691_channels,
-> +	.manual_channels =3D ad4691_manual_channels,
-> +	.name =3D "ad4691",
-> +	.num_channels =3D ARRAY_SIZE(ad4691_channels),
-> +	.max_rate =3D 500000,
-> +};
-> +
-> +static const struct ad4691_chip_info ad4691_ad4692 =3D {
-> +	.channels =3D ad4691_channels,
-> +	.manual_channels =3D ad4691_manual_channels,
-> +	.name =3D "ad4692",
-> +	.num_channels =3D ARRAY_SIZE(ad4691_channels),
-> +	.max_rate =3D 1000000,
-> +};
-> +
-> +static const struct ad4691_chip_info ad4691_ad4693 =3D {
-> +	.channels =3D ad4693_channels,
-> +	.manual_channels =3D ad4693_manual_channels,
-> +	.name =3D "ad4693",
-> +	.num_channels =3D ARRAY_SIZE(ad4693_channels),
-> +	.max_rate =3D 500000,
-> +};
-> +
-> +static const struct ad4691_chip_info ad4691_ad4694 =3D {
-> +	.channels =3D ad4693_channels,
-> +	.manual_channels =3D ad4693_manual_channels,
-> +	.name =3D "ad4694",
-> +	.num_channels =3D ARRAY_SIZE(ad4693_channels),
-> +	.max_rate =3D 1000000,
-> +};
-> +
-> +struct ad4691_state {
-> +	const struct ad4691_chip_info	*chip;
-> +	struct spi_device		*spi;
-> +	struct regmap			*regmap;
-> +
-> +	unsigned long			ref_clk_rate;
-> +	struct pwm_device		*conv_trigger;
-> +
-> +	enum ad4691_adc_mode		adc_mode;
-> +
-> +	int				vref;
-> +	u64				cnv_period;
+>  
+> -	return ret;
 > +	/*
-> +	 * Synchronize access to members of the driver state, and ensure
-> +	 * atomicity of consecutive SPI operations.
+> +	 * We set handle_bad_irq because the .set_type() should
+> +	 * always be invoked and set the right type of handler.
 > +	 */
-> +	struct mutex			lock;
-> +};
-> +
-> +static void ad4691_disable_pwm(void *data)
-> +{
-> +	struct pwm_device *pwm =3D data;
-> +	struct pwm_state state;
-> +
-> +	pwm_get_state(pwm, &state);
-> +	state.enabled =3D false;
-> +	pwm_apply_might_sleep(pwm, &state);
-
-You can just do:
-
-	struct pwm_state state =3D { .enabled =3D false, };
-	pwm_apply_might_sleep(pwm, &state);
-
-as there is no need to keep period and duty_cycle.
-
-> +}
-> +
-> +static int ad4691_regulator_get(struct ad4691_state *st)
-> +{
-> +	struct device *dev =3D &st->spi->dev;
-> +	int ret;
-> +
-> +	ret =3D devm_regulator_get_enable(dev, "vio");
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to get and enable VIO\n");
-> +
-> +	st->vref =3D devm_regulator_get_enable_read_voltage(dev, "vref");
-> +	if (st->vref =3D=3D -ENODEV)
-> +		st->vref =3D devm_regulator_get_enable_read_voltage(dev, "vrefin");
-> +	if (st->vref < 0)
-> +		return dev_err_probe(dev, st->vref,
-> +				     "Failed to get reference supply\n");
-> +
-> +	if (st->vref < AD4691_VREF_MIN || st->vref > AD4691_VREF_MAX)
-> +		return dev_err_probe(dev, -EINVAL, "vref(%d) must be under [%u %u]\n",
-> +				     st->vref, AD4691_VREF_MIN, AD4691_VREF_MAX);
+> +	irq_domain_set_info(d,
+> +			    irq,
+> +			    hwirq,
+> +			    gc->irq.chip,
+> +			    gc,
+> +			    girq->handler,
+> +			    NULL, NULL);
+> +	irq_set_probe(irq);
 > +
 > +	return 0;
-> +}
-> +
-> +static int ad4691_reg_read(void *context, unsigned int reg, unsigned int=
- *val)
-> +{
-> +	struct ad4691_state *st =3D context;
-> +	u8 tx[2], rx[4];
-> +	int ret;
-> +
-> +	put_unaligned_be16(0x8000 | reg, tx);
-> +
-> +	switch (reg) {
-> +	case 0 ... AD4691_OSC_FREQ_REG:
-> +	case AD4691_SPARE_CONTROL ... AD4691_ACC_SAT_OVR_REG(15):
-> +		ret =3D spi_write_then_read(st->spi, tx, 2, rx, 1);
-> +		if (!ret)
-> +			*val =3D rx[0];
-> +		return ret;
-> +	case AD4691_STD_SEQ_CONFIG:
-> +	case AD4691_AVG_IN(0) ... AD4691_AVG_IN(15):
-> +		ret =3D spi_write_then_read(st->spi, tx, 2, rx, 2);
-> +		if (!ret)
-> +			*val =3D get_unaligned_be16(rx);
-> +		return ret;
-> +	case AD4691_AVG_STS_IN(0) ... AD4691_AVG_STS_IN(15):
-> +	case AD4691_ACC_IN(0) ... AD4691_ACC_IN(15):
-> +		ret =3D spi_write_then_read(st->spi, tx, 2, rx, 3);
-> +		if (!ret)
-> +			*val =3D get_unaligned_be24(rx);
-> +		return ret;
-> +	case AD4691_ACC_STS_DATA(0) ... AD4691_ACC_STS_DATA(15):
-> +		ret =3D spi_write_then_read(st->spi, tx, 2, rx, 4);
-> +		if (!ret)
-> +			*val =3D get_unaligned_be32(rx);
-> +		return ret;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int ad4691_reg_write(void *context, unsigned int reg, unsigned in=
-t val)
-> +{
-> +	struct ad4691_state *st =3D context;
-> +	u8 tx[4];
-> +
-> +	put_unaligned_be16(reg, tx);
-> +
-> +	switch (reg) {
-> +	case 0 ... AD4691_OSC_FREQ_REG:
-> +	case AD4691_SPARE_CONTROL ... AD4691_GPIO_MODE2_REG:
-> +		if (val > 0xFF)
-> +			return -EINVAL;
-> +		tx[2] =3D val;
-> +		return spi_write_then_read(st->spi, tx, 3, NULL, 0);
-> +	case AD4691_STD_SEQ_CONFIG:
-> +		if (val > 0xFFFF)
-> +			return -EINVAL;
-> +		put_unaligned_be16(val, &tx[2]);
-> +		return spi_write_then_read(st->spi, tx, 4, NULL, 0);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static bool ad4691_volatile_reg(struct device *dev, unsigned int reg)
-> +{
-> +	switch (reg) {
-> +	case AD4691_STATUS_REG:
-> +	case AD4691_CLAMP_STATUS1_REG:
-> +	case AD4691_CLAMP_STATUS2_REG:
-> +	case AD4691_GPIO_READ:
-> +	case AD4691_ACC_STATUS_FULL1_REG ... AD4691_ACC_STATUS_SAT2_REG:
-> +	case AD4691_ACC_SAT_OVR_REG(0) ... AD4691_ACC_SAT_OVR_REG(15):
-> +	case AD4691_AVG_IN(0) ... AD4691_AVG_IN(15):
-> +	case AD4691_AVG_STS_IN(0) ... AD4691_AVG_STS_IN(15):
-> +	case AD4691_ACC_IN(0) ... AD4691_ACC_IN(15):
-> +	case AD4691_ACC_STS_DATA(0) ... AD4691_ACC_STS_DATA(15):
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static bool ad4691_readable_reg(struct device *dev, unsigned int reg)
-> +{
-> +	switch (reg) {
-> +	case 0 ... AD4691_OSC_FREQ_REG:
-> +	case AD4691_SPARE_CONTROL ... AD4691_ACC_SAT_OVR_REG(15):
-> +	case AD4691_STD_SEQ_CONFIG:
-> +	case AD4691_AVG_IN(0) ... AD4691_AVG_IN(15):
-> +	case AD4691_AVG_STS_IN(0) ... AD4691_AVG_STS_IN(15):
-> +	case AD4691_ACC_IN(0) ... AD4691_ACC_IN(15):
-> +	case AD4691_ACC_STS_DATA(0) ... AD4691_ACC_STS_DATA(15):
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static bool ad4691_writeable_reg(struct device *dev, unsigned int reg)
-> +{
-> +	switch (reg) {
-> +	case 0 ... AD4691_OSC_FREQ_REG:
-> +	case AD4691_STD_SEQ_CONFIG:
-> +	case AD4691_SPARE_CONTROL ... AD4691_GPIO_MODE2_REG:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static const struct regmap_config ad4691_regmap_config =3D {
-> +	.reg_bits =3D 16,
-> +	.val_bits =3D 32,
-> +	.reg_read =3D ad4691_reg_read,
-> +	.reg_write =3D ad4691_reg_write,
-> +	.volatile_reg =3D ad4691_volatile_reg,
-> +	.readable_reg =3D ad4691_readable_reg,
-> +	.writeable_reg =3D ad4691_writeable_reg,
-> +	.max_register =3D AD4691_ACC_STS_DATA(15),
-> +	.cache_type =3D REGCACHE_RBTREE,
-> +};
-> +
-> +static int ad4691_get_sampling_freq(struct ad4691_state *st)
-> +{
-> +	if (st->adc_mode =3D=3D AD4691_MANUAL_MODE) {
-> +		return DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC,
-> +					     ktime_to_ns(st->sampling_period));
-> +	}
-> +
-> +	return DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC,
-> +				     pwm_get_period(st->conv_trigger));
-
-Other iio drivers (I looked at ad4062.c) use down-rounding division to
-provide the sampling frequency. I wonder if there should be some
-consistency about that in the different drivers?
-(But having said that, the ad4062.c calculation looks somewhat fishy, is
-AD4062_TCONV_NS really relevant to the frequency?)
-
-> +}
-> +
-> +static int __ad4691_set_sampling_freq(struct ad4691_state *st, int freq)
-> +{
-> +	unsigned long long target, ref_clk_period_ns;
-> +	struct pwm_state cnv_state;
-> +
-> +	pwm_init_state(st->conv_trigger, &cnv_state);
-> +
-> +	freq =3D clamp(freq, 1, st->chip->max_rate);
-> +	target =3D DIV_ROUND_CLOSEST_ULL(st->ref_clk_rate, freq);
-> +	ref_clk_period_ns =3D DIV_ROUND_CLOSEST_ULL(NANO, st->ref_clk_rate);
-> +	st->cnv_period =3D ref_clk_period_ns * target;
-> +	cnv_state.period =3D ref_clk_period_ns * target;
-
-You're losing precision here. Consider ref_clk_rate =3D 64000000, freq =3D
-1234560. Then
-   cnv_state.period
- =3D ref_clk_period_ns * target
- =3D DIV_ROUND_CLOSEST_ULL(NANO, st->ref_clk_rate) * DIV_ROUND_CLOSEST_ULL(=
-st->ref_clk_rate, freq)=20
- =3D 16 * 52
- =3D 832
-
-The exact value is NANO / freq (as st->ref_clk_rate cancels out) which
-is 810.0051840331778.
-
-So this either needs a comment why the calculation is as it is without
-canceling st->ref_clk_rate and two divisions instead of only one, or it
-should be simplified.
-
-Also I wonder if DIV_ROUND_CLOSEST_ULL(NANO, freq) is right. With freq =3D
-793336 we get:
-
-	NANO / freq =3D 1260.499964706001
-
-so 1260 is picked as period which results in an actual frequency of
-
-	NANO / 1260 =3D 793650.7936507936
-
-and thus a delta of 314.79365079361014 Hz. With period =3D 1261 however we
-get
-
-	NANO / 1261 =3D 793021.4115781126
-
-which has a delta of 314.5884218873689 and thus is (maybe?) the better
-choice? But maybe that is too theoretic as the underlying PWM hardware
-probably cannot set 1260 ns or 1261 ns exactly anyhow and most probably
-both result in the same HW setting (but if not, 1261 yields the better
-setting).
-
-> +	cnv_state.duty_cycle =3D AD4691_CNV_DUTY_CYCLE_NS;
-> +	cnv_state.enabled =3D false;
-> +
-> +	return pwm_apply_might_sleep(st->conv_trigger, &cnv_state);
-> +}
-
-Best regards
-Uwe
-
---amwkcpt2w7rk5qj2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmmz54UACgkQj4D7WH0S
-/k7U2QgAn4YyAc8Fw2+n2l7BZ1locp9Tq72dYSPRukDyBsJj+19NGb4c8Rc1rHVf
-UbYoGeAII70L6kJqfVQJwoUMnjT4QWe1nubeiqbOsUyEEkP4rUz4YLAmM7JUtWxT
-aeGCvl4rh8bT9zJRljN/Fd5i4XYY75VsXUxDiQL13nSZd0S4M/FwkmLFON12ty/D
-eBPzShXzvvcwDTKp3ezRtyCiQB5ZJe8TYwUMabCpmGuR0Kz8bno8WNqf5GSZhykd
-FKIl3NooFcWvnarG3+Gw81cl6JdDmdJgxiJTmq4blrtb8OHajeNpfwyWgIbx9AhH
-GB/An5hlTfQcaZHljeb9dAvuwTbDgw==
-=X1aI
------END PGP SIGNATURE-----
-
---amwkcpt2w7rk5qj2--
+>  }
+>  
+>  static unsigned int gpiochip_child_offset_to_irq_noop(struct gpio_chip *gc,
+> -- 
+> 2.47.3
+> 
 
