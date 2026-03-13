@@ -1,34 +1,34 @@
-Return-Path: <linux-gpio+bounces-33381-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33380-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MOQML8UatGlLhQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33381-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 15:10:13 +0100
+	id uJJVN18atGlLhQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33380-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 15:08:31 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57C0C2849A5
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 15:10:13 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E6E728492C
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 15:08:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 44F6132C1FC7
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 14:03:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EB64E32AE764
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 14:03:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EFFA39EF09;
-	Fri, 13 Mar 2026 14:03:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6C5839DBFE;
+	Fri, 13 Mar 2026 14:02:55 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6384C334C2B
-	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 14:02:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F6B398918
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 14:02:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773410584; cv=none; b=I1mxVBQi4OW+yM+/VSpynknSnAQRisnAm1qS5XWdQcRF6LO75jz5KKcW43sFeILyRfA2MFK/B2XT9SxWoVAqZ2X55TkMvpd4yAKAW+b9anceImLMdzYTeJht17TgbrWi11hZmFY0LkTdl8wfOxIrwsiYernecR3cEctKyliT8rI=
+	t=1773410574; cv=none; b=C6Q0VyzJ8WTKUQhXNvTCd+45+JfSijxSMlhEn0i9TvzmD9WICnQgJoJHGCp7nF+9Z61tfRgLowZSyj3AzcfWU0mQuKO8ifzbtsx4EZZVHwqfdXEbr4De+3HrfggAGoCaQZ00IAGSTq+MYR+tEJhTQKuqL4Oh0vu79rkk+LrzBQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773410584; c=relaxed/simple;
-	bh=NNKwWgj9DWzOPkZ2FEGrIuJ15iPDrxzyFMPuDeiCfXE=;
+	s=arc-20240116; t=1773410574; c=relaxed/simple;
+	bh=96WIg8Hzrxqo8cK84L/k6XozbT381jgbo5yN9aAe2ZY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MJd2naSBeW/jaTYLmmZjce3bGW0L5L4n6u6l0AR9ltEtxsjEwAH6rpT8QVspCma1lb4Veygewtd4drJuldZkrH8kdjoACqHxMik+lXSZ82+ubJxTTVvOTB4a8BmY8Bb5ZXLaRaC6bwBOlUGnlwNgkMbjGxTztYbC7c/qZtgn6Xk=
+	 MIME-Version:Content-Type; b=ARtcbiH3Dq9psgsgF2Wt0ly8NZ37qMbe8zXpxt0mJmWOQKcGolsAGnp/d57cjdJ9R0hIVNPojPqqrBEx+WcpyavHJdYdl1hjggydTQek0TkorpUUhg5ItCSXfulgOH24lyXX5z3ifzrfhSPdkOaWxTzvJ5mBz77gE0AgEVTlzn8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -36,16 +36,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1w135r-0007Jo-A2; Fri, 13 Mar 2026 15:02:23 +0100
+	id 1w135r-0007Jp-B5; Fri, 13 Mar 2026 15:02:23 +0100
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac] helo=dude04)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1w135q-0005ct-3C;
+	id 1w135r-0005cv-03;
 	Fri, 13 Mar 2026 15:02:23 +0100
 Received: from ore by dude04 with local (Exim 4.98.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1w135q-000000055hl-3l2w;
+	id 1w135q-000000055hv-3rfB;
 	Fri, 13 Mar 2026 15:02:22 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: Guenter Roeck <linux@roeck-us.net>,
@@ -55,16 +55,16 @@ To: Guenter Roeck <linux@roeck-us.net>,
 	Lee Jones <lee@kernel.org>,
 	Peter Rosin <peda@axentia.se>,
 	Linus Walleij <linusw@kernel.org>
-Cc: David Jander <david@protonic.nl>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	kernel@pengutronix.de,
 	linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-hwmon@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH v4 4/6] pinctrl: add NXP MC33978/MC34978 pinctrl driver
-Date: Fri, 13 Mar 2026 15:02:15 +0100
-Message-ID: <20260313140218.1213393-5-o.rempel@pengutronix.de>
+	linux-gpio@vger.kernel.org,
+	David Jander <david@protonic.nl>
+Subject: [PATCH v4 5/6] hwmon: add NXP MC33978/MC34978 driver
+Date: Fri, 13 Mar 2026 15:02:16 +0100
+Message-ID: <20260313140218.1213393-6-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260313140218.1213393-1-o.rempel@pengutronix.de>
 References: <20260313140218.1213393-1-o.rempel@pengutronix.de>
@@ -74,896 +74,529 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spamd-Result: default: False [1.54 / 15.00];
+X-Spamd-Result: default: False [1.04 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[pengutronix.de];
-	RCVD_COUNT_FIVE(0.00)[6];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-33381-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[14];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33380-lists,linux-gpio=lfdr.de];
+	DMARC_NA(0.00)[pengutronix.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.948];
-	FROM_NEQ_ENVFROM(0.00)[o.rempel@pengutronix.de,linux-gpio@vger.kernel.org];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,pengutronix.de:email,pengutronix.de:mid,nxp.com:url,protonic.nl:email,checkpatch.pl:url]
-X-Rspamd-Queue-Id: 57C0C2849A5
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[o.rempel@pengutronix.de,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_COUNT_FIVE(0.00)[6];
+	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.980];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,pengutronix.de:email,pengutronix.de:mid]
+X-Rspamd-Queue-Id: 5E6E728492C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: David Jander <david@protonic.nl>
+Add hardware monitoring support for the NXP MC33978/MC34978 MSDI.
 
-Add pin control and GPIO driver for the NXP MC33978/MC34978 Multiple
-Switch Detection Interface (MSDI) devices.
+The driver exposes static operating thresholds (thermal, over-voltage,
+under-voltage) and reports dynamic hardware fault alarms.
 
-This driver exposes the 22 mechanical switch detection inputs (14
-Switch-to-Ground, 8 Programmable) as standard GPIOs.
-
-Key features implemented:
-- GPIO read/write: Translates physical switch states (open/closed)
-  to logical GPIO levels based on the configured switch topology
-  (Switch-to-Ground vs. Switch-to-Battery).
-- Emulated Output: Allows setting pins "high" or "low" by manipulating
-  the tri-state registers and hardware pull topologies.
-- Interrupt routing: Proxies GPIO interrupt requests to the irq_domain
-  managed by the parent MFD core driver.
-
-Signed-off-by: David Jander <david@protonic.nl>
-Co-developed-by: Oleksij Rempel <o.rempel@pengutronix.de>
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Linus Walleij <linusw@kernel.org>
 ---
 changes v4:
-- add Reviewed-by: Linus Walleij ...
-- Replace the of_device_id match table with a platform_device_id table
-- Add device_set_node(dev, dev_fwnode(dev->parent)) during probe
-- Remove the check for a missing dev->of_node
+- no changes
 changes v3:
-- replace manual mutex_lock()/mutex_unlock() paths with guard(mutex)
-- Unify error checking style by replacing if (ret < 0) with if (ret)
-- Migrate from a custom .to_irq callback to a hierarchical gpio_irq_chip
-- Implement .irq_bus_lock and .irq_bus_sync_unlock proxies to properly
-  cascade SPI bus lock operations to the parent MFD domain
-- Set girq->handler to handle_simple_irq
+- no changes
 changes v2:
-- Translate all remaining German comments to English.
-- Remove unnecessary #ifdef CONFIG_OF wrappers around dt_node_to_map.
-- Add detailed comments to mc33978_get() and mc33978_get_multiple() explaining
-  the hardware comparator logic (1 = closed, 0 = open) and justifying the
-  bitwise inversion required to report actual physical voltage levels.
-- Add comments to the .set() and .set_config() callbacks explaining why
-  gpiolib's standard open-drain emulation (switching to input mode) fails on
-  this hardware due to active wetting currents, and why tri-state isolation is
-  mandatory.
-- Add a comment to mc33978_gpio_to_irq() explaining why it must act as a
-  proxy to the parent MFD's irq_domain (shared physical INT_B line with hwmon).
-- Drop dummy pin group callbacks (get_groups_count, etc.). This relies on a
-  preparatory patch in this series making these callbacks optional in the core.
-- Fix debugfs 'pinconf-pins' read errors by correctly returning -ENOTSUPP
-  instead of -EOPNOTSUPP for unsupported generic configurations.
-- Fix empty 'gpio-ranges' and missing debugfs labels by explicitly calling
-  gpiochip_add_pin_range() during probe.
-- Eliminate "magic" bitwise math in the wetting current configuration by
-  introducing a static lookup array (mc33978_wet_mA).
-- Resolve checkpatch.pl strict warnings regarding macro argument reuse by
-  converting MC33978_SPSG, MC33978_PINSHIFT, MC33978_WREG, and MC33978_WSHIFT
-  to static inline functions.
-- Remove artifacts from previous interrupt handling implementations.
-- Address minor formatting and whitespace nits.
+- Switch from OF match table to platform_device_id
 ---
- drivers/pinctrl/Kconfig           |  14 +
- drivers/pinctrl/Makefile          |   1 +
- drivers/pinctrl/pinctrl-mc33978.c | 747 ++++++++++++++++++++++++++++++
- 3 files changed, 762 insertions(+)
- create mode 100644 drivers/pinctrl/pinctrl-mc33978.c
+ drivers/hwmon/Kconfig         |  10 +
+ drivers/hwmon/Makefile        |   1 +
+ drivers/hwmon/mc33978-hwmon.c | 430 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 441 insertions(+)
+ create mode 100644 drivers/hwmon/mc33978-hwmon.c
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index afecd9407f53..c315656c0fe5 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -388,6 +388,20 @@ config PINCTRL_MAX77620
- 	  function in alternate mode. This driver also configure push-pull,
- 	  open drain, FPS slots etc.
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index 486152a8ea77..afe691539df3 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -700,6 +700,16 @@ config SENSORS_MC13783_ADC
+         help
+           Support for the A/D converter on MC13783 and MC13892 PMIC.
  
-+config PINCTRL_MC33978
-+	tristate "MC33978/MC34978 industrial input controller support"
++config SENSORS_MC33978
++	tristate "NXP MC33978/MC34978 fault monitoring"
 +	depends on MFD_MC33978
-+	select GPIOLIB
-+	select GENERIC_PINCONF
 +	help
-+	  Say Y here to enable support for NXP MC33978/MC34978 Multiple
-+	  Switch Detection Interface (MSDI) devices. This driver provides
-+	  pinctrl and GPIO interfaces for the 22 mechanical switch inputs
-+	  (14 Switch-to-Ground, 8 Programmable).
++	  If you say yes here you get fault monitoring support for the
++	  NXP MC33978/MC34978 Multiple Switch Detection Interface (MSDI).
 +
-+	  It allows reading switch states, configuring hardware pull
-+	  topologies, and handling interrupts for state changes.
++	  This driver can also be built as a module. If so, the module
++	  will be called mc33978-hwmon.
 +
- config PINCTRL_MCP23S08_I2C
- 	tristate
- 	select REGMAP_I2C
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index f7d5d5f76d0c..afb58fb5a197 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_PINCTRL_XWAY)	+= pinctrl-xway.o
- obj-$(CONFIG_PINCTRL_LPC18XX)	+= pinctrl-lpc18xx.o
- obj-$(CONFIG_PINCTRL_MAX7360)	+= pinctrl-max7360.o
- obj-$(CONFIG_PINCTRL_MAX77620)	+= pinctrl-max77620.o
-+obj-$(CONFIG_PINCTRL_MC33978)	+= pinctrl-mc33978.o
- obj-$(CONFIG_PINCTRL_MCP23S08_I2C)	+= pinctrl-mcp23s08_i2c.o
- obj-$(CONFIG_PINCTRL_MCP23S08_SPI)	+= pinctrl-mcp23s08_spi.o
- obj-$(CONFIG_PINCTRL_MCP23S08)	+= pinctrl-mcp23s08.o
-diff --git a/drivers/pinctrl/pinctrl-mc33978.c b/drivers/pinctrl/pinctrl-mc33978.c
+ config SENSORS_MC33XS2410
+ 	tristate "MC33XS2410 HWMON support"
+ 	depends on PWM_MC33XS2410
+diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+index 5833c807c688..4c3db5433a10 100644
+--- a/drivers/hwmon/Makefile
++++ b/drivers/hwmon/Makefile
+@@ -167,6 +167,7 @@ obj-$(CONFIG_SENSORS_MAX31790)	+= max31790.o
+ obj-$(CONFIG_MAX31827) += max31827.o
+ obj-$(CONFIG_SENSORS_MAX77705) += max77705-hwmon.o
+ obj-$(CONFIG_SENSORS_MC13783_ADC)+= mc13783-adc.o
++obj-$(CONFIG_SENSORS_MC33978)	+= mc33978-hwmon.o
+ obj-$(CONFIG_SENSORS_MC33XS2410) += mc33xs2410_hwmon.o
+ obj-$(CONFIG_SENSORS_MC34VR500)	+= mc34vr500.o
+ obj-$(CONFIG_SENSORS_MCP3021)	+= mcp3021.o
+diff --git a/drivers/hwmon/mc33978-hwmon.c b/drivers/hwmon/mc33978-hwmon.c
 new file mode 100644
-index 000000000000..31065d633317
+index 000000000000..8740523773f7
 --- /dev/null
-+++ b/drivers/pinctrl/pinctrl-mc33978.c
-@@ -0,0 +1,747 @@
++++ b/drivers/hwmon/mc33978-hwmon.c
+@@ -0,0 +1,430 @@
 +// SPDX-License-Identifier: GPL-2.0-only
++// Copyright (c) 2026 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
 +/*
-+ * Copyright (C) 2024 David Jander <david@protonic.nl>, Protonic Holland
-+ * Copyright (C) 2026 Oleksij Rempel <kernel@pengutronix.de>, Pengutronix
++ * MC33978/MC34978 Hardware Monitor Driver
 + *
-+ * MC33978/MC34978 Multiple Switch Detection Interface - Pinctrl/GPIO Driver
++ * CRITICAL HARDWARE BEHAVIOR - THERMAL (tLIM):
++ * When the thermal limit (>155°C) is reached, the IC autonomously
++ * reduces the continuous wetting current (CWET) to 2.0 mA to prevent
++ * thermal destruction. This throttling persists until the silicon cools
++ * down below 140°C (15°C hysteresis).
 + *
-+ * Provides GPIO and pinctrl interfaces for the 22 switch detection inputs.
-+ * Handles digital input reading and wetting current configuration. Analog AMUX
-+ * functionality is handled by a separate mux driver.
++ * WARNING FOR PINCTRL/GPIO CONSUMERS:
++ * During an active tLIM fault, the switch state detection becomes
++ * inherently unreliable. A throttled wetting current of 2.0 mA may
++ * be insufficient to break through the oxide layer of mechanical
++ * contacts in the field, leading to false-open GPIO readings.
 + *
-+ * GPIO Mapping:
-+ * - GPIO 0-13:  SG0-SG13 (Switch-to-Ground inputs)
-+ * - GPIO 14-21: SP0-SP7 (Programmable: Switch-to-Ground or Switch-to-Battery)
-+ * This is dictated by the READ_IN register where bits [21:14] = SP[7:0]
-+ * and bits [13:0] = SG[13:0].
-+ *
-+ * Register Organization:
-+ * Configuration registers are generally paired. The _SP register at offset N
-+ * controls SP0-SP7, and the _SG register at offset N+2 controls SG0-SG13.
-+ *
-+ * Wetting Currents vs. Pull Resistors:
-+ * The hardware physically lacks traditional passive pull-up or pull-down
-+ * resistors. Instead, it uses active, controllable current regulators
-+ * (wetting currents) to detect switch states and clean mechanical contacts.
-+ * - Because these are active current sources, specifying an ohmic value for
-+ * pull-up/down biases is physically invalid. The driver ignores ohm arguments.
-+ * - 8 selectable current values: 2, 6, 8, 10, 12, 14, 16, 20 mA.
-+ * - Exposed via the pinconf PIN_CONFIG_DRIVE_STRENGTH parameter (in mA).
-+ *
-+ * Emulated Outputs:
-+ * The hardware lacks traditional push-pull output drivers; it is strictly an
-+ * input device. "Outputs" are simulated by toggling the wetting currents and
-+ * physically isolating the pins via hardware tri-state registers. Consequently,
-+ * consumers MUST flag outputs with GPIO_OPEN_DRAIN or GPIO_OPEN_SOURCE in
-+ * the Device Tree.
-+ *
-+ * Input Detection Mechanics:
-+ * This input mechanism relies on the active current regulators rather than
-+ * passive hard resistors. For a Switch-to-Ground (SG) pin, the chip sources
-+ * a constant current. When the switch is open, the pin voltage floats up to
-+ * the battery voltage. When the switch closes, it creates a path to ground;
-+ * because the current is strictly regulated, the pin voltage drops sharply
-+ * below the internal 4.0V comparator threshold.
-+ * * The hardware evaluates this and reports an abstract "contact status"
-+ * (1 = closed, 0 = open). For SG pins, a closed switch (~0V) reports as '1'.
-+ * To align with gpiolib expectations where ~0V equals a physical logical '0',
-+ * this driver explicitly inverts the hardware status for all SG-configured
-+ * pins before reporting them.
-+ *
-+ * Interrupts:
-+ * The physical INT_B line and threaded IRQ domain are managed centrally by
-+ * the parent MFD core. This driver simply proxies .to_irq() to the parent.
-+ *
-+ * Written by David Jander <david@protonic.nl>
-+ *
-+ * Datasheet:
-+ * https://www.nxp.com/docs/en/data-sheet/MC33978.pdf
++ * VOLTAGE DEGRADATION WARNING (VBATP):
++ * While the hard Undervoltage Lockout (UVLO) asserts strictly at 4.5V,
++ * the silicon operates with degraded parametrics whenever the supply
++ * drops below 6.0V. System designers must be aware that analog routing
++ * (AMUX) and switch detection logic may behave non-deterministically
++ * before the actual UV alarm triggers.
 + */
 +
-+#include <linux/cleanup.h>
 +#include <linux/device.h>
-+#include <linux/gpio/driver.h>
++#include <linux/err.h>
++#include <linux/hwmon.h>
 +#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
++#include <linux/mod_devicetable.h>
 +#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/pinctrl/pinconf.h>
-+#include <linux/pinctrl/pinctrl.h>
 +#include <linux/platform_device.h>
 +#include <linux/regmap.h>
-+#include <linux/seq_file.h>
 +
 +#include <linux/mfd/mc33978.h>
 +
-+#define MC33978_NGPIO		22
++/* Thermal Warning threshold (~120C) */
++#define MC33978_TEMP_WARN_MC		120000
 +
-+/*
-+ * Input numbering is dictated by bit-order of the input register:
-+ * Inputs 0-13 -> SG0-SG13
-+ * Inputs 14-21 -> SP0-SP7
-+ */
-+#define MC33978_NUM_SG		14
-+#define MC33978_SP_MASK		GENMASK(MC33978_NGPIO - 1, MC33978_NUM_SG)
-+#define MC33978_SG_MASK		GENMASK(MC33978_NUM_SG - 1, 0)
-+#define MC33978_SG_SHIFT	0
-+#define MC33978_SP_SHIFT	MC33978_NUM_SG
++/* Thermal Limit / tLIM (>155C) - Hardware enters CWET throttling */
++#define MC33978_TEMP_CRIT_MC		155000
 +
-+#define MC33978_TRISTATE	0
-+#define MC33978_PU		1
-+#define MC33978_PD		2
++/* Hysteresis for tLIM recovery (Silicon must cool to <140C) */
++#define MC33978_TEMP_HYST_MC		15000
 +
-+struct mc33978_pinctrl {
++/* VBATP (in0) IC Level thresholds */
++#define MC33978_VBATP_OV_MV		36000 /* Overvoltage limit */
++#define MC33978_VBATP_FUNC_MV		28000 /* Functional/Normal boundary */
++#define MC33978_VBATP_DEGRADED_MV	6000 /* Degraded parametrics start */
++#define MC33978_VBATP_UVLO_MV		4500 /* UV Rising Threshold max */
++
++/* VDDQ (in1) Logic Supply thresholds */
++#define MC33978_VDDQ_MAX_MV		5250 /* Operating Condition max */
++#define MC33978_VDDQ_MIN_MV		3000 /* Operating Condition min */
++#define MC33978_VDDQ_UV_MV		2800 /* UV Falling Threshold max */
++
++enum mc33978_hwmon_in_channels {
++	MC33978_IN_VBATP,
++	MC33978_IN_VDDQ,
++};
++
++struct mc33978_hwmon_priv {
 +	struct device *dev;
-+	struct regmap *regmap;
-+	int irq;
++	struct device *hwmon_dev;
++	struct regmap *map;
++	int fault_irq;
++	u32 last_faults;
++};
 +
-+	struct irq_domain *domain;
++static int mc33978_hwmon_read_fault(struct mc33978_hwmon_priv *priv,
++				    u32 *faults)
++{
++	unsigned int val;
++	int ret;
 +
-+	struct gpio_chip chip;
-+	struct pinctrl_dev *pctldev;
-+	struct pinctrl_desc pinctrl_desc;
++	ret = regmap_read(priv->map, MC33978_REG_FAULT, &val);
++	if (ret)
++		return ret;
 +
++	*faults = val;
++
++	return 0;
++}
++
++static void mc33978_hwmon_report_faults(struct mc33978_hwmon_priv *priv,
++					u32 new_faults)
++{
 +	/*
-+	 * Protects multi-register hardware sequences in .set() and atomic
-+	 * READ_IN + CONFIG reads in .get()
++	 * Log only newly asserted critical faults to prevent kernel log spam
++	 * during persistent hardware fault conditions.
++	 * dev_*_ratelimited provides an additional safety net against noisy IRQs.
 +	 */
-+	struct mutex lock;
-+};
++	if (!new_faults)
++		return;
 +
-+static const struct pinctrl_pin_desc mc33978_pins[] = {
-+	PINCTRL_PIN(0, "sg0"),
-+	PINCTRL_PIN(1, "sg1"),
-+	PINCTRL_PIN(2, "sg2"),
-+	PINCTRL_PIN(3, "sg3"),
-+	PINCTRL_PIN(4, "sg4"),
-+	PINCTRL_PIN(5, "sg5"),
-+	PINCTRL_PIN(6, "sg6"),
-+	PINCTRL_PIN(7, "sg7"),
-+	PINCTRL_PIN(8, "sg8"),
-+	PINCTRL_PIN(9, "sg9"),
-+	PINCTRL_PIN(10, "sg10"),
-+	PINCTRL_PIN(11, "sg11"),
-+	PINCTRL_PIN(12, "sg12"),
-+	PINCTRL_PIN(13, "sg13"),
-+	PINCTRL_PIN(14, "sp0"),
-+	PINCTRL_PIN(15, "sp1"),
-+	PINCTRL_PIN(16, "sp2"),
-+	PINCTRL_PIN(17, "sp3"),
-+	PINCTRL_PIN(18, "sp4"),
-+	PINCTRL_PIN(19, "sp5"),
-+	PINCTRL_PIN(20, "sp6"),
-+	PINCTRL_PIN(21, "sp7"),
-+};
++	if (new_faults & MC33978_FAULT_OT)
++		dev_crit_ratelimited(priv->dev, "Over-temperature fault detected!\n");
 +
-+static inline bool mc33978_is_sp(unsigned int pin)
-+{
-+	return pin >= MC33978_NUM_SG;
++	if (new_faults & MC33978_FAULT_OV)
++		dev_crit_ratelimited(priv->dev, "Over-voltage fault detected!\n");
++
++	if (new_faults & MC33978_FAULT_UV)
++		dev_err_ratelimited(priv->dev, "Under-voltage fault detected!\n");
 +}
 +
-+/* Choose register offset for _SG/_SP registers. reg is always the _SP addr. */
-+static inline u8 mc33978_spsg(u8 reg, unsigned int pin)
++static irqreturn_t mc33978_hwmon_fault_irq(int irq, void *data)
 +{
-+	return mc33978_is_sp(pin) ? reg : reg + 2;
-+}
-+
-+/* Get the bit index into the corresponding register */
-+static inline unsigned int mc33978_pinshift(unsigned int pin)
-+{
-+	return mc33978_is_sp(pin) ? pin - MC33978_NUM_SG : pin;
-+}
-+
-+#define MC33978_PINMASK(pin)	BIT(mc33978_pinshift(pin))
-+
-+/*
-+ * Wetting current registers: 3 in total, each pin uses a 3-bit field,
-+ * 8 pins per register, except for the last one.
-+ */
-+static inline u8 mc33978_wreg(u8 reg, unsigned int pin)
-+{
-+	return reg + (mc33978_is_sp(pin) ? 0 : 2 + 2 * (pin / 8));
-+}
-+
-+static inline unsigned int mc33978_wshift(unsigned int pin)
-+{
-+	return mc33978_is_sp(pin) ? 3 * (pin - MC33978_NUM_SG) : 3 * (pin % 8);
-+}
-+
-+#define MC33978_WMASK(pin)	(7 << mc33978_wshift(pin))
-+
-+static int mc33978_read(struct mc33978_pinctrl *mpc, u8 reg, u32 *val)
-+{
++	struct mc33978_hwmon_priv *priv = data;
++	u32 faults, new_faults, changed_faults;
 +	int ret;
 +
-+	ret = regmap_read(mpc->regmap, reg, val);
-+	if (ret)
-+		dev_err_ratelimited(mpc->dev, "Regmap read error %d at reg: %02x.\n",
-+				    ret, reg);
-+	return ret;
-+}
-+
-+static int mc33978_update_bits(struct mc33978_pinctrl *mpc, u8 reg, u32 mask, u32 val)
-+{
-+	int ret;
-+
-+	ret = regmap_update_bits(mpc->regmap, reg, mask, val);
-+	if (ret)
-+		dev_err_ratelimited(mpc->dev, "Regmap update bits error %d at reg: %02x.\n",
-+				    ret, reg);
-+	return ret;
-+}
-+
-+static const struct pinctrl_ops mc33978_pinctrl_ops = {
-+	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
-+	.dt_free_map = pinconf_generic_dt_free_map,
-+};
-+
-+static int mc33978_get_pull(struct mc33978_pinctrl *mpc, unsigned int pin, int *val)
-+{
-+	unsigned int data;
-+	int ret;
-+
-+	ret = mc33978_read(mpc, mc33978_spsg(MC33978_REG_TRI_SP, pin), &data);
-+	if (ret)
-+		return ret;
-+
-+	/* Is the pin tri-stated? */
-+	if (data & MC33978_PINMASK(pin)) {
-+		*val = MC33978_TRISTATE;
-+		return 0;
++	ret = mc33978_hwmon_read_fault(priv, &faults);
++	if (ret) {
++		dev_err_ratelimited(priv->dev, "Failed to read fault register: %pe\n",
++				    ERR_PTR(ret));
++		return IRQ_NONE;
 +	}
 +
-+	/* Pins 0..13 only support pull-up */
-+	if (!mc33978_is_sp(pin)) {
-+		*val = MC33978_PU;
-+		return 0;
-+	}
++	changed_faults = faults ^ priv->last_faults;
++	if (!changed_faults)
++		return IRQ_HANDLED;
 +
-+	/* Check pin pull direction for pins 14..21 */
-+	ret = mc33978_read(mpc, MC33978_REG_CONFIG, &data);
-+	if (ret)
-+		return ret;
++	new_faults = faults & ~priv->last_faults;
++	if (new_faults)
++		mc33978_hwmon_report_faults(priv, new_faults);
 +
-+	if (data & MC33978_PINMASK(pin))
-+		*val = MC33978_PD;
-+	else
-+		*val = MC33978_PU;
++	priv->last_faults = faults;
 +
-+	return 0;
++	if (changed_faults & MC33978_FAULT_UV)
++		hwmon_notify_event(priv->hwmon_dev, hwmon_in,
++				   hwmon_in_lcrit_alarm, MC33978_IN_VBATP);
++
++	if (changed_faults & MC33978_FAULT_OV)
++		hwmon_notify_event(priv->hwmon_dev, hwmon_in,
++				   hwmon_in_crit_alarm, MC33978_IN_VBATP);
++
++	if (changed_faults & MC33978_FAULT_TEMP_WARN)
++		hwmon_notify_event(priv->hwmon_dev, hwmon_temp,
++				   hwmon_temp_max_alarm, 0);
++
++	if (changed_faults & MC33978_FAULT_OT)
++		hwmon_notify_event(priv->hwmon_dev, hwmon_temp,
++				   hwmon_temp_crit_alarm, 0);
++
++	/* Push a chip-level alarm on any hardware status change */
++	hwmon_notify_event(priv->hwmon_dev, hwmon_chip,
++			   hwmon_chip_alarms, 0);
++
++	return IRQ_HANDLED;
 +}
 +
-+static int mc33978_set_pull(struct mc33978_pinctrl *mpc, unsigned int pin, int val)
++static umode_t mc33978_hwmon_is_visible(const void *data,
++					enum hwmon_sensor_types type,
++					u32 attr, int channel)
 +{
-+	unsigned int mask = MC33978_PINMASK(pin);
-+	int ret;
++	switch (type) {
++	case hwmon_chip:
++		if (attr == hwmon_chip_alarms)
++			return 0444;
++		break;
 +
-+	/* SG pins physically lack pull-downs current sources */
-+	if (val == MC33978_PD && !mc33978_is_sp(pin))
-+		return -EINVAL;
-+
-+	/* Configure direction (Exclusively for SP pins) */
-+	if (mc33978_is_sp(pin) && val != MC33978_TRISTATE) {
-+		ret = mc33978_update_bits(mpc, MC33978_REG_CONFIG, mask,
-+					  (val == MC33978_PD) ? mask : 0);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/* Enable current source or set to tri-state  */
-+	return mc33978_update_bits(mpc, mc33978_spsg(MC33978_REG_TRI_SP, pin),
-+				   mask,
-+				   (val == MC33978_TRISTATE) ? mask : 0);
-+}
-+
-+static const unsigned int mc33978_wet_mA[] = { 2, 6, 8, 10, 12, 14, 16, 20 };
-+
-+static int mc33978_set_ds(struct mc33978_pinctrl *mpc, unsigned int pin,
-+			  unsigned int val)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(mc33978_wet_mA); i++) {
-+		if (val == mc33978_wet_mA[i]) {
-+			return mc33978_update_bits(mpc,
-+					mc33978_wreg(MC33978_REG_WET_SP, pin),
-+					MC33978_WMASK(pin),
-+					i << mc33978_wshift(pin));
++	case hwmon_temp:
++		switch (attr) {
++		case hwmon_temp_max:
++		case hwmon_temp_crit:
++		case hwmon_temp_crit_hyst:
++		case hwmon_temp_max_alarm:
++		case hwmon_temp_crit_alarm:
++			return 0444;
++		default:
++			break;
 +		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int mc33978_get_ds(struct mc33978_pinctrl *mpc, unsigned int pin,
-+			  unsigned int *val)
-+{
-+	unsigned int data;
-+	int ret;
-+
-+	ret = mc33978_read(mpc, mc33978_wreg(MC33978_REG_WET_SP, pin), &data);
-+	if (ret)
-+		return ret;
-+
-+	data &= MC33978_WMASK(pin);
-+	data >>= mc33978_wshift(pin);
-+
-+	if (data >= ARRAY_SIZE(mc33978_wet_mA))
-+		return -EINVAL;
-+
-+	*val = mc33978_wet_mA[data];
-+
-+	return 0;
-+}
-+
-+static int mc33978_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
-+			       unsigned long *config)
-+{
-+	struct mc33978_pinctrl *mpc = pinctrl_dev_get_drvdata(pctldev);
-+	enum pin_config_param param = pinconf_to_config_param(*config);
-+	unsigned int data, status;
-+	int ret;
-+
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		ret = mc33978_get_pull(mpc, pin, &data);
-+		if (ret)
-+			return ret;
-+		status = (data == MC33978_PU);
 +		break;
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		ret = mc33978_get_pull(mpc, pin, &data);
-+		if (ret)
-+			return ret;
-+		status = (data == MC33978_PD);
-+		break;
-+	case PIN_CONFIG_BIAS_DISABLE:
-+	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
-+		ret = mc33978_get_pull(mpc, pin, &data);
-+		if (ret)
-+			return ret;
-+		status = (data == MC33978_TRISTATE);
-+		break;
-+	case PIN_CONFIG_DRIVE_STRENGTH:
-+		ret = mc33978_get_ds(mpc, pin, &data);
-+		if (ret)
-+			return ret;
-+		*config = pinconf_to_config_packed(param, data);
-+		status = 1;
++
++	case hwmon_in:
++		switch (attr) {
++		case hwmon_in_label:
++		case hwmon_in_max:
++		case hwmon_in_min:
++		case hwmon_in_lcrit:
++			return 0444;
++		case hwmon_in_crit:
++			if (channel == MC33978_IN_VBATP)
++				return 0444;
++			break;
++		case hwmon_in_crit_alarm:
++		case hwmon_in_lcrit_alarm:
++			if (channel == MC33978_IN_VBATP)
++				return 0444;
++			break;
++		}
 +		break;
 +	default:
-+		/*
-+		 * Ignore checkpatch warning: the pinctrl core specifically
-+		 * expects -ENOTSUPP to silently skip unsupported generic
-+		 * parameters. Using -EOPNOTSUPP causes debugfs read failures.
-+		 */
-+		return -ENOTSUPP;
++		break;
 +	}
 +
-+	return status ? 0 : -EINVAL;
++	return 0;
 +}
 +
-+/*
-+ * Hardware constraint regarding PIN_CONFIG_BIAS_PULL_UP/DOWN:
-+ * The MC33978 utilizes active constant current sources (wetting currents)
-+ * rather than passive pull-resistors. Since the equivalent ohmic resistance
-+ * scales dynamically with the fluctuating board voltage (VBATP), computing
-+ * a static ohm value is physically invalid.
-+ * The driver intentionally ignores resistance arguments during configuration
-+ * and continuously reports 0 ohms to the pinctrl framework.
-+ */
-+static int mc33978_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
-+			       unsigned long *configs, unsigned int num_configs)
++static int mc33978_hwmon_read(struct device *dev,
++			      enum hwmon_sensor_types type,
++			      u32 attr, int channel, long *val)
 +{
-+	struct mc33978_pinctrl *mpc = pinctrl_dev_get_drvdata(pctldev);
-+	enum pin_config_param param;
-+	int ret = 0;
-+	u32 arg;
-+	int i;
++	struct mc33978_hwmon_priv *priv = dev_get_drvdata(dev);
++	u32 faults;
++	int ret;
 +
-+	for (i = 0; i < num_configs; i++) {
-+		param = pinconf_to_config_param(configs[i]);
-+		arg = pinconf_to_config_argument(configs[i]);
-+
-+		/*
-+		 * The hardware physically lacks push-pull output drivers.
-+		 * By explicitly handling OPEN_DRAIN and OPEN_SOURCE here, we
-+		 * signal to gpiolib that we support these modes "natively".
-+		 * This crucially prevents gpiolib from falling back to its
-+		 * software emulation (which sets the pin to input mode to
-+		 * achieve High-Z). On the MC33978, input mode is NOT High-Z;
-+		 * it actively drives the line with a wetting current!
-+		 */
-+		switch (param) {
-+		case PIN_CONFIG_DRIVE_OPEN_SOURCE:
-+		case PIN_CONFIG_BIAS_PULL_UP:
-+			ret = mc33978_set_pull(mpc, pin, MC33978_PU);
-+			break;
-+		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-+		case PIN_CONFIG_BIAS_PULL_DOWN:
-+			if (!mc33978_is_sp(pin)) {
-+				dev_err(mpc->dev, "Pin %u is SG and does not support pull-down\n",
-+					pin);
-+				return -EINVAL;
++	switch (type) {
++	case hwmon_in:
++		if (channel == MC33978_IN_VBATP) {
++			switch (attr) {
++			case hwmon_in_crit:
++				*val = MC33978_VBATP_OV_MV;
++				return 0;
++			case hwmon_in_max:
++				*val = MC33978_VBATP_FUNC_MV;
++				return 0;
++			case hwmon_in_min:
++				*val = MC33978_VBATP_DEGRADED_MV;
++				return 0;
++			case hwmon_in_lcrit:
++				*val = MC33978_VBATP_UVLO_MV;
++				return 0;
++			default:
++				break;
 +			}
-+			ret = mc33978_set_pull(mpc, pin, MC33978_PD);
-+			break;
-+		case PIN_CONFIG_DRIVE_STRENGTH_UA:
-+			arg /= 1000;
-+			fallthrough;
-+		case PIN_CONFIG_DRIVE_STRENGTH:
-+			ret = mc33978_set_ds(mpc, pin, arg);
-+			break;
++		} else if (channel == MC33978_IN_VDDQ) {
++			switch (attr) {
++			case hwmon_in_max:
++				*val = MC33978_VDDQ_MAX_MV;
++				return 0;
++			case hwmon_in_min:
++				*val = MC33978_VDDQ_MIN_MV;
++				return 0;
++			case hwmon_in_lcrit:
++				*val = MC33978_VDDQ_UV_MV;
++				return 0;
++			default:
++				break;
++			}
++		}
++		break;
++
++	case hwmon_temp:
++		switch (attr) {
++		case hwmon_temp_max:
++			*val = MC33978_TEMP_WARN_MC;
++			return 0;
++		case hwmon_temp_crit:
++			*val = MC33978_TEMP_CRIT_MC;
++			return 0;
++		case hwmon_temp_crit_hyst:
++			*val = MC33978_TEMP_CRIT_MC - MC33978_TEMP_HYST_MC;
++			return 0;
 +		default:
-+			/*
-+			 * Required by the pinctrl core to safely fall back or
-+			 * skip unsupported configs. Do not use -EOPNOTSUPP.
-+			 */
-+			return -ENOTSUPP;
++			break;
 +		}
++		break;
 +
-+		if (ret) {
-+			dev_err(mpc->dev, "Failed to set config param %04x for pin %u: %d\n",
-+				param, pin, ret);
-+			return ret;
-+		}
++	default:
++		break;
 +	}
 +
-+	return ret;
-+}
-+
-+static const struct pinconf_ops mc33978_pinconf_ops = {
-+	.pin_config_get = mc33978_pinconf_get,
-+	.pin_config_set = mc33978_pinconf_set,
-+	.is_generic = true,
-+};
-+
-+static int mc33978_direction_input(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct mc33978_pinctrl *mpc = gpiochip_get_data(chip);
-+
-+	/*
-+	 * This chip only has inputs. We emulate outputs by setting a
-+	 * wetting current and/or using the tri-state register to turn it on
-+	 * and off. If a pin was an output and is now tri-stated, we should
-+	 * disable the tri-state now to make the input work correctly.
-+	 */
-+	guard(mutex)(&mpc->lock);
-+	return mc33978_update_bits(mpc, mc33978_spsg(MC33978_REG_TRI_SP, offset),
-+				   MC33978_PINMASK(offset), 0);
-+}
-+
-+static int mc33978_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct mc33978_pinctrl *mpc = gpiochip_get_data(chip);
-+	bool is_switch_to_ground = true;
-+	bool is_switch_closed;
-+	int status, ret;
-+
-+	guard(mutex)(&mpc->lock);
-+
-+	/* Read hardware switch status (open or closed) */
-+	ret = mc33978_read(mpc, MC33978_REG_READ_IN, &status);
++	/* 2. Dynamic alarms (read hardware flags) */
++	ret = mc33978_hwmon_read_fault(priv, &faults);
 +	if (ret)
 +		return ret;
 +
-+	is_switch_closed = !!(status & BIT(offset));
-+
-+	/* Determine current topology for SP pins */
-+	if (mc33978_is_sp(offset)) {
-+		int config_reg;
-+
-+		ret = mc33978_read(mpc, MC33978_REG_CONFIG, &config_reg);
-+		if (ret == 0) {
-+			/* CONFIG: 0 = Switch-to-Ground (PU), 1 = Switch-to-Battery (PD) */
-+			if (config_reg & MC33978_PINMASK(offset))
-+				is_switch_to_ground = false;
++	switch (type) {
++	case hwmon_chip:
++		if (attr == hwmon_chip_alarms) {
++			*val = faults;
++			return 0;
 +		}
++		break;
++
++	case hwmon_in:
++		if (channel == MC33978_IN_VBATP) {
++			switch (attr) {
++			case hwmon_in_crit_alarm:
++				*val = !!(faults & MC33978_FAULT_OV);
++				return 0;
++			case hwmon_in_lcrit_alarm:
++				*val = !!(faults & MC33978_FAULT_UV);
++				return 0;
++			default:
++				*val = 0;
++				return 0;
++			}
++		}
++		/* VDDQ has no dedicated hardware fault flags */
++		*val = 0;
++		return 0;
++
++	case hwmon_temp:
++		switch (attr) {
++		case hwmon_temp_max_alarm:
++			*val = !!(faults & MC33978_FAULT_TEMP_WARN);
++			return 0;
++		case hwmon_temp_crit_alarm:
++			*val = !!(faults & MC33978_FAULT_OT);
++			return 0;
++		default:
++			break;
++		}
++		break;
++
++	default:
++		return -EOPNOTSUPP;
 +	}
 +
-+	/*
-+	 * The hardware evaluates pin voltage against a threshold (default 4.0V)
-+	 * and reports an abstract contact status (1 = closed, 0 = open):
-+	 *
-+	 * SG (Switch-to-Ground) topology (pull-up current source):
-+	 * - Voltage > Threshold: Switch Open   (HW reports 0) -> Physical High
-+	 * - Voltage < Threshold: Switch Closed (HW reports 1) -> Physical Low
-+	 *
-+	 * SB (Switch-to-Battery) topology (pull-down current source):
-+	 * - Voltage > Threshold: Switch Closed (HW reports 1) -> Physical High
-+	 * - Voltage < Threshold: Switch Open   (HW reports 0) -> Physical Low
-+	 *
-+	 * We translate this contact status back into physical voltage levels.
-+	 * This translation is necessary because the hardware's contact status
-+	 * (e.g., reporting 1 when an SG pin is grounded) contradicts the
-+	 * typical GPIO expectation where ~0V corresponds to a logical 0.
-+	 */
-+	if (is_switch_to_ground)
-+		status = !is_switch_closed;
-+	else
-+		status = is_switch_closed;
-+
-+	return status;
++	return -EOPNOTSUPP;
 +}
 +
-+static int mc33978_get_multiple(struct gpio_chip *chip,
-+				unsigned long *mask, unsigned long *bits)
++static int mc33978_hwmon_read_string(struct device *dev,
++				     enum hwmon_sensor_types type,
++				     u32 attr, int channel, const char **str)
 +{
-+	struct mc33978_pinctrl *mpc = gpiochip_get_data(chip);
-+	unsigned int status;
-+	unsigned int config_reg = 0;
-+	unsigned int inv_mask;
-+	int ret;
++	/* Only in_label is supported for string reads */
++	if (type != hwmon_in || attr != hwmon_in_label)
++		return -EOPNOTSUPP;
 +
-+	guard(mutex)(&mpc->lock);
-+
-+	ret = mc33978_read(mpc, MC33978_REG_READ_IN, &status);
-+	if (ret)
-+		return ret;
-+
-+	/* Read CONFIG register only if the requested mask involves SP pins */
-+	if (*mask & MC33978_SP_MASK) {
-+		ret = mc33978_read(mpc, MC33978_REG_CONFIG, &config_reg);
-+		if (ret)
-+			return ret;
++	switch (channel) {
++	case MC33978_IN_VBATP:
++		*str = "VBATP";
++		return 0;
++	case MC33978_IN_VDDQ:
++		*str = "VDDQ";
++		return 0;
++	default:
++		return -EINVAL;
 +	}
-+
-+	/*
-+	 * Create an inversion mask for all pins currently operating in
-+	 * Switch-to-Ground (SG) topology. As explained in mc33978_get(),
-+	 * SG pins must have their hardware status bits inverted to
-+	 * correctly report their physical voltage levels.
-+	 */
-+	inv_mask = MC33978_SG_MASK |
-+		   (~(config_reg << MC33978_NUM_SG) & MC33978_SP_MASK);
-+
-+	*bits = (status ^ inv_mask) & *mask;
-+
-+	return 0;
 +}
 +
-+static int mc33978_set(struct gpio_chip *chip, unsigned int offset, int value)
-+{
-+	struct mc33978_pinctrl *mpc = gpiochip_get_data(chip);
-+	int pull;
-+	int ret;
++static const struct hwmon_channel_info * const mc33978_hwmon_info[] = {
++	HWMON_CHANNEL_INFO(chip,
++			   HWMON_C_ALARMS),
++	HWMON_CHANNEL_INFO(temp,
++			   HWMON_T_MAX | HWMON_T_CRIT | HWMON_T_CRIT_HYST |
++			   HWMON_T_MAX_ALARM | HWMON_T_CRIT_ALARM),
++	HWMON_CHANNEL_INFO(in,
++			   /* Index 0: MC33978_IN_VBATP */
++			   HWMON_I_LABEL | HWMON_I_CRIT | HWMON_I_MAX |
++			   HWMON_I_MIN | HWMON_I_LCRIT |
++			   HWMON_I_CRIT_ALARM | HWMON_I_LCRIT_ALARM,
 +
-+	/*
-+	 * We emulate open-drain/-source outputs by routing or isolating the
-+	 * active wetting current sources.
-+	 * To drive the line, we apply the current source.
-+	 * To turn the line OFF (achieve High-Impedance), we MUST use the
-+	 * hardware TRI_SP / TRI_SG tri-state registers to physically isolate
-+	 * it.
-+	 */
-+	if (mc33978_is_sp(offset)) {
-+		pull = value ? MC33978_PU : MC33978_PD;
-+		value = 1;
-+	} else {
-+		pull = MC33978_PU;
-+	}
-+
-+	guard(mutex)(&mpc->lock);
-+
-+	/*
-+	 * Break-before-make sequencing to prevent hardware glitches (spikes).
-+	 * Since SPI transfers take time, writing the pull and tri-state
-+	 * registers in the wrong order causes a brief moment where current
-+	 * flows to the pin before it is masked, causing a visible LED flash.
-+	 */
-+	if (value) {
-+		/*
-+		 * Turn ON: Configure the underlying current source (pull) first,
-+		 * then route it to the pin by disabling tri-state.
-+		 */
-+		ret = mc33978_set_pull(mpc, offset, pull);
-+		if (ret)
-+			return ret;
-+
-+		ret = mc33978_update_bits(mpc, mc33978_spsg(MC33978_REG_TRI_SP,
-+							    offset),
-+					  MC33978_PINMASK(offset), 0);
-+	} else {
-+		/*
-+		 * Turn OFF: Isolate the pin first by enabling tri-state,
-+		 * then safely disable the underlying current source.
-+		 */
-+		ret = mc33978_update_bits(mpc, mc33978_spsg(MC33978_REG_TRI_SP,
-+							    offset),
-+					  MC33978_PINMASK(offset),
-+					  MC33978_PINMASK(offset));
-+	}
-+
-+	return ret;
-+}
-+
-+static int mc33978_set_multiple(struct gpio_chip *chip,
-+				unsigned long *mask, unsigned long *bits)
-+{
-+	unsigned int sgmask = (*mask & MC33978_SG_MASK) >> MC33978_SG_SHIFT;
-+	unsigned int sgbits = (*bits & MC33978_SG_MASK) >> MC33978_SG_SHIFT;
-+	unsigned int spmask = (*mask & MC33978_SP_MASK) >> MC33978_SP_SHIFT;
-+	unsigned int spbits = (*bits & MC33978_SP_MASK) >> MC33978_SP_SHIFT;
-+	struct mc33978_pinctrl *mpc = gpiochip_get_data(chip);
-+	int ret;
-+
-+	guard(mutex)(&mpc->lock);
-+	if (spmask)
-+		ret = mc33978_update_bits(mpc, MC33978_REG_TRI_SP, spmask,
-+					  ~spbits);
-+	if (sgmask)
-+		ret = mc33978_update_bits(mpc, MC33978_REG_TRI_SG, sgmask,
-+					  ~sgbits);
-+
-+	return ret;
-+}
-+
-+static int mc33978_direction_output(struct gpio_chip *chip, unsigned int offset,
-+				    int value)
-+{
-+	return mc33978_set(chip, offset, value);
-+}
-+
-+static int mc33978_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
-+					      unsigned int child,
-+					      unsigned int child_type,
-+					      unsigned int *parent,
-+					      unsigned int *parent_type)
-+{
-+	*parent_type = child_type;
-+	*parent = child;
-+
-+	return 0;
-+}
-+
-+static void mc33978_gpio_irq_bus_lock(struct irq_data *data)
-+{
-+	struct irq_data *parent = data->parent_data;
-+
-+	parent->chip->irq_bus_lock(parent);
-+}
-+
-+static void mc33978_gpio_irq_bus_sync_unlock(struct irq_data *data)
-+{
-+	struct irq_data *parent = data->parent_data;
-+
-+	parent->chip->irq_bus_sync_unlock(parent);
-+}
-+
-+static const struct irq_chip mc33978_gpio_irqchip = {
-+	.name = "mc33978-gpio",
-+	.irq_mask = irq_chip_mask_parent,
-+	.irq_unmask = irq_chip_unmask_parent,
-+	.irq_set_type = irq_chip_set_type_parent,
-+	.irq_bus_lock = mc33978_gpio_irq_bus_lock,
-+	.irq_bus_sync_unlock = mc33978_gpio_irq_bus_sync_unlock,
-+	.flags = IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
++			   /* Index 1: MC33978_IN_VDDQ */
++			   HWMON_I_LABEL | HWMON_I_MAX | HWMON_I_MIN |
++			   HWMON_I_LCRIT),
++	NULL
 +};
 +
-+static void mc33978_init_gpio_chip(struct mc33978_pinctrl *mpc,
-+				   struct device *dev)
-+{
-+	struct gpio_irq_chip *girq;
++static const struct hwmon_ops mc33978_hwmon_ops = {
++	.is_visible = mc33978_hwmon_is_visible,
++	.read_string = mc33978_hwmon_read_string,
++	.read = mc33978_hwmon_read,
++};
 +
-+	mpc->chip.label = dev_name(dev);
-+	mpc->chip.direction_input = mc33978_direction_input;
-+	mpc->chip.get = mc33978_get;
-+	mpc->chip.get_multiple = mc33978_get_multiple;
-+	mpc->chip.direction_output = mc33978_direction_output;
-+	mpc->chip.set = mc33978_set;
-+	mpc->chip.set_multiple = mc33978_set_multiple;
-+	mpc->chip.set_config = gpiochip_generic_config;
++static const struct hwmon_chip_info mc33978_hwmon_chip_info = {
++	.ops = &mc33978_hwmon_ops,
++	.info = mc33978_hwmon_info,
++};
 +
-+	mpc->chip.base = -1;
-+	mpc->chip.ngpio = MC33978_NGPIO;
-+	mpc->chip.can_sleep = true;
-+	mpc->chip.parent = dev;
-+	mpc->chip.owner = THIS_MODULE;
-+
-+	girq = &mpc->chip.irq;
-+	gpio_irq_chip_set_chip(girq, &mc33978_gpio_irqchip);
-+	girq->fwnode = dev_fwnode(dev);
-+	girq->parent_domain = mpc->domain;
-+	girq->child_to_parent_hwirq = mc33978_gpio_child_to_parent_hwirq;
-+	girq->handler = handle_simple_irq;
-+	girq->default_type = IRQ_TYPE_NONE;
-+}
-+
-+static void mc33978_init_pinctrl_desc(struct mc33978_pinctrl *mpc,
-+				      struct device *dev)
-+{
-+	mpc->pinctrl_desc.name = dev_name(dev);
-+
-+	mpc->pinctrl_desc.pctlops = &mc33978_pinctrl_ops;
-+	mpc->pinctrl_desc.confops = &mc33978_pinconf_ops;
-+	mpc->pinctrl_desc.pins = mc33978_pins;
-+	mpc->pinctrl_desc.npins = MC33978_NGPIO;
-+	mpc->pinctrl_desc.owner = THIS_MODULE;
-+}
-+
-+static int mc33978_pinctrl_probe(struct platform_device *pdev)
++static int mc33978_hwmon_probe(struct platform_device *pdev)
 +{
 +	struct device *dev = &pdev->dev;
-+	struct mc33978_pinctrl *mpc;
++	struct mc33978_hwmon_priv *priv;
++	struct device *hwmon_dev;
 +	int ret;
 +
-+	device_set_node(dev, dev_fwnode(dev->parent));
-+
-+	mpc = devm_kzalloc(dev, sizeof(*mpc), GFP_KERNEL);
-+	if (!mpc)
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
 +		return -ENOMEM;
 +
-+	mpc->dev = dev;
++	priv->dev = dev;
 +
-+	mpc->regmap = dev_get_regmap(dev->parent, NULL);
-+	if (!mpc->regmap)
-+		return dev_err_probe(dev, -ENODEV, "Failed to get parent regmap\n");
++	priv->map = dev_get_regmap(dev->parent, NULL);
++	if (!priv->map)
++		return dev_err_probe(dev, -ENODEV, "failed to get regmap\n");
 +
-+	mpc->domain = irq_find_host(dev->parent->of_node);
-+	if (!mpc->domain)
-+		return dev_err_probe(dev, -ENODEV, "Failed to find parent IRQ domain\n");
++	platform_set_drvdata(pdev, priv);
 +
-+	mutex_init(&mpc->lock);
++	priv->fault_irq = platform_get_irq(pdev, 0);
++	if (priv->fault_irq < 0)
++		return priv->fault_irq;
 +
-+	mc33978_init_gpio_chip(mpc, dev);
-+	mc33978_init_pinctrl_desc(mpc, dev);
-+
-+	mpc->pctldev = devm_pinctrl_register(dev, &mpc->pinctrl_desc, mpc);
-+	if (IS_ERR(mpc->pctldev))
-+		return dev_err_probe(dev, PTR_ERR(mpc->pctldev),
-+				     "can't register pinctrl\n");
-+
-+	ret = devm_gpiochip_add_data(dev, &mpc->chip, mpc);
++	ret = mc33978_hwmon_read_fault(priv, &priv->last_faults);
 +	if (ret)
-+		return dev_err_probe(dev, ret, "can't add GPIO chip\n");
++		return dev_err_probe(dev, ret, "failed to read initial faults\n");
 +
-+	ret = gpiochip_add_pin_range(&mpc->chip, dev_name(dev), 0, 0,
-+				     MC33978_NGPIO);
++	if (priv->last_faults & MC33978_FAULT_CRITICAL)
++		mc33978_hwmon_report_faults(priv, priv->last_faults);
++
++	hwmon_dev = devm_hwmon_device_register_with_info(dev, "mc33978", priv,
++							 &mc33978_hwmon_chip_info,
++							 NULL);
++	if (IS_ERR(hwmon_dev))
++		return dev_err_probe(dev, PTR_ERR(hwmon_dev),
++				     "failed to register hwmon device\n");
++
++	priv->hwmon_dev = hwmon_dev;
++
++	ret = devm_request_threaded_irq(dev, priv->fault_irq, NULL,
++					mc33978_hwmon_fault_irq, IRQF_ONESHOT,
++					dev_name(dev), priv);
 +	if (ret)
-+		return dev_err_probe(dev, ret, "failed to add pin range\n");
-+
-+	platform_set_drvdata(pdev, mpc);
++		return dev_err_probe(dev, ret, "failed to request fault IRQ\n");
 +
 +	return 0;
 +}
 +
-+static const struct platform_device_id mc33978_pinctrl_id[] = {
-+	{ "mc33978-pinctrl", },
-+	{ "mc34978-pinctrl", },
++static const struct platform_device_id mc33978_hwmon_id[] = {
++	{ "mc33978-hwmon", },
++	{ "mc34978-hwmon", },
 +	{ }
 +};
-+MODULE_DEVICE_TABLE(platform, mc33978_pinctrl_id);
++MODULE_DEVICE_TABLE(platform, mc33978_hwmon_id);
 +
-+static struct platform_driver mc33978_pinctrl_driver = {
++static struct platform_driver mc33978_hwmon_driver = {
 +	.driver = {
-+		.name = "mc33978-pinctrl",
++		.name = "mc33978-hwmon",
 +	},
-+	.probe = mc33978_pinctrl_probe,
-+	.id_table = mc33978_pinctrl_id,
++	.probe = mc33978_hwmon_probe,
++	.id_table = mc33978_hwmon_id,
 +};
-+module_platform_driver(mc33978_pinctrl_driver);
++module_platform_driver(mc33978_hwmon_driver);
 +
-+MODULE_AUTHOR("David Jander <david@protonic.nl>");
-+MODULE_DESCRIPTION("NXP MC33978/MC34978 pinctrl driver");
++MODULE_AUTHOR("Oleksij Rempel <kernel@pengutronix.de>");
++MODULE_DESCRIPTION("NXP MC33978/MC34978 Hardware Monitor Driver");
 +MODULE_LICENSE("GPL");
 -- 
 2.47.3
