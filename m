@@ -1,193 +1,328 @@
-Return-Path: <linux-gpio+bounces-33310-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33311-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UFijDhizs2lYZwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33310-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 07:47:52 +0100
+	id wOgxL5exs2lYZwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33311-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 07:41:27 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D30227E4E5
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 07:47:51 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6ACA127E3F5
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 07:41:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 3098D304BB6D
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 06:30:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 369F63018AE5
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 06:40:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DAAF3446D8;
-	Fri, 13 Mar 2026 06:30:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85592271468;
+	Fri, 13 Mar 2026 06:40:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GYu64oVK"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="igt3PzcN";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="gPBqNSqp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A1B322DAF
-	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 06:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773383413; cv=pass; b=Jt6cPfTVBRQ8VgitVP8lH94SQ+gzkA4S8W4DFrWT9V9R0UZvSaIOydEhha5yxT/U3XxuL6V8sDv48dvBWWL0f5ltgciiKz0mz40tKejxPXGiopoWq2reD5d9+zZqv0k3AhPKIM/xjOxVZCo/p82Swgri1ue+hWq+VGBP7gBRhzU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773383413; c=relaxed/simple;
-	bh=3WtB1EO7ULP2dv1nFjQ5XE7neEDPZu3SzQtV2a9e/Q4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jqyv86MhkI1vTCKVpIrdC+aL/YYu9fS8eYPh35EQ73kC0yE6LkxlLcqhG7/ddEBAQajsmncVBVa3L516UBjMG0WBRql1yzRf1JmwCvcnC/bF52G8pyq+d4xvsP+IX0tev7FVN1BpWAE96brSd4HejUkkpWD9iK3kPonyr7IPCS8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GYu64oVK; arc=pass smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b941d924534so218170666b.3
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2026 23:30:11 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773383410; cv=none;
-        d=google.com; s=arc-20240605;
-        b=EU4+FOoqQ4soaQsHFedsKXkjCoQWeZ9CwsbOXfxyz2P0xNQ74G8Ybxt1R5uqHLKSxF
-         jadvAgpBkr3Ee6rcqZNqzQcUDlipnAr+GkY/hNZg4QBafzKXPbNfm2CRwXo4z4FM3flS
-         UE8at/YHNzEad1kR2JGSWLVOdp82rGgHAW2tTSPwOU+wXlYV1MbsvJyb1UN9Bv3JwFne
-         bgHAVxNOHLIizow3nDCn5Ihy5wLgBdCdV3W5VqkTzqB+Pm0s9kngWbW0BxHCfFUHhmEj
-         MsyHKtDK6V8+SvvI3ncUlEFM2JYX8AeBKK8Et/hMAbvzYEQAu4kWHM9GpJLa1vdmZ6hc
-         fGKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=dPJHfICB2kVM1pQvzl6TqPezMCEYItbR1A1kcv/R7E0=;
-        fh=0NPERyZABX6YX/JX9BYPbIbBmhJ3VEcBMe/dL0CPpPU=;
-        b=K9SeA0TNBhg3+s1t7TPAYA1ZXdgixbFpjMGfVjHHOYP3wD9Hj0gWj1uRme3fLZ+RBk
-         QmD53gqmeCDrLNe6yCg9/7pGzqtcUqikWWlib4z1KM1g4LFM+R15LbmU5Hv2ZRy3goiE
-         lrOQFgAHHLS7dvtxXBsXqvsHl4+k8xHwSCrLDPT6h/UJQDXtkauiXCJquJ1WmaBz6dw4
-         QQ6Ay8Mimpbt7a4d4jcljKbPx5yCAkueAA31/cO88Up4dEcPvrkm7SiQ+WFvO0VJsiyj
-         S+nbw2xzKRkdaFYhO5ZCC57cgcg7ERy81GTLiVDsAqA7Knz2rUl2L6rP2EdYbeeVvs/1
-         eIjw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D2935950
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 06:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773384042; cv=none; b=DHjQg+Nw8XT29+zsOBXGvQ4VFT7PbkT29jx9XL2HhxT+BB5VgZYAnT5h32Y0/E7c2e3B95g1eWoEeVCVm++ouc3LjUT8jlwZVCmSR+d/AeaFHUlpoXdQtMBOXIyxuU6o4zKlqeDeRA0MDWJ6n2dpql8fS+j7iACi/3ly3pzISsk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773384042; c=relaxed/simple;
+	bh=e09vajKUZDPJp/jtPUeU3JFL/LXPxR/y5475uhVbaV8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XpQNXuq7/dSoqzATapE6REyz/X8sXQMYkf9NUUEs95hoq/rRrSTRlDOLjxbKj2eLQiP9hUG07QJ8/MWkoN9JpvMk/Gn7L65+wRsgKBWxfwsCjBa8Ar6+jduCYKIAxhNBkAmWsBhnhRY3HWlzg6FXAHoKibQVzAG+72T1UXA6C7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=igt3PzcN; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=gPBqNSqp; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62D5tYjF3229721
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 06:40:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Z2yHacvHoEIS2iQIpmAHHWFbIhfSnfNYOJJs/3j8L5k=; b=igt3PzcNK9I98DSL
+	VHvueWo2j9CWkpFIGpFBP9CT4CmDO9ra1MMdk6sqBhSjlLctmC18afwIPFjUrDAe
+	3kddXrWbr1vgSWWWsSwX5HtNzkz6Ys+G0vdUmwZBqXs91X9Kq2ShBaByRCfzZ0vB
+	kVWO6lOFqoMcQaSN3wIBziYb6VUAHiQqdkHzKMBWlmwM7GQ6gKtjbKrzPdGSCBGb
+	k3Kf04SNM0AAvT76DM6qMzDHaNQ6IG92nM1DxK/14sh8JwW0pgYf9d+ihTbkj/eU
+	qScEAs5EorzHHnC1b51Fld4ZaePc5phInRtHHjNNukym8CHTHOQFK5z1pCBhrxdo
+	Y2pgNQ==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cv8n7gvc9-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 06:40:40 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2aecd4f7c37so4657295ad.1
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2026 23:40:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773383410; x=1773988210; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dPJHfICB2kVM1pQvzl6TqPezMCEYItbR1A1kcv/R7E0=;
-        b=GYu64oVKzwgzn8ZAuawiupzGgdpEC8YMZ5rJ/rLOiuLO1yKiLBKflt6gHMmS7FMA+l
-         vKrKE4Rs0LN/B3OpW9U4FpXdZjKQg9iWmIkH2nrWXbXaY6sziUcP1StBToPW9u7DMdwJ
-         MEqSR1WpHDqGYeFhCqU4OqfabnGYFZtOcyGy2CJ5uDpGlWMpgSAIMGnQqaRYqdb+Zayj
-         mnGvXiv3ly+NmEznAiW7DRh2Am4TIYkxY+Aj1J7L0+It7bQpdr+Rc3U5+ljIoMW9qcvY
-         ErNXbWvobiWjBk07OElHISCRq3GxSozVzZlmwlbe6j0BafOSxZITzW4vunqFLsOxk+0N
-         S4mw==
+        d=oss.qualcomm.com; s=google; t=1773384039; x=1773988839; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Z2yHacvHoEIS2iQIpmAHHWFbIhfSnfNYOJJs/3j8L5k=;
+        b=gPBqNSqpeDOd5HwhK1bdTomJ7bpDTNAkKHzJd8JC1EfV8yLrUZFITI4f6qTAb/wcUJ
+         6pepeIxotUPpC39Gl78xnFONBz16TefE1AKQJaYgbmqnZ/bVlw/UMDkBK985iLv2ojL4
+         /IrwFc4GF9pWxdHKQs505egQIhGRfqXj2PqfL8+GakgRV4aFKM/u7S91G72zFE5xxLcW
+         dcmbsdZ+AHiFMHcfbms2+iacpq0jZshRT4HjlYcTI0Fba33Ej4twOj4+l6aG9N99nA8Y
+         4eelNCN8rmzT/xt69QwnD3bfy/QFozsoVhCeIcK8IWXfiuZP1UsSiPk46VrltiqOxv8j
+         J40A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773383410; x=1773988210;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=dPJHfICB2kVM1pQvzl6TqPezMCEYItbR1A1kcv/R7E0=;
-        b=AYhYKk0Zs9kWh0CNTPHhYB+56m7ngd+iNlJtlRwQhp0u6Jr/KNSA+/uH3WH4YbtsrC
-         RhjLMZOgNUKC7ObEgCaIgdPLzuqv/927V7dMqUB3pw+4Orm31CbYSxrGv4lN317yY0u9
-         /SzELYfq+waMqP51RmOVNP9uTq/noMSTt0nn9mpVBj/PoppeOLLyqpeojImtoL3VZAO7
-         e+/1bIhASQpcmzEOzXB/hxoAvke8PW5OdupCkXgdthVAvFgel/tthI8qMPY12z3ogF/6
-         /y/LLoiIzE8S70Q7rsFWF6HHsLbGN8vml5XH4fTIHPgeQxB0wmfcSWL76Qa08VkiUido
-         Jf4A==
-X-Gm-Message-State: AOJu0YzzpcSr1hpkqy5IqRFrYeOO+1p709yepnapg9irwUHlIt0B/8Mu
-	qBO0aePdU/WRFGhgD/c7fpH05NksWtGRYb6/H3KyovlMntuUmOsbPL8FLZJ0Qj0YKiAL9sBPJYM
-	6FKuzzZCb3sA1nJ8VpSGpycrxQ02U+Xw=
-X-Gm-Gg: ATEYQzx0r16SaUEeD7P2A7wKxqtaZSMc0PM8huFTAXnQH/Tw52EEVdR93rFYfqXWXhy
-	eGE0eqiBaXGv1CRcXY77MMh9wMR+305agGIjbBEdHuWABWBDdihWjiprMemOH5iQh9LhXfefiHf
-	F5qa3XlMBQvlyK3BLHTdmQnbQi8sXN2mrMkRgl+SErMvdW33bAahJrFJLrBPieQ28DxWNrbc+V4
-	Ztp1yowFr/PxJ37qXxpKneGvmLXIjzNbIuw8FA9QeCzL1qSmixsj+g6yaceDB607OLMs4ps1mF6
-	VFAwGWsXzGGfPtVx1Boswwisjtx3bcc4uzxs5OpSihZ8yt5YbUijAiSHC1aFWlJfou1uDWDkNfP
-	6kbkJzQ==
-X-Received: by 2002:a17:907:3d87:b0:b93:a3db:a68c with SMTP id
- a640c23a62f3a-b97651e7241mr118021166b.40.1773383409452; Thu, 12 Mar 2026
- 23:30:09 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1773384039; x=1773988839;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z2yHacvHoEIS2iQIpmAHHWFbIhfSnfNYOJJs/3j8L5k=;
+        b=g3HRfZCdxicuZIAzZy/SA6zvcFVCzgtKoEBrqe41ERj8YhstEVFtLLhtuaPVhTK+Op
+         phFUhUnERAl1WnKQdBWZ9mwZ3F3meOS9qr8kA945AHPiI8/LmVk6YgKugIkL7z6kqGhL
+         pplzl4E5blK3Ju6h0EITh13xIba7ewcCl0XQe+FM4yZh1xTCkVRVAi7enfVoOIb1VlKS
+         0AWjdbv81Oe/6lSKqzg3Lm8s/FWTicDhE1ZYb1CyBXOMXf68SmokZ3J3lUyaq90xPpRv
+         fFHtlHPQsSQwIWOJaSoAeQjud72u0XSYyX2ADSNogHOspI8tMcaFZ+4P8q2GYf1XT/ko
+         cjKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUrNWHZD66wS9z3qltFPSzniHBShdHZrpdlubisobKaFkXxzg3E/ogutXsiVB09ma1FALO9SYJyDxsB@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAyLM4t7tQdSHvORX7rwC5Bv8AAm9YW2EwaUeVXpwzsxerRyne
+	XUIWm1e+twOnyDjy+7HLtm7xWPdZyJBpxnIwy9sDxD8tD74EVnoMZmwNQMiy6LTF0UGal/EVq7d
+	9L079CYVonSuU/xGl5BTur1YB/WSsxYqad3w0NBc7uSD+Qf4LTO07oUJsArKxCWA+
+X-Gm-Gg: ATEYQzwoL9tBGBXh0l6UKkqqbAvfB8Q/43eqtuYwZl14jKo3M07ccisoC3ZG88Jk5wm
+	ibXBK9qqI+8f3Mo1/5KJdXICFuXM5P+WWddLDpY9Y48bDglpX/JpAzAKezuDqmjvlN4XMyVzxzA
+	zDzqJxlZbOuaQPTz6D5CLP1awhfIWu/8jUqK3Vq0TseXK4CCXD/6J7Vp0Ft+kQI51dLrCqZcod6
+	4Rmhjqi7Oe69eV18MnQTTfjh14vXmQ0t77TFHhFIzy+EISRZZo5NpYaggxUPMbvHJgC+AVb+u7W
+	88BrxbjDwT8oR1AwW+f8VSu9yCL6VNNAfBR/wH8JdyX8ZGWYF7z4OBJ3cOHC+UtPv2OGXX1Mj7C
+	pXBxVktiD9PysczG2MxZrrbG4QiKWDjcHY8qkEVlJcGV0xg6HElQ=
+X-Received: by 2002:a17:902:d58e:b0:2ae:ceeb:fa5f with SMTP id d9443c01a7336-2aeceebfd57mr9326935ad.28.1773384039351;
+        Thu, 12 Mar 2026 23:40:39 -0700 (PDT)
+X-Received: by 2002:a17:902:d58e:b0:2ae:ceeb:fa5f with SMTP id d9443c01a7336-2aeceebfd57mr9326555ad.28.1773384038853;
+        Thu, 12 Mar 2026 23:40:38 -0700 (PDT)
+Received: from [10.217.198.242] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2aece62c581sm14676585ad.33.2026.03.12.23.40.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2026 23:40:38 -0700 (PDT)
+Message-ID: <771a8f63-90d1-45b5-960e-342d9041fc4d@oss.qualcomm.com>
+Date: Fri, 13 Mar 2026 12:10:33 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260312193717.12221-1-rosenp@gmail.com> <7jwgbrijeldghk44tdg2be5q7o7vuj5np3nlbl2pxuln6c7ll7@ntuquxxdnfmm>
-In-Reply-To: <7jwgbrijeldghk44tdg2be5q7o7vuj5np3nlbl2pxuln6c7ll7@ntuquxxdnfmm>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Thu, 12 Mar 2026 23:29:58 -0700
-X-Gm-Features: AaiRm51lyu5fd17YeYxCP6g9ZNV_rgw3odQq_g1fIwHyYebHzAUSuwEuLroDVYs
-Message-ID: <CAKxU2N_7sZu+J46sCQH4jgVB0r9HsHREToeCTg0Hz4PaVjY+sQ@mail.gmail.com>
-Subject: Re: [PATCHv3] gpio: virtio: remove one kcalloc
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-gpio@vger.kernel.org, 
-	"Enrico Weigelt, metux IT consult" <info@metux.net>, Viresh Kumar <vireshk@kernel.org>, Linus Walleij <linusw@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"open list:VIRTIO GPIO DRIVER" <virtualization@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] irqchip/qcom-pdc: Configure PDC to pass through mode
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+        Linus Walleij <linusw@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Sneh Mankad <sneh.mankad@oss.qualcomm.com>
+References: <20260312-hamoa_pdc-v1-0-760c8593ce50@oss.qualcomm.com>
+ <20260312-hamoa_pdc-v1-3-760c8593ce50@oss.qualcomm.com>
+ <eizcoxjnjgbobjwndnq7gewqnynnm2o2aqhh4muposgnhhagaf@tnomg2p4uj27>
+Content-Language: en-US
+From: "Maulik Shah (mkshah)" <maulik.shah@oss.qualcomm.com>
+In-Reply-To: <eizcoxjnjgbobjwndnq7gewqnynnm2o2aqhh4muposgnhhagaf@tnomg2p4uj27>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: S-f4pRjRNbjJmnqfRbzSprwQnd7XYhx8
+X-Proofpoint-GUID: S-f4pRjRNbjJmnqfRbzSprwQnd7XYhx8
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzEzMDA1MSBTYWx0ZWRfX/0lOCtqnXU7y
+ fYqBStxDqqYTaSMssp+Rr//s2EwJkex5FMsnQqgoxHIOPPbBRUjJc0DLAkbd56zBzhgdbeNfW1R
+ ZfBefQPE3ILflofvnjeHc5XbnXxomdteEsaFqdWiewRF9x5dBLoxpS0CgNiC1JUFUJO/elsyi39
+ yHPp+Aaa17T2T88IougPQbYsec1z4dyzSm1HAMnrFH0do2kkaMWge6fAngbs3mzeXgCTw6jvcKc
+ eUTadZWLCQh1/gdyd5/0AK/qhcKVFRL2qTWC1dnvDWH3nagL+1s0hphR7wl+oI4Y8lBZ4y7ZyMX
+ x0M8RiOiVuHwssfgh1w6DA+HO3905O9zMZJoS8CZwX1EN8nqLolAbXn+6qVuZ9cL3XhWaqNfwww
+ qOJNrSIZE/1Eo1QX2rec+tDxAEtTob09dLrTuwAPaqcecNmKH6MqvrD7yb0H5+AS2xNz6gw15au
+ jIbu9AAgzzEJUYS80sg==
+X-Authority-Analysis: v=2.4 cv=CpCys34D c=1 sm=1 tr=0 ts=69b3b168 cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=YMgV9FUhrdKAYTUUvYB2:22
+ a=wsG5e61cFZotgxzGgJkA:9 a=QEXdDO2ut3YA:10 a=GvdueXVYPmCkWapjIL-Q:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-12_03,2026-03-12_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1015 spamscore=0
+ priorityscore=1501 adultscore=0 suspectscore=0 bulkscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603130051
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33310-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	TAGGED_FROM(0.00)[bounces-33311-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linaro.org:email]
-X-Rspamd-Queue-Id: 3D30227E4E5
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:dkim];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[maulik.shah@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 6ACA127E3F5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Mar 12, 2026 at 11:09=E2=80=AFPM Viresh Kumar <viresh.kumar@linaro.=
-org> wrote:
->
-> On 12-03-26, 12:37, Rosen Penev wrote:
-> > A flexible array member can be used to combine allocations.
-> >
-> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
-> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
-> >  v3: add counting field for __counted_by.
-> >  v2: add space in struct
-> >  drivers/gpio/gpio-virtio.c | 14 +++++++-------
-> >  1 file changed, 7 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
-> > index ed6e0e90fa8a..57d0eb532c3c 100644
-> > --- a/drivers/gpio/gpio-virtio.c
-> > +++ b/drivers/gpio/gpio-virtio.c
-> > @@ -52,7 +52,6 @@ struct virtio_gpio {
-> >       struct virtio_device *vdev;
-> >       struct mutex lock; /* Protects virtqueue operation */
-> >       struct gpio_chip gc;
-> > -     struct virtio_gpio_line *lines;
-> >       struct virtqueue *request_vq;
-> >
-> >       /* irq support */
-> > @@ -60,6 +59,9 @@ struct virtio_gpio {
-> >       struct mutex irq_lock; /* Protects irq operation */
-> >       raw_spinlock_t eventq_lock; /* Protects queuing of the buffer */
-> >       struct vgpio_irq_line *irq_lines;
-> > +
-> > +     u16 ngpio;
-> > +     struct virtio_gpio_line lines[] __counted_by(ngpio);
-> >  };
->
-> I wonder if it is worth it anymore. Why combining allocations is better w=
-hen we
-> are ending up using more memory ?
-No idea. That's what maintainers suggested for some unknown reason.
 
-Anyway, I don't care if this gets merged anymore.
->
-> --
-> viresh
+
+On 3/13/2026 7:52 AM, Dmitry Baryshkov wrote:
+> On Thu, Mar 12, 2026 at 09:26:37PM +0530, Maulik Shah wrote:
+>> There are two modes PDC irqchip supports pass through mode and secondary
+>> controller mode.
+> 
+> Can't parse this, excuse me.
+
+Ok, I can drop this in v2.
+
+> 
+>>
+>> All PDC irqchip supports pass through mode in which both Direct SPIs and
+>> GPIO IRQs (as SPIs) are sent to GIC without latching at PDC.
+>>
+>> Newer PDCs (v3.0 onwards) also support additional secondary controller mode
+> 
+> It would help to mention the platforms, not everybody has the core docs.
+
+Sure, i can update the platforms which are v3.0 or higher.
+
+> 
+>> where PDC latches GPIO IRQs and sends to GIC as level type IRQ. Direct SPIs
+>> still works same as pass through mode without latching at PDC even in
+>> secondary controller mode.
+>>
+>> All the SoCs so far default uses pass through mode with the exception of
+> 
+> Is it something that must be configured by the bootloaders?
+
+yes, currently changing the the mode can be done from secure world either at boot
+or after boot via scm write.
+
+> 
+>> x1e. x1e PDC may be set to secondary controller mode for builds on CRD
+>> boards whereas it may be set to pass through mode for IoT-EVK.
+>>
+>> There is no way to read which current mode it is set to and make PDC work
+>> in respective mode as the read access is not opened up for non secure
+>> world. There is though write access opened up via SCM write API to set the
+>> mode.
+> 
+> What are going to loose? The ability to latch the wakeup sources on the
+> CRD?
+
+CXPC (SoC level low power mode) would be lost if the device can not wake up from GPIO wakeup sources.
+
+> 
+>> Configure PDC mode to pass through mode for all x1e based boards via SCM
+>> write.
+> 
+> Would it make sense to always use the secondary mode instead?
+
+No, it would not make sense to support the secondary mode in Linux.
+
+> 
+..
+..
+
+>>  
+>> -	pdc_base = ioremap(res.start, res_size);
+>> -	if (!pdc_base) {
+>> -		pr_err("%pOF: unable to map PDC registers\n", node);
+>> -		ret = -ENXIO;
+>> -		goto fail;
+>> +		/*
+>> +		 * There are two modes PDC irqchip can work in
+>> +		 *	- pass through mode
+>> +		 *	- secondary controller mode
+>> +		 *
+>> +		 * All PDC irqchip supports pass through mode in which both
+>> +		 * Direct SPIs and GPIO IRQs (as SPIs) are sent to GIC
+>> +		 * without latching at PDC.
+>> +		 *
+>> +		 * Newer PDCs (v3.0 onwards) also support additional
+>> +		 * secondary controller mode where PDC latches GPIO IRQs
+>> +		 * and sends to GIC as level type IRQ. Direct SPIs still
+>> +		 * works same as pass through mode without latching at PDC
+>> +		 * even in secondary controller mode.
+> 
+> I'd say, there is no need to duplicate the commit message.
+
+Sure, i can remove from comments.
+
+> 
+>> +		 *
+>> +		 * All the SoCs so far default uses pass through mode with
+>> +		 * the exception of x1e.
+>> +		 *
+>> +		 * x1e modes:
+>> +		 *
+>> +		 * x1e PDC may be set to secondary controller mode for
+>> +		 * builds on CRD boards whereas it may be set to pass
+>> +		 * through mode for IoT-EVK boards.
+>> +		 *
+>> +		 * There is no way to read which current mode it is set to
+>> +		 * and make PDC work in respective mode as the read access
+>> +		 * is not opened up for non secure world. There is though
+>> +		 * write access opened up via SCM write API to set the mode.
+>> +		 *
+>> +		 * Configure PDC mode to pass through mode for all x1e based
+>> +		 * boards.
+>> +		 *
+>> +		 * For successful write:
+>> +		 *	- Nothing more to be done
+>> +		 *
+>> +		 * For unsuccessful write:
+> 
+> Why would it fail?
+
+It can fail if the write is denied by firmware.
+As i understand the older firmware had neither read/write as such firmware
+was meant to be used for non-linux (windows only and not for the dual boot).
+
+> 
+>> +		 *	- Inform TLMM to monitor GPIO IRQs (same as MPM)
+>> +		 *	- Prevent SoC low power mode (CxPC) as PDC is not
+>> +		 *	  monitoring GPIO IRQs which may be needed to wake
+>> +		 *	  the SoC from low power mode.
+> 
+> This doesn't quite match the description of "latches the GPIO IRQs".
+
+It does, PDC would continue to still latch the GPIO IRQs (as the mode change failed)
+but PDC won't forward them to parent GIC as they are masked at PDC with __pdc_mask_intr().
+
+In summary,
+
+Below is what x1e users get today if they boot up Linux:
+ - All the GPIO interrupts works fine for them as they don't get forwarded to PDC
+   due to commit 602cb14e310a ("pinctrl: qcom: x1e80100: Bypass PDC wakeup parent for now")
+ - SS3 idle state (CPU level deepest low power mode) not added in device tree due to
+   above commit.
+ - This prevents CXPC (SoC level low power mode) as the CPU subsystem cannot hit deepest low power mode.
+
+Below is what would x1e users would get from this series,
+ - GPIO interrupts continue to work fine after reverting commit 602cb14e310a
+   ("pinctrl: qcom: x1e80100: Bypass PDC wakeup parent for now"), PATCH 5/5 of this series.
+ - SS3 idle state (CPU level deepest idle state) is added, PATCH 4/4 of this series.
+   Adding the SS3 idle states opens up the path for the SoC to achieve CXPC (SoC level low power mode)
+   (This again depends on drivers removing all the global resources vote)
+
+   While all global resources votes can get removed, if the PDC still could not wake the SoC from GPIO
+   interrupts, the CX is kept at MoL (minimum operating level) and TLMM (which is on Cx rail) would then
+   wake up the CPUs from SS3 CPUidle / suspend (s2idle) state with GPIO interrupts.
+
+Thanks,
+Maulik
 
