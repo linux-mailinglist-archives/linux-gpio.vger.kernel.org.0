@@ -1,346 +1,729 @@
-Return-Path: <linux-gpio+bounces-33339-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33340-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yH1zCnDqs2nadAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33339-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 11:44:00 +0100
+	id kDcGI9nts2m4dQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33340-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 11:58:33 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07A92281A9F
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 11:44:00 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A940281D49
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 11:58:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 70C83302D9CF
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 10:43:59 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BB55B3028126
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 10:58:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 754C7388388;
-	Fri, 13 Mar 2026 10:43:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F1F3390218;
+	Fri, 13 Mar 2026 10:58:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="f6I1//u8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M/+MwsKT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011046.outbound.protection.outlook.com [52.101.125.46])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E4E277CA5;
-	Fri, 13 Mar 2026 10:43:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773398635; cv=fail; b=dzidBdkYTdWJ+Xr9nio8KUVfwYPp9EPA0HD7k+l5vvdnuvytuOVWDL0Aqx8HzUATw6vHbk13jbDSAGB11ppTjVCRCx53hxqnuAA8NB941dxIk0RgrKj/cF5JSTnXE0H0zkAfyAWdeapWZEseYSU2X3SFaKStCw+SsXTb795bjxQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773398635; c=relaxed/simple;
-	bh=FXaGwhAmcinLlRqGZL7nXE8FbaenCAyO1cv2G0rYQVk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=VDlqjrKuXIcgwKsxsmA2gJMyX0kfH3nH1Xd2z1FDw+C4ZhYgHoVhtNgSKf39TKYmnXCEMXCh5qwmybkQrmTdij0tzLwh+NNwRsGWICc42PKu89+WPfGDH723g6uGp4Ts1J5otoCxi4OevcIor0iAtOlH6FpW+B7TS7knJ8HkYq4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=f6I1//u8; arc=fail smtp.client-ip=52.101.125.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=G4tAa0rCMFGY4yawJHxbPERcBF5CmucOnTFtv0JS+92wCpfhjEf+Wi3IFsS6+5UOnpE5Psg8srlAIqdYWeb2tzqKYAf/SaKOEyQMQ7qX9+r7Nm8PQkobqzKtqfncfHEz2Q/h80BYawamTnJuxpAHJ7nDGBsl+Y4QOom3rDE8M5RW/sMMOSRL1uZtq6EQQW52HofyBQDjrAdw32EzBv/MxBWzWuSoNVf5qtZ9jvfJJicgAqjSQwr6N0etgUmgJIhcHggzKnC5Bkmy0LcucniON+aZvFNsQkSliuiCG0oFfNz1bcgeiGd9mYOqjAoTc1ETCs1G+o1aJZ7RIRyLvnNa2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uqwklELkW71XHAxls4/I7K8NUBNwEd/+s9L6b2VZIfk=;
- b=N/RLX2hLfgKWJThwCMkfHFSMYgbtYiTd69gMeWAkLVvUuxq3z4CEtYcVGRlH8CQ+34StMRWiOiWn73EFspmuQX8XC+6DjRqS9eBv1NXY8Opu2NSz672cpfniFxjL+o2V25nOGMb21ySMsJkk9dFdfVLbCwB9ZK3ETw/IsAMpHzesvDMqINRwOK0X3ig0GVntCj1sC7BO/JYMpqoIOjRrbEs2TWT59iDTjRlPJlEKnbIYHn2EBtTfPz+5udEkwC59XbmFWRnBsRhTOyCY+0160YcD0bmpELYbCyZwWXvSIHbW6qGj3F349Z9SJ1O33CAORHRcOOxDYlz+UkRZU+q9Iw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uqwklELkW71XHAxls4/I7K8NUBNwEd/+s9L6b2VZIfk=;
- b=f6I1//u8115yQj62nZj5seTV0PIR0fN0ZHRqrdMvKGzXdGHRJqP8GOES17VPP+arutY+JFJoyZXQ/sJOZxZizolQ85pd6U/6drdhFMet8KIJfZds8rFJMiDBd4TKPlNS27+HTEcD7N/MzV7Rymo775kjgfKaiqF0JM9v8VbSqkk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-Received: from TYCPR01MB11947.jpnprd01.prod.outlook.com (2603:1096:400:3e1::6)
- by TYYPR01MB12451.jpnprd01.prod.outlook.com (2603:1096:405:f6::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.15; Fri, 13 Mar
- 2026 10:43:40 +0000
-Received: from TYCPR01MB11947.jpnprd01.prod.outlook.com
- ([fe80::33f1:f7cd:46be:e4d8]) by TYCPR01MB11947.jpnprd01.prod.outlook.com
- ([fe80::33f1:f7cd:46be:e4d8%5]) with mapi id 15.20.9700.017; Fri, 13 Mar 2026
- 10:43:27 +0000
-Date: Fri, 13 Mar 2026 11:42:34 +0100
-From: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66C33815C8;
+	Fri, 13 Mar 2026 10:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773399496; cv=none; b=Wy0SA1/ms9x0mS0dbInYLa80brZszwK9TQzAX73gnPqasSNdu44ihvWaA3Cc1rhklEsxMZTVqotdw9VSfpqrpePd+Q5L0rbOwTZMeKmek+36GJqAI5ganInX+fRehqNvw5AvMzPuhHsS68z04xzDsfU9agkMwIsrWQ8pSY6xM4Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773399496; c=relaxed/simple;
+	bh=ywlZKF2EeuFPRiyRmHuRnJIVuhykwHG7ywEkrrCvd+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HcmLavA5pXJC+zw06Dx/EwaeBg/KSKTQvxjjZLGrCnRuuYPKhyUqbNqE5WSGTHUnRrpUJP/XvuhRqu4RQcEu625c3v/90YfS/k+V9PXDkixdK4KFQ+Bd9MfQAqUnwH0ZXOFKSXkHKXYdsht5fWJ4bxmz4JjDkdsbkxQ70nD0F40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M/+MwsKT; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773399495; x=1804935495;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ywlZKF2EeuFPRiyRmHuRnJIVuhykwHG7ywEkrrCvd+8=;
+  b=M/+MwsKTUr7QgF78+2adv4qmcROtWTIfWqBpUZUa3jZgrTzMLMWjYEud
+   O7uyMva35dri0BS4G+WhBunFqpWW6kZajwxdUixE7jzIIHbM4h6wMB526
+   WPN52wTlrd3sYDDg64K6N00pwD3dCKx4dr5QhF6KB/LO/R0fOHdH4i1xb
+   Jmks3BXJRJUyGfRVVWlADMjSgGHQjBGfaUZWSOVvUanS12b3NGzF2gft0
+   qWN16FVN9E7QrRuYFrF253UcgSHi+YtBP2AWyyRDZC39k8RGQSDG+FT3v
+   BG+PGYYFRP5Q1bK5n2SPG8NySc6ARVv0davaYV8hlNT2U/7BaYGlVCgCn
+   g==;
+X-CSE-ConnectionGUID: LbMo3EksQJG0/pyRvk238Q==
+X-CSE-MsgGUID: ysprSMSASjqDKsr2f7+Msw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11727"; a="74386393"
+X-IronPort-AV: E=Sophos;i="6.23,118,1770624000"; 
+   d="scan'208";a="74386393"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2026 03:58:14 -0700
+X-CSE-ConnectionGUID: +HyIi+hIRkG8uMmQUMdd7w==
+X-CSE-MsgGUID: 4XvwEiMOQBiG0dE+2nTcdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,118,1770624000"; 
+   d="scan'208";a="251647217"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.246])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2026 03:58:09 -0700
+Date: Fri, 13 Mar 2026 12:58:07 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: radu.sabau@analog.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-	Peter Rosin <peda@axentia.se>, Linus Walleij <linusw@kernel.org>,
-	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-gpio@vger.kernel.org, David Jander <david@protonic.nl>,
-	biju.das.jz@bp.renesas.com, tomm.merciai@gmail.com
-Subject: Re: [PATCH v3 4/7] gpio: gpiolib: fix allocation order in
- hierarchical IRQ domains
-Message-ID: <abPqGvy5FqJ0a0ug@tom-desktop>
-References: <20260309134920.1918294-1-o.rempel@pengutronix.de>
- <20260309134920.1918294-5-o.rempel@pengutronix.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260309134920.1918294-5-o.rempel@pengutronix.de>
-X-ClientProxiedBy: MR1P264CA0208.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:501:56::8) To TY3PR01MB11948.jpnprd01.prod.outlook.com
- (2603:1096:400:409::5)
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] iio: adc: ad4691: add initial driver for AD4691
+ family
+Message-ID: <abPtv0Y_QWYoMuAO@ashevche-desk.local>
+References: <20260313-ad4692-multichannel-sar-adc-driver-v3-0-b4d14d81a181@analog.com>
+ <20260313-ad4692-multichannel-sar-adc-driver-v3-2-b4d14d81a181@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYCPR01MB11947:EE_|TYYPR01MB12451:EE_
-X-MS-Office365-Filtering-Correlation-Id: 17de5af7-257d-4d31-b0a4-08de80ed5e2a
-X-LD-Processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|52116014|7416014|366016|38350700014|22082099003|56012099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	IHTxUUa17okWfFf7/DssuIye+gEa1EYdbJCHDNJq9i7AuSQAnlH4qEI3jUSvwGSXQtWLBBgzbDcUCddjQia3ZlhJuQRxAdr/STrTxjaamO7ooXfHsSYyEum5AKtIG+LB01znah5zVBpE5XAIJ2sQbdDL6S+bhvnr9Bkm0bt9kBRjTMxWxA7Ut/vF3lUX+hwAEnaaqGHWQYxtWauNACa1QCGSyybOyFZSiJy607UHwvTuCHj9c5RsIJlIjgz9z5cWaSnAN2AT6ijnbXqpCC71j25uhCAvM6p8P9kvdIBZsBpcGCkExr013Rf+A6dNlEB/oZgncJob6VJoC45cRf7PHoNLJf7ZgShfN2Q7iR3fWUvD2Rmc13Bh2IlBZ9f9tQIpPui2TIK4sURiOsiztIrTL0qY6ekoP2GsHAea/EpFAT8aWXqUCQkmG0PYGi6Uu9KAu7NkKAgTrMcQ5xc1Dv2hTcTyqiKGs2sN0sf/haoDNGdrbufyzZe9u0qT1wUDrW0wZf+QjD9/Bi/NWTKq323Q7frpukTqHrpMWreodxb4OGXGxN+JoDKT6fEIBbaWhl7dRdSiwXEfTcTqwE4LDdI7Xr6K6UYL8a/75jTahUzI1JpLp+rkXpBDhhwiBFo1GPvHO+zv4FqOk5lhXbe0jLxg2CMgIMR5oYk1u6TnDS3PI5g6A0uermNFPHWS0C9UEPlEcx5znjXPxpqhIMcR65YtiZ7rIQGwmwgAWIOK5mLTuVNat4Va5vp1/+Ht6U8bs33ZIuPGElcrsqkmH7Dl+VHNqsQxUrgrkcb9ovEscS7rhKw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB11947.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(7416014)(366016)(38350700014)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?w9dQRv0WYbW5VxrRTLiUEzFt8hX7mRo90nfrHdrLRz5pOOH+zDxVPxuiKPPy?=
- =?us-ascii?Q?eFtSnGH5J9MvxT3pFPJSFnuw019+L9XV5yurw8w4aVl/vzPXKPGzIN7ZrPwM?=
- =?us-ascii?Q?+PVDFPKwTMSc5XEwskZCaHm2NHe+hWpQmTcUEJ/cfff9JIj4rotiArOtfeiw?=
- =?us-ascii?Q?fA7WMeUtOsH/Gvlnb61j3RtbbNIPbGDwQqdZlkX1ET0prFsuQLgVGdVah38w?=
- =?us-ascii?Q?0PyXRvt9U8xGFYP7Pk2Up6HtaXsskei0GN+v4zbGodnm08fZRyxGKGCXfOHl?=
- =?us-ascii?Q?EEQHfRQCv0HnV9BQIDJCDM97UevaxK23kaA2AqPyo3hZNepuihC4vKQIMWxH?=
- =?us-ascii?Q?yLNhKszdME8WhT9wyCVkfcYR57hhks2G2NkHpW+Q2WrShcWSKScIGZBU1nSz?=
- =?us-ascii?Q?TUMAvRbto+UCdRl2zDTcKcp/pbPB1domezL/hh++Z9V6egM2NbaW+ogboQRW?=
- =?us-ascii?Q?KMrlQlSwmPam4Bg39alXAtfyGiFsSLywcqmQRFoVJvlPcmrcoYhN2fmkGx6x?=
- =?us-ascii?Q?QYP689tBJSsRFV+bVrWxGM2sUXhhn/Am0j4sHLHC2KEau6R7FTQ3wNwnpYTb?=
- =?us-ascii?Q?dBl6g1WIDB4SW/uO4RICVKSTMb0dVWn8eBK3bEazBwHWWV2cwmJOG9wgVLq9?=
- =?us-ascii?Q?bGix1ui+G3uoaQwPSPNFQvHciJkNIb8o3ujYakTph1g/U+Z3QuXtxAR37HEi?=
- =?us-ascii?Q?HY46hPL9IdhNeNs3SH7znV7coNQ7IgjYvfA3waEhO/1HGbhRU7mQZmGG+Lnc?=
- =?us-ascii?Q?K3o+AR0TOm5AoaOOF6MfmIBr3YQYHoeiKMrIIV2b/1hCO7OByUqnwhLE3Aei?=
- =?us-ascii?Q?AESzP4GoxOSS8ksUVqN3vt7gJxm7dgbC2wEBNevy7Me3fLINSdDEHzFfGUTq?=
- =?us-ascii?Q?GPUVLg23awD497M6EMR1BE1E2V20fOxrraWfIGFjPCfTOlMshlGQ/3CF2tFF?=
- =?us-ascii?Q?dbwbsDbXylrCr4MAQ+xtltkfjvzDTyetpbFUgNlmnV7xijNAmnfjxN86jnf9?=
- =?us-ascii?Q?V//NjjPvusZ4E/VCll41HFKx18SkIS2QCFEEvCDugIEIqb47z20Ztf0IjhUZ?=
- =?us-ascii?Q?eVjWAcMSKcmRakDgN/dcTdtSdcy9A7C+wsBLjdibVAvk1ZTzwRRih4IMZcTO?=
- =?us-ascii?Q?hY082zqoqhFxvhskjFlYKKJ//W+Gsz0beNaiEaRYpPDHHkGmTruhBfcUBysf?=
- =?us-ascii?Q?h7tcHzPTyhMP2wR12MdvkMkpSVtByzy9Rut1LZTysOvxdgDRzW9GjU9W530p?=
- =?us-ascii?Q?bZP+y2L2Fj1CpemNUVDHip2dMnYlAc2nZByOGy7jgkiie7kUtTHZ1m94Bkne?=
- =?us-ascii?Q?ZPwYGcnMvXVo6fllwro0fZ180GX2+UuMOXjcd1KY6R3U8hLH8YxdhvAErODA?=
- =?us-ascii?Q?NdHZ4Ucb6IRZKBd8iv8tNry+dPW/8M6OidnEbKGhx+S6AZiOTcur/3DlxMs/?=
- =?us-ascii?Q?pe5wg0g/i23rPz6zOkaVnl9h508AUZkfqAcGshVYtYV1nKhjPNkdSEHJttgJ?=
- =?us-ascii?Q?BPcUA53TZqawgiWByKtfw5WgjnHFeAIkPPbu5eyBbWHVwFd0n0h8xz6V4XZJ?=
- =?us-ascii?Q?zP2Yusy/MBUFa1NvWmFCwALqPZSM+KeBfnKvLe+nGbtK6SmRQ81xQv7fCEYI?=
- =?us-ascii?Q?rUmuubuxzzqyNfgCXvazka4B7kuNk9w30CkLGro0WTSCIIUZryc0zJ7RfwQX?=
- =?us-ascii?Q?YxPW0BlAsADyGYnw5LfBAVUgTTg6etMHA8k37TkTfx4KQeD5ADi7CdtXZumW?=
- =?us-ascii?Q?1PmUZdyqWD5BIi4DGVcUsEIA6a0FM2GvoAo6N4KJ3iuN9ZglmaKJ?=
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17de5af7-257d-4d31-b0a4-08de80ed5e2a
-X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11948.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2026 10:43:27.1965
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3ESp6KV6fwQ6YR4zaKR0hgyYL7EWO8p0FxTKbvxpcqKGkuVfyE9Lj6le8i9YXedPNMQQ5TJGgRvtnxy0Y6PJ7vo/2TQL/cpPO5Sx7CEw67hPGZXvgNblqInmITH8tpMe
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYYPR01MB12451
-X-Spamd-Result: default: False [1.84 / 15.00];
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260313-ad4692-multichannel-sar-adc-driver-v3-2-b4d14d81a181@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[renesas.com,none];
-	R_DKIM_ALLOW(-0.20)[bp.renesas.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33339-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-33340-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	FREEMAIL_CC(0.00)[roeck-us.net,kernel.org,axentia.se,pengutronix.de,vger.kernel.org,protonic.nl,bp.renesas.com,gmail.com];
-	DKIM_TRACE(0.00)[bp.renesas.com:+];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[intel.com:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[tommaso.merciai.xr@bp.renesas.com,linux-gpio@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,pengutronix.de:email]
-X-Rspamd-Queue-Id: 07A92281A9F
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 4A940281D49
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Oleksij,
-Thanks for your patch.
+On Fri, Mar 13, 2026 at 12:07:26PM +0200, Radu Sabau via B4 Relay wrote:
 
-I'm working on DSI support for RZ/G3E
-
-from this morning rebasing on top of next-20260312 I'm seeing
-the following:
-
-
-[   19.230966] [drm] Initialized rzg2l-du 1.0.0 for 16490000.display on minor 2
-[   19.240377] rzg2l-du 16490000.display: [drm] Device 16490000.display probed
-[   19.250504] irq 165, desc: 000000004f0a321f, depth: 0, count: 0, unhandled: 0
-[   19.257630] ->handle_irq():  00000000a74f5df5, handle_bad_irq+0x0/0x25c
-[   19.264223] ->irq_data.chip(): 0000000057261646, rzg2l_gpio_irqchip+0x0/0x118
-[   19.271328] ->action(): 0000000027be85a3
-[   19.275227] ->action->handler(): 00000000e5c70c61, irq_default_primary_handler+0x0/0x8
-[   20.645894] ov5645 0-003c: ov5645_write_reg: write reg error -110: reg=300e, val=58
-[   40.257787] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-[   40.263915] rcu:     (detected by 2, t=5253 jiffies, g=3325, q=241 ncpus=4)
-[   40.270632] rcu: All QSes seen, last rcu_preempt kthread activity 5255 (4294902363-4294897108), jiffies_till_next_fqs=1, root ->qsmask 0x0
-[   40.283054] rcu: rcu_preempt kthread timer wakeup didn't happen for 5257 jiffies! g3325 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x200
-[   40.294351] rcu:     Possible timer handling issue on cpu=0 timer-softirq=1342
-[   40.301309] rcu: rcu_preempt kthread starved for 5262 jiffies! g3325 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x200 ->cpu=0
-[   40.311657] rcu:     Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
-[   40.320771] rcu: RCU grace-period kthread stack dump:
-[   40.325821] task:rcu_preempt     state:R stack:0     pid:15    tgid:15    ppid:2      task_flags:0x208040 flags:0x00000010
-[   40.336886] Call trace:
-[   40.339345]  __switch_to+0xec/0x1a8 (T)
-[   40.343236]  __schedule+0x360/0xe18
-[   40.346763]  schedule+0x34/0x110
-[   40.350029]  schedule_timeout+0x84/0x100
-[   40.353997]  rcu_gp_fqs_loop+0x114/0x420
-[   40.357963]  rcu_gp_kthread+0x100/0x114
-[   40.361843]  kthread+0x118/0x124
-[   40.365122]  ret_from_fork+0x10/0x20
-[   40.368740] rcu: Stack dump where RCU GP kthread last ran:
-[   40.374223] Sending NMI from CPU 2 to CPUs 0:
-[  113.405786] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-[  113.411908] rcu:     (detected by 3, t=23540 jiffies, g=3325, q=259 ncpus=4)
-[  113.418711] rcu: All QSes seen, last rcu_preempt kthread activity 23542 (4294920650-4294897108), jiffies_till_next_fqs=1, root ->qsmask 0x0
-[  113.431220] rcu: rcu_preempt kthread timer wakeup didn't happen for 23544 jiffies! g3325 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x200
-[  113.442606] rcu:     Possible timer handling issue on cpu=0 timer-softirq=1342
-[  113.449564] rcu: rcu_preempt kthread starved for 23549 jiffies! g3325 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x200 ->cpu=0
-[  113.459998] rcu:     Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
-[  113.469112] rcu: RCU grace-period kthread stack dump:
-[  113.474163] task:rcu_preempt     state:R stack:0     pid:15    tgid:15    ppid:2      task_flags:0x208040 flags:0x00000010
-[  113.485229] Call trace:
-[  113.487688]  __switch_to+0xec/0x1a8 (T)
-[  113.491581]  __schedule+0x360/0xe18
-[  113.495109]  schedule+0x34/0x110
-[  113.498374]  schedule_timeout+0x84/0x100
-[  113.502342]  rcu_gp_fqs_loop+0x114/0x420
-[  113.506308]  rcu_gp_kthread+0x100/0x114
-[  113.510188]  kthread+0x118/0x124
-[  113.513466]  ret_from_fork+0x10/0x20
-[  113.517082] rcu: Stack dump where RCU GP kthread last ran:
-[  113.522566] Sending NMI from CPU 3 to CPUs 0:
-[  186.553784] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-[  186.559904] rcu:     (detected by 3, t=41827 jiffies, g=3325, q=268 ncpus=4)
-[  186.566706] rcu: All QSes seen, last rcu_preempt kthread activity 41829 (4294938937-4294897108), jiffies_till_next_fqs=1, root ->qsmask 0x0
-[  186.579213] rcu: rcu_preempt kthread timer wakeup didn't happen for 41831 jiffies! g3325 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x200
-[  186.590599] rcu:     Possible timer handling issue on cpu=0 timer-softirq=1342
-[  186.597556] rcu: rcu_preempt kthread starved for 41836 jiffies! g3325 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x200 ->cpu=0
-[  186.607990] rcu:     Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
-[  186.617105] rcu: RCU grace-period kthread stack dump:
-[  186.622155] task:rcu_preempt     state:R stack:0     pid:15    tgid:15    ppid:2      task_flags:0x208040 flags:0x00000010
-[  186.633219] Call trace:
-
-
-I found out the the issue is related to the interrupt of the adv7535
-bridge:
-
-        adv7535: hdmi1@3d {
-                compatible = "adi,adv7535";
-                ...
-                ...
-                interrupts-extended = <&pinctrl RZG3E_GPIO(L, 4) IRQ_TYPE_EDGE_FALLING>;
-
-RZ/G3E is using:
- - drivers/pinctrl/renesas/pinctrl-rzg2l.c
-
-Reverting this patch fix the issue.
-(git revert a23463beb3d5)
-
-I'm wondering if someone else get the same.
-Thanks in advance.
-
-Kind Regards,
-Tommaso
-
-
-On Mon, Mar 09, 2026 at 02:49:15PM +0100, Oleksij Rempel wrote:
-> In gpiochip_hierarchy_irq_domain_alloc(), calling irq_domain_set_info()
-> before irq_domain_alloc_irqs_parent() causes a NULL pointer dereference
-> for slow-bus (SPI/I2C) IRQ chips.
+> Add support for the Analog Devices AD4691 family of high-speed,
+> low-power multichannel SAR ADCs: AD4691 (16-ch, 500 kSPS),
+> AD4692 (16-ch, 1 MSPS), AD4693 (8-ch, 500 kSPS) and
+> AD4694 (8-ch, 1 MSPS).
 > 
-> irq_domain_set_info() locks the child descriptor, triggering .irq_bus_lock.
-> If the child proxies this lock to the parent, it crashes because
-> parent->chip is not yet allocated.
+> The driver implements a custom regmap layer over raw SPI to handle the
+> device's mixed 1/2/3/4-byte register widths and uses the standard IIO
+> read_raw/write_raw interface for single-channel reads.
 > 
-> Fix this by allocating the parent IRQs first, ensuring parent->chip is
-> populated before the child's .irq_bus_lock is invoked.
+> Two buffered operating modes are supported, auto-detected from the
+> device tree:
 > 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
-> changes v3
-> - new patch
-> ---
->  drivers/gpio/gpiolib.c | 32 +++++++++++++++++---------------
->  1 file changed, 17 insertions(+), 15 deletions(-)
+>     - CNV Clock Mode:  an external PWM drives the CNV pin; the sampling
+>                        rate is controlled via the PWM period. Requires a
+>                        reference clock and a DATA_READY interrupt.
 > 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index ada572aaebd6..1ea9531934cc 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1628,19 +1628,6 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
->  	}
->  	gpiochip_dbg(gc, "found parent hwirq %u\n", parent_hwirq);
->  
-> -	/*
-> -	 * We set handle_bad_irq because the .set_type() should
-> -	 * always be invoked and set the right type of handler.
-> -	 */
-> -	irq_domain_set_info(d,
-> -			    irq,
-> -			    hwirq,
-> -			    gc->irq.chip,
-> -			    gc,
-> -			    girq->handler,
-> -			    NULL, NULL);
-> -	irq_set_probe(irq);
-> -
->  	/* This parent only handles asserted level IRQs */
->  	ret = girq->populate_parent_alloc_arg(gc, &gpio_parent_fwspec,
->  					      parent_hwirq, parent_type);
-> @@ -1657,12 +1644,27 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
->  	 */
->  	if (irq_domain_is_msi(d->parent) && (ret == -EEXIST))
->  		ret = 0;
-> -	if (ret)
-> +	if (ret) {
->  		gpiochip_err(gc,
->  			     "failed to allocate parent hwirq %d for hwirq %lu\n",
->  			     parent_hwirq, hwirq);
-> +		return ret;
+>     - Manual Mode:     CNV is tied to SPI CS; each SPI transfer triggers
+>                        a conversion and returns the previous result
+>                        (pipelined). No external clock or interrupt needed.
+> 
+> In both modes the chip idles in Autonomous Mode so that single-shot
+> read_raw can use the internal oscillator without disturbing the
+> hardware configuration.
+
+...
+
+> +#define AD4691_SEQ_ALL_CHANNELS_OFF		0x00
+
+Unused
+
+...
+
+> +#define AD4691_STATE_RESET_ALL			0x01
+> +
+> +#define AD4691_REF_CTRL_MASK			GENMASK(4, 2)
+
+It's a bit better for navigating thru code if the register bit field
+definitions are located after the respective register offset.
+
+...
+
+> +#define AD4691_DEVICE_MANUAL			0x14
+> +#define AD4691_DEVICE_REGISTER			0x10
+
+These two are unused.
+
+...
+
+> +#define AD4691_AUTONOMOUS_MODE_VAL		0x02
+
+As per above (move closer to the respective offset definition).
+
+...
+
+> +#define AD4691_NOOP				0x00
+> +#define AD4691_ADC_CHAN(ch)			((0x10 + (ch)) << 3)
+
+Unused.
+
+...
+
+> +#define AD4691_STATUS_REG			0x014
+> +#define AD4691_CLAMP_STATUS1_REG		0x01A
+> +#define AD4691_CLAMP_STATUS2_REG		0x01B
+> +#define AD4691_DEVICE_SETUP			0x020
+> +#define AD4691_REF_CTRL				0x021
+> +#define AD4691_OSC_FREQ_REG			0x023
+> +#define AD4691_STD_SEQ_CONFIG			0x025
+> +#define AD4691_SPARE_CONTROL			0x02A
+> +
+> +#define AD4691_OSC_EN_REG			0x180
+> +#define AD4691_STATE_RESET_REG			0x181
+> +#define AD4691_ADC_SETUP			0x182
+> +#define AD4691_ACC_MASK1_REG			0x184
+> +#define AD4691_ACC_MASK2_REG			0x185
+> +#define AD4691_ACC_COUNT_LIMIT(n)		(0x186 + (n))
+
+> +#define AD4691_ACC_COUNT_VAL			0x3F
+
+Unused
+
+> +#define AD4691_GPIO_MODE1_REG			0x196
+> +#define AD4691_GPIO_MODE2_REG			0x197
+> +#define AD4691_GPIO_READ			0x1A0
+> +#define AD4691_ACC_STATUS_FULL1_REG		0x1B0
+> +#define AD4691_ACC_STATUS_FULL2_REG		0x1B1
+> +#define AD4691_ACC_STATUS_OVERRUN1_REG		0x1B2
+> +#define AD4691_ACC_STATUS_OVERRUN2_REG		0x1B3
+> +#define AD4691_ACC_STATUS_SAT1_REG		0x1B4
+> +#define AD4691_ACC_STATUS_SAT2_REG		0x1BE
+> +#define AD4691_ACC_SAT_OVR_REG(n)		(0x1C0 + (n))
+> +#define AD4691_AVG_IN(n)			(0x201 + (2 * (n)))
+> +#define AD4691_AVG_STS_IN(n)			(0x222 + (3 * (n)))
+> +#define AD4691_ACC_IN(n)			(0x252 + (3 * (n)))
+> +#define AD4691_ACC_STS_DATA(n)			(0x283 + (4 * (n)))
+
+...
+
+> +#define AD4691_CHANNEL(chan, index, real_bits, storage_bits, _shift)	\
+> +	{								\
+> +		.type = IIO_VOLTAGE,					\
+> +		.indexed = 1,						\
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ)	\
+> +					   | BIT(IIO_CHAN_INFO_SCALE),	\
+
+Can be better formatting:
+
+		.info_mask_shared_by_all =				\
+			   BIT(IIO_CHAN_INFO_SAMP_FREQ)	|		\
+			   BIT(IIO_CHAN_INFO_SCALE),			\
+
+> +		.channel = chan,					\
+> +		.scan_index = index,					\
+> +		.scan_type = {						\
+> +			.sign = 'u',					\
+> +			.realbits = real_bits,				\
+> +			.storagebits = storage_bits,			\
+> +			.shift = _shift,				\
+> +		},							\
 > +	}
->  
-> -	return ret;
-> +	/*
-> +	 * We set handle_bad_irq because the .set_type() should
-> +	 * always be invoked and set the right type of handler.
-> +	 */
-> +	irq_domain_set_info(d,
-> +			    irq,
-> +			    hwirq,
-> +			    gc->irq.chip,
-> +			    gc,
-> +			    girq->handler,
-> +			    NULL, NULL);
-> +	irq_set_probe(irq);
+
+...
+
+> +	u64				cnv_period;
+
+Units?
+
+...
+
+> +static int ad4691_regulator_get(struct ad4691_state *st)
+> +{
+> +	struct device *dev = regmap_get_device(st->regmap);
+> +	int ret;
+> +
+> +	ret = devm_regulator_get_enable(dev, "vio");
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to get and enable VIO\n");
+> +
+> +	st->vref_uV = devm_regulator_get_enable_read_voltage(dev, "vref");
+> +	if (st->vref_uV == -ENODEV)
+> +		st->vref_uV = devm_regulator_get_enable_read_voltage(dev, "vrefin");
+
+> +	if (st->vref_uV < 0)
+> +		return dev_err_probe(dev, st->vref_uV,
+> +				     "Failed to get reference supply\n");
+> +
+> +	if (st->vref_uV < AD4691_VREF_uV_MIN || st->vref_uV > AD4691_VREF_uV_MAX)
+> +		return dev_err_probe(dev, -EINVAL, "vref(%d) must be under [%u %u]\n",
+
+"...must be in the range [%u,%u]\n"
+(or other possible delimiter instead of space: double or triple dots, dash).
+
+> +				     st->vref_uV, AD4691_VREF_uV_MIN, AD4691_VREF_uV_MAX);
 > +
 > +	return 0;
->  }
->  
->  static unsigned int gpiochip_child_offset_to_irq_noop(struct gpio_chip *gc,
-> -- 
-> 2.47.3
-> 
+> +}
+
+...
+
+> +static int ad4691_reg_read(void *context, unsigned int reg, unsigned int *val)
+> +{
+> +	struct ad4691_state *st = context;
+> +	struct spi_device *spi = to_spi_device(regmap_get_device(st->regmap));
+
+Make the context to be spi, st is not used here...
+
+> +	u8 tx[2], rx[4];
+> +	int ret;
+> +
+> +	put_unaligned_be16(0x8000 | reg, tx);
+> +
+> +	switch (reg) {
+> +	case 0 ... AD4691_OSC_FREQ_REG:
+> +	case AD4691_SPARE_CONTROL ... AD4691_ACC_SAT_OVR_REG(15):
+> +		ret = spi_write_then_read(spi, tx, 2, rx, 1);
+> +		if (ret)
+> +			return ret;
+> +		*val = rx[0];
+> +		return 0;
+> +	case AD4691_STD_SEQ_CONFIG:
+> +	case AD4691_AVG_IN(0) ... AD4691_AVG_IN(15):
+> +		ret = spi_write_then_read(spi, tx, 2, rx, 2);
+> +		if (ret)
+> +			return ret;
+> +		*val = get_unaligned_be16(rx);
+> +		return 0;
+> +	case AD4691_AVG_STS_IN(0) ... AD4691_AVG_STS_IN(15):
+> +	case AD4691_ACC_IN(0) ... AD4691_ACC_IN(15):
+> +		ret = spi_write_then_read(spi, tx, 2, rx, 3);
+> +		if (ret)
+> +			return ret;
+> +		*val = get_unaligned_be24(rx);
+> +		return 0;
+> +	case AD4691_ACC_STS_DATA(0) ... AD4691_ACC_STS_DATA(15):
+> +		ret = spi_write_then_read(spi, tx, 2, rx, 4);
+> +		if (ret)
+> +			return ret;
+> +		*val = get_unaligned_be32(rx);
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int ad4691_reg_write(void *context, unsigned int reg, unsigned int val)
+> +{
+> +	struct ad4691_state *st = context;
+> +	struct spi_device *spi = to_spi_device(regmap_get_device(st->regmap));
+
+...neither here. Sorry if my previous comment was misleading in these cases.
+
+> +	u8 tx[4];
+> +
+> +	put_unaligned_be16(reg, tx);
+> +
+> +	switch (reg) {
+> +	case 0 ... AD4691_OSC_FREQ_REG:
+> +	case AD4691_SPARE_CONTROL ... AD4691_GPIO_MODE2_REG:
+> +		if (val > 0xFF)
+> +			return -EINVAL;
+> +		tx[2] = val;
+> +		return spi_write_then_read(spi, tx, 3, NULL, 0);
+> +	case AD4691_STD_SEQ_CONFIG:
+> +		if (val > 0xFFFF)
+> +			return -EINVAL;
+> +		put_unaligned_be16(val, &tx[2]);
+> +		return spi_write_then_read(spi, tx, 4, NULL, 0);
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+
+...
+
+> +{
+> +	if (st->adc_mode == AD4691_MANUAL_MODE)
+> +		return DIV_ROUND_CLOSEST(NSEC_PER_SEC,
+> +					 ktime_to_ns(st->sampling_period));
+
+> +	return DIV_ROUND_CLOSEST(NSEC_PER_SEC,
+> +				 pwm_get_period(st->conv_trigger));
+
+One line. It's fine to have ~83 character long lines if it increases
+readability.
+
+> +}
+
+...
+
+> +static int __ad4691_set_sampling_freq(struct ad4691_state *st, int freq)
+> +{
+> +	unsigned long long target, ref_clk_period_ns;
+> +	struct pwm_state cnv_state;
+> +
+> +	pwm_init_state(st->conv_trigger, &cnv_state);
+> +
+> +	freq = clamp(freq, 1, st->chip->max_rate);
+> +	target = DIV_ROUND_CLOSEST_ULL(st->ref_clk_rate, freq);
+> +	ref_clk_period_ns = DIV_ROUND_CLOSEST_ULL(NANO, st->ref_clk_rate);
+
+NANO --> NSEC_PER_SEC
+
+Why _ULL?
+
+> +	st->cnv_period = ref_clk_period_ns * target;
+> +	cnv_state.period = ref_clk_period_ns * target;
+> +	cnv_state.duty_cycle = AD4691_CNV_DUTY_CYCLE_NS;
+> +	cnv_state.enabled = false;
+> +
+> +	return pwm_apply_might_sleep(st->conv_trigger, &cnv_state);
+> +}
+
+...
+
+> +{
+> +	struct ad4691_state *st = iio_priv(indio_dev);
+> +
+> +	IIO_DEV_ACQUIRE_DIRECT_MODE(indio_dev, claim);
+
+> +
+
+Redundant blank line.
+
+> +	if (IIO_DEV_ACQUIRE_FAILED(claim))
+> +		return -EBUSY;
+> +
+> +	guard(mutex)(&st->lock);
+> +
+> +	if (st->adc_mode == AD4691_MANUAL_MODE) {
+> +		if (!freq || freq > st->chip->max_rate)
+> +			return -ERANGE;
+
+> +		st->sampling_period = ns_to_ktime(DIV_ROUND_CLOSEST(NSEC_PER_SEC,
+> +									 freq));
+
+Better indentation either to put all on one line or
+
+		st->sampling_period =
+			ns_to_ktime(DIV_ROUND_CLOSEST(NSEC_PER_SEC, freq));
+
+> +		return 0;
+> +	}
+> +
+> +	if (!st->conv_trigger)
+> +		return -ENODEV;
+
+> +	if (!freq || freq > st->chip->max_rate)
+
+in_range() ?
+
+> +		return -ERANGE;
+> +
+> +	return __ad4691_set_sampling_freq(st, freq);
+> +}
+
+...
+
+> +static int ad4691_single_shot_read(struct iio_dev *indio_dev,
+> +				   struct iio_chan_spec const *chan, int *val)
+> +{
+> +	struct ad4691_state *st = iio_priv(indio_dev);
+> +	u16 mask = ~BIT(chan->channel);
+
+> +	u32 acc_mask[2] = { mask & 0xFF, mask >> 8 };
+
+This looks quite wrong. Is it for sure like two 32-bit stances per each mask
+byte? If not, this should be __le16 acc_mask = cpu_to_le16(~BIT(...));
+
+> +	unsigned int reg_val;
+> +	int ret;
+> +
+> +	/*
+> +	 * Always use AUTONOMOUS mode for single-shot reads, regardless
+> +	 * of the buffer mode (CNV_CLOCK or MANUAL). The chip is kept
+> +	 * in AUTONOMOUS mode during idle; enter_conversion_mode() and
+> +	 * exit_conversion_mode() handle the switch for buffer operation.
+> +	 */
+> +	ret = regmap_write(st->regmap, AD4691_STATE_RESET_REG,
+> +			   AD4691_STATE_RESET_ALL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(st->regmap, AD4691_STD_SEQ_CONFIG,
+> +			   BIT(chan->channel));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_bulk_write(st->regmap, AD4691_ACC_MASK1_REG, acc_mask, 2);
+
+I believe this is not doing what you were expected to do in accordance with u32
+above. Using sizeof() is a good pattern to show mistakes.
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(st->regmap, AD4691_OSC_EN_REG, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * Wait for conversion to complete using a timed delay.
+> +	 * A single read needs 2 internal oscillator periods.
+> +	 * OSC_FREQ_REG is never modified by the driver, so the
+> +	 * oscillator runs at reset-default speed. Use chip->max_rate
+> +	 * as a conservative proxy: it is always <= the OSC frequency,
+> +	 * so the computed delay is >= the actual conversion time.
+> +	 */
+
+> +	unsigned long conv_us = DIV_ROUND_UP(2 * USEC_PER_SEC,
+> +					     st->chip->max_rate);
+
+No, we do not mix definitions and code (only a couple of exceptions, none of
+which is applicable here).
+
+> +	fsleep(conv_us);
+> +
+> +	ret = regmap_write(st->regmap, AD4691_OSC_EN_REG, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_read(st->regmap, AD4691_AVG_IN(chan->channel), &reg_val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*val = reg_val;
+> +	regmap_write(st->regmap, AD4691_STATE_RESET_REG, AD4691_STATE_RESET_ALL);
+> +
+> +	return IIO_VAL_INT;
+> +}
+
+...
+
+> +static int ad4691_read_raw(struct iio_dev *indio_dev,
+> +			   struct iio_chan_spec const *chan, int *val,
+> +			   int *val2, long info)
+> +{
+> +	struct ad4691_state *st = iio_priv(indio_dev);
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW: {
+> +		IIO_DEV_ACQUIRE_DIRECT_MODE(indio_dev, claim);
+> +
+> +		if (IIO_DEV_ACQUIRE_FAILED(claim))
+> +			return -EBUSY;
+> +
+> +		return ad4691_single_shot_read(indio_dev, chan, val);
+> +	}
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		*val = ad4691_get_sampling_freq(st);
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+
+> +		*val = st->vref_uV / 1000;
+
+"1000" --> "(MICRO / MILLI)"
+
+> +		*val2 = chan->scan_type.realbits;
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+
+...
+
+> +{
+> +	struct device *dev = regmap_get_device(st->regmap);
+> +	struct reset_control *rst;
+> +
+> +	rst = devm_reset_control_get_optional_exclusive(dev, NULL);
+> +	if (IS_ERR(rst))
+
+> +		return dev_err_probe(dev, PTR_ERR(rst),
+> +				     "Failed to get reset\n");
+
+It's one line (of 81 characters, which is fine in this case).
+
+> +	if (!rst)
+> +		return 0;
+
+Is this required? I mean if reset APIs are NULL-aware, this will be just 300 µs
+sleep.
+
+> +	reset_control_assert(rst);
+> +	/* Reset delay required. See datasheet Table 5. */
+> +	fsleep(300);
+> +	reset_control_deassert(rst);
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static int ad4691_config(struct ad4691_state *st)
+
+I missed the fact that 'spi' is used in one occasion here, perhaps just supply
+the max_speed_hz instead of to_spi_device() ?
+
+> +{
+> +	struct device *dev = regmap_get_device(st->regmap);
+> +	enum ad4691_ref_ctrl ref_val;
+> +	unsigned int reg_val;
+> +	int ret;
+> +
+> +	/*
+> +	 * Determine buffer conversion mode from DT: if a PWM is provided it
+> +	 * drives the CNV pin (CNV_CLOCK_MODE); otherwise CNV is tied to CS
+> +	 * and each SPI transfer triggers a conversion (MANUAL_MODE).
+> +	 * Both modes idle in AUTONOMOUS mode so that read_raw can use the
+> +	 * internal oscillator without disturbing the hardware configuration.
+> +	 */
+> +	if (device_property_present(dev, "pwms")) {
+> +		st->adc_mode = AD4691_CNV_CLOCK_MODE;
+> +		ret = ad4691_pwm_get(st);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		st->adc_mode = AD4691_MANUAL_MODE;
+> +		st->sampling_period = ns_to_ktime(DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC,
+
+Why _ULL? The dividend is 32-bit.
+
+> +			AD4691_MANUAL_MODE_STD_FREQ(st->chip->num_channels,
+> +				to_spi_device(dev)->max_speed_hz)));
+> +	}
+> +
+> +	/* Perform a state reset on the channels at start-up. */
+> +	ret = regmap_write(st->regmap, AD4691_STATE_RESET_REG,
+> +			   AD4691_STATE_RESET_ALL);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to write state reset\n");
+> +
+> +	/* Clear STATUS register by reading from the STATUS register. */
+> +	ret = regmap_read(st->regmap, AD4691_STATUS_REG, &reg_val);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to read status register\n");
+> +
+> +	switch (st->vref_uV) {
+> +	case AD4691_VREF_uV_MIN ... 2750000:
+> +		ref_val = AD4691_VREF_2P5;
+> +		break;
+> +	case 2750001 ... 3250000:
+> +		ref_val = AD4691_VREF_3P0;
+> +		break;
+> +	case 3250001 ... 3750000:
+> +		ref_val = AD4691_VREF_3P3;
+> +		break;
+> +	case 3750001 ... 4500000:
+> +		ref_val = AD4691_VREF_4P096;
+> +		break;
+> +	case 4500001 ... AD4691_VREF_uV_MAX:
+> +		ref_val = AD4691_VREF_5P0;
+> +		break;
+> +	default:
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "Unsupported vref voltage: %d uV\n",
+> +				     st->vref_uV);
+> +	}
+> +
+> +	ret = regmap_write(st->regmap, AD4691_REF_CTRL,
+> +			   FIELD_PREP(AD4691_REF_CTRL_MASK, ref_val));
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to write REF_CTRL\n");
+> +
+> +	/* Both CNV_CLOCK and MANUAL devices start in AUTONOMOUS mode. */
+> +	ret = regmap_write(st->regmap, AD4691_ADC_SETUP, AD4691_AUTONOMOUS_MODE_VAL);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to write ADC_SETUP\n");
+> +
+> +	return regmap_write(st->regmap, AD4691_GPIO_MODE1_REG, AD4691_ADC_BUSY);
+> +}
+
+...
+
+> +static int ad4691_probe(struct spi_device *spi)
+> +{
+> +	struct device *dev = &spi->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct ad4691_state *st;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+
+> +	st = iio_priv(indio_dev);
+> +	ret = devm_mutex_init(dev, &st->lock);
+
+It's better to have like this
+
+	...
+	st = iio_priv(indio_dev);
+	st->chip = spi_get_device_match_data(spi);
+
+	ret = devm_mutex_init(dev, &st->lock);
+	...
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	st->regmap = devm_regmap_init(dev, NULL, st, &ad4691_regmap_config);
+> +	if (IS_ERR(st->regmap))
+> +		return dev_err_probe(dev, PTR_ERR(st->regmap),
+> +				     "Failed to initialize regmap\n");
+> +
+> +	st->chip = spi_get_device_match_data(spi);
+> +
+> +	ret = ad4691_regulator_get(st);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ad4691_reset(st);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ad4691_config(st);
+> +	if (ret)
+> +		return ret;
+> +
+> +	indio_dev->name = st->chip->name;
+> +	indio_dev->info = &ad4691_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	indio_dev->channels = (st->adc_mode == AD4691_MANUAL_MODE) ?
+> +		st->chip->manual_channels : st->chip->channels;
+> +	indio_dev->num_channels = st->chip->num_channels;
+> +
+> +	return devm_iio_device_register(dev, indio_dev);
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
