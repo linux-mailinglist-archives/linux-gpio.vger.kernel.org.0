@@ -1,223 +1,232 @@
-Return-Path: <linux-gpio+bounces-33304-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33305-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GKD8CcRWs2kRVQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33304-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 01:13:56 +0100
+	id 0Nd+AWZzs2kQWgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33305-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 03:16:06 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 312B827B7B7
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 01:13:55 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 992D827C9D3
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 03:16:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A0F8D30314C9
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 00:12:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 76467318DE85
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 02:11:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D65821DA23;
-	Fri, 13 Mar 2026 00:12:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B6EE31E847;
+	Fri, 13 Mar 2026 02:11:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lim6HX+x"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jtoHtrl8";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="SbRPW1iz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yx1-f48.google.com (mail-yx1-f48.google.com [74.125.224.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250C56F2F2
-	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 00:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB5D33D6CA
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 02:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773360750; cv=none; b=bjB0vrGixyuzYurVpn7LCOTxVYXPyGkVafQw3wZV9I4sbBctXYxfV+Uivw3y9lTtmOvjIcSpd4kfVbn8L32MqXzyIY1oFVnfrhK9JRBeDWHYqGhHFRhgrD9JSHbuY8nhuuUU/3oaIR5e0hvSaYfNO5q6sCEmTj7jC5FwTZMgAv4=
+	t=1773367907; cv=none; b=lzzusV6vXyos5hYXBEKmX7DtGP48R+m7B73wSpZbz+3jjDE1FP0gOEYTfzQ+kKTEJX2pL7pA9vbznUzaGwGTgm+4OQhu8GHA+xIgqONtTKv8IL+kb4nb8shFC2LPi8XFKedVtsqjGJ2xskJaAuEGzYo/BCCjsZ/en9rxaQ0TLqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773360750; c=relaxed/simple;
-	bh=T4r2vx6dhxOLnZH/JlyaRVdHbC7RPrKhEoaEGGAroBI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PFNO0Ai5MCRfEcTOW+NzMlPlZ50twDI5CBUYW4TB1ES2oZOtaNKMz6qQ/aXo/qAYIU9o4pXUj1GNo9imUCxT6jmgtUMc5Fhv/OABbDhTNnzD4fcMQoSVEdbzBt6kYcRDQMX4b/sAHL1Jv4VSDhXL3xTOwkj4vZhdYp4er7oEdsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lim6HX+x; arc=none smtp.client-ip=74.125.224.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yx1-f48.google.com with SMTP id 956f58d0204a3-64c9a6d68e5so1462568d50.3
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2026 17:12:28 -0700 (PDT)
+	s=arc-20240116; t=1773367907; c=relaxed/simple;
+	bh=iEHWAOMWK9NBZlmVkzkSZR2rVMRLUZHQpZHVOg5mmwQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ewt8BG5Wm1FJEJDxAmFu2uYkwEDqwttHyTXPyQDe/hPmtMvX73zn7ToSFWd6T8cihgJr/wUDOkh/hNDPEuLu6iBTGNtmV9+QdXcv9HpAuuyeE6z8yyRaPcS9SGxaeeOdVsC1KXarjmTOT0D3tVy1i6/selmPD39qEzGZXW2MMSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jtoHtrl8; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=SbRPW1iz; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62CMK3M13285337
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 02:11:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=Z8nQMK/dyX/NcjJbrlQ377Lv
+	LK9n7wIl6HwnSAm5xgg=; b=jtoHtrl8plFtSfni9vWe48+HdC9NYBxh3bJ5jblT
+	1XbNfJg8niVlsX2hdPV5ZcRYwBN3cqVoVr2Q6p7Nw9M9U9brVSk+eap0wNUGvqAU
+	TRoidlBW8PVk2VJK0ZHSfNpbNfy76gnQebtNze7AMNUOWhEjcToL/1sph+Snt8g3
+	vvQ08ohgHwKJYD6HflVtBVUto72+giBJ2VZPUDEvylw3etRDClkpgMEGFbOzo1QH
+	dSVx1kEZ64xUbggvDBWrs8p3+UM7eOPv50lifmfdlV0qFpIJOLI5/cOuToE3LWh9
+	p+ldJgoUNSwd2AsuwBFa+UwQ7WwT+ClqNvp5LqWMZunp4Q==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cuh4w4545-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 02:11:45 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-50937c5b742so67416081cf.2
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2026 19:11:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773360748; x=1773965548; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=riNuyQ7mIoctt4Nrm79i2EVlOIkF+ZTDYIpMnh/XtIM=;
-        b=Lim6HX+xMzOPVP/Pp0w1ILKLhdAUQDcOXkWJAK0WEmjLa0fXXdWPV7MPlK6YcVRJNr
-         ie8KDiYHdeoO97maDvBpVDu+609642Wh1gKr1r7r6uBZELON8yjPN6I9qdaYVyN9bujl
-         RJjZKjZQe2uJ6juToj8jyNYPH1QwVcRjrcYrI31zzFycrKmClkVkzbMYddGtFEf+9Vae
-         pCE7bE+s0nC9exiDdmesglQtpI/p4OEpUfi26s0HqC7eaKb5oHjizuSJTbChWAgkj+AI
-         mbvupb9YnKwK2Ez37WjmENyAptqdsC9VN66QXXUp1lb1fwG0Oj//ycPAjGVFvc/yXjzy
-         3mdg==
+        d=oss.qualcomm.com; s=google; t=1773367904; x=1773972704; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z8nQMK/dyX/NcjJbrlQ377LvLK9n7wIl6HwnSAm5xgg=;
+        b=SbRPW1izwaPnX/ja5Jq+Gl8tTOItLElICkHYIB6jCIGu9Ko53UPSji8oalocta1MEZ
+         FASkw4IvwvOw4u1EaaV3NQPvNuKPHt4Enk28FaN2Wj2gTVAIsNzXad1bC9gT0mvLttkF
+         k2mq502Y69iflIGIHYrEAMPwtNq3G6rZcWLSpXdK2xt1Zg5ThhNjSBaiQf8BkBS6unXT
+         ObvzrWz1xF8a0I08ogg/xvB+OEX1nxhUNsjCJPamYCS11TbnJ/WzRPIwQzbTBikKIak3
+         z7t1R0Lpy+T/gz/OKsVmPzP26nDZb/g49HCNpI6/vZ0Xjy3Z/oEXUm34I5mMHOz/e3GD
+         k7Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773360748; x=1773965548;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=riNuyQ7mIoctt4Nrm79i2EVlOIkF+ZTDYIpMnh/XtIM=;
-        b=H7IUh3LusZN1hBmkQaI1Qp2a0PP+GOKnJKLIEmvPGAJ8TzF5t/f2CKEBw2J5a2baWf
-         rBvRydWaaselwjAbbIQ5A0O8cKCju+BQvxkS55Lwwps1b6Zq/chilFJ7VnO33pJBUc/C
-         fUjbzDr/fl+1W4s8wc31JhtHRZH2b6S4ncngVlKNWCG6trPvJmZlxBxkSYAB6nQ7BIjg
-         j8KIy/rAKYBQ3ba/0C1+QNeUEQo4u9D23GdoYb8WMlUqH5UxbsNE2cEBuQKuJ3WoiWFc
-         j/2uMjJjYg20ear4qJUEhV7mSAW3tD9w3OhoCM3sR8Z6MWXNv5mkYpDDsAnEXoo4rhPC
-         EUDQ==
-X-Gm-Message-State: AOJu0YzQ3vZ4NBszhHmeikcsDgF2ikD0wHdz9f19djJ9LvtO/fenaGGQ
-	rXOskrqJVNYFC3JY9mSLVTScGrjurxFakzejHEsoJ4V7VaBeu5N4uS4X4px9htGh
-X-Gm-Gg: ATEYQzxu7WJTTrSaNVwooNueABHBHWC9uuSX02QUtLi9OFN/AaaN531YFr9SPZHgabR
-	pWbktfKRu2GCKoQA8q5PAZq53XL36JI0OI4AgOb57Frm69EhtGsCAnfWhU4JSN8wYwAtXFUQgVc
-	zPaZisz4wj21wD8MJrHBDr/0Uv4HEQagi8kNx2KyRY7WyQRGY0rV283OBxQzuVoySji8tVhf9CS
-	YMwl3SNxgs3sxBVeySlT/u/lEgjsBkljuvVmI6k8hHlvwfTGykg/ZhyzmbOe0UcY5HEgQmiUgwg
-	h/wgnubY1Mfm/PqjmSErxIxGTEtfcw1xFAISvsmCvQBwfEY9cEdccICXHIFG249Xda2SfKe1njW
-	upW4oKJMhlyhA/ths2DjXqumsBFNe5YMPPu8O10AR/nNQ1iyvwD+fV/pHB7lVEctP57Fp/ihoQ1
-	g8Up3ZGakDHxB3L0t6M52s9FlLhIXsB3ZenwYAdq3WprHhhSS18x0TIQ==
-X-Received: by 2002:a05:690e:44a3:b0:649:38be:34bd with SMTP id 956f58d0204a3-64e63050c8cmr1360709d50.45.1773360747727;
-        Thu, 12 Mar 2026 17:12:27 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-64e65b39dd2sm144411d50.14.2026.03.12.17.12.26
+        d=1e100.net; s=20251104; t=1773367904; x=1773972704;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z8nQMK/dyX/NcjJbrlQ377LvLK9n7wIl6HwnSAm5xgg=;
+        b=PWXw9aaKQk45yg5Z3fXZLp8s0+CpIKkKOEC528zJuEm6mHjJuECjv4+dV91pKvz/M4
+         nM+tprECckACtV3GyaVhw3c6vF8IpF5uS8wenk7N0D0vChxljkN0H0l2gJZdYmKMgtrW
+         c0DqKM134y8sOHv4F3u1ewcGo43dOFFa2YbClxTfSKvslnhJXaFyo2aMGI3ijxRiu1o4
+         Ea7ZHcjy0q5IOzwEyTBCoJMq0H1Om3tJoKcmeMchrTQE0QZDSusUt4xzC5Eoxyxuuzb0
+         yo1dzlgufmFx0paC5NwPV+GijAeNPieKSeHaAQn9NI3z6W2zedy0Eq+tXMjfGFcplc+j
+         YxXw==
+X-Forwarded-Encrypted: i=1; AJvYcCUydiTuvaW90Eqd7KHDa2AtYacrw2BdMilWKFsjShXVMTFt8maxj/04IBUiCINCWvrkPp843dckPQlG@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFcPdTxvzUXZWrkKNwa/5e582OZSKDfc3XGo9EAqqmuj1e4/Ri
+	tTOuVlPdLiHN1QroTsPhvsX+w8w9rg6bYFOP1oKekCo23kzH3Z+bmfuKwP6rVWYfLesJzKGYXns
+	zIAq1GIDbTzeQ4E1i/NapNiKTK2kdm3CwHrSOeAte8LpfIrN+qeCSRdNX7gbQfCet
+X-Gm-Gg: ATEYQzy4m1pcXZ8lTUhZ8FcPUXIlVB6Fm/3Pefv/6HYi6gNpwlbRm2CGpIs6Ei6SP+M
+	xL6YJ5yoPPvzO+4iHqCXfKy4CZxxhYam2yxMtoRl/NuXtu3AJJPEZ4PPx4RD3B+608HxZLE0ynR
+	x1slDdKHCWlGS2bhmsnB6v7AWQ7NtKWMLcYcnmm3DktI5S94N6PRsu94YqPOVCNQa9VuydFcmmb
+	9uciNzPp96cwq5I25QpyOvp30WLY3lvZtyG2demBxf6ykpMwkzifLLtDQCe5yTPUq+hyy8pdThf
+	THuigcO3mvahI7HCqzIq/BrWpz0OLTg6dXMD3apA2D0F4ooKRYYJfC1Csaz0FjqouYAHb+w0/yy
+	hrOzO8BvQ8VUJDafNikz2dDYjVvOMZ92Gy7DnXynYpwxeZ+qSXvuBY/tJ5CbT4NvhQGFBEpbl1m
+	8cSXb3/ygkn5qvPNobGZIX9mpvZFFBUuf0B1k=
+X-Received: by 2002:a05:620a:2549:b0:8cd:98c1:763f with SMTP id af79cd13be357-8cdb5a4abfdmr257099985a.11.1773367904030;
+        Thu, 12 Mar 2026 19:11:44 -0700 (PDT)
+X-Received: by 2002:a05:620a:2549:b0:8cd:98c1:763f with SMTP id af79cd13be357-8cdb5a4abfdmr257097885a.11.1773367903551;
+        Thu, 12 Mar 2026 19:11:43 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a156162c12sm1222960e87.52.2026.03.12.19.11.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2026 17:12:27 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] gpio: cs5535: use dynamically allocated priv struct
-Date: Thu, 12 Mar 2026 17:12:09 -0700
-Message-ID: <20260313001209.117823-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+        Thu, 12 Mar 2026 19:11:42 -0700 (PDT)
+Date: Fri, 13 Mar 2026 04:11:39 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Maulik Shah <maulik.shah@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+        Linus Walleij <linusw@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Sneh Mankad <sneh.mankad@oss.qualcomm.com>
+Subject: Re: [PATCH 1/5] arm64: dts: qcom: x1e80100: Remove interconnect from
+ SCM device
+Message-ID: <bnaxwhrfeer3n62xp5rka4pq4mz6y5xxwsin2vavc5zcj3ymxj@splrj22ki445>
+References: <20260312-hamoa_pdc-v1-0-760c8593ce50@oss.qualcomm.com>
+ <20260312-hamoa_pdc-v1-1-760c8593ce50@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260312-hamoa_pdc-v1-1-760c8593ce50@oss.qualcomm.com>
+X-Proofpoint-GUID: _4T9WOQTg1hYFJcjTd3LdtaCGoKJc1qH
+X-Authority-Analysis: v=2.4 cv=Cpays34D c=1 sm=1 tr=0 ts=69b37261 cx=c_pps
+ a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=buI6ytlUu26sYBdjsKoA:9 a=CjuIK1q_8ugA:10
+ a=a_PwQJl-kcHnX1M80qC6:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: _4T9WOQTg1hYFJcjTd3LdtaCGoKJc1qH
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzEzMDAxNiBTYWx0ZWRfXxlBA188avxvj
+ mvZmHkwGhFGdl+wuorlvnnKuB4RISC9otChh65kd0rmEEj99llaTyM0kk3cS3ZXPjDFE5TNcyHD
+ MqzoB2Ld2O/kEL5N7CCS7Ol5OXPF6ApHPo8SZwDc5lpBBBntM6+KghUOiIksYdlGvZLxYPDJkkR
+ gP6Sz2jhh/64xYo6ablFXh/CLb+oiMQDJJ0u86CeuxIEFS7gmX78nDulznmtM8gmvIi0DDr9817
+ McE+QJlZNViudUNjiSkT0iqTafzB/btcgiwMZ9bP4rAENfgltNTQKXlBF8kuvtiOZUO83ItmuLl
+ eI/FT3xaEnoE1LIM8EvJbcXQ+Mt3P9vz/SgKPCivcbEqVedzVBiZnZxBYVJ6mV2dFNUjlvb4QuW
+ Dh1JvdRUEboQpEWcJpfRBwLtpCD0ojl1rdOuXPFYyUK8MqEjK0PRoB22lc+OOcdRtYybIK75m3d
+ 84Fwa14bPBCyX76Nfaw==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-12_03,2026-03-12_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 phishscore=0 adultscore=0 clxscore=1015 lowpriorityscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 impostorscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603130016
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33304-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-33305-lists,linux-gpio=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[dmitry.baryshkov@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	NEURAL_HAM(-0.00)[-0.997];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 312B827B7B7
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 992D827C9D3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Static allocation is deprecated.
+On Thu, Mar 12, 2026 at 09:26:35PM +0530, Maulik Shah wrote:
+> Interconnect from SCM device are optional and were added to get
+> additional performance benefit. These nodes however delays the
+> SCM firmware device probe due to dependency on interconnect and
+> results in NULL pointer dereference for the users of SCM device
+> driver APIs, such as PDC driver.
 
-Remove the FIXME as gpiochip_add_data allows using gpiod_get_data.
-No need for container_of.
+This sounds like a bug in the PDC driver. It should reject being probed
+before SCM is available.
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/gpio/gpio-cs5535.c | 48 +++++++++++++++++---------------------
- 1 file changed, 21 insertions(+), 27 deletions(-)
+> 
+> Remove them from the scm device to unblock the user.
+> 
+> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
+> ---
+>  arch/arm64/boot/dts/qcom/hamoa.dtsi | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/hamoa.dtsi b/arch/arm64/boot/dts/qcom/hamoa.dtsi
+> index d7596ccf63b90a8a002ad6e77c0fb2c1b32ec9c8..ebecf43e0d462c431540257e299e3ace054901fd 100644
+> --- a/arch/arm64/boot/dts/qcom/hamoa.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/hamoa.dtsi
+> @@ -308,8 +308,7 @@ eud_in: endpoint {
+>  	firmware {
+>  		scm: scm {
+>  			compatible = "qcom,scm-x1e80100", "qcom,scm";
+> -			interconnects = <&aggre2_noc MASTER_CRYPTO QCOM_ICC_TAG_ALWAYS
+> -					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
+> +			/* TODO: add interconnects */
 
-diff --git a/drivers/gpio/gpio-cs5535.c b/drivers/gpio/gpio-cs5535.c
-index 8affe4e9f90e..5f5373d86397 100644
---- a/drivers/gpio/gpio-cs5535.c
-+++ b/drivers/gpio/gpio-cs5535.c
-@@ -39,10 +39,6 @@ static ulong mask = GPIO_DEFAULT_MASK;
- module_param_named(mask, mask, ulong, 0444);
- MODULE_PARM_DESC(mask, "GPIO channel mask.");
- 
--/*
-- * FIXME: convert this singleton driver to use the state container
-- * design pattern, see Documentation/driver-api/driver-model/design-patterns.rst
-- */
- static struct cs5535_gpio_chip {
- 	struct gpio_chip chip;
- 	resource_size_t base;
-@@ -285,30 +281,29 @@ static const char * const cs5535_gpio_names[] = {
- 	"GPIO28", NULL, NULL, NULL,
- };
- 
--static struct cs5535_gpio_chip cs5535_gpio_chip = {
--	.chip = {
--		.owner = THIS_MODULE,
--		.label = DRV_NAME,
--
--		.base = 0,
--		.ngpio = 32,
--		.names = cs5535_gpio_names,
--		.request = chip_gpio_request,
--
--		.get = chip_gpio_get,
--		.set = chip_gpio_set,
--
--		.direction_input = chip_direction_input,
--		.direction_output = chip_direction_output,
--	},
--};
--
- static int cs5535_gpio_probe(struct platform_device *pdev)
- {
-+	struct cs5535_gpio_chip *priv;
-+	struct gpio_chip *gc;
- 	struct resource *res;
- 	int err = -EIO;
- 	ulong mask_orig = mask;
- 
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	gc = &priv->chip;
-+	gc->owner = THIS_MODULE;
-+	gc->label = DRV_NAME;
-+	gc->ngpio = 32;
-+	gc->names = cs5535_gpio_names;
-+	gc->request = chip_gpio_request;
-+	gc->get = chip_gpio_get;
-+	gc->set = chip_gpio_set;
-+	gc->direction_input = chip_direction_input;
-+	gc->direction_output = chip_direction_output;
-+
- 	/* There are two ways to get the GPIO base address; one is by
- 	 * fetching it from MSR_LBAR_GPIO, the other is by reading the
- 	 * PCI BAR info.  The latter method is easier (especially across
-@@ -329,9 +324,9 @@ static int cs5535_gpio_probe(struct platform_device *pdev)
- 	}
- 
- 	/* set up the driver-specific struct */
--	cs5535_gpio_chip.base = res->start;
--	cs5535_gpio_chip.pdev = pdev;
--	spin_lock_init(&cs5535_gpio_chip.lock);
-+	priv->base = res->start;
-+	priv->pdev = pdev;
-+	spin_lock_init(&priv->lock);
- 
- 	dev_info(&pdev->dev, "reserved resource region %pR\n", res);
- 
-@@ -347,8 +342,7 @@ static int cs5535_gpio_probe(struct platform_device *pdev)
- 				mask_orig, mask);
- 
- 	/* finally, register with the generic GPIO API */
--	return devm_gpiochip_add_data(&pdev->dev, &cs5535_gpio_chip.chip,
--				      &cs5535_gpio_chip);
-+	return devm_gpiochip_add_data(&pdev->dev, gc, priv);
- }
- 
- static struct platform_driver cs5535_gpio_driver = {
+Somebody will try to fix this TODO, reverting this patch. Let's find a
+better way to handle it (which would also fit other platforms).
+Originaly this was proposed by Sibi ([1]) to speed up PAS
+authentication. Other platforms require RPM or GCC clocks to let the
+firmware access crypto core.
+
+One of the (stupid) ideas would be to add a separate SCM (child?) device
+which would be used for crypto-related SCM calls. I'd like to point out
+that currently we bump those clocks or NoC bandwidth, but at the same
+time we don't vote on the CX rail. I'm not sure of the firmware handles
+that somehow or not.
+
+[1] https://lore.kernel.org/all/1653289258-17699-1-git-send-email-quic_sibis@quicinc.com/
+
+>  			qcom,dload-mode = <&tcsr 0x19000>;
+>  		};
+>  
+> 
+> -- 
+> 2.34.1
+> 
+
 -- 
-2.53.0
-
+With best wishes
+Dmitry
 
