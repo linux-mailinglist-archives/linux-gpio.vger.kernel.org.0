@@ -1,146 +1,125 @@
-Return-Path: <linux-gpio+bounces-33407-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33408-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cFD/CNGYtGnMqwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33407-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 00:08:01 +0100
+	id qEm0NuSftGlGrQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33408-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 00:38:12 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22C3C28A98F
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 00:08:00 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3966328AB68
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 00:38:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 0E9DC3019E08
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 23:07:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A6F04305E319
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 23:38:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D6583D6666;
-	Fri, 13 Mar 2026 23:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 969DA3D5655;
+	Fri, 13 Mar 2026 23:38:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MiDBX56F"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJ8Ek8wz"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4117226A08A;
-	Fri, 13 Mar 2026 23:07:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7793E317D
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 23:38:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773443273; cv=none; b=bTSsDM07W0SWecvo70bx41B7ur0QkQOBF14PlQ908Q23ZLk0Zgi65xypAZmsxyiXuIFgYBBnL+TcIVvZp8Uge0L/+BNHsNJLpJwcHCMobftCoG3dJWJQsfNY9EUjNY60sxUuuPB5uyqscLiv7+pjDRpblvJHF/wvZI5AVGM7tWg=
+	t=1773445087; cv=none; b=oK8PxWXWY2CUMMEoOUqWWFs7UdbkSN83MlEOchOb5w4So2nxv8RtVzE9Q1xHtbDXtZDfF04rRt/hMvsF80xOPDaVYT+ShgC5q2t6TZXQGbX9AdKfzZJL9W2WXqcR5mQd8mScHSqtXT2ofNB8SFQQO4Qrc4+dGOFaibu/Gnt8nLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773443273; c=relaxed/simple;
-	bh=U0JR/zwuYItOTXr794DeYP/MNrGW1PbPk4aqVvSPkW8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=T4SUFGcNi7OjrA+S5zIeKeePo5xlQPej2D3iYvuMNiYkwJTvR5vYVk21xHfzywaCbbYHQTBZW19PNpKjqUSJW4VBRgvNo+Mz9RXTlkE6LW6BrTJ73wR7BteScReh0syr3UIbU9qYqADtgFt4ZJjN6ephG3uBLpPjgFGJlLDi0Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MiDBX56F; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3193C19421;
-	Fri, 13 Mar 2026 23:07:51 +0000 (UTC)
+	s=arc-20240116; t=1773445087; c=relaxed/simple;
+	bh=KKnxkDEoWNIa9pNZxrMGY1sk/rXEff2G80DmQM2Dzps=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LwDekeHxdzwXjzvt4O8JG2EPFHK+19XlwfzCXR07C7F1j64bvxn/wzYS8cURvznuyw5wQF+moFPKyvvzHl5KL/ULK0LSLZMX93ZXvcI17DvimTJi9rimOosMI0OlIQQpTCeVgR13rlDqyzlLIdMcTNfoKBoELf+i3YN1lEAXrfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJ8Ek8wz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03F25C2BC86
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 23:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773443272;
-	bh=U0JR/zwuYItOTXr794DeYP/MNrGW1PbPk4aqVvSPkW8=;
-	h=From:Date:Subject:To:Cc:From;
-	b=MiDBX56F0ySdjf0NrEcx67BqjTRTocZm6eiYhzloqJ2D4KzNmqk1sPmILuDkAvNO2
-	 KmU5/+LNPTugLPgYKn9+qsb8y0b5ef9KFp5fdhmebvnBhlkJzsXk0JA5/H0CqguMM3
-	 HTeV2ENYHzcxJcT+Tljd5/xiPqCbkmv5/BXVQWFMMBpzoqJuf+2sMPHSnDjPFKvbjv
-	 WfVPCD5ZkwZ3iaGaCdPe3rumZJxuRKw61T6BlXa1IgCP/+qlDxer508hm9kYdr96hV
-	 h5P5WvWub5Yd8wEhWWSFzJTBZ6XXCVHz6QmxCeTHlQWBXytFgnroUlnNNY2u7NwOFA
-	 uK8VBfGc5Iwdw==
-From: Linus Walleij <linusw@kernel.org>
-Date: Sat, 14 Mar 2026 00:07:50 +0100
-Subject: [PATCH v2] Do not enable the v1 uAPI by default
+	s=k20201202; t=1773445087;
+	bh=KKnxkDEoWNIa9pNZxrMGY1sk/rXEff2G80DmQM2Dzps=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=kJ8Ek8wzxzBaaxN/ED11y24Z/23/TEY9a3hodUvSb+6Y9jaeooLteE2tbs9Bn+O21
+	 k0oaV8YtVHY/szKNLAUrlWv4QysvzUk81GVUMyby8QiQPy5v7QHLy23S+YCb4Kot76
+	 L/WctlyOo3swfUgk1If6U1vmDguihYbsazTSFEKBuur7kvGBjuWF3wqjLoPKnxH5JW
+	 Wt9Jdik6y37//+Rcdpu+mBuadUxjx9xe+Ao+itcqFkmcLzUYXzXCMn+V0dZRRSa2aH
+	 JlO1lbgS7ECFTKlyBfvHneHC+YdM7Us0eOZIEiBM9eBPNfcgbB41xAk5PSxxzDQIa7
+	 6XuR0lua5uILg==
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-78fc4425b6bso28634627b3.1
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 16:38:06 -0700 (PDT)
+X-Gm-Message-State: AOJu0YzIkqFAGtSMhA99XebMhw5NxcUT82z/2ZHSo2ZqfwwrxXGqkjFL
+	EYxVaahnaREgwKFKulL/AVYEFtQypr5iF14kzP6WAaqHpHMFvbtxTvOwDrH0QL12xnjhsePb4dA
+	TCZgkBAMpT8qK82vhTwSBUOwqGbkCay0=
+X-Received: by 2002:a05:690c:d91:b0:798:56eb:f227 with SMTP id
+ 00721157ae682-79a1c0cf55emr58534237b3.23.1773445086387; Fri, 13 Mar 2026
+ 16:38:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260314-no-y-uapi1-default-v2-1-578f09c91b8f@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/22NQQqDMBBFryJZd0omCSJd9R7FRTQTHZBEEpWKe
- PemQnddvgf//UNkSkxZPKpDJNo4cwwF1K0S/WjDQMCusFBSaUSpIUTYYbUzIzjydp0WMEoaaup
- eGqtFGc6JPL+v6KstPHJeYtqvjw2/9pcz/3IbAoKvpdPYdLXv6DlxsCneYxpEe57nB37Ylhe1A
- AAA
-X-Change-ID: 20231103-no-y-uapi1-default-4204e86c04a3
-To: Linus Walleij <linusw@kernel.org>, 
- Bartosz Golaszewski <brgl@kernel.org>, Kent Gibson <warthog618@gmail.com>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Linus Walleij <linusw@kernel.org>
-X-Mailer: b4 0.14.3
+References: <cover.1773399246.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1773399246.git.geert+renesas@glider.be>
+From: Linus Walleij <linusw@kernel.org>
+Date: Sat, 14 Mar 2026 00:37:55 +0100
+X-Gmail-Original-Message-ID: <CAD++jL=vBnHG_Wc4_nFFgYN9COS-d0Ak1KMXTk3tFphiEQbnWA@mail.gmail.com>
+X-Gm-Features: AaiRm51fXy_bp1rfhDcRF-amClZFYUPa_cs0-2DaSvYhRXjN9lRBn9NNXnIYXcU
+Message-ID: <CAD++jL=vBnHG_Wc4_nFFgYN9COS-d0Ak1KMXTk3tFphiEQbnWA@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: renesas: Fixes for v7.0
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33407-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,linux.intel.com];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	TAGGED_FROM(0.00)[bounces-33408-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 22C3C28A98F
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,glider.be:email]
+X-Rspamd-Queue-Id: 3966328AB68
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-It's been five years since we introduced the v2 uAPI and
-the major consumer libgpiod is at v2.2.3.
+On Fri, Mar 13, 2026 at 12:12=E2=80=AFPM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-Let's discourage the old ABI.
+> The following changes since commit 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f2=
+7f:
+>
+>   Linux 7.0-rc1 (2026-02-22 13:18:59 -0800)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
+ tags/renesas-pinctrl-fixes-for-v7.0-tag1
+>
+> for you to fetch changes up to fb22bb9701d48c4b0e81fe204c2f96a37a520568:
+>
+>   pinctrl: renesas: rza1: Normalize return value of gpio_get() (2026-03-1=
+0 10:33:47 +0100)
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-Changes in v2:
-- Rebase on v7.0-rc1
-- Do not explicitly state "default n", n is the default.
-- Drop RFC, I waited like two years+
-- Link to v1: https://lore.kernel.org/r/20231104-no-y-uapi1-default-v1-1-f60d318b6fbe@linaro.org
----
- drivers/gpio/Kconfig | 3 ---
- 1 file changed, 3 deletions(-)
+Pulled in for fixes, thanks Geert!
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index b45fb799e36c..d574e5fb851d 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -95,7 +95,6 @@ config GPIO_CDEV
- 
- config GPIO_CDEV_V1
- 	bool "Support GPIO ABI Version 1"
--	default y
- 	depends on GPIO_CDEV
- 	help
- 	  Say Y here to support version 1 of the GPIO CDEV ABI.
-@@ -103,8 +102,6 @@ config GPIO_CDEV_V1
- 	  This ABI version is deprecated.
- 	  Please use the latest ABI for new developments.
- 
--	  If unsure, say Y.
--
- config GPIO_GENERIC
- 	depends on HAS_IOMEM # Only for IOMEM drivers
- 	tristate
-
----
-base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
-change-id: 20231103-no-y-uapi1-default-4204e86c04a3
-
-Best regards,
--- 
-Linus Walleij <linusw@kernel.org>
-
+Yours,
+Linus Walleij
 
