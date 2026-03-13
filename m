@@ -1,93 +1,117 @@
-Return-Path: <linux-gpio+bounces-33388-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33389-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EGxPJeQhtGl7hwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33388-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 15:40:36 +0100
+	id IE4zNtoktGl7hwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33389-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 15:53:14 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDACA2852C2
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 15:40:35 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90174285573
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 15:53:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3F1FA30BA36F
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 14:40:31 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 3A9E9305650B
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 14:49:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3108F3A4F5A;
-	Fri, 13 Mar 2026 14:40:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEDD53B0ADB;
+	Fri, 13 Mar 2026 14:47:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EGbAEev7"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="g1+Fkfqy";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="VFux0IXB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA95372B22;
-	Fri, 13 Mar 2026 14:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED32B3AEF41
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 14:47:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773412830; cv=none; b=bX8P1jMpp5BfTKzfbsyJFoY969mww3ljUolwYS2v3pDkR4+kjTQM101Px7CvhL17wyMzWmz7EF8Q2Z7ym4s2ZzD+z1INYgmABId67PCf9BNo2bh7e3RqppVUokZrYCqcHc0+kjDurjESZR2oMWaeKolV01wrpQy3apjG5PZEN7M=
+	t=1773413275; cv=none; b=fneNDwLpIkl6Bmw7wf/NyKmoD63Mn/R18pM9uzDSwOcroG9VXfVhD2DeVzz+qhjHcErufTq6sH4I0hhI3K/LvVtED4WNoa7RmNiLe2iKoRdoz0DH/W69FJUmlvBxZjz4g/cYG+t6KUjCmoftNjTnksoSD6jsi9M36jt1VU8BiUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773412830; c=relaxed/simple;
-	bh=d23l5QfZILL92TANqDOqm0WjgNLDASSxYAanpTwaEgE=;
+	s=arc-20240116; t=1773413275; c=relaxed/simple;
+	bh=BwyR3wMEIv+XOoo4gD08vL2uWYEwf9XPM06RxHZmicA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LbYjLy1lDxd/97UyVqHFz6k4M62X59Z8i8awDxEL8pUDYsCDkKPD9WYBhq/CDPmBmX5/7xHzIduzXmjbGyg+uZGKWC4QkbV7IvFrvzS3+xtb2DDLGmf9RAod64hh6uiv4wuf5LJKRPrqH/7XQrWXt4GvXGe1E7tpXlp3q/0RY00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EGbAEev7; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773412828; x=1804948828;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=d23l5QfZILL92TANqDOqm0WjgNLDASSxYAanpTwaEgE=;
-  b=EGbAEev7miV1BJjqzfAtGilgzJ6wbn3TF37tNjvaFhIAE32cbq5x12Pa
-   puSuGkBMEm2Xsi1eHALpoLF6KRug/ENzAZw8ncKixsDXGBrjVu0RC5HRd
-   GadDxOgefoumjJfYQqe6SfNhCuL0ZCrajzy/Y7n8E6/DXDFE3pD5Wv2b9
-   zueXNB82dQvj/EOxIkRHyXTo5Cr+7PvFUSGEKeE7ooE48BPfbQDh2yMes
-   bFKEG7hIL/XrF6waGg3vXpoYV8mdeBCF/rZKaRjG6YfKg4CsWezbRru+z
-   XSynfdtNys+nfuUyKf7wOOtHnxrrRKPZd6SzD/m3ZpcdU9ygDzE5eBDMx
-   g==;
-X-CSE-ConnectionGUID: G/dvZH0LQFaussNxKmw1wA==
-X-CSE-MsgGUID: Uqvw0KZ3Tu+wvuhPD66L3w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11728"; a="62090732"
-X-IronPort-AV: E=Sophos;i="6.23,118,1770624000"; 
-   d="scan'208";a="62090732"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2026 07:40:28 -0700
-X-CSE-ConnectionGUID: k7P44SedR9iseEQORDQ+MA==
-X-CSE-MsgGUID: fZ+VfvuWSh6RDMwVkZXiOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,118,1770624000"; 
-   d="scan'208";a="217597282"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.246])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2026 07:40:23 -0700
-Date: Fri, 13 Mar 2026 16:40:21 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	"Hennerich, Michael" <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	"Sa, Nuno" <Nuno.Sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3 3/4] iio: adc: ad4691: add triggered buffer support
-Message-ID: <abQh1Y5_oGyvIxwT@ashevche-desk.local>
-References: <20260313-ad4692-multichannel-sar-adc-driver-v3-0-b4d14d81a181@analog.com>
- <20260313-ad4692-multichannel-sar-adc-driver-v3-3-b4d14d81a181@analog.com>
- <abPxR0TVa70sMg38@ashevche-desk.local>
- <LV9PR03MB841415AA5DB9FFB714710CC3F745A@LV9PR03MB8414.namprd03.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bLHbYr2Cq8qj875dmFa9OllQ98KxsYopcI0wlpKYbvOccBSYbcnVJNrdPUJvngq+zzlt+9O8mUyCTxj4gpwvm+7pMt2gdm9aPl3sclmOtieDl4Asdc9VdSujyxtCHf4AXyaE3Mvg/+8YP26RmaYUu4yv1I0TF313egTIINw7u/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=g1+Fkfqy; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=VFux0IXB; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62DAmvMA2391118
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 14:47:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=EIjzCgcCqS7gor9O/lJVl3Uf
+	7RzlS6vZQX73cMseU68=; b=g1+FkfqymcZfTK8YTMn9wpWbqvfIbhBqJ1PqC9Xj
+	yKJHhJIEcvzhGKb1nBF1hAmcfEzfjVzTbrDcWpvEGM/8IjnEVHXfDoChDfZo/hJA
+	XU4Uz7Xxrs2GM49gxNwg8VL0UmtCM1gUmApFoDHYSBxBxjD+Y1N4lIFfO+vh4xMt
+	+JsIgFna/9vnaI7f4l0y6kbjRgg2N8NxU7aQX9bOvq2zUdxxJDocQGN13Go4Qfei
+	vtNjBX6t30wgeaYEwUuUbALTuu5Zl5GSdOu7z6ohnCpJQ1BpL/ZdhECVmdttTVQO
+	uDGEeB/VdirBcmLXZRmxwTMJcKVFZYgm/I7+9YSpXT7eyw==
+Received: from mail-ua1-f72.google.com (mail-ua1-f72.google.com [209.85.222.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cvh5m8scj-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 14:47:49 +0000 (GMT)
+Received: by mail-ua1-f72.google.com with SMTP id a1e0cc1a2514c-94ea747d58eso2166255241.2
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 07:47:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1773413269; x=1774018069; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EIjzCgcCqS7gor9O/lJVl3Uf7RzlS6vZQX73cMseU68=;
+        b=VFux0IXBWPfzNkQ7elO+u57wA9waIb/zmQC0Am4YFUx/nNVC06TzTmZPg9X0lBI37C
+         JDqxuWMTC2tiZnqegWr6jSpC04PEq3V0n90qvM6H1HYARvTFUGdQUujlWQT5B7TEwwdP
+         XT4HRRKXb7rGELxBaeTYsKLqm19SZHZgqZ1qjX/nFtqsTRTohw7ooUF1RBo9zhnGkNw5
+         WDdrVypHQ+EHPFHNmM9u3aedPpTNETzGrgX4hzTVbtWIVKWlE0m/yD6Ffw/mDQkK+/Jz
+         vt7F+JwFtn2Ga0xMEHcA5YPWvxjc5okMLbG2TelNzdIWqk6kRJyeLVn8nkNXLOni5czB
+         I+kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773413269; x=1774018069;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EIjzCgcCqS7gor9O/lJVl3Uf7RzlS6vZQX73cMseU68=;
+        b=mDz2G19/paGae4UdpDHKg/tTiiDDTB0Ri0KNNe7LULlJnz/Ut2UqHQYHQksCHLLSX5
+         xcbtdSB8rdxlA/CH7R051dnbQ0X06IUD7KSG6kfiLpPr4QHZETtUSObNzt/u1fxEcDVk
+         ZUrXI7VxdOaG9/SDIEKLFW8MK76rg1TG/mqX38vUnEg+4w4aUqEu4cy9wHZMcluzEBku
+         OMEv8GDhA7K/jRsan7OI5TZdVAk101Jt1dFZcv3jUldxYNiGFzVtNVadJSxg1AOZ1kc9
+         J6OKi1plNRh3C8GMxJ0lf1/GgTGT1BcMv9zCPFPB/EdMIEpQl5P0Cskg/mcO56zn38Wm
+         UYxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXEOzx5CCrQKzBZtpsbxGkJJvDa9z2LLm784QMP9JuMOepMtvVO0Y1Rjd7jLD802d1GV5IO5cXUvQk+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZjnZ/4Go8zVIsp6XlA0rQ6hPzeTVxtFd9EOGgK/+ZoE81ee5G
+	izYwUxU0keS4V1C5tfsbxyEl7b2GnPlrHhgDw3oNcelvPXpAwhhZ+fGTWQWxl71gKXq3RREEXgS
+	qlFHra9RyjsVVGuzqBJ36ilBPBd1GbNET5oWhyiJISURJLil+WhkNErYBgz1uwLfI
+X-Gm-Gg: ATEYQzyOaFGARUg0ymeZfQPgPlJ1ozJUfCFSKawLXIZUpS88bB8X94rTnVAI9JhPNsx
+	9YJ0CDkSXPPsP5t3W/aFDWAaMLy6av26/mRJUrOwY5gb5ZA0zGSFms3T0hsyFOfNzH6oJGF9nTe
+	KTnkFd6bCDn7A45E0PvVSmZz1XqJRiNrv+a7Xt3ErEQSlnGBWUWiXK20gJuqoSHriWr/z075Kkt
+	rXv+XBH571s/Df+/X8n70uCp2FCEwQlDXf2wnz09U5uuBWUgnEHT3nA04ULi8Uq1RbYnzF5IgQ7
+	KLuAHE36Ssn3KhjPfSuHX9GKLGYJRuLRQAUS0d02DGo75imwR8t0pKe5w0Z2wKasd0cQV7gSRdo
+	+SbBdwKTVx07a0YeOkbfPku0nVq/vbysJMCnx0BJ/TYl9wDp6+XwsILbAwlEjlHuqYdBzPjzIUV
+	NE8SNttGZQqIRnkGAFv5S/u2bte/fnywRdTUg=
+X-Received: by 2002:a05:6102:ccd:b0:600:11e1:2a4b with SMTP id ada2fe7eead31-6020e5a22bbmr1418122137.34.1773413268838;
+        Fri, 13 Mar 2026 07:47:48 -0700 (PDT)
+X-Received: by 2002:a05:6102:ccd:b0:600:11e1:2a4b with SMTP id ada2fe7eead31-6020e5a22bbmr1418106137.34.1773413268328;
+        Fri, 13 Mar 2026 07:47:48 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-38a67e7dfb3sm14777811fa.45.2026.03.13.07.47.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2026 07:47:46 -0700 (PDT)
+Date: Fri, 13 Mar 2026 16:47:45 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: "Maulik Shah (mkshah)" <maulik.shah@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+        Linus Walleij <linusw@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Sneh Mankad <sneh.mankad@oss.qualcomm.com>
+Subject: Re: [PATCH 1/5] arm64: dts: qcom: x1e80100: Remove interconnect from
+ SCM device
+Message-ID: <ro25acm4voifctjfd4hj2v22ulcx7mj4xugzkr3ai34eft6r7b@vhfajna3djja>
+References: <20260312-hamoa_pdc-v1-0-760c8593ce50@oss.qualcomm.com>
+ <20260312-hamoa_pdc-v1-1-760c8593ce50@oss.qualcomm.com>
+ <bnaxwhrfeer3n62xp5rka4pq4mz6y5xxwsin2vavc5zcj3ymxj@splrj22ki445>
+ <198ccf60-a4b9-438b-ad92-bc4d2cc84b83@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -96,106 +120,205 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <LV9PR03MB841415AA5DB9FFB714710CC3F745A@LV9PR03MB8414.namprd03.prod.outlook.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+In-Reply-To: <198ccf60-a4b9-438b-ad92-bc4d2cc84b83@oss.qualcomm.com>
+X-Proofpoint-ORIG-GUID: 14QueS8IkdC5NBW3wMpFV4TiDeBZq0Se
+X-Proofpoint-GUID: 14QueS8IkdC5NBW3wMpFV4TiDeBZq0Se
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzEzMDExNiBTYWx0ZWRfX12LmezE7OczR
+ mEjzMrM8/qUuXFTWilYi6sngJqwCKqGQ4pVtGzIuG3tj2Br3U1W2RQuH9HOrudHhBQ3nYqbxq8T
+ 5t14kP2ztRzfq06ZP2NcUGDav25PFwljJZDMTQARRMhjYrvoX2WaPdfKJG6lkqWU+EFHhfQtA+R
+ biDgjW+Jcv0lo+UI3Mpqv6a5XE1V3jikkYn5Jk6h00KtxkFlRAaXigG932EdtTR2HHtC3AEWJ/E
+ Z6QER5U994BHP76q6a7JFJqONWsrGjw2kBgLaQX75x5FwzzH0VzBJ3YJyMLLjVRRz3Btb/5/gUI
+ nGiqCJVR/NCx4JU/LzbqkGjDQwepTbUhT6mFHUea7piRhdz9sxpyrX07bPQaz1bCArFolULnyti
+ KQBhj8mgyqPfRqL9/ackqIGfCzrhhm1eu//kS4hhwbuWhrn9MGepMnVp1gsKsTkKYsu0Xc7Rj7o
+ IbSJATEtaAEV5tD/OMg==
+X-Authority-Analysis: v=2.4 cv=S6TUAYsP c=1 sm=1 tr=0 ts=69b42395 cx=c_pps
+ a=ULNsgckmlI/WJG3HAyAuOQ==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=DApZc1ZKry7Yto7750kA:9 a=CjuIK1q_8ugA:10
+ a=1WsBpfsz9X-RYQiigVTh:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-13_02,2026-03-13_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 phishscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 malwarescore=0 spamscore=0 impostorscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603130116
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	TAGGED_FROM(0.00)[bounces-33388-lists,linux-gpio=lfdr.de];
-	HAS_ORG_HEADER(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-33389-lists,linux-gpio=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,qualcomm.com:dkim,qualcomm.com:email];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[dmitry.baryshkov@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ashevche-desk.local:mid]
-X-Rspamd-Queue-Id: EDACA2852C2
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 90174285573
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Mar 13, 2026 at 12:09:55PM +0000, Sabau, Radu bogdan wrote:
-> > -----Original Message-----
-> > From: Andy Shevchenko <andriy.shevchenko@intel.com>
-> > Sent: Friday, March 13, 2026 11:13 AM
-> > On Fri, Mar 13, 2026 at 12:07:27PM +0200, Radu Sabau via B4 Relay wrote:
-
-...
-
-> > > -#define AD4691_ACC_COUNT_VAL			0x3F
-> > > +#define AD4691_ACC_COUNT_VAL			0x01
-> > 
-> > No ping-pong, and actually this was not used at all. So, make sure you add
-> > constants when they are really started being used.
+On Fri, Mar 13, 2026 at 03:42:32PM +0530, Maulik Shah (mkshah) wrote:
 > 
-> This value is being used in the buffer_postenable in order to make
-> sure we don't encounter oversampling, since Manual Mode doesn't
-> oversample, and per Jonathan's review, there is no reason to support
-> both oversampled and raw readings at the same time.
-
-Yes, but it wasn't used before this patch.
-
-...
-
-> > > +static int ad4691_setup_triggered_buffer(struct iio_dev *indio_dev,
-> > > +					 struct ad4691_state *st)
-> > > +{
-> > > +	struct device *dev = regmap_get_device(st->regmap);
-> > > +	struct spi_device *spi = to_spi_device(dev);
-> > > +	int irq, ret;
-> > > +
-> > > +	st->trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
-> > > +					  indio_dev->name,
-> > > +					  iio_device_id(indio_dev));
-> > 
-> > It seems you ignored some of my comments. Please go back and read carefully
-> > what I commented on previous version of the series.
 > 
-> I am very sorry for this. I may have misunderstood the comments, and thus
-> seem like I ignored them, but this wasn't my intention at all.
+> On 3/13/2026 7:41 AM, Dmitry Baryshkov wrote:
+> > On Thu, Mar 12, 2026 at 09:26:35PM +0530, Maulik Shah wrote:
+> >> Interconnect from SCM device are optional and were added to get
+> >> additional performance benefit. These nodes however delays the
+> >> SCM firmware device probe due to dependency on interconnect and
+> >> results in NULL pointer dereference for the users of SCM device
+> >> driver APIs, such as PDC driver.
+> > 
+> > This sounds like a bug in the PDC driver. It should reject being probed
+> > before SCM is available.
+> 
+> The SCM driver provides no way to check if its ready or not to decide to reject/defer the probe.
+> A new API like below would be needed here,
 
-When in such a situation, ask! A request is free and acceptable.
+qcom_scm_is_available() ?
 
-> If you refer to the trigger_alloc comment, I did talk to my senior colleagues
-> and they referred to the fact -ENOMEM return should have been enough,
-> but perhaps this was wrong too. Could you please clarify?
+> 
+> int qcom_scm_ready(void)
+> {
+>         if (__scm == NULL || __scm->dev == NULL)
+>                 return -EPROBE_DEFER;
+>         return 0;
+> }
+> EXPORT_SYMBOL_GPL(qcom_scm_ready);
+> 
+> This is inline with what cmd-db does today with cmd_db_ready() API.
+> (drivers/soc/qcom/cmd-db.c).
+> 
+> > 
+> >>
+> >> Remove them from the scm device to unblock the user.
+> >>
+> >> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
+> >> ---
+> >>  arch/arm64/boot/dts/qcom/hamoa.dtsi | 3 +--
+> >>  1 file changed, 1 insertion(+), 2 deletions(-)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/qcom/hamoa.dtsi b/arch/arm64/boot/dts/qcom/hamoa.dtsi
+> >> index d7596ccf63b90a8a002ad6e77c0fb2c1b32ec9c8..ebecf43e0d462c431540257e299e3ace054901fd 100644
+> >> --- a/arch/arm64/boot/dts/qcom/hamoa.dtsi
+> >> +++ b/arch/arm64/boot/dts/qcom/hamoa.dtsi
+> >> @@ -308,8 +308,7 @@ eud_in: endpoint {
+> >>  	firmware {
+> >>  		scm: scm {
+> >>  			compatible = "qcom,scm-x1e80100", "qcom,scm";
+> >> -			interconnects = <&aggre2_noc MASTER_CRYPTO QCOM_ICC_TAG_ALWAYS
+> >> -					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
+> >> +			/* TODO: add interconnects */
+> > 
+> > Somebody will try to fix this TODO, reverting this patch. Let's find a
+> > better way to handle it (which would also fit other platforms).
+> > Originaly this was proposed by Sibi ([1]) to speed up PAS
+> > authentication. Other platforms require RPM or GCC clocks to let the
+> > firmware access crypto core.
+> > 
+> > One of the (stupid) ideas would be to add a separate SCM (child?) device
+> > which would be used for crypto-related SCM calls. I'd like to point out
+> > that currently we bump those clocks or NoC bandwidth, but at the same
+> > time we don't vote on the CX rail. I'm not sure of the firmware handles
+> > that somehow or not.
+> 
+> Nice catch, AFAIK firmware don't handle voting for CX rail during SCM call.
+> 
+> > 
+> > [1] https://lore.kernel.org/all/1653289258-17699-1-git-send-email-quic_sibis@quicinc.com/
+> 
+> yes, I had already seen this,
+> 
+> So remoteproc PAS driver gets performance benefit with crypto vote and interesting choice was
+> made to place it from SCM driver. It was evaluated and considered reasonable one at that time,
+> pasting from [2],
+> The clocking needs for the CE relates to the SCM and not the remoteproc, and it's in line with
+> the management of CE clocks from the SCM driver.
 
-I'm talking about the room of the previous lines
+I agree that those clocks must be managed, but I think it was a hack to
+reuse SCM's iface / bus clocks for crypto. Originally, *I suppose* were
+added for very old platforms which had separate DAYTONA NoC clock, most
+likely controlling access to some of the backing hardware, but not
+necessarily crypto hardware.
 
-	st->trig = devm_iio_trigger_alloc(dev, "%s-dev%d", indio_dev->name,
-					  iio_device_id(indio_dev));
+> 
+> With my limited understanding of remoteproc, SCM and crypto,
+> 
+> - A crypto vote would no way bump up the performance of CPU jumping from/to non-secure and secure world.
+>   (actual "path" of SCM driver).
+> 
+>   if remoteproc requires the crypto vote for image validation/authentication then remoteproc should
+>   place the vote for crypto path before invoking SCM APIs, SCM don't really use this vote for itself.
+>   SCM driver though today adds/removes vote within remoteproc APIs keeping vote placement limited
+>   to remoteproc usage only.
 
-fits 80 limit, for example. OTOH this is less logical, perhaps your variant
-is okay.
+Looking at the code, I'd assume that once we start testing HDCP we'd
+perform the same for the HDCP-related calls. The problem is that this
+kind of management also doesn't seem to belong to the remoteproc driver:
+it doesn't know and it should be of no concern for it if the firmware
+uses crypto behind its back or not.
 
-...
+> - Firmware could have put the crypto vote if firmware is doing image validation/authentication
+>   after the SCM call lands in firmware and remove it before returning to non-secure world.
+>   clearly not a choice now to update firmware.
+> 
+> - I see crypto device too places same vote (at least on x1e) so i must be missing something and
+>   both SCM and crypto device vote are needed here. I was thinking if remoteproc should route the
+>   SCM call via crypto driver (which would places the required crypto vote) and crypto driver
+>   should then invoke the crypto related SMC calls.
 
-> Radu
+I think, this also looks like a hammer plumbing. The use of crypto
+device for those calls is a firmware implementation detail.
 
-When answering, remove the context you are agree with and not going to discuss.
-I had to drop over 200 lines just "for fun" (no).
+> 
+>   crypto: crypto@1dfa000 {
+>   	compatible = "qcom,x1e80100-qce", "qcom,sm8150-qce", "qcom,qce";
+> 	..
+>         interconnects = <&aggre2_noc MASTER_CRYPTO QCOM_ICC_TAG_ALWAYS
+>                         &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
+>   };
+> 
+> Let me know any preferences from below options or any other.
+> 
+> a) Add the API like qcom_scm_ready(), this has been tested and works fine.
+
+We already have qcom_scm_is_available().
+
+> b) Move interconnects from SCM to remoteproc PAS driver for all devices
+>    Take the vote before invoking SCM API and release after return.
+> c) Remove the interconnects from SCM and rely on crypto driver already
+>    placing the vote, Route the remote proc to SCM call via crypto API,
+>    This would ensure crpyto is being used and it would have placed the required vote.
+> d) Add separate SCM child device (with interconnects) under SoC.
+
+This is going to be my preference, but I'm ready to listen for other
+opinions.
+
+> 
+> [2] https://lore.kernel.org/all/Yr0Os5TOITY7f0Wk@builder.lan/
+> 
+> Thanks,
+> Maulik
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+With best wishes
+Dmitry
 
