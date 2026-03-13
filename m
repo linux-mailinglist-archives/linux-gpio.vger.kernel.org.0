@@ -1,162 +1,208 @@
-Return-Path: <linux-gpio+bounces-33320-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33321-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4LAkJ6DJs2kqawAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33320-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 09:24:00 +0100
+	id wIgRN0jMs2n2awAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33321-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 09:35:20 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10E7327F8B3
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 09:24:00 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 663BF27FC34
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 09:35:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DE5303043022
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 08:19:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4E2923198C9A
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 08:32:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBDF337F72F;
-	Fri, 13 Mar 2026 08:19:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5EA4383C9A;
+	Fri, 13 Mar 2026 08:32:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j9jGkyZP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ve4+KjZM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC26282F02;
-	Fri, 13 Mar 2026 08:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194D1375F90
+	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 08:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773389970; cv=none; b=ckBBxZf+gRtozfUVDHFo3oiK90vtG878ZIwzqo1qOvakLMBpOOeM6wVTEGhroRxmZJ5Swn72uaaRq1ldNVng06OeF8JM/m5FbC8k/Tu5W3uwV5oro+RJ/VpfpPWDViFxN69ubJ22dA+viE6Em/D+rN51roI8pZ69AO0LvH0PpfY=
+	t=1773390742; cv=none; b=QbIdv5GknpMtpe2yDFtE1H1TtW9jtRxoZ70H2ygcSjmj8RP6M543ptC4XtD/S1hUiwZLFJqLWu7l406KbNSDwi2ZOAHe7RxMMypkKYOWMcSCVx3XyPtqin0o9MtZAnp3s1hZlT4kjU/QhxnJ1n+DhhTxi/ZYou9w5hJNfdyiWQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773389970; c=relaxed/simple;
-	bh=m7edpa5kTYRBXIFOsTax/1exoALFKjRIP/hfMMmsYZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C1V0hTVmqFFH0K6qc6md3eheN55yRzOfOexibZsw1BUT0gt7WS8R4HbTeeBOI4ZxXz22eseh+Z4pBbbijAgppDfIHGtsjeRuWnlNBVCDPyKCrYI+CNmJthsZ64O5NUGHed6lp9Eypu0JBcveonwnJDZCCWa9GRecP3I4QUla6GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j9jGkyZP; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773389969; x=1804925969;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=m7edpa5kTYRBXIFOsTax/1exoALFKjRIP/hfMMmsYZA=;
-  b=j9jGkyZPNDcGe6D+bDErikAzGl24hlxBz0uW9DbkPV7R3d71PhuFzxxy
-   OCCz7Fdpj1Wo6jlg0eEtJFMMwvSt7sy6prnTjRWRJ2PhP/Fs+AuUossgl
-   jDczxu/61+GJSBoHDDioZVG1IfBmBdpMmltSMTt2I04KkOimvrmuIiJx3
-   /p9vDNaKEH7rBHp71LB9wzSTCgQ9dKBqgw6eOOyv1vT5EasL+E2xHPYxT
-   lrlUDpfCk/+VT4sybs7OzLlGmN0V8YkWOXLIAsyYJHdLmde6st7CrbIg2
-   tIMsUcuhE7F39334tiF1d1cq6sqIZkxkLmOrbr8s1Kpuc3iBB206G+fNB
-   A==;
-X-CSE-ConnectionGUID: Ti6bS03ITEyz34rhUBFGZw==
-X-CSE-MsgGUID: D23qxDYoRfGlCPEOxCH8qQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11727"; a="92070385"
-X-IronPort-AV: E=Sophos;i="6.23,117,1770624000"; 
-   d="scan'208";a="92070385"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2026 01:19:29 -0700
-X-CSE-ConnectionGUID: d8JBjj9MTgu+j70Fsd85vg==
-X-CSE-MsgGUID: DjysSfnfRDmtuJ+YAalEzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,117,1770624000"; 
-   d="scan'208";a="217543473"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.246])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2026 01:19:26 -0700
-Date: Fri, 13 Mar 2026 10:19:23 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linus Walleij <linusw@kernel.org>
-Cc: Kalle Valo <kvalo@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Alban Bedel <albeu@free.fr>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@toke.dk>,
-	=?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>,
-	linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3] wifi: ath9k: Obtain system GPIOS from descriptors
-Message-ID: <abPIi0qsJDDSdfLp@ashevche-desk.local>
-References: <20260312-descriptors-wireless-v3-1-5230e0870c31@kernel.org>
- <abLomhQ4faipjIQu@ashevche-desk.local>
- <CAD++jLmerNFyjGXAH9n9MKNAkcTSy3swg53=PARMqsXKjT7R3w@mail.gmail.com>
+	s=arc-20240116; t=1773390742; c=relaxed/simple;
+	bh=gF7U4AhLl2B54UlbLoigUUUH6Jsm/F5mlTaV5RfBX1c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J+e89y19Yx4dlpl5mLNgij6QV0L5mLB8ngfciR7cbxKj+WPD7Lm0/C7HM+fVL6v1dQSaGjSp+rAttfDEV5/+LFp9OBwGjjZR4qJAesg6L/iiHEyHOGuyrO3Aj8SdGbGK9On0uixwasnpb0LJw+dG+2FSG3v7t8WvP5v9qNs6ncA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ve4+KjZM; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b93698bb57aso373969266b.0
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 01:32:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773390739; x=1773995539; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zbcDxBVVYzOw7c6OTfNiMQmEPeMGSouBlRwpnguHKAQ=;
+        b=Ve4+KjZMZXY4pNNaIPy6oKForvFFVjldMaURWwmxmzsmi+eV3MBTRRAd1SMZIX345h
+         CuM9UPCoPnm84rEkVOfCzztFXPmTAlGoJBaGYyyhDd+hIbw2oLs+ZICv/LMKPCSCoPau
+         HvE2s0thCUwFl1Lp4ruYJ7XJgjfwEHOYBowlXC5BHuqsyW5NJv2OWwL5ShpyhPmnxoyI
+         IaTH1CNYSzxrimyyURz3spByUlwxn+KkTXJBZTy4lWDfNEIzHdB7/laV0bVJSJPK2lrJ
+         2ERci+y02pPLrqM5DXhh8IXd4bDpOuswI7THsBPfv/Ywl+B54JNSA58bAKWTK286/sJQ
+         Jvqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773390739; x=1773995539;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zbcDxBVVYzOw7c6OTfNiMQmEPeMGSouBlRwpnguHKAQ=;
+        b=X7gbB7VJnhXX9hZ78isFHz2Xv8EvPyLBIshuncYJfWUQqwid/lAcyX2I0zR7c3G+Ye
+         xs24WbjV533paAB43pJMPFl0yAU8qcE8O1Cif0Kr5Du92FskXNoqopYhAsdNP6ULVhZ0
+         8xbLEtU3hv9R5CEWV1fX4lJJm0kUSmKQ3BOKdvIF3iDs1ymRoIyw+o/3KvVePnQ8UbUG
+         4M39nalbmzKT4zU8l5VTfNRTHIDE86Cfl17LhGN0K5i3V9htEdJGrC/DyGwUB3rNDECw
+         bpBRMB7T52fmlnIrw4ddfZSjdQgyGQrZUhJkWc/cw4vB8r97Q/D7lP2K4u+XTPeOIJz+
+         hEUw==
+X-Forwarded-Encrypted: i=1; AJvYcCWxUGoqCMk4w2pQ2dktQYNNs3FtSXBLIUhz4LIfLTj5Pva2lcMaULtZ65Wpsz+3/xGLi85yHB7r96K0@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQT6be5SxZRRgY9IKusiMW+PZzbABlzEfaxu1faXXiKTDZivFj
+	JeTxQYYv8ojjx3qsCjHd8nik4JBCC/bwSC80mjjf57ov/MM9V0dBr6fP
+X-Gm-Gg: ATEYQzzglmPW+QOoyfEp8NGIZtupa5LA+3sOoe/aV1idljPh1wY5j6oRlFBOgIgIxGu
+	Io3S0Yuz26Qk6to5a4tGS8np6TT8fDLIhTGC57bjKcyWN4W0Cynnj3Kp/bFuWrQzHn+ACKwzz6X
+	fKUjkT81ujE3dNC4Hi3rz0+uXiE0R/D/7o955bSYmXwAGCWhb5743sKRPjKRvpb230rXeJCH5gm
+	IkMJdt3swKwE705+GR24fAHeiAE53k7h5jQZdm25fvjejZ0m+IeR21LepuVAalFjsv1QmqFYZ3K
+	+/yrbPCllRYiGEH7zJxymuOXSF4KuSb/ZghElDbHSL8SchUoDCAPjY2GzqNG41uOwhlFTb6j/lf
+	OSpReqBloaqmtDU2QNNbBLD5nliS581FL7zWZFLihCOvZEu62wtYWQZW3dMmJfkOT3LkMoXKMas
+	SwhfYfA1uM4Kl9Q52TP4fF66QdC9PuyMUWVCLuLKFIHL0ggf4jwWGIYuq9xkoyyePwGg==
+X-Received: by 2002:a17:907:9285:b0:b97:73ae:e2e with SMTP id a640c23a62f3a-b9773ae119bmr31732166b.18.1773390738986;
+        Fri, 13 Mar 2026 01:32:18 -0700 (PDT)
+Received: from ?IPV6:2a02:8109:8617:d700:5998:31f2:ed8:c4f? ([2a02:8109:8617:d700:5998:31f2:ed8:c4f])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b976cba6ec4sm29152166b.5.2026.03.13.01.32.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2026 01:32:18 -0700 (PDT)
+Message-ID: <2bcc0442-cdd7-4093-831c-0bd4652edf56@gmail.com>
+Date: Fri, 13 Mar 2026 09:32:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD++jLmerNFyjGXAH9n9MKNAkcTSy3swg53=PARMqsXKjT7R3w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-X-Spamd-Result: default: False [-2.16 / 15.00];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 00/21] media: i2c: add Maxim GMSL2/3 serializer and
+ deserializer drivers
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, dumitru.ceclan@analog.com
+Cc: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Julien Massot <julien.massot@collabora.com>, Rob Herring <robh@kernel.org>,
+ =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Cosmin Tanislav <cosmin.tanislav@analog.com>, mitrutzceclan@gmail.com,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-staging@lists.linux.dev,
+ linux-gpio@vger.kernel.org,
+ =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+ Martin Hecht <Martin.Hecht@avnet.eu>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Cosmin Tanislav <demonsingur@gmail.com>, Cory Keitz <ckeitz@amazon.com>
+References: <20260311-gmsl2-3_serdes-v9-0-41499f09004f@analog.com>
+ <abEgijQAqW27i5fU@kekkonen.localdomain>
+Content-Language: en-US
+From: Martin Hecht <mhecht73@gmail.com>
+In-Reply-To: <abEgijQAqW27i5fU@kekkonen.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,arndb.de,free.fr,bgdev.pl,toke.dk,kempniu.pl,vger.kernel.org,broadcom.com];
-	TAGGED_FROM(0.00)[bounces-33320-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33321-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[ideasonboard.com,kernel.org,collabora.com,ragnatech.se,linuxfoundation.org,analog.com,gmail.com,vger.kernel.org,lists.linux.dev,avnet.eu,amazon.com];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mhecht73@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:dkim,intel.com:email]
-X-Rspamd-Queue-Id: 10E7327F8B3
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 663BF27FC34
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Mar 12, 2026 at 10:26:06PM +0100, Linus Walleij wrote:
-> Hi Andy,
-> 
-> (I'll obviously fix all the syntax issues for v4)
-> 
-> On Thu, Mar 12, 2026 at 5:24 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > Have you considered using software nodes instead?
-> 
-> That's the big question. And also: have I considered adding device
-> tree bindings to map to those look-ups, that would provide a way for
-> new users of these devices to actually do the right thing. I thought of both!
-> 
-> The big problem is that we don't have a handle on the device
-> and it's name, because it comes from the device tree and
-> could be named anything. Same thing with the GPIO controller.
-> 
-> If we register lookups or software nodes in the GPIO driver we
-> don't have a reference to the ath9k device or its name, and if we
-> register it in the ath9k device, we don't have a handle on the
-> GPIO controller or its name.
-> 
-> All of these GPIOs "should have" had bindings and "should have"
-> been in the device tree, but they are not, and I think some of those
-> device trees are even outside of the Linux kernel so we can't really
-> fix them either :( it's a mess, I'm just stirring the mud to try and
-> make it a bit better by removing the global GPIO numbers.
+Hi Sakari, hi Dumitru,
 
-Thanks for this elaboration! Since Bart is the person who wants to move
-the lookup tables to software nodes, I leave that part to him. For time
-being your patch looks good (after addressing style and minor issues I
-pointed out), feel free to add
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-to the next version.
+I'm testing v8 already and will migrate next week to that version. Below 
+some further comments.
 
--- 
-With Best Regards,
-Andy Shevchenko
+On 3/11/26 08:58, Sakari Ailus wrote:
+> Hi Dumitru,
+> 
+> On Wed, Mar 11, 2026 at 09:17:12AM +0200, Dumitru Ceclan via B4 Relay wrote:
+>> The following deserializers are supported:
+>> * MAX96712 (already exists in staging)
+>> * MAX96714 (already exists)
+>> * MAX96714F (already exists)
+>> * MAX96714R (GMSL2)
+>> * MAX96716 (GMSL2)
+>> * MAX96724 (already exists as part of existing MAX96712 driver)
+>> * MAX96724F (GMSL2)
+>> * MAX96724R (GMSL2)
+>> * MAX9296A (GMSL2)
+>> * MAX96792A (GMSL3)
+>>
+>> The following serializers are supported:
+>> * MAX96717 (already exists)
+>> * MAX9295A (GMSL2)
+>> * MAX96793 (GMSL3)
+> 
+> It'd be nice to have more reviews as well as comments from the users of the
+> existing drivers especially on how this works for them.
+> 
+> Are there differences in functionality or UAPI compared to the drivers
+> already in upstream?
 
+Compared with the current mainline drivers from Julian (what offere a 
+good basic functionality) there are a lot or more features enabled. One 
+ov them is support for routing the channels as well as i2c-atr instead 
+of i2c-gate only. Both helps to setup up more complex and reconfigurable 
+routing of the video channels in complex systems with many 
+sensors/cameras/streams.
 
+Additionally a lot more and never devices are supported by that patchset 
+including the new GMSL3 devices what are also backward compatible to GMSL2.
+
+Both link types are supported now. Generation of test patterns in pixel 
+mode has been added.
+
+Also log-status returns a lot of very useful information about the link 
+mode (tunnel mode versus pixel mode) and potential errors / packet 
+losses over cable by presenting the counter registers. That helps to 
+monitor the quality and reliability of the GMSL links as well as CSI links.
+
+> 
+> ...
+> 
+>> The following v4l2-compliance test still fails:
+>>                  fail: v4l2-test-subdevs.cpp(371): fmt.code == 0 || fmt.code == ~0U
+>>                  fail: v4l2-test-subdevs.cpp(418): checkMBusFrameFmt(node, fmt.format)
+>>          test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
+> 
+> Could you post the full report here, please?
+> 
+
+BR Martin
 
