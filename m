@@ -1,76 +1,79 @@
-Return-Path: <linux-gpio+bounces-33408-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33409-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qEm0NuSftGlGrQAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33408-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 00:38:12 +0100
+	id mM/jGAOotGlvrgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33409-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 01:12:51 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3966328AB68
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 00:38:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BFD9028ADB1
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 01:12:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A6F04305E319
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2026 23:38:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F1281308ED72
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 00:12:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 969DA3D5655;
-	Fri, 13 Mar 2026 23:38:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15CED225775;
+	Sat, 14 Mar 2026 00:12:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJ8Ek8wz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3nK86uT"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7793E317D
-	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 23:38:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2A61D555;
+	Sat, 14 Mar 2026 00:12:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773445087; cv=none; b=oK8PxWXWY2CUMMEoOUqWWFs7UdbkSN83MlEOchOb5w4So2nxv8RtVzE9Q1xHtbDXtZDfF04rRt/hMvsF80xOPDaVYT+ShgC5q2t6TZXQGbX9AdKfzZJL9W2WXqcR5mQd8mScHSqtXT2ofNB8SFQQO4Qrc4+dGOFaibu/Gnt8nLo=
+	t=1773447166; cv=none; b=k1KU961/D2A3iSn4XgL80j5txhdD4xRyO97UczarLSQiGSdVT+xwv4EmFn9SfG013fQQNwOOzKzjr18HcnEuGhwQchOho4zwtuFAS1n2qVhvn7ZNG4mAQujwwCp6yf35WrjXQ0CCzE8HATH1dQGVvLnvI8lQwvSjap92mVIuTkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773445087; c=relaxed/simple;
-	bh=KKnxkDEoWNIa9pNZxrMGY1sk/rXEff2G80DmQM2Dzps=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LwDekeHxdzwXjzvt4O8JG2EPFHK+19XlwfzCXR07C7F1j64bvxn/wzYS8cURvznuyw5wQF+moFPKyvvzHl5KL/ULK0LSLZMX93ZXvcI17DvimTJi9rimOosMI0OlIQQpTCeVgR13rlDqyzlLIdMcTNfoKBoELf+i3YN1lEAXrfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJ8Ek8wz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03F25C2BC86
-	for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 23:38:07 +0000 (UTC)
+	s=arc-20240116; t=1773447166; c=relaxed/simple;
+	bh=PspIzlOgSIHhY3SbB6UtbeuiSGc96oEWYbYAyeK+8TY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nrNanzD/YntSBol4lhivvpP3TdofCKoRSvLJQO7enqqsv5L6E4igHrfOmtAjR3SHHFBhWxe0SHpsDKbMTnmy4U3Zuhn8VjOBh5s7XpNOGnf2+E+QB5fGxJrrzi/GwRV/rG6eKGV58jrSkVi7fevUJq6n9FclDCFkZuAGCvzm0ZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3nK86uT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EACEC19421;
+	Sat, 14 Mar 2026 00:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773445087;
-	bh=KKnxkDEoWNIa9pNZxrMGY1sk/rXEff2G80DmQM2Dzps=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kJ8Ek8wzxzBaaxN/ED11y24Z/23/TEY9a3hodUvSb+6Y9jaeooLteE2tbs9Bn+O21
-	 k0oaV8YtVHY/szKNLAUrlWv4QysvzUk81GVUMyby8QiQPy5v7QHLy23S+YCb4Kot76
-	 L/WctlyOo3swfUgk1If6U1vmDguihYbsazTSFEKBuur7kvGBjuWF3wqjLoPKnxH5JW
-	 Wt9Jdik6y37//+Rcdpu+mBuadUxjx9xe+Ao+itcqFkmcLzUYXzXCMn+V0dZRRSa2aH
-	 JlO1lbgS7ECFTKlyBfvHneHC+YdM7Us0eOZIEiBM9eBPNfcgbB41xAk5PSxxzDQIa7
-	 6XuR0lua5uILg==
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-78fc4425b6bso28634627b3.1
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2026 16:38:06 -0700 (PDT)
-X-Gm-Message-State: AOJu0YzIkqFAGtSMhA99XebMhw5NxcUT82z/2ZHSo2ZqfwwrxXGqkjFL
-	EYxVaahnaREgwKFKulL/AVYEFtQypr5iF14kzP6WAaqHpHMFvbtxTvOwDrH0QL12xnjhsePb4dA
-	TCZgkBAMpT8qK82vhTwSBUOwqGbkCay0=
-X-Received: by 2002:a05:690c:d91:b0:798:56eb:f227 with SMTP id
- 00721157ae682-79a1c0cf55emr58534237b3.23.1773445086387; Fri, 13 Mar 2026
- 16:38:06 -0700 (PDT)
+	s=k20201202; t=1773447166;
+	bh=PspIzlOgSIHhY3SbB6UtbeuiSGc96oEWYbYAyeK+8TY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k3nK86uT9WAGBd61j1jhNRkko5MZUppELNXWuqaNT8pWuvF9I/psFYbDQoTOSK+Ba
+	 y+jtjdxWQ0uVuv+ipqviQBTrUsYRaZLxuiOJfTK2WPplVYoM9mRtDlgpH431FdiEuq
+	 GZru+ekUsd4C8HcKjaAyG0sAbV43NzzhCu0LR1sP4M+pCKehLDw35CKAw20qpGuvAU
+	 4v553biz4QdvRIdF0/s+EkQ0E8YcGFzH7RWe1/oIIFPkCoP9ynJ4T/lXVGa6Y5/sVX
+	 3cWFDUm63uX7WKzaRSpVKeniW1fqwHGXnxhGdSBQgT4UQE/Sh/cYc+9OwH9trbIfzQ
+	 Ik8JkBmQEGxew==
+Date: Fri, 13 Mar 2026 19:12:45 -0500
+From: Rob Herring <robh@kernel.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Linus Walleij <linusw@kernel.org>,
+	AKASHI Takahiro <akashi.tkhro@gmail.com>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.og>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	arm-scmi@vger.kernel.org
+Subject: Re: [PATCH v3 6/7] dt-bindings: gpio: Add bindings for pinctrl based
+ generic gpio driver
+Message-ID: <20260314001245.GA3706571-robh@kernel.org>
+References: <cover.1773150895.git.dan.carpenter@linaro.org>
+ <58446889d781435424c46bac563483e603d7c0e9.1773150895.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1773399246.git.geert+renesas@glider.be>
-In-Reply-To: <cover.1773399246.git.geert+renesas@glider.be>
-From: Linus Walleij <linusw@kernel.org>
-Date: Sat, 14 Mar 2026 00:37:55 +0100
-X-Gmail-Original-Message-ID: <CAD++jL=vBnHG_Wc4_nFFgYN9COS-d0Ak1KMXTk3tFphiEQbnWA@mail.gmail.com>
-X-Gm-Features: AaiRm51fXy_bp1rfhDcRF-amClZFYUPa_cs0-2DaSvYhRXjN9lRBn9NNXnIYXcU
-Message-ID: <CAD++jL=vBnHG_Wc4_nFFgYN9COS-d0Ak1KMXTk3tFphiEQbnWA@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: renesas: Fixes for v7.0
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <58446889d781435424c46bac563483e603d7c0e9.1773150895.git.dan.carpenter@linaro.org>
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
@@ -78,48 +81,127 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	TAGGED_FROM(0.00)[bounces-33408-lists,linux-gpio=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,linaro.og,vger.kernel.org,intel.com,oss.qualcomm.com];
+	TAGGED_FROM(0.00)[bounces-33409-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,glider.be:email]
-X-Rspamd-Queue-Id: 3966328AB68
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,devicetree.org:url]
+X-Rspamd-Queue-Id: BFD9028ADB1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Mar 13, 2026 at 12:12=E2=80=AFPM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Wed, Mar 11, 2026 at 10:39:17PM +0300, Dan Carpenter wrote:
+> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> 
+> Add a dt binding for the gpio-by-pinctrl driver.  The driver is used
+> for doing GPIO over the SCMI pinctrl protocol.  There are a few
+> mandatory properties such as gpio-ranges and ngpios, but it's not
+> mandatory to specify the pin-mux.
+> 
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>  .../bindings/gpio/pin-control-gpio.yaml       | 70 +++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/pin-control-gpio.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/pin-control-gpio.yaml b/Documentation/devicetree/bindings/gpio/pin-control-gpio.yaml
+> new file mode 100644
+> index 000000000000..81c68579df6e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/pin-control-gpio.yaml
+> @@ -0,0 +1,70 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/pin-control-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Pin control based generic GPIO controller
+> +
+> +description:
+> +  The pin control-based GPIO will facilitate a pin controller's ability
+> +  to drive electric lines high/low and other generic properties of a
+> +  pin controller to perform general-purpose one-bit binary I/O.
+> +
+> +maintainers:
+> +  - Dan Carpenter <dan.carpenter@linaro.og>
+> +
+> +properties:
+> +  compatible:
+> +    const: scmi-pinctrl-gpio
+> +
+> +  gpio-controller: true
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  gpio-ranges: true
+> +
+> +  ngpios: true
+> +
+> +patternProperties:
+> +  "^.+-hog(-[0-9]+)?$":
+> +    type: object
+> +
+> +    required:
+> +      - gpio-hog
+> +
+> +required:
+> +  - compatible
+> +  - gpio-controller
+> +  - "#gpio-cells"
+> +  - gpio-ranges
+> +  - ngpios
+> +
+> +additionalProperties: true
 
-> The following changes since commit 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f2=
-7f:
->
->   Linux 7.0-rc1 (2026-02-22 13:18:59 -0800)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
- tags/renesas-pinctrl-fixes-for-v7.0-tag1
->
-> for you to fetch changes up to fb22bb9701d48c4b0e81fe204c2f96a37a520568:
->
->   pinctrl: renesas: rza1: Normalize return value of gpio_get() (2026-03-1=
-0 10:33:47 +0100)
+That's only valid for common (incomplete) schemas. It must be false.
 
-Pulled in for fixes, thanks Geert!
+> +
+> +examples:
+> +  - |
+> +    gpio1 {
+> +        compatible = "scmi-pinctrl-gpio";
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        ngpios = <10>;
+> +        gpio-ranges = <&scmi_pinctrl 0 8 4>,
+> +                      <&scmi_pinctrl 4 12 1>,
+> +                      <&scmi_pinctrl 5 15 1>,
+> +                      <&scmi_pinctrl 6 17 4>;
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&i2c2_pins>;
+> +    };
+> +
+> +    gpio2 {
+> +        compatible = "scmi-pinctrl-gpio";
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        ngpios = <3>;
+> +        gpio-line-names = "gpio_5_17", "gpio_5_20", "gpio_5_22", "gpio_2_1";
+> +        gpio-ranges = <&scmi_pinctrl 0 30 4>;
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&keys_pins>;
+> +    };
 
-Yours,
-Linus Walleij
+I think 1 example is enough.
+
+> -- 
+> 2.51.0
+> 
 
