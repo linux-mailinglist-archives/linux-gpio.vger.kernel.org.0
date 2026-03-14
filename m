@@ -1,111 +1,110 @@
-Return-Path: <linux-gpio+bounces-33415-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33416-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KMD0DmIatWlZwgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33415-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 09:20:50 +0100
+	id UPl/E30atWlZwgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33416-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 09:21:17 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96EB728C17B
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 09:20:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A47A828C18C
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 09:21:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BED473031823
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 08:20:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2297B3032061
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 08:21:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65F3A3019A6;
-	Sat, 14 Mar 2026 08:20:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 914402F6192;
+	Sat, 14 Mar 2026 08:21:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YMNITgA/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="co3cYosh"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801A6282F0A
-	for <linux-gpio@vger.kernel.org>; Sat, 14 Mar 2026 08:20:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124B42DB787
+	for <linux-gpio@vger.kernel.org>; Sat, 14 Mar 2026 08:21:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773476446; cv=pass; b=AZaHXSrWglHd3B9B73tbMSdjWc+i3DRP/sXLzVuXSbwwHFUHghco+Q140qvxG+GLgj6RJQGXTTleKv5egfSDk4Zl0VfruEfxOHvxO+lYPR0bGZ+szYVUg0PL0/e04Rw8zaBHpLJ9/T/wjfDixRV6W5vZXVWfg1hgVi8B8rl/D18=
+	t=1773476462; cv=pass; b=EN0zhIAMcO/N3Mwcc+OvIXhJCBwuii3vCvWt7k+4BtwGMqxRLt7hTy4T68HxMCKWrO9iInl96+ZuebU+/zX5IJ+H75XF2v8qFX1by1GXQYXhyt1wSNI6LPcfo8PgTUljen7VJryMnr4VErLsHJnPZP68GfXAO2RU6fsfN7k8iHI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773476446; c=relaxed/simple;
-	bh=aKEodoFrsnEUz7A+3wp4L6Xznh2GG5VgXnuRS4O4LBk=;
+	s=arc-20240116; t=1773476462; c=relaxed/simple;
+	bh=vlKb7klkqu40FzQ6yrehhV+k5I1Bpd1t4GCy3P/aJDQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bOps/m/Ui8wwx7BzbKVrVVo94mbgqNBPcFDDyLT1QskXehULVCwXz/t8Ay+DqWIGfSMH8vAHkXJCm+g5MwSea36g4D5JzstCQDP8mtdQYoJGkDp2/wTNV8SEbIpMoUBa+WuN8UF4N2e5K6ezZPUOkgmY5FpVEOz9KcVBtVfUTL0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YMNITgA/; arc=pass smtp.client-ip=209.85.218.45
+	 To:Cc:Content-Type; b=MQA9AXp12QgpmrUjBw732/p11cuKfoLYs0K/tx46kB+cQPQlcvG9hhdmQqQqeN3qKvQwl3FJ8OYVZnsgwgisHdaFmKJAQTrZixCOGWaOXB33t8hV/ebSlLgqmTmjVVchSTlsqVEB0mF+nO0SVVW8+ykUny7eYucx2UW+e4owcvw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=co3cYosh; arc=pass smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b96dc65b886so724315666b.0
-        for <linux-gpio@vger.kernel.org>; Sat, 14 Mar 2026 01:20:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773476442; cv=none;
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b7cf4a975d2so392202366b.2
+        for <linux-gpio@vger.kernel.org>; Sat, 14 Mar 2026 01:21:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773476459; cv=none;
         d=google.com; s=arc-20240605;
-        b=IINkf6pwk9zjlPHHLmyVCnLKT2uFPkL9PwtwqwUJZs97N6g8fQUIgLUORA7D061BSV
-         PzyQ8jJse3EynBiJHwD5x+A0VK3Zc1abVH2IgPEpuZDGcBjsF32QhbUE0Kq+/z4mnnlh
-         UfnV8aBr0HrJXMqBWT52xb41Dl6cP+1tLTbUYYv6swCQbqXM/wHBB3qQVd2myBTgK9E9
-         ZzFJiKrM028TAzRsYEg6Fe9DVDrUt5+b8dT5+sOxs+pTBBfF106qwIyp7Z7mGjnJDfQO
-         VLjSqSL6njNJilmlfIoeo7PaCEN2HJnGE+PvlMbZ4bJBAxDTbLLu7YDaGU/ZqKbqp7pW
-         qesA==
+        b=Nnj315r+l627YI1ivKe9WScaXkpuBSX5TWXZ1iKdXbZpJ6N/OLbQgGW+iq4I+L2VT0
+         GBe4JpdMkW9yLjP2VOXBoxIMn1jLj+66T3+kCBQwB2EHdlAJ72dA3ZOUnF+ENZZ5EfAE
+         79YFWrVD758QyFtBIdAKx+NIL7VyWlUUX7NTlbyY4UzjXVEX6J1UV/88PyQAQ28n7ro/
+         18XslmO0LFhDqmlJD/jvrR4kzPz8eCNjhXM7la3adZSgNRRTLyNsMM4SkdaN99o+jCg3
+         itXRdgJh15ZxlB/u56eyhc/h6nyqgniWIvNG4NYeTirlUoj0Ycg4dpDHUP81B1NLRjWL
+         OfGw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=aKEodoFrsnEUz7A+3wp4L6Xznh2GG5VgXnuRS4O4LBk=;
-        fh=Q+jO/7PowYYwx/orVi9slbqPDry26A0zJDj/kY4I6kA=;
-        b=JPJmC0FcBz/Es5a4M2UDFsH6bbsFB+N0HSo7rzB8SKkFooP4o+lwLA9S0n6bPa3L8o
-         F+tRo8IqorltKWt1XsJ/oQOoX4XJJqE8tAfRn5VPNnIV2iNarU98603fsIsen8h92I44
-         kZI8uc8awPylZdrXZvAtzN4FIelgcq80RZy10Z4Bq3fsEZxMSlPGousuyQNr7y8PpZCo
-         8J0TrmtzpgMrlJBBgtdjm8+BRZ8MKLvk/rEAjpO6fxD3NQvvl3d82CKdLv4gmN80I02e
-         phCdxj0Pad5zCSFodeXTf/ypRCbBKxZNdQD5tGJcZLRxPwX/XY2ooJCAQia45azMEyci
-         4wiA==;
+        bh=vlKb7klkqu40FzQ6yrehhV+k5I1Bpd1t4GCy3P/aJDQ=;
+        fh=+4QYYtVFPK57cgBLqeXHbjJH3W2fyznLrCLeBttczCU=;
+        b=VKdj9SxHnYK8vwnMOk6h5IvPP/YaTIfiwTcOcRhOVccs72LjGUFpsxCDv3fs6KaA4Z
+         eP+eKkkvvQXvl+vNS6oY/o22HtsXT6RM4DW4BZmoxiNC3HnQQOGACLUE6Wfqh4uQjEiO
+         1rtQGatZphHp9K7gr0uMO3UyyDmTYTAN4A9jrTEc5YR/9PzGLlCKXiEQElw/Wd5NTBGW
+         fhz9ZbINjZmmi0G6JS42n5EFtKqYmy2KZJ1W/tFq1H+gXxt6f+cEZi24ORUtPh0om41e
+         2eQzq6oaNg560fmJCFoEL0jAJ0GRP8xC3bYdvinJUyjizxItXLEuiZ73/eIqESIt4thY
+         Sdtw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773476442; x=1774081242; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773476459; x=1774081259; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=aKEodoFrsnEUz7A+3wp4L6Xznh2GG5VgXnuRS4O4LBk=;
-        b=YMNITgA/eKYYfWjN+FBHM1EADE5KUoqx2Kx4HVf51vvhGyuzgAqS3uSUnsEZpAq3EO
-         r+pgw3dk8fFNHMhpWK8W690RzHrpIgsmLjq44MbFtFB1R5sWlITO+RhM190kb4hwcUur
-         s2XorXyDvgccQvlW1kaX3KiobWSDub9uaL6iHrwQSB11NPU13lO/OvgdpUYAC76rZKff
-         xlPhEgL2qRaNC3vc+FtKvagU/GqpfAX7RWMngNfoE5hAVBPCfcrClSEWJeHQKOYjV0JH
-         2oOwyGmW2YCnWJeY7sFrNEqABtupPzDqW4CjayCMab6VFDQoUqkcaEhIsnIph/VQNhpc
-         u72g==
+        bh=vlKb7klkqu40FzQ6yrehhV+k5I1Bpd1t4GCy3P/aJDQ=;
+        b=co3cYosh/BLt61sqHjI+FIRrkkYN0K6PDvEN7eEgCUu2VW4GWCP/uo7Tf96Ds27P9U
+         0e2RiXCqjCBZmd/KeK5/gDnz5Utej7kiGH1VhChbSlSfvwDCIPJEAM/W1u2tnZ9/K8qV
+         zhgIcvomrultgY5RxRuRSHf6U5l28FEMeMmOVA+1KZ/6s+XW8G9SqbkXR7C3TITvogv2
+         5WTkqRH0b8YcCfCe1bn5BJMSXQtBLoBnx3CTRgZKr9GIF9lfB1CaoG4U2Qi6Flp1PLx3
+         CWMb5RKqPeoK3icTtlYJImJPzRkoezF3tMfFnwhjkN28fxAhEKLCnxHKoc42wjEn+1/k
+         VaVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773476442; x=1774081242;
+        d=1e100.net; s=20251104; t=1773476459; x=1774081259;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aKEodoFrsnEUz7A+3wp4L6Xznh2GG5VgXnuRS4O4LBk=;
-        b=lKrWEGgJ+b/pX++QH5RjXN1AM0Tg0EfkMy1Kzo1qIitxAWaewJBteVYNmZQJS1SaMJ
-         2C6ILj88mffn/IV0WVYetzKoCLgvYT5akwe7YEnXMG/9bQjGEIpXcvRxeLlxBuMcfbAX
-         twVjfyvPGhwa8fwLeRhkOPVN5oz9dhHHwRWooDNSDRq5uxQ+PK4tj+6KPfdVh3FGKAsa
-         HvF0CoLKSOcFLrhlS8RbvtRII3Tbc35ZT2t1XL+feu5R5OBJBh1Udx2/Z4Bna7OM0YaK
-         pGqcU3ro3GQA61ljamHDkShjf6T2lMG/jlBJ8fAnyipwPLB5P0Jr5pYHYkhw8LPcXiGi
-         O6bA==
-X-Forwarded-Encrypted: i=1; AJvYcCXo8p3bAEs9L3aj+UXBHvFb3Ymv/MBf0jazLk7TcH4WPoUbNiPUVnmYeGhiZfg6aaM/I7VACxqs2GzI@vger.kernel.org
-X-Gm-Message-State: AOJu0YypEpt7Cv6sRqCtO0UFwS0S7OTdBCozwhx3jhBGmzF/vLnWoYWx
-	pcLhDrXK9FXk5POOT1XqNOOLvz3UeVyfPgx26pGKKJpUVnav1OoevfCwjAHanNkqCpGYw1hWqxf
-	Zz0kNwxF6lGPZq/F3UcxWmiG8fymgYsQ=
-X-Gm-Gg: ATEYQzzh2FSW2gs2FSk8J+kMnDijewGWNqasaZ9VnfDmW/lvBP8NiS6VI3F4UVgyA4K
-	+PdI4QUr4D++6bxw59LYL4zNRaClz7kuo8AGJVWznExJm/QuzlmSB0rTjC5lxEP8Et03+XfYz8K
-	1lRvBZXOngXwMV9kKc3kKDEDKwN8WGkcQ+WHvY7kvEBfed009Xbd2RSNffkAYG1xASJklX6ajt4
-	D5F/VAfl6afQ+z2Qw7P6G7AAjX6V84O4/IJKrBY72PcWinsmOARVuCjbnFQt5kfkDdcqg0vuxMS
-	1JmkLg==
-X-Received: by 2002:a17:906:dc94:b0:b97:80be:c9a0 with SMTP id
- a640c23a62f3a-b9780bf0140mr178652466b.28.1773476441488; Sat, 14 Mar 2026
- 01:20:41 -0700 (PDT)
+        bh=vlKb7klkqu40FzQ6yrehhV+k5I1Bpd1t4GCy3P/aJDQ=;
+        b=CtajGrI+3UEofDwRGDUlajivW+gtAjMFhRJ0ihda4CgPnawqBo+LTk/q37JdUfc9Di
+         XjPtTrLUpOHQwO4NEJ0pY6aIuO0NHZ7c9ADbokj1NxMG0XQPzNSktRUOIs7UvlZMilN9
+         3cXqIhnVHx6sQqDXMQUCyb1jYgxlEUIJHrG1haxHg0vnBIg0TdOYlovUw4KBJUWbTb0u
+         qnNIeSpZEK38y2zULmsuzUNdHz8roIJWZkciIgc7uYTZhSamjVEQEDZbBDMiRhVPfG5B
+         XkCWUW5lW38LZ9mwtLoL1R03as6iL/cEnAD+67QAzqwNeTrWNBU3PpjbNUMAuIvt9yta
+         OSrg==
+X-Forwarded-Encrypted: i=1; AJvYcCVYqugJM8/nO12cqScqn1wpLRUEzahWbZACABfYRAKc672vPW9hQE6XDXaHj9H01+POSKzYzeULYhVs@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJF5teCpveizWbGOPBETaqW40p2rpyzz6vWDgEhPAByB0735ja
+	CNfFL3wG4MVgcEF/aAAC8BAHslzovfcp/UVxpzIsqu894Ost7GwsCdI5UBhg95ghJyzmT2yj1jk
+	rWqkrJqZqNH+SMBNJGzEi/q3K6HjiS+nLLQ==
+X-Gm-Gg: ATEYQzwXuUID8WS9SNEbg5z49KLx8BRhns/rcivhAD+4X7cEhhJQDAKbk6ayLvGlHQa
+	VQfhVlLwfHXZIkUCKzrL0AqVGH1Kvadv7UsUQMp2GptgIvtYZt2OMp1bGQtoRDV6Y2G+zQUdMNV
+	WaMnaJMuXc5/Z8rrKpjppcDRpOer64qKc6nxofFDiz5ildT5gat8UmatpoEky2omOZ2H5Bg8Uvd
+	MXv9Hf3z/F0sIiRhdctscDoeENB2qcx2yK3xGKMnSfvrwNswa/kbfW5/HDYvEXDJuokQHggpUOa
+	hqoX6xzMsnLYmflp
+X-Received: by 2002:a17:907:c305:b0:b96:df8c:42cb with SMTP id
+ a640c23a62f3a-b97652124b2mr305792966b.46.1773476458945; Sat, 14 Mar 2026
+ 01:20:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260312-k1-gpio-set-config-v1-0-8c3541da16b1@pigmoral.tech> <20260312-k1-gpio-set-config-v1-1-8c3541da16b1@pigmoral.tech>
-In-Reply-To: <20260312-k1-gpio-set-config-v1-1-8c3541da16b1@pigmoral.tech>
+References: <20260312-k1-gpio-set-config-v1-0-8c3541da16b1@pigmoral.tech> <20260312-k1-gpio-set-config-v1-2-8c3541da16b1@pigmoral.tech>
+In-Reply-To: <20260312-k1-gpio-set-config-v1-2-8c3541da16b1@pigmoral.tech>
 From: Anand Moon <linux.amoon@gmail.com>
-Date: Sat, 14 Mar 2026 13:50:25 +0530
-X-Gm-Features: AaiRm53rSdWgcmbPnwhHtOT4QoH5qCsuKsNqkPJOpNSMw1Ld03rj8Uh5faUWLZI
-Message-ID: <CANAwSgSreMvKmWuV-wikoiEQDGEQ4YCo3MN8Ke4s4+Y49OOY2Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: spacemit: return -ENOTSUPP for unsupported
- pin configurations
+Date: Sat, 14 Mar 2026 13:50:40 +0530
+X-Gm-Features: AaiRm50vBOSwj4szvgoweRvqZZno3gW1jvqc0W3UsBDtZwZjhBCmdc4MEYz21_c
+Message-ID: <CANAwSgQj62=2VFxpUKqXiyNfP2vpPBnB-p_k4_83L0mMQ5oOPQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: spacemit-k1: Add set_config callback support
 To: Junhui Liu <junhui.liu@pigmoral.tech>
 Cc: Linus Walleij <linusw@kernel.org>, Yixun Lan <dlan@kernel.org>, 
 	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
@@ -121,7 +120,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33415-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33416-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -139,7 +138,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,pigmoral.tech:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 96EB728C17B
+X-Rspamd-Queue-Id: A47A828C18C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
@@ -147,14 +146,14 @@ Hi Junhui,
 
 On Thu, 12 Mar 2026 at 14:14, Junhui Liu <junhui.liu@pigmoral.tech> wrote:
 >
-> Return -ENOTSUPP instead of -EINVAL when encountering unsupported pin
-> configuration parameters. This is more logical and allows the GPIO
-> subsystem to gracefully handle unsupported parameters via functions like
-> gpio_set_config_with_argument_optional(), which specifically ignores
-> -ENOTSUPP but treats others as failure.
+> Assign gpiochip_generic_config() to the set_config() callback to support
+> pin configuration through the GPIO subsystem. This allows users to
+> configure GPIO pin attributes like pull-up/down when specifying a GPIO
+> line in the Device Tree.
 >
 > Signed-off-by: Junhui Liu <junhui.liu@pigmoral.tech>
 > ---
+
 Reviewed-by: Anand Moon <linux.amoon@gmail.com>
 
 Thanks
