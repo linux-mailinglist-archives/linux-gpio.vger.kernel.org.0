@@ -1,77 +1,77 @@
-Return-Path: <linux-gpio+bounces-33417-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33418-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mHnxHwUbtWlZwgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33417-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 09:23:33 +0100
+	id qLTpBNsetWngwgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33418-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 09:39:55 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70E9E28C1D8
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 09:23:32 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 699DB28C32A
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 09:39:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 987BB300FEDA
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 08:23:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 76A6A3019B97
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 08:38:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB0173264E2;
-	Sat, 14 Mar 2026 08:23:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B754A20C00C;
+	Sat, 14 Mar 2026 08:38:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cOzy9GC2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UgnxNAc7"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E34C30FF30
-	for <linux-gpio@vger.kernel.org>; Sat, 14 Mar 2026 08:23:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AAC94F881
+	for <linux-gpio@vger.kernel.org>; Sat, 14 Mar 2026 08:38:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773476606; cv=none; b=Xv3cGJeUKojGL5xXRwaISzM3YTaeA4Xnl3Kv7X7lI5kxTeodqmFlhSJlcamoQ3h2SGNr43rz0faieItPRh3NjyS9uCUkIN8Tic3KODUctFv9i9ejxMpsee0XNMDgF5wiXUksXNYPlH0Xa3Gla9jArxI4K5GeZe7/Ewk2Mea13i0=
+	t=1773477505; cv=none; b=ZER3kWNq4MArNHYj1/ZVQunV0uKwvkPRYY3alWoIRs9Ddjvp2vaTXkLZZG5IDowdl4AxGuTt488c3l3Z7LG1qJCBEa754Tvy231Ja0kt9ON4xUstjIwN2Cz7sik+yTvJ1bVUNEzgWsMYlWrtdbY7PZF2wNWfRYhLwehXSlbskho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773476606; c=relaxed/simple;
-	bh=8SQqEnyd8Ym6Ru02MK+S6GOZ0uWuE7fHmLVfyAGsPMg=;
+	s=arc-20240116; t=1773477505; c=relaxed/simple;
+	bh=zs5ayvvkI5PTSLsGJL88a7+jQEKfQg3DX6WpRBk/6/0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aAvhHrJyKZQaqfGxLyDE6YZ9cRVHhG1olynwe6ymoq6KUIUlpBg05Fpzu7HVxNxpzBxsgWUa0mvafwjMK4/3c2HS70BegP2qDopSwaZv6qs6suww3BuHh+vHz3/hqbhHPJC1JvI0KMwCCMG03M7DymcEdHVixfnp8cZ8B8T7Irw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cOzy9GC2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CFFCC2BCB0
-	for <linux-gpio@vger.kernel.org>; Sat, 14 Mar 2026 08:23:26 +0000 (UTC)
+	 To:Cc:Content-Type; b=JdW/f1oyqt0jm8XiaC5K5SId1SgoYzhekCEn5jeINwnKfRDOkNwd0mE3kC3qVe3vUdzKGSzmmsCAmy1RGFdG9jut5GkGM3VclLL92y5M7YbVorZWRxRjfRC9eDXBKPC0r7iClIfJbMXjTJ5ODedkPGHf6fO7pt6HHY7yI6IY6gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UgnxNAc7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37A3CC116C6
+	for <linux-gpio@vger.kernel.org>; Sat, 14 Mar 2026 08:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773476606;
-	bh=8SQqEnyd8Ym6Ru02MK+S6GOZ0uWuE7fHmLVfyAGsPMg=;
+	s=k20201202; t=1773477505;
+	bh=zs5ayvvkI5PTSLsGJL88a7+jQEKfQg3DX6WpRBk/6/0=;
 	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
-	b=cOzy9GC2DTXK+k4f56wA61QizXLZqFsQsaIxotqWcbToMEH6t45IiyoLwP7PQwUfi
-	 EqsUzYVoG/gCZ3/NiPEikqjSgYPbdBKnftK231OidPGL3CTHN1Q3YAlZWMFpLufIJC
-	 OD4VuvW1vcBHgw4QyU91qWCFOc2tfSnodnH5lLnQpChol1eFLs1WE7jBs3e35pL9bj
-	 mPWj3e8V9iemQTbu10sWYqLUylh4/JM8/kV+hzANClhob71xRLK1rzOd8LErw6ZiIL
-	 lctd3lFlVK3JSMcV2N6HQWNrVBCNrm8z+ft9LbyBAX+9EQ7lvApDpGfpZwLsCchnIO
-	 qhNYtW+VIGV2g==
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-38a67221fe8so24612131fa.3
-        for <linux-gpio@vger.kernel.org>; Sat, 14 Mar 2026 01:23:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUJUPj5vXXEn27wj4LrWA82rqyhy8hsntmYfv2kqqFzTjPd5exGbDbvu7cRRCvYahYrITkyyU10AVbE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzv0+4Jk5yE136qIO/R2vEynrxQ8TiVmEoOEDiBZ2SRBk9giJon
-	4WADV6W8tdn05e8jgxJEl2aVpw1LZafboV1Nq8ueaa02+IgWYGMXXc/SOKoBcXICTLynOctkOIY
-	7T5e4YoCMpgQF2RcJoz8J+nORqF0Nv9Q=
-X-Received: by 2002:a05:651c:198d:b0:383:1c18:adfd with SMTP id
- 38308e7fff4ca-38a8965a613mr19950571fa.7.1773476604352; Sat, 14 Mar 2026
- 01:23:24 -0700 (PDT)
+	b=UgnxNAc7tAQWYiHcp5jJ2xvCpg1e0jf5AX9GdeHFfrS7HciaU9D4E4aZHr5jxtImp
+	 5nS0/gaBUxA61/0Rl8F1mT0OQnn39+zfnp62f4dBkEnF1KVtc7LRUpe9sF7VsMwXFc
+	 7yPwYlfZF5EZFI9g9Ph8LAIzAeSqLQtnyXTpHdhzz8cpe+aEFsUU1ZGftbixTRW/LC
+	 oj7xHRdpJe3v6Q94STrUW37Ms4HnajEPRwu++rcUCfMXufhoEbp4+pMR4B3jLeNUpI
+	 3pBoOJcYjuL4//elETUStMUlUsWKl47BLIwu0uoc694FneDtPf/UAFIpGn9f9/56Hk
+	 yAaefljBFFKsQ==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5a133502accso3778867e87.3
+        for <linux-gpio@vger.kernel.org>; Sat, 14 Mar 2026 01:38:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW6FUYdE0W+7+j5M1Fpmvp2KkEgBAZf0KUWqPaV+ZzmUT2VXTu0kL8oRS3gMM8dJVPSAzUftcvQZW4G@vger.kernel.org
+X-Gm-Message-State: AOJu0YzozxoasHTyLwMXzTbnnt2kT0ygupInqnNJJFxvzOR/8c0h27Sw
+	0Dkf6GIV2VWFKNHu0eiCcz7AG3CLqtXkz13g+ut9Ft0zSKNy66/oFtw2rI8SBVUwgb5y2eFJbey
+	nVnb0jDKBnLJwTLXoSCqKBGdd5hpqxdw=
+X-Received: by 2002:ac2:54af:0:b0:5a1:27a8:be28 with SMTP id
+ 2adb3069b0e04-5a162af644cmr1432283e87.11.1773477503501; Sat, 14 Mar 2026
+ 01:38:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260314-rc2-boot-hang-v3-1-0b48221181a9@mmpsystems.pl>
-In-Reply-To: <20260314-rc2-boot-hang-v3-1-0b48221181a9@mmpsystems.pl>
+References: <20260313000652.11470-1-andre.przywara@arm.com> <a4cfb10e4701da0649ef648136496a962be5870d.camel@icenowy.me>
+In-Reply-To: <a4cfb10e4701da0649ef648136496a962be5870d.camel@icenowy.me>
 Reply-To: wens@kernel.org
 From: Chen-Yu Tsai <wens@kernel.org>
-Date: Sat, 14 Mar 2026 16:23:11 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67ZYyQ13ttMdzskHNTYxqYfEB_kVsMqsY9ZJhRKRQTigQ@mail.gmail.com>
-X-Gm-Features: AaiRm50WuEF8U-AOW_wk_AUphFoKyP9ESXQMp8H01_1K7MXDXNBxQrTOlyOt8gs
-Message-ID: <CAGb2v67ZYyQ13ttMdzskHNTYxqYfEB_kVsMqsY9ZJhRKRQTigQ@mail.gmail.com>
-Subject: Re: [PATCH v3] pinctrl: sunxi: fix gpiochip_lock_as_irq() failure
- when pinmux is unknown
-To: Michal Piekos <michal.piekos@mmpsystems.pl>
-Cc: Linus Walleij <linusw@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, linux-gpio@vger.kernel.org, 
+Date: Sat, 14 Mar 2026 16:38:11 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65RD3ksSnEC0RjYYQ1J-NoP9gGfeTR1UCfLgKCJEFBSTQ@mail.gmail.com>
+X-Gm-Features: AaiRm51E4965eeb0L_fn-2SZNoUKwdxVpJdCBkpbsBdc_UAFU6x4kPtBXXnJXuo
+Message-ID: <CAGb2v65RD3ksSnEC0RjYYQ1J-NoP9gGfeTR1UCfLgKCJEFBSTQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] pinctrl: sunxi: convert to GPIO_GENERIC
+To: Icenowy Zheng <uwu@icenowy.me>
+Cc: Andre Przywara <andre.przywara@arm.com>, Linus Walleij <linusw@kernel.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
@@ -81,20 +81,20 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,sholland.org,vger.kernel.org,lists.infradead.org,lists.linux.dev];
+	FREEMAIL_CC(0.00)[arm.com,kernel.org,gmail.com,sholland.org,vger.kernel.org,lists.infradead.org,lists.linux.dev];
 	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33417-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33418-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
@@ -103,36 +103,52 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	HAS_REPLYTO(0.00)[wens@kernel.org];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mmpsystems.pl:email,mail.gmail.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 70E9E28C1D8
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 699DB28C32A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Sat, Mar 14, 2026 at 4:10=E2=80=AFPM Michal Piekos
-<michal.piekos@mmpsystems.pl> wrote:
+On Sat, Mar 14, 2026 at 1:14=E2=80=AFPM Icenowy Zheng <uwu@icenowy.me> wrot=
+e:
 >
-> Fixes kernel hang during boot due to inability to set up IRQ on AXP313a.
+> =E5=9C=A8 2026-03-13=E4=BA=94=E7=9A=84 01:06 +0100=EF=BC=8CAndre Przywara=
+=E5=86=99=E9=81=93=EF=BC=9A
+> > Allwinner SoCs combine pinmuxing and GPIO control in one device/MMIO
+> > register frame. So far we were instantiating one GPIO chip per
+> > pinctrl
+> > device, which covers multiple banks of up to 32 GPIO pins per bank.
+> > The
+> > GPIO numbers were set to match the absolute pin numbers, even across
+> > the
+> > typically two instances of the pinctrl device.
+> >
+> > Convert the GPIO part of the sunxi pinctrl over to use the
+> > gpio_generic
+> > framework. This alone allows to remove some sunxi specific code,
+> > which
+> > is replaced with the existing generic code. This will become even
+> > more
+> > useful with the upcoming A733 support, which adds set and clear
+> > registers for the output.
+> > As a side effect this also changes the GPIO device and number
+> > allocation: Each bank is now represented by its own gpio_chip, with
+> > only
+> > as many pins as there are actually implemented. The numbering is left
+> > up
 >
-> The issue is caused by gpiochip_lock_as_irq() which is failing when gpio
-> is in unitialized state.
->
-> Solution is to set pinmux to GPIO INPUT in
-> sunxi_pinctrl_irq_request_resources() if it wasn't initialized
-> earlier.
->
-> Tested on Orange Pi Zero 3.
->
-> Signed-off-by: Michal Piekos <michal.piekos@mmpsystems.pl>
-> Suggested-by: Chen-Yu Tsai <wens@kernel.org>
+> Ah, is this a userspace API break?
 
-Interesting solution, not at all what I had in mind. :D
-This fixes things immediately for sunxi, and keeps proper pin lockout,
-i.e. one can't use a pin muxed for other uses as a GPIO interrupt pin.
-I was hoping that the maintainers could provide some guidance as to
-whether the core could provide helpers for this, but for now:
+Unfortunately, yes. This means the easily computable numbers that one can
+use with the (deprecated) sysfs interface is gone, and also the pins are
+now split amongst multiple gpiochip instances.
 
-Reviewed-by: Chen-Yu Tsai <wens@kernel.org>
+However if someone wanted the old "one gpiochip for one PIO instance with
+evenly spaced banks" scheme, I suppose we could put together something
+with the GPIO aggregator driver? It won't have same base pin number though.
+
+
+ChenYu
 
