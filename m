@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-33425-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33426-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6PPWKYs0tWl3xgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33425-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 11:12:27 +0100
+	id OAILFdw0tWl3xgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33426-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 11:13:48 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0ED8E28C9E6
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 11:12:27 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1390F28C9F6
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 11:13:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1D3EE3037994
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 10:12:23 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 27C9630312DC
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 10:13:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EB33350A0F;
-	Sat, 14 Mar 2026 10:12:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDDD7350A18;
+	Sat, 14 Mar 2026 10:13:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jAF1weGl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jrKCwnPo"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C435D17B43F;
-	Sat, 14 Mar 2026 10:12:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0B121883E;
+	Sat, 14 Mar 2026 10:13:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773483141; cv=none; b=SxIIgNjN+RZ5oDzlNnm2srkebnu6Cb6fObBbqq8HN17PP7mEkMoOHSZbFNBhwsY4eNITLfmwSoDnIgp2XYjYrKAwWGSoE1MEMzcRsplwmfnqPbjeVNaEVvAU8jSg3OEgBLVptBSQkTRi6l2ZwxyLPravwmY/KtP7r69bkF2TJ+g=
+	t=1773483222; cv=none; b=V32wG0ydQ3mPu71jKMFptYjAFbiQdy9uRq2ZflIxBc+28/rvxZdcWy3UGEJPysiJLY5yCmayOBcSmj2c1EOpviSol07C4QEQAcc0Ic9/RHbEw32FtFa+nuX8K/Ox/Po/EDLmmKBDnoUtICT96POmZ0ME6t5FI9sFCFItMwRii+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773483141; c=relaxed/simple;
-	bh=0shKt22s2Lf5YoGfPhwuk6VKamBLGFVgPw8TffefUBg=;
+	s=arc-20240116; t=1773483222; c=relaxed/simple;
+	bh=/C33RI0RUQ0f/pDZa3F7x6OmYNV8FxATuTEla5fQvPs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t3npvxL5V/zjUDOPZ05BEABtcE+b6H9w1LwEzpdS/NuGYiX5IdOXcpKVYx3ulRd0m/6RUq0Ua0Ox0yIdrpqThKy0CrDsoPRG6hJs8SOdj9M+BxO0pI8BwByRok2uqNznActTXcxE7BOcGjzJt3ZKPhgAwUnhICnXN7TL1179PdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jAF1weGl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65046C116C6;
-	Sat, 14 Mar 2026 10:12:17 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=lvtGYz8t9IYUvdmZfhQd3NLcvqgjw5l6iUrqjiJI/cvgK1QMHisMB12kYdXOXsFL1lTIfLGXNg4nigKumbXoES77XrrusjaWvSG0tCqQjI9wXWb+hydTPGvVazD0m9ADaRdqcHus23T6v7Mn26k/bjUjzvyqGj+htUNayKYtEWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jrKCwnPo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 384AAC116C6;
+	Sat, 14 Mar 2026 10:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773483141;
-	bh=0shKt22s2Lf5YoGfPhwuk6VKamBLGFVgPw8TffefUBg=;
+	s=k20201202; t=1773483222;
+	bh=/C33RI0RUQ0f/pDZa3F7x6OmYNV8FxATuTEla5fQvPs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jAF1weGlhQUDJCMI4lQd8wTOUx6H0tXuCRXG0mUwd9FXiG+b30ZKTiGY/ZjEZa+Yz
-	 hxNg5DL3tsLpymlAtZpvbpVwAVita1XhDdwxQJX/8/OJKHvdWy9mkaI3qqoXJeNAgl
-	 IRmv86zrBeXPXMbEPaOlSSImfBqxKogKT6EM1DEDVHVMY1zIZKutwOZJ7IWjJhB/Tl
-	 LgtBmnx8OnreONY49mBLhfbh7dR8O3sekn7qCZ3zNOwVXQaUoX/Cs4IbvHVahPtbtQ
-	 hj+dtyjiIvR8AVnRz0IMxrOVx1VznucQtr4XeuQ6vHIKO+7mCBxT5nUHK4uR8S+RAN
-	 ztbWnWRd6zEgA==
-Message-ID: <c1d949b5-962d-47a8-bf35-741aeef27612@kernel.org>
-Date: Sat, 14 Mar 2026 11:12:15 +0100
+	b=jrKCwnPoZDUyBBMLi2Xl7O8FYTNBB1rbXUoPSfNq4fi7/A24GEcshscUJZvF5mzlE
+	 7YP/eca6yKYSsgBoKqMGqCHulaIaB1L4Oo8DnW9gi43t+EYaEddGzAcvdpbYyws72+
+	 P3YVBFnxSedcm6Q8WL9Hmu4ZGhz0pKPD62eJjt4cGvCAnP33xhJc9A4wDKRw39wI2o
+	 FWV4VbFwArZ5KYDIY9TLlStqfWid+8VY9KZziO7AdDJnhgMbThFRlOGe0hDdLq76Li
+	 ARlX9jmuqCAU2odaGLBKgyFQKKqbZJXg5JsaXO8orASTHpAARgIIzvPkHIa8DJXQ0W
+	 Ec1YOkfM5cA/A==
+Message-ID: <2e7ddc36-25ed-4f76-9966-00d818ed3503@kernel.org>
+Date: Sat, 14 Mar 2026 11:13:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -53,8 +53,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/8] dt-bindings: pinctrl: Add bindings for TI TAC5x1x
- pinctrl
+Subject: Re: [PATCH v1 1/8] dt-bindings: mfd: Add bindings for TI TAC5x1x MFD
+ core
 To: Niranjan H Y <niranjan.hy@ti.com>, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org, linux-sound@vger.kernel.org,
  devicetree@vger.kernel.org
@@ -63,7 +63,7 @@ Cc: lee@kernel.org, linusw@kernel.org, lgirdwood@gmail.com,
  krzk+dt@kernel.org, conor+dt@kernel.org, nb@tipi-net.de, navada@ti.com,
  v-hampiholi@ti.com, sandeepk@ti.com, baojun.xu@ti.com, shenghao-ding@ti.com
 References: <20260312184833.263-1-niranjan.hy@ti.com>
- <20260312184833.263-3-niranjan.hy@ti.com>
+ <20260312184833.263-2-niranjan.hy@ti.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,7 +109,7 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260312184833.263-3-niranjan.hy@ti.com>
+In-Reply-To: <20260312184833.263-2-niranjan.hy@ti.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -117,11 +117,11 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33425-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33426-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -138,50 +138,142 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ti.com:email,devicetree.org:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 0ED8E28C9E6
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ti.com:email,ti.com:url,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,devicetree.org:url]
+X-Rspamd-Queue-Id: 1390F28C9F6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 On 12/03/2026 19:48, Niranjan H Y wrote:
+> Add device tree bindings for the Texas Instruments TAC5x1x family of
+> audio codecs with integrated GPIO controller, describing the MFD core
+> device interface, power supplies, and clock configuration.
+> 
+> Signed-off-by: Niranjan H Y <niranjan.hy@ti.com>
+> ---
+>  .../devicetree/bindings/mfd/ti,tac5x1x.yaml   | 247 ++++++++++++++++++
+>  1 file changed, 247 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/ti,tac5x1x.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/ti,tac5x1x.yaml b/Documentation/devicetree/bindings/mfd/ti,tac5x1x.yaml
+> new file mode 100644
+> index 000000000000..3d7943c0411f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/ti,tac5x1x.yaml
+> @@ -0,0 +1,247 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/pinctrl/ti,tac5x1x-pinctrl.yaml#
+> +$id: http://devicetree.org/schemas/mfd/ti,tac5x1x.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: TI TAC5x1x Pin Controller
+> +title: Texas Instruments TAC5x1x Multi-Function Audio Device
 > +
 > +maintainers:
 > +  - Niranjan H Y <niranjan.hy@ti.com>
 > +
 > +description: |
-> +  The TAC5x1x devices have 5 configurable pins that can be used for GPIO
-> +  or alternate functions like PDM (Pulse Density Modulation) and interrupt
-> +  generation. A subset of pins can be present in any variant of the HW.
+> +  TAC5x1x family of low-power, high-performance audio codecs with integrated
+> +  GPIO controller and diagnostic capabilities.
 > +
-> +  This binding is used as a child node of the main TAC5x1x MFD device
-> +  described in Documentation/devicetree/bindings/mfd/ti,tac5x1x.yaml
+> +  This is the parent binding. Child nodes are bound by these bindings:
+> +  - Pin controller: Documentation/devicetree/bindings/pinctrl/ti,tac5x1x-pinctrl.yaml
+> +  - Audio codec: Documentation/devicetree/bindings/sound/ti,tac5x1x.yaml
 > +
-> +  Pin capabilities:
-> +  - GPIO1, GPIO2: Bidirectional, configurable as GPIO, PDM clock, or IRQ output
-> +  - GPO1: Output only, configurable as GPIO, PDM clock, or IRQ output.
-> +          Some variants use different name GPO1A.
-> +  - GPI1: Input only, configurable as GPIO or PDM data input
-> +          Some variants use different name GPI1A.
-> +  - GPI2A: Input only, configurable as GPIO or PDM data input
+> +  Hardware features:
+> +  - Audio ADC/DAC with configurable impedance and voltage references
+> +  - 4-pin GPIO controller with alternate functions (PDM, IRQ)
+> +  - Analog voltage and current monitoring circuits
+> +  - Diagnostic fault detection with interrupt generation
+> +
+> +  Device datasheets can be found at:
+> +    TAA5212:    https://www.ti.com/lit/ds/symlink/taa5212.pdf
+> +    TAA5412-Q1: https://www.ti.com/lit/ds/symlink/taa5412-q1.pdf
+> +    TAC5111:    https://www.ti.com/lit/ds/symlink/tac5111.pdf
+> +    TAC5112:    https://www.ti.com/lit/ds/symlink/tac5112.pdf
+> +    TAC5211:    https://www.ti.com/lit/ds/symlink/tac5211.pdf
+> +    TAC5212:    https://www.ti.com/lit/ds/symlink/tac5212.pdf
+> +    TAC5301:    https://www.ti.com/lit/ds/symlink/tac5301-q1.pdf
+> +    TAC5311-Q1: https://www.ti.com/lit/ds/symlink/tac5311-q1.pdf
+> +    TAC5312-Q1: https://www.ti.com/lit/ds/symlink/tac5312-q1.pdf
+> +    TAC5411-Q1: https://www.ti.com/lit/ds/symlink/tac5411-q1.pdf
+> +    TAC5412-Q1: https://www.ti.com/lit/ds/symlink/tac5412-q1.pdf
+> +    TAD5112:    https://www.ti.com/lit/ds/symlink/tad5112.pdf
+> +    TAD5212:    https://www.ti.com/lit/ds/symlink/tad5212.pdf
 > +
 > +properties:
 > +  compatible:
-> +    const: ti,tac5x1x-pinctrl
+> +    enum:
+> +      - ti,taa5212
+> +      - ti,taa5412
+> +      - ti,tac5111
+> +      - ti,tac5112
+> +      - ti,tac5211
+> +      - ti,tac5212
+> +      - ti,tac5301
+> +      - ti,tac5311
+> +      - ti,tac5312
+> +      - ti,tac5411
+> +      - ti,tac5412
+> +      - ti,tad5112
+> +      - ti,tad5212
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: I2C slave address
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description: Hardware reset control pin (active low)
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: |
+> +      Interrupt from device diagnostic circuits to host processor.
+> +      Generated on voltage/current fault conditions and other diagnostic events.
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: Master clock input (MCLK)
+> +
+> +  clock-names:
+> +    items:
+> +      - const: mclk
+> +
+> +  avdd-supply:
+> +    description: |
+> +      Analog supply voltage input (AVDD pin).
+> +      Typical voltages: 1.8V, 3.0V, 3.3V, 5.0V
+> +
+> +  iovdd-supply:
+> +    description: |
+> +      Digital I/O supply voltage input (IOVDD pin).
+> +      Typical voltages: 1.8V, 3.3V
+> +
+> +  ti,vref-voltage:
 
-As your code points out - drop, completely unused.
+NAK
+
+This was repeated multiple times, was mentioned in my
+talks/presentations, is explicitly documented in kernel docs.
+
+This posting has poor quality. First go via internal review because I do
+not believe such code was reviewed earlier.
 
 ...
 
-> +    };
-> diff --git a/include/dt-bindings/pinctrl/tac5x1x.h b/include/dt-bindings/pinctrl/tac5x1x.h
 
-Also drop - not used.
+> +    default: [2600, 18000]
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - avdd-supply
+> +  - iovdd-supply
+> +
+> +unevaluatedProperties: false
+
+You never tested this binding. You cannot have one without example.
 
 Best regards,
 Krzysztof
