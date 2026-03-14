@@ -1,137 +1,189 @@
-Return-Path: <linux-gpio+bounces-33419-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33420-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uJjvMm8gtWktwwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33419-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 09:46:39 +0100
+	id yE3HJ3ImtWkSxAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33420-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 10:12:18 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32B4828C357
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 09:46:39 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CEDE28C4AD
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 10:12:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5C2203024C86
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 08:45:58 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4D5F43036E88
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 09:12:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 824CD2C187;
-	Sat, 14 Mar 2026 08:45:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9A362DC76C;
+	Sat, 14 Mar 2026 09:12:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=mmpsystems.pl header.i=@mmpsystems.pl header.b="Mt5lNKJe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z3sdjKh1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from s106b.cyber-folks.pl (s106b.cyber-folks.pl [195.78.66.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881C8C145;
-	Sat, 14 Mar 2026 08:45:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.78.66.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470332D239B
+	for <linux-gpio@vger.kernel.org>; Sat, 14 Mar 2026 09:12:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773477957; cv=none; b=ZCzU0l0xPCulq2HHyaoB9RsbJ32Ald57OaqgITNJdsbCioMID+oOz2Hc/kZ71Mte/T8MGlcFqzM9giAPJUnJYbrVEqjhEU4HnvhdwdJppTCADPl7UieFX5cvKmE0EBEiyCApFBBhoOg2crM9bazyWNSq1lEr4iuuLXWhhD1dkFo=
+	t=1773479522; cv=none; b=j7xeAe5CJYGx3T5a/cLXj46dCjaGLhzRSVxK/4Ioy0dHyWjM73lK2j728RK9SNAOGwuVwgIEtmkXGlAzz8+A+ctOwmGzKFQw92ZXBAjYNjJmoDzONyvzFxWD9RF0uPm4/ceTXs/NDbdX0o70YWO2j0/tbgN7iLvI55xu0nL9pww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773477957; c=relaxed/simple;
-	bh=zPkPI1veKKVGIV7jCwGwVXXMUM3/6U7Y3nLOhBoCMXw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D3cox9bsZM0nRbxKuMz2zUg2JWNVgdkeWKpEB5UckKrE0LV+/rL7h1il/8TLbRNNRJjGz6vpZ3DZrIv1RWlg9/hsAOLm1RYu6+11TsrCI8C6H286wEPF3TrBb0jGADKjqCHrfuXm6RrVf9YVgxfrKvPX6o+Wsa6G12AxsH6zpQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mmpsystems.pl; spf=pass smtp.mailfrom=mmpsystems.pl; dkim=pass (2048-bit key) header.d=mmpsystems.pl header.i=@mmpsystems.pl header.b=Mt5lNKJe; arc=none smtp.client-ip=195.78.66.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mmpsystems.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mmpsystems.pl
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=mmpsystems.pl; s=x; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=9G7QiHXpxmHH4C6Nxml7OsvQ5dLKhj3eSSSnkxHngmw=; b=Mt5lNKJeYn3j4izThdejaY9AVb
-	Bpjbj2BpETkq0aglrJT8DDAAOmq+3HELbFsj6qUaZREMWwjiIOl7JcKa7lAy4d6beYxT5PK004dSS
-	L9rmi4oED2kAfE3B0ZGZ9MpGhVROfQHCef+duccDykZQVHKSnVVrnNkdpsVXBTTCelS5Z1r7mp6tN
-	ajJxm4AOeQgsfRBzbgPN7u2XxbyvflOFFnbC9pVr0SZcsdYvuzQ5tDMfFnS3O/0BlHUMNSz9fgaw1
-	0qUdxHBh+wYFrvf7OlL9GAuedGpJbaIvKyg6QuKvx6ydBRLapCK2eaXlDzfMdKceOi2m937QXauPK
-	cqcGflqw==;
-Received: from user-5-173-16-20.play-internet.pl ([5.173.16.20] helo=localhost)
-	by s106.cyber-folks.pl with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <michal.piekos@mmpsystems.pl>)
-	id 1w1Kd6-0000000Eq3d-1G9O;
-	Sat, 14 Mar 2026 09:45:52 +0100
-Date: Sat, 14 Mar 2026 09:45:51 +0100
-From: Michal Piekos <michal.piekos@mmpsystems.pl>
-To: Chen-Yu Tsai <wens@kernel.org>
-Cc: Linus Walleij <linusw@kernel.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] pinctrl: sunxi: fix gpiochip_lock_as_irq() failure
- when pinmux is unknown
-Message-ID: <wil4524ca35bcrqutlip7mzi7xlwa3xrauym2pi5a73vlkohcl@zhd3hczj6e4u>
-References: <20260314-rc2-boot-hang-v3-1-0b48221181a9@mmpsystems.pl>
- <CAGb2v67ZYyQ13ttMdzskHNTYxqYfEB_kVsMqsY9ZJhRKRQTigQ@mail.gmail.com>
+	s=arc-20240116; t=1773479522; c=relaxed/simple;
+	bh=QiwL16bjOziT5hiJB9OYiaVlhavbbKb1oaWep8hSRjk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pb37MWNA0CqZke1m6jIJ4ATAQUmrzZUmTVxdj5TFMBCO6k0XHj1gag0scc3UCccN3W0gpSxoHSP28uevX/nieRpZlnmxXGptG8+SeTRHDRpTl0lxRLaw467zyssvl+oeetIuIsoQmxaNoxQd5hCKkaAz+PFJZ6K0i329am5EgSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z3sdjKh1; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-439b94a19fdso2737459f8f.0
+        for <linux-gpio@vger.kernel.org>; Sat, 14 Mar 2026 02:12:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773479519; x=1774084319; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QiwL16bjOziT5hiJB9OYiaVlhavbbKb1oaWep8hSRjk=;
+        b=Z3sdjKh1lXZlXlkYIuWKIJzPFsNVMop0m1taZX7dDXiPSQgwzx+GRegVyDfOmL6csF
+         Nvle81qwXF3H9b2D1+Ttom0tvwDYzA0GhUYncIxgRrOmSTnoXbW/bjFsWxIb4pqE3VBg
+         NkZ/gNGcKTCYd0XSR4ywkjfIkfbh4HOYh/JHAa4LxslycvKtLHsv2VGKOPJEPuaMpLtN
+         SP3zGE+BczIXs79aDPzrZ/HbGE9bhpz2GJMMcLA1KygVLrBuuw4JMstA6cIGyQ+EKj0K
+         13iWQyzE88sdmlOUPC/p9P9xUhxUkqJu0yc5RrQrIaWM7F8Dkkma/RY/UoPZWC6n9q5q
+         oVSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773479519; x=1774084319;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=QiwL16bjOziT5hiJB9OYiaVlhavbbKb1oaWep8hSRjk=;
+        b=VRZMrK1NDyUQKDKVcVsWY+XFd06mJOoU8IvSK0FDRRdBH2V09GWMNjiOUbuWkKbldI
+         0bGP2tSNj4j6epAdwuw1gjo6pP/z4UzHWUGBypR+M3xyE9yodJk5FYkxKn4zrk+bZ3vu
+         klnL5fZocT7oQd+V0E9dCN+F6ZGXpkYkRq9HMfCW7drTSoaxxjdg2TIo1YX6Wgye8E7E
+         /BxoY8i4xkGz/iB+eX+wyN5drMZVCwI6ojNmNxmQC6MoqXaDUXgerdP1Fk+yR1ywrFPu
+         7p9cJzp4LyhsmdfHNN9pj/oNmHKUZiyOHqff1ThhtGJ+KzrFBoGRggE3vmEiP/wvU/dX
+         dDMw==
+X-Forwarded-Encrypted: i=1; AJvYcCXY9vGKpxZIhKDg6PUYDWE2hBzuefpsbCO73oFe5Xh0e+Au//3+xOkn4oMcHzsCtWYp9GmDc6bdnvIH@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEBh0Uhkb1+8Hh687JnOyvYojhL3SB2U04XPneg1HVI5YWkDP7
+	L2MvGIbrkEdvG5waZgeE4Qk0Hy6CbdcoECEN34PDzuvgP7EfXs5wgdGA
+X-Gm-Gg: ATEYQzzdW6RvKbIlXsbhc3pVXA1GV1SIGNMEC7iW1REN+L5gBg9lbd+NMRq7HwsWZgG
+	EhW6YA0CoFnUCTa67nKpEqbzFQOpCUoroe7dKFc5DkU0TGGAE8OjVkEJawtzD8mTmcpUquW5liR
+	n4MdHZLfwL0tmupJe7YNHDT9kDWc8nAJnjyG/7tfNwS4cijt12iSb01/DaNnpRHMNPf5rQqZT8K
+	J3JPbqkUb2N47AzubMPE7/yw0bSe+sNnaCKgMxmbHO2wvxRADzHrXtr3cGzMp2FasAuSDqJW9mn
+	OiHGZ1e3RjfjHTfRauH1sB0bRVyOPppdEzY84DnHdb/HkW668rxXhRALIA56RKk0MXbcs6gmhwy
+	mv1CnWsidbx//RgeoFTuYQw87wV0Xf1Uj7wFqQIi9ISjgrYs5HtEl7wOJ/38bG4U8kgw3dFO0pr
+	8f8T2rkBImnIe757OMxoCJEJSTeEgtNbbnXgMM23Fd3goktCQ5P4+xnlSezQLmMls5ZrZN/rr/S
+	PzcdrIwk2YKLfQ=
+X-Received: by 2002:a05:6000:2f83:b0:439:b940:8bfb with SMTP id ffacd0b85a97d-43a04d87714mr11537033f8f.15.1773479519281;
+        Sat, 14 Mar 2026 02:11:59 -0700 (PDT)
+Received: from jernej-laptop.localnet (86-58-12-163.dynamic.telemach.net. [86.58.12.163])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439fe2273e8sm25569590f8f.33.2026.03.14.02.11.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Mar 2026 02:11:58 -0700 (PDT)
+From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: Icenowy Zheng <uwu@icenowy.me>, wens@kernel.org
+Cc: Andre Przywara <andre.przywara@arm.com>,
+ Linus Walleij <linusw@kernel.org>, Samuel Holland <samuel@sholland.org>,
+ Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] pinctrl: sunxi: convert to GPIO_GENERIC
+Date: Sat, 14 Mar 2026 10:11:57 +0100
+Message-ID: <1948361.tdWV9SEqCh@jernej-laptop>
+In-Reply-To:
+ <CAGb2v65RD3ksSnEC0RjYYQ1J-NoP9gGfeTR1UCfLgKCJEFBSTQ@mail.gmail.com>
+References:
+ <20260313000652.11470-1-andre.przywara@arm.com>
+ <a4cfb10e4701da0649ef648136496a962be5870d.camel@icenowy.me>
+ <CAGb2v65RD3ksSnEC0RjYYQ1J-NoP9gGfeTR1UCfLgKCJEFBSTQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGb2v67ZYyQ13ttMdzskHNTYxqYfEB_kVsMqsY9ZJhRKRQTigQ@mail.gmail.com>
-X-Authenticated-Id: michal.piekos@mmpsystems.pl
-X-Spamd-Result: default: False [1.64 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_REJECT(1.00)[mmpsystems.pl:s=x];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[mmpsystems.pl : SPF not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33419-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33420-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,sholland.org,vger.kernel.org,lists.infradead.org,lists.linux.dev];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.997];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[michal.piekos@mmpsystems.pl,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[mmpsystems.pl:-];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mmpsystems.pl:email]
-X-Rspamd-Queue-Id: 32B4828C357
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jernejskrabec@gmail.com,linux-gpio@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[icenowy.me:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 1CEDE28C4AD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Sat, Mar 14, 2026 at 04:23:11PM +0800, Chen-Yu Tsai wrote:
-> On Sat, Mar 14, 2026 at 4:10 PM Michal Piekos
-> <michal.piekos@mmpsystems.pl> wrote:
+Dne sobota, 14. marec 2026 ob 09:38:11 Srednjeevropski standardni =C4=8Das =
+je Chen-Yu Tsai napisal(a):
+> On Sat, Mar 14, 2026 at 1:14=E2=80=AFPM Icenowy Zheng <uwu@icenowy.me> wr=
+ote:
 > >
-> > Fixes kernel hang during boot due to inability to set up IRQ on AXP313a.
+> > =E5=9C=A8 2026-03-13=E4=BA=94=E7=9A=84 01:06 +0100=EF=BC=8CAndre Przywa=
+ra=E5=86=99=E9=81=93=EF=BC=9A
+> > > Allwinner SoCs combine pinmuxing and GPIO control in one device/MMIO
+> > > register frame. So far we were instantiating one GPIO chip per
+> > > pinctrl
+> > > device, which covers multiple banks of up to 32 GPIO pins per bank.
+> > > The
+> > > GPIO numbers were set to match the absolute pin numbers, even across
+> > > the
+> > > typically two instances of the pinctrl device.
+> > >
+> > > Convert the GPIO part of the sunxi pinctrl over to use the
+> > > gpio_generic
+> > > framework. This alone allows to remove some sunxi specific code,
+> > > which
+> > > is replaced with the existing generic code. This will become even
+> > > more
+> > > useful with the upcoming A733 support, which adds set and clear
+> > > registers for the output.
+> > > As a side effect this also changes the GPIO device and number
+> > > allocation: Each bank is now represented by its own gpio_chip, with
+> > > only
+> > > as many pins as there are actually implemented. The numbering is left
+> > > up
 > >
-> > The issue is caused by gpiochip_lock_as_irq() which is failing when gpio
-> > is in unitialized state.
-> >
-> > Solution is to set pinmux to GPIO INPUT in
-> > sunxi_pinctrl_irq_request_resources() if it wasn't initialized
-> > earlier.
-> >
-> > Tested on Orange Pi Zero 3.
-> >
-> > Signed-off-by: Michal Piekos <michal.piekos@mmpsystems.pl>
-> > Suggested-by: Chen-Yu Tsai <wens@kernel.org>
-> 
-> Interesting solution, not at all what I had in mind. :D
-> This fixes things immediately for sunxi, and keeps proper pin lockout,
-> i.e. one can't use a pin muxed for other uses as a GPIO interrupt pin.
-> I was hoping that the maintainers could provide some guidance as to
-> whether the core could provide helpers for this, but for now:
-> 
-> Reviewed-by: Chen-Yu Tsai <wens@kernel.org>
+> > Ah, is this a userspace API break?
+>=20
+> Unfortunately, yes. This means the easily computable numbers that one can
+> use with the (deprecated) sysfs interface is gone, and also the pins are
+> now split amongst multiple gpiochip instances.
 
-Thank you.
+I don't mind this at all for new SoCs, e.g. A733, but not really for already
+supported SoCs.
+
+>=20
+> However if someone wanted the old "one gpiochip for one PIO instance with
+> evenly spaced banks" scheme, I suppose we could put together something
+> with the GPIO aggregator driver? It won't have same base pin number thoug=
+h.
+
+IIUC, this can be instantiated only via sysfs or configfs?
+
+Best regards,
+Jernej
+
+
+
+
 
