@@ -1,174 +1,178 @@
-Return-Path: <linux-gpio+bounces-33445-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33446-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GAKSJnFvtmlnBgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33445-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 15 Mar 2026 09:36:01 +0100
+	id DCcpCWE8t2leOgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33446-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 00:10:25 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24ECD2903FE
-	for <lists+linux-gpio@lfdr.de>; Sun, 15 Mar 2026 09:36:01 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D094292F58
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 00:10:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EAFF03036763
-	for <lists+linux-gpio@lfdr.de>; Sun, 15 Mar 2026 08:35:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 19EFB30166E4
+	for <lists+linux-gpio@lfdr.de>; Sun, 15 Mar 2026 23:10:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26AD62571D7;
-	Sun, 15 Mar 2026 08:35:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F03E289E06;
+	Sun, 15 Mar 2026 23:10:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jzg930Pc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y65crVlR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE8F40DFD6;
-	Sun, 15 Mar 2026 08:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6ED26738C
+	for <linux-gpio@vger.kernel.org>; Sun, 15 Mar 2026 23:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773563754; cv=none; b=KMnoPv1rjuhUIzkbbd/j9ZZnaa055+vWeKHqyxCBRMNVH6sYzosh1rJOuGL8/PLE5H5PZmA0uPiF0RH2BxfgWtesbV8ZNdqDn7bMr6M97LwmrOeAV3bOv+NZ++J79Im+5azxhQjtMOZCQlMo97qhYB2d4v3DhhweZr3x8PhTfSs=
+	t=1773616219; cv=none; b=RcZZ5B9aKdGtr9lz7PaiSM6l1PNrXWKvoD9ngsmCT2A3WFlxtKLDuxyo3cm2cQ5ap0qeJaLEcqE6tIrYvW74oqCVfjGtTJziwDUpvwSHurm/Uk4/dC2XoywS8RDF4pAdV7sFnOzx/9Vr+iwGk0j8Rw1bfYsdVfoD9zy550klvZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773563754; c=relaxed/simple;
-	bh=rASGD/IG59PWpEwpkp0F5276h1uqLe8dRNT7iXMUvbA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LdKyYUftGC9JDp37wzFA7M5XMFPr8IpIWfq3uxap3SSRcfAmr5ZAqzOItTWs9nGX650G0R5Z7rZr5DqHIRnXYxp5sYi4OtA8l2tsoFKdkEPrtMqp9YozygN5RdU4028qRieCbaSzfI4/fevYoIYaNljGktvUs+ClQVjKf++n8/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jzg930Pc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68B52C4CEF7;
-	Sun, 15 Mar 2026 08:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773563754;
-	bh=rASGD/IG59PWpEwpkp0F5276h1uqLe8dRNT7iXMUvbA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jzg930PcIWhnj9Hsq3jOcZC/L2BaJJhiTPxRPsbxkZLsK5khA5kXouuBayW2XqXx1
-	 MUvjIBM3yrFk5LnZJ9h7FKsgtvQzIbMIsH9sh58Jny7KVH0gI5wm8GvnMbIUEY7zxa
-	 5WseFAR9+fC9oxeTGACtnBTKu2rVUrr3rb8O8MpG5bFSpGvsVc1VZs0mIr4sNyNORK
-	 HM7/LrCYNYuFCgyqCS403ZpMiiyomCnhCRCxfMF0VvG67/EEff+gGNPUpwyTc2sEsm
-	 Udcikv7kw9lhlIg/8UvJt98fHKX5cYGddlWb0oV3FIWN2f1ZMHZkmnvjUgScLLV1yC
-	 dG+xAwCowz/tg==
-Message-ID: <219d11df-4d30-4f90-b410-024d1cc20c90@kernel.org>
-Date: Sun, 15 Mar 2026 09:35:49 +0100
+	s=arc-20240116; t=1773616219; c=relaxed/simple;
+	bh=fLloq4+x8At7hQovZLrmBNB1XxjUka1iComkdFuv2dU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ezMQwgL9Cmm4/Nisem1B4r//iPYsczFDd2GpySoAGwvWJM7v8lTdeBXyxRhoEl0j0wJB/vFEqe0m84OWZLRxw28B3s352Htu/Mku63XGd4urgnrb1LCNHVK87jke45iHi9D3EBYT+aRpexmGaQTaiVrXii0PKU/wowa7xyXjNhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y65crVlR; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3590042fa8eso2534398a91.1
+        for <linux-gpio@vger.kernel.org>; Sun, 15 Mar 2026 16:10:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773616218; x=1774221018; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LEWsD2Q8KtTGsEAWmFS/iNWR9RG+AhbQpSE8inJiSCs=;
+        b=Y65crVlR74PkKRkO8mL4eeqPXhF782C26loL0teMr+PV7x/KxM9veSRd4A/9JLYNfe
+         PY8IjmzJUDAx+nDk5krQVFaYqZCtxJ85cIyI7eVuLXQV1mR7wtqp0+EYxgFTs4MRgMmz
+         bQoELgCedf0pews2p8+Srzggs5OO/UAk/wpRAMBr5XYXO/xzsf6peOhBKbxGpvV5girZ
+         ATu8+/9gXuvtpkQn0J/Vdj+S9tnwZr0XyTfnkOAJNtZytlUwF9ymDAdhzyF2ublQR9PZ
+         Ds7mMvctffhKb6RZqbK73noFjqDtCQm1tEB3TERpt2L3hqaP+2X1ssPaWh1YK28Jeilv
+         KDRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773616218; x=1774221018;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LEWsD2Q8KtTGsEAWmFS/iNWR9RG+AhbQpSE8inJiSCs=;
+        b=qO7vZhZ4mSMDiVeSJWEVwC/xUBwdTVETnmwwpgAc7assLv28h3HY7BaVorBf1EISri
+         wIWlp4CNyPjgNsutpX+7kNaxi9mYBjTWcjXa52I3bW3j0/0mHwkHY5S3OYKvhr43bZ3r
+         Q2E9nfYTBkrkSbi1evRT3ShzxjLBtyQASgmNf3Yr4nmiMqJTL6zvEM6khm/alrg82Rm9
+         tDPwsBMxJa1sTsB+tbC2Z7KNrZTZgO3EfSrc+snyeVBNFjYXXkyVk5AX7wr52Q9gtnXj
+         CnX8DMLZzoypNwDYkPDxZ2sT//4x/dGADFzqIWg6Q1i0k5+ijmgkn0+SqW519fFr3x7w
+         ni2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVBaROSOV8188htHkZ+ravG+8zdOtiUVhxay495wftA2Ryt+ZKDdfl8henv1HZPwGJ0PT4wMVDyVzCd@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSW81dJRZQ+gd0Zty6u47AZgtk8HVvy3gQxqUTt18+XGBM/SuM
+	R3BljrdQhsVA5pl4s5F/4PxO/zIZR7lWDmZQY2ZRqzi4sRWL2MsYr2+l
+X-Gm-Gg: ATEYQzzeSqwiuJho2uGQTUdBMt7GNYucUHVPsHzoyPtDiSk8StBfn86Pnl0JuTfPEaw
+	dRFC3FPwy0gYA6zfnltxVtGbwx49bU33AH5ZFE01svkETqxVcxfShR6ql/T0VuYKq2zUiFFYdxm
+	R9C4+L2ut8EbB3jBNGQTmc4VP/5GmsuW725tDDN7K890OYJHUVvhe8+mMMhQJkYTgdUtR8iERyt
+	9HGjxc/ZDvlwviPbquNGVl3UC/pILW9p1nB4fzPZr4WkXfcONTxai+06pDTslYtJMJIe+R9jwsp
+	63ZJTZb0CM1ll2+xXHm57W5uQWFBqXu6IyUOvHORCG0+ml4jGsgbCTEeXUWBRc4A/mzpVuAlEuh
+	QpFzUGJ2K+ZOsqTEvzH/jOwhPFSWIetBKDRr87mb7Cz3fh3ng5HsfOarLPJ8SUsQMlBaux25ksJ
+	5A0kvLBK/t3P9gnG6OgcKXCpped6h+4lmeUuK3r3tm+6T3wYAYN+4JjM4=
+X-Received: by 2002:a17:90a:da90:b0:35b:91e1:e110 with SMTP id 98e67ed59e1d1-35b91e1e214mr3925378a91.20.1773616218024;
+        Sun, 15 Mar 2026 16:10:18 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:56f5::8bd])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35b9db7dfe6sm1399177a91.8.2026.03.15.16.10.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Mar 2026 16:10:17 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-tegra@vger.kernel.org
+Cc: Linus Walleij <linusw@kernel.org>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] pinctrl: tegra: use flexible array member for array
+Date: Sun, 15 Mar 2026 16:10:00 -0700
+Message-ID: <20260315231000.50543-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: codec: arizona: Convert to use GPIO descriptors
-To: Linus Walleij <linusw@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Russell King <linux@armlinux.org.uk>, Lee Jones <lee@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Bartosz Golaszewski <brgl@kernel.org>
-Cc: patches@opensource.cirrus.com, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20260314-asoc-arizona-v1-1-ecc9a165307c@kernel.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20260314-asoc-arizona-v1-1-ecc9a165307c@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[kernel.org,samsung.com,armlinux.org.uk,gmail.com,perex.cz,suse.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33445-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email]
-X-Rspamd-Queue-Id: 24ECD2903FE
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-33446-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	NEURAL_HAM(-0.00)[-0.999];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 6D094292F58
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 14/03/2026 23:56, Linus Walleij wrote:
-> This converts the Arizona driver to use GPIO descriptors
-> exclusively, deletes the legacy code path an updates the
-> in-tree user of legacy GPIO.
-> 
-> The GPIO lines for mic detect polarity and headphone ID
-> detection are made exclusively descriptor-oriented. The
-> headphone ID detection could actually only be used by
-> the legacy GPIO code, but I converted it to use a
-> descriptor if someone would actually need it so we don't
-> just drop useful code.
-> 
-> The compatible "wlf,hpdet-id-gpio" is not in the device
-> tree bindings and only intended to be used by software
-> nodes if any. If someone insists I can try to add a
-> binding for it, but I doubt there is any real user so
-> it seems pointless.
-> 
-> Signed-off-by: Linus Walleij <linusw@kernel.org>
-> ---
-> This patch hits all over the place, but I think merging it to
-> the ASoC tree would be the best.
-> ---
->  arch/arm/mach-s3c/mach-crag6410-module.c |  6 +-
+Simplifies allocation slightly by removing a kcalloc call and using
+struct_size.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com> # s3c
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
+---
+ drivers/pinctrl/tegra/pinctrl-tegra.c | 9 ++-------
+ drivers/pinctrl/tegra/pinctrl-tegra.h | 2 +-
+ 2 files changed, 3 insertions(+), 8 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+index 11ecbd6a9b2a..b09d7675a33a 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+@@ -832,19 +832,14 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+ 	int fn, gn, gfn;
+ 	unsigned long backup_regs_size = 0;
+ 
+-	pmx = devm_kzalloc(&pdev->dev, sizeof(*pmx), GFP_KERNEL);
++	pmx = devm_kzalloc(&pdev->dev,
++			struct_size(pmx, pingroup_configs, soc_data->ngroups), GFP_KERNEL);
+ 	if (!pmx)
+ 		return -ENOMEM;
+ 
+ 	pmx->dev = &pdev->dev;
+ 	pmx->soc = soc_data;
+ 
+-	pmx->pingroup_configs = devm_kcalloc(&pdev->dev,
+-					     pmx->soc->ngroups, sizeof(*pmx->pingroup_configs),
+-					     GFP_KERNEL);
+-	if (!pmx->pingroup_configs)
+-		return -ENOMEM;
+-
+ 	/*
+ 	 * Each mux group will appear in 4 functions' list of groups.
+ 	 * This over-allocates slightly, since not all groups are mux groups.
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/tegra/pinctrl-tegra.h
+index bc7b70913b89..c74272c82828 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.h
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
+@@ -26,7 +26,7 @@ struct tegra_pmx {
+ 	void __iomem **regs;
+ 	u32 *backup_regs;
+ 	/* Array of size soc->ngroups */
+-	struct tegra_pingroup_config *pingroup_configs;
++	struct tegra_pingroup_config pingroup_configs[];
+ };
+ 
+ enum tegra_pinconf_param {
+-- 
+2.53.0
+
 
