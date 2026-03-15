@@ -1,390 +1,578 @@
-Return-Path: <linux-gpio+bounces-33443-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33444-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ANotKr3ntWkT6wAAu9opvQ
-	(envelope-from <linux-gpio+bounces-33443-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 23:57:01 +0100
+	id kBDrMtYAtmn78AAAu9opvQ
+	(envelope-from <linux-gpio+bounces-33444-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 15 Mar 2026 01:44:06 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 513DC28F669
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 23:57:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EE7828FAA2
+	for <lists+linux-gpio@lfdr.de>; Sun, 15 Mar 2026 01:44:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3658E3019BB3
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Mar 2026 22:56:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 50E74305DA96
+	for <lists+linux-gpio@lfdr.de>; Sun, 15 Mar 2026 00:44:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D2E637F737;
-	Sat, 14 Mar 2026 22:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCKFpXVh"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2AA01E5B68;
+	Sun, 15 Mar 2026 00:44:02 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D140E2772D;
-	Sat, 14 Mar 2026 22:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D3421A681D;
+	Sun, 15 Mar 2026 00:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773529016; cv=none; b=TBx0Dn7c9yQHoHAM3Wx//KDH/jk1lTQeytVoA8rYd4NL6aL/D42Onz6L0VIiB8U5vxuwKyXu43JeHXLLiw0POlitbxTtq3kEk1NvYqmOEE4tO1V1u4JZBzWFk97FwY99nani/Vd9rSYzDx0xEaV0Zzj3X/HdKjTZxiFb9O4Be8s=
+	t=1773535442; cv=none; b=gw6vbrcCp/BVg+Yn+Dqy5eninF3EP2FqvNMlRBYj999yhzNXRD/36mcHEhK0jQr9cGFwr6bUMaLJabTp3j1Op23rI7aYOZ/9OnF1af6fKX+RAIoMuJ7VoUgaClwzoWZJ+LizBTyVCWacOYrFe2fB9OtPWGgYILVlUHByirN4rak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773529016; c=relaxed/simple;
-	bh=HTBn76J+zrddAYfE5QCFlT+eHYur3YWWbRorIKZsH3E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=c6KU7TWSGcqHA1NJYGc5C5jjQVbfb9vp8H03qZlgPG0Bnmer5nYaiq38jULxXqbIc6L2m6ac6/2+Bi6EJStQEaHJ7cXl0DYurB+2yflc7dLB21G4WqSTmvIJQZ7LglTFL3ikQyDQiQOipgPFBbKoxhmQxcOvnDZI7tK4Bqt9PHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCKFpXVh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0A79C116C6;
-	Sat, 14 Mar 2026 22:56:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773529015;
-	bh=HTBn76J+zrddAYfE5QCFlT+eHYur3YWWbRorIKZsH3E=;
-	h=From:Date:Subject:To:Cc:From;
-	b=cCKFpXVhrNM4vpHStdRLyUwRCcHinaMyRfIlmaNFrnFYhoInqLWPnjhD1aM0oYZXc
-	 zF9RQkrDXn3jLoPAFp116s/mxwS5Y9RFoambA3UZbcO1sUJyGFM8hMd5hRqG21IV4U
-	 bFLAlB7QNYl0NnICYleSn+EBhq1Zw5RBTEQpsAGINE4/KqRAUXC4+c2jQ8F4k9sMYk
-	 hYAurn7BOeKpoWUfeDQ8yUcmwOOKSXcSrMG983aUc0s6yCT0fpdtFX35rtusFxoWZh
-	 BCfsmOD9jaCUDGT4UYmOSDBFLTd2rW+MJGheQ3lWXnANtJkneQFsUA0eErYJWLyYfP
-	 31TArudNLM8HQ==
-From: Linus Walleij <linusw@kernel.org>
-Date: Sat, 14 Mar 2026 23:56:49 +0100
-Subject: [PATCH] ASoC: codec: arizona: Convert to use GPIO descriptors
+	s=arc-20240116; t=1773535442; c=relaxed/simple;
+	bh=jhbwOkmSNbArfrU++r8APhIkf0krh5jWjxZOb6bJsVw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HijaxfoJTUNTUzG3f0BOYd0rlKXg1Lm8XTbYTu8Lp/leVv2MQHUTxNtIDCQjW4a8dadiH3GZ7bM5xyeUo63SDDP1YkQXDgoVaTZL7mJkC7q/KgjKVxgZpeqWreTdyD6OYf7jLM9Uxyyq/wymWGk0+0GPtiFr6eg0qdKU8Y3F53s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BCFA152B;
+	Sat, 14 Mar 2026 17:43:52 -0700 (PDT)
+Received: from ryzen.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 762313F7BD;
+	Sat, 14 Mar 2026 17:43:56 -0700 (PDT)
+Date: Sun, 15 Mar 2026 01:42:05 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Icenowy Zheng <uwu@icenowy.me>
+Cc: Linus Walleij <linusw@kernel.org>, Chen-Yu Tsai <wens@kernel.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland	
+ <samuel@sholland.org>, Bartosz Golaszewski <brgl@kernel.org>,
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] pinctrl: sunxi: convert to GPIO_GENERIC
+Message-ID: <20260315014205.471d6834@ryzen.lan>
+In-Reply-To: <a4cfb10e4701da0649ef648136496a962be5870d.camel@icenowy.me>
+References: <20260313000652.11470-1-andre.przywara@arm.com>
+	<a4cfb10e4701da0649ef648136496a962be5870d.camel@icenowy.me>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260314-asoc-arizona-v1-1-ecc9a165307c@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzMDY0MT3cTi/GTdxKLMqvy8RF1LCxMLc2Nj85RU8yQloJaCotS0zAqwcdG
- xtbUAAfs3+V4AAAA=
-X-Change-ID: 20260314-asoc-arizona-98487337de7b
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, Russell King <linux@armlinux.org.uk>, 
- Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Bartosz Golaszewski <brgl@kernel.org>
-Cc: patches@opensource.cirrus.com, linux-arm-kernel@lists.infradead.org, 
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Linus Walleij <linusw@kernel.org>
-X-Mailer: b4 0.14.3
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [0.14 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[arm.com : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[kernel.org,samsung.com,armlinux.org.uk,gmail.com,perex.cz,suse.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33443-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,sholland.org,vger.kernel.org,lists.infradead.org,lists.linux.dev];
+	TAGGED_FROM(0.00)[bounces-33444-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andre.przywara@arm.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-0.997];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 513DC28F669
+X-Rspamd-Queue-Id: 2EE7828FAA2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-This converts the Arizona driver to use GPIO descriptors
-exclusively, deletes the legacy code path an updates the
-in-tree user of legacy GPIO.
+On Sat, 14 Mar 2026 13:14:25 +0800
+Icenowy Zheng <uwu@icenowy.me> wrote:
 
-The GPIO lines for mic detect polarity and headphone ID
-detection are made exclusively descriptor-oriented. The
-headphone ID detection could actually only be used by
-the legacy GPIO code, but I converted it to use a
-descriptor if someone would actually need it so we don't
-just drop useful code.
+> =E5=9C=A8 2026-03-13=E4=BA=94=E7=9A=84 01:06 +0100=EF=BC=8CAndre Przywara=
+=E5=86=99=E9=81=93=EF=BC=9A
+> > Allwinner SoCs combine pinmuxing and GPIO control in one device/MMIO
+> > register frame. So far we were instantiating one GPIO chip per
+> > pinctrl
+> > device, which covers multiple banks of up to 32 GPIO pins per bank.
+> > The
+> > GPIO numbers were set to match the absolute pin numbers, even across
+> > the
+> > typically two instances of the pinctrl device.
+> >=20
+> > Convert the GPIO part of the sunxi pinctrl over to use the
+> > gpio_generic
+> > framework. This alone allows to remove some sunxi specific code,
+> > which
+> > is replaced with the existing generic code. This will become even
+> > more
+> > useful with the upcoming A733 support, which adds set and clear
+> > registers for the output.
+> > As a side effect this also changes the GPIO device and number
+> > allocation: Each bank is now represented by its own gpio_chip, with
+> > only
+> > as many pins as there are actually implemented. The numbering is left
+> > up =20
+>=20
+> Ah, is this a userspace API break?
 
-The compatible "wlf,hpdet-id-gpio" is not in the device
-tree bindings and only intended to be used by software
-nodes if any. If someone insists I can try to add a
-binding for it, but I doubt there is any real user so
-it seems pointless.
+Was that ever a guaranteed user space API? Or just something
+that everyone relied on because it was always the same (until it
+wasn't)? Similar to /dev/mmcblk0 being the SD card?
+And ignoring the ill-fated old-style sysfs interface for now, how does
+this work with libgpiod? Would it still use the absolute pin numbers?
 
-Signed-off-by: Linus Walleij <linusw@kernel.org>
+I mean looking at that warning about the forced GPIO numbering we
+get, using base =3D -1 seems to be the recommended way?
+
+Cheers,
+Andre
+
+> Sincerely,
+> Icenowy
+>=20
+> > to the kernel (.base =3D -1).
+> >=20
+> > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> > ---
+> > =C2=A0drivers/pinctrl/sunxi/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> > =C2=A0drivers/pinctrl/sunxi/pinctrl-sunxi.c | 245 ++++++++++++---------=
 ---
-This patch hits all over the place, but I think merging it to
-the ASoC tree would be the best.
----
- arch/arm/mach-s3c/mach-crag6410-module.c |  6 +-
- include/linux/mfd/arizona/pdata.h        | 10 ----
- sound/soc/codecs/arizona-jack.c          | 95 ++++++++++----------------------
- sound/soc/codecs/arizona.h               |  1 +
- 4 files changed, 34 insertions(+), 78 deletions(-)
-
-diff --git a/arch/arm/mach-s3c/mach-crag6410-module.c b/arch/arm/mach-s3c/mach-crag6410-module.c
-index 4ffcf024b09d..14b0f9cc103e 100644
---- a/arch/arm/mach-s3c/mach-crag6410-module.c
-+++ b/arch/arm/mach-s3c/mach-crag6410-module.c
-@@ -239,7 +239,6 @@ static struct gpiod_lookup_table wm8994_gpiod_table = {
- static struct arizona_pdata wm5102_reva_pdata = {
- 	.gpio_base = CODEC_GPIO_BASE,
- 	.irq_flags = IRQF_TRIGGER_HIGH,
--	.micd_pol_gpio = CODEC_GPIO_BASE + 4,
- 	.micd_rate = 6,
- 	.gpio_defaults = {
- 		[2] = 0x10000, /* AIF3TXLRCLK */
-@@ -265,6 +264,8 @@ static struct gpiod_lookup_table wm5102_reva_gpiod_table = {
- 	.table = {
- 		GPIO_LOOKUP("GPION", 7,
- 			    "wlf,ldoena", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("arizona", 4,
-+			    "wlf,micd-pol", GPIO_ACTIVE_HIGH),
- 		{ },
- 	},
- };
-@@ -272,7 +273,6 @@ static struct gpiod_lookup_table wm5102_reva_gpiod_table = {
- static struct arizona_pdata wm5102_pdata = {
- 	.gpio_base = CODEC_GPIO_BASE,
- 	.irq_flags = IRQF_TRIGGER_HIGH,
--	.micd_pol_gpio = CODEC_GPIO_BASE + 2,
- 	.gpio_defaults = {
- 		[2] = 0x10000, /* AIF3TXLRCLK */
- 		[3] = 0x4,     /* OPCLK */
-@@ -297,6 +297,8 @@ static struct gpiod_lookup_table wm5102_gpiod_table = {
- 	.table = {
- 		GPIO_LOOKUP("GPION", 7,
- 			    "wlf,ldo1ena", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("arizona", 2,
-+			    "wlf,micd-pol", GPIO_ACTIVE_HIGH),
- 		{ },
- 	},
- };
-diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
-index f72e6d4b14a7..d465dcd8c90a 100644
---- a/include/linux/mfd/arizona/pdata.h
-+++ b/include/linux/mfd/arizona/pdata.h
-@@ -117,11 +117,6 @@ struct arizona_pdata {
- 	/** Check for line output with HPDET method */
- 	bool hpdet_acc_id_line;
- 
--#ifdef CONFIG_GPIOLIB_LEGACY
--	/** GPIO used for mic isolation with HPDET */
--	int hpdet_id_gpio;
--#endif
--
- 	/** Channel to use for headphone detection */
- 	unsigned int hpdet_channel;
- 
-@@ -131,11 +126,6 @@ struct arizona_pdata {
- 	/** Extra debounce timeout used during initial mic detection (ms) */
- 	unsigned int micd_detect_debounce;
- 
--#ifdef CONFIG_GPIOLIB_LEGACY
--	/** GPIO for mic detection polarity */
--	int micd_pol_gpio;
--#endif
--
- 	/** Mic detect ramp rate */
- 	unsigned int micd_bias_start_time;
- 
-diff --git a/sound/soc/codecs/arizona-jack.c b/sound/soc/codecs/arizona-jack.c
-index 303c1d44ebd8..a9063bac2752 100644
---- a/sound/soc/codecs/arizona-jack.c
-+++ b/sound/soc/codecs/arizona-jack.c
-@@ -11,7 +11,6 @@
- #include <linux/interrupt.h>
- #include <linux/err.h>
- #include <linux/gpio/consumer.h>
--#include <linux/gpio.h>
- #include <linux/input.h>
- #include <linux/pm_runtime.h>
- #include <linux/property.h>
-@@ -459,11 +458,6 @@ static int arizona_hpdet_do_id(struct arizona_priv *info, int *reading,
- 			       bool *mic)
- {
- 	struct arizona *arizona = info->arizona;
--#ifdef CONFIG_GPIOLIB_LEGACY
--	int id_gpio = arizona->pdata.hpdet_id_gpio;
--#else
--	int id_gpio = 0;
--#endif
- 
- 	if (!arizona->pdata.hpdet_acc_id)
- 		return 0;
-@@ -474,9 +468,8 @@ static int arizona_hpdet_do_id(struct arizona_priv *info, int *reading,
- 	 */
- 	info->hpdet_res[info->num_hpdet_res++] = *reading;
- 
--#ifdef CONFIG_GPIOLIB_LEGACY
- 	/* Only check the mic directly if we didn't already ID it */
--	if (id_gpio && info->num_hpdet_res == 1) {
-+	if (info->hpdet_id_gpio && info->num_hpdet_res == 1) {
- 		dev_dbg(arizona->dev, "Measuring mic\n");
- 
- 		regmap_update_bits(arizona->regmap,
-@@ -486,13 +479,12 @@ static int arizona_hpdet_do_id(struct arizona_priv *info, int *reading,
- 				   ARIZONA_ACCDET_MODE_HPR |
- 				   info->micd_modes[0].src);
- 
--		gpio_set_value_cansleep(id_gpio, 1);
-+		gpiod_set_value_cansleep(info->hpdet_id_gpio, 1);
- 
- 		regmap_update_bits(arizona->regmap, ARIZONA_HEADPHONE_DETECT_1,
- 				   ARIZONA_HP_POLL, ARIZONA_HP_POLL);
- 		return -EAGAIN;
- 	}
--#endif
- 
- 	/* OK, got both.  Now, compare... */
- 	dev_dbg(arizona->dev, "HPDET measured %d %d\n",
-@@ -514,7 +506,7 @@ static int arizona_hpdet_do_id(struct arizona_priv *info, int *reading,
- 	/*
- 	 * If we measure the mic as high impedance
- 	 */
--	if (!id_gpio || info->hpdet_res[1] > 50) {
-+	if (!info->hpdet_id_gpio || info->hpdet_res[1] > 50) {
- 		dev_dbg(arizona->dev, "Detected mic\n");
- 		*mic = true;
- 		info->detecting = true;
-@@ -533,9 +525,6 @@ static irqreturn_t arizona_hpdet_irq(int irq, void *data)
- {
- 	struct arizona_priv *info = data;
- 	struct arizona *arizona = info->arizona;
--#ifdef CONFIG_GPIOLIB_LEGACY
--	int id_gpio = arizona->pdata.hpdet_id_gpio;
--#endif
- 	int ret, reading, state, report;
- 	bool mic = false;
- 
-@@ -591,10 +580,8 @@ static irqreturn_t arizona_hpdet_irq(int irq, void *data)
- 
- 	arizona_extcon_hp_clamp(info, false);
- 
--#ifdef CONFIG_GPIOLIB_LEGACY
--	if (id_gpio)
--		gpio_set_value_cansleep(id_gpio, 0);
--#endif
-+	if (info->hpdet_id_gpio)
-+		gpiod_set_value_cansleep(info->hpdet_id_gpio, 0);
- 
- 	/* If we have a mic then reenable MICDET */
- 	if (state && (mic || info->mic))
-@@ -1325,58 +1312,33 @@ int arizona_jack_codec_dev_probe(struct arizona_priv *info, struct device *dev)
- 		regmap_update_bits(arizona->regmap, ARIZONA_GP_SWITCH_1,
- 				ARIZONA_SW1_MODE_MASK, arizona->pdata.gpsw);
- 
--#ifdef CONFIG_GPIOLIB_LEGACY
--	if (pdata->micd_pol_gpio > 0) {
--		if (info->micd_modes[0].gpio)
--			mode = GPIOF_OUT_INIT_HIGH;
--		else
--			mode = GPIOF_OUT_INIT_LOW;
--
--		ret = devm_gpio_request_one(dev, pdata->micd_pol_gpio,
--					    mode, "MICD polarity");
--		if (ret != 0) {
--			dev_err(arizona->dev, "Failed to request GPIO%d: %d\n",
--				pdata->micd_pol_gpio, ret);
--			return ret;
--		}
--
--		info->micd_pol_gpio = gpio_to_desc(pdata->micd_pol_gpio);
--	} else
--#endif
--	{
--		if (info->micd_modes[0].gpio)
--			mode = GPIOD_OUT_HIGH;
--		else
--			mode = GPIOD_OUT_LOW;
-+	if (info->micd_modes[0].gpio)
-+		mode = GPIOD_OUT_HIGH;
-+	else
-+		mode = GPIOD_OUT_LOW;
- 
--		/* We can't use devm here because we need to do the get
--		 * against the MFD device, as that is where the of_node
--		 * will reside, but if we devm against that the GPIO
--		 * will not be freed if the extcon driver is unloaded.
--		 */
--		info->micd_pol_gpio = gpiod_get_optional(arizona->dev,
--							 "wlf,micd-pol",
--							 mode);
--		if (IS_ERR(info->micd_pol_gpio)) {
--			ret = PTR_ERR(info->micd_pol_gpio);
--			dev_err_probe(arizona->dev, ret, "getting microphone polarity GPIO\n");
--			return ret;
--		}
-+	/* We can't use devm here because we need to do the get
-+	 * against the MFD device, as that is where the of_node
-+	 * will reside, but if we devm against that the GPIO
-+	 * will not be freed if the extcon driver is unloaded.
-+	 */
-+	info->micd_pol_gpio = gpiod_get_optional(arizona->dev,
-+						 "wlf,micd-pol",
-+						 mode);
-+	if (IS_ERR(info->micd_pol_gpio)) {
-+		ret = PTR_ERR(info->micd_pol_gpio);
-+		dev_err_probe(arizona->dev, ret, "getting microphone polarity GPIO\n");
-+		return ret;
- 	}
- 
--#ifdef CONFIG_GPIOLIB_LEGACY
--	if (arizona->pdata.hpdet_id_gpio > 0) {
--		ret = devm_gpio_request_one(dev, arizona->pdata.hpdet_id_gpio,
--					    GPIOF_OUT_INIT_LOW,
--					    "HPDET");
--		if (ret != 0) {
--			dev_err(arizona->dev, "Failed to request GPIO%d: %d\n",
--				arizona->pdata.hpdet_id_gpio, ret);
--			gpiod_put(info->micd_pol_gpio);
--			return ret;
--		}
-+	info->hpdet_id_gpio = gpiod_get_optional(arizona->dev,
-+						 "wlf,hpdet-id-gpio",
-+						 mode);
-+	if (IS_ERR(info->hpdet_id_gpio)) {
-+		ret = PTR_ERR(info->hpdet_id_gpio);
-+		dev_err_probe(arizona->dev, ret, "getting headphone detect ID GPIO\n");
-+		return ret;
- 	}
--#endif
- 
- 	return 0;
- }
-@@ -1385,6 +1347,7 @@ EXPORT_SYMBOL_GPL(arizona_jack_codec_dev_probe);
- int arizona_jack_codec_dev_remove(struct arizona_priv *info)
- {
- 	gpiod_put(info->micd_pol_gpio);
-+	gpiod_put(info->hpdet_id_gpio);
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(arizona_jack_codec_dev_remove);
-diff --git a/sound/soc/codecs/arizona.h b/sound/soc/codecs/arizona.h
-index ecd8890eefc1..0703182d87b3 100644
---- a/sound/soc/codecs/arizona.h
-+++ b/sound/soc/codecs/arizona.h
-@@ -100,6 +100,7 @@ struct arizona_priv {
- 	struct snd_soc_jack *jack;
- 	struct regulator *micvdd;
- 	struct gpio_desc *micd_pol_gpio;
-+	struct gpio_desc *hpdet_id_gpio;
- 
- 	u16 last_jackdet;
- 
-
----
-base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
-change-id: 20260314-asoc-arizona-98487337de7b
-
-Best regards,
--- 
-Linus Walleij <linusw@kernel.org>
+> > --
+> > =C2=A0drivers/pinctrl/sunxi/pinctrl-sunxi.h |=C2=A0 11 +-
+> > =C2=A03 files changed, 124 insertions(+), 133 deletions(-)
+> >=20
+> > diff --git a/drivers/pinctrl/sunxi/Kconfig
+> > b/drivers/pinctrl/sunxi/Kconfig
+> > index dc62eba96348e..5905810dbf398 100644
+> > --- a/drivers/pinctrl/sunxi/Kconfig
+> > +++ b/drivers/pinctrl/sunxi/Kconfig
+> > @@ -4,6 +4,7 @@ if ARCH_SUNXI
+> > =C2=A0config PINCTRL_SUNXI
+> > =C2=A0	bool
+> > =C2=A0	select PINMUX
+> > +	select GPIO_GENERIC
+> > =C2=A0	select GENERIC_PINCONF
+> > =C2=A0	select GPIOLIB
+> > =C2=A0
+> > diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> > b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> > index 48434292a39b5..4235f9feff00d 100644
+> > --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> > +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> > @@ -13,6 +13,7 @@
+> > =C2=A0#include <linux/clk.h>
+> > =C2=A0#include <linux/export.h>
+> > =C2=A0#include <linux/gpio/driver.h>
+> > +#include <linux/gpio/generic.h>
+> > =C2=A0#include <linux/interrupt.h>
+> > =C2=A0#include <linux/io.h>
+> > =C2=A0#include <linux/irqchip/chained_irq.h>
+> > @@ -86,17 +87,6 @@ static void sunxi_mux_reg(const struct
+> > sunxi_pinctrl *pctl,
+> > =C2=A0	*mask=C2=A0 =3D (BIT(MUX_FIELD_WIDTH) - 1) << *shift;
+> > =C2=A0}
+> > =C2=A0
+> > -static void sunxi_data_reg(const struct sunxi_pinctrl *pctl,
+> > -			=C2=A0=C2=A0 u32 pin, u32 *reg, u32 *shift, u32 *mask)
+> > -{
+> > -	u32 offset =3D pin % PINS_PER_BANK * DATA_FIELD_WIDTH;
+> > -
+> > -	*reg=C2=A0=C2=A0 =3D sunxi_bank_offset(pctl, pin) + DATA_REGS_OFFSET +
+> > -		 offset / BITS_PER_TYPE(u32) * sizeof(u32);
+> > -	*shift =3D offset % BITS_PER_TYPE(u32);
+> > -	*mask=C2=A0 =3D (BIT(DATA_FIELD_WIDTH) - 1) << *shift;
+> > -}
+> > -
+> > =C2=A0static void sunxi_dlevel_reg(const struct sunxi_pinctrl *pctl,
+> > =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0 u32 pin, u32 *reg, u32 *shift, u32
+> > *mask)
+> > =C2=A0{
+> > @@ -930,99 +920,22 @@ static const struct pinmux_ops sunxi_pmx_ops =3D
+> > {
+> > =C2=A0	.strict			=3D true,
+> > =C2=A0};
+> > =C2=A0
+> > -static int sunxi_pinctrl_gpio_direction_input(struct gpio_chip
+> > *chip,
+> > -					unsigned offset)
+> > -{
+> > -	struct sunxi_pinctrl *pctl =3D gpiochip_get_data(chip);
+> > -
+> > -	return sunxi_pmx_gpio_set_direction(pctl->pctl_dev, NULL,
+> > -					=C2=A0=C2=A0=C2=A0 chip->base + offset,
+> > true);
+> > -}
+> > -
+> > -static int sunxi_pinctrl_gpio_get(struct gpio_chip *chip, unsigned
+> > offset)
+> > -{
+> > -	struct sunxi_pinctrl *pctl =3D gpiochip_get_data(chip);
+> > -	bool set_mux =3D pctl->desc->irq_read_needs_mux &&
+> > -		gpiochip_line_is_irq(chip, offset);
+> > -	u32 pin =3D offset + chip->base;
+> > -	u32 reg, shift, mask, val;
+> > -
+> > -	sunxi_data_reg(pctl, offset, &reg, &shift, &mask);
+> > -
+> > -	if (set_mux)
+> > -		sunxi_pmx_set(pctl->pctl_dev, pin,
+> > SUN4I_FUNC_INPUT);
+> > -
+> > -	val =3D (readl(pctl->membase + reg) & mask) >> shift;
+> > -
+> > -	if (set_mux)
+> > -		sunxi_pmx_set(pctl->pctl_dev, pin, SUN4I_FUNC_IRQ);
+> > -
+> > -	return val;
+> > -}
+> > -
+> > -static int sunxi_pinctrl_gpio_set(struct gpio_chip *chip, unsigned
+> > int offset,
+> > -				=C2=A0 int value)
+> > -{
+> > -	struct sunxi_pinctrl *pctl =3D gpiochip_get_data(chip);
+> > -	u32 reg, shift, mask, val;
+> > -	unsigned long flags;
+> > -
+> > -	sunxi_data_reg(pctl, offset, &reg, &shift, &mask);
+> > -
+> > -	raw_spin_lock_irqsave(&pctl->lock, flags);
+> > -
+> > -	val =3D readl(pctl->membase + reg);
+> > -
+> > -	if (value)
+> > -		val |=3D mask;
+> > -	else
+> > -		val &=3D ~mask;
+> > -
+> > -	writel(val, pctl->membase + reg);
+> > -
+> > -	raw_spin_unlock_irqrestore(&pctl->lock, flags);
+> > -
+> > -	return 0;
+> > -}
+> > -
+> > -static int sunxi_pinctrl_gpio_direction_output(struct gpio_chip
+> > *chip,
+> > -					unsigned offset, int value)
+> > -{
+> > -	struct sunxi_pinctrl *pctl =3D gpiochip_get_data(chip);
+> > -
+> > -	sunxi_pinctrl_gpio_set(chip, offset, value);
+> > -	return sunxi_pmx_gpio_set_direction(pctl->pctl_dev, NULL,
+> > -					=C2=A0=C2=A0=C2=A0 chip->base + offset,
+> > false);
+> > -}
+> > -
+> > -static int sunxi_pinctrl_gpio_of_xlate(struct gpio_chip *gc,
+> > -				const struct of_phandle_args
+> > *gpiospec,
+> > -				u32 *flags)
+> > -{
+> > -	int pin, base;
+> > -
+> > -	base =3D PINS_PER_BANK * gpiospec->args[0];
+> > -	pin =3D base + gpiospec->args[1];
+> > -
+> > -	if (pin > gc->ngpio)
+> > -		return -EINVAL;
+> > -
+> > -	if (flags)
+> > -		*flags =3D gpiospec->args[2];
+> > -
+> > -	return pin;
+> > -}
+> > -
+> > =C2=A0static int sunxi_pinctrl_gpio_to_irq(struct gpio_chip *chip,
+> > unsigned offset)
+> > =C2=A0{
+> > =C2=A0	struct sunxi_pinctrl *pctl =3D gpiochip_get_data(chip);
+> > =C2=A0	struct sunxi_desc_function *desc;
+> > -	unsigned pinnum =3D pctl->desc->pin_base + offset;
+> > -	unsigned irqnum;
+> > +	unsigned int pinnum, irqnum, i;
+> > =C2=A0
+> > =C2=A0	if (offset >=3D chip->ngpio)
+> > =C2=A0		return -ENXIO;
+> > =C2=A0
+> > +	for (i =3D 0; i < SUNXI_PINCTRL_MAX_BANKS; i++)
+> > +		if (pctl->banks[i].chip.gc.base =3D=3D chip->base)
+> > +			break;
+> > +	if (i =3D=3D SUNXI_PINCTRL_MAX_BANKS)
+> > +		return -EINVAL;
+> > +	pinnum =3D pctl->desc->pin_base + i * PINS_PER_BANK + offset;
+> > +
+> > =C2=A0	desc =3D sunxi_pinctrl_desc_find_function_by_pin(pctl, pinnum,
+> > "irq");
+> > =C2=A0	if (!desc)
+> > =C2=A0		return -EINVAL;
+> > @@ -1039,18 +952,19 @@ static int
+> > sunxi_pinctrl_irq_request_resources(struct irq_data *d)
+> > =C2=A0{
+> > =C2=A0	struct sunxi_pinctrl *pctl =3D irq_data_get_irq_chip_data(d);
+> > =C2=A0	struct sunxi_desc_function *func;
+> > -	int ret;
+> > +	int pinnum =3D pctl->irq_array[d->hwirq], ret;
+> > +	int bank =3D (pinnum - pctl->desc->pin_base) / PINS_PER_BANK;
+> > =C2=A0
+> > -	func =3D sunxi_pinctrl_desc_find_function_by_pin(pctl,
+> > -					pctl->irq_array[d->hwirq],
+> > "irq");
+> > +	func =3D sunxi_pinctrl_desc_find_function_by_pin(pctl, pinnum,
+> > "irq");
+> > =C2=A0	if (!func)
+> > =C2=A0		return -EINVAL;
+> > =C2=A0
+> > -	ret =3D gpiochip_lock_as_irq(pctl->chip,
+> > -			pctl->irq_array[d->hwirq] - pctl->desc- =20
+> > >pin_base); =20
+> > +	ret =3D gpiochip_lock_as_irq(&pctl->banks[bank].chip.gc,
+> > +				=C2=A0=C2=A0 d->hwirq % IRQ_PER_BANK);
+> > =C2=A0	if (ret) {
+> > =C2=A0		dev_err(pctl->dev, "unable to lock HW IRQ %lu for
+> > IRQ\n",
+> > =C2=A0			irqd_to_hwirq(d));
+> > +
+> > =C2=A0		return ret;
+> > =C2=A0	}
+> > =C2=A0
+> > @@ -1063,9 +977,10 @@ static int
+> > sunxi_pinctrl_irq_request_resources(struct irq_data *d)
+> > =C2=A0static void sunxi_pinctrl_irq_release_resources(struct irq_data *=
+d)
+> > =C2=A0{
+> > =C2=A0	struct sunxi_pinctrl *pctl =3D irq_data_get_irq_chip_data(d);
+> > +	int pinnum =3D pctl->irq_array[d->hwirq] - pctl->desc- =20
+> > >pin_base; =20
+> > +	struct gpio_chip *gc =3D &pctl->banks[pinnum /
+> > PINS_PER_BANK].chip.gc;
+> > =C2=A0
+> > -	gpiochip_unlock_as_irq(pctl->chip,
+> > -			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pctl->irq_array[d->hwirq] - pctl- =20
+> > >desc->pin_base); =20
+> > +	gpiochip_unlock_as_irq(gc, pinnum);
+> > =C2=A0}
+> > =C2=A0
+> > =C2=A0static int sunxi_pinctrl_irq_set_type(struct irq_data *d, unsigned
+> > int type)
+> > @@ -1493,6 +1408,84 @@ static int sunxi_pinctrl_setup_debounce(struct
+> > sunxi_pinctrl *pctl,
+> > =C2=A0	return 0;
+> > =C2=A0}
+> > =C2=A0
+> > +static bool sunxi_of_node_instance_match(struct gpio_chip *chip,
+> > unsigned int i)
+> > +{
+> > +	struct sunxi_pinctrl *pctl =3D gpiochip_get_data(chip);
+> > +
+> > +	if (i >=3D SUNXI_PINCTRL_MAX_BANKS)
+> > +		return false;
+> > +
+> > +	return (chip->base =3D=3D pctl->banks[i].chip.gc.base);
+> > +}
+> > +
+> > +static int sunxi_num_pins_of_bank(struct sunxi_pinctrl *pctl, int
+> > bank)
+> > +{
+> > +	int max =3D -1, i;
+> > +
+> > +	for (i =3D 0; i < pctl->desc->npins; i++) {
+> > +		int pinnum =3D pctl->desc->pins[i].pin.number - pctl- =20
+> > >desc->pin_base; =20
+> > +
+> > +		if (pinnum / PINS_PER_BANK < bank)
+> > +			continue;
+> > +		if (pinnum / PINS_PER_BANK > bank)
+> > +			break;
+> > +		if (pinnum % PINS_PER_BANK > max)
+> > +			max =3D pinnum % PINS_PER_BANK;
+> > +	}
+> > +
+> > +	return max + 1;
+> > +}
+> > +
+> > +static int sunxi_gpio_add_bank(struct sunxi_pinctrl *pctl, int
+> > index)
+> > +{
+> > +	char bank_name =3D 'A' + index + pctl->desc->pin_base /
+> > PINS_PER_BANK;
+> > +	struct sunxi_gpio_bank *bank =3D &pctl->banks[index];
+> > +	struct gpio_generic_chip_config config;
+> > +	struct gpio_chip *gc =3D &bank->chip.gc;
+> > +	int ngpio, ret;
+> > +
+> > +	ngpio =3D sunxi_num_pins_of_bank(pctl, index);
+> > +	bank->pctl =3D pctl;
+> > +	bank->base =3D pctl->membase + index * pctl->bank_mem_size;
+> > +	if (!ngpio) {
+> > +		gc->owner =3D THIS_MODULE;
+> > +		gc->ngpio =3D 0;
+> > +		gc->base =3D -1;
+> > +		gc->of_gpio_n_cells =3D 3;
+> > +
+> > +		return 0;
+> > +	}
+> > +
+> > +	config =3D (struct gpio_generic_chip_config) {
+> > +		.dev =3D pctl->dev,
+> > +		.sz =3D 4,
+> > +		.dat =3D bank->base + DATA_REGS_OFFSET,
+> > +		.set =3D bank->base + DATA_REGS_OFFSET,
+> > +		.clr =3D NULL,
+> > +		.flags =3D GPIO_GENERIC_READ_OUTPUT_REG_SET |
+> > +			 GPIO_GENERIC_PINCTRL_BACKEND,
+> > +	};
+> > +
+> > +	ret =3D gpio_generic_chip_init(&bank->chip, &config);
+> > +	if (ret)
+> > +		return dev_err_probe(pctl->dev, ret,
+> > +				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to init generic gpio
+> > chip\n");
+> > +
+> > +	gc->owner		=3D THIS_MODULE;
+> > +	gc->label		=3D devm_kasprintf(pctl->dev,
+> > GFP_KERNEL,
+> > +						 "%s-P%c", gc- =20
+> > >label, =20
+> > +						 bank_name);
+> > +	gc->ngpio		=3D ngpio;
+> > +	gc->base		=3D -1;
+> > +	gc->of_gpio_n_cells	=3D 3;
+> > +	gc->of_node_instance_match =3D sunxi_of_node_instance_match;
+> > +	gc->set_config		=3D gpiochip_generic_config;
+> > +	gc->to_irq		=3D sunxi_pinctrl_gpio_to_irq;
+> > +	gc->can_sleep		=3D false;
+> > +
+> > +	return gpiochip_add_data(gc, pctl);
+> > +}
+> > +
+> > =C2=A0int sunxi_pinctrl_init_with_flags(struct platform_device *pdev,
+> > =C2=A0				=C2=A0 const struct sunxi_pinctrl_desc
+> > *desc,
+> > =C2=A0				=C2=A0 unsigned long flags)
+> > @@ -1503,6 +1496,7 @@ int sunxi_pinctrl_init_with_flags(struct
+> > platform_device *pdev,
+> > =C2=A0	struct sunxi_pinctrl *pctl;
+> > =C2=A0	struct pinmux_ops *pmxops;
+> > =C2=A0	int i, ret, last_pin, pin_idx;
+> > +	int gpio_banks;
+> > =C2=A0	struct clk *clk;
+> > =C2=A0
+> > =C2=A0	pctl =3D devm_kzalloc(&pdev->dev, sizeof(*pctl), GFP_KERNEL);
+> > @@ -1590,38 +1584,23 @@ int sunxi_pinctrl_init_with_flags(struct
+> > platform_device *pdev,
+> > =C2=A0		return PTR_ERR(pctl->pctl_dev);
+> > =C2=A0	}
+> > =C2=A0
+> > -	pctl->chip =3D devm_kzalloc(&pdev->dev, sizeof(*pctl->chip),
+> > GFP_KERNEL);
+> > -	if (!pctl->chip)
+> > -		return -ENOMEM;
+> > -
+> > -	last_pin =3D pctl->desc->pins[pctl->desc->npins -
+> > 1].pin.number;
+> > -	pctl->chip->owner =3D THIS_MODULE;
+> > -	pctl->chip->request =3D gpiochip_generic_request;
+> > -	pctl->chip->free =3D gpiochip_generic_free;
+> > -	pctl->chip->set_config =3D gpiochip_generic_config;
+> > -	pctl->chip->direction_input =3D
+> > sunxi_pinctrl_gpio_direction_input;
+> > -	pctl->chip->direction_output =3D
+> > sunxi_pinctrl_gpio_direction_output;
+> > -	pctl->chip->get =3D sunxi_pinctrl_gpio_get;
+> > -	pctl->chip->set =3D sunxi_pinctrl_gpio_set;
+> > -	pctl->chip->of_xlate =3D sunxi_pinctrl_gpio_of_xlate;
+> > -	pctl->chip->to_irq =3D sunxi_pinctrl_gpio_to_irq;
+> > -	pctl->chip->of_gpio_n_cells =3D 3;
+> > -	pctl->chip->can_sleep =3D false;
+> > -	pctl->chip->ngpio =3D round_up(last_pin, PINS_PER_BANK) -
+> > -			=C2=A0=C2=A0=C2=A0 pctl->desc->pin_base;
+> > -	pctl->chip->label =3D dev_name(&pdev->dev);
+> > -	pctl->chip->parent =3D &pdev->dev;
+> > -	pctl->chip->base =3D pctl->desc->pin_base;
+> > -
+> > -	ret =3D gpiochip_add_data(pctl->chip, pctl);
+> > -	if (ret)
+> > -		return ret;
+> > +	last_pin =3D pctl->desc->pins[pctl->desc->npins -
+> > 1].pin.number -
+> > +		=C2=A0=C2=A0 pctl->desc->pin_base;
+> > +	for (gpio_banks =3D 0;
+> > +	=C2=A0=C2=A0=C2=A0=C2=A0 gpio_banks <=3D last_pin / PINS_PER_BANK;
+> > +	=C2=A0=C2=A0=C2=A0=C2=A0 gpio_banks++) {
+> > +		ret =3D sunxi_gpio_add_bank(pctl, gpio_banks);
+> > +		if (ret)
+> > +			goto gpiochip_error;
+> > +	}
+> > =C2=A0
+> > =C2=A0	for (i =3D 0; i < pctl->desc->npins; i++) {
+> > =C2=A0		const struct sunxi_desc_pin *pin =3D pctl->desc->pins
+> > + i;
+> > +		int bank =3D (pin->pin.number - pctl->desc->pin_base)
+> > / PINS_PER_BANK;
+> > +		struct gpio_chip *gc =3D &pctl->banks[bank].chip.gc;
+> > =C2=A0
+> > -		ret =3D gpiochip_add_pin_range(pctl->chip,
+> > dev_name(&pdev->dev),
+> > -					=C2=A0=C2=A0=C2=A0=C2=A0 pin->pin.number - pctl- =20
+> > >desc->pin_base, =20
+> > +		ret =3D gpiochip_add_pin_range(gc, dev_name(&pdev- =20
+> > >dev), =20
+> > +					=C2=A0=C2=A0=C2=A0=C2=A0 pin->pin.number %
+> > PINS_PER_BANK,
+> > =C2=A0					=C2=A0=C2=A0=C2=A0=C2=A0 pin->pin.number, 1);
+> > =C2=A0		if (ret)
+> > =C2=A0			goto gpiochip_error;
+> > @@ -1690,6 +1669,8 @@ int sunxi_pinctrl_init_with_flags(struct
+> > platform_device *pdev,
+> > =C2=A0	return 0;
+> > =C2=A0
+> > =C2=A0gpiochip_error:
+> > -	gpiochip_remove(pctl->chip);
+> > +	while (--gpio_banks >=3D 0)
+> > +		gpiochip_remove(&pctl->banks[gpio_banks].chip.gc);
+> > +
+> > =C2=A0	return ret;
+> > =C2=A0}
+> > diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> > b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> > index ad26e4de16a85..085131caa02fe 100644
+> > --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> > +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+> > @@ -14,6 +14,7 @@
+> > =C2=A0#define __PINCTRL_SUNXI_H
+> > =C2=A0
+> > =C2=A0#include <linux/kernel.h>
+> > +#include <linux/gpio/generic.h>
+> > =C2=A0#include <linux/spinlock.h>
+> > =C2=A0
+> > =C2=A0#define PA_BASE	0
+> > @@ -159,9 +160,17 @@ struct sunxi_pinctrl_regulator {
+> > =C2=A0	refcount_t		refcount;
+> > =C2=A0};
+> > =C2=A0
+> > +struct sunxi_pinctrl;
+> > +
+> > +struct sunxi_gpio_bank {
+> > +	struct gpio_generic_chip chip;
+> > +	struct sunxi_pinctrl *pctl;
+> > +	void __iomem *base;
+> > +};
+> > +
+> > =C2=A0struct sunxi_pinctrl {
+> > =C2=A0	void __iomem			*membase;
+> > -	struct gpio_chip		*chip;
+> > +	struct
+> > sunxi_gpio_bank		banks[SUNXI_PINCTRL_MAX_BANKS];
+> > =C2=A0	const struct sunxi_pinctrl_desc	*desc;
+> > =C2=A0	struct device			*dev;
+> > =C2=A0	struct sunxi_pinctrl_regulator	regulators[11]; =20
+>=20
 
 
