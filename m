@@ -1,118 +1,180 @@
-Return-Path: <linux-gpio+bounces-33506-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33507-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MAJdDKjZt2mcWAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33506-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 11:21:28 +0100
+	id OEDjEiLZt2mcWAEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33507-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 11:19:14 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C385297D21
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 11:21:27 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95023297CDC
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 11:19:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 1F5683001070
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:14:28 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 80C0F3005EA3
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:19:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4155D34F46F;
-	Mon, 16 Mar 2026 10:14:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EADF938E5C4;
+	Mon, 16 Mar 2026 10:19:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uFk6DyEl"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="rdMfKQKV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CD9382362
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 10:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596A538B7C3
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 10:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773656065; cv=none; b=TZSvdQKE6ZgFfssSYdkqyhVPnwzpN0sFkribNVJahLudmbRXDvfTDURbE+VL/mmcqUPPUP/iMLV2ObgRId4liXBEsX1rIRs1eqSpta/Sy4izrI/hsrJ6bXJjbbho/Q+cI8JCo8+iaD521pSfibZHmKpw0tipTY2L1Kquph6YHNw=
+	t=1773656351; cv=none; b=pEkaKPJUMFpGAEtB5oc2qOUSpimUkJpu3EYQAfS9y+7BhuLdq4OsE5Fk/bVutYG5LJzB10jdWWrlTR08VG8qN3VVlS0W4yB8XOhYDrqzIPAn5Pr2u9f6FkZZDC1g9pKnoVBb7aEVrH4R5DtjJFC7J+qp0fcSj1LFhw51e+HI94s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773656065; c=relaxed/simple;
-	bh=h1LiluTE35YqGxIDMhkPjhGl7IwqanehezLOS/w0gfQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dPfY7ITNEk+a8TIQkc/ajnnQX18ULxlNzMlIgT+nVKanz2tntt8ktjKzu18zrUv+GztKQMfpWZhQlgLsk6eRPEfg5dp+J9Kr9yVqq/NA57oc+17zX5t48nRxwLRP2a9gCjNhRpdD8L/gZUu9SMlqXYMiZqNlo07i1x2jpPRcAgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uFk6DyEl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E9B5C2BCAF
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 10:14:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773656064;
-	bh=h1LiluTE35YqGxIDMhkPjhGl7IwqanehezLOS/w0gfQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uFk6DyElo1/tRXWTQVW/re4bH+5PAVtubuyjzK1HAqx0bi6xT9bxulyzDiI/zehQx
-	 RclGh0TzwPOrF4+NUCCkw3E7DsMHPl2AXy8Ia0voLJw8k6u+riOUUwdGYodUpTtYTG
-	 J70BohJ16dX+NPdwsipryqrx14AdWzveGSSHcuaf435SasaHt2ghGXrDZXurBMOqvz
-	 3+MFVfdRgWL1LSfjfQrxXfBjJ5rd71o9MnPLLaYMII1XNknjoWU1M6HPLI/qFA/NeU
-	 bw88HRRN7KYEEeQjeMU5ZuPBulqoO2+ynExOIkZaVB6EOIEHF9bnRbqS/WdiljBl1K
-	 2uqqahjtXlCpA==
-Received: by mail-yx1-f47.google.com with SMTP id 956f58d0204a3-64c9a6d6b70so3570118d50.3
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 03:14:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX/1HZ7jXrCo5APGxSvi0zJuH/M8Jqu6yuPpYvdEqwy1Dd3ZoId4yWPN7pI6MfV32sr7ozz1U4zoQT9@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCy48e0k/C9muMbYN8iCyngKh2iV3j2lEsmBF/aihTHNzlRWhx
-	NBo0p3sCbO9nHIOs+PVl1O9k3AzKklo9v1NjP40xpAkuzpvSyRZfh2FuE1XT9QCJoOGCYIf4yrN
-	IbyD2JTq7yk1VHVRHxfqZpBlfY4DXh/U=
-X-Received: by 2002:a05:690c:6d83:b0:799:1f23:6e46 with SMTP id
- 00721157ae682-79a1c1888efmr126635857b3.33.1773656063903; Mon, 16 Mar 2026
- 03:14:23 -0700 (PDT)
+	s=arc-20240116; t=1773656351; c=relaxed/simple;
+	bh=Z3Pv2UF3x1mOPl70WNEH733HqOKkS4/KHiIUlvtl3AI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PQJHzxAjzcDtwE+Dt9iyceKE90fF8YCsnnoZuwBqRkYmGp+AM4TsWl4fXTsH/1ciQ4aLNV3OQrFznYkxqdP2beCV7fxzUYQovHUQuM+iHOk57FLfXPHBEjWY/TIwv4P0WI9Bz3ovboytBXjjWDrDPL3Prj2x2TxDz2TlqJOhtMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=rdMfKQKV; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-48534237460so48636395e9.3
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 03:19:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1773656347; x=1774261147; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=guiztfKTm/HX0Pn7WIHNBacDDiPf6WW6XQg+TERbbf0=;
+        b=rdMfKQKVYnxv860r2PUuB8YMItsTGqsxuyW6SNBtLRgV4XY9mKKkDE4M2mjXJYxr49
+         M2gFlBrXDQXDm/OdxVaGIb8fmI5BimkfJrY8sMeRp0Te3eQFG26BlbxMnrGKfQw39BDs
+         POYFNECAVbniVjbZ1YWC6BMaXq1nknq8Pu97aaJN4bqbKyEO+2Yz5SlsOqP48AoR3tOX
+         2qSmLEeNvzP9O8xFEb85Hmd0ypICGrkj/b7MQUoow6em8+8FXoUtAx40Djce+G0Auh4T
+         n9vHq1DDgB7B6/LW6nnB7XRejyWWhS9MKCUx0RnGzKLHQotkmu9roI/PD5iBxwJ0Oq9P
+         Lqyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773656347; x=1774261147;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=guiztfKTm/HX0Pn7WIHNBacDDiPf6WW6XQg+TERbbf0=;
+        b=NsZS+uwBgmoUIdQlRKeOUnuRCCb/i6v6qX2Bl6atPvVkWpnpNL/lI0HVCVZDNiSXBC
+         fG8m6iGN9Z+ktxrb4Y3biJCMM7nCoMWvDgMXZYt8nTlYRa0bsecL4gMtQOu+IUvZGdEf
+         rN8f7AB91htxqoNltqJkDeuaV6nB7meF9M52s9z9yf6Jva4s8W38t/iQI/YCWVgRidee
+         /Azff5mFxCW5bvxq5M60zSgMF13PlRVz4HkM9gshZ2lDjWRrzeHfp2BLoYKVhseFX07a
+         LS6PRv52Fs4TUZnsWFN0tdVBuNsPkE5v5dQzGVYolsmwwpRx4SayY3LV++VO86m5Ijy0
+         DXQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVVqZYQZgAVitM/UUkc7Zn2erKqqlYm0xUqawMgQTuGfopjCliga6r0PxOEXr2p36x5Zl5WGabE83QX@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKJ4ulnSpRbbH1hHND41dYZeMd1Sngs9Y6jS7MwE2San/xDoYj
+	ACL2kTbbEZhO/C3QIX606Ea8bmVmxKH641NyE7ZqJa1sirodDAX0c26BPNOc82bYHw0=
+X-Gm-Gg: ATEYQzx7Xt0R6JTI1EcBG4SF2N1AK14z2SlsoCBOv09h2+zQ6RBz91hW/pSbwsm3Qud
+	rw1+qlgJJElnF+tcQUNZkqnn4bcTnWAbzIeWEAsyRLD60rwBFGdUWWnuuJNOmSy6hMpAYpVvctk
+	j40QD0e1ant+thFZb+WqBw1/MWq7VMNUKttqFcecoDfzt+CouFp31TTITLJ/uBtqThL/cHXsHdK
+	aNEKARL1pC2SffOd+/9aA8sGqph+3VF1GwnxWxDgOf3w7uDSgEaoGNk8jZJqaLu021e2dBlCt1J
+	ZcHqg1zRXqoLCZrXCfV2eNUvyxpb/VLN+dukO4ErZhPtcK3QLQiU2G2b0+/nOPpA4IgiUBeAqBf
+	FIYqqRDi28VevVcZGXoAdj3WR52ubP2pqHFt4GFrtvOmDGFg+zuw7lBU3FX1Q1N9taRk4NoVww5
+	p+XnLx2ho3shXx8gqTef6XtLw1Wt7KblgL+MdnqTKfkiTsikcZQtFmHQtEq6p4qPcopQue/t9KX
+	9Zgtlk=
+X-Received: by 2002:a05:600c:49a1:b0:485:4bd1:4c74 with SMTP id 5b1f17b1804b1-4855670c0damr128725525e9.32.1773656347449;
+        Mon, 16 Mar 2026 03:19:07 -0700 (PDT)
+Received: from ?IPV6:2a02:2f04:6208:0:c5e3:3624:ad1c:6b4? ([2a02:2f04:6208:0:c5e3:3624:ad1c:6b4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48557c6c69fsm93983115e9.26.2026.03.16.03.19.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Mar 2026 03:19:07 -0700 (PDT)
+Message-ID: <2772d5e1-2127-4808-bd9d-aa40b4ad7104@tuxon.dev>
+Date: Mon, 16 Mar 2026 12:19:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260312031820.3007962-1-nichen@iscas.ac.cn>
-In-Reply-To: <20260312031820.3007962-1-nichen@iscas.ac.cn>
-From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 16 Mar 2026 11:14:13 +0100
-X-Gmail-Original-Message-ID: <CAD++jL=2ZVbZB1oVSQ623YoU=o8hyibjm_rV6KNOgy+SLj54zg@mail.gmail.com>
-X-Gm-Features: AaiRm50FujuUhRUGrDo77dR6-NYp7ro_9lIoFx03OHhUkSsgalB-gNemesvbDtc
-Message-ID: <CAD++jL=2ZVbZB1oVSQ623YoU=o8hyibjm_rV6KNOgy+SLj54zg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: realtek: Fix error check for devm_platform_ioremap_resource()
-To: Chen Ni <nichen@iscas.ac.cn>
-Cc: eleanor.lin@realtek.com, bartosz.golaszewski@oss.qualcomm.com, 
-	tychang@realtek.com, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Add GPIO set_config
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linusw@kernel.org, brgl@kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20260218151925.1104098-1-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdWv1dQ55NcwMga_X0G8K97RgMRXoDu_FV10fNQv7AadbA@mail.gmail.com>
+Content-Language: en-US
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <CAMuHMdWv1dQ55NcwMga_X0G8K97RgMRXoDu_FV10fNQv7AadbA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[tuxon.dev:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33506-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	RCPT_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[tuxon.dev:+];
+	TAGGED_FROM(0.00)[bounces-33507-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	DMARC_NA(0.00)[tuxon.dev];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 2C385297D21
+	TAGGED_RCPT(0.00)[linux-gpio];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[claudiu.beznea@tuxon.dev,linux-gpio@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,renesas.com:email]
+X-Rspamd-Queue-Id: 95023297CDC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Mar 12, 2026 at 4:20=E2=80=AFAM Chen Ni <nichen@iscas.ac.cn> wrote:
+Hi, Geert,
 
-> Replace NULL check with IS_ERR() for devm_platform_ioremap_resource()
-> return value. Use dev_err_probe() for error handling to maintain
-> consistency with the rest of the probe function.
->
-> Fixes: b7f698b22b8b ("pinctrl: realtek: Switch to use devm functions")
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+On 3/13/26 15:15, Geert Uytterhoeven wrote:
+> Hi Claudiu,
+> 
+> On Wed, 18 Feb 2026 at 16:19, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> Add GPIO set_config to allow setting GPIO specific functionalities.
+>>
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> Thanks for your patch!
+> 
+>> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+>> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+>> @@ -1848,6 +1848,25 @@ static void rzg2l_gpio_free(struct gpio_chip *chip, unsigned int offset)
+>>          rzg2l_gpio_direction_input(chip, offset);
+>>   }
+>>
+>> +static int rzg2l_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
+>> +                                unsigned long config)
+>> +{
+>> +       switch (pinconf_to_config_param(config)) {
+>> +       case PIN_CONFIG_BIAS_DISABLE:
+>> +       case PIN_CONFIG_BIAS_PULL_UP:
+>> +       case PIN_CONFIG_BIAS_PULL_DOWN:
+>> +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+>> +       case PIN_CONFIG_DRIVE_PUSH_PULL:
+>> +       case PIN_CONFIG_SLEW_RATE:
+>> +       case PIN_CONFIG_DRIVE_STRENGTH:
+>> +       case PIN_CONFIG_DRIVE_STRENGTH_UA:
+>> +       case PIN_CONFIG_POWER_SOURCE:
+> 
+> Shouldn't you handle all types that are supported by
+> rzg2l_pinctrl_pinconf_[gs]et()?
+> 
+> The following are missing:
+> PIN_CONFIG_INPUT_ENABLE
+> PIN_CONFIG_OUTPUT_ENABLE
+> PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS
+> PIN_CONFIG_INPUT_SCHMITT_ENABLE
+> RENESAS_RZV2H_PIN_CONFIG_OUTPUT_IMPEDANCE
 
-Patch applied.
+I'll add these as well.
 
-Yours,
-Linus Walleij
+Thank  you for your review,
+Claudiu
 
