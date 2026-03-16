@@ -1,154 +1,181 @@
-Return-Path: <linux-gpio+bounces-33462-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33463-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QKWKCMvIt2kRVQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33462-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:09:31 +0100
+	id iGhALsrIt2kRVQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33463-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:09:30 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8080A296BD5
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DFB4296BD4
 	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:09:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3D0C6301DC0E
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 09:08:56 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B165430058FB
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 09:09:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A17838425B;
-	Mon, 16 Mar 2026 09:08:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F15B8384247;
+	Mon, 16 Mar 2026 09:09:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cfd1p+je"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YahZNhhJ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC82384244
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:08:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5105381B1B
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:09:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773652134; cv=none; b=YnsLzF5joudaf8Df5H4LbILJn5MS2eDj4kh5uqdb8I1amX7CdhypajjoMyma6kNKp39nAtC+PmeI9x5hoYtXZOIvj5+li+ABb6tLXY6/V2ma9+ArsBHXR0i41Vasr+JJPlXcTsUolKwrzpq9LJfQhXjTuAp4vr1UnVgDnx2O+QU=
+	t=1773652165; cv=none; b=JI6oknW7SU9DmzR6hpDl6iOFJChMaONHDarQHbt44hyRE19htHGRVFOXDx7jgetMx62TtZxWHix2SU5LLOzzKMyNHN6/RvZlSlSgIdWx8+lHJc22tQUxA60Nv4FAb2ML6BH3CRV//NXxDlDF6ZGLCloan/oa70aYuV9K94YGhxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773652134; c=relaxed/simple;
-	bh=IHP2z/7YeWXK6Tx4xtubEup0KBNca0fnUaaTxKTXo0I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QgKelS49NJZv3QYzh1csj6dDogSuJblRQos9Zjogtn1OI5E3ytUuThuDLmENO81aa3V19oSZLnM3fWik6t+57yYiSC2fQoP/WbA8RlFjZdU0Ll59lm7en2okFu3kcqbyQpvKjryeYqXo7/Lbj0RN0KuMjt+Nz+WK1MJ7HUf25iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cfd1p+je; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF188C2BCB2
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:08:53 +0000 (UTC)
+	s=arc-20240116; t=1773652165; c=relaxed/simple;
+	bh=b/v2YK1Ny0iCGdh1uKhLo31haI200+Khn2gytgyltlc=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n46EVQQ3DXARNn9lwJD4/YakgUGo9ACn2vJFFjgUs1TovFrXqtwPG45oaaQ5bl9KPy/e90MYOHXe7ozMJ/OXV17DZkCru2hwLX2STik5tnetvqqCZH7l+ZGNyNlYAViQDhMijzkOyuAF0DVoeK1s7bG0U6oFcEJAdk+rHQ786Fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YahZNhhJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ED9BC4AF0C
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773652133;
-	bh=IHP2z/7YeWXK6Tx4xtubEup0KBNca0fnUaaTxKTXo0I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Cfd1p+jed+2I/+2rf19TdHKMBG9ibfRW/HVz7if3RgCQ2iNPhdaNOoT+I75rCqZQH
-	 AVaUTQSd31nvk37LrOLbBXgA5vNPDyDMwvwjdaqxcRp1NGmDpvIHaiAOVzJB1YgxlP
-	 Lfz3fmmzsfU83Gr42fXaDXbDnsO0wQXUmZpJuc7x+haIvz06VIrzbcWo89sHUfK2s/
-	 aTlUiplClTZhbyXL0sChAnoQ0tO5nzSpcYgr9jsPmaBGv/Qfx7qLuNXMRahLWCqLWf
-	 e1gjniiKFm4b+kHj/kJK2iTW0amUuhEVND1nH5A+b+baD/JUF93pZTimp9QfS6zxwf
-	 ojRbZEiflMygg==
-Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-64cb577e79cso4614542d50.0
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 02:08:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV8TP3OO6/FeEl4lVyNZErgWSjNZja1aisgFGqPTUNKYftDyBIVhcnah+DhInZ4Wf3jIGktiqUFs5xY@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfnJK0KO7oDYkWjuEoxGfme2tKsO7J0Ki3nsYrYA3rh4opoO8u
-	brFJDZNHkPWBkODribYYBXWiFpYVffLPMWA6LM3dyBPH6kDig7hdV34jwLbght03fRhbjZc1q+w
-	zjswFiKfleXwCBeTkmUzrBLm55Y0uE/0=
-X-Received: by 2002:a05:690c:7344:b0:798:4f55:2c59 with SMTP id
- 00721157ae682-79a1c188c09mr124992917b3.39.1773652133121; Mon, 16 Mar 2026
- 02:08:53 -0700 (PDT)
+	s=k20201202; t=1773652165;
+	bh=b/v2YK1Ny0iCGdh1uKhLo31haI200+Khn2gytgyltlc=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
+	b=YahZNhhJ3/iamDBtfHsrE3+vtZY6pAFMKyIsYsLjyVKzreB5aiwuNjFTYbWL5aMxM
+	 UTa67fi67NmucwHIcNs6xLXr1MPYjsUwXw4CipJnBY9A/yL/4QHnXxZ3cLbq2uPhPo
+	 TJnnbi648EopYGjP7ixrfqoBptD9u/TxuM9dzMpxjOsrxwkTLbdkZQ5BBHd2aUXOyb
+	 o6MvWxllkb9ks4ZGsB0sGueG7qsW35uX7/LT4Wc2xAoDFSJJqQs2FLrn/2sXxUUAUV
+	 OaZxIqNrKMHWwuvIkMid5W2jhpYUuSaXk/rwJPcav5nCZUz1UarNAC75jD8MqQw9f+
+	 c4W4kKGE3wM1A==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5a0faa0d15cso4295334e87.0
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 02:09:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUgGW6axYYVz4V+TFf9bkyevnW6xVwU3UEj9E+Z4SZMLo36P56tW+mquxR3g0ZqjTfcBxIA5ihljnib@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLhvAuXTjfqEyYG/grMzREJdtOcLd+YumazgSFvOzNbhDPKuaG
+	29nqdM/cuS0ms6/Vm3HOoeLBJkwXBdRYZ7P0SSdiRze22rcJ1DvjMOliNw2Gn7cOi8vAPMDkmXo
+	Hft2mo8gwL6n4iyomVxHkU+fr8IPKnPsT2Q3ZD8t4jA==
+X-Received: by 2002:a05:6512:606:10b0:5a1:378c:11ea with SMTP id
+ 2adb3069b0e04-5a162702d43mr3088735e87.13.1773652164132; Mon, 16 Mar 2026
+ 02:09:24 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 16 Mar 2026 05:09:22 -0400
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 16 Mar 2026 05:09:22 -0400
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260313-descriptors-wireless-v4-1-07ab47c89a98@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260313000652.11470-1-andre.przywara@arm.com>
- <a4cfb10e4701da0649ef648136496a962be5870d.camel@icenowy.me> <20260315014205.471d6834@ryzen.lan>
-In-Reply-To: <20260315014205.471d6834@ryzen.lan>
-From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 16 Mar 2026 10:08:42 +0100
-X-Gmail-Original-Message-ID: <CAD++jLmO-wpxYZJw2PCoqD73Kom2s1_5GT7CXQGMi+ED6sh-1A@mail.gmail.com>
-X-Gm-Features: AaiRm53q4gewf2JyuIj82fugjLAoB6_CrhPdB9DI4ls4pXU8cNr5OY8BWc8rHig
-Message-ID: <CAD++jLmO-wpxYZJw2PCoqD73Kom2s1_5GT7CXQGMi+ED6sh-1A@mail.gmail.com>
-Subject: Re: [RFC PATCH] pinctrl: sunxi: convert to GPIO_GENERIC
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Icenowy Zheng <uwu@icenowy.me>, Chen-Yu Tsai <wens@kernel.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+References: <20260313-descriptors-wireless-v4-1-07ab47c89a98@kernel.org>
+Date: Mon, 16 Mar 2026 05:09:22 -0400
+X-Gmail-Original-Message-ID: <CAMRc=MdJXhXyid1a4ycmKv6nwOf3FYd=rFEaBqQ7k3SFq_j4FQ@mail.gmail.com>
+X-Gm-Features: AaiRm50E8GRHGkdeiQAzZ_1v88_i8nLlnialk2yAEGDF-41oOttxzoscFG9qkpU
+Message-ID: <CAMRc=MdJXhXyid1a4ycmKv6nwOf3FYd=rFEaBqQ7k3SFq_j4FQ@mail.gmail.com>
+Subject: Re: [PATCH v4] wifi: ath9k: Obtain system GPIOS from descriptors
+To: Linus Walleij <linusw@kernel.org>
+Cc: linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com, 
+	linux-gpio@vger.kernel.org, Kalle Valo <kvalo@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Alban Bedel <albeu@free.fr>, Bartosz Golaszewski <brgl@bgdev.pl>, =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@toke.dk>, 
+	=?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[icenowy.me,kernel.org,gmail.com,sholland.org,vger.kernel.org,lists.infradead.org,lists.linux.dev];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_FROM(0.00)[bounces-33462-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[vger.kernel.org,broadcom.com,kernel.org,linux.intel.com,arndb.de,free.fr,bgdev.pl,toke.dk,kempniu.pl];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33463-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
 	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,qualcomm.com:email,mail.gmail.com:mid,intel.com:email,linaro.org:email];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:email,mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,wikipedia.org:url,icenowy.me:email]
-X-Rspamd-Queue-Id: 8080A296BD5
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 5DFB4296BD4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Sun, Mar 15, 2026 at 1:44=E2=80=AFAM Andre Przywara <andre.przywara@arm.=
-com> wrote:
-> On Sat, 14 Mar 2026 13:14:25 +0800
-> Icenowy Zheng <uwu@icenowy.me> wrote:
-
-> > Ah, is this a userspace API break?
+On Fri, 13 Mar 2026 22:53:43 +0100, Linus Walleij <linusw@kernel.org> said:
+> The ath9k has an odd use of system-wide GPIOs: if the chip
+> does not have internal GPIO capability, it will try to obtain a
+> GPIO line from the system GPIO controller:
 >
-> Was that ever a guaranteed user space API? Or just something
-> that everyone relied on because it was always the same (until it
-> wasn't)? Similar to /dev/mmcblk0 being the SD card?
+>   if (BIT(gpio) & ah->caps.gpio_mask)
+>         ath9k_hw_gpio_cfg_wmac(...);
+>   else if (AR_SREV_SOC(ah))
+>         ath9k_hw_gpio_cfg_soc(ah, gpio, out, label);
+>
+> Where ath9k_hw_gpio_cfg_soc() will attempt to issue
+> gpio_request_one() passing the local GPIO number of the controller
+> (0..31) to gpio_request_one().
+>
+> This is somewhat peculiar and possibly even dangerous: there is
+> nowadays no guarantee of the numbering of these system-wide
+> GPIOs, and assuming that GPIO 0..31 as used by ath9k would
+> correspond to GPIOs 0..31 on the system as a whole seems a bit
+> wild.
+>
+> Register all 32 GPIOs at index 0..31 directly in the ATH79K
+> GPIO driver and associate with the NULL device (making them
+> widely available) if and only if we are probing ATH79K wifi
+> from the AHB bus (used for SoCs). We obtain these offsets from
+> the NULL device if necessary.
+>
+> These GPIOs should ideally be defined in the device tree
+> instead, but we have no control over that for the legacy
+> code path.
+>
+> Testcompiled with the ath79 defconfig.
+>
+> Reported-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
+> Acked-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@toke.dk>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Linus Walleij <linusw@kernel.org>
+> ---
+> This patch set is a long standing attempt to get rid of the global
+> GPIO numbers from the ath9k Wireless driver.
+>
+> Maybe Kalle can merge this to the Wireless tree if we agree on this
+> hack solution.
+>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Changes in v4:
+> - Fix review comments from Andy.
+> - Collect ACKs.
 
-As Torvalds has pointed out, if it has users (that complain) it's an ABI.
+I think this did not work. :)
 
-However if a tree falls in the forest and no-one is there to hear it
-fall, it is a philosophical question whether it makes a sound or not.
-https://en.wikipedia.org/wiki/If_a_tree_falls_in_a_forest_and_no_one_is_aro=
-und_to_hear_it,_does_it_make_a_sound%3F
+> - Link to v3: https://lore.kernel.org/r/20260312-descriptors-wireless-v3-=
+1-5230e0870c31@kernel.org
+>
+> Changes in v3:
+> - Rebased on kernel v7.0-rc1
+> - Fix up issues as pointed out by Micha=C5=82 K=C4=99pie=C5=84
+> - Link to v2: https://lore.kernel.org/r/20240423-descriptors-wireless-v2-=
+1-6d1d03b30bfa@linaro.org
+>
+> Changes in v2:
+> - Define all the descriptors directly in the ATH79K
+>   GPIO driver in case the driver want to request them directly.
+> - Link to v1: https://lore.kernel.org/r/20240131-descriptors-wireless-v1-=
+0-e1c7c5d68746@linaro.org
+> ---
 
-The ABI has been broken since the first introduction of dynamic
-GPIO devices, because anything specifying -1 as base will
-get some random semi-predictable global GPIO numbers.
-
-> And ignoring the ill-fated old-style sysfs interface for now, how does
-> this work with libgpiod? Would it still use the absolute pin numbers?
-
-No.
-
-There is also a new sysfs that enables you to export chip-local
-lines, and this is what you get with CONFIG_GPIO_SYSFS.
-The old ABI is available behind CONFIG_GPIO_SYSFS_LEGACY
-and if the users don't enable this, then they don't have a
-problem with this patch.
-
-> I mean looking at that warning about the forced GPIO numbering we
-> get, using base =3D -1 seems to be the recommended way?
-
-It is.
-
-Unless there are users that love the old ABI (for Sunxi, I *doubt it*)
-I think the patch should be applied.
-
-Yours,
-Linus Walleij
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
