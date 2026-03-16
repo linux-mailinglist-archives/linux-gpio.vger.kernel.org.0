@@ -1,145 +1,135 @@
-Return-Path: <linux-gpio+bounces-33491-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33492-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YIK9FJbQt2n0VgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33491-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:42:46 +0100
+	id 8PfXK+TPt2n0VgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33492-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:39:48 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6DB22973DD
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:42:45 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB4B1297281
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:39:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 66AA93035D45
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 09:39:26 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E0A2F3004CA3
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 09:39:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C54238A71D;
-	Mon, 16 Mar 2026 09:39:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDD8038A711;
+	Mon, 16 Mar 2026 09:39:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M89CEiZO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IZUk+OhF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC58389109
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A2238A708;
+	Mon, 16 Mar 2026 09:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773653965; cv=none; b=TsaaGT+/30JFqhI8g3mV+HBBEABjQ/rWbQy8Z7vOKc58K0vehWEKuMwlTmxS9jbL1oPBX5AYbOPO1/nzJfSLBR+8ZEtRWJbgpUocAeF8ougR76DiPlvPrI9F8M+R3JY1/CO8+jInjM48knR7uiKt/EEPMLQJzX2S9TvIlXOGybM=
+	t=1773653981; cv=none; b=D/UNHHt5tcuQj476687ktLKuud0LuJuCL/gerRhMkvkygQ4On7gMQinpLexWogv/l9UlU4dwbZJMCH++kedlAa8Mrtypq11B25/K5iRcOXhF065gOxqFL6GGCWQ22iMYcrB/U79iwqRNOKOYXgdRYaXY54d+Uqki+hvkSJUNQAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773653965; c=relaxed/simple;
-	bh=RbqZslNxIIkzTluBmL/ed2uqFPa1E/cM4+gpAQj+klU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XCPy/y8y9+Y8pV33hop6dab0/+cV2QKvWJldfMdL2GgTIRu5S8FECsc1JdX2TK12l42s5zrb/zN52Rat/GWw0XRj9EslywjcdUgxJVneV7iIbrGO4lEPMHDMO5r4HevCsExwUmXWmn82JXeWBE2FXEv3K2Acp1xA3VlZcbnkHzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M89CEiZO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC33BC19424
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:39:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773653964;
-	bh=RbqZslNxIIkzTluBmL/ed2uqFPa1E/cM4+gpAQj+klU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=M89CEiZOnHW6l0rVxIAVYujeaAXXC4wcFEgK6RvQrRatF+GJGYQPCQzJqxY8+1VIA
-	 E7ZCdMygmp4NiT/9U0vyf51n5I+cO6swsADrHEdCOP1BbB+Kl6PKS3hjlfS8XRAbDI
-	 FqbHS3YpHzueVeZy1lUiGD6oOZPmUBwFBnVZR0YJK7ri5JSsOvqdQ8JXeBV1zvQ9Aj
-	 iZuHlJW52n1Dcc+QGXJDlCK+tgfX07jqK9IIBqCmihvHKJESa7f89hJqPcLevHPKze
-	 xRFRnqqAGAXyPwMBME8EPg2+xjOSKUqRn9bRAGb6Bph92medmVxRyhjXkG7MELJtr7
-	 uH4XTBPdAIpOg==
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-79495b1aaa7so38962857b3.1
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 02:39:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWPkeU++EA2NJDQX98lGXGHf4A4sK8LF4m2jYWbrlI2mH6tgaaRCOEokU1Wz28564IwL0G4QQsq5Ikh@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdaxJ8+dczObSYYPVcrrBDY38EHbEp7FaIsmjjmyOdeD6MnJgU
-	miGMmNWPbh8NYLgnhDzFzYsdRwNY7g/iUb+kGzAF4jSdkjyj+lheobgOvydeC58k8Dc4AcjOdQG
-	olMd97L9my+BF4zoz0AE3ZMA9knf4KZg=
-X-Received: by 2002:a05:690c:6e87:b0:79a:3b28:a710 with SMTP id
- 00721157ae682-79a3b2912f5mr61530517b3.27.1773653964110; Mon, 16 Mar 2026
- 02:39:24 -0700 (PDT)
+	s=arc-20240116; t=1773653981; c=relaxed/simple;
+	bh=sFax7KVFmBwnkHO9Mju4Q1a5pWjn4SX2LhJX0iJ6Mjo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OB98QAWMUYP5Mxj+Fs5eGrDlw+PsP2dY1zKfN5iczuElWT9PD/wahRo2X/+mK0RcFM3M0L1ivGnWeRKpiga9pWV/IpDzkEaOP+MTskPd+v7twzOTX+zA5VOANS9jAcsV0DDK6sCabGXrVNB2R7gCC780uv+Ad+HgXi0Uwy9EKaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IZUk+OhF; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773653981; x=1805189981;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=sFax7KVFmBwnkHO9Mju4Q1a5pWjn4SX2LhJX0iJ6Mjo=;
+  b=IZUk+OhFZ1dIPDxvuIJ4SywiNkIFrf5vnJrg8hZklnu7FCJlhN1yvNgz
+   nCaGYR0g6mRLvq+GGnyY3k+ZgUFpiGUvL5a++lPiH0TiJAfugVt1VK4Mm
+   KEjeywpNaiK9fQXLPbBaotrGRxwplIQUDz2z8JPWzh4j+vZuz3awsWejG
+   mUp/YZY5cndIOI29rfS5FlnBd92u4gqZPIuyleDHWf0poQIBcRt2wO13Y
+   U4X6S0EXlyhAJvrB3t5uJWk84JbKXl9QBHXbLGLCiZnEC4NOk7NGHZ275
+   jAkMKr3d7tK6LC6b5NJueYLnHHzK7xc4KlaQSvOAMZVjWCEcl/azObauN
+   w==;
+X-CSE-ConnectionGUID: cIA/e4XfQ1mHI57QtgGV9w==
+X-CSE-MsgGUID: G5rXod3vRKumGbwWYtijFA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11730"; a="84981339"
+X-IronPort-AV: E=Sophos;i="6.23,123,1770624000"; 
+   d="scan'208";a="84981339"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 02:39:41 -0700
+X-CSE-ConnectionGUID: VpmjNsV9SWuagmuws7aekw==
+X-CSE-MsgGUID: cbYCVSo4SKWtObkRq7OoFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,123,1770624000"; 
+   d="scan'208";a="222059288"
+Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.237])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 02:39:39 -0700
+Date: Mon, 16 Mar 2026 11:39:36 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Bartosz Golaszewski <brgl@kernel.org>,
+	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Do not enable the v1 uAPI by default
+Message-ID: <abfP2EzJXXgrxAWO@ashevche-desk.local>
+References: <20260314-no-y-uapi1-default-v2-1-578f09c91b8f@kernel.org>
+ <abfN3bE0BMhkj0_R@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260311-pinctrl-mux-v3-0-236b1c17bf9b@nxp.com> <20260311-pinctrl-mux-v3-4-236b1c17bf9b@nxp.com>
-In-Reply-To: <20260311-pinctrl-mux-v3-4-236b1c17bf9b@nxp.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 16 Mar 2026 10:39:12 +0100
-X-Gmail-Original-Message-ID: <CAD++jL=8tqT=jEy+_W-WnPq=Az7GbsW7pdXHZNmu8m+tKoDMDQ@mail.gmail.com>
-X-Gm-Features: AaiRm53Q_0hsf1jplyh4XsHDGxCWDXM_lyumSvDs8oSWpLJERT4ci6Zqc30deP8
-Message-ID: <CAD++jL=8tqT=jEy+_W-WnPq=Az7GbsW7pdXHZNmu8m+tKoDMDQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/7] pinctrl: add optional .release_mux() callback
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, Haibo Chen <haibo.chen@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <abfN3bE0BMhkj0_R@ashevche-desk.local>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33491-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[axentia.se,kernel.org,milecki.pl,pengutronix.de,gmail.com,vger.kernel.org,lists.linux.dev,lists.infradead.org,nxp.com];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
+	TAGGED_FROM(0.00)[bounces-33492-lists,linux-gpio=lfdr.de];
+	HAS_ORG_HEADER(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,nxp.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: E6DB22973DD
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,ashevche-desk.local:mid,intel.com:dkim]
+X-Rspamd-Queue-Id: BB4B1297281
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Mar 11, 2026 at 8:08=E2=80=AFPM Frank Li <Frank.Li@nxp.com> wrote:
+On Mon, Mar 16, 2026 at 11:31:13AM +0200, Andy Shevchenko wrote:
+> On Sat, Mar 14, 2026 at 12:07:50AM +0100, Linus Walleij wrote:
+> > It's been five years since we introduced the v2 uAPI and
+> > the major consumer libgpiod is at v2.2.3.
+> 
+> Buildroot is still at libgpiod v1.6.5.
+> 
+> > Let's discourage the old ABI.
+> 
+> Anybody to ping them?
 
-> Add an optional .release_mux() callback to struct pinmux_ops.
->
-> Some drivers acquire additional resources in .set_mux(), such as software
-> locks. These resources may need to be released when the mux function is n=
-o
-> longer active. Introducing a dedicated .release_mux() callback allows
-> drivers to clean up such resources.
->
-> The callback is optional and does not affect existing drivers.
->
-> Commit 2243a87d90b42 ("pinctrl: avoid duplicated calling
-> enable_pinmux_setting for a pin") removed the .disable() callback
-> to resolve two issues:
->
->   1. desc->mux_usecount increasing monotonically
->   2. Hardware glitches caused by repeated .disable()/.enable() calls
->
-> Adding .release_mux() does not reintroduce those problems. The callback i=
-s
-> intended only for releasing driver-side resources (e.g. locks) and must n=
-ot
-> modify hardware registers.
->
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Ah, there are two packages, one is libgpiod (v1.6.5) and the other is
+libgpiod2, I looked at the old one.
 
-OK fair enough, I think I'm convinced about this now, also it has
-a nice pairing with set_mux(). Let's see if someone else has comments,
-I might apply v4 after fixing the generic function issue in patch 2.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Yours,
-Linus Walleij
+
 
