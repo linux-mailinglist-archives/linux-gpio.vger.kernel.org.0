@@ -1,135 +1,123 @@
-Return-Path: <linux-gpio+bounces-33492-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33493-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8PfXK+TPt2n0VgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33492-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:39:48 +0100
+	id wB9tNe/Qt2n0VgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33493-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:44:15 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB4B1297281
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:39:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E4770297444
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:44:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E0A2F3004CA3
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 09:39:44 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 42BAF3024437
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 09:41:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDD8038A711;
-	Mon, 16 Mar 2026 09:39:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CC5338E13E;
+	Mon, 16 Mar 2026 09:41:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IZUk+OhF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FvQ9/GKc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A2238A708;
-	Mon, 16 Mar 2026 09:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5DF38CFFB
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773653981; cv=none; b=D/UNHHt5tcuQj476687ktLKuud0LuJuCL/gerRhMkvkygQ4On7gMQinpLexWogv/l9UlU4dwbZJMCH++kedlAa8Mrtypq11B25/K5iRcOXhF065gOxqFL6GGCWQ22iMYcrB/U79iwqRNOKOYXgdRYaXY54d+Uqki+hvkSJUNQAI=
+	t=1773654067; cv=none; b=EAEX3Xp7NkLkUCBXF49mgyf2c6zvyDNT6hMDOU6aWvxldCyfQk1A50rHyKA0+Cowg5QZlqso9Bqv9Qevd4PlbFEmDn2mfMVuOpPDYYEPWvdUYnct9DiGladiktQ03B1nx4MG3sH9vsPA18/QfsM2cnpJN7Wu4QzH/8wQdR0vhH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773653981; c=relaxed/simple;
-	bh=sFax7KVFmBwnkHO9Mju4Q1a5pWjn4SX2LhJX0iJ6Mjo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OB98QAWMUYP5Mxj+Fs5eGrDlw+PsP2dY1zKfN5iczuElWT9PD/wahRo2X/+mK0RcFM3M0L1ivGnWeRKpiga9pWV/IpDzkEaOP+MTskPd+v7twzOTX+zA5VOANS9jAcsV0DDK6sCabGXrVNB2R7gCC780uv+Ad+HgXi0Uwy9EKaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IZUk+OhF; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773653981; x=1805189981;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sFax7KVFmBwnkHO9Mju4Q1a5pWjn4SX2LhJX0iJ6Mjo=;
-  b=IZUk+OhFZ1dIPDxvuIJ4SywiNkIFrf5vnJrg8hZklnu7FCJlhN1yvNgz
-   nCaGYR0g6mRLvq+GGnyY3k+ZgUFpiGUvL5a++lPiH0TiJAfugVt1VK4Mm
-   KEjeywpNaiK9fQXLPbBaotrGRxwplIQUDz2z8JPWzh4j+vZuz3awsWejG
-   mUp/YZY5cndIOI29rfS5FlnBd92u4gqZPIuyleDHWf0poQIBcRt2wO13Y
-   U4X6S0EXlyhAJvrB3t5uJWk84JbKXl9QBHXbLGLCiZnEC4NOk7NGHZ275
-   jAkMKr3d7tK6LC6b5NJueYLnHHzK7xc4KlaQSvOAMZVjWCEcl/azObauN
-   w==;
-X-CSE-ConnectionGUID: cIA/e4XfQ1mHI57QtgGV9w==
-X-CSE-MsgGUID: G5rXod3vRKumGbwWYtijFA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11730"; a="84981339"
-X-IronPort-AV: E=Sophos;i="6.23,123,1770624000"; 
-   d="scan'208";a="84981339"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 02:39:41 -0700
-X-CSE-ConnectionGUID: VpmjNsV9SWuagmuws7aekw==
-X-CSE-MsgGUID: cbYCVSo4SKWtObkRq7OoFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,123,1770624000"; 
-   d="scan'208";a="222059288"
-Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.237])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 02:39:39 -0700
-Date: Mon, 16 Mar 2026 11:39:36 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linus Walleij <linusw@kernel.org>
-Cc: Bartosz Golaszewski <brgl@kernel.org>,
-	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Do not enable the v1 uAPI by default
-Message-ID: <abfP2EzJXXgrxAWO@ashevche-desk.local>
-References: <20260314-no-y-uapi1-default-v2-1-578f09c91b8f@kernel.org>
- <abfN3bE0BMhkj0_R@ashevche-desk.local>
+	s=arc-20240116; t=1773654067; c=relaxed/simple;
+	bh=Z8msOfxeowllRcJq32bZpSujfByu+DcMa2B+qOK1z6c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XnEq9fsnOAIE26XZMVOFeVyKW9ZIBGY1GG09BGWfP3X+TkPUl2rAUZWVqAYdUu7cXh2njhm7aA4WJvvksMjgXplAzL1kw88mxa+ezJ5d7B4Z05pqdu+KVoi3tfhGxHtt6rT2q81TkHeorivpoRBEw+RZeudbKkVh/eFCWiM+9as=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FvQ9/GKc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD5D7C2BCAF
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:41:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773654066;
+	bh=Z8msOfxeowllRcJq32bZpSujfByu+DcMa2B+qOK1z6c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=FvQ9/GKcDqmGgAAoj077c1EfOGahXoK21ZWGDM8QElN4LpnNTYOL/79aWdo1ocCNY
+	 O4q0TAWCYbxe5zd/TFjruAxbPxv8bqde+79DWLjmz1WA1/+TJK/F5bjhtNKyn+GOiM
+	 h6Gw9962LjAHSeqpxD9KGWF1iYJHowE4y6ndlSbKv8stNc57gaEeOG7mgqIKuD9cnB
+	 J4Ws5u2lcwhh6cTFi/yd0APiFFeGeyefn33EZ4B9AXQzfVvqRb6zm5gWY8sW6C+Ebt
+	 zmH0FW7rEWg4agRa8YZEVD8wQX2AFSjZ1s6zaFay3csxXCPFbo8nYoebmLH8zKzFwh
+	 wM9Wkp/CH9UYQ==
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-7985ce90542so39792287b3.0
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 02:41:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWL5DINfWKdzS2DdLzQQ0TtZ6Rp6FXP5f+GsSc58/fLvlNXWOD9wvxft22U2pp243izR92DMKErTZE6@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQcVtl6x3jyUUo8O5lrlDBcbJhAM+UQ5ZzZDy3fyBcVgZseBrW
+	BphafsfyJSR0y0d6T9IqTo2P0si8FfQGlXrQ7RehiRDOydzP2amgpKbl5SLsVs7zLkNuOydSnG8
+	BPYeKCZEsz/XtdQj+Y62nrrWPwKt9icQ=
+X-Received: by 2002:a05:690c:1c:b0:798:34a:52de with SMTP id
+ 00721157ae682-79a1c1ddd0fmr123816337b3.51.1773654066057; Mon, 16 Mar 2026
+ 02:41:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <abfN3bE0BMhkj0_R@ashevche-desk.local>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-X-Spamd-Result: default: False [-2.16 / 15.00];
+References: <20260311-pinctrl-mux-v3-0-236b1c17bf9b@nxp.com>
+In-Reply-To: <20260311-pinctrl-mux-v3-0-236b1c17bf9b@nxp.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Mon, 16 Mar 2026 10:40:55 +0100
+X-Gmail-Original-Message-ID: <CAD++jLkNdc+jc2+c_ageDAbw7ASCDf+6CKTaU4nMt68LhpuB5Q@mail.gmail.com>
+X-Gm-Features: AaiRm51CGq6AEM0GTX8yXQmjUc1clr3otpnO-iyM1eZa4K5fUJagwOZsjTiiBjY
+Message-ID: <CAD++jLkNdc+jc2+c_ageDAbw7ASCDf+6CKTaU4nMt68LhpuB5Q@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] pinctrl: Add generic pinctrl for board-level mux chips
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, Haibo Chen <haibo.chen@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33492-lists,linux-gpio=lfdr.de];
-	HAS_ORG_HEADER(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33493-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[axentia.se,kernel.org,milecki.pl,pengutronix.de,gmail.com,vger.kernel.org,lists.linux.dev,lists.infradead.org,nxp.com];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_FIVE(0.00)[5];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,ashevche-desk.local:mid,intel.com:dkim]
-X-Rspamd-Queue-Id: BB4B1297281
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: E4770297444
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Mar 16, 2026 at 11:31:13AM +0200, Andy Shevchenko wrote:
-> On Sat, Mar 14, 2026 at 12:07:50AM +0100, Linus Walleij wrote:
-> > It's been five years since we introduced the v2 uAPI and
-> > the major consumer libgpiod is at v2.2.3.
-> 
-> Buildroot is still at libgpiod v1.6.5.
-> 
-> > Let's discourage the old ABI.
-> 
-> Anybody to ping them?
+On Wed, Mar 11, 2026 at 8:08=E2=80=AFPM Frank Li <Frank.Li@nxp.com> wrote:
 
-Ah, there are two packages, one is libgpiod (v1.6.5) and the other is
-libgpiod2, I looked at the old one.
+> Add a generic pinctrl binding for board-level pinmux chips that are
+> controlled through the multiplexer subsystem.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I really like this version, I had a minor comment on refactoring the
+generic helper instead of wrapping it (plus some random ramblings
+from my side, sorry). With this fixed I feel I can apply v4.
 
-
+Yours,
+Linus Walleij
 
