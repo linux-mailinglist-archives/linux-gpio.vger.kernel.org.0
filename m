@@ -1,150 +1,180 @@
-Return-Path: <linux-gpio+bounces-33480-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33481-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mB7lJy/Nt2kRVQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33480-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:28:15 +0100
+	id CBNBK87Nt2mDVgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33481-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:30:54 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4525296FAB
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:28:14 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5813F29705E
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:30:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 490B3300B8C1
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 09:28:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6426A303429E
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 09:29:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC5123876D6;
-	Mon, 16 Mar 2026 09:28:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C392C386C2F;
+	Mon, 16 Mar 2026 09:29:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="um21Ly8S"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QGNlWh6p"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF9D38756E
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF68182D0;
+	Mon, 16 Mar 2026 09:29:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773653280; cv=none; b=EKhORC28tXYYdmi7DPT4Hp31vkQ5czVRTAR9+A2/hsMQeIviDRBpglLWs3K1S9/GJh/f9EgyQZ492fEX4bt4rQ58xt8l6pPAXr/tF49M/sRhQhig+4ey0Ky6M/hoTJAgCmiKTYKDuC7Rf5j3dL3IVzwjaitD3dqhsR5r+XZLteE=
+	t=1773653360; cv=none; b=EdJtQFsF25g0CL6ob/q1f6AT05VcoLG/EEO08vF64HESfAy6z50+3PFbW71gwRDe7L7BkS1XGFFQBVE2VXp+6yHYuouwYLXiZNvx0Dmnac2DftH3WipvChiXZ+5Z0+c8/x1l1oO6C4eGKq+AqEidYySEhzG0CYICw1OlbwIom0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773653280; c=relaxed/simple;
-	bh=O/YgTgaQRwnEXirxmU+ykEQ0yOSJ8I1KRJZXk4GajnM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fzx4wpYb6rp8WyP9EAvjIjxmyi3wWj1E1QCyZkyJvhVQup7nx+x57CLogw54TJK+y2D3TPq0n7rDhE/tpa6Zg1kxMxB+G9yix3f+XSxb2BYpo4nzbYZ72fnweYVY35ULa0XqJJlTaTuBTiAfdgpmXfIByXcxaVw65Yr+HQQgEGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=um21Ly8S; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 553E9C19421
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:27:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773653279;
-	bh=O/YgTgaQRwnEXirxmU+ykEQ0yOSJ8I1KRJZXk4GajnM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=um21Ly8SseFTJHB6APb8c1vvjnw4Qo3PPBAIuDnbeBrrANm5pl8YoBi7+1xda+Yr+
-	 g/SGslQ+inPIVImOKjxIk2VVXTggEuQJPM2ClVZBMiPWSjctuKkXZ8fPHvmZeVgWza
-	 jpmtLCvv9bb0CP9lOUVRJWLyr6M8CgYCpeWxI9DfslyABaOd/EkUPnCqngTSPCWfBf
-	 r2QG4fFdj8HHPulDlP+wr8sNcQsC8aXhxTeNrKM0p7j3u+qhWLqYpr9hFXWQ5gmd1C
-	 G2UtcWVHohy5sFB+9BSFwsOxXKqKAeL8creJrKi3+vPQuCMFfjadxqYEAXLklLOQb7
-	 Yae+EasyHNBmA==
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-79801df3e42so54155677b3.0
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 02:27:59 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yz52Affnk+4fkRwvkogDiUP6b1QoNOFKwpoDNYnVQXE0iu3NR67
-	yQ8krWUT7e+kELs13XCADwzRSwwAdOSmXDrMDaqh8SO6Y6yn8czWhr7FAsDoovC69y6rNDWD1MS
-	HoJmP6S3bD3xyn0hBoq9Dq9dXrcse08M=
-X-Received: by 2002:a05:690c:c4fa:b0:79a:3be7:81a8 with SMTP id
- 00721157ae682-79a3be7b453mr52979097b3.6.1773653278643; Mon, 16 Mar 2026
- 02:27:58 -0700 (PDT)
+	s=arc-20240116; t=1773653360; c=relaxed/simple;
+	bh=PYSyaABDE9FCBpORP7Yb8TmbH+eE0gPZ7nOryR4YMVY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jhotQ1311GIbAKiU39I77PygY6WjKuPg4NjiuHyTXOzwr97cX6zw7WHWreEVNfm7GUP16TfceJU/uHOIsRq8OJhfMK0RmK3QnW6z5tj0bEsEVRo+g0d4mqiaDBw6PHjEPFSlCfeqrL0ivOxJlMqe0/y0rhsvU0CPefLnYAHGENw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QGNlWh6p; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773653358; x=1805189358;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=PYSyaABDE9FCBpORP7Yb8TmbH+eE0gPZ7nOryR4YMVY=;
+  b=QGNlWh6pvZoQkFny6Xxy70mkIulSasNk7ANyvqssFXxzC8UR6CptbjVR
+   VzC0rat6g9ZaXsiJDR9fNirbcSecT41e40tvF97laeUjf8iHBfn55AK9r
+   2DckkEXZSDdk8s2BN36CL2AZ3pUkVsSHCEwxzYY2OFL7HjJGZUIbJSEXV
+   XyO7uamRf76RtOL13LDiCzYPL+11Ro4+LfRBxg8s32E7woQanWEh8j1tW
+   1LSjsgggAb3oSGFinoq/rf8YRr/P4HwSdLl/SIBMII0czeZyeBcbLMCd6
+   GGQV20rMUceOVdV3SLIuqsp0KANKXf702OKXslZRxfEE3f9xJtHA0TwhI
+   w==;
+X-CSE-ConnectionGUID: NgbPZq/TRYGYaAWBpNUeJw==
+X-CSE-MsgGUID: iaVrFkK/S7acSvJnzS8UQA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11730"; a="74581426"
+X-IronPort-AV: E=Sophos;i="6.23,123,1770624000"; 
+   d="scan'208";a="74581426"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 02:29:18 -0700
+X-CSE-ConnectionGUID: a4g6kxQqT2aozanqYYNhWg==
+X-CSE-MsgGUID: Kmm6JFaRQcS5k9gC9TyQwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,123,1770624000"; 
+   d="scan'208";a="226522964"
+Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.237])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 02:29:15 -0700
+Date: Mon, 16 Mar 2026 11:29:13 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Linus Walleij <linusw@kernel.org>, linux-wireless@vger.kernel.org,
+	brcm80211-dev-list.pdl@broadcom.com, linux-gpio@vger.kernel.org,
+	Kalle Valo <kvalo@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Alban Bedel <albeu@free.fr>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@toke.dk>,
+	=?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH v4] wifi: ath9k: Obtain system GPIOS from descriptors
+Message-ID: <abfNaRH10hnXug4l@ashevche-desk.local>
+References: <20260313-descriptors-wireless-v4-1-07ab47c89a98@kernel.org>
+ <CAMRc=MdJXhXyid1a4ycmKv6nwOf3FYd=rFEaBqQ7k3SFq_j4FQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260311-tasting-friend-eae39148fb96@spud> <20260311-skimming-pummel-6a3e2fc66a9f@spud>
-In-Reply-To: <20260311-skimming-pummel-6a3e2fc66a9f@spud>
-From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 16 Mar 2026 10:27:47 +0100
-X-Gmail-Original-Message-ID: <CAD++jLnsToZN7hBYWnxn8NrmhmgWpgmKDvDn=0TKig36TzcOrA@mail.gmail.com>
-X-Gm-Features: AaiRm50WpMGGktuAFovbckLRYxycl65oWNTRA0oVNDR_39hckQmaUFp3WcObLzM
-Message-ID: <CAD++jLnsToZN7hBYWnxn8NrmhmgWpgmKDvDn=0TKig36TzcOrA@mail.gmail.com>
-Subject: Re: [PATCH v12 4/4] riscv: dts: microchip: update mpfs gpio
- interrupts to better match the SoC
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-gpio@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Herve Codina <herve.codina@bootlin.com>, 
-	Daire McNamara <daire.mcnamara@microchip.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Bartosz Golaszewski <brgl@kernel.org>, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MdJXhXyid1a4ycmKv6nwOf3FYd=rFEaBqQ7k3SFq_j4FQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33480-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,broadcom.com,arndb.de,free.fr,bgdev.pl,toke.dk,kempniu.pl];
+	TAGGED_FROM(0.00)[bounces-33481-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DKIM_TRACE(0.00)[intel.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B4525296FAB
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,kempniu.pl:email,intel.com:dkim,intel.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 5813F29705E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Mar 11, 2026 at 4:18=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
-te:
+On Mon, Mar 16, 2026 at 05:09:22AM -0400, Bartosz Golaszewski wrote:
+> On Fri, 13 Mar 2026 22:53:43 +0100, Linus Walleij <linusw@kernel.org> said:
+> > The ath9k has an odd use of system-wide GPIOs: if the chip
+> > does not have internal GPIO capability, it will try to obtain a
+> > GPIO line from the system GPIO controller:
+> >
+> >   if (BIT(gpio) & ah->caps.gpio_mask)
+> >         ath9k_hw_gpio_cfg_wmac(...);
+> >   else if (AR_SREV_SOC(ah))
+> >         ath9k_hw_gpio_cfg_soc(ah, gpio, out, label);
+> >
+> > Where ath9k_hw_gpio_cfg_soc() will attempt to issue
+> > gpio_request_one() passing the local GPIO number of the controller
+> > (0..31) to gpio_request_one().
+> >
+> > This is somewhat peculiar and possibly even dangerous: there is
+> > nowadays no guarantee of the numbering of these system-wide
+> > GPIOs, and assuming that GPIO 0..31 as used by ath9k would
+> > correspond to GPIOs 0..31 on the system as a whole seems a bit
+> > wild.
+> >
+> > Register all 32 GPIOs at index 0..31 directly in the ATH79K
+> > GPIO driver and associate with the NULL device (making them
+> > widely available) if and only if we are probing ATH79K wifi
+> > from the AHB bus (used for SoCs). We obtain these offsets from
+> > the NULL device if necessary.
+> >
+> > These GPIOs should ideally be defined in the device tree
+> > instead, but we have no control over that for the legacy
+> > code path.
+> >
+> > Testcompiled with the ath79 defconfig.
+> >
+> > Reported-by: Michał Kępień <kernel@kempniu.pl>
+> > Acked-by: Toke Høiland-Jørgensen <toke@toke.dk>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Signed-off-by: Linus Walleij <linusw@kernel.org>
+> > ---
+> > This patch set is a long standing attempt to get rid of the global
+> > GPIO numbers from the ath9k Wireless driver.
+> >
+> > Maybe Kalle can merge this to the Wireless tree if we agree on this
+> > hack solution.
+> >
+> > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> > ---
+> > Changes in v4:
+> > - Fix review comments from Andy.
+> > - Collect ACKs.
+> 
+> I think this did not work. :)
 
-> From: Conor Dooley <conor.dooley@microchip.com>
->
-> There are 3 GPIO controllers on this SoC, of which:
-> - GPIO controller 0 has 14 GPIOs
-> - GPIO controller 1 has 24 GPIOs
-> - GPIO controller 2 has 32 GPIOs
->
-> All GPIOs are capable of generating interrupts, for a total of 70.
-> There are only 41 IRQs available however, so a configurable mux is used
-> to ensure all GPIOs can be used for interrupt generation.
-> 38 of the 41 interrupts are in what the documentation calls "direct
-> mode", as they provide an exclusive connection from a GPIO to the PLIC.
-> The 3 remaining interrupts are used to mux the interrupts which do not
-> have a exclusive connection, one for each GPIO controller.
->
-> The mux was overlooked when the bindings and driver were originally
-> written for the GPIO controllers on Polarfire SoC, and the interrupts
-> property in the GPIO nodes used to try and convey what the mapping was.
-> Instead, the mux should be a device in its own right, and the GPIO
-> controllers should be connected to it, rather than to the PLIC.
-> Now that a binding exists for that mux, fix the inaccurate description
-> of the interrupt controller hierarchy.
->
-> GPIO controllers 0 and 1 do not have all 32 possible GPIO lines, so
-> ngpios needs to be set to match the number of lines/interrupts.
->
-> The m100pfsevp has conflicting interrupt mappings for controllers 0 and
-> 2, as they cannot both be using an interrupt in "direct mode" at the
-> same time, so the default replaces this impossible configuration.
->
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+It's just extra SoB where it's not needed, but the tags are collected in
+the proper commit message.
 
-Reviewed-by: Linus Walleij <linusw@kernel.org>
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Yours,
-Linus Walleij
+
 
