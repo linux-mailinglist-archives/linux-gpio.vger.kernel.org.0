@@ -1,172 +1,189 @@
-Return-Path: <linux-gpio+bounces-33572-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33573-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IB90KS8ruGnhZgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33572-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 17:09:19 +0100
+	id WAG1KJQruGnhZgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33573-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 17:11:00 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 201C429D161
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 17:09:19 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46BDE29D1A9
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 17:11:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 529203047DD6
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 16:01:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2559C3007C95
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 16:08:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C78133CCFCA;
-	Mon, 16 Mar 2026 16:01:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C7B8330651;
+	Mon, 16 Mar 2026 16:08:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tRvR8jWP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sl5mcm4P"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540093CCFA0
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 16:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773676868; cv=pass; b=lUBpdnN+4NB85a3KYOoDwBp9P+YulTbTNA/B6L2IOzM1x0vCx1YfU8V7AerFDMVLZN9E9Nfq0sB7oNjIjpuN1evsxFEa7hMg18Z+kLL+Tfz9R6ROr5VtYTBRXAzHMwqF0yYVOxCV70OewZvucBoJbhDewIV59r9M9ZOQj9GKcXM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773676868; c=relaxed/simple;
-	bh=nRTROiegC3HHzc2PKkDT6LEu+pHZlAThf22kVsmxLDs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oqNfOL+YuMLhmquxHKHWYgnC697zOGkUo6zEQtz09NE0KnavB9N5GhcAt5CYxEDuVzz4Ej+qmrEfyFqE/0ZAvgWMH4vz0sw6p2fAjxHrC6PL6WBe0A4miYc6UipcZXMyGv6IjJ6Rzn0PF58P+zvWCRLU3UJErrZtoMhToqaeb9Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tRvR8jWP; arc=pass smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6653b589a78so2140300a12.3
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:01:07 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773676866; cv=none;
-        d=google.com; s=arc-20240605;
-        b=MnjgW384NYsRWGBlRoRaayWAtvpDnstOjINkB/BOfWKNwdVHhnjg4vX7LFXb1gn1GW
-         KTLQvmrqY9/7eyTjq5PadzW69XWki6g+++NfH6P6bqRmhaKOu2XIYvNF7AiqEtNchge5
-         7v//U8Y2ownAaPRIEIIofuF2HVQ8OdDJVKFN/1wKnv0S5SWIH5BpNrj4P1uXXzngQBLC
-         FvLnfWhkpfHTus7hOPo4J1FnIhQHxjxM6znTxiIO0FPIIKR0CNlnQrxfd/mF4WHU4Q/K
-         i+cKllkfwsx6Mf1ZfTrCILBSIssoQpKvCXoGX+SDm/gQh2H3qXS5hy3I6PYVuI5Krwne
-         0qeA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=nRTROiegC3HHzc2PKkDT6LEu+pHZlAThf22kVsmxLDs=;
-        fh=kUZdT1zHC+66TKzGjmVTiHWG/Qu7OXHf2VC24iYDu14=;
-        b=Ie1nIUBL8QKjk6mq1Kh7KUZWa8L4n/hetXQobNlsAhP5byx86ucgSOemXUCSjte9fy
-         e4mZ2zdyzc9mI22BHPYEINcn8wmW6G8Y46sq0zMncOxVU7ck40XOlRlUcE5ciJTsNK5g
-         hK8IZ1pdoLnWt4vqLx3B9KRKirzKfKdYQTxJ2aRAM2wUJfAyUeoeYXgeZ9VRQfKvHo+S
-         6mjtYaPDPb6oy5rjEdHVP1R08oyAKSttSTwMreIP/6XFhZC/AchrnDls+4DfpoJvEsUt
-         X5Rud9TmVuUs326pRKH/0IeLr50ttRpYJem/DdP2iIEdfjGF8IBYFG2eVI9S6h2EU9qJ
-         5icg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1773676866; x=1774281666; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nRTROiegC3HHzc2PKkDT6LEu+pHZlAThf22kVsmxLDs=;
-        b=tRvR8jWPdYpapywuFbFHAwdbkmfciAm97lupRo23Lz95ol4WDw47KF+V049m3ECDKP
-         khDfrPMN6aR/vimprZmLRF6GU2CkUGsd4Jv5xtJGU+u1yNjoX+Yy544KdjdWYeVUqwvP
-         PAuT67hKYlEjtdFL0MRqVeSCfe5qhhfNz5y8pDlti3aC5sbdN5iYW7S3kFsgmreBC4CN
-         qAGJEDXXCt/WGvWjeZrLQIJq7Yect+cT6Mb1tiyLaxvjXE+m/ds4hH8ov+Y8sMqZNrSm
-         SWPoHKrCT3TVDDSq/C0ySD3PoMmRqSWtUYuAZVCOsx/LSb4q+nVLCCHHlStxxvaawLlT
-         Ym6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773676866; x=1774281666;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=nRTROiegC3HHzc2PKkDT6LEu+pHZlAThf22kVsmxLDs=;
-        b=GOCHUQ2Y2ndwRHiyRVDUF82Cs30X4TiHbXM2P58O9mnTCaOBvp3fLGXj3sG8UzTh8C
-         XKoOTuR3B8hMUam67KJ4QSFmMk3PRbgLbs4Vs9CqLGCWWC9ZJxGrgj2MHp27UpPXKeNQ
-         F+z6Q0fjZScNwBTsQaelH5fpgRqmA1f/XW0R/iT57NIxZIFiCD0yQBD7ns/NK9WXzo0Q
-         o+CAA7L9pkqkOjJricIIyboUalwduqEeO/x/jSKdiY96cW7CRcghwPJvLxWviWLV2qls
-         7r1R3dZqYmtdC3FGt9YxbucWJ0rlKAmmeWAeRZ6Y2lJabCaX8GO7vjwVyx/fcZpKzt2N
-         KnHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXu8Ks7p6cFqX+W/bqc1n3lTP/S8EBBqvSYk7PVLxujyEciPWf7KHwf+yFaL3a3TyxwMo6Sd3JgFhNT@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8YcArrkeL48jyAHX5y2w1eQadtUo4r+j1D1WebI1/6wK4lQ9m
-	hnFiOuTisYRIkMJVxynG9uGwMoG6ZLpXPShKtCTXxYb3f+/4mVzPq6+pPPylxbs2DMc3NCsVmN2
-	cssaX8lN+BFyiXgWU+2kJtVsAc8uZjqv3MehJf+kvTw==
-X-Gm-Gg: ATEYQzykYSkpH2gLzX1LJZtZMn9JzJ/M+jMBLsH+QZYPurNfCFmEnRpwvyhBD/p2Buj
-	TtdEQn2ElbUVlM7hj+xKm7GEN0hMQIWYhzdxD4oMnen+XPz1wl6vK5obqfw/kqwi1zsYJzUMorH
-	BgFz+IoQO+XQ+dpopaxBfgZ2VmxXoEbc56MJMutULcDgDW7C71XvCZVx9Zfbc6bAdqDQ6KdJ+Oz
-	rE+SkvMoi2xWV6uppIIRwJZXnBPXJlj+BEkl+JrkXrCoBgEr1ghQNRTOUOV5mYvzHlwLOv+fvq3
-	+AT4jb87peOqX2T6qT3YeU+LzAbCrt3OI0uDgN95UA==
-X-Received: by 2002:a05:6402:51c9:b0:65c:2af1:b7e2 with SMTP id
- 4fb4d7f45d1cf-663bac17dcamr7423927a12.27.1773676865593; Mon, 16 Mar 2026
- 09:01:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2FE324B1E;
+	Mon, 16 Mar 2026 16:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773677302; cv=none; b=fpKVmGOpuvYwMez7FcgGEddPRHGegpnsqkoseJvEMB5pg8XJIkL2dBV4fK8jqBairZJwvWAGAtb26lwa4YywSHwNP1Kj09a3kPkArFj4Zj1ahNMaLN5ZV8UA5uj1P94H2Rxrn1H2mWjLWbj70wAhdGtENYUccT71mbR9L795ekU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773677302; c=relaxed/simple;
+	bh=zheSOjWZVX0jJy+pjuzYRXGN8X8Rm5D2EoxmK7k4oks=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=nnWB/4eVbQRoyFKUvzQtImpK/XLhiPVc2MN3gHNhTGOeHlbqzuhRx0x/GPmF4wficg6Nb6+2SJEIfrLJ+iRXYeg5shsloSKChVbsG+BZfY8ms0dCWVJ29K1y6cUyXHNMry+gYISiRe/Yoys7e3J49Ux2C5hMN/jvpzpIHqsuoGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sl5mcm4P; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E154C19421;
+	Mon, 16 Mar 2026 16:08:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773677301;
+	bh=zheSOjWZVX0jJy+pjuzYRXGN8X8Rm5D2EoxmK7k4oks=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=Sl5mcm4P8hJ1OluY+arkRsUP9K3UqR8NoBbLxPwPmqGefGsulo8YAEha5DTJN0Soi
+	 PzryUlubnQPpZH2SSuwzBpEnGDPtzVGPMpp4kw44O+9kO7FWLr2rmYPidQi+RKaVbV
+	 QbbPYDdREZH7Vfj0+R4/ABF7uyLBX36FQ2SMfv27z6H8sh42KIyefLLm4sbRQxQ40x
+	 LUpunQj7+JUpC81KsHZg62rrgrSqcMyr3sbGyEd3BFk2OM2V80cExZ72lsSQavnamt
+	 FTOJU+fZrAK+R41/qVBnpU4b4t7DyZ6CvEd0u97CsdjYuibowtHqtAJjP8VRLGdgXW
+	 x72QRov6czrSA==
+Date: Mon, 16 Mar 2026 11:08:20 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260313195801.2043306-1-shenwei.wang@nxp.com> <CAD++jLkVZc7J+39eUtpWz4+YQm035HDtUyiyrEFGifQkcSMsCA@mail.gmail.com>
-In-Reply-To: <CAD++jLkVZc7J+39eUtpWz4+YQm035HDtUyiyrEFGifQkcSMsCA@mail.gmail.com>
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Date: Mon, 16 Mar 2026 10:00:53 -0600
-X-Gm-Features: AaiRm52a6xRhLIv8WCDX8JG5wzLTI5tmdCIrfHWi7mJRzbOdI91SV43T2PYw5ig
-Message-ID: <CANLsYkyd8x29kz1u2dkyn_5hhWVJehz6VVKEx81Ew6i1nKObwg@mail.gmail.com>
-Subject: Re: [PATCH v12 0/5] Enable Remote GPIO over RPMSG on i.MX Platform
-To: Linus Walleij <linusw@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Cc: Shenwei Wang <shenwei.wang@nxp.com>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, arnaud.pouliquen@foss.st.com, 
-	Shuah Khan <skhan@linuxfoundation.org>, linux-gpio@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>, 
-	devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-0.66 / 15.00];
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, Conor Dooley <conor+dt@kernel.org>, 
+ Linus Walleij <linusw@kernel.org>, linux-hwmon@vger.kernel.org, 
+ Lee Jones <lee@kernel.org>, devicetree@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, David Jander <david@protonic.nl>, 
+ linux-kernel@vger.kernel.org, kernel@pengutronix.de, 
+ Peter Rosin <peda@axentia.se>, Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+In-Reply-To: <20260316140514.1406588-2-o.rempel@pengutronix.de>
+References: <20260316140514.1406588-1-o.rempel@pengutronix.de>
+ <20260316140514.1406588-2-o.rempel@pengutronix.de>
+Message-Id: <177367730051.1660620.4239200064941367815.robh@kernel.org>
+Subject: Re: [PATCH v5 1/7] dt-bindings: pinctrl: add NXP MC33978/MC34978
+ MSDI
+X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33572-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_CC(0.00)[nxp.com,kernel.org,lwn.net,pengutronix.de,foss.st.com,linuxfoundation.org,vger.kernel.org,gmail.com,lists.linux.dev,lists.infradead.org];
+	TAGGED_FROM(0.00)[bounces-33573-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mathieu.poirier@linaro.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[linaro.org:+];
-	NEURAL_HAM(-0.00)[-0.998];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 201C429D161
+X-Rspamd-Queue-Id: 46BDE29D1A9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-[Adding Andrew Lunn]
 
-On Mon, 16 Mar 2026 at 08:23, Linus Walleij <linusw@kernel.org> wrote:
->
-> Hi Shenwei,
->
-> On Fri, Mar 13, 2026 at 8:58=E2=80=AFPM Shenwei Wang <shenwei.wang@nxp.co=
-m> wrote:
->
-> > Support the remote devices on the remote processor via the RPMSG bus on
-> > i.MX platform.
->
-> I think v12 looks pretty good, if Arnaud gives his ACK on this patch
-> series I think it's ripe for merge.
+On Mon, 16 Mar 2026 15:05:06 +0100, Oleksij Rempel wrote:
+> Add device tree binding documentation for the NXP MC33978 and MC34978
+> Multiple Switch Detection Interface (MSDI) devices.
+> 
+> The MC33978 and MC34978 differ primarily in their operating temperature
+> ranges. While not software-detectable, providing specific compatible
+> strings allows the hwmon subsystem to correctly interpret thermal
+> thresholds and hardware faults.
+> 
+> These ICs monitor up to 22 mechanical switch contacts in automotive and
+> industrial environments. They provide configurable wetting currents to
+> break through contact oxidation and feature extensive hardware
+> protection against thermal overload and voltage transients (load
+> dumps/brown-outs).
+> 
+> The device interfaces via SPI. While it provides multiple functions, its
+> primary hardware purpose is pin/switch control. To accurately represent
+> the hardware as a single physical integrated circuit without unnecessary
+> DT overhead, all functions are flattened into a single pinctrl node:
+> - pinctrl: Exposing the 22 switch inputs (SG/SP pins) as a GPIO controller
+>   and managing their pin configurations.
+> - hwmon: Exposing critical hardware faults (OT, OV, UV) and static
+>   voltage/temperature thresholds.
+> - mux: Controlling the 24-to-1 analog multiplexer to route pin voltages,
+>   internal temperature, or battery voltage to an external SoC ADC.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+> changes v5:
+> - Commit Message: Added justification for distinct compatible strings
+>   based on temperature ranges.
+> - Restricted pins property to an explicit enum of valid hardware pins
+> changes v4:
+> - Drop the standalone mfd/nxp,mc33978.yaml schema entirely.
+> - Move the unified device binding to bindings/pinctrl/nxp,mc33978.yaml,
+> - Remove the dedicated child node compatible strings (nxp,mc33978-pinctrl).
+> - Flatten the pinctrl/gpio properties directly into the main SPI device
+>   node.
+> changes v3:
+> - Drop regular expression pattern from pinctrl child node and define
+>   it as a standard property
+> - Reorder required properties list in MFD binding
+> - Remove stray blank line from the MFD binding devicetree example
+> - Replace unevaluatedProperties with additionalProperties in the pinctrl
+>   binding
+> changes v2:
+> - Squashed MFD, pinctrl, hwmon, and mux bindings into a single patch
+> - Removed the empty hwmon child node
+> - Folded the mux-controller node into the parent MFD node
+> - Added vbatp-supply and vddq-supply to the required properties block
+> - Changed the example node name from mc33978@0 to gpio@0
+> - Removed unnecessary literal block scalars (|) from descriptions
+> - Documented SG, SP, and SB pin acronyms in the pinctrl description
+> - Added consumer polarity guidance (GPIO_ACTIVE_LOW/HIGH) for SG/SB
+>   inputs, with a note on output circuit dependency
+> - Updated commit message
+> ---
+>  .../bindings/pinctrl/nxp,mc33978.yaml         | 153 ++++++++++++++++++
+>  1 file changed, 153 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,mc33978.yaml
+> 
 
-Please wait until Andrew and I have provided our RBs before merging.
+My bot found errors running 'make dt_binding_check' on your patch:
 
->
-> Yours,
-> Linus Walleij
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/nxp,mc33978.example.dtb: gpio@0 (nxp,mc33978): $nodename:0: 'gpio@0' does not match '^mux-controller(@.*|-([0-9]|[1-9][0-9]+))?$'
+	from schema $id: http://devicetree.org/schemas/mux/mux-controller.yaml
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.kernel.org/project/devicetree/patch/20260316140514.1406588-2-o.rempel@pengutronix.de
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
 
