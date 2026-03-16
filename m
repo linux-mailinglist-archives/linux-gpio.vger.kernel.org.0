@@ -1,167 +1,132 @@
-Return-Path: <linux-gpio+bounces-33522-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33523-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4G6mKIQKuGkWYQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33522-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 14:49:56 +0100
+	id +NMKCyELuGkWYQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33523-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 14:52:33 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F11F29ABC3
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 14:49:56 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73FE929AC9A
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 14:52:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F40E43099E93
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 13:45:13 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 13ED1300516F
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 13:48:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50F9439A070;
-	Mon, 16 Mar 2026 13:45:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D93C395D85;
+	Mon, 16 Mar 2026 13:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zr28obzB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7931F39A804
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 13:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50147361663
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 13:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773668710; cv=none; b=SqYCgzSGrbUnzKTFkaPqSWnOc7Vn40ZVBs0lf+NhgkI6le8AhR81iEgsJunGzaLBVyEjgrRRFK+5PmwYdo/yWx53PXNSF28WRLm/lUUnKDcz0Am1+TUWhVOpNMctrA1DqdhntsNaiyg+/jEy7/OI4dTSqfmiJTA9LJNCT0CAIzY=
+	t=1773668881; cv=none; b=e+0ZRaHLLmqIDM/F82gxNDpkY3lZlZTv11UozwaaobDwuEwNvE+RAPBtpvIW9tyBdZaucgVyZdez5O+mZ7ybtd0NhRpDf2JnWMMchmKP4ljI9+wzAWDWhlbNiHODbDOZ4s1JMJLrx/Af0LpCLWrOkn4ty0aYgycr4OU1yVSK3QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773668710; c=relaxed/simple;
-	bh=CJsJ4OND96u3gKlcyJ1wDnGCTfTeeaQ6qt2SAE5Q5f4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GstzaQX1FSvQAPt8LPFRJqb8oXRyuANX2nILX8wK9mm99/T5RJEOP2aq9BRhgK5UhmHBzt6Bx1sOyUQwRt53H+S1dHWmmi/TlQBh0JrBvwAzvKCXwrZiD46rOIyLoku4YiSLYpOYfcZ7f7G1br/Z6yYvuBHQtar4Tw4AMXoZ0VY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1w28FR-0007l4-6I; Mon, 16 Mar 2026 14:44:45 +0100
-Message-ID: <ea59ff34-73f2-491c-88cf-51d1ac3db424@pengutronix.de>
-Date: Mon, 16 Mar 2026 14:44:43 +0100
+	s=arc-20240116; t=1773668881; c=relaxed/simple;
+	bh=wYH3+XpB4a2gyPrlHeP5QGbRc5PtadVy9tM/LQIg5+4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f9AO/nSugGe3WHlyVpwgF8ykam/NaPzGfpRQ7neCteSa3qz31/l+GdLUba9ZZGQI23R8LRz9Ylb93fCKiW5C095MHc0Kr9IdZ3UM7jhiZ+DEteAvqK/OJGClWZN91iT4Uxpnmox3a/Xh2Fmqrbnm+KXghtd9x9tv05xAkpQ5mb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zr28obzB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE1D9C19421
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 13:48:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773668880;
+	bh=wYH3+XpB4a2gyPrlHeP5QGbRc5PtadVy9tM/LQIg5+4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Zr28obzB2/uEDuh3BIv5vyyyx5Wzyc1kKJE2tYjnlJN3KaFJWJ3+i0JGfF2CeOc9B
+	 H//Sf9loybFwk6aCh8uYG1+Cuiq3LWnmN79j7fPzvFgZvlrJNyl/EmbzWY07PQhhef
+	 Sdkj53/l4o6cihupIm4+ksuRVKSGOffOFVxD23xdPo4v1KqVpkgpWpU4jjeLqghE1+
+	 vNbN7wgzW+yHvQCG/Pv4Tws5H3IixFRQANMsuZXyAfe6cTICh2rJadZRSW53MlaJxu
+	 HYz5hJKngmPzZREOB8I1uT7DmyaHgmiCc1OYnkXg8HzmCLCSCBPodD1oNWXvinSz+p
+	 XnW2EeBqcGVjw==
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-799001d73bdso33616697b3.0
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 06:48:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWfQFYKidylHa5RGToEY7yffYxynyX8DYoIHwZyljg5Yh+2MYYjC5cRmpjqI585S2wxL/h3XAUptfbu@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNNlGvDplvbkAKHsrcqquA16F4iEcLAbi8GimiESjNwhdGvRot
+	xpe+25A2YGi80by3CdJy50rL1pEieEg3Q1myzDkCcKkGsUAHVynBtZbd9Yh11OrWnvVcVycWVHP
+	8urMzGQpKz/j09kLP8y60OhvM2sD5+UA=
+X-Received: by 2002:a05:690c:20a2:b0:798:6cc2:69c9 with SMTP id
+ 00721157ae682-79a1c0d0184mr99248767b3.24.1773668880274; Mon, 16 Mar 2026
+ 06:48:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/7] arm64: dts: imx8mp-evk: add board-level mux for
- CAN2 and MICFIL
-To: Frank Li <Frank.Li@nxp.com>, Peter Rosin <peda@axentia.se>,
- Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>
-Cc: imx@lists.linux.dev, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Haibo Chen <haibo.chen@nxp.com>,
- linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20260311-pinctrl-mux-v3-0-236b1c17bf9b@nxp.com>
- <20260311-pinctrl-mux-v3-6-236b1c17bf9b@nxp.com>
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Content-Language: en-US, de-DE, de-BE
-In-Reply-To: <20260311-pinctrl-mux-v3-6-236b1c17bf9b@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spamd-Result: default: False [0.04 / 15.00];
+References: <20260312113040.68189-1-eleanor.lin@realtek.com> <20260312113040.68189-4-eleanor.lin@realtek.com>
+In-Reply-To: <20260312113040.68189-4-eleanor.lin@realtek.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Mon, 16 Mar 2026 14:47:49 +0100
+X-Gmail-Original-Message-ID: <CAD++jLmyGNR-242npzHpENhXu7mmuwfLf=ZnoFnfKECFdinS2Q@mail.gmail.com>
+X-Gm-Features: AaiRm50SIXiDQuSs2d8ukotnHyL489fbFBxqS63wwvx1B_UNJFo44E1ehctETTQ
+Message-ID: <CAD++jLmyGNR-242npzHpENhXu7mmuwfLf=ZnoFnfKECFdinS2Q@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] dt-bindings: pinctrl: realtek: Improve
+ 'realtek,duty-cycle' description
+To: Yu-Chun Lin <eleanor.lin@realtek.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	afaerber@suse.com, bartosz.golaszewski@oss.qualcomm.com, 
+	james.tai@realtek.com, cy.huang@realtek.com, stanley_chang@realtek.com, 
+	tychang@realtek.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-realtek-soc@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DMARC_NA(0.00)[pengutronix.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[nxp.com,axentia.se,kernel.org,milecki.pl,pengutronix.de,gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33522-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-33523-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[a.fatoum@pengutronix.de,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.947];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,2.98.90.0:email,pengutronix.de:email,pengutronix.de:mid,pengutronix.de:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 1F11F29ABC3
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,realtek.com:email]
+X-Rspamd-Queue-Id: 73FE929AC9A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 3/11/26 8:08 PM, Frank Li wrote:
-> The board integrates an on-board mux to route shared signals to either
-> CAN2 or PDM (MICFIL). The mux is controlled by a GPIO.
-> 
-> Add a pinctrl-based multiplexer node to describe this routing and ensure
-> proper probe ordering of the dependent devices.
-> 
-> Previously, MICFIL operation implicitly depended on the default level of
-> PCA6416 GPIO3. After adding the pinctrl-multiplexer, make the dependency
-> explicit.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+On Thu, Mar 12, 2026 at 12:30=E2=80=AFPM Yu-Chun Lin <eleanor.lin@realtek.c=
+om> wrote:
 
-Reviewed-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+> The previous description was misleading because this hardware block is no=
+t
+> a PWM generator. It does not generate a signal with a specific frequency
+> and duty ratio.
+>
+> Instead, it provides a fixed nanosecond-level adjustment to the rising/
+> falling edges of an existing signal.
+>
+> The property name is kept as 'realtek,duty-cycle' rather than being
+> renamed to strictly preserve Device Tree ABI backward compatibility.
+>
+> Signed-off-by: Yu-Chun Lin <eleanor.lin@realtek.com>
 
-I really like this new abstraction.
+Thanks for working this out,
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
-> +	can_mux_pinctrl: pinctrl-gpiomux {
-> +		compatible = "pinctrl-multiplexer";
-> +
-> +		can_fun: can-grp {
-> +			mux-states = <&can_mux 1>;
-> +		};
-> +
-> +		pdm_fun: pdm-grp {
-> +			mux-states = <&can_mux 0>;
-> +		};
-> +	};
-
-Just to make sure: If both &flexcan2 and &micfil were enabled at the
-same time, the existing pinctrl clash detection will also work for this
-new pinctrl-multiplexer and point that out, right?
-
-Thanks,
-Ahmad
-
-> +
->  	memory@40000000 {
->  		device_type = "memory";
->  		reg = <0x0 0x40000000 0 0xc0000000>,
-> @@ -446,7 +465,7 @@ &flexcan1 {
->  
->  &flexcan2 {
->  	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_flexcan2>;
-> +	pinctrl-0 = <&pinctrl_flexcan2>, <&can_fun>;
->  	phys = <&flexcan_phy 1>;
->  	status = "disabled";/* can2 pin conflict with pdm */
->  };
-> @@ -712,7 +731,7 @@ &lcdif3 {
->  &micfil {
->  	#sound-dai-cells = <0>;
->  	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_pdm>;
-> +	pinctrl-0 = <&pinctrl_pdm>, <&pdm_fun>;
->  	assigned-clocks = <&clk IMX8MP_CLK_PDM>;
->  	assigned-clock-parents = <&clk IMX8MP_AUDIO_PLL1_OUT>;
->  	assigned-clock-rates = <196608000>;
-> 
-
--- 
-Pengutronix e.K.                  |                             |
-Steuerwalder Str. 21              | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany         | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686  | Fax:   +49-5121-206917-5555 |
-
+Yours,
+Linus Walleij
 
