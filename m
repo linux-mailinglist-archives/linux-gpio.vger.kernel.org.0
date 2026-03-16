@@ -1,59 +1,59 @@
-Return-Path: <linux-gpio+bounces-33551-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33552-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uKBnA2QiuGk8ZgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33551-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 16:31:48 +0100
+	id wIruIFUhuGmdZQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33552-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 16:27:17 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B28B29C6BE
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 16:31:47 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5038129C4F0
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 16:27:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A4CF330A184A
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 15:25:57 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id BFD4930340BF
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 15:26:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22A5D39FCA7;
-	Mon, 16 Mar 2026 15:25:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 390363A256A;
+	Mon, 16 Mar 2026 15:25:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="f2TQfXi6"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SGscBu9M"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A29C39FCA9;
-	Mon, 16 Mar 2026 15:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEBF3A1A48
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 15:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773674754; cv=none; b=qUiimuTIRVyMpNuB255Eq+cP19wXiS+rLUcBQ07v0z1ksweq3G+zhlI/nCLpl2tR6xiEcow0puqwzjPR6yCWpe4IGgUcSrITL0W5zS+qAgqLemxzP50c9IpG6zGs7Aj9Xikn+Z4IFGYprhxrRir8f/iPl0cvU/uXx9DzbItwsec=
+	t=1773674758; cv=none; b=CnVd/n9yjZovabmosj8YJiw6DeM/QepwMFmYno/w5eZUpiohJmVp6S8IQBBiNqjam99gFpyqf1+6rI9EJV2K84j0ukwNR1x1cUoxsKtId84k/rwvPQEQctk67eWqhdawDjm2dcdw/J0ML68AzMttV8DoMhhOX8LNtutYOI3cTxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773674754; c=relaxed/simple;
-	bh=0lSJAvm4Hn1Ils6DHNjWeGoR73lEO8Dc8PMjR4+fBqc=;
+	s=arc-20240116; t=1773674758; c=relaxed/simple;
+	bh=oBOR980TwjJ2dJBFw8+3I1q6s5oxOQVha3EWu0SuaCA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jWa1hm0B71P3YtpCmVe7yltDNqj37GVjKV9UGBayFsig1jbk4JztfRGbhq8evdPzphg2jvABO61j+RXOkZ/tFJgWkNj/Cerh674fpzW666wkiH8hipkmhWMyRY9HzjXmTg2ZQiDGoUfNSl+zFeJZWlMkTEgmjtLTbby7W1s1jU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=f2TQfXi6; arc=none smtp.client-ip=185.246.84.56
+	 In-Reply-To:To:Cc; b=u/hvyrQTGj189lh/HYN0bBlJc2GBIIf1FkqmRUOXnqlOdx6rhHzstPWGpcjLP38X7G65N05QYdIIbHeWeV+YyLSuBCIdcTRXTiv/AjKYZL7a3/IBmJCC8VpFlc4YwXZQdHmCz9xSLV/zLQhsx7myrJ3Tc/ziezExKTatXnCCrQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SGscBu9M; arc=none smtp.client-ip=185.246.85.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 5A74C1A2E5B;
-	Mon, 16 Mar 2026 15:25:52 +0000 (UTC)
+	by smtpout-03.galae.net (Postfix) with ESMTPS id CCBBB4E426C0;
+	Mon, 16 Mar 2026 15:25:54 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 235635FC4A;
-	Mon, 16 Mar 2026 15:25:52 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CE3E2103721EB;
-	Mon, 16 Mar 2026 16:25:49 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 969575FC4A;
+	Mon, 16 Mar 2026 15:25:54 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5D7CC103721CF;
+	Mon, 16 Mar 2026 16:25:51 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1773674751; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1773674753; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=YdDsgApApAV3cK0W79hVYmB4UC7l0NfHNOm1EgR/sOU=;
-	b=f2TQfXi67nM66+ddhpigqhueijFX/zBaiSp1yLDY3jgJ6cyVoN9IgTUoWytDGJ2eDy2Tov
-	ZeZd4ODA9vrkqB3iD8p8EBVY+2S5Fx4O2gYDvdSXt4bvWhcT2Wv3HIfcbswv/R2QJkd5N8
-	O9sEZAurdl5v/S1kJj1fGU2NGPQSjLZ82oWORtwQSg0b4TrwcGSFWrNJctM2OoBzXtXwMg
-	Zs8gmmmbNnbQ3tngviIDItcvKQaoD+sgRTbupK8VfT7NPdbF1PTlsnour3etUtptWpopFL
-	47pRZRFqyRK/ntlMuulFqNbtdBdvUDqTiLP/Y5HxdKaNP1pym65V2yarW+q8JA==
+	bh=xbFb0N0mWFaPr9wcm17PmP2ipXvyfHX9OmBmbZQsT74=;
+	b=SGscBu9MMZUwkNU0iPZ2bCoHdZ+KzW2fEilU+Rrm30mO8Slk5XKfxmfihCb+pq8wvyQ1CQ
+	OpPK5D2Sy2NjIyy9z8CZRm36CKiXHTNuTOnlMDtfYoBNTE+V5SFt2+YFhYYdU/fDNhWVkJ
+	/8KAv8Ol+AdevSaC+S3ox4PhZHRWjv9yJVSvttm8NP6V1w8cNKdWqWC66Rl5uGYO1g2KsL
+	tWiwvnP5zSVW86mLh5h17ycGauNyX/s5XuIVKHXRlF9epXPCM/gsVPTIUVAZphTa9l0cNS
+	aIUmyiWdf3XoEVen2dzqLLDXY5iiVMdCW4r47sFkTuUcqVNQ7ERcRn+3UMt4Zg==
 From: =?utf-8?q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>
-Date: Mon, 16 Mar 2026 16:25:38 +0100
-Subject: [PATCH v4 01/13] dt-bindings: mips: Add Mobileye EyeQ6Lplus SoC
+Date: Mon, 16 Mar 2026 16:25:39 +0100
+Subject: [PATCH v4 02/13] dt-bindings: soc: mobileye: Add EyeQ6Lplus OLB
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260316-eyeq6lplus-v4-1-bf44dfc7a261@bootlin.com>
+Message-Id: <20260316-eyeq6lplus-v4-2-bf44dfc7a261@bootlin.com>
 References: <20260316-eyeq6lplus-v4-0-bf44dfc7a261@bootlin.com>
 In-Reply-To: <20260316-eyeq6lplus-v4-0-bf44dfc7a261@bootlin.com>
 To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
@@ -85,58 +85,308 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33551-lists,linux-gpio=lfdr.de];
-	DKIM_TRACE(0.00)[bootlin.com:+];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33552-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[19];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[bootlin.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[benoit.monin@bootlin.com,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 6B28B29C6BE
+	DBL_BLOCKED_OPENRESOLVER(0.00)[devicetree.org:url,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 5038129C4F0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add an entry to the mobileye bindings for the EyeQ6Lplus
-which is part of the EyeQ family of system-on-chip.
+The "Other Logic Block" found in the EyeQ6Lplus from Mobileye provides
+various functions for the controllers present in the SoC.
+
+The OLB produces 22 clocks derived from its input, which is connected
+to the main oscillator of the SoC.
+
+It provides reset signals via two reset domains.
+
+It also controls 32 pins to be either a GPIO or an alternate function.
 
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Benoît Monin <benoit.monin@bootlin.com>
 ---
- Documentation/devicetree/bindings/mips/mobileye.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../soc/mobileye/mobileye,eyeq6lplus-olb.yaml      | 208 +++++++++++++++++++++
+ .../dt-bindings/clock/mobileye,eyeq6lplus-clk.h    |  37 ++++
+ 2 files changed, 245 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mips/mobileye.yaml b/Documentation/devicetree/bindings/mips/mobileye.yaml
-index d60744550e46..83abe268e96b 100644
---- a/Documentation/devicetree/bindings/mips/mobileye.yaml
-+++ b/Documentation/devicetree/bindings/mips/mobileye.yaml
-@@ -31,6 +31,11 @@ properties:
-           - enum:
-               - mobileye,eyeq6h-epm6
-           - const: mobileye,eyeq6h
-+      - description: Boards with Mobileye EyeQ6Lplus SoC
-+        items:
-+          - enum:
-+              - mobileye,eyeq6lplus-epm6
-+          - const: mobileye,eyeq6lplus
- 
- additionalProperties: true
- 
+diff --git a/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq6lplus-olb.yaml b/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq6lplus-olb.yaml
+new file mode 100644
+index 000000000000..8334876cf4e6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq6lplus-olb.yaml
+@@ -0,0 +1,208 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq6lplus-olb.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Mobileye EyeQ6Lplus SoC system controller
++
++maintainers:
++  - Benoît Monin <benoit.monin@bootlin.com>
++  - Grégory Clement <gregory.clement@bootlin.com>
++  - Théo Lebrun <theo.lebrun@bootlin.com>
++  - Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
++
++description:
++  OLB ("Other Logic Block") is a hardware block grouping smaller blocks.
++  Clocks, resets, pinctrl are being handled from here. EyeQ6Lplus hosts
++  a single instance providing 22 clocks, two reset domains and one bank
++  of 32 pins.
++
++properties:
++  compatible:
++    items:
++      - const: mobileye,eyeq6lplus-olb
++      - const: syscon
++
++  reg:
++    maxItems: 1
++
++  '#reset-cells':
++    description:
++      First cell is reset domain index.
++      Second cell is reset index inside that domain.
++    const: 2
++
++  '#clock-cells':
++    const: 1
++
++  clocks:
++    maxItems: 1
++    description:
++      Input parent clock to all PLLs. Expected to be the main crystal.
++
++  clock-names:
++    const: ref
++
++patternProperties:
++  '-pins?$':
++    type: object
++    description: Pin muxing configuration.
++    $ref: /schemas/pinctrl/pinmux-node.yaml#
++    additionalProperties: false
++    properties:
++      pins: true
++      function:
++        enum: [gpio, timer0, timer1, uart_ssi, spi0, uart0, timer2, timer3,
++               timer_ext0, spi1, timer_ext1, ext_ref_clk, mipi_ref_clk]
++      bias-disable: true
++      bias-pull-down: true
++      bias-pull-up: true
++      drive-strength: true
++    required:
++      - pins
++      - function
++    allOf:
++      - if:
++          properties:
++            function:
++              const: gpio
++        then:
++          properties:
++            pins:
++              items: # PA0 - PA31
++                pattern: '^(PA[1,2]?[0-9]|PA3[0,1])$'
++      - if:
++          properties:
++            function:
++              const: timer0
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA0, PA1]
++      - if:
++          properties:
++            function:
++              const: timer1
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA2, PA3]
++      - if:
++          properties:
++            function:
++              const: uart_ssi
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA4, PA5]
++      - if:
++          properties:
++            function:
++              const: spi0
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA6, PA7, PA8, PA9, PA10]
++      - if:
++          properties:
++            function:
++              const: uart0
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA11, PA12]
++      - if:
++          properties:
++            function:
++              const: timer2
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA13, PA14]
++      - if:
++          properties:
++            function:
++              const: timer3
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA15, PA16]
++      - if:
++          properties:
++            function:
++              const: timer_ext0
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA17, PA18, PA19, PA20]
++      - if:
++          properties:
++            function:
++              const: spi1
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA21, PA22, PA23, PA24, PA25]
++      - if:
++          properties:
++            function:
++              const: timer_ext1
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA26, PA27, PA28, PA29]
++      - if:
++          properties:
++            function:
++              const: ext_ref_clk
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA30]
++      - if:
++          properties:
++            function:
++              const: mipi_ref_clk
++        then:
++          properties:
++            pins:
++              items:
++                enum: [PA31]
++
++required:
++  - compatible
++  - reg
++  - '#clock-cells'
++  - clocks
++  - clock-names
++  - '#reset-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    soc {
++      #address-cells = <2>;
++      #size-cells = <2>;
++
++      system-controller@e8400000 {
++        compatible = "mobileye,eyeq6lplus-olb", "syscon";
++        reg = <0 0xe8400000 0x0 0x80000>;
++        #reset-cells = <2>;
++        #clock-cells = <1>;
++        clocks = <&xtal>;
++        clock-names = "ref";
++      };
++    };
+diff --git a/include/dt-bindings/clock/mobileye,eyeq6lplus-clk.h b/include/dt-bindings/clock/mobileye,eyeq6lplus-clk.h
+new file mode 100644
+index 000000000000..20d84ee24ad5
+--- /dev/null
++++ b/include/dt-bindings/clock/mobileye,eyeq6lplus-clk.h
+@@ -0,0 +1,37 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright (C) 2025 Mobileye Vision Technologies Ltd.
++ */
++
++#ifndef _DT_BINDINGS_CLOCK_MOBILEYE_EYEQ6LPLUS_CLK_H
++#define _DT_BINDINGS_CLOCK_MOBILEYE_EYEQ6LPLUS_CLK_H
++
++#define EQ6LPC_PLL_CPU		0
++#define EQ6LPC_PLL_DDR		1
++#define EQ6LPC_PLL_PER		2
++#define EQ6LPC_PLL_VDI		3
++#define EQ6LPC_PLL_ACC		4
++
++#define EQ6LPC_CPU_OCC		5
++
++#define EQ6LPC_ACC_VDI		6
++#define EQ6LPC_ACC_OCC		7
++#define EQ6LPC_ACC_FCMU		8
++
++#define EQ6LPC_DDR_OCC		9
++
++#define EQ6LPC_PER_OCC		10
++#define EQ6LPC_PER_I2C_SER	11
++#define EQ6LPC_PER_PCLK		12
++#define EQ6LPC_PER_TSU		13
++#define EQ6LPC_PER_OSPI		14
++#define EQ6LPC_PER_GPIO		15
++#define EQ6LPC_PER_TIMER	16
++#define EQ6LPC_PER_I2C		17
++#define EQ6LPC_PER_UART		18
++#define EQ6LPC_PER_SPI		19
++#define EQ6LPC_PER_PERIPH	20
++
++#define EQ6LPC_VDI_OCC		21
++
++#endif
 
 -- 
 2.53.0
