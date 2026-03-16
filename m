@@ -1,253 +1,167 @@
-Return-Path: <linux-gpio+bounces-33576-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33577-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QB5tG4Q0uGnXaQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33576-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 17:49:08 +0100
+	id 2FSFJdY8uGmpagEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33577-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 18:24:38 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C722729DA09
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 17:49:07 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1443729E1B0
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 18:24:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C540B30B9CB9
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 16:44:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 44F72302D582
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 17:19:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6F7F38E5D1;
-	Mon, 16 Mar 2026 16:44:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34C043CFF72;
+	Mon, 16 Mar 2026 17:18:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="iTFuv01s"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilL5GFQK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805103A1A5C
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 16:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0E63BED73;
+	Mon, 16 Mar 2026 17:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773679489; cv=none; b=d5QzU4nlCidW7TrlBiG9qBbhf5Qv9X26nCxGojdF590rHtxkx7Qaz3Bx0eO4JLktdRVQA4jUPrnpmwCcHDLcvljnq3mi4rXVjUOvxBBfbaZZVwShmmNUd1V/nF3As8mzo9A0kVF9laV/0o422jE/CH3suc8DVliUMFKCDtbl5Gs=
+	t=1773681536; cv=none; b=ji1/KmuGQRID4aRMVGvuGXWRSSWVIP92LO/VOsMbC0eo4Z2Z4D0yX/vywaHqTglQdWPNF92dIu4r7LjfvcRazCsNuQybad11HgV33oFU3LhYlfJzpg7nmyk/sTtH0U6p0S4iNgN+ufTfGfFsebFzl3PwQ6rgreXey89ysQGI2ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773679489; c=relaxed/simple;
-	bh=Tkdt6e6cnfyPY0SugtxYloHST0stO69sHMglYRTuOi0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C9QTNWhgoT7W+AFUPqXNP/RRQ9edu8/htee5vrU/VmiDiMRoNcc8473tER88JAnzAtYRhS19rS3pduzd2kylgDv5OqZe19BIagDMWfAU79M77STNDaseya18E+DfNoXgSWBmUJiwP4tg7CeVMzXGvpkKfTBh0bBY3quE/3kTelg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=iTFuv01s; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-40ea36b56b7so3246287fac.3
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:44:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1773679486; x=1774284286; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4AJTku3OJZDZ6/Kpiw5pDXaqosol7el2TXJoCn2CGLI=;
-        b=iTFuv01sWYT+Kv5MkQyWtJ5hj1yeq4H2sWPcTmnOjZwRc+VRQZ7HLoo2fAUEjJa8a/
-         I4yhutovyrIh0Dog60nItEsnan7+/ELbTB6P39HRFPutA0L8dFvynDwjMhb62zXzDEWD
-         BS4lYWyhk7AGsCOkEZPwBzG6N0PAyGTe2N60Vb/vbyecUzjYi/+48yd82Alg4IMdw4pm
-         0OLfZMCubL00ZTG7wVAhIEOHX1R0WqCIlOedtQw6oebgcXqKQvlviYMZoxB39oC3D/ox
-         KDa2sDZ7yrwt5sfO5JWymdSFM6P1uAGIkFlVoawdP+6UG49eY58kesVfjfH41MBQTljF
-         GreA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773679486; x=1774284286;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4AJTku3OJZDZ6/Kpiw5pDXaqosol7el2TXJoCn2CGLI=;
-        b=heN7LvZXE38xlpgnexO8SRRQoGATQFWyUHJ7kEWT8GVUnUGTKi6lIOY4Bn8GWpcuDb
-         9LNtDRAW1EwfNqSgcnNWxrJ5wv1JT76Q2aaRM3Qc/xH0t7PxAcFRdZKurYyMq6GueGOj
-         0ys5QGGnU+P7jY6P3Iaennh0hsKEMrCnWJrgsZWbwH/Yz7CBPcBPmF7HHXmqaDGK38Df
-         s8wyTZMQdbw6voqqyCU1J7m0Djxj57zkyY1FwrYGP4k8thVWO+xdshS8esf828HX6Tng
-         xB1p6YgzOsm6gXiZFYbiLHPB1r/Ke5dynkmEKFe1LZxlk4CU1lBRRW3mCB+khe2dKLZG
-         kkaw==
-X-Forwarded-Encrypted: i=1; AJvYcCXLKH8z/xuWwEmGWwIyL+QC7N/IMOsDXYfTVcGZzhd//Jmk9//SQrm3tNQFGhQtkD/+FMB0cYxGidBv@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaOuLNzQwsd4TkXn1/pb0RloBueDCCXk+lUA3r6J0iQTff25sp
-	UQLVryCDq42dVxu/hMsLJcJTYxjntexMbxtzS6DxYlWPxxY6mx0aISa+i6jVRwdPbVM=
-X-Gm-Gg: ATEYQzyft+tLwq39YO2Vl/fGLnBH1PDl3VLCE/qx/7aOSKAWKNpbrbYnlyNwuvsvhi4
-	eASkBHDfjZX7OtHQStBRNzn2y0YGO0hZAl6PMBc1wdbX7RlpYmoMJAyRhfvVLsD0jRVEUiyed+O
-	sw/MHxYRuBFunMaj2cqNbx5raK20NF4dwd271b33sfhCvC4Z8TNyrbtro/M2sIaPPVZ0vMgw0XV
-	+xEspq8g5pOfDyVYumPB3JDDzP4+14n2O68kktGeEolMi3ZnRwH52GtiVHbcTiz3mcXDnle2WZJ
-	l5S36VdLDRGX6mk4bQqXmYaqzbJ/GEkF+2t7E9G7N9xbETxmSvHd/O0G9nCIEQ/QkV3IxeG1Zyg
-	eaRDzx51U33uCl7LEuqOlZ16nGDnGuV4hpKqIulSeu2kEjx4vMxqcTVzmAhEV0WBEqD70nE8AzW
-	pYjNgFth8Yf9aro32V67H9E+ulpYoTfmrVKT4CcCQyGyy06x/Y01Wuf0evL1h1qlcszN/BqcQI9
-	Q==
-X-Received: by 2002:a05:6870:3b8e:b0:417:22c9:a311 with SMTP id 586e51a60fabf-417b902ecbcmr8375036fac.6.1773679486349;
-        Mon, 16 Mar 2026 09:44:46 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:500:e504:a034:1152:a664? ([2600:8803:e7e4:500:e504:a034:1152:a664])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4177e69c79dsm15440675fac.15.2026.03.16.09.44.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Mar 2026 09:44:45 -0700 (PDT)
-Message-ID: <06b48810-f997-40a4-86db-d3b7db9dfc18@baylibre.com>
-Date: Mon, 16 Mar 2026 11:44:44 -0500
+	s=arc-20240116; t=1773681536; c=relaxed/simple;
+	bh=9cK3KLb4HrCqUUxkMKGn6O5T8UEF2tr+A46rGmJElf8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m9tbUrbeDZLq+SdPEP9K2aT4zhTWG9pS1qxSicFB5G1a4Cqn+PYgZVe2ErIHBOOpVubQn2/93P/Otg2cFbc1xPrCRAlRvAeMkTJ8iVBCl56K6sgpQjuwdOq0HG3KxG3+KX1TbPme6YNQ76DTPNMh/dZ+ZA7P2kmOBXZpAlPuNV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilL5GFQK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EB50C2BC87;
+	Mon, 16 Mar 2026 17:18:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773681535;
+	bh=9cK3KLb4HrCqUUxkMKGn6O5T8UEF2tr+A46rGmJElf8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ilL5GFQK2OtuJkzGrrwtNW7qPiZYpzofHMyOgZ5SRG5ULZ6m/g20WUP3gjknafSFT
+	 B6r/8IJdFIg42TeP0H+2zVhRWQxImRJD3T1xo7uq2CXynFcrDgCMNB3fyYjbwH4DxK
+	 6gIVQYmL50QCS2RNBy2rPq/RIvXTsi2AC1b9MOKicEODI1yZY7Nwpz5ddWUftLr9nd
+	 jPuJSKcOk932r2foN3UxdB+xpCcjmzrHq3EKthGR2vw2R9uEMP/F/EuVXg08GCnOWg
+	 4R5ANtdtfGdqTogV7zD2oZVcHhCSLTkS/Zplrd1icxGPC1wCjZhUcPJC2JrC92sTaq
+	 RPJRWEaSq0wAw==
+Date: Mon, 16 Mar 2026 12:18:54 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>, Linus Walleij <linusw@kernel.org>,
+	David Jander <david@protonic.nl>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, kernel@pengutronix.de,
+	linux-hwmon@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/7] dt-bindings: pinctrl: add NXP MC33978/MC34978 MSDI
+Message-ID: <177368153336.2253380.3145314125714011470.robh@kernel.org>
+References: <20260316140514.1406588-1-o.rempel@pengutronix.de>
+ <20260316140514.1406588-2-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] iio: adc: ad4691: add triggered buffer support
-To: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>,
- Lars-Peter Clausen <lars@metafoo.de>,
- "Hennerich, Michael" <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, "Sa, Nuno" <Nuno.Sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-References: <20260313-ad4692-multichannel-sar-adc-driver-v3-0-b4d14d81a181@analog.com>
- <20260313-ad4692-multichannel-sar-adc-driver-v3-3-b4d14d81a181@analog.com>
- <0bca5313-a968-48a1-9245-aeae25ab4187@baylibre.com>
- <LV9PR03MB8414E82D015E615DD64ADEFAF740A@LV9PR03MB8414.namprd03.prod.outlook.com>
- <7251a53a-100c-4867-ab4e-b7d2d019b26b@baylibre.com>
- <LV9PR03MB84146ADC269645000849795AF740A@LV9PR03MB8414.namprd03.prod.outlook.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <LV9PR03MB84146ADC269645000849795AF740A@LV9PR03MB8414.namprd03.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.16 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260316140514.1406588-2-o.rempel@pengutronix.de>
+X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[baylibre-com.20230601.gappssmtp.com:s=20230601];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-33576-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[analog.com,metafoo.de,kernel.org,gmail.com,pengutronix.de];
-	DMARC_NA(0.00)[baylibre.com];
-	DKIM_TRACE(0.00)[baylibre-com.20230601.gappssmtp.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33577-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dlechner@baylibre.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: C722729DA09
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[pengutronix.de:email,0.0.0.0:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 1443729E1B0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 3/16/26 10:56 AM, Sabau, Radu bogdan wrote:
+
+On Mon, 16 Mar 2026 15:05:06 +0100, Oleksij Rempel wrote:
+> Add device tree binding documentation for the NXP MC33978 and MC34978
+> Multiple Switch Detection Interface (MSDI) devices.
 > 
+> The MC33978 and MC34978 differ primarily in their operating temperature
+> ranges. While not software-detectable, providing specific compatible
+> strings allows the hwmon subsystem to correctly interpret thermal
+> thresholds and hardware faults.
 > 
->> -----Original Message-----
->> From: David Lechner <dlechner@baylibre.com>
->> Sent: Monday, March 16, 2026 5:38 PM
->> To: Sabau, Radu bogdan <Radu.Sabau@analog.com>; Lars-Peter Clausen
->> <lars@metafoo.de>; Hennerich, Michael <Michael.Hennerich@analog.com>;
->> Jonathan Cameron <jic23@kernel.org>; Sa, Nuno <Nuno.Sa@analog.com>;
->> Andy Shevchenko <andy@kernel.org>; Rob Herring <robh@kernel.org>;
->> Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor Dooley
->> <conor+dt@kernel.org>; Uwe Kleine-König <ukleinek@kernel.org>; Liam
->> Girdwood <lgirdwood@gmail.com>; Mark Brown <broonie@kernel.org>; Linus
->> Walleij <linusw@kernel.org>; Bartosz Golaszewski <brgl@kernel.org>; Philipp
->> Zabel <p.zabel@pengutronix.de>
->> Cc: linux-iio@vger.kernel.org; devicetree@vger.kernel.org; linux-
->> kernel@vger.kernel.org; linux-pwm@vger.kernel.org; linux-
->> gpio@vger.kernel.org
->> Subject: Re: [PATCH v3 3/4] iio: adc: ad4691: add triggered buffer support
->>
->> [External]
->>
->> On 3/16/26 8:22 AM, Sabau, Radu bogdan wrote:
->>>
->>>
->>>> -----Original Message-----
->>>> From: David Lechner <dlechner@baylibre.com>
->>>> Sent: Saturday, March 14, 2026 8:38 PM
->>>
->>> ...
->>>
->>>>> Both operating modes share a single IIO trigger and trigger handler.
->>>>> The handler builds a complete scan — one u32 slot per channel at its
->>>>> scan_index position, followed by a timestamp — and pushes it to the
->>>>> IIO buffer in a single iio_push_to_buffers_with_ts() call.
->>>>
->>>> It would really help here to see some timing diagrams to know if we
->>>> are implementing this right.
->>>>
->>>> For example, it isn't clear that in clocked mode if CNV triggers a
->>>> single conversion in the sequencer (i.e. IIO_SAMP_FREQ should be
->>>> info_mask_separate) or if it triggers the sequence (i.e. IIO_SAMP_FREQ
->>>> should be info_mask_shared_by_all).
->>>>
->>>
->>> The CNV triggers the sequence and IIO_SAMP_FREQ is
->> info_mask_shared_by_all.
->>>
->>> As per datasheet page 31 (Accumulator Section), when each accumulator
->>> receives a sample, the ACC_COUNT is increased. In clocked mode we
->>> are setting the ACC_COUNT limit to 1, therefore having one sample per
->>> channel (no oversampling as discussed in previous versions). So each
->>> period of the CNV PWM is respective to one sample of a channel.
->>
->> Assuming that "a" channel means "one" channel...
->>
->> In this case then sampling_frequency should be per channel (separate).
->>
->> A sampling_frequency that is shared_by_all means that each period of
->> CNV should trigger one sample each for _all_ channels. In other words,
->> the sampling frequency gives one complete set of samples for all enabled
->> channels pushed to the buffer.
->>
+> These ICs monitor up to 22 mechanical switch contacts in automotive and
+> industrial environments. They provide configurable wetting currents to
+> break through contact oxidation and feature extensive hardware
+> protection against thermal overload and voltage transients (load
+> dumps/brown-outs).
 > 
-> Oh, ok then, will have them separate. I assumed that since the PWM period
-> is constant with each pulse, then the sampling rate will be the same for
-> each channel, thus having them as shared_by_all, but I assume you are
-> right about this in this case, I will have them as separate in this case, the
-> update will happen in the previous patch upon next version.
+> The device interfaces via SPI. While it provides multiple functions, its
+> primary hardware purpose is pin/switch control. To accurately represent
+> the hardware as a single physical integrated circuit without unnecessary
+> DT overhead, all functions are flattened into a single pinctrl node:
+> - pinctrl: Exposing the 22 switch inputs (SG/SP pins) as a GPIO controller
+>   and managing their pin configurations.
+> - hwmon: Exposing critical hardware faults (OT, OV, UV) and static
+>   voltage/temperature thresholds.
+> - mux: Controlling the 24-to-1 analog multiplexer to route pin voltages,
+>   internal temperature, or battery voltage to an external SoC ADC.
 > 
-Does the sampling stop after one "burst" (reading each enabled channel once)?
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+> changes v5:
+> - Commit Message: Added justification for distinct compatible strings
+>   based on temperature ranges.
+> - Restricted pins property to an explicit enum of valid hardware pins
+> changes v4:
+> - Drop the standalone mfd/nxp,mc33978.yaml schema entirely.
+> - Move the unified device binding to bindings/pinctrl/nxp,mc33978.yaml,
+> - Remove the dedicated child node compatible strings (nxp,mc33978-pinctrl).
+> - Flatten the pinctrl/gpio properties directly into the main SPI device
+>   node.
+> changes v3:
+> - Drop regular expression pattern from pinctrl child node and define
+>   it as a standard property
+> - Reorder required properties list in MFD binding
+> - Remove stray blank line from the MFD binding devicetree example
+> - Replace unevaluatedProperties with additionalProperties in the pinctrl
+>   binding
+> changes v2:
+> - Squashed MFD, pinctrl, hwmon, and mux bindings into a single patch
+> - Removed the empty hwmon child node
+> - Folded the mux-controller node into the parent MFD node
+> - Added vbatp-supply and vddq-supply to the required properties block
+> - Changed the example node name from mc33978@0 to gpio@0
+> - Removed unnecessary literal block scalars (|) from descriptions
+> - Documented SG, SP, and SB pin acronyms in the pinctrl description
+> - Added consumer polarity guidance (GPIO_ACTIVE_LOW/HIGH) for SG/SB
+>   inputs, with a note on output circuit dependency
+> - Updated commit message
+> ---
+>  .../bindings/pinctrl/nxp,mc33978.yaml         | 153 ++++++++++++++++++
+>  1 file changed, 153 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,mc33978.yaml
+> 
 
-If yes, then what controls when the next set of samples starts?
-
-Looking at Figure 63 in the datasheet for CNV Clock mode, it looks like it
-depends entirely on how long the SPI message takes. So the actual sample rate
-is going to be quite random instead of the sum of each channel as the IIO ABI
-says it should. It seems a waste of the PWM to do it this way since we end
-up with a random sample rate.
-
-It seems to me like the CNV Burst mode would actually be better suited to
-how IIO usually does things. In this case, the PWM frequency would control
-the effective sample rate (one PWM pulse triggers one complete set of
-samples) and the internal oscillator controls triggering each individual
-conversion.
-
-In this setup, we would still have the info_mask_separate IIO_SAMP_FREQ,
-but it would control the internal oscillator. Then we would have a separate
-buffer0/sampling_frequency attribute that controlled the PWM frequency.
-
-Then, as long as the PWM frequency was slow enough that the SPI message
-can be done, it can make samples with almost no jitter. This is why I would
-expect PWM to almost always be used with SPI offload though, otherwise
-it has to be quite slow compared to what the chip is capable of.
-
-I suppose the CNV Clock mode could also be made to work with the typical
-IIO trigger so that we could control the actual sample rate. It just
-wouldn't be as precise.
-
-
-
-If you have some examples of how this chip should actually be used in the
-real world, that could help pick what is the right thing to do here.
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
 
