@@ -1,187 +1,221 @@
-Return-Path: <linux-gpio+bounces-33514-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33515-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aEUaBt/2t2nSXgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33514-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 13:26:07 +0100
+	id eL2iNkj3t2nSXgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33515-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 13:27:52 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88691299775
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 13:26:06 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BC06299819
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 13:27:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3237830459CF
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 12:23:05 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D6192302DE7A
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 12:27:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8494E3559DF;
-	Mon, 16 Mar 2026 12:23:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7F70396564;
+	Mon, 16 Mar 2026 12:27:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ljQGM4V/"
+	dkim=pass (1024-bit key) header.d=vjti.ac.in header.i=@vjti.ac.in header.b="DqCXl/Ix"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F1226A0C7
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 12:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1902395DB5
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 12:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773663784; cv=none; b=WKp0V5ZgZIiV388sXQ3gTnCXtPcAtq2exQGxsna7tURj65rhmKLLuocXo1TK06kURuqtwLuEmdruBeJk3CzaZYgMjLaB/dh9ovttIZyrcaQkRdX1M6eWd3Ryh+yYcsqIVZeMOHJ8jNVL02V2ZwnCvqwXBzwTdGaGALae+09EO/A=
+	t=1773664039; cv=none; b=bv7fkB+gDphk7bsyH4auXno5n+SJK3964hsbvjr4011E4QOE4gxECUSC99c1gT1NllAJjgQlQ2uC14gvmnlvRart4nOoPi6vV5m2y2w6DWfdrvASjZ3hSLj8L3BWdJgOJYS7LZ+ubsDn0hJSAgO4hSFyoSlR+JYSZFx+2Wgjrus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773663784; c=relaxed/simple;
-	bh=ee9mcvjsKDMNJSDrjdCRK4iF5zD9JpiraU31g4vsD8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=oXNN9BWBDPJXEN9JQcKqX+lkmtcB100CD528Tp9XVgQTLEUOjK4K8TTIWE7tP3Up3zBshzqrNmfvlsWJw0/0KWgnEz1VTZixNhXYG+DN13ZqS/QLnMcHqy4w1INSRit+10G0x4a5b5dbOa24xDkSm1kZzGucRA08gHBQqb4qScI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ljQGM4V/; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773663782; x=1805199782;
-  h=date:from:to:cc:subject:message-id;
-  bh=ee9mcvjsKDMNJSDrjdCRK4iF5zD9JpiraU31g4vsD8Q=;
-  b=ljQGM4V/5Pf5yD5b9MkQLNnBk2geOEcmj+grGZAQTele8/jhwcBFHOX1
-   4E1WGqKVkbIkSssXgQJKvipr085MhSFNixUcFy/JJLcwCxdOJIlIk0SSH
-   4Jbx1t7cWuIHDxqIociRrGHOX2uUWaWsQ5MNMq3d2GzHVJgskjGWhV2LT
-   2afQIRCTCqZ/QPHjgydkOO/ZjKoAajpvW6nWbqXfcSzD/1M7mj39gnFcV
-   e4QUCi3c2/uwHqJqm+DZbZZRWJL6j+ZQIWfmx2sZkOUNvbxGUZIZFd8XU
-   WjWaepWSVaurnd23RZXyv1xpXHXqAKngp/PdGCKsQKlNdVomGp1Z52IPb
-   w==;
-X-CSE-ConnectionGUID: h6ftnU2STXalvGvpzRb6tg==
-X-CSE-MsgGUID: ajyogBywTii7WpgmX9KqtQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11730"; a="85758216"
-X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
-   d="scan'208";a="85758216"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2026 05:23:01 -0700
-X-CSE-ConnectionGUID: JsXzaT0PTouHjWITsqNiPw==
-X-CSE-MsgGUID: HYuJrm2hQ5es++k+0i2xow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
-   d="scan'208";a="219106278"
-Received: from lkp-server01.sh.intel.com (HELO 892944969b78) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 16 Mar 2026 05:22:59 -0700
-Received: from kbuild by 892944969b78 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1w26yH-000000000eG-0gws;
-	Mon, 16 Mar 2026 12:22:57 +0000
-Date: Mon, 16 Mar 2026 20:22:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linusw@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [linusw-gpio:b4/descriptors-wireless 2/2]
- drivers/gpio/gpio-ath79.c:264:1: warning: no return statement in function
- returning non-void
-Message-ID: <202603162011.BYf9zG1R-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1773664039; c=relaxed/simple;
+	bh=z5bTSnOfCXpsdyszj/zQ1VyCEsbWXJpuSa2LiAKJ5QI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FXxiYzasVYDDHN+ips7uendU/oRUobdDJXTteJhWGD8Vil41ekPxUfTtF6FFqOLgjBRma8wEYMSN1nO1IgoshgXtSZr8+eu+HLFEXUx5l/zEfPl0XGyq6mztI9+hA3iV590RnhwrGnKUIMoxpv+KAV0HVzJQoAeWV9tsvzbKGOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ee.vjti.ac.in; spf=none smtp.mailfrom=ee.vjti.ac.in; dkim=pass (1024-bit key) header.d=vjti.ac.in header.i=@vjti.ac.in header.b=DqCXl/Ix; arc=none smtp.client-ip=209.85.214.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ee.vjti.ac.in
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ee.vjti.ac.in
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-2ad617d5b80so31602235ad.1
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 05:27:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vjti.ac.in; s=google; t=1773664037; x=1774268837; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2jCeOFdqqSIe3CaVdT9a8Lo0webumtRzvsw7kpgbj3U=;
+        b=DqCXl/IxODtluQ7DIoeDqJORMqDo+n7Nj93ULSnNGPHIk3iBV0x4oc0miHypaK6Vz2
+         ZWrBPZpORBlEd5bwO7A03S0XR60un8t+NzPs+CXrg5YGnAk3HvFUhz0M6NudgdA+twPa
+         OWKHJ8S9MgcM0pfyk4k9o5WIEWOfKG1SyS0ME=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773664037; x=1774268837;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2jCeOFdqqSIe3CaVdT9a8Lo0webumtRzvsw7kpgbj3U=;
+        b=VZMQaSrd2ttCF9gurVue+899OfYt0Lb3fQjCOw9/Ef4TNa9cWC/cqkWgufPzVsvRYs
+         2cg4BSsOOYhfN40mLln2MBpv7gJkoa1AF26R609mW0LMG0i4lD/hebN6shzfSedfboLl
+         IMKklVpN3lc8C1B3bLaEpkrpJMna4hckQGkCyRiMHrwgOlHIRwamhtV+2H6xO7qFZU9x
+         bWx4kK9j76HibEr9h3YjqnesvXnkT6fFG6h8vtibhw7kP56aMDlAkJ9bbldwehwJv6CG
+         WuzHJ4r3r4ZyUDJMZv0UubKB/CwyA4JeG1U2stxYK0iQYzx9ljF60EU01mgl1fVqK5Ia
+         s9DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUkeodrGpajX6WNI4B6FoRhRPw6Ya1W/eYSoz5WUDAJhNQdRr87TB+asC+fRlaxlIz/PjsvYD9DLCcB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8qEF5Tvo1hxvWzWJ71Cw0dnD+HAkfpJfRhog+zl3hfrdQykw0
+	BgaGhfJQBo1OYTOJOPYr/gs2ZyVjZqmG72xvrL7x9DqyjDMeaNzlHvX3ehieqsTbwto=
+X-Gm-Gg: ATEYQzxCRw4d+2jt3yR8VQv44jEIe44EA2npZoCft1I4pccSiuLYGRt4Y4W1pvvRf3p
+	1USNNOaK7EbkvT/RfXhtu+AU+7A7S7VL5vqhwKeMxGw/FlJVIesbBbqkP9A8bwePtxqAlszCkEE
+	wc/Fd3RGzMK7HmBvXTFBpvFrjovoTf1aUjLY2Phi5dno3+uwkqMt4cL2rszEe9qoSLvFBNurvvQ
+	UBuZr2zbXRWxeh2lE0L+QaTbKBxPBI7m08+5DMXWKxFbYZmANZH3eEZ3talVAAxhNXlr4ddrYhW
+	pnGa5Y5U/pK8gyLjvmwCHGkltotLJlm2HT4Ui7O9OXAm7jDklK0E2YlP8/qrO3xR2kzcXz1/JYH
+	y+YygWkV/exk4BgDgMq4q7WDfgoLrV8WnT+6tA9rHNdMV2B+tD65yz7qgnUgLcN89pbyZ3t+XJI
+	2thK4uvUFAsWNqmffUEDHHkvTwYXSDkE8k+xjX+VJS3Q323tGEXIQ1bV/4P1GlfuwqCZoImvA5
+X-Received: by 2002:a17:903:3203:b0:2ae:c88c:197 with SMTP id d9443c01a7336-2aeca9eb9cfmr131744215ad.17.1773664037145;
+        Mon, 16 Mar 2026 05:27:17 -0700 (PDT)
+Received: from ranegod-HP-ENVY-x360-Convertible-13-bd0xxx.. ([14.139.108.62])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b05b4e6094sm23397765ad.77.2026.03.16.05.27.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2026 05:27:16 -0700 (PDT)
+From: Shaurya Rane <ssrane_b23@ee.vjti.ac.in>
+To: devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linusw@kernel.org,
+	brgl@kernel.org,
+	sudipm.mukherjee@gmail.com,
+	Shaurya Rane <ssrane_b23@ee.vjti.ac.in>
+Subject: [PATCH] dt-bindings: gpio: gpio-exar: Convert to DT schema
+Date: Mon, 16 Mar 2026 17:57:07 +0530
+Message-Id: <20260316122707.23353-1-ssrane_b23@ee.vjti.ac.in>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[vjti.ac.in,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_DKIM_ALLOW(-0.20)[vjti.ac.in:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33514-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-33515-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,ee.vjti.ac.in];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_NEQ_ENVFROM(0.00)[ssrane_b23@ee.vjti.ac.in,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_COUNT_FIVE(0.00)[6];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:email,intel.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,01.org:url]
-X-Rspamd-Queue-Id: 88691299775
+	DKIM_TRACE(0.00)[vjti.ac.in:+];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[devicetree.org:url,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,0.0.0.0:email,ee.vjti.ac.in:mid]
+X-Rspamd-Queue-Id: 5BC06299819
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git b4/descriptors-wireless
-head:   f498eb811e7dd7b968743a9bba20710a5070c0be
-commit: f498eb811e7dd7b968743a9bba20710a5070c0be [2/2] wifi: ath9k: Obtain system GPIOS from descriptors
-config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20260316/202603162011.BYf9zG1R-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 15.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260316/202603162011.BYf9zG1R-lkp@intel.com/reproduce)
+Signed-off-by: Shaurya Rane <ssrane_b23@ee.vjti.ac.in>
+---
+ .../devicetree/bindings/gpio/gpio-exar.txt    |  6 +-
+ .../devicetree/bindings/gpio/gpio-exar.yaml   | 67 +++++++++++++++++++
+ 2 files changed, 68 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-exar.yaml
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202603162011.BYf9zG1R-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/gpio/gpio-ath79.c: In function 'ath79_gpio_register_wifi_descriptors':
->> drivers/gpio/gpio-ath79.c:264:1: warning: no return statement in function returning non-void [-Wreturn-type]
-     264 | }
-         | ^
-
-
-vim +264 drivers/gpio/gpio-ath79.c
-
-   217	
-   218	#if IS_ENABLED(CONFIG_ATH9K_AHB)
-   219	/*
-   220	 * This registers all of the ath79k GPIOs as descriptors to be picked
-   221	 * directly from the ATH79K wifi driver if the two are jitted together
-   222	 * in the same SoC.
-   223	 */
-   224	#define ATH79K_WIFI_DESCS 32
-   225	static int ath79_gpio_register_wifi_descriptors(struct device *dev,
-   226							const char *label)
-   227	{
-   228		struct gpiod_lookup_table *lookup;
-   229		int i;
-   230	
-   231		/* Create a gpiod lookup using gpiochip-local offsets + 1 for NULL */
-   232		lookup = devm_kzalloc(dev,
-   233				      struct_size(lookup, table, ATH79K_WIFI_DESCS + 1),
-   234				      GFP_KERNEL);
-   235		if (!lookup)
-   236			return -ENOMEM;
-   237	
-   238		/*
-   239		 * Ugly system-wide lookup for the NULL device: we know this
-   240		 * is already NULL but explicitly assign it here for people to
-   241		 * know what is going on. (Yes this is an ugly legacy hack, live
-   242		 * with it.)
-   243		 */
-   244		lookup->dev_id = NULL;
-   245	
-   246		for (i = 0; i < ATH79K_WIFI_DESCS; i++) {
-   247			lookup->table[i] =
-   248				/*
-   249				 * Set the HW offset on the chip and the lookup
-   250				 * index to the same value, so looking up index 0
-   251				 * will get HW offset 0, index 1 HW offset 1 etc.
-   252				 */
-   253				GPIO_LOOKUP_IDX(label, i, "ath9k", i, GPIO_ACTIVE_HIGH);
-   254		}
-   255	
-   256		gpiod_add_lookup_table(lookup);
-   257	
-   258		return 0;
-   259	}
-   260	#else
-   261	static int ath79_gpio_register_wifi_descriptors(struct device *dev,
-   262							const char *label)
-   263	{
- > 264	}
-   265	#endif
-   266	
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-exar.txt b/Documentation/devicetree/bindings/gpio/gpio-exar.txt
+index 4540d61824af..9f183e66bce9 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-exar.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-exar.txt
+@@ -1,5 +1 @@
+-Exportable MPIO interface of Exar UART chips
+-
+-Required properties of the device:
+- - exar,first-pin: first exportable pins (0..15)
+- - ngpios: number of exportable pins (1..16)
++This file has moved to gpio-exar.yaml.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-exar.yaml b/Documentation/devicetree/bindings/gpio/gpio-exar.yaml
+new file mode 100644
+index 000000000000..be592c7d4564
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-exar.yaml
+@@ -0,0 +1,67 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/gpio-exar.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Exportable MPIO interface of Exar UART chips
++
++maintainers:
++  - Sudip Mukherjee <sudipm.mukherjee@gmail.com>
++  - Bartosz Golaszewski <brgl@kernel.org>
++
++description: |
++  Exar XR17V35x UART chips expose a subset of their MPIO lines as a GPIO
++  controller. The GPIO controller is instantiated by the Exar 8250 PCI UART
++  driver as a child platform device and consumes firmware properties from a
++  child node describing the exported MPIO range.
++
++select: false
++
++properties:
++  $nodename:
++    pattern: "^gpio(@.*)?$"
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    const: 2
++
++  gpio-line-names: true
++
++  exar,first-pin:
++    description:
++      Number of the first exported MPIO pin.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0
++    maximum: 15
++
++  ngpios:
++    description: |
++      Number of exported MPIO pins on the primary Exar device. The driver
++      automatically doubles this for cascaded XR17V354 and XR17V358 devices.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 1
++    maximum: 16
++
++required:
++  - gpio-controller
++  - '#gpio-cells'
++  - exar,first-pin
++  - ngpios
++
++additionalProperties: false
++
++examples:
++  - |
++    serial@0 {
++        reg = <0 0>;
++        gpio {
++            gpio-controller;
++            #gpio-cells = <2>;
++            exar,first-pin = <0>;
++            ngpios = <16>;
++        };
++    };
++
++...
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
 
