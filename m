@@ -1,299 +1,492 @@
-Return-Path: <linux-gpio+bounces-33569-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33570-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SJlqCYgpuGnhZgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33569-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 17:02:16 +0100
+	id aIgXFmMquGnhZgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33570-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 17:05:55 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A95FC29CF26
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 17:02:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 15B6B29D07D
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 17:05:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1C150302DE09
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 15:58:23 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7D9E5303EF89
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 16:00:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF75F3B8BB7;
-	Mon, 16 Mar 2026 15:58:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9F023B9D9C;
+	Mon, 16 Mar 2026 16:00:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="X5Aw/Re5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OyCnBjvS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E843B8957;
-	Mon, 16 Mar 2026 15:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.135.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773676700; cv=fail; b=l/6BGzXDUvTihjhsdzIO5rknmVlekx2mYy+1hbTSeNSDbr8IMYJBoYwCYlQda09yyxugDQOSsjV6GNOA1euwwstw9msXfeXwbfRxmc/vU7jJz3DcwGRwT+GJ1VuXUt+vDhMNJyikkiQJXQGLoxcSGzsmx3BURN5Vzansh6wdJjM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773676700; c=relaxed/simple;
-	bh=QraQiNC3ToeGGM3Kfc8G70JYc3SrOVKTvIMJqGARJoU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=BadAVsQzxicX7OrPrNvp5Ux95YeseCiLk7lvb/vmexMNTl9+cr9h/8q3E8Rejd2bDzPmEEAdXVvAh0geLKmuR4aQI9V85bufiO67zMjokDzOyh4bj1QcnMEj+/l4iC6sb+0Ut8H74EejNKVks0K1urEm/4pv4p6JyUiQJWsUX38=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=X5Aw/Re5; arc=fail smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62GExLeD270160;
-	Mon, 16 Mar 2026 11:57:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=QraQi
-	NC3ToeGGM3Kfc8G70JYc3SrOVKTvIMJqGARJoU=; b=X5Aw/Re5KJAiyKCv53O1k
-	RSE4bXYUWQg3Nn0S2XpPwSty0VCQ563aBlbRgJJI1TGJebkFYuIVfd1vXmDncLp1
-	kxG8sIj6Gh9f5hMHBkv/+MhpJ66Vj4W/5h/4/uDg5FeyaHgcf0JCpWOpCWmcQNdE
-	9h1L3LJrMWw0Jg2x3o7aTXcbAq8Xh1G23P/wdL9BXjRNNceplbac2rRGo3EIA0sP
-	Fwqu3RF3/Zf+xL3nxm/PAmzPxmYAj+YZwGpVrN0/nySeaBgHcgqjOvvbwATIVCUI
-	HkI6hOH0z11V+7zoFOWjHLz33wF8RyjtZ7XSAPQcuPzF1T88r7FMICAqlp1mGzkA
-	Q==
-Received: from dm5pr21cu001.outbound.protection.outlook.com (mail-centralusazon11011041.outbound.protection.outlook.com [52.101.62.41])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 4cw4k0y668-2
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Mon, 16 Mar 2026 11:57:57 -0400 (EDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jgkCB40KjoLg9I2BZXvctCww6fcOuEhM87M/YVmYNHUXCZz4UqaBh/OiD8B9xsSKyc36QXckXJhMtLo8uZ0LAtdrNUiDjdHg2acDEOF4ZOJ3vH99/du0IpE1J+9THV5aFVipR2DtK0A1p/BSJdhNPGnKcGN6G7PK4L72lk1kCdTCP6gnOMcPvm6FhA0053bE7P4TCg/I51NUZoHjT/PFBODZ4YJAUcNWco4Ih/xmHR57F+Z3WQUUYuz1qFZZh0NW0MdPdfA+4SS4z+Jy7wi3r8Nk2TlSEthLN4zHsneDBz31YCZscrBI48TcXQOoju+YLOqOWFX3XoKwSvomYeK70w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QraQiNC3ToeGGM3Kfc8G70JYc3SrOVKTvIMJqGARJoU=;
- b=hYTVhFoUigqR04Sm1ZUQSZ61r1oDH+5EP06gRG7EdrugmtmJzTp1C4jsY2PsMYEkc6IQCCgbcvWXl5rEG8pSn4Ev8HsoESWoRcoslDvXrpgGxWnA/O29p1K09YXUnIm87WJtB9E6PdKt0kKQkWKFrBnU570zPH2p8B04Kdwo/wRlNW8uKb9ToP6wD+3Yn63Huau+kw2rLWAHUPAA35yG+uua9Zj5Cy7Sy/hcq667dZTkIqALSKY0qrvf+/A2EEeVZGrfJw9CR8pbyVlVzfUpCwtmGsUieg44A/Na62pCk2e+QMDC4eZOnpk9ZDjNb1iWbu7Eeo+NXjp8aCoRlMgK2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-Received: from LV9PR03MB8414.namprd03.prod.outlook.com (2603:10b6:408:367::23)
- by DM4PR03MB6191.namprd03.prod.outlook.com (2603:10b6:5:39b::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.24; Mon, 16 Mar
- 2026 15:57:43 +0000
-Received: from LV9PR03MB8414.namprd03.prod.outlook.com
- ([fe80::d661:7c16:d052:cc81]) by LV9PR03MB8414.namprd03.prod.outlook.com
- ([fe80::d661:7c16:d052:cc81%6]) with mapi id 15.20.9700.022; Mon, 16 Mar 2026
- 15:57:53 +0000
-From: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>
-To: David Lechner <dlechner@baylibre.com>,
-        Andy Shevchenko
-	<andriy.shevchenko@intel.com>
-CC: Lars-Peter Clausen <lars@metafoo.de>,
-        "Hennerich, Michael"
-	<Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>, "Sa,
- Nuno" <Nuno.Sa@analog.com>,
-        Andy Shevchenko <andy@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?=
-	<ukleinek@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
-	<broonie@kernel.org>,
-        Linus Walleij <linusw@kernel.org>,
-        Bartosz Golaszewski
-	<brgl@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: RE: [PATCH v3 2/4] iio: adc: ad4691: add initial driver for AD4691
- family
-Thread-Topic: [PATCH v3 2/4] iio: adc: ad4691: add initial driver for AD4691
- family
-Thread-Index: AQHcstE9wdxbJGrMMUOmE/HdBho5IrWsSumAgAT5J6CAAA/NAIAAAaNQ
-Date: Mon, 16 Mar 2026 15:57:53 +0000
-Message-ID:
- <LV9PR03MB84141484B1472E01578A2243F740A@LV9PR03MB8414.namprd03.prod.outlook.com>
-References:
- <20260313-ad4692-multichannel-sar-adc-driver-v3-0-b4d14d81a181@analog.com>
- <20260313-ad4692-multichannel-sar-adc-driver-v3-2-b4d14d81a181@analog.com>
- <abPtv0Y_QWYoMuAO@ashevche-desk.local>
- <LV9PR03MB84148A9A0A7F6544CF370B7DF740A@LV9PR03MB8414.namprd03.prod.outlook.com>
- <e33b0096-c7b6-45e5-a9d1-8da11714ac8e@baylibre.com>
-In-Reply-To: <e33b0096-c7b6-45e5-a9d1-8da11714ac8e@baylibre.com>
-Accept-Language: en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-dg-rorf: true
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LV9PR03MB8414:EE_|DM4PR03MB6191:EE_
-x-ms-office365-filtering-correlation-id: 6386d987-191a-45d4-e0db-08de8374c83b
-x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700021|18002099003|22082099003|56012099003;
-x-microsoft-antispam-message-info:
- kRaXqZ7C3sS7r9QiFbWxfx5kKdTPgFipm2zxd8IwD2rMKt8tbgdOTVrWEHS69D8u4KFW/wPJNYzBAeWihL8pih4apgMVg4GwTnYcWgUUfxffRCY0c08ShLaF6eZYvaDzenGsrufT4cG8Dm1dga2DXf0gzcRlpt0leJhxgFZNyEeWgclkFs9+ytSHVMdAn5OIrtIX2jxCW77eiXUcPmxr3VlYc38FI/ugam7x1roMmnWr1Ahnv8lxtuKbe/Q/wnspE7vVqoO/EFWwk0ZsGJBHvsexVcbhcHhcv+K9p6HuhL/XhLQy1N24t1n9Oya8YmexZYWH0/RXoAbAikNsWR/8PzULQIpMzFQ5GD4VEl910qitdWcFj3iC1oq0VdEJEHxKUpKeVEwP6CloNrLE1P22YGV6DN/AwQrEYoUGjUX9pfmQKSwhR3LoVHgjuMr4YZG1RxRCCGkeLnDA+HYGqP/MP+c2Biob15ScWCur1zGrGirhNa+1WVJbxmBFZHuT9US+z2JWzXqBxGaIR4dHhqXXVFbYU8FMpnMv2MAv+rTKAiwj6TbFrc0l6PYhuAK1cqq8na4tDpvekl7kTGFuSKsSM1sBiDLtMalkxUZkJ2wVUf0H+CdHIdB+rdkDiezJGRXSBlFmIsjXOI4y74OtJqgBQ13lWp8vhrSCV5UYhlLkiB9heFLDYFyBConm7rZoRvlzAH1PXYHbH5gdWdLbfHVqC7DKRjIpFSwMyGqFqUq2NIQBqINzVM7cNU21MlxW6SdlfTZdgGC40vQcIWYgoHlqQ6IAzm9QUANTBtP2pWnTVkU=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV9PR03MB8414.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700021)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?Yi9sL3RPV2VscWZudWN1KzNTYWNoTzdJUUZ5ZXRoRXVFWk9oUW53Mm11b1o2?=
- =?utf-8?B?WXRRSi9KVFpYNUdEckVvME4yQUFCdWNYbjd3akZHd05RN3pTTUw3bkl2UjRS?=
- =?utf-8?B?TlpEVnQ3UUdrNGMwUFU2Y2lLVUpkRlRzWUd5UklmZyt0SGlNSXZqeWhOZno1?=
- =?utf-8?B?cnF2bVFrSjl1THZIUjB1V09vdlVuc2hOM0p0MWlHU3pRZFJzc1h1THFlQnE3?=
- =?utf-8?B?WGZyNkUreTlxblZ2N3VmUjM0TUZ1YzIwRHhxcnhzRWpDcnpaazl3SzNSNUdh?=
- =?utf-8?B?bVdaVlIrdEYrRFZxTGZ4STNVV1JGOEgrOHZjYUhzQjhCblhNdEU1TmQ5d01r?=
- =?utf-8?B?Z2xLWDI2WTZDSkRQYjlqNWJZVExMVXZSSGNkUmdZQTFuMlE0VUVtaS9GdXFx?=
- =?utf-8?B?RDJ6NGRyVW9zdmtKSnFNRk55N0puYTBadzZSZW5MVHJxaDd2Y0UyMElVVXQy?=
- =?utf-8?B?b3hnaTlISEtUdkxYUE14cUEvUnQzYmdZbW40eXp4UjVRbkVjQ0NNSkRkOWpC?=
- =?utf-8?B?Skc1U21SZlFjVHBnR2Z6UldUcElpVU5CUVovdE9pM2JOajdGVStnbytkeFEv?=
- =?utf-8?B?MkkrdE9QTFFybmVhaFpwSnIrWGxVbGVpbTRFQWRyUHYxMHdoVjk0cEVFN1lD?=
- =?utf-8?B?RzI4TUZZNmVIM29oa2JMb3hKeFhYRU84cWZsekFJR3R4am8yWnN0aUVuNlZL?=
- =?utf-8?B?RTNCRUpjRFlqbUE1YkhURUUxSFZON2lNQTliYXFYSFNuL0hSOUVZSXZPU1hC?=
- =?utf-8?B?S1F6ZSt1bGJTU1lLUkZKSEhONm1vOWwxc1EyeVd5dUFUS3YvQTdNRzNuOFZZ?=
- =?utf-8?B?aXFraHNrbU9MRWVvSTI4YVhoMHRYQnJuUHQza2dPSGFkbndxMFhqM2owVTBj?=
- =?utf-8?B?Qzc0bCs1bW82SVpxS3hUd2hkRXZ0b0s3N0dEdlAxdHcydjZZcGlOdTVwS2J2?=
- =?utf-8?B?em00NVE3b1pmbkpDb2N3cXUxQUdPWWtJOUhOS2M5NGQ1blBpNjFwMmpudk5z?=
- =?utf-8?B?S2JRbTdKRzdkcFdsTXZDbTZtaTE5dHBVT1Z6aitzTDJwTWdvV1BMaXNrNTQz?=
- =?utf-8?B?NW04VFEvaEszNHA5Rkt1NlpKVjBna3RsTSs1QUxFaFZ3ZTY5c0MyME9oZ25P?=
- =?utf-8?B?c2FQMWxZNnlvbkpVMHR4L09ZR3VGUGZYN1JXZXZuQURuQ2hrSlpLdWJ2cFVn?=
- =?utf-8?B?L2xtZGU3M3padDFtZ3I4QVhHeHJmQzVLdHNoc1VPZExMQXZFN3JLMk5iK1JJ?=
- =?utf-8?B?OFg4c1dGRE9SWGRQUUQ0TEtLRkYvQysySlRYMmhsbWR4Nk5vbDFyYnUrbnZK?=
- =?utf-8?B?U0I0dVRFNW93Sm9DTElvSlNxelJyYkVwTjllcmJ5TGFzWHJCOFpsQ0ZZSkc3?=
- =?utf-8?B?bEg5N3NBOHNpeEpwRjhlRmlhcmNhODhoSzZqb1crajdwZ2I0WEgvaEtEYnJR?=
- =?utf-8?B?Yk1YaGN1UG9PbVkzeXJxY2wveTh3MG5vbWZhQjUvMWFJK1pZU2VpRlRWUk1X?=
- =?utf-8?B?UDVpNDh4UnNma2h0TjRoT2FzYkdUbFZqdlc2ajhuZmVhSzd3V0VuTUdxRlVD?=
- =?utf-8?B?eHh3R1dJQnd2UHNheGI3ZkxxNEoxNFVMN1BTVjFNNFdlYmxVY2JKWjJ0eDk5?=
- =?utf-8?B?Q0JlQ2ZOM1VybGpyTGhtcXIyeWpmVGZUaFdDaE53b0NRamJrQnQxWWsyRlN6?=
- =?utf-8?B?Yld6T25LV0pTcElxNWhJMlZML2N3MU00dUNqRXpKRFNKVnZwYW9DTjlvb3Jl?=
- =?utf-8?B?KzlVRExFa1hsa3hvUDV4Lzk3dEphTENzd0RPZU5qR00xT1p3WUYxWlNRaXB4?=
- =?utf-8?B?dnRrRVhkKzI3eGVsMDdhTTlaK0VLcngzZUFIeTFQQm1SZ1NaSkhGSFBjVFdo?=
- =?utf-8?B?WndhbitTWWNCbWl0OHQ5V0l4ZVAyQTBNK2JtTUV1OExxUHN4RU5reTJGMjN4?=
- =?utf-8?B?U0IyVWtqRUY5a0Y1WFdRMlR6MnFhQlNvZHBGZFdFandMSGprUE15bkNzejA1?=
- =?utf-8?B?WkJvU2cwYlJhRnhYOWpGdkEya0NSWldsb0pyMUk2WjVYRXZyYm1yR2JRU05W?=
- =?utf-8?B?cFdlL2IzYit4R2xyS2NqNk02RHdNc0NySmhlRDYyU2RWSnZadmlINmVRcFUz?=
- =?utf-8?B?QWY4bzRaSFNpOVZTdkJRaWh4ZDdNUDNTUjRrNDcvOXR6S2ovUHdhNm4yNk1h?=
- =?utf-8?B?MWlSNmdRVmR3cXpEa00zb1BBZnhKY2R5OHlDc0tBVVpjZXNnNUM3d3BMeXlW?=
- =?utf-8?B?S3NFcjBXSlAzL1RsTUg2M2VjRlFjNkZFWGRLUmJhL3ByRWlSQkRRY2g0VkNC?=
- =?utf-8?Q?odGQkJdkLWmfwaWBQM?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C583BA228
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 16:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773676804; cv=none; b=sDZok7sx2FGGeGsc/cm1R2RKOLiRNw2/dJVv9U4VcWH5EuS8rxZpD9x2WlTDKr3Lo/xLFVmeGZ8mZ4w46ePV4yQKbUn8r6QHL8JeHmxf1TRfE1IRVlitGwAAcD39Md6O8ZrjAIq87FXKejU0INeiNwugAPohRyKUefE3oR/lr1k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773676804; c=relaxed/simple;
+	bh=zlkyQWpxbXVWuEYCvTbCPl6ah+DNoG67ZQ2g20gaCsw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nQLUS9VP4rAd0bsIlTx34Akvwaq4WQopf1P39Xp4rbqS8W+DscNEiyEYk1Os7oZHE/ejFlOYabA3gaT1nl1oY1HeFP594ihQsw7GZeTuPH605nRVhk2eNkOUwXoJj4Mo2OK1k7SV9NovrarlA1btC5I3YN214XCvQTiDWepe2yI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OyCnBjvS; arc=none smtp.client-ip=74.125.82.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-2c0bdf1988cso2389698eec.1
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:00:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773676802; x=1774281602; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+1SmoxvUH6Gph+iSv3rj6ZF+MrAyLmghEWqn/nKSy/w=;
+        b=OyCnBjvSu46sPhdZco0xTrSg+0Ivk57/JEJL7BeO6iqmYHDGYaxa2AN/G350aalE8E
+         3nUDHOauMCUkPKEa+UrGHOaYyJETgOB3GuCHPmxAcrt+2d5QC2kT1+ld1t6HoT1Ry2Li
+         V3HehbeKNrky1gDoMwBWnzu4kYBtcCNBL13aFxWiGkc5SnG/SojpyyxuBPKBS4J79wzr
+         xIEg4HJt7McatKoRu9J71ITVfp/aY7/5TVCFpMJprhbfC9JuahySQRPUevG4rfmbZU7w
+         lYr696qBgbZAUw+u/9Dp6LoO09eoUXlB5QqNouJCZEoCirE+Ma+Uc5NuIHR1Vc0V16C1
+         GGeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773676802; x=1774281602;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+1SmoxvUH6Gph+iSv3rj6ZF+MrAyLmghEWqn/nKSy/w=;
+        b=ZoM1WYq733vEvqpCwxYqUw0tGl9HSwfPUJQ0bNe6MyGmiE1ATjpEiba97TBG0kCNN/
+         TJO1iO63RASUIMOih8ZytDqtJasJPowdevyZmU7IsHUFnCvsQOaAYJSeWQSJ0YfCUuzU
+         BqlMgeOAF8w/YKTL7scJALmJnEuIsEZ7PFE5SHH5Xl3rDVCfVPzCAE/Pfz6uX2UbsVAE
+         Ud0KTwBKJ3XySXkBhBpsgG+zHi4/G/dOIFmcFywlZ2ixrYwHhySsw4WneeYIrWhzfLKr
+         XIuzyUfZOG0YEku8g3+XTzep1x92I0KtcujQSk4xrMS0pO6sa+1mVlhYhd3fGxTWYEMi
+         G42Q==
+X-Gm-Message-State: AOJu0YyUTtCtv+AysXRAdt6LyADveU9CuIK8FkoFS5evDBqY8XwXDu4/
+	Kw1/IhYSChQRBQBd2R1GHEabuT0eYhakQ0N4iluR/BuLPPbdf7ReLTl5
+X-Gm-Gg: ATEYQzwBxXsgWutljPtDLK6fxBICw+YkadNjFyOMjsOXooxim5RMXRKzlU2spiaQXwD
+	CTm3ixLzX/A0kLMnE8ERL+G+UjTDUdOEr6aB5oulis49wHidpGBxJ7cJdCeZYsekguO+CdJ2vju
+	x4PdT25BpOTd1AyoBSrxUVbeChKSWpTD/bNcxk/tQGiDa/dJS34kk92MpNbl0nx9mWtJnZqrBae
+	SXXw1Dwk+H9rp+gb0gx05Aq1lORhnPmJA1NM4kjINnLYW8M/pEpandkJ66cYrokb/Ke//g/XomE
+	a+rpJhnlh5EpFckmr/+G0n36Um9m9SuYHznx/BPj18swvZv6/GLTR0pBdhaAn0udD1Jxi+LYLJ6
+	H9H7gQsXK9LL9CEEbxvqcxxpqxffRvA91zJbJiFEZqjtYZxzHntHHTnzVnvAqZxKvKKwj18zX8y
+	zxWQNNRhIeghe1x+aPf1IvgBMEe77AWN3lgjKy
+X-Received: by 2002:a05:7301:10c4:b0:2b8:c1b4:9cb7 with SMTP id 5a478bee46e88-2bea5523f59mr6710445eec.22.1773676802057;
+        Mon, 16 Mar 2026 09:00:02 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c0c12fb4a8sm5959340eec.0.2026.03.16.09.00.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2026 09:00:01 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 16 Mar 2026 08:59:56 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: nuno.sa@analog.com
+Cc: linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Document the LTC4283 Swap
+ Controller
+Message-ID: <c395fad0-ca24-448a-a77f-ddac1cd9f809@roeck-us.net>
+References: <20260314-ltc4283-support-v7-0-1cda48e93802@analog.com>
+ <20260314-ltc4283-support-v7-1-1cda48e93802@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Exchange-RoutingPolicyChecked:
-	O7XpgE/FEkBBz+WBh8wEQbqKue6zRMsylLAhC22bl0ezx1wHQWUyKj7rusMpWWNKRmPXH/Mvn7CYwW3Hywm9dhqk+qTOsTuBjLgsJblMjl9SfehWX7jDfU4+93Evsll6LL/En+nWcIkcx5uz7vkOmbizzFYI8YHvEoCkC1Mq0dplz71MLnmqCv32gSYnj/tLxXiVXIcKwMPiVgU95NW4VH0Tcl7Pha+nZ3OrZ6XWuWl+ozrs6OgQOqC0FRHo0g5YzNVfClm8QzNHYNckZNpvcrizKKTcOrj8lNNBkxLy12HS29BuTOe1ewalFnrh9xKpisIbAZnvM0AbriNHwc3Qpw==
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LV9PR03MB8414.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6386d987-191a-45d4-e0db-08de8374c83b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Mar 2026 15:57:53.1475
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0JgJFOAxB0NvR/En0GnX3jYb5IqE/Vnn+VbnCiIhZlfzmTRbnfgRnWDzTluugN422q2N6PZqv7Oqw2PsxJl7MA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR03MB6191
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE2MDEyMSBTYWx0ZWRfXy7pR9rQhcQsk
- wzJXasdw/uqFV6XZXAev2HUBd1XUwix5qq/N8m975NRXZ95C+TcJlfLGBKbPonc/OU6DOTFVPQZ
- 8XVVuNvVo6vzxu7oSJOlLbfr8XJqNc8CwE7Ps43+KF5eLEMdktcHOQ9fMJwYgiNlkWktU4WspzI
- gtnjY6fzdmtFVGqD2hEun9oJR9kHdyeaulVY7Zj4IqKx+Mj6npGxPVpAq+IBdSyDdaOshh23W+X
- WSxQl/So59aqDcm07OcD3WjzUazGyJoqRkxQjEfdHkXvxfidpulNwzIYtdxzeq8z1FB9Jpls8si
- sHqC50EV/TADrMh7VtSiKYPn6q5xM3p26tZ4YWEyTzO+84xoEXBunet5mucDj0xLt9u8aqLAouQ
- PsKS602CqgFQNs4NTrT6/Ed/gprAJd/f4dA4fOO6amBfoL/zC2V2qAcA4xI2rnWdikPy6AXCIi2
- uBPh5kvQ403xOkuUprg==
-X-Proofpoint-ORIG-GUID: B1msMlp1xBSXH9OOycd5JPUP4WKudg6M
-X-Authority-Analysis: v=2.4 cv=bYZmkePB c=1 sm=1 tr=0 ts=69b82885 cx=c_pps
- a=ouBVT1c3MJkzDXWVqRnxag==:117 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=0sLvza09kfJOxVLZPwjg:22
- a=Z0pTeXoby7EwIRygza74:22 a=IpJZQVW2AAAA:8 a=gAnH3GRIAAAA:8 a=QyXUC8HyAAAA:8
- a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=xLNx2DLV2KPprmsAIcgA:9 a=QEXdDO2ut3YA:10
- a=IawgGOuG5U0WyFbmm1f5:22
-X-Proofpoint-GUID: B1msMlp1xBSXH9OOycd5JPUP4WKudg6M
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-16_04,2026-03-16_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 phishscore=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 clxscore=1015 bulkscore=0 suspectscore=0 malwarescore=0
- adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
- definitions=main-2603160121
-X-Spamd-Result: default: False [1.44 / 15.00];
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260314-ltc4283-support-v7-1-1cda48e93802@analog.com>
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[analog.com,quarantine];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[analog.com:s=DKIM];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-33569-lists,linux-gpio=lfdr.de];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[metafoo.de,analog.com,kernel.org,gmail.com,pengutronix.de,vger.kernel.org];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Radu.Sabau@analog.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[analog.com:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_FROM(0.00)[bounces-33570-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	DMARC_NA(0.00)[roeck-us.net];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linux@roeck-us.net,linux-gpio@vger.kernel.org];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: A95FC29CF26
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 15B6B29D07D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGF2aWQgTGVjaG5lciA8
-ZGxlY2huZXJAYmF5bGlicmUuY29tPg0KPiBTZW50OiBNb25kYXksIE1hcmNoIDE2LCAyMDI2IDU6
-NTEgUE0NCj4gVG86IFNhYmF1LCBSYWR1IGJvZ2RhbiA8UmFkdS5TYWJhdUBhbmFsb2cuY29tPjsg
-QW5keSBTaGV2Y2hlbmtvDQo+IDxhbmRyaXkuc2hldmNoZW5rb0BpbnRlbC5jb20+DQo+IENjOiBM
-YXJzLVBldGVyIENsYXVzZW4gPGxhcnNAbWV0YWZvby5kZT47IEhlbm5lcmljaCwgTWljaGFlbA0K
-PiA8TWljaGFlbC5IZW5uZXJpY2hAYW5hbG9nLmNvbT47IEpvbmF0aGFuIENhbWVyb24gPGppYzIz
-QGtlcm5lbC5vcmc+Ow0KPiBTYSwgTnVubyA8TnVuby5TYUBhbmFsb2cuY29tPjsgQW5keSBTaGV2
-Y2hlbmtvIDxhbmR5QGtlcm5lbC5vcmc+Ow0KPiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
-PjsgS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6aytkdEBrZXJuZWwub3JnPjsNCj4gQ29ub3IgRG9v
-bGV5IDxjb25vcitkdEBrZXJuZWwub3JnPjsgVXdlIEtsZWluZS1Lw7ZuaWcNCj4gPHVrbGVpbmVr
-QGtlcm5lbC5vcmc+OyBMaWFtIEdpcmR3b29kIDxsZ2lyZHdvb2RAZ21haWwuY29tPjsgTWFyayBC
-cm93bg0KPiA8YnJvb25pZUBrZXJuZWwub3JnPjsgTGludXMgV2FsbGVpaiA8bGludXN3QGtlcm5l
-bC5vcmc+OyBCYXJ0b3N6DQo+IEdvbGFzemV3c2tpIDxicmdsQGtlcm5lbC5vcmc+OyBQaGlsaXBw
-IFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPjsNCj4gbGludXgtaWlvQHZnZXIua2VybmVs
-Lm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5r
-ZXJuZWwub3JnOyBsaW51eC1wd21Admdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gZ3Bpb0B2Z2Vy
-Lmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAyLzRdIGlpbzogYWRjOiBhZDQ2
-OTE6IGFkZCBpbml0aWFsIGRyaXZlciBmb3IgQUQ0NjkxDQo+IGZhbWlseQ0KPiANCj4gW0V4dGVy
-bmFsXQ0KPiANCj4gT24gMy8xNi8yNiAxMDoyOSBBTSwgU2FiYXUsIFJhZHUgYm9nZGFuIHdyb3Rl
-Og0KPiA+DQo+ID4NCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTog
-QW5keSBTaGV2Y2hlbmtvIDxhbmRyaXkuc2hldmNoZW5rb0BpbnRlbC5jb20+DQo+ID4+IFNlbnQ6
-IEZyaWRheSwgTWFyY2ggMTMsIDIwMjYgMTI6NTggUE0NCj4gPj4gVG86IFNhYmF1LCBSYWR1IGJv
-Z2RhbiA8UmFkdS5TYWJhdUBhbmFsb2cuY29tPg0KPiA+Pg0KPiA+Pj4gKwl1MzIgYWNjX21hc2tb
-Ml0gPSB7IG1hc2sgJiAweEZGLCBtYXNrID4+IDggfTsNCj4gPj4NCj4gPj4gVGhpcyBsb29rcyBx
-dWl0ZSB3cm9uZy4gSXMgaXQgZm9yIHN1cmUgbGlrZSB0d28gMzItYml0IHN0YW5jZXMgcGVyIGVh
-Y2ggbWFzaw0KPiA+PiBieXRlPyBJZiBub3QsIHRoaXMgc2hvdWxkIGJlIF9fbGUxNiBhY2NfbWFz
-ayA9IGNwdV90b19sZTE2KH5CSVQoLi4uKSk7DQo+ID4+DQo+ID4NCj4gPiBIaSBBbmR5LA0KPiA+
-DQo+ID4gRWFjaCBhY2NfbWFzayBoYXMgaXRzIG93biByZWdpc3RlciwgdGhlcmVmb3JlIHRoZSB1
-MzIgYWNjX21hc2tbMl0gaXMNCj4gPiBpbnRlbnRpb25hbCAtIHNpbmNlIHRoZSByZWdtYXAgaXMg
-Y29uZmlndXJlZCB3aXRoIHZhbF9iaXRzPTMyIC0gdGhlIDQtYnl0ZQ0KPiA+IHN0cmlkZSBtYXRj
-aGVzIHdoYXQgcmVnbWFwIHJlYWRzLiBIb3dldmVyLCBJIHVuZGVyc3RhbmQgaG93IHRoaXMNCj4g
-PiBjYW4gYmUgY29uZnVzaW5nIGZvciBhbnlvbmUgcmVhZGluZyB0aGUgY29kZSwgdGhlcmVmb3Jl
-IEkgcHJvcG9zZQ0KPiA+IHR3byB3YXlzIGZvciB0aGlzIDoNCj4gPg0KPiA+IDEuIEtlZXAgcmVn
-bWFwX2J1bGtfd3JpdGUgYW5kIGFkZCBhIGNvbW1lbnQgYWJvdmUgYWNjX21hc2sgZXhwbGFpbmlu
-Zw0KPiA+IHdoeSB1MzIgaXMgdXNlZCwgYWx0aG91Z2ggdGhlc2UgcmVnaXN0ZXIgdmFsdWVzIGFy
-ZSA4IGJpdHMuDQo+ID4gMi4gU3dpdGNoIHRvIHJlZ21hcF9tdWx0aV9yZWdfd3JpdGUsIHdoaWNo
-IHRha2VzIGV4cGxpY2l0IChyZWcsIHZhbHVlKSBwYWlycw0KPiA+IGFuZCBzaWRlc3RlcHMgdGhl
-IGFtYmlndWl0eSBlbnRpcmVseS4NCj4gPg0KPiA+IERvIHlvdSBoYXZlIGEgcHJlZmVyZW5jZT8N
-Cj4gDQo+IFNpbmNlIHdlIGFscmVhZHkgaGF2ZSBhIGN1c3RvbSByZWFkL3dyaXRlIGZ1bmN0aW9u
-cyB0byBoYW5kbGUgZGlmZmVyZW50DQo+IHJlZ2lzdGVyIHNpemVzIGFuZCB0aGUgY2hpcCBjYW4g
-cmVhZCBtb3JlIHRoYW4gb25lIGNvbnNlY3V0aXZlIHJlZ2lzdGVyDQo+IGF0IG9uY2UsIGNhbiB3
-ZSBqdXN0IGNhbGwgdGhpcyBhIHNpbmdsZSByZWdpc3RlciBhbmQgYWRkIGEgc3BlY2lhbCBjYXNl
-DQo+IHRvIGFkNDY5MV9yZWdfcmVhZC93cml0ZSgpIHRvIGhhbmRsZSBpdD8gVGhlbiB3ZSBjYW4g
-anVzdCBkbyBhIHJlZ3VsYXINCj4gcmVnbWFwX3JlYWQvd3JpdGUoKSBmdW5jdGlvbnMgdG8gYWNj
-ZXNzIGl0IGFzIGEgc2luZ2xlIDE2LWJpdCB2YWx1ZS4NCg0KVGhpcyBzb3VuZHMgZXZlbiBiZXR0
-ZXIhIEkgd2lsbCBoYXZlIHRoaXMgaW4gdGhlIG5leHQgdmVyc2lvbiENCg0K
+On Sat, Mar 14, 2026 at 10:52:19AM +0000, Nuno Sá via B4 Relay wrote:
+> From: Nuno Sá <nuno.sa@analog.com>
+> 
+> The LTC4283 is a negative voltage hot swap controller that drives an
+> external N-channel MOSFET to allow a board to be safely inserted and
+> removed from a live backplane.
+> 
+> Special note for the "adi,vpower-drns-enable" property. It allows to choose
+> between the attenuated MOSFET drain voltage or the attenuated input
+> voltage at the RTNS pin (effectively choosing between input or output
+> power). This is a system level decision not really intended to change at
+> runtime and hence is being added as a Firmware property.
+> 
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+
+Some AI review feedback inline. Feel free to ignore if wrong, but please let me know
+to help improve it.
+
+Thanks,
+Guenter
+
+> ---
+>  .../devicetree/bindings/hwmon/adi,ltc4283.yaml     | 272 +++++++++++++++++++++
+>  MAINTAINERS                                        |   6 +
+>  2 files changed, 278 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/adi,ltc4283.yaml b/Documentation/devicetree/bindings/hwmon/adi,ltc4283.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..f82fff1ec7e4407ed63d00f8b1281db459d7221b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/adi,ltc4283.yaml
+> @@ -0,0 +1,272 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/hwmon/adi,ltc4283.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: LTC4283 Negative Voltage Hot Swap Controller
+> +
+> +maintainers:
+> +  - Nuno Sá <nuno.sa@analog.com>
+> +
+> +description: |
+> +  The LTC4283 negative voltage hot swap controller drives an external N-channel
+> +  MOSFET to allow a board to be safely inserted and removed from a live
+> +  backplane.
+> +
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ltc4283.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ltc4283
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  adi,rsense-nano-ohms:
+> +    description: Value of the sense resistor.
+> +
+> +  adi,current-limit-sense-microvolt:
+> +    description:
+> +      The current limit sense voltage of the chip is adjustable between
+> +      15mV and 30mV in 1mV steps. This effectively limits the current
+> +      on the load.
+> +    minimum: 15000
+> +    maximum: 30000
+> +    default: 15000
+> +
+> +  adi,current-limit-foldback-factor:
+> +    description:
+> +      Specifies the foldback factor for the current limit. The current limit
+> +      can be reduced (folded back) to one of four preset levels. The value
+> +      represents the percentage of the current limit sense voltage to use
+> +      during foldback. A value of 100 means no foldback.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [10, 20, 50, 100]
+> +    default: 100
+> +
+> +  adi,cooling-delay-ms:
+> +    description:
+> +      Cooling time to apply after an overcurrent fault, FET bad or
+> +      external fault.
+> +    enum: [512, 1002, 2005, 4100, 8190, 16400, 32800, 65600]
+> +    default: 512
+> +
+> +  adi,fet-bad-timer-delay-ms:
+> +    description:
+> +      FET bad timer delay. After a FET bad status condition is detected,
+> +      this timer is started. If the condition persists for the
+> +      specified time, the FET is turned off and a fault is logged.
+> +    enum: [256, 512, 1002, 2005]
+> +    default: 256
+> +
+> +  adi,power-good-reset-on-fet:
+> +    description:
+> +      If set, resets the power good status when the MOSFET is turned off.
+> +      Otherwise, it resets when a low output voltage is detected.
+> +    type: boolean
+> +
+> +  adi,fet-turn-off-disable:
+> +    description:
+> +      If set, the MOSFET is turned off immediately when a FET fault is detected.
+> +    type: boolean
+
+Is there a logic inversion between the property name and its description?
+The property name uses a -disable suffix, but the description says "If set,
+the MOSFET is turned off immediately", which sounds like it is enabling the
+behavior rather than disabling it.
+> +
+> +  adi,tmr-pull-down-disable:
+> +    description: Disables 2uA pull-down current on the TMR pin.
+> +    type: boolean
+> +
+> +  adi,dvdt-inrush-control-disable:
+> +    description:
+> +      Enables dV/dt inrush control during startup. In dV/dt mode, the inrush
+> +      current is limited by controlling a constant output voltage ramp rate.
+> +      If not set, the inrush control mechanism is active current limiting.
+> +    type: boolean
+
+Does this description contradict the property name?
+The -disable suffix implies the property turns off the dV/dt inrush control,
+but the description states that setting the property enables it.
+
+[ Non-AI note: It seems to me that the description contradicts itself. 
+  It first says "_Enables_ ...", then it says "If _not_ set, the inrush control
+  mechanism is active current limiting" ]
+
+> +
+> +  adi,fault-log-enable:
+> +    description:
+> +      If set, enables logging fault registers and ADC data into EEPROM upon a
+> +      fault.
+> +    type: boolean
+> +
+> +  adi,vpower-drns-enable:
+> +    description:
+> +      If set, enables the attenuated MOSFET drain voltage to be monitored. This
+> +      effectively means that the MOSFET power is monitored. If not set, the
+> +      attenuated input voltage (and hence input power) is monitored.
+> +    type: boolean
+> +
+> +  adi,external-fault-fet-off-enable:
+> +    description: Turns MOSFET off following an external fault.
+> +    type: boolean
+> +
+> +  adi,undervoltage-retry-disable:
+> +    description: Do not retry to turn on the MOSFET after an undervoltage fault.
+> +    type: boolean
+> +
+> +  adi,overvoltage-retry-disable:
+> +    description: Do not retry to turn on the MOSFET after an overvoltage fault.
+> +    type: boolean
+> +
+> +  adi,external-fault-retry-enable:
+> +    description: Retry to turn on the MOSFET retry after an external fault.
+> +    type: boolean
+
+This isn't a bug, but there's a typo in the description where the word
+"retry" is repeated.
+
+> +
+> +  adi,overcurrent-retries:
+> +    description: Configures auto-retry following an Overcurrent fault.
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    enum: [latch-off, "1", "7", unlimited]
+> +    default: latch-off
+> +
+> +  adi,fet-bad-retries:
+> +    description:
+> +      Configures auto-retry following a FET bad fault and a consequent MOSFET
+> +      turn off.
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    enum: [latch-off, "1", "7", unlimited]
+> +    default: latch-off
+> +
+> +  adi,pgio1-func:
+> +    description: Configures the function of the PGIO1 pin.
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    enum: [inverted_power_good, power_good, gpio]
+> +    default: inverted_power_good
+> +
+> +  adi,pgio2-func:
+> +    description: Configures the function of the PGIO2 pin.
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    enum: [inverted_power_good, power_good, gpio, active_current_limiting]
+> +    default: inverted_power_good
+> +
+> +  adi,pgio3-func:
+> +    description: Configures the function of the PGIO3 pin.
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    enum: [inverted_power_good_input, power_good_input, gpio]
+> +    default: inverted_power_good_input
+> +
+> +  adi,pgio4-func:
+> +    description: Configures the function of the PGIO4 pin.
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    enum: [inverted_external_fault, external_fault, gpio]
+> +    default: inverted_external_fault
+> +
+> +  adi,gpio-on-adio1:
+> +    description: If set, the ADIO1 pin is used as a GPIO.
+> +    type: boolean
+> +
+> +  adi,gpio-on-adio2:
+> +    description: If set, the ADIO2 pin is used as a GPIO.
+> +    type: boolean
+> +
+> +  adi,gpio-on-adio3:
+> +    description: If set, the ADIO3 pin is used as a GPIO.
+> +    type: boolean
+> +
+> +  adi,gpio-on-adio4:
+> +    description: If set, the ADIO4 pin is used as a GPIO.
+> +    type: boolean
+
+Does this dependency block force a redundant specification of adi,pgio4-func?
+The default for adi,pgio4-func is inverted_external_fault, which means the
+default hardware state already supports external fault features.
+If a device tree legitimately omits adi,pgio4-func to rely on that default,
+will it fail schema validation here since the dependencies keyword strictly
+checks for the literal presence of properties without injecting defaults?
+
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +dependencies:
+> +  adi,gpio-on-adio1:
+> +    - gpio-controller
+> +    - '#gpio-cells'
+> +  adi,gpio-on-adio2:
+> +    - gpio-controller
+> +    - '#gpio-cells'
+> +  adi,gpio-on-adio3:
+> +    - gpio-controller
+> +    - '#gpio-cells'
+> +  adi,gpio-on-adio4:
+> +    - gpio-controller
+> +    - '#gpio-cells'
+> +  adi,external-fault-retry-enable:
+> +    - adi,pgio4-func
+> +  adi,external-fault-fet-off-enable:
+> +    - adi,pgio4-func
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - adi,rsense-nano-ohms
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        adi,pgio1-func:
+> +          const: gpio
+> +      required:
+> +        - adi,pgio1-func
+> +    then:
+> +      required:
+> +        - gpio-controller
+> +        - '#gpio-cells'
+> +
+> +  - if:
+> +      properties:
+> +        adi,pgio2-func:
+> +          const: gpio
+> +      required:
+> +        - adi,pgio2-func
+> +    then:
+> +      required:
+> +        - gpio-controller
+> +        - '#gpio-cells'
+> +
+> +  - if:
+> +      properties:
+> +        adi,pgio3-func:
+> +          const: gpio
+> +      required:
+> +        - adi,pgio3-func
+> +    then:
+> +      required:
+> +        - gpio-controller
+> +        - '#gpio-cells'
+> +
+> +  - if:
+> +      properties:
+> +        adi,pgio4-func:
+> +          const: gpio
+> +      required:
+> +        - adi,pgio4-func
+> +    then:
+> +      properties:
+> +        adi,external-fault-retry-enable: false
+> +        adi,external-fault-fet-off-enable: false
+> +      required:
+> +        - gpio-controller
+> +        - '#gpio-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        swap-controller@15 {
+> +            compatible = "adi,ltc4283";
+> +            reg = <0x15>;
+> +
+> +            adi,rsense-nano-ohms = <500>;
+> +            adi,current-limit-sense-microvolt = <25000>;
+> +            adi,current-limit-foldback-factor = <10>;
+> +            adi,cooling-delay-ms = <8190>;
+> +            adi,fet-bad-timer-delay-ms = <512>;
+> +
+> +            adi,external-fault-fet-off-enable;
+> +            adi,pgio4-func = "external_fault";
+> +
+> +            adi,gpio-on-adio1;
+> +            adi,pgio1-func = "gpio";
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +        };
+> +    };
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 830c6f076b0029f0ff1abee148ad0e1905a60e82..13ae2f3db449e5fd3a7d0fbac92aabdc01734ba9 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15141,6 +15141,12 @@ F:	Documentation/devicetree/bindings/hwmon/adi,ltc4282.yaml
+>  F:	Documentation/hwmon/ltc4282.rst
+>  F:	drivers/hwmon/ltc4282.c
+>  
+> +LTC4283 HARDWARE MONITOR AND GPIO DRIVER
+> +M:	Nuno Sá <nuno.sa@analog.com>
+> +L:	linux-hwmon@vger.kernel.org
+> +S:	Supported
+> +F:	Documentation/devicetree/bindings/hwmon/adi,ltc4283.yaml
+> +
+>  LTC4286 HARDWARE MONITOR DRIVER
+>  M:	Delphine CC Chiu <Delphine_CC_Chiu@Wiwynn.com>
+>  L:	linux-hwmon@vger.kernel.org
+> 
+> -- 
+> 2.51.0
+> 
+> 
+> 
 
