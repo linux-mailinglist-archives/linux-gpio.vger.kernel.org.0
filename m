@@ -1,231 +1,225 @@
-Return-Path: <linux-gpio+bounces-33487-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33488-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QLrvAWvPt2mDVgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33487-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:37:47 +0100
+	id gNxuDOnPt2n0VgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33488-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:39:53 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69D73297212
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:37:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A64EF297290
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:39:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8939F3056D95
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 09:35:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A8D303040ABE
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 09:37:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1EE338A285;
-	Mon, 16 Mar 2026 09:35:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E444338947F;
+	Mon, 16 Mar 2026 09:37:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="U/PkFDeB";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="HwLA5rgc"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="nkhtzvZ0";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="kpAS2y0n"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744C9347539
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773653707; cv=none; b=K3EHAFa85KDnDvbpf4plsOHrt3sUzeYhDv0BPlWpJhNzD+Bxl+QNvTFyn0EF7e6E9R8dSLfPCeq+KldR0fAdf0xkpPCzTRXyaiuxA76IMiqYA949qZSSlPLvZoDa15B9PiiCZZlAbXqZye3EDAbsnbR1GkHbJ44wvp60egW1d4g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773653707; c=relaxed/simple;
-	bh=4r2iMJNnjHizHuoua26v+38XXw7c1p7R6XSQ8WsVbGw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dU1wZ3L+yBYB6/jMQlma2U1lgN6N6z+y8fcFbnS8w+VvWN2t10Wsv7EsZYBqzaXN4Kv3Q1qTAIg83oVi23ET/QxtFxCBNanGSwqaUOW2WqGTG5KCj2Rnt/SYKhmbMfFDXmRQOJhz1v2ruSGfihRtOsM9x6O2PEIE5C9SAEPlvCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=U/PkFDeB; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=HwLA5rgc; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62G64gXM323604
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:35:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	1B/hBs9jqGXN0SatIrrTFMFGQGJmlKhZrWp6PbywrY8=; b=U/PkFDeBlrTsKB4C
-	6YsBXWqQLQNNKucxb4AjteIqyUsG8InibHHx6ZMbPsEHm3s1HGtUDQt2fukXAI/i
-	V9XJXMqCRWxJ9/furxhpWWH0hrEWX1uv6n35rKXt93ceeX7jR+O2MfoivZoWdbe3
-	Mktc3TXJHl6eUHdW06qqkfjP5NITEW3AznvFj1vCT0mBJhEauqWHJeVL1v2zf+5R
-	848vXObuf59Ise8YjfczNFrguqYdJ/D7ge3dHodfA8iPDDUJ+Rsn+GczS/rWdrMj
-	Chr3Jv0eRUZ+jQ8WyKf2NXAknettViT57x748EZ88KUQoriLMGMwBqhlQlua4dpL
-	u7JHow==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cw03qn56n-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:35:05 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8cd8ea43d4eso216200585a.3
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 02:35:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8509D4A35;
+	Mon, 16 Mar 2026 09:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773653835; cv=fail; b=kTrXPn1h6ho1xxd+8hOhgVMX1fY8DzAK2FGr0shyCOxWuHD5lu8c5B8M/u2wSM/Xmk+vMkmlnqxB58YW5mJblJdLh2Y4PQo4dfx9h1QR4WVPacY8sshVX/s9sb94JM0gOD1I0xytu+hc0Ypfb2fJxHuskc5C3Jup91U7T7wj8ig=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773653835; c=relaxed/simple;
+	bh=dI6NdrHzqPO559e2EzMD4PQkqg7wCsrJ85/Zegm2X08=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S9JJOIxBTIaRsbjBmmgAnlgZ217aaljn15HUb0Y8zmZ3mGb5F8BkaspL2jXMbPKCtW6WD5MdhbsN8g2rp8ArfeO3IQmAZUcm/aH4GVIOikiXrjREqKG4sTb2VWSwiiOYOYERm+aySvxd2Bmap2EJmnhzto5C5Zj9RSZAauGsrqY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=nkhtzvZ0; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=kpAS2y0n; arc=fail smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62G7rAqc836156;
+	Mon, 16 Mar 2026 04:36:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=PODMain02222019; bh=81Y86rXJbCDKq8rR7q
+	4ptcjLklZkuPxAaYAuaihIemw=; b=nkhtzvZ0tjygl3WEiKQy2uoJFwllBZInOv
+	fJ8upGsbmoLR38IQoeh/y5fexKEow3F7Kq3c8sNY7EfydW3nuUKdPOdSTVl9wetT
+	k2ZJaWKfVA8/2KnBE37CB9qnOGXIYLZAuohWKSX71sz8FRQ4x3qpj07sE6/tt1XJ
+	xANyS5cUprMCsfBJXEejbiJbAfb5WlX4ADzf2cCIDyGBg2D21N+RZve5uksR0FIo
+	f4C/sVgkELAJnoGoS5DnrQXyAJo8jFxZLafFLnA3WL+5oz1NGoM/oumyLajo2vxd
+	6/Q89M8tVw6WqW/8lRaaolqh9kirzT5qfzJA4u3dV6GO126ekwZw==
+Received: from cy3pr05cu001.outbound.protection.outlook.com (mail-westcentralusazon11023090.outbound.protection.outlook.com [40.93.201.90])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 4cw52v1tbt-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Mon, 16 Mar 2026 04:36:40 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dLY+9R9pITCuc8CwQ/FeZ0i7pYCO/nCH4//+HRoZQo91UzH42kqfhwKpk1FS11x/7ccr+44U9DOofORKeZuEBfKfH0JUs4VbihTLi+ox2tlk86VNGi4UNt5SnzQlookYrdWFF9v4WzFO08zZqTZH7x4Mz6jU6EUBTykemmEY6v625p/BzcAuz4zlDzMRFz9AGleWppsVjZCexhBAZdJqGY5g/F7lvLrLsHKCkVC+BdaGG7W61kjtFE63GFqRDQJKAXNn/Q8LA6wSZYIpPy4pb87iSikVd8xiIF74L09LZ20bf0oiNXyXj5o4Zgw1IM34Rzme9Goru4HuY0Z7UgAr/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=81Y86rXJbCDKq8rR7q4ptcjLklZkuPxAaYAuaihIemw=;
+ b=T89K3ge1p5UJtI0ux1jL8ZzSYHnC7HpDBAix05FmjOqaCzhfTUghSy+JnJYWaXm8GRdaHGZZYqNIy9nB75M6NQ7rLXtaNTV0Yg9o5zAm97cHHdz2BemE8cRpWkDsleY+JgOWbDszs+wgDHx3ZFs2tq7JL6sOBbBEHTi03Af5bgQlJ9rw3uiLBJQYqC1vWhu33HwXtfsbomBDc5Oxp3s7w0k5j0CUwf+oU47DgTu9wrZEaeCqNEhv1tFtXSzF7K+VSa8BvELBcovGz22cvzQJR+PaZaFshzN3XebRnoBnXyBnpCATukW3+6tswExUSteOHx4n45dV8RqL6yL2sflwrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 84.19.233.75) smtp.rcpttodomain=armlinux.org.uk
+ smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
+ action=oreject header.from=opensource.cirrus.com; dkim=none (message not
+ signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1773653705; x=1774258505; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1B/hBs9jqGXN0SatIrrTFMFGQGJmlKhZrWp6PbywrY8=;
-        b=HwLA5rgck+WARMxmqfoRwWXl9Gen7H4HE04DVLYowkM7x2oc523cLwk5IXj/Qac5T3
-         L3mhs3a1s+SNzY2LnxkTaX0o0mA7Q97LUJT4Io1B/NnOZFxtBLRz40vHB1bu206aqzB+
-         Aij55WrfAOZLWYkNX1/k+/+28WH8NTDzojAhKV9GkEVEPzAtWTYhSaz1yvaICrBOHIlw
-         lkJSWe42EOIWJYDvimXi4DvwZ3ElXw8foJUzEBTcMNKSs18zorsbKzcQYDdu8xfr0sG+
-         4HekIYE8ZxQpaS1zPqQvW1Bh8dYGDp0gAs/nEj8+mcRdIOoN/Sghfhh210CO5oVU5liO
-         Cqew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773653705; x=1774258505;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1B/hBs9jqGXN0SatIrrTFMFGQGJmlKhZrWp6PbywrY8=;
-        b=sQta5+rUpDTrke050u/TlJM0VxwN6LAy5YR2yXgU5ikK5jL4XbprXlDwEwW/wcGZvc
-         T7Ko3x5kcypi9TCtIYCxB9vXW3eD9eCBHUuubRMdIVlTzQlcWyYm+QyKY9cb95dilUb3
-         JBMfynT3KRaPrUI2MUhCxK+/T25ZIKO7KKrLOifgXpfmImhVW+hpN8v7qf156IB39HDo
-         9SKchkkPVLRYwZ+avOAVAyNDkwbj97X/RtD7DVcvWCh+RJ6cZWSL+ZtuK8vRkXNpFCfd
-         Gi/So6uKFF+D6BXQJkd5fOJ2QUpnQ09jvPqYElLjBOW2DRTvu2sn5A5EMZQfm+OqEfo+
-         fBTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVeRzydwQQa5ihiy++zJDW+3jixjp1oxTxrkuOMGDgtORO5wfXh3sImQJE8AC24bosdtSwu+5wzDHRK@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPZuWbIUjFrr/wWPY5YDTYna/pLnBIoulIxKSSyRRGCf3rb9ND
-	ZngHdy/kYZ0ebXAp8W7ghvAC1bPGJbyKE9aAsy0gYmrIbjGEi8LhoegFqPAP8g89l5IIh9vG3B7
-	c8OZYtGPM7KNHGkE+8YCQ5TfpAYjgOMaemy8K3Oax9ESVWzh73MzN4kAToe84x9JG
-X-Gm-Gg: ATEYQzyqGvuJHMrH6sBONQrujnUGMHHnUypuLZN9iXlvhQ0bnERFsHLCvLgmKoi4Va1
-	wiTd66SFiGMfuCI9O8IUJjVHc6A8gpz70zqh3/VMYC8L7SdIVTZgpmprZyulaJbVSSXgwdYZema
-	Hwm1JwdmixSo4NX62sIs10Xn5qaSmop+KAzdRTjZAeMiCd8TG2pWgsYpQJK4x5Ufm7JGS+SA3AK
-	1+xm12FUYnMXLbbx72nFLYAu+PFuzMv8BmCy7UenECQL4M/g029cQpWir//sYxLCEFYp7/P7stI
-	uQG2IGeUYQLdeYdcHhzig4Py8rciN+vajKeQX2XWCsunONHPdvsvWSRuYAdN1BZP1eNAaUFiA//
-	VBoFn1vftCwCRGFhJ7oVabpvc0HR4sZOYqKH7ig24kil+qv5hqQ/vWY3/wYmzK4aBus5NCvcqZw
-	Ki0UU=
-X-Received: by 2002:a05:620a:290e:b0:8c9:eee0:dba6 with SMTP id af79cd13be357-8cdb5b7617bmr1232412685a.7.1773653704567;
-        Mon, 16 Mar 2026 02:35:04 -0700 (PDT)
-X-Received: by 2002:a05:620a:290e:b0:8c9:eee0:dba6 with SMTP id af79cd13be357-8cdb5b7617bmr1232407785a.7.1773653703814;
-        Mon, 16 Mar 2026 02:35:03 -0700 (PDT)
-Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b97cb0d2df2sm45121166b.54.2026.03.16.02.35.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Mar 2026 02:35:02 -0700 (PDT)
-Message-ID: <6679e85c-4eef-480f-882b-c64f8d0eb1b7@oss.qualcomm.com>
-Date: Mon, 16 Mar 2026 10:34:59 +0100
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=81Y86rXJbCDKq8rR7q4ptcjLklZkuPxAaYAuaihIemw=;
+ b=kpAS2y0nHqPtk8DriQZVEz/swfo2fw+1QGdZ6vTfPObxhUtATLrvozV5lbbV3GPD8QH5XiS0ikkZaADiIMYAiqEl/Zo/WbW47DQoq6ZhNXjCDirzY+4RwYQJFAEw0G5kj+3ikPO1fe+s8JcFnIGiw8mGLg3O6QEN7AmdaPLiYYY=
+Received: from SN7PR04CA0039.namprd04.prod.outlook.com (2603:10b6:806:120::14)
+ by LV0PR19MB9573.namprd19.prod.outlook.com (2603:10b6:408:326::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.24; Mon, 16 Mar
+ 2026 09:36:36 +0000
+Received: from SN1PEPF0002529D.namprd05.prod.outlook.com
+ (2603:10b6:806:120:cafe::dd) by SN7PR04CA0039.outlook.office365.com
+ (2603:10b6:806:120::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9700.24 via Frontend Transport; Mon,
+ 16 Mar 2026 09:36:36 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is 84.19.233.75)
+ smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ opensource.cirrus.com discourages use of 84.19.233.75 as permitted sender)
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ SN1PEPF0002529D.mail.protection.outlook.com (10.167.242.4) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9700.17
+ via Frontend Transport; Mon, 16 Mar 2026 09:36:35 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 78C17406542;
+	Mon, 16 Mar 2026 09:36:34 +0000 (UTC)
+Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id 6144D820247;
+	Mon, 16 Mar 2026 09:36:34 +0000 (UTC)
+Date: Mon, 16 Mar 2026 09:36:33 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Russell King <linux@armlinux.org.uk>, Lee Jones <lee@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Bartosz Golaszewski <brgl@kernel.org>, patches@opensource.cirrus.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] ASoC: codec: arizona: Convert to use GPIO  descriptors
+Message-ID: <abfPIZyk8Gch5rxT@opensource.cirrus.com>
+References: <20260314-asoc-arizona-v1-1-ecc9a165307c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 8/9] arm64: dts: qcom: add IPQ5210 SoC and rdp504 board
- support
-To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linus Walleij <linusw@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Robert Marko <robimarko@gmail.com>,
-        Guru Das Srinagesh <linux@gurudas.dev>,
-        Sumit Garg <sumit.garg@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-mmc@vger.kernel.org
-References: <20260311-ipq5210_boot_to_shell-v1-0-fe857d68d698@oss.qualcomm.com>
- <20260311-ipq5210_boot_to_shell-v1-8-fe857d68d698@oss.qualcomm.com>
- <6e33daf1-bb90-47d8-955c-12ccdd30ebce@oss.qualcomm.com>
- <84f1407d-62c6-4ec2-8976-eabe66c74728@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <84f1407d-62c6-4ec2-8976-eabe66c74728@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: HEkVWSAfihxXdsLVUXr99HwnF0F08LcV
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE2MDA3MyBTYWx0ZWRfX8lXebiNu2c/k
- eDg3DXiF8of4rqaDW0dxMrUWRKySftbOvBixbFt71xu9A6M83I9ExsYabfMLjbTRAwCbbnLa5lN
- UQzz15OXfAByPrjQl2Ne5iGPzQpQO0DzV5WxxtpvEuxT6rSsc+JMt+PAPkoXUOlHYE46kiTg7W0
- Cb1hX78W/ZSSoGQueAm61e7A9RNHrXrKZxnsrW+Vp88hUV6WFxVKIJw7R5j8PHs1lEFvjQFTBwC
- FutgFYo/kAy8YzpCri/94gbxjuIDIc72vHzWQFLi+FCN2W+lJREfo89UElbZ0/XdAvI4mIEPRAl
- 31tqVJkBo/9iQqdrQBApU3RiOW6SLPasATYn5x1WTl+YITDAG5894OTq7QKkY3qjxpaNXtRHcUW
- hzTAuTCxTGLO2gXTC+m8ckCSUv/FZ0mkZfnoaZKB0Caz3Y5oCBaSBzSd3RzPWm9TIaJSkqILv3E
- Tq1ZG7ztRSKx+tNecHw==
-X-Proofpoint-ORIG-GUID: HEkVWSAfihxXdsLVUXr99HwnF0F08LcV
-X-Authority-Analysis: v=2.4 cv=ZbQQ98VA c=1 sm=1 tr=0 ts=69b7cec9 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22
- a=EUspDBNiAAAA:8 a=4Zt3pBCKRviRSeEyxVwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-16_03,2026-03-13_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 priorityscore=1501 adultscore=0 suspectscore=0
- lowpriorityscore=0 malwarescore=0 clxscore=1015 phishscore=0 spamscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
- definitions=main-2603160073
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260314-asoc-arizona-v1-1-ecc9a165307c@kernel.org>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002529D:EE_|LV0PR19MB9573:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4c6785cb-b657-4ab6-361e-08de833f8476
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|61400799027|36860700016|82310400026|22082099003|16102099003|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	RMD0GKziH9JzRy1oYlZ7u8Uedh2YVspPYZ7r69tWCQxFpj0lTWibaLO3ovWC9ctqhUoXjZW67BjKHWlsPc3QXjM3JGNyD8KuJyWwp+snqZUetBmBm8UJXGeV41AfdhonMsA80iAD/8by3CofX7cj2s8ecTr1G/FZbPLTuOdc8+iYeEndYbuELoikQ/u2NEcNZvH/LJo+OiNYrnCqUGPrRK1RbO0XxDDmqGYNopmXPsz4N1xglQ3OiHFoOVGzS9LuBmEL13ZsPK3avF+2RpJHVN3wL/6RH1gwUwgS+WUkErfPxo5B9onC5L73LbtYccysmiM7vBnovzaOi34HQRN33yOxbx96Tl0eds9bgfZXTSG0KVWUv81rJulNdchHgdc8oU1Aof3oWXI9/dL4NOh2/644yAYQaWG5tuSbGvIWfLE9i9yZCh8fF+ZQ/TT6GsC+MnOPWoSQG7U5CUXGx3/3ghfuTz0wPIQdsfKTmo8w9WjMaFLS9kloL0fW1YeTk3q8jKOFdNFtXW4Fxzxtpdpa9To0tastH4K7hThjtn8IuddjRnHeztB450gVjA9zfovqFNRtmChcl53ZhUuuTruFkcUWn9mii0cJxZfHDwbKkbUEkKUcjyYkORSxAbZImWUvE8itSOuOcMC/8QYlqG7np2IweFr7g3l01k7Uyumgw4wI5HiYi2QQ/q82GrVHOZUcOuc65cU2+ghMup1G2L+iDFB/6gD3JcZcU+3+AuDFmsYegiMUbgrhRXde5psOSXNiP/ZfZbAgFjZAOZ+hncNrHQ==
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(61400799027)(36860700016)(82310400026)(22082099003)(16102099003)(56012099003)(18002099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	yrDhD/4QHdwqY/TkPGa0Cj9KWPJgA5MK0jt9+jOcuwPVSD/XndngRzLZRciO43HoSiqclb+vcF9TiYag43zvBWAVU9M/vdCxFomc9v3ALAn97Ajc1Qah2XGis20rM5ym5/KBZbW0gYEHtNi393SiKCwXRUzm04HrFRPBhOImtDEYB7F7uF81QToi1Kd7nzhSaY9ewi9e8JmMo13qL8hIiW5aXgSeDPccSqE/SunJSTURQfVLFeq+yBzywO2YRG7k0h04POxrxvebMq66nQwFKF+VZZ3483gy1ry35rh8zRFggAs/UW0XLekcciJ8481UXES3QGyAb2jkt25m7ngYyot4ZtH/sZilgnOYjDCfW5ipa5FgjJBweLkBypecqrPyxPbIviyrtaTc21iuJ83JwOHdJtYavTFnnotbsJjz4G31oIwIGhy6P5qUcLkMxWN6
+X-Exchange-RoutingPolicyChecked:
+	rXnIgIOkXU8qAGvMIR7yEnVtLbjt/YuHbIg0a2PmXgzQPmY3He4T5XmhuIJcQ0Er1yxcTWOyq0a1gzY27S4EWVSZx6cIfuiTnrsHNZFbg8YcnCVlqD0Yq8uwRoBkwLHzW1yf8p2qEFE9QLEHGLuTT+PIy6/OBgqr0KcAR1fQgCZAvcrYHqqagdFqqPr135FQFB4r8hEFPE7UIbF2lMoe80gUPJ++ryJsRwWWq8kbdrgUxl3gngtr/5eXVWnzK6bhgOZxEk7w50FdTBbh1T5x/TVUXg8DQyRn/KUND5rFXK/Slf6lZ6LFxQtwyjyCwTM3xG86PORQvHwQequfYCuisA==
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Mar 2026 09:36:35.8902
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c6785cb-b657-4ab6-361e-08de833f8476
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-SN1PEPF0002529D.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV0PR19MB9573
+X-Proofpoint-GUID: gQqcs9RopwTNSOOXMEV89CIqqIu71EkS
+X-Authority-Analysis: v=2.4 cv=MpZfKmae c=1 sm=1 tr=0 ts=69b7cf28 cx=c_pps
+ a=krMX4SE5d8na1K7/klQVLg==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=kj9zAlcOel0A:10 a=Yq5XynenixoA:10 a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=iX4cTi3TZMoOKdANLEfx:22 a=Dj2-6B8FqX4mGL0U3gbX:22
+ a=VwQbUJbxAAAA:8 a=w1d2syhTAAAA:8 a=PApNQ4Y_GqTqzXxjRcUA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-ORIG-GUID: gQqcs9RopwTNSOOXMEV89CIqqIu71EkS
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE2MDA3MyBTYWx0ZWRfX04vLvoN0MsPC
+ hv2vZHprYNtcaV1yPbabPpy617AZd+jBV+C9g9lAgRNuEmx0bMkkJ4srVM8IJFeNcmUTFjF+vPs
+ ghhFLsH7hn+dZXboSLn53P3URKUeifL9qlaPN8zSseIQCasT3LrYNDxKnOppl2nya+fZ0JazDxI
+ Qg6imNoPYc5yeKyOmX9rBLXTbq1Hn9cAE2P/8zVSJrDRS7wcDbe8wQdN0oIYoERgON4uLn8Uy63
+ +n2sCZmi5kHFr0bQMsgnjWOfGTVP1i51+fMX6b/MC7UACWNYW3yIwmvhddR/3ixHwgchyR9Zfx4
+ 5aNVkstMwrlazXxniTYK9VOnzLsXBJ4vm4RPZh2sy2X8USYjn1fGOlTR0Y7APXyjTAviAbXb+59
+ KM7skkGl4CdGE3/r5gpAWZnSc1iF6JtY/KFrs6yUKDuN5/ebd2Pd6RqCkeNI07jmrjqYOtWZHEd
+ zVFWHh7/tx1a3oQJoSA==
+X-Proofpoint-Spam-Reason: safe
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[cirrus.com,reject];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[cirrus.com:s=PODMain02222019,cirrus4.onmicrosoft.com:s=selector2-cirrus4-onmicrosoft-com];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33487-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:dkim,qualcomm.com:email,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	FREEMAIL_TO(0.00)[oss.qualcomm.com,kernel.org,baylibre.com,pengutronix.de,linaro.org,gmail.com,gurudas.dev];
+	FREEMAIL_CC(0.00)[kernel.org,samsung.com,armlinux.org.uk,gmail.com,perex.cz,suse.com,opensource.cirrus.com,lists.infradead.org,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-33488-lists,linux-gpio=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[cirrus.com:dkim,cirrus.com:email,cirrus4.onmicrosoft.com:dkim,opensource.cirrus.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DKIM_TRACE(0.00)[cirrus.com:+,cirrus4.onmicrosoft.com:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[konrad.dybcio@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[ckeepax@opensource.cirrus.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 69D73297212
+	RCVD_COUNT_SEVEN(0.00)[10]
+X-Rspamd-Queue-Id: A64EF297290
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 3/16/26 10:03 AM, Kathiravan Thirumoorthy wrote:
+On Sat, Mar 14, 2026 at 11:56:49PM +0100, Linus Walleij wrote:
+> This converts the Arizona driver to use GPIO descriptors
+> exclusively, deletes the legacy code path an updates the
+> in-tree user of legacy GPIO.
 > 
-> On 3/13/2026 6:18 PM, Konrad Dybcio wrote:
->> On 3/11/26 10:45 AM, Kathiravan Thirumoorthy wrote:
->>> Add initial device tree support for the Qualcomm IPQ5210 SoC and
->>> rdp504 board.
->>>
->>> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
->>> ---
-
-[...]
-
->>> +    firmware {
->>> +        optee {
->>> +            compatible = "linaro,optee-tz";
->>> +            method = "smc";
->>> +        };
->>> +
->>> +        scm {
->>> +            compatible = "qcom,scm-ipq5210", "qcom,scm";
->>> +        };
->> OP-TEE *and* SCM? What does the former do?
+> The GPIO lines for mic detect polarity and headphone ID
+> detection are made exclusively descriptor-oriented. The
+> headphone ID detection could actually only be used by
+> the legacy GPIO code, but I converted it to use a
+> descriptor if someone would actually need it so we don't
+> just drop useful code.
 > 
-> For OP-TEE, we have use cases like getting the random numbers, remoteproc PAS and few others.
-> 
-> For SCM, setting the download mode is one typical example where OP-TEE doesn't come into picture.
-> 
-> Please let me know if this helps.
+> The compatible "wlf,hpdet-id-gpio" is not in the device
+> tree bindings and only intended to be used by software
+> nodes if any. If someone insists I can try to add a
+> binding for it, but I doubt there is any real user so
+> it seems pointless.
 
-I think it does, but it's odd that OPTEE wouldn't handle both
+Yeah probably fine, this was also on the definitely more
+esoteric end of the driver features. Although again there
+were definitely some out of tree users in the distant past.
 
-fwiw +Sumit is poking at OSS firmware for other platforms and may be
-interested
+> Signed-off-by: Linus Walleij <linusw@kernel.org>
+> ---
 
-Konrad
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+
+Thanks,
+Charles
 
