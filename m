@@ -1,267 +1,183 @@
-Return-Path: <linux-gpio+bounces-33548-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33549-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MICKAQEfuGlYZAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33548-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 16:17:21 +0100
+	id kIIKATgguGmdZQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33549-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 16:22:32 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B58CB29C219
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 16:17:20 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 844A829C373
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 16:22:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5459F304A8B7
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 15:14:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4335F30A1716
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 15:17:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1788439A7F3;
-	Mon, 16 Mar 2026 15:14:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74FD03A257F;
+	Mon, 16 Mar 2026 15:16:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="uZ6QC/3h"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jtsz07GN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62CD316189
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 15:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773674071; cv=none; b=CDnxjHT834dSTpTnyIy/l+XkUuDBN+EZy8Bwv2scQ+58YZzJh9whKw9SxrZdShbNrFAjgqIyUAlmTfdcfQ7nFLrNpHqDZWIYsXrhTn9y7TDgG23w/MPZltP6mCUpj3nVhfCHsQgwrUP0OIRxEHSeOg5Lfworf3AaPFx7xO2VEVo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773674071; c=relaxed/simple;
-	bh=qpG/1vY4dOiYQwru9PU879QJPd/QPvUcZPRbRx5ZIBs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fkNIPqEiLc7IpBChZ4Zp9AwnBhlwcDki7AGsN/VcTOn9wuG7V3QRDyOJXUlFDtyj5cqB9Af7Ugyv6VlEE406jpzBn/IWyIx8WfSVaE8tPwiQoo42yBpchlAEuRqqQHZBET+2nomFCBMDIjiJ/wAGSJvFAk05SpkBOcPsLwOj91U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=uZ6QC/3h; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-7d756f2a06dso4169752a34.1
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 08:14:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3B93A1D0A
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 15:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773674165; cv=pass; b=Ea3+JcfvjivSYChD2tWIa99Xk2ln+omjV9WawjDhEWtgk9LOSYaGeX2fYG2Et56id86MuQ7xWNNdrCafpr0r8x4YHgMMVLXFRMf4tAzw9VeFoVivuE6Rhs1sSF48rRKXapxNVSrPuPNBcvY2kSW3vDJVNrkPWbElACxEof53hzU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773674165; c=relaxed/simple;
+	bh=SGrKOh6DxyjU+GV0XnOjtJnq9uPykPDANTIFfa61QH4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mFGhyFm/uAwgtxxvEP99K5D16RYucnieuFNxHPSKd1xuYzxQN8o4OD5KvGM4QQje609dVqIYs+15puN+0SunLG1Igm5Ig0F0Pi07/HiMZl58xSFuNWBqNugOxNo4K+q/IzbU8xHS+jwzHedAFVpYyOl9vsjZRDg04KDIaNXpZLA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jtsz07GN; arc=pass smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-38a694a3cf9so38591631fa.3
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 08:16:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773674162; cv=none;
+        d=google.com; s=arc-20240605;
+        b=MdJq84uywjBQyAXc7mM6s08Mmxe5LXmw2Cfoadfd6Wfv3nwiTQyaW5QP6idSM9tPen
+         Lx8voYsxztvuC1FELIMoUho6siXbCyY+rABsfnJCfZo1UXnvSQqdmnrlZ7D+hVuZ+afa
+         xA8PbPvc1dTTCcoW1CqLTib0oB1kKp6SDCGHiLpdUcxtk64h6RRZF6a5C0sS2zx6fJD5
+         j0AN1ki7QTqbOgoJWAaX7ztzI7MHRqEyWVdyEi9OhLXz1kXUPalM99aHJvCLfruFu/gd
+         B2tq9mbavsdpnkIVyhDSRnrq4gMknGds4zIoqKUbPi1zmbTXkK19XOLmUcd9MAck4Tu5
+         68LQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=aWwOA9SQqzmxmd74/y4xRp+f9Kw/OsZUX40Voc8OPk4=;
+        fh=gctNIQqgrhXmZGTpFZ2Y52js2gm2wXjXqe4jh5O/xIk=;
+        b=Gf0lPnelCW+Z23VXMbbJIojLT7P9MXv/9EHxDyHK9V9g7s31VzvmM1RoCi9xN97EDG
+         GaT26q1a43UVqSXY3il5MV/ZI9puKkFKi00eZR79B83FL/Fbho/tYV6N+vmhZxRxc1LK
+         f8vNMspfhPxudXspAS8eT36kUroBbUUGkQhj84BHAQn8nrbOzDqN9o1yjBnppzmY8pj0
+         oxzUEPvOpa/Ylx2Zg0v96JERRm2RAdZfDlBjo47j7t8j4CFkZ9XiI2bbCW43SnMyBBf+
+         +9Zuz9cNWSAj2iVT6HgnAdp3ZKfYN+htJkCHjtDY4rUsg3GRmb/rJ0I2eIhaZzJxJSy7
+         ysGw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1773674069; x=1774278869; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=n8x5eATN23jYRz4BCnmX7sl/BaRv2gWsraoFkpJIVsk=;
-        b=uZ6QC/3hRLxPpUC2v5S+9lTZfJ5zJxZrBlEVIeiGn62i7cOZh4SeCCIlVWGPhLiV/a
-         f/vYrEQOvlP14nShPxAUyw/m7sZRVFHTXeoByLlQkhJZ7zWMxbJouuHRvt2tHYn+3evi
-         dnd8SUvD+Pu7I41TIIpJr0mGJo5YNsbSKAxYbdnn/CtYBh2IyGZT5OpT7xjc2G9iDxDW
-         htNR0judOgV9FZnnIAELB86uEIND8QGatBe/7lM4Jlety1glViZuiCt0ciV6vvHhNQ4y
-         NBDhuxhpxhgisipLUME6p3M+yrihCkh6WCktdg8HjKirceGM1C8EEk2YQldnU52vZ7Ds
-         Iakw==
+        d=linaro.org; s=google; t=1773674162; x=1774278962; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=aWwOA9SQqzmxmd74/y4xRp+f9Kw/OsZUX40Voc8OPk4=;
+        b=jtsz07GNFeAEXMC6uCu//Kl6N+FETjCtKU3pYIQGECDs/OEavmObeUfyyeV4xJYGAa
+         JP3KQ/hR2fIxtUIi4vLy/zrESlImC2KgV8N2BWbuXtqq+lodc+6T3NnuRqHg/36XtRM8
+         2jyu9oHE6oP6NpGRlGITsvzGunnEG6OnlOq+XQ97omXL/cGdtiRTfj4Xkypi8XBHzq4g
+         hi+9JLBr+Fek8NouPQwdUQ8u72u5DpSMoK9DWQbPZASR7aZOntoPxVGjLJ92dI9D9ZDU
+         2sTvLFOCqHr/zBXOFcAZpEH5e95dpF787Uv5voUdcW0ozL5K2Y8iC6mjSxDMc65Hf/5j
+         RUfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773674069; x=1774278869;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=n8x5eATN23jYRz4BCnmX7sl/BaRv2gWsraoFkpJIVsk=;
-        b=A1d+drStB0valyJUxjsE7Dc0lmrtI06xc5/294lnLEqOnCQy6+3S9NZ0yMsAWdHyX1
-         IC/md1r3X1DiSEmZP+NHxd9I0uK1vE180IO8fNnEgX3K5yCuGrB10e3UVpv17T+974u0
-         /+DgtAK4fxSWYaW1TaeztpqWPI8GnVoLB+3JKstJgbHeHjM+6NBfVBQDzybk6wbw0+8+
-         c0kqEbYGSKr8Vhm158hwN4RCFat3p0/Hs7eJWagg5BZy9bFeJxCZv2WkwuEfR1fdZEfs
-         REl9+rCXq9qhQtfI6yR5wgCcXgQ/fee+Et3dkdqEFbgOlG2nZD3U76+rG9jNnSnrINw2
-         qQ7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVtgDPuvOelCJ41ALsNTWWNOIy2GH7cJZs0qcTyrkM5UWjy6PyIXT6ZYWtziU9wg7TCK8Tdit1HOO/u@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoxPujEEbnUQ6Jdw0tDQgR4FGl8fSRyglGGrixlxRtYKHWsu8v
-	B1zLiyNYz9SKz17A7lkDOd+uypLhQ+HHMF45jOQMDpfXkg8kgq1QWxE3EnRfMPvbSFQ=
-X-Gm-Gg: ATEYQzyeAvwYyjF+FkomvQWfshF0WwiqKdxQyNOyhRByaUZxLZ91sGvTE6FN9hCFsSQ
-	gjrXKhJHVXEKHSCRQcub2yi/W+I6QPPWHMdd+4gkCTGQnArL1G78JzTz0zYpfYhwLpypKU6wRXJ
-	/uGvwNNcA3dkJjBTmfamQbnfuhA9j4oVOEjV7H68IMq6FN2jvmnK4gX62nlLJXEFQRqXeJM00gb
-	f8piCWvnNbFBQlvTit1XP2HxjPECIDxTl8E72mHAyVWPvaSD5U+K9+wk0u6xVqX2mW/5LE7IwsR
-	m81kaA0gRH6tAcz+yCDz9uwJhmWjLGzrGyGm8gZ5MfaXv/chh6dak5kvC9UHlPzxVl0HEdSjKYw
-	+6qElLlevznbCgSZmR8EbGZ/gP3WwkpKuJW7uQZ8ThZm9fUJqS4X493McScxqoeWkjKIq6JNwlb
-	CCe3s8ovatJbADgzOHIk/EUltTIq1buoHPwnVywOJx6y1XB0P/0eg28zBj0oa1SQ2vXHn9jTrc+
-	g==
-X-Received: by 2002:a05:6830:6519:b0:7d7:4c03:d4e2 with SMTP id 46e09a7af769-7d776d1c0c6mr11002771a34.18.1773674068556;
-        Mon, 16 Mar 2026 08:14:28 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:500:e504:a034:1152:a664? ([2600:8803:e7e4:500:e504:a034:1152:a664])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7d76ae9a51csm12527858a34.23.2026.03.16.08.14.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Mar 2026 08:14:27 -0700 (PDT)
-Message-ID: <04257601-5ea2-4cd8-8170-29decad13861@baylibre.com>
-Date: Mon, 16 Mar 2026 10:14:26 -0500
+        d=1e100.net; s=20251104; t=1773674162; x=1774278962;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aWwOA9SQqzmxmd74/y4xRp+f9Kw/OsZUX40Voc8OPk4=;
+        b=XLExJd4OelFN+IkBab1XahgZvn7yVGP5sr/MAo7oLGw7JLaLwKIoTjuMsf7yxH3KCn
+         6GpnRg+BRXfMo+WyEQadZKO3u0KmVDHilj53PtjkO8WTkFlQjIYIbd5SR4ylNTtXDnwZ
+         Z4dgp/u/1o7WASIIozf8FzHvkLV7OtZ1zws1XCT7WRzEpsbrAFANFCs2jEjdrxmeOZEH
+         xuBz4KYUXua275onVaGOhtw10k9WxIgrryopzKXT5GxezcgK0rOVG8C3DowGClfyeaq2
+         DR4II8IbpEskVvNCZz/Ok4drrZSZna6e9xjAiJ/oE/fCn+1IOP7q9blUzFOcr7knZ9Sp
+         Z5wA==
+X-Forwarded-Encrypted: i=1; AJvYcCWB7TC0pMB4VluWRAQNjxkbnkHMC7yXKKz7IOtmOXxUl86JsCNojON1ZeAu7jMplRqQSHkjjpuar0Nv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+GJdQAWtsQKDYwF3O6G440m+grzaz+MO2G4DeDsMuP4CUIX04
+	tUnI6lWGRJSPVIK7O5Q26iYOg5KIOU7tgaGy/sYlpsi3KSJxsgq4O2m2Yzw6bSa/m2WeANregLS
+	MQCRqz2VeE9VpVQ25iT2S+N2NvVw275RU2cEGH30jbA==
+X-Gm-Gg: ATEYQzxDYBLxAovrxjCzkEnjSONNu4xadOmxL7fbHgLk4+gp8cvvBw6LrMafbLCZ9NP
+	1f6+wx7TFGfmZCNEPEL8HMDkRPAkTP/rZfy5tPWL74XEl7p/ffPlnzwZZwHZxFId8teebPCVNAs
+	IX/AhSSCda8BjZ9rjEdv6pyeTiYoPadRwWGxkuefnRj4TlDGrpX07sQbyHc5V8KEUojyblero4X
+	COcfiLvGJySbsA7tihzXRJlznvu2b12D+2x1w1d36FzARCKCQUQCRdJO0MFU9VtuLW5XP+n6783
+	G2nPZVCM
+X-Received: by 2002:a05:651c:b1f:b0:386:7e61:5de1 with SMTP id
+ 38308e7fff4ca-38a8930e573mr42245921fa.0.1773674161832; Mon, 16 Mar 2026
+ 08:16:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/4] dt-bindings: iio: adc: add bindings for AD4691
- family
-To: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>,
- Lars-Peter Clausen <lars@metafoo.de>,
- "Hennerich, Michael" <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, "Sa, Nuno" <Nuno.Sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-References: <20260313-ad4692-multichannel-sar-adc-driver-v3-0-b4d14d81a181@analog.com>
- <20260313-ad4692-multichannel-sar-adc-driver-v3-1-b4d14d81a181@analog.com>
- <a1824f39-3925-4e94-ac98-52dcdfbaa0d2@baylibre.com>
- <LV9PR03MB84149CBDC5DD03EDAF554136F740A@LV9PR03MB8414.namprd03.prod.outlook.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <LV9PR03MB84149CBDC5DD03EDAF554136F740A@LV9PR03MB8414.namprd03.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.16 / 15.00];
+References: <20260311-ipq5210_boot_to_shell-v1-0-fe857d68d698@oss.qualcomm.com>
+ <20260311-ipq5210_boot_to_shell-v1-6-fe857d68d698@oss.qualcomm.com>
+In-Reply-To: <20260311-ipq5210_boot_to_shell-v1-6-fe857d68d698@oss.qualcomm.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 16 Mar 2026 16:15:24 +0100
+X-Gm-Features: AaiRm5153tShsk2TIyyE8TGCBjpaUzTwpROv6h6ltabxhtejv3_1C_1EaRy8Em0
+Message-ID: <CAPDyKFq-pyTffu_D_eZAZQo3e=vkO3uhQ_hAjS-s2DY4TmXoXw@mail.gmail.com>
+Subject: Re: [PATCH 6/9] dt-bindings: mmc: sdhci-msm: add IPQ5210 compatible
+To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Linus Walleij <linusw@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Robert Marko <robimarko@gmail.com>, 
+	Guru Das Srinagesh <linux@gurudas.dev>, linux-arm-msm@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[baylibre-com.20230601.gappssmtp.com:s=20230601];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33548-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[analog.com,metafoo.de,kernel.org,gmail.com,pengutronix.de];
 	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[baylibre.com];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	DKIM_TRACE(0.00)[baylibre-com.20230601.gappssmtp.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33549-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	FREEMAIL_CC(0.00)[kernel.org,baylibre.com,pengutronix.de,gmail.com,gurudas.dev,vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dlechner@baylibre.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ulf.hansson@linaro.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[linaro.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,baylibre-com.20230601.gappssmtp.com:dkim]
-X-Rspamd-Queue-Id: B58CB29C219
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linaro.org:dkim,mail.gmail.com:mid,qualcomm.com:email]
+X-Rspamd-Queue-Id: 844A829C373
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 3/16/26 7:39 AM, Sabau, Radu bogdan wrote:
-> 
-> 
->> -----Original Message-----
->> From: David Lechner <dlechner@baylibre.com>
->> Sent: Saturday, March 14, 2026 5:30 PM
->> On 3/13/26 5:07 AM, Radu Sabau via B4 Relay wrote:
-> 
-> ...
-> 
->>> +
->>> +  clocks:
->>> +    description: Reference clock for PWM timing in CNV Clock Mode.
->>> +    maxItems: 1
->>
->> I feel like I asked this already, but which pin is this clock connected to?
->> It sounds like it is the clock for the PWM, not the ADC. So it does not belong
->> here.
->>
-> 
-> The pin is connected to the CNV pin of the ADC, which in CNV Clock Mode
-> replaces the internal oscillator. 
-> 
->>> +
->>> +  pwms:
->>> +    description:
->>> +      PWM connected to the CNV pin. When present, selects CNV Clock Mode
-> 
-> ...
-> 
->>> +      Two cells are required:
->>> +        - First cell: Trigger event type (0 = BUSY, 1 = DATA_READY)
->>
->> I'm wondering if we really need to specify the event type. For interrupts,
->> we we just specify the pin and not the function when the pin has more than
->> one possible function.
->>
->> I know that we have done something like this on some of the previous SPI
->> offload devices. So maybe there was a good reason for it. Or maybe I just
->> had tunnel vision at the time.
->>
->> I suggest we try implementing this with just one cell that specifies the
->> physical pin. In the driver, when SPI_OFFLOAD_TRIGGER_DATA_READY is
->> requested in the driver, we can use that to program the function of the
->> pin accordingly.
-> 
-> I agree with this, since only DATA_READY will be used anyway as an interrupt
-> in CNV_CLOCK mode.
-> In fact, I am now thinking of removing ADC_BUSY entirely, since its used in
-> just two cases, which none of them perhaps make sense :
-> 
-> 1. Manual Mode,where ADC_BUSY is selected for GPx, though is not used as
-> an interrupt or 'feedback' of anyway.
-> 2. Autonomous Mode, where in theory it would be used to see when each
-> channel was sampled, but this mode is used for just once channel single
-> shot reading, so again, not actually used.
-> 
-> The implementation would see the enum removed and just initializing
-> the GPx pin used as DATA READY using a macro. 
-> 
-> What are your thoughts on this?
+On Wed, 11 Mar 2026 at 10:46, Kathiravan Thirumoorthy
+<kathiravan.thirumoorthy@oss.qualcomm.com> wrote:
+>
+> The IPQ5210 supports eMMC with an SDHCI controller. Add the appropriate
+> compatible to the documentation.
+>
+> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+> index 938be8228d668c87f0be95c63d4d951ebbadd4e4..fd1d5b04e7556903daffe86e455fde11be0dbd9f 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+> @@ -38,6 +38,7 @@ properties:
+>        - items:
+>            - enum:
+>                - qcom,ipq5018-sdhci
+> +              - qcom,ipq5210-sdhci
+>                - qcom,ipq5332-sdhci
+>                - qcom,ipq5424-sdhci
+>                - qcom,ipq6018-sdhci
+>
+> --
+> 2.34.1
+>
 
+Applied for next, thanks!
 
-We should try to consider every reasonable possible wiring situation.
-The only case I can think where the devicetree might need to know the
-requested function in addition to which pin is if the pin is wired to
-something not controlled by Linux. That is an odd enough situation though
-that we could defer considering that. I think we could add support for such
-a thing later if we needed to without breaking the existing bindings.
-
-So hopefully I am thinking clearly enough about this to say, yes, we
-should just go with #trigger-source-cells = <1>; where the cell is the
-GP pin number.
-
-> 
->>
->>> +        - Second cell: GPIO pin number (only 0 = GP0 is supported)
->>
->> If GP0 is the only possible pin for an output, we should omit the cell. If
->> there are more possible pins, we should document them (even if the driver
->> doesn't support it).
-> 
-> You are also right about this, other pins can be used as DATA_READY, and so
-> the DT should perhaps indicate which of those pins is actually used, so
-> that we know at probe (gpio_setup would make a comeback?) which
-> value should be written to the GPIO registers.
-> 
->>
->>> +
->>> +      Macros are available in dt-bindings/iio/adc/adi,ad4691.h:
->>> +        AD4691_TRIGGER_EVENT_BUSY,
-> 
-> ...
-> 
->>> +
->>> +            clocks = <&ref_clk>;
->>> +
->>> +            pwms = <&pwm_gen 0 0>;
->>> +            pwm-names = "cnv";
->>
->> Should we also include the trigger in this example?
->>
-> 
-> In this example, I would say this is needed since the CNV PWM is
-> not only starting the conversion on the ADC, but also controlling
-> the sampling rate, making custom sampling rates available in
-> comparison to the internal oscillator used by AUTONOMOUS.
-
-The point was to have an example that shows SPI offload usage.
-I assume this would be more common that PWM without SPI offload.
-
-> 
->>> +
->>> +            interrupts = <12 4>;
-> 
-> Best Regards,
-> Radu
-
+Kind regards
+Uffe
 
