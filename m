@@ -1,83 +1,82 @@
-Return-Path: <linux-gpio+bounces-33477-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33478-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YH4jEoLMt2kRVQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33477-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:25:22 +0100
+	id KMqHEorMt2kRVQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33478-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:25:30 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0B09296ED6
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:25:21 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51833296EE5
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 10:25:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id F325A301C125
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 09:24:29 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id CE80A300E18C
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Mar 2026 09:24:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CF8A386569;
-	Mon, 16 Mar 2026 09:24:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5B62374735;
+	Mon, 16 Mar 2026 09:24:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t5Vydq0P"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H9pS/bmP"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F53D378812
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:24:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926CF387347
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:24:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773653067; cv=none; b=RlDy3ujUaf/U/zhY3gUQoLmRTMJnuA8j7VJzuwe7jlQAKWr+isr+cvgklqHwiI62XgTVeP9++3wwaSMU9ki5RQWf3ov+9BJXq8cvA0zZBBSzUQ9UQywek/9AyJffhOW4CK8aTCE31/L1O/AGxhHELwWwqizQJbJonwIF4LWvBlk=
+	t=1773653092; cv=none; b=UJPpLDJ5wah5ZRV1IqyIx+qMDiQwt75sBkkd4FTtA1RGk49Rdwy6AYLfI07vgxgB8UgbrheJpipiXMW9W5mhk8hNkft7FypmeBzTdaU7pckNnMekMnDVB2kBLNZVr+9lot0Owbq/MC2X8gn11tgs4AvYMOT4vSPmdbOWdD6G54o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773653067; c=relaxed/simple;
-	bh=ZnLNDjXRmrLc93v5XVKHHUWhoTftzAtj9fQW7vodS8A=;
+	s=arc-20240116; t=1773653092; c=relaxed/simple;
+	bh=BIWygk2t/YSDljMoUZZVTZOf2mAecHQoiMZzTqE4Q3U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O2bMwiYWFRU0/JvbCb8c70yKT8W6DZIu+E+kC19Niae/Kc5pmZck1XEl7f+c5PnvMrm2SH+lJkvDDWnL+AfepmmG8Sp8yXtR2mFcofwK1S1PZmHfMn7H1pL9N3M/zTBP5Scr2gk5/aPmwkOjPfSMJVKEIjGud6LQAHOM7+fnrdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t5Vydq0P; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEEE8C4AF0C
-	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:24:26 +0000 (UTC)
+	 To:Cc:Content-Type; b=GNT3ZdM2J24JX+di+uqrg+nyL7NIJHZdsQlE07SU3PKHdhnnPAye3wqdbQYcGllP0w0mRZzOqgB0GhC0DU1sw6q4z3AW5EruqQyknkTlEbZ+S+dtR43rkvX5QHMJFAw9dd1PbehFXU0wKtWLhCwtBTISRwmCZTedn9HT8Q2XCz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H9pS/bmP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48046C19424
+	for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 09:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773653066;
-	bh=ZnLNDjXRmrLc93v5XVKHHUWhoTftzAtj9fQW7vodS8A=;
+	s=k20201202; t=1773653092;
+	bh=BIWygk2t/YSDljMoUZZVTZOf2mAecHQoiMZzTqE4Q3U=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=t5Vydq0Pm3Hy5I+94LdlrgUQE2eoX83qsyuW/AMjmRg+8K8bDT88z+3EkXdvgCD8n
-	 yglFounJ/THRwBi97Ut6kNnRNIISeVpJs/3cbtg9ezsmalTGlE8vSvZ+nteofYyRAs
-	 2Bq+AMV+4ztpA/SO2YTlqedn4ZhndR1v+Te0zJHdchxWEBdGsXttIjTpT6d981pMBR
-	 M1o//gJycYkHxwf4WsygMt6EH/XBd7MW7SfeHS31WtxkfpG4zfMyS5snAfEFdpwMDj
-	 pVGmgv0YFx2L4za0GrKIof5DFoxUg0fYezYLH2BhKRyIXe32CELBTHXT+73sGWjp3w
-	 Ij4CzTzwy8krw==
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-79a46260385so7706277b3.3
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 02:24:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUfECTnICwNIwHFzHIL8It4gYMAJEut54o4zFMR9ZjC6Pfs2F4FnypAHEmn0DGQb3bb2aLJBVJX0pw5@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFJtEhPSBxUCpWBpGOhX4eigrN+VD6T9cpwWsPbgA8VIrreE92
-	winznjb8o7unuerAp9REvZtLCw5q5l1UGiE1NuuhptGUeWGBFW6b059BwDoEUwTNMBezefEw3R7
-	JZyv2Afr5hJHAmuCCCVaxWdVZe02gGGY=
-X-Received: by 2002:a05:690c:6604:b0:798:6042:12f8 with SMTP id
- 00721157ae682-79a1c1f1ac6mr113568307b3.55.1773653066158; Mon, 16 Mar 2026
- 02:24:26 -0700 (PDT)
+	b=H9pS/bmPk94avmOf1UFTuiLOUW2m5oUndYfGaYsQZxpuY45RiS9r5Xs7gV3sGU97S
+	 XlMcRQDNe/+flO5poKXz6jIPewfYypOGS6q19ViK/LQ57HtSvwAQ8CVIdnM/GZUo7d
+	 iCZfU1TWLAiyT1TjPwit4MBH3if+bqm5r6YiYmxvWKV1QoQ8eCoPDtxMp9Evz9yC+7
+	 OHQnOldgim8Au/pr0ounUhgVLnjUDIpnc3yWGVnMIntSuO7E6UkrCq7j2ina8GayyV
+	 nqvLEJtrDg66U0/3MTrm9p/B0aaQaI1Ccp7EmIi+UQJsAjsVyb4PtId0RW5vlquvPE
+	 S9eId1a8qx/7A==
+Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-64ca09f2056so3198721d50.2
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Mar 2026 02:24:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX1A9ylW3o6H/P63jGbutPnVVXrLTG3w9T5biHZne8eBrnfSWo++aUWhUOwT1KumPUR2QBjkWH3O+47@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYfST8xQ0dMSabjXmr3XcnOZHe1OnRjWuiExsWm90xiNVJ7Us1
+	bGJpHqvtGXnvO9j2Odxi8mAdl9fF1hGiVac9yiks1PbCPwTwNd9wCpECbS6wu+0lZQBadc0T+K4
+	pcUEvSmiFYzXG8wo4I75SGxNgPuCyJco=
+X-Received: by 2002:a05:690c:7283:b0:79a:1fc2:be05 with SMTP id
+ 00721157ae682-79a1fc2c602mr107019937b3.1.1773653091619; Mon, 16 Mar 2026
+ 02:24:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260312081805.3020612-1-arnd@kernel.org> <20260312081805.3020612-2-arnd@kernel.org>
-In-Reply-To: <20260312081805.3020612-2-arnd@kernel.org>
+References: <20260312081805.3020612-1-arnd@kernel.org>
+In-Reply-To: <20260312081805.3020612-1-arnd@kernel.org>
 From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 16 Mar 2026 10:24:15 +0100
-X-Gmail-Original-Message-ID: <CAD++jLkdAAD2SNhxWvSCg0X5h94mP+Fqsb3SpJ7+eTV+o_kERA@mail.gmail.com>
-X-Gm-Features: AaiRm52v3ufpixHupvPLX0Q4ClMALFB9XzDqktmpG1RxOvzrgbGN0bx9Ial3b_o
-Message-ID: <CAD++jLkdAAD2SNhxWvSCg0X5h94mP+Fqsb3SpJ7+eTV+o_kERA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: defconfig: enable CONFIG_MFD_STMFX instead of PINCTRL_STMFX
+Date: Mon, 16 Mar 2026 10:24:40 +0100
+X-Gmail-Original-Message-ID: <CAD++jLngojT_gGgGn4PHRiBtSweA780BsfoXngLUHVM8HuPMOw@mail.gmail.com>
+X-Gm-Features: AaiRm51HfNEbdv3QjrL-RIfuGLdjSponbSK63MbCGrMV2QM-93a_NszGzAJcll0
+Message-ID: <CAD++jLngojT_gGgGn4PHRiBtSweA780BsfoXngLUHVM8HuPMOw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: stmfx: fix mfd dependency
 To: Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Conor Dooley <conor.dooley@microchip.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Conor Dooley <conor.dooley@microchip.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -86,7 +85,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33477-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33478-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -94,13 +93,13 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,arndb.de:email,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: D0B09296ED6
+	DBL_BLOCKED_OPENRESOLVER(0.00)[arndb.de:email,mail.gmail.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 51833296EE5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
@@ -109,9 +108,23 @@ te:
 
 > From: Arnd Bergmann <arnd@arndb.de>
 >
-> PINCTRL_STMFX now depends on MFD_STMFX instead of selecting it, so
-> adapt the defconfig to pick the right one again.
+> The PINCTRL_STMFX driver attempts to force-enable its MFD parent
+> driver, which is really the wrong way around compared to general
+> conventions. After the OF_GPIO dependency got dropped, this leads
+> to a harmless but annoying build warning:
 >
+> WARNING: unmet direct dependencies detected for MFD_STMFX
+>   Depends on [n]: HAS_IOMEM [=3Dy] && I2C [=3Dy] && OF [=3Dn]
+>   Selected by [m]:
+>   - PINCTRL_STMFX [=3Dm] && PINCTRL [=3Dy] && I2C [=3Dy] && HAS_IOMEM [=
+=3Dy]
+>
+> Change the 'select' into a dependency instead. As this changes the
+> defconfig behavior, also change the generic arm defconfig file to enable
+> the other symbol instead.
+>
+> Fixes: e785c990adcc ("pinctrl: Kconfig: drop unneeded dependencies on OF_=
+GPIO")
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
 Reviewed-by: Linus Walleij <linusw@kernel.org>
