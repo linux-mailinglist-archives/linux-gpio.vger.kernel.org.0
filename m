@@ -1,37 +1,37 @@
-Return-Path: <linux-gpio+bounces-33644-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33645-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CMIyOjlmuWkyDgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33644-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 15:33:29 +0100
+	id oJBXIrxjuWlsCwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33645-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 15:22:52 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97C1F2AC078
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 15:33:29 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67B1C2ABC3A
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 15:22:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4850C308C131
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 14:13:41 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 6E371301B674
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 14:22:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58E0F3E63A2;
-	Tue, 17 Mar 2026 14:12:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7CCE3E3D8E;
+	Tue, 17 Mar 2026 14:22:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="N+dDSJ2H"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0KUmaox7"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E49B73E3C44;
-	Tue, 17 Mar 2026 14:12:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E6D3E276C;
+	Tue, 17 Mar 2026 14:22:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773756724; cv=none; b=Qovv4/4bOP8ZsWvmhdpF2wsorV1s6RvUe2eFHcThDs5pE7CV/IR2Af5Y81G8yidLlpcKRjfE1sTUfCG4jHrGZuRoT+BoDj0jvKVFskeOkwbKHr1nmUUNPsKPMcE+5Xf9D7zmLo8v4QJGPRCWoIwlIHo6jLUrbnBlD6zyo5QsjtY=
+	t=1773757354; cv=none; b=kEs4r3Sp78cDxeb8Sa2nvUtwvprJHvVOdlBVYaAJYM6ZtewrTSUgQsC981ntszuvxniS/xLQPG4DTs5nmx6VljrRhoxhj8H7FqVCjsbOviARTmV9hiME9qEaE5BuSQkGxt78CyKnrxFieRwpzK13Dpu2j+h/I1qyIa/UQYel+OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773756724; c=relaxed/simple;
-	bh=UcmRX+iIkZwytJqVNJodQzwRiiKSnbEQOAtWHuJEfn4=;
+	s=arc-20240116; t=1773757354; c=relaxed/simple;
+	bh=28yViGP6bassgTvap2oH91NclsVYHfgNoQlH2l9XYMY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DkyWJkKpKn9UllB2KF9Em0p/sZNem+5V/f1Pe+HCOBHrvOi/5lr5dzg6Z6nxdFJNgAJJkmdwaYCueM2xr8vfddXGG7McH4alLPUHeJHgz3Qk2VJv4JA+BCcaoXMDArcC+Aq5KZrpw/bdDDl07nySXxlauLssNPHpQBhfCNZzksk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=N+dDSJ2H; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vy44xWHbhy0AWnHuIGnYyXcCuO6Tjx7T6MDXatxzd4S7x0o/GhN5mltY6/4YXPZ2A4xU7uFGpFnNu6IekkCy04V5cavDbbDYo+kEictv3zFIqWypTtg8EZ6GEKCX4BcTCQqsSpNFLXm9MO/hPhbQbwn58b4nsN97V9mvfJXPeco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=0KUmaox7; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
@@ -39,13 +39,13 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=8I4GJ6VYY4sAkpPtIoMg3PlbM8gWrHzgVlQtnkD+cJ8=; b=N+dDSJ2HU0OM2CcLn4jv+usPjd
-	A9wdkncTUcJn9notW4QhMgME5kzWZfjThVZ2iXhKee3kFdfO9g3pq4hnExXaG/dDDz3gIj3W3JgL4
-	wXUtVec4QUwzHQP2wbKIu2ac3PcBp/nHnJnwaIruyb5KuldwzIx57kVDbrjp+jnghfHQ=;
+	bh=I6Y4ZFhW4cSATcogRMbcAzq1BU+egoD9LUl6g+F51PA=; b=0KUmaox7WptcPUgpyYu6zf8gmx
+	OuQhHCtBY1RmDCddkr8WPd7/OqPtgIAqv3DZazZKjnYAtGsf7kv0jzozr0f6Nli51WdnXtTl1fNQE
+	5SN/WJghoZzlYvj4Htq9wxoxVWZoQw6jwhr4VF7p2KDhKgD67YTd14XUtDWt6KrkaJzQ=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1w2V98-00C2BR-78; Tue, 17 Mar 2026 15:11:46 +0100
-Date: Tue, 17 Mar 2026 15:11:46 +0100
+	id 1w2VJQ-00C2Ig-J1; Tue, 17 Mar 2026 15:22:24 +0100
+Date: Tue, 17 Mar 2026 15:22:24 +0100
 From: Andrew Lunn <andrew@lunn.ch>
 To: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
 Cc: Shenwei Wang <shenwei.wang@nxp.com>, Linus Walleij <linusw@kernel.org>,
@@ -64,7 +64,7 @@ Cc: Shenwei Wang <shenwei.wang@nxp.com>, Linus Walleij <linusw@kernel.org>,
 	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	linux-imx@nxp.com, Bartosz Golaszewski <brgl@bgdev.pl>
 Subject: Re: [PATCH v12 3/5] gpio: rpmsg: add generic rpmsg GPIO driver
-Message-ID: <104e9861-bfd4-4e0f-8967-a849edf7e6fb@lunn.ch>
+Message-ID: <0f880475-a850-4138-b79d-d3c88765b0e0@lunn.ch>
 References: <20260313195801.2043306-1-shenwei.wang@nxp.com>
  <20260313195801.2043306-4-shenwei.wang@nxp.com>
  <2aa1d063-181f-4145-9f1f-7e3012c4d0af@foss.st.com>
@@ -82,12 +82,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[lunn.ch,none];
 	R_DKIM_ALLOW(-0.20)[lunn.ch:s=20171124];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33644-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33645-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_CC(0.00)[nxp.com,kernel.org,lwn.net,linaro.org,pengutronix.de,linuxfoundation.org,vger.kernel.org,gmail.com,lists.linux.dev,lists.infradead.org,bgdev.pl];
@@ -101,89 +101,45 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[andrew@lunn.ch,linux-gpio@vger.kernel.org];
 	DKIM_TRACE(0.00)[lunn.ch:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,lunn.ch:dkim,lunn.ch:mid,lwn.net:url]
-X-Rspamd-Queue-Id: 97C1F2AC078
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lunn.ch:dkim,lunn.ch:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 67B1C2ABC3A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-> > +struct rpmsg_gpio_info {
-> > +	struct rpmsg_device *rpdev;
-> > +	struct rpmsg_gpio_packet *reply_msg;
-> > +	struct completion cmd_complete;
-> > +	struct mutex lock;
-> > +	void **port_store;
-> > +};
+> > +static int rpmsg_gpio_send_message(struct rpmsg_gpio_port *port,
+> > +				   struct rpmsg_gpio_packet *msg,
+> > +				   bool sync)
+> > +{
+> > +	struct rpmsg_gpio_info *info = &port->info;
+> > +	struct rpdev_drvdata *drvdata;
+> > +	int ret;
+> > +
+> > +	drvdata = dev_get_drvdata(&info->rpdev->dev);
+> > +	reinit_completion(&info->cmd_complete);
+> > +
+> > +	if (drvdata->protocol_fixed_up)
+> > +		ret = drvdata->protocol_fixed_up->send_fixed_up(info, msg);
 > 
-> Except if I missunderstood Mathieu and Bjorn's request:
-> "reuse all the design-work done in the gpio-virtio"
-> We should find similar structures here to those defined
-> in virtio_gpio.h.
-> struct rpmsg_gpio_config {
-> 	__le16 ngpio;
-> 	__u8 padding[2];
-> 	__le32 gpio_names_size;
-> };
+> Seems not part of a generic implementation
+
+Agreed. Lets have a clean generic implementation first, and then
+patches on top for legacy stuff.
+
+> > +	ret = of_property_read_u32(np, "ngpios", &port->ngpios);
 > 
-> /* Virtio GPIO Request / Response */
-> struct virtio_gpio_request {
-> 	__le16 type;
-> 	__le16 gpio;
-> 	__le32 value;
-> };
+> The number of GPIOs should be obtained from the remote side, as done in
+> virtio_gpio. In virtio_gpio, this is retrieved via a get_config operation.
+> Here, you could implement a specific RPMsg to retrieve the remote topology.
 
-The core of the issue is that Shenwei is stone walling any change
-which makes it hard to keep the legacy firmware. It is possible to use
-these structures, but it makes the extra code Shenwei needs to
-translate this protocol to the legacy protocol more difficult. It
-might need to keep state, etc. 
+The DT property ngpios is pretty standard, so i think it makes a lot
+of sense to have. But i also agree that asking the other side makes
+sense. What is being implemented here with rpmsg is not that different
+to greybus, and the greybus GPIO driver also ask the other side how
+many GPIO lines it has. So yes, it should be part of the protocol, but
+maybe optional?
 
-Two points...
-
-The firmware implements more than GPIO. There is definitely I2C as
-well, the first version of the patch has bits of I2C code. Looking at:
-
-https://lwn.net/ml/all/20250922200413.309707-3-shenwei.wang@nxp.com/
-
-There is also RTC, and a few other things which don't directly map to
-Linux subsystems, but maybe do have Linux drivers?
-
-Give how much pushback there has been on the existing protocol for
-GPIO, it would be wise to assume that I2C, and RTC is going to get the
-same amount of pushback. If any of these three, GPIO, I2C, or RTC
-decide that only a new, clean protocol will be accepted, no legacy
-shims, the firmware has to change, breaking compatibility to legacy
-protocols, and the accepted shims become pointless Maintenance burden.
-
-Point two is that the customers who are pushing for these drivers to
-be added to Mainline probably know that nearly nothing gets into
-Mainline without some changes. There is some short term pain to
-swapping to Mainline because of these changes, in this case, firmware
-upgrades. But in the long run, it is worth the pain to be able to use
-Mainline. And those customers who don't want to upgrade the firmware
-can keep with the out of tree drives.
-
-So, what are our choices?
-
-1) We accept the code as it is now, with the shim?
-
-2) We keep pushing for the virtio protocol, with the shim?
-
-3) We keep pushing for the virtio protocol, no shim, firmware changes
-
-4) We pause GPIO where it is today, and restart all the arguments with
-   the I2C driver. We can come back to the GPIO driver in a few months
-   time once we have a better idea how I2C is going. And maybe we also
-   need to see the watchdog driver, and argue about its protocol.
-
-I also understand ST has a generic I2C driver nearly ready, if that
-gets merged first, that probably kills the NXP I2C protocol, and maybe
-the NXP GPIO and RTC protocols.
-
-My vote is for 3. If not 3, then 4.
-
-     Andrew
-
+	  Andrew
 
