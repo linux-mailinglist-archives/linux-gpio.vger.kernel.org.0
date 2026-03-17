@@ -1,159 +1,144 @@
-Return-Path: <linux-gpio+bounces-33656-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33657-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gIQ6JcZzuWm8EgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33656-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 16:31:18 +0100
+	id QIjZDbh1uWm8EgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33657-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 16:39:36 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 147222AD14A
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 16:31:18 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BDD02AD2BA
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 16:39:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 133C4304D16D
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 15:28:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 710FA3071F34
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 15:38:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE6C722A817;
-	Tue, 17 Mar 2026 15:28:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40A123EAC7B;
+	Tue, 17 Mar 2026 15:38:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnZr5r/e"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fZfnN39h"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832273EAC98
-	for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2026 15:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518C23E5ED6;
+	Tue, 17 Mar 2026 15:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773761316; cv=none; b=o56f2Pfnd+EBKikUnObq7LGlPsDYBditk5l1ZsSXEHon/UXoh1FhTN+e/dk/suyIceOy2l9yzi2Gvp7eSjyO6g//UcMNy4qTFqd8uXVjt5izp9GioQd/Q6qgIGxP109Q/MrplLTQvDJ57M35TeJplrYBFW0awYswsqCv1HgPDtg=
+	t=1773761926; cv=none; b=LWdG0AzaCOVXFVGOuyVsMYnBEgtGzp2vtqbJeFApNcRU04yPzlp4LA7Xrx3spbvxKIlJzanL+j6jmjmVDcFT5/Db4axFwxurEvQWYtotJlY+invj8E01dStokJoijASHIt1hLEtON5COURchgWJNz4FECFFgo3wfRU/Yut8OPZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773761316; c=relaxed/simple;
-	bh=MzjNtUfyyXDy9rsAiv5Ph6MOEVlWEvAVArTUZ9AKnMY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PhbV5LmTO0JpOsZ6MYo99kMvaSbgfFM1OalmWyc6kOQEYdRErNM7k3TN2cap9Es1ZkoGf4CTNq1QpeGZYEQRODB5C5eTa3CkV36w3Rpb+UFQTZzyB4igJ4ZPjUhvsX+gX9+4IB1EgwNqrNl2bra/LHkO459Y87p9mV9HUwFCV/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nnZr5r/e; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2a9296b3926so47687135ad.1
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2026 08:28:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773761315; x=1774366115; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r0RfajJWwZmTYBapOkDrRSM6JA1jpPzYsQwAyl/wAZs=;
-        b=nnZr5r/enNmbJ8aFOaDp8MjZpACqOWZxl2WXzZ+efDIwipHSMT8xMXzvQusJJGURam
-         zta5hf4kz2neTNQ6tb5XsgWFpTmpLikPJ4JBrpa+ZpSz+6ATR4AjNjROZiGUKX9oRrsQ
-         iwLHJuNXKDwG2lW7W3Dq8rXsLYMzMLL5kqfxaxCG4HRubmhvvbBaHROK6pxXB3l09GP4
-         v0CzGxo8AwOEVJyr3p5ZRFtoWzECrt7IwUYdgdovGCwlIaXXfogCmUHxAGMUltHQvDzN
-         Ddo2a+pk3e5nKu/cMpKP/HeEZUhPHKwJW0LtvsdFQEYY5qkPczKIK59OpOW3Lv+BrzWq
-         m92w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773761315; x=1774366115;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r0RfajJWwZmTYBapOkDrRSM6JA1jpPzYsQwAyl/wAZs=;
-        b=KYtuQLLdvYbtvFRfH4LkP4heBz3N6gENgi6xxQTu7x0J32X40r5KYuCV5XXP4PTLKC
-         5hpNu/3ow+nIjVUpu6Gl0JTsdphnrYHyC1pNMUDZLMXygxudjssAWqspycg+3MJe2ZEs
-         nKmtSO8327iOa/5dq7Qz9xu9i6NMRLTJciwc+1QihJt/EG/Itkt6EcLJUw5OjSPUA6Qo
-         doNuM2Tyg3wasNrCB/dBaBCsQK/AYXm1D4ZvYyoIKd1kvqJCoTFMQSZayfrvbnbmyUbR
-         WcHpCFEPunh8rbF3vse3KQzFunQ1XzGkK/DWHtjyD9yq+LeRQIJNfUiET2OaqQoftX6t
-         PfMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWx5VATqYM7op/TT59WLY+1WuFVoTlb6Q/a5BTybNYUSku4FdMFJ7VoNkiDaHpxd4F/JK4tyfEjOet@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkeACeqVTgGwzVZLNmyh/+jGEGkg9T++2y+Qd8MerZiOxoriQm
-	kmxIV5dGLMGcRRoJj/ORU4mb6qOcRB3vgy5TtOWwU7C4um9hPZ1GW7rJfY17WxIT
-X-Gm-Gg: ATEYQzxaH5HlN1Edy7o4HyqTAw753Cw3S67sNmg/CqkKZqiSRJNvasbZn6nK2VXy3K5
-	pQ4ekmVZ0lOPtQUfc1770I7DceCX1Qvjg+Jeqb7iNiLGI1tij3w5DUlGdpioIRV4FA2gCZgGKa3
-	SXBQrTcTLSWGhISIVps5oenjDjI/1Tw/N9WMIAwrEyHj0FdiAPkuuQLRFedAbEfsFqzvTlMe4yi
-	+H8OZ4Zsc8uIA8EiU+iwfbO4mI6R4L4UPc9sUGkNx6I2GtmQSUh2sDnTft3XUKbo+KqIydao8w0
-	ahSRwpOfg2TPq96LxD+wK+H6g80t1bGCI5EDgm24qc/MOCt4eJW42bLasH6RSnLpbWwgcNxvUiY
-	MV8jY+Z5P4vHP7UORHdQZ+JbqzgZ9hr4ZtXG3tbwxmkMseUMzHG9sgx0H6UD/yz7Dgm8eXASjMk
-	nY0GQWKGbOYVXQWfIzFfQTIwYOWcOSmd/+Cy8d2RMHVlLHrSOCNJppPjh46MM6BUHSuKEPaw==
-X-Received: by 2002:a17:902:ea0f:b0:2b0:6323:1739 with SMTP id d9443c01a7336-2b063231bc0mr44454175ad.41.1773761314768;
-        Tue, 17 Mar 2026 08:28:34 -0700 (PDT)
-Received: from localhost.localdomain (61-230-23-18.dynamic-ip.hinet.net. [61.230.23.18])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b0542909d8sm105242455ad.31.2026.03.17.08.28.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2026 08:28:34 -0700 (PDT)
-From: Yu-Chun Lin <eleanor15x@gmail.com>
-To: linus.walleij@linaro.org,
-	matt.porter@linaro.org,
-	syin@broadcom.com,
-	laurent.pinchart@ideasonboard.com,
-	csd@broadcom.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
+	s=arc-20240116; t=1773761926; c=relaxed/simple;
+	bh=x1gSLvzKsw5RxCMGtUcdm7YX+5lOyd2zRpU8JHZgXO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LMA7hwcPohFYrqX/q+6u6Gum8HVULKcfFuFMmvXybZt/t4CS3FOrlYUHGuW7wkvwrr5U0/p0Y/C6UtPbvIyWB5Zq6/lVP6Pxd1ssVyjBE6u6JhlFm7du/miOaTIl5j+kq9Fd+Yp0Z1ZHluhZeEnTMelxvSar7rP1d875SaYooGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fZfnN39h; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773761924; x=1805297924;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=x1gSLvzKsw5RxCMGtUcdm7YX+5lOyd2zRpU8JHZgXO4=;
+  b=fZfnN39hQe6zJ8+qMNytu+eydVDhs/OlP+G1etI7bfIMi2vUlH9gtVTL
+   uOrMfKxb/OCuhi7VQpSX4Mh4ChY+dWpEvuUnXYiPOxUREjf450EHl2N1I
+   oPDaOPNwSVbSCmCzXWKYmUriUJfW+EQp9rng1Pj1aYU9LyxI0LYaiTAHj
+   wnnxz4fUzW74aq6399qR58WFtz6bNK/dvWk32nU59vDQIh+4udJVvsXeC
+   f6MtTBPCATRpD4cZj4pLecMxk9IQy9lUc3WMc+8PB1zG0PwOwiriB9KoK
+   bGIpp24IGOEhscMnOwuw9EQ9DuFBdUkvxjNbK+wHUx/UKg9h98hg7pdE4
+   Q==;
+X-CSE-ConnectionGUID: hnUf30r7Qoq2rQJDLAcRxQ==
+X-CSE-MsgGUID: XCzrHIv4TRSSRNjwXig7tg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11732"; a="78651507"
+X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
+   d="scan'208";a="78651507"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 08:38:44 -0700
+X-CSE-ConnectionGUID: +Eu8r4TETdWrWgU4PeUEew==
+X-CSE-MsgGUID: tDIkp/UlRNmQmrlTxCG9kQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,126,1770624000"; 
+   d="scan'208";a="226989411"
+Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.97])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 08:38:40 -0700
+Date: Tue, 17 Mar 2026 17:38:36 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@kernel.org>,
+	AKASHI Takahiro <akashi.tkhro@gmail.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Linus Walleij <linusw@kernel.org>, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	visitorckw@gmail.com,
-	Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: [PATCH] pinctrl: abx500: Fix type of 'argument' variable
-Date: Tue, 17 Mar 2026 23:27:51 +0800
-Message-Id: <20260317152751.21210-1-eleanor15x@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Khaled Ali Ahmed <Khaled.AliAhmed@arm.com>,
+	Michal Simek <michal.simek@amd.com>
+Subject: Re: [PATCH v4 2/7] pinctrl: scmi: Add SCMI_PIN_INPUT_VALUE
+Message-ID: <abl1fPQEDE38KZQN@ashevche-desk.local>
+References: <cover.1773757772.git.dan.carpenter@linaro.org>
+ <940ff48bd53e35e19a4cda081170d9198c20675e.1773757772.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <940ff48bd53e35e19a4cda081170d9198c20675e.1773757772.git.dan.carpenter@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-33656-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,arm.com,vger.kernel.org,lists.infradead.org,oss.qualcomm.com,linaro.org,amd.com];
+	TAGGED_FROM(0.00)[bounces-33657-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[eleanor15x@gmail.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 147222AD14A
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:dkim]
+X-Rspamd-Queue-Id: 9BDD02AD2BA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The argument variable is assigned the return value of
-pinconf_to_config_argument(), which returns a u32. Change its type from
-enum pin_config_param to unsigned int to correctly store the configuration
-argument.
+On Tue, Mar 17, 2026 at 05:40:27PM +0300, Dan Carpenter wrote:
+> The PIN_CONFIG_LEVEL parameter represents the value of the pin, whether
+> reading or writing to the pin.  In SCMI, the parameter is represented by
+> two different values SCMI_PIN_OUTPUT_VALUE for writing to a pin and
+> SCMI_PIN_INPUT_VALUE for reading.  The current code translates
+> PIN_CONFIG_LEVEL as SCMI_PIN_OUTPUT_VALUE (writing).
+> 
+> Add a function to translate it to either INPUT or OUTPUT depending on
+> whether it is called from a _get or _set() operation.
 
-Fixes: 03b054e9696c ("pinctrl: Pass all configs to driver on pin_config_set()")
-Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
----
- drivers/pinctrl/nomadik/pinctrl-abx500.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In three consecutive patches against the same file you have three (!) different
+prefixes. Please, align with what is being used most in the driver and/or subsystem
+(the driver seems has no consensus with itself, so subsystem then, something like
+ "pinctrl: scmi: ").
 
-diff --git a/drivers/pinctrl/nomadik/pinctrl-abx500.c b/drivers/pinctrl/nomadik/pinctrl-abx500.c
-index 8cd4ba5cf0bd..6650d3912acc 100644
---- a/drivers/pinctrl/nomadik/pinctrl-abx500.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-abx500.c
-@@ -856,7 +856,7 @@ static int abx500_pin_config_set(struct pinctrl_dev *pctldev,
- 	int ret = -EINVAL;
- 	int i;
- 	enum pin_config_param param;
--	enum pin_config_param argument;
-+	u32 argument;
- 
- 	for (i = 0; i < num_configs; i++) {
- 		param = pinconf_to_config_param(configs[i]);
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
 
