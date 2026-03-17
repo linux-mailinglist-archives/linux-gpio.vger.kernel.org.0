@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-33607-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33608-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kMKfFwUruWmVtQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33607-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 11:20:53 +0100
+	id KIC8JyYruWmVtQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33608-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 11:21:26 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDCF12A7C2C
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 11:20:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C92C2A7C52
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 11:21:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E82753067A39
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 10:16:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 26E4E3076B54
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 10:16:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 981863A4F44;
-	Tue, 17 Mar 2026 10:16:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F2403A5E90;
+	Tue, 17 Mar 2026 10:16:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l4M5zYhb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CiENfRnf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15BAB39FCD8
-	for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2026 10:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81CDB3A4F29
+	for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2026 10:16:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773742594; cv=none; b=ZuiXgjGe4yj8S/G688QMtFge5Uv2bpaod1ZTjN+uhnjrH5EMf6FFlrU0nUjeX/tS8qyg/aHuVdNXt4jLQSYT8CxIuTWWnYt4auKexOFgu23SoA5sMcfRu4SbdSVvi2T76su6SF/vLigGVRoGDho7So0kflOjF0ap4URsehatiec=
+	t=1773742596; cv=none; b=omrQrmxyPrglUW6xnp82Sd9ZcKGpdF2Scwt0KpAqwTktieCckRoeYjvStfawNadcVvPaC5bxMNoANLxw5ql+pRneHo/ruHHm8y4si0Mzdic2PVtBnWxJNn5gZcet2ZM+fv3C0+aUbIP/NsrjLsjo4cLs8aWdqxYOwj9WnkHA3yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773742594; c=relaxed/simple;
-	bh=MkKJsnHJt0I3M0VDRqlYD6Y/FYCi4SGRoTsot9r9C98=;
+	s=arc-20240116; t=1773742596; c=relaxed/simple;
+	bh=se68fAGuB/j8qlO1u+fnKd186GWgmOrI8uSRY2A7fp4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TqHDyiBrfh2faykm9e7Ab9b3ExtgO1M9dH3n4cuwGQu87Su49XZLTFlpttxqoF1N8fHlboJd+RE/OxRFZIGDQ7LEN47zFjeWXaoOogLek4QXAN5/ZKrRiqwpmoyGSQnm/R/w823F1wNtdyslfqdDpyCrI3K3pUm9GhVwvm8efcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l4M5zYhb; arc=none smtp.client-ip=209.85.128.49
+	 MIME-Version; b=TxXJcO3McEKfPiGPQ6i0twjJZVPOp/7JqNnJrvCUn9M1bBndW2U09+zk/OX8uP4m5yW9jREc6ZB5YLtHqPjv9FooQn/cjBiDzYPUBT9CM6N8oy6VsJyy848/3E047Bf1N4xGb2UwleIZ79CIo/81iQDp8V8xXV3kg4MNKtCF/Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CiENfRnf; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-482f454be5bso6003715e9.0
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2026 03:16:32 -0700 (PDT)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-486b96760easo3320445e9.2
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2026 03:16:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773742591; x=1774347391; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1773742593; x=1774347393; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UPU/OB6JjZLkGjsMveSgC+3WpNZwaCIVZ3MgU8COI8Y=;
-        b=l4M5zYhbKZqXFBOmgxRGR/CjiszGzCFNsHkEFIe1hwMV5e8Ug3YlnHDBEBUIcER6rP
-         4B/1LaiVYpV+MWrfulMjc67iwNjNGeziIOw0Qaq2t+k0+L+hYF4WrKsOWT5d4gtYv935
-         6g0P5TIJ3jcLbSAvUczLr3XYuA8KMaIGS/JWXZ2i7rBwZ2CdhjjmdztoI5f7fk6NFCXR
-         OzKmO/APIGYblGveonCdYYvQgBxqXqjRj0eYcpVG5pkXeYrZ9vga7JH9nixcTkY358sM
-         vX8LJmg8mfFvxfCzrbaxrjFyh91dG8ALK2qGhLbAfeW9gOEB6VpD3XUVvJByoL9i+WsP
-         Y+9A==
+        bh=bqdh04d/N2PVxo1lQ+gjA+vu/NkwjnKwwKhdoYX6Q4g=;
+        b=CiENfRnfAjRQLrTiNTrFqONQ4s4smpqFb6gpPaeO/NmIlsfV8XdMCj2beqYubIw6St
+         ZhWJHVJ0ilbx8NDMInWbKTdmkIEXd2WTf6ahNzqpgKaUQp9RAfT8c9Qj51oGAOWDCPNM
+         KfGd/Ige6XQuTsrWOA8OPF83zDZZ4rFSj/XBHbZvLxk6rl2KF8adk7CHn16U3OVYH09c
+         5URDUzRayEojDZa8hhENA/iOH1Fbu83KST6TI3Ki1mIefsL3p/uC5qDNPvgLRIPqWijc
+         TElMjRDzct6OWfQ8bvwJjVsC3P+FSscjHqu+nnKHJci9ZM/LJfRGj4ELtO7BjyUEO0Nv
+         BmmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773742591; x=1774347391;
+        d=1e100.net; s=20251104; t=1773742593; x=1774347393;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=UPU/OB6JjZLkGjsMveSgC+3WpNZwaCIVZ3MgU8COI8Y=;
-        b=QYtaaqHabrTRkLkMr0JnalzyjpwHZTu6E/ofzTdVLu5UtXONxhK75ULhQi6JkQPkJg
-         bu8rTECPJK+ZWKOMs/UT6OvLWjJX+lJT7IDbfIBYTxkL1XKnfG0tA1ON30ThGvXXi0OJ
-         Q0yEBMCHOzH2KeVUUQcAzNwUCO/rl4p6PZmOQ7BeoNrP+NvLzJ+GZMQr0bdmRNcHCKEz
-         +yrTPmZjwtcB9s6KHDqijpbhLJzJkavFruSsIH7T/k6Ib29AYHje3OwXk6x420+OvMV4
-         egrI0Jfz+8w9OTILr9yjaZdKDDNZw/DvZmPuXUayXZULOlcVCsS3oOeziU4ub47ICD4y
-         Dh5g==
-X-Forwarded-Encrypted: i=1; AJvYcCUnf4WXZQo53dQbAl9PzYn5vmk5A+nu+u544g/gBn6gY3r5nKNeLVYniSrR0osfSAxuAsEg35HBA59+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxx/fQIrLqon1RNqa8dAxXE8F1Aur9Ly2Imeg3vzgR5vLbfH7/i
-	lhzoyfheQrxn6KnEwrFFU4pyvk/IXLSf24lt92Iva/VorIrWOAEcLEIu
-X-Gm-Gg: ATEYQzz3G8DriT3+d0F5c6fQ/QtgPBpLguXsVih5gOgDu0fv6xvwJvgqFjSxDqlLvBW
-	/VPs7+Vxys8Fu19OtkVW9ipKs8fPVIF21MYQnYDo0PVxb0nNnkmHeKYbDeUUFr6kV5dQ79k+F/a
-	W28IWlgNVFjSTAyC1dgmkREkh6AtkVKb7RR+2YneX1yLiiCIoxHmso0ril5ILSgczuk/NwHUl7K
-	hxSoIgn7Dtnavj4N1aauiUE+fVEpbkk+O22YxnOE0DYFyI2mYa12WVOWRmpkZClwaXXrclHXVdA
-	6Goj1avT9lg+iufRthK1Ed+nyk+A37hIEcEi8qTLR0gPgkI704n9iyzakWpgqbW41KLhezWd9Yp
-	CPzxMSF5hApl16/gzVfYcY54D+8fqtiNV8Kig2yJnkrCw+x1MawfC6Gt2aQJgqkC/dJbBUAjUSg
-	VrtCJ7jspzECz9xbg/g6ECoTdjqQaatDdZaUbjNtHsVmxDNCeB
-X-Received: by 2002:a05:600c:4f92:b0:485:3cef:d6ea with SMTP id 5b1f17b1804b1-4856eadb12amr36947195e9.13.1773742591264;
-        Tue, 17 Mar 2026 03:16:31 -0700 (PDT)
+        bh=bqdh04d/N2PVxo1lQ+gjA+vu/NkwjnKwwKhdoYX6Q4g=;
+        b=OSdhdkacL6xBrYBw82C15QB36Q/lhJQOR5xu8olg5t7ezpqPE5JxcKqvnxQ+kNjEBl
+         p0IlUxK24mnxA4x1nUiWSCpVUH6TGHFhjEnRIlJlVGM00xOoOpGvYUopRA7aIqD32v+r
+         KVCIGVzQlquJSa69tf39vK0oBPT3uD6eLv4VedGZ7SYE13BYui2rg8zj+eprWbr9Yhzl
+         jTWACVSV4usjinZtuqA9scvpqUEX9hZQKYKcBywNW/TH1b7uKv6QqdvBaqCKRLazBCFt
+         ujQoXoN+uw/7hbA9HD2Yb7fz7Y9PAT7JHZiek/SuxPmgtmw4JKWIoRFv2h0BnruO3lKO
+         OJxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWv9ChVxcT2i92O6JktKjzr6m/VKBD7/EfAElY9FPafLyA5wNyYm7/ArLmSFGASjm/52E4xCvbhmoal@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMojeNo/qiRCop8AChHVwFJL4hU5OicwJgFCFrMP8BRAf0BxOb
+	Sdl1n59E6huCG7WRbKlWbeinIlW4BpUTEMq0hXdHbHWuVoEnb1mIbf3D
+X-Gm-Gg: ATEYQzywRGK2ph4gCBkF5pCYRIvAOTHrpLqUIAuqlJ8JrjZSegoFjXSoqM4OXHogntj
+	TLH+O/ax0xSvRsfUHxtgMB07auU8VGHYxUjULVXGjyUqpKbtZgLxbtAajZmtHqFDEn4QgZRQayV
+	NDQhAPvMWLtpsBnbUyAbNtgIc6BiaXyx3kxPWrNAnmVdBMriRVpJGbyIMddMcLzR+oXySL9/3fU
+	FwM1Xb1EscE2A8py+Vx/wzHC8vuNrNV/v5UxbxGQBurRpy6jDPcecqN2PixY3PCjvbyXmgzKMPx
+	P/56VaPXgF+9S1e4mdOVoAPH5GLuhgK5Wb0AKbHuXK4/oOjv0IKouPuEfqzjtL/huoUGLgB6+dH
+	/SOeHC11hfb5E3ia6VBhOOWRuByul8URctNFnlgpiy9HJA3nDk/OBF9AehSeEZtlHBm0ovINKWh
+	RSgscVVEehxgwoHxWiuhGzH78qOja5R8YI9XE9hzB5dxze0nkU
+X-Received: by 2002:a05:600c:468e:b0:485:3f58:d9d with SMTP id 5b1f17b1804b1-48556714b67mr269050695e9.32.1773742592645;
+        Tue, 17 Mar 2026 03:16:32 -0700 (PDT)
 Received: from localhost.localdomain ([2a00:23c4:a758:8a01:e16b:fc56:e220:9aa9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4856eaee510sm53903275e9.14.2026.03.17.03.16.30
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4856eaee510sm53903275e9.14.2026.03.17.03.16.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2026 03:16:30 -0700 (PDT)
+        Tue, 17 Mar 2026 03:16:32 -0700 (PDT)
 From: Biju <biju.das.au@gmail.com>
 X-Google-Original-From: Biju <biju.das.jz@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -92,9 +92,9 @@ Cc: Biju Das <biju.das.jz@bp.renesas.com>,
 	linux-kernel@vger.kernel.org,
 	Biju Das <biju.das.au@gmail.com>,
 	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v3 1/8] dt-bindings: pinctrl: renesas: Document reset-names
-Date: Tue, 17 Mar 2026 10:16:14 +0000
-Message-ID: <20260317101627.174491-2-biju.das.jz@bp.renesas.com>
+Subject: [PATCH v3 2/8] dt-bindings: pinctrl: renesas: Document RZ/G3L SoC
+Date: Tue, 17 Mar 2026 10:16:15 +0000
+Message-ID: <20260317101627.174491-3-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260317101627.174491-1-biju.das.jz@bp.renesas.com>
 References: <20260317101627.174491-1-biju.das.jz@bp.renesas.com>
@@ -115,7 +115,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33607-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33608-lists,linux-gpio=lfdr.de];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_TO(0.00)[glider.be,kernel.org,gmail.com];
@@ -134,71 +134,127 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bp.renesas.com:mid,microchip.com:email,renesas.com:email]
-X-Rspamd-Queue-Id: DDCF12A7C2C
+X-Rspamd-Queue-Id: 0C92C2A7C52
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Biju Das <biju.das.jz@bp.renesas.com>
 
-All SoCs has multiple resets. Document reset-names property.
+Add documentation for the pin controller found on the Renesas RZ/G3L
+(R9A08G046) SoC. The RZ/G3L PFC is similar to the RZ/G3S SoC but has
+more pins.
+
+Also add header file similar to RZ/G3E and RZ/V2H as it has alpha
+numeric ports.
+
+Document renesas,clonech property for controlling clone channel
+control register located on SYSC IP block on RZ/G3L SoC.
 
 Acked-by: Conor Dooley <conor.dooley@microchip.com>
 Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
 v2->v3:
- * No change
+ * Documented renesas,clonech property for controlling clone channel
+   control register located on SYSC IP block on RZ/G3L SoC.
+ * Retained the tag as it is similar change for RZ/G3E thermal bindings.
 v1->v2:
- * Split DTSI patches from bindings
- * Fix typo maxItems->minItems
  * Collected tag
 ---
- .../bindings/pinctrl/renesas,rzg2l-pinctrl.yaml   | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ .../pinctrl/renesas,rzg2l-pinctrl.yaml        | 20 ++++++++++
+ .../pinctrl/renesas,r9a08g046-pinctrl.h       | 39 +++++++++++++++++++
+ 2 files changed, 59 insertions(+)
+ create mode 100644 include/dt-bindings/pinctrl/renesas,r9a08g046-pinctrl.h
 
 diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-index 00c05243b9a4..1a94e396b1b0 100644
+index 1a94e396b1b0..fb1fe1ea759f 100644
 --- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
 +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-@@ -78,6 +78,16 @@ properties:
-           - description: PFC main reset
-           - description: Reset for the control register related to WDTUDFCA and WDTUDFFCM pins
+@@ -26,6 +26,7 @@ properties:
+               - renesas,r9a07g043-pinctrl # RZ/G2UL{Type-1,Type-2} and RZ/Five
+               - renesas,r9a07g044-pinctrl # RZ/G2{L,LC}
+               - renesas,r9a08g045-pinctrl # RZ/G3S
++              - renesas,r9a08g046-pinctrl # RZ/G3L
+               - renesas,r9a09g047-pinctrl # RZ/G3E
+               - renesas,r9a09g056-pinctrl # RZ/V2N
+               - renesas,r9a09g057-pinctrl # RZ/V2H(P)
+@@ -88,6 +89,16 @@ properties:
+           - const: main
+           - const: error
  
-+  reset-names:
-+    oneOf:
++  renesas,clonech:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    items:
 +      - items:
-+          - const: rstn
-+          - const: port
-+          - const: spare
-+      - items:
-+          - const: main
-+          - const: error
++          - description: phandle to system controller
++          - description: offset of clone channel control register
++    description:
++      Phandle and offset to the system controller containing the clone channel
++      control values.
 +
  additionalProperties:
    anyOf:
      - type: object
-@@ -152,10 +162,14 @@ allOf:
-       properties:
-         resets:
-           maxItems: 2
-+        reset-names:
-+          maxItems: 2
-     else:
-       properties:
-         resets:
-           minItems: 3
-+        reset-names:
-+          minItems: 3
+@@ -150,6 +161,15 @@ additionalProperties:
+ allOf:
+   - $ref: pinctrl.yaml#
  
- required:
-   - compatible
-@@ -187,6 +201,7 @@ examples:
-             resets = <&cpg R9A07G044_GPIO_RSTN>,
-                      <&cpg R9A07G044_GPIO_PORT_RESETN>,
-                      <&cpg R9A07G044_GPIO_SPARE_RESETN>;
-+            reset-names = "rstn", "port", "spare";
-             power-domains = <&cpg>;
- 
-             scif0_pins: serial0 {
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: renesas,r9a08g046-pinctrl
++    then:
++      required:
++        - renesas,clonech
++
+   - if:
+       properties:
+         compatible:
+diff --git a/include/dt-bindings/pinctrl/renesas,r9a08g046-pinctrl.h b/include/dt-bindings/pinctrl/renesas,r9a08g046-pinctrl.h
+new file mode 100644
+index 000000000000..660c26477d42
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/renesas,r9a08g046-pinctrl.h
+@@ -0,0 +1,39 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * This header provides constants for Renesas RZ/G3L family pinctrl bindings.
++ *
++ * Copyright (C) 2026 Renesas Electronics Corp.
++ *
++ */
++
++#ifndef __DT_BINDINGS_PINCTRL_RENESAS_R9A08G046_PINCTRL_H__
++#define __DT_BINDINGS_PINCTRL_RENESAS_R9A08G046_PINCTRL_H__
++
++#include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
++
++/* RZG3L_Px = Offset address of PFC_P_mn  - 0x22 */
++#define RZG3L_P2	2
++#define RZG3L_P3	3
++#define RZG3L_P4	4
++#define RZG3L_P5	5
++#define RZG3L_P6	6
++#define RZG3L_P7	7
++#define RZG3L_P8	8
++#define RZG3L_PA	10
++#define RZG3L_PB	11
++#define RZG3L_PC	12
++#define RZG3L_PD	13
++#define RZG3L_PE	14
++#define RZG3L_PF	15
++#define RZG3L_PG	16
++#define RZG3L_PH	17
++#define RZG3L_PJ	19
++#define RZG3L_PK	20
++#define RZG3L_PL	21
++#define RZG3L_PM	22
++#define RZG3L_PS	28
++
++#define RZG3L_PORT_PINMUX(b, p, f)	RZG2L_PORT_PINMUX(RZG3L_P##b, p, f)
++#define RZG3L_GPIO(port, pin)		RZG2L_GPIO(RZG3L_P##port, pin)
++
++#endif /* __DT_BINDINGS_PINCTRL_RENESAS_R9A08G046_PINCTRL_H__ */
 -- 
 2.43.0
 
