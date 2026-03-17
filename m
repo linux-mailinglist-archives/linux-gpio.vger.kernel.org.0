@@ -1,51 +1,52 @@
-Return-Path: <linux-gpio+bounces-33623-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33622-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iG9bEZlBuWnq9wEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33623-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 12:57:13 +0100
+	id uL4yC5RBuWnq9wEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33622-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 12:57:08 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE4B92A9579
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 12:57:12 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB4D02A956F
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 12:57:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 964B33039EF8
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4D6693061611
 	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 11:57:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18C263B6C1A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 057163B6BFC;
 	Tue, 17 Mar 2026 11:56:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="jaTIJ6mv"
+	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="qbgO9yzC"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3143B585B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1F03B5858;
 	Tue, 17 Mar 2026 11:56:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773748618; cv=none; b=fJ7AkRTEWOe1dw+ml6E7S40cQlGw4rgeQF0vllCLuw4qfDNWiDwuDCGVKGWc3rHK4U21pwQDhsqcGXhOGaurxcA2AwSspimUrvCZDFVOBdFeDdfI+2VDUh6vULaTWpyhc/5ceIU82qhj2t+cXZ+j4Gnon0yLZuA2hk/iifN0Ehw=
+	t=1773748618; cv=none; b=cDR7l3gQlS4TDBwyZaBJwxCE1iJ5M3FIxUYMauiyXme4H/gE7pdaJcppzy+YmoXWYyzgWSvyMhu7pVvsuegj00+fXsAw3BNgnVNqcaQFJEHE4eyTDT5OVof+1qrcMwZm1u18UTj8gCLtoqXYaROsK31l6KewNXHhdhoMlCMSftM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773748618; c=relaxed/simple;
-	bh=dezsWorhfibkwlHjX73400AkFUuGSNlj/FFuYVrWAY0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H9wM4v0hOoSKyoL/klctBTamMBwl48IPgTIiL7X/EUmUxpI6UTQ0S4xaY2B4zbmprM79k84/i1ie1cvMxtUszYZWiACAJCxU49SnxbNkcDPdCvkeYEBOENbG7LDawK8ptAcD9y3rW9tJH9RJwNaLnuA6fDm7WsO5pZ2F27EEJfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=jaTIJ6mv; arc=none smtp.client-ip=211.75.126.72
+	bh=JNcHzp2vUvet+HC+elhus6q0vUhvqSZM56J3WlZfRz0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VwGVoktIl8TEyI5MIMvbOjlqFWCGXs360K3h6Tz28Qi4AN8UzCvNlkyY1LEbE9KtkvK5Nqxs5ITig+dcIqR48HrEjksmmrETYHv554R57pueMiJ6EOPrzne8470m0dS5IhaUfztXsCvLMdNPvBbtZ5pmNyCOu5dtoajLJ6OXfDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=qbgO9yzC; arc=none smtp.client-ip=211.75.126.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 62HBsBcvD3851620, This message is accepted by code: ctloc85258
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 62HBsBryD3851622, This message is accepted by code: ctloc85258
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1773748451; bh=FTzoew/ZMvCMhjpr6otK/JMZgS+ZUn1dml7NawnXAH8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type;
-	b=jaTIJ6mvYDvh6kBQuEgsfjpE3MXweheH8fPz7ML2iqBKfOTf4xBWeBqfQuz5RtXka
-	 eMXVHLMCXFPzD3UhZh9f1B4M2bGZUQlM0ROA0HUcRjjsqLkJUZ+kvQY9W0hFb7OR3i
-	 iX/GCweaIViD6zdINUoBs7DTUZu3MC3UC/MngbdaPy1vI8QNPIM9GRW8uGlOZtXdtt
-	 3yNsnbEnfExQtSqhrm4eEd9fD2Oqjtewoi7kcXhASVa8RegKuMTGMckm70odjJZkPH
-	 xh1QQRYlG51JefNgf75/gDOVgzLNvpTYmnbwDssKfCAsBMC3N76up1/4c2Jn3VPNBA
-	 6G7msU3vzBE9g==
+	t=1773748451; bh=LmcQWcTpui/IS83jy38IVoTuQN9QElDGWF7h4ph+PX0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding:Content-Type;
+	b=qbgO9yzCkcfA2EjlD81g71Xx8XE3t0P8tk94sCgMWO7ukxLFz82vkCcK8FsU0A/l0
+	 flBPBQnCpb7OtpjqH6hPojOeNTYCM8UXr9sgpWJY/yYWUqGRKe+C2MU7i4xGnJ3Ajw
+	 uUIDv2A2puI+kS+6yuJ5NqxLXRQaViaIQ0AsD+DO5AtiDkhpn6A+2Y257Q1R+6xchu
+	 duRO9BA6Bi4gIM4ev5uuPP9Sh2LYoa4ubsYvC9HkbYT0gjYwOLJnmxNvywWAggv6Iq
+	 NSeNMXP8NxRiHP2xT/EDYoWRTl4dC6aENRlwbbS5Ew+gz9dKRPcFlz9sQ+RPpfcydi
+	 u1iApzvr0Qqrg==
 Received: from mail.realtek.com (rtkexhmbs02.realtek.com.tw[172.21.6.41])
-	by rtits2.realtek.com.tw (8.15.2/3.21/5.94) with ESMTPS id 62HBsBcvD3851620
+	by rtits2.realtek.com.tw (8.15.2/3.21/5.94) with ESMTPS id 62HBsBryD3851622
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
 	Tue, 17 Mar 2026 19:54:11 +0800
 Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
@@ -68,10 +69,12 @@ CC: <bartosz.golaszewski@oss.qualcomm.com>, <james.tai@realtek.com>,
         <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
         <linux-realtek-soc@lists.infradead.org>
-Subject: [PATCH v4 0/8] pinctrl: realtek: Core improvements and RTD1625 support
-Date: Tue, 17 Mar 2026 19:54:02 +0800
-Message-ID: <20260317115411.2154365-1-eleanor.lin@realtek.com>
+Subject: [PATCH v4 1/8] pinctrl: realtek: Fix function signature for config argument
+Date: Tue, 17 Mar 2026 19:54:03 +0800
+Message-ID: <20260317115411.2154365-2-eleanor.lin@realtek.com>
 X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20260317115411.2154365-1-eleanor.lin@realtek.com>
+References: <20260317115411.2154365-1-eleanor.lin@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -87,85 +90,56 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[realtek.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[realtek.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FROM_NEQ_ENVFROM(0.00)[eleanor.lin@realtek.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33623-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33622-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	DKIM_TRACE(0.00)[realtek.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,realtek.com:dkim,realtek.com:mid];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,realtek.com:dkim,realtek.com:email,realtek.com:mid];
 	TO_DN_NONE(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCPT_COUNT_TWELVE(0.00)[16];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: AE4B92A9579
+X-Rspamd-Queue-Id: CB4D02A956F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-This series introduces pinctrl support for the Realtek RTD1625 SoC.
+The argument originates from pinconf_to_config_argument(), which returns a
+u32. Therefore, the arg parameter should be an unsigned int instead of enum
+pin_config_param.
 
-Besides the new SoC support, this series improves the common Realtek pinctrl
-driver and the generic pinctrl library by:
-
-1. Introducing the generic 'input-threshold-voltage-microvolt' property to pincfg
-and pinconf-generic.
-2. Improve other Realtek pinctrl bindings's descrption.
-3. Adding support for slew rate, input voltage parameters.
-
-I welcome feedback and suggestions.
-
-Best regards,
-Yu-Chun Lin
+Fixes: e99ce78030db ("pinctrl: realtek: Add common pinctrl driver for Realtek DHC RTD SoCs")
+Signed-off-by: Yu-Chun Lin <eleanor.lin@realtek.com>
 ---
 Changes in v4:
-- Add a new patch to fix the argument type in rtd_pconf_parse_conf().
-- Rename property from "input-voltage-microvolt" to
-"input-threshold-voltage-microvolt".
-- Update pinconf-generic to reflect the property renaming.
-- Add tag from Linus and Conor which received in v3.
+- This is a new patch.
 ---
-Tzuyi Chang (5):
-  dt-bindings: pincfg-node: Add input-threshold-voltage-microvolt
-    property
-  pinctrl: pinconf-generic: Add properties
-    'input-threshold-voltage-microvolt'
-  dt-bindings: pinctrl: realtek: Add RTD1625 pinctrl binding
-  pinctrl: realtek: add support for slew rate, input voltage and high
-    VIL
-  pinctrl: realtek: add rtd1625 pinctrl driver
+ drivers/pinctrl/realtek/pinctrl-rtd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yu-Chun Lin (3):
-  pinctrl: realtek: Fix function signature for config argument
-  dt-bindings: pinctrl: realtek: Improve 'realtek,duty-cycle'
-    description
-  arm64: dts: realtek: Add pinctrl support for RTD1625
-
- .../bindings/pinctrl/pincfg-node.yaml         |    6 +
- .../pinctrl/realtek,rtd1315e-pinctrl.yaml     |    7 +-
- .../pinctrl/realtek,rtd1319d-pinctrl.yaml     |    7 +-
- .../pinctrl/realtek,rtd1619b-pinctrl.yaml     |    7 +-
- .../pinctrl/realtek,rtd1625-pinctrl.yaml      |  260 ++
- arch/arm64/boot/dts/realtek/kent.dtsi         |   20 +
- drivers/pinctrl/pinconf-generic.c             |    2 +
- drivers/pinctrl/realtek/Kconfig               |   14 +
- drivers/pinctrl/realtek/Makefile              |    1 +
- drivers/pinctrl/realtek/pinctrl-rtd.c         |   68 +-
- drivers/pinctrl/realtek/pinctrl-rtd.h         |   37 +
- drivers/pinctrl/realtek/pinctrl-rtd1625.c     | 3138 +++++++++++++++++
- include/linux/pinctrl/pinconf-generic.h       |    3 +
- 13 files changed, 3562 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1625-pinctrl.yaml
- create mode 100644 drivers/pinctrl/realtek/pinctrl-rtd1625.c
-
+diff --git a/drivers/pinctrl/realtek/pinctrl-rtd.c b/drivers/pinctrl/realtek/pinctrl-rtd.c
+index 60dfb39bc986..16cee851393e 100644
+--- a/drivers/pinctrl/realtek/pinctrl-rtd.c
++++ b/drivers/pinctrl/realtek/pinctrl-rtd.c
+@@ -280,7 +280,7 @@ static const struct rtd_pin_sconfig_desc *rtd_pinctrl_find_sconfig(struct rtd_pi
+ static int rtd_pconf_parse_conf(struct rtd_pinctrl *data,
+ 				unsigned int pinnr,
+ 				enum pin_config_param param,
+-				enum pin_config_param arg)
++				unsigned int arg)
+ {
+ 	const struct rtd_pin_config_desc *config_desc;
+ 	const struct rtd_pin_sconfig_desc *sconfig_desc;
 -- 
 2.34.1
 
