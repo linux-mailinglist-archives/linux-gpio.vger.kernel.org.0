@@ -1,172 +1,302 @@
-Return-Path: <linux-gpio+bounces-33619-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33620-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oFRmNr0/uWkowQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-33619-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 12:49:17 +0100
+	id CCKEFflAuWmB9QEAu9opvQ
+	(envelope-from <linux-gpio+bounces-33620-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 12:54:33 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41EAC2A9339
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 12:49:17 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A9262A94AD
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 12:54:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BC6C930CC7B5
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 11:45:13 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 5E7C93025721
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 11:52:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D46253AE6FE;
-	Tue, 17 Mar 2026 11:45:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD4433B19C4;
+	Tue, 17 Mar 2026 11:52:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYebuKFL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T8DcSW2L"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967DD3AE1BA
-	for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2026 11:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5D33B0AE0;
+	Tue, 17 Mar 2026 11:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773747912; cv=none; b=dLKVAZZuRNMaLjGypD2pXJtLzkIzFv79AWPPhE0S1874+bAOcfDi9rbm2rJRlYOBQe/QCl/kDMoKZaeeKCE0G3wiz/oJQTs0TV1d4GSFJsSLJtbZolaP1CVsDMW6JwCdfcBe+VGPoDhmpbBTObhbkieP8ts6kxwBZV5eRi6Ib6M=
+	t=1773748370; cv=none; b=e6cye4yRcI8AllD1M3Y4RtqLAnTUKznvGwbwTCvPCf/0VrzRj1LyLgKLB5ghNa+qYbBzw7Ky64s466wjVN1sBiVVvHwW61ogjXuRpZ3deYoPsH6pHZRRPgTq96beWKOIXJIqzH22dCkvEwWKuixxernvRA5lfx74g+wwuLDvty4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773747912; c=relaxed/simple;
-	bh=a6JGZHNLmDjgBE7UJX8DjOMfdT1XtVYSMErNAfhXIQk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jpKmOe7s/N6GlxvhWTy/T2cvOEphcuQSYUAaQlgaUlX9WFPvwPkoRZJdvH7gFlbli1gmb9lnw6YLMGbjXKcCzaVqMjS3L0SBQ/CkQKc4tl3RIkjgqv0VhAniwcZP+E0Z8NgmRoAYFdMP+PcGO1CA1PwY9R4D6Umma0O1NkjRa1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYebuKFL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6082DC2BCAF
-	for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2026 11:45:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773747912;
-	bh=a6JGZHNLmDjgBE7UJX8DjOMfdT1XtVYSMErNAfhXIQk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=iYebuKFLbQgPXfUWIvavbnBJ629p/FVMpTEBs9c5vKRSdcTjc9be8RgrhZPOS71Ml
-	 Ih3UNIzSXzgre0UHE6zqIvnN7TGj15bCr7WHNa+dygMITNqTuUDLbEHa2GgK6vrdlh
-	 tG7U+ElYqep2tj7CWSzbyUfQL1uG75Dzbxwg/uzqjPr6ySvUmfAqOKkmeqW7gLcPga
-	 hoLGbYOMhKHx4M1zfL8i+HcCsUX/CuYSHIejESb8v254ZEkpqZ2sXdFLRoo0ZHUfsx
-	 CA3XuYn4W+R0lEUrMz7/b1gYDqdgdGvBUO2JBJK4BbX/N8llJFJaHgvUVOR0tMWabu
-	 X1oGoTBZnXBYA==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-59dcdf60427so4977768e87.3
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2026 04:45:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWBi45ir4T6YoFEmiIYtU7KMs8LdnwFzBLpLqgreY3jX66EPa5wRdi3LHdkqD0YmAL85Jz3X1GI9Ye2@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywf0DGalkr+Fgkm/8xUvL49pYVdTKUjD24/MXXFCu8kLDYjcovJ
-	4FpngQLinh1DnPocBt4tLvTdgn7IpX5xkZCKrr0tvBeG5NLrxiD5o+6ByGoffB6+AZ+XHp1bju1
-	LtDJ3dialwQlL9+2EMX+to5l0lBFb0t85VY5zkm/gsg==
-X-Received: by 2002:a05:6512:67d4:b0:5a1:407e:1206 with SMTP id
- 2adb3069b0e04-5a162b15266mr3838399e87.35.1773747910957; Tue, 17 Mar 2026
- 04:45:10 -0700 (PDT)
+	s=arc-20240116; t=1773748370; c=relaxed/simple;
+	bh=bAcLqt5AOOlimNdDcnW9re6/aAcNUgnFMoUDknv+gPY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Lh2e6BaxPiMW4oAoyGtT6f5KlXIl4ZELJmZemFRKKwiu/2uajUqlB4y8ky2tsISkwxUfU4YBFMnmhL/sg1fRh0SRCBzluhQBlXynX1q52EbPoQ0CNDVLSCLuttTw5H2rtLtf4Tv56CIiPdEK6hG0mU/QPMAbBTH7sc5VnPvKx6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T8DcSW2L; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773748370; x=1805284370;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=bAcLqt5AOOlimNdDcnW9re6/aAcNUgnFMoUDknv+gPY=;
+  b=T8DcSW2LZ8+4OKYRXKyfOIbCH9xerOFt8bzckOOijJxxU6dy5WmzuFg/
+   7HBcnSDZPg5FxRhN8R5Uz6CfqBmbfGQmX8x2RDmGqxdQAaqECmmCL/LdP
+   3mlfa6qAg6Km10zDWREIBA81K+zqQpnG74XAZJjSSwWYGdF4+tPiO2MWi
+   pV876WB8InvOrKNrgKH/mZogMlUvCdJBAmORcAYf35s12/+6txKgn098g
+   bZUV6SjsfTdNRQCDyjdsSqRf3pdH6vJ5N78cA/qBphNMnt70B6jzgn9BY
+   dYIanR1ckMGQYFn+Bpcb5trPyuJzLIHx/aNAl+Og5LzYPdqLuk/Mmibrc
+   g==;
+X-CSE-ConnectionGUID: C+N+nDH9RqyLHM2hWg5r8w==
+X-CSE-MsgGUID: y/A+HXBiSDarhRhI+VMNMg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11732"; a="77386993"
+X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
+   d="scan'208";a="77386993"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 04:52:44 -0700
+X-CSE-ConnectionGUID: aZjilz0bQ324rLoXclnpLg==
+X-CSE-MsgGUID: d8qIAcOFTa6Vn+dpHGQtXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
+   d="scan'208";a="226369881"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.161])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 04:52:38 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 17 Mar 2026 13:52:34 +0200 (EET)
+To: Antti Laakso <antti.laakso@linux.intel.com>
+cc: linux-media@vger.kernel.org, linux-gpio@vger.kernel.org, 
+    platform-driver-x86@vger.kernel.org, linusw@kernel.org, brgl@kernel.org, 
+    sakari.ailus@linux.intel.com, mchehab@kernel.org, 
+    dan.scally@ideasonboard.com, Hans de Goede <hansg@kernel.org>, 
+    hverkuil+cisco@kernel.org, sre@kernel.org, hao.yao@intel.com, 
+    jimmy.su@intel.com, miguel.vadillo@intel.com, kees@kernel.org, 
+    ribalda@chromium.org
+Subject: Re: [PATCH v2 5/5] platform: int3472: Add MSI prestige board data
+In-Reply-To: <20260311131910.835513-6-antti.laakso@linux.intel.com>
+Message-ID: <c6625073-7af9-a0c8-2755-8a47d2abe638@linux.intel.com>
+References: <20260311131910.835513-1-antti.laakso@linux.intel.com> <20260311131910.835513-6-antti.laakso@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260316-gpio-shared-xlate-v1-1-0ce07a1362d2@oss.qualcomm.com> <dff3c797-a619-42c0-9696-3e617e13356e@nvidia.com>
-In-Reply-To: <dff3c797-a619-42c0-9696-3e617e13356e@nvidia.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Tue, 17 Mar 2026 12:44:59 +0100
-X-Gmail-Original-Message-ID: <CAMRc=Mfg-2kjfd5RrcD748WPcUUef=aaxyk8fBtzdcbxqmxcCA@mail.gmail.com>
-X-Gm-Features: AaiRm51F-rZceSowWivXHo_LwR8DeYLwNLyNKy_RKop7yCzWOvSjXTbLiKGOTw4
-Message-ID: <CAMRc=Mfg-2kjfd5RrcD748WPcUUef=aaxyk8fBtzdcbxqmxcCA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: shared: call gpio_chip::of_xlate() if set
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Linus Walleij <linusw@kernel.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: multipart/mixed; boundary="8323328-952343647-1773748354=:968"
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	CTYPE_MIXED_BOGUS(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
+	MIME_GOOD(-0.10)[multipart/mixed,text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33619-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33620-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+,1:+];
+	DKIM_TRACE(0.00)[intel.com:+];
 	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[ilpo.jarvinen@linux.intel.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nvidia.com:email]
-X-Rspamd-Queue-Id: 41EAC2A9339
+	TAGGED_RCPT(0.00)[linux-gpio,cisco];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.intel.com:mid,intel.com:dkim,intel.com:email]
+X-Rspamd-Queue-Id: 1A9262A94AD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Mar 17, 2026 at 11:12=E2=80=AFAM Jon Hunter <jonathanh@nvidia.com> =
-wrote:
->
-> Thanks for sending this. However, I am seeing a different issue now ...
->
->   ------------[ cut here ]------------
->   WARNING: drivers/gpio/gpiolib-shared.c:499 at gpio_shared_add_proxy_loo=
-kup+0x118/0x1d8, CPU#8: swapper/0/1
->   Modules linked in:
->   CPU: 8 UID: 0 PID: 1 Comm: swapper/0 Not tainted 7.0.0-rc3-next-2026030=
-9-00005-g02826fefa46f #14 PREEMPT
->   Hardware name: NVIDIA NVIDIA Jetson AGX Orin Developer Kit/Jetson, BIOS=
- buildbrain-gcid-42974706 11/20/2025
->   pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
->   pc : gpio_shared_add_proxy_lookup+0x118/0x1d8
->   lr : gpio_shared_add_proxy_lookup+0xfc/0x1d8
->   sp : ffff8000832bba30
->   x29: ffff8000832bba30 x28: ffff000080d01010 x27: ffffffffffffefff
->   x26: 0000000000000001 x25: ffff800082df0538 x24: ffff800082df0528
->   x23: 0000000000000000 x22: ffff00008012c158 x21: ffff000081455010
->   usb 1-3: new full-speed USB device number 2 using tegra-xusb
->   x20: ffff000080d5d430 x19: ffff00008012c158 x18: 00000000ffffffff
->   x17: ffff8000830786a8 x16: ffff800083078718 x15: ffff8000832bb880
->   x14: ffffffffffffffff x13: 0000000000000008 x12: 0101010101010101
->   x11: 7f7f7f7f7f7f7f7f x10: ffff8000827f20d0 x9 : 0000000000000003
->   x8 : 0101010101010101 x7 : 0080808080808000 x6 : 15151a0a59460209
->   x5 : 000000000000003c x4 : ffff8000832bb990 x3 : ffff0000800fe800
->   x2 : ffff0000801c2f40 x1 : ffff0000801c2f40 x0 : ffff800082df0538
->   Call trace:
->    gpio_shared_add_proxy_lookup+0x118/0x1d8 (P)
->    gpiod_find_and_request+0x1bc/0x548
->    devm_fwnode_gpiod_get_index+0x1c/0x6c
->    gpio_keys_probe+0x494/0x9fc
->    platform_probe+0x5c/0x98
->    really_probe+0xbc/0x2a8
->    __driver_probe_device+0x78/0x12c
->    driver_probe_device+0x3c/0x15c
->    __driver_attach+0x90/0x19c
->    bus_for_each_dev+0x78/0xd4
->    driver_attach+0x24/0x30
->    bus_add_driver+0xe4/0x208
->    driver_register+0x5c/0x124
->    __platform_driver_register+0x24/0x30
->    gpio_keys_init+0x1c/0x28
->    do_one_initcall+0x7c/0x1c0
->    kernel_init_freeable+0x204/0x2ec
->    kernel_init+0x24/0x1e0
->    ret_from_fork+0x10/0x20
->   ---[ end trace 0000000000000000 ]---
->
-> I see the comment says ...
->
->   /* We warn here because this can only happen if the programmer borked. =
-*/
->   WARN_ON(1);
->
-> I will take a closer look, but let me know if you have any thoughts?
->
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I suppose this is not a reset-gpio-like use-case? Could you point me
-to the DTS you're using? I've reproduced the bug with a dummy dts and
-xlate function in gpio-sim and this patch fixes it but maybe I'm
-missing something.
+--8323328-952343647-1773748354=:968
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Bart
+On Wed, 11 Mar 2026, Antti Laakso wrote:
+
+> Define regulators and gpio for ov5675 in MSI Prestige 14 AI EVO+ laptop.
+>=20
+> Signed-off-by: Antti Laakso <antti.laakso@linux.intel.com>
+> ---
+>  .../x86/intel/int3472/tps68470_board_data.c   | 101 ++++++++++++++++++
+>  1 file changed, 101 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/d=
+rivers/platform/x86/intel/int3472/tps68470_board_data.c
+> index 71357a036292..6892d6e98072 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/dmi.h>
+>  #include <linux/gpio/machine.h>
+>  #include <linux/platform_data/tps68470.h>
+> +#include <linux/property.h>
+>  #include <linux/regulator/machine.h>
+>  #include "tps68470.h"
+> =20
+> @@ -232,6 +233,72 @@ static const struct tps68470_regulator_platform_data=
+ dell_7212_tps68470_pdata =3D
+>  =09},
+>  };
+> =20
+> +/* Settings for MSI Prestige 14 AI+ Evo C2VMG laptop. */
+> +static struct regulator_consumer_supply ovti5675_avdd_consumer_supplies[=
+] =3D {
+> +=09REGULATOR_SUPPLY("avdd", "i2c-OVTI5675:00"),
+> +};
+> +
+> +static struct regulator_consumer_supply ovti5675_dovdd_consumer_supplies=
+[] =3D {
+> +=09REGULATOR_SUPPLY("dovdd", "i2c-OVTI5675:00"),
+> +};
+> +
+> +static struct regulator_consumer_supply ovti5675_dvdd_consumer_supplies[=
+] =3D {
+> +=09REGULATOR_SUPPLY("dvdd", "i2c-OVTI5675:00"),
+> +};
+> +
+> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_core_reg=
+_init_data =3D {
+> +=09.constraints =3D {
+> +=09=09.min_uV =3D 1200000,
+> +=09=09.max_uV =3D 1200000,
+> +=09=09.apply_uV =3D 1,
+> +=09=09.valid_ops_mask =3D REGULATOR_CHANGE_STATUS,
+> +=09},
+> +=09.num_consumer_supplies =3D ARRAY_SIZE(ovti5675_dvdd_consumer_supplies=
+),
+> +=09.consumer_supplies =3D ovti5675_dvdd_consumer_supplies,
+> +};
+> +
+> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_ana_reg_=
+init_data =3D {
+> +=09.constraints =3D {
+> +=09=09.min_uV =3D 2815200,
+> +=09=09.max_uV =3D 2815200,
+> +=09=09.apply_uV =3D 1,
+> +=09=09.valid_ops_mask =3D REGULATOR_CHANGE_STATUS,
+> +=09},
+> +=09.num_consumer_supplies =3D ARRAY_SIZE(ovti5675_avdd_consumer_supplies=
+),
+> +=09.consumer_supplies =3D ovti5675_avdd_consumer_supplies,
+> +};
+> +
+> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vio_reg_=
+init_data =3D {
+> +=09.constraints =3D {
+> +=09=09.min_uV =3D 1800600,
+> +=09=09.max_uV =3D 1800600,
+> +=09=09.apply_uV =3D 1,
+> +=09=09.valid_ops_mask =3D REGULATOR_CHANGE_STATUS,
+> +=09},
+> +=09.num_consumer_supplies =3D 0,
+> +=09.consumer_supplies =3D NULL,
+> +};
+> +
+> +static const struct regulator_init_data msi_p14_ai_evo_tps68470_vsio_reg=
+_init_data =3D {
+> +=09.constraints =3D {
+> +=09=09.min_uV =3D 1800600,
+> +=09=09.max_uV =3D 1800600,
+> +=09=09.apply_uV =3D 1,
+> +=09=09.valid_ops_mask =3D REGULATOR_CHANGE_STATUS,
+> +=09},
+> +=09.num_consumer_supplies =3D ARRAY_SIZE(ovti5675_dovdd_consumer_supplie=
+s),
+> +=09.consumer_supplies =3D ovti5675_dovdd_consumer_supplies,
+> +};
+> +
+> +static const struct tps68470_regulator_platform_data msi_p14_ai_evo_tps6=
+8470_pdata =3D {
+> +=09.reg_init_data =3D {
+> +=09=09[TPS68470_CORE] =3D &msi_p14_ai_evo_tps68470_core_reg_init_data,
+> +=09=09[TPS68470_ANA]  =3D &msi_p14_ai_evo_tps68470_ana_reg_init_data,
+> +=09=09[TPS68470_VIO]  =3D &msi_p14_ai_evo_tps68470_vio_reg_init_data,
+> +=09=09[TPS68470_VSIO] =3D &msi_p14_ai_evo_tps68470_vsio_reg_init_data,
+> +=09},
+> +};
+> +
+>  static struct gpiod_lookup_table surface_go_int347a_gpios =3D {
+>  =09.dev_id =3D "i2c-INT347A:00",
+>  =09.table =3D {
+> @@ -258,6 +325,23 @@ static struct gpiod_lookup_table dell_7212_int3479_g=
+pios =3D {
+>  =09}
+>  };
+> =20
+> +static struct gpiod_lookup_table msi_p14_ai_evo_ovti5675_gpios =3D {
+> +=09.dev_id =3D "i2c-OVTI5675:00",
+> +=09.table =3D {
+> +=09=09GPIO_LOOKUP("tps68470-gpio", 9, "reset", GPIO_ACTIVE_LOW),
+> +=09=09{ }
+> +=09}
+> +};
+> +
+> +static const struct property_entry msi_p14_ai_evo_gpio_props[] =3D {
+> +=09PROPERTY_ENTRY_BOOL("daisy-chain-enable"),
+> +=09{ }
+> +};
+> +
+> +static const struct software_node msi_p14_ai_evo_tps68470_gpio_swnode =
+=3D {
+> +=09.properties =3D msi_p14_ai_evo_gpio_props,
+> +};
+> +
+>  static const struct int3472_tps68470_board_data surface_go_tps68470_boar=
+d_data =3D {
+>  =09.dev_name =3D "i2c-INT3472:05",
+>  =09.tps68470_regulator_pdata =3D &surface_go_tps68470_pdata,
+> @@ -287,6 +371,16 @@ static const struct int3472_tps68470_board_data dell=
+_7212_tps68470_board_data =3D
+>  =09},
+>  };
+> =20
+> +static const struct int3472_tps68470_board_data msi_p14_ai_evo_tps68470_=
+board_data =3D {
+> +=09.dev_name =3D "i2c-INT3472:06",
+> +=09.tps68470_regulator_pdata =3D &msi_p14_ai_evo_tps68470_pdata,
+> +=09.tps68470_gpio_swnode =3D &msi_p14_ai_evo_tps68470_gpio_swnode,
+> +=09.n_gpiod_lookups =3D 1,
+> +=09.tps68470_gpio_lookup_tables =3D {
+> +=09=09&msi_p14_ai_evo_ovti5675_gpios,
+> +=09},
+> +};
+> +
+>  static const struct dmi_system_id int3472_tps68470_board_data_table[] =
+=3D {
+>  =09{
+>  =09=09.matches =3D {
+> @@ -316,6 +410,13 @@ static const struct dmi_system_id int3472_tps68470_b=
+oard_data_table[] =3D {
+>  =09=09},
+>  =09=09.driver_data =3D (void *)&dell_7212_tps68470_board_data,
+>  =09},
+> +=09{
+> +=09=09.matches =3D {
+> +=09=09=09DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., =
+Ltd."),
+> +=09=09=09DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Prestige 14 AI+ Evo C2VMG"),
+> +=09=09},
+> +=09=09.driver_data =3D (void *)&msi_p14_ai_evo_tps68470_board_data,
+> +=09},
+>  =09{ }
+>  };
+> =20
+>=20
+
+Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+--8323328-952343647-1773748354=:968--
 
