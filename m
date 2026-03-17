@@ -1,244 +1,189 @@
-Return-Path: <linux-gpio+bounces-33643-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33644-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gO6JB1FiuWlsCwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33643-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 15:16:49 +0100
+	id CMIyOjlmuWkyDgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33644-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 15:33:29 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B02D2ABA15
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 15:16:48 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97C1F2AC078
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 15:33:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6533E30B7694
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 14:08:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4850C308C131
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2026 14:13:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5C173E3C4E;
-	Tue, 17 Mar 2026 14:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58E0F3E63A2;
+	Tue, 17 Mar 2026 14:12:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FSXpdnY+";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Ajzn2JvM"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="N+dDSJ2H"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE9D3E316C
-	for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2026 14:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E49B73E3C44;
+	Tue, 17 Mar 2026 14:12:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773756469; cv=none; b=J458x8AGIg8LRNODP1pomDY+sVPyl71Xzjg7Y9AZxQL2q/6m4ph8DOLieeMFVhluQxvbZbmbpfGF6sl82jEkb2tFJ5FMbESzIRUXk85rtqNMWT7z/+blWWmDf/Nr4Q9ihl3oyNJXH4fgeR3BQlB2WqDSSvzzUIw811CPMaYRdw0=
+	t=1773756724; cv=none; b=Qovv4/4bOP8ZsWvmhdpF2wsorV1s6RvUe2eFHcThDs5pE7CV/IR2Af5Y81G8yidLlpcKRjfE1sTUfCG4jHrGZuRoT+BoDj0jvKVFskeOkwbKHr1nmUUNPsKPMcE+5Xf9D7zmLo8v4QJGPRCWoIwlIHo6jLUrbnBlD6zyo5QsjtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773756469; c=relaxed/simple;
-	bh=SjKY5rL+nXL4pYVVde5HOkkJzq5ZHB/znoBTF2Z5A3w=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VjhEVG1FdQ86Uxy5o7AeLRToN4cyMHTUE+e90AuukZShkjt3LdE5JrITHGP77yynFqMjTlrYrQ6SS79lvyCVRoZNNT26nv2Vi0Nu+lNnnvAPutehNdWmogC5/CzJGkjl2RgpLEbpfGU2uaUZoFGrRre2OhYfCqz7dAC9TnqORFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FSXpdnY+; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Ajzn2JvM; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62H8474U1355583
-	for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2026 14:07:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LgfIYBWPJOjzoQOWNAMuyA9WL02GR4rPUnpaw9+fGZI=; b=FSXpdnY+eL/9xWle
-	/gm4urTVBVWJJKN1sPPPv3+VCdEoEVd3sQBUn2O7wjzrnTAPnsH2qLWmRqqXJ24M
-	rFTgN1z9CrtlW1sjL2gGaYEB/kF+6vJ6WqLtKk68PqrWiGcfKjRQ2dt8BZ3xQ6ir
-	mQ6xRzKduYlsOB8ScKYO1u/5NhgfCifIYQNG2Dkq2g/QZZ03g74OUVjeHxIpbk+Y
-	NZKp40XcYpzXOWdUjRZTd9W+NEUv2o5IMPpmSo4JPe+1ch8V/cgJ3TmmqYdXXYGt
-	/jIpo9vF7hjHGO3p5EKZWii/9mpJDI9IoAfVmDuqA79QZm+hHq/hX4Rl0lxb2w5h
-	L9R3Eg==
-Received: from mail-vs1-f69.google.com (mail-vs1-f69.google.com [209.85.217.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cxkuy4asm-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2026 14:07:47 +0000 (GMT)
-Received: by mail-vs1-f69.google.com with SMTP id ada2fe7eead31-5fb6622ca5dso7455409137.0
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2026 07:07:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1773756466; x=1774361266; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=LgfIYBWPJOjzoQOWNAMuyA9WL02GR4rPUnpaw9+fGZI=;
-        b=Ajzn2JvMmyEg6wRSFr0+xagejCFMvgX/QPgjlcRwE+GTMggsIMB23BwMGk95OroUwi
-         g5yFCs1p6VnReXGsfWzWFP0Jo+E/xH4IpK/o0t9T6g+5s6OpZ3Nio0ivWojMkbR8R7Rq
-         tj8XVGfSPff6YsfcIc36e0uiXIcihcCbFztvQbmzCHvwyerhZ4Uea+TPhQUpNYop1zcz
-         +ubnXmtAyKcasqvBlKryMmqsyZpOf6DFVmao94rCQGPI7u8V2R7g8NRhQjETqyRGYFte
-         91FXMGf/blp/aHHUyC169R76WH7gJeDjDypVHUGgqb7tcYeR6BtDtbT8FEILzcMfH9Bo
-         wC8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773756466; x=1774361266;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LgfIYBWPJOjzoQOWNAMuyA9WL02GR4rPUnpaw9+fGZI=;
-        b=L1Nee5/6yZntO0B7jzH1k/fpLszddNkbiOHogba+bsbAt5j9wKYjPMuMYxyJfV2n3y
-         t5uvYmIAfL6tGnbUv5sf7U9bNc8CHT2Uyux/73qVgbZubMMVIKr4bzv0NIq+XTwbI2GA
-         SgSa9o8aEWbilmGe+HO/SrcGln5IeG3YmcPTEnTpd+eajEVajvc9ykfEbXnM+//BmnWg
-         jnl3u4WiwZC2PrQWbKT8utvD46VxF33ZDZ18RDRHUMU0Z7FcAn3x+oPUTrdYASIlg/8c
-         3cEB4cQRxMlz4OCeI4kRuXf1CIuon8H6aMFJjZry1kzP7SW16D+HDHREA58vKAjxv0YN
-         CPdw==
-X-Forwarded-Encrypted: i=1; AJvYcCWcylWtM8erSl3JylZnTiv//QTg3r0WUNa/nv8TzXp4ZNEm4/ikaBsm76eEZzQrWhgGtBnFsH3OweSu@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJKTRK8zuAoHMHkXzRKh0oexSkvMYGIUIXqBxmvUOXej4hpXKs
-	zz1kDSHHzyIniYohal1NOSEsZikO2ECGuJeLMeETNczc3T0HnNP2mSfhSd2ASkq88yG3gxoCzIo
-	rZ/VKLF5Fvl7LkcismhWJDin/iI9LaURKmaa036fVUwB7UcYKIQGg+rD7FsV4964z
-X-Gm-Gg: ATEYQzwU+KrNyXAAYQttykVZjE7CoUkb2/Akj+SnLOXCHtAR0vS0RQuXDlF08QFjsPV
-	4lLzwKhBXm/Wz0Z0+MSRDV4mb2h28g68EJlVdPKn1b2PoyYSGJqJx+yFGMC+o9Ykcq97t5QaUhk
-	/g7LjIWURkV8b21yxyLJSGCzHnYqYuSEFq0Y79bIVf262yPr79/9RyM2GE3sXG6Vmo4ZuaE+rP1
-	3vy5b9bSK7F6467y7HErDLq2THepyfmn5lg7gWD9LPDQBMiryOihmD7sKo7t5GCzP605i4IwLQs
-	p7za1XY7QWg0zokCMpmPdSy8X41ILxg/BQyss4Jforisuh30X1WhNkg2bO4uJBzL3ftga0OnqhH
-	0a5I2z2ZxztfQmK18yyjhpW0pE7ynlbbjaYDjBF/g5wthMqIPf0lK+LgXysxBRIY9Dd9M7aRoeZ
-	EdJdck3pj8p7R86Ec/VzNgiTCo4F36GAxDWXC0dVDXJbYlf3ReITXGHNq8Lc4LRjcubR+ecnWUd
-	iAB9FPX3h1TJfWY
-X-Received: by 2002:a05:6102:442b:b0:5ff:a16b:93f0 with SMTP id ada2fe7eead31-6020e585dbdmr5264167137.22.1773756466314;
-        Tue, 17 Mar 2026 07:07:46 -0700 (PDT)
-X-Received: by 2002:a05:6102:442b:b0:5ff:a16b:93f0 with SMTP id ada2fe7eead31-6020e585dbdmr5264100137.22.1773756465573;
-        Tue, 17 Mar 2026 07:07:45 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-66350b85f3bsm6577959a12.25.2026.03.17.07.07.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2026 07:07:44 -0700 (PDT)
-Message-ID: <459993ae-c94a-4092-b81e-dc07c7011397@oss.qualcomm.com>
-Date: Tue, 17 Mar 2026 15:07:43 +0100
+	s=arc-20240116; t=1773756724; c=relaxed/simple;
+	bh=UcmRX+iIkZwytJqVNJodQzwRiiKSnbEQOAtWHuJEfn4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DkyWJkKpKn9UllB2KF9Em0p/sZNem+5V/f1Pe+HCOBHrvOi/5lr5dzg6Z6nxdFJNgAJJkmdwaYCueM2xr8vfddXGG7McH4alLPUHeJHgz3Qk2VJv4JA+BCcaoXMDArcC+Aq5KZrpw/bdDDl07nySXxlauLssNPHpQBhfCNZzksk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=N+dDSJ2H; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=8I4GJ6VYY4sAkpPtIoMg3PlbM8gWrHzgVlQtnkD+cJ8=; b=N+dDSJ2HU0OM2CcLn4jv+usPjd
+	A9wdkncTUcJn9notW4QhMgME5kzWZfjThVZ2iXhKee3kFdfO9g3pq4hnExXaG/dDDz3gIj3W3JgL4
+	wXUtVec4QUwzHQP2wbKIu2ac3PcBp/nHnJnwaIruyb5KuldwzIx57kVDbrjp+jnghfHQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1w2V98-00C2BR-78; Tue, 17 Mar 2026 15:11:46 +0100
+Date: Tue, 17 Mar 2026 15:11:46 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
+Cc: Shenwei Wang <shenwei.wang@nxp.com>, Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Frank Li <Frank.Li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Shuah Khan <skhan@linuxfoundation.org>, linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
+	devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-imx@nxp.com, Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v12 3/5] gpio: rpmsg: add generic rpmsg GPIO driver
+Message-ID: <104e9861-bfd4-4e0f-8967-a849edf7e6fb@lunn.ch>
+References: <20260313195801.2043306-1-shenwei.wang@nxp.com>
+ <20260313195801.2043306-4-shenwei.wang@nxp.com>
+ <2aa1d063-181f-4145-9f1f-7e3012c4d0af@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: johannes.goede@oss.qualcomm.com
-Subject: Re: [PATCH 1/1] platform: int3472: Drop redundant initialisation to 0
- and NULL
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: Antti Laakso <antti.laakso@linux.intel.com>, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linusw@kernel.org,
-        brgl@kernel.org, mchehab@kernel.org, dan.scally@ideasonboard.com,
-        ilpo.jarvinen@linux.intel.com, hverkuil+cisco@kernel.org,
-        sre@kernel.org, hao.yao@intel.com, jimmy.su@intel.com,
-        miguel.vadillo@intel.com, kees@kernel.org, ribalda@chromium.org
-References: <20260317131040.215119-1-sakari.ailus@linux.intel.com>
-Content-Language: en-US, nl
-In-Reply-To: <20260317131040.215119-1-sakari.ailus@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=br1BxUai c=1 sm=1 tr=0 ts=69b96033 cx=c_pps
- a=5HAIKLe1ejAbszaTRHs9Ug==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=gowsoOTTUOVcmtlkKump:22 a=QyXUC8HyAAAA:8
- a=EUspDBNiAAAA:8 a=z3Uast6Rtm7B2PKYKTAA:9 a=QEXdDO2ut3YA:10
- a=gYDTvv6II1OnSo0itH1n:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE3MDEyNSBTYWx0ZWRfX/fseMM5QtzvN
- 4NLiHXqxLHtlpgAdFtDP7Ot0nvNJuOPdygEUu9v22pt9IS6J+yDGdM7uOeifPmV+yEnPVH22/bM
- jlL37iP77g7RYhKSqqS/60GbTb5i+8TZtMiSGeMgNGI9cM8B7AVXFICCT19lX/eV/ckLags7q5F
- t2Wt+LtFPo6QAJVDc7QVanFHiOhGKCHNMYxXEhOSWQIK+r2wK+rQ48EKpOSmfoNpWuhaRLMIWGC
- xdVtkpe51Wxuc76AB5Urxk1kYnjT+AU5/SO73yCit3R/TqpEPoXcf2ugWNldAP6hGooramjwPbM
- 7mi5Rm8o3rXaPhBicHdZiWYCqsFarYQY0EVKG7eBWKgX9stXPqpT9Gf2YqsXydcQfCQlL0+TarG
- QbFdx/psWJ6TnLUyvoSLV6aTJewMs8p3AHKv/Odcnk0TXqe6dIIVmuZGcunjqTCvrxCaAOQMgML
- WKmmDf+wsAs3mSQxTGA==
-X-Proofpoint-ORIG-GUID: O3fBRe4VsLBrdF9WZeBbw38ulKfs7vnz
-X-Proofpoint-GUID: O3fBRe4VsLBrdF9WZeBbw38ulKfs7vnz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-17_01,2026-03-17_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 priorityscore=1501 phishscore=0 clxscore=1011 impostorscore=0
- suspectscore=0 lowpriorityscore=0 adultscore=0 spamscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603170125
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2aa1d063-181f-4145-9f1f-7e3012c4d0af@foss.st.com>
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[lunn.ch,none];
+	R_DKIM_ALLOW(-0.20)[lunn.ch:s=20171124];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33643-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,qualcomm.com:dkim,qualcomm.com:email];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
+	TAGGED_FROM(0.00)[bounces-33644-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[nxp.com,kernel.org,lwn.net,linaro.org,pengutronix.de,linuxfoundation.org,vger.kernel.org,gmail.com,lists.linux.dev,lists.infradead.org,bgdev.pl];
+	RCPT_COUNT_TWELVE(0.00)[25];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	FROM_NO_DN(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[johannes.goede@oss.qualcomm.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andrew@lunn.ch,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[lunn.ch:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,cisco];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 8B02D2ABA15
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,lunn.ch:dkim,lunn.ch:mid,lwn.net:url]
+X-Rspamd-Queue-Id: 97C1F2AC078
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi,
-
-On 17-Mar-26 14:10, Sakari Ailus wrote:
-> A few fields in structs containing regulator initialisation data for Dell
-> laptops are initialised to 0 and NULL. Drop the explicit initialisation as
-> redundant.
+> > +struct rpmsg_gpio_info {
+> > +	struct rpmsg_device *rpdev;
+> > +	struct rpmsg_gpio_packet *reply_msg;
+> > +	struct completion cmd_complete;
+> > +	struct mutex lock;
+> > +	void **port_store;
+> > +};
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
-
-Regards,
-
-Hans
-
-
-
-> ---
->  drivers/platform/x86/intel/int3472/tps68470_board_data.c | 8 --------
->  1 file changed, 8 deletions(-)
+> Except if I missunderstood Mathieu and Bjorn's request:
+> "reuse all the design-work done in the gpio-virtio"
+> We should find similar structures here to those defined
+> in virtio_gpio.h.
+> struct rpmsg_gpio_config {
+> 	__le16 ngpio;
+> 	__u8 padding[2];
+> 	__le32 gpio_names_size;
+> };
 > 
-> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> index 6bec5a910396..c1ddbf9a82c0 100644
-> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> @@ -151,8 +151,6 @@ static const struct regulator_init_data dell_7212_tps68470_core_reg_init_data =
->  		.apply_uV = 1,
->  		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
->  	},
-> -	.num_consumer_supplies = 0,
-> -	.consumer_supplies = NULL,
->  };
->  
->  static const struct regulator_init_data dell_7212_tps68470_ana_reg_init_data = {
-> @@ -162,8 +160,6 @@ static const struct regulator_init_data dell_7212_tps68470_ana_reg_init_data = {
->  		.apply_uV = 1,
->  		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
->  	},
-> -	.num_consumer_supplies = 0,
-> -	.consumer_supplies = NULL,
->  };
->  
->  static const struct regulator_init_data dell_7212_tps68470_vcm_reg_init_data = {
-> @@ -173,8 +169,6 @@ static const struct regulator_init_data dell_7212_tps68470_vcm_reg_init_data = {
->  		.apply_uV = 1,
->  		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
->  	},
-> -	.num_consumer_supplies = 0,
-> -	.consumer_supplies = NULL,
->  };
->  
->  static const struct regulator_init_data dell_7212_tps68470_vio_reg_init_data = {
-> @@ -184,8 +178,6 @@ static const struct regulator_init_data dell_7212_tps68470_vio_reg_init_data = {
->  		.apply_uV = 1,
->  		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
->  	},
-> -	.num_consumer_supplies = 0,
-> -	.consumer_supplies = NULL,
->  };
->  
->  static const struct regulator_init_data dell_7212_tps68470_vsio_reg_init_data = {
+> /* Virtio GPIO Request / Response */
+> struct virtio_gpio_request {
+> 	__le16 type;
+> 	__le16 gpio;
+> 	__le32 value;
+> };
+
+The core of the issue is that Shenwei is stone walling any change
+which makes it hard to keep the legacy firmware. It is possible to use
+these structures, but it makes the extra code Shenwei needs to
+translate this protocol to the legacy protocol more difficult. It
+might need to keep state, etc. 
+
+Two points...
+
+The firmware implements more than GPIO. There is definitely I2C as
+well, the first version of the patch has bits of I2C code. Looking at:
+
+https://lwn.net/ml/all/20250922200413.309707-3-shenwei.wang@nxp.com/
+
+There is also RTC, and a few other things which don't directly map to
+Linux subsystems, but maybe do have Linux drivers?
+
+Give how much pushback there has been on the existing protocol for
+GPIO, it would be wise to assume that I2C, and RTC is going to get the
+same amount of pushback. If any of these three, GPIO, I2C, or RTC
+decide that only a new, clean protocol will be accepted, no legacy
+shims, the firmware has to change, breaking compatibility to legacy
+protocols, and the accepted shims become pointless Maintenance burden.
+
+Point two is that the customers who are pushing for these drivers to
+be added to Mainline probably know that nearly nothing gets into
+Mainline without some changes. There is some short term pain to
+swapping to Mainline because of these changes, in this case, firmware
+upgrades. But in the long run, it is worth the pain to be able to use
+Mainline. And those customers who don't want to upgrade the firmware
+can keep with the out of tree drives.
+
+So, what are our choices?
+
+1) We accept the code as it is now, with the shim?
+
+2) We keep pushing for the virtio protocol, with the shim?
+
+3) We keep pushing for the virtio protocol, no shim, firmware changes
+
+4) We pause GPIO where it is today, and restart all the arguments with
+   the I2C driver. We can come back to the GPIO driver in a few months
+   time once we have a better idea how I2C is going. And maybe we also
+   need to see the watchdog driver, and argue about its protocol.
+
+I also understand ST has a generic I2C driver nearly ready, if that
+gets merged first, that probably kills the NXP I2C protocol, and maybe
+the NXP GPIO and RTC protocols.
+
+My vote is for 3. If not 3, then 4.
+
+     Andrew
 
 
