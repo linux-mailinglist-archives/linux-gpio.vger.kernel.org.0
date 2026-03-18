@@ -1,68 +1,68 @@
-Return-Path: <linux-gpio+bounces-33759-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33764-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2IMzIBXGumlobwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33759-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 16:34:45 +0100
+	id sJDqFdLBumm6bgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33764-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 16:16:34 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 894942BE4FB
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 16:34:44 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C00872BE040
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 16:16:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A583C31CBC7F
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 15:14:51 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7255830584D2
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 15:15:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 767403E63BA;
-	Wed, 18 Mar 2026 15:13:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9916B3E95AC;
+	Wed, 18 Mar 2026 15:13:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aomogoQb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h4qPid2+"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2543E3D84;
-	Wed, 18 Mar 2026 15:13:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E135C3E7155;
+	Wed, 18 Mar 2026 15:13:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773846784; cv=none; b=lBTFavYEyI8HqohQsSoxajNzrBuufTGL4+8VJLJLG1pOtR7G1oPBvlHMKzFHdJz2j3rrrWI33TXTUCWktJfm0zxdNUIba4mthYeWNPZso3ZPIpoKe+UkQ8WCopYbrEYGAYvy6JgfcN+IvI/wF/NKy4Tl8q7CZ+/XZPhyIJ4NdrE=
+	t=1773846789; cv=none; b=hq6BpYdsQRg+U/dYbiFNiC7y6Xynsuz975lffnQkPz7DyVa0LWvLChkB8PspcbR8XnVRlQsUAmBoRKb6pbGpwYOGjD0DgpPO1qxdAiCJ6Zp0xdFbLMU8RrOvuifkNZy4Zi11RKvsCs8wE9fuke6+xX1a8lnfaDQBDSlDDAen8R0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773846784; c=relaxed/simple;
-	bh=51fda7QAM30p08uZhu0wEnvSa6RBIXMTfne4HtjqSOU=;
+	s=arc-20240116; t=1773846789; c=relaxed/simple;
+	bh=wF4iUZV76f7W3PXuwWxNV/7Gg0YYVO8Px9yNm4Hmdq0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Qzouxbj56fr6AUnqqwD9OD31gNh2qnhmzy3AXNYUiuCUU+F7x8gZWqeK8fKGdOirleAr4kplHb+PkvgfTsDkqNuP7WifsIU4AutWi02w6BQQ9Aiq6pbZPJ8SkXCvrlnH+d/ise8zp56CvD9WVyNyfKE7IsgP4P9hXn5wufvV3Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aomogoQb; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version; b=sJP/TGG1AnhqtQ56he6WUMLnzQdBIf4OIfQuNQ5FR+4Oc4xOWBqx82et/lLy5IIFVWoJ6OoRY3IfZHyDnwBLfRUk9yQxOOD68XPGvLuUlW9oaSOMSeEbjWmsxBaI/5i6qkX4SwzHnmtf+yWUPtTxtR/KuMIoU5QbEkS/tG+yQzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h4qPid2+; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773846782; x=1805382782;
+  t=1773846787; x=1805382787;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=51fda7QAM30p08uZhu0wEnvSa6RBIXMTfne4HtjqSOU=;
-  b=aomogoQbWVCHdR3BNDNrOu2dB+i1XLRKYef1spdUGjAsLGJcdos646LW
-   dGhMZZIQIriEUJccm7NlGdHr3CaUle8vc+5PKHNXjhqxCMUalurUnhkHo
-   Ceizj0L+622W7kAwp/evIQESZ9NLw4Nl97dBVhKb6P8KiFRZSRYfdc4Cp
-   p6ldti5II3yznG5vxf9zCGeEVY8l4kazZnW1KLvU7dwWPTBFsvdeQdxlk
-   eF48XsqnfLQZ8ZHIdw+UZhXsgXSSILAGsjhU3rbvhGGOfrs4ZdlMtKQ7s
-   CI5ii87eNMEo1+y1C7jGZRz09Lq0y64TG7zsWTv1d6sR++mV8INYccSSP
-   A==;
-X-CSE-ConnectionGUID: DfMjp/nKTJGh+fwlZcWyWw==
-X-CSE-MsgGUID: wjzCImMhSwaEWHGGekHTsA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11733"; a="75084536"
+  bh=wF4iUZV76f7W3PXuwWxNV/7Gg0YYVO8Px9yNm4Hmdq0=;
+  b=h4qPid2+F/Qt8b6LLFS0xWK5cwHS4j8KW2LJs/IJZjEixEwVWhNIMuot
+   kTrjsmrx/2rRcCUKojRHyeQ09yxT6Gj1jQ2M2aNEw33VVFre48JOMNVwx
+   65Sqc2tBRbInp2QwkQVKCdHh3Tg9iDFQkBNLPzJo5vWpPPZ3IPeaE8jcW
+   /eelZw0Y5+/3QzKBcRS19bZHKcJhGPnpQd+uMDtpMqzR1pBxKbLybZ1UM
+   skkONboYMnJFlOESmvgM9AFkg7T0595CR3BcIeSVM2KOGUe6myIq+4aSm
+   6A2bDuEfBzabs6lmK4KAUlPbMd8FpCq5lQVSo4HlC1B2GWZtJkQkToiXE
+   g==;
+X-CSE-ConnectionGUID: VviiMuL0QV2WshtWPXKb7g==
+X-CSE-MsgGUID: ruKh1qALRsq85MMW022Efg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11733"; a="75084547"
 X-IronPort-AV: E=Sophos;i="6.23,127,1770624000"; 
-   d="scan'208";a="75084536"
+   d="scan'208";a="75084547"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2026 08:13:01 -0700
-X-CSE-ConnectionGUID: yyRuOcozQ3+CuIjP1kL/cQ==
-X-CSE-MsgGUID: IVSCc0f8SGGvDumF8RF6tw==
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2026 08:13:03 -0700
+X-CSE-ConnectionGUID: l+khbGIXTJyimFpL2g8fCQ==
+X-CSE-MsgGUID: eBhFSEgOTQyilBQdH4U1qQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,127,1770624000"; 
-   d="scan'208";a="247122451"
+   d="scan'208";a="247122458"
 Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa001.fm.intel.com with ESMTP; 18 Mar 2026 08:12:59 -0700
+  by fmviesa001.fm.intel.com with ESMTP; 18 Mar 2026 08:13:01 -0700
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 1D1BFA1; Wed, 18 Mar 2026 16:12:58 +0100 (CET)
+	id 219E7A2; Wed, 18 Mar 2026 16:12:58 +0100 (CET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Mika Westerberg <mika.westerberg@linux.intel.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -70,9 +70,9 @@ To: Mika Westerberg <mika.westerberg@linux.intel.com>,
 	linux-kernel@vger.kernel.org
 Cc: Andy Shevchenko <andy@kernel.org>,
 	Linus Walleij <linusw@kernel.org>
-Subject: [PATCH v1 4/5] pinctrl: intel: Refactor intel_gpio_add_pin_ranges() to make it shorter
-Date: Wed, 18 Mar 2026 16:10:18 +0100
-Message-ID: <20260318151256.2590375-5-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 5/5] pinctrl: intel: define iterator variables inside for-loop
+Date: Wed, 18 Mar 2026 16:10:19 +0100
+Message-ID: <20260318151256.2590375-6-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260318151256.2590375-1-andriy.shevchenko@linux.intel.com>
 References: <20260318151256.2590375-1-andriy.shevchenko@linux.intel.com>
@@ -89,7 +89,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -97,9 +97,9 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33759-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33764-lists,linux-gpio=lfdr.de];
 	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCPT_COUNT_FIVE(0.00)[6];
 	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
@@ -108,47 +108,205 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-0.994];
 	RCVD_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.intel.com:mid]
-X-Rspamd-Queue-Id: 894942BE4FB
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.intel.com:mid]
+X-Rspamd-Queue-Id: C00872BE040
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Refactor intel_gpio_add_pin_ranges() to make it shorter in binary
-and source formats.
-
-Function                                     old     new   delta
-intel_gpio_add_pin_ranges                    219     215      -4
-Total: Before=15522, After=15518, chg -0.03%
+Reduce the scope of the iterator variables by defining them inside
+the respective for-loops. This makes code more robust against reuse
+of the same variable in the future, which might lead to some mistakes.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/intel/pinctrl-intel.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/pinctrl/intel/pinctrl-intel.c | 44 ++++++++++++---------------
+ 1 file changed, 19 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 97bf5ec78db4..7311b787dfc6 100644
+index 7311b787dfc6..c506f9f343c3 100644
 --- a/drivers/pinctrl/intel/pinctrl-intel.c
 +++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1361,16 +1361,15 @@ static int intel_gpio_irq_init_hw(struct gpio_chip *gc)
- int intel_gpio_add_pin_ranges(struct gpio_chip *gc)
+@@ -431,7 +431,6 @@ static int intel_pinmux_set_mux(struct pinctrl_dev *pctldev,
  {
- 	struct intel_pinctrl *pctrl = gpiochip_get_data(gc);
-+	const struct device *dev = pctrl->dev;
- 	const struct intel_community *community;
- 	const struct intel_padgroup *grp;
- 	int ret;
+ 	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+ 	const struct intel_pingroup *grp = &pctrl->soc->groups[group];
+-	int i;
  
- 	for_each_intel_gpio_group(pctrl, community, grp) {
--		ret = gpiochip_add_pin_range(&pctrl->chip, dev_name(pctrl->dev),
--					     grp->gpio_base, grp->base,
--					     grp->size);
-+		ret = gpiochip_add_pin_range(gc, dev_name(dev), grp->gpio_base, grp->base, grp->size);
- 		if (ret)
--			return dev_err_probe(pctrl->dev, ret, "failed to add GPIO pin range\n");
-+			return dev_err_probe(dev, ret, "failed to add GPIO pin range\n");
+ 	guard(raw_spinlock_irqsave)(&pctrl->lock);
+ 
+@@ -439,13 +438,13 @@ static int intel_pinmux_set_mux(struct pinctrl_dev *pctldev,
+ 	 * All pins in the groups needs to be accessible and writable
+ 	 * before we can enable the mux for this group.
+ 	 */
+-	for (i = 0; i < grp->grp.npins; i++) {
++	for (unsigned int i = 0; i < grp->grp.npins; i++) {
+ 		if (!intel_pad_usable(pctrl, grp->grp.pins[i]))
+ 			return -EBUSY;
  	}
  
- 	return 0;
+ 	/* Now enable the mux setting for each pin in the group */
+-	for (i = 0; i < grp->grp.npins; i++) {
++	for (unsigned int i = 0; i < grp->grp.npins; i++) {
+ 		void __iomem *padcfg0;
+ 		u32 value, pmode;
+ 
+@@ -909,12 +908,12 @@ static int intel_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 			  unsigned long *configs, unsigned int nconfigs)
+ {
+ 	struct intel_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+-	int i, ret;
++	int ret;
+ 
+ 	if (!intel_pad_usable(pctrl, pin))
+ 		return -ENOTSUPP;
+ 
+-	for (i = 0; i < nconfigs; i++) {
++	for (unsigned int i = 0; i < nconfigs; i++) {
+ 		switch (pinconf_to_config_param(configs[i])) {
+ 		case PIN_CONFIG_BIAS_DISABLE:
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+@@ -1323,9 +1322,8 @@ static void intel_gpio_irq_init(struct intel_pinctrl *pctrl)
+ 
+ 	for_each_intel_pin_community(pctrl, community) {
+ 		void __iomem *reg, *is;
+-		unsigned int gpp;
+ 
+-		for (gpp = 0; gpp < community->ngpps; gpp++) {
++		for (unsigned int gpp = 0; gpp < community->ngpps; gpp++) {
+ 			reg = community->regs + community->ie_offset + gpp * 4;
+ 			is = community->regs + community->is_offset + gpp * 4;
+ 
+@@ -1436,14 +1434,14 @@ static int intel_pinctrl_add_padgroups_by_gpps(struct intel_pinctrl *pctrl,
+ 					       struct intel_community *community)
+ {
+ 	struct intel_padgroup *gpps;
++	unsigned int ngpps = community->ngpps;
+ 	unsigned int padown_num = 0;
+-	size_t i, ngpps = community->ngpps;
+ 
+ 	gpps = devm_kcalloc(pctrl->dev, ngpps, sizeof(*gpps), GFP_KERNEL);
+ 	if (!gpps)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < ngpps; i++) {
++	for (unsigned int i = 0; i < ngpps; i++) {
+ 		gpps[i] = community->gpps[i];
+ 
+ 		if (gpps[i].size > INTEL_PINCTRL_MAX_GPP_SIZE)
+@@ -1476,18 +1474,18 @@ static int intel_pinctrl_add_padgroups_by_size(struct intel_pinctrl *pctrl,
+ 					       struct intel_community *community)
+ {
+ 	struct intel_padgroup *gpps;
+-	unsigned int npins = community->npins;
++	unsigned int npins = community->npins, ngpps;
+ 	unsigned int padown_num = 0;
+-	size_t i, ngpps = DIV_ROUND_UP(npins, community->gpp_size);
+ 
+ 	if (community->gpp_size > INTEL_PINCTRL_MAX_GPP_SIZE)
+ 		return -EINVAL;
+ 
++	ngpps = DIV_ROUND_UP(npins, community->gpp_size);
+ 	gpps = devm_kcalloc(pctrl->dev, ngpps, sizeof(*gpps), GFP_KERNEL);
+ 	if (!gpps)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < ngpps; i++) {
++	for (unsigned int i = 0; i < ngpps; i++) {
+ 		unsigned int gpp_size = community->gpp_size;
+ 
+ 		gpps[i].reg_num = i;
+@@ -1513,7 +1511,6 @@ static int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
+ 	const struct intel_pinctrl_soc_data *soc = pctrl->soc;
+ 	struct intel_community_context *communities;
+ 	struct intel_pad_context *pads;
+-	int i;
+ 
+ 	pads = devm_kcalloc(pctrl->dev, soc->npins, sizeof(*pads), GFP_KERNEL);
+ 	if (!pads)
+@@ -1525,7 +1522,7 @@ static int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
+ 		return -ENOMEM;
+ 
+ 
+-	for (i = 0; i < pctrl->ncommunities; i++) {
++	for (unsigned int i = 0; i < pctrl->ncommunities; i++) {
+ 		struct intel_community *community = &pctrl->communities[i];
+ 		u32 *intmask, *hostown;
+ 
+@@ -1578,7 +1575,7 @@ int intel_pinctrl_probe(struct platform_device *pdev,
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct intel_pinctrl *pctrl;
+-	int i, ret, irq;
++	int ret, irq;
+ 
+ 	pctrl = devm_kzalloc(dev, sizeof(*pctrl), GFP_KERNEL);
+ 	if (!pctrl)
+@@ -1598,7 +1595,7 @@ int intel_pinctrl_probe(struct platform_device *pdev,
+ 	if (!pctrl->communities)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < pctrl->ncommunities; i++) {
++	for (unsigned int i = 0; i < pctrl->ncommunities; i++) {
+ 		struct intel_community *community = &pctrl->communities[i];
+ 		unsigned short capability_offset[6];
+ 		void __iomem *regs;
+@@ -1806,10 +1803,9 @@ static int intel_pinctrl_suspend_noirq(struct device *dev)
+ 	struct intel_pinctrl *pctrl = dev_get_drvdata(dev);
+ 	struct intel_community_context *communities;
+ 	struct intel_pad_context *pads;
+-	int i;
+ 
+ 	pads = pctrl->context.pads;
+-	for (i = 0; i < pctrl->soc->npins; i++) {
++	for (unsigned int i = 0; i < pctrl->soc->npins; i++) {
+ 		const struct pinctrl_pin_desc *desc = &pctrl->soc->pins[i];
+ 		void __iomem *padcfg;
+ 		u32 val;
+@@ -1828,7 +1824,7 @@ static int intel_pinctrl_suspend_noirq(struct device *dev)
+ 	}
+ 
+ 	communities = pctrl->context.communities;
+-	for (i = 0; i < pctrl->ncommunities; i++) {
++	for (unsigned int i = 0; i < pctrl->ncommunities; i++) {
+ 		struct intel_community *community = &pctrl->communities[i];
+ 		void __iomem *base;
+ 		unsigned int gpp;
+@@ -1915,13 +1911,12 @@ static int intel_pinctrl_resume_noirq(struct device *dev)
+ 	struct intel_pinctrl *pctrl = dev_get_drvdata(dev);
+ 	const struct intel_community_context *communities;
+ 	const struct intel_pad_context *pads;
+-	int i;
+ 
+ 	/* Mask all interrupts */
+ 	intel_gpio_irq_init(pctrl);
+ 
+ 	pads = pctrl->context.pads;
+-	for (i = 0; i < pctrl->soc->npins; i++) {
++	for (unsigned int i = 0; i < pctrl->soc->npins; i++) {
+ 		const struct pinctrl_pin_desc *desc = &pctrl->soc->pins[i];
+ 
+ 		if (!(intel_pinctrl_should_save(pctrl, desc->number) ||
+@@ -1938,17 +1933,16 @@ static int intel_pinctrl_resume_noirq(struct device *dev)
+ 	}
+ 
+ 	communities = pctrl->context.communities;
+-	for (i = 0; i < pctrl->ncommunities; i++) {
++	for (unsigned int i = 0; i < pctrl->ncommunities; i++) {
+ 		struct intel_community *community = &pctrl->communities[i];
+ 		void __iomem *base;
+-		unsigned int gpp;
+ 
+ 		base = community->regs + community->ie_offset;
+-		for (gpp = 0; gpp < community->ngpps; gpp++)
++		for (unsigned int gpp = 0; gpp < community->ngpps; gpp++)
+ 			intel_restore_intmask(pctrl, i, base, gpp, communities[i].intmask[gpp]);
+ 
+ 		base = community->regs + community->hostown_offset;
+-		for (gpp = 0; gpp < community->ngpps; gpp++)
++		for (unsigned int gpp = 0; gpp < community->ngpps; gpp++)
+ 			intel_restore_hostown(pctrl, i, base, gpp, communities[i].hostown[gpp]);
+ 	}
+ 
 -- 
 2.50.1
 
