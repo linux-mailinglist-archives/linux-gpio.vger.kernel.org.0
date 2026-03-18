@@ -1,172 +1,190 @@
-Return-Path: <linux-gpio+bounces-33757-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33758-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EHbcKSq2umlWawIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33757-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 15:26:50 +0100
+	id uH0yM8+5umlWawIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33758-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 15:42:23 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE6322BD132
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 15:26:49 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 714032BD5F1
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 15:42:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 314CA301FAB5
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 14:25:55 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E0850308F138
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 14:37:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 480123D890D;
-	Wed, 18 Mar 2026 14:25:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09E423DBD6F;
+	Wed, 18 Mar 2026 14:37:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="jrlVF/nd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JG5w3gV6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hl4uH0rv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB1835DA51;
-	Wed, 18 Mar 2026 14:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2F53DBD46
+	for <linux-gpio@vger.kernel.org>; Wed, 18 Mar 2026 14:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773843953; cv=none; b=QnjLz7hJRVZnCB9U1moOERcIyH6NaV+Ty4kGMCePJf+neqLe08oMWztNuhuST+TTJtKbJH/HDmJh2e8LbU7ShKTFioUXjfWXfyg2AjarHa/aqjW+4pQB80b3uEsm7TYDCIME5ngK7bUCUpJndNRigJP1rcPrgf4iTLVOGxGzqqk=
+	t=1773844625; cv=none; b=hVbhkbGTewY6e6Nm5JaNashm97WEN9FSkCQI85NSAuLR7LGsHP4Zh0KoIntVZ0tGCaT/91Lax0cTL9Bu6UzFnlInZnOS1/LxobxIUGVQ/qLD3i/vZm35PpOqesQC7ATBtLiwoYapGTme2rvVqabFuqCh3lYEOgh3otlOIVfRydQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773843953; c=relaxed/simple;
-	bh=N2PsIoPsyaJ7VsnEGCnxDDMZ0OoYPu1Xit7V4zZg28E=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=gA1H3ZqY6sv/8/80bg/2IO9pjFv1PR9qhdffDxDWyqdUKjL68ntE3PPd09RxBcB2KXHF4znUk1+ZZ7HmdKWawmlY89yLFS4ck9qfEyqBAPDsHblQf8jvkZFkTB/UBMSfRcXcEYzLymp3LdCOMNeZ9gnQR/xk+5F5dW7LsFLwgsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=jrlVF/nd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JG5w3gV6; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 0799F1400274;
-	Wed, 18 Mar 2026 10:25:50 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Wed, 18 Mar 2026 10:25:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1773843950;
-	 x=1773930350; bh=Fjj1/vwoIE8CU8UbLphlvDEAqDhSGrLkR2VrJeLLjKM=; b=
-	jrlVF/nd+eg7LtForar/W2ZllyLw7tm+DVa7vSLXQOnwR4YiWr/NxxDPZiA3896i
-	JL5S9c+VixyXbA4OvjuSAptvm8qhJIUfZLNNCc2M0Jwj5ckVh/e9gu9+Z42tpaeY
-	k32nFB0HsmyLenZkqdNeNV+QKbbFU2cY3Vll+1ZlLt+AkmLTdHSW4u9TdiJuHm6s
-	BxvvBv9Px6LgDcP9rGYkGXpmXMptzhuJBVpj8Z8loB2n2jDCzlkuD7F35Vl1zr1+
-	eDWFbS4k+8uBSHx/Qx2fVMRiLaAOoaLBBxGwYBVwAfJ5uwbzNdS6FzME1/fwfuJS
-	MwTNehjYAolkJZGnHkLSqg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1773843950; x=
-	1773930350; bh=Fjj1/vwoIE8CU8UbLphlvDEAqDhSGrLkR2VrJeLLjKM=; b=J
-	G5w3gV6uGTJpdAZot+gW6a22AvM8MRRplHKSq1wQR7T/VhN5VhnmRGsbK/78s/FZ
-	cHMEEBgzAy27+2dEOGL8c0RF13BaBK21hUOgUEkOASMVtEl5i8f/WMmvYygIxKDO
-	HD3xUmirvX3pi73DECRx0u8ZRmQn2wFe0OotoTV6LY9QdWedPKDm/EResHpXW3c1
-	hKv5+U29lw7yWkew18EisdKl2qNwaSeY/h0XdI7Mx8NYw3YNItOfH3Lbj+bMaCBE
-	QF2FrgJHQ66WfoGBsVu+kmjV0mciFr/XZKDPnfjByn3c0gOyp+WJchR7HUSitmaG
-	BQq/oeQudil+TJNXTC1vA==
-X-ME-Sender: <xms:7bW6aWShVGSd5YQ81J6kCGLTpl5lFIP5puBCAWdcESraYZAEIP38tQ>
-    <xme:7bW6aWljxxx0ezet3QAHw4blZaQEq-kGhll-DbIhCBa8ScqqZGoKQVINTTc7aXqwt
-    Gzw2JJtZprgElomnanY6mZVN232nypfu3UPfeAfNX-Fxc75gCOLFw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdeftdegfeeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
-    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
-    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
-    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudejpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopegsphesrghlihgvnhekrdguvgdprhgtphhtthhopegsohhothgtse
-    gsohhothgtrdhnvghtpdhrtghpthhtohepjhhimhdrtghrohhmihgvsehgmhgrihhlrdgt
-    ohhmpdhrtghpthhtohepsghrghhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvg
-    gvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhhsfieskhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtohepphgrvhgvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepth
-    hglhigsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeigkeeisehkvghrnhgvlhdrohhr
-    gh
-X-ME-Proxy: <xmx:7bW6aRom8XOF_BtpNZmhqRa4sqPxSVBZNn0LuiFjeTI0BbRrCNICaA>
-    <xmx:7bW6aeVthtROeNrii4ZvgwB4N5JVTmuHisp_Esqzg7xxJGTtbKMWUQ>
-    <xmx:7bW6aU071DXXAHKBjltQydHPPLb6Q-yBDintmOR8d12ARnvDbHOi8Q>
-    <xmx:7bW6aX0Jyaan0ZAu1bu4Zswn2xj-oHE3PLduP4mP9cE8uO9LdSMX8w>
-    <xmx:7rW6aZCvCwCdB9ey422BjriBGHwVFlh1Zw6xmRZfWHlABq2rEUREaqkQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id F3F02700065; Wed, 18 Mar 2026 10:25:48 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1773844625; c=relaxed/simple;
+	bh=nzM5rsog/BPN55jXu8KqFKLiphFyEv9EsonRFYnRiOA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tnIxVzcqzZPoY6pJAkEyzR5ZogTiJ0bCiiwDoHQwUr5f7ZvV3uQGgKl0aHS8cb4lDhu6GHEOnod/7Izz3MhwwLl3ei3jMsOfjoyOF/FfEXgwefXDFGMDvdR0fSFxe5vKYyrDqgNodkTHT/E50VUzjwUM8I0xfpSAtdtHumpFEQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hl4uH0rv; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773844624; x=1805380624;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nzM5rsog/BPN55jXu8KqFKLiphFyEv9EsonRFYnRiOA=;
+  b=Hl4uH0rvNhSNcOqfaKLoMC5jn7eDzIvon8ktkuhOF3HjPqgPdDlZMovg
+   9+plL4ENpwAFIp8cgg+ZOA2kf2697o4ZVApKVXFxDnUS1h7fONzT3GEWc
+   Kdl4U4ZHq40KBbdzaH4+KU0+mOlh2Y5HIfZnExpLO3+WLZeEZ4zGIco2R
+   tcL0cXtZK9UBnbg71CpUALtI6e7BxiI/leBoz8bkRMydetPa+j2344rQk
+   PnGmnQlDF/gg5zDi/kchlwCNxwcOtGsAE7sHzJlDOZoF0uZ2D2ICBkgDz
+   cJf9Ka0VGATtOHNa3Xux0YfGIAXf2xJqxq60vUOdEhnPIWiNNVO1l2a47
+   g==;
+X-CSE-ConnectionGUID: 0HlYqcBoQnuewM0xFjbRlA==
+X-CSE-MsgGUID: dhmnzNC5Q8yTXXvgMzKiNQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11733"; a="74930729"
+X-IronPort-AV: E=Sophos;i="6.23,127,1770624000"; 
+   d="scan'208";a="74930729"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2026 07:37:03 -0700
+X-CSE-ConnectionGUID: 7sHXO73sRRO0grbPodVW7Q==
+X-CSE-MsgGUID: lp7c8KT+TJKK0cSCNT3hqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,127,1770624000"; 
+   d="scan'208";a="260548428"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.240])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2026 07:37:02 -0700
+Date: Wed, 18 Mar 2026 16:36:59 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Alan Borzeszkowski <alan.borzeszkowski@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linusw@kernel.org, brgl@kernel.org,
+	mika.westerberg@linux.intel.com
+Subject: Re: [PATCH] gpio: Add Intel Nova Lake ACPI GPIO events driver
+Message-ID: <abq4i4Kt0azQcYtq@ashevche-desk.local>
+References: <20260318142418.48574-1-alan.borzeszkowski@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ANlOrQyGGoi-
-Date: Wed, 18 Mar 2026 15:25:28 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>,
- "Jim Cromie" <jim.cromie@gmail.com>, "Thomas Gleixner" <tglx@kernel.org>,
- "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Chris Boot" <bootc@bootc.net>, "Lee Jones" <lee@kernel.org>,
- "Pavel Machek" <pavel@kernel.org>, "Linus Walleij" <linusw@kernel.org>,
- "Bartosz Golaszewski" <brgl@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Message-Id: <997e3ff4-c394-4fbe-9371-272220ab2aa0@app.fastmail.com>
-In-Reply-To: <20260318-gpio-scx200-header-v1-1-626688284f17@oss.qualcomm.com>
-References: <20260318-gpio-scx200-header-v1-1-626688284f17@oss.qualcomm.com>
-Subject: Re: [PATCH] gpio: scx200: move the header under linux/gpio/
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.65 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260318142418.48574-1-alan.borzeszkowski@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[arndb.de,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[arndb.de:s=fm3,messagingengine.com:s=fm1];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	TAGGED_FROM(0.00)[bounces-33757-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33758-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[oss.qualcomm.com,gmail.com,kernel.org,redhat.com,alien8.de,linux.intel.com,zytor.com,linuxfoundation.org,bootc.net];
+	FROM_HAS_DN(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[arnd@arndb.de,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[arndb.de:+,messagingengine.com:+];
-	RCVD_COUNT_FIVE(0.00)[6];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	NEURAL_HAM(-0.00)[-0.563];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,qualcomm.com:email,messagingengine.com:dkim,arndb.de:dkim,app.fastmail.com:mid]
-X-Rspamd-Queue-Id: BE6322BD132
+	NEURAL_HAM(-0.00)[-0.998];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,intel.com:dkim,ashevche-desk.local:mid]
+X-Rspamd-Queue-Id: 714032BD5F1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Mar 18, 2026, at 14:48, Bartosz Golaszewski wrote:
-> Headers exposing symbols specific to individual GPIO drivers should all
-> live under linux/gpio/ for consistency. scx200_gpio.h is currently a
-> top-level header directly under linux/. Move it and update all users.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
-> With Acks from relevant maintainers, I can take it through the GPIO
-> tree.
+On Wed, Mar 18, 2026 at 03:24:18PM +0100, Alan Borzeszkowski wrote:
+> This driver provides support for new way of handling platform events,
+> through the use of GPIO-signaled ACPI events. This mechanism is used on
+> Intel client platforms released in 2026 and later, starting with Intel
+> Nova Lake.
 
-No objections to the change, but I'd point out that while this is a
-driver for gpio registers, it's not a gpiolib driver but rather a
-custom chardev with ioctl interface.
+...
 
-Since the chip was never as popular as the separate geode/cs553x
-ones, I wonder if there are any users left, maybe Jim has an idea.
+> +static void nvl_gpio_irq_mask_unmask(struct gpio_chip *gc, unsigned long hwirq,
+> +				     bool mask)
 
-If there are users, they might be able to use drivers/gpio/gpio-cs5535.c
-instead, but I have not checked if the two are compatible.
+> +	addr = nvl_gpio_get_byte_addr(priv, GPE_EN_REG_OFFSET(priv->blk_size),
+> +				      byte_idx);
 
-     Arnd
+These are only two cases where we go a bit further than 80, so I would just
+make them a single line each.
+
+
+...
+
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +	raw_spin_lock_init(&priv->lock);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_IO, 0);
+> +	if (!res)
+> +		return -ENXIO;
+> +	/*
+> +	 * GPE block length should be non-negative multiple of two and allow up
+> +	 * to 128 pins. ACPI v6.6 section 5.2.9 and 5.6.4.
+> +	 */
+> +	ioresource_size = resource_size(res);
+> +	if (!ioresource_size || ioresource_size % 2 || ioresource_size > 0x20)
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "invalid GPE block length, resource: %pR\n",
+> +				     res);
+
+There is no point to even allocate memory if the resource is not available or
+invalid.
+
+	..._get_resource()
+	...validate...
+	...map, as we still have local variable for that...
+
+	priv = devm_kzalloc(...);
+	...
+	_init_lock(...);
+
+
+> +	regs = devm_ioport_map(dev, res->start, ioresource_size);
+> +	if (!regs)
+> +		return -ENOMEM;
+> +	priv->reg_base = regs;
+> +	priv->blk_size = ioresource_size;
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+> +		return irq;
+> +
+> +	ret = devm_request_irq(dev, irq, nvl_gpio_irq, IRQF_SHARED,
+> +			       dev_name(dev), priv);
+
+I would also go with a single line here:
+
+	ret = devm_request_irq(dev, irq, nvl_gpio_irq, IRQF_SHARED, dev_name(dev), priv);
+
+One Q though, is it indeed shared? Or can it be shared?
+
+> +	if (ret)
+> +		return ret;
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
