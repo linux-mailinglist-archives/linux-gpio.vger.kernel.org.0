@@ -1,68 +1,68 @@
-Return-Path: <linux-gpio+bounces-33762-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33759-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KAJ5DIzDumkGbgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33762-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 16:23:56 +0100
+	id 2IMzIBXGumlobwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33759-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 16:34:45 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82B642BE1FE
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 16:23:55 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 894942BE4FB
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 16:34:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EB7E132BFCBE
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 15:15:02 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id A583C31CBC7F
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 15:14:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D41D83E8678;
-	Wed, 18 Mar 2026 15:13:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 767403E63BA;
+	Wed, 18 Mar 2026 15:13:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T8B1/GOa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aomogoQb"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875DB3E63BD;
-	Wed, 18 Mar 2026 15:13:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2543E3D84;
+	Wed, 18 Mar 2026 15:13:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773846787; cv=none; b=gDjQyCY+PBSETpplXuSxdlc1mLpEcJGG38iFgQ5iBUhnpz221Y96duE/dmJsw61gv94x9MyLAhk0oFyCaPprVkeiO0bjKUPru4OqJnyYuBV3OFv18aZj60n6XC+lHLKK3CgoQm9PtJ2jUDHQ5k3e4mZGd7H+0YQiwYLnRR0TNu8=
+	t=1773846784; cv=none; b=lBTFavYEyI8HqohQsSoxajNzrBuufTGL4+8VJLJLG1pOtR7G1oPBvlHMKzFHdJz2j3rrrWI33TXTUCWktJfm0zxdNUIba4mthYeWNPZso3ZPIpoKe+UkQ8WCopYbrEYGAYvy6JgfcN+IvI/wF/NKy4Tl8q7CZ+/XZPhyIJ4NdrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773846787; c=relaxed/simple;
-	bh=7mKQR6uTf2Wsf//NUwbsAaj+ayneo7o3k7ijJkC7Gqg=;
+	s=arc-20240116; t=1773846784; c=relaxed/simple;
+	bh=51fda7QAM30p08uZhu0wEnvSa6RBIXMTfne4HtjqSOU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aW/rdSJ9hYcSPF2H61i/ieIcYNESCXjoIoxICzKbaNyHldlHnGa49qkQhdI/AIRjNco9GtF2YVHDDmmWGZyF2Qy4n78XoFk07yaDn4JHt+Fj6aeuJ8zBjSMpMpL0dnrxT96nPUlghA88vq8wCYG7wHK8UV5fkKnWzVnQK9TRAoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T8B1/GOa; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version; b=Qzouxbj56fr6AUnqqwD9OD31gNh2qnhmzy3AXNYUiuCUU+F7x8gZWqeK8fKGdOirleAr4kplHb+PkvgfTsDkqNuP7WifsIU4AutWi02w6BQQ9Aiq6pbZPJ8SkXCvrlnH+d/ise8zp56CvD9WVyNyfKE7IsgP4P9hXn5wufvV3Kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aomogoQb; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773846785; x=1805382785;
+  t=1773846782; x=1805382782;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=7mKQR6uTf2Wsf//NUwbsAaj+ayneo7o3k7ijJkC7Gqg=;
-  b=T8B1/GOa1rP8YrMgJaka5wgxyhUZ9StNopJ+CvPn6qZ+P6KSMB+mMCQ1
-   MoiI/9KyMvYuTf5sDyrjohI8bI4AEEE0qrPpFTvzI4k6nwPl57gfHAdAw
-   wgFskzRK7vwCQyKnA1hyemQExLNX3W5M6BFoMbWNK4mOsPPNEaNRg73WK
-   t4WToOa+KYG69MkklY+AbUgiXWX5dbkqO46En1EIekFPxBbM2KaJmNaTv
-   qHS6FnFKNf1MnTCWI/Cat2N9I/BDv9vTIeHOIMQZONbXJGbRMI9owehsF
-   WfAlGgTIB46FX2l3hwt63GMohLBNbolQO3xiAbnYOhunD7PWxC9hH1MBH
-   w==;
-X-CSE-ConnectionGUID: bKzhH/+vQHmSjo0pN0JwtQ==
-X-CSE-MsgGUID: Xr+4GNUSSfiQgeVs6bjfvw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11733"; a="75084542"
+  bh=51fda7QAM30p08uZhu0wEnvSa6RBIXMTfne4HtjqSOU=;
+  b=aomogoQbWVCHdR3BNDNrOu2dB+i1XLRKYef1spdUGjAsLGJcdos646LW
+   dGhMZZIQIriEUJccm7NlGdHr3CaUle8vc+5PKHNXjhqxCMUalurUnhkHo
+   Ceizj0L+622W7kAwp/evIQESZ9NLw4Nl97dBVhKb6P8KiFRZSRYfdc4Cp
+   p6ldti5II3yznG5vxf9zCGeEVY8l4kazZnW1KLvU7dwWPTBFsvdeQdxlk
+   eF48XsqnfLQZ8ZHIdw+UZhXsgXSSILAGsjhU3rbvhGGOfrs4ZdlMtKQ7s
+   CI5ii87eNMEo1+y1C7jGZRz09Lq0y64TG7zsWTv1d6sR++mV8INYccSSP
+   A==;
+X-CSE-ConnectionGUID: DfMjp/nKTJGh+fwlZcWyWw==
+X-CSE-MsgGUID: wjzCImMhSwaEWHGGekHTsA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11733"; a="75084536"
 X-IronPort-AV: E=Sophos;i="6.23,127,1770624000"; 
-   d="scan'208";a="75084542"
+   d="scan'208";a="75084536"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2026 08:13:02 -0700
-X-CSE-ConnectionGUID: AUdx3uOuRc63fPqVlBQQuQ==
-X-CSE-MsgGUID: kXsgylgVS++3PGq6F02fCg==
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2026 08:13:01 -0700
+X-CSE-ConnectionGUID: yyRuOcozQ3+CuIjP1kL/cQ==
+X-CSE-MsgGUID: IVSCc0f8SGGvDumF8RF6tw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,127,1770624000"; 
-   d="scan'208";a="247122452"
+   d="scan'208";a="247122451"
 Received: from black.igk.intel.com ([10.91.253.5])
   by fmviesa001.fm.intel.com with ESMTP; 18 Mar 2026 08:12:59 -0700
 Received: by black.igk.intel.com (Postfix, from userid 1003)
-	id 18AFD9E; Wed, 18 Mar 2026 16:12:58 +0100 (CET)
+	id 1D1BFA1; Wed, 18 Mar 2026 16:12:58 +0100 (CET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Mika Westerberg <mika.westerberg@linux.intel.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -70,9 +70,9 @@ To: Mika Westerberg <mika.westerberg@linux.intel.com>,
 	linux-kernel@vger.kernel.org
 Cc: Andy Shevchenko <andy@kernel.org>,
 	Linus Walleij <linusw@kernel.org>
-Subject: [PATCH v1 3/5] pinctrl: intel: Enable 3-bit PAD_OWN feature
-Date: Wed, 18 Mar 2026 16:10:17 +0100
-Message-ID: <20260318151256.2590375-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 4/5] pinctrl: intel: Refactor intel_gpio_add_pin_ranges() to make it shorter
+Date: Wed, 18 Mar 2026 16:10:18 +0100
+Message-ID: <20260318151256.2590375-5-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260318151256.2590375-1-andriy.shevchenko@linux.intel.com>
 References: <20260318151256.2590375-1-andriy.shevchenko@linux.intel.com>
@@ -89,7 +89,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -97,102 +97,58 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33762-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33759-lists,linux-gpio=lfdr.de];
 	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	RCPT_COUNT_FIVE(0.00)[6];
 	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-0.993];
+	NEURAL_HAM(-0.00)[-0.994];
 	RCVD_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 82B642BE1FE
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,linux.intel.com:mid]
+X-Rspamd-Queue-Id: 894942BE4FB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Starting from revision 1.1 of the Chassis specification the PAD_OWN
-is represented by 3 bits instead of 2 bits in the previous revisions.
-Update the driver to support this feature.
+Refactor intel_gpio_add_pin_ranges() to make it shorter in binary
+and source formats.
+
+Function                                     old     new   delta
+intel_gpio_add_pin_ranges                    219     215      -4
+Total: Before=15522, After=15518, chg -0.03%
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/intel/pinctrl-intel.c | 21 ++++++++++++++++-----
- drivers/pinctrl/intel/pinctrl-intel.h |  1 +
- 2 files changed, 17 insertions(+), 5 deletions(-)
+ drivers/pinctrl/intel/pinctrl-intel.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index a5a264ba6fbb..97bf5ec78db4 100644
+index 97bf5ec78db4..7311b787dfc6 100644
 --- a/drivers/pinctrl/intel/pinctrl-intel.c
 +++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -203,19 +203,25 @@ static bool intel_pad_owned_by_host(const struct intel_pinctrl *pctrl, unsigned
- 	community = intel_get_community(pctrl, pin);
- 	if (!community)
- 		return false;
--	if (!community->padown_offset)
-+
-+	/* If padown_offset is not provided, assume host ownership */
-+	padown = community->regs + community->padown_offset;
-+	if (padown == community->regs)
- 		return true;
+@@ -1361,16 +1361,15 @@ static int intel_gpio_irq_init_hw(struct gpio_chip *gc)
+ int intel_gpio_add_pin_ranges(struct gpio_chip *gc)
+ {
+ 	struct intel_pinctrl *pctrl = gpiochip_get_data(gc);
++	const struct device *dev = pctrl->dev;
+ 	const struct intel_community *community;
+ 	const struct intel_padgroup *grp;
+ 	int ret;
  
-+	/* New HW generations have extended PAD_OWN registers */
-+	if (community->features & PINCTRL_FEATURE_3BIT_PAD_OWN)
-+		return !(readl(padown + pin_to_padno(community, pin) * 4) & 7);
-+
- 	padgrp = intel_community_get_padgroup(community, pin);
- 	if (!padgrp)
- 		return false;
+ 	for_each_intel_gpio_group(pctrl, community, grp) {
+-		ret = gpiochip_add_pin_range(&pctrl->chip, dev_name(pctrl->dev),
+-					     grp->gpio_base, grp->base,
+-					     grp->size);
++		ret = gpiochip_add_pin_range(gc, dev_name(dev), grp->gpio_base, grp->base, grp->size);
+ 		if (ret)
+-			return dev_err_probe(pctrl->dev, ret, "failed to add GPIO pin range\n");
++			return dev_err_probe(dev, ret, "failed to add GPIO pin range\n");
+ 	}
  
- 	gpp_offset = padgroup_offset(padgrp, pin);
- 	gpp = PADOWN_GPP(gpp_offset);
--	offset = community->padown_offset + padgrp->padown_num * 4 + gpp * 4;
--	padown = community->regs + offset;
-+	offset = padgrp->padown_num * 4 + gpp * 4;
- 
--	return !(readl(padown) & PADOWN_MASK(gpp_offset));
-+	return !(readl(padown + offset) & PADOWN_MASK(gpp_offset));
- }
- 
- static bool intel_pad_acpi_mode(const struct intel_pinctrl *pctrl, unsigned int pin)
-@@ -1597,6 +1603,7 @@ int intel_pinctrl_probe(struct platform_device *pdev,
- 		struct intel_community *community = &pctrl->communities[i];
- 		unsigned short capability_offset[6];
- 		void __iomem *regs;
-+		u32 revision;
- 		u32 offset;
- 		u32 value;
- 
-@@ -1611,10 +1618,14 @@ int intel_pinctrl_probe(struct platform_device *pdev,
- 		value = readl(regs + REVID);
- 		if (value == ~0u)
- 			return -ENODEV;
--		if (((value & REVID_MASK) >> REVID_SHIFT) >= 0x92) {
-+
-+		revision = (value & REVID_MASK) >> REVID_SHIFT;
-+		if (revision >= 0x092) {
- 			community->features |= PINCTRL_FEATURE_DEBOUNCE;
- 			community->features |= PINCTRL_FEATURE_1K_PD;
- 		}
-+		if (revision >= 0x110)
-+			community->features |= PINCTRL_FEATURE_3BIT_PAD_OWN;
- 
- 		/* Determine community features based on the capabilities */
- 		offset = CAPLIST;
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.h b/drivers/pinctrl/intel/pinctrl-intel.h
-index 2f37109d5860..b5476b9de0db 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.h
-+++ b/drivers/pinctrl/intel/pinctrl-intel.h
-@@ -150,6 +150,7 @@ struct intel_community {
- #define PINCTRL_FEATURE_PWM		BIT(3)
- #define PINCTRL_FEATURE_BLINK		BIT(4)
- #define PINCTRL_FEATURE_EXP		BIT(5)
-+#define PINCTRL_FEATURE_3BIT_PAD_OWN	BIT(6)
- 
- #define __INTEL_COMMUNITY(b, s, e, g, n, gs, gn, soc)		\
- 	{							\
+ 	return 0;
 -- 
 2.50.1
 
