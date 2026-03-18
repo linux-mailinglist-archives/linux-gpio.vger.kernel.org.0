@@ -1,58 +1,58 @@
-Return-Path: <linux-gpio+bounces-33742-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33743-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ANgiHgadummHZgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33742-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 13:39:34 +0100
+	id 2KG9HW6dummHZgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33743-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 13:41:18 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 332742BB9AA
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 13:39:34 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BD102BBA70
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 13:41:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7ABD73022E27
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 12:39:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1F8743140E61
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2026 12:39:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 464603D7D67;
-	Wed, 18 Mar 2026 12:39:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EEDB3D7D7E;
+	Wed, 18 Mar 2026 12:39:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="FqkC1wI5"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="oavHusXk"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07AB3D75A9;
-	Wed, 18 Mar 2026 12:39:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8794B3D75B5;
+	Wed, 18 Mar 2026 12:39:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773837551; cv=none; b=BcdIXncCe3rQb62RyGdttU+tgOllpKgbVn0tc6l+oeu9h19gae0xmBh6Qe0DJCoKunSlASX4oMO7EYrCPjs4rAMjXfxnRBscoaDwHUvoVGV4wNlnrtzYxveZqejM+oELDlhxxWfJ/Xm7fyBFWoylqM+OelzfZZXwIv23SVDIdPM=
+	t=1773837552; cv=none; b=aVmpR3Smfi2kTzqh2F6sXKEtXI0l9Wsjt9pOiGfk/JlXlwe+YzKoT9LPOwVutUzTjyEjNfrcZSJEyY1VjBFPf/MjZ04G3vsx8bt0+A/1g5vWYJ1D4PBbFXG6ViLaWy7UTXgTiGVptkp4HRafJjZwg1H0EoovgmhMNMk3QDoLF38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773837551; c=relaxed/simple;
-	bh=WL9VO4CT3Q+H6qxrfU7yZL1mVg3nI3AzqGEwGt8v8m8=;
+	s=arc-20240116; t=1773837552; c=relaxed/simple;
+	bh=/9GsD8Paw2FG8zbS8w+TdnFQsZUhCwbrgaXvCp6ENE0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E6Rt5RhKQHCYoyo4WtR9fcZwB1G3BhBIfZi4rDtZuy4Ks6qpD02wq4leYhI94z2pY42yvUEjdcU5Vm2vCybjIufLXObS4F+mYwpTNw8evMgn038M+utQ4W5qUuqVpblZBxTyo1HNT51ndEAT29B+pqfyp2vECcaubwxpfX2yH/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=FqkC1wI5; arc=none smtp.client-ip=148.251.105.195
+	 In-Reply-To:Content-Type; b=Qu+80n5ygJCjLgaQQDai6mOzUrD3ZO0icTm+Uc4H27efz0vjkr9OKrzIgIr42YCw9fPosAqUgJHh9t4FGCL/H7lmB+rTpbe6gZ20BM3q5WWr1M+J2lUVKVqLQg0c5r9oeh46L6XIq4SYVWIiH6EXC9+PeJFKMOKZOOX6IfTk9uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=oavHusXk; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1773837546;
-	bh=WL9VO4CT3Q+H6qxrfU7yZL1mVg3nI3AzqGEwGt8v8m8=;
+	s=mail; t=1773837547;
+	bh=/9GsD8Paw2FG8zbS8w+TdnFQsZUhCwbrgaXvCp6ENE0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FqkC1wI5I9QxfNm++xlyuXaXAN+JCCU/0G3JEKg3rho0b5llDVOZ63gGh/QOEhdhN
-	 4hVO77C1rO9jEIf/Xqn9QO4QxeMXmi7cLkOrQZ8LUZAqVbOl8R9rZRwsbIUWpGlZO8
-	 R3jXdFmVbJltnxsXc97xq+Y8TCuVx4ptyk7BEC4qBafAsIUor5+bJ5AVGVZPjlReDA
-	 Xoei0AnRSteZDoo2C18ypZi/qrEz48o86o8g0LvAqistF+0mVIAMBXpGUEvvsfh+2X
-	 YcNdgzmFi8uTQwupupC7BbTss4M76q23oE8pli8ex+LnmECxnFkoLILeU11NLmoSl5
-	 MAgKNbzURaUjw==
+	b=oavHusXkCkB7Kqa5VC0x2RW+xdZIuSLE32GVO8SOJWcjAeukEHxn/HEle9dvPQjZo
+	 YpmhpbYQVnKYqeeVNjitJTwB0xV3NmVNNNHFDGYnJ+6/iVWpp17z03ZLMHHP2w5lAP
+	 8CX2myd0Eu0aRHM1KQkcsBtgmfMMHCLU3xWiUxQFf4P1NWXRy3HYZN/XjjyNUy9mtA
+	 TQ5v/x+GT5ZnIHt8KpnaFukD4BZbBaLM5YRLy9tIvYJNuYneJkphNfV7+oMw+2Pxro
+	 lzUU8XFTTB4MOGPiglYKWWa6PtnxlSvNOQVlN71YVkhj05JkR4VF4Zzm5wlJgoRPI5
+	 ItYnGPP27d/9A==
 Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id CB9B817E1537;
-	Wed, 18 Mar 2026 13:39:05 +0100 (CET)
-Message-ID: <c649b147-e078-4327-b660-f0e05826f1c0@collabora.com>
-Date: Wed, 18 Mar 2026 13:39:04 +0100
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1426617E1330;
+	Wed, 18 Mar 2026 13:39:07 +0100 (CET)
+Message-ID: <8e1ce45b-e001-40a5-9b20-b113e3e6ed54@collabora.com>
+Date: Wed, 18 Mar 2026 13:39:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -60,8 +60,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/9] dt-bindings: input: mtk-pmic-keys: add MT6392
- binding definition
+Subject: Re: [PATCH v3 1/9] dt-bindings: mfd: mt6397: Add bindings for MT6392
+ PMIC
 To: Luca Leonardo Scorcia <l.scorcia@gmail.com>,
  linux-mediatek@lists.infradead.org
 Cc: Fabien Parent <parent.f@gmail.com>, Val Packett <val@packett.cool>,
@@ -71,30 +71,29 @@ Cc: Fabien Parent <parent.f@gmail.com>, Val Packett <val@packett.cool>,
  Sean Wang <sean.wang@mediatek.com>, Macpaul Lin <macpaul.lin@mediatek.com>,
  Lee Jones <lee@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
  Linus Walleij <linusw@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Gary Bisson <bisson.gary@gmail.com>,
  Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>,
- Gary Bisson <bisson.gary@gmail.com>,
  Julien Massot <julien.massot@collabora.com>,
  Chen Zhong <chen.zhong@mediatek.com>, linux-input@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-gpio@vger.kernel.org
 References: <20260317184507.523060-1-l.scorcia@gmail.com>
- <20260317184507.523060-3-l.scorcia@gmail.com>
+ <20260317184507.523060-2-l.scorcia@gmail.com>
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-In-Reply-To: <20260317184507.523060-3-l.scorcia@gmail.com>
+In-Reply-To: <20260317184507.523060-2-l.scorcia@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[collabora.com,none];
 	R_DKIM_ALLOW(-0.20)[collabora.com:s=mail];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33742-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33743-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_TO(0.00)[gmail.com,lists.infradead.org];
 	FREEMAIL_CC(0.00)[gmail.com,packett.cool,kernel.org,mediatek.com,collabora.com,vger.kernel.org,lists.infradead.org];
@@ -112,24 +111,61 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[collabora.com:dkim,collabora.com:email,collabora.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 332742BB9AA
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,collabora.com:dkim,collabora.com:email,collabora.com:mid,packett.cool:email]
+X-Rspamd-Queue-Id: 8BD102BBA70
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 Il 17/03/26 19:43, Luca Leonardo Scorcia ha scritto:
 > From: Fabien Parent <parent.f@gmail.com>
 > 
-> Add the binding documentation of the mtk-pmic-keys for the MT6392 PMICs.
+> Add the currently supported bindings for the MT6392 PMIC.
 > 
 > Signed-off-by: Fabien Parent <parent.f@gmail.com>
 > Signed-off-by: Val Packett <val@packett.cool>
 > Signed-off-by: Luca Leonardo Scorcia <l.scorcia@gmail.com>
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+> ---
+>   .../devicetree/bindings/mfd/mediatek,mt6397.yaml         | 9 +++++++++
+>   1 file changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mediatek,mt6397.yaml b/Documentation/devicetree/bindings/mfd/mediatek,mt6397.yaml
+> index 6a89b479d10f..22b09e148d7c 100644
+> --- a/Documentation/devicetree/bindings/mfd/mediatek,mt6397.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/mediatek,mt6397.yaml
+> @@ -40,6 +40,10 @@ properties:
+>             - mediatek,mt6358
+>             - mediatek,mt6359
+>             - mediatek,mt6397
+> +      - items:
+> +          - enum:
+> +              - mediatek,mt6392
+> +          - const: mediatek,mt6323
+>         - items:
+>             - enum:
+>                 - mediatek,mt6366
+> @@ -68,6 +72,10 @@ properties:
+>                 - mediatek,mt6331-rtc
+>                 - mediatek,mt6358-rtc
+>                 - mediatek,mt6397-rtc
+> +          - items:
+> +              - enum:
+> +                  - mediatek,mt6392-rtc
+> +              - const: mediatek,mt6323-rtc
+>             - items:
+>                 - enum:
+>                     - mediatek,mt6366-rtc
+> @@ -92,6 +100,7 @@ properties:
+>                 - mediatek,mt6328-regulator
+>                 - mediatek,mt6358-regulator
+>                 - mediatek,mt6359-regulator
+> +              - mediatek,mt6392-regulator
+>                 - mediatek,mt6397-regulator
+>             - items:
+>                 - enum:
 
 
 
