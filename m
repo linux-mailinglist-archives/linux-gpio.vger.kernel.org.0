@@ -1,200 +1,184 @@
-Return-Path: <linux-gpio+bounces-33822-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33823-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KO6XOAcFvGnGrQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33822-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 15:15:35 +0100
+	id iO3NOcsFvGmurAIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33823-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 15:18:51 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58B422CC885
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 15:15:35 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 722802CC9A9
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 15:18:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 23156304EA6F
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 14:14:37 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1A9633077CF2
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 14:15:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EDEC314A73;
-	Thu, 19 Mar 2026 14:14:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFFFA315D40;
+	Thu, 19 Mar 2026 14:15:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qJFdgiFw";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4jpB79yc";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OrcSAEzL";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="HXVk5/yP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GW2j87qq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD60C31077A
-	for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 14:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40072357A3F
+	for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 14:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773929640; cv=none; b=aEFysuF6O07bCTlrrBlh1GIiiDZs1hhDNQWFN8X85TsUl81AZbJ9Cpp3hN3/TDPCeKdnuIjde84hs7/LEKLAmKsGBPzeNnoGwHIg3ju+hNqkMpn1RM7z5vq1DeZOTnQTw1yzVH2BStyN8d1pvl+gzxpJKDxHfS7zHQKxmiFNNoM=
+	t=1773929721; cv=none; b=LgpzNn6uB1DRqrIFZz5O9YjnpQNwdY7DaAMDEpe+CiEwaHSuuv347LHwlM9o21COFNCYcWoEGiRpBxhQMChAxDj6uAtfuTfVqesjY9/D++KCGqGygy1bD7FosTakmP8+4cme5grn3fARgKwL01rcDb6CP5Mq7TgqHflTkGBJgQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773929640; c=relaxed/simple;
-	bh=4zAon2/wL1xkF183JwLxXVvEK05OvlwLI29zwOFhq2E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BWQE4HlzeDVMZyKxXRN81pxJCcWb2qYPRpUvyLruC8Z7gwpPBx7Ux9ZQyJ4tvUn99kJU37D9/dFm23cJO2huN1btAMzHVYuJ2t713ymTSnzP8KRJ9twtrtIl+K6TVBoh6gfV+0wwsYewfoL3SoLk0fD07E7z8y5vfwYwxzeowfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qJFdgiFw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4jpB79yc; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OrcSAEzL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=HXVk5/yP; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 233AB5BD4B;
-	Thu, 19 Mar 2026 14:13:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1773929632; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4fUFXPph0d+U/6GDmGbgLZ/FXBjYuxpYsgD69WTKZEc=;
-	b=qJFdgiFwZof840urwELAyJUPmqr5R5KSb1T4rwYuc7bb8XNbCm/kv+M5FkrKSBEOM1bZiu
-	/MGyuwm/OFnFKmJm/t/Uz/+GbEcAEAQCMtEWioCbgwKOh4DWZ0qNVZOg9g66xDY+m4U+fD
-	w9Xqoe30eNI+goFz62hSwZMzWorThdA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1773929632;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4fUFXPph0d+U/6GDmGbgLZ/FXBjYuxpYsgD69WTKZEc=;
-	b=4jpB79ycXSQsxOkgtV3HKUa6Dm/vQ/wRir8pmFsiYnB6qgK3LbPe12RtulXb4tol7/E3ij
-	faYPra8B4GTfZjDQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1773929631; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4fUFXPph0d+U/6GDmGbgLZ/FXBjYuxpYsgD69WTKZEc=;
-	b=OrcSAEzL/6c4UDB40dZmtUkHL2UKN/t418W/3/WLfRE3VUYtttdOTA1LBRs2LexriSZBXr
-	IUCLAcO9QxQoLCNXA0PSitgNb7BC5cuH9t+EXroQLbXGhfbC1mTChSWj64vc6V41FfYy8R
-	mio6pb/J12e+5TPnOnmBoDRex83ce1A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1773929631;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4fUFXPph0d+U/6GDmGbgLZ/FXBjYuxpYsgD69WTKZEc=;
-	b=HXVk5/yPJtxIjyky0dtujMNvVHE9KONXRU8D1O6wb4LBxoqwDaKPYOnkGEkCrYDJmYyVOA
-	klxEA++oJw6AsaAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 14B714273B;
-	Thu, 19 Mar 2026 14:13:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id TmUEBZ8EvGlPZwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 19 Mar 2026 14:13:51 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id C850FA0B32; Thu, 19 Mar 2026 15:13:46 +0100 (CET)
-Date: Thu, 19 Mar 2026 15:13:46 +0100
-From: Jan Kara <jack@suse.cz>
-To: Philipp Hahn <phahn-oss@avm.de>
-Cc: amd-gfx@lists.freedesktop.org, apparmor@lists.ubuntu.com, 
-	bpf@vger.kernel.org, ceph-devel@vger.kernel.org, cocci@inria.fr, 
-	dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org, gfs2@lists.linux.dev, 
-	intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev, 
-	kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-btrfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org, 
-	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-mips@vger.kernel.org, 
-	linux-mm@kvack.org, linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org, linux-phy@lists.infradead.org, 
-	linux-pm@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org, linux-sound@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, ntfs3@lists.linux.dev, 
-	samba-technical@lists.samba.org, sched-ext@lists.linux.dev, target-devel@vger.kernel.org, 
-	tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev, Jan Kara <jack@suse.com>
-Subject: Re: [PATCH 12/61] quota: Prefer IS_ERR_OR_NULL over manual NULL check
-Message-ID: <ol2d7c5z7yfyuwo5tyfxurgqedruhr6bzmuv37bx5phhrmmoyh@4zjspbtexid3>
-References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
- <20260310-b4-is_err_or_null-v1-12-bd63b656022d@avm.de>
+	s=arc-20240116; t=1773929721; c=relaxed/simple;
+	bh=8kS+1y8NLmoU6Dtxma21Rgv8v/62TbkWuij5XLIyCSw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Eo3W+iU3YZA9cv2KQ/q/embDb7NscM+iO5TE2eHgnmoOmyouvZF7oyuAHi3CqJ4vyTgfoc3EumQVegfhembz8KwgBsfPAJGtAWOhRBxLCxAZyncfNDQCHeJVG7WSKv9RgZN10BuDClNTSyNTtnIH3VzUlzOxoDCcDXYMaOg7psg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GW2j87qq; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-48628ce9ab5so13202985e9.2
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 07:15:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773929718; x=1774534518; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rw9fgwKjqMmJpNhhmasAcm5Av9X74nVirvYp0L8odpA=;
+        b=GW2j87qqiblxD5JA5n7hZZ2sMRgQbAsiRzImidp0Rtn/pCUZ7hG1LAekWXq4YTtpxt
+         kWSa8NIaTqfOMefzUYcyGBWhL+aHdw2boTq5YlN1ntQf555av99NDetmlT7dY2dFf3+6
+         l9xQrJiRbbatzi/Hs/0tvBS7gGiTbhhmtKWgpHgc2L5A3pFILXGTL4BwGbsEFnPPJWS+
+         Ce8bStuSzxGiQtGeOCeiEa0RVVjISVrfmKnA+R7aWLe7dKvKkhcZi56tEeNeKqf32BCz
+         VvYOZ97Q+BT5HiN7FYcjPJkgzda1R4k3KD6h4yjAxu9be/CnxF05qyF8MCOrMoPsp8Hv
+         /gpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773929718; x=1774534518;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rw9fgwKjqMmJpNhhmasAcm5Av9X74nVirvYp0L8odpA=;
+        b=kMWwyTXlMZG1vOwJ2m7nusnHbujm5krN5+IE1N2OOY0G6USgV3L3jeQLtXQ/WpSEFb
+         zJEqXCBNTJsK823yTMsJNWfo1io/YrK9s9IWFF94Ma6thWje3TMCd9FDBnQ7raSRy9Gu
+         6v4T11j68LsrYfdZvdBxthfxTDxMx9Uo6sx9PUhfDcQoOXqJisQS0ardbPvrrt3h7r++
+         XAR2dB5Y5S11G6OSZPaezw9PA/PFrzycoyz7UJXuWz6PZmr3TVYD0aU0W0dPlb7vpPQL
+         VZZjsIxeB12tGulpJX7svH0NnjQ+KBt0GReU/t511L21Onyp4gwiyZ6eqnb3dlrtzTGi
+         iGEw==
+X-Forwarded-Encrypted: i=1; AJvYcCVyngaakWhZ79oxW19rnX1LfPYeLAa4eJeyvAXy+FlQHglljovS//ZYiqzHexkqumkrL2wMAL70VSkH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwR0mo+aD/Wr0rgOLEj8hfsaV9R08Kvl2C9AVM0mtFe+97Lh+r+
+	npD1CYfEsAl/n+7lmORn3jnE9mXMJojiyI/8YmRj4Ul/65PakFlDwD5g
+X-Gm-Gg: ATEYQzwXjn8mdi80qRG2imw+9v4ICTWsOtjIo60wSfeGTBH7Puq3uPtIiw6ajf/CD57
+	VyYK1zqEleXMB6BhrBI/fQtLyCn3ExyWmto3YSrOLUWDXrhdXI5hwwXmBDcv00eqa2qVA1DHL2K
+	YYYtbRzgY9ntfIMbEY9bsimL6pUreV6TwBV0nR3OA8kIQAoERTnIi3TwWYARecEq6kEt+bFpMlS
+	DCOmmymM2q2IGn7+a502pypa9u9pq9RCwFCb7m1NUNSDLJle5vPVXYImRyeXTI+smFjULxegipf
+	m5gtX/sroHuS8WtMEl6pe8OMZiUFfK3JkT+unimkyX7BamblIfxADy6XcumQGsxYsWtce5/JcBf
+	O+9eix+yx/toiPcvIGI35r6kJk1cjyL1mCwAl4aDbgnzB//tlWjjRnV9nYwL9itAuNQ7jkRB16O
+	2WuqX0zO5JXQjEzR/DwpPf+NXRzjcsDSeJmlfGHBmrRtHS4Tk2A+QtaRU+x1TgamrVB8Qyy/DaB
+	2BWkFrmAemKrCSLQVsGKBQi/QIwLoWEg+dSSr0w/vKytMw=
+X-Received: by 2002:a05:600c:a4f:b0:485:9a50:3384 with SMTP id 5b1f17b1804b1-486f4476ccbmr129027975e9.25.1773929718223;
+        Thu, 19 Mar 2026 07:15:18 -0700 (PDT)
+Received: from iku.example.org ([2a06:5906:61b:2d00:f7c0:c444:6359:4c21])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b5184957bsm17824618f8f.5.2026.03.19.07.15.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2026 07:15:17 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linusw@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 0/2] Add support for configuring pin properties on RZ/T2H-N2H SoCs
+Date: Thu, 19 Mar 2026 14:15:13 +0000
+Message-ID: <20260319141515.2053556-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260310-b4-is_err_or_null-v1-12-bd63b656022d@avm.de>
-X-Spam-Score: -2.30
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [0.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33822-lists,linux-gpio=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[suse.cz];
+	TAGGED_FROM(0.00)[bounces-33823-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[55];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jack@suse.cz,linux-gpio@vger.kernel.org];
+	FREEMAIL_TO(0.00)[glider.be,kernel.org,gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,bp.renesas.com,renesas.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.991];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 58B422CC885
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[prabhakarcsengg@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-0.929];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 722802CC9A9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue 10-03-26 12:48:38, Philipp Hahn wrote:
-> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
-> check.
-> 
-> Change generated with coccinelle.
-> 
-> To: Jan Kara <jack@suse.com>
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Thanks for the patch but frankly I find the original variant clearer wrt
-what is going on. So I prefer to keep the code as is.
+Hi all,
 
-								Honza
+This patch series adds support for configuring pin properties on the
+Renesas RZ/T2H-N2H SoCs. The RZ/T2H allows configuring pin properties
+through the DRCTLm (I/O Buffer Function Switching) registers, including:
+- Drive strength (low/middle/high/ultra high)
+- Pull-up/pull-down/no-bias configuration (3 options: no pull, pull-up,
+  pull-down)
+- Schmitt trigger control (enable/disable)
+- Slew rate control (2 options: slow/fast)
 
-> ---
->  fs/quota/quota.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/quota/quota.c b/fs/quota/quota.c
-> index 33bacd70758007129e0375bab44d7431195ec441..2e09fc247d0cf45b9e83a4f8a0be7ea694c8c2a1 100644
-> --- a/fs/quota/quota.c
-> +++ b/fs/quota/quota.c
-> @@ -965,7 +965,7 @@ SYSCALL_DEFINE4(quotactl, unsigned int, cmd, const char __user *, special,
->  	else
->  		drop_super_exclusive(sb);
->  out:
-> -	if (pathp && !IS_ERR(pathp))
-> +	if (!IS_ERR_OR_NULL(pathp))
->  		path_put(pathp);
->  	return ret;
->  }
-> 
-> -- 
-> 2.43.0
-> 
+Note,
+- These patches apply on top of next-20260318
+- There is a dtbs_check failure reported on my machine which is due to
+  a known issue in DT-schema (which was discussed on IRC with Rob),
+  arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dtb: pinctrl@802c0000
+  (renesas,r9a09g077-pinctrl): xspi0-group:clk-pins:drive-strength-microamp: [9000] is not one of [2500, 5000, 9000, 11800]
+	from schema $id: http://devicetree.org/schemas/pinctrl/renesas,r9a09g077-pinctrl.yaml
+
+v1->v2:
+- Updated commit description
+- Switched to using the standard drive-strength-microamp property
+  name instead of a custom one
+- Added a description for slew-rate property
+- Dropped 32 bit reg access for DRCTLm registers
+- Switched using to guard for locking in rzt2h_pinctrl_drctl_rmwq
+  helper function
+- Dropped using RENESAS_RZT2H_PIN_CONFIG_DRIVE_STRENGTH instead
+  switched to using the standard PIN_CONFIG_DRIVE_STRENGTH_UA
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (2):
+  dt-bindings: pinctrl: renesas,r9a09g077: Document pin configuration
+    properties
+  pinctrl: renesas: rzt2h: Add pin configuration support
+
+ .../pinctrl/renesas,r9a09g077-pinctrl.yaml    |  17 ++
+ drivers/pinctrl/renesas/pinctrl-rzt2h.c       | 259 ++++++++++++++++++
+ 2 files changed, 276 insertions(+)
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.53.0
+
 
