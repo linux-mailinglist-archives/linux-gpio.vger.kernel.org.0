@@ -1,80 +1,82 @@
-Return-Path: <linux-gpio+bounces-33823-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33825-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iO3NOcsFvGmurAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33823-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 15:18:51 +0100
+	id SPrxFgUHvGkArgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33825-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 15:24:05 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 722802CC9A9
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 15:18:51 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D1702CCB52
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 15:24:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1A9633077CF2
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 14:15:40 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 1CD49306D058
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 14:15:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFFFA315D40;
-	Thu, 19 Mar 2026 14:15:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 447FC3370EC;
+	Thu, 19 Mar 2026 14:15:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GW2j87qq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q1E2Poh0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40072357A3F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A0E33A70F
 	for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 14:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773929721; cv=none; b=LgpzNn6uB1DRqrIFZz5O9YjnpQNwdY7DaAMDEpe+CiEwaHSuuv347LHwlM9o21COFNCYcWoEGiRpBxhQMChAxDj6uAtfuTfVqesjY9/D++KCGqGygy1bD7FosTakmP8+4cme5grn3fARgKwL01rcDb6CP5Mq7TgqHflTkGBJgQ4=
+	t=1773929726; cv=none; b=hObgZ/1JvoHrFLuk1QcEDrJ12sZm7i3QkC7BVsT5m9V36JuMtvJ29yOW8XJKfWDw/jPGahwYBAr82A2HToC4cvLlePmLzXG8NYoCBagkBBJmrSRRnWUm2MxuD/1KOXGICDT257QEgKTHcl/Mbzg3XD6Ssb9ccrKKyzHg7kErjl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773929721; c=relaxed/simple;
-	bh=8kS+1y8NLmoU6Dtxma21Rgv8v/62TbkWuij5XLIyCSw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Eo3W+iU3YZA9cv2KQ/q/embDb7NscM+iO5TE2eHgnmoOmyouvZF7oyuAHi3CqJ4vyTgfoc3EumQVegfhembz8KwgBsfPAJGtAWOhRBxLCxAZyncfNDQCHeJVG7WSKv9RgZN10BuDClNTSyNTtnIH3VzUlzOxoDCcDXYMaOg7psg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GW2j87qq; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1773929726; c=relaxed/simple;
+	bh=AVqKV2koLL7ZlkRc62jikhi1UX4IiI5DvZw1l2ipQw8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aT7S4vAEJRqy56BXBUt6K4uu+fVXC2a/SI9iSM9/PE7HwGKwEh6vp6EN6kl+zrT2WMAisn8BsYZTVpCWHJY13jHc9SBbUyTdZqZ3/6GLJU+nEIanWGenC8pX0C/1O/GCSFy8l4XDSGEc4fLqHHUqKEHAH4a4LPqk9vVkF6FMsRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q1E2Poh0; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-48628ce9ab5so13202985e9.2
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-43b4d734678so989575f8f.1
         for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 07:15:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773929718; x=1774534518; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rw9fgwKjqMmJpNhhmasAcm5Av9X74nVirvYp0L8odpA=;
-        b=GW2j87qqiblxD5JA5n7hZZ2sMRgQbAsiRzImidp0Rtn/pCUZ7hG1LAekWXq4YTtpxt
-         kWSa8NIaTqfOMefzUYcyGBWhL+aHdw2boTq5YlN1ntQf555av99NDetmlT7dY2dFf3+6
-         l9xQrJiRbbatzi/Hs/0tvBS7gGiTbhhmtKWgpHgc2L5A3pFILXGTL4BwGbsEFnPPJWS+
-         Ce8bStuSzxGiQtGeOCeiEa0RVVjISVrfmKnA+R7aWLe7dKvKkhcZi56tEeNeKqf32BCz
-         VvYOZ97Q+BT5HiN7FYcjPJkgzda1R4k3KD6h4yjAxu9be/CnxF05qyF8MCOrMoPsp8Hv
-         /gpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773929718; x=1774534518;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1773929719; x=1774534519; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Rw9fgwKjqMmJpNhhmasAcm5Av9X74nVirvYp0L8odpA=;
-        b=kMWwyTXlMZG1vOwJ2m7nusnHbujm5krN5+IE1N2OOY0G6USgV3L3jeQLtXQ/WpSEFb
-         zJEqXCBNTJsK823yTMsJNWfo1io/YrK9s9IWFF94Ma6thWje3TMCd9FDBnQ7raSRy9Gu
-         6v4T11j68LsrYfdZvdBxthfxTDxMx9Uo6sx9PUhfDcQoOXqJisQS0ardbPvrrt3h7r++
-         XAR2dB5Y5S11G6OSZPaezw9PA/PFrzycoyz7UJXuWz6PZmr3TVYD0aU0W0dPlb7vpPQL
-         VZZjsIxeB12tGulpJX7svH0NnjQ+KBt0GReU/t511L21Onyp4gwiyZ6eqnb3dlrtzTGi
-         iGEw==
-X-Forwarded-Encrypted: i=1; AJvYcCVyngaakWhZ79oxW19rnX1LfPYeLAa4eJeyvAXy+FlQHglljovS//ZYiqzHexkqumkrL2wMAL70VSkH@vger.kernel.org
-X-Gm-Message-State: AOJu0YwR0mo+aD/Wr0rgOLEj8hfsaV9R08Kvl2C9AVM0mtFe+97Lh+r+
-	npD1CYfEsAl/n+7lmORn3jnE9mXMJojiyI/8YmRj4Ul/65PakFlDwD5g
-X-Gm-Gg: ATEYQzwXjn8mdi80qRG2imw+9v4ICTWsOtjIo60wSfeGTBH7Puq3uPtIiw6ajf/CD57
-	VyYK1zqEleXMB6BhrBI/fQtLyCn3ExyWmto3YSrOLUWDXrhdXI5hwwXmBDcv00eqa2qVA1DHL2K
-	YYYtbRzgY9ntfIMbEY9bsimL6pUreV6TwBV0nR3OA8kIQAoERTnIi3TwWYARecEq6kEt+bFpMlS
-	DCOmmymM2q2IGn7+a502pypa9u9pq9RCwFCb7m1NUNSDLJle5vPVXYImRyeXTI+smFjULxegipf
-	m5gtX/sroHuS8WtMEl6pe8OMZiUFfK3JkT+unimkyX7BamblIfxADy6XcumQGsxYsWtce5/JcBf
-	O+9eix+yx/toiPcvIGI35r6kJk1cjyL1mCwAl4aDbgnzB//tlWjjRnV9nYwL9itAuNQ7jkRB16O
-	2WuqX0zO5JXQjEzR/DwpPf+NXRzjcsDSeJmlfGHBmrRtHS4Tk2A+QtaRU+x1TgamrVB8Qyy/DaB
-	2BWkFrmAemKrCSLQVsGKBQi/QIwLoWEg+dSSr0w/vKytMw=
-X-Received: by 2002:a05:600c:a4f:b0:485:9a50:3384 with SMTP id 5b1f17b1804b1-486f4476ccbmr129027975e9.25.1773929718223;
+        bh=dVOwtxYwKf7F+id86vByPrLslX0VOCCmqpIA6XP6qiw=;
+        b=Q1E2Poh0Sgop4j0ZeuULYvsTCnM9vWucHJdYqXYr4Vd63rxYm/g5HsODEZkqMtRNdN
+         1W91gwJYsY267BOY79c7XvY/i/5awpakgTaaWZgsQFw/HfB2BA7rVnGnRWsHCQeeLhhz
+         Q/3u8Jd+v/YGR3qDKuJkJN6CDyA8/o7Ym1hXLCm/wOI4qX6Cx1tBEsebzWcPZlX/LHC3
+         8pz3pvd1m+bH73g3Fy9R7XAcfbk/ycLzsq4ye72kNMbH5L+Un0zpYqyzG5JMl5LYCDxN
+         1OtVOGjXaMyQ8GlR15mRFQybd0oV7Hr0CmiqfznjD3uPXJ6KJw/WvyciDQE0Ru0EzSNf
+         2pNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773929719; x=1774534519;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=dVOwtxYwKf7F+id86vByPrLslX0VOCCmqpIA6XP6qiw=;
+        b=qtm99CMrQWbfbx5L/5nZHtiY+sJl/+Us1SnugdPHZZkSRClbEVdTJO8qSG1clWVnxR
+         DT54u1ZBjMdgHT/oF1miMOubCCf8ExyLSKnXzqY9TCJd6seJiVugrzKS/1SNBx8BzEj7
+         oUMdXzMxwc7ep4VE4PsP00m8rwbAy3N0mSNPszfadm4NMc+4J+yNp3+vfZQN4Ks49vW0
+         zHikJruyOTQ0Ecrht8E2xFwgKtcmQ2qpPncZQSXwGPrydH73DK449DnQv3qeWYIzp8K0
+         xSWMWFciC17uIedV+wgt6wkdpMCP3C1pKTO+BA6dUhEslpDb2sB6uaGMW1Loow8HpuOM
+         ZIlA==
+X-Forwarded-Encrypted: i=1; AJvYcCVXWmCQ+mrS2cHsNQCZkqB8FWIf5RarNkjqEtZEyssZSyeTAENLgvJ9+ESnSO1V6tL+0LQAGIfQu+7m@vger.kernel.org
+X-Gm-Message-State: AOJu0YxD0vny1cNbmpUvFBu+aAZx3G0XN4CYzWkFRNeaKE674U1Vdl80
+	qR+LQZwne2ShY0xrJ7XRSkKoL8IRgjtEcstmsXeIOTNbScn9FLsK03Es
+X-Gm-Gg: ATEYQzw9MFJGNgd4aoQGvDP4YETrJUsqlwp3vqnPTGA5lOZh3mBNc81t+VHdBKB5AXJ
+	FadaeYpkrwmX13kN9zc5O5rZbZCXsjn3YCIeEW8nKLdw4xszN+7dPyNxKzbmem5w0AvyWHLt0dk
+	ob0w1Lsp2RoEw8fQAKs+25fmDlUdkuS/u+p+mTHOLBwfAi9CrJ1mw/N10m6rc4UwmGuhqD/2MVJ
+	r6z6w/p0m3VnaSLitAaxPVqPuO4cbT+h0itKYYPqcCibubAUUIAVCvSjoTmJd0h/jHqQbpih5Rh
+	Ll1EgBrhfpxbArT+2uKd9mfc9pDXL5OCzBYmImgQyj57EKsMsPvezQsM/0S+wKyajLoOGnlvB2O
+	csI12gS6142rtM5lk0UJtBEYYebvZ7SNEVahtLpzq3Ie9bl3WtxB7QpdjLlLa9XqyFJdiFKmOQr
+	rFY/xbi060M/3XI7cnziPN+hmEMOxFyzaAsuINuuf1dFh4fCqIHeUSWhJVJbE48kTDrlsJQdtYv
+	WokzZPezMd4B4zfSKDaq8QZEfaFEx7nIDBg96uwqozApyU=
+X-Received: by 2002:a05:6000:2501:b0:439:c42f:10c4 with SMTP id ffacd0b85a97d-43b527a97b3mr13343032f8f.15.1773929718875;
         Thu, 19 Mar 2026 07:15:18 -0700 (PDT)
 Received: from iku.example.org ([2a06:5906:61b:2d00:f7c0:c444:6359:4c21])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b5184957bsm17824618f8f.5.2026.03.19.07.15.17
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b5184957bsm17824618f8f.5.2026.03.19.07.15.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 07:15:17 -0700 (PDT)
+        Thu, 19 Mar 2026 07:15:18 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -91,10 +93,12 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 0/2] Add support for configuring pin properties on RZ/T2H-N2H SoCs
-Date: Thu, 19 Mar 2026 14:15:13 +0000
-Message-ID: <20260319141515.2053556-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 1/2] dt-bindings: pinctrl: renesas,r9a09g077: Document pin configuration properties
+Date: Thu, 19 Mar 2026 14:15:14 +0000
+Message-ID: <20260319141515.2053556-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260319141515.2053556-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20260319141515.2053556-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -106,78 +110,84 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33823-lists,linux-gpio=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-33825-lists,linux-gpio=lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_TO(0.00)[glider.be,kernel.org,gmail.com];
 	RCPT_COUNT_TWELVE(0.00)[14];
 	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,bp.renesas.com,renesas.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[prabhakarcsengg@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	NEURAL_HAM(-0.00)[-0.929];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 722802CC9A9
+	NEURAL_HAM(-0.00)[-0.959];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[renesas.com:email,bp.renesas.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 4D1702CCB52
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Hi all,
+Document the pin configuration properties supported by the RZ/T2H
+pinctrl driver.
 
-This patch series adds support for configuring pin properties on the
-Renesas RZ/T2H-N2H SoCs. The RZ/T2H allows configuring pin properties
-through the DRCTLm (I/O Buffer Function Switching) registers, including:
-- Drive strength (low/middle/high/ultra high)
-- Pull-up/pull-down/no-bias configuration (3 options: no pull, pull-up,
-  pull-down)
-- Schmitt trigger control (enable/disable)
-- Slew rate control (2 options: slow/fast)
+The RZ/T2H SoC allows configuring several electrical characteristics
+through the DRCTLm (I/O Buffer Function Switching) registers. These
+registers control drive strength, bias configuration, Schmitt trigger
+input, and output slew rate.
 
-Note,
-- These patches apply on top of next-20260318
-- There is a dtbs_check failure reported on my machine which is due to
-  a known issue in DT-schema (which was discussed on IRC with Rob),
-  arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dtb: pinctrl@802c0000
-  (renesas,r9a09g077-pinctrl): xspi0-group:clk-pins:drive-strength-microamp: [9000] is not one of [2500, 5000, 9000, 11800]
-	from schema $id: http://devicetree.org/schemas/pinctrl/renesas,r9a09g077-pinctrl.yaml
-
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
 v1->v2:
 - Updated commit description
 - Switched to using the standard drive-strength-microamp property
   name instead of a custom one
 - Added a description for slew-rate property
-- Dropped 32 bit reg access for DRCTLm registers
-- Switched using to guard for locking in rzt2h_pinctrl_drctl_rmwq
-  helper function
-- Dropped using RENESAS_RZT2H_PIN_CONFIG_DRIVE_STRENGTH instead
-  switched to using the standard PIN_CONFIG_DRIVE_STRENGTH_UA
+---
+ .../pinctrl/renesas,r9a09g077-pinctrl.yaml      | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Cheers,
-Prabhakar
-
-Lad Prabhakar (2):
-  dt-bindings: pinctrl: renesas,r9a09g077: Document pin configuration
-    properties
-  pinctrl: renesas: rzt2h: Add pin configuration support
-
- .../pinctrl/renesas,r9a09g077-pinctrl.yaml    |  17 ++
- drivers/pinctrl/renesas/pinctrl-rzt2h.c       | 259 ++++++++++++++++++
- 2 files changed, 276 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pinctrl.yaml
+index f049013a4e0c..63993b20524f 100644
+--- a/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/renesas,r9a09g077-pinctrl.yaml
+@@ -83,6 +83,23 @@ definitions:
+       input: true
+       input-enable: true
+       output-enable: true
++      bias-disable: true
++      bias-pull-down: true
++      bias-pull-up: true
++      input-schmitt-enable: true
++      input-schmitt-disable: true
++      slew-rate:
++        description: 0 is slow slew rate, 1 is fast slew rate
++        enum: [0, 1]
++      drive-strength-microamp:
++        description: |
++          Four discrete levels are supported (via registers DRCTLm), corresponding
++          to the following nominal values:
++          - 2500  (Low strength)
++          - 5000  (Middle strength)
++          - 9000  (High strength)
++          - 11800 (Ultra High strength)
++        enum: [2500, 5000, 9000, 11800]
+     oneOf:
+       - required: [pinmux]
+       - required: [pins]
 -- 
 2.53.0
 
