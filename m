@@ -1,193 +1,186 @@
-Return-Path: <linux-gpio+bounces-33778-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33779-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4E/MJgU+u2mphQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33778-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 01:06:29 +0100
+	id oDF1MU5Tu2lMigIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33779-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 02:37:18 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D2F72C4079
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 01:06:28 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73BB92C48C4
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 02:37:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 419DC3015EDC
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 00:06:23 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B8D443017DC0
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 01:37:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23FF640DFCA;
-	Thu, 19 Mar 2026 00:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5301D33ADAD;
+	Thu, 19 Mar 2026 01:36:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKs9I72Y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a5BRtnw6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE65DEEA8
-	for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 00:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43CBE33263B;
+	Thu, 19 Mar 2026 01:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773878777; cv=none; b=OobIR4VUJpcTFQkaI3zHI3fUR+PCvkThAG+IlEUqKegoExvNnaNnTKnwsM+EtHtVTJRecZFY0M7zCIeO5MqG22s8aSZopLqftnLWVlaeD9U/Ym22TRLP7Z7g8Op8lPDh1c6NQoyhqFPZwScLbdRgdCmcvHjBeYhDtpYdbd6vyRI=
+	t=1773884199; cv=none; b=KsJ1OdnsW/Y4KSQIn0YbtEuiDLis9GoXvOuXZRSHgaOC8B83jSE8O2E8Ut+74QRDflTnXgm+oWpL2crvGxA77il3MLjzFiJk68/BTBb4pGvGvI0yNBLSISt3BFJ9yYpfKZheKSxnsaf/xroZIdJNOzEr30qJgc1kmxnqm1Gia8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773878777; c=relaxed/simple;
-	bh=FzNH19rgnTQby5fAPdsDwWUSiHP1o3ls1AowYzfPyg0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GMrzcIQTylxZwFgxo7DD8EhnlgSjxF/nqL4DpqrZNMBxl+0ve8RjoS6YgwftR54iwfrgerk9SBzczO8uzw5ab5OIYGrYiolxn050QW5v/DKDYsXVvNbUH1zqFPKJQvhFKD7c+oRwsWDN2Qw5U3E3FxPBKVxNgjUO+Q9jvr5jlIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EKs9I72Y; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2b06c43e6a7so1537935ad.2
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Mar 2026 17:06:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773878776; x=1774483576; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yRm3k9nSwdEcyKRHATcZEGW4qHweuoW5rJO6irAqBPs=;
-        b=EKs9I72YKo1AFwo5u1YJpW5ayVVkW4fxZSe3oHvA7EfkSUbVo8yW2xyCZhQAZ7EfPy
-         RUzUj0Wx7yDWuzMEAWePvwovWTmqSe0RekEYTceb4llaIRCloDlK9ezFnmKqeXaqZhFF
-         r8wl506HQDgMNMuAZnqlcROlL645h3rJYFK2F3rEmCPM8504JcbG1/33u/4PU1QMlhH9
-         EUurRx1iZEsFUK6myQuaGhH3vBK4u6KEtuuqzU0Wkaxzx6NWVku/KemPYwrLosbH0W/N
-         4uMKfrRNyEKhYxLyvN5PJ1nE3P4UW58CgR92l5inVXaXTqzn6Qa8GIGmZJMa+K/lXuXC
-         7Ffg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773878776; x=1774483576;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yRm3k9nSwdEcyKRHATcZEGW4qHweuoW5rJO6irAqBPs=;
-        b=a1nlPMsoGfm4F94APtQMcT5PHYSdDwMAcqLwgdSakGzSKZJM3faPVVvaP6zfWHUcXd
-         Aq7fUQjda12Tsog9FJ01xmlFEOoWJ4iI4VeKbcQhgGgJ3h8w+SRazYT/gI9sZ/eXUY90
-         OCNqNkn5EHkwknX2WMEMAeT7zkj8wtuN5gz3Zem7MwWifyNVicCyi7uJ/O7bpZ+ByqUt
-         dR+wKD1nSFwe8cdsDAcKWGCSkdsQ0vuW+CKW9bB+eRbrR1az1ure5jHMGL0h6NwUSeu9
-         V6hLM4zsF5Ijoe/fqLBBlxrhqDtSYr/VxDVTFznSJbPz0Rg1PAXSdT36SBuwQ8xdwBht
-         e+LA==
-X-Gm-Message-State: AOJu0YzNJMq5SSkRsxHF+AAZmuDurkaFhCShKffZ1SCTnS8cK10/XUPY
-	HYeEJYukbVc3m3OT40RudMLkX50XttQtZVfy1E3JyZS483Mq/QEny2H2NWit6A==
-X-Gm-Gg: ATEYQzwIhN3jDYM5Ffjwf1kDcJg6LLJYeKa7Z5IOPtcz6aVrcnzYs0qYZNbxPAoj6vJ
-	zjPnPLJyY/nIoJsjRrnQ4Gdfnzbf5z4XhHOuNSx+c6osT1TiqbC7eTBCwrh8Ain/LINcLrde8GB
-	ZWmCb8gc6Soq1IceN7hIq5tUJBdY9X8HWFQ8Dc1GW6iN9PIPnoRpXOXGUp886CBcKcIiy69tTVd
-	wGy0Nr70vYBCg+VJhGCHjaTUVkPip1U9y94xQx1Cfx/WPv1TvZN+H/MGCvWj9lzEqjpqflrvMWc
-	Un+DUOLM0HgJjeGF1+C9OUseGyT0/RCieDCLCZJQnL7LNeIZ0NNmAiLjQXlBjOg0ET0/2Hvi3J9
-	flC86Z2qW7ZAQm41ChthRIxMGj4+y8HFWXyLP1pdR6u2MUVNOB1KXZYeI+fj9k1P21BD3cPxyLP
-	qKKDDMDGKOHXcy6N13csC1mGRVp9uC5IQ/awy37iGad0bT2jnFd/lleN6ZSjEEeutRaw==
-X-Received: by 2002:a17:903:2f87:b0:2ae:ba41:60 with SMTP id d9443c01a7336-2b06e3248d5mr49150455ad.1.1773878775805;
-        Wed, 18 Mar 2026 17:06:15 -0700 (PDT)
-Received: from ryzen ([2601:644:8000:56f5::8bd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b06e4199easm51952735ad.5.2026.03.18.17.06.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2026 17:06:15 -0700 (PDT)
-From: Rosen Penev <rosenp@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: Bamvor Jian Zhang <bamv2005@gmail.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-hardening@vger.kernel.org (open list:KERNEL HARDENING (not covered by other areas):Keyword:\b__counted_by(_le|_be)?\b)
-Subject: [PATCH] gpio: mockup: allocate lines with main struct
-Date: Wed, 18 Mar 2026 17:05:58 -0700
-Message-ID: <20260319000558.22108-1-rosenp@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	s=arc-20240116; t=1773884199; c=relaxed/simple;
+	bh=sQ9S+t4COwhuFxYoWBjkSUbfHgYR1riJrMiDGK+HRh8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A4qjoeUGTBSr2b+AxYRPuaSbn5LvebTYmrTnzxUnIODmSDZ3fi3KWdcoD1c/hi39wQwikLYgs5dtzG8WEsiO4hYJDay7yXY6lL7WEc01JlPhZkbOucrQAKEAofQMD2PAVbwJ6jBWGapZ1e1Y/f8WD6/U0LvsDxXkETxpulJx0J0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a5BRtnw6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4215C19421;
+	Thu, 19 Mar 2026 01:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773884198;
+	bh=sQ9S+t4COwhuFxYoWBjkSUbfHgYR1riJrMiDGK+HRh8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a5BRtnw6drSdoWmxEklt+Rjt7mGp6DfUCqRw4LNPMcm4Ht23m1oQd1kG3az99XtTt
+	 mfD8a7x8C1E0od3DjgkYqtI8Oplqy2wo0mR+hxYgOZrdHm11EIBj5VnkeTxyEF2kew
+	 4vrPo0B99vs9znEg0qJD3tGBdPfYRSOneaKRC5Lcasy/GsNDZ48ySq2/ejIQMFWYdp
+	 9XVftGCZS3T4mWtWx3yOXylCr7UH/1u5FYrwXdHkEeflo4X3cWCLCkPBoNauZaAVmK
+	 reS5kcyJfgbXTtHp25oq3iSijm45Zzci9qk2dy4TgTXeZEQewMsknjHvuDIX/n8r0l
+	 0ia6wp+wIUPlg==
+Date: Thu, 19 Mar 2026 01:36:33 +0000
+From: Conor Dooley <conor@kernel.org>
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linusw@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: renesas,r9a09g077: Document
+ pin configuration properties
+Message-ID: <20260319-cleat-doorman-922ab3729b52@spud>
+References: <20251014191121.368475-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20251014191121.368475-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20251016-dimmed-affidavit-90bae7e162aa@spud>
+ <CA+V-a8un1cF=acNjG=79_v7oaR8gzBQ+3z1As8AqrJnOnk-OUw@mail.gmail.com>
+ <CA+V-a8vq2EvTb_hXxRzW_Rbp+BPLSaLsEVkvaTjc1zRin-RV=Q@mail.gmail.com>
+ <20251208-headgear-header-e17e162f0f52@spud>
+ <CA+V-a8s0gPbe2ffmN1G_7ibVL4+=FKUEQZu3_CwQL=U0T3--DQ@mail.gmail.com>
+ <CAD++jL=J2UpxQSNrZhCMw2fJ0umM8NRtNys2zMBouAFBoK0m2A@mail.gmail.com>
+ <CA+V-a8vNeJdbjJ6K9QkedHgAprC=Z0ckUztwe1ZapSiqjPKEsw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="np5LBp3+k11Z84gj"
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8vNeJdbjJ6K9QkedHgAprC=Z0ckUztwe1ZapSiqjPKEsw@mail.gmail.com>
+X-Spamd-Result: default: False [-2.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-33779-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-33778-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FREEMAIL_TO(0.00)[gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-0.969];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	NEURAL_HAM(-0.00)[-0.947];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[kernel.org,glider.be,linaro.org,gmail.com,vger.kernel.org,bp.renesas.com,renesas.com];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 9D2F72C4079
+	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 73BB92C48C4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Remove no longer needed kcalloc to simplify allocation.
 
-Added __counted_by along with a counting variable to get extra runtime
-analysis.
+--np5LBp3+k11Z84gj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Rosen Penev <rosenp@gmail.com>
----
- drivers/gpio/gpio-mockup.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+On Wed, Mar 18, 2026 at 09:30:06PM +0000, Lad, Prabhakar wrote:
+> Hi All,
+>=20
+> On Mon, Jan 19, 2026 at 12:10=E2=80=AFAM Linus Walleij <linusw@kernel.org=
+> wrote:
+> >
+> > Hi Lad,
+> >
+> > I think this back-and-forth must be a bit stressful. Sorry about that.
+> >
+> > On Wed, Jan 14, 2026 at 9:53=E2=80=AFPM Lad, Prabhakar
+> > <prabhakar.csengg@gmail.com> wrote:
+> >
+> > > > > > > > +      renesas,drive-strength:
+> > > > > > > > +        description:
+> > > > > > > > +          Drive strength configuration value. Valid values=
+ are 0 to 3, representing
+> > > > > > > > +          increasing drive strength from low, medium, high=
+ and ultra high.
+> > > > > > >
+> >
+> > > I got the feedback from the HW team "The RZ/T2H drive strength
+> > > (driving ability) is expressed using abstract levels such as Low,
+> > > Middle, and High. These values do not correspond directly to specific
+> > > mA units.
+> >
+> > But they do correspond to *something* electrical inside the
+> > silicon do they not? Then what is that?
+> >
+> > I think it is just 1, 2, 3 or 4 driver stages.
+> >
+> > > To determine how much current the pin can actually drive,
+> > > the engineer must refer to the electrical characteristics table.
+> > > Therefore, the drive strength in RZ/T2H is a parameter that switches
+> > > the internal output transistor mode rather than directly representing
+> > > a physical drive current.
+> > >
+> > > Consequently, expressing RZ/T2H drive strength in milli- or
+> > > micro-amps, as suggested by the reviewer, is inappropriate. To
+> > > accurately reflect the SoC's hardware specification, introducing a
+> > > custom property is essential."
+> >
+> Sorry for the confusion , there was a miscommunication regarding the
+> specs, but it=E2=80=99s all been sorted out. The drive-strength settings =
+on
+> this chip are 2.5/5/9/11.8 mA, I will represent them using the
+> drive-strength-microamp DT property and send a new version.
 
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index a7d69f3835c1..a907ce28cbbb 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -52,10 +52,11 @@ struct gpio_mockup_line_status {
- 
- struct gpio_mockup_chip {
- 	struct gpio_chip gc;
--	struct gpio_mockup_line_status *lines;
- 	struct irq_domain *irq_sim_domain;
- 	struct dentry *dbg_dir;
- 	struct mutex lock;
-+	int nr_lines;
-+	struct gpio_mockup_line_status lines[] __counted_by(nr_lines);
- };
- 
- struct gpio_mockup_dbgfs_private {
-@@ -436,15 +437,18 @@ static int gpio_mockup_probe(struct platform_device *pdev)
- 	if (rv)
- 		name = dev_name(dev);
- 
--	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-+	chip = devm_kzalloc(dev, struct_size(chip, lines, ngpio), GFP_KERNEL);
- 	if (!chip)
- 		return -ENOMEM;
- 
--	mutex_init(&chip->lock);
-+	chip->nr_lines = ngpio;
- 
- 	gc = &chip->gc;
--	gc->base = base;
- 	gc->ngpio = ngpio;
-+	gc->base = base;
-+
-+	mutex_init(&chip->lock);
-+
- 	gc->label = name;
- 	gc->owner = THIS_MODULE;
- 	gc->parent = dev;
-@@ -460,11 +464,6 @@ static int gpio_mockup_probe(struct platform_device *pdev)
- 	gc->request = gpio_mockup_request;
- 	gc->free = gpio_mockup_free;
- 
--	chip->lines = devm_kcalloc(dev, gc->ngpio,
--				   sizeof(*chip->lines), GFP_KERNEL);
--	if (!chip->lines)
--		return -ENOMEM;
--
- 	for (i = 0; i < gc->ngpio; i++)
- 		chip->lines[i].dir = GPIO_LINE_DIRECTION_IN;
- 
--- 
-2.53.0
+neat :)
 
+--np5LBp3+k11Z84gj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCabtTIQAKCRB4tDGHoIJi
+0ql1AP9ysMDTWQsOxxKKrwhxFbvCogLtOnFCUjA40DK4MCrEfAD/bI+m0QT7sICr
+Vh5vZn/KFYCxnY42LSsUvytzeXUBYQo=
+=BFsu
+-----END PGP SIGNATURE-----
+
+--np5LBp3+k11Z84gj--
 
