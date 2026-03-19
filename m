@@ -1,122 +1,144 @@
-Return-Path: <linux-gpio+bounces-33808-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33809-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cN+tKn/Iu2leoQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33808-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 10:57:19 +0100
+	id iF98BSnUu2k4owIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33809-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 11:47:05 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0972F2C9245
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 10:57:18 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A51692C9B6B
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 11:47:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E897032708B1
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 09:46:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4EFFD3213384
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 10:41:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B80DF3750AE;
-	Thu, 19 Mar 2026 09:46:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C63043C1997;
+	Thu, 19 Mar 2026 10:41:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMuFV1Lx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cJyqzsFT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3EA374727
-	for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 09:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5CB3AEF2B;
+	Thu, 19 Mar 2026 10:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773913578; cv=none; b=u+E4JpjSjTmRVyD9HHTVze74yWrPNYDErBtInHlaclzlf248vyfCIPX8Obije6GdZrC/y1YXwp4j9m4mG3HQqx5WAVhY6tXyMPfB03Lh0tGTvZnQ0ApWkPcs7mGQW6TsKbMwzwO92y+kbmncu8sy1rJwnLt9zYIbGc8hGMmO8B4=
+	t=1773916895; cv=none; b=JsCFH06Yogg0Kfv8z5Zs3EMhOdGjRE0rm/oZVldHgZJFnm1OdPyy+Vfh6VuxBfKoP3xDLAMJMiuN454GiMovu4Zf1w6ChPkcx1l6l5i4s5C/GngUq4AtmjMVTIVrK2c2YL5Whdf/1gxylHZWtw/S78uCUbNOLC3yUU0oYrF0ia0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773913578; c=relaxed/simple;
-	bh=oijKMewdPgogYXQR9FM0p3Swk08ISDJV5pfBwFnYyYk=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dbflJH74FS8KD+SXyXRwoIS+5Em9OfpTM6xeC4WhfcvTc81xepgdxDzHKTIWvmw6TH2SYJxOj5jFO95tpSEx3zFKfk+cSzr4lmECYxsJKY1Ruo4Oty6KK6CJFlKeiWDxcNWDEHVYPVnZMmDE55yV0EY4k2O6Z0VbzWbI8jKxung=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMuFV1Lx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60BC3C2BCB4
-	for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 09:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773913578;
-	bh=oijKMewdPgogYXQR9FM0p3Swk08ISDJV5pfBwFnYyYk=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=GMuFV1LxG6SzfIgBXZiSyP20E5uX2Uu8dcCazbe+AoJRqEoiX+EHXhmdHXMq8PbK9
-	 FutLDgUhreid/9i/R3lj/GdEvTlG+wV1EqAsk7z1OcMfRutwWxfBWcwxNIieL3nv7c
-	 hs5g9yI4Su69kY92k3VYAHVzsPzD/f32GA1Ak627A8mAAMQnZcC2PcjWvEDTduLC9B
-	 wWM1BRMiApjiqTekiRNdhrvODFUlC/u1XHgbREr5IiZUOMidbV6ebdc8D+lccnwza7
-	 xGRFzf/OQfIyVNIzqU1F7665BwYXHut7To22Swy/8AIsEYbUkiGv+ocl/QGbIESZ6O
-	 lKMbxfWENDWqg==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5a277379151so623305e87.2
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 02:46:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUuP9F8kKer3Pz0ai7lF2CrzcRYKk0RkySafU7y6mn3Fwri1uBtzQa4+WluJ1A6hqgULTUsZD8/gxtJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx11Jt8HynxKC8LDct/F0Qz8lR+4HTqRJszil4BVmQwaoMQ1bHy
-	tYGPPuLfzTNXsSPqnAWX6PfWxzPARyGeZvfDAtWKCeOIiZq/YxXSwhSNsJXo8FFkUegdrl3Q/Nt
-	U4cXh9/xqwmjiY2M5+8fxD5S/PFZj7LTEpOAZLPNHPA==
-X-Received: by 2002:a05:6512:20c9:b0:5a1:23fe:b04c with SMTP id
- 2adb3069b0e04-5a27958b7f8mr2222705e87.18.1773913576985; Thu, 19 Mar 2026
- 02:46:16 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 19 Mar 2026 02:46:15 -0700
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 19 Mar 2026 02:46:15 -0700
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260318-barco-p50-gpio-set-v2-2-c0a4a6416163@gmail.com>
+	s=arc-20240116; t=1773916895; c=relaxed/simple;
+	bh=Yh5rXitUzlFimADw7HSOcupMmucskxa3HXNePiJhcso=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DLN0ipnByRVndRsXRHDifkaBe7HPe2i5gglAQQlG3pLPyUlZ/UUjS+HchifKtkM4yC/tmpEMuBfTA7HJbMgVM6CCdekhwr7UPNH249HTclhofwQiZcfBHVYNKSvWfX0Kz3OXfGWzj48uk0XJjYyPGnkwOTIvInO7qYCSOc11A8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cJyqzsFT; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1773916895; x=1805452895;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Yh5rXitUzlFimADw7HSOcupMmucskxa3HXNePiJhcso=;
+  b=cJyqzsFTuk2TzwsWu61AD+mgjjtnvaQvc/LPLf/MHxq+nzdlAhkubnxp
+   MsxVN0C0ULtCg/w9/MrLM9jSnzCQPAHErSOMNOtkl+/vBxI14l+NP6NFz
+   nUeZ4XkmROqCI/ldFWbdzBjL7zegXNySfz9+vzuVVkgnnwut19of/U2BY
+   WVMgtneynC1C4Tg+KQLDaZDqck5kShE2VnWIrh4h6oFYT0Eohii5SGmas
+   i+rmD6vtKhyoDRDu+gh+dPMU1Smj05Q2JKzgTxvAgkQ4vnbgLnKE1pVHu
+   e/kuUuGMkQRqhdEDbNVFBXan40ZfXVrS4vfFVYt5D4161LAVCzGBq8hxb
+   g==;
+X-CSE-ConnectionGUID: PI6zEkHEStiOmQGYfYCb4g==
+X-CSE-MsgGUID: hP664elcR9GLt/dhVBwrlQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11733"; a="85302688"
+X-IronPort-AV: E=Sophos;i="6.23,129,1770624000"; 
+   d="scan'208";a="85302688"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2026 03:41:34 -0700
+X-CSE-ConnectionGUID: TbDEzxw1RW2DSe4DKCZLmQ==
+X-CSE-MsgGUID: NNc+VqSHQreSbS0VFZtJmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,129,1770624000"; 
+   d="scan'208";a="220319671"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa008.fm.intel.com with ESMTP; 19 Mar 2026 03:41:32 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 960CF95; Thu, 19 Mar 2026 11:41:30 +0100 (CET)
+Date: Thu, 19 Mar 2026 11:41:30 +0100
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linusw@kernel.org>
+Subject: Re: [PATCH v1 5/5] pinctrl: intel: define iterator variables inside
+ for-loop
+Message-ID: <20260319104130.GT2275908@black.igk.intel.com>
+References: <20260318151256.2590375-1-andriy.shevchenko@linux.intel.com>
+ <20260318151256.2590375-6-andriy.shevchenko@linux.intel.com>
+ <20260319060221.GP2275908@black.igk.intel.com>
+ <abuedvr8_FauBMJW@ashevche-desk.local>
+ <20260319070925.GS2275908@black.igk.intel.com>
+ <abuj05EIZcO10wQa@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260318-barco-p50-gpio-set-v2-0-c0a4a6416163@gmail.com> <20260318-barco-p50-gpio-set-v2-2-c0a4a6416163@gmail.com>
-Date: Thu, 19 Mar 2026 02:46:15 -0700
-X-Gmail-Original-Message-ID: <CAMRc=MfWT9Egu9aBRar2qyQ5_7CUL2hn-h1Q99nBmtuuh=h9iw@mail.gmail.com>
-X-Gm-Features: AaiRm53xfEXDs_Oh6VhVv87lOcMbBcsDbeIpwCS_pmj929lMpmv03Yi-4X9Ub4M
-Message-ID: <CAMRc=MfWT9Egu9aBRar2qyQ5_7CUL2hn-h1Q99nBmtuuh=h9iw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] platform/x86: barco-p50-gpio: convert to guard() notation
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Peter Korsgaard <peter.korsgaard@barco.com>, Hans de Goede <hansg@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Santosh Kumar Yadav <santoshkumar.yadav@barco.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <abuj05EIZcO10wQa@ashevche-desk.local>
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33808-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33809-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,mail.gmail.com:mid,intel.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_HAM(-0.00)[-0.996];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mika.westerberg@linux.intel.com,linux-gpio@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	NEURAL_HAM(-0.00)[-0.993];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 0972F2C9245
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: A51692C9B6B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, 19 Mar 2026 03:56:18 +0100, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> said:
-> Using guard notation simplifies control flow and makes the code clearer.
->
-> Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
+On Thu, Mar 19, 2026 at 09:20:51AM +0200, Andy Shevchenko wrote:
+> On Thu, Mar 19, 2026 at 08:09:25AM +0100, Mika Westerberg wrote:
+> > On Thu, Mar 19, 2026 at 08:57:58AM +0200, Andy Shevchenko wrote:
+> > > On Thu, Mar 19, 2026 at 07:02:21AM +0100, Mika Westerberg wrote:
+> > > > On Wed, Mar 18, 2026 at 04:10:19PM +0100, Andy Shevchenko wrote:
+> 
+> ...
+> 
+> > > > > -	int i;
+> > > > 
+> > > > If there are multiple loops, I prefer to declare the variable outside of
+> > > > them.
+> > > 
+> > > Why?! It's exactly where it make even more sense to hide.
+> > 
+> > I disagree.
+> 
+> Why? Can you give a constructive feedback, please?
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+I think I did already.
+
+If you have just a single loop it's okay. If multiple then it makes more
+sense to declare the variable in the outer scope. This is at least what I'm
+used to do and prefer here as well.
 
