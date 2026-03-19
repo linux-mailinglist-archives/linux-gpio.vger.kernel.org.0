@@ -1,103 +1,105 @@
-Return-Path: <linux-gpio+bounces-33833-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33834-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SB8AJVEjvGkptQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33833-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 17:24:49 +0100
+	id QINmCEYjvGkptQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33834-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 17:24:38 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F5BA2CEC0D
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 17:24:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 769102CEBE5
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 17:24:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 808B43202CA3
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 16:11:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8E52E32C78FD
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2026 16:11:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 962A03EAC9B;
-	Thu, 19 Mar 2026 16:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D3003EBF2F;
+	Thu, 19 Mar 2026 16:11:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UuqVAtaD";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="cwlucFd7"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Yl6232p3";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="CHtTMjyC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2AF73E92B8
-	for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 16:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE663C73C1
+	for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 16:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773936674; cv=none; b=u2RWLp+bY83BjeR26j6rF9qOucjLOXfiUsxjk0BT364q4Fevik3XcJ8Jv0Y+yNT2v6k6kUT5uEgoYI8j85ZaVmSmfeLnsyNr43y6mmybC+oAaFnicCQrAOXc/Av0uOayqlUiUzfO5DgLBCRgPTI7IABCszZ6SAs5o5znsinkWbU=
+	t=1773936677; cv=none; b=qAycuJFxQ1HAYJsxviY7k9Z78SkLNNVHrH0mtmsQIB/02479t4ntfOigpGi/dOtJDUPYV+xZ0o7cmGr9aEeum01HkPDuhNirRlZQmAZkYfgGczQT0jkpb2G7xt60YeQ2bDmphlSOFoSQ/liDoajOzAEsU/JO/x5k52dZMLcWPCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773936674; c=relaxed/simple;
-	bh=pAa4lSJt1eX5y7wxtdI7aP4F3W8n+Uq5GJrm501jlWs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gG3wLOvHrNBHjcx5Xs9kmvfp7btxz46ccchi5zDP8fffiylH+gzfR6yyRGD3DwGyHXfsXXBn/gxaFz4iHOe0czBObFGEqiGPmJhmt3Ee2oRbhYo3GvSV1/I43DBNPcfy96FjJrxvo8jRrmZ2zMaBTce5UA8wmwNB0+t7KwolNuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UuqVAtaD; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=cwlucFd7; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1773936677; c=relaxed/simple;
+	bh=GXiegH5SRMfYAHFveVz49Jd/VzeFD4+D1OYGYQfjqbw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=A+sbJeUXrJIZpAlW2UF7amBmqxQa5MrQE1fIh/aVNNEtsz7cMt1VjDjUnjvMijU4r614maUTp2g4SuwBj0dfrRCsLVvKXCuGV7zA1UYSW7vviPo+tkQ3z5WSiSGXGbO2fpyarqwoS8r1hqCWcjDe7Ly55jmAkpd4iJ4UFTQweOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Yl6232p3; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=CHtTMjyC; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62JFAF912544614
-	for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 16:11:10 GMT
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62JEW41Z2981406
+	for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 16:11:12 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=nceZfJ+3sqBsNfl8MmkTbM
-	4rULkZHkwhD/qFdlmV7fw=; b=UuqVAtaD4p6dbgtmfedqzWrSZ1NyaJ34xqcOVd
-	u/0GqvGhhjR2OleQO465Uv8odGoND2oaERQX7AnY+URkDfUMTOeyfXLSOTs5xpKG
-	KJ6KroKhzTz7rIWIjsv9cQrVk7blULQtOJtzrB1CO/jehWwVDgTF0dd+65SWyH1f
-	KpzJI6ZqR1RgJPBJwKbVukg6fNSL27t8ERrexW6KGjPb6q1bqiMs+FRrVzmJ0tt4
-	UhnoECwCXCDvJGKzh9my+v/EnxmXsa8Rt5Zwa8sW2Kom18xsjj+0L11z0To3tZPD
-	Js5Sqw4kr3v5HBSf7YZpsshh2i6kM/7LpAhSI8I9549bg/Uw==
-Received: from mail-ua1-f69.google.com (mail-ua1-f69.google.com [209.85.222.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d0957t95d-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	gNEZb3fCa4ZhfpQFG8JrK/v/wHOU6VGHlluFvh+xrDE=; b=Yl6232p3sgiIdBpj
+	2/UsPXQfBQ9ugWU7BkCKfQK/bQOjGcQ5ti7kkP6JiHOi39f9ojbaoW/hCKp+XvBj
+	CTWO2h0ITqAMq2E0zlquoPRPQqvEwce2006dzV+7pZMhc79lkyN+yrAbbegPob76
+	IrRCeKLoA6SV4ELbeTa0JvqNZsCZUeYaxmZ3HBNiZrNtCpeLmSVQPNf83XUeAWWn
+	uTGh+XCujiFq+UL3Ez+owaZBwss0DrZ3GaEnSNe2BPlqC1nvO+UjVAy+JPdD8LSk
+	679lX7leYBWPKHeMZ+kFWlQ/bJTJghqQjF+DpTxTRzio8B+R2pLGYvOtgGIJoX45
+	POTjIg==
+Received: from mail-vs1-f72.google.com (mail-vs1-f72.google.com [209.85.217.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d0k080bmj-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 16:11:10 +0000 (GMT)
-Received: by mail-ua1-f69.google.com with SMTP id a1e0cc1a2514c-94eb847f11cso10341385241.2
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 09:11:10 -0700 (PDT)
+	for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 16:11:12 +0000 (GMT)
+Received: by mail-vs1-f72.google.com with SMTP id ada2fe7eead31-5f934f736d4so1553001137.1
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2026 09:11:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1773936669; x=1774541469; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nceZfJ+3sqBsNfl8MmkTbM4rULkZHkwhD/qFdlmV7fw=;
-        b=cwlucFd7CNRy1yyOKrHMzqVQUNXBNg7YoXcdPxB30M1+WrwmfkgMzpjfPDFKuuALHt
-         rr+LH+ke1anEFGwoO9spW3/qA08eM7SczUGg2KaX1212nneW0ijCbbenleKFP1PtDE/4
-         abfN68n36MDeZfNr8xYBfdt9mRqpahkQc7TKCrHFX5nsa+ECp4LfBqoyTNR6GidTKsc3
-         /eSc0XxDFp3v16GsVRW1K0wRFj9Lq4E7Z7/FXSxwsQRJSgsdRnpe8Q/5e2SHURhbbVug
-         CA+yH+LerqO9gkNOTGhd2vc+cSgvSEC1dmEnFqNQ7Lqmuk4y7PbyoJEUB5+lGgSprsHb
-         KVpg==
+        d=oss.qualcomm.com; s=google; t=1773936672; x=1774541472; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gNEZb3fCa4ZhfpQFG8JrK/v/wHOU6VGHlluFvh+xrDE=;
+        b=CHtTMjyCESW4cC0SZjZBHEYovmhbhygCHeQPgd5ShPW7SdcYn21rCvxsbW4Itgc5sa
+         eq0xWJ6r5BwvnsKtNVNuYpCW310Y62JguxAeQyfxozxZ8BNqVURER1H4wyURPrDllibT
+         rQUE16q8te1PbHviov42G6OU4+PmHZKd0276rEbS7TpVHk1TROwV0N/jbn4AfN6EKM/j
+         DeSgxaA/vopXUrxbpvdqhwfThpNe2FnDcwBqWk/jlx+FQ6BmHeUJqZL2g2fLKyn9RHat
+         4q05NTnIIgxoll98fUttDzjSaGdzFc0YkdRVnPveq0KSnakHVYcG3v9XNGbI1hVEwmJ7
+         EmzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773936669; x=1774541469;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nceZfJ+3sqBsNfl8MmkTbM4rULkZHkwhD/qFdlmV7fw=;
-        b=HHXY7drg/Y8jVWDMq1qzB64FZKuO9y+QSWjQSltTTA8BpUtKosMsGEGFWj84yt0LJm
-         pBtdcDfPTuqZdwCjZmhI+/XAwORMp/ONNRzyt5QdhbCi+JruU5nz7l8lghXWODvpiWYw
-         dbA/uqCKC2j5ffUI9JF1hRX6vmUQ8AcTJlcnhV8XpWAYscwWrAX6ubwZxvVW+wOz13kg
-         LCEjusev+9uiATmrHqf14CJhQyI5fSiJG7Mu4j6RIxM2C0Jvw6XFHWrV1yLDJiGP7Fks
-         F2iVZp1Pvod/AoK4nmTqhoNjOyf6LWx58VuRP7afXta+1+89CB7mG4cXQdP/nX4ce0tT
-         giIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUoG9ckzecDGiBXXPQmoU4HyKJmLwd2u1zGs26DDyvdXiUXggfL2FiDGcHE/lSnTjZkTbWv9L3nidkH@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUOoe/uHi84XnKWb0P2MHtjj670lebtjPzk10a8voe3BaL3CfL
-	pnNehVUFGUesilQYETBflD1Wd7Ep0CeoKgzsYMAQpp7BdENl3Wa03jwn/x/i8KmHK6yCkVpoMXr
-	ss42zOb3iOu1Iwl0AO/OHmuNUSkPS/ouFCPKE65z3LhHo5i+RyyGNbPnHSrpEPTUW
-X-Gm-Gg: ATEYQzxr6WZ+Ih615mqXDv4HnH+gWuqYCV8SWBhsSD9eFYt97ot1B1GqV3rTLNJoW8O
-	hb0rDcZmfyuV5LGfEEfbhn4BglUAQZaZMeViN/Zx7/Rou44ZqwSlZlK37lRjz+UQcFpegZUKo0Q
-	wvcyGsy6TG8Uo00iU9RgDeLcgBzFcCJTwdgQCSrDAxULIUHjsL3NmgQ27ELcMelILg8qG1vwhLf
-	uW2xCFZ8T4WF2aQf8qpc0u4vW9wfwIVVWANM2dgxDPIhWQPyI6IVAwUzIo1LWz+zUSmcN18D1bO
-	7Dwsm0aAEcZWd9+kzdJd/4WO0F/mDTvcs8/sTQ6ezHdWw216pLPRh+k9GUDQLj/gM50wN9aSuxw
-	FigAsEKxPNJXMRhK0JDlrOGPuDEiwIacPFtdjb7PPKrh11F+YCPlJ
-X-Received: by 2002:a05:6102:26c9:b0:602:80fa:ee9a with SMTP id ada2fe7eead31-602ae79fd0dmr90736137.0.1773936668958;
-        Thu, 19 Mar 2026 09:11:08 -0700 (PDT)
-X-Received: by 2002:a05:6102:26c9:b0:602:80fa:ee9a with SMTP id ada2fe7eead31-602ae79fd0dmr90694137.0.1773936668505;
-        Thu, 19 Mar 2026 09:11:08 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1773936672; x=1774541472;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=gNEZb3fCa4ZhfpQFG8JrK/v/wHOU6VGHlluFvh+xrDE=;
+        b=kwA4IgjGAc1/gwcfRNrIFKhvQyGRPqmzdBOWuFffjzE0R3OG4VJycl/807eDx/6dmh
+         +9IrviE6uChtXIXrpgFOirO9YKgZVTViuoMljX1fyGBvBC6gTZVKC1LqBB1KUUFkW1lf
+         9id3ODZiFdvkSdt9RaJdArNAmW+q+fRyQF/Fb53H5ckgKyjMV7mUFP3V02Mi99pXS7U6
+         xQUWLzw+09lOHnXmGe0Az2pGYbWhIatqlWStMxzjfyn8CfScQaAXWXIH/bQRkSUhFPBq
+         l+/DcpjsSGpXr9UkbHxb9PEdEnTk5ZyS8jFPx69zTbni0kCijIXDUqQClaskBvc/u9Y5
+         pClw==
+X-Forwarded-Encrypted: i=1; AJvYcCWi7vAvoVYQ5zdL84NZSPHqCpihwb1KjlkP4isriClvYONc7i2NJc6AVIFltk6u4/K52sf88h9llrbS@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJqVc8119CVNJjB9z2K7AnO/EdCwS98LAw5HeNqngCCycGCjRg
+	kGs0Kd0Dj1GJKFiOdPh1jhjUmEQOFK6xvllieCHhKGkefoo6kHPxT3eFbDGPr4IRv78xB/IPrxV
+	2SMAMEeU/F8PjAUvAe2GYfUiRZ1AJD4WrRAO/uWvbAtt7F9BnZJWOAvG31fwTnje7xXOCpdCH
+X-Gm-Gg: ATEYQzxKJjELX1v6UiC8EPclahWRZ2lbYw8JsaqGHSGUeCtnSzCOfk0B7X9S5VeF9ED
+	q6byKTgKmjzQRgQ9c5VqWad3hJMKMEtzgRIWPOxU/qftbaZtTVag6TbB5LuDitFEhR1iHkx1eFn
+	ern6rkYhP9lGsGxff83a3TzgLG3lxzMQwC3ZENWCC+sb0cFMhyuRrwV8DOr3M2Ugfm5Zbm0CwBE
+	qHrpjYer+r0Md5K+1bldYZBX9IK7Gmzxk1+VUAtPn03DJGTraLgRnNfy1jhgUpjJZKsNOqivnzW
+	q0yRLy6xNSzhw1t7MQBwWphU0u7UtaokmScUw5wemGakrrC9hBMfaEmZ9GMbx/k5O4315TvjXoc
+	RGPRN0imNUaDYK19pc0csCxSWzLgUwXYlFBXj907nJRjRFbjRZrnW
+X-Received: by 2002:a05:6102:1620:b0:5f5:4d9b:bd67 with SMTP id ada2fe7eead31-602aea8d87amr64290137.6.1773936671566;
+        Thu, 19 Mar 2026 09:11:11 -0700 (PDT)
+X-Received: by 2002:a05:6102:1620:b0:5f5:4d9b:bd67 with SMTP id ada2fe7eead31-602aea8d87amr64249137.6.1773936671012;
+        Thu, 19 Mar 2026 09:11:11 -0700 (PDT)
 Received: from brgl-qcom.local ([2a01:cb1d:dc:7e00:9d74:8015:408c:d719])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486f4e5495csm83756915e9.2.2026.03.19.09.11.06
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486f4e5495csm83756915e9.2.2026.03.19.09.11.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 09:11:07 -0700 (PDT)
+        Thu, 19 Mar 2026 09:11:10 -0700 (PDT)
 From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: [PATCH 0/4] platform/x86: x86-android-tablets: use real firmware
- node references with intel drivers
-Date: Thu, 19 Mar 2026 17:10:53 +0100
-Message-Id: <20260319-baytrail-real-swnode-v1-0-75f2264ae49f@oss.qualcomm.com>
+Date: Thu, 19 Mar 2026 17:10:54 +0100
+Subject: [PATCH 1/4] software node: support automatic secondary fwnode
+ assignment
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -106,10 +108,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAA4gvGkC/x3M3QpAQBBA4VfRXJtalMWryMWwgyktzcpP8u42l
- 9/FOQ8EVuEATfKA8iFBVh+RpQkMM/mJUVw05CYvTZHV2NO9K8mCyrRgOP3qGK1jS0VlzWgriOm
- mPMr1b9vufT88Ue1vZgAAAA==
-X-Change-ID: 20260319-baytrail-real-swnode-7de7a3870f78
+Message-Id: <20260319-baytrail-real-swnode-v1-1-75f2264ae49f@oss.qualcomm.com>
+References: <20260319-baytrail-real-swnode-v1-0-75f2264ae49f@oss.qualcomm.com>
+In-Reply-To: <20260319-baytrail-real-swnode-v1-0-75f2264ae49f@oss.qualcomm.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Daniel Scally <djrscally@gmail.com>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
@@ -127,44 +128,45 @@ Cc: linux-acpi@vger.kernel.org, driver-core@lists.linux.dev,
         platform-driver-x86@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4472;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6123;
  i=bartosz.golaszewski@oss.qualcomm.com; h=from:subject:message-id;
- bh=pAa4lSJt1eX5y7wxtdI7aP4F3W8n+Uq5GJrm501jlWs=;
- b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpvCARRxDRtIINByeRuSym3dN5SmO8nU7TwUKxF
- VxxDZ4+/huJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCabwgEQAKCRAFnS7L/zaE
- w9NtEACIoDgpGhpNS7/dur+iU8YGQwrvgaM0TBz/nl1UhJqMNXJUq7bhFSR3hYEMFRubZa/LEU/
- nPU7YpaZJhNtJrFRdLUW1BSUzesL/beg/0nPoZ+LMRg4gxFywujHceqDR7Z1+/25hDMXJP39N7H
- neNeaLyLKxFtcwvZ8OLSdydCdvi0rQ106KVFNmXlrPttmK4t4iCLsAIuEYBuiBSz2SLgngwsdNg
- 7QLCIa3Uq9T2cGxUGpJCmJN64Hkn1iWPeRfBMyct31TAA+ZlNP9cnK759f0bPRycVPLhGpvBGp1
- sKD/pp1W7G1kxStrOeUPs5i6a41DR6cvR9+e9P0u+rFQhUGv+ed1C5ot2lJrdU633ysn/seW0pK
- c4Evq4MRJqo5cUbxT4arrIlcSV0x4NlNhICbHpw8QH9mGjCT8KVHA6+/rIkf3+Pbozj9Azxo8IZ
- i+n593rFtErjRG18Qwyaf9ES6VCcdIjUfsX0x2KlEyBURa1baj29lAf8eneLQz4M1VOq75mYs4j
- dLyrL9xq60s+2fFLSL8FZX4arBe+m5Qd/1rmVygO2tUKnSFGTO8VxeSDhsl/1Chx05Ijx2if2Lo
- aQp9T/5AGZV/y91PaS0iErzQRGd4uck7XXojgtGlUi5n9coRn3dqzRHpTj52V/RgTg985+yyYZY
- FRMXL25e/bCbfCQ==
+ bh=GXiegH5SRMfYAHFveVz49Jd/VzeFD4+D1OYGYQfjqbw=;
+ b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpvCAVp+475D0wjSe7sNWCHgFiPzD5xfW+6V8+s
+ e56aQ4t7r6JAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCabwgFQAKCRAFnS7L/zaE
+ w4rMD/4mXJtbJEJDhQSrVx5z5ehAjOrKhwEW/rwBEzb2I/foHLrrJfCNVaCUxCcItm3N2Y3lCrl
+ ItGljm9OhedLjGBvsMlw8Tdpdn1qxv2NEuLi5poDmB3Su1cvljGHDwBQo32mbFl4SMOoQlgRzUM
+ 9BbdtP5Crgdq1JgJrFPXLw9tSFLHNKEBXqxKqIb0Z+fbTbcI5KkimEdZFj7q/XUMrZut1pyCE5l
+ NNDRieumg0PzpjQxqXTNlktCxsBCvvrhjsxztNodt0VcWYR7YxrWYBpn//h1PE3Rg73nDuSTjSH
+ IhdVfsjwFvTxxIEi5UmB8DcC6Z67IPobAqt4fIaFmDvQbbMWVMX62Y4s+zT1onQgxC6Yi3JuF2W
+ X+TWiyhMPsd5f7oRLjMoRmI8VPsptJnSKeGLo0JMSdvnrlNTlbESzXKrEdmk3pNDFOY6UYslVjX
+ JX8LmPFyClN9sZiBlTle3fuv1Ji0WiRgzbe7bJk8lygR2AnVPptiD1xHLlLMJKtSiJ9GBA5mjCp
+ JvAaCBhXbDi1F1+0hh54Ynvhj3tv8gqveh2g/l1Ke1aKCRqJ/Z513d0mVLe3b4gPvhE9NaFjRJg
+ 7ExTgQEOtVVlHmEL+4BbY08i20ec9aXk47D3ing4v2AvwMrSKoVlagq1uEhuR9ngkiZ/eFguR6J
+ TOrPj0sO8UkykQA==
 X-Developer-Key: i=bartosz.golaszewski@oss.qualcomm.com; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
-X-Proofpoint-ORIG-GUID: jjbvYOmpajLdWkeQM658S2aiuD_5NcS0
-X-Proofpoint-GUID: jjbvYOmpajLdWkeQM658S2aiuD_5NcS0
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE5MDEyOSBTYWx0ZWRfXxUHSIkUPjFzH
- nLqy84Vq2oLUNcUBTxRCsew9JrHnOba5DipL752M8OBirIu8STRtOiH9M9Fu6Hcb+TL0oFuEXDd
- o8ctjSiIKq0WTKOlt1KJE3igvMOV1ZXuqDJsRucxq7Dx+Izk8fHFhfZ2/7dIkZldpia28Lg1Q59
- N+IJI8+dV+TQ+roZVTAG1pqQIpPnIKhZTkYskkEE3g3lHWWgfIH9+Jnm8NTbHvo8TE+lyCipM03
- ur45jsRup3H6Q2AVQxEQ31hCZ/0PK4eDdsiI7fkoLkf8F0CiNRpq07get3FiJB+jLd45MRB7eY0
- dJChKgWCzS717VCv55uO3m8EQ/CqwzXsHq0TyPVSNfDQkFY+7lEf10WZul2ZOydN+gy68oxrZqD
- N9QyRZnO3eO/0w/tYVBa9PO+p15KFYKJ73AU+trVUSlU1eTi8+RRm8lzILig/6mLcsvm7TciNm3
- GX+54iNHbN52C/G+kxw==
-X-Authority-Analysis: v=2.4 cv=RZedyltv c=1 sm=1 tr=0 ts=69bc201e cx=c_pps
- a=UbhLPJ621ZpgOD2l3yZY1w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+X-Authority-Analysis: v=2.4 cv=MYhhep/f c=1 sm=1 tr=0 ts=69bc2020 cx=c_pps
+ a=DUEm7b3gzWu7BqY5nP7+9g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
  a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22 a=EUspDBNiAAAA:8
- a=mdeBE-fw4-FjdeD6YvcA:9 a=QEXdDO2ut3YA:10 a=TOPH6uDL9cOC6tEoww4z:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22 a=EUspDBNiAAAA:8
+ a=QyXUC8HyAAAA:8 a=lzMY5pp4uJb4PBOz-uUA:9 a=QEXdDO2ut3YA:10
+ a=-aSRE8QhW-JAV6biHavz:22
+X-Proofpoint-ORIG-GUID: juDWPCqHUedkjZvI1i14HMgpxq3X7TI6
+X-Proofpoint-GUID: juDWPCqHUedkjZvI1i14HMgpxq3X7TI6
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE5MDEyOSBTYWx0ZWRfX+yrDoia/3sjS
+ QDPYuRbtttWU4qNT8IiThO9dR0f3MRtSpORvyL7zDqtrej/yNDaIlNQnXAxWmgIdMV9u471GktE
+ huAiz/0GcQ80s/L2DBfrQ/NrFT2AhozCWZr5JCWy4OrNNFPxUUFmFuiZ2WxZIVhH7UqxV0W3m8B
+ fmQuxwdmWfrU+Namz7Mx6bh+foImnBd2eaJQjtEFRfMjXbkEFeJwZVGmwswYl0hgKBGaOmskFHF
+ DlS4dOPWHmcw87jD43IUJEppQUqApTHiti/bX6+CDrb1jUn7rhdWQ8Jh6/ublFeBrOzh/ekkmi0
+ XPcHF1QQNv92AAhRlaeB2ndbv0iivzlK5MfsQIaGGMKVPjy1idS5ENgQjFq/CaZ5jYuSy7+G6ky
+ ib1KbrruBkiBCedPXzXqAEEQ4bdl/X7mCrmFpDzU+pleFxlr9Y7ueKt8/iL3qy0JlMVvKCgb75U
+ aB9LcdJDXS781k6Edcw==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-03-19_02,2026-03-19_05,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 priorityscore=1501 impostorscore=0 suspectscore=0 adultscore=0
- spamscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
+ clxscore=1015 spamscore=0 suspectscore=0 phishscore=0 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 adultscore=0 bulkscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603190129
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -176,8 +178,8 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33833-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:dkim,oss.qualcomm.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:dkim,qualcomm.com:email];
+	TAGGED_FROM(0.00)[bounces-33834-lists,linux-gpio=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,intel.com:email,qualcomm.com:dkim,qualcomm.com:email];
 	FREEMAIL_TO(0.00)[linux.intel.com,gmail.com,linuxfoundation.org,kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -195,91 +197,187 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 3F5BA2CEC0D
+X-Rspamd-Queue-Id: 769102CEBE5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Problem statement: GPIO software node lookup should rely exclusively on
-matching the addresses of the referenced firmware nodes. I tried to
-enforce it with commit e5d527be7e69 ("gpio: swnode: don't use the
-swnode's name as the key for GPIO lookup") but it broke existing
-users who abuse the software node mechanism by creating "dummy" software
-nodes named after the device they want to get GPIOs from but never
-attaching them to the actual GPIO devices. They rely on the current
-behavior of GPIOLIB where it will match the label of the GPIO controller
-against the name of the software node and does not require a true link.
-
-x86-android-tablets driver is one of the abusers in that it creates
-dummy software nodes for baytrail and cherryview GPIO controllers but
-they don't really reference these devices. Before we can reapply
-e5d527be7e69 and support matching by fwnode address exclusively, we need
-to convert all the users to using actual fwnode references.
-
-It's possible for drivers to reference real firmware nodes from software
-nodes via PROPERTY_ENTRY_REF() in general or PROPERTY_ENTRY_GPIO()
-specifically but for platform devices binding to real firmware nodes (DT
-or ACPI) it's cumbersome as they would need to dynamically look for the
-right nodes and create references dynamically with no way of using
-static const software nodes.
-
-This series proposes a solution in the form of automatic secondary
-software node assignment (I'm open to better naming ideas). We extend
-the swnode API with functions allowing to set up a behind-the-scenes bus
-notifier for a group of named software nodes. It will wait for bus
-events and when a device is added, it will check its name against the
-software node's name and - on match - assign the software node as the
-secondary firmware node of the device's *real* firmware node.
-
-For now it only supports name matching but I suppose we could extend it
-with additional mechanisms if needed. I didn't plan to introduce a
-generic API for this initially but the code in cherryview and baytrail
-drivers ended up being exactly the same so I decided to factor it out
-into common library code.
-
-First patch provides the new interfaces. Next two patches set up
-automatic secondary fwnodes for intel baytrail and cherryview drivers.
-Finally patch 4/4 replaces the dummy software nodes with ones that will
-end up actually being attached to the relevant devices.
-
-GPIOLIB is now able to match a GPIO controller by both its primary as
-well as secondary firmware node. While I don't have the relevant
-hardware, I tested the series and the new behavior on x86 qemu with
-a dummy ACPI table and modified gpio-sim. I assume it will work in real
-life but testing is welcome.
-
-Merging strategy: This touches three trees and there are build-time
-dependencies. I think it should go through the x86 platform tree with
-Ilpo providing an immutable branch for the driver core and pinctrl
-trees.
+Provide a structure and a set of functions allowing to set up automatic
+secondary firmware node assignment for platform devices. It uses
+a behind-the-scenes bus notifier for a group of named software nodes. It
+will wait for bus events and when a device is added, it will check its
+name against the software node's name and - on match - assign the
+software node as the secondary firmware node of the device's *real*
+firmware node.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 ---
-Bartosz Golaszewski (4):
-      software node: support automatic secondary fwnode assignment
-      pinctrl: intel: expose software nodes for baytrail GPIO devices
-      pinctrl: intel: expose software nodes for cherryiew GPIO devices
-      platform/x86: x86-android-tablets: enable fwnode matching of GPIO chips
+ drivers/base/swnode.c    | 105 +++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/property.h |  18 ++++++++
+ 2 files changed, 123 insertions(+)
 
- drivers/base/swnode.c                              | 105 +++++++++++++++++++++
- drivers/pinctrl/intel/pinctrl-baytrail.c           |  40 +++++++-
- drivers/pinctrl/intel/pinctrl-cherryview.c         |  47 ++++++++-
- drivers/platform/x86/x86-android-tablets/Kconfig   |   1 +
- drivers/platform/x86/x86-android-tablets/acer.c    |  11 ++-
- drivers/platform/x86/x86-android-tablets/asus.c    |   9 +-
- drivers/platform/x86/x86-android-tablets/core.c    |  47 +--------
- drivers/platform/x86/x86-android-tablets/lenovo.c  |  31 +++---
- drivers/platform/x86/x86-android-tablets/other.c   |  23 ++---
- .../x86/x86-android-tablets/shared-psy-info.c      |   7 +-
- .../x86/x86-android-tablets/x86-android-tablets.h  |   4 -
- include/linux/pinctrl/intel.h                      |  17 ++++
- include/linux/property.h                           |  18 ++++
- 13 files changed, 270 insertions(+), 90 deletions(-)
----
-base-commit: f50e991d263338028b296f4398c669feca8f0c3b
-change-id: 20260319-baytrail-real-swnode-7de7a3870f78
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index 51320837f3a9f1bf4f65aa161d9b941affc74936..97e3354cdafd94e175d29acb697a0dc61186a9c8 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -6,6 +6,7 @@
+  * Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+  */
+ 
++#include <linux/cleanup.h>
+ #include <linux/container_of.h>
+ #include <linux/device.h>
+ #include <linux/err.h>
+@@ -1088,6 +1089,110 @@ int device_create_managed_software_node(struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(device_create_managed_software_node);
+ 
++static struct software_node_auto_secondary *to_auto_sec(struct notifier_block *nb)
++{
++	return container_of(nb, struct software_node_auto_secondary, nb);
++}
++
++static void swnode_set_secondary_fwnode(struct device *dev,
++					const struct software_node *swnode)
++{
++	struct fwnode_handle *fwnode;
++
++	fwnode = software_node_fwnode(swnode);
++	if (WARN(!fwnode, "Software node %s should have been registered before", swnode->name))
++		return;
++
++	set_secondary_fwnode(dev, fwnode);
++}
++
++static int swnode_auto_secondary_notifier(struct notifier_block *nb,
++					  unsigned long action, void *data)
++{
++	struct software_node_auto_secondary *auto_sec = to_auto_sec(nb);
++	const struct software_node * const *swnode;
++	struct device *dev = data;
++
++	switch (action) {
++	case BUS_NOTIFY_ADD_DEVICE:
++		for (swnode = auto_sec->node_group; *swnode; swnode++) {
++			if (strcmp(dev_name(dev), (*swnode)->name))
++				continue;
++
++			swnode_set_secondary_fwnode(dev, *swnode);
++			return NOTIFY_OK;
++		}
++		break;
++	default:
++		break;
++	}
++
++	return NOTIFY_DONE;
++}
++
++/**
++ * software_node_register_auto_secondary() - set up automatic assignment of
++ *                                           secondary firmware nodes
++ * @auto_sec: Context data to use.
++ *
++ * NOTE: All software nodes passed in @auto_sec must be named.
++ *
++ * Returns:
++ * 0 on success, negative error number on failure.
++ *
++ * This registers the software node group passed in @auto_sec and sets up
++ * automatic assignment of them as secondary firmware nodes of real nodes
++ * attached to appropriate devices on the bus specified in @auto_sec. The
++ * software nodes must be named and their names must be the same as the
++ * devices they should reference. The assignment happens when the device is
++ * first added to the bus.
++ */
++int software_node_register_auto_secondary(struct software_node_auto_secondary *auto_sec)
++{
++	const struct software_node * const *swnode;
++	int ret;
++
++	if (!auto_sec->node_group || !auto_sec->bus)
++		return -EINVAL;
++
++	for (swnode = auto_sec->node_group; *swnode; swnode++) {
++		if (!(*swnode)->name)
++			return -EINVAL;
++	}
++
++	ret = software_node_register_node_group(auto_sec->node_group);
++	if (ret)
++		return ret;
++
++	auto_sec->nb.notifier_call = swnode_auto_secondary_notifier;
++	ret = bus_register_notifier(auto_sec->bus, &auto_sec->nb);
++	if (ret)
++		software_node_unregister_node_group(auto_sec->node_group);
++
++	/* Device may have been already added. */
++	for (swnode = auto_sec->node_group; *swnode; swnode++) {
++		struct device *dev __free(put_device) =
++			bus_find_device_by_name(auto_sec->bus, NULL, (*swnode)->name);
++		if (dev)
++			swnode_set_secondary_fwnode(dev, *swnode);
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(software_node_register_auto_secondary);
++
++/**
++ * software_node_unregister_auto_secondary() - unregister automatic assignment
++ *                                             of secondary firmware nodes
++ * @auto_sec: Address of the context structure used at registration
++ */
++void software_node_unregister_auto_secondary(struct software_node_auto_secondary *auto_sec)
++{
++	bus_unregister_notifier(auto_sec->bus, &auto_sec->nb);
++	software_node_unregister_node_group(auto_sec->node_group);
++}
++EXPORT_SYMBOL_GPL(software_node_unregister_auto_secondary);
++
+ void software_node_notify(struct device *dev)
+ {
+ 	struct swnode *swnode;
+diff --git a/include/linux/property.h b/include/linux/property.h
+index e30ef23a9af3396455d5bb19bb6d41089d81d77f..2a7af60cbb8ecc2ba83819ce92562db42705b82a 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -15,10 +15,12 @@
+ #include <linux/bits.h>
+ #include <linux/cleanup.h>
+ #include <linux/fwnode.h>
++#include <linux/notifier.h>
+ #include <linux/stddef.h>
+ #include <linux/types.h>
+ #include <linux/util_macros.h>
+ 
++struct bus_type;
+ struct device;
+ 
+ enum dev_prop_type {
+@@ -610,4 +612,20 @@ int device_create_managed_software_node(struct device *dev,
+ 					const struct property_entry *properties,
+ 					const struct software_node *parent);
+ 
++/**
++ * struct software_node_auto_secondary - context data for automatic secondary
++ *                                       fwnode assignment
++ * @nb: Private bus notifier data - don't use
++ * @node_group: NULL-terminated array of software node addresses
++ * @bus: Bus on which to wait for devices
++ */
++struct software_node_auto_secondary {
++	struct notifier_block nb;
++	const struct software_node * const *node_group;
++	const struct bus_type *bus;
++};
++
++int software_node_register_auto_secondary(struct software_node_auto_secondary *auto_sec);
++void software_node_unregister_auto_secondary(struct software_node_auto_secondary *auto_sec);
++
+ #endif /* _LINUX_PROPERTY_H_ */
 
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+2.47.3
 
 
