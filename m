@@ -1,174 +1,324 @@
-Return-Path: <linux-gpio+bounces-33937-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33938-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id II4qE7N4vWmt9wIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33937-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 17:41:23 +0100
+	id 6NNYMViAvWnH+QIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33938-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 18:14:00 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C13AC2DD99E
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 17:41:22 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F5F92DE637
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 18:14:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CA3BD30CC076
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 16:34:00 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 7FC41300748D
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 17:07:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DF263CBE9D;
-	Fri, 20 Mar 2026 16:33:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3F6C3CF033;
+	Fri, 20 Mar 2026 17:07:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DRBE1D62"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WQKdlWMW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670E12641CA
-	for <linux-gpio@vger.kernel.org>; Fri, 20 Mar 2026 16:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BEE1EB9E1;
+	Fri, 20 Mar 2026 17:07:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774024422; cv=none; b=Gx8lRLcu8WvZlmy+GUt+RQbHmH0FrZN3gwuu2KGT5L7HcNOppPYDhtpWu3iD1iVQtYD34e3p4hI/qm+2Z3JLpp+1ouDDGlguPFo5j7voZBtmP9AaBF2LMovfRyb53qp/K9uY9HaD8nveYOoo6k78sQbfrHs5xVQc1pQoZZJGSwQ=
+	t=1774026470; cv=none; b=RVFa6uAdtHD6Jov0wbBEG0Euwkx7ODgmksfD5dc9id71pGc80Ki1N9eiKiF/+c2GIxgNJu7cRF6xvwVP23CcU8791SdIQEgfRzyVv+Ln1ejwG3cPJ70YWWsTjigB+FvhXtQNvOs3nKVIhWhD3gk2tWT7IRg7DPzjb0e2QyyJ3x0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774024422; c=relaxed/simple;
-	bh=aR+lmIyxdCmSGPLX8RZVLT5kQykRNGcPaMNJlitc93M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dJ/HatrwZ8DZYjTly3cQPzG87XqCvGmHvSL9DcjpGQCGVhzs6vTsTzOSTJogNE9u92VxK/tH7MjwiVUkfyLL2Wa8ZEL4OC58nS4BjB6OYvwbcUmNZPWtCtMq6w/1Z0+QFle5uDKIVJ5SxOCmpPvb5eztj9P/XdkaTH7iUcLTDGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DRBE1D62; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2aae4816912so5362415ad.2
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Mar 2026 09:33:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1774024421; x=1774629221; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dfmjJ6c8eGMhzWErFCRUQJ0ZlgQhdVdCn3Ze9qpx/ww=;
-        b=DRBE1D62ykdoBPcTU0Hsmbf464lu8XGAeMttghjy9P0F4RTNyFFbCYueVPLHH/9jzJ
-         cdlvC7kAdsUs8yHe/SNIk4Nzhi6t1RPyySDJi/9q3l/3ID/KlrY51jxu8pdCLbyNHd93
-         IBu7uN3r9Pwa4CeClGRY+MbOj3WRnEE+ihH5DcoFZp66VXueoSU+SvbrU70w/Bd5mvYu
-         JlijYHvs54kKRPnAsvvanf3tyT7+CrxV+MYJrly7QewzRXShvWwJO4utZKI+DdBQWv6Y
-         kkrpb2OeN5OsTk5lZ+EpjwkD4SBU2GBEVvFjjCpkwuW6L5AmvB140oWJdznG4DBdwH49
-         p7nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774024421; x=1774629221;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dfmjJ6c8eGMhzWErFCRUQJ0ZlgQhdVdCn3Ze9qpx/ww=;
-        b=IwY2B/s8HtEY/C/ok3hcNDNFgkJB10bjV0C/3wPDXfKFBBwtQeYIYUpkn3bMqz3jVZ
-         Kotgwgzu3dctQJ1teYICRk0hAMV6VeYfFAvFyS1+IlhqS3Mn5MjNUwltydSzQ/mnIXHz
-         QdhFndOBvZR0drIUQSJEJ3VR9ZM7wAZT9E5kAQc09l21mKOmY3xhq97JNSzFkRX5pVEY
-         ie8SjGOveI9E6UGp30TZGTRQXS0B9fAmii3vVqMI2H6nQa3HLBIMZ6HD+eLFAdbG0ykQ
-         M+7F357oYrVaDSHMHmCY5YtBUPnYaiPN8p1iUaZBydvfbjKBSZUx/6prKIjW1ZhpIJFu
-         LdtQ==
-X-Gm-Message-State: AOJu0YyHqSHNwBfHS+gJ++tWlwH5OZCidnSEI2lTtjv2YjpkItp1MIzE
-	wRyRiqJU4RB3hO5Bd/8mi23Q5QTUAGMmjw0jKPHEmKgx0x93DhB3N0Yk
-X-Gm-Gg: ATEYQzwP1MXw5VTBjdsxxiEWEerw/b/Lt8MLaZNNmkg6Xg08FmojFCmF+VLmoyqFcAu
-	olr7Xkacs64zICCC3rTSWJo+kQeA/doLCU6xyqnjyriZnil0ncCOVzpd925xwOE5Pm0XXZXwXWY
-	8w+ZzIxbwTrRtPWNG2l8X3b2JcXzSopQlBesdyQLQSTSsd18OU8FRqZ/BV5XYRKVNWiZMtfpe60
-	Ph9xv63dlw05WIUCDN7JLO/lUiAk8m+sGI+NaTnKYQm5hSPQCpS3h8/sXxlvinmpwna6/+O0WFX
-	TCXLvVFKrYoe6/NmoTPA65Zhl0ujCCczPBC1/P1RCh18xtBX9CkDiejUVF9AfwymHab11DyGo/w
-	UkpTdYSa9nQALeT7/GPXtoxx+denWl3ylJmFHbGqs2O0ZHhEPasfiLBHhd6EYqbcVa3uOeNx0KU
-	tuQ9j7o1LQKZreUCCPzfci1ynnyWjhFT+wslNk
-X-Received: by 2002:a17:903:3890:b0:2b0:6638:b357 with SMTP id d9443c01a7336-2b0826c751dmr38677055ad.11.1774024420634;
-        Fri, 20 Mar 2026 09:33:40 -0700 (PDT)
-Received: from junjungu-PC.localdomain ([223.167.147.240])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b083655718sm27803345ad.39.2026.03.20.09.33.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2026 09:33:40 -0700 (PDT)
-From: Felix Gu <ustc.gu@gmail.com>
-Date: Sat, 21 Mar 2026 00:33:38 +0800
-Subject: [PATCH] pinctrl: rtd: Fix error handling for
- devm_platform_ioremap_resource()
+	s=arc-20240116; t=1774026470; c=relaxed/simple;
+	bh=K0n7PtbZscSYHZTpNewnpXiO3uLV59cevvAXQJ8i2OM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n74aBNj46RnR1BQtro6PiGUS92dufIeY5npDIHlkXtrgLZNxnP4E44FZdzpvcE1pXmO90aR98gx4m6jl84saVOpU2rchClnyTF1EgOImsFe2gpj+I8npuRpwRRRxF+4UOUOUPG+QvQrSijtrB0LeHflM//4/fC7XQO2apre+xN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WQKdlWMW; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774026468; x=1805562468;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=K0n7PtbZscSYHZTpNewnpXiO3uLV59cevvAXQJ8i2OM=;
+  b=WQKdlWMWSb3nlkrVtDEeQMXeCAgyWjblrCggpWBaiMhSwhNzKtoAAeKG
+   wnP6ubW62nmxoaP/e9jVGRdgIMC5DRgbisuiMmGBA3P8OKzIOqovmdxeH
+   JMaVUb9dfrdxzTzyTDULiXCWSpqh1n7PbsC1oQ6/k2clW1Fn3UUaZvwKV
+   xCqJPGCZ4fK8qaBOvEmWtZ3RzISo/LsYIZY+fCkT64JspToO21B1H1jrq
+   Rmw7skXED0yBvTtR3m9q33ww0Pk0AVcFtNGyyJDEtPmi2PB0zYaBKU7BU
+   SLI600VYfyGg2N2yXBGbDDZXCS0MscG6/nJYGvtxRbFZgb4vGZ3IdBTOr
+   A==;
+X-CSE-ConnectionGUID: hhQSw12nTUC7l+Zb/cVuxw==
+X-CSE-MsgGUID: xHQs4iaDRgSLpFSXX3K3rw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11735"; a="75308976"
+X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
+   d="scan'208";a="75308976"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 10:07:47 -0700
+X-CSE-ConnectionGUID: QfBlZzGeSyC3Ltz6/lwk4Q==
+X-CSE-MsgGUID: WSo707w0QICSzzyU2iq/fg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
+   d="scan'208";a="228066475"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.245.40])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 10:07:42 -0700
+Date: Fri, 20 Mar 2026 19:07:40 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: radu.sabau@analog.com, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 4/4] iio: adc: ad4691: add SPI offload support
+Message-ID: <ab1-3FLCDbu_iEQt@ashevche-desk.local>
+References: <20260320-ad4692-multichannel-sar-adc-driver-v4-0-052c1050507a@analog.com>
+ <20260320-ad4692-multichannel-sar-adc-driver-v4-4-052c1050507a@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260321-rtd-v1-1-9c2022f73826@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAOF2vWkC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzMDYyND3aKSFN3UNMukNMs0y+TURHMloMqCotS0zAqwKdGxtbUAyyHzO1U
- AAAA=
-X-Change-ID: 20260321-rtd-ef9bf9f9cea7
-To: Linus Walleij <linusw@kernel.org>, 
- Yu-Chun Lin <eleanor.lin@realtek.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Felix Gu <ustc.gu@gmail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1774024420; l=1164;
- i=ustc.gu@gmail.com; h=from:subject:message-id;
- bh=aR+lmIyxdCmSGPLX8RZVLT5kQykRNGcPaMNJlitc93M=;
- b=it7pbsbghx0plHCQLPBz8e00h2FZ5zS35ZXSw+qkKY8sbh+QNUlSzGixvhqpQGMYm4sKDjcBx
- 9+cez223GNqAySw3nxidxk4+ksCJbaj4+dA7vosVPWKJ9baR9MyOZy0
-X-Developer-Key: i=ustc.gu@gmail.com; a=ed25519;
- pk=fjUXwmjchVN7Ja6KGP55IXOzFeCl9edaHoQIEUA+/hw=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260320-ad4692-multichannel-sar-adc-driver-v4-4-052c1050507a@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33937-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-33938-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	DKIM_TRACE(0.00)[intel.com:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ustcgu@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	NEURAL_HAM(-0.00)[-0.972];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: C13AC2DD99E
+	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
+	NEURAL_HAM(-0.00)[-0.982];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,intel.com:dkim,ashevche-desk.local:mid]
+X-Rspamd-Queue-Id: 6F5F92DE637
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-devm_platform_ioremap_resource() returns ERR_PTR() on failure,
-not NULL. The incorrect NULL check would fail to detect actual
-errors from the ioremap operation.
+On Fri, Mar 20, 2026 at 01:03:58PM +0200, Radu Sabau via B4 Relay wrote:
 
-Fix by using IS_ERR() and PTR_ERR() as documented for this API.
+> Add SPI offload support to enable DMA-based, CPU-independent data
+> acquisition using the SPI Engine offload framework.
+> 
+> When an SPI offload is available (devm_spi_offload_get() succeeds),
+> the driver registers a DMA engine IIO buffer and uses dedicated buffer
+> setup operations. If no offload is available the existing software
+> triggered buffer path is used unchanged.
+> 
+> Both CNV Burst Mode and Manual Mode support offload, but use different
+> trigger mechanisms:
+> 
+> CNV Burst Mode: the SPI Engine is triggered by the ADC's DATA_READY
+> signal on the GP pin specified by the trigger-source consumer reference
+> in the device tree (one cell = GP pin number 0-3). For this mode the
+> driver acts as both an SPI offload consumer (DMA RX stream, message
+> optimization) and a trigger source provider: it registers the
+> GP/DATA_READY output via devm_spi_offload_trigger_register() so the
+> offload framework can match the '#trigger-source-cells' phandle and
+> automatically fire the SPI Engine DMA transfer at end-of-conversion.
+> 
+> Manual Mode: the SPI Engine is triggered by a periodic trigger at
+> the configured sampling frequency. The pre-built SPI message uses
+> the pipelined CNV-on-CS protocol: N+1 4-byte transfers are issued
+> for N active channels (the first result is discarded as garbage from
+> the pipeline flush) and the remaining N results are captured by DMA.
+> 
+> All offload transfers use 32-bit frames (bits_per_word=32, len=4) for
+> DMA word alignment. This patch promotes the channel scan_type from
+> storagebits=16 (triggered-buffer path) to storagebits=32 to match the
+> DMA word size; the triggered-buffer paths are updated to the same layout
+> for consistency. CNV Burst Mode channel data arrives in the lower 16
+> bits of the 32-bit word (shift=0); Manual Mode data arrives in the upper
+> 16 bits (shift=16), matching the 4-byte SPI transfer layout
+> [data_hi, data_lo, 0, 0]. A separate ad4691_manual_channels[] array
+> encodes the shift=16 scan type for manual mode.
+> 
+> Kconfig gains a dependency on IIO_BUFFER_DMAENGINE.
 
-Fixes: b7f698b22b8b ("pinctrl: realtek: Switch to use devm functions")
-Signed-off-by: Felix Gu <ustc.gu@gmail.com>
----
- drivers/pinctrl/realtek/pinctrl-rtd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+...
 
-diff --git a/drivers/pinctrl/realtek/pinctrl-rtd.c b/drivers/pinctrl/realtek/pinctrl-rtd.c
-index 60dfb39bc986..429c94b79c49 100644
---- a/drivers/pinctrl/realtek/pinctrl-rtd.c
-+++ b/drivers/pinctrl/realtek/pinctrl-rtd.c
-@@ -574,8 +574,8 @@ int rtd_pinctrl_probe(struct platform_device *pdev, const struct rtd_pinctrl_des
- 		return -ENOMEM;
- 
- 	data->base = devm_platform_ioremap_resource(pdev, 0);
--	if (!data->base)
--		return -ENOMEM;
-+	if (IS_ERR(data->base))
-+		return PTR_ERR(data->base);
- 
- 	data->dev = &pdev->dev;
- 	data->info = desc;
+> +	struct spi_offload		*offload;
+> +	/* SPI offload trigger - periodic (MANUAL) or DATA_READY (CNV_BURST) */
+> +	struct spi_offload_trigger	*offload_trigger;
+> +	u64				offload_trigger_hz;
+> +	struct spi_message		offload_msg;
+> +	/* Max 16 channel xfers + 1 state-reset or NOOP */
+> +	struct spi_transfer		offload_xfer[17];
+> +	u32				offload_tx_cmd[17];
+> +	u32				offload_tx_reset;
 
----
-base-commit: b5d083a3ed1e2798396d5e491432e887da8d4a06
-change-id: 20260321-rtd-ef9bf9f9cea7
+Ouch! Can you guarantee this kilobytes (isn't it?) of memory will be used in
+majority of the cases? When I got comment on replacing a single u8 by unsigned
+long in one well used data structure in the kernel I was laughing, but this
+single driver may beat the recode of memory waste on the embedded platforms.
+Perhaps having a separate structure and allocate it separately when we sure
+the offload is supported?
 
-Best regards,
+Cc'ed to Wolfram.
+
+...
+
+> +	/* Scan buffer: one slot per channel (u32) plus timestamp */
+>  	struct {
+> -		u16 vals[16];
+> +		u32 vals[16];
+>  		s64 ts __aligned(8);
+
+This might break the existing cases or make code ugly and not actually
+compatible with u32 layout.
+
+>  	} scan __aligned(IIO_DMA_MINALIGN);
+
+...
+
+> +static int ad4691_cnv_burst_offload_buffer_postenable(struct iio_dev *indio_dev)
+> +{
+> +	struct ad4691_state *st = iio_priv(indio_dev);
+> +	struct device *dev = regmap_get_device(st->regmap);
+> +	struct spi_device *spi = to_spi_device(dev);
+> +	struct spi_offload_trigger_config config = {
+> +		.type = SPI_OFFLOAD_TRIGGER_DATA_READY,
+> +	};
+
+> +	unsigned int n_active = hweight_long(*indio_dev->active_scan_mask);
+
+Should be bitmap_weight() with properly given amount of bits.
+
+
+> +	unsigned int bit, k;
+> +	int ret;
+> +
+> +	ret = regmap_write(st->regmap, AD4691_ACC_MASK_REG,
+> +			   (u16)~(*indio_dev->active_scan_mask));
+
+This is not how we work with bitmaps. Use bitmap_read().
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(st->regmap, AD4691_STD_SEQ_CONFIG,
+> +			   *indio_dev->active_scan_mask);
+
+Ditto.
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	iio_for_each_active_channel(indio_dev, bit) {
+> +		ret = regmap_write(st->regmap, AD4691_ACC_COUNT_LIMIT(bit),
+> +				   AD4691_ACC_COUNT_VAL);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	ret = ad4691_enter_conversion_mode(st);
+> +	if (ret)
+> +		return ret;
+> +
+> +	memset(st->offload_xfer, 0, sizeof(st->offload_xfer));
+> +
+> +	/*
+> +	 * N transfers to read N AVG_IN registers plus one state-reset
+> +	 * transfer (no RX) to re-arm DATA_READY.
+> +	 *   TX: [reg_hi | 0x80, reg_lo, 0x00, 0x00]
+> +	 *   RX: [0x00, 0x00, data_hi, data_lo]   (shift=0)
+> +	 */
+> +	k = 0;
+> +	iio_for_each_active_channel(indio_dev, bit) {
+> +		unsigned int reg = AD4691_AVG_IN(bit);
+> +
+> +		st->offload_tx_cmd[k] =
+
+> +			cpu_to_be32(((reg >> 8 | 0x80) << 24) |
+> +				    ((reg & 0xFF) << 16));
+
+Isn't this is just a cpu_to_be16(0x8000 | reg) ?
+
+> +		st->offload_xfer[k].tx_buf = &st->offload_tx_cmd[k];
+> +		st->offload_xfer[k].len = sizeof(u32);
+> +		st->offload_xfer[k].bits_per_word = AD4691_OFFLOAD_BITS_PER_WORD;
+> +		st->offload_xfer[k].offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
+> +		if (k < n_active - 1)
+> +			st->offload_xfer[k].cs_change = 1;
+> +		k++;
+> +	}
+> +
+> +	/* State reset to re-arm DATA_READY for the next scan. */
+> +	st->offload_tx_reset =
+> +		cpu_to_be32(((AD4691_STATE_RESET_REG >> 8) << 24) |
+> +			    ((AD4691_STATE_RESET_REG & 0xFF) << 16) |
+> +			    (AD4691_STATE_RESET_ALL << 8));
+
+In similar way
+
+		cpu_to_be32((AD4691_STATE_RESET_REG << 16) |
+			    (AD4691_STATE_RESET_ALL << 8));
+
+> +	st->offload_xfer[k].tx_buf = &st->offload_tx_reset;
+> +	st->offload_xfer[k].len = sizeof(u32);
+> +	st->offload_xfer[k].bits_per_word = AD4691_OFFLOAD_BITS_PER_WORD;
+> +	k++;
+> +
+> +	spi_message_init_with_transfers(&st->offload_msg, st->offload_xfer, k);
+> +	st->offload_msg.offload = st->offload;
+> +
+> +	ret = spi_optimize_message(spi, &st->offload_msg);
+> +	if (ret)
+> +		goto err_exit_conversion;
+> +
+> +	ret = ad4691_sampling_enable(st, true);
+> +	if (ret)
+> +		goto err_unoptimize;
+> +
+> +	ret = spi_offload_trigger_enable(st->offload, st->offload_trigger, &config);
+> +	if (ret)
+> +		goto err_sampling_disable;
+> +
+> +	return 0;
+> +
+> +err_sampling_disable:
+> +	ad4691_sampling_enable(st, false);
+> +err_unoptimize:
+> +	spi_unoptimize_message(&st->offload_msg);
+> +err_exit_conversion:
+> +	ad4691_exit_conversion_mode(st);
+> +	return ret;
+> +}
+
 -- 
-Felix Gu <ustc.gu@gmail.com>
+With Best Regards,
+Andy Shevchenko
+
 
 
