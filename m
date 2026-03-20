@@ -1,216 +1,276 @@
-Return-Path: <linux-gpio+bounces-33896-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33897-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4MXoJVwmvWmr6wIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33896-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 11:50:04 +0100
+	id yGLNG6cpvWkG7QIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33897-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 12:04:07 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 181832D906B
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 11:50:03 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7363C2D93DF
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 12:04:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 94A8D301BEE3
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 10:49:53 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 5FBA9300E18C
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 11:04:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 855D53876C6;
-	Fri, 20 Mar 2026 10:49:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2A5F39526D;
+	Fri, 20 Mar 2026 11:03:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ivcw7/2N"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YzNErErr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012029.outbound.protection.outlook.com [40.107.209.29])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5943806CA;
-	Fri, 20 Mar 2026 10:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.29
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774003789; cv=fail; b=NzrZcBvEAb3++PVTzKIbQQJtXGT+b1Q46J3IFwKIr+a8Ne5QhCTzE+dXROtOcEYB0BsPzszBsclmvzgnQtz4j56UbkZ6gMQy6rtrs4dJleLKM846Uz6Wjaytr7siBNZZ/hQnhlf0WDSpqSd6EK4sN2ANdjm/ENxYvUDI5pTEFk0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774003789; c=relaxed/simple;
-	bh=pvHkdOOobL7XUuNDMCi00N8H2s7FPsycdwqSjE/6H9A=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qz03ifRLYQDkBNxzMXH2nD8DZuwS2MgizLg7xMUU+JPlQt6f5CWJGjk+wF7hhgNM036MPu0xkuJE/LyNyjsnGVrIshqF25txIz8OqGRJlNFXUclNzGNu0NltHym83MCcBrpfiPB9WkbLdEpU5HHgf8tqTvooys3zn5Tkyfl+COs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ivcw7/2N; arc=fail smtp.client-ip=40.107.209.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LzuHBLr+xTNySchtfuR1/Wy87DPnyIDZIrmnxFwcpqGKR7V06yv3tEdVbc4jjeEn1bgdY1aBrwJOQuHIdOKaIaPxzOqMMaolJZw8Qd/oRD6JNKgPvsSI0RY9k2/RreD8O1GEIN6hCmoitW4fy+NF9geA9RoPkgXqA+GG40XynvxycAzOThmv0r9bay/M8V0PEulMBkBIb21ILElWsYGHSWup3/m1RvwHDYdqkclNvDvgNSx5Y5B2acACQB/UFvyIKSqGG/3SbXDS/RbwJaD1e6X01+ECNGxrewxxyPx/HAIWgeAhzhuKS52trMvuX6ThxNPMYxA5NBgkbjd8MJtcAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JJ3MFsNZbEcKQwt/6YgBDIdFSG45wred3YQGtG5DNGc=;
- b=lBCaRYuGx1yS3Edl2GSmRZELFrrYCZo4P2GcBPO5Lxuoyn/76udepMI1pYaHveKOb1x7VNrImfQy3UVWj8h3KrXdTMBeSLQFRPo2+y3OFjj2XxvrpJO+sxshZc1r5IQEidw4yQAoV/gtVYiJGq1UYxjVvIsbktMMt/qGBdI0RcofEiJ5WkwOqT8vE8Aa3N/UHBkdWsiSjgswuTU34Pd2EIADZzpLf06ANl5xsBgtfaTIq3L7EedJqYvednhMnUCTSaBjVOdE2Xi7vL+Es9yuz+emFN7TbaD+W2i1xQuTcXYPwUoAwFSYac/UCX9tUqrfoV/wLzACPKSMjMfberefhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JJ3MFsNZbEcKQwt/6YgBDIdFSG45wred3YQGtG5DNGc=;
- b=ivcw7/2NyxKOS1heZa6natL2lRaYn6IeY2n2+qh6IjKfTL42f/+jBLdr5M0mUJZgU6RwTI6d/YptH60OJ5MlVfkmzQtVDoJnKoKn/d3W70Q1bKwcEmMFU/Ed46lhWhCEsZD8oMrBFfbXbOgxZoT95sean7TXCbW9YYfvMCLfToSRCr/nJQMn0/mTn5fH0+zR/7jJaXhvJRHX1OONvQmKbN4ALs9Jp1n5YV4ia2b3P858PsOIWk+TthtwcXpgV4QkmdDAPJSvSizZ48GR9OpKGgzBYNlKdbKXQPsX3q95JVeXBvSMww+ZX6HiZ8GJWMTuTJ/g2Ffn6wnWDJmRuJqigw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS2PR12MB9750.namprd12.prod.outlook.com (2603:10b6:8:2b0::12)
- by CYXPR12MB9443.namprd12.prod.outlook.com (2603:10b6:930:db::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.9; Fri, 20 Mar
- 2026 10:49:44 +0000
-Received: from DS2PR12MB9750.namprd12.prod.outlook.com
- ([fe80::56a8:d6bf:e24c:b391]) by DS2PR12MB9750.namprd12.prod.outlook.com
- ([fe80::56a8:d6bf:e24c:b391%6]) with mapi id 15.20.9745.007; Fri, 20 Mar 2026
- 10:49:44 +0000
-Message-ID: <c5685e0c-eca6-464e-b2a9-d688918b966b@nvidia.com>
-Date: Fri, 20 Mar 2026 10:49:40 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] gpio: shared: fix devicetree corner cases
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
- Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <20260318-gpio-shared-xlate-v2-0-0ce34c707e81@oss.qualcomm.com>
-From: Jon Hunter <jonathanh@nvidia.com>
-Content-Language: en-US
-In-Reply-To: <20260318-gpio-shared-xlate-v2-0-0ce34c707e81@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P265CA0141.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9f::33) To DS2PR12MB9750.namprd12.prod.outlook.com
- (2603:10b6:8:2b0::12)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C8B375AB5;
+	Fri, 20 Mar 2026 11:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774004639; cv=none; b=RlEEslTUtETiXtO+h8pIp1CrDsuM+al4rNsb+yVI0O5AeI3l0MLnao1I6peVaRxmhTAGAJ3IEB4Df9ajXCBo7FqAPOSulXVmQr7k3QTyKcreNfZAITEgFIInnTydBwvhuii4sJZjbD0TGZObA2VX4cd68yUlI5Rdt/FHzXpUwhA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774004639; c=relaxed/simple;
+	bh=L2DyslcxuuFf7iElJ54ONbiTYAIR9Qi8A8oX8s5e1HI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=G3VzYZaZNVGxZMKO8FUjqzc2ufkAZ/fMny43YimnCi+EGMzdbfua9faXb+KrmTIkJJzi8qVbV5xJ6UgbWI5W7drUgrx0bH2MmBHmxZ+rUWNL7deKNiqCYb/SkyNVlllk3F2fqMgqiv+JKwX/xY/6cDjVIPTBszfmWbsJ+JeAIhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YzNErErr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 67941C4CEF7;
+	Fri, 20 Mar 2026 11:03:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774004639;
+	bh=L2DyslcxuuFf7iElJ54ONbiTYAIR9Qi8A8oX8s5e1HI=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=YzNErErrvG900RKIp8aZiac4EeGUh2DnDwF0tW5gbZIxt2XChzrJb9+NTz3hWTUKA
+	 rqmqLFUqMfhtnKUBEDlVlME+be1nOMKtEOnrm4X/zuU2GhXHUUMEqzHIAE8Q973nGR
+	 DarjpqYmZ345y1y/slnTsRPNC5hby+IZTU5MrlE3De8I0KVLnYez/yeDB3/cflcpse
+	 Z3PvB9au8uRqqzk7BKGsYRamjSa0utlNHcv31A7ju2DpwOF05K25YDrCHB+0qzUaXM
+	 mQhE2+b/BZsJgcPav/PQOAB9tI8zMTCPZhNiyfB/rE3IsmnheP6YA0D4p722yDExIW
+	 HlPxekbMy/uRA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BDE108B8F5;
+	Fri, 20 Mar 2026 11:03:59 +0000 (UTC)
+From: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
+Subject: [PATCH v4 0/4] iio: adc: ad4691: add driver for AD4691
+ multichannel SAR ADC family
+Date: Fri, 20 Mar 2026 13:03:54 +0200
+Message-Id: <20260320-ad4692-multichannel-sar-adc-driver-v4-0-052c1050507a@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PR12MB9750:EE_|CYXPR12MB9443:EE_
-X-MS-Office365-Filtering-Correlation-Id: 46aa4ac1-f41f-4324-a986-08de866e658d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|376014|1800799024|366016|22082099003|56012099003|7053199007|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	G/JW0B33i/ws23FDHHLpXsMZlEM4i83Lc5yst31BVdMXARKVtlgy02hAO636CikGc1Z5Useuex/GUcGW4YSk9WTpNRnk4C2dto3PTbeov8rG8aKTUf591EAdVSu2WbbQD/PImoO5QkWuVNlXIHQu/szCL50pR2cwYL7yrP3GKS7eTfGiy/4TNhnYZ9MjYpH7KGktr0BDLuji2X58hhaYkIpOvzAfQqmQpcWuHEHLyWEsAVwuk0OThwFNiKXqTTxU2hIP7g/m6UctkX/DIPalFDw2tNGpfKE2/Tve7HVIM7Pev6xfW3L3byuManhttOTJHzc2yF+qVwZQ0gfKQp8v3seSO92kCZ+BKHLOSq2rDVpDr7qu6wz7SUgLaRkoTBMElTGPjicxdJ9ZbwF1XUzwqA6bQXwqKIc5OKbYXUnXI8la82PCb5+ItCz4+rf1MnXRoYwU8VjxgOKxY2zyZP1NWhzwc6Ii/Vifsl5rqc3I0h0HzPeIGGWvkyI/qfniHA7D+Tvz4qM/IkXUs1KrG4P8Y2y4Szy00hMIfDFKEoZ8zczJLod3ABJyp3PuDQWZfaSh5veM8eV4Mk6YYACBLRViPrJJNk1rKDo0/ynB8g6LcLU7kZhKN5Q99SrAq61HPXlDW6gi1HPbDVMvUDD7ofboQZlsTjuN7lOFywtM0zvwPwGeJg6HQ+trUiESeMU8kQ8pxP5BzuseyrKsVF0WMNYKig9J2U7iwiYHNu3RG+z5fOs=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS2PR12MB9750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(376014)(1800799024)(366016)(22082099003)(56012099003)(7053199007)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NUoxRXJmYjNLZlphZHJuMURyaFdOODJKdVVGT01PWFhMQld0V3llKzVNdVlU?=
- =?utf-8?B?SjM0ZXRBMzFBS1ZvL0FYM0VzOG9uL1hMcGRramgyWFcrV2twd1VLZy9jTzRZ?=
- =?utf-8?B?aXF1ZElrZHBzT2w4TC8wRDc3dy96UkFiSGl1T1RUbDkvdTZ5S0M2M0xUQk9C?=
- =?utf-8?B?ck9YYVNNMUViR0hBRHhBRmU2RXdtd0JuSXV1UEVZUFFrUnJ0VktKb0szZWNs?=
- =?utf-8?B?SVRNSC9ZTFhKSGFacWtSNFhQRjV6NzZld0VTNVhCS29KN0NjV3ltTDVsT0Jn?=
- =?utf-8?B?ZW1GS0JOSlBMZlRiYndKY01tZ2krbW92MmJITzFaRXp6VHpOSThSbUErOHBs?=
- =?utf-8?B?cStPM1hBKzlkTGdQVllWSndWWkREY1RndVV1ZUl0dVozQ1h3RzdYRkttN0hB?=
- =?utf-8?B?dDFmVTlDbEttaUlKejNZSTlXV0pkdDRWQTYvTjRPSWF0SmVRK3dPdGdGZ3Uz?=
- =?utf-8?B?Uy9Pdm82eGRJUjBkY2dMbW1vREdvSzlTVDdaN1hPblB4Z1ZZMUg4T2F4SGhx?=
- =?utf-8?B?NGg2VmhmZnNwRlZ0SHRxNmpFaTBtSlgvT2dTcnZ4UjA0eDB5K0VvOEJOL2s5?=
- =?utf-8?B?emZJK01tUDZrcjIzR1Zqb2JiNSsxbWd3enVRQ3BTbVRTL1N2NzZpV0plZVgw?=
- =?utf-8?B?U3RGWWxiTnBDT0NBMFl4b3czS282NGk1QW5xSDBNOTVtQ0VEUnJxY2JtSitZ?=
- =?utf-8?B?RXVsc2VSbUNpc0NSWkIydWlZcnBPcENodDVMNG1MK0ppSG52NE1kR0txZGtl?=
- =?utf-8?B?bG5RZE50TlZ6UGJqQWI2eVppTFB4Q1d6RXpBaEg5b2FEQm9PQS8zVlN1dEww?=
- =?utf-8?B?RU1ZYnpXTEptb1BnOXVGOTNZTFVuY1dHSS9nNVhCbWJGdFdOUDAxNjRVbmNa?=
- =?utf-8?B?MWJIaEpLSUs1UzFQMUVRMk5ITzFiZW1qZXZTU0tDS0t3RXZTV25GOS9pa0Rr?=
- =?utf-8?B?OUwzVGVBNjNWWlF2LzZtUmQ4TXdkS3c0TUkvbGtxdFlqTk1iQ1d1WE40eTlk?=
- =?utf-8?B?VjhjeTlYRnlwc2NBYkpXbk1Mc05rVVVxbnA5RmxTb2VGMFhIUEMybi9IU2VD?=
- =?utf-8?B?MFQzbGRoUENFbmJFSW5vV1diNTFHSHUvWm12UWJkanpmb29IQlVpRk9rbVU5?=
- =?utf-8?B?SkFHOVNibkdkT1F1TmpYTVkvdmxxQndaVVpOZVVCSXRlUnhsUUR5c2ZXNzA5?=
- =?utf-8?B?Vi81RkVqVUJlcXNpR0xkV3IvTlhjaGhWTmovWkNRTmxpbk41UDJkeStmVVBG?=
- =?utf-8?B?djlYb3pldnpEUHFBV1VESzhOWi9YQndoT3F4TXFjaGoxRXJLM2tXUUJHVXBy?=
- =?utf-8?B?aDA0VWg5QWVMMWViaFNmZ0MrZVl0b2poZDhVeW1qWTdQMmllVWNZdzVqQ0xK?=
- =?utf-8?B?R1JRYTh0N1BocEpGNHJSTmhaMkd0RTViL2NPZlV0MThaUThjMFlpUXlSRjAv?=
- =?utf-8?B?eWF5VE5kMFNSMXUxb2NCVWc0dytXYk1wRFFqaUkwYTVqb0VBUUdtVFNMc2dT?=
- =?utf-8?B?SE5ZaVhNNmFUY2JRbEtEOU0wQ2cxUGhGeEx5cTJ1czh5NllwTnhOb2VidnJO?=
- =?utf-8?B?bTdudDdYWnkxdzV4eFNSOTY5ZHhMMTNsem9ZTElVL3V6U2hSSUpmS2svZHZx?=
- =?utf-8?B?OXdUd1lQZUZ0azhiYnNPUWloU1VieFVreXhOdzBZSkJOaWcvbms0UFFQUXdm?=
- =?utf-8?B?NUFMWXhlbEZMcVlPN2xOcnFzMFpyMW8yTWFrZmRCSEhTNXJrVHRLTjBOWm9T?=
- =?utf-8?B?V3l4YkdPTURyM0h4S1VPelhLSDd1NkxJTjUxclIxNXRZdXFNK1lFZXFuTk9s?=
- =?utf-8?B?U210WFpSblczZXFxWkppYlgrdjc2U1BwaWU2TlBoUVRGSW5yNXZIWmU2ODdE?=
- =?utf-8?B?c09kTTJWY1MzSE9KTkJDN2lNeVJIQmVSaVJ3SGN3eUFKZ2xxTjAwbXFyNnYy?=
- =?utf-8?B?SURNTllBajlaNzg2VXdjUHBPMndPTi9meXY5dnFSYTF6R2EzVmV3Z1dvUDRv?=
- =?utf-8?B?aHpaNkNCcHFNVVBEM1M1NGdZTFd5M0xOM2FrekJ1ZnJ3a2N6WVJ5VVQ1aG9T?=
- =?utf-8?B?WmdRN0dKWmJwT1oyNFZIR1ZFOS8rcUxlNlBueGVrdmd2a1NtYUF5bnhvRHB6?=
- =?utf-8?B?ejdnSHl5djd3ejFiZG5uRXJtRm96RkhYYU1LQkZpbzQxVWs0N0tGMjNQTUhK?=
- =?utf-8?B?aXB5NHFkemU4dXVmQ0lsSDFOODZCNVd1eW1vOEFJNjVvUi95Ym05cGV1eTdB?=
- =?utf-8?B?bVRwbXl0alkrMDFMWk1QNFpyd1g3WExNYzhuUGluR25taFNHY2JUN3FLdENY?=
- =?utf-8?B?bmRjS0N3aEVxYWtremhkUjBnSUdOREVvU2Y2SkgzNTZsNXRvTHYvL3FhRUhQ?=
- =?utf-8?Q?IuDfDIy9iW3rWM1oS484K/+LdhUCCiBtJNpgkUe/q5Z1h?=
-X-MS-Exchange-AntiSpam-MessageData-1: jAsAnrZp0C/Srg==
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46aa4ac1-f41f-4324-a986-08de866e658d
-X-MS-Exchange-CrossTenant-AuthSource: DS2PR12MB9750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2026 10:49:44.2175
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +3tze6whF6cuoquupAvopohOvZCnleWby8GXB1gxwncWr4VTgkVl5YxqmtbdJMQdZcF8TYxHRlvSx05BhnIe1g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9443
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
-	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAJopvWkC/43NQQrCMBQE0KtI1kaSn1hTV95DXCT5Xw3UVpIal
+ NK7mxYExU2XMwxvBpYoBkpsvxpYpBxS6NoS9HrF/NW2F+IBS2YgoBJKALeoqxr47dH0YVq01PB
+ kY+k9xxgyRb4zpFFrBO2AFege6Rye88nxVPI1pL6Lr/kzy6n98NslfJZccKUqgNoa9H53sK1tu
+ svGdzc2+Rm+TCkWmVBMrJ0zltyW5L+pvk21yFTFdBqlRiOtNPLHHMfxDfclFzZ9AQAA
+X-Change-ID: 20260302-ad4692-multichannel-sar-adc-driver-78e4d44d24b2
+To: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, Radu Sabau <radu.sabau@analog.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1774004636; l=8011;
+ i=radu.sabau@analog.com; s=20260220; h=from:subject:message-id;
+ bh=L2DyslcxuuFf7iElJ54ONbiTYAIR9Qi8A8oX8s5e1HI=;
+ b=33DNg90fJB06nH6J4RZuCy8EuVUVMfiPeIezUxxesYdRzps9wgXTjW69cpc5gQM+AyJnxPZ5N
+ iYTljzlT6TODvsvzxsVljV+UldiRPG9XRw/yrWlk/qjZlvlxMs6zyTI
+X-Developer-Key: i=radu.sabau@analog.com; a=ed25519;
+ pk=lDPQHgn9jTdt0vo58Na9lLxLaE2mb330if71Cn+EvFU=
+X-Endpoint-Received: by B4 Relay for radu.sabau@analog.com/20260220 with
+ auth_id=642
+X-Original-From: Radu Sabau <radu.sabau@analog.com>
+Reply-To: radu.sabau@analog.com
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33896-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33897-lists,linux-gpio=lfdr.de,radu.sabau.analog.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jonathanh@nvidia.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[Nvidia.com:+];
-	NEURAL_HAM(-0.00)[-0.997];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[Nvidia.com:dkim,qualcomm.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,nvidia.com:email,nvidia.com:mid,msgid.link:url]
-X-Rspamd-Queue-Id: 181832D906B
+	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	NEURAL_HAM(-0.00)[-0.993];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	HAS_REPLYTO(0.00)[radu.sabau@analog.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 7363C2D93DF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+This series adds support for the Analog Devices AD4691 family of
+high-speed, low-power multichannel successive approximation register
+(SAR) ADCs with an SPI-compatible serial interface.
 
-On 18/03/2026 14:00, Bartosz Golaszewski wrote:
-> This fixes two issues with shared GPIO management reported by Jon.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
-> Changes in v2:
-> - Add patch 2/2 fixing an issue with sharing GPIOs by child nodes of
->    devices
-> - Collect tags
-> - Link to v1: https://patch.msgid.link/20260316-gpio-shared-xlate-v1-1-0ce07a1362d2@oss.qualcomm.com
-> 
-> ---
-> Bartosz Golaszewski (2):
->        gpio: shared: call gpio_chip::of_xlate() if set
->        gpio: shared: handle pins shared by child nodes of devices
-> 
->   drivers/gpio/gpiolib-shared.c | 33 +++++++++++++++++++++++++++++----
->   drivers/gpio/gpiolib-shared.h | 11 +++++++----
->   drivers/gpio/gpiolib.c        |  6 +++---
->   3 files changed, 39 insertions(+), 11 deletions(-)
-> ---
-> base-commit: eadf2995ab7c8158bf694304d41e49cada263277
-> change-id: 20260316-gpio-shared-xlate-708c651cac5f
+The family includes:
+  - AD4691: 16-channel, 500 kSPS
+  - AD4692: 16-channel, 1 MSPS
+  - AD4693: 8-channel, 500 kSPS
+  - AD4694: 8-channel, 1 MSPS
 
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+The devices support two operating modes, auto-detected from the device
+tree:
+  - CNV Burst Mode: external PWM drives CNV independently of SPI;
+                    DATA_READY on a GP pin signals end of conversion
+  - Manual Mode: CNV tied to SPI CS; each SPI transfer reads
+                 the previous conversion result and starts the
+                 next (pipelined N+1 scheme)
 
-Thanks for the rapid fixes!
+A new driver is warranted rather than extending ad4695: the AD4691
+data path uses an accumulator-register model — results are read from
+AVG_IN registers, with ACC_MASK, ADC_SETUP, DEVICE_SETUP, and
+GPIO_MODE registers controlling the sequencer — none of which exist
+in AD4695. CNV Burst Mode (PWM drives CNV independently of SPI) and
+Manual Mode (pipelined N+1 transfers) also have no equivalent in
+AD4695's command-embedded single-cycle protocol.
 
-Jon
+The series is structured as follows:
+  1/4 - DT bindings (YAML schema) and MAINTAINERS entry
+  2/4 - Initial driver: register map via custom regmap callbacks,
+        IIO read_raw/write_raw, both operating modes, single-channel
+        reads via internal oscillator (Autonomous Mode)
+  3/4 - Triggered buffer support: IRQ-driven (DATA_READY on a GP pin
+        selected via interrupt-names) for CNV Burst Mode; external IIO
+        trigger for Manual Mode to handle the pipelined N+1 SPI protocol
+  4/4 - SPI Engine offload support: DMA-backed high-throughput
+        capture path using the SPI offload subsystem
 
+Datasheets:
+  https://www.analog.com/en/products/ad4691.html
+  https://www.analog.com/en/products/ad4692.html
+  https://www.analog.com/en/products/ad4693.html
+  https://www.analog.com/en/products/ad4694.html
+
+Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+---
+Changes in v4:
+- dt-bindings: add avdd-supply (required) and ldo-in-supply (optional);
+  rename vref-supply → ref-supply, vrefin-supply → refin-supply;
+  corrected reset-gpios polarity (active-high → active-low); remove
+  clocks and pwm-names; extend interrupts to up to 4 GP pins with
+  interrupt-names "gp0".."gp3"; reduce #trigger-source-cells to
+  const: 1 (GP pin number); add gpio-controller / #gpio-cells = <2>;
+  drop adi,ad4691.h header; update binding examples
+- driver: rename CNV Clock Mode → CNV Burst Mode throughout
+- driver: add avdd-supply (required) and ldo-in-supply; track ref vs.
+  refin supply for REFBUF_EN; set LDO_EN in DEVICE_SETUP when ldo-in
+  is present; add software reset fallback via SPI_CONFIG_A register
+- driver: merge ACC_MASK1_REG / ACC_MASK2_REG into ACC_MASK_REG with
+  a single ADDR_DESCENDING 16-bit SPI write
+- driver: remove clocks usage; set PWM rate directly without ref clock
+- driver: rename chip info structs (ad4691_chip_info etc.); rename
+  *chip → *info in state struct; replace adc_mode enum with manual_mode
+  bool; replace ktime sampling_period with u32 cnv_period_ns
+- driver: move IIO_CHAN_INFO_SAMP_FREQ to info_mask_separate with an
+  available list for the internal oscillator frequency
+- driver: use regcache MAPLE instead of RBTREE
+- triggered buffer: derive DATA_READY GP pin from interrupt-names in
+  firmware ("gp0".."gp3") instead of assuming GP0
+- triggered buffer: use regmap_update_bits for DEVICE_SETUP mode toggle
+  to avoid clobbering LDO_EN when toggling MANUAL_MODE bit
+- triggered buffer: split buffer setup ops into separate Manual and
+  CNV Burst variants (mirrors offload path structure)
+- SPI offload: promote channel storagebits from 16 to 32 to match DMA
+  word size; introduce ad4691_manual_channels[] with shift=16 (data in
+  upper 16 bits of the 32-bit word); update triggered-buffer paths to
+  the same layout for consistency
+- SPI offload: derive GP pin from trigger-source args[0] instead of
+  hardcoding GP0; split offload buffer setup ops per mode
+- replace put_unaligned_be32() + FIELD_PREP() with cpu_to_be32() and
+  plain bit-shift ops for SPI offload message construction
+- multiple reviewer-requested code style and correctness fixes
+  (Andy Shevchenko, Nuno Sá, Uwe Kleine-König, David Lechner)
+- Link to v3: https://lore.kernel.org/r/20260313-ad4692-multichannel-sar-adc-driver-v3-0-b4d14d81a181@analog.com
+
+Changes in v3:
+- Replace GPIO reset handling with reset controller framework
+- Replace two regmap_write() calls for ACC_MASK1/ACC_MASK2 with regmap_bulk_write()
+- Move conv_us declaration closer to its first use
+- Derive spi_device/dev from regmap instead of storing st->spi
+- ad4691_trigger_handler(): use guard(mutex)() and iio_for_each_active_channel()
+- ad4691_setup_triggered_buffer(): return -ENOMEM/-ENOENT directly instead of
+  wrapping in dev_err_probe(); fix fwnode_irq_get() check (irq <= 0 → irq < 0)
+- Add GENMASK defines for SPI offload 32-bit message layout; replace manual
+  bit-shifts with put_unaligned_be32() + FIELD_PREP()
+- Use DIV_ROUND_CLOSEST_ULL() instead of div64_u64()
+- ad4691_set_sampling_freq(): fix indentation; drop unnecessary else after return
+- ad4691_probe(): use PTR_ERR_OR_ZERO() for devm_spi_offload_get()
+- Link to v2: https://lore.kernel.org/r/20260310-ad4692-multichannel-sar-adc-driver-v2-0-d9bb8aeb5e17@analog.com
+
+Changes in v2:
+- Drop adi,spi-mode DT property; operating mode now auto-detected
+  from pwms presence (CNV Clock Mode if present, Manual Mode if not)
+- Reduce from 5 operating modes to 2 (CNV Clock Mode, Manual Mode);
+  Autonomous, SPI Burst and CNV Burst modes removed as user-selectable
+  modes; Autonomous Mode is now the internal idle/single-shot state
+- Single-shot read_raw always uses internal oscillator (Autonomous
+  Mode), independent of the configured buffer mode
+- Replace bulk regulator API with devm_regulator_get_enable() and
+  devm_regulator_get_enable_read_voltage()
+- Use guard(mutex) and IIO_DEV_ACQUIRE_DIRECT_MODE scoped helpers
+- Replace enum + indexed chip_info array with named chip_info structs
+- Remove product_id field and hardware ID check from probe
+- Factor IIO_CHAN_INFO_RAW body into ad4691_single_shot_read() helper
+- Use fwnode_irq_get(dev_fwnode(dev), 0); drop interrupt-names from
+  DT binding
+- Use devm_clk_get_enabled(dev, NULL); drop clock-names from DT
+  binding
+- Use spi_write_then_read() for DMA-safe register writes
+- Use put_unaligned_be16() for SPI header construction
+- fsleep() instead of usleep_range() in single-shot path
+- storagebits 24->32 for manual-mode channels (uniform DMA layout)
+- Collect full scan into vals[16], single iio_push_to_buffers_with_ts()
+- Use pf->timestamp instead of iio_get_time_ns() in trigger handler
+- Remove IRQF_TRIGGER_FALLING (comes from firmware/DT)
+- Fix offload xfer array size ([17]: N channels + 1 state reset)
+- Drop third DT binding example per reviewer request
+- Link to v1: https://lore.kernel.org/r/20260305-ad4692-multichannel-sar-adc-driver-v1-0-336229a8dcc7@analog.com
+
+---
+Radu Sabau (4):
+      dt-bindings: iio: adc: add AD4691 family
+      iio: adc: ad4691: add initial driver for AD4691 family
+      iio: adc: ad4691: add triggered buffer support
+      iio: adc: ad4691: add SPI offload support
+
+ .../devicetree/bindings/iio/adc/adi,ad4691.yaml    |  173 +++
+ MAINTAINERS                                        |    8 +
+ drivers/iio/adc/Kconfig                            |   14 +
+ drivers/iio/adc/Makefile                           |    1 +
+ drivers/iio/adc/ad4691.c                           | 1638 ++++++++++++++++++++
+ 5 files changed, 1834 insertions(+)
+---
+base-commit: 11439c4635edd669ae435eec308f4ab8a0804808
+change-id: 20260302-ad4692-multichannel-sar-adc-driver-78e4d44d24b2
+
+Best regards,
 -- 
-nvpublic
+Radu Sabau <radu.sabau@analog.com>
+
 
 
