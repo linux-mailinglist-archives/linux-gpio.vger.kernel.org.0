@@ -1,175 +1,162 @@
-Return-Path: <linux-gpio+bounces-33936-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33933-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8JTCEpJ2vWmt9wIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33936-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 17:32:18 +0100
+	id 4EdABiBmvWlF9gIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33933-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 16:22:08 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5FD02DD6AE
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 17:32:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 67E0D2DC923
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 16:22:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EC19D319AC0A
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 16:26:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A2DBD30D55E7
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 15:15:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 094583CEBA0;
-	Fri, 20 Mar 2026 16:26:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 189063C4564;
+	Fri, 20 Mar 2026 15:15:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ubuntu.com header.i=@ubuntu.com header.b="Zg09Km6p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hXOlQhDc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8789A317176
-	for <linux-gpio@vger.kernel.org>; Fri, 20 Mar 2026 16:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F733C73E4
+	for <linux-gpio@vger.kernel.org>; Fri, 20 Mar 2026 15:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774023991; cv=none; b=YE0eDBnSZVQJL1+yIRNQY2AtWgFLnvUP2TPp79HRFYllQ3YeeUyIeCUhnfM0RBiRpiXclwHmxb/haJkhrDEBuZLxaUHf4YBT7Kb6ReGIzxD2XW1rzHWr3/zxtyYJwNRctF1YvUfAvodgc+gx5MFf6EXODGcPVPnJBHexXm1Nroc=
+	t=1774019746; cv=none; b=CA2hLfcnGXTLI/2gFA6cQoFYKyPh2ncm+ndsFUjvw0LbhpTDJoYSIDCOpZbqQ0nmrIbYQqJjma7uCaAwc96PUpMOgnT03qFd7iJPnlruOKdlf0AMq8JFbPMrKUpPcUDv4cggq+Nr7nNLASCzXeTodKrb1KqlaCgPaMfsM63Yh1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774023991; c=relaxed/simple;
-	bh=fMyFSszCJXOXIv+DX7+R6wPDH9WSrMIYlywm/2fLRog=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=PTFOpU2FN6yFxt5m/YJdyzgAHXza1xWIIZDJUXEsxVigNOR6ThCq4CriPGqWRx4NScZvgow6pKYQzmkHZ0FJmtL0upxDtl8jBsaO3U5/WvqjBfF2f8mqkad0Y4mDiKj3yYiLf8LdnggooOCJc/JGSMrg9V3N/6NM5qUWI516yZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ubuntu.com; spf=pass smtp.mailfrom=fe-bounces.ubuntu.com; dkim=pass (2048-bit key) header.d=ubuntu.com header.i=@ubuntu.com header.b=Zg09Km6p; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ubuntu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.ubuntu.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ubuntu.com;
- h=In-Reply-To: References: Subject: Cc: To: From: Message-Id: Date:
- Content-Type: Content-Transfer-Encoding: Mime-Version; q=dns/txt;
- s=fe-953a8a3ca9; t=1774023984;
- bh=ft21UeP4z579XSbja1g9AqWPvCF44UV/oZHoOxBnDIs=;
- b=Zg09Km6pEig2W317wXE9AYFNDA89c1OBbbfj7LLBzsbpSXFvKMQBHHE34vj+XByDasn1zGdoV
- qUDuj8FqfoW5qsZ47I2LOPg8wV2kZpuveForvYBwbk7Mh5gmeWw4Zhw98Gbdr44gWD+boZwyOfx
- caYLWjS/lrLwMifPIKkuOI5BXtAeCsk5AAhzo6xhZXDhywjKu1h4zisP9CPXbswwjGLIrTdp0+y
- MbOSN3J7DCNJmYWiFeQqX7+bA8M6KMGfFaT1NXSVMxm6uHxDJekUaUeGZtlNqM4joP1G7H0e+P/
- vKi6ZrinodYt0mMMIAKvkm5pS8kt39ftQ+fc8jl0mERw==
-X-Forward-Email-ID: 69bd60d63c81f5afefaa2dca
-X-Forward-Email-Sender: rfc822; jpeisach@ubuntu.com, smtp.forwardemail.net,
- 149.28.215.223
-X-Forward-Email-Version: 2.6.53
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
+	s=arc-20240116; t=1774019746; c=relaxed/simple;
+	bh=wqnjcjNaie6UDTzmbysnfxNuiFNQP0Thq71AYiTlERg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HnUi/5HFrF1bevf9o/qofdzWI9cWF2S4kKNzDhvPIVyDo58xhT53K8DzBrLuy+1UbjSDhOGgu9GMu/gTXGjanV/bZP1D4PoMSNbRchw+w1G4emYQC2r2XUFC/GFsPPTMXtG+8zDufcge6RUA6qs8Fu/72nH8gHsgsWB8gDhoEGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hXOlQhDc; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-35a1cc6e478so1434414a91.0
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Mar 2026 08:15:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1774019745; x=1774624545; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZOHGPk5doVf5PlHGyevPKUA2fqHQSdmXOjKYw+Hc8ik=;
+        b=hXOlQhDcZZMDujEe72nGIxlJqbe70/SlX+HdrRp4I+/of1YtJsor+j6GfaQoaKrWug
+         wiieToHGl+AGNJ6kdFhGQusDfmHpqwmBipm98iZbSV2C+zHddOQRYKv8bTJs+Y60eb3s
+         QL8GxKnF0JKQ0qllCFpam2WNiY2Qj8RvloLhT9fQYFIgfntbXQVaBIqSb6Q70irBE2l5
+         gXU80aYc88So5QhRaSzg0k/hMOkcdY7Bkk4Fz3+aVgdRu9CbhLgCehuJylXAi1rciOqQ
+         5GkCeZ1R9rOghw85ddwPiOTZseG1Z0x/jUNxeZudwvU9wjNrH+F+utox1jwQkG5uUlCz
+         nUnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774019745; x=1774624545;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZOHGPk5doVf5PlHGyevPKUA2fqHQSdmXOjKYw+Hc8ik=;
+        b=Sbmw7fEm/mfLy2cPnG65KBOTXO+vs4LqZDdNYH+G6wIzGktBhlEJNIJ9vsGlCoreD0
+         PEDZFreoGTLPBucX0tVIehwVfLHHe67kOndYRHLkpnPL4VjIx5LKOPSkZMAovU7fvdXW
+         j5L4A9aTln/+1kQu6CflIVsZf8Qkdwh8+l79PF478wpqi19Hmksjg5zO+yxWiykXwvrJ
+         ozjau2pdssGH+bPOwpWIiWyPJeICgxCOJIkzHrAUQ+mfQD+CBYDOL0/TxrXEa4KUn8UG
+         W1y2wR7/dD+UzzoMoCznLwNcfoAyC7GYPi2Ey49e5/OrBMWxo05zHARDcmRdkTZbf2H6
+         64Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCWulwvBzj/PwVl0AV2iPIZZXbkyLQ5J8EIp7x7ohv/2scZIypaTeTzsZGz96RRi9Y3u+AP8bZ8S4iqU@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqqxziU9WX4fOkbkHCDsEMsGUtDk8b30eg6fvDk56WZ01pERX/
+	v0hTrOCOeDnwV7jYbIoaeCzynuWtwSBdZfmVH0c+2+yGGS3E73L7TC3c
+X-Gm-Gg: ATEYQzztaRRXjc4+CPWObtC5288m6TyjCPYdBepO93TIlSQ35Fj9o+PvHX5BjEeOPjp
+	JWWSJei/izch6tZ4cuiQsOpZCbd11IOXWjX56xEMgr8YH+7EPQfXNA9o0Ll3+GPE32N9gWbHXbc
+	VU49Z4DVEsIkYIaO+Lpmv5AV3JgooYb//h+9HjBwXqikfprq61gx/1ew+C9BC9FpK0Vf9fsNzxJ
+	Syl2ShjwNAfwxrPOPxvv+mE8S87LYEeaBwYF9DrGJPXB7YVqO8g444P85JvxJZCw7VnjJU0lJOI
+	lorH+w5fQ3Qc80MWeK2D5g3pBpehbIeur4ks4bTGuxXZ4FlyLMVdxGEAosmMQc4AGcuUxrjy3Py
+	IUoCFn5CTzPGxXlghJxMnXpkAWS68Bf+7OddrdlaW3GB3fw497yv9Ur7KDQPlPWSC1GusIUsIyH
+	tUzwhxalicb718XYtoox9k66Jgew==
+X-Received: by 2002:a17:90b:5603:b0:359:2d1c:9206 with SMTP id 98e67ed59e1d1-35bd2d35149mr2773896a91.33.1774019744963;
+        Fri, 20 Mar 2026 08:15:44 -0700 (PDT)
+Received: from Vivobook.. ([2401:e180:88b2:f091:d2bd:d651:8e5e:9b62])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35bd3eb4bf5sm2284699a91.4.2026.03.20.08.15.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2026 08:15:44 -0700 (PDT)
+From: Yu-Chun Lin <eleanor15x@gmail.com>
+To: linusw@kernel.org,
+	laurent.pinchart@ideasonboard.com,
+	matt.porter@linaro.org,
+	syin@broadcom.com,
+	csd@broadcom.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yu-Chun Lin <eleanor15x@gmail.com>
+Subject: [PATCH v2] pinctrl: abx500: Fix type of 'argument' variable
+Date: Fri, 20 Mar 2026 23:15:06 +0800
+Message-Id: <20260320151506.10679-1-eleanor15x@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8; format=Flowed
-Date: Fri, 20 Mar 2026 10:59:32 -0400
-Message-Id: <DH7P658BN6Y6.2NN4PAO1KAEEQ@ubuntu.com>
-From: "Joshua Peisach" <jpeisach@ubuntu.com>
-To: "Janne Grunau" <j@jannau.net>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Lorenzo Pieralisi" <lpieralisi@kernel.org>, "Sven
- Peter" <sven@kernel.org>, "Neal Gompa" <neal@gompa.dev>, "Wim Van Sebroeck"
- <wim@linux-watchdog.org>, "Guenter Roeck" <linux@roeck-us.net>, "Linus
- Walleij" <linusw@kernel.org>, "Mark Kettenis" <kettenis@openbsd.org>, "Andi
- Shyti" <andi.shyti@kernel.org>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, "Sasha Finkelstein" <fnkl.kernel@gmail.com>
-Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <asahi@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
- <linux-watchdog@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
- <linux-i2c@vger.kernel.org>, <linux-pwm@vger.kernel.org>, "Michael Reeves"
- <michael.reeves077@gmail.com>
-Subject: Re: [PATCH 0/9] Initial Apple silicon M3 device trees and
- dt-bindings
-X-Mailer: aerc 0.20.0
-References: <20260320-apple-m3-initial-devicetrees-v1-0-5842e1e393a8@jannau.net>
-In-Reply-To: <20260320-apple-m3-initial-devicetrees-v1-0-5842e1e393a8@jannau.net>
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MV_CASE(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[ubuntu.com,none];
-	R_DKIM_ALLOW(-0.20)[ubuntu.com:s=fe-953a8a3ca9];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33936-lists,linux-gpio=lfdr.de];
-	FREEMAIL_TO(0.00)[jannau.net,kernel.org,gompa.dev,linux-watchdog.org,roeck-us.net,openbsd.org,gmail.com];
+	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,gmail.com];
+	TAGGED_FROM(0.00)[bounces-33933-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	RCPT_COUNT_TWELVE(0.00)[23];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[ubuntu.com:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jpeisach@ubuntu.com,linux-gpio@vger.kernel.org];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.linux.dev,lists.infradead.org,gmail.com];
-	NEURAL_HAM(-0.00)[-0.662];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[jannau.net:email,ubuntu.com:dkim,ubuntu.com:email,ubuntu.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B5FD02DD6AE
+	FROM_NEQ_ENVFROM(0.00)[eleanor15x@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	NEURAL_HAM(-0.00)[-0.899];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 67E0D2DC923
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri Mar 20, 2026 at 8:23 AM EDT, Janne Grunau wrote:
-> Hej,
->
-> This series adds initial device trees for M3 Apple silicon devices. The
-> device trees contain only a minimal set of hardware not going much
-> beyond the minimum required for booting kernel and initramfs and
-> verify via serial console that the hardware and drivers work.
-> The hardware with the exception of the interrupt controller is
-> compatible with the M1 and M2 SoCs and the existing drivers.
-> Changes for the interrupt controller were sent separately in [1] and are
-> picked up and in linux-next. The device trees pass make dtbs_check with
-> the apple,aic2 dt-bindings change from that series.
->
-> Link: https://lore.kernel.org/asahi/20260223-irq-apple-aic3-v3-0-2b732807=
-6b8d@jannau.net/ [1]
->
-> Signed-off-by: Janne Grunau <j@jannau.net>
-> ---
-> Janne Grunau (9):
->       dt-bindings: arm: cpus: Add Apple M3 CPU core compatibles
->       dt-bindings: arm: apple: apple,pmgr: Add t8122 compatible
->       dt-bindings: power: apple,pmgr-pwrstate: Add t8122 compatible
->       dt-bindings: watchdog: apple,wdt: Add t8122 compatible
->       dt-bindings: pinctrl: apple,pinctrl: Add t8122 compatible
->       dt-bindings: i2c: apple,i2c: Add t8122 compatible
->       dt-bindings: pwm: apple,s5l-fpwm: Add t8122 compatible
->       dt-bindings: arm: apple: Add M3 based devices
->       arm64: dts: apple: Initial t8122 (M3) device trees
->
->  Documentation/devicetree/bindings/arm/apple.yaml   |   18 +
->  .../devicetree/bindings/arm/apple/apple,pmgr.yaml  |    4 +-
->  Documentation/devicetree/bindings/arm/cpus.yaml    |    2 +
->  .../devicetree/bindings/i2c/apple,i2c.yaml         |    4 +-
->  .../devicetree/bindings/pinctrl/apple,pinctrl.yaml |    4 +-
->  .../bindings/power/apple,pmgr-pwrstate.yaml        |    4 +-
->  .../devicetree/bindings/pwm/apple,s5l-fpwm.yaml    |    1 +
->  .../devicetree/bindings/watchdog/apple,wdt.yaml    |    4 +-
->  arch/arm64/boot/dts/apple/Makefile                 |    5 +
->  arch/arm64/boot/dts/apple/t8122-j433.dts           |   19 +
->  arch/arm64/boot/dts/apple/t8122-j434.dts           |   19 +
->  arch/arm64/boot/dts/apple/t8122-j504.dts           |   37 +
->  arch/arm64/boot/dts/apple/t8122-j613.dts           |   35 +
->  arch/arm64/boot/dts/apple/t8122-j615.dts           |   35 +
->  arch/arm64/boot/dts/apple/t8122-jxxx.dtsi          |   48 +
->  arch/arm64/boot/dts/apple/t8122-pmgr.dtsi          | 1149 ++++++++++++++=
-++++++
->  arch/arm64/boot/dts/apple/t8122-usbpd-i2c.dtsi     |   32 +
->  arch/arm64/boot/dts/apple/t8122.dtsi               |  444 ++++++++
->  18 files changed, 1859 insertions(+), 5 deletions(-)
-> ---
-> base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
-> change-id: 20260319-apple-m3-initial-devicetrees-5c546ad977a2
->
-> Best regards,
+The argument variable is assigned the return value of
+pinconf_to_config_argument(), which returns a u32. Change its type from
+enum pin_config_param to unsigned int to correctly store the configuration
+argument.
 
-Seems fine, well done!
+Fixes: 03b054e9696c ("pinctrl: Pass all configs to driver on pin_config_set()")
+Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+---
+Changes in v2:
+- Rebased on the latest mainline to fix the recipient list.
+- Updated the variable type to match the commit message.
+---
+ drivers/pinctrl/nomadik/pinctrl-abx500.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Joshua Peisach <jpeisach@ubuntu.com>
+diff --git a/drivers/pinctrl/nomadik/pinctrl-abx500.c b/drivers/pinctrl/nomadik/pinctrl-abx500.c
+index fc7ebeda8440..858fbaebcf8e 100644
+--- a/drivers/pinctrl/nomadik/pinctrl-abx500.c
++++ b/drivers/pinctrl/nomadik/pinctrl-abx500.c
+@@ -852,7 +852,7 @@ static int abx500_pin_config_set(struct pinctrl_dev *pctldev,
+ 	int ret = -EINVAL;
+ 	int i;
+ 	enum pin_config_param param;
+-	enum pin_config_param argument;
++	unsigned int argument;
+ 
+ 	for (i = 0; i < num_configs; i++) {
+ 		param = pinconf_to_config_param(configs[i]);
+-- 
+2.34.1
+
 
