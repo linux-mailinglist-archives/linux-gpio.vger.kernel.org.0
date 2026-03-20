@@ -1,162 +1,326 @@
-Return-Path: <linux-gpio+bounces-33933-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33934-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4EdABiBmvWlF9gIAu9opvQ
-	(envelope-from <linux-gpio+bounces-33933-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 16:22:08 +0100
+	id kPwMIJJnvWnL9gIAu9opvQ
+	(envelope-from <linux-gpio+bounces-33934-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 16:28:18 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67E0D2DC923
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 16:22:07 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EAF32DCA9A
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 16:28:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A2DBD30D55E7
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 15:15:47 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2C9F230D8399
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2026 15:16:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 189063C4564;
-	Fri, 20 Mar 2026 15:15:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A0CA3C7E18;
+	Fri, 20 Mar 2026 15:16:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hXOlQhDc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TCNCaFvl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F733C73E4
-	for <linux-gpio@vger.kernel.org>; Fri, 20 Mar 2026 15:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC686301704;
+	Fri, 20 Mar 2026 15:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774019746; cv=none; b=CA2hLfcnGXTLI/2gFA6cQoFYKyPh2ncm+ndsFUjvw0LbhpTDJoYSIDCOpZbqQ0nmrIbYQqJjma7uCaAwc96PUpMOgnT03qFd7iJPnlruOKdlf0AMq8JFbPMrKUpPcUDv4cggq+Nr7nNLASCzXeTodKrb1KqlaCgPaMfsM63Yh1g=
+	t=1774019793; cv=none; b=FwIiAo/qEHEI/SJAvZE2Fwfi+uCtpyTwYE4K+mN3xguOcZTt07TG76jIusVpBjlGBN0gu6smyAKL9Y0uwupDdKQjU2x5CWIpSxP4Hjz3vLFtHQrfZRsAkDXSzEaih2p/u/v+Z4p/dIE8gLZ1x7ug/PvJPkLysJw9nosVieV+ZZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774019746; c=relaxed/simple;
-	bh=wqnjcjNaie6UDTzmbysnfxNuiFNQP0Thq71AYiTlERg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HnUi/5HFrF1bevf9o/qofdzWI9cWF2S4kKNzDhvPIVyDo58xhT53K8DzBrLuy+1UbjSDhOGgu9GMu/gTXGjanV/bZP1D4PoMSNbRchw+w1G4emYQC2r2XUFC/GFsPPTMXtG+8zDufcge6RUA6qs8Fu/72nH8gHsgsWB8gDhoEGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hXOlQhDc; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-35a1cc6e478so1434414a91.0
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Mar 2026 08:15:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1774019745; x=1774624545; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZOHGPk5doVf5PlHGyevPKUA2fqHQSdmXOjKYw+Hc8ik=;
-        b=hXOlQhDcZZMDujEe72nGIxlJqbe70/SlX+HdrRp4I+/of1YtJsor+j6GfaQoaKrWug
-         wiieToHGl+AGNJ6kdFhGQusDfmHpqwmBipm98iZbSV2C+zHddOQRYKv8bTJs+Y60eb3s
-         QL8GxKnF0JKQ0qllCFpam2WNiY2Qj8RvloLhT9fQYFIgfntbXQVaBIqSb6Q70irBE2l5
-         gXU80aYc88So5QhRaSzg0k/hMOkcdY7Bkk4Fz3+aVgdRu9CbhLgCehuJylXAi1rciOqQ
-         5GkCeZ1R9rOghw85ddwPiOTZseG1Z0x/jUNxeZudwvU9wjNrH+F+utox1jwQkG5uUlCz
-         nUnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774019745; x=1774624545;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZOHGPk5doVf5PlHGyevPKUA2fqHQSdmXOjKYw+Hc8ik=;
-        b=Sbmw7fEm/mfLy2cPnG65KBOTXO+vs4LqZDdNYH+G6wIzGktBhlEJNIJ9vsGlCoreD0
-         PEDZFreoGTLPBucX0tVIehwVfLHHe67kOndYRHLkpnPL4VjIx5LKOPSkZMAovU7fvdXW
-         j5L4A9aTln/+1kQu6CflIVsZf8Qkdwh8+l79PF478wpqi19Hmksjg5zO+yxWiykXwvrJ
-         ozjau2pdssGH+bPOwpWIiWyPJeICgxCOJIkzHrAUQ+mfQD+CBYDOL0/TxrXEa4KUn8UG
-         W1y2wR7/dD+UzzoMoCznLwNcfoAyC7GYPi2Ey49e5/OrBMWxo05zHARDcmRdkTZbf2H6
-         64Cw==
-X-Forwarded-Encrypted: i=1; AJvYcCWulwvBzj/PwVl0AV2iPIZZXbkyLQ5J8EIp7x7ohv/2scZIypaTeTzsZGz96RRi9Y3u+AP8bZ8S4iqU@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqqxziU9WX4fOkbkHCDsEMsGUtDk8b30eg6fvDk56WZ01pERX/
-	v0hTrOCOeDnwV7jYbIoaeCzynuWtwSBdZfmVH0c+2+yGGS3E73L7TC3c
-X-Gm-Gg: ATEYQzztaRRXjc4+CPWObtC5288m6TyjCPYdBepO93TIlSQ35Fj9o+PvHX5BjEeOPjp
-	JWWSJei/izch6tZ4cuiQsOpZCbd11IOXWjX56xEMgr8YH+7EPQfXNA9o0Ll3+GPE32N9gWbHXbc
-	VU49Z4DVEsIkYIaO+Lpmv5AV3JgooYb//h+9HjBwXqikfprq61gx/1ew+C9BC9FpK0Vf9fsNzxJ
-	Syl2ShjwNAfwxrPOPxvv+mE8S87LYEeaBwYF9DrGJPXB7YVqO8g444P85JvxJZCw7VnjJU0lJOI
-	lorH+w5fQ3Qc80MWeK2D5g3pBpehbIeur4ks4bTGuxXZ4FlyLMVdxGEAosmMQc4AGcuUxrjy3Py
-	IUoCFn5CTzPGxXlghJxMnXpkAWS68Bf+7OddrdlaW3GB3fw497yv9Ur7KDQPlPWSC1GusIUsIyH
-	tUzwhxalicb718XYtoox9k66Jgew==
-X-Received: by 2002:a17:90b:5603:b0:359:2d1c:9206 with SMTP id 98e67ed59e1d1-35bd2d35149mr2773896a91.33.1774019744963;
-        Fri, 20 Mar 2026 08:15:44 -0700 (PDT)
-Received: from Vivobook.. ([2401:e180:88b2:f091:d2bd:d651:8e5e:9b62])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35bd3eb4bf5sm2284699a91.4.2026.03.20.08.15.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2026 08:15:44 -0700 (PDT)
-From: Yu-Chun Lin <eleanor15x@gmail.com>
-To: linusw@kernel.org,
-	laurent.pinchart@ideasonboard.com,
-	matt.porter@linaro.org,
-	syin@broadcom.com,
-	csd@broadcom.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: [PATCH v2] pinctrl: abx500: Fix type of 'argument' variable
-Date: Fri, 20 Mar 2026 23:15:06 +0800
-Message-Id: <20260320151506.10679-1-eleanor15x@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1774019793; c=relaxed/simple;
+	bh=GkNDdaVsOUqNwYWo7W4428KaeYtWZrqhStkpVFxO/AU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FGEloPiMjbsub9HFyDIHY4OLpb9Eyo5P1jayhPd9VKYDGxgB/CSET+8KhXCDUPIK03vLb5oxKt6g6FqRZQLx6f3kfNQV/e8I82z1YZDLKA8BGP8x3VVd+Rn5FwcFJIuv9G3hJEHCVjbixE6k2PS9SUKAnNgp3i9gzMgnzhQubKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TCNCaFvl; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774019792; x=1805555792;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GkNDdaVsOUqNwYWo7W4428KaeYtWZrqhStkpVFxO/AU=;
+  b=TCNCaFvlRG5La3Dzhh8PPJ5x+ImD2ZAB52D1wUq0gRIRlN4xeupsTzWs
+   0Gk9BroU+/7xAw1MJZZBiIdNB1kNvmmSxNdsLXcSW3DG1bCuo8ZaqwNbF
+   HZNJSjLHaG6jabimuwuker2mB5fM6w8pqevnNrUndvXk0686yxLraS4nr
+   oB/FICRb3LMXjABkIllhglP9To5NsLyl431st26CbA/3+dByjFhZx57CJ
+   2dHUtl/P8QwHTt8DEi6fMoP+aalfwDG5NKQmeeqQZ4t9bxiXPwm7oJo9k
+   l4UMOBt9QH+4I8wCwr6+x+PyVCWAYam5mijA+/Z9Rk3iUFTJumG2cvo0w
+   A==;
+X-CSE-ConnectionGUID: DhxsN5BJTfKwZg80GygFdg==
+X-CSE-MsgGUID: hjLw8A6qRROV8bR7PQzrSw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11735"; a="97725588"
+X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
+   d="scan'208";a="97725588"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 08:16:31 -0700
+X-CSE-ConnectionGUID: LJIG37obSneLj5G8pQfLWg==
+X-CSE-MsgGUID: VxaY5xfiQSyjNDsBM6s/ZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,130,1770624000"; 
+   d="scan'208";a="223300291"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.245.40])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 08:16:27 -0700
+Date: Fri, 20 Mar 2026 17:16:24 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: radu.sabau@analog.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] iio: adc: ad4691: add initial driver for AD4691
+ family
+Message-ID: <ab1kyFPyrkxJLw2Z@ashevche-desk.local>
+References: <20260320-ad4692-multichannel-sar-adc-driver-v4-0-052c1050507a@analog.com>
+ <20260320-ad4692-multichannel-sar-adc-driver-v4-2-052c1050507a@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260320-ad4692-multichannel-sar-adc-driver-v4-2-052c1050507a@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-33933-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FREEMAIL_CC(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-33934-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[eleanor15x@gmail.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	NEURAL_HAM(-0.00)[-0.899];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 67E0D2DC923
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	NEURAL_HAM(-0.00)[-0.980];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,ashevche-desk.local:mid]
+X-Rspamd-Queue-Id: 3EAF32DCA9A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The argument variable is assigned the return value of
-pinconf_to_config_argument(), which returns a u32. Change its type from
-enum pin_config_param to unsigned int to correctly store the configuration
-argument.
+On Fri, Mar 20, 2026 at 01:03:56PM +0200, Radu Sabau via B4 Relay wrote:
 
-Fixes: 03b054e9696c ("pinctrl: Pass all configs to driver on pin_config_set()")
-Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
----
-Changes in v2:
-- Rebased on the latest mainline to fix the recipient list.
-- Updated the variable type to match the commit message.
----
- drivers/pinctrl/nomadik/pinctrl-abx500.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Add support for the Analog Devices AD4691 family of high-speed,
+> low-power multichannel SAR ADCs: AD4691 (16-ch, 500 kSPS),
+> AD4692 (16-ch, 1 MSPS), AD4693 (8-ch, 500 kSPS) and
+> AD4694 (8-ch, 1 MSPS).
+> 
+> The driver implements a custom regmap layer over raw SPI to handle the
+> device's mixed 1/2/3/4-byte register widths and uses the standard IIO
+> read_raw/write_raw interface for single-channel reads.
+> 
+> The chip idles in Autonomous Mode so that single-shot read_raw can use
+> the internal oscillator without disturbing the hardware configuration.
+> 
+> Three voltage supply domains are managed: avdd (required), vio, and a
+> reference supply on either the REF pin (ref-supply, external buffer)
+> or the REFIN pin (refin-supply, uses the on-chip reference buffer;
+> REFBUF_EN is set accordingly). Hardware reset is performed via
+> the reset controller framework; a software reset through SPI_CONFIG_A
+> is used as fallback when no hardware reset is available.
+> 
+> Accumulator channel masking for single-shot reads uses ACC_MASK_REG via
+> an ADDR_DESCENDING SPI write, which covers both mask bytes in a single
+> 16-bit transfer.
 
-diff --git a/drivers/pinctrl/nomadik/pinctrl-abx500.c b/drivers/pinctrl/nomadik/pinctrl-abx500.c
-index fc7ebeda8440..858fbaebcf8e 100644
---- a/drivers/pinctrl/nomadik/pinctrl-abx500.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-abx500.c
-@@ -852,7 +852,7 @@ static int abx500_pin_config_set(struct pinctrl_dev *pctldev,
- 	int ret = -EINVAL;
- 	int i;
- 	enum pin_config_param param;
--	enum pin_config_param argument;
-+	unsigned int argument;
- 
- 	for (i = 0; i < num_configs; i++) {
- 		param = pinconf_to_config_param(configs[i]);
+...
+
+> +static int ad4691_reg_read(void *context, unsigned int reg, unsigned int *val)
+> +{
+> +	struct spi_device *spi = context;
+> +	u8 tx[2], rx[4];
+> +	int ret;
+
+> +	put_unaligned_be16(0x8000 | reg, tx);
+
+I would expect that the config will have read_flag_mask set and here you just
+use it. But it's fine like now, just add a comment
+
+	/* Set bit 15 to mark the operation READ */
+
+or something similar.
+
+> +	switch (reg) {
+> +	case 0 ... AD4691_OSC_FREQ_REG:
+> +	case AD4691_SPARE_CONTROL ... AD4691_ACC_SAT_OVR_REG(15):
+> +		ret = spi_write_then_read(spi, tx, 2, rx, 1);
+> +		if (ret)
+> +			return ret;
+> +		*val = rx[0];
+> +		return 0;
+> +	case AD4691_STD_SEQ_CONFIG:
+> +	case AD4691_AVG_IN(0) ... AD4691_AVG_IN(15):
+> +		ret = spi_write_then_read(spi, tx, 2, rx, 2);
+> +		if (ret)
+> +			return ret;
+> +		*val = get_unaligned_be16(rx);
+> +		return 0;
+> +	case AD4691_AVG_STS_IN(0) ... AD4691_AVG_STS_IN(15):
+> +	case AD4691_ACC_IN(0) ... AD4691_ACC_IN(15):
+> +		ret = spi_write_then_read(spi, tx, 2, rx, 3);
+> +		if (ret)
+> +			return ret;
+> +		*val = get_unaligned_be24(rx);
+> +		return 0;
+> +	case AD4691_ACC_STS_DATA(0) ... AD4691_ACC_STS_DATA(15):
+> +		ret = spi_write_then_read(spi, tx, 2, rx, 4);
+> +		if (ret)
+> +			return ret;
+> +		*val = get_unaligned_be32(rx);
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+
+...
+
+> +static int ad4691_regulator_setup(struct ad4691_state *st)
+> +{
+> +	struct device *dev = regmap_get_device(st->regmap);
+> +	int ret;
+> +
+> +	ret = devm_regulator_get_enable(dev, "avdd");
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to get and enable AVDD\n");
+
+> +	ret = devm_regulator_get_enable(dev, "ldo-in");
+> +	if (ret && ret != -ENODEV)
+> +		return dev_err_probe(dev, ret, "Failed to get and enable LDO-IN\n");
+> +	st->ldo_en = (ret == -ENODEV);
+
+You can use the approach from below
+
+	ret = devm_regulator_get_enable(dev, "ldo-in");
+	if (ret == -ENODEV)
+		st->ldo_en = true;
+	else if (ret)
+		return dev_err_probe(dev, ret, "Failed to get and enable LDO-IN\n");
+	// no other branches assuming ldo_en = false due to kzalloc():ed memory.
+
+
+> +	ret = devm_regulator_get_enable(dev, "vio");
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to get and enable VIO\n");
+> +
+> +	st->vref_uV = devm_regulator_get_enable_read_voltage(dev, "ref");
+
+> +	if (st->vref_uV >= 0) {
+> +		st->refbuf_en = false;
+
+Do you need this? Isn't 'st' allocated with kzalloc() or alike?
+
+> +	} else if (st->vref_uV == -ENODEV) {
+> +		st->vref_uV = devm_regulator_get_enable_read_voltage(dev, "refin");
+> +		st->refbuf_en = true;
+
+> +	}
+> +	if (st->vref_uV < 0)
+> +		return dev_err_probe(dev, st->vref_uV,
+> +				     "Failed to get reference supply\n");
+
+> +	if (st->vref_uV < AD4691_VREF_uV_MIN || st->vref_uV > AD4691_VREF_uV_MAX)
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "vref(%d) must be in the range [%u...%u]\n",
+> +				     st->vref_uV, AD4691_VREF_uV_MIN,
+> +				     AD4691_VREF_uV_MAX);
+> +
+> +	return 0;
+> +}
+
+...
+
+> +	if (!rst)
+
+It's not an error check, so I would invert the condition.
+
+> +		/* No hardware reset available, fall back to software reset. */
+> +		return regmap_write(st->regmap, AD4691_SPI_CONFIG_A_REG,
+> +				    AD4691_SW_RESET);
+> +
+> +	reset_control_assert(rst);
+> +	/* Reset delay required. See datasheet Table 5. */
+> +	fsleep(300);
+> +	reset_control_deassert(rst);
+
+	if (rst) {
+		reset_control_assert(rst);
+		/* Reset delay required. See datasheet Table 5. */
+		fsleep(300);
+		reset_control_deassert(rst);
+
+		return 0;
+	}
+
+	/* No hardware reset available, fall back to software reset. */
+	return regmap_write(st->regmap, AD4691_SPI_CONFIG_A_REG, AD4691_SW_RESET);
+
+
+...
+
+> +	ret = regmap_write(st->regmap, AD4691_REF_CTRL,
+> +			   FIELD_PREP(AD4691_REF_CTRL_MASK, ref_val) |
+> +			   (st->refbuf_en ? AD4691_REFBUF_EN : 0));
+
+regmap_update_bits()?
+regmap_assign_bits()?
+
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to write REF_CTRL\n");
+> +
+> +	ret = regmap_write(st->regmap, AD4691_DEVICE_SETUP,
+> +			   st->ldo_en ? AD4691_LDO_EN : 0);
+
+Ditto.
+
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to write DEVICE_SETUP\n");
+> +
+> +	/*
+> +	 * Set the internal oscillator to the highest valid rate for this chip.
+> +	 * Index 0 (1 MHz) is valid only for AD4692/AD4694; AD4691/AD4693 start
+> +	 * at index 1 (500 kHz).
+> +	 */
+> +	ret = regmap_write(st->regmap, AD4691_OSC_FREQ_REG,
+> +			   (st->info->max_rate == HZ_PER_MHZ) ? 0 : 1);
+
+Ditto.
+
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to write OSC_FREQ\n");
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
 
