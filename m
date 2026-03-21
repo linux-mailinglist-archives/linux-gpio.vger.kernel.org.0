@@ -1,283 +1,204 @@
-Return-Path: <linux-gpio+bounces-33973-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33974-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UHvmL02ivmmLVAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-33973-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 14:51:09 +0100
+	id UKdFGNGsvmmlWQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-33974-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 15:36:01 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 496AD2E59EF
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 14:51:09 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id F399B2E5D40
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 15:36:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D8C1530157CF
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 13:50:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 61EA93013A97
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 14:35:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B974277C81;
-	Sat, 21 Mar 2026 13:50:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96E2038C2DC;
+	Sat, 21 Mar 2026 14:35:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YbRRxNvM";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="e53JOUzf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Km+laChP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5773033C0
-	for <linux-gpio@vger.kernel.org>; Sat, 21 Mar 2026 13:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5673D28689B;
+	Sat, 21 Mar 2026 14:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774101059; cv=none; b=hGKO3ygNOHd5ykQfWSb/reBQ6GW1jfizfbVLEBmpmLG+SAY/TkaiUUVZKMIbqq6tDFyZqU7vp8AdiPyHc/3aAt0obpxCnPv1cHC1l2k12yX3J4aAuZpW7NKoX/NYL80fpPZ8g8krXXJnL5DY+ofVwup0o9lNsM1jkxohRsc9Q6E=
+	t=1774103715; cv=none; b=WqvcUBoF6OBxLgbGCpYJLoOC69iJGU3J65FTQimOrxqedrZtRUGEZjy61ltpxGCM3tHf0VRX5Fn9pZ1sI3OAelovZBr9zluBQP8eQDhzJuM9Yk7zrwOmUm1sGmiJbnKbQ+n6UFa/h53v57vCvPbOOUNVqEevlk4ETA8PGcsxg84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774101059; c=relaxed/simple;
-	bh=92OGINrYIEMHF4Yj1z89XucWCdQo5x7PD93rkEDJkSU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pGH4j/5C1BPizRpjGsaSBm45fhFbYgEaJ+C6ShEOsR651FspRhsfTgr2gvpeOdFDxInLYepugFpxZQbhqZZjpO5GYGzi9vCouXSODVOpnhrB14VKMOBR6vVnU/06nbduZP7sXBQxDVu+Td101nS0CAYsDY943ra49Nyss+i2y64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YbRRxNvM; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=e53JOUzf; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62L3jvHg355145
-	for <linux-gpio@vger.kernel.org>; Sat, 21 Mar 2026 13:50:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=dEwv3v4fvUI
-	ft8JTog2rIO4fgOp9tun/AvsOV/PcgME=; b=YbRRxNvMbb0bTnKuOUFNjAugrSH
-	mbQgzEOVLCNBcbkGentXKXdqKynHhMwdukdelNCMGRLNOdLW8c2AjK+yCiWNKxTU
-	SHCDL/h1sX+ZI0t2FrZSpy5X7lOW6B1vGWGfcibHcuqrCgxe4avSPI06cAKMW0VJ
-	z749n+4JhMP5MmwmU3EdC6Y6r/7Q+yNh7w55FE8BPyXyyPTW6GWNz2ZRplGTBA3y
-	rhiGnGDuiNpUKaGMCCRyOuaE+OzMJgNXo7ncQkDb5BAbLVuJ0nGn3ODGnjF/Xozd
-	oIp/Vwz3QuNV38WA3if0WMB/8k8+49WXHcPLSRpnLxS9Pndyvt0TNVWsTPg==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d1kq5rrkb-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Sat, 21 Mar 2026 13:50:56 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2b04911610fso34508655ad.3
-        for <linux-gpio@vger.kernel.org>; Sat, 21 Mar 2026 06:50:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1774101056; x=1774705856; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dEwv3v4fvUIft8JTog2rIO4fgOp9tun/AvsOV/PcgME=;
-        b=e53JOUzfRn7jhJ+kfuFsXrL30/aN2GdF1GOQQjbq/O+jcCVchT5TCjr64ihysT0nJR
-         nu0lyfuI+ssnk5Twi8esR7WmxWQ7Fl7vMZb/fPbX4KDpxe0tZGK6Es7u4124RgcB124n
-         nFieDFP0dgVM6nxCIVhOBKei4UM6e/g6geOiHbp8NI6qG5HSpkjQFN5gDx4RbOaKmJzy
-         lYK5rKpLcPHNiOvMlZ2bZQfusKfAXtjFPl5tZFaftX9/DFkYHYgRvVFlNNPntNlvCCTf
-         4MgEfIaQDXFqoWcRdx5oKSl3ELexHXTDw6Ss1qHEbdQ4VoGbtnMOvfmDFVU4dw08aupY
-         28CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774101056; x=1774705856;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=dEwv3v4fvUIft8JTog2rIO4fgOp9tun/AvsOV/PcgME=;
-        b=bvxGiO56kFH3M07oO3di/SggMEznPb0bceYZntjtm8Uu84tbceZFSR35tW+ei5SAB6
-         Ogv6z8PLl674oSx8V6aG+kym+NlPvZ+FESxqNDJboJ7tiMhYB8ZuA9hhAOMnuIuC9Bme
-         Hg897ue22p2fEj8DOFXL9EbAoyQ4mfUNvrE3UfUU+iR6fdhuUflq7wcoPheANoh04E5W
-         9LLmoTODHm5v1W/vS9ItpOlZBESjEopPjn2/IV16VLMhXGwMNADhyZ7v7M54u1m8DUgW
-         SnUeCdTU6PEHSdCakbmOF+IQfMP9kMx0FWPYVucO2wvSuIMtejO8vqc2ERBfp/+OtLeI
-         I9eg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQAd08tpYEhC6nUZ2V/3R98aGlwS+1edpv1zjMtNPL3J6QgjpjydbkCRWw2Yky+3NjworNvD16tKmr@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFChnuAe8hyAXNGy5KZde1xn5QLEsZNxEFopBNy5dSk1qh5lNw
-	Xwyxmfacf1bRXwXuPb33mDrSmUo9/nRlXQR6pALJT4CU4U7BtJPESxFSBOEp9OqQUVJKzVcZPLU
-	7JxIiw1s1pZwk8rMqtxi5jWzAjFKkp6nVHb09yx3aw3E5ISQPjqkIBERvzZJeYdQW
-X-Gm-Gg: ATEYQzxHf3KilATcQe5l3MbQ41S7fW/wm24swMX/A0IukpzH7GyX8M/VQgLeh9S3lw7
-	8B30+Rr1lbps/ByaRvc4boxVLWFasFiTHK+pFu3qMLfI7jY2AgX60bS9AQH8hZLwv8eOD55oR2R
-	c2+4ICmIqr0tp5860Wuaqgiv4FgpPoD3kumwjVbqx3XkLkVzxzZbpY6dwIjU62nHL+ZmXTWt1OQ
-	TXdhvvFeczvyKkYa9+Mccx8bSZgdqXwjdicu3YbAoH73f34/jcYANoRAnsc9C0jno2kDipRp0yd
-	TEwiP+tU5h/nbHDT2c2O9+zJvneiJJ4VDsO76oCSytn8gGBrifUqKBwvkTyFmK6h0kO8ceJsczq
-	WT4mLEE+ZfJx0lojzkZt4szGBdZSCbc4ZSzFN9prfPJQ9uLaD31Cnuva8UQ==
-X-Received: by 2002:a17:902:e551:b0:2ae:c9be:5f30 with SMTP id d9443c01a7336-2b0827898f7mr62267115ad.23.1774101055705;
-        Sat, 21 Mar 2026 06:50:55 -0700 (PDT)
-X-Received: by 2002:a17:902:e551:b0:2ae:c9be:5f30 with SMTP id d9443c01a7336-2b0827898f7mr62266925ad.23.1774101055240;
-        Sat, 21 Mar 2026 06:50:55 -0700 (PDT)
-Received: from hu-vdadhani-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b083516cb9sm54897555ad.2.2026.03.21.06.50.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Mar 2026 06:50:54 -0700 (PDT)
-From: Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>
-To: mkl@pengutronix.de, mani@kernel.org, thomas.kopp@microchip.com,
-        mailhol@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
-        linusw@kernel.org, brgl@kernel.org, linux-can@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc: mukesh.savaliya@oss.qualcomm.com, anup.kulkarni@oss.qualcomm.com,
-        Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>
-Subject: [PATCH v3 2/2] can: mcp251xfd: add support for XSTBYEN transceiver standby control
-Date: Sat, 21 Mar 2026 19:20:31 +0530
-Message-Id: <20260321135031.3107408-3-viken.dadhaniya@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260321135031.3107408-1-viken.dadhaniya@oss.qualcomm.com>
-References: <20260321135031.3107408-1-viken.dadhaniya@oss.qualcomm.com>
+	s=arc-20240116; t=1774103715; c=relaxed/simple;
+	bh=t7eS6BNztXPaIUR0HVv++sV18u11edlOqEYCGLdYT0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KTp5T2tFtj2px3ptmJf0/fwbteKZCB+5nwu2zwbKPTBvmc3/HngDFGZeYYSIsyaOxmJ49gzSJTh7XuOooF+/oa7a7LYOMIuBN98fKcgJPMCZ8bOiB+kn0wnpDJwX3TJnBYW3cU0T59AatpEN7uWCHS5BAxw0ObigWALrH8wKoOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Km+laChP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0FB3C19421;
+	Sat, 21 Mar 2026 14:35:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774103715;
+	bh=t7eS6BNztXPaIUR0HVv++sV18u11edlOqEYCGLdYT0k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Km+laChPryEJ07CoN1+1BD0ZI1DQpMdSmmJdoutMfpEcpRAcRFAhKzYk615aWPP6e
+	 CINwkkBbSUb3clfKqT6Um9XE9DvsnXIdo3HanSaJvfDzK1kKUoikIXDm5iizEKjYcp
+	 fwaCs6p5HXNQDU2HMWPV0TwqDl1K3MmUgg/AGLHazxxqvOX5z90B+XwBKAF3kXW/Cy
+	 HKz9r3l3I7fu8pKMKHC6mz7UlwELaQm2J5ZXimHU3F+1zJDcS0nshgyMvut3GS0Zi1
+	 KpUBtWhBPBH+d8GkrCtBfHJ0nNVaeqfjO/aZt75BAm/W18gVAxE710ypUJ81+dxwgL
+	 rXpgNzal6ioew==
+Date: Sat, 21 Mar 2026 14:35:02 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
+Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, David Lechner
+ <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
+ Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Uwe
+ =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linus Walleij
+ <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Philipp Zabel
+ <p.zabel@pengutronix.de>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] dt-bindings: iio: adc: add AD4691 family
+Message-ID: <20260321143502.4a9cf6b9@jic23-huawei>
+In-Reply-To: <20260320-ad4692-multichannel-sar-adc-driver-v4-1-052c1050507a@analog.com>
+References: <20260320-ad4692-multichannel-sar-adc-driver-v4-0-052c1050507a@analog.com>
+	<20260320-ad4692-multichannel-sar-adc-driver-v4-1-052c1050507a@analog.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=GNoF0+NK c=1 sm=1 tr=0 ts=69bea240 cx=c_pps
- a=IZJwPbhc+fLeJZngyXXI0A==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
- a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=K7bTvPR2ScrnO788fwgA:9 a=uG9DUKGECoFWVXl0Dc02:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzIxMDExNSBTYWx0ZWRfX6mRWwapKrkiu
- TVGnlmcVXS1+Dl2d1ml8oHWYK1Do9wCSxK/3YMddvPpLecpzmPez+zh9UWyqVF5yTnD84NmYe9+
- 83815iQWwNyiGfrMMBiynG3yW93Wvyhdo99BssRvn6MeP7nKyZATtwV4QAe3kH+amz5DHcU1JM3
- Smfn0q8DeFuWvhGuGXBrqIZ/Ha1svnxa5+69hDo8hihBb6YVQeJowsWyf2AbhQyU2NzTp0h2xHG
- imY+aEVGvhHQm4ECg0RiLItcpVsUC6cdK9onVhc5oDLkmEvrruKO1P8O/abswwJvbpIG+YiXL1Y
- Dj40hzHDXeJ8fSlW7IIO5xM1s+rzEjrtR+EkNQ02bWXR38LnpyFJx8LjGQi5DSQnby5im3NGONg
- P9Z5Qg2zjScg1Xx7iKhgShpPK5SCsCc/GsHfBkaz8G3iWIZqPPzhI8IJ4oE9X+3hrdeYKo3erb/
- qOho4iwriUw2gsGv4Jw==
-X-Proofpoint-ORIG-GUID: iK6KZp72rcExOtYThFWPCi8WejbHAJlm
-X-Proofpoint-GUID: iK6KZp72rcExOtYThFWPCi8WejbHAJlm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-21_04,2026-03-20_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 lowpriorityscore=0 clxscore=1015 suspectscore=0
- spamscore=0 adultscore=0 bulkscore=0 phishscore=0 impostorscore=0
- malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
- definitions=main-2603210115
-X-Spamd-Result: default: False [0.84 / 15.00];
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-33974-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33973-lists,linux-gpio=lfdr.de];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[viken.dadhaniya@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[21];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:dkim,oss.qualcomm.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,qualcomm.com:dkim,qualcomm.com:email];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[analog.com,metafoo.de,baylibre.com,kernel.org,gmail.com,pengutronix.de,vger.kernel.org];
+	TAGGED_RCPT(0.00)[linux-gpio,radu.sabau.analog.com,dt];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 496AD2E59EF
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:email,analog.com:url,devicetree.org:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: F399B2E5D40
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The MCP251xFD has a dedicated transceiver standby control function on
-the INT0/GPIO0/XSTBY pin, controlled by the XSTBYEN bit in IOCON.
-When enabled, the hardware automatically manages the transceiver
-standby state: the pin is driven low when the controller is active
-and high when it enters Sleep mode.
+On Fri, 20 Mar 2026 13:03:55 +0200
+Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org> wrote:
 
-Enable this feature when the 'microchip,xstbyen' device tree property
-is present.
+> From: Radu Sabau <radu.sabau@analog.com>
+> 
+> Add DT bindings for the Analog Devices AD4691 family of multichannel
+> SAR ADCs (AD4691, AD4692, AD4693, AD4694).
+> 
+> The binding describes the hardware connections:
+> 
+> - Power domains: avdd-supply (required), vio-supply,
 
-Signed-off-by: Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>
----
-v2 -> v3:
+Bit odd to call out avdd-supply as required but not vio-supply
 
-- Configure xstbyen pin before bringing the controller into normal mode.
-- Add a check in mcp251xfd_gpio_request() to ensure that GPIO0 cannot be
-  used when xstbyen is enabled.
 
-v2 Link: https://lore.kernel.org/all/20260316131950.859748-3-viken.dadhaniya@oss.qualcomm.com/
----
- .../net/can/spi/mcp251xfd/mcp251xfd-core.c    | 37 +++++++++++++++++++
- drivers/net/can/spi/mcp251xfd/mcp251xfd.h     |  1 +
- 2 files changed, 38 insertions(+)
+> ref-supply or
+>   refin-supply (external reference; the REFIN path enables the
+>   internal reference buffer), and an optional ldo-in-supply, that if
+>   absent, means the on-chip internal LDO will be used.
+> 
+> - Optional PWM on the CNV pin selects CNV Burst Mode; when absent,
+>   Manual Mode is assumed with CNV tied to SPI CS.
+> 
+> - An optional reset GPIO (reset-gpios) for hardware reset.
+> 
+> - Up to four GP pins (gp0..gp3) usable as interrupt sources,
+>   identified in firmware via interrupt-names "gp0".."gp3".
+> 
+> - gpio-controller with #gpio-cells = <2> for GP pin GPIO usage.
+> 
+> - #trigger-source-cells = <1>: one cell selecting the GP pin number
+>   (0-3) used as the SPI offload trigger source.
+> 
+> Two binding examples are provided: CNV Burst Mode with SPI offload
+> (DMA data acquisition driven by DATA_READY on a GP pin), and Manual
+> Mode for CPU-driven triggered-buffer or single-shot capture.
+> 
+> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+> ---
+>  .../devicetree/bindings/iio/adc/adi,ad4691.yaml    | 173 +++++++++++++++++++++
+>  MAINTAINERS                                        |   7 +
+>  2 files changed, 180 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
+> new file mode 100644
+> index 000000000000..def9f32c78af
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
+> @@ -0,0 +1,173 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4691.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD4691 Family Multichannel SAR ADCs
+> +
+> +maintainers:
+> +  - Radu Sabau <radu.sabau@analog.com>
+> +
+> +description: |
+> +  The AD4691 family are high-speed, low-power, multichannel successive
+> +  approximation register (SAR) analog-to-digital converters (ADCs) with
+> +  an SPI-compatible serial interface. The ADC supports CNV Burst Mode,
+> +  where an external PWM drives the CNV pin, and Manual Mode, where CNV
+> +  is directly tied to the SPI chip-select.
+> +
+> +  Datasheets:
+> +    * https://www.analog.com/en/products/ad4692.html
 
-diff --git a/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c b/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
-index 9c86df08c2c5..92a86083c896 100644
---- a/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
-+++ b/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
-@@ -764,6 +764,31 @@ static void mcp251xfd_chip_stop(struct mcp251xfd_priv *priv,
- 	mcp251xfd_chip_set_mode(priv, MCP251XFD_REG_CON_MODE_CONFIG);
- }
- 
-+static int mcp251xfd_chip_xstbyen_enable(const struct mcp251xfd_priv *priv)
-+{
-+	/* Configure the INT0/GPIO0/XSTBY pin as transceiver standby control:
-+	 *
-+	 * - XSTBYEN=1: route the pin to the transceiver standby function
-+	 * - TRIS0=0:   set output direction; the reset default is 1 (input),
-+	 *              which leaves the pin floating HIGH and keeps the
-+	 *              transceiver in standby regardless of XSTBYEN
-+	 * - LAT0=0:    drive pin LOW => transceiver active (not in standby)
-+	 *
-+	 * All three bits are included in the mask; only XSTBYEN is set in
-+	 * val, so TRIS0 and LAT0 are cleared to 0 atomically.
-+	 *
-+	 * Pin behaviour by mode:
-+	 * - Config mode: controlled by LAT0 (LAT0=0 => LOW => active)
-+	 * - Normal mode: hardware drives pin LOW (active)
-+	 * - Sleep mode:  hardware drives pin HIGH (standby)
-+	 */
-+	return regmap_update_bits(priv->map_reg, MCP251XFD_REG_IOCON,
-+				  MCP251XFD_REG_IOCON_XSTBYEN |
-+				  MCP251XFD_REG_IOCON_TRIS0 |
-+				  MCP251XFD_REG_IOCON_LAT0,
-+				  MCP251XFD_REG_IOCON_XSTBYEN);
-+}
-+
- static int mcp251xfd_chip_start(struct mcp251xfd_priv *priv)
- {
- 	int err;
-@@ -796,6 +821,12 @@ static int mcp251xfd_chip_start(struct mcp251xfd_priv *priv)
- 
- 	priv->can.state = CAN_STATE_ERROR_ACTIVE;
- 
-+	if (priv->xstbyen) {
-+		err = mcp251xfd_chip_xstbyen_enable(priv);
-+		if (err)
-+			goto out_chip_stop;
-+	}
-+
- 	err = mcp251xfd_chip_set_normal_mode(priv);
- 	if (err)
- 		goto out_chip_stop;
-@@ -1805,6 +1836,11 @@ static int mcp251xfd_gpio_request(struct gpio_chip *chip, unsigned int offset)
- 	u32 pin_mask = MCP251XFD_REG_IOCON_PM(offset);
- 	int ret;
- 
-+	if (priv->xstbyen && offset == 0) {
-+		netdev_err(priv->ndev, "Can't use GPIO 0 with XSTBYEN!\n");
-+		return -EINVAL;
-+	}
-+
- 	if (priv->rx_int && offset == 1) {
- 		netdev_err(priv->ndev, "Can't use GPIO 1 with RX-INT!\n");
- 		return -EINVAL;
-@@ -2271,6 +2307,7 @@ static int mcp251xfd_probe(struct spi_device *spi)
- 	priv->pll_enable = pll_enable;
- 	priv->reg_vdd = reg_vdd;
- 	priv->reg_xceiver = reg_xceiver;
-+	priv->xstbyen = device_property_present(&spi->dev, "microchip,xstbyen");
- 	priv->devtype_data = *(struct mcp251xfd_devtype_data *)spi_get_device_match_data(spi);
- 
- 	/* Errata Reference:
-diff --git a/drivers/net/can/spi/mcp251xfd/mcp251xfd.h b/drivers/net/can/spi/mcp251xfd/mcp251xfd.h
-index 085d7101e595..d3f4704e2678 100644
---- a/drivers/net/can/spi/mcp251xfd/mcp251xfd.h
-+++ b/drivers/net/can/spi/mcp251xfd/mcp251xfd.h
-@@ -672,6 +672,7 @@ struct mcp251xfd_priv {
- 	struct gpio_desc *rx_int;
- 	struct clk *clk;
- 	bool pll_enable;
-+	bool xstbyen;
- 	struct regulator *reg_vdd;
- 	struct regulator *reg_xceiver;
- 
--- 
-2.34.1
+Odd ordering.  Put them in numeric order.
+
+> +    * https://www.analog.com/en/products/ad4691.html
+> +    * https://www.analog.com/en/products/ad4694.html
+> +    * https://www.analog.com/en/products/ad4693.html
+> +
+> +$ref: /schemas/spi/spi-peripheral-props.yaml#
+...
+
+> +
+> +  interrupt-names:
+> +    description: Names of the interrupt lines, matching the GP pin names.
+> +    minItems: 1
+> +    maxItems: 4
+> +    items:
+
+I think this wants to be an enum.  Generally look for a similar example
+and copy it + test the resulting binding with latest version of the
+dts-schema.
+
+> +      - const: gp0
+> +      - const: gp1
+> +      - const: gp2
+> +      - const: gp3
+> +
+
 
 
