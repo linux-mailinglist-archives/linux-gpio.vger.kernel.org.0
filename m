@@ -1,50 +1,50 @@
-Return-Path: <linux-gpio+bounces-33974-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33975-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UKdFGNGsvmmlWQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-33974-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 15:36:01 +0100
+	id GEWiHsuvvmnEWwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-33975-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 15:48:43 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id F399B2E5D40
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 15:36:00 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8EDC2E5E32
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 15:48:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 61EA93013A97
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 14:35:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 27871300C02B
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 14:48:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96E2038C2DC;
-	Sat, 21 Mar 2026 14:35:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B414F390206;
+	Sat, 21 Mar 2026 14:48:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Km+laChP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BV1Rz2GK"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5673D28689B;
-	Sat, 21 Mar 2026 14:35:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBA92F12A5;
+	Sat, 21 Mar 2026 14:48:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774103715; cv=none; b=WqvcUBoF6OBxLgbGCpYJLoOC69iJGU3J65FTQimOrxqedrZtRUGEZjy61ltpxGCM3tHf0VRX5Fn9pZ1sI3OAelovZBr9zluBQP8eQDhzJuM9Yk7zrwOmUm1sGmiJbnKbQ+n6UFa/h53v57vCvPbOOUNVqEevlk4ETA8PGcsxg84=
+	t=1774104504; cv=none; b=D75dqzIz4kZAlp4nzgVSQ342fKmuWkaefYpBuSsxXCU4OZK5c7OooB5F03/t3yWLMoYoXSJC88f55/ioAJQTYRqg4uHhAVoNsWCVUsX1cePdARIG6gXNnwHx9OJlRugSMenX7tImEnRtXquayNoUdCd5sUf/8XfF6b1FzJP1vRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774103715; c=relaxed/simple;
-	bh=t7eS6BNztXPaIUR0HVv++sV18u11edlOqEYCGLdYT0k=;
+	s=arc-20240116; t=1774104504; c=relaxed/simple;
+	bh=1hspwDxm5i95HPmRejs68JkolWq+xlqoExhyuZ4hwSw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KTp5T2tFtj2px3ptmJf0/fwbteKZCB+5nwu2zwbKPTBvmc3/HngDFGZeYYSIsyaOxmJ49gzSJTh7XuOooF+/oa7a7LYOMIuBN98fKcgJPMCZ8bOiB+kn0wnpDJwX3TJnBYW3cU0T59AatpEN7uWCHS5BAxw0ObigWALrH8wKoOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Km+laChP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0FB3C19421;
-	Sat, 21 Mar 2026 14:35:07 +0000 (UTC)
+	 MIME-Version:Content-Type; b=Fk0QGJMB787pS0AslZg4U61wRDgFbWKyasT8395SCTkVgt1AZslJQHciFVKPWXxlRlM1S7l5jBpAvoVAlkbDly86ljKyEk47XNZOkx/tvyDWfXKzrAAskzI0wd6X0r2WSZaZM/gDQwkUsX5lwlWwB/CAPZrvdiJ7mx5O3JO96gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BV1Rz2GK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4256C19421;
+	Sat, 21 Mar 2026 14:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774103715;
-	bh=t7eS6BNztXPaIUR0HVv++sV18u11edlOqEYCGLdYT0k=;
+	s=k20201202; t=1774104504;
+	bh=1hspwDxm5i95HPmRejs68JkolWq+xlqoExhyuZ4hwSw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Km+laChPryEJ07CoN1+1BD0ZI1DQpMdSmmJdoutMfpEcpRAcRFAhKzYk615aWPP6e
-	 CINwkkBbSUb3clfKqT6Um9XE9DvsnXIdo3HanSaJvfDzK1kKUoikIXDm5iizEKjYcp
-	 fwaCs6p5HXNQDU2HMWPV0TwqDl1K3MmUgg/AGLHazxxqvOX5z90B+XwBKAF3kXW/Cy
-	 HKz9r3l3I7fu8pKMKHC6mz7UlwELaQm2J5ZXimHU3F+1zJDcS0nshgyMvut3GS0Zi1
-	 KpUBtWhBPBH+d8GkrCtBfHJ0nNVaeqfjO/aZt75BAm/W18gVAxE710ypUJ81+dxwgL
-	 rXpgNzal6ioew==
-Date: Sat, 21 Mar 2026 14:35:02 +0000
+	b=BV1Rz2GK5IgIlOeIho+DG6ofMbjSSH5FT/5RCVpWsuUSfQo7q0kQjPGVBmlYFcY38
+	 cQpUP7RpqX4gJXhsYg3fiKoTfdOE+MqdLZMuOYDYJeDfrYtVscdp+M1ubwplUQIF4c
+	 6gK3G+XAXcciVByo1ds4jyqWvJIIZfiVDN9UmlOdOIB8B6kcf03CXEecfcbvIlmKbb
+	 1f8i7ko2RhbA3TBqdu0/raCwqGXV7HCX04M8SstBXCfKGWIgO6MPXtc2TcAjMYqSNQ
+	 x/g+fJ4WLysbwi3u4RzURwF/56jA9vZyqHet42yYCn06a8PA2t6GvNv64ONeKDWu94
+	 0IF2F7v9GZTOQ==
+Date: Sat, 21 Mar 2026 14:48:11 +0000
 From: Jonathan Cameron <jic23@kernel.org>
 To: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
 Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
@@ -58,11 +58,12 @@ Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
  <p.zabel@pengutronix.de>, linux-iio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] dt-bindings: iio: adc: add AD4691 family
-Message-ID: <20260321143502.4a9cf6b9@jic23-huawei>
-In-Reply-To: <20260320-ad4692-multichannel-sar-adc-driver-v4-1-052c1050507a@analog.com>
+Subject: Re: [PATCH v4 2/4] iio: adc: ad4691: add initial driver for AD4691
+ family
+Message-ID: <20260321144811.0c58dcf0@jic23-huawei>
+In-Reply-To: <20260320-ad4692-multichannel-sar-adc-driver-v4-2-052c1050507a@analog.com>
 References: <20260320-ad4692-multichannel-sar-adc-driver-v4-0-052c1050507a@analog.com>
-	<20260320-ad4692-multichannel-sar-adc-driver-v4-1-052c1050507a@analog.com>
+	<20260320-ad4692-multichannel-sar-adc-driver-v4-2-052c1050507a@analog.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -77,12 +78,12 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33974-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-33975-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -96,109 +97,244 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
 	FREEMAIL_CC(0.00)[analog.com,metafoo.de,baylibre.com,kernel.org,gmail.com,pengutronix.de,vger.kernel.org];
 	TAGGED_RCPT(0.00)[linux-gpio,radu.sabau.analog.com,dt];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:email,analog.com:url,devicetree.org:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: F399B2E5D40
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: D8EDC2E5E32
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, 20 Mar 2026 13:03:55 +0200
+On Fri, 20 Mar 2026 13:03:56 +0200
 Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org> wrote:
 
 > From: Radu Sabau <radu.sabau@analog.com>
 > 
-> Add DT bindings for the Analog Devices AD4691 family of multichannel
-> SAR ADCs (AD4691, AD4692, AD4693, AD4694).
+> Add support for the Analog Devices AD4691 family of high-speed,
+> low-power multichannel SAR ADCs: AD4691 (16-ch, 500 kSPS),
+> AD4692 (16-ch, 1 MSPS), AD4693 (8-ch, 500 kSPS) and
+> AD4694 (8-ch, 1 MSPS).
 > 
-> The binding describes the hardware connections:
+> The driver implements a custom regmap layer over raw SPI to handle the
+> device's mixed 1/2/3/4-byte register widths and uses the standard IIO
+> read_raw/write_raw interface for single-channel reads.
 > 
-> - Power domains: avdd-supply (required), vio-supply,
-
-Bit odd to call out avdd-supply as required but not vio-supply
-
-
-> ref-supply or
->   refin-supply (external reference; the REFIN path enables the
->   internal reference buffer), and an optional ldo-in-supply, that if
->   absent, means the on-chip internal LDO will be used.
+> The chip idles in Autonomous Mode so that single-shot read_raw can use
+> the internal oscillator without disturbing the hardware configuration.
 > 
-> - Optional PWM on the CNV pin selects CNV Burst Mode; when absent,
->   Manual Mode is assumed with CNV tied to SPI CS.
+> Three voltage supply domains are managed: avdd (required), vio, and a
+> reference supply on either the REF pin (ref-supply, external buffer)
+> or the REFIN pin (refin-supply, uses the on-chip reference buffer;
+> REFBUF_EN is set accordingly). Hardware reset is performed via
+> the reset controller framework; a software reset through SPI_CONFIG_A
+> is used as fallback when no hardware reset is available.
 > 
-> - An optional reset GPIO (reset-gpios) for hardware reset.
-> 
-> - Up to four GP pins (gp0..gp3) usable as interrupt sources,
->   identified in firmware via interrupt-names "gp0".."gp3".
-> 
-> - gpio-controller with #gpio-cells = <2> for GP pin GPIO usage.
-> 
-> - #trigger-source-cells = <1>: one cell selecting the GP pin number
->   (0-3) used as the SPI offload trigger source.
-> 
-> Two binding examples are provided: CNV Burst Mode with SPI offload
-> (DMA data acquisition driven by DATA_READY on a GP pin), and Manual
-> Mode for CPU-driven triggered-buffer or single-shot capture.
+> Accumulator channel masking for single-shot reads uses ACC_MASK_REG via
+> an ADDR_DESCENDING SPI write, which covers both mask bytes in a single
+> 16-bit transfer.
 > 
 > Signed-off-by: Radu Sabau <radu.sabau@analog.com>
-> ---
->  .../devicetree/bindings/iio/adc/adi,ad4691.yaml    | 173 +++++++++++++++++++++
->  MAINTAINERS                                        |   7 +
->  2 files changed, 180 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
+Hi Radu,
+
+Just a few minor comments from me.
+I'd have tweak them whilst applying but looks like you are doing a v5 anyway
+for other comments.
+
+Jonathan
+
+
+> diff --git a/drivers/iio/adc/ad4691.c b/drivers/iio/adc/ad4691.c
 > new file mode 100644
-> index 000000000000..def9f32c78af
+> index 000000000000..5e02eb44ca44
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
-> @@ -0,0 +1,173 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4691.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD4691 Family Multichannel SAR ADCs
-> +
-> +maintainers:
-> +  - Radu Sabau <radu.sabau@analog.com>
-> +
-> +description: |
-> +  The AD4691 family are high-speed, low-power, multichannel successive
-> +  approximation register (SAR) analog-to-digital converters (ADCs) with
-> +  an SPI-compatible serial interface. The ADC supports CNV Burst Mode,
-> +  where an external PWM drives the CNV pin, and Manual Mode, where CNV
-> +  is directly tied to the SPI chip-select.
-> +
-> +  Datasheets:
-> +    * https://www.analog.com/en/products/ad4692.html
+> +++ b/drivers/iio/adc/ad4691.c
 
-Odd ordering.  Put them in numeric order.
+> +#define AD4691_CHANNEL(ch)						\
+> +	{								\
+> +		.type = IIO_VOLTAGE,					\
+> +		.indexed = 1,						\
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)		\
+> +				    | BIT(IIO_CHAN_INFO_SAMP_FREQ),	\
+> +		.info_mask_separate_available =				\
+> +				      BIT(IIO_CHAN_INFO_SAMP_FREQ),	\
+> +		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SCALE),	\
+> +		.channel = ch,						\
+> +		.scan_index = ch,					\
+> +		.scan_type = {						\
+> +			.sign = 'u',					\
+> +			.realbits = 16,					\
+> +			.storagebits = 16,				\
+> +			.shift = 0,					\
 
-> +    * https://www.analog.com/en/products/ad4691.html
-> +    * https://www.analog.com/en/products/ad4694.html
-> +    * https://www.analog.com/en/products/ad4693.html
+Unless there is a reason to need the 0 to act as documentation we normally
+assume it's the natural default and don't set it explicitly (let the C
+struct initialization rules deal with setting it to 0 for us).
+
+> +		},							\
+> +	}
+
+
+> +static int ad4691_set_sampling_freq(struct iio_dev *indio_dev, int freq)
+> +{
+> +	struct ad4691_state *st = iio_priv(indio_dev);
+> +	unsigned int start = (st->info->max_rate == HZ_PER_MHZ) ? 0 : 1;
+
+Use 1 * HZ_PER_MHZ
+
+May seem pointless but that conversion scale macro on it's own looks
+strange with respect to what is it converting.
+
+> +	unsigned int i;
 > +
-> +$ref: /schemas/spi/spi-peripheral-props.yaml#
-...
+> +	IIO_DEV_ACQUIRE_DIRECT_MODE(indio_dev, claim);
+> +	if (IIO_DEV_ACQUIRE_FAILED(claim))
+> +		return -EBUSY;
+> +
+> +	for (i = start; i < ARRAY_SIZE(ad4691_osc_freqs); i++) {
+> +		if ((int)ad4691_osc_freqs[i] == freq)
+
+I would flip this around to reduce the indent of the path for when
+we have a match.
+
+		if ((int)ad4691_osc_freqs[i] != freq)
+			continue;
+
+		return regmap_update_bits(st->regmap, AD4691_OSC_FREQ_REG,
+					  AD4691_OSC_FREQ_MASK, i);
+
+
+> +			return regmap_update_bits(st->regmap, AD4691_OSC_FREQ_REG,
+> +						  AD4691_OSC_FREQ_MASK, i);
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+
+> +static int ad4691_single_shot_read(struct iio_dev *indio_dev,
+> +				   struct iio_chan_spec const *chan, int *val)
+> +{
+> +	struct ad4691_state *st = iio_priv(indio_dev);
+> +	unsigned int reg_val;
+> +	int ret;
+> +
+> +	guard(mutex)(&st->lock);
+> +
+> +	/*
+> +	 * Use AUTONOMOUS mode for single-shot reads. The chip always
+> +	 * operates in AUTONOMOUS mode in this driver revision.
+> +	 */
+> +	ret = regmap_write(st->regmap, AD4691_STATE_RESET_REG,
+> +			   AD4691_STATE_RESET_ALL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(st->regmap, AD4691_STD_SEQ_CONFIG,
+> +			   BIT(chan->channel));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(st->regmap, AD4691_ACC_MASK_REG,
+> +			   (u16)~BIT(chan->channel));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_read(st->regmap, AD4691_OSC_FREQ_REG, &reg_val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(st->regmap, AD4691_OSC_EN_REG, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * Wait for at least 2 internal oscillator periods for the
+> +	 * conversion to complete.
+> +	 */
+> +	fsleep(DIV_ROUND_UP(2 * USEC_PER_SEC,
+> +			    ad4691_osc_freqs[FIELD_GET(AD4691_OSC_FREQ_MASK,
+> +						       reg_val)]));
+
+Go long on this line for readability.
+			    ad4691_osc_freqs[FIELD_GET(AD4691_OSC_FREQ_MASK, reg_val)]));
+Is fine.  The whole 80-100 char range is fine to use if it improves redability and
+here I think it does.
 
 > +
-> +  interrupt-names:
-> +    description: Names of the interrupt lines, matching the GP pin names.
-> +    minItems: 1
-> +    maxItems: 4
-> +    items:
-
-I think this wants to be an enum.  Generally look for a similar example
-and copy it + test the resulting binding with latest version of the
-dts-schema.
-
-> +      - const: gp0
-> +      - const: gp1
-> +      - const: gp2
-> +      - const: gp3
+> +	ret = regmap_write(st->regmap, AD4691_OSC_EN_REG, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_read(st->regmap, AD4691_AVG_IN(chan->channel), &reg_val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*val = reg_val;
+> +
+> +	ret = regmap_write(st->regmap, AD4691_STATE_RESET_REG, AD4691_STATE_RESET_ALL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return IIO_VAL_INT;
+> +}
+> +
+> +static int ad4691_read_raw(struct iio_dev *indio_dev,
+> +			   struct iio_chan_spec const *chan, int *val,
+> +			   int *val2, long info)
+> +{
+> +	struct ad4691_state *st = iio_priv(indio_dev);
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW: {
+> +		IIO_DEV_ACQUIRE_DIRECT_MODE(indio_dev, claim);
 > +
 
+I think we should have convention of no blank line here.
+The bit above is setting a variable then we are checking it for error.
+
+> +		if (IIO_DEV_ACQUIRE_FAILED(claim))
+> +			return -EBUSY;
+> +
+> +		return ad4691_single_shot_read(indio_dev, chan, val);
+> +	}
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		return ad4691_get_sampling_freq(st, val);
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = st->vref_uV / (MICRO / MILLI);
+> +		*val2 = chan->scan_type.realbits;
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+
+> +static int ad4691_regulator_setup(struct ad4691_state *st)
+> +{
+> +	struct device *dev = regmap_get_device(st->regmap);
+> +	int ret;
+> +
+> +	ret = devm_regulator_get_enable(dev, "avdd");
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to get and enable AVDD\n");
+> +
+> +	ret = devm_regulator_get_enable(dev, "ldo-in");
+> +	if (ret && ret != -ENODEV)
+> +		return dev_err_probe(dev, ret, "Failed to get and enable LDO-IN\n");
+> +	st->ldo_en = (ret == -ENODEV);
+> +
+> +	ret = devm_regulator_get_enable(dev, "vio");
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to get and enable VIO\n");
+
+Unless there is an ordering constraint for power supplies, I'd move this up to
+just after avdd so the two non optional ones are done together.
+
+> +
+> +	st->vref_uV = devm_regulator_get_enable_read_voltage(dev, "ref");
+> +	if (st->vref_uV >= 0) {
+> +		st->refbuf_en = false;
+> +	} else if (st->vref_uV == -ENODEV) {
+> +		st->vref_uV = devm_regulator_get_enable_read_voltage(dev, "refin");
+> +		st->refbuf_en = true;
+> +	}
 
 
