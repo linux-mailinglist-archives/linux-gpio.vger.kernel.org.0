@@ -1,224 +1,181 @@
-Return-Path: <linux-gpio+bounces-33961-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33962-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OMn9NyprvmnGPAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-33961-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 10:55:54 +0100
+	id gChWFVNvvml1PQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-33962-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 11:13:39 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8681F2E4867
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 10:55:54 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA1BD2E4A7C
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 11:13:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 6921B3003367
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 09:55:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E00C83028816
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Mar 2026 10:13:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AE37329C57;
-	Sat, 21 Mar 2026 09:55:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A84A40DFB0;
+	Sat, 21 Mar 2026 10:13:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K+KrsgmO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wy8Cjpnl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021CE30AD15;
-	Sat, 21 Mar 2026 09:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225F6305047
+	for <linux-gpio@vger.kernel.org>; Sat, 21 Mar 2026 10:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774086948; cv=none; b=hqaLkiDR7K6rdTJMcOuHtNCNWBs6EoiDimVCiEMDyLJFL5DRdjicPgwLpZvMdn41VCrjxnb5lyML2UenbDU3tnbmyzNZvKYtZ8njsty1rCWFxM/YU9JFd+756FaqrbrB04GxeSj1HC7WXnvR3no8UyK8OZgPrVG5YfsPXqt9yv8=
+	t=1774088004; cv=none; b=YzuyiChWjWdJRyizHEL6qZWLLAzJuj6tlPA78ndgVW32mGvvN1qMnB5MdM+DpL3VpLnL11nmv8TBElfofhwrn82iHP4BUL6TVxkAC/YmrppbM3meFoqGt9topflmUkZW0x609JA4t3m+eBx3029ilX2pG84/liA3i6x7FaKGj10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774086948; c=relaxed/simple;
-	bh=+bxeNqGS4g73fmWjkbancHa8pvalO+/l92TEazAnvD0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fedSKbZqnTOOFGOx4MbgCB9OeV+zG/4jr3sDOn5C3CeivZbkxArO4VinJz0x2JwP6Q+XHssrkdxzjP3L+e48Uw2EbX5lTuanvRwdkVlx1khbrPdP7j7sT1mS8ace6USgNY2jsXjZYopmE+z7VmGzAhgT1QgBrZivr2ziOPn1RHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K+KrsgmO; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774086946; x=1805622946;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=+bxeNqGS4g73fmWjkbancHa8pvalO+/l92TEazAnvD0=;
-  b=K+KrsgmO44AkA8JAgPJkXSW9KY3CszDm0uK2OMxtm9ZxlKrVxAdymKWW
-   40U5ZjVBVWxtid8BVq1houp/vbYhO2QjomMAUKUVyTWOa2ADpZF7GMqUG
-   CQSdm0DtmT49NlUPJSoe3y8eHmzVZZ5zG2VmX5o3nuEO3ir7oPu7UIjj0
-   h5WuByabzMINSExPt31rrUrxcZselz8YCmaomhJSwxmuQTus9qahNMDRq
-   LA9brM9laaLSJ0MaH2fsYY0cvaHiZEkYV1cad7sMs8PhraVeiNxEl1KY6
-   C42+FzIU6JWHbCYpr1kCOmU+DGNC0ElQgNDWUDqG4UbP5/WJMC0Wwg+bP
-   g==;
-X-CSE-ConnectionGUID: l1IruYB9SOWN8FVULJokcg==
-X-CSE-MsgGUID: /VxPk0s5RTifnsMOBoJNdw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11735"; a="75046966"
-X-IronPort-AV: E=Sophos;i="6.23,133,1770624000"; 
-   d="scan'208";a="75046966"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2026 02:55:44 -0700
-X-CSE-ConnectionGUID: Ty8ZodjhQwu9KXyKylY7Lw==
-X-CSE-MsgGUID: gDVLYt6bRuyyHHfThzfChQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,133,1770624000"; 
-   d="scan'208";a="246560424"
-Received: from lkp-server02.sh.intel.com (HELO d7fefbca0d04) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 21 Mar 2026 02:55:42 -0700
-Received: from kbuild by d7fefbca0d04 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1w3t3T-000000000ZT-3woI;
-	Sat, 21 Mar 2026 09:55:39 +0000
-Date: Sat, 21 Mar 2026 17:55:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v1 1/1] pinctrl: core: Drop unused include
-Message-ID: <202603211748.5YfMNVO3-lkp@intel.com>
-References: <20260320220550.3237142-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1774088004; c=relaxed/simple;
+	bh=dY1qL4oiruMLLPPOfCTpq/3L4rUbkzScjCoW0ifJR+g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=RfmE120EVw2g2r0gbDJQsoRb26xwxiMJXlse7jzYLo8jZwjxVHc5egYihTTC6h79e4TpXYtlOH0SRuV2TGyOvLHFKUpNUqoWci17Xw6G4FTYQt5D2cavRpD15JTATjOyH3HYampKJt5eP5upHa5utzFD9xo5XZNp3krCAY45D6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wy8Cjpnl; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-48374014a77so25635555e9.3
+        for <linux-gpio@vger.kernel.org>; Sat, 21 Mar 2026 03:13:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1774088000; x=1774692800; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vxcTJFOmewD2GhiVVB+6YPckSGMQdPbVx332O/W6xHg=;
+        b=wy8Cjpnl2Bfu0PsOn4ROCFPXGahT9sjEL53kkUTwk7m0nWUoTg9kbEipScJTgC7BVw
+         JR+Jo8HDbHmhuS9t9V7UgVFCu6FXUFCkksveZvahIre6RKfsgm5JC1fYUKB4dSot+NGa
+         dtaFbZk1z/o/VI2wua1ssQq+u4xJ9NGg5GU5GTMahrEMKeArdZd0HvRqEI29A+Q6QJQx
+         LR1XlipRcewSMUf1C3DNdJcSNGkTin+gvA2nTO9NHNneO44fmo4abzIbg96RxYQ3G3Xv
+         miaFRtgU1eof/Xeom7cgViK31C8wdAeQq9ZyDCR653oTAvD4IAa76tM97nj7L/Sw1U+9
+         12VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774088000; x=1774692800;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vxcTJFOmewD2GhiVVB+6YPckSGMQdPbVx332O/W6xHg=;
+        b=NeNSaaFbSQlVmVRXZL/1K0RTWAEcoxdSqJZncCePWZsCoHEgA+vexqD2lPqiDUxUBC
+         ZX2TmLvG91dgX51WuAd+dsJDYrUH7fnzKGVlkP/A50Q6jdOZCTL/44mcBb88bJ6VOJSH
+         mtrPSiNbxTnE6oUVZ9MqxeUZ1TI8/3lRrkIUdYtW72YHiAy0+PVueXWln3c8yv029k7z
+         gR7u+IpujrlgOHJ0xS/7T3+0HRjTQLfrR55APs3boNDfowZwnB56WAnA1UAL7KD2yjUJ
+         aKIbe0t8I9/UM4jJeY3jG/ZUu35lYD5w6jH1rCVqgxO51/sCl5tlQ8/EC41P9mzPwS3K
+         uOmw==
+X-Forwarded-Encrypted: i=1; AJvYcCWgHuD+1pKm4TtM0KAy74tIERosEJo901JOIQ4uaYs4AD23OylZEd8//eIti4l7GZxSZRTl+YvsHl/J@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOAfiqBHb8HNvL3VF9SqXDTFYlSGDKAhgWNTy2XizNh7mir7ZH
+	NjXwkRVzqJE+iI8qPaun93Z2l+NnRBgfZ1QF0gr37IavNWxXHrePkWrKce+mp0aLnhY=
+X-Gm-Gg: ATEYQzwFInWMWeoNgYE73MlbBTkO2VPd2ydnzu14zxeQn7y02AqauK+6pqWQ5fY5PfL
+	PsAoufhadLtY4k9tVhaqsQlIy+5/iVmTvGdorkMQzI9wgKmTVJynguMjpjQy4TopEtn0dc7Fi0i
+	nOr7p25rABhmYNawxbBVL7nWU7LUZhWahreZmX0Ym/ViKb7lPWtz0TtWfBPItyAOu+4+TjzbQlR
+	EWDnMzxiJRz65RBNoYmnC2lY+uH/49KihsKIxiX0qhKAsCoe08pk9/OHTQ0g2mL42HMKE55mRo7
+	gTUgSIoIhNa+HljWQoujwvRjVwQINKlQY5+aOM4hvLVIgLsqdiq3Mr4jw+1zyj0FcjSvH2qazzp
+	8qXDtMdAoprq7Nax9YQXG+US0tIoaNxV41pqRZ1UOQdjzgF+Wnld6fhalusaE7rGYJc67/vInH9
+	QE756Lsv1c3kAiMvmvoqqdVjc2kcC6
+X-Received: by 2002:a05:600c:3490:b0:487:300:d9ca with SMTP id 5b1f17b1804b1-4870300db54mr39007055e9.31.1774088000252;
+        Sat, 21 Mar 2026 03:13:20 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-487031790fdsm68147015e9.3.2026.03.21.03.13.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Mar 2026 03:13:19 -0700 (PDT)
+Date: Sat, 21 Mar 2026 13:13:16 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Linus Walleij <linusw@kernel.org>,
+	AKASHI Takahiro <akashi.tkhro@gmail.com>
+Cc: arm-scmi@vger.kernel.org, Bartosz Golaszewski <brgl@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Dan Carpenter <dan.carpenter@linaro.og>, devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+	Sudeep Holla <sudeep.holla@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Khaled Ali Ahmed <Khaled.AliAhmed@arm.com>,
+	Michal Simek <michal.simek@amd.com>
+Subject: [PATCH v5 0/7] gpio: introduce a gpio driver for SCMI
+Message-ID: <cover.1774087290.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260320220550.3237142-1-andriy.shevchenko@linux.intel.com>
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33961-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33962-lists,linux-gpio=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[20];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[intel.com:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dan.carpenter@linaro.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[linaro.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[git-scm.com:url,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,01.org:url,intel.com:dkim,intel.com:email,intel.com:mid]
-X-Rspamd-Queue-Id: 8681F2E4867
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:dkim,linaro.org:mid]
+X-Rspamd-Queue-Id: AA1BD2E4A7C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Andy,
+This basically abandons my earlier attempts and goes back to Takahiro
+Akashi's driver.  Here is the link to Takahiro's patchset:
 
-kernel test robot noticed the following build errors:
+https://lore.kernel.org/all/20231005025843.508689-1-takahiro.akashi@linaro.org/
 
-[auto build test ERROR on linusw-pinctrl/devel]
-[also build test ERROR on linusw-pinctrl/for-next linus/master v7.0-rc4 next-20260320]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+v5: Addresses Andy's cleanups to the driver.
+    Adrresses Krzysztof's comments about the dt spec file.
+    And almost all the subsystem prefixes were wrong.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/pinctrl-core-Drop-unused-include/20260321-095653
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20260320220550.3237142-1-andriy.shevchenko%40linux.intel.com
-patch subject: [PATCH v1 1/1] pinctrl: core: Drop unused include
-config: hexagon-randconfig-001-20260321 (https://download.01.org/0day-ci/archive/20260321/202603211748.5YfMNVO3-lkp@intel.com/config)
-compiler: clang version 23.0.0git (https://github.com/llvm/llvm-project 4abb927bacf37f18f6359a41639a6d1b3bffffb5)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260321/202603211748.5YfMNVO3-lkp@intel.com/reproduce)
+v4: Addressed Andy's comments about kernel-doc
+    Addressed Rob's comments on the spec file
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202603211748.5YfMNVO3-lkp@intel.com/
+v3: Forward ported Takahiro's patches and added some fixes ups to make
+    it work on current kernels.
 
-All errors (new ones prefixed by >>):
+AKASHI Takahiro (3):
+  pinctrl: introduce pinctrl_gpio_get_config()
+  gpio: dt-bindings: Add bindings for pinctrl based generic gpio driver
+  gpio: gpio-by-pinctrl: add pinctrl based generic GPIO driver
 
->> drivers/pinctrl/core.c:1742:32: error: call to undeclared function 'gpio_to_desc'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    1742 |                         gdev = gpiod_to_gpio_device(gpio_to_desc(gpio_num));
-         |                                                     ^
->> drivers/pinctrl/core.c:1742:32: error: incompatible integer to pointer conversion passing 'int' to parameter of type 'struct gpio_desc *' [-Wint-conversion]
-    1742 |                         gdev = gpiod_to_gpio_device(gpio_to_desc(gpio_num));
-         |                                                     ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/gpio/driver.h:817:60: note: passing argument to parameter 'desc' here
-     817 | struct gpio_device *gpiod_to_gpio_device(struct gpio_desc *desc);
-         |                                                            ^
-   2 errors generated.
+Dan Carpenter (4):
+  pinctrl: scmi: Add SCMI_PIN_INPUT_VALUE
+  pinctrl: scmi: Delete PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS support
+  pinctrl: scmi: ignore PIN_CONFIG_PERSIST_STATE
+  firmware: arm_scmi: Allow PINCTRL_REQUEST to return EOPNOTSUPP
 
-
-vim +/gpio_to_desc +1742 drivers/pinctrl/core.c
-
-2744e8afb3b763 Linus Walleij       2011-05-02  1700  
-2744e8afb3b763 Linus Walleij       2011-05-02  1701  	seq_printf(s, "registered pins: %d\n", pctldev->desc->npins);
-2744e8afb3b763 Linus Walleij       2011-05-02  1702  
-42fed7ba44e4e8 Patrice Chotard     2013-04-11  1703  	mutex_lock(&pctldev->mutex);
-57b676f9c1b7cd Stephen Warren      2012-03-02  1704  
-706e8520e8450a Chanho Park         2012-01-03  1705  	/* The pin number can be retrived from the pin controller descriptor */
-706e8520e8450a Chanho Park         2012-01-03  1706  	for (i = 0; i < pctldev->desc->npins; i++) {
-2744e8afb3b763 Linus Walleij       2011-05-02  1707  		struct pin_desc *desc;
-2744e8afb3b763 Linus Walleij       2011-05-02  1708  
-706e8520e8450a Chanho Park         2012-01-03  1709  		pin = pctldev->desc->pins[i].number;
-2744e8afb3b763 Linus Walleij       2011-05-02  1710  		desc = pin_desc_get(pctldev, pin);
-2744e8afb3b763 Linus Walleij       2011-05-02  1711  		/* Pin space may be sparse */
-cea234e996922d Markus Elfring      2017-05-02  1712  		if (!desc)
-2744e8afb3b763 Linus Walleij       2011-05-02  1713  			continue;
-2744e8afb3b763 Linus Walleij       2011-05-02  1714  
-cf9d994dcf00c0 Masahiro Yamada     2016-05-24  1715  		seq_printf(s, "pin %d (%s) ", pin, desc->name);
-2744e8afb3b763 Linus Walleij       2011-05-02  1716  
-f1b206cf7c5756 Drew Fustini        2020-07-22  1717  #ifdef CONFIG_GPIOLIB
-9dfbcf2fc566c0 Léo DUBOIN          2024-04-25  1718  		gdev = NULL;
-482715ff0601c8 Andy Shevchenko     2021-04-15  1719  		gpio_num = -1;
-f1b206cf7c5756 Drew Fustini        2020-07-22  1720  		list_for_each_entry(range, &pctldev->gpio_ranges, node) {
-db5032981ab37e Léo DUBOIN          2024-04-25  1721  			if (range->pins != NULL) {
-db5032981ab37e Léo DUBOIN          2024-04-25  1722  				for (int i = 0; i < range->npins; ++i) {
-db5032981ab37e Léo DUBOIN          2024-04-25  1723  					if (range->pins[i] == pin) {
-db5032981ab37e Léo DUBOIN          2024-04-25  1724  						gpio_num = range->base + i;
-f1b206cf7c5756 Drew Fustini        2020-07-22  1725  						break;
-f1b206cf7c5756 Drew Fustini        2020-07-22  1726  					}
-f1b206cf7c5756 Drew Fustini        2020-07-22  1727  				}
-db5032981ab37e Léo DUBOIN          2024-04-25  1728  			} else if ((pin >= range->pin_base) &&
-db5032981ab37e Léo DUBOIN          2024-04-25  1729  				   (pin < (range->pin_base + range->npins))) {
-db5032981ab37e Léo DUBOIN          2024-04-25  1730  				gpio_num =
-db5032981ab37e Léo DUBOIN          2024-04-25  1731  					range->base + (pin - range->pin_base);
-db5032981ab37e Léo DUBOIN          2024-04-25  1732  			}
-db5032981ab37e Léo DUBOIN          2024-04-25  1733  			if (gpio_num != -1)
-db5032981ab37e Léo DUBOIN          2024-04-25  1734  				break;
-db5032981ab37e Léo DUBOIN          2024-04-25  1735  		}
-482715ff0601c8 Andy Shevchenko     2021-04-15  1736  		if (gpio_num >= 0)
-e3863fa123c8fd Linus Walleij       2023-01-20  1737  			/*
-e3863fa123c8fd Linus Walleij       2023-01-20  1738  			 * FIXME: gpio_num comes from the global GPIO numberspace.
-e3863fa123c8fd Linus Walleij       2023-01-20  1739  			 * we need to get rid of the range->base eventually and
-e3863fa123c8fd Linus Walleij       2023-01-20  1740  			 * get the descriptor directly from the gpio_chip.
-e3863fa123c8fd Linus Walleij       2023-01-20  1741  			 */
-524fc108b89586 Bartosz Golaszewski 2023-11-15 @1742  			gdev = gpiod_to_gpio_device(gpio_to_desc(gpio_num));
-524fc108b89586 Bartosz Golaszewski 2023-11-15  1743  		if (gdev)
-524fc108b89586 Bartosz Golaszewski 2023-11-15  1744  			seq_printf(s, "%u:%s ",
-524fc108b89586 Bartosz Golaszewski 2023-11-15  1745  				   gpio_num - gpio_device_get_base(gdev),
-524fc108b89586 Bartosz Golaszewski 2023-11-15  1746  				   gpio_device_get_label(gdev));
-f1b206cf7c5756 Drew Fustini        2020-07-22  1747  		else
-f1b206cf7c5756 Drew Fustini        2020-07-22  1748  			seq_puts(s, "0:? ");
-f1b206cf7c5756 Drew Fustini        2020-07-22  1749  #endif
-f1b206cf7c5756 Drew Fustini        2020-07-22  1750  
-2744e8afb3b763 Linus Walleij       2011-05-02  1751  		/* Driver-specific info per pin */
-2744e8afb3b763 Linus Walleij       2011-05-02  1752  		if (ops->pin_dbg_show)
-2744e8afb3b763 Linus Walleij       2011-05-02  1753  			ops->pin_dbg_show(pctldev, s, pin);
-2744e8afb3b763 Linus Walleij       2011-05-02  1754  
-2744e8afb3b763 Linus Walleij       2011-05-02  1755  		seq_puts(s, "\n");
-2744e8afb3b763 Linus Walleij       2011-05-02  1756  	}
-2744e8afb3b763 Linus Walleij       2011-05-02  1757  
-42fed7ba44e4e8 Patrice Chotard     2013-04-11  1758  	mutex_unlock(&pctldev->mutex);
-57b676f9c1b7cd Stephen Warren      2012-03-02  1759  
-2744e8afb3b763 Linus Walleij       2011-05-02  1760  	return 0;
-2744e8afb3b763 Linus Walleij       2011-05-02  1761  }
-b5520891a3491c Andy Shevchenko     2018-02-17  1762  DEFINE_SHOW_ATTRIBUTE(pinctrl_pins);
-2744e8afb3b763 Linus Walleij       2011-05-02  1763  
+ .../bindings/gpio/pin-control-gpio.yaml       |  59 ++++++++++
+ drivers/firmware/arm_scmi/pinctrl.c           |   2 +
+ drivers/gpio/Kconfig                          |  13 +++
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-by-pinctrl.c                | 101 ++++++++++++++++++
+ drivers/pinctrl/core.c                        |  31 ++++++
+ drivers/pinctrl/pinctrl-scmi.c                |  46 +++++---
+ include/linux/pinctrl/consumer.h              |   9 ++
+ 8 files changed, 249 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/pin-control-gpio.yaml
+ create mode 100644 drivers/gpio/gpio-by-pinctrl.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.51.0
+
 
