@@ -1,196 +1,353 @@
-Return-Path: <linux-gpio+bounces-33979-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33980-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8GuEGj5cv2ms3QMAu9opvQ
-	(envelope-from <linux-gpio+bounces-33979-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Mar 2026 04:04:30 +0100
+	id mIosLpRcv2ms3QMAu9opvQ
+	(envelope-from <linux-gpio+bounces-33980-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Mar 2026 04:05:56 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD16F2E806B
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Mar 2026 04:04:29 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23B652E8094
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Mar 2026 04:05:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C30A83010D95
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Mar 2026 03:04:18 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 76DA63014C58
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Mar 2026 03:05:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 948A327F19F;
-	Sun, 22 Mar 2026 03:04:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6E7837CD45;
+	Sun, 22 Mar 2026 03:05:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="OIzaZsCm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f+TRDCZJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013042.outbound.protection.outlook.com [52.101.72.42])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0566BFCE;
-	Sun, 22 Mar 2026 03:04:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774148657; cv=fail; b=iqMLcH22JwFagze1KTg5lktotzQSRjDsE/Z0vdVQckn7z/DoXuFfqTYJi29H4us6v1Fl37JS5QjpIpRZWqRRf6eD4TNpwr5s/+ONhBTwOhNMKPeIKFes1cglV2amHPnpn1EvJGg6QHpTyW6PpXNptSaEOblbaSEJm5AIqCUdhKM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774148657; c=relaxed/simple;
-	bh=wH2WesUVmdFsXKDBaHyzDwSHa92p5brSpS3GKEVH750=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=CjmTTMpGV8jSowjO7HEqzKXpPYmABMhBAVOTUlu+fwhL7e7o3h51Iis39/4HYsSzfxzzqAMuF2gj8JzUz/EG+bAaYCYnmDFIMdKNkT/Bdi0XFVZENRcwQPo4NaOf+1bdmjncL6KyQrbK0EUMPh6Qr0PH9yTSIszTaPbroF0WBEk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=OIzaZsCm; arc=fail smtp.client-ip=52.101.72.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TBZRaUCQr52frbLMmrWO2uIhxzCHR/BYvJbe17FhwhtCWvEcFP2RWfC2PXZM2xVuRtX5p35LYrk9G88Kh9nm0Ku3ChJDcOc/DQLLgskefDqX5KLeg+aTZgzksCTcEhKuOo3jsrVVPgZZyEdxjOMkZDSgCXcpRQ3X6u9/1Jn0SZQigsbwRfNOChm03uaK3jrwEBuucBAx+ZsxVKiY9w8mVN/a6ZAITgD59bN6kr6VkOvFN6j0qOeiSprIArJgY6VGZdVgCzJjm0EVQOKqw/x+DeTgRMPisJsfiIqWxG06tqaSJ3t8ySpIU4RTO0UY4NB8hy2nKd1AgDZAiN30R32msQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wH2WesUVmdFsXKDBaHyzDwSHa92p5brSpS3GKEVH750=;
- b=tYUjmzK7AmAy+UDDmhc4LCuU54eQgTPjRhBDbznUMKJEYmGViA4FNdhtkoYZXuw3hjiRl2sxSGur7ehmZj7djkB68BXnCNLPZxtnQp41A7uAUO78RtWQNZt+FIQhysg6FwDHryCo/RBqkRFzbaRsDwKCy5nAfbhLvNeWPMbaZqD11AznS3FdiyIsOe82nSfD36tZsZxApCfteuq5Jl60yQnzyXz0guJmzALyqkIT+E0wqfkNqXx6MVzPEl/p5tX3Fp+HpQGNhH1k/iIynUTNM/IA7/FrBU/JZMv6YPvD/s2z7N2ix3Rz1WHABxmPgubGWpLXr/ogaVwBtJvAzrzX5A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wH2WesUVmdFsXKDBaHyzDwSHa92p5brSpS3GKEVH750=;
- b=OIzaZsCmjZGHNpIBvtdrwEJ4nzQyuPA+dtqDv0lNH7hTW1+YAzoBh/M+NEAkigG999cK8B2ajXBecCaNwLTRWJRuaOGQei1m+rsj0JuFFRFGx4wrj7IZUx/yk3xdfjyQzSlEwVBaMj7dah4PCxuBD+Qlt6aACpoSCqIb9tYCibaEvzrJdgmQYIEXhiv3hb2N7IAQJ0A/d/yjk9goH/CXyqmYXOk4mT9w7a9bxlameEkwlHPIPBnv6XwqbHocfzjoYS2dTE0NrN7IMCB/SAuh2Jvj8ZabtG33LdbuwVUSxVjwnPRBrKLbySSb0a+P52BzL7vzLdm18TkQf0+EAwEQEQ==
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by AM9PR04MB8811.eurprd04.prod.outlook.com (2603:10a6:20b:40a::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.25; Sun, 22 Mar
- 2026 03:03:55 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::4972:7eaa:b9f6:7b5e]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::4972:7eaa:b9f6:7b5e%3]) with mapi id 15.20.9723.022; Sun, 22 Mar 2026
- 03:03:59 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-To: Shenwei Wang <shenwei.wang@nxp.com>, Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>, Frank Li <frank.li@nxp.com>, Sascha
- Hauer <s.hauer@pengutronix.de>
-CC: Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
-	<festevam@gmail.com>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH v2] gpio: mxc: map Both Edge pad wakeup to Rising Edge
-Thread-Topic: [PATCH v2] gpio: mxc: map Both Edge pad wakeup to Rising Edge
-Thread-Index: AQHcuKA+G1eOINrPn0OSZMvrGuC3iLW536mw
-Date: Sun, 22 Mar 2026 03:03:58 +0000
-Message-ID:
- <PAXPR04MB84592EFE18236DC4D3C71E4C884AA@PAXPR04MB8459.eurprd04.prod.outlook.com>
-References: <20260320193150.2508850-1-shenwei.wang@nxp.com>
-In-Reply-To: <20260320193150.2508850-1-shenwei.wang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PAXPR04MB8459:EE_|AM9PR04MB8811:EE_
-x-ms-office365-filtering-correlation-id: 4c1dc546-99ec-4c16-6b4b-08de87bfa9a4
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|366016|1800799024|19092799006|38070700021|56012099003|22082099003|18002099003;
-x-microsoft-antispam-message-info:
- K3c4qOXK/j8JS4H9f2Y/6geZ4YWrKL9PKYBiBqH4j1jatk8TtjadCs8xlRYBPe1OKyTD3YIO9dPyZgDNgbXQVTtBxpxl6sWM35+mPJR/njLmN68QwZMTrtGWpOvHzChMIkzWCmeRBowNCgnz3KRA4FSbYsEnqwcNi5bOuDLVVO3tCo9OXX0rTG7qUxGpWeNaO0dm0OcMFIRg/m5rGNpADyBO63EkiG7A9zB5LyrcQS1tkewnanuiNCmGCESysWi6kd98BlNpmgXu5n5P6rnPPjt9eBoteDPmINSFzyJBDio80kdxYXpWDFN3q6zaRhG0PP3q/A7zv/yK8BL2wcRmyeir6f5l6Ds5HhuFaUWpcn4JkTG0eqaNMxFkLw5VOmObSiwzyCLPxhkNj4XKlyVEjE+mlOftGFW9f4hmrgk8IzxLC2XEeDUHFaZvucEnKJJq4hXbVw0wKBRbeGk1F08lcZ7P1q3aitntiSDsW+F/SgfUJqUooibIP9CHN/QWeIrxthq7SomXxBAZyUXIrT1QAWq1ArGPhq//xMGqgb1xgWTDMjSm81ZFizda5Cec4SB/qJkjTlUMXBobjktEDeU8Y+Faem0w5C9hBeCAR5bVJ8OwQFyh5Vv7yaITx9C2RxRraVvtxOK1qEKNiQNx3KpNuTm7/76OeXF87xK4g40RSKtIR/agwEcxh3AX85v0tEo4uOQQ+0AG1ZxEE/lJvBFutS4NaSlKSfUDTUcjdbIfZtpgU0tVQJOU6in9LQaPjXQ8ommZ1ApYokNNR5Tsq9x1s67/ZgtpBTL9CxFdbuy1K0s=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(19092799006)(38070700021)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?zpU59tqv6ZSAa2y1g5mc7nRgbrGhX3ihmgNMRqD8tZvcrnwRb0jRGQ6M4UfF?=
- =?us-ascii?Q?JBAFP6TfK8oqo34MTx69o3WTLol5KR5BQYmreOaF9H56h4H4ItzaOSQ0hXvG?=
- =?us-ascii?Q?CGGIZjUkjV0dKboKDgb42i3paThMTmpaN3uhHan58NGH7A82553C0NeEFVn7?=
- =?us-ascii?Q?Gi2xXgZiHUNRGYXhmuoL1W4e54Ea37TeoNBuAnLIP+3/oG/DQK5NvnC/IqhN?=
- =?us-ascii?Q?dpyKjO2nicHo0zf3y30Agr1xyMwoOsLa2OEk4XzyjEWidR3ycWog9HI1FR9+?=
- =?us-ascii?Q?vNp0YtvRKcAq155X12hl1bnHw5TY5LBUdxnEKQRbzHDUs3xL9WVk1QyLg+jh?=
- =?us-ascii?Q?H6+XnTSrON7/Ua615e8OccCn3+w6T/ixDDXrhlbdeoOV2HnBEHAp8JvVtt1z?=
- =?us-ascii?Q?TMFATWQf1j6bZC6PQGzWDscKKHnNfCkB2c4JDjqXizpAF8koa6hn7pA+kKks?=
- =?us-ascii?Q?UApfZLRCFQFVEqJfDSIJLvwgHDVTu6x4vssU00MbJCZYNhSb+Q0XRiW5RqXj?=
- =?us-ascii?Q?AgtJk0j8VU4myKddxKiFglkl1gftpAWptM5fFDSfaS1Fl+lb4MIGlThodfJ/?=
- =?us-ascii?Q?3yf5d/vTqonfVKhagnzRh+u5lO7k9D+/Gvrr81CJc06kkWipHLtsHKgPutUs?=
- =?us-ascii?Q?iuO7dyCIksi6XOqPfYSc6bnlc6LaLJain/RHWbHHzXKQSkdan5k9+x9RY7f7?=
- =?us-ascii?Q?04X8775nNnJgadUqJHP74MbhQjH6lqYdWqLZVL0nDJ17LolU9b5zIYTXhzlW?=
- =?us-ascii?Q?9fQZikP4dv+DBQBmcQ1EQ6VG1kCyrPVVEdHA+bIsdxd1PQNjh4pshVWFht+n?=
- =?us-ascii?Q?ahbtTDa3NsfITlgGtCjKtmvvd7HXLkuY8e+5FenR2ASKg2T6GF5AZNFG3HYb?=
- =?us-ascii?Q?RkEkmDI8Iq6Bomcx6oiNysjuOIZiDqXYIYtvN4rar91QG/0iQ5P2gdQcfSLi?=
- =?us-ascii?Q?Xr3KKgZ9NZt7p74UfZuVd9JVbof+GvZBAltUBjmaxBFfoidVPJb93EkZZCsL?=
- =?us-ascii?Q?amf8JxP3COdlDN8K2mhwpvx4UCNFMG2s/Blyk+C/gTaBvmixF2f4Lwd8WKcY?=
- =?us-ascii?Q?mJFY7s6g6BpeG4mdGeKFve4fKh3hxxPazDId30ZqMeBOboclgDsW6UMhnVDe?=
- =?us-ascii?Q?jyRHbxkCHzrCMadRWn3JLbiol7FJkoN+9b9XANUFU9Pn78XRdHcCc/8tARM+?=
- =?us-ascii?Q?l1/5+xOpgz7sRqU9OjIZHstdqCcPTHSkjdcLjOL5HY/yumfdzMYV9WmqzarV?=
- =?us-ascii?Q?mm7M1PlgFpTBn/4IKo5PEzpb8/ZE9tv0TMJudFXec8ye/gAmrWTKEzoetWwJ?=
- =?us-ascii?Q?1d5aGJsrxfygOOuc4JJj1zUL8fS0S94UXRaCha/IFpj/bwrDaCrTvFY/zF3l?=
- =?us-ascii?Q?wYAQkJ7ivw2K6ibo7bEkR/5saBn1pav+qz8qVJTqWl0Vd0/5jmluxB+j1Vtn?=
- =?us-ascii?Q?CEmhoi5hpdE9AD9PH8IALx58MiN9AguHDkNBjX6rrCzbl/a2ABEEWMHynYcV?=
- =?us-ascii?Q?xb8VIWhEilXLFQ9q0xAJaaF3DfcvMumjN08M1mZdncDloa4leXxU6IWsuh3v?=
- =?us-ascii?Q?PshsO7xCBlAbPf424e8zsyLSDspAab6+SMyCJOqqIyFPhdys5RenOZJUk9or?=
- =?us-ascii?Q?TVNlx+4G4c04YRFKRjW6Sbetvm7Nh8dogI+DN4UJuUdm76qebYrL1BM7e1z4?=
- =?us-ascii?Q?S288wL06SsDu+4qtk5ZoQOLCylUnrY141++xCWP1ivcFa/v/?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E672411CBA;
+	Sun, 22 Mar 2026 03:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774148749; cv=none; b=UkRUqOkdHFqUs+Gd6iHKU8HvJa8y7R8rtkuYQ7T2mKE6lFM4pyITxA7t68wFiVkt0ptAj2p0sP+pApZf5mSSjIWU+AlY3IpLQjl3AW6CzshSk/SXwwxNrWdTJUTR/GoXfbN7rettvOR5GFWyU6Ba13LytHZ57vztF7mE0jMXV9I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774148749; c=relaxed/simple;
+	bh=VMkkKrN/cGKbWAacN7ZpmF4BdLdsuj5FwYzcdoKlfWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gE+L94QkIXitV8oSlE6SS54kdawQQntaM6MI+ZxSdF9ihRZ0Z0gX5hsQ5/CSu7jDrKszRUCJpqIkxEA1MEhrhe56N8Fc0cTD5CnVz1ScbNqCUuRm5ORV0jjkKf/jGi6ma9fZdUzKiHqhx1tXxyeFCn6bep6f2aWOYJlm2jdeAy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f+TRDCZJ; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774148747; x=1805684747;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=VMkkKrN/cGKbWAacN7ZpmF4BdLdsuj5FwYzcdoKlfWk=;
+  b=f+TRDCZJzwRMnLdGsMo4+dJocHUxbmBrwxqklZ3fS1gv27v/CMOcHdrY
+   ueN680uX89JjLmwENbFzwqlgcRDuQmVBuTdTh2rykry7CUJdPRz8HwgZs
+   5W72jTUyszmmWggeClrTV70P2brNfC9/483JasHzwwE1W1TTDxQx7xw4X
+   3ndItvnwQj8RGA/cG7zQhcpaxBRIAkuVLjtzyoOz5bR5OrJmmyj01l4kA
+   IV3H5IbxQouPJbcv9mxzQNMHwsaovgr+MY14WnH3TS4oXWOLzpaOi2V+2
+   W+QdCYRaBgvNqpnPgPvFE3X2Iak/LEHfFki/cGPxAs/0HZ9dMZn+VR3Rn
+   w==;
+X-CSE-ConnectionGUID: kH4f5nI8RMWCTuUH8wzbpQ==
+X-CSE-MsgGUID: DECdhpl4SByzaraOOxL7Rw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11736"; a="100643296"
+X-IronPort-AV: E=Sophos;i="6.23,134,1770624000"; 
+   d="scan'208";a="100643296"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2026 20:05:46 -0700
+X-CSE-ConnectionGUID: /HkuUnGlSAywlXUWkCZfyA==
+X-CSE-MsgGUID: t1wsWAmCTPOMxuGcAnBFcA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,134,1770624000"; 
+   d="scan'208";a="223645830"
+Received: from lkp-server02.sh.intel.com (HELO d7fefbca0d04) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 21 Mar 2026 20:05:41 -0700
+Received: from kbuild by d7fefbca0d04 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1w4988-000000001ZJ-3pbJ;
+	Sun, 22 Mar 2026 03:05:34 +0000
+Date: Sun, 22 Mar 2026 11:05:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: oe-kbuild-all@lists.linux.dev, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Radu Sabau <radu.sabau@analog.com>
+Subject: Re: [PATCH v4 4/4] iio: adc: ad4691: add SPI offload support
+Message-ID: <202603221011.rzczUvUN-lkp@intel.com>
+References: <20260320-ad4692-multichannel-sar-adc-driver-v4-4-052c1050507a@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c1dc546-99ec-4c16-6b4b-08de87bfa9a4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2026 03:03:58.7787
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DzH4zHaW+vELrCFzy1v3CvuB3IHC69mMbRUvC45pcxGvgf43dRzt50RIPxnMddH52wP83b35T4nDPHM2daWgxA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8811
-X-Spamd-Result: default: False [0.44 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_DKIM_ALLOW(-0.20)[NXP1.onmicrosoft.com:s=selector1-NXP1-onmicrosoft-com];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260320-ad4692-multichannel-sar-adc-driver-v4-4-052c1050507a@analog.com>
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33979-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[pengutronix.de,gmail.com,vger.kernel.org,lists.linux.dev,lists.infradead.org,nxp.com];
-	RCPT_COUNT_TWELVE(0.00)[13];
+	TAGGED_FROM(0.00)[bounces-33980-lists,linux-gpio=lfdr.de];
+	FREEMAIL_TO(0.00)[kernel.org,metafoo.de,analog.com,baylibre.com,gmail.com,pengutronix.de];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[NXP1.onmicrosoft.com:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[peng.fan@oss.nxp.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,NXP1.onmicrosoft.com:dkim]
-X-Rspamd-Queue-Id: CD16F2E806B
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,radu.sabau.analog.com,dt];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[01.org:url]
+X-Rspamd-Queue-Id: 23B652E8094
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-> Subject: [PATCH v2] gpio: mxc: map Both Edge pad wakeup to Rising
-> Edge
->=20
-> Suspend may fail on i.MX8QM when Falling Edge is used as a pad
-> wakeup trigger due to a hardware bug in the detection logic. Since the
-> hardware does not support Both Edge wakeup, remap requests for
-> Both Edge to Rising Edge by default to avoid hitting this issue.
->=20
-> A warning is emitted when Falling Edge is selected on i.MX8QM.
->=20
-> Fixes: f60c9eac54af ("gpio: mxc: enable pad wakeup on i.MX8x
-> platforms")
-> cc: stable@vger.kernel.org
-> Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
+Hi Radu,
 
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on 11439c4635edd669ae435eec308f4ab8a0804808]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Radu-Sabau-via-B4-Relay/dt-bindings-iio-adc-add-AD4691-family/20260321-120718
+base:   11439c4635edd669ae435eec308f4ab8a0804808
+patch link:    https://lore.kernel.org/r/20260320-ad4692-multichannel-sar-adc-driver-v4-4-052c1050507a%40analog.com
+patch subject: [PATCH v4 4/4] iio: adc: ad4691: add SPI offload support
+config: nios2-randconfig-r122-20260322 (https://download.01.org/0day-ci/archive/20260322/202603221011.rzczUvUN-lkp@intel.com/config)
+compiler: nios2-linux-gcc (GCC) 11.5.0
+sparse: v0.6.5-rc1
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260322/202603221011.rzczUvUN-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202603221011.rzczUvUN-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/iio/adc/ad4691.c:954:39: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int @@     got restricted __be32 [usertype] @@
+   drivers/iio/adc/ad4691.c:954:39: sparse:     expected unsigned int
+   drivers/iio/adc/ad4691.c:954:39: sparse:     got restricted __be32 [usertype]
+   drivers/iio/adc/ad4691.c:970:31: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int @@     got restricted __be32 [usertype] @@
+   drivers/iio/adc/ad4691.c:970:31: sparse:     expected unsigned int
+   drivers/iio/adc/ad4691.c:970:31: sparse:     got restricted __be32 [usertype]
+   drivers/iio/adc/ad4691.c:1059:39: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int @@     got restricted __be32 [usertype] @@
+   drivers/iio/adc/ad4691.c:1059:39: sparse:     expected unsigned int
+   drivers/iio/adc/ad4691.c:1059:39: sparse:     got restricted __be32 [usertype]
+>> drivers/iio/adc/ad4691.c:1072:30: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int [usertype] offload_tx_reset @@     got restricted __be32 [usertype] @@
+   drivers/iio/adc/ad4691.c:1072:30: sparse:     expected unsigned int [usertype] offload_tx_reset
+   drivers/iio/adc/ad4691.c:1072:30: sparse:     got restricted __be32 [usertype]
+
+vim +954 drivers/iio/adc/ad4691.c
+
+   927	
+   928	static int ad4691_manual_offload_buffer_postenable(struct iio_dev *indio_dev)
+   929	{
+   930		struct ad4691_state *st = iio_priv(indio_dev);
+   931		struct device *dev = regmap_get_device(st->regmap);
+   932		struct spi_device *spi = to_spi_device(dev);
+   933		struct spi_offload_trigger_config config = {
+   934			.type = SPI_OFFLOAD_TRIGGER_PERIODIC,
+   935		};
+   936		unsigned int bit, k;
+   937		int ret;
+   938	
+   939		ret = ad4691_enter_conversion_mode(st);
+   940		if (ret)
+   941			return ret;
+   942	
+   943		memset(st->offload_xfer, 0, sizeof(st->offload_xfer));
+   944	
+   945		/*
+   946		 * N+1 transfers for N channels. Each CS-low period triggers
+   947		 * a conversion AND returns the previous result (pipelined).
+   948		 *   TX: [AD4691_ADC_CHAN(n), 0x00, 0x00, 0x00]
+   949		 *   RX: [data_hi, data_lo, 0x00, 0x00]   (shift=16)
+   950		 * Transfer 0 RX is garbage; transfers 1..N carry real data.
+   951		 */
+   952		k = 0;
+   953		iio_for_each_active_channel(indio_dev, bit) {
+ > 954			st->offload_tx_cmd[k] =
+   955				cpu_to_be32(FIELD_PREP(AD4691_MSG_ADDR_HI,
+   956						       AD4691_ADC_CHAN(bit)));
+   957			st->offload_xfer[k].tx_buf = &st->offload_tx_cmd[k];
+   958			st->offload_xfer[k].len = sizeof(u32);
+   959			st->offload_xfer[k].bits_per_word = AD4691_OFFLOAD_BITS_PER_WORD;
+   960			st->offload_xfer[k].cs_change = 1;
+   961			st->offload_xfer[k].cs_change_delay.value = AD4691_CNV_HIGH_TIME_NS;
+   962			st->offload_xfer[k].cs_change_delay.unit = SPI_DELAY_UNIT_NSECS;
+   963			/* First transfer RX is garbage — skip it. */
+   964			if (k > 0)
+   965				st->offload_xfer[k].offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
+   966			k++;
+   967		}
+   968	
+   969		/* Final NOOP to flush pipeline and capture last channel. */
+   970		st->offload_tx_cmd[k] =
+   971			cpu_to_be32(FIELD_PREP(AD4691_MSG_ADDR_HI, AD4691_NOOP));
+   972		st->offload_xfer[k].tx_buf = &st->offload_tx_cmd[k];
+   973		st->offload_xfer[k].len = sizeof(u32);
+   974		st->offload_xfer[k].bits_per_word = AD4691_OFFLOAD_BITS_PER_WORD;
+   975		st->offload_xfer[k].offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
+   976		k++;
+   977	
+   978		spi_message_init_with_transfers(&st->offload_msg, st->offload_xfer, k);
+   979		st->offload_msg.offload = st->offload;
+   980	
+   981		ret = spi_optimize_message(spi, &st->offload_msg);
+   982		if (ret)
+   983			goto err_exit_conversion;
+   984	
+   985		config.periodic.frequency_hz = st->offload_trigger_hz;
+   986		ret = spi_offload_trigger_enable(st->offload, st->offload_trigger, &config);
+   987		if (ret)
+   988			goto err_unoptimize;
+   989	
+   990		return 0;
+   991	
+   992	err_unoptimize:
+   993		spi_unoptimize_message(&st->offload_msg);
+   994	err_exit_conversion:
+   995		ad4691_exit_conversion_mode(st);
+   996		return ret;
+   997	}
+   998	
+   999	static int ad4691_manual_offload_buffer_predisable(struct iio_dev *indio_dev)
+  1000	{
+  1001		struct ad4691_state *st = iio_priv(indio_dev);
+  1002	
+  1003		spi_offload_trigger_disable(st->offload, st->offload_trigger);
+  1004		spi_unoptimize_message(&st->offload_msg);
+  1005	
+  1006		return ad4691_exit_conversion_mode(st);
+  1007	}
+  1008	
+  1009	static const struct iio_buffer_setup_ops ad4691_manual_offload_buffer_setup_ops = {
+  1010		.postenable = &ad4691_manual_offload_buffer_postenable,
+  1011		.predisable = &ad4691_manual_offload_buffer_predisable,
+  1012	};
+  1013	
+  1014	static int ad4691_cnv_burst_offload_buffer_postenable(struct iio_dev *indio_dev)
+  1015	{
+  1016		struct ad4691_state *st = iio_priv(indio_dev);
+  1017		struct device *dev = regmap_get_device(st->regmap);
+  1018		struct spi_device *spi = to_spi_device(dev);
+  1019		struct spi_offload_trigger_config config = {
+  1020			.type = SPI_OFFLOAD_TRIGGER_DATA_READY,
+  1021		};
+  1022		unsigned int n_active = hweight_long(*indio_dev->active_scan_mask);
+  1023		unsigned int bit, k;
+  1024		int ret;
+  1025	
+  1026		ret = regmap_write(st->regmap, AD4691_ACC_MASK_REG,
+  1027				   (u16)~(*indio_dev->active_scan_mask));
+  1028		if (ret)
+  1029			return ret;
+  1030	
+  1031		ret = regmap_write(st->regmap, AD4691_STD_SEQ_CONFIG,
+  1032				   *indio_dev->active_scan_mask);
+  1033		if (ret)
+  1034			return ret;
+  1035	
+  1036		iio_for_each_active_channel(indio_dev, bit) {
+  1037			ret = regmap_write(st->regmap, AD4691_ACC_COUNT_LIMIT(bit),
+  1038					   AD4691_ACC_COUNT_VAL);
+  1039			if (ret)
+  1040				return ret;
+  1041		}
+  1042	
+  1043		ret = ad4691_enter_conversion_mode(st);
+  1044		if (ret)
+  1045			return ret;
+  1046	
+  1047		memset(st->offload_xfer, 0, sizeof(st->offload_xfer));
+  1048	
+  1049		/*
+  1050		 * N transfers to read N AVG_IN registers plus one state-reset
+  1051		 * transfer (no RX) to re-arm DATA_READY.
+  1052		 *   TX: [reg_hi | 0x80, reg_lo, 0x00, 0x00]
+  1053		 *   RX: [0x00, 0x00, data_hi, data_lo]   (shift=0)
+  1054		 */
+  1055		k = 0;
+  1056		iio_for_each_active_channel(indio_dev, bit) {
+  1057			unsigned int reg = AD4691_AVG_IN(bit);
+  1058	
+  1059			st->offload_tx_cmd[k] =
+  1060				cpu_to_be32(((reg >> 8 | 0x80) << 24) |
+  1061					    ((reg & 0xFF) << 16));
+  1062			st->offload_xfer[k].tx_buf = &st->offload_tx_cmd[k];
+  1063			st->offload_xfer[k].len = sizeof(u32);
+  1064			st->offload_xfer[k].bits_per_word = AD4691_OFFLOAD_BITS_PER_WORD;
+  1065			st->offload_xfer[k].offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
+  1066			if (k < n_active - 1)
+  1067				st->offload_xfer[k].cs_change = 1;
+  1068			k++;
+  1069		}
+  1070	
+  1071		/* State reset to re-arm DATA_READY for the next scan. */
+> 1072		st->offload_tx_reset =
+  1073			cpu_to_be32(((AD4691_STATE_RESET_REG >> 8) << 24) |
+  1074				    ((AD4691_STATE_RESET_REG & 0xFF) << 16) |
+  1075				    (AD4691_STATE_RESET_ALL << 8));
+  1076		st->offload_xfer[k].tx_buf = &st->offload_tx_reset;
+  1077		st->offload_xfer[k].len = sizeof(u32);
+  1078		st->offload_xfer[k].bits_per_word = AD4691_OFFLOAD_BITS_PER_WORD;
+  1079		k++;
+  1080	
+  1081		spi_message_init_with_transfers(&st->offload_msg, st->offload_xfer, k);
+  1082		st->offload_msg.offload = st->offload;
+  1083	
+  1084		ret = spi_optimize_message(spi, &st->offload_msg);
+  1085		if (ret)
+  1086			goto err_exit_conversion;
+  1087	
+  1088		ret = ad4691_sampling_enable(st, true);
+  1089		if (ret)
+  1090			goto err_unoptimize;
+  1091	
+  1092		ret = spi_offload_trigger_enable(st->offload, st->offload_trigger, &config);
+  1093		if (ret)
+  1094			goto err_sampling_disable;
+  1095	
+  1096		return 0;
+  1097	
+  1098	err_sampling_disable:
+  1099		ad4691_sampling_enable(st, false);
+  1100	err_unoptimize:
+  1101		spi_unoptimize_message(&st->offload_msg);
+  1102	err_exit_conversion:
+  1103		ad4691_exit_conversion_mode(st);
+  1104		return ret;
+  1105	}
+  1106	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
