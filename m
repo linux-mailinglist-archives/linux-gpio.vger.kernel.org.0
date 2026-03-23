@@ -1,41 +1,41 @@
-Return-Path: <linux-gpio+bounces-34016-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34017-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mOalOugfwWnCQwQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34016-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 12:11:36 +0100
+	id UKNSD7AgwWmTQwQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34017-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 12:14:56 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 969FA2F0F16
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 12:11:36 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id B06D22F1031
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 12:14:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9008430E6D40
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 11:02:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1F50C3116D24
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 11:02:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BAFF396D16;
-	Mon, 23 Mar 2026 11:02:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE6E73976A3;
+	Mon, 23 Mar 2026 11:02:10 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED07A396B7F;
-	Mon, 23 Mar 2026 11:02:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA68E3976A2;
+	Mon, 23 Mar 2026 11:02:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774263727; cv=none; b=PvpDKFOyHEhymusCKePCvPYXJPZ0Ab0geXzfW/xgyhI8khCyeWHROG3O1Qc0NhgAMEYrnXUKBdllPkzzx+NsMU0nay0pII12+6VgBXlHlSDkewWKT4QdamhF9FzwlRE2LAj4k0SNFz9LBj5bKtqtAHgviu8UW2xosqdiuWEo/Sg=
+	t=1774263730; cv=none; b=NkQ1yovAn/jBS9iWOgmOslhRIpUnPoi6BYPZSLir1nOiyHXW5g6K+Axt1yTSYbA0Va8XBlxvDppraYGEhxOS9CJTuPaddDL52kvtzirznNzUEnEmxR3TjQSupRPemF8ygFqEoYcEGH6NaUtyZDq2DdphD9/DOb6xnUQUnrp+g6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774263727; c=relaxed/simple;
-	bh=6LQoW6kQOfbEsfzMM/F1yWmTZlzQ6I3tofZzfSVmVy0=;
+	s=arc-20240116; t=1774263730; c=relaxed/simple;
+	bh=g52Al9YWCGtwUmdi2nk9qV8gQKZV5m7STqJ7l17xicE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VBR3PQHGmzmZFRIQzXkywM2XqouCg010FzZz+opZcEEPb2uV2oqL6+Wr6gaVq1VlIh9WdbM6YKaF68D1GQ3r5tgkM78MZts+/CbspFb6ktUBwh9hBljcoktdtuchSErBpGQxy4Pp73Rt5xrRqJaJZIqxJUAERvKjqGUUE5gcXG0=
+	 MIME-Version; b=CHhpU7hv8XmWP7ihZ0m2ZChjFUjw4E1WkqNzPkL7cbHHjM6AzamFCT6Fy+/+PU/IuisDAc1RRVInXh7Tp9wQpfDkN4m8HXeGH1gwKSTujDGw2erqPtLY3Mgcss+IT9K5mNmWJzqoU3jZMPgPbfpy/F8WE+jQBLvlUiJfsVUuAFw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67EE31688;
-	Mon, 23 Mar 2026 04:01:59 -0700 (PDT)
-Received: from e142021.fritz.box (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C69DD3F73B;
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 665FF1692;
 	Mon, 23 Mar 2026 04:02:02 -0700 (PDT)
+Received: from e142021.fritz.box (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C37453F73B;
+	Mon, 23 Mar 2026 04:02:05 -0700 (PDT)
 From: Andre Przywara <andre.przywara@arm.com>
 To: Linus Walleij <linusw@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -50,9 +50,9 @@ Cc: Michal Piekos <michal.piekos@mmpsystems.pl>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-sunxi@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] pinctrl: sunxi: Remove unneeded IRQ remuxing for some SoCs
-Date: Mon, 23 Mar 2026 12:01:48 +0100
-Message-ID: <20260323110151.2352832-3-andre.przywara@arm.com>
+Subject: [PATCH 3/5] dt-bindings: pinctrl: sun55i-a523: increase IRQ bank number
+Date: Mon, 23 Mar 2026 12:01:49 +0100
+Message-ID: <20260323110151.2352832-4-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260323110151.2352832-1-andre.przywara@arm.com>
 References: <20260323110151.2352832-1-andre.przywara@arm.com>
@@ -68,7 +68,7 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	DMARC_POLICY_SOFTFAIL(0.10)[arm.com : SPF not aligned (relaxed), No valid DKIM,none];
@@ -78,7 +78,7 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-34016-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34017-lists,linux-gpio=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[13];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -89,110 +89,60 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:email,arm.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 969FA2F0F16
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,arm.com:email,arm.com:mid]
+X-Rspamd-Queue-Id: B06D22F1031
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The Allwinner A10 and H3 SoCs cannot read the state of a GPIO line when
-that line is muxed for IRQ triggering (muxval 6), but only if it's
-explicitly muxed for GPIO input (muxval 0). Other SoCs do not show this
-behaviour, so we added a optional workaround, triggered by a quirk bit,
-which triggers remuxing the pin when it's configured for IRQ, while we
-need to read its value.
-
-For some reasons this quirk flag was copied over to newer SoCs, even
-though they don't show this behaviour, and the GPIO data register
-reflects the true GPIO state even with a pin configured to muxval 6
-(IRQ). The workaround is just more costly, but doesn't break otherwise,
-so this was probably never noticed by anyone.
-Experiments confirm that the H5, H6, H616 and A523 do not need this
-workaround, they show the GPIO line value with both muxval 0 and 6.
-
-Remove the unneeded quirk from those SoC's pinctrl driver description.
-This should have no obvious effect on the H5, H6, H616 (other than
-being more efficient), but the workaround is broken for the A523, so
-it fixes (one part of the) interrupt operation there.
+The Allwinner A523 SoC implements 10 GPIO banks in the first pinctrl
+instance, but it skips the first bank (PortA), so their index goes from
+1 to 10. The same is actually true for the IRQ banks: there are registers
+for 11 banks, though the first bank is not implemented (RAZ/WI).
+In contrast to previous SoCs, the count of the IRQ banks starts with this
+first unimplemented bank, so we need to provide an interrupt for it.
+And indeed the A523 user manual lists an interrupt number for PortA, so we
+need to increase the maximum number of interrupts per pin controller to 11,
+to be able to assign the correct interrupt number for each bank.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Fixes: b8a51e95b376 ("pinctrl: sunxi: Add support for the secondary A523 GPIO ports")
 ---
- drivers/pinctrl/sunxi/pinctrl-sun50i-h5.c     | 2 --
- drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c     | 1 -
- drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c   | 1 -
- drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c | 1 -
- drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c   | 1 -
- 5 files changed, 6 deletions(-)
+ .../bindings/pinctrl/allwinner,sun55i-a523-pinctrl.yaml   | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h5.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h5.c
-index 669793c6578e..56ce0f78d4ba 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h5.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h5.c
-@@ -533,7 +533,6 @@ static const struct sunxi_pinctrl_desc sun50i_h5_pinctrl_data_broken = {
- 	.pins = sun50i_h5_pins,
- 	.npins = ARRAY_SIZE(sun50i_h5_pins),
- 	.irq_banks = 2,
--	.irq_read_needs_mux = true,
- 	.disable_strict_mode = true,
- };
+diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun55i-a523-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun55i-a523-pinctrl.yaml
+index 154e03da8ce9..f87b8274cc37 100644
+--- a/Documentation/devicetree/bindings/pinctrl/allwinner,sun55i-a523-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun55i-a523-pinctrl.yaml
+@@ -34,7 +34,7 @@ properties:
  
-@@ -541,7 +540,6 @@ static const struct sunxi_pinctrl_desc sun50i_h5_pinctrl_data = {
- 	.pins = sun50i_h5_pins,
- 	.npins = ARRAY_SIZE(sun50i_h5_pins),
- 	.irq_banks = 3,
--	.irq_read_needs_mux = true,
- 	.disable_strict_mode = true,
- };
+   interrupts:
+     minItems: 2
+-    maxItems: 10
++    maxItems: 11
+     description:
+       One interrupt per external interrupt bank supported on the
+       controller, sorted by bank number ascending order.
+@@ -61,7 +61,7 @@ properties:
+       bank found in the controller
+     $ref: /schemas/types.yaml#/definitions/uint32-array
+     minItems: 2
+-    maxItems: 10
++    maxItems: 11
  
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-index 517118341316..22f3d3875316 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
-@@ -589,7 +589,6 @@ static const struct sunxi_pinctrl_desc h6_pinctrl_data = {
- 	.npins = ARRAY_SIZE(h6_pins),
- 	.irq_banks = 4,
- 	.irq_bank_map = h6_irq_bank_map,
--	.irq_read_needs_mux = true,
- 	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
- };
+ patternProperties:
+   # It's pretty scary, but the basic idea is that:
+@@ -130,8 +130,8 @@ allOf:
+     then:
+       properties:
+         interrupts:
+-          minItems: 10
+-          maxItems: 10
++          minItems: 11
++          maxItems: 11
  
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c
-index ecf6d2438e21..48cf114505e0 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c
-@@ -875,7 +875,6 @@ static const struct sunxi_pinctrl_desc h616_pinctrl_data = {
- 	.npins = ARRAY_SIZE(h616_pins),
- 	.irq_banks = ARRAY_SIZE(h616_irq_bank_map),
- 	.irq_bank_map = h616_irq_bank_map,
--	.irq_read_needs_mux = true,
- 	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_CTL,
- };
- 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c b/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
-index 69cd2b4ebd7d..462aa1c4a5fa 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
-@@ -26,7 +26,6 @@ static const u8 a523_r_irq_bank_muxes[SUNXI_PINCTRL_MAX_BANKS] =
- static struct sunxi_pinctrl_desc a523_r_pinctrl_data = {
- 	.irq_banks = ARRAY_SIZE(a523_r_irq_bank_map),
- 	.irq_bank_map = a523_r_irq_bank_map,
--	.irq_read_needs_mux = true,
- 	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
- 	.pin_base = PL_BASE,
- };
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c b/drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c
-index 7d2308c37d29..b6f78f1f30ac 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c
-@@ -26,7 +26,6 @@ static const u8 a523_irq_bank_muxes[SUNXI_PINCTRL_MAX_BANKS] =
- static struct sunxi_pinctrl_desc a523_pinctrl_data = {
- 	.irq_banks = ARRAY_SIZE(a523_irq_bank_map),
- 	.irq_bank_map = a523_irq_bank_map,
--	.irq_read_needs_mux = true,
- 	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
- };
- 
+   - if:
+       properties:
 -- 
 2.43.0
 
