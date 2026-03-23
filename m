@@ -1,255 +1,245 @@
-Return-Path: <linux-gpio+bounces-33989-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33990-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UU9uKPfJwGljKwQAu9opvQ
-	(envelope-from <linux-gpio+bounces-33989-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 06:04:55 +0100
+	id GGb/GNPhwGnAOAQAu9opvQ
+	(envelope-from <linux-gpio+bounces-33990-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 07:46:43 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 103C62EC93F
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 06:04:54 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE6462ED280
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 07:46:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B0DFF30078BE
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 05:04:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 774853007CB4
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 06:46:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D29A2609EE;
-	Mon, 23 Mar 2026 05:04:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA87435BDC7;
+	Mon, 23 Mar 2026 06:46:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="mXstpnQy"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="j8S//1c1";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Q5mhrDkZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013064.outbound.protection.outlook.com [52.101.83.64])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E3E4414;
-	Mon, 23 Mar 2026 05:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774242290; cv=fail; b=rZnfhPthr0XL6YIe64JDOWLGqR1X/MMy0ltXS737SBibXs0DBSm+U6657R1b+Nw+jKS7RO37OEw2mzMr44tADykPlJYKM3XkhvVCsgeZlofe50a93s9jgzVpNxkEeeZUzd4rLD8EYz8rkJfYCzUjf3RMNjorb7xMxb4csdkfrf4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774242290; c=relaxed/simple;
-	bh=IxtiPxjXmduiabfkuGBmQW9LXxt3QjIzRacomkgBPhc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Y8Pb1jzFJTAtejZhAbvmDRuhejiZWymQ0Q7xtLwnijnSVzHql1V7u7ppwbFgKCDKPRVpxUMBAOGOLJqg/QnBSuqjBs2earq7HiEvHfa7NDSi+56eHeJ1K1EWENDvO68NFAu8MOUhLJ9CdEYJZZMjHJdJ+uO0xrnBV2xMPSGKw5k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=mXstpnQy; arc=fail smtp.client-ip=52.101.83.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ndZJbMq0/KmVUVYa5gOz71mxkKIjyIOIbbbYoKx27r52JYbGriuo+V80ryPIb+1WZVlq0TkImPKS+4gfuOG6vp21XBP8CS+bi67BFbIE+GAOOnNiz/MM6n7jWQrAxndrMktcdX00d/A9LYVoQ7bi6ER7AA6orqwMVcrI1TqZmWkiTHf+tzk4mzaA79As9ve2hnc89So7yF3iDn7/sIlSvDyyUDBpd1oiOOsAyt95ERa1N6OHcSUPvW7o1rm1oMVCvOprFuvH9xJc6p9phFF9AuVwBXfs/ommlDaP8jTrCy09nd4JIHJLekYFvKzA9lQp70mPrDoLNIgLhSsEFB+Ekg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SsCN1F9+1ZhXcZSx4UhQ063DlSXD0x5hBye9ET+rMZ0=;
- b=j2RC7HJa48IafTJcVgxKvN/1HLn/p2zaKPHXjaiFQg8mTLJZ+tUzonL9/jJAaN8BZ11BO9DSRjxMzsz+UT3v0+gt+S30csxX4G2mMYqD9GiBkG5TgXBr0DV4jckMj1TfKyapERvAI41yyoUt6vj5QRObtmo6j7VjMYkO3Y+lDQ0K+g/F3umpkV/fHwZ1mGYU616zbrS9vv0XUSdrVLmxqLz5tCjksVNTTLj6EJ/tGnPkIQrMqih3h2+KeywPXOT6kt60sXAMI8WYEmI7SbgFB/B7iAeaf5TAy1gKC0pWj/0SCWhjAKhuEm55awN7ZdbSZXQrWvcFQkQdv0tOUTX/AQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SsCN1F9+1ZhXcZSx4UhQ063DlSXD0x5hBye9ET+rMZ0=;
- b=mXstpnQySFY4EU9oATsEjpAl4cGcfUn70n1FZk01lpUp018DBTWOVG7qh+YybRgGAyMfyqSHvEjStVvgBNMG+zK+KLibZrqZG/Rl2S23Szz3UoMa/vNEJt5GtSPuqbyGiiNjU3C/ILr1TgmDBp9p0tzqTKyH7y4/1+RTjJsPIx7JSwyZIT/FK/XAFuG97YCtaOWCpNxS83VL22WLPoOYRz8Ign3JgRcDVB+x3gyU0xnCggeQmwYx2O0T901xehmjx+TKbSZ/OPAYlIrWhqtoNmQAgxk0oTeMszt52k0YjNG2gRMEeB/jDIDJKJjLsJZJ9p7XW1+IeuKfwEOMPARIgw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by VI0PR04MB10317.eurprd04.prod.outlook.com (2603:10a6:800:216::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.25; Mon, 23 Mar
- 2026 05:04:28 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::4972:7eaa:b9f6:7b5e]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::4972:7eaa:b9f6:7b5e%3]) with mapi id 15.20.9723.022; Mon, 23 Mar 2026
- 05:04:24 +0000
-Date: Mon, 23 Mar 2026 14:20:24 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Peng Fan <peng.fan@nxp.com>, AKASHI Takahiro <akashi.tkhro@gmail.com>,
-	Alice Guo <alice.guo@nxp.com>, Anis Chali <chalianis1@gmail.com>,
-	Arturs Artamonovs <arturs.artamonovs@analog.com>,
-	Eoin Dickson <eoin.dickson@microchip.com>,
-	Greg Malysa <malysagreg@gmail.com>,
-	Ian Roberts <ian.roberts@timesys.com>, Jacky Bai <ping.bai@nxp.com>,
-	Marek Vasut <marek.vasut+renesas@mailbox.org>,
-	Marek Vasut <marex@denx.de>,
-	Michael Trimarchi <michael@amarulasolutions.com>,
-	Nathan Barrett-Morrison <nathan.morrison@timesys.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Oliver Gaskell <Oliver.Gaskell@analog.com>,
-	Paul Barker <paul.barker.ct@bp.renesas.com>,
-	Philip Molloy <philip.molloy@analog.com>,
-	Ranjani Vaidyanathan <Ranjani.Vaidyanathan@nxp.com>,
-	Tanmay Kathpalia <tanmay.kathpalia@altera.com>,
-	Tom Rini <trini@konsulko.com>, u-boot@lists.denx.de,
-	Utsav Agarwal <utsav.agarwal@analog.com>,
-	Valentin Caron <valentin.caron@foss.st.com>,
-	Vasileios Bimpikas <vasileios.bimpikas@analog.com>,
-	Vinh Nguyen <vinh.nguyen.xz@renesas.com>, Yao Zi <me@ziyao.cc>,
-	Yegor Yefremov <yegorslists@googlemail.com>, Ye Li <ye.li@nxp.com>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	arm-scmi@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Khaled Ali Ahmed <Khaled.AliAhmed@arm.com>,
-	Michal Simek <michal.simek@amd.com>
-Subject: Re: [PATCH v2 0/4] u-boot: add SCMI GPIO/Pinctrl support
-Message-ID: <acDbqCbCSulKNELd@nxa18884-linux.ap.freescale.net>
-References: <cover.1773256350.git.dan.carpenter@linaro.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1773256350.git.dan.carpenter@linaro.org>
-X-ClientProxiedBy: SI1PR02CA0050.apcprd02.prod.outlook.com
- (2603:1096:4:1f5::12) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F97348883
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 06:46:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774248395; cv=none; b=Cd7CHW8WnN5rM+KEFJdbFM4xtoq4WcqCPPGKOjT3zrkuz1UPtSTv6OJjZMwROpidRwRITHvQGCPOW8cISMdilTE3lnHV+7VQkbKSJK3tAlvPw8hoM6RTjzdFdqHiM47s5AP1JjkUmwdqY6FQ/Z1o/kWKBHQ1QR0OCBC9yoviHss=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774248395; c=relaxed/simple;
+	bh=YaD+CatjIqfxIvSpZJAbYPQwzCHAxtNUw4nAc7oYroc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=As21/8tLkAGhf4afPMa2PnI11IxXS0cpGlaJBur+Fr4Ul4r2skbupmOqqDgrlI/LmiM4ml8meF7WUQgWJ89krvFdzV/pC3ghA3S5BfTRjirUZkfvhyj1lbNSWvq6Sz9mNSesok6JHnM55NUVVskZ2fxW6By/Fliz3q7xojBIKG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=j8S//1c1; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Q5mhrDkZ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62MKqEU94129218
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 06:46:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	JzgrEA8u622UtmJ7BDFdV+2Neo9h7xytlbrUEgoYnlA=; b=j8S//1c1CV4vxAD7
+	1/OS5fuZttK0wmEfc9YsihpbbwJwmx9EeNZYVkXEXRo6VdRcxGr5WOKU70g1QOWl
+	2doE6d45nStmLCMkGkab3BppeBhGnOt239mmwvFhEoKzUQKVSg67Z6XEhXHIZRFb
+	FB2bs2kEF4Ue+40jwbk080kNQRe5P/HfTg+1QSGhHAvdzzMldr7zN9VKA9/wdt3C
+	rr8hKoPUMEh+SORmHs3t1xLiK2k/UZVPX8IQVOt93vLiDv3B0mGFtFLRswTlb1yt
+	yGCpRieCzGe1jylYIYJlFQM74WxKAez8TdT487dHr+kyYnV5eERe1Hxsq9k/AMBq
+	YBOYfg==
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d1gpk48mq-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 06:46:33 +0000 (GMT)
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-359fe4e9ea7so3525055a91.0
+        for <linux-gpio@vger.kernel.org>; Sun, 22 Mar 2026 23:46:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1774248392; x=1774853192; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JzgrEA8u622UtmJ7BDFdV+2Neo9h7xytlbrUEgoYnlA=;
+        b=Q5mhrDkZ5lItoKp+E/dAPB/7rMukvIOK/oCF2VwN4QOAMP6eQ1YHPTAQ7vYBQzcN6/
+         N3S3YilK8KgFkb5Rl0RX2EFt4u1PdctkEVCNvHwMGwN7trgyMysQTn2WDCh69Cz6g3kv
+         UowEjbGhCgqcu+F0m3npDxXH7Z8ZYp0apgPHmNgMXyP1LfeUB59dUOaWFB81kTfpQM0i
+         AzUP2EdRc0qJvklisdHBGBIlZorvGoesJu3bDvzZyorg0+gm3K7DhCPlMV3ZmhFEgNIG
+         aCyPRxyp9Yo0T9rcoUJdj3Ck7vDeLD5tfCHWbW04+Z3HuOqhOfsGB9Z2NnKfDg2jPFm4
+         gRzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774248392; x=1774853192;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JzgrEA8u622UtmJ7BDFdV+2Neo9h7xytlbrUEgoYnlA=;
+        b=cAvUuptmCndWZ+WSXEkvRxUBNLl5et8u3zVNz8toptWyKM2i8nsX5SNMjEvBlQUO9X
+         plyLdIp+TusOVpoNo7yHX+lVyF7LzNBKFl8BtcXFPDBVRHfhXLX7Tr2WTZ/zRyUyoDdC
+         6ziVx7qwrUy9+MRUnR03mg6vJiR/govNIQUPy+n4Qs5uIqMIlPozkZJf9zOs/JlJJBzV
+         7GID9HSbxmZhlRMfZw80Q5rj2R76k2Wh6XWO3UudD72TqZBr0QiMNXR0z/0M971IfGcn
+         TcK9FY5IvtidCjTCGhm9ezBhfDKkNSoTDzFAl2gfv/RN6VBJjy4fobZG2+4NsN1L3PPZ
+         sHmg==
+X-Forwarded-Encrypted: i=1; AJvYcCXdFyv+kCP7dMNIrEcWBMPsVzBxTYZoVA7XqQn+dPKKIzH+8DrLE6uoEfyXxGJoR6/TBNZ6PlmlsGQ8@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMYlF9kxg+Sm+XaJ90PDYWH9ftgmWDvn0f/vWnjNhnhsx+LJZt
+	oj7LQBt77Cv851x14iC3nrF6/JFDirsxIw10/dEkMtO4iU1OgOaqH4sraCZOLvvuCZ8UUnwcBBX
+	LGZHmb4R8/IKzTJxLdgxA65fmKjffKdr8JkmiwegeMlgFAY15OJ7HY1u2qfNt/6v5
+X-Gm-Gg: ATEYQzwcCTajWIZZQDyyQFgptQ+zEiz8S/attM/EzHxIMiYXfHIRQe+/JV3pnJFk9S2
+	Rjc3EtzdEezk2a42W2TNiTIUwgo/UZoyy8wDQRQE8GQy7URzTpAxCLw6gjfbiUUQU5M0kQYQo6M
+	9KDXDk5ZnywbMFfjZqFeQV1tgN6NIJUN5AvakBIqlJsEU91rvjiMNSWQ4Eiemi1bnZcrLG3jZ9P
+	cxhXhC5YOsSatJ3nTIF893lnrqsNRLBB0ZByiC22ueH5jbVWSa4T5To9wV/YKHV34BUjMB1UQEd
+	iXCIMRFJlC5/douEGqmWNqCOMXBgBilA02UTKT6rtzYK+Qd1Yj7DX2tCdzylcmHMaxacMfLoN/6
+	k93BS25glE1Ux8ghAEIQyu3Q4C60cXyhtovx0ppixbqc0+inODZCyRBmcah5gVqbzSQ==
+X-Received: by 2002:a17:90b:4c48:b0:35b:e844:3bd with SMTP id 98e67ed59e1d1-35be8440fadmr3293679a91.31.1774248392307;
+        Sun, 22 Mar 2026 23:46:32 -0700 (PDT)
+X-Received: by 2002:a17:90b:4c48:b0:35b:e844:3bd with SMTP id 98e67ed59e1d1-35be8440fadmr3293667a91.31.1774248391804;
+        Sun, 22 Mar 2026 23:46:31 -0700 (PDT)
+Received: from [10.151.37.217] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35bd33919a0sm4548940a91.2.2026.03.22.23.46.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Mar 2026 23:46:31 -0700 (PDT)
+Message-ID: <01bd44db-32b7-4195-ad66-0a608b25dca3@oss.qualcomm.com>
+Date: Mon, 23 Mar 2026 12:16:26 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|VI0PR04MB10317:EE_
-X-MS-Office365-Filtering-Correlation-Id: f0c016c5-f06b-4ba4-9e8d-08de8899a69d
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|52116014|19092799006|366016|1800799024|38350700014|56012099003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	C1v+9WndEnowEEJbtXaIaZT/kKt2Ar/wXj0223TanGqVgDWoROQq5bdtLJzXKDTWJ3sr1PgXVkGryw8xij/jh8BA82JsCPz2xfIkFHZdiQOFEHkWJfQSWmHmuo4nhKMH38UFh6hZ6ZqiA7lKPxv36L0xs07DBS7mWsXGTe6JVD6dR3m4dN++ECg6mXsPcTuSV6NUBYLhSR10ZZNox7nJUEF4yldY7Kr/hGljMRCyT8ykjQNsq/2m6o6MjucFIEzb7zIEZQeQuFE+1Oszz+C891YMvs78oD/17Pvq/Pa9ATNtbiYHdMltjMRf4DPwajE8VckWE9be9vK+MbS4l9nYN1jx+3wad/rEHTvmr+Ba72sHScvKSirtdAO6pmUMhgec8ArVHPLD/1ch2NeDg6EpoCNl0snMT6Wu6DbGzF+G0YO83Y5MoPR2eNICXoCX4SY9hwTR7mwgGJsLXCcD+lG6v0NueUOQuqw9sI/liImr/6t+ma+VBRfJl324+XsyMe6wfMxS++N7M30STn0/OePW5DeuDQac33gm4Xr9PaDLxV4yQjvd9b3ikrcwfAZ1gxFj00uit4OYPw1GCYt+EGoPgTwLZlza8f3CRz9rFk0sKRPR1J+xVetVJMMU4abChtoH9rsz3f587J9gbTAvFEycJgS/IbxM/J4yED02mVmjMBYTV7Yn44T1+J9BrLIdE8dVyayQSQNRY2h3eBSJ1XGGYKLp5frAZ3sp5IQsqlpX1KpFdSdmmsl8zE8bxh2niAEwqZTiGp+cftcr37o9swQfBgbkR/RAkNEOLWzx/heMZGc=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(19092799006)(366016)(1800799024)(38350700014)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?gSGjpDLm2NrCPq2HRgeYXoPltvIsC3tYS11TmC7hnNddYBh9K8pemz4L9a+Z?=
- =?us-ascii?Q?sC+x6NMEf4+Itwk5ALiU7LuaUai7Mhw4MyzO+P+2bwEmAvQiYkL8hrQUI2lW?=
- =?us-ascii?Q?p7WkQB8sXHQbs8YqtPvXkztKje/byxnAE3QZq1yBINiHcA9NA98Fc5LpQc+c?=
- =?us-ascii?Q?Z5IChKhCUytE+f26DzXIEgdtz6CxhUH+qDhpXMo517GM7DLcv1DmdTi0k1p8?=
- =?us-ascii?Q?EKMnYE/vkm6m71WmDJEkJX/mqTKQWs3VtUod4I+l8RKyjv/N2/BOBK8DX646?=
- =?us-ascii?Q?vDr88LfS74ADeQ9QW/JxCUu47FsBgd/LYty3LR8VOjOL5TcP7FtM+ut17Jt4?=
- =?us-ascii?Q?vF5x4ntYETN1++M3+pno9xD5ym6qP199Derr0AqIntOZhiM0DsCRHo2l23Ll?=
- =?us-ascii?Q?la48vbJBW1UAUHhQYziutmMgNA0W9VkkU+mwZdOknv40IVpisrJk/+Ed5cDo?=
- =?us-ascii?Q?tlO3vvGLJAZO+MBrp9sbARwN/LHI+1L8qB5Cm875ldwNJ4FjuXETKjkscluG?=
- =?us-ascii?Q?OIuF5cAaCjgVM7HxsvT59du7ftm54k4d9BTbeqRcYX3QK+2/E0mGBJqJ2170?=
- =?us-ascii?Q?W4/AxdXQdjKwcX59qRzAGS/ehJRhhXhfuUQM8O1jWzEnA+kx6KSiWEFWMEBH?=
- =?us-ascii?Q?pmHEdziv/n//GQxEXGyQahhPCBfqJC5i6Z1mHRX3mg5f2HxB8SGTOfKdSJ1a?=
- =?us-ascii?Q?zAa3ftskjwNxK3CwRd5R5GPEUQxPvlq6ns/1I/riMLob2bYBWe6pDhzbPV/t?=
- =?us-ascii?Q?cF7hHYimn0QGvG3dK6kxXal6wt5OlnZQ0NmiAVmEFiMhIKC+xQ5aS2+CMnfq?=
- =?us-ascii?Q?1LdXgcGBykMw3ld2fhYFbpfRSKfhg5C7Dje1tcumtsYWXNj9z2eplmMCmkAv?=
- =?us-ascii?Q?YBsjOA586x7WPfn68BcFZYAxRDcQUk8+HUL/zxJDyzwughUjnGiOGVIzcHTI?=
- =?us-ascii?Q?kIaY9w1o4JLjwA144XGExXg4jmMKfkp+YDCA+SCvJAEKlc7RGH1kNGD5WKtY?=
- =?us-ascii?Q?VKvQpeaVdygzTfesw/06xHpfTlcM4NFHk/b1pTI3n0SiVJukzXzB11sDAxKM?=
- =?us-ascii?Q?/e9nEKdpeULVXu3PrlXrGAyKCvhy8PinV8bw1RSmy0mN6wisavUrqMzfGHEF?=
- =?us-ascii?Q?UzObq9GCQCdLvcGb9daw8PoXW9HY/+PJxvLdGlivra6cp+K9sg8nRTvXyeY3?=
- =?us-ascii?Q?pt01wd/aOHBG8rJaF3bWZaPTjUVXbQEkSMEpgTa+xlaimDKLluAmwzzGydNE?=
- =?us-ascii?Q?Q7aNlU1US8h7NGrC/uBiBUSLV6xyYgPnI7kkYlIPTnOJjbf3vqhGbHKlwRJV?=
- =?us-ascii?Q?qbVtWXZVKpGnRfSUaEjs/V1ULPUS5BeMoBZBALvBppSVV73N7yFN+Q8rIgvW?=
- =?us-ascii?Q?YXCVLAsWcnyjOTiwz434/6q8LFQck+PobIyOm4vdHQwb/pag70xWsuRFbAp+?=
- =?us-ascii?Q?iUkF5SjEUwYAfgL5P3hgb9YZX3upOd0Zxy58WroK3Lan6XKe6QqzLqLogeB2?=
- =?us-ascii?Q?lOwviAWMQuyCZaRk2cHJAtVVuJ8tDFj7Ps/Axgu18pVQNPogBuZnkZqTC5D/?=
- =?us-ascii?Q?SJ1YnwS3JFar5849h3ycFEAxVCrC04cE2z0e3zOkS0WDXuPNV9zvPiZLwy71?=
- =?us-ascii?Q?OnAsGVWFQO6t+CWHaE3dtTIjaHoe5YkdrI4EMy+pzE7tpq+r3Z6pZE1P+F/a?=
- =?us-ascii?Q?fOiaMA9cEI7ns79DXzEV3xNuVQIUT/9DXxRaH896tk0BojRP4UO4WzzlfRmn?=
- =?us-ascii?Q?b0faor7KNQ=3D=3D?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0c016c5-f06b-4ba4-9e8d-08de8899a69d
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2026 05:04:24.3134
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yJXZwxSVjtHBrQ8fNKLlze3oFeDNaGI43t/YStcokbEID62o4js66TrGaXC2uDUuXg+hsQm1JibJwAnrV5NHyA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10317
-X-Spamd-Result: default: False [1.94 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_DKIM_ALLOW(-0.20)[NXP1.onmicrosoft.com:s=selector1-NXP1-onmicrosoft-com];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] pinctrl: qcom: Introduce IPQ5210 TLMM driver
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+References: <20260318-ipq5210_tlmm-v2-0-182d47b3d540@oss.qualcomm.com>
+ <20260318-ipq5210_tlmm-v2-2-182d47b3d540@oss.qualcomm.com>
+ <abtbnafiKkswWSy1@baldur>
+Content-Language: en-US
+From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+In-Reply-To: <abtbnafiKkswWSy1@baldur>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: jNHrc5gn29FfI4-1zIVsa0C6D7V1s37B
+X-Proofpoint-GUID: jNHrc5gn29FfI4-1zIVsa0C6D7V1s37B
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzIzMDA1MCBTYWx0ZWRfX4xQvxeRioCA1
+ DvvjYbxvlqaBwQP2DqDpuDYc3HQy0t7ghMgN+MtcGafeyz/wdq4mYqf/+OlhwdLkub4B3hFN74a
+ YrkwpKbVqyAeGvHxQKt4doW7PtyUAnIasQ2/O1P5VP2XT4iutWOKRgeMKH7WBMfIjoNPkc3N+YI
+ SzwiCxwT1B4Mwxp/YPs+I0+ZN7L2kXy7rvBUt4jQc7JscAMHw+q1hFkJ3CoUxMcW69IBrd7ovrw
+ PfK/pLdx0bKo1d4K0QQ/WbliyTjAS9zVOD8L1vXIBsnUIPNgYAiD7KxDzkUwZ3MDM7aBSzAdXk6
+ aAc/qGx7TpI3PkwG1M0dg1smAvJPGgodkQZv3fU3OtZxRwfxsbQn4adZpH6pzUK6EmEfRyfP5n+
+ LTMxWLE0Ntd1LsemurOdWI1d2qvh1xuwRWuLLouq6Lxs8aXImjBaipxaWGd+i4QX8Ri6kIjHco+
+ 3+aHenZ0kpiLIlWjqpQ==
+X-Authority-Analysis: v=2.4 cv=QKhlhwLL c=1 sm=1 tr=0 ts=69c0e1c9 cx=c_pps
+ a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22
+ a=xLcBPJq00M2AN48BsqkA:9 a=QEXdDO2ut3YA:10 a=O8hF6Hzn-FEA:10
+ a=uKXjsCUrEbL0IQVhDsJ9:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-23_02,2026-03-20_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 adultscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ priorityscore=1501 malwarescore=0 phishscore=0 impostorscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603230050
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33989-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[37];
-	FREEMAIL_CC(0.00)[nxp.com,gmail.com,analog.com,microchip.com,timesys.com,mailbox.org,denx.de,amarulasolutions.com,linaro.org,bp.renesas.com,altera.com,konsulko.com,lists.denx.de,foss.st.com,renesas.com,ziyao.cc,googlemail.com,intel.com,kernel.org,oss.qualcomm.com,vger.kernel.org,arm.com,amd.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,qualcomm.com:dkim];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33990-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FROM_NEQ_ENVFROM(0.00)[kathiravan.thirumoorthy@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[peng.fan@oss.nxp.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[NXP1.onmicrosoft.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,nxa18884-linux.ap.freescale.net:mid,NXP1.onmicrosoft.com:dkim]
-X-Rspamd-Queue-Id: 103C62EC93F
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: BE6462ED280
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Dan,
 
-On Wed, Mar 11, 2026 at 10:39:30PM +0300, Dan Carpenter wrote:
->There is an existing SCMI pinctrl driver in drivers/pinctrl/nxp/ which
->lets you configure the initial state of the pins via device tree.  This
->patchset is a more generic version which provides GPIO as well.
+On 3/19/2026 7:47 AM, Bjorn Andersson wrote:
+> On Wed, Mar 18, 2026 at 12:44:31PM +0530, Kathiravan Thirumoorthy wrote:
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-ipq5210.c b/drivers/pinctrl/qcom/pinctrl-ipq5210.c
+> [..]
+>> +static const struct pinfunction ipq5210_functions[] = {
+> [..]
+>> +	MSM_PIN_FUNCTION(qup_se5_l01),
+>> +	MSM_PIN_FUNCTION(qup_se5_l10),
+>> +	MSM_PIN_FUNCTION(qup_se5_l11),
+>> +	MSM_PIN_FUNCTION(qup_se5_l2),
+>> +	MSM_PIN_FUNCTION(qup_se5_l3),
+>> +	MSM_PIN_FUNCTION(qup_se5_l4),
+>> +	MSM_PIN_FUNCTION(qup_se5_l5),
+> Listing each pin of each QUP SE as their own function forces the DT
+> author to write one state definition per pin. Group these into their
+> logical functions instead.
 >
->I wrote two small cleanup patches to the NXP driver, one which renamed
->an enum and another which made some white space changes.
->
->The next patch adds an pinctrl driver which lets you configure the
->initial state for the pins.  But the main thing is that we need one
->driver to handle the SCMI pinctrl protocol so the pinctrl driver does
->this.
->
->The last patch adds GPIO support over SCMI.
->
->I tested this code using the SCP SCMI server on OP-TEE over Qemu.  I
->created a custom mock pinctrl device in SCP.
->
->Changes since v1:
->Address Peng Fang's review comments.
->Use the standard gpio-ranges to describe the pins instead of
->inventing a custom format.
->
->Dan Carpenter (4):
->  scmi: pinctrl: add pinctrl message IDs
->  scmi: update comments for scmi_pinctrl_config_set_in()
->  scmi: pinctrl: add pinctrl driver for SCMI
+> Same thing with other logical functions that you have split into
+> multiple separate functions.
 
-I picked up the above three patches.
+Sure, will take care of this in next spin.
 
-Thanks,
-Peng
+>
+>> +	MSM_PIN_FUNCTION(resout),
+>> +	MSM_PIN_FUNCTION(rx_los00),
+>> +	MSM_PIN_FUNCTION(rx_los01),
+>> +	MSM_PIN_FUNCTION(rx_los10),
+>> +	MSM_PIN_FUNCTION(rx_los11),
+>> +	MSM_PIN_FUNCTION(rx_los20),
+>> +	MSM_PIN_FUNCTION(rx_los21),
+>> +	MSM_PIN_FUNCTION(sdc_clk),
+>> +	MSM_PIN_FUNCTION(sdc_cmd),
+>> +	MSM_PIN_FUNCTION(sdc_data),
+>> +	MSM_PIN_FUNCTION(tsens_max),
+>> +};
+>> +
+>> +static const struct msm_pingroup ipq5210_groups[] = {
+>> +	[0] = PINGROUP(0, sdc_data, qspi_data, pwm, _, _, _, _, _, _),
+>> +	[1] = PINGROUP(1, sdc_data, qspi_data, pwm, _, _, _, _, _, _),
+>> +	[2] = PINGROUP(2, sdc_data, qspi_data, pwm, _, _, _, _, _, _),
+>> +	[3] = PINGROUP(3, sdc_data, qspi_data, pwm, _, _, _, _, _, _),
+>> +	[4] = PINGROUP(4, sdc_cmd, qspi_cs_n, _, _, _, _, _, _, _),
+>> +	[5] = PINGROUP(5, sdc_clk, qspi_clk, _, _, _, _, _, _, _),
+>> +	[6] = PINGROUP(6, qup_se0_l2, led0, pwm, _, cri_trng0, qdss_tracedata_a, _, _, _),
+>> +	[7] = PINGROUP(7, qup_se0_l3, led1, pwm, _, cri_trng1, qdss_tracedata_a, _, _, _),
+>> +	[8] = PINGROUP(8, qup_se0_l0, pwm, audio_pri2, audio_pri2, _, cri_trng2, qdss_tracedata_a, _, _),
+> How can both function 3 and 4 be "audio_pri2", do you expect the system
+> integrator to be able to select function 4?
 
->  gpio: scmi: Add gpio_scmi driver
+Function 3 and 4 are audio_pri_mclk_out and audio_pri_mclk_in 
+respectively and either one of them can be selected based on the codec's 
+mclock requirement. Let me expand the full function to avoid these 
+confusion in the next spin.
+
 >
-> drivers/firmware/scmi/Makefile            |   1 +
-> drivers/firmware/scmi/pinctrl.c           | 365 +++++++++++++++++++++
-> drivers/firmware/scmi/scmi_agent-uclass.c |   4 +-
-> drivers/gpio/Kconfig                      |   6 +
-> drivers/gpio/Makefile                     |   1 +
-> drivers/gpio/gpio_scmi.c                  | 248 ++++++++++++++
-> drivers/pinctrl/Kconfig                   |   9 +
-> drivers/pinctrl/Makefile                  |   1 +
-> drivers/pinctrl/nxp/pinctrl-imx-scmi.c    |   2 +-
-> drivers/pinctrl/pinctrl-scmi.c            | 365 +++++++++++++++++++++
-> include/scmi_agent-uclass.h               |   2 +-
-> include/scmi_protocols.h                  | 379 +++++++++++++++++++++-
-> 12 files changed, 1371 insertions(+), 12 deletions(-)
-> create mode 100644 drivers/firmware/scmi/pinctrl.c
-> create mode 100644 drivers/gpio/gpio_scmi.c
-> create mode 100644 drivers/pinctrl/pinctrl-scmi.c
+>> +	[9] = PINGROUP(9, qup_se0_l1, led2, pwm, _, cri_trng3, qdss_tracedata_a, _, _, _),
+>> +	[10] = PINGROUP(10, pon_rx_los, qup_se3_l3, pwm, _, _, qdss_tracedata_a, _, _, _),
+>> +	[11] = PINGROUP(11, pon_active_led, qup_se3_l2, pwm, _, _, qdss_tracedata_a, _, _, _),
+>> +	[12] = PINGROUP(12, pon_tx_dis, qup_se2_l3, pwm, audio_pri0, audio_pri0, _, qrng_rosc0, qdss_tracedata_a, _),
+>> +	[13] = PINGROUP(13, gpn_tx_dis, qup_se2_l2, pwm, audio_pri3, audio_pri3, _, qrng_rosc1, qdss_tracedata_a, _),
+> Same here.
 >
->-- 
->2.51.0
->
->
+> Regards,
+> Bjorn
 
