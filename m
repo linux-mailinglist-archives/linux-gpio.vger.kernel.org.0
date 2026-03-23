@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-33998-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34000-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kK6PNuYCwWlUPgQAu9opvQ
-	(envelope-from <linux-gpio+bounces-33998-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 10:07:50 +0100
+	id GEYJNKQDwWlUPgQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34000-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 10:11:00 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7698D2EEB30
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 10:07:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 92ED22EEC1A
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 10:11:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E64C130360A7
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 09:03:56 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 76274306A96F
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 09:04:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 309CF386432;
-	Mon, 23 Mar 2026 09:03:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C97DF38656D;
+	Mon, 23 Mar 2026 09:04:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V8z6WKCi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lOgGEWMc"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E6B3859F9
-	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 09:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B0A38644B
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 09:04:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774256635; cv=none; b=angHMUb8S0ZDwMn7vc1sHQ/hXBIOY3Ue0Kk8TvDASKdgS9OB89i8CiYEFA+QkwRLnCw6dDSZlDamNTwyfD5/7RVVzfAqVhQwqd76atHgeRYahA+FqAkGbv/8LSWU3b/67Jt7iCoQWAfzEgzyeZO8nnDNtsSxQB+yjnjKYzjkwgg=
+	t=1774256664; cv=none; b=Tj1Om0mZ0ZhEeh+FNTAci8M2gvwc7FFV+nAh/sDYpaBPuaqWua3Pj+S4wwESiHuiaUPuhS8ArtTu4vALQ7dCl2w7Ob/G5GhrVQsogbRwG3IWU+ukNLSDbi/7Fx1+yD4qEPEJQYTkgulmsKKoqCFwQioOBs7TxkIAbGDmEGEeqnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774256635; c=relaxed/simple;
-	bh=Y6Ln7apokh/wc0AOi/toxBUgq+c7baqtMbdqFe1JR+s=;
+	s=arc-20240116; t=1774256664; c=relaxed/simple;
+	bh=CHxEWkwgCvKhtru7JHa2zSMKFKwZ0cGz1RP4X38VhkM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VQ+8XwV9C72IsfK/GjC1DEyxuPrnGVZNeHHsEqEVMPxSteiXYPprMM2HoO22hnvwVbFDCfRaYM4q4QEu7yl+WDJ7tM8wioYO2V5TSWnVN7fl7jAjYTHmicOceWJsb4PU5tcLN4WyxSU1Yt/lIKdW9ncT1BZyXgeP9jKHjuty6iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V8z6WKCi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A538EC4AF09
-	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 09:03:54 +0000 (UTC)
+	 To:Cc:Content-Type; b=uNUWnFtEhrZUsWJib+d7WQHxqZ5JhJZOmDWKJq3B1V2f8bjzWtj6xXskd2W4ffLZI0rVZO7CFCCKdESdn7eyFmCPTZeAqThQ2y9TBhQlDcAlCKe4mvklVz7EZsDDpskKbMLr28rIC/0smN4d9nf0TxBLfT3b1SSgvlVq+qdmJl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lOgGEWMc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49708C2BCB8
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 09:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774256634;
-	bh=Y6Ln7apokh/wc0AOi/toxBUgq+c7baqtMbdqFe1JR+s=;
+	s=k20201202; t=1774256664;
+	bh=CHxEWkwgCvKhtru7JHa2zSMKFKwZ0cGz1RP4X38VhkM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=V8z6WKCi5Zsoe+uxCF5locHBMfndoMqJUIb3dbz8gIFPVW0vzOoTHca+9gaYnHiQQ
-	 hrRXi/zQwDPRMkSc5/sSxhCktqWAiUpuM9GC9WC3870hjvxhKVV+C2AOQVxTl8h3Gz
-	 VM5AZvnrQ/j5baJa2Xcgi/n5bbyvai8OKkDwKd2RPtfyV2bHzTs+7xP3G7sC2kvRua
-	 pzXTiQsuj9qx8E5+dKS33jZczro/rs4AqaT0nzMjnLlbhHSSUoqq2pL3AcCCg8fQIl
-	 d4T58fNpVcEr9WJJh1fVY70yaIRYgShJ15l/92CG/+ggpJPhAlGDW5N8v8NbtcTu2v
-	 BWPfF+5+Mhprw==
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-79a40fb9890so23061997b3.1
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 02:03:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW+WTRCtFSZILfc8ZwIBXa6VhnBFcr0VjQ3adrAcBXkSpz+gETLMW2SneQ6zuLuiCxdt4XZ3Q28qzXH@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy78Oe/Z9E1aKTcH1pUiYr3oxmN3IExCxaG5azzYC5s4ML9TVjO
-	gcMReZN8xYj1o8lkcRkV2YVdg2DgShmpP4yE4W02K8FeBFUZqN5IziL5FYDnVhbLqyJIBa0dFsG
-	BOK7mzarYBCd3Wc0nIytQWtXsm+65gnU=
-X-Received: by 2002:a05:690c:c513:b0:79a:b77f:3fe0 with SMTP id
- 00721157ae682-79ab77f4a4emr19423007b3.5.1774256634011; Mon, 23 Mar 2026
- 02:03:54 -0700 (PDT)
+	b=lOgGEWMcgXue43r4VYarYu1alRlyVb1yCOGINwilJZEfhMfjd3NkVJhAhNiNouKU5
+	 /abvT5VauAmmComqNrM7CASX8lzgf2A/ncd4R3IDoiOft6Q88geRkoJbRUC6RWUsFt
+	 RsbT4tZPtSh+ZdMSR4O86MssGOPhlA5jEGoblu7FcVJoZp0c5APBb6yRZcqYO734ah
+	 Vaflkx6FMOnH12UI2dpPodqsd9q4yuHiMp0HK81CcmPpHalw93gqr43n5GD9xGtDT6
+	 NAAeYOQ6jYgU/MbNyDSdh76ajSKgYPjWITsfJ191EqU6TishfsAyQbkBXuB2fsPYxh
+	 553jBM1YyxXZA==
+Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-64e9d72d5f4so3087733d50.3
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 02:04:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVrXN9Ned6cO8CZnQxJFmkD2kKYuOEYg53dil4rn2cW/WWrkApgAaR2KyPpbGgxYdSDoM0kSmRTvSPL@vger.kernel.org
+X-Gm-Message-State: AOJu0YylU/f369zVpwa1hNacFBThoEumTVy9X69uPSe0uVJq45AFjnJv
+	9KOZbG9XVGtmXDUAD07BB9qOqZM4eN9tGbB3wh1wywGZOFBz9VqAOdCjdGzpj6mBL8Ykc1c/Huo
+	RH8KepuEifCEcMrbWzBZbPQWPntjz1hc=
+X-Received: by 2002:a05:690e:edc:b0:64c:e97a:4dc1 with SMTP id
+ 956f58d0204a3-64eaa7eb74amr9335133d50.63.1774256663654; Mon, 23 Mar 2026
+ 02:04:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260316-eyeq6lplus-v4-0-bf44dfc7a261@bootlin.com> <20260316-eyeq6lplus-v4-2-bf44dfc7a261@bootlin.com>
-In-Reply-To: <20260316-eyeq6lplus-v4-2-bf44dfc7a261@bootlin.com>
+References: <20260316-eyeq6lplus-v4-0-bf44dfc7a261@bootlin.com> <20260316-eyeq6lplus-v4-5-bf44dfc7a261@bootlin.com>
+In-Reply-To: <20260316-eyeq6lplus-v4-5-bf44dfc7a261@bootlin.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 23 Mar 2026 10:03:43 +0100
-X-Gmail-Original-Message-ID: <CAD++jLn+z13_oZO0XLm9Q_sqwDq09-qYKN5PQiZCOZ96+9LkHw@mail.gmail.com>
-X-Gm-Features: AQROBzAs6grpZb_qsDNBkL3kogXuOOZDTkjOH99AKL5DVmwWAn4NYFh7gNmvQi4
-Message-ID: <CAD++jLn+z13_oZO0XLm9Q_sqwDq09-qYKN5PQiZCOZ96+9LkHw@mail.gmail.com>
-Subject: Re: [PATCH v4 02/13] dt-bindings: soc: mobileye: Add EyeQ6Lplus OLB
+Date: Mon, 23 Mar 2026 10:04:12 +0100
+X-Gmail-Original-Message-ID: <CAD++jLn7PBJ7_5=qxgkvW0Ne5FYugVcXRAadNxUDsQaPP7noog@mail.gmail.com>
+X-Gm-Features: AaiRm53UTjsbahjmuSRSfD7rVi5GU2Ick6V0yQm5ZuBdfQqJbkn30zWageiPKtc
+Message-ID: <CAD++jLn7PBJ7_5=qxgkvW0Ne5FYugVcXRAadNxUDsQaPP7noog@mail.gmail.com>
+Subject: Re: [PATCH v4 05/13] pinctrl: eyeq5: Use match data
 To: =?UTF-8?Q?Beno=C3=AEt_Monin?= <benoit.monin@bootlin.com>
 Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
 	Gregory CLEMENT <gregory.clement@bootlin.com>, =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, 
@@ -88,7 +88,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33998-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34000-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -106,24 +106,33 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 7698D2EEB30
+X-Rspamd-Queue-Id: 92ED22EEC1A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Mar 16, 2026 at 4:25=E2=80=AFPM Beno=C3=AEt Monin <benoit.monin@boo=
+On Mon, Mar 16, 2026 at 4:26=E2=80=AFPM Beno=C3=AEt Monin <benoit.monin@boo=
 tlin.com> wrote:
 
-> The "Other Logic Block" found in the EyeQ6Lplus from Mobileye provides
-> various functions for the controllers present in the SoC.
+> Instead of using the pin descriptions, pin functions and register offsets
+> of the EyeQ5 directly, access those via a pointer to a newly introduced
+> struct eq5p_match_data.
 >
-> The OLB produces 22 clocks derived from its input, which is connected
-> to the main oscillator of the SoC.
+> This structure contains, in addition to the pin descriptions and pin
+> functions, an array of pin banks. Each bank holds the number of pins
+> and the register offsets.
 >
-> It provides reset signals via two reset domains.
+> All functions accessing a pin now use a pointer to a bank structure and
+> an offset inside that bank. The conversion from a pin number to a bank
+> and an offset is done in the new function eq5p_pin_to_bank_offset(),
+> which replace eq5p_pin_to_bank() and eq5p_pin_to_offset().
 >
-> It also controls 32 pins to be either a GPIO or an alternate function.
+> All the data related to the EyeQ5 is declared with the eq5p_eyeq5_
+> prefix to distinguish it from the common code.
 >
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> During the probe, we use the parent OF node to get the match data.
+> We cannot directly use an OF node since pinctrl-eyeq5 is an auxiliary
+> device of clk-eyeq.
+>
 > Signed-off-by: Beno=C3=AEt Monin <benoit.monin@bootlin.com>
 
 Reviewed-by: Linus Walleij <linusw@kernel.org>
