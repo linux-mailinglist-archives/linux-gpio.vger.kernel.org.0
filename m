@@ -1,97 +1,105 @@
-Return-Path: <linux-gpio+bounces-33988-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33989-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KleUAMekwGlRJgQAu9opvQ
-	(envelope-from <linux-gpio+bounces-33988-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 03:26:15 +0100
+	id UU9uKPfJwGljKwQAu9opvQ
+	(envelope-from <linux-gpio+bounces-33989-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 06:04:55 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69DA12EBE9E
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 03:26:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 103C62EC93F
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 06:04:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 56DAD3007648
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 02:26:13 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B0DFF30078BE
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 05:04:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 568BC223DFB;
-	Mon, 23 Mar 2026 02:26:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D29A2609EE;
+	Mon, 23 Mar 2026 05:04:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="a+kuJRWg"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="mXstpnQy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010048.outbound.protection.outlook.com [52.101.84.48])
+Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013064.outbound.protection.outlook.com [52.101.83.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E325D35979;
-	Mon, 23 Mar 2026 02:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E3E4414;
+	Mon, 23 Mar 2026 05:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.64
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774232772; cv=fail; b=bUOWYQ5ubVgCCQO0Mz5qkb/p7nSkUc9n1EXa2ISl31AlnhJ4+vwG1bwr7UP76/b8sHcwlGueyaCOFnldJ1LN3rAn3yx8ok3Leb6YEDpTW8BR56SJw+uD76yVuLxETeHcqhsDI/bTLXWsEjon/LpNcWZEqNQiBkez3h+jwqzrkJY=
+	t=1774242290; cv=fail; b=rZnfhPthr0XL6YIe64JDOWLGqR1X/MMy0ltXS737SBibXs0DBSm+U6657R1b+Nw+jKS7RO37OEw2mzMr44tADykPlJYKM3XkhvVCsgeZlofe50a93s9jgzVpNxkEeeZUzd4rLD8EYz8rkJfYCzUjf3RMNjorb7xMxb4csdkfrf4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774232772; c=relaxed/simple;
-	bh=IA1YgxIlW22KRZ0OaQ+2guywBkD5BZmRUDxf4z2/5Ms=;
+	s=arc-20240116; t=1774242290; c=relaxed/simple;
+	bh=IxtiPxjXmduiabfkuGBmQW9LXxt3QjIzRacomkgBPhc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=LphRp0eE/ZQg2B6mfiv8TVg0obQJdnMoViBiIlxC8RsJfmM7V0MrvXC/cqz2ZkstY0TDWoHiOe5jsiWuSOxAwak0VpCfdsN6Y2oEh0z/UUwN/H7+zXNCi6eyvmaK7UF8cj+bpgWjV/AHaiYK/NxgR43yAUwb4DkeWL75DvtnwPw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=a+kuJRWg; arc=fail smtp.client-ip=52.101.84.48
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Y8Pb1jzFJTAtejZhAbvmDRuhejiZWymQ0Q7xtLwnijnSVzHql1V7u7ppwbFgKCDKPRVpxUMBAOGOLJqg/QnBSuqjBs2earq7HiEvHfa7NDSi+56eHeJ1K1EWENDvO68NFAu8MOUhLJ9CdEYJZZMjHJdJ+uO0xrnBV2xMPSGKw5k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=mXstpnQy; arc=fail smtp.client-ip=52.101.83.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PnlEzCgb24wrHtXbcXMeeX4hg/rqDKdJEKTyHbZ/ZRO9BKHmnj5oDN9/aavMGbFCqrZHlXXKUUWuIK2p4tKWzAVjLtzzSlboI5xxUQ3GCbU+Uj/PU4hQcXfEt2mWMQMzVB8GluB5V0I3ggwUcnAbSdcgOYkIqAQ3izK6a4o24lls70YtYXOGTSmGC2q2uQCp87P6CyXi6h3UzptnfoDCm5sWFEWTsUNTmnRfioPYn42pKIQRohi4QOjGFz01TwK4EdMaRNTz7ZiEjK+MHB4gO5fHSAI5C2tRuNdK4so5epYFS/KkcjhHfE84/XnnGu3qL6hxepiWdEVWNFMSDCsAdQ==
+ b=ndZJbMq0/KmVUVYa5gOz71mxkKIjyIOIbbbYoKx27r52JYbGriuo+V80ryPIb+1WZVlq0TkImPKS+4gfuOG6vp21XBP8CS+bi67BFbIE+GAOOnNiz/MM6n7jWQrAxndrMktcdX00d/A9LYVoQ7bi6ER7AA6orqwMVcrI1TqZmWkiTHf+tzk4mzaA79As9ve2hnc89So7yF3iDn7/sIlSvDyyUDBpd1oiOOsAyt95ERa1N6OHcSUPvW7o1rm1oMVCvOprFuvH9xJc6p9phFF9AuVwBXfs/ommlDaP8jTrCy09nd4JIHJLekYFvKzA9lQp70mPrDoLNIgLhSsEFB+Ekg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qWY8BF6Y/02769wV6mOaUw0igxtwTL/AHaGguHKDGE0=;
- b=S2JBePasaGKCATApfvlCRI2E8kbFaS3G/qQ6FzI7wHUSbJ6uuW5xNB1sT/wa+Sb3ZwfKd1uHxMRz8bQEQyXeSGZy5rq8xfb+VDQqZAa8OF1OS1ZBEDD1zdg5nz9yTgZOz/dYQNJJ2tlNUtuUXJeV1YiJMk2nmWzXq3l8lLCS7jEVoj+MSsZiAmYNsVBwFZZT7onhT89fKubLCeNrswINZ9NTuLGqYfgQChYLgbpdwwCatN05w4NEVBeAFfXqFze1RcOMdI3svs6tohAMWOsGA52UBQCzURLQ+A/Q0RSIIAZ/rCEd6b1D+4K+5HwFJRPw65rZj3zJ965Oqdx5IIu/lg==
+ bh=SsCN1F9+1ZhXcZSx4UhQ063DlSXD0x5hBye9ET+rMZ0=;
+ b=j2RC7HJa48IafTJcVgxKvN/1HLn/p2zaKPHXjaiFQg8mTLJZ+tUzonL9/jJAaN8BZ11BO9DSRjxMzsz+UT3v0+gt+S30csxX4G2mMYqD9GiBkG5TgXBr0DV4jckMj1TfKyapERvAI41yyoUt6vj5QRObtmo6j7VjMYkO3Y+lDQ0K+g/F3umpkV/fHwZ1mGYU616zbrS9vv0XUSdrVLmxqLz5tCjksVNTTLj6EJ/tGnPkIQrMqih3h2+KeywPXOT6kt60sXAMI8WYEmI7SbgFB/B7iAeaf5TAy1gKC0pWj/0SCWhjAKhuEm55awN7ZdbSZXQrWvcFQkQdv0tOUTX/AQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qWY8BF6Y/02769wV6mOaUw0igxtwTL/AHaGguHKDGE0=;
- b=a+kuJRWg1ljTcOXDESnULnZ3ASZwOID30ngAOTR70/mAIML12xix5UuficVcpsLBzyG0A/ohmOLCTA1mFagwcilzHDDODWUtSky9YA+fjp+xVV+RszmQe/mfY1cTtN01uRXYpE24CRPr581CH4/ybeWW0eOyqQrJoUacWxaS6L7w5PYwni7maUAOQFq0jLko4RKrTcU0RH8Pe+SWU0ueN2gwcKAkYMbTHXWHCSQnJPVa3CQOwyS4DbwGVKzxY4VR29B55YxMulhj1hWesEouW6CF805KPeLbXYQozMS5pxSEr3MQjrbvlyeMdtd6119JLgqEOV644o+UKAumSDxuFA==
+ bh=SsCN1F9+1ZhXcZSx4UhQ063DlSXD0x5hBye9ET+rMZ0=;
+ b=mXstpnQySFY4EU9oATsEjpAl4cGcfUn70n1FZk01lpUp018DBTWOVG7qh+YybRgGAyMfyqSHvEjStVvgBNMG+zK+KLibZrqZG/Rl2S23Szz3UoMa/vNEJt5GtSPuqbyGiiNjU3C/ILr1TgmDBp9p0tzqTKyH7y4/1+RTjJsPIx7JSwyZIT/FK/XAFuG97YCtaOWCpNxS83VL22WLPoOYRz8Ign3JgRcDVB+x3gyU0xnCggeQmwYx2O0T901xehmjx+TKbSZ/OPAYlIrWhqtoNmQAgxk0oTeMszt52k0YjNG2gRMEeB/jDIDJKJjLsJZJ9p7XW1+IeuKfwEOMPARIgw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=oss.nxp.com;
 Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by DU4PR04MB12299.eurprd04.prod.outlook.com (2603:10a6:10:62b::14) with
+ by VI0PR04MB10317.eurprd04.prod.outlook.com (2603:10a6:800:216::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.20; Mon, 23 Mar
- 2026 02:26:06 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.25; Mon, 23 Mar
+ 2026 05:04:28 +0000
 Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
  ([fe80::4972:7eaa:b9f6:7b5e]) by PAXPR04MB8459.eurprd04.prod.outlook.com
  ([fe80::4972:7eaa:b9f6:7b5e%3]) with mapi id 15.20.9723.022; Mon, 23 Mar 2026
- 02:25:49 +0000
-Date: Mon, 23 Mar 2026 11:41:49 +0800
+ 05:04:24 +0000
+Date: Mon, 23 Mar 2026 14:20:24 +0800
 From: Peng Fan <peng.fan@oss.nxp.com>
 To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Tom Rini <trini@konsulko.com>, AKASHI Takahiro <akashi.tkhro@gmail.com>,
-	Peng Fan <peng.fan@nxp.com>, Greg Malysa <malysagreg@gmail.com>,
-	Utsav Agarwal <utsav.agarwal@analog.com>,
-	Vasileios Bimpikas <vasileios.bimpikas@analog.com>,
-	Ian Roberts <ian.roberts@timesys.com>,
-	Oliver Gaskell <Oliver.Gaskell@analog.com>,
-	Yegor Yefremov <yegorslists@googlemail.com>,
-	Philip Molloy <philip.molloy@analog.com>,
-	Nathan Barrett-Morrison <nathan.morrison@timesys.com>,
-	Eoin Dickson <eoin.dickson@microchip.com>,
+Cc: Peng Fan <peng.fan@nxp.com>, AKASHI Takahiro <akashi.tkhro@gmail.com>,
+	Alice Guo <alice.guo@nxp.com>, Anis Chali <chalianis1@gmail.com>,
 	Arturs Artamonovs <arturs.artamonovs@analog.com>,
+	Eoin Dickson <eoin.dickson@microchip.com>,
+	Greg Malysa <malysagreg@gmail.com>,
+	Ian Roberts <ian.roberts@timesys.com>, Jacky Bai <ping.bai@nxp.com>,
+	Marek Vasut <marek.vasut+renesas@mailbox.org>,
+	Marek Vasut <marex@denx.de>,
+	Michael Trimarchi <michael@amarulasolutions.com>,
+	Nathan Barrett-Morrison <nathan.morrison@timesys.com>,
 	Neil Armstrong <neil.armstrong@linaro.org>,
+	Oliver Gaskell <Oliver.Gaskell@analog.com>,
+	Paul Barker <paul.barker.ct@bp.renesas.com>,
+	Philip Molloy <philip.molloy@analog.com>,
+	Ranjani Vaidyanathan <Ranjani.Vaidyanathan@nxp.com>,
 	Tanmay Kathpalia <tanmay.kathpalia@altera.com>,
-	u-boot@lists.denx.de, Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Tom Rini <trini@konsulko.com>, u-boot@lists.denx.de,
+	Utsav Agarwal <utsav.agarwal@analog.com>,
+	Valentin Caron <valentin.caron@foss.st.com>,
+	Vasileios Bimpikas <vasileios.bimpikas@analog.com>,
+	Vinh Nguyen <vinh.nguyen.xz@renesas.com>, Yao Zi <me@ziyao.cc>,
+	Yegor Yefremov <yegorslists@googlemail.com>, Ye Li <ye.li@nxp.com>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
 	Linus Walleij <linusw@kernel.org>,
 	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
 	arm-scmi@vger.kernel.org, linux-gpio@vger.kernel.org,
 	Vincent Guittot <vincent.guittot@linaro.org>,
 	Khaled Ali Ahmed <Khaled.AliAhmed@arm.com>,
 	Michal Simek <michal.simek@amd.com>
-Subject: Re: [PATCH v2 4/4] gpio: scmi: Add gpio_scmi driver
-Message-ID: <acC2fSdjDmj5Wp1a@nxa18884-linux.ap.freescale.net>
+Subject: Re: [PATCH v2 0/4] u-boot: add SCMI GPIO/Pinctrl support
+Message-ID: <acDbqCbCSulKNELd@nxa18884-linux.ap.freescale.net>
 References: <cover.1773256350.git.dan.carpenter@linaro.org>
- <f8e1dcb617917dfe69efce0b3407f8786e4c971d.1773256350.git.dan.carpenter@linaro.org>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f8e1dcb617917dfe69efce0b3407f8786e4c971d.1773256350.git.dan.carpenter@linaro.org>
-X-ClientProxiedBy: MA5P287CA0279.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:1f2::10) To PAXPR04MB8459.eurprd04.prod.outlook.com
+In-Reply-To: <cover.1773256350.git.dan.carpenter@linaro.org>
+X-ClientProxiedBy: SI1PR02CA0050.apcprd02.prod.outlook.com
+ (2603:1096:4:1f5::12) To PAXPR04MB8459.eurprd04.prod.outlook.com
  (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -101,153 +109,145 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|DU4PR04MB12299:EE_
-X-MS-Office365-Filtering-Correlation-Id: d8bc0132-ee30-4add-c09d-08de88837e88
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|VI0PR04MB10317:EE_
+X-MS-Office365-Filtering-Correlation-Id: f0c016c5-f06b-4ba4-9e8d-08de8899a69d
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|52116014|376014|366016|19092799006|38350700014|22082099003|56012099003|18002099003;
+	BCL:0;ARA:13230040|376014|7416014|52116014|19092799006|366016|1800799024|38350700014|56012099003|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	Kf+Uufo7Y6lbHg97pNZHCIKC34S2qDFnruw04K6nOQfaG/xBwvjI6HwMAU3RLViGOu6W58codRpHExDZSp7WO8F70kESAXGFqxa4GyNdib/e0FwRUSSR2dlJR8Axau9TO2JcdoZKhCI4B6DiVUf4senl2C2RtCRqDOfxMLxlmU1ls2I36lVGL0VizHqdkI/gHnmZ2y4TdkL8TWr+Gbv09u4O3/tar+kuN12CgwBjWcpkEwsm7/UKuAM6lrnlfz/HNAKCrXlENFmICM0ZHhTE67myfrtbH90R0IMvjkPC6nu3cr2gPbDbOQ7kPuxLcV+jmceRVPus0uEr8GdK3JjW8XMhgwkLhJdFK6J+JMBoshAFCa6WjrHp4TqeBr67+lkHI+GfKtSgtkP7LZTjgVItT5gT3k52qxms1WQgi5El1MWLlCuhjxKb3sn+rCrMEm2vAFpeUWruUbpOWoAW4f1d1qrIWKI91/bbHoCLMTT5sZ1YTzGc7dxXGk/48LeLqZPNo2Jbi+qdXSXYi3fpin6H6a/N6C9jDZxvFTDyCnJVAQe9NsO3q40Vzin1CJMP4wtQITwWnPkUo/WQBbLRIFKseEGQUffhYpuWl+odwJ/znZ41UaEEO9ltuSGQdufe8eFiw5jtagF8dLOeW1uBkYY157yoziLAuRElNxaa4oX6VWlefsn9vcqptIzUW2D+tgTKSabFfI6YzWdKua9anmthWArWIsj9N7XVHgclpTbC1rk=
+	C1v+9WndEnowEEJbtXaIaZT/kKt2Ar/wXj0223TanGqVgDWoROQq5bdtLJzXKDTWJ3sr1PgXVkGryw8xij/jh8BA82JsCPz2xfIkFHZdiQOFEHkWJfQSWmHmuo4nhKMH38UFh6hZ6ZqiA7lKPxv36L0xs07DBS7mWsXGTe6JVD6dR3m4dN++ECg6mXsPcTuSV6NUBYLhSR10ZZNox7nJUEF4yldY7Kr/hGljMRCyT8ykjQNsq/2m6o6MjucFIEzb7zIEZQeQuFE+1Oszz+C891YMvs78oD/17Pvq/Pa9ATNtbiYHdMltjMRf4DPwajE8VckWE9be9vK+MbS4l9nYN1jx+3wad/rEHTvmr+Ba72sHScvKSirtdAO6pmUMhgec8ArVHPLD/1ch2NeDg6EpoCNl0snMT6Wu6DbGzF+G0YO83Y5MoPR2eNICXoCX4SY9hwTR7mwgGJsLXCcD+lG6v0NueUOQuqw9sI/liImr/6t+ma+VBRfJl324+XsyMe6wfMxS++N7M30STn0/OePW5DeuDQac33gm4Xr9PaDLxV4yQjvd9b3ikrcwfAZ1gxFj00uit4OYPw1GCYt+EGoPgTwLZlza8f3CRz9rFk0sKRPR1J+xVetVJMMU4abChtoH9rsz3f587J9gbTAvFEycJgS/IbxM/J4yED02mVmjMBYTV7Yn44T1+J9BrLIdE8dVyayQSQNRY2h3eBSJ1XGGYKLp5frAZ3sp5IQsqlpX1KpFdSdmmsl8zE8bxh2niAEwqZTiGp+cftcr37o9swQfBgbkR/RAkNEOLWzx/heMZGc=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(52116014)(376014)(366016)(19092799006)(38350700014)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(19092799006)(366016)(1800799024)(38350700014)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?sFQI2+6FHQMLtm4Q5QaM59wO9U8GVcG4xv1jVo3SARsmyAtb3Twl0AN6g+GD?=
- =?us-ascii?Q?OyUAFOzkbMSJDZ6jr+JQTMuqJtxrpdKENlXAtJdM1O9d3yLyqc6ZvZHTnLZE?=
- =?us-ascii?Q?ks0MCWYsxBP4nVVOl+rA1j+sVPWTnrFJfeyWh8G5+djnb5+X4o+yoIBUOw9L?=
- =?us-ascii?Q?TwBm1LKL12j683ahxgsju3qyJB85Az3yjbUYpEMWs8vBwEmJaETral9R8Z3L?=
- =?us-ascii?Q?0XQUH68QIUEwBdndRrt/KIEU8ivrSK5Xxt0V+BDTmOhrS8gt6FUC04bEoFMt?=
- =?us-ascii?Q?geBulnJWriTQty/v7h8NRLPG7j3Amf9lWGVUftxYFCoBEt1t0Dm7M/04xnid?=
- =?us-ascii?Q?6WocKtZeRUWcZ1/qKS7Mn2o3gFi0DT/iDM2iLnaH0Cfl1cpluI/7wE0HGOe2?=
- =?us-ascii?Q?d0T5CaPz5C+1pMlYo65rUw90vtRMBPq2B84bUTSVIj7Ih3KzEpJE6wxQ9fZx?=
- =?us-ascii?Q?p7lV+ENdxZt04ES6VeB2wmwEeq4grcp7Ez/x/d+PY45OddSFXy2jxGT0CrZI?=
- =?us-ascii?Q?3XHVGYhkKrx35Bv1mKzjhYxqDHHVvvJWA+gIhO34UOnCYOnx3DJ2L5v8SIzA?=
- =?us-ascii?Q?0xaBh1fTlIj4IFuQQeeRTdFVX3DclXaU41J5obJzKkSIm0QY9qqRovA0ioYN?=
- =?us-ascii?Q?khEypRRR2n+jGQg3Vo3jJ+HEnRlK0RtBYYA3sR2A3bl8R4uGVzF6IMV2fnBj?=
- =?us-ascii?Q?dy+oTYa7y+O+C+Doh5DWIRWrb1z3+eH/+UwYWNU0X2e7ZvAKslid4gVg11hI?=
- =?us-ascii?Q?Nv75fJ51+brpoBzCIItHtoJJVMgJNOOKjnTX1qEqi7FBHGEC8xOUP51Rl9mh?=
- =?us-ascii?Q?AcDAO9UQ4w7g6IZa5pKnjLj2akRZjdeNCgFVXF5yhN3GcGODOxTqVnpNtkzo?=
- =?us-ascii?Q?QObWlk0btswKBTRhUhxgWq6tOjQMQXOiq0/7n8n4KEg80DdHF+dXWL0WWJo9?=
- =?us-ascii?Q?O+JS0lI1sfJ+A9tMaL1h0ZPf/2d7YcUt5XcigaaNrHTw4O2WkZ/J9JuxbJ8w?=
- =?us-ascii?Q?QsSiadsqQ76lKuwgyRFDMMv4S2AtG/5dUYEe9aoeqMN/y0ndTplwNSY3rb/R?=
- =?us-ascii?Q?knqXfglX+aKy6tYdCINVXER/2P67g8M3e1gVqO7valmNF4K7JogdXENTQfZh?=
- =?us-ascii?Q?IX/LRZwZZYY9kABSL4zUilYbcraJWIOqKmjXNi5/XEEuU4p6pKwszML+uYe9?=
- =?us-ascii?Q?2Mm3+QjUlEP3rmlqcnYequWWGwC3W6PbbetoMuNaryiOBBaXhWghbN3NqrmK?=
- =?us-ascii?Q?39FOdxUvTRFxUND4oA3j7B/z3EeYmU5PkJ1WulqDoesJ4GLRZaGUrfLs8lKB?=
- =?us-ascii?Q?OiWgs4Cl9QD1TNf+Rv3zczEv62IiLQphXC7LJsc84Xl402srtODSwyqrl4LH?=
- =?us-ascii?Q?42O76OfjIjqvKBpzS68CbL3jmvYQuWqiQWDV8NNXzLdpbY1aBHCPRes13Aaj?=
- =?us-ascii?Q?vBZ0f7j/dZVOtcXqFSvR+1pFKtYblUasZ+Dc7gJoIHZr+zWK5Hk1LB/i5Ocb?=
- =?us-ascii?Q?Gqn/vmHxcVZIENw5F6yN3KclGugzSHldQ+lnqnUPd7ygZ6YCk6KROBxmqPow?=
- =?us-ascii?Q?vDkbdDt/tk3bY61Cv0eW8OpIAPzqM/HDcJIoP2vU4E0mq3FNoF257Xr7lb4b?=
- =?us-ascii?Q?lzywvRw6HWhG/yh2LNZbGCnqkeecd1df3AZlZpxX43MTaoYIFAzsOpCiQzAN?=
- =?us-ascii?Q?qVrwqWr351g/pmzCx58661chQLONAhqVZh4kVzUaU4XryzRjMhM52N+INnq0?=
- =?us-ascii?Q?WEv3QQTLaQ=3D=3D?=
+	=?us-ascii?Q?gSGjpDLm2NrCPq2HRgeYXoPltvIsC3tYS11TmC7hnNddYBh9K8pemz4L9a+Z?=
+ =?us-ascii?Q?sC+x6NMEf4+Itwk5ALiU7LuaUai7Mhw4MyzO+P+2bwEmAvQiYkL8hrQUI2lW?=
+ =?us-ascii?Q?p7WkQB8sXHQbs8YqtPvXkztKje/byxnAE3QZq1yBINiHcA9NA98Fc5LpQc+c?=
+ =?us-ascii?Q?Z5IChKhCUytE+f26DzXIEgdtz6CxhUH+qDhpXMo517GM7DLcv1DmdTi0k1p8?=
+ =?us-ascii?Q?EKMnYE/vkm6m71WmDJEkJX/mqTKQWs3VtUod4I+l8RKyjv/N2/BOBK8DX646?=
+ =?us-ascii?Q?vDr88LfS74ADeQ9QW/JxCUu47FsBgd/LYty3LR8VOjOL5TcP7FtM+ut17Jt4?=
+ =?us-ascii?Q?vF5x4ntYETN1++M3+pno9xD5ym6qP199Derr0AqIntOZhiM0DsCRHo2l23Ll?=
+ =?us-ascii?Q?la48vbJBW1UAUHhQYziutmMgNA0W9VkkU+mwZdOknv40IVpisrJk/+Ed5cDo?=
+ =?us-ascii?Q?tlO3vvGLJAZO+MBrp9sbARwN/LHI+1L8qB5Cm875ldwNJ4FjuXETKjkscluG?=
+ =?us-ascii?Q?OIuF5cAaCjgVM7HxsvT59du7ftm54k4d9BTbeqRcYX3QK+2/E0mGBJqJ2170?=
+ =?us-ascii?Q?W4/AxdXQdjKwcX59qRzAGS/ehJRhhXhfuUQM8O1jWzEnA+kx6KSiWEFWMEBH?=
+ =?us-ascii?Q?pmHEdziv/n//GQxEXGyQahhPCBfqJC5i6Z1mHRX3mg5f2HxB8SGTOfKdSJ1a?=
+ =?us-ascii?Q?zAa3ftskjwNxK3CwRd5R5GPEUQxPvlq6ns/1I/riMLob2bYBWe6pDhzbPV/t?=
+ =?us-ascii?Q?cF7hHYimn0QGvG3dK6kxXal6wt5OlnZQ0NmiAVmEFiMhIKC+xQ5aS2+CMnfq?=
+ =?us-ascii?Q?1LdXgcGBykMw3ld2fhYFbpfRSKfhg5C7Dje1tcumtsYWXNj9z2eplmMCmkAv?=
+ =?us-ascii?Q?YBsjOA586x7WPfn68BcFZYAxRDcQUk8+HUL/zxJDyzwughUjnGiOGVIzcHTI?=
+ =?us-ascii?Q?kIaY9w1o4JLjwA144XGExXg4jmMKfkp+YDCA+SCvJAEKlc7RGH1kNGD5WKtY?=
+ =?us-ascii?Q?VKvQpeaVdygzTfesw/06xHpfTlcM4NFHk/b1pTI3n0SiVJukzXzB11sDAxKM?=
+ =?us-ascii?Q?/e9nEKdpeULVXu3PrlXrGAyKCvhy8PinV8bw1RSmy0mN6wisavUrqMzfGHEF?=
+ =?us-ascii?Q?UzObq9GCQCdLvcGb9daw8PoXW9HY/+PJxvLdGlivra6cp+K9sg8nRTvXyeY3?=
+ =?us-ascii?Q?pt01wd/aOHBG8rJaF3bWZaPTjUVXbQEkSMEpgTa+xlaimDKLluAmwzzGydNE?=
+ =?us-ascii?Q?Q7aNlU1US8h7NGrC/uBiBUSLV6xyYgPnI7kkYlIPTnOJjbf3vqhGbHKlwRJV?=
+ =?us-ascii?Q?qbVtWXZVKpGnRfSUaEjs/V1ULPUS5BeMoBZBALvBppSVV73N7yFN+Q8rIgvW?=
+ =?us-ascii?Q?YXCVLAsWcnyjOTiwz434/6q8LFQck+PobIyOm4vdHQwb/pag70xWsuRFbAp+?=
+ =?us-ascii?Q?iUkF5SjEUwYAfgL5P3hgb9YZX3upOd0Zxy58WroK3Lan6XKe6QqzLqLogeB2?=
+ =?us-ascii?Q?lOwviAWMQuyCZaRk2cHJAtVVuJ8tDFj7Ps/Axgu18pVQNPogBuZnkZqTC5D/?=
+ =?us-ascii?Q?SJ1YnwS3JFar5849h3ycFEAxVCrC04cE2z0e3zOkS0WDXuPNV9zvPiZLwy71?=
+ =?us-ascii?Q?OnAsGVWFQO6t+CWHaE3dtTIjaHoe5YkdrI4EMy+pzE7tpq+r3Z6pZE1P+F/a?=
+ =?us-ascii?Q?fOiaMA9cEI7ns79DXzEV3xNuVQIUT/9DXxRaH896tk0BojRP4UO4WzzlfRmn?=
+ =?us-ascii?Q?b0faor7KNQ=3D=3D?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8bc0132-ee30-4add-c09d-08de88837e88
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0c016c5-f06b-4ba4-9e8d-08de8899a69d
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2026 02:25:49.1880
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2026 05:04:24.3134
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TaQLbHCxJdsGd3ExRyIaOF1fKSqsJ0LLu2MJb7fhDq/IRMHx6Ng7yk6RY3XuTe4NHPEITeoIVN0qDCNNgWb96w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB12299
+X-MS-Exchange-CrossTenant-UserPrincipalName: yJXZwxSVjtHBrQ8fNKLlze3oFeDNaGI43t/YStcokbEID62o4js66TrGaXC2uDUuXg+hsQm1JibJwAnrV5NHyA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10317
 X-Spamd-Result: default: False [1.94 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[NXP1.onmicrosoft.com:s=selector1-NXP1-onmicrosoft-com];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-33988-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33989-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[konsulko.com,gmail.com,nxp.com,analog.com,timesys.com,googlemail.com,microchip.com,linaro.org,altera.com,lists.denx.de,intel.com,kernel.org,oss.qualcomm.com,vger.kernel.org,arm.com,amd.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[37];
+	FREEMAIL_CC(0.00)[nxp.com,gmail.com,analog.com,microchip.com,timesys.com,mailbox.org,denx.de,amarulasolutions.com,linaro.org,bp.renesas.com,altera.com,konsulko.com,lists.denx.de,foss.st.com,renesas.com,ziyao.cc,googlemail.com,intel.com,kernel.org,oss.qualcomm.com,vger.kernel.org,arm.com,amd.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[25];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[peng.fan@oss.nxp.com,linux-gpio@vger.kernel.org];
 	DKIM_TRACE(0.00)[NXP1.onmicrosoft.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 69DA12EBE9E
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,nxa18884-linux.ap.freescale.net:mid,NXP1.onmicrosoft.com:dkim]
+X-Rspamd-Queue-Id: 103C62EC93F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 Hi Dan,
 
-On Wed, Mar 11, 2026 at 10:41:36PM +0300, Dan Carpenter wrote:
->This provides GPIO support over SCMI.  It is built on top of the
->pinctrl-scmi driver.  The device tree entry would work the same as
->in linux.  Perhaps something like this.
->+
+On Wed, Mar 11, 2026 at 10:39:30PM +0300, Dan Carpenter wrote:
+>There is an existing SCMI pinctrl driver in drivers/pinctrl/nxp/ which
+>lets you configure the initial state of the pins via device tree.  This
+>patchset is a more generic version which provides GPIO as well.
+>
+>I wrote two small cleanup patches to the NXP driver, one which renamed
+>an enum and another which made some white space changes.
+>
+>The next patch adds an pinctrl driver which lets you configure the
+>initial state for the pins.  But the main thing is that we need one
+>driver to handle the SCMI pinctrl protocol so the pinctrl driver does
+>this.
+>
+>The last patch adds GPIO support over SCMI.
+>
+>I tested this code using the SCP SCMI server on OP-TEE over Qemu.  I
+>created a custom mock pinctrl device in SCP.
+>
+>Changes since v1:
+>Address Peng Fang's review comments.
+>Use the standard gpio-ranges to describe the pins instead of
+>inventing a custom format.
+>
+>Dan Carpenter (4):
+>  scmi: pinctrl: add pinctrl message IDs
+>  scmi: update comments for scmi_pinctrl_config_set_in()
+>  scmi: pinctrl: add pinctrl driver for SCMI
 
-[....]
-
->+	ret = snprintf(NULL, 0, "gpio_scmi%d_", bank_cnt);
->+	uc_priv->bank_name = devm_kzalloc(dev, ret + 1, GFP_KERNEL);
->+	if (!uc_priv->bank_name)
->+		return -ENOMEM;
->+	snprintf(uc_priv->bank_name, ret + 1, "gpio_scmi%d_", bank_cnt);
-
-build fail in CI [1]:
-
-drivers/gpio/gpio_scmi.c: In function 'scmi_gpio_probe':
-drivers/gpio/gpio_scmi.c:227:25: error: passing argument 1 of 'snprintf' discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
-  227 |         snprintf(uc_priv->bank_name, ret + 1, "gpio_scmi%d_", bank_cnt);
-      |                  ~~~~~~~^~~~~~~~~~~
-In file included from include/log.h:12,
-                 from include/linux/printk.h:4,
-                 from include/linux/kernel.h:5,
-                 from include/linux/libfdt_env.h:13,
-                 from include/linux/libfdt.h:6,
-                 from include/fdtdec.h:17,
-                 from include/dm/ofnode.h:11,
-                 from include/asm-generic/gpio.h:10,
-                 from ./arch/sandbox/include/asm/gpio.h:24,
-                 from drivers/gpio/gpio_scmi.c:6:
-include/stdio.h:60:20: note: expected 'char *' but argument is of type 'const char *'
-   60 | int snprintf(char *buf, size_t size, const char *fmt, ...)
-      |              ~~~~~~^~~
-  CC      drivers/net/phy/broadcom.o
-
-[1] https://source.denx.de/u-boot/custodians/u-boot-fsl-qoriq/-/jobs/1408382
+I picked up the above three patches.
 
 Thanks,
 Peng
 
->+	bank_cnt++;
->+
->+	uc_priv->gpio_count = priv->num_pins;
->+
->+	return 0;
->+}
->+
->+static const struct udevice_id scmi_gpio_match[] = {
->+	{ .compatible = "scmi-pinctrl-gpio" },
->+	{ }
->+};
->+
->+U_BOOT_DRIVER(scmi_pinctrl_gpio) = {
->+	.name	= "scmi_pinctrl_gpio",
->+	.id	= UCLASS_GPIO,
->+	.of_match = scmi_gpio_match,
->+	.probe	= scmi_gpio_probe,
->+	.priv_auto = sizeof(struct scmi_gpio_priv),
->+	.ops	= &scmi_gpio_ops,
->+};
->+
+>  gpio: scmi: Add gpio_scmi driver
+>
+> drivers/firmware/scmi/Makefile            |   1 +
+> drivers/firmware/scmi/pinctrl.c           | 365 +++++++++++++++++++++
+> drivers/firmware/scmi/scmi_agent-uclass.c |   4 +-
+> drivers/gpio/Kconfig                      |   6 +
+> drivers/gpio/Makefile                     |   1 +
+> drivers/gpio/gpio_scmi.c                  | 248 ++++++++++++++
+> drivers/pinctrl/Kconfig                   |   9 +
+> drivers/pinctrl/Makefile                  |   1 +
+> drivers/pinctrl/nxp/pinctrl-imx-scmi.c    |   2 +-
+> drivers/pinctrl/pinctrl-scmi.c            | 365 +++++++++++++++++++++
+> include/scmi_agent-uclass.h               |   2 +-
+> include/scmi_protocols.h                  | 379 +++++++++++++++++++++-
+> 12 files changed, 1371 insertions(+), 12 deletions(-)
+> create mode 100644 drivers/firmware/scmi/pinctrl.c
+> create mode 100644 drivers/gpio/gpio_scmi.c
+> create mode 100644 drivers/pinctrl/pinctrl-scmi.c
+>
 >-- 
 >2.51.0
 >
