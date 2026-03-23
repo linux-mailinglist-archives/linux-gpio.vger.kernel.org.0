@@ -1,156 +1,139 @@
-Return-Path: <linux-gpio+bounces-34002-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34003-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MFnVAMEEwWlUPgQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34002-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 10:15:45 +0100
+	id gGx7Bq4IwWmtPwQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34003-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 10:32:30 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 889732EED1D
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 10:15:44 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CDD82EF1F8
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 10:32:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 806EE3029260
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 09:10:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 992083039898
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 09:31:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E71E43859F2;
-	Mon, 23 Mar 2026 09:10:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55D73386C09;
+	Mon, 23 Mar 2026 09:31:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="kABur1xZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EzEPDdhT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB323195F5;
-	Mon, 23 Mar 2026 09:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A74638645F;
+	Mon, 23 Mar 2026 09:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774257012; cv=none; b=FsUEoSdvPCCIB7pind2xwmaisx1dcKvpoA4FgrznJUggCXwLKVgogTES7anxAdU52Sbyd8mfJtV4yLZr6okar5Ls/p9wZlwSssNQxLukxGG7uXb9y9sH1DGq/dbZ8gPOMzIBv+BYKO7U/DsGq69zKSPBbcn+KkmfwC/1H+FfOPk=
+	t=1774258279; cv=none; b=H167RyIXtnC7D6W2rsBSPIEMiIo3kK/9xrOcgbqdQd95YvEX25Ogf6wINg837VoMD8XUdo7sFpMRPzH/e+Hl2jvrYGRIcIVHVBXQiXdWO1CV8QBghr9JXshJuPbPyIOaagk+4tejKNe8WHL0PdiQQePd05PZbNEidK4rzXnhkac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774257012; c=relaxed/simple;
-	bh=FPggMhb9eV6CV10c1Jtp79adwp7yMMUlWGYc4nMQ5rA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=euwWEbgMhs9L8dQwn8NhwEXqdO6UOMxnoH0jxtw0Kv2Ip7fAPIJ5LRGQuYinRdwacP8qSjenmSh/agb9mJePPJG1lepL8EFPo86UaIe8ownX0ILZkTkCZoY9dEbaMt14KIeaHYewvoC2K2JK+LPk5UhhHEPMBZTEukkAY8K+buc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=kABur1xZ; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 62N99xe662852590, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1774256999; bh=FPggMhb9eV6CV10c1Jtp79adwp7yMMUlWGYc4nMQ5rA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=kABur1xZ9jwTR9OK76osxK0Xl1ersyRFaZf7yWfrJDX07iMdDc1DVYVYhTcIMcy6d
-	 Hs9qCXrEg6Ggu4Hs2/znSQtTT+DcKlNvXgJGr8IjixIvvIjWtgkH09I8tHYbvkc2is
-	 oKvs+7/xVyYXGzIshZjnXZ5oFAoDmILvZnBBMICgrorQgm8Zyh58GnDvKyn0P2Abl7
-	 OlOdG/vsCVh3xUXr+Pc5yoQcemejIwXXK+wxXIj3x0Y4yJhvhTHNiDLY9JoCcFdWpL
-	 6tkYE3FhX9UYeuurtwzpHJzmFC6XpUGNsEX7EwcbGARByc2OCvd05CNXT7giKsU43t
-	 U5VCZ6JSHiwJg==
-Received: from mail.realtek.com (rtkexhmbs02.realtek.com.tw[172.21.6.41])
-	by rtits2.realtek.com.tw (8.15.2/3.21/5.94) with ESMTPS id 62N99xe662852590
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 23 Mar 2026 17:09:59 +0800
-Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
- RTKEXHMBS02.realtek.com.tw (172.21.6.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Mon, 23 Mar 2026 17:09:58 +0800
-Received: from RTKEXHMBS06.realtek.com.tw ([fe80::4cbd:6c6c:b92b:3913]) by
- RTKEXHMBS06.realtek.com.tw ([fe80::4cbd:6c6c:b92b:3913%10]) with mapi id
- 15.02.1748.010; Mon, 23 Mar 2026 17:09:58 +0800
-From: =?utf-8?B?WXUtQ2h1biBMaW4gW+ael+elkOWQm10=?= <eleanor.lin@realtek.com>
-To: Felix Gu <ustc.gu@gmail.com>, Linus Walleij <linusw@kernel.org>
-CC: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] pinctrl: rtd: Fix error handling for
- devm_platform_ioremap_resource()
-Thread-Topic: [PATCH] pinctrl: rtd: Fix error handling for
- devm_platform_ioremap_resource()
-Thread-Index: AQHcuIdRe6ZNht1+SU2nBwFZnQfqJ7W71UUw
-Date: Mon, 23 Mar 2026 09:09:58 +0000
-Message-ID: <800d7dde24ea442aa19cf8484c186079@realtek.com>
-References: <20260321-rtd-v1-1-9c2022f73826@gmail.com>
-In-Reply-To: <20260321-rtd-v1-1-9c2022f73826@gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1774258279; c=relaxed/simple;
+	bh=/xaKgDzdUXAip4kiZ3mBDtc5Io2Fo7/8TxIhCfHpVcE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ay5apGXmXzq4syIOrutA/fN5gfS3Ilt2x7hIEnRsIBILIBfsqiGa7V5LzLwQkurmPNTs9+q5pXa/sneX6bRLqfOV5DwrZLrAoRCc9i3YNhEf2wGu9aS3syqVyQLi0hrG7Ozdmeha2U8OSPPfdNx0d63vdBwvm+zIpyDnGcMEvwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EzEPDdhT; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774258278; x=1805794278;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/xaKgDzdUXAip4kiZ3mBDtc5Io2Fo7/8TxIhCfHpVcE=;
+  b=EzEPDdhTTASbb39eEzF8OJrmqUy/LnHxHD7pfioFCpyfYwhtYp/7kMOc
+   WKCWuquLilg77GWY/2q7dCa1b5yAfhSX34QLt9+ehxIJ8McRekfdF23vS
+   aC6VAO7phHvIPRoZNmyc4egjn/FqqtQ+N5nyem7LA2fkiNhGsRwWj9bXd
+   vDdXZurvqXxrOfmKlDaFNPfjmpUU6PWi5mQmjOetxzxcgv4iz5ZXiLPSM
+   5z2jaCrp4veIYwWJqVjI7QQvrqKIBondcLVWid+LRUSh8IOa5fbh1O2ev
+   dDqJ7rLABs89i4B7JtH+WjO9Q+sSc+2LcTSL5EzX2OP8i6kMTHq9di6UZ
+   Q==;
+X-CSE-ConnectionGUID: mdO5bbRUSgaQXL6f5amDsg==
+X-CSE-MsgGUID: 2Eg1H9C/SnOH1eAOZ6ZqrA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11737"; a="100703342"
+X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
+   d="scan'208";a="100703342"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 02:31:17 -0700
+X-CSE-ConnectionGUID: CJiAscDmSviIbs8GWRklRg==
+X-CSE-MsgGUID: 1ViZh9WrShO4BC1TPb3Y+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
+   d="scan'208";a="247003880"
+Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.22])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 02:31:14 -0700
+Date: Mon, 23 Mar 2026 11:31:12 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Linus Walleij <linusw@kernel.org>,
+	AKASHI Takahiro <akashi.tkhro@gmail.com>,
+	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	arm-scmi@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Khaled Ali Ahmed <Khaled.AliAhmed@arm.com>,
+	Michal Simek <michal.simek@amd.com>
+Subject: Re: [PATCH v5 1/7] pinctrl: introduce pinctrl_gpio_get_config()
+Message-ID: <acEIYI-O8WrsowSS@ashevche-desk.local>
+References: <cover.1774087290.git.dan.carpenter@linaro.org>
+ <f7a41ed017fba4a0986ffe72e06933cc1bba2406.1774087290.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Spamd-Result: default: False [-2.06 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f7a41ed017fba4a0986ffe72e06933cc1bba2406.1774087290.git.dan.carpenter@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[realtek.com,none];
-	R_DKIM_ALLOW(-0.20)[realtek.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34002-lists,linux-gpio=lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[172.234.253.10:from];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org,oss.qualcomm.com,linaro.org,arm.com,amd.com];
+	TAGGED_FROM(0.00)[bounces-34003-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[intel.com:+];
 	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_COUNT_FIVE(0.00)[6];
-	NEURAL_HAM(-0.00)[-0.999];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[eleanor.lin@realtek.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[realtek.com:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[100.90.174.1:received,10.21.1.56:received,172.21.6.41:received];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,realtek.com:dkim,realtek.com:email,realtek.com:mid]
-X-Rspamd-Queue-Id: 889732EED1D
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:dkim,ashevche-desk.local:mid]
+X-Rspamd-Queue-Id: 8CDD82EF1F8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmVsaXggR3UgPHVzdGMu
-Z3VAZ21haWwuY29tPg0KPiBTZW50OiBTYXR1cmRheSwgTWFyY2ggMjEsIDIwMjYgMTI6MzQgQU0N
-Cj4gVG86IExpbnVzIFdhbGxlaWogPGxpbnVzd0BrZXJuZWwub3JnPjsgWXUtQ2h1biBMaW4gW+ae
-l+elkOWQm10NCj4gPGVsZWFub3IubGluQHJlYWx0ZWsuY29tPg0KPiBDYzogbGludXgtZ3Bpb0B2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IEZlbGl4IEd1DQo+
-IDx1c3RjLmd1QGdtYWlsLmNvbT4NCj4gU3ViamVjdDogW1BBVENIXSBwaW5jdHJsOiBydGQ6IEZp
-eCBlcnJvciBoYW5kbGluZyBmb3INCj4gZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jlc291cmNlKCkN
-Cj4gDQo+IA0KPiBFeHRlcm5hbCBtYWlsIDogVGhpcyBlbWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0
-c2lkZSB0aGUgb3JnYW5pemF0aW9uLiBEbyBub3QNCj4gcmVwbHksIGNsaWNrIGxpbmtzLCBvciBv
-cGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5b3UgcmVjb2duaXplIHRoZSBzZW5kZXIgYW5kDQo+IGtu
-b3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4NCj4gDQo+IA0KPiANCj4gZGV2bV9wbGF0Zm9ybV9pb3Jl
-bWFwX3Jlc291cmNlKCkgcmV0dXJucyBFUlJfUFRSKCkgb24gZmFpbHVyZSwgbm90IE5VTEwuDQo+
-IFRoZSBpbmNvcnJlY3QgTlVMTCBjaGVjayB3b3VsZCBmYWlsIHRvIGRldGVjdCBhY3R1YWwgZXJy
-b3JzIGZyb20gdGhlIGlvcmVtYXANCj4gb3BlcmF0aW9uLg0KPiANCj4gRml4IGJ5IHVzaW5nIElT
-X0VSUigpIGFuZCBQVFJfRVJSKCkgYXMgZG9jdW1lbnRlZCBmb3IgdGhpcyBBUEkuDQo+IA0KPiBG
-aXhlczogYjdmNjk4YjIyYjhiICgicGluY3RybDogcmVhbHRlazogU3dpdGNoIHRvIHVzZSBkZXZt
-IGZ1bmN0aW9ucyIpDQo+IFNpZ25lZC1vZmYtYnk6IEZlbGl4IEd1IDx1c3RjLmd1QGdtYWlsLmNv
-bT4NCj4gLS0tDQo+ICBkcml2ZXJzL3BpbmN0cmwvcmVhbHRlay9waW5jdHJsLXJ0ZC5jIHwgNCAr
-Ky0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0K
-PiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9yZWFsdGVrL3BpbmN0cmwtcnRkLmMN
-Cj4gYi9kcml2ZXJzL3BpbmN0cmwvcmVhbHRlay9waW5jdHJsLXJ0ZC5jDQo+IGluZGV4IDYwZGZi
-MzliYzk4Ni4uNDI5Yzk0Yjc5YzQ5IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwvcmVh
-bHRlay9waW5jdHJsLXJ0ZC5jDQo+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9yZWFsdGVrL3BpbmN0
-cmwtcnRkLmMNCj4gQEAgLTU3NCw4ICs1NzQsOCBAQCBpbnQgcnRkX3BpbmN0cmxfcHJvYmUoc3Ry
-dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwNCj4gY29uc3Qgc3RydWN0IHJ0ZF9waW5jdHJsX2Rl
-cw0KPiAgICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07DQo+IA0KPiAgICAgICAgIGRhdGEt
-PmJhc2UgPSBkZXZtX3BsYXRmb3JtX2lvcmVtYXBfcmVzb3VyY2UocGRldiwgMCk7DQo+IC0gICAg
-ICAgaWYgKCFkYXRhLT5iYXNlKQ0KPiAtICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07DQo+
-ICsgICAgICAgaWYgKElTX0VSUihkYXRhLT5iYXNlKSkNCj4gKyAgICAgICAgICAgICAgIHJldHVy
-biBQVFJfRVJSKGRhdGEtPmJhc2UpOw0KPiANCj4gICAgICAgICBkYXRhLT5kZXYgPSAmcGRldi0+
-ZGV2Ow0KPiAgICAgICAgIGRhdGEtPmluZm8gPSBkZXNjOw0KPiANCj4gLS0tDQo+IGJhc2UtY29t
-bWl0OiBiNWQwODNhM2VkMWUyNzk4Mzk2ZDVlNDkxNDMyZTg4N2RhOGQ0YTA2DQo+IGNoYW5nZS1p
-ZDogMjAyNjAzMjEtcnRkLWVmOWJmOWY5Y2VhNw0KPiANCj4gQmVzdCByZWdhcmRzLA0KPiAtLQ0K
-PiBGZWxpeCBHdSA8dXN0Yy5ndUBnbWFpbC5jb20+DQoNCkhpIEZlbGl4LA0KDQpUaGFua3MgZm9y
-IHRoZSBwYXRjaC4gSG93ZXZlciwgYSBmaXggZm9yIHRoaXMgaGFzIGFscmVhZHkgYmVlbiBhcHBs
-aWVkLg0KWzFdOiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dp
-dC9saW51c3cvbGludXgtcGluY3RybC5naXQvY29tbWl0Lz9oPWZvci1uZXh0JmlkPTliYTRlZjY4
-NDdiYTUzZGVhOTJlZmNlNDdjOWUwNDRmYmY2ZDZkY2YNCg0KQmVzdCBSZWdhcmRzLA0KWXUtQ2h1
-bg0K
+On Sat, Mar 21, 2026 at 01:13:22PM +0300, Dan Carpenter wrote:
+
+> This is a counterpart of pinctrl_gpio_set_config(), which will be used
+> to implement the ->get() interface in a GPIO driver for SCMI.
+
+...
+
+> +	ret = pin_config_get_for_pin(pctldev, pin, config);
+
+Seems you need also add a stub for this for !CONFIG_GENERIC_PINCONF.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
