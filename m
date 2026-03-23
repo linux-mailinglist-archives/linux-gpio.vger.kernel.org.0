@@ -1,158 +1,114 @@
-Return-Path: <linux-gpio+bounces-34023-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34024-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IOQJJDs7wWn2RgQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34023-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 14:08:11 +0100
+	id 4ASUJ8JAwWmeRwQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34024-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 14:31:46 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79D502F287A
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 14:08:11 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6F692F2F62
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 14:31:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 49EB2301F3BE
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 13:06:40 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id AD45A30E986E
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 13:23:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1884327B327;
-	Mon, 23 Mar 2026 13:06:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67B8839659A;
+	Mon, 23 Mar 2026 13:23:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ikl1fSsQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e5HtEG+7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D411917CD;
-	Mon, 23 Mar 2026 13:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4C739D6F8
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 13:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774271191; cv=none; b=B+auL71lzF10+Z0DT6ces6MzzWn75QayLBh4Awx4BIob4x8PEMOOAZS07yVYVLnIqXC1qoRAFSnkLgegOEGDXMcOlvvLpaNrYbt9WaxPaC6mS7a6NKwxiAMNFj9dVE+90Be0uXNQigAx//g8rEkDnTTuyQqLeEo1bV/VXmoZcWY=
+	t=1774272233; cv=none; b=X3XddfJgmKFk0/la4iyimdp1RQ90grcYSgsHsNsFBi5VXXppcsTt3HydMkJH/NW47PYJchA948+/8FToUkuNztCeUy+DuqfN9W8Nt1g3Dojaks/sAZ+gmdaDo1DuxPJXxCwEp/GWBc0aV7fe3yAjZX4cuuaFrlXLaoDIMBHPNdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774271191; c=relaxed/simple;
-	bh=gOgv5bKsksgGx3nrv4fb0woIoZIh4/V/CUpY0JM0vXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o1aaX+24czW4+41B+edcpm7BRncRWzVDno+HGDHfJrkYqDEJxGAoG7mo7Q4636iJyaH4KyusHjYLmIzHDIQH9B5FQk4h6Wpn31Q708NqEZ1s/KRTiMn3tF87L+MEHPjZM+7V7h4wpitERMXZ5HzWs1TqrFVMBbwgXD4oxuySKqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ikl1fSsQ; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774271189; x=1805807189;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gOgv5bKsksgGx3nrv4fb0woIoZIh4/V/CUpY0JM0vXI=;
-  b=ikl1fSsQN01POC/6fLBTSOAH+OphbMORWXCkkgvlxB7EDKyVDyqiiDjw
-   OFAaCh30UnaP8gMChjGQxp9/qPI7B0Ktoor4UO5k2Y3UxptjGSaT+QRvG
-   0VjPnaemMjlOKzxCwEGsSPQWQwGlr3Zw4n85ASt0CHC6FYPIqN5LbCsyE
-   qOsk3sKkE8ZwJkaUXx4iPWUS2SxFzXrN1KgmSSv2CuCCsyaEDuoSO1fbm
-   vXy7BPsSr4EaszajvsmvWAB2acqXpl0uI/VQD6L2DnOp7TV7uc4rVk0OO
-   6AkFumiIqx7r4OEPJy6Y2+Gr70yWmbDSTJDU4PXK5putxXwTIxoVKUAqq
-   A==;
-X-CSE-ConnectionGUID: OZYIWwnTR8isps2Cy+UnOg==
-X-CSE-MsgGUID: BEDOk68ZS62Q6MI0lsrEhg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11737"; a="75332744"
-X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
-   d="scan'208";a="75332744"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 06:06:28 -0700
-X-CSE-ConnectionGUID: W/sWqUpCSw2K+giilmXCDw==
-X-CSE-MsgGUID: K15JoVVdTbGmKczSDs/sOw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
-   d="scan'208";a="224235586"
-Received: from lkp-server01.sh.intel.com (HELO 3905d212be1b) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 23 Mar 2026 06:06:21 -0700
-Received: from kbuild by 3905d212be1b with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1w4ez2-000000000Zt-0X7C;
-	Mon, 23 Mar 2026 13:06:16 +0000
-Date: Mon, 23 Mar 2026 21:06:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Radu Sabau <radu.sabau@analog.com>
-Subject: Re: [PATCH v4 4/4] iio: adc: ad4691: add SPI offload support
-Message-ID: <202603232017.8IO2whBG-lkp@intel.com>
-References: <20260320-ad4692-multichannel-sar-adc-driver-v4-4-052c1050507a@analog.com>
+	s=arc-20240116; t=1774272233; c=relaxed/simple;
+	bh=p4euLU3dzlJaKSg+W6fHDQOReg72+Z4efBvrwOXxb+0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TvMBmd0En4U4brFQmfRfqlqZK6PTcMATTkNlmPqP6osL5eXpuW4vjWbQxsGtdOpGUVIykqVhO0woIPP01GUsMSqAtJ8W2ZW9uIS9Yd8gj9pJdh4T7zykvo7CCAU0X85r1PCsvSzcfeCcl7EMd+mgmZSzZIZhgwXgse3E4jI0PpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e5HtEG+7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11876C2BCB8
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 13:23:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774272233;
+	bh=p4euLU3dzlJaKSg+W6fHDQOReg72+Z4efBvrwOXxb+0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=e5HtEG+7Z0hUDOWD3lrZNo7a5ayfeIp4SuizcRE4uO+9EmsW6BKXHcDeifvaxe2rG
+	 /ceh2tyMi5IQbD7GLa5h7LrgBy3Y8VacInQubtMZaeCLkxtliLIBn4nQGNwUOe/wBW
+	 QbjfMaLR5sJXIU8YSZUO3SCti6TsRFNn4FiLOVdWtKVlTErmN0xUNv/9tkq88PPhTf
+	 qssJrNQOt2HkVZyO8EvMkPR1qSjAZeNS8e6159kq2ha/5Iyvs43bh3AeN6D2/fXZU4
+	 JHf64I8vwPYntE4oEO7/Bi25jM18wKuNtomZjGX6ciHWT02qSMeWrXH8R2oY8QYTFb
+	 TJZQJ7uCmsVEQ==
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-79a60975dc5so1916807b3.0
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 06:23:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU9jpNdtVhRfhIuh+BvFHBpS6x5oOWdswSD1qzEwQHwLWGq3n/R58L+aFZXo2w3XgtXfzZs+zuxTL8M@vger.kernel.org
+X-Gm-Message-State: AOJu0YwA3yI3xYnWbjmKe8GCjlohZgH0L6/WD7z7Wenjl0Y3LlfNIILU
+	PBfajgriD3F2XS/3LMFlTWQBGCotkfV2eWroiqmJxNso7ZpRtClXaG0AHv9oZKLJXdgw5M8iuVM
+	EohvK7kAu0Y2moGGGhY4XgMTbSaIJw08=
+X-Received: by 2002:a05:690c:2605:b0:798:1219:c78d with SMTP id
+ 00721157ae682-79a90c0a53emr125159107b3.50.1774272232374; Mon, 23 Mar 2026
+ 06:23:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260320-ad4692-multichannel-sar-adc-driver-v4-4-052c1050507a@analog.com>
-X-Spamd-Result: default: False [0.34 / 15.00];
+References: <20260320-rc2-boot-hang-v6-0-74dca70dd60e@mmpsystems.pl>
+In-Reply-To: <20260320-rc2-boot-hang-v6-0-74dca70dd60e@mmpsystems.pl>
+From: Linus Walleij <linusw@kernel.org>
+Date: Mon, 23 Mar 2026 14:23:41 +0100
+X-Gmail-Original-Message-ID: <CAD++jL=ztBrtMxaN3JohArsPm5sYaJ8=54v8VrCHyFRPOBsROQ@mail.gmail.com>
+X-Gm-Features: AQROBzCnimvZvEKxbgJqnARSDh8ZkIJDbBTIcd5gmgSkLxqAgXbW8hAX9GtTaeY
+Message-ID: <CAD++jL=ztBrtMxaN3JohArsPm5sYaJ8=54v8VrCHyFRPOBsROQ@mail.gmail.com>
+Subject: Re: [PATCH v6 0/2] fix gpiochip_lock_as_irq() failure when pinmux is unknown
+To: michal.piekos@mmpsystems.pl
+Cc: Chen-Yu Tsai <wens@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,sholland.org,vger.kernel.org,lists.infradead.org,lists.linux.dev,arm.com];
+	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34023-lists,linux-gpio=lfdr.de];
-	FREEMAIL_TO(0.00)[kernel.org,metafoo.de,analog.com,baylibre.com,gmail.com,pengutronix.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-34024-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,radu.sabau.analog.com,dt];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,intel.com:dkim,intel.com:email,intel.com:mid,01.org:url]
-X-Rspamd-Queue-Id: 79D502F287A
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: D6F692F2F62
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Radu,
+Hi Michal,
 
-kernel test robot noticed the following build warnings:
+this v6 patchset applied for fixes!
 
-[auto build test WARNING on 11439c4635edd669ae435eec308f4ab8a0804808]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Radu-Sabau-via-B4-Relay/dt-bindings-iio-adc-add-AD4691-family/20260321-120718
-base:   11439c4635edd669ae435eec308f4ab8a0804808
-patch link:    https://lore.kernel.org/r/20260320-ad4692-multichannel-sar-adc-driver-v4-4-052c1050507a%40analog.com
-patch subject: [PATCH v4 4/4] iio: adc: ad4691: add SPI offload support
-config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20260323/202603232017.8IO2whBG-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260323/202603232017.8IO2whBG-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202603232017.8IO2whBG-lkp@intel.com/
-
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
-
->> WARNING: modpost: module ad4691 uses symbol devm_iio_dmaengine_buffer_setup_with_handle from namespace IIO_DMAENGINE_BUFFER, but does not import it.
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Yours,
+Linus Walleij
 
