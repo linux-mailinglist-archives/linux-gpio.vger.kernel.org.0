@@ -1,199 +1,144 @@
-Return-Path: <linux-gpio+bounces-34012-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34013-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sCx8OHgawWn5QQQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34012-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 11:48:24 +0100
+	id 8PeLDrwbwWn5QQQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34013-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 11:53:48 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id E75732F0763
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 11:48:23 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 950B42F0924
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 11:53:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C51E630523BA
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 10:42:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 769543086870
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 10:47:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32C402D9ECB;
-	Mon, 23 Mar 2026 10:41:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DAE23914E5;
+	Mon, 23 Mar 2026 10:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WdTV8Pu0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8458E390215
-	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 10:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE35390C8B;
+	Mon, 23 Mar 2026 10:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774262515; cv=none; b=CUUtX7ki7BdWJ7IsJ6PWQZE1ogvayEjy+A2wkJg88MPuohLiuO+RL58hqJWWjwuNCaoLFcKUXwMLHf5jzcysomyZ+VdQOzyhZLm8IB7/uRRAAsRDHs33gEIWbTqqK8NhmSkOcVSuULzHTkLb2rKmwauYlUfNssg23eCzl5Iyj2U=
+	t=1774262835; cv=none; b=iPbqEvw4jqdbLtSqGpn0riB6Wrbup4hxUBpcvckt65gBJvKYOy1ZQ33iw6DBuczaVpV7s7neXS12667qKT+sLl6I7Tinq2h/Rded8IK/KJvi7A4Mi7f2mPigiQ1JPx0HJX9DvaRazDMDQ9XIkDyXRDpQAN2ojrtEanxNlmH1fMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774262515; c=relaxed/simple;
-	bh=Z6GcXlGT7FKbncFELrN6EUuqe1RbllaJTGYxbiWsiQA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ch89OSdw7auuL25xgW6f2wsu+0Wkqv9rgoxrA0LpxOdIIiePSjT1RwpGvYsMXHfN6yVwhdEsU4F593k1LCr3dFA+X8DvlZoS296oVy84m1HuEEE8c1sx6hjB5pfWWisY1Zr8PCXUdFjrxKoPb8iO6D708tuzD8IlmvTMaMo02TI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1w4ciw-0001Ls-1M; Mon, 23 Mar 2026 11:41:30 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1w4civ-001iBA-2O;
-	Mon, 23 Mar 2026 11:41:29 +0100
-Received: from pengutronix.de (p4ffb2dc6.dip0.t-ipconnect.de [79.251.45.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 5965450A81A;
-	Mon, 23 Mar 2026 10:41:29 +0000 (UTC)
-Date: Mon, 23 Mar 2026 11:41:29 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>
-Cc: mani@kernel.org, thomas.kopp@microchip.com, mailhol@kernel.org, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org, 
-	konradybcio@kernel.org, linusw@kernel.org, brgl@kernel.org, linux-can@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, mukesh.savaliya@oss.qualcomm.com, anup.kulkarni@oss.qualcomm.com
-Subject: Re: [PATCH v3 1/2] dt-bindings: can: mcp251xfd: add
- microchip,xstbyen property
-Message-ID: <20260323-noble-mysterious-hippogriff-340f73-mkl@pengutronix.de>
-X-AI: stop_reason: "refusal"
-References: <20260321135031.3107408-1-viken.dadhaniya@oss.qualcomm.com>
- <20260321135031.3107408-2-viken.dadhaniya@oss.qualcomm.com>
+	s=arc-20240116; t=1774262835; c=relaxed/simple;
+	bh=0NUK8VRmQ4Cp9kanzBWCjpNq1JsmARXiiQF5DxHJG3s=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=m/6FUuNcLaXqQi6OhZ4bR7Y3+IVALgPQebiqAAVJkz76FTnd7iQK74wvmtz9pdnoVAV75fMvTq9F4xgyaKVgRSAePjO7ux89JJd/FDHhjAgQ26iYV3zKghZE5VFNTJqS1BW6AOpvXrtY3bjeQr0VT0CH/5AZu1XIHFoUQ8b0LFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WdTV8Pu0; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774262834; x=1805798834;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=0NUK8VRmQ4Cp9kanzBWCjpNq1JsmARXiiQF5DxHJG3s=;
+  b=WdTV8Pu0Qh71go/2du5fFn/cwIYr/0zdxi42luZg/7KS6qy9N0/33XUS
+   Ay3+V9EpdfKmMBpOtyZcmRw64NfbuVqjOjbF3/dxvi5FhTWrCPe0c47ep
+   UljBMCNeTX0dsxWEpLLZM4cXELNxEExdIZrHT2NWECXgSyCba3KV1bxYp
+   JFeS1Pr02OJwJ40/YNvhsOItuNrK3Awzqhhsu6Ba22XGin0OSWN+rfZ43
+   EcJjCIu345nmSLroRahagkL9eTEiVThc3qCcl4BKczRH2jKffj2kCgUEa
+   vZrO/bNssxLnKHpk7lQpDOfqmkGOoG6xmTSeSWjOgYdRaA4Ia7IT+qTAh
+   Q==;
+X-CSE-ConnectionGUID: jSFxS+PPTWugN1XWijh1lw==
+X-CSE-MsgGUID: 01Sxq0mIRPGQZrZt2b35aA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11737"; a="85952795"
+X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
+   d="scan'208";a="85952795"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 03:47:14 -0700
+X-CSE-ConnectionGUID: YwYpkmxMTB+9arGjCnRqEg==
+X-CSE-MsgGUID: R0kEfuntT5mDG5AEER5Nlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
+   d="scan'208";a="224203600"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.49])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 03:47:08 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Santosh Kumar Yadav <santoshkumar.yadav@barco.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Peter Korsgaard <peter.korsgaard@barco.com>, 
+ Hans de Goede <hansg@kernel.org>, Linus Walleij <linusw@kernel.org>, 
+ Bartosz Golaszewski <brgl@kernel.org>, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+In-Reply-To: <20260318-barco-p50-gpio-set-v2-0-c0a4a6416163@gmail.com>
+References: <20260318-barco-p50-gpio-set-v2-0-c0a4a6416163@gmail.com>
+Subject: Re: [PATCH v2 0/2] barco-p50-gpio: normalize return value of "get"
+ and convert to guard()
+Message-Id: <177426282270.8512.4556036830475075786.b4-ty@linux.intel.com>
+Date: Mon, 23 Mar 2026 12:47:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="acu6kjxbnxtaftpm"
-Content-Disposition: inline
-In-Reply-To: <20260321135031.3107408-2-viken.dadhaniya@oss.qualcomm.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spamd-Result: default: False [-2.56 / 15.00];
-	SIGNED_PGP(-2.00)[];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-34012-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	DMARC_NA(0.00)[pengutronix.de];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-34013-lists,linux-gpio=lfdr.de];
+	FREEMAIL_TO(0.00)[barco.com,gmail.com];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mkl@pengutronix.de,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCVD_COUNT_FIVE(0.00)[6];
-	R_DKIM_NA(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ilpo.jarvinen@linux.intel.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[pengutronix.de:mid,pengutronix.de:url,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,qualcomm.com:email]
-X-Rspamd-Queue-Id: E75732F0763
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,linux.intel.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 950B42F0924
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On Wed, 18 Mar 2026 19:56:16 -0700, Dmitry Torokhov wrote:
 
---acu6kjxbnxtaftpm
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 1/2] dt-bindings: can: mcp251xfd: add
- microchip,xstbyen property
-MIME-Version: 1.0
+> These 2 patches fixes a regression in the driver arising from gpiolib
+> tightening its API, and converts it to guard() notation when taking a
+> mutex to simplify the code flow.
+> 
+> v2:
+> 
+> - added reviiewed-by and fixes trailers
+> - added new patch using guard()
+> 
+> [...]
 
-On 21.03.2026 19:20:30, Viken Dadhaniya wrote:
-> Add the boolean property 'microchip,xstbyen' to enable the dedicated
-> transceiver standby control function on the INT0/GPIO0/XSTBY pin of
-> the MCP251xFD family.
->
-> Signed-off-by: Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>
 
-This series looks good to me, I think we need an Acked by the DT people.
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-regards,
-Marc
+The list of commits applied:
+[1/2] platform/x86: barco-p50-gpio: normalize return value of gpio_get
+      commit: 1c9d30d37aaffe3454d70b89a77f8aaecda257bf
+[2/2] platform/x86: barco-p50-gpio: convert to guard() notation
+      commit: a5877e921389178f994a5ec15a145d7e7ba3ec65
 
-> ---
-> v2 -> v3:
->
-> - No change.
->
-> v2 Link: https://lore.kernel.org/all/20260316131950.859748-2-viken.dadhan=
-iya@oss.qualcomm.com/
->
-> v1 -> v2:
->
-> - Drop the gpio-hog approach as suggested by Dmitry.
-> - Add the microchip,xstbyen property to enable transceiver standby contro=
-l.
->
-> v1 Link: https://lore.kernel.org/all/20260108125200.2803112-2-viken.dadha=
-niya@oss.qualcomm.com/
-> ---
->  .../devicetree/bindings/net/can/microchip,mcp251xfd.yaml  | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp251xf=
-d.yaml b/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
-> index 2d13638ebc6a..28e494262cd9 100644
-> --- a/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
-> +++ b/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
-> @@ -44,6 +44,14 @@ properties:
->        signals a pending RX interrupt.
->      maxItems: 1
->
-> +  microchip,xstbyen:
-> +    type: boolean
-> +    description:
-> +      If present, configure the INT0/GPIO0/XSTBY pin as transceiver stan=
-dby
-> +      control. The pin is driven low when the controller is active and h=
-igh
-> +      when it enters Sleep mode, allowing automatic standby control of an
-> +      external CAN transceiver connected to this pin.
-> +
->    spi-max-frequency:
->      description:
->        Must be half or less of "clocks" frequency.
-> --
-> 2.34.1
->
->
->
+--
+ i.
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---acu6kjxbnxtaftpm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSl+MghEFFAdY3pYJLMOmT6rpmt0gUCacEY1wAKCRDMOmT6rpmt
-0kmlAQCNELR5JUwWlmN5Z24i7Xj/tpKV+XPWrS9q2fn0iE2hLwEAvx+Q7vop5d52
-z+zV1UqbjBCe5rYx+bqEhZyZ5KAd4wE=
-=SepY
------END PGP SIGNATURE-----
-
---acu6kjxbnxtaftpm--
 
