@@ -1,212 +1,352 @@
-Return-Path: <linux-gpio+bounces-34019-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34020-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4L0eOTogwWmTQwQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34019-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 12:12:58 +0100
+	id yqENHqMmwWm+RAQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34020-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 12:40:19 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 461522F0F6A
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 12:12:58 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 201D72F1568
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 12:40:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 19936312E83C
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 11:03:08 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A2DE33019CBA
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 11:40:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 676C4397E93;
-	Mon, 23 Mar 2026 11:02:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74358397E70;
+	Mon, 23 Mar 2026 11:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mqr96Lol"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D0F338838A;
-	Mon, 23 Mar 2026 11:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2A7396587
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 11:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774263737; cv=none; b=RN6q2m5yB0xUDOfMKi1viU/cXc+5amvQfwFbyJ+N6hznSmTLdsdc5BDBH01fN8ZPYRF/449nOvhAZLPUJtxnYPwPxCszpN3M5sOO1laBsT2aU7LrZGtuIUVWAhXm9GHViJJAtPEruip4Ay9bp3+6dlZuwKgONSgxKIziox7BU5Y=
+	t=1774266014; cv=none; b=NR6rdQo4nRLuwYhUNegO34NS2uKojuATPDnKsf21X6xR1cNyuElmKEKjX01ZW/keHHIKjM6x9OLxoIqHA024KOttYDzwB8Q853rMek9CnFTeDi0/D1+JPzivUqVlLd/BO7u3r85iB9u1PmG/cSeqWDTX9mY1aeMDrzBrnhxONKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774263737; c=relaxed/simple;
-	bh=BdcEra9FbAB3SE5ZyznxdSUBQYhHbt1CSIJp0DdTRCo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MON7eXG8tG0y33k4kINdSplsr1mHYy0SiSBpnMZLEVvKTT38bf9fwYX28jHWHqcnrmw2bcgea9M0ePLMe7rVSOE5WGd+XDV57LRgmSi6nRajwef/NCk1NSQyAWEDTLbeYZu/XvbmfiXNJAltrzsYNpv3pwBv5uEhbEehJVd+gJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A37F6169E;
-	Mon, 23 Mar 2026 04:02:08 -0700 (PDT)
-Received: from e142021.fritz.box (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C4FD23F73B;
-	Mon, 23 Mar 2026 04:02:11 -0700 (PDT)
-From: Andre Przywara <andre.przywara@arm.com>
-To: Linus Walleij <linusw@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>
-Cc: Michal Piekos <michal.piekos@mmpsystems.pl>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] pinctrl: sunxi: a523: add missing IRQ bank (plus old DT workaround)
-Date: Mon, 23 Mar 2026 12:01:51 +0100
-Message-ID: <20260323110151.2352832-6-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260323110151.2352832-1-andre.przywara@arm.com>
-References: <20260323110151.2352832-1-andre.przywara@arm.com>
+	s=arc-20240116; t=1774266014; c=relaxed/simple;
+	bh=xBPbm2psL2E1gEqh2Far/32tTK00tXUWPBenA/iZQWA=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AMKS2J1SJEtVw4H9ZSfhMHGOG1l5D+FtkW/soVHiSicYidSYMgzgCJ7RHg5gLHbIrl7a0p7Te53PzkP1Lz/ENdylLM0SbNY53pUnqzdnD64srbdCoqG2mlop3lHckU6sKy+J9dnmaJMGK6FzQMI9O1dweSMa2NM39TqMbou3zqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mqr96Lol; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE23CC2BC9E
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 11:40:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774266014;
+	bh=xBPbm2psL2E1gEqh2Far/32tTK00tXUWPBenA/iZQWA=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
+	b=mqr96LolKdqiKOCLHzaUKK0CFgbDJ0UryPgFgCvIIh6tkvzgZ0yrzNVLAwS8f3uVV
+	 7CnlHhNUBtJYkN2ExeMh0qGogEXotRNa0b9EQ3E+T6qrxecTG/xAJ9fJuwIPjcIl8M
+	 2EUCMAfggOgASMkpDzNRTIKaP/QuRfGRNMPnmBwL6H1dYdAMVUNKueD4UAFpPbu1w/
+	 EhaqjVSSuhzhgX41JeQpCeIdDZ73MtRnBUyg+quRBRJeap1CuNZCzTXxWRucGvWQc6
+	 0WiB7DnYEmeCNKZmr/khI1g5c7Ol04qxTT1U0ekZQqj4IKFb1bgfUILFbLgsYqTRgC
+	 nT9Y2SFMMpOSQ==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5a0ff30b240so4180887e87.0
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 04:40:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX9pAmpgLhRmGtTHpvHg1Fc47+puQ3Vlix0OjMFm8MlXMb9H08Ghl/bdc3sie+/V5oyCwz1cw0BxDQj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys7BrDs8GasFlhHif0yWSKLlsb98Y1/QftRI54XRMoaxQpdtcg
+	pgw0v8u6s5+ZLIhpajCLbR47Wo1Zm6wYDZWZO8GOx+qx04b1HIhq3/kusokN4O94YVV8Rq3VJTV
+	PFBAnB3jZDkSmyXaSWxw+Wi9aGBfvlu9uvgxIz3jwOQ==
+X-Received: by 2002:a05:6512:308c:b0:5a2:78f8:60aa with SMTP id
+ 2adb3069b0e04-5a285b5aab5mr4842573e87.37.1774266012393; Mon, 23 Mar 2026
+ 04:40:12 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 23 Mar 2026 04:40:11 -0700
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 23 Mar 2026 04:40:11 -0700
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <ab47QXIYCo3vNI8J@google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [1.64 / 15.00];
+References: <20260319-baytrail-real-swnode-v1-0-75f2264ae49f@oss.qualcomm.com>
+ <abyje0mhIOtDZbxO@google.com> <CAMRc=McPQq6QxJ48zk7kxA+kwc=Em8dsFfyECJXg0asY-+pRiw@mail.gmail.com>
+ <ab47QXIYCo3vNI8J@google.com>
+Date: Mon, 23 Mar 2026 04:40:11 -0700
+X-Gmail-Original-Message-ID: <CAMRc=MdmuOS-5mHGYtsr3jz654rA9moH4Po_rAFdaPBq-5KCZA@mail.gmail.com>
+X-Gm-Features: AaiRm50xYuGbGJMWR-La7zfZgOhQynHddWFdS_RuSs-HPX9Rf22AdalqjZ092cY
+Message-ID: <CAMRc=MdmuOS-5mHGYtsr3jz654rA9moH4Po_rAFdaPBq-5KCZA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] platform/x86: x86-android-tablets: use real firmware
+ node references with intel drivers
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	linux-acpi@vger.kernel.org, driver-core@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
+	Bartosz Golaszewski <brgl@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[arm.com : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-34020-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,csie.org,gmail.com,sholland.org];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FREEMAIL_TO(0.00)[gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[linux.intel.com,gmail.com,linuxfoundation.org,kernel.org,vger.kernel.org,lists.linux.dev,oss.qualcomm.com];
+	RCPT_COUNT_TWELVE(0.00)[20];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-34019-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FROM_HAS_DN(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	R_DKIM_NA(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	FROM_NEQ_ENVFROM(0.00)[andre.przywara@arm.com,linux-gpio@vger.kernel.org];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,arm.com:email,arm.com:mid]
-X-Rspamd-Queue-Id: 461522F0F6A
+	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 201D72F1568
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The Allwinner A532 SoC implements 10 GPIO banks, each of which is
-interrupt capable. However the first bank (PortA) is skipped, so the
-indicies of those banks range from 1 to 10, not 0 to 9.
-We described the skipped bank correctly, but missed that for the IRQ
-banks, where we rely on the IRQ bank index to be aligned with the MMIO
-register offset, starting at 0x200.
+On Sat, 21 Mar 2026 08:01:30 +0100, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> said:
+> On Fri, Mar 20, 2026 at 01:33:06PM -0700, Bartosz Golaszewski wrote:
+>> On Fri, 20 Mar 2026 02:49:02 +0100, Dmitry Torokhov
+>> <dmitry.torokhov@gmail.com> said:
+>> > Hi Bartosz,
+>> >
+>> > On Thu, Mar 19, 2026 at 05:10:53PM +0100, Bartosz Golaszewski wrote:
+>> >>
+>> >> This series proposes a solution in the form of automatic secondary
+>> >> software node assignment (I'm open to better naming ideas). We extend
+>> >> the swnode API with functions allowing to set up a behind-the-scenes bus
+>> >> notifier for a group of named software nodes. It will wait for bus
+>> >> events and when a device is added, it will check its name against the
+>> >> software node's name and - on match - assign the software node as the
+>> >> secondary firmware node of the device's *real* firmware node.
+>> >
+>> > The more I think about the current approaches with strict identity
+>> > matching the less I like them, and the reason is that strict identity
+>> > matching establishes rigid links between consumers and producers of
+>> > GPIOS/swnodes, and puts us into link order hell. For example, I believe
+>> > if andoird tablets drivers were in drivers/android vs
+>> > drivers/platform/... the current scheme would break since the nodes
+>> > would not be registered and GPIO lookups would fail with -ENOENT vs
+>> > -EPROBE_DEFER.
+>> >
+>>
+>> Why would they not get registered? They get attached when the target devices
+>> are added in modules this module depends on. They are exported symbols so the
+>> prerequisite modules will get loaded before and the module's init function
+>> will have run by the time the software nodes are referred to by the fwnode
+>> interface at which point they will have been registered with the swnode
+>> framework.
+>
+> I mentioned link order, which implies no modules are involved. When code
+> is built into the kernel initialization follows link order, which is
+> typically alphabetical. To ensure the order you require you either need
+> to move targets inside makefiles or change some drivers from
+> module_init() to <some other>_initcall(). This is known as "link order
+> hell" that was very common before deferred probing was introduced.
+>
 
-Correct that by increasing the number of IRQ banks to 11, to cover both
-the first skipped one, but also the last one (PortK). This fixes a bug
-where the interrupt numbers would be off-by-one, due to that
-mis-enumeration.
-The big caveat is that now old DTs break the kernel, since they only
-provide 10 interrupts, and the driver bails out entirely due to the last
-missing one. So add a workaround for this particular case, where we
-detect the requirement for 11 banks, but only 10 interrupts provided,
-and continue with 10 IRQs, albeit emitting a warning about a DT update.
-This would still be broken in terms of interrupt assignment, but it was
-broken the whole time before, so it's not a regression.
+Maybe we should return -EPROBE_DEFER in GPIO swnode lookup when
+fwnode_property_get_reference_args() returns -ENOENT because if there's a
+software node that's not yet been registered as a firmware node, it's not much
+different from there being a firmware node not bound to a device yet - which
+is grounds for probe deferral.
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
----
- drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c |  2 +-
- drivers/pinctrl/sunxi/pinctrl-sunxi.c       | 22 +++++++++++++--------
- 2 files changed, 15 insertions(+), 9 deletions(-)
+>>
+>> > Given that this series somewhat re-introduces the name matching, I
+>> > wonder if we can not do something like the following (the rough draft):
+>> >
+>>
+>> I'm open to better ideas and possibly multiple matching mechanisms but this
+>> just fit in this particular case. I'm not overly attached to name matching. We
+>> may as well use whatever properties ACPI provides to identify the devices and
+>> assign them their swnodes.
+>
+> What ACPI has to do with this? Oftentimes we are dealing with non x86
+> systems.
+>
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c b/drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c
-index b6f78f1f30ac..a1d157de53d2 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c
-@@ -17,7 +17,7 @@ static const u8 a523_nr_bank_pins[SUNXI_PINCTRL_MAX_BANKS] =
- /*	  PA  PB  PC  PD  PE  PF  PG  PH  PI  PJ  PK */
- 	{  0, 15, 17, 24, 16,  7, 15, 20, 17, 28, 24 };
- 
--static const unsigned int a523_irq_bank_map[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-+static const unsigned int a523_irq_bank_map[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
- 
- static const u8 a523_irq_bank_muxes[SUNXI_PINCTRL_MAX_BANKS] =
- /*	  PA  PB  PC  PD  PE  PF  PG  PH  PI  PJ  PK */
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 6a86b7989b25..ffee79397590 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -19,6 +19,7 @@
- #include <linux/irqdomain.h>
- #include <linux/of.h>
- #include <linux/of_clk.h>
-+#include <linux/of_irq.h>
- #include <linux/platform_device.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
-@@ -1582,6 +1583,7 @@ int sunxi_pinctrl_init_with_flags(struct platform_device *pdev,
- 	struct sunxi_pinctrl *pctl;
- 	struct pinmux_ops *pmxops;
- 	int i, ret, last_pin, pin_idx;
-+	int num_irq_banks;
- 	struct clk *clk;
- 
- 	pctl = devm_kzalloc(&pdev->dev, sizeof(*pctl), GFP_KERNEL);
-@@ -1715,16 +1717,20 @@ int sunxi_pinctrl_init_with_flags(struct platform_device *pdev,
- 		goto gpiochip_error;
- 	}
- 
--	pctl->irq = devm_kcalloc(&pdev->dev,
--				 pctl->desc->irq_banks,
--				 sizeof(*pctl->irq),
--				 GFP_KERNEL);
-+	num_irq_banks = pctl->desc->irq_banks;
-+	/* Workaround for old A523 DT, exposing one less interrupt. */
-+	if (num_irq_banks == 11 && of_irq_count(node) < 11) {
-+		num_irq_banks = 10;
-+		pr_warn("Not enough PIO interrupts, please update your DT!\n");
-+	}
-+	pctl->irq = devm_kcalloc(&pdev->dev, num_irq_banks,
-+				 sizeof(*pctl->irq), GFP_KERNEL);
- 	if (!pctl->irq) {
- 		ret = -ENOMEM;
- 		goto gpiochip_error;
- 	}
- 
--	for (i = 0; i < pctl->desc->irq_banks; i++) {
-+	for (i = 0; i < num_irq_banks; i++) {
- 		pctl->irq[i] = platform_get_irq(pdev, i);
- 		if (pctl->irq[i] < 0) {
- 			ret = pctl->irq[i];
-@@ -1733,7 +1739,7 @@ int sunxi_pinctrl_init_with_flags(struct platform_device *pdev,
- 	}
- 
- 	pctl->domain = irq_domain_create_linear(dev_fwnode(&pdev->dev),
--						pctl->desc->irq_banks * IRQ_PER_BANK,
-+						num_irq_banks * IRQ_PER_BANK,
- 						&sunxi_pinctrl_irq_domain_ops, pctl);
- 	if (!pctl->domain) {
- 		dev_err(&pdev->dev, "Couldn't register IRQ domain\n");
-@@ -1741,7 +1747,7 @@ int sunxi_pinctrl_init_with_flags(struct platform_device *pdev,
- 		goto gpiochip_error;
- 	}
- 
--	for (i = 0; i < (pctl->desc->irq_banks * IRQ_PER_BANK); i++) {
-+	for (i = 0; i < (num_irq_banks * IRQ_PER_BANK); i++) {
- 		int irqno = irq_create_mapping(pctl->domain, i);
- 
- 		irq_set_lockdep_class(irqno, &sunxi_pinctrl_irq_lock_class,
-@@ -1751,7 +1757,7 @@ int sunxi_pinctrl_init_with_flags(struct platform_device *pdev,
- 		irq_set_chip_data(irqno, pctl);
- 	}
- 
--	for (i = 0; i < pctl->desc->irq_banks; i++) {
-+	for (i = 0; i < num_irq_banks; i++) {
- 		/* Mask and clear all IRQs before registering a handler */
- 		writel(0, pctl->membase +
- 			  sunxi_irq_ctrl_reg_from_bank(pctl->desc, i));
--- 
-2.43.0
+What I meant is: name matching is only one method of assigning software nodes
+to devices. Here I went with waiting for devices but with DT we may as well
+look up a node by compatible depending on the driver. For ACPI we may probably
+use some mechanism that matches the devices to the software node in a more
+specific way. That's just hypothetical, I don't know if there even is one.
 
+IOW: device-name-to-software-node name matching is only one of possible methods.
+
+>>
+>> > diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+>> > index 51320837f3a9..b0e8923a092c 100644
+>> > --- a/drivers/base/swnode.c
+>> > +++ b/drivers/base/swnode.c
+>> > @@ -509,6 +509,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
+>> >  	struct swnode *swnode = to_swnode(fwnode);
+>> >  	const struct software_node_ref_args *ref_array;
+>> >  	const struct software_node_ref_args *ref;
+>> > +	const struct software_node *ref_swnode;
+>> >  	const struct property_entry *prop;
+>> >  	struct fwnode_handle *refnode;
+>> >  	u32 nargs_prop_val;
+>> > @@ -550,7 +551,10 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
+>> >  		refnode = software_node_fwnode(ref->swnode);
+>> >  	else if (ref->fwnode)
+>> >  		refnode = ref->fwnode;
+>> > -	else
+>> > +	else if (ref->swnode_name) {
+>> > +		ref_swnode = software_node_find_by_name(NULL, ref->swnode_name);
+>> > +		refnode = ref_swnode ? software_node_fwnode(ref_swnode) : NULL;
+>> > +	} else
+>> >  		return -EINVAL;
+>> >
+>> >  	if (!refnode)
+>> > diff --git a/include/linux/property.h b/include/linux/property.h
+>> > index e30ef23a9af3..44e96ee47272 100644
+>> > --- a/include/linux/property.h
+>> > +++ b/include/linux/property.h
+>> > @@ -363,6 +363,7 @@ struct software_node;
+>> >  struct software_node_ref_args {
+>> >  	const struct software_node *swnode;
+>> >  	struct fwnode_handle *fwnode;
+>> > +	const char *swnode_name;
+>> >  	unsigned int nargs;
+>> >  	u64 args[NR_FWNODE_REFERENCE_ARGS];
+>> >  };
+>> > @@ -373,6 +374,9 @@ struct software_node_ref_args {
+>> >  			   const struct software_node *: _ref_,	\
+>> >  			   struct software_node *: _ref_,	\
+>> >  			   default: NULL),			\
+>> > +	.swnode_name = _Generic(_ref_,				\
+>> > +				const char *: _ref_,		\
+>> > +				default: NULL),			\
+>> >  	.fwnode = _Generic(_ref_,				\
+>> >  			   struct fwnode_handle *: _ref_,	\
+>> >  			   default: NULL),			\
+>> >
+>> > This will allow consumers specify top-level software node name instead
+>> > of software node structure, and it will get resolved to concrete
+>> > firmware node. GPIOLIB can continue matching on node identity.
+>> >
+>> > WDYT?
+>> >
+>>
+>> I think it's bad design and even bigger abuse of the software node concept.
+>> What you're proposing is effectively allowing to use struct software_node as
+>> a misleading string wrapper. You wouldn't use it to pass any properties to
+>> the device you're pointing to - because how if there's no link between them -
+>> you would just store an arbitrary string in a structure that serves
+>> a completely different purpose.
+>
+> I think you completely misunderstood the proposal. We are not using
+
+Ok, I didn't fully get that part, I was OoO on Friday and should have probably
+not rushed a late evening answer. :)
+
+> software node as a string wrapper, we give an opportunity to use
+> software node name to resolve to the real software node at the time we
+> try to resolve the reference. The software node is still expected to be
+> bound to the target device (unlike the original approach that has a
+> dangling software node which name expected to match gpiochip label).
+>
+> I think this actually a very good approach: it severs the tight coupling
+> while still maintains the spirit of firmware nodes being attached to
+> devices. The only difference we are using object's name and not its
+> address as starting point. Similarly how you use name derived from
+> device name to locate and assign secondary node in this patch series.
+>
+
+I still don't like it. It forces us to use names for the remote software nodes,
+which are after all C structures that we could identify by addresses alone.
+Even this series could be reworked to drop the names from the GPIO software
+nodes.
+
+software_node_find_by_name() only goes through the list of registered software
+nodes so we'd still end up returning -ENOENT for nodes which have not been
+registered yet and wouldn't be able to tell this situation apart from a case
+where there's no such software node at all.
+
+The consumer driver still needs to know the remote device by an arbitrary
+string.
+
+I think you're exaggarating the possible problems with link order. I believe
+that issue could be fixed by returning EPROBE_DEFER when a software node is
+not yet known by an fwnode handle but we know it is there so it's just a matter
+of it getting registered.
+
+That being said, I would like to hear from driver core maintainers in general
+and from software node maintainers in particular.
+
+>>
+>> Which is BTW exactly what was done in GPIO and - while there's no denying that
+>> I signed-off on these patches - it goes to show just how misleading this design
+>> is - I was aware of this development and queued the patches but only really
+>> understood what was going on when it was too late and this pattern was
+>> copy-pasted all over the kernel.
+>>
+>> Software nodes are just an implementation of firmware nodes and as such should
+>> follow the same principles. If a software node describes a device, it should be
+>> attached to it
+>
+> Yes, and the patch above solves this.
+>
+
+I would say it just pushes the string matching deeper.
+
+>> so that references can be resolved by checking the address of
+>> the underlying firmware node handle and not by string matching. I will die on
+>> that hill. :)
+>
+> I would like to understand why. I outlined the problems with this
+> approach (too tight coupling, needing to export nodes, include
+> additional headers, and deal with the link order issues, along with
+> potential changes to the system initialization/probe order). What are
+> the drawbacks of name matching as long as we do not create
+> dangling/shadow nodes?
+>
+> You are saying that you want resolve strictly by address, but have you
+> looked at how OF references are resolved? Hint: phandle is not a raw
+> address. It's actually a 32 bit integer! Look at ACPI. It also does not
+> simply have a pointer to another ACPI node there, the data structure is
+> much more complex.
+>
+
+That's dictated by the binary format of devicetree where:
+
+	prop = <&foo>;
+
+Is translated to:
+
+	foo {
+		phandle = <0x123>;
+	};
+
+	prop = <0x123>;
+
+And I suppose this could be translated into addresses of respective struct
+device_node objects already at the tree unflattening stage - just like is
+done for parent-child relationships.
+
+However, this is very much hidden from users and someone who deals with DT
+sources always sees a proper reference to a node (by path, label or otherwise).
+
+Here we're talking about referring to firmware nodes by name which does happen
+but is typically reserved for some special cases and well-known nodes.
+
+Bartosz
 
