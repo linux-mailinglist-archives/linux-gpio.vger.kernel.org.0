@@ -1,245 +1,192 @@
-Return-Path: <linux-gpio+bounces-33990-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-33991-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GGb/GNPhwGnAOAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-33990-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 07:46:43 +0100
+	id kG9WImXrwGl6OQQAu9opvQ
+	(envelope-from <linux-gpio+bounces-33991-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 08:27:33 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE6462ED280
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 07:46:42 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30B242ED94F
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 08:27:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 774853007CB4
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 06:46:36 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E506330117C2
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 07:27:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA87435BDC7;
-	Mon, 23 Mar 2026 06:46:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 010A63164B4;
+	Mon, 23 Mar 2026 07:27:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="j8S//1c1";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Q5mhrDkZ"
+	dkim=pass (2048-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="R0hPVjz/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from www537.your-server.de (www537.your-server.de [188.40.3.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F97348883
-	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 06:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1102D7DDB;
+	Mon, 23 Mar 2026 07:27:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.3.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774248395; cv=none; b=Cd7CHW8WnN5rM+KEFJdbFM4xtoq4WcqCPPGKOjT3zrkuz1UPtSTv6OJjZMwROpidRwRITHvQGCPOW8cISMdilTE3lnHV+7VQkbKSJK3tAlvPw8hoM6RTjzdFdqHiM47s5AP1JjkUmwdqY6FQ/Z1o/kWKBHQ1QR0OCBC9yoviHss=
+	t=1774250823; cv=none; b=ZHX1J9i/cN5Ve/RtDuS15xJd+DK+6l+eWLvXGEHxHfH8h+4IZcAe1+l+hh6YN8TedoCX6HqDcDTAaElJlZxeH2QvU6qqUfPR9IzkwyJ9fHHOg0LVX79kylx+P88itMOK15S7rxyfWC1y62RZ44kQivwmqGuYksXUtAkoqDimujU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774248395; c=relaxed/simple;
-	bh=YaD+CatjIqfxIvSpZJAbYPQwzCHAxtNUw4nAc7oYroc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=As21/8tLkAGhf4afPMa2PnI11IxXS0cpGlaJBur+Fr4Ul4r2skbupmOqqDgrlI/LmiM4ml8meF7WUQgWJ89krvFdzV/pC3ghA3S5BfTRjirUZkfvhyj1lbNSWvq6Sz9mNSesok6JHnM55NUVVskZ2fxW6By/Fliz3q7xojBIKG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=j8S//1c1; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Q5mhrDkZ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62MKqEU94129218
-	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 06:46:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	JzgrEA8u622UtmJ7BDFdV+2Neo9h7xytlbrUEgoYnlA=; b=j8S//1c1CV4vxAD7
-	1/OS5fuZttK0wmEfc9YsihpbbwJwmx9EeNZYVkXEXRo6VdRcxGr5WOKU70g1QOWl
-	2doE6d45nStmLCMkGkab3BppeBhGnOt239mmwvFhEoKzUQKVSg67Z6XEhXHIZRFb
-	FB2bs2kEF4Ue+40jwbk080kNQRe5P/HfTg+1QSGhHAvdzzMldr7zN9VKA9/wdt3C
-	rr8hKoPUMEh+SORmHs3t1xLiK2k/UZVPX8IQVOt93vLiDv3B0mGFtFLRswTlb1yt
-	yGCpRieCzGe1jylYIYJlFQM74WxKAez8TdT487dHr+kyYnV5eERe1Hxsq9k/AMBq
-	YBOYfg==
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d1gpk48mq-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 06:46:33 +0000 (GMT)
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-359fe4e9ea7so3525055a91.0
-        for <linux-gpio@vger.kernel.org>; Sun, 22 Mar 2026 23:46:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1774248392; x=1774853192; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JzgrEA8u622UtmJ7BDFdV+2Neo9h7xytlbrUEgoYnlA=;
-        b=Q5mhrDkZ5lItoKp+E/dAPB/7rMukvIOK/oCF2VwN4QOAMP6eQ1YHPTAQ7vYBQzcN6/
-         N3S3YilK8KgFkb5Rl0RX2EFt4u1PdctkEVCNvHwMGwN7trgyMysQTn2WDCh69Cz6g3kv
-         UowEjbGhCgqcu+F0m3npDxXH7Z8ZYp0apgPHmNgMXyP1LfeUB59dUOaWFB81kTfpQM0i
-         AzUP2EdRc0qJvklisdHBGBIlZorvGoesJu3bDvzZyorg0+gm3K7DhCPlMV3ZmhFEgNIG
-         aCyPRxyp9Yo0T9rcoUJdj3Ck7vDeLD5tfCHWbW04+Z3HuOqhOfsGB9Z2NnKfDg2jPFm4
-         gRzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774248392; x=1774853192;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JzgrEA8u622UtmJ7BDFdV+2Neo9h7xytlbrUEgoYnlA=;
-        b=cAvUuptmCndWZ+WSXEkvRxUBNLl5et8u3zVNz8toptWyKM2i8nsX5SNMjEvBlQUO9X
-         plyLdIp+TusOVpoNo7yHX+lVyF7LzNBKFl8BtcXFPDBVRHfhXLX7Tr2WTZ/zRyUyoDdC
-         6ziVx7qwrUy9+MRUnR03mg6vJiR/govNIQUPy+n4Qs5uIqMIlPozkZJf9zOs/JlJJBzV
-         7GID9HSbxmZhlRMfZw80Q5rj2R76k2Wh6XWO3UudD72TqZBr0QiMNXR0z/0M971IfGcn
-         TcK9FY5IvtidCjTCGhm9ezBhfDKkNSoTDzFAl2gfv/RN6VBJjy4fobZG2+4NsN1L3PPZ
-         sHmg==
-X-Forwarded-Encrypted: i=1; AJvYcCXdFyv+kCP7dMNIrEcWBMPsVzBxTYZoVA7XqQn+dPKKIzH+8DrLE6uoEfyXxGJoR6/TBNZ6PlmlsGQ8@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMYlF9kxg+Sm+XaJ90PDYWH9ftgmWDvn0f/vWnjNhnhsx+LJZt
-	oj7LQBt77Cv851x14iC3nrF6/JFDirsxIw10/dEkMtO4iU1OgOaqH4sraCZOLvvuCZ8UUnwcBBX
-	LGZHmb4R8/IKzTJxLdgxA65fmKjffKdr8JkmiwegeMlgFAY15OJ7HY1u2qfNt/6v5
-X-Gm-Gg: ATEYQzwcCTajWIZZQDyyQFgptQ+zEiz8S/attM/EzHxIMiYXfHIRQe+/JV3pnJFk9S2
-	Rjc3EtzdEezk2a42W2TNiTIUwgo/UZoyy8wDQRQE8GQy7URzTpAxCLw6gjfbiUUQU5M0kQYQo6M
-	9KDXDk5ZnywbMFfjZqFeQV1tgN6NIJUN5AvakBIqlJsEU91rvjiMNSWQ4Eiemi1bnZcrLG3jZ9P
-	cxhXhC5YOsSatJ3nTIF893lnrqsNRLBB0ZByiC22ueH5jbVWSa4T5To9wV/YKHV34BUjMB1UQEd
-	iXCIMRFJlC5/douEGqmWNqCOMXBgBilA02UTKT6rtzYK+Qd1Yj7DX2tCdzylcmHMaxacMfLoN/6
-	k93BS25glE1Ux8ghAEIQyu3Q4C60cXyhtovx0ppixbqc0+inODZCyRBmcah5gVqbzSQ==
-X-Received: by 2002:a17:90b:4c48:b0:35b:e844:3bd with SMTP id 98e67ed59e1d1-35be8440fadmr3293679a91.31.1774248392307;
-        Sun, 22 Mar 2026 23:46:32 -0700 (PDT)
-X-Received: by 2002:a17:90b:4c48:b0:35b:e844:3bd with SMTP id 98e67ed59e1d1-35be8440fadmr3293667a91.31.1774248391804;
-        Sun, 22 Mar 2026 23:46:31 -0700 (PDT)
-Received: from [10.151.37.217] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35bd33919a0sm4548940a91.2.2026.03.22.23.46.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Mar 2026 23:46:31 -0700 (PDT)
-Message-ID: <01bd44db-32b7-4195-ad66-0a608b25dca3@oss.qualcomm.com>
-Date: Mon, 23 Mar 2026 12:16:26 +0530
+	s=arc-20240116; t=1774250823; c=relaxed/simple;
+	bh=QMLfOSHN7yBX7dd2DeMRSHAPCl1Q8shqK91AzimibIY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k+ZAtwKdTSNSLRaDamSx3OBq7oMvnak2tJZtNFEVd2oamduXX4KpQLrOWpJCFU5F6+dIpYULxcq99025avjBbKb1el/guylvdvzUhh/iUZgmKV36zkypew7zTJdYEonecyc4vZYMSSiY682yrxpgXK+4Y4/J9otFT3JAra841qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=R0hPVjz/; arc=none smtp.client-ip=188.40.3.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=ew.tq-group.com; s=default2602; h=Content-Type:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=foORgteAPlfrIAS1ba1QdpFRcnbJ/IN133dyq0cl3iU=; b=R0hPVjz/e4re407HofT8dGEi1i
+	3JQFkXx9UO3s9OlU19vdAjXPHEUcBzvdyiBPi3DsLnMUCj9uOVolF6dMKHg5ofWtTd1S1/g65GYA0
+	bTUmFtRmprxRn8aON9G+L2Rws5xyEd/NkeZSCXRLAUfcPgsoMVHlTQZyiXaZVRhC1zOegPlo/iW3Z
+	d/liLWIOX6ww6cXhLLmsDBL0UeG8/+mGp7VPpE/Q3CuMTKazScNmAjIkVDNJJEItjcHdrFUR5oNfP
+	sog5+bH2+knmqkgqP4jQ7fxHYpymAa1Z5a2dJbVWA7/ss/yw7vI80ZLEOadk7aEOl5i2ASn5wrvat
+	VpK0VGpg==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+	by www537.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <alexander.stein@ew.tq-group.com>)
+	id 1w4Zga-000OD6-1i;
+	Mon, 23 Mar 2026 08:26:52 +0100
+Received: from localhost ([127.0.0.1])
+	by sslproxy06.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <alexander.stein@ew.tq-group.com>)
+	id 1w4Zg2-000N2t-2c;
+	Mon, 23 Mar 2026 08:26:52 +0100
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+ Frank Li <Frank.Li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Shenwei Wang <shenwei.wang@nxp.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Shenwei Wang <shenwei.wang@nxp.com>,
+ Peng Fan <peng.fan@nxp.com>, linux-gpio@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-imx@nxp.com, stable@vger.kernel.org
+Subject: Re: [PATCH v2] gpio: mxc: map Both Edge pad wakeup to Rising Edge
+Date: Mon, 23 Mar 2026 08:26:51 +0100
+Message-ID: <2826794.mvXUDI8C0e@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20260320193150.2508850-1-shenwei.wang@nxp.com>
+References: <20260320193150.2508850-1-shenwei.wang@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] pinctrl: qcom: Introduce IPQ5210 TLMM driver
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-References: <20260318-ipq5210_tlmm-v2-0-182d47b3d540@oss.qualcomm.com>
- <20260318-ipq5210_tlmm-v2-2-182d47b3d540@oss.qualcomm.com>
- <abtbnafiKkswWSy1@baldur>
-Content-Language: en-US
-From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-In-Reply-To: <abtbnafiKkswWSy1@baldur>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: jNHrc5gn29FfI4-1zIVsa0C6D7V1s37B
-X-Proofpoint-GUID: jNHrc5gn29FfI4-1zIVsa0C6D7V1s37B
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzIzMDA1MCBTYWx0ZWRfX4xQvxeRioCA1
- DvvjYbxvlqaBwQP2DqDpuDYc3HQy0t7ghMgN+MtcGafeyz/wdq4mYqf/+OlhwdLkub4B3hFN74a
- YrkwpKbVqyAeGvHxQKt4doW7PtyUAnIasQ2/O1P5VP2XT4iutWOKRgeMKH7WBMfIjoNPkc3N+YI
- SzwiCxwT1B4Mwxp/YPs+I0+ZN7L2kXy7rvBUt4jQc7JscAMHw+q1hFkJ3CoUxMcW69IBrd7ovrw
- PfK/pLdx0bKo1d4K0QQ/WbliyTjAS9zVOD8L1vXIBsnUIPNgYAiD7KxDzkUwZ3MDM7aBSzAdXk6
- aAc/qGx7TpI3PkwG1M0dg1smAvJPGgodkQZv3fU3OtZxRwfxsbQn4adZpH6pzUK6EmEfRyfP5n+
- LTMxWLE0Ntd1LsemurOdWI1d2qvh1xuwRWuLLouq6Lxs8aXImjBaipxaWGd+i4QX8Ri6kIjHco+
- 3+aHenZ0kpiLIlWjqpQ==
-X-Authority-Analysis: v=2.4 cv=QKhlhwLL c=1 sm=1 tr=0 ts=69c0e1c9 cx=c_pps
- a=UNFcQwm+pnOIJct1K4W+Mw==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22
- a=xLcBPJq00M2AN48BsqkA:9 a=QEXdDO2ut3YA:10 a=O8hF6Hzn-FEA:10
- a=uKXjsCUrEbL0IQVhDsJ9:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-23_02,2026-03-20_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 adultscore=0 bulkscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 malwarescore=0 phishscore=0 impostorscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603230050
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Virus-Scanned: Clear (ClamAV 1.4.3/27948/Sun Mar 22 07:24:25 2026)
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[ew.tq-group.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[ew.tq-group.com:s=default2602];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,qualcomm.com:dkim];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-33991-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[pengutronix.de,gmail.com,nxp.com,vger.kernel.org,lists.linux.dev,lists.infradead.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-33990-lists,linux-gpio=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	FROM_NEQ_ENVFROM(0.00)[kathiravan.thirumoorthy@oss.qualcomm.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	DKIM_TRACE(0.00)[ew.tq-group.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[alexander.stein@ew.tq-group.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: BE6462ED280
+	RCPT_COUNT_TWELVE(0.00)[15];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 30B242ED94F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Am Freitag, 20. M=E4rz 2026, 20:31:50 CET schrieb Shenwei Wang:
+> Suspend may fail on i.MX8QM when Falling Edge is used as a pad wakeup
+> trigger due to a hardware bug in the detection logic. Since the hardware
+> does not support Both Edge wakeup, remap requests for Both Edge to Rising
+> Edge by default to avoid hitting this issue.
+>=20
+> A warning is emitted when Falling Edge is selected on i.MX8QM.
+>=20
+> Fixes: f60c9eac54af ("gpio: mxc: enable pad wakeup on i.MX8x platforms")
+> cc: stable@vger.kernel.org
+> Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
+> ---
+>  Changes in V2:
+>   - add a check for i.mx8qm and emit a warning when Falling Edge is
+>     selected.
+>=20
+>  drivers/gpio/gpio-mxc.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+> index d7666fe9dbf8..095bcfbc56e0 100644
+> --- a/drivers/gpio/gpio-mxc.c
+> +++ b/drivers/gpio/gpio-mxc.c
+> @@ -584,12 +584,13 @@ static bool mxc_gpio_set_pad_wakeup(struct mxc_gpio=
+_port *port, bool enable)
+>  	unsigned long config;
+>  	bool ret =3D false;
+>  	int i, type;
+> +	bool is_imx8qm =3D of_device_is_compatible(port->dev->of_node, "fsl,imx=
+8qm-gpio");
+>=20
+>  	static const u32 pad_type_map[] =3D {
+>  		IMX_SCU_WAKEUP_OFF,		/* 0 */
+>  		IMX_SCU_WAKEUP_RISE_EDGE,	/* IRQ_TYPE_EDGE_RISING */
+>  		IMX_SCU_WAKEUP_FALL_EDGE,	/* IRQ_TYPE_EDGE_FALLING */
+> -		IMX_SCU_WAKEUP_FALL_EDGE,	/* IRQ_TYPE_EDGE_BOTH */
+> +		IMX_SCU_WAKEUP_RISE_EDGE,	/* IRQ_TYPE_EDGE_BOTH */
+>  		IMX_SCU_WAKEUP_HIGH_LVL,	/* IRQ_TYPE_LEVEL_HIGH */
+>  		IMX_SCU_WAKEUP_OFF,		/* 5 */
+>  		IMX_SCU_WAKEUP_OFF,		/* 6 */
+> @@ -604,6 +605,12 @@ static bool mxc_gpio_set_pad_wakeup(struct mxc_gpio_=
+port *port, bool enable)
+>  				config =3D pad_type_map[type];
+>  			else
+>  				config =3D IMX_SCU_WAKEUP_OFF;
+> +
+> +			if (is_imx8qm && config =3D=3D IMX_SCU_WAKEUP_FALL_EDGE) {
+> +				dev_warn_once(port->dev, "No falling-edge support on i.MX8QM\n");
 
-On 3/19/2026 7:47 AM, Bjorn Andersson wrote:
-> On Wed, Mar 18, 2026 at 12:44:31PM +0530, Kathiravan Thirumoorthy wrote:
->> diff --git a/drivers/pinctrl/qcom/pinctrl-ipq5210.c b/drivers/pinctrl/qcom/pinctrl-ipq5210.c
-> [..]
->> +static const struct pinfunction ipq5210_functions[] = {
-> [..]
->> +	MSM_PIN_FUNCTION(qup_se5_l01),
->> +	MSM_PIN_FUNCTION(qup_se5_l10),
->> +	MSM_PIN_FUNCTION(qup_se5_l11),
->> +	MSM_PIN_FUNCTION(qup_se5_l2),
->> +	MSM_PIN_FUNCTION(qup_se5_l3),
->> +	MSM_PIN_FUNCTION(qup_se5_l4),
->> +	MSM_PIN_FUNCTION(qup_se5_l5),
-> Listing each pin of each QUP SE as their own function forces the DT
-> author to write one state definition per pin. Group these into their
-> logical functions instead.
->
-> Same thing with other logical functions that you have split into
-> multiple separate functions.
+How about "No falling-edge support for wakeup on i.MX8QM"? Without
+context this message in the kernellog is confusing.
 
-Sure, will take care of this in next spin.
+Best regards,
+Alexander
 
->
->> +	MSM_PIN_FUNCTION(resout),
->> +	MSM_PIN_FUNCTION(rx_los00),
->> +	MSM_PIN_FUNCTION(rx_los01),
->> +	MSM_PIN_FUNCTION(rx_los10),
->> +	MSM_PIN_FUNCTION(rx_los11),
->> +	MSM_PIN_FUNCTION(rx_los20),
->> +	MSM_PIN_FUNCTION(rx_los21),
->> +	MSM_PIN_FUNCTION(sdc_clk),
->> +	MSM_PIN_FUNCTION(sdc_cmd),
->> +	MSM_PIN_FUNCTION(sdc_data),
->> +	MSM_PIN_FUNCTION(tsens_max),
->> +};
->> +
->> +static const struct msm_pingroup ipq5210_groups[] = {
->> +	[0] = PINGROUP(0, sdc_data, qspi_data, pwm, _, _, _, _, _, _),
->> +	[1] = PINGROUP(1, sdc_data, qspi_data, pwm, _, _, _, _, _, _),
->> +	[2] = PINGROUP(2, sdc_data, qspi_data, pwm, _, _, _, _, _, _),
->> +	[3] = PINGROUP(3, sdc_data, qspi_data, pwm, _, _, _, _, _, _),
->> +	[4] = PINGROUP(4, sdc_cmd, qspi_cs_n, _, _, _, _, _, _, _),
->> +	[5] = PINGROUP(5, sdc_clk, qspi_clk, _, _, _, _, _, _, _),
->> +	[6] = PINGROUP(6, qup_se0_l2, led0, pwm, _, cri_trng0, qdss_tracedata_a, _, _, _),
->> +	[7] = PINGROUP(7, qup_se0_l3, led1, pwm, _, cri_trng1, qdss_tracedata_a, _, _, _),
->> +	[8] = PINGROUP(8, qup_se0_l0, pwm, audio_pri2, audio_pri2, _, cri_trng2, qdss_tracedata_a, _, _),
-> How can both function 3 and 4 be "audio_pri2", do you expect the system
-> integrator to be able to select function 4?
+> +				config =3D IMX_SCU_WAKEUP_OFF;
+> +			}
+> +
+>  			ret |=3D mxc_gpio_generic_config(port, i, config);
+>  		}
+>  	}
+> --
+> 2.43.0
+>=20
+>=20
+>=20
 
-Function 3 and 4 are audio_pri_mclk_out and audio_pri_mclk_in 
-respectively and either one of them can be selected based on the codec's 
-mclock requirement. Let me expand the full function to avoid these 
-confusion in the next spin.
 
->
->> +	[9] = PINGROUP(9, qup_se0_l1, led2, pwm, _, cri_trng3, qdss_tracedata_a, _, _, _),
->> +	[10] = PINGROUP(10, pon_rx_los, qup_se3_l3, pwm, _, _, qdss_tracedata_a, _, _, _),
->> +	[11] = PINGROUP(11, pon_active_led, qup_se3_l2, pwm, _, _, qdss_tracedata_a, _, _, _),
->> +	[12] = PINGROUP(12, pon_tx_dis, qup_se2_l3, pwm, audio_pri0, audio_pri0, _, qrng_rosc0, qdss_tracedata_a, _),
->> +	[13] = PINGROUP(13, gpn_tx_dis, qup_se2_l2, pwm, audio_pri3, audio_pri3, _, qrng_rosc1, qdss_tracedata_a, _),
-> Same here.
->
-> Regards,
-> Bjorn
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
+
+
 
