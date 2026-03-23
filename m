@@ -1,189 +1,158 @@
-Return-Path: <linux-gpio+bounces-34038-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34023-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aAjrEl1nwWliSwQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34038-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 17:16:29 +0100
+	id IOQJJDs7wWn2RgQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34023-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 14:08:11 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0200E2F7D74
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 17:16:28 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79D502F287A
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 14:08:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D936C30E092E
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 15:42:59 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 49EB2301F3BE
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 13:06:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EA163B6BF9;
-	Mon, 23 Mar 2026 15:38:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1884327B327;
+	Mon, 23 Mar 2026 13:06:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mgU9aFrC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ikl1fSsQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8AAB3B531A
-	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 15:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D411917CD;
+	Mon, 23 Mar 2026 13:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774280290; cv=none; b=lTM4+O/ku9bcXYahkG1E+b7oyKe7EyvxpqYBL0dAxr+zSgPCCEXNW/MXVoi0UO2dh1Rp3D14efb+BDhg0FBBvLQuW/QFJGSM4od6BY+QYmFfwEz4fnfBwlaM2appmJrJ3pymbk/CgrkZ2sHtNC2Df4Ruym1oWDeolhe7GovFql0=
+	t=1774271191; cv=none; b=B+auL71lzF10+Z0DT6ces6MzzWn75QayLBh4Awx4BIob4x8PEMOOAZS07yVYVLnIqXC1qoRAFSnkLgegOEGDXMcOlvvLpaNrYbt9WaxPaC6mS7a6NKwxiAMNFj9dVE+90Be0uXNQigAx//g8rEkDnTTuyQqLeEo1bV/VXmoZcWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774280290; c=relaxed/simple;
-	bh=vToF1UbNvL4l1OkVwlOI7+XcnxHkjKZMzjHswh/EJ+k=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=MzUK1iiTsUvks1hhL4oMgGyXFFRX5A1eZ5vkVBUS5hWLP/BCIXfOmlAFSO4wQN3gk0lEe+M8CVje6Zeg/qnrXbb+80//pzvi/m5pcEXA1hOgYvBbvMKRY9AWMTP+7v5xlTgC3HtXjpmMpADUwIbuYwA0EjG94f0PCO17k/FAa9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=mgU9aFrC; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20260323153802epoutp039f4195fc5430d2236bded3036116a350~fgoQ_fAhS2213022130epoutp03Q
-	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 15:38:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20260323153802epoutp039f4195fc5430d2236bded3036116a350~fgoQ_fAhS2213022130epoutp03Q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1774280282;
-	bh=MYU9K1BczlLtBMfJPDu28QIk9pzoA+hXl3yf17nC2HI=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=mgU9aFrC+5Kx+21CCBQ48vtUtevP0XGV5aHjupTGFTw7s0wbx2FYZ7piHu2gEGNx9
-	 7FiJ9iRzTsn7N6OtZVcQFwqx9+/yRy1FbPgDJReQh76dJWCUi3xQdbS9llr9OgF8ia
-	 3KFTDuksHm5/ZDwJUU6SICm8wW+RY1yai4quNiMM=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20260323153802epcas5p1bb1e979594c5257c037cdf6411e7a177~fgoQZrLX82373723737epcas5p1t;
-	Mon, 23 Mar 2026 15:38:02 +0000 (GMT)
-Received: from epcpadp2new (unknown [182.195.40.142]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4ffckf0KMvz3hhT4; Mon, 23 Mar
-	2026 15:38:02 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20260323123542epcas5p349d0e7c45d02ccaa06c84dbdf1777126~feJElRtj12139221392epcas5p34;
-	Mon, 23 Mar 2026 12:35:42 +0000 (GMT)
-Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20260323123538epsmtip2099c850de3b514ee4ac3f5a0092dd02a~feJAkDKG92361023610epsmtip2P;
-	Mon, 23 Mar 2026 12:35:38 +0000 (GMT)
-From: "Alim Akhtar" <alim.akhtar@samsung.com>
-To: "'Vladimir Oltean'" <vladimir.oltean@nxp.com>, "'Martin K. Petersen'"
-	<martin.petersen@oracle.com>
-Cc: <linux-phy@lists.infradead.org>, "'Vinod Koul'" <vkoul@kernel.org>,
-	"'Neil	Armstrong'" <neil.armstrong@linaro.org>,
-	<dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
-	<linux-can@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<linux-ide@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-media@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<linux-renesas-soc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<linux-rockchip@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
-	<linux-scsi@vger.kernel.org>, <linux-sunxi@lists.linux.dev>,
-	<linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <spacemit@lists.linux.dev>,
-	<UNGLinuxDriver@microchip.com>, "'Bart Van Assche'" <bvanassche@acm.org>,
-	"'Peter Griffin'" <peter.griffin@linaro.org>, "'James E.J. Bottomley'"
-	<James.Bottomley@HansenPartnership.com>, "'Krzysztof	Kozlowski'"
-	<krzk@kernel.org>, "'Chanho Park'" <chanho61.park@samsung.com>
-In-Reply-To: <20260323115848.ghdu4sbk75tvggfb@skbuf>
-Subject: RE: [PATCH v5 phy-next 09/27] scsi: ufs: exynos: stop poking into
- struct phy guts
-Date: Mon, 23 Mar 2026 18:05:36 +0530
-Message-ID: <1891546521.01774280282025.JavaMail.epsvc@epcpadp2new>
+	s=arc-20240116; t=1774271191; c=relaxed/simple;
+	bh=gOgv5bKsksgGx3nrv4fb0woIoZIh4/V/CUpY0JM0vXI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o1aaX+24czW4+41B+edcpm7BRncRWzVDno+HGDHfJrkYqDEJxGAoG7mo7Q4636iJyaH4KyusHjYLmIzHDIQH9B5FQk4h6Wpn31Q708NqEZ1s/KRTiMn3tF87L+MEHPjZM+7V7h4wpitERMXZ5HzWs1TqrFVMBbwgXD4oxuySKqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ikl1fSsQ; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774271189; x=1805807189;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gOgv5bKsksgGx3nrv4fb0woIoZIh4/V/CUpY0JM0vXI=;
+  b=ikl1fSsQN01POC/6fLBTSOAH+OphbMORWXCkkgvlxB7EDKyVDyqiiDjw
+   OFAaCh30UnaP8gMChjGQxp9/qPI7B0Ktoor4UO5k2Y3UxptjGSaT+QRvG
+   0VjPnaemMjlOKzxCwEGsSPQWQwGlr3Zw4n85ASt0CHC6FYPIqN5LbCsyE
+   qOsk3sKkE8ZwJkaUXx4iPWUS2SxFzXrN1KgmSSv2CuCCsyaEDuoSO1fbm
+   vXy7BPsSr4EaszajvsmvWAB2acqXpl0uI/VQD6L2DnOp7TV7uc4rVk0OO
+   6AkFumiIqx7r4OEPJy6Y2+Gr70yWmbDSTJDU4PXK5putxXwTIxoVKUAqq
+   A==;
+X-CSE-ConnectionGUID: OZYIWwnTR8isps2Cy+UnOg==
+X-CSE-MsgGUID: BEDOk68ZS62Q6MI0lsrEhg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11737"; a="75332744"
+X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
+   d="scan'208";a="75332744"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 06:06:28 -0700
+X-CSE-ConnectionGUID: W/sWqUpCSw2K+giilmXCDw==
+X-CSE-MsgGUID: K15JoVVdTbGmKczSDs/sOw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,137,1770624000"; 
+   d="scan'208";a="224235586"
+Received: from lkp-server01.sh.intel.com (HELO 3905d212be1b) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 23 Mar 2026 06:06:21 -0700
+Received: from kbuild by 3905d212be1b with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1w4ez2-000000000Zt-0X7C;
+	Mon, 23 Mar 2026 13:06:16 +0000
+Date: Mon, 23 Mar 2026 21:06:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Radu Sabau <radu.sabau@analog.com>
+Subject: Re: [PATCH v4 4/4] iio: adc: ad4691: add SPI offload support
+Message-ID: <202603232017.8IO2whBG-lkp@intel.com>
+References: <20260320-ad4692-multichannel-sar-adc-driver-v4-4-052c1050507a@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJoz1sM+EbPjkyDopxrfJVWkMJWdwI9AyWpAaSC6pgB9ZOp/gJXIgBltGJxFXA=
-Content-Language: en-us
-X-CMS-MailID: 20260323123542epcas5p349d0e7c45d02ccaa06c84dbdf1777126
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20260323115859epcas5p10177db12a2e8aee9578271ff1411137b
-References: <20260319223241.1351137-1-vladimir.oltean@nxp.com>
-	<20260319223241.1351137-10-vladimir.oltean@nxp.com>
-	<yq1a4w3l04g.fsf@ca-mkp.ca.oracle.com>
-	<CGME20260323115859epcas5p10177db12a2e8aee9578271ff1411137b@epcas5p1.samsung.com>
-	<20260323115848.ghdu4sbk75tvggfb@skbuf>
-X-Spamd-Result: default: False [-1.66 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260320-ad4692-multichannel-sar-adc-driver-v4-4-052c1050507a@analog.com>
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[samsung.com,none];
-	R_DKIM_ALLOW(-0.20)[samsung.com:s=mail20170921];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34038-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
+	TAGGED_FROM(0.00)[bounces-34023-lists,linux-gpio=lfdr.de];
+	FREEMAIL_TO(0.00)[kernel.org,metafoo.de,analog.com,baylibre.com,gmail.com,pengutronix.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[31];
-	DKIM_TRACE(0.00)[samsung.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[alim.akhtar@samsung.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[24];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[8]
-X-Rspamd-Queue-Id: 0200E2F7D74
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,radu.sabau.analog.com,dt];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,intel.com:dkim,intel.com:email,intel.com:mid,01.org:url]
+X-Rspamd-Queue-Id: 79D502F287A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Vladimir
+Hi Radu,
 
-> -----Original Message-----
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> Sent: Monday, March 23, 2026 5:29 PM
-> To: Martin K. Petersen <martin.petersen@oracle.com>
-> Cc: linux-phy@lists.infradead.org; Vinod Koul <vkoul@kernel.org>; Neil
-> Armstrong <neil.armstrong@linaro.org>; dri-devel@lists.freedesktop.org;
-> freedreno@lists.freedesktop.org; linux-arm-kernel@lists.infradead.org;
-> linux-arm-msm@vger.kernel.org; linux-can@vger.kernel.org; linux-
-> gpio@vger.kernel.org; linux-ide@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linux-media@vger.kernel.org; linux-
-> pci@vger.kernel.org; linux-renesas-soc@vger.kernel.org; linux-
-> riscv@lists.infradead.org; linux-rockchip@lists.infradead.org;
-linux-samsung-
-> soc@vger.kernel.org; linux-scsi@vger.kernel.org;
-linux-sunxi@lists.linux.dev;
-> linux-tegra@vger.kernel.org; linux-usb@vger.kernel.org;
-> netdev@vger.kernel.org; spacemit@lists.linux.dev;
-> UNGLinuxDriver@microchip.com; Bart Van Assche <bvanassche@acm.org>;
-> Alim Akhtar <alim.akhtar@samsung.com>; Peter Griffin
-> <peter.griffin@linaro.org>; James E.J. Bottomley
-> <James.Bottomley@HansenPartnership.com>; Krzysztof Kozlowski
-> <krzk@kernel.org>; Chanho Park <chanho61.park@samsung.com>
-> Subject: Re: [PATCH v5 phy-next 09/27] scsi: ufs: exynos: stop poking into
-> struct phy guts
-> 
-> On Thu, Mar 19, 2026 at 10:15:17PM -0400, Martin K. Petersen wrote:
-> > Vladimir,
-> >
-> > > The Exynos host controller driver is clearly a PHY consumer (gets
-> > > the
-> > > ufs->phy using devm_phy_get()), but pokes into the guts of struct
-> > > ufs->phy
-> > > to get the generic_phy->power_count.
-> >
-> > Ah, newer version. Would still like an ack from Samsung.
-> >
-> > And I hit the wrong key, I did not actually apply this...
-> 
-> I will have to resend v6 because of an armv7 build error I've caused for
-ufs-
-> qcom.c (which doesn't #include <linux/interrupt.h>, and relies on a
-transitive
-> inclusion from <linux/phy/phy.h>). It would be nice to get the ack from
-> Samsung, but I'll send the next version in the upcoming hours regardless.
-Will review and possibly test on one of the board later tonight
+kernel test robot noticed the following build warnings:
 
+[auto build test WARNING on 11439c4635edd669ae435eec308f4ab8a0804808]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Radu-Sabau-via-B4-Relay/dt-bindings-iio-adc-add-AD4691-family/20260321-120718
+base:   11439c4635edd669ae435eec308f4ab8a0804808
+patch link:    https://lore.kernel.org/r/20260320-ad4692-multichannel-sar-adc-driver-v4-4-052c1050507a%40analog.com
+patch subject: [PATCH v4 4/4] iio: adc: ad4691: add SPI offload support
+config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20260323/202603232017.8IO2whBG-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260323/202603232017.8IO2whBG-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202603232017.8IO2whBG-lkp@intel.com/
+
+All warnings (new ones prefixed by >>, old ones prefixed by <<):
+
+>> WARNING: modpost: module ad4691 uses symbol devm_iio_dmaengine_buffer_setup_with_handle from namespace IIO_DMAENGINE_BUFFER, but does not import it.
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
