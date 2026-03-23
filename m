@@ -1,96 +1,96 @@
-Return-Path: <linux-gpio+bounces-34051-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34052-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mL7ELwOPwWmuTwQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34051-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 20:05:39 +0100
+	id /o7EF6aOwWmuTwQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34052-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 20:04:06 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36A762FBD81
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 20:05:39 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDFC92FBCFA
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 20:04:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 709F6307AB2F
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 19:01:43 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 516F63036C4B
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2026 19:01:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6AD23090F5;
-	Mon, 23 Mar 2026 19:01:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B09A31715A;
+	Mon, 23 Mar 2026 19:01:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QrwhrYv/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="btnBsPSF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38EF233993
-	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 19:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868AC317164
+	for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 19:01:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774292498; cv=none; b=PlqCF4Gaa2cZw225blQPrMhQXKBHXmXutnABtOTurc7hmSuvb7YUnaxpzjL0fDCFsXd9QDO8EPKRg8Vu57EvABooNkAkZSwW0/m+LfLhxAwQSsvVNM6mZ6pHmYgnKJ6SDKqyKIN/zAuKYq7aC0GHA+YFzNI+jWErkncHIL4uUCg=
+	t=1774292503; cv=none; b=rMJOh+FyKgPBCuKNbuSohb7NNhd+1eYB+4XDSoOEImCguBzx46sqXydKb2ZNAR8ADJ1B4ksbs0DAaCsxbDFJFihm69K25xJM7UmL7jzagnThuRxg2enYCbwIdPa8XSDd2LCKQiTK4Lhgq/lal7/hQZ9EaUsMAnauTTENTJywOMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774292498; c=relaxed/simple;
-	bh=jCF+eLwlD7MQ3lst0osm4ZMLlYmOygIY+kAEfdT6yWo=;
+	s=arc-20240116; t=1774292503; c=relaxed/simple;
+	bh=4eMRyd7ypxHELGqboKMzfQdvI1AzqqmZaR+Esy/mH5Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t3CY4vLEmKMIayxop2ZmkvtuqdmS3EAVWYf2SvUoMvQzP/lt1IGK9BTb3BybVIIIGaIM5xJdyLZ1grvF5U3lM57bTfOIrrUTZKuQis1Njd3cVcQj+LEogDfZ1u1Dl9CRRMYLCATqx+3x8AnmI62w+JjxL1mfF330Jz1Gz7gwkrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QrwhrYv/; arc=none smtp.client-ip=209.85.128.44
+	 Content-Type:Content-Disposition:In-Reply-To; b=RLisrvVu+XErWRrx3CfYMf5d6rWu/qEMBrCsvcogRcEslkZdmYnd3Tlu0lQfJyC27mgoXxGC1Zudebr9Rswg1I1nZYrInwiHkuuiDBKcbTBSYa4aLR0YmHhPDQZmaRGBbZvK3G3OIKrQ7hPe5X8wKpQhIzBWrY339XfVcEuRs8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=btnBsPSF; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-48700b1ba53so29781955e9.1
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 12:01:37 -0700 (PDT)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4838c15e3cbso37880035e9.3
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2026 12:01:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1774292496; x=1774897296; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1774292501; x=1774897301; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8mX/GcwoKo6bWMEhcm0gaJZhmtfjF5BKuCj21CKeODo=;
-        b=QrwhrYv/AiZUW4cgVLrFKBOVuIr8yilP2bWIRJCZdfGgG+MqU81TEbYDEH4xkoKt8q
-         wgrBlO02TSTv1WTiuHghqBGWgh3iU6GrLVNMp92rXN9XXet5PWcH5PpbC+g5TSG5b7il
-         aPHmkfB37jRoUGzNgMggH4R1Sv5a+jYwa5gXb0XbDmHtcT6Nyswah2CtNBzxSMajoxYQ
-         uoNsKxO+HBnMEZB9TbgGl3RzqhhUc/Jy1JqeTZ78N3ZGylz8ylq4YUVyKagiwj1Eey1O
-         2d8BFJxo/xnvUjD0pfyNNr6JlcFdf3iTCfpV92i+RncgfTJJdb7Zn0bDp6pd93BciefM
-         MTPw==
+        bh=wqJ8L0iDmB6uCpuEVuLQCen8FVgOtcZrswCudIKUuCI=;
+        b=btnBsPSF92cKZrz8T6VQhotiwZbNd18MKjnhDSiZyBAnN1eqPBxva9wvOE3Fremi9H
+         iMhE5YFPQQOMeoDtrkQ1NMUgMd0R0QY0ySqjpvqB7mkKvIDEduP7rv7Kva8CYUoRB9SX
+         oZrL8V+Dizk8Bd0cM6qhM0dmCOP6sUPSwrM5g0WO8llcQotV4Mr6UdU62vETUZWicaLE
+         M/o1G/IBGTt5wtXoxw4wMcUnu6hoeb10Td+5GB8TivzOul1iRNTabc27s5Tdq0S/T4ge
+         ieXy0R1gRgbFZsKe9l9NfxuY2n+DmmCNwyZXr5IC5oQlC356SYjE0GBBbmwIkVS7Z5b2
+         Z4PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774292496; x=1774897296;
+        d=1e100.net; s=20251104; t=1774292501; x=1774897301;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8mX/GcwoKo6bWMEhcm0gaJZhmtfjF5BKuCj21CKeODo=;
-        b=hVkRe1zANB51ucUDw5yC//M2DKucpkmd+Fp28L2LTR/K9v0sA13qwlQYQ0Ee/vCQBH
-         Jfq05jx/Q0ZnabJfWEvhGfYszqUQtbRi09f+EooD4b8B7WdqL8i6ntfa/qeAlAutmnPG
-         6Tou97zPme3KCovPT0wsCVPyM/gLKxB99zJkymYxBlMqyRdYiEPeHudNEJH9GYu2f7XR
-         6F3zr8nwuhKPtjQucXDuhmLsgHKebxboC0QgGmfrsnUhcqBA6MmJe7J+XnJB6o0HydW1
-         SGD3LO9yUJXowHluk8GEncy/l9qh6mLo2thwOalLTvtoi/OmhAZMaqC5OI1Pw2M72ewR
-         3sCg==
-X-Forwarded-Encrypted: i=1; AJvYcCXtrZOmJle0dy93TzIErwCxHP7mLEvP4t7Q34z59JL9xmIl8BfH/fuKW+5g72xGpTPgJQHOPdTuLBsx@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqZ9nLmoI5k47le2z7OyzC9So0cAXjFZeO+3u8Xv9OuUkLYoUg
-	IFe8ZyCS6UMju4qmBKalCcMEgpisVezibp8t6fNNbbaAs5vvR/fXNS/UbrF6BCmFxkw=
-X-Gm-Gg: ATEYQzzjGlpu4LYIwxTwfze2oaOtkPUifxoHsPHbJ5H1mq/Uz6544qsxj1Y15zL5UJQ
-	gmsfa9iqrJVPqjSEdCmx7Bsm+a1wifE7Gpgjp5Axj/w4W7UT6BMQluQfa99ETLcYUy9a47C6PEk
-	a1NkrmQwKyThNn2GeISwPhuCoZjg+52aQ9TEQ7cN2nbEGHaoIjuOxSKUJy+lfzeUbrZ9Gsyyg2/
-	l9nmeZAgQT7kiQn03IGp7sI2Z1g7cGVOrh41XGOXIbNtTQ93pypX4mWzvqJTqc5Xpo9s3G8OULQ
-	YxfgsOfRGCQO6AD3yQ8Aq4ifgMTIQsk2jO1D1uPqSQ7XZ5E/R/Nvy+G7A18UZzPiwtsEuro89Zj
-	dzn8kvoHKzuGFzZ0upnI/zHgid7O21Q2SLeYIUsfcUUwtFyOEcJeGFySA1hvz0v6pas8/F5dg2F
-	FYsGbb7LhkwYE26QMTLFWQ97DUYNin
-X-Received: by 2002:a05:600c:3514:b0:485:3d3e:1675 with SMTP id 5b1f17b1804b1-486fedb5624mr182256275e9.8.1774292495555;
-        Mon, 23 Mar 2026 12:01:35 -0700 (PDT)
+        bh=wqJ8L0iDmB6uCpuEVuLQCen8FVgOtcZrswCudIKUuCI=;
+        b=EbNMKnZKykxykRCLHo2TowJdCFpDvv7MKTYA6rurqH+/Mc6k38I3B50ZsGPibNVu+W
+         vX7YP3JzgkEavTCLk3ytNZgMJwskTG9Xcqq5kX3Qgypdf/MPxrYWlGZeM9L0nK4NigGM
+         LAJdi03U6ZGJOgseBJR7b0bhyJNbrDVTL8hrucLDevO2yxoO4PiN6Uu012FQxJsP6M/R
+         foq66RgqHmZiBLITRZckD4mV5uGiBfoYVPhenpNNEOWv0Nz7CFKVJVRleCeuGrjBm1zf
+         s2Fd8nuPSNAj/ntg740tO68effsluJIPpEHSZjH7y2SKeY55CS0rBzrURW35Loy46Fk6
+         rfmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUswJYxeeQoMdcxIHTMMqtwi6UOup+07xkJHdVEn0izJjRjPEGyLNRKyFRa8POMMRkj3QgVmASAeOub@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTy5bRrFAZkmXtEqCY0PkdbI7PwmY/Lrqzkk0Z+2dKFrLPC1QZ
+	fywbvmj/vMIrmJRAZmYX8cS0NOVO6HQl8kvATUM2cQjp6rMR+bcYQb3kqy1epFVmSCE=
+X-Gm-Gg: ATEYQzw7eVOfiOWdRbHidGZW+6HZCMLlbZY+yZodmfOOicHzqA8BumbHBDv/1qm+Don
+	0krQsRu1ZZE2RPlZ0fb8psZFqvWHw4KfImwDGOO0hDDOP7ABKgJVuHOrox7NEodiF+9dynvDUC2
+	Z9jxILD5YWN8H8L687/HLgDjAWDZQnyc5fCKIoSGjM7vwmWEzNZBeIJY9mBppot52XnCxT2FNBC
+	8jBbK3JKyJgFFFmXvm7Z0WCF1fp3FDPnD8xmmXcsM36g17mgZxTrU4hHz8U6ycIh/REYxHzySQQ
+	XFOeQnq+oLpsEt+IJFro5WnFDxZY8FcV0svViHzy7fP1kVBOQ0Yogk2o+t4Qd7eqR4DPk9vFul+
+	7fr5GX14P3doVvkplMP90ZmCnRghHXzhHuH23zMuJCrpb/wWTW/pt9oyJHU5Jfmj4dqhQymZBvc
+	cy7B4qDsVcJJtTzHH/Hy0vfnOiQBWW
+X-Received: by 2002:a05:600c:608e:b0:485:419c:4eba with SMTP id 5b1f17b1804b1-486febb58a9mr166627335e9.1.1774292500848;
+        Mon, 23 Mar 2026 12:01:40 -0700 (PDT)
 Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4870f80b6a3sm1441505e9.21.2026.03.23.12.01.34
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-486fe032a55sm582792635e9.7.2026.03.23.12.01.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2026 12:01:35 -0700 (PDT)
-Date: Mon, 23 Mar 2026 22:01:32 +0300
+        Mon, 23 Mar 2026 12:01:40 -0700 (PDT)
+Date: Mon, 23 Mar 2026 22:01:37 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
 To: Sudeep Holla <sudeep.holla@kernel.org>,
 	AKASHI Takahiro <akashi.tkhro@gmail.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Linus Walleij <linusw@kernel.org>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+Cc: Cristian Marussi <cristian.marussi@arm.com>, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Linus Walleij <linusw@kernel.org>,
 	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	linux-gpio@vger.kernel.org,
 	Vincent Guittot <vincent.guittot@linaro.org>,
 	Khaled Ali Ahmed <Khaled.AliAhmed@arm.com>,
-	Michal Simek <michal.simek@amd.com>, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH v6 3/7] pinctrl: scmi: Delete
- PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS support
-Message-ID: <48bee15dbf615c0c9a76ee4313bed7c06a07f143.1774283146.git.dan.carpenter@linaro.org>
+	Michal Simek <michal.simek@amd.com>
+Subject: [PATCH v6 5/7] firmware: arm_scmi: Allow PINCTRL_REQUEST to return
+ EOPNOTSUPP
+Message-ID: <2089955559d22747745c0f3fed19c1bea8608d83.1774283146.git.dan.carpenter@linaro.org>
 References: <cover.1774283146.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -106,18 +106,18 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	TAGGED_FROM(0.00)[bounces-34051-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-34052-lists,linux-gpio=lfdr.de];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_TO(0.00)[kernel.org,gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
@@ -129,45 +129,40 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nxp.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linaro.org:dkim,linaro.org:email,linaro.org:mid]
-X-Rspamd-Queue-Id: 36A762FBD81
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:dkim,linaro.org:email,linaro.org:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: EDFC92FBCFA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The argument for PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS is supposed to
-be expressed in terms of ohms.  But the pinctrl-scmi driver was
-implementing it the same as PIN_CONFIG_OUTPUT and writing either a
-zero or one to the pin.
+The SCMI protocol specification says that the PINCTRL_REQUEST and
+PINCTRL_RELEASE commands are optional.  So if the SCMI server returns
+-EOPNOTSUPP, then treat that as success and continue.
 
-The SCMI protocol doesn't have an support configuration type so just
-delete this code instead of replacing it.
-
-Cc: Peng Fan <peng.fan@nxp.com>
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 Reviewed-by: Linus Walleij <linusw@kernel.org>
+Reviewed-by: Sudeep Holla <sudeep.holla@kernel.org>
 ---
-v5: fix subystem prefix
+v5: fix subsytem prefix
 v4: add r-b tags
 v3: new patch
 
- drivers/pinctrl/pinctrl-scmi.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/firmware/arm_scmi/pinctrl.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-scmi.c b/drivers/pinctrl/pinctrl-scmi.c
-index 5d347e6b2e4c..de8c113bc61d 100644
---- a/drivers/pinctrl/pinctrl-scmi.c
-+++ b/drivers/pinctrl/pinctrl-scmi.c
-@@ -254,9 +254,6 @@ static int pinctrl_scmi_map_pinconf_type(enum pin_config_param param,
- 	case PIN_CONFIG_OUTPUT_ENABLE:
- 		*type = SCMI_PIN_OUTPUT_MODE;
- 		break;
--	case PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS:
--		*type = SCMI_PIN_OUTPUT_VALUE;
--		break;
- 	case PIN_CONFIG_POWER_SOURCE:
- 		*type = SCMI_PIN_POWER_SOURCE;
- 		break;
+diff --git a/drivers/firmware/arm_scmi/pinctrl.c b/drivers/firmware/arm_scmi/pinctrl.c
+index a020e23d7c49..42cb1aef1fe1 100644
+--- a/drivers/firmware/arm_scmi/pinctrl.c
++++ b/drivers/firmware/arm_scmi/pinctrl.c
+@@ -578,6 +578,8 @@ static int scmi_pinctrl_request_free(const struct scmi_protocol_handle *ph,
+ 	tx->flags = cpu_to_le32(type);
+ 
+ 	ret = ph->xops->do_xfer(ph, t);
++	if (ret == -EOPNOTSUPP)
++		ret = 0;
+ 	ph->xops->xfer_put(ph, t);
+ 
+ 	return ret;
 -- 
 2.53.0
 
