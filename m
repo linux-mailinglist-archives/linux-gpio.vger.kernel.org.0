@@ -1,339 +1,233 @@
-Return-Path: <linux-gpio+bounces-34105-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34106-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cO1BC6jmwmnnnAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34105-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 20:31:52 +0100
+	id UG/KNFjxwmkdnQQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34106-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 21:17:28 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 915AD31B8D2
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 20:31:51 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7471631C383
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 21:17:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CC108309E322
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 19:25:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A24D730547CE
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 20:16:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29053301460;
-	Tue, 24 Mar 2026 19:25:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 128C7347BD7;
+	Tue, 24 Mar 2026 20:16:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="P9lL39LB"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="e1Iyf0Hn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013011.outbound.protection.outlook.com [40.107.159.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2408F312819;
-	Tue, 24 Mar 2026 19:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774380301; cv=none; b=Eqms9czEKEqRDsm7UJhtayAw4n1mRLvr5bR0CuM/1mgeJa2fMBR5t5HXYneqsGjuWTF/CPEX6aCPkJxltquaYeNqsNOIV/cgJ9r21Bdi/J4E/cMpsU0W4U6ubD7nLisBD1Uc5bJug2psPVTvx+lSaaxZAa+gXMAKEfoZgItWaUs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774380301; c=relaxed/simple;
-	bh=wPhgCjwQeSn+BRAqoO5C5GaoqnCQLTgwDb2zWF3xTM4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nXIEcSEf6EVEhtKbG5hlbgK9kdlEqfihgLjORRfJC52pg3EDrdaajVlCEw2HbU1I8ANAtW9nDUWSFEixLBqD3o9zuA3RtqCEBJBdZu8z0UmIVSuILtKiYg5mrTy0kZI14WtsWNEW/PT7SxrhMfqLSz8D9m0uEFHxFcVrO/y7Jms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=P9lL39LB; arc=none smtp.client-ip=185.171.202.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 12D39C5809E;
-	Tue, 24 Mar 2026 19:25:26 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id A5362601A0;
-	Tue, 24 Mar 2026 19:24:58 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 965F410451131;
-	Tue, 24 Mar 2026 20:24:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1774380297; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=1q0RfS1aGG0lt8SxBmxfpAMO/VATuKtCz+N6YMM1DZo=;
-	b=P9lL39LBq8Hpic2d2kTOq1A50ORaO2tfnv4QJtnyolkztW8KFPRi6TAB7le3ipL7mzoYtR
-	05MzCY9tvSoH6XuteTaMIaWBOh+htIYzUoYR12OKpvrGoOTGH1ssxVRL6i8Bp9KLj95crJ
-	x/JvXtdU1/89Ls5oQ75ldw+YVmXmwKUKN9iZw85XgTa/6n5mk9Zu8hZYarYPmafvoQW7cc
-	IK/B3T5JPu3yTLE/qOX2gwxYpn3svLJr5jWBbcY1OMqts5vnHo973XCY3v+xHti0R3H6hl
-	tuqJxrLuQAagaXIUg4JGEBD7wgS6pLx6SjFs05HbwG/x/Yx+YUjK8YYw0UAsYA==
-From: "Thomas Perrot (Schneider Electric)" <thomas.perrot@bootlin.com>
-Date: Tue, 24 Mar 2026 20:24:31 +0100
-Subject: [PATCH v4 5/5] watchdog: aaeon: Add watchdog driver for SRG-IMX8P
- MCU
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969D4347516;
+	Tue, 24 Mar 2026 20:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774383381; cv=fail; b=rRqLwtfs5TtRNW86FX0ZStTWohe51LiLZMnmwiPl48cW97Gdap2Zt8IJYm6TzVVN+wyn07fEtHRol68R19n6B8mJVd1I3h3REkZ2BzkJVLh2idKltkRqlR0jF3kI5iLtvR2YJYtrCdvBevDCc6sLIYW6h2E5YXv8CO5QUwFYTZg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774383381; c=relaxed/simple;
+	bh=b8LAQLZeIH7YguUqGr413z3UgnQRE69d7gbY97/2sV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=PEIwv2N8zIrHfg9/nMLZBcJ90JDAjJaQwrAIQRswCluOfbMOzJjsNd/Ib9bZj7B9bC+/x1T77bTfFUjv3wpIpzy2zVdW9Rj0+C4ra0bdUMPSh0wJleoqpWRawrO+eoViNo5VLgRG9//yvkhH+csIBpy+nsKwD0mRh/CVjG3+q7g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=e1Iyf0Hn; arc=fail smtp.client-ip=40.107.159.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hAEQ3bK9n+vVNBgv8Xo2rusFchFsbU5b8lah53AmiOKvdzRttU5DwYurdyUyCoixZFDcUUL75NNFDqb+gY4w6eoaeB0wOrEgM7z5hRtbs1OAAwU5kYeyeEGdayDM7CSnmIaGaSqihiDM23drokeH1m8FAIX8zWDQg/0yRrSXZ0I2YFDG0FaK9bXPDmaP0LwdgVgMcWQKwYtUSrJuhSgg5KDizzLmBYaK1561RSZAhuoB8bj3nGMRjp8mYC3K12pDAhUKA1UQgasNWPvhBEuO1oZheekMSeKqCoyzCbINwDEAdMXBQNooP7CXZ6tlCsanG8xaSfelSy6yMrWzUcTv3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O6Ym9+ou8Lwc6zPePoiOfqTHMyCBcSn7z7BgbT9PNvw=;
+ b=qtlSYpA1FnhX7UXEuL/N/rzTKCcdtg8eVNuLgxMmV2OHnBClnxq58mpTDT+4gdwDTrL4AY6JqIXKnBazYi0JLnQHCzZBFI3AKTwZVP0AqRlWwBQXRwhEM/fyfXIEE3QZHpwCYKEH9T+S2aHhs8xwl1HfCtfbuPywpZWg9ewmysYyk4iGtVUN2TqxmSpU9QkRIpNG+7QzKo3zZFEIwaoynWc4oG7Zz+f6uGLR4Sfzt4/k1RZ6PWYJ55IBi1QPvKjmovCVszM8Es5iFbeJMIygcCOZCK5euSDHRdOlgLkPUK08XQjCoOy6mkwbwpkn1AdM+LkUd47j8RzAow3RPnGWsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O6Ym9+ou8Lwc6zPePoiOfqTHMyCBcSn7z7BgbT9PNvw=;
+ b=e1Iyf0HnOCHQc4stH4Zwkqax3wxDq7iY1klhyJjRgd62UnNK2RTEXwSwFvUuWwciUE+H59pNQFxNOqC90OhiHFWQohgcJK1HvqtZ9WS9pqGr0Pr+3cAxGclYcMMfIG+ARWsaz5+b3+WHUZRrpzAN0QTkGOJ7p1eoe56UJUyHndirLpJw12zI/NXsnQbQIZ1ixubwVhAD2zOTz1syypepJr+WG3s5LGWQFUPwV6YOqjnC8EfTSX3DwJ2NvzBAJFxZ696UzUmG/dTFuhZ5vQ3E/CI4SxAHsSJ4wKcntU50Afl5RoJmYS/jcCungAog/HN/VHkPCLdmQ5ppjQlk2nu9GA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
+ by AS8PR04MB8327.eurprd04.prod.outlook.com (2603:10a6:20b:3f1::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.31; Tue, 24 Mar
+ 2026 20:16:17 +0000
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9723.030; Tue, 24 Mar 2026
+ 20:16:09 +0000
+Date: Tue, 24 Mar 2026 16:16:10 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	Haibo Chen <haibo.chen@nxp.com>
+Subject: Re: [PATCH v3 3/7] pinctrl: pinctrl-generic: add
+ __pinctrl_generic_pins_function_dt_node_to_map()
+Message-ID: <acLxCnz3qYfAC3iB@lizhi-Precision-Tower-5810>
+References: <20260311-pinctrl-mux-v3-0-236b1c17bf9b@nxp.com>
+ <20260311-pinctrl-mux-v3-3-236b1c17bf9b@nxp.com>
+ <CAD++jL=U2xNMMHk_LyH8CX+YpC5EGPVRasM11yesXSH4XLhqYw@mail.gmail.com>
+ <absvZ5wzAwpbjHf1@lizhi-Precision-Tower-5810>
+ <CAD++jLkp1CFcLccmLP0BWQSBKkruGCPT71dMeuyu3JY1N4T50g@mail.gmail.com>
+ <ab1Rpf2zS8Bn1-HV@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ab1Rpf2zS8Bn1-HV@lizhi-Precision-Tower-5810>
+X-ClientProxiedBy: SA9PR13CA0153.namprd13.prod.outlook.com
+ (2603:10b6:806:28::8) To PA4PR04MB9366.eurprd04.prod.outlook.com
+ (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260324-dev-b4-aaeon-mcu-driver-v4-5-afb011df4794@bootlin.com>
-References: <20260324-dev-b4-aaeon-mcu-driver-v4-0-afb011df4794@bootlin.com>
-In-Reply-To: <20260324-dev-b4-aaeon-mcu-driver-v4-0-afb011df4794@bootlin.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linusw@kernel.org>, 
- Bartosz Golaszewski <brgl@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, 
- =?utf-8?q?J=C3=A9r=C3=A9mie_Dautheribes?= <jeremie.dautheribes@bootlin.com>, 
- Wim Van Sebroeck <wim@linux-watchdog.org>, 
- Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, 
- "Thomas Perrot (Schneider Electric)" <thomas.perrot@bootlin.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6725;
- i=thomas.perrot@bootlin.com; h=from:subject:message-id;
- bh=wPhgCjwQeSn+BRAqoO5C5GaoqnCQLTgwDb2zWF3xTM4=;
- b=owEB7QES/pANAwAKAZ/ACwVx/grtAcsmYgBpwuT27JsW8/YHaUMPDqgCojJdgL89bJwEQd9x4
- cly+1EmiH+JAbMEAAEKAB0WIQSHQHfGpqMKIwOoEiGfwAsFcf4K7QUCacLk9gAKCRCfwAsFcf4K
- 7UhvC/0UM418wlXqO3GCW341kENa5EIpae1YpssVqwzEhaf+0gDrlvNyNW5D4GWWsnK51zJlnzM
- 08fPq7tmk7sp9/Pf4DdFHoaAWPJ4imB8JPbXO5FlMomguIVdmSp35VCvbBkGr1Bai16ZEl7KdrT
- 9xBOfeb8PJDsFlrLoT2dJ91bQS7ZdiAp12NjZ6xO/8UhfdoAPzOVu5BUEQfXa4O64SQLD72P6mJ
- fTQJwjVmsPMGLg4giGEhDZkLhcZ+p0MKkcqNqHBN1L4ELUvMT+L5Ox8XRcberjiEOM8FIG2nMK4
- lchewQwOIFJF6mj7WQlMtszE53Eci1gsnaKx7V91djJkpI8lGqq/aCagdjP1RrLW2e7K69zAE+w
- LocOuwnEDaRN5t+KJMpIP/nvLmd7vDRb+nMdWIecysAybdracX/J8pn7gdGIXJRGuX3wNYFFunP
- w16aBXCnUhtQOeTmj293cxeOXjChM41pUMZO7VMhctcoMoInbC8S2Xw8PivPI+ktiCcKc=
-X-Developer-Key: i=thomas.perrot@bootlin.com; a=openpgp;
- fpr=874077C6A6A30A2303A812219FC00B0571FE0AED
-X-Last-TLS-Session-Version: TLSv1.3
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|AS8PR04MB8327:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8d13fb12-40a5-4aba-f865-08de89e22f95
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|52116014|376014|19092799006|366016|38350700014|56012099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	pqgb5WNFk4dd7xsiTimc8odBwAZPcLiJRfnmRCKvAxLf/9nGdAgQNnp2eM7jz+7lgScL6l0Xi5+QovzROaP8cphBroaEudHBke67v9fmUNHaJzVzpqKE4YqhjyL6GmhG+Sq1FRJ1b++Zfbwp7W1OBJU8lJPPJQavvYUryQfKP44PS8mHy8TRUKMx2fPEjQiG9Cqa4TIFBHtNfriNc+oPUpQzW3mqfU80/4pOYLpI5BDy75rdetEjJpdeTAP7YQUC8LdRfEV6Mj80Gu3dAJ4/8qe+iiWKjgn0A5dtgH0BBYVv3XXnkhZGtNtEnLtDbjbHB6DYKs9Sok1eU9rNianWUmgQbiwXdcDnMiZO1xJZXe/ohMAUxtTnUzyb0Qk1IPSUlxUtqwStImhzGRq8OfbKftzRQSJ4X5bS5IDK0ktWWdfDi0eWMongvrabw6wrLhfs+A9or+qpI0BTZlC/m6OLbD0VV07w8UMeFB/rt7Gqy9v7l0HMJptXmIJzRPOo+SlpgLKmzNhai9sDf7Hs8ofQYRJyheT7SyWCdqh3HIpsY9pq5yHnLL5IYQDF56awHqUJZlZNXs4Bxu59xQq3IK/eo2onKjGdNBpBEflHv7CC5I2NucobR8N1ktYnyDPP6irCFMchcpuUxo2QAYIj9N5xIGkaFziCDX97kzPJ9iXByYUiobiNofmh1El95YP4AXcKHa34BtwkLbn9tuwkwxnQfVN3z3uRJc97WNbMr4x2CxRew7xSEBjBeTsRW9pCTysESQzNfRzbsMTzwelLHgvocnMfljpa+R1Zo/Jg/lTpSBc=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(52116014)(376014)(19092799006)(366016)(38350700014)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QjBrdmF4aElJNDhKemxuVjYyTHFwNklzMVFVMGgwc3owOUNkZndpR3V1enBy?=
+ =?utf-8?B?Y0lKTnZuK2duSjZMeVR3QW1DQU1sQkVSR0FTYVpId2d6RUdTRE5mY3hjZWpJ?=
+ =?utf-8?B?S0dsa09yT0VtOHdNM2xuay9iaTBUb3RaSS91SUtiYnpCck5wbER4TXhRa1pM?=
+ =?utf-8?B?RGs0Q2t5a1dqUkttVHhvRFI1QnNqaVlJOTlxZFpCdkowTndIUnY5KzU5RzVj?=
+ =?utf-8?B?L0VjWENFRUl2UEVrMS9DWFpNVHM1cDBEU25nRmMwaVVEWGptS1pxQkxDclpy?=
+ =?utf-8?B?dEgveWhTU1grUkY5WmhEbUpZU0JJOUZuSXhnaFZ0Y1ZaZWFIZjBkU2ZTZWxW?=
+ =?utf-8?B?V3F4WHE1M05WN0FxWEdJcE52ZWcxUWZaRzVhNklGRnNHdTNibkdUajVEcUhs?=
+ =?utf-8?B?cGx1aTZuRVk0cnJvck5ESERzYUZ0djIxTG9GOTlGaGQ5VnVHNlhrbzF1NUxE?=
+ =?utf-8?B?UXVNTi91V1JtSis3aWQ2a1ZIbW90M1ZSOEpEMWpqV0VEKzlEaElRVjl1OWlD?=
+ =?utf-8?B?QTRwSGxsdjhOQkRnS1IvM08rOTBSWVhwUUdFeHp3ekNQejBPVEI4TGs3V3c2?=
+ =?utf-8?B?dkZ5c0l0NFQ5U2c2ZXMvL3YzNmxQVXQ0VnpaWWw3VWZqcHRhZkhJd3lNY2M1?=
+ =?utf-8?B?cTM1TWdlVjlnUlVBa1ZxSzM5YnRwR2R5WEc2WTI1T3BHeUVPZ2hUVjc5ZzBR?=
+ =?utf-8?B?anJNUTZFV1JlWTF3MC81NU9WcUlSbmtSdldRaFJVMEtMTHY0U0Z4dHc3c2Q5?=
+ =?utf-8?B?eUszZ3liaE5PeGhvcG9hbEhENXRHbVVJVi9waGh4OFUyMWp1U2pUME1DRm9G?=
+ =?utf-8?B?RnkrK3Q3UmhrcVlRN3FoRXRwRE5PSTQ5aGNxaC9XbXVFc09KNkxSOEJkK1RL?=
+ =?utf-8?B?QmFrckFnL3hMQ0hnRklVUFpSWlNTNUJ5UHBGU0szdXp0NEhjdG1RNVpYaVVH?=
+ =?utf-8?B?aW9OdEZwVmd4L2ZuakVONWtjc3VMTEpJcUQvQ2lnZkVyb3VQU3lNUW1yaEd2?=
+ =?utf-8?B?VFNvVnZJbXc3aDJvbEZ1bDdwdlNiZ0F2Skh0Vi9CNDV3TDlJWWRjVWNUTUI4?=
+ =?utf-8?B?RFVvTktzSzZWTmpkNVlYL0xhNm9aSXhPVURnNEYzSzR6YlVTTWNlUGFnenVY?=
+ =?utf-8?B?T0VZN0FHdE55VWJzNFMyRGpKWGZhSkZ4blQxTEMvTENQNmNlaWdSMk5JMjB4?=
+ =?utf-8?B?OW0vU0F6a2ZZSm01aWVJQ0U2NzlSZWtiUW1iUDdsTUExRyt5eUh1K09nNkYv?=
+ =?utf-8?B?bVk0UUlUaHpJOWhLVzFHb25RUnA2ZFFQOVdoaWFiMGlaRWxyWStRWmF5a1BM?=
+ =?utf-8?B?cTRvNTlzbDZrSTBaakZMV1N4bk02d0dobHdkb1JxcjNweXAxSlExV2V4RDd4?=
+ =?utf-8?B?SnFUNFYwQ3ljYlc3cGR5YzF0YTVKVEx1RXNzUlo5NGovWGU3R2pSc0I0bzJO?=
+ =?utf-8?B?akR4WDFHOXJIRmNmamJaWWJ2TEF2RzhVMy9tMVRhYncvUjlKdVRKQzlOeHBR?=
+ =?utf-8?B?SWNnTnRLTjRWMlhBcldSM0g5OTdpNlA2aDRHWTlFV2pERElvTStIa1VyakpU?=
+ =?utf-8?B?eEpyTVhNTFVFWEN6Tk54S0MyZG9wVDJnekJMOU9WbzNkQVJJNE04bjhYMTU5?=
+ =?utf-8?B?aXMxekZrNEJjaDBsMnFYcHlkZ1NQaTJPN1dPU2FnNE90allpY2lTTWoyOGVI?=
+ =?utf-8?B?em8vT1YxYXUvQktVOXlKVEV2ODMvaXNUZHkvNHBjY0RuL0NyT1g4RkFueEZr?=
+ =?utf-8?B?aHRKUzkxdUg4Y2FpaGJxT2o3Wm1LYytLb2JBaEZBT01sV1VPVGVjMTJNWTRU?=
+ =?utf-8?B?SUNKL2I0cElacXM1K1FpWWFsK2hmSUdsSllycjZrNDVMTW1MS2ZTclkyNUhT?=
+ =?utf-8?B?dFdBZG5xdldxQUxLdHdmUWIwTW9CRFc2MlE1TFVwdW9mSEZjbWFEOXJtKzhG?=
+ =?utf-8?B?UzB0TWZzMnQ0MjBUSTQ1eXl1TlhXcnBhVm5LYzQzVlBpMHBvaGo0WlFzazRD?=
+ =?utf-8?B?OERvWFhXaCt6bCtQRDNPaTZpaWNudzk0c3FhTm5zaHQwbkdwQklnUEVJN2RH?=
+ =?utf-8?B?Sk81ek1pK1ZzRm9QN20xcXdFWlVCdlR0SVVJUzNuMDhPN1c2VDZDaWhhNW1x?=
+ =?utf-8?B?bVh3MkVCU2MzcFJLSWVhOE80b1E1SVNJWm5OWllJaFVTNnZQVXUzSWRJZ3lT?=
+ =?utf-8?B?UmNoR3dtQ25RcnVsdkhCUndGNy95b29NaWNNYzltQ2hRR1JXME44aUJybjAy?=
+ =?utf-8?B?di9tdDFwU003aU4xc1RjbmRZNWhMYkxiMHlEcUhncE95bFhuaC96dUhPSC91?=
+ =?utf-8?Q?N0VoYJPsC1ef0xKUmp?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d13fb12-40a5-4aba-f865-08de89e22f95
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2026 20:16:08.9388
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XTHnmLJEqs60ndxeQO4InIT5yABbhTNWwe95x6I722TqUmN2i/ad5/SmCwflwyjPLuqewnpAhb3YicyP6Up2Hw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8327
+X-Spamd-Result: default: False [1.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
-	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34105-lists,linux-gpio=lfdr.de];
-	FREEMAIL_TO(0.00)[kernel.org,pengutronix.de,gmail.com,bootlin.com,linux-watchdog.org,roeck-us.net];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
+	FREEMAIL_CC(0.00)[axentia.se,kernel.org,milecki.pl,pengutronix.de,gmail.com,vger.kernel.org,lists.linux.dev,lists.infradead.org,nxp.com];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-34106-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[thomas.perrot@bootlin.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[bootlin.com:+];
+	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[nxp.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid]
-X-Rspamd-Queue-Id: 915AD31B8D2
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 7471631C383
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add watchdog driver for the Aaeon SRG-IMX8P embedded controller.
-This driver provides system monitoring and recovery capabilities
-through the MCU's watchdog timer.
+On Fri, Mar 20, 2026 at 09:54:45AM -0400, Frank Li wrote:
+> On Fri, Mar 20, 2026 at 02:27:21PM +0100, Linus Walleij wrote:
+> > On Thu, Mar 19, 2026 at 12:04 AM Frank Li <Frank.li@nxp.com> wrote:
+> > > On Mon, Mar 16, 2026 at 10:37:28AM +0100, Linus Walleij wrote:
+> >
+> > > > That said: in this case you're just adding a parameter, just add
+> > > > the parameter and change all of the in-tree users to pass false
+> > > > or whatever you need, these is just one (1) in-tree user anyway.
+> > >
+> > > pinctrl_generic_pins_function_dt_node_to_map() directly feed to
+> > > .dt_node_to_map() callback, add parameter will impact too much.
+> >
+> > Why do you say that. It already has many parameters, one more
+> > or less doesn't matter. It's not like this call is performance-critical.
+> > Just change the users.
+>
+> In only user drivers/pinctrl/microchip/pinctrl-mpfs-mssio.c,
+> 	.dt_node_to_map = pinctrl_generic_pins_function_dt_node_to_map;
+>
+> pinctrl_generic_pins_function_dt_node_to_map() need match .dt_node_to_map()'s
+> declear.
+>
+> So it can't direct add two parameters in pinctrl_generic_pins_function_dt_node_to_map()
+> Need simple wrap function, which other in pinctrl-mpfs-mssio.c or in
+> pinconf.h.
+>
+> If add two parameter in .dt_node_to_map(), need change all functions, which
+> .dt_node_to_map = xxx_to_map(). and OF core part.
 
-The watchdog supports start, stop, and ping operations with a maximum
-hardware heartbeat of 25 seconds and a default timeout of 240 seconds.
+Linus Walleij:
+	Is my explain clear enough? I am preparing respin it?
 
-Co-developed-by: Jérémie Dautheribes (Schneider Electric) <jeremie.dautheribes@bootlin.com>
-Signed-off-by: Jérémie Dautheribes (Schneider Electric) <jeremie.dautheribes@bootlin.com>
-Signed-off-by: Thomas Perrot (Schneider Electric) <thomas.perrot@bootlin.com>
----
- MAINTAINERS                      |   1 +
- drivers/watchdog/Kconfig         |  10 +++
- drivers/watchdog/Makefile        |   1 +
- drivers/watchdog/aaeon_mcu_wdt.c | 134 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 146 insertions(+)
+	is okay use wrap function
+	pinctrl_generic_pins_function_dt_node_to_map_ext()?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2538f8c4bc1482b139e18243a68f0a21b9be3704..7b92af42c9fdc17a69a4e7a2fe50f9e199c8b144 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -193,6 +193,7 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/mfd/aaeon,srg-imx8p-mcu.yaml
- F:	drivers/gpio/gpio-aaeon-mcu.c
- F:	drivers/mfd/aaeon-mcu.c
-+F:	drivers/watchdog/aaeon_mcu_wdt.c
- F:	include/linux/mfd/aaeon-mcu.h
- 
- AAEON UPBOARD FPGA MFD DRIVER
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index d3b9df7d466b0b7215ee87b3040811d44ee53d2a..da54e6a641d7af343e4f0ae84f96f150979f8348 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -168,6 +168,16 @@ config SOFT_WATCHDOG_PRETIMEOUT
- 	  watchdog. Be aware that governors might affect the watchdog because it
- 	  is purely software, e.g. the panic governor will stall it!
- 
-+config AAEON_MCU_WATCHDOG
-+	tristate "Aaeon MCU Watchdog"
-+	depends on MFD_AAEON_MCU
-+	select WATCHDOG_CORE
-+	help
-+	  Select this option to enable watchdog timer support for the Aaeon
-+	  SRG-IMX8P onboard microcontroller (MCU). This driver provides
-+	  watchdog functionality through the MCU, allowing system monitoring
-+	  and automatic recovery from system hangs.
-+
- config BD957XMUF_WATCHDOG
- 	tristate "ROHM BD9576MUF and BD9573MUF PMIC Watchdog"
- 	depends on MFD_ROHM_BD957XMUF
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index ba52099b125398a32f80dad23317e223cc4af028..2deec425d3eafb6b208e061fda9f216f4baa8ecc 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -37,6 +37,7 @@ obj-$(CONFIG_USBPCWATCHDOG) += pcwd_usb.o
- # ALPHA Architecture
- 
- # ARM Architecture
-+obj-$(CONFIG_AAEON_MCU_WATCHDOG) += aaeon_mcu_wdt.o
- obj-$(CONFIG_ARM_SP805_WATCHDOG) += sp805_wdt.o
- obj-$(CONFIG_ARM_SBSA_WATCHDOG) += sbsa_gwdt.o
- obj-$(CONFIG_ARMADA_37XX_WATCHDOG) += armada_37xx_wdt.o
-diff --git a/drivers/watchdog/aaeon_mcu_wdt.c b/drivers/watchdog/aaeon_mcu_wdt.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..f01571cf0036d252f9bebd3a9d6a1c2e7a83e42c
---- /dev/null
-+++ b/drivers/watchdog/aaeon_mcu_wdt.c
-@@ -0,0 +1,134 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Aaeon MCU Watchdog driver
-+ *
-+ * Copyright (C) 2025 Bootlin
-+ * Author: Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>
-+ * Author: Thomas Perrot <thomas.perrot@bootlin.com>
-+ */
-+
-+#include <linux/mfd/aaeon-mcu.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/watchdog.h>
-+
-+#define AAEON_MCU_CONTROL_WDT	0x63
-+#define AAEON_MCU_PING_WDT	0x73
-+
-+#define AAEON_MCU_WDT_TIMEOUT         240
-+#define AAEON_MCU_WDT_HEARTBEAT_MS    25000
-+
-+struct aaeon_mcu_wdt {
-+	struct watchdog_device wdt;
-+	struct regmap *regmap;
-+};
-+
-+static int aaeon_mcu_wdt_cmd(struct aaeon_mcu_wdt *data, u8 opcode, u8 arg)
-+{
-+	/* The MCU always sends a response byte after each command; discard it. */
-+	return regmap_write(data->regmap, AAEON_MCU_REG(opcode, arg), 0);
-+}
-+
-+static int aaeon_mcu_wdt_start(struct watchdog_device *wdt)
-+{
-+	struct aaeon_mcu_wdt *data = watchdog_get_drvdata(wdt);
-+
-+	return aaeon_mcu_wdt_cmd(data, AAEON_MCU_CONTROL_WDT, 0x01);
-+}
-+
-+static int aaeon_mcu_wdt_status(struct watchdog_device *wdt, bool *enabled)
-+{
-+	struct aaeon_mcu_wdt *data = watchdog_get_drvdata(wdt);
-+	unsigned int rsp;
-+	int ret;
-+
-+	ret = regmap_read(data->regmap,
-+			  AAEON_MCU_REG(AAEON_MCU_CONTROL_WDT, 0x02),
-+			  &rsp);
-+	if (ret)
-+		return ret;
-+
-+	*enabled = rsp == 0x01;
-+	return 0;
-+}
-+
-+static int aaeon_mcu_wdt_stop(struct watchdog_device *wdt)
-+{
-+	struct aaeon_mcu_wdt *data = watchdog_get_drvdata(wdt);
-+
-+	return aaeon_mcu_wdt_cmd(data, AAEON_MCU_CONTROL_WDT, 0x00);
-+}
-+
-+static int aaeon_mcu_wdt_ping(struct watchdog_device *wdt)
-+{
-+	struct aaeon_mcu_wdt *data = watchdog_get_drvdata(wdt);
-+
-+	return aaeon_mcu_wdt_cmd(data, AAEON_MCU_PING_WDT, 0x00);
-+}
-+
-+static const struct watchdog_info aaeon_mcu_wdt_info = {
-+	.identity	= "Aaeon MCU Watchdog",
-+	.options	= WDIOF_KEEPALIVEPING
-+};
-+
-+static const struct watchdog_ops aaeon_mcu_wdt_ops = {
-+	.owner		= THIS_MODULE,
-+	.start		= aaeon_mcu_wdt_start,
-+	.stop		= aaeon_mcu_wdt_stop,
-+	.ping		= aaeon_mcu_wdt_ping,
-+};
-+
-+static int aaeon_mcu_wdt_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct watchdog_device *wdt;
-+	struct aaeon_mcu_wdt *data;
-+	bool enabled;
-+	int ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->regmap = dev_get_regmap(dev->parent, NULL);
-+	if (!data->regmap)
-+		return -ENODEV;
-+
-+	wdt = &data->wdt;
-+	wdt->parent = dev;
-+	wdt->info = &aaeon_mcu_wdt_info;
-+	wdt->ops = &aaeon_mcu_wdt_ops;
-+	/*
-+	 * The MCU firmware has a fixed hardware timeout of 25 seconds that
-+	 * cannot be changed. The watchdog core will handle automatic pinging
-+	 * to support longer timeouts. The software timeout of 240 seconds is
-+	 * chosen arbitrarily as a reasonable value and is not user-configurable.
-+	 */
-+	wdt->timeout = AAEON_MCU_WDT_TIMEOUT;
-+	wdt->max_hw_heartbeat_ms = AAEON_MCU_WDT_HEARTBEAT_MS;
-+
-+	watchdog_set_drvdata(wdt, data);
-+
-+	ret = aaeon_mcu_wdt_status(wdt, &enabled);
-+	if (ret)
-+		return ret;
-+
-+	if (enabled)
-+		set_bit(WDOG_HW_RUNNING, &wdt->status);
-+
-+	return devm_watchdog_register_device(dev, wdt);
-+}
-+
-+static struct platform_driver aaeon_mcu_wdt_driver = {
-+	.driver		= {
-+		.name	= "aaeon-mcu-wdt",
-+	},
-+	.probe		= aaeon_mcu_wdt_probe,
-+};
-+
-+module_platform_driver(aaeon_mcu_wdt_driver);
-+
-+MODULE_DESCRIPTION("Aaeon MCU Watchdog Driver");
-+MODULE_AUTHOR("Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>");
-+MODULE_LICENSE("GPL");
-
--- 
-2.53.0
-
+Frank
+>
+> Frank
+>
+> >
+> > Yours,
+> > Linus Walleij
 
