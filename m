@@ -1,153 +1,240 @@
-Return-Path: <linux-gpio+bounces-34096-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34097-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QBDzDOvOwmnRmQQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34096-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 18:50:35 +0100
+	id IBSSDLDXwmllmgQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34097-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 19:28:00 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B091031A542
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 18:50:34 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C1FF31AD1C
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 19:27:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9A4D23098415
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 17:45:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9A9083085300
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 18:25:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7E6D40B6D0;
-	Tue, 24 Mar 2026 17:45:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7CC63A1D02;
+	Tue, 24 Mar 2026 18:25:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q53Uk/5N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wr0JnZCI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF68408252;
-	Tue, 24 Mar 2026 17:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774374344; cv=none; b=ARs2BWOsiD0t6zJebuYgstU676G1S87oktR4kSXQXtmxfSKpoSEPv1GhoeQKow37wagPLhNjzBFfA/VdUdYlcp2CwcvOJ1ONlVYFq0+KGljxdaNocj+Ou1/bWjpQqpXIue8omjbyanxsYDJm0Unqu9b2jACXMrdSvXMGMfHr37s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774374344; c=relaxed/simple;
-	bh=upGFHp7lyoGcE1KG0T65EXU8eX+EfmbRVqdvqDeIAUI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mz/ucQAhzBo4eUOWhAYFjJV9K+ysPgxA8jSMHzCYHqnB4hY1GgzCAMptUDXE26Mv3L4Dq3dUO+snsld9jLogaNmlaguaLioGCVZRQmwhierU1oi8pKnVTZ3azz84ONGN5LQHd0u0kmJ+79XVMlhNySJG6k8ZQfEhjGNYQEEM+Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q53Uk/5N; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F335AC19424;
-	Tue, 24 Mar 2026 17:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774374344;
-	bh=upGFHp7lyoGcE1KG0T65EXU8eX+EfmbRVqdvqDeIAUI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q53Uk/5NNGvIwCylp+3SADOvVjiS9lI19E4nwffc+W+jPguD3LZXlfftiMeo5crNU
-	 TgX2WXgSwVn3XLcam/6EC6/4KEqZf4nDLCX92j+I8yEWZr+hjxLh8h7pVUKYecONEz
-	 qdWCrjPj1iBBNV9Yq+3s2AZrM2G9CT1iupVi5obIom5M5JiUKE6ViZGY9tlfGYh48Z
-	 e3hsjZF+Wc68XDsUhinxv0FoV/RqQkOqblpzRRwQ2ZOn2YjSgYZ8DY8KLdEOX2UBMW
-	 86yKUKKwTyPvehziOoiVWCZpTEIsgT+kdKFoLM6WGwqvso1Rky4DZEFiZ2OhOMlqNw
-	 B/2KA7mdl51ag==
-Date: Tue, 24 Mar 2026 17:45:38 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: linux-gpio@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@kernel.org>
-Subject: Re: (subset) [PATCH v13 0/5] PolarFire SoC GPIO interrupt support
-Message-ID: <20260324-grub-finless-bacbd4d6ff94@spud>
-References: <20260318-gift-nearest-fd3ef3e4819b@spud>
- <177425976898.21144.1074460491522922532.b4-ty@oss.qualcomm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D9C39FCDD
+	for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 18:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774376744; cv=pass; b=NzSnjSxBkl+xCwJQB4el4IMfoj9W7xoBYaRxNHVbxhr6ulIEM7JLYahR2eaS0g4GhdksnwimY0kcy8H3QoV+DlyckGBxHCpmuwdgR1KLDa0f/iBPfCkC7h/W68zx5Ly+J4ZrYTyblak1yMQ6bA6bsiHjDcU84+UgBVgk9y6gR7Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774376744; c=relaxed/simple;
+	bh=nSeJjWi9ff21ilzihYD7YJPR61++LDGp71PADOCu5cU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rQZ1MOXTNJ/WdXlF1bvOjJHD9OlaWmFon0EJ2KUftL4Yj5em0XyWU9rgjtNiUPZtfALlXN6sP+uGQx9yybabpx2cIb2k3j3QqgfzpGdGpFyRMW8+6mVybKWbBcYF1Tgz1tLF6JWI2d+H5UlOUoQ86An7w6Pio+CRlfzNW3gukj8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wr0JnZCI; arc=pass smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b97bca3797dso209051466b.0
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 11:25:42 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774376741; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Lu8XZpfiHY9iC5WoYt1QnQ3lRRFMwNT9NMQik1jjPaFimJ4+4Ig+GYFJnZTE1FniTx
+         yr2ePZcYmE9HSEuuJH+fWQlerCSlLAz/ijmLbCQQibKzLuqxn5ScsWhVLkmfku19R4jX
+         /PVhBRs+CFENbFIviJX49Q12zyPNqN73CYobn56c0URY9yWgsDdjd6JYqWtCa0a2ErJg
+         H0C+FbqECEiMKcWk0OJOa2PDp12A1QW7+PPUcpgBSzevmR654ra05BhJvD98wsDm0YQ5
+         kLGstWx3C1NxtSL46E03g8xmj3Tv0NiqSjvI6T9okQp19smAzcBW7Ig+AlDhZqgBdraQ
+         O0Pg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=QK4NUvTEC0se5sdlimEBUGkPC6mWj52an2k34LrXOLs=;
+        fh=4H9MyTnPpc3lZtfHSRhZsEAamfqx8q55o2gnZs/BlXo=;
+        b=bqbyrLJToT02wO7rCzFSZy0/FiwiW2NxBKoo02c+A8LSrGwffy9R9DwEQYoHR3VDfJ
+         h1EepN6xQ0Wzq2LP3mL6Xpswn17nDHipU24Hj07yIaug9DnnbWHSbS+++HOdS2JXglvw
+         To/lONVHU1Kt++xmMYoZevzOmNJOKEFSN0KNSNQx8go2FUdUhDc/Ws4psl4s8p3yHdnI
+         Sknz7FDUCj9ityFxMVJ+/C23fyb0RqLGXeqSPEYjST0S2ZhVheBRSXLpx3/Y8E0yimZW
+         PU3gGZzYmn9BxdIdeoy8K7F0DBnhRNqME4vHBwTQlaCT0D20IzjBCOjW08DW5LgmGHRd
+         MTEQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774376741; x=1774981541; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QK4NUvTEC0se5sdlimEBUGkPC6mWj52an2k34LrXOLs=;
+        b=Wr0JnZCIrytmmcN/pEfjMSz1DKNpQTX1Zp/hXxE21IHktTEagZT8ASEunmUlmu1v9h
+         nfRuZp/bWegr0JqYMf7z4KDFeR3M3edbh18KntwvpjVnGLkoBlfwgbCZ3fzgH1+c5f3E
+         I9pVrXpXcET9fqq4oDTvJ/qj8Iyvo8C63VC1v3WAzyCXssgsdPDt1SOBOkmbm0dIL+xc
+         6G9WRW0NkTwJbU9W/z46Y+LT0fYtth9gaNpsKJWhbolZGcHHuqB+sjJ9b9tshYM22ngf
+         ArxzcTIKTgH/fFh2eKH76nEreiXj2VvFFUNHqr8HtI/wOO9dJahy6EzS99H0ewnBgv8q
+         ZH2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774376741; x=1774981541;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=QK4NUvTEC0se5sdlimEBUGkPC6mWj52an2k34LrXOLs=;
+        b=b+5XGQ2xS3hgGjZqYgubPuZEUm5zGe2YM7or5lBRq45f5sQ+hIne6UaF+m2v7bLyve
+         F3DkmND/FLKzp6MIjITq4jZLGqwqna/Ev9V2zUZWUAzs2JomZCSvtcvavW1WiGn1MWjI
+         fZ/hiAgAyeBl2u4fsREEn1s7s86JxbMgzQRJFAalCyUv56YOsPq4tRgbseto2u6zgdoo
+         A2d/okItReDj3v8bnTExTHaBUOaMOt+OvJVd/8E6+8KwzaNOTRBpe5nDVqraR/y5Nvus
+         Hu+bk8RxgCq20QXQ/4MC+GSiZao21CIRo5PKwkLApIz+CZGie/Wb5jzrEZvz2Nbms0/F
+         BXsg==
+X-Forwarded-Encrypted: i=1; AJvYcCU4Ph47X9PQDeEXlT7XLfNLvjVmWcT2fCzeKpHvUngb03BB8acPawB8HEAEkmWLsB/cl1T7bGLVqMN6@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEUo8cxwZ6K0YzS06mlWySES513Y2mz8kSFfjdk3vhviFBpwiU
+	rTl6zj27rWk2ndDnGYZCwFsA75DneHsb9Q8SsFfOzQWIBJugOGvySE0XGTb02aXzvvgdxUDOZ8t
+	PurPUzVunfaeyX4p2rAdHhWmivL0tI3A=
+X-Gm-Gg: ATEYQzxn3pwtvIDNESdA/gy6QCcwG5fvZ38LRs2lq/4bZU9cjFHTRMrFEckgZbI74PU
+	7wa7WHMVAnBB6YamOUJzJMHlF9iD3iqjkp+w0sOtUWhvy7fmWr5JHx44fmflBp5mtPS9qlhXNZ7
+	iXd0MMiD6MpuYDhwwxaBx2fIsBGFZePQi012eA3DjWHSIKDIlihq4mcqbbAe+TeLqregTl0m+9o
+	j/f63Wi0lfUWBaQrKKf7O39TeRWSJZyK33cL9Qu35fbqqtBd5sqjODGx4dHHYHHKRjLPAFH+H5l
+	tk0eHOovLsGvoPueD1Gw1/ZqmiSkv9iric/YvCKbqQjuVWo3yERBrNl8lipGm4YlkugiFtuQihY
+	6C9A/WA==
+X-Received: by 2002:a17:906:f59c:b0:b98:8a4a:7d15 with SMTP id
+ a640c23a62f3a-b9a3f1a70fdmr30898466b.19.1774376740366; Tue, 24 Mar 2026
+ 11:25:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="BcLAMXhdpy+bmO3t"
-Content-Disposition: inline
-In-Reply-To: <177425976898.21144.1074460491522922532.b4-ty@oss.qualcomm.com>
-X-Spamd-Result: default: False [-2.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+References: <20260319000558.22108-1-rosenp@gmail.com> <202603201104.8D7B8A1@keescook>
+ <CAKxU2N8ZZp5fcCWfMaqZ9VKwNQ3a06fsQPXpBQa-d1N07zPGng@mail.gmail.com>
+ <CAMRc=MctGTeqBHQ8zaQ7_2YAoWoTUxOK4_hs+-EHEQEPnz+A-g@mail.gmail.com>
+ <CAKxU2N9KdziPen9-_gfe0UZjyuMTOsbb583aeF3=kqm22rGieA@mail.gmail.com>
+ <CAMRc=Me2RLj-vvCVNho9CPYVwsQHypC_KvKHJWkLyj=rMkfx2w@mail.gmail.com>
+ <CAKxU2N8gudRXR-bLMoyDVDuv3vWuzqrbyVsHL=Gu3mDZWMvs6w@mail.gmail.com>
+ <CAMRc=MeYoDB1QsgckNH9OGWx=WJZofMHq+zL4xY8VK+rzP3gog@mail.gmail.com>
+ <CAKxU2N80Qf+Uc_daBSxjz26e54fAz8bLRPVZYdCcaiHhpfHK-g@mail.gmail.com> <CAMRc=Mcv1TW55R87xiuAOQShX1Tjf_=BkwfoXdDN8SfUK=a5GQ@mail.gmail.com>
+In-Reply-To: <CAMRc=Mcv1TW55R87xiuAOQShX1Tjf_=BkwfoXdDN8SfUK=a5GQ@mail.gmail.com>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Tue, 24 Mar 2026 11:25:29 -0700
+X-Gm-Features: AQROBzAP0LwYIgjA2GAFD4uEyPzen9IwFHr8wG9Eghx_TY_10NtmkgkzTOhTbjo
+Message-ID: <CAKxU2N9gCoyDapYmiY31EMPnTr0vPns6nme26xtibw+Ybs5iHA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mockup: allocate lines with main struct
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, linux-gpio@vger.kernel.org, 
+	Bamvor Jian Zhang <bamv2005@gmail.com>, Linus Walleij <linusw@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34096-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
+	TAGGED_FROM(0.00)[bounces-34097-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,gmail.com];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[microchip.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B091031A542
+	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 9C1FF31AD1C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-
---BcLAMXhdpy+bmO3t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Mar 23, 2026 at 10:56:20AM +0100, Bartosz Golaszewski wrote:
->=20
-> On Wed, 18 Mar 2026 11:04:31 +0000, Conor Dooley wrote:
-> > From: Conor Dooley <conor.dooley@microchip.com>
-> >=20
-> > Yo,
-> >=20
-> > Here's a v3 with an extra patch updating the gpio binding from fished
-> > out from my old branch, fixing the examples and setting the permitted
-> > values of gpios for the controllers on polarfire soc and the existing
-> > binding patch's example fixed.
-> >=20
-> > [...]
->=20
-> Applied, thanks!
->=20
-> [1/5] dt-bindings: gpio: fix microchip,mpfs-gpio interrupt documentation
->       https://git.kernel.org/brgl/c/ececb46fc947705f22cc8c1f9182224e7ec4b=
-b97
-
-Am I to interpret this being all you applied and the driver getting an
-ack as meaning I should take the driver change with the mux driver
-through the soc tree?
-
-Cheers,
-Conor.
-
---BcLAMXhdpy+bmO3t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCacLNwgAKCRB4tDGHoIJi
-0v92AP9QtYZ5z+bPYKGuedxGPgH9ZXMFl7PX5WuGUMEFrWPrSAD/c15IGtL/CEKi
-ha8FmsQczul0R8gZyiQtGTaBH23qAwA=
-=/NsT
------END PGP SIGNATURE-----
-
---BcLAMXhdpy+bmO3t--
+On Tue, Mar 24, 2026 at 10:16=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.o=
+rg> wrote:
+>
+> On Tue, Mar 24, 2026 at 4:56=E2=80=AFPM Rosen Penev <rosenp@gmail.com> wr=
+ote:
+> >
+> > On Tue, Mar 24, 2026 at 8:54=E2=80=AFAM Bartosz Golaszewski <brgl@kerne=
+l.org> wrote:
+> > >
+> > > On Tue, Mar 24, 2026 at 4:52=E2=80=AFPM Rosen Penev <rosenp@gmail.com=
+> wrote:
+> > > >
+> > > > On Tue, Mar 24, 2026 at 2:16=E2=80=AFAM Bartosz Golaszewski <brgl@k=
+ernel.org> wrote:
+> > > > >
+> > > > > On Mon, 23 Mar 2026 17:43:00 +0100, Rosen Penev <rosenp@gmail.com=
+> said:
+> > > > > > On Mon, Mar 23, 2026 at 3:00=E2=80=AFAM Bartosz Golaszewski <br=
+gl@kernel.org> wrote:
+> > > > > >>
+> > > > > >> On Sat, Mar 21, 2026 at 12:00=E2=80=AFAM Rosen Penev <rosenp@g=
+mail.com> wrote:
+> > > > > >> >
+> > > > > >> > >
+> > > > > >> > > static int gpio_mockup_probe(struct platform_device *pdev)
+> > > > > >> > > {
+> > > > > >> > >         ...
+> > > > > >> > >         u16 ngpio;
+> > > > > >> > >         ...
+> > > > > >> > >         rv =3D device_property_read_u16(dev, "nr-gpios", &=
+ngpio);
+> > > > > >> > >         ...
+> > > > > >> > >         gc->ngpio =3D ngpio;
+> > > > > >> > >         ...
+> > > > > >> > >         chip->lines =3D devm_kcalloc(dev, gc->ngpio,
+> > > > > >> > >                                    sizeof(*chip->lines), G=
+FP_KERNEL);
+> > > > > >> > >
+> > > > > >> > > But this begs the question: why add nr_lines when ngpio is=
+ already part
+> > > > > >> > > of the struct:
+> > > > > >> > Maintainers for some inexplicable reason want an extra varia=
+ble for
+> > > > > >> > __counted_by works.
+> > > > > >>
+> > > > > >> I believe what Kees means here is: you can use ngpio for __cou=
+nted_by() like so:
+> > > > > >>
+> > > > > >>   __counted_by(gc.ngpio)
+> > > > > > __counted_by doesn't support nested variables like that.
+> > > > > >
+> > > > > > drivers/gpio/gpio-mockup.c:59:61: error: =E2=80=98gc=E2=80=99 u=
+ndeclared here (not in
+> > > > > > a function)
+> > > > > >    59 |         struct gpio_mockup_line_status lines[] __counte=
+d_by(gc.ngpio);
+> > > > >
+> > > > > The following spin on your patch builds fine for me:
+> > > > >
+> > > > > diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mocku=
+p.c
+> > > > > index a7d69f3835c1e..9427ab8c45f73 100644
+> > > > > --- a/drivers/gpio/gpio-mockup.c
+> > > > > +++ b/drivers/gpio/gpio-mockup.c
+> > > > > @@ -52,10 +52,10 @@ struct gpio_mockup_line_status {
+> > > > >
+> > > > >  struct gpio_mockup_chip {
+> > > > >         struct gpio_chip gc;
+> > > > > -       struct gpio_mockup_line_status *lines;
+> > > > >         struct irq_domain *irq_sim_domain;
+> > > > >         struct dentry *dbg_dir;
+> > > > >         struct mutex lock;
+> > > > > +       struct gpio_mockup_line_status lines[] __counted_by(gc.ng=
+pio);
+> > > > You're using an older compiler. This does not work at all.
+> > > >
+> > > >  *
+>
+> Indeed, sorry. In that case I don't know what Kees meant. I'm fine
+> with a new variable.
+I think his comment is that there's already a counting variable, with
+or without counted_by.
+>
+> Bartosz
 
