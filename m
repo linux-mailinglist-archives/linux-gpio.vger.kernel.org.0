@@ -1,207 +1,137 @@
-Return-Path: <linux-gpio+bounces-34078-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34079-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aBloFlxYwmnQbwQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34078-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 10:24:44 +0100
+	id 4MGVLH9ywmmncwQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34079-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 12:16:15 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C64BD30589D
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 10:24:43 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34357307207
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 12:16:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 718003080AD5
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 09:16:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9CCFC301412B
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 11:15:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88F08328243;
-	Tue, 24 Mar 2026 09:16:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9FF33E559A;
+	Tue, 24 Mar 2026 11:15:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hp1tE/88"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iVnNX4VQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DFA6314B8C
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 09:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E333E3E9F7C;
+	Tue, 24 Mar 2026 11:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774343805; cv=none; b=e0YrV/xZ364zNJCrtnOUyigHmF920HpzWZnMvyTLbHKkIZtWLhTe//zG34FW4/QrJTKkqRSD1+xTAvDPz2V37kdQB0sEKj+099xSXJPdDs8KlUcTD0VznVnesOI12HftJtuP8OEpgLeD/7xN2SivW2cLgGsi/J4iJYPednGvMx8=
+	t=1774350956; cv=none; b=c0NR4bUCwVSh8s3pmBVUNDD3w8V+9MzbylVtu+cYiaN48NqqS3r16nYhT4+qbrYSVKjdD3RgKrLa8DI2TBF7SEvIQ0TXTqXzo5gG5sP4bAHj0SYaYIWeuml58YA/drf5+kdRscjjRz1cLiMEnsyLax47LjHu7pXd5F/45aQUQR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774343805; c=relaxed/simple;
-	bh=d2RtwnezpRl4urg1RLWpLR9gYpLAfG0zOJbGPiOmAl8=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YWX/Jm+G6HMQ5Y3zwgjY0BsVusnTyzaWGpACnVyF0Nx+deNCqHVSsWg2isrK4apsTU6OWfnFF+sSg+eNqCk8gqpkw8stzCJ2DP/iIcqz77+usMVbarQAGaZJ4kkBMFZu2ME1x/RWS4zzXZihJjFRGrVL1HE69Ff+3ws/hyzX1JA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hp1tE/88; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0BFFC2BCB2
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 09:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774343804;
-	bh=d2RtwnezpRl4urg1RLWpLR9gYpLAfG0zOJbGPiOmAl8=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=Hp1tE/8828/HZBnUyCnsBaYxB2JLqDJ4Qa4BaBDqZy7OE/gVnwiBLI7jVYv8khLfC
-	 bZOFG4e9BNIf1xotYP9auHqH1V1L1715UHIoA2Y+5iIRgBuHykvCcSOx7WrYmjXxTO
-	 qMVUDinby+XtaMy4oHDCGFX3eDq+JrtGvRJwazaJEQIpHOWdq+avXwMoYjy1daoYIl
-	 rUYPpR+sYK7nQSae7Q1ijMRif1ciH7zjzUIyzcxr+J0AlmU5NYtWkTzEQKe+FgVQJ4
-	 rdpkWPSYAhStZd+UYoxlnFsBvykCzDxi+9LYNEj/wcY1T26ZbQ+/FW/Th7ABmF3HIb
-	 46eoyZVFVY2NQ==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5a27a2fc113so911040e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 02:16:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX88zpI/fURGVMbmj5Sxnlp8e1cVBV6Q2rQlmW1TFFCbFvxVJlmhmdre7t0M0BORsMuF+uD3AQIsLCQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQQ8B5MJLfcxwwSc+pTBHp9ez5UzgBZl9iGPzNbDR1b5Z+0dSC
-	6VsGpV29jUwcctu2xnJWTyrS0Vs1yClrU8RkXJDYsJYgynqR64k/ov6iolrXJ5CaFkhMzWnsd1F
-	Yiee93gNiMzhF4yUprZdUiUADnbRjYe3QtHi2GXvSbw==
-X-Received: by 2002:a05:6512:401f:b0:5a1:422b:dc0 with SMTP id
- 2adb3069b0e04-5a285b4466bmr5394517e87.26.1774343803256; Tue, 24 Mar 2026
- 02:16:43 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 24 Mar 2026 02:16:41 -0700
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 24 Mar 2026 02:16:41 -0700
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <CAKxU2N9KdziPen9-_gfe0UZjyuMTOsbb583aeF3=kqm22rGieA@mail.gmail.com>
+	s=arc-20240116; t=1774350956; c=relaxed/simple;
+	bh=XzQaaymKb1x+m7GD9B9Foc8m37ERJtZPwOtDyzbsATY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kqum09e3HXsQ5hIEXKutF863lT12rXdbvO0lW/1kGQvZp9kG5KyydQdaqAF6egmPqzaplQrtkH/wENM83nXW4hx8k6O/dmkFjZ9N8Xtfgf3StN8UTA3PEF7aaaYEPFi2JcmLWyKTqlwXPzgYijMtdG/d7oiGm74h3FkBa25dSdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iVnNX4VQ; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774350952; x=1805886952;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XzQaaymKb1x+m7GD9B9Foc8m37ERJtZPwOtDyzbsATY=;
+  b=iVnNX4VQGfjhgxFsBKqIIoDcUwKbqm82q5AkZw1tTPF9L2HNbUX7XIf2
+   KJp3oFt0LkH4TAltYFx0odRJdsiWT3J6b9f6FJUCvGYgPQhwqzTeN1OEQ
+   f5nICpYHZV24YakPVaznC47gjniF4tMxN+HseHe0tPkn7L3n0T5ar+W24
+   h8UxighGMVwu5fzIKXT5L6FCSLvKRCAEerYQWYUEdH1Ib0IFVqVwv+NrK
+   FGn6Wf0wW11zDH1XP+f9rrzcAfRATzMGvP0qT3ZAR6dUSkwUz3OU8wAJB
+   KKW2dwxt0jqRYHt4ucnxygOe4LuirdCtoXtN1r2+iNM0yPGhhiBrNFzH0
+   g==;
+X-CSE-ConnectionGUID: DePGGDCzRDq9mJCuSru3Qg==
+X-CSE-MsgGUID: SL1UtC+zR1uTiWH6P07vwQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11738"; a="75431791"
+X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
+   d="scan'208";a="75431791"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 04:15:51 -0700
+X-CSE-ConnectionGUID: xmaytABaQ4CPk0IJ81u5gg==
+X-CSE-MsgGUID: RE/tylX5RNitjcAQaFObuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
+   d="scan'208";a="220984899"
+Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.214])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 04:15:49 -0700
+Date: Tue, 24 Mar 2026 13:15:46 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Linus Walleij <linusw@kernel.org>,
+	AKASHI Takahiro <akashi.tkhro@gmail.com>,
+	Bartosz Golaszewski <brgl@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	arm-scmi@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Khaled Ali Ahmed <Khaled.AliAhmed@arm.com>,
+	Michal Simek <michal.simek@amd.com>
+Subject: Re: [PATCH v6 7/7] gpio: gpio-by-pinctrl: add pinctrl based generic
+ GPIO driver
+Message-ID: <acJyYirIONH3sYvi@ashevche-desk.local>
+References: <cover.1774283146.git.dan.carpenter@linaro.org>
+ <edd789f8fc87f294211adf84b09c2af9f4aa6a6f.1774283146.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260319000558.22108-1-rosenp@gmail.com> <202603201104.8D7B8A1@keescook>
- <CAKxU2N8ZZp5fcCWfMaqZ9VKwNQ3a06fsQPXpBQa-d1N07zPGng@mail.gmail.com>
- <CAMRc=MctGTeqBHQ8zaQ7_2YAoWoTUxOK4_hs+-EHEQEPnz+A-g@mail.gmail.com> <CAKxU2N9KdziPen9-_gfe0UZjyuMTOsbb583aeF3=kqm22rGieA@mail.gmail.com>
-Date: Tue, 24 Mar 2026 02:16:41 -0700
-X-Gmail-Original-Message-ID: <CAMRc=Me2RLj-vvCVNho9CPYVwsQHypC_KvKHJWkLyj=rMkfx2w@mail.gmail.com>
-X-Gm-Features: AaiRm519BRTEX2gQGLowKC6jTLSHz0cjqDQ3RS2L5qInYINfzfPKlo8eh2B_Md0
-Message-ID: <CAMRc=Me2RLj-vvCVNho9CPYVwsQHypC_KvKHJWkLyj=rMkfx2w@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mockup: allocate lines with main struct
-To: Rosen Penev <rosenp@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, linux-gpio@vger.kernel.org, 
-	Bamvor Jian Zhang <bamv2005@gmail.com>, Linus Walleij <linusw@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <edd789f8fc87f294211adf84b09c2af9f4aa6a6f.1774283146.git.dan.carpenter@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-34078-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,gmail.com];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org,oss.qualcomm.com,linaro.org,arm.com,amd.com];
+	TAGGED_FROM(0.00)[bounces-34079-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
+	HAS_ORG_HEADER(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: C64BD30589D
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[intel.com:+];
+	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:dkim,intel.com:email]
+X-Rspamd-Queue-Id: 34357307207
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, 23 Mar 2026 17:43:00 +0100, Rosen Penev <rosenp@gmail.com> said:
-> On Mon, Mar 23, 2026 at 3:00=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.=
-org> wrote:
->>
->> On Sat, Mar 21, 2026 at 12:00=E2=80=AFAM Rosen Penev <rosenp@gmail.com> =
-wrote:
->> >
->> > >
->> > > static int gpio_mockup_probe(struct platform_device *pdev)
->> > > {
->> > >         ...
->> > >         u16 ngpio;
->> > >         ...
->> > >         rv =3D device_property_read_u16(dev, "nr-gpios", &ngpio);
->> > >         ...
->> > >         gc->ngpio =3D ngpio;
->> > >         ...
->> > >         chip->lines =3D devm_kcalloc(dev, gc->ngpio,
->> > >                                    sizeof(*chip->lines), GFP_KERNEL)=
-;
->> > >
->> > > But this begs the question: why add nr_lines when ngpio is already p=
-art
->> > > of the struct:
->> > Maintainers for some inexplicable reason want an extra variable for
->> > __counted_by works.
->>
->> I believe what Kees means here is: you can use ngpio for __counted_by() =
-like so:
->>
->>   __counted_by(gc.ngpio)
-> __counted_by doesn't support nested variables like that.
->
-> drivers/gpio/gpio-mockup.c:59:61: error: =E2=80=98gc=E2=80=99 undeclared =
-here (not in
-> a function)
->    59 |         struct gpio_mockup_line_status lines[] __counted_by(gc.ng=
-pio);
+On Mon, Mar 23, 2026 at 10:01:47PM +0300, Dan Carpenter wrote:
 
-The following spin on your patch builds fine for me:
+> The ARM SCMI pinctrl protocol allows GPIO access.  Instead of creating
+> a new SCMI GPIO driver, this driver is a generic GPIO driver that uses
+> standard pinctrl interfaces.
 
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index a7d69f3835c1e..9427ab8c45f73 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -52,10 +52,10 @@ struct gpio_mockup_line_status {
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 
- struct gpio_mockup_chip {
- 	struct gpio_chip gc;
--	struct gpio_mockup_line_status *lines;
- 	struct irq_domain *irq_sim_domain;
- 	struct dentry *dbg_dir;
- 	struct mutex lock;
-+	struct gpio_mockup_line_status lines[] __counted_by(gc.ngpio);
- };
+-- 
+With Best Regards,
+Andy Shevchenko
 
- struct gpio_mockup_dbgfs_private {
-@@ -436,15 +436,16 @@ static int gpio_mockup_probe(struct platform_device *=
-pdev)
- 	if (rv)
- 		name =3D dev_name(dev);
 
--	chip =3D devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-+	chip =3D devm_kzalloc(dev, struct_size(chip, lines, ngpio), GFP_KERNEL);
- 	if (!chip)
- 		return -ENOMEM;
-
--	mutex_init(&chip->lock);
--
- 	gc =3D &chip->gc;
--	gc->base =3D base;
- 	gc->ngpio =3D ngpio;
-+	gc->base =3D base;
-+
-+	mutex_init(&chip->lock);
-+
- 	gc->label =3D name;
- 	gc->owner =3D THIS_MODULE;
- 	gc->parent =3D dev;
-@@ -460,11 +461,6 @@ static int gpio_mockup_probe(struct platform_device *p=
-dev)
- 	gc->request =3D gpio_mockup_request;
- 	gc->free =3D gpio_mockup_free;
-
--	chip->lines =3D devm_kcalloc(dev, gc->ngpio,
--				   sizeof(*chip->lines), GFP_KERNEL);
--	if (!chip->lines)
--		return -ENOMEM;
--
- 	for (i =3D 0; i < gc->ngpio; i++)
- 		chip->lines[i].dir =3D GPIO_LINE_DIRECTION_IN;
-
-Bart
 
