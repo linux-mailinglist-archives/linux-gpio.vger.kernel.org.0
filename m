@@ -1,306 +1,615 @@
-Return-Path: <linux-gpio+bounces-34083-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34084-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mM/GCPh/wmnqdAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34083-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 13:13:44 +0100
+	id 4EL6Nx6CwmlneQQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34084-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 13:22:54 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73008307FC7
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 13:13:43 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC636308216
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 13:22:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C734B30E2640
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 12:05:35 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E97F1302A393
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 12:22:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A09B3F7880;
-	Tue, 24 Mar 2026 12:05:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B4253F6601;
+	Tue, 24 Mar 2026 12:22:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eiiwG5ed";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="FU07j3OS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hu+iy2MX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F573EFD1B
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 12:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439153F23B5
+	for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 12:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774353906; cv=none; b=L+YD67zRnqqaZ3KyRhgKKrMMBKto+9RA1390QN51QnUB6wjDaBk9Na3cowKpNCvofIro21YTod3m6/5y7LdMnOGUZYiTbdLnADh9Pfo7/Ibu6xZAh35dvuhehSgtDQqa95yO41mCRIa0W9a38lKnXCx3auxy0EntxdlG4je5G2Q=
+	t=1774354928; cv=none; b=coPB62BwJu5Umr8DXOQ7+oKwuLLLOtbefdJRvySLrjhwSHsuUsrrnwpNqlWrPJDqCTP/UNY4o0zCx/LadFYyGj0lHJyYRlg8cyddIjmt7vaRIdIVcIfwphUsqTWMVnsMMe0raIn/yrEzNpgPgOPSkwxOTPthBYuStkXQsNkH/Qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774353906; c=relaxed/simple;
-	bh=INmeiGJKMXk+0PJEej2mrgVEmYRHxRGrlBMc5p0a5aY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qSS7L3tNbA+2Y/v9g+wkKg4SAW95d0KXTmKA4TkMeaPk44aSoLoJ83xy05T+PwP9v23Lx5Ig7wkwWYBw/iwlUB0R6pbotlLhqOGOjPMSU/TRtZLKaN0KoM4SvUXaJDsHip1D90l9/+ugID0BruB7IHIJEUGq50eVicV3mYOQ+CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eiiwG5ed; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=FU07j3OS; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62OC4vKp409083
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 12:05:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	E5IUEO5PyBIerJfWjfzoqFirzXsSOD9hNzXQV1mXr0E=; b=eiiwG5edacFrpRTZ
-	EtFrpYBAz2dzEh8QgxuzMve34/TbRlhIqFNx0EIQC9p4hZ2Sc1R0WIg2sTP6BzrM
-	ZMpxlfMwVzsguvbqR5NsG0MiTxuaUDz7gQK9z/PxTLu1TEuNtp0aZM+jWN5B0FTG
-	cAEb6aMA1eo/Z0VWzsnyIojgSv0Q7zlmm7vQ+g3Jors7pW4zXq4WIA+Gen1trqxO
-	8FKevj/nVzz62rhyId8j2AORT2bDOzfq1W9g4Gu+AsQMotjMluRzjhztxSKw7emf
-	qjozK5HoD7x8HTa7uMYLbYLYuYjcsGG4hg2oWm9+adG+aTQzddUtS3YHqtw1B3gb
-	YkEiWw==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d3nexs7ea-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 12:05:01 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2b064f043adso75412225ad.0
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 05:04:59 -0700 (PDT)
+	s=arc-20240116; t=1774354928; c=relaxed/simple;
+	bh=r1GJsCW8OLWD6HbAwhJRnQ4Q6N5LSNo7LvQtNAUbDmw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TaPHEU+3MiqYoPiwAN+C2yCh/mnJSX3qC6mdZrWkGtfxkBU+9OC0Fh3LB+Of2p2io5JGnfQblnyUFoEq7sGPyKQfRaZHb9oKpLZ7jzpW6hcsnnlRcZuh9cY3jpX6r7mQbIGhLHXThTH6grVeGyK290t6CxjnX3W4mYT7LeG9Jbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hu+iy2MX; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-439b94a19fdso3631007f8f.0
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 05:22:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1774353836; x=1774958636; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=E5IUEO5PyBIerJfWjfzoqFirzXsSOD9hNzXQV1mXr0E=;
-        b=FU07j3OS0SbNW0a7QEOtrOJeGdEIruDFXh+c0y/FIu8wend0BZV/f6m1oR1AErABYO
-         UskGWuEYuBqeQyVEZpawhyGxURu7pAp5CBY4nu+ciSOYVSS2Z5xhcfI6SGbBozRPJGcS
-         98p5TMrc5OCQYmRiDqMVPbP4WVE0UDIY0wOWqfVGCPYTna6Y/j/ctIkKsYbvDwGVbpCY
-         FUxHXzTn1N4NSGQNxBknAH814nerO6wCWvG4Kll7FP4TMLB7BHlB+e6C9b0Wskxx25N6
-         z9LQYiXmQ+d1tDCgJflmpmkMCfzeCJ3gIByBfDcCvxi82nqHJlEtio3ATl6fYKn5LFoH
-         HU0A==
+        d=gmail.com; s=20251104; t=1774354925; x=1774959725; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=q5dvk7Zm80VcMEttb3GAfdno1MkIso7lnn9GAMceQ6w=;
+        b=hu+iy2MXoQ27dPUT/Emhf66o/sCS7kRpgWAzzUgtKuBuaa2xT/LofKdvNvRjNzI/n5
+         lAAj2lzgI/q/3QLLohY17ZHgjGSOZehWnuDmIlEww0S1OpeYx0WzzDTw21i2z7Cx44A6
+         1C/KWGI26/d9ZwTtHldBoCOVuRr4KvrhGtspgqUQ8yn0GQTq5lsHUh32KKBLIewGqc1r
+         /Rw4lr4uMn3zJkF9rTX7YEyjKSAcKdKHEkKfTe7hVa6k1Y0aczqmvwzRdRoimhfrq4d7
+         VoJRvIdsvn5WHVOHLtCutxOZTdd2U25LI4kEx8QWjKT/2UIUvy/c1tuw817DVVvaJgrr
+         rwKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774353836; x=1774958636;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=E5IUEO5PyBIerJfWjfzoqFirzXsSOD9hNzXQV1mXr0E=;
-        b=kRmfcsr1A+31pXYa9Q2VoPB8tUXEJKQYj0/4iqbyKuvc9ZNyfX3fZwQAPMcgMPkD8s
-         uYaC+qhWoj09ZXcSoiW5w4Efyce18vvUBR7Jig1SCAYPpmqVDYFkGv1FwtczdWYMm05g
-         fDs8AwStMhp1ENMRsWFDttq53HVuUSqcNoAj8mWYE2vlgc5S7Sx66euNp5ILJE2kHSd0
-         YdLOUV6f99ymukolgI9zgUAn5zLF7jGkG9Aaj2zrdSjiySzDcl9oN+iYlZDp+elMK0Ba
-         xQOlhrQfoYvvzsjL7Tq4kWutO3md16PrXf4fmYtM4xBZ9RfDjoNm8c3ALC/IdjuOncea
-         MPsA==
-X-Forwarded-Encrypted: i=1; AJvYcCXFqWHvSJepH6HxQGmnxUfpLo2DO41W217sbDIC9nWoFXArsGAQ6rF+2IQv1KoY43pLBbtfEVgsJBNE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7Y2UmuwhhgQvvQD2sDVjCi4VCB7IAQpJgBJNtmtQ8STK2ln4u
-	5tyowjOg1AsioC+IJ0LhlmnpjZpBJ584hodetC4YK3nzHC7+BEHtvvQJN/yMTWP3ocvw6CdWUew
-	8XXKKFm0tFlBoyJLudV4KTdnu6mgsqj0wgiaBDR7cGv+n8lrQlZELIR0dGfkn/639
-X-Gm-Gg: ATEYQzyPQmBQp0v0iv4opwW2WIYakEbS/u/UlqoqaD38lMy/GT3S5tuFbsNvo+Bno9J
-	s6xPEEdOuHxB5d+I/CXpXo9Wbxjw68GwRRo+VET+J75Zt3W0ID8esBOWUi8EAEdF8gvf0uLF85a
-	htvT6Buc/16myk49W8Y7TD4wXdShnIPv5W4a/vmEoGNwid8LljnCAQwrZNLeixNIYv5Je7FfSxz
-	q+P3oF3h9WRfj84luwmwEtnDUxAcri8N+7OBnrVGFIym4R4xlvGERXUYmQ9htKbREPeMWb4sr+I
-	R2h5ouhuNkCNKakdDCjtzeo4JDBzVSvCB2Zvj/v1mv7JTHDnEUNC+yCHZyoqGSHZouXLHiEQJEC
-	WcIFhMIFFp1Pwq9g0Wh0sgdI3rjyAIudxwmawDa77fti4XIgxXITY7w==
-X-Received: by 2002:a17:903:3ba5:b0:2b0:5aab:c40a with SMTP id d9443c01a7336-2b08277aecamr143665645ad.31.1774353835791;
-        Tue, 24 Mar 2026 05:03:55 -0700 (PDT)
-X-Received: by 2002:a17:903:3ba5:b0:2b0:5aab:c40a with SMTP id d9443c01a7336-2b08277aecamr143662045ad.31.1774353830506;
-        Tue, 24 Mar 2026 05:03:50 -0700 (PDT)
-Received: from [10.218.35.45] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b083656f65sm208995095ad.45.2026.03.24.05.03.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2026 05:03:50 -0700 (PDT)
-Message-ID: <f97c6dfa-55dc-4792-95d6-4aa1bce3694d@oss.qualcomm.com>
-Date: Tue, 24 Mar 2026 17:33:42 +0530
+        d=1e100.net; s=20251104; t=1774354925; x=1774959725;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q5dvk7Zm80VcMEttb3GAfdno1MkIso7lnn9GAMceQ6w=;
+        b=YW5rk1slzE4cNGrqRrUsHuCLsOnxk37eY/3nSYpEM2203CQxSdahqXkp5tCYChBb8X
+         zkSjdA5HwKpb9S7ySImysy3iWkOPXpvcbvlBma8QGhZ+G406XH8qovwFSCnbX+lAA+kW
+         VJMvhJnzorFve/7r2T/wj0JDbU/q7e6UEIRNWxDukwpv86Fw6tkBOclQWThhrv2RvUHp
+         JOhLOLQ5WrZhyHXrq3gMVXndyzNgen/NzwMEQnfdSo+TeJS2ttuqeu0rSodl3wBRSEMX
+         ZUcMtY6NxKPaP8MrwXxEQnDvW5dIom14Pv4gn4EZEaecArdOU+q0i5XU01l9ja/j3cr6
+         p6rg==
+X-Forwarded-Encrypted: i=1; AJvYcCWIKMwSHR6eL3uKKoMJKwMLPv2W0YvJH3ZwRJDWBUJRKo8zpW8kOJOoAzrDfzufIxfC/ohmqXKKtIvO@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUXfVpqH38WPMImSjBqqc82Z/eK2xEHiw3O36qYn8FHGxnjMJv
+	jLVLrjbbA/YZ4OzJdKpDEumT6BJXSAnbtaRFNqBzyYVczeysNIYtvydL
+X-Gm-Gg: ATEYQzwTQLqc4d4Huil/lNnNcqLK/q0Zi21BuPs6fxFGmKnxAHgCbSWY3rX3zUOYVV+
+	D8ZqoLx7R/cIVM/CHXQX9UB9rbk/ywCBro4Q3NTiNukeQic+4gdnM1MezFVSV0mqRQczspqdA2d
+	V+BQdekiAhFNnDnYIX5G3Z7/ZsVj1xvs/wzWpUjMwxjFavX+BtJxaxD5cB6wDAXEqdKtDcLim6M
+	/KYU31vW5xb8yq7FieOfR1Bxp+ddtuMCvgYFtGPE6A75WHL5zE3Qc2e5BvzGV5gqSTUzjfmhkxx
+	cW3h04d8pjx8Z/UxPEXrUg6hYHgQLVwRPr2Qjnn3xii5VEwvnqa8FqYUAi32axjqJzl9znmS4GC
+	witsPTynV6ZozU2hME4JJXaIc/lS83M7bTwixOq1wyBhJQ4Eit95H0SPqn6f6eD7x/WXNMKn2ml
+	c+hiXAULy4RA6uFCkDPf/JUBeCmdL4OgvK47q37KEzCg==
+X-Received: by 2002:a05:6000:2010:b0:43b:4ec7:f924 with SMTP id ffacd0b85a97d-43b64264073mr24532596f8f.34.1774354924370;
+        Tue, 24 Mar 2026 05:22:04 -0700 (PDT)
+Received: from [192.168.1.187] ([148.63.225.166])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b6470c239sm37754549f8f.27.2026.03.24.05.22.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2026 05:22:03 -0700 (PDT)
+Message-ID: <83d87ff35002e5c7b9448a5ee7f2791a63c38c38.camel@gmail.com>
+Subject: Re: [PATCH v4 3/4] iio: adc: ad4691: add triggered buffer support
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron
+ <jic23@kernel.org>, David Lechner	 <dlechner@baylibre.com>, Nuno
+ =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>,  Andy Shevchenko	
+ <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski	
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Uwe
+ =?ISO-8859-1?Q?Kleine-K=F6nig?=	 <ukleinek@kernel.org>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown	 <broonie@kernel.org>, Linus Walleij
+ <linusw@kernel.org>, Bartosz Golaszewski	 <brgl@kernel.org>, Philipp Zabel
+ <p.zabel@pengutronix.de>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Date: Tue, 24 Mar 2026 12:22:50 +0000
+In-Reply-To: <20260320-ad4692-multichannel-sar-adc-driver-v4-3-052c1050507a@analog.com>
+References: 
+	<20260320-ad4692-multichannel-sar-adc-driver-v4-0-052c1050507a@analog.com>
+	 <20260320-ad4692-multichannel-sar-adc-driver-v4-3-052c1050507a@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 3/3] PCI: Add support for PCIe WAKE# interrupt
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-        Pavel Machek <pavel@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Danilo Krummrich <dakr@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linusw@kernel.org>,
-        Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>,
-        Saravana Kannan <saravanak@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-gpio@vger.kernel.org, quic_vbadigan@quicinc.com,
-        sherry.sun@nxp.com, driver-core@lists.linux.dev,
-        devicetree@vger.kernel.org
-References: <20260313-wakeirq_support-v8-0-48a0a702518a@oss.qualcomm.com>
- <20260313-wakeirq_support-v8-3-48a0a702518a@oss.qualcomm.com>
- <4n5heks4oymfz75wiajyc5zuzzulmwyfj2couudbi7gi67h2rk@smpnmyhdjkns>
-Content-Language: en-US
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <4n5heks4oymfz75wiajyc5zuzzulmwyfj2couudbi7gi67h2rk@smpnmyhdjkns>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI0MDA5NiBTYWx0ZWRfX8EgmLEE4HsoX
- AiPhZEXaMwwkizY3KbbtqbBAbRRRRR3VyT1ItNraXM/W/SXVuVHZ44XMxzK7jIUZlEVsQzMe4hu
- L+s2hA1uTpyn9aPv74UJaZKqQGwxiJbqczc8MKN3MPSwTRLT+77usJKF3M5u+0izRCkHVrRWenN
- PJ4Radms13RsE1k44vuIOno0eLr0Z7a7QhkcFo8TkgWAnMLD1Qz6pn5cplNB8fjjU5aNxsca25J
- AENr2gHLBIZk5nWlb+b4EnrBEQsLsbJ6c9bmRjPoV1UCMZtBYRQZ5kXMpk/T5vr8NywsqfRoXXU
- kxn67OOquveU+Un0Dx58/2jqsYlm9Z0wixQ4NZjIw5fOVdXRW506NtwAo9u9F9fXOw82hDnB6BH
- QxX7x1aICvN3OtDeRxJwQ4E3D7isKxSpk81hVbowCqVJPgkMGrP28+u5yFFrU2f25ZATo8T2t0L
- wjl/MnIHKx8J/RI00dw==
-X-Proofpoint-GUID: pebWK6XXUEoV0V2kC5v5p2y9EHMX34F2
-X-Proofpoint-ORIG-GUID: pebWK6XXUEoV0V2kC5v5p2y9EHMX34F2
-X-Authority-Analysis: v=2.4 cv=Bd/VE7t2 c=1 sm=1 tr=0 ts=69c27ded cx=c_pps
- a=JL+w9abYAAE89/QcEU+0QA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
- a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=NEAV23lmAAAA:8 a=KKAkSRfTAAAA:8
- a=rFA5VEQNUbPbIC_WhckA:9 a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-24_02,2026-03-23_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 impostorscore=0 clxscore=1015 malwarescore=0 bulkscore=0
- phishscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603240096
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	TAGGED_FROM(0.00)[bounces-34083-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:dkim,qualcomm.com:email];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krishna.chundru@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-34084-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[analog.com,metafoo.de,kernel.org,baylibre.com,gmail.com,pengutronix.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[21];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[nonamenuno@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 73008307FC7
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:url,analog.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: CC636308216
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Hi Radu,
+
+Some comments from me.
+
+On Fri, 2026-03-20 at 13:03 +0200, Radu Sabau via B4 Relay wrote:
+> From: Radu Sabau <radu.sabau@analog.com>
+>=20
+> Add buffered capture support using the IIO triggered buffer framework.
+>=20
+> CNV Burst Mode: the GP pin identified by interrupt-names in the device
+> tree is configured as DATA_READY output. The IRQ handler stops
+> conversions and fires the IIO trigger; the trigger handler executes a
+> pre-built SPI message that reads all active channels from the AVG_IN
+> accumulator registers and then resets accumulator state and restarts
+> conversions for the next cycle.
+>=20
+> Manual Mode: CNV is tied to SPI CS so each transfer simultaneously
+> reads the previous result and starts the next conversion (pipelined
+> N+1 scheme). At preenable time a pre-built, optimised SPI message of
+> N+1 transfers is constructed (N channel reads plus one NOOP to drain
+> the pipeline). The trigger handler executes the message in a single
+> spi_sync() call and collects the results. An external trigger (e.g.
+> iio-trig-hrtimer) is required to drive the trigger at the desired
+> sample rate.
+>=20
+> Both modes share the same trigger handler and push a complete scan =E2=80=
+=94
+> one u16 slot per channel at its scan_index position, followed by a
+> timestamp =E2=80=94 to the IIO buffer via iio_push_to_buffers_with_ts().
+>=20
+> The CNV Burst Mode sampling frequency (PWM period) is exposed as a
+> buffer-level attribute via IIO_DEVICE_ATTR.
+>=20
+> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+> ---
+> =C2=A0drivers/iio/adc/Kconfig=C2=A0 |=C2=A0=C2=A0 2 +
+> =C2=A0drivers/iio/adc/ad4691.c | 584 ++++++++++++++++++++++++++++++++++++=
++++++++++--
+> =C2=A02 files changed, 571 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 3685a03aa8dc..d498f16c0816 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -142,6 +142,8 @@ config AD4170_4
+> =C2=A0config AD4691
+> =C2=A0	tristate "Analog Devices AD4691 Family ADC Driver"
+> =C2=A0	depends on SPI
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
+> =C2=A0	select REGMAP
+> =C2=A0	help
+> =C2=A0	=C2=A0 Say yes here to build support for Analog Devices AD4691 Fam=
+ily MuxSAR
+> diff --git a/drivers/iio/adc/ad4691.c b/drivers/iio/adc/ad4691.c
+> index 5e02eb44ca44..db776de32846 100644
+> --- a/drivers/iio/adc/ad4691.c
+> +++ b/drivers/iio/adc/ad4691.c
+> @@ -9,9 +9,12 @@
+> =C2=A0#include <linux/delay.h>
+> =C2=A0#include <linux/device.h>
+> =C2=A0#include <linux/err.h>
+> +#include <linux/interrupt.h>
+> =C2=A0#include <linux/math.h>
+> =C2=A0#include <linux/module.h>
+> =C2=A0#include <linux/mod_devicetable.h>
+> +#include <linux/property.h>
+> +#include <linux/pwm.h>
+> =C2=A0#include <linux/regmap.h>
+> =C2=A0#include <linux/regulator/consumer.h>
+> =C2=A0#include <linux/reset.h>
+> @@ -19,7 +22,12 @@
+> =C2=A0#include <linux/units.h>
+> =C2=A0#include <linux/unaligned.h>
+> =C2=A0
+> +#include <linux/iio/buffer.h>
+> =C2=A0#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/iio/trigger_consumer.h>
+> =C2=A0
+> =C2=A0#define AD4691_VREF_uV_MIN			2400000
+> =C2=A0#define AD4691_VREF_uV_MAX			5250000
+> @@ -28,6 +36,8 @@
+> =C2=A0#define AD4691_VREF_3P3_uV_MAX			3750000
+> =C2=A0#define AD4691_VREF_4P096_uV_MAX		4500000
+> =C2=A0
+> +#define AD4691_CNV_DUTY_CYCLE_NS		380
+> +
+> =C2=A0#define AD4691_SPI_CONFIG_A_REG			0x000
+> =C2=A0#define AD4691_SW_RESET				(BIT(7) | BIT(0))
+> =C2=A0
+
+...
+
+>=20
+> +static int ad4691_cnv_burst_buffer_preenable(struct iio_dev *indio_dev)
+> +{
+> +	struct ad4691_state *st =3D iio_priv(indio_dev);
+> +	struct device *dev =3D regmap_get_device(st->regmap);
+> +	struct spi_device *spi =3D to_spi_device(dev);
+> +	unsigned int n_active =3D hweight_long(*indio_dev->active_scan_mask);
+> +	unsigned int bit, k, i;
+> +	int ret;
+> +
+> +	st->scan_devm_group =3D devres_open_group(dev, NULL, GFP_KERNEL);
+> +	if (!st->scan_devm_group)
+> +		return -ENOMEM;
+
+Agree with Jonathan. Not seeing a valid reason for the above.
+
+> +
+> +	st->scan_xfers =3D devm_kcalloc(dev, 2 * n_active, sizeof(*st->scan_xfe=
+rs),
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 GFP_KERNEL);
+> +	st->scan_tx =3D devm_kcalloc(dev, n_active, sizeof(*st->scan_tx),
+> +				=C2=A0=C2=A0 GFP_KERNEL);
+> +	st->scan_rx =3D devm_kcalloc(dev, n_active, sizeof(*st->scan_rx),
+> +				=C2=A0=C2=A0 GFP_KERNEL);
+> +	if (!st->scan_xfers || !st->scan_tx || !st->scan_rx) {
+> +		devres_release_group(dev, st->scan_devm_group);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	spi_message_init(&st->scan_msg);
+> +
+> +	/*
+> +	 * Each AVG_IN read needs two transfers: a 2-byte address write phase
+> +	 * followed by a 2-byte data read phase. CS toggles between channels
+> +	 * (cs_change=3D1 on the read phase of all but the last channel).
+> +	 */
+> +	k =3D 0;
+> +	iio_for_each_active_channel(indio_dev, i) {
+> +		st->scan_tx[k] =3D cpu_to_be16(0x8000 | AD4691_AVG_IN(i));
+> +		st->scan_xfers[2 * k].tx_buf =3D &st->scan_tx[k];
+> +		st->scan_xfers[2 * k].len =3D sizeof(__be16);
+> +		spi_message_add_tail(&st->scan_xfers[2 * k], &st->scan_msg);
+> +		st->scan_xfers[2 * k + 1].rx_buf =3D &st->scan_rx[k];
+> +		st->scan_xfers[2 * k + 1].len =3D sizeof(__be16);
+> +		if (k < n_active - 1)
+> +			st->scan_xfers[2 * k + 1].cs_change =3D 1;
+> +		spi_message_add_tail(&st->scan_xfers[2 * k + 1], &st->scan_msg);
+> +		k++;
+> +	}
+> +
+> +	devres_close_group(dev, st->scan_devm_group);
+> +
+> +	st->scan_msg.spi =3D spi;
+> +
+> +	ret =3D spi_optimize_message(spi, &st->scan_msg);
+> +	if (ret) {
+> +		devres_release_group(dev, st->scan_devm_group);
+> +		return ret;
+> +	}
+> +
+> +	ret =3D regmap_write(st->regmap, AD4691_ACC_MASK_REG,
+> +			=C2=A0=C2=A0 (u16)~(*indio_dev->active_scan_mask));
+> +	if (ret)
+> +		goto err;
+> +
+> +	ret =3D regmap_write(st->regmap, AD4691_STD_SEQ_CONFIG,
+> +			=C2=A0=C2=A0 *indio_dev->active_scan_mask);
+> +	if (ret)
+> +		goto err;
+> +
+> +	iio_for_each_active_channel(indio_dev, bit) {
+> +		ret =3D regmap_write(st->regmap, AD4691_ACC_COUNT_LIMIT(bit),
+> +				=C2=A0=C2=A0 AD4691_ACC_COUNT_VAL);
+> +		if (ret)
+> +			goto err;
+> +	}
+> +
+> +	ret =3D ad4691_enter_conversion_mode(st);
+> +	if (ret)
+> +		goto err;
+> +
+> +	ret =3D ad4691_sampling_enable(st, true);
+> +	if (ret)
+> +		goto err;
+> +
+> +	enable_irq(st->irq);
+> +	return 0;
+> +err:
+> +	spi_unoptimize_message(&st->scan_msg);
+> +	devres_release_group(dev, st->scan_devm_group);
+> +	return ret;
+> +}
+> +
+> +static int ad4691_cnv_burst_buffer_postdisable(struct iio_dev *indio_dev=
+)
+> +{
+> +	struct ad4691_state *st =3D iio_priv(indio_dev);
+> +	struct device *dev =3D regmap_get_device(st->regmap);
+> +	int ret;
+> +
+> +	disable_irq(st->irq);
+
+Should we use disable_irq_sync()?
+> +
+> +	ret =3D ad4691_sampling_enable(st, false);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D regmap_write(st->regmap, AD4691_STD_SEQ_CONFIG,
+> +			=C2=A0=C2=A0 AD4691_SEQ_ALL_CHANNELS_OFF);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D ad4691_exit_conversion_mode(st);
+> +	spi_unoptimize_message(&st->scan_msg);
+> +	devres_release_group(dev, st->scan_devm_group);
+> +	return ret;
+> +}
+> +
+> +static const struct iio_buffer_setup_ops ad4691_cnv_burst_buffer_setup_o=
+ps =3D {
+> +	.preenable =3D &ad4691_cnv_burst_buffer_preenable,
+> +	.postdisable =3D &ad4691_cnv_burst_buffer_postdisable,
+> +};
+> +
+> +static ssize_t sampling_frequency_show(struct device *dev,
+> +					struct device_attribute *attr,
+> +					char *buf)
+> +{
+> +	struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
+> +	struct ad4691_state *st =3D iio_priv(indio_dev);
+> +
+> +	if (st->manual_mode)
+> +		return -ENODEV;
+
+Can the above happen at all? I think you're making sure (at probe) this int=
+erface
+never get's exposed in manual mode.
+
+> +
+> +	return sysfs_emit(buf, "%u\n", (u32)(NSEC_PER_SEC / st->cnv_period_ns))=
+;
+> +}
+> +
+> +static ssize_t sampling_frequency_store(struct device *dev,
+> +					 struct device_attribute *attr,
+> +					 const char *buf, size_t len)
+> +{
+> +	struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
+> +	struct ad4691_state *st =3D iio_priv(indio_dev);
+> +	int freq, ret;
+> +
+> +	if (st->manual_mode)
+> +		return -ENODEV;
+> +
+> +	ret =3D kstrtoint(buf, 10, &freq);
+> +	if (ret)
+> +		return ret;
+> +
+> +	guard(mutex)(&st->lock);
+> +
+> +	ret =3D ad4691_set_pwm_freq(st, freq);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return len;
+> +}
+> +
+> +static IIO_DEVICE_ATTR(sampling_frequency, 0644,
+> +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sampling_frequency_show,
+> +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sampling_frequency_store, 0);
+> +
+> +static const struct iio_dev_attr *ad4691_buffer_attrs[] =3D {
+> +	&iio_dev_attr_sampling_frequency,
+> +	NULL,
+> +};
+> +
+> +static irqreturn_t ad4691_irq(int irq, void *private)
+> +{
+> +	struct iio_dev *indio_dev =3D private;
+> +	struct ad4691_state *st =3D iio_priv(indio_dev);
+> +
+> +	/*
+> +	 * GPx has asserted: stop conversions before reading so the
+> +	 * accumulator does not continue sampling while the trigger handler
+> +	 * processes the data. Then fire the IIO trigger to push the sample
+> +	 * to the buffer.
+> +	 */
+> +	ad4691_sampling_enable(st, false);
+> +	iio_trigger_poll(st->trig);
+
+Not sure you need to save trig in your struct. We already have it in indio_=
+dev->trig. Sure,
+it is a private member but still fairly common to see (this patch included)=
+:
+
+indio_dev->trig =3D iio_trigger_get(trig);
+
+So I would say we either assume it's public or start to not allow the above
+pattern.
+
+Alternatively, I don't think you're using indio_dev driverdata right? Could=
+ save it
+in there.
+
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static const struct iio_trigger_ops ad4691_trigger_ops =3D {
+> +	.validate_device =3D iio_trigger_validate_own_device,
+> +};
+> +
+> +static irqreturn_t ad4691_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf =3D p;
+> +	struct iio_dev *indio_dev =3D pf->indio_dev;
+> +	struct ad4691_state *st =3D iio_priv(indio_dev);
+> +	unsigned int i, k =3D 0;
+> +	int ret;
+> +
+> +	guard(mutex)(&st->lock);
+> +
+> +	ret =3D spi_sync(st->scan_msg.spi, &st->scan_msg);
+> +	if (ret)
+> +		goto done;
+> +
+> +	if (st->manual_mode) {
+> +		iio_for_each_active_channel(indio_dev, i) {
+> +			st->scan.vals[i] =3D be16_to_cpu(st->scan_rx[k + 1]);
+> +			k++;
+> +		}
+> +	} else {
+> +		iio_for_each_active_channel(indio_dev, i) {
+> +			st->scan.vals[i] =3D be16_to_cpu(st->scan_rx[k]);
+> +			k++;
+> +		}
+> +
+> +		ret =3D regmap_write(st->regmap, AD4691_STATE_RESET_REG,
+> +				=C2=A0=C2=A0 AD4691_STATE_RESET_ALL);
+> +		if (ret)
+> +			goto done;
+> +
+> +		ret =3D ad4691_sampling_enable(st, true);
+> +		if (ret)
+> +			goto done;
+> +	}
+> +
+> +	iio_push_to_buffers_with_ts(indio_dev, &st->scan, sizeof(st->scan),
+> +				=C2=A0=C2=A0=C2=A0 pf->timestamp);
+> +
+> +done:
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> =C2=A0static const struct iio_info ad4691_info =3D {
+> =C2=A0	.read_raw =3D &ad4691_read_raw,
+> =C2=A0	.write_raw =3D &ad4691_write_raw,
+> @@ -495,6 +934,25 @@ static const struct iio_info ad4691_info =3D {
+> =C2=A0	.debugfs_reg_access =3D &ad4691_reg_access,
+> =C2=A0};
+> =C2=A0
+> +static int ad4691_pwm_setup(struct ad4691_state *st)
+> +{
+> +	struct device *dev =3D regmap_get_device(st->regmap);
+> +	int ret;
+> +
+> +	st->conv_trigger =3D devm_pwm_get(dev, "cnv");
+> +	if (IS_ERR(st->conv_trigger))
+> +		return dev_err_probe(dev, PTR_ERR(st->conv_trigger),
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to get cnv pwm\n");
+> +
+> +	ret =3D devm_add_action_or_reset(dev, ad4691_disable_pwm,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 st->conv_trigger);
+
+This is a suspicious pattern. But I do see it's used like this in more plac=
+es and it's a no-op
+if PWM is already disabled. Still, not sure if agree with this kind "unbala=
+nced" handling.
+
+> +	if (ret)
+> +		return dev_err_probe(dev, ret,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to register PWM disable action\n");
+> +
+> +	return ad4691_set_pwm_freq(st, st->info->max_rate);
+> +}
+> +
+> =C2=A0static int ad4691_regulator_setup(struct ad4691_state *st)
+> =C2=A0{
+> =C2=A0	struct device *dev =3D regmap_get_device(st->regmap);
+> @@ -555,12 +1013,30 @@ static int ad4691_reset(struct ad4691_state *st)
+> =C2=A0	return 0;
+> =C2=A0}
+> =C2=A0
+> -static int ad4691_config(struct ad4691_state *st)
+> +static int ad4691_config(struct ad4691_state *st, u32 max_speed_hz)
+
+My eyes might be failing me but where is 'max_speed_hz' used?
 
 
-On 3/17/2026 12:56 PM, Manivannan Sadhasivam wrote:
-> On Fri, Mar 13, 2026 at 12:38:42PM +0530, Krishna Chaitanya Chundru wrote:
->> According to the PCI Express specification (PCIe r7.0, Section 5.3.3.2),
->> two link wakeup mechanisms are defined: Beacon and WAKE#. Beacon is a
->> hardware-only mechanism and is invisible to software (PCIe r7.0,
->> Section 4.2.7.8.1). This change adds support for the WAKE# mechanism in
->> the PCI core.
->>
->> According to the PCIe specification, multiple WAKE# signals can exist in
->> a system or each component in the hierarchy could share a single WAKE#
->> signal. In configurations involving a PCIe switch, each downstream port
->> (DSP) of the switch may be connected to a separate WAKE# line, allowing
->> each endpoint to signal WAKE# independently. From figure 5.4 in sec
->> 5.3.3.2, WAKE# can also be terminated at the switch itself. To support
->> this, the WAKE# should be described in the device tree node of the
->> endpoint/bridge. If all endpoints share a single WAKE# line, then each
->> endpoint node should describe the same WAKE# signal or a single WAKE# in
->> the Root Port node.
->>
->> In pci_device_add(), PCI framework will search for the WAKE# in device
->> node, If not found, it searches in its upstream port only if upstream port
->> is Root Port. Once found, register for the wake IRQ in shared mode, as the
->> WAKE# may be shared among multiple endpoints.
->>
->> dev_pm_set_dedicated_shared_wake_irq() associates a wakeup IRQ with a
->> device and requests it, but the PM core keeps the IRQ disabled by default.
->> The IRQ is enabled only when the device is permitted to wake the system,
->> i.e. during system suspend and after runtime suspend, and only when device
->> wakeup is enabled.
->>
->> When the wake IRQ fires, the wakeirq handler invokes pm_runtime_resume() to
->> bring the device back to an active power state, such as transitioning from
->> D3cold to D0. Once the device is active and the link is usable, the
->> endpoint may generate a PME, which is then handled by the PCI core through
->> PME polling or the PCIe PME service driver to complete the wakeup of the
->> endpoint.
->>
->> WAKE# is added in dts schema and merged based on below links.
->>
->> Link: https://lore.kernel.org/all/20250515090517.3506772-1-krishna.chundru@oss.qualcomm.com/
->> Link: https://github.com/devicetree-org/dt-schema/pull/170
->> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
->> ---
->>   drivers/pci/of.c       | 74 ++++++++++++++++++++++++++++++++++++++++++++++++++
->>   drivers/pci/pci.c      | 10 +++++++
->>   drivers/pci/pci.h      |  2 ++
->>   drivers/pci/probe.c    |  2 ++
->>   drivers/pci/remove.c   |  1 +
->>   include/linux/of_pci.h |  4 +++
->>   include/linux/pci.h    |  2 ++
->>   7 files changed, 95 insertions(+)
->>
->> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
->> index 9f8eb5df279ed28db7a3b2fd29c65da9975c2efa..b7199d3598b31b62245716c178a5a73565efc89e 100644
->> --- a/drivers/pci/of.c
->> +++ b/drivers/pci/of.c
->> @@ -7,6 +7,7 @@
->>   #define pr_fmt(fmt)	"PCI: OF: " fmt
->>   
->>   #include <linux/cleanup.h>
->> +#include <linux/gpio/consumer.h>
->>   #include <linux/irqdomain.h>
->>   #include <linux/kernel.h>
->>   #include <linux/pci.h>
->> @@ -15,6 +16,7 @@
->>   #include <linux/of_address.h>
->>   #include <linux/of_pci.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/pm_wakeirq.h>
->>   #include "pci.h"
->>   
->>   #ifdef CONFIG_PCI
->> @@ -586,6 +588,78 @@ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
->>   	return irq_create_of_mapping(&oirq);
->>   }
->>   EXPORT_SYMBOL_GPL(of_irq_parse_and_map_pci);
->> +
->> +static void pci_configure_wake_irq(struct pci_dev *pdev, struct gpio_desc *wake)
->> +{
->> +	int ret, wake_irq;
->> +
->> +	wake_irq = gpiod_to_irq(wake);
->> +	if (wake_irq < 0) {
->> +		pci_err(pdev, "Failed to get wake irq: %d\n", wake_irq);
->> +		return;
->> +	}
->> +
->> +	device_init_wakeup(&pdev->dev, true);
-> Just set wakeup only if dev_pm_set_dedicated_shared_wake_irq() succeeds.
-ack.
->> +
->> +	/*
->> +	 * dev_pm_set_dedicated_shared_wake_irq() associates a wakeup IRQ with the
->> +	 * device and requests it, but the PM core keeps it disabled by default.
->> +	 * The IRQ is enabled only when the device is allowed to wake the system
->> +	 * (during system suspend and after runtime suspend), and only if device
->> +	 * wakeup is enabled.
->> +	 *
->> +	 * When the wake IRQ fires, the wakeirq handler invokes pm_runtime_resume()
->> +	 * to bring the device back to an active power state (e.g. from D3cold to D0).
->> +	 * Once the device is active and the link is usable, the endpoint may signal
->> +	 * a PME, which is then handled by the PCI core (either via PME polling or the
->> +	 * PCIe PME service driver) to wakeup particular endpoint.
->> +	 */
->> +	ret = dev_pm_set_dedicated_shared_wake_irq(&pdev->dev, wake_irq,
->> +						   IRQ_TYPE_EDGE_FALLING);
-> Isn't WAKE# a level triggered signal?
-Ack. I will change IRQ_TYPE_EDGE_FALLING to IRQ_TYPE_LEVEL_LOW.
->> +	if (ret < 0) {
->> +		pci_err(pdev, "Failed to set wake IRQ: %d\n", ret);
-> s/wake/WAKE#
-ack.
+> =C2=A0{
+> =C2=A0	struct device *dev =3D regmap_get_device(st->regmap);
+> =C2=A0	enum ad4691_ref_ctrl ref_val;
+> +	const char *irq_name;
+> +	unsigned int gp_num;
+> =C2=A0	int ret;
+> =C2=A0
+> +	/*
+> +	 * Determine buffer conversion mode from DT: if a PWM is provided it
+> +	 * drives the CNV pin (CNV_BURST_MODE); otherwise CNV is tied to CS
+> +	 * and each SPI transfer triggers a conversion (MANUAL_MODE).
+> +	 * Both modes idle in AUTONOMOUS mode so that read_raw can use the
+> +	 * internal oscillator without disturbing the hardware configuration.
+> +	 */
+> +	if (device_property_present(dev, "pwms")) {
+> +		st->manual_mode =3D false;
+> +		ret =3D ad4691_pwm_setup(st);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		st->manual_mode =3D true;
+> +	}
+> +
+> =C2=A0	switch (st->vref_uV) {
+> =C2=A0	case AD4691_VREF_uV_MIN ... AD4691_VREF_2P5_uV_MAX:
+> =C2=A0		ref_val =3D AD4691_VREF_2P5;
+> @@ -595,17 +1071,91 @@ static int ad4691_config(struct ad4691_state *st)
+> =C2=A0		return dev_err_probe(dev, ret, "Failed to write DEVICE_SETUP\n");
+> =C2=A0
+> =C2=A0	/*
+> -	 * Set the internal oscillator to the highest valid rate for this chip.
+> -	 * Index 0 (1 MHz) is valid only for AD4692/AD4694; AD4691/AD4693 start
+> -	 * at index 1 (500 kHz).
+> +	 * Set the internal oscillator to the highest rate this chip supports.
+> +	 * Index 0 (1 MHz) exceeds the 500 kHz max of AD4691/AD4693, so those
+> +	 * chips start at index 1 (500 kHz).
+> =C2=A0	 */
+> =C2=A0	ret =3D regmap_write(st->regmap, AD4691_OSC_FREQ_REG,
+> -			=C2=A0=C2=A0 (st->info->max_rate =3D=3D HZ_PER_MHZ) ? 0 : 1);
+> +			=C2=A0=C2=A0 (ad4691_osc_freqs[0] > st->info->max_rate) ? 1 : 0);
 
-- Krishna Chaitanya.
-> - Mani
->
+Does this belong to this commit?
+
+> =C2=A0	if (ret)
+> =C2=A0		return dev_err_probe(dev, ret, "Failed to write OSC_FREQ\n");
+> =C2=A0
+> =C2=A0	/* Device always operates in AUTONOMOUS mode. */
+> -	return regmap_write(st->regmap, AD4691_ADC_SETUP, AD4691_AUTONOMOUS_MOD=
+E_VAL);
+> +	ret =3D regmap_write(st->regmap, AD4691_ADC_SETUP, AD4691_AUTONOMOUS_MO=
+DE);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to write ADC_SETUp\n");
+> +
+> +	if (st->manual_mode)
+> +		return 0;
+> +
+> +	ret =3D device_property_read_string_array(dev, "interrupt-names",
+> +						&irq_name, 1);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to read interrupt-names\n");
+> +
+> +	if (strncmp(irq_name, "gp", 2) !=3D 0 ||
+> +	=C2=A0=C2=A0=C2=A0 kstrtouint(irq_name + 2, 10, &gp_num) || gp_num > 3)
+> +		return dev_err_probe(dev, -EINVAL,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid interrupt name '%s'\n", irq_name);
+> +
+
+I would likely prefer something like [1] rather than the string parsing.
+
+[1]: https://elixir.bootlin.com/linux/v7.0-rc5/source/drivers/iio/imu/adis1=
+6480.c#L1582
+
+- Nuno S=C3=A1
 
 
