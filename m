@@ -1,194 +1,270 @@
-Return-Path: <linux-gpio+bounces-34094-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34095-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8Jx0A83HwmmIlgQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34094-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 18:20:13 +0100
+	id qBWUIe7JwmmIlgQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34095-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 18:29:18 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BCE7319E92
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 18:20:12 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E30D431A03D
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 18:29:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DE4CC3020E95
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 17:16:27 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 49950301A15E
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2026 17:28:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB700402459;
-	Tue, 24 Mar 2026 17:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="By1JhFF6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F14CD407562;
+	Tue, 24 Mar 2026 17:28:57 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3F63FE66D
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 17:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C5E405AAF
+	for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 17:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774372584; cv=none; b=HjZYAezZiuspalb9l+2WAqWv/jhANRjRCAbBHyEDCahgl39ngUcuyHWqfTSK2A9dtK4ediXeL1c73ZRaNoy+fkidThntU0Osm46FVdC0oU67S7KliOju4K0q0C5w5l6/g8zJEJ+5giqYvnrrahvTdnL0xBaiQpJhEAo14ffnj/8=
+	t=1774373337; cv=none; b=BhDzvRpCVe4c1X/xWh5vuR8+vkXYG9nWoncwlDZhicfVr4ZdQXFdnZKH6z4sj5oT+BBus8IrUpWuhYRgHOaEQ/YIFBYVPQJmHYjES6dmsZdBOsiQp5zgNNdjSUVuzPQAkM7OHLor10SNlJatJs/KFeJED6HxhiKBRPyvG0mDCmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774372584; c=relaxed/simple;
-	bh=Fj+AtXhBM1UOR856IjycUCEf95rf/PY2qAG7I/xx33U=;
+	s=arc-20240116; t=1774373337; c=relaxed/simple;
+	bh=x2ByeNkouiKEPMao42C6oXqtSEjnJKDNRhIggOr4SeU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mWju0iOO8YTgXjBIb3XzRWelROC1Y0w6L/Nr3CMdqr1q1IGk8crgTuxXV1fQeSc7+9aLvr0jy8Hy6Qfw/42dFk0uJUQJsgSAk8e53mLGhq5Ahgz90C4c5t2Rqe17K0xnxW9XwqNNdoOHuPVjXR5ATkNhzOKhz5+ehPw1Ma5lTJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=By1JhFF6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D399C2BCB4
-	for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 17:16:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774372584;
-	bh=Fj+AtXhBM1UOR856IjycUCEf95rf/PY2qAG7I/xx33U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=By1JhFF6eSxxHrRMCeYC4Eadk5Ls7EHIMYc4kYWz5XGUM3mcGWS3LbU8MmEua9Js4
-	 QnedlBd8TGZpmulnSu2k9kWz31ybaQVTD/B7hR8EMSAy+W7Kzo6PNHTzEy3XWBTSGj
-	 ILK4Q15BeaRMXZMO92W92oI0uDqGkEU3jLFMZs0V8khqb09PGMEiF/CRvx6r864Ke+
-	 qSOm8CzIgGgncBDnaT+pSi9OxjA0aGYIzzSlGdvSVVIEazlJyMm1Xll4REUzym59YC
-	 Q/tBBmoEIeeSj0pFG0MmjXfJ53kl6K2a+bH+FCFcwJ8AXUZjVq0Z9+0MXAQUU600gc
-	 3Y2JcdPQDcfMg==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-38c26612508so11744241fa.3
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 10:16:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXLDeMROgwrU9DTGcJATcEtthH2UR1huOI44HdjDPuhzy53w97XjKxtJn2Trs9F/BQ2dY4ECrCMoId+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbSm89FP4l1i/zfwczMfa1DCawG6byw27lPGkifWL5PmkanKei
-	OXVxdYM2UF7HVLCrSwqI1xQxnKdpAt2X1f47bD3IvguNfiAPVNGvXSHFP9f93aubgUU2St7mbkq
-	IvD0U5Jrv0YaPbcelh4P8dWIKqORpqEhpU3cEPKcAyw==
-X-Received: by 2002:a2e:2e06:0:b0:383:282b:7ac5 with SMTP id
- 38308e7fff4ca-38c431bdb22mr505351fa.25.1774372582937; Tue, 24 Mar 2026
- 10:16:22 -0700 (PDT)
+	 To:Cc:Content-Type; b=nNyjiUesl7RArXnjVMccDoueVyAcgzVhsX+4Vz0qdzCQTD49EeVGfgjQ1o8ypKmPbLywsXdMjIOmuaoMZxLqi5+zWg/vBrTx/6KQ8vwByavnIgZI/mAG72fo9ei/5kPuT2ptxZvVvPp58RaGbcbqcHWT0d0T9xnjSRFga+NTtag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-5ffc879c1aeso3263070137.2
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 10:28:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774373334; x=1774978134;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=XpevOJBLVmJEY5vWAghuAgrLubq4HkQJ5E3Owe/CCLU=;
+        b=LHNsI/gtlPCN8PV/f+uQZ5dcmxZCaYPtnBc+M0NGjM5EywwgNwuDw+bw3jVr34yvGZ
+         +ZDEH3S24VgIrqE0CUyRCmugWn+Homf+nXoTYF8bMKsgKr9NuBqYpQxXlpPN+JKo56yp
+         G2B2kLKe85x3r0VGKBdQBuMgPB059Zd97tOl2GZ4E1DPRPDP7GfSDxyAV7QhImsZxrQ2
+         CzjZMAB6J0iAvNh8DJVAkMmAcaBEUJKAhrRC5HL3LVU7HgjxBQeoLVkjtYoMLvFCBGnB
+         8AJ6UR7g33T+1xy4dRh5P4y27zI8o97zfmtoa+ndmCymueYnQfLi15cuh+p571gOgVkL
+         PDNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVnjgUEIEBKqmEoRffeclSJbqyAY1UkfQ+Ot77nISdSpLUuDULTegyhIB/O3JWjK1F0t7DznH1CcUJx@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6IDtbRHvEROa3tLKaABpKf8+rB0Jtj9dLZQkmL0rN9Ns2ychF
+	GdU6M0UY4WhIIt5NnrwmdJNxamc3P1FVzcEv+T1WS9mUpp2s5wTV1SBtcUqVvjrWhpg=
+X-Gm-Gg: ATEYQzzGiv7IrioCZWWHzfa1C/bSFbcVmwU7hFjvvIElsSXUyCh41ILN6V/wP0vapYy
+	z6losL/cfO21ZOYMmlTCKQiAFge1B2dhGTE7XvTqYOx9KmDrt0GBRQGyLcwjLNJS61oxB5QdMtz
+	uxGshohcX8vUQfaFGiU+6dnPAiUrE+v0GA3EtJHD/f1Xo4ab0Jxl8dcY5sKdQlFgi3Y8nnWPdEQ
+	4/n2rIDGVmmmMHEfsFkmsFDJSpuqpEdiBKk6lKUas1IKSrAwMJQjj4pF6DJAADu71i8FbkfpLVp
+	c3E8vnqm0nlHBirRacmztpwmVKiENZQIOZDyuk4/7RZyCJsW41nNm4zA9RhdtGhahmp7RbNYHjI
+	Sj22cPK7mR/wzQNekdhlXAE7+dlpRmQX22DMeh/J3PYHJaNJ7aTFVbuIbcMlkwtmEkXOkeOftON
+	ZMtBneMhG/hTA75X6nOJZpolEI8ItZ5ot5BFS0Me6CEGjkTDgP3j0I/f62lFjLlAgfcfzoUpEq/
+	os=
+X-Received: by 2002:a05:6102:5e8c:b0:600:a2:1397 with SMTP id ada2fe7eead31-603872992a1mr390308137.25.1774373334085;
+        Tue, 24 Mar 2026 10:28:54 -0700 (PDT)
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-602af5ea90esm11486791137.0.2026.03.24.10.28.52
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Mar 2026 10:28:52 -0700 (PDT)
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-56739adfa1aso4084549e0c.0
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2026 10:28:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXYnd3E+W3S0jdyISmOCmYBVaQxqCEPjEEZNQKBRERQ5i8Gb5S8f/jRIlpCHq2/B7cctRLyUCOTgnbv@vger.kernel.org
+X-Received: by 2002:a05:6122:3296:b0:56c:c88d:e8c0 with SMTP id
+ 71dfb90a1353d-56d21f9be0dmr420645e0c.6.1774373332547; Tue, 24 Mar 2026
+ 10:28:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260319000558.22108-1-rosenp@gmail.com> <202603201104.8D7B8A1@keescook>
- <CAKxU2N8ZZp5fcCWfMaqZ9VKwNQ3a06fsQPXpBQa-d1N07zPGng@mail.gmail.com>
- <CAMRc=MctGTeqBHQ8zaQ7_2YAoWoTUxOK4_hs+-EHEQEPnz+A-g@mail.gmail.com>
- <CAKxU2N9KdziPen9-_gfe0UZjyuMTOsbb583aeF3=kqm22rGieA@mail.gmail.com>
- <CAMRc=Me2RLj-vvCVNho9CPYVwsQHypC_KvKHJWkLyj=rMkfx2w@mail.gmail.com>
- <CAKxU2N8gudRXR-bLMoyDVDuv3vWuzqrbyVsHL=Gu3mDZWMvs6w@mail.gmail.com>
- <CAMRc=MeYoDB1QsgckNH9OGWx=WJZofMHq+zL4xY8VK+rzP3gog@mail.gmail.com> <CAKxU2N80Qf+Uc_daBSxjz26e54fAz8bLRPVZYdCcaiHhpfHK-g@mail.gmail.com>
-In-Reply-To: <CAKxU2N80Qf+Uc_daBSxjz26e54fAz8bLRPVZYdCcaiHhpfHK-g@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Tue, 24 Mar 2026 18:16:10 +0100
-X-Gmail-Original-Message-ID: <CAMRc=Mcv1TW55R87xiuAOQShX1Tjf_=BkwfoXdDN8SfUK=a5GQ@mail.gmail.com>
-X-Gm-Features: AaiRm50VUxNmgBJk1Sm41yzBCFZNXDJcscr6VpBVck3WnRLwtXJr2JQpzTHu8MQ
-Message-ID: <CAMRc=Mcv1TW55R87xiuAOQShX1Tjf_=BkwfoXdDN8SfUK=a5GQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mockup: allocate lines with main struct
-To: Rosen Penev <rosenp@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, linux-gpio@vger.kernel.org, 
-	Bamvor Jian Zhang <bamv2005@gmail.com>, Linus Walleij <linusw@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
+References: <20260218151925.1104098-1-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdWv1dQ55NcwMga_X0G8K97RgMRXoDu_FV10fNQv7AadbA@mail.gmail.com> <2772d5e1-2127-4808-bd9d-aa40b4ad7104@tuxon.dev>
+In-Reply-To: <2772d5e1-2127-4808-bd9d-aa40b4ad7104@tuxon.dev>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 24 Mar 2026 18:28:41 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUEjMs9TgGR=vMG4Sd_XtnaW+D5Vrb0VBCZdb35TtLXEw@mail.gmail.com>
+X-Gm-Features: AQROBzCteidl4a6fS-qPzYwEquSsiUdAXRMvWK12r9jXkFflwuEKzU1olQROBhU
+Message-ID: <CAMuHMdUEjMs9TgGR=vMG4Sd_XtnaW+D5Vrb0VBCZdb35TtLXEw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Add GPIO set_config
+To: claudiu beznea <claudiu.beznea@tuxon.dev>
+Cc: linusw@kernel.org, brgl@kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-34094-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-34095-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	DMARC_NA(0.00)[linux-m68k.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 7BCE7319E92
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,tuxon.dev:email,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: E30D431A03D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Mar 24, 2026 at 4:56=E2=80=AFPM Rosen Penev <rosenp@gmail.com> wrot=
-e:
->
-> On Tue, Mar 24, 2026 at 8:54=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.=
-org> wrote:
+Hi Claudiu,
+
+On Mon, 16 Mar 2026 at 11:19, claudiu beznea <claudiu.beznea@tuxon.dev> wro=
+te:
+> On 3/13/26 15:15, Geert Uytterhoeven wrote:
+> > On Wed, 18 Feb 2026 at 16:19, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >>
+> >> Add GPIO set_config to allow setting GPIO specific functionalities.
+> >>
+> >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > >
-> > On Tue, Mar 24, 2026 at 4:52=E2=80=AFPM Rosen Penev <rosenp@gmail.com> =
-wrote:
-> > >
-> > > On Tue, Mar 24, 2026 at 2:16=E2=80=AFAM Bartosz Golaszewski <brgl@ker=
-nel.org> wrote:
-> > > >
-> > > > On Mon, 23 Mar 2026 17:43:00 +0100, Rosen Penev <rosenp@gmail.com> =
-said:
-> > > > > On Mon, Mar 23, 2026 at 3:00=E2=80=AFAM Bartosz Golaszewski <brgl=
-@kernel.org> wrote:
-> > > > >>
-> > > > >> On Sat, Mar 21, 2026 at 12:00=E2=80=AFAM Rosen Penev <rosenp@gma=
-il.com> wrote:
-> > > > >> >
-> > > > >> > >
-> > > > >> > > static int gpio_mockup_probe(struct platform_device *pdev)
-> > > > >> > > {
-> > > > >> > >         ...
-> > > > >> > >         u16 ngpio;
-> > > > >> > >         ...
-> > > > >> > >         rv =3D device_property_read_u16(dev, "nr-gpios", &ng=
-pio);
-> > > > >> > >         ...
-> > > > >> > >         gc->ngpio =3D ngpio;
-> > > > >> > >         ...
-> > > > >> > >         chip->lines =3D devm_kcalloc(dev, gc->ngpio,
-> > > > >> > >                                    sizeof(*chip->lines), GFP=
-_KERNEL);
-> > > > >> > >
-> > > > >> > > But this begs the question: why add nr_lines when ngpio is a=
-lready part
-> > > > >> > > of the struct:
-> > > > >> > Maintainers for some inexplicable reason want an extra variabl=
-e for
-> > > > >> > __counted_by works.
-> > > > >>
-> > > > >> I believe what Kees means here is: you can use ngpio for __count=
-ed_by() like so:
-> > > > >>
-> > > > >>   __counted_by(gc.ngpio)
-> > > > > __counted_by doesn't support nested variables like that.
-> > > > >
-> > > > > drivers/gpio/gpio-mockup.c:59:61: error: =E2=80=98gc=E2=80=99 und=
-eclared here (not in
-> > > > > a function)
-> > > > >    59 |         struct gpio_mockup_line_status lines[] __counted_=
-by(gc.ngpio);
-> > > >
-> > > > The following spin on your patch builds fine for me:
-> > > >
-> > > > diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.=
-c
-> > > > index a7d69f3835c1e..9427ab8c45f73 100644
-> > > > --- a/drivers/gpio/gpio-mockup.c
-> > > > +++ b/drivers/gpio/gpio-mockup.c
-> > > > @@ -52,10 +52,10 @@ struct gpio_mockup_line_status {
-> > > >
-> > > >  struct gpio_mockup_chip {
-> > > >         struct gpio_chip gc;
-> > > > -       struct gpio_mockup_line_status *lines;
-> > > >         struct irq_domain *irq_sim_domain;
-> > > >         struct dentry *dbg_dir;
-> > > >         struct mutex lock;
-> > > > +       struct gpio_mockup_line_status lines[] __counted_by(gc.ngpi=
-o);
-> > > You're using an older compiler. This does not work at all.
-> > >
-> > >  *
+> > Thanks for your patch!
+> >
+> >> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> >> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> >> @@ -1848,6 +1848,25 @@ static void rzg2l_gpio_free(struct gpio_chip *c=
+hip, unsigned int offset)
+> >>          rzg2l_gpio_direction_input(chip, offset);
+> >>   }
+> >>
+> >> +static int rzg2l_gpio_set_config(struct gpio_chip *chip, unsigned int=
+ offset,
+> >> +                                unsigned long config)
+> >> +{
+> >> +       switch (pinconf_to_config_param(config)) {
+> >> +       case PIN_CONFIG_BIAS_DISABLE:
+> >> +       case PIN_CONFIG_BIAS_PULL_UP:
+> >> +       case PIN_CONFIG_BIAS_PULL_DOWN:
+> >> +       case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> >> +       case PIN_CONFIG_DRIVE_PUSH_PULL:
+> >> +       case PIN_CONFIG_SLEW_RATE:
+> >> +       case PIN_CONFIG_DRIVE_STRENGTH:
+> >> +       case PIN_CONFIG_DRIVE_STRENGTH_UA:
+> >> +       case PIN_CONFIG_POWER_SOURCE:
+> >
+> > Shouldn't you handle all types that are supported by
+> > rzg2l_pinctrl_pinconf_[gs]et()?
+> >
+> > The following are missing:
+> > PIN_CONFIG_INPUT_ENABLE
+> > PIN_CONFIG_OUTPUT_ENABLE
+> > PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS
+> > PIN_CONFIG_INPUT_SCHMITT_ENABLE
+> > RENESAS_RZV2H_PIN_CONFIG_OUTPUT_IMPEDANCE
+>
+> I'll add these as well.
 
-Indeed, sorry. In that case I don't know what Kees meant. I'm fine
-with a new variable.
+Apparently you can't just add RENESAS_RZV2H_PIN_CONFIG_OUTPUT_IMPEDANCE
+to the switch statement, as gcc requires all case statements to use values
+that are actually defined in the enum:
 
-Bartosz
+    drivers/pinctrl/renesas/pinctrl-rzg2l.c:2072:9: error: case value
+=E2=80=98128=E2=80=99 not in enumerated type =E2=80=98enum pin_config_param=
+=E2=80=99 [-Werror=3Dswitch]
+
+As the documentation states this range is meant for custom
+configurations:
+
+     * @PIN_CONFIG_END: this is the last enumerator for pin configurations,=
+ if
+     *      you need to pass in custom configurations to the pin controller=
+, use
+     *      PIN_CONFIG_END+1 as the base offset.
+     * @PIN_CONFIG_MAX: this is the maximum configuration value that can be
+     *      presented using the packed format.
+
+I fixed that by replacing the enum by u8 in the conversion macros:
+
+    --- a/include/linux/pinctrl/pinconf-generic.h
+    +++ b/include/linux/pinctrl/pinconf-generic.h
+    @@ -173,9 +173,9 @@ enum pin_config_param {
+      * upper 24 bits.
+      */
+
+    -static inline enum pin_config_param
+pinconf_to_config_param(unsigned long config)
+    +static inline u8 pinconf_to_config_param(unsigned long config)
+     {
+    -       return (enum pin_config_param) (config & 0xffUL);
+    +       return config & 0xffUL;
+     }
+
+     static inline u32 pinconf_to_config_argument(unsigned long config)
+    @@ -183,8 +183,7 @@ static inline u32
+pinconf_to_config_argument(unsigned long config)
+            return (u32) ((config >> 8) & 0xffffffUL);
+     }
+
+    -static inline unsigned long pinconf_to_config_packed(enum
+pin_config_param param,
+    -                                                    u32 argument)
+    +static inline unsigned long pinconf_to_config_packed(u8 param,
+u32 argument)
+     {
+            return PIN_CONF_PACKED(param, argument);
+     }
+
+Probably a few more should be updated, too?
+
+> >> @@ -2819,6 +2838,7 @@ static int rzg2l_gpio_register(struct rzg2l_pinc=
+trl *pctrl)
+> >>        chip->direction_output =3D rzg2l_gpio_direction_output;
+> >>        chip->get =3D rzg2l_gpio_get;
+> >>        chip->set =3D rzg2l_gpio_set;
+> >> +       chip->set_config =3D rzg2l_gpio_set_config;
+> >>        chip->label =3D name;
+> >>        chip->parent =3D pctrl->dev;
+> >>        chip->owner =3D THIS_MODULE;
+
+This change breaks pin control and GPIO on RZ/Five:
+
+    -pinctrl-rzg2l 11030000.pinctrl: pinctrl-rzg2l support registered
+    +gpio gpiochip0: (11030000.pinctrl): setup of own GPIO can0_stb failed
+    +requesting hog GPIO can0_stb (chip 11030000.pinctrl, offset 18) failed=
+, -95
+    +gpiochip_add_data_with_key: GPIOs 512..743 (11030000.pinctrl)
+failed to register, -95
+    +pinctrl-rzg2l 11030000.pinctrl: error -EOPNOTSUPP: failed to add
+GPIO controller
+    +pinctrl-rzg2l 11030000.pinctrl: error -EOPNOTSUPP: failed to add GPIO =
+chip
+    +pinctrl-rzg2l 11030000.pinctrl: probe with driver pinctrl-rzg2l
+failed with error -95
+
+For the can0_stb hog, rzg2l_gpio_set_config() is called with offset 18 and
+config 0x115 (PIN_CONFIG_PERSIST_STATE =3D 1).
+
+Just adding PIN_CONFIG_PERSIST_STATE to the switch doesn't help,
+as pinctrl_gpio_set_config() also returns -EOPNOTSUPP.
+Ignoring PIN_CONFIG_PERSIST_STATE helps a bit, but the next call
+uses config 0x8, and pinctrl_gpio_set_config() now returns -EINVAL,
+but the pin controller now gets registered?...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
