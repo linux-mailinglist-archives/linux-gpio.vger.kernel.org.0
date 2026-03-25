@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-34141-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34142-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0OvqJkH0w2lZvAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34141-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 15:42:09 +0100
+	id 8CoUK230w2lZvAQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34142-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 15:42:53 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80C27326F05
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 15:42:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 906F9326F23
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 15:42:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id C8E37304053A
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 14:38:44 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A02E130553CF
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 14:39:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4308D3E6DC9;
-	Wed, 25 Mar 2026 14:37:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95DC13E5578;
+	Wed, 25 Mar 2026 14:38:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="m62ahB0C"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jicdb06/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A080B3E4C95;
-	Wed, 25 Mar 2026 14:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187D53DEFE6;
+	Wed, 25 Mar 2026 14:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774449473; cv=none; b=oBKhBmmOPYdVrMKYglYGx+7zHxHg7l3Igcp2929Pdk7CkCMeVtQrzgL+9W35+3anLc7Db8Wb0mf48YXGnFqkY0ZblTO6C00fIVItZQRg//+eQHxVKVYloDxzbqCg9reoslO9PTnbrRHrqIMjh82wL+7FtsSreXTlRumI4e5n1PI=
+	t=1774449491; cv=none; b=shTs6EJw7h5Kz3155scWwrQjntTYACF4T06gqWKY6L0ABunOHso4Ua1vQyUNjSseX9iNesq4JwxJ4el+cUT3BIai6SKR8tgrjnI9l70hxQUt4uxuyAMhvcEAQ3H2GGafzM3fv4GB9x0+j99ajeuXMKpRD6bIDcJ8Axpc3V+TbPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774449473; c=relaxed/simple;
-	bh=9WU6CnPwYf69YjJfs3q6iXeTR9MJC3N/+SMlykGezC0=;
+	s=arc-20240116; t=1774449491; c=relaxed/simple;
+	bh=UwxR+Ul1StSjhduN3EHd6qicY3DfH1rq6TnJJFzr9hg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ATjliRvjMNM33n6ZgphMtgQYeBc3NHbJ2yTehvKaBv6Rr3FaMiJahjUgbyEI0TFwICsduX/sxGuuCLD4GhhMhw/rr8GFZGchLGCefnfdVEy9v5200SvNm+61aDkhTWPxcRIswHATc9V1L/650n/MmmS5zdSKf8HWs1o9ztJaPck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=m62ahB0C; arc=none smtp.client-ip=185.171.202.116
+	 MIME-Version; b=FYrfSqIPmxFjlwvQbps3OBqXbtX7gH+DZnEfqwbkleo6zGUQqCENA4Oltz6Iq/Vt9cFJUAbhKjnmYN1SwVJF5lNFqd1Yf1IRBKr5HSmF6eUmSHnq4KoXgW+5a7FJk2hFJDv0rVusWaAdqP9CYba6GDKQFlMVkI8th6a/zh8LrFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jicdb06/; arc=none smtp.client-ip=185.246.84.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id F3491C580B2;
-	Wed, 25 Mar 2026 14:38:16 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id F2EEF1A2FE2;
+	Wed, 25 Mar 2026 14:38:08 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 36F74601FA;
-	Wed, 25 Mar 2026 14:37:49 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id AE6F210451416;
-	Wed, 25 Mar 2026 15:37:28 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id C8D2C601FA;
+	Wed, 25 Mar 2026 14:38:08 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id EBEA2104513C1;
+	Wed, 25 Mar 2026 15:37:46 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1774449465; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1774449485; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=FQEG+gi+2Owsvm5H07y7paCS6UXV8c60jAbpve0hKl8=;
-	b=m62ahB0CVbVSXyRzaj89A96TBTVUsl3QaPdwwSz4hjzQmkXkz5moBnHKLWQ3c5d9uBM2RC
-	s1jU5vtd69pR9AV4zKvymEGToEMVnY1l9kYhR62DwZXGqqPwk06uwzNsCZK1kW3ypmbRCF
-	rmoQVBgfMVdgNyKFWE1Qa5aGIzLVae1Ik50Cf6ihtlYUbrFz+ls6RMH3R6FGoiaX/orx2V
-	wzLs7iRiMz9hudgG/Rw8kDC9/SyNC26JP9GiJakS1Yw+k2WWJvweJRTrpvT4vU85jLq0e8
-	QPyqwd0wiYgVNPuMQcX36ASXO+BoHi97BRRZkQadmG0Fol8WK+sQ/gjYj6ksoQ==
+	bh=g0YAlT/AYXN3edr5F8ErpyNXz9CtdBrFkNJZ/XQhiZk=;
+	b=jicdb06/2xgJ6J3XEarSvubHse460HG9+RF4RFaCYJgtJ9JvDK/b4HvDl5XoWPxX1eDiuG
+	42s84UbAdMK71zcYCFydpQ0XvB6tTuu8FrAdBcGtW1p4bz5y+dXJs/iHDiv0tckf+aCyxe
+	fx3+7dS2VcyXPN4AcCFSQo22UGrK0ntXYRoa6iIzlLL1r1GGgZ9sE+dE66v+j8AYl+CtlH
+	xx6tdjroR1GRgaCpy4aoYVk4JtuMp/v+R2Cwv3KPr0XioXgTSBNRuSCHxTNc/pkFol7G1w
+	inzAxiNuXSR72KO7J6w5gr5CnLkd28BXSakMjDSIwbpnirJHH1PcOwNcDJqJjw==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Andrew Lunn <andrew@lunn.ch>,
 	Rob Herring <robh@kernel.org>,
@@ -115,9 +115,9 @@ Cc: Wolfram Sang <wsa@kernel.org>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v6 05/27] bus: simple-pm-bus: Populate child nodes at probe
-Date: Wed, 25 Mar 2026 15:35:32 +0100
-Message-ID: <20260325143555.451852-6-herve.codina@bootlin.com>
+Subject: [PATCH v6 06/27] driver core: fw_devlink: Introduce fw_devlink_set_device()
+Date: Wed, 25 Mar 2026 15:35:33 +0100
+Message-ID: <20260325143555.451852-7-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260325143555.451852-1-herve.codina@bootlin.com>
 References: <20260325143555.451852-1-herve.codina@bootlin.com>
@@ -143,7 +143,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[lunn.ch,kernel.org,glider.be,gmail.com,linuxfoundation.org,nxp.com,pengutronix.de,baylibre.com,sang-engineering.com,axentia.se,arndb.de,bootlin.com,google.com,opensource.cirrus.com,cirrus.com,linaro.org,linux.intel.com,stgolabs.net,huawei.com,intel.com];
-	TAGGED_FROM(0.00)[bounces-34141-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34142-lists,linux-gpio=lfdr.de];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[bootlin.com:+];
@@ -158,105 +158,43 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCPT_COUNT_GT_50(0.00)[63];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid]
-X-Rspamd-Queue-Id: 80C27326F05
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid,intel.com:email,cirrus.com:email]
+X-Rspamd-Queue-Id: 906F9326F23
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The simple-pm-bus driver handles several simple busses. When it is used
-with busses other than a compatible "simple-pm-bus", it doesn't populate
-its child devices during its probe.
+Setting fwnode->dev is specific to fw_devlink.
 
-This confuses fw_devlink and results in wrong or missing devlinks.
+In order to avoid having a direct 'fwnode->dev = dev;' in several
+place in the kernel, introduce fw_devlink_set_device() helper to perform
+this operation.
 
-Once a driver is bound to a device and the probe() has been called,
-device_links_driver_bound() is called.
-
-This function performs operation based on the following assumption:
-    If a child firmware node of the bound device is not added as a
-    device, it will never be added.
-
-Among operations done on fw_devlinks of those "never be added" devices,
-device_links_driver_bound() changes their supplier.
-
-With devices attached to a simple-bus compatible device, this change
-leads to wrong devlinks where supplier of devices points to the device
-parent (i.e. simple-bus compatible device) instead of the device itself
-(i.e. simple-bus child).
-
-When the device attached to the simple-bus is removed, because devlinks
-are not correct, its consumers are not removed first.
-
-In order to have correct devlinks created, make the simple-pm-bus driver
-compliant with the devlink assumption and create its child devices
-during its probe.
+Having this helper allows to hide the fwnode devlink related stuff
+behind the helper.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
- drivers/bus/simple-pm-bus.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ include/linux/fwnode.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
-index 9ebd588ea24f..30628958c923 100644
---- a/drivers/bus/simple-pm-bus.c
-+++ b/drivers/bus/simple-pm-bus.c
-@@ -42,14 +42,15 @@ static int simple_pm_bus_probe(struct platform_device *pdev)
- 	match = of_match_device(dev->driver->of_match_table, dev);
- 	/*
- 	 * These are transparent bus devices (not simple-pm-bus matches) that
--	 * have their child nodes populated automatically.  So, don't need to
--	 * do anything more. We only match with the device if this driver is
--	 * the most specific match because we don't want to incorrectly bind to
--	 * a device that has a more specific driver.
-+	 * need to have their child nodes populated. So, don't need to do
-+	 * anything more except populate child nodes during this probe(). We
-+	 * only match with the device if this driver is the most specific match
-+	 * because we don't want to incorrectly bind to a device that has a more
-+	 * specific driver.
- 	 */
- 	if (match && match->data) {
- 		if (of_property_match_string(np, "compatible", match->compatible) == 0)
--			return 0;
-+			goto populate;
- 		else
- 			return -ENODEV;
- 	}
-@@ -64,13 +65,14 @@ static int simple_pm_bus_probe(struct platform_device *pdev)
+diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+index a921ca2fe940..a1345e274125 100644
+--- a/include/linux/fwnode.h
++++ b/include/linux/fwnode.h
+@@ -231,4 +231,10 @@ void fw_devlink_purge_absent_suppliers(struct fwnode_handle *fwnode);
+ void fw_devlink_refresh_fwnode(struct fwnode_handle *fwnode);
+ bool fw_devlink_is_strict(void);
  
- 	dev_set_drvdata(&pdev->dev, bus);
- 
--	dev_dbg(&pdev->dev, "%s\n", __func__);
--
- 	pm_runtime_enable(&pdev->dev);
- 
-+populate:
- 	if (np)
- 		of_platform_populate(np, NULL, lookup, &pdev->dev);
- 
-+	dev_dbg(&pdev->dev, "%s\n", __func__);
++static inline void fw_devlink_set_device(struct fwnode_handle *fwnode,
++					 struct device *dev)
++{
++	fwnode->dev = dev;
++}
 +
- 	return 0;
- }
- 
-@@ -78,7 +80,7 @@ static void simple_pm_bus_remove(struct platform_device *pdev)
- {
- 	const void *data = of_device_get_match_data(&pdev->dev);
- 
--	if (pdev->driver_override || data)
-+	if (pdev->driver_override)
- 		return;
- 
- 	dev_dbg(&pdev->dev, "%s\n", __func__);
-@@ -86,7 +88,8 @@ static void simple_pm_bus_remove(struct platform_device *pdev)
- 	if (pdev->dev.of_node)
- 		of_platform_depopulate(&pdev->dev);
- 
--	pm_runtime_disable(&pdev->dev);
-+	if (!data)
-+		pm_runtime_disable(&pdev->dev);
- }
- 
- static int simple_pm_bus_runtime_suspend(struct device *dev)
+ #endif
 -- 
 2.53.0
 
