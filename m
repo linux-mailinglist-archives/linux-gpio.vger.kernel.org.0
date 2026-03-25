@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-34151-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34152-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ICmXFXf1w2lZvAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34151-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 15:47:19 +0100
+	id IPE7A1P2w2lZvAQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34152-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 15:50:59 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A9343270FA
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 15:47:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DD947327241
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 15:50:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 0F82330B9798
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 14:42:19 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 7FF05307CE1A
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 14:45:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 427A43EBF01;
-	Wed, 25 Mar 2026 14:40:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E8433FA5E0;
+	Wed, 25 Mar 2026 14:41:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YFHVBRNZ"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="x9aXYJt2"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986EE244660;
-	Wed, 25 Mar 2026 14:40:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6853F880D;
+	Wed, 25 Mar 2026 14:41:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774449649; cv=none; b=L9KYZdZufPeTL7+3rthHbTby1XN0JFxV0XabNUhlXq35DRyAzYA8Pbp4K5r6D/NXA5kKEq2b4aBq+Fu5XDwBDnRGhJ/3ZBC8rQdz3A6foScQmWjKR8foe8ZnPVpX9g9koMMK2rlJvFIIbMgMOdI9GqKE212Ylx4qNJjGHtw4v6E=
+	t=1774449669; cv=none; b=TuX0341W1v9wC1/A5xtxpiKIvjB4we4hpYJUD18qevouA886U+iblQG/VSjPxk/gAExYDpWJ6OVDvnQxd7sJiaO613QLBE7F20jNbJ0HxTXFNc27YoC3gBY8hvUThvN8sk3V3zIVLem7AiLSnaP2Ym9NOrJGqoSA66aOebnKMvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774449649; c=relaxed/simple;
-	bh=DaRfsV2u+e7/20CbFYhTmGEe9Lq4oc9ftgi7hzgtJxs=;
+	s=arc-20240116; t=1774449669; c=relaxed/simple;
+	bh=uDuPgt2o/9oBQHh+Cpy7Gf83um6TASnvbhCiTbvCQdY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tgbm5gWetpyknaXCQ0zp6a4cllMqAGlzoeTQfI7DiF98Il9kCheRDSh/UL8mB4k//m0bQ1dil5kC/V/ZECYeza9X15BhdnEeds58y2ZO4mXdY4LJagWQL9b3s6k+t2iuY06V/XYUye4+ERDv5Mk6Lkw/+XnygI33WihT4F6Px1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YFHVBRNZ; arc=none smtp.client-ip=185.246.84.56
+	 MIME-Version; b=vC5dYS6C44c08CXHiVn4h8xI68VPk4hJ/Kv7LSNTO7Ax/dpPQKAILKhwUo1gAanYIPO6k6P7mCUR9z0hw11NWS3Qy1HhUaTlLY6hIhDxdDofdIJ4bCcR0n9ZKExm9n8wQ9So+L/STUaAGyV+w2aRaukML9h+08yZPnXqXJBgGtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=x9aXYJt2; arc=none smtp.client-ip=185.246.84.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 773921A2EFA;
-	Wed, 25 Mar 2026 14:40:46 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 371411A2FE8;
+	Wed, 25 Mar 2026 14:41:05 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 3ECA6601E2;
-	Wed, 25 Mar 2026 14:40:46 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D65EA10451417;
-	Wed, 25 Mar 2026 15:40:27 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 05245601FA;
+	Wed, 25 Mar 2026 14:41:05 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5F96E104513C1;
+	Wed, 25 Mar 2026 15:40:44 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1774449643; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1774449661; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=EO+KwDm3fpx2sS0DmTpGwECNmbhB0N19pDgf5whzoMI=;
-	b=YFHVBRNZ+4X0eUGYxGcRdBemBZJ+IuGttbYxvNOnEWumFTnvI89irKZyA/5L5njmYiGFY6
-	eeQpqEBeK+GrJFArhYFNfLvTKbm0jPktRKzSgWPxpYjvCbaUr6j6CiM4jYev6430X0Ch3v
-	GON1VTnHTdBuZ9PL6ncaw03zYbuAVgt0LZXPIR1q3xwDzRYuH3tuRY64VgHPDDs4ZluL9d
-	r2I3ie4W0rxnR2Z+qj3G4vq2JLnaRjplGvKlIOj4EyVfupQULSx+tWgGSrLUmpyIHf4z8m
-	Fb8x1MMoHX6TBHTPtEa4nq4AeFJs8VXZjKyA5cLHoLkNlgTZNdUOXLWz5Vtszg==
+	bh=EB2C+jRFMxDkKtJvrc3FzQhnrQCg9ZYzY6GBMb2A8G4=;
+	b=x9aXYJt2Xgv4kB01GyPszWYFEN17VsPTuRWho3EM5oIObrs0bojHjDhISOKnG44m1DMxNq
+	cKQJDZLmCapQChTQoa3OODYY+pV9TVmx+9r2a1wgUgaAXGCgOsYXiXVRNoih0o25MH/3Fc
+	MGwNg9BPQmrmMvUjiRSJxCoactYMhwFr7lQUqyE9QjOGv6YC/kIA9QXZRIxrN+qsbAaGeQ
+	aKwIxzVON7u5qPOVEvBm8Em5pWnL1+NdeOnjZHFydwFiUarG2Xc/wCG2XUwBwISErwUn2f
+	ysLd8Zbxa66++hAPrjNqzamzw69xul/RiuxCwgrNipfI3j+0AvjiRJ2e4Ea7CQ==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Andrew Lunn <andrew@lunn.ch>,
 	Rob Herring <robh@kernel.org>,
@@ -115,9 +115,9 @@ Cc: Wolfram Sang <wsa@kernel.org>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v6 15/27] i2c: mux: Set adapter physical device
-Date: Wed, 25 Mar 2026 15:35:42 +0100
-Message-ID: <20260325143555.451852-16-herve.codina@bootlin.com>
+Subject: [PATCH v6 16/27] i2c: mux: Create missing devlink between mux and adapter physical device
+Date: Wed, 25 Mar 2026 15:35:43 +0100
+Message-ID: <20260325143555.451852-17-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260325143555.451852-1-herve.codina@bootlin.com>
 References: <20260325143555.451852-1-herve.codina@bootlin.com>
@@ -143,7 +143,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[lunn.ch,kernel.org,glider.be,gmail.com,linuxfoundation.org,nxp.com,pengutronix.de,baylibre.com,sang-engineering.com,axentia.se,arndb.de,bootlin.com,google.com,opensource.cirrus.com,cirrus.com,linaro.org,linux.intel.com,stgolabs.net,huawei.com,intel.com];
-	TAGGED_FROM(0.00)[bounces-34151-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34152-lists,linux-gpio=lfdr.de];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[bootlin.com:+];
@@ -158,37 +158,109 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCPT_COUNT_GT_50(0.00)[63];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:dkim,bootlin.com:email,bootlin.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 1A9343270FA
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid]
+X-Rspamd-Queue-Id: DD947327241
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-For i2c muxes, the parent of the mux adapter device is the adapter
-device the mux is connected to.
+When removing an i2c controller device handling an i2c bus where an i2c
+mux is connected to, the removal process hangs and is stuck in the
+wait_completion() call done in i2c_del_adapter().
 
-This parent is not the physical device related to the mux adapter.
-Indeed, the physical device of the mux adapter is the mux device itself.
+The i2c_del_adapter() tries to removed the i2c adapter related to the
+i2c controller device and the wait_completion() is waiting for the i2c
+adapter device release. This release is performed when the device is no
+more used (i.e. refcount reaches zero).
 
-Fill the adap.physdev with the mux device.
+When an i2c mux is involved in an i2c path, the struct dev topology is
+the following:
+
+    +----------------+                +-------------------+
+    | i2c controller |                |      i2c mux      |
+    |     device     |                |      device       |
+    |       ^        |                |                   |
+    |       |        |                |                   |
+    |  dev's parent  |                |                   |
+    |       |        |                |                   |
+    |   i2c adapter  |                | i2c adapter chanX |
+    |     device  <---- dev's parent ------  device       |
+    |   (no driver)  |                |    (no driver)    |
+    +----------------+                +-------------------+
+
+When an i2c mux device creates an i2c adapter for its downstream
+channel, a reference is taken to its adapter dev's parent. This parent
+is the i2c mux upstream adapter device.
+
+No relationship exists between the i2c mux device itself and the i2c
+controller device (physical device) in order to have the i2c mux device
+calling i2c_del_adapter() to remove its downstream adapters and so,
+release references taken to the upstream adapter.
+
+This consumer/supplier relationship is typically a devlink relationship.
+
+Also, i2c muxes can be chained and so, the upstream adapter can be
+supplied by either an i2c controller device or an other i2c mux device.
+
+In order to get the physical device of the adapter a mux is connected
+to, rely on the newly introduced i2c_adapter_get_physdev() and create
+the missing devlink between the i2c mux device and the physical
+device of the adapter the mux is connected to.
+
+With that done, the i2c mux device is removed before the device
+handling the upstream i2c adapter (i2c controller device or i2c mux
+device). All references are released and the i2c_del_adapter() call
+performed by driver handling the upstream adapter device is not blocking
+anymore.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
 ---
- drivers/i2c/i2c-mux.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/i2c/i2c-mux.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
 diff --git a/drivers/i2c/i2c-mux.c b/drivers/i2c/i2c-mux.c
-index 681a201c239b..f4e73e7a0e33 100644
+index f4e73e7a0e33..26470a7c2eea 100644
 --- a/drivers/i2c/i2c-mux.c
 +++ b/drivers/i2c/i2c-mux.c
-@@ -315,6 +315,7 @@ int i2c_mux_add_adapter(struct i2c_mux_core *muxc,
- 	priv->adap.algo = &priv->algo;
- 	priv->adap.algo_data = priv;
- 	priv->adap.dev.parent = &parent->dev;
-+	priv->adap.physdev = muxc->dev;
- 	priv->adap.retries = parent->retries;
- 	priv->adap.timeout = parent->timeout;
- 	priv->adap.quirks = parent->quirks;
+@@ -268,7 +268,9 @@ int i2c_mux_add_adapter(struct i2c_mux_core *muxc,
+ 			u32 force_nr, u32 chan_id)
+ {
+ 	struct i2c_adapter *parent = muxc->parent;
++	struct device *parent_physdev;
+ 	struct i2c_mux_priv *priv;
++	struct device_link *dl;
+ 	char symlink_name[20];
+ 	int ret;
+ 
+@@ -375,6 +377,29 @@ int i2c_mux_add_adapter(struct i2c_mux_core *muxc,
+ 				      ACPI_COMPANION(muxc->dev),
+ 				      chan_id);
+ 
++	/*
++	 * There is no relationship set between the mux device and the physical
++	 * device handling the parent adapter. Create this missing relationship
++	 * in order to remove the i2c mux device (consumer) and so the dowstream
++	 * channel adapters before removing the physical device (supplier) which
++	 * handles the i2c mux upstream adapter.
++	 */
++	parent_physdev = i2c_get_adapter_physdev(parent);
++	if (!parent_physdev) {
++		dev_err(muxc->dev, "failed to get the parent physical device\n");
++		ret = -ENODEV;
++		goto err_free_priv;
++	}
++	dl = device_link_add(muxc->dev, parent_physdev, DL_FLAG_AUTOREMOVE_CONSUMER);
++	if (!dl) {
++		dev_err(muxc->dev, "failed to create device link to %s\n",
++			dev_name(parent_physdev));
++		put_device(parent_physdev);
++		ret = -EINVAL;
++		goto err_free_priv;
++	}
++	put_device(parent_physdev);
++
+ 	if (force_nr) {
+ 		priv->adap.nr = force_nr;
+ 		ret = i2c_add_numbered_adapter(&priv->adap);
 -- 
 2.53.0
 
