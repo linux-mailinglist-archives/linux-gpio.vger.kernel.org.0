@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-34138-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34139-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CJJNIq/zw2lZvAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34138-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 15:39:43 +0100
+	id MNeECtnzw2lZvAQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34139-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 15:40:25 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 534B2326E41
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 15:39:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 08342326E7D
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 15:40:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 5542E306CFEB
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 14:37:21 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 7CC09307CC39
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 14:37:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38DDE3E3C4B;
-	Wed, 25 Mar 2026 14:36:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ABC53E4C8D;
+	Wed, 25 Mar 2026 14:37:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FZ4i1own"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FFGPN5nV"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759F53A452D;
-	Wed, 25 Mar 2026 14:36:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3473E2770;
+	Wed, 25 Mar 2026 14:37:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774449418; cv=none; b=H+EhZ1N5/BArk/j+9q9ScXwi25aDX+hrzG9wvONmsU+4pSRTqldDDZ7uQhgkP5zyQB3wfMsQ5qpbA6Setzj1/VsvJKl9Ws8pw+q/HXTY95rO+uYiD+Xj1VCKJQyzKXgsZFH2uT7aAR/i8Y/Fxc4PqmUApoYAaaXtzWFelJme39w=
+	t=1774449435; cv=none; b=Z1/+oSnpyFhcnwCFAnwaBqX6cIoYPXg/NCAGI9E3htYWuGCx3Z8vbypxsKAvxPnBEByyuyiUCX5Mhx+pGOeHW1F4a6H8ok6WPanNeVxqhWB10ao+w64Pev9klYvJuEQnPNCKLexfNtGtvLrTuACnuUxjahhVB7qdDJ46PupsFo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774449418; c=relaxed/simple;
-	bh=ELGRYLKuygkGfQqF1xaCp2fy8ZYCsjD3GfCuUCSoLgI=;
+	s=arc-20240116; t=1774449435; c=relaxed/simple;
+	bh=+4o3wPaMwan2MCfaea1vEsPxc09waB5Zo6tFRpwWVm0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gLGOtbPmrUiY4e8Yj9ngZuP+MpvNOUeAQ8KX+RHT8qQwVvjl0Xfz6ssb+PkNhkCA4XnSFrXYIYmTUiZc72zs0HDTVBpeecUOJ2B93mWJxeyVxDSoG+SP+tGN/VFabc+R15hpNf/YcI0RR7zhE8mkTUXdI7yTiaRHF+cflT2pgTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FZ4i1own; arc=none smtp.client-ip=185.171.202.116
+	 MIME-Version; b=D84lTjDNnGoY3GBqIf42xoGK5ejsOa8NadZ9ebIEs+IsJdPxZHTnnSEuxrh4roAKCoSBsD6KJu8qtz9E+UllOGxlOnBMwiQv3mm/Q9PW6ARgNKSqIrikZaahnZ9ZsiclBwd9EjHko53la6g6JrP4owGig5GVRf9OEZzGrtYFC0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FFGPN5nV; arc=none smtp.client-ip=185.171.202.116
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 0C6C1C580B2;
-	Wed, 25 Mar 2026 14:37:23 +0000 (UTC)
+	by smtpout-04.galae.net (Postfix) with ESMTPS id CBB23C580B1;
+	Wed, 25 Mar 2026 14:37:38 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 34573601FA;
-	Wed, 25 Mar 2026 14:36:55 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E0A7A10451A72;
-	Wed, 25 Mar 2026 15:36:37 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 0EDB9601FA;
+	Wed, 25 Mar 2026 14:37:11 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CEB51104513C1;
+	Wed, 25 Mar 2026 15:36:52 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1774449412; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1774449428; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=e66ZQnhCt52Yibqi7nOR45Pvk80W8g1E8vl6pyJHbMg=;
-	b=FZ4i1ownWnZlcO6echlt3He9lacUD3OtK1ESVkQBGJdxIaeUAg5DhQar1BIOX1ngtCyuvF
-	HpQN/pZ8Rvolp6VKJVoDRZOu84w4cDwJ4fbWj6n/40MI3s6GwSwHXCrpD8Ux3R2bGRb+c9
-	YZO3pVL0ca75D17F+SeHxBlgG5d1vMfwQ+JwMF0Yb356cE328akPZtJYRGEbwVdM35PhHO
-	y+0QXt9Zoi6UOgYUDRO6HkOjNFnk04zwchEKQ4V8z3aabB2PqmqmUEND1fDVloFY8pQ+M7
-	W9KxUk+LZD82hvJt88ZtB8unLGMbRnRKbUSk1VxQKFRNgobJcpQopx1UOCH9jA==
+	bh=U0+APqYNxOm5BrIt/rkc9+bR4FWNwWtem6DAlTFw1es=;
+	b=FFGPN5nVEzUE/C8alp2Y3x0pOsDaiW6bIsM+7p+PbLkuBxxT59XGJBEl1roxot4uvVgXbI
+	//DxIJt+WmgFpZ4EsD/3v3lPNOLVccZCMXTL6r+ZmIkKoMPUl3I8kA1NaIcqljxG1r3woQ
+	qTwJYgCC6MKUTfwMb2oSfh1kIcsQM+O83g2M8ekeEovZ+vrMG7dQ02YJANblxD/hbd6P17
+	trRjtx6mltWXztorri0PKGTWdZqxadhZl9ZEZGDE1RcgmLW+Yqh/J+w+Tqyd8I4feKYyqO
+	3vfvwRvCxE+SB7UgA8ugLwLjeuMJlndhTFZ/nTTSYYWmj2g3DaJVKWsQukj48w==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Andrew Lunn <andrew@lunn.ch>,
 	Rob Herring <robh@kernel.org>,
@@ -116,9 +116,9 @@ Cc: Wolfram Sang <wsa@kernel.org>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v6 02/27] of: dynamic: Fix overlayed devices not probing because of fw_devlink
-Date: Wed, 25 Mar 2026 15:35:29 +0100
-Message-ID: <20260325143555.451852-3-herve.codina@bootlin.com>
+Subject: [PATCH v6 03/27] driver core: Avoid warning when removing a device while its supplier is unbinding
+Date: Wed, 25 Mar 2026 15:35:30 +0100
+Message-ID: <20260325143555.451852-4-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260325143555.451852-1-herve.codina@bootlin.com>
 References: <20260325143555.451852-1-herve.codina@bootlin.com>
@@ -144,7 +144,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[lunn.ch,kernel.org,glider.be,gmail.com,linuxfoundation.org,nxp.com,pengutronix.de,baylibre.com,sang-engineering.com,axentia.se,arndb.de,bootlin.com,google.com,opensource.cirrus.com,cirrus.com,linaro.org,linux.intel.com,stgolabs.net,huawei.com,intel.com];
-	TAGGED_FROM(0.00)[bounces-34138-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34139-lists,linux-gpio=lfdr.de];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[bootlin.com:+];
@@ -159,184 +159,107 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCPT_COUNT_GT_50(0.00)[64];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,glider.be:email,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid]
-X-Rspamd-Queue-Id: 534B2326E41
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid]
+X-Rspamd-Queue-Id: 08342326E7D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Saravana Kannan <saravanak@google.com>
+During driver removal, the following warning can appear:
+   WARNING: CPU: 1 PID: 139 at drivers/base/core.c:1497 __device_links_no_driver+0xcc/0xfc
+   ...
+   Call trace:
+     __device_links_no_driver+0xcc/0xfc (P)
+     device_links_driver_cleanup+0xa8/0xf0
+     device_release_driver_internal+0x208/0x23c
+     device_links_unbind_consumers+0xe0/0x108
+     device_release_driver_internal+0xec/0x23c
+     device_links_unbind_consumers+0xe0/0x108
+     device_release_driver_internal+0xec/0x23c
+     device_links_unbind_consumers+0xe0/0x108
+     device_release_driver_internal+0xec/0x23c
+     driver_detach+0xa0/0x12c
+     bus_remove_driver+0x6c/0xbc
+     driver_unregister+0x30/0x60
+     pci_unregister_driver+0x20/0x9c
+     lan966x_pci_driver_exit+0x18/0xa90 [lan966x_pci]
 
-When an overlay is applied, if the target device has already probed
-successfully and bound to a device, then some of the fw_devlink logic
-that ran when the device was probed needs to be rerun. This allows newly
-created dangling consumers of the overlayed device tree nodes to be
-moved to become consumers of the target device.
+This warning is triggered when a consumer is removed because the links
+status of its supplier is not DL_DEV_DRIVER_BOUND and the link flag
+DL_FLAG_SYNC_STATE_ONLY is not set.
 
-Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT overlays")
-Reported-by: Herve Codina <herve.codina@bootlin.com>
-Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgyo8x6=9F9rZ+-KzjOg@mail.gmail.com/
-Closes: https://lore.kernel.org/all/20240221095137.616d2aaa@bootlin.com/
-Closes: https://lore.kernel.org/lkml/20240312151835.29ef62a0@bootlin.com/
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-Link: https://lore.kernel.org/lkml/20240411235623.1260061-3-saravanak@google.com/
-[Herve: Rebase on top of recent kernel]
-[Herve: Add the call to driver_deferred_probe_trigger()]
+The topology in terms of consumers/suppliers used was the following
+(consumer ---> supplier):
+
+      i2c -----------> OIC ----> PCI device
+       |                ^
+       |                |
+       +---> pinctrl ---+
+
+When the PCI device is removed, the OIC (interrupt controller) has to be
+removed. In order to remove the OIC, pinctrl and i2c need to be removed
+and to remove pinctrl, i2c need to be removed. The removal order is:
+  1) i2c
+  2) pinctrl
+  3) OIC
+  4) PCI device
+
+In details, the removal sequence is the following (with 0000:01:00.0 the
+PCI device):
+  driver_detach: call device_release_driver_internal(0000:01:00.0)...
+    device_links_busy(0000:01:00.0):
+      links->status = DL_DEV_UNBINDING
+    device_links_unbind_consumers(0000:01:00.0):
+      0000:01:00.0--oic link->status = DL_STATE_SUPPLIER_UNBIND
+      call device_release_driver_internal(oic)...
+        device_links_busy(oic):
+          links->status = DL_DEV_UNBINDING
+        device_links_unbind_consumers(oic):
+          oic--pinctrl link->status = DL_STATE_SUPPLIER_UNBIND
+          call device_release_driver_internal(pinctrl)...
+            device_links_busy(pinctrl):
+              links->status = DL_DEV_UNBINDING
+            device_links_unbind_consumers(pinctrl):
+              pinctrl--i2c link->status = DL_STATE_SUPPLIER_UNBIND
+              call device_release_driver_internal(i2c)...
+                device_links_busy(i2c): links->status = DL_DEV_UNBINDING
+                __device_links_no_driver(i2c)...
+                  pinctrl--i2c link->status is DL_STATE_SUPPLIER_UNBIND
+                  oic--i2c link->status is DL_STATE_ACTIVE
+                  oic--i2c link->supplier->links.status is DL_DEV_UNBINDING
+
+The warning is triggered by the i2c removal because the OIC (supplier)
+links status is not DL_DEV_DRIVER_BOUND. Its links status is indeed set
+to DL_DEV_UNBINDING.
+
+It is perfectly legit to have the links status set to DL_DEV_UNBINDING
+in that case. Indeed we had started to unbind the OIC which triggered
+the consumer unbinding and didn't finish yet when the i2c is unbound.
+
+Avoid the warning when the supplier links status is set to
+DL_DEV_UNBINDING and thus support this removal sequence without any
+warnings.
+
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-Tested-by: Kalle Niemi <kaleposti@gmail.com>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
+Reviewed-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/base/core.c    | 83 +++++++++++++++++++++++++++++++++++++-----
- drivers/of/overlay.c   | 15 ++++++++
- include/linux/fwnode.h |  1 +
- 3 files changed, 90 insertions(+), 9 deletions(-)
+ drivers/base/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 791f9e444df8..019fda47d089 100644
+index 019fda47d089..cc6b84f8cdfb 100644
 --- a/drivers/base/core.c
 +++ b/drivers/base/core.c
-@@ -235,6 +235,79 @@ static void __fw_devlink_pickup_dangling_consumers(struct fwnode_handle *fwnode,
- 		__fw_devlink_pickup_dangling_consumers(child, new_sup);
- }
- 
-+static void fw_devlink_pickup_dangling_consumers(struct device *dev)
-+{
-+	struct fwnode_handle *child;
-+
-+	guard(mutex)(&fwnode_link_lock);
-+
-+	fwnode_for_each_available_child_node(dev->fwnode, child)
-+		__fw_devlink_pickup_dangling_consumers(child, dev->fwnode);
-+	__fw_devlink_link_to_consumers(dev);
-+}
-+
-+/**
-+ * fw_devlink_refresh_fwnode - Recheck the tree under this firmware node
-+ * @fwnode: The fwnode under which the fwnode tree has changed
-+ *
-+ * This function is mainly meant to adjust the supplier/consumer dependencies
-+ * after a fwnode tree overlay has occurred.
-+ */
-+void fw_devlink_refresh_fwnode(struct fwnode_handle *fwnode)
-+{
-+	struct device *dev;
-+
-+	/*
-+	 * Find the closest ancestor fwnode that has been converted to a device
-+	 * that can bind to a driver (bus device).
-+	 */
-+	fwnode_handle_get(fwnode);
-+	do {
-+		if (fwnode->flags & FWNODE_FLAG_NOT_DEVICE)
-+			continue;
-+
-+		dev = get_dev_from_fwnode(fwnode);
-+		if (!dev)
-+			continue;
-+
-+		if (dev->bus)
-+			break;
-+
-+		put_device(dev);
-+	} while ((fwnode = fwnode_get_next_parent(fwnode)));
-+
-+	/*
-+	 * If none of the ancestor fwnodes have (yet) been converted to a device
-+	 * that can bind to a driver, there's nothing to fix up.
-+	 */
-+	if (!fwnode)
-+		return;
-+
-+	WARN(device_is_bound(dev) && dev->links.status != DL_DEV_DRIVER_BOUND,
-+	     "Don't multithread overlaying and probing the same device!\n");
-+
-+	/*
-+	 * If the device has already bound to a driver, then we need to redo
-+	 * some of the work that was done after the device was bound to a
-+	 * driver. If the device hasn't bound to a driver, running things too
-+	 * soon would incorrectly pick up consumers that it shouldn't.
-+	 */
-+	if (dev->links.status == DL_DEV_DRIVER_BOUND) {
-+		fw_devlink_pickup_dangling_consumers(dev);
-+		/*
-+		 * Some of dangling consumers could have been put previously in
-+		 * the deferred probe list due to the unavailability of their
-+		 * suppliers. Those consumers have been picked up and some of
-+		 * their suppliers links have been updated. Time to re-try their
-+		 * probe sequence.
-+		 */
-+		driver_deferred_probe_trigger();
-+	}
-+
-+	put_device(dev);
-+	fwnode_handle_put(fwnode);
-+}
-+
- static DEFINE_MUTEX(device_links_lock);
- DEFINE_STATIC_SRCU(device_links_srcu);
- 
-@@ -1312,16 +1385,8 @@ void device_links_driver_bound(struct device *dev)
- 	 * child firmware node.
- 	 */
- 	if (dev->fwnode && dev->fwnode->dev == dev) {
--		struct fwnode_handle *child;
--
- 		fwnode_links_purge_suppliers(dev->fwnode);
--
--		guard(mutex)(&fwnode_link_lock);
--
--		fwnode_for_each_available_child_node(dev->fwnode, child)
--			__fw_devlink_pickup_dangling_consumers(child,
--							       dev->fwnode);
--		__fw_devlink_link_to_consumers(dev);
-+		fw_devlink_pickup_dangling_consumers(dev);
+@@ -1500,7 +1500,8 @@ static void __device_links_no_driver(struct device *dev)
+ 		if (link->supplier->links.status == DL_DEV_DRIVER_BOUND) {
+ 			WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
+ 		} else {
+-			WARN_ON(!device_link_test(link, DL_FLAG_SYNC_STATE_ONLY));
++			WARN_ON(link->supplier->links.status != DL_DEV_UNBINDING &&
++				!device_link_test(link, DL_FLAG_SYNC_STATE_ONLY));
+ 			WRITE_ONCE(link->status, DL_STATE_DORMANT);
+ 		}
  	}
- 	device_remove_file(dev, &dev_attr_waiting_for_supplier);
- 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index c1c5686fc7b1..4e45f3414c2c 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -185,6 +185,15 @@ static int overlay_notify(struct overlay_changeset *ovcs,
- 	return 0;
- }
- 
-+static void overlay_fw_devlink_refresh(struct overlay_changeset *ovcs)
-+{
-+	for (int i = 0; i < ovcs->count; i++) {
-+		struct device_node *np = ovcs->fragments[i].target;
-+
-+		fw_devlink_refresh_fwnode(of_fwnode_handle(np));
-+	}
-+}
-+
- /*
-  * The values of properties in the "/__symbols__" node are paths in
-  * the ovcs->overlay_root.  When duplicating the properties, the paths
-@@ -951,6 +960,12 @@ static int of_overlay_apply(struct overlay_changeset *ovcs,
- 		pr_err("overlay apply changeset entry notify error %d\n", ret);
- 	/* notify failure is not fatal, continue */
- 
-+	/*
-+	 * Needs to happen after changeset notify to give the listeners a chance
-+	 * to finish creating all the devices they need to create.
-+	 */
-+	overlay_fw_devlink_refresh(ovcs);
-+
- 	ret_tmp = overlay_notify(ovcs, OF_OVERLAY_POST_APPLY);
- 	if (ret_tmp)
- 		if (!ret)
-diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-index 097be89487bf..a921ca2fe940 100644
---- a/include/linux/fwnode.h
-+++ b/include/linux/fwnode.h
-@@ -228,6 +228,7 @@ int fwnode_link_add(struct fwnode_handle *con, struct fwnode_handle *sup,
- 		    u8 flags);
- void fwnode_links_purge(struct fwnode_handle *fwnode);
- void fw_devlink_purge_absent_suppliers(struct fwnode_handle *fwnode);
-+void fw_devlink_refresh_fwnode(struct fwnode_handle *fwnode);
- bool fw_devlink_is_strict(void);
- 
- #endif
 -- 
 2.53.0
 
