@@ -1,150 +1,181 @@
-Return-Path: <linux-gpio+bounces-34120-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34121-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id COyMFae5w2nUtgQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34120-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 11:32:07 +0100
+	id QIbUAFe8w2kRtwQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34121-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 11:43:35 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BFD8323068
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 11:32:07 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 679AB32332A
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 11:43:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id BFDF7305980E
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 10:24:32 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 489973137446
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 10:32:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23273396D38;
-	Wed, 25 Mar 2026 10:24:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A38693B777D;
+	Wed, 25 Mar 2026 10:32:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bEQrkKEz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQsLCgUR"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D826E30E0F2
-	for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2026 10:24:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656033B777C
+	for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2026 10:32:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774434268; cv=none; b=jIAz3BOoDwj5sBNo0k23kc5Bqkx0QfK3p1G5Axdtlcf3oscfgs5GgV92aQw2NArd4aDcy8+PWZZjlIxZrn5rBnEZUGa20H+HUHeWMDJutYuzB9hntN6M+j0PKjHUOyWhtcdIIxjKlcua8u/Y/fxOVeDU1DFt99yKrXVQ7VixEwo=
+	t=1774434724; cv=none; b=tVpM4tiv/thbyZSFwHp1knwo6hDJTJPMkcu0DmdaT44CeUrGnRJpkXJuibLAk+FZ1o5db0N0nsdluhT8ByuC0qKjN5sTCUWcQ0VY8rDjFjbAPpJsmaP3faY02R7CSWdq7uBVe5RcWmKD5oAJytQdn2sINgoePb3uXwl/SABbu9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774434268; c=relaxed/simple;
-	bh=DQWAjarmAEIR12f+N5kRbQsMdjqbb6LUni3iSD57BnA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ClPlOi6eh61dlZNY1UBVSwBTRnNjVSyDa0ydAUQTDr0iG2P+DyQw2EpA4fQ/lNgG+yuvaULIVuZ2NuDm1KPDBKyPRDhQDYD2c5F70iRdGGmn3QEkaaS+Kc9Omn2yuSeIK9asZS2zQK7cdJSjRfngxhaszxkf159h2sQ7x9eOsnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bEQrkKEz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 881C9C2BCB7
-	for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2026 10:24:28 +0000 (UTC)
+	s=arc-20240116; t=1774434724; c=relaxed/simple;
+	bh=ocM1mdWqdcmXzLcIYmHxofHeePVA9vqDrQenuhbw7uQ=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bECsPvaIUxugmhN33iaqmwZdKWGHN2Fsqm7Bn1fzn3d6wk9H24koP9Kb8QTtwzSmN6autqWyX0Yjbep6eybbsvCRuHlkU+8XJ8IVpnE9VbIW14YwBt3+HTVTnidXY3ictFTYY2RT3ZfWaRVeHPiO8bFnNjaiyyh4e/e9nXqSsQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQsLCgUR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C4E8C2BCB4
+	for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2026 10:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774434268;
-	bh=DQWAjarmAEIR12f+N5kRbQsMdjqbb6LUni3iSD57BnA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bEQrkKEzQxDGG2rRmwMwwzN1PH2pUmPqRZOMb7514c+kC5R2sVannMWLpgjySJZVe
-	 mbV+bE/TRHqs/ehwzg20kGw9dIaKov4LyqKeOg0JDwDgW84Bk2zOWCJ1thteWuIOKm
-	 pTPqPAOOCcooBmPBydv03XO29dmd9KDMaPDzA9ew2sjRhNnTsRP0TnNTwZy88n83Z4
-	 cuY6nJP5L7IN/VFyC6ZCF+m8vEywUbh4PWv31+bbtWma0mkO9TK79+f4Jf0FBzGmtc
-	 dVefH9QRJYh1T75xstMx0JOCKh6AZjLbU93SSPNR2iI/no0EE4DyOjTxgZclmdErBM
-	 DNK+jKKaLi7Bg==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-38b13652c87so19468221fa.0
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2026 03:24:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWadMxwvz09A2brIEIxNS/fFQvOBIU5hQn/dTDr9PVvGqZpr+e0tpecMisxJTCPvClpPDA406wzwE6r@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0Z0X2rQ/fnwdZOQD/Em0+U57ocV5yeNyoHGhTyIuIn/amY5J3
-	KkyaVXfREhN4v2rxsaDvMwY9swS3jbUGqDtvkWt790nXbHw8/PHPxwPiu35sd7NZ+Cx/umS0QMr
-	F63vId6TWoCkbsBeKSvJU46HcMXqRj6xDhVgI5VcJvw==
-X-Received: by 2002:a05:651c:1582:b0:38b:f0f0:e3cd with SMTP id
- 38308e7fff4ca-38c4320ca56mr8033351fa.36.1774434267149; Wed, 25 Mar 2026
- 03:24:27 -0700 (PDT)
+	s=k20201202; t=1774434724;
+	bh=ocM1mdWqdcmXzLcIYmHxofHeePVA9vqDrQenuhbw7uQ=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
+	b=rQsLCgURkLIEosDEkWhGLHl2g1Ra6qaeLKzy2cRqqnyXRcXcVKKwx3toJni6EMrux
+	 2yTlCjJ/KdtIfr9nJlV3R9Uyw8RZjwSCEWZZ46F6kW+ognCmhXZTt+4caRkrSnV4pJ
+	 g4EKHg7lADOkIJM8Zy429vK7uL9pAvIYddbYoRTRMs0BHYvdVDX9uYgNCxGUfYD9zg
+	 KwaTmNGmGRK3/Fgg/iLtZ3V1Oeowegn1mvk53dgavo/7O2ptF2VSu4l/gEOC/UGQ10
+	 b27HeM60vA3MAPu4GdjcQl6p8kfoIuA4k6Bdijgtvn3EOmXmoLIi8zD+zePRhB70dz
+	 j8GibjkFw3IsQ==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5a0fc5e2c59so6550559e87.1
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2026 03:32:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXShJtWpiNUVHicIUdg+wk8TYcELUjffquwyTdsMAmIVzscZqLgQ+ziXc+Juwm8aFj8z1i2gbMrowPl@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXGDWlGlBuZa2Wmt+MbqBAZQ9ok3PGFuELoX10o9jy95xS340M
+	cmaxYcWfA91Eh2RdLBb8nsOM4Qwv8PHKoqHHIpq1SCwhr4dEhL9O0HgYOQ3tD7JcmpezDHEgUAW
+	9ATU+tcIBNJVDZw+4Fc5/lSE/W3UkCvx10Zps/qJ2WQ==
+X-Received: by 2002:a05:6512:220f:b0:5a1:34a3:757f with SMTP id
+ 2adb3069b0e04-5a29b9958e6mr1037060e87.25.1774434722860; Wed, 25 Mar 2026
+ 03:32:02 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 25 Mar 2026 03:32:01 -0700
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 25 Mar 2026 03:32:01 -0700
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260325100144.1696731-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1774283146.git.dan.carpenter@linaro.org> <CAD++jL=mz5jOLkq6GA6ZWzfGfFnVOLTCoXKOd38YHj2UZaZ9ww@mail.gmail.com>
-In-Reply-To: <CAD++jL=mz5jOLkq6GA6ZWzfGfFnVOLTCoXKOd38YHj2UZaZ9ww@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Wed, 25 Mar 2026 11:24:13 +0100
-X-Gmail-Original-Message-ID: <CAMRc=Me2pyUshFZeXqWU0DF2eTkNjNvVDUP3LL9DO0ZfMOPJDA@mail.gmail.com>
-X-Gm-Features: AaiRm50nqwnVr1AXzgZWPax30PNVL9bQfMa7oruOnr447gPeYYgO3Xx86_ZMZ5g
-Message-ID: <CAMRc=Me2pyUshFZeXqWU0DF2eTkNjNvVDUP3LL9DO0ZfMOPJDA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/7] gpio: introduce a GPIO driver for SCMI
-To: Linus Walleij <linusw@kernel.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, AKASHI Takahiro <akashi.tkhro@gmail.com>, 
-	arm-scmi@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
-	Cristian Marussi <cristian.marussi@arm.com>, devicetree@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Rob Herring <robh@kernel.org>, Sudeep Holla <sudeep.holla@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@intel.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Khaled Ali Ahmed <Khaled.AliAhmed@arm.com>, 
-	Michal Simek <michal.simek@amd.com>
+References: <20260325100144.1696731-1-arnd@kernel.org>
+Date: Wed, 25 Mar 2026 03:32:01 -0700
+X-Gmail-Original-Message-ID: <CAMRc=Mdwu85gghDjQEu4eP2HZxHjBFpph07q9SOfAifSDMtpVw@mail.gmail.com>
+X-Gm-Features: AaiRm53MDlZLZwdTwMSs-omwMVxdmGT3F6ltQ_Yfx4HD4BKPWevgMv5IzNZGH1g
+Message-ID: <CAMRc=Mdwu85gghDjQEu4eP2HZxHjBFpph07q9SOfAifSDMtpVw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: fix up CONFIG_OF dependencies
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Yixun Lan <dlan@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-34120-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[linaro.org,gmail.com,vger.kernel.org,kernel.org,arm.com,lists.infradead.org,intel.com,oss.qualcomm.com,amd.com];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-34121-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[arndb.de,kernel.org,gmail.com,collabora.com,vger.kernel.org,lists.infradead.org,lists.linux.dev];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,arndb.de:email,mail.gmail.com:mid];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,linaro.org:email,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 3BFD8323068
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 679AB32332A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Mar 24, 2026 at 2:11=E2=80=AFPM Linus Walleij <linusw@kernel.org> w=
-rote:
+On Wed, 25 Mar 2026 11:01:14 +0100, Arnd Bergmann <arnd@kernel.org> said:
+> From: Arnd Bergmann <arnd@arndb.de>
 >
-> On Mon, Mar 23, 2026 at 8:01=E2=80=AFPM Dan Carpenter <dan.carpenter@lina=
-ro.org> wrote:
+> A number of GPIO drivers that used to have a CONFIG_OF_GPIO dependency now fail
+> to build on targets without CONFIG_OF:
 >
-> > This basically abandons my earlier attempts and goes back to Takahiro
-> > Akashi's driver.  Here is the link to Takahiro's patchset:
-> >
-> > https://lore.kernel.org/all/20231005025843.508689-1-takahiro.akashi@lin=
-aro.org/
-> >
-> > v6: Fix a build error when CONFIG_PINCONF is disabled
-> >     Fix the dt-binding subject and my email address
-> >     Use pinconf_to_config_packed() instead of PIN_CONF_PACKED()
+> WARNING: unmet direct dependencies detected for GPIO_SYSCON
+>   Depends on [n]: GPIOLIB [=y] && HAS_IOMEM [=y] && MFD_SYSCON [=y] && OF [=n]
+>   Selected by [y]:
+>   - GPIO_SAMA5D2_PIOBU [=y] && GPIOLIB [=y] && HAS_IOMEM [=y] && MFD_SYSCON [=y] && (ARCH_AT91 || COMPILE_TEST [=y])
 >
-> v6 applied to this immutable branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/=
-log/?h=3Dib-scmi-pinctrl-gpio
+> drivers/gpio/gpio-mt7621.c: In function 'mediatek_gpio_bank_probe':
+> drivers/gpio/gpio-mt7621.c:254:20: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
+>   254 |         rg->chip.gc.of_gpio_n_cells = 2;
+>       |                    ^
+> drivers/gpio/gpio-tegra186.c: In function 'tegra186_gpio_of_xlate':
+> drivers/gpio/gpio-tegra186.c:502:25: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
+>   502 |         if (WARN_ON(chip->of_gpio_n_cells < 2))
+>       |                         ^~
+> drivers/gpio/gpio-lpc32xx.c: In function 'lpc32xx_gpio_probe':
+> drivers/gpio/gpio-lpc32xx.c:523:49: error: 'struct gpio_chip' has no member named 'of_xlate'
+>   523 |                         lpc32xx_gpiochip[i].chip.of_xlate = lpc32xx_of_xlate;
+>       |                                                 ^
+> drivers/gpio/gpio-spacemit-k1.c: In function 'spacemit_gpio_add_bank':
+> drivers/gpio/gpio-spacemit-k1.c:234:11: error: 'struct gpio_chip' has no member named 'of_gpio_n_cells'
+>   234 |         gc->of_gpio_n_cells     = 3;
+>       |           ^~
 >
-> Then merged into my devel branch for next.
+> Bring that back as a dependency.
 >
-> Bartosz, you might want to pull it in!
->
-> Dan: thanks for your efforts to fix up the remaining hurdles and
-> bringing this to completion! Sometimes the last few % of work are
-> the hardest.
->
-> Also thanks to Takahiro for this idea: it worked out just like you
-> imagined.
->
+> Fixes: 7803501e5754 ("gpio: drop unneeded Kconfig dependencies on OF_GPIO")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> There may be more fallout from the change, this is just what I found immediately,
+> but you could already fold the changes into the broken patch while I look
+> for additional ones.
+> ---
 
-Pulled, thanks!
+Thanks and sorry for the breakage. However, I'm wondering if it wouldn't make
+sense to do the following:
 
-Bart
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 17511434ed077..ce0e0df68dbaa 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -473,7 +473,6 @@ struct gpio_chip {
+ 	struct gpio_irq_chip irq;
+ #endif /* CONFIG_GPIOLIB_IRQCHIP */
+
+-#if defined(CONFIG_OF_GPIO)
+ 	/*
+ 	 * If CONFIG_OF_GPIO is enabled, then all GPIO controllers described in
+ 	 * the device tree automatically may have an OF translation
+@@ -516,7 +515,6 @@ struct gpio_chip {
+ 	 */
+ 	int (*of_xlate)(struct gpio_chip *gc,
+ 			const struct of_phandle_args *gpiospec, u32 *flags);
+-#endif /* CONFIG_OF_GPIO */
+ };
+
+ char *gpiochip_dup_line_label(struct gpio_chip *gc, unsigned int offset);
+
+Symbols from linux/of.h are stubbed out and these drivers can build just fine
+with !CONFIG_OF. This would naturally increase the build coverage.
+
+Bartosz
 
