@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-34139-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34140-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MNeECtnzw2lZvAQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34139-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 15:40:25 +0100
+	id MDNvGUH2w2lZvAQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34140-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 15:50:41 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08342326E7D
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 15:40:24 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D490A32721D
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 15:50:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7CC09307CC39
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 14:37:45 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 25C4C31734CA
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 14:38:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ABC53E4C8D;
-	Wed, 25 Mar 2026 14:37:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34F323E4C70;
+	Wed, 25 Mar 2026 14:37:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FFGPN5nV"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OkUF+xwg"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3473E2770;
-	Wed, 25 Mar 2026 14:37:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E3B3E5ECF;
+	Wed, 25 Mar 2026 14:37:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774449435; cv=none; b=Z1/+oSnpyFhcnwCFAnwaBqX6cIoYPXg/NCAGI9E3htYWuGCx3Z8vbypxsKAvxPnBEByyuyiUCX5Mhx+pGOeHW1F4a6H8ok6WPanNeVxqhWB10ao+w64Pev9klYvJuEQnPNCKLexfNtGtvLrTuACnuUxjahhVB7qdDJ46PupsFo8=
+	t=1774449454; cv=none; b=fWnErL7Qk9nG3J5er9DBxCik9BXHNMvkm2KefzCkLvSLLff75Hk2mnlkyHmDACqqofbdgnveEehIWMzmonbZg4MgKED5rCBZIVRqPwqZ58u6BvoalU9EfG+Df6AIORXtl62NbzSetgGU33vppKDuBblvub+T8E3uXEYkRjGCAJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774449435; c=relaxed/simple;
-	bh=+4o3wPaMwan2MCfaea1vEsPxc09waB5Zo6tFRpwWVm0=;
+	s=arc-20240116; t=1774449454; c=relaxed/simple;
+	bh=pNJgxM3Q6VrVRA/ImgG+f9Z478N2c1kQ4rp0wHmYr48=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D84lTjDNnGoY3GBqIf42xoGK5ejsOa8NadZ9ebIEs+IsJdPxZHTnnSEuxrh4roAKCoSBsD6KJu8qtz9E+UllOGxlOnBMwiQv3mm/Q9PW6ARgNKSqIrikZaahnZ9ZsiclBwd9EjHko53la6g6JrP4owGig5GVRf9OEZzGrtYFC0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FFGPN5nV; arc=none smtp.client-ip=185.171.202.116
+	 MIME-Version; b=RtxOXqVr5mbbjA6G7d8lOhXLombwbCdeBEue3+KQw/8n4hJ4jXrXqf9cIHBFKiJIvYbDpYywlTGzsJu1tJI7bDweRa50NniUuxYuQN0JpJd7C1XTd22QK2yKMuE7YqRijvW5kbK466aZEbIGwc++Mwe7qzjo7U0Z1OJdCCwqzgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OkUF+xwg; arc=none smtp.client-ip=185.171.202.116
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id CBB23C580B1;
-	Wed, 25 Mar 2026 14:37:38 +0000 (UTC)
+	by smtpout-04.galae.net (Postfix) with ESMTPS id DE424C580B1;
+	Wed, 25 Mar 2026 14:37:58 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 0EDB9601FA;
-	Wed, 25 Mar 2026 14:37:11 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CEB51104513C1;
-	Wed, 25 Mar 2026 15:36:52 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 2268F601E2;
+	Wed, 25 Mar 2026 14:37:31 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2782410451411;
+	Wed, 25 Mar 2026 15:37:08 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1774449428; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1774449447; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=U0+APqYNxOm5BrIt/rkc9+bR4FWNwWtem6DAlTFw1es=;
-	b=FFGPN5nVEzUE/C8alp2Y3x0pOsDaiW6bIsM+7p+PbLkuBxxT59XGJBEl1roxot4uvVgXbI
-	//DxIJt+WmgFpZ4EsD/3v3lPNOLVccZCMXTL6r+ZmIkKoMPUl3I8kA1NaIcqljxG1r3woQ
-	qTwJYgCC6MKUTfwMb2oSfh1kIcsQM+O83g2M8ekeEovZ+vrMG7dQ02YJANblxD/hbd6P17
-	trRjtx6mltWXztorri0PKGTWdZqxadhZl9ZEZGDE1RcgmLW+Yqh/J+w+Tqyd8I4feKYyqO
-	3vfvwRvCxE+SB7UgA8ugLwLjeuMJlndhTFZ/nTTSYYWmj2g3DaJVKWsQukj48w==
+	bh=giDCWLXbUuWTQUHzm6UggcAb1bsu7moyMro/sWeCGf0=;
+	b=OkUF+xwg+KzGLtZZeuTeipRi19HlS9OGToxlwsayITguVCVP9o7jIkr8zer4EEl4/Y/F52
+	Sr944Fdof3BVGUwEF/QP6h2Qt/of+WzWQbnQAZ6GtAtA8kf1AMo1C8BtcP9x9laPobQr2P
+	rNxGVR3Am3j7BDfHzvgH342IB7vMqZpqvqyBqmrWzpaH1XUAiYxHzXccTL5JvybqsBBc0K
+	TpBRFz144tF6lsrURgh3ewd/XGFxHlLgdA7GJf4xgQHowGCgGIXycrXRj91GABY5pfw510
+	1eBLxya9Lb4KeWwyyvjszvRu49BFZL9eG52jchJYMRA5c8oRsjocvPl6/HAKwg==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Andrew Lunn <andrew@lunn.ch>,
 	Rob Herring <robh@kernel.org>,
@@ -114,11 +114,10 @@ Cc: Wolfram Sang <wsa@kernel.org>,
 	Horatiu Vultur <horatiu.vultur@microchip.com>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v6 03/27] driver core: Avoid warning when removing a device while its supplier is unbinding
-Date: Wed, 25 Mar 2026 15:35:30 +0100
-Message-ID: <20260325143555.451852-4-herve.codina@bootlin.com>
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH v6 04/27] bus: simple-pm-bus: Remove child devices when the bus is unbound
+Date: Wed, 25 Mar 2026 15:35:31 +0100
+Message-ID: <20260325143555.451852-5-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260325143555.451852-1-herve.codina@bootlin.com>
 References: <20260325143555.451852-1-herve.codina@bootlin.com>
@@ -136,7 +135,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -144,11 +143,11 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[lunn.ch,kernel.org,glider.be,gmail.com,linuxfoundation.org,nxp.com,pengutronix.de,baylibre.com,sang-engineering.com,axentia.se,arndb.de,bootlin.com,google.com,opensource.cirrus.com,cirrus.com,linaro.org,linux.intel.com,stgolabs.net,huawei.com,intel.com];
-	TAGGED_FROM(0.00)[bounces-34139-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34140-lists,linux-gpio=lfdr.de];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[bootlin.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[herve.codina@bootlin.com,linux-gpio@vger.kernel.org];
@@ -156,110 +155,42 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_GT_50(0.00)[64];
+	RCPT_COUNT_GT_50(0.00)[63];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid]
-X-Rspamd-Queue-Id: 08342326E7D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:dkim,bootlin.com:email,bootlin.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: D490A32721D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-During driver removal, the following warning can appear:
-   WARNING: CPU: 1 PID: 139 at drivers/base/core.c:1497 __device_links_no_driver+0xcc/0xfc
-   ...
-   Call trace:
-     __device_links_no_driver+0xcc/0xfc (P)
-     device_links_driver_cleanup+0xa8/0xf0
-     device_release_driver_internal+0x208/0x23c
-     device_links_unbind_consumers+0xe0/0x108
-     device_release_driver_internal+0xec/0x23c
-     device_links_unbind_consumers+0xe0/0x108
-     device_release_driver_internal+0xec/0x23c
-     device_links_unbind_consumers+0xe0/0x108
-     device_release_driver_internal+0xec/0x23c
-     driver_detach+0xa0/0x12c
-     bus_remove_driver+0x6c/0xbc
-     driver_unregister+0x30/0x60
-     pci_unregister_driver+0x20/0x9c
-     lan966x_pci_driver_exit+0x18/0xa90 [lan966x_pci]
+During its probe, the simple-pm-bus driver (simple-pm-bus compatible
+variant) populates its child devices but it doesn't touch them during
+its removal.
 
-This warning is triggered when a consumer is removed because the links
-status of its supplier is not DL_DEV_DRIVER_BOUND and the link flag
-DL_FLAG_SYNC_STATE_ONLY is not set.
+This leads to bus child devices present and bound to drivers whereas the
+bus itself is unbound.
 
-The topology in terms of consumers/suppliers used was the following
-(consumer ---> supplier):
-
-      i2c -----------> OIC ----> PCI device
-       |                ^
-       |                |
-       +---> pinctrl ---+
-
-When the PCI device is removed, the OIC (interrupt controller) has to be
-removed. In order to remove the OIC, pinctrl and i2c need to be removed
-and to remove pinctrl, i2c need to be removed. The removal order is:
-  1) i2c
-  2) pinctrl
-  3) OIC
-  4) PCI device
-
-In details, the removal sequence is the following (with 0000:01:00.0 the
-PCI device):
-  driver_detach: call device_release_driver_internal(0000:01:00.0)...
-    device_links_busy(0000:01:00.0):
-      links->status = DL_DEV_UNBINDING
-    device_links_unbind_consumers(0000:01:00.0):
-      0000:01:00.0--oic link->status = DL_STATE_SUPPLIER_UNBIND
-      call device_release_driver_internal(oic)...
-        device_links_busy(oic):
-          links->status = DL_DEV_UNBINDING
-        device_links_unbind_consumers(oic):
-          oic--pinctrl link->status = DL_STATE_SUPPLIER_UNBIND
-          call device_release_driver_internal(pinctrl)...
-            device_links_busy(pinctrl):
-              links->status = DL_DEV_UNBINDING
-            device_links_unbind_consumers(pinctrl):
-              pinctrl--i2c link->status = DL_STATE_SUPPLIER_UNBIND
-              call device_release_driver_internal(i2c)...
-                device_links_busy(i2c): links->status = DL_DEV_UNBINDING
-                __device_links_no_driver(i2c)...
-                  pinctrl--i2c link->status is DL_STATE_SUPPLIER_UNBIND
-                  oic--i2c link->status is DL_STATE_ACTIVE
-                  oic--i2c link->supplier->links.status is DL_DEV_UNBINDING
-
-The warning is triggered by the i2c removal because the OIC (supplier)
-links status is not DL_DEV_DRIVER_BOUND. Its links status is indeed set
-to DL_DEV_UNBINDING.
-
-It is perfectly legit to have the links status set to DL_DEV_UNBINDING
-in that case. Indeed we had started to unbind the OIC which triggered
-the consumer unbinding and didn't finish yet when the i2c is unbound.
-
-Avoid the warning when the supplier links status is set to
-DL_DEV_UNBINDING and thus support this removal sequence without any
-warnings.
+Be consistent and remove child devices when the bus itself is unbound.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
-Reviewed-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/base/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/bus/simple-pm-bus.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 019fda47d089..cc6b84f8cdfb 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -1500,7 +1500,8 @@ static void __device_links_no_driver(struct device *dev)
- 		if (link->supplier->links.status == DL_DEV_DRIVER_BOUND) {
- 			WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
- 		} else {
--			WARN_ON(!device_link_test(link, DL_FLAG_SYNC_STATE_ONLY));
-+			WARN_ON(link->supplier->links.status != DL_DEV_UNBINDING &&
-+				!device_link_test(link, DL_FLAG_SYNC_STATE_ONLY));
- 			WRITE_ONCE(link->status, DL_STATE_DORMANT);
- 		}
- 	}
+diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
+index 3f00d953fb9a..9ebd588ea24f 100644
+--- a/drivers/bus/simple-pm-bus.c
++++ b/drivers/bus/simple-pm-bus.c
+@@ -83,6 +83,9 @@ static void simple_pm_bus_remove(struct platform_device *pdev)
+ 
+ 	dev_dbg(&pdev->dev, "%s\n", __func__);
+ 
++	if (pdev->dev.of_node)
++		of_platform_depopulate(&pdev->dev);
++
+ 	pm_runtime_disable(&pdev->dev);
+ }
+ 
 -- 
 2.53.0
 
