@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-34162-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34163-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +BsLCZ35w2klvQQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34162-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 16:05:01 +0100
+	id CGS0IFD/w2lXvQQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34163-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 16:29:20 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BAC232777E
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 16:05:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D554327F96
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 16:29:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9CFF4314EA2D
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 14:49:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9053D32898D3
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2026 14:50:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91D043F2106;
-	Wed, 25 Mar 2026 14:44:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E96B3FFAA3;
+	Wed, 25 Mar 2026 14:44:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ue2vm7uw"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gqvjBLpm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9303F2103;
-	Wed, 25 Mar 2026 14:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CC23E92A8;
+	Wed, 25 Mar 2026 14:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774449840; cv=none; b=fF8INHQB3VpnRIEx82H6ZTAlMXuBjZ5jJ8JOOG0c6f12dYBQazGLNeRZyvPOoLJ1Xbin+XZMA5HJefJ6C5/5B7Kad+oBEiJUVdjSLBibdBeHshuJ1tKcebAx0Y3jc8MyqL0rJQOhdF1MBVvJ5xjYhze4ttANeUoe+a6TVcSmuxE=
+	t=1774449858; cv=none; b=PGCXeDX5FEwwSMgKkbKRKLn69ZEwpMAMqWZcyWVqDi6udNWVRA/v16hgAF64Izb6YfrVyFKjkv3BfqCYIcWeuVTmlZnUeegkJZ8GFfMdawX8VXxOMoT+BrvO08wo0msyA0nESk6mBi7v5oZIGNkgC5bkEDERK6oaB0qmxD93I9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774449840; c=relaxed/simple;
-	bh=SsD09xOCQ2lgSQj/n0w/ZoUczDXfNByivtOBGWXEmt8=;
+	s=arc-20240116; t=1774449858; c=relaxed/simple;
+	bh=jT14jpW+74aFxWT5k0JsiKiyPP15AQVRZS7/5fdgNS0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TlLUw6/pZzIanOix1Bo0Cu9P12G7JfLbWJjZjMQY1QFEnXuGzEZngFaMnFlB5QrSc34EyE//HK1wHHV2jNDjuwe7XftgXHqxhg0JznbuPgwddhOFbD1TGNVlCqpwq5+7cpS0q5N03aF18PGmtx5j5ZLgs8UABWrPg3RHy/KsCxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ue2vm7uw; arc=none smtp.client-ip=185.171.202.116
+	 MIME-Version; b=iYDc/5iW2CHOx5ZgfhAAj1KRbS6I39RSH4laO+67WdlL17Qyy/MnSu6MvWYf8YW1DgDwv3xc5YMHjTW8dg57MAASqsY8ljwaGNF8hqhXJ2SnAoTUj5djXNaQ+Xp/Lhgk9znJPufplAXn5Ac9GPxWqvH6Mu4v7dJKV4aPqy7Z/Lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gqvjBLpm; arc=none smtp.client-ip=185.246.85.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 607E6C580B1;
-	Wed, 25 Mar 2026 14:44:25 +0000 (UTC)
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 52CC34E427EE;
+	Wed, 25 Mar 2026 14:44:15 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 97A89601E2;
-	Wed, 25 Mar 2026 14:43:57 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B57A110451A7C;
-	Wed, 25 Mar 2026 15:43:39 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 217C9601FA;
+	Wed, 25 Mar 2026 14:44:15 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 56D7D10451522;
+	Wed, 25 Mar 2026 15:43:55 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1774449834; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1774449852; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=Q13pHLbTNQd/5Auc3jF+bDsxwBJ2OfItINqgqY+fL/8=;
-	b=Ue2vm7uwkTRBp1NcWE3tdKs4TAiyHE+L3oB+LWtyTZ4MQyeOSrQP5yGBlls4jz6KpV+Z82
-	3zAymGBb4rq7FkQyqJ68BonJDYlM25/sCFhX7mvYLLkV/3fo6OikqnDnt2ATY6q2tAQ6EK
-	YPKyLLGOlAfrhNpspVQUHb0X70qBUkZ29w20sHEabl8acyAal0mvx2apRrARq9rSveJVfN
-	gJjd7CKy+/jPdKJ7/QBKk7zfq54MQrQZJqxyVh/LpeCIaRgBt8Fj6fx/UeJZYNJuud3GYy
-	gC+1W5Coa9js9KFNP6ZsXRXTgQVCyU4y04Ry+pYul8fxEq4DCB67xmq61Zn1+A==
+	bh=JD+Fs5XfMyLydBRoehNihG/5lsm5NM0S4zMf8NGpirs=;
+	b=gqvjBLpmkSLJAYbmDeGzZRLD9Ccx0kGJ+DN1N+YpWxaW5rwGSimaQrzjJDOYlV9EYSCJXC
+	EGclYReSW/RNCSO1Hu4WTUKD57Ziz1RKr8cPgpsfGmAP4WEPw+vgCwWkjKY9MSUY9LEVJ5
+	6tZHX14Ux3GOzP2naksiasYRWY6SGCxOeInkkhKHnjF3KzqTlDE/RonHW77l2feenMrKtZ
+	cSTYd0V7ODBlSM4QX1RMj5id3x2Ob313sCSnE3Hd+xGsT3juXCzJcIYBFohtcxaPyYLz+X
+	eKq3F87xw+izeQvuGGtry4ygCvsiMBpIw+2Bl/K7VPxnw+SA0SbnFtvGb6ObSA==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Andrew Lunn <andrew@lunn.ch>,
 	Rob Herring <robh@kernel.org>,
@@ -115,9 +115,9 @@ Cc: Wolfram Sang <wsa@kernel.org>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v6 26/27] misc: lan966x_pci: Sort the drivers list in Kconfig help
-Date: Wed, 25 Mar 2026 15:35:53 +0100
-Message-ID: <20260325143555.451852-27-herve.codina@bootlin.com>
+Subject: [PATCH v6 27/27] misc: lan966x_pci: Add drivers needed to support SFPs in Kconfig help
+Date: Wed, 25 Mar 2026 15:35:54 +0100
+Message-ID: <20260325143555.451852-28-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260325143555.451852-1-herve.codina@bootlin.com>
 References: <20260325143555.451852-1-herve.codina@bootlin.com>
@@ -143,7 +143,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[lunn.ch,kernel.org,glider.be,gmail.com,linuxfoundation.org,nxp.com,pengutronix.de,baylibre.com,sang-engineering.com,axentia.se,arndb.de,bootlin.com,google.com,opensource.cirrus.com,cirrus.com,linaro.org,linux.intel.com,stgolabs.net,huawei.com,intel.com];
-	TAGGED_FROM(0.00)[bounces-34162-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34163-lists,linux-gpio=lfdr.de];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[bootlin.com:+];
@@ -158,39 +158,45 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCPT_COUNT_GT_50(0.00)[63];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid]
-X-Rspamd-Queue-Id: 7BAC232777E
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:dkim,bootlin.com:email,bootlin.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 2D554327F96
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The LAN966X Kconfig help section mentions drivers related to
-devices.
+Recently, new device-tree nodes were added in the overlay to add support
+for SFPs on LAN966x PCI device.
 
-Sort this list alphabetically.
+The LAN966X Kconfig help section mentions drivers related to devices
+added based on the overlay description.
+
+Add drivers related to devices described by those new nodes in the
+already existing driver list.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- drivers/misc/Kconfig | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/misc/Kconfig | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 5cc79d1517af..9c285a7c88ba 100644
+index 9c285a7c88ba..69825dc0f85e 100644
 --- a/drivers/misc/Kconfig
 +++ b/drivers/misc/Kconfig
-@@ -635,13 +635,13 @@ config MCHP_LAN966X_PCI
+@@ -635,13 +635,18 @@ config MCHP_LAN966X_PCI
  	  Even if this driver does not depend on those other drivers, in order
  	  to have a fully functional board, the following drivers are needed:
  	    - fixed-clock (COMMON_CLK)
--	    - lan966x-oic (LAN966X_OIC)
++	    - i2c-mux-pinctrl (I2C_MUX_PINCTRL)
  	    - lan966x-cpu-syscon (MFD_SYSCON)
--	    - lan966x-switch-reset (RESET_MCHP_SPARX5)
-+	    - lan966x-miim (MDIO_MSCC_MIIM)
-+	    - lan966x-oic (LAN966X_OIC)
++	    - lan966x-gck (COMMON_CLK_LAN966X)
+ 	    - lan966x-miim (MDIO_MSCC_MIIM)
+ 	    - lan966x-oic (LAN966X_OIC)
  	    - lan966x-pinctrl (PINCTRL_OCELOT)
  	    - lan966x-serdes (PHY_LAN966X_SERDES)
--	    - lan966x-miim (MDIO_MSCC_MIIM)
  	    - lan966x-switch (LAN966X_SWITCH)
-+	    - lan966x-switch-reset (RESET_MCHP_SPARX5)
+ 	    - lan966x-switch-reset (RESET_MCHP_SPARX5)
++	    - sam9x60-i2c (I2C_AT91)
++	    - sama5d2-flexcom (MFD_ATMEL_FLEXCOM)
++	    - sfp (SFP)
  
  source "drivers/misc/c2port/Kconfig"
  source "drivers/misc/eeprom/Kconfig"
