@@ -1,341 +1,243 @@
-Return-Path: <linux-gpio+bounces-34226-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34227-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8FAOJPyNxWlG/QQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34226-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2026 20:50:20 +0100
+	id UKziFky+xWkeBAUAu9opvQ
+	(envelope-from <linux-gpio+bounces-34227-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 00:16:28 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1048833B22C
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2026 20:50:16 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 045F933CF8E
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 00:16:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7CB39300EA8D
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2026 19:47:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8BC64308FE7C
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2026 23:10:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0481B349B1F;
-	Thu, 26 Mar 2026 19:47:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EBFB34EF0C;
+	Thu, 26 Mar 2026 23:10:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="mszQzplg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MwcYaqRP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010068.outbound.protection.outlook.com [52.101.69.68])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9B925F99B;
-	Thu, 26 Mar 2026 19:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774554440; cv=fail; b=fTQBEwNh4VAfgtRXPW6p3sGWO17XI95yU3Me09T9UPwkQI/08KDGHy5Pxpb0p7RzL3QHKRuRDGRVx+OLyBjRu/ZGEZypMg0JSgoFUnjxLACbeu9JyMiQ5ThWoKaL62CdjWMk5XKqi0hZRJ3MKiqmfa0nQ7zs/vgO+/dy5wkfhM8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774554440; c=relaxed/simple;
-	bh=WK5fxPAdvnIaqYgv6Q3s47YQLY3S6YdjmtgozSCpJjE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ZRwSzmvO2JBDpuOr2EsVnkru9/l8aDup9+1i7IG8Wa1w5Ke0CBhGXLUrrOjtHCF14XI7yrFxutrKC3lVnqLAI3PczTrLlVLMIiAOYJECnryHZxO1qRt2cT6y0dPoFJm1Bm02rf8XEHOEpLUrJSE9mwmC0nnw1rb9TzAZ+RgC3xY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=mszQzplg; arc=fail smtp.client-ip=52.101.69.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gKBCLcMqDSwhLLBB5uxOZxxwJgFjiFRwIvhajliswt4Dui9fFmLy35bsEUqA9/F7jd/gOP/zuX+8g3FQ7/Ay883R4fpdO+sriEt8fdTh1yCH9ldyTQDTi/9eH0cWTUumdnrhU9YGUg2goZNyKisCL4FD3ot/+XI1YlrmHk61UaOpyAkcPzqxipPqh71ntqag//Qz/CTVpyq1DgWmn87A/ite1Xl/4tCHj5ycwWEY/hzeHb0MI7be5CQv9j9WmuSD8VAZgHgvVxvhImZIHa1w8NqETFiTYCcgmBPRkuolDWbj/pHJAVOhKQhA2kGyjPJy5gGsHxjLNbj8EnBQ4r9S0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VLIzwB5kEFGI/DvTT0q7RQouEwYDVjXCy7eU0mMpxo0=;
- b=m2ZOjZNW1aHiv04rIuSdzgSgeIJUNniem4hlT8X5pguuByu7+ZyV5uKLX7zBjx+HTlBANSSTUJv2WOXz95s57WhWMD9H+zkve8NMmmiZ5m/z+VL49Mb6lfA/VPzeeTdNtADCxVWpDiPTrK+IYO51HfAcdXR8mhz9c3UunGr6NP4752skKNz8tX0Zyde0HtakNmUbqr3rC1nwGlAdenmRMrLFJtN5KT7sAm2D4bOQbGuAMvLOHCZDsFeW0iQEd7AjDjADsHaL8bRhbvW3CqnZLX+AzFcyJF8bFAD9KEdW3A5izy27EK4jjsWqSgJ+nOtuNeYACU6IR/kmZjUhCeQvAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VLIzwB5kEFGI/DvTT0q7RQouEwYDVjXCy7eU0mMpxo0=;
- b=mszQzplgjx1CfbQLOYqCM+8uhUQNo8bVjzKIQqfSztao0TJr5pzd6c4l6rWCCHPy4AyJrxA/U6nLzNQ2dwGC+xsBnT9h7YexTtN2ODfXi1T46Ivt6AkXPoi7Cw4im7slh/yhgxgfF9XJcDyxGeRxDKLgVEzTkGbUBtu3mdjcz73/MYs9lft7et3f5QAiTSFyMppZDoK2tP4VYmf/a/B5OlI5ZQ60vjJZbqm9GFTbQQQuSJMkepvbcEZUUA5bODFWUXgc6R+PGgFuOwTfAw9YsSGDlgl7kUsm7EwUm9yw2WXKA4AVZ9uf5grLy9Y9oa2XoJ93J6r0DXD/pBijgNQO6w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
- by OSKPR04MB11368.eurprd04.prod.outlook.com (2603:10a6:e10:9e::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.20; Thu, 26 Mar
- 2026 19:47:14 +0000
-Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
- ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
- ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9745.022; Thu, 26 Mar 2026
- 19:47:14 +0000
-Date: Thu, 26 Mar 2026 15:47:06 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Peter Rosin <peda@axentia.se>, Linus Walleij <linusw@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	Haibo Chen <haibo.chen@nxp.com>
-Subject: Re: [PATCH v4 3/7] pinctrl: extract pinctrl_generic_to_map() from
- pinctrl_generic_pins_function_dt_node_to_map()
-Message-ID: <acWNOhnBvA5l9NW3@lizhi-Precision-Tower-5810>
-References: <20260325-pinctrl-mux-v4-0-043c2c82e623@nxp.com>
- <20260325-pinctrl-mux-v4-3-043c2c82e623@nxp.com>
- <20260326-concur-eel-3e0b3d91e00a@spud>
- <20260326-poncho-expanse-d30a9eded8e2@spud>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260326-poncho-expanse-d30a9eded8e2@spud>
-X-ClientProxiedBy: PH7PR10CA0016.namprd10.prod.outlook.com
- (2603:10b6:510:23d::8) To PA4PR04MB9366.eurprd04.prod.outlook.com
- (2603:10a6:102:2a9::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1AA346A1D;
+	Thu, 26 Mar 2026 23:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774566650; cv=none; b=Sk2FrY27xCREYq1sI1CuG6iI0WqIXzLxLA28uuvZI4vao30aGpWwKeZIBjvaMLNDwuiAJiUhcYTBczAf3N3/7mcm6t5sS+kmEt3nnO7T3D0sJptfKCRspTcp9sCgbIY1YZHJ+BFQrcLgUNiEhWn6JczYw6tdSNB8Dz7rGo4ynaQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774566650; c=relaxed/simple;
+	bh=LFk1wAs4FKcW9griZHevwjzZHHkLSKzVhryrwFOnxvU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YgBDAUG6Vx8uX7YslXj/0yfnkCBM7HwYHCIgmCREhWd46f3xYiX6u6F/szuUShOX3qbFbqICREPZN+sGkJN/LKnCuWk7+jfCB70FqYwAz7Tt3HQJIFYNLufpZRHMpuvuH+hWEc7xMztO5sWIsn2lF0p8tfKK/ekmFXGT1NA8SQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MwcYaqRP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02993C116C6;
+	Thu, 26 Mar 2026 23:10:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774566649;
+	bh=LFk1wAs4FKcW9griZHevwjzZHHkLSKzVhryrwFOnxvU=;
+	h=From:Date:Subject:To:Cc:From;
+	b=MwcYaqRPw/8nhCry3tpgyZEvpGcZxGi35s+iy53G/8j1K2s9Vygwi7S6YnDtMefAg
+	 AZE//bIixrb/WykCIrXE9K1bknanZmtEIRmo5b3OA48nq9OsjXauHTrtfF/3CFv2Ry
+	 JfTsVhH5aPtIe5job4m3yC/NiiWS9eOQuE5w4zq7r/hJDVqduVbFCvneCBNBpzNSQx
+	 c3PVhFsTO0HntlmqIY1zoC91/MyO/DzFu8M011oGSz4bULM4ITzVsjD0dhAwD3pLNW
+	 Bxip6cpjr2wDc5DgyrByYtbHu9RsN225yIaA1cbPbbAdnrWpCmoKvTLmFyXjXmmlEf
+	 YCKw5AUQXPxSw==
+From: Linus Walleij <linusw@kernel.org>
+Date: Fri, 27 Mar 2026 00:10:46 +0100
+Subject: [PATCH] ASoC: wsa881x: Move custom workaround to gpiolib-of
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|OSKPR04MB11368:EE_
-X-MS-Office365-Filtering-Correlation-Id: cbbd8a41-5df6-4896-e576-08de8b707a81
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|19092799006|376014|1800799024|7416014|52116014|366016|56012099003|22082099003|18002099003|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	L140J1Mu5+6B/johF89xk3yauB3eM2KlqHeylYEUPcvDyDABB3ZrUrZVwLPOSkNIkUdCeGUJJDvasLCZJT5h3nypg1yuZjYSAT8K/EBPCY78GCl/6sfoLxZrx98KxXqD8a1yOvpBSWRaAVvma3sKSTK4HbkH3w40iFKE6X5FNDRbkUeGrQGO/3Weldz48z00DXrKomGfmmJtLr32lYGpXPKB7zE/3sSgGzYF9TYtHPgS3VoduForIQERUY70f3zE2BuEfnkpzwKn6vfjnCCYq+u+AvocZPH+ZfpvTApbSPKPjfrvvHQRaoAENT+07YrkJC4YaVo5G18NBYGJq+J9td0KYvbEWm/QLx7HehUNAQ6iI+tUS0dbBCtDjtXO/0qefatxPX7+9fZgFyGXlDZLEvuiRtc1Msy5+NCPb/AqVp8DdXvhNGUWFfTSBLSxDTJj6FnKKWp3EtKqOyDzMqYYs6wN2c8YUwmlQLZsX8KzoQnm4ivs0V+6D/3/UeHyoAXSZm55b6Xw3zf9XSe4+GcJMbqKmQub4CTvUUR7aMd6BP64TUCaIT0w13sKfemtJmYxhDg0ZoZCW/GUYvsC+E79lDqMjniRZ6SBN+f/WVMCWf/XBBv2wZhlVoZSX5fARl/ESEn5wLatx0hMLNcl3RMmY/W0b6x/2xnH6ribS0rH///k7qlO3tLjzxm3mfPmzSjFULtiHaRXTBYxVt8TMuik+VAWzWWX1asqnPqbcMoebhZ2KFy57csuagPXAVD+aAv1OkvRuolJ4aut3suF5nsXgBFGDXvaP2NOqtUn2pzk2NU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(376014)(1800799024)(7416014)(52116014)(366016)(56012099003)(22082099003)(18002099003)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?z1OT0MV72s1Gou/+mw/lx/b2fMONEjCrC+XziZZ2C34NOOfsNvsT72TeaL1z?=
- =?us-ascii?Q?wUdyqGd1zWy9vCHhgQ/9/vA4mGtCTxSg2NkgA0lJCjLXIi+kfxFWsx471XgN?=
- =?us-ascii?Q?yl216SETG5DcoffrYpPW2x0h+7RFuAw9sFaLHKV9MyryVMOexgOUI6ov+xUE?=
- =?us-ascii?Q?ipNHj98QbigQVc0nlZQG+4or0sXNgB1m1oDPe1RW/wikg9D5Lf9qOablVdgt?=
- =?us-ascii?Q?wbve0jtrrXc6g7iRj5TEQ/x7RHbaDOLfXXjroQFIZH/dPmHNaBQaXaHvNJeB?=
- =?us-ascii?Q?wx1cTXM/dn9xKak7GX635jJxRHLyuk9h7DwB5z7TINUWbYoCKiPFJdsQynqX?=
- =?us-ascii?Q?FeIIbpjxylBbcGLLs46EKzv9LRzDwuF9r2FTy+A8DQ1vl+LnOhjyudVR/0Gw?=
- =?us-ascii?Q?EL50hea+MiYafzmn8u5qRKXBh2SmrZl1ldyNQAZrApOrU3Y1yvo7t7+sQS9t?=
- =?us-ascii?Q?UE9rI065D9YSFjQHE70ylbzaDUiLEEz7ZS5+2VwgFgiUqRJScW2YcsmkvsMt?=
- =?us-ascii?Q?4qA+ji7yAlSl280YO3JngobXaFvWz+bmd/g90rwfGrWsjMxSlXDqMwQiypb5?=
- =?us-ascii?Q?KWwFoYY9h/iUx7mRhTIRm7sOtdfrcIgTDfQtllhABGSN1IBPjw0fmEKhCREy?=
- =?us-ascii?Q?p5ZcOs9/oXmbQyY1AkfxqTXzHH/8IVk2PdYePHC8gCmJAevKQ4lLWGCk+SqU?=
- =?us-ascii?Q?bUxV2hx1/mzJpsCKK+FAnq3vBGqNco2ssNfPnOxdGSMI1H/S+ZeHX2ZnaxJb?=
- =?us-ascii?Q?Q8bo/k2mreTy9UyBUVtK8LdDhMiGsDvpyfmmjNo22on4kFFuGITtu/iTzQ7G?=
- =?us-ascii?Q?GH/YpHm2s2Uw9zpfhQgcJoXRKIq5KbTHEp6+GnP463+e1oWHma3962nJtXi/?=
- =?us-ascii?Q?j5g6pY7DJU0ZD/AGPhtt36A413eTISwhz0z0AP/T39To+VGh/gOi6nsIUSkw?=
- =?us-ascii?Q?kW24h41F0qXiM+FytosMmoG9wLvR66/XxSgXcFbBPsafoygNdG8kBjDm7Lz2?=
- =?us-ascii?Q?TUKjO4MAeLRuS0vXhdqcfft0ozj5cpcGpdXH2at/W1rnTD3gUGWjVA0yZNtS?=
- =?us-ascii?Q?VdV71dwjrqcnIqS/CI2K9OPMLo4VO2uVwLf95StxAt0MGPoWLZq3IlyrdNQn?=
- =?us-ascii?Q?OecjJsI+EYZDwBI+Wor5jhsR0xuAvENtVIcBo4nCT0ybIAwJfc84HE8dXp9N?=
- =?us-ascii?Q?7Qn/5AsLNLyR5oo8KtzjorU0INEsAYSkHBqBbcg+Cyb1xjzWaMJMKTxZ1jUE?=
- =?us-ascii?Q?Kmqzny4rwXF6xCuoG+lfinNP46E4tzCQLT7f+/WKgUu8SG1viZLYvinYxaDK?=
- =?us-ascii?Q?gBPf6Ozqf9pf3IYT8xZycgQ+ZA7f86SqoYD1YT2FaeJ3RD1Bpe5FU3rp7YF4?=
- =?us-ascii?Q?gqn+cW98XEKpIimMHYKO2hWAHnlJvmK9CRxmqSYmYu9VVWDEDgpn69/cl96d?=
- =?us-ascii?Q?cdH8ZU6QZN17qPiA/YBeWb6yqh/i7p30oPgiuoj7pvuDG9RTVe6f/I2Ffpav?=
- =?us-ascii?Q?xy6jZuI3QzOMnocRIP+Y0XfkQkBBYqPz0mdNNRooF5IfrmXvRWq1mVaIP4Iz?=
- =?us-ascii?Q?8her54qchJr3qvrsxw82uAymrzGzqqaDKKbL+RYrv+a8pOHKAXnpKbNautlV?=
- =?us-ascii?Q?Mkt5rGpvelNFZDL15OepAlw9890N4h1luIKvsWZ13nWTsO4OlN9dDcUpDRDg?=
- =?us-ascii?Q?gziJsSqEditwRv9WxC9qIQ30HmHNVohzCkpsalQTt5fIFrgI?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cbbd8a41-5df6-4896-e576-08de8b707a81
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2026 19:47:14.2393
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NEMmM+ZWr2YSSg5nJulsEvj4h49OEiajs+X/vTQUlTyx2SX6F2B0aJ8ugt+101IBWI7CMGhHXYb5oZ/Jm3fEWQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSKPR04MB11368
-X-Spamd-Result: default: False [1.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
-	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260327-asoc-wsa881x-v1-1-53dc05867e6b@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIzMDYyMz3cTi/GTd8uJECwvDCl0zY+PkZPM0cwNDYyMloJaCotS0zAqwcdG
+ xtbUAaZevp14AAAA=
+X-Change-ID: 20260326-asoc-wsa881x-633cc7f70132
+To: Bartosz Golaszewski <brgl@kernel.org>, 
+ Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>
+Cc: linux-gpio@vger.kernel.org, linux-sound@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, Linus Walleij <linusw@kernel.org>
+X-Mailer: b4 0.14.3
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-34226-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34227-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com,perex.cz,suse.com];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	FREEMAIL_CC(0.00)[axentia.se,kernel.org,milecki.pl,pengutronix.de,gmail.com,vger.kernel.org,lists.linux.dev,lists.infradead.org,nxp.com];
-	DKIM_TRACE(0.00)[nxp.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[microchip.com:email]
-X-Rspamd-Queue-Id: 1048833B22C
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 045F933CF8E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Mar 26, 2026 at 06:55:01PM +0000, Conor Dooley wrote:
-> On Thu, Mar 26, 2026 at 06:52:12PM +0000, Conor Dooley wrote:
-> > On Wed, Mar 25, 2026 at 07:04:12PM -0400, Frank Li wrote:
-> >
-> > > diff --git a/drivers/pinctrl/pinctrl-generic.c b/drivers/pinctrl/pinctrl-generic.c
-> > > index efb39c6a670331775855efdc8566102b5c6202ef..20a216ae63e91b69985ea4cfcd0b57103c6ca950 100644
-> > > --- a/drivers/pinctrl/pinctrl-generic.c
-> > > +++ b/drivers/pinctrl/pinctrl-generic.c
-> > > @@ -17,29 +17,18 @@
-> > >  #include "pinctrl-utils.h"
-> > >  #include "pinmux.h"
-> > >
-> > > -static int pinctrl_generic_pins_function_dt_subnode_to_map(struct pinctrl_dev *pctldev,
-> >
-> > > +int
-> > > +pinctrl_generic_to_map(struct pinctrl_dev *pctldev, struct device_node *parent,
-> >
-> > Can you drop this stylistic change please? The
->
-> Whoops, cut myself off. To be clear, what I am asking for is to keep the
-> "int" etc on the same line as the function name. This function is new,
-> but you did it for the existing function too and the comparison is here.
->
-> >
-> > > +		       struct device_node *np, struct pinctrl_map **maps,
-> > > +		       unsigned int *num_maps, unsigned int *num_reserved_maps,
-> > > +		       const char **group_names, unsigned int ngroups,
-> > > +		       const char **functions, unsigned int *pins)
-> > >  {
-> > >  	struct device *dev = pctldev->dev;
-> > > -	const char **functions;
-> > > +	int npins, ret, reserve = 1;
-> > > +	unsigned int num_configs;
-> > >  	const char *group_name;
-> > >  	unsigned long *configs;
-> > > -	unsigned int num_configs, pin, *pins;
-> > > -	int npins, ret, reserve = 1;
-> > > -
-> > > -	npins = of_property_count_u32_elems(np, "pins");
-> > > -
-> > > -	if (npins < 1) {
-> > > -		dev_err(dev, "invalid pinctrl group %pOFn.%pOFn %d\n",
-> > > -			parent, np, npins);
-> > > -		return npins;
-> > > -	}
-> > >
-> > >  	group_name = devm_kasprintf(dev, GFP_KERNEL, "%pOFn.%pOFn", parent, np);
-> > >  	if (!group_name)
-> > > @@ -51,22 +40,6 @@ static int pinctrl_generic_pins_function_dt_subnode_to_map(struct pinctrl_dev *p
-> > >  	if (!pins)
-> > >  		return -ENOMEM;
-> >
-> > This looks suspect. You've left the pins allocation behind:
-> > 	pins = devm_kcalloc(dev, npins, sizeof(*pins), GFP_KERNEL);
-> > 	if (!pins)
-> > 		return -ENOMEM;
-> > but pinctrl_generic_pins_function_dt_subnode_to_map() has already
-> > populated this array before calling the function.
+The WSA881x codec driver has a local workaround for old device
+trees that have the "powerdown" GPIO flagged as active high,
+despite it is active low.
 
-what's means?
+This quirk can be replaced by a single quirk entry in
+gpiolib-of.c
 
-pinctrl_generic_pins_function_dt_subnode_to_map()
-{
-	pins = devm_kcalloc(dev, npins, sizeof(*pins), GFP_KERNEL);
-	...
-	pinctrl_generic_to_map();
-}
+Drop all polarity inversion code and drop the surplus
+gpiod_direction_output() call in probe() since we now set up
+the line correctly when getting the GPIO.
 
-pinctrl_generic_pins_function_dt_subnode_to_map() have not use this array.
+Also drop the inclusion of the unused <linux/gpio.h>.
 
-Frank
-> >
-> > Also, this should probably be
-> > Suggested-by: Conor Dooley <conor.dooley@microchip.com>
-> >
-> > Cheers,
-> > Conor.
-> >
-> > >
-> > > -	functions = devm_kcalloc(dev, npins, sizeof(*functions), GFP_KERNEL);
-> > > -	if (!functions)
-> > > -		return -ENOMEM;
-> > > -
-> > > -	for (int i = 0; i < npins; i++) {
-> > > -		ret = of_property_read_u32_index(np, "pins", i, &pin);
-> > > -		if (ret)
-> > > -			return ret;
-> > > -
-> > > -		pins[i] = pin;
-> > > -
-> > > -		ret = of_property_read_string(np, "function", &functions[i]);
-> > > -		if (ret)
-> > > -			return ret;
-> > > -	}
-> > > -
-> > >  	ret = pinctrl_utils_reserve_map(pctldev, maps, num_reserved_maps, num_maps, reserve);
-> > >  	if (ret)
-> > >  		return ret;
-> > > @@ -103,6 +76,54 @@ static int pinctrl_generic_pins_function_dt_subnode_to_map(struct pinctrl_dev *p
-> > >  	return 0;
-> > >  };
-> > >
-> > > +static int
-> > > +pinctrl_generic_pins_function_dt_subnode_to_map(struct pinctrl_dev *pctldev,
-> > > +						struct device_node *parent,
-> > > +						struct device_node *np,
-> > > +						struct pinctrl_map **maps,
-> > > +						unsigned int *num_maps,
-> > > +						unsigned int *num_reserved_maps,
-> > > +						const char **group_names,
-> > > +						unsigned int ngroups)
-> > > +{
-> > > +	struct device *dev = pctldev->dev;
-> > > +	unsigned int pin, *pins;
-> > > +	const char **functions;
-> > > +	int npins, ret;
-> > > +
-> > > +	npins = of_property_count_u32_elems(np, "pins");
-> > > +
-> > > +	if (npins < 1) {
-> > > +		dev_err(dev, "invalid pinctrl group %pOFn.%pOFn %d\n",
-> > > +			parent, np, npins);
-> > > +		return npins;
-> > > +	}
-> > > +
-> > > +	pins = devm_kcalloc(dev, npins, sizeof(*pins), GFP_KERNEL);
-> > > +	if (!pins)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	functions = devm_kcalloc(dev, npins, sizeof(*functions), GFP_KERNEL);
-> > > +	if (!functions)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	for (int i = 0; i < npins; i++) {
-> > > +		ret = of_property_read_u32_index(np, "pins", i, &pin);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +
-> > > +		pins[i] = pin;
-> > > +
-> > > +		ret = of_property_read_string(np, "function", &functions[i]);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +	}
-> > > +
-> > > +	return pinctrl_generic_to_map(pctldev, parent, np, maps, num_maps,
-> > > +				      num_reserved_maps, group_names, ngroups,
-> > > +				      functions, pins);
-> > > +}
-> > > +
-> > >  /*
-> > >   * For platforms that do not define groups or functions in the driver, but
-> > >   * instead use the devicetree to describe them. This function will, unlike
-> > >
-> > > --
-> > > 2.43.0
-> > >
->
->
+Signed-off-by: Linus Walleij <linusw@kernel.org>
+---
+Perhaps this can be applied to ASoC directly we seldom add
+things to these quirks so I think it'll be fine.
 
+I was thinking of adding Fixes: but the current code is fine,
+we don't really fix anything we just make it simpler.
+---
+ drivers/gpio/gpiolib-of.c  |  8 ++++++++
+ sound/soc/codecs/wsa881x.c | 35 ++++-------------------------------
+ 2 files changed, 12 insertions(+), 31 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index ef1ac68b94b7..d498b2918179 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -240,6 +240,14 @@ static void of_gpio_try_fixup_polarity(const struct device_node *np,
+ 		 * treats it as "active low".
+ 		 */
+ 		{ "ti,tsc2005",		"reset-gpios",	false },
++#endif
++#if IS_ENABLED(CONFIG_SND_SOC_WSA881X)
++		/*
++		 * WSA881 powerdown is always active low, but some device trees
++		 * missed this when first contributed. It also has a very strange
++		 * compatible.
++		 */
++		{ "sdw10217201000",	"powerdown",	false },
+ #endif
+ 	};
+ 	unsigned int i;
+diff --git a/sound/soc/codecs/wsa881x.c b/sound/soc/codecs/wsa881x.c
+index 2fc234adca5f..d15fda648dad 100644
+--- a/sound/soc/codecs/wsa881x.c
++++ b/sound/soc/codecs/wsa881x.c
+@@ -3,7 +3,6 @@
+ // Copyright (c) 2019, Linaro Limited
+ 
+ #include <linux/bitops.h>
+-#include <linux/gpio.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/module.h>
+ #include <linux/regmap.h>
+@@ -672,11 +671,6 @@ struct wsa881x_priv {
+ 	struct sdw_stream_runtime *sruntime;
+ 	struct sdw_port_config port_config[WSA881X_MAX_SWR_PORTS];
+ 	struct gpio_desc *sd_n;
+-	/*
+-	 * Logical state for SD_N GPIO: high for shutdown, low for enable.
+-	 * For backwards compatibility.
+-	 */
+-	unsigned int sd_n_val;
+ 	int active_ports;
+ 	bool hw_init;
+ 	bool port_prepared[WSA881X_MAX_SWR_PORTS];
+@@ -1121,31 +1115,11 @@ static int wsa881x_probe(struct sdw_slave *pdev,
+ 	if (!wsa881x)
+ 		return -ENOMEM;
+ 
+-	wsa881x->sd_n = devm_gpiod_get_optional(dev, "powerdown", 0);
++	wsa881x->sd_n = devm_gpiod_get_optional(dev, "powerdown", GPIOD_OUT_LOW);
+ 	if (IS_ERR(wsa881x->sd_n))
+ 		return dev_err_probe(dev, PTR_ERR(wsa881x->sd_n),
+ 				     "Shutdown Control GPIO not found\n");
+ 
+-	/*
+-	 * Backwards compatibility work-around.
+-	 *
+-	 * The SD_N GPIO is active low, however upstream DTS used always active
+-	 * high.  Changing the flag in driver and DTS will break backwards
+-	 * compatibility, so add a simple value inversion to work with both old
+-	 * and new DTS.
+-	 *
+-	 * This won't work properly with DTS using the flags properly in cases:
+-	 * 1. Old DTS with proper ACTIVE_LOW, however such case was broken
+-	 *    before as the driver required the active high.
+-	 * 2. New DTS with proper ACTIVE_HIGH (intended), which is rare case
+-	 *    (not existing upstream) but possible. This is the price of
+-	 *    backwards compatibility, therefore this hack should be removed at
+-	 *    some point.
+-	 */
+-	wsa881x->sd_n_val = gpiod_is_active_low(wsa881x->sd_n);
+-	if (!wsa881x->sd_n_val)
+-		dev_warn(dev, "Using ACTIVE_HIGH for shutdown GPIO. Your DTB might be outdated or you use unsupported configuration for the GPIO.");
+-
+ 	dev_set_drvdata(dev, wsa881x);
+ 	wsa881x->slave = pdev;
+ 	wsa881x->dev = dev;
+@@ -1158,7 +1132,6 @@ static int wsa881x_probe(struct sdw_slave *pdev,
+ 	pdev->prop.sink_dpn_prop = wsa_sink_dpn_prop;
+ 	pdev->prop.scp_int1_mask = SDW_SCP_INT1_BUS_CLASH | SDW_SCP_INT1_PARITY;
+ 	pdev->prop.clk_stop_mode1 = true;
+-	gpiod_direction_output(wsa881x->sd_n, !wsa881x->sd_n_val);
+ 
+ 	wsa881x->regmap = devm_regmap_init_sdw(pdev, &wsa881x_regmap_config);
+ 	if (IS_ERR(wsa881x->regmap))
+@@ -1181,7 +1154,7 @@ static int wsa881x_runtime_suspend(struct device *dev)
+ 	struct regmap *regmap = dev_get_regmap(dev, NULL);
+ 	struct wsa881x_priv *wsa881x = dev_get_drvdata(dev);
+ 
+-	gpiod_direction_output(wsa881x->sd_n, wsa881x->sd_n_val);
++	gpiod_direction_output(wsa881x->sd_n, 1);
+ 
+ 	regcache_cache_only(regmap, true);
+ 	regcache_mark_dirty(regmap);
+@@ -1196,13 +1169,13 @@ static int wsa881x_runtime_resume(struct device *dev)
+ 	struct wsa881x_priv *wsa881x = dev_get_drvdata(dev);
+ 	unsigned long time;
+ 
+-	gpiod_direction_output(wsa881x->sd_n, !wsa881x->sd_n_val);
++	gpiod_direction_output(wsa881x->sd_n, 0);
+ 
+ 	time = wait_for_completion_timeout(&slave->initialization_complete,
+ 					   msecs_to_jiffies(WSA881X_PROBE_TIMEOUT));
+ 	if (!time) {
+ 		dev_err(dev, "Initialization not complete, timed out\n");
+-		gpiod_direction_output(wsa881x->sd_n, wsa881x->sd_n_val);
++		gpiod_direction_output(wsa881x->sd_n, 1);
+ 		return -ETIMEDOUT;
+ 	}
+ 
+
+---
+base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
+change-id: 20260326-asoc-wsa881x-633cc7f70132
+
+Best regards,
+-- 
+Linus Walleij <linusw@kernel.org>
 
 
