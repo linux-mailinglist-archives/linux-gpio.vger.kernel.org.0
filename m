@@ -1,141 +1,143 @@
-Return-Path: <linux-gpio+bounces-34200-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34201-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YOBlJ+wPxWkI6AQAu9opvQ
-	(envelope-from <linux-gpio+bounces-34200-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2026 11:52:28 +0100
+	id QLnOCsAUxWnr6QQAu9opvQ
+	(envelope-from <linux-gpio+bounces-34201-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2026 12:13:04 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 206B7333C91
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2026 11:52:28 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 290363342E0
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2026 12:13:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7DAA53042D42
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2026 10:41:16 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 3E82330B0D53
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2026 10:56:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37D123CA484;
-	Thu, 26 Mar 2026 10:41:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12550382F39;
+	Thu, 26 Mar 2026 10:51:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gkcPGaWS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i9BsEftY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC75392836;
-	Thu, 26 Mar 2026 10:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6138EEBB;
+	Thu, 26 Mar 2026 10:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774521671; cv=none; b=l5HC8MaX3pdvFJdu2vTK0Ahfw+mYiSMTdE5Qapv7TJZKE0mDwntGhib9QjbyqgJrOA0/IyFe9f4HsaBFCV+dkwrsrAPk6ZAqlCTMlyPI3VnFDj6hiOWI90CieMx1c/4Pfd/6e4HgF3OOq0rN1XASFMEH7i9xNGq7J/pydNLqTEU=
+	t=1774522275; cv=none; b=tnmBzGRE2smlwrg40YcWcVd5T7vK/vnIYw5Q98pBOpC1FBiLw+wzdfwSILjKl3Uu7Kkja8oMkeHz+hWDvCEDPokqHz7lmoqoFCq5X/3PUSS6e3GBwkHODXjjwsu+c+Iogfsog/jKMxt0m9yr8AOM4kIEZtZqjaktDu8SF9FGNnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774521671; c=relaxed/simple;
-	bh=QwcRD7lYBB3bVtbVPl0xFodLgyrxXNTDNPu1TEeWvDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ohevkyTkDJY+hmDLlWmn3qUnYUGlqeIzVdGdr629tQpMdmkNnI0Xt8KdzqZ91psOPNV8uqZR9PWsgaCi90a9Qxp1Oo1WpQsXZxhpxf8rB9wenn4TTZltfxaNrWVOieKDiyvGgeD91lbIIRSgof3YNclkU99EgGQvbz/94lqU3sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gkcPGaWS; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774521669; x=1806057669;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QwcRD7lYBB3bVtbVPl0xFodLgyrxXNTDNPu1TEeWvDo=;
-  b=gkcPGaWSrTPcdymTv7F29eI3xgPmCJDkj4D6bvqj8AInzRVlXs8FRfMZ
-   3IIhY3Wopfc9rI0/P0K7H0Stq1HovrmpDk2iQ/UEURilTxa+keLfjyf2A
-   InBwvOJGotBd/pBlqqD3BctgxOUNHUJ93TWUdUxjg/ogabHTaLUmb/hbE
-   Y7133V8Ba6IAKQRjkZLgmGAlqbgwfhbTPY4fqVnSj357/WbMcEziGTs/1
-   rq0p4m0r7I/vYsm4hZ5/8rJkuqleArcvIq/QsLVDAMd44abb//+w22PDV
-   0KEp5IR0dVh1LgEiTJhEAp9QHVQIyniy1foUR5d3B3Wr+3LWnlBtADEBL
-   w==;
-X-CSE-ConnectionGUID: Izzb4LYCRLiRiHWIK1EKPw==
-X-CSE-MsgGUID: tSMhccCMQ+6I2KbiAVnfaA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11740"; a="75770957"
-X-IronPort-AV: E=Sophos;i="6.23,142,1770624000"; 
-   d="scan'208";a="75770957"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2026 03:41:08 -0700
-X-CSE-ConnectionGUID: ly6uU2sqRbWjZOjb1sKkaw==
-X-CSE-MsgGUID: 3nuDLsGkRtGNo0cuf7eFTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,142,1770624000"; 
-   d="scan'208";a="229907833"
-Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.216])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2026 03:41:06 -0700
-Date: Thu, 26 Mar 2026 12:41:03 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-gpio@vger.kernel.org,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linusw@kernel.org>, Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_by(_le|_be)?b" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: intel: use FAM for communities
-Message-ID: <acUNP7ZG87rV-LJL@ashevche-desk.local>
-References: <20260326023627.54349-1-rosenp@gmail.com>
- <acUMB5OUGCpy73eW@ashevche-desk.local>
+	s=arc-20240116; t=1774522275; c=relaxed/simple;
+	bh=EzZfmQOMMujOeVfa6UhnYFzzL8p4aNp/rOTVD6jR130=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rH9f/DlgBlsXIF3OaeFyNMvulIWcAdkgOysq58Ke+VjG10vYzQZbH1DQNpvMcbBE80zfThB5dcvgTIXnJTBUhhcstNhBpaWnrnUKrb6HDy6V4KCRbtJLFYzkungdnsbV2pJoHhMqq92lP8f7lEVMy6w9sxneNnyHfiqsKh3Gkyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i9BsEftY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51F2BC116C6;
+	Thu, 26 Mar 2026 10:51:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774522275;
+	bh=EzZfmQOMMujOeVfa6UhnYFzzL8p4aNp/rOTVD6jR130=;
+	h=From:Subject:Date:To:Cc:From;
+	b=i9BsEftYC8DWjjVl5F9XivgCx1p1Tf+R8ZtuLsYK6yVe+ECzE8+o7garo++mCTIur
+	 dUGAztlpWGqRiOmW2CDI0noohube+OPm7xGPCBGXTQSauBqbCuV7BpHo41yxZq98fL
+	 SKqaJRtW9iQVdRPNs5bxJWAKQ1+0VebfbEJ9tuAxQ8xXz4ZeXw6Ktdzaqb2bzp3WwZ
+	 y28G/rXlRCxr6XGw64WkF8x3SYD7EZ/ptkpF+upcretwWiNCgw1oaH8bl6HK6rtn5C
+	 f+ruLwQnJAhRG2VgkRCRlhQvIAJOke5QhejMjLb2CoKoQrLFExOnYwZ0y1h7yNjGbT
+	 7TApi9iiAkXsg==
+From: Linus Walleij <linusw@kernel.org>
+Subject: [PATCH v4 0/2] mfd: arizona: Move IRQ GPIO to GPIO descriptor
+Date: Thu, 26 Mar 2026 11:51:10 +0100
+Message-Id: <20260326-mfd-arizona-irq-v4-0-50c47ed0a18e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <acUMB5OUGCpy73eW@ashevche-desk.local>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3XOwQ6CMAyA4VchO1vDuo2JJ9/DeJijg0VlOgxRC
+ e/u4IQhHv8m/dqBdRQ9dWyfDSxS7zsf2hRykzHbmLYm8FVqhjkWueASbq4CE/0ntAZ8fEDhSDv
+ iujR5ydLWPZLzr1k8nlI3vnuG+J4P9Hya/rd6DhzkWWunULqdwMOFYkvXbYg1m7Ael4BeAwg5l
+ GSULJziurIrQCyBcg2IBKC0qLjQmuzvB+M4fgFBRjPgMQEAAA==
+X-Change-ID: 20260314-mfd-arizona-irq-6fe7fe179a09
+To: Lee Jones <lee@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ Linus Walleij <linusw@kernel.org>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.14.3
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34200-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-34201-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	HAS_ORG_HEADER(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ashevche-desk.local:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,intel.com:dkim]
-X-Rspamd-Queue-Id: 206B7333C91
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 290363342E0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Mar 26, 2026 at 12:35:57PM +0200, Andy Shevchenko wrote:
-> On Wed, Mar 25, 2026 at 07:36:27PM -0700, Rosen Penev wrote:
+Move the hack using a platform data-provided GPIO line to use
+a proper devicetree-provided GPIO descriptor to poll the IRQ.
 
-...
+Signed-off-by: Linus Walleij <linusw@kernel.org>
+---
+Changes in v4:
+- Fix error path to use dev_err_probe() and report mismatches GPIO
+  IRQ numbers properly.
+- Fix spelling error in commit message.
+- Pick up ACKs.
+- Link to v3: https://lore.kernel.org/r/20260319-mfd-arizona-irq-v3-0-24c251377ec2@kernel.org
 
-> What I would like to see is rater special devm_kmalloc_and_dup()-like API
-> instead of doing this in every driver out of dozens of drivers.
+Changes in v3:
+- Reword the irq-gpios documentation as Charles Want it.
+- Collect ACK.
+- Link to v2: https://lore.kernel.org/r/20260317-mfd-arizona-irq-v2-0-9ea546f517dc@kernel.org
 
-You may start with providing a common API for all Intel pin control drivers.
+Changes in v2:
+- Instead of deleting the feature, migrate it properly to devicetree.
+- Add irq-gpios devicetree bindings.
+- Add code to handle irq-gpios for GPIO polling of IRQ line.
+- Link to v1: https://lore.kernel.org/r/20260314-mfd-arizona-irq-v1-1-4b77f524f832@kernel.org
 
-Patch series of:
-- add a new API and new member
-- convert driver-by-driver in separate changes.
+---
+Linus Walleij (2):
+      dt-bindings: mfd: wlf,arizona: Add irq-gpios
+      mfd: arizona: Convert GPIO IRQ handling to descriptors
 
-Actually why can't it be done like this from the start?
+ .../devicetree/bindings/mfd/wlf,arizona.yaml       | 10 +++++
+ drivers/mfd/arizona-irq.c                          | 46 +++++++++++-----------
+ include/linux/mfd/arizona/core.h                   |  2 +
+ include/linux/mfd/arizona/pdata.h                  |  5 ---
+ 4 files changed, 34 insertions(+), 29 deletions(-)
+---
+base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
+change-id: 20260314-mfd-arizona-irq-6fe7fe179a09
 
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Linus Walleij <linusw@kernel.org>
 
 
