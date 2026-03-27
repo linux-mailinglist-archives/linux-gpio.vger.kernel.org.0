@@ -1,176 +1,322 @@
-Return-Path: <linux-gpio+bounces-34232-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34233-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EF8YMuIqxmnQGwUAu9opvQ
-	(envelope-from <linux-gpio+bounces-34232-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 07:59:46 +0100
+	id KLeqJXs7xmm7HgUAu9opvQ
+	(envelope-from <linux-gpio+bounces-34233-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 09:10:35 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5707734021B
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 07:59:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F2503340C90
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 09:10:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D274C304B5A1
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 06:53:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F1F37304D263
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 08:05:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12D2E3C3C09;
-	Fri, 27 Mar 2026 06:53:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D260938839E;
+	Fri, 27 Mar 2026 08:05:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uM9tWBQS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eTpDLsLO"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1A12BE7BB;
-	Fri, 27 Mar 2026 06:53:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CE13CD8DE;
+	Fri, 27 Mar 2026 08:05:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774594384; cv=none; b=ESnt93odZ5ccH6QecTRpZez+pzGT89aWC5NqsSD8Fhcz/j3N18YOpxXVT0+bixAVPmssGaNK2zDc0HvmLkXEMzWwqty9HsdNmXprVtVgMdG2+G+T5L5RQWwWNWpCSTFW4enPEy2xpyRC3lru1cdjUBoELDq43oS19HqYbTfoCEg=
+	t=1774598752; cv=none; b=cLB9z+0Yd5CRlH0aroMUkQ6aOkbqhXFqjLTq98AHznrjSlOlNGdnVODtb9TZ0frcNWwgKSHL2yDhcu1fMrj8zT+71k/94p1cUS96cGPYgjEu3eIFyHRIG/pC09srf7dNFEDGaNTPFGFwCr8n2pb4H4xbAOHVmMO730vajfhzb5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774594384; c=relaxed/simple;
-	bh=+6taD/KYX6s6aOGsQO53ivGa0KI2dG/K2GEdTZ29IxI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=maY8VjJ4M8ub7rY6gutpF8eIFQyvtYi1+++x2DcJwHGfOX0f41dZIGa/Utm0EM31BBTovbZ3+CXl08C+ydUVpxWWk/i4kcyZ5hKkqJpgD7zVyXn0oEDR9CpUbgRk9lHRqxSD+owzeafQuMEczQJ88UbSl9Lvv+cLesXXTneo4VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uM9tWBQS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5247EC19423;
-	Fri, 27 Mar 2026 06:52:55 +0000 (UTC)
+	s=arc-20240116; t=1774598752; c=relaxed/simple;
+	bh=Bv4/Y8lJ6NAbAEPN6r/5Z3DUXsK0z/ia4RMACrqi9ZU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dsN88Gov6RFkKcDSOdrDHov3Pf0WQmWLqGEXBcb3a4f2WZWcAdh6Lj1E1PjCPa8cjgaV8V5MqFe6ig3rgimArxtwcqLHMF1s+vXgTKc1U83ivJFfJRslE1y2tI3oQvhN1wJ+3fQmHgdnrHywAXqOm2xIRzkcLZGAnZj6JPXDPJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eTpDLsLO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 839B8C19423;
+	Fri, 27 Mar 2026 08:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774594383;
-	bh=+6taD/KYX6s6aOGsQO53ivGa0KI2dG/K2GEdTZ29IxI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uM9tWBQSBzeOskmqaDM0QvWoV4jUNiC4DsBlIKIFg7In21qbXcrgvL+npIdvVsRu4
-	 qrE69iQ+kiDSqXlcivHy16z+fEY80xVdn90vInQTF9nPU0Nfe7+PBampXS2wO/gG+p
-	 NgAISEoCyX1+VSpZjmfa/Wk2xePLkgGitS5duT/iqLt2Xz6gmhtYoyq/3bAsUtsGq+
-	 2OtE88H/kNHCxHKSKe13LzCtkcFHYUQtieBVLEZ/RgfH2fMVrGZXCU2jVD0wDWvbDI
-	 /UHVNy1S2RfsSIT/lKpdHdy0Vk/hccjI1KCqeAffyJ+BOUCNvP4IiTCz7QCM5HVlUz
-	 YXDRsPrcv0reg==
-Date: Fri, 27 Mar 2026 12:22:46 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: linux-phy@lists.infradead.org, Vinod Koul <vkoul@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-can@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org, linux-sunxi@lists.linux.dev, 
-	linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org, 
-	spacemit@lists.linux.dev, UNGLinuxDriver@microchip.com, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Nitin Rawat <quic_nitirawa@quicinc.com>
-Subject: Re: [PATCH v5 phy-next 10/27] scsi: ufs: qcom: keep parallel track
- of PHY power state
-Message-ID: <gq4sswslkjaoe5hhxe2mz6z57uiumotqknkryadvfsstj4srx4@qgenqekgrqv4>
-References: <20260319223241.1351137-1-vladimir.oltean@nxp.com>
- <20260319223241.1351137-11-vladimir.oltean@nxp.com>
- <ezrcjjwtg5n76w4m65l27szu5mywx66ti3xuprkfcp3x6quvbf@2rew4zrnnbt2>
- <20260325114309.3k7xkfrffpxp5xq4@skbuf>
- <vu3cxpynr5mu2fzkrtmjcwijc5jz323wlnbc3r7lp2wxqmhydx@z5xhgf4myw2d>
- <20260325115731.genmq2yew2p4dvbs@skbuf>
- <20260326080444.gbesciaa5zwvcgoy@skbuf>
+	s=k20201202; t=1774598751;
+	bh=Bv4/Y8lJ6NAbAEPN6r/5Z3DUXsK0z/ia4RMACrqi9ZU=;
+	h=From:Date:Subject:To:Cc:From;
+	b=eTpDLsLO6Cd65yxoP3gzCMOhkjhmxEGSkuoop5OPlbLZO9y9H+CTeHiPB8oVHlyjE
+	 FuDO0yzqhcC/lamg86m45VpoyWxdrZnHgjlWbnwc/kfUMiDPfJw9eJzy7dMC8GtnZf
+	 rxfbwUhML5Wxl1bKKtm8Sx7hBbY5g2+W8a01VZ2joWLMviKdWK4jY5Dp9OOHseRqgD
+	 yEdm4og4laxBs3Qa7GRoDepx1H+71XuVIxUM3EB7ZEie6nx+1jWpZcYNzjrarY4M3R
+	 qwcDB1YHR4I0hWtY2Wz+49QPAU2I8EH6nNrBrYh1rT2z/bmTEr+NNc3Qf/2JkSnf30
+	 8+gNLj6kgqLBA==
+From: Linus Walleij <linusw@kernel.org>
+Date: Fri, 27 Mar 2026 09:05:47 +0100
+Subject: [PATCH] ASoC: uda1380: Modernize the driver
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260326080444.gbesciaa5zwvcgoy@skbuf>
-X-Spamd-Result: default: False [-1.66 / 15.00];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260327-asoc-uda1380-v1-1-f6f91be9b7f8@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIzMDYyNz3cTi/GTd0pREQ2MLA13jtGQzc3NzYyMTy0QloJaCotS0zAqwcdG
+ xtbUA38MAml4AAAA=
+X-Change-ID: 20260327-asoc-uda1380-3fc67773249a
+To: Philipp Zabel <p.zabel@pengutronix.de>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Linus Walleij <linusw@kernel.org>
+X-Mailer: b4 0.14.3
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-34233-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34232-lists,linux-gpio=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[28];
+	FREEMAIL_TO(0.00)[pengutronix.de,perex.cz,suse.com,gmail.com,kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mani@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 5707734021B
+X-Rspamd-Queue-Id: F2503340C90
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Mar 26, 2026 at 10:04:44AM +0200, Vladimir Oltean wrote:
-> On Wed, Mar 25, 2026 at 01:57:31PM +0200, Vladimir Oltean wrote:
-> > On Wed, Mar 25, 2026 at 05:21:14PM +0530, Manivannan Sadhasivam wrote:
-> > > I believe I added the power_count check for phy_exit(). But since that got
-> > > moved, the check becomes no longer necessary.
-> > 
-> > FYI, the power_count keeps track of the balance of phy_power_on() and
-> > phy_power_off() calls, whereas it is the init_count keeps track of
-> > phy_init() and phy_exit() calls. They are only related to the extent
-> > that you must respect the phy_init() -> phy_power_on() -> phy_power_off()
-> > -> phy_exit() sequence. But in any case, both should be considered
-> > PHY-internal fields. The "Order of API calls" section from
-> > Documentation/driver-api/phy/phy.rst mentions the order that I just
-> > described above, and consumers should just ensure they follow that.
-> 
-> Ok, so we can close this topic of "checking the power_count not needed"
-> by linking to the conversation which spun off here:
-> https://lore.kernel.org/lkml/20260325120122.265973-1-manivannan.sadhasivam@oss.qualcomm.com/
-> 
+This codec driver depended on the legacy GPIO API, and nothing
+in the kernel is defining the platform data.
 
-Sure.
+Since there may be out of tree users, migrate to GPIO descriptors,
+drop the platform data that is unused, and assign the dac_clk the
+value that was used in all platforms found in a historical dig.
 
-> Mani, I spent some more time to figure out what's really going on with
-> this unexpected phy_power_off() call. Do you think you could
-> regression-test the patch attached?
-> 
+Add some menuconfig so the codec can be selected and tested.
 
-I tested the patch. But it fails ufs_qcom_power_up_sequence() if PHY was already
-powered on:
+Signed-off-by: Linus Walleij <linusw@kernel.org>
+---
+Maybe this driver should rather be deleted if there are no
+real users left, but that can be done after this patch if
+so desired. This makes the driver usable on contemporary Linux.
+---
+ include/sound/uda1380.h    | 19 ----------------
+ sound/soc/codecs/Kconfig   |  6 +++--
+ sound/soc/codecs/uda1380.c | 56 +++++++++++++++++++++++++---------------------
+ 3 files changed, 34 insertions(+), 47 deletions(-)
 
-[   31.513321] qcom-qmp-ufs-phy 1d87000.phy: phy initialization timed-out
-[   31.513335] ufshcd-qcom 1d84000.ufshc: Failed to calibrate PHY: -110
-[   31.565273] ufshcd-qcom 1d84000.ufshc: Enabling the controller failed
-
-Funny thing is, it didn't affect the functionality since the UFS core retries
-ufshcd_hba_enable() and in the error path of ufs_qcom_power_up_sequence(),
-phy_power_off() gets called and that causes the next try to succeed. So it is
-evident that, if PHY was already powered ON, it should be powered off before
-ufs_qcom_phy_power_on(). And due to the UFS driver design,
-ufs_qcom_power_up_sequence() can get called multiple times. So we cannot just
-remove phy_power_off().
-
-Below diff on top of your patch fixes the issue:
-
-```
-diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-index ed067247d72a..2c9fe03f349e 100644
---- a/drivers/ufs/host/ufs-qcom.c
-+++ b/drivers/ufs/host/ufs-qcom.c
-@@ -567,6 +567,8 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
-        if (ret)
-                return ret;
+diff --git a/include/sound/uda1380.h b/include/sound/uda1380.h
+deleted file mode 100644
+index 2e42ea2d0cfd..000000000000
+--- a/include/sound/uda1380.h
++++ /dev/null
+@@ -1,19 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * UDA1380 ALSA SoC Codec driver
+- *
+- * Copyright 2009 Philipp Zabel
+- */
+-
+-#ifndef __UDA1380_H
+-#define __UDA1380_H
+-
+-struct uda1380_platform_data {
+-	int gpio_power;
+-	int gpio_reset;
+-	int dac_clk;
+-#define UDA1380_DAC_CLK_SYSCLK 0
+-#define UDA1380_DAC_CLK_WSPLL  1
+-};
+-
+-#endif /* __UDA1380_H */
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index adb3fb923be3..c374a50fb6e0 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -2364,9 +2364,11 @@ config SND_SOC_UDA1342
+ 	  mic inputs), stereo audio DAC, with basic audio processing.
  
-+       ufs_qcom_phy_power_off(host);
+ config SND_SOC_UDA1380
+-	tristate
++	tristate "Philips UDA1380 CODEC"
+ 	depends on I2C
+-	depends on GPIOLIB_LEGACY
++	help
++	  The UDA1380 codec is used in the HTC Magician and on a number of
++	  Samsung reference boards.
+ 
+ config SND_SOC_WCD_CLASSH
+ 	tristate
+diff --git a/sound/soc/codecs/uda1380.c b/sound/soc/codecs/uda1380.c
+index 9e9c540a45ca..421ae6cb7d8d 100644
+--- a/sound/soc/codecs/uda1380.c
++++ b/sound/soc/codecs/uda1380.c
+@@ -16,7 +16,7 @@
+ #include <linux/types.h>
+ #include <linux/slab.h>
+ #include <linux/errno.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/delay.h>
+ #include <linux/i2c.h>
+ #include <linux/workqueue.h>
+@@ -25,7 +25,9 @@
+ #include <sound/initval.h>
+ #include <sound/soc.h>
+ #include <sound/tlv.h>
+-#include <sound/uda1380.h>
 +
-        ret = ufs_qcom_phy_set_gear(host, mode);
-        if (ret) {
-                dev_err(hba->dev, "%s: phy_set_mode_ext() failed, ret = %d\n",
-```
++#define UDA1380_DAC_CLK_SYSCLK 0
++#define UDA1380_DAC_CLK_WSPLL  1
+ 
+ #include "uda1380.h"
+ 
+@@ -36,6 +38,8 @@ struct uda1380_priv {
+ 	struct work_struct work;
+ 	struct i2c_client *i2c;
+ 	u16 *reg_cache;
++	struct gpio_desc *power;
++	struct gpio_desc *reset;
+ };
+ 
+ /*
+@@ -150,13 +154,12 @@ static void uda1380_sync_cache(struct snd_soc_component *component)
+ 
+ static int uda1380_reset(struct snd_soc_component *component)
+ {
+-	struct uda1380_platform_data *pdata = component->dev->platform_data;
+ 	struct uda1380_priv *uda1380 = snd_soc_component_get_drvdata(component);
+ 
+-	if (gpio_is_valid(pdata->gpio_reset)) {
+-		gpio_set_value(pdata->gpio_reset, 1);
++	if (uda1380->reset) {
++		gpiod_set_value(uda1380->reset, 1);
+ 		mdelay(1);
+-		gpio_set_value(pdata->gpio_reset, 0);
++		gpiod_set_value(uda1380->reset, 0);
+ 	} else {
+ 		u8 data[3];
+ 
+@@ -589,9 +592,9 @@ static int uda1380_set_bias_level(struct snd_soc_component *component,
+ 	enum snd_soc_bias_level level)
+ {
+ 	struct snd_soc_dapm_context *dapm = snd_soc_component_to_dapm(component);
++	struct uda1380_priv *uda1380 = snd_soc_component_get_drvdata(component);
+ 	int pm = uda1380_read_reg_cache(component, UDA1380_PM);
+ 	int reg;
+-	struct uda1380_platform_data *pdata = component->dev->platform_data;
+ 
+ 	switch (level) {
+ 	case SND_SOC_BIAS_ON:
+@@ -601,8 +604,8 @@ static int uda1380_set_bias_level(struct snd_soc_component *component,
+ 		break;
+ 	case SND_SOC_BIAS_STANDBY:
+ 		if (snd_soc_dapm_get_bias_level(dapm) == SND_SOC_BIAS_OFF) {
+-			if (gpio_is_valid(pdata->gpio_power)) {
+-				gpio_set_value(pdata->gpio_power, 1);
++			if (uda1380->power) {
++				gpiod_set_value(uda1380->power, 1);
+ 				mdelay(1);
+ 				uda1380_reset(component);
+ 			}
+@@ -612,10 +615,10 @@ static int uda1380_set_bias_level(struct snd_soc_component *component,
+ 		uda1380_write(component, UDA1380_PM, 0x0);
+ 		break;
+ 	case SND_SOC_BIAS_OFF:
+-		if (!gpio_is_valid(pdata->gpio_power))
++		if (!uda1380->power)
+ 			break;
+ 
+-		gpio_set_value(pdata->gpio_power, 0);
++		gpiod_set_value(uda1380->power, 0);
+ 
+ 		/* Mark mixer regs cache dirty to sync them with
+ 		 * codec regs on power on.
+@@ -694,13 +697,12 @@ static struct snd_soc_dai_driver uda1380_dai[] = {
+ 
+ static int uda1380_probe(struct snd_soc_component *component)
+ {
+-	struct uda1380_platform_data *pdata =component->dev->platform_data;
+ 	struct uda1380_priv *uda1380 = snd_soc_component_get_drvdata(component);
+ 	int ret;
+ 
+ 	uda1380->component = component;
+ 
+-	if (!gpio_is_valid(pdata->gpio_power)) {
++	if (!uda1380->power) {
+ 		ret = uda1380_reset(component);
+ 		if (ret)
+ 			return ret;
+@@ -709,7 +711,7 @@ static int uda1380_probe(struct snd_soc_component *component)
+ 	INIT_WORK(&uda1380->work, uda1380_flush_work);
+ 
+ 	/* set clock input */
+-	switch (pdata->dac_clk) {
++	switch (uda1380->dac_clk) {
+ 	case UDA1380_DAC_CLK_SYSCLK:
+ 		uda1380_write_reg_cache(component, UDA1380_CLK, 0);
+ 		break;
+@@ -742,6 +744,7 @@ static const struct snd_soc_component_driver soc_component_dev_uda1380 = {
+ static int uda1380_i2c_probe(struct i2c_client *i2c)
+ {
+ 	struct uda1380_platform_data *pdata = i2c->dev.platform_data;
++	struct device *dev = &i2c->dev;
+ 	struct uda1380_priv *uda1380;
+ 	int ret;
+ 
+@@ -753,19 +756,20 @@ static int uda1380_i2c_probe(struct i2c_client *i2c)
+ 	if (uda1380 == NULL)
+ 		return -ENOMEM;
+ 
+-	if (gpio_is_valid(pdata->gpio_reset)) {
+-		ret = devm_gpio_request_one(&i2c->dev, pdata->gpio_reset,
+-			GPIOF_OUT_INIT_LOW, "uda1380 reset");
+-		if (ret)
+-			return ret;
+-	}
++	uda1380->reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
++	if (IS_ERR(uda1380->reset))
++		return dev_err_probe(dev, PTR_ERR(uda1380->reset),
++				     "error obtaining reset GPIO\n");
++	gpiod_set_consumer_name(uda1380->reset, "uda1380 reset");
+ 
+-	if (gpio_is_valid(pdata->gpio_power)) {
+-		ret = devm_gpio_request_one(&i2c->dev, pdata->gpio_power,
+-			GPIOF_OUT_INIT_LOW, "uda1380 power");
+-		if (ret)
+-			return ret;
+-	}
++	uda1380->power = devm_gpiod_get_optional(dev, "power", GPIOD_OUT_LOW);
++	if (IS_ERR(uda1380->power))
++		return dev_err_probe(dev, PTR_ERR(uda1380->power),
++				     "error obtaining power GPIO\n");
++	gpiod_set_consumer_name(uda1380->power, "uda1380 power");
++
++	/* TODO: add device properties to make WPLL selectable here */
++	uda1380->dac_clk = UDA1380_DAC_CLK_SYSCLK;
+ 
+ 	uda1380->reg_cache = devm_kmemdup_array(&i2c->dev, uda1380_reg, ARRAY_SIZE(uda1380_reg),
+ 						sizeof(uda1380_reg[0]), GFP_KERNEL);
 
-- Mani
+---
+base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
+change-id: 20260327-asoc-uda1380-3fc67773249a
 
+Best regards,
 -- 
-மணிவண்ணன் சதாசிவம்
+Linus Walleij <linusw@kernel.org>
+
 
