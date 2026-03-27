@@ -1,301 +1,237 @@
-Return-Path: <linux-gpio+bounces-34241-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34242-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wI+pGhpKxmmgIAUAu9opvQ
-	(envelope-from <linux-gpio+bounces-34241-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 10:12:58 +0100
+	id MBTRDThZxmkrJAUAu9opvQ
+	(envelope-from <linux-gpio+bounces-34242-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 11:17:28 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8BAB3418F4
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 10:12:57 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1BAF342588
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 11:17:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 54A443114DD8
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 09:08:27 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B384C3051379
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 10:17:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 175B13DA7C4;
-	Fri, 27 Mar 2026 09:08:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D78A3B389A;
+	Fri, 27 Mar 2026 10:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qn6UBzLC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F85F3932DD
-	for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 09:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774602503; cv=none; b=Gg8fBQLU/fZaNaNNfEIUtrSElQ2ge89sDpcvY1c1roPFsTIf0eleFErEnMKpwywduC/guKyc7AK0ME59N3a7+yzvPpbEWvnkV5htrQO7VyJ5Rq/fHLnOENkIa56hdk23849Kt/0idK2ckMUk8tWKnasU009NNfnurSZTU3R2Hns=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774602503; c=relaxed/simple;
-	bh=mYddDiLjRIiBo+VXrYSKXlZ7TkAluu4urY+vSi+s2Zw=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03653AE183
+	for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 10:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774606629; cv=pass; b=g07NHJKMmIaPxWxYgt3XP0jY0JxhRoXXBSXHEDeOZQcu7ygOKrVTuvGnvodRJsjeeSvKblNa29y81ZtKullHPR+G+IWJHWZgN8Xt/EZj4mqiD/T1Trl1rOyALol2ig9bvbGfhl1erHujpupmyInAOPwlgwFhgUiisbI87kURt8A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774606629; c=relaxed/simple;
+	bh=qS2Q9O7bG/xoCokg+S7YRoYhx+f6F9kSCLDT8bvQ+58=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oySiixc9Q7JDTGRHePzPfAkZ4i9RtwNYpR8knZov6Opsag3P+vkKYMTP/cuxT4eI3oxtdbVusRAeygASYrnwwXcdUW65poBSGEK6iS58JwICajzAGN80oLlYI3H9ZUe0+pG8F+hx1wi1wzjMZApXMRVw1tEiDOkdTXTUGSxuv3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=e2BrgfCLUgbCak1yCaflr4uSq2EmJoi7dIk0xiu3O5kBk3Yyl/FwofCggXtELOMUWVOIV9TmH0DxeFJn+MbNH1F3VEc9GIzOwF8B54bo6tRfbipBhfcKV2JzNGGRu+5QpismqmJIG+H/l/WoPifezc5QSggyIo9Iwl1BiJ9gNSs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qn6UBzLC; arc=pass smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-56cd842b60bso1373586e0c.0
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 02:08:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774602495; x=1775207295;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-486fd5360d4so24223985e9.1
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 03:17:06 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774606625; cv=none;
+        d=google.com; s=arc-20240605;
+        b=PiwDyaRrSdPm20nClyl+JAhqJF5uaIfSnrDtvP253XtegWwo4L1tMt0KyCbw+JcA+o
+         wB1GWZ15XUy1heK2z0oiSbatXMjiCxjPDBJSl2Ta9k6GAaLtm652vePe3xFSgwHEM7GP
+         sPipJ3wuOHZjw3Lk2fOW+11NQXvJ/YtbuIENOxylBTTlMj8IE9eujbwgGRjA7BoOx1Mv
+         QrvBO0AHo/thimAXJEDxLjtiWXIhfSu0pYKSPidKRqJiTLi+QpZUcDNudO0MaiOHCusv
+         AdsrLIpQtwXKqdpJBy77oyhYgDjdtoRmo826Cbk+M6Mmk34vYuu/fjjvU5dV3IVMZPCc
+         vmSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=MD962DJa2d+eTZumSAmw+2SavlPnEgh1c+O5EkQB1zw=;
+        fh=tpu6FRqh6ANxhtN0TeYMF6qvMjBusvhZR0U+HckYQS4=;
+        b=MYbuRL5xNEerDw4+bDBscfw3Ajh2Ume3mnuachsy0a2yyTUDzAc2J59jItFbBjrCoz
+         wcj62oJY1jM7cKrFJ855DunP4Xer6Hrs99N7eV6DHtlhxmzQqN8VfzfNQkIRhH9krVSI
+         2yqrBQECogeXKMHdLlcc860EElgCv/8BX/KLq7eoE39jVUMOohu+7a1hvkmWCkALKScr
+         DNotAY9KGOrh6DRSkG0+fYuS+58UsisUJpvNUz8K0ylhudjDnWS3yTFxrX81pEHArn6L
+         hZcz/VZkNX819w5CO5qKR7qMewnt8rJ4dEGCGHdeW+ByagxOe2MrU+dZDLVB4VXO7It9
+         jorw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774606625; x=1775211425; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TeLMshVR0nsPw/iZt1BDXxCDpZRjG9f/fkTDxEhSQHU=;
-        b=MrCixG2FfoU8bJJZxDwYE4tYFPkNJZa2sIXAyTPSzTDVtxG3PD2Is5A+EwSSaCkhgO
-         CM169sTNef48kgc07rhd88lael2/0ZSoOK5CAoRXDZY+U+BQAu2FWSxeHLshWAh+RiJE
-         DDbSmgmFkiHD1Pcr0bAgN6efvTxsOBoP5h3g51B6XOrYLO5EW+FU+fkZnb3QjaqfX61v
-         r04RyCPOgf9txaNfsR1OfGUAXbKeRv1q07zX2xbgSyqIVFcJ4klYusyUl9SYZ0lANnTT
-         uD0MO71Zq/bUXMkf/0pkSfrXRZEpgXrXj6UEudft08vkMpawZAzgUXaQnB9VcgZ+6qde
-         TiUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVrCLhlfdr4xsxk18k0YDm5o3gzWu5KdZ6PWae79fdSCFIVStPxSCEg/vbwLL2ybxAK1qiQ3ZrswLlA@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvPS4BS+bc/3JssR8GXUrMXOSPBouv2b0AkTe8XTQm0JDlIKk1
-	cslXYzXAbOKXMp8QNiYnUISLvEo2GrVZROd8+0XV9CJUJz6U/oWwTxVFDXHXh8EAY2k=
-X-Gm-Gg: ATEYQzwb695Gdm5LC5/Oi0zUFwlij11z/3rv8R5xUfEBgpsgLxqZDvVMNAZ+JKLkZKR
-	/ovfIUi2zaCKtCTGFK2DUeZ7yGtS/HcspUSFowl/jzqCn4uX70ry3gQJ+DWSsYaX/Fu7CYnzlaO
-	xpAZsqpu3MHueOI2qIBlH5GiRMlidsfy0XAMXQCa45Hba12spJwB2+roqCFzhtHq17KdA0bdgi0
-	BaMSHs/eB41W/O5vd65PGc0EgAoe/LmxuJnQUtReeTdyUYE2JjxfP8XpJQhltg/F5uEsYToq5pn
-	+Y996fZeQSxChHD5ZtbJLDskJvwJiWxCKoA6+IZ+VFP4iTYGb0wn256PhcKazglWDxGhAUKkC98
-	oqtrHZ0N32g0kbI77F9JbU8jisDERKUo3g8jYSwOl52S7lIMv4lbfHqVJPpj6tHhfgDoS8Mp5kr
-	Z82Y8HmwQnuTQSaq6rxUQkXJioi3/D5iXHcLdpSlwJGg8RNAuHjvOgNED5Jy1RVYoMVfOoIvg=
-X-Received: by 2002:a05:6122:80ac:b0:56b:1eb:d396 with SMTP id 71dfb90a1353d-56d4a67062fmr587398e0c.14.1774602495023;
-        Fri, 27 Mar 2026 02:08:15 -0700 (PDT)
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-56d31c29de8sm7759212e0c.6.2026.03.27.02.08.13
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Mar 2026 02:08:14 -0700 (PDT)
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-604d732cd22so1147367137.1
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 02:08:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWtvg3azgeWK1uisET8nKvhGBZ5hxqIeD7nmya6Q5v0pVW+1WsG00bPZtAc9w9jIbh3Fyflt2/JO4DO@vger.kernel.org
-X-Received: by 2002:a05:6102:390e:b0:604:f29d:84be with SMTP id
- ada2fe7eead31-604f904cadamr719685137.3.1774602493193; Fri, 27 Mar 2026
- 02:08:13 -0700 (PDT)
+        bh=MD962DJa2d+eTZumSAmw+2SavlPnEgh1c+O5EkQB1zw=;
+        b=Qn6UBzLCj1XJ+cF8re6vgTipiZbzuYeTwOyEJodUpmiQvQ4Wp6yeVkkFnfrRz/QwXW
+         afDlZ7QFYyFQxk64enp+IM3lTYwA2tlVfk0f++Ts/mUu+8kUksoLhZKTzgwNWeVZb93o
+         /unh3umxrVCU7ZLRR2Qh7YBoZf9+gpbMDyzfiyRP4gHfCGUY09q41+agfze/tGuD9rfl
+         HrGtT89aKSMZIuh9inOkK3wuNnKUtcoVASi++39J9agqsmnj05YZX2tGoC415gaKeE+b
+         9dE9tF+bl82RqxlivYRThHsyjYZLkiL75SEzittSVqBx2djmEWrRH7T6O3YOduAIGqlk
+         3a0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774606625; x=1775211425;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=MD962DJa2d+eTZumSAmw+2SavlPnEgh1c+O5EkQB1zw=;
+        b=fdVyR/vlpUf6oG8wvCSKHoSpTsH5duyBmXDLOnyVrW3XqPnZ14fl4n7SYar3VuF0XS
+         ypfEvOpmOsxYEi8RFCyYtNvvmfLXYxDfUxA9rh0s2u1hJfnsHyGYgg5vIh1z2H7VnfI+
+         S/9IWAuARutH7zejW4gc8kJQbCPLqa5aM9OxsIT41KpwSAYPpIEBkzPU+TUktJ8deZBC
+         bessBokk193AmcWIciQPRyBMLM7NGJr2CPl3t+KW+IZ+X2HAzI5C5zsp5TBLWYoSnb7S
+         dsT/gmvPBIlqo9W+REFTFCbbwMnTN9yHFMYFjK9ECVFRBLekhXebiBgNbLBTn6ThknrL
+         um3w==
+X-Forwarded-Encrypted: i=1; AJvYcCV69OEoJFQ0+cHDYGGHfyKrCdc366/Mr7LUx2aQfKXZHHxIEsPW8daRlXCVJXw4J92lK6yhbE4Q4LGu@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7bbQ4PukLdLkwSwCf1CK1H6OQfKei+sVksG3YgDGWkRkUTDGz
+	ZrjNMwGe9OPgotzzrw2mITDrpiv42tU2UkEzRgTPfreiDEX7er0gPueJDegGzWRjIkD95UW46+M
+	6TQc8qbJeKJaOQSJCzd/grAt7jBBlUqU=
+X-Gm-Gg: ATEYQzx3LueBSrfM4gBLDyBn7W6h8532KaREd5j9KMcgKcegyGs+fbpHY+EOeuYojLy
+	s8kY50UvzQWIVYUCpomUfcPSzzAaj3AMkhnQf6lAtIFoIbt27hBlNpnFF44+3l+nYUbOFEFcMFA
+	uKNgY71aitG5NzSMLsgwq11E4T3RxIT+T28Pu47BRi8cnfIcj+Vr7RjoKjpRXyitFNzfu7WfREQ
+	5zVFoI/W3OwXiv1eF8ECgYUSej6mDpDBRs66GaaFtA2+Gqp2LBlyJz4ci1dTlGusTdIPvADo/aw
+	ZGzH9D5gMeVK9tVp24GvVaEQ10MZraIe4KWUH7rRkzSb0mLzI+39/Q5hOKYZRTwmIzzhuw==
+X-Received: by 2002:a05:6000:2c10:b0:439:bd70:610f with SMTP id
+ ffacd0b85a97d-43b9eab26famr2859930f8f.44.1774606624710; Fri, 27 Mar 2026
+ 03:17:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260326-gpio-hogs-multiple-v2-1-7c3813460e4f@oss.qualcomm.com>
-In-Reply-To: <20260326-gpio-hogs-multiple-v2-1-7c3813460e4f@oss.qualcomm.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 27 Mar 2026 10:08:01 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVZjCP7EOaruhjZ1uRNK4=HVZ_hjUkZGyqxiizqi_2rwg@mail.gmail.com>
-X-Gm-Features: AQROBzBdr6sIAp5W8NrHbjRfvn9tx7UeWmkqq0bQqItBRyQm5XaOxmLC4qs6Kc8
-Message-ID: <CAMuHMdVZjCP7EOaruhjZ1uRNK4=HVZ_hjUkZGyqxiizqi_2rwg@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: fix hogs with multiple lines
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20260319141515.2053556-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20260319141515.2053556-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXzWFHxeyR4Z4fLUc-QhwPK1RnB5VTzQODjzoR6oDwKHg@mail.gmail.com>
+In-Reply-To: <CAMuHMdXzWFHxeyR4Z4fLUc-QhwPK1RnB5VTzQODjzoR6oDwKHg@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 27 Mar 2026 10:16:38 +0000
+X-Gm-Features: AQROBzA351V4-u031sU_LWBz8AfXD44IpEZr_5GEUWRa6g-PutLuycoQAmmlEFY
+Message-ID: <CA+V-a8sRgOePfrEG2HfMp3XnCYXRay58s9fWjjg8yLjqYFvdnA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] pinctrl: renesas: rzt2h: Add pin configuration support
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spamd-Result: default: False [-1.46 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34241-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MIME_TRACE(0.00)[0:+];
-	DMARC_NA(0.00)[linux-m68k.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-34242-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org,bp.renesas.com,renesas.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	R_DKIM_NA(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,msgid.link:url,linux-m68k.org:email,qualcomm.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,glider.be:email]
-X-Rspamd-Queue-Id: D8BAB3418F4
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[prabhakarcsengg@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,glider.be:email]
+X-Rspamd-Queue-Id: C1BAF342588
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Bartosz,
+Hi Geert,
 
-On Thu, 26 Mar 2026 at 15:18, Bartosz Golaszewski
-<bartosz.golaszewski@oss.qualcomm.com> wrote:
-> After moving GPIO hog handling into GPIOLIB core, we accidentally stopped
-> supporting devicetree hog definitions with multiple lines like so:
+Thank you for the review.
+
+On Thu, Mar 26, 2026 at 4:34=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
 >
->         hog {
->                 gpio-hog;
->                 gpios = <3 0>, <4 GPIO_ACTIVE_LOW>;
->                 output-high;
->                 line-name = "foo";
->         };
+> Hi Prabhakar,
 >
-> Restore this functionality to fix reported regressions.
+> On Thu, 19 Mar 2026 at 15:15, Prabhakar <prabhakar.csengg@gmail.com> wrot=
+e:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Add pin configuration support for the Renesas RZ/T2H SoC. The RZ/T2H So=
+C
+> > allows configuring several electrical characteristics through the DRCTL=
+m
+> > (I/O Buffer Function Switching) registers. These registers control bias
+> > configuration, Schmitt trigger input, output slew rate, and drive
+> > strength.
+> >
+> > Implement pinconf_ops to allow reading and updating these properties
+> > through the generic pin configuration framework. The implementation
+> > supports bias-disable, bias-pull-up, bias-pull-down,
+> > input-schmitt-enable, slew-rate, and drive-strength-microamp.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> > v1->v2:
+> > - Updated commit description
+> > - Dropped 32 bit reg access for DRCTLm registers
+> > - Switched using to guard for locking in rzt2h_pinctrl_drctl_rmwq
+> >   helper function
+> > - Dropped using RENESAS_RZT2H_PIN_CONFIG_DRIVE_STRENGTH instead
+> >   switched to using the standard PIN_CONFIG_DRIVE_STRENGTH_UA
 >
-> Fixes: d1d564ec4992 ("gpio: move hogs into GPIO core")
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Closes: https://lore.kernel.org/all/CAMuHMdX6RuZXAozrF5m625ZepJTVVr4pcyKczSk12MedWvoejw@mail.gmail.com/
-> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
-> Changes in v2:
-> - Use a default value of 2 for the number of GPIO cells
-> - Use kzalloc_objs() instead of kcalloc()
-> - Propagate the error number from fwnode_property_read_u32()
-> - Remove special cases forced by the lack of default cells value
-> - Link to v1: https://patch.msgid.link/20260325-gpio-hogs-multiple-v1-1-7e3a7347f0d6@oss.qualcomm.com
-
-Thanks for the update!
-
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -938,12 +938,18 @@ int gpiochip_add_hog(struct gpio_chip *gc, struct fwnode_handle *fwnode)
->         struct fwnode_handle *gc_node = dev_fwnode(&gc->gpiodev->dev);
->         struct fwnode_reference_args gpiospec;
->         enum gpiod_flags dflags;
-> +       const char *name = NULL;
->         struct gpio_desc *desc;
->         unsigned long lflags;
-> -       const char *name;
-> +       size_t num_hogs;
-
-unsigned int should be sufficient to store the quotient of two positive
-32-bit numbers.
-
->         int ret, argc;
-> -       u32 gpios[3]; /* We support up to three-cell bindings. */
-> -       u32 cells;
-> +       /*
-> +        * For devicetree-based systems, this needs to be defined in bindings
-> +        * and there's no real default value. For other firmware descriptions
-> +        * it makes the most sense to use 2 cells for the GPIO offset and
-> +        * request flags.
-> +        */
-> +       u32 cells = 2;
+> Thanks for the update!
 >
->         lflags = GPIO_LOOKUP_FLAGS_DEFAULT;
->         dflags = GPIOD_ASIS;
-> @@ -952,42 +958,22 @@ int gpiochip_add_hog(struct gpio_chip *gc, struct fwnode_handle *fwnode)
->         argc = fwnode_property_count_u32(fwnode, "gpios");
->         if (argc < 0)
->                 return argc;
-> -       if (argc > 3)
-> -               return -EINVAL;
+> > --- a/drivers/pinctrl/renesas/pinctrl-rzt2h.c
+> > +++ b/drivers/pinctrl/renesas/pinctrl-rzt2h.c
 >
-> -       ret = fwnode_property_read_u32_array(fwnode, "gpios", gpios, argc);
-> -       if (ret < 0)
-> +       ret = fwnode_property_read_u32(gc_node, "#gpio-cells", &cells);
-> +       if (ret && is_of_node(fwnode))
->                 return ret;
-> +       if (!ret && (argc % cells))
-
-No need to check for !ret, the %-test should be valid for non-DT, too.
-
-I guess we can't have #gpio-cells = <0> (single-GPIO provider not
-supporting flags), and it would be very difficult to hog it.
-
-> +               return -EINVAL;
+> > @@ -54,6 +56,16 @@
+> >  #define PFC_PIN_MASK(pin)      (PFC_MASK << ((pin) * 8))
+> >  #define PFC_FUNC_INTERRUPT     0
+> >
+> > +#define DRCTL_PIN_SHIFT(pin)   ((pin) << 3)
 >
-> -       if (is_of_node(fwnode)) {
-> -               /*
-> -                * OF-nodes need some additional special handling for
-> -                * translating of devicetree flags.
-> -                */
-> -               ret = fwnode_property_read_u32(gc_node, "#gpio-cells", &cells);
-> -               if (ret)
-> -                       return ret;
-> -               if (!ret && argc != cells)
-> -                       return -EINVAL;
-> -
-> -               memset(&gpiospec, 0, sizeof(gpiospec));
-> -               gpiospec.fwnode = fwnode;
-> -               gpiospec.nargs = argc;
-> +       num_hogs = argc / cells;
+> "* 8" sounds more logical to me.
 >
-> -               for (int i = 0; i < argc; i++)
-> -                       gpiospec.args[i] = gpios[i];
-> +       u32 *gpios __free(kfree) = kzalloc_objs(*gpios, argc);
-> +       if (!gpios)
-> +               return -ENOMEM;
->
-> -               ret = of_gpiochip_get_lflags(gc, &gpiospec, &lflags);
-> -               if (ret)
-> -                       return ret;
-> -       } else {
-> -               /*
-> -                * GPIO_ACTIVE_LOW is currently the only lookup flag
-> -                * supported for non-OF firmware nodes.
-> -                */
-> -               if (gpios[1])
-> -                       lflags |= GPIO_ACTIVE_LOW;
-> -       }
-> +       ret = fwnode_property_read_u32_array(fwnode, "gpios", gpios, argc);
-> +       if (ret < 0)
-> +               return ret;
->
->         if (fwnode_property_present(fwnode, "input"))
->                 dflags |= GPIOD_IN;
-> @@ -1000,11 +986,41 @@ int gpiochip_add_hog(struct gpio_chip *gc, struct fwnode_handle *fwnode)
->
->         fwnode_property_read_string(fwnode, "line-name", &name);
->
-> -       desc = gpiochip_get_desc(gc, gpios[0]);
-> -       if (IS_ERR(desc))
-> -               return PTR_ERR(desc);
-> +       for (unsigned int i = 0; i < num_hogs; i++) {
-> +               if (is_of_node(fwnode)) {
-> +                       /*
-> +                        * OF-nodes need some additional special handling for
-> +                        * translating of devicetree flags.
-> +                        */
-> +                       memset(&gpiospec, 0, sizeof(gpiospec));
-> +                       gpiospec.fwnode = fwnode;
-> +                       gpiospec.nargs = cells;
-> +
-> +                       for (int j = 0; j < cells; j++)
+Ok.
 
-unsigned int
-
-> +                               gpiospec.args[j] = gpios[i * cells + j];
-> +
-> +                       ret = of_gpiochip_get_lflags(gc, &gpiospec, &lflags);
-> +                       if (ret)
-> +                               return ret;
-> +               } else {
-> +                       /*
-> +                        * GPIO_ACTIVE_LOW is currently the only lookup flag
-> +                        * supported for non-OF firmware nodes.
-> +                        */
-> +                       if (gpios[i * cells + 1])
-> +                               lflags |= GPIO_ACTIVE_LOW;
-> +               }
-> +
-> +               desc = gpiochip_get_desc(gc, gpios[i * cells]);
-> +               if (IS_ERR(desc))
-> +                       return PTR_ERR(desc);
+> > +#define DRCTL_DRV_PIN_MASK(pin)        (GENMASK_ULL(1, 0) << DRCTL_PIN=
+_SHIFT(pin))
+> > +#define DRCTL_PUD_PIN_MASK(pin)        (GENMASK_ULL(3, 2) << DRCTL_PIN=
+_SHIFT(pin))
+> > +#define DRCTL_SMT_PIN_MASK(pin)        (BIT_ULL(4) << DRCTL_PIN_SHIFT(=
+pin))
+> > +#define DRCTL_SR_PIN_MASK(pin) (BIT_ULL(5) << DRCTL_PIN_SHIFT(pin))
 >
-> -       return gpiod_hog(desc, name, lflags, dflags);
-> +               ret = gpiod_hog(desc, name, lflags, dflags);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       return 0;
->  }
+> I will drop DRCTL_PIN_SHIFT(), and replace it by "((pin) * 8)" while
+> applying, for consistency with e.g. PFC_PIN_MASK() above.
 >
->  static int gpiochip_hog_lines(struct gpio_chip *gc)
+Ok, thank you for taking care of it.
 
-Gr{oetje,eeting}s,
+Cheers,
+Prabhakar
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> i.e. will queue in renesas-pinctrl for v7.1.
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
+>
 
