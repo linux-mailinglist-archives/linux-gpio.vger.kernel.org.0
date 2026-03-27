@@ -1,157 +1,169 @@
-Return-Path: <linux-gpio+bounces-34275-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34277-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8LWsNEqZxmnrMQUAu9opvQ
-	(envelope-from <linux-gpio+bounces-34275-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 15:50:50 +0100
+	id CFAYA8W4xmnoNwUAu9opvQ
+	(envelope-from <linux-gpio+bounces-34277-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 18:05:09 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27093346544
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 15:50:50 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 164F1348069
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 18:05:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 982BD302AAC7
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 14:50:38 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 96655317A93D
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 16:35:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 456B13ECBF3;
-	Fri, 27 Mar 2026 14:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="tbZMekGk"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEAA128726D;
+	Fri, 27 Mar 2026 16:35:26 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820C02459E1;
-	Fri, 27 Mar 2026 14:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F8A34DB4B
+	for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 16:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774623034; cv=none; b=bKzudrPtHGJZvFS4gvDxDRgYJoEwDKk8n5BV21i4o+qsyCr7hzMh0DYyduxjBpf1LVpy8b0UdFZJD8HVtcoyM/Inp6PX/wuIHZ6MlytvhHOxkFVEQ6Yd2aGlW27RB0UdmJBAcXQKfMwJJiWsRs9h0TCu8u6sGx31hk/uf/ptUKo=
+	t=1774629326; cv=none; b=HM1ubmPiSzKDFEFKsHyHPd6KfFKtpUYJC05EwarxY4hR6lu+o0952zXyzkWOsCHrZ5z/Vo9U9198QojEGM4oPVRmqEBnot+xGoQhnCMI3MihSN0up8dNSPb24XH2QhmEZc3tG5RglUcP+yP43xhhpaxRaN3RmfwKvruLco1+QW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774623034; c=relaxed/simple;
-	bh=zscjXi9MVK0FT3fVQJwSvaIPjyt14k6440PyKgBymwE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o208hb7HTeV9LxNLHrWSVYKg9TJ5PYygD/Zn7Y4Ay+JYxo7G2aPrxmYCo2lRpfK1MmWGWOIogi9whfohVkWqKnO5P777kC+SMAAbe2tw5sVj6IB++hxlRsLKR6dH9jjDlCgZ/UUn4DE4o57kp6lc7sapmLSGpP7ga+xBpoTpnf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=tbZMekGk; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from [192.168.0.43] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net [86.13.91.161])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A84091E31;
-	Fri, 27 Mar 2026 15:49:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1774622951;
-	bh=zscjXi9MVK0FT3fVQJwSvaIPjyt14k6440PyKgBymwE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tbZMekGko73w71JNSZuMM/9A+ve1pKguqY+bQOlLyqJ1LjSeEV6vSrs9agrVmVNGc
-	 WAfxWFZTOu6uCBjG/CUNJoFuvUx/OmU8yu9OYfdeQvpF+3FZcdSYDzHwlBV8CxVOEo
-	 owys2tZJWWWxBWPZ9rDknF74I4V4aQ/bog/TlnWQ=
-Message-ID: <732143c6-3cca-4b47-8e7f-7f8d1499d901@ideasonboard.com>
-Date: Fri, 27 Mar 2026 14:50:27 +0000
+	s=arc-20240116; t=1774629326; c=relaxed/simple;
+	bh=wqiNOl1lDvijilY9uyMxJI00M0Y8PmMX/abDalPSgVg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZE1ufSkVcpmCsKXXDmIdxyvT1hprkB1Z25Ga5da8YCOPplybly+u85X/S4MebVAhe7Bd2yHlLzFWdrq4IxtsA0K+QqPKLsVegAhhzGDbGzi1bJiCgVckjyfnZgaVE3VwjxboTheG0u9GdfK7zb/HTFE+WKbyMteQHWTLq3gzN9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1w6A9G-00066Y-6l; Fri, 27 Mar 2026 17:35:02 +0100
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac] helo=dude04)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1w6A9F-002PtL-0i;
+	Fri, 27 Mar 2026 17:35:01 +0100
+Received: from ore by dude04 with local (Exim 4.98.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1w6A9F-0000000DnCt-0aqk;
+	Fri, 27 Mar 2026 17:35:01 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Guenter Roeck <linux@roeck-us.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Peter Rosin <peda@axentia.se>,
+	Linus Walleij <linusw@kernel.org>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	David Jander <david@protonic.nl>
+Subject: [PATCH v7 0/6] mfd: Add support for NXP MC33978/MC34978 MSDI
+Date: Fri, 27 Mar 2026 17:34:44 +0100
+Message-ID: <20260327163450.3287313-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] platform: int3472: Drop redundant initialisation to 0
- and NULL
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: Antti Laakso <antti.laakso@linux.intel.com>, linux-gpio@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linusw@kernel.org, brgl@kernel.org,
- mchehab@kernel.org, ilpo.jarvinen@linux.intel.com,
- hverkuil+cisco@kernel.org, sre@kernel.org, hao.yao@intel.com,
- jimmy.su@intel.com, miguel.vadillo@intel.com, kees@kernel.org,
- ribalda@chromium.org
-References: <20260317131040.215119-1-sakari.ailus@linux.intel.com>
-Content-Language: en-US
-From: Dan Scally <dan.scally@ideasonboard.com>
-In-Reply-To: <20260317131040.215119-1-sakari.ailus@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spamd-Result: default: False [1.54 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ideasonboard.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[ideasonboard.com:s=mail];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34275-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	DMARC_NA(0.00)[pengutronix.de];
+	RCVD_COUNT_FIVE(0.00)[6];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-34277-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	DKIM_TRACE(0.00)[ideasonboard.com:+];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dan.scally@ideasonboard.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	R_DKIM_NA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,cisco];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,intel.com:email]
-X-Rspamd-Queue-Id: 27093346544
+	FROM_NEQ_ENVFROM(0.00)[o.rempel@pengutronix.de,linux-gpio@vger.kernel.org];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[pengutronix.de:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 164F1348069
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Sakari
+changes v7:
+- drop gpiolib irq fix and make pinctrl more robust against NULL point
+  dereference.
 
-On 17/03/2026 13:10, Sakari Ailus wrote:
-> A few fields in structs containing regulator initialisation data for Dell
-> laptops are initialised to 0 and NULL. Drop the explicit initialisation as
-> redundant.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
+This series adds support for the NXP MC33978/MC34978 Multiple Switch Detection
+Interface (MSDI) via the MFD framework.
 
-Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
+Architecture overview:
+* mfd: Core driver handling 2-frame pipelined SPI, regulator sequencing, and
+  linear irq_domain. Harvests status bits from SPI MISO MSB.
+* pinctrl: Exposes 22 physical switch inputs as standard GPIOs. Proxies IRQs to
+  the MFD domain.
+* hwmon: Exposes thermal limits, VBATP/VDDQ voltage boundaries, and dynamic
+  fault alarms.
+* mux: Controls the 24-to-1 AMUX routing analog signals (switch voltages,
+  temperature, VBATP) to an external ADC.
 
->   drivers/platform/x86/intel/int3472/tps68470_board_data.c | 8 --------
->   1 file changed, 8 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> index 6bec5a910396..c1ddbf9a82c0 100644
-> --- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> +++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-> @@ -151,8 +151,6 @@ static const struct regulator_init_data dell_7212_tps68470_core_reg_init_data =
->   		.apply_uV = 1,
->   		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
->   	},
-> -	.num_consumer_supplies = 0,
-> -	.consumer_supplies = NULL,
->   };
->   
->   static const struct regulator_init_data dell_7212_tps68470_ana_reg_init_data = {
-> @@ -162,8 +160,6 @@ static const struct regulator_init_data dell_7212_tps68470_ana_reg_init_data = {
->   		.apply_uV = 1,
->   		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
->   	},
-> -	.num_consumer_supplies = 0,
-> -	.consumer_supplies = NULL,
->   };
->   
->   static const struct regulator_init_data dell_7212_tps68470_vcm_reg_init_data = {
-> @@ -173,8 +169,6 @@ static const struct regulator_init_data dell_7212_tps68470_vcm_reg_init_data = {
->   		.apply_uV = 1,
->   		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
->   	},
-> -	.num_consumer_supplies = 0,
-> -	.consumer_supplies = NULL,
->   };
->   
->   static const struct regulator_init_data dell_7212_tps68470_vio_reg_init_data = {
-> @@ -184,8 +178,6 @@ static const struct regulator_init_data dell_7212_tps68470_vio_reg_init_data = {
->   		.apply_uV = 1,
->   		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
->   	},
-> -	.num_consumer_supplies = 0,
-> -	.consumer_supplies = NULL,
->   };
->   
->   static const struct regulator_init_data dell_7212_tps68470_vsio_reg_init_data = {
+Initial pinctrl implementation by David Jander, reworked into this MFD
+architecture.
+
+Best regards,
+Oleksij
+
+David Jander (1):
+  pinctrl: add NXP MC33978/MC34978 pinctrl driver
+
+Oleksij Rempel (5):
+  dt-bindings: pinctrl: add NXP MC33978/MC34978 MSDI
+  mfd: add NXP MC33978/MC34978 core driver
+  pinctrl: core: Make pin group callbacks optional for pin-only drivers
+  hwmon: add NXP MC33978/MC34978 driver
+  mux: add NXP MC33978/MC34978 AMUX driver
+
+ .../bindings/pinctrl/nxp,mc33978.yaml         | 153 +++
+ drivers/hwmon/Kconfig                         |  10 +
+ drivers/hwmon/Makefile                        |   1 +
+ drivers/hwmon/mc33978-hwmon.c                 | 548 ++++++++++
+ drivers/mfd/Kconfig                           |  15 +
+ drivers/mfd/Makefile                          |   2 +
+ drivers/mfd/mc33978.c                         | 933 ++++++++++++++++++
+ drivers/mux/Kconfig                           |  14 +
+ drivers/mux/Makefile                          |   2 +
+ drivers/mux/mc33978-mux.c                     | 136 +++
+ drivers/pinctrl/Kconfig                       |  14 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/core.c                        |  41 +-
+ drivers/pinctrl/pinconf.c                     |   9 +-
+ drivers/pinctrl/pinctrl-mc33978.c             | 836 ++++++++++++++++
+ include/linux/mfd/mc33978.h                   |  92 ++
+ 16 files changed, 2800 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,mc33978.yaml
+ create mode 100644 drivers/hwmon/mc33978-hwmon.c
+ create mode 100644 drivers/mfd/mc33978.c
+ create mode 100644 drivers/mux/mc33978-mux.c
+ create mode 100644 drivers/pinctrl/pinctrl-mc33978.c
+ create mode 100644 include/linux/mfd/mc33978.h
+
+--
+2.47.3
 
 
