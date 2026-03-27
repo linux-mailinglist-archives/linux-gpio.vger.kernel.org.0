@@ -1,237 +1,220 @@
-Return-Path: <linux-gpio+bounces-34242-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34243-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MBTRDThZxmkrJAUAu9opvQ
-	(envelope-from <linux-gpio+bounces-34242-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 11:17:28 +0100
+	id 4G6VFvJdxmm+JAUAu9opvQ
+	(envelope-from <linux-gpio+bounces-34243-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 11:37:38 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1BAF342588
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 11:17:27 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAAEF342AE3
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 11:37:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B384C3051379
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 10:17:19 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5590530A6E51
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 10:31:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D78A3B389A;
-	Fri, 27 Mar 2026 10:17:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75F7532692B;
+	Fri, 27 Mar 2026 10:31:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qn6UBzLC"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gLtP11x3";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="LsoRtIQm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03653AE183
-	for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 10:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774606629; cv=pass; b=g07NHJKMmIaPxWxYgt3XP0jY0JxhRoXXBSXHEDeOZQcu7ygOKrVTuvGnvodRJsjeeSvKblNa29y81ZtKullHPR+G+IWJHWZgN8Xt/EZj4mqiD/T1Trl1rOyALol2ig9bvbGfhl1erHujpupmyInAOPwlgwFhgUiisbI87kURt8A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774606629; c=relaxed/simple;
-	bh=qS2Q9O7bG/xoCokg+S7YRoYhx+f6F9kSCLDT8bvQ+58=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e2BrgfCLUgbCak1yCaflr4uSq2EmJoi7dIk0xiu3O5kBk3Yyl/FwofCggXtELOMUWVOIV9TmH0DxeFJn+MbNH1F3VEc9GIzOwF8B54bo6tRfbipBhfcKV2JzNGGRu+5QpismqmJIG+H/l/WoPifezc5QSggyIo9Iwl1BiJ9gNSs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qn6UBzLC; arc=pass smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-486fd5360d4so24223985e9.1
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 03:17:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774606625; cv=none;
-        d=google.com; s=arc-20240605;
-        b=PiwDyaRrSdPm20nClyl+JAhqJF5uaIfSnrDtvP253XtegWwo4L1tMt0KyCbw+JcA+o
-         wB1GWZ15XUy1heK2z0oiSbatXMjiCxjPDBJSl2Ta9k6GAaLtm652vePe3xFSgwHEM7GP
-         sPipJ3wuOHZjw3Lk2fOW+11NQXvJ/YtbuIENOxylBTTlMj8IE9eujbwgGRjA7BoOx1Mv
-         QrvBO0AHo/thimAXJEDxLjtiWXIhfSu0pYKSPidKRqJiTLi+QpZUcDNudO0MaiOHCusv
-         AdsrLIpQtwXKqdpJBy77oyhYgDjdtoRmo826Cbk+M6Mmk34vYuu/fjjvU5dV3IVMZPCc
-         vmSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=MD962DJa2d+eTZumSAmw+2SavlPnEgh1c+O5EkQB1zw=;
-        fh=tpu6FRqh6ANxhtN0TeYMF6qvMjBusvhZR0U+HckYQS4=;
-        b=MYbuRL5xNEerDw4+bDBscfw3Ajh2Ume3mnuachsy0a2yyTUDzAc2J59jItFbBjrCoz
-         wcj62oJY1jM7cKrFJ855DunP4Xer6Hrs99N7eV6DHtlhxmzQqN8VfzfNQkIRhH9krVSI
-         2yqrBQECogeXKMHdLlcc860EElgCv/8BX/KLq7eoE39jVUMOohu+7a1hvkmWCkALKScr
-         DNotAY9KGOrh6DRSkG0+fYuS+58UsisUJpvNUz8K0ylhudjDnWS3yTFxrX81pEHArn6L
-         hZcz/VZkNX819w5CO5qKR7qMewnt8rJ4dEGCGHdeW+ByagxOe2MrU+dZDLVB4VXO7It9
-         jorw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6A2265623
+	for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 10:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774607492; cv=none; b=aTf6yCZSvDCrtg2VCjf7m5/ZjrapL6LP+eJ1Z0Y2vorBLdB97gXis9jgkVCFyRaUgtouaubkgcEF81Tq//IN5bfA8aINYgtafG5jq9qRPfyBQN+KzcH+f7iG3n3dp4QGdH6H+Yt7p6MECMOEWClHfNrZoeTQexuPh4Faf8U7Hv8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774607492; c=relaxed/simple;
+	bh=cCpbO0xpxrkamZBYNK5FGi1dHW8NWRYnOVaCqRl+4R8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZYUf5qBOVxJxkkPS2e6MeFYt9Oy/c00OZ+66KNP1tq/2kp0C7UpLbvvy1gqhfyoYHGOnQKbf668COiwqXoWefEn8E307f10hT2l0zWNxdRhyR0kxV7OuDijQPUmHrbJma4wPVII8a+RDW3gqpXQ1RyxJufrZ+YzRnQFNKZ12D+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gLtP11x3; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=LsoRtIQm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62R6wIiU2538750
+	for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 10:31:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=ilMfAjXX4CaXmjRfbjW2ud
+	wFpVpV8FN1246tP76Ll+4=; b=gLtP11x3r5d1+CTLHfpQoS9G2sR7nJ77mfXaJw
+	Dpd5JjYbH1lbRm+rMeyNNSlt9yY10jcPRhIAJoBWWpxp2ns3rbuYpKIbeM8Ag1em
+	T0E7jywrw8EDBmfpOhA8kJ6PZKKM7WaoEdyoXI0Ccbkv65OgnsR+1c6UWVEVQlVc
+	BLGvphE44iAvh+G1WlIIvM3nridIgmv16WI4ea0TJfuat5UPGfbyU77of8qI3ynN
+	2GGRv4Z+zdi7b155j8mYPzQR16Pr7gNHZeq4FBMiiWAc+S5T6YpHpAjhOaJK2lmP
+	6TCwz95Z6zwveRR4ity8PIdZxU3I57vZPO3U9UMLcTCILdqQ==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d5883kjeh-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 10:31:30 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-50b4ca7e7c2so48227991cf.3
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 03:31:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774606625; x=1775211425; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MD962DJa2d+eTZumSAmw+2SavlPnEgh1c+O5EkQB1zw=;
-        b=Qn6UBzLCj1XJ+cF8re6vgTipiZbzuYeTwOyEJodUpmiQvQ4Wp6yeVkkFnfrRz/QwXW
-         afDlZ7QFYyFQxk64enp+IM3lTYwA2tlVfk0f++Ts/mUu+8kUksoLhZKTzgwNWeVZb93o
-         /unh3umxrVCU7ZLRR2Qh7YBoZf9+gpbMDyzfiyRP4gHfCGUY09q41+agfze/tGuD9rfl
-         HrGtT89aKSMZIuh9inOkK3wuNnKUtcoVASi++39J9agqsmnj05YZX2tGoC415gaKeE+b
-         9dE9tF+bl82RqxlivYRThHsyjYZLkiL75SEzittSVqBx2djmEWrRH7T6O3YOduAIGqlk
-         3a0Q==
+        d=oss.qualcomm.com; s=google; t=1774607489; x=1775212289; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ilMfAjXX4CaXmjRfbjW2udwFpVpV8FN1246tP76Ll+4=;
+        b=LsoRtIQmdKnZfm0F/Gg2V1c4d2uLwD2lRHbyJ2fchebAZ6IqLty04z8L8FqXZkidp0
+         0vMEQPZJsU6yT57UavXWGX6EK2rlfV701wxxjaPXT+tkrFJO/j9WZp8LnnT/a1pML7/l
+         S+gDJWZ8yQ7UsKAepuL3E87aURL75yC2lriEEujTj9aL1JhBbi3X+7kJJTG7VfK+0pUY
+         vlUiz5bAN4w56WY8xcvZBwvqKKa6k8VyhIG7veptMZ2akdCfFdAjhJP/uE7YPxvcNn8D
+         x4pdUToQTqZu25sXTjogEn7kCwkglFvXNMdrd19GmPo9jojIRtTGFXw7ubg3sf7ATFFS
+         Alig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774606625; x=1775211425;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=MD962DJa2d+eTZumSAmw+2SavlPnEgh1c+O5EkQB1zw=;
-        b=fdVyR/vlpUf6oG8wvCSKHoSpTsH5duyBmXDLOnyVrW3XqPnZ14fl4n7SYar3VuF0XS
-         ypfEvOpmOsxYEi8RFCyYtNvvmfLXYxDfUxA9rh0s2u1hJfnsHyGYgg5vIh1z2H7VnfI+
-         S/9IWAuARutH7zejW4gc8kJQbCPLqa5aM9OxsIT41KpwSAYPpIEBkzPU+TUktJ8deZBC
-         bessBokk193AmcWIciQPRyBMLM7NGJr2CPl3t+KW+IZ+X2HAzI5C5zsp5TBLWYoSnb7S
-         dsT/gmvPBIlqo9W+REFTFCbbwMnTN9yHFMYFjK9ECVFRBLekhXebiBgNbLBTn6ThknrL
-         um3w==
-X-Forwarded-Encrypted: i=1; AJvYcCV69OEoJFQ0+cHDYGGHfyKrCdc366/Mr7LUx2aQfKXZHHxIEsPW8daRlXCVJXw4J92lK6yhbE4Q4LGu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7bbQ4PukLdLkwSwCf1CK1H6OQfKei+sVksG3YgDGWkRkUTDGz
-	ZrjNMwGe9OPgotzzrw2mITDrpiv42tU2UkEzRgTPfreiDEX7er0gPueJDegGzWRjIkD95UW46+M
-	6TQc8qbJeKJaOQSJCzd/grAt7jBBlUqU=
-X-Gm-Gg: ATEYQzx3LueBSrfM4gBLDyBn7W6h8532KaREd5j9KMcgKcegyGs+fbpHY+EOeuYojLy
-	s8kY50UvzQWIVYUCpomUfcPSzzAaj3AMkhnQf6lAtIFoIbt27hBlNpnFF44+3l+nYUbOFEFcMFA
-	uKNgY71aitG5NzSMLsgwq11E4T3RxIT+T28Pu47BRi8cnfIcj+Vr7RjoKjpRXyitFNzfu7WfREQ
-	5zVFoI/W3OwXiv1eF8ECgYUSej6mDpDBRs66GaaFtA2+Gqp2LBlyJz4ci1dTlGusTdIPvADo/aw
-	ZGzH9D5gMeVK9tVp24GvVaEQ10MZraIe4KWUH7rRkzSb0mLzI+39/Q5hOKYZRTwmIzzhuw==
-X-Received: by 2002:a05:6000:2c10:b0:439:bd70:610f with SMTP id
- ffacd0b85a97d-43b9eab26famr2859930f8f.44.1774606624710; Fri, 27 Mar 2026
- 03:17:04 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1774607489; x=1775212289;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ilMfAjXX4CaXmjRfbjW2udwFpVpV8FN1246tP76Ll+4=;
+        b=AE4xTysM5MnYQ3BR3Oelt0/7osAYBxUPU8b9dMqbDW3+rGul/SVMu+NzF4EwGCKDFq
+         P2P4H7UDmh/tj6RkMhVCS0ddSbSVladIuFt6VO8oE2dYF3VeLgCsW68eCSfUt00sJiqp
+         fTyiEZXSPkc55cvODFouQjq6TCMIuPZffwUZHm58iYCbOyTHgE6G19OWjd6mvxzB9eXf
+         JFb//HRHZp4kfRTdwAk02rPVYDgDapEbnrpWp/yhUVosXRFDIkXbsXcEskt2u4CLE02q
+         pVQXXln6FRsCIVjhKDGWHlSg9Tt6nw6MLXifeVYk/+q3DQrUSO4Bbe7GuokWnmICnfqH
+         6otw==
+X-Gm-Message-State: AOJu0YwYOB0xLntk77D207keT6G3Y95nUIKway8vgLS053xQCLGDG62o
+	bxjHNwcgzBOJJTZ7ZnLgozdaKRSmQJ3ggXFc4ApCqLd77LIpT57/TFWJiBeP7zyt89z83H9AR7F
+	XFX0eH9axPzFqIlD+eqpdASi2pkMdZVCiKW6v8Uc5Ln8qk2ELzO4ZeaB6oQ7gBOwT
+X-Gm-Gg: ATEYQzxG2lg5wA8mrLKAX+7iFuFY2f2grLT/kDdCQyu0BH7rPvohB60UvdaULbYoz4e
+	ZpSSh/yq9i1r/cHacWMxbeuL/uEqobJhuR6M5zEXe43y3PKps6yhpVH6euwV/CYJR01m/gK7/iQ
+	pdqVgzBKQ7HhIaNxsc5GCQLcmO46CpTzu+WUjmEkXX4tWuGOcxaLx27fFvU1Y+9JhezjX2n17eQ
+	QtxNthJN97xVgUSUfFq8YRw4WhMREgRqWeyOb8qjvGENJblvb3DOZmvTjuecUpvILnA1ZuyOUUz
+	yT1YJRnZfgAQV1UwX5ewn7UhzPYXuAkj1AicCwRvK3IryzCdsyP5xitfK2I6eV9z/vce3U/36D0
+	a6IfxxlOpmPPZFbzZ65NcTsMfhlR+9kT7C+0dt1YNT6Sv2OqEd0c=
+X-Received: by 2002:a05:622a:548:b0:50b:1e5d:9928 with SMTP id d75a77b69052e-50ba3951c58mr22981941cf.56.1774607489603;
+        Fri, 27 Mar 2026 03:31:29 -0700 (PDT)
+X-Received: by 2002:a05:622a:548:b0:50b:1e5d:9928 with SMTP id d75a77b69052e-50ba3951c58mr22981341cf.56.1774607488762;
+        Fri, 27 Mar 2026 03:31:28 -0700 (PDT)
+Received: from brgl-qcom.local ([2a01:cb1d:dc:7e00:94ec:a3a:baff:9151])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b919588e6sm13382138f8f.16.2026.03.27.03.31.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2026 03:31:28 -0700 (PDT)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: [PATCH 0/4] gpio: kill dev-sync-probe
+Date: Fri, 27 Mar 2026 11:31:10 +0100
+Message-Id: <20260327-gpio-kill-dev-sync-probe-v1-0-efac254f1a1d@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260319141515.2053556-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20260319141515.2053556-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXzWFHxeyR4Z4fLUc-QhwPK1RnB5VTzQODjzoR6oDwKHg@mail.gmail.com>
-In-Reply-To: <CAMuHMdXzWFHxeyR4Z4fLUc-QhwPK1RnB5VTzQODjzoR6oDwKHg@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 27 Mar 2026 10:16:38 +0000
-X-Gm-Features: AQROBzA351V4-u031sU_LWBz8AfXD44IpEZr_5GEUWRa6g-PutLuycoQAmmlEFY
-Message-ID: <CA+V-a8sRgOePfrEG2HfMp3XnCYXRay58s9fWjjg8yLjqYFvdnA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] pinctrl: renesas: rzt2h: Add pin configuration support
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAG9cxmkC/x3MQQqAIBBA0avErBuYLAy6SrQwm2woVBSiiO6et
+ HyL/x/InIQzDNUDiU/JEnxBU1dgN+MdoyzFoEhpalWPLkrAXY4DFz4x395iTGFm7Ej1q5nJktF
+ Q8ph4letfj9P7fifWSyZqAAAA
+X-Change-ID: 20260327-gpio-kill-dev-sync-probe-4027fab0c0a6
+To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1410;
+ i=bartosz.golaszewski@oss.qualcomm.com; h=from:subject:message-id;
+ bh=cCpbO0xpxrkamZBYNK5FGi1dHW8NWRYnOVaCqRl+4R8=;
+ b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpxlx1imIrohs2txSfQ0W0/A1O9egP03XIdR9w2
+ 1j+xqS6cRGJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCacZcdQAKCRAFnS7L/zaE
+ w6qOEACUM9z46FKBoNpH6hehqlAvRzW7n+ix3b2CA04rT3bTncDafZ1lRDCedY8kXe1IuWxZ/qd
+ lX476ShH2rkUCt70HHIHO6RmCG2QKDEmBEZdiYLm3GQo3H8UQMR8usjP1a2mngV+DjhQWjDyRmw
+ ShcwYE3yhHRzD0lQ3A846zjitv0aCrHyZjqRf9ZKAzjChxGA2Xj5igvckowI5GAoxjX71vTpjy8
+ +jhL5dXey3Bn94yGpOlo94eumtaE9Fr+sMckev1cFmxY81u32tGrhbNS0sNCK/A0JhyGYGb/lnK
+ 65He3yUILt5/zBeu9BLtejVfmwGPhs0dk9Sr1q9ppdRN/j/CNiTPtgjOExp2rkCfnk/wYk7jRNt
+ JYHeVOH4/kwFuAgE1R7ILZLv7AdoR3XzfkGg73ZjR8afnWHBwa3Guur9GG9qBkMQFrOoPB81Yjd
+ KtGdhu3Mf+hw6gf2fZ4RZV1xzp4VVA6gA/eNoxOR9SC/M8yFaCiI2TO+GhN+S9GNveV6Po8zOD9
+ VZsViCGjujSMvGqGvTHsWFsRYQaMR7h5yhUlUVjVf2FEnoUQ+F4ku7JwCFCzE72G7ErhmojsJr0
+ g4RwZ5tkPjxPwRv9ROg8wi6Nz+SVbYzck5/gpvyvh+oYqwcP+cq7E5sWA8+zrl2MxfadlcMdy8v
+ f7qv2oQUjM9Hurw==
+X-Developer-Key: i=bartosz.golaszewski@oss.qualcomm.com; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+X-Proofpoint-GUID: oYCymylwqTtrT7-X37POmLaqx3IklqUy
+X-Authority-Analysis: v=2.4 cv=bopBxUai c=1 sm=1 tr=0 ts=69c65c82 cx=c_pps
+ a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22 a=EUspDBNiAAAA:8
+ a=G4XsEQhtMV_5Gyacy6EA:9 a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22
+X-Proofpoint-ORIG-GUID: oYCymylwqTtrT7-X37POmLaqx3IklqUy
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI3MDA3NiBTYWx0ZWRfX9Ea7nMSMDcK6
+ rt+g6j0yZxisa3jggzZjN7zDnR/yLJfOPUSf8TST8P3Ns1U2ZwrvhAcDEKAZmF9bINb3b0TzERD
+ IEISkbI+O5zMFshUoj1YlEgFDfMHeGDPMS/aPJpPGyedB+yESAG6eDvV1Xgxr89APyZsrwpWtxf
+ VII2IeGrg7rkrBvOxD33Iz+gko2T7nYQ6qOG6budVnKkvquGPwJkS7WZjRJRtfrUruWhB+4Et2k
+ QZMyGg2Phvo6IVmxfA0DzjzXv2CigiPfhzUSUHSCfl8LEUiWhUcO5ldfaLjZ7DRBcbNeX9Pb7Lj
+ P7dS9XQ+XzZDFxyrFK7XLOTTrHGaqECL0EoySrUlb6ycl2TzH9FXp4TvrdaAd1pUssBQIR/fgQd
+ tu7oNWN1aUsnzbLsJiw7SLLrGr+ZWh7tNnRriJsafewz4YODTK4gzoC0KJMcVeB8yyQtTneaNRI
+ o9TVRqpOua5uOO1zogQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-26_04,2026-03-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 bulkscore=0 clxscore=1015 suspectscore=0 malwarescore=0
+ adultscore=0 priorityscore=1501 phishscore=0 impostorscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603270076
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,qualcomm.com:dkim,qualcomm.com:email];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34242-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org,bp.renesas.com,renesas.com];
+	TAGGED_FROM(0.00)[bounces-34243-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[prabhakarcsengg@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,glider.be:email]
-X-Rspamd-Queue-Id: C1BAF342588
+	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: CAAEF342AE3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Geert,
+I came up with this elaborate mechanism to synchronously wait for the
+platform devices activated over configs to probe, involving notifiers
+and completions (which was later factored out into what is today the
+dev-sync-probe module) because I didn't know any better. It turns out
+there's an idiomatic way of achieving the same goal with much less LOC.
+Port the three drivers to using a combination of wait_for_probe() and
+device_is_bound() and remove the dev-sync-probe module.
 
-Thank you for the review.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+---
+Bartosz Golaszewski (4):
+      gpio: sim: stop using dev-sync-probe
+      gpio: aggregator: stop using dev-sync-probe
+      gpio: virtuser: stop using dev-sync-probe
+      gpio: remove dev-sync-probe
 
-On Thu, Mar 26, 2026 at 4:34=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Thu, 19 Mar 2026 at 15:15, Prabhakar <prabhakar.csengg@gmail.com> wrot=
-e:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add pin configuration support for the Renesas RZ/T2H SoC. The RZ/T2H So=
-C
-> > allows configuring several electrical characteristics through the DRCTL=
-m
-> > (I/O Buffer Function Switching) registers. These registers control bias
-> > configuration, Schmitt trigger input, output slew rate, and drive
-> > strength.
-> >
-> > Implement pinconf_ops to allow reading and updating these properties
-> > through the generic pin configuration framework. The implementation
-> > supports bias-disable, bias-pull-up, bias-pull-down,
-> > input-schmitt-enable, slew-rate, and drive-strength-microamp.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> > v1->v2:
-> > - Updated commit description
-> > - Dropped 32 bit reg access for DRCTLm registers
-> > - Switched using to guard for locking in rzt2h_pinctrl_drctl_rmwq
-> >   helper function
-> > - Dropped using RENESAS_RZT2H_PIN_CONFIG_DRIVE_STRENGTH instead
-> >   switched to using the standard PIN_CONFIG_DRIVE_STRENGTH_UA
->
-> Thanks for the update!
->
-> > --- a/drivers/pinctrl/renesas/pinctrl-rzt2h.c
-> > +++ b/drivers/pinctrl/renesas/pinctrl-rzt2h.c
->
-> > @@ -54,6 +56,16 @@
-> >  #define PFC_PIN_MASK(pin)      (PFC_MASK << ((pin) * 8))
-> >  #define PFC_FUNC_INTERRUPT     0
-> >
-> > +#define DRCTL_PIN_SHIFT(pin)   ((pin) << 3)
->
-> "* 8" sounds more logical to me.
->
-Ok.
+ drivers/gpio/Kconfig           |  6 ---
+ drivers/gpio/Makefile          |  3 --
+ drivers/gpio/dev-sync-probe.c  | 97 ------------------------------------------
+ drivers/gpio/dev-sync-probe.h  | 25 -----------
+ drivers/gpio/gpio-aggregator.c | 38 +++++++++--------
+ drivers/gpio/gpio-sim.c        | 49 ++++++++++++---------
+ drivers/gpio/gpio-virtuser.c   | 30 ++++++++-----
+ 7 files changed, 70 insertions(+), 178 deletions(-)
+---
+base-commit: e77a5a5cfe43b4c25bd44a3818e487033287517f
+change-id: 20260327-gpio-kill-dev-sync-probe-4027fab0c0a6
 
-> > +#define DRCTL_DRV_PIN_MASK(pin)        (GENMASK_ULL(1, 0) << DRCTL_PIN=
-_SHIFT(pin))
-> > +#define DRCTL_PUD_PIN_MASK(pin)        (GENMASK_ULL(3, 2) << DRCTL_PIN=
-_SHIFT(pin))
-> > +#define DRCTL_SMT_PIN_MASK(pin)        (BIT_ULL(4) << DRCTL_PIN_SHIFT(=
-pin))
-> > +#define DRCTL_SR_PIN_MASK(pin) (BIT_ULL(5) << DRCTL_PIN_SHIFT(pin))
->
-> I will drop DRCTL_PIN_SHIFT(), and replace it by "((pin) * 8)" while
-> applying, for consistency with e.g. PFC_PIN_MASK() above.
->
-Ok, thank you for taking care of it.
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
-Cheers,
-Prabhakar
-
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> i.e. will queue in renesas-pinctrl for v7.1.
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
->
 
