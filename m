@@ -1,103 +1,103 @@
-Return-Path: <linux-gpio+bounces-34245-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34246-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yGDeNPRcxmm+JAUAu9opvQ
-	(envelope-from <linux-gpio+bounces-34245-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 11:33:24 +0100
+	id CH5zOApdxmm+JAUAu9opvQ
+	(envelope-from <linux-gpio+bounces-34246-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 11:33:46 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81FC83429AE
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 11:33:24 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F9693429BD
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 11:33:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 86070306E010
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 10:31:49 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2748D307ECF6
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2026 10:32:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 653F23B0AD0;
-	Fri, 27 Mar 2026 10:31:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 903C43BA223;
+	Fri, 27 Mar 2026 10:31:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SmWbzjcZ";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="S8gzVmVE"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pYDhOn8G";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="COn68SCa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF28F3A8724
-	for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 10:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3793B5832
+	for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 10:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774607496; cv=none; b=jX/AF/zO91iq4pdP16iUA+o13DRzQ+Ve340uEokxx+Y76F/+7391hcAPYAQHBkkt8lsU1gnrnpbCnZo2nRMY+o2hQXpkJ6xP1IqPSup/l9L43Y1hpQbEfmRdmy+NPBp1E99O+fQ8gY/NR1taxFUczS8TU2fVDZPI5REDeDUeA78=
+	t=1774607498; cv=none; b=N8ERYz8+1jf1NV2UBZLNo1E9luRIPXVBnedIU5Nuzw3OdJeG4hMVlWxFhoyd0pw5pOOXZa7usj4HyyBxLRHXU31EUCPnkoYNJYbRAjJ/V3N/9HdlT9OO7pF0KtGWhEK0V+juBDfv7p7lqQKkGvA7DAXpNl6wM+YHtIA2w/E8iLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774607496; c=relaxed/simple;
-	bh=cvNWbcJEPu+X1KGHjftcUVfo5YRpAWfGsNOyThkztWg=;
+	s=arc-20240116; t=1774607498; c=relaxed/simple;
+	bh=q/vXhHDoFJqrdpA76UB07ULdvhJqcsq8Sba4mXCbT/w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mNobzcWd+yzc1DReYtfkqThp2H9QOONpO1LREuO1KpitYhibPwTzvOHX1uymNXAJ+5OPAUnxL2P3gqn9lrE27zB+qV6eKtlRB55FDZJKVUgN7NiJqkE6MdZ9rzaJ9Ez2Lb6f9xLS+tkFDepCVvuBZziCnYKzSGOgKBYqKU74/as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SmWbzjcZ; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=S8gzVmVE; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:Cc; b=GGP2rQbcM/u5W5Rf7xsV1wymrYX4BnP86qXuUb9IwdcwLSqZJ7y2taeIPfyEzGF7y+/zDaBeRVeTTkx6VALswI5FHaSJMX9ADts+O7MIk9DPE+CkMrDyTUAcb19gtFq0t0d8hiHIhKnSozEyn5P8zJVBACDyE2GM9uhORr9ZIsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pYDhOn8G; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=COn68SCa; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62R6vqId298588
-	for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 10:31:33 GMT
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62R6wwMG2846540
+	for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 10:31:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	kRfsS1H0OfXi/OKjLlmM2I3kRnvciT3vVPcYJHJok3w=; b=SmWbzjcZVkYgjVN9
-	MLM6h3QZF2ZmScn8YT9cO58rAtkjmvg1Jjvqi/e1sspoHrzJ+rbL3ixNk/TxWnku
-	nNeJb7DsuPsBWgRORmotZkUpGPjU72EgSvwDJYnERTM/TSXJ7IWMxEn0IJvqavu4
-	MJ/1dwlaHiFbBx7wh3AjU+N9FgcyTRyK0ay3PU6H2iJDcgKyeHWnvztwlggTJ6tv
-	tAYyHUTmxIjrZvWkOcZZllTXW55LujWvY4vJrJlRSHB6N76JzF0u8sAy6Szhnjhd
-	MdCkaIznZAtpScleTJTPBNeTf+4v8x1goUbm79in71FB5cMBAtIOXYLo/EVCMTPX
-	WjtFog==
-Received: from mail-vk1-f197.google.com (mail-vk1-f197.google.com [209.85.221.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d5bd8tpp0-1
+	3/k4engZPj/RiobDJAVbe81ltf6mEEKXLxF5f98ke8s=; b=pYDhOn8GWhyV8LJM
+	Vc/eiIkKRgmp7Yzw0sgSZAwY3X5izJ0alPrl8oLLpd6hv0qZQ936ayM0R8gF3B0Y
+	PyvJOf1uT7DtQmxl02puaAlIAUF1l1HV59J18O+DJW2vxj8Y/lRVUOa+xrH7+MZh
+	FFL4+q6p+89bzUDVz9MZQMb4q4dG6CyVrAvROzP8Yf5k8Hb54Yn6fOMJ9enjv7OF
+	Gnob3OuRIPaserW+nPHOkb0kbxBAEyOkp8RyVKRX70p3nXAfEmEs1SJkD7AP1rE0
+	qxTko1xH5GYT0zXIzmatJr50Dd2pdYyvwJ1Sd4ZFrEIxnxsLIaJze2AsJIZXgbs9
+	nEIupw==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d53eqmmv1-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 10:31:33 +0000 (GMT)
-Received: by mail-vk1-f197.google.com with SMTP id 71dfb90a1353d-56b7482a2easo1162314e0c.1
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 03:31:33 -0700 (PDT)
+	for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 10:31:36 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-8cfbeca17b2so793060585a.0
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 03:31:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1774607493; x=1775212293; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1774607495; x=1775212295; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kRfsS1H0OfXi/OKjLlmM2I3kRnvciT3vVPcYJHJok3w=;
-        b=S8gzVmVEZRrpPlGo1eskq6O+jkJXdukx8FlI1LxwxCEOa9FYsPgTAWrwW4m5P+aDbR
-         hp3RWqxxwWjwiXf9E29xllAlWlMxtvzo4WacS1Psay84SBOGVOCA3ACMU3+F4k+gwldy
-         Mtb585lwSuZ6Xfwkd7ZuCKoU3maoXfv3N4BhBhY6wY4Cae0TKjpdkEFyONqNZYdfPAFr
-         jzspeuLTzSeLQyxSBOnw87yZouAYMAK/nmKLuFaCyKHxtcAedyiNv9g0KeOs1BqE458W
-         PN11bSjm3GBVBW1bMdMyQ7RkdhfM59RC5WC2PoYBV74GlkpsdKnk7ygPImGWK5watg5y
-         pU+g==
+        bh=3/k4engZPj/RiobDJAVbe81ltf6mEEKXLxF5f98ke8s=;
+        b=COn68SCaGxHwUJ6ao52vv85WkKNAmSMivdIOZWlTrVNVBjIMaBknvbIxV8A2my9apl
+         ypVXwqNhETuQ9BCpe5zAs8piS9Clpi/0pjLFyMvdgVxlokmblFhM+nvGMmEXt0E6a73/
+         9LuKGWPRYvSO67IbpScehv+JdBM/1ul4EGBdV0XAnPbMpeKZUBfiSRRs04id0x0sCAmG
+         3KkiKOqhtKigsdont41A8V5Yk8gAhugIe3X+/jUYFMJiH7eWwwi3uEDwbCDOVmrp9Ktl
+         XVgQxzPV1jlOieJ/4mYTBGXLXbyCvJw3Hgf5CvleFP44pGuMVWwDLcM2O/upPbwX3Ixi
+         Cm+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774607493; x=1775212293;
+        d=1e100.net; s=20251104; t=1774607495; x=1775212295;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=kRfsS1H0OfXi/OKjLlmM2I3kRnvciT3vVPcYJHJok3w=;
-        b=kb1J+AyXrLk03fbDdKyB35sKcYqDvl7GwSGy14WBF9YBw8CxKbvF/GdMaPdgxmdgfy
-         r/jfTDuMMQO7ne0vA9mVKmvSTxQ6tCVxFR6NUSQyfT2CBTgks9r3VWH3YIdd6EbvX+aB
-         HbuNHD3J77LxWXHembUf7WqusKP36m1bjCEVurInBpAncvPymO5p1/AQaTpHpLwdtE1z
-         +t3RkN6UmnKncZXh1JJvYEODSrzzEWSaBhIDQXjrcGD3LHwFRKWOdLu8rOsB+Tee0iM4
-         a5JmtkSqumSZ73DFwnfSFs6WDmh/qe26RdBkG9/vxFO24JAxxPvKQX8hmJv+NJDkV72o
-         nEhg==
-X-Gm-Message-State: AOJu0Yzb1kYKDlEdgoVLoa7rvo5Qas0lLL3Y5zSj3CwsiDcZpqObbY4x
-	D+Ytv9VCbiGPgJqKQilO6uPjnG41B0W/1JlwzYTvoE2M0jz1lX/FpYtXSLmEDBY6MdKqTvqMOt8
-	DPkdTgv9sLDpu9F1Pjrdct2+0bkdhwFG9ocY/Ku+EIRej/jy4Nk/POxciHoKO4wsLUDhCHpf2
-X-Gm-Gg: ATEYQzwnctR3hUEKpR5oWeC6py6F/4IOkKPeN6LlymAhZFD4Tv5JkN8epQv5tHOFit3
-	H8VHjXWc9S1xuk8KmCjzi1Cl2jJ1QHIHiamDZWS7msijp6Xtty0YFmWWuJgJzmggVcdkiTuu81h
-	/+nr9S+nVhS/0SIs7fR0vAZ8xDRn6rwUFRy2IC5U12eqj58BYT+NGDVy+rRtEFjcPru5AJGJ0fN
-	l5JZDuRp9m6V662t8QYqz2pBHoXxAPoSfDlQL0yBmMZFkbOB6rUid+9Uye+f4LJ1P2LXS2bgwzS
-	gDsHdkMrbldakFvSqty27lg6ccb0i9LD0DG0p9a+lUxmWmBuLkRH6ThTDM7yRFsbFNcP4xSjY85
-	9uv7LLElOPFEkWH0P3aZZuRxDafhI4Yxj1mf3pFu4nF6IdOKD1lw=
-X-Received: by 2002:a05:6102:8026:b0:602:b1cf:80d5 with SMTP id ada2fe7eead31-604f9070848mr641320137.8.1774607492813;
-        Fri, 27 Mar 2026 03:31:32 -0700 (PDT)
-X-Received: by 2002:a05:6102:8026:b0:602:b1cf:80d5 with SMTP id ada2fe7eead31-604f9070848mr641306137.8.1774607492316;
-        Fri, 27 Mar 2026 03:31:32 -0700 (PDT)
+        bh=3/k4engZPj/RiobDJAVbe81ltf6mEEKXLxF5f98ke8s=;
+        b=Ryf150kNmt+gU8SQT5yyU9dNnHCPd7AlfcTcLidFk7/cigN1XiQRCg0Ef+LpKq2rpj
+         z4GDF+u6MSQghmBOxyMDw1cJtxEg4kIBzZRIN35o7AOjoTWPOPz7OoPta7/B5KrQYefO
+         ywPcvUoAOsbutjLDOj4UHi8B5JJL4HMFSkfkRFFIg17fbTzgCKGUIqdP/M93eOGOyrcj
+         sn5k0g4glnMaIzfcmDdqIbMcmwoSXflnJiFAmLucvcSc7o39eClPoFMhVaIR7o8jls7n
+         brnK4yAqlgjKKjQjpyyCGBmjE4eOPuceXPCGHUKdnZ+qJ9syQ1k07eV8QFplTZdCD0Zv
+         4JWg==
+X-Gm-Message-State: AOJu0YzsraExc9z3Xv9Z0UZVyznOE+gMB8E13J1mIU4k0QoXCVtxo3zm
+	SyjaNLWdYL+ZD4PrDw0odsx3xCMdTAINc7t9yeHoEPI7afMfZmiR0PKNOi+tv39alYpOTm/jXbb
+	7mUaV2maD11/B0XE60t+5kQHQ6aVHQKR1c4J2sZ3XgjXwvPnJWGo/wX12fkkDGE97
+X-Gm-Gg: ATEYQzyD+ccJsjk5664T20r3nEGR5FSm6vUJmSSgysKVQo2ear3wcPHIt0kyZYnUhu1
+	no/Zj/S7Ad97IFX41Agkl0cBE710gsGNCBMZq5isMheDAakBHNhncxb7WYe0aWyUh6xsuEP0lCJ
+	p0psZdlZxZnGVCmsp+CaIb7KzrDnrMPQswDhIuEids/cZaPjKI9SHShu1R/B4Tl7wbwaBfwXjLX
+	4mImNY7t4YTQLO2jD/yAIFD+ME+fcDoLiwLi9lKKdBCcUJ0zth8LqxhG9vbcABr4F/RkU8la6t+
+	9zZt+YdKWoVoVp3Z8hPFcUycM3MvssBbGVT1gjsTkSRutI3FW86ezySH3oNjTyfEL0MqY2dZgSm
+	zZt0x4T9vfC8Ej+BfgO+6ngM+e1Zy3jJsOjdupmIQ93MSCDgGheI=
+X-Received: by 2002:a05:622a:14b:b0:509:144a:43bd with SMTP id d75a77b69052e-50b9938983bmr59466141cf.3.1774607494596;
+        Fri, 27 Mar 2026 03:31:34 -0700 (PDT)
+X-Received: by 2002:a05:622a:14b:b0:509:144a:43bd with SMTP id d75a77b69052e-50b9938983bmr59465761cf.3.1774607494087;
+        Fri, 27 Mar 2026 03:31:34 -0700 (PDT)
 Received: from brgl-qcom.local ([2a01:cb1d:dc:7e00:94ec:a3a:baff:9151])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b919588e6sm13382138f8f.16.2026.03.27.03.31.30
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43b919588e6sm13382138f8f.16.2026.03.27.03.31.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2026 03:31:31 -0700 (PDT)
+        Fri, 27 Mar 2026 03:31:33 -0700 (PDT)
 From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Date: Fri, 27 Mar 2026 11:31:12 +0100
-Subject: [PATCH 2/4] gpio: aggregator: stop using dev-sync-probe
+Date: Fri, 27 Mar 2026 11:31:13 +0100
+Subject: [PATCH 3/4] gpio: virtuser: stop using dev-sync-probe
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -106,7 +106,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260327-gpio-kill-dev-sync-probe-v1-2-efac254f1a1d@oss.qualcomm.com>
+Message-Id: <20260327-gpio-kill-dev-sync-probe-v1-3-efac254f1a1d@oss.qualcomm.com>
 References: <20260327-gpio-kill-dev-sync-probe-v1-0-efac254f1a1d@oss.qualcomm.com>
 In-Reply-To: <20260327-gpio-kill-dev-sync-probe-v1-0-efac254f1a1d@oss.qualcomm.com>
 To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
@@ -115,44 +115,44 @@ To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5044;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3646;
  i=bartosz.golaszewski@oss.qualcomm.com; h=from:subject:message-id;
- bh=cvNWbcJEPu+X1KGHjftcUVfo5YRpAWfGsNOyThkztWg=;
- b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpxlx7/LwnXz655ObLQ1uxB4C2yqxOC9hpMFgFZ
- FQSh4Sn4uqJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCacZcewAKCRAFnS7L/zaE
- w7K9D/9OPshfbXmeEOYpJy4frYd3hQfDF7xgiCMX4+XAL/LpWN+rvWWIls7yN+emtf9OAZ7IKpm
- Xoh3Grl56GxlBaDpSXfnCNOhIgHUJTgPVsnsGFwr57fz0mcZrRB4hrlu+bXZwXCQsG6raVFlqsv
- TmNBSjmH/7DSP71y7OmnC0ZU+KKr8wZo5O7p5U8xuhA36wzLPx5GgWkJo7PWIN//ie686kK/Fse
- WcDHRnAAn2/fUaE6WpeUz7wKTcwtQCavkhTRCa168yKWcrJ1Gpghrq7+lBVGHvd8EAJshd38KQH
- ie0P6LYygePSh1yWcRKpEwWLv0XFAFL90sG62NkcyEe0qeWg6kYcUgzOS797bmn2PUEQpF3cOpV
- nO2xU/JgVnP7k1JaOuLGIFhNehwvUsewV9k/On23skZxhGgwiuddBqE/AJ9YvMu/RTUHaX8tvxG
- /dYoiFalySxv1a4BbM4voU70I145sx7+8ZVmO0mCaO+VvbIcUKG2tZgIJEjepZsdiWNmqRlXTAi
- 9V9zVQgMt0AgOOhuUahmdjrC3YT0s3KkSwP8S5VL4idlhH8F1tBpgHPuMi9bBtjKP1JiuMZRcyY
- Cb7IwuaIo7dGR+SQG7HkZY3udgGCkoL7VonU5SXkMjpPLSWOERRfTxVH4XrSW/Fwd9xLwIeuYn7
- sFqe58CYYuURMeg==
+ bh=q/vXhHDoFJqrdpA76UB07ULdvhJqcsq8Sba4mXCbT/w=;
+ b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBpxlx8ngUkGTup2/Q6rOFiB8rh7VNTI/rHOyn5Z
+ ygK8SZ8qi6JAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCacZcfAAKCRAFnS7L/zaE
+ wzT4D/4vtUnZRLGALIT9cgohlC+n+TmdnZZ95emyzO3t+Vdm54HMUu4Mj553eFmFauAJ1PnrETX
+ YPFPEnQNuQo3F9I54S48dP++uXRPmd35Ug2S1P9bZOz4B3QheCo21EnlSVIjPZjQjRtcctDOlqh
+ fhe9y8qLaK4E9Ez2iekLGEhURDzTErhfShzAD49NRPcpPbOtYMrzGBaaLmV+KrnAFYSPIRAWmqx
+ 8KkNfYI1lMAeEjVc5tmfJJF5N3ouz0NVeNnYL1SxTVPO1GcJS4Gy51Hi73T/KTIjLc6D0ClNUrV
+ soc31xfGiULvnISjRhSH2jduwutJBfmVdGP/LsOZ2FEDKpMl1kC17/k1oZseummCxGz9indWEw3
+ th2hy8dBOPyko01U63hX1HFntoViGNORAFIEHo86BzT5l4fW0ig0c8Zkvd4Yh6zDdgJ1JdKiZxr
+ uOeoq7gqMXDi4uW1MO6qq/W0L/wLmaTIsnUyNohE57i2Z6/D3HhZQKVy8Ww98BgOkVrbMV9M7GM
+ hswxWGwnIq3EVVsTVnOfbjTejySYuVCgOlG5QBgsB6fUR0c4DOXTPLaFGUzCKvAcu5kwSU+c0Po
+ QcUkDblbdKuHOqT94NNegxod7LCqgR/a/5Mb63p7EaV7BHyPvITW/0JzWBbkO8Y6ufLHCf7MbkG
+ hUqfYaSf9ahbtDA==
 X-Developer-Key: i=bartosz.golaszewski@oss.qualcomm.com; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI3MDA3NiBTYWx0ZWRfX2Pztm+cbfyQb
- hWR7CMG9EBF2gh5EQVpSzzp8atFVxdiNvtRwPYFEUqG6jePjeIFsZS0RIRrwiafDCNMn7H3w2I2
- qU0bk06sbBjlyZLJEY7Mxs9HF2fEwpI8IyomIkL+fcq88MJGBwMPMxDzcTC9enVOA9V1KlHBXlt
- oGhdb2cF3hfdxRtNM4n8D5rJSv7fnJW3ACKCUDDQoFw4BgM+XM9bvJXZx+DyA1PO3HvSEr4Tg1Y
- jNF30gPlSASb9LCh5XDeOF95K8WgDCMK+PI8WRia/CHhwpPoD0qTRSUO1clydHImIldl7urwEBA
- +3UzNCBprWpP1C9sSFDAmKdB1Ug00lbgdj430qve2XRva3JfrMiD24NyVMAeUP8zBtKpOeu6J6S
- q+RsW0IKvb1kgi2qrOJZJqJqRoReg0kA7iX0jt+I8u6cP9u4mb3nwyKph6IV8w7J5RABKMywtwk
- F4yI9hara/GdH9YbP3A==
-X-Proofpoint-ORIG-GUID: c-Qb4Cx1W8wJI_Hw_7dALElEjzT2X2vn
-X-Authority-Analysis: v=2.4 cv=BZrVE7t2 c=1 sm=1 tr=0 ts=69c65c85 cx=c_pps
- a=JIY1xp/sjQ9K5JH4t62bdg==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzI3MDA3NiBTYWx0ZWRfX3PNPCN3Js99v
+ +R6gBUcL7sbc3NHx5RGxtRGLA4vlt9N+gAnM63PPSkvIkKNxFENpjPHyvdLQjEVUVlg/QSsoC4V
+ v0dC3S8+8EpZ7sPH7xxVEj7lzxJwCeNtJdCEUEz9CMzC8VYItV/OAnsHm4lmt+3sif5ZbPpneuT
+ pChAXyYam+D39koVsj/pXdHuQk1Lb0AvY80fToH0oUUt+JOPvZe4waU8CQjX2HUfMW7OhK7lyQZ
+ Oe536QiwR5qwjsq7cjiDQap73EOCFBLtYF+T0oOs7OiDuxh+whvS6iq31DTxeMkJjEbBQ/HpVl8
+ 9W5IRweHwcdXxx7Mk+8BrAV39p0X24oWB9iHWIpl0tWu4tOZ2pnbYHGND4dWlrLMtwhakBM0gPu
+ C6kz/jxW4v6AFA3Ua1R0lr6KhfhA4Lgf7RUoBKDdwZmeKy4KkG+IMaS5A75+1xtGnZxAhkkcJJ6
+ ummR8t1tV/4nsDT0fRQ==
+X-Proofpoint-GUID: FCfzlyV3taBf-3qDaIgJvNatsEE_zPG-
+X-Authority-Analysis: v=2.4 cv=S4bUAYsP c=1 sm=1 tr=0 ts=69c65c88 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
  a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22 a=EUspDBNiAAAA:8
- a=DQLobAsLdNT4mewj-18A:9 a=QEXdDO2ut3YA:10 a=tNoRWFLymzeba-QzToBc:22
-X-Proofpoint-GUID: c-Qb4Cx1W8wJI_Hw_7dALElEjzT2X2vn
+ a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22 a=EUspDBNiAAAA:8
+ a=eBvw1o6kvFRJjbXN8kYA:9 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-ORIG-GUID: FCfzlyV3taBf-3qDaIgJvNatsEE_zPG-
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-03-26_04,2026-03-26_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 lowpriorityscore=0 adultscore=0 priorityscore=1501 bulkscore=0
- phishscore=0 clxscore=1015 impostorscore=0 spamscore=0 malwarescore=0
+ priorityscore=1501 malwarescore=0 lowpriorityscore=0 bulkscore=0 phishscore=0
+ spamscore=0 impostorscore=0 clxscore=1015 adultscore=0 suspectscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603270076
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -160,15 +160,15 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
 	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:dkim,oss.qualcomm.com:mid,qualcomm.com:dkim,qualcomm.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:dkim,qualcomm.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,oss.qualcomm.com:dkim,oss.qualcomm.com:mid];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34245-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34246-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
@@ -176,13 +176,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 81FC83429AE
+X-Rspamd-Queue-Id: 8F9693429BD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
@@ -192,145 +192,116 @@ wait for the platform device to probe.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 ---
- drivers/gpio/Kconfig           |  1 -
- drivers/gpio/gpio-aggregator.c | 38 +++++++++++++++++++++-----------------
- 2 files changed, 21 insertions(+), 18 deletions(-)
+ drivers/gpio/Kconfig         |  1 -
+ drivers/gpio/gpio-virtuser.c | 30 ++++++++++++++++++++----------
+ 2 files changed, 20 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index a603406cb2e53a89e1da6214a3c1c256d5246be7..09db777938f3723e5dbd895dd1b30d39a21a2da1 100644
+index 09db777938f3723e5dbd895dd1b30d39a21a2da1..56a7ddaa95eac07ee4f7b755335595805a316319 100644
 --- a/drivers/gpio/Kconfig
 +++ b/drivers/gpio/Kconfig
-@@ -1984,7 +1984,6 @@ menu "Virtual GPIO drivers"
- config GPIO_AGGREGATOR
- 	tristate "GPIO Aggregator"
+@@ -2072,7 +2072,6 @@ config GPIO_VIRTUSER
+ 	select DEBUG_FS
  	select CONFIGFS_FS
+ 	select IRQ_WORK
 -	select DEV_SYNC_PROBE
  	help
- 	  Say yes here to enable the GPIO Aggregator, which provides a way to
- 	  aggregate existing GPIO lines into a new virtual GPIO chip.
-diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-index 9adf3228c12a84e098ab7ffd543fcad58951ba99..5915209e1e2168b0932de4d16aff38074b889c2b 100644
---- a/drivers/gpio/gpio-aggregator.c
-+++ b/drivers/gpio/gpio-aggregator.c
-@@ -32,8 +32,6 @@
- #include <linux/gpio/forwarder.h>
- #include <linux/gpio/machine.h>
+ 	  Say Y here to enable the configurable, configfs-based virtual GPIO
+ 	  consumer testing driver.
+diff --git a/drivers/gpio/gpio-virtuser.c b/drivers/gpio/gpio-virtuser.c
+index 955b5efc283ef565f8c1cfcaccd6d653f2f78f19..fe0eac920ced323926b2bc83ca0a2eb5f85c2154 100644
+--- a/drivers/gpio/gpio-virtuser.c
++++ b/drivers/gpio/gpio-virtuser.c
+@@ -36,8 +36,6 @@
+ #include <linux/string_helpers.h>
+ #include <linux/types.h>
  
 -#include "dev-sync-probe.h"
 -
- #define AGGREGATOR_MAX_GPIOS 512
- #define AGGREGATOR_LEGACY_PREFIX "_sysfs"
+ #define GPIO_VIRTUSER_NAME_BUF_LEN 32
  
-@@ -42,7 +40,7 @@
-  */
+ static DEFINE_IDA(gpio_virtuser_ida);
+@@ -978,7 +976,7 @@ static struct platform_driver gpio_virtuser_driver = {
+ };
  
- struct gpio_aggregator {
+ struct gpio_virtuser_device {
 -	struct dev_sync_probe_data probe_data;
 +	struct platform_device *pdev;
  	struct config_group group;
- 	struct gpiod_lookup_table *lookups;
- 	struct mutex lock;
-@@ -135,7 +133,7 @@ static bool gpio_aggregator_is_active(struct gpio_aggregator *aggr)
- {
- 	lockdep_assert_held(&aggr->lock);
  
--	return aggr->probe_data.pdev && platform_get_drvdata(aggr->probe_data.pdev);
-+	return aggr->pdev && platform_get_drvdata(aggr->pdev);
+ 	int id;
+@@ -1002,7 +1000,7 @@ gpio_virtuser_device_is_live(struct gpio_virtuser_device *dev)
+ {
+ 	lockdep_assert_held(&dev->lock);
+ 
+-	return !!dev->probe_data.pdev;
++	return !!dev->pdev;
  }
  
- /* Only aggregators created via legacy sysfs can be "activating". */
-@@ -143,7 +141,7 @@ static bool gpio_aggregator_is_activating(struct gpio_aggregator *aggr)
- {
- 	lockdep_assert_held(&aggr->lock);
+ struct gpio_virtuser_lookup {
+@@ -1342,7 +1340,7 @@ gpio_virtuser_device_config_dev_name_show(struct config_item *item,
  
--	return aggr->probe_data.pdev && !platform_get_drvdata(aggr->probe_data.pdev);
-+	return aggr->pdev && !platform_get_drvdata(aggr->pdev);
- }
+ 	guard(mutex)(&dev->lock);
  
- static size_t gpio_aggregator_count_lines(struct gpio_aggregator *aggr)
-@@ -909,6 +907,7 @@ static int gpio_aggregator_activate(struct gpio_aggregator *aggr)
+-	pdev = dev->probe_data.pdev;
++	pdev = dev->pdev;
+ 	if (pdev)
+ 		return sprintf(page, "%s\n", dev_name(&pdev->dev));
+ 
+@@ -1450,6 +1448,7 @@ static int
+ gpio_virtuser_device_activate(struct gpio_virtuser_device *dev)
  {
  	struct platform_device_info pdevinfo;
- 	struct gpio_aggregator_line *line;
 +	struct platform_device *pdev;
  	struct fwnode_handle *swnode;
- 	unsigned int n = 0;
- 	int ret = 0;
-@@ -962,12 +961,23 @@ static int gpio_aggregator_activate(struct gpio_aggregator *aggr)
+ 	int ret;
  
- 	gpiod_add_lookup_table(aggr->lookups);
+@@ -1471,12 +1470,23 @@ gpio_virtuser_device_activate(struct gpio_virtuser_device *dev)
+ 	if (ret)
+ 		goto err_remove_swnode;
  
--	ret = dev_sync_probe_register(&aggr->probe_data, &pdevinfo);
+-	ret = dev_sync_probe_register(&dev->probe_data, &pdevinfo);
 -	if (ret)
 +	pdev = platform_device_register_full(&pdevinfo);
 +	if (IS_ERR(pdev)) {
 +		ret = PTR_ERR(pdev);
  		goto err_remove_lookup_table;
 +	}
- 
++
 +	wait_for_device_probe();
 +	if (!device_is_bound(&pdev->dev)) {
 +		ret = -ENXIO;
 +		goto err_unregister_pdev;
 +	}
-+
-+	aggr->pdev = pdev;
+ 
++	dev->pdev = pdev;
  	return 0;
  
 +err_unregister_pdev:
 +	platform_device_unregister(pdev);
  err_remove_lookup_table:
- 	kfree(aggr->lookups->dev_id);
- 	gpiod_remove_lookup_table(aggr->lookups);
-@@ -981,7 +991,8 @@ static int gpio_aggregator_activate(struct gpio_aggregator *aggr)
+ 	gpio_virtuser_remove_lookup_table(dev);
+ err_remove_swnode:
+@@ -1492,8 +1502,9 @@ gpio_virtuser_device_deactivate(struct gpio_virtuser_device *dev)
  
- static void gpio_aggregator_deactivate(struct gpio_aggregator *aggr)
- {
--	dev_sync_probe_unregister(&aggr->probe_data);
-+	platform_device_unregister(aggr->pdev);
-+	aggr->pdev = NULL;
- 	gpiod_remove_lookup_table(aggr->lookups);
- 	kfree(aggr->lookups->dev_id);
- 	kfree(aggr->lookups);
-@@ -1145,7 +1156,7 @@ gpio_aggregator_device_dev_name_show(struct config_item *item, char *page)
+ 	lockdep_assert_held(&dev->lock);
  
- 	guard(mutex)(&aggr->lock);
- 
--	pdev = aggr->probe_data.pdev;
-+	pdev = aggr->pdev;
- 	if (pdev)
- 		return sysfs_emit(page, "%s\n", dev_name(&pdev->dev));
- 
-@@ -1322,7 +1333,6 @@ gpio_aggregator_make_group(struct config_group *group, const char *name)
- 		return ERR_PTR(ret);
- 
- 	config_group_init_type_name(&aggr->group, name, &gpio_aggregator_device_type);
--	dev_sync_probe_init(&aggr->probe_data);
- 
- 	return &aggr->group;
+-	swnode = dev_fwnode(&dev->probe_data.pdev->dev);
+-	dev_sync_probe_unregister(&dev->probe_data);
++	swnode = dev_fwnode(&dev->pdev->dev);
++	platform_device_unregister(dev->pdev);
++	dev->pdev = NULL;
+ 	gpio_virtuser_remove_lookup_table(dev);
+ 	fwnode_remove_software_node(swnode);
  }
-@@ -1471,12 +1481,6 @@ static ssize_t gpio_aggregator_new_device_store(struct device_driver *driver,
- 	scnprintf(name, sizeof(name), "%s.%d", AGGREGATOR_LEGACY_PREFIX, aggr->id);
- 	config_group_init_type_name(&aggr->group, name, &gpio_aggregator_device_type);
+@@ -1723,7 +1734,6 @@ gpio_virtuser_config_make_device_group(struct config_group *group,
+ 				    &gpio_virtuser_device_config_group_type);
+ 	mutex_init(&dev->lock);
+ 	INIT_LIST_HEAD(&dev->lookup_list);
+-	dev_sync_probe_init(&dev->probe_data);
  
--	/*
--	 * Since the device created by sysfs might be toggled via configfs
--	 * 'live' attribute later, this initialization is needed.
--	 */
--	dev_sync_probe_init(&aggr->probe_data);
--
- 	/* Expose to configfs */
- 	res = configfs_register_group(&gpio_aggregator_subsys.su_group,
- 				      &aggr->group);
-@@ -1495,7 +1499,7 @@ static ssize_t gpio_aggregator_new_device_store(struct device_driver *driver,
- 		goto remove_table;
- 	}
- 
--	aggr->probe_data.pdev = pdev;
-+	aggr->pdev = pdev;
- 	module_put(THIS_MODULE);
- 	return count;
- 
+ 	return &no_free_ptr(dev)->group;
+ }
 
 -- 
 2.47.3
