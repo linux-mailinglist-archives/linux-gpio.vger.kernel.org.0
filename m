@@ -1,149 +1,165 @@
-Return-Path: <linux-gpio+bounces-34342-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34343-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iM28GrI5x2n/UQUAu9opvQ
-	(envelope-from <linux-gpio+bounces-34342-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Mar 2026 03:15:14 +0100
+	id WfaeI/iZx2nsZgUAu9opvQ
+	(envelope-from <linux-gpio+bounces-34343-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Mar 2026 10:06:00 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E66BB34D09D
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Mar 2026 03:15:13 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFAEB34DE24
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Mar 2026 10:05:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0672F3040AB8
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Mar 2026 02:13:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2A1EC302D52A
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Mar 2026 09:05:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61241358362;
-	Sat, 28 Mar 2026 02:13:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C60A5313272;
+	Sat, 28 Mar 2026 09:05:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHUJAxHL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YqPmzdDo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A965352C22
-	for <linux-gpio@vger.kernel.org>; Sat, 28 Mar 2026 02:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3147B2D594F
+	for <linux-gpio@vger.kernel.org>; Sat, 28 Mar 2026 09:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774664019; cv=none; b=obz21yLXyZPJtYkK1/DyMY6qaNOhXDs99qhD7+Z3gwuM/yLRnIz2lTEcA4OaLVPP6a1ZeYCTwjfb4VEmdLJCsVggBHdaDbcSiKHFfKXZqK6r0ApA0MGiTcsM2KG9yfrur9SAjKBULPwDuXnKnoIGcL2FE4VFRBuU6vFl6FT/W2g=
+	t=1774688755; cv=none; b=iH8mm2vsy5tvebKS/fS7BEEuqqdCVXjDFsUmw35N7uO6P9xBeP39QZpQv7KeOkMyMQRKSNV288XbnnIgQuzn72wPDtsXYUj7Y7nJEu9YuA/w/NLOURRcoi53hfPIh7GHAbbi1xXnxN6mhC+IrxlKt7gU3EIua0PFLQfjy6xP2j8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774664019; c=relaxed/simple;
-	bh=ATKWFQRUP23topNj63SfFnspXkMmp8YWIXAjBnFqKNM=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QENyC0Wb1HtVXg373/Ccrg0XenEWUgq8mi/ADg1fyHA1j1RExIBEnQFr85LYBdkiqWi4uWgpS2PDHNevugE8HqeEc8uqsJX2UZrZKz4sMjIfNggeNA59MnfoQkvrDxVZDKAE6fkU3l/9MtXvn8OWKeSrmo+wDeL7oK0jHs8vxyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jHUJAxHL; arc=none smtp.client-ip=209.85.222.174
+	s=arc-20240116; t=1774688755; c=relaxed/simple;
+	bh=MdQfG1i63z2+B8h+hGMucXuxr1uS0joRSYii9egx/pQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Oq0WjU7hfAaeDrHOl31LZQfRvs/HZ9znXkDq7x5WxNmd3vADBhXlrAA4P5gcCLtqSYGdaeC1RnY5L+8B/+CAWStCtEfmwP9562h5TB3UB7otUN0rxvZMsitNZq+lc0eep0Q71x6M5yBXqY33D3JdrCHeQuuUb72jhlJ+SpcoCmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YqPmzdDo; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-8cbb6d5f780so315206585a.1
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2026 19:13:37 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-48538c5956bso28261355e9.0
+        for <linux-gpio@vger.kernel.org>; Sat, 28 Mar 2026 02:05:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774664017; x=1775268817; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0SqqMgKQDeGv0TpX+c488DpvFeTC5TGIxUu1Utv0hBs=;
-        b=jHUJAxHL6/w0zxS/i0sdTZ30Dxt3FV03CH8/TmZlNa2SB5UNZ+N19Py5j2O/3wRwqw
-         +EuEfU7LB0FsdFf9CA4S4rrhAKtcrYFtp8EYdztw5kN+avsNBLKn2VOn61U9pjp82ZaV
-         GGmjwAa1PUNqi7/tQmzsDMDFDOSoQppneGZ1AQEcoArDg4JM+mzvut/ZAVv2pt87sVkq
-         K7WAqSE/BReGP5MooJxBwJW/KiRdQti7GiEb+/AwJNWs24do0kDIdIwIM5VIyAlusvEh
-         NUq/t0bCVg7QNXExxxRH0qm09OdznNM24kp9Ry/jKhVK2inwximQ+ozjWV7o352Ih7F9
-         Shmw==
+        d=gmail.com; s=20251104; t=1774688752; x=1775293552; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mrtALhRQ+/dB+7gUCD8Q9TtNE8HoAMbogKYxXP9zCuc=;
+        b=YqPmzdDoWVyGbzubSdUmNkPvOMkfpJvQL+ELeDRnMBM3wZcYkJhLsb67NVCv2gKb0E
+         v6tMqr43iMvBOZeyuAEB+yf5sHK84JV6daMkv4LQ9igsqE7pNS6abQre8XortyEKQa3Z
+         SXMZcDCtPelvJCXEy4STLdd5QJqlsF+bUYkqkNqWEfgnvvXLKyYXG9DZE1VqfZ0sgB6Z
+         XPGmYpsZAerd8eaqrduDyrUNzI74TO93ppaFWToAuPYFFS3F1NTiQBJvaB4HlCLzYOHp
+         vB+ARVVzU3h8+RSUV6TZnzSbxxf3643uamvhRw36ppH5L7/ctVFCdtEaYEqGtUle0wlH
+         fZDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774664017; x=1775268817;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0SqqMgKQDeGv0TpX+c488DpvFeTC5TGIxUu1Utv0hBs=;
-        b=YggzcZURF4idNnsK2E8updRsysJlkwVmJ3F5SW4x30n4Du+SaZ9yLqGfujl2MyARRb
-         h/3YhMCNkkCDytw+t7KOUQBQSU5RpuTDQXiExR7tkk28bys09ngEoTQGBZb38Bw7NcZe
-         JBGMyxhOnAdXrpTRys95uEIsBYUAi0n+2AkEOGnT5pVl1nJoKOIyCooqAk8QFurvTxpf
-         yP0FTwxoZWwqoPz+v8VN992dSpYpj1Q/pI+JhppRR19vrCFariXqA7xheR5w1uXrL/r2
-         yfWdjThKoBpUuoz2LTIiMbVFzkbzVNW9ImKjPKLQxyiWG+DUoNIZbYec9gCrNW7elq3J
-         tBTw==
-X-Forwarded-Encrypted: i=1; AJvYcCWdS/+nJSyo3vu6A6ybGUj3H+g5OjVU4CoCqJTXbqieFq7GrKJLFFW16hOG8QZ6tYYfv4N4rAPtqOVE@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUEra5ZdAf6zGGr4yplNUjxZxDYiEO5/Gr8dkMyBoT39Hc3mWy
-	p8fl1UDzqub1U3XKTR3VogEsxZ8zS/MNvVtVUgSgzDa39ZWcYvpwRH9k
-X-Gm-Gg: ATEYQzx4PpR0gTywY/vepZk8QbhNp/X5uaRwFTj5KyXhoinCEqzJFIsuBGwW2dVLIWv
-	kQj9rTYyLVddZeS/6ziy1yQ+mQH/ZODWKDw0ryeOY1UC4YcRQupxSRJF4k8ifrmNyjERDVR/t0p
-	Q+JAu7CEqtmsmYaGH+RT5EKdAmk8bHbzrT4oUS5Q2/fI6gJP49WttcRoi2Qw0PGcaroJSkH/dji
-	X8+jJ4DOM+F4dXkptt/uDZF2B35W6/hJZ6vrhW/ISJLuU1BhPi1k/m/hVCI/X7insS49Q4FgLCb
-	g2FkrAxw4vX4oiUox7t05sJAVgYoTAYfvKyFDEd3Nvd/JKhQK64pb3/pmjam9a6HOfmZ6XNaQ4y
-	aMfp91fmz+vYk8yX2vaK1HbCl662Xsd8LAIl3XoW95dGvplc13ccKUYRJWiqbduso1DC2mv8xPR
-	Ql6k+b5KpWi/zleXpdG90jx1fYoQ==
-X-Received: by 2002:a05:620a:199f:b0:8cb:71d4:d0fb with SMTP id af79cd13be357-8d01c7fbc7emr603637585a.36.1774664016838;
-        Fri, 27 Mar 2026 19:13:36 -0700 (PDT)
-Received: from localhost ([184.144.58.243])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8d027f2fc0dsm66130585a.21.2026.03.27.19.13.36
+        d=1e100.net; s=20251104; t=1774688752; x=1775293552;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mrtALhRQ+/dB+7gUCD8Q9TtNE8HoAMbogKYxXP9zCuc=;
+        b=A/1Mt8Qag2QWiAsP19fxVab//pC54tZbG7SRPrsqzvr5dW8yyaztPll4EN3beJBFHQ
+         PRmeUf36NgvYipKj/fmNU9BN6zIJQ60OniREEJ9DRHCwdkTYQXTeJzY09oXpfV0yVpzO
+         Lx+xXgb6diny+tT7lZEgUOW1YXl0y1hBSdwsBTrCYyOHKyrC3E0npWUZApWsmCU8UrT1
+         5vA57y7+zbbVBMKERQDpjNDt46O+bZHbpNJRv2WetjyGE+CXVRwJ0rcpExIA3yc57Dm7
+         hE4C5M5juszhHq5VRukm1QpNzKJcgmyr+LrVxDj9mNsNe4GMVwEhmvp24k/CPJd9jOVy
+         vgMA==
+X-Forwarded-Encrypted: i=1; AJvYcCWaiATURZYvvVPlhH2qaEfK+I/hBMyKpmxk189SeW/BnVT0LgdfZYsYuljFfPylgMekIZX3jkqy8XLO@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+e/c7RVfavxVjRt+4P4IN/R6QNV5RtmM25Oey97wZoJR6HNOW
+	B83ZwQwW0T/oYrcqOHqoIObuIRjLMT4rm2CvCqXrkBXky+G98XLMLEKX
+X-Gm-Gg: ATEYQzzOTMnRxI0dPf9LY//7WFW4k1ycPOBKyndv114g75PmAxAYPmETZebuvUpTDxi
+	82zcJ1ZknIOo3xo+10gWXKyEfflAo4FNwilY0WFBudlyFMTtrEHyKAsExU7VMSiCSQ7gIkeJYM0
+	h0knzzRca5QrGfY6dv/ywUdaE9jH1NN2Du+zDSo1CoZanXFwPUUjsCL6cjIN034SQF+UkgmZ98H
+	a9xL6WxkTOpNqX9fhaRxJme2KyTS07l7DnMcq6DtWfhMixGmX29+TIL2shAdYkXPLqtKIRdV+pt
+	ufufZ+qx0N/66VTAM/pcEOKWhSfcvXrGojV2VFkBac6uz+LfRHAN1B8FEADuZYhgBy2c3JSAG6v
+	n3NUPrNFtUA3VtjIwgjin7W7o2c7OzYJWcsBMjHZshcFfNsdMIBsKRmb4bYkWYZ8P3L/5ek1Pik
+	32ELkDPzEIQzDQZ/0Jo30ui1Uv8rWQeEyAVdelvUP254GH+/8/
+X-Received: by 2002:a05:600c:6986:b0:46e:59bd:f7e2 with SMTP id 5b1f17b1804b1-48729109c35mr75510485e9.11.1774688752254;
+        Sat, 28 Mar 2026 02:05:52 -0700 (PDT)
+Received: from localhost.localdomain ([2a00:23c4:a758:8a01:8a55:5310:98fe:930d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48727bfc5ecsm77227735e9.1.2026.03.28.02.05.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2026 19:13:36 -0700 (PDT)
-Date: Fri, 27 Mar 2026 22:14:12 -0400
-From: Richard Acayan <mailingradian@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] SDM670 LPASS LPI pin controller support
-Message-ID: <acc5dKPef3v4cvbC@rdacayan>
-References: <20260328021036.85945-1-mailingradian@gmail.com>
+        Sat, 28 Mar 2026 02:05:51 -0700 (PDT)
+From: Biju <biju.das.au@gmail.com>
+X-Google-Original-From: Biju <biju.das.jz@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linusw@kernel.org>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Biju Das <biju.das.au@gmail.com>
+Subject: [PATCH] pinctrl: renesas: rzg2l: Fix incorrect PUPD register offset for high pins during suspend/resume
+Date: Sat, 28 Mar 2026 09:05:45 +0000
+Message-ID: <20260328090548.84124-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260328021036.85945-1-mailingradian@gmail.com>
-X-Spamd-Result: default: False [-1.66 / 15.00];
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34342-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[bp.renesas.com,vger.kernel.org,gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-34343-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mailingradian@gmail.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[bijudasau@gmail.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: E66BB34D09D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[renesas.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bp.renesas.com:mid]
+X-Rspamd-Queue-Id: CFAEB34DE24
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Mar 27, 2026 at 10:10:31PM -0400, Richard Acayan wrote:
-> This adds support for the LPASS LPI pin controller on SDM670, which
-> controls some audio pins (e.g. TDM or PDM busses). The ADSP patches are
-> not sent yet.
-> 
-> Dependencies:
-> - SDM670 Basic SoC thermal zones (devicetree nodes are touching)
->   https://lore.kernel.org/r/20260310002037.1863-1-mailingradian@gmail.com
-> - Support for the Pixel 3a XL with the Tianma panel (for reserved GPIOs)
->   https://lore.kernel.org/r/20260310002606.16413-1-mailingradian@gmail.com
-> 
-> Changes since v2 (https://lore.kernel.org/r/20260310012446.32226-1-mailingradian@gmail.com):
-> - add minItems and maxItems (1/5)
-> - add review tags (2-5/5)
+From: Biju Das <biju.das.jz@bp.renesas.com>
 
-Uh, it seems I dropped them (pun intended).
+When saving/restoring pull-up/down register state during suspend/resume,
+the second PUPD register access was incorrectly using the same base offset
+as the first, effectively reading/writing the same register twice instead
+of the adjacent one.
+
+Add the correct + 4 byte offset to the second RZG2L_PCTRL_REG_ACCESS32
+call so that pupd[1][port] is properly saved and restored from the next
+32-bit register in the PUPD register pair, covering pins 4–7 of ports
+with 4 or more pins.
+
+Fixes: b2bd65fbb617 ("pinctrl: renesas: rzg2l: Add suspend/resume support for pull up/down")
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+---
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index 561e6018fd89..68b94c748f53 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -3049,7 +3049,7 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2l_pinctrl *pctrl, bool suspen
+ 			RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + PUPD(off),
+ 						 cache->pupd[0][port]);
+ 			if (pincnt >= 4) {
+-				RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + PUPD(off),
++				RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + PUPD(off) + 4,
+ 							 cache->pupd[1][port]);
+ 			}
+ 		}
+-- 
+2.43.0
+
 
