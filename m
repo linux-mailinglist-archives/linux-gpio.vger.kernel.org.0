@@ -1,276 +1,126 @@
-Return-Path: <linux-gpio+bounces-34352-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34353-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aAb9Flf7x2mIfwUAu9opvQ
-	(envelope-from <linux-gpio+bounces-34352-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Mar 2026 17:01:27 +0100
+	id eDy1LEr/x2kqgAUAu9opvQ
+	(envelope-from <linux-gpio+bounces-34353-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Mar 2026 17:18:18 +0100
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0813834F12C
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Mar 2026 17:01:27 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5103C34F250
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Mar 2026 17:18:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9D22730668B2
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Mar 2026 15:55:58 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 7E3B8300B468
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Mar 2026 16:18:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C822376472;
-	Sat, 28 Mar 2026 15:55:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C202634F47E;
+	Sat, 28 Mar 2026 16:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bm7fMoYF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VsuRmaJu"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3923352927;
-	Sat, 28 Mar 2026 15:55:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8616B34A788
+	for <linux-gpio@vger.kernel.org>; Sat, 28 Mar 2026 16:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774713356; cv=none; b=AYkg6vzRnyNaldCPyybmoHtPVb/KGdtDnlyfxhA244TXXw+0wuXu3gtuN3aV6s2AJyjlcqeltHEH6zbGlW4CaaW0LvGdRGOQo32L5+87exGpPaSDgR9ojvjP85NDFWyP91AaiyRL5grT5PVnVVIzPUDHVnXzO3djsFzf0IjBoIE=
+	t=1774714687; cv=none; b=sHB6QdU2ak/2iAFoo1uimvp2YnCnx8nhk+FFgFv0g8R4b6k4ENAzujL9NMqocVjNJ06Wriy+kzMt8y+hnsAfcIpmLAvijOa9Rm+LwS4p+bJTPiFovmQc1LNnhHXhVct7IL4DCHyJYniQ1ZXCNANz5G3NUObe94nPvXT24FntTgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774713356; c=relaxed/simple;
-	bh=UD/TwSuuylvsTVk6WuLqLc/i823tJemYw2VTGjQDzOU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kMgKiyVhwGX4uyRyXSoWxqVEmksfTZAXyYtqr3rdWe5Ff/RS9HFerBnAgbY7e2OUQrDSAd1ytgY9iwoVKTCcC7rfuT9jcwsXHLq2YrY8XCjbMPsPF1BSyvvz37dfzfb1lfnTOmAIEfskv24c0ViRZ02+SWqbrgQs+3bXug+SljA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bm7fMoYF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64A26C2BC86;
-	Sat, 28 Mar 2026 15:55:54 +0000 (UTC)
+	s=arc-20240116; t=1774714687; c=relaxed/simple;
+	bh=BCwhnZkHq7orJJATJ99lfTzegCRxTho8kUF2KkI0UXc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uSNyZRxsto1ItGzBQ43u4lmzu1Oy2al7eAp6AC17+apYPNYwU9/vg3i8K71aLk2O/q/+9dRiuxa7EbBCcyqTbVnwaN1D83iTUnF+Ph2bg5mgHjFopFy3TX2hBShSUeBALzmUBhPuOMSEWsN+cnjKkujGGsT9qZM9uQgdpfvNUCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VsuRmaJu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C0E9C4CEF7
+	for <linux-gpio@vger.kernel.org>; Sat, 28 Mar 2026 16:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774713356;
-	bh=UD/TwSuuylvsTVk6WuLqLc/i823tJemYw2VTGjQDzOU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Bm7fMoYFkUbimvOYpNbqJa1zS9jOSlu3hhkd1VIWosEKAiRFMr0AbqbdeuoXQ6za1
-	 slZjp+JbOw4XGUTyGKd83DJdlyE5RLol1fN1LxQZS3Qy5C5ae/SHwu7NvyvLNl+7Kl
-	 Tmy9K7uxnwDUIRiXkcR4sy4eXorE6OLiKOqpKde6NYgCh+LgD0jhwG5nfFsQoePwmZ
-	 5NBVj5J41BY1UqisNpeBe79Z7tqOQ3DxRnBATawJnrhNFinStUy9sE6tcHzv/y5sVB
-	 +qsZ1B1KWFzbeMgHRm8nwy9ZbvEPdthwa1FuEKJx/2bZcB7mlBXeONsodKpwPcFNS7
-	 d0+YXPgPSQ2hA==
-From: Linus Walleij <linusw@kernel.org>
-Date: Sat, 28 Mar 2026 16:55:48 +0100
-Subject: [PATCH 2/2] MIPS/mtd: Handle READY GPIO in generic NAND platform
- data
+	s=k20201202; t=1774714687;
+	bh=BCwhnZkHq7orJJATJ99lfTzegCRxTho8kUF2KkI0UXc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VsuRmaJuV9kx+HvZ4ZaA5GbdxCovoauGRPk1XOdp2VGHuOrluu9r0xF15qfEPzvs4
+	 4db2G4LQMOID7230pqyOsNafqDIz1q27MrKFfxkKropt/FozkFRZHT6IsPNA0B5MzB
+	 RI+W0LXDx7PC459UCwOMovezRGQeUUdRovQr7i67QzO/I54AZa31ZiaKuBUFSLM8j3
+	 FJihHtN6HJge4ckg8GrEKCFKpr/2xyaWdGwIilf+n37lohE3RjjJdMub07nFZzsSlg
+	 nYfRxWfKkSYLtJzPAIxYmT4Kx0MHpnZzQCVwX+8LbZ8lUo4+1rX1wBNKYxsBfeT6t7
+	 w5ETY6JHS4MHQ==
+Received: by mail-yx1-f50.google.com with SMTP id 956f58d0204a3-64937edbc9eso3125769d50.2
+        for <linux-gpio@vger.kernel.org>; Sat, 28 Mar 2026 09:18:07 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwP+e3DT2uTQGNJAjYdO3g7Z1b2BoIhrJtLB/eQllTVcX6Ay0zB
+	I9hQqVAcUNxBtz5qYr3oyVNdH9RTdpLjmD58rDp8Km3To84c05frAH/Xjsb3KEMzvwRKeZmsQpV
+	JzYm29V5gED7OYFFLOiC4AvEz+jTyYyY=
+X-Received: by 2002:a05:690c:9304:b0:79a:6a75:554a with SMTP id
+ 00721157ae682-79bde01413dmr56222657b3.30.1774714686223; Sat, 28 Mar 2026
+ 09:18:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260328-mips-input-rb532-button-v1-2-98e201621501@kernel.org>
-References: <20260328-mips-input-rb532-button-v1-0-98e201621501@kernel.org>
-In-Reply-To: <20260328-mips-input-rb532-button-v1-0-98e201621501@kernel.org>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- Bartosz Golaszewski <brgl@kernel.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-mips@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-mtd@lists.infradead.org, 
- Linus Walleij <linusw@kernel.org>
-X-Mailer: b4 0.14.3
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+References: <cover.1774606726.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1774606726.git.geert+renesas@glider.be>
+From: Linus Walleij <linusw@kernel.org>
+Date: Sat, 28 Mar 2026 17:17:55 +0100
+X-Gmail-Original-Message-ID: <CAD++jL=O+Vu+8HGL6wi9YtDAOi_a1yzEAAa8dyCZVGSuvcC-KA@mail.gmail.com>
+X-Gm-Features: AQROBzBQUfWkPkePszA79CkS_TXT32uL3CScuVQmzL-4Rb0wR8nfDTbIJuUvnQs
+Message-ID: <CAD++jL=O+Vu+8HGL6wi9YtDAOi_a1yzEAAa8dyCZVGSuvcC-KA@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v7.1
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-34352-lists,linux-gpio=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[alpha.franken.de,gmail.com,kernel.org,bootlin.com,nod.at,ti.com];
 	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	TAGGED_FROM(0.00)[bounces-34353-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 0813834F12C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,glider.be:email]
+X-Rspamd-Queue-Id: 5103C34F250
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The callbacks into the MIPS RB532 platform to read the GPIO pin
-indicating that the NAND chip is ready are oldschool and does
-not assign GPIOs as properties to the NAND device.
+On Sat, Mar 28, 2026 at 1:11=E2=80=AFPM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-Add a capability to the generic platform NAND chip driver to use
-a GPIO line to detect if a NAND chip is ready and override the
-platform-local drv_ready() callback with this check if the GPIO
-is present.
+> The following changes since commit fb22bb9701d48c4b0e81fe204c2f96a37a5205=
+68:
+>
+>   pinctrl: renesas: rza1: Normalize return value of gpio_get() (2026-03-1=
+0 10:33:47 +0100)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
+ tags/renesas-pinctrl-for-v7.1-tag1
+>
+> for you to fetch changes up to 3f92867ce3ee2a274ebb7e7d5de7f6ee85da21f6:
+>
+>   pinctrl: renesas: rzg2l: Drop superfluous blank line (2026-03-26 20:05:=
+36 +0100)
 
-This makes it possible to drop the legacy include header
-<linux/gpio.h> from the RB532 devices.
+Pulled in, thanks Geert!
 
-Signed-off-by: Linus Walleij <linusw@kernel.org>
----
- arch/mips/rb532/devices.c        | 36 +++++++++++++++++++++---------------
- drivers/mtd/nand/raw/plat_nand.c | 24 +++++++++++++++++++++++-
- 2 files changed, 44 insertions(+), 16 deletions(-)
-
-diff --git a/arch/mips/rb532/devices.c b/arch/mips/rb532/devices.c
-index 3f56d9feb73a..c3d8d96d0ef5 100644
---- a/arch/mips/rb532/devices.c
-+++ b/arch/mips/rb532/devices.c
-@@ -14,7 +14,6 @@
- #include <linux/platform_device.h>
- #include <linux/mtd/platnand.h>
- #include <linux/mtd/mtd.h>
--#include <linux/gpio.h>
- #include <linux/gpio/machine.h>
- #include <linux/gpio/property.h>
- #include <linux/gpio_keys.h>
-@@ -135,12 +134,6 @@ static struct platform_device cf_slot0 = {
- 	.num_resources = ARRAY_SIZE(cf_slot0_res),
- };
- 
--/* Resources and device for NAND */
--static int rb532_dev_ready(struct nand_chip *chip)
--{
--	return gpio_get_value(GPIO_RDY);
--}
--
- static void rb532_cmd_ctrl(struct nand_chip *chip, int cmd, unsigned int ctrl)
- {
- 	unsigned char orbits, nandbits;
-@@ -166,16 +159,23 @@ static struct resource nand_slot0_res[] = {
- };
- 
- static struct platform_nand_data rb532_nand_data = {
--	.ctrl.dev_ready = rb532_dev_ready,
- 	.ctrl.cmd_ctrl	= rb532_cmd_ctrl,
- };
- 
--static struct platform_device nand_slot0 = {
--	.name = "gen_nand",
--	.id = -1,
--	.resource = nand_slot0_res,
--	.num_resources = ARRAY_SIZE(nand_slot0_res),
--	.dev.platform_data = &rb532_nand_data,
-+static const struct property_entry nand0_properties[] = {
-+	PROPERTY_ENTRY_GPIO("ready-gpios", &rb532_gpio0_node,
-+			    GPIO_RDY, GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct platform_device_info nand0_info  __initconst = {
-+	.name		= "gen_nand",
-+	.id		= PLATFORM_DEVID_NONE,
-+	.res		= nand_slot0_res,
-+	.num_res	= ARRAY_SIZE(nand_slot0_res),
-+	.data		= &rb532_nand_data,
-+	.size_data	= sizeof(struct platform_nand_data),
-+	.properties	= nand0_properties,
- };
- 
- static struct mtd_partition rb532_partition_info[] = {
-@@ -234,7 +234,6 @@ static struct platform_device rb532_uart = {
- 
- static struct platform_device *rb532_devs[] = {
- 	&korina_dev0,
--	&nand_slot0,
- 	&cf_slot0,
- 	&rb532_led,
- 	&rb532_uart,
-@@ -321,6 +320,13 @@ static int __init plat_setup_devices(void)
- 	 */
- 	software_node_register(&rb532_gpio0_node);
- 
-+	pd = platform_device_register_full(&nand0_info);
-+	ret = PTR_ERR_OR_ZERO(pd);
-+	if (ret) {
-+		pr_err("failed to create NAND slot0 device: %d\n", ret);
-+		return ret;
-+	}
-+
- 	pd = platform_device_register_full(&rb532_button_info);
- 	ret = PTR_ERR_OR_ZERO(pd);
- 	if (ret) {
-diff --git a/drivers/mtd/nand/raw/plat_nand.c b/drivers/mtd/nand/raw/plat_nand.c
-index 0bcd455328ef..fe31551bcf5f 100644
---- a/drivers/mtd/nand/raw/plat_nand.c
-+++ b/drivers/mtd/nand/raw/plat_nand.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/err.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-@@ -17,6 +18,7 @@ struct plat_nand_data {
- 	struct nand_controller	controller;
- 	struct nand_chip	chip;
- 	void __iomem		*io_base;
-+	struct gpio_desc	*ready_gpio;
- };
- 
- static int plat_nand_attach_chip(struct nand_chip *chip)
-@@ -32,6 +34,14 @@ static const struct nand_controller_ops plat_nand_ops = {
- 	.attach_chip = plat_nand_attach_chip,
- };
- 
-+/* Resources and device for NAND */
-+static int plat_nand_gpio_dev_ready(struct nand_chip *chip)
-+{
-+	struct plat_nand_data *data = nand_get_controller_data(chip);
-+
-+	return gpiod_get_value(data->ready_gpio);
-+}
-+
- /*
-  * Probe for the NAND device.
-  */
-@@ -41,6 +51,7 @@ static int plat_nand_probe(struct platform_device *pdev)
- 	struct plat_nand_data *data;
- 	struct mtd_info *mtd;
- 	const char **part_types;
-+	struct nand_chip *chip;
- 	int err = 0;
- 
- 	if (!pdata) {
-@@ -59,9 +70,17 @@ static int plat_nand_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
- 
-+	data->ready_gpio = devm_gpiod_get_optional(&pdev->dev, "ready",
-+						   GPIOD_IN);
-+	if (IS_ERR(data->ready_gpio))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(data->ready_gpio),
-+				     "could not get READY GPIO\n");
-+
- 	data->controller.ops = &plat_nand_ops;
- 	nand_controller_init(&data->controller);
- 	data->chip.controller = &data->controller;
-+	chip = &data->chip;
-+	nand_set_controller_data(chip, data);
- 
- 	data->io_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(data->io_base))
-@@ -74,7 +93,10 @@ static int plat_nand_probe(struct platform_device *pdev)
- 	data->chip.legacy.IO_ADDR_R = data->io_base;
- 	data->chip.legacy.IO_ADDR_W = data->io_base;
- 	data->chip.legacy.cmd_ctrl = pdata->ctrl.cmd_ctrl;
--	data->chip.legacy.dev_ready = pdata->ctrl.dev_ready;
-+	if (data->ready_gpio)
-+		data->chip.legacy.dev_ready = plat_nand_gpio_dev_ready;
-+	else
-+		data->chip.legacy.dev_ready = pdata->ctrl.dev_ready;
- 	data->chip.legacy.select_chip = pdata->ctrl.select_chip;
- 	data->chip.legacy.write_buf = pdata->ctrl.write_buf;
- 	data->chip.legacy.read_buf = pdata->ctrl.read_buf;
-
--- 
-2.53.0
-
+Yours,
+Linus Walleij
 
