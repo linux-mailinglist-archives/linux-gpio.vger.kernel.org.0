@@ -1,85 +1,85 @@
-Return-Path: <linux-gpio+bounces-34367-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34368-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mDBOFulFyWkAxAUAu9opvQ
-	(envelope-from <linux-gpio+bounces-34367-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 17:31:53 +0200
+	id WKESHHZHyWkAxAUAu9opvQ
+	(envelope-from <linux-gpio+bounces-34368-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 17:38:30 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7A6935298F
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 17:31:52 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D5F3352A66
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 17:38:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1B2803004DE7
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 15:31:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4A3393034E2C
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 15:34:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1012131CA4E;
-	Sun, 29 Mar 2026 15:31:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5365E37E2E8;
+	Sun, 29 Mar 2026 15:34:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GsdCsXHx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HgNdxzI3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A7726FA6F
-	for <linux-gpio@vger.kernel.org>; Sun, 29 Mar 2026 15:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B4B3793A6
+	for <linux-gpio@vger.kernel.org>; Sun, 29 Mar 2026 15:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774798309; cv=none; b=Ty/r9WbVUnYxPSNvKialxkTWPewRBd+k2Nj/QAh9XMLYGXzFlhV6GALw6tF7xPRZB3bkszQDpSjKpVzjoI89UlgbNK6TWhvTJ+3+9NtedjziTaEKxsr/W61I8AQcWb+70CQTgsb2m/D5FkYN16SrrMpjUqS/4QcTFp19HmyTPPQ=
+	t=1774798476; cv=none; b=fAa9pQEmBZgeO3REHOuKJRQIXuXFiJyMumkfdb0rekW9HtryEFthB4f/6AuYbuTRCCdv6F89sga41EFW6tZbtqtt+VfYbD8x9PROhV+mvJAOzaD64ajDJ3bQHUKa6IZ6Riq/bUsY3JHmsZCh7z8CEbsff58tb9Gd+rEqNn9uOGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774798309; c=relaxed/simple;
-	bh=au2eKM8u7aYrDUz5dztDboQXIdUsEbqGrxHSvOHJykw=;
+	s=arc-20240116; t=1774798476; c=relaxed/simple;
+	bh=3wtd1IIeCkBJ/XmcMqk04Aty7K0zW5MZcZUzKuiYVt4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sU5JaBpA+M7JbzQYY3JEKgOtkQBgcPLuAy6HJCFWPsmhNLXNMHU920UTrfqE50aADgMMnoXP9EX0UVANTIPQ918Jqa3EEvHkNMcuCSKRkAbqvevPRU+2ha6QWayRAogRySGMaiT6eFsqzTLTJZRorQSR6ZylXmiy9FjvijGPzq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GsdCsXHx; arc=none smtp.client-ip=74.125.82.44
+	 In-Reply-To:Content-Type; b=Goci8D8GBOiTaqFv1uDIdIoXtjbzxl9Ep+Ah9pdhTrJTHSir+kf+Tlu8UubXLuiUY00aqhfKMx6n8OrveBI2dTQCa7MbKfPfQhp6b74ACG1S6wZHhr4Ot2NGg9WtvKGKUaX1t+YrXK+CgyeUCyParl5b0sS0+e3IrOW+did4TFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HgNdxzI3; arc=none smtp.client-ip=74.125.82.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-12a74039dc6so2774057c88.0
-        for <linux-gpio@vger.kernel.org>; Sun, 29 Mar 2026 08:31:48 -0700 (PDT)
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-2b6b0500e06so4847820eec.1
+        for <linux-gpio@vger.kernel.org>; Sun, 29 Mar 2026 08:34:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774798308; x=1775403108; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1774798474; x=1775403274; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=lbC14XtI3H5l+g6ZcwMwWY/fzzcIo7U44X14GI38NY0=;
-        b=GsdCsXHx4pwdN5Idmy/anGLDS5S12R4ZATfmUOvWtYKW0DL3tXfJ81tQm4OB8RQTvi
-         lveg4ibvK2zNWmWgkzYT/bC7Oz1d47L6xvR/khMQtYemp41uyBOUUynWqILvPDmO2ekp
-         STSf+lHLEjgmv60ffQlELBa3ljhcIhFkpFKUB4FNLUwZSOEfbBOtk+MbkwEU9HonjKCQ
-         eCl3tJNSBzztmZftGnvjbPantFqjwIouMOD7ogUZ6JERL4I3U0yX+Xanx9I9LqrQ0yd1
-         GDm0r5yOs184fB1Q68O4GPK3b0Q9l1N9HFedaWVBsKlao8TkD6ZPRBuf+MmuN/1QtVLM
-         Azhg==
+        bh=Y4jQhTO1UJPiph8NqA2wQY7EhFFaT1IhjZIj6QBNFBo=;
+        b=HgNdxzI3ZeFA0kKwIJoKaLxq9D671m7oQ81dH6FqWbBSBSa5BCHoN7iFOqNOsQDqVM
+         KZSXZIm3bPn0SPowY2T3M2BlDUe6xvW4DHNFaXSuFuQwA2ztIeNbIOq+05Ng/F/+ST7p
+         n0PeK93Stdc3R4qneg2MML7D/p1zoFlI8BF4R1pEfYm2wdkDVBGTyb0ciFVGgOdjcM3f
+         5T65ky4d6I2ZYHMpt3kPskG48Ez4fFMHDPyIw0p5WJAfhYUs0AkYvruGQD1ReBlYgCGs
+         PaoQJtOfX2IKghZvN4NHcOl1zjzP5eM+XW1EhYjtwUjipZiN0044A0TPjVLSIlHU1TDn
+         EGeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774798308; x=1775403108;
+        d=1e100.net; s=20251104; t=1774798474; x=1775403274;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lbC14XtI3H5l+g6ZcwMwWY/fzzcIo7U44X14GI38NY0=;
-        b=DvqOY6tSTsJ5rZReuynDGGeN7B6HjucsunF2Txfb6BuAHv37n/+HasBZciFYPwXa8n
-         8hNP5J6Ens67hS3/RteIx4ca8tuG8RML3tOgbvTkCkjBgjIHsBxGCDHz2Cmttn6RWVsu
-         IdBj7T9T3nF8/tJQmae6PB9uPlT1MhQPWB8cTn+5SJX6RpxBl19N9chfzrRhbgErJYk4
-         ugd09DzJeLIlwB/NMHo6xA/0C75OsYW3JecC7tVY4gN/xcom/aOTRMk02VrrlQbnhf60
-         08qLFi0uqre1JXWFHE02L55+i8/7erGTrfN1gp+m1jl4wyJRjWioiks2pFi+Jepk86df
-         WbYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXoR47T6ArjqYl6vVB/gaJnwxZWDqM8Wm25hmJC9TVSGzmG6WFU+zUYi647GkrehubriZNJlET6oOE1@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhU7+bzws8DGx01gU45TK78ai87HO8eBOJdty3KdCproMI6l5r
-	aDox72u6/iT3ME4E3+ZpRfg38C6dx72GJui1lyOO2ijcfvfwWmgXKzWu
-X-Gm-Gg: ATEYQzyOWmkxmtw3CQy3fqlFNAMAF7XNluPQ/78hEJgqgafj8fs0+Hhx31jduwis2+G
-	bSU5E5NLQ/QgIxNtWK2wbDCMDdm1b6ZDJ12nxNHE/sQdtng+Lchs9TKq+Yp/t8FjwCVnil76y6G
-	5RxSxCRNBTJOv1+0t2ThqGOyGcxOjj4wMbyLkUJppi3gNFyim2SrlKXtlZKD/q1Bf+1/24VjyC5
-	z+uR4ofa+9o++ZCjcpq1B072rqVLpEhCbqc9UYlkI3gm3yeFdXcMnZrniZCKK9ucP0MXvJQJzQZ
-	w3fLDV4nRsm5WrBbhYtucAoEuzrmoR/yUBlzUyuZnOLlZr65E2JETslwHoJYI6MEV6Prkb4Nypw
-	2/PM3Zr3Zi2UsU2p+szXgPcfDkSVlbJqLIzXU2rL4lAjJlSH0UFAFuSgQgC+yVHLaF+hG4T86vp
-	YLGyzbbbvAK1c3wzI13COR9VhFkr/pBkCKsoba/fsG3Rux70aJ7cHrgtlYMx8f+yMZbBrK9CoW
-X-Received: by 2002:a05:7022:20c:b0:119:e56b:98be with SMTP id a92af1059eb24-12ab28ff327mr4858192c88.37.1774798307626;
-        Sun, 29 Mar 2026 08:31:47 -0700 (PDT)
+        bh=Y4jQhTO1UJPiph8NqA2wQY7EhFFaT1IhjZIj6QBNFBo=;
+        b=SbQdpvMsSO46FQpvgEL0ihRVz3NWnfhc/YwX/VDa35Q2NTo0Lx/OrL4FtalRVJqd8W
+         N1CwUQClGepga1GqiZ/HGQ5b1i5dbefsmZ9ewJ8rTfP4DYIhzl7+C1p7AePnW7pdbCev
+         xjt+s76IrwZBg8m6pZf7GSuSgNf1b5tmHu8WT+IZCEpyA9X2iD4XHgfTD5sNADrQyipn
+         rGt7qKK2qi7NRQV99wtUumpTH3/pl5pksJ236hijhaol9jHjv4rVVGM5zbcOithHFAgi
+         dtc2Lb43iXwxgeBf4/hZWRuCt9OrZV9047RXoduX7nS5+ULmZxWQWj7cy9QjLC6I2dFs
+         aycA==
+X-Forwarded-Encrypted: i=1; AJvYcCVv3f0Bf8dLUzhFszinEP2K8TvYv3uz6ClI9cI0u3AB28l/dUdUCPkOcqvc9sgKbmooDooP/1+5K1g2@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhJ7osddoD1q6c9e5p1W5NtmdlKjyV7XfqBl6GTki2gvr/zsLC
+	BiBx342w+Cdock5NjNRreCKoqnbmf69vNwX8LP0Gqb0YhJDylLG2NhFG
+X-Gm-Gg: ATEYQzwN0qFay8/Qwj5rq2Jhx5TTVso/ZVd2wrhBiNzTPJnWz3AjRbnkEzFctJrCplo
+	gg8pIZ7qFiaGLGykidqKZoR8Gdchn4Lmei88J9aSD8AZAOSlfPmOHTsnx8it9AaP4IsKX8Bwa8z
+	jRisPUUXU5kt3UWf///wCp6TOBod/YRSDdlKE9YRobRVEcmunPkBuhUEQcVLlbB2P+T91W8+itg
+	FICNVzIWHEo1wlcuE2D/7FUwH1fA3EFDAkSE6eYoC7Egp92ykHSBFPFO4zRItYZORO2I2bWtSYb
+	0ifqPm9+HTb4TXmyCjqb7Cmm8bRMIYasKKhbNJAOEUGW5oJv23ijgAbz5CwEke7kiHQvlJXCQHC
+	jORrUBRf/UWjdAqtwVWyn0D0iM3Nj53EwmZT9wBXzN/RTIhKkGkRylFZrnlPSS0MOrHlkcXGfxb
+	at8OMl36YkQlAVj0oCUXd5wgOfHcBmJexd/xf4AzTBl9lk34mLMZR8iJqBVY2c4nwc6W4VOWbk
+X-Received: by 2002:a05:7300:8605:b0:2ba:6978:2b4 with SMTP id 5a478bee46e88-2c185e45bc3mr5584844eec.20.1774798473900;
+        Sun, 29 Mar 2026 08:34:33 -0700 (PDT)
 Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12ab97ca83bsm4812631c88.2.2026.03.29.08.31.45
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c3c74825a0sm4702738eec.27.2026.03.29.08.34.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Mar 2026 08:31:46 -0700 (PDT)
+        Sun, 29 Mar 2026 08:34:33 -0700 (PDT)
 Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <72b9d96c-59c7-429e-b422-ffec702342e7@roeck-us.net>
-Date: Sun, 29 Mar 2026 08:31:45 -0700
+Message-ID: <8291919d-c5ea-42ab-b2e5-2dfa16c23698@roeck-us.net>
+Date: Sun, 29 Mar 2026 08:34:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -87,7 +87,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 5/6] hwmon: add NXP MC33978/MC34978 driver
+Subject: Re: [PATCH v8 0/6] mfd: Add support for NXP MC33978/MC34978 MSDI
 To: Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
@@ -96,7 +96,6 @@ Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org,
  linux-gpio@vger.kernel.org, David Jander <david@protonic.nl>
 References: <20260329090601.532477-1-o.rempel@pengutronix.de>
- <20260329090601.532477-6-o.rempel@pengutronix.de>
 Content-Language: en-US
 From: Guenter Roeck <linux@roeck-us.net>
 Autocrypt: addr=linux@roeck-us.net; keydata=
@@ -142,18 +141,18 @@ Autocrypt: addr=linux@roeck-us.net; keydata=
  F0WaMvQMNrk9UAUziVcUkLU52NS9SXqpVg8vgrO0JKx97IXFPcNh0DWsSj/0Y8HO/RDkGXYn
  FDMj7fZSPKyPQPmEHg+W/KzxSSfdgWIHF2QaQ0b2q1wOSec4Rti52ohmNSY+KNIW/zODhugJ
  np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <20260329090601.532477-6-o.rempel@pengutronix.de>
+In-Reply-To: <20260329090601.532477-1-o.rempel@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-34367-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34368-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	DMARC_NA(0.00)[roeck-us.net];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -166,36 +165,48 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linux@roeck-us.net,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[pengutronix.de:email]
-X-Rspamd-Queue-Id: E7A6935298F
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,roeck-us.net:mid]
+X-Rspamd-Queue-Id: 1D5F3352A66
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 3/29/26 02:06, Oleksij Rempel wrote:
-> Add hardware monitoring support for the NXP MC33978/MC34978 Multiple
-> Switch Detection Interface (MSDI).
-> 
-> The hardware utilizes a clear-on-read FAULT register, but physical
-> faults remain asserted as long as the underlying condition exists. This
-> asserts a global FAULT_STAT bit on the SPI bus. To handle this without
-> trapping the CPU in an interrupt storm, this driver implements the
-> following architecture:
-> - Requests a rising-edge nested IRQ (IRQF_TRIGGER_RISING) from the MFD
->    core to catch the initial 0 -> 1 transition of the global fault state.
-> - Caches hwmon-specific alarm bits and calculates state edges (XOR) to
->    isolate alarm transitions from system integrity faults.
-> - Implements a 1Hz delayed workqueue that polls the hardware as long as
->    any alarm is active. This compensates for the edge-triggered IRQ by
->    discovering secondary faults that occur without a rising edge, and
->    detecting when the hardware clears.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Hi Oleksij,
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+On 3/29/26 02:05, Oleksij Rempel wrote:
+> changes v7:
+> - drop gpiolib irq fix and make pinctrl more robust against NULL point
+>    dereference.
+> 
+> This series adds support for the NXP MC33978/MC34978 Multiple Switch Detection
+> Interface (MSDI) via the MFD framework.
+> 
+> Architecture overview:
+> * mfd: Core driver handling 2-frame pipelined SPI, regulator sequencing, and
+>    linear irq_domain. Harvests status bits from SPI MISO MSB.
+> * pinctrl: Exposes 22 physical switch inputs as standard GPIOs. Proxies IRQs to
+>    the MFD domain.
+> * hwmon: Exposes thermal limits, VBATP/VDDQ voltage boundaries, and dynamic
+>    fault alarms.
+> * mux: Controls the 24-to-1 AMUX routing analog signals (switch voltages,
+>    temperature, VBATP) to an external ADC.
+> 
+> Initial pinctrl implementation by David Jander, reworked into this MFD
+> architecture.
+> 
+
+I Acked the hwmon driver, but Sashiko is still not happy with several of the other
+patches in the series:
+
+https://sashiko.dev/#/patchset/20260329090601.532477-1-o.rempel%40pengutronix.de
+
+If the remaining issues are false positives, please let Roman and/or me know.
+
+Thanks,
+Guenter
 
 
