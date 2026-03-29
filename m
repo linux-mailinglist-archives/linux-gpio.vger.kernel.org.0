@@ -1,75 +1,75 @@
-Return-Path: <linux-gpio+bounces-34365-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34366-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WExNGEQIyWk3tgUAu9opvQ
-	(envelope-from <linux-gpio+bounces-34365-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 13:08:52 +0200
+	id 73b7Br0IyWl2tgUAu9opvQ
+	(envelope-from <linux-gpio+bounces-34366-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 13:10:53 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3317351BAB
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 13:08:51 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E339351BD9
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 13:10:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 83F69301413B
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 11:08:50 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id D81683006826
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 11:10:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAC1731DDBF;
-	Sun, 29 Mar 2026 11:08:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A22C5344D9B;
+	Sun, 29 Mar 2026 11:10:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DFnzOb40"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CdpGECGP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5514F314B63
-	for <linux-gpio@vger.kernel.org>; Sun, 29 Mar 2026 11:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A124933F595
+	for <linux-gpio@vger.kernel.org>; Sun, 29 Mar 2026 11:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774782527; cv=none; b=DEZgnLpZO8cCcxbxY/VUpCdc2TOb1O2Iiw1mTl3ZiwFGW1PghbAfKrygwyeTbzJ6Cc8TJuACwMKYfjTGS+AF5SXbOAUdIiMtmoc7lSCH5sMzIPEP6GmOdW+nqfNjWiwIhg4ok/n8BckZQgbdVJ2GF0SlMprjfNTqQDIaFJYtrLg=
+	t=1774782647; cv=none; b=RVZoO1PHff5kA7d4VEzJnFc2lEzQzsMD6Pb23EceBC/Qg83RBufSpIDW+M5jeZEj0fFmQ2efJeG/f1Kq9pE5n9e3LDYWwtHZgs4oLI7dHPOYX9J+MFY9jl0w3BleQwIOjv/s2W0Gbs0EBfzp5KvOLN12TXqjVbjNQtNmmP2xg2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774782527; c=relaxed/simple;
-	bh=jFZZ1mD/KohwvVBLnkXXL6VIMMTpYy+vpGk8SUejoH0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=lKls9Oaj9NgaroN0tW7BPAndBG/JMITVJxVYesylQ4hjCUxZMnjmF7l4fEX15Kb+F01wl8fx5/mBnR+jjYpl6/mCGp0N6bN7LKdgTh6c9F/4AcXRPHEoLmES9325jwiWoELPho38Yi7XplHNnQ70fSFFx5vazhzcpQbKH45R/j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DFnzOb40; arc=none smtp.client-ip=198.175.65.18
+	s=arc-20240116; t=1774782647; c=relaxed/simple;
+	bh=VIiBO8KPtYxRKngpjQYkBEgL/XRGqEF44cb/FD6Kw+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=spQWtPj6XMHWZwzjJDKmny3TBMRZHtr05DAKHMzP2el6Y+OkW1ex3hh1BrBMQm+LReRxprsf0jvsgkcoKDIooMlJfxht6a8wxtb9uG+Ut8myGVqLxBC9jH/W9U99s7XjpYcN+kHuGOiqtNAQ0lXP/7ipdE/fjXWDDKQiipPhH44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CdpGECGP; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774782526; x=1806318526;
+  t=1774782646; x=1806318646;
   h=date:from:to:cc:subject:message-id;
-  bh=jFZZ1mD/KohwvVBLnkXXL6VIMMTpYy+vpGk8SUejoH0=;
-  b=DFnzOb40+ecYGhpj2Vm8696IhTRRsk+sJ08igKT2jbm6PuABvuE2hUvK
-   0vE3SUmBHopA4uOh28udc5L0guCKfPI5vv5cNHjmHDn9LAXsemeViOmVU
-   tzD2kin9G8QzDVQiv3Xh4WV0sprzs6tJz9BVSOXdt0+0ZrJlrws6mPoVB
-   re2+VDI+J+bDg7B+fAO6VvUdITsyz68cppknaAj2DMeq6D8eaBeURjWaw
-   ectt8wXd8EdDPBdUYlKuilFWmGwb7La63xZ02bblG9nGsYykVwT32LwjP
-   nleMCCx/2NnV2/HVBm29RoQVhzw/d231zasS7B9WWU7Z0ONeupDXwwoQS
+  bh=VIiBO8KPtYxRKngpjQYkBEgL/XRGqEF44cb/FD6Kw+Q=;
+  b=CdpGECGPUhc7whf4QI1XIN94iUWh04OWw4hVWBl7r/VYHEJD/se68DPc
+   ZadxRAfJtNIEG6oYW50IoAZLCO2BP9m6Zek1VVgAqPTqBkcsH+WDXZrdT
+   DIv12cinkHMCnHM4FdzRNfiQ8t7ot2rNl1w5WCogoz8YgF47A+vsyNGbD
+   Lyi/lotSFlh/oQed6V4ep9tyS4nO4bO3vIx+7BPDrJ6rs3TSaTffdUt88
+   BnB8/gZ4Nsa+iIm5pWiVKdc34FWU4sZDh0S6E0KCzS9jZO8/UV8R8DaNz
+   O40JKLKeTL28C2LFhvrg2oR7rex2a+UQj2UkWxEoIgnvKf0pTnCl4bsmp
    w==;
-X-CSE-ConnectionGUID: Ry7bO+yJS2eJd6FRKcpEyA==
-X-CSE-MsgGUID: mbUKzeytQwyl5gJghjOhkw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11742"; a="75813569"
+X-CSE-ConnectionGUID: FiiFgKZ1QDuDrVvxyT1icw==
+X-CSE-MsgGUID: jVLVHlVJQ5eVVEETjDurkA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11742"; a="93179797"
 X-IronPort-AV: E=Sophos;i="6.23,148,1770624000"; 
-   d="scan'208";a="75813569"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2026 04:08:45 -0700
-X-CSE-ConnectionGUID: zbgS7t2PTheJAntvwBSTaw==
-X-CSE-MsgGUID: h6CCRokAStmPbfL9fzP4AQ==
+   d="scan'208";a="93179797"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2026 04:10:45 -0700
+X-CSE-ConnectionGUID: KZuxnM36QsyZ9AjMSO0j6w==
+X-CSE-MsgGUID: /jY6GCYgSTOhrSTVf1kuxw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,148,1770624000"; 
-   d="scan'208";a="248828782"
+   d="scan'208";a="229848133"
 Received: from lkp-server01.sh.intel.com (HELO 3905d212be1b) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 29 Mar 2026 04:08:43 -0700
+  by orviesa003.jf.intel.com with ESMTP; 29 Mar 2026 04:10:44 -0700
 Received: from kbuild by 3905d212be1b with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1w6o0X-00000000CIv-0sSe;
-	Sun, 29 Mar 2026 11:08:41 +0000
-Date: Sun, 29 Mar 2026 19:07:44 +0800
+	id 1w6o2T-00000000CJB-1gOt;
+	Sun, 29 Mar 2026 11:10:41 +0000
+Date: Sun, 29 Mar 2026 19:09:45 +0800
 From: kernel test robot <lkp@intel.com>
 To: Linus Walleij <linusw@kernel.org>
 Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 58a64a4b05e1ea555490a93ee1b2cb27657e546e
-Message-ID: <202603291936.6qtNRr9Q-lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ a91cbf52c115e52392729a855ddb9d85da0517df
+Message-ID: <202603291936.zCQm9KUY-lkp@intel.com>
 User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -82,7 +82,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -90,9 +90,9 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWO(0.00)[2];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34365-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34366-lists,linux-gpio=lfdr.de];
 	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
@@ -101,15 +101,15 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: C3317351BAB
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 0E339351BD9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 58a64a4b05e1ea555490a93ee1b2cb27657e546e  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: a91cbf52c115e52392729a855ddb9d85da0517df  Merge tag 'renesas-pinctrl-for-v7.1-tag1' of git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers into devel
 
-elapsed time: 743m
+elapsed time: 746m
 
 configs tested: 169
 configs skipped: 2
