@@ -1,212 +1,648 @@
-Return-Path: <linux-gpio+bounces-34368-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34369-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WKESHHZHyWkAxAUAu9opvQ
-	(envelope-from <linux-gpio+bounces-34368-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 17:38:30 +0200
+	id iJY4NV1vyWlDyAUAu9opvQ
+	(envelope-from <linux-gpio+bounces-34369-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 20:28:45 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D5F3352A66
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 17:38:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 231A535397E
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 20:28:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4A3393034E2C
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 15:34:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4D1C1300D479
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 18:28:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5365E37E2E8;
-	Sun, 29 Mar 2026 15:34:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFDB438551C;
+	Sun, 29 Mar 2026 18:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HgNdxzI3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TMUdLhWv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B4B3793A6
-	for <linux-gpio@vger.kernel.org>; Sun, 29 Mar 2026 15:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994952DEA93
+	for <linux-gpio@vger.kernel.org>; Sun, 29 Mar 2026 18:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774798476; cv=none; b=fAa9pQEmBZgeO3REHOuKJRQIXuXFiJyMumkfdb0rekW9HtryEFthB4f/6AuYbuTRCCdv6F89sga41EFW6tZbtqtt+VfYbD8x9PROhV+mvJAOzaD64ajDJ3bQHUKa6IZ6Riq/bUsY3JHmsZCh7z8CEbsff58tb9Gd+rEqNn9uOGg=
+	t=1774808921; cv=none; b=MDZzXhWmBp7RVM4zO5y7nXk53/qsepUfw3qw8MD6Kl8pmtnPGK0km6FnDQr+AtUrRmcxp2VINQZTfmXEWKPbp7iSQ//qtad6qt6UMTzm5D6d972DsE0Hik0ACdk67/xMmn7HbzwMXd27ERaBPrlcNi1BYceWkdw9jBk/zpod6+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774798476; c=relaxed/simple;
-	bh=3wtd1IIeCkBJ/XmcMqk04Aty7K0zW5MZcZUzKuiYVt4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Goci8D8GBOiTaqFv1uDIdIoXtjbzxl9Ep+Ah9pdhTrJTHSir+kf+Tlu8UubXLuiUY00aqhfKMx6n8OrveBI2dTQCa7MbKfPfQhp6b74ACG1S6wZHhr4Ot2NGg9WtvKGKUaX1t+YrXK+CgyeUCyParl5b0sS0+e3IrOW+did4TFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HgNdxzI3; arc=none smtp.client-ip=74.125.82.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	s=arc-20240116; t=1774808921; c=relaxed/simple;
+	bh=WkFkH8fM+J/LnlXbLmAUr6qMVWX8cGdP1Xs8X/u5nxc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KYv8ng8re/XSwgePXvUPZgh1EeipeVytXzN4CqOw0mWarPq5q45twFNgZDjnuVM728dKuGit9RUuLRDSlX16+NgkyZOmK2hMwcgE5jLdbrA2kN18xGa1j6Fc5nsfZZ5nyWai+i4RYtUiZQAzgx2maSWzi4xQQ0ygIeRQIeDxWNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TMUdLhWv; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-2b6b0500e06so4847820eec.1
-        for <linux-gpio@vger.kernel.org>; Sun, 29 Mar 2026 08:34:34 -0700 (PDT)
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-67e00a230adso2384301eaf.3
+        for <linux-gpio@vger.kernel.org>; Sun, 29 Mar 2026 11:28:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774798474; x=1775403274; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y4jQhTO1UJPiph8NqA2wQY7EhFFaT1IhjZIj6QBNFBo=;
-        b=HgNdxzI3ZeFA0kKwIJoKaLxq9D671m7oQ81dH6FqWbBSBSa5BCHoN7iFOqNOsQDqVM
-         KZSXZIm3bPn0SPowY2T3M2BlDUe6xvW4DHNFaXSuFuQwA2ztIeNbIOq+05Ng/F/+ST7p
-         n0PeK93Stdc3R4qneg2MML7D/p1zoFlI8BF4R1pEfYm2wdkDVBGTyb0ciFVGgOdjcM3f
-         5T65ky4d6I2ZYHMpt3kPskG48Ez4fFMHDPyIw0p5WJAfhYUs0AkYvruGQD1ReBlYgCGs
-         PaoQJtOfX2IKghZvN4NHcOl1zjzP5eM+XW1EhYjtwUjipZiN0044A0TPjVLSIlHU1TDn
-         EGeA==
+        d=gmail.com; s=20251104; t=1774808918; x=1775413718; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rg0uMy/jx2NSn6EVJetGifZ0Mlgvuk8yNhBJ8hBLp1o=;
+        b=TMUdLhWvWuRen8zHfdp+30IMMfoida9lh+Gd0KMWDfny0GEkJaSVag47ogNx4ppNJy
+         z8w1EFLThPKqC4k8rsiQouu5NLWKJP+ZXT84Xp1NGtYtb2ugs/ooyywlsM/fKssp4LNg
+         0EXMoSsbzbN7tegUi004sXdDWUgpxmzGNmFg6WqLYDco5AFVHvwocBWDymqugUP/iPqz
+         Y1bkUA/hYmZ33m5igrY9b9pIf2EP3JDfYaxwWx0ugKXbkeMz2nYbMQHvS6WdRv+YJ1Cz
+         SEsfRDSjaY50txvRIlau8PFK+fe7jtBVnXDqtTC0rHh1/+i8dR0u6ZHFx0ar1A2mh3eJ
+         6tqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774798474; x=1775403274;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y4jQhTO1UJPiph8NqA2wQY7EhFFaT1IhjZIj6QBNFBo=;
-        b=SbQdpvMsSO46FQpvgEL0ihRVz3NWnfhc/YwX/VDa35Q2NTo0Lx/OrL4FtalRVJqd8W
-         N1CwUQClGepga1GqiZ/HGQ5b1i5dbefsmZ9ewJ8rTfP4DYIhzl7+C1p7AePnW7pdbCev
-         xjt+s76IrwZBg8m6pZf7GSuSgNf1b5tmHu8WT+IZCEpyA9X2iD4XHgfTD5sNADrQyipn
-         rGt7qKK2qi7NRQV99wtUumpTH3/pl5pksJ236hijhaol9jHjv4rVVGM5zbcOithHFAgi
-         dtc2Lb43iXwxgeBf4/hZWRuCt9OrZV9047RXoduX7nS5+ULmZxWQWj7cy9QjLC6I2dFs
-         aycA==
-X-Forwarded-Encrypted: i=1; AJvYcCVv3f0Bf8dLUzhFszinEP2K8TvYv3uz6ClI9cI0u3AB28l/dUdUCPkOcqvc9sgKbmooDooP/1+5K1g2@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhJ7osddoD1q6c9e5p1W5NtmdlKjyV7XfqBl6GTki2gvr/zsLC
-	BiBx342w+Cdock5NjNRreCKoqnbmf69vNwX8LP0Gqb0YhJDylLG2NhFG
-X-Gm-Gg: ATEYQzwN0qFay8/Qwj5rq2Jhx5TTVso/ZVd2wrhBiNzTPJnWz3AjRbnkEzFctJrCplo
-	gg8pIZ7qFiaGLGykidqKZoR8Gdchn4Lmei88J9aSD8AZAOSlfPmOHTsnx8it9AaP4IsKX8Bwa8z
-	jRisPUUXU5kt3UWf///wCp6TOBod/YRSDdlKE9YRobRVEcmunPkBuhUEQcVLlbB2P+T91W8+itg
-	FICNVzIWHEo1wlcuE2D/7FUwH1fA3EFDAkSE6eYoC7Egp92ykHSBFPFO4zRItYZORO2I2bWtSYb
-	0ifqPm9+HTb4TXmyCjqb7Cmm8bRMIYasKKhbNJAOEUGW5oJv23ijgAbz5CwEke7kiHQvlJXCQHC
-	jORrUBRf/UWjdAqtwVWyn0D0iM3Nj53EwmZT9wBXzN/RTIhKkGkRylFZrnlPSS0MOrHlkcXGfxb
-	at8OMl36YkQlAVj0oCUXd5wgOfHcBmJexd/xf4AzTBl9lk34mLMZR8iJqBVY2c4nwc6W4VOWbk
-X-Received: by 2002:a05:7300:8605:b0:2ba:6978:2b4 with SMTP id 5a478bee46e88-2c185e45bc3mr5584844eec.20.1774798473900;
-        Sun, 29 Mar 2026 08:34:33 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c3c74825a0sm4702738eec.27.2026.03.29.08.34.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Mar 2026 08:34:33 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <8291919d-c5ea-42ab-b2e5-2dfa16c23698@roeck-us.net>
-Date: Sun, 29 Mar 2026 08:34:31 -0700
+        d=1e100.net; s=20251104; t=1774808918; x=1775413718;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rg0uMy/jx2NSn6EVJetGifZ0Mlgvuk8yNhBJ8hBLp1o=;
+        b=hcF/bTZ15MQ8D7X07m6jlFyZDnXtVSj5owSJifYLtB8WbAUogoGgePhwqiigIGvo69
+         jpOVx9No+eKRals4AwlAE8vstgmZwnpOsyRjWd+owmjqf/fLdvDE3k9QefrcGw/F9lxC
+         a5FKC7vfPlX982RGWaBFueKezMbIgfOTH5fO7kcOy2KwcnBmt2izDQNGfaD5w7jb4lTy
+         yvwq/hf5sY6PNCJXg0wijJqtLB3feLh5PUbMJ4XT1lGTwgNVaAtl0VMzx630s8cc28KH
+         /FK698QIPDHvBWKuVlog7TA7+NF40YMwEVNWzXpMoSf2LaRL68StH6Dq7QgskAWAB9kS
+         zmBg==
+X-Gm-Message-State: AOJu0YzZFdwkJ3EwPd9HwzQsSH5gjL89Q9j3+uagTzjHURM83pnY5m0u
+	m52bnAWmFO8Cw/xYnsolO4dTJa6/+GwU/+jmxBDsOEB6ZG++acMSHnuDK2WLeg==
+X-Gm-Gg: ATEYQzyGAr5dhF9wVP97unm95yL8ZWuZntuJEPyBRlMUiK5VB191IU4akZ+rlgdvpGu
+	QVOoTCVnjr7THC9NGso+eG69UMYnPlAtuH0U4rBJWDgzVzHQI0eJYCsN5CXG4WWiKASRmTic+SE
+	d3muqJmv/hbaAQ+hjHUMYT8pUZjhC++JAfTNhTQi0ip3s/fPZffv54VW9BE5M/eeMM+0RnS4+SU
+	Y2JkNOUOOc4lwc+g2Smx4tcKX2sPdoc4eE6soPtq53bcLP2l9jp6rkdq/s5OOZLkrJi9D0q+iDm
+	ptHF7tA9FMCh6XRgYuyNfxFIMp0u7mLMIhp8WuqDiKyYvCvBa7v3aTUFes2RTe/gtxds5G0blGU
+	S0w8vuZxqpVh7lXCStTgdzmcdvfjl/oweD6ZPSx0KpKV9dl6uoB7rM/QWwgn8MmQfY6G+qF80v1
+	3+xbIMdvF5LmDeGF4dAZttTisiYQbDdhlRoxLkXmLJrcPMwybGTY9/5MwJTV/PWA==
+X-Received: by 2002:a05:6820:81c1:b0:67b:c368:1364 with SMTP id 006d021491bc7-67e1862686cmr5437622eaf.25.1774808918159;
+        Sun, 29 Mar 2026 11:28:38 -0700 (PDT)
+Received: from Zephyrus.localdomain ([131.93.209.211])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-67e231ea41dsm3549796eaf.15.2026.03.29.11.28.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Mar 2026 11:28:37 -0700 (PDT)
+From: Vincent Fazio <vfazio@gmail.com>
+To: linux-gpio@vger.kernel.org
+Cc: Vincent Fazio <vfazio@gmail.com>
+Subject: [libgpiod][PATCH] bindings: python: drop python 3.9 support
+Date: Sun, 29 Mar 2026 13:28:32 -0500
+Message-ID: <20260329182832.39824-1-vfazio@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 0/6] mfd: Add support for NXP MC33978/MC34978 MSDI
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
- Peter Rosin <peda@axentia.se>, Linus Walleij <linusw@kernel.org>
-Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-gpio@vger.kernel.org, David Jander <david@protonic.nl>
-References: <20260329090601.532477-1-o.rempel@pengutronix.de>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <20260329090601.532477-1-o.rempel@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-34368-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[roeck-us.net];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linux@roeck-us.net,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-34369-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[vfazio@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sashiko.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,roeck-us.net:mid]
-X-Rspamd-Queue-Id: 1D5F3352A66
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 231A535397E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Oleksij,
+* Update pyproject.toml to require Python 3.10+ for runtime
+* Update mypy's target version to 3.10 syntax
+* Drop ruff's target version as it's inferred by the project's
+  requires-python value
+* Remove the linter settings that ignored UP007 & UP0045
+* Update type annotations to conform to active linter rules
 
-On 3/29/26 02:05, Oleksij Rempel wrote:
-> changes v7:
-> - drop gpiolib irq fix and make pinctrl more robust against NULL point
->    dereference.
-> 
-> This series adds support for the NXP MC33978/MC34978 Multiple Switch Detection
-> Interface (MSDI) via the MFD framework.
-> 
-> Architecture overview:
-> * mfd: Core driver handling 2-frame pipelined SPI, regulator sequencing, and
->    linear irq_domain. Harvests status bits from SPI MISO MSB.
-> * pinctrl: Exposes 22 physical switch inputs as standard GPIOs. Proxies IRQs to
->    the MFD domain.
-> * hwmon: Exposes thermal limits, VBATP/VDDQ voltage boundaries, and dynamic
->    fault alarms.
-> * mux: Controls the 24-to-1 AMUX routing analog signals (switch voltages,
->    temperature, VBATP) to an external ADC.
-> 
-> Initial pinctrl implementation by David Jander, reworked into this MFD
-> architecture.
-> 
+Closes: https://github.com/brgl/libgpiod/issues/151
+Signed-off-by: Vincent Fazio <vfazio@gmail.com>
+---
+ bindings/python/gpiod/__init__.py         |  9 +++---
+ bindings/python/gpiod/_ext.pyi            | 10 +++----
+ bindings/python/gpiod/_internal.py        | 10 +++----
+ bindings/python/gpiod/chip.py             | 36 ++++++++++-------------
+ bindings/python/gpiod/line_request.py     | 36 ++++++++++-------------
+ bindings/python/pyproject.toml            | 10 ++-----
+ bindings/python/tests/gpiosim/chip.py     |  9 +++---
+ bindings/python/tests/helpers.py          |  8 ++---
+ bindings/python/tests/tests_edge_event.py |  5 ++--
+ bindings/python/tests/tests_info_event.py |  3 +-
+ configure.ac                              |  2 +-
+ 11 files changed, 59 insertions(+), 79 deletions(-)
 
-I Acked the hwmon driver, but Sashiko is still not happy with several of the other
-patches in the series:
-
-https://sashiko.dev/#/patchset/20260329090601.532477-1-o.rempel%40pengutronix.de
-
-If the remaining issues are false positives, please let Roman and/or me know.
-
-Thanks,
-Guenter
+diff --git a/bindings/python/gpiod/__init__.py b/bindings/python/gpiod/__init__.py
+index 854e41f..be1b6b0 100644
+--- a/bindings/python/gpiod/__init__.py
++++ b/bindings/python/gpiod/__init__.py
+@@ -8,7 +8,6 @@ This module wraps the native C API of libgpiod in a set of python classes.
+ """
+ 
+ from collections.abc import Iterable
+-from typing import Optional, Union
+ 
+ from . import (
+     _ext,
+@@ -87,10 +86,10 @@ def is_gpiochip_device(path: str) -> bool:
+ 
+ def request_lines(
+     path: str,
+-    config: dict[Union[Iterable[Union[int, str]], int, str], Optional[LineSettings]],
+-    consumer: Optional[str] = None,
+-    event_buffer_size: Optional[int] = None,
+-    output_values: Optional[dict[Union[int, str], line.Value]] = None,
++    config: dict[Iterable[int | str] | int | str, LineSettings | None],
++    consumer: str | None = None,
++    event_buffer_size: int | None = None,
++    output_values: dict[int | str, line.Value] | None = None,
+ ) -> LineRequest:
+     """
+     Open a GPIO chip pointed to by 'path', request lines according to the
+diff --git a/bindings/python/gpiod/_ext.pyi b/bindings/python/gpiod/_ext.pyi
+index 31fd352..873c23f 100644
+--- a/bindings/python/gpiod/_ext.pyi
++++ b/bindings/python/gpiod/_ext.pyi
+@@ -1,8 +1,6 @@
+ # SPDX-License-Identifier: LGPL-2.1-or-later
+ # SPDX-FileCopyrightText: 2024 Vincent Fazio <vfazio@gmail.com>
+ 
+-from typing import Optional
+-
+ from .chip_info import ChipInfo
+ from .edge_event import EdgeEvent
+ from .info_event import InfoEvent
+@@ -32,7 +30,7 @@ class Request:
+     def get_values(self, offsets: list[int], values: list[Value]) -> None: ...
+     def set_values(self, values: dict[int, Value]) -> None: ...
+     def reconfigure_lines(self, line_cfg: LineConfig) -> None: ...
+-    def read_edge_events(self, max_events: Optional[int]) -> list[EdgeEvent]: ...
++    def read_edge_events(self, max_events: int | None) -> list[EdgeEvent]: ...
+     @property
+     def chip_name(self) -> str: ...
+     @property
+@@ -47,12 +45,12 @@ class Chip:
+     def get_info(self) -> ChipInfo: ...
+     def line_offset_from_id(self, id: str) -> int: ...
+     def get_line_info(self, offset: int, watch: bool) -> LineInfo: ...
+-    def get_line_name(self, offset: int) -> Optional[str]: ...
++    def get_line_name(self, offset: int) -> str | None: ...
+     def request_lines(
+         self,
+         line_cfg: LineConfig,
+-        consumer: Optional[str],
+-        event_buffer_size: Optional[int],
++        consumer: str | None,
++        event_buffer_size: int | None,
+     ) -> Request: ...
+     def read_info_event(self) -> InfoEvent: ...
+     def close(self) -> None: ...
+diff --git a/bindings/python/gpiod/_internal.py b/bindings/python/gpiod/_internal.py
+index ee15796..b81f970 100644
+--- a/bindings/python/gpiod/_internal.py
++++ b/bindings/python/gpiod/_internal.py
+@@ -5,7 +5,7 @@ from __future__ import annotations
+ 
+ from datetime import timedelta
+ from select import select
+-from typing import TYPE_CHECKING, Optional, Union
++from typing import TYPE_CHECKING
+ 
+ if TYPE_CHECKING:
+     from collections.abc import Generator, Iterable
+@@ -15,8 +15,8 @@ if TYPE_CHECKING:
+ __all__ = ["poll_fd", "config_iter"]
+ 
+ 
+-def poll_fd(fd: int, timeout: Optional[Union[timedelta, float]] = None) -> bool:
+-    sec: Union[float, None]
++def poll_fd(fd: int, timeout: timedelta | float | None = None) -> bool:
++    sec: float | None
+     if isinstance(timeout, timedelta):
+         sec = timeout.total_seconds()
+     else:
+@@ -27,8 +27,8 @@ def poll_fd(fd: int, timeout: Optional[Union[timedelta, float]] = None) -> bool:
+ 
+ 
+ def config_iter(
+-    config: dict[Union[Iterable[Union[int, str]], int, str], Optional[LineSettings]],
+-) -> Generator[tuple[Union[int, str], Optional[LineSettings]]]:
++    config: dict[Iterable[int | str] | int | str, LineSettings | None],
++) -> Generator[tuple[int | str, LineSettings | None]]:
+     for key, settings in config.items():
+         if isinstance(key, int) or isinstance(key, str):
+             yield key, settings
+diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.py
+index a98fce6..8113fa9 100644
+--- a/bindings/python/gpiod/chip.py
++++ b/bindings/python/gpiod/chip.py
+@@ -4,7 +4,7 @@
+ from __future__ import annotations
+ 
+ from errno import ENOENT
+-from typing import TYPE_CHECKING, Optional, Union, cast
++from typing import TYPE_CHECKING, cast
+ 
+ from . import _ext
+ from ._internal import config_iter, poll_fd
+@@ -60,8 +60,8 @@ class Chip:
+           path:
+             Path to the GPIO character device file.
+         """
+-        self._chip: Union[_ext.Chip, None] = _ext.Chip(path)
+-        self._info: Union[ChipInfo, None] = None
++        self._chip: _ext.Chip | None = _ext.Chip(path)
++        self._info: ChipInfo | None = None
+ 
+     def __bool__(self) -> bool:
+         """
+@@ -81,9 +81,9 @@ class Chip:
+ 
+     def __exit__(
+         self,
+-        exc_type: Optional[type[BaseException]],
+-        exc_value: Optional[BaseException],
+-        traceback: Optional[TracebackType],
++        exc_type: type[BaseException] | None,
++        exc_value: BaseException | None,
++        traceback: TracebackType | None,
+     ) -> None:
+         """
+         Controlled execution exit callback.
+@@ -117,7 +117,7 @@ class Chip:
+ 
+         return self._info
+ 
+-    def line_offset_from_id(self, id: Union[str, int]) -> int:
++    def line_offset_from_id(self, id: str | int) -> int:
+         """
+         Map a line's identifier to its offset within the chip.
+ 
+@@ -155,13 +155,13 @@ class Chip:
+ 
+         return offset
+ 
+-    def _get_line_info(self, line: Union[int, str], watch: bool) -> LineInfo:
++    def _get_line_info(self, line: int | str, watch: bool) -> LineInfo:
+         self._check_closed()
+         return cast("_ext.Chip", self._chip).get_line_info(
+             self.line_offset_from_id(line), watch
+         )
+ 
+-    def get_line_info(self, line: Union[int, str]) -> LineInfo:
++    def get_line_info(self, line: int | str) -> LineInfo:
+         """
+         Get the snapshot of information about the line at given offset.
+ 
+@@ -174,7 +174,7 @@ class Chip:
+         """
+         return self._get_line_info(line, watch=False)
+ 
+-    def watch_line_info(self, line: Union[int, str]) -> LineInfo:
++    def watch_line_info(self, line: int | str) -> LineInfo:
+         """
+         Get the snapshot of information about the line at given offset and
+         start watching it for future changes.
+@@ -188,7 +188,7 @@ class Chip:
+         """
+         return self._get_line_info(line, watch=True)
+ 
+-    def unwatch_line_info(self, line: Union[int, str]) -> None:
++    def unwatch_line_info(self, line: int | str) -> None:
+         """
+         Stop watching a line for status changes.
+ 
+@@ -201,9 +201,7 @@ class Chip:
+             self.line_offset_from_id(line)
+         )
+ 
+-    def wait_info_event(
+-        self, timeout: Optional[Union[timedelta, float]] = None
+-    ) -> bool:
++    def wait_info_event(self, timeout: timedelta | float | None = None) -> bool:
+         """
+         Wait for line status change events on any of the watched lines on the
+         chip.
+@@ -237,12 +235,10 @@ class Chip:
+ 
+     def request_lines(
+         self,
+-        config: dict[
+-            Union[Iterable[Union[int, str]], int, str], Optional[LineSettings]
+-        ],
+-        consumer: Optional[str] = None,
+-        event_buffer_size: Optional[int] = None,
+-        output_values: Optional[dict[Union[int, str], Value]] = None,
++        config: dict[Iterable[int | str] | int | str, LineSettings | None],
++        consumer: str | None = None,
++        event_buffer_size: int | None = None,
++        output_values: dict[int | str, Value] | None = None,
+     ) -> LineRequest:
+         """
+         Request a set of lines for exclusive usage.
+diff --git a/bindings/python/gpiod/line_request.py b/bindings/python/gpiod/line_request.py
+index deb48a7..0287791 100644
+--- a/bindings/python/gpiod/line_request.py
++++ b/bindings/python/gpiod/line_request.py
+@@ -4,7 +4,7 @@
+ from __future__ import annotations
+ 
+ import warnings
+-from typing import TYPE_CHECKING, Optional, Union, cast
++from typing import TYPE_CHECKING, cast
+ 
+ from . import _ext
+ from ._internal import config_iter, poll_fd
+@@ -33,11 +33,11 @@ class LineRequest:
+         Note: LineRequest objects can only be instantiated by a Chip parent.
+         LineRequest.__init__() is not part of stable API.
+         """
+-        self._req: Union[_ext.Request, None] = req
++        self._req: _ext.Request | None = req
+         self._chip_name: str
+         self._offsets: list[int]
+         self._name_map: dict[str, int]
+-        self._lines: list[Union[int, str]]
++        self._lines: list[int | str]
+ 
+     def __bool__(self) -> bool:
+         """
+@@ -57,9 +57,9 @@ class LineRequest:
+ 
+     def __exit__(
+         self,
+-        exc_type: Optional[type[BaseException]],
+-        exc_value: Optional[BaseException],
+-        traceback: Optional[TracebackType],
++        exc_type: type[BaseException] | None,
++        exc_value: BaseException | None,
++        traceback: TracebackType | None,
+     ) -> None:
+         """
+         Controlled execution exit callback.
+@@ -79,7 +79,7 @@ class LineRequest:
+         cast("_ext.Request", self._req).release()
+         self._req = None
+ 
+-    def get_value(self, line: Union[int, str]) -> Value:
++    def get_value(self, line: int | str) -> Value:
+         """
+         Get a single GPIO line value.
+ 
+@@ -92,16 +92,14 @@ class LineRequest:
+         """
+         return self.get_values([line])[0]
+ 
+-    def _line_to_offset(self, line: Union[int, str]) -> int:
++    def _line_to_offset(self, line: int | str) -> int:
+         if isinstance(line, int):
+             return line
+         if (_line := self._name_map.get(line)) is None:
+             raise ValueError(f"unknown line name: {line}")
+         return _line
+ 
+-    def get_values(
+-        self, lines: Optional[Iterable[Union[int, str]]] = None
+-    ) -> list[Value]:
++    def get_values(self, lines: Iterable[int | str] | None = None) -> list[Value]:
+         """
+         Get values of a set of GPIO lines.
+ 
+@@ -124,7 +122,7 @@ class LineRequest:
+         cast("_ext.Request", self._req).get_values(offsets, buf)
+         return buf
+ 
+-    def set_value(self, line: Union[int, str], value: Value) -> None:
++    def set_value(self, line: int | str, value: Value) -> None:
+         """
+         Set the value of a single GPIO line.
+ 
+@@ -136,7 +134,7 @@ class LineRequest:
+         """
+         self.set_values({line: value})
+ 
+-    def set_values(self, values: dict[Union[int, str], Value]) -> None:
++    def set_values(self, values: dict[int | str, Value]) -> None:
+         """
+         Set the values of a subset of GPIO lines.
+ 
+@@ -152,9 +150,7 @@ class LineRequest:
+ 
+     def reconfigure_lines(
+         self,
+-        config: dict[
+-            Union[Iterable[Union[int, str]], int, str], Optional[LineSettings]
+-        ],
++        config: dict[Iterable[int | str] | int | str, LineSettings | None],
+     ) -> None:
+         """
+         Reconfigure requested lines.
+@@ -196,9 +192,7 @@ class LineRequest:
+ 
+         cast("_ext.Request", self._req).reconfigure_lines(line_cfg)
+ 
+-    def wait_edge_events(
+-        self, timeout: Optional[Union[timedelta, float]] = None
+-    ) -> bool:
++    def wait_edge_events(self, timeout: timedelta | float | None = None) -> bool:
+         """
+         Wait for edge events on any of the requested lines.
+ 
+@@ -215,7 +209,7 @@ class LineRequest:
+ 
+         return poll_fd(self.fd, timeout)
+ 
+-    def read_edge_events(self, max_events: Optional[int] = None) -> list[EdgeEvent]:
++    def read_edge_events(self, max_events: int | None = None) -> list[EdgeEvent]:
+         """
+         Read a number of edge events from a line request.
+ 
+@@ -271,7 +265,7 @@ class LineRequest:
+         return self._offsets
+ 
+     @property
+-    def lines(self) -> list[Union[int, str]]:
++    def lines(self) -> list[int | str]:
+         """
+         List of requested lines. Lines requested by name are listed as such.
+         """
+diff --git a/bindings/python/pyproject.toml b/bindings/python/pyproject.toml
+index 1c3549c..d919b88 100644
+--- a/bindings/python/pyproject.toml
++++ b/bindings/python/pyproject.toml
+@@ -11,7 +11,7 @@ dynamic = ["version"]
+ description = "Python bindings for libgpiod"
+ readme = "README.md"
+ license = "LGPL-2.1-or-later"
+-requires-python = ">=3.9.0"
++requires-python = ">=3.10"
+ authors = [
+   {name = "Bartosz Golaszewski", email = "brgl@bgdev.pl"},
+ ]
+@@ -22,7 +22,6 @@ classifiers = [
+   "Programming Language :: Python",
+   "Programming Language :: Python :: 3",
+   "Programming Language :: Python :: 3 :: Only",
+-  "Programming Language :: Python :: 3.9",
+   "Programming Language :: Python :: 3.10",
+   "Programming Language :: Python :: 3.11",
+   "Programming Language :: Python :: 3.12",
+@@ -46,7 +45,7 @@ include = ["gpiod"]
+ namespaces = false
+ 
+ [tool.mypy]
+-python_version = "3.9"
++python_version = "3.10"
+ files = [
+   "gpiod/",
+   "tests/",
+@@ -57,7 +56,7 @@ module = "gpiod.line.*"
+ strict_equality = false # Ignore Enum comparison-overlap: https://github.com/python/mypy/issues/17317
+ 
+ [tool.ruff]
+-target-version = "py39"
++target-version = "py310"
+ include = [
+   "gpiod/**/*.py",
+   "gpiod/**/*.pyi",
+@@ -72,9 +71,6 @@ ignore=[
+   "B904",
+   # Never enforce line length violations. Let the formatter handle it: https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
+   "E501",
+-  # Ignore new Union (|) syntax until we require 3.10+
+-  "UP007",
+-  "UP045",
+ ]
+ 
+ [tool.ruff.lint.per-file-ignores]
+diff --git a/bindings/python/tests/gpiosim/chip.py b/bindings/python/tests/gpiosim/chip.py
+index 691bfe1..7fd0042 100644
+--- a/bindings/python/tests/gpiosim/chip.py
++++ b/bindings/python/tests/gpiosim/chip.py
+@@ -2,7 +2,6 @@
+ # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+ 
+ from enum import Enum
+-from typing import Optional
+ 
+ from . import _ext
+ 
+@@ -27,10 +26,10 @@ class Chip:
+ 
+     def __init__(
+         self,
+-        label: Optional[str] = None,
+-        num_lines: Optional[int] = None,
+-        line_names: Optional[dict[int, str]] = None,
+-        hogs: Optional[dict[int, tuple[str, Direction]]] = None,
++        label: str | None = None,
++        num_lines: int | None = None,
++        line_names: dict[int, str] | None = None,
++        hogs: dict[int, tuple[str, Direction]] | None = None,
+     ):
+         self._chip = _ext.Chip()
+ 
+diff --git a/bindings/python/tests/helpers.py b/bindings/python/tests/helpers.py
+index ad272a1..4abd8b2 100644
+--- a/bindings/python/tests/helpers.py
++++ b/bindings/python/tests/helpers.py
+@@ -4,7 +4,7 @@
+ from __future__ import annotations
+ 
+ import os
+-from typing import TYPE_CHECKING, Optional
++from typing import TYPE_CHECKING
+ 
+ if TYPE_CHECKING:
+     from types import TracebackType
+@@ -20,8 +20,8 @@ class LinkGuard:
+ 
+     def __exit__(
+         self,
+-        type: Optional[type[BaseException]],
+-        val: Optional[BaseException],
+-        tb: Optional[TracebackType],
++        type: type[BaseException] | None,
++        val: BaseException | None,
++        tb: TracebackType | None,
+     ) -> None:
+         os.unlink(self.dst)
+diff --git a/bindings/python/tests/tests_edge_event.py b/bindings/python/tests/tests_edge_event.py
+index bf1685c..4efed2a 100644
+--- a/bindings/python/tests/tests_edge_event.py
++++ b/bindings/python/tests/tests_edge_event.py
+@@ -6,7 +6,6 @@ from datetime import timedelta
+ from functools import partial
+ from select import select
+ from threading import Thread
+-from typing import Optional
+ from unittest import TestCase
+ 
+ import gpiod
+@@ -56,7 +55,7 @@ class EdgeEventInvalidConfig(TestCase):
+ class WaitingForEdgeEvents(TestCase):
+     def setUp(self) -> None:
+         self.sim = gpiosim.Chip(num_lines=8)
+-        self.thread: Optional[Thread] = None
++        self.thread: Thread | None = None
+ 
+     def tearDown(self) -> None:
+         if self.thread:
+@@ -208,7 +207,7 @@ class PollLineRequestObject(TestCase):
+         self.request = gpiod.request_lines(
+             self.sim.dev_path, {2: gpiod.LineSettings(edge_detection=Edge.BOTH)}
+         )
+-        self.thread: Optional[Thread] = None
++        self.thread: Thread | None = None
+ 
+     def tearDown(self) -> None:
+         if self.thread:
+diff --git a/bindings/python/tests/tests_info_event.py b/bindings/python/tests/tests_info_event.py
+index 31dc952..e32ef19 100644
+--- a/bindings/python/tests/tests_info_event.py
++++ b/bindings/python/tests/tests_info_event.py
+@@ -8,7 +8,6 @@ import time
+ from dataclasses import FrozenInstanceError
+ from functools import partial
+ from select import select
+-from typing import Optional
+ from unittest import TestCase
+ 
+ import gpiod
+@@ -53,7 +52,7 @@ class WatchingInfoEventWorks(TestCase):
+     def setUp(self) -> None:
+         self.sim = gpiosim.Chip(num_lines=8, line_names={4: "foobar"})
+         self.chip = gpiod.Chip(self.sim.dev_path)
+-        self.thread: Optional[threading.Thread] = None
++        self.thread: threading.Thread | None = None
+ 
+     def tearDown(self) -> None:
+         if self.thread:
+diff --git a/configure.ac b/configure.ac
+index 61a010f..c1bae2a 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -234,7 +234,7 @@ AM_CONDITIONAL([WITH_BINDINGS_PYTHON], [test "x$with_bindings_python" = xtrue])
+ 
+ if test "x$with_bindings_python" = xtrue
+ then
+-	AM_PATH_PYTHON([3.9], [],
++	AM_PATH_PYTHON([3.10], [],
+ 		[AC_MSG_ERROR([python3 not found - needed for python bindings])])
+ fi
+ 
+-- 
+2.43.0
 
 
