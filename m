@@ -1,184 +1,176 @@
-Return-Path: <linux-gpio+bounces-34355-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34356-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cN41A0W/yGmDqAUAu9opvQ
-	(envelope-from <linux-gpio+bounces-34355-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 07:57:25 +0200
+	id gNwzAT7dyGkorwUAu9opvQ
+	(envelope-from <linux-gpio+bounces-34356-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 10:05:18 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A78F9350DD6
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 07:57:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 97DD23512F2
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 10:05:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 761993026587
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 05:56:55 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6B96B301F9E0
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2026 08:04:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29FAC28B7DB;
-	Sun, 29 Mar 2026 05:56:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D6D12DCF67;
+	Sun, 29 Mar 2026 08:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LUNOBC6W"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883AA29B78D
-	for <linux-gpio@vger.kernel.org>; Sun, 29 Mar 2026 05:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8F624B28;
+	Sun, 29 Mar 2026 08:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774763815; cv=none; b=e5p4iS3BzpXcEOSKtCqk32tFLsED0FE2zphJ1IMI7z0v3IJF295IQ+x/JgqTc+b5MIZ3d9elNLFdo8fKYWMQSv1yBMN2vO5mL8UTobLTiyFy6c1S15zWKg6BvpFCvoK3c2t2m+x8ehuTy95992jsgsGsqpVtIwpu/1QKi5PHgP0=
+	t=1774771490; cv=none; b=iFEOxWIPc+xa169opxKQq/djwvi8S91hC78l1iLU1hdgoLU1KR+LPvcYItkgu9nrNwRd8S+haBsFLlaNO5LJDLEZj7DHeYa+B5g/psS+zkw1P82YfYEI+gkulB4swQEGhipt+FEta6KYkIk/1JUEvE48iDWJ11SfhC+1d9xY8Ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774763815; c=relaxed/simple;
-	bh=qBV3ETz4r9ysc3UuOuguCm3fT6bSo21r4UODatXRPCA=;
+	s=arc-20240116; t=1774771490; c=relaxed/simple;
+	bh=i6SF/XNHOmRD3nw7Nr4/q/gJ9IwKNLMR8vrL1INFa/w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h1Flfi/C9n0dkAHz94gbUDI87Jy6C48TiqHNYdIAhAHpGZY3z9kscHdX7RfV3PEQg3wUK64VHcsNXTC5Ny7sidKBWBZQYWSRPv5xAwJffOGr0p58TSFKv+OkCHp3YzuGgksKqZHhvN3YHwQEGkdumxyEytn9QDrYiezHmCTjOuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1w6j8G-0007tM-9S; Sun, 29 Mar 2026 07:56:20 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1w6j8F-002fH8-1i;
-	Sun, 29 Mar 2026 07:56:19 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.98.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1w6j8F-0000000CR4n-1joR;
-	Sun, 29 Mar 2026 07:56:19 +0200
-Date: Sun, 29 Mar 2026 07:56:19 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-	Peter Rosin <peda@axentia.se>, Linus Walleij <linusw@kernel.org>
-Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-gpio@vger.kernel.org, David Jander <david@protonic.nl>
-Subject: Re: [PATCH v7 0/6] mfd: Add support for NXP MC33978/MC34978 MSDI
-Message-ID: <aci_A1ye2N3g0IIQ@pengutronix.de>
-References: <20260327163450.3287313-1-o.rempel@pengutronix.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ftOFPiDowGoN7zLJF3dhSjsnBYmKlqwlfjdMRL1nJXnwZaIoj+efUyf61/RsFd3fjjfz9d8DTyFf3OydviVAHldMe6VZugK+aJn1I4AEER+HPoYP7r1k3t/sFU5VpPKlM0J3LHIy9QzPZIT9e9vj3OKN2INMJWEM+QooLv2Dkaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LUNOBC6W; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF8ACC116C6;
+	Sun, 29 Mar 2026 08:04:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774771490;
+	bh=i6SF/XNHOmRD3nw7Nr4/q/gJ9IwKNLMR8vrL1INFa/w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LUNOBC6W3siRz3O/MJUXFqKvWhmKuFuVTeOiEgUSLMA2Q2OTfOfA5bVnT1v5+G8K5
+	 yzq4CbMUnkIO4kaIVauW0xPyEhCaWxh5lzDDXtjNYdmhRqEcpJWdx1G3bvuzk1esjc
+	 NZ7buNMOsoYgX0CR9UHlehhrDlTD0GHPAQqkUFnKaAeEYJvuJ8qhMsBTTe+ZOz6opN
+	 ++9tkipFX0uRMDjx4vBhN/WYGlHkFj2zjAYTWJt9ucMQXBWCFqFDFnAlp6lKa4AgZr
+	 Yhhknt4ih4Nryxkg1ZK0/Zulz7YIGf0Q0SByyU8KV7OL4RoJlXNi04rH3+TKUIqhXD
+	 I0dE71BfmCX6Q==
+Date: Sun, 29 Mar 2026 10:04:47 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: radu.sabau@analog.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v5 3/4] iio: adc: ad4691: add triggered buffer support
+Message-ID: <acjaqByQo0C2Msjo@monoceros>
+References: <20260327-ad4692-multichannel-sar-adc-driver-v5-0-11f789de47b8@analog.com>
+ <20260327-ad4692-multichannel-sar-adc-driver-v5-3-11f789de47b8@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="5etpnf3qopr55utl"
 Content-Disposition: inline
-In-Reply-To: <20260327163450.3287313-1-o.rempel@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spamd-Result: default: False [0.04 / 15.00];
+In-Reply-To: <20260327-ad4692-multichannel-sar-adc-driver-v5-3-11f789de47b8@analog.com>
+X-Spamd-Result: default: False [-2.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	TAGGED_FROM(0.00)[bounces-34355-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[pengutronix.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-34356-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	FREEMAIL_CC(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[o.rempel@pengutronix.de,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[pengutronix.de:mid,pengutronix.de:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sashiko.dev:url]
-X-Rspamd-Queue-Id: A78F9350DD6
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 97DD23512F2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi all,
 
-There are some valid review points related to the MFD core:
-https://sashiko.dev/#/patchset/20260327163450.3287313-1-o.rempel%40pengutronix.de
+--5etpnf3qopr55utl
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v5 3/4] iio: adc: ad4691: add triggered buffer support
+MIME-Version: 1.0
 
-i'll send a new version.
+On Fri, Mar 27, 2026 at 01:07:59PM +0200, Radu Sabau via B4 Relay wrote:
+> +static const char * const ad4691_gp_names[] = { "gp0", "gp1", "gp2", "gp3" };
+> +
+> +/*
+> + * Valid ACC_DEPTH values where the effective divisor equals the count.
+> + * From Table 13: ACC_DEPTH = 2^N yields right-shift = N, divisor = 2^N.
+> + */
+> +static const int ad4691_oversampling_ratios[] = { 1, 2, 4, 8, 16, 32 };
+> [...]
+> +static int ad4691_set_oversampling_ratio(struct iio_dev *indio_dev,
+> +					 const struct iio_chan_spec *chan,
+> +					 int osr)
+> +{
+> +	struct ad4691_state *st = iio_priv(indio_dev);
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ad4691_oversampling_ratios); i++) {
+> +		if (ad4691_oversampling_ratios[i] != osr)
+> +			continue;
 
-On Fri, Mar 27, 2026 at 05:34:44PM +0100, Oleksij Rempel wrote:
-> changes v7:
-> - drop gpiolib irq fix and make pinctrl more robust against NULL point
->   dereference.
-> 
-> This series adds support for the NXP MC33978/MC34978 Multiple Switch Detection
-> Interface (MSDI) via the MFD framework.
-> 
-> Architecture overview:
-> * mfd: Core driver handling 2-frame pipelined SPI, regulator sequencing, and
->   linear irq_domain. Harvests status bits from SPI MISO MSB.
-> * pinctrl: Exposes 22 physical switch inputs as standard GPIOs. Proxies IRQs to
->   the MFD domain.
-> * hwmon: Exposes thermal limits, VBATP/VDDQ voltage boundaries, and dynamic
->   fault alarms.
-> * mux: Controls the 24-to-1 AMUX routing analog signals (switch voltages,
->   temperature, VBATP) to an external ADC.
-> 
-> Initial pinctrl implementation by David Jander, reworked into this MFD
-> architecture.
-> 
-> Best regards,
-> Oleksij
-> 
-> David Jander (1):
->   pinctrl: add NXP MC33978/MC34978 pinctrl driver
-> 
-> Oleksij Rempel (5):
->   dt-bindings: pinctrl: add NXP MC33978/MC34978 MSDI
->   mfd: add NXP MC33978/MC34978 core driver
->   pinctrl: core: Make pin group callbacks optional for pin-only drivers
->   hwmon: add NXP MC33978/MC34978 driver
->   mux: add NXP MC33978/MC34978 AMUX driver
-> 
->  .../bindings/pinctrl/nxp,mc33978.yaml         | 153 +++
->  drivers/hwmon/Kconfig                         |  10 +
->  drivers/hwmon/Makefile                        |   1 +
->  drivers/hwmon/mc33978-hwmon.c                 | 548 ++++++++++
->  drivers/mfd/Kconfig                           |  15 +
->  drivers/mfd/Makefile                          |   2 +
->  drivers/mfd/mc33978.c                         | 933 ++++++++++++++++++
->  drivers/mux/Kconfig                           |  14 +
->  drivers/mux/Makefile                          |   2 +
->  drivers/mux/mc33978-mux.c                     | 136 +++
->  drivers/pinctrl/Kconfig                       |  14 +
->  drivers/pinctrl/Makefile                      |   1 +
->  drivers/pinctrl/core.c                        |  41 +-
->  drivers/pinctrl/pinconf.c                     |   9 +-
->  drivers/pinctrl/pinctrl-mc33978.c             | 836 ++++++++++++++++
->  include/linux/mfd/mc33978.h                   |  92 ++
->  16 files changed, 2800 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,mc33978.yaml
->  create mode 100644 drivers/hwmon/mc33978-hwmon.c
->  create mode 100644 drivers/mfd/mc33978.c
->  create mode 100644 drivers/mux/mc33978-mux.c
->  create mode 100644 drivers/pinctrl/pinctrl-mc33978.c
->  create mode 100644 include/linux/mfd/mc33978.h
-> 
-> --
-> 2.47.3
-> 
-> 
+Given that ad4691_oversampling_ratios[i] is 1 << i; you can get rid of
+the loop using something like:
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+	if (osr < 1 || osr > 32 || !is_power_of_2(osr))
+		return -EINVAL;
+
+	i = ilog2(osr);
+
+> +
+> +		IIO_DEV_ACQUIRE_DIRECT_MODE(indio_dev, claim);
+> +		if (IIO_DEV_ACQUIRE_FAILED(claim))
+> +			return -EBUSY;
+> +
+> +		st->osr[chan->scan_index] = osr;
+> +		return regmap_write(st->regmap,
+> +				    AD4691_ACC_DEPTH_IN(chan->scan_index), osr);
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+
+Best regards
+Uwe
+
+--5etpnf3qopr55utl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmnI3RwACgkQj4D7WH0S
+/k6zzAf+J/7TqFHxQOCCHdUOD0oRn8btWZ2pH95is3fxAKrwDQtngFy3M4CULsCg
+GqYyEx+As2PJ1gq8S4Sy8jGMn7um3xjGe/WP82wePbJ1ZnYbfyiGFGRd8Ra5IgV2
+rujUIVQnvkbiwWnvg9IYUQmkwOl3aGa+dS13XzG9FO/9hrS/SnxaBdt+rKZrPTD3
+GTFcSRG2f8op0gwLh+7uUEOQbos+jI5DhXxujrs56oEJxatRLP/0EKmz6VRVUc1f
+8h38ZNXNJP1JlEwYK4HH3PiIF7zDC4i8VFqzph2t1rKkzGwueaUDi72C1HThYl/9
+1Nc/iQRpQneT8ikWVpjN8yWMsd5pCQ==
+=0mMc
+-----END PGP SIGNATURE-----
+
+--5etpnf3qopr55utl--
 
