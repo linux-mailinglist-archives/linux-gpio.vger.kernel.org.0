@@ -1,84 +1,85 @@
-Return-Path: <linux-gpio+bounces-34388-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34389-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mLiXDaA0ymnn6QUAu9opvQ
-	(envelope-from <linux-gpio+bounces-34388-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2026 10:30:24 +0200
+	id aK64CF42ymkx6gUAu9opvQ
+	(envelope-from <linux-gpio+bounces-34389-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2026 10:37:50 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id D122A3572B9
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2026 10:30:23 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74F053574B2
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2026 10:37:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 416B9300789F
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2026 08:30:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 95362304BDB0
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2026 08:31:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEA693AE19D;
-	Mon, 30 Mar 2026 08:30:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 837873ACF19;
+	Mon, 30 Mar 2026 08:31:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wka5z5mA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BG1xSiLI"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E57E3AD531
-	for <linux-gpio@vger.kernel.org>; Mon, 30 Mar 2026 08:30:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45FF83AB29D
+	for <linux-gpio@vger.kernel.org>; Mon, 30 Mar 2026 08:31:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774859419; cv=none; b=ry5AuPUiE2VNrTkTiLt84GZKJw+yz4fq5xeVX2fjA/ElJZqMuO8jydyFJAOeKx3NoOF45Hv8x+rjl25PVcQ+ZJbi5FR2ZL90eDboOtjth/WB5guYgQ39LUb9omc5s6ywjHO/CuSSZg0dzwEgx12pftScSOAq85gP+SU5RpYdhPs=
+	t=1774859474; cv=none; b=fw67Is8aMlsuMXzeEamOHCv1+ddEFgRbXcl58OUd5SpTQFQrFnHOfES34f9bIiQHiKzR5vDsVrzmBBhFbpYXyw+RaEPrfg6JwV9bj9dgUY5qq4davu3HQaswKHES46vd4W8wjFqdl72rlvHNcbbbPgu32rcebHczvnjVZTgh1Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774859419; c=relaxed/simple;
-	bh=gsBEGNHcqtbt6TEPS3qjYo/9d8yMbnMoE8MR1yPPkE0=;
+	s=arc-20240116; t=1774859474; c=relaxed/simple;
+	bh=eKvzCc322fl5N0+7gcXHhAyB/HAAszO9oZGPts34+oM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I9jbEx9nfTa6C7qgH0d0cJEot3DhHdgb8QigV7IxpKvDe8hiC25JOkIwIUHoJ5oX5Nvfmopn0z/dgrhDNA7QhjacyjBSyY5/iDhaLjbHcWd4oQA2sbOw0W4e3i4NPuFXB1MlKHs/3c4PEdSJ/R+vXevjuI7xoePByCNqtrC1sZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wka5z5mA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1A1BC2BCB3
-	for <linux-gpio@vger.kernel.org>; Mon, 30 Mar 2026 08:30:18 +0000 (UTC)
+	 To:Cc:Content-Type; b=eqge0b7sKZzXt+T5J97a7IKfxMdaTfO/DnTjdyr3DvLoY43JprpfNQn8ipdlAXRsoateklSdt7JB6orthlMuwN42tY6Y994PEzOK15SCPL+sHw6BuET2ns7cWtfggj5MT+f/t2v7na2LL8J02BZSK2ZIvCUVyQMdrA6KIWkHGug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BG1xSiLI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13716C4CEF7
+	for <linux-gpio@vger.kernel.org>; Mon, 30 Mar 2026 08:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774859418;
-	bh=gsBEGNHcqtbt6TEPS3qjYo/9d8yMbnMoE8MR1yPPkE0=;
+	s=k20201202; t=1774859474;
+	bh=eKvzCc322fl5N0+7gcXHhAyB/HAAszO9oZGPts34+oM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Wka5z5mAbex5oRpHGMSbyhmo6IL6NEsdBEnASwAEy6ef/25JO4rWyz+L34JywT1eA
-	 +sFgpYF32oc22/T+EbCXzTeeiOPxRoXm3QaQFGYI199uxIdC07ehV81sejazvuFE+u
-	 v4Jt3hZ011OicuG5sJjqJNVSsXpLOdank3vlK2V/4HYIYXElEizXMuBbRDWfC0HTwE
-	 Q0Ut+eBpNq45H91ViqupNx0HOq2WsLYYheli3DMCoUecugBW1UR/XgoC/NSgGW9Us+
-	 Gz70fxXISvQF6Khm4yHIN8xFQ8p/Ku15PRj02m9WL3nBDAkfhqgAcFPyhXIwUpqRqX
-	 hplcn+coRg+Og==
-Received: by mail-yx1-f50.google.com with SMTP id 956f58d0204a3-6501d32b04bso923852d50.2
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Mar 2026 01:30:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW85CWIiu8yXKbvbYU1AjdJ8ZY88B7waSVQ2nHTkmNhuAU/SUCD9cWZfPewsZy0WuEkIBMjY7nRGTSP@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywa28PFduLKcFYIZK/DOYSRCOW14gMIrD4MMUMIFu61tjm6Qhyp
-	zERYk8DOz6Io44n4X8vLjMv6UQjuHd6b77TGofoJE8jSryc6fzCA+5UFB3wAE3qmf8/jkQI8uNp
-	ylTdgXMt6GciuHX8Tx8BXo/mqDasIkcY=
-X-Received: by 2002:a05:690c:93:b0:796:6df5:485a with SMTP id
- 00721157ae682-79bde01777bmr118018997b3.39.1774859418160; Mon, 30 Mar 2026
- 01:30:18 -0700 (PDT)
+	b=BG1xSiLIjSlH1+C5ray0lsdKPxmyQqiGt2tw1IVTxwcpMDqbfzMmZXdi57hlCEUEj
+	 L3hgo2yFiiE93f4WFxmF4yHx0j9ho0WZluuiowDyxcQhTGECnMXRZkMe/1iD7PxEaN
+	 drEf0Jaat2KvIniu2JUXqiAyy3bZfwCTy89VtF1RvRe8Rdf2PXEIyNsW096X5mBJjz
+	 mGs91r2EkFIZcvTmnL2P0aJic0ATnFxVdvtciUyv0FytrT0ZR+0Xpp/flkRXomNFAd
+	 MAAOWF8B4oo/qyRj2H+lZ/06wknZQVPrwojALMmh4PYw8lhn6no32W/OtAQ8rvN3Qo
+	 s/0mMKpiQI2Zw==
+Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-65015facf32so1754265d50.1
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Mar 2026 01:31:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW6QKIBfDIAw4KdQAYNPVWAVYuDZ2zT9evSkJwg19INR0KfCgbZ1Odp7chY7HC5qJIygbz5jaFmMU5d@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzd3Sqho9NDO1ZzUAu33fzW2rZhWA/7qGJyo+mxFq9Sf/pZCLOE
+	B6P6Yod15jvHgZ33X6CBH4EEYRT95a7ZDbW5QHmVha68IOCBvldzWI3dEekurqNWca3ERtAROF+
+	0HjMU9Lj0g4m7NsWh4SqbVBcwP6KoLME=
+X-Received: by 2002:a05:690c:389:b0:79a:3a33:93a with SMTP id
+ 00721157ae682-79bde0b0492mr116304437b3.37.1774859473483; Mon, 30 Mar 2026
+ 01:31:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260327171240.3222755-1-mukesh.ojha@oss.qualcomm.com>
-In-Reply-To: <20260327171240.3222755-1-mukesh.ojha@oss.qualcomm.com>
+References: <20260327171240.3222755-1-mukesh.ojha@oss.qualcomm.com> <20260327171240.3222755-2-mukesh.ojha@oss.qualcomm.com>
+In-Reply-To: <20260327171240.3222755-2-mukesh.ojha@oss.qualcomm.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 30 Mar 2026 10:30:07 +0200
-X-Gmail-Original-Message-ID: <CAD++jLmSiPBhuBxzneP=6VZW4waQgAOTq=W-x-8UEWCaRv34ng@mail.gmail.com>
-X-Gm-Features: AQROBzBO1UqMnVAEdNWQczMORO8MkElarvQfd0yRFfv3ScughE9FdwH_S1g0tSY
-Message-ID: <CAD++jLmSiPBhuBxzneP=6VZW4waQgAOTq=W-x-8UEWCaRv34ng@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: qcom: eliza: Fix interrupt target bit
+Date: Mon, 30 Mar 2026 10:31:02 +0200
+X-Gmail-Original-Message-ID: <CAD++jLna8XSqyo0m=59k3UFpZEmC3Kszh=oKeEFX_jXDpW9BMw@mail.gmail.com>
+X-Gm-Features: AQROBzDohunATUWqEjHd6JUfuS0cCpw1GKYJTKpnQBK3emFWxJ5qIyJPBB03r4Q
+Message-ID: <CAD++jLna8XSqyo0m=59k3UFpZEmC3Kszh=oKeEFX_jXDpW9BMw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: qcom: Drop redundant intr_target_reg on
+ modern SoCs
 To: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
 Cc: Bjorn Andersson <andersson@kernel.org>, 
 	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
 	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, Abel Vesa <abel.vesa@oss.qualcomm.com>, 
 	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -87,7 +88,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34388-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34389-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -95,42 +96,38 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,mail.gmail.com:mid,qualcomm.com:email]
-X-Rspamd-Queue-Id: D122A3572B9
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: 74F053574B2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Mar 27, 2026 at 6:13=E2=80=AFPM Mukesh Ojha
+On Fri, Mar 27, 2026 at 6:16=E2=80=AFPM Mukesh Ojha
 <mukesh.ojha@oss.qualcomm.com> wrote:
 
-> The intr_target_bit for Eliza was incorrectly set to 5, which is the
-> value used by older Qualcomm SoCs (e.g. SM8250, MSM8996, X1E80100).
-> Newer SoCs such as SM8650, SM8750, Milos, and Kaanapali all use
-> bit 8 for the interrupt target field in the TLMM interrupt configuration
-> register.
->
-> Eliza belongs to the newer generation and should use bit 8 to correctly
-> route interrupts to the KPSS (Applications Processor). Using the wrong
-> bit position means the interrupt target routing is silently misconfigured=
+> On all Qualcomm TLMM generations from APQ8084 onwards, the interrupt
+> target routing bits are located in the same register as the interrupt
+> configuration bits (intr_cfg_reg). Only five older SoCs =E2=80=94 APQ8064=
 ,
-> which can result in GPIO interrupts not being delivered to the expected
-> processor.
+> IPQ8064, MDM9615, MSM8660 and MSM8960 =E2=80=94 have a genuinely separate
+> interrupt target routing register at a different offset (0x400 + 0x4 * id=
+).
 >
-> Fix this by aligning Eliza with the correct value used by its peer SoCs.
+> Replace MSM_ACCESSOR(intr_target) with a custom accessor that falls back
+> to intr_cfg_reg when intr_target_reg is zero. Apply the same fallback in
+> the SCM path. Drop the now-redundant .intr_target_reg initializer from
+> all SoC drivers where it duplicated intr_cfg_reg, keeping it only in
+> the five drivers where it genuinely differs.
 >
-> Fixes: 6f26989e15fb ("pinctrl: qcom: Add Eliza pinctrl driver")
-> Cc: stable@vger.kernel.org
 > Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
 
-Patch applied.
-
-I dropped the stable tag because that is for backporting to older kernels
-and the Eliza support is in current dev... (what will become v7.1).
+Patch applied so we get some rotation in linux-next for this. If Bj=C3=B6rn
+has opinions
+I will just pull it out again.
 
 Yours,
 Linus Walleij
