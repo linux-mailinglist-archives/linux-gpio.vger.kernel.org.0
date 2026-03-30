@@ -1,134 +1,153 @@
-Return-Path: <linux-gpio+bounces-34389-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34390-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aK64CF42ymkx6gUAu9opvQ
-	(envelope-from <linux-gpio+bounces-34389-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2026 10:37:50 +0200
+	id oDUJNUk1ymnn6QUAu9opvQ
+	(envelope-from <linux-gpio+bounces-34390-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2026 10:33:13 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74F053574B2
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2026 10:37:49 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE5BA35736C
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2026 10:33:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 95362304BDB0
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2026 08:31:15 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 5570A30069B9
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2026 08:32:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 837873ACF19;
-	Mon, 30 Mar 2026 08:31:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47B543ACEF3;
+	Mon, 30 Mar 2026 08:32:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BG1xSiLI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lut/MqHL"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45FF83AB29D
-	for <linux-gpio@vger.kernel.org>; Mon, 30 Mar 2026 08:31:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACCA3AD512
+	for <linux-gpio@vger.kernel.org>; Mon, 30 Mar 2026 08:32:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774859474; cv=none; b=fw67Is8aMlsuMXzeEamOHCv1+ddEFgRbXcl58OUd5SpTQFQrFnHOfES34f9bIiQHiKzR5vDsVrzmBBhFbpYXyw+RaEPrfg6JwV9bj9dgUY5qq4davu3HQaswKHES46vd4W8wjFqdl72rlvHNcbbbPgu32rcebHczvnjVZTgh1Pw=
+	t=1774859566; cv=none; b=WISf5FDR8D0XAtQPe9fb60o7V5qrmO/hU2HI7Hi6dHIIAIl8aXynnrCt+r8Hwj4MGaxhdhguDsHPlHtv7AUoxuQuRxmlC2Ojd75pF/bGd2tXTw49eDJNoDR7vzB0twGZeDf2H9XQnLjkmkZXP6Rd6bFtrXMyOP4JhBrLrxVOAAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774859474; c=relaxed/simple;
-	bh=eKvzCc322fl5N0+7gcXHhAyB/HAAszO9oZGPts34+oM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eqge0b7sKZzXt+T5J97a7IKfxMdaTfO/DnTjdyr3DvLoY43JprpfNQn8ipdlAXRsoateklSdt7JB6orthlMuwN42tY6Y994PEzOK15SCPL+sHw6BuET2ns7cWtfggj5MT+f/t2v7na2LL8J02BZSK2ZIvCUVyQMdrA6KIWkHGug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BG1xSiLI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13716C4CEF7
-	for <linux-gpio@vger.kernel.org>; Mon, 30 Mar 2026 08:31:14 +0000 (UTC)
+	s=arc-20240116; t=1774859566; c=relaxed/simple;
+	bh=75FEs0ybZkc7CPZSVzblsuu4jpTIyJxwvM3fwOTN0rg=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pU+bm1q3LV//c/zkF5u8NGGvHvwuBDeu0wFzkAvVdWqmrcDIRL1mgbxU5QarJdRw2aFTgTlm0SrhOlyYCCmt+CPcSvuw4RfI8mlEUSlnk+A8KnwxhEu/bL5pEAYkLXe9wXh9xvN17IHYrxL6gjaQQIeqstV1EFXiYbMOCQNunBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lut/MqHL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA078C4CEF7
+	for <linux-gpio@vger.kernel.org>; Mon, 30 Mar 2026 08:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774859474;
-	bh=eKvzCc322fl5N0+7gcXHhAyB/HAAszO9oZGPts34+oM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BG1xSiLIjSlH1+C5ray0lsdKPxmyQqiGt2tw1IVTxwcpMDqbfzMmZXdi57hlCEUEj
-	 L3hgo2yFiiE93f4WFxmF4yHx0j9ho0WZluuiowDyxcQhTGECnMXRZkMe/1iD7PxEaN
-	 drEf0Jaat2KvIniu2JUXqiAyy3bZfwCTy89VtF1RvRe8Rdf2PXEIyNsW096X5mBJjz
-	 mGs91r2EkFIZcvTmnL2P0aJic0ATnFxVdvtciUyv0FytrT0ZR+0Xpp/flkRXomNFAd
-	 MAAOWF8B4oo/qyRj2H+lZ/06wknZQVPrwojALMmh4PYw8lhn6no32W/OtAQ8rvN3Qo
-	 s/0mMKpiQI2Zw==
-Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-65015facf32so1754265d50.1
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Mar 2026 01:31:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW6QKIBfDIAw4KdQAYNPVWAVYuDZ2zT9evSkJwg19INR0KfCgbZ1Odp7chY7HC5qJIygbz5jaFmMU5d@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd3Sqho9NDO1ZzUAu33fzW2rZhWA/7qGJyo+mxFq9Sf/pZCLOE
-	B6P6Yod15jvHgZ33X6CBH4EEYRT95a7ZDbW5QHmVha68IOCBvldzWI3dEekurqNWca3ERtAROF+
-	0HjMU9Lj0g4m7NsWh4SqbVBcwP6KoLME=
-X-Received: by 2002:a05:690c:389:b0:79a:3a33:93a with SMTP id
- 00721157ae682-79bde0b0492mr116304437b3.37.1774859473483; Mon, 30 Mar 2026
- 01:31:13 -0700 (PDT)
+	s=k20201202; t=1774859565;
+	bh=75FEs0ybZkc7CPZSVzblsuu4jpTIyJxwvM3fwOTN0rg=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
+	b=lut/MqHLT3mIfsnrZa/CWojAdKoXSmnhdU8btIJ63M7YiQ12HDv5GyrBtJLFAdjhs
+	 C002qK9ZXDseA4vW4DYAl6/jVxIXTtx2oSeLo6BWYbWW+wejxISjWDg/enHPsnBzjy
+	 VJqfeOIKb6MiWUC8bcBeUFADGctUrjxGLbXc9eR19JmOy7qX3XxPUOo1sIHYmcO++3
+	 TEJYOQaoidN6JNNszG8Z0Duob6VYEoyW+IgQUP8EhzqklUaoYdAwmCnbzVX7NczsG6
+	 4wz/2fnDRfykTwyzN5eTyuuf7APY4iOCe0OZNDzVjYzxsa23yGxJekoZHH/HgGORfd
+	 ei/68WiIjMNNQ==
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-38bd60d7a2cso39851021fa.1
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Mar 2026 01:32:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWME0owBD6Wyo+Z/23jEe/X+OPxI6Ddb//jeFEfCm4YJyZdeIS//cYrSxxA59eHL7msdtp5hzwVS7VY@vger.kernel.org
+X-Gm-Message-State: AOJu0YzS4/4lfY8BJaPn8ITOTh+aEBkzrQfg9sOQxjcGq/GTNJ9vPhu9
+	sIobXoZPTIzmP/rf8QJ8aK7PSIXY2Fy00sE3R8fIuYRDPTuAnHXq0D4qXtRqI8Tkl++TD45eKkZ
+	qrsu2R7KwbbQHS0KW0wQUZ5u4djZ7w2F/Pq04EntdPw==
+X-Received: by 2002:a05:651c:502:b0:38c:4b3a:337e with SMTP id
+ 38308e7fff4ca-38c731277d5mr34532821fa.11.1774859563585; Mon, 30 Mar 2026
+ 01:32:43 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 30 Mar 2026 01:32:42 -0700
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 30 Mar 2026 01:32:42 -0700
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260326-mfd-arizona-irq-v4-1-50c47ed0a18e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260327171240.3222755-1-mukesh.ojha@oss.qualcomm.com> <20260327171240.3222755-2-mukesh.ojha@oss.qualcomm.com>
-In-Reply-To: <20260327171240.3222755-2-mukesh.ojha@oss.qualcomm.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 30 Mar 2026 10:31:02 +0200
-X-Gmail-Original-Message-ID: <CAD++jLna8XSqyo0m=59k3UFpZEmC3Kszh=oKeEFX_jXDpW9BMw@mail.gmail.com>
-X-Gm-Features: AQROBzDohunATUWqEjHd6JUfuS0cCpw1GKYJTKpnQBK3emFWxJ5qIyJPBB03r4Q
-Message-ID: <CAD++jLna8XSqyo0m=59k3UFpZEmC3Kszh=oKeEFX_jXDpW9BMw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: qcom: Drop redundant intr_target_reg on
- modern SoCs
-To: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, Abel Vesa <abel.vesa@oss.qualcomm.com>, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20260326-mfd-arizona-irq-v4-0-50c47ed0a18e@kernel.org> <20260326-mfd-arizona-irq-v4-1-50c47ed0a18e@kernel.org>
+Date: Mon, 30 Mar 2026 01:32:42 -0700
+X-Gmail-Original-Message-ID: <CAMRc=Mf4pW9iF2DvCD6AXj6+p9r5Lt1RFs-Ncfb1_Dnaew6ftQ@mail.gmail.com>
+X-Gm-Features: AQROBzDIZUI2nf1NyRuAAq4jwxwnEPPBZL2x8h6eRzw_2rEgUS5PZL-0f_UvDww
+Message-ID: <CAMRc=Mf4pW9iF2DvCD6AXj6+p9r5Lt1RFs-Ncfb1_Dnaew6ftQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: mfd: wlf,arizona: Add irq-gpios
+To: Linus Walleij <linusw@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Charles Keepax <ckeepax@opensource.cirrus.com>, patches@opensource.cirrus.com, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-34390-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34389-lists,linux-gpio=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,qualcomm.com:email,mail.gmail.com:mid,microchip.com:email,cirrus.com:email];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 74F053574B2
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: DE5BA35736C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Mar 27, 2026 at 6:16=E2=80=AFPM Mukesh Ojha
-<mukesh.ojha@oss.qualcomm.com> wrote:
-
-> On all Qualcomm TLMM generations from APQ8084 onwards, the interrupt
-> target routing bits are located in the same register as the interrupt
-> configuration bits (intr_cfg_reg). Only five older SoCs =E2=80=94 APQ8064=
-,
-> IPQ8064, MDM9615, MSM8660 and MSM8960 =E2=80=94 have a genuinely separate
-> interrupt target routing register at a different offset (0x400 + 0x4 * id=
-).
+On Thu, 26 Mar 2026 11:51:11 +0100, Linus Walleij <linusw@kernel.org> said:
+> The Wolfson Microelectronics Arizona sometimes needs to poll the
+> GPIO line corresponding to the IRQ to counter bugs in the hardware
+> that appear on edge-triggered IRQs.
 >
-> Replace MSM_ACCESSOR(intr_target) with a custom accessor that falls back
-> to intr_cfg_reg when intr_target_reg is zero. Apply the same fallback in
-> the SCM path. Drop the now-redundant .intr_target_reg initializer from
-> all SoC drivers where it duplicated intr_cfg_reg, keeping it only in
-> the five drivers where it genuinely differs.
+> For this situation, provide the optional irq-gpios property.
 >
-> Signed-off-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> Signed-off-by: Linus Walleij <linusw@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/wlf,arizona.yaml | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/wlf,arizona.yaml b/Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
+> index 7902f3c5d289..359e40b3dacb 100644
+> --- a/Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
+> @@ -194,6 +194,16 @@ properties:
+>    reset-gpios:
+>      maxItems: 1
+>
+> +  irq-gpios:
+> +    maxItems: 1
+> +    description:
+> +      A functional IRQ should be provided in the interrupts
+> +      property. This property enables edge triggered IRQ emulation
+> +      for hosts that don't support the codecs level triggered IRQ
+> +      output. The GPIO line corresponding to the IRQ will be polled
+> +      until all IRQs have been handled, ensuring an edge is generated
+> +      for the next IRQ.
+> +
+>    wlf,reset:
+>      description:
+>        GPIO specifier for the GPIO controlling RESET
+>
+> --
+> 2.53.0
+>
+>
 
-Patch applied so we get some rotation in linux-next for this. If Bj=C3=B6rn
-has opinions
-I will just pull it out again.
-
-Yours,
-Linus Walleij
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
