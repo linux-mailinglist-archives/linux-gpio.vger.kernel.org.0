@@ -1,204 +1,301 @@
-Return-Path: <linux-gpio+bounces-34502-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34503-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sDg7BAgUzGkvOAYAu9opvQ
-	(envelope-from <linux-gpio+bounces-34502-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 20:35:52 +0200
+	id mAdRKFoVzGnAOAYAu9opvQ
+	(envelope-from <linux-gpio+bounces-34503-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 20:41:30 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 532AA3700E5
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 20:35:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 17DFA3701CE
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 20:41:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2593E3017508
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 18:33:13 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id AA9663015D0F
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 18:41:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F50C38E5E6;
-	Tue, 31 Mar 2026 18:33:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AD8937CD57;
+	Tue, 31 Mar 2026 18:41:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qp5Tm5nj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asqKZeq3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com [74.125.82.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C0F38B13E;
-	Tue, 31 Mar 2026 18:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1483238F945
+	for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2026 18:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774981989; cv=none; b=BS7TMyuSJ4MYQUUDNCUzEwEL2Ls0pgk7CXMIErsTkkggKb6/r6z9BI2ewPV26sgC1yupstskpkyBFiBPadwoegTLMWz8fc9abIUAORi0O7uopVe1qZQmYjdRS+rQwHzZI2KfVRoqFYzY4tSF8KCGkSUZ0VHIUYadPGm81gYcsLI=
+	t=1774982487; cv=none; b=lPchmdPO0r1S1RkWfn4MAIqKhFkMP/f8Bsh15nB82hSe+7WMt125CxTI+SQ/CQauAGCeVjx28G7/E0dTRzFW+cifMxhJ4czskDb1Z3HwXFlCoIBr1jyOc9xznKMDpMtk6wSrOgKw5ODJCOHd0eygyFI0PkB1e1EkHqdCXJ/39Aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774981989; c=relaxed/simple;
-	bh=3ZoheLZ70aCWRH+iMxChQO0wPJvNXhELhlVHg+OVUso=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=PUFOFZnlPNRVqcXUK8du4pBT50L4T0AtZlBaH53QEODTw9rwjRRWEFOt3pFWQBkwluw4awynpYn1XjxrYoWFf+viiQKHmJUkzPfPV1dgQB2IgaTaQUrBStJysiBprhcOR+ZDSftlUu2htEheNJWKqEEVKjpB8VaIEZQfKAlZ66I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qp5Tm5nj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22E1FC19423;
-	Tue, 31 Mar 2026 18:33:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774981989;
-	bh=3ZoheLZ70aCWRH+iMxChQO0wPJvNXhELhlVHg+OVUso=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=qp5Tm5njZhYexVFvbOMTwdH0kQkuMh4iB3LaxZb7yu3mfH+TggRSEhNLDjYseBM4n
-	 1SGXpEWXAGHraWrNkvmtG1elgxkqtlJ4uOEgGeqJLf1aqG5U4DI807MmHT5V4X+b3E
-	 7ukGAWj/W+fUTL43eCQh5mRjWzDDLQU2f6ZGjvxabG+FRHcVJvVZ5VFcA7KuDfrKQP
-	 PsXLuNrcuhehagm4Na9Z9VxBXL5TqiXg9UnlZejXqf84mVofHQvTwkJGaHhjk5zVaV
-	 oDLblMpr8IQtJhibTO20/T4NBDJe6hWqRbOQuo6Ba0r4vaVQ76QwH51s9qh/tNMgaH
-	 eFBbB1g2MPkbg==
-Date: Tue, 31 Mar 2026 13:32:47 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1774982487; c=relaxed/simple;
+	bh=b4oOB+cE1UN5ardHWDCwv58C52n9br6YeW2dOw5y/Y0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O8/ONPl2F6OQJu0xf6IH5XNe7gBuInpxZ4BWqbiqAC3mtaLluWIPTVYR3FJFbEu2VF0oGnxWky1oLr+JA1cCXQUX3bR4LgWPtKAb7v/lfVh/5AEYme8QNQIp0sK+seM06qJOQiDBGpgV6RlsEiZlzX8eDM2ZwHimMwC1TCjypv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=asqKZeq3; arc=none smtp.client-ip=74.125.82.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-2c54c68db4dso4772512eec.0
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2026 11:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774982484; x=1775587284; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LiDEkkSBUbqq8xRSZm9VbsPNXKLV08haEOOr6RCuwFA=;
+        b=asqKZeq3xeLkeBZPlIVT76okaYZFV5G3Dip6aNHVPXphWfb1zJYBUrd2zxqnpuMxbH
+         C3gt/WPv42+tYZP4uMSxLYaisjNAHyJJjwqTmEp1p2jpxV6Y5V7csv7+hKgfP9Oum9Ng
+         UhB9PchbBgy5jLaf/X2kYYKDG7hMOayo0fGyuA6reTFidwr2g7GirF4efGWtyAix6GCz
+         PfTC7SmzfO4brJcqs6w3IjkofGfyV01LtIHpCSJN9hhyVzSntrzAXtKWgyt7WzZyUf6p
+         Ny43XhogXb5230yqMw3Gcl0Mlz0cTrCN4jd2nu8P2Hu3vKDIhywlKvPUOPgT/kwWPQYu
+         GV5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774982484; x=1775587284;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LiDEkkSBUbqq8xRSZm9VbsPNXKLV08haEOOr6RCuwFA=;
+        b=MeF29UqxzIATk8g1dkpbVdOctZjzQh3q5jP9ZC11mk063G2WGbM5dIxxKMQNde/Grp
+         W4K4cOyH0PNJnz5XRzH8SyjB7aNza9QKrYw0rGFwwjGKkFIaj3wybgWdtlCgz6JZoYcu
+         kiZK1uYKAM5iqU1Uq9fzC5w3ojOt1jUGMfOjoO0ymWrqRCbCUNPJ0uJhNqbwelLL6FZj
+         Wo0u1T2/LCBHYxLTv0r3IeoZYJrBveS83qqEbE8w3wU80RP2Teamv9C3EjgOGv1F/TFA
+         CAleUsucj/C6Mueefk3vtm0Hzvn230lkdIuclgBIA1HrnvUMg1EUtUAwfHysu8xQrvJa
+         Q6QA==
+X-Forwarded-Encrypted: i=1; AJvYcCUs2S7a3Ys8FFExAyYReax/jbqUg5l+OBc47ivrZu8f/cHeykJPLjj4KqqBoy0Z3jPUqRD8672kEgPG@vger.kernel.org
+X-Gm-Message-State: AOJu0YykQSxtBKK1vFlkrY6Jqf/1Z7BjY46dDGHtZg//2fy/0zvbwTdF
+	tGxISwSsk57QN3mujM72qYZoCebp7Ksvz5C4/6SWpwYJbEkYip3OeJUv
+X-Gm-Gg: ATEYQzzdj4K3PQ9VPL/DAOYPoQM/oafrILiav8GyYDho9VUN1DyLLQS+GI4GXcRQsUO
+	BjoUjeH0zzEmYqIOjY/3xczSXdw1q3axNo3AWzZqqFfCWG7QH77gpZO2cumng++WFia7PMV2O/L
+	7uVE0C3jquKodLPgOQ4BHGni4Gtl565Dq8oH3rfDlVPWPjF/dWbJMn85VxsTLsR68QDgqm+f2w6
+	CA8VvXp/sosp+fNmcu8QGwHBPRUf+NfouUllKR22ZR2+JL7KBFSvGw3RiLob6N8UBzaaWRI2VXx
+	qHR7FPkw2/6br4EJjZup72KtpXkcwb7UGWj7LrkEEnoZjwZI75IhcC6KiI9b2ZgRqBnkgPcwXHQ
+	KQqo9WOgeRKOBetMwtm9bebzDI5BBDqij04A03q2XRfeMeS69t6uOm7WDPSxr96Io2RTfbB1pgX
+	J/3OdvNSr1DnqvqDB9+zgpPU7b6qFdGMECtCfl0fd+leuJpTPK5eOh9gBjR80Ztzkx
+X-Received: by 2002:a05:693c:2c88:b0:2c6:cdb3:bd8d with SMTP id 5a478bee46e88-2c930c766d0mr221901eec.7.1774982483694;
+        Tue, 31 Mar 2026 11:41:23 -0700 (PDT)
+Received: from google.com ([2a00:79e0:2ebe:8:1dbf:b0e0:8ad0:5a2e])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2c3c4cbbc1fsm10368963eec.13.2026.03.31.11.41.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2026 11:41:23 -0700 (PDT)
+Date: Tue, 31 Mar 2026 11:41:19 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation: gpio: update the preferred method for
+ using software node lookup
+Message-ID: <acwTkgJ3BFAYIoLV@google.com>
+References: <20260331-doc-gpio-swnodes-v1-1-3f84c268999b@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org, 
- kernel@pengutronix.de, Conor Dooley <conor+dt@kernel.org>, 
- Peter Rosin <peda@axentia.se>, devicetree@vger.kernel.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, David Jander <david@protonic.nl>, 
- linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
- Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee@kernel.org>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-In-Reply-To: <20260331171612.102018-2-o.rempel@pengutronix.de>
-References: <20260331171612.102018-1-o.rempel@pengutronix.de>
- <20260331171612.102018-2-o.rempel@pengutronix.de>
-Message-Id: <177498196767.1813355.6423158973907813746.robh@kernel.org>
-Subject: Re: [PATCH v9 1/6] dt-bindings: pinctrl: add NXP MC33978/MC34978
- MSDI
-X-Spamd-Result: default: False [0.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260331-doc-gpio-swnodes-v1-1-3f84c268999b@oss.qualcomm.com>
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34502-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-34503-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[devicetree.org:url,0.0.0.0:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,pengutronix.de:email]
-X-Rspamd-Queue-Id: 532AA3700E5
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dmitrytorokhov@gmail.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[pdev_info.id:url,pdev_info.name:url,qualcomm.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 17DFA3701CE
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Hi Bartosz,
 
-On Tue, 31 Mar 2026 19:16:07 +0200, Oleksij Rempel wrote:
-> Add device tree binding documentation for the NXP MC33978 and MC34978
-> Multiple Switch Detection Interface (MSDI) devices.
+On Tue, Mar 31, 2026 at 02:28:29PM +0200, Bartosz Golaszewski wrote:
+> In its current version, the manual for converting of board files from
+> using GPIO lookup tables to software nodes recommends leaving the
+> software nodes representing GPIO controllers as "free-floating", not
+> attached objects and relying on the matching of their names against the
+> GPIO controller's name. This is an abuse of the software node API and
+> makes it impossible to create fw_devlinks between GPIO suppliers and
+> consumers in this case. We want to remove this behavior from GPIOLIB and
+> to this end, work on converting all existing drivers to using "attached"
+> software nodes.
 > 
-> The MC33978 and MC34978 differ primarily in their operating temperature
-> ranges. While not software-detectable, providing specific compatible
-> strings allows the hwmon subsystem to correctly interpret thermal
-> thresholds and hardware faults.
+> Except for a few corner-cases where board files define consumers
+> depending on GPIO controllers described in firmware - where we need to
+> reference a real firmware node from a software node - which requires a
+> more complex approach, most board files can easily be converted to using
+> propert firmware node lookup.
 > 
-> These ICs monitor up to 22 mechanical switch contacts in automotive and
-> industrial environments. They provide configurable wetting currents to
-> break through contact oxidation and feature extensive hardware
-> protection against thermal overload and voltage transients (load
-> dumps/brown-outs).
+> Update the documentation to recommend attaching the GPIO chip's software
+> nodes to the actual platform devices and show how to do it.
 > 
-> The device interfaces via SPI. While it provides multiple functions, its
-> primary hardware purpose is pin/switch control. To accurately represent
-> the hardware as a single physical integrated circuit without unnecessary
-> DT overhead, all functions are flattened into a single pinctrl node:
-> - pinctrl: Exposing the 22 switch inputs (SG/SP pins) as a GPIO controller
->   and managing their pin configurations.
-> - hwmon: Exposing critical hardware faults (OT, OV, UV) and static
->   voltage/temperature thresholds.
-> - mux: Controlling the 24-to-1 analog multiplexer to route pin voltages,
->   internal temperature, or battery voltage to an external SoC ADC.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> Reviewed-by: Linus Walleij <linusw@kernel.org>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 > ---
-> changes v9:
-> - no changes
-> changes v8:
-> - Update IRQ_TYPE_* macros include path reference in documentation from
->   interrupt-controller.h to dt-bindings/interrupt-controller/irq.h.
-> - Add bias-disable, drive-open-drain, drive-open-source, and drive-strength
->   to the list of supported pin configuration properties.
-> changes v7:
-> - no changes
-> changes v6:
-> - add Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> - add Reviewed-by: Linus Walleij <linusw@kernel.org>
-> changes v5:
-> - Commit Message: Added justification for distinct compatible strings
->   based on temperature ranges.
-> - Restricted pins property to an explicit enum of valid hardware pins
-> changes v4:
-> - Drop the standalone mfd/nxp,mc33978.yaml schema entirely.
-> - Move the unified device binding to bindings/pinctrl/nxp,mc33978.yaml,
-> - Remove the dedicated child node compatible strings (nxp,mc33978-pinctrl).
-> - Flatten the pinctrl/gpio properties directly into the main SPI device
->   node.
-> changes v3:
-> - Drop regular expression pattern from pinctrl child node and define
->   it as a standard property
-> - Reorder required properties list in MFD binding
-> - Remove stray blank line from the MFD binding devicetree example
-> - Replace unevaluatedProperties with additionalProperties in the pinctrl
->   binding
-> changes v2:
-> - Squashed MFD, pinctrl, hwmon, and mux bindings into a single patch
-> - Removed the empty hwmon child node
-> - Folded the mux-controller node into the parent MFD node
-> - Added vbatp-supply and vddq-supply to the required properties block
-> - Changed the example node name from mc33978@0 to gpio@0
-> - Removed unnecessary literal block scalars (|) from descriptions
-> - Documented SG, SP, and SB pin acronyms in the pinctrl description
-> - Added consumer polarity guidance (GPIO_ACTIVE_LOW/HIGH) for SG/SB
->   inputs, with a note on output circuit dependency
-> - Updated commit message
-> ---
->  .../bindings/pinctrl/nxp,mc33978.yaml         | 158 ++++++++++++++++++
->  1 file changed, 158 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,mc33978.yaml
+>  Documentation/driver-api/gpio/board.rst         | 15 +++++++++---
+>  Documentation/driver-api/gpio/legacy-boards.rst | 32 ++++++++++++++++++-------
+>  2 files changed, 36 insertions(+), 11 deletions(-)
 > 
+> diff --git a/Documentation/driver-api/gpio/board.rst b/Documentation/driver-api/gpio/board.rst
+> index 0993cac891fb5e4887a1aee6deae273197c6aae1..c2880533742b1b55108f28853a3903cb273fe791 100644
+> --- a/Documentation/driver-api/gpio/board.rst
+> +++ b/Documentation/driver-api/gpio/board.rst
+> @@ -108,9 +108,8 @@ macro, which ties a software node representing the GPIO controller with
+>  consumer device. It allows consumers to use regular gpiolib APIs, such as
+>  gpiod_get(), gpiod_get_optional().
+>  
+> -The software node representing a GPIO controller need not be attached to the
+> -GPIO controller device. The only requirement is that the node must be
+> -registered and its name must match the GPIO controller's label.
+> +The software node representing a GPIO controller must be attached to the
+> +GPIO controller device - either as the primary or the secondary firmware node.
+>  
+>  For example, here is how to describe a single GPIO-connected LED. This is an
+>  alternative to using platform_data on legacy systems.
+> @@ -153,6 +152,16 @@ alternative to using platform_data on legacy systems.
+>  	};
+>  	software_node_register_node_group(swnodes);
+>  
+> +	/*
+> +	 * 5. Attach the GPIO controller's software node to the device and
+> +	 *    register it.
+> +	 */
+> +	 static void gpio_foo_register(void)
+> +	 {
+> +		gpio_foo_pdev.dev.fwnode = software_node_fwnode(&gpio_controller_node);
+> +		platform_device_register(&gpio_foo_pdev);
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Maybe nudge people towards platform_device_register_full() with
+info.swnode set to the software node? The change adding swnode to
+platform_device_info is already in an immutable branch in driver core
+tree and will be merged in the next release.
 
-yamllint warnings/errors:
+> +	 }
+> +
+>  	// Then register a platform_device for "leds-gpio" and associate
+>  	// it with &led_device_swnode via .fwnode.
+>  
+> diff --git a/Documentation/driver-api/gpio/legacy-boards.rst b/Documentation/driver-api/gpio/legacy-boards.rst
+> index 46e3a26dba772e5e5117866b5d202e76c8e2adf2..fac63dd38d5b71c3bf43b5286a432f6449f422d0 100644
+> --- a/Documentation/driver-api/gpio/legacy-boards.rst
+> +++ b/Documentation/driver-api/gpio/legacy-boards.rst
+> @@ -36,12 +36,10 @@ Requirements for GPIO Properties
+>  When using software nodes to describe GPIO connections, the following
+>  requirements must be met for the GPIO core to correctly resolve the reference:
+>  
+> -1.  **The GPIO controller's software node "name" must match the controller's
+> -    "label".** The gpiolib core uses this name to find the corresponding
+> -    struct gpio_chip at runtime.
+> -    This software node has to be registered, but need not be attached to the
+> -    device representing the GPIO controller that is providing the GPIO in
+> -    question. It may be left as a "free floating" node.
+> +1.  **The GPIO controller's software node must be registered and attached to
+> +    the controller's ``struct device`` either as its primary or secondary
+> +    firmware node.** The gpiolib core uses the address of the firmware node to
+> +    find the corresponding ``struct gpio_chip`` at runtime.
+>  
+>  2.  **The GPIO property must be a reference.** The ``PROPERTY_ENTRY_GPIO()``
+>      macro handles this as it is an alias for ``PROPERTY_ENTRY_REF()``.
+> @@ -75,6 +73,11 @@ A typical legacy board file might look like this:
+>  
+>    #define MYBOARD_GPIO_CONTROLLER "gpio-foo"
+>  
+> +  static struct platform_device myboard_gpio = {
+> +        .name = MYBOARD_GPIO_CONTROLLER,
+> +        .id = PLATFORM_DEVID_NONE,
+> +  };
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/nxp,mc33978.example.dtb: gpio@0 (nxp,mc33978): $nodename:0: 'gpio@0' does not match '^mux-controller(@.*|-([0-9]|[1-9][0-9]+))?$'
-	from schema $id: http://devicetree.org/schemas/mux/mux-controller.yaml
+Same here, let's use platform_device_info.
 
-doc reference errors (make refcheckdocs):
+> +
+>    /* LED setup */
+>    static const struct gpio_led myboard_leds[] = {
+>    	{
+> @@ -124,6 +127,7 @@ A typical legacy board file might look like this:
+>    	gpiod_add_lookup_table(&myboard_leds_gpios);
+>    	gpiod_add_lookup_table(&myboard_buttons_gpios);
+>  
+> +        platform_device_register(&myboard_gpio);
 
-See https://patchwork.kernel.org/project/devicetree/patch/20260331171612.102018-2-o.rempel@pengutronix.de
+Use tabs.
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+>    	platform_device_register_data(NULL, "leds-gpio", -1,
+>    				      &myboard_leds_pdata, sizeof(myboard_leds_pdata));
+>    	platform_device_register_data(NULL, "gpio-keys", -1,
+> @@ -141,8 +145,7 @@ Step 1: Define the GPIO Controller Node
+>  ***************************************
+>  
+>  First, define a software node that represents the GPIO controller that the
+> -LEDs and buttons are connected to. The ``name`` of this node must match the
+> -name of the driver for the GPIO controller (e.g., "gpio-foo").
+> +LEDs and buttons are connected to. The ``name`` of this node is optional.
+>  
+>  .. code-block:: c
+>  
+> @@ -257,6 +260,16 @@ software nodes using the ``fwnode`` field in struct platform_device_info.
+>    	if (error)
+>    		return error;
+>  
+> +  	memset(&pdev_info, 0, sizeof(pdev_info));
+> +  	pdev_info.name = MYBOARD_GPIO_CONTROLLER;
+> +  	pdev_info.id = PLATFORM_DEVID_NONE;
+> +  	pdev_info.fwnode = software_node_fwnode(&myboard_gpio_controller_node);
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+	pdev_info.swnode = ...
 
-pip3 install dtschema --upgrade
+> +  	gpio_pdev = platform_device_register_full(&pdev_info);
+> +  	if (IS_ERR(gpio_pdev)) {
+> +  		error = PTR_ERR(gpio_pdev);
+> +  		goto err_unregister_nodes;
+> +  	}
+> +
+>    	memset(&pdev_info, 0, sizeof(pdev_info));
+>    	pdev_info.name = "leds-gpio";
+>    	pdev_info.id = PLATFORM_DEVID_NONE;
+> @@ -264,6 +277,7 @@ software nodes using the ``fwnode`` field in struct platform_device_info.
+>    	leds_pdev = platform_device_register_full(&pdev_info);
+>    	if (IS_ERR(leds_pdev)) {
+>    		error = PTR_ERR(leds_pdev);
+> +  		platform_device_unregister(gpio_pdev);
+>    		goto err_unregister_nodes;
+>    	}
+>  
+> @@ -274,6 +288,7 @@ software nodes using the ``fwnode`` field in struct platform_device_info.
+>    	keys_pdev = platform_device_register_full(&pdev_info);
+>    	if (IS_ERR(keys_pdev)) {
+>    		error = PTR_ERR(keys_pdev);
+> +  		platform_device_unregister(gpio_pdev);
+>    		platform_device_unregister(leds_pdev);
+>    		goto err_unregister_nodes;
+>    	}
+> @@ -289,6 +304,7 @@ software nodes using the ``fwnode`` field in struct platform_device_info.
+>    {
+>    	platform_device_unregister(keys_pdev);
+>    	platform_device_unregister(leds_pdev);
+> +	platform_device_unregister(gpio_pdev);
+>    	software_node_unregister_node_group(myboard_swnodes);
+>    }
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+Thanks.
 
+-- 
+Dmitry
 
