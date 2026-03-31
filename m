@@ -1,202 +1,183 @@
-Return-Path: <linux-gpio+bounces-34504-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34505-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iP8CB7wazGnHPgYAu9opvQ
-	(envelope-from <linux-gpio+bounces-34504-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 21:04:28 +0200
+	id UFVSJgQqzGkmQgYAu9opvQ
+	(envelope-from <linux-gpio+bounces-34505-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 22:09:40 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2361A37055E
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 21:04:27 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4407E371022
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 22:09:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 3C2A23009387
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 19:04:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6556F3025D01
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 20:06:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB8283A3E7E;
-	Tue, 31 Mar 2026 19:04:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28E3D3CD8A3;
+	Tue, 31 Mar 2026 20:06:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dPSUDz8g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKuG/IaR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17E938CFE7;
-	Tue, 31 Mar 2026 19:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6DE3CCA1C
+	for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2026 20:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774983861; cv=none; b=MsRkhcNZjPqBsWfpNjwDwZ6uklk5GjxmxJSOgmp8c6v8t7HrhoKuHKabA+oalrGoG330QPHAT+M5n+O+/2YoCvpQjSyMM7/rsM7tEF7/EED7vtRQ5u0MoIZBLuoiGYa8lubFIqnaF2eq3UZyrGCiUKomq5I4fUXMNRRldhnhxT8=
+	t=1774987579; cv=none; b=aUZb7SFjjcWy7yN8xZKEu9KkUaaJVEFFexo8XSGTt4BDYDGYdfHa/A+wOpDkyPCxInieKwX4S4E6I2jNAK22mTwpxe18GpUACuXcVTGay1lWF8qdi29WsV/w8viB/Eiivis6jEd56W7Nw4dZ7D2oBqsQimUX2oQZN03ZHuEKwx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774983861; c=relaxed/simple;
-	bh=vl9bPdAnhZOB7e2rN8a7bQ/OUcqdayO0Mnx+F9C5UVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jBpzkgmAEKMZagl0ZYb4ge7spSPVf6jNM46IB9B/8Pd989XxngGVqow2w1yXkvhgAAcq4uNldgKKnoisWeqfAcUkkpiAk5YJXxLPOY6bMsd3o86sXPnX8Rd8FioPEKgpu5qhwEYArcifK/s85ooHXjaE5P3mY+/4iV44zJcS9Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dPSUDz8g; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774983860; x=1806519860;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vl9bPdAnhZOB7e2rN8a7bQ/OUcqdayO0Mnx+F9C5UVE=;
-  b=dPSUDz8gpbUl+njiYFq4wKJ7wPhxShlp9VvqUunMYPWlm98R+X2vk/rL
-   ZZPYlUDPDbJ2t9LAys5Nu1fwn5DoB4PXY0zd+QJ/3dexulNZdsQdflZ1J
-   5mBsmLHPa5/cGwjV0xHEpkqF2tHa/CEdkmEkvvZC9d2zBCWrzayX6up/g
-   /16yJeROZoUHkArocQXQ3qu3xfRMasVW/xR7PnOBo2Y9YHLX/9UC63+Zj
-   wZ6HJr0fzu8T26oszLfzbFsS27F8FuQUV0aRbGgWjbEbublhdvkFfIjNR
-   ykT2Xw/HUtPrzBYHQU5qo/scuK82uiHJDwSn3SVz0cOPQypt1LX4PBooL
-   Q==;
-X-CSE-ConnectionGUID: xQePCVYPTq6wEnDy8w9jrg==
-X-CSE-MsgGUID: LRz1/7uSQ5abtNZLfho0sw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="76070831"
-X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="76070831"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 12:04:19 -0700
-X-CSE-ConnectionGUID: wSpzeWmCTYC99op37aHAhA==
-X-CSE-MsgGUID: SCK12xPFRo2r1F1cB/xtbw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="225626681"
-Received: from rvuia-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.209])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 12:04:13 -0700
-Date: Tue, 31 Mar 2026 22:04:10 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	"Hennerich, Michael" <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	"Sa, Nuno" <Nuno.Sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+	s=arc-20240116; t=1774987579; c=relaxed/simple;
+	bh=+jfuPOfrvlJyorqipEtBDPEwBEOBADumN3Z9GVWqrm4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lI2rQTyv3ioDimz4yRSRU2YHzSDYViC+7ugMCx98X7NHwgW5GzsjSRsekSQI1+QYgysrVsI+R2p4qfNfm5ncHnaqQ8vV47spUwpxS+XSNUbmaxmF0mBwc6jaCfGfdahyNaP9gDm8MUBlDTilDZi2aIVYVr/J7OdJpDdrk3rZHJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kKuG/IaR; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-8d00cf835b7so791800685a.1
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2026 13:06:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774987575; x=1775592375; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d2SuGEcofMViAjcduIJKVxzZDL5jSsKT9V5K04cwa+Y=;
+        b=kKuG/IaRBma49+MjTcXk9IOK+chvpyiQifYx4idlqsHmSyEKVcR/kz6KaplklqrIXE
+         Z3cExyZnm/xBApdxmo1Zaqgcv8j3XP2b1C1q/o+Fkb/6dsw+thjsNlAR9wNfNZcN1Tw9
+         7DGde3MH2XR0pCvX7a+QEt7uj6GgN2MCVntCzFZRDlDchS4tvqFtU4kF+ALU6I30Lc9z
+         XPgDCze2IYxQttjJj4u3CMt3FbJ+CEydxJcpw1xQDtTwiW9+kACw5OPCi2DoQSCl/Wwo
+         J502nRgmX1rx6N+qQD97hPfbaO6u2IZmC3XEZ8ifEiHaVXqiorEBXRjrhcVBqnLx4co8
+         IaJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774987575; x=1775592375;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d2SuGEcofMViAjcduIJKVxzZDL5jSsKT9V5K04cwa+Y=;
+        b=HhpQvGF2G/vLmhV1OmER6QZVymm+J/6RifSHUaNpJwGZIvd837Glt/Z2lJ83xGk3dJ
+         1THI0rMOyZRt7VhVSw/ddV0OSGuqns4+lKKUx8CY/xPI+qrxclGwcN5aGk4H/uO2gMmL
+         QQJjkfjnwdThS8h6pGwalO7iRUZZc3d6r+3zAQ2FcWs0Q9wjCQzhsFkX/6eAUF6hATL5
+         fl5ZHVAWTtRhueowAPaVHCeUr0K+FJfMtEwuSsxSTBnyLUenIHw0j4J6em3LYdrAzzxr
+         5WPrswk5kcUTuDPLwy62LvHs4CYoRQtTQHDkEkViH9HwV2lZIIJzq9Aohtjw5NFhbBYI
+         kQLw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxMkmy83Jo2iGCktwHzqa9Ijxe//EyUkzftLYPTR28IZBfN7MsBOLVu4/HPJkXeoFz5Ql4WF1Cfi2I@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/8RYqFLASNrstrrqSiKgr/dB95T56ZMLQThv87CHiumeT5tBv
+	6Oj8Jetm18oWyz0Qw+d3rS0xOFHLixxy7Tc+WVLeN4dMoennPf+DhTGc5NcpAQ==
+X-Gm-Gg: ATEYQzzc4s3Y3v5G4Ha+VIr+VKLJ/VkdtjXmKRdpIom3dbxDTAp+UCV3YekpL5I6sEr
+	fNjCqrxuKwGWfG/v6k066aY0Td3CmAuOCoJ8eHYJ7BjwQz7i8M6m0wyv9CT3hOnVevL/2X9f6gi
+	DdvNajwbJqo3TTbL0JDatIm10i9+Fgh5bCj8IYw79IS+zFY5RKbcrEW+nOe2PaqIw3SIJu327+Z
+	alRXdrd526nMOIgJHUqr9GsKsAxo7owCTHRM8TMOFdh24N5ODtY/jtYXkpXCbSVwdc3yO0+NYnS
+	WAuK6QW6Uncux0HcprBa8TDnU6iDb4HzYvW/nHRK3d7AlkcOOOqVZJIBACQWrOD82JLKb/Oqygf
+	diiQuiz7KPU283K8CzmsnioxU7Tj7iK2Tq3qzeSEn1te2VpeX6mGtZhooI9D34a1r+3VLEgv5dJ
+	/5vORK1vbDNO+ITGPq8OMa6FZE
+X-Received: by 2002:a05:620a:444e:b0:8cf:cf45:140d with SMTP id af79cd13be357-8d1b5b25471mr159346085a.29.1774987575026;
+        Tue, 31 Mar 2026 13:06:15 -0700 (PDT)
+Received: from localhost ([199.7.157.124])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8d027edc650sm913382585a.6.2026.03.31.13.06.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2026 13:06:14 -0700 (PDT)
+From: Richard Acayan <mailingradian@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v5 2/4] iio: adc: ad4691: add initial driver for AD4691
- family
-Message-ID: <acwaqrSMXR36KqVR@ashevche-desk.local>
-References: <20260327-ad4692-multichannel-sar-adc-driver-v5-0-11f789de47b8@analog.com>
- <20260327-ad4692-multichannel-sar-adc-driver-v5-2-11f789de47b8@analog.com>
- <acZrthJYQX-h_9p5@ashevche-desk.local>
- <LV9PR03MB84143540CE505514E1CD84B4F752A@LV9PR03MB8414.namprd03.prod.outlook.com>
- <CAHp75VcUCM8aeUpNaFEXnS+Cm08Mq5j+Qp2gYqWP9vCO+9CtQA@mail.gmail.com>
- <LV9PR03MB8414CB05EB794F6974584C2AF753A@LV9PR03MB8414.namprd03.prod.outlook.com>
- <acuMxjX_rsfsJvMp@ashevche-desk.local>
- <LV9PR03MB841477521DF5AB809D0184FAF753A@LV9PR03MB8414.namprd03.prod.outlook.com>
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org
+Cc: Richard Acayan <mailingradian@gmail.com>
+Subject: [PATCH v5 0/4] SDM670 LPASS LPI pin controller support
+Date: Tue, 31 Mar 2026 16:06:54 -0400
+Message-ID: <20260331200658.1306-1-mailingradian@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <LV9PR03MB841477521DF5AB809D0184FAF753A@LV9PR03MB8414.namprd03.prod.outlook.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	TAGGED_FROM(0.00)[bounces-34504-lists,linux-gpio=lfdr.de];
-	HAS_ORG_HEADER(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,metafoo.de,analog.com,kernel.org,baylibre.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	NEURAL_HAM(-0.00)[-1.000];
+	FREEMAIL_CC(0.00)[gmail.com];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,intel.com:dkim,intel.com:email,ashevche-desk.local:mid]
-X-Rspamd-Queue-Id: 2361A37055E
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-34505-lists,linux-gpio=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mailingradian@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 4407E371022
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Mar 31, 2026 at 05:05:32PM +0000, Sabau, Radu bogdan wrote:
-> > -----Original Message-----
-> > From: Andy Shevchenko <andriy.shevchenko@intel.com>
-> > Sent: Tuesday, March 31, 2026 11:59 AM
-> > On Tue, Mar 31, 2026 at 08:36:42AM +0000, Sabau, Radu bogdan wrote:
-> > > > -----Original Message-----
-> > > > From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > > Sent: Monday, March 30, 2026 8:24 PM
+This adds support for the LPASS LPI pin controller on SDM670, which
+controls some audio pins (e.g. TDM or PDM busses). The ADSP patches are
+not sent yet.
 
-...
+Dependencies:
+- SDM670 Basic SoC thermal zones (devicetree nodes are touching)
+  https://lore.kernel.org/r/20260310002037.1863-1-mailingradian@gmail.com
+- Support for the Pixel 3a XL with the Tianma panel (for reserved GPIOs)
+  https://lore.kernel.org/r/20260310002606.16413-1-mailingradian@gmail.com
 
-> > > > > > > +#include <linux/bitfield.h>
-> > > > > > > +#include <linux/bitops.h>
-> > > > > > > +#include <linux/cleanup.h>
-> > > > > > > +#include <linux/delay.h>
-> > > > > > > +#include <linux/device.h>
-> > > > > >
-> > > > > > Hmm... Is it used? Or perhaps you need only
-> > > > > > dev_printk.h
-> > > > > > device/devres.h
-> > > > > > ?
-> > > >
-> > > > > I have checked this out and it seems device.h doesn't actually need
-> > > > > to be included anyway since spi.h directly includes device.h, and since
-> > > > > this is a SPI driver that's never going away, it's covered. Will drop it!
-> > > >
-> > > > No, this is the wrong justification. IWYU principle is about exact
-> > > > match between what is used and included in a file (module). spi.h is
-> > > > not dev_*() provider and may not be considered for that.
-> > > >
-> > >
-> > > You are right, my justification was incorrect. Under IWYU, relying on
-> > > spi.h's transitive pull of device.h is not valid. However, I think device.h
-> > > is still needed in this case since struct device is used directly in the code
-> > > both as local variables and in the regmap callbacks.
-> > 
-> > Really? I can't see that.
-> > (Hint: use of the data type and use of its pointer is a huge difference.)
-> > 
-> > > Also dev_err_probe() is called directly and lives in device.h.
-> > 
-> > No, as I started with my replies. The proper header that provides it is
-> > dev_printk.h.
-> 
-> Yep, my bad... device.h can be removed and devres and dev_printk be
-> used instead. Sorry for the confusion from my end, I thought I was
-> looking at device.h, but was instead looking at dev_printk.h.
+Changes since v4 (https://lore.kernel.org/r/20260330164707.87441-1-mailingradian@gmail.com):
+- squash reserved gpios patch (Dmitry's review tag dropped) (4/4, previously 5/5)
+- add review tags (3/4, 4/4)
+- correct changelog (0/4)
 
-No problem. Headers in Linux kernel is a mess. Mostly historically,
-maintainers' preferences and neglecting the foreseeing the future of
-the dependency hell.
+Changes since v3 (https://lore.kernel.org/r/20260328021036.85945-1-mailingradian@gmail.com):
+- restore review tags (2-5/5)
+- add review tags (1/5)
 
+Changes since v2 (https://lore.kernel.org/r/20260310012446.32226-1-mailingradian@gmail.com):
+- add minItems and maxItems (1/5)
+- add review tags (2-5/5)
+
+Changes since v1 (https://lore.kernel.org/r/20260210021109.11906-1-mailingradian@gmail.com):
+- add LPASS in dt-bindings patch subject (2/5)
+- change pin names (2/5, 3/5, 4/5)
+- add reviewed-by from Krzysztof (2/5)
+- specify gpio-reserved-ranges (1/5, 5/5)
+
+Richard Acayan (4):
+  dt-bindings: qcom: lpass-lpi-common: add reserved GPIOs property
+  dt-bindings: pinctrl: qcom: Add SDM670 LPASS LPI pinctrl
+  pinctrl: qcom: add sdm670 lpi tlmm
+  arm64: dts: qcom: sdm670: add lpi pinctrl
+
+ .../pinctrl/qcom,lpass-lpi-common.yaml        |   8 +
+ .../qcom,sdm670-lpass-lpi-pinctrl.yaml        |  81 +++++++++
+ .../boot/dts/qcom/sdm670-google-common.dtsi   |   5 +
+ arch/arm64/boot/dts/qcom/sdm670.dtsi          |  73 ++++++++
+ drivers/pinctrl/qcom/Kconfig                  |  10 ++
+ drivers/pinctrl/qcom/Makefile                 |   1 +
+ .../pinctrl/qcom/pinctrl-sdm670-lpass-lpi.c   | 166 ++++++++++++++++++
+ 7 files changed, 344 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdm670-lpass-lpi-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sdm670-lpass-lpi.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.53.0
 
 
