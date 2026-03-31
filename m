@@ -1,179 +1,147 @@
-Return-Path: <linux-gpio+bounces-34487-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34488-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cPEnK3Tby2lHMAYAu9opvQ
-	(envelope-from <linux-gpio+bounces-34487-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 16:34:28 +0200
+	id aKiUI3Ddy2lHMAYAu9opvQ
+	(envelope-from <linux-gpio+bounces-34488-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 16:42:56 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 537B836B082
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 16:34:28 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20F2036B1E4
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 16:42:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2040030458F1
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 14:34:06 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C8585301C13D
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 14:36:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B02D83DFC69;
-	Tue, 31 Mar 2026 14:34:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE9533FD124;
+	Tue, 31 Mar 2026 14:36:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7eo1es6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jOFTTnnQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60067329E4B
-	for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2026 14:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A175228150F;
+	Tue, 31 Mar 2026 14:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774967642; cv=none; b=ZdCnbuNfBIEkG284+YGt5rz7hqold4Yhi7/86npnAnVPfZzwzRy1Im+VxIgYjB6DgjTN8QDaUhU5SVnB2gxZo1onu6DifGrr9/IokdsWarDOW0gEsxq+yeFdd0lsLRaGPeAXLMrHk2ykexzAluYh5kKi1ImvGyj0sah9oNJZtfU=
+	t=1774967774; cv=none; b=uTHG/3QcGvHMEqlVy6wPm9xjIIH7T3/o6kBhfxRQSpgNAZUKGJGaBUqKtgDFQ0+wYPSjT9Vd6tCqJENygvPhBixpHg5onRi9RPgsVs9ne+1zMJlneDqpxDBVHXss3lRznr2Hx0pqf7mCyTYqZNxVM20oGAN2H1aurTLLc2ML17M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774967642; c=relaxed/simple;
-	bh=7QyT5y5IdVGl5TzBMiqcHoPN++K1BEB+3G5SBMmIV3E=;
+	s=arc-20240116; t=1774967774; c=relaxed/simple;
+	bh=WuipAWbd8LzKDAYhXLX11litf3pJQChGrJT8VlXp5go=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XjubcyrbnCWnZVv38kcKAHj4pJQYq7H8w5SeDx3A2k71QVR9ghZ6u4iy8JRg5Ql9CyvoiLT05lIeQgWvgGLMFie/Wnp7E1PzX32gthu99KDtue+7KlGjeim7maICbwZCVaNx6Z4QExI9kP4fzKbnSe1AAsohhMFyyQhtNZvZBSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K7eo1es6; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2adff872068so24069115ad.1
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2026 07:34:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774967641; x=1775572441; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GIKZrQUV999cNYN5HmhG6qaejnSRA17IrWYvv0z6dB4=;
-        b=K7eo1es6Y2rpeszh+QgzNujvKQXXwUlNVavKy6ibgpk+rTDOU/5j3h4T9i8gKhh8YB
-         XcGjznYxFtOHXUWhx5loGkJ8S9fHVmN/6vIsy3kynHIeU9k7u1DW9R2BxXg5bZNXbGlr
-         JM962gNJnoPJ7wzGHoeI3dp1TttjmN9cB2H2KwYT/2UmD04qthzVX4llU9Zjvl7l9lMe
-         zzJ3XxrGm5BEnu9ajNd9RGVA66bjCewLxn64P40jF7cw+PX1dLGm5dKp72GCFrscRZuw
-         WHVtFcLq/YCPtlubfwsM0As39ZUd6jCO8NVCIOdp6pjzizAmHL4m8KnVLtYbKKzDZJEP
-         xH7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774967641; x=1775572441;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GIKZrQUV999cNYN5HmhG6qaejnSRA17IrWYvv0z6dB4=;
-        b=KWneAw84LlGox0KNPNrLboFgz5TPdbynFNlVpKOng/GhnMEqsbzF2iPMJaVtyphM5I
-         +7StTQPjf4H2NnWRE4XkZyfYB259FZbfdhOnEO+AUXo6v03dgOfC9A7N3G0ZyWlmxqln
-         EYBoLIzjlsRJ4TwpVjZ+sBKzKOaZpBcPR4nBppXHMs+v3BRk8q2JZKhB4dag5zbIE0+j
-         pYtw4LS3+S8/I+VSCwzib1efPWidFIQfcRsfPNIuRKZS1jm2tEVVpSqO8V7pU3+Dusdk
-         LfJEKiiuKmVMbygUvSxQtLmYImAAOrd5wS/cDA2vighbYyBaL+5zA/zKuys5NfRUYdzy
-         wehA==
-X-Gm-Message-State: AOJu0YwBuopsO0A6ef+15nvJjyxqFFgrzh6IUFncCEshB+VRYv0+aw7e
-	uRZ9z/+HUv8WO8jaXPXmpa+S8lc3WmelKUhZNFgXdtwTS4zK0k7MPFov
-X-Gm-Gg: ATEYQzy6ur69KUTmRdQ4Kp4I8918iGJIJnbjO/iDzoaMhH89tZUfTmkLOhSKTHU96Np
-	6VXq/n1Ym2iZPtHvUwBxT7x45AR4OhuqyfkZCbf5nx+i4uLEg8UFV8wTo7mTSS5lo5BB9ydzKSi
-	qP35zxdTheeFXGeq0wrdGWaC80LMiEGPcS6Hwk3XNtDYQLNtAQ9gXbnrQzs7Z14rfF9J7d6zVb2
-	9fg5pfzj41TNF7lhOt0j1XXYml5cCW6sL9qWr74xj2HhDsxINuEgfamGAHutdW2D6JDIRhml79W
-	fqIwUePIIHihnANjkSjlK/smZ/WLgs9ZVXMbGW1M0tI2hgHNX0G0jQnHBWERiXk/ygTaVYAvfF1
-	7QnvWWhjM/TvCkokoHSd+ErznRWo0/iS+eoYn0negcbyaNlSp7seTVbCeFYrFRLJ/aqZ9xs54ct
-	DZKsRAffxt8siuhP9TevpY3sV9D7IxbmaLMkl19bC9
-X-Received: by 2002:a17:902:f552:b0:2b2:497e:3f60 with SMTP id d9443c01a7336-2b2497e414dmr108576305ad.33.1774967640575;
-        Tue, 31 Mar 2026 07:34:00 -0700 (PDT)
-Received: from rigel (121-44-73-195.tpgi.com.au. [121.44.73.195])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b24266b92fsm115847515ad.23.2026.03.31.07.33.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2026 07:34:00 -0700 (PDT)
-Date: Tue, 31 Mar 2026 22:33:55 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Mathis Joussemet <joussemetmathis@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Subject: Re: Help regarding IO configuration of multiple lines
-Message-ID: <20260331143355.GA64085@rigel>
-References: <cf52e066ba190f52bbfbfcfdcbdf7addc8998616.camel@gmail.com>
- <20260307021344.GA14011@rigel>
- <CAOdiGsteopFY2-A9X65cBxMKbW9uWeZvfaKbMhwFT1E5gceOLQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=BS2tLgxD3CLYBf2U9Syy9wbKKlz8QAdvyWWAGD1Z9hueb0mwLPCcFTkDw6iekxfnF8GXltox8J5SH2d7phAADxwKB2tLmkIye1bVSOcllo/mi+j6gy5msKu6Xulc9ALe2NiStEW+AZOgG8eTZcTG7eQsaWzEATXhT7p4RXT/R+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jOFTTnnQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9841EC19423;
+	Tue, 31 Mar 2026 14:36:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774967774;
+	bh=WuipAWbd8LzKDAYhXLX11litf3pJQChGrJT8VlXp5go=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jOFTTnnQcZ81Gs+max/xpNqAqNQstVbm1orhVfZe8UVkYx6MSX7c6BhQOcD38wMJd
+	 Db9i1oawG5fhLlHd7CDM0ESTD9DTQxTZuARuiFHmV8VqwSEHgWwsW6fU7Rp0VzPG73
+	 FzMggP501Tly4BD4YhTrdbXUeKqrGL7UN+ApV3U6m0DGba/KtPhqAmi/jIQ+mA0VlY
+	 EYMP1gbgFdOJbOEpDJ8lnwnmZBjoaIt9uzZ7kh9d/DtfMaWuhw/Fn1X3gYU3OVa9ks
+	 tYa2PsD45bwHqvl4m17JR0ocl3jHpOgBhqFzclE2JSmE+0oteu9FY1c/EyQhIqv/3k
+	 KesxtMTfCxm8w==
+Date: Tue, 31 Mar 2026 15:36:09 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Bartosz Golaszewski <brgl@kernel.org>, linux-sound@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH] ASoC: uda1380: Modernize the driver
+Message-ID: <73689388-a323-4ef3-929c-8f8f15455116@sirena.org.uk>
+References: <20260327-asoc-uda1380-v1-1-f6f91be9b7f8@kernel.org>
+ <CAMRc=MeJ4eVx9HEWP6_4Yd-a=jb4SOyoWW=KgY_=od=ft1=7eA@mail.gmail.com>
+ <CAD++jLniBA_9NzG3BwNpTpT8fC3QRF0yiM_=Wq4u409_fqWVcQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="U+SAKaxgJwZ5jaYv"
 Content-Disposition: inline
-In-Reply-To: <CAOdiGsteopFY2-A9X65cBxMKbW9uWeZvfaKbMhwFT1E5gceOLQ@mail.gmail.com>
-X-Spamd-Result: default: False [-1.66 / 15.00];
+In-Reply-To: <CAD++jLniBA_9NzG3BwNpTpT8fC3QRF0yiM_=Wq4u409_fqWVcQ@mail.gmail.com>
+X-Cookie: I just had a NOSE JOB!!
+X-Spamd-Result: default: False [-4.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-34487-lists,linux-gpio=lfdr.de];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-34488-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,pengutronix.de,perex.cz,suse.com,gmail.com];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[warthog618@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[broonie@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 537B836B082
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,sirena.org.uk:mid]
+X-Rspamd-Queue-Id: 20F2036B1E4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Mar 31, 2026 at 03:23:16PM +0200, Mathis Joussemet wrote:
-> Hi Kent,
-> 
-> Sorry for the late reply, was up until now in exam hell.
-> It indeed works! I can now drive 2 LEDs at the same time!
-> 
-> I just have 2 new questions:
-> - I am now using a button to toggle one of the two LEDs by checking the
-> buttons value using
-> gpiod_line_request_get_value(request, offset[2])!=0)
-> in a if statement.
 
-I don't see any obvious reason that wouldn't read the button, assuming it is
-the third line in your offset array, and the condition is tested at the time
-you are pushing the button.
+--U+SAKaxgJwZ5jaYv
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Have you tried the equivalent with the gpiod tools (gpioget) or some of the
-example code (e.g. get_line_value) to confirm your hardware setup is working
-as expected?
+On Mon, Mar 30, 2026 at 10:56:53AM +0200, Linus Walleij wrote:
+> On Mon, Mar 30, 2026 at 10:45=E2=80=AFAM Bartosz Golaszewski <brgl@kernel=
+=2Eorg> wrote:
 
-> I've setup the correct input bias, but when I press on
-> it, the LED doesn't toggle. Checking with a scope still shows the voltage
-> jumping to 3.3v when pressed and 0v at other times. Is there something I'm
-> missing?
+> > $ git grep nxp,uda1380
+> > arch/arm/boot/dts/nxp/lpc/lpc3250-ea3250.dts:           compatible =3D
+> > "nxp,uda1380";
+> > arch/arm/boot/dts/nxp/lpc/lpc3250-phy3250.dts:          compatible =3D
+> > "nxp,uda1380";
 
-That being the input voltage?  For an input pulled down when the button is
-not pressed and pulled high when it is pressed?
-That is what I would expect to see.
+> > I think these count as in-tree users of the driver, right? The compatib=
+le is
+> > not described in bindings but I think this still looks as ABI.
 
-> - I'm trying to switch from an snapshot based line change reporting to an
-> event one. however when using a watch line event before/after the request,
-> the program still blocks. How should i code it to prevent blocking while
-> still having infos like output values types when there is a change?
-> 
+> Oh I didn't see *those*!
 
-You can use edge events in a polling scenario by testing if the request
-fd is ready to read using poll() or select() or similar.
-It will become ready when an event is available.
-You can then read the event as usual and the read will not block.
-So similar to the async_watch_line_value example, but with a 0 timeout in
-the poll() and checking the ret:
+> Well we could just delete the platform data handling instead but fixing
+> this properly is probably more fun and helpful.
 
-  ret = poll(&pollfd, 1, 0);
-  if (ret > 0) {
-    // read event...
-  }
+Note that at least the ea3250 is trying to use wspll as the sysclk,
+though the DT parsing code doesn't appear to actually exist so I'm not
+expecting it to work currently.
 
-and doing whatever else you want in the polling loop.
+--U+SAKaxgJwZ5jaYv
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Cheers,
-Kent.
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmnL29gACgkQJNaLcl1U
+h9DxDgf9HDXNyXEYBzmW+RFsdhkkN+xTocyRP0/NaU9hbVgy/zCfEumP3ERWSew0
+BonhF2Q92DFu9ASDqiB6CQqiHmaajKI8B8sCdfCW/jGQxL/b7b2l3u1pmcQ2MotI
+Oq/S1rA1yx26DdDRnvU9K5/cxnlVFbTws8tbabH8b/Vh2PctVCw9pAK0Rzf0TXlp
+z4YIh2v2+aTHj/VZz4ZBX1ekfzmf8bg/w1/QiOIL+/+P+m1E4QXyzCm+KAaXl4B1
+jZwkwjMQ5CPlWqgqRgLuDd5k+fY5vcWKkRHjxfcLq5wAl01oiYivpHs81S4xifDT
+sUBGidNoMgXvdisA7bUClV6Joj5ECg==
+=TtZW
+-----END PGP SIGNATURE-----
+
+--U+SAKaxgJwZ5jaYv--
 
