@@ -1,331 +1,211 @@
-Return-Path: <linux-gpio+bounces-34469-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34470-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eDugM6iZy2mYJQYAu9opvQ
-	(envelope-from <linux-gpio+bounces-34469-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 11:53:44 +0200
+	id mIHXMV2fy2loJgYAu9opvQ
+	(envelope-from <linux-gpio+bounces-34470-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 12:18:05 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EFB8367643
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 11:53:44 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2AB2367C63
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 12:18:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 9F9403088E89
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 09:48:05 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 454C8305C729
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 10:12:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 803D33EDABD;
-	Tue, 31 Mar 2026 09:48:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 075723B52E0;
+	Tue, 31 Mar 2026 10:12:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adzEQltm"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="SH5HD3eD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JheDDw++"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A573ED5B7
-	for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2026 09:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25EF3CCA16;
+	Tue, 31 Mar 2026 10:12:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774950482; cv=none; b=EaxXc2tC4GaPuEql0T9QOPkOxunMCm8NZA8HPzasglsZydn+3cIHx0YYSTm/QIFXOgSFiKB1En+P/B7VxYuU82iCvh0bc11y7UrZ3RwIGggKzuhpKdp9HTEyjvZrf5owtKNpKRAD3dWkXk39yhjYn/PV3bLks32q7xuyu7ZZZnc=
+	t=1774951943; cv=none; b=LREEWHDEm42nFGu4CLD0y1Xbvt9CUxwSGVUSxOpfA9TTzFNMZs5FqPbNi9ZvjrBtEh3e36A+gSZjQi8T2a3blCWEzgo7HRolkLYyFyQbrUHYIHz4U/AFKYH1edRjbRbqgEs60vcJcADOjHkv4BY3oBuU88GM0Yr3EO7Id646LBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774950482; c=relaxed/simple;
-	bh=enjXq1IaosHLxnBgQhk2lHI8aL7+jqMUWCiR5kNvnlI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WSq15439ZU5LEEOi+KM1l5nK9v47YJMBDdT9scxuKeileVRm8TzFJqNCVyZdhFu1aFNAWxLzCnxEqXomY9uyvtXjF6z0VAFN9knCHtEi5vFuuPl/JKq1SjBxJYyBquvjW9MP49n73lnThDCyHEAJBf7NW6eVHpxHfTxKbs8RU7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=adzEQltm; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-486fb112c09so51275355e9.1
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2026 02:47:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774950478; x=1775555278; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HmEtPoEG1EUMKwQsf4OvvafgJCsYzJUriFfog6MNbws=;
-        b=adzEQltmPRXJzxV64O8v8A+IFV8kFJoXexFbIIoSwvYutmRN9qZaOwWysUZkM+Hpa2
-         NFdcRYQvUnuySWJA5DAtHYaAdoMx5E7FCodw2oF8kgxAdPzzk29snueyyQ79FIARaPl4
-         EEvzQDnvDw8MKn8YhJkvQSVehu0Tkr8OslqT+iLoFWY9JAiIya9UYTaG/kZyE1qYVhJB
-         cp6dLe9D3s6p83aCu/nqnsQ1MeZ2BTjLItlXL+FN7HUNm2NVc5r2V/CjDb3TyGzKf81q
-         vNZNACzlI+r3W7FDtZgVfewB8jfTZRBP767CO+Hk1fOWwdEaFM0ev8oqY0N1P8JG4P70
-         eMRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774950478; x=1775555278;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HmEtPoEG1EUMKwQsf4OvvafgJCsYzJUriFfog6MNbws=;
-        b=VMJN4PE8r/wf+Mi42hDxkV9lXf3MpT9RISi9ZwKGxUb773396rIOOQX3mK8GvsrM9v
-         EjZQ2ZUX31dV3LjC+MtHOktF4089MwWAqHxrG4LW2eDdfjYB0HnalKcS2aCynEpM5eDd
-         Ibr7xoxhGqCCLDGR2myIPCARlyoB//Pme0/4tapFGb1svDvR8JP/HPt6grSHqCO3mhvg
-         wPCyiI6Nmka1f429jc4pp/jaORvignzjPyjgu0xKD44+3vJdTc04Ynv5rH5xefxLQ8Ud
-         +ehiXG5/UlHpABlTydfNefm8BCjoRt5vRCm/u2uPukobxCHHxBwI4wupgBBT+6ImrUqo
-         xI6w==
-X-Forwarded-Encrypted: i=1; AJvYcCW8BMqTy1puaHRmFfNlysr+EHv0lviMz/dedNIeFOgU9cfQTGGqmipy/czBRIO9yDG18kIvYT3J8A+H@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxm6LcPJvRKl+3nL/+OZBM+coBTYQwkeYwMA22LCc/kAPCD+P13
-	aDCjvUnqjxbvVz0KEkLQ8GTqzOS3UZMorUuL89GDPQmxKTw32vWlIj+U
-X-Gm-Gg: ATEYQzz4KUMNSQ69CSa0dzGu768/jMho/9vvOFH74Rc0hNGor12ay1fhUruNpCfAXQt
-	vHcblUI2dAuZjnoxDm5+K9XJ4MNG0SBM2yLdRapYv+i1mJoOr3Fib44oa3tD/Q/3ImfeLWALi5z
-	5hOrHrnSj83GJ9Cckcud5wHGtmY9U2tNFW8iIrggWHk5IOC/JvHuXGWBAwNshQ3l1w2PU8ZYY3S
-	o/BSE4dR0o+cPbDGiMkzBDsOW+U0sExyGyt41w9LIYLLA23PaCSHbuYEo5wO31bq1456cGHeBxE
-	MCvMtshsYb1V4IvM1aTyLDnryG/Hq6UJDHgLnf5j8eZY7IqKjJRfcG7sLTYwLSfu1K9MaoMQwql
-	rywd5/mUaQsmakwFF2IOzKcWEsqRXc7cYTqjwY8aeZ2+yZfg958BJxWE78uBd3IiSQMk4R5W5gb
-	frUS3DJQyCulZx
-X-Received: by 2002:a05:600c:b95:b0:485:5c6e:8a38 with SMTP id 5b1f17b1804b1-48727f63664mr250648925e9.17.1774950478236;
-        Tue, 31 Mar 2026 02:47:58 -0700 (PDT)
-Received: from nsa ([185.128.9.53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4887aacb8d0sm14105285e9.3.2026.03.31.02.47.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2026 02:47:57 -0700 (PDT)
-Date: Tue, 31 Mar 2026 10:48:43 +0100
-From: Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, linux-gpio@vger.kernel.org, 
-	linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
-Subject: Re: [PATCH v8 2/3] hwmon: ltc4283: Add support for the LTC4283 Swap
- Controller
-Message-ID: <acuLynb1hRFJRcEf@nsa>
-References: <20260327-ltc4283-support-v8-0-471de255d728@analog.com>
- <20260327-ltc4283-support-v8-2-471de255d728@analog.com>
- <aco5L_6SZIB2DdpF@nsa>
- <e0c96f38-6742-4b86-8938-64e4e6063119@roeck-us.net>
+	s=arc-20240116; t=1774951943; c=relaxed/simple;
+	bh=ED7tg0lfon/aB5lbP4hi2wJ6i3VH5bCIJ3/mOjYixwo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=uTPIpzb22rhnvQ7Mj1HnLj5gyG69WCGJA3BD4bM3ZRz60X7sxoUlkEen3R8f/mZE2knA6TONSJMKd5qdGNYDIMBExHparYhnsbWomthFsq5a/UUlqbKm99yOdlrq4gTElJL9CDasJ1twfNn3Aegqq8d3hQIv7OhqiLfVwumdqUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=SH5HD3eD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JheDDw++; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfout.phl.internal (Postfix) with ESMTP id F12ABEC010C;
+	Tue, 31 Mar 2026 06:12:20 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-04.internal (MEProxy); Tue, 31 Mar 2026 06:12:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1774951940;
+	 x=1775038340; bh=Ppm8Ahxu3yD+PaCS+Jim/Aqx0Ce8DbNQlo2I+oBEARU=; b=
+	SH5HD3eDFjqigcr/67yohxqmEFPcoDYm+X66SGibt8qEGfUvVYOF8Fb2pErlBdJk
+	gS3Fk6APUCJC/Ydbo8NykY5BH7rKOfxiQPAvYxpk2MF6J2dUNoAKxTLnGoYPxFmU
+	DQkhNlRqRr7Ql/QCON1ryH0nim/eKY/AWEBnKuinvp1XmblZDTdgoGUgDwrOZ4/c
+	PrX0ZhZIBl2SDv3cSHI13UhpclcUE99/klk6NBGiOPLwJHqLLnwcuDT6M+lGFxmi
+	31mOciEGB32HB1X3EhK7cZRlOCkP4WApBnG7p67mL2S23snBa4j4FZolC3JYCCju
+	l/kPh+S6hoFiUjigRyZ/bg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1774951940; x=
+	1775038340; bh=Ppm8Ahxu3yD+PaCS+Jim/Aqx0Ce8DbNQlo2I+oBEARU=; b=J
+	heDDw++4zOPnwVEt4nKnSX739unAB96P1xTMIZdCDH59ovLtEUqU6WTkp/KAx/s/
+	g2a9M9SJRSu5eXpToDVGv8ufqm9yRYH4fxX2JoAPLcs6gSDXd11ZuibCA3rH9Z5X
+	snxpvBtPvz2otie2z1+/bmkHMV3HkH5LGydrDouPm1rov3J74auD1ikEQOb0eZXU
+	3Z3VO/BrEiZcso9tl9HAize72+MxRmq9bwNff/cJNcI6J8Pb+MtpwGpq7Heo4kbD
+	qnuxlxQEoF623TGCBAC3LKmYtQhrKgtY2kX4CzUg5bxCmCt0ZEsrZYOg2k3ebwpo
+	nNSGpta9lQvDABDyHgvXg==
+X-ME-Sender: <xms:BJ7LacTMVsVR2n3PY_TFnbd3-JVesOhKJHqrEfgZBliveklaH6ZTaQ>
+    <xme:BJ7LaUkbLJqcOkbDAT0uuax9_BhkPUyeEdcXB-S01Z9G69BSehW__hR0yrVpe1mfX
+    ZglUg91dBZx_bPoofZ_vNKZsRhoVyApPO4Z-mh39os0B8-UwbH8rXc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdefgeduieduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
+    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepfedvpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtoheptghhvghsth
+    gvrheivdehudehsehgmhgrihhlrdgtohhmpdhrtghpthhtohepfhgvshhtvghvrghmsehg
+    mhgrihhlrdgtohhmpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehk
+    rhiikheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehr
+    ohgshheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:BJ7LaddLmIq35YemD71eYqqc6mzG5eLijk23RuFEQ3BTb8wC75g4_w>
+    <xmx:BJ7LaYsk_2JHQ6SFNpX-EkzZ6nmJyF2phArkF-dCiaVchnnRWU1eEQ>
+    <xmx:BJ7LaSmHEKbIz7QwDnLsC5Q6h0EKLqK7cOfq3XMumq6xK0XOoWjCCQ>
+    <xmx:BJ7LaUNKtVS1PZvg4n9AvAMg1JNydzOj-lm-Bm8Ynj5veo9TpfFhQw>
+    <xmx:BJ7LadQ-ubt37WZVfMH62Qp9RhbIYCL0YTWmv2MWnCrvo8iyrsXaBQZK>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 5ACF3700065; Tue, 31 Mar 2026 06:12:20 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e0c96f38-6742-4b86-8938-64e4e6063119@roeck-us.net>
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-ThreadId: ABMmOHXEXk43
+Date: Tue, 31 Mar 2026 12:11:40 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Khristine Andreea Barbulescu" <khristineandreea.barbulescu@oss.nxp.com>,
+ "Krzysztof Kozlowski" <krzk@kernel.org>,
+ "Ghennadi Procopciuc" <ghennadi.procopciuc@oss.nxp.com>
+Cc: "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Chester Lin" <chester62515@gmail.com>,
+ "Matthias Brugger" <mbrugger@suse.com>,
+ "Ghennadi Procopciuc" <ghennadi.procopciuc@nxp.com>,
+ "Larisa Grigore" <larisa.grigore@nxp.com>, "Lee Jones" <lee@kernel.org>,
+ "Shawn Guo" <shawnguo@kernel.org>,
+ "Sascha Hauer" <s.hauer@pengutronix.de>,
+ "Fabio Estevam" <festevam@gmail.com>,
+ "Aisheng Dong" <aisheng.dong@nxp.com>, "Jacky Bai" <ping.bai@nxp.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+ "Alberto Ruiz" <aruizrui@redhat.com>,
+ "Christophe Lizzi" <clizzi@redhat.com>, devicetree@vger.kernel.org,
+ "Enric Balletbo" <eballetb@redhat.com>,
+ "Eric Chanudet" <echanude@redhat.com>, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, "NXP S32 Linux Team" <s32@nxp.com>,
+ "Pengutronix Kernel Team" <kernel@pengutronix.de>,
+ "Vincent Guittot" <vincent.guittot@linaro.org>,
+ "Rob Herring" <robh@kernel.org>
+Message-Id: <e1c341d6-e60d-4200-a094-48667e8ccd5c@app.fastmail.com>
+In-Reply-To: <4c46909d-641b-4389-bc4a-29394cb1d46d@oss.nxp.com>
+References: 
+ <20260120115923.3463866-1-khristineandreea.barbulescu@oss.nxp.com>
+ <20260120115923.3463866-2-khristineandreea.barbulescu@oss.nxp.com>
+ <20260121021913.GA1704619-robh@kernel.org>
+ <e956750b-0333-4465-b37e-5f460b5e092f@oss.nxp.com>
+ <edc3a63a-8117-476f-9582-97ae31fefa96@kernel.org>
+ <7d200097-51bc-4404-be8b-f536d0ecfc25@oss.nxp.com>
+ <21531cdd-5ab9-493e-a722-61b98117e2c4@kernel.org>
+ <22a5a072-847e-4cfd-8abd-e37163f73265@oss.nxp.com>
+ <fe755e85-1558-4272-bdd4-af7a2038ab1f@kernel.org>
+ <ba6140bf-237e-4099-af0c-ee404c1719cd@oss.nxp.com>
+ <c7a59716-3d53-4787-b4ef-9674c2a4a9b5@kernel.org>
+ <3c454da1-d949-4258-87ce-8b545000bf01@app.fastmail.com>
+ <5f1b651b-1064-4280-a7e0-b7d66c396cde@oss.nxp.com>
+ <f3ff461b-edd7-423a-ac99-e70145aaaaea@kernel.org>
+ <4c46909d-641b-4389-bc4a-29394cb1d46d@oss.nxp.com>
+Subject: Re: [PATCH v8 01/10] dt-bindings: mfd: add support for the NXP SIUL2 module
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.65 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[arndb.de,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[arndb.de:s=fm1,messagingengine.com:s=fm2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	XM_UA_NO_VERSION(0.01)[];
+	TAGGED_FROM(0.00)[bounces-34470-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34469-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_FROM(0.00)[gmail.com];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[32];
+	FREEMAIL_CC(0.00)[linaro.org,bgdev.pl,kernel.org,gmail.com,suse.com,nxp.com,pengutronix.de,linuxfoundation.org,redhat.com,vger.kernel.org,lists.linux.dev,lists.infradead.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nonamenuno@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 5EFB8367643
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[arnd@arndb.de,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[arndb.de:+,messagingengine.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	NEURAL_HAM(-0.00)[-0.924];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[messagingengine.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,app.fastmail.com:mid]
+X-Rspamd-Queue-Id: B2AB2367C63
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Mar 30, 2026 at 08:47:32AM -0700, Guenter Roeck wrote:
-> On 3/30/26 02:28, Nuno Sá wrote:
-> > Hi Guenter, Regarding AI review, I think most of the points were
-> > discussed in previous revisions, but there are two valid.
-> > 
-> > On Fri, Mar 27, 2026 at 05:26:15PM +0000, Nuno Sá wrote:
-> > > Support the LTC4283 Hot Swap Controller. The device features programmable
-> > > current limit with foldback and independently adjustable inrush current to
-> > > optimize the MOSFET safe operating area (SOA). The SOA timer limits MOSFET
-> > > temperature rise for reliable protection against overstresses.
-> > > 
-> > > An I2C interface and onboard ADC allow monitoring of board current,
-> > > voltage, power, energy, and fault status.
-> > > 
-> > > Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-> > > ---
-> > >   Documentation/hwmon/index.rst   |    1 +
-> > >   Documentation/hwmon/ltc4283.rst |  266 ++++++
-> > >   MAINTAINERS                     |    1 +
-> > >   drivers/hwmon/Kconfig           |   12 +
-> > >   drivers/hwmon/Makefile          |    1 +
-> > >   drivers/hwmon/ltc4283.c         | 1796 +++++++++++++++++++++++++++++++++++++++
-> > >   6 files changed, 2077 insertions(+)
-> > > 
-> > 
-> > ...
-> > 
-> > > +static int ltc4283_read_in_alarm(struct ltc4283_hwmon *st, u32 channel,
-> > > +				 bool max_alm, long *val)
-> > > +{
-> > > +	if (channel == LTC4283_VPWR)
-> > > +		return ltc4283_read_alarm(st, LTC4283_ADC_ALM_LOG_1,
-> > > +					  BIT(2 + max_alm), val);
-> > > +
-> > > +	if (channel >= LTC4283_CHAN_ADI_1 && channel <= LTC4283_CHAN_ADI_4) {
-> > > +		u32 bit = (channel - LTC4283_CHAN_ADI_1) * 2;
-> > > +		/*
-> > > +		 * Lower channels go to higher bits. We also want to go +1 down
-> > > +		 * in the min_alarm case.
-> > > +		 */
-> > > +		return ltc4283_read_alarm(st, LTC4283_ADC_ALM_LOG_2,
-> > > +					  BIT(7 - bit - !max_alm), val);
-> > > +	}
-> > > +
-> > > +	if (channel >= LTC4283_CHAN_ADIO_1 && channel <= LTC4283_CHAN_ADIO_4) {
-> > > +		u32 bit = (channel - LTC4283_CHAN_ADIO_1) * 2;
-> > > +
-> > > +		return ltc4283_read_alarm(st, LTC4283_ADC_ALM_LOG_3,
-> > > +					  BIT(7 - bit - !max_alm), val);
-> > > +	}
-> > > +
-> > > +	if (channel >= LTC4283_CHAN_ADIN12 && channel <= LTC4283_CHAN_ADIN34) {
-> > > +		u32 bit = (channel - LTC4283_CHAN_ADIN12) * 2;
-> > > +
-> > > +		return ltc4283_read_alarm(st, LTC4283_ADC_ALM_LOG_5,
-> > > +					  BIT(7 - bit - !max_alm), val);
-> > > +	}
-> > 
-> > "Will this condition handle the ADIO12 and ADIO34 differential channels?
-> > It looks like channels 14 and 15 fall through to the default return intended
-> > for the DRAIN channel. Since reading the alarm implicitly clears the register
-> > bits, could reading these ADIO alarms unintentionally clear actual DRAIN
-> > alarms? Should the upper bound be LTC4283_CHAN_ADIO34?"
-> > 
-> > Good catch and should be:
-> > 
-> > -       if (channel >= LTC4283_CHAN_ADIN12 && channel <= LTC4283_CHAN_ADIN34) {
-> > +       if (channel >= LTC4283_CHAN_ADIN12 && channel <= LTC4283_CHAN_ADIO34) {
-> > 
-> > > +
-> > > +	if (channel == LTC4283_CHAN_DRNS)
-> > > +		return ltc4283_read_alarm(st, LTC4283_ADC_ALM_LOG_4,
-> > > +					  BIT(6 + max_alm), val);
-> > > +
-> > > +	return ltc4283_read_alarm(st, LTC4283_ADC_ALM_LOG_4, BIT(4 + max_alm),
-> > > +				  val);
-> > > +}
-> > 
-> > ...
-> > 
-> > > +
-> > > +static int ltc4283_probe(struct i2c_client *client)
-> > > +{
-> > > +	struct device *dev = &client->dev, *hwmon;
-> > > +	struct auxiliary_device *adev;
-> > > +	struct ltc4283_hwmon *st;
-> > > +	int ret;
-> > > +
-> > > +	st = devm_kzalloc(dev, sizeof(*st), GFP_KERNEL);
-> > > +	if (!st)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	if (!i2c_check_functionality(client->adapter,
-> > > +				     I2C_FUNC_SMBUS_BYTE_DATA |
-> > > +				     I2C_FUNC_SMBUS_WORD_DATA |
-> > > +				     I2C_FUNC_SMBUS_READ_I2C_BLOCK))
-> > > +		return -EOPNOTSUPP;
-> > > +
-> > > +	st->client = client;
-> > > +	st->map = devm_regmap_init(dev, &ltc4283_regmap_bus, client,
-> > > +				   &ltc4283_regmap_config);
-> > > +	if (IS_ERR(st->map))
-> > > +		return dev_err_probe(dev, PTR_ERR(st->map),
-> > > +				     "Failed to create regmap\n");
-> > > +
-> > > +	ret = ltc4283_setup(st, dev);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	hwmon = devm_hwmon_device_register_with_info(dev, "ltc4283", st,
-> > > +						     &ltc4283_chip_info, NULL);
-> > > +
-> > > +	if (IS_ERR(hwmon))
-> > > +		return PTR_ERR(hwmon);
-> > > +
-> > > +	ltc4283_debugfs_init(st, client);
-> > > +
-> > > +	if (!st->gpio_mask)
-> > > +		return 0;
-> > > +
-> > > +	adev = devm_auxiliary_device_create(dev, "gpio", &st->gpio_mask);
-> > > +	if (!adev)
-> > > +		return dev_err_probe(dev, -ENODEV, "Failed to add GPIO device\n");
-> > 
-> > "Does this allow multiple LTC4283 chips to probe successfully?
-> > Without allocating a unique ID per I2C instance, it seems the first probed
-> > chip takes the generic name. If a second chip is present, it might attempt
-> > to register with the exact same name, resulting in a failure in device_add()
-> > and aborting the probe."
-> > 
-> > Also looks valid and I suspect is one of those that a quick look will
-> > find more "offenders". I would purpose:
-> > 
-> > -       adev = devm_auxiliary_device_create(dev, "gpio", &st->gpio_mask);
-> > +       adev = __devm_auxiliary_device_create(dev, KBUILD_MODNAME, "gpio",
-> > +                                             &st->gpio_mask, client->addr);
-> > 
+On Tue, Mar 31, 2026, at 09:48, Khristine Andreea Barbulescu wrote:
 > 
-> That would still fail if there are multiple chips at the same I2C address
-> on multiple I2C busses. Check drivers/gpu/drm/bridge/ti-sn65dsi86.c which has
-> the same problem.
+> With the current layout, the SIUL2 node itself now contains the two
+> MMIO ranges directly, while the remaining child node is only the
+> pinctrl/GPIO function.
 
-I did looked at that one but totally forgot the multiple busses
-scenario.
+The thread started by saying this is an MFD "It can export information
+about the SoC, configure the pinmux&pinconf for pins and it is also
+a GPIO controller with interrupt capability." Having a combined
+pinctrl/gpio/irqchip driver is normal, but can you clarify what
+you plan to do with the "information about the SoC" part?
 
-> 
-> > If there's nothing else and you agree with the above, is this something
-> > you can tweak while applying or should I spin a new version?
-> > 
-> 
-> Please respin. Also, regarding the other concerns:
-> 
->   Can BIT(8) * st->rsense wrap to zero on 32-bit architectures?
->   BIT(8) is a 32-bit unsigned long and st->rsense is a u32. If a user sets a
->   very large sense resistor value via the device tree, the multiplication could
->   wrap to 0, causing a division-by-zero kernel panic. Should the divisor use
->   BIT_ULL(8)?
-> 
-> Unless I am missing something, this _can_ overflow. Try to provide a sense
-> resistor value of 1677721600. Yes, it is unreasonable to specify such large
-> rsense values, but why not just limit it such that it does not overflow ?
+Was this a "soc_device" driver, or something else? Have you
+concluded now that this is not going to be needed at all?
+In that case, I guess having a monolithic driver is
+indeed simpler than an MFD.
 
-Yes, that's pretty much my reasoning (regarding the unreasonable
-rsense). I could just make BIT_ULL() and be done with it. I can also
-also cap rsense to a max value but i'm not 100% what that value would
-be. Maybe 1 ohm is already more than reasonable. I can also ask internally. Any
-preference on this one?
+What I wonder about then is whether the binding needs to be changed
+at all. With the current nxp,s32g2-siul2-pinctrl.yaml binding
+and pinctrl-s32g2.c implementation, you seem to have a monolithic
+device already, though missing the gpio functionality. Rather
+than completely replacing this, I assume the easiest way then
+would be to add the PGPD registers into this device node, right?
 
-> 
-> Also, for the overflow concerns, if you are sure they can not happen, I'll
-> really need to write the unit test code to make sure that this is indeed
-> the case.
->
+It is still a bit weird to list the individual register areas
+inside of the larger device here, but that still seems better
+than an incompatible binding change.
 
-Hmm, for the val * MILLI case, well it should not happen but given it
-depends on user input, better if I clamp it before passing the
-value to ltc4283_write_in_byte(). Yes, we clamp again inside the
-write_bytes() API but not a big deal.
-
-For the st->power_max is again one of those cases where the values would
-not make sense (I think - the combination of vsense_max and rsense). Just looking
-at the code, it can overflow but this one I'm not really sure how we could handle it.
-Maybe clamp power_max to U8_MAX and have a warning message in ltc4283_read_power_byte() if
-we overflow long in which case we need a power64 attr?
-
-But even clamping does not make much sense here. The power limit register
-is 8 bits, so if our design (rsense + vsense_max) overflows that,
-there's nothing we can do other that erroring out.
-
-- Nuno Sá
-
-> Thanks,
-> Guenter
-> 
+    Arnd
 
