@@ -1,224 +1,179 @@
-Return-Path: <linux-gpio+bounces-34486-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34487-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mL3BM1bWy2mILwYAu9opvQ
-	(envelope-from <linux-gpio+bounces-34486-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 16:12:38 +0200
+	id cPEnK3Tby2lHMAYAu9opvQ
+	(envelope-from <linux-gpio+bounces-34487-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 16:34:28 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67E4936ABE1
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 16:12:38 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 537B836B082
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 16:34:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 51989304C138
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 14:08:58 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2040030458F1
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 14:34:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19C523B19CB;
-	Tue, 31 Mar 2026 14:08:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B02D83DFC69;
+	Tue, 31 Mar 2026 14:34:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="B1LCww5S";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CWbrwQ7W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7eo1es6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17ED737F00F;
-	Tue, 31 Mar 2026 14:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60067329E4B
+	for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2026 14:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774966136; cv=none; b=erjyUJ3PlZubD5ppHhKpDAgV8PEaCwSkxwD/I0qtbQ9UEdyD9w1pYTpcYO6UdK9yxfwa60Hb2lfWZ+/IPXmEIyszLxsZwgzlc+9jDJzQmY1UImUcmlj2cmv1qqRgxJQQuqGxrYmccDB27AM9MpoFRv/m59ev0oxYCArjaIssuiA=
+	t=1774967642; cv=none; b=ZdCnbuNfBIEkG284+YGt5rz7hqold4Yhi7/86npnAnVPfZzwzRy1Im+VxIgYjB6DgjTN8QDaUhU5SVnB2gxZo1onu6DifGrr9/IokdsWarDOW0gEsxq+yeFdd0lsLRaGPeAXLMrHk2ykexzAluYh5kKi1ImvGyj0sah9oNJZtfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774966136; c=relaxed/simple;
-	bh=rnxwcNzb3fPolYDOHzrOQiXvCPNY8XDxsBQaUp9OUnU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Wje/NoxBAJYpzLT82hcixhy4ciSNdv3/3ImMKdD6bDMHASS0QsT1ZRxDQkWYrGkxCft8ET0Uy+ohJ5v22ffZKc/rTu9i7QBSIiTJlelZvUuGQPrWRtB7zZeP1D5yiYPW1OMzej9HUrztGaf8r83hCINlWI/h9zMrVZxnKWSnhGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=B1LCww5S; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CWbrwQ7W; arc=none smtp.client-ip=202.12.124.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfout.stl.internal (Postfix) with ESMTP id 120971D0018F;
-	Tue, 31 Mar 2026 10:08:53 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Tue, 31 Mar 2026 10:08:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1774966132;
-	 x=1775052532; bh=+wB5qVtq/fKVMAqMqoSITrLfao0bHO9kdmdL6ob1esQ=; b=
-	B1LCww5SHprChvjdDhQI4LHZjDChEB2tZO8cjxh8WpbQZRShsreuUnnSTnlL3Ahn
-	QCrNsUp35Pbx5nswQcBH0oZhDglNNa32RyMScKs8kvUZY0NiWEIoza0NNxuNW0Ld
-	d4vNO5k9+oSPNTeUj1BfIIypgD1x0Shljb/8jBYd+qUE4KBzUiUVC6UHHOk1ioBj
-	25q1L9bl+kdWJa00VZeUGVC5hiQw+7lA8K/aOc7s2tR6wNweOpvcbHPQPRC0z2sl
-	FTGPKJAohRBpJQu99nfNqaTWRzhKWLqz6JMiA0Sv5wo0ChMf/hVp2VvR8W6cSCUU
-	8C/g2dF9xSKEkjFusZhxwA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1774966132; x=
-	1775052532; bh=+wB5qVtq/fKVMAqMqoSITrLfao0bHO9kdmdL6ob1esQ=; b=C
-	WbrwQ7WOlPJbXrTJ39oQjfRWzqdsAAO2jn+orvIp2vh9bj7yOlLP9iN29/e+QcL/
-	S3Wb5lvEgQP9NasSAud8hCBJxB1lGiMfqrteZG/cGMdTXS68WEw9skfIjPrKRzR3
-	MLrEVx7ZtkDjNj2rn4fQJqi6gdg9vKbBALveUnvvZWpn/gSxVNB4acU++9Zj0Gz4
-	1fvlr+1Ny37Z5DwbVCp7IDRHRDWtFT5VvDjavE633c34iluwLsta379T6CHNXfQ8
-	xTZvclmKmt8y9JJyDyvsSrW/wwiO4bOPY9cjloZ17BvhNJNpfI4sD6DJompSOucg
-	0NVQIObVTrRP17AVwka/A==
-X-ME-Sender: <xms:c9XLaYTAkZ8e2SygqkXmUPSfi887r1A6GBN06apjKB6aset5L0stzA>
-    <xme:c9XLaQlkRLHRDxhMiY0yxXeFYhUFNpGziUk7G6SKBqiCt0ABXQS98Me2jnY--b--z
-    c97HcH8dQEZBnEBvApgPnSts7piqn1eYAxgcScgUHBKPSWI0jxR>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdegtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegrihhl
-    ohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpe
-    foggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcuuegv
-    rhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrhhnpe
-    efhfehteffuddvgfeigefhjeetvdekteekjeefkeekleffjeetvedvgefhhfeihfenucff
-    ohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthht
-    ohepfedvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsrhhglhessghguggvvh
-    drphhlpdhrtghpthhtoheptghhvghsthgvrheivdehudehsehgmhgrihhlrdgtohhmpdhr
-    tghpthhtohepfhgvshhtvghvrghmsehgmhgrihhlrdgtohhmpdhrtghpthhtoheptghonh
-    horhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehkrhiikheskhgvrhhnvghlrdhorhhgpdhrtghpth
-    htoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:dNXLaZfv9GSbkLKfM-5iSaGk5mPu9owz27weaJ1tk0itL-smBqH24A>
-    <xmx:dNXLaUtdjwwx6whu2Rp0Ewgf4qTI2G_YQ4ktIi059_0ldn0RhaVSww>
-    <xmx:dNXLaekwdTzWIGJ914lp8fvdxQEV7G0ASaLHLhybPnIqaHPO5tH5SQ>
-    <xmx:dNXLaQMRFMsVlZKpzoYJzx2wBHdt9Qcsy0V67Cqrp33ea-owvHI4xg>
-    <xmx:dNXLaZS7XS-e_g_pxLDBPvibHaYx8a2TUHZ5C51W5UnEMrfIxYbyKT4a>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id DE24A700065; Tue, 31 Mar 2026 10:08:51 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1774967642; c=relaxed/simple;
+	bh=7QyT5y5IdVGl5TzBMiqcHoPN++K1BEB+3G5SBMmIV3E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XjubcyrbnCWnZVv38kcKAHj4pJQYq7H8w5SeDx3A2k71QVR9ghZ6u4iy8JRg5Ql9CyvoiLT05lIeQgWvgGLMFie/Wnp7E1PzX32gthu99KDtue+7KlGjeim7maICbwZCVaNx6Z4QExI9kP4fzKbnSe1AAsohhMFyyQhtNZvZBSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K7eo1es6; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2adff872068so24069115ad.1
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2026 07:34:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774967641; x=1775572441; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GIKZrQUV999cNYN5HmhG6qaejnSRA17IrWYvv0z6dB4=;
+        b=K7eo1es6Y2rpeszh+QgzNujvKQXXwUlNVavKy6ibgpk+rTDOU/5j3h4T9i8gKhh8YB
+         XcGjznYxFtOHXUWhx5loGkJ8S9fHVmN/6vIsy3kynHIeU9k7u1DW9R2BxXg5bZNXbGlr
+         JM962gNJnoPJ7wzGHoeI3dp1TttjmN9cB2H2KwYT/2UmD04qthzVX4llU9Zjvl7l9lMe
+         zzJ3XxrGm5BEnu9ajNd9RGVA66bjCewLxn64P40jF7cw+PX1dLGm5dKp72GCFrscRZuw
+         WHVtFcLq/YCPtlubfwsM0As39ZUd6jCO8NVCIOdp6pjzizAmHL4m8KnVLtYbKKzDZJEP
+         xH7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774967641; x=1775572441;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GIKZrQUV999cNYN5HmhG6qaejnSRA17IrWYvv0z6dB4=;
+        b=KWneAw84LlGox0KNPNrLboFgz5TPdbynFNlVpKOng/GhnMEqsbzF2iPMJaVtyphM5I
+         +7StTQPjf4H2NnWRE4XkZyfYB259FZbfdhOnEO+AUXo6v03dgOfC9A7N3G0ZyWlmxqln
+         EYBoLIzjlsRJ4TwpVjZ+sBKzKOaZpBcPR4nBppXHMs+v3BRk8q2JZKhB4dag5zbIE0+j
+         pYtw4LS3+S8/I+VSCwzib1efPWidFIQfcRsfPNIuRKZS1jm2tEVVpSqO8V7pU3+Dusdk
+         LfJEKiiuKmVMbygUvSxQtLmYImAAOrd5wS/cDA2vighbYyBaL+5zA/zKuys5NfRUYdzy
+         wehA==
+X-Gm-Message-State: AOJu0YwBuopsO0A6ef+15nvJjyxqFFgrzh6IUFncCEshB+VRYv0+aw7e
+	uRZ9z/+HUv8WO8jaXPXmpa+S8lc3WmelKUhZNFgXdtwTS4zK0k7MPFov
+X-Gm-Gg: ATEYQzy6ur69KUTmRdQ4Kp4I8918iGJIJnbjO/iDzoaMhH89tZUfTmkLOhSKTHU96Np
+	6VXq/n1Ym2iZPtHvUwBxT7x45AR4OhuqyfkZCbf5nx+i4uLEg8UFV8wTo7mTSS5lo5BB9ydzKSi
+	qP35zxdTheeFXGeq0wrdGWaC80LMiEGPcS6Hwk3XNtDYQLNtAQ9gXbnrQzs7Z14rfF9J7d6zVb2
+	9fg5pfzj41TNF7lhOt0j1XXYml5cCW6sL9qWr74xj2HhDsxINuEgfamGAHutdW2D6JDIRhml79W
+	fqIwUePIIHihnANjkSjlK/smZ/WLgs9ZVXMbGW1M0tI2hgHNX0G0jQnHBWERiXk/ygTaVYAvfF1
+	7QnvWWhjM/TvCkokoHSd+ErznRWo0/iS+eoYn0negcbyaNlSp7seTVbCeFYrFRLJ/aqZ9xs54ct
+	DZKsRAffxt8siuhP9TevpY3sV9D7IxbmaLMkl19bC9
+X-Received: by 2002:a17:902:f552:b0:2b2:497e:3f60 with SMTP id d9443c01a7336-2b2497e414dmr108576305ad.33.1774967640575;
+        Tue, 31 Mar 2026 07:34:00 -0700 (PDT)
+Received: from rigel (121-44-73-195.tpgi.com.au. [121.44.73.195])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b24266b92fsm115847515ad.23.2026.03.31.07.33.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2026 07:34:00 -0700 (PDT)
+Date: Tue, 31 Mar 2026 22:33:55 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Mathis Joussemet <joussemetmathis@gmail.com>
+Cc: linux-gpio@vger.kernel.org
+Subject: Re: Help regarding IO configuration of multiple lines
+Message-ID: <20260331143355.GA64085@rigel>
+References: <cf52e066ba190f52bbfbfcfdcbdf7addc8998616.camel@gmail.com>
+ <20260307021344.GA14011@rigel>
+ <CAOdiGsteopFY2-A9X65cBxMKbW9uWeZvfaKbMhwFT1E5gceOLQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: ABMmOHXEXk43
-Date: Tue, 31 Mar 2026 16:08:31 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Khristine Andreea Barbulescu" <khristineandreea.barbulescu@oss.nxp.com>,
- "Krzysztof Kozlowski" <krzk@kernel.org>,
- "Ghennadi Procopciuc" <ghennadi.procopciuc@oss.nxp.com>
-Cc: "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Chester Lin" <chester62515@gmail.com>,
- "Matthias Brugger" <mbrugger@suse.com>,
- "Ghennadi Procopciuc" <ghennadi.procopciuc@nxp.com>,
- "Larisa Grigore" <larisa.grigore@nxp.com>, "Lee Jones" <lee@kernel.org>,
- "Shawn Guo" <shawnguo@kernel.org>,
- "Sascha Hauer" <s.hauer@pengutronix.de>,
- "Fabio Estevam" <festevam@gmail.com>,
- "Aisheng Dong" <aisheng.dong@nxp.com>, "Jacky Bai" <ping.bai@nxp.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- "Alberto Ruiz" <aruizrui@redhat.com>,
- "Christophe Lizzi" <clizzi@redhat.com>, devicetree@vger.kernel.org,
- "Enric Balletbo" <eballetb@redhat.com>,
- "Eric Chanudet" <echanude@redhat.com>, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- linux-kernel@vger.kernel.org, "NXP S32 Linux Team" <s32@nxp.com>,
- "Pengutronix Kernel Team" <kernel@pengutronix.de>,
- "Vincent Guittot" <vincent.guittot@linaro.org>,
- "Rob Herring" <robh@kernel.org>
-Message-Id: <0666ab85-60ef-4eb9-81fb-636c604653fe@app.fastmail.com>
-In-Reply-To: <fd8c90ec-927e-4395-85ba-9e45c23fd799@oss.nxp.com>
-References: 
- <20260120115923.3463866-1-khristineandreea.barbulescu@oss.nxp.com>
- <20260120115923.3463866-2-khristineandreea.barbulescu@oss.nxp.com>
- <20260121021913.GA1704619-robh@kernel.org>
- <e956750b-0333-4465-b37e-5f460b5e092f@oss.nxp.com>
- <edc3a63a-8117-476f-9582-97ae31fefa96@kernel.org>
- <7d200097-51bc-4404-be8b-f536d0ecfc25@oss.nxp.com>
- <21531cdd-5ab9-493e-a722-61b98117e2c4@kernel.org>
- <22a5a072-847e-4cfd-8abd-e37163f73265@oss.nxp.com>
- <fe755e85-1558-4272-bdd4-af7a2038ab1f@kernel.org>
- <ba6140bf-237e-4099-af0c-ee404c1719cd@oss.nxp.com>
- <c7a59716-3d53-4787-b4ef-9674c2a4a9b5@kernel.org>
- <3c454da1-d949-4258-87ce-8b545000bf01@app.fastmail.com>
- <5f1b651b-1064-4280-a7e0-b7d66c396cde@oss.nxp.com>
- <f3ff461b-edd7-423a-ac99-e70145aaaaea@kernel.org>
- <4c46909d-641b-4389-bc4a-29394cb1d46d@oss.nxp.com>
- <e1c341d6-e60d-4200-a094-48667e8ccd5c@app.fastmail.com>
- <fd8c90ec-927e-4395-85ba-9e45c23fd799@oss.nxp.com>
-Subject: Re: [PATCH v8 01/10] dt-bindings: mfd: add support for the NXP SIUL2 module
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.65 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOdiGsteopFY2-A9X65cBxMKbW9uWeZvfaKbMhwFT1E5gceOLQ@mail.gmail.com>
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[arndb.de,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[arndb.de:s=fm1,messagingengine.com:s=fm2];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	TAGGED_FROM(0.00)[bounces-34486-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-34487-lists,linux-gpio=lfdr.de];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[32];
-	FREEMAIL_CC(0.00)[linaro.org,bgdev.pl,kernel.org,gmail.com,suse.com,nxp.com,pengutronix.de,linuxfoundation.org,redhat.com,vger.kernel.org,lists.linux.dev,lists.infradead.org];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[arnd@arndb.de,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[arndb.de:+,messagingengine.com:+];
-	RCVD_COUNT_FIVE(0.00)[6];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	NEURAL_HAM(-0.00)[-0.058];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[app.fastmail.com:mid,messagingengine.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,arndb.de:dkim]
-X-Rspamd-Queue-Id: 67E4936ABE1
+	FROM_NEQ_ENVFROM(0.00)[warthog618@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 537B836B082
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Mar 31, 2026, at 15:43, Khristine Andreea Barbulescu wrote:
-> On 3/31/2026 1:11 PM, Arnd Bergmann wrote:
->
-> Our initial intention had been to expose that SoC-information as
-> discussed in the earlier revisions of this series. However,
-> taking the review feedback into account, the current direction is
-> to stop handling those SoC information registers in the Linux driver
-> altogether and instead rely on a boot firmware to pass that
-> information forward, as you suggested.
+On Tue, Mar 31, 2026 at 03:23:16PM +0200, Mathis Joussemet wrote:
+> Hi Kent,
 > 
-> With this approach, the SIUL2 driver would no longer be responsible
-> for any separate SoC-information functionality. In that case,
-> I understand your point that a monolithic pinctrl/GPIO/irqchip
-> driver is a better fit than keeping the MFD structure.
+> Sorry for the late reply, was up until now in exam hell.
+> It indeed works! I can now drive 2 LEDs at the same time!
+> 
+> I just have 2 new questions:
+> - I am now using a button to toggle one of the two LEDs by checking the
+> buttons value using
+> gpiod_line_request_get_value(request, offset[2])!=0)
+> in a if statement.
 
-Ok
+I don't see any obvious reason that wouldn't read the button, assuming it is
+the third line in your offset array, and the condition is tested at the time
+you are pushing the button.
 
-> However, as you mentioned, this is still weird because it means
-> listing individual register areas of the larger device inside.
->
-> For this reason, I was wondering whether it would still be
-> acceptable to move forward with the new binding introduced
-> in this series, but simplify it so that it describes a single
-> monolithic SIUL2 pinctrl/GPIO device instead of an MFD, 
-> following the example node I included in my previous reply [1].
->
-> [1] 
-> https://lore.kernel.org/linux-gpio/20260120115923.3463866-4-khristineandreea.barbulescu@oss.nxp.com/T/#m778088251774a15bde7463350d6e75d5e9b9b57d
+Have you tried the equivalent with the gpiod tools (gpioget) or some of the
+example code (e.g. get_line_value) to confirm your hardware setup is working
+as expected?
 
-I can't think of a justification for making this an incompatible
-binding change, if the new "nxp,s32g-siul2-pinctrl" binding is almost
-the same as the old "nxp,s32g2-siul2-pinctrl" one, and you still
-plan to support both versions in the same driver indefinitely.
+> I've setup the correct input bias, but when I press on
+> it, the LED doesn't toggle. Checking with a scope still shows the voltage
+> jumping to 3.3v when pressed and 0v at other times. Is there something I'm
+> missing?
 
-It would seem much easier to me to make sure that nxp,s32g-siul2-pinctrl
-remains backwards compatible with the existing driver and only
-adds the properties for gpio support on top, so a single
-driver can handle both old and new dts files.
+That being the input voltage?  For an input pulled down when the button is
+not pressed and pulled high when it is pressed?
+That is what I would expect to see.
 
-      Arnd
+> - I'm trying to switch from an snapshot based line change reporting to an
+> event one. however when using a watch line event before/after the request,
+> the program still blocks. How should i code it to prevent blocking while
+> still having infos like output values types when there is a change?
+> 
+
+You can use edge events in a polling scenario by testing if the request
+fd is ready to read using poll() or select() or similar.
+It will become ready when an event is available.
+You can then read the event as usual and the read will not block.
+So similar to the async_watch_line_value example, but with a 0 timeout in
+the poll() and checking the ret:
+
+  ret = poll(&pollfd, 1, 0);
+  if (ret > 0) {
+    // read event...
+  }
+
+and doing whatever else you want in the polling loop.
+
+Cheers,
+Kent.
 
