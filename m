@@ -1,179 +1,204 @@
-Return-Path: <linux-gpio+bounces-34501-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34502-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uOQ8K2YOzGnGNgYAu9opvQ
-	(envelope-from <linux-gpio+bounces-34501-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 20:11:50 +0200
+	id sDg7BAgUzGkvOAYAu9opvQ
+	(envelope-from <linux-gpio+bounces-34502-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 20:35:52 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2BE536FC6B
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 20:11:49 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 532AA3700E5
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 20:35:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A77C33043175
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 17:56:55 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2593E3017508
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2026 18:33:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 837424418EC;
-	Tue, 31 Mar 2026 17:56:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F50C38E5E6;
+	Tue, 31 Mar 2026 18:33:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G1Rr/TMQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qp5Tm5nj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFE53D5227;
-	Tue, 31 Mar 2026 17:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C0F38B13E;
+	Tue, 31 Mar 2026 18:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774979804; cv=none; b=aJyH9WAUebfRLSzCwlIqga1cXxnCbFGBCpno/u+LKRMgtvLveas6OOd1Ozn73cVgxUFBtPaxIu6DqEjl2obFOAGzbYXlDzWzDtwP4+4IoKSwk9YTaOR3feVNgx5n0JPwl8SVxOZ7Cp5+Pb/u06tzjkSlf8mbCZKuc4gIRwUJ3NE=
+	t=1774981989; cv=none; b=BS7TMyuSJ4MYQUUDNCUzEwEL2Ls0pgk7CXMIErsTkkggKb6/r6z9BI2ewPV26sgC1yupstskpkyBFiBPadwoegTLMWz8fc9abIUAORi0O7uopVe1qZQmYjdRS+rQwHzZI2KfVRoqFYzY4tSF8KCGkSUZ0VHIUYadPGm81gYcsLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774979804; c=relaxed/simple;
-	bh=TcZWBzzpqTS7aPD+ZnOCeM/2iUYCY9wQrFL9paJkYx8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=clTbBrUZYfSrYpQ/9AoKe/DAJZ4nqHL2ityCDLlLzvZ+bQ0Yq1mXxL85pSKBRwX9ODqs5kGmgPafJbESAS7RH/HcszB7Nxw3bNtjTil1SEs70A6BZf0YSZxQuuXUL7daX0b7m7jXxL6hQeYY/GPyOiTQjDORmKcOltP72OAeEYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G1Rr/TMQ; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774979802; x=1806515802;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TcZWBzzpqTS7aPD+ZnOCeM/2iUYCY9wQrFL9paJkYx8=;
-  b=G1Rr/TMQKqk7w9CtAWxbppxiam0oLIIMi1Ytb1yq9KfvYmRI+TOyoAo/
-   uKlP5x/hx2Z5F4TB192TKzb3MzV2CV3DdFLmCpnV0WrCMtYj1h2yL+a8+
-   UJz4aJjBKZ5HXWSwiVLmsrLn3uYrz8UqAvL0L5mLWux1t+LUCPAr18Pat
-   7TEAiHidZTvf4ZiGd9U/wSD8/wzH/qi5+kxHEFZgyUp9RptoTu24TZN14
-   4ezlrxe+TX+D2ZWLmDbPUVTWD0ahVbMeBw/Jsnt58UyQD2MeHvoQFD+u4
-   MwWOj6nOsVHHVglpigWRYo/NqMYwSyIObLXrl6LcCB1GtpAFJ2cEh49DI
-   Q==;
-X-CSE-ConnectionGUID: cJX5dCRjSS69CDlzJEqUKg==
-X-CSE-MsgGUID: 7b6FKjxjR7KZvhtjZDR7rg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="87078491"
-X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="87078491"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 10:56:40 -0700
-X-CSE-ConnectionGUID: vgGp7BthSbC+6Z49GyWWcA==
-X-CSE-MsgGUID: z3szsMWpQeymP90If8fszQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="230501581"
-Received: from lkp-server01.sh.intel.com (HELO 283bf2e1b94a) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 31 Mar 2026 10:56:33 -0700
-Received: from kbuild by 283bf2e1b94a with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1w7dKI-00000000463-3PEk;
-	Tue, 31 Mar 2026 17:56:30 +0000
-Date: Wed, 1 Apr 2026 01:55:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: Luca Leonardo Scorcia <l.scorcia@gmail.com>,
-	linux-mediatek@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, Fabien Parent <parent.f@gmail.com>,
-	Val Packett <val@packett.cool>,
-	Luca Leonardo Scorcia <l.scorcia@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Sen Chu <sen.chu@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Macpaul Lin <macpaul.lin@mediatek.com>, Lee Jones <lee@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Julien Massot <julien.massot@collabora.com>,
-	Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>,
-	Gary Bisson <bisson.gary@gmail.com>,
-	Chen Zhong <chen.zhong@mediatek.com>, linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 7/9] regulator: Add MediaTek MT6392 regulator
-Message-ID: <202604010103.FzAGRPye-lkp@intel.com>
-References: <20260330083429.359819-8-l.scorcia@gmail.com>
+	s=arc-20240116; t=1774981989; c=relaxed/simple;
+	bh=3ZoheLZ70aCWRH+iMxChQO0wPJvNXhELhlVHg+OVUso=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=PUFOFZnlPNRVqcXUK8du4pBT50L4T0AtZlBaH53QEODTw9rwjRRWEFOt3pFWQBkwluw4awynpYn1XjxrYoWFf+viiQKHmJUkzPfPV1dgQB2IgaTaQUrBStJysiBprhcOR+ZDSftlUu2htEheNJWKqEEVKjpB8VaIEZQfKAlZ66I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qp5Tm5nj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22E1FC19423;
+	Tue, 31 Mar 2026 18:33:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774981989;
+	bh=3ZoheLZ70aCWRH+iMxChQO0wPJvNXhELhlVHg+OVUso=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=qp5Tm5njZhYexVFvbOMTwdH0kQkuMh4iB3LaxZb7yu3mfH+TggRSEhNLDjYseBM4n
+	 1SGXpEWXAGHraWrNkvmtG1elgxkqtlJ4uOEgGeqJLf1aqG5U4DI807MmHT5V4X+b3E
+	 7ukGAWj/W+fUTL43eCQh5mRjWzDDLQU2f6ZGjvxabG+FRHcVJvVZ5VFcA7KuDfrKQP
+	 PsXLuNrcuhehagm4Na9Z9VxBXL5TqiXg9UnlZejXqf84mVofHQvTwkJGaHhjk5zVaV
+	 oDLblMpr8IQtJhibTO20/T4NBDJe6hWqRbOQuo6Ba0r4vaVQ76QwH51s9qh/tNMgaH
+	 eFBbB1g2MPkbg==
+Date: Tue, 31 Mar 2026 13:32:47 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260330083429.359819-8-l.scorcia@gmail.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org, 
+ kernel@pengutronix.de, Conor Dooley <conor+dt@kernel.org>, 
+ Peter Rosin <peda@axentia.se>, devicetree@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, David Jander <david@protonic.nl>, 
+ linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+ Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee@kernel.org>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+In-Reply-To: <20260331171612.102018-2-o.rempel@pengutronix.de>
+References: <20260331171612.102018-1-o.rempel@pengutronix.de>
+ <20260331171612.102018-2-o.rempel@pengutronix.de>
+Message-Id: <177498196767.1813355.6423158973907813746.robh@kernel.org>
+Subject: Re: [PATCH v9 1/6] dt-bindings: pinctrl: add NXP MC33978/MC34978
+ MSDI
 X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[lists.linux.dev,gmail.com,packett.cool,collabora.com,kernel.org,mediatek.com,vger.kernel.org,lists.infradead.org];
-	RCPT_COUNT_TWELVE(0.00)[29];
-	TAGGED_FROM(0.00)[bounces-34501-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-34502-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com,lists.infradead.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
-	NEURAL_HAM(-0.00)[-0.998];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[01.org:url,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,intel.com:dkim,intel.com:email,intel.com:mid,git-scm.com:url]
-X-Rspamd-Queue-Id: B2BE536FC6B
+	DBL_BLOCKED_OPENRESOLVER(0.00)[devicetree.org:url,0.0.0.0:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,pengutronix.de:email]
+X-Rspamd-Queue-Id: 532AA3700E5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Luca,
 
-kernel test robot noticed the following build warnings:
+On Tue, 31 Mar 2026 19:16:07 +0200, Oleksij Rempel wrote:
+> Add device tree binding documentation for the NXP MC33978 and MC34978
+> Multiple Switch Detection Interface (MSDI) devices.
+> 
+> The MC33978 and MC34978 differ primarily in their operating temperature
+> ranges. While not software-detectable, providing specific compatible
+> strings allows the hwmon subsystem to correctly interpret thermal
+> thresholds and hardware faults.
+> 
+> These ICs monitor up to 22 mechanical switch contacts in automotive and
+> industrial environments. They provide configurable wetting currents to
+> break through contact oxidation and feature extensive hardware
+> protection against thermal overload and voltage transients (load
+> dumps/brown-outs).
+> 
+> The device interfaces via SPI. While it provides multiple functions, its
+> primary hardware purpose is pin/switch control. To accurately represent
+> the hardware as a single physical integrated circuit without unnecessary
+> DT overhead, all functions are flattened into a single pinctrl node:
+> - pinctrl: Exposing the 22 switch inputs (SG/SP pins) as a GPIO controller
+>   and managing their pin configurations.
+> - hwmon: Exposing critical hardware faults (OT, OV, UV) and static
+>   voltage/temperature thresholds.
+> - mux: Controlling the 24-to-1 analog multiplexer to route pin voltages,
+>   internal temperature, or battery voltage to an external SoC ADC.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Reviewed-by: Linus Walleij <linusw@kernel.org>
+> ---
+> changes v9:
+> - no changes
+> changes v8:
+> - Update IRQ_TYPE_* macros include path reference in documentation from
+>   interrupt-controller.h to dt-bindings/interrupt-controller/irq.h.
+> - Add bias-disable, drive-open-drain, drive-open-source, and drive-strength
+>   to the list of supported pin configuration properties.
+> changes v7:
+> - no changes
+> changes v6:
+> - add Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> - add Reviewed-by: Linus Walleij <linusw@kernel.org>
+> changes v5:
+> - Commit Message: Added justification for distinct compatible strings
+>   based on temperature ranges.
+> - Restricted pins property to an explicit enum of valid hardware pins
+> changes v4:
+> - Drop the standalone mfd/nxp,mc33978.yaml schema entirely.
+> - Move the unified device binding to bindings/pinctrl/nxp,mc33978.yaml,
+> - Remove the dedicated child node compatible strings (nxp,mc33978-pinctrl).
+> - Flatten the pinctrl/gpio properties directly into the main SPI device
+>   node.
+> changes v3:
+> - Drop regular expression pattern from pinctrl child node and define
+>   it as a standard property
+> - Reorder required properties list in MFD binding
+> - Remove stray blank line from the MFD binding devicetree example
+> - Replace unevaluatedProperties with additionalProperties in the pinctrl
+>   binding
+> changes v2:
+> - Squashed MFD, pinctrl, hwmon, and mux bindings into a single patch
+> - Removed the empty hwmon child node
+> - Folded the mux-controller node into the parent MFD node
+> - Added vbatp-supply and vddq-supply to the required properties block
+> - Changed the example node name from mc33978@0 to gpio@0
+> - Removed unnecessary literal block scalars (|) from descriptions
+> - Documented SG, SP, and SB pin acronyms in the pinctrl description
+> - Added consumer polarity guidance (GPIO_ACTIVE_LOW/HIGH) for SG/SB
+>   inputs, with a note on output circuit dependency
+> - Updated commit message
+> ---
+>  .../bindings/pinctrl/nxp,mc33978.yaml         | 158 ++++++++++++++++++
+>  1 file changed, 158 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,mc33978.yaml
+> 
 
-[auto build test WARNING on lee-mfd/for-mfd-next]
-[also build test WARNING on broonie-regulator/for-next linusw-pinctrl/devel linusw-pinctrl/for-next lee-mfd/for-mfd-fixes linus/master v7.0-rc6 next-20260330]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+My bot found errors running 'make dt_binding_check' on your patch:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Luca-Leonardo-Scorcia/dt-bindings-mfd-mt6397-Add-MT6392-PMIC/20260331-081127
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-patch link:    https://lore.kernel.org/r/20260330083429.359819-8-l.scorcia%40gmail.com
-patch subject: [PATCH v4 7/9] regulator: Add MediaTek MT6392 regulator
-config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20260401/202604010103.FzAGRPye-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 15.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260401/202604010103.FzAGRPye-lkp@intel.com/reproduce)
+yamllint warnings/errors:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202604010103.FzAGRPye-lkp@intel.com/
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/nxp,mc33978.example.dtb: gpio@0 (nxp,mc33978): $nodename:0: 'gpio@0' does not match '^mux-controller(@.*|-([0-9]|[1-9][0-9]+))?$'
+	from schema $id: http://devicetree.org/schemas/mux/mux-controller.yaml
 
-All warnings (new ones prefixed by >>):
+doc reference errors (make refcheckdocs):
 
->> drivers/regulator/mt6392-regulator.c:181:18: warning: 'ldo_volt_table1b' defined but not used [-Wunused-const-variable=]
-     181 | static const u32 ldo_volt_table1b[] = {
-         |                  ^~~~~~~~~~~~~~~~
+See https://patchwork.kernel.org/project/devicetree/patch/20260331171612.102018-2-o.rempel@pengutronix.de
 
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-vim +/ldo_volt_table1b +181 drivers/regulator/mt6392-regulator.c
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-   180	
- > 181	static const u32 ldo_volt_table1b[] = {
-   182		1500000, 1800000, 2500000, 2800000,
-   183	};
-   184	
+pip3 install dtschema --upgrade
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
 
