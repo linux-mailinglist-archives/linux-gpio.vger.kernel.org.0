@@ -1,86 +1,86 @@
-Return-Path: <linux-gpio+bounces-34514-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34515-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GLpvBPZkzGnZSgYAu9opvQ
-	(envelope-from <linux-gpio+bounces-34514-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Apr 2026 02:21:10 +0200
+	id YH41D0VkzGnZSgYAu9opvQ
+	(envelope-from <linux-gpio+bounces-34515-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Apr 2026 02:18:13 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73C3037313C
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Apr 2026 02:21:09 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E52B937310A
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Apr 2026 02:18:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4826D3091D2D
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Apr 2026 00:18:10 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id DB4E63068316
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Apr 2026 00:18:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2642B19005E;
-	Wed,  1 Apr 2026 00:18:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 667AB19005E;
+	Wed,  1 Apr 2026 00:18:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RKcPZ2Ef"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i2mTfZPl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2D718BC3D
-	for <linux-gpio@vger.kernel.org>; Wed,  1 Apr 2026 00:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9739F54774
+	for <linux-gpio@vger.kernel.org>; Wed,  1 Apr 2026 00:18:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775002689; cv=none; b=hhI03Cyr1/+BuXxpVYa9Os17veZq4AWvVPlOBk54VSpAxmp60E1BMKwVTII3SbTixad8AfXKuvEeCjgQcMIOWMD8bv0v9Zd4la2H3sX4enGj9uEmt1/fm7TSSzihOedZDuzsqJdWw4k6dj9ajZ70ybhRgRAEzGa+5l1z9jfyAg0=
+	t=1775002691; cv=none; b=QQzUidFY+c1Vt/GVvuoTIl0ne7Rcpz0CgCB9F8k7G6VrKelQkTIhAAWdhkuOiwv3tnEa4XwV4oXRolo/5y7RODv0PunhCjUPvtCqazuiz+dq7phvYRPHZpeuOwC88xWPgR4sf6K7U0S7k3/ezv+QvNgCFGoRimMqQYCiFTZBX5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775002689; c=relaxed/simple;
-	bh=cYANgNimMZrJTsfFvYFY+5hrZL6s1bs4ZSTj7/3a5WQ=;
+	s=arc-20240116; t=1775002691; c=relaxed/simple;
+	bh=hzZDRtRV/H700buyCd1Wztfj71qlJZdLde2jIe9ZCXI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O4GXYg8SAcX6ITNcEC3zxb19CshLUIq3XOD1RRhkU2EN1pN9tnmkJ3dqbnXf2XToryFxzkKPKA92gtjWNAW87V8YW+ujl9s8ieQhWfpgbeQdOTXi+1OG7Lg8AS/EqNn7bYJ7Bu9GfU4Sv604fVEr6iNTBfNc4iMSmXLCakzHVqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RKcPZ2Ef; arc=none smtp.client-ip=209.85.210.44
+	 MIME-Version; b=abGhJlTzQXpbsWuYFtF/BRvqn8o6Ho9vlALBlMKqrG50GurexQ4BZ/mo5XEMW5sz67yFKj/IPjxamq3LZRuyKFShhfrkGZaEqYatBnm6Dd0MW2PqvEnWxFbG46JmSkC8hzGsIqP1t3s7pk7xHgyeo9uaxRGoMB/ud9bewYjQdg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i2mTfZPl; arc=none smtp.client-ip=209.85.210.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-7d9b1c57a4cso5470167a34.3
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2026 17:18:08 -0700 (PDT)
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-7d744d9acbeso2612333a34.1
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2026 17:18:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775002687; x=1775607487; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1775002688; x=1775607488; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=x6abWCMaslQml4OmdnZcxBZNoa10rbuzBmK5AQe5jaQ=;
-        b=RKcPZ2Efb/wHp0DIU+TwA5/ZJGdHR+TKRtCFCv/peZUchdiHXFxcNa/H83eky2Un95
-         L14yVrvQR5s+3sLDr4sAwPhlBtcigpe/2uDP2WGxPX/Q1oGoLCGzZvWZSsxKxdo26BSm
-         uOy2oqsXAaa243tq25SqurkTCxRptMD817RVtOq+bjNTOGlGoytn3HCuQg/CVQZCfXKl
-         Tm04PBmeU80PLQtlbg6KKWoQCVR9YaGkqlXRk0QFNqFozdFUhOPLrlj0nmxWNGpEkaaa
-         eBSqK8++TjjONvERK9gp/qKyHh4JJnMnHZSbNYlaQkRzuDdNu3reG/aJMF6gYarUkw8T
-         HFqw==
+        bh=qS1IR6h1A6KBA8WAe7dnZ6uw7ZjCJhyeETtH4oVvRpI=;
+        b=i2mTfZPl/Ga1M944RFkhdSvlpsK5RcoAfsei30/zcLjjqY3LW1JO9DQU+0jr1hKJUA
+         ziRwFuehoWCaz5VJJwL3gDIx9l4IyYTf3QF1AgQXyha41dMJiQpUH9rOD1AEW2VBSra0
+         dxdtbuMiyscYd/CAtVVRGrHPIHZ9hcngIZwAQLRRIw2AKd8ZjrRgF0ORlCrVaGUGoRdY
+         sD4sqAlVx1F8gg6x2JDOlkA2mTmO6y5eWj4j3Nhukw2aKaUtRBcX6U/wHY2x5i1F3oXf
+         93xq5Rm3xEP2Cd8ODw+fTo8pUPSLSNWYcHOhpLmlWhe9wbo0ZTjNtw8uTZaFHIf0hHZn
+         iLwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775002687; x=1775607487;
+        d=1e100.net; s=20251104; t=1775002688; x=1775607488;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=x6abWCMaslQml4OmdnZcxBZNoa10rbuzBmK5AQe5jaQ=;
-        b=XnxjiR0NWA8kbmru+EEZEtjrOLZNtUCaPs5R+Oq7qwN2MMHvtsmV3XIMMtkohFjgme
-         4vYx4gU6CSCP9R/3nCRsWLO8pa0V9mkhktV4+70WzDAEeENG4EcCvVMR3pMQf2HI9Ja8
-         mWrF23Wq0EerOPmoIUD6K+720MVr9zWeOUoju9bz4rGbRk839aIV61eCdAV3ggmOd+tJ
-         niUp7gLK/XoDxuz50tfk3enSd0PFfvqbGDZXoED3fvcIUCmRT7+X1K82HBUf/xSDbRsX
-         2K+p2EavY4OYLGh2bk7FoZFUgcE4ihOFO925RX3R+yLtCRjdYmqdyVMq9F8dOc82K1WW
-         oSzA==
-X-Gm-Message-State: AOJu0YzCiDvXQ0iKwbTslf4SllBTcqkdQ+KVWRAsxBIvQ3/bSFMYJ2cJ
-	VXfg2oH3eIGtW5I2iZiX2BgRS/X9kHeYIiezEEIw6rwWUAnwavb7WUhM9wohUw==
-X-Gm-Gg: ATEYQzwaVnV6MR22WGY2HqudjyDlomo+86fNklFop9mO3DfO12evAPYa74E4iykecil
-	vKz7OUP5holZAkskKF5qqk2u2r/WT6xnKOB3XNthxaMwYEiNzaGMylfDU0dbeptOoQ1n0Fjkc8h
-	Jm5UqVbiInQL/7iPpKYRV4xm9gyEh7Nz6/inVUbL5W/pe7jhjMitDa/3XsFfp9vN9B3lhRFOsIw
-	sB/iEgX9R0uIZXHCRe1uEkOg2JUIcHlwPxoNRCD0r+Sx3odfunJ2BOkBUXNe4S56FKwiHLCv2YC
-	D8zoDuz/Elg5bnXs+wfj3iY1RLfKju0lBCJ+JPlI+DdKwGRhBjzkJ57LPqR4QqNxxhZ4WpxWwbJ
-	3u0hj3S/eoZu2vCWm0Yg5swDCxZAWCueCzogAjje1yMUTMSVu24oJoR+OkfmbNeIOJy/GNzguXI
-	6XbC5IuAQQ3t+2R39WmAPKVGd+Yzoi9ZP5roEZowdHcEcv8Nc8rsElvPzzAu+Q+g==
-X-Received: by 2002:a05:6830:700c:b0:7d7:eaa0:5e3f with SMTP id 46e09a7af769-7db993f4ffamr1054752a34.24.1775002687335;
-        Tue, 31 Mar 2026 17:18:07 -0700 (PDT)
+        bh=qS1IR6h1A6KBA8WAe7dnZ6uw7ZjCJhyeETtH4oVvRpI=;
+        b=q0ZLZCuS+9jO4es8WqIo/Vj5czvBtCsv5u1bz5Jr2ls+Q1TesBQNATMpjA6XMO3bh0
+         SUdsSkBdYOzuAJ85s35wUBXcBLtPqNmzJC2zxp+4I9Uky7z2VpsxZ6dY2tjUvdwQkj9B
+         IzhuRdJSIi4ZV4wF1GZlIgBCavP2JvIJ+eWVPKgCHZPh/B2qVvOYPx+hG2nwEjFJ0x6A
+         NGY5q9cntRiGdypMh3Y5gN/+kuDRIStw05zUA82C65tTxeCFEPhEO61uVfVrcPyyYLT6
+         bqfkye7+6CcDdVDfcV1Xw8jO/Jn3vQVtw4VFfYTmMpJiXms02W3g8MgGSbBNs5Fae781
+         E4Lw==
+X-Gm-Message-State: AOJu0YwBIVXPoeSZyG046ddRBwwUJKbVfVTjkW4ZBOeeKpJbkEcbLGVx
+	OIGVAwJjWuMYaeWTxsn8HED1vqCUIO2hwQQo4o0+htjA6l0KL/RTL3np5g3JMQ==
+X-Gm-Gg: ATEYQzzJSGEJFl2vr+slinCDlMyG5p+F1nfqQ2OetO15ZNdCVcfjNuWlF27EXvnRXs2
+	IYNZT/EesLdSi/rg+XTNe3gkT3m25RQXSQH/XuCqPHVdCL0c8a+UeEGPo0vTVlebxujQRyRJJlC
+	Nyq1LYLozL2DBGwaOSNEXsiqtD3Yv5QefqCVVrHfQF3eJH34QSCxPDy+0xQiafGgTzD6bdg9WfD
+	f1uj3kbszBkcIiCHcZZoJGvbkvqYJfeHBLqF9O442HrO4TjlTUpQpjmzlxKvZrWw/J/eH3HPg2v
+	dic6iEzlk+kXNyRUVCyjTtGa7BPSXCrljLsyDotTn5kMcFycbuv5ZWj+9uagCzRxWWhPBL0Fy4Y
+	3VL18YL7MupxU72p49tLpVq3dHwQ19Nq320e0rtkIdMDKIO+2XET7nzutGREgouRYEwQqE979ky
+	7b6XvFPYIB40xLDwKT0BRw+lExbOshAFkQzP2jpWr9KZVbdFfWSwMszCvRvwPZmTdyck7BTsWQ
+X-Received: by 2002:a05:6830:2713:b0:7d7:d100:2613 with SMTP id 46e09a7af769-7db992588eemr1041162a34.1.1775002688240;
+        Tue, 31 Mar 2026 17:18:08 -0700 (PDT)
 Received: from Zephyrus.localdomain ([131.93.209.211])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7da0a7ea668sm9173679a34.19.2026.03.31.17.18.06
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7da0a7ea668sm9173679a34.19.2026.03.31.17.18.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 31 Mar 2026 17:18:07 -0700 (PDT)
 From: Vincent Fazio <vfazio@gmail.com>
 To: linux-gpio@vger.kernel.org
 Cc: Vincent Fazio <vfazio@gmail.com>
-Subject: [libgpiod][PATCH 5/9] bindings: python: setup: use logging module
-Date: Tue, 31 Mar 2026 19:14:54 -0500
-Message-ID: <20260401001459.19159-5-vfazio@gmail.com>
+Subject: [libgpiod][PATCH 6/9] bindings: python: examples: add type annotations
+Date: Tue, 31 Mar 2026 19:14:55 -0500
+Message-ID: <20260401001459.19159-6-vfazio@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260401001459.19159-1-vfazio@gmail.com>
 References: <20260401001459.19159-1-vfazio@gmail.com>
@@ -97,18 +97,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	TO_DN_SOME(0.00)[];
 	FREEMAIL_CC(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-34514-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34515-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWO(0.00)[2];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[vfazio@gmail.com,linux-gpio@vger.kernel.org];
@@ -119,45 +119,290 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,pypa.io:url,collections.abc:url,bgdev.pl:email]
-X-Rspamd-Queue-Id: 73C3037313C
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: E52B937310A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Use the `logging` module to conform to setuptools' recommendations [0].
+Add type annotations to help with lint checks.
 
-[0]: https://setuptools.pypa.io/en/latest/deprecated/distutils-legacy.html#prefer-setuptools
 Signed-off-by: Vincent Fazio <vfazio@gmail.com>
 ---
- bindings/python/setup.py | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ bindings/python/examples/async_watch_line_value.py      | 8 +++++---
+ bindings/python/examples/find_line_by_name.py           | 5 +++--
+ bindings/python/examples/get_chip_info.py               | 2 +-
+ bindings/python/examples/get_line_info.py               | 2 +-
+ bindings/python/examples/get_line_value.py              | 2 +-
+ bindings/python/examples/get_multiple_line_values.py    | 4 +++-
+ bindings/python/examples/reconfigure_input_to_output.py | 2 +-
+ bindings/python/examples/toggle_line_value.py           | 4 ++--
+ bindings/python/examples/toggle_multiple_line_values.py | 6 ++++--
+ bindings/python/examples/watch_line_info.py             | 4 +++-
+ bindings/python/examples/watch_line_rising.py           | 2 +-
+ bindings/python/examples/watch_line_value.py            | 5 +++--
+ bindings/python/examples/watch_multiple_line_values.py  | 8 +++++---
+ 13 files changed, 33 insertions(+), 21 deletions(-)
 
-diff --git a/bindings/python/setup.py b/bindings/python/setup.py
-index 5f5950e..cd50a8c 100644
---- a/bindings/python/setup.py
-+++ b/bindings/python/setup.py
-@@ -2,18 +2,20 @@
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+diff --git a/bindings/python/examples/async_watch_line_value.py b/bindings/python/examples/async_watch_line_value.py
+index ec42e04..640a4c5 100755
+--- a/bindings/python/examples/async_watch_line_value.py
++++ b/bindings/python/examples/async_watch_line_value.py
+@@ -8,10 +8,12 @@ import gpiod
+ import select
  
- from collections.abc import Callable
-+from logging import getLogger
- from os import getenv, path, unlink
- from shutil import copy, copytree, rmtree
- from typing import TypeVar, cast
- 
- from setuptools import Extension, setup
- from setuptools.command.build_ext import build_ext as orig_build_ext
--from setuptools.command.sdist import log
- from setuptools.command.sdist import sdist as orig_sdist
- from setuptools.errors import BaseError
- 
- T = TypeVar("T", "sdist", "build_ext")
- 
-+log = getLogger(__name__)
+ from datetime import timedelta
 +
- LINK_SYSTEM_LIBGPIOD = getenv("LINK_SYSTEM_LIBGPIOD") == "1"
- LIBGPIOD_MINIMUM_VERSION = "2.1"
- LIBGPIOD_VERSION = getenv("LIBGPIOD_VERSION")
++from gpiod.edge_event import EdgeEvent
+ from gpiod.line import Bias, Edge
+ 
+ 
+-def edge_type_str(event):
++def edge_type_str(event: EdgeEvent) -> str:
+     if event.event_type is event.Type.RISING_EDGE:
+         return "Rising"
+     if event.event_type is event.Type.FALLING_EDGE:
+@@ -19,7 +21,7 @@ def edge_type_str(event):
+     return "Unknown"
+ 
+ 
+-def async_watch_line_value(chip_path, line_offset, done_fd):
++def async_watch_line_value(chip_path: str, line_offset: int, done_fd: int) -> None:
+     # Assume a button connecting the pin to ground,
+     # so pull it up and provide some debounce.
+     with gpiod.request_lines(
+@@ -59,7 +61,7 @@ if __name__ == "__main__":
+     # run the async executor (select.poll) in a thread to demonstrate a graceful exit.
+     done_fd = os.eventfd(0)
+ 
+-    def bg_thread():
++    def bg_thread() -> None:
+         try:
+             async_watch_line_value("/dev/gpiochip0", 5, done_fd)
+         except OSError as ex:
+diff --git a/bindings/python/examples/find_line_by_name.py b/bindings/python/examples/find_line_by_name.py
+index ac798a9..4ed3848 100755
+--- a/bindings/python/examples/find_line_by_name.py
++++ b/bindings/python/examples/find_line_by_name.py
+@@ -6,15 +6,16 @@
+ 
+ import gpiod
+ import os
++from collections.abc import Generator
+ 
+ 
+-def generate_gpio_chips():
++def generate_gpio_chips() -> Generator[str]:
+     for entry in os.scandir("/dev/"):
+         if gpiod.is_gpiochip_device(entry.path):
+             yield entry.path
+ 
+ 
+-def find_line_by_name(line_name):
++def find_line_by_name(line_name: str) -> None:
+     # Names are not guaranteed unique, so this finds the first line with
+     # the given name.
+     for path in generate_gpio_chips():
+diff --git a/bindings/python/examples/get_chip_info.py b/bindings/python/examples/get_chip_info.py
+index 7dc76fb..037e424 100755
+--- a/bindings/python/examples/get_chip_info.py
++++ b/bindings/python/examples/get_chip_info.py
+@@ -7,7 +7,7 @@
+ import gpiod
+ 
+ 
+-def get_chip_info(chip_path):
++def get_chip_info(chip_path: str) -> None:
+     with gpiod.Chip(chip_path) as chip:
+         info = chip.get_info()
+         print("{} [{}] ({} lines)".format(info.name, info.label, info.num_lines))
+diff --git a/bindings/python/examples/get_line_info.py b/bindings/python/examples/get_line_info.py
+index cd4ebcc..8e7283e 100755
+--- a/bindings/python/examples/get_line_info.py
++++ b/bindings/python/examples/get_line_info.py
+@@ -7,7 +7,7 @@
+ import gpiod
+ 
+ 
+-def get_line_info(chip_path, line_offset):
++def get_line_info(chip_path: str, line_offset: int) -> None:
+     with gpiod.Chip(chip_path) as chip:
+         info = chip.get_line_info(line_offset)
+         is_input = info.direction == gpiod.line.Direction.INPUT
+diff --git a/bindings/python/examples/get_line_value.py b/bindings/python/examples/get_line_value.py
+index f3ca13b..5ca952b 100755
+--- a/bindings/python/examples/get_line_value.py
++++ b/bindings/python/examples/get_line_value.py
+@@ -9,7 +9,7 @@ import gpiod
+ from gpiod.line import Direction
+ 
+ 
+-def get_line_value(chip_path, line_offset):
++def get_line_value(chip_path: str, line_offset: int) -> None:
+     with gpiod.request_lines(
+         chip_path,
+         consumer="get-line-value",
+diff --git a/bindings/python/examples/get_multiple_line_values.py b/bindings/python/examples/get_multiple_line_values.py
+index 46cf0b2..f70369f 100755
+--- a/bindings/python/examples/get_multiple_line_values.py
++++ b/bindings/python/examples/get_multiple_line_values.py
+@@ -4,12 +4,14 @@
+ 
+ """Minimal example of reading multiple lines."""
+ 
++from collections.abc import Iterable
++
+ import gpiod
+ 
+ from gpiod.line import Direction
+ 
+ 
+-def get_multiple_line_values(chip_path, line_offsets):
++def get_multiple_line_values(chip_path: str, line_offsets: Iterable[int]) -> None:
+     with gpiod.request_lines(
+         chip_path,
+         consumer="get-multiple-line-values",
+diff --git a/bindings/python/examples/reconfigure_input_to_output.py b/bindings/python/examples/reconfigure_input_to_output.py
+index 0f2e358..feb5f0b 100755
+--- a/bindings/python/examples/reconfigure_input_to_output.py
++++ b/bindings/python/examples/reconfigure_input_to_output.py
+@@ -9,7 +9,7 @@ import gpiod
+ from gpiod.line import Direction, Value
+ 
+ 
+-def reconfigure_input_to_output(chip_path, line_offset):
++def reconfigure_input_to_output(chip_path: str, line_offset: int) -> None:
+     # request the line initially as an input
+     with gpiod.request_lines(
+         chip_path,
+diff --git a/bindings/python/examples/toggle_line_value.py b/bindings/python/examples/toggle_line_value.py
+index e0de8fb..bc948de 100755
+--- a/bindings/python/examples/toggle_line_value.py
++++ b/bindings/python/examples/toggle_line_value.py
+@@ -10,13 +10,13 @@ import time
+ from gpiod.line import Direction, Value
+ 
+ 
+-def toggle_value(value):
++def toggle_value(value: Value) -> Value:
+     if value == Value.INACTIVE:
+         return Value.ACTIVE
+     return Value.INACTIVE
+ 
+ 
+-def toggle_line_value(chip_path, line_offset):
++def toggle_line_value(chip_path: str, line_offset: int) -> None:
+     value_str = {Value.ACTIVE: "Active", Value.INACTIVE: "Inactive"}
+     value = Value.ACTIVE
+ 
+diff --git a/bindings/python/examples/toggle_multiple_line_values.py b/bindings/python/examples/toggle_multiple_line_values.py
+index 12b968d..74ff587 100755
+--- a/bindings/python/examples/toggle_multiple_line_values.py
++++ b/bindings/python/examples/toggle_multiple_line_values.py
+@@ -10,13 +10,15 @@ import time
+ from gpiod.line import Direction, Value
+ 
+ 
+-def toggle_value(value):
++def toggle_value(value: Value) -> Value:
+     if value == Value.INACTIVE:
+         return Value.ACTIVE
+     return Value.INACTIVE
+ 
+ 
+-def toggle_multiple_line_values(chip_path, line_values):
++def toggle_multiple_line_values(
++    chip_path: str, line_values: dict[int | str, Value]
++) -> None:
+     value_str = {Value.ACTIVE: "Active", Value.INACTIVE: "Inactive"}
+ 
+     request = gpiod.request_lines(
+diff --git a/bindings/python/examples/watch_line_info.py b/bindings/python/examples/watch_line_info.py
+index e49a669..8ae5ac0 100755
+--- a/bindings/python/examples/watch_line_info.py
++++ b/bindings/python/examples/watch_line_info.py
+@@ -4,10 +4,12 @@
+ 
+ """Minimal example of watching for info changes on particular lines."""
+ 
++from collections.abc import Iterable
++
+ import gpiod
+ 
+ 
+-def watch_line_info(chip_path, line_offsets):
++def watch_line_info(chip_path: str, line_offsets: Iterable[int]) -> None:
+     with gpiod.Chip(chip_path) as chip:
+         for offset in line_offsets:
+             chip.watch_line_info(offset)
+diff --git a/bindings/python/examples/watch_line_rising.py b/bindings/python/examples/watch_line_rising.py
+index 7b1c6b0..2f7f25f 100755
+--- a/bindings/python/examples/watch_line_rising.py
++++ b/bindings/python/examples/watch_line_rising.py
+@@ -9,7 +9,7 @@ import gpiod
+ from gpiod.line import Edge
+ 
+ 
+-def watch_line_rising(chip_path, line_offset):
++def watch_line_rising(chip_path: str, line_offset: int) -> None:
+     with gpiod.request_lines(
+         chip_path,
+         consumer="watch-line-rising",
+diff --git a/bindings/python/examples/watch_line_value.py b/bindings/python/examples/watch_line_value.py
+index 171a67c..9b84d29 100755
+--- a/bindings/python/examples/watch_line_value.py
++++ b/bindings/python/examples/watch_line_value.py
+@@ -7,10 +7,11 @@
+ import gpiod
+ 
+ from datetime import timedelta
++from gpiod.edge_event import EdgeEvent
+ from gpiod.line import Bias, Edge
+ 
+ 
+-def edge_type_str(event):
++def edge_type_str(event: EdgeEvent) -> str:
+     if event.event_type is event.Type.RISING_EDGE:
+         return "Rising"
+     if event.event_type is event.Type.FALLING_EDGE:
+@@ -18,7 +19,7 @@ def edge_type_str(event):
+     return "Unknown"
+ 
+ 
+-def watch_line_value(chip_path, line_offset):
++def watch_line_value(chip_path: str, line_offset: int) -> None:
+     # Assume a button connecting the pin to ground,
+     # so pull it up and provide some debounce.
+     with gpiod.request_lines(
+diff --git a/bindings/python/examples/watch_multiple_line_values.py b/bindings/python/examples/watch_multiple_line_values.py
+index 5906b7d..d0ee35a 100755
+--- a/bindings/python/examples/watch_multiple_line_values.py
++++ b/bindings/python/examples/watch_multiple_line_values.py
+@@ -4,12 +4,14 @@
+ 
+ """Minimal example of watching for edges on multiple lines."""
+ 
+-import gpiod
++from collections.abc import Iterable
+ 
++import gpiod
++from gpiod.edge_event import EdgeEvent
+ from gpiod.line import Edge
+ 
+ 
+-def edge_type_str(event):
++def edge_type_str(event: EdgeEvent) -> str:
+     if event.event_type is event.Type.RISING_EDGE:
+         return "Rising"
+     if event.event_type is event.Type.FALLING_EDGE:
+@@ -17,7 +19,7 @@ def edge_type_str(event):
+     return "Unknown"
+ 
+ 
+-def watch_multiple_line_values(chip_path, line_offsets):
++def watch_multiple_line_values(chip_path: str, line_offsets: Iterable[int]) -> None:
+     with gpiod.request_lines(
+         chip_path,
+         consumer="watch-multiple-line-values",
 -- 
 2.43.0
 
