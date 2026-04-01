@@ -1,177 +1,142 @@
-Return-Path: <linux-gpio+bounces-34526-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34527-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oK/RM8SyzGkMVwYAu9opvQ
-	(envelope-from <linux-gpio+bounces-34526-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Apr 2026 07:53:08 +0200
+	id 4WLPEAe9zGl3WQYAu9opvQ
+	(envelope-from <linux-gpio+bounces-34527-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Apr 2026 08:36:55 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47B0D374F87
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Apr 2026 07:53:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 048FE37546C
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Apr 2026 08:36:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 202C43017243
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Apr 2026 05:53:07 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7BBAE305D2C5
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Apr 2026 06:36:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09A7A329C49;
-	Wed,  1 Apr 2026 05:53:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EDBB334688;
+	Wed,  1 Apr 2026 06:36:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HejP+3xA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WclfYtAf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D282FFDF8
-	for <linux-gpio@vger.kernel.org>; Wed,  1 Apr 2026 05:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFA2330315;
+	Wed,  1 Apr 2026 06:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775022785; cv=none; b=TmQ3FFe6JFRZgxUETk0flEBLquPLtYfam4hwgrHiBWr6bxB5Z4oY/TycsID/0hnhj/NpVttUc0MiWrw61veoOWvLLFOOF6wu1liYWwp0i/sDmriM9KBkSydr7reFEDysE8WI3Kv1RRa98WWse2lFrjKTPjfe9VFftt32HMDw8mw=
+	t=1775025406; cv=none; b=Q27CRGdeAeNddQsayBim0HOxyGByk/QGvrZS5YyRS5d8SSQsXdyo3ByoMSxPuarBve12/6HEc8IX4K7MxF03j6cFiSjYR9yDDdB7UC9+rFmS0B5lEZGQouD7Su1CkYW2ScbXASU7pfqDQlZtLUSiYZHKS88JhngLinxmEH2GLmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775022785; c=relaxed/simple;
-	bh=vn+Whyqndr9lPTR+5c+7GGHj6JO+k6GBr1ThCNEZSec=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EgrKwlaLKAQ4i/9g6MsAa5SzY9g/pQSIHK24fhaRLWmUiRbS6rjVFiuSF7n7wKFPxtGzfsdMqjBJfM88pFLDFkNNWMp7H6EM4SdNJ526+Z2h8+q9PdVHCffF9y9gevAUvEchmWR+rBCvww/vuXiTWQGFfr/5PhXbJYnQ7RJR9IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HejP+3xA; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-48374014a77so76367235e9.3
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2026 22:53:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775022783; x=1775627583; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=INcc211bG9FjWsZ9dybz2/l2jRpAaGE+SI/LHykHcTQ=;
-        b=HejP+3xAkMpVkd3w72H84ARFeSnZUys4TU0wTI2asHqDbjLQv8Sl/Q0X6zW0PFgFcv
-         +SGNYMCSM2h2h6QjWwYKqAz5oIZILR8nguy9LE4Hk3NMUzdUlxlIZC+xZd9nsXgNqQ1l
-         r/vNTNLjSH4XRxs7rgMvQJAjp8SddCH+kW05pAqPBc4GEKK4JZBvTJzbV6U+qG3pdEtn
-         9FtscbDlVH5WBsdUHOoZI8epL+AMEQr3oGmUN4vQXTfztpCtkMmUUkgAtkU24HyUQHS2
-         B11o/dG2+TUMxszaD1mYGO+xPNZU7VoFUwFB1wY/zrtLTDFLZgpdVYgtJ60Bb14aO4F4
-         uxaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775022783; x=1775627583;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=INcc211bG9FjWsZ9dybz2/l2jRpAaGE+SI/LHykHcTQ=;
-        b=hCww1aWDJN4Y5jMNqbQh0I4V5HZ2pDVMe/J/4JgAvrrSWubh1ubizVOiSM6dyPsUc9
-         HcbxKVglZj3xxCIyPTevR3GxWHp9apbGToDshIGUywhdq7tV1x9rSXzd5WBVd8uQvVOk
-         EtuyuWVw24OWEP85exTtWhuwnhaikn0WDnlpX7JMhETT/wci0vVIGDHz9xNzUjZfq8nC
-         7kHZwTsw/ZGhThCwsZAiXCH/xTpM4UMk3plSWTNTieegZim0Z72gbTzrumQVtw4xa81g
-         f6/c6Z0XeNLgvqBgPd/v314pNO8UiJQDt7vbdNVM+URh/gAkxiifV8D9/IjH4Nk7pme3
-         y09w==
-X-Forwarded-Encrypted: i=1; AJvYcCVACjWI+DLm7ldgGMeuP6ae2+OTwVc71A3Z2P0N2UUgKTUZRoTetrG1nqHueww3QnIqU7/kkJVc49dL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6q3xzI3vprog2ErXD3x4Sn/9h1BNH20v9PrE/18A+DsLQMuW6
-	lWggz9Ce0O1O9aTTp1q9U3bBE1RWBJxkzNEYMkWrrgUEpMrrRgvsRrRD
-X-Gm-Gg: ATEYQzwm42wTsCfUEOPM76j34X1tif/EGGE2MxP4HI2Itu+xIV7rJJ0D0RrI079pYe7
-	P2zEZeIR4ysmBA994JE0nre7U7onQi5OSw7LuLJhbZ/vowUBnxAT7B0UHh3zIu85kYBQgOi3ggf
-	O2Aht8+6WzFjSUV9YGdgHiD0aJAozCjsvUO75vtMnwsNC8wSTzY5y/hDKLpE+OSH3a6EM8XIB9a
-	yYWTqgkh3PDkAwkD35FopmCUC+g9zj4zX8q9WbAFAoTH1T8N6yQGxqgCkQFayAqVx6NZQRDlqrg
-	OYwbfA4idIwMIoy40FfUlJjqo7xD68JzjZ5VA4YJd2TS18jG/E32NfYUL4OzFj8WXTiXr+FNJrC
-	wZA6lLHH+HXB+TJamoOc71WGlfgCqKZM1Rf2MXF/zfLhY09RNC5ECcMWVq2iJ2bkcuTz4XkLIh+
-	rAqIHTf6AgM5kX6wCMUdqj68dvis3p
-X-Received: by 2002:a05:600c:468b:b0:480:1d0b:2d32 with SMTP id 5b1f17b1804b1-4888356275bmr32683845e9.12.1775022782457;
-        Tue, 31 Mar 2026 22:53:02 -0700 (PDT)
-Received: from [172.25.98.130] ([5.2.194.157])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4887c8ee2d3sm34684675e9.32.2026.03.31.22.53.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2026 22:53:02 -0700 (PDT)
-Message-ID: <8e8acf76-2101-4566-ad09-ce32b6f51e94@gmail.com>
-Date: Wed, 1 Apr 2026 08:52:59 +0300
+	s=arc-20240116; t=1775025406; c=relaxed/simple;
+	bh=+DFyPkJ1QSfX7H4m+XwGecn09bxaPGHmqQ4ZAuy0BBU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OylWfSmZ+pYTA9Jt/GAjJTl8uZUWbz3Awso7NBhVP4ykOZUgFVDzEZft3HTQAcHfc63tMcKuJetW1s2a2g5SsS6V4dZNqWyT6Q0L1QAYCl40/pGmuXuIqOQqsolJcIVyRoVGFGyETTu0+PxZ8DCdjDT460c+vuxfbYzsvJRdDNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WclfYtAf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDA7CC4CEF7;
+	Wed,  1 Apr 2026 06:36:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775025406;
+	bh=+DFyPkJ1QSfX7H4m+XwGecn09bxaPGHmqQ4ZAuy0BBU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WclfYtAfA+jn1T5q2pKAdFGdE/1Z56hq/WPtVIjGLF1grcmjCmdcco2N+sVAvb8zP
+	 11+2vjA3wehcpSNIcPibPfNkLImDnpjVozhHCpKjb1N12x1NYrPxFX6gik0brUwBs6
+	 ozM8AkmjzU2MrTEXEx5Gzdkpf63/Qkc19d7K2YtrsNXPyzNDcLYd3SCI48+ypDoQ1+
+	 sm3PxF7fNJPClSpGQ5sD4jZ+D4pjn4HQ5wYwHB8sa9zAQIPLkmvM2mEBN8QwEZbJHw
+	 QVcgh+WUtH7DYHzOEgy9F1rTOznu5Jz4Da3ZrhmFPppNfx2UjUZrfGJr/mb9qEf6ax
+	 /gUpVa6CGMt6Q==
+Date: Wed, 1 Apr 2026 08:36:43 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Billy Tsai <billy_tsai@aspeedtech.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+	Ryan Chen <ryan_chen@aspeedtech.com>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] dt-bindings: mfd: aspeed,ast2x00-scu: Describe
+ AST2700 SCU0
+Message-ID: <20260401-adept-zebra-of-bloom-5bb68b@quoll>
+References: <20260331-upstream_pinctrl-v5-0-8994f59ff367@aspeedtech.com>
+ <20260331-upstream_pinctrl-v5-2-8994f59ff367@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 00/21] media: i2c: add Maxim GMSL2/3 serializer and
- deserializer drivers
-To: "Dayananda, Vivekananda" <vivekananda.dayananda@amd.com>,
- "dumitru.ceclan@analog.com" <dumitru.ceclan@analog.com>,
- Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Julien Massot <julien.massot@collabora.com>, Rob Herring <robh@kernel.org>,
- =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Cosmin Tanislav <cosmin.tanislav@analog.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
- "martin.hecht@avnet.eu" <martin.hecht@avnet.eu>,
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Cosmin Tanislav <demonsingur@gmail.com>, Cory Keitz <ckeitz@amazon.com>
-References: <20260311-gmsl2-3_serdes-v9-0-41499f09004f@analog.com>
- <MW4PR12MB566835A0D88DAA21D6642832E856A@MW4PR12MB5668.namprd12.prod.outlook.com>
- <86a96690-1307-4a6f-8265-1d6d30ce6d6c@gmail.com>
- <MW4PR12MB56682D24FB2D7B1EF2D53B78E853A@MW4PR12MB5668.namprd12.prod.outlook.com>
-Content-Language: en-US
-From: Ceclan Dumitru <mitrutzceclan@gmail.com>
-In-Reply-To: <MW4PR12MB56682D24FB2D7B1EF2D53B78E853A@MW4PR12MB5668.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260331-upstream_pinctrl-v5-2-8994f59ff367@aspeedtech.com>
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.linux.dev,ragnatech.se,avnet.eu,ideasonboard.com,gmail.com,amazon.com];
-	TAGGED_FROM(0.00)[bounces-34526-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
+	TAGGED_FROM(0.00)[bounces-34527-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mitrutzceclan@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	MISSING_XM_UA(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 47B0D374F87
+X-Rspamd-Queue-Id: 048FE37546C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-
-
-On 3/31/26 8:43 PM, Dayananda, Vivekananda wrote:
-> [Public]
+On Tue, Mar 31, 2026 at 03:31:17PM +0800, Billy Tsai wrote:
+> AST2700 consists of two interconnected SoC instances, each with its own
+> System Control Unit (SCU). The SCU0 provides pin control, interrupt
+> controllers, clocks, resets, and address-space mappings for the
+> Secondary and Tertiary Service Processors (SSP and TSP).
 > 
-> There is one other patch that is required in addition, which enables the remote-control channel links from port 1 using REG3. Adding the patch below
-> ----
-> From 36936732c6ecd599f1a26744bef3031e41194229 Mon Sep 17 00:00:00 2001
-> From: Vivekananda Dayananda <vivekana@amd.com>
-> Date: Tue, 31 Mar 2026 08:12:20 -0700
-> Subject: [PATCH] media: i2c: maxim-serdes: max96724: allow selecting CC port
+> Describe the SSP/TSP address mappings using the standard
+> memory-region and memory-region-names properties.
 > 
-> Add a DT property that lets platforms choose which control-channel port the MAX96724 exposes to the upstream I2C host. Document the new property for the MAX96724 compatibles and default to port 0 so existing device trees retain their behaviour.
+> Disallow legacy child nodes that are not present on AST2700, including
+> p2a-control and smp-memram. The latter is unnecessary as software can
+> access the scratch registers via the SCU syscon.
 > 
-> The driver caches the chosen port and reprograms register 0x03 after every reset, restoring control-channel access regardless of whether the deserializer was power-cycled. Boards that need to talk through port 1 can now opt in by setting "maxim,control-channel-port = <1>;" in the device tree.
+> Also allow the AST2700 SoC0 pin controller to be described as a child
+> node of the SCU0, and add an example illustrating the SCU0 layout,
+> including reserved-memory, interrupt controllers, and pinctrl.
 > 
-> Signed-off-by: Vivekananda Dayananda <vivekana@amd.com>
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
 > ---
+>  .../bindings/mfd/aspeed,ast2x00-scu.yaml           | 117 +++++++++++++++++++++
+>  1 file changed, 117 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml b/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml
+> index a87f31fce019..86d51389689c 100644
+> --- a/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/aspeed,ast2x00-scu.yaml
+> @@ -46,6 +46,9 @@ properties:
+>    '#reset-cells':
+>      const: 1
+>  
+> +  memory-region: true
+> +  memory-region-names: true
 
-[...]
+Missing constraints. From where did you take such syntax (so I can fix
+it)?
 
-Thank you, will be included in V10. I'll await first confirmation from
-Sakari that the failing v4l2 compliance tests do not make sense for
-serdes like I've considered.
+Best regards,
+Krzysztof
+
 
