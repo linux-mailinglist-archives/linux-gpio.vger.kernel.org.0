@@ -1,86 +1,86 @@
-Return-Path: <linux-gpio+bounces-34512-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34513-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0NlBGUJkzGnZSgYAu9opvQ
-	(envelope-from <linux-gpio+bounces-34512-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Apr 2026 02:18:10 +0200
+	id CJZNFENkzGnZSgYAu9opvQ
+	(envelope-from <linux-gpio+bounces-34513-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Apr 2026 02:18:11 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFB353730FC
-	for <lists+linux-gpio@lfdr.de>; Wed, 01 Apr 2026 02:18:09 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7522373103
+	for <lists+linux-gpio@lfdr.de>; Wed, 01 Apr 2026 02:18:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C5DB3306832F
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Apr 2026 00:18:08 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B7EA93035895
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Apr 2026 00:18:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73D7918A92F;
-	Wed,  1 Apr 2026 00:18:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 625D3189F20;
+	Wed,  1 Apr 2026 00:18:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bDXX/eoy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYbSUaUg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C1918BC3D
-	for <linux-gpio@vger.kernel.org>; Wed,  1 Apr 2026 00:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1DF54774
+	for <linux-gpio@vger.kernel.org>; Wed,  1 Apr 2026 00:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775002688; cv=none; b=lBIPTwrr3TDHe2EUnyizkoR9OYZVagTT0648orLXavoLxku04v7SlQw2nTMPyzrPFHijlId+2Mp1rO0nlK5PnD8K9TRTuRTCl9JuhV7XckXBFTjYzlGcH6p/HRZCaOEk+fPM5RZpqLxds7eU009X/TJbfpYnb1brjy/TYWADXXU=
+	t=1775002689; cv=none; b=UyE4lxbEbGlZeKrkc+4ZtpWL2SjFx65LbsWAZBz4yBIbGvNXQyuun522F156STOGBDsKnJC805f1ZgdGXjkRQ1JeBoW3Dwxpy59yHOGNpWLRC1paEhwczBa+xXc4/USgEiQmT2BcnbR3l/3aNUS98774kgDVhYzocvtknsPM5cM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775002688; c=relaxed/simple;
-	bh=vmcQGfSdokuL2RhbLJNKjH4NvXM/fNPZowW3AErytnk=;
+	s=arc-20240116; t=1775002689; c=relaxed/simple;
+	bh=aO6z0pIlEfgd9NJupNQ+WoAXFx4hkywd+0dZ7J7Z8uQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GOFzzRtxge2BxknF7CFkcgw2U8tyndONu6xwmXz69aqihpCsD6QjVcwXt8gcNilHzqoq6qRzhI7lEK4xKTHVeHRiXLbCjZqiIVNsQQyt1mSAVxeybgHmfwy5TClxruPTvoY9WSsbzZ1+zdb+006Ffdas3IF//PJsDUoEpMR6ulY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bDXX/eoy; arc=none smtp.client-ip=209.85.210.42
+	 MIME-Version; b=UEkE4lsjGjw8B+uxa2aUuP9KPtT0RH6pcBA1IjSpa08bu04xASOmwujaZZe63UmK4RHluVEOYNZJWGXTKOv8LlSKitOGdqHOzUxToLp7xsh9S4CSzG6U5qMc1J2/NAEILO+uvX1Jwwgti7/UyG4P4fI6OD5VUhBm2Ox8ZGDXpY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aYbSUaUg; arc=none smtp.client-ip=209.85.167.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-7d1872504cbso426011a34.0
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2026 17:18:06 -0700 (PDT)
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-46aa216a65aso2299504b6e.1
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2026 17:18:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20251104; t=1775002686; x=1775607486; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MJX7hL4hTjPHcklVVW+2FwrO6RmoRwssmjnnhZbP86Y=;
-        b=bDXX/eoyDcSOnxF3QkWawZb1wlM1qe43Fbrl5gTRlp/TiEZXLThN6Hpl6zzx7GSyGO
-         gJen4VxtpqutLZPF3uGsHVtn0M092wT9yOSUKyALyaPobyTGKDBuepIbeJaJxva66WsO
-         EdOLF5cXsU3IHKGVcYbnfMpb1bAiFoJsnhq7ouDJq4tRys6NJE52rT9YUMQAZr8Blv36
-         T3B3uJPTOVooVDZIMELiDz1pJ+ts+7xIWmRruEyNfp+TMmLam+cNKg8Iiqd5ycZrEVYK
-         7d/74Zs0Badpj0Ntc+3Qi3x/s3ixKCXPalBDJA59O0XVM2xwM9CqWlL+ZTYxM8l29Em0
-         AWwA==
+        bh=9Oe0Pdp4ldq+lBERamuDmC69rk6YjZVnj4Xz4VeI3KM=;
+        b=aYbSUaUgkSKoRMyLFbUuq2wLuaVkWpK4AZ6sFxd0cKjZ1xS7vkwLGzbbPfl7t8974s
+         33cpFHomdXzVAz97jcVbL0WqwApOvrzYvFRePQn1pHrk6HcEvOtK7Vgnf79vBmpHTEHj
+         3fWZXT3uo1BoqjC9wVFnV501usqM1ltRJvs+5N2T8Ig2wezae5Zh1WtyZOWM+CLNXJTn
+         2i6nNPxL3FIURm2kpVtTxJ9JQLjHm2As36OSMphrWrkzpT8nXAlY8IvNBuZ2SxjkIV0V
+         c2AiXc84nyme9v2gfmX3Pp6E1jrC8vMH+5wpWPi4f/cKL2/WqemkER5BWxe2Cf+HktAQ
+         F2fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20251104; t=1775002686; x=1775607486;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=MJX7hL4hTjPHcklVVW+2FwrO6RmoRwssmjnnhZbP86Y=;
-        b=NQ43ali/ZyN/IKA2tYPXovN7+v76cQpdTJFSsunebBn2AIrOHJeaGQkzcEmkRQV87T
-         kMS/kBiAXs5iPuOHOoDU/gB9akmx9u/jZAFynKRHIu/uxdEBP4CpBWYFgXhAMRaWUcwT
-         2dBRrA8EbSbR+ycNk4ezBgcu1so6kMUChwHZS1cGDFW0LtYhWcFpzgOmcCRr8QQkatN7
-         lenwPOzCGJCc0OoryWfInZfmZfjQjc0NM2A8k2qTVoCReDVITXqIY4eWkicr8MV2IO6j
-         X2yM6K1C5b9vUFFw4OLXwrmbe7GFa0bZDu60C+nxmh+5AokSQJ9BmbCh7e9wbKs+Eb/1
-         msSA==
-X-Gm-Message-State: AOJu0YxvLU4V3LYiAR6c2wAboM21kV5LSxIHw+woknpEDy5QipiroX9j
-	K4H2ojWoG7kq5cZL59EdR482Y5gDZuoeCzIWVFzMUthxWoEya9vZGsdIS7RF0A==
-X-Gm-Gg: ATEYQzx4aR5D0GoW7dqRBEHTbHq/I1UOv56zRKR9v2IEnmKAiGqIqUn4Vp8bi1m+/65
-	Su0nWO8fNnf3RmnEsUO/eZEK6rutAGw//rTz8MUYJ8KqmXNTY5YPMoqmb01WLDeP2XgcmVyespQ
-	mifzpa1/izud/GjRAXT1I1kqZu8uNZkFR7l/m/de0LFgaJbPd0aA1Ex+/VbFBV5jxVzT42h9I+P
-	pNTiikCqSuHr1vlOoAE5P1KlGQQiWgx7ozDITDBDLSNR94DRs1vEHvBEmeZjIdC+aNTLSzcWEKE
-	wBykkUeXl8E/7Jqa9fEsEvbvOzbKe5N+siZTiDG0U5hYG07mNVIhym3CykovTV8WRcqDzs582Y1
-	Go63b8Gw5eECkB6u0ZpY/ZKbh6DHWyjqwtEN0H+3yr+VLHgCyafMWHykafC1OC4kjp52iU4uEWl
-	e98VoM+/Tp7wcBVA4zyvE++fQhXz9093l4t26aT4Vd7z8i4DiENZJRGMgs94MO8w==
-X-Received: by 2002:a05:6830:3693:b0:7d7:ecee:af6b with SMTP id 46e09a7af769-7db99f252f5mr906362a34.2.1775002685632;
-        Tue, 31 Mar 2026 17:18:05 -0700 (PDT)
+        bh=9Oe0Pdp4ldq+lBERamuDmC69rk6YjZVnj4Xz4VeI3KM=;
+        b=e4RKPrZF0M5sN87MLeloU/W4JahXDYEIXD7FL0wfbb3IhAnJbUXBYPglbSszeZuf8K
+         dI56YzgVp1DdnCJI55GX0sN+ptJed4I7UzivQs1D/UvPaSsH6DGovYql+WikomeG0eh9
+         /YbjAzduuIkKVeZqaZMx9fqLwQ5KVU/N5Cu4PIMBnwMZ4OZ1MIQQiKcyc0ALxTOyx0ka
+         ByNg1nYFKIxANdHAU8tSxXrX9BLDJrNY/lQvoaxp7xVaR2ocJkE/7RpF99rfEc0V4x6W
+         snx/FuML7IQBVg7Eqpf7C2e2ZAPVQkqYa1x+WHLe1DhhCO89cwo+wj3aLMg4yAlBOjEG
+         54dg==
+X-Gm-Message-State: AOJu0YzF7zkAA7GpbI3kUjab/klCbibm4G1qP6JJApGB4zC3NtcHSeca
+	N5MlBGKfREnfvAMXY+4fOY74iRjcHy95IqEPgUy+CIl0tb1QSd/D7TVDxnGv1g==
+X-Gm-Gg: ATEYQzxnarGvJPiUMk9kMxcL1in7Lm6gwDoU4uEjlt0BiTSkqcB3Ep0kdmNKO95ZxC+
+	TKYUDG8JcMJp1u9h8Qo3aKZgHJk1z9IyV5GuzPv1mA/Bo3rm2Zq5PxNklwMKgT+NmKGSv2cPIU2
+	aTsdjQO/bthUk5/MZ2/TC7MY0jHZuO8K+Fbeer4nNfOtuL0hkMIP1l11F83CKmRJRe5LmqSLtMq
+	eT4C7I/p1T8Z6UgMbDkwZUNCC2JIoyJ3FT2idwPxlUNogr+XoqFwOKo9gSvsVmZWUWd8+sLsHfd
+	0UCc2Mewfnr9lH/W5p1LhyfQW6AkO2nsIB+RVSEPgBSj72G2ZErhRezsNOpJEyoAi7jeYEsofmx
+	mzg2fJCtj/3pSNjUX7TPy082XCKCy40nlFxOp1TtLIqIcdoLu6jtXF97Jb0VVW+vHdbKnDBr+Vg
+	l9uEwedFNYk7LJMKHR+Oqs1SnJDdrCgx5wSO8I41PCHki5G16fhS9Cysk+i4mFiw==
+X-Received: by 2002:a05:6808:c2c8:b0:467:1212:46fe with SMTP id 5614622812f47-46ae015bbdcmr899401b6e.38.1775002686505;
+        Tue, 31 Mar 2026 17:18:06 -0700 (PDT)
 Received: from Zephyrus.localdomain ([131.93.209.211])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7da0a7ea668sm9173679a34.19.2026.03.31.17.18.04
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7da0a7ea668sm9173679a34.19.2026.03.31.17.18.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2026 17:18:05 -0700 (PDT)
+        Tue, 31 Mar 2026 17:18:06 -0700 (PDT)
 From: Vincent Fazio <vfazio@gmail.com>
 To: linux-gpio@vger.kernel.org
 Cc: Vincent Fazio <vfazio@gmail.com>
-Subject: [libgpiod][PATCH 3/9] bindings: python: setup: add type annotations
-Date: Tue, 31 Mar 2026 19:14:52 -0500
-Message-ID: <20260401001459.19159-3-vfazio@gmail.com>
+Subject: [libgpiod][PATCH 4/9] bindings: python: setup: apply linter recommendations
+Date: Tue, 31 Mar 2026 19:14:53 -0500
+Message-ID: <20260401001459.19159-4-vfazio@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260401001459.19159-1-vfazio@gmail.com>
 References: <20260401001459.19159-1-vfazio@gmail.com>
@@ -97,18 +97,18 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	TO_DN_SOME(0.00)[];
 	FREEMAIL_CC(0.00)[gmail.com];
-	TAGGED_FROM(0.00)[bounces-34512-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34513-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWO(0.00)[2];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[vfazio@gmail.com,linux-gpio@vger.kernel.org];
@@ -119,126 +119,78 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: CFB353730FC
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: E7522373103
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add type annotations to help with lint checks.
+* Drop unneeded mode parameters
+* Cast toml parsing result to dict[str, str] for expected license value
+* Disambiguate the `line` variable type for parsing the .asc file
 
 Signed-off-by: Vincent Fazio <vfazio@gmail.com>
 ---
- bindings/python/setup.py | 25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+ bindings/python/setup.py | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
 diff --git a/bindings/python/setup.py b/bindings/python/setup.py
-index 7bf9246..4061328 100644
+index 4061328..5f5950e 100644
 --- a/bindings/python/setup.py
 +++ b/bindings/python/setup.py
-@@ -1,8 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
- 
-+from collections.abc import Callable
+@@ -4,7 +4,7 @@
+ from collections.abc import Callable
  from os import getenv, path, unlink
  from shutil import copy, copytree, rmtree
-+from typing import TypeVar
+-from typing import TypeVar
++from typing import TypeVar, cast
  
  from setuptools import Extension, setup
  from setuptools.command.build_ext import build_ext as orig_build_ext
-@@ -10,6 +12,8 @@ from setuptools.command.sdist import log
- from setuptools.command.sdist import sdist as orig_sdist
- from setuptools.errors import BaseError
- 
-+T = TypeVar("T", "sdist", "build_ext")
-+
- LINK_SYSTEM_LIBGPIOD = getenv("LINK_SYSTEM_LIBGPIOD") == "1"
- LIBGPIOD_MINIMUM_VERSION = "2.1"
- LIBGPIOD_VERSION = getenv("LIBGPIOD_VERSION")
-@@ -20,7 +24,7 @@ SHA256_CHUNK_SIZE = 2048
- LICENSE_FILE = "LICENSE"
- 
- 
--def sha256(filename):
-+def sha256(filename: str) -> str:
-     """
-     Return a sha256sum for a specific filename, loading the file in chunks
-     to avoid potentially excessive memory use.
-@@ -35,7 +39,7 @@ def sha256(filename):
-     return sha256sum.hexdigest()
- 
- 
--def find_sha256sum(asc_file, tar_filename):
-+def find_sha256sum(asc_file: str, tar_filename: str) -> str:
-     """
+@@ -44,11 +44,11 @@ def find_sha256sum(asc_file: str, tar_filename: str) -> str:
      Search through a local copy of sha256sums.asc for a specific filename
      and return the associated sha256 sum.
-@@ -49,7 +53,7 @@ def find_sha256sum(asc_file, tar_filename):
+     """
+-    with open(asc_file, "r") as f:
++    with open(asc_file) as f:
+         for line in f:
+-            line = line.strip().split("  ")
+-            if len(line) == 2 and line[1] == tar_filename:
+-                return line[0]
++            _line = line.strip().split("  ")
++            if len(_line) == 2 and _line[1] == tar_filename:
++                return _line[0]
+ 
      raise BaseError(f"no signature found for {tar_filename}")
  
- 
--def fetch_tarball(command):
-+def fetch_tarball(func: Callable[[T], None]) -> Callable[[T], None]:
-     """
-     Verify the requested LIBGPIOD_VERSION tarball exists in sha256sums.asc,
-     fetch it from https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
-@@ -61,10 +65,10 @@ def fetch_tarball(command):
- 
-     # If no LIBGPIOD_VERSION is specified in env, just run the command
-     if LIBGPIOD_VERSION is None:
--        return command
-+        return func
- 
-     # If LIBGPIOD_VERSION is specified, apply the tarball wrapper
--    def wrapper(self):
-+    def wrapper(cmd: T) -> None:
-         # Just-in-time import of tarfile and urllib.request so these are
-         # not required for Yocto to build a vendored or linked package
-         import sys
-@@ -83,7 +87,7 @@ def fetch_tarball(command):
+@@ -85,8 +85,8 @@ def fetch_tarball(func: Callable[[T], None]) -> Callable[[T], None]:
+         # If the version in "libgpiod-version.txt" already matches our
+         # requested tarball, then skip the fetch altogether.
          try:
-             if open("libgpiod-version.txt", "r").read() == LIBGPIOD_VERSION:
-                 log.info(f"skipping tarball fetch")
--                command(self)
-+                func(cmd)
+-            if open("libgpiod-version.txt", "r").read() == LIBGPIOD_VERSION:
+-                log.info(f"skipping tarball fetch")
++            if open("libgpiod-version.txt").read() == LIBGPIOD_VERSION:
++                log.info("skipping tarball fetch")
+                 func(cmd)
                  return
          except OSError:
-             pass
-@@ -175,13 +179,13 @@ def fetch_tarball(command):
-                     # For further details, see `egg_info.find_sources` and
-                     # `manifest_maker.add_license_files`
-                     copy(_path, LICENSE_FILE)
--                    self.distribution.metadata.license_files = [LICENSE_FILE]
-+                    cmd.distribution.metadata.license_files = [LICENSE_FILE]  # type: ignore[attr-defined]
+@@ -161,7 +161,8 @@ def fetch_tarball(func: Callable[[T], None]) -> Callable[[T], None]:
+                 if sys.version_info >= (3, 11):
+                     import tomllib
  
-         # Save the libgpiod version for sdist
-         open("libgpiod-version.txt", "w").write(LIBGPIOD_VERSION)
- 
-         # Run the command
--        command(self)
-+        func(cmd)
- 
-         # Clean up the build directory
-         if path.exists(LICENSE_FILE):
-@@ -206,8 +210,9 @@ class build_ext(orig_build_ext):
-     """
- 
-     @fetch_tarball
--    def run(self):
-+    def run(self) -> None:
+-                    license_file = tomllib.load(f).get("project").get("license")
++                    project = cast("dict[str,str]", tomllib.load(f).get("project"))
++                    license_file = project.get("license")
+                 else:  # tomllib isn't standard, fall back to parsing by line
+                     for line in f.readlines():
+                         _line = line.decode()
+@@ -214,7 +215,7 @@ class build_ext(orig_build_ext):
          # Try to get the gpiod version from the .txt file included in sdist
-+        libgpiod_version: str | None
+         libgpiod_version: str | None
          try:
-             libgpiod_version = open("libgpiod-version.txt", "r").read()
+-            libgpiod_version = open("libgpiod-version.txt", "r").read()
++            libgpiod_version = open("libgpiod-version.txt").read()
          except OSError:
-@@ -251,7 +256,7 @@ class sdist(orig_sdist):
-     """
- 
-     @fetch_tarball
--    def run(self):
-+    def run(self) -> None:
-         super().run()
- 
+             libgpiod_version = LIBGPIOD_VERSION
  
 -- 
 2.43.0
