@@ -1,68 +1,77 @@
-Return-Path: <linux-gpio+bounces-34581-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34582-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OO17IsgqzmnIlQYAu9opvQ
-	(envelope-from <linux-gpio+bounces-34581-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 02 Apr 2026 10:37:28 +0200
+	id 6KJ2HME6zmmAmAYAu9opvQ
+	(envelope-from <linux-gpio+bounces-34582-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 02 Apr 2026 11:45:37 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04F1A3861F4
-	for <lists+linux-gpio@lfdr.de>; Thu, 02 Apr 2026 10:37:27 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D486387246
+	for <lists+linux-gpio@lfdr.de>; Thu, 02 Apr 2026 11:45:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5F762300D697
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Apr 2026 08:33:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 375ED30036D0
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Apr 2026 09:45:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D9523A1E9F;
-	Thu,  2 Apr 2026 08:33:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12BC93DA7C6;
+	Thu,  2 Apr 2026 09:45:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jG2HH9sW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Re75d8ZZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2F83890FC;
-	Thu,  2 Apr 2026 08:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C895E332909
+	for <linux-gpio@vger.kernel.org>; Thu,  2 Apr 2026 09:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775118790; cv=none; b=DNstgn0kLrIT8NSbi/LIIkNrHbbSNiFxJKK0ZplFI9ZtMet3WpKG2M1XMejRlC6OKYxLf2SkRK4yOHO2n9wgn/aPx8jItg3r7eVOu+l1iwuWfWT8NUUDsQzK9efa4XX+VeP8khMFfaoD7BpZUcNUAnrGoGbeVUGP5e6XS+NROYw=
+	t=1775123133; cv=none; b=ufIV5CnFr4mFXByOEsh/Ya4XcKo/qUuRX4dhgW7UIw8iQLxWvXwMitnaq47rBSqxGPrdIMRtQS3rKvkyuKEAuGoN+SEQ+pQOJfxL88QkW6PgPjkWbmfXINCDkKG4ZtBSdpFjzvBE1N9o2YEIqG7lYTlt9fCMyNQmJNJ1rcb2XHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775118790; c=relaxed/simple;
-	bh=INDKtHgHQ0n50wacZnSNn0khdkNH2PNx0jlzaSDgQvM=;
+	s=arc-20240116; t=1775123133; c=relaxed/simple;
+	bh=0S11xU1IpT8SFc/cXmISfCOc70osQynlAxsHynpDX4s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RAkba0KrWxNGpPZrEsSQi5a/5FBhvnXsdfTE9BjhLk53K7s6rp7zjtO2ZEl0YO3QniY8MZw/LBP8d9cwoW2snZ/y2gZIl2KRA6kqpslw35d4YU7d61SzXYU9sINxLCqiKwq7v60j+uTsaNvU8+wGGBCy151R3/GeqVpkjkMGXYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jG2HH9sW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C090C116C6;
-	Thu,  2 Apr 2026 08:33:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775118789;
-	bh=INDKtHgHQ0n50wacZnSNn0khdkNH2PNx0jlzaSDgQvM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jG2HH9sWgGhhlsIVu7Z62OXVTDcrhA0kUh0hYkaB3f1ANXB+rx1hzqNYZTbp6usVK
-	 lCDeGGOgrTNLmWk2jiqR8i6H8zs7+szNGVg/5BgNSJLMbqSBwR6HgXmc/mvIbaArLX
-	 21RugLGvr79SGkknRZ1nC0m1AbOVhIAmkDMvKtmNZJtCVnmlZX5i0wAs6nyDU0x05J
-	 QkYzLnS0ABsxHRbGeG1tNmwubIPFtIS9YHphyYh6WMhGR7KYbEZ02goOFIAbJZt+MS
-	 N9UY5V2Y0iFUAfLzX7NO87/VzXltWztZavZ5IGcdgTZSl9cfkCsXQevY9/0EO3EqKv
-	 xsHksarCY8p1g==
-Date: Thu, 2 Apr 2026 10:33:07 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <jesszhan0024@gmail.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Cong Yang <yangcong5@huaqin.corp-partner.google.com>, 
-	Ondrej Jirman <megi@xff.cz>, Javier Martinez Canillas <javierm@redhat.com>, 
-	Jagan Teki <jagan@edgeble.ai>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 04/19] dt-bindings: display/panel: ilitek,ili9881c:
- describe Waveshare panel
-Message-ID: <20260402-divergent-active-mantis-95bd18@quoll>
-References: <20260401-waveshare-dsi-touch-v1-0-5e9119b5a014@oss.qualcomm.com>
- <20260401-waveshare-dsi-touch-v1-4-5e9119b5a014@oss.qualcomm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wdn54O2yr9nKfQca1fb/leIkf4i32iT3kJcsU3dLo+4Jl5+wgn5/FjpJJGzTCkufOMIYDDKu3daiRFiFVtXnzSXdCsKg+IGxhGOuZtv6VheDl9ThCSbQXq+EdR6dyZnjZXWVlebEXumie0PL1wWmwUW15+SJdwMUe7bnu3PiHuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Re75d8ZZ; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775123122; x=1806659122;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0S11xU1IpT8SFc/cXmISfCOc70osQynlAxsHynpDX4s=;
+  b=Re75d8ZZI682cfCZ6T7a/64Pe9eh8fkkVgJBw984cKDBJxhsyHKJWH0J
+   thkWg4DPm88/g5CrtP4tLzAEhVs12JCOxYlMymPPejlsDJnd/BuTek35l
+   uZifo0BRytens+jRHZiU59+JDKutmEnTUKZUpp3bkD05Jx4dwqWexuN7+
+   FbZSyUmvGC4y6ctwJo+NlZRu+j97PP41wgByiQrZewQZoDX66Y87/4k9j
+   t2SyVdoZ8QNESDgBaNmarN4DaKaTvxI3/ZtSuC0fE4ycvSrTBI6tw41s3
+   jPuElGQq8872wSpcDFnXTJvC0zn3ov+GHeA4OQeph2zmbSQF4OY+h+P+6
+   Q==;
+X-CSE-ConnectionGUID: q+dC628ITSujOIaT5VX1OA==
+X-CSE-MsgGUID: EyvGY9eVS0u4iadmfeJLVA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11746"; a="76066105"
+X-IronPort-AV: E=Sophos;i="6.23,155,1770624000"; 
+   d="scan'208";a="76066105"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 02:45:21 -0700
+X-CSE-ConnectionGUID: hTOGSMcFSKSY8u88MicQcQ==
+X-CSE-MsgGUID: e9QA+H21TU2TqWTs1zvRow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,155,1770624000"; 
+   d="scan'208";a="231342278"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa004.jf.intel.com with ESMTP; 02 Apr 2026 02:45:20 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id DCBDE95; Thu, 02 Apr 2026 11:45:18 +0200 (CEST)
+Date: Thu, 2 Apr 2026 11:45:18 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Alan Borzeszkowski <alan.borzeszkowski@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linusw@kernel.org, brgl@kernel.org,
+	andriy.shevchenko@intel.com,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v2] gpio: Add Intel Nova Lake ACPI GPIO events driver
+Message-ID: <20260402094518.GT3552@black.igk.intel.com>
+References: <20260401174526.60881-1-alan.borzeszkowski@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -71,80 +80,44 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260401-waveshare-dsi-touch-v1-4-5e9119b5a014@oss.qualcomm.com>
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+In-Reply-To: <20260401174526.60881-1-alan.borzeszkowski@linux.intel.com>
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-34581-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34582-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[linaro.org,gmail.com,ffwll.ch,linux.intel.com,kernel.org,suse.de,huaqin.corp-partner.google.com,xff.cz,redhat.com,edgeble.ai,lists.freedesktop.org,vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mika.westerberg@linux.intel.com,linux-gpio@vger.kernel.org];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email]
-X-Rspamd-Queue-Id: 04F1A3861F4
+	RCVD_COUNT_FIVE(0.00)[6];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,black.igk.intel.com:mid]
+X-Rspamd-Queue-Id: 9D486387246
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Apr 01, 2026 at 10:26:23AM +0300, Dmitry Baryshkov wrote:
-> Describe Waveshare 7" DSI panel which uses ILI9881 as a panel
-> controller. This panel requires two voltags supplies, so add separate
-
-typo, voltage supplies
-
-> iovcc supply.
+On Wed, Apr 01, 2026 at 07:45:26PM +0200, Alan Borzeszkowski wrote:
+> This driver provides support for new way of handling platform events,
+> through the use of GPIO-signaled ACPI events. This mechanism is used on
+> Intel client platforms released in 2026 and later, starting with Intel
+> Nova Lake.
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->  Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml b/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml
-> index d979701a00a8..42e35986fbf6 100644
-> --- a/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml
-> @@ -24,6 +24,7 @@ properties:
->            - raspberrypi,dsi-7inch
->            - startek,kd050hdfia020
->            - tdo,tl050hdv35
-> +          - waveshare,7.0-dsi-touch-a
->            - wanchanglong,w552946aaa
->            - wanchanglong,w552946aba
->        - const: ilitek,ili9881c
-> @@ -34,6 +35,7 @@ properties:
->    backlight: true
->    port: true
->    power-supply: true
-> +  iovcc-supply: true
->    reset-gpios: true
->    rotation: true
+> Signed-off-by: Alan Borzeszkowski <alan.borzeszkowski@linux.intel.com>
 
-Move the allOf to place before additional/unevaluatedProps and disallow
-it for other variants.
-
-Unless you assume that all other devices also could have iovcc, but then
-please mention it in the commit msg.
-
-Best regards,
-Krzysztof
-
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
