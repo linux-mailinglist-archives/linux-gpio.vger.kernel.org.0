@@ -1,195 +1,175 @@
-Return-Path: <linux-gpio+bounces-34596-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34597-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aF5mCt+RzmnAogYAu9opvQ
-	(envelope-from <linux-gpio+bounces-34596-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 02 Apr 2026 17:57:19 +0200
+	id oPSzAjqVzmkBowYAu9opvQ
+	(envelope-from <linux-gpio+bounces-34597-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 02 Apr 2026 18:11:38 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 938FB38B8BF
-	for <lists+linux-gpio@lfdr.de>; Thu, 02 Apr 2026 17:57:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 21D6B38BAB0
+	for <lists+linux-gpio@lfdr.de>; Thu, 02 Apr 2026 18:11:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 89552301371B
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Apr 2026 15:55:23 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D16BA3068323
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Apr 2026 16:05:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E56DE3BED22;
-	Thu,  2 Apr 2026 15:55:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C06BF28642B;
+	Thu,  2 Apr 2026 16:05:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q601aes0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TBfV5Ra0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yx1-f45.google.com (mail-yx1-f45.google.com [74.125.224.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830A3318146
-	for <linux-gpio@vger.kernel.org>; Thu,  2 Apr 2026 15:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775145322; cv=pass; b=aeD+dLSvZvVnklUgkrnp2UJur4G+YPacoomUQsGlJVrwk9hlEaGHykvilGNIW95XmVRoIAuEt2DmnwLPeX5sX6Meu77eZX2ahRB1Rwuo+F39d8qcQ3tDHWjjegGivxTBq+ujI7ZhQJ/CD9mX2mjSAq0cjN368IXy2ZuC9HKmuqo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775145322; c=relaxed/simple;
-	bh=iQpYKeGUJaDb3ega+GZrUnddk9L0sOhFcohh3lYgQBc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LT/pdDcy/GOmSNn55Qu/sLsS0cbgKZplLvc4q+Rrr72tmNr6y7odzlP+W1mD/4rTA5ahnXXvYtp7wHBEsnq2mCQQ/AWglOsQ/I16l9Fln6Sh4+kiX7Hm3NGmjjtteE9iUtSIBu+2YgiOo11v3nkrY9LDuEWXW2Ss38IkFf/JIHI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=q601aes0; arc=pass smtp.client-ip=74.125.224.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-6501547d7edso1093700d50.0
-        for <linux-gpio@vger.kernel.org>; Thu, 02 Apr 2026 08:55:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775145320; cv=none;
-        d=google.com; s=arc-20240605;
-        b=LCis1GLaX5nDcNgejZMbBR1PSmHZo4HJwTrGPEUSrXgp1vkWKLDygEnnYVjRettj9i
-         Vr5dBIdHNFMX6vzGeSu9MpD11fQGugTXYDPe415j2eTw16Jk+m+pwDXMJbt+ZTXwrV1Y
-         EmI5g7jP1fgBPXhYBXGTtHagduc/7w4yo/Vi9IM+akOkA5//kWVfFVR3DppjWeGGQ3r9
-         eMWj1KAhq6QyqFpUq5aU5oMMpkYv/W0gIuCLkDKTuBk5qf/y+fzrPQW0Z5Ub6lAvv07g
-         HCGp03KtMq0qUJIyfRmVxHJyCHnDx+RtnIdjZVCaA5p7eMCUsq8WYK2ydnPLSSQoPqx8
-         5Q+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Vk885SISY9oQj+riibrHWNe5BAuKBlyBwbBtGI14zec=;
-        fh=lVbY9JkkIKGU0bgEFTL/gADrkzuiP+/5Ir7IXoxPEiY=;
-        b=bOIeQ4h/8+r2/e2DMX6VSUmA8tY7LfVuKIKyqwp5SLn8Ag3eAtHHpYlHZjjwoz5HZ4
-         ZS+S/TJyUAdh9AbC1Fp4UvUozlYsFQY2r+htARtNbAhD7EDMCuzxuAX5aWocQGtLRhV1
-         wa9+mg1PXJPbtDjsusVGBlAqip0qOWs75N4HoEowmNSuEwIks9vot+F3yo4Fg/Zwpoa2
-         5nssE8kU6lO/9Ud5HvgwlAil8rS1BIwaBr4P+rJZ2TFTwNSoVJ67NamtXRs+yGYPKtHC
-         YpfMveicgJ9Xi73pEZt2MEdo2FHSww5uzmx+e/KBcEsQlIqyFeknomVnyuIKstbr/lAM
-         +GSA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775145320; x=1775750120; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vk885SISY9oQj+riibrHWNe5BAuKBlyBwbBtGI14zec=;
-        b=q601aes0bM7Y7FlfKRfaIp8Ns90sdRI+Bkp61/Q+Aodkd8pZpAx1rZ7hNjZSjW4VwX
-         w24NFlkCnPqYAHu+hgDs1M68/P0RHVKQHGspke0jwsLEU//ZGXu7QK2rmvXi5QxrWqk2
-         5AmhOliYyoLt7OxhQAdby7htqf926r6v8WdURL3emWGcm1jOTyXKHnJq3PZdfDqZ0/Uo
-         Qk8EUm3kzCnh6E/0boYedOPKghvZXdkrNQQs+7vxUcifOYaY5l3kmWkoJkUwFMe/m5PV
-         KFtjEv/k0OrA0c2ByclOb83yZ3T+uBnPCjPPnejeyW2CP2UHfOMHs2Y6jpKjYlOeQZfz
-         3jTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775145320; x=1775750120;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Vk885SISY9oQj+riibrHWNe5BAuKBlyBwbBtGI14zec=;
-        b=n25JnvZzO+Q0vQ4YNP6PipZjXTloThnu2wLfbw4dDM+cbE1k/zUCFfWYfqTGL7IuON
-         R+jZTOmTXuj2TKjboW37jF5FJwecLksA5Tm4+9AoH94YgH8cNXwFPZxltrZI60ldeLPN
-         Cqpvk2qINuVfm9Fu4DtePOtWQRcSE9pPaY3OCmu91KCxbWAkTTW72zQVVg/wXk0oqYy4
-         5Bg39wzy/b2WX4AZsZ19nN98fJxILOSlfFLffTOc3I6tMrahbqc6WZ27wO50LMtWblA+
-         nQu6xbJEpm9QeazeHZs3iHVM4UeZzI/jM2QOWqMuJ8Fa1f0gwJX/OLmK283eKTbZFEPg
-         OVzw==
-X-Gm-Message-State: AOJu0Yx4PAmQ0S3NO05sPLtPggnOWpgL2DnNWSyh55sVTohPinYbsxis
-	X/gbJ/LJoUZqZPQu8AWPITFrA4RkmrJ95wT9L01cYozLIJK8vuJHrwRgO0Yqak+QAW6IGAzng4T
-	HXKVAkpCLrpn3Jd0eFNHu/kXovTK9+vFSAFej
-X-Gm-Gg: AeBDietE5KzbwJCqah93YDuG2EK2ZEGQpP6SmswvEbCx0byw6JWL7So5d51jkjXIME5
-	kxU4hM+2IWfyM50PqJtqnu0JJKB2WXXNxYSM0nZoxaqZsRXYRXYOkFLQZ1FBfXpjfjoxswb+zh7
-	oqYnBPdVh+tVAW0BccNBk4Js1uDO/RunYw5XGckf41P6yYv2hN5fWjWr0NPjkc8K+ck9hkCoh3o
-	ceLYpmVQVEaSXk8bNWFr5Djzjrxqc939s9g3d7PSkvJ/34T8vhoCSKMil+0/+p7KhG8X6tkyPBY
-	oS2CEGpKwcuO5fH8TFT+Xqn/PwJ4MVqCFmAa/z4=
-X-Received: by 2002:a53:d8c3:0:b0:645:51f9:b4c0 with SMTP id
- 956f58d0204a3-6502fe652damr5925633d50.55.1775145320195; Thu, 02 Apr 2026
- 08:55:20 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DD82FFF8F;
+	Thu,  2 Apr 2026 16:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775145930; cv=none; b=bTcvTCrC+QcVSLhF66FrJpVLnU1YkhlHsvBKwQ5sl2B27Rr8VeJR/hZSyKwn2WWxuFat9KalebEJG81DrYo/+LSAU16pwGmBWnwunKvsy17NRuChAIAnpsjzO4JzVB+uF5rjqRTVgDNAaUzy2z14fUiOJWjJ6yKnpfAkcTvaNpQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775145930; c=relaxed/simple;
+	bh=IODCawz8kcexRtKlj/yGaPPXqXPpD1zBkHmNkzRnqCc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pmaEd38Ci0kI2MZq/2hPENoz2Dmw2/waMT9aDQNNQoQw+6OvKUq+9Xixb8AFqtSTgGn0yrZk1ECUIiRWx1Llu1YqMiSdmmpQ98wLLwdeIG269ak3ttVS+bXFAZaqc90Hr2pM0JUkqkod2yRA/3V7VP7AoAV5Px/KPXDxfW62jWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TBfV5Ra0; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775145929; x=1806681929;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=IODCawz8kcexRtKlj/yGaPPXqXPpD1zBkHmNkzRnqCc=;
+  b=TBfV5Ra0I+92u9sINodPHjWu1ZqGk5c+EOluiuRjiygXHGYW4BJkJbPA
+   XhNT7cQHZqhpol4fqo6dj4Vq5zBhmdp7UVVxB9dp5IvQ6tRy6LJmmzmZo
+   gMgKs53wMxavM35HMHTPAgcF5Il3AdZMCfCFvjfagLuIb0CMX69Eert1m
+   tUffP/T7qNnrdwUwQ90WL/3/iF5sXBOn0sqXioOaqXwthy+LZTCZTcURQ
+   18yJGaJDREVG2ZHSrnwB6A1Pvyr5zXDBk3K4ZL7yBhD/DnjFH+1CRewfo
+   4Y73qSF3vzGIBIBD7xxLowDRqu++rFG83QNhoxtVeXRO6CVcNNRINl1uR
+   w==;
+X-CSE-ConnectionGUID: RWkKSCMvSfyv8ulmt00mww==
+X-CSE-MsgGUID: mOCdQftDTDaRjG9gW+/WIA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11747"; a="63759096"
+X-IronPort-AV: E=Sophos;i="6.23,156,1770624000"; 
+   d="scan'208";a="63759096"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 09:05:28 -0700
+X-CSE-ConnectionGUID: nX2n9YhRQIiu0VLycGKtyQ==
+X-CSE-MsgGUID: AvO1IF+FSPGsevXXqjehog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,156,1770624000"; 
+   d="scan'208";a="226886785"
+Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.245.31])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 09:05:23 -0700
+Date: Thu, 2 Apr 2026 19:05:20 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] platform/x86: x86-android-tablets: use real
+ firmware node references with intel drivers
+Message-ID: <ac6TwAL3fQrlpef2@ashevche-desk.local>
+References: <20260402-baytrail-real-swnode-v2-0-6f5054a4cc07@oss.qualcomm.com>
+ <ac5t5XozmzN9oq96@ashevche-desk.local>
+ <CAMRc=McR+S9LCHmDjAS6Wn=SrNvq5Ojr-w1qeLsGNJ+L39pbrw@mail.gmail.com>
+ <ac5zhZAyiwbUwzWo@ashevche-desk.local>
+ <CAMRc=McJFNp15jnrehGLHsmFRfBpRQoppmdB_51whzJUQ-5ZLw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260401001459.19159-1-vfazio@gmail.com> <20260401001459.19159-9-vfazio@gmail.com>
- <CAMRc=MdbVb4cXGE56eLOpAe33mgBKC971K-W-z8mUVZh_aVsJQ@mail.gmail.com>
-In-Reply-To: <CAMRc=MdbVb4cXGE56eLOpAe33mgBKC971K-W-z8mUVZh_aVsJQ@mail.gmail.com>
-From: Vincent Fazio <vfazio@gmail.com>
-Date: Thu, 2 Apr 2026 10:55:08 -0500
-X-Gm-Features: AQROBzBGDLaAj5R4N9mH4D5v6g9Ppux-Tu2y4dWFQNcHotJmPekk0xbaJlOZPi8
-Message-ID: <CAOrEah6BHFHeCWxqzR57jOrAaJ7h6+_uwBn8bTFMr4x0oRffOg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 9/9] bindings: python: update linter configuration
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=McJFNp15jnrehGLHsmFRfBpRQoppmdB_51whzJUQ-5ZLw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWO(0.00)[2];
+	FREEMAIL_CC(0.00)[oss.qualcomm.com,gmail.com,linux.intel.com,linuxfoundation.org,kernel.org,vger.kernel.org,lists.linux.dev];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34596-lists,linux-gpio=lfdr.de];
-	TO_DN_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-34597-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[vfazio@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
 	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	MISSING_XM_UA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mail.gmail.com:mid,mypy.readthedocs.io:url]
-X-Rspamd-Queue-Id: 938FB38B8BF
+	NEURAL_HAM(-0.00)[-0.995];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 21D6B38BAB0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Apr 2, 2026 at 9:37=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.org=
-> wrote:
-> Ruff checks work fine but I'm seeing this with mypy:
->
-> $ mypy
-> build_tests.py:22: error: Library stubs not installed for "setuptools"
->  [import-untyped]
-> build_tests.py:23: error: Library stubs not installed for
-> "setuptools.command.build_ext"  [import-untyped]
-> build_tests.py:23: note: Hint: "python3 -m pip install types-setuptools"
-> build_tests.py:23: note: (or run "mypy --install-types" to install all
-> missing stub packages)
-> build_tests.py:23: note: See
-> https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
-> setup.py:10: error: Library stubs not installed for "setuptools"
-> [import-untyped]
-> setup.py:11: error: Library stubs not installed for
-> "setuptools.command.build_ext"  [import-untyped]
-> setup.py:12: error: Library stubs not installed for
-> "setuptools.command.sdist"  [import-untyped]
-> setup.py:13: error: Library stubs not installed for
-> "setuptools.errors"  [import-untyped]
-> Found 6 errors in 2 files (checked 45 source files)
->
-> I'm using mypy v1.20.0. Is this something with my environment?
+On Thu, Apr 02, 2026 at 05:03:10PM +0200, Bartosz Golaszewski wrote:
+> On Thu, Apr 2, 2026 at 3:47 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Thu, Apr 02, 2026 at 03:35:24PM +0200, Bartosz Golaszewski wrote:
+> > > On Thu, Apr 2, 2026 at 3:23 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
 
-Yes, slightly. I guess maybe I didn't state it explicitly, but when I
-added patch 8, I included a list of required dependencies for type
-checking and called out the group in documentaiton:
-https://lore.kernel.org/linux-gpio/20260401001459.19159-8-vfazio@gmail.com/=
-T/#u
+...
 
-If you're running mypy from within a virtual environment, you'll need
-to make sure that the dependencies in that group are installed for a
-clean check and can use the dependency group to help with that.
+> > > > > 3. Export the acpi_bus_type symbol. It's already available in the
+> > > > > acpi_bus.h header but it's not available to loadable modules.
+> > > >
+> > > > Nowadays we don't do that but export the dev_is_acpi() or something similar if
+> > > > it's not yet available and to_acpi_dev(). (Names are derived from the existing
+> > > > pattern, they might be need to be adjusted, dunno.) See how PNP does that.
+> > > > Note, I haven't read the patches yet, just a quick comment.
+> > >
+> > > Maybe I should have said why I do it. It's to register a notifier call
+> > > on ACPI bus events. Is there a better way to do this?
+> >
+> > AFAIU there shouldn't be pure ACPI devices, they are companions to the real
+> > ones. Can we simply attach to the normal device notifier and check if the
+> > companion is what we are looking for? Also since it's specific to that driver
+> > and you know what the platforms you are looking for, why can't we hook
+> > something into drivers/acpi/x86/lpss.c?
+> 
+> The ACPI companions seem to only ever be added once and never removed
+> - unlike platform devices. This is why I prefer to check the ACPI bus.
+> 
+> As for lpss.c - what do you sugest exactly because at first glance I'm
+> not quite sure what's there to hook up?
 
-If you're running mypy from the system level and outside of a virtual
-environment, you will have to install the distribution packages that
-provide the typing information.
+Can't we create / submit the software node of the given device (GPIO)
+when it's get created (as platform device)? That driver uses a notification
+when ACPI bus is scanned, that's what may trigger the software node creation
+and the other end will eventually see it.
 
-My typical workflow for ensuring that linter checks pass:
-* cd bindings/python
-* python3 -m venv venv
-* .venv/bin/activate
-* pip install -U pip
-* (now) pip install --group lint
-* mypy --strict; ruff format; ruff check
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Some repositories try to implement these checks as part of pre-commit
-hooks but I wasn't sure if we wanted to go so far as requiring these
-checks
+
 
