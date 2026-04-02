@@ -1,135 +1,158 @@
-Return-Path: <linux-gpio+bounces-34591-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34592-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uEv6Gu9xzmnxngYAu9opvQ
-	(envelope-from <linux-gpio+bounces-34591-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 02 Apr 2026 15:41:03 +0200
+	id IGKjB39yzmnxngYAu9opvQ
+	(envelope-from <linux-gpio+bounces-34592-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 02 Apr 2026 15:43:27 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CE2F389E42
-	for <lists+linux-gpio@lfdr.de>; Thu, 02 Apr 2026 15:41:03 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3FE3389EE5
+	for <lists+linux-gpio@lfdr.de>; Thu, 02 Apr 2026 15:43:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2A6553009CFE
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Apr 2026 13:35:40 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id D39FF3130F7A
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Apr 2026 13:36:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ED20313298;
-	Thu,  2 Apr 2026 13:35:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD1C13009CB;
+	Thu,  2 Apr 2026 13:36:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skcYctrt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c+uXZyYm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122E830B50F
-	for <linux-gpio@vger.kernel.org>; Thu,  2 Apr 2026 13:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2F130E831;
+	Thu,  2 Apr 2026 13:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775136938; cv=none; b=alpDCeHKC8iMValOrolJhEQiW2mo8Vrd8olkAhQ7e7XmzmRYAUDLSRBC96FC0NH9VKQr52yfpr2wKuyM7ZNTeiPA5T+qZi0wJr9KOAptVEToF426nyMcaaefWR2z7KUwyXY/0tZjzPHIzA9DUsTGQyOrnUemd+eB1/dvZwpOV9A=
+	t=1775136964; cv=none; b=gPAxzV5WtNJ4LHPHhBg7XroCyXjXKeD4qJ8W6XV73xgmk8YjouhORy4/6qF/IxEXDdCHNzIgi7X/E1uNVXpYBcJd29Zh7WzT9lDs0pPIbWbyz92cVGjypk1/yrEShorzOL+/PMETcrhWU2DjZnb/qyOC9QzkE+6u92oTnKQKgPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775136938; c=relaxed/simple;
-	bh=7uEYQL7HD9/Dkdn1yxfoKID/JvNmDVrxwOtZ1tVhHI4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jtdDWUgW0UvLb1DtSFcDs2+3UBTNk3X9Rr2NztwoVXT4Vl7M8MD40C3z759xQRQSMMs5oiMPa6GKdqXChzoJHRzmqnwdi1SJM4sDH3fVHiGXTB8Mi7ELpRuOGW2nMH8CXFH43WeJVQanqd+/GA2ni4E2WJAMr8H6sakUephH4XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skcYctrt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6BEAC4AF09
-	for <linux-gpio@vger.kernel.org>; Thu,  2 Apr 2026 13:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775136937;
-	bh=7uEYQL7HD9/Dkdn1yxfoKID/JvNmDVrxwOtZ1tVhHI4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=skcYctrt2MM7OmL1A3amxb8BYZSXVzPGIfr/zsQG8fia7FInDmSWGKVcub3pzmuDv
-	 e6dt6GcuybRP1I73fCFh5+f0Im9WIOP6h4Dp/b6FPxNu0S1Yu1l46+DvLqV4JpGb/u
-	 72XqO374H7fva6orAyRcK84YY6suMdGaPTY7KIzbPMFsoUKtoUls4lq3h0OS7gasc/
-	 TpI1ibpGuq4lY8be3GtElSTR84ODNqDcMnc2LJPVFMyMQooK9OVgewRNxjH8LnjwVb
-	 97FLY+e525bmUUrbSXYPzR1m8ClDRuiybmfsH81lhGBuikdSyU/KaxfMhjp2w0zDjC
-	 uEDuq9FnBbWAQ==
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3878de20527so8011641fa.3
-        for <linux-gpio@vger.kernel.org>; Thu, 02 Apr 2026 06:35:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUqclyvma86KkqB5Jh/BwjEWU1A538QZXkJT33SB6cFEZNsRRvJgetjOxql9fMbJHn7YFSIkHrVWKAG@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL6/SmhF/ONBqXBQHicsm1OrLIrlQmraM/LewaukE0+mOs9WU9
-	E4PIqRmj9hIhaw3+M9/t8mAlyWatK+r9oZ7Mfa8CoUHoB3MHEYL2g0t20I2HB/OOdhwTyJifYzl
-	/0QYfGHC1Y7E7oFiVDZoDbvlbs8ZlxsNYXFDvovc+Ug==
-X-Received: by 2002:a05:651c:438e:20b0:38a:4de2:8807 with SMTP id
- 38308e7fff4ca-38cc305253bmr23362071fa.18.1775136936479; Thu, 02 Apr 2026
- 06:35:36 -0700 (PDT)
+	s=arc-20240116; t=1775136964; c=relaxed/simple;
+	bh=EUyHOU+PT6gcnQyOOsL/7iU6RX6nDZfCu5E3pc2js84=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TtM7TrL24Xwtx5QTdFc+2VlCM02AJrGtwCeUjgKAYnm0+KBSYZkHrxchPzFI3WYKXx5K8PECUJVVPMGqZNe38QC4QUCK6dUUM7ZW9VwCln86FBcXYlJIS0c4FGJ5wPlmdWla890vj/tgfx9aAYX0YrJ1dY+67LD3zaGsF3U19t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c+uXZyYm; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775136963; x=1806672963;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EUyHOU+PT6gcnQyOOsL/7iU6RX6nDZfCu5E3pc2js84=;
+  b=c+uXZyYmGZoJw5GpIgc4SGi5XUFlX0JQURrWqT0ThjSno7TCrkxQPWPC
+   CwczDuB1Sg4fPbZSSoM4w7kjyxj8e8FmKONLlvKO5FluO0J4tJV/Yg2d4
+   Eij5Oc/1biospJiLIlGceQnYtI5/98rIeJbXEr3U6QAqly7NpDC2R7Jju
+   iz2kwqHdzxgc6Rj9akUWtao68DoNzbUo23iBb1i/ms737xU0jWldDrqAy
+   OVnmG1RTf3RTpV58hHqlFykVV3CHFKgJYZDBPKD9HNrArC4rxw2iQlGFl
+   0lGfZMLQy5kaACmAFmvKv0uNSiMyhhBRYwEtYyMY95yocl0TLmDHE6qfw
+   g==;
+X-CSE-ConnectionGUID: KV9QR5sZQzKfQ96CrpKxoQ==
+X-CSE-MsgGUID: Hfj39xJrQ9ORyL/gmrYLSQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11746"; a="86896088"
+X-IronPort-AV: E=Sophos;i="6.23,155,1770624000"; 
+   d="scan'208";a="86896088"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 06:36:03 -0700
+X-CSE-ConnectionGUID: ohdmiZMgRjSwR2KP1n23kg==
+X-CSE-MsgGUID: +0H3evrnRy+vKvbW51rkjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,155,1770624000"; 
+   d="scan'208";a="257464118"
+Received: from amilburn-desk.amilburn-desk (HELO localhost) ([10.245.245.31])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 06:35:38 -0700
+Date: Thu, 2 Apr 2026 16:35:34 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	brgl@kernel.org
+Subject: Re: [PATCH v2 1/4] software node: return -ENXIO when referenced
+ swnode is not registered yet
+Message-ID: <ac5wprh9vfTU5pGa@ashevche-desk.local>
+References: <20260402-baytrail-real-swnode-v2-0-6f5054a4cc07@oss.qualcomm.com>
+ <20260402-baytrail-real-swnode-v2-1-6f5054a4cc07@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260402-baytrail-real-swnode-v2-0-6f5054a4cc07@oss.qualcomm.com> <ac5t5XozmzN9oq96@ashevche-desk.local>
-In-Reply-To: <ac5t5XozmzN9oq96@ashevche-desk.local>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Thu, 2 Apr 2026 15:35:24 +0200
-X-Gmail-Original-Message-ID: <CAMRc=McR+S9LCHmDjAS6Wn=SrNvq5Ojr-w1qeLsGNJ+L39pbrw@mail.gmail.com>
-X-Gm-Features: AQROBzCueRALrTZuDx_r_Y8DgGoZK4uCubDxSqHkQnTQ6s5JA8TFv9V9OgZrdQY
-Message-ID: <CAMRc=McR+S9LCHmDjAS6Wn=SrNvq5Ojr-w1qeLsGNJ+L39pbrw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] platform/x86: x86-android-tablets: use real
- firmware node references with intel drivers
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260402-baytrail-real-swnode-v2-1-6f5054a4cc07@oss.qualcomm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-34591-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[oss.qualcomm.com,gmail.com,linux.intel.com,linuxfoundation.org,kernel.org,vger.kernel.org,lists.linux.dev];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,linux.intel.com,linuxfoundation.org,kernel.org,vger.kernel.org,lists.linux.dev];
+	TAGGED_FROM(0.00)[bounces-34592-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[20];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	DKIM_TRACE(0.00)[intel.com:+];
 	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:email]
-X-Rspamd-Queue-Id: 0CE2F389E42
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,ashevche-desk.local:mid,intel.com:dkim]
+X-Rspamd-Queue-Id: D3FE3389EE5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, Apr 2, 2026 at 3:23=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> > 3. Export the acpi_bus_type symbol. It's already available in the
-> > acpi_bus.h header but it's not available to loadable modules.
->
-> Nowadays we don't do that but export the dev_is_acpi() or something simil=
-ar if
-> it's not yet available and to_acpi_dev(). (Names are derived from the exi=
-sting
-> pattern, they might be need to be adjusted, dunno.) See how PNP does that=
-.
-> Note, I haven't read the patches yet, just a quick comment.
->
+On Thu, Apr 02, 2026 at 02:54:26PM +0200, Bartosz Golaszewski wrote:
+> It's possible that at the time of resolving a reference to a remote
+> software node, the node we know exists is not yet registered as a full
+> firmware node. We currently return -ENOENT in this case but the same
+> error code is also returned in some other cases, like the reference
+> property with given name not existing in the property list of the local
+> software node.
+> 
+> It makes sense to let users know that we're dealing with an unregistered
+> software node so that they can defer probe - the situation is somewhat
+> similar to there existing a firmware node to which no device is bound
+> yet - which is valid grounds for probe deferral. To that end: use -ENXIO
+> which stands for "No such device or address".
 
-Maybe I should have said why I do it. It's to register a notifier call
-on ACPI bus events. Is there a better way to do this?
+This error code is also too generic to my taste. What about alternative(s)?
+EADDRNOTAVAIL
+ENOTCONN
 
-Bart
+(The brief grep shows that the second one might suit slightly better than the
+ first one by existing use cases.)
+
+Do we need to update the (chain of) kernel-doc?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
