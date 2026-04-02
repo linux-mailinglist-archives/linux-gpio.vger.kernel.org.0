@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-34604-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34605-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MJWtBSiezmnfowYAu9opvQ
-	(envelope-from <linux-gpio+bounces-34604-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 02 Apr 2026 18:49:44 +0200
+	id QEitJKyfzmlZpAYAu9opvQ
+	(envelope-from <linux-gpio+bounces-34605-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 02 Apr 2026 18:56:12 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0047A38C2FE
-	for <lists+linux-gpio@lfdr.de>; Thu, 02 Apr 2026 18:49:43 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE83238C3FC
+	for <lists+linux-gpio@lfdr.de>; Thu, 02 Apr 2026 18:56:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1DD52307A549
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Apr 2026 16:47:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 65B4030BE1F6
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Apr 2026 16:48:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 895533F2117;
-	Thu,  2 Apr 2026 16:47:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 152F73F1660;
+	Thu,  2 Apr 2026 16:48:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i9m/0DOo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qyz4bHTN"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8373DEFE5;
-	Thu,  2 Apr 2026 16:47:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC2F3C9459;
+	Thu,  2 Apr 2026 16:48:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775148421; cv=none; b=YsHuZ7e+jPQ/gM7Kjwk9alHFAePYZFbXnbaXDBV8GtHf6roRVXAHEvsShUksvksFyq1I382bi79o6nXX+rvhcPpMPZspiP5L/8bXkbgyjrVumN8NgRa78zuNQG727GpMp9ia8BurlqvLN+DqJDoP+K99t55eydATLac8r/wmGIM=
+	t=1775148506; cv=none; b=MsLn1QZdk+NWgHDW8kLVS8bmzH8RUI5XVT06SaTNmMuFX13L8PkwDJ6pYdb9yVoWHqTKO39vaEnevRBMHI8c/q62NUFeO15X0oLcZetEF7DNNilNyVt3xR22NsIJ/mNoN4aJmVVFBt7RkEk1JKokJaX896sSwQaXZIFra/Yv9Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775148421; c=relaxed/simple;
-	bh=UpyTZvsrNFPO7jT8ElQYdz5fqtSAp+1zLFSLOMxOW8g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bTjgppr5z4RDbcMzawXEIz9j3V7KCtoNjlGkhM6/ALGyDis6hHX7YCY4DPWT6/ZoKfETjhNYJCpsCH7wRW+26nVB9NafHclUPzlZOr0cTa9bsZiBsEZZdPe5qOzqoN8XqlS5dkGXxTHL4FLw0lhgGaRdLNk2tvvMVhu5qFuBt2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i9m/0DOo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63811C116C6;
-	Thu,  2 Apr 2026 16:46:57 +0000 (UTC)
+	s=arc-20240116; t=1775148506; c=relaxed/simple;
+	bh=9vNIZE6d7J2nu2PeCMWke+C5rG8NL1MM8jJnypOOPig=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=nj4QaiXDdkafOytGRW3oogS+Sk+YU+VqmETR/ehz+9q2OC0uQGOoHtO84sRb3tRSY901t3U57HedaDW+MOS9XAJwK6sJEO1x9zyhRKCOLMI1chFzhnkCzcrRTgnFy4WYI9Ghjd9AAfswI4NHZCtvYAScB8LPcT6ScZ9Xm52Gy8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qyz4bHTN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA07DC116C6;
+	Thu,  2 Apr 2026 16:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775148420;
-	bh=UpyTZvsrNFPO7jT8ElQYdz5fqtSAp+1zLFSLOMxOW8g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=i9m/0DOowecA/DBfprXutBPV5k0FDftcOAe55GtrJqeCWssoBQPlBWmfwFH47cTJO
-	 nEYu6cjrY0QL9BBa/wXKyxIfd5qdTzjMEZRuk9AAk0ZlTTiEUfEKqTfN9EpsbvojAd
-	 k7/SqzJcaQ7S2Ztw3aIjgF6kCPw8cosE9+JrymhjXvYrI87sz+ir3ZHWX2kaea/P3G
-	 lynnvaYjj/0cYDKM/f+wn5no0//E26tjJknt8pPU3IZYgMnCljiHZT3FTPmPmZ8fWf
-	 ij5Zm8ZgAvJuGtYNuazcp8sZTsK8GkifaJzTC8e9Hj+5hslFQjhYyRkI8uM7qwGS0I
-	 xHTyQ3Q7B2q4g==
-Message-ID: <c28e97b2-4266-4a32-b70d-049518c606fe@kernel.org>
-Date: Thu, 2 Apr 2026 18:46:55 +0200
+	s=k20201202; t=1775148505;
+	bh=9vNIZE6d7J2nu2PeCMWke+C5rG8NL1MM8jJnypOOPig=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=qyz4bHTN7c6FqZihF+fvH9DCkTNMqNpA7RQXU70cu/HrNsjZOo7ow52sdp0stDYCZ
+	 d565E5jBKa9x/hjFmSLwuebN3PcyKDAQeMOkQYz68qfUvPFZGMyL1lKRQLfTF4CuEH
+	 xi5B8su8WqW4UaFaXY9zHoeQRjOGfBCt5ygpsMBY5WHpA4daUxcSg1MvgOH0azIeTW
+	 RC36sMZ1wGR0i/zFoqXpM/vC5q0enxNTV7zXYc75GIZRO7rqsuEyAOt8fOO4xAvEUf
+	 cEI4aBDRq6hCYoYuGSa/MLpjm/4fTBCODHRLoGV8LjtI2cwW1I5/kqNMj2NGT/auK0
+	 XiT6ZAXnIoxyw==
+Message-ID: <5068c136-4dfe-49ef-841e-871c42c9d062@kernel.org>
+Date: Thu, 2 Apr 2026 18:48:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -54,6 +54,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 1/2] dt-bindings: gpio: Add eio gpio node to gpio-zynq
+From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
  linux-kernel@vger.kernel.org
 Cc: git@amd.com, shubhrajyoti.datta@gmail.com,
@@ -65,7 +66,7 @@ Cc: git@amd.com, shubhrajyoti.datta@gmail.com,
  devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 References: <20260402163840.938417-1-shubhrajyoti.datta@amd.com>
  <20260402163840.938417-2-shubhrajyoti.datta@amd.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <c28e97b2-4266-4a32-b70d-049518c606fe@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -110,26 +111,26 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260402163840.938417-2-shubhrajyoti.datta@amd.com>
+In-Reply-To: <c28e97b2-4266-4a32-b70d-049518c606fe@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34604-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34605-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_CC(0.00)[amd.com,gmail.com,kernel.org,vger.kernel.org,lists.infradead.org];
 	RCPT_COUNT_TWELVE(0.00)[14];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
@@ -139,44 +140,30 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 0047A38C2FE
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: CE83238C3FC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 02/04/2026 18:38, Shubhrajyoti Datta wrote:
-> Add the EIO gpio node to the device tree.
-
-What is EIO? A name of new SoC? Or you forgot to include the SoC here?
-
-
-> The EIO GPIO block exposes only bank 0 and bank 1 to
-> multiplexed I/O pins, providing a fixed total of 52 GPIO lines
-> (2 banks × 26 pins). Enforce this hardware constraint by requiring
-> exactly 52 entries in gpio-line-names for the EIO variant.
-
-Don't describe the syntax. We can read the diff.
-
+On 02/04/2026 18:46, Krzysztof Kozlowski wrote:
+> On 02/04/2026 18:38, Shubhrajyoti Datta wrote:
+>> Add the EIO gpio node to the device tree.
 > 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
-> ---
+> What is EIO? A name of new SoC? Or you forgot to include the SoC here?
 > 
->  .../devicetree/bindings/gpio/gpio-zynq.yaml        | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml b/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
-> index 5e2496379a3c..b8dd279753a5 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
-> @@ -16,6 +16,7 @@ properties:
->        - xlnx,zynqmp-gpio-1.0
->        - xlnx,versal-gpio-1.0
->        - xlnx,pmc-gpio-1.0
-> +      - xlnx,eio-gpio-1.0
+>> The EIO GPIO block exposes only bank 0 and bank 1 to
+>> multiplexed I/O pins, providing a fixed total of 52 GPIO lines
+>> (2 banks × 26 pins). Enforce this hardware constraint by requiring
+>> exactly 52 entries in gpio-line-names for the EIO variant.
+> 
+> Don't describe the syntax. We can read the diff.
+> 
 
-Please keep some sane ordering.
+I also receive immediate Out of office bounces when replying. Please do
+not cc addresses of people who cannot set up correctly their
+autoresponder and send to open source Out of office messages.
 
->  
 Best regards,
 Krzysztof
 
