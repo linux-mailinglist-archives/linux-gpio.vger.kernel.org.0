@@ -1,236 +1,415 @@
-Return-Path: <linux-gpio+bounces-34636-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34637-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0NV8Mvevz2mXzQYAu9opvQ
-	(envelope-from <linux-gpio+bounces-34636-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Apr 2026 14:17:59 +0200
+	id CEbLHbWzz2l1zgYAu9opvQ
+	(envelope-from <linux-gpio+bounces-34637-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Apr 2026 14:33:57 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBA77393F8F
-	for <lists+linux-gpio@lfdr.de>; Fri, 03 Apr 2026 14:17:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 849C23940C3
+	for <lists+linux-gpio@lfdr.de>; Fri, 03 Apr 2026 14:33:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id B2C8F3015149
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Apr 2026 12:17:55 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 0DF7C304A8E1
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Apr 2026 12:31:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1BA71C84DE;
-	Fri,  3 Apr 2026 12:17:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C300838A705;
+	Fri,  3 Apr 2026 12:30:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bMQlVPnQ";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="d63+pzr+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DpMFor8c"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436A715665C
-	for <linux-gpio@vger.kernel.org>; Fri,  3 Apr 2026 12:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832D136C9F4
+	for <linux-gpio@vger.kernel.org>; Fri,  3 Apr 2026 12:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775218673; cv=none; b=ZTJKMlVL6acrgt/Gnk1w9XsmQg699zCT9MJnrjpU0JHoxTPm3mXmzVp01SF+YpJrGKOx7+68DWd6U8UiThbibfmVfvJFdEgdErH/u3rJPMosTJxg6E6gc/pIUrYlQG6Diw9R5Iwij+93ySNN1GC920REvmNgAvoawSmqG0GHIaQ=
+	t=1775219425; cv=none; b=Wlm/RvP95Cz6DihMvlbZPXPDfoByHMDmyl9j8e/52qQSXRvvijf0LedXy8Kzc/RmyUoIWBL9Kxu/tDS5E2KvNdebDWUI+a3hDMXAVVCTeO5X9ZxnDnvvvV656232/m5zLpCs36EDLpAcua8jPJj/aDC5jC6DPItjukPl1huRwZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775218673; c=relaxed/simple;
-	bh=LkxykMNmD/UzagHkXsZeEOi48t5ewU3G7Gk0qERSokY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Qj6aPkQ1KkOfh06gehLDWUizcreo7MHK3cfAsAT/IpvWEKzmZGMKff0ZSkenlhN8WybNFS5ClC8YMQauSrq3lPozzfUHOCR7mNwogQQ71L8NPVDZ3XlXGLbsXfwEAmB/IdQQ6bI5AddoFOrn0fSYT2Alg6pXDtoPCPbBunZdlDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bMQlVPnQ; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=d63+pzr+; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 633B1fSH1453615
-	for <linux-gpio@vger.kernel.org>; Fri, 3 Apr 2026 12:17:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=LqPPhGqAfu4rMeWH0TBiKS
-	X4xIe6+yGOiuM9BnuKBmQ=; b=bMQlVPnQVx9fr2RGrv1WLpJNeBVsTE/E8lSi4n
-	X/fHP5NRttW5a3ypKI8giGBhsELxFw22fdY8llP9+so51fyZCG3ljkDFGkKtzOHx
-	IlNkFb3Ce0Bi+13OVVrJNLCK+SSsSvfTa65bpc8wP6QkIm84Fm+JlSr9Vt8H/Qzu
-	NqEULRtCyqzA2HwaV0vfB2ls5Fqx+eRsalQvx5aWBbeEXy4bOJVeK+gPbCf4SESB
-	RWzDt3K+9R2+fX2dfbdLX2AzY/K0FjNiD3zPcj1Nl6+p0YTOXHd8PbEmv4j2qewM
-	xCqnkDeRyoSO8weDXhSb4XxwTNFDRykroY7LHGZ3NtnIVM9w==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dacam85wm-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Fri, 03 Apr 2026 12:17:51 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-50d63962d83so21267821cf.2
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Apr 2026 05:17:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1775218670; x=1775823470; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LqPPhGqAfu4rMeWH0TBiKSX4xIe6+yGOiuM9BnuKBmQ=;
-        b=d63+pzr+9inwd5gG9rpw4UhrUZGxyuSiOzuvpouCrNZASw0CnBrFLRGGeADhHqBq7p
-         Yu3iG3Aj9HSsJjyintljwsTBukdUGct38d5kgKl3EX8qxiN6JdK4a55iOzEI2SnPZrRT
-         qYnPci9XfLrJBzeC90GSAputIHYEIMWJtu3CD0SZFTMBeVQdb0ObsmdbD/HugIO5mYqz
-         cG2nopjFi1X6vYV666tXQRD+iAwf5V6ZNj1AxiGNNyWPDm/tzKGSvUJtlS7I/0NWL3kO
-         yYA9MwQQOci2XTZz09/ql2NPqKF7bZzny5fqc/lRBXpe/1w2JvmHG+BR19axj0gllqFV
-         fcRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775218670; x=1775823470;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LqPPhGqAfu4rMeWH0TBiKSX4xIe6+yGOiuM9BnuKBmQ=;
-        b=YoQ7m5j6JTsFdOwTbcHRg0Dx47Iy4Cw5uCWDjH/sivmiAGKDeBgiFcZCfImFPyw4oe
-         10mqOSG22+OEjeo/YNYFAp1KY6XkOD6dWRsJR7AdAXhu8IrZ6kLu4ypqgQtC9EFM+A2X
-         zQWdCrsABvCPmRSM3FMMqLMaDO8ObBYVMXD0g5fYQy94cLJC9SM9FoUB8t3/JFiQY+w9
-         l/HMp1OAC9WrloCdb5tnqLyY/FTfgjxdynZeoMwed7bHJ5EykGI9szoZQDbmgC4T3IVX
-         r1v45jWC2QvU1nU3pb2so9GxE3+k3cPgayiaNzD1hykG8LJRVyExeqRrAIauCGrRC68G
-         kj/w==
-X-Forwarded-Encrypted: i=1; AJvYcCWdRA7nzv82V1Vw5LdbYmHB1OAlocAUUHur5NLeymPQo3nF+9FgISCzgdbZeFgIKD0bGRo909pBXPw1@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrlafKN6V7DwAifdPNxNux7oYEc+9P9rmzu0PBnh+ezD0W9Zmv
-	C9DqJ8KLPKYtdfHxVFz+xoXlTCkfBjdzsCSpd6y7QMa2yyBaiqhAC2/fUL5R2bv/NPQrQ5xHOx0
-	8d298BLkjyz56MUY1dsvXGD2QTQyPg4M4oYtmyBO8C+gfCnt8ym5AIrtazZ2ogup8
-X-Gm-Gg: ATEYQzzEBnHFuR98EZZI2TjEas/4Sg766zTKAXkJPWUYK7tlb+jP/OUZhkyP9EYoyKy
-	EXw87urmqLMHpTqPD4brYVrVG3ZKhgdEDYnyBovpCCvRqb2kRVRXvDeissq6nrK0R8/PKTT9m3B
-	sSBTQNVMREsZrI8Cx+oLzgjIj4aikwl++1kJUxA7XTj69nUO4+zFl+8bqoGqX5Y1Q3r10Wf+MeA
-	judjndl6YIqpRbTZssy2x3Wlpq6gxHEAKN59BLTiMKVeH36kJXQZFxsbSJeLQghoUS8sL7bL8K3
-	E+IgV6eIa9yqD9oh5wh5f18DnOIfQmBsepFn5ZmGYpjZyr3rh9Aaeuh0nGB9iZwFPy2yqawAicd
-	pSoJbGMdHCTTVBF+vtDJEpqME4qCU2XZSd2eMCoY/JXltwwDjdw==
-X-Received: by 2002:a05:622a:a18b:b0:50b:22ad:6197 with SMTP id d75a77b69052e-50d62adff92mr34153231cf.11.1775218670354;
-        Fri, 03 Apr 2026 05:17:50 -0700 (PDT)
-X-Received: by 2002:a05:622a:a18b:b0:50b:22ad:6197 with SMTP id d75a77b69052e-50d62adff92mr34152891cf.11.1775218669921;
-        Fri, 03 Apr 2026 05:17:49 -0700 (PDT)
-Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:129d:59e8:f7c9:47ca])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4887e9630ddsm251626315e9.13.2026.04.03.05.17.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2026 05:17:48 -0700 (PDT)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linusw@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, brgl@kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Subject: [GIT PULL] gpio fixes for v7.0-rc7
-Date: Fri,  3 Apr 2026 14:17:40 +0200
-Message-ID: <20260403121741.18145-1-bartosz.golaszewski@oss.qualcomm.com>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1775219425; c=relaxed/simple;
+	bh=sOPOma5JvgHlPD8EHyYQ81EIK530Cc/jdeno4e8nfuA=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oQkQj+1EFwOkzHokYgqDvAMJlMiiy8VfWGHqkbuPyqoHYtoB6BaEhoo62TKJ1p7z4ODrlY27EKXgwoOChdksXMln3pr35nXtxdS5NZx/kzjQr68gCrqfDesU2hJ74EU6pE7Lj1RBuEbxoubemXOKWj6FcjvZOEqVVTIwvxGpf3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DpMFor8c; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45E85C2BCB8
+	for <linux-gpio@vger.kernel.org>; Fri,  3 Apr 2026 12:30:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775219425;
+	bh=sOPOma5JvgHlPD8EHyYQ81EIK530Cc/jdeno4e8nfuA=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
+	b=DpMFor8cI1LYDodeElPr7jO9CQYKRo4ViqX9CVGXZqf2J3yKh2EUqDCThBwZG3jhe
+	 gQ5QlYteTvi6uPeQNJCl/hIv4UiDsJhUpmuOAiH/vQ2iP6Grfa3LlPN+g9TUR+KcDg
+	 rfZfqGdqut8yrDgnXydpv/R2xKrFchPCG+TvxQGA072PHr2vBGqcE13YNX4VBOgcEu
+	 WsgVHHo96f2GRlj8gDG0Rm8dwavFEJB31Mi87J7MWqyD7i1CRKP/lCVt07VCw9rzp5
+	 705L+wMOqRrSsowNQkjUPrYFXBJDOfFWJaB7KS1GQAF1u/m9CdP7idXxD7KXbH8d4O
+	 jpfOZfPMydpdQ==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-38cd00b3b12so16010901fa.0
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Apr 2026 05:30:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXZGE1pBLvOXpIgx/faPHcptI981jEsqbtNQGYaV++C1RV1JdM5b9diB/gGsDa5S4gEthnjDtNhn0Gc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9MWFc4gJpHZwc40humAk1Dlqmn+QpbluK6ZawwOLTUpdxCwp+
+	iubiG+8edcYAeruEtTkSpE7CTzDfMchKM/RUXRO4dCPNzIAmfA4aGlNDzGttsjquCCga282787S
+	GaIUciqNfx8i1zN/eQGGlKfsFkbKRn6lHvlFG3/0SIQ==
+X-Received: by 2002:a2e:b8cc:0:b0:38a:c9f3:557c with SMTP id
+ 38308e7fff4ca-38d8d37c9fdmr8372031fa.4.1775219423794; Fri, 03 Apr 2026
+ 05:30:23 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 3 Apr 2026 08:30:22 -0400
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 3 Apr 2026 08:30:22 -0400
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260401-waveshare-dsi-touch-v1-19-5e9119b5a014@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: _4ivDXWDlI3l8t-U6-4jIU2hUkyLBxi3
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAzMDEwOCBTYWx0ZWRfX+lHI5tXTvYay
- xXCGkpoSrBFszmQAZwvjpThstnCT/9hGxWixpbEViTy/7vYe22+6IVEn20jKLjTVO02XU4AHhcR
- Byr1lp2HkmI9Wk6JoPr2AWET7khmmcr09jV0sESmes1GfIkgfDFTjcXtEZuecVqBcl7pJJ8/JEf
- lC7r28IezD6JKbkz2RuTFMj+emuKsWdSZjRa5Elf2q5U2QDfrs9gQbTMko/uUGg80DA6gdr5J2Y
- LeTpEj/XZLooAXgxaowhkRxVnVQtNhIhIKpDeQ+9dvQ6IQOsdD60P3mlFtdqDuCbvSyWqQFoCEz
- rWHSoWhPSDzWA98vuiBnJSjE2dbnrCvBlApqkn/rVPki45qJVqIrsGNsnv2UZ104Pn+tOONdEO3
- 93z1akqvvadqRUx2xdh5aIeCEB7zMJxUOJRqAFnCPpa7X1t5zkc6r54tvqUEYJNcoiVOtkxbh0/
- 60zZ77MzJttM0a0zrWg==
-X-Proofpoint-ORIG-GUID: _4ivDXWDlI3l8t-U6-4jIU2hUkyLBxi3
-X-Authority-Analysis: v=2.4 cv=ULXQ3Sfy c=1 sm=1 tr=0 ts=69cfafef cx=c_pps
- a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=gowsoOTTUOVcmtlkKump:22 a=VwQbUJbxAAAA:8
- a=k0vPc38Y0uk8dxTUGMcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=uxP6HrT_eTzRwkO_Te1X:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-03_04,2026-04-03_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 suspectscore=0 bulkscore=0 clxscore=1015 spamscore=0
- phishscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604030108
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+References: <20260401-waveshare-dsi-touch-v1-0-5e9119b5a014@oss.qualcomm.com> <20260401-waveshare-dsi-touch-v1-19-5e9119b5a014@oss.qualcomm.com>
+Date: Fri, 3 Apr 2026 08:30:22 -0400
+X-Gmail-Original-Message-ID: <CAMRc=Mcusnm-k76e6jTiwrw5xJL7f-nWBsg4=QpD08cv8pPgMw@mail.gmail.com>
+X-Gm-Features: AQROBzBFOBsqk3csaKGEG_opTJgFQ4S2aNRzfCekYFtcmXKCuuraYlP8uaLIZPE
+Message-ID: <CAMRc=Mcusnm-k76e6jTiwrw5xJL7f-nWBsg4=QpD08cv8pPgMw@mail.gmail.com>
+Subject: Re: [PATCH 19/19] gpio: add GPIO controller found on Waveshare DSI
+ TOUCH panels
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <jesszhan0024@gmail.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Cong Yang <yangcong5@huaqin.corp-partner.google.com>, Ondrej Jirman <megi@xff.cz>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Jagan Teki <jagan@edgeble.ai>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-34636-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:dkim,oss.qualcomm.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,qualcomm.com:dkim];
+	TAGGED_FROM(0.00)[bounces-34637-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[lists.freedesktop.org,vger.kernel.org,linaro.org,gmail.com,ffwll.ch,linux.intel.com,kernel.org,suse.de,huaqin.corp-partner.google.com,xff.cz,redhat.com,edgeble.ai];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid,qualcomm.com:email];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: CBA77393F8F
+X-Rspamd-Queue-Id: 849C23940C3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Linus,
+On Wed, 1 Apr 2026 09:26:38 +0200, Dmitry Baryshkov
+<dmitry.baryshkov@oss.qualcomm.com> said:
+> The Waveshare DSI TOUCH family of panels has separate on-board GPIO
+> controller, which controls power supplies to the panel and the touch
+> screen and provides reset pins for both the panel and the touchscreen.
+> Also it provides a simple PWM controller for panel backlight. Add
+> support for this GPIO controller.
+>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+>  drivers/gpio/Kconfig              |  10 ++
+>  drivers/gpio/Makefile             |   1 +
+>  drivers/gpio/gpio-waveshare-dsi.c | 220 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 231 insertions(+)
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 4c3f6ec336c1..f0bb5cdebf9b 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -804,6 +804,16 @@ config GPIO_VISCONTI
+>  	help
+>  	  Say yes here to support GPIO on Tohisba Visconti.
+>
+> +config GPIO_WAVESHARE_DSI_TOUCH
+> +	tristate "Waveshare GPIO controller for DSI panels"
+> +	depends on BACKLIGHT_CLASS_DEVICE
+> +	depends on I2C
+> +	select REGMAP_I2C
+> +	help
+> +	  Enable support for the GPIO and PWM controller found on Waveshare DSI
+> +	  TOUCH panel kits. It provides GPIOs (used for regulator control and
+> +          resets) and backlight support.
+> +
+>  config GPIO_WCD934X
+>  	tristate "Qualcomm Technologies Inc WCD9340/WCD9341 GPIO controller driver"
+>  	depends on MFD_WCD934X
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 20d4a57afdaa..75ce89fc3b93 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -207,6 +207,7 @@ obj-$(CONFIG_GPIO_VIRTUSER)		+= gpio-virtuser.o
+>  obj-$(CONFIG_GPIO_VIRTIO)		+= gpio-virtio.o
+>  obj-$(CONFIG_GPIO_VISCONTI)		+= gpio-visconti.o
+>  obj-$(CONFIG_GPIO_VX855)		+= gpio-vx855.o
+> +obj-$(CONFIG_GPIO_WAVESHARE_DSI_TOUCH)	+= gpio-waveshare-dsi.o
+>  obj-$(CONFIG_GPIO_WCD934X)		+= gpio-wcd934x.o
+>  obj-$(CONFIG_GPIO_WHISKEY_COVE)		+= gpio-wcove.o
+>  obj-$(CONFIG_GPIO_WINBOND)		+= gpio-winbond.o
+> diff --git a/drivers/gpio/gpio-waveshare-dsi.c b/drivers/gpio/gpio-waveshare-dsi.c
+> new file mode 100644
+> index 000000000000..30fe7569c150
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-waveshare-dsi.c
+> @@ -0,0 +1,220 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2024 Waveshare International Limited
+> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+> + */
+> +
+> +#include <linux/backlight.h>
+> +#include <linux/err.h>
+> +#include <linux/fb.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/regmap.h>
+> +
+> +/* I2C registers of the microcontroller. */
+> +#define REG_TP		0x94
+> +#define REG_LCD		0x95
+> +#define REG_PWM		0x96
+> +#define REG_SIZE	0x97
+> +#define REG_ID		0x98
+> +#define REG_VERSION	0x99
+> +
+> +enum {
+> +	GPIO_AVDD = 0,
+> +	GPIO_PANEL_RESET = 1,
+> +	GPIO_BL_ENABLE = 2,
+> +	GPIO_IOVCC = 4,
+> +	GPIO_VCC = 8,
+> +	GPIO_TS_RESET = 9,
+> +	NUM_GPIO = 16,
 
-Please pull the following set of GPIO fixes for the next RC.
+Why is this part of an enum?
 
-The merge you see is because a fix for GPIO core error path looked
-high-right and I queued it in an immutable branch for v7.1 initially but
-since it didn't trigger any regressions, I decided to send it for v7.0.
+> +};
+> +
+> +struct waveshare_gpio {
+> +	struct mutex dir_lock;
+> +	struct mutex pwr_lock;
+> +	struct regmap *regmap;
+> +	u16 poweron_state;
+> +
+> +	struct gpio_chip gc;
+> +};
+> +
+> +static const struct regmap_config waveshare_gpio_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = REG_PWM,
+> +};
+> +
+> +static int waveshare_gpio_get(struct waveshare_gpio *state, unsigned int offset)
+> +{
+> +	u16 pwr_state;
+> +
+> +	mutex_lock(&state->pwr_lock);
+> +	pwr_state = state->poweron_state & BIT(offset);
+> +	mutex_unlock(&state->pwr_lock);
+> +
+> +	return !!pwr_state;
+> +}
+> +
+> +static int waveshare_gpio_set(struct waveshare_gpio *state, unsigned int offset, int value)
+> +{
+> +	u16 last_val;
+> +
+> +	mutex_lock(&state->pwr_lock);
 
-Thanks,
-Bartosz
+Can you use guards for locks?
 
-The following changes since commit 11439c4635edd669ae435eec308f4ab8a0804808:
+> +
+> +	last_val = state->poweron_state;
+> +	if (value)
+> +		last_val |= BIT(offset);
+> +	else
+> +		last_val &= ~BIT(offset);
+> +
+> +	state->poweron_state = last_val;
+> +
+> +	regmap_write(state->regmap, REG_TP, last_val >> 8);
+> +	regmap_write(state->regmap, REG_LCD, last_val & 0xff);
 
-  Linux 7.0-rc2 (2026-03-01 15:39:31 -0800)
+I2C regmap writes can fail and their return value should be checked.
 
-are available in the Git repository at:
+> +
+> +	mutex_unlock(&state->pwr_lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static int waveshare_gpio_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
+> +{
+> +	return GPIO_LINE_DIRECTION_OUT;
+> +}
+> +
+> +static int waveshare_gpio_gpio_get(struct gpio_chip *gc, unsigned int offset)
+> +{
+> +	struct waveshare_gpio *state = gpiochip_get_data(gc);
+> +
+> +	return waveshare_gpio_get(state, offset);
+> +}
+> +
+> +static int waveshare_gpio_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
+> +{
+> +	struct waveshare_gpio *state = gpiochip_get_data(gc);
+> +
+> +	return waveshare_gpio_set(state, offset, value);
+> +}
+> +
+> +static int waveshare_gpio_update_status(struct backlight_device *bl)
+> +{
+> +	struct waveshare_gpio *state = bl_get_data(bl);
+> +	int brightness = backlight_get_brightness(bl);
+> +
+> +	waveshare_gpio_set(state, GPIO_BL_ENABLE, brightness);
+> +
+> +	return regmap_write(state->regmap, REG_PWM, brightness);
+> +}
+> +
+> +static const struct backlight_ops waveshare_gpio_bl = {
+> +	.update_status = waveshare_gpio_update_status,
+> +};
+> +
+> +static int waveshare_gpio_i2c_read(struct i2c_client *client, u8 reg, unsigned int *buf)
+> +{
+> +	int val;
+> +
+> +	val = i2c_smbus_read_byte_data(client, reg);
+> +	if (val < 0)
+> +		return val;
+> +
+> +	*buf = val;
+> +
+> +	return 0;
+> +}
+> +
+> +static int waveshare_gpio_probe(struct i2c_client *i2c)
+> +{
+> +	struct backlight_properties props = {};
+> +	struct waveshare_gpio *state;
+> +	struct device *dev = &i2c->dev;
+> +	struct backlight_device *bl;
+> +	struct regmap *regmap;
+> +	unsigned int data;
+> +	int ret;
+> +
+> +	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
+> +	if (!state)
+> +		return -ENOMEM;
+> +
+> +	ret = devm_mutex_init(dev, &state->dir_lock);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_mutex_init(dev, &state->pwr_lock);
+> +	if (ret)
+> +		return ret;
+> +
+> +	i2c_set_clientdata(i2c, state);
+> +
+> +	regmap = devm_regmap_init_i2c(i2c, &waveshare_gpio_regmap_config);
+> +	if (IS_ERR(regmap))
+> +		return dev_err_probe(dev, PTR_ERR(regmap), "Failed to allocate register map\n");
+> +
+> +	ret = waveshare_gpio_i2c_read(i2c, REG_ID, &data);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Failed to read register\n");
+> +
+> +	dev_dbg(dev, "waveshare panel hw id = 0x%x\n", data);
+> +
+> +	ret = waveshare_gpio_i2c_read(i2c, REG_SIZE, &data);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Failed to read register\n");
+> +
+> +	dev_dbg(dev, "waveshare panel size = %d\n", data);
+> +
+> +	ret = waveshare_gpio_i2c_read(i2c, REG_VERSION, &data);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Failed to read register\n");
+> +
+> +	dev_dbg(dev, "waveshare panel mcu version = 0x%x\n", data);
+> +
+> +	state->poweron_state = BIT(GPIO_TS_RESET);
+> +	regmap_write(regmap, REG_TP, state->poweron_state >> 8);
+> +	regmap_write(regmap, REG_LCD, state->poweron_state & 0xff);
+> +	msleep(20);
+> +
+> +	state->regmap = regmap;
+> +	state->gc.parent = dev;
+> +	state->gc.label = i2c->name;
+> +	state->gc.owner = THIS_MODULE;
+> +	state->gc.base = -1;
+> +	state->gc.ngpio = NUM_GPIO;
+> +
+> +	/* it is output only */
+> +	state->gc.get = waveshare_gpio_gpio_get;
+> +	state->gc.set = waveshare_gpio_gpio_set;
+> +	state->gc.get_direction = waveshare_gpio_gpio_get_direction;
+> +	state->gc.can_sleep = true;
+> +
+> +	ret = devm_gpiochip_add_data(dev, &state->gc, state);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to create gpiochip\n");
+> +
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v7.0-rc7
+This driver looks like it could be easily converted to use gpio-regmap and
+become much shorter in the process. Could you please take a look at
+linux/gpio/regmap.h?
 
-for you to fetch changes up to 6b5ef8c88854b343b733b574ea8754c9dab61f41:
+> +	props.type = BACKLIGHT_RAW;
+> +	props.max_brightness = 255;
+> +	props.brightness = 255;
+> +	bl = devm_backlight_device_register(dev, dev_name(dev), dev, state,
+> +					    &waveshare_gpio_bl, &props);
+> +	return PTR_ERR_OR_ZERO(bl);
+> +}
+> +
+> +static const struct of_device_id waveshare_gpio_dt_ids[] = {
+> +	{ .compatible = "waveshare,dsi-touch-gpio" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, waveshare_gpio_dt_ids);
+> +
+> +static struct i2c_driver waveshare_gpio_regulator_driver = {
+> +	.driver = {
+> +		.name = "waveshare-regulator",
+> +		.of_match_table = of_match_ptr(waveshare_gpio_dt_ids),
+> +	},
+> +	.probe = waveshare_gpio_probe,
+> +};
+> +
+> +module_i2c_driver(waveshare_gpio_regulator_driver);
+> +
+> +MODULE_DESCRIPTION("GPIO controller driver for Waveshare DSI touch panels");
+> +MODULE_LICENSE("GPL");
+>
+> --
+> 2.47.3
+>
+>
 
-  dt-bindings: gpio: fix microchip #interrupt-cells (2026-03-30 10:22:33 +0200)
-
-----------------------------------------------------------------
-gpio fixes for v7.0-rc7
-
-- fix kerneldocs for gpio-timberdale and gpio-nomadik
-- clear the "requested" flag in error path in gpiod_request_commit()
-- call of_xlate() if provided when setting up shared GPIOs
-- handle pins shared by child firmware nodes of consumer devices
-- fix return value check in gpio-qixis-fpga
-- fix suspend on gpio-mxc
-- fix gpio-microchip DT bindings
-
-----------------------------------------------------------------
-Barnabás Pőcze (1):
-      gpiolib: clear requested flag if line is invalid
-
-Bartosz Golaszewski (4):
-      Merge branch 'gpio/dev-init-rework' into gpio/for-current
-      gpio: shared: call gpio_chip::of_xlate() if set
-      gpio: shared: handle pins shared by child nodes of devices
-      gpio: shared: shorten the critical section in gpiochip_setup_shared()
-
-Felix Gu (1):
-      gpio: qixis-fpga: Fix error handling for devm_regmap_init_mmio()
-
-Jamie Gibbons (1):
-      dt-bindings: gpio: fix microchip #interrupt-cells
-
-Randy Dunlap (2):
-      gpio: timberdale: repair kernel-doc comments
-      gpio: nomadik: repair some kernel-doc comments
-
-Shenwei Wang (1):
-      gpio: mxc: map Both Edge pad wakeup to Rising Edge
-
-Tzung-Bi Shih (1):
-      gpio: Fix resource leaks on errors in gpiochip_add_data_with_key()
-
- .../bindings/gpio/microchip,mpfs-gpio.yaml         |   4 +-
- drivers/gpio/gpio-mxc.c                            |  10 +-
- drivers/gpio/gpio-qixis-fpga.c                     |   4 +-
- drivers/gpio/gpiolib-shared.c                      |  57 ++++++++---
- drivers/gpio/gpiolib-shared.h                      |  11 +-
- drivers/gpio/gpiolib.c                             | 113 ++++++++++-----------
- include/linux/gpio/gpio-nomadik.h                  |  12 +--
- include/linux/timb_gpio.h                          |   6 +-
- 8 files changed, 124 insertions(+), 93 deletions(-)
+Bart
 
