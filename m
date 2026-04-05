@@ -1,154 +1,185 @@
-Return-Path: <linux-gpio+bounces-34684-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34685-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ehXuKEt20ml8YAcAu9opvQ
-	(envelope-from <linux-gpio+bounces-34684-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 05 Apr 2026 16:48:43 +0200
+	id +MP7Bo1/0mnFYQcAu9opvQ
+	(envelope-from <linux-gpio+bounces-34685-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 05 Apr 2026 17:28:13 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1499B39EC34
-	for <lists+linux-gpio@lfdr.de>; Sun, 05 Apr 2026 16:48:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B92639ED98
+	for <lists+linux-gpio@lfdr.de>; Sun, 05 Apr 2026 17:28:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C2C043007AF8
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 Apr 2026 14:48:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id AC5E43008A79
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 Apr 2026 15:28:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A00D429BD8C;
-	Sun,  5 Apr 2026 14:48:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DAEE308F0A;
+	Sun,  5 Apr 2026 15:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gapp-nthu-edu-tw.20251104.gappssmtp.com header.i=@gapp-nthu-edu-tw.20251104.gappssmtp.com header.b="JtJrgzF0"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="KvQWd+Gl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B53F1EF09B
-	for <linux-gpio@vger.kernel.org>; Sun,  5 Apr 2026 14:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 795DF2750ED;
+	Sun,  5 Apr 2026 15:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775400519; cv=none; b=MnL2GTuNOgFwa59i+hnqEka9DsKVO6iJO7+91tP+lF8XBzgvfKQQa3i2y5iotsFJK0jQDSO9TE7DHBuQCO7Cembclq6K8JDcrgFWRU2WOb0eBop41Pdbnd4GrlIQKwdqI0uBhkWGrlRFrkOpsUAQbRE8ACgjQ9PTdNCTStAsEcY=
+	t=1775402885; cv=none; b=W8yR1hSuArPw6bkYxsGtKxdenDkTvQoBGLlpMnK4F/hKnNiyILBPLfCeCfJ9dr3glQ7CpZOF4svysqJ96ECdyH4/jCQVf0AgTEZECdL9NjVGRthAR9OaIXknsMyiQhIKnYVGWFH1MmVXaoOX2SMFXiyPwe9L5MG1CN8shcJJTKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775400519; c=relaxed/simple;
-	bh=gwtzXr5sONBgqnAqNu4+/3CIMhQ+AeMVTmHchIT/SBM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NLAzuoJvL1avneNHRsn9Wucfma20YUyHi9I7tPefVOPpvvR1X+9+FQ+HfYspc5zFnUPxWtBIjUngHXaNsZ3O4RziOs/a0bCSodNkGfuO9lvOsTcx0L1z+V8eRZ48i6mE0c/pZo9jwQy4A2hFfdcKiRnhdDdMpS5NdFAKR1K+Qd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gapp.nthu.edu.tw; spf=pass smtp.mailfrom=gapp.nthu.edu.tw; dkim=pass (2048-bit key) header.d=gapp-nthu-edu-tw.20251104.gappssmtp.com header.i=@gapp-nthu-edu-tw.20251104.gappssmtp.com header.b=JtJrgzF0; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gapp.nthu.edu.tw
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gapp.nthu.edu.tw
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-35dac556bb2so2089143a91.1
-        for <linux-gpio@vger.kernel.org>; Sun, 05 Apr 2026 07:48:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gapp-nthu-edu-tw.20251104.gappssmtp.com; s=20251104; t=1775400515; x=1776005315; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YWxgN07OZVOqO1Bvp7LxV7r6cRwAlkUDH9yP+maR0zM=;
-        b=JtJrgzF0YBMSIGdMzCe4MgVTrtG1dfHp0vxMVfgn/CGGk8oxtJQasffsgN3t2j6oep
-         6kFpHMzwFLShJhqqV5AU0aOMJudLYTdYgbqjOuXhTeRdNE+9mCBDQEUsgxJD7wvApOXn
-         X3lLHrqUrOGYToe50l1Q/DIcA9K6l8b+7aR7LVlilSjuAAUVUDcuCb00BkYuJM/Vzcgs
-         NDaUhUmYqwOFvXvL/Nm+zDpMKnwCiZ7SDdXNWm+GEZYCLw9Logrql3259cQUHHg3rrhM
-         ITvRqjyk7MbH4HnybTn5D+nO9Wv8egCzqfdYmWJwj7fxeZMm205tJcZ/RBljoIgrUJAy
-         nbUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775400515; x=1776005315;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YWxgN07OZVOqO1Bvp7LxV7r6cRwAlkUDH9yP+maR0zM=;
-        b=QW7V5ta69w0DUc4+w1JJSUaAZZn5gapTimWBquN9a4A6njJJ75W6CRNHKm3pJnVUP1
-         jzhgpDjkKPYmZ99f6J9GDYulF1W/n+xTrWhM5GlGThkt/lerjU8B8c889tBiNA3F+6Op
-         c6HTJ7uNqvYy9JqcgSpyY04G0SaW6FnkaLcVrJOqVWjEv3B9OUZoD+9sQY3gbZnzjD2E
-         AkN3eb40M7edXE62vwCxqfVIj3wp2Qyi7sw25+U3rX1OlvphFTd0W3fpjs9qh7KagBzI
-         74jezP105LEgn4IsUoYyKomV35HS/tvQyASdfyJjoMKomhM6Fmta7tAXeAGUBziIIFTu
-         rB9A==
-X-Gm-Message-State: AOJu0YwF1SNdDAN4HpPskFRDXyOcXLJflCyN9t8YS5EOdfqyUMZe1teo
-	mlP2CDiakpup6NMO7oebNdxSI3F2113aj0acJgNYSwSnWaL3GSC9V7V9TuC9wBufOZ0=
-X-Gm-Gg: AeBDieu0Qcj2jNBWqQa0MeSLNzXls7yZEdivr1xuA7XMhEb7lp730Gj/NnHc4c0QYfo
-	JhFZ3AiOZBpHidQ/4bQ2i3YT3kWGlnQsvTVIrLT73dyBGGhSA7sVIdrc/6bxg/R63LgkDkUe3XX
-	DZGCxuqeyTmI6m6Ojf+iPdCySvub/0m/gwfjfzlXHxKkQ2KvPtyXnedFXrGZ8JEDvBSfpajOGdz
-	DohzPXYxZCcxWGOkHIKxDiFJlELW2a9GXx88CFXn1DVQSIuAomsffGVi2M3oVRKHodXh8TLiR0m
-	KUuElcE8vFJeGL01cD3ikTNl6YKXt1ALZkAUEbjD0C5qQZu42dy3rKfpyjAAXqUHj2InKaTs2VG
-	r/YSKC66KxovUwq2MDAixwbaYNDp+yzJa0tKHShJNlvLZhQBc9eGaJ17jffW1OiE7cfewyZ5nc1
-	UJuIri1PcYFp3u7A79BN4UT3/PXvjjr2qftn/RgGW7Mm2eX0ERabjXeWpX3yvRmc5t4hZVz9R/6
-	8M1JsC0pfzzRlL2wXi6s8nDQyh82JkdF0QchCQFcLIqeCKdCQ==
-X-Received: by 2002:a17:90b:3c0c:b0:35d:ac4d:3cb6 with SMTP id 98e67ed59e1d1-35de68417eamr8177597a91.5.1775400515423;
-        Sun, 05 Apr 2026 07:48:35 -0700 (PDT)
-Received: from tomato-cultivator-HP-ZBook-15-G6.. (2001-b400-e3d8-86cb-6841-8517-e166-bc96.emome-ip6.hinet.net. [2001:b400:e3d8:86cb:6841:8517:e166:bc96])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35dbe9709b8sm15357742a91.16.2026.04.05.07.48.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2026 07:48:35 -0700 (PDT)
-From: Chen Jung Ku <ku.loong@gapp.nthu.edu.tw>
-To: linusw@kernel.org,
-	brgl@kernel.org,
-	joel@jms.id.au,
-	andrew@codeconstruct.com.au
-Cc: linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	Chen Jung Ku <ku.loong@gapp.nthu.edu.tw>
-Subject: [PATCH] gpio: aspeed: fix unsigned long int declaration
-Date: Sun,  5 Apr 2026 22:48:03 +0800
-Message-ID: <20260405144803.31358-1-ku.loong@gapp.nthu.edu.tw>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1775402885; c=relaxed/simple;
+	bh=NDnBsbXnNGGHQG0turWSfj4CBg3TO2qRC78L3hPeXs4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f/G6aDiZLTTxAZsSRZOXDTw9Z1UHOf6jk8E58QljM7sagWUV4u6Ewlsrx7DUWU7pM54NGoBjG2Yr1A1+3wlsbGtP46p69JsTn+FXWHObhEUmiIaGRFd4IxIf0noxl8wTPVbUdWIMF3KxJJqa4jMpE4GRl/1R0S7R/ZdfCU/gGGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=KvQWd+Gl; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 048E81BC0;
+	Sun,  5 Apr 2026 08:27:49 -0700 (PDT)
+Received: from ryzen.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E34383F62B;
+	Sun,  5 Apr 2026 08:27:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1775402874; bh=NDnBsbXnNGGHQG0turWSfj4CBg3TO2qRC78L3hPeXs4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KvQWd+GlyQ26qJRkqKLtd0rZhhvYeTZuhURhP2De+TrJdzHLaXomuaxGKCg7V+Nmu
+	 Cq76diR6Q/0tGfEMAOK8ZxI5sR+DH/t5TeJTkhUA5i4JJEJ6ngsn8s9++hzFvakxNn
+	 hubn+aHBCVzSVgfa8MK94n19vR39SYApBGMpstuA=
+Date: Sun, 5 Apr 2026 17:27:38 +0200
+From: Andre Przywara <andre.przywara@arm.com>
+To: Chen-Yu Tsai <wens@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jernej Skrabec
+ <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] pinctrl: sunxi: a523: Remove unneeded IRQ
+ remuxing flag
+Message-ID: <20260405172738.02530c80@ryzen.lan>
+In-Reply-To: <CAGb2v64A0rgiMkTCdvq-pVfzCTqWKqc=nx69B9tD7A8_E7vHUg@mail.gmail.com>
+References: <20260327113006.3135663-1-andre.przywara@arm.com>
+	<20260327113006.3135663-2-andre.przywara@arm.com>
+	<CAGb2v64A0rgiMkTCdvq-pVfzCTqWKqc=nx69B9tD7A8_E7vHUg@mail.gmail.com>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.06 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[arm.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gapp-nthu-edu-tw.20251104.gappssmtp.com:s=20251104];
+	R_DKIM_ALLOW(-0.20)[arm.com:s=foss];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[nthu.edu.tw : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gapp-nthu-edu-tw.20251104.gappssmtp.com:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34684-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ku.loong@gapp.nthu.edu.tw,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,sholland.org,vger.kernel.org,lists.infradead.org,lists.linux.dev];
+	TAGGED_FROM(0.00)[bounces-34685-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[arm.com:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,gapp.nthu.edu.tw:mid]
-X-Rspamd-Queue-Id: 1499B39EC34
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andre.przywara@arm.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.998];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 6B92639ED98
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Replace "unsigned long int" with "unsigned long"
-to follow Linux kernel coding style.
-No functional change intended.
+On Fri, 27 Mar 2026 19:38:57 +0800
+Chen-Yu Tsai <wens@kernel.org> wrote:
 
-Signed-off-by: Chen Jung Ku <ku.loong@gapp.nthu.edu.tw>
----
- drivers/gpio/gpio-aspeed.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Linus,
 
-diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-index 9115e56a1626..e6af7f3fba5e 100644
---- a/drivers/gpio/gpio-aspeed.c
-+++ b/drivers/gpio/gpio-aspeed.c
-@@ -655,7 +655,7 @@ static void aspeed_init_irq_valid_mask(struct gpio_chip *gc,
- 
- 	while (!is_bank_props_sentinel(props)) {
- 		unsigned int offset;
--		const unsigned long int input = props->input;
-+		const unsigned long input = props->input;
- 
- 		/* Pretty crummy approach, but similar to GPIO core */
- 		for_each_clear_bit(offset, &input, 32) {
--- 
-2.43.0
+> On Fri, Mar 27, 2026 at 7:30=E2=80=AFPM Andre Przywara <andre.przywara@ar=
+m.com> wrote:
+> >
+> > The Allwinner A10 and H3 SoCs cannot read the state of a GPIO line when
+> > that line is muxed for IRQ triggering (muxval 6), but only if it's
+> > explicitly muxed for GPIO input (muxval 0). Other SoCs do not show this
+> > behaviour, so we added a optional workaround, triggered by a quirk bit,
+> > which triggers remuxing the pin when it's configured for IRQ, while we
+> > need to read its value.
+> >
+> > For some reasons this quirk flag was copied over to newer SoCs, even
+> > though they don't show this behaviour, and the GPIO data register
+> > reflects the true GPIO state even with a pin muxed to IRQ trigger.
+> >
+> > Remove the unneeded quirk from the A523 family, where it's definitely
+> > not needed (confirmed by experiments), and where it actually breaks,
+> > because the workaround is not compatible with the newer generation
+> > pinctrl IP used in that chip.
+> >
+> > Together with a DT change this fixes GPIO IRQ operation on the A523
+> > family of SoCs, as for instance used for the SD card detection.
+> >
+> > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> > Fixes: b8a51e95b376 ("pinctrl: sunxi: Add support for the secondary A52=
+3 GPIO ports") =20
+>=20
+> Acked-by: Chen-Yu Tsai <wens@kernel.org>
+
+Can you possibly take this patch and maybe the binding (PATCH v2 2/3)?
+Ideally still for v7.0? IIUC Chen-Yu would take the DT patch, but
+relies on those two here.
+
+Thanks,
+Andre
+
+
+>=20
+> > ---
+> >  drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c | 1 -
+> >  drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c   | 1 -
+> >  2 files changed, 2 deletions(-)
+> >
+> > diff --git a/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c b/drivers/pi=
+nctrl/sunxi/pinctrl-sun55i-a523-r.c
+> > index 69cd2b4ebd7d..462aa1c4a5fa 100644
+> > --- a/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
+> > +++ b/drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
+> > @@ -26,7 +26,6 @@ static const u8 a523_r_irq_bank_muxes[SUNXI_PINCTRL_M=
+AX_BANKS] =3D
+> >  static struct sunxi_pinctrl_desc a523_r_pinctrl_data =3D {
+> >         .irq_banks =3D ARRAY_SIZE(a523_r_irq_bank_map),
+> >         .irq_bank_map =3D a523_r_irq_bank_map,
+> > -       .irq_read_needs_mux =3D true,
+> >         .io_bias_cfg_variant =3D BIAS_VOLTAGE_PIO_POW_MODE_SEL,
+> >         .pin_base =3D PL_BASE,
+> >  };
+> > diff --git a/drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c b/drivers/pinc=
+trl/sunxi/pinctrl-sun55i-a523.c
+> > index 7d2308c37d29..b6f78f1f30ac 100644
+> > --- a/drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c
+> > +++ b/drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c
+> > @@ -26,7 +26,6 @@ static const u8 a523_irq_bank_muxes[SUNXI_PINCTRL_MAX=
+_BANKS] =3D
+> >  static struct sunxi_pinctrl_desc a523_pinctrl_data =3D {
+> >         .irq_banks =3D ARRAY_SIZE(a523_irq_bank_map),
+> >         .irq_bank_map =3D a523_irq_bank_map,
+> > -       .irq_read_needs_mux =3D true,
+> >         .io_bias_cfg_variant =3D BIAS_VOLTAGE_PIO_POW_MODE_SEL,
+> >  };
+> >
+> > --
+> > 2.43.0
+> > =20
+>=20
 
 
