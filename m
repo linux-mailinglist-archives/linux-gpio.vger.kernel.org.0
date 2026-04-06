@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-34722-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34726-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gJP6D5MV1GksqwcAu9opvQ
-	(envelope-from <linux-gpio+bounces-34722-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Apr 2026 22:20:35 +0200
+	id eFU3KAcV1GksqwcAu9opvQ
+	(envelope-from <linux-gpio+bounces-34726-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Apr 2026 22:18:15 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB14A3A710B
-	for <lists+linux-gpio@lfdr.de>; Mon, 06 Apr 2026 22:20:34 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B4223A6FBA
+	for <lists+linux-gpio@lfdr.de>; Mon, 06 Apr 2026 22:18:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 420FD3048087
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Apr 2026 20:15:31 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 1B79B3038D35
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Apr 2026 20:15:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3E2939DBDA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB08339E16B;
 	Mon,  6 Apr 2026 20:15:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T7wzcy07"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rESA4Koe"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74EF439C63C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A9639C645;
 	Mon,  6 Apr 2026 20:15:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775506521; cv=none; b=D542pcRXNjDjDwhFSJctQvTW6M32LbkguMGUoyzdpTdHHtyAAvS9E9wTe3ocU+xOrqbrGLB2vVS+uzzK/4a5Rz3tc25J98aH/CuC8+4IIrlE23scv7AxmYnNkUh5+ml0jYz2aFWksrc8PwYxdUe5qMR3XMz/FngDkpmlhiIFlVY=
+	t=1775506521; cv=none; b=W8yOy0hH8+RF7OW0C//QtA4p257Ahrq58jNQhsziGovKoITl8Bgfys5bNklbXhqbitPBuTOoHZtV6GzEavyztjh/QGap6ME/r8OddA813P6tpBy503MeznWiNSUMEg5+wt5v3uXkHsrE/p9TvkQNqPskf0e+PYibmpa1xUwtQXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1775506521; c=relaxed/simple;
-	bh=TN5gW6iNB2jW1IrzWJimE/kYjWyumxoU2kSZpdU/BtA=;
+	bh=Sry+uDii319VRYofHQb5iOaUnnf0yvES4yy/guIbB1I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=q7ZB9SQyV921F3sSU0KCDGA7leB3E4wjmlLF9jaDi9IkxtEHhGvp5SNu4R9qa/6uP2xg8xx2nNnN7CCbYBn3g8NKPWQWWvdfvxQCBS7HGZ5Ix7m5L4ova8DQHgDRhkEV6DhaPGH8Dgi1Rr2xooruYsC89r+XW6F/4N/br5jhj0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T7wzcy07; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 55AF4C4AF09;
+	 In-Reply-To:To:Cc; b=uiV9ojHXl9cN4x1V1xnCR7kY51plZgBkLOS/jIhCjwiUf9xdUKYh/M1KlkcDby188pXinT969zowAR3qHVEtHnkRhC7cKpFCWKy06NGq/Mx7vJ2hRBC7I6ZZH8PQFKd3SW2NZro+SjN+1RMKXgqza4ODY7vCdFVdqd93k0wtkS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rESA4Koe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5FA03C2BCAF;
 	Mon,  6 Apr 2026 20:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1775506521;
-	bh=TN5gW6iNB2jW1IrzWJimE/kYjWyumxoU2kSZpdU/BtA=;
+	bh=Sry+uDii319VRYofHQb5iOaUnnf0yvES4yy/guIbB1I=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=T7wzcy07TwxtXqaHmuVfQbhI5sx0mfuExs0+m0p5Pj6y6mjB7VbKp1hipPv5ypMna
-	 4vEoVgOgOgEUJs81NdZKuKOeieOs3AxuiQYVcTfkIMYbGVo6oGnjHY4ZJHwRyIYLWO
-	 MVgP25tadGXuTb4001JC0iUAKX2W/lRdVH9cmfGK3S2OzNfoPbzWEnoH3CaHM59Kkc
-	 PoSzvGs7aW7FixToLM8/Jm7mNSD3Jo0VDJUzwPSWckVkiPLtz9/iUisetf4ZvJVwvh
-	 fI7NxhAFcADZ7WccA0VWeQMXpuTqcIVQ9GkSIqhXPaeNUdOcYY1FdPRpXQNjAtQELo
-	 VzZEvIeMHqChw==
+	b=rESA4KoeiIZdlBMRJyWtb8GCtw4drLhRhSF99kym6rX8kgUbJrfmyTUujB8V8v1o5
+	 QUA+UeaDfufgL/ls5ulNqf5hbswy5xDRKe6li9Mu7ab4jRWxBkcMxiY6h/NLqDDjaP
+	 jcIzk5XukLimRiCC4HwnRyBBy/ppoZxejqeUH2Mhnpzte8CRG59CYXCZ8UgHlIfPXm
+	 V3T2i1/u3dKZi7RWx2eSBjloFdiGSshj8i3ZWJxZtthMLt9StV9L9WjdzgR+vRSYcO
+	 lWCY3bTiCh5zdRY7FMepL1nwAwpoGq62wISfU3a8k+6prTVgESJGBXyjHW+rhEmHOa
+	 zHgO+kaid0GJw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A3EF46C7E;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 573BBF46C48;
 	Mon,  6 Apr 2026 20:15:21 +0000 (UTC)
 From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Date: Mon, 06 Apr 2026 23:14:42 +0300
-Subject: [PATCH v10 03/22] dt-bindings: media: i2c: max96717: add support
- for pinctrl/pinconf
+Date: Mon, 06 Apr 2026 23:14:43 +0300
+Subject: [PATCH v10 04/22] dt-bindings: media: i2c: max96717: add support
+ for MAX9295A
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -59,7 +59,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260406-gmsl2-3_serdes-v10-3-645560fedca5@analog.com>
+Message-Id: <20260406-gmsl2-3_serdes-v10-4-645560fedca5@analog.com>
 References: <20260406-gmsl2-3_serdes-v10-0-645560fedca5@analog.com>
 In-Reply-To: <20260406-gmsl2-3_serdes-v10-0-645560fedca5@analog.com>
 To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
@@ -77,11 +77,11 @@ Cc: mitrutzceclan@gmail.com, linux-media@vger.kernel.org,
  Martin Hecht <Martin.Hecht@avnet.eu>, 
  Cosmin Tanislav <demonsingur@gmail.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1775506518; l=4016;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1775506518; l=1215;
  i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=sExaJUhOeiAGEBZqr9l/7UndPhdjAg2W2En5kv5tuKE=;
- b=3/qzg3zCnDP1tb7OY1oG/gCYXT0JBP6jwJ1OjDxxBnC1VK7gRYT0XacvkOWs14LZYghC6v9MA
- HcB+qA4NYQ3DPTAd1OwrXMmjZ9RN0nen4GUX/W/laLFD02I/jMK7aY6
+ bh=8jacOUwQxTYOOAqlRYCuRO4h/l1w0TlJWVRJXtwaMxI=;
+ b=SDnFkPLK1Ecy/yKbPLQUh8xHjM9dzVq0bELfY+b4K8Mz8y0yo7vjDRoiVZIX8TLEzKElYYfFY
+ 02H+L1hzzYKCGKEKPow3nuJPmyOOEKFZp3GhrbQ9KTCmoqtvyEVFXle
 X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
  pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
 X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
@@ -93,12 +93,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34722-lists,linux-gpio=lfdr.de,dumitru.ceclan.analog.com];
+	TAGGED_FROM(0.00)[bounces-34726-lists,linux-gpio=lfdr.de,dumitru.ceclan.analog.com];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[18];
@@ -111,144 +111,52 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	NEURAL_HAM(-0.00)[-0.997];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_HAM(-0.00)[-0.998];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	HAS_REPLYTO(0.00)[dumitru.ceclan@analog.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:replyto,analog.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: DB14A3A710B
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,analog.com:replyto,analog.com:mid]
+X-Rspamd-Queue-Id: 5B4223A6FBA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Cosmin Tanislav <demonsingur@gmail.com>
 
-MAX96717 is capable of configuring various pin properties.
+MAX9295A is an older variant of the MAX96717 which does not support
+tunnel mode.
 
-Add pinctrl/pinconf properties to support this usecase.
+Document the compatibility.
 
 Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/media/i2c/maxim,max96717.yaml         | 105 +++++++++++++++++++++
- 1 file changed, 105 insertions(+)
+ Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-index 976f6dd2c164..d507cad18edc 100644
+index d507cad18edc..bbb38b3de7df 100644
 --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
 +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-@@ -120,6 +120,111 @@ required:
-   - reg
-   - ports
+@@ -24,12 +24,17 @@ description:
  
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    additionalProperties: false
+   The GMSL2 serial link operates at a fixed rate of 3Gbps or 6Gbps in the
+   forward direction and 187.5Mbps in the reverse direction.
 +
-+    properties:
-+      function:
-+        enum: [gpio, rclkout]
-+
-+      pins: true
-+      drive-open-drain: true
-+      drive-push-pull: true
-+      bias-disable: true
-+      output-disable: true
-+      output-enable: true
-+      output-low: true
-+      output-high: true
-+      input-enable: true
-+
-+      slew-rate:
-+        description: |
-+          Slew rate.
-+          Rise and fall times represent the time needed for a GPIO to go
-+          from 20% to 80% of VDDIO.
-+          0 - Fastest
-+              rise:  1.0ns @ 1.8V,  0.6ns @ 3.3V,
-+              fall:  0.8ns @ 1.8V,  0.5ns @ 3.3V
-+          1 - Fast
-+              rise:  2.1ns @ 1.8V,  1.1ns @ 3.3V,
-+              fall:  2.0ns @ 1.8V,  1.1ns @ 3.3V
-+          2 - Slow
-+              rise:  4.0ns @ 1.8V, 2.3ns @3.3V,
-+              fall: 10.0ns @ 1.8V, 5.0ns @3.3V
-+          3 - Slowest
-+              rise:  9.0ns @ 1.8V, 5.0ns @3.3V,
-+              fall: 10.0ns @ 1.8V, 5.0ns @3.3V
-+        maximum: 3
-+
-+      bias-pull-up:
-+        oneOf:
-+          - type: boolean
-+            description: Enable regular 40kOhm pull-up
-+          - enum: [ 40000, 1000000 ]
-+            description: Enable either the 40kOhm or the 1MOhm pull-up
-+
-+      bias-pull-down:
-+        oneOf:
-+          - type: boolean
-+            description: Enable regular 40kOhm pull-down
-+          - enum: [ 40000, 1000000 ]
-+            description: Enable either the 40kOhm or the 1MOhm pull-down
-+
-+      maxim,jitter-compensation:
-+        type: boolean
-+        description: |
-+          Enables jitter compensation.
-+          Jitter compensation is used to minimize the jitter of the
-+          signals transmitted from the deserializer to the serializer
-+          by adding a fixed delay to every transition on the serializer
-+          side. This can be used for pulse generation where timing is
-+          critical.
-+
-+      maxim,tx-id:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          Enable transmission of the pin state from the serializer to
-+          the deserializer using the specified identifier.
-+        maximum: 31
-+
-+      maxim,rx-id:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          Enable transmission of the pin state from the deserializer to
-+          the serializer using the specified identifier.
-+        maximum: 31
-+
-+    required:
-+      - pins
-+      - function
-+
-+    allOf:
-+      - $ref: /schemas/pinctrl/pincfg-node.yaml#
-+      - $ref: /schemas/pinctrl/pinmux-node.yaml#
-+
-+      - if:
-+          properties:
-+            function:
-+              const: gpio
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [mfp0, mfp1, mfp2, mfp3, mfp4, mfp5, mfp6, mfp7,
-+                       mfp8, mfp9, mfp10]
-+
-+      - if:
-+          properties:
-+            function:
-+              const: rclkout
-+        then:
-+          properties:
-+            pins:
-+              items:
-+                enum: [mfp2, mfp4]
-+
- additionalProperties: false
+   MAX96717F only supports a fixed rate of 3Gbps in the forward direction.
  
- allOf:
++  MAX9295A only supports pixel mode.
++
+ properties:
+   compatible:
+     oneOf:
+-      - const: maxim,max96717f
++      - enum:
++          - maxim,max9295a
++          - maxim,max96717f
+       - items:
+           - enum:
+               - maxim,max96717
 
 -- 
 2.51.0
