@@ -1,71 +1,72 @@
-Return-Path: <linux-gpio+bounces-34823-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34824-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oD+oNuot1Wli1wcAu9opvQ
-	(envelope-from <linux-gpio+bounces-34823-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 18:16:42 +0200
+	id SGaAJmMu1Wli1wcAu9opvQ
+	(envelope-from <linux-gpio+bounces-34824-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 18:18:43 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 939993B1A43
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 18:16:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E45C3B1B12
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 18:18:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 39A0E30886FD
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2026 16:09:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4BE973108E83
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2026 16:09:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DAF03D3D1E;
-	Tue,  7 Apr 2026 16:07:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 164A33D47A7;
+	Tue,  7 Apr 2026 16:08:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uIAC5Y/L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DED6xyp8"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A485C386C3A;
-	Tue,  7 Apr 2026 16:07:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A003AB29C;
+	Tue,  7 Apr 2026 16:08:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775578068; cv=none; b=blr1g3Ljn/ar+igVwGT2qRj0vAIL3KaoxbhXgJPz39fJVXaRJU+NUd7/okuCEKlE6DvkGQHWZAvrQRfa+CVuZ2RGjBq5CeHsmMnqNYdTK1J6PoZoDqEHmAr/5gStEyguIN4y5yZfuoHTtOk+Rv99UTyULVdYH9NiNs9/wJpCi6o=
+	t=1775578085; cv=none; b=Z8h7Be3mDGE5+XhgDoKSfODNJhRcS2F3E0Ldzhr4uTQNgHBvZ1l9ZwN3cPeDNK1Osk59agAzQ/3MakPHOptWPzllhcKwCU4KQRAeUvP1KVdCfXHEYsk0aGZsXY00w3FXLCFHONceBYzOUICB5JsfG3DBMjdKzDe/cKAkev1EaoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775578068; c=relaxed/simple;
-	bh=a8f50lh5fA9hxzVyPE4idNgBqFtpQ3j17xPrmyDtRAM=;
+	s=arc-20240116; t=1775578085; c=relaxed/simple;
+	bh=8trqOvymtySKFHxGiIFzGhJy6W6b/leyLuH7GdE85NQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UDerbNxo0ZBzIYry/YqXZC+yVMwSywP9z21WwjQmyZhqIzqq6/YkoQXE7x4qq6VrYH6BlCpdQzqz8Fk6eiPGz4koV2nBMxcEmpELFHMTGF8Z2TCLHr5QGUacENkz7AqPUREMGGVkQWIM1JvRxIPH1QmicSzXO3B4Yi/ajyj2hw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uIAC5Y/L; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D78F0C116C6;
-	Tue,  7 Apr 2026 16:07:47 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=WkUbUMrZ44cpPM/CMMlDMPQ0ROISqjeoePksZrC1QRbuAcF55J8Z0AupHsOJSedjDUXUtQv6beIEah8RlFDFOgz4ezyvsPsRE4P9YRUHlibcSX0ZkKzzIY75taGLtwISryP3oBXsWqDWAR1hcDG9LAZ1xYDOmKOgSNAAMR14268=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DED6xyp8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6C76C116C6;
+	Tue,  7 Apr 2026 16:08:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775578068;
-	bh=a8f50lh5fA9hxzVyPE4idNgBqFtpQ3j17xPrmyDtRAM=;
+	s=k20201202; t=1775578084;
+	bh=8trqOvymtySKFHxGiIFzGhJy6W6b/leyLuH7GdE85NQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uIAC5Y/LBhLO9INatQI6tmlUtW5UHotCnMhrz2f6dSE1am4z1kzi5V7ideheHP3MO
-	 z2MYeMxfqcRI/fnvc4sC7BMxyHnUymQOpY44/CLIbSpqdYrduI4EMuBV6++ugdU9OD
-	 oqeM5oEC1JnyUXszbv+WIxUUHt1oNpMFVhKQJdfS1IC+dDDmRudnTIX4cSNT2NWmnS
-	 fT8t5TApXAuIs+7IOqn7zAcK8ZLSBawLkg6xk3IJdWU8fwBMmmumEVT3vofmawZ/kl
-	 qkptwfxGa2006RXFhO3ZtJ/e2CLA5rgIDY8+8f4XpoO4++x0KBjdGk9L5nKNlktkFO
-	 q4TG+e6v1x8xg==
-Date: Tue, 7 Apr 2026 11:07:46 -0500
+	b=DED6xyp8G2cygWWTVjdVo3Xj1yqlt4lpXXCHuiVr7MI7Wvtr0AeXaEfphlZCY2LKO
+	 +ZWxjNvBZ/UcoHoGLfLwJpu++uAEMkpwWF5y+59b00Zrk7gJIMn7zQbpShgemHm1qD
+	 OHJ47FEE+njXpJQfZavqb4aAWrJINz5bkF+RAcc/4Q0a+t7W88Df9NRe39rV3eCOfb
+	 3pRIpVQvw2kgxFt07QzkK8JAFvb4Sdi6O0R8jAr+6NJFoctlooF/7o3u3MqGX85Tid
+	 2T84BiCzh2J/521wLLSnL5vcGzs1uqpUkqU/qICKf7i2hSIAq9exH89fdL/Op6Yc7R
+	 A31DLJ2Ks9hqg==
+Date: Tue, 7 Apr 2026 11:08:02 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Janne Grunau <j@jannau.net>
-Cc: Neal Gompa <neal@gompa.dev>, linux-i2c@vger.kernel.org,
-	Linus Walleij <linusw@kernel.org>,
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-i2c@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	Sven Peter <sven@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
 	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
 	Mark Kettenis <kettenis@openbsd.org>,
+	Andi Shyti <andi.shyti@kernel.org>, linux-kernel@vger.kernel.org,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-	devicetree@vger.kernel.org,
+	Neal Gompa <neal@gompa.dev>,
 	Sasha Finkelstein <fnkl.kernel@gmail.com>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Sven Peter <sven@kernel.org>, asahi@lists.linux.dev,
-	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, Andi Shyti <andi.shyti@kernel.org>,
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Guenter Roeck <linux@roeck-us.net>,
+	Linus Walleij <linusw@kernel.org>, asahi@lists.linux.dev,
+	linux-watchdog@vger.kernel.org,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>
-Subject: Re: [PATCH 4/9] dt-bindings: watchdog: apple,wdt: Add t8122
+Subject: Re: [PATCH 3/9] dt-bindings: power: apple,pmgr-pwrstate: Add t8122
  compatible
-Message-ID: <177557806556.2661973.776224786066669604.robh@kernel.org>
+Message-ID: <177557808164.2662432.8266259969992444267.robh@kernel.org>
 References: <20260320-apple-m3-initial-devicetrees-v1-0-5842e1e393a8@jannau.net>
- <20260320-apple-m3-initial-devicetrees-v1-4-5842e1e393a8@jannau.net>
+ <20260320-apple-m3-initial-devicetrees-v1-3-5842e1e393a8@jannau.net>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -74,7 +75,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260320-apple-m3-initial-devicetrees-v1-4-5842e1e393a8@jannau.net>
+In-Reply-To: <20260320-apple-m3-initial-devicetrees-v1-3-5842e1e393a8@jannau.net>
 X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	MID_CONTAINS_FROM(1.00)[];
@@ -87,8 +88,8 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[21];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[gompa.dev,vger.kernel.org,kernel.org,openbsd.org,roeck-us.net,gmail.com,linux-watchdog.org,lists.infradead.org,lists.linux.dev];
-	TAGGED_FROM(0.00)[bounces-34823-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,kernel.org,linux-watchdog.org,openbsd.org,gompa.dev,gmail.com,roeck-us.net,lists.linux.dev];
+	TAGGED_FROM(0.00)[bounces-34824-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -104,19 +105,20 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[jannau.net:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 939993B1A43
+X-Rspamd-Queue-Id: 5E45C3B1B12
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
-On Fri, 20 Mar 2026 13:23:22 +0100, Janne Grunau wrote:
-> The watchdog on the Apple silicon t8122 (M3) SoC is compatible with the
-> existing driver. Add "apple,t8122-wdt" as SoC specific compatible under
-> "apple,t8103-wdt" used by the driver.
+On Fri, 20 Mar 2026 13:23:21 +0100, Janne Grunau wrote:
+> The device power state management of the PMGR blocks on Apple's t8122
+> SoC (M3) is compatible with the existing driver.
+> Add "apple,t8122-pmgr-pwrstate" as SoC specific compatible under the
+> existing "apple,t8103-pmgr-pwrstate" used by the driver.
 > 
 > Signed-off-by: Janne Grunau <j@jannau.net>
 > ---
->  Documentation/devicetree/bindings/watchdog/apple,wdt.yaml | 4 +++-
+>  Documentation/devicetree/bindings/power/apple,pmgr-pwrstate.yaml | 4 +++-
 >  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
 
