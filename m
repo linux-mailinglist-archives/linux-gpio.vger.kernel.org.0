@@ -1,45 +1,46 @@
-Return-Path: <linux-gpio+bounces-34837-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34838-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MOMRCOlR1Wkf4wcAu9opvQ
-	(envelope-from <linux-gpio+bounces-34837-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 20:50:17 +0200
+	id kOzyCOxR1Wkf4wcAu9opvQ
+	(envelope-from <linux-gpio+bounces-34838-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 20:50:20 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 764E13B30B5
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 20:50:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C04813B30BC
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 20:50:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 17C82302F9AA
+	by sea.lore.kernel.org (Postfix) with ESMTP id 61B1D3036D54
 	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2026 18:49:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 617AA31F99C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E79633263A;
 	Tue,  7 Apr 2026 18:49:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=duagon.com header.i=@duagon.com header.b="i/jaK/8M"
+	dkim=pass (1024-bit key) header.d=duagon.com header.i=@duagon.com header.b="YJapxY3N"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from ZR1P278CU001.outbound.protection.outlook.com (mail-switzerlandnorthazon11022078.outbound.protection.outlook.com [40.107.168.78])
+Received: from ZRZP278CU001.outbound.protection.outlook.com (mail-switzerlandnorthazon11021124.outbound.protection.outlook.com [40.107.167.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42AF25393E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E307F25A321;
 	Tue,  7 Apr 2026 18:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.168.78
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.167.124
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775587764; cv=fail; b=Vuv3jS5+B8rnF/PHFImlxKTw7+l6YwZLHIoL5GEeUM5AIr7bS2eMTsomOFkSHDPPhtzKpwvnRv8rncPvt6fYAtlJd7qaC6+HVmuRskPA7y6U6DOfbkznFbYdtkKvYtnVLPKPERfKZrOGPTn3QIDEGICuWPr5v1n/6rFYkOPhmMo=
+	t=1775587764; cv=fail; b=EiVtviG6LVwnexBk8JzdWfp048qmJzs1EPRT4GH6mz3W5mkusdmiaEoahGYeFZlyl9dwE+1LBsJ6LK0hr1L929wQ6k7beqIRk/R2Fg5TLRMsyWVHdaiG9DFX1u+B5wOvvATX1PEjxE3ZoxQRK1yoRxLo20g4fIOz3cnN2W7tFb4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1775587764; c=relaxed/simple;
-	bh=R4sXP8DemNCFaE/okyQoyROWKk52nOli1mSIaru/pcU=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=IIKF2bAwxxfSBNEqBviD5cEZj4/EfvTIfOtSbdUP0JlnTwbChqOhuxw4nUStLKm9MTdzeLZ/La59GDi2/4So5xqg6N3LM78+4d4cixcmI4AfdMFz5UzNij8U6Ccl6XIGKjnyPtFNHWc3V3ProEBg6wfNmgvg6XS8STtnvvY4AGw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=duagon.com; spf=pass smtp.mailfrom=duagon.com; dkim=pass (1024-bit key) header.d=duagon.com header.i=@duagon.com header.b=i/jaK/8M; arc=fail smtp.client-ip=40.107.168.78
+	bh=GsLT9skqXxNqS8tdVC0hBa9a+AJGlUePwwj06cat+Y0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=B0VqG2lWcqSmPnCIiqZUUwKqWDLbeFIfZrAnYmCGSrb74PyVsOFYCi90f0VvBRvgwuIKkAvYIDEn7I55Fub/OmunpSdqT4lr+VeQkai/ZTKJa708I3KXO4kGdom/pgwU+U+CgQ5g1k6wXK0Ppeo1jE9Ljt8MmabYxRzI+9u7qqc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=duagon.com; spf=pass smtp.mailfrom=duagon.com; dkim=pass (1024-bit key) header.d=duagon.com header.i=@duagon.com header.b=YJapxY3N; arc=fail smtp.client-ip=40.107.167.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=duagon.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=duagon.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=v37KowBZwDvIhBtMHQmw0B5x1pTXxWWUCS1wZxmItrEU00rv08EsoO2eWieguwqnGGCY0r6LESGHf9GbItzLPd0ZQPU2slRG8NszDCYy5D9Gs1l+WFgcibzaz/xNn3CKR13lcz3+05L9TFnfxPDy9oziv2++Ai+mCbKBaKJNwx9Wws0SUyndzFxwELyQqh3CLR0RKOghwoHzGVkblSaUc+ZfHS1Jsu0p//fjACi40f4dnPFLf7NQHDNillJGOfcm0GBXqQ1QcKnCdichbXhUbkYfaPuiJqHx2gH3bYUKtDpdTK4LztNtOqbTg0Rnd+VJHs0zySkSdIxZ9ukJKxWswg==
+ b=lJQWglIkhDFfvd+NAiV+QL8bOco0xeN8gfKG+kZy/MlhBkCv/Q/Py+84MOCqFetqgXPdhgcmoSaJumK6RxaLJfaDrFRkvr3WeE2YIAOXaWNngHGX8dyddDImW2todI6jk++ew/c9zB78+fGJ4NORiLMhLK513MhKA6o5hPNLtPwvdQG82UN/3FHshEivY9V9F8TNenRkw3LYC4Z1VGeemtaC5GE6VqKvynZ3rQoQPNzUAHE1v22C1LQFr+D0gR4m2cBlxre6fKQqyGygoMG0fTE29UDuPLvQY6kF1ovzPOWVZpi6B3CNB9UGefyP08qncxqPEQb9OYfPdIzibbAgCg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tJ+byARz69Q1ru5glUVDbo24AUqdXK7YMlOYP/qhNQs=;
- b=A8ZodqROttWETPUmMXFs6RcuA/sCuW20Kfc6ypK9LMYOUK/3+RTSASD9Ya8xymGgjoWsc+1JBEgVj4BKgWXGeKqFC2jlfb8wnzjgpMswiID4bR/obATcRIaHSutG/+neUsPezJVZOmyY4Pkidfz9YeZgL1iHixCgTqtyTjanxlWa+IBoUTUz+UbXUJuKSOLNA8GN50gfxWKubyfbgUUsdybmOIyVUlN3cKq60k0NW7mC3URatVkHmQ5k/N462GcP0amis8qrp6hSPWGnqnO+RP+HncDNz2F/V9jSCG/qiip352W6wGutHp9QAxbdPkChq2l1cv24kNaMywL7drrE1Q==
+ bh=5tSU0evtGs8EtidQCG5nZVpGaFPEmE7FKr4PzsVR8Vs=;
+ b=p4SVdjgFpf3g2ClHL6OyaTlY4fBiaEqu1hj8sDXyJ7fU/E45od5YAAe7vg449+7jbhpJektpvKbmij+ajiTtvz+yKQjOYiAy8/XhK9e4C7D+qEB6pvzBNoxwKm9rKft5ovpfclZ3A7j5ZNkt4HVNorsxDsaSi1RyOUCZbcW15rcO1b/rrTpPEGtSIrIpZQvkPb7J1ViK40QAeM3I19SthtM93uB2wFRFn4CSTWBEzPPwicbTiCPfRuNhAmytumWvFJ7LW4SriQMuvIgg4PaDnqGIRrO6Z8AoalgqmZYyRb/XBTWDTa7FVD/RTm26qefdHVm6bWomMkgSzujnGN8E1A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  40.93.85.4) smtp.rcpttodomain=kernel.org smtp.mailfrom=duagon.com; dmarc=pass
  (p=reject sp=reject pct=100) action=none header.from=duagon.com; dkim=none
@@ -47,18 +48,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=duagon.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tJ+byARz69Q1ru5glUVDbo24AUqdXK7YMlOYP/qhNQs=;
- b=i/jaK/8M8Knw++u3Mo/eLo3SxaEcMoyqZfs4BDDBMCo5UC1GHATL5lTJ5CHETeIM/dTdb+ePMK6EKkBRR3cVr5Ie1vK16UDD/LY3okkvbCASmtVc+QM81MZ9Pln8la1PLBI1iGHZW2jv1Y/GLRc3UPNnO7Rrf+tPAGnVeW8RzdQ=
-Received: from DUZPR01CA0199.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4b6::28) by ZR2P278MB1056.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:61::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.20; Tue, 7 Apr
- 2026 18:49:18 +0000
-Received: from DB1PEPF000509E8.eurprd03.prod.outlook.com
- (2603:10a6:10:4b6:cafe::21) by DUZPR01CA0199.outlook.office365.com
- (2603:10a6:10:4b6::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.32 via Frontend Transport; Tue,
- 7 Apr 2026 18:49:17 +0000
+ bh=5tSU0evtGs8EtidQCG5nZVpGaFPEmE7FKr4PzsVR8Vs=;
+ b=YJapxY3NW2ll/lxFlRLY8sL8SAmzexm2TKLO1cuPIEliWZsWtIBOuy3gsVPY6zN2KKAlznbQKdLMp/PNvh08xosL/UCOG9xvHLqZy/N4oVtNEYYJxlAwQPKDWZ2AfDRi6fqX/NcxRNjoNo+7eON1WueyCj2tPQNdtzkdVTnHHz8=
+Received: from DUZPR01CA0237.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:4b5::20) by ZR4P278MB2096.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:b3::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.17; Tue, 7 Apr
+ 2026 18:49:19 +0000
+Received: from DB1PEPF000509EE.eurprd03.prod.outlook.com
+ (2603:10a6:10:4b5:cafe::57) by DUZPR01CA0237.outlook.office365.com
+ (2603:10a6:10:4b5::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.35 via Frontend Transport; Tue,
+ 7 Apr 2026 18:49:18 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 40.93.85.4)
  smtp.mailfrom=duagon.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=duagon.com;
@@ -66,59 +67,61 @@ Received-SPF: Pass (protection.outlook.com: domain of duagon.com designates
  40.93.85.4 as permitted sender) receiver=protection.outlook.com;
  client-ip=40.93.85.4; helo=ZRAP278CU002.outbound.protection.outlook.com; pr=C
 Received: from hz-deliver01.de.seppmail.cloud (2a01:4f8:a0:13df::219) by
- DB1PEPF000509E8.mail.protection.outlook.com (2603:10a6:18:3::61a) with
+ DB1PEPF000509EE.mail.protection.outlook.com (2603:10a6:18:3::628) with
  Microsoft SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id
- 15.20.9769.17 via Frontend Transport; Tue, 7 Apr 2026 18:49:17 +0000
-Received: from hz-glue05.de.seppmail.cloud (unknown [10.11.0.47])
+ 15.20.9745.21 via Frontend Transport; Tue, 7 Apr 2026 18:49:18 +0000
+Received: from hz-glue01.de.seppmail.cloud (unknown [10.11.0.26])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by hz-deliver01.de.seppmail.cloud (Postfix) with ESMTPS id 4fqwGP1PVFz4vjx;
-	Tue,  7 Apr 2026 20:49:17 +0200 (CEST)
-Received: from hz-glue05.de.seppmail.cloud (unknown [172.18.0.7])
-	by hz-glue05.de.seppmail.cloud (Postfix) with ESMTP id 4fqwGP13Wdz20Qq;
-	Tue,  7 Apr 2026 20:49:17 +0200 (CEST)
-X-SEPP-Suspect: bb5caf39a18247a6ba6401eb6b79d2fe
-Received: from hz-scan01.de.seppmail.cloud (unknown [10.11.0.3])
+	by hz-deliver01.de.seppmail.cloud (Postfix) with ESMTPS id 4fqwGQ0pkhz4wfb;
+	Tue,  7 Apr 2026 20:49:18 +0200 (CEST)
+Received: from hz-glue01.de.seppmail.cloud (unknown [172.18.0.3])
+	by hz-glue01.de.seppmail.cloud (Postfix) with ESMTP id 4fqwGQ0VYrz20hw;
+	Tue,  7 Apr 2026 20:49:18 +0200 (CEST)
+X-SEPP-Suspect: 385a42524b254aafafe27cd15d8621e2
+Received: from hz-scan09.de.seppmail.cloud (unknown [10.11.0.50])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
-	by hz-glue03.de.seppmail.cloud (Postfix) with ESMTPS id 4fqwGP0Kyfz23dn;
+	by hz-glue05.de.seppmail.cloud (Postfix) with ESMTPS id 4fqwGP6xq9z20Qq;
 	Tue,  7 Apr 2026 20:49:17 +0200 (CEST)
-Received: from hz-scan01 (localhost [127.0.0.1])
-	by hz-scan01.de.seppmail.cloud (Postfix) with SMTP id 4fqwGN4nNkz4JBl;
-	Tue, 07 Apr 2026 20:49:16 +0200 (CEST)
+Received: from hz-scan09 (localhost [127.0.0.1])
+	by hz-scan09.de.seppmail.cloud (Postfix) with SMTP id 4fqwGP6Fctz19fG;
+	Tue, 07 Apr 2026 20:49:17 +0200 (CEST)
 Received: from hz-m365gate01.de.seppmail.cloud (unknown [10.11.0.27])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by hz-scan01.de.seppmail.cloud (Postfix) with ESMTPS;
-	Tue, 07 Apr 2026 20:49:15 +0200 (CEST)
+	by hz-scan09.de.seppmail.cloud (Postfix) with ESMTPS;
+	Tue, 07 Apr 2026 20:49:16 +0200 (CEST)
 Received: from ZRAP278CU002.outbound.protection.outlook.com (mail-switzerlandnorthazlp17010004.outbound.protection.outlook.com [40.93.85.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature RSA-PSS (4096 bits) server-digest SHA256
 	 client-signature RSA-PSS (2048 bits) client-digest SHA256)
 	(Client CN "mail.protection.outlook.com", Issuer "DigiCert Cloud Services CA-1" (not verified))
-	by hz-m365gate01.de.seppmail.cloud (Postfix) with ESMTPS id 4fqwGL5qlHz2xLN;
-	Tue,  7 Apr 2026 20:49:14 +0200 (CEST)
+	by hz-m365gate01.de.seppmail.cloud (Postfix) with ESMTPS id 4fqwGM6mctz2xLQ;
+	Tue,  7 Apr 2026 20:49:15 +0200 (CEST)
 Received: from ZR0P278MB0523.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:34::6) by
  GV0P278MB0162.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:2d::12) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9769.18; Tue, 7 Apr 2026 18:49:12 +0000
+ 15.20.9769.18; Tue, 7 Apr 2026 18:49:13 +0000
 Received: from ZR0P278MB0523.CHEP278.PROD.OUTLOOK.COM
  ([fe80::30b2:3be9:48ab:c354]) by ZR0P278MB0523.CHEP278.PROD.OUTLOOK.COM
  ([fe80::30b2:3be9:48ab:c354%6]) with mapi id 15.20.9769.018; Tue, 7 Apr 2026
- 18:49:12 +0000
+ 18:49:13 +0000
 From: Jose Javier Rodriguez Barbarin <dev-josejavier.rodriguez@duagon.com>
 To: linusw@kernel.org,
 	brgl@kernel.org
 Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Jose Javier Rodriguez Barbarin <dev-josejavier.rodriguez@duagon.com>
-Subject: [RFC PATCH 0/5] gpio: add PMIO support to gpio-mmio
-Date: Tue,  7 Apr 2026 20:48:00 +0200
-Message-ID: <20260407184805.807328-1-dev-josejavier.rodriguez@duagon.com>
+Subject: [RFC PATCH 1/5] gpio: generic: add a generic register wrapper for MMIO and PMIO
+Date: Tue,  7 Apr 2026 20:48:01 +0200
+Message-ID: <20260407184805.807328-2-dev-josejavier.rodriguez@duagon.com>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260407184805.807328-1-dev-josejavier.rodriguez@duagon.com>
+References: <20260407184805.807328-1-dev-josejavier.rodriguez@duagon.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: MA3P292CA0072.ESPP292.PROD.OUTLOOK.COM
@@ -131,18 +134,18 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-TrafficTypeDiagnostic:
-	ZR0P278MB0523:EE_|GV0P278MB0162:EE_|DB1PEPF000509E8:EE_|ZR2P278MB1056:EE_
-X-MS-Office365-Filtering-Correlation-Id: c57c3a66-96f4-491e-0ea2-08de94d65f76
+	ZR0P278MB0523:EE_|GV0P278MB0162:EE_|DB1PEPF000509EE:EE_|ZR4P278MB2096:EE_
+X-MS-Office365-Filtering-Correlation-Id: bcb99e0a-195d-4ff6-fada-08de94d65fff
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|366016|376014|52116014|56012099003|18002099003|38350700014;
+ BCL:0;ARA:13230040|1800799024|366016|376014|52116014|56012099003|18002099003|22082099003|38350700014;
 X-Microsoft-Antispam-Message-Info-Original:
- 4dZ9SLL7Tw8pJVo4TAACa7IUCN3HQWydvf2yxnf6TJ2TpU2GTS+ah3ZFfc1UgvfjNEDEKeLz0E6HCmKt2MQ9GUxu8/sES8xCEt+RzGqa39BkAlNRT67st0ATAzuKKus/TAuH/AxfZf1hBxIObIwFfHY3wFxczJaqiWQtX+9atQS8rdxoxBfhDEkKIvgB8DTOXgovr0B3TsNFElwm42uWo3OwKcs5KRzZ0Fz1ey9EIegXja4SVbMwonVVkjWsZZ+PGblkelkaF4mlwgRY3krKFMx37AlO58LoUVQuBrn0rt8Tcyhp3zc9h7qsMaPMG4rf2F+lMVkF5KjbZXxZjvJbnLeDjrNRK0/md4rjmmKzh8/EjZ7fV6H28g6c2IvwxTR7I7Wn9SSbOU+aRnX6936QxprbTJu5yUIbb3R5TJ8EpMpsyyy8EC+kF0VqY7aeDA2+6adR7M7UVw/O06E5Qzg0wOcbI2NZmDl6lUCDd2az/ClFwqVYfLKUMo5AbcjadAvWt684CZnjnhGr5KoiypE4pAF2hmG3QvEGKMi2GHo2hWQ/uTeov07RvctmTQM549Wl8VLp4scIyhQ0rj8gRgLeDqM7kHeQzya6oSQgGsav4+ZBmhWZnTNLnSKi3y7defVYN6LhAEoStmxWUgJWJFGMjFi+V1Cv7sKHe35aSi6u1ifluwAoMFGMggzDQGYxiqmojBjHkwHbuC9wmh9AiDMX1b3AV+w6Ed/ts9GSrK+7eraPNnwmjDPH2RYQM0IefXx+WJ+1krYIqzo8on95gnvhkssERntxwmbyXasd6XIDdhM=
+ w5jmIdVlO0mf5x6iOaQh8lrEWPYFTKFYmHIwXL4C5XiYNza9syIqT1ASk7A5I7usYlqDkdFFfwX2Mxmlxjo79i4t3F2Kcrb3iPD/bb1az3SHtiEQgPj2NeDf3ner+yUDuVkFeY7if4jMGLiT4AffdE9VeowBbW05PA2LTJXBqldLbgXPk65XVmA899x2EVz38RLk85EgE6npzBG3vA3e5/FLiVpQSfBiLsSDXvd2b043E/GXvV2hB/QwfJZkHsLovtg0dcqsJtHdBZeHwYZgcMuSz5zZl7tsJAjGcSwNgIta/ManleEpj6MTj/NQ8UBDGUlMxHkZmkaulnU8UOR7iTzopwt6fFFAP2wiFHYPMpN1Hyq2HiD3xmzizurNM/K2YyncUuBZZ0dvdfr/41+90Pg/0Tp6hEOayxme9JYJ36ZrxFwl8tu8iK8IKXV+Q0TQcOspS37dmDVanw8qvzkHREbks2KYOcZ53RCzgnwjvQJvwr0qlVDJVTbnCEa88R0aoxbSkwkmZy3Fvy6BRM9cqcpdXStQAyRaXV56QSMMS2ADqNYb9PSoTrC7Zw/lLkdF5T1XMHT3dxjhkm6DzwoNrJpUX+fV6Ch/JwIUgxBJF4zKX83yBEETXJstCU5pFxLXy4AxVeLKF1MyxrPCvT0PlsdNOkeGmIfRoW1hNr2C3aF5ZCh6n5VF5yHSEy4Irs+h+u4pSY2BQKUaP5XZknGDTe01i+eM34/9YuHQObmZVfrgGko45CSnJqE8P4ThYpUYooT6cxaY5rIUb5QwTNCFXPdZbsxqBjQF9vYj0HrP6vc=
 X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZR0P278MB0523.CHEP278.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(52116014)(56012099003)(18002099003)(38350700014);DIR:OUT;SFP:1102;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZR0P278MB0523.CHEP278.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(52116014)(56012099003)(18002099003)(22082099003)(38350700014);DIR:OUT;SFP:1102;
 X-Exchange-RoutingPolicyChecked:
- pn8oVH0EiJ+umbvNyq0tvCEwsDIM4nW+NN4JTrquYbU8bmhZp1W8SGG0IgupfHuRO89jq//nfRotPafCAzDZT9P/xY7+QzUwpqHJQKczxq265jWi+Cqd9GYXOYO8sED6vzGJD6gIid9DAukyTBW8jSibS1W+n5/yyAC4mrr60+D2CJ/X8gb26S3ef5ZB6cNpJkiDCv++9+K4dw7oPcFZgMsWZYcjmlElGWhtP8e34NiF7I6J/kwDYDiUOYP3wIKGtbydadz1qNxNghPb8wYjXTyWEUFuHHQxPEa47B+Saox+gZPKV6TPDMfJkqqXTufoNieVnxslaQwFSb4JrPGbUQ==
+ DsD9f1DMy0caImeXlAhmQkSOWCpdsz6TmBMmI9fFuiFZnGgaG9H0lAo+YyE24ER4D8gUSLdSMfWfD3s/+xRn9uF8Gm6EXQKP1bePo7/EaQebsvg6Z4hdJZWp9mdKDjh2HBtTzkC0gHK/KtpeY9mkV1vPaMWCh0/IGsHLLs5/Sl/Cv1LbrCjMmjn5PrPjEXH2OY3DCyPURVKFb7yu5SwdF7LhinRjwJjl35rq4RWH26bhoEqCoRKpOWJRYvo+Is7fgV/UlyQVAKCJBHR9100UfbCTgBJK3RWLpmAqHJRKJOqII5SZxcTNhrZ1PrxbJo2ZS6roi1BveG96IEG2hR1veg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV0P278MB0162
 X-SEPP-CCCVersion: 2026-03-30T09:40:10+02:00 639c564b
 X-EOPAttributedMessage: 0
@@ -151,51 +154,52 @@ X-MS-Exchange-SkipListedInternetSender:
 X-MS-Exchange-ExternalOriginalInternetSender:
  ip=[40.93.85.4];domain=ZRAP278CU002.outbound.protection.outlook.com
 X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DB1PEPF000509E8.eurprd03.prod.outlook.com
+ DB1PEPF000509EE.eurprd03.prod.outlook.com
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	b7baca83-2c67-4fca-b849-08de94d65c20
+	e2ba8c9b-98b9-4f2b-c1b9-08de94d65cf2
 X-SM-ruleversion: 2.1.0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|35042699022|376014|14060799003|82310400026|10070799003|1800799024|18002099003|56012099003;
+	BCL:0;ARA:13230040|35042699022|1800799024|82310400026|10070799003|376014|14060799003|36860700016|18002099003|22082099003|56012099003;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?h3mGyr20kyxYMc7F7wAKoOCazh6TP5CC0WDP3RE5htp+G0Ze/JTX7dzkIVIW?=
- =?us-ascii?Q?+/pVhSjJ2+AuqWHOIX4V1cz9JikxXRX+yTKxeIrZ3lgw8izYJPqwZw/4u+x6?=
- =?us-ascii?Q?flMPmH+Qb0jZGQwETyDNWbQOpNpytLUcwysQM4jM3Nk5mczdb5meJWrxH+SY?=
- =?us-ascii?Q?M8eW9JeJwMBWkILAPKsYI6Eejpi4yZGO9unHbiNutwcjfKP44VMh2USTG7hi?=
- =?us-ascii?Q?mBbUcfaXDXWKykh6strhELdh2jLCuooFGT6yKYh/D8Tf3OtdSIYTd4Nion6g?=
- =?us-ascii?Q?mRlssFHPampaDT523rriqljrcYYiZmlCqDV/muk9085HtTHvc7QVA/L3owaN?=
- =?us-ascii?Q?Vm1EFdu6axSz1iErFkP4MS4KxA78g+B3d50a6nO93ZaxqSNum90I1fJoySVO?=
- =?us-ascii?Q?X084C6AAQiy+P4bMxGUZtXoktHe7RT0fatyu3eF2eKNOCNSyRcZdnr91J1rI?=
- =?us-ascii?Q?yIntE69zJOdV5S7A+ZMwMkOL5Yo1Pi0eFOxwPB0TAdlljVY5bzozmc9DFszO?=
- =?us-ascii?Q?YpFKP7NjTuVLfk+3dU4QCDsIX+n7yZI4EVuC3W0V7uaC/cqdaH/MWXclUQ6L?=
- =?us-ascii?Q?qB63CK1BB+6sDMoVrTKwg98yPoWF7dR9w2WM1D3hlmgIvqEn5L85QhZAzuCc?=
- =?us-ascii?Q?+2HCiMGIwVLvs48kM9aZxPrFP+WWgie7bmVxio40O712gGXaeLBIB/nz/Gil?=
- =?us-ascii?Q?l/zdtFSOcO90aqag7FffObI6mPX+Mp+1ZwWAnq3JAGdQVzLasWa2hQKJOU0w?=
- =?us-ascii?Q?+XyLKoeQapvb7jXON0kjdkSwF3quLvsyFUKiMe/FDiqJ1qkKAvnFjSU+wJaO?=
- =?us-ascii?Q?7G/bIys06qN43fRRbpuqNgI/ANgSI2/DA8mO+beB5xsYO7A6/ygQbew4bEiE?=
- =?us-ascii?Q?XLs4R1lcsrKrWJ2J6duguKsaaU7FF+OGeCPhR3aLOKTYhaWr8I2fVRkDpttP?=
- =?us-ascii?Q?E29ymGWXYqUL2eMB0m76ebTgwpPXfP2biDyVI6GgmtzjM10uhJJ8kVOKr54p?=
- =?us-ascii?Q?KkVUYTl92e9YMzgMNg4c/n450jbbOxYIKwLCSYdvr9ODNW3YQJVyZbwZV/DU?=
- =?us-ascii?Q?snMV1wJxspHCLbFFdmRl7kPCdnacoyBX3Wl87ncsRozVC9n5DMFbrgakGO/z?=
- =?us-ascii?Q?CQSc+yig9VnKYjdIkunmBIhDXRqFee+6ffAfBwY8hXBS2nmEuHuFsvtlZm/k?=
- =?us-ascii?Q?MtVB0V2xYXjdeQ/CATI/5CjrR2IjQbQllO5VYg=3D=3D?=
+	=?us-ascii?Q?eACzm9sJklTyM+v5LGLWAFRvBBSLSIwgNNr2RU3mDetWuVbbmDufBhg7TE3L?=
+ =?us-ascii?Q?QKJbWYdZy+owQruQLLjSZdOEHlHMowBYtXgRidl72+yYh3G0zgxu21zSNjlM?=
+ =?us-ascii?Q?EnLzuHQ4+JZvpX1OCHlzMeQHDxJiqz0I1uvlSuju67TJjeA5Xm/BPylO632K?=
+ =?us-ascii?Q?wsiu2eavM8k/SufPLqpFOUKvhklWqET3esUIpaFXZ9Torg3MCaa/OAvgzII3?=
+ =?us-ascii?Q?cRH3vuJ7nW9DxdMWSLN9FixHgmhP3cuwbGK6BDlQQjKWQJduI7B50zCv6k0v?=
+ =?us-ascii?Q?3Xz+7ebjIbTN7/xgzaXGDmgZ1XCJPyBSnUec0eAN/jgfpBbQncBxvet8L/6p?=
+ =?us-ascii?Q?+5F57seumUaiCPiP7F0t8Fsoe3H91uyts2IyRP19CA7lN5pyGa2azsyRRsoK?=
+ =?us-ascii?Q?WWh49JJnZmmGoTuQM3P0tZGHRXmJoodDAVbSE3d6C2Gg0zEaiD2YfP3LWDXn?=
+ =?us-ascii?Q?7sI1jcZe6aZm4gMEOYaEeHMK35SiaTyVdHMmUhUWMgAGhjxC4Y9l/8xR9a9G?=
+ =?us-ascii?Q?Y0yqlKNFzRuj/nLWPLLUncNnisxIPu3psVdTRHwj+wWmL6LoGo/bz8K5d+pF?=
+ =?us-ascii?Q?skcgiepfymxQnju8CzOO8SWRMsLqE67aYO/GCL8SOmIxw+7D9+g/FesHl5D1?=
+ =?us-ascii?Q?9oCwuv7/hj7VkH37JrnUheDhZuVqfRBy2CaFyQWsDqSYsUMLGkcOrBGtmYhh?=
+ =?us-ascii?Q?asVdjlCBWW+mwhKddYsS/rmIgw0jdCDXCDyn6f60pfN050571Dt7I6DHleF0?=
+ =?us-ascii?Q?SH8Gi71mDQ73EXe+6vIVHkNaS5C4j2GP48XG9R7vZR5T/wuNU8qFVSJmRow5?=
+ =?us-ascii?Q?1OESy3Nyho+FTfWHflNOXracVIQqW8vUJCdGtLrGccDNrhsYwrabgpJQ3Toh?=
+ =?us-ascii?Q?FzX7RRi0ASoJgor0uxSFDgQZtUnt0vFTPOR5XFBBLwa05X21lM2r1EBQ5PNc?=
+ =?us-ascii?Q?rV8CGkYSDBiW2UeN2cv5X24jZ5DUv+MZKMqNAMH9Ynyu0KsmRBOLJmhj0py6?=
+ =?us-ascii?Q?x1jF/otPsURy41EOOAV4xx1pUvAcNZhWlhSswPuFgOywQE65fnyvzqfzG2XF?=
+ =?us-ascii?Q?+32tGehFcUy7RrNwzTuKLRvasnOXyLDT9SRpDlWd2maDC0Mmeatep6tV7ppM?=
+ =?us-ascii?Q?va9w80ljwG9NSc3SzyrlZdufQgElK1JpxtnRILUiL224k4ilPBtVCWMqfHGB?=
+ =?us-ascii?Q?g+fDIbfeEbhZs9/QRG3oiw1l6pIxHzmeOeppFOMPuIopntjrBXm/PTfpdmKr?=
+ =?us-ascii?Q?MlJd+qYNklS3zAk84db+?=
 X-Forefront-Antispam-Report:
-	CIP:2a01:4f8:a0:13df::219;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZRAP278CU002.outbound.protection.outlook.com;PTR:mail-switzerlandnorthazlp17010004.outbound.protection.outlook.com;CAT:NONE;SFS:(13230040)(36860700016)(35042699022)(376014)(14060799003)(82310400026)(10070799003)(1800799024)(18002099003)(56012099003);DIR:OUT;SFP:1102;
+	CIP:2a01:4f8:a0:13df::219;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZRAP278CU002.outbound.protection.outlook.com;PTR:mail-switzerlandnorthazlp17010004.outbound.protection.outlook.com;CAT:NONE;SFS:(13230040)(35042699022)(1800799024)(82310400026)(10070799003)(376014)(14060799003)(36860700016)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	DSV6Iif1vqTTKBxZ3zBDslntWtgleagCKU622XsjFprAW5b28wSz/mHlsBz/MuPKB2AXoQ5a0fV+Bk2SXbc6pDOaHhYzMB6UBLoNoWPQicBRvUI73gb7UkZA0JVLJ9LvttNOzbhNJ65G2LH6T+nWBtK/ArLPYl5aECrbD4dsRQ/m4KZGtD7XTlRB9fr8HdYTv5xCCNlH8EWiJdV2gF08hEJhnZcprpMU9jbU187yamytWbhW63fI2ZRQ6Y0C8mpi7ObFBVJQ7tU4Ob16ucTgc8fGCOAbR4KDj63ztB1S2FnyOblM2bPJ58mlMR+FZG1w0vYRKQ0UTPH9Dwp1sBxnV5direlirvJ5Lmfmc0gVyAwu/7LdhYJ22X4h2d5jWWenDyb6pch/EwMYVljIt8F0K+NN9ejJCQb/OKXkkg8BH4L75F9p3P+V7H3a1UNLy3hK
+	ILGMHnT0h5bkhb5wkk2XDqA47/bNzQB8jkTl0POMOn2MDbu8ux9I0RzELFbtjiFzYOd2byjN6asDyT6jCED9fLc/TQmzlm+GPeiSgLYTT+evce3G1wS4drca4LNaUBN8dBAlQ5rAfMnzBgVH+nlTNwBq7T88wCsZw7yTU16IsbsFa1zIkKW2B3ECuIM03IGsn0pH+bqZ9VYqc5h/wca24BqlVxqKs7ZJg13ENy2BCwOj6jI32BMDePEJfmk/HOZFmBuoJbahGtNEs9qN4lioGuEAeCFA5fNlUwdRLXmF7NtmwwpXMXcBCN38Se1pvMk1xqtpsaVIUb34d3JUA6H8SH7ABzMnnZ4cmNMNpRny0oU/JeQEun9iVzS2HF5aUufdtMYN7ZIiEAS6yFroUtfGyLV8+Ltb5gZD8OdEo/In48awNu/gNR4bgTsE6FtDNC/I
 X-OriginatorOrg: duagon.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2026 18:49:17.7463
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2026 18:49:18.6512
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c57c3a66-96f4-491e-0ea2-08de94d65f76
+X-MS-Exchange-CrossTenant-Network-Message-Id: bcb99e0a-195d-4ff6-fada-08de94d65fff
 X-MS-Exchange-CrossTenant-Id: e5e7e96e-8a28-45d6-9093-a40dd5b51a57
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5e7e96e-8a28-45d6-9093-a40dd5b51a57;Ip=[2a01:4f8:a0:13df::219];Helo=[hz-deliver01.de.seppmail.cloud]
 X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF000509E8.eurprd03.prod.outlook.com
+	DB1PEPF000509EE.eurprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZR2P278MB1056
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZR4P278MB2096
 X-Spamd-Result: default: False [1.34 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
@@ -206,7 +210,7 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-34837-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34838-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -221,62 +225,56 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	NEURAL_HAM(-0.00)[-1.000];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[duagon.com:dkim,duagon.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 764E13B30B5
+	DBL_BLOCKED_OPENRESOLVER(0.00)[duagon.com:dkim,duagon.com:email,duagon.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: C04813B30BC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-This series is an RFC for adding port-mapped I/O (PMIO) support to
-gpio-mmio.
+For adding support to port-mapped devices within gpio_generic_chip, a new
+data type is required for passing to read_reg() and write_reg()
+callbacks as I/O port-mapped and memory-mapped registers use different
+data types.
 
-The initial motivation was to add PMIO support to gpio-menz127, as we
-plan to support this across MCB client drivers. Since gpio-menz127
-currently relies on the gpio_generic_chip API, adding PMIO support only
-in that driver would require a significant refactoring, including
-separate callbacks for memory-mapped and port-mapped accesses.
+Introduce a new struct gpio_chip_reg to encapsulate mmio addresses and
+I/O port numbers.
 
-While looking into this, I noticed a TODO item added by Linus Walleij
-about extending gpio-mmio to support port-mapped devices. Based on that,
-this series explores adding PMIO support to gpio-mmio instead of
-handling it in individual drivers.
+Signed-off-by: Jose Javier Rodriguez Barbarin <dev-josejavier.rodriguez@duagon.com>
+---
+ include/linux/gpio/generic.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-The main goal of this approach is to preserve compatibility with
-existing MMIO drivers using gpio_generic_chip while extending the API to
-also describe PMIO-backed registers. To achieve that, the series extends
-struct gpio_generic_chip_config with dedicated fields for port-mapped
-registers.
-
-To handle the different register address types used by MMIO
-(void __iomem *) and PMIO (unsigned long), this series introduces a
-small wrapper structure that can represent both. The read_reg() and
-write_reg() callbacks are then updated to operate on this common
-representation.
-
-This series has been tested with gpio-menz127, and the driver worked
-correctly with both MMIO and PMIO devices.
-
-This is being sent as RFC because I would like feedback on the overall
-approach before proceeding further.
-
-In particular, feedback would be appreciated on:
-- whether extending gpio_generic_chip_config is the right direction;
-- whether introducing a common MMIO/PMIO register descriptor is
-  acceptable;
-- whether PMIO support should instead be implemented differently in
-  gpio-mmio.
-
-Jose Javier Rodriguez Barbarin (5):
-  gpio: generic: add a generic register wrapper for MMIO and PMIO
-  gpio: generic: extend gpio_generic_chip_config with PMIO register
-    fields
-  gpio: generic: add io_port to struct gpio_generic_chip
-  gpio: mmio: convert accessors to generic register descriptors
-  gpio: mmio: add port-mapped read/write callbacks
-
- drivers/gpio/gpio-mmio.c     | 277 +++++++++++++++++++++++++----------
- include/linux/gpio/generic.h |  49 +++++--
- 2 files changed, 243 insertions(+), 83 deletions(-)
-
+diff --git a/include/linux/gpio/generic.h b/include/linux/gpio/generic.h
+index ff566dc9c3cb..87c624070901 100644
+--- a/include/linux/gpio/generic.h
++++ b/include/linux/gpio/generic.h
+@@ -18,6 +18,7 @@ struct device;
+ #define GPIO_GENERIC_NO_SET_ON_INPUT		BIT(6)
+ #define GPIO_GENERIC_PINCTRL_BACKEND		BIT(7) /* Call pinctrl direction setters */
+ #define GPIO_GENERIC_NO_INPUT			BIT(8) /* only output */
++#define GPIO_GENERIC_PORT_MAPPED		BIT(9) /* port-mapped */
+ 
+ /**
+  * struct gpio_generic_chip_config - Generic GPIO chip configuration data
+@@ -56,6 +57,19 @@ struct gpio_generic_chip_config {
+ 	unsigned long flags;
+ };
+ 
++/**
++ * struct gpio_chip_reg - Generic GPIO chip register descriptor for MMIO or port-mapped I/O
++ * @mmio: MMIO register address.
++ * @port: I/O Port register address.
++ *
++ * Describes a GPIO chip register located either in MMIO space or in
++ * port-mapped I/O space.
++ */
++struct gpio_chip_reg {
++	void __iomem *mmio;
++	unsigned long port;
++};
++
+ /**
+  * struct gpio_generic_chip - Generic GPIO chip implementation.
+  * @gc: The underlying struct gpio_chip object, implementing low-level GPIO
 -- 
 2.53.0
 
