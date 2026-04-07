@@ -1,131 +1,136 @@
-Return-Path: <linux-gpio+bounces-34781-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34782-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eFrbEOr21GkjywcAu9opvQ
-	(envelope-from <linux-gpio+bounces-34781-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 14:22:02 +0200
+	id ELUMAY731GlszQcAu9opvQ
+	(envelope-from <linux-gpio+bounces-34782-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 14:24:46 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC1213AE400
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 14:22:01 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AD483AE49B
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 14:24:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E42EC3029E46
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2026 12:19:38 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0AA27300CA02
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2026 12:24:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09C983AA516;
-	Tue,  7 Apr 2026 12:19:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44BA43B38AF;
+	Tue,  7 Apr 2026 12:24:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qLrrIbPt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DP20bL8l"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10003A7F64
-	for <linux-gpio@vger.kernel.org>; Tue,  7 Apr 2026 12:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47B43A3831;
+	Tue,  7 Apr 2026 12:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775564377; cv=none; b=tgtD9Vo9v7EKjblnoiBrf+sBH3BOEj/HLRWqKOW/JUZKsMiMEvMflaewqwJ0JAmhcn7XkMh8nPw8enu+EOuA+xFhk4MVQrqgK5cMasRvkXj4iUsT/MsfjkymhwfWhiXFwMvRoskDD6jfXO2HGjjEZhQOqANPl0mCI7Q/semyyYA=
+	t=1775564681; cv=none; b=Subv2QE685CkzntzB8/CnnJf0ucGZOKloh0iGCYpWs3OGaPX2dMo9AHVPqTO+hkw5Sbmn/wdawJL8zYcQB728kwswyW9OWydNtnV+jvE+z7ZW3m1QnLUufbGcgOeQZG5kpC0kqNzN1bJ3PULz/xSMlD5F2zc0vyUkvGHiifSCk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775564377; c=relaxed/simple;
-	bh=1c5la7jW3HK3gF97OtM6GfLE8oFAaLIEYMk33mp27dY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Elbuw5b+aak57B5RoGc1v0TorxY9WGcBCoTuv46OMwW30FgK54ntEGc3PXW/DlI6GhLPdsnBd5iRmyePS0herLT0p8YSAoVmV+RhWUNQpLF19/ZmjgTF5hjuWgNo1cU/xSplrZDFvg2CLYnGO7qhNpBKgR/YgMFNyE1lDCM8t0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qLrrIbPt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DDEBC2BCB5
-	for <linux-gpio@vger.kernel.org>; Tue,  7 Apr 2026 12:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775564377;
-	bh=1c5la7jW3HK3gF97OtM6GfLE8oFAaLIEYMk33mp27dY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qLrrIbPtHkYIJmyGmzo3jt4ySZ1Ok88NT9lCp5L0KXPUV3kqQD9O7Moididr/Gc0G
-	 BudIBX9uBTzUuQl447jvHTNNzavjCeJUucoyifvogzvsSWzW1yuEbR2RoLKeI8xd0D
-	 RQBqvBcycO7b/ozSFxYTZw1kk95lz8P1ylPJIbBm737GN3aDEIoyerJEOGF70oS/8A
-	 sESKDh8HB5gXk/xrbGhc+a91KmoYN0M0wpdXWEq1IBbLsyG5KbcWjuLUCgl4CoqIGj
-	 7r3+g5yj5eStn8wSw2oDONLAMxqNdQQ+QKw1/6CSc29BXD//BXHwriZsz+qCWce/mb
-	 gScFD7f1Tmflw==
-Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-6501725d888so3812544d50.0
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Apr 2026 05:19:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUL2Bm63VogNA1FFhPQNpR2k+38JUqX2fcYZ8tnrL996BRWdCD6SMfSBrfRNeckEQ9zocQ4Lh13bFo/@vger.kernel.org
-X-Gm-Message-State: AOJu0YwESkVoraJO14CVbngzYNIEfPKobFxL+ONb9KM1l+p2ttPNkHTI
-	UmDdz0wUwQUXIKoWaDXVfuVsU0sZ1g29dvDNovrXKdmddr/n9j2NlcbPFdUwRQZILtsh3Q95C30
-	hs4C6g/IqFhI9chRIhhDq5kNI+dwYvhk=
-X-Received: by 2002:a05:690e:169b:b0:650:1b68:874d with SMTP id
- 956f58d0204a3-650486f471amr15894844d50.18.1775564376854; Tue, 07 Apr 2026
- 05:19:36 -0700 (PDT)
+	s=arc-20240116; t=1775564681; c=relaxed/simple;
+	bh=7vUEmXCiBvW5Q7MjYbPq7XgplXmNVer9sQSwSRnDVAo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rmkd3L7jt/9D3yBrDlry0BXu7A8wayuWerkklT+aY5JZGF/31+h2kZ75PX4AY/Zm7J6BWN7KToUQEY/UlphodaiG6So2oEsE6RYVxlxxdJJ52l9dVS5K7RLKbNrcLOpDSwwkUMQoMQQay6YVsIKKxN5JwpX2PB20pBTtUB3onvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DP20bL8l; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775564680; x=1807100680;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7vUEmXCiBvW5Q7MjYbPq7XgplXmNVer9sQSwSRnDVAo=;
+  b=DP20bL8lmqg7UiQggKwxE0uHvCOauw+IHNJYrXnGFUjegDftJKs5xQpQ
+   k1MF32hQ4xTM7ktqS7hABzYuoAXV6T5GzBkrVJwQgXXnyFyWbyURsdqPs
+   4bX3EZL/c7Nk3McZpC750hT06C18Z+s1YLQieROTr1rPFCTQkHg0N7xrC
+   2zLSFsFYfA33sN0eGcmvtxUwtoqiYuKOpG9dJLWl2j39ZAn6rrUMH4mFH
+   JR06cuqBterXw9x6TsHXCvDbruGBqmJ4bc6J4E4at2pTT/BcfCzbybF6R
+   bWz2cAm/PAUzJOnq616Da1v9x/6hzYmpsWgO5eKQq5RZK3usTkBoovv0q
+   w==;
+X-CSE-ConnectionGUID: cEb4zXEIQQS4HDk4o4PBnw==
+X-CSE-MsgGUID: /G7AQkRZQ8+mOUQKF/9f4g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11752"; a="75698564"
+X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
+   d="scan'208";a="75698564"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 05:24:39 -0700
+X-CSE-ConnectionGUID: d81mAbAvQ/GjL3OQM7tAUQ==
+X-CSE-MsgGUID: qQd4DCSgTAW144Bi5AtkNw==
+X-ExtLoop1: 1
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.182])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 05:24:36 -0700
+Date: Tue, 7 Apr 2026 15:24:34 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: Re: [PATCH v5 0/4] ti-ads7950: fix gpio handling and facelift
+Message-ID: <adT3gs3H38bbj40L@ashevche-desk.local>
+References: <20260405-ti-ads7950-facelift-v5-0-1f980ed3cf9e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1774283146.git.dan.carpenter@linaro.org>
- <edd789f8fc87f294211adf84b09c2af9f4aa6a6f.1774283146.git.dan.carpenter@linaro.org>
- <CAMuHMdWRgkAE-eSzRif6DSqRgOySiN48vcogESN1s2gs2k7bJQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdWRgkAE-eSzRif6DSqRgOySiN48vcogESN1s2gs2k7bJQ@mail.gmail.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Tue, 7 Apr 2026 14:19:25 +0200
-X-Gmail-Original-Message-ID: <CAD++jL=EHrgDiXS3X+49MPZLaG7+WiPFaich0Cf6EmD8eGTrEQ@mail.gmail.com>
-X-Gm-Features: AQROBzDcs91SP9msOOYh23t_2WceF5Zb13bPz-OsJOPeQmVMS6t1TQZeKeJLTUs
-Message-ID: <CAD++jL=EHrgDiXS3X+49MPZLaG7+WiPFaich0Cf6EmD8eGTrEQ@mail.gmail.com>
-Subject: Re: [PATCH v6 7/7] gpio: gpio-by-pinctrl: add pinctrl based generic
- GPIO driver
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, AKASHI Takahiro <akashi.tkhro@gmail.com>, 
-	Bartosz Golaszewski <brgl@kernel.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Andy Shevchenko <andriy.shevchenko@intel.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, arm-scmi@vger.kernel.org, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Khaled Ali Ahmed <Khaled.AliAhmed@arm.com>, 
-	Michal Simek <michal.simek@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260405-ti-ads7950-facelift-v5-0-1f980ed3cf9e@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[linaro.org,gmail.com,kernel.org,vger.kernel.org,intel.com,oss.qualcomm.com,arm.com,amd.com];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-34782-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34781-lists,linux-gpio=lfdr.de];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	HAS_ORG_HEADER(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-gpio];
+	NEURAL_HAM(-0.00)[-0.998];
 	RCPT_COUNT_TWELVE(0.00)[12];
 	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: AC1213AE400
+X-Rspamd-Queue-Id: 9AD483AE49B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Apr 7, 2026 at 12:21=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
+On Sun, Apr 05, 2026 at 09:39:22PM -0700, Dmitry Torokhov wrote:
+> The original reason for this series is to make sure ti_ads7950_get()
+> returns result in range [0, 1] or a negative error code to comply with
+> gpiolib requirement.
+> 
+> During review David noticed the fact that the function also clobbers
+> gpio state. Fixing that lead to adding cleanups using guard() and devm.
 
-> > +config GPIO_BY_PINCTRL
-> > +       tristate "GPIO support based on a pure pin control backend"
-> > +       depends on GPIOLIB
->
-> Should this depend on ARM_SCMI *|| COMPILE_TEST)?  The driver only
-> matches against the "scmi-pinctrl-gpio" compatible value.
-> Or do you envision a use case without SCMI?
+Now the series LGTM,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Thanks.
 
-It can be used without SCMI but SCMI is the only current user.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-I imagine any firmware protocol (e.g. rpmsg, heh) implementing
-a pinctrl driver could get GPIO "for free" using this.
 
-Yours,
-Linus Walleij
 
