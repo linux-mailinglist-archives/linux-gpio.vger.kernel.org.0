@@ -1,87 +1,94 @@
-Return-Path: <linux-gpio+bounces-34815-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34816-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6JyQAyMN1WlQzwcAu9opvQ
-	(envelope-from <linux-gpio+bounces-34815-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 15:56:51 +0200
+	id IOpDL4QP1Wl20AcAu9opvQ
+	(envelope-from <linux-gpio+bounces-34816-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 16:07:00 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E9763AF921
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 15:56:50 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D2D13AFB55
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 16:07:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 28ACB30CE86A
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2026 13:47:42 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 09A76307B36F
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2026 14:00:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85BF63B584E;
-	Tue,  7 Apr 2026 13:47:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83DF03B8958;
+	Tue,  7 Apr 2026 14:00:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dg7BNpWv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KFjXiaUj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65E32222AC;
-	Tue,  7 Apr 2026 13:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1985A3B636E;
+	Tue,  7 Apr 2026 13:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775569661; cv=none; b=M+7N2Pwol1lFE2Ogdw6k1Jjp5hrL4ZlnIlh6u+Pc38OLiLAWWmfX2/TA68jJJr2R64XckQhMSbnFgllB9DJONSvsej0JTRBNW+Kv6cwLxEkHUbdDZ3y/JNnd0mH/+hc1BQ2hLgK2Hx0qYApMXtO9R3Zjo5kxlmBTbaHFDapzdeg=
+	t=1775570400; cv=none; b=ooty5LvFLa9SUkOmsZX1+/yvlhIZZQjTAOtWsZ3UADMALcB8hYqhEHlT8KEZZ49aHq2WrMKMK8F/QkGa0MJF5rAYMOZ2LOm+B8rZj2LBSVZqpZcEWGJ280p/Uh9GIKG1hPP1MKvytYTlB/z5+azO85y6CpQlE70wpAnsNUkCXTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775569661; c=relaxed/simple;
-	bh=NO2i62UYlO6ddKgbEZAUCawjWBgQw2MTuKaUmQ0/f78=;
+	s=arc-20240116; t=1775570400; c=relaxed/simple;
+	bh=H3Fo4J2NVU0PFRfCQAwlJEgYC6mqn4kJRkIsmg1rNmQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a9NYg2wxel/E2SNQ8K91i3fKQYOXgkFgnzpFADIdAQDghnCa+8MPfwxG0EvMsmCTHTJz3ZtvQ8SmZWReBPkoX27tCl5wnOSQczSZCadhaDEMBMLpSgDgvPJ1ym0W8E2qE3sdXbs64gmCzfjTRAUR05XwTMJK9qP4cPlglxC5MtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dg7BNpWv; arc=none smtp.client-ip=198.175.65.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=PK9GZqk2X+OEoNWMjSf4y3pi0zwpaJExTQLQdJUAWJhrPee8AT/7S5hwXzGAP6codUQ47mL3htxRUs0pQD5GKWTDCuy9CB72wbTjI0TG0SPXkxS6HN3pzubBmBJgtWIdfICUDrrtCHwy9iwvWgHDf+eAQkPYJn3Ae7bLAibX7Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KFjXiaUj; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775569660; x=1807105660;
+  t=1775570399; x=1807106399;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:content-transfer-encoding:in-reply-to;
-  bh=NO2i62UYlO6ddKgbEZAUCawjWBgQw2MTuKaUmQ0/f78=;
-  b=Dg7BNpWvWgvDPioZdb1tuHeoX2Chy9LMr6xf9JrYYqMcmF3MFxaHmHRI
-   pAOA44G/2t8W/Dz0I1193Q91/B01h9azTGFGRr+Q/R1fPRBdfUZo8dtxM
-   UWAWGAsbQ2uBOesfH9GlNvHQpHR0DLJneG/wkgdqhPAdPrGDcWL7Aksli
-   lZzxm7awLfyD+P49jOnZvsaH6Wty3f1ZWPW/DMg1TAEsMnTNk187WkN2m
-   9nHE+uJKEIygRcA7Zt9DS+X+FO9+hYt9Pp7i/5YMlg2KF++3FUgUcjR0e
-   M2bTR4/TNkbtwkLBl2MBbzdYb4rISHRSTDr4Gnta1zvPD+DEL4BiCCIKV
-   A==;
-X-CSE-ConnectionGUID: bH1HvhYjS6CwYyu31qYcAg==
-X-CSE-MsgGUID: tZjdbdygTPOBM6Vpr1V6UA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11752"; a="76544899"
+  bh=H3Fo4J2NVU0PFRfCQAwlJEgYC6mqn4kJRkIsmg1rNmQ=;
+  b=KFjXiaUjrQBaUb7SBE2M+hlt2hCUGWcOpEkNOq7zK/MO970unci8Waty
+   vUFnE5XiA0uf09PTop5vKWr377HfdfJnnyVMdqrG6/q9wU8bzUaim33j7
+   Pg0AUyjXr9C5JnF2DSuRtXnUb7SR1ORYKCAnVJfDs1vhRB/zdaUV7X9UA
+   3DY2aT0c/5rSJcXGlabM1o4udVDRPOUdollXX2qHpGBEg7+ij6DnmlQwM
+   fV6Uo6PvuzrA5NzbvhWcg53PvRYx0SwTv55PdNtKVsHGx8u/W5yhWQPJa
+   E2MhGkQJm/hV46OczP85cIj8qgXWtr//R3VtGR4/5pH88h6aPYv8Vtsrj
+   g==;
+X-CSE-ConnectionGUID: wozY9WhbSWaxH2KWOTaGUQ==
+X-CSE-MsgGUID: n967fMBuTAeldXDhtCfT+Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11752"; a="76416502"
 X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
-   d="scan'208";a="76544899"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 06:47:39 -0700
-X-CSE-ConnectionGUID: aYc0XUMCS+SUjJs+wS+vWQ==
-X-CSE-MsgGUID: iUczbetsQq+uFftphdUKxw==
+   d="scan'208";a="76416502"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 06:59:59 -0700
+X-CSE-ConnectionGUID: IGZNhBObRoOtINcVfkMZIw==
+X-CSE-MsgGUID: EdV9wd8jR22m7NUwFtblFA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
-   d="scan'208";a="223871549"
+   d="scan'208";a="251309532"
 Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.182])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 06:47:36 -0700
-Date: Tue, 7 Apr 2026 16:47:33 +0300
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 06:59:54 -0700
+Date: Tue, 7 Apr 2026 16:59:52 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Francesco Lavra <flavra@baylibre.com>
-Cc: Linus Walleij <linusw@kernel.org>,
-	Maksim Kiselev <bigunclemax@gmail.com>,
-	Sander Vanheule <sander@svanheule.net>,
-	Mike Looijmans <mike.looijmans@topic.nl>,
-	Dmitry Mastykin <mastichi@gmail.com>,
-	Evgenii Shatokhin <e.shatokhin@yadro.com>,
-	Arturas Moskvinas <arturas.moskvinas@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Andreas Kaessens <akaessens@gmail.com>,
-	Radim Pavlik <radim.pavlik@tbs-biometrics.com>,
-	Thomas Preston <thomas.preston@codethink.co.uk>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: mcp23s08: Disable all pin interrupts during
- probe
-Message-ID: <adUK9YgJoBKY8fsm@ashevche-desk.local>
-References: <20260330161914.1071118-1-flavra@baylibre.com>
- <CAD++jLkdoD=0RjpAMLWTMRtUX1+3tB6exOu5=nC3ERBYdrUiUw@mail.gmail.com>
- <e66a4241ad77859921a4562dec17ab932cfd79b0.camel@baylibre.com>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] software node: return -ENXIO when referenced
+ swnode is not registered yet
+Message-ID: <adUN2LIjNn9Y_xeT@ashevche-desk.local>
+References: <20260402-baytrail-real-swnode-v2-0-6f5054a4cc07@oss.qualcomm.com>
+ <20260402-baytrail-real-swnode-v2-1-6f5054a4cc07@oss.qualcomm.com>
+ <ac5wprh9vfTU5pGa@ashevche-desk.local>
+ <ac7UqTsPC8yUooAR@google.com>
+ <CAMRc=Mcq-T=4fnGTWXzEBjfiPaZLGw4HVAuOm48v-5Uf++K5xg@mail.gmail.com>
+ <ac_9EV3C0I1WXQz2@google.com>
+ <CAMRc=MeRSKWoEn36hht4JuwrwOMpoA5g_Xju2XT9Urq3mQS2wg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -91,7 +98,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e66a4241ad77859921a4562dec17ab932cfd79b0.camel@baylibre.com>
+In-Reply-To: <CAMRc=MeRSKWoEn36hht4JuwrwOMpoA5g_Xju2XT9Urq3mQS2wg@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -99,16 +106,16 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,svanheule.net,topic.nl,yadro.com,pengutronix.de,tbs-biometrics.com,codethink.co.uk,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-34815-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[gmail.com,oss.qualcomm.com,linux.intel.com,linuxfoundation.org,kernel.org,vger.kernel.org,lists.linux.dev];
+	TAGGED_FROM(0.00)[bounces-34816-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	HAS_ORG_HEADER(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
+	RCPT_COUNT_TWELVE(0.00)[20];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[intel.com:+];
 	MISSING_XM_UA(0.00)[];
@@ -119,44 +126,68 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	NEURAL_HAM(-0.00)[-0.970];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ashevche-desk.local:mid,intel.com:dkim]
-X-Rspamd-Queue-Id: 6E9763AF921
+	NEURAL_HAM(-0.00)[-0.973];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ashevche-desk.local:mid,intel.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 7D2D13AFB55
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Apr 07, 2026 at 09:50:39AM +0200, Francesco Lavra wrote:
-> On Tue, 2026-04-07 at 08:58 +0200, Linus Walleij wrote:
-> > On Mon, Mar 30, 2026 at 6:19 PM Francesco Lavra <flavra@baylibre.com>
-> > wrote:
+On Tue, Apr 07, 2026 at 12:57:29PM +0200, Bartosz Golaszewski wrote:
+> On Fri, Apr 3, 2026 at 8:07 PM Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+> > On Fri, Apr 03, 2026 at 09:29:38AM +0200, Bartosz Golaszewski wrote:
+> > > On Thu, Apr 2, 2026 at 10:43 PM Dmitry Torokhov
+> > > <dmitry.torokhov@gmail.com> wrote:
+> > > > On Thu, Apr 02, 2026 at 04:35:34PM +0300, Andy Shevchenko wrote:
+> > > > > On Thu, Apr 02, 2026 at 02:54:26PM +0200, Bartosz Golaszewski wrote:
 
 ...
 
-> > > This issue has always been present, but has been latent until commit
-> > > "f9f4fda15e72" ("pinctrl: mcp23s08: init reg_defaults from HW at probe
-> > > and
-> > > switch cache type"), which correctly removed reg_defaults from the
-> > > regmap
-> > > and as a side effect changed the behavior of the interrupt handler so
-> > > that
-> > > the real value of the MCP_GPINTEN register is now being read from the
-> > > chip
-> > > instead of using a bogus 0 default value; a non-zero value for this
-> > > register can trigger the invocation of a nested handler which may not
-> > > exist
-> > > (yet).
-> > > Fix this issue by disabling all pin interrupts during initialization.
-> > > 
-> > > Fixes: "f9f4fda15e72" ("pinctrl: mcp23s08: init reg_defaults from HW at
-> > > probe and switch cache type")
+> > > Because -EPROBE_DEFER only makes sense in probe() context, while
+> > > fwnode_get_reference_args() may be called in many other situations.
+> >
+> > Exactly same argument applies to your follow-up change: gpiod_get()
+> > returning -EPROBE_DEFER only makes sense in probe context but it may be
+> > called in many other situations. Are you planning to change all places
+> > where gpiolib returns -EPROBE_DEFER to something else just in case it
+> > might be called outside of probe context?
 > 
-> I realized I put stray double quotes around the commit hash.
+> I'd argue that gpiod_get() should really be limited to being called at
+> probe() time but I see your point.
 
-Also you put way too many lines of backtrace. Submitting Patches recommends to
-leave ~3-5 lines only (the one that bring value).
+There is weird hardware that might need to switch GPIO from IRQ (input) to
+output at runtime (at least some touchscreens functioning like that IIRC).
+But I dunno if it requires gpiod_put()/gpiod_get() dances.
 
-> > > Signed-off-by: Francesco Lavra <flavra@baylibre.com>
+> > -EPROBE_DEFER should have been called -ENOTREADY from the beginning and
+> > then we would not have this argument. Or, even better, we should have
+> > used -EAGAIN. But it is just a name, semantics does not really change.
+> > We want to signal that something is not ready and the operation needs be
+> > repeated. Currently we contorting ourselves by using yet another error
+> > code that everyone will either convert to -EPORBE_DEFER or will handle
+> > like -EAGAIN.
+> >
+> > > I think ENOTCONN as "not connected" makes sense, though the string
+> >
+> > Why is it better? Most of users of -ENOTCONN are in networking code so
+> > it is somewhat unexpected to have other APIs return it.
+> >
+> > > representation says: "Transport endpoint is not connected" which
+> > > doesn't spell out quite the same thing.
+> >
+> > Yes, because it is really for networking/sockets handling.
+
+> Andy et al: what is your take on this?
+
+I already commented on this while ago, and I think EPROBE_DEFER should be
+limited as much as possible (and eventually killed for good). This is known
+hack to the Linux device model instead of doing it via some graphs that are
+constructed during initialisation. There were talks and approaches how to
+solve this using graph theory IIRC (i.o.w. mathematically proven).
+
+To the current case, I think the fwnode/swnode APIs should be clean of
+deferred probe hack, so I like Bart's patch.
 
 -- 
 With Best Regards,
