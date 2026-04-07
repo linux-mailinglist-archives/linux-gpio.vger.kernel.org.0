@@ -1,136 +1,134 @@
-Return-Path: <linux-gpio+bounces-34752-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34753-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aMvxFjyu1GnNwQcAu9opvQ
-	(envelope-from <linux-gpio+bounces-34752-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 09:11:56 +0200
+	id aElZLNyu1GnvwQcAu9opvQ
+	(envelope-from <linux-gpio+bounces-34753-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 09:14:36 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDA1F3AAAF4
-	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 09:11:55 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED1033AAB0C
+	for <lists+linux-gpio@lfdr.de>; Tue, 07 Apr 2026 09:14:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 02C61307923B
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2026 07:09:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 768F730056C2
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2026 07:14:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48F8D3921E7;
-	Tue,  7 Apr 2026 07:09:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAC7D3921E7;
+	Tue,  7 Apr 2026 07:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lg3+MFyn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e6RHv0Yu"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD4F38F248
-	for <linux-gpio@vger.kernel.org>; Tue,  7 Apr 2026 07:09:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5A2C2FF
+	for <linux-gpio@vger.kernel.org>; Tue,  7 Apr 2026 07:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775545786; cv=none; b=kyHMpQu33hANa3rVLFd3UUbOtTcCDSdeH/YnYad+VskZXqV1RxyO6Q/8yjs+lKUcJGYok8gmB4Snm0p5UisgmPr0vrTOcCenyldg0iBJN0vepaKdiv/cx3icCt4GqcaJq+r4q4Snb5F63jBRJlezfAS5LQ6JZPK8oe3Uc9uPCSU=
+	t=1775546073; cv=none; b=uZ6JXLI26RU9kotAlWs/id8hSOtU387e+G0bg4lNY/Ugr5Vd7QoJCSY490sY00MjlS6pXQ4KIyy2Gz9vdEKWOZfZG/YMG2AjsDugzmecxo1cEgkamJqIUZ6HFLF2ODh0b6+Zbsq7mXgkbpEKl/7kZIBb0KIhj0gbPexBpuqG6dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775545786; c=relaxed/simple;
-	bh=KC/jj6GmhMHDUzRtlH3EgwHDlxInZpWR93VMFPpSvO0=;
+	s=arc-20240116; t=1775546073; c=relaxed/simple;
+	bh=eDYNJnr4ETlKa/GKXVghhxv0mku2PXdivqbDDAcFYYs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lk46+KfuaASTY44KeuwIbjuc8s1C/IyVbSAXPQpw13rDlIcQrNDwfAONNai2QNxlK+S0NiR6fideiHQOUGJNUmev+8ug2lqsx8cuoSyNEji7kdxZE7bYQ00zA/GBF9raxc00nFSwzAUBylFpicJM9bd34yx7y5dsYrRz89cC2ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lg3+MFyn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1628C2BCB5
-	for <linux-gpio@vger.kernel.org>; Tue,  7 Apr 2026 07:09:45 +0000 (UTC)
+	 To:Cc:Content-Type; b=NIXlmMRXO23ERG8DgpzuAO9x4Z3J6IzjlCE1mWxDOMirD0i9thGawwkuNrh/K8mbEbukQKJXhUW/Clmr+rfrmWibYig4XIt/c1TVL3HNmwkDlOiplTtqMKrt23t57uRuhbN70EkWsHEpbyhdvispFCk/FmJ5nrSeEEsmFQpbmJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e6RHv0Yu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FF25C2BC9E
+	for <linux-gpio@vger.kernel.org>; Tue,  7 Apr 2026 07:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775545785;
-	bh=KC/jj6GmhMHDUzRtlH3EgwHDlxInZpWR93VMFPpSvO0=;
+	s=k20201202; t=1775546073;
+	bh=eDYNJnr4ETlKa/GKXVghhxv0mku2PXdivqbDDAcFYYs=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Lg3+MFynZZDfGOAdcXK5csUuSME6DXXC2MFxNvAOHdoXnkpb4sCdWpygnucSj9v1m
-	 95UFzrmtIoL/cY3EQ5MbSFZAR5Fb2zHLH5E2xcV1SfEIllG4HLZJ+jDvEJZG4VS73M
-	 /tloYF7hTklShsjtd2WMxecRcFfyyLlFISH0sP9Bv3MV2PvGMIfemhb7LZF26B8ZYV
-	 BVeRbXceej5LrHISpis04/2N/bLNcGtjE6vGSA/xYpa8Mw2mVzvRV3g7OOP3vHiSqr
-	 m8SJo43kSOF5F6ZwQOUf0vlBiX80pFNSsfK3eE2SCsqD2Z4vHIQLDRp1fOlBAOaFsV
-	 zHgQzrtSI1N/g==
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-79495b1aaa7so43768067b3.1
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Apr 2026 00:09:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUF9oM9jZW88TEaWLgfuYmoYpi8lXbcz1IOrXqrsCOHZNH8LA/27+MVwHLkKRwGuBcPZtVtoCQKydG8@vger.kernel.org
-X-Gm-Message-State: AOJu0YweAi5E6hZX3CiNGT6tNpZ8GI4Horb421MuhDGYyR5Q0i1aYAzk
-	wDzrEAe31FMRVkd5FaBl5k9tepggcwxRMJBOhGgK7JBw/D8MD8hjpYvnvoyJY3wPZzinmnOE3vW
-	cM5AVLeEQX5zZlBPTLP+uD8DxC4J9SKg=
-X-Received: by 2002:a05:690c:38a:b0:79a:7cff:7b81 with SMTP id
- 00721157ae682-7a4d556cdf1mr162249447b3.27.1775545785139; Tue, 07 Apr 2026
- 00:09:45 -0700 (PDT)
+	b=e6RHv0Yu9urVko13Ln68xAueF738ZXzS7tdsaS/46PUUOPlP5CuLpl91YXHvKXBgk
+	 PDw1oakAOBB/J13Ko+DJMWeaTOv/oUniEwsd5v7ULt2Dst3BuuY8GARf99TUM1rHx9
+	 NpCDf867TsKWmxmsIhCZdqhcJwNxWczRo109DvsvawKWBJtf7FUoNsDmTg/nGNLbT6
+	 /kZyEheo9OQs7hBmcqiWaIUvO9hvVdd0tFdqRxvEoHIw2RkY12FRzMaf+VBucAFrAz
+	 b2H7LLkAMITli4l3763xxC3gAX5dOUj2AgzMCUN5vvem3rFZrC4EGFeZljhu+oBlFx
+	 XS6pkfloyDCMA==
+Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-6501e465a8eso5180630d50.1
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Apr 2026 00:14:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVulC5DlRI9D3C/RxSPTs0ylDnY2YP8R/f7I2uVvOo+fRyH/uAY4NDq4YnEpBNqHgKuPRkiTN028VFc@vger.kernel.org
+X-Gm-Message-State: AOJu0YymtPsH3qDgxZKKFngW4YryOB5h8aWpP6UmqKDT3Olsbl+vhSQJ
+	4PLbbfmExXNQbevbspdw3WzCtcajWuTXP3i66sitA5O9Hiwa98OlgMzDJ1em3OGtzZP985UwvqO
+	Nx5ajqOfM2qEntO7gKBbdm/srSUBjLGM=
+X-Received: by 2002:a05:690e:d07:b0:650:7b78:2bf6 with SMTP id
+ 956f58d0204a3-6507b782cc8mr1364136d50.21.1775546072903; Tue, 07 Apr 2026
+ 00:14:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1774864401-177149-1-git-send-email-shawn.lin@rock-chips.com>
-In-Reply-To: <1774864401-177149-1-git-send-email-shawn.lin@rock-chips.com>
+References: <20260331-pxa-gpio-swnodes-v1-0-f66d86d10d8d@oss.qualcomm.com>
+In-Reply-To: <20260331-pxa-gpio-swnodes-v1-0-f66d86d10d8d@oss.qualcomm.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Tue, 7 Apr 2026 09:09:34 +0200
-X-Gmail-Original-Message-ID: <CAD++jLnKRFwdZOVdjX4wPmU_YvHw-MNjbbe09-GPaxHYDNav8Q@mail.gmail.com>
-X-Gm-Features: AQROBzCRHOHR9JFWyk6j7oerUzw_hLzyX-ZP_Z0zJ8yhgH3qIO3DjaI4Yz45Jn0
-Message-ID: <CAD++jLnKRFwdZOVdjX4wPmU_YvHw-MNjbbe09-GPaxHYDNav8Q@mail.gmail.com>
-Subject: Re: [PATCH] gpio: rockchip: convert to dynamic GPIO base allocation
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Bartosz Golaszewski <brgl@kernel.org>, Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, ye.zhang@rock-chips.com
+Date: Tue, 7 Apr 2026 09:14:22 +0200
+X-Gmail-Original-Message-ID: <CAD++jLmEstHo0CYq=ifqm367UXqFcMgs7669s-1P1Y96rKcTwg@mail.gmail.com>
+X-Gm-Features: AQROBzD3uIlbGSM9X7dypNf0x3ZZt8RrcOHCg4-dWSS6NmwEI15IRO13jTknXdg
+Message-ID: <CAD++jLmEstHo0CYq=ifqm367UXqFcMgs7669s-1P1Y96rKcTwg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] ARM: pxa: attach software nodes to the GPIO controllers
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, 
+	Robert Jarzmik <robert.jarzmik@free.fr>, Russell King <linux@armlinux.org.uk>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Arnd Bergmann <arnd@kernel.org>, brgl@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-34752-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[zonque.org,gmail.com,free.fr,armlinux.org.uk,kernel.org,lists.infradead.org,vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-34753-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCPT_COUNT_FIVE(0.00)[6];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
 	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	NEURAL_HAM(-0.00)[-0.997];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[rock-chips.com:email,mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: CDA1F3AAAF4
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: ED1033AAB0C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Mar 30, 2026 at 11:53=E2=80=AFAM Shawn Lin <shawn.lin@rock-chips.co=
-m> wrote:
+On Tue, Mar 31, 2026 at 11:11=E2=80=AFAM Bartosz Golaszewski
+<bartosz.golaszewski@oss.qualcomm.com> wrote:
 
-> This driver is used on device tree based platform. Use dynamic
-> GPIO numberspace base to suppress the warning:
+> I was looking for a use-case where automatic secondary fwnode assignment
+> would make sense for a DT platform. With the paz00 issue having been
+> addressed by Dmitry, PXA looked like the last one that could match the
+> idea but it turned out that we can just easily attach the software nodes
+> to their controllers enabling fwnode lookup of GPIOs.
 >
-> gpio gpiochip0: Static allocation of GPIO base is deprecated, use dynamic=
- allocation.
-> gpio gpiochip1: Static allocation of GPIO base is deprecated, use dynamic=
- allocation.
-> gpio gpiochip2: Static allocation of GPIO base is deprecated, use dynamic=
- allocation.
-> gpio gpiochip3: Static allocation of GPIO base is deprecated, use dynamic=
- allocation.
-> gpio gpiochip4: Static allocation of GPIO base is deprecated, use dynamic=
- allocation.
+> After that the only GPIO consumers that still use label lookup with
+> dangling software nodes are ACPI platform devices and a single PCI
+> use-case. In that case, I won't be doing anything OF-related and will
+> limit the x86 tablets series to an ACPI-centric solution.
 >
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> With that being said: here's a series attaching software nodes to GPIO
+> controllers on the PXA platform. Since everything happens in a
+> bord-file, it's quite straightforward.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
+This makes things better, thanks!
 Reviewed-by: Linus Walleij <linusw@kernel.org>
-
-(I personally think we should be progressive with these changes,
-Bartosz may be more careful.)
-
-> -       gc->base =3D bank->pin_base;
-> +       gc->base =3D -1;
-
-Can we remove the whole ->pin_base next kernel cycle if this all
-goes well?
 
 Yours,
 Linus Walleij
