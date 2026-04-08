@@ -1,130 +1,155 @@
-Return-Path: <linux-gpio+bounces-34890-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34891-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2JiXLrhr1mnlFAgAu9opvQ
-	(envelope-from <linux-gpio+bounces-34890-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Apr 2026 16:52:40 +0200
+	id 8OfmIjx01mkWFggAu9opvQ
+	(envelope-from <linux-gpio+bounces-34891-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Apr 2026 17:29:00 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64FDD3BDE0E
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Apr 2026 16:52:35 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4596B3BE315
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Apr 2026 17:29:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B44843010D94
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Apr 2026 14:52:33 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 614E93017F8C
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Apr 2026 15:28:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38CF03D3D03;
-	Wed,  8 Apr 2026 14:52:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 823B93D6CA2;
+	Wed,  8 Apr 2026 15:28:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hSt4HlKd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RYiJzEIN"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE122DFA3A
-	for <linux-gpio@vger.kernel.org>; Wed,  8 Apr 2026 14:52:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2283D646D;
+	Wed,  8 Apr 2026 15:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775659953; cv=none; b=kSzP4jziOIXctXA1XmtlFvy2vNMpm5tFvFw6zy+SvEVaQyH0WG+wWQVYvTo2LOqEoxBZwOXJX8uu+2wgFzWNhxDviRKRg9ooKcHeMd63qTJ1chvrK5FpNdwdrUVr18/zEYKkg0TN9MyRHZrewNstOUr1pQfiNLv6kW5MV8RmOtI=
+	t=1775662133; cv=none; b=lyBe9UsnTzgoVshoLXElwAH1DthfC+FcbuX1LwHSKAVf/KArFxBhboByizUzHFvo1hR84XUxa/VxcZcaTgq7PiYdmcCGRCFKUhWIqebZF+oEJw49WovDlZ0IQJF5ppTK6NeSlP/NWLnES+FPqCZirp2mpdAO87wXmEScdLcJZi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775659953; c=relaxed/simple;
-	bh=6Lw/Eoe9ZoD6jthuPKa1ibfp0TkJ9tLImTtpG7tP2pw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LG2W+wifD77WA4UoGyK2DIibbPPnbyNm3U2HCzrFJnIC/lkaXaSt1IsNMyX1Dk7Vh3FwOae2UEJ/rW5D8a2pxV6YYGKNnpzVgbaf8fFHPtTCz95up+X8x8M+tKrTMZb0avcJ8pyVj8ek5nh6LIx3iepeYX9iKv6sT9u9CsTvIsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hSt4HlKd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C902AC2BC87
-	for <linux-gpio@vger.kernel.org>; Wed,  8 Apr 2026 14:52:32 +0000 (UTC)
+	s=arc-20240116; t=1775662133; c=relaxed/simple;
+	bh=wCWFT/9q2k5RRPzbWKYbpefTxNcp2EWEDGnOMlT4WrM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=KB76Zcdr3kk6cg7ApSE8hZS7F4a3uePY8AtjXAyFt1K6TOV8XU6dsmh38OXu2Cp+kgFwIm2mvOu8DHm0dpKTha4f8fphyG55HJnqsRz3PtnmA74Ztp6r4PeM4KiXf79Aas1dTIqjH3mTJYeZYlsMChnS6XDaAZKg+HH+Kb4vWKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RYiJzEIN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12084C2BC9E;
+	Wed,  8 Apr 2026 15:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775659952;
-	bh=6Lw/Eoe9ZoD6jthuPKa1ibfp0TkJ9tLImTtpG7tP2pw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hSt4HlKdxTwjgm6p37Rr9l2jgKxCW0L1HvBWiY+/f+FfRap7BjxXZVJprpPyXj7GX
-	 0MjdSbFodJDoILNBzFxkOTUVcma+Yk1OlQgekmR59+k1vV0PUIydtn8KWuHFblVGjd
-	 7uytPOONXF3Mmyw+QJtrlGaYUM1MQIP2c6fDCgUIDVWX+Hrrieu9Alu1zNy8cN6pQF
-	 xzFj4HlA+nhrz7V/A3zZxz/5GxGMMqQSxcgodNDe9VfyVVRc3uUZ/gaDsA32pIdAK4
-	 HwUk40xIPbqarAbmI6EgYKb/qnZvItVy0OVU0TUjQiIWzjh153YgrYQhwV3dy85Z4f
-	 65+BaHMOMV1eA==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-66f74fa69ceso2880950a12.2
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Apr 2026 07:52:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWEA1txRcqJbOmvkyT9/YFldjJZivGrqz4F8Pk5/MsvRcvJVyDjCClgi18o2vgelqJsLEb+yNLFHjqK@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJKTZmM8c9174/EwswfHn+4cQPoxrSEvdSXXOD26xcZr42bTNH
-	hHr88zP9tS09pkMvI1300jZRl9Xu6zvKDSkzRwP3QNjAjFkM+lIu64bG9yBOcASLNkuR1gz+9Me
-	KDjQnogu8qP9OgJsxeOvzfbRnJlNZ1Q==
-X-Received: by 2002:a17:907:d27:b0:b9d:166f:ff82 with SMTP id
- a640c23a62f3a-b9d166fff95mr311519766b.6.1775659951347; Wed, 08 Apr 2026
- 07:52:31 -0700 (PDT)
+	s=k20201202; t=1775662132;
+	bh=wCWFT/9q2k5RRPzbWKYbpefTxNcp2EWEDGnOMlT4WrM=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=RYiJzEINIAUuLwwxzwbKMJ4PoNGjD3lvsGAni07Q4y/U7LcJ0n+2ZwG+XzLAqklkV
+	 Psk0SQ+PJnG531WPB4bRI1qvPuFzW563Y4Vd0r47fuwNr3f6MXOZ/yxr01M66MLjdc
+	 8YQSjQCeTXSAb8k6DfELSctyLGCSdnqqOgqoSJogEHm5zezda54Vq6Ymj8rlKcTRlD
+	 8kpXPgxRUXLXc/aC/+v3g4FycB6rwaI6RB2F1lfuIXzIEc9blzElpT5AabyGZ6c23F
+	 IV3YNMTyi7ZDwwh2x/gHfpnXC+etMDeQE6RSv8XxqkEYNZ8ZzpTw9ID+B4HOxO+d6Q
+	 ifzZXvQsA6/MA==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260406075114.25672-1-clamor95@gmail.com> <20260406075114.25672-3-clamor95@gmail.com>
-In-Reply-To: <20260406075114.25672-3-clamor95@gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 8 Apr 2026 09:52:18 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJcKb6xpevQh7C9aATh=p-H5_y05PzVYi3YMAZaH5iX4A@mail.gmail.com>
-X-Gm-Features: AQROBzA3f7YSNHZDG2jSbl1BDtXRj5DsGY054stV9bbMGP2ohdg1jN5t1jiEhGA
-Message-ID: <CAL_JsqJcKb6xpevQh7C9aATh=p-H5_y05PzVYi3YMAZaH5iX4A@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] dt-bindings: pinctrl: pinctrl-max77620: convert to
- DT schema
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: Linus Walleij <linusw@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 08 Apr 2026 17:28:46 +0200
+Message-Id: <DHNVOVO67YMW.1Q763BB153CGF@kernel.org>
+Subject: Re: [PATCH v4 1/2] software node: return -ENOTCONN when referenced
+ swnode is not registered yet
+Cc: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>, "Daniel Scally"
+ <djrscally@gmail.com>, "Heikki Krogerus" <heikki.krogerus@linux.intel.com>,
+ "Sakari Ailus" <sakari.ailus@linux.intel.com>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Mika Westerberg" <mika.westerberg@linux.intel.com>, "Andy Shevchenko"
+ <andy@kernel.org>, "Linus Walleij" <linusw@kernel.org>, "Hans de Goede"
+ <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, "Len Brown" <lenb@kernel.org>,
+ <linux-acpi@vger.kernel.org>, <driver-core@lists.linux.dev>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+ <platform-driver-x86@vger.kernel.org>, "Bartosz Golaszewski"
+ <bartosz.golaszewski@oss.qualcomm.com>
+To: "Bartosz Golaszewski" <brgl@kernel.org>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20260407-swnode-unreg-retcode-v4-0-1b2f0725eb9c@oss.qualcomm.com> <20260407-swnode-unreg-retcode-v4-1-1b2f0725eb9c@oss.qualcomm.com> <CAMRc=MdWSigDmTGSCe-ggAC+rKcCLimKgKU_kAGh5N66jyXGtg@mail.gmail.com>
+In-Reply-To: <CAMRc=MdWSigDmTGSCe-ggAC+rKcCLimKgKU_kAGh5N66jyXGtg@mail.gmail.com>
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MV_CASE(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-34890-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-34891-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[linux.intel.com,gmail.com,linuxfoundation.org,kernel.org,vger.kernel.org,lists.linux.dev,oss.qualcomm.com];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 64FDD3BDE0E
+	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 4596B3BE315
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Apr 6, 2026 at 2:51=E2=80=AFAM Svyatoslav Ryhel <clamor95@gmail.com=
-> wrote:
+On Wed Apr 8, 2026 at 9:19 AM CEST, Bartosz Golaszewski wrote:
+> On Tue, Apr 7, 2026 at 3:28=E2=80=AFPM Bartosz Golaszewski
+> <bartosz.golaszewski@oss.qualcomm.com> wrote:
+>>
+>> It's possible that at the time of resolving a reference to a remote
+>> software node, the node we know exists is not yet registered as a full
+>> firmware node. We currently return -ENOENT in this case but the same
+>> error code is also returned in some other cases, like the reference
+>> property with given name not existing in the property list of the local
+>> software node.
+>>
+>> It makes sense to let users know that we're dealing with an unregistered
+>> software node so that they can defer probe - the situation is somewhat
+>> similar to there existing a firmware node to which no device is bound
+>> yet - which is valid grounds for probe deferral. To that end: use
+>> -ENOTCONN to indicate the software node is "not connected".
+>>
+>> Acked-by: Andy Shevchenko <andy@kernel.org>
+>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com=
 >
-> Convert pinctrl-max77620 devicetree bindings for the MAX77620 PMIC from
-> TXT to YAML format. This patch does not change any functionality; the
-> bindings remain the same.
+>> ---
 >
-> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> ---
->  .../pinctrl/maxim,max77620-pinctrl.yaml       |  98 ++++++++++++++
->  .../bindings/pinctrl/pinctrl-max77620.txt     | 127 ------------------
->  2 files changed, 98 insertions(+), 127 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/maxim,max77=
-620-pinctrl.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-max=
-77620.txt
+> Hi Danilo!
+>
+> With Andy's Ack, do you think you could still queue this for v7.1?
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Yeah, that should work, but I have a question about the patch.
 
-This needs to go into 7.1 as the MFD part was already applied.
+The comment added to fwnode_property_get_reference_args() says:
+
+	+ *            %-ENOTCONN when the remote firmware node is a software node=
+ that
+	+ *                       has not been registered as a firmware node yet
+
+This seems like a bit of a layering violation to me, as it makes it explici=
+t
+that this error code indicates a software node, while
+fwnode_property_get_reference_args() itself should be agnostic.
+
+The caller can easily derive more specific semantics with an is_software_no=
+de()
+check as you already do in the GPIO code.
+
+Can we describe the same condition, but without explicitly naming the backe=
+nd?
 
