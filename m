@@ -1,283 +1,163 @@
-Return-Path: <linux-gpio+bounces-34867-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34868-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EKwuBowE1mnbAQgAu9opvQ
-	(envelope-from <linux-gpio+bounces-34867-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Apr 2026 09:32:28 +0200
+	id oCFCM+4H1mnbAQgAu9opvQ
+	(envelope-from <linux-gpio+bounces-34868-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Apr 2026 09:46:54 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63BFC3B83E9
-	for <lists+linux-gpio@lfdr.de>; Wed, 08 Apr 2026 09:32:27 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43EB13B8853
+	for <lists+linux-gpio@lfdr.de>; Wed, 08 Apr 2026 09:46:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D256A301700E
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Apr 2026 07:31:33 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E2477300B3E3
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Apr 2026 07:43:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 973EB382381;
-	Wed,  8 Apr 2026 07:31:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2BD0389108;
+	Wed,  8 Apr 2026 07:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2dJR7dQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ag6U+jvI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AD9359A8A
-	for <linux-gpio@vger.kernel.org>; Wed,  8 Apr 2026 07:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D52C35B65D
+	for <linux-gpio@vger.kernel.org>; Wed,  8 Apr 2026 07:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775633492; cv=none; b=lT2BQq+zUozvI3+jz89+QsFMq9+jByQ+QsuLDnEqPJk7qG1cvUikCQgb1YXBmM9c+pJOX4X1bexkazB86rFaKrGdEE53Hvev5BpE190zrvJE4g7ByKldVJ0/JPsIiyiDQHJqo5HDfkpvA6N83BgmKmvYwXom93Pt49u9R7duI8E=
+	t=1775634203; cv=none; b=RPnsIhySgc4AapFP/tuAfI3EIdcMKRANUcvSfO3QD4RItfHVtTfVSV6FGAqZMjVXHjKnwlBZXVQkZpISgx8cMSf50Y8G9ECm9bIQx/UJAW1zGvfBxiSzd2Kck+zibjjkgEkckXOdccRRghAHE6lOEqQWkZXnMZ2uiH9rAfeOzzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775633492; c=relaxed/simple;
-	bh=kTCKrQL00F1TtK9Lwc24qq0fGDc6kjFjWFKBMs3ppAI=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VJbFKYgmRVkKgT47tATE5KSEuE4wBdcpHZxx88WCp1NuQV/g5xqDaAqh8zCph4DU0JIQucjT73oUDOUl2FvzAtYb224Kv4s/nHClOvLHpYxFpKxibfSnHCd8815sdJcgBY9/PKL0G8kxWzuc04KUiSdXLXTbWHgAD68qVW2ynWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2dJR7dQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C262C2BCB3
-	for <linux-gpio@vger.kernel.org>; Wed,  8 Apr 2026 07:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775633492;
-	bh=kTCKrQL00F1TtK9Lwc24qq0fGDc6kjFjWFKBMs3ppAI=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=V2dJR7dQPnPRwc13ZdP55Rlj1GFe4mgJhxJ6yZkIcek7h8pamPD7FeqI+osD7Gp5g
-	 udUrN7iGrBo94H7sJ0AwHlqzA1+2K5bnTeRueNwXPWqzfoafJsManetQ2AsrB2rFCI
-	 Ju7gA52R+mngm/6yQFaGaWxyrrhLdMcVNz/YOuiN7lBAdhdwXpG75VuUoJOPco0p2U
-	 G93sboc+zXveOLyYEE4YHKc7VaJiKXudCCL8RQsmEfIq3YrO/VESiru8soc8HrUMwy
-	 aRHylJ3ZXNa4c+4UnszFw0qyR0plSc+XZWaJNeizU9XTmenBY1HmlTlYINhbLJE+sX
-	 dNbX8iZ3Ommog==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-38dd9c6840aso36832011fa.0
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Apr 2026 00:31:31 -0700 (PDT)
-X-Gm-Message-State: AOJu0YzfjQ0bdtYGhsevC8NRsggNx++HlStZs89ZEDvG7Q2LbQ5Ybcyg
-	kdJEYChzHjx3XH1Xj16xo+EdBysOtp3I6OE0E6rHsvTHHduSsiomPz67PEJBJhgcZbif0KGK/Uh
-	QaxonECJNy6V+7oOLpDCoxNUdymp1NfgZsiiUJG+lOA==
-X-Received: by 2002:a05:651c:154c:b0:38e:1714:b64e with SMTP id
- 38308e7fff4ca-38e1714bf45mr17377281fa.3.1775633490684; Wed, 08 Apr 2026
- 00:31:30 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 8 Apr 2026 00:31:29 -0700
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 8 Apr 2026 00:31:29 -0700
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260408025243.1155482-4-eleanor.lin@realtek.com>
+	s=arc-20240116; t=1775634203; c=relaxed/simple;
+	bh=FVrkQLqzRfTTn662gTwVRk7jP+2yxPo2jfqrboiVMBE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fssUlikom+yXOSHf4pr9CSglXX/GhvCI0rXUEG81+QHw8QqDkoxgqv4s8+g68P9WqQWCi6znK7mxU0aocqE2o6FkpPe0bHEV9qBTLZlm/DT5+A9Vr/6sXC9Xz0drwColbKTuMlWh1ilP1Igt675mvfk08nP/5RBC+B90XyyuYMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ag6U+jvI; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5a2b542cbaaso6437468e87.0
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Apr 2026 00:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775634200; x=1776239000; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bYr02N4sEgyPGrFLtqaQYZgzdhwTkxoIxQrvtNAx6aA=;
+        b=Ag6U+jvIwQXdqaSgqtOm0tAGJ8OiQcx1i8lmrSTkYXBVnELN2NhW8aBFGRFHwes3jG
+         H/0t81BrNxJGkt5UzsVagOhjleYBq7c/c4G6qzlxiFSs6TWeqQtgpLTxS+srsoqZFEgC
+         c5xrfDFL/dlrsVwAPsl3nner7X9iTNal4rE1ZpvcaPmnqid3eC4rmzlAQB/pexHXNIOM
+         HpdqLhMkRdSckwJr1lUCE0r6GZiLWYlpGAcvJCt/qROlqpe/ScyuqYN3rJJgrqL9DafO
+         yijWF6+dE4eiEE0LocVxeKsq5R7NSCPO/TmYjH/RLI1I6g4nZWqcnZZ1AIoHB9xHGQtT
+         /hGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775634200; x=1776239000;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bYr02N4sEgyPGrFLtqaQYZgzdhwTkxoIxQrvtNAx6aA=;
+        b=pMY4XWgqr87JRlI/Vt9qcYm79i3rjcBI4tHg6ZBbp6a4+wkEI23oYKrPmOEQD937HH
+         eKRuc+mk94uOVBm6CODKOeIigXrLCvyyTAblZ/s7nc3ajDX9JaUd35UKSjsOkG9+P0KH
+         6W+WfnZSI0ibT87x3hoV1H5JK9AVN8qy48w4kP3yHWWGtxEU3FqWM0os9qDOrUBooNqQ
+         RHxzxUXqMCsXSVWQvRniExiylt6XXOzG1PFAeAydSjFlnFpBiLmD21JjZ7AXV4Ik0Bf4
+         Nt9a+CcSGc/C4y2tcvQuh3fYFaaSPwPrqLAy9eI+c5aenztY6edAnB+7LkuN34bwE8eI
+         YPRA==
+X-Forwarded-Encrypted: i=1; AJvYcCWsgrvWpAVforYtzRdXEaGfjsqolyjAoKBL30g7xXNiLiemmeg72kqLhqyMfOpIipNnmpwcfrrgdR+4@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnjX+gk6plsPBIc8wJo9PbYYlMZXAwIstpjHDVhD0dC0ubKj9R
+	+gqZrHxQJdGyGJn7AhLPKfARi4DTuga6xpoE5qfIixZf4iKrpOqg0Ihu
+X-Gm-Gg: AeBDieucNoV2cgIww/JdDZFJeehjoJj37OgOGdXw3M1durD4kpdWOFyT2AunlP0XDpX
+	wFl0cdSynIR0xwkHzVTnCLLB7zOILIuplAxVZpGRVUbfEr+pUVPRAk4JgDQHudPkHEpfT4TgSO+
+	l3HWSJCm9lyjTeQDV4DMTsuaexYVYjo7PSNgs8O91OWXwYjfu2Wx/pfJnSzYbLaseRj8FyaKZEF
+	ux+DAtjVv7gwKQpn0s59p6LzHeSIe6ii/9YAaeTT3hiEveJUxady7LB6W7Zw7XsUWeh+KSm6RrV
+	GGbVxT8fXTOm2Dl6ChCbN7LrSPi4HSPId5i1KNvIj7/Yy392wPxtnrALh35+kGmUbsosX3EoTUX
+	RdmjwguctGbZEv/05oDghqq4sTgwQj8aky2hM7SJo5xiOmp4Y6F8E/GBkB4ZWOv721ralRVIQUT
+	NVBEk9aEZzDvlDU0yeDuVS1v1kKNrTeenW
+X-Received: by 2002:a05:6512:3b0d:b0:5a2:c766:13ae with SMTP id 2adb3069b0e04-5a33755053dmr5751339e87.5.1775634200104;
+        Wed, 08 Apr 2026 00:43:20 -0700 (PDT)
+Received: from [10.38.18.54] ([213.255.186.37])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a2c6c95288sm4693429e87.14.2026.04.08.00.43.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Apr 2026 00:43:17 -0700 (PDT)
+Message-ID: <4cea1226-dfef-4612-b744-10112fd869fa@gmail.com>
+Date: Wed, 8 Apr 2026 10:43:15 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260408025243.1155482-1-eleanor.lin@realtek.com> <20260408025243.1155482-4-eleanor.lin@realtek.com>
-Date: Wed, 8 Apr 2026 00:31:29 -0700
-X-Gmail-Original-Message-ID: <CAMRc=MfUh_OuxS4SC6QzSOg_PMNc9i9crGYgBASrbVUgHDHSCw@mail.gmail.com>
-X-Gm-Features: AQROBzB5exLZ5SG0QSPEWBvRd7DGoi1G63K1Vi7bJ14rkJY_dk0S6b0kTI6vPfY
-Message-ID: <CAMRc=MfUh_OuxS4SC6QzSOg_PMNc9i9crGYgBASrbVUgHDHSCw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] gpio: realtek: Add driver for Realtek DHC RTD1625 SoC
-To: Yu-Chun Lin <eleanor.lin@realtek.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-realtek-soc@lists.infradead.org, cy.huang@realtek.com, 
-	stanley_chang@realtek.com, james.tai@realtek.com, linusw@kernel.org, 
-	brgl@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	afaerber@suse.com, tychang@realtek.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpio: handle missing regmap
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+ Matti Vaittinen <matti.vaittinen@linux.dev>
+Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Andreas Kemnade <andreas@kemnade.info>
+References: <5bfffee380863bcf24f3062e48094c8eb7b1342f.1775565381.git.mazziesaccount@gmail.com>
+ <177563264634.6152.117129686332918058.b4-ty@oss.qualcomm.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <177563264634.6152.117129686332918058.b4-ty@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-34867-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	TAGGED_FROM(0.00)[bounces-34868-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_TWELVE(0.00)[16];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 63BFC3B83E9
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mazziesaccount@gmail.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 43EB13B8853
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, 8 Apr 2026 04:52:42 +0200, Yu-Chun Lin <eleanor.lin@realtek.com> said:
-> From: Tzuyi Chang <tychang@realtek.com>
->
-> Add support for the GPIO controller found on Realtek DHC RTD1625 SoCs.
->
-> Unlike the existing Realtek GPIO driver (drivers/gpio/gpio-rtd.c),
-> which manages pins via shared bank registers, the RTD1625 introduces
-> a per-pin register architecture. Each GPIO line now has its own
-> dedicated 32-bit control register to manage configuration independently,
-> including direction, output value, input value, interrupt enable, and
-> debounce. Therefore, this distinct hardware design requires a separate
-> driver.
->
-> Reviewed-by: Linus Walleij <linusw@kernel.org>
-> Signed-off-by: Tzuyi Chang <tychang@realtek.com>
-> Signed-off-by: Yu-Chun Lin <eleanor.lin@realtek.com>
-> ---
-> Changes in v2:
-> - Remove "default y".
-> - Add base_offset member to struct rtd1625_gpio_info to handle merged regions.
-> ---
->  drivers/gpio/Kconfig        |  11 +
->  drivers/gpio/Makefile       |   1 +
->  drivers/gpio/gpio-rtd1625.c | 584 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 596 insertions(+)
->  create mode 100644 drivers/gpio/gpio-rtd1625.c
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 5ee11a889867..281549ad72ac 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -638,6 +638,17 @@ config GPIO_RTD
->  	  Say yes here to support GPIO functionality and GPIO interrupt on
->  	  Realtek DHC SoCs.
->
-> +config GPIO_RTD1625
-> +	tristate "Realtek DHC RTD1625 GPIO support"
-> +	depends on ARCH_REALTEK || COMPILE_TEST
-> +	select GPIOLIB_IRQCHIP
-> +	help
-> +	  This option enables support for the GPIO controller on Realtek
-> +	  DHC (Digital Home Center) RTD1625 SoC.
-> +
-> +	  Say yes here to support both basic GPIO line functionality
-> +	  and GPIO interrupt handling capabilities for this platform.
-> +
->  config GPIO_SAMA5D2_PIOBU
->  	tristate "SAMA5D2 PIOBU GPIO support"
->  	depends on MFD_SYSCON
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index c05f7d795c43..c95ba218d53a 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -159,6 +159,7 @@ obj-$(CONFIG_GPIO_REALTEK_OTTO)		+= gpio-realtek-otto.o
->  obj-$(CONFIG_GPIO_REG)			+= gpio-reg.o
->  obj-$(CONFIG_GPIO_ROCKCHIP)	+= gpio-rockchip.o
->  obj-$(CONFIG_GPIO_RTD)			+= gpio-rtd.o
-> +obj-$(CONFIG_GPIO_RTD1625)		+= gpio-rtd1625.o
->  obj-$(CONFIG_ARCH_SA1100)		+= gpio-sa1100.o
->  obj-$(CONFIG_GPIO_SAMA5D2_PIOBU)	+= gpio-sama5d2-piobu.o
->  obj-$(CONFIG_GPIO_SCH311X)		+= gpio-sch311x.o
-> diff --git a/drivers/gpio/gpio-rtd1625.c b/drivers/gpio/gpio-rtd1625.c
-> new file mode 100644
-> index 000000000000..bcc1bbb115fa
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-rtd1625.c
-> @@ -0,0 +1,584 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Realtek DHC RTD1625 gpio driver
-> + *
-> + * Copyright (c) 2023 Realtek Semiconductor Corp.
+On 08/04/2026 10:18, Bartosz Golaszewski wrote:
+> 
+> On Tue, 07 Apr 2026 15:41:48 +0300, Matti Vaittinen wrote:
+>> Currently the probe does not check whether getting the regmap succeeded.
+>> This can cause crash when regmap is used, if it wasn't successfully
+>> obtained. Failing to get the regmap is unlikely, especially since this
+>> driver is expected to be kicked by the MFD driver only after registering
+>> the regmap - but it is still better to handle this gracefully.
+>>
+>>
+>> [...]
+> 
+> The subject should have been: "gpio: bd72720: handle missing regmap".
 
-No modifications since 2023?
+Indeed!
 
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/bitops.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irqchip.h>
-> +#include <linux/irqchip/chained_irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/types.h>
-> +
-> +#define RTD1625_GPIO_DIR BIT(0)
-> +#define RTD1625_GPIO_OUT BIT(2)
-> +#define RTD1625_GPIO_IN BIT(4)
-> +#define RTD1625_GPIO_EDGE_INT_DP BIT(6)
-> +#define RTD1625_GPIO_EDGE_INT_EN BIT(8)
-> +#define RTD1625_GPIO_LEVEL_INT_EN BIT(16)
-> +#define RTD1625_GPIO_LEVEL_INT_DP BIT(18)
-> +#define RTD1625_GPIO_DEBOUNCE GENMASK(30, 28)
-> +#define RTD1625_GPIO_DEBOUNCE_WREN BIT(31)
-> +
-> +#define RTD1625_GPIO_WREN(x) ((x) << 1)
-> +
-> +/* Write-enable masks for all GPIO configs and reserved hardware bits */
-> +#define RTD1625_ISO_GPIO_WREN_ALL 0x8000aa8a
-> +#define RTD1625_ISOM_GPIO_WREN_ALL 0x800aaa8a
-> +
-> +#define RTD1625_GPIO_DEBOUNCE_1US 0
-> +#define RTD1625_GPIO_DEBOUNCE_10US 1
-> +#define RTD1625_GPIO_DEBOUNCE_100US 2
-> +#define RTD1625_GPIO_DEBOUNCE_1MS 3
-> +#define RTD1625_GPIO_DEBOUNCE_10MS 4
-> +#define RTD1625_GPIO_DEBOUNCE_20MS 5
-> +#define RTD1625_GPIO_DEBOUNCE_30MS 6
-> +#define RTD1625_GPIO_DEBOUNCE_50MS 7
-> +
-> +#define GPIO_CONTROL(gpio) ((gpio) * 4)
-> +
-> +/**
-> + * struct rtd1625_gpio_info - Specific GPIO register information
-> + * @num_gpios: The number of GPIOs
-> + * @irq_type_support: Supported IRQ types
-> + * @gpa_offset: Offset for GPIO assert interrupt status registers
-> + * @gpda_offset: Offset for GPIO deassert interrupt status registers
-> + * @level_offset: Offset of level interrupt status register
-> + * @write_en_all: Write-enable mask for all configurable bits
-> + */
-> +struct rtd1625_gpio_info {
-> +	unsigned int	num_gpios;
-> +	unsigned int	irq_type_support;
-> +	unsigned int	base_offset;
-> +	unsigned int	gpa_offset;
-> +	unsigned int	gpda_offset;
-> +	unsigned int	level_offset;
-> +	unsigned int	write_en_all;
-> +};
+> I fixed it and queued the patch.
 
-Please remove the tabs in the above struct.
+Thanks a bunch :)
 
-> +
-> +struct rtd1625_gpio {
-> +	struct gpio_chip		gpio_chip;
-> +	const struct rtd1625_gpio_info	*info;
-> +	void __iomem			*base;
-> +	void __iomem			*irq_base;
-> +	unsigned int			irqs[3];
-> +	raw_spinlock_t			lock;
-> +	unsigned int			*save_regs;
-> +};
+Yours,
+   -- Matti
 
-I'd also personally remove these tabs here but won't die on that hill.
 
-> +
-> +static unsigned int rtd1625_gpio_gpa_offset(struct rtd1625_gpio *data, unsigned int offset)
-> +{
-> +	return data->info->gpa_offset + ((offset / 32) * 4);
-> +}
-> +
-> +static unsigned int rtd1625_gpio_gpda_offset(struct rtd1625_gpio *data, unsigned int offset)
-> +{
-> +	return data->info->gpda_offset + ((offset / 32) * 4);
-> +}
-> +
-> +static unsigned int rtd1625_gpio_level_offset(struct rtd1625_gpio *data, unsigned int offset)
-> +{
-> +	return data->info->level_offset + ((offset / 32) * 4);
-> +}
+---
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
 
-Looking at these, I'm under the impression that this driver could quite easily
-be converted to using gpio-mmio or even gpio-regmap with an MMIO regmap, have
-you looked into it by any chance?
-
-Bart
+~~ When things go utterly wrong vim users can always type :help! ~~
 
