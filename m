@@ -1,217 +1,203 @@
-Return-Path: <linux-gpio+bounces-34965-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34966-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OLf0OWbM12k/TAgAu9opvQ
-	(envelope-from <linux-gpio+bounces-34965-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 09 Apr 2026 17:57:26 +0200
+	id eNfnDuHV12lZTggAu9opvQ
+	(envelope-from <linux-gpio+bounces-34966-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 09 Apr 2026 18:37:53 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1252F3CD359
-	for <lists+linux-gpio@lfdr.de>; Thu, 09 Apr 2026 17:57:21 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C90E33CDB5F
+	for <lists+linux-gpio@lfdr.de>; Thu, 09 Apr 2026 18:37:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A03C5300A65A
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Apr 2026 15:57:15 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 9F81E300D36C
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Apr 2026 16:37:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25CDA3431EF;
-	Thu,  9 Apr 2026 15:57:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7AF33D16E7;
+	Thu,  9 Apr 2026 16:37:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tD+Traxk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UppKiqZX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D462F83A2;
-	Thu,  9 Apr 2026 15:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166123A4502
+	for <linux-gpio@vger.kernel.org>; Thu,  9 Apr 2026 16:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775750232; cv=none; b=crMY1ud/zaoJCbnSx/bAZFJAtrIE6+pcZWIoMIRsd5ncFe1kUtxhM7kgCT17AY1IqxnC4DQJsLZ+yo1GyhZ98EWVyOyPHzyKy6pz844F8g4iY6uThl+gNzMyidPDHOkQrX1CunvcxT0V3RtcrWP0CbXWmU9SkSIEhbBALATG88o=
+	t=1775752670; cv=none; b=fokqAGkVg6wyWQmdILpL9u+3CSJOEer/Q58Z8memeUkwZnpkQlncNwr88noKLhS/dasUYiYNHWDmLK1++TPIWlzqI/Qeodm68MC6B1G6TKdMT2k/k1FPAocVHgRKrZ1U6bErpXUM52jSlbXT2lgq1G34OtzxD//P2tCDBMERMNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775750232; c=relaxed/simple;
-	bh=WR+qzP41usMsL+U2CHUcv+sT27DtSgM6KltIpwfZcnY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GMJkXW5qszJ5WEAjzZPsgLI4jcmmayMXNupt+lhNzjXMytmcCgYigQjOPbnmDWzlTNUSLQ+YE8kdmAktT5laiGzWYsLmko8JGs4EeDpw6GZ8fWgH6fvLbzcmE2P+YWtJizWpp3UjMxCo9hrxLdoD5GzZ1tNf6bRwGpvo6E1Z98c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tD+Traxk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 768C0C4CEF7;
-	Thu,  9 Apr 2026 15:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775750232;
-	bh=WR+qzP41usMsL+U2CHUcv+sT27DtSgM6KltIpwfZcnY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tD+TraxkBSWzV1OrvrD/QSp3BLnXIyQ/r5VEw6Ssz3oVkX62k9yBe3TLQioa/1soi
-	 pwx5mlxqS6foCBa5LNeuMMUU16bHPdrWEfieNxK+dyyT+lyEaiFtCE2rRc+83+PC5a
-	 K/2pOvpJ0ECptyYkObH3plHWEH1NYAkS6HHUESwGZki2P/UqMiwpiIZjucJN39BENx
-	 OBo4WsN5BqX+ULmrxtpN3dIJnAgIXmLrFEp5Co2xDwD5ek+foaAd2xxGQHGc7qHwRt
-	 Xqb9KwwQypnh1KRJ3vALlj/mwQqaexs+JkfB5teKHDpMco9wLLTzVsA+gA/tSA3FGc
-	 FYT/GUmKcq9yQ==
-Date: Thu, 9 Apr 2026 16:57:06 +0100
-From: Conor Dooley <conor@kernel.org>
-To: radu.sabau@analog.com
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v7 1/6] dt-bindings: iio: adc: add AD4691 family
-Message-ID: <20260409-headwear-condense-c119f423095b@spud>
-References: <20260409-ad4692-multichannel-sar-adc-driver-v7-0-be375d4df2c5@analog.com>
- <20260409-ad4692-multichannel-sar-adc-driver-v7-1-be375d4df2c5@analog.com>
+	s=arc-20240116; t=1775752670; c=relaxed/simple;
+	bh=6+9Yq/J748bAsu3wFGlZ94P4MyPnEJjVFXdnEHAaBHA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WFdT096kGoCi7GWNbFeQfc1EfxfXhIzYS5yAKk6ofNme0IcLvjfhUjG0Heki0DuT8HjlnLz3XqnRwSG+qU9ztNRKyJevO3w6VmXzB8C9Cu6v6mHjgxJLDAEiiYVYDp+O9aCmcdfMJCLgrebTDiR4KMk/nxrghYK7AkiP5T10GK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UppKiqZX; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-43cf906b007so677123f8f.0
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Apr 2026 09:37:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775752666; x=1776357466; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FXhkcwFnrqpZXSNcKJMXEOAfSe5R07qP9cSyRDKM2Kg=;
+        b=UppKiqZXHC6Kw5QG9b9w01UO/P00rHaE2G5Ru6IzGSZlhNx0E1O0z7DfkYzZNwA+Bx
+         +pts7pLflUa7B/SsCOHZ7rmnS9r/Hl+PjfAIJLbGvhkFc8Pb9siM+roMwsAMMEaprr4D
+         8hLu874FZJf4SzsVmtnmOhsjN/efOcxJ64ze2Ia+2KF5pMAZLxsO+zK63mNJy/pSHPeH
+         z3/7fZni4I6dBfd2gDjV0GdQ0fodRhREbiuiUFGJWWBrQwjc7nOVcuqc1t97UuO8zqfJ
+         LlLsQ1O2h/2yn2BdHpaByVrO/lamzVmr1cggi1jwTX2tfQmTGiyIK0rPdtyTJhZ24TQh
+         PxEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775752666; x=1776357466;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FXhkcwFnrqpZXSNcKJMXEOAfSe5R07qP9cSyRDKM2Kg=;
+        b=jayBzvuoZ8yR9haBjHK4/2vGU8rLEmAEZoMC03kxH+KxuUGAltjDFeCA6YO8VZU06+
+         LndxQa5SukNVLUQRRJnK8lgC2yr0/mu+5nd9S5CaQK3wbxwv+D7+rLmMfVqcMfG7xIqC
+         kkZnJXDtrD++xqdr4oLr+Y1xSiftm9rDhrTUfm8x1Q5MUDS7aH+bH6PvPlnDuw369NXD
+         OX24TzcuDrF+EcJyrV2u2sonB5NEB9FwyjKWs4FvXDu/kvp/D0+A1dkBkK4KAiyQDKds
+         drCxfsvUa04djDyIiV0R9jEYyGXC9o1foG2sr1jY6rNxflHaQJcXQfSoe2NhOSzuomRz
+         4WPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXdUKq3aujbUzvj2RwD07BTVgydJYRA3bYHuwnBHkApxf3YQbPa6IJ4q12u1FnjfHmWcowCH5HhKuHJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfhaZ49r0n03adyvBrltK2tXiYVwz/FTuOZFObkCcwJZKksRZ1
+	hQ5XblkGpRq2zC1uGZCqJJ/mXDZeJyxRDl0xsDhWvwu6UxNXuZ0X1r6P
+X-Gm-Gg: AeBDietMN5hVdf4bWTQvOaIKtYt7x7z6G86jCeNb8M5qPeaaPej5zpKAD/+q+noeHw4
+	ZKePGAGxMzmFcNSJKvUmnP6sdJd6j6axUVjD+G3QsG3lvvUNHwDfoM+zUDRxCOrdPkZtt1BzCN7
+	FMy6zY4IbNJ//RHpK+G+pgfrmo3zist4rpNkxqlueaR3afHkAloofIV6XCMhKUftJ+ZFvgC5ELY
+	aE9O1nlXZrzWdl1C17Z05VBv/FX9knhPLW7wAk8IhHGnsG/RtvkG5KNvZOOV5wDsxlocNTaDzcu
+	wYigEh31LU5+2T3RSxO3BB151dB1wG3I972F5uPnx1q8HvMsr6K5z2vudgu+nuYjibG3cU9YRfE
+	WDhsS8HPQ54DXS1JCngVVVCFqOISXS9nHEtdEsunOvmvluWwIg5AH4F2vaJmlb5ETCf28qDTlly
+	f+OUu5MDaetdNCd+WvSMAMSJJO0Yh890fhPVL3x9tnpIMYUG4F5HBsjdfmBeYTSy/iPcBUC40qe
+	VeqluP6IM7lX/2Nz1Y89yvIb3oKhZhbqVEN1lynQoldJw==
+X-Received: by 2002:a05:6000:2903:b0:43b:3d4f:e18d with SMTP id ffacd0b85a97d-43d292e8001mr38314231f8f.39.1775752666272;
+        Thu, 09 Apr 2026 09:37:46 -0700 (PDT)
+Received: from iku.example.org ([2a06:5906:61b:2d00:e6c9:3997:12f3:90d])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d63de2e4csm76587f8f.2.2026.04.09.09.37.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2026 09:37:45 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linusw@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] pinctrl: renesas: rzg2l: Add SR register cache for PM suspend/resume
+Date: Thu,  9 Apr 2026 17:37:36 +0100
+Message-ID: <20260409163736.2419396-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6AiVT6msxNHZX0tI"
-Content-Disposition: inline
-In-Reply-To: <20260409-ad4692-multichannel-sar-adc-driver-v7-1-be375d4df2c5@analog.com>
-X-Spamd-Result: default: False [-2.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34965-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	FREEMAIL_CC(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,bp.renesas.com,renesas.com];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-34966-lists,linux-gpio=lfdr.de];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[prabhakarcsengg@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[microchip.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,devicetree.org:url,analog.com:email,analog.com:url]
-X-Rspamd-Queue-Id: 1252F3CD359
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: C90E33CDB5F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
---6AiVT6msxNHZX0tI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Include the SR (Slew Rate) register in the PM suspend/resume register
+cache.
 
-On Thu, Apr 09, 2026 at 06:28:22PM +0300, Radu Sabau via B4 Relay wrote:
-> From: Radu Sabau <radu.sabau@analog.com>
->=20
-> Add DT bindings for the Analog Devices AD4691 family of multichannel
-> SAR ADCs (AD4691, AD4692, AD4693, AD4694).
->=20
-> The binding describes the hardware connections:
->=20
-> - Power domains: avdd-supply (required), vio-supply, ref-supply or
->   refin-supply (external reference; the REFIN path enables the
->   internal reference buffer), and an optional ldo-in-supply, that if
->   absent, means the on-chip internal LDO will be used.
->=20
-> - Optional PWM on the CNV pin selects CNV Burst Mode; when absent,
->   Manual Mode is assumed with CNV tied to SPI CS.
->=20
-> - An optional reset GPIO (reset-gpios) for hardware reset.
->=20
-> - Up to four GP pins (gp0..gp3) usable as interrupt sources,
->   identified in firmware via interrupt-names "gp0".."gp3".
->=20
-> - gpio-controller with #gpio-cells =3D <2> for GP pin GPIO usage.
->=20
-> - #trigger-source-cells =3D <1>: one cell selecting the GP pin number
->   (0-3) used as the SPI offload trigger source.
->=20
-> Two binding examples are provided: CNV Burst Mode with SPI offload
-> (DMA data acquisition driven by DATA_READY on a GP pin), and Manual
-> Mode for CPU-driven triggered-buffer or single-shot capture.
->=20
-> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
-> ---
->  .../devicetree/bindings/iio/adc/adi,ad4691.yaml    | 162 +++++++++++++++=
-++++++
->  MAINTAINERS                                        |   7 +
->  2 files changed, 169 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml b/=
-Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
-> new file mode 100644
-> index 000000000000..81d2ca4e0e22
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
-> @@ -0,0 +1,162 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4691.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD4691 Family Multichannel SAR ADCs
-> +
-> +maintainers:
-> +  - Radu Sabau <radu.sabau@analog.com>
-> +
-> +description: |
-> +  The AD4691 family are high-speed, low-power, multichannel successive
-> +  approximation register (SAR) analog-to-digital converters (ADCs) with
-> +  an SPI-compatible serial interface. The ADC supports CNV Burst Mode,
-> +  where an external PWM drives the CNV pin, and Manual Mode, where CNV
-> +  is directly tied to the SPI chip-select.
-> +
-> +  Datasheets:
-> +    * https://www.analog.com/en/products/ad4691.html
-> +    * https://www.analog.com/en/products/ad4692.html
-> +    * https://www.analog.com/en/products/ad4693.html
-> +    * https://www.analog.com/en/products/ad4694.html
-> +
-> +$ref: /schemas/spi/spi-peripheral-props.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad4691
-> +      - adi,ad4692
-> +      - adi,ad4693
-> +      - adi,ad4694
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-Please add a note to the commit message about why these devices are not
-compatible. With that,
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-pw-bot: not-applicable
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index 561e6018fd89..347926dad0c9 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -322,6 +322,7 @@ struct rzg2l_pinctrl_pin_settings {
+  * @pupd: PUPD registers cache
+  * @ien: IEN registers cache
+  * @smt: SMT registers cache
++ * @sr: SR registers cache
+  * @sd_ch: SD_CH registers cache
+  * @eth_poc: ET_POC registers cache
+  * @oen: Output Enable register cache
+@@ -336,6 +337,7 @@ struct rzg2l_pinctrl_reg_cache {
+ 	u32	*ien[2];
+ 	u32	*pupd[2];
+ 	u32	*smt;
++	u32	*sr;
+ 	u8	sd_ch[2];
+ 	u8	eth_poc[2];
+ 	u8	oen;
+@@ -2741,6 +2743,10 @@ static int rzg2l_pinctrl_reg_cache_alloc(struct rzg2l_pinctrl *pctrl)
+ 	if (!cache->smt)
+ 		return -ENOMEM;
+ 
++	cache->sr = devm_kcalloc(pctrl->dev, nports, sizeof(*cache->sr), GFP_KERNEL);
++	if (!cache->sr)
++		return -ENOMEM;
++
+ 	for (u8 i = 0; i < 2; i++) {
+ 		u32 n_dedicated_pins = pctrl->data->n_dedicated_pins;
+ 
+@@ -3002,7 +3008,7 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2l_pinctrl *pctrl, bool suspen
+ 	struct rzg2l_pinctrl_reg_cache *cache = pctrl->cache;
+ 
+ 	for (u32 port = 0; port < nports; port++) {
+-		bool has_iolh, has_ien, has_pupd, has_smt;
++		bool has_iolh, has_ien, has_pupd, has_smt, has_sr;
+ 		u32 off, caps;
+ 		u8 pincnt;
+ 		u64 cfg;
+@@ -3023,6 +3029,7 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2l_pinctrl *pctrl, bool suspen
+ 		has_ien = !!(caps & PIN_CFG_IEN);
+ 		has_pupd = !!(caps & PIN_CFG_PUPD);
+ 		has_smt = !!(caps & PIN_CFG_SMT);
++		has_sr = !!(caps & PIN_CFG_SR);
+ 
+ 		if (suspend)
+ 			RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + PFC(off), cache->pfc[port]);
+@@ -3068,6 +3075,9 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2l_pinctrl *pctrl, bool suspen
+ 
+ 		if (has_smt)
+ 			RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + SMT(off), cache->smt[port]);
++
++		if (has_sr)
++			RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + SR(off), cache->sr[port]);
+ 	}
+ }
+ 
+-- 
+2.53.0
 
---6AiVT6msxNHZX0tI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCadfMUgAKCRB4tDGHoIJi
-0g4LAQCDFiL/WYpD2A+CMZGioBuUJdp7MxiycZ1eF9K+aAushQD+K4LkAPI6pd7C
-hvPe16l+EF68AU12LiKpOM8XZ7AdZAg=
-=it+N
------END PGP SIGNATURE-----
-
---6AiVT6msxNHZX0tI--
 
