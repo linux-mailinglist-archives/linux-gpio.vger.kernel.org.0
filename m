@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-34920-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34921-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ELUSAORe12kCNAgAu9opvQ
-	(envelope-from <linux-gpio+bounces-34920-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 09 Apr 2026 10:10:12 +0200
+	id 4C5dL4df12kCNAgAu9opvQ
+	(envelope-from <linux-gpio+bounces-34921-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 09 Apr 2026 10:12:55 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50BD43C7875
-	for <lists+linux-gpio@lfdr.de>; Thu, 09 Apr 2026 10:10:11 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CBB93C7927
+	for <lists+linux-gpio@lfdr.de>; Thu, 09 Apr 2026 10:12:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C2F7A303E4BA
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Apr 2026 08:04:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C67E33026AA7
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Apr 2026 08:07:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F4A8389E18;
-	Thu,  9 Apr 2026 08:04:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7552396B6F;
+	Thu,  9 Apr 2026 08:07:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XjEI11ip"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LHcbuAbi"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3241382399
-	for <linux-gpio@vger.kernel.org>; Thu,  9 Apr 2026 08:04:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9733988FD
+	for <linux-gpio@vger.kernel.org>; Thu,  9 Apr 2026 08:07:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775721891; cv=none; b=p+z/ZfTNQYXQuAr5KnLOsIb6+WqHZfCpXFqqqa0qkeT2WJDZgWAvSAu/Ap/Un40ebXQ8Qc6V59yjmtWi1sgArJE11j1i98PjbvVTR2akTvRv5Wl+vZeen03DwDx9e/ukfuk9n0vzqPEVStRYt1W967HLVhPc5oV2P4OaT9x8l2Q=
+	t=1775722056; cv=none; b=XnpRlfiEQr+aD/IUb6wBBfFKsuxnIft7spl/r1e/dtw2S9onp3bxwP2PDdJITj2qHBmSVWaJRVYKoBu/LTpDPQBx/7tzgE/6jX/rS9swDyHX+5NcuVlBR9VCf5B9nu8ui3waroVk/IzJmqiOspXY7Xk4M+rjiynHgyQFYOpSHmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775721891; c=relaxed/simple;
-	bh=C6vY1/liCWOmwvhpqVq+RRM/Ex9Dg3s3PkITm9pUSq4=;
+	s=arc-20240116; t=1775722056; c=relaxed/simple;
+	bh=LZBNqEFB1NNAudAGb3yCp5RdZJ1nCcVNqjcBmjGFoJo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wafg3xLgUepH+bkyX36gLwonomg5xiGiL+CQJkjkGcLcc9uckjfPtoI+OgdaY9+izbKjksQj+YoABBAkzbWKT+tJhI/MxIAV0/iNyuzvTKcBYZ6as+Hw/TZTUmN9/OArgdV89f0NK4NOrBA4FXo4nM39Q7zuH/WyPpoAzXLLwxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XjEI11ip; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A950C2BC9E
-	for <linux-gpio@vger.kernel.org>; Thu,  9 Apr 2026 08:04:51 +0000 (UTC)
+	 To:Cc:Content-Type; b=srzNEsywWVPcteV+VxgcNMAQUpgIf7qeN6EgEfCKTHlPgpyxSDfmpXFsdNVhz6h3bJjCDZHQBrM7g+PrnhKxpx/oUYCKfvsXJD3FJC+sG6LSWqH94ruu8kimsPg/CE758z7va+4WdUdWk+AUKiorelP2y+1CU9hSgxxvkUghrCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LHcbuAbi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 648E1C4CEF7
+	for <linux-gpio@vger.kernel.org>; Thu,  9 Apr 2026 08:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775721891;
-	bh=C6vY1/liCWOmwvhpqVq+RRM/Ex9Dg3s3PkITm9pUSq4=;
+	s=k20201202; t=1775722055;
+	bh=LZBNqEFB1NNAudAGb3yCp5RdZJ1nCcVNqjcBmjGFoJo=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XjEI11ipi4OhM81fREBgwto9yE06rP8v7hundcR/3y6mGNEJneDWUe448KCz/eOjm
-	 l0/LRJbBsTLKvZpsJ0YV6CVMqaA/+B8A06fgSSzKDPu+DelOwVNLgR4vJLsYTvdB2h
-	 XJGn0Qj4Zq8vuJ0JDj9xLwc+KyJ+uFnSwSGqtmvQoG/1oAzCu6frh8E7qdKwmr1lfO
-	 WCfBZE0pmGoL5eiCDEXAGApxRALQBGf3IhjLBpM45U3kQbU6828NX7g3JnWAY/9sdV
-	 0RdDTYqexXgDEKn/i1nYZlw4ANFSvhjW+ylfTyEG0EorP31HHp7sScHpaF4g6OsL7C
-	 ll0GxYbs6jMOA==
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-7a2b6adbfa6so6095877b3.0
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Apr 2026 01:04:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXhNpLVonBBeb2pQSaBOYt+gKuYEjZMw1sBRGLUW0W/paxFi8dIM6NBDGBTNHwWDsZWxmwl/D4H5M1U@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyv7zrltLuRSMwyxkcECrURRuEaAB4mU8VVGTomP0mBSoAGyOj/
-	PlR+o3eGh5/0gaUQyhOuugumoCmt2SE8ijA4InBaku8//1yBvySvoIdVR1mmLJif8lsCprjEjcj
-	Y6rV01UHg1Z4YQ+vNRnUNJYhFzTulwqU=
-X-Received: by 2002:a05:690c:6084:b0:79a:57a2:ed75 with SMTP id
- 00721157ae682-7a4d86c20bbmr243395487b3.34.1775721890908; Thu, 09 Apr 2026
- 01:04:50 -0700 (PDT)
+	b=LHcbuAbiWLfPq1Vx9L2xZz1mTbFSAv6AJj+1rEUGXxeudhYS0mTPSWgK4HqINM/Fo
+	 WMYfGBdb8eblI3L8OXalo8cE/XV/xIvbk/mA3ExghaaD74lmOC7t1R6MkDX/EZDUpF
+	 H7jlhtVtTj43/X2Wy2aoP8qUUJBjuaSyzuuXRcc59uP+0nrfTWG9SV+/0XxvUeBCWB
+	 OQ3XxkbNLiCaGNypLSbQD1Txy1Nd3UyBWzKhWy22+wO5QBqugDL1shiknQuzpTkGWy
+	 ksy59ppSUlROkcOEgSc2ifPDGn6iSpV5nhCJ9X50VAnc2auLz6UkIvfKJNx4F6VOvV
+	 qSJSSQjkfEE7w==
+Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-6501547d7edso659975d50.0
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Apr 2026 01:07:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUQt7yHFno9E775AcZwhZXwjydig3ZK6e1nGMAjXMz2QI7q5IlcTUnu4UMZSodFqG/u1GgDaaIzRBaX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2r9vnsMx/gfmfxHwo/Zxoqh6Di9tnXo9xtSU42gYRn9J9LNIJ
+	bEJibmpldo6YkzMEV75LbmJBkCxSwMLEzNip4B4qrVoU8DIQg7K1idTv+fKpj19R494B7nUGvWO
+	W7fmPUVsByReBQ4AcGjKtDolQHluA3ug=
+X-Received: by 2002:a05:690e:440d:b0:649:bbf4:121b with SMTP id
+ 956f58d0204a3-650486bf82emr18263002d50.2.1775722054841; Thu, 09 Apr 2026
+ 01:07:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260407184805.807328-1-dev-josejavier.rodriguez@duagon.com> <20260407184805.807328-4-dev-josejavier.rodriguez@duagon.com>
-In-Reply-To: <20260407184805.807328-4-dev-josejavier.rodriguez@duagon.com>
+References: <20260407184805.807328-1-dev-josejavier.rodriguez@duagon.com> <20260407184805.807328-5-dev-josejavier.rodriguez@duagon.com>
+In-Reply-To: <20260407184805.807328-5-dev-josejavier.rodriguez@duagon.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 9 Apr 2026 10:04:39 +0200
-X-Gmail-Original-Message-ID: <CAD++jL=bxeWbf=Pm4W6WLgwzkPTHpUeOH9vwpniAdaO-AwNrzA@mail.gmail.com>
-X-Gm-Features: AQROBzChSuDIcHvtmzPqcW7WwtA4rYbqIaIb_ppLVNCEpUTgvN4vag9L0FHHCEU
-Message-ID: <CAD++jL=bxeWbf=Pm4W6WLgwzkPTHpUeOH9vwpniAdaO-AwNrzA@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/5] gpio: generic: add io_port to struct gpio_generic_chip
+Date: Thu, 9 Apr 2026 10:07:24 +0200
+X-Gmail-Original-Message-ID: <CAD++jLmeCMAGmLjpSok7ouX080tQtGH9_jystGgh7RASTSrzEQ@mail.gmail.com>
+X-Gm-Features: AQROBzBkavb26-WDDLAuTxTNJd_i9vbiGYa7-KJ0vQBl_oWlwFNtOPje7S_8hmw
+Message-ID: <CAD++jLmeCMAGmLjpSok7ouX080tQtGH9_jystGgh7RASTSrzEQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 4/5] gpio: mmio: convert accessors to generic register descriptors
 To: Jose Javier Rodriguez Barbarin <dev-josejavier.rodriguez@duagon.com>
 Cc: brgl@kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
@@ -75,7 +75,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -83,11 +83,11 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	RCPT_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-34920-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-34921-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
@@ -96,21 +96,32 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[duagon.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 50BD43C7875
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,duagon.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 1CBB93C7927
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
+
+Hi Jose,
+
+thanks for your patch!
 
 On Tue, Apr 7, 2026 at 8:49=E2=80=AFPM Jose Javier Rodriguez Barbarin
 <dev-josejavier.rodriguez@duagon.com> wrote:
 
-> Add an io_port field to struct gpio_generic_chip. Initialize it
-> depending on whether the GPIO_GENERIC_PORT_MAPPED flag is set.
+> Convert the gpio-mmio accessors to use struct gpio_chip_reg instead of
+> the previous MMIO-only register type.
+>
+> This allows the same accessors to operate on both MMIO and PMIO
+> registers and aligns gpio-mmio with the updated gpio_generic_chip API.
 >
 > Signed-off-by: Jose Javier Rodriguez Barbarin <dev-josejavier.rodriguez@d=
 uagon.com>
 
-This looks reasonable!
+This should work the same fine with a union as described per
+patch 1, and this is where that will start saving a bunch of memory.
+
+Possibly squash patch 1 into this patch? The new struct/union
+isn't used until here.
 
 Yours,
 Linus Walleij
