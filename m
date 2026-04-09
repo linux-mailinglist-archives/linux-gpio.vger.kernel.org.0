@@ -1,118 +1,135 @@
-Return-Path: <linux-gpio+bounces-34932-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34933-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kBskA6pp12moNwgAu9opvQ
-	(envelope-from <linux-gpio+bounces-34932-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 09 Apr 2026 10:56:10 +0200
+	id GIrbHalq12myNggAu9opvQ
+	(envelope-from <linux-gpio+bounces-34933-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 09 Apr 2026 11:00:25 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 522DE3C8145
-	for <lists+linux-gpio@lfdr.de>; Thu, 09 Apr 2026 10:56:09 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9F4D3C8217
+	for <lists+linux-gpio@lfdr.de>; Thu, 09 Apr 2026 11:00:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id EA22F301A69B
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Apr 2026 08:53:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 627183021EAC
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Apr 2026 08:53:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DED503822BA;
-	Thu,  9 Apr 2026 08:53:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBA483822BD;
+	Thu,  9 Apr 2026 08:53:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hnV4tPsK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EtH5qKdL"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FB837BE85
-	for <linux-gpio@vger.kernel.org>; Thu,  9 Apr 2026 08:53:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E64A37BE85
+	for <linux-gpio@vger.kernel.org>; Thu,  9 Apr 2026 08:53:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775724820; cv=none; b=AWBb/R5o0FWKiwhBNpNnxK/4rt3egEuNuFzFLUsIxqqFCmmwuGDCUb/QFBITIhBjFNquEo8uGi5anvSqxs8WR4vzeioEC5kRtGVW+FcI/CtDiu4WOlgGrzqy7pMThSjHwHw3UJlZ0d3gHmVJq0+qwPdmUyyVT+CwLXj0yriC65c=
+	t=1775724838; cv=none; b=ZJkHZQNJl2DoyTl69n7sZz/aDYeKc2NTOD8smQ8iixXyy+We6MOEnINSZ/wkWHsTqoTP+IJUIEnbMok6LzrJmnfOjWffi4pr1JFJJsXmSoCQSz3XSV69bPiUhV+rN/PbkGyhsFOg3oGvkv9eoMdA4fRFgZqhYlm5FKpOLZXONxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775724820; c=relaxed/simple;
-	bh=+gnYadLPiXy+5pNfg8GvSB4jJxsEx+b65W3ka6Kxn9A=;
+	s=arc-20240116; t=1775724838; c=relaxed/simple;
+	bh=VPUYR4LP+0KATdMvEmZX4SL61Dntc2f7Qo3SSh171vM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uEe7Q1AJsAnEGmpUnWxpyq/lG1KHzoa3sS9NA/CUnNaV027APDjDTsetVTN9Q8pCn/HTR3vOzyVySxR+zEzHtPEdoONV1lI7U9XqZYAKupbNlaGJT8GF0RNuA6Hm+jDEsCNtiRnsLtsqwe84aLuHYOYqtpgNgFoqFbcPCIQVne0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hnV4tPsK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51FA4C4CEF7
-	for <linux-gpio@vger.kernel.org>; Thu,  9 Apr 2026 08:53:40 +0000 (UTC)
+	 To:Cc:Content-Type; b=DqF/k4KFHOhOl0mLjctivENaOYwBT4WuYtmm2VnVTTdN/DQyQro8bH9IkBfjXQE62tgxDh0jvXmuQ/tUs74+81OH9XILknHAsQzX2QFgGGqE1S8mGq+U1G+aezNeA2FoysAt6bLvYPM4wC4oMyNXyc9NWwPFY8VvFE3bi33ffM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EtH5qKdL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61626C4AF0E
+	for <linux-gpio@vger.kernel.org>; Thu,  9 Apr 2026 08:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775724820;
-	bh=+gnYadLPiXy+5pNfg8GvSB4jJxsEx+b65W3ka6Kxn9A=;
+	s=k20201202; t=1775724838;
+	bh=VPUYR4LP+0KATdMvEmZX4SL61Dntc2f7Qo3SSh171vM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hnV4tPsK/NsT1jjzDTn+Xrrw04dglbAqMClXktPPbAvdPcpoKbLLqxZL50vuUELSk
-	 4Hj7zHz8ROv7Pjj6O0XQrpBs4kqt4I3g4TEjgdu4h50gnXrlwHKJ31AxzQQmGVnwC3
-	 oXCNWK6v1b5S7iBYMWLGjcU6zSzfPi8ZGwB7CGHfgJ4Et5qwBZV37Q9NZaidQKnQPc
-	 izqUGnN2W4aDVPUbq4QtmYSLo8tysZTIveOQKrEacxtA8qgASnTkS66rb7EWQC7PQU
-	 d1rSoxl8CZlKpUAsZGO/UMczErV442grgX4UIQdhmECtiLMC6hSZv8KfcGlBogCcNP
-	 bDjuWCq/aRPzg==
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-79a535e7c00so7178337b3.3
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Apr 2026 01:53:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUcu/jgsJv7VBDruqaC9p/jo+sVP0b3Qbc+GGecNp4ySnKBmllAaY6wlQFhmfzQeMkNFvcKX/IdbGWj@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtR0jcNL2rpIaxH6K7GbipUpI88EjksyNL3Lr5A56THkGeaFo7
-	f0fut7twtM65sMcVHe6Fky5IG3gDtn5SCsehgkpwFHpg6ZwiqjJ80F0PAlmuTF9LOVA94BRPtxz
-	ku1awHT4CbUrahfPQs4y0PyyNDq2WzYY=
-X-Received: by 2002:a05:690c:9:b0:7a4:e4e5:38ba with SMTP id
- 00721157ae682-7adf314ac35mr30273177b3.45.1775724819767; Thu, 09 Apr 2026
- 01:53:39 -0700 (PDT)
+	b=EtH5qKdLmmztI9hjq53SGVlqeGinGzRUR7gz/+Zrn5X4w9z9cuN9ruUVrtFkMPp7a
+	 h0NHqvMCjxxO/T8/hByT23Aio/UQsc1M3CtfAxfCpkQ4Gjdlxi0F2mWz86AfUVzca0
+	 Cw2A9hM5pWyYXzq+NMXxgLO+iK+LYowV3zmv7eO+MYufuyAqUcazrElKZIF40+8xEK
+	 0EeoRkjOxicLaeaKrKnZbyG8Wv5uMq7NwV3TsLQmCDeWFKF6K3t2KIHRG72fIdZS6+
+	 rOpv7K8FeR7scDrduKrrVxK0gIYhwhnHXDc8tuJhqwdNuqT0a5unE9vUqbs4NZcANy
+	 wZdKmfmpKak3w==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-59e4a04f059so549238e87.2
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Apr 2026 01:53:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVKModv0B7Ib/PoBU7JE0QmJwLdFlNO9vg7sMUsguxG3/Cpk4ssrQIVOcpTEe0uQbylCcQaEnEO+fh+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNfxNftSKxHfmJPYSATY7HZOjvten80oFCAW+RrV2iZrgR7asj
+	clj335QpnvnaJhKcmkT7hK6KXJgPCLdoVEqW5t3JlcEi2YjKJSqyM3QhcWa24HN0qF8NmJC5DHn
+	g6NRd6G/JY9TtHdm1K6SqPS5V8KJzixLOa0YuYsQUcw==
+X-Received: by 2002:a05:6512:a93:b0:5a2:ae27:c879 with SMTP id
+ 2adb3069b0e04-5a3e7b4b5cdmr993856e87.29.1775724837082; Thu, 09 Apr 2026
+ 01:53:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260408-hawi-pinctrl-v2-0-fd7f681f5e05@oss.qualcomm.com>
-In-Reply-To: <20260408-hawi-pinctrl-v2-0-fd7f681f5e05@oss.qualcomm.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 9 Apr 2026 10:53:28 +0200
-X-Gmail-Original-Message-ID: <CAD++jLkVHZOBk3bgdqk0dX2q4v=+CD8jC+1vu2gi8CK9BLfX2w@mail.gmail.com>
-X-Gm-Features: AQROBzA6XJGRgSvcnO-lnO5vSscUWxOTlZ4i6TF-QZ3gCocWNhYISa1pZoKedJw
-Message-ID: <CAD++jLkVHZOBk3bgdqk0dX2q4v=+CD8jC+1vu2gi8CK9BLfX2w@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] pinctrl: qcom: Introduce Pinctrl for Hawi SoC
-To: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20260407-swnode-unreg-retcode-v4-0-1b2f0725eb9c@oss.qualcomm.com>
+ <20260407-swnode-unreg-retcode-v4-1-1b2f0725eb9c@oss.qualcomm.com>
+ <CAMRc=MdWSigDmTGSCe-ggAC+rKcCLimKgKU_kAGh5N66jyXGtg@mail.gmail.com>
+ <DHNVOVO67YMW.1Q763BB153CGF@kernel.org> <CAMRc=MchUSdWo=BXrYN-qS3YFer2R3J02HyJxKJje-a1QvWdfg@mail.gmail.com>
+ <DHO01A7B9M0Y.1QVVS8600WRJ5@kernel.org>
+In-Reply-To: <DHO01A7B9M0Y.1QVVS8600WRJ5@kernel.org>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Thu, 9 Apr 2026 10:53:43 +0200
+X-Gmail-Original-Message-ID: <CAMRc=MfX8D1xM+BLCMO75zxQ9NTKtYBLoMPiXtbqUmOn+o9K_w@mail.gmail.com>
+X-Gm-Features: AQROBzDr4oZI_GfUCnBWYgDbtcc6blX4QnOeCr1x6uj9MPbAiBva7WK__bUOmQw
+Message-ID: <CAMRc=MfX8D1xM+BLCMO75zxQ9NTKtYBLoMPiXtbqUmOn+o9K_w@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] software node: return -ENOTCONN when referenced
+ swnode is not registered yet
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-34933-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[linux.intel.com,gmail.com,linuxfoundation.org,kernel.org,vger.kernel.org,lists.linux.dev,oss.qualcomm.com];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-34932-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.998];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,qualcomm.com:email]
-X-Rspamd-Queue-Id: 522DE3C8145
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: C9F4D3C8217
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Apr 8, 2026 at 4:16=E2=80=AFPM Mukesh Ojha <mukesh.ojha@oss.qualcom=
-m.com> wrote:
+On Wed, Apr 8, 2026 at 8:53=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
+rote:
+>
+> One additional question though. I think it should be fine, but are we sur=
+e the
+> change can't regress other subsystems? It seems some of them (e.g. sfp-bu=
+s,
+> v4l2, iio) special case -ENOENT.
 
-> Introduce Top Level Mode Multiplexer dt-binding and driver for upcoming
-> Qualcomm Hawi SoC.
+It seems all users check for -ENOENT for when there *is no such*
+property. If this does break anyone in next cycle's RCs, I'm here to
+fix it.
 
-All was reviewed quickly so patches applied for kernel v7.1,
-because why not.
-
-Yours,
-Linus Walleij
+Bart
 
