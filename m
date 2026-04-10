@@ -1,220 +1,140 @@
-Return-Path: <linux-gpio+bounces-34995-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35015-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kJ/1G+fM2GktiQgAu9opvQ
-	(envelope-from <linux-gpio+bounces-34995-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 12:11:51 +0200
+	id ADjeEXEm2WmnmggAu9opvQ
+	(envelope-from <linux-gpio+bounces-35015-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 18:33:53 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1972B3D5782
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 12:11:51 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B20BD3DA70D
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 18:33:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BB2943063131
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 10:05:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 60E743082DD9
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 16:28:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB6DC37D134;
-	Fri, 10 Apr 2026 10:05:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF8433DBD7E;
+	Fri, 10 Apr 2026 16:28:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vab0Bd46"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="poLVcO41"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD119344046;
-	Fri, 10 Apr 2026 10:05:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F0623EA92;
+	Fri, 10 Apr 2026 16:28:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775815549; cv=none; b=SRN5e8omDMqiEwuuliKYRWs/t3Asuv+XZk4MEjQfEOTtwwhb+o8HY4CTcBesK3diYVTJp5KwCRKW2YAhtGrhIGMmU4fg85SOXXxYroallWssVMoprupSoH+tWSKt6CZYo9NE8wVlY1eYscc0tJ5ogAaJR6bXhZ6FjJejKIJ+Aj8=
+	t=1775838509; cv=none; b=lQqUOi3L/k5Gh2YPMmdMEgjsVnHC3SSPw2XZcgbznZ5/+4iImgAvOaAlEUOLTj/U/kaWjLM/wimhSCD1LTrOqYScaVvr2M3XRza+KBiUXWHpo7TE96a9NLDUsvaAyJy+mrkCgXs7/FNQTduWTTU1dei9tDBRN7w02+6LKs5IYQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775815549; c=relaxed/simple;
-	bh=h1YJbNrS1D9yF0FDupwEzDG5/Aq1wIyxMf2Ir4lrryU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=P+xd/L+JOQPooil6qWzWnYQ/exVUsiyRO9okRMYIu/XgrbnpIDtVLwhSMYhAau3cR+IO9kGnzFHhG4x3VYdEMU5fSNvOastrfU/8tAvLEPee2w/et1lkiXgoFjETtfBZG1b7Mfc2U6BiaXs1RKvppICzBP9kh6fYdUIsOFoH67Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vab0Bd46; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4B17C19421;
-	Fri, 10 Apr 2026 10:05:44 +0000 (UTC)
+	s=arc-20240116; t=1775838509; c=relaxed/simple;
+	bh=EpnNbR/nAY+kLzkBNfKS7Cb94i1OYlMvgNWWPVNUEHc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=FVp0InlFZCGP5Z4PI4L6PWBD8DoC2CwqpQiQbGjI3hRcOYpgwZaMrHolnji8BRrO0bJyxMMzpj/QEpnAfgtO7c1jiaWNrDGY0tHa+EjqjOApBmGUSH1kiPLYU9c5jcUzDbmFaMnAo87m8/hXd/ku8F1fwjEvBgxRRTWfGLSQBQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=poLVcO41; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B386C19421;
+	Fri, 10 Apr 2026 16:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775815549;
-	bh=h1YJbNrS1D9yF0FDupwEzDG5/Aq1wIyxMf2Ir4lrryU=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Vab0Bd46+FCKKgiU7n9Ca1lcIFD4pv5vlGNtCmK0exf9Zb/Da5y4sfZOJYdArRa7p
-	 2W0QZJkJc9NyeaQ3AxstUe6FSbt/BQvlRHGJ0YnARXR00RBv+ATsrIq+hw2czcBY74
-	 xVE2feiAWL+u/YEzCuG5dj/kb2dmtdEO0NfqmeJcYoEO+k6Anm0P40slzywVB+UGLY
-	 RtRrw1Pkm+ttV/4VOtPlDzd10VhrNgAacKz5DKGaFsRuuuSR0Ld6cFs7huuDBGXixh
-	 PlH2Pj7HVBvjDVqVF6b2IrC9oClcKWgdVinPFuPpc+l3CE+h239Kk52e1FLDCcKFk6
-	 l+KaeGugNHO8g==
-Message-ID: <0a81889e-b610-4497-98c9-74a04a1595e7@kernel.org>
-Date: Fri, 10 Apr 2026 12:05:43 +0200
+	s=k20201202; t=1775838509;
+	bh=EpnNbR/nAY+kLzkBNfKS7Cb94i1OYlMvgNWWPVNUEHc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=poLVcO41o0YakKir25v4r37sYRi/2JayT/KpQTGadfRh2l3KEMbKflMy6SJI3LMrQ
+	 m5mgxOlf5mHy2+TITMon3vW7EXCdOal4eAN98cmja5KXvVuz53+VkxOEUmmVVdor2m
+	 M6lTYffpX3OX9VcSBFJkE6bPg5R4J+PKcoy5LW78IFgYdlNboJeElj04NEwRBLzT/+
+	 L+yRjTuFNeolge44uzV9Vq115VtNgjRZAJIB0dZHKpNn7FTzZJclAecC1MfucazAqL
+	 1NYw5xhKVD8oOKXoLq5mpFK6vtOtk28ZmgOlNoJynS0veguWjepq9O2VeAmElyvC+B
+	 lU3j+hE6srQYg==
+From: Mark Brown <broonie@kernel.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Bartosz Golaszewski <brgl@kernel.org>, 
+ Linus Walleij <linusw@kernel.org>
+Cc: linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org
+In-Reply-To: <20260409-asoc-uda1380-v3-1-b3d5a53f31be@kernel.org>
+References: <20260409-asoc-uda1380-v3-1-b3d5a53f31be@kernel.org>
+Subject: Re: [PATCH v3] ASoC: uda1380: Modernize the driver
+Message-Id: <177581696991.1070744.13246183215946136465.b4-ty@b4>
+Date: Fri, 10 Apr 2026 11:29:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/6] pinctrl: tegra: Add Tegra238 pinmux driver
-To: pshete@nvidia.com, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-kernel@vger.kernel.org, arnd@arndb.de,
- bjorn.andersson@oss.qualcomm.com, conor+dt@kernel.org,
- dmitry.baryshkov@oss.qualcomm.com, ebiggers@kernel.org,
- geert@linux-m68k.org, jonathanh@nvidia.com, krzk+dt@kernel.org,
- kuninori.morimoto.gx@renesas.com, linusw@kernel.org,
- luca.weiss@fairphone.com, michal.simek@amd.com,
- prabhakar.mahadev-lad.rj@bp.renesas.com, robh@kernel.org, rosenp@gmail.com,
- sven@kernel.org, thierry.reding@kernel.org, webgeek1234@gmail.com
-References: <20260409131340.168556-1-pshete@nvidia.com>
- <20260409131340.168556-4-pshete@nvidia.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260409131340.168556-4-pshete@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1089; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=EpnNbR/nAY+kLzkBNfKS7Cb94i1OYlMvgNWWPVNUEHc=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBp2SUqz4/fQJ0lMXsG8iyoC+ipcR7rhWJ09QvYM
+ faCVWOVZyuJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCadklKgAKCRAk1otyXVSH
+ 0NmFB/9t0RWsee00Ft9uTrRYEwtdWsgnngP33FHIj6pcsTBykIeAY8J7K3Fc5EiTg7/FhET0rxO
+ D4dxHK4XgFaoCEtnIxuuPzTHb8QYzmW9v6JAqChWmmruj80vqMOI6OUS9SDeNUenJiymhyYa+YV
+ 18okJCmt7Zqv5GmADInN2bcPjDxo4YPtjSpKnM3+/in4WCbI18uohHBHka3EMO8EAONLltjv1we
+ lDpJBwzU+La6nT2t4mhKBmPG7I5X358yVucOqoa69OaO29lP2WUbjkCCRQtTvVEhZuxroCcnvLH
+ NGtxDp1Yk/FjlpUFM73bgJXTjo6kOjyM48Obw2wN3Q/czlf9
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-34995-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[nvidia.com,vger.kernel.org,arndb.de,oss.qualcomm.com,kernel.org,linux-m68k.org,renesas.com,fairphone.com,amd.com,bp.renesas.com,gmail.com];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[pengutronix.de,perex.cz,suse.com,gmail.com,kernel.org];
+	TAGGED_FROM(0.00)[bounces-35015-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	TO_DN_NONE(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[broonie@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nvidia.com:email,bootlin.com:url]
-X-Rspamd-Queue-Id: 1972B3D5782
+	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: B20BD3DA70D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 09/04/2026 15:13, pshete@nvidia.com wrote:
-> From: Prathamesh Shete <pshete@nvidia.com>
-> 
-> This change adds support for the two pin controllers
+On Thu, 09 Apr 2026 23:39:31 +0200, Linus Walleij wrote:
+> ASoC: uda1380: Modernize the driver
 
-Please do not use "This commit/patch/change", but imperative mood. See
-longer explanation here:
-https://elixir.bootlin.com/linux/v6.16/source/Documentation/process/submitting-patches.rst#L94
+Applied to
 
-> (MAIN and AON) found on Tegra238.
-> 
-> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
-> ---
->  drivers/pinctrl/tegra/Kconfig            |    9 +
->  drivers/pinctrl/tegra/Makefile           |    1 +
->  drivers/pinctrl/tegra/pinctrl-tegra238.c | 2056 ++++++++++++++++++++++
->  3 files changed, 2066 insertions(+)
->  create mode 100644 drivers/pinctrl/tegra/pinctrl-tegra238.c
-> 
-> diff --git a/drivers/pinctrl/tegra/Kconfig b/drivers/pinctrl/tegra/Kconfig
-> index 660d101ea367..ccb8c337b4ee 100644
-> --- a/drivers/pinctrl/tegra/Kconfig
-> +++ b/drivers/pinctrl/tegra/Kconfig
-> @@ -36,6 +36,15 @@ config PINCTRL_TEGRA234
->  	bool
->  	select PINCTRL_TEGRA
->  
-> +config PINCTRL_TEGRA238
-> +	tristate "NVIDIA Tegra238 pinctrl driver"
-> +	select PINCTRL_TEGRA
-> +	help
-> +	  Say Y or M here to enable support for the pinctrl driver for
-> +	  NVIDIA Tegra238 SoC. This driver controls the pin multiplexing
-> +	  and configuration for the MAIN and AON pin controllers found
-> +	  on Tegra238.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-7.1
 
-All other Tegra drivers are non-selectable, so you are introducing
-completely different style. This needs explanation WHY in the commit msg.
+Thanks!
 
-Also, since you are changing things around, then I suggest to finally
-enable proper COMPILE_TEST for all tegra pinctrl. Unless I mistaken,
-it's impossible to compile test currently anything from Tegra pinctrl...
-Actually let me take a look, maybe I will do it for several platforms.
+[1/1] ASoC: uda1380: Modernize the driver
+      https://git.kernel.org/broonie/sound/c/0cb7aa965ad0
 
-...
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-> +static struct platform_driver tegra238_pinctrl_driver = {
-> +	.driver = {
-> +		.name = "tegra238-pinctrl",
-> +		.of_match_table = tegra238_pinctrl_of_match,
-> +	},
-> +	.probe = tegra238_pinctrl_probe,
-> +};
-> +
-> +static int __init tegra238_pinctrl_init(void)
-> +{
-> +	return platform_driver_register(&tegra238_pinctrl_driver);
-> +}
-> +module_init(tegra238_pinctrl_init);
-> +
-> +static void __exit tegra238_pinctrl_exit(void)
-> +{
-> +	platform_driver_unregister(&tegra238_pinctrl_driver);
-> +}
-> +module_exit(tegra238_pinctrl_exit);
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Why this cannot be module_platform_driver()?
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Best regards,
-Krzysztof
+Thanks,
+Mark
+
 
