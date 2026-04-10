@@ -1,231 +1,121 @@
-Return-Path: <linux-gpio+bounces-35021-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35022-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wBiXCHdo2Wn5pQgAu9opvQ
-	(envelope-from <linux-gpio+bounces-35021-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 23:15:35 +0200
+	id ULhSBEpt2WmmpggAu9opvQ
+	(envelope-from <linux-gpio+bounces-35022-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 23:36:10 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11BA53DCC8E
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 23:15:34 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 885AB3DCF7E
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 23:36:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C353B300404D
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 21:15:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 181F8304D5DC
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 21:29:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA02F39B484;
-	Fri, 10 Apr 2026 21:15:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91BE33BAD9C;
+	Fri, 10 Apr 2026 21:29:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b="Iq4bgpeP"
+	dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b="bAkLb03z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from polaris.svanheule.net (polaris.svanheule.net [84.16.241.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0E73A960F
-	for <linux-gpio@vger.kernel.org>; Fri, 10 Apr 2026 21:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062C22E62A9
+	for <linux-gpio@vger.kernel.org>; Fri, 10 Apr 2026 21:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.241.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775855726; cv=none; b=o5PZtqwiI02QlSbL4+fod1vLTDvnsCrZqrAm9RJ2fSE/1P4CCzmfbHOxzEhlGgJvgnf6qHZFdq/wbP4zaMYDNh2GAXt6Hu+HPOo5WhbnsEx6lw5KLoOpsK/jXzp1wPqUBh+07zWPKAnG5+RFBg3cGup83G91HyyWq4GPJRx1CZQ=
+	t=1775856571; cv=none; b=mXCFA3KseKVoBniSwjEXo9/xujqGvh1D17wgOU8Uu26xt5gsQmdkJz3H2YSkTGBStoQgDhQySYvpxNR1LpLsPadQscDLimA1ysyVc3j6gdE7Vz5GyMZ+/J2FM5SlSzoXXE8IpGwCmDw8rLue3rtTB7U9iU80BczZsZV8SQiZlm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775855726; c=relaxed/simple;
-	bh=cAXb9CrTpv524+4pOELODw8P3jQqS2XAiSFfzufoL7w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O5uya2BGrnpzlyXSbCU74rqsmDkQu9lUro/qaX3ghQbQmWGAazBSD80SSBpPSKG6p9JIWwunFhlp22SeIi3xl7N8fmyltgQUuAL/pi1tv+8Geuyn8lDRw2BvAEOxlK7ez6qbA/fSLpb8zSQMguc/VT96R3mqF7itQUUvusRgaJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b=Iq4bgpeP; arc=none smtp.client-ip=209.85.210.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-7dbcd92eda5so1844389a34.2
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Apr 2026 14:15:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20251104.gappssmtp.com; s=20251104; t=1775855722; x=1776460522; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/2F93Mx6phIJ7QoLcf5ftd6VaLTce3YAnV6T7zlntoQ=;
-        b=Iq4bgpePomKXt6AMMlpaPk9SJk6i/A1tgjOMozgB89M4I78HwLhBvsHC1LHos7KBTN
-         hpQ5SoqDc9gLQ6r4JlVk9gTNB0EDMcNQ52ebRjbV7tPVSN7n/7oRDkF23vPhPzRKRDzR
-         WnAdhK0JDnro1imOvz2DyaJD00+fhQylcUQIWrwcEDCYt9tx01uQGcBkI0RubUc0HFx9
-         YRXnP4SKu3Cn1BKhHX1sPr3PfLl2+b2V1rv9roHxLJ562FK0rvJKZB/K0e1Zvcsmh2uJ
-         ij7Ck1Oc+hrE6HUmw+S/ihUc+crUt7sGS6G0KMpccao9YqE6NojZVaQorKVOXQDxd7ov
-         Q5rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775855722; x=1776460522;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/2F93Mx6phIJ7QoLcf5ftd6VaLTce3YAnV6T7zlntoQ=;
-        b=Hcn8R8M1Sn7l3v1TEa32//E3EDyK+xkrinl8+8jxiAVsfSDMdClrNhCrM2VbNQAX6q
-         JLCwOYPfT6cN4cY9RKIJ47be78cvRIep4jt5F6ssKQjrk0I7JrLKtTPpWn+IcMwY10hC
-         MfNLjwAgHAjvp8O2eMqUJCstscRD3ligy4dlooHMwQBhmm7YB2DbKgTiIS12GGmLzfGd
-         jyGkFqWcEsNhkZSgTv5b5kUQ77EnbLX+JJSxeaxjUcGD0qY8/5W/Wc9VLV14E11FMkXp
-         Bk0MhDSZVKoCQieqxFBSD5ZxUuf3WT7I3483aMTOQeJD8HHa3iV8b+uIRNZY1tceLnXL
-         /hCA==
-X-Forwarded-Encrypted: i=1; AJvYcCWCyrZVhmmy+nODwoauzDB3aAE+/4eZ4wU47SIMgCcNGurrvS8P2+eF7+sIfEtozU8xHYj67JwfVOAF@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUA1qGjD7E5LPfWt8y5ksb/KFdIPrmmg5TpuGUkdpULDVM9Wx0
-	dHKaxD8KNq3jllf+/8JVSpOYwI1iOZWhsVvdDqaZnaBOz0VoUui5c2XVW5UDO45RjwA=
-X-Gm-Gg: AeBDieujF/laIiob1+0HnvEgMLtggHLd6Jn7X3eIo70VrfbjTEiwRpWtXTZutQOuDbN
-	X5LsKHviDal+Z1jDO04gi/q60DoE7fZumh0XNzCzW+qVx8ik82GxhkmWjNTC+8fg1o2iOqNRQc7
-	U0XJB0TjvoILDVhqv4InO+1sS436TnEfEk7Z81hk6zgu8WhAAyr6hRFEXIhMZTQn583rskgFDtq
-	/81YoImpm3+WiaTNoS1OK5PYWh5oPXcP+47ed/QUoPOrm67/EjbDuvFqpqjb98iCuRmLX4SdryW
-	4M7zJMvmp0/no7DLAyIbOxJ1BAOLjUV1LwL1L43nMiHmytfcjgr80jAK0AvwhKODnbndBVIPFo/
-	4c2x7mTizrrZkSWQCNSGQGXcE66feNBcwUH+m80VDHZhnGlwYnOqUOGYz0grLtdVJPTSJATMR9r
-	D2a2KmShyLA19fgTeUj/hc01EQbs/YmcRh+Y03iBXf/wCQ9ipua9oDvLzjk157o2UDOYu0QcACF
-	Q==
-X-Received: by 2002:a05:6820:822:b0:687:a24d:5ba2 with SMTP id 006d021491bc7-68be8bd89b5mr2314197eaf.55.1775855722351;
-        Fri, 10 Apr 2026 14:15:22 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:500:b75d:2440:dc10:808b? ([2600:8803:e7e4:500:b75d:2440:dc10:808b])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-68bc82ea1b7sm1972885eaf.5.2026.04.10.14.15.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Apr 2026 14:15:21 -0700 (PDT)
-Message-ID: <742b1821-9103-414e-a860-c2e8d5406e35@baylibre.com>
-Date: Fri, 10 Apr 2026 16:15:20 -0500
+	s=arc-20240116; t=1775856571; c=relaxed/simple;
+	bh=xJojJ7zXZE3hv9FTrQrIOztWtQat3bt+LI2SjTASCc8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dWkUmUgGMr4AKzo11l5iLAFc8xkGmBSRptCeW+8JQpnoiDorHyMrhylqLGL0+zPKaXSwzHUxzSFS4WBLe0BOGRRIT5u9C5DW6hWM7O0E1Bw6Pz+EZqfeFMTvQxfEccyFvdVEgW0yokhMCtzAym6iSD/Jv/JbR8gJWSL+bp5wW5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net; spf=pass smtp.mailfrom=svanheule.net; dkim=pass (2048-bit key) header.d=svanheule.net header.i=@svanheule.net header.b=bAkLb03z; arc=none smtp.client-ip=84.16.241.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svanheule.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svanheule.net
+Received: from [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8] (2a02-1812-162c-8f00-1e2d-b404-3319-eba8.ip6.access.telenet.be [IPv6:2a02:1812:162c:8f00:1e2d:b404:3319:eba8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sander@svanheule.net)
+	by polaris.svanheule.net (Postfix) with ESMTPSA id 805BB74665B;
+	Fri, 10 Apr 2026 23:22:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+	s=mail1707; t=1775856124;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D4Zfbjm4MkkPRNcu/lkToxV+ObwGoSvmfiyPV7tjrN4=;
+	b=bAkLb03z7VWjwwinayKy0UinK2NeeyXmLjxtVWLWzopQZe/CEqd7MO7MK4lvGQ8TTldQUk
+	fcDYkSR6tAgJVvweYLghVtF4Xw99PvAsyR//i3bFXXikpARiUp74Y/f5mMn0ZGFBKIPCtb
+	vLqVj7AzirgexJZSyP0MSHpn3+6rBsDF790y5JKogAgATvb8s8T9x0JtgySogkCbMZnz/V
+	tsh8XX77wx7Fp82NJjy1u3yA+nZNhRphlQZZJ/d43GA0lin6qCQLIYE1tdQNO/ixtJTHnE
+	tLuWWhZtiEo+6+q7y901DBqv7S5sIqlM/bhmuIhlit4jqRfuYOOxIhxS2jpv1g==
+Message-ID: <a5e993d2b6c8b57d2057909812ce831877762bd6.camel@svanheule.net>
+Subject: Re: [PATCH 3/4] pinctrl: vt8500: Enable compile testing
+From: Sander Vanheule <sander@svanheule.net>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>, Linus
+ Walleij	 <linusw@kernel.org>, Andreas =?ISO-8859-1?Q?F=E4rber?=
+ <afaerber@suse.de>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Jeffery
+	 <andrew@codeconstruct.com.au>, linux-aspeed@lists.ozlabs.org, 
+	openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Joel
+ Stanley	 <joel@jms.id.au>, linux-realtek-soc@lists.infradead.org, James Tai
+	 <james.tai@realtek.com>, Yu-Chun Lin <eleanor.lin@realtek.com>
+Date: Fri, 10 Apr 2026 23:22:03 +0200
+In-Reply-To: <20260410-pinctrl-testing-v1-3-6f708c855867@oss.qualcomm.com>
+References: <20260410-pinctrl-testing-v1-0-6f708c855867@oss.qualcomm.com>
+	 <20260410-pinctrl-testing-v1-3-6f708c855867@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 5/6] iio: adc: ad4691: add oversampling support
-To: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>, Philipp Zabel
- <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20260409-ad4692-multichannel-sar-adc-driver-v7-0-be375d4df2c5@analog.com>
- <20260409-ad4692-multichannel-sar-adc-driver-v7-5-be375d4df2c5@analog.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20260409-ad4692-multichannel-sar-adc-driver-v7-5-be375d4df2c5@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[baylibre-com.20251104.gappssmtp.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[svanheule.net,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[svanheule.net:s=mail1707];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35021-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35022-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[analog.com,metafoo.de,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[baylibre.com];
-	RCPT_COUNT_TWELVE(0.00)[23];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[baylibre-com.20251104.gappssmtp.com:+];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	DKIM_TRACE(0.00)[svanheule.net:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dlechner@baylibre.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[sander@svanheule.net,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TAGGED_RCPT(0.00)[linux-gpio];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[baylibre.com:mid,baylibre-com.20251104.gappssmtp.com:dkim,analog.com:email]
-X-Rspamd-Queue-Id: 11BA53DCC8E
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,svanheule.net:dkim,svanheule.net:mid]
+X-Rspamd-Queue-Id: 885AB3DCF7E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 4/9/26 10:28 AM, Radu Sabau via B4 Relay wrote:
-> From: Radu Sabau <radu.sabau@analog.com>
-> 
-> Add per-channel oversampling ratio (OSR) support for CNV burst mode.
-> The accumulator depth register (ACC_DEPTH_IN) is programmed with the
-> selected OSR at buffer enable time and before each single-shot read.
-> 
-> Supported OSR values: 1, 2, 4, 8, 16, 32.
-> 
-> Introduce AD4691_MANUAL_CHANNEL() for manual mode channels, which do
-> not expose the oversampling ratio attribute since OSR is not applicable
-> in that mode. A separate manual_channels array is added to
-> struct ad4691_channel_info and selected at probe time; offload paths
-> reuse the same arrays with num_channels capping access before the soft
-> timestamp entry.
-> 
-> The reported sampling frequency accounts for the active OSR:
-> effective_freq = oscillator_freq / osr
+Hi Krzysztof,
 
-Technically, the way this is implemented is fine according to IIO ABI
-rules. Writing any attribute can cause others to change. It does
-introduce a potential pitfall though. Currently, changing the OSR will
-change the sampling frequency, so you have to always write oversampling_ratio
-first, then write sampling_frequency to get what you asked for. If you want
-to change the OSR and keep the same sample rate, you still have to write both
-attributes again.
+On Fri, 2026-04-10 at 15:04 +0200, Krzysztof Kozlowski wrote:
+> Enable compile testing for Realtek pin controller drivers for increased
 
-In other drivers, I've implemented it so that the requested sampling frequency
-is stored any you always get the closest sampling frequency available based on
-the oversampling ratio. This way, it doesn't matter which order you write
-the attributes. In that case, the actual periodic trigger source isn't set up
-until we actually start sampling.
+Small nit, but this looks like a copy-paste error from the other patch.
 
-> 
-> OSR defaults to 1 (no accumulation) for all channels.
-> 
+	Realtek -> VIA/Wondermedia (or vt8500, whatever you prefer)
 
-...
-
-> @@ -499,7 +570,7 @@ static int ad4691_get_sampling_freq(struct ad4691_state *st, int *val)
->  	if (ret)
->  		return ret;
->  
-> -	*val = ad4691_osc_freqs_Hz[FIELD_GET(AD4691_OSC_FREQ_MASK, reg_val)];
-> +	*val = ad4691_osc_freqs_Hz[FIELD_GET(AD4691_OSC_FREQ_MASK, reg_val)] / osr;
-
-I guess we don't have to worry about fractional values here?
-
->  	return IIO_VAL_INT;
->  }
->  
-> @@ -536,6 +607,11 @@ static int ad4691_read_avail(struct iio_dev *indio_dev,
->  		*type = IIO_VAL_INT;
->  		*length = ARRAY_SIZE(ad4691_osc_freqs_Hz) - start;
->  		return IIO_AVAIL_LIST;
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		*vals = ad4691_oversampling_ratios;
-> +		*type = IIO_VAL_INT;
-> +		*length = ARRAY_SIZE(ad4691_oversampling_ratios);
-> +		return IIO_AVAIL_LIST;
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -566,6 +642,11 @@ static int ad4691_single_shot_read(struct iio_dev *indio_dev,
->  	if (ret)
->  		return ret;
->  
-> +	ret = regmap_write(st->regmap, AD4691_ACC_DEPTH_IN(chan->channel),
-> +			   st->osr[chan->channel]);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = regmap_read(st->regmap, AD4691_OSC_FREQ_REG, &reg_val);
->  	if (ret)
->  		return ret;
-> @@ -575,8 +656,9 @@ static int ad4691_single_shot_read(struct iio_dev *indio_dev,
->  		return ret;
->  
->  	osc_idx = FIELD_GET(AD4691_OSC_FREQ_MASK, reg_val);
-> -	/* Wait 2 oscillator periods for the conversion to complete. */
-> -	period_us = DIV_ROUND_UP(2UL * USEC_PER_SEC, ad4691_osc_freqs_Hz[osc_idx]);
-> +	/* Wait osr oscillator periods for all accumulator samples to complete. */
-
-Why did we need to way 2 before and only 1 now when OSR == 1?
-
-> +	period_us = DIV_ROUND_UP((unsigned long)st->osr[chan->channel] * USEC_PER_SEC,
-> +				 ad4691_osc_freqs_Hz[osc_idx]);
+Best,
+Sander
 
