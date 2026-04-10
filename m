@@ -1,148 +1,206 @@
-Return-Path: <linux-gpio+bounces-34993-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-34994-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gPCkOu7K2GktiQgAu9opvQ
-	(envelope-from <linux-gpio+bounces-34993-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 12:03:26 +0200
+	id eBaMJiLK2GmkiAgAu9opvQ
+	(envelope-from <linux-gpio+bounces-34994-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 12:00:02 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FDD13D55C8
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 12:03:26 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E388C3D5559
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 12:00:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A2C48301573D
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 09:55:14 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id F24E6300BE2C
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Apr 2026 09:59:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E21B3783CC;
-	Fri, 10 Apr 2026 09:55:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEEFA3ACA7C;
+	Fri, 10 Apr 2026 09:59:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T6+n50wf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rErJRG4Z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67D437756B
-	for <linux-gpio@vger.kernel.org>; Fri, 10 Apr 2026 09:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775814912; cv=none; b=oxfGZiLfG8640ulgW9QYrXCvrg1q4tyYvDLxXXiuuNlpDwz1eKQ3tbwrf4hkpcGRIFAyMj+Ui8RtFzVjzJKRKZxcwbZTyEc27xqWcxQniqYDTII+ZWNrA0W+WMo+scYDQqhKgxHDBFUdxX9/sbFKbajKjhAnPogH6vOcywvjuSs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775814912; c=relaxed/simple;
-	bh=Wr5+DY/r74XrPI08rq2r+6e8S4vo7PRdMxQwpUoapWc=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB413A9D83
+	for <linux-gpio@vger.kernel.org>; Fri, 10 Apr 2026 09:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775815175; cv=pass; b=TlfkG8v/rqV/IODlYdaC/sBmMTzzPV+ox91xUxAZUsaTsPcDK6+XnCpQ2FQp0woAuj27B6I+cRsDDzVs9TTl9D8I2rBiyGI56ifVLMK0KK2E7htb+67jYyKYRLDwPEEKpbDj7JWkblYxriR1A7n3Fz5DoyxSfEXCLHhsZ2xFfp4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775815175; c=relaxed/simple;
+	bh=N2Ytf4PmH2myigvUKMqYUbjaDrOTgHCXnYH7NNPpZ9Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JFhAmSTyZHP3x19InffVRnFp3SboTvpaJYImlvuQVtH1YelO2aA0/CxmfLuwtse5ZMbwIoz3Qtgbtk9LB83DxSBD5/0YkI/dmDgkKQlzuOHjqZadGfIIjcvsh9a8dUgb9li5PI5B+IyTZYbqC+WhHB2ZpCcMO+Dkmrhbg1k6rPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T6+n50wf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88C28C19421
-	for <linux-gpio@vger.kernel.org>; Fri, 10 Apr 2026 09:55:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775814912;
-	bh=Wr5+DY/r74XrPI08rq2r+6e8S4vo7PRdMxQwpUoapWc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=T6+n50wfxhA0Z3X4fXSdHd+0nckQVzmfcE6pJnKliP4yUr5vzgO3pZC7NCZ1WtO+B
-	 EW5O11mjHqwaUIaPkOIk7+AVVyk4T4kJugmboOcrdvo32jf0wypts7ySU4AmBTBlnB
-	 owolzVGoXiy4ck1U0vS3oOCY1gpWkoZkj3RIWY0oZmGNMPGKgZd0MDe1K/ymiSCmLM
-	 WTzdFQWXc6h/mbUwNoO44DMth3PuB8z7hKqr4WFGPE0TahLa4HOF8YoObqToRd6mnU
-	 ZDTsl53cCud9kPvEgNB+gm6mcYARk16jJs7+AiohMl39rsMO8wzyW6BaUzLWtr1FcJ
-	 f9r7pobV/ePQA==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5a2967e5de4so2747849e87.3
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Apr 2026 02:55:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWq0n6VpiU1iZ1baBZGgVDThcGLgt5YuqVJl0fTedFY/nUDAwEN+UPxxDtKdtX+J+y29FURCg/s0S1D@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywmm9xHDkBhTqIXu0VvsqtkbGfQTHJDEIh2FCNYxf5a7BSyEavr
-	WAdPSrz1phRIl8KsOgq7Es3qnyCgFy0TBz5lpsUgwoz40McoL6Oq1TOyKvZF4EAlcyBp8aBIpZ7
-	69lzBAg3OAksKVF8qD9f7NsnHJnxrgzPScV38Rgnzxg==
-X-Received: by 2002:a05:6512:114c:b0:5a2:afbe:4aaf with SMTP id
- 2adb3069b0e04-5a3efb2c6c3mr909348e87.21.1775814911289; Fri, 10 Apr 2026
- 02:55:11 -0700 (PDT)
+	 To:Cc:Content-Type; b=n+Xnu9SBFwS5xUJ4smqvjGKWUfHUCGisUg9tK4cl6iCPfPjsqseEVEmsg0+7P3mBm5oNull7p2ugO3can+5Mg4k2d3inq0o4ulh8AYrV3C9T7l+2yO+dNAahAAfdZ0vZFlVUf0a/DSWlf3ObMlgH6OWy0maRfsOyTPDFNcpBElY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rErJRG4Z; arc=pass smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-79ab5fd969aso20382067b3.0
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Apr 2026 02:59:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775815173; cv=none;
+        d=google.com; s=arc-20240605;
+        b=a7yVOrCrdijrsvBaiHZnw19Y4J8iBop/QHna8FBo1RLpcPkJ2xXQD8+nRZYjYW/tzu
+         vObeQ/IBwKtyerdAa2+6TM54o9fwb1BuTnPctbhKC60Cal7Gtte2k/pBh7SDwSdgRAqc
+         UuA+vT4UpJF5ESTdYrrCzvFQOiclmQCOhmwG+hAceM1SqFZf1qwKkEnu/TP5ZSCcbG7L
+         s+cOIwRcELsy9/xhsH5x9t99K4SBOPAE9KhkbpZd5pNADjzC0jPHRG8KfInC+qpC3apG
+         +4uJSD0EKGjM4MKOwNLp9+zXXA2rTCTaQGPPNmYftCuLD65HYJLoPgbzzqBMJ/nY4d2d
+         /ZVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=N2Ytf4PmH2myigvUKMqYUbjaDrOTgHCXnYH7NNPpZ9Q=;
+        fh=iFmXqwC/dcO3pu34AFfXIOfZkHXKdCWBnJdQvrT348U=;
+        b=HRd3rFrMuougoEN6abSwSdOIhD9EAci2KG/XhQmtsSMcrjO5p2AB5w+/2t43Qp+Wnx
+         /99ojXPep4NBNnZqhk1ZoXJzyyfRaKguwKFVXAQ4vB7G4xXMQGJA+80PMyCU//Yf21ix
+         Tsu9Gl3UAOt9PakwhvJ7xbjnXj0JIiGoJ3S01yM87wZKWUEoeRd8gMgIWUWK5o3UuKYB
+         MQzz9XLvqTjJ8ywR5mo8KuZVyYRYEKdzFXOabY1wyK9poKUKj+0P4uSMHIbteMqXa+Lk
+         FnsEmzkb+wMijPj+XTdyTktMpPsMXKHaVHkLYgbGeSShIkun9OfmM/uT5gFV8don8wtS
+         P9XQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775815173; x=1776419973; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N2Ytf4PmH2myigvUKMqYUbjaDrOTgHCXnYH7NNPpZ9Q=;
+        b=rErJRG4ZXVbUQMFbRFnmhepxOtcXBpodg5RLaOgBH+BoRSymMMJ7ImR40QJedCzbyW
+         tMf1Kw0G48yG1WZj+bNeo4MywgSjIiHC6+mdUiWs/1trlCFn5wz1/AAEssiw7iJpV45I
+         HfNU8cXmReN8Nsez829lTb/TBvUrr77OsqHawEgFSQ6vY1oOAVLWJ0U/Z4+fMTe/VFCg
+         IR23/Yp54EUoq9dhxidWHZuyoQIaTlIzdzfge5/sD4+zoIksk5Yd0vqptdZ4fGSwlDMf
+         y/S/uZCe8K9ouwDdws1zrrxjoze6PKxwMOQ8PgDitKmFK8vgUphQisVdc+pg/trHdpwt
+         wTJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775815173; x=1776419973;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=N2Ytf4PmH2myigvUKMqYUbjaDrOTgHCXnYH7NNPpZ9Q=;
+        b=aQRWlamdN+vU1YYoGgC7Ly0A+/uxIUqJbHwtGh6h/sRonTgRh4IaM3N5dubBlqMB1B
+         8igF/96cgZ2FqowqkH4xoUVl/XMQWjDXbl74dXALLJc+TTnBcdQqpHcHPXCOYw4CROBe
+         nzVYQ3ldfIXc4u+SdoS81eSbZe7StkJG6/QxeANzdARsKgtPrN5B7MJ2nWs1T1HVfWco
+         0T30sANPinW6x0xwxVf+uP63ygttNJYgah55GENfi6CgfDvxcUjm86YylAO9W14LsgKx
+         qxgB2++V3QWfE8uh1ZSvzY0OhmTE8ooTssgcgtR0tWdvZTgEAYZd52/+EeGmOp5H24fk
+         p4lQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWfWoL3t+3bg3rJIXWgaZXySSTOpDqiC5syEGeIvMu5b2eImd77Yw1qi1M1pUvfuIKeKW0LlU5/D0jd@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywoc01t6/efRXfoxjxyl/3oV2yfy2u0bC2AEk9z+kLBPnBISIz0
+	l/TnARCzy9fTvgciwcz73bpLBn0CFpB7YiKm9UW6RMfhbF1SeqvkCHGZIlDDAjWmaJUPmjzGzri
+	G9MbzkxpDC1QFz/JxG7L3IEOzZ8B+aEo=
+X-Gm-Gg: AeBDiesRSntAMLBZvH9ys6mv75ujHjegBkgbM7BOWn1MuyjO3Zje9u20uuTeqTOiMH0
+	0/hstzJujhroDoR606R+5KhBe+i504Be6VL2b14eXth/XPP9GMTjjnZIMMLraifEKnqloCkOOWe
+	Yl+lp97+/Fe3KZFXKboSm5kl4P0qOFGUfCMTG6DDFK0r5jbp2kHlHw02Vj0L7arwZ+xGEubVw04
+	WNWZ1w5zw7ZeOUvmfPDqdLihI1uA7+Oa4lVHgWN+TnvXs+dnfNqAdNBE5SLna/KLDWALgvLl5DV
+	cIgtwTGw/kOKC6lkXl5LXqOMZ1mNxiR3240T1Xcl/g==
+X-Received: by 2002:a05:690c:83:b0:79f:3715:1980 with SMTP id
+ 00721157ae682-7af6f907f77mr24281587b3.12.1775815173216; Fri, 10 Apr 2026
+ 02:59:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260410070935.9540-1-bartosz.golaszewski@oss.qualcomm.com> <trinity-5e6f6a95-e576-4f97-9085-c6de21945eab-1775813076268@trinity-msg-rest-gmx-gmx-live-5cf7d7879b-qwfn5>
-In-Reply-To: <trinity-5e6f6a95-e576-4f97-9085-c6de21945eab-1775813076268@trinity-msg-rest-gmx-gmx-live-5cf7d7879b-qwfn5>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Fri, 10 Apr 2026 11:54:57 +0200
-X-Gmail-Original-Message-ID: <CAMRc=Md1pC_a8zSQqWWcubNG-1ret8Lf9sajVDnU8nw2gnXZiA@mail.gmail.com>
-X-Gm-Features: AQROBzCP-_fg9A2t_Kbkm4--HVao78r-kjo5RBoGRmmLlahvEN3yRZA61_WNy7w
-Message-ID: <CAMRc=Md1pC_a8zSQqWWcubNG-1ret8Lf9sajVDnU8nw2gnXZiA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: moore: implement gpio_chip::get_direction()
-To: Frank Wunderlich <frank-w@public-files.de>
-Cc: bartosz.golaszewski@oss.qualcomm.com, linux@fw-web.de, 
-	sean.wang@kernel.org, linusw@kernel.org, matthias.bgg@gmail.com, 
-	angelogioacchino.delregno@collabora.com, linux-mediatek@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
+References: <20260408053037.1867092-1-a0282524688@gmail.com>
+ <20260408053037.1867092-2-a0282524688@gmail.com> <CAMRc=MeJL_po8HuBa4btVowR-e0i2FyzbDgNVo2u54iPKyuvWw@mail.gmail.com>
+In-Reply-To: <CAMRc=MeJL_po8HuBa4btVowR-e0i2FyzbDgNVo2u54iPKyuvWw@mail.gmail.com>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Fri, 10 Apr 2026 17:59:22 +0800
+X-Gm-Features: AQROBzChhaENjKRgm1eiXEkKC5Ek3HBghHXiZXP2Ngye9h9-wWZ61ho7Hz-V2Tw
+Message-ID: <CAOoeyxXqUbdd3Y0VorzVVOARVpoEkx033sYrv5Hs4tRfst2tOA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] mfd: nct6694: Switch to devm_mfd_add_devices() and
+ drop IDA
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: tmyu0@nuvoton.com, linusw@kernel.org, linux@roeck-us.net, 
+	andi.shyti@kernel.org, lee@kernel.org, mkl@pengutronix.de, mailhol@kernel.org, 
+	alexandre.belloni@bootlin.com, wim@linux-watchdog.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[oss.qualcomm.com,fw-web.de,kernel.org,gmail.com,collabora.com,lists.infradead.org,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-34993-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[public-files.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-34994-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[11];
 	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,mail.gmail.com:mid,collabora.com:email,public-files.de:email]
-X-Rspamd-Queue-Id: 5FDD13D55C8
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[a0282524688@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: E388C3D5559
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Apr 10, 2026 at 11:24=E2=80=AFAM Frank Wunderlich
-<frank-w@public-files.de> wrote:
+Hi Bart, all,
+
+Thanks for the review.
+
+Bartosz Golaszewski <brgl@kernel.org> =E6=96=BC 2026=E5=B9=B44=E6=9C=888=E6=
+=97=A5=E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=883:25=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> > Gesendet: Freitag, 10. April 2026 um 09:09
-> > Von: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>
-> > An: "Frank Wunderlich" <linux@fw-web.de>, "Sean Wang" <sean.wang@kernel=
-.org>, "Linus Walleij" <linusw@kernel.org>, "Matthias Brugger" <matthias.bg=
-g@gmail.com>, "AngeloGioacchino Del Regno" <angelogioacchino.delregno@colla=
-bora.com>, "Bartosz Golaszewski" <brgl@kernel.org>
-> > CC: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, lin=
-ux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "Bartosz G=
-olaszewski" <bartosz.golaszewski@oss.qualcomm.com>
-> > Betreff: [PATCH] pinctrl: mediatek: moore: implement gpio_chip::get_dir=
-ection()
+> On Wed, Apr 8, 2026 at 7:31=E2=80=AFAM <a0282524688@gmail.com> wrote:
 > >
-> > If the gpio_chip::get_direction() callback is not implemented by the GP=
-IO
-> > controller driver, GPIOLIB emits a warning.
+> > From: Ming Yu <a0282524688@gmail.com>
 > >
-> > Implement get_direction() for the GPIO part of pinctrl-moore.
+> > Currently, the nct6694 core driver uses mfd_add_hotplug_devices()
+> > and an IDA to manage subdevice IDs.
 > >
-> > Fixes: 471e998c0e31 ("gpiolib: remove redundant callback check")
-> > Fixes: e623c4303ed1 ("gpiolib: sanitize the return value of gpio_chip::=
-get_direction()")
-> > Reported-by: Frank Wunderlich <linux@fw-web.de>
+> > Switch the core implementation to use the managed
+> > devm_mfd_add_devices() API, which simplifies the error handling and
+> > device lifecycle management. Concurrently, drop the custom IDA
+> > implementation and transition to using pdev->id.
+> >
+> > Signed-off-by: Ming Yu <a0282524688@gmail.com>
+> > ---
 >
-> please use the email i used for SoB in my linked patch (closes link below=
-), the other email i use only for sending patches due to mail provider limi=
-tation.
+> This does result in a nice code shrink but I'd split this commit into
+> two: one switching to using MFD_CELL_BASIC() with hard-coded devices
+> IDs and one completing the transition to devres.
 >
 
-Linus: Can you fix this when applying, please?
 
-Frank: Can you also leave your Tested-by under the patch?
+You are right that this change is trying to do too much at once, and
+splitting it as you suggested would make the series much cleaner.
 
-Thanks,
-Bartosz
+After looking more closely at the ID handling and hotplug
+implications, I realized that switching to devm_mfd_add_devices() and
+dropping the IDA is not a good fit for this driver. The current
+mfd_add_hotplug_devices() path uses PLATFORM_DEVID_AUTO, which gives
+globally unique device IDs and avoids sysfs name collisions. If we
+switch to devm_mfd_add_devices() with fixed IDs, multiple identical
+NCT6694 devices can end up registering subdevices with the same
+platform device names, which would break hotplug support when more
+than one device is present.
+
+So I think it is better not to pursue this direction further.
+
+For the next revision, I will drop this part of the change and keep
+the existing MFD core logic, including the IDA usage. The series will
+focus on adding the nct6694-hif MFD driver only, and I will add the
+IDA initialization there as needed.
+
+Thanks again for the suggestion and review.
+
+
+Best regards,
+Ming
 
