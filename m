@@ -1,106 +1,106 @@
-Return-Path: <linux-gpio+bounces-35050-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35051-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sNyVKAg82mkqzQgAu9opvQ
-	(envelope-from <linux-gpio+bounces-35050-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Apr 2026 14:18:16 +0200
+	id aPgXBT482mkqzQgAu9opvQ
+	(envelope-from <linux-gpio+bounces-35051-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Apr 2026 14:19:10 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A4C13DFD4B
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Apr 2026 14:18:15 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 996FB3DFD78
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Apr 2026 14:19:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3D9783122815
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Apr 2026 12:12:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4D58130470D1
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Apr 2026 12:12:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E27BC3624CE;
-	Sat, 11 Apr 2026 12:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 042BA3630A0;
+	Sat, 11 Apr 2026 12:11:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HVtX1g1H";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="TsFLe/Bh"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RdqYeQdx";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="D/VNeznB"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5B5361DCA
-	for <linux-gpio@vger.kernel.org>; Sat, 11 Apr 2026 12:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A0136215F
+	for <linux-gpio@vger.kernel.org>; Sat, 11 Apr 2026 12:11:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775909495; cv=none; b=XwfSQJJRcwBhvZwFs42SxhN+GsmBlJf3AIayr+6t6v1fghfp3N8JQKaYyvdaEY6Q2xfAtswpRrYEIdffJP1R05mcqmeMbRO6sHrKpXRC2EW7sAR+uoWhzNqPYjsVmlAN3I1FrX3iYoP6twDs69TH3ghGgqle/CE+7QBcMNmxCZU=
+	t=1775909497; cv=none; b=nqY2t6GtIqlIiBuah2N9OaHPP6oqtt4GYpvhq5hB1Ir1mFabCpC2SsLSdJu7CcJP8Lf2Bg+8YWdj16DUhqNS0kLAGgJfyyPjlWayb3zeK5mD8bWMFiTdHTy17M/krJ6ws7+oukBD0qT6e7ifDCmrqGfryPSyt0Wxy9kvneqng7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775909495; c=relaxed/simple;
-	bh=TunD4E0x54s+DUKwuOGbXcTKMUnxxvwmjd9+k4H8VAQ=;
+	s=arc-20240116; t=1775909497; c=relaxed/simple;
+	bh=hmXTmyPe2+8CQYPgL4u755xNdxBVwLTJmFYBmxJpfok=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sLLKCFcmBlYbdI95T4g7VW3Wnxp46X1ue2etYlAcvJ97YNNDVxRhC5reU26WyRD3kT822tVw8e9z6l/7ianD5HVn83aj5+5uU2MS3SiLCXqmusGFTKDbt1lUZaBS26GBiw/5mHw8TQ9XtK7FlfXFaikcaBPuinX2m91RZbRVJBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HVtX1g1H; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=TsFLe/Bh; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:Cc; b=dLDCZowF9w4xDD5DWj3CBCqymGBVmHL6PjeXSeIamQsOHBCAbPbxo+q/5BWIBXZdMH7srWK1RJrNADUW/lMqlqmopCB6kq+kwK0xt3uu/VLT95V25fgjDOBsyGrufhorYiOYV/4SGPNmwHjoi41mOWrFTyjVek2FjBhevkBtU/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RdqYeQdx; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=D/VNeznB; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63B434cK2736607
-	for <linux-gpio@vger.kernel.org>; Sat, 11 Apr 2026 12:11:33 GMT
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63B47ido1200641
+	for <linux-gpio@vger.kernel.org>; Sat, 11 Apr 2026 12:11:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	U5Psy+WxXrFJxWjrPWpUan7fIsF4S4KxZB8EgUH3wwc=; b=HVtX1g1Hn1UjhWAO
-	eUueBXyLW5F/JIiQD1ybbQrYHa1VlqXQc5keMZ5KOEitP+cIP9APU4wt5pnfXlK2
-	u45AhyigTGRnVOfP673i09iqypc6/Ln465w2cvUW+sEsevIzbXgIrXchSuowPlgo
-	BoT+J23XHz2W5h2P97ekfqQqR7Blr514IchPmEIc6P+iW0I4mLrwG9rhiLN5DHU8
-	7k792e1QO5PlixINwHFV2gxC6+1uA6UUIrW5r5Y41lJ4EJhnWrtEkQ1ce8X5p3CH
-	zisVNHcvFmeTMCiSgNtXUGhaU4zGeWKlhOftJhB7oVtGSflnOnNksh/1ozd6ps17
-	zTPL8w==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dfexcrn2y-1
+	a6xJZ5euRUkJ01/MhbgNuHprFSRyTM9G9jNcE79fdD8=; b=RdqYeQdxVqul5YUP
+	YJv9ALIZxbDX7x/Z5cCkXTFbSom/0+K1yIi8RGidsUR06hvamy4/ccrH2PgOACd/
+	Ms5rbdZha2/cyIDevs7ITLt55xwfxXvOefbbt43G48D9JAdIyz8292D4JOFQnVu7
+	+lflPqk2ufEwDiSqoGzisdCqJWJFRuv4SlPQUM2n37B0EUF1IAI3IN5iWgjcVohO
+	BEJv1EJkBgFvbwOm2qDsZ1ae7WvvBa59vb6X0rqp2XE1W9rAcXyqPg8/LsHKnLfL
+	+UI4YRErrOPqWpRpeNV8vRcG1buDkM5vh9oFidyHW5FzE/mGoklDuXQfq6htmd3y
+	jbFnrA==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dff0jrnap-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Sat, 11 Apr 2026 12:11:32 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-50b3544bc7bso36868241cf.2
-        for <linux-gpio@vger.kernel.org>; Sat, 11 Apr 2026 05:11:32 -0700 (PDT)
+	for <linux-gpio@vger.kernel.org>; Sat, 11 Apr 2026 12:11:34 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-8d5010ea730so686904185a.0
+        for <linux-gpio@vger.kernel.org>; Sat, 11 Apr 2026 05:11:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1775909492; x=1776514292; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1775909494; x=1776514294; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=U5Psy+WxXrFJxWjrPWpUan7fIsF4S4KxZB8EgUH3wwc=;
-        b=TsFLe/Bhx8UyYTdAo/KSMCBNliaQhVrDVS+P0exaRb5zg6tCT7Vh6TmMPBSh6KRXNh
-         BzMz0PPjRDBZlZjgnJ5r3/HOm9hgcpIOxlPmDhYkHgB60Tqq4zfMAbRheLjQkCS+w6Eb
-         PazcpQi6hemf84NtorqM2cqaYjxocDjqWCPbCwUh0Xt47rshbyceHr1+zFLbj2Cuo9qT
-         dXd9gr6nG4SIKM8U8nVu5Icct4MUwGvjDYgo9/K4l3ijBAa/hhrcC4ZsjEPWvJjsvBCN
-         0X0xaIhCBMYMpSc9NAOZS8Lp1hJklNeZAui5j9OAaOXg7rmuks+WPyFo+10Q42glSpjG
-         wImw==
+        bh=a6xJZ5euRUkJ01/MhbgNuHprFSRyTM9G9jNcE79fdD8=;
+        b=D/VNeznBJAkkziHuHPeDwnvqBDLIeB7ttPeMiGpdbO8i4dV18k5UTf/e4deAIn5Rap
+         NCQ309QaLyDuEbcgMyZ8gnRgQeY6nV58TcU52Nviu/pRi8RR1Q2hdfxOWffojggXNrId
+         JaAyFDNB5uVupZZIR/TElddq1lazcMfJPF0ZmVpJyMR6FxjEoUnMGGqQTt8p6N5vvAEZ
+         VqJvD0QNDrwlFz7bQYQnubFom22Y7YR4It8mPRACz79Hw2jyKWkaXozy+X4HA4dP54lc
+         n9tsjiSBB1oOQ2g8ZKpLDtQMp18CskGuvtNvvWRUM0FamfzOhuIj2+A7QTSh+B6bP6kD
+         l0/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775909492; x=1776514292;
+        d=1e100.net; s=20251104; t=1775909494; x=1776514294;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=U5Psy+WxXrFJxWjrPWpUan7fIsF4S4KxZB8EgUH3wwc=;
-        b=FxblVZ3y93gmtciV/0kPTpSMTEh9qgLMv0znMUUZNqS18mTXNQ5c9R9z8SVogitgAz
-         +uwPv1HvWgHIkSiDkw2Z8Vyrc9HRPrCNc+sMnRLKli+ymV0hjO50EMcKrLmMMnktJ4Mk
-         ICAvGmFv3X17KcgbpedXfHQtsj//JIxYmtm/kXIQHAWTPpdYVvqbz34zRan88DqCzz2w
-         RIl0G5XwBx/ciL65Lek9UHMGPQjFGrHLuTJ67NHutHurvov4iMrXmGGgdssQVQiUWFv3
-         Vp7vU74/ckdwKj2UufTS8aqzt9WY+ezTkz7vWgOz9iAe4WhTxqFWn2aTuowXLyC8GKsk
-         v5MQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsEuStoBtHqOwnr77XY9XvVpFdJM6Z/Ni6z54w0VASUJwlGba1Um7hkDZDW3GLQyMooqTGFg4elGV8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwUPY2WLJY0j1S0AkBfScJD3IrRq2V9lljcs6ovcv8Q8DCh/nV
-	dVc1wtIAJqdLznHrTpy2b2xacO9vsXWiMIHNhABvJzEy8hSMO1XNwwfMVRDasha5KGvxY0vMrql
-	+3wwKUgfPolVX55u5ypf3WRRbDckzMeCAz8zjEjFvKa2yL8OLo9PSKD1jgg4y6WSr
-X-Gm-Gg: AeBDietcILLvYu0RRbeBMyyNJo+oGGsLu3L099KzoDYwSZb/aw0V5JAnh2cV/i6ZVCN
-	T8qWE0ot17D7bASApZw/YUX396SLzdFgwaDdHLMeJjVbAmNFSktcIq4zOtE3gued73OGCOl8cD1
-	wb4bBbTXV4rW93BEWov4KhfNcBmROWWyI5iAJd/LoX9NgNb3pWGU08wFFe1yoppWC64Ph1qc6MI
-	kPzz1ezzys5I0oz/uB6Q4v7tAvnnS3NWy5bAXYDxyzVNS1OdTJ/wHnPrnORSwH2GBIPzTzrU3z+
-	ALYn4EmdE7C6FDccKUGAUrvFjSanrLqoDOuX8B6ClSRr2JL58yOkRnlQzw4W4UmEORZOhyhW7oF
-	dIeZ8EUmtcLbR0VNJ15rOVTG3ysZAnUe65f3c+xwBtKDwfU/aTX/22UUDcmpq02cDpJJTF3SZ99
-	FFD+jYN7aTb95R/647g0MrN6CU+lT6yaHMYQ8=
-X-Received: by 2002:ac8:7e96:0:b0:50b:3d1e:58ba with SMTP id d75a77b69052e-50dd5b00979mr98627111cf.28.1775909492118;
-        Sat, 11 Apr 2026 05:11:32 -0700 (PDT)
-X-Received: by 2002:ac8:7e96:0:b0:50b:3d1e:58ba with SMTP id d75a77b69052e-50dd5b00979mr98626411cf.28.1775909491599;
-        Sat, 11 Apr 2026 05:11:31 -0700 (PDT)
+        bh=a6xJZ5euRUkJ01/MhbgNuHprFSRyTM9G9jNcE79fdD8=;
+        b=ncfleE7ZCJNyNfjBA3UU4bUdjncVbG5sv1RTesNBu8YTm29aG9cGt4Ncd1slf6Eb2Q
+         ipfsExrDVZ55Bc3QHy67djyzMB4v9jQ7xDfvJEqC8CaAHTFNSagrYT2yRuN7OWEW2C6r
+         014nFLoyXKlvG+YSxAGIKcajH4Jz+u4Cjnbcf9MzDkZTp8nO9bszdOlh0eyrSgDQFmAH
+         bGsmQ1bIVW8L1YQelHIzwMq87RlNuLzYp6MqJ/atpgnf6Ih+FombRZMrUAa3C0gm795n
+         meX7GkAPf6l3unmYaMTVHm+HLGno6pPJnFbxnEDad4fDoykTNPCX17gNMNjJI26/bvct
+         Wn3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWMfiJdKwKsxCWFqBovxZZUR0mroqaMUi/ZGgFww3Cl8OMUmylgKEznd1DY5P/0f9/3UHUX75RIJ/wm@vger.kernel.org
+X-Gm-Message-State: AOJu0YzP3PIM/q0Ry1bqmUj2rPt5T7/ozIPSeNQR4tmaKz2Zxi+Ho4Vj
+	cQOySHxtflQlgI3EM8AGanTcx/xHokl3asimHhw01T4O9XaiMnQGcuGCaNC9SR2Di8Ih3D2PBcM
+	BXID9u4o2tfkSUNhaBryM0BoXs5s2cBqUpdJOJ1wdW2FPJT9BOXDdtckyDTeR4D8h
+X-Gm-Gg: AeBDievSfHOtGZ079cTSUqXRTixKo1rdH8TzzCb5KVUP3H7xn/E6vHEwxfv8nC+KYaM
+	ISiutckNnrMauNKFrQnz+vT4o4+PCFXZVjn6tuq51J59DJ4R93ahOHcAZOgtEzf/qKicmCXzJ/F
+	AklSGb3wIbB2vWBB8zox1Yp41DP36WGMB219K6tPPJXlehaoH2n+4UNxnfZk4ToyA2PvlP5Scjr
+	ITVrNntb2iVcYvmbwHHxOulJ0lZ7UAnTDOsQSIe/GiDvPQCFF3sOVsPF9HWgwm+CU1sllxnKzAd
+	1kkqyQJsMEZynSJZQjrtvywELBMp6csvna9j2hvHg1IwuWMucHFYnDvKwifuOrrcCkBJ8GePRBe
+	+E0lsd8oPQErXbflDFXtIczJYk8zV8fOHXxSqhVNX8t4uL79ED0VrhBqjcqKT2TwTkiyS0l3IkP
+	IjsPAnhTbgy7Of954WvJEHfSlHXywAwlG89QA=
+X-Received: by 2002:a05:622a:1c0c:b0:50d:8ed0:7f10 with SMTP id d75a77b69052e-50dd6abfc41mr80286641cf.13.1775909493618;
+        Sat, 11 Apr 2026 05:11:33 -0700 (PDT)
+X-Received: by 2002:a05:622a:1c0c:b0:50d:8ed0:7f10 with SMTP id d75a77b69052e-50dd6abfc41mr80286161cf.13.1775909493152;
+        Sat, 11 Apr 2026 05:11:33 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-38e495b4e73sm11906291fa.41.2026.04.11.05.11.30
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-38e495b4e73sm11906291fa.41.2026.04.11.05.11.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Apr 2026 05:11:30 -0700 (PDT)
+        Sat, 11 Apr 2026 05:11:32 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Sat, 11 Apr 2026 15:10:40 +0300
-Subject: [PATCH v2 20/21] dt-bindings: gpio: describe Waveshare GPIO
- controller
+Date: Sat, 11 Apr 2026 15:10:41 +0300
+Subject: [PATCH v2 21/21] gpio: add GPIO controller found on Waveshare DSI
+ TOUCH panels
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -109,7 +109,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260411-waveshare-dsi-touch-v2-20-75cdbeac5156@oss.qualcomm.com>
+Message-Id: <20260411-waveshare-dsi-touch-v2-21-75cdbeac5156@oss.qualcomm.com>
 References: <20260411-waveshare-dsi-touch-v2-0-75cdbeac5156@oss.qualcomm.com>
 In-Reply-To: <20260411-waveshare-dsi-touch-v2-0-75cdbeac5156@oss.qualcomm.com>
 To: Neil Armstrong <neil.armstrong@linaro.org>,
@@ -130,200 +130,334 @@ Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Riccardo Mereu <r.mereu@arduino.cc>
 X-Mailer: b4 0.15.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3630;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7737;
  i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=TunD4E0x54s+DUKwuOGbXcTKMUnxxvwmjd9+k4H8VAQ=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBp2jpHtM3Gez7N+kbhy0GNn7VWDq9k4rV8AIC5g
- V9gzMYNDHuJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCado6RwAKCRCLPIo+Aiko
- 1dOlB/9R7LXGfMg9J3Q3qbrUwPk+5jcoHdyw4BIu1kwNEY6QOBkdv6gsS6c3TuPy3k0JwKB93h0
- fOMRcIaHEOlOn25jeLblSp/mrdVhZCAb5J9U3ecVDSBU1Kep9OoFnBimg+yTRWtG4u46uAElXsq
- PpizulwSizhLUPv32+Szedtdb/fRJRpNR9vqfAUJmc5QcV6kSogBIO0cpM+bhQdKJLNklkClg8u
- itHCVH92adX1pQ/CJdsNgRTGzExAZSkf7OnJhhctcdmAAD8lOYWKC/Eb6VpLmoVFgxE58V5ldX9
- BbfgdcO7eIP825VIrDzxhl9u85az+rqkOPQlcrysLmZiW+B3
+ bh=hmXTmyPe2+8CQYPgL4u755xNdxBVwLTJmFYBmxJpfok=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBp2jpIAhcDDnqAbT569t4Y6yYBcC7UU+uWhTpAV
+ 0kIUUmkVj2JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCado6SAAKCRCLPIo+Aiko
+ 1Y4LB/49p6uXzAnYxBtCIJJINoYExIC34T8A+v+6+4Hp3IsBSs9yXVGxN30mvWRcA8HhqRSCM0K
+ XoaS/4PG+5LPwJkqRIxD0ZiwFO+PJ15Oh6S3jGWE3poikGgO+SmnsPTsyI/QEv7EKqxSzPfVyNw
+ rzfWqq3Zu0+wHuKFX2bAi4pN6gtg99qY2a/esrjqOOW60H5DNybgHK+a5DKTUmeys2G3ry5LGSR
+ sp6OQc3NF3MDzjbJS9zT4YIvVie2Cun5eu5KGf2gDMHjWpaMQIwR24tgbn3J44yBhq8O6Mlm9Gj
+ IF3ik1hbXueFlEI2vastpmeSH3FuFa4tzbpMmg8qPijfnKtj
 X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDExMDEwMiBTYWx0ZWRfX5FLybOju/gRT
- 8ZzZ4bzlFbwqG1pBPEiFx/FvG67qpixKBG3WL6zWdTO/1WmOHDkr5XuE+4vCzPle2tuG9wO601u
- KF0tFcnndC699LZ3Cdh62tqN1GBl6KY+qXFbfzjYZXBofKS+gX5clXuvKBFM02TuJzoq3d8fGFU
- 0y5ryP3XSTc5umAa7wP7zJeTCnxJz/n2mr0fg+qjHVHBNbbT/KXxfquKIUooLPgbqgZzktX6Aoq
- MqrD5vWizgpvGPG6qYvXR8knI77pdlVPk94/e3S5BCQ59wc9PotyPES7SrMeMgjJuTbLgoUrQqq
- ZSoRccp6iSR42oe1/98YkEZxkrKi1RkfwstmqYLiUQFs2fS/OAXA8O/PG02Q2H4KQeG2RlBKECN
- 65MAhozqTmiHmDZVh4W/9QjBfPixgxLlDN0Kzr3ZXncILTJMGweCTJYY2y00tNMIelWpk/KBJ8I
- FGAu76/5k5qAL+Y8h/A==
-X-Proofpoint-GUID: skoe0_xM_voBTZti58wjFjX2_38jx-M5
-X-Authority-Analysis: v=2.4 cv=MqliLWae c=1 sm=1 tr=0 ts=69da3a74 cx=c_pps
- a=WeENfcodrlLV9YRTxbY/uA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDExMDEwMiBTYWx0ZWRfX+ieH7DdQ5tBc
+ vgRIVzNq8JtqS/I4N4JsU9XiecElNPPH3OSSeHH8PMwxuwtRegI5Dck7SOCZE3R6JFEF66svmQ1
+ NJq5OrMGV7r9qy7abTkNzsZyKJLhvCf46+IYfPaVS6hWFzIyaVWWbbonyb9vA/RaksxDnggWXNp
+ SYiL+bomzNbxXiZL7tzK1b4VuQhHHxtGeADf7T9n8M7VEdnwALeAC0rUFw43XYTDzmj2Q/XaPbD
+ zXTXbTWq6a3N4VxPwiFD6+glfl4y+DjVtzNqyeS3IcOYtfw0nyVn9cHhCrarkCNFXtzYqcTXnrQ
+ PQAlL6wnE7nBWpr1YHjlucXrdNjmwtnvvd35aaOrgfy9eR+rg4YFU/KeWciQ1yc9U0Q2D8tmKKB
+ 3R6434EoLWRewbEIeRC0bnSjB5/oDliMbKQgHlbpwXXifJpGyIkTEy5nmzxC88crXERme+82ZnF
+ CyiJya4UfdISPRgXQ0Q==
+X-Proofpoint-ORIG-GUID: 0qFzOt4z2iaqTlZHh_UQ8qjDH5kucEGJ
+X-Proofpoint-GUID: 0qFzOt4z2iaqTlZHh_UQ8qjDH5kucEGJ
+X-Authority-Analysis: v=2.4 cv=d/LFDxjE c=1 sm=1 tr=0 ts=69da3a76 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
  a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22 a=gEfo2CItAAAA:8
- a=EUspDBNiAAAA:8 a=ClTKKeZw4Bcbv9k5X4IA:9 a=QEXdDO2ut3YA:10
- a=kacYvNCVWA4VmyqE58fU:22 a=sptkURWiP4Gy88Gu7hUp:22
-X-Proofpoint-ORIG-GUID: skoe0_xM_voBTZti58wjFjX2_38jx-M5
+ a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22 a=EUspDBNiAAAA:8
+ a=BBJQNc9AFPM2Ar9AcygA:9 a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-11_03,2026-04-09_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 adultscore=0 priorityscore=1501 phishscore=0 lowpriorityscore=0
- impostorscore=0 bulkscore=0 suspectscore=0 malwarescore=0 spamscore=0
+ spamscore=0 impostorscore=0 malwarescore=0 phishscore=0 priorityscore=1501
+ bulkscore=0 suspectscore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2604010000 definitions=main-2604110102
-X-Spamd-Result: default: False [4.84 / 15.00];
-	SEM_URIBL(3.50)[0.0.0.0:email];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	BAD_REP_POLICIES(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[devicetree.org:url,0.0.0.45:email,arduino.cc:email,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,qualcomm.com:dkim,qualcomm.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35050-lists,linux-gpio=lfdr.de];
-	R_DKIM_ALLOW(0.00)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	TAGGED_FROM(0.00)[bounces-35051-lists,linux-gpio=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,arduino.cc:email,qualcomm.com:dkim,qualcomm.com:email];
 	FREEMAIL_TO(0.00)[linaro.org,gmail.com,ffwll.ch,linux.intel.com,kernel.org,suse.de,huaqin.corp-partner.google.com,xff.cz,redhat.com,edgeble.ai];
-	GREYLIST(0.00)[pass,meta];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	DMARC_POLICY_ALLOW(0.00)[qualcomm.com,reject];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	NEURAL_SPAM(0.00)[0.787];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	DBL_PROHIBIT(0.00)[0.0.0.0:email];
 	FROM_NEQ_ENVFROM(0.00)[dmitry.baryshkov@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_SPF_ALLOW(0.00)[+ip6:2600:3c04:e001:36c::/64:c];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 1A4C13DFD4B
+X-Rspamd-Queue-Id: 996FB3DFD78
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 The Waveshare DSI TOUCH family of panels has separate on-board GPIO
 controller, which controls power supplies to the panel and the touch
 screen and provides reset pins for both the panel and the touchscreen.
-Also it provides a simple PWM controller for panel backlight.
-
-Add bindings for these GPIO controllers. As overall integration might be
-not very obvious (and it differs significantly from the bindings used by
-the original drivers), provide complete example with the on-board
-regulators and the DSI panel.
+Also it provides a simple PWM controller for panel backlight. Add
+support for this GPIO controller.
 
 Tested-by: Riccardo Mereu <r.mereu@arduino.cc>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 ---
- .../bindings/gpio/waveshare,dsi-touch-gpio.yaml    | 100 +++++++++++++++++++++
- 1 file changed, 100 insertions(+)
+ drivers/gpio/Kconfig              |  10 ++
+ drivers/gpio/Makefile             |   1 +
+ drivers/gpio/gpio-waveshare-dsi.c | 208 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 219 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/waveshare,dsi-touch-gpio.yaml b/Documentation/devicetree/bindings/gpio/waveshare,dsi-touch-gpio.yaml
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index dbe7c6e63eab..1b210c451151 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -805,6 +805,16 @@ config GPIO_VISCONTI
+ 	help
+ 	  Say yes here to support GPIO on Tohisba Visconti.
+ 
++config GPIO_WAVESHARE_DSI_TOUCH
++	tristate "Waveshare GPIO controller for DSI panels"
++	depends on BACKLIGHT_CLASS_DEVICE
++	depends on I2C
++	select REGMAP_I2C
++	help
++	  Enable support for the GPIO and PWM controller found on Waveshare DSI
++	  TOUCH panel kits. It provides GPIOs (used for regulator control and
++          resets) and backlight support.
++
+ config GPIO_WCD934X
+ 	tristate "Qualcomm Technologies Inc WCD9340/WCD9341 GPIO controller driver"
+ 	depends on MFD_WCD934X
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 20d4a57afdaa..75ce89fc3b93 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -207,6 +207,7 @@ obj-$(CONFIG_GPIO_VIRTUSER)		+= gpio-virtuser.o
+ obj-$(CONFIG_GPIO_VIRTIO)		+= gpio-virtio.o
+ obj-$(CONFIG_GPIO_VISCONTI)		+= gpio-visconti.o
+ obj-$(CONFIG_GPIO_VX855)		+= gpio-vx855.o
++obj-$(CONFIG_GPIO_WAVESHARE_DSI_TOUCH)	+= gpio-waveshare-dsi.o
+ obj-$(CONFIG_GPIO_WCD934X)		+= gpio-wcd934x.o
+ obj-$(CONFIG_GPIO_WHISKEY_COVE)		+= gpio-wcove.o
+ obj-$(CONFIG_GPIO_WINBOND)		+= gpio-winbond.o
+diff --git a/drivers/gpio/gpio-waveshare-dsi.c b/drivers/gpio/gpio-waveshare-dsi.c
 new file mode 100644
-index 000000000000..410348fcda25
+index 000000000000..f4a1d4d3b872
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/waveshare,dsi-touch-gpio.yaml
-@@ -0,0 +1,100 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/waveshare,dsi-touch-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/gpio/gpio-waveshare-dsi.c
+@@ -0,0 +1,208 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2024 Waveshare International Limited
++ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
++ */
 +
-+title: Waveshare GPIO controller on DSI TOUCH panels
++#include <linux/backlight.h>
++#include <linux/err.h>
++#include <linux/fb.h>
++#include <linux/gpio/driver.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/regmap.h>
 +
-+maintainers:
-+  - Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
++/* I2C registers of the microcontroller. */
++#define REG_TP		0x94
++#define REG_LCD		0x95
++#define REG_PWM		0x96
++#define REG_SIZE	0x97
++#define REG_ID		0x98
++#define REG_VERSION	0x99
 +
-+description:
-+  Waveshare DSI TOUCH panel kits contain separate GPIO controller for toggling
-+  power supplies and panel / touchscreen resets.
++enum {
++	GPIO_AVDD = 0,
++	GPIO_PANEL_RESET = 1,
++	GPIO_BL_ENABLE = 2,
++	GPIO_IOVCC = 4,
++	GPIO_VCC = 8,
++	GPIO_TS_RESET = 9,
++};
 +
-+properties:
-+  compatible:
-+    const: waveshare,dsi-touch-gpio
++#define NUM_GPIO 16
 +
-+  reg:
-+    maxItems: 1
++struct waveshare_gpio {
++	struct mutex dir_lock;
++	struct mutex pwr_lock;
++	struct regmap *regmap;
++	u16 poweron_state;
 +
-+  gpio-controller: true
++	struct gpio_chip gc;
++};
 +
-+  '#gpio-cells':
-+    const: 2
++static const struct regmap_config waveshare_gpio_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = REG_PWM,
++};
 +
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - "#gpio-cells"
++static int waveshare_gpio_get(struct waveshare_gpio *state, unsigned int offset)
++{
++	u16 pwr_state;
 +
-+additionalProperties: false
++	guard(mutex)(&state->pwr_lock);
++	pwr_state = state->poweron_state & BIT(offset);
 +
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
++	return !!pwr_state;
++}
 +
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
++static int waveshare_gpio_set(struct waveshare_gpio *state, unsigned int offset, int value)
++{
++	u16 last_val;
++	int err;
 +
-+        wsgpio: gpio@45 {
-+            compatible = "waveshare,dsi-touch-gpio";
-+            reg = <0x45>;
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+        };
-+    };
++	guard(mutex)(&state->pwr_lock);
 +
-+    panel_avdd: regulator-panel-avdd {
-+        compatible = "regulator-fixed";
-+        regulator-name = "panel-avdd";
-+        gpios = <&wsgpio 0 GPIO_ACTIVE_HIGH>;
-+        enable-active-high;
-+    };
++	last_val = state->poweron_state;
++	if (value)
++		last_val |= BIT(offset);
++	else
++		last_val &= ~BIT(offset);
 +
-+    panel_iovcc: regulator-panel-iovcc {
-+        compatible = "regulator-fixed";
-+        regulator-name = "panel-iovcc";
-+        gpios = <&wsgpio 4 GPIO_ACTIVE_HIGH>;
-+        enable-active-high;
-+    };
++	state->poweron_state = last_val;
 +
-+    panel_vcc: regulator-panel-vcc {
-+        compatible = "regulator-fixed";
-+        regulator-name = "panel-vcc";
-+        gpios = <&wsgpio 8 GPIO_ACTIVE_HIGH>;
-+        enable-active-high;
-+        regulator-always-on;
-+    };
++	err = regmap_write(state->regmap, REG_TP, last_val >> 8);
++	if (!err)
++		err = regmap_write(state->regmap, REG_LCD, last_val & 0xff);
 +
-+    dsi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
++	return err;
++}
 +
-+        panel@0 {
-+            reg = <0>;
-+            compatible = "waveshare,8.0-dsi-touch-a", "jadard,jd9365da-h3";
-+            reset-gpios = <&wsgpio 1 GPIO_ACTIVE_LOW>;
-+            vdd-supply = <&panel_avdd>;
-+            vccio-supply = <&panel_iovcc>;
-+            backlight = <&wsgpio>;
++static int waveshare_gpio_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
++{
++	return GPIO_LINE_DIRECTION_OUT;
++}
 +
-+            port {
-+                  panel_in: endpoint {
-+                      remote-endpoint = <&dsi_out>;
-+                  };
-+            };
-+        };
++static int waveshare_gpio_gpio_get(struct gpio_chip *gc, unsigned int offset)
++{
++	struct waveshare_gpio *state = gpiochip_get_data(gc);
 +
-+        port {
-+            dsi_out: endpoint {
-+                data-lanes = <0 1 2 3>;
-+                remote-endpoint = <&panel_in>;
-+            };
-+        };
-+    };
-+...
++	return waveshare_gpio_get(state, offset);
++}
++
++static int waveshare_gpio_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
++{
++	struct waveshare_gpio *state = gpiochip_get_data(gc);
++
++	return waveshare_gpio_set(state, offset, value);
++}
++
++static int waveshare_gpio_update_status(struct backlight_device *bl)
++{
++	struct waveshare_gpio *state = bl_get_data(bl);
++	int brightness = backlight_get_brightness(bl);
++
++	waveshare_gpio_set(state, GPIO_BL_ENABLE, brightness);
++
++	return regmap_write(state->regmap, REG_PWM, brightness);
++}
++
++static const struct backlight_ops waveshare_gpio_bl = {
++	.update_status = waveshare_gpio_update_status,
++};
++
++static int waveshare_gpio_probe(struct i2c_client *i2c)
++{
++	struct backlight_properties props = {};
++	struct waveshare_gpio *state;
++	struct device *dev = &i2c->dev;
++	struct backlight_device *bl;
++	struct regmap *regmap;
++	unsigned int data;
++	int ret;
++
++	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
++	if (!state)
++		return -ENOMEM;
++
++	ret = devm_mutex_init(dev, &state->dir_lock);
++	if (ret)
++		return ret;
++
++	ret = devm_mutex_init(dev, &state->pwr_lock);
++	if (ret)
++		return ret;
++
++	regmap = devm_regmap_init_i2c(i2c, &waveshare_gpio_regmap_config);
++	if (IS_ERR(regmap))
++		return dev_err_probe(dev, PTR_ERR(regmap), "Failed to allocate register map\n");
++
++	state->regmap = regmap;
++	i2c_set_clientdata(i2c, state);
++
++	ret = regmap_read(regmap, REG_ID, &data);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "Failed to read register\n");
++
++	dev_dbg(dev, "waveshare panel hw id = 0x%x\n", data);
++
++	ret = regmap_read(regmap, REG_SIZE, &data);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "Failed to read register\n");
++
++	dev_dbg(dev, "waveshare panel size = %d\n", data);
++
++	ret = regmap_read(regmap, REG_VERSION, &data);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "Failed to read register\n");
++
++	dev_dbg(dev, "waveshare panel mcu version = 0x%x\n", data);
++
++	ret = waveshare_gpio_set(state, GPIO_TS_RESET, 1);
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to program GPIOs\n");
++
++	msleep(20);
++
++	state->gc.parent = dev;
++	state->gc.label = i2c->name;
++	state->gc.owner = THIS_MODULE;
++	state->gc.base = -1;
++	state->gc.ngpio = NUM_GPIO;
++
++	/* it is output only */
++	state->gc.get = waveshare_gpio_gpio_get;
++	state->gc.set = waveshare_gpio_gpio_set;
++	state->gc.get_direction = waveshare_gpio_gpio_get_direction;
++	state->gc.can_sleep = true;
++
++	ret = devm_gpiochip_add_data(dev, &state->gc, state);
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to create gpiochip\n");
++
++	props.type = BACKLIGHT_RAW;
++	props.max_brightness = 255;
++	props.brightness = 255;
++	bl = devm_backlight_device_register(dev, dev_name(dev), dev, state,
++					    &waveshare_gpio_bl, &props);
++	return PTR_ERR_OR_ZERO(bl);
++}
++
++static const struct of_device_id waveshare_gpio_dt_ids[] = {
++	{ .compatible = "waveshare,dsi-touch-gpio" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, waveshare_gpio_dt_ids);
++
++static struct i2c_driver waveshare_gpio_regulator_driver = {
++	.driver = {
++		.name = "waveshare-regulator",
++		.of_match_table = of_match_ptr(waveshare_gpio_dt_ids),
++	},
++	.probe = waveshare_gpio_probe,
++};
++
++module_i2c_driver(waveshare_gpio_regulator_driver);
++
++MODULE_DESCRIPTION("GPIO controller driver for Waveshare DSI touch panels");
++MODULE_LICENSE("GPL");
 
 -- 
 2.47.3
