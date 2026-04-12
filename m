@@ -1,293 +1,242 @@
-Return-Path: <linux-gpio+bounces-35069-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35070-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SE36ARnd22lMHgkAu9opvQ
-	(envelope-from <linux-gpio+bounces-35069-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Apr 2026 19:57:45 +0200
+	id ENgPA//c22lhHwkAu9opvQ
+	(envelope-from <linux-gpio+bounces-35070-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Apr 2026 19:57:19 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E7573E5476
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Apr 2026 19:57:44 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0974F3E5451
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Apr 2026 19:57:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 572DD301980A
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Apr 2026 17:56:35 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 1574D3002D31
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Apr 2026 17:57:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ED0A3624D7;
-	Sun, 12 Apr 2026 17:56:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6284E3624CF;
+	Sun, 12 Apr 2026 17:57:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B0wdgmfL"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OP4YViH4";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="Qaxo8b7L"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE9E2F12CF;
-	Sun, 12 Apr 2026 17:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776016593; cv=none; b=WLNfES0jgdhKg7Ob8Pavfc0dZga1yBggV3582WgBuE0xlgDLyidRN5xaHTax23KXm4qIXaKaA2kniQ0165xvxeauo2CO3qfDDMsYjCSDveOhEn1ekNRrG2H3eLU8cTQSMFapXLVmvhEQQxSxbHoroQRdTuxI6QA1NyLKBwhJaIs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776016593; c=relaxed/simple;
-	bh=ZH2xmfRZ6G5E0Z3i/WYuhZZTh+s6+LY0DlBanLVI+8I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NfE7ZYVQ4cm7F2IAlkLa77M6oEvY5pdR74lsj6n7SXrmjNaCrheoZuwJYXAzsa5fYCKlKTfNW6Mr6ULqSSi4g8RB+TspZj4rBO+lFOd8zQoFWUoPK3WOBKit7tVRKelyijXDdvVr+xRYeUD1CgrEmNb0ONwXODIgB8DLKBxQpew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B0wdgmfL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78E36C19424;
-	Sun, 12 Apr 2026 17:56:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776016593;
-	bh=ZH2xmfRZ6G5E0Z3i/WYuhZZTh+s6+LY0DlBanLVI+8I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=B0wdgmfLA2+nguCIFApE+Cjl05PPFLjYEdVjXLDZOEa14PX3kDsg2r1+vhn7z7uoS
-	 QVfoL/N8C1GW/KVDotJOy96K2IZpVIE4WN7Er6frPSMVAspyzENp+Ubza7xcevCIEj
-	 yzI9LkDhulj4QMrjBbCMM5y/e6SvkDeFw5lZbjglP+X56U1WaKJ3IB/nSndl6S4ZoD
-	 JC9ZFflOAeytvKVaNJdBLbVjn/DrWV53ah6VC1yzx4I2/SkTos26OpQM/cKAo/wC2M
-	 SSjrq5KlQy4Qlgkqw3iGsqzvdYqlHNIA7Cbk5BECd2j2KppvV8wL7czM1h9t0rSE5q
-	 rsSNICUg4wHLA==
-Date: Sun, 12 Apr 2026 18:56:19 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
-Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, David Lechner
- <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
- Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linus Walleij
- <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Philipp Zabel
- <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
- <skhan@linuxfoundation.org>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH v7 4/6] iio: adc: ad4691: add SPI offload support
-Message-ID: <20260412185619.5584fca9@jic23-huawei>
-In-Reply-To: <20260409-ad4692-multichannel-sar-adc-driver-v7-4-be375d4df2c5@analog.com>
-References: <20260409-ad4692-multichannel-sar-adc-driver-v7-0-be375d4df2c5@analog.com>
-	<20260409-ad4692-multichannel-sar-adc-driver-v7-4-be375d4df2c5@analog.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089592F12CF
+	for <linux-gpio@vger.kernel.org>; Sun, 12 Apr 2026 17:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=205.220.180.131
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776016631; cv=pass; b=pXdLQHD+xoOYNE6TwUPVQsaxkLxEnqQUH0Ia8WhzzmBVEuHXvm+Lu8/xg2ky3mWeAo7xiJFXxpvVPVhqdyMnwHZqkpD2MlWJUJD/nv5n/qwYdJI/RQMpH8VKHqJDrlS3+Iy/T/5Z0fMc9hIf362fOO35RammnCNQKglfhxP2wfA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776016631; c=relaxed/simple;
+	bh=HOLZOlV+M7mqQWApb4MkDtQJgVZ7IXsO9qDA1D6A5Us=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qCpZjCZE0xK/BY6YQ9hNNnqzn9DIZ9vWhReBy2H73Bq5ThaQYmX8022pSNzc1YBpFHJf46urfixqUZEKEgcByULEd3+t2X08cotI8VSxuvOsgUDjZ/AbKaI6c27OjmsDePTbGluzM/2GwFFkZYpJwythc7esO0NJDps37XdSIfM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OP4YViH4; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=Qaxo8b7L; arc=pass smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63CE4jTD541660
+	for <linux-gpio@vger.kernel.org>; Sun, 12 Apr 2026 17:57:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	thQtqmVfOFcBFGUwZg+zw5IjO7y+NzSjPPe7a716jaw=; b=OP4YViH4gAd2pwHt
+	tCOBnwBeu4z5tWAGGf5hAjQhsDSlroquvq4gEIxfEbAa4AnikdfrjQWjeLITouHc
+	HiR1zhvIhsXpvEAqxgPANua/Ws8rZzmSJD6zpX3h6wm6uLOCPlIKxDyB8jv7Ey8S
+	LQLB9VsgZmJFrXd61XneBjuiAPmECCkuOtgWXsIuWpmybpiaWbLhS925KeFP6YFO
+	AlsmhCSMC1Xz6ZyfXgedrg8nbunSYnNM1kMlRGWuvKU7zwpzKJfTtm8/mTHdV9I/
+	eZEcDezlQMIw/xEv4ofenUsjDerIFBIB9wNOYNZ+qSrVYJ6aya1LwFNTpFek/5wY
+	/woqLA==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dfexfts8c-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Sun, 12 Apr 2026 17:57:08 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-358f058973fso3680732a91.1
+        for <linux-gpio@vger.kernel.org>; Sun, 12 Apr 2026 10:57:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776016628; cv=none;
+        d=google.com; s=arc-20240605;
+        b=VneBPWRn8SaUx4/yuPFhWsIELlqP5W4dm9g+SkeHosRM2/wFxrIb0giWwqOg5mo+vC
+         yVB84oGxOi4W7s3d+F9QZc2+qNqxbHKpC1RHnqXwiZjgV568s1mmUFBIondjB5g6mQgA
+         E6PWsz6dhixaxqgKI4LQcQxGEYzUb2IiN9a5k4QXXG6RtYEZihzCKWIwPXZDeNosHTzk
+         ukeM679iIPCoQz7x9Lkp4AO6OpCk3q7YdhOt0Xs7JZqXkRyyO7a2R8tJB7xQ8CYWb8Wd
+         OMX1tldMphvBrExbMFROywVI4J3cA5lI+GTJIhkyndTO7AyevLi1JqFfwq+iXUad8xD/
+         oY+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=thQtqmVfOFcBFGUwZg+zw5IjO7y+NzSjPPe7a716jaw=;
+        fh=NTkiBpI4JSmDFoeuDpy+wumLn2oCnDARwa9WFbHmHzs=;
+        b=hnTjeC55xKLZFMoabK7n4XvKez9jGe8Q5Hl3tDaPHOZXtPmZDb7HIyyPAv3Y3j4MEL
+         jsX0Sg/adcei6ykVzoydBEBF+p3uVjm0wDIJU0yKnY+l1M111CbULeodtKAbqys2ntRh
+         gMa2F8HZofeU6l5gUHO09zJ8Iwgf+rsKv6FDgQRzPrQq5sUpSJ4YsFsj421VWWKrmP44
+         mu9cbVI26kSoTLLIbL4PxKzDMykkpYWNHkryABQG+Bc4K4SqFDDyPCJaSXjzNyTMNKqb
+         liHnND7wGR9cNMWte++uNp8NKEWlJ4Ihb0ufaDA+GVLPu5/vCE/Tk/49AQhmD4Ejfv82
+         mo0A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1776016628; x=1776621428; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=thQtqmVfOFcBFGUwZg+zw5IjO7y+NzSjPPe7a716jaw=;
+        b=Qaxo8b7LNAE595vvWVzEqfBL1vW+FdQFmpVYEBhSzuxb7RD/aSgNAwf8FFX2ZfGcO8
+         gyjCMxlJVzLftPV7JElexruwUKxCwXMJI1ZudQtfraSpw+ghFhW1f+3IdpkcQIMb3YXv
+         WuCDNMf3licJpVcdyCO36Q6UVWr4Z+r/Kdjl7cuFT5Q3meabZTSgKcz/gbWBoPh9PvSw
+         M/nCiA7raJ7LZOajcwBGXvM40eAuIy7YXW6BPRi+/JKzdWMWJMGSRdLJ+BuquJcm5Wh5
+         5Fbv1lmG173QehD4ov8wU9duNiyBqZkKFECLT8uZEky4Y7BgaqQczbaIz+AuK9Li32EM
+         0RFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776016628; x=1776621428;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=thQtqmVfOFcBFGUwZg+zw5IjO7y+NzSjPPe7a716jaw=;
+        b=K6wYSnogS05m7vjeO4OH123faXrF1Cdcm+Bp8Bc2QvhuvjBqz8t8KMG4n/Ay1dEp3L
+         jkRwAnYwFkK406Wg+DlffgfHRX2XQNm/FiyyyZkXUIKqskQvQWxIYBL9+ucRPYSy4kPK
+         DgaXOIToPF70S//+hPpdlkr03qXU0CGN3HFRbzmolnRw+xPPbJgcIq/2J41Jz+lZPRA3
+         34Yatx7MBxKf5iMCKmzOO07uOW6LCB+QNhbTEdo3ypQrQDNfWmmYt+ObUK3288clRhmN
+         713PvTD8cDRsD8LUWfyKNkfmFqeY4ScgFggzJkWdCw29edriKc3tKIzdsD768ZoeNdFJ
+         wKBQ==
+X-Forwarded-Encrypted: i=1; AFNElJ89KIozmMlPst5K7Qu5bO290FosKUJ/KDmo3XcPPG6gXjHr39/aDWhE6FJItQFaDXWyZNgwZqhmitNB@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqMmRyIseWSA/0EG/HrNI47bKa2dbIu0TudBEhMVGrYmRNTpMf
+	Uvu5SlHajFXU2pL1JwPzL2nBbiDtVfynRPphuCArpOBW5CH40MKYB/OOr8Vjs3MGbFW6naKEWJ3
+	RLhdQCTIfnUfi2WCy6JtNY4jH0lsBYtsrN3HO3z1WRjHKO92lgO9pPg/q2sKgkLhpEQGP489E6M
+	do+65Exj8/EBgPuxWn7yUCMSadPwbfqx3/74MRl7Q=
+X-Gm-Gg: AeBDieuFx8ToaMYVSnpSSFxlnPhsfmdM+6xRrABPdderRIi/ojWbdKMihaQn8irPkpw
+	KB9QkWGXMbSTmgFM4Px36m4QTgxx7frBFdH9eq1Et2lfeH3xGIFZ/61dF7SaZKU0HZywQm7RP24
+	9tt+zn1GkDO9Nf3A3Im48/rVQjmGRAURGNcci7NPBW6AZ+IkC88aWgZoIKx3Cw97/2czy+3TXHS
+	v5120Y=
+X-Received: by 2002:a17:90b:3c48:b0:35f:b9ea:8fa5 with SMTP id 98e67ed59e1d1-35fb9ea918cmr89832a91.20.1776016627716;
+        Sun, 12 Apr 2026 10:57:07 -0700 (PDT)
+X-Received: by 2002:a17:90b:3c48:b0:35f:b9ea:8fa5 with SMTP id
+ 98e67ed59e1d1-35fb9ea918cmr89814a91.20.1776016627186; Sun, 12 Apr 2026
+ 10:57:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.16 / 15.00];
+References: <20260401-waveshare-dsi-touch-v1-0-5e9119b5a014@oss.qualcomm.com>
+ <20260401-waveshare-dsi-touch-v1-14-5e9119b5a014@oss.qualcomm.com>
+ <CAD++jL=jUd4sQ1bhwcBRYpFFApP6vdJw2BoQwxoWShUKdEb9oA@mail.gmail.com>
+ <z3obsnbmdvvlzs3cxm57osbax4ivg2zq2zk6xgp37n4hni7y6i@smwn362nhn6a> <CAD++jLnXJKKv5ghRnCcMTU9g984seJAMHyL6VWWV0Bv+dv01wg@mail.gmail.com>
+In-Reply-To: <CAD++jLnXJKKv5ghRnCcMTU9g984seJAMHyL6VWWV0Bv+dv01wg@mail.gmail.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Sun, 12 Apr 2026 20:56:56 +0300
+X-Gm-Features: AQROBzBYY7vv1cLFhlrg6piWW1-Z80EzCE2Hx7Xxi4DegOE8nD2ShaZfoDVqJb0
+Message-ID: <CAO9ioeUAqG5uPs97ZAgzEfQVTW6OZWsCpAfxmDP4YUhjYt8E1A@mail.gmail.com>
+Subject: Re: [PATCH 14/19] drm/panel: jadard-jd9365da-h3: support Waveshare
+ DSI panels
+To: Linus Walleij <linusw@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+        Jessica Zhang <jesszhan0024@gmail.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Cong Yang <yangcong5@huaqin.corp-partner.google.com>,
+        Ondrej Jirman <megi@xff.cz>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Jagan Teki <jagan@edgeble.ai>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-GUID: HFTkNLEIfX6gnW7PuA0UNIDV6PMGRM0a
+X-Authority-Analysis: v=2.4 cv=OpZ/DS/t c=1 sm=1 tr=0 ts=69dbdcf4 cx=c_pps
+ a=0uOsjrqzRL749jD1oC5vDA==:117 a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10
+ a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
+ a=gowsoOTTUOVcmtlkKump:22 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=xwq5OVEf12Z6bUwLnC4A:9 a=QEXdDO2ut3YA:10 a=mQ_c8vxmzFEMiUWkPHU9:22
+X-Proofpoint-ORIG-GUID: HFTkNLEIfX6gnW7PuA0UNIDV6PMGRM0a
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDEyMDE3NiBTYWx0ZWRfX37JZ8pXk/M/a
+ 0bnzc72REZ++zgOQxEPmZYbpaeTaBqxc9yLMuY8i5baIAs3QchRKKco6oy/OTXYLaB+hLUEw6Fc
+ 7kpiHWp87BU1XDxUB84YZBqkzF+efGJYfKySlbfl2ZvVN3INIagX+0uK8t0r2tYyc3pS4L8uah0
+ aZzGoMIYHJoJRCx6LwE+/Pu1jSu9uVE7o7lOwlNTPe5wpITWnLofetFXWK9mBJ3dMwGb6XW4hpM
+ jhZ3/9HRqqVfeFHYVXdvneSLNDtGPcdto8Nqar/uL+P6r7rIQJ7Frc2XFYlHkVReoA/DJiiESM0
+ etdFnwnnv9y7/JgZZO2exWLcUqt6M43PxpJ+Zpp4W4D9K/eO+FiX8cjsfjcWZGpJ17k0/xDVyF2
+ MD8HxIf4kPqXChI3tHyrbKmqzWU60tEP8Q47AFydcFgwU3CeDsCgvNeYhh48ZgVG2wvHy9DKPzC
+ VMMLnUnlrZpWSsnalCA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-12_04,2026-04-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 malwarescore=0 spamscore=0 bulkscore=0 priorityscore=1501
+ adultscore=0 lowpriorityscore=0 phishscore=0 clxscore=1015 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604010000 definitions=main-2604120176
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35069-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[linaro.org,gmail.com,ffwll.ch,linux.intel.com,kernel.org,suse.de,huaqin.corp-partner.google.com,xff.cz,redhat.com,edgeble.ai,lists.freedesktop.org,vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-35070-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[analog.com,metafoo.de,baylibre.com,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[dmitry.baryshkov@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,radu.sabau.analog.com,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 9E7573E5476
+X-Rspamd-Queue-Id: 0974F3E5451
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Thu, 09 Apr 2026 18:28:25 +0300
-Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org> wrote:
+On Thu, 9 Apr 2026 at 11:50, Linus Walleij <linusw@kernel.org> wrote:
+>
+> On Thu, Apr 9, 2026 at 2:49=E2=80=AFAM Dmitry Baryshkov
+> <dmitry.baryshkov@oss.qualcomm.com> wrote:
+>
+> > > But there is also one more thing, this looks like a big "jam table"
+> > > with just register+value tuples, so construct something like:
+> > >
+> > > struct jadard_jam_tbl_entry {
+> > >         u8 reg;
+> > >         u8 val;
+> > > };
+> > >
+> > > static const struct jadard_jam_tbl_entry jd_3_4_c_init_jam[] =3D {
+> > >         {0x00, 0x00}, {0x01, 0x41}, ...};
+> > >
+> > > (Ideas taken from drivers/net/dsa/realtek/rtl8366rb.c, take a look
+> > > for code and all, you get the picture.)
+> >
+> > Few months ago the code was moved exactly in the opposite direction. We
+> > added all _multi() functions and made shure that the code is as
+> > efficient as the register tables. On the other hand, having it as a cod=
+e
+> > allows better control. E.g. handling 2/4 lane case would require extra
+> > hacks to the register tables, while the code handles that without extra
+> > hacks and without loosing effectiveness.
+>
+> OK then sorry for the fuzz!
 
-> From: Radu Sabau <radu.sabau@analog.com>
-> 
-> Add SPI offload support to enable DMA-based, CPU-independent data
-> acquisition using the SPI Engine offload framework.
-> 
-> When an SPI offload is available (devm_spi_offload_get() succeeds),
-> the driver registers a DMA engine IIO buffer and uses dedicated buffer
-> setup operations. If no offload is available the existing software
-> triggered buffer path is used unchanged.
-> 
-> Both CNV Burst Mode and Manual Mode support offload, but use different
-> trigger mechanisms:
-> 
-> CNV Burst Mode: the SPI Engine is triggered by the ADC's DATA_READY
-> signal on the GP pin specified by the trigger-source consumer reference
-> in the device tree (one cell = GP pin number 0-3). For this mode the
-> driver acts as both an SPI offload consumer (DMA RX stream, message
-> optimization) and a trigger source provider: it registers the
-> GP/DATA_READY output via devm_spi_offload_trigger_register() so the
-> offload framework can match the '#trigger-source-cells' phandle and
-> automatically fire the SPI Engine DMA transfer at end-of-conversion.
-> 
-> Manual Mode: the SPI Engine is triggered by a periodic trigger at
-> the configured sampling frequency. The pre-built SPI message uses
-> the pipelined CNV-on-CS protocol: N+1 16-bit transfers are issued
-> for N active channels (the first result is discarded as garbage from
-> the pipeline flush) and the remaining N results are captured by DMA.
-> 
-> All offload transfers use 16-bit frames (bits_per_word=16, len=2).
-> The channel scan_type (storagebits=16, shift=0, IIO_BE) is shared
-> between the software triggered-buffer and offload paths; no separate
-> scan_type or channel array is needed for the offload case. The
-> ad4691_manual_channels[] array introduced in the triggered-buffer
-> commit is reused here: it hides the IIO_CHAN_INFO_OVERSAMPLING_RATIO
-> attribute, which is not applicable in Manual Mode.
-> 
-> Kconfig gains a dependency on IIO_BUFFER_DMAENGINE.
-> 
-> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+No worries, it's fine to explain it (and also sorry for me not being
+able to answer your other questions).
 
-A few comments inline.
-
-> diff --git a/drivers/iio/adc/ad4691.c b/drivers/iio/adc/ad4691.c
-> index 3e5caa0972eb..839ea7f44c78 100644
-> --- a/drivers/iio/adc/ad4691.c
-> +++ b/drivers/iio/adc/ad4691.c
+> Reviewed-by: Linus Walleij <linusw@kernel.org>
 
 
-> +
-> +static int ad4691_cnv_burst_offload_buffer_postenable(struct iio_dev *indio_dev)
-> +{
-> +	struct ad4691_state *st = iio_priv(indio_dev);
-> +	struct ad4691_offload_state *offload = st->offload;
-> +	struct device *dev = regmap_get_device(st->regmap);
-> +	struct spi_device *spi = to_spi_device(dev);
-> +	struct spi_offload_trigger_config config = {
-> +		.type = SPI_OFFLOAD_TRIGGER_DATA_READY,
-> +	};
-> +	unsigned int n_active;
-> +	unsigned int bit, k;
-> +	int ret;
-> +
-> +	n_active = bitmap_weight(indio_dev->active_scan_mask, iio_get_masklength(indio_dev));
-> +
-> +	ret = regmap_write(st->regmap, AD4691_STD_SEQ_CONFIG,
-> +			   bitmap_read(indio_dev->active_scan_mask, 0,
-> +				       iio_get_masklength(indio_dev)));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_write(st->regmap, AD4691_ACC_MASK_REG,
-> +			   ~bitmap_read(indio_dev->active_scan_mask, 0,
-> +				iio_get_masklength(indio_dev)) & GENMASK(15, 0));
-This indent is hard to read. I would either use a local variable, or do it as
-
-	ret = regmap_write(st->regmap, AD4691_ACC_MASK_REG,
-			   ~bitmap_read(indio_dev->active_scan_mask, 0,
-					iio_get_masklength(indio_dev)) &
-			   GENMASK(15, 0));
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ad4691_enter_conversion_mode(st);
-> +	if (ret)
-> +		return ret;
-> +
-> +	memset(st->scan_xfers, 0, sizeof(st->scan_xfers));
-> +
-> +	/*
-> +	 * Each AVG_IN register read uses two 16-bit transfers:
-> +	 *   TX: [reg_hi | 0x80, reg_lo]  (address, CS stays asserted)
-> +	 *   RX: [data_hi, data_lo]       (data, storagebits=16, shift=0)
-> +	 * The state reset is also split into two 16-bit transfers
-> +	 * (address then value) to keep bits_per_word uniform throughout.
-> +	 */
-> +	k = 0;
-> +	iio_for_each_active_channel(indio_dev, bit) {
-> +		put_unaligned_be16(0x8000 | AD4691_AVG_IN(bit), offload->tx_cmd[k]);
-> +
-> +		/* TX: address phase, CS stays asserted into data phase */
-> +		st->scan_xfers[2 * k].tx_buf = offload->tx_cmd[k];
-> +		st->scan_xfers[2 * k].len = sizeof(offload->tx_cmd[k]);
-> +		st->scan_xfers[2 * k].bits_per_word = AD4691_OFFLOAD_BITS_PER_WORD;
-> +
-> +		/* RX: data phase, CS toggles after to delimit the next register op */
-> +		st->scan_xfers[2 * k + 1].len = sizeof(offload->tx_cmd[k]);
-> +		st->scan_xfers[2 * k + 1].bits_per_word = AD4691_OFFLOAD_BITS_PER_WORD;
-> +		st->scan_xfers[2 * k + 1].offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
-> +		st->scan_xfers[2 * k + 1].cs_change = 1;
-> +		k++;
-> +	}
-> +
-> +	/* State reset to re-arm DATA_READY for the next scan. */
-> +	put_unaligned_be16(AD4691_STATE_RESET_REG, offload->tx_reset);
-> +	offload->tx_reset[2] = AD4691_STATE_RESET_ALL;
-> +
-> +	st->scan_xfers[2 * k].tx_buf = offload->tx_reset;
-> +	st->scan_xfers[2 * k].len = sizeof(offload->tx_cmd[k]);
-> +	st->scan_xfers[2 * k].bits_per_word = AD4691_OFFLOAD_BITS_PER_WORD;
-> +
-> +	st->scan_xfers[2 * k + 1].tx_buf = &offload->tx_reset[2];
-> +	st->scan_xfers[2 * k + 1].len = sizeof(offload->tx_cmd[k]);
-> +	st->scan_xfers[2 * k + 1].bits_per_word = AD4691_OFFLOAD_BITS_PER_WORD;
-> +	st->scan_xfers[2 * k + 1].cs_change = 1;
-> +
-> +	spi_message_init_with_transfers(&st->scan_msg, st->scan_xfers, 2 * k + 2);
-> +	st->scan_msg.offload = offload->spi;
-> +
-> +	ret = spi_optimize_message(spi, &st->scan_msg);
-> +	if (ret)
-> +		goto err_exit_conversion;
-> +
-> +	ret = ad4691_sampling_enable(st, true);
-> +	if (ret)
-> +		goto err_unoptimize;
-> +
-> +	ret = spi_offload_trigger_enable(offload->spi, offload->trigger, &config);
-> +	if (ret)
-> +		goto err_sampling_disable;
-> +
-> +	return 0;
-> +
-> +err_sampling_disable:
-> +	ad4691_sampling_enable(st, false);
-> +err_unoptimize:
-> +	spi_unoptimize_message(&st->scan_msg);
-> +err_exit_conversion:
-> +	ad4691_exit_conversion_mode(st);
-> +	return ret;
-> +}
-
->  
->  static ssize_t sampling_frequency_store(struct device *dev,
-> @@ -833,6 +1123,23 @@ static ssize_t sampling_frequency_store(struct device *dev,
->  	if (ret)
->  		return ret;
->  
-> +	if (st->manual_mode && st->offload) {
-> +		struct spi_offload_trigger_config config = {
-> +			.type = SPI_OFFLOAD_TRIGGER_PERIODIC,
-> +			.periodic = { .frequency_hz = freq },
-> +		};
-> +
-> +		ret = spi_offload_trigger_validate(st->offload->trigger, &config);
-> +		if (ret) {
-> +			iio_device_release_direct(indio_dev);
-> +			return ret;
-> +		}
-> +
-> +		st->offload->trigger_hz = config.periodic.frequency_hz;
-> +		iio_device_release_direct(indio_dev);
-This release in a different scope is a bit ugly. 
-
-Look at whether the auto cleanup approach works well here.
-
-https://elixir.bootlin.com/linux/v7.0-rc7/source/include/linux/iio/iio.h#L767
-
-
-> +		return len;
-> +	}
-> +
+--=20
+With best wishes
+Dmitry
 
