@@ -1,107 +1,107 @@
-Return-Path: <linux-gpio+bounces-35088-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35089-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wHBTAzXg3GnrXgkAu9opvQ
-	(envelope-from <linux-gpio+bounces-35088-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 14:23:17 +0200
+	id OMJnKi7g3GnrXgkAu9opvQ
+	(envelope-from <linux-gpio+bounces-35089-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 14:23:10 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF1613EBDF5
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 14:23:16 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83FDC3EBDE5
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 14:23:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 17B78301AA83
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 12:23:00 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 2DA5B30089B8
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 12:23:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B193F3C4568;
-	Mon, 13 Apr 2026 12:22:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 236573C5528;
+	Mon, 13 Apr 2026 12:23:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="onLJ9rIS";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="A2eOKyAv"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dMoH/WRt";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="iQasXWZK"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCC43C4554
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 12:22:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74333C456A
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 12:22:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776082977; cv=none; b=eK8FAJTmkJinRk6pqAzV2Bs4oOOwCA4L8lXVWqWLWA4F6JBmiiXKfrPQ1AEqwe13t67A1v2xsWsNbmOu3YsOJEyRQ2ib2ZLbrTh0qR/DuPbcsJZQ0zhXn7J7tx3IKlKw4FyUaUaG+9yat5WSOoubLc/rlkPJfzbT/apFxqPgQr0=
+	t=1776082979; cv=none; b=rruf/VzJv+bePvTkibzihg7WeAkj5FTL9A25A5EGWmybAcy/8mZUVTbERrkMPpYTBNYbGOa5I5D/I1vra9QL+hvsPlPi2DqyZj/mRqIfS+V6EgwjiC64+NZu7uRcG9b5seU0dVxQmXhYBPpCAAOreKk3qeuep3nXOCm4KWrKB1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776082977; c=relaxed/simple;
-	bh=ut9PV2o4yH/f8FFw1egzoxIKS47z+ANZobPjPIWRqWk=;
+	s=arc-20240116; t=1776082979; c=relaxed/simple;
+	bh=Q3U9cR71Ou1c/o6O1vQUwLt7SPIPHBKKzdH+VYokhRM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lFPyLA+IO23/5gHDAUEQRinR+W31PnpveCHOoX3zYK4q6X10SLeStD9vOxf42Pcc+9IqJ1Rl50Iwne1UwcTpx5cr59h5KwqRkRzQDbcwuNx7IF03FuEidYimGaT+huvD2yX6AYHxMzBYJUJiJdAOSPRyAgUlsP6gpTWzgi11voA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=onLJ9rIS; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=A2eOKyAv; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version; b=saWrV9cAbfMsHOXOp9THXS83ziXvPR1jSuISRM2Wrpcqg9+J43mmz9T8lwnpS+hVV8BdVALwgaHwCnqbgWLjvpsZZZnOi76B8DaGWgMpPt6L3mrtT4wH/mAKk+rtvZa8lJFISYU3nVSKXxRqhFncNNHCCaIOHdQP3GYMRGZHBk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dMoH/WRt; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=iQasXWZK; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63DC80ih2187568
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 12:22:55 GMT
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63DC7Z1s2186168
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 12:22:58 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=/JSKbxKMjlH
-	hR33pPEPgG0vWEqr9Nna/LCJkfK6/9BQ=; b=onLJ9rISvd95Su9DRKOxqBAqa9C
-	WT67BEOcfPbGm1K5H1ZKsImVuDmZ+fhec0YXJdF4bMQFW8xyx9SsAlMaTC9gP3Yy
-	+etHTyNcGUrXsYL2wt3t5ZrysYKDwOrq9KFobRZDw4iNqnDtnYZ0UTJw0IsgzzGv
-	jrrBz37c7lTSnU7dOWioV5aH17V04BmsKU7veloOJZmrqjCEQ52W9ypnPZPvO4tK
-	uc0oQVd0L44bCn4NTA2Ta3NsExM424+V3q24aP+qdT3cQKNRalk/EY9eDRR/O6Kv
-	5o+8MaNy3SjziFB7kqlzRVRz+Y3n5f4bnNSh7K08SCJyFq+r1j9vd5ozwfQ==
-Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com [209.85.128.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dh07hg1cy-1
+	:mime-version:references:subject:to; s=qcppdkim1; bh=aR0wfxNzBVS
+	ofwPdxGhUSe58+s1gtFmmIRWzztRcMV0=; b=dMoH/WRt73np3wkJeNeCFojWaq6
+	VlbKSYxBeWmdVZ+IJyfd0PFUXoFdmZ8/t20GaMAMv0YGZs+ObZ21xk0o/dZG4YNv
+	yM3lkJwP+lSUrlRqz0ndqgggcO4eZX/6ct6fkOsN8ndqt0HqnJ6EbtIUKkXOw7Jv
+	5sqLBXHsUAPlBUumSaaveF32ijjHb0HGLvBvxjHObSSmqNFwGNPNbBWYl4qvikoD
+	czNTxDrULKFhQpuPbn9rWjOpBIgprBiYxwqPD/Z5qzH4+MX+PouzSIy4GY5p25NT
+	oQmifzYp1Uw1+cke+HK14eRxQlBeLlOZwbmtU0R88uwBaigigJ5TLdj1oGg==
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com [209.85.128.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dh07hg1d7-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 12:22:55 +0000 (GMT)
-Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-790afc07667so86142467b3.0
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 05:22:55 -0700 (PDT)
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 12:22:58 +0000 (GMT)
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-7af89eabe49so60443027b3.0
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 05:22:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1776082975; x=1776687775; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1776082977; x=1776687777; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/JSKbxKMjlHhR33pPEPgG0vWEqr9Nna/LCJkfK6/9BQ=;
-        b=A2eOKyAvAE+DR0arzu9Q9ux1qkDd/gOVIa9rpxpXIPGxcc7u1Xd7YoarG9ScFqyLd7
-         vf9zhdzIa3uiRKF1sMO1WElmZAZOxdId+ctZnsmcq0MyGWF7QiNvnkha4bYGLDqOuPt3
-         I2Bdk5fMqq56vntnf208BsFd3IR6U0SFEGhCNYK2OqexyWVJO9u5tQ3VjDi8i1fSEOdl
-         tfEB1j3rV1Weqxv/f+CtOcHn9O2AsQKIZgwBHXwwjlok7y2JnJgmDWt1hTItQ37RJPsJ
-         T5w0i9yV3agE7hxpnJwRDE77UKiHRdD1vkACC2wiC463xKuj39tAt9IfdiaXklVZQX6u
-         sSrQ==
+        bh=aR0wfxNzBVSofwPdxGhUSe58+s1gtFmmIRWzztRcMV0=;
+        b=iQasXWZK4VFqdGWH3aHE8KvAk04NTf3NLB7hlHxnN56d73+78em/vtgSO1ynrS0Vt9
+         yUPWnnA6dNGkLHKyx9fX6zdlRnTJCEW3FpQfN8rMlFINR/6LL3i3bcruEOiqRTFh5ecL
+         Zy5m7TMcmGMpN7tuA7d0QqoDsssOzVdSFxM93jIcuCUuqMFSjBar9Hqh9faVfm8fMhFf
+         Daxq/l3Lt1AlXTPNSbzo32E1slq/AYY0X96iLSTL80XPvF1KB3BSSUc9fDrlOA8Qb80h
+         mO4g5Wgjo3TDfNJDPntm4u3cCgCfz6z8kUe3ebv+MVRnXxq/10P9N2WK/beV/mpUqRtE
+         yFFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776082975; x=1776687775;
+        d=1e100.net; s=20251104; t=1776082977; x=1776687777;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=/JSKbxKMjlHhR33pPEPgG0vWEqr9Nna/LCJkfK6/9BQ=;
-        b=tLV9THinxO7f2gUw1S5rwlAohkhi9/yyolAdQDS7rSKcP95tYTTxquAYrVD57rUnhj
-         f4G8/uE8HHVIgmC0V1v9qP9BmVgu7BgfAXLRF2oVfbmIeGLmM+6sy+jfdgpzg9R8ewOS
-         vVhHTPSS2CzMH40bBqGACZCq3spMrVy13wrfYfrnnQlrBbtuP2BhKuBXBxMroyUz5h71
-         QGi/E28b+KWnc21Vsn/WJpPcNaRlLhu+0ZGdM69rQlcTA3ChcmUJagklV61kqqQ11Sdi
-         3jDHLs52lZBpZiQ358NwGKcgCrgdR6PRAr533phL0j7oJuxPVi2gCvVPiwZiTNGOEaOq
-         r4MA==
-X-Forwarded-Encrypted: i=1; AFNElJ9wOuU4ufAHFnq5nM/xrZ46r+qOzKLHLpqqT/ZmgT1HnUqNMgXWw8/x1LRB/FQSLxTmL6kLiOCRBonD@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAyWjm+8S17Gpz0dHSnjVimrR11vOgi+il5hCty7oE6OBFaYO1
-	UVSx+OgQ6+XP+C9dbhZ9kYLNkllHBoMmjSkOxmZw+WjKravPrxKUtFnOI/SUObXvGe43ynngb21
-	gkp/b4A+CzwCZKYNM2Xi/wZ6WR/c3ohQFha8aV7eN369phgLfS5NotHvt9lac08rZ
-X-Gm-Gg: AeBDievptwVLp7zuyfymfW/rdl4ChchOZgpzZNM7PtrQ+QvuHUX8Xffg4o2PknnHUOJ
-	l7dx+zidcb+mNYMtdJUoDliStTf+nCwozyUC1LDJBnT3YISb9J52aiB0bMckE7j8ANcO65ER2Qk
-	9aZvrJCd/hDa/C8GXy5QgwtXIGVgzRH5UNDJpVOHClYhwyxl4zy1pp9jw75kOsbpu6SmIDArqzK
-	SlXuL5e3+GRs/oXchB/A9xHASnNcuy7Pww7nzKlWfT9Q7VIXR9r7i6lkMXbKUR87XioK0BOPkyt
-	XaxuHLtrhRGqX4VWcoONHedfkp5vnmEjGqVr6T2u/7BVw0PnMGSupWT0Z6ALJZJYqNbeE733bvD
-	BNZmWr7/BmGi0+9Tw359twrNWXLAtVe/Nn3UH4AquzyKfOAbF3g==
-X-Received: by 2002:a05:690c:60c7:b0:79e:8299:7505 with SMTP id 00721157ae682-7af6ef4008dmr143218247b3.6.1776082974384;
-        Mon, 13 Apr 2026 05:22:54 -0700 (PDT)
-X-Received: by 2002:a05:690c:60c7:b0:79e:8299:7505 with SMTP id 00721157ae682-7af6ef4008dmr143217887b3.6.1776082973816;
-        Mon, 13 Apr 2026 05:22:53 -0700 (PDT)
+        bh=aR0wfxNzBVSofwPdxGhUSe58+s1gtFmmIRWzztRcMV0=;
+        b=a+eAwwQUrK0IeGW5fZZNKSAgyG+U980JYSTomFQ7VTHgNoNGiZY1/kWsLvmGQR8gMb
+         plo8vXTl4ghw+JzccM9IvYqgv4vdNo7A1Y3Q7tbDqtdFu+oEavAljWdvB9NAdFY197Gj
+         Ib6KgaF5t5XjYcRnWpKquiTmfiBrji/0XGJn2GZZ79tq+NAq64r1jnWL1kuEmxr78r2B
+         8UHRvRr/iDOfhDeg4nF0ip8vNyt9FEAk5ONifRysS6V9xU20/SBOmN9Pz9UtwS3Enka3
+         bQDLIpLMSUx/735B7U6Zsfd8j3bLKMJG+0Jfrjv7JM+kAV+yBGzwxAEbqY5SsxkwuCYz
+         bM1Q==
+X-Forwarded-Encrypted: i=1; AFNElJ8osdbyH86xWHm+ctZVff8UjDVK7hwNErdAHgjY0UaJUbqglOrilaRjl91fH2WVYLZOKQbURCKeIGO0@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEDSqyafn9h+txIhk7FQb5zl8CVUbL6w/FDBVDchk6Gx1eST7l
+	G85sRTLPRDjw5JaLWdCxQAKNmwlNY4se1cB7n5+Y7Ey9Vuh6IWBReVAeBGpOZz7xGuh0vvFKp2h
+	c83YFYxly1nZRAaYhYu3y1mR2kkWWzqnGI1z9WnTg3l58d53p6YDyC3zMKCzR8jUw
+X-Gm-Gg: AeBDievWqXuveGYEdLFx7ncJ52vKZgbZf/BX5n92rcpEvOdToqG8Eo8xwqHE854EQwc
+	gzS6aS/0BTWNEEvlWlOP0pC77cMCrGFbu2IU4LBph0qoRzlqhZInONfulOMZXfeS1HHq9TtEyy2
+	nbQ+wqUhm8VHSncbuAM2It1xNJ6rLaw9sAuqwPAOSGJR/yfxjdlsD0DibpXnfLKdlFL7Su1mJtX
+	EfG3oZG/OzdUY5b7rq4wHWDNcpAoIKJEKUQYA7GHJBpxtqo9hyckJrmUP/3N+BZdJMFJQ2XWXoN
+	JeuJ91KMyyRAgXirgIRhvV/mVb78Cn3Qgw8kwLlMSe0wtic+VcLKzvsjyVhVIYLf1WLALo96Fyc
+	AuGkR/yBlEOMXM3IJ5RHOdqvyYF8k2QPI4DsfJEGjFiyBGThxTQ==
+X-Received: by 2002:a05:690c:3482:b0:7b3:ca3b:84a4 with SMTP id 00721157ae682-7b3ca3b8fa5mr19090297b3.18.1776082977277;
+        Mon, 13 Apr 2026 05:22:57 -0700 (PDT)
+X-Received: by 2002:a05:690c:3482:b0:7b3:ca3b:84a4 with SMTP id 00721157ae682-7b3ca3b8fa5mr19090057b3.18.1776082976678;
+        Mon, 13 Apr 2026 05:22:56 -0700 (PDT)
 Received: from hu-nandam-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7af400eb1fasm50781657b3.44.2026.04.13.05.22.51
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7af400eb1fasm50781657b3.44.2026.04.13.05.22.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2026 05:22:53 -0700 (PDT)
+        Mon, 13 Apr 2026 05:22:56 -0700 (PDT)
 From: Ajay Kumar Nandam <ajay.nandam@oss.qualcomm.com>
 To: Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linusw@kernel.org>
 Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org, srinivas.kandagatla@oss.qualcomm.com
-Subject: [PATCH v1 2/3] pinctrl: qcom: lpass-lpi: Fix GPIO register access helper return types
-Date: Mon, 13 Apr 2026 17:52:32 +0530
-Message-Id: <20260413122233.375945-3-ajay.nandam@oss.qualcomm.com>
+Subject: [PATCH v1 3/3] pinctrl: qcom: lpass-lpi: Resume clocks for GPIO access
+Date: Mon, 13 Apr 2026 17:52:33 +0530
+Message-Id: <20260413122233.375945-4-ajay.nandam@oss.qualcomm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260413122233.375945-1-ajay.nandam@oss.qualcomm.com>
 References: <20260413122233.375945-1-ajay.nandam@oss.qualcomm.com>
@@ -112,21 +112,21 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: D3CAsHM77pfcooN13mQusziMQZG9uMyi
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDEzMDEyMiBTYWx0ZWRfXwjacW7Ey9xCe
- VBlEMMxtR2psE5tqlbOwYp/XmM+a7Pk0dvZ7yr9Z5jBTCprvZydCw+sQCDw4VJfYx0xEyUnTlUu
- eSkT8aSoop11gmw5kHi5IuyhZcHL1SxO8gy9uR+Pg5F8SjY4/7mhV65vuRAqXb4zRApYchy5LnD
- igmpzghsmRcidT/Wy7YGcLtPPTXd3qzsPCbijouwlP04QQWsz7ijtUNC1NRgAuTvT0f2C505kFo
- 0JJGnvEBJEXyYPzVXHLhdItiMIWd0ZdH2HlgWDavtKO1ZpA0hS97A9UU2fpaeo7AWB2uc2UF+9r
- EA3pTU8/q1huBws9JBBfLZXSxm/dK4tTEvaI5IxalvV/NArifosWlLUQFGXYDTCqf+Ssft6ut+z
- gHiPvtq1LQ6r68UilTTwR+LBIgi6m1dRqoy1itsG1WfFBJP3huV/Wvc+MbEpSoe0w5fYvNqsOVQ
- pcamUajwmcOuN5/muNg==
-X-Proofpoint-GUID: D3CAsHM77pfcooN13mQusziMQZG9uMyi
-X-Authority-Analysis: v=2.4 cv=QtNuG1yd c=1 sm=1 tr=0 ts=69dce01f cx=c_pps
- a=g1v0Z557R90hA0UpD/5Yag==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+X-Proofpoint-ORIG-GUID: WSahv8w5r4AO1IZv2CPT2r86BCsxllNc
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDEzMDEyMiBTYWx0ZWRfX9HzQbX0DHZMn
+ lBUMGmvrjBWn+1tV5FY5jsvOoG4ehgfg9rafq5fdziMTllpDVTuoAZte1ouE6DYgeOyZwdOBhDj
+ fNp2xEMqt1/bz6bxyVEamoR/K9/SZEOynzf/czge2v/sQriXlLXM4KZ1Ob/cRvQnXTxX3xZTGQZ
+ U5pu3FzavVbGyOPSxkSR6kptxrZn5bSF/XiAG30ppOEN6ThZ6ak2O/EBPdceWeVguDXIcyoMI/q
+ p0v36rWF+1FeXhNPJ5T4V/VG/t2sNKzobjD3OL6saz5u7s0X8BDnHm8AsBO/xivs45jl0vfgTPE
+ gziLpB06+vvkc9uY0iyHfb56+Hr8B0+7y/bGpgsrRJmJzj1DHcyq9vqSIvqdTpHcb3yVByGS+99
+ PW2/M9EL17pn9H1hETWXKBNNlEFFpJ7SIJyiHWhwFOFNVxdW9vGVtT7JPOvwvIGwoMFLg14ExIN
+ +a9zEY5yJ9/8mtSVLOA==
+X-Proofpoint-GUID: WSahv8w5r4AO1IZv2CPT2r86BCsxllNc
+X-Authority-Analysis: v=2.4 cv=QtNuG1yd c=1 sm=1 tr=0 ts=69dce022 cx=c_pps
+ a=72HoHk1woDtn7btP4rdmlg==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
  a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
  a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22 a=EUspDBNiAAAA:8
- a=1J4TlokszvnMI57PoO4A:9 a=MFSWADHSvvjO3QEy5MdX:22
+ a=f7xhw97bOydz6QRQpsAA:9 a=kA6IBgd4cpdPkAWqgNAz:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-13_03,2026-04-13_01,2025-10-01_01
@@ -140,15 +140,15 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35088-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35089-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,qualcomm.com:dkim,qualcomm.com:email];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:dkim,oss.qualcomm.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,qualcomm.com:dkim,qualcomm.com:email];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
@@ -156,200 +156,69 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	NEURAL_HAM(-0.00)[-1.000];
+	NEURAL_HAM(-0.00)[-0.999];
 	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	RCPT_COUNT_FIVE(0.00)[6];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: BF1613EBDF5
+X-Rspamd-Queue-Id: 83FDC3EBDE5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The LPI GPIO register access helpers previously returned the value from
-ioread32(), even though their return type was int. This mixes data
-return with status and is inconsistent with common kernel helper
-conventions.
+Ensure the LPI pinctrl device clocks are runtime resumed
+before accessing GPIO registers and autosuspended after
+the access completes.
 
-Rework lpi_gpio_read() and lpi_gpio_write() to return an int status and
-use output parameters to pass register values. Update all callers to
-match the new helper interface.
-
-This change fixes the helper API and resulting call sites without
-intending any functional change in GPIO or pinctrl behavior.
+Guard GPIO register read and write helpers with synchronous
+runtime PM calls so the device is active during MMIO
+operations.
 
 Signed-off-by: Ajay Kumar Nandam <ajay.nandam@oss.qualcomm.com>
 ---
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 66 +++++++++++++++++-------
- 1 file changed, 47 insertions(+), 19 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-index 6d50e06ef..d108e7321 100644
+index d108e7321..4275f2734 100644
 --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
 +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-@@ -39,22 +39,26 @@ struct lpi_pinctrl {
- };
- 
- static int lpi_gpio_read(struct lpi_pinctrl *state, unsigned int pin,
--			 unsigned int addr)
-+			 unsigned int addr, u32 *val)
- {
- 	u32 pin_offset;
-+	int ret;
- 
- 	if (state->data->flags & LPI_FLAG_USE_PREDEFINED_PIN_OFFSET)
- 		pin_offset = state->data->groups[pin].pin_offset;
+@@ -49,8 +49,17 @@ static int lpi_gpio_read(struct lpi_pinctrl *state, unsigned int pin,
  	else
  		pin_offset = LPI_TLMM_REG_OFFSET * pin;
  
--	return ioread32(state->tlmm_base + pin_offset + addr);
-+	*val = ioread32(state->tlmm_base + pin_offset + addr);
-+
-+	return 0;
- }
- 
- static int lpi_gpio_write(struct lpi_pinctrl *state, unsigned int pin,
- 			  unsigned int addr, unsigned int val)
- {
- 	u32 pin_offset;
-+	int ret;
- 
- 	if (state->data->flags & LPI_FLAG_USE_PREDEFINED_PIN_OFFSET)
- 		pin_offset = state->data->groups[pin].pin_offset;
-@@ -107,7 +111,8 @@ static int lpi_gpio_set_mux(struct pinctrl_dev *pctldev, unsigned int function,
- {
- 	struct lpi_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
- 	const struct lpi_pingroup *g = &pctrl->data->groups[group];
--	u32 val;
-+	u32 val, io_val;
-+	int ret;
- 	int i, pin = g->pin;
- 
- 	for (i = 0; i < g->nfuncs; i++) {
-@@ -119,7 +124,9 @@ static int lpi_gpio_set_mux(struct pinctrl_dev *pctldev, unsigned int function,
- 		return -EINVAL;
- 
- 	mutex_lock(&pctrl->lock);
--	val = lpi_gpio_read(pctrl, pin, LPI_GPIO_CFG_REG);
-+	ret = lpi_gpio_read(pctrl, pin, LPI_GPIO_CFG_REG, &val);
-+	if (ret)
-+		goto out_unlock;
- 
- 	/*
- 	 * If this is the first time muxing to GPIO and the direction is
-@@ -129,24 +136,28 @@ static int lpi_gpio_set_mux(struct pinctrl_dev *pctldev, unsigned int function,
- 	 */
- 	if (i == GPIO_FUNC && (val & LPI_GPIO_OE_MASK) &&
- 	    !test_and_set_bit(group, pctrl->ever_gpio)) {
--		u32 io_val = lpi_gpio_read(pctrl, group, LPI_GPIO_VALUE_REG);
-+		ret = lpi_gpio_read(pctrl, group, LPI_GPIO_VALUE_REG, &io_val);
-+		if (ret)
-+			goto out_unlock;
- 
- 		if (io_val & LPI_GPIO_VALUE_IN_MASK) {
- 			if (!(io_val & LPI_GPIO_VALUE_OUT_MASK))
--				lpi_gpio_write(pctrl, group, LPI_GPIO_VALUE_REG,
--					       io_val | LPI_GPIO_VALUE_OUT_MASK);
-+				ret = lpi_gpio_write(pctrl, group, LPI_GPIO_VALUE_REG,
-+						     io_val | LPI_GPIO_VALUE_OUT_MASK);
- 		} else {
- 			if (io_val & LPI_GPIO_VALUE_OUT_MASK)
--				lpi_gpio_write(pctrl, group, LPI_GPIO_VALUE_REG,
--					       io_val & ~LPI_GPIO_VALUE_OUT_MASK);
-+				ret = lpi_gpio_write(pctrl, group, LPI_GPIO_VALUE_REG,
-+						     io_val & ~LPI_GPIO_VALUE_OUT_MASK);
- 		}
- 	}
- 
- 	u32p_replace_bits(&val, i, LPI_GPIO_FUNCTION_MASK);
--	lpi_gpio_write(pctrl, pin, LPI_GPIO_CFG_REG, val);
-+	ret = lpi_gpio_write(pctrl, pin, LPI_GPIO_CFG_REG, val);
-+
-+out_unlock:
- 	mutex_unlock(&pctrl->lock);
- 
--	return 0;
-+	return ret;
- }
- 
- static const struct pinmux_ops lpi_gpio_pinmux_ops = {
-@@ -165,8 +176,11 @@ static int lpi_config_get(struct pinctrl_dev *pctldev,
- 	int is_out;
- 	int pull;
- 	u32 ctl_reg;
-+	int ret;
- 
--	ctl_reg = lpi_gpio_read(state, pin, LPI_GPIO_CFG_REG);
-+	ret = lpi_gpio_read(state, pin, LPI_GPIO_CFG_REG, &ctl_reg);
-+	if (ret)
++	ret = pm_runtime_get_sync(state->dev);
++	if (ret < 0) {
++		pm_runtime_put_noidle(state->dev);
 +		return ret;
- 	is_out = ctl_reg & LPI_GPIO_OE_MASK;
- 	pull = FIELD_GET(LPI_GPIO_PULL_MASK, ctl_reg);
- 
-@@ -293,17 +307,22 @@ static int lpi_config_set(struct pinctrl_dev *pctldev, unsigned int group,
- 	}
- 
- 	mutex_lock(&pctrl->lock);
--	val = lpi_gpio_read(pctrl, group, LPI_GPIO_CFG_REG);
-+	ret = lpi_gpio_read(pctrl, group, LPI_GPIO_CFG_REG, &val);
-+	if (ret) {
-+		mutex_unlock(&pctrl->lock);
-+		goto out_unlock;
 +	}
++
+ 	*val = ioread32(state->tlmm_base + pin_offset + addr);
  
- 	u32p_replace_bits(&val, pullup, LPI_GPIO_PULL_MASK);
- 	u32p_replace_bits(&val, LPI_GPIO_DS_TO_VAL(strength),
- 			  LPI_GPIO_OUT_STRENGTH_MASK);
- 	u32p_replace_bits(&val, output_enabled, LPI_GPIO_OE_MASK);
- 
--	lpi_gpio_write(pctrl, group, LPI_GPIO_CFG_REG, val);
--	mutex_unlock(&pctrl->lock);
-+	ret = lpi_gpio_write(pctrl, group, LPI_GPIO_CFG_REG, val);
- 
--	return 0;
-+out_unlock:
-+	mutex_unlock(&pctrl->lock);
-+	return ret;
++	pm_runtime_mark_last_busy(state->dev);
++	pm_runtime_put_autosuspend(state->dev);
++
+ 	return 0;
  }
  
- static const struct pinconf_ops lpi_gpio_pinconf_ops = {
-@@ -352,9 +371,13 @@ static int lpi_gpio_direction_output(struct gpio_chip *chip,
- static int lpi_gpio_get(struct gpio_chip *chip, unsigned int pin)
- {
- 	struct lpi_pinctrl *state = gpiochip_get_data(chip);
-+	u32 val;
-+	int ret;
+@@ -65,8 +74,17 @@ static int lpi_gpio_write(struct lpi_pinctrl *state, unsigned int pin,
+ 	else
+ 		pin_offset = LPI_TLMM_REG_OFFSET * pin;
  
--	return lpi_gpio_read(state, pin, LPI_GPIO_VALUE_REG) &
--		LPI_GPIO_VALUE_IN_MASK;
-+	ret = lpi_gpio_read(state, pin, LPI_GPIO_VALUE_REG, &val);
-+	if (ret)
++	ret = pm_runtime_get_sync(state->dev);
++	if (ret < 0) {
++		pm_runtime_put_noidle(state->dev);
 +		return ret;
-+	return val & LPI_GPIO_VALUE_IN_MASK;
++	}
++
+ 	iowrite32(val, state->tlmm_base + pin_offset + addr);
+ 
++	pm_runtime_mark_last_busy(state->dev);
++	pm_runtime_put_autosuspend(state->dev);
++
+ 	return 0;
  }
  
- static int lpi_gpio_set(struct gpio_chip *chip, unsigned int pin, int value)
-@@ -387,6 +410,7 @@ static void lpi_gpio_dbg_show_one(struct seq_file *s,
- 	int drive;
- 	int pull;
- 	u32 ctl_reg;
-+	int ret;
- 
- 	static const char * const pulls[] = {
- 		"no pull",
-@@ -397,7 +421,11 @@ static void lpi_gpio_dbg_show_one(struct seq_file *s,
- 
- 	pctldev = pctldev ? : state->ctrl;
- 	pindesc = pctldev->desc->pins[offset];
--	ctl_reg = lpi_gpio_read(state, offset, LPI_GPIO_CFG_REG);
-+	ret = lpi_gpio_read(state, offset, LPI_GPIO_CFG_REG, &ctl_reg);
-+	if (ret) {
-+		seq_printf(s, " %-8s: <read error %d>", pindesc.name, ret);
-+		return;
-+	}
- 	is_out = ctl_reg & LPI_GPIO_OE_MASK;
- 
- 	func = FIELD_GET(LPI_GPIO_FUNCTION_MASK, ctl_reg);
 -- 
 2.34.1
 
