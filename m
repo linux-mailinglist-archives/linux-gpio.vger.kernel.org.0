@@ -1,116 +1,202 @@
-Return-Path: <linux-gpio+bounces-35092-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35091-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CEYHFKnz3GkvYgkAu9opvQ
-	(envelope-from <linux-gpio+bounces-35092-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 15:46:17 +0200
+	id SDgXHTz13GkvYgkAu9opvQ
+	(envelope-from <linux-gpio+bounces-35091-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 15:53:00 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD4733ECB43
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 15:46:15 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id F08603ECC68
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 15:52:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 69AE73010928
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 13:45:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 119DB301F325
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 13:45:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D3C23CF034;
-	Mon, 13 Apr 2026 13:45:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA6603CEBA6;
+	Mon, 13 Apr 2026 13:45:24 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB7063CA485;
-	Mon, 13 Apr 2026 13:45:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C03032AAA7;
+	Mon, 13 Apr 2026 13:45:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776087924; cv=none; b=d6476Xm7hhjIIYz9Tl+kM7fT8f4WGmtAzo/VuiBm6e1sd3nsJ2duo2RBZVH4fu1N/AxGeTyBSrCMxsWfO/ctQ4LkoQdh3lHBilaKqviIPsGk8/XmatxqKKp7mFPauqc3pRg3fhQhYksEaP2zexVdB1tFXJY1lUjFPjR+FU6D4h0=
+	t=1776087924; cv=none; b=b0D/dOkT50xAiCCN7V4BynJGLRH3jhg2bgz1hVu/i9SeMjpFXgvA6L+P8mT0S9EDpfhjfAvwoYd9DcMliyZWBQDYUKe6JFDlj7+aiTgMyrYlr86KnUB+5CGJygHw7HBfXR7wk7MyaX7WDIjtLw3jJf36RpkiGd4zCl8GeY9sjCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776087924; c=relaxed/simple;
-	bh=Odv5zH1J4LxnKF5UkH74kWOp+Irz5AABX7a6T6Der+A=;
+	bh=909Q03nLYzRnV2uD3X2X/W7tkeK+QT5NOhuVd+eYU8g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HXpJr/Ggow+GTZfGd4SaydFs2g1O6G32W61MnYbN9r6/K1EnhduU/508tygRgkAdItTkIXSny+QxAW4q0JGntXiTxi09NMklmF6cp/x7vlVLkpK0qeMlJIVPsy/eOBP5RGzpy8+skpHD7eH3JXholfI+nrFdhgJ8n1YF77vatys=
+	 Content-Type:Content-Disposition:In-Reply-To; b=FhfbsXkNDMUqbP2WUoQztqoRvbR19bDNXKCQTizLEIQZVWRLV0oDMxe8PLdM8VqSnN39AgrxIrWP7Cd8haGBg1gjJ/wxFCdgK+FpgF+gEQuqfHYN/iqsFD+/o0OPp6Jo23g1AOOE/zcqULJD5kX/wUffpHqKIcnnDkIB0QLOuvc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1wCHbE-0004aF-00; Mon, 13 Apr 2026 15:45:12 +0200
+	id 1wCHbE-0004aH-00; Mon, 13 Apr 2026 15:45:12 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 3E540C0256; Mon, 13 Apr 2026 15:43:01 +0200 (CEST)
-Date: Mon, 13 Apr 2026 15:43:01 +0200
+	id D4B6BC0C39; Mon, 13 Apr 2026 15:44:14 +0200 (CEST)
+Date: Mon, 13 Apr 2026 15:44:14 +0200
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Linus Walleij <linusw@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-mips@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH 0/2] MIPS RB532 GPIO descriptor conversion
-Message-ID: <adzy5WHWbZUZjQ8I@alpha.franken.de>
-References: <20260328-mips-input-rb532-button-v1-0-98e201621501@kernel.org>
+To: =?iso-8859-1?Q?Beno=EEt?= Monin <benoit.monin@bootlin.com>
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Linus Walleij <linusw@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 00/13] Introducing the Mobileye EyeQ6Lplus SoC
+Message-ID: <adzzLvq2tA9mzwc2@alpha.franken.de>
+References: <20260316-eyeq6lplus-v4-0-bf44dfc7a261@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20260328-mips-input-rb532-button-v1-0-98e201621501@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260316-eyeq6lplus-v4-0-bf44dfc7a261@bootlin.com>
 X-Spamd-Result: default: False [0.04 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	TAGGED_FROM(0.00)[bounces-35091-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	DMARC_NA(0.00)[franken.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,bootlin.com,nod.at,ti.com,vger.kernel.org,lists.infradead.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35092-lists,linux-gpio=lfdr.de];
-	DMARC_NA(0.00)[franken.de];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[tsbogend@alpha.franken.de,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	NEURAL_HAM(-0.00)[-0.957];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	R_DKIM_NA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-0.996];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: DD4733ECB43
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bootlin.com:email]
+X-Rspamd-Queue-Id: F08603ECC68
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Sat, Mar 28, 2026 at 04:55:46PM +0100, Linus Walleij wrote:
-> This moves the MIPS Mikrotik RouterBoard RB532 over to using
-> GPIO descriptors by augmenting the two remaining drivers using
-> GPIOs to use software nodes and device properties.
+On Mon, Mar 16, 2026 at 04:25:37PM +0100, Benoît Monin wrote:
+> The Eyeq6Lplus is a new system-on-chip part of Mobileye's EyeQ family
+> of SoC aimed at Advanced Driver Assistance Systems (ADAS). It is built
+> around a multicore MIPS I6500 with 2 cores and 8 threads and integrates
+> controllers and accelerators dedicated to driving assistance.
 > 
-> This is part of the pull to get rid of the legacy GPIO API
-> inside the kernel.
+> This patchset adds the initial support for the EyeQ6Lplus and its
+> evaluation board with the following list of controllers:
+> * The OLB ("Other Logic Block") providing clocks, resets and pin controls.
+> * One UART from DesignWare.
+> * One GPIO controller from DesignWare.
+> * Two SPI controllers from DesignWare, one in host mode and one in target
+>   mode.
+> * One octoSPI flash controller from Cadence, identical to the one found
+>   in the EyeQ5.
+> * Two I2C controllers from Designware.
 > 
-> It would be nice if someone can test of this actually works,
-> I've only compile-tested it.
+> The patch series adds the device tree bindings for the SoC and the OLB.
+> It also adds the Kconfig entry for the EyeQ6Lplus, the SoC and evaluation
+> board device tree, and the defconfig. For the OLB, the series adds the
+> match data to the clk-eyeq, reset-eyeq and pinctrl-eyeq5 drivers.
 > 
-> If we can agree on this method to move forward with this machine
-> it would be nice if the MIPS maintainer could merge the end
-> result with ACKs from the input and MTD maintainers.
+> It also brings three other changes. One is for the pinctrl-eyeq5 driver
+> to access the pin descriptions, pin functions, and pin bank registers
+> via the match data instead of directly. This is needed to add support
+> for the EyeQ6Lplus alongside the EyeQ5 to the pinctrl driver.
 > 
-> Signed-off-by: Linus Walleij <linusw@kernel.org>
+> To be able to match against compatible entries, an OF node is needed
+> but the pinctrl-eyeq5 does not have one as it is an auxiliary device
+> of clk-eyeq. As part of his MACB phy series[1], Théo switched to
+> devm_auxiliary_device_create() to register the auxiliary devices, and
+> this helper sets the OF node of the auxiliary device.
+> 
+> So this series depends on Théo's patchset so that eq5p_probe() can use
+> the OF node to get the match data, similar to what is done in eqr_probe()
+> in reset-eyeq.
+> 
+> The two other changes are in the clk-eyeq driver. First we skip the
+> post-divisor when computing the PLL frequency in the clk-eyeq driver,
+> to match how the clock signal is wired internally in all EyeQ PLL and
+> compute the correct frequency for the PLL of the EyeQ6Lplus. Second we
+> adjust the accuracy and down spreading computation of the PLL frequency
+> as the spread spectrum of all EyeQ PLL is in 1/1024 and not in 1/1000
+> as previously thought.
+> 
+> [1]: https://lore.kernel.org/lkml/20260225-macb-phy-v7-0-665bd8619d51@bootlin.com/
+> 
+> Signed-off-by: Benoît Monin <benoit.monin@bootlin.com>
 > ---
-> Linus Walleij (2):
->       MIPS/input: Move RB532 button to GPIO descriptors
->       MIPS/mtd: Handle READY GPIO in generic NAND platform data
+> Changes in v4:
+> - Simplify entries in Kconfig for clk-eyeq and reset-eyeq, since all
+>   Mobileye EyeQ SoCs use these drivers.
+> - Link to v3: https://lore.kernel.org/r/20260226-eyeq6lplus-v3-0-9cbeb59268b0@bootlin.com
 > 
->  arch/mips/rb532/devices.c         | 83 ++++++++++++++++++++++++++++-----------
->  drivers/input/misc/rb532_button.c | 35 ++++++++++++++---
->  drivers/mtd/nand/raw/plat_nand.c  | 24 ++++++++++-
->  3 files changed, 113 insertions(+), 29 deletions(-)
+> Changes in v3:
+> - Rebase series on v7.0-rc1 + Théo's patchset[1].
+> - Refresh the defconfig.
+> - Add missing cdns,fifo-depth entry in octospi node of the SoC device tree.
+> - Simplify eq5p_probe() now that the OF node is set in clk-eyeq driver.
+> - Link to v2: https://lore.kernel.org/r/20251223-eyeq6lplus-v2-0-cd1fd21d182c@bootlin.com
+> 
+> Changes in v2:
+> - Rebased on v6.19-rc2.
+> - Drop spidev nodes from the evaluation board DT, they were
+>   here for test only.
+> - Fix bug in eq5p_pinconf_set() using uninitialized value.
+> - Link to v1: https://lore.kernel.org/r/20251217-eyeq6lplus-v1-0-e9cdbd3af4c2@bootlin.com
+> 
+> ---
+> Benoît Monin (13):
+>       dt-bindings: mips: Add Mobileye EyeQ6Lplus SoC
+>       dt-bindings: soc: mobileye: Add EyeQ6Lplus OLB
+>       MIPS: Add Mobileye EyeQ6Lplus support
+>       reset: eyeq: Add Mobileye EyeQ6Lplus OLB
+>       pinctrl: eyeq5: Use match data
+>       pinctrl: eyeq5: Add Mobileye EyeQ6Lplus OLB
+>       clk: eyeq: Skip post-divisor when computing PLL frequency
+>       clk: eyeq: Adjust PLL accuracy computation
+>       clk: eyeq: Add Mobileye EyeQ6Lplus OLB
+>       MIPS: Add Mobileye EyeQ6Lplus SoC dtsi
+>       MIPS: Add Mobileye EyeQ6Lplus evaluation board dts
+>       MIPS: config: add eyeq6lplus_defconfig
+>       MAINTAINERS: Mobileye: Add EyeQ6Lplus files
+> 
+>  .../devicetree/bindings/mips/mobileye.yaml         |   5 +
+>  .../soc/mobileye/mobileye,eyeq6lplus-olb.yaml      | 208 ++++++++++
+>  MAINTAINERS                                        |   4 +-
+>  arch/mips/boot/dts/mobileye/Makefile               |   1 +
+>  arch/mips/boot/dts/mobileye/eyeq6lplus-epm6.dts    | 103 +++++
+>  arch/mips/boot/dts/mobileye/eyeq6lplus-pins.dtsi   |  84 ++++
+>  arch/mips/boot/dts/mobileye/eyeq6lplus.dtsi        | 170 ++++++++
+>  arch/mips/configs/eyeq6lplus_defconfig             | 117 ++++++
+>  arch/mips/mobileye/Kconfig                         |   3 +
+>  arch/mips/mobileye/Platform                        |   1 +
+>  drivers/clk/Kconfig                                |   4 +-
+>  drivers/clk/clk-eyeq.c                             |  90 ++++-
+>  drivers/pinctrl/Kconfig                            |   4 +-
+>  drivers/pinctrl/pinctrl-eyeq5.c                    | 437 +++++++++++++++------
+>  drivers/reset/Kconfig                              |   4 +-
+>  drivers/reset/reset-eyeq.c                         |  31 ++
+>  .../dt-bindings/clock/mobileye,eyeq6lplus-clk.h    |  37 ++
+>  17 files changed, 1156 insertions(+), 147 deletions(-)
 
 series applied to mips-next
 
