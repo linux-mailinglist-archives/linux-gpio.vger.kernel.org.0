@@ -1,106 +1,106 @@
-Return-Path: <linux-gpio+bounces-35114-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35115-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oLNnDYT63GnXYgkAu9opvQ
-	(envelope-from <linux-gpio+bounces-35114-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 16:15:32 +0200
+	id GK/vKpj63GnXYgkAu9opvQ
+	(envelope-from <linux-gpio+bounces-35115-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 16:15:52 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB0E93ED2E4
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 16:15:31 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5314C3ED303
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 16:15:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 156FF3013851
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 14:07:55 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id ADCBA300D1DC
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 14:08:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 212F93DDDD8;
-	Mon, 13 Apr 2026 14:06:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB0AF3DDDDD;
+	Mon, 13 Apr 2026 14:06:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FrycF7jE";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="ONcPOERY"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MbV555wZ";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="iLw15uoO"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F1E3DD51E
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 14:06:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101A73DD50E
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 14:06:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776089187; cv=none; b=O4D8Y2Z69hGhvO01R4d+fPLudA9cotlDhI3kY/drazVxDrPzqg/hwbA2c2bQ/rQY2tk5BTjXw6jyihgh8XYvFFHdCgjNs1Ix81kq7f+FogIlDJZOoCAb+x2A8B4tB0TqhjHJHDPdeE3Wux8jIoASz0EBgYVgTc4QremFn6kG8bM=
+	t=1776089190; cv=none; b=o5tudbfF9YwHsJFsui1aE63VALjhZOMaqBkQoIgeTQXDVCtZ1KvNcWa+tMugCac0LfpUEwjZnp4FudIOdjCnn6wgBsiGN3g2jep7ND6BSjlbSGWyKE6WbgD3HhM1On6n9uvEXmyANZBkEdWeuGXIjehfN6v7BCOrfy6/XuhNeoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776089187; c=relaxed/simple;
-	bh=ME4roFLF5kQS3ILE+qVmFR5ny/0HVBFtJjwmIHIWOBw=;
+	s=arc-20240116; t=1776089190; c=relaxed/simple;
+	bh=NxOTOcbnEcq1UCCLVr2MVAq8PhJPaj6hbxOeziIVdG0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cS/2gCdMBg7zUaSVHrEqIsiRyA/o/EkfX3Lpt8t1wV95vfSwN3T5/uopfsYRQv0LAsUG+VFa1ipuIgEHbhD4J6Ih29v2bEpwX0zLS8Z/FwIhoBhHn2yew3+VzMH3dH1Z1Ru44FAxxXxmwhnuKP9DSK800Cvl9YNNv1Us7s2qLHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FrycF7jE; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ONcPOERY; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:Cc; b=A8eBTucNj8s2wGZ4f4RVk2Dg97nEG9QJH7Rlytcz6lCoh67hUNhRY60BOUORFB8wAG80+byCGmibLoce8hUP4VHQV2vgctjc2aO6JVLc0ewb+hhgMmcqsNm2deTduz9iMPvQyP2w77TMfhvCfVffy3uHvDR2PeJZku8tQ9I9s9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MbV555wZ; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=iLw15uoO; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63DDwPJt3567916
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 14:06:24 GMT
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63D7ttrE3974426
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 14:06:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8LKKLDk/nGutkoYnIlWHeYdiYX58VLqnbBajsoZj2yQ=; b=FrycF7jEDSNkQOIX
-	LWGVCkHStfEAfvFYM9Wfl3NK0OETS/GHjvtrzv/A0kPLC0qBhTs5kJin9f1cY1Y2
-	4YAFZxCTX2Y0lAhz+YzzIweGWEGH22+RVqr8PA/FKXP6MiIUP6rmhJtcgSkQg+a7
-	xJrvThsBQOy4rlekAm1yFBif7wbqZt6FnXnLonbwjhKISPt/uEwbumWuWCVjOPFK
-	zkkOhQVnTuzqfRsvHQMPv7KDNvaumuELeo1VenIFUEf+SxGTU2dgOPalS4x8PcYh
-	zyYVAYagHnxnLS18DHdS9imYWlmMDTghZu/gu16WNHrMh7IU8l4wKE5qELFvrTm7
-	MJCAUw==
-Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com [209.85.167.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dh1uf01c1-1
+	7WjVXXDUz+b865LEXWgbJquW7AHByUWxUZ2e7FwcrFA=; b=MbV555wZ7gt/jskI
+	8sJl+Yg4FtdsndyBJmwetOSOj68lMxTv0lOpFSp6ZhhQdoqBvGlz1QA8BgbKnbcv
+	N3XRXapDFWTgy4TW0HGee0F24WsT953NTEyCcq+Y7cMzIdJU/ioRCb9r8r0f2s0F
+	vyZy7XJ+UBx+GLRyG1gE1PA+ruxE7opnrfD3hgM8pb1GrOAoIWjkVBDhxJyrNKgD
+	3AfjW66zLC9INGmVllEoLcJEYc7CKYo/NYcyRgCsuwq4F6E3ofrQCkojmwI0ScEa
+	J4xibrmPH42iHUxFK65xIvvyoNVI8u8RyxeA4orjQJvscPzRJNjsRLRDDy1NMPOD
+	ig4D9Q==
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com [209.85.167.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dfjbpd9yb-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 14:06:24 +0000 (GMT)
-Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-46ff0cb3a36so5824579b6e.2
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 07:06:24 -0700 (PDT)
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 14:06:26 +0000 (GMT)
+Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-467e00b684eso2793635b6e.3
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 07:06:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1776089183; x=1776693983; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1776089185; x=1776693985; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8LKKLDk/nGutkoYnIlWHeYdiYX58VLqnbBajsoZj2yQ=;
-        b=ONcPOERYxTCKyYLHv2TOgWu9WtVRghFdxOPGrZ+yucPg8Sj9bFNr7M0zs3iENk/gh/
-         pI8NmEoknTZJRF8m4Zxx0mTC+NlupHvxMBK1Ba55EaB3fiSDoPOLC+ACVgJ3m66+sVlk
-         PGTn/iEqA5eKNPWivYeDB6m6CDv3n3dj/VDWK3axQuvvFg+VZio6rLI9TTT9a7pTHkko
-         EJUonIcTg5lfQ7sjc/8guVS6hOgSwUIw8Gpr0LoqESVQSlrdmeVMab1bUvOuqFbfTsYq
-         DdLiQ9dr1MNJuizDNllepAiPxdtKg7okB9y1v24eOwvGMWC7/gRJuAHj58lcLhI/GKPx
-         cGGQ==
+        bh=7WjVXXDUz+b865LEXWgbJquW7AHByUWxUZ2e7FwcrFA=;
+        b=iLw15uoOLM/gzCfcO5u5dsNC5rN9OQi/fep6y/+z/ammD+U9aGtjPqaISTbGPx62C1
+         Pzf9YKK4eGVaFMrQu+gBQy34bKMzvagSVnfO+mvBdQPgdBtr3gWfkXOC4qU0OuF7GoY8
+         dFmmeQT8Y+tBx/ieYsnmiOR2EMlpJFm8RrydAnz7+OtXPYEXeKPdhnds1ez33IPIbfFR
+         syIT3GPP4t12r21DSGvA1XfIdZqoQk2uo/9/dbHoZfYiMnCAD5cT1j7rgyURXfI5DBxV
+         PwWyar3BMotMWJbXU5gj3AdqzPOH9Iwe47xLWw1MHHSHsWkTQPDtA/gLSpdFltKgUyYj
+         ZEaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776089183; x=1776693983;
+        d=1e100.net; s=20251104; t=1776089185; x=1776693985;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=8LKKLDk/nGutkoYnIlWHeYdiYX58VLqnbBajsoZj2yQ=;
-        b=C83j8gQH4FxlbdFLSE8x3boWzYGj/mDk0qXaXfevhK+its4T1RnaeqsFggtKsJ/gKK
-         PWfwr/dLxj+S0OGgQMzdUw9vO3zfFn9aa/rj4dhXvC6MqEPfNaxveKMeXsD0otyOHZhJ
-         pvoi8LXuKbJMrOSJ/uOPD7NHEgKbCihCerW13w1VPjKDLb3N0YN+c9zuqpKfN07QyWev
-         xDGBoW1z3FfB8ct+IXHCDFNW9qvBvPjqc77Ii/De2vq2WzF5ELxPzC/71VaUhl3RZ2Z7
-         imekO3L7gwtt5dvf0ejjZ78ndBThA1Fu+itSN3SSv3eF1m85/CDQRymmamiHLMXhkQWy
-         yykA==
-X-Forwarded-Encrypted: i=1; AFNElJ/13g8cniu4pMCvlI68O/YUEcOmB+1umv33bHRL53um9sg1PFIjLoaNonGdSwDKrW8EUEh9ppSn6PBw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzvy1QW6W1T/WBhboIzUmgzt2ROzJykXoEeW5heFKPJ2nHSEsCB
-	ycTQ8fAEFOy0SIOPVeNDij/ztTzA/D0UGFlLmZV8KHFyT8eIl7fyj1Zpc47eon781Kitb+wdir3
-	1F5UMnMrVyRumqmYjQUSYMF7H6LpSWpxCELf5DNOsllP7i3/JB+O5ZLHSMiNncwr3
-X-Gm-Gg: AeBDiesXxgqAc/BrrDJad6t/HLaS/teuNyY4ous3ScpP4Av79B7gpIWVzppqJxPS4Bk
-	rGyaAZObAFX0x8TbRyS1THLXOJNtBFuNLuXJC4Hy5u5dWCTjHWOXknQBqhMZutUMzYMveEApcqr
-	G5VEXt5Mxj7D7w4C5B31gWq+P9AiGLEha7njpCtlcOHjYmuFtxnKGNLZ23JW56YGOO/9WB9VB2v
-	v9Nr6C3dnSuvHI3OFwFGF6sh6OK7iQBPdbfnKMhkwJ80gzHp4zv3LreZq4/6iGGneMmLfNbby+z
-	q5nxXoxCuWg3AUMWfqo1y4iCaBP2EYyG+XVPsy2usSK9QLpar37D4fHWwjIBjNr8b6t/c7nlKWg
-	yj02B/LaYGZqNhC7o8a6ZOGf+j1pgaV5IOB2QBWagDgjGF7cy5gyNkqnXfuc93gAfpDkn+LZAn9
-	YqbF6TNcDZhX3oGnsDcUwO/6X+tyfXzjMSx1Q=
-X-Received: by 2002:a05:6808:660b:b0:467:58e:5d6e with SMTP id 5614622812f47-4789f60519cmr6343866b6e.30.1776089183288;
-        Mon, 13 Apr 2026 07:06:23 -0700 (PDT)
-X-Received: by 2002:a05:6808:660b:b0:467:58e:5d6e with SMTP id 5614622812f47-4789f60519cmr6343819b6e.30.1776089182771;
-        Mon, 13 Apr 2026 07:06:22 -0700 (PDT)
+        bh=7WjVXXDUz+b865LEXWgbJquW7AHByUWxUZ2e7FwcrFA=;
+        b=Lff4Y99nKYh1ZweGvl7SeF8eYA/yEpSiLqv5qWxG91RPiyGNAcRtGg3sTqUk5tGgLE
+         cgWBG64k2SScxQCn2kOs9HHqklx3TZleFYfjo0RMa0wRAajgv3PtiAQSAvCMPkaajZfD
+         819ptZr5omoPZZ7yW8KxvrZkx5bmY4d8XpshpZcIYSkfkQ3AA5QWduwrmbl4lct/j6Rt
+         Hr+Bpo5xpCYTXCrRM9qlIkLP6XrUAQoP+us0WZD6nOga5+6IFKgqtx10EQwpCn5VvZI3
+         VIXpj1qWnYT+T9Ly7qnlG1KkZA6EGU29xD61urOqEzcUDPjp9iwX4JgjgzzFhTs36Ile
+         bwcQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+PrZm90crD/1FRNL9ncqb+3AxmLdtlFp10gAeurkZPx4tkJRQAgnJuj5JBNLfQ/nSOv9QubkkxKh0A@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRM2sQ0IAP2/YAZ31N6FNphAJECGieh1Pxy2gUVPaO5gEvOpYL
+	6wRb0vrvggCpnJJLlQwaiEhK4J4yD12lC25gr9gEnha8+j1uk5LZRM09DzvTXKYhaPse+DnU18u
+	7Zgo9WWmdQl7R3hIj1i2qWGWpy+7FqeN2JGJ5eTLxd3yDOjS6zo4ng6+Peqa8fAFZ
+X-Gm-Gg: AeBDiesYb3gTYIzRij4wqkjRNx4B3L6ImDGY82XadcAcaMA31KGn8M4PoMC5wgyHZkv
+	MvuQPMFBBo5JXJGNNgF3P8UfL3ZqHmRk0qVMNStMpd7frgHpI/Oo/OVqC5V3az5NU4l75bOsDUL
+	3MZ2AGERm/lebkX+DAS6QxYLEcJOX1fNoJTYgLzv2xfiikgijSesfTBU1lLo3QaTyAhFjqP4YVV
+	hEhSyQA90RnuYftQ1vFKYsSRqLrAT4InyAjbUq235OEfVfUes/Js+uzB50FikeXqqnBl7z0dgY7
+	QXERytSoTwWo+9D2reSB0M7lvMvWNwghAGrvvrhdbPK4eT5Em01ERBD8y1R8V3Ul+2zWH7/muHW
+	cgt5GR3byehMor5eNty0NPY7veJKZYXpA3a2KqYT6Lm0KNXb5w/AmvGDncn84++6meCZ7A7Z2vV
+	MmdC8Ja8YFmftzwFWDu8qQQU9bVhahpNGIRc0=
+X-Received: by 2002:a05:6808:1796:b0:467:db23:25c with SMTP id 5614622812f47-4789f9008e6mr6468630b6e.46.1776089185115;
+        Mon, 13 Apr 2026 07:06:25 -0700 (PDT)
+X-Received: by 2002:a05:6808:1796:b0:467:db23:25c with SMTP id 5614622812f47-4789f9008e6mr6468565b6e.46.1776089184531;
+        Mon, 13 Apr 2026 07:06:24 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a3eee8c91csm2687521e87.19.2026.04.13.07.06.21
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a3eee8c91csm2687521e87.19.2026.04.13.07.06.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2026 07:06:21 -0700 (PDT)
+        Mon, 13 Apr 2026 07:06:23 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Mon, 13 Apr 2026 17:05:42 +0300
-Subject: [PATCH v3 19/21] drm/panel: add driver for Waveshare 8.8" DSI
- TOUCH-A panel
+Date: Mon, 13 Apr 2026 17:05:43 +0300
+Subject: [PATCH v3 20/21] dt-bindings: gpio: describe Waveshare GPIO
+ controller
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -109,7 +109,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260413-waveshare-dsi-touch-v3-19-3aeb53022c32@oss.qualcomm.com>
+Message-Id: <20260413-waveshare-dsi-touch-v3-20-3aeb53022c32@oss.qualcomm.com>
 References: <20260413-waveshare-dsi-touch-v3-0-3aeb53022c32@oss.qualcomm.com>
 In-Reply-To: <20260413-waveshare-dsi-touch-v3-0-3aeb53022c32@oss.qualcomm.com>
 To: Neil Armstrong <neil.armstrong@linaro.org>,
@@ -130,352 +130,198 @@ To: Neil Armstrong <neil.armstrong@linaro.org>,
 Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 X-Mailer: b4 0.15.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8361;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3582;
  i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=ME4roFLF5kQS3ILE+qVmFR5ny/0HVBFtJjwmIHIWOBw=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBp3PgpLEhsqxoLgLo3jbYp7nEh2ZBpLYh/4SK12
- 4yCFP0QstiJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCadz4KQAKCRCLPIo+Aiko
- 1XTRB/0U4axfmYExh+0IkahMe1OYpyHDQdRsGD8dI4V0s7G/q68sghoH1RC7a9e6sFOtYXMwghb
- MenUT7wsNkxEShmOBkIFWKv1NkBL+8x1Ir6zRKhfRAr3T8xcd28xsFHkN9JR7esKltz+ODuNj2O
- QMZg2oiZzHEa6RyBlW0R5emeNZGRiMZ95bUVTAYPGgvnmw51X8F7wGXbQ3qxmiGLnYehI82mdfW
- XnZowAoMJ9z4j0ay1D8UYaSA5Ql7sXxpGYdAna18ybuVkhcE/Pvt4kYp/yCApRTgCsyvbrLUo9+
- TCYe5ieK+ckMWs9QapsFC4lZCAc1KgBFzeUeMApyTbhT8JGS
+ bh=NxOTOcbnEcq1UCCLVr2MVAq8PhJPaj6hbxOeziIVdG0=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBp3PgpJbQp7/Thx5AFbDZ3MJz1gCOh8B6IHEIIW
+ fv5ZYu/LouJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCadz4KQAKCRCLPIo+Aiko
+ 1WlsB/9jCSy7PdUg/mLPbALC+8TGXtsfMpAIz+y/8wCXE020hB6PkIF3wXzJPj1fgghhVvm96+o
+ V+llBWNzGIG6xJOLUaTAYK8aJ01D7Vxf5h6mjbldw9m3yFVyRI2yys5vSipyVw9Wk1/SzKxOxaj
+ PgQVJh37OWIinWagd2PrA+gvCOLqEqRuGG0Kd8CT6oXMH7bBTNQLrVpKS7DfisGHcBMTEaJWvTM
+ lwV9+R0HVmdkogNr0isj1DFP92rnsMQXDvdXXoFaAWuTqcbseOBKGVK2RKhsaPoRT7L+GuJ302l
+ dI1npvbMOw+/Km9vf9Dzm8uGawi2mmG5y1OPEy+E3LpGkrAI
 X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Authority-Analysis: v=2.4 cv=Dc4nbPtW c=1 sm=1 tr=0 ts=69dcf860 cx=c_pps
- a=yymyAM/LQ7lj/HqAiIiKTw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+X-Authority-Analysis: v=2.4 cv=PuijqQM3 c=1 sm=1 tr=0 ts=69dcf862 cx=c_pps
+ a=AKZTfHrQPB8q3CcvmcIuDA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
  a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=I0FmcsL6nTCMfcQUCV4A:9 a=QEXdDO2ut3YA:10
- a=efpaJB4zofY2dbm2aIRb:22
-X-Proofpoint-ORIG-GUID: pdZpZMMtV9GA1zaXdKRYEYCuc6q5lN4O
-X-Proofpoint-GUID: pdZpZMMtV9GA1zaXdKRYEYCuc6q5lN4O
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDEzMDEzNyBTYWx0ZWRfXxOHE2YHrwvKK
- yrXgVFsmVrDqgfgaoc8cG9CW8qCwTMwmIKNZ2oSITvJgW64kMgtwLXF0BwARHWh23ohKI+6EDXW
- lQmVIrsCV659lgUftQeecaNlaK/auHOFYm8l52yfUt+SBphC68AzMDOS3TdB+6NEOhc7L6AjuVv
- MdBT3OpZvqOm5K0OPWnnbs9GJpac2qOxS/Lt7W+pK+Fm6UMzlmf/kWO9PFfuIOvmOT8cVyjSOaC
- pOqz/7pvNVZjaABvszLnfQ7g62gQ0rB5+ghNaeB1ZlVgCIhxxzuKeWerlsFI3x4/TLGWZK/OPn/
- MuA1iSf2SOOpq4FTZ4qXWDiDTxEQlCCtMEJ4OZui9hnixGvzhUuXS1mAm9IrupVFUP2FYqphuQK
- YyxLnwJj3S2cAgcgwsfmgV1Q/gipUIl9BzkdLDIh8kMQycbo1xOrwOUPRY7gHNovFdHJ9GFNnKQ
- WnBKJHBFJFV+isB/ClA==
+ a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22 a=gEfo2CItAAAA:8
+ a=EUspDBNiAAAA:8 a=ClTKKeZw4Bcbv9k5X4IA:9 a=QEXdDO2ut3YA:10
+ a=pF_qn-MSjDawc0seGVz6:22 a=sptkURWiP4Gy88Gu7hUp:22
+X-Proofpoint-ORIG-GUID: 2ewg48RGYmx6m8gZIjdILe2uR-iSCbny
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDEzMDEzOCBTYWx0ZWRfX+vAddeZcmfp8
+ Sf+Jj2n8dIqOl/dQhzP4+borDsS6sjndvEbt7czgwYGPFYzFXsjzB6OjPSqUe9wB0DtUP7uRSzD
+ /B6wV3RwR9mOprJTJIZG3oBWHNqre+IAPxyaDOj8/1LLYhypOD/EsiFp4HX2/set31UU0fHryCa
+ p3KUevf35nqSfHbf3Mn3ZiEEqENIeMX8llQ8XkZ4HQXAuIgjn4oNvZCp+gqlR7X+Pi21Vb18wpJ
+ IK8Ne4D/2DzAdrJ12Qo96kCoxsHb+Th9z7u9L1GvsAOV9wDZx2ArWRSW3jTChLG8pEhOkxzU/V1
+ ed+aS/72Dmh5rIMRM+iGOFqBzO4prBdL7BQO2BFvwECBrB6ZdrK09FWims2onBTkcvIP0n8U+/e
+ 1L9tYXAl8doa7Jw0Ih68FxWSK8pXawR7vnM5R0DNlqPCwGQqGN6KRHv+0QXOrmvktckJQMahGUI
+ +I9HBVn4JG1UBHo6ejA==
+X-Proofpoint-GUID: 2ewg48RGYmx6m8gZIjdILe2uR-iSCbny
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-13_03,2026-04-13_03,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 adultscore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
- impostorscore=0 priorityscore=1501 spamscore=0 malwarescore=0 suspectscore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 spamscore=0 phishscore=0
+ malwarescore=0 clxscore=1015 impostorscore=0 adultscore=0 bulkscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604010000 definitions=main-2604130137
-X-Spamd-Result: default: False [-0.66 / 15.00];
+ reason=mlx scancount=1 engine=8.22.0-2604010000 definitions=main-2604130138
+X-Spamd-Result: default: False [4.84 / 15.00];
+	SEM_URIBL(3.50)[0.0.0.0:email];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
+	BAD_REP_POLICIES(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35114-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,qualcomm.com:dkim,qualcomm.com:email,oss.qualcomm.com:dkim,oss.qualcomm.com:mid];
-	FREEMAIL_TO(0.00)[linaro.org,gmail.com,ffwll.ch,linux.intel.com,kernel.org,suse.de,huaqin.corp-partner.google.com,xff.cz,redhat.com,edgeble.ai,oss.qualcomm.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35115-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	R_DKIM_ALLOW(0.00)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	GREYLIST(0.00)[pass,body];
+	DMARC_POLICY_ALLOW(0.00)[qualcomm.com,reject];
 	RCPT_COUNT_TWELVE(0.00)[23];
+	FREEMAIL_TO(0.00)[linaro.org,gmail.com,ffwll.ch,linux.intel.com,kernel.org,suse.de,huaqin.corp-partner.google.com,xff.cz,redhat.com,edgeble.ai,oss.qualcomm.com];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,0.0.0.0:email,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,devicetree.org:url,qualcomm.com:dkim,qualcomm.com:email,0.0.0.45:email];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
+	NEURAL_HAM(-0.00)[-0.182];
 	FROM_NEQ_ENVFROM(0.00)[dmitry.baryshkov@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
+	R_SPF_ALLOW(0.00)[+ip4:172.232.135.74:c];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: BB0E93ED2E4
+X-Rspamd-Queue-Id: 5314C3ED303
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add driver for the panel found on Waveshare 8.8" DSI TOUCH-A kit. It
-uses ota7290b IC as a controller.
+The Waveshare DSI TOUCH family of panels has separate on-board GPIO
+controller, which controls power supplies to the panel and the touch
+screen and provides reset pins for both the panel and the touchscreen.
+Also it provides a simple PWM controller for panel backlight.
 
-Reviewed-by: Linus Walleij <linusw@kernel.org>
+Add bindings for these GPIO controllers. As overall integration might be
+not very obvious (and it differs significantly from the bindings used by
+the original drivers), provide complete example with the on-board
+regulators and the DSI panel.
+
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 ---
- drivers/gpu/drm/panel/Kconfig                    |  12 ++
- drivers/gpu/drm/panel/Makefile                   |   1 +
- drivers/gpu/drm/panel/panel-focaltech-ota7290b.c | 226 +++++++++++++++++++++++
- 3 files changed, 239 insertions(+)
+ .../bindings/gpio/waveshare,dsi-touch-gpio.yaml    | 100 +++++++++++++++++++++
+ 1 file changed, 100 insertions(+)
 
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index ba527b4d7737..979109c27b9b 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -144,6 +144,18 @@ config DRM_PANEL_FEIYANG_FY07024DI26A30D
- 	  Say Y if you want to enable support for panels based on the
- 	  Feiyang FY07024DI26A30-D MIPI-DSI interface.
- 
-+config DRM_PANEL_FOCALTECH_OTA7290B
-+	tristate "Focaltech OTA7290B"
-+	depends on DRM_MIPI_DSI
-+	depends on I2C
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	select DRM_KMS_HELPER
-+	help
-+	  Enable support for panels using OTA7290B as a controller (for
-+	  example, Waveshare 12.3" DSI TOUCH-A panel). Say Y here if you want
-+	  to enable support for this panel. To compile this driver as a module,
-+	  choose M here.
-+
- config DRM_PANEL_DSI_CM
- 	tristate "Generic DSI command mode panels"
- 	depends on OF
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index a4291dc3905b..0d694acbfbb6 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -17,6 +17,7 @@ obj-$(CONFIG_DRM_PANEL_EBBG_FT8719) += panel-ebbg-ft8719.o
- obj-$(CONFIG_DRM_PANEL_ELIDA_KD35T133) += panel-elida-kd35t133.o
- obj-$(CONFIG_DRM_PANEL_FEIXIN_K101_IM2BA02) += panel-feixin-k101-im2ba02.o
- obj-$(CONFIG_DRM_PANEL_FEIYANG_FY07024DI26A30D) += panel-feiyang-fy07024di26a30d.o
-+obj-$(CONFIG_DRM_PANEL_FOCALTECH_OTA7290B) += panel-focaltech-ota7290b.o
- obj-$(CONFIG_DRM_PANEL_HIMAX_HX8279) += panel-himax-hx8279.o
- obj-$(CONFIG_DRM_PANEL_HIMAX_HX83102) += panel-himax-hx83102.o
- obj-$(CONFIG_DRM_PANEL_HIMAX_HX83112A) += panel-himax-hx83112a.o
-diff --git a/drivers/gpu/drm/panel/panel-focaltech-ota7290b.c b/drivers/gpu/drm/panel/panel-focaltech-ota7290b.c
+diff --git a/Documentation/devicetree/bindings/gpio/waveshare,dsi-touch-gpio.yaml b/Documentation/devicetree/bindings/gpio/waveshare,dsi-touch-gpio.yaml
 new file mode 100644
-index 000000000000..8c135697a0fd
+index 000000000000..410348fcda25
 --- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-focaltech-ota7290b.c
-@@ -0,0 +1,226 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2024 Waveshare International Limited
-+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-+ */
++++ b/Documentation/devicetree/bindings/gpio/waveshare,dsi-touch-gpio.yaml
+@@ -0,0 +1,100 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/waveshare,dsi-touch-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
++title: Waveshare GPIO controller on DSI TOUCH panels
 +
-+#include <linux/gpio/consumer.h>
-+#include <linux/regulator/consumer.h>
++maintainers:
++  - Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 +
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_modes.h>
-+#include <drm/drm_panel.h>
-+#include <drm/drm_probe_helper.h>
++description:
++  Waveshare DSI TOUCH panel kits contain separate GPIO controller for toggling
++  power supplies and panel / touchscreen resets.
 +
-+struct ota7290b {
-+	struct drm_panel panel;
-+	struct mipi_dsi_device *dsi;
++properties:
++  compatible:
++    const: waveshare,dsi-touch-gpio
 +
-+	struct regulator *power;
-+	struct gpio_desc *reset;
-+	struct regulator *avdd;
-+	struct regulator *vdd;
-+	struct regulator *vcc;
++  reg:
++    maxItems: 1
 +
-+	enum drm_panel_orientation orientation;
-+};
++  gpio-controller: true
 +
-+static inline struct ota7290b *panel_to_ota(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct ota7290b, panel);
-+}
++  '#gpio-cells':
++    const: 2
 +
-+static int ota7290b_prepare(struct drm_panel *panel)
-+{
-+	struct ota7290b *ctx = panel_to_ota(panel);
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = ctx->dsi };
-+	int ret;
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - "#gpio-cells"
 +
-+	if (ctx->vcc) {
-+		ret = regulator_enable(ctx->vcc);
-+		if (ret)
-+			dev_err(panel->dev, "failed to enable VCC regulator: %d\n", ret);
-+	}
++additionalProperties: false
 +
-+	if (ctx->reset) {
-+		gpiod_set_value_cansleep(ctx->reset, 0);
-+		msleep(60);
-+		gpiod_set_value_cansleep(ctx->reset, 1);
-+		msleep(60);
-+	}
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
 +
-+	if (ctx->vdd) {
-+		ret = regulator_enable(ctx->vdd);
-+		if (ret)
-+			dev_err(panel->dev, "failed to enable VDD regulator: %d\n", ret);
-+	}
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
 +
-+	if (ctx->reset) {
-+		gpiod_set_value_cansleep(ctx->reset, 0);
-+		msleep(60);
-+	}
++        wsgpio: gpio@45 {
++            compatible = "waveshare,dsi-touch-gpio";
++            reg = <0x45>;
++            gpio-controller;
++            #gpio-cells = <2>;
++        };
++    };
 +
-+	if (ctx->avdd) {
-+		ret = regulator_enable(ctx->avdd);
-+		if (ret)
-+			dev_err(panel->dev, "failed to enable AVDD regulator: %d\n", ret);
-+	}
++    panel_avdd: regulator-panel-avdd {
++        compatible = "regulator-fixed";
++        regulator-name = "panel-avdd";
++        gpios = <&wsgpio 0 GPIO_ACTIVE_HIGH>;
++        enable-active-high;
++    };
 +
-+	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 120);
-+	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 50);
++    panel_iovcc: regulator-panel-iovcc {
++        compatible = "regulator-fixed";
++        regulator-name = "panel-iovcc";
++        gpios = <&wsgpio 4 GPIO_ACTIVE_HIGH>;
++        enable-active-high;
++    };
 +
-+	if (dsi_ctx.accum_err < 0)
-+		dev_err(panel->dev, "failed to init panel: %d\n", dsi_ctx.accum_err);
++    panel_vcc: regulator-panel-vcc {
++        compatible = "regulator-fixed";
++        regulator-name = "panel-vcc";
++        gpios = <&wsgpio 8 GPIO_ACTIVE_HIGH>;
++        enable-active-high;
++        regulator-always-on;
++    };
 +
-+	return dsi_ctx.accum_err;
-+}
++    dsi {
++        #address-cells = <1>;
++        #size-cells = <0>;
 +
-+static int ota7290b_unprepare(struct drm_panel *panel)
-+{
-+	struct ota7290b *ctx = panel_to_ota(panel);
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = ctx->dsi };
++        panel@0 {
++            reg = <0>;
++            compatible = "waveshare,8.0-dsi-touch-a", "jadard,jd9365da-h3";
++            reset-gpios = <&wsgpio 1 GPIO_ACTIVE_LOW>;
++            vdd-supply = <&panel_avdd>;
++            vccio-supply = <&panel_iovcc>;
++            backlight = <&wsgpio>;
 +
-+	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
-+	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
++            port {
++                  panel_in: endpoint {
++                      remote-endpoint = <&dsi_out>;
++                  };
++            };
++        };
 +
-+	if (ctx->avdd)
-+		regulator_disable(ctx->avdd);
-+
-+	if (ctx->reset) {
-+		gpiod_set_value_cansleep(ctx->reset, 1);
-+		msleep(5);
-+	}
-+
-+	if (ctx->vdd)
-+		regulator_disable(ctx->vdd);
-+
-+	if (ctx->vcc)
-+		regulator_disable(ctx->vcc);
-+
-+	return 0;
-+}
-+
-+static const struct drm_display_mode waveshare_dsi_touch_8_8_a_mode = {
-+	.clock = 75000,
-+
-+	.hdisplay = 480,
-+	.hsync_start = 480 + 50,
-+	.hsync_end = 480 + 50 + 50,
-+	.htotal = 480 + 50 + 50 + 50,
-+
-+	.vdisplay = 1920,
-+	.vsync_start = 1920 + 20,
-+	.vsync_end = 1920 + 20 + 20,
-+	.vtotal = 1920 + 20 + 20 + 20,
-+
-+	.width_mm = 68,
-+	.height_mm = 219,
-+	.type = DRM_MODE_TYPE_DRIVER,
-+};
-+
-+static int ota7290b_get_modes(struct drm_panel *panel,
-+			      struct drm_connector *connector)
-+{
-+	return drm_connector_helper_get_modes_fixed(connector, &waveshare_dsi_touch_8_8_a_mode);
-+}
-+
-+static enum drm_panel_orientation ota7290b_get_orientation(struct drm_panel *panel)
-+{
-+	struct ota7290b *ctx = panel_to_ota(panel);
-+
-+	return ctx->orientation;
-+}
-+
-+static const struct drm_panel_funcs ota7290b_funcs = {
-+	.prepare = ota7290b_prepare,
-+	.unprepare = ota7290b_unprepare,
-+	.get_modes = ota7290b_get_modes,
-+	.get_orientation = ota7290b_get_orientation,
-+};
-+
-+static int ota7290b_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct ota7290b *ctx;
-+	int ret;
-+
-+	ctx = devm_drm_panel_alloc(&dsi->dev, struct ota7290b, panel,
-+				   &ota7290b_funcs,
-+				   DRM_MODE_CONNECTOR_DSI);
-+	if (!ctx)
-+		return -ENOMEM;
-+	mipi_dsi_set_drvdata(dsi, ctx);
-+	ctx->dsi = dsi;
-+
-+	ctx->reset = devm_gpiod_get_optional(&dsi->dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(ctx->reset))
-+		return dev_err_probe(&dsi->dev, PTR_ERR(ctx->reset),
-+				     "Couldn't get our reset GPIO\n");
-+
-+	ctx->vcc = devm_regulator_get_optional(&dsi->dev, "vcc");
-+	if (IS_ERR(ctx->vcc))
-+		return dev_err_probe(&dsi->dev, PTR_ERR(ctx->vcc),
-+					"Couldn't get our VCC supply\n");
-+
-+	ctx->avdd = devm_regulator_get_optional(&dsi->dev, "avdd");
-+	if (IS_ERR(ctx->avdd))
-+		return dev_err_probe(&dsi->dev, PTR_ERR(ctx->avdd),
-+					"Couldn't get our AVDD supply\n");
-+
-+	ctx->vdd = devm_regulator_get_optional(&dsi->dev, "vdd");
-+	if (IS_ERR(ctx->vdd))
-+		return dev_err_probe(&dsi->dev, PTR_ERR(ctx->vdd),
-+					"Couldn't get our VDD supply\n");
-+
-+	ret = of_drm_get_panel_orientation(
-+			dsi->dev.of_node, &ctx->orientation);
-+	if (ret) {
-+		dev_err(&dsi->dev, "%pOF: failed to get orientation: %d\n",
-+			dsi->dev.of_node, ret);
-+		return ret;
-+	}
-+
-+	ret = drm_panel_of_backlight(&ctx->panel);
-+	if (ret)
-+		return ret;
-+
-+	ctx->panel.prepare_prev_first = true;
-+
-+	ret = devm_drm_panel_add(&dsi->dev, &ctx->panel);
-+	if (ret)
-+		return ret;
-+
-+	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_HSE |
-+		MIPI_DSI_MODE_LPM | MIPI_DSI_CLOCK_NON_CONTINUOUS,
-+	dsi->format = MIPI_DSI_FMT_RGB888,
-+	dsi->lanes = 2;
-+
-+	return devm_mipi_dsi_attach(&dsi->dev, dsi);
-+}
-+
-+static const struct of_device_id ota7290b_of_match[] = {
-+	{ .compatible = "waveshare,8.8-dsi-touch-a", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, ota7290b_of_match);
-+
-+static struct mipi_dsi_driver ota7290b_driver = {
-+	.probe		= ota7290b_probe,
-+	.driver = {
-+		.name		= "focaltech-ota7290b",
-+		.of_match_table	= ota7290b_of_match,
-+	},
-+};
-+module_mipi_dsi_driver(ota7290b_driver);
-+
-+MODULE_DESCRIPTION("Panel driver for Focaltech OTA7290B panels");
-+MODULE_LICENSE("GPL");
++        port {
++            dsi_out: endpoint {
++                data-lanes = <0 1 2 3>;
++                remote-endpoint = <&panel_in>;
++            };
++        };
++    };
++...
 
 -- 
 2.47.3
