@@ -1,137 +1,168 @@
-Return-Path: <linux-gpio+bounces-35090-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35094-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CKHdFHnz3GnZYQkAu9opvQ
-	(envelope-from <linux-gpio+bounces-35090-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 15:45:29 +0200
+	id MHZ/ETv53GnXYgkAu9opvQ
+	(envelope-from <linux-gpio+bounces-35094-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 16:10:03 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58EAD3ECB16
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 15:45:28 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E0503ED133
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 16:10:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 4AE1330095F1
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 13:45:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8E5163046EAB
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 14:02:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA10F3C345B;
-	Mon, 13 Apr 2026 13:45:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21DA73CEBB7;
+	Mon, 13 Apr 2026 14:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tk154.de header.i=@tk154.de header.b="qAnkKP3I"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C0B233D6DD;
-	Mon, 13 Apr 2026 13:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from smtp6.goneo.de (smtp6.goneo.de [85.220.129.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1073CEBA9;
+	Mon, 13 Apr 2026 14:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.220.129.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776087923; cv=none; b=Eix2aW0vJ6IS/IBWPc4Jt5ER776YT3J9zKzE9JTXS1AA5NH3CSieiRQRFEBnR8Y7m0fi21gxUCldbOfDBRq+ESXyzbYQ1a0fcmovPp5GJTw6cgo7ycHB2SODhgGbw45OmBsrWORq2wU16n/RKYhJv4/AbObHblhkA1hOR+TAg5o=
+	t=1776088955; cv=none; b=PAiwPzBwBcwo6MLrhtFbuPJk98HTAJZMIC7NImmNwQ3lLhzqwKCf/LI0yYbCIEdbWVNE/xdJPyW41f94z62qcDzr6dtOUDptiO0nvb04b1yRKmWUVkktceXK0PdWZsTpQfF/JCuGvtimChkWtRr3Obla3a8sgHpB/FE4Z9MDWbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776087923; c=relaxed/simple;
-	bh=WyiUE0gUbdjjvEx1688riyxWEbMO5SIwWFq6YOC87iM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o16VJ47AL/aid6Pz4kOY+lRcS0uyxmYMctpNfgpYJk/6te63R7HQV57vYcFqtQvldn1Z4uYBP0svU/Ju/qjA1Lo9ZNO+b47yP+qD8H5xqx7cvFkzCtQHi8l9fjEcoqNxCfono3hOPhofRbnNvKOuv8ldp8DWtQFA3Q1ebq/Eh9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1wCHbE-0004aJ-00; Mon, 13 Apr 2026 15:45:12 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 5A4C6C0CA1; Mon, 13 Apr 2026 15:44:53 +0200 (CEST)
-Date: Mon, 13 Apr 2026 15:44:53 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org
-Subject: Re: [resend, PATCH v2 1/1] MIPS: Alchemy: Remove unused forward
- declaration
-Message-ID: <adzzVQNjjk9ZifNk@alpha.franken.de>
-References: <20260320202852.3233790-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1776088955; c=relaxed/simple;
+	bh=U4yl6IJ0xPqDdadjbaM2BrsEcT2xQbYLoYAGSi4cbaQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jMu0j7XbKTzMq2BEbdJo9cE17wvrBECW3cEp+cBPsVB6XcGdfv+UB4kmqZAp87F7/Fc12BnUS5rPhyf5sNZQZdARVcA9KKpgPBJ+bTJcCI4NuM+zZh/ft9pvMN4tk/KfhY74YhdqM5rxuqBcdEYD0C61Sln5P0Urm6rlZfGNsi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tk154.de; spf=pass smtp.mailfrom=tk154.de; dkim=pass (2048-bit key) header.d=tk154.de header.i=@tk154.de header.b=qAnkKP3I; arc=none smtp.client-ip=85.220.129.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tk154.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tk154.de
+Received: from hub2.goneo.de (hub2.goneo.de [IPv6:2001:1640:5::8:53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	by smtp6.goneo.de (Postfix) with ESMTPS id 9614024095D;
+	Mon, 13 Apr 2026 15:53:18 +0200 (CEST)
+Received: from hub2.goneo.de (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	by hub2.goneo.de (Postfix) with ESMTPS id 5D5252400EE;
+	Mon, 13 Apr 2026 15:53:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tk154.de; s=DKIM001;
+	t=1776088396;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=24AXtsu9nDzvup8XfLHaKXM36uG/XOpm7O1cB4AmO1g=;
+	b=qAnkKP3IRcTWtr9pNvmdDatPzfnUHcitZyZaB4hwJZEStDgk8xGDNFIy5rIUENDe1mvI89
+	GybCEPymUW/ILLXe4A1SHVBh6bOFj8TdJr0P2TMz4M+/89WQ3U/o+LD2G9TcrJnexnjn0R
+	T/X3lHXgMPeVgflJrRvwuIq9rBTe8sQblXgWVqTLggRgq/XTqyCmD4KtN/rAbwl0KBR5UV
+	APhdyt4ti1WF8+ITH53yVX4RJpm9vfdzRCusUaqgU11/PDTOPmidBpzdD6gnc98LzTbD2i
+	A2r8xfPUQVdJzwcE2o2udVl/DjHvtZz0mQCS4ZgZb8mLsLTEKMj/ANmjT5+vaQ==
+Received: from Til-Notebook.meshlab (unknown [195.37.88.189])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by hub2.goneo.de (Postfix) with ESMTPSA id AEA5F240025;
+	Mon, 13 Apr 2026 15:53:14 +0200 (CEST)
+From: Til Kaiser <mail@tk154.de>
+To: andersson@kernel.org,
+	linusw@kernel.org
+Cc: linux-arm-msm@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: qcom: ipq4019: mark gpio as a GPIO pin function
+Date: Mon, 13 Apr 2026 15:52:34 +0200
+Message-ID: <20260413135234.4067548-1-mail@tk154.de>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260320202852.3233790-1-andriy.shevchenko@linux.intel.com>
-X-Spamd-Result: default: False [-1.46 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-Rspamd-UID: d068c0
+X-Rspamd-UID: f61d5b
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[tk154.de:s=DKIM001];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	NEURAL_HAM(-0.00)[-0.997];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
-	DMARC_NA(0.00)[franken.de];
-	FROM_NEQ_ENVFROM(0.00)[tsbogend@alpha.franken.de,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35090-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
+	DKIM_TRACE(0.00)[tk154.de:+];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[]
-X-Rspamd-Queue-Id: 58EAD3ECB16
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[tk154.de];
+	TAGGED_FROM(0.00)[bounces-35094-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mail@tk154.de,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_COUNT_FIVE(0.00)[6];
+	NEURAL_HAM(-0.00)[-0.999];
+	TO_DN_NONE(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,tk154.de:dkim,tk154.de:email,tk154.de:mid]
+X-Rspamd-Queue-Id: 8E0503ED133
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, Mar 20, 2026 at 09:28:08PM +0100, Andy Shevchenko wrote:
-> The 'struct gpio' is not used in the code, remove unneeded forward declaration.
-> This seems to be a leftover for a 5 years.
-> 
-> Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> 
-> v2 (resend): Cc'ed to GPIO maintainers and ML
-> v2: collected tags (Thomas)
-> 
-> Bart, it was agreed to take this patch via GPIO tree
-> (that's why we have an Ack), can you apply it, please?
-> 
->  arch/mips/include/asm/mach-au1x00/gpio-au1000.h | 2 --
->  arch/mips/include/asm/mach-au1x00/gpio-au1300.h | 1 -
->  2 files changed, 3 deletions(-)
-> 
-> diff --git a/arch/mips/include/asm/mach-au1x00/gpio-au1000.h b/arch/mips/include/asm/mach-au1x00/gpio-au1000.h
-> index d820b481ac56..e6306f6820e6 100644
-> --- a/arch/mips/include/asm/mach-au1x00/gpio-au1000.h
-> +++ b/arch/mips/include/asm/mach-au1x00/gpio-au1000.h
-> @@ -40,8 +40,6 @@
->  #define AU1000_GPIO2_INTENABLE	0x10
->  #define AU1000_GPIO2_ENABLE	0x14
->  
-> -struct gpio;
-> -
->  static inline int au1000_gpio1_to_irq(int gpio)
->  {
->  	return MAKE_IRQ(1, gpio - ALCHEMY_GPIO1_BASE);
-> diff --git a/arch/mips/include/asm/mach-au1x00/gpio-au1300.h b/arch/mips/include/asm/mach-au1x00/gpio-au1300.h
-> index 43d44f384f97..b12f37262cfa 100644
-> --- a/arch/mips/include/asm/mach-au1x00/gpio-au1300.h
-> +++ b/arch/mips/include/asm/mach-au1x00/gpio-au1300.h
-> @@ -12,7 +12,6 @@
->  #include <asm/io.h>
->  #include <asm/mach-au1x00/au1000.h>
->  
-> -struct gpio;
->  struct gpio_chip;
->  
->  /* with the current GPIC design, up to 128 GPIOs are possible.
-> -- 
-> 2.50.1
+The qcom pinctrl core supports marking functions that represent GPIO mode
+via PINCTRL_GPIO_PINFUNCTION(), so that strict pinmuxing does not reject
+GPIO requests for pins that are muxed to the GPIO function.
 
-applied to mips-next
+ipq4019 still describes its gpio function with QCA_PIN_FUNCTION(gpio),
+so it is not treated as a GPIO pin function. As a result, GPIO consumers
+can still conflict with pinctrl states that select the "gpio" function.
 
-Thomas.
+Add a QCA_GPIO_PIN_FUNCTION() helper and use it for the ipq4019 gpio
+function, matching how the msm-based qcom drivers handle this.
 
+This allows ipq4019 to keep the GPIO-related pin configuration in DTS
+without tripping over strict pinmux ownership checks.
+
+Fixes: cc85cb96e2e4 ("pinctrl: qcom: make the pinmuxing strict")
+Signed-off-by: Til Kaiser <mail@tk154.de>
+---
+ drivers/pinctrl/qcom/pinctrl-ipq4019.c | 2 +-
+ drivers/pinctrl/qcom/pinctrl-msm.h     | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-ipq4019.c b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+index 6ede3149b6e1..07df812fb728 100644
+--- a/drivers/pinctrl/qcom/pinctrl-ipq4019.c
++++ b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+@@ -480,7 +480,7 @@ static const struct pinfunction ipq4019_functions[] = {
+ 	QCA_PIN_FUNCTION(blsp_uart0),
+ 	QCA_PIN_FUNCTION(blsp_uart1),
+ 	QCA_PIN_FUNCTION(chip_rst),
+-	QCA_PIN_FUNCTION(gpio),
++	QCA_GPIO_PIN_FUNCTION(gpio),
+ 	QCA_PIN_FUNCTION(i2s_rx),
+ 	QCA_PIN_FUNCTION(i2s_spdif_in),
+ 	QCA_PIN_FUNCTION(i2s_spdif_out),
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
+index 4625fa5320a9..120217012a9f 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.h
++++ b/drivers/pinctrl/qcom/pinctrl-msm.h
+@@ -39,6 +39,11 @@ struct pinctrl_pin_desc;
+ 					fname##_groups,		\
+ 					ARRAY_SIZE(fname##_groups))
+ 
++#define QCA_GPIO_PIN_FUNCTION(fname)				\
++	[qca_mux_##fname] = PINCTRL_GPIO_PINFUNCTION(#fname,	\
++					fname##_groups,		\
++					ARRAY_SIZE(fname##_groups))
++
+ /**
+  * struct msm_pingroup - Qualcomm pingroup definition
+  * @grp:                  Generic data of the pin group (name and pins)
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.53.0
+
 
