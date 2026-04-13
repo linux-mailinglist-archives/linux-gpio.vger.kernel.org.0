@@ -1,82 +1,82 @@
-Return-Path: <linux-gpio+bounces-35128-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35127-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uDoMFY013Wl9agkAu9opvQ
-	(envelope-from <linux-gpio+bounces-35128-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	id mKo4OY013Wl9agkAu9opvQ
+	(envelope-from <linux-gpio+bounces-35127-lists+linux-gpio=lfdr.de@vger.kernel.org>)
 	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 20:27:25 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 008073F1FF4
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 20:27:24 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A982B3F1FFB
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 20:27:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E3C2930657A6
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 18:25:31 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0878C3065A69
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2026 18:25:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A81F383C63;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59B93383C60;
 	Mon, 13 Apr 2026 18:25:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oUtnyAvL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWLKszxi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB427376BDE
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 18:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EB637EFF2
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 18:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776104714; cv=none; b=SpBvK5uw66pnoHlDgFgwEwuCCJ4Zbz5K1TsoesRqNUwsCWaZMh+GrftlBGuK1zHQhMFZFY9jpDdTuwXm09XVyVNK1wnS2hUztsxNipX5HY8AW2t0cuJLrwD5PmkRaO0ZsKTLsohLx9dTrPiYBp2bQlj1pyIy9BDt0YJQhiOupnc=
+	t=1776104714; cv=none; b=UNAeukbvg1Q60XImgrBsvdpP/u3p4hXO67YrhLls9//R/Law7EnPyfOQ+M7elp5MgFQiWSVmI05RaQcwUmx1J5vPsweMjPK2v7LzrZCBrtRNEEPFPuUCoZo0ufrAGhNbzumYVVbqWxEDWzt1+zdaisPQBLGoE5H0WfqPzmSh5iE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776104714; c=relaxed/simple;
-	bh=U4Y/F+JH7fE+UC5EjEQ+l4RRAJguyzUzwpFHaYQwvWY=;
+	bh=turxcnX6VN1eznYIWFKB43dvw3RiMLfdFwVTJ1DnT8g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ajtzHXZVlOnb6vlJ+eWz7xLdHHJeySuzcPUybZBBmSzHcAb+I7IILhup4czit+7S6bhTFPiVgEjR+vvF1nKkdhn86KJqkLR95yhqNqbCYuVSfH4VqRs9bysR6G3xRatqkdIFYfyIylaYjFsZu1q8ECEosRclMp3TAjLH+YkZmm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=oUtnyAvL; arc=none smtp.client-ip=209.85.128.48
+	 MIME-Version; b=t6w3n82udWLjiVFFj4DNAilpB36e9l3Lxjz9snfeiVJ+GTq+7Yw+e/b79rg8nOasfzI9iGTEm5NDtyAi4eFsk3i0i3yhac0Ifx9+ZY2KVFPtgDveb5YYVi8x9W3AXOlqOgzea0i8YkbRMSoVzFAnQWw/7bGdj1tHNeDOGWklx/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DWLKszxi; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-488ad135063so45645395e9.0
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 11:25:11 -0700 (PDT)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-488afb0427eso59244825e9.1
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2026 11:25:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776104710; x=1776709510; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1776104711; x=1776709511; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QvXShpkoYrfA999CM9pWEW9h1p62k4eqsGp9A9pTeT8=;
-        b=oUtnyAvLJX682lG7orYukO4hCuYq7lOWhFQhKiqEm8L1Yn/VJ7pKqX2lLekTCNYXQS
-         w3xlFXyZm/9aEHpS4rf807crVF2J3p5YxuT+2wJz0+xEKSWsz4D4baY0Juet1FTFLcQT
-         PB3TgPUb6Kf8DD6aUvNvRw+BOyc7ByHmWUIACyno2mcfp0Y5us99dR2g1JlOZA/L9puV
-         kHhaQxCSuukeR2JTI5QjHzTh1v4uKEAoVOZHCnTHfzBWEwBGY5VSVqOZvV4UC3pvRVgN
-         xOx5MDDfzONvZkaY5Xe7GJTdKTmsYKabzm5k2NfywKIFCtxBdEyApPxFQoHdRdzo/Y5i
-         DpPg==
+        bh=KVO71wT2Z3EhUstHSSWgsmxaknRZDzEPaI688DZMWQM=;
+        b=DWLKszxilW6AUZ5ef/pAmEOFsEZqLQr3X6vlBdKXM8qmsdcg/UZc6CyCn2yrFGmRz1
+         +I7QnAqi1G6XjWLaxcbHy0sPfvBr24+RNdtwx+oUaCLomwBmXoEvvwDBK8Jl/MRXuy3B
+         JoqHPoGuMwf9ztDahdF6Jhwv/m8jVYGQbcajm2peQpcjSTZIXOFOIh19AmX7aAbwixtt
+         EvA1DY8BB7gNN7hVohbl/Lru36/NUZXUikpzvuElH93wwDjKphHa7IRwyYnW+0AQSA0x
+         Rf0QPvfkoKlb8awLrGzmqN+4to3QVg4uIumcatmqalO06muz0dXROnIbrd+srCwK31iv
+         pA+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776104710; x=1776709510;
+        d=1e100.net; s=20251104; t=1776104711; x=1776709511;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=QvXShpkoYrfA999CM9pWEW9h1p62k4eqsGp9A9pTeT8=;
-        b=EIfKDZ41caD45N5jEv83s4MpZg2sMZHelLS4qhfc7kyQpI7z6A4OaWrAbmfUUtB5WY
-         ljoqU+4LrjPQBWg1gskU7gAIaea35aNnybeQRe26slosUN/BSSZUCcEOQJHlxu9vpCw1
-         N3qBh3EF/NpY+wcHffnc1UMQOvpi3PeO9hW/10TaP/sdUS/Tm6aErGFsu9dLJ+AmnXXl
-         b6DHfAI+oxhdjclXlHTGhMYA5W2OLy0UHlzvp9TVSGPtPMe0tc4clEvaRPtyNWegrg1j
-         qgWmUNrMYSVtsaY6OPmxpLQuyQsduk8GtzTvH0uhurlxKsgvR+mESDna/qAWiiyyuj1Q
-         Vmyg==
-X-Forwarded-Encrypted: i=1; AFNElJ+efVmcL8RYRGb4D2oDlMtSmzfj7IvHzeHGlgdRp6962stJNlnCeQLpW/H8ihOsfzWs84O/BldgTem+@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfXzbqWDlwXY9y9u/hcCOpmdbN/QnhP1oC5LZZmZcb6J50p0v/
-	vQvU5vRLThfTvihWi0NqCHxPv98G7dV1bzaEAX8CETBQSsOjfCrxPuQ0
-X-Gm-Gg: AeBDietlAhK3Shh3/3yPdFOVVeEl5ZT2MYrPkk1Ab5kRKqJMLz7zI3BYRz+uzAEJdVK
-	kdlzYQxsakedZ/MEj1P6nZKSwWsY/JmAILgK758mai+o8wxhGzj6YiaGzKehXsFwheN+YkxSoqG
-	VyRBsygz0zftqfPrO/s6cHe7TwZ/ZtXAN6yhMcpE+4QACOEmrSWJ1XIGWcmzVKBhU3kV2JBVsRx
-	Gm8KF6osJWDyEvTlcTqBKfOO/5C3G4wJaBjDugAUwcAzdSU5EAFvcbWHQqxidGub2ChG6SYd+Ri
-	Vy1VRErY1HM7LAWIbXjvWEgDW6jexnGWHdxkVxC6LAV6ovYEGGUBc28R+0463vb2RlfyMvikHtZ
-	B/euabLea80fKc4ixUhYHp3xagzXU8xDzjYclgBwc4q8CtX1GUe9edeL2gKGWml9R0wnLC0Ejf/
-	hU1ctpkAcY++MUZ6L1yLbW332CVqxGvVS4gbvoqzOHyPJbm3HUp/4oUtD0jwG5DovFZMzxlo4Me
-	HbH17SWIp+BzmdRxp5HRz4r3mRXr9PSobU0b8I5UQ1ItyQ=
-X-Received: by 2002:a05:600c:5292:b0:486:fe39:28b7 with SMTP id 5b1f17b1804b1-488d67fa48emr206566925e9.9.1776104710273;
+        bh=KVO71wT2Z3EhUstHSSWgsmxaknRZDzEPaI688DZMWQM=;
+        b=O4q6xIew717B5gKYyRUa7xo6QPetH03dzRSYF8h+yB5AHrahvNxk4oag4OvM6DVdg+
+         TRkFJ3RfYwtY15Jy9fKENGVOXHo7cRyRK4f98Bchr9mj1vXcoO+3B086UMXQEcBZ1evW
+         tewUxFi26D1//oXRTG4At63hWCBHSZk7f8bisce7KLCvszZ3okbXIW7AsVFxBYNNoKHg
+         CdL8V4Rv76WAd7s3wVq9HzmqOvdEGQ3nZ9V2bBLyW/iABGrXHqZm0wkYdk5EICP5QdU9
+         zSkMgdLFOElW4rZcPokWcT8VOX4LCedPZ8ii4Rx1kIlaeTLL9dOU5uazghTmwde3FyVn
+         IrOg==
+X-Forwarded-Encrypted: i=1; AFNElJ8MubWc2yPV8aoHE7b5UQPffhbcSlsR56cvGtzjVQnIrZUuCUt2Vy2RYOdsiLBfC0/QQmodO+he5ZSP@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpVqJmeBjMVusi/w4Qlgt5QwBfe/uDSOuQqNiv61GU4ydxygnJ
+	GtYbVQAMZhqklAC1Quk7fPI0fAnR9Z3rFFE9mJJN73opZTLBJNnY2dy9
+X-Gm-Gg: AeBDievRg7HoCkunfNwagl+3HCcFxKhObZcUP7rMYp85+TLrWQjztQ8kPRk+IixPCMj
+	K4pRdZbwGDRVmbCT6W8ghTOmQ/7CSfj0WnUyHzdRubvVB/+0vIBnirLfFsTh0U8vvmLia7yuj7r
+	r5LD7IAuOaVZNDxH13nhJS5jvJf1cqD2vOYb1pM+Chj9A4hozCuOf3DPg3iu/9FdoZBcHjLhVGR
+	kY9Xr0/CfxSzMSrEsNoicoxNGy0EaNO+bOKoNq/7XGuo4qtpZN+U+C/f26zEPzOBKKb76QPkOt4
+	3BH1pGpFd7DLGS+63ypOh/pQjg0uB3UQi9n4wPOAoQn5tV1mBxCQV8pskAg4+zQWdXBo1a+KvLV
+	E8xB6U5w27oIBr9d4YNIO5WANuS9se5Dvo/f7XOvFDBWg2P/iPynU3/oQcCVYzS2gmvQS/Nne2W
+	7gMjrpgTabwO7EHHGTPtGTwSVg3tyjYsuW5i7SnMJ0YzglIyW/cOw95Td9jYLkzZywA4Dz1LKIn
+	NbS2aK5Ttxx5ayUt4O9oueS+EpCiA7VeMib6vO8hwS7nWk=
+X-Received: by 2002:a05:600c:608e:b0:488:78f2:6b0 with SMTP id 5b1f17b1804b1-488d688a11amr194803115e9.29.1776104710878;
         Mon, 13 Apr 2026 11:25:10 -0700 (PDT)
 Received: from iku.example.org ([2a06:5906:61b:2d00:8060:3087:2ea2:f494])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488d5b56d1asm301175695e9.15.2026.04.13.11.25.09
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488d5b56d1asm301175695e9.15.2026.04.13.11.25.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2026 11:25:09 -0700 (PDT)
+        Mon, 13 Apr 2026 11:25:10 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -88,9 +88,9 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 4/5] pinctrl: renesas: rzg2l: Add NOD register cache for PM suspend/resume
-Date: Mon, 13 Apr 2026 19:24:54 +0100
-Message-ID: <20260413182456.811543-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 5/5] pinctrl: renesas: rzg2l: Handle PUPD for RZ/V2H(P) dedicated pins in PM
+Date: Mon, 13 Apr 2026 19:24:55 +0100
+Message-ID: <20260413182456.811543-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260413182456.811543-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20260413182456.811543-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -106,7 +106,7 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -116,9 +116,9 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35128-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35127-lists,linux-gpio=lfdr.de];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
@@ -129,137 +129,78 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 008073F1FF4
+X-Rspamd-Queue-Id: A982B3F1FFB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Include the NOD (N-ch Open Drain) register in the PM suspend/resume
-register cache.
+On RZ/V2H(P), dedicated pins support pull-up/pull-down configuration
+via PIN_CFG_PUPD. Add PUPD handling for dedicated pins in the PM
+save/restore path.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
 v1->v2:
 - New patch
 ---
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 37 +++++++++++++++++++++++--
- 1 file changed, 35 insertions(+), 2 deletions(-)
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index b2eb9dca7eec..be6d229c927b 100644
+index be6d229c927b..1aaa78469f52 100644
 --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -323,6 +323,7 @@ struct rzg2l_pinctrl_pin_settings {
-  * @ien: IEN registers cache
-  * @smt: SMT registers cache
-  * @sr: SR registers cache
-+ * @nod: NOD registers cache
-  * @sd_ch: SD_CH registers cache
-  * @eth_poc: ET_POC registers cache
-  * @oen: Output Enable register cache
-@@ -338,6 +339,7 @@ struct rzg2l_pinctrl_reg_cache {
- 	u32	*pupd[2];
- 	u32	*smt[2];
- 	u32	*sr[2];
-+	u32	*nod[2];
- 	u8	sd_ch[2];
- 	u8	eth_poc[2];
- 	u8	oen;
-@@ -2767,6 +2769,11 @@ static int rzg2l_pinctrl_reg_cache_alloc(struct rzg2l_pinctrl *pctrl)
- 		if (!cache->sr[i])
- 			return -ENOMEM;
- 
-+		cache->nod[i] = devm_kcalloc(pctrl->dev, nports, sizeof(*cache->nod[i]),
-+					     GFP_KERNEL);
-+		if (!cache->nod[i])
-+			return -ENOMEM;
-+
- 		/* Allocate dedicated cache. */
- 		dedicated_cache->iolh[i] = devm_kcalloc(pctrl->dev, n_dedicated_pins,
- 							sizeof(*dedicated_cache->iolh[i]),
-@@ -2785,6 +2792,12 @@ static int rzg2l_pinctrl_reg_cache_alloc(struct rzg2l_pinctrl *pctrl)
- 						      GFP_KERNEL);
- 		if (!dedicated_cache->sr[i])
+@@ -2798,6 +2798,12 @@ static int rzg2l_pinctrl_reg_cache_alloc(struct rzg2l_pinctrl *pctrl)
+ 						       GFP_KERNEL);
+ 		if (!dedicated_cache->nod[i])
  			return -ENOMEM;
 +
-+		dedicated_cache->nod[i] = devm_kcalloc(pctrl->dev, n_dedicated_pins,
-+						       sizeof(*dedicated_cache->nod[i]),
-+						       GFP_KERNEL);
-+		if (!dedicated_cache->nod[i])
++		dedicated_cache->pupd[i] = devm_kcalloc(pctrl->dev, n_dedicated_pins,
++							sizeof(*dedicated_cache->pupd[i]),
++							GFP_KERNEL);
++		if (!dedicated_cache->pupd[i])
 +			return -ENOMEM;
  	}
  
  	pctrl->cache = cache;
-@@ -3016,7 +3029,7 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2l_pinctrl *pctrl, bool suspen
- 	struct rzg2l_pinctrl_reg_cache *cache = pctrl->cache;
- 
- 	for (u32 port = 0; port < nports; port++) {
--		bool has_iolh, has_ien, has_pupd, has_smt, has_sr;
-+		bool has_iolh, has_ien, has_pupd, has_smt, has_sr, has_nod;
- 		u32 off, caps;
- 		u8 pincnt;
- 		u64 cfg;
-@@ -3039,6 +3052,7 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2l_pinctrl *pctrl, bool suspen
- 		has_pupd = !!(caps & PIN_CFG_PUPD);
- 		has_smt = !!(caps & PIN_CFG_SMT);
- 		has_sr = !!(caps & PIN_CFG_SR);
-+		has_nod = !!(caps & PIN_CFG_NOD);
- 
- 		if (suspend)
- 			RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + PFC(off), cache->pfc[port]);
-@@ -3099,6 +3113,15 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2l_pinctrl *pctrl, bool suspen
- 							 cache->sr[1][port]);
- 			}
- 		}
-+
-+		if (has_nod) {
-+			RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + NOD(off),
-+						 cache->nod[0][port]);
-+			if (pincnt >= 4) {
-+				RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + NOD(off) + 4,
-+							 cache->nod[1][port]);
-+			}
-+		}
- 	}
- }
- 
-@@ -3113,7 +3136,7 @@ static void rzg2l_pinctrl_pm_setup_dedicated_regs(struct rzg2l_pinctrl *pctrl, b
+@@ -3136,7 +3142,7 @@ static void rzg2l_pinctrl_pm_setup_dedicated_regs(struct rzg2l_pinctrl *pctrl, b
  	 * port offset are close together.
  	 */
  	for (i = 0, caps = 0; i < pctrl->data->n_dedicated_pins; i++) {
--		bool has_iolh, has_ien, has_sr;
-+		bool has_iolh, has_ien, has_sr, has_nod;
+-		bool has_iolh, has_ien, has_sr, has_nod;
++		bool has_iolh, has_ien, has_sr, has_nod, has_pupd;
  		u32 off, next_off = 0;
  		u64 cfg, next_cfg;
  		u8 pincnt;
-@@ -3136,6 +3159,7 @@ static void rzg2l_pinctrl_pm_setup_dedicated_regs(struct rzg2l_pinctrl *pctrl, b
- 				      PIN_CFG_IOLH_C | PIN_CFG_IOLH_RZV2H));
+@@ -3160,6 +3166,7 @@ static void rzg2l_pinctrl_pm_setup_dedicated_regs(struct rzg2l_pinctrl *pctrl, b
  		has_ien = !!(caps & PIN_CFG_IEN);
  		has_sr = !!(caps & PIN_CFG_SR);
-+		has_nod = !!(caps & PIN_CFG_NOD);
+ 		has_nod = !!(caps & PIN_CFG_NOD);
++		has_pupd = !!(caps & PIN_CFG_PUPD);
  		pincnt = hweight8(FIELD_GET(RZG2L_SINGLE_PIN_BITS_MASK, cfg));
  
  		if (has_iolh) {
-@@ -3150,6 +3174,10 @@ static void rzg2l_pinctrl_pm_setup_dedicated_regs(struct rzg2l_pinctrl *pctrl, b
- 			RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + SR(off),
- 						 cache->sr[0][i]);
+@@ -3178,6 +3185,11 @@ static void rzg2l_pinctrl_pm_setup_dedicated_regs(struct rzg2l_pinctrl *pctrl, b
+ 			RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + NOD(off),
+ 						 cache->nod[0][i]);
  		}
-+		if (has_nod) {
-+			RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + NOD(off),
-+						 cache->nod[0][i]);
++		if (has_pupd) {
++			RZG2L_PCTRL_REG_ACCESS32(suspend, pctrl->base + PUPD(off),
++						 cache->pupd[0][i]);
 +		}
++
  		if (pincnt >= 4) {
  			if (has_iolh) {
  				RZG2L_PCTRL_REG_ACCESS32(suspend,
-@@ -3166,6 +3194,11 @@ static void rzg2l_pinctrl_pm_setup_dedicated_regs(struct rzg2l_pinctrl *pctrl, b
- 							 pctrl->base + SR(off) + 4,
- 							 cache->sr[1][i]);
+@@ -3199,6 +3211,11 @@ static void rzg2l_pinctrl_pm_setup_dedicated_regs(struct rzg2l_pinctrl *pctrl, b
+ 							 pctrl->base + NOD(off) + 4,
+ 							 cache->nod[1][i]);
  			}
-+			if (has_nod) {
++			if (has_pupd) {
 +				RZG2L_PCTRL_REG_ACCESS32(suspend,
-+							 pctrl->base + NOD(off) + 4,
-+							 cache->nod[1][i]);
++							 pctrl->base + PUPD(off) + 4,
++							 cache->pupd[1][i]);
 +			}
  		}
  		caps = 0;
