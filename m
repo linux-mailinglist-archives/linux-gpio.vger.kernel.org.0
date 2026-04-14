@@ -1,540 +1,209 @@
-Return-Path: <linux-gpio+bounces-35148-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35152-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EutiMX463mmzpgkAu9opvQ
-	(envelope-from <linux-gpio+bounces-35148-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 15:00:46 +0200
+	id 8LLhDAZG3mnlpwkAu9opvQ
+	(envelope-from <linux-gpio+bounces-35152-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 15:49:58 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83C0B3FA3F7
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 15:00:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E836C3FAB8A
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 15:49:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 8A3CA30031D3
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 12:59:37 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9D85F306B535
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 13:49:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD5653E63BA;
-	Tue, 14 Apr 2026 12:59:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E1FA3E7160;
+	Tue, 14 Apr 2026 13:49:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oq1eLCic"
+	dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b="oc9d1yFn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11022083.outbound.protection.outlook.com [40.93.195.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A133E5591
-	for <linux-gpio@vger.kernel.org>; Tue, 14 Apr 2026 12:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776171576; cv=none; b=qjv/hFyR4PQChrXfeoi+SAaauxAEMRXtnztmlThdLzg9JoxlMGvNZiFfn7YdPZEfo4bEkPASN6KHF2D0jBlZPr2fXC9y3F0/wrKJ/UM7oEkakiEb1YKsAcxVXlk0IiMqyuOZn//Tke7K/P7EW1O+R5G69lz+N7Zs/4izrp8lbKE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776171576; c=relaxed/simple;
-	bh=tFmbdcdwhlLelL6Y4T/dw0I/MoRjmmmsyUhAKCtOgRI=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=K07wIx16N0FlAaOFC0llxO0VOPj2yCBnm8+JrWAsmdmY+CyOFIHnQF0xSjJAS626GtdSB8crTXMj1m5GiZVeYCXM49TOIghQbJc8nec/75ZT0fAbD6pRQrw0VSt8HErQ8HvcNL/cZ8sseBLpKZNDdjQi4vp/2Km6z/wPbUACvKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oq1eLCic; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-43d73352cf2so2050642f8f.1
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Apr 2026 05:59:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1776171573; x=1776776373; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=36NQBjdVOl8b2F78n+KMqXPnTDHbTcKHZXkBZWWZqFY=;
-        b=oq1eLCic1O+KK16bOgkdwrmCLSADa/5XZ9NcRXiqUgKA2ld5V9v0pEdub4sLjzpl0/
-         Qng0new1lwfT/6rqMLrAwbXvBAUGJ5lFMsBmQK52ztcQB4DquWjIyCHgWg4wFuU9M/Wc
-         IDRvx/zCD69LPbrwVgixz7VFwt9ErRqewN+7C07SL4O1tzz3+CAmtz0pLsmEL7BEDB2n
-         MK5WLKGOGTwe777fdD1+mYO+Wtz2HhJdf0WVFbsDP82wQwUKavgBDjKtuDRdPWjYyJM4
-         wyHA4clsPG3K27sqb/L1StSDFUmbAMIflA/TLFZO3ZOmtFPL4n8fzlkXUQC5ll3Yxcjl
-         bkDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776171573; x=1776776373;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=36NQBjdVOl8b2F78n+KMqXPnTDHbTcKHZXkBZWWZqFY=;
-        b=NIg/zO6fqh0NzuKFQyM9ij5Xa98UDRREL53UjhtO+FErc6TI/2H2TKabyoMHVJFxqf
-         BRlMGkN9j5FvAMnszF/9RyMvM9StCeiJ+RRIDhPhBXBJKiAPwrGnqJGpxyIVmsOTFWyw
-         +FBLakZwwUKUyN0hkvjFUDKXiYUAaVWanxwqFz5KblQIvQLiVIxYfCI2JEj9nmERfxeh
-         4n7KY5B3kgLQnErfWZINMbZYzkppxFGnmLzVOk2G7jkBNYlYaqUqvgS+zogIIT/85lnQ
-         wz+UXJvX0pzQD2yRR+pRTCu2mswrQK1p8rZxNhUL0pMum6E1DNviNtSXzicjSJ7xDOvD
-         cGuw==
-X-Forwarded-Encrypted: i=1; AFNElJ9TSoafyT485YLP0Kdlldxcc9X9A0hovdix+WV4HFUwByMRDkv/tFejutYKliX4sA6Ofr06Akjb1Tsl@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlNQosWUroZ5obi/+D9eYU9wQGNjASro94E19JHOLtIaJjdrDd
-	TeZCPg9yu15twdAd+F1ElYGWvv13Kw00PisspsHVjD1ENVArXhP4sPtRXlWMGu2iEAw=
-X-Gm-Gg: AeBDieuw31A8uDhgF4R4aBCF7Y51wgWmPeYfEwnTd3MY+dT+4ggE0eA/f7jbNtAtoM8
-	U+RVR25QpaXwFfqCBtijooiuHNZVV7QrqzvJJc4yxlgVsvpcKMu/9q0/LgYP7/me7p72IeE+kbM
-	4TqjzsNWt81GSpYDySyXCbTFl8mKsDb1Jt/Rreb/Xf+WDHvF+QaNSzS1r7nPlgQH22Xeb2pwET+
-	2wiZoKlzbTLiwUHCZHo8B84UTC8zzhJ3FLR4/wXjOmFQCj1yraMi7qnY9+peDActVrDHYdok5Qh
-	algQpeWqczuXYVsvlzBrO5T/WZ8rFh/iJNH2Xh9BhiasfZ+DGcslP6TgZpkecSieTdA97K2nqQM
-	OoqmNBh+AFmnNjFEcLyW1SExYYSK99j/4A0XDyOsB4TcRZ11EWYobwpMubClq+95trGZLFtTN10
-	H9kYsEgM0B6C0SOhgrnUXgwk6r1JFwcQSQ5NjpIECONRJE6b0v7yC9VkUV3w+yAtOyY+JBRWgMx
-	UM3rqLvih1NpkM=
-X-Received: by 2002:a05:6000:615:b0:43d:1bf6:927 with SMTP id ffacd0b85a97d-43d64292737mr25826396f8f.14.1776171573040;
-        Tue, 14 Apr 2026 05:59:33 -0700 (PDT)
-Received: from ?IPV6:2001:861:c12:13d0:5627:3bd0:f3ee:8a22? ([2001:861:c12:13d0:5627:3bd0:f3ee:8a22])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43d63e50200sm41735888f8f.29.2026.04.14.05.59.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2026 05:59:32 -0700 (PDT)
-Message-ID: <1b9323f4-f370-47a4-a45d-ecf781405cc1@linaro.org>
-Date: Tue, 14 Apr 2026 14:59:31 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52ED3E6392;
+	Tue, 14 Apr 2026 13:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776174542; cv=fail; b=ZVEY1ZcPExDy+9wdjMOPjVKlElRgOVB0Tx/v3kt9SDo/1K/nZQxg2SnyxB93ND7/6AvjKeBfhtmWCgOK9bTpcwbQyd7egnYWBRWctLqsUhLNDjj9iNvPF8K6glcDCe9C6E5ezVSzZDh0R3phpHUwa+wFIZ2iJ4woOi/PjtTudyw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776174542; c=relaxed/simple;
+	bh=Io/GMsGRNQ4Tnemef2yZeU8ouOWgdCfKz7xZ73DOgKk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bVts3oLt5M1PtP3l1IGsSnQJru+JRGv4+moygRgICiT5ZdypbLSdn0kPcQMZXDhZe3NeZgGniJ7MsAHiqWWPock0JIjG+DGjri43MHmAR0Vun/UK0ZI6FtKOnoetfjlFfD0pckvLhnEokSWAUuyv9Pf6E3yK080oPKHXmm88uco=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axiado.com; spf=pass smtp.mailfrom=axiado.com; dkim=pass (2048-bit key) header.d=axiado.com header.i=@axiado.com header.b=oc9d1yFn; arc=fail smtp.client-ip=40.93.195.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axiado.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axiado.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Owju1sT/tw9vMyyMsAKH0d92KIKuyPG9gabf0k50Y+8bVy5zJ1sVmy1HQXGYb52o8JLC/nGFB6VxsE08Xyp70BokE87/JjJfLBPIipVddAPmleiKwAiG0Xi2ngDXjVeVEIwOcK+gn0J286sCUv3B5YYv503aqVRkM9AMLciVpL/fPjhASyHjm6ENT0Y4gTqlROx0vu26yGp237sYB4wCHDkBZ3r8kvmQSfraRZo5ONOMlcoJm3pN2kEuYy2y+a3gqznRp+YBK4DgWADmR4owITWH5Dv/d8nq4GvE0EWVQ0563ISBd2MHpwM1/RMdhGj0kko1p6lQn+AikNcmfkkd1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vSom+LQ2hgD1/KOY3xFyTW2hYyd2vO4j/9ZqnZ/JatM=;
+ b=o3UUGbyFQHZrfFzu6RQI78QEN6tj4RDvs6jSgsTMIqKPi6pLBJV1DyPEGGt/ASV94vsxc4paDGAzB6nkPl4GOgseIgRPE9UwNSbBGJi9hs4P248wb0lAh6jHWJrphoqSMWk4NUpD2xBT/Nd2FJX1u8iDPOu1Rpg8ZozKPJn+lrmga20YLVP2RUdxEEro/7wdfaz/Ridln2iOSrmjZntxJlAYPpo0fKGi02AUNHpIJ88sHMz5tbL3Y3G54Glv+bTlh2rvuEMhABM8qhC3eRixFZAz31MrSbkOfVcmqTgbVMsk+rhteVkyG6xuHm8eVSUAxciaTcpODZQvosEcomM+MA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 50.233.182.194) smtp.rcpttodomain=axiado.com smtp.mailfrom=axiado.com;
+ dmarc=none action=none header.from=axiado.com; dkim=none (message not
+ signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axiado.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vSom+LQ2hgD1/KOY3xFyTW2hYyd2vO4j/9ZqnZ/JatM=;
+ b=oc9d1yFnuec813kDFriXAArZclAxmREMICPeWa9muDxbJCNp32goYeG9fEBHjyK+2p3+SfxZwzpcOMjHjdwasM6C8qkUW9RoIcRwXs6MqRFK7MgXCg+lUVyt8snuHvK3gozmaESeZFG4fITbcj9lCbbHEdDQrmX79dY91dpQGzB7DtJY9iIIT8ECvjqkin3qImhG/UevlRmzTRZnIkaHWRWhKHCwnSPHH2MDkeSFGzatXFpK7ZVdTMZKgyftLWlIHd8yxDR4p5wFhWw8fLlx7YwiAj3YGptl3thsBuDp7c9XuAkXt1Q0d/wAocvYRdLu8Shc3qHmxCcrM5gBr/yWLQ==
+Received: from BY5PR04CA0028.namprd04.prod.outlook.com (2603:10b6:a03:1d0::38)
+ by LV8PR18MB5808.namprd18.prod.outlook.com (2603:10b6:408:1f4::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.48; Tue, 14 Apr
+ 2026 13:48:56 +0000
+Received: from SJ5PEPF000001D1.namprd05.prod.outlook.com
+ (2603:10b6:a03:1d0:cafe::28) by BY5PR04CA0028.outlook.office365.com
+ (2603:10b6:a03:1d0::38) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.47 via Frontend Transport; Tue,
+ 14 Apr 2026 13:48:53 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 50.233.182.194)
+ smtp.mailfrom=axiado.com; dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=axiado.com;
+Received-SPF: Fail (protection.outlook.com: domain of axiado.com does not
+ designate 50.233.182.194 as permitted sender)
+ receiver=protection.outlook.com; client-ip=50.233.182.194;
+ helo=smtp.corp.axiado.com;
+Received: from smtp.corp.axiado.com (50.233.182.194) by
+ SJ5PEPF000001D1.mail.protection.outlook.com (10.167.242.53) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.17
+ via Frontend Transport; Tue, 14 Apr 2026 13:48:52 +0000
+Received: from axz-uw1-build-vm02.corp.axiado.com (unknown [10.14.1.22])
+	by smtp.corp.axiado.com (Postfix) with ESMTP id 44ACA4186B55;
+	Tue, 14 Apr 2026 06:48:51 -0700 (PDT)
+From: Petar Stepanovic <pstepanovic@axiado.com>
+Subject: [PATCH 0/3] Subject: [PATCH 0/3] gpio: add support for Axiado
+ SGPIO controller
+Date: Tue, 14 Apr 2026 06:48:31 -0700
+Message-Id: <20260414-axiado-ax3000-sgpio-controller-v1-0-b5c7e4c2e69b@axiado.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v3 16/21] drm/panel: jadard-jd9365da-h3: support Waveshare
- 720p DSI panels
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Jessica Zhang <jesszhan0024@gmail.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Cong Yang <yangcong5@huaqin.corp-partner.google.com>,
- Ondrej Jirman <megi@xff.cz>, Javier Martinez Canillas <javierm@redhat.com>,
- Jagan Teki <jagan@edgeble.ai>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>, Jie Gan <jie.gan@oss.qualcomm.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- Riccardo Mereu <r.mereu@arduino.cc>
-References: <20260413-waveshare-dsi-touch-v3-0-3aeb53022c32@oss.qualcomm.com>
- <20260413-waveshare-dsi-touch-v3-16-3aeb53022c32@oss.qualcomm.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20260413-waveshare-dsi-touch-v3-16-3aeb53022c32@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
+X-B4-Tracking: v=1; b=H4sIAK9F3mkC/x2NQQqEMAwAvyI5byBWKOhXxEO3jd2ANJIui1D8u
+ 2VPw1xmGlQ24QrL0MD4J1W0dBlfA8RPKJlRUndw5DxNjjBcEpJ2TESENZ+iGLV8TY+DDYl2z2N
+ 6+8gz9MhpvMv1H6zbfT+owj+jcAAAAA==
+X-Change-ID: 20260320-axiado-ax3000-sgpio-controller-00f6e1db6ce9
+To: Petar Stepanovic <pstepanovic@axiado.com>, 
+ Tzu-Hao Wei <twei@axiado.com>, Swark Yang <syang@axiado.com>, 
+ Prasad Bolisetty <pbolisetty@axiado.com>, Linus Walleij <linusw@kernel.org>, 
+ Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Harshit Shah <hshah@axiado.com>, 
+ SriNavmani A <srinavmani@axiado.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1776174532; l=1471;
+ i=pstepanovic@axiado.com; s=20250916; h=from:subject:message-id;
+ bh=Io/GMsGRNQ4Tnemef2yZeU8ouOWgdCfKz7xZ73DOgKk=;
+ b=rnveu0X2ToRJZnkET/NNBaJTha2iRQu0sq5I+4fT6JVkIoaXn2Y4FaznLDrpt+vD7TtlftdZo
+ SGDc+8JekKqDib6PJGAHF+eD1MVIntJJjrqGAZ5gkY6l7V0NPWQq0Xv
+X-Developer-Key: i=pstepanovic@axiado.com; a=ed25519;
+ pk=70f1UJOGT9U11ZK6o+ENXtv0I5wBE3e+Y9YWODzRsdI=
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D1:EE_|LV8PR18MB5808:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1e2c6c96-1040-4729-da0d-08de9a2c90b8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|36860700016|82310400026|921020|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	QzAVtDEIEZ/AAQIJCa+VrnYfG2eA02W6hQ+cDBNkt7p37YMIru+mGSJEdBeryYcS+ufwin3i4HTP3aej8usaxPwJSCPgF3SIgPOZu5XNwjBZ57cSrNrtaaalkWa67Kz2DSkzOIr3JBvymCFq/RL6FcjMVKUzt/vag0cRSV2ryMa/BougR7FZ9JAFO1nnoaQ2mjfMHcDe92J67dCLyMNehEKVDBQ9vGmSNWzG0q9kc+Wx4AduXqv2t5D0EcJVKdCbfwxY4YbF4QwxzUKGDfMWPjiFZPp7cm7J+IaAaSsrEHDbkj01XGRu4W3CgQ5ju/lhTlQJ641m8z5ZZWRi7bsVMY5chxaHWfI9PTzOHM9hL+lAfek1fBUQgxQqrT1+6934wA6VK+yD27UGZlXI53eGeH98x1E1+Pf1MLhnG9T4DWa1wF6lhi2kKjy2SSwS7pXnufJyYC3z5Nb6OXcAeix0PoqNc+jocn/Hv+rVojp0H0rLY/vrUhiE1S/lI9XhOBTN2BK1HMnkDf7MkC6LLSAjdJaZbATlywm4nmpWTLBNtj/Kj5ZN4qNVnSC236KINMRZX8RL3GjMVsS0HqWvut+qzUGjjeUOJv7Xkw18aEsPMUHAw3xM2gn9isdpdNng9yKe3RrhMKIX86Ych23Rr4uL9gFJvzektojyrY5FngCfkFPBG9BFaj7slhdkSI7GOV2h1+KgshFidsQVJ591f63jJ+yonm6SSCeJRskrM47aBt4NWr+malwOjHDI+a1Ww69PbLwoE5ZwkPO3uhyu2f5zuqmQ7wkxp93GZL8+Nu5+/ubGZxjgySouBcTc+iI0W1XA
+X-Forefront-Antispam-Report:
+	CIP:50.233.182.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtp.corp.axiado.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700016)(82310400026)(921020)(18002099003)(56012099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	8bAJiByhE7wuYndQBFf5M5VjlTjgsp/W1yy7SvOXqI2lNcbsRPXnT/UJEjlH7AslgpED/0LDH+ZJrHLtqF4AuEkDU8LUK3ZPQgb8+SoCd5jC5YuTG9CsbtTKeeXsQraDxrk4RRTe9mHV2PVJQwEFvft5OizDJBEw/0h3vd5/RcDKJ5siXwqkgGZHQpyyrhkgFRJv3NFcinnPaBPT313lnRyV8IY/2+zdgarJnK4oDKS7wAEbySudYB1BTLhCwa0Ol6oYZP6IY04NO49NfSkK7nSJDcH3pQbPSvT6rqd1Q4NAc8QAJ0Y2ppxe2PH4f5gLqK/d89m7HTGj+cqmVZY5ej9KMd+T8rOvO6TeFUwLH9FC4NnsyxOUJNmswfXao6wNm8pO46s3MbGN5CjbTtxLpVJxBhmIEx8jroaCtg8j7IoEWF3wp0QDi/YtDDRHoQQ/
+X-OriginatorOrg: axiado.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2026 13:48:52.9908
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e2c6c96-1040-4729-da0d-08de9a2c90b8
+X-MS-Exchange-CrossTenant-Id: ff2db17c-4338-408e-9036-2dee8e3e17d7
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=ff2db17c-4338-408e-9036-2dee8e3e17d7;Ip=[50.233.182.194];Helo=[smtp.corp.axiado.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001D1.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR18MB5808
+X-Spamd-Result: default: False [0.34 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	R_DKIM_ALLOW(-0.20)[axiado.com:s=selector1];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-35152-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35148-lists,linux-gpio=lfdr.de];
-	FREEMAIL_TO(0.00)[oss.qualcomm.com,gmail.com,ffwll.ch,linux.intel.com,kernel.org,suse.de,huaqin.corp-partner.google.com,xff.cz,redhat.com,edgeble.ai];
-	HAS_ORG_HEADER(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[linaro.org:+];
-	RCPT_COUNT_TWELVE(0.00)[24];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[axiado.com:dkim,axiado.com:email,axiado.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[axiado.com];
+	RCPT_COUNT_TWELVE(0.00)[15];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,arduino.cc:email,linaro.org:dkim,linaro.org:email,linaro.org:replyto,linaro.org:mid,qualcomm.com:email];
-	HAS_REPLYTO(0.00)[neil.armstrong@linaro.org];
-	PRECEDENCE_BULK(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[neil.armstrong@linaro.org,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[axiado.com:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[pstepanovic@axiado.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	REPLYTO_EQ_FROM(0.00)[]
-X-Rspamd-Queue-Id: 83C0B3FA3F7
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: E836C3FAB8A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 4/13/26 16:05, Dmitry Baryshkov wrote:
-> Add configuration for Waveshare 9.0" and 10.1" 720p DSI panels using
-> JD9365 controller.
-> 
-> Tested-by: Riccardo Mereu <r.mereu@arduino.cc>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->   drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c | 312 +++++++++++++++++++++++
->   1 file changed, 312 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c b/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
-> index 7744c66514c9..6fff3299f4ad 100644
-> --- a/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
-> +++ b/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
-> @@ -21,6 +21,8 @@
->   #include <linux/of.h>
->   #include <linux/regulator/consumer.h>
->   
-> +#include <video/mipi_display.h>
-> +
->   struct jadard;
->   
->   struct jadard_panel_desc {
-> @@ -2283,6 +2285,49 @@ static const struct jadard_panel_desc waveshare_8_0_inch_a_desc = {
->   		      MIPI_DSI_MODE_LPM | MIPI_DSI_CLOCK_NON_CONTINUOUS,
->   };
->   
-> +static int waveshare_10_1_b_init(struct jadard *jadard);
-> +
-> +static const struct jadard_panel_desc waveshare_9_0_inch_b_desc = {
-> +	.mode_4ln = &(const struct drm_display_mode) {
-> +		.clock		= (720 + 60 + 60 + 4) * (1280 + 16 + 12 + 4) * 60 / 1000,
-> +
-> +		.hdisplay	= 720,
-> +		.hsync_start	= 720 + 60,
-> +		.hsync_end	= 720 + 60 + 60,
-> +		.htotal		= 720 + 60 + 60 + 4,
-> +
-> +		.vdisplay	= 1280,
-> +		.vsync_start	= 1280 + 16,
-> +		.vsync_end	= 1280 + 16 + 12,
-> +		.vtotal		= 1280 + 16 + 12 + 4,
-> +
-> +		.width_mm	= 114,
-> +		.height_mm	= 196,
-> +		.type		= DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-> +	},
-> +	.mode_2ln = &(const struct drm_display_mode) {
-> +		.clock		= (720 + 50 + 50 + 50) * (1280 + 26 + 12 + 4) * 60 / 1000,
-> +
-> +		.hdisplay	= 720,
-> +		.hsync_start	= 720 + 50,
-> +		.hsync_end	= 720 + 50 + 50,
-> +		.htotal		= 720 + 50 + 50 + 50,
-> +
-> +		.vdisplay	= 1280,
-> +		.vsync_start	= 1280 + 26,
-> +		.vsync_end	= 1280 + 26 + 12,
-> +		.vtotal		= 1280 + 26 + 12 + 4,
-> +
-> +		.width_mm	= 114,
-> +		.height_mm	= 196,
-> +		.type		= DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-> +	},
-> +	.format = MIPI_DSI_FMT_RGB888,
-> +	.init = waveshare_10_1_b_init,
-> +	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO |
-> +		MIPI_DSI_MODE_LPM | MIPI_DSI_CLOCK_NON_CONTINUOUS,
-> +};
-> +
->   static const struct drm_display_mode waveshare_10_1_a_mode = {
->   	.clock		= (800 + 40 + 20 + 20) * (1280 + 20 + 20 + 4) * 60 / 1000,
->   
-> @@ -2627,6 +2672,265 @@ static const struct jadard_panel_desc waveshare_10_1_inch_a_desc = {
->   		MIPI_DSI_MODE_LPM | MIPI_DSI_CLOCK_NON_CONTINUOUS,
->   };
->   
-> +static int waveshare_10_1_b_init(struct jadard *jadard)
-> +{
-> +	struct mipi_dsi_multi_context dsi_ctx = { .dsi = jadard->dsi };
-> +
-> +	jd9365da_switch_page(&dsi_ctx, 0x00);
-> +	jadard_enable_standard_cmds(&dsi_ctx);
-> +
-> +	jd9365da_switch_page(&dsi_ctx, 0x01);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x00, 0x00);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x01, 0x3d);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x03, 0x10);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x04, 0x3f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x17, 0x00);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x18, 0xbf);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x19, 0x01);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x1a, 0x00);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x1b, 0xbf);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x1c, 0x01);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x24, 0xfe);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x37, 0x19);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x38, 0x05);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x39, 0x08);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x3a, 0x1f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x3c, 0x74);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x3d, 0xff);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x3e, 0xff);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x3f, 0xff);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x40, 0x04);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x41, 0xa0);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x42, 0x7e);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x43, 0x1a);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x44, 0x0f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x45, 0x24);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x55, 0x02);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x57, 0xa9);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x59, 0x0a);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5a, 0x38);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5b, 0x1a);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5d, 0x7f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5e, 0x65);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5f, 0x52);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x60, 0x44);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x61, 0x3d);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x62, 0x2d);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x63, 0x2d);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x64, 0x14);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x65, 0x28);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x66, 0x25);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x67, 0x23);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x68, 0x3f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x69, 0x2d);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6a, 0x34);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6b, 0x27);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6c, 0x24);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6d, 0x18);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6e, 0x0a);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6f, 0x00);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x70, 0x7f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x71, 0x65);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x72, 0x52);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x73, 0x44);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x74, 0x3d);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x75, 0x2d);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x76, 0x2d);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x77, 0x14);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x78, 0x28);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x79, 0x25);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x7a, 0x23);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x7b, 0x3f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x7c, 0x2d);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x7d, 0x34);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x7e, 0x27);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x7f, 0x24);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x80, 0x18);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x81, 0x0a);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x82, 0x00);
-> +
-> +	jd9365da_switch_page(&dsi_ctx, 0x02);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x00, 0x51);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x01, 0x55);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x02, 0x50);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x03, 0x51);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x04, 0x5f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x05, 0x77);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x06, 0x57);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x07, 0x5f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x08, 0x47);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x09, 0x46);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x0a, 0x45);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x0b, 0x44);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x0c, 0x4b);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x0d, 0x4a);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x0e, 0x49);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x0f, 0x48);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x10, 0x40);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x11, 0x41);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x12, 0x5f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x13, 0x5f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x14, 0x5f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x15, 0x5f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x16, 0x51);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x17, 0x55);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x18, 0x50);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x19, 0x51);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x1a, 0x5f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x1b, 0x77);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x1c, 0x57);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x1d, 0x5f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x1e, 0x47);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x1f, 0x46);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x20, 0x45);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x21, 0x44);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x22, 0x4b);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x23, 0x4a);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x24, 0x49);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x25, 0x48);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x26, 0x40);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x27, 0x41);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x28, 0x5f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x29, 0x5f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x2a, 0x5f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x2b, 0x5f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x2c, 0x11);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x2d, 0x1f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x2e, 0x01);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x2f, 0x00);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x30, 0x15);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x31, 0x17);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x32, 0x17);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x33, 0x1f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x34, 0x08);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x35, 0x09);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x36, 0x0a);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x37, 0x0b);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x38, 0x04);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x39, 0x05);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x3a, 0x06);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x3b, 0x07);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x3c, 0x11);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x3d, 0x10);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x3e, 0x1f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x3f, 0x1f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x40, 0x1f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x41, 0x1f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x42, 0x11);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x43, 0x1f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x44, 0x01);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x45, 0x00);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x46, 0x15);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x47, 0x17);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x48, 0x17);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x49, 0x1f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x4a, 0x08);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x4b, 0x09);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x4c, 0x0a);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x4d, 0x0b);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x4e, 0x04);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x4f, 0x05);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x50, 0x06);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x51, 0x07);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x52, 0x11);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x53, 0x10);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x54, 0x1f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x55, 0x1f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x56, 0x1f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x57, 0x1f);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x58, 0x40);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5b, 0x10);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5c, 0x07);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5d, 0x40);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5e, 0x01);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x5f, 0x02);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x60, 0x40);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x61, 0x01);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x62, 0x02);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x63, 0x06);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x64, 0x66);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x65, 0x55);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x66, 0x13);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x67, 0x73);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x68, 0x09);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x69, 0x06);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6a, 0x66);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6b, 0x08);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6c, 0x00);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6d, 0x04);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6e, 0x04);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x6f, 0x88);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x75, 0xe3);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x76, 0x00);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x77, 0xd5);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x78, 0x2a);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x79, 0x21);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x7a, 0x00);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x7d, 0x06);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x7e, 0x66);
-> +
-> +	jd9365da_switch_page(&dsi_ctx, 0x04);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x00, 0x0e);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x02, 0xb3);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x09, 0x60);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x0e, 0x48);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x37, 0x58);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x2b, 0x0f);
-> +
-> +	jd9365da_switch_page(&dsi_ctx, 0x05);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0x15, 0x1d);
-> +
-> +	jd9365da_switch_page(&dsi_ctx, 0x00);
-> +	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
-> +	msleep(120);
-> +	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
-> +	msleep(5);
-> +	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_SET_TEAR_ON);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct jadard_panel_desc waveshare_10_1_inch_b_desc = {
-> +	.mode_4ln = &(const struct drm_display_mode) {
-> +		.clock		= (720 + 60 + 60 + 4) * (1280 + 16 + 12 + 4) * 60 / 1000,
-> +
-> +		.hdisplay	= 720,
-> +		.hsync_start	= 720 + 60,
-> +		.hsync_end	= 720 + 60 + 60,
-> +		.htotal		= 720 + 60 + 60 + 4,
-> +
-> +		.vdisplay	= 1280,
-> +		.vsync_start	= 1280 + 16,
-> +		.vsync_end	= 1280 + 16 + 12,
-> +		.vtotal		= 1280 + 16 + 12 + 4,
-> +
-> +		.width_mm	= 125,
-> +		.height_mm	= 222,
-> +		.type		= DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-> +	},
-> +	.mode_2ln = &(const struct drm_display_mode) {
-> +		.clock		= (720 + 50 + 50 + 50) * (1280 + 26 + 12 + 4) * 60 / 1000,
-> +
-> +		.hdisplay	= 720,
-> +		.hsync_start	= 720 + 50,
-> +		.hsync_end	= 720 + 50 + 50,
-> +		.htotal		= 720 + 50 + 50 + 50,
-> +
-> +		.vdisplay	= 1280,
-> +		.vsync_start	= 1280 + 26,
-> +		.vsync_end	= 1280 + 26 + 12,
-> +		.vtotal		= 1280 + 26 + 12 + 4,
-> +
-> +		.width_mm	= 125,
-> +		.height_mm	= 222,
-> +		.type		= DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-> +	},
-> +	.format = MIPI_DSI_FMT_RGB888,
-> +	.init = waveshare_10_1_b_init,
-> +	.mode_flags = MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO |
-> +		MIPI_DSI_MODE_LPM | MIPI_DSI_CLOCK_NON_CONTINUOUS,
-> +};
-> +
->   static int jadard_dsi_probe(struct mipi_dsi_device *dsi)
->   {
->   	struct device *dev = &dsi->dev;
-> @@ -2762,10 +3066,18 @@ static const struct of_device_id jadard_of_match[] = {
->   		.compatible = "waveshare,8.0-dsi-touch-a",
->   		.data = &waveshare_8_0_inch_a_desc
->   	},
-> +	{
-> +		.compatible = "waveshare,9.0-dsi-touch-b",
-> +		.data = &waveshare_9_0_inch_b_desc
-> +	},
->   	{
->   		.compatible = "waveshare,10.1-dsi-touch-a",
->   		.data = &waveshare_10_1_inch_a_desc
->   	},
-> +	{
-> +		.compatible = "waveshare,10.1-dsi-touch-b",
-> +		.data = &waveshare_10_1_inch_b_desc
-> +	},
->   	{ /* sentinel */ }
->   };
->   MODULE_DEVICE_TABLE(of, jadard_of_match);
-> 
+The SGPIO controller provides a serialized interface for
+controlling multiple GPIO signals over a limited number of
+physical lines. It supports configurable data direction and
+interrupt handling.
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+This series adds support for the Axiado SGPIO controller.
 
-Thanks,
-Neil
+The series includes:
+- Device tree binding documentation
+- GPIO driver implementation
+- MAINTAINERS entry
+
+The driver integrates with the Linux GPIO subsystem and
+registers the controller as a gpio_chip.
+
+Tested on Axiado platforms.
+
+---
+Patch 1: dt-bindings: gpio: add Axiado SGPIO controller
+Patch 2: gpio: axiado: add SGPIO controller support
+Patch 3: MAINTAINERS: add Axiado SGPIO controller
+
+Signed-off-by: Petar Stepanovic <pstepanovic@axiado.com>
+
+---
+Petar Stepanovic (3):
+      dt-bindings: gpio: add Axiado SGPIO controller
+      gpio: axiado: add SGPIO controller support
+      MAINTAINERS: add Axiado SGPIO controller
+
+ .../devicetree/bindings/gpio/axiado,sgpio.yaml     |  98 +++
+ MAINTAINERS                                        |   9 +
+ drivers/gpio/Kconfig                               |  18 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-axiado-sgpio.c                   | 780 +++++++++++++++++++++
+ 5 files changed, 906 insertions(+)
+---
+base-commit: 63804fed149a6750ffd28610c5c1c98cce6bd377
+change-id: 20260320-axiado-ax3000-sgpio-controller-00f6e1db6ce9
+
+Best regards,
+-- 
+Petar Stepanovic <pstepanovic@axiado.com>
+
 
