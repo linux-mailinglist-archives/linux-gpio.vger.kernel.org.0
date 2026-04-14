@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-35154-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35155-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yLmTA45L3mkzqAkAu9opvQ
-	(envelope-from <linux-gpio+bounces-35154-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 16:13:34 +0200
+	id OC3XGMhM3mkzqAkAu9opvQ
+	(envelope-from <linux-gpio+bounces-35155-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 16:18:48 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F5D03FAEFE
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 16:13:32 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FABF3FB063
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 16:18:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4F7C130D2B7C
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 14:06:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 782BF301F9C4
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 14:12:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C966D3E7171;
-	Tue, 14 Apr 2026 14:06:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C8563E5EF9;
+	Tue, 14 Apr 2026 14:12:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o7ZcYUUX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qPliRY52"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899453E714F;
-	Tue, 14 Apr 2026 14:06:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AEA32C11FA;
+	Tue, 14 Apr 2026 14:12:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776175614; cv=none; b=nWlzwzSZz2uLXpTzu/3JUl29Ufruy8/8u0Bi/QTU84R579uAV04YsPazx38ismcEZGJ865r97aZb7B66poNzBTlEZojBNVNi9Yb2ixTjbfv4LhuK8ayew0JysyymwLEOKlcjKJgPWEAQo5uBeRWpO4NBdQ/PFI+qo0M4riET0Ng=
+	t=1776175964; cv=none; b=Xt4xzKzMPyNFbx3oRS2HoCwOMdwjTXXoFMNSH0op14lqrCH4jCrPbV0/E8h2DlxGLgtF0Vo+1EH9Q59f0ID7lOLCUR0a98I4FnnvgPZA5inY9PUOC2hBpF22YHKnfx2uW4VUJlDqE82ZFb4s5g/eH0q2ANBh+9/6rfbEiiwl8e8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776175614; c=relaxed/simple;
-	bh=t4X7l3EOKtqGKlDUASynKsS2O0JDUC1jZLEKi60Gtl0=;
+	s=arc-20240116; t=1776175964; c=relaxed/simple;
+	bh=WlH7WsSUqw0QpoPiI2l2MTr6QiRnePDgSL/y4mefmdE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sNpDRTChT/dBzmxzl47zBAyoj1lCJJUAO8dvh9OcuxgtxkP8BLEwQXeEHNnx3ziMGpQD9ka/cSyX7+7tLzKvHuGem1XXAjKIdZi80RwFU12xnnShLb8FCR+QE7s/KvlI2ntD8LS78c8Ci3k43cf4T1B0IYBihSs9tnP0TthqCLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o7ZcYUUX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22419C19425;
-	Tue, 14 Apr 2026 14:06:50 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Swz2P8BZ0FdGWB6nhEFaAmO2WaMqU5BZ4FHWBIUfl5EetZTGuxv30AY4yAudQcnc0dJrKJ03NLAkEYjBNjMqM5UrdgIA/tYKx16ah+DBFLGePdR7H1yUU2xF0wvTSUDPX/NYZjEZe/Oc5yTRiVWlIXkrNaCs8OQCHBVftECFOc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qPliRY52; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0169C19425;
+	Tue, 14 Apr 2026 14:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776175614;
-	bh=t4X7l3EOKtqGKlDUASynKsS2O0JDUC1jZLEKi60Gtl0=;
+	s=k20201202; t=1776175963;
+	bh=WlH7WsSUqw0QpoPiI2l2MTr6QiRnePDgSL/y4mefmdE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=o7ZcYUUXmJIzKgU/9IBQaeyg135a8wfN3ysTO6yKUruwITxim+o89AicYt2Ac3JGu
-	 PqoRlMm5Q8KZ5ar3Wk5jf9GTFio0do+qeh6cJwo+0sBobrHoNm1+U51Ktj4LoGPLCO
-	 cnWNGyjA5SLltTI8cjcA1AT63S/366sB5VBFhBShesl1B/OtBVrPPAaumhOVHEkmes
-	 6mwBDcGJeYp4IUS3I5wcISewbZRuK6TRYOUt9ut3/HqDYXgJGNQOfFiDDTFquf+dPg
-	 +fRTaKybMMdk5ipLZ8Ny0glgaypBRMuVSig861H2UEm91yN1jwjYb6IH6/fT2Rv+NP
-	 c16mKpnGeLjiw==
-Message-ID: <4d0a05b9-664d-4a2b-9a35-1b93726e2c33@kernel.org>
-Date: Tue, 14 Apr 2026 16:06:49 +0200
+	b=qPliRY52jXXxQrUo0YryBcH8lTQhb/vhW1dpZb+gnhByeRzbLlqBmHi2xWHZZPeKE
+	 BmsWlWZzFJ6f6D98cFvcllablPOE2JkXD1JjHmXi5wTUwddzuNx9oXNZrvhlE0CQvK
+	 uX77Z4CCzWFuSwcuNi6sAHTS4N4t8xHC+66DLbdmC0k3zxQnv/bfe67cCyW0+LeOoi
+	 trhLSNrbfxhyVuql6hXrKoJm9tOwQosi5YY9Kev3xBWeAmdAuen6a/fGI9C61Wxl+k
+	 I1DUJqnpdwTMhDzCYfzQuh+flDhAENQdNg6fjfc9teHDWpOY1YE7+a1xrUXwVqQfTO
+	 mIZ6SW1QBJWqQ==
+Message-ID: <cadd1ab2-a70a-4f7f-9bd8-3146ddacc2cc@kernel.org>
+Date: Tue, 14 Apr 2026 16:12:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: gpio: add Axiado SGPIO controller
+Subject: Re: [PATCH 3/3] MAINTAINERS: add Axiado SGPIO controller
 To: Petar Stepanovic <pstepanovic@axiado.com>, Tzu-Hao Wei <twei@axiado.com>,
  Swark Yang <syang@axiado.com>, Prasad Bolisetty <pbolisetty@axiado.com>,
  Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
@@ -63,7 +63,7 @@ To: Petar Stepanovic <pstepanovic@axiado.com>, Tzu-Hao Wei <twei@axiado.com>,
 Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <20260414-axiado-ax3000-sgpio-controller-v1-0-b5c7e4c2e69b@axiado.com>
- <20260414-axiado-ax3000-sgpio-controller-v1-1-b5c7e4c2e69b@axiado.com>
+ <20260414-axiado-ax3000-sgpio-controller-v1-3-b5c7e4c2e69b@axiado.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,26 +109,26 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260414-axiado-ax3000-sgpio-controller-v1-1-b5c7e4c2e69b@axiado.com>
+In-Reply-To: <20260414-axiado-ax3000-sgpio-controller-v1-3-b5c7e4c2e69b@axiado.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35154-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35155-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[15];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
@@ -137,54 +137,30 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[a000:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 5F5D03FAEFE
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,axiado.com:email]
+X-Rspamd-Queue-Id: 0FABF3FB063
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 On 14/04/2026 15:48, Petar Stepanovic wrote:
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - axiado,sgpio
-
-That's a SoC no? Where is SoC compatible?
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +  design-variant:
-
-Sorry, but no, none of this and further properties apply to DT. Drop all
-of them.
-
-Please also read writing bindings so you won't make trivial mistakes.
-
-...
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 67db88b04537..56835c0a1863 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4234,6 +4234,15 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/sound/axentia,*
+>  F:	sound/soc/atmel/tse850-pcm5142.c
+>  
+> +AXIADO SGPIO DRIVER
+> +M:	Petar Stepanovic <pstepanovic@axiado.com>
+> +M:	SriNavmani A <srinavmani@axiado.com>
+> +M:	Prasad Bolisetty <pbolisetty@axiado.com>
 
 
-> +    sgpio@a000 {
-> +            compatible = "axiado,sgpio";
+I also expect reviews from the remaining maintainers, especially in all
+the trivialities like posting very old code patterns.
 
-Don't come with own style, please. Look at other files.
-
-> +            reg = <0xa000 0x800>;
-> +            gpio-controller;
-> +            #gpio-cells = <2>;
 Best regards,
 Krzysztof
 
