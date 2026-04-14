@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-35153-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35154-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AE2bJhBL3mkzqAkAu9opvQ
-	(envelope-from <linux-gpio+bounces-35153-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 16:11:28 +0200
+	id yLmTA45L3mkzqAkAu9opvQ
+	(envelope-from <linux-gpio+bounces-35154-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 16:13:34 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 414EE3FAE6D
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 16:11:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F5D03FAEFE
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 16:13:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 47856302416F
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 14:05:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4F7C130D2B7C
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 14:06:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F1923E7169;
-	Tue, 14 Apr 2026 14:05:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C966D3E7171;
+	Tue, 14 Apr 2026 14:06:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XRQYte4a"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o7ZcYUUX"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513543A4F37;
-	Tue, 14 Apr 2026 14:05:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899453E714F;
+	Tue, 14 Apr 2026 14:06:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776175505; cv=none; b=cJ4hXGrqFB08LXuiI6+BHaqOTckErJHp/9uYo85T6Z5vpoPef7e69Su3xGTjtKKN4kXXfsxB2h6mJ5ujbknHOcS76marJgTrCRmD6UPi4gbZVvfj9G9Y3cFD2qxirRdPRxm44tx1h0909WsPFGoarhVDhh0LEaN+GDbDCMy509w=
+	t=1776175614; cv=none; b=nWlzwzSZz2uLXpTzu/3JUl29Ufruy8/8u0Bi/QTU84R579uAV04YsPazx38ismcEZGJ865r97aZb7B66poNzBTlEZojBNVNi9Yb2ixTjbfv4LhuK8ayew0JysyymwLEOKlcjKJgPWEAQo5uBeRWpO4NBdQ/PFI+qo0M4riET0Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776175505; c=relaxed/simple;
-	bh=OF74E1jQi9q8RugvWARpV7zDv+GE0MY3No45lifQv/4=;
+	s=arc-20240116; t=1776175614; c=relaxed/simple;
+	bh=t4X7l3EOKtqGKlDUASynKsS2O0JDUC1jZLEKi60Gtl0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N4WjZd0yj6LnoY1tIqY2YZ6oPcYOgSeHwSwfhHQC1xUf3njs7HUvsEsDHXBmOUH1iU046dgQSLBwfLmEu9TfbebI8jyhNHMni8Ss6KrPqeAoGSkjkdeXFnqi+W2k4e1Ud8+kAArPfqPCxHD5tPew6/FwBcaMS2MG3Naw16dFwQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XRQYte4a; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF9C0C19425;
-	Tue, 14 Apr 2026 14:05:01 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=sNpDRTChT/dBzmxzl47zBAyoj1lCJJUAO8dvh9OcuxgtxkP8BLEwQXeEHNnx3ziMGpQD9ka/cSyX7+7tLzKvHuGem1XXAjKIdZi80RwFU12xnnShLb8FCR+QE7s/KvlI2ntD8LS78c8Ci3k43cf4T1B0IYBihSs9tnP0TthqCLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o7ZcYUUX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22419C19425;
+	Tue, 14 Apr 2026 14:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776175504;
-	bh=OF74E1jQi9q8RugvWARpV7zDv+GE0MY3No45lifQv/4=;
+	s=k20201202; t=1776175614;
+	bh=t4X7l3EOKtqGKlDUASynKsS2O0JDUC1jZLEKi60Gtl0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XRQYte4arHLokcDvFI9HBWgNA9wtDMJVYVJbkgQeM2bC47GJWfUNsI4BoF5ra/O8D
-	 bAh6VdqSSceAQeK4BW1KcIJDDxbp3mthjclhC8Kc1c7wFfoFNCot5w09okpk6ZOVQD
-	 /pItKbut6ccWoajFKFZ2XWijoqG1s2nshmzdA/nfB4VSyou7tGxjAOxLuoNk1Bn+5q
-	 Fgu/vk9cAMDWElgaYzZpHA6EBs7GtLtXCPQ9k8K+SGQdwFVTibwShZuw23DZk9rH6G
-	 UrRxl/x3RuLoD/xry8YYLU6yj8rBQH21z2pL6nkSiQXE3/cJbLlh9sd6mmKOoxI2sB
-	 LUWCi73Ox/S1g==
-Message-ID: <247a2a55-14e5-469b-908a-54ffebe035d8@kernel.org>
-Date: Tue, 14 Apr 2026 16:04:59 +0200
+	b=o7ZcYUUXmJIzKgU/9IBQaeyg135a8wfN3ysTO6yKUruwITxim+o89AicYt2Ac3JGu
+	 PqoRlMm5Q8KZ5ar3Wk5jf9GTFio0do+qeh6cJwo+0sBobrHoNm1+U51Ktj4LoGPLCO
+	 cnWNGyjA5SLltTI8cjcA1AT63S/366sB5VBFhBShesl1B/OtBVrPPAaumhOVHEkmes
+	 6mwBDcGJeYp4IUS3I5wcISewbZRuK6TRYOUt9ut3/HqDYXgJGNQOfFiDDTFquf+dPg
+	 +fRTaKybMMdk5ipLZ8Ny0glgaypBRMuVSig861H2UEm91yN1jwjYb6IH6/fT2Rv+NP
+	 c16mKpnGeLjiw==
+Message-ID: <4d0a05b9-664d-4a2b-9a35-1b93726e2c33@kernel.org>
+Date: Tue, 14 Apr 2026 16:06:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] gpio: axiado: add SGPIO controller support
+Subject: Re: [PATCH 1/3] dt-bindings: gpio: add Axiado SGPIO controller
 To: Petar Stepanovic <pstepanovic@axiado.com>, Tzu-Hao Wei <twei@axiado.com>,
  Swark Yang <syang@axiado.com>, Prasad Bolisetty <pbolisetty@axiado.com>,
  Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
@@ -63,7 +63,7 @@ To: Petar Stepanovic <pstepanovic@axiado.com>, Tzu-Hao Wei <twei@axiado.com>,
 Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <20260414-axiado-ax3000-sgpio-controller-v1-0-b5c7e4c2e69b@axiado.com>
- <20260414-axiado-ax3000-sgpio-controller-v1-2-b5c7e4c2e69b@axiado.com>
+ <20260414-axiado-ax3000-sgpio-controller-v1-1-b5c7e4c2e69b@axiado.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,7 +109,7 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260414-axiado-ax3000-sgpio-controller-v1-2-b5c7e4c2e69b@axiado.com>
+In-Reply-To: <20260414-axiado-ax3000-sgpio-controller-v1-1-b5c7e4c2e69b@axiado.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-2.16 / 15.00];
@@ -121,7 +121,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35153-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35154-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -137,126 +137,54 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 414EE3FAE6D
+	DBL_BLOCKED_OPENRESOLVER(0.00)[a000:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 5F5D03FAEFE
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 On 14/04/2026 15:48, Petar Stepanovic wrote:
-> +
-> +	for (i = 0; i < sgpio->max_offset_regs; i++) {
-> +		sgpio->slices[2].reg_ss[i] = 0;
-> +		dout_value = be32_to_cpu(prop[i]);
-> +
-> +		for (dout_reverse = 0; dout_reverse < 32; ++dout_reverse) {
-> +			sgpio->slices[2].reg_ss[i] <<= 1;
-> +			sgpio->slices[2].reg_ss[i] |= (dout_value & 1);
-> +			dout_value >>= 1;
-> +		}
-> +	}
-> +
-> +	sgpio_hw_init(sgpio);
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - axiado,sgpio
 
-Odd style
-
-> +	if (irq < 0) {
-> +		dev_err(&pdev->dev, "Failed to get parent IRQ: %d\n", irq);
-> +		return irq;
-> +	}
-> +	/* Store parent IRQ for cleanup */
-> +	sgpio->parent_irq = irq;
-> +
-> +	rc = devm_request_threaded_irq(&pdev->dev, irq, NULL, sgpio_irq_handler,
-> +				       IRQF_ONESHOT, "axiado-sgpio", sgpio);
-> +
-> +	if (rc < 0) {
-> +		dev_err(&pdev->dev, "Failed to request threaded IRQ %d: %d\n",
-> +			irq, rc);
-
-Nope
-
-> +		return rc;
-> +	}
-> +
-> +	sgpio->chip.parent = &pdev->dev;
-> +	sgpio->chip.ngpio = sgpio->ngpios * 2;
-> +	sgpio->chip.owner = THIS_MODULE;
-> +	sgpio->chip.direction_input = ax3000_sgpio_dir_in;
-> +	sgpio->chip.direction_output = ax3000_sgpio_dir_out;
-> +	sgpio->chip.get = ax3000_sgpio_get;
-> +	sgpio->chip.set = ax3000_sgpio_set;
-> +	sgpio->chip.label = dev_name(&pdev->dev);
-> +	sgpio->chip.base = -1;
-> +
-> +	girq = &sgpio->chip.irq;
-> +
-> +	girq->chip = &axiado_sgpio_irqchip;
-> +	girq->handler = handle_edge_irq;
-> +	girq->default_type = IRQ_TYPE_NONE;
-> +	girq->num_parents = 1;
-> +	girq->parents =
-> +		devm_kcalloc(&pdev->dev, 1, sizeof(*girq->parents), GFP_KERNEL);
-> +	if (!girq->parents) {
-> +		dev_err(&pdev->dev, "Failed to allocate parents array\n");
-> +		return -ENOMEM;
-
-Ykes...
-
-> +	}
-
-
+That's a SoC no? Where is SoC compatible?
 
 > +
-> +static struct platform_driver sgpio_driver = {
-> +	.driver = {
-> +		.name = "sgpio",
-> +		.owner = THIS_MODULE,
-
-Uh, that's 13 year old code. Please drop everything and write from
-scratch using latest reviewed drivers as your base. No point to repeat
-same review and fix the same issues we already fixed during last 13 years...
-
-> +		.of_match_table = ax_sgpio_match,
-> +	},
-> +	.probe = sgpio_probe,
-> +	.remove = sgpio_remove,
-> +};
+> +  reg:
+> +    maxItems: 1
 > +
-> +static int __init ax_sgpio_init(void)
-> +{
-> +	int ret;
+> +  gpio-controller: true
 > +
-> +	ret = platform_driver_register(&sgpio_driver);
-> +	if (ret < 0) {
-> +		pr_err("Failed to register SGPIO driver\n");
-> +		return ret;
-> +	}
+> +  '#gpio-cells':
+> +    const: 2
 > +
-> +	return 0;
-> +}
+> +  interrupts:
+> +    maxItems: 1
 > +
-> +static void __exit ax_sgpio_exit(void)
-> +{
-> +	platform_driver_unregister(&sgpio_driver);
-> +}
+> +  interrupt-controller: true
 > +
-> +module_init(ax_sgpio_init);
-> +module_exit(ax_sgpio_exit);
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +  design-variant:
 
-And that's one more.
+Sorry, but no, none of this and further properties apply to DT. Drop all
+of them.
 
-module_platform_driver, no?
+Please also read writing bindings so you won't make trivial mistakes.
 
-> +
-> +MODULE_DESCRIPTION("Axiado Serial GPIO Driver");
-> +MODULE_AUTHOR("Axiado Corporation");
-> +MODULE_LICENSE("GPL");
-> 
+...
 
 
+> +    sgpio@a000 {
+> +            compatible = "axiado,sgpio";
+
+Don't come with own style, please. Look at other files.
+
+> +            reg = <0xa000 0x800>;
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
 Best regards,
 Krzysztof
 
