@@ -1,399 +1,272 @@
-Return-Path: <linux-gpio+bounces-35143-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35144-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OEyGNh0k3mk1ngkAu9opvQ
-	(envelope-from <linux-gpio+bounces-35143-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 13:25:17 +0200
+	id EGHYCxc53mkxpgkAu9opvQ
+	(envelope-from <linux-gpio+bounces-35144-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 14:54:47 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7A3D3F9474
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 13:25:16 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 185823FA312
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 14:54:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 97C8A301C909
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 11:25:14 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 6DE173014B86
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2026 12:54:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 034FF3D9DB0;
-	Tue, 14 Apr 2026 11:25:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 809793E63A2;
+	Tue, 14 Apr 2026 12:54:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J+zzUVph"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="T9TEvwTG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00128a01.pphosted.com (mx0b-00128a01.pphosted.com [148.163.139.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84D53168EE;
-	Tue, 14 Apr 2026 11:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776165911; cv=none; b=ise3w0ZVQg5x7ZG123VXTnTR8BSnttBovEzikUWkQSXcdtM9KVz7dezVXk6vq/jXVo9hSIIzgIfmzghMqkQjNIh1+nknsYdjYHGH5aR9+z3MlJ4jWBZFcANrYfGf0RDPiiUuEGwAEbR7JkEqwG1MM1TrOHz3mS2tVQ2HhpBNZxU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776165911; c=relaxed/simple;
-	bh=h3YBr9Hc1kwJDNaFQDk42AGu7C55cR3ZCxSi64OOvp4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oT07b94jNVI0Y1AqwADxfIY4owu746SE6zu28mnJfv0MVibAkr143bTCZ9EbmeWRnRpZGSDd6UCQjLTMqnojWoNOUF/fQdd8VBWPqkmFPu+N49+ypRZ6Syq4IPwc2yTceM+pY2Np1hV+c8hUxFX8rrtlKYamzyfiaAM0E3vsTX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J+zzUVph; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88504C19425;
-	Tue, 14 Apr 2026 11:25:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776165911;
-	bh=h3YBr9Hc1kwJDNaFQDk42AGu7C55cR3ZCxSi64OOvp4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=J+zzUVphh2htPrvHLn5uCwIveDTjOy4+xC8WHdu+xUKYNd1SoPWb3u6btxT8ll8mb
-	 gtSFPLKcHxZggnru2kfk+BrhPXTy68y36A+Hnrr87vQjOthcd60f41DtZ+rcyLyRJI
-	 wnuHJqZfsGAWf3kINEGd4ZNEu7Q7GAF+pWtXXmffCdI9D2U+aP8ngjXGXxmfwiwWdf
-	 61P8TPCOQfoRU33/N6Wb5iEJXeOGpyVLxcJr0QHkQzv7KoUCY8UEhvm5MyDh/YnwGG
-	 3TX88l99AyBBQHWASTzY8BNmiPiHp9eb4iJmOg1rqxU9rPqM4w+fUDcUNol3iD89fS
-	 +r5kBSFZYYv+Q==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	mika.westerberg@linux.intel.com,
-	andy@kernel.org,
-	linusw@kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.19-5.15] pinctrl: intel: Fix the revision for new features (1kOhm PD, HW debouncer)
-Date: Tue, 14 Apr 2026 07:24:57 -0400
-Message-ID: <20260414112509.410217-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.53.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68BC20DE3;
+	Tue, 14 Apr 2026 12:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.139.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776171281; cv=fail; b=irzhY0E3dUMUH5auZiE4wfEiwyTnA9o0uP7CavRnGPfee1n0kzd5OHDnhvGJlxpeix0z1qKNDP5/627nLoBWSt1f9Ys8lVLWJNDkKHzJ8GcmxBzTnnWv8gsV91NV8IP8C5uiUmyUx2Ulafrn6vQLEScF9Xf+FwrA4lkMDuh6RTc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776171281; c=relaxed/simple;
+	bh=+W3I3AHJOnV8czxIf47dXHOOjCKkxMchgnM8yg4znM0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=oldrs/a/nIdEnm3vP4Kfy738pkw4pKmUxLifubAZ3tj1Quh+LRCmMAcmwe57zYNBfOKl6ErcSwDqdV4YaFx0oZam+syikkp4UB+a5+uBde0ayU8299QgQuvunNT0IpHTMN1bE5SYVk8jyKGtlrDLX8i6FE6VA14uQOpBElpMtWA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=T9TEvwTG; arc=fail smtp.client-ip=148.163.139.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0516786.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63E5Vk0l1997990;
+	Tue, 14 Apr 2026 08:54:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=+W3I3
+	AHJOnV8czxIf47dXHOOjCKkxMchgnM8yg4znM0=; b=T9TEvwTGVpaIjD/YZBwGt
+	RmAD3jG0CdOW11hUufMqUI0Dcyom3uPCl/DHwXVxIcIMSZ+9ku9iwrHqoAEd4R8C
+	8BdB5lrIwB+bxLd6auSz65+v3kY387Auhx21yjZaZhnjbhOXyE6jl/5mFPCpUK3z
+	L368bI2+7me+gJFDnuhm8c6C+yQTng8as77KnOYAuPUYzFTDZxOKNA54VzK+a2l/
+	Z109SeXqeX9KunPfrr7/XtUegeIpjOqIqSx2H6zG/VxPvNm2SBUJfdXye+R4kIGw
+	aHUdHW77XZoaUpZEb6/3rI8GqhT6iMpb29xuxEFp8c37DV6Kbjjz8n/rRcxrn+v3
+	Q==
+Received: from ph7pr06cu001.outbound.protection.outlook.com (mail-westus3azon11010031.outbound.protection.outlook.com [52.101.201.31])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 4dh84na715-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Tue, 14 Apr 2026 08:54:09 -0400 (EDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CtaDU/opsR8+dYafpnMzwi1KGUfysqx0+VsIQ+HHX/DuOePNZZ/ZNfwUtV3VNIB4QuHvbAZH4vXcxNdrSbYVfZD9yJBz+kuHf3fnpJQx5z5BJleoUc6ebYScZ672CfmeHaSoqQLbNragDTeKYk3kXsJ2lSuLrskMAf06zZ3ae9shXBGUUfBeyTmqlFtPaU6Q2xWxsTasUDijQ3jMnzZtwCIMLYaoeLNN7Jr3ZFAxLaAJeTYAEMksVVZ1pBwXkNR15zQ/kNJPjCbx3RBnmOO6SE5aSu9M0EXpetNRcBQFBB/VnxnW7tZKqU5OV9m/NcSF9dbx0bEccKb9D5Okhj7R9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+W3I3AHJOnV8czxIf47dXHOOjCKkxMchgnM8yg4znM0=;
+ b=YPabhQgvAsBNR7WkCMo1yqhY9p5jJRX0oN9sUcHl1GK2kAFAS+q+GJ6X3ONBcPtD5gMvqIItGB30xzkM/604TDo9r1nieeW/NXSp7uf9xHdbrNgUEqH9DH2WeMsT0aKS7Wf4jrY0d4XTH543Yw+iAuHnc6uQUiTC2/GH9ouoRcvGVgB0cfX5dpfa39yLUsXvfw3+glOG+HkEaR4sR06Ya/pQ6G8zHaUNSmUolphQhgfPhSAFWVFJirp6o9MSBlMazAjO7PzhUcZOuk+5VR9SGNMLDAgnY5CYN3Ck21z9bGOccEYuEIQPPQkTUCJmZ5xYERm7Yc+YvIJ0S6sxH7usvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+Received: from LV9PR03MB8414.namprd03.prod.outlook.com (2603:10b6:408:367::23)
+ by SA6PR03MB7734.namprd03.prod.outlook.com (2603:10b6:806:43b::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.23; Tue, 14 Apr
+ 2026 12:54:05 +0000
+Received: from LV9PR03MB8414.namprd03.prod.outlook.com
+ ([fe80::d661:7c16:d052:cc81]) by LV9PR03MB8414.namprd03.prod.outlook.com
+ ([fe80::d661:7c16:d052:cc81%6]) with mapi id 15.20.9769.046; Tue, 14 Apr 2026
+ 12:54:05 +0000
+From: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>
+To: David Lechner <dlechner@baylibre.com>,
+        Lars-Peter Clausen
+	<lars@metafoo.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>, "Sa, Nuno" <Nuno.Sa@analog.com>,
+        Andy
+ Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <ukleinek@kernel.org>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Linus Walleij
+	<linusw@kernel.org>,
+        Bartosz Golaszewski <brgl@kernel.org>,
+        Philipp Zabel
+	<p.zabel@pengutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Shuah Khan
+	<skhan@linuxfoundation.org>
+CC: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: RE: [PATCH v7 6/6] docs: iio: adc: ad4691: add driver documentation
+Thread-Topic: [PATCH v7 6/6] docs: iio: adc: ad4691: add driver documentation
+Thread-Index: AQHcyDWJomzupQjRrEa04kfReeoCrrXY1GkAgAW19nA=
+Date: Tue, 14 Apr 2026 12:54:05 +0000
+Message-ID:
+ <LV9PR03MB8414B21076633842E8E3286EF7252@LV9PR03MB8414.namprd03.prod.outlook.com>
+References:
+ <20260409-ad4692-multichannel-sar-adc-driver-v7-0-be375d4df2c5@analog.com>
+ <20260409-ad4692-multichannel-sar-adc-driver-v7-6-be375d4df2c5@analog.com>
+ <9c36ee85-12da-41e8-b9ab-e32b7ec29e75@baylibre.com>
+In-Reply-To: <9c36ee85-12da-41e8-b9ab-e32b7ec29e75@baylibre.com>
+Accept-Language: en-US
+Content-Language: en-GB
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: LV9PR03MB8414:EE_|SA6PR03MB7734:EE_
+x-ms-office365-filtering-correlation-id: dfd24307-9cb7-414a-c312-08de9a24e913
+x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|1800799024|7416014|366016|921020|38070700021|18002099003|22082099003|56012099003;
+x-microsoft-antispam-message-info:
+ WHHayOlXNe/NRyCEQCB+C0GQXALobp1pNl7f2LyGqoO/h4fy5MrEi634SHqoyCbC6do0A23XFwIJnEUariNqDfJ1f7rKWxh0dnKdqHfXg6077zpisNaCFl71I1fAjDjv88OHob0vt4tFD1kHBAarUX54bLgF4B/UCftIEJ/w9jdKUFMe2S7NTkOo+VAxP1pB0m9yUxZNUM/Q+Kzyxsmm0s7ApHUx7f+Az2PzeG+2YGLslF7abyJx7Fug8P7Q0YHV6vWBTZmLsn/7n+Cm5uxx6SafHWpWD552EiNWpfqZ3YWGumJEYSAGzjzj3Jyl1J+0w24gLlM+7tAqD5z9R5m3DJj5UPAT0amV/rf1LMHXu4kD4PMS8OseE+KhaYxDbg5pdqAgFYoDPqaB/vpW+hjdYJLCrzqxcuv4LNDI+zuGBPC8OZ6Z0JTivWHp+Sqe6YbBZdQXvwgxVIb+RNEifYhb0ce6hpmSqED5xKTfEKjuTfPH35Fin3NQHMEf/6W+Vt18Tl/K1yJKt2qRzGNArWKFzcXLhhpjVFkAVO2rv35sYPVixCnIKasj5x22tdrLH9CwGu1fWCXsw9sjdkDquyLcpXyv/OwoaipVl+ZNxdD+Pt14K/BI5RqrLGzTC1XdPm0aMqy7XSY7lZ16dksP5SjTugsLe4h3z/ncAc30qs28jaW02yoEVHOEmIco7/S9XBqigmRQiyDPL/EhdvwBlmKVPR7I+zV4EuEZjSDkOlcpQosGRYhhmDUg8EPNVbjfifIPHNtPS8Q2pmw58X7SbHxpvFrJZqZ0QBg+tkzeUGFw1dR0O8gE0SrzgWWXc6PgxvIQ
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV9PR03MB8414.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(921020)(38070700021)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?NENXS3BYWnRDUDJ3NElyN1NuQmlha2JhWlRsQTJWTTd5OTlIU05iWGR5Vktq?=
+ =?utf-8?B?bW4vVG4rWkZtZ3FReWtDSGlWMU5oZFgxTTJaSERhVEN4RDVHck01WkM2NzVE?=
+ =?utf-8?B?N1dIQnljeDJtRm5sSHQxQ2doV1VuMGlyNlJncUF5U1VVdmdZL1BITHVtaWs2?=
+ =?utf-8?B?SUhBeGJ0ZlJuRWI1STZEb09tZEZLaU12Z0RHazlDMGFDWTN5eExrdXQrdjVq?=
+ =?utf-8?B?MllsanRqQTdwMk04ejQvOWZMTmJtaWNWalIvenhpOG9qV3pHemZoS05UQzNo?=
+ =?utf-8?B?amoxZlhYS2hsV3pIS2dLUW11ckVkMjJHQWF3UlgwdmE1MktCYnhKaCtwZzdZ?=
+ =?utf-8?B?bnFPK0x2d2RvbGdXcVRvZnZQQU5XRWxmcE1DQXV0UkdWMUZGWGRUNUpwYVMv?=
+ =?utf-8?B?M2lOc0tOVklRME9lOWlpTlBDOG5NdEdrVkZDOTJHMUx2ZjFNdjFGRVpQdUFS?=
+ =?utf-8?B?UFBEOEd4M29UWkZqdnlXcXBBNWtySWpFd3QxK0c1WThWRXdTaWtXclllMTR4?=
+ =?utf-8?B?M0dDWHl2SjVyZ1ZlZWhVelVXbE15ZWhkTTIzK0RwODRWSldqRFpmcmNPYlFV?=
+ =?utf-8?B?WFA2L3V6K3p1c2NpcEp6SFJHSmZvb3BRNTBwSlBmQUlQaE9ZSFJiNGpaa2s2?=
+ =?utf-8?B?ZFVXUEc2akc2ZENwdm1sNVQ1M2xaQ0djNWsxc2puWk52TmhSM3UrWXNpM2xE?=
+ =?utf-8?B?dkN5NUgwODN2K1FjUGJObHlRNXJVVS9Vaml3TmhLbXViNHQ2Szlvb2VZSDhL?=
+ =?utf-8?B?REhBNjFZOXNYRE1OQWVCTlozSHNPWkJMK1d6d294ZkZzdkhQcGVmNnFPTTgr?=
+ =?utf-8?B?WjVFMzE5NndMeG5JTnI5clpYeXNkY1RnUkNCd003bGlobTZJencxZjlzbXFR?=
+ =?utf-8?B?Z3BtVFlXeHRHdkFuQnF1bXpPN1F2NEJZelhLYmF4VVZjQVVla2twbzhIM3d0?=
+ =?utf-8?B?Rzg1dU9PamNFSGJPMFl3c1c0TDFUZHhwSGtpb0xyVkpnVWpLcFdCOXhEZjJ3?=
+ =?utf-8?B?UVJZTzI3MStycHZpQXBWNVQ2RXllc2xoYmRWd1ZrOWNSczhkWTNBZnk0emJB?=
+ =?utf-8?B?MUVQZzg4VXZ6cWdEQ1k1NFU2NHQ0MzkyaXF1Zi9odXJiZEFQeGZCM2dDTy9m?=
+ =?utf-8?B?RHBwQUkxUFBUUFFxTzVHdGM3ZVJlenQ0T21xSTZITGhTbE50VU5oVnYzS3ZF?=
+ =?utf-8?B?enJqSjRCSjNGMFNuNXN2VGZuWTJXeThweDl2clJNMlpLOENBVUFucVlPeFRs?=
+ =?utf-8?B?TkUzVVlOT0RJaDQ3VGQwOVpLL1hGS1NuNTNEMjluUXIzOGNBUmlFTE4yQXU2?=
+ =?utf-8?B?Nzc1dW5xZnBweGgzNThicHc2am9ndkI3MktQL0V0ZWNuS3lVbGNSM29RcXRV?=
+ =?utf-8?B?RHkzTnpjd0YwcTlvbXAybitpc1lIM3kyM1hEajJwN0RkOHZrajlpZ1VXS2s3?=
+ =?utf-8?B?MGlrbnE4YVJCYUpMa3NPQzNUQzM4OU5KWXhlY3hmcmJTVnh0a3BLQWhtcmtm?=
+ =?utf-8?B?MUtEZVdqOElqMCtCUXMzTHRqaVI4eTNoQTVHRVQyWnQ3bHczWWtFSkFaSW42?=
+ =?utf-8?B?Smkwb3Y3NVhnQnpPNnFCU2lWNlhsNlFVdU1UaDJidHZhUVRaWFpoRlFsTVNJ?=
+ =?utf-8?B?Y2VuUy9kbm9BMWt3WWVmalBCWXdOZHdHVjRTc1RXeW5idFZWbW5YWWlhaFU0?=
+ =?utf-8?B?aFQzcWhTTHgrem1xWFVBa3RkYUlYdC9FSXlPb1c5VXp4aENWSTdRU3hYbVpC?=
+ =?utf-8?B?aWN3UGo2ZzFNc05WYWdnNHV1cVMwT2VldDVoTmdOdWg5cUY3RU5RNVpCZGxF?=
+ =?utf-8?B?RnZzaVpFZTFMZk0vLzhlN3IxTFV4RER4SllNOHlyOWIybDNmT1dTak1XcFo3?=
+ =?utf-8?B?TUJVNk1JUHBxNXBjMTh0eWtPRldhU09PTVRXbDAyNHRFOEpiNEhKUzBZK1BE?=
+ =?utf-8?B?SjNMUjVocVlCeXVqVm5jZ0l3M1UyOHBjZkphVjFmQ0J1UHVEWkxGN0ZKNitO?=
+ =?utf-8?B?cmYvMEMvM1VoTDROQm9FeERCSVNSV1FBdVc4YkVMNGU5WHhuMjJWNnp5cWpn?=
+ =?utf-8?B?UDlGOXhiM3Y4aTJiZXJldWt1T1dZNGQzTUtBekRTTWkzZENoeDlnNnV5MVdT?=
+ =?utf-8?B?SlJ2QXVneXlyOUJSTzM2NGNBOTVkRW9Qd1dneWxsZlV6Q09Id0lYdnErVmlB?=
+ =?utf-8?B?Mi9iN1pFeVFmTG9JbDg1SDJFTWw2T2tpYmYvL1VJbUJmV254UHhuU0FvZlZV?=
+ =?utf-8?B?Zm9CcUQ0QjNnK0UybzR3Y0FpSUw2RzBocU5IU3hvalJBU0RzWHJvYVQzektJ?=
+ =?utf-8?B?SGl0SFdrWitsNnhiMi9GSDlmL0VaZHUzVVJRWi9ZRGs4YXk0S3hidz09?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.19.12
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-1.16 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+X-Exchange-RoutingPolicyChecked:
+	DkScqt/ut6uE/j5kFrKbuHEfwCjrToKzO04pKZsvBsZgZLLVqQlviVCPQCogmLQiZZF2mfh0elKL5RJe+0gOTi6xTIbXEBNl/qQlcQ1E0aHbfa5gO0Cpeky6k/+B4I81C23qrCcEme6edM10C8nn2kXwlpC+a0C6YQBEmHms8eVLbsOMM23SO1V2ejckxNuem8KcH4ONjBmpvIQ2Rwd/7fMfNdlCwIhdDC2w9qr6vHhvw03qPUffspiKV58Tt5AIlwFGPZYiNoZ6Q1QnsvwQBAJATD3g9LL2GnZj34ImPQmz5gIV8u3FkhOB3HZ984aEJNxzpwAUno9VeUPUCPuIYA==
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: LV9PR03MB8414.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dfd24307-9cb7-414a-c312-08de9a24e913
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2026 12:54:05.2482
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DLgW9hKSEh+jhDugBWvph81Vi+Fl8c9UI3ChV1q+IxceHpxqMO1d72XBrLOeK0Iy5IqUl2mViwphw3jUjnHkeQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR03MB7734
+X-Authority-Analysis: v=2.4 cv=IMQyzAvG c=1 sm=1 tr=0 ts=69de38f1 cx=c_pps
+ a=FTqHLmxhk7TnHmysD/QBZQ==:117 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=0sLvza09kfJOxVLZPwjg:22
+ a=ZQxX5BWu6Z8IJBb2zLX7:22 a=IpJZQVW2AAAA:8 a=1nDf0xZJOO9T7ogfS_oA:9
+ a=QEXdDO2ut3YA:10 a=IawgGOuG5U0WyFbmm1f5:22
+X-Proofpoint-ORIG-GUID: LsEfvRguM-lIKzyEtJOjRCgyWCvZXf7i
+X-Proofpoint-GUID: LsEfvRguM-lIKzyEtJOjRCgyWCvZXf7i
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDE0MDEyMSBTYWx0ZWRfX7LwyHLhCl0/B
+ /edh7ptDRBbMydjrux3d0guEEGTaXw4TdqQkDfHJu6K0eMb0Zxhkj6Ze4IsfdEIAXdnUJmk0EJO
+ Z43PYFMwsShwLPWdVlzj8l74T3/lng6fXse6vQhoCrgvNoVkQED3SrjkaC1EV9T658U4BqoPfgg
+ KwAJRz73+kW7nYQbBt0ZrN0fE0XUgV7w4RSBIgvC2v8wbSje+fC+oXO0LycYNVIOO88uCAIvf6/
+ Yen5aOq73Cukc9KxHb0nRpCp1xN2LxQN8zfoBmDfERAVZkoY5qu1BqRRC3bq7OvRLV4DbgJipO0
+ OZatdjFimz81u3qdPOxmv6LPf92HqJRK0N0beWSqRcUlLjUpckKMoHZXqvYJvATurQO1mCngZqA
+ x01TKE4BGXGv7lgRuugeyYykCEup7g54y5IgO/OCxU/Yuw0mDy6VLve9emLcJmOHfvqKr65m6fz
+ c2/+uUfwgSkzurwY5JA==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-14_03,2026-04-13_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 bulkscore=0 lowpriorityscore=0 adultscore=0 suspectscore=0
+ phishscore=0 spamscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604070000 definitions=main-2604140121
+X-Spamd-Result: default: False [2.44 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MIME_BASE64_TEXT_BOGUS(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[analog.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[analog.com:s=DKIM];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
+	MIME_BASE64_TEXT(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35143-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	TAGGED_FROM(0.00)[bounces-35144-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[baylibre.com,metafoo.de,analog.com,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashal@kernel.org,linux-gpio@vger.kernel.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,analog.com:dkim,baylibre.com:email];
+	DKIM_TRACE(0.00)[analog.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[Radu.Sabau@analog.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,intel.com:email]
-X-Rspamd-Queue-Id: A7A3D3F9474
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 185823FA312
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-[ Upstream commit a4337a24d13e9e3b98a113e71d6b80dc5ed5f8c4 ]
-
-The 1kOhm pull down and hardware debouncer are features of the revision 0.92
-of the Chassis specification. Fix that in the code accordingly.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-
-LLM Generated explanations, may be completely bogus:
-
-Now I have all the information needed for a thorough analysis. Let me
-compile the findings.
-
----
-
-## PHASE 1: COMMIT MESSAGE FORENSICS
-
-**Step 1.1: Subject Line**
-- Subsystem: `pinctrl: intel:`
-- Action verb: "Fix" — explicitly a bug fix
-- Summary: Corrects the hardware revision threshold for enabling 1kOhm
-  pull-down and hardware debouncer features.
-- Record: [pinctrl/intel] [Fix] [Corrects revision check from 0x94 to
-  0x92 for debounce/1K_PD features]
-
-**Step 1.2: Tags**
-- Signed-off-by: Andy Shevchenko — the primary Intel pinctrl maintainer
-  and long-time contributor
-- No Fixes: tag (expected — that's why we're reviewing)
-- No Reported-by, no Tested-by, no Reviewed-by, no Link: tag
-- No Cc: stable
-- Record: Only author SOB. Andy Shevchenko is the subsystem expert.
-
-**Step 1.3: Commit Body**
-- States that 1kOhm pull-down and hardware debouncer are features of
-  revision 0.92 of the Chassis specification.
-- The code incorrectly used 0x94 as the threshold. Fix changes it to
-  0x92.
-- No stack traces, no user reports, no reproduction steps.
-- Record: [Bug: wrong revision threshold prevents hardware features from
-  being enabled on rev 0x92-0x93 hardware] [Symptom: debounce and 1kOhm
-  PD features not available on qualifying hardware] [Root cause:
-  incorrect magic number in revision comparison]
-
-**Step 1.4: Hidden Bug Fix Detection**
-- This is explicitly labeled "Fix" — not hidden. However, the
-  implications are deeper than just "features not enabled" (see Phase
-  2).
-- Record: Explicit fix, not disguised.
-
-## PHASE 2: DIFF ANALYSIS
-
-**Step 2.1: Inventory**
-- 1 file changed: `drivers/pinctrl/intel/pinctrl-intel.c`
-- 1 line changed: `0x94` → `0x92`
-- Function: `intel_pinctrl_probe()`
-- Scope: Single-character surgical fix
-- Record: [1 file, 1 line, +1/-1] [intel_pinctrl_probe()] [Minimal
-  surgical fix]
-
-**Step 2.2: Code Flow Change**
-- Before: Features (DEBOUNCE + 1K_PD) enabled only for revision >= 0x94
-- After: Features enabled for revision >= 0x92
-- This expands the set of hardware revisions that get these features —
-  specifically adds 0x92 and 0x93.
-- Record: [Revision threshold lowered from 0x94 to 0x92, enabling
-  features on additional hardware revisions]
-
-**Step 2.3: Bug Mechanism**
-This is critically important. `PINCTRL_FEATURE_DEBOUNCE` affects pad
-register stride calculation in `intel_get_padcfg()` (line 190):
-```c
-nregs = (community->features & PINCTRL_FEATURE_DEBOUNCE) ? 4 : 2;
-return community->pad_regs + reg + padno * nregs * 4;
-```
-
-If hardware has revision 0x92/0x93 with 4 registers per pad (PADCFG0-3),
-but the driver thinks there are only 2 (because feature not detected),
-the register stride is wrong:
-- Driver uses stride of 8 bytes (2 × 4) instead of 16 bytes (4 × 4)
-- Pad N would be accessed at offset N×8 instead of N×16
-- For N>0, ALL pad register accesses hit the WRONG hardware registers
-
-This means: GPIO configuration, interrupt setup, pull-up/down, and
-debounce for EVERY pin except pin 0 would read/write incorrect
-registers.
-
-Additionally, `PINCTRL_FEATURE_1K_PD` gates availability of 833Ω and 1kΩ
-pull-down values (lines 653, 658, 815, 820).
-
-- Record: [Bug category: incorrect hardware detection → wrong register
-  stride] [Mechanism: revision threshold too high causes wrong nregs
-  calculation, corrupting all pad register accesses on affected
-  hardware]
-
-**Step 2.4: Fix Quality**
-- Obviously correct: the specification says 0.92, code had 0.94. One-
-  character change.
-- Minimal and surgical.
-- Regression risk: effectively zero for hardware ≥0x94 (no change). For
-  hardware 0x92-0x93, this ENABLES correct behavior.
-- Record: [Obviously correct, minimal, no regression risk for existing
-  working hardware]
-
-## PHASE 3: GIT HISTORY
-
-**Step 3.1: Blame**
-- The buggy line (0x94) was introduced by commit `998c49e8f8b7c9`
-  ("pinctrl: intel: Drop unnecessary check for predefined features") in
-  v5.12-rc1, which was a refactoring of the original code.
-- The original 0x94 value came from `e57725eabf87c` ("pinctrl: intel:
-  Add support for hardware debouncer") in v4.11-rc1.
-- The 0x94 value has been wrong since v4.11 (~2017).
-- Record: [Buggy value from v4.11 (commit e57725eabf87c), refactored in
-  v5.12 (998c49e8f8b7c9). Bug present for ~9 years.]
-
-**Step 3.2: Fixes tag** — Not present. Expected.
-
-**Step 3.3: File History** — No closely related fixes. The file has
-ongoing development but nothing directly related to this revision check.
-
-**Step 3.4: Author** — Andy Shevchenko is the primary Intel pinctrl
-maintainer with dozens of commits in this subsystem. Very high
-authority.
-
-**Step 3.5: Dependencies** — None. This is a standalone one-character
-fix.
-
-## PHASE 4: MAILING LIST RESEARCH
-
-The background agent found:
-- There was a patch series with this fix. A v2 was submitted, suggesting
-  review feedback was received.
-- Andy Shevchenko identified a related bug in the broader series.
-- No explicit stable nomination found.
-- Record: [Patch went through review, v2 submitted. No explicit stable
-  request found.]
-
-## PHASE 5: CODE SEMANTIC ANALYSIS
-
-**Step 5.1: Key Functions**
-- `intel_pinctrl_probe()` — the probe function, called during driver
-  initialization for every Intel pinctrl community.
-
-**Step 5.2: Callers**
-- `intel_pinctrl_probe()` is called by every Intel pinctrl platform
-  driver (there are many: Tiger Lake, Alder Lake, Raptor Lake, Meteor
-  Lake, etc.). This is the core probe path for ALL Intel GPIO
-  controllers.
-
-**Step 5.3: Impact of DEBOUNCE flag**
-- `intel_get_padcfg()` — used extensively for ALL pad register access.
-  If stride is wrong, every GPIO operation is broken.
-- 1K_PD feature gates pull-down resistance values in pin configuration.
-
-**Step 5.4: Reachability**
-- The probe path is triggered during boot for every Intel platform with
-  GPIO controllers. This is core infrastructure.
-
-## PHASE 6: STABLE TREE ANALYSIS
-
-**Step 6.1: Code exists in stable trees**
-- Verified: `0x94` value exists in v6.6 (line 1585) and v5.15 (line
-  1502).
-- The buggy code exists in ALL active stable trees since the bug is from
-  v4.11.
-
-**Step 6.2: Backport Complications**
-- The patch should apply cleanly — it's a single character change in a
-  line that hasn't changed since v5.12, and the surrounding context is
-  stable.
-
-**Step 6.3: No related fixes already in stable**
-
-## PHASE 7: SUBSYSTEM CONTEXT
-
-**Step 7.1:**
-- Subsystem: drivers/pinctrl/intel — Intel GPIO/pinctrl
-- Criticality: IMPORTANT — Intel GPIO controllers are used on virtually
-  all Intel platforms (laptops, desktops, servers with Intel chipsets)
-- Record: [IMPORTANT subsystem — affects all Intel platforms with
-  affected GPIO controller revisions]
-
-## PHASE 8: IMPACT AND RISK ASSESSMENT
-
-**Step 8.1: Affected Users**
-- Users with Intel hardware whose GPIO controller reports revision 0x92
-  or 0x93. Specific platforms unknown but this is Intel mainstream
-  hardware.
-
-**Step 8.2: Trigger Conditions**
-- Triggered at boot during driver probe. If hardware has revision
-  0x92-0x93, the bug is always present.
-
-**Step 8.3: Failure Mode Severity**
-- On affected hardware: wrong register stride means all GPIO pad
-  accesses (except pad 0) hit wrong registers → incorrect GPIO behavior,
-  broken interrupts, broken pin configuration. Severity: HIGH (hardware
-  malfunction, potential for data corruption via incorrect GPIO states).
-
-**Step 8.4: Risk-Benefit**
-- BENEFIT: Fixes potentially serious register access errors on affected
-  Intel hardware. HIGH.
-- RISK: One character change, obviously correct per specification. VERY
-  LOW.
-- Ratio: Strongly favorable.
-
-## PHASE 9: FINAL SYNTHESIS
-
-**Evidence FOR backporting:**
-1. One-character fix — minimal scope, obviously correct
-2. From subsystem maintainer (Andy Shevchenko)
-3. Corrects objectively wrong value per hardware specification (0.92 vs
-   0.94)
-4. PINCTRL_FEATURE_DEBOUNCE affects pad register stride calculation —
-   wrong stride means ALL pad register accesses are corrupted on
-   affected hardware
-5. Bug present since v4.11, affects all stable trees
-6. Applies cleanly to all stable trees
-7. No dependencies on other patches
-8. Similar in nature to hardware quirk/device ID fixes (enabling correct
-   behavior for specific hardware)
-
-**Evidence AGAINST backporting:**
-1. No user reports of the issue (no Reported-by)
-2. No Fixes: tag
-3. Unknown if real hardware with revision 0x92-0x93 exists in the wild
-4. Has been wrong since 2017 without complaints
-
-**Stable Rules Checklist:**
-1. Obviously correct? YES — spec says 0.92, code had 0.94
-2. Fixes real bug? YES — wrong register stride on affected hardware
-3. Important issue? YES — corrupts all GPIO register accesses on
-   affected hardware
-4. Small and contained? YES — 1 character, 1 file
-5. No new features? CORRECT — no new features, enables existing features
-   on qualifying hardware
-6. Can apply to stable? YES — clean apply expected
-
-## Verification
-
-- [Phase 1] Parsed subject: "Fix" verb, pinctrl/intel subsystem,
-  revision threshold correction
-- [Phase 1] Tags: only author SOB (Andy Shevchenko). No Fixes/Reported-
-  by/Cc:stable (expected)
-- [Phase 2] Diff: single character change 0x94→0x92 in
-  intel_pinctrl_probe(), line 1613
-- [Phase 2] Code impact: verified PINCTRL_FEATURE_DEBOUNCE controls
-  nregs (2 vs 4) at line 190, affecting pad register stride
-- [Phase 2] 1K_PD feature gates pull-down values at lines 653, 658, 815,
-  820
-- [Phase 3] git blame: 0x94 value from commit 998c49e8f8b7c9 (v5.12),
-  originally from e57725eabf87c (v4.11)
-- [Phase 3] git describe: original commit in v4.11-rc1, refactored
-  commit in v5.12-rc1
-- [Phase 3] Author: Andy Shevchenko has dozens of commits in
-  drivers/pinctrl/intel/ — confirmed subsystem maintainer
-- [Phase 4] Lore search: patch went through review, v2 submitted. No
-  explicit stable nomination found.
-- [Phase 5] intel_get_padcfg() uses DEBOUNCE feature flag for stride;
-  wrong stride corrupts all pad accesses for padno > 0
-- [Phase 6] Verified 0x94 exists in v6.6 (line 1585) and v5.15 (line
-  1502) — present in all active stable trees
-- [Phase 6] Clean apply expected — single character in unchanged context
-- UNVERIFIED: Whether real hardware with revision 0x92 or 0x93 actually
-  exists in the field (no user reports confirm this)
-
-The fix is a trivially correct one-character correction from the
-subsystem maintainer, fixing a wrong hardware revision threshold that
-has been wrong since v4.11. On affected hardware (if revision 0x92-0x93
-exists), the consequences are severe: incorrect register stride causes
-ALL GPIO pad register accesses to hit wrong addresses. The risk of the
-fix is essentially zero.
-
-**YES**
-
- drivers/pinctrl/intel/pinctrl-intel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index cf9db8ac0f42e..106835b5ee5a5 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1610,7 +1610,7 @@ int intel_pinctrl_probe(struct platform_device *pdev,
- 		value = readl(regs + REVID);
- 		if (value == ~0u)
- 			return -ENODEV;
--		if (((value & REVID_MASK) >> REVID_SHIFT) >= 0x94) {
-+		if (((value & REVID_MASK) >> REVID_SHIFT) >= 0x92) {
- 			community->features |= PINCTRL_FEATURE_DEBOUNCE;
- 			community->features |= PINCTRL_FEATURE_1K_PD;
- 		}
--- 
-2.53.0
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGF2aWQgTGVjaG5lciA8
+ZGxlY2huZXJAYmF5bGlicmUuY29tPg0KPiBTZW50OiBTYXR1cmRheSwgQXByaWwgMTEsIDIwMjYg
+MTI6MzkgQU0NCg0KLi4uDQogDQo+ID4gK0J1ZmZlciBkYXRhIGZvcm1hdA0KPiA+ICs9PT09PT09
+PT09PT09PT09PT0NCj4gPiArDQo+ID4gK1RoZSBJSU8gYnVmZmVyIGRhdGEgZm9ybWF0IChgYGlu
+X3ZvbHRhZ2VOX3R5cGVgYCkgaXMgdGhlIHNhbWUgYWNyb3NzIGFsbA0KPiA+ICtwYXRoczogMTYt
+Yml0IHVuc2lnbmVkIGJpZy1lbmRpYW4gc2FtcGxlcyB3aXRoIG5vIHNoaWZ0Lg0KPiA+ICsNCj4g
+PiArKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tKy0t
+LS0tLS0rDQo+ID4gK3wgUGF0aCAgICAgICAgICAgICAgICAgICAgfCBzdG9yYWdlYml0cyB8IHJl
+YWxiaXRzIHwgc2hpZnQgfA0KPiA+ICsrPT09PT09PT09PT09PT09PT09PT09PT09PSs9PT09PT09
+PT09PT09Kz09PT09PT09PT0rPT09PT09PSsNCj4gPiArfCBUcmlnZ2VyZWQgYnVmZmVyICAgICAg
+ICB8IDE2ICAgICAgICAgIHwgMTYgICAgICAgfCAwICAgICB8DQo+ID4gKystLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLSstLS0tLS0tKw0KPiA+ICt8IENO
+ViBCdXJzdCBvZmZsb2FkIChETUEpIHwgMTYgICAgICAgICAgfCAxNiAgICAgICB8IDAgICAgIHwN
+Cj4gPiArKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0t
+Ky0tLS0tLS0rDQo+ID4gK3wgTWFudWFsIG9mZmxvYWQgKERNQSkgICAgfCAxNiAgICAgICAgICB8
+IDE2ICAgICAgIHwgMCAgICAgfA0KPiA+ICsrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSstLS0t
+LS0tLS0tLS0tKy0tLS0tLS0tLS0rLS0tLS0tLSsNCj4gDQo+IE5vdCBzdXJlIHRoaXMgdGFibGUg
+aXMgaGVscGZ1bCBzaW5jZSBhbGwgdmFsdWVzIGFyZSB0aGUgc2FtZSBldmVyeXdoZXJlLg0KPiAN
+Cj4gQWxzbywgZG9lc24ndCBTUEkgb2ZmbG9hZCBoYXZlIHN0b3JhZ2ViaXRzID09IDMyPw0KDQpJ
+IHRyaWVkIHVzaW5nIDE2IHN0b3JhZ2UgYml0cyBmb3Igb2ZmbG9hZCB0b28sIGFuZCBzbyB1c2Ug
+dGhlIHNhbWUgY2hhbm5lbHMNCm1hY3JvLiBGb3IgTWFudWFsIGl0cyByZWNlaXZlZCBpbiB0aGUg
+bmV4dCB0cmFuc2ZlciBhbmQgZm9yIENOViBvbmx5IHRoZQ0KcmVjZWl2ZSB0cmFuc2ZlcnMgYXJl
+IHJ4IHN0cmVhbWVkLCBhbmQgc28gMTYgc3RvcmFnZSBiaXRzIHN1ZmZpY2UgZm9yIGJvdGguDQoN
+Cg==
 
