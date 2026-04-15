@@ -1,57 +1,103 @@
-Return-Path: <linux-gpio+bounces-35164-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35166-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4BAcEbF032mFTAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-35164-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2026 13:21:21 +0200
+	id cG9COPt232ljTQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-35166-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2026 13:31:07 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B921B403B49
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2026 13:21:20 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB428403CD3
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2026 13:31:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3328131333C3
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2026 11:16:18 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 5EBFE304C477
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2026 11:30:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 623153783D1;
-	Wed, 15 Apr 2026 11:16:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A60CA37B415;
+	Wed, 15 Apr 2026 11:29:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=0leil.net header.i=@0leil.net header.b="gmt0lluC"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZmIWpX0R";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="TnPBc1+w"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934043431F5
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2026 11:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDF237C91F
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2026 11:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776251775; cv=none; b=LNPrvYRTvb67HL+z3xUPY+qfQL0LPl4Qun2Wvv9s/6YFiWwvtgLdmiCxD9o2fJ6LJqNu4Vn73Hp16HKe2JC3x+FJeqBmSs/RpzAgw7TwCn/c3M29OuaDcsKt1pQ1VJbWUztPCLUdK/Hrfnox3SHsIrjwhPJmeze1QjiCJMLB9xY=
+	t=1776252584; cv=none; b=UBatgZWnfrIT6izr+GMA8TbC2D4qPqWw7iWGa1hT8UWyOXAblvyxMkE9eGNz0+jVbmfD+R2cgXhSRs3wNwNTWXxv7oGXRW9vXHLQOsf4rgp8PFudwVJatik860udxeVMiqYtckDsAcz2ZOID4j+FXLwzJZYy6zPJSidkcmXqRTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776251775; c=relaxed/simple;
-	bh=2JbAD/DSNBNfRE24tbvNZj/0IfyRuIUOcjNQsNfyiZw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CHra6eNihZ97C+3fQgSgIwuSzkeh9n8PapfWZRBGB1wSZ43XhDhStEKUjYQ9mNrwxyTqa7MLSXjAegN3nCaDeXphAhN+yOis9yNWoDBSbX2qiSIj2fGeiaVfC1OPigWA0bVVsHCZePgcTfqKyx+wEEEKkdCaQ+U2kwXd6aw4L2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; dkim=pass (2048-bit key) header.d=0leil.net header.i=@0leil.net header.b=gmt0lluC; arc=none smtp.client-ip=185.125.25.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=0leil.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6c])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4fwdqs5853zyTB;
-	Wed, 15 Apr 2026 13:16:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=0leil.net;
-	s=20231125; t=1776251769;
-	bh=yfWCJrrXvC+OtV0W0WCKQPC1fpYnvPmsr7D+XYucFmY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=gmt0lluCphkmSE2abwtDdfupMf8+4KqSVto9p7MkRdKDt6HvEtLcXmwNMDZWOkTKd
-	 ApnXYc7oQmVdmVwNVUsm4Cxj/v7Gba5QNpOOlqAMv8abd44BF4fq2JMt4jlQzb4QNS
-	 WgoYXy6Jd4AoFMks5EUsoqywMPzRX0e3fRU2FSbHVamJ8BWJRFYYkANTSfNts75mLj
-	 6j0Q6UgaHihJpsVm+8POxRS6kUGnYm3yRGe68yGvsewctLlLwTESxbxmCPBDBVeE+Y
-	 3PBW9E0Kl2g6478aQgjdl/kX6fyoSplXsHWqyxUvqrqTvF58uYGSbnQZHPlsA2Q5k3
-	 pzuWGypY3CkEw==
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4fwdqr6Jzwzw5F;
-	Wed, 15 Apr 2026 13:16:08 +0200 (CEST)
-From: Quentin Schulz <foss+kernel@0leil.net>
-Date: Wed, 15 Apr 2026 13:15:41 +0200
-Subject: [PATCH 6.12.y 2/2] gpiolib: fix race condition for gdev->srcu
+	s=arc-20240116; t=1776252584; c=relaxed/simple;
+	bh=zkTj1FPBTPay2KEYBi9VK1EONkKuBT3XGTuds7WjW4E=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=alKAFwGMLxlMwApBzKczMQRsnhm4O/E5fY4FRVLZ3JMJkW34BK8lMA5mAWJzfPyIOIOWPBng6K53Cj454JyZKH4fLYrLRrhhhCeasTe1S3QMrI6w7m+ympCMDiuoKSrRLfmdK2geCrRw2MhM6oIR0ZAtPeokphtfncB5JhfCtf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZmIWpX0R; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=TnPBc1+w; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63F5xRTa2773224
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2026 11:29:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=MvJqQNQOqBECWN6GQMmqlr
+	hF5/Geu/mthKKLlru98gk=; b=ZmIWpX0RnxT48IdcKUnQ+i1bqGgW77TDmA5m4S
+	VtEfxVwA5r8WgE1UZWPN0mXL/VWkyD8W7/jzLWS2MlinOYXZNB7TaXxRC8G0W1QU
+	BRvv+jAaAIF258zVGwqBhY0a0Zdcfs+PzFquPE8JACPGO9PnSAf68NL73hn1uCse
+	HCxfCpXV49jp66/xlzhpbA1Jug1Bffgjw/RvpuxffWYKvm988HsvVRMUm2Gf0V3r
+	6ENMn/dJwvdfeq82+VHxXgQ8I91J0ECFenFP1HkvtbS5/WGnK6nuGJ+/T6oq8Y0u
+	/v8BBXCKI+Cgint9cntsZRb7DNhOfox/30ABJN0cwMgHAOTw==
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dj50v14xf-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2026 11:29:42 +0000 (GMT)
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-c7691378914so3195929a12.0
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2026 04:29:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1776252581; x=1776857381; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MvJqQNQOqBECWN6GQMmqlrhF5/Geu/mthKKLlru98gk=;
+        b=TnPBc1+wQcradvZgvJ3gP0PifJHUkO+28oCmrkvbiIPRCnqsjyrZgQkAAul0nFs68I
+         Kr+yxqY4t9clu9jjLfhr6y3DS9SPmszEiluEiJT3yKT7d9jGSOO9Z2rftbYjZRgND2QW
+         H7DTLFEC2aLwNn9qVYtemdrqBDI5MV3bBNoGPnpLpnLasT0XQa4d5EMSiq1g1SYvOfLe
+         AQa8nSnF19Y/1R+NuesaIWKmZ3F+3T1IlyX44BE8WhyX6wjbp9SDvCN/fSkIGf+4/xRP
+         yix0h9aVLLTJteGmbNlV9FMPQ6v6wMg+F1FNUmrX4XpM1iihYYu9Rszs49ntnWWq917D
+         4GZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776252581; x=1776857381;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MvJqQNQOqBECWN6GQMmqlrhF5/Geu/mthKKLlru98gk=;
+        b=ad7PPn1T+Ge2HMuEDmfmQWRPrKp0gs4/To/1Bx9L2vZpygaGLwSfxeTJCt0Ms7e0ZM
+         hlhtXe8uRDhQHqiPP/g+Y7LftI2o4YAujJUq60Mnz59NIumMMdqNzTpmCRG6iG5l6wyT
+         UoaRKao4SAxgelyxvj1Gbw6hRF23jVIuamOdg6KDjzrmwopOInvXkAPM22WVypFfCHUk
+         /7mkSzE/OIUJVaOtZJqo3pZqz/DYzEE/MOEmg0j0khuMILV+kPo6wjR2GhyVvC+fmoNE
+         IATs74IMch127dpjdZAWxr1m2Hq6ozrDfYwytFxIng/CEvWFtsg4o6ZHY9RfW7KgVN/i
+         SrhQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+xQrhtvVaMxs6gKeY217U1S/fVhJoWO8YRRp0mH2UBudfoG+JTBXBRca1UDo9DZhJdAC/68H/VZy37@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiD4wT0ntmeTLm3+oxuJV9tgCC+lqg9fNJNo0G1P1GnpL9HGjT
+	IWiNh5UUh8unJ4LDkWgn1w8UK241Rr8dymImfY41nZpYUIpMvSNhD7uYnogCCNd2hFgflrIgN/7
+	wwf8EGtSK8whtSNeW1qgMcL1zVdtseVM7hvlPBph2OahbnbayrmoWpP1+UbEpyJSH
+X-Gm-Gg: AeBDiesDTnfBGQtfDCDiTZC/3d7ctr10z7baMZGJFYFoRAughVwcFk1A7i2RoZqBci8
+	e6OL7/2A9+M3IN9uIn+mm5crWtbDVL1Z5A0egs95BZNU9PfcPAS3Hjy8gEk0sA/GHUIRbPYi+35
+	k4Yrw2Ckq8mji8pmo0zqxdirbbNz/28OdvV4o+UboEw1YevpIXR5fqSjNAanGe4bha4R7B4pboZ
+	hmWPJfpJkSKpt3W2QQftb5y8j1krFl5QnJGx4Bm2G080adJvOeX6RhANDRj5fpMTFQdhMlFr5vv
+	WdU8SSQjtZW6sBg87TEWCP1zSd31ZLuEMJMGIr2Uq+rZXuoD12cVeIhoYp6Utab6k7mHoH7O0Ta
+	iE5pqXkowmCRAnpho0xQho7rFQmD+Ali41hApeBx1kZVcl6VA7c2mMZ7K1DVGzL2Yrw2sCGz61h
+	bb0ihB64utyEYLGTtWKndaI/tii809AecYNfW/ZlipW54wrHfs27X3Lu+s
+X-Received: by 2002:a05:6a21:1b8a:b0:39f:27ab:2438 with SMTP id adf61e73a8af0-39fe400280amr25183970637.48.1776252581411;
+        Wed, 15 Apr 2026 04:29:41 -0700 (PDT)
+X-Received: by 2002:a05:6a21:1b8a:b0:39f:27ab:2438 with SMTP id adf61e73a8af0-39fe400280amr25183939637.48.1776252580924;
+        Wed, 15 Apr 2026 04:29:40 -0700 (PDT)
+Received: from hu-kathirav-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c7957ecee24sm1417183a12.1.2026.04.15.04.29.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2026 04:29:40 -0700 (PDT)
+From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+Subject: [PATCH 0/2] Introduce TLMM driver for Qualcomm IPQ9650 SoC
+Date: Wed, 15 Apr 2026 16:59:23 +0530
+Message-Id: <20260415-ipq9650_tlmm-v1-0-bd16ccb06332@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -59,205 +105,100 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260415-6-12-gpiolib-cve-2026-22986-v1-2-3a7a6de332eb@cherry.de>
-References: <20260415-6-12-gpiolib-cve-2026-22986-v1-0-3a7a6de332eb@cherry.de>
-In-Reply-To: <20260415-6-12-gpiolib-cve-2026-22986-v1-0-3a7a6de332eb@cherry.de>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Heiko Stuebner <heiko.stuebner@cherry.de>, stable@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- Quentin Schulz <quentin.schulz@cherry.de>, 
- =?utf-8?q?Pawe=C5=82_Narewski?= <pawel.narewski@nokia.com>, 
- Jakub Lewalski <jakub.lewalski@nokia.com>, 
- Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-X-Mailer: b4 0.15-dev-47773
-X-Infomaniak-Routing: alpha
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJN232kC/yXMTQ5AMBBA4avIrDVpiyZcRUSqBiN+W0Qi7q5Yf
+ ov3LnBoCR1kwQUWD3I0Tx4iDMB0emqRUe0NkkvFI6kYLWuqEl5uwzgyqYVBHavGpAJ8slhs6Px
+ 2efHb7VWPZnsfcN8PqYuTw3AAAAA=
+X-Change-ID: 20260326-ipq9650_tlmm-2a1cea46fc91
+To: Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linusw@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+X-Mailer: b4 0.15.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1776252577; l=842;
+ i=kathiravan.thirumoorthy@oss.qualcomm.com; s=20230906;
+ h=from:subject:message-id; bh=zkTj1FPBTPay2KEYBi9VK1EONkKuBT3XGTuds7WjW4E=;
+ b=gct8cnLRX2BpHIVUTXwooKifRVem7Rf4JL4pVZzEVlUXczvn8jflm59sRI8dfrdgB3CDzpwGH
+ v8poMwWur64AJaw6PExA/eu3zcflRzfWJtngtRWeYTW7b4GDdm3l4m/
+X-Developer-Key: i=kathiravan.thirumoorthy@oss.qualcomm.com; a=ed25519;
+ pk=xWsR7pL6ch+vdZ9MoFGEaP61JUaRf0XaZYWztbQsIiM=
+X-Proofpoint-GUID: 0PEXF9OR-6huZbWMsN9fK0nQklZih2V1
+X-Authority-Analysis: v=2.4 cv=eLMjSnp1 c=1 sm=1 tr=0 ts=69df76a6 cx=c_pps
+ a=Qgeoaf8Lrialg5Z894R3/Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
+ a=EUspDBNiAAAA:8 a=udllaobD4nFk2SGM0x8A:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
+ a=x9snwWr2DeNwDh03kgHS:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDE1MDEwNSBTYWx0ZWRfX/NDVrcCtEuBV
+ oU+Ec8/rl5JlhMJcmDOOXkjzL7+D/G3A8P5hXDKs2jsOgbeUGC7yOzqMjtroOEuMyDIzIaZ/6Fg
+ gML8I2PYXuRjulO/iXFm+LNBwktgtaUTlTN7n6YaDoVBzK9Mn3+hUbHX6jjuq/BPa3v6Ymw+xnW
+ xvyHm8b6Pa3GAdcxubZqfJ2zvCLvqT2BVLefSArArVrkh46V3GH8SgudSgp7nJOf8WJOKX/cnkB
+ 2i+gr9yH1SFk2OpmN5UMyjmY6QWbvTuIncxkQxkoNaJcKO9HsFhqwMKPPHuQSZz2UEFgY8jmr6P
+ 6JaVznx76qkVCiuj1CjpD4pFU4ENuzhtgr1Qw/ohoYV/2q2eCeiOwUXDSp/Yca8NtKHLl/EtZLG
+ Rql/Ms6SCmfXHdQ4+bZE4GlDF+NC8pTXCSPMRY6pQDIWI+Cf5QWWQLFIRlGu9BmJjaqtKG6hH8C
+ HL7SocnFQUll57OU9XQ==
+X-Proofpoint-ORIG-GUID: 0PEXF9OR-6huZbWMsN9fK0nQklZih2V1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-14_04,2026-04-13_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 clxscore=1015 bulkscore=0 lowpriorityscore=0 impostorscore=0
+ suspectscore=0 malwarescore=0 priorityscore=1501 spamscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604070000 definitions=main-2604150105
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[0leil.net,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[0leil.net:s=20231125];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35164-lists,linux-gpio=lfdr.de,kernel];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[0leil.net:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,qualcomm.com:dkim,qualcomm.com:email];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35166-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	FROM_NEQ_ENVFROM(0.00)[kathiravan.thirumoorthy@oss.qualcomm.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[foss@0leil.net,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[0leil.net:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,cherry.de:mid,cherry.de:email]
-X-Rspamd-Queue-Id: B921B403B49
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: CB428403CD3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Paweł Narewski <pawel.narewski@nokia.com>
+The IPQ9650 is Qualcomm's SoC for Routers, Gateways and Access Points.
+Add the pinctrl support for the same.
 
-[ Upstream commit a7ac22d53d0990152b108c3f4fe30df45fcb0181 ]
-
-If two drivers were calling gpiochip_add_data_with_key(), one may be
-traversing the srcu-protected list in gpio_name_to_desc(), meanwhile
-other has just added its gdev in gpiodev_add_to_list_unlocked().
-This creates a non-mutexed and non-protected timeframe, when one
-instance is dereferencing and using &gdev->srcu, before the other
-has initialized it, resulting in crash:
-
-[    4.935481] Unable to handle kernel paging request at virtual address ffff800272bcc000
-[    4.943396] Mem abort info:
-[    4.943400]   ESR = 0x0000000096000005
-[    4.943403]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    4.943407]   SET = 0, FnV = 0
-[    4.943410]   EA = 0, S1PTW = 0
-[    4.943413]   FSC = 0x05: level 1 translation fault
-[    4.943416] Data abort info:
-[    4.943418]   ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
-[    4.946220]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[    4.955261]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[    4.955268] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000038e6c000
-[    4.961449] [ffff800272bcc000] pgd=0000000000000000
-[    4.969203] , p4d=1000000039739003
-[    4.979730] , pud=0000000000000000
-[    4.980210] phandle (CPU): 0x0000005e, phandle (BE): 0x5e000000 for node "reset"
-[    4.991736] Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
-...
-[    5.121359] pc : __srcu_read_lock+0x44/0x98
-[    5.131091] lr : gpio_name_to_desc+0x60/0x1a0
-[    5.153671] sp : ffff8000833bb430
-[    5.298440]
-[    5.298443] Call trace:
-[    5.298445]  __srcu_read_lock+0x44/0x98
-[    5.309484]  gpio_name_to_desc+0x60/0x1a0
-[    5.320692]  gpiochip_add_data_with_key+0x488/0xf00
-    5.946419] ---[ end trace 0000000000000000 ]---
-
-Move initialization code for gdev fields before it is added to
-gpio_devices, with adjacent initialization code.
-Adjust goto statements  to reflect modified order of operations
-
-Fixes: 47d8b4c1d868 ("gpio: add SRCU infrastructure to struct gpio_device")
-Reviewed-by: Jakub Lewalski <jakub.lewalski@nokia.com>
-Signed-off-by: Paweł Narewski <pawel.narewski@nokia.com>
-[Bartosz: fixed a build issue, removed stray newline]
-Link: https://lore.kernel.org/r/20251224082641.10769-1-bartosz.golaszewski@oss.qualcomm.com
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-[missing commit fcc8b637c542 ("gpiolib: switch the line state notifier
- to atomic"), commit dcb73cbaaeb3 ("gpio: cdev: use raw notifier for
- line state events") and commit d4f335b410dd ("gpiolib: rename GPIO chip
- printk macros") in 6.12.y.
- Both notifiers as well as both srcu inits are moved before the
- scoped_guard, following same logic as in a7ac22d53d09.
- Rest is changes to git context only.]
-Cc: stable@vger.kernel.org # 6.12
-Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
 ---
- drivers/gpio/gpiolib.c | 38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+Kathiravan Thirumoorthy (2):
+      dt-bindings: pinctrl: qcom: add IPQ9650 pinctrl
+      pinctrl: qcom: Introduce IPQ9650 TLMM driver
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 3f9019cc832ac..5c8cd81656963 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -988,6 +988,17 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	gdev->ngpio = gc->ngpio;
- 	gdev->can_sleep = gc->can_sleep;
- 
-+	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
-+	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->device_notifier);
-+
-+	ret = init_srcu_struct(&gdev->srcu);
-+	if (ret)
-+		goto err_free_label;
-+
-+	ret = init_srcu_struct(&gdev->desc_srcu);
-+	if (ret)
-+		goto err_cleanup_gdev_srcu;
-+
- 	scoped_guard(mutex, &gpio_devices_lock) {
- 		/*
- 		 * TODO: this allocates a Linux GPIO number base in the global
-@@ -1002,7 +1013,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 			if (base < 0) {
- 				ret = base;
- 				base = 0;
--				goto err_free_label;
-+				goto err_cleanup_desc_srcu;
- 			}
- 
- 			/*
-@@ -1022,21 +1033,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 		ret = gpiodev_add_to_list_unlocked(gdev);
- 		if (ret) {
- 			chip_err(gc, "GPIO integer space overlap, cannot add chip\n");
--			goto err_free_label;
-+			goto err_cleanup_desc_srcu;
- 		}
- 	}
- 
--	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->line_state_notifier);
--	BLOCKING_INIT_NOTIFIER_HEAD(&gdev->device_notifier);
--
--	ret = init_srcu_struct(&gdev->srcu);
--	if (ret)
--		goto err_remove_from_list;
--
--	ret = init_srcu_struct(&gdev->desc_srcu);
--	if (ret)
--		goto err_cleanup_gdev_srcu;
--
- #ifdef CONFIG_PINCTRL
- 	INIT_LIST_HEAD(&gdev->pin_ranges);
- #endif
-@@ -1046,11 +1046,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 
- 	ret = gpiochip_set_names(gc);
- 	if (ret)
--		goto err_cleanup_desc_srcu;
-+		goto err_remove_from_list;
- 
- 	ret = gpiochip_init_valid_mask(gc);
- 	if (ret)
--		goto err_cleanup_desc_srcu;
-+		goto err_remove_from_list;
- 
- 	for (desc_index = 0; desc_index < gc->ngpio; desc_index++) {
- 		struct gpio_desc *desc = &gdev->descs[desc_index];
-@@ -1117,10 +1117,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	of_gpiochip_remove(gc);
- err_free_valid_mask:
- 	gpiochip_free_valid_mask(gc);
--err_cleanup_desc_srcu:
--	cleanup_srcu_struct(&gdev->desc_srcu);
--err_cleanup_gdev_srcu:
--	cleanup_srcu_struct(&gdev->srcu);
- err_remove_from_list:
- 	scoped_guard(mutex, &gpio_devices_lock)
- 		list_del_rcu(&gdev->list);
-@@ -1130,6 +1126,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 		gpio_device_put(gdev);
- 		goto err_print_message;
- 	}
-+err_cleanup_desc_srcu:
-+	cleanup_srcu_struct(&gdev->desc_srcu);
-+err_cleanup_gdev_srcu:
-+	cleanup_srcu_struct(&gdev->srcu);
- err_free_label:
- 	kfree_const(gdev->label);
- err_free_descs:
+ .../bindings/pinctrl/qcom,ipq9650-tlmm.yaml        | 118 ++++
+ drivers/pinctrl/qcom/Kconfig.msm                   |   9 +
+ drivers/pinctrl/qcom/Makefile                      |   1 +
+ drivers/pinctrl/qcom/pinctrl-ipq9650.c             | 762 +++++++++++++++++++++
+ 4 files changed, 890 insertions(+)
+---
+base-commit: e6efabc0afca02efa263aba533f35d90117ab283
+change-id: 20260326-ipq9650_tlmm-2a1cea46fc91
 
--- 
-2.53.0
+Best regards,
+--  
+Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
 
 
