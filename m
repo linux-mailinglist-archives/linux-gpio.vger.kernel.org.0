@@ -1,137 +1,175 @@
-Return-Path: <linux-gpio+bounces-35159-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35160-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gNwNMZ5n32lSSgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-35159-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2026 12:25:34 +0200
+	id mHw6M+9u32nqSwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-35160-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2026 12:56:47 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 202CE403441
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2026 12:25:34 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B41240373F
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2026 12:56:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9F833302F581
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2026 10:24:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A53D8302E329
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2026 10:56:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 719D7344D9B;
-	Wed, 15 Apr 2026 10:24:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6E5B347FD0;
+	Wed, 15 Apr 2026 10:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kYRhflMn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010007.outbound.protection.outlook.com [52.101.56.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3DB6345734;
-	Wed, 15 Apr 2026 10:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776248697; cv=none; b=EtBQY29iEBZoD363Cjm2JsJv7rtSL+yEIoF+UbW24KMa0RUgDhWEm70oqPfwPK99CpxoS+va92l5gGoZtNcjHQhqpWSPMtS2jH6qSvj9QEKt0puEDol3yYGNAolGHIcCb7kZxnSuE5s8gzcFBgBC8eUPib1Miqjnwvc1fxEpjfQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776248697; c=relaxed/simple;
-	bh=mm7hDoKN7iti+b5vLqDrPKkhJ+rkkywvY8n22UKL7Q4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=q+rbZ2TruZwe2I6bn0Ff0VmuGj1mPCkx9hIzVrE8C8agrJBcdSM7xOsI6hdn5LbhWCBVdt6ofki0yGDhCAsUNlApyomVAI7i5QpippboAQuc/fEzuxVq7GnNOPgOjoQcphS55A79SnyR1VvdF0n0WR92AkWgw8weYnegDk4gSwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 15 Apr
- 2026 18:24:46 +0800
-Received: from [127.0.1.1] (192.168.10.13) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Wed, 15 Apr 2026 18:24:46 +0800
-From: Billy Tsai <billy_tsai@aspeedtech.com>
-Date: Wed, 15 Apr 2026 18:24:42 +0800
-Subject: [PATCH] gpio: aspeed: fix AST2700 debounce selector bit
- definitions
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6992113AF2;
+	Wed, 15 Apr 2026 10:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776250603; cv=fail; b=QOOAORrX8hCwbZNcyxE7thriiLYnMClv4ByaAHAAXzJ+pCRjOEieY91Y10JWxpnImoslc9dldPty86D91j55u570FeHPDQiHtQQB9fUywMQgq5Ujn3xD1aj/akX5dLrnQLHaArvEHxElr7FYC4gzIaYPQqvPvv4hrEW2gLrXQeU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776250603; c=relaxed/simple;
+	bh=MKFGu2/ngrBB0SkQ6KZo8d9kTpi3zkWEIkaCe5aDYxA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BRGD2g22AyGibYQtaZ2UJVaSiICJAgwRGjtuc6CFu8RsnzcrkWJ4XfUDR2f0/VIOjAz70z24Sv8xwz76Pz9R7ILiOUUg203zrut0DkBOLua8ZhLgm94/jY1owSEcUYoQm99AnmYjI5vhbIttUia8spAj0NYe0HBjil8dHDzl9E4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kYRhflMn; arc=fail smtp.client-ip=52.101.56.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=j5ir10i0ENcCcxpGot+fZcRZ6KV/4Ye7hERB3cvqVvmNXv+vseIUKkdPONhtjLSM3IJNg4gTn9AdJ1DVjbo1GRCGygEznAEKwbgQxT8QTLNWHiLkegW5RMPU3mwkIzmpFWBSOKiI8JtbMPc7vy1HsEeMHbUkS/eJ4Eh2JTHo+D+4Pd264yIobCEkxj+zJJ9eCC3Y2JRcEQo99nFeLia94HQGcVqJY48P2Ln9Ni2cCqkrN0seOTGijCs9CqWlKmTxQqrcng9J5bA/5+OMSaHBbEpvig0/eiBK+3j8sCcUWgiuxEcZxyyQ9+EAwp+GjOFi2qCuQsIsRJ83fJj02nLMMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ORMkIirTVyqhAbhva6OfdO9FUeMUmniBJil9afulF/I=;
+ b=GmmI9gHQaBKYCyD9W6r07CejRy2OSfO44OjzKVs8hdUIlpy/Jwf2jUyrAL1cOsjqunfkmmBo61j7LrSlwZPWUlaSzhWJG51yRzLAvWA0Ax2hA6/7U52W8rfKZnHzCRMOwrrKcd27YrKRgD60A5+wt7baFExamWRAU3QfXMZ4s/IzUDFnAtEqhBc4EF21P7bsxuQ5wjFfys0TarGVVl63Z/rUEKDNHGcx7fY6yq0dZQpNCLgodJAaltDyNqQNQxIpyRMY2PHw76GC8GxnEpd/MpNt/iKsoruort6VuoC6+MXJZlL5Wv5wWHOZ8OzMV4zdgfX885vjhjOvWqxxctoQFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ORMkIirTVyqhAbhva6OfdO9FUeMUmniBJil9afulF/I=;
+ b=kYRhflMn7THtqu3fvMmykj75kg5F1A2lvpuzNkSubo7xHgAQpRMoFRGb7FuZTqEOL3/y2ur/ITz8vy00XJho8yH+ez1yo9CCpRLiqye4i6S0Xm7/BYwfoCKNQ/aSnBkie3jVfkAWXym0CwiR+xiamrni2RVNneoNMLteB+EgYJY=
+Received: from SA0PR11CA0003.namprd11.prod.outlook.com (2603:10b6:806:d3::8)
+ by BY5PR12MB4225.namprd12.prod.outlook.com (2603:10b6:a03:211::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9791.32; Wed, 15 Apr
+ 2026 10:56:38 +0000
+Received: from SN1PEPF0002529D.namprd05.prod.outlook.com
+ (2603:10b6:806:d3:cafe::28) by SA0PR11CA0003.outlook.office365.com
+ (2603:10b6:806:d3::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.48 via Frontend Transport; Wed,
+ 15 Apr 2026 10:56:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ SN1PEPF0002529D.mail.protection.outlook.com (10.167.242.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9769.17 via Frontend Transport; Wed, 15 Apr 2026 10:56:38 +0000
+Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 15 Apr
+ 2026 05:56:37 -0500
+Received: from xhdshubhraj40.xilinx.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Wed, 15 Apr 2026 05:56:34 -0500
+From: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
+To: <linux-kernel@vger.kernel.org>
+CC: <git@amd.com>, <shubhrajyoti.datta@gmail.com>, Shubhrajyoti Datta
+	<shubhrajyoti.datta@amd.com>, Srinivas Neeli <srinivas.neeli@amd.com>,
+	"Michal Simek" <michal.simek@amd.com>, Linus Walleij <linusw@kernel.org>,
+	"Bartosz Golaszewski" <brgl@kernel.org>, Rob Herring <robh@kernel.org>,
+	"Krzysztof Kozlowski" <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2 0/3] gpio: Add EIO GPIO support
+Date: Wed, 15 Apr 2026 16:26:25 +0530
+Message-ID: <20260415105628.957689-1-shubhrajyoti.datta@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20260415-gpio-fix-v1-1-b08a89b31e6f@aspeedtech.com>
-X-B4-Tracking: v=1; b=H4sIAGln32kC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzMDE0NT3fSCzHzdtMwKXUNzE1NTC+PU5DQDMyWg8oKiVKAw2Kjo2NpaADr
- KCulaAAAA
-X-Change-ID: 20260415-gpio-fix-1745583ecf06
-To: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
-	Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>
-CC: <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, Billy Tsai
-	<billy_tsai@aspeedtech.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1776248686; l=1387;
- i=billy_tsai@aspeedtech.com; s=20251118; h=from:subject:message-id;
- bh=mm7hDoKN7iti+b5vLqDrPKkhJ+rkkywvY8n22UKL7Q4=;
- b=xltRCYSWnLbGHqjv3iCcpoxcxMICHhXNHsq8rZVGdgeOxVKQIMYm7j5TcRzziaAqE2G5qfqW0
- t13s1XuI2pMA6PQpU3uoagyImsMSbktSm1U/OoH2Ac9o2mabPBnwVlk
-X-Developer-Key: i=billy_tsai@aspeedtech.com; a=ed25519;
- pk=/A8qvgZ6CPfnwKgT6/+k+nvXOkN477MshEGJvVdzeeQ=
-X-Spamd-Result: default: False [0.04 / 15.00];
-	DMARC_POLICY_QUARANTINE(1.50)[aspeedtech.com : SPF not aligned (relaxed), No valid DKIM,quarantine];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002529D:EE_|BY5PR12MB4225:EE_
+X-MS-Office365-Filtering-Correlation-Id: c755bf1f-6314-4c7b-1f43-08de9addab4c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700016|1800799024|7416014|376014|82310400026|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	mg9AcbgcY/WBKznRiMtAxjREuuCVFgxiBknnO1mhc/haSjtmb7f7mM0Z0LEkJHvbx9Urqbcsc2qjyZU91y1MlCegYF1X6eKku3yojTL2DM03b5sbZ1FHYXmJu96oJgZyk4ieyg0Y3fUM9RlgvCTdV0eTi8AmFTlry5N//xuGeyAYuZWudevkANgHDr2MxYcUjIfkd+2J+jGXEiSLLkDmMgI477iFSdRBcKrVrb8LyCdNrW1mb/K1DP/SLN5WAjUuMPplaHu88zTJq6znA7xJ8x/9zS7hQyiv8vlAycQVqyFbe9pukiU+/4g+bXR9RXDvgokX//cgI4vJ2nwJ+2whVM+8iRn8ZtyKaECMZI3Qr9yTqiME7ZenmaUa6husVnRU3bmrtgV2yUq1JQuenx5L0SWv843a1cCEc9BkK1qycACvv8/xa37TozwFYBXHVsZzF4kjpX32T2y+NS5PAVrKreh6DhiD4DRAjvB7V9+5CCqxLcK7KxCVCSPZv9WSirR4wjqMh7wh4AJBGLDmFMgTGEuElDo4JIOohMd4QWyVxQZ7Z9xpm+FvapAyjdvZ8k5mKAWpTdf8VMcwJyoUKSmVq1wBAdnssfGLQ1mxrZyzhi5Vsb42jyo8YcuPDOU5WmHVdKqfBfzxVocR9lbpzqykd029RKnTyxAG93y5uJS+dVbrEoVyqRLCynBtwqQTjcsB2TLp4rcxEF+PEfJqGulewAL24F+lN7CC0zASBv8rCiDhwE+364LS1OMA6JUnIIr/Gh01DiJss2Yz7zgpdLxRRA==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(1800799024)(7416014)(376014)(82310400026)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	Rus2fJN7XsQhXw4iQTLnaf/uEWwWO9jNcaNzEoQekmJLcZG6Qm6tt6ULfNkc6AKwRvoxB8B614SzqTOaQi4NLSaqvH/g0HU3D8PJb0QDcXquxiVJAI2FoaRdU/cpcRhRCJbtqG7MlV2kDPHsBEO2KzhRAVS6smWrdQF9aG0apTPUWTlmVooX5AKv5kDyfuP2Vdy6sN2/h0COIf6+HqpKcziofpPdTAe65bHFjN9Cer2FCBD3gkKN1ZLsFTjwgHExUAQhg0mOI0m62E797zGql1fnF72V6gHhBB2eut7OSXhpJf4qZdsuWv6HSnLLAECt33WC1KQKxfFb/FFuDkjIxcM0Ia+7j/ITVxoSfo0wVEkvtB3yq7udmyBPMdXVaYPwScS5vukdqe2cze9OzPqIhCwbfSzeo5mnkiIVJ/lQrfLceSY56DHZT79XYAgwegBi
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2026 10:56:38.4880
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c755bf1f-6314-4c7b-1f43-08de9addab4c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002529D.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4225
+X-Spamd-Result: default: False [1.34 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[amd.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[amd.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,aspeedtech.com:mid,aspeedtech.com:email];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FREEMAIL_CC(0.00)[amd.com,gmail.com,kernel.org,vger.kernel.org,lists.infradead.org];
 	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	FROM_NEQ_ENVFROM(0.00)[billy_tsai@aspeedtech.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35159-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[]
-X-Rspamd-Queue-Id: 202CE403441
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35160-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[shubhrajyoti.datta@amd.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[amd.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:dkim,amd.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	NEURAL_HAM(-0.00)[-0.998];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[8]
+X-Rspamd-Queue-Id: 2B41240373F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The AST2700 datasheet defines reg_debounce_sel1 as the low bit and
-reg_debounce_sel2 as the high bit. The current driver uses the AST2600
-mapping instead, where sel1 is the high bit and sel2 is the low bit.
+Add the EIO GPIO support.
+Add the dt description and the compatible to the driver.
 
-As a result, the debounce selector bits are programmed in reverse on
-AST2700. Swap the G7 sel1/sel2 bit definitions so the driver matches the
-hardware definition.
+Changes in v2:
+- Add new patch to sort the compatible strings alphabetically
+- Add description of EIO block in the dt-bindings patch
 
-Fixes: b2e861bd1eaf ("gpio: aspeed: Support G7 Aspeed gpio controller")
-Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
----
- drivers/gpio/gpio-aspeed.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Shubhrajyoti Datta (3):
+  dt-bindings: gpio: zynq: Sort compatible strings alphabetically
+  dt-bindings: gpio: Add EIO GPIO compatible to gpio-zynq
+  gpio: zynq: Add eio gpio support
 
-diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-index 9115e56a1626..98b5bfbc04a3 100644
---- a/drivers/gpio/gpio-aspeed.c
-+++ b/drivers/gpio/gpio-aspeed.c
-@@ -42,8 +42,8 @@
- #define GPIO_G7_CTRL_IRQ_TYPE1 BIT(4)
- #define GPIO_G7_CTRL_IRQ_TYPE2 BIT(5)
- #define GPIO_G7_CTRL_RST_TOLERANCE BIT(6)
--#define GPIO_G7_CTRL_DEBOUNCE_SEL1 BIT(7)
--#define GPIO_G7_CTRL_DEBOUNCE_SEL2 BIT(8)
-+#define GPIO_G7_CTRL_DEBOUNCE_SEL2 BIT(7)
-+#define GPIO_G7_CTRL_DEBOUNCE_SEL1 BIT(8)
- #define GPIO_G7_CTRL_INPUT_MASK BIT(9)
- #define GPIO_G7_CTRL_IRQ_STS BIT(12)
- #define GPIO_G7_CTRL_IN_DATA BIT(13)
+ .../devicetree/bindings/gpio/gpio-zynq.yaml    | 18 +++++++++++++++---
+ drivers/gpio/gpio-zynq.c                       | 12 ++++++++++++
+ 2 files changed, 27 insertions(+), 3 deletions(-)
 
----
-base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
-change-id: 20260415-gpio-fix-1745583ecf06
-
-Best regards,
 -- 
-Billy Tsai <billy_tsai@aspeedtech.com>
+2.34.1
 
 
