@@ -1,220 +1,204 @@
-Return-Path: <linux-gpio+bounces-35193-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35194-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cJlUH7S24GlYlAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-35193-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 12:15:16 +0200
+	id uJWrM0rV4Gk5mgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-35194-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 14:25:46 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C44540CC75
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 12:15:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B9E8740E137
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 14:25:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 85FD030240B0
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 10:15:15 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 43E263033389
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 12:25:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE879313558;
-	Thu, 16 Apr 2026 10:15:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5D873B8958;
+	Thu, 16 Apr 2026 12:25:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKXuQdC9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GQGv29sX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yx1-f41.google.com (mail-yx1-f41.google.com [74.125.224.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB6739EF04
-	for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2026 10:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776334511; cv=pass; b=HXkFXwIBw+gyNrqimRHm0fEDNMQuPRq7kYP8cHj//F78x548uCJYrQfv7aeT3DdncrCxnVy3GYA8QU6Oj7WDzf0caOzsf2uqbf7DN2pAcS1M1QmjhuupWgVbyz3bW7Bfff9YITT5sM+dE6/Mm57dT2JEMxsf7agpWR7nN/7/3+A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776334511; c=relaxed/simple;
-	bh=W14sY8rFVQP5R86DvhFB8pwK3PIqD2viK/+q2E9YJ5A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=heogdfqpenAxNvGHJmEvaiD2h04rVrYq8oniDwgduMhHqumy69JDBG2gz3xgvO8ASGyehwwDMis2dYTk7IR9/z2vmGb703egdrmF0Hn2DsBxSJTk0vf3l98d6gXDh11V+LWqRnGJnp807FKKY7pwqcj6hlSNgFkpsCKXlOG3RSE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gKXuQdC9; arc=pass smtp.client-ip=74.125.224.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-6501d242e3fso7423241d50.0
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2026 03:15:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776334509; cv=none;
-        d=google.com; s=arc-20240605;
-        b=CnRYVD+zcnjedliqXkpQfk5MxVOxZH2jwUOLj/Ijpa7Kk7xSqKAQAL8Bd1oEmvRIeR
-         q7tpwDuZsd8pWT5oWNWeRT7XXZXDI89o2b6gTB8RqVGHa1bmDz/MEznGl43rvXiKtVCg
-         j+PNdMa3BE9B/Zv4rt7xOVpfsebGf2sE1uf9O4EwWB6HmuJEyaeikES2pLj02pfzK/MV
-         poSB4oZZUlS+HCUUDcdQApsNsQhhRBPpgCJ6vNjWMOQox5axg5FTyMBnns+HxVWWV6Pe
-         rY3DUa0dWlnQvtJ/RjubRIla5ws5WN3Y64FQGZ0xfj0Z4OR8QNTffdhoeu/cjuA6e4UE
-         7aUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=MIU0mNT5q/kCll0NZpz4oa7I+7IP+1P1zx78jkbqb28=;
-        fh=IfuqZzxv0CS6z09iAe0CSUIZLpHCMqx6xhJVTQflvVY=;
-        b=bUSM8CPshpLdq7odxduntB9cDSHNVp9FZtFoYLp4wBq4Ot4hL3y64PlCqSjLlvAyCy
-         tlL+Z7lpJe2g/0UhBidNdWd9BdVzHFioEaF6+HbtMPmA38t/J8yMf0LWpBAc8O2dZiFK
-         3GGVxmVRZmCsaNl3xnNvcZxONlZoaD6Mmj32Dnqm1iCJ5cb5bbUCK3aquVpDfw1qKS4j
-         h2YzzUUCwITcOx2wlDNcq48Z0xNhLEj/k3a4B3E+TiAGOWIHQ87ogaWCKGwsIaLSmAh9
-         T4oNIaSEB4LgzgOCaRcbs/aAsCfn4vX3/jA2Dde5QtWpihx6VSBiXvZ7BT/g6ftA8tye
-         uAMg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776334509; x=1776939309; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MIU0mNT5q/kCll0NZpz4oa7I+7IP+1P1zx78jkbqb28=;
-        b=gKXuQdC91ojrprddfuB+MM5IqwwSTDX3RwvSyRUgLazw8NYB0gwlLSis5TQ5hfqGJ/
-         3n8oWodXQIc3Oepd0gK8snZoq6EUdx5d1IhNAU9vu2nxLslkGyBmOTpGjb8AMxPnRAGH
-         3qYYaj7pix3wE2VsIANblF6vCuIz46REiZBk/r+K3Ik9atZY+F7/VVC0I/jkyijkf0v0
-         3E3XQxildQhQlmwR2/HxjE99+zJwmGwVqLPIn0rxdZc215ttJUSvdgT22lb6s2MJ8Go+
-         ebwp7NrOG8gtsmiU48hIbobm/zUSW0vxXg4yFUiD3BWOh9WQvbNJfjk1x7jNMGNOQF2c
-         xUJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776334509; x=1776939309;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=MIU0mNT5q/kCll0NZpz4oa7I+7IP+1P1zx78jkbqb28=;
-        b=Ua0UKmC9HqNE2n5C5efPtHszrtS3iw0FhTPUzNrqe6Oo8cHeYtKlGpTjDsdyURohzO
-         OHQ2kcWWIpNK0y8JX8sIlSgmjRfcubh2l+cCYHlktXXv3rBtEM6qcvxslM3n4Nln//bd
-         J2R+/Zh/lPK6i3wKQln3sunxMt8C+M0SMo0ONolzIy4dQV9nrUZwrUu4L/lVo8NNIaSu
-         QFu6GBy6zRSRFPLFj35rbdqmlSWkjgHvj72B6CNFRHR2gy+5Ws04Wz6yD8Wf1DeDHYht
-         Lqde/mLAMSWJYJ+2R/J4FCw4YT4Vo/FLaZrsDlGUTQdtyuU4v18oSWN6sp3m2a/rGAKF
-         2zEg==
-X-Forwarded-Encrypted: i=1; AFNElJ9poPdSpxxxHgeuQWfB9q/oblZnhUUIaQMAeWmBdRjeQibcTnhllJuXvqmZDjxvySEoQVx2hlHOzMfW@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdXt5GV8bqvVfAlQSXxuj9Xwh4umHHb5k9UCmgMNG+kmAiOfFU
-	syAWbcR9l0HDgdWYjzoNkvG+6SsOULpTB+cN7j8nPQX/jeGqjuGF9m2blHjizCd8198XZunOCQA
-	YvURim7f+cPR6Mk7qGG71/dv6UH+ynK4=
-X-Gm-Gg: AeBDievcPNHF/U0wDxsdJ83UsDN6N0pyHSj++a7USNu57SupL5pLADl95jl66Deivmd
-	OKimibDAECo3DVY6opsttske0EeQCP9moiRzb3k9Ni/yTQgHySy/n2EQ1AvGj4TQbaSlK+9gQe0
-	R4NZHSyTy5obMym06yjKhZ6/qeRh1Ku2da0zIrnE96v20v3MgaegnfM4aYOov6zIWfSbRMxWvLu
-	qGEG/VKQY0XTNXB4DaEJRjhup7xPgxFknZtqF0NqsTDJIGDTXWZQb565EhAsTxf0pspEfnJgJiJ
-	P3hPgX9MnPFhJ5ws9AqR
-X-Received: by 2002:a53:df4a:0:b0:64a:d04e:a340 with SMTP id
- 956f58d0204a3-65198a57036mr16625320d50.11.1776334508728; Thu, 16 Apr 2026
- 03:15:08 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C69337C924;
+	Thu, 16 Apr 2026 12:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776342318; cv=none; b=BxN9ADopjT0HG67ERqv27hTKoTqduufKYyqNQQVEskErZusc7h4cHqQrNDfWE/SFLyKX16g5jXT54Xde2HaMrxPV4Q6gUQOSGC3FPPnSWxfIbdpoGLYoNnXoowfaZAPpalMqUekDmhLyuprL40HoH41iMxukcXlhldI0BRF2E7s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776342318; c=relaxed/simple;
+	bh=gECMS4EGrtN1lWkNcMdqV1cQaJPbxrgRQTXN3zouHSg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qdy/3MK0MwfEslDJpUvmQ3NbrxoYe4MuYEDd5I/0hg/Nklg/98f/WeraW+0hZjOYR3ll5HB/lln9Vf/aNZ/P5qvUZTryMZaQMBekQrlZ6d0uvRI+GqT9D3Ogs1R7/zYBLCu6V41SnsfnNkoGkdpGsPaklv/lrlL6JXwJhjAW5P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GQGv29sX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4797C2BCB3;
+	Thu, 16 Apr 2026 12:25:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776342318;
+	bh=gECMS4EGrtN1lWkNcMdqV1cQaJPbxrgRQTXN3zouHSg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GQGv29sXj5S5z7UPKnXaUJAuD1qc92DQaWs8UXQ6wwBCK62RBOeMuB3RtNcxzLs+n
+	 PPcHL7L8pFqT/h2G0bvvPkUySB8nqp1hX+g8DsxNBEPpxoa8+yXm1bMdZVixBjqxgs
+	 n60V3osh+8lSW6pt2nDmsfqoDHDW6Auv9CDrXKgdtoPlM9Xla54AXl1OSAYSKpcXrA
+	 NmL+fSV7Qk/BTzx5WK8y+vV+U+fxOTS5SiuiemUg0UByoPARoWSlKdZYhXUYnMvTFf
+	 DgJsTYvf1ogHE4V/gC2FO90mA6aK9sVcz0Z1Cm9dDcGVpaCAj1nCKENYb7/YBcL1F4
+	 1oc9q29NjGBrg==
+Message-ID: <1fd72d1b-f5cd-447f-ae11-6f4d4426b8e8@kernel.org>
+Date: Thu, 16 Apr 2026 14:24:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260412133356.2536585-1-lgs201920130244@gmail.com>
-In-Reply-To: <20260412133356.2536585-1-lgs201920130244@gmail.com>
-From: Guangshuo Li <lgs201920130244@gmail.com>
-Date: Thu, 16 Apr 2026 18:14:54 +0800
-X-Gm-Features: AQROBzAzpUVwDqsuwaFup_uU3Pw92c3_Go_sblTv00ait3DeiQxzl9cHn1aUjew
-Message-ID: <CANUHTR-s4dJCy8j2qXtsgTX8N9SFTJiipYnaM5TngUBpRWsqxQ@mail.gmail.com>
-Subject: Re: [PATCH] misc: microchip: pci1xxxx: fix IRQ vector leak in gp_aux_bus_probe()
-To: "Vaibhaav Ram T.L" <vaibhaavram.tl@microchip.com>, 
-	Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 55/61] interconnect: Prefer IS_ERR_OR_NULL over manual
+ NULL check
+To: Philipp Hahn <phahn-oss@avm.de>, amd-gfx@lists.freedesktop.org,
+ apparmor@lists.ubuntu.com, bpf@vger.kernel.org, ceph-devel@vger.kernel.org,
+ cocci@inria.fr, dm-devel@lists.linux.dev, dri-devel@lists.freedesktop.org,
+ gfs2@lists.linux.dev, intel-gfx@lists.freedesktop.org,
+ intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
+ kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+ linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-mm@kvack.org,
+ linux-modules@vger.kernel.org, linux-mtd@lists.infradead.org,
+ linux-nfs@vger.kernel.org, linux-omap@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-pm@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-sctp@vger.kernel.org,
+ linux-security-module@vger.kernel.org, linux-sh@vger.kernel.org,
+ linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+ ntfs3@lists.linux.dev, samba-technical@lists.samba.org,
+ sched-ext@lists.linux.dev, target-devel@vger.kernel.org,
+ tipc-discussion@lists.sourceforge.net, v9fs@lists.linux.dev
+Cc: Georgi Djakov <djakov@kernel.org>
+References: <20260310-b4-is_err_or_null-v1-0-bd63b656022d@avm.de>
+ <20260310-b4-is_err_or_null-v1-55-bd63b656022d@avm.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20260310-b4-is_err_or_null-v1-55-bd63b656022d@avm.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35193-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-35194-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lgs201920130244@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[55];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 2C44540CC75
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,avm.de:email]
+X-Rspamd-Queue-Id: B9E8740E137
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi=EF=BC=8C
+On 10/03/2026 12:49, Philipp Hahn wrote:
+> Prefer using IS_ERR_OR_NULL() over using IS_ERR() and a manual NULL
+> check.
+> 
+> Semantich change: Previously the code only printed the warning on error,
+> but not when the pointer was NULL. Now the warning is printed in both
+> cases!
 
-On Sun, 12 Apr 2026 at 21:34, Guangshuo Li <lgs201920130244@gmail.com> wrot=
-e:
->
-> gp_aux_bus_probe() allocates IRQ vectors with pci_alloc_irq_vectors()
-> before initializing and adding the second auxiliary device.
->
-> When pci_irq_vector(), auxiliary_device_init() or auxiliary_device_add()
-> for the second auxiliary device fails, the function unwinds the auxiliary
-> devices and ida allocations, but leaves the allocated IRQ vectors behind.
->
-> Add a dedicated error path to call pci_free_irq_vectors() after IRQ
-> vectors have been allocated successfully.
->
-> Fixes: 393fc2f5948f ("misc: microchip: pci1xxxx: load auxiliary bus drive=
-r for the PIO function in the multi-function endpoint of pci1xxxx device.")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
+NAK, read the code
+
+> 
+> Change found with coccinelle.
+> 
+> To: Georgi Djakov <djakov@kernel.org>
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Philipp Hahn <phahn-oss@avm.de>
 > ---
->  drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c b/drivers/misc=
-/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-> index 34c9be437432..5e1f99a35100 100644
-> --- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-> +++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-> @@ -93,14 +93,14 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, con=
-st struct pci_device_id *id
->
->         retval =3D pci_irq_vector(pdev, 0);
->         if (retval < 0)
-> -               goto err_aux_dev_init_1;
-> +               goto err_irq_vectors;
->
->         pdev->irq =3D retval;
->         aux_bus->aux_device_wrapper[1]->gp_aux_data.irq_num =3D pdev->irq=
-;
->
->         retval =3D auxiliary_device_init(&aux_bus->aux_device_wrapper[1]-=
->aux_dev);
->         if (retval < 0)
-> -               goto err_aux_dev_init_1;
-> +               goto err_irq_vectors;
->
->         retval =3D auxiliary_device_add(&aux_bus->aux_device_wrapper[1]->=
-aux_dev);
->         if (retval)
-> @@ -113,6 +113,9 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, con=
-st struct pci_device_id *id
->
->  err_aux_dev_add_1:
->         auxiliary_device_uninit(&aux_bus->aux_device_wrapper[1]->aux_dev)=
-;
-> +
-> +err_irq_vectors:
-> +       pci_free_irq_vectors(pdev);
->         goto err_aux_dev_add_0;
->
->  err_aux_dev_init_1:
-> --
-> 2.43.0
->
+>  drivers/interconnect/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index 8569b78a18517b33abeafac091978b25cbc1acc7..22e92b30f73853d5bd2e05b4f52cb5aa22556468 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -790,7 +790,7 @@ void icc_put(struct icc_path *path)
+>  	size_t i;
+>  	int ret;
+>  
+> -	if (!path || WARN_ON(IS_ERR(path)))
+> +	if (WARN_ON(IS_ERR_OR_NULL(path)))
 
-I re-checked this issue on our side and found that my previous
-analysis was incorrect. This patch is therefore not needed.
+IS_ERR_OR_NULL is simply discouraged, but beside of code preference, you
+just added bug here. This is clearly not equivalent and you emit warn on
+perfectly valid case!
 
-I'll drop this patch.
-
-Sorry for the noise, and thanks.
-
-Guangshuo
+Best regards,
+Krzysztof
 
