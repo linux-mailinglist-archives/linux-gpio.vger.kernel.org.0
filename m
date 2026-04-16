@@ -1,288 +1,249 @@
-Return-Path: <linux-gpio+bounces-35196-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35197-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eGTqKf/X4GlymgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-35196-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 14:37:19 +0200
+	id 2HAmO5zy4GkZnwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-35197-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 16:30:52 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C83740E4E8
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 14:37:19 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5771740F941
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 16:30:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 363283043D01
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 12:32:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 107D43050231
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 14:30:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4856B3B892B;
-	Thu, 16 Apr 2026 12:32:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C5C7217F27;
+	Thu, 16 Apr 2026 14:30:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gIZa+0gv";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="AwJc+2sd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qJ6zi6Ln"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FB03B38B0
-	for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2026 12:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B914A208D0
+	for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2026 14:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776342777; cv=none; b=tL6hpBB+6pLc5Y93vvZDySomZUbpcg/joYIxqSTSNPRaYc+nGwjsPXwW4Y09dTxUubKhsls6RfwC7An0rALEgWME5OV1Y+7Q0uLAfVO7vx1sXPkMDu11+IwYNQdiESmoi5tgVtEtARKvV2Ombq7rU3oqbjTAUPFWKuHLlxrNmtg=
+	t=1776349843; cv=none; b=Rtz7BMSVsbsnQcynFeIYK7KBUP4oWXisPIWZnRxDK+uBWEy8/p4Y+9MeeD4yE2JunWfj/LEZPBeesOX3/lRfQQEx2Lo4ZDvJ3IZSAnEQZjm2fzrVrWJJsqx8QlbcgYeUX4wHeztsywkBnVowfIR8mkXg/Xp+sSOT73xRQChO2zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776342777; c=relaxed/simple;
-	bh=cwE1pKm5PJA5sW7aqFj52asvuoc1NO8t4F4Tt0GXABo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G+MBKJh/JlWVNGsvkKwYrosW1Zrjn3wrZWNUnqYUBBe9qnloUMMVsiCdYTIOfnWZmSvZbfpJhJWBTb7EmVCiiqEO6M1wcAOnHUg//CAf6nlcZ/v8h/i9871Fb79rlTIil4ef8AJbfTgXugl7wkMhz2wYBhfVgyfA/aoK29Dqtzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gIZa+0gv; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=AwJc+2sd; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63G8CXIp2576111
-	for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2026 12:32:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	z+j9Ne7osd79sCPFakjkyiz6R7TFYBWznjRj3B5Vnuc=; b=gIZa+0gvPJBkOEcr
-	ZYMkHmJruDbYYrXt+yCctRix3Go4E5tFyvdg5NUzTFD2aAUMSfzxE2+YfYIrE/fH
-	B2ukGpSh4uL0p17gcBzjPVwjHL61E3Fj7Kgk27ZFcjO4766fVxqBDQ1Yic2pAgv6
-	3cNzjYAieVQyRafmrQG/xa8KU3gKv7xWZ4GVXx4JLzcfYvO0Lep49I4WeLHASDz4
-	GlCgA9j7LDe8jbjsiDlxTiG45rv+VvSAabr5RHiSTUXfX/WZYAFXcr8I/5hxbfgK
-	Uap9lIEGm93G/qekm2ayqA0O3Tmjel86Fv+1FOJjjbARH3dN50E4XK+CX/rv6txe
-	GIpT6Q==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4djv27gxc3-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2026 12:32:54 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2b454cac322so45652855ad.2
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2026 05:32:54 -0700 (PDT)
+	s=arc-20240116; t=1776349843; c=relaxed/simple;
+	bh=gfLBIxCP9gTBkqUQkCDioJa5j+uF4TVTBk1UlYn4f1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xd7jtsYVexCNc8Wf3DjAfmPxdgtAlWY6dRLV7w2t46hzh+YSKNOvXQbpIVjFkzf0/AHb3gGUFCeDI1PAx6FhOsWa2nJ0+VnZAHgCv3YxextPnEo91QkzHJdI3tWV+6eIxo1Wdz3mWhr/ZD7ACPe+ufAtmRy1MWMagpnszHFSF0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qJ6zi6Ln; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-488a8ca4aadso96438365e9.3
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2026 07:30:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1776342773; x=1776947573; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=z+j9Ne7osd79sCPFakjkyiz6R7TFYBWznjRj3B5Vnuc=;
-        b=AwJc+2sd5nJ74xXVtTDZPT6QC6SjG6gK/xZD3a6VwnLCUL65zRWvUNOj8C4DszMHv5
-         vh/AnaFT9JLbj5JJs91wRdovWsyOF26blMmczgBvcJvdSP4kyKwhQiCwS1yOZsqJvleU
-         vPwsblgep1CzKPzbSd4H7azxnyqvS/JrBz+n4tJt5MGl74LtKIxibw7lywWWE/Z6KAcb
-         dsZsomwZ6keeIRnbp0B6Eo8wpy62nJVp55YRuePpH9Vn+KD4c/36RHJ1SeIe3bEnX8A5
-         iIGHGeczSVrr5sEbqUdkLniEbhTw5KMniYqDDbZv/+BOMAw4BgI//xfBP3Zhf5v/4tJD
-         6HYA==
+        d=gmail.com; s=20251104; t=1776349840; x=1776954640; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+kwLEL1gpqQktpl52WXxb4CxP8KVAiLEC1DOuEVmbLQ=;
+        b=qJ6zi6LnKLsu+MVzgdExoi4dB2CNROHGceCpeUcLO51pEu55t4jM8ha3AaKgEZMJn6
+         dTKO5cmYsRyBj1MlZOzVWvvgkDbyOVvDTucPxMIAzpwdwEOf5d0P5OldH5rf1mO1513S
+         ypzDiC19vgV+PW++gkvJcfSsCbWD4Y3bvoWTvsamW3lPgA12JPcEcki4AluTghtOCc2n
+         kflv7+hQG8A205uy7G8Oa4FoBithYCUp6WuV9O16Tlzja8B659SFVbZFmznNcSN9N+hg
+         ghxj0sGUTdxGJ6RpBttuPuJ/mlO/xV0R4lmSPdxMSHuV/FDtoaGYEwiayhC0JkWUUkkz
+         9bJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776342773; x=1776947573;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z+j9Ne7osd79sCPFakjkyiz6R7TFYBWznjRj3B5Vnuc=;
-        b=mGFnXyE5kC/HnaQjA+5RsymbsC5w2J1V1eN+vc+qVBYC82ifsnYRboerIJlwy/xOdT
-         h5gpnugzOo8x1Ixc6dOT8NLQgML+YKmhJ0AwT41FpeioKDAJvJ5qFnLA6DVD9TYQB2gZ
-         s6xfG0IauWgcmPM3lZpK6zZZoM4vfscQ2BbS8UH1uaFd6hg0W2SMXHOl1KELXJ5Fp8Xu
-         aZXw84okJWzbTxS6Ak5Y7GXn/TQRHZRSbJLPFZk6cfBjKt/WwUdPDtIhi8ZTvEzXV/oQ
-         ZDk+zGz/bnBOyuwER5S1yo7+Om3yhD7QBk3Z9DZFF8C/OxWSN28Zr+g/aciWWJc1X4IN
-         aOww==
-X-Forwarded-Encrypted: i=1; AFNElJ+vuwwxeHoPQxU9HyiJLr/YlG2rML56dtm+OhmhAU8Ykt9HRtWIh6fMhj+Y26nGdm7gNuYoLx8yb5pF@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRqfKpBaL1cQvyL9v30UeNHtC7tvUGlu6yC6422b0ToSG0efZw
-	9RXK6JCrjBTokHMOhSKEmhv65zOUscRlXPJnb+MJ3kQJa1Dz05JHLbg06exaIrar5rEI11npU8h
-	yTen3j5JMzvGNWEkthwKfct1q92Ed9bCCYEwCoYX+Id0JYpd0eNQFroTCr2j+0qbHcg322Jc/
-X-Gm-Gg: AeBDieu9YpmzKt+15qhuIydGsTHrMlCOmWKG0z2QDWuqwJW92ObATnPNhQDB1HOB0dn
-	g2G6Wn1vJjsVD+JKoWR+nec663R6EqKbAtVuPovSLQPdVBve20GmGWvFNqgHt7Q8I/viV8jte4V
-	QN8LL9+YfV7SyfccqSDc++Za86tPmbxjglLSq84Tp35lp+DwoaZ5oMEAxLQP71HKY2ZTvZ80d4Z
-	LaD02AjQ2M847f4+GxTYNsGFNeZqSppo3wZC+zozixq/9iwbAexSqmWJGBps4A4QrbCziJ8LKUi
-	5K9RMlqtDg6xCD3MhiGJ8KoG9NoHUg7p/KDwHBACa5dlP2ZiRUbOpXhNRnJSnuEdkQ2bVfuOa0L
-	uj6eWOg3OtNQwvZz3U3+HO2DF+YZkjaOfgu0DEiwjAXs1CWKvvg==
-X-Received: by 2002:a17:903:98c:b0:2b4:5b1a:d09c with SMTP id d9443c01a7336-2b45b1ad1ddmr181277425ad.15.1776342773447;
-        Thu, 16 Apr 2026 05:32:53 -0700 (PDT)
-X-Received: by 2002:a17:903:98c:b0:2b4:5b1a:d09c with SMTP id d9443c01a7336-2b45b1ad1ddmr181277225ad.15.1776342772961;
-        Thu, 16 Apr 2026 05:32:52 -0700 (PDT)
-Received: from [10.219.49.106] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b4782a93c7sm49156115ad.62.2026.04.16.05.32.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2026 05:32:52 -0700 (PDT)
-Message-ID: <9963cee3-cd65-4583-b21e-0ac4eaca9bf2@oss.qualcomm.com>
-Date: Thu, 16 Apr 2026 18:02:49 +0530
+        d=1e100.net; s=20251104; t=1776349840; x=1776954640;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+kwLEL1gpqQktpl52WXxb4CxP8KVAiLEC1DOuEVmbLQ=;
+        b=hN1zBZFn/mIdgqq8q+LjW8qjWMxzAZQG73zO3pUnu5Ljuw1snih48DLAy+1Qnl/UZz
+         IxadyvvKI4rnHSaOLL6UdqB5tWclADfDTOwX9SZAW67gxn9NqQ8/+urrFZ8PXgBa+R98
+         G0H9EhXMBebhbasCy2PzPd6IPB3q5YqnfjXhqKy/MrS0hV5pVU+GIXgy9tssgpoAZZIB
+         B9XpetHXFt1omJz6F5kLWA2A4pd2lFKQj/LbyeQNV1ObPoUSwU0LgaIhaKTJDYDHJY0M
+         y5JamuWX+h83N1TfS1UopBURdbRKrcU4mpvE6lAOl/8YAaK/YjAtDwJgj1WPTEhOAe4u
+         GSoA==
+X-Forwarded-Encrypted: i=1; AFNElJ/SWuDw1UtcM8RmAawY+yaJmJ/SWFkBpAy/ak5RLMwTkxwLya3twuMQS4ZgXAxgx8Q912Z/ywDIMkev@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXdvkBdtKhEV4MDmqO6GWocBCj5K8ny9LKasCcRTw1pTT2joF9
+	BlOgMDY6BA9n2KAOQPfumLgmgJmgk0Ibdtfy/7LKtRqGU0ca8RFAnU0S
+X-Gm-Gg: AeBDietVfvs+V9HV/oGJkGrPXOkeJ/38vapehTyNA6Q99JYluJf4ESVW0s7yW2F3apa
+	kjrjtSPWba9rnD2vH2UC+Yoz7yhkXdwK1gjp0vsoxJ1HfQB2ayLbWL++HBDaOMsinc2GujWglHd
+	CaWURbpkmZ1FHbJpcWSTCkqM41HBKL1vYlHkrdLkjDboaq3oF7VHsrMObPNv01i65ag3TlJOTum
+	AFfPZwCcXWfTAZ/o2y0hV497bAGy2PL0c5psWGSZZLTw/rNo8wZb6hd/eUHgDqr3dv7QD5K5gP5
+	14eYsDBkL5QnS5a3VwxN/XimauuDlFV/3390ZoKAbVDYsc8xwaN5ydmqh+UdU/ooZfCl0azlKYV
+	cSW4Fl0HhFHiHI6vy4mzQ843HLd2aL4rrQWnJbxPFszrMTl98TQZib4v0eLuRlBkC67q+UdZU3D
+	pFQpVgpy95AYD9ZCFJn55AaR6JjQpa6W3J6EtJ3apU7RYsTCct/rkSDUcxkqZtM+6ysEQFKrEuB
+	BjjuJwRTgcVrSJsicboEAjr
+X-Received: by 2002:a05:600c:1391:b0:487:5c0:671f with SMTP id 5b1f17b1804b1-488d67e6a48mr377654785e9.9.1776349839862;
+        Thu, 16 Apr 2026 07:30:39 -0700 (PDT)
+Received: from orome (p200300e41f131500f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f13:1500:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488f5813970sm54034215e9.1.2026.04.16.07.30.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2026 07:30:38 -0700 (PDT)
+Date: Thu, 16 Apr 2026 16:30:35 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, pshete@nvidia.com, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, arnd@arndb.de, bjorn.andersson@oss.qualcomm.com, 
+	conor+dt@kernel.org, dmitry.baryshkov@oss.qualcomm.com, ebiggers@kernel.org, 
+	geert@linux-m68k.org, krzk+dt@kernel.org, kuninori.morimoto.gx@renesas.com, 
+	linusw@kernel.org, luca.weiss@fairphone.com, michal.simek@amd.com, 
+	prabhakar.mahadev-lad.rj@bp.renesas.com, robh@kernel.org, rosenp@gmail.com, sven@kernel.org, 
+	thierry.reding@kernel.org, webgeek1234@gmail.com
+Subject: Re: [PATCH 6/6] arm64: defconfig: make Tegra238 and Tegra264 Pinctrl
+ a loadable module
+Message-ID: <aeDv2oI6lJOlfJxR@orome>
+References: <20260409131340.168556-1-pshete@nvidia.com>
+ <20260409131340.168556-7-pshete@nvidia.com>
+ <9408f231-7a12-425c-b8de-2990d3162bb3@kernel.org>
+ <097f71e0-cbc8-44e3-ba60-8bac79cf5217@nvidia.com>
+ <19f390ab-ffa9-4237-9f24-ead07b627a89@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] pinctrl: qcom: lpass-lpi: Switch to PM clock
- framework for runtime PM
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linusw@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, srinivas.kandagatla@oss.qualcomm.com
-References: <20260413122233.375945-1-ajay.nandam@oss.qualcomm.com>
- <20260413122233.375945-2-ajay.nandam@oss.qualcomm.com>
- <0975d136-0013-425b-a465-08f07efcefc7@oss.qualcomm.com>
-Content-Language: en-US
-From: Ajay Kumar Nandam <ajay.nandam@oss.qualcomm.com>
-In-Reply-To: <0975d136-0013-425b-a465-08f07efcefc7@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=PJQ/P/qC c=1 sm=1 tr=0 ts=69e0d6f6 cx=c_pps
- a=JL+w9abYAAE89/QcEU+0QA==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
- a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22
- a=EUspDBNiAAAA:8 a=3rPMQvdw1QVwHz-kkGoA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=324X-CrmTo6CU4MGRt3R:22
-X-Proofpoint-GUID: jqVMDprkOjKLaTDiTnR0qr3p5YwLVO5q
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDE2MDExOSBTYWx0ZWRfX7GZ5wnlI2cG9
- eNjq7kNLDPThuw9DgVHA9My5eTl/2/OobTuEaMdiL8HAUFTb2DSoajv2TWFgWVMtT/g2gZIneLA
- OZDYNPaQA8vuWPz2GosPIQc/Dok/MEmS05lu97SKMQnqACnyZv1CuaKhOV08TijFMw7X+DtiF9C
- RBFzrFabRVFnWMBteNsdS/7iCTDN2D7boRxRGaFdC5uWAzfnzfRhg0sMJGP55Co+aasdXM1kf19
- bi6KTS09QUDrlXdljjiOz6Y59Ab5dVSKz3XbgStG1pNj+f4JRhrjERFOqGYnI1q9eHIlvFb0YKn
- z12uOzyVG9CyXWe0biyKjWCsOODvgXoHVzkX34e13+3b86uQQNRcHfw8XUEcOoS1wov9ssMmkyM
- Cq571FWA/ndPswRINk9hKzzzYtHK7nHZ4NL4X8JD4/zidwp8cIPFSszJVE9DXX28rfzASlJbGwe
- LZ0Lb1hxWw3b+24RuUA==
-X-Proofpoint-ORIG-GUID: jqVMDprkOjKLaTDiTnR0qr3p5YwLVO5q
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-16_03,2026-04-16_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 spamscore=0 adultscore=0 phishscore=0
- impostorscore=0 bulkscore=0 priorityscore=1501 clxscore=1015
- lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604070000
- definitions=main-2604160119
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zdz2kxftdpnb3xlu"
+Content-Disposition: inline
+In-Reply-To: <19f390ab-ffa9-4237-9f24-ead07b627a89@nvidia.com>
+X-Spamd-Result: default: False [-2.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	MID_RHS_NOT_FQDN(0.50)[];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:dkim,qualcomm.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oss.qualcomm.com:dkim,oss.qualcomm.com:mid];
+	TAGGED_FROM(0.00)[bounces-35197-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35196-lists,linux-gpio=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	FROM_NEQ_ENVFROM(0.00)[ajay.nandam@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FREEMAIL_CC(0.00)[kernel.org,nvidia.com,vger.kernel.org,arndb.de,oss.qualcomm.com,linux-m68k.org,renesas.com,fairphone.com,amd.com,bp.renesas.com,gmail.com];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[24];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 1C83740E4E8
+	FROM_NEQ_ENVFROM(0.00)[thierryreding@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-0.999];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email]
+X-Rspamd-Queue-Id: 5771740F941
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
+--zdz2kxftdpnb3xlu
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 6/6] arm64: defconfig: make Tegra238 and Tegra264 Pinctrl
+ a loadable module
+MIME-Version: 1.0
 
-On 4/14/2026 2:07 PM, Konrad Dybcio wrote:
-> On 4/13/26 2:22 PM, Ajay Kumar Nandam wrote:
->> Convert the LPASS LPI pinctrl driver to use the PM clock framework for
->> runtime power management.
->>
->> This allows the LPASS LPI pinctrl driver to drop clock votes when idle,
->> improves power efficiency on platforms using LPASS LPI island mode, and
->> aligns the driver with common runtime PM patterns used across Qualcomm
->> LPASS subsystems.
->>
->> Signed-off-by: Ajay Kumar Nandam <ajay.nandam@oss.qualcomm.com>
->> ---
->>   drivers/pinctrl/qcom/pinctrl-lpass-lpi.c      | 36 +++++++++++++------
->>   drivers/pinctrl/qcom/pinctrl-lpass-lpi.h      |  2 ++
->>   .../pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c   |  5 +++
->>   3 files changed, 32 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
->> index 76aed3296..6d50e06ef 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
->> @@ -14,15 +14,16 @@
->>   
->>   #include <linux/pinctrl/pinconf-generic.h>
->>   #include <linux/pinctrl/pinconf.h>
->> +#include <linux/pm_runtime.h>
->>   #include <linux/pinctrl/pinmux.h>
->>   
->>   #include "../pinctrl-utils.h"
->>   
->>   #include "pinctrl-lpass-lpi.h"
->> +#include <linux/pm_clock.h>
-> 
-> Please move it up, together with other non-local includes
-> 
-> [...]
+On Mon, Apr 13, 2026 at 10:49:50AM +0100, Jon Hunter wrote:
+>=20
+> On 10/04/2026 09:25, Jon Hunter wrote:
+> >=20
+> >=20
+> > On 10/04/2026 07:37, Krzysztof Kozlowski wrote:
+> > > On 09/04/2026 15:13, pshete@nvidia.com wrote:
+> > > > From: Prathamesh Shete <pshete@nvidia.com>
+> > > >=20
+> > > > Building the Pinctrl driver into the kernel image increases its siz=
+e.
+> > >=20
+> > > That's obvious.
+> > >=20
+> > > > These drivers are not required during early boot, build them as
+> > > > a loadable
+> > > > module instead to reduce the kernel image size.
+> > >=20
+> > > So you replace built-in into module?
+> > > >=20
+> > > > Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> > > > ---
+> > > > =C2=A0 arch/arm64/configs/defconfig | 2 ++
+> > > > =C2=A0 1 file changed, 2 insertions(+)
+> > > >=20
+> > > > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defc=
+onfig
+> > > > index dd1ac01ee29b..f525670d3b84 100644
+> > > > --- a/arch/arm64/configs/defconfig
+> > > > +++ b/arch/arm64/configs/defconfig
+> > > > @@ -711,6 +711,8 @@ CONFIG_PINCTRL_SC8280XP_LPASS_LPI=3Dm
+> > > > =C2=A0 CONFIG_PINCTRL_SM8550_LPASS_LPI=3Dm
+> > > > =C2=A0 CONFIG_PINCTRL_SM8650_LPASS_LPI=3Dm
+> > > > =C2=A0 CONFIG_PINCTRL_SOPHGO_SG2000=3Dy
+> > > > +CONFIG_PINCTRL_TEGRA238=3Dm
+> > > > +CONFIG_PINCTRL_TEGRA264=3Dm
+> > >=20
+> > > No, you just added as module. Why do we want them in upstream defconf=
+ig?
+> > >=20
+> > > Standard question, already asked Nvidia more than once.
+> >=20
+> > Yes :-)
+> >=20
+> > Prathamesh, what we need to do is ...
+> >=20
+> > 1. Add a patch to populate the pinctrl DT nodes for Tegra264 device.
+> > 2. In this patch, only enable pinctrl for Tegra264 because we are
+> >  =C2=A0=C2=A0 lacking an upstream board for Tegra238 for that moment. I=
+n the commit
+> >  =C2=A0=C2=A0 message we should add a comment to indicate with Tegra264=
+ platform is
+> >  =C2=A0=C2=A0 using this.
+>=20
+> Thinking about this some more, I think I would prefer that we skip the
+> defconfig patch and just add ...
+>=20
+>  default m if ARCH_TEGRA_238_SOC
+>=20
+>  default m if ARCH_TEGRA_264_SOC
+>=20
+> ... in the respective Kconfig files for the drivers.
 
-ACK, will correct in the next version
+I know some people have objected to this type of construct in the past
+because it means that you automatically enable these drivers in configs
+where it previously wasn't, bloating people's test builds, etc.
 
-Thanks
-Ajay Kumar Nandam
+I also know that people don't like it when we add seemingly random
+options to defconfig.
 
-> 
->> +	pm_runtime_set_autosuspend_delay(dev, 100);
->> +	pm_runtime_use_autosuspend(dev);
->> +	pm_runtime_enable(dev);
-> 
-> devm_pm_runtime_enable() will let you drop the manual disablement below and
-> in .remove()
+For this particular case, given that the options are dependent on the
+per-SoC Kconfig symbols I think the "default m" above is a fair
+compromise.
 
-ACK, will switch in the next version.
+Thierry
 
-Thanks
-Ajay Kumar Nandam
+--zdz2kxftdpnb3xlu
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
->>   
->>   	pctrl->desc.pctlops = &lpi_gpio_pinctrl_ops;
->>   	pctrl->desc.pmxops = &lpi_gpio_pinmux_ops;
->> @@ -539,20 +540,33 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
->>   	return 0;
->>   
->>   err_pinctrl:
->> +	pm_runtime_disable(dev);
->>   	mutex_destroy(&pctrl->lock);
->> -	clk_bulk_disable_unprepare(MAX_LPI_NUM_CLKS, pctrl->clks);
->>   
->>   	return ret;
->>   }
-> 
-> [...]
-> 
->> --- a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
->> @@ -139,10 +139,15 @@ static const struct of_device_id lpi_pinctrl_of_match[] = {
->>   };
->>   MODULE_DEVICE_TABLE(of, lpi_pinctrl_of_match);
->>   
->> +static const struct dev_pm_ops lpi_pinctrl_pm_ops = {
->> +	RUNTIME_PM_OPS(lpi_pinctrl_runtime_suspend, lpi_pinctrl_runtime_resume, NULL)
->> +};
->> +
->>   static struct platform_driver lpi_pinctrl_driver = {
->>   	.driver = {
->>   		   .name = "qcom-sc7280-lpass-lpi-pinctrl",
->>   		   .of_match_table = lpi_pinctrl_of_match,
->> +		   .pm = pm_ptr(&lpi_pinctrl_pm_ops),
-> 
-> I believe SoCs other than kodiak also require this change to avoid
-> regressions.
+-----BEGIN PGP SIGNATURE-----
 
-This patch is currently limited to SC7280, where the runtime PM behavior
-has been validated.
+iQIzBAABCgAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmng8ocACgkQ3SOs138+
+s6GLDw//UkW/3SDVTez5uuRcccg2eBGqX/zaY1yU6TYz909vpObsLW+WrxFfq5Un
+qspGtIXmoOokDmBhG8UNvSainJ/q8PKsEfUIO7+jzvmr/FoxFdttJO7Ouo2D7SQL
+FuOg8npa4zaeybyh/PSr/XK1ET8CFJ8uJ7bNo7dq5lvnLA4LxRRrGgbJPUQYzIAK
+ZA8kwfGqWN6ZSaK7L57hRg3iermVGG803wyscNiFE3Vgqy7HuNjnFy79JIcYsvll
+cixH9CydPAbgzXyJK1vdl97JaMpm/PhfclkEq5tYycCRSTWp7FJuGrRizzDOeUaD
+8VyrvMmA1qnT/ou+oTi9OUaroPtqCWRebTkAKEy0toLCHanv9Tj9HoZYfSccos6i
+u2ZMQkTXTj5+2mdF8WrRq1F9arlq1K9Thox4K7XSq16rmu3mhd35qZy0wtXmlgVi
+3eUbtiD5oQ/syXHRCcm1XsMf7t1LWwGBsiFGXeiMVTJ7mrN59MwVft/1Z8vKkM8o
+YRbsW3shvFvQPQfJwiTLtxO2TDcgs43iOyL4g5CjHhYdt+SFOpts85y4Vuk2/3l6
+SJOFv40RNRUWeIl+PGzIgmVJmaJkYjQE9bLUQQzwI0E0nY9M+tEs6j4fCvlEXLij
+PCSXdQILNYyGAv6rccvVV13KUuQWvuldNdTr7e9AR0ceMYen2u0=
+=RApE
+-----END PGP SIGNATURE-----
 
-Based on this feedback, I’ll revisit the series and extend the same
-runtime PM support to the other LPASS‑LPI SoC drivers that share this
-block, so the behavior remains consistent across platforms and avoids
-potential regressions.
-
-Thanks
-Ajay Kumar Nandam
-
-
-
-> 
-> Konrad
-
+--zdz2kxftdpnb3xlu--
 
