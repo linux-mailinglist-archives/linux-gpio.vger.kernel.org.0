@@ -1,195 +1,180 @@
-Return-Path: <linux-gpio+bounces-35198-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35199-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +ATOOXj04GmInwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-35198-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 16:38:48 +0200
+	id aJzGG1UF4WkuogAAu9opvQ
+	(envelope-from <linux-gpio+bounces-35199-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 17:50:45 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D36A40FA99
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 16:38:48 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id D26004113C0
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 17:50:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D8D6C30528BC
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 14:37:44 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 41EF4301CFD8
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2026 15:49:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 707873D5240;
-	Thu, 16 Apr 2026 14:37:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBD402773EC;
+	Thu, 16 Apr 2026 15:49:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NvlbDkpO"
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="MCl0POvd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CEB43BED5A;
-	Thu, 16 Apr 2026 14:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4D219D093
+	for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2026 15:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776350264; cv=none; b=j5MBQ19upruKDbYUYBaK7g6WF/8AUyhOsvcZ9xuCfFEDEJUI5+3yxMfXz0ZF2HTndV6d7uaykTRzGBGkuyZ2Aqhny1ssHpl4sX/nq6MLfZxn8YbpLp4bL9FzHuaOb6k5DckamYOKMVR+lCAqo4CI/p8eS7f2ozlEy3cHeBqa/O0=
+	t=1776354586; cv=none; b=kZol7OrhhcYrmzbjGBuM7598MBEw8FykOGC5kTHcvXS1LXX6B9pTB6VSVHivVGhaiEg4SB6lYAXlap3+2ozZfNqWmlzNF5Dd3XF3xCZ4nSs4KRj28wQCuZLuG53cxh6vKSunuqgTboobF3IkrywBvas41y73EMBmcWnp0RIKHPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776350264; c=relaxed/simple;
-	bh=G+KnY9y9FdnNF9iVCsYYY5VVlBQ/sjKrA5+JI/RlTLg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=dBEzkdrfWxQgdaA9UWIQLzM4ACmb7VWlqYMiI9cPTk++zyfp/Sovlc80dXs6VQ3JQhPEGzsHRVqnH1rL+FXanGIwT4WjWD584gai4z5AKtXd+pir+auH/niUXUs2j10L5mYJ4maNxUmKIKMLMmMFqza+Xg/wwsTi4vbtYey1CcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NvlbDkpO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21F21C2BCB4;
-	Thu, 16 Apr 2026 14:37:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776350264;
-	bh=G+KnY9y9FdnNF9iVCsYYY5VVlBQ/sjKrA5+JI/RlTLg=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=NvlbDkpOkX2eVupOtyFCbP3DRuq7WY7ZyiuiJRl2cRJkhrdmnXJWiwRDm6+i8osVJ
-	 hEgXll92lkwnoyhrWTgyAmbPTqK+GrZng4pJynD+hCQYQRClBtiHoyx2FgkOCVjyNB
-	 PRPi8NLO7AiovljBdvexUpWlriHaJUtkIIyQIAFyedy9sB6sxPVe+G5q0yjnb/H2ly
-	 +XI4uk1O90wRBW82L2U/QsPQKtl2fjU4wH4sW9mulZKeYSvtY85JIpuSN+UA9XHRhv
-	 ziV1D+hU2IB66WIYjWeXBQP4UuGcAA7BV89FRg32YYYZLoVt0cEwFGg5loxLWg6RI3
-	 i4AJUfe+4StUw==
-Message-ID: <e3ab5e2d-9ed4-4921-acf4-71109aafcfc8@kernel.org>
-Date: Thu, 16 Apr 2026 16:37:36 +0200
+	s=arc-20240116; t=1776354586; c=relaxed/simple;
+	bh=dWhMv0IKX0ffGXHPVfzmL6Pyd1ttdQOX1RRmdGuaPuk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tMICYo3QEnKl1eLDN2NviKrbPHy9htyCbKuaAXrQw5KcJ0EL4uDujVN7w/TRAyyXpiDI827/4gYxplTxo56pYiS2b4zDQ92zpvTStOSExtMNzfItbxPpWeOjQUw61Bc2KQ6tnvls3Tm4X8Ttz9HMuDpXKKMq79jn+58HKdi6Ub0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=MCl0POvd; arc=none smtp.client-ip=121.127.44.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: MIME-Version: Message-ID: Date: Subject: Cc:
+ To: From; q=dns/txt; s=fe-e1b5cab7be; t=1776354578;
+ bh=iZdfqgTzXtA3fPbIpl8GLH8neb3096MRhShKVT67buk=;
+ b=MCl0POvdl4KVnynmurGEdVkDtm/c1qW5AF5DkD8NZh0TJg6D0xeNwzgvfsaKgi8IHVM3/b2YI
+ /wYXvw2MmtY0qwObW/yAYFUYtx6JkyH90KmU5A09wvxv6IvsGpXT6qLHd69Cg8RY5TShEnlB20D
+ dOveg6hE8AZ4JtSGStHf++HVSOL4vjc/CzD77wkBNs/m0dbVb5pHXm8dFeJJATLeuWyON4UgyG+
+ bkpKwHV6XAxuoaR5FO/XWZe8YNnrK4wKiKq4d7w1vBGLG8VdgasSptSHU5u+Gq+vL9X1uRJT5kr
+ fatwDmtQ9PVRVPJp8W75HOFombXGiedXnRkF1l0FIwJA==
+X-Forward-Email-ID: 69e1050d06b3fda24d33d578
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 121.127.44.73
+X-Forward-Email-Version: 2.7.3
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+From: Jonas Karlman <jonas@kwiboo.se>
+To: Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Jonas Karlman <jonas@kwiboo.se>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: rockchip: Fix GPIO after convert to dynamic base allocation
+Date: Thu, 16 Apr 2026 15:49:28 +0000
+Message-ID: <20260416154928.2103388-1-jonas@kwiboo.se>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] arm64: defconfig: make Tegra238 and Tegra264 Pinctrl
- a loadable module
-To: Jon Hunter <jonathanh@nvidia.com>, pshete@nvidia.com,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de,
- bjorn.andersson@oss.qualcomm.com, conor+dt@kernel.org,
- dmitry.baryshkov@oss.qualcomm.com, ebiggers@kernel.org,
- geert@linux-m68k.org, krzk+dt@kernel.org, kuninori.morimoto.gx@renesas.com,
- linusw@kernel.org, luca.weiss@fairphone.com, michal.simek@amd.com,
- prabhakar.mahadev-lad.rj@bp.renesas.com, robh@kernel.org, rosenp@gmail.com,
- sven@kernel.org, thierry.reding@kernel.org, webgeek1234@gmail.com
-References: <20260409131340.168556-1-pshete@nvidia.com>
- <20260409131340.168556-7-pshete@nvidia.com>
- <9408f231-7a12-425c-b8de-2990d3162bb3@kernel.org>
- <097f71e0-cbc8-44e3-ba60-8bac79cf5217@nvidia.com>
- <19f390ab-ffa9-4237-9f24-ead07b627a89@nvidia.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <19f390ab-ffa9-4237-9f24-ead07b627a89@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kwiboo.se,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kwiboo.se:s=fe-e1b5cab7be];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35198-lists,linux-gpio=lfdr.de];
-	FREEMAIL_TO(0.00)[nvidia.com,vger.kernel.org,arndb.de,oss.qualcomm.com,kernel.org,linux-m68k.org,renesas.com,fairphone.com,amd.com,bp.renesas.com,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[23];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35199-lists,linux-gpio=lfdr.de];
+	DKIM_TRACE(0.00)[kwiboo.se:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jonas@kwiboo.se,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 7D36A40FA99
+	RCPT_COUNT_SEVEN(0.00)[10];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,ff720000:email,ff788000:email,ff780000:email,ff730000:email]
+X-Rspamd-Queue-Id: D26004113C0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 13/04/2026 11:49, Jon Hunter wrote:
->>>> index dd1ac01ee29b..f525670d3b84 100644
->>>> --- a/arch/arm64/configs/defconfig
->>>> +++ b/arch/arm64/configs/defconfig
->>>> @@ -711,6 +711,8 @@ CONFIG_PINCTRL_SC8280XP_LPASS_LPI=m
->>>>   CONFIG_PINCTRL_SM8550_LPASS_LPI=m
->>>>   CONFIG_PINCTRL_SM8650_LPASS_LPI=m
->>>>   CONFIG_PINCTRL_SOPHGO_SG2000=y
->>>> +CONFIG_PINCTRL_TEGRA238=m
->>>> +CONFIG_PINCTRL_TEGRA264=m
->>>
->>> No, you just added as module. Why do we want them in upstream defconfig?
->>>
->>> Standard question, already asked Nvidia more than once.
->>
->> Yes :-)
->>
->> Prathamesh, what we need to do is ...
->>
->> 1. Add a patch to populate the pinctrl DT nodes for Tegra264 device.
->> 2. In this patch, only enable pinctrl for Tegra264 because we are
->>     lacking an upstream board for Tegra238 for that moment. In the commit
->>     message we should add a comment to indicate with Tegra264 platform is
->>     using this.
-> 
-> Thinking about this some more, I think I would prefer that we skip the 
-> defconfig patch and just add ...
-> 
->   default m if ARCH_TEGRA_238_SOC
-> 
->   default m if ARCH_TEGRA_264_SOC
-> 
-> ... in the respective Kconfig files for the drivers.
+The commit c8079f83e0bf ("gpio: rockchip: convert to dynamic GPIO base
+allocation") broke GPIO on devices using device trees which don't set
+the gpio-ranges property, something only Rockchip RK35xx SoC DTs do.
 
+On a Rockchip RK3399 device something like following is now observed:
 
-I support this, I am trying to do something similar to Qualcomm. None of
-core SoC drivers should become a question to the user. We want one
-multiplatform image in general, so whoever chooses ARCH_TEGRA or
-ARCH_QCOM should get everything (while still being able to disable if
-needed).
+[    0.082771] rockchip-gpio ff720000.gpio: probed /pinctrl/gpio@ff720000
+[    0.083531] rockchip-gpio ff730000.gpio: probed /pinctrl/gpio@ff730000
+[    0.084110] rockchip-gpio ff780000.gpio: probed /pinctrl/gpio@ff780000
+[    0.084746] rockchip-gpio ff788000.gpio: probed /pinctrl/gpio@ff788000
+[    0.085389] rockchip-gpio ff790000.gpio: probed /pinctrl/gpio@ff790000
+--
+[    0.212208] rockchip-pinctrl pinctrl: pin 637 is not registered so it cannot be requested
+[    0.212271] rockchip-pinctrl pinctrl: error -EINVAL: pin-637 (gpio3:637)
+[    0.212344] leds-gpio leds: error -EINVAL: Failed to get GPIO '/leds/led-0'
+[    0.212389] leds-gpio leds: probe with driver leds-gpio failed with error -22
+--
+[    0.607545] rockchip-pinctrl pinctrl: pin 519 is not registered so it cannot be requested
+[    0.608775] rockchip-pinctrl pinctrl: error -EINVAL: pin-519 (gpio0:519)
+[    0.610003] dwmmc_rockchip fe320000.mmc: probe with driver dwmmc_rockchip failed with error -22
+--
+[    0.805882] rockchip-pinctrl pinctrl: pin 547 is not registered so it cannot be requested
+[    0.806672] rockchip-pinctrl pinctrl: error -EINVAL: pin-547 (gpio1:547)
+[    0.807301] reg-fixed-voltage regulator-vbus-typec: error -EINVAL: can't get GPIO
+[    0.807307] rockchip-pinctrl pinctrl: pin 602 is not registered so it cannot be requested
+[    0.807970] reg-fixed-voltage regulator-vbus-typec: probe with driver reg-fixed-voltage failed with error -22
+[    0.808692] rockchip-pinctrl pinctrl: error -EINVAL: pin-602 (gpio2:602)
+[    0.810279] reg-fixed-voltage regulator-vcc3v3-pcie: error -EINVAL: can't get GPIO
+[    0.810284] rockchip-pinctrl pinctrl: pin 665 is not registered so it cannot be requested
+[    0.810299] rockchip-pinctrl pinctrl: error -EINVAL: pin-665 (gpio4:665)
+[    0.810960] reg-fixed-voltage regulator-vcc3v3-pcie: probe with driver reg-fixed-voltage failed with error -22
+[    0.811679] reg-fixed-voltage regulator-vcc5v0-host: error -EINVAL: can't get GPIO
+[    0.813943] reg-fixed-voltage regulator-vcc5v0-host: probe with driver reg-fixed-voltage failed with error -22
+--
+[    0.867788] rockchip-pinctrl pinctrl: pin 522 is not registered so it cannot be requested
+[    0.868537] rockchip-pinctrl pinctrl: error -EINVAL: pin-522 (gpio0:522)
+[    0.869166] pwrseq_simple sdio-pwrseq: error -EINVAL: reset GPIOs not ready
+[    0.869798] pwrseq_simple sdio-pwrseq: probe with driver pwrseq_simple failed with error -22
+--
+[    0.940365] rockchip-pinctrl pinctrl: pin 623 is not registered so it cannot be requested
+[    0.941084] rockchip-pinctrl pinctrl: error -EINVAL: pin-623 (gpio3:623)
+[    0.941823] rk_gmac-dwmac fe300000.ethernet: error -EINVAL: Cannot register the MDIO bus
+[    0.942542] rk_gmac-dwmac fe300000.ethernet: error -EINVAL: MDIO bus (id: 0) registration failed
+[    0.943772] rk_gmac-dwmac fe300000.ethernet: probe with driver rk_gmac-dwmac failed with error -22
 
-Best regards,
-Krzysztof
+Restore GPIO to a working state on devices using older Rockchip SoCs
+and/or DTs not having the gpio-ranges property set by restoring prior
+use of bank->pin_base as the pin_offset value.
+
+Also change to use bank->nr_pins as the npins value to align and prevent
+a possible future breakage if gc->ngpio is ever changed to match the 32
+GPIOs each controller theoretically can handle.
+
+Fixes: c8079f83e0bf ("gpio: rockchip: convert to dynamic GPIO base allocation")
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+ drivers/gpio/gpio-rockchip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
+index 08ea64434f8f..44d7ebd12724 100644
+--- a/drivers/gpio/gpio-rockchip.c
++++ b/drivers/gpio/gpio-rockchip.c
+@@ -617,7 +617,7 @@ static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
+ 			return -ENODEV;
+ 
+ 		ret = gpiochip_add_pin_range(gc, dev_name(pctldev->dev), 0,
+-					     gc->base, gc->ngpio);
++					     bank->pin_base, bank->nr_pins);
+ 		if (ret) {
+ 			dev_err(bank->dev, "Failed to add pin range\n");
+ 			goto fail;
+-- 
+2.53.0
+
 
