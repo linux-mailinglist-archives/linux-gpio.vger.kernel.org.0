@@ -1,158 +1,120 @@
-Return-Path: <linux-gpio+bounces-35238-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35239-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id nO7lL0NI5WnvgQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35238-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Apr 2026 23:25:23 +0200
+	id OEhND25M5WnvggEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35239-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Apr 2026 23:43:10 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 173744258DD
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Apr 2026 23:25:22 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BFE2425956
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Apr 2026 23:43:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A70A63019809
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Apr 2026 21:25:20 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 78E0A3004D24
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Apr 2026 21:43:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2AA72F39C2;
-	Sun, 19 Apr 2026 21:25:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BCD730B53E;
+	Sun, 19 Apr 2026 21:43:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OdSRI7Oe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hqG7Rrti"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7636B26E706
-	for <linux-gpio@vger.kernel.org>; Sun, 19 Apr 2026 21:25:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F68E1482E8
+	for <linux-gpio@vger.kernel.org>; Sun, 19 Apr 2026 21:43:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776633918; cv=none; b=ieqq3iqOyL1IMoHhd8A7ykI2e1tw0RNUfiw+inceBCFwVQa1eWTNo4hq0Os6RCmS+zvHfPyoEoDjAu0SMSPpG9k4J5XI6vdxU6B4esWHFwVO8MExzqJWW9rp/9im3GrvZj8PEPgxq/gIebbgJ3Ui5eBXY5j6Ap6h/+Y0/XPZpi8=
+	t=1776634985; cv=none; b=t40TmFic1zyCAcYqAaUcvXjNP64gWDRzyfntQ43Ed837wJTkLon8i3VodilfXX/XcYdtdfK2RbMA2WDNhu6LzQs4jcNfzmyGt+e0HQR9Zlqin4aJEKYY0Dh7thzC3DTWGE2B7RdNuLTioeCZWREH5tI4H1uLwt2cp3m81P87K9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776633918; c=relaxed/simple;
-	bh=VPpvhZnHqPvZTTZSZHq8wzi2fJSBw8ozWgwB8TOn5OM=;
+	s=arc-20240116; t=1776634985; c=relaxed/simple;
+	bh=4jpSLr3O/lNvtNtYaN3mKKdH9bxXsImrwjUfU90LEqA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wsn4V2QAJK6p/Ujdue+Mc/IBRQI5d/3Qc4cHNp+xbkVROCabHwTNXw3aZLciQg36iiPRhS1T39q8tZellZigjQc7CqCRHwLXxwv7asy7E3zCImV5YDgx1xKVy7FaJRaYkgCVo91YWTeZEJYreASpuYOfxO+bCrV+MLEzH/m17tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OdSRI7Oe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D8AC2BCB4
-	for <linux-gpio@vger.kernel.org>; Sun, 19 Apr 2026 21:25:18 +0000 (UTC)
+	 To:Cc:Content-Type; b=C6msk+aKfP7gDm/Jk4Z5rkYzy/jOtoRAZ7OYRZhCzT2z504iUSJ99RumCSxpKXKdPeNHq6/ZPlydqvMzquw6WY+vEZObgbbWm7FMYWwf62xk1j917LoWVvneJe5VSjWHvzYv1iURcMKWq3Vm7o9/39QfANKGIBxc2Fx0rKKjCi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hqG7Rrti; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6061C2BCC4
+	for <linux-gpio@vger.kernel.org>; Sun, 19 Apr 2026 21:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776633918;
-	bh=VPpvhZnHqPvZTTZSZHq8wzi2fJSBw8ozWgwB8TOn5OM=;
+	s=k20201202; t=1776634984;
+	bh=4jpSLr3O/lNvtNtYaN3mKKdH9bxXsImrwjUfU90LEqA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=OdSRI7Oe618HTNH8NyqZtcPnjws0bE+m/Y64W+7TLgbCMU+mF8IrK6RSl9I4JMXsq
-	 Wrqmot9z2fahVxINLzh1FM6nuf+cRrKSJhgcIh9+BNEZKXHTcYRngsgf6TCqAcoHl1
-	 xodsa4xGw9ztkJgqFMr33YkRTDOTt988CHDhQbDyX3ehUEkFjeCCJFIb06ns/1ZXLU
-	 5Ys/8zB5wLJrab56YnDJed6AcFnI+aq5FYqQmesfKwdgaRytYM+FLvO0YCoDXlCPi6
-	 QlCOJ/tg7KSyHpOhU2OhHrhw7QSR1BVZ/L+9sEtpT26kRn/Ef5Y4KHpsND/wbGYx9T
-	 8bLssOUly6mdw==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5a2c7427ad9so2331757e87.1
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Apr 2026 14:25:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9raUhgSSfRDPjydsPMtNfuHrGlTA6wev9voFY3ME9Ax4DihWoWlltS8M4dFRih4W4Pa0/IcC5ZdDOF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyck61HfPzl4yirZNNgQXmd5gsFjLUfjaW138DVRwa1lAkcQyIw
-	9HCJPTY2Z6SP6AMbcxoC70YTQyJSlJCbZQqUj0IAvsp/n989EppSfRJ4d4/xNQyPlxs+2o3/oYy
-	SaAMKCRkl5/1PgGXBcpgOs3IMibsC0+8=
-X-Received: by 2002:a05:6512:2396:b0:5a1:15bd:b057 with SMTP id
- 2adb3069b0e04-5a417183cf5mr2919080e87.0.1776633916921; Sun, 19 Apr 2026
- 14:25:16 -0700 (PDT)
+	b=hqG7RrtihfJdrJ6OZFOR462gSPMnJHMqK+JIR8x0qWYPS9EZ/Bvxqos3Una4AADqK
+	 Ij/7OzGmkoPi/M90hGRcdm0syEZCHXcdLmaNcgIVUQeknor10CL21Lz/gK3pIO/YCV
+	 WMXpHUq5bjTF83K9fTxRTTdIEdaeZX+B5/rw0lU5S0+YMqF87A81fnY+ZKHadB0bba
+	 WKgq/b/mugd3qJXtRbOm/7eF/nZMDMyWJoRyLrRh9brrWcKtCTxRXI5usaG4XBkh5l
+	 YHJbsSkWTiZL/Y7MBleNw4AU+atbQUSPAVtCJ6lhD6UTujWoo/OCmmXln70N+SgmW/
+	 wQ3tJ8I1AsCcg==
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5a283c44478so4079357e87.3
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Apr 2026 14:43:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/KqR8LNKy42H9vtdp18n2g8TEKT2lBV8J5kE15sGiw0NFjncDFCdMJ6wjx9cZaYXIbiYgQ2g7Jn1BQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/Ns7X7Ys45zHI1z2Kj2BRcSLlC+4nkvd8nN44hJ3yTbD+8S++
+	KaOMW3aM/asDDsgtVuoQw4HVtcRiza/p5kSN8zP6CTFbzrA1rTwqwtkx7u+7Tz9v4HesbkpJA+B
+	FF4g7pD8wOWNJGRoBnk9GRtQR80ZEB1Q=
+X-Received: by 2002:a05:6512:220c:b0:5a4:c6f:d43a with SMTP id
+ 2adb3069b0e04-5a4172de516mr3364349e87.36.1776634983477; Sun, 19 Apr 2026
+ 14:43:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260410070935.9540-1-bartosz.golaszewski@oss.qualcomm.com>
- <trinity-5e6f6a95-e576-4f97-9085-c6de21945eab-1775813076268@trinity-msg-rest-gmx-gmx-live-5cf7d7879b-qwfn5>
- <CAD++jLnjN-gUdCbmdmLaMYck=sP9wrhT2fFRB0TGCAVGvSsY1w@mail.gmail.com> <dc46f7d784281642aad6d47e79a3e91652eec667@linux.dev>
-In-Reply-To: <dc46f7d784281642aad6d47e79a3e91652eec667@linux.dev>
+References: <20260416154928.2103388-1-jonas@kwiboo.se>
+In-Reply-To: <20260416154928.2103388-1-jonas@kwiboo.se>
 From: Linus Walleij <linusw@kernel.org>
-Date: Sun, 19 Apr 2026 23:25:05 +0200
-X-Gmail-Original-Message-ID: <CAD++jLkz189qT1kJr34ratZT_n20oWEAQg8q0ttQ-VrsFchp7g@mail.gmail.com>
-X-Gm-Features: AQROBzD6GJfiRfmGUvsT5MRDRhLkl5NtG5OqsqcwlWbZ18Vb-NT9p92nuBlzqpo
-Message-ID: <CAD++jLkz189qT1kJr34ratZT_n20oWEAQg8q0ttQ-VrsFchp7g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: moore: implement gpio_chip::get_direction()
-To: Frank Wunderlich <frank.wunderlich@linux.dev>
-Cc: Frank Wunderlich <frank-w@public-files.de>, bartosz.golaszewski@oss.qualcomm.com, 
-	linux@fw-web.de, sean.wang@kernel.org, matthias.bgg@gmail.com, 
-	angelogioacchino.delregno@collabora.com, brgl@kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date: Sun, 19 Apr 2026 23:42:51 +0200
+X-Gmail-Original-Message-ID: <CAD++jL=ETs2q5FYr_zWYFbnqbCx3DmT4MarAHmy_KA1GggnHcw@mail.gmail.com>
+X-Gm-Features: AQROBzAepQPgH7Yy776Lv2UHkdRyF0oPi28JCu9KzCWx0YubHgHTG4J0DP8U52E
+Message-ID: <CAD++jL=ETs2q5FYr_zWYFbnqbCx3DmT4MarAHmy_KA1GggnHcw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: rockchip: Fix GPIO after convert to dynamic base allocation
+To: Jonas Karlman <jonas@kwiboo.se>
+Cc: Bartosz Golaszewski <brgl@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+	Shawn Lin <shawn.lin@rock-chips.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35238-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[public-files.de,oss.qualcomm.com,fw-web.de,kernel.org,gmail.com,collabora.com,lists.infradead.org,vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35239-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.dev:email,public-files.de:email,collabora.com:email]
-X-Rspamd-Queue-Id: 173744258DD
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 8BFE2425956
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Apr 13, 2026 at 6:59=E2=80=AFPM Frank Wunderlich
-<frank.wunderlich@linux.dev> wrote:
-> Am 13. April 2026 um 10:01 schrieb "Linus Walleij" <linusw@kernel.org mai=
-lto:linusw@kernel.org?to=3D%22Linus%20Walleij%22%20%3Clinusw%40kernel.org%3=
-E >:
-> >
-> > On Fri, Apr 10, 2026 at 11:24 AM Frank Wunderlich
-> > <frank-w@public-files.de> wrote:
-> >
-> > >
-> > > Gesendet: Freitag, 10. April 2026 um 09:09
-> > >  Von: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>
-> > >  An: "Frank Wunderlich" <linux@fw-web.de>, "Sean Wang" <sean.wang@ker=
-nel.org>, "Linus Walleij" <linusw@kernel.org>, "Matthias Brugger" <matthias=
-.bgg@gmail.com>, "AngeloGioacchino Del Regno" <angelogioacchino.delregno@co=
-llabora.com>, "Bartosz Golaszewski" <brgl@kernel.org>
-> > >  CC: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, =
-linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "Bartos=
-z Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>
-> > >  Betreff: [PATCH] pinctrl: mediatek: moore: implement gpio_chip::get_=
-direction()
-> > >
-> > >  If the gpio_chip::get_direction() callback is not implemented by the=
- GPIO
-> > >  controller driver, GPIOLIB emits a warning.
-> > >
-> > >  Implement get_direction() for the GPIO part of pinctrl-moore.
-> > >
-> > >  Fixes: 471e998c0e31 ("gpiolib: remove redundant callback check")
-> > >  Fixes: e623c4303ed1 ("gpiolib: sanitize the return value of gpio_chi=
-p::get_direction()")
-> > >  Reported-by: Frank Wunderlich <linux@fw-web.de>
-> > >
-> > >  please use the email i used for SoB in my linked patch (closes link =
-below), the other email i use only for sending patches due to mail provider=
- limitation.
-> > >
-> > I can't fix this up because the closes link isn't working right now.
-> > Is it the same
-> > as the one this mail came from frank-w@public-files.de?
->
-> yes, closes-link works for me
+Thanks for fixing this Jonas,
 
-Fixed up and applied. Will be going in as fix for v7.1.
+this also uses the function in the right way: instead of using
+gc->base which just happened to match the pin base it passes
+bank->pin_base which makes a lot of sense.
+
+(My original response mail was a bit whimsical because I
+didn't realize the offset passed as argument 1 is local and not
+global.... but you figured that out.)
+
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
 Yours,
 Linus Walleij
