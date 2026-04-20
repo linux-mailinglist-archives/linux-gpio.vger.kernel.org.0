@@ -1,239 +1,365 @@
-Return-Path: <linux-gpio+bounces-35240-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35241-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8KzKEEvU5WmmoQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35240-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 09:22:51 +0200
+	id mKU+C17U5WmmoQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35241-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 09:23:10 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB822427B02
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 09:22:50 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C93F8427B23
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 09:23:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 60E0F301726B
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 07:22:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A5604300B139
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 07:23:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4546B383C99;
-	Mon, 20 Apr 2026 07:22:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65D2D38423F;
+	Mon, 20 Apr 2026 07:23:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IMey3crY"
+	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="YRca/6tn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022136.outbound.protection.outlook.com [52.101.126.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E4E2FD7D3;
-	Mon, 20 Apr 2026 07:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776669738; cv=none; b=i/+DI5VRI3Krd7Neoxh9NQVhqAe7coZiWqIfEw0J97BU674xsrYJtlJDyuMZ9qtObf1tCXlrA0UkaOyg+4pNf5wW5b6wtOrFszaghVQNxfFZBLxwHMhEWuMvDfc7sVALNG4PfxmJzMzNVLit2JLB0u1zuORJUIGmmBldzx8Ts2s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776669738; c=relaxed/simple;
-	bh=OfvTvpLPvCOhEfrZP20Fdwx6Oml0HCemcKq7lCtxkyE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=CtGcEA20VRHAtCreG3inKFfe8ttb/FAuHDL6pxnOAUD46h2Shk8GSVrksL2yV3QDzj3lon0mixPk5btKcShzaI1THTyGhoseaywMPfMbjiL2pcNDSOUwfBSYL7LfhKFrWU2/8rZrBaAvIc8ijLjs1b+buyPJunHQoWIvm7ErfWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IMey3crY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 805D0C19425;
-	Mon, 20 Apr 2026 07:22:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776669737;
-	bh=OfvTvpLPvCOhEfrZP20Fdwx6Oml0HCemcKq7lCtxkyE=;
-	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
-	b=IMey3crYn7faai6rgUGWKlY+8hRpsd9v7aeDXyOpQyfZoHGJbsfz6R50DB40aPfGA
-	 scmZDevIY5KrT+Xtm5F1Q5W7GkcKH3TlcudlihDzXyEZfC4uJ+ID9uoHTpOITXJddl
-	 kPx9P7oi2FNemZrjdUBG2macvC/BHf5ra7cx++oyuddBTo2iO556nLVT08mYazZN8b
-	 kq8Y2FBt/k3RZKnO/cCH2ywt+sead2cswjBkqqCIbMaGQuWEMezh9nYE6zLs2AS0ig
-	 MkwDgIBIrtcF0tjJEpppzUi+REL0BbYUsRRA2xXYQ+DadjTO2xLi/VT7fa+E54lIGL
-	 OczJRz0NsD0+Q==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D389F2D738A;
+	Mon, 20 Apr 2026 07:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.136
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776669783; cv=fail; b=BL5S5MMOu5urU5FHlzqYRCciWBurUx8/lBrx9dwO+hMvd4TDo7FmdpmAYkye86esQXCe7mBrjDVYHZoTzEIeafMLCxlPcRjjmhwtxzq1ykuBOSGczms3UEjD7+Qf5BtrmMWHF57Rfkx1nA1nTgza2QD7flQIXjX1FrBKg7Vcccg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776669783; c=relaxed/simple;
+	bh=QszABz7taMe5qfYjY6GJXcTRX8XJrY4krhyrc3Ee5z0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=OKSF0y00DjNLLv2VhcouvzJ60GSYJ7BlxrsV6Fn5MUMxYQPhylk5Sxba44IpV6Us0tU29dF0VB41yrA20MwZk4ahRh78y0J5Y6X8jcOQ1CepWLevrcIlntPm6y0bn/dQDvBHSB9kp5u7g1mkZor6r1IFqmtw7ZM6plNrTuh4Rxc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=YRca/6tn; arc=fail smtp.client-ip=52.101.126.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uf2B2mlLI69k791S4B+v6JJbifgydOhWLPkmWHDnqUJ3qrFvNEZr+TYWrj+Gu4VBj27Ol0CutytFhk2+IREETyOiRoAcmYnBvk0eurDIpdmJwGzMnjUoivf6+igteT1gZ9H04Iq60S4kVw7pmc2Og8hbYBzQpDr3pJaIBi64LqyRktReGwQDcNYCX4ucRZ7vjpqCVHB0kljlleFnwVngoq7Z87/HBL7j5jyyafXHYuezx8/mI5QLcgRAxFu3nnLT1zLnAg+NybHJQpWWmTc3Cku03vcSP8Y+geSiQt4szkCj2KAZg1EQneL0QLxZAQZW1dnbexwqUzkVvXk23ZhCZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lA1SS64rK86AA89yR52Qj5t6mBiiFO6Jj0e5xY7n8N0=;
+ b=oA+EYx+L3HhzPOvKDypr6ks8d3lPAWcHrBLZJxBFApV6Ctt+4KbMqwI8BlGTx4qugTZObAm6eWYU1GvbwFN1ztJx5GO5d80fg+sInr4sJekgSQIu6L4Zyp63yLlz68bbuBmm+nXXQFVa30A47lZVk2mDYdOhbSzkXHHnIg4bdXqEMR9HDANN4wyvcUE2lrEqg6cPcOAdHZ/M4OaQfYdoHTKS8nuHUiJ3clGUS+QA9Atr/i2cCWISCzh1eDUZVHA3m7euQHMBDUw5utEB7bgIHgeA3L4fA7yRNHctW05nKm3/ks4cB24VLEnojtJV3IK3M5Wz2sQzV94sfWznoU9COQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lA1SS64rK86AA89yR52Qj5t6mBiiFO6Jj0e5xY7n8N0=;
+ b=YRca/6tnySxc8Ztg/S5QP8Z4dZNQPw9GwtP7oRa8Z9cBp9YVGqhVgcroSGMmTIYZC6Yd7CTpqxA+oUGJdkiwSELuXOqjhCVoAcyWt72ZVNaGGw6tFpMX08ROjdLE4850SqR9N7Snvl0UP45LzTm9RYqbJoRXLEU8NEaZcTg1MOe7b8ColUQWcDv9CSdsdqL5UnK9QCf2dLEQNWoXExOH2cR2V5jKZga8kdL3C482U/ltQ2KfU0EVEJaMJWB6OP+ruAFXI5AG59PRbYuNmqvS7PiEs3L6OA+RMHHsuLSk12umK4UbHM0LfxGrqha0mWFcxQ9p0YoTrVOOk+/X7hF9eA==
+Received: from OSQPR06MB7252.apcprd06.prod.outlook.com (2603:1096:604:29c::6)
+ by SEYPR06MB7044.apcprd06.prod.outlook.com (2603:1096:101:1db::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.32; Mon, 20 Apr
+ 2026 07:22:57 +0000
+Received: from OSQPR06MB7252.apcprd06.prod.outlook.com
+ ([fe80::92af:c9d9:8779:d19]) by OSQPR06MB7252.apcprd06.prod.outlook.com
+ ([fe80::92af:c9d9:8779:d19%4]) with mapi id 15.20.9818.031; Mon, 20 Apr 2026
+ 07:22:57 +0000
+From: Billy Tsai <billy_tsai@aspeedtech.com>
+To: Conor Dooley <conor@kernel.org>
+CC: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Joel
+ Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>, Linus
+ Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Ryan Chen
+	<ryan_chen@aspeedtech.com>, Andrew Jeffery <andrew@aj.id.au>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org"
+	<linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "openbmc@lists.ozlabs.org"
+	<openbmc@lists.ozlabs.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "linux-clk@vger.kernel.org"
+	<linux-clk@vger.kernel.org>
+Subject: Re: [PATCH v7 1/3] dt-bindings: pinctrl: Add
+ aspeed,ast2700-soc0-pinctrl
+Thread-Topic: [PATCH v7 1/3] dt-bindings: pinctrl: Add
+ aspeed,ast2700-soc0-pinctrl
+Thread-Index: AQHczXLoc0DWafBAUU23YFhFi4LfGrXh15uAgACsm2SAAOlSgIAEIoHU
+Date: Mon, 20 Apr 2026 07:22:57 +0000
+Message-ID:
+ <OSQPR06MB7252BD7967D2567AD6DA7A1D8B2F2@OSQPR06MB7252.apcprd06.prod.outlook.com>
+References: <20260416-upstream_pinctrl-v7-0-d72762253163@aspeedtech.com>
+ <20260416-upstream_pinctrl-v7-1-d72762253163@aspeedtech.com>
+ <20260416-brutishly-saga-ba7168a4cd14@spud>
+ <OSQPR06MB7252EB0C2A1A3313DE49406B8B202@OSQPR06MB7252.apcprd06.prod.outlook.com>
+ <20260417-anemia-borrower-fb90ac02b417@spud>
+In-Reply-To: <20260417-anemia-borrower-fb90ac02b417@spud>
+Accept-Language: en-US, zh-TW
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OSQPR06MB7252:EE_|SEYPR06MB7044:EE_
+x-ms-office365-filtering-correlation-id: 5d998068-2d00-4c47-66a0-08de9eada53b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|7416014|1800799024|376014|38070700021|56012099003|22082099003|18002099003;
+x-microsoft-antispam-message-info:
+ QQ95Nrz8QBMlWRnZXGg7uhrakBwQzm9aSixPUo0aFsLDSXYSt51wzfu2UQQe0Ks/NSQZrQBjMbJ2ezibtlXz1TnIPdvMw1xRsrnByXCmJf9dWCjpj3zl7c8k0d9kvZhLrUkP6NttmL3y1CpJQO+12hkp6uhJsbc/MZT9qDM1YOXttZnwJApmFePjSYswI3c45KXsBlMcsZI5jz9EXMKMKpYUGLOvV8ng4ftbvTEr2b58ZhhjPCsN0+O91oTiEBV8GPlACGV7Zgwv7fKbB9RI8Qy5kt05YZ/bfz92juYVSMGMI5eRG21Q1gQb2nS80blm+7a+ZGwnw25FPtfAE8pzKnz8JDBp9BwQfHzR6QgZAe+RUUgyFys9o3WUqS8vO2UZb8jX1WC1hPtPEOUyii1ysmCqeaSdjw64Z2GFVVR4o1SRn9DFSjL3bIRe/1RFccfahUUb4bHXxsktj5x59iVKk51hK9cjXyTAJ+ehMe81TppTL6yJLDE6y+W1QmUnEbKq9EP0YiCNc6qvC+WEqi7YRfbV0LeVX0cRJ9lEO/4cZ6a/qTSJ7RnHBbi0ONq0xQazUbabuFTmxv1OGYCRYl5Qiw9hWu6gA66RC8D6bykZoPz6v+U3cL8+CijDOlF+oH3SWW6BShLfO6/WF1AZxVqGzJUtZgSM28SnlbgN3u2SsgdZX5QJ18Yzgo/xKBsSYnc6GQ7FQr+E72WsnitdV4gTHnqt9IMaGi7HRwxhf3jJoj/Prtb3kN0A3uOgFl4FiyggNN/LuZiTp6hjusQ7g4bF2KWGyJJPFxxH303ym2SBanM=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSQPR06MB7252.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014)(38070700021)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?0iYjePFxEZciiBquxEDqSzZu6z2k07UkvkcswDz7Ab8B8L1xIFHG9Ar0nL?=
+ =?iso-8859-1?Q?pH4z5F/SygKQExNjn37qG3XEHEw9BR6tF56LqqGbnj40+ML+QSFTsCQxcH?=
+ =?iso-8859-1?Q?75zhCHp+WniQU4BR4Pr80BkhWLPSZz3uzc0mURdWMvLgUS6Ihxg8ecM4FZ?=
+ =?iso-8859-1?Q?aUeydy15VCE5oO0rX5DYehbMh/ALq2Vkj2PSCMPRdjDs/zS+2WJ0EtUUED?=
+ =?iso-8859-1?Q?RjpcKd/O2wV2ZcLK06+7MEIoFGuqPJ+OddTdeR8JI4P3z+Q/84tY+PEQzP?=
+ =?iso-8859-1?Q?jexVZNq419p8/4DAzmA0deRNJJcHx0urY/NiNbK0iPULjsijl+qh7AZBeE?=
+ =?iso-8859-1?Q?uh48nfbqPSRBtym9Rz69fByQkkSwvuiOrKeRYkBoyia/d4d+hSpSc8PLVH?=
+ =?iso-8859-1?Q?Wky3rfPBSRZkopr7axovJGIB2PzQzdS28mEoKetNVMzuf2LoAZfVAq5+fD?=
+ =?iso-8859-1?Q?LdDJH/92Uh1XBUIMB26J/KjbY0nHnHKE9+gjh6CnftrAE3PTl7RxwjNKHd?=
+ =?iso-8859-1?Q?kHjKrrk83L0vtEkbBX6UeOPiFCAXeH2HhR8585yL6FjM8y2n8jTJXdLRIH?=
+ =?iso-8859-1?Q?TyzOvf6qoLKj0Ysuhjub6iAPAySozV9FI74Q3pKHCP6QIJp9FwcEdWNJ9D?=
+ =?iso-8859-1?Q?4puw89qrK+irs6oitk2j7Rz+YAN/ugDbpzbxAEd3b5BimxnHVYcPoUAY8M?=
+ =?iso-8859-1?Q?Ms7YnlQGR2jjQq2lTxTHV18CWxr4u0g8pGMPU9kDZme69hx3jcE/KiWId2?=
+ =?iso-8859-1?Q?Io4SdB62xrXVSQGBeJpxinbrgleqCRxi7kbqqt0h0Gf2SRA3E/HY0ZY/pw?=
+ =?iso-8859-1?Q?EKAtLp9Tx+udxmSu6W97e/YmQ6pEnm+LhgOO/0A2URXRFVj+peHgP9rw3y?=
+ =?iso-8859-1?Q?Hm0MNopmcgS1jrtGPvtq93Nn4cG+pZsJDKNl7EWNMQ5v4UvMDMGYmbJ3Ns?=
+ =?iso-8859-1?Q?Jjwpg2VgDwI0Td/cu0pRH0jh+otjOCPvpcPSBc8DNYQ2a/n69cjZH9lTF2?=
+ =?iso-8859-1?Q?L6T6uCe0x3nMFF0SDCK7EU7omH8tV+TF1nou8NqDaKhYRiYTvPwM0beUo1?=
+ =?iso-8859-1?Q?3fddnozvhnaIvhUV4qV7gHzzkuCfXemqhXhOXkJlpfWK7AXWZSsa5PpNLm?=
+ =?iso-8859-1?Q?vwol5gIIE5JcqioTvQQwYR+SLMNVRiC8oOSiZ3Yy4VzEKCZYgRdPYkGo+a?=
+ =?iso-8859-1?Q?sqU9XwJkjpFmNM+Sq6mnWVZ0PYbDMqi1vvugmbdAkphFmoKWlanTCSNPCU?=
+ =?iso-8859-1?Q?ztuUeVY4eq0eBBaVSVAlnkMVziHhnmEhCSgkC/0XWuGwDJtuIghbmrb7Sl?=
+ =?iso-8859-1?Q?cVGbK11gloLrX9TuB/JoZtaC0yTrs+P39CO6f/zirepKAuqlZRek/4uluz?=
+ =?iso-8859-1?Q?fYYg4Q+Wk0ANwJMVI7VPO2xBfnOfabAPrE4I2lps0LFXXGo6frL6QDMkj4?=
+ =?iso-8859-1?Q?6nxOIPzY8eg9g+9vKNZemXyUevzaD7upmyjDvIe5MGGQxPcMZHBUCkO2yi?=
+ =?iso-8859-1?Q?QT90DoqP4TFZ4ce5CyyqyAssyGguhopZ7jlGcMgfwXH7w+72KAv5DNqXHH?=
+ =?iso-8859-1?Q?VEyy3eOfHTWWJDKWOEnjJZCqzSiwfmbDfwFE3N8Af9rQQDWw679IJLDp+f?=
+ =?iso-8859-1?Q?PIB4O7H3aI7IZalMxQpQz/CenZGSdDJbUwNVq0KA4cXzBV3IkjOo3fo9R6?=
+ =?iso-8859-1?Q?+1wZlhmnJ1r+nBAmQkXiE9E0a2IQI6AwdSRBEBfluKpmEQIXxr2K6N3zQU?=
+ =?iso-8859-1?Q?5i4y7qr41zHjocsnqscDrD5+lAIdVNU1qB/N7ZGbIViVaCqriplAlp7fLE?=
+ =?iso-8859-1?Q?QxWCvR7APQ=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=90b98803b27b5277d55f5c028db99ddc444d61087c0fc38a687673f1b0fc;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Mon, 20 Apr 2026 09:22:13 +0200
-Message-Id: <DHXSUW3NJU22.1RUYUHQZSZ53S@kernel.org>
-Subject: Re: [PATCH v2 3/4] gpio: realtek: Add driver for Realtek DHC
- RTD1625 SoC
-Cc: "Bartosz Golaszewski" <brgl@kernel.org>, "linux-gpio@vger.kernel.org"
- <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org"
- <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-realtek-soc@lists.infradead.org"
- <linux-realtek-soc@lists.infradead.org>,
- =?utf-8?b?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?= <cy.huang@realtek.com>,
- =?utf-8?b?U3RhbmxleSBDaGFuZ1vmmIzogrLlvrdd?= <stanley_chang@realtek.com>,
- =?utf-8?b?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "afaerber@suse.com" <afaerber@suse.com>,
- =?utf-8?b?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Linus Walleij" <linusw@kernel.org>,
- =?utf-8?b?WXUtQ2h1biBMaW4gW+ael+elkOWQm10=?= <eleanor.lin@realtek.com>
-X-Mailer: aerc 0.20.0
-References: <20260408025243.1155482-1-eleanor.lin@realtek.com>
- <20260408025243.1155482-4-eleanor.lin@realtek.com>
- <CAMRc=MfUh_OuxS4SC6QzSOg_PMNc9i9crGYgBASrbVUgHDHSCw@mail.gmail.com>
- <52bf9ce2b7754af8af69b0afee0d07b2@realtek.com>
- <CAD++jLkpS-T9yK=ctSwpLvXkj7s7ivmwu1KKwzy4KS40LVYeyA@mail.gmail.com>
-In-Reply-To: <CAD++jLkpS-T9yK=ctSwpLvXkj7s7ivmwu1KKwzy4KS40LVYeyA@mail.gmail.com>
-X-Spamd-Result: default: False [-3.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MV_CASE(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+MIME-Version: 1.0
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSQPR06MB7252.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d998068-2d00-4c47-66a0-08de9eada53b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2026 07:22:57.1828
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4l5JLVY7glv4+hkSBCK9waNvf1O2t60RwmdBYYa+0BO26eBGwz23Uk3/Ehu2LAYOIKjHBqMBc5KVi9yeflbdO8ogzrrmfoqaOWid5kyXEKk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB7044
+X-Spamd-Result: default: False [1.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[aspeedtech.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[aspeedtech.com:s=selector1];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35240-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35241-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[aspeedtech.com:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mwalle@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[billy_tsai@aspeedtech.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[realtek.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: AB822427B02
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,OSQPR06MB7252.apcprd06.prod.outlook.com:mid]
+X-Rspamd-Queue-Id: C93F8427B23
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
---90b98803b27b5277d55f5c028db99ddc444d61087c0fc38a687673f1b0fc
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-
-Hi,
-
-On Sun Apr 19, 2026 at 11:19 PM CEST, Linus Walleij wrote:
-> Hi Yu-Chun,
->
-> On Fri, Apr 10, 2026 at 11:39=E2=80=AFAM Yu-Chun Lin [=E6=9E=97=E7=A5=90=
-=E5=90=9B]
-> <eleanor.lin@realtek.com> wrote:
->
->> We did look into gpio-mmio and gpio-regmap, but they are not quite suita=
-ble for
->> our platform due to the specific hardware design:
->>
->> 1. Per-GPIO Dedicated Registers: Unlike typical GPIO controllers that pa=
-ck 32 pins
->> into a single 32-bit register (1 bit per pin), our hardware uses a dedic=
-ated 32-bit
->> register for each individual GPIO. This single register controls the
->> input/output state, direction, and interrupt trigger type for that speci=
-fic pin.
->
-> Isn't that attainable by:
->
-> - setting .ngpio_per_reg to 1 in struct gpio_regmap_config
-
-Which is just used by the gpio_regmap_simple_xlate() anyway. So it
-doesn't really matter. But yeah, 1 would be the correct value here,
-assuming that the registers are consecutive.
-
-> - extend .reg_mask_xlate callback with an enum for each operation
->   (need to change all users of the .reg_mask_xlate callback but
->   who cares, they are not many):
->
-> e.g.
->
-> enum gpio_regmap_operation {
->     GPIO_REGMAP_GET_OP,
->     GPIO_REGMAP_SET_OP,
->     GPIO_REGMAP_SET_WITH_CLEAR_OP,
->     GPIO_REGMAP_GET_DIR_OP,
->     GPIO_REGMAP_SET_DIR_OP,
-> };
->
->  int (*reg_mask_xlate)(struct gpio_regmap *gpio,
->                               enum_gpio_regmap_operation op,
->                               unsigned int base,
->                               unsigned int offset, unsigned int *reg,
->                               unsigned int *mask);
->
-> This way .reg_mask_xlate() can hit different bits in the returned
-> *mask depending on operation and it will be find to pack all of
-> the bits into one 32bit register.
->
-> Added Michael Walle to the the thread, he will know if this is a
-> good idea.
-
-Nice idea, though the information is then redundant in the usual
-case, i.e. drivers which need to translate specific registers
-will do a "switch (base)" at the moment. These should be converted
-to "switch (op)" just to keep all the drivers aligned and prevent
-new drivers from using the old method. You'd need to touch them
-anyway.
-
-I was briefly thinking about making it somewhat possible to embed
-the op into the base, if it would otherwise be all the same. That
-way, you could gpio-regmap as is. A special case like
-GPIO_REGMAP_ADDR_ZERO, that could be used by these kind of drivers,
-but that is probably too hacky.
-
-I'm fine with either way.
-
->> 2. Write-Enable (WREN) Mask Mechanism: Our hardware requires a specific =
-Write-Enable
->> mask to be written simultaneously when updating the register values.
->
-> Which is to just set bit 31.
->
-> With the above scheme your .reg_mask_xlate callback can just set bit 31
-> no matter what operating you're doing. Piece of cake.
-
-Keep in mind, that this will make reading and writing somewhat
-different. reading assumes there is only one bit set in mask,
-because of the "!!(val & mask)" op, which is hardcoded. I'm not
-against using the write like that though.
-
--michael
-
->> 3. Hardware Debounce: We also need to support hardware debounce settings=
- per pin,
->> which requires custom configuration via set_config mapped to these speci=
-fic per-pin
->> registers.
->
-> Just add a version of an optional .set_config() call to gpio-regmap.c
-> to handle this using .reg_mask_xlate() per above and add a new
-> GPIO_REGMAP_CONFIG_OP to the above enum, problem solved.
->
-> If it seems too hard I can write patch 1 & 2 adding this infrastructure
-> but I bet you can easily see what can be done with gpio-regmap.c
-> here provided Michael W approves the idea.
->
-> Yours,
-> Linus Walleij
-
-
---90b98803b27b5277d55f5c028db99ddc444d61087c0fc38a687673f1b0fc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCaeXUJhIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/gYPAGA38kF6k0QPnHqbuf0F8snMjubpa3TOjs3
-G9onuKDYzjTIsUAnEIkP2OGyzFeQDyiSAX9GSJK/SNrLRYFKwB25HIvNQffrfllE
-mYvy1Hm1NFWYVTeAs8zKhOWZ1siJfgpLSHg=
-=VBJf
------END PGP SIGNATURE-----
-
---90b98803b27b5277d55f5c028db99ddc444d61087c0fc38a687673f1b0fc--
+> > > > +=A0=A0=A0 properties:=0A=
+> > > > +=A0=A0=A0=A0=A0 function:=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0 enum:=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - EMMC=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - JTAGDDR=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - JTAGM0=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - JTAGPCIEA=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - JTAGPCIEB=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - JTAGPSP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - JTAGSSP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - JTAGTSP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - JTAGUSB3A=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - JTAGUSB3B=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - PCIERC0PERST=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - PCIERC1PERST=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - TSPRSTN=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - UFSCLKI=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2AD0=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2AD1=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2AH=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2AHP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2AHPD0=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2AXH=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2AXH2B=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2AXHD1=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2AXHP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2AXHP2B=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2AXHPD1=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2BD0=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2BD1=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2BH=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2BHP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2BHPD0=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2BXH=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2BXH2A=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2BXHD1=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2BXHP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2BXHP2A=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2BXHPD1=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3AXH=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3AXH2B=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3AXHD=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3AXHP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3AXHP2B=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3AXHPD=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3BXH=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3BXH2A=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3BXHD=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3BXHP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3BXHP2A=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3BXHPD=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - VB=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - VGADDC=0A=
+> > > > +=0A=
+> > > > +=A0=A0=A0=A0=A0 groups:=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0 enum:=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - EMMCCDN=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - EMMCG1=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - EMMCG4=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - EMMCG8=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - EMMCWPN=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - JTAG0=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - PCIERC0PERST=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - PCIERC1PERST=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - TSPRSTN=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - UFSCLKI=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2A=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2AAP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2ABP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2ADAP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2AH=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2AHAP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2B=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2BAP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2BBP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2BDBP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2BH=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB2BHBP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3A=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3AAP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3ABP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3B=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3BAP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - USB3BBP=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - VB0=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - VB1=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - VGADDC=0A=
+> > > > +=A0=A0=A0=A0=A0 pins:=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0 enum:=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - AB13=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - AB14=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - AC13=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - AC14=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - AD13=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - AD14=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - AE13=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - AE14=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - AE15=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - AF13=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - AF14=0A=
+> > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0 - AF15=0A=
+=0A=
+> > > Why do you have groups and pins?=0A=
+> > > Is it valid in your device to have groups and pins in the same node?=
+=0A=
+=0A=
+> > The intent is to support both group-based mux selection and=0A=
+> > configuration, as well as per-pin configuration.=0A=
+=0A=
+> > In our hardware:=0A=
+> > - `function` + `groups` are used for pinmux selection.=0A=
+> > - `pins` is used for per-pin configuration (e.g. drive strength,=0A=
+> >=A0=A0 bias settings).=0A=
+> > - `groups` may also be used for group-level configuration.=0A=
+=0A=
+> > As a result, both `groups` and `pins` may appear in the same node,=0A=
+> > but they serve different purposes and do not conflict:=0A=
+> > - `groups` selects the mux function and may apply configuration to=0A=
+> >=A0=A0 the entire group.=0A=
+> > - `pins` allows overriding or specifying configuration for individual=
+=0A=
+> >=A0=A0 pins.=0A=
+=0A=
+> > In most cases, only one of them is needed, but both are allowed when=0A=
+> > both group-level and per-pin configuration are required.=0A=
+=0A=
+> To be honest, that sounds like your groups are not sufficiently=0A=
+> granular and should be reduced such that you can use them for pin=0A=
+> settings.=0A=
+=0A=
+The intent was to keep the binding flexible, but in practice the mixed=0A=
+use of `groups` and `pins` in the same node is not expected to be used.=0A=
+=0A=
+Given that, I agree this flexibility is unnecessary and makes the=0A=
+binding semantics less clear. I'll rework the binding to make the=0A=
+expected usage explicit rather than allowing combinations that do not=0A=
+correspond to a real use case.=0A=
+=0A=
+In particular, I'll split the constraints as follows:=0A=
+=0A=
+- For pinmux, the presence of `function` will require `groups`, and=0A=
+  `pins` will not be allowed. This reflects the hardware design, where=0A=
+  the groups are defined by the pins affected by a given mux expression=0A=
+=0A=
+- For pin configuration, exactly one of `groups` or `pins` will be=0A=
+  required (using oneOf), so that configuration is applied either at=0A=
+  group level or per-pin, but not both.=0A=
+=0A=
+=0A=
+- if:=0A=
+    required:=0A=
+      - function=0A=
+  then:=0A=
+    required:=0A=
+      - groups=0A=
+    not:=0A=
+      required:=0A=
+        - pins=0A=
+  else:=0A=
+    oneOf:=0A=
+      - required:=0A=
+          - groups=0A=
+        not:=0A=
+          required:=0A=
+            - pins=0A=
+      - required:=0A=
+          - pins=0A=
+        not:=0A=
+          required:=0A=
+            - groups=0A=
+Does this match what you had in mind?=0A=
+=0A=
+Thanks=0A=
+Billy Tsai=
 
