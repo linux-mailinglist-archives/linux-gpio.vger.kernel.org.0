@@ -1,190 +1,207 @@
-Return-Path: <linux-gpio+bounces-35256-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35257-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gDj5KkYG5mkIqgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35256-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 12:56:06 +0200
+	id 6GQKDaYd5mkMsAEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35257-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 14:35:50 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE2A6429A49
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 12:56:05 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3740F42ACE1
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 14:35:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id BACD4300C6D0
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 10:56:02 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 8F6C13031F30
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 12:32:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4CEA39A7F8;
-	Mon, 20 Apr 2026 10:56:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83F9539B979;
+	Mon, 20 Apr 2026 12:31:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C2GApaAd"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OkjI+iv0";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="S2Hhaufj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4463439A809
-	for <linux-gpio@vger.kernel.org>; Mon, 20 Apr 2026 10:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D46239FCAB
+	for <linux-gpio@vger.kernel.org>; Mon, 20 Apr 2026 12:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776682561; cv=none; b=MJXbAwBGanAB2SbivmfqHS0fwFCbuOrtbI31FMmxA7JFuGfnBdOsd/aRQw6RXWyJsgSLB2igwCP09P/v9GglYM3oTagU2XcIO8Jkyakeu0mFzRd8eQWYSWiRah5tHm3y+i68VEESEN/P+/I6NyvfUmwTOoST+meZqfs4qnsOG1c=
+	t=1776688315; cv=none; b=lDz1EugXurEl6i3O+HRc3dDplkLoH+kn/bSKEHBk9jIC1R1773miGZqzDUTwiWXuqZJshP8vTK9atZERHxHUrb7OkO6VlW+N9JwgpSGFXfVpt9fIbWkbErmohzNh1PzgmIb0QE9rpcUBcEiYf1PCIwLZ5bX1gj9T2bsWxLQI8jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776682561; c=relaxed/simple;
-	bh=A1WSNvZBH7Gl27blE0SBf08sIf2c8iIjtoiwnzlc7uU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=fgHCqcbD6cEkpa8vBKwM+JzEZxOPCM2FwzA2wam5MQKgjUbo+rGB4Ibdn4GIPMYFYPEaLM/4IPshNCi9pqm19JwmgAgQKWV6nyCdNCsb9fv65PZjBxz0xWEX/PI6AEa08K7uacSfQyFlJ6fI41MLO8TUeEW/OtNQZJQ05FRzqmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C2GApaAd; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-82f946efa38so1262364b3a.0
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Apr 2026 03:56:00 -0700 (PDT)
+	s=arc-20240116; t=1776688315; c=relaxed/simple;
+	bh=fijNuC9FR1cZ4vpqQWPAtPUr+djgOpl0AYC6SN2xKEE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fCTvjNidRugKIFYWSJHHF/rjeNVbZ5aK2fQzZKinM1zjWq26ZF8Gm8QhVsprxCMPmn9gf19uQ4PHwuVmE+4iHY3q7WZ1oShQYLq3+a8KcGM54ToItcYVUq99P3DyTVxkFcXfXaQy8c4KZncBXdY1P1j3wrSbkhC8k263OHAaECw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OkjI+iv0; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=S2Hhaufj; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63K91RVA2281691
+	for <linux-gpio@vger.kernel.org>; Mon, 20 Apr 2026 12:31:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=eyXSzsk8PjP1o8Rxe3vocqKQDzDOHBKK7Gp
+	9Aex3a2M=; b=OkjI+iv0RLHLiEVzjOLDxXLTbWrRCgGymwE+1ny4FecooC2QwpL
+	yccBYzY7LFrldqHdK6V8382iaUdwUj+y9P9XNn72fKAJbvCctRZVFE9F6sHq5XRo
+	FsJmAieRqF0IX+H6hV/nGwrwm5qRec2dlq4Da7ldISkzZ7oqvMgU2VxM1MXo9Lhe
+	X+oZ1bsIaipF5Wfj4jTvx52Oiva+6l7samDDOy/qDOznGc9huu6e5U4Jq0GkN45/
+	/pF9QxJXbWpdzlomaaZ7Htkz3sGes0bP3c4lHZdDs+t6WJdC4yToYvbJwczlThX1
+	DmQnNXhvQvTz115JZz2uHQkNMSaQoHnCExQ==
+Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com [209.85.128.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dnh598psw-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Mon, 20 Apr 2026 12:31:51 +0000 (GMT)
+Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-7900fc7033bso67406837b3.1
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Apr 2026 05:31:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776682559; x=1777287359; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=86QtRyfODNt78/15/vwrG7dKY8dGMsIZ3LKVUkBa3Dc=;
-        b=C2GApaAdsHE7hO+QI7QaLC/4rKSN2OBn/3C3cmOQ/fffZy0NdG0dDnyHdIkuYyHGox
-         v7PSppjq7MuPiB1sWepxOamDkZosu+uhls4qDhCx10bEYXzjxNXqfIOnjr+iLRUi4OfL
-         JAd4BrAP3bt3jhwHi8dP0o/DqfkmQr+CflM9PZ5Vq8DODxfmjdNc6nf+U78UEkkDNNgm
-         2QeCoku0INurif9YOJbzXzHN7yUywsJz2RcK4hty66vfso6haffGsbZpEGG1ZE422PQb
-         exrRwC/v6L2uErWsB5C4GRivZdfhumqbVCThkUIq16mLQsmPhj2UA1Q54VO8LRp0GaI0
-         /S2A==
+        d=oss.qualcomm.com; s=google; t=1776688310; x=1777293110; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eyXSzsk8PjP1o8Rxe3vocqKQDzDOHBKK7Gp9Aex3a2M=;
+        b=S2HhaufjPavg/7Z8jri0K4A89e7oKHCRQ/hf7IyHW9bD4FVcn3rMlLsccuV/7Ak3jK
+         XDqbtXRFMzktx7Vl+nLivCy1FlcHN6HRnnqLq6vANVrfVHVxFLupRI8V4htGdQ0F7b3o
+         sb1vc25MpAJ3/HVFE3zcC5xC7vvfhjDaaaqHq4AWD26RCgjZQCJQEpTyOtEJuDcRT3mO
+         NRow+5CkcvwlP33kyv5SQfUy9+xKeeA0XFLSfZWJ8iOKjzIbGI3lSlPfHjLyUOScuSxy
+         HkifPNkGpECVnLAyGu97yjvQY9i+0+2t9MxZ5pc8NGXC5oVZ2DoskRvcpRgWZNbpr2RJ
+         sEnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776682559; x=1777287359;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20251104; t=1776688310; x=1777293110;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=86QtRyfODNt78/15/vwrG7dKY8dGMsIZ3LKVUkBa3Dc=;
-        b=ewTCb35TMGQxsyTi4I2sQpFvxFShVfjuiYw7aG8xMKubVfZYS1gX+ldN5WOKeAVLnX
-         WXvjo6689CGmn0+Eft99zItRTbxWcP63DHuu3B8J2fm4ZqmWsQidsKxdyr8A/6dbZRux
-         EpnFOZNWbEiD1RbpaSFy5mZVInDdKuGLJg1RehgDHqVG8RExh1Xr+4tNcNBb2GIbIhbY
-         n4P9GtKPo8YhHiZO5mNpS1nfzdbpHux1Yi5afIja1osfks4tMYKtMqGEWVk5W5ZAQOxU
-         nkapz4vdb9NRmZgF211sYujFOk9u+42GJmfY0WeCXqmTA++lu591sFJJfONOvYiNOY7r
-         q2IQ==
-X-Gm-Message-State: AOJu0Yx8VAl/zXqMUpMiYIsnERfQyW5x2GkOE06xsQW4n4Fgie4uGSwC
-	sdJNeiddqtRFlKAoW2Dos1r64O/Fx/6XwS9kibaGKCl+KXqdhVCzI+2WbzeoYRDt
-X-Gm-Gg: AeBDietfU3vFG7LFwp1yTboxwiGDXMOS5ODuu35ps1rmWDYWyGFbKhrah1ywp8VZvxd
-	aOgHMPkypu3V8kBhG8UGf++A9/atMva0oateVzlhM+pI2Sm8hYy1Rh+tnnTWxK4G8vZ5wBSPLZo
-	lmbRiktziDWd3smvOBsS4EIQki38TvRm6YPxtsdmEE8lBZdalBZ62MGmOz7KaH5I1iKxGC3GdWb
-	n1ch+8+909hJu9WFvY+k9VQLluKUlOrKXnrv1ca7UsIbMCTGxavpYOL6BmtIZj69A5GpZSs1n7R
-	zvrxAGSibY/QSOnHhpt+9SWB3Bpi1ftFl+/VAGuj1NMJhupp5zk623sbClIwKveRfpuQWeuSDQn
-	08QKx/jzh+2tpVa3eRAALFi+NnheX0e3U5M321e3wffE6ohzrUc78q2cGilHAE20W4eDS1uSKVv
-	k9zCA9wmocCCcV07+xO8jN991p5ilB5ElOCqMzqdE4UCU9melFLajzDGl0SvD7oWNstqS6ubdzP
-	JWDrzGweJXf0JbpLdjWwt3/ZeMajB8=
-X-Received: by 2002:a05:6a00:181b:b0:824:b304:2d1e with SMTP id d2e1a72fcca58-82f8b389d04mr12288256b3a.8.1776682559260;
-        Mon, 20 Apr 2026 03:55:59 -0700 (PDT)
-Received: from junjungu-PC.localdomain ([223.167.147.125])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82f8ec06cbfsm12227889b3a.58.2026.04.20.03.55.57
+        bh=eyXSzsk8PjP1o8Rxe3vocqKQDzDOHBKK7Gp9Aex3a2M=;
+        b=SZT3HzizzDLN51sMAN9PAIOiF5O3OrgxHSv6BVutIlsLBBY8tjNLUH+g/pK9Q+ShtQ
+         pxLesC/yBCdI3Sbs+yCdHXvOJssmpiJOVw4qxuqdo3BLYxetdgIff+gVUp5ngekjg0sV
+         dZgbZkE4ohUFuRkuPgXZlh15n6iuxZtYGEYIVtDDd3lr1uy4arrySfYSR+4YZdpk7O7r
+         DVlibaLC2uBW2a7+5osV5oT/xarelKVt4BYUAiEjX5j6Jg5lMst9yUPKsqDBlJDrbv9e
+         nh3TuuP7HTaJQB6y6LrAlS/CPl5tQ3ipwXg4vPTe5xJ3unni3xKA3L9nQ6YXdoTl/EFV
+         dkNw==
+X-Forwarded-Encrypted: i=1; AFNElJ9Wejij7PyBPO9GAfK2t/EqEXZONoJIMWetGhScY1yAcjoJYgusMPU53hShzksVR7RCFyhOFd1KMJAo@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+hibv9MY2ofn5PNO0L0ZzRb1krmGzptDsGQ8K5GQAX55y4bBO
+	/uyf2P79VQHUUFlKzwlSc4CVIUksMOHKJ5DfNDz9b748eu9YhJwyVY6pWJR6vNMwYvcsf2xhIVW
+	noK17dsSt8UlTgmLTPQMupIuGeZeWao0FpOGP47HT1KZICbbWUEo9lhQDBbmEAIr6
+X-Gm-Gg: AeBDies0tj01m49rCsZXoumH7NXin/m79ZeaKFdCEpxbvBcgyigoixqNaLTdAAT4W/B
+	FX1+WZMpRJ9+NTLPSgINjgtOFXuJi/mNZC4tLpzHlyKJJMf7/c4rU5b+X0Nave+stMPM4PzfoId
+	bhGD9bXP8VE5hbMFSpFZO36CMp9+OqnPhrrsWUA70Ofg5DoGR6aQB9Zj7YgpZifb64bg0LyrgsW
+	j2jaWfahy0ePZojzn9rhM8/rUWftMtVrHUQ6/rCPoHz5Dn7lzWIBUStL1gR0DcAkU6EUELxt1OO
+	ChLUFywycydTLhHUBRdlyrZtAFjfX5OBTJs1r0RYJveEGlInl8NnDZYlwg9Lk0CKfnA4XbAR3y9
+	IOzKwJEDQmZWVp0vSzPeH7w/wwwUh3ZXEkzWCbdEKZ7N4KSVg5kk3QGpbWkku
+X-Received: by 2002:a05:690c:14:b0:79b:e346:9813 with SMTP id 00721157ae682-7b9ed2ce09cmr110296637b3.10.1776688310664;
+        Mon, 20 Apr 2026 05:31:50 -0700 (PDT)
+X-Received: by 2002:a05:690c:14:b0:79b:e346:9813 with SMTP id 00721157ae682-7b9ed2ce09cmr110296307b3.10.1776688310218;
+        Mon, 20 Apr 2026 05:31:50 -0700 (PDT)
+Received: from hu-nandam-hyd.qualcomm.com ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7b9ee8be8e4sm44014267b3.14.2026.04.20.05.31.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2026 03:55:58 -0700 (PDT)
-From: Felix Gu <ustc.gu@gmail.com>
-Date: Mon, 20 Apr 2026 18:55:55 +0800
-Subject: [PATCH] pinctrl: pinconf-generic: fix properties bitmap leak in
- parse_fw_cfg()
+        Mon, 20 Apr 2026 05:31:49 -0700 (PDT)
+From: Ajay Kumar Nandam <ajay.nandam@oss.qualcomm.com>
+To: Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linusw@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mohammad.rafi.shaik@oss.qualcomm.com,
+        ajay.nandam@oss.qualcomm.com
+Subject: [PATCH v2 0/3] pinctrl: qcom: lpass-lpi: Switch to PM clock framework
+Date: Mon, 20 Apr 2026 18:01:32 +0530
+Message-Id: <20260420123135.350446-1-ajay.nandam@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260420-pinconf-v1-1-82f8276d8aec@gmail.com>
-X-B4-Tracking: v=1; b=H4sIADoG5mkC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzMDEyMD3YLMvOT8vDTdtFRDC0uTxGQDo8RkJaDqgqLUtMwKsEnRsbW1AOW
- jILdZAAAA
-X-Change-ID: 20260420-pinconf-fe1894ac02ac
-To: Linus Walleij <linusw@kernel.org>, 
- Conor Dooley <conor.dooley@microchip.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Felix Gu <ustc.gu@gmail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1776682557; l=1640;
- i=ustc.gu@gmail.com; h=from:subject:message-id;
- bh=A1WSNvZBH7Gl27blE0SBf08sIf2c8iIjtoiwnzlc7uU=;
- b=4KG3p0Phbq/joYNJzNNSAXc7vV/V3sEXN3+vnu2zRTfQmR2eDxVA4yNT4p/ETdVhM12Xwlmww
- PhEA3EdTXZ8AvyBc47tS9XL/nhySJYHqz7zo+yMuXlKamMJK2eGgLgF
-X-Developer-Key: i=ustc.gu@gmail.com; a=ed25519;
- pk=fjUXwmjchVN7Ja6KGP55IXOzFeCl9edaHoQIEUA+/hw=
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: kXw23sHMJw1bl_6ZKHYpwKSK7fRc9uHi
+X-Proofpoint-GUID: kXw23sHMJw1bl_6ZKHYpwKSK7fRc9uHi
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIwMDEyMyBTYWx0ZWRfX9DDdOymeEWf0
+ 5/1wfglgDoeRJ3FZkviaScWv/tYYpJkXKXjssljFGdgOLd8OI3mAimmwZznpA9H9oK7ATiyOyRH
+ oP5YEAz6wsRqa/6QO8O7rctjyhSirSJvcT9IdggjHsc73N66NcrDP5uzKjo5Ty8h5WlfoyVW/OT
+ nZk+g1m5isdldmIROZHYa38iK9N5PnxECy7bxz6+ToLrmNsVkqhpgghBPVZIVpC9Yl4kujGDQuE
+ 2X7vJmdM40p6MfC5RsZJbxaaKAcGcn1nK1rdEXt6BZRoLlZlw+r9+l8GIINjQFmPhXmj5oJ/mh8
+ SMZAWTSFecumJTWjNCRpFi0SlKwaaSA5UzRACILlq2MKYI5dzGJkerFfy9FeYke5/djZLQ00q8k
+ c/pAKQX2Aqtxi9+5nGTl6JkOrtlXPmGzsbhy3Q5TqAx7ghFysw4Qy4JVIznDBUGlSA1gdT863su
+ rbuzCxjhg5Ae1GDPXtg==
+X-Authority-Analysis: v=2.4 cv=HNrz0Itv c=1 sm=1 tr=0 ts=69e61cb7 cx=c_pps
+ a=g1v0Z557R90hA0UpD/5Yag==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22 a=VwQbUJbxAAAA:8
+ a=EUspDBNiAAAA:8 a=9dJ8MUsXuwlyAIs3VwEA:9 a=MFSWADHSvvjO3QEy5MdX:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-20_02,2026-04-17_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 suspectscore=0 adultscore=0 spamscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604070000 definitions=main-2604200123
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-35256-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ustcgu@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35257-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ajay.nandam@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:dkim,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5]
-X-Rspamd-Queue-Id: AE2A6429A49
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 3740F42ACE1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-In parse_fw_cfg(), if fwnode_property_match_property_string() fails with
--ENOENT, the code returns directly and leaks the bitmap.
+This series moves LPASS LPI pinctrl runtime clock control to the PM
+clock framework and ensures GPIO register accesses runtime-resume the
+block before MMIO.
 
-Use __free(bitmap) for automatic cleanup to fix the leak.
-
-Fixes: 9c105255108b ("pinctrl: pinconf-generic: perform basic checks on pincfg properties")
-Signed-off-by: Felix Gu <ustc.gu@gmail.com>
----
- drivers/pinctrl/pinconf-generic.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-index 64ed28309788..077149121628 100644
---- a/drivers/pinctrl/pinconf-generic.c
-+++ b/drivers/pinctrl/pinconf-generic.c
-@@ -225,10 +225,9 @@ static int parse_fw_cfg(struct fwnode_handle *fwnode,
- 			unsigned int count, unsigned long *cfg,
- 			unsigned int *ncfg)
- {
--	unsigned long *properties;
- 	int i, test;
- 
--	properties = bitmap_zalloc(count, GFP_KERNEL);
-+	unsigned long *properties __free(bitmap) = bitmap_zalloc(count, GFP_KERNEL);
- 
- 	for (i = 0; i < count; i++) {
- 		u32 val;
-@@ -263,7 +262,6 @@ static int parse_fw_cfg(struct fwnode_handle *fwnode,
- 			if (ret) {
- 				pr_err("%pfw: conflicting setting detected for %s\n",
- 				       fwnode, par->property);
--				bitmap_free(properties);
- 				return -EINVAL;
- 			}
- 		}
-@@ -295,7 +293,6 @@ static int parse_fw_cfg(struct fwnode_handle *fwnode,
- 		pr_err("%pfw: cannot have multiple drive configurations\n",
- 		       fwnode);
- 
--	bitmap_free(properties);
- 	return 0;
- }
- 
+The common LPASS LPI core now uses PM clocks and autosuspend. Runtime PM
+callbacks are wired for all LPASS LPI variant drivers sharing the common
+core so behavior is consistent across SoCs using DT-provided clocks via
+of_pm_clk_add_clks().
 
 ---
-base-commit: c7275b05bc428c7373d97aa2da02d3a7fa6b9f66
-change-id: 20260420-pinconf-fe1894ac02ac
+v1: lore.kernel.org/r/20260413122233.375945-1-ajay.nandam@oss.qualcomm.com
 
-Best regards,
+Changes since v1:
+- Kept GPIO helper return type adjustments in the runtime PM access
+  patch and switched access paths to pm_runtime_resume_and_get()
+- Added runtime PM callback wiring for remaining LPASS LPI SoC drivers
+  (sc8280xp, sm4250, sm6115, sm8250, sm8450, sm8550, sm8650)
+- Addressed style nits in GPIO access helper declaration formatting
+
+Testing:
+- Runtime behavior validated on Kodiak (sc7280)
+- Other LPASS LPI variants compile-tested; wider runtime testing welcome
+
+Ajay Kumar Nandam (3):
+  pinctrl: qcom: lpass-lpi: Switch to PM clock framework for runtime PM
+  pinctrl: qcom: lpass-lpi: Enable runtime PM hooks on remaining SoCs
+  pinctrl: qcom: lpass-lpi: Resume clocks for GPIO access
+
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.c      | 48 ++++++++++++-------
+ .../pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c   |  7 +++
+ .../pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c | 11 ++++-
+ .../pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c   |  7 +++
+ .../pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c   |  7 +++
+ .../pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c   | 11 ++++-
+ .../pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c   | 11 ++++-
+ .../pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c   | 11 ++++-
+ .../pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c   | 11 ++++-
+ 9 files changed, 97 insertions(+), 27 deletions(-)
+
 -- 
-Felix Gu <ustc.gu@gmail.com>
-
+2.34.1
 
