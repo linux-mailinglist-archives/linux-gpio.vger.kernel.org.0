@@ -1,243 +1,391 @@
-Return-Path: <linux-gpio+bounces-35260-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35261-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eKA1B3Ue5mkMsAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35260-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 14:39:17 +0200
+	id IJQ0JlAn5mm6sgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35261-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 15:17:04 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8617142AD77
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 14:39:16 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A99F42B758
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 15:17:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E5C1030C531D
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 12:32:31 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id AD043301CE74
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 13:16:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 145AC35979;
-	Mon, 20 Apr 2026 12:32:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C92943A3825;
+	Mon, 20 Apr 2026 13:15:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jM69qmsV";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="LjOCjnaq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4XhjMjZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F7A3A0B2B
-	for <linux-gpio@vger.kernel.org>; Mon, 20 Apr 2026 12:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B743A1E73;
+	Mon, 20 Apr 2026 13:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776688323; cv=none; b=GzfwYeLV304r/6NO4HcJ5gyrQIWUhGKvYvUBoH+3U2wuPVkonFDh91qgbZAUNCzB1evVbfMfjh0aM/aRTxMNYofP59Rlp9kLrN1Zm9KJ6VgIiCBEDBNeidr04jhOhNUAK6o/hW0cHSpo6z7gWiMkyCvEa08g//emyK3BvR32+VQ=
+	t=1776690949; cv=none; b=qYBU/WtLHs9tSl1wnOcPcJqugDZU+7w7cCbZakPteSPyjbzd91hqWHl+az5HTLHqUHQxcn9BaIiv8uabqaC3wpYUb6NjwCBOSZTLU1QQDqWjx4tv9TDrc0Rzx0QLrFHFXSdj9dwFB7BDEmzCximMJ0K0BI9+EHcjIsreq7woOQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776688323; c=relaxed/simple;
-	bh=RBUpwZ70RPQbPgmumF+Rmkz1kj7CY4tfG3vzA+uP9OA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UEs42oqn2mRSdgaBt8rsaXpKpHMGs5Ej3wN7oEBg4gx58xI3Fp0Q4jMr42CfpFhedBFDa2PfyueD83NtQPJGX4l+wliYCcYMbiPfxRRbSG0MAsj15ofLwDozmWGm7mWef/fiYvh/Fy37uNFkYDcLG4hL5QzzPHowTWMNMCyLXvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jM69qmsV; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=LjOCjnaq; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63K97CMO2755700
-	for <linux-gpio@vger.kernel.org>; Mon, 20 Apr 2026 12:32:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=0QwktVWI85h
-	g7BDmt0yaUgnHhq7bSJQMuHPQVL+nHqY=; b=jM69qmsVM/7Hm5QVlCYPnGwL9E6
-	NYyRq8+LB6sNJ+ch9j7AuqdlQthDFUdEy3UJJuEal55uDJhTYmb6bWUd4hNMJfDw
-	Il6kfcwvOV8/PBEQp4+XPSKC02cVVCqJC+BKyUQs8lEQgEekgsnxcQm8FsN3tVa2
-	0VdgbeiJqfwsn/BtASBsB7Tgju5jVTi/26iB2nQWe304PgqJWc7F8Cig8Kx2BIth
-	HZcyYVSwSBRB6BXqBLNN8XSE2sZKw3J1lbT6/OZmGQjjmSRrfhRALcCnosabqHFe
-	UuxE1yoQeGdqmbRxi8XEsp2Ew7sD5Ipni3ovLQfwhXF1q225F+8Vkq+XT2w==
-Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com [209.85.128.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dnh7xgnqm-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Mon, 20 Apr 2026 12:32:01 +0000 (GMT)
-Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-79aa3a19ea3so45269587b3.0
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Apr 2026 05:32:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1776688321; x=1777293121; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0QwktVWI85hg7BDmt0yaUgnHhq7bSJQMuHPQVL+nHqY=;
-        b=LjOCjnaqR4lytOTncvcHffGdo0Mp/5hv9ry2i8S8US5PxggNeyJaqXIb/WXPQpVhr2
-         Pyjv8eeTprjzZ+//ILeGyHJyiZRxAXDnftSVui2YWlfHBKL6Vnm7YPEGauOOja0U4NXQ
-         x6t5u8uLx9s0SU3/mmUR/RE6sqKvSZbKjuqVhR8wTm2/ZS2+KzlFOinuR6epBP8pqrY5
-         sWmQ8Fi2/tAPFV+IMhv1NuTmRlM5+7zeJqL5KYnBWC00UO2YiMXqJSOzdGD+nZXNKfKT
-         OhDBPQlJQEZglTl6NSCKQraARf9SF5koVzVC+NAWJFW9N1Vt+nIWupKw37XHs2hvyGMi
-         cc/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776688321; x=1777293121;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0QwktVWI85hg7BDmt0yaUgnHhq7bSJQMuHPQVL+nHqY=;
-        b=tXtl7zyf9Y1GdzeVp/X6KlSmYaiHPBcxJe5PMTfJwBV3pwBi7BI1P2Jgiq67nF4WA9
-         3UkQLRJICFg6RAa/BkfJ4An7hX9BWuP4MyyH6g5y/1b3bOCv1Az9Nz/asd6JDgSQP2T9
-         XnHVuEOFtlzbCFp8fUjIt6h7hu97Yb3FKxxYVQlX7l9dZEkKn0719wBpvh45Nr1WpTJb
-         wTFGib5ec9INJjx65kJrNByhxt/fQ+sHzasvkdWKSSBku+mllk7dF1qYhrkOzTf0AmSB
-         ASXscUkhbc426H9JhZzQXPGVp5eVqMnUdyx4a7gvOFzhwVmZMgnlQLQhl3H2R5G2DevF
-         ZQtA==
-X-Forwarded-Encrypted: i=1; AFNElJ9rKU/KHKfXTpM47CenDcsu+XY4rG9VS0w64+So4uiAj8GE2rim9XS9Gsbi06SXz8geriz10cv7VlvP@vger.kernel.org
-X-Gm-Message-State: AOJu0YytCw7zFSLnW3+4THoOo8wd8nol3biTpye/ydqwc8JKDe0/uHKq
-	jKWmTR1riyNqey0W3pRMbvr/VqfPXDPts6kmt8+JdJKVs1o2lBiec3xHScqHZ9Uwy6MytJnuFyq
-	vW12tr+TIoZUTreeCPoNfVuV/7bX27IJmf0uLFA6i9YbIDUEyMA2Yu/VhZcwGluRE
-X-Gm-Gg: AeBDietfxuCohcdVzNs0HGPSa8Wc4ttFQ+jrAUyhILeBQXLKcMwZSlCMd+rHg0KrNsG
-	QyO7RDxagR83mJQa3iKi1Fgjrq+dQo8g4OfZJJZkl9zxEfdir9guii21cp1KbWFwD4VhgJnXdQf
-	K/ddciwV0XdaG5uaQD3sNJnDqxRQNhorrD8Vuu5ZJhx+8zDRvY5MlRxvnNUV5brdOLYMhxH7yRm
-	ty5yM4sBmldsDPwIlstP1rPibe3bi40xGKP5WOQT7wmqE0eZHql+tLFkJIW1mXC14i6TieBIMdU
-	qwo9EKSi+jR18eZgSLHaWq71sfv+Gmm0N+0eZmKDrNi6yrQVzS2zgar/+b1pTs/b+ZJ12S1LZ2y
-	JgNFKfidxCRBvOf95M/PdnL/OTVT5qVUh08hQZHEWAvG9tEPviGCo1kYwmfNx
-X-Received: by 2002:a05:690c:6601:b0:79a:dabf:cbcc with SMTP id 00721157ae682-7b9ed03ea6emr147508267b3.44.1776688320752;
-        Mon, 20 Apr 2026 05:32:00 -0700 (PDT)
-X-Received: by 2002:a05:690c:6601:b0:79a:dabf:cbcc with SMTP id 00721157ae682-7b9ed03ea6emr147507947b3.44.1776688320379;
-        Mon, 20 Apr 2026 05:32:00 -0700 (PDT)
-Received: from hu-nandam-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7b9ee8be8e4sm44014267b3.14.2026.04.20.05.31.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2026 05:32:00 -0700 (PDT)
-From: Ajay Kumar Nandam <ajay.nandam@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linusw@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mohammad.rafi.shaik@oss.qualcomm.com,
-        ajay.nandam@oss.qualcomm.com
-Subject: [PATCH v2 3/3] pinctrl: qcom: lpass-lpi: Resume clocks for GPIO access
-Date: Mon, 20 Apr 2026 18:01:35 +0530
-Message-Id: <20260420123135.350446-4-ajay.nandam@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260420123135.350446-1-ajay.nandam@oss.qualcomm.com>
-References: <20260420123135.350446-1-ajay.nandam@oss.qualcomm.com>
+	s=arc-20240116; t=1776690949; c=relaxed/simple;
+	bh=yFy+QQIRSBLq3C9dEiBy+11bYiiz4OjbaBiD3WNJNjk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Mu8isfBmgMhWUE/5rq7zXjaTRxT49Lhs/0C7YURAkD9yRNZdE9KGrNQN1SGLwl+ebVM7l96T8/rJoriXL6afjAT6VPJWQ76QuelVZ4+YE7Q3anpmzfLZle4nmO6D04KXx0JQag0ON3XVFbJ6ad70nRaC+hvI8dOMRgW8qEvGth4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4XhjMjZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D597C19425;
+	Mon, 20 Apr 2026 13:15:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776690949;
+	bh=yFy+QQIRSBLq3C9dEiBy+11bYiiz4OjbaBiD3WNJNjk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Z4XhjMjZs0lWpW+g5wbzQgYgYLIb3rrwRJZFHXOxaL4gLpJrL39lASkCsOOJDJFkN
+	 HJflaZGqFH5RX2Wtnfvc9UmRCvGGENKHPmdpz01q7gqljclJ9q9G4B1mN3whq1WnmE
+	 lAoGo+OYqfVHROve6zLN9Vp+tunpoEOL82PQgPPhPYdbcMYarbIOOqB7BDo1zrhBbB
+	 kEab3AEtIK9YvfXEOYDExsSKdlOuXgObZfF2AhXLf/mrPjV5JZTQMowbeHYi2epBVM
+	 HD6fZNvgA/ixkpw2NzbGlpyPCVYwpMH1UmIKOHhf4ZUDaRqXIOzuZce/ywIgj/N+mJ
+	 NI3rQu9Xh7jgQ==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Sasha Levin <sashal@kernel.org>,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 7.0-5.10] gpio: lp873x: normalize return value of gpio_get
+Date: Mon, 20 Apr 2026 09:07:52 -0400
+Message-ID: <20260420131539.986432-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260420131539.986432-1-sashal@kernel.org>
+References: <20260420131539.986432-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 7.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIwMDEyMyBTYWx0ZWRfX+V9nKOerm2Vm
- GtgVZsSy3oMll7z25MDo1CVdtfZTJyC9c1KygJhCVPfl+AlghYpmRdWT4uhjqfsuuzfMyV+1gUY
- v5KBpG2BJuFE42t8CBSEcFB0+IJPCuPXMFktAdwReu6IbGD4d8zLcJldxg32g9jhh/rt5Vb7SjF
- EFFKq4oc8aeRX7rrcVYLAsOGZ5gs67QYE2PzB/jzSKneqbmVXSlBuwNrBqN0PCXhY+665OuXxZJ
- lHMVTN8SPnURU+dXWN8tQSxpyH3dC4lHQ0vdzafExMmf26u++auKO73SfIrRp997H8VeJe611dT
- /fo+OWS9Ml7B8rEIGiWrhkjnwoe8OkMTJY3paGEJVn/EF8y21keN5F1ukG2q+Pg7Lodo+BfWoY5
- UOws436vkzipJg5yXmiRf1pRx0Gykbhje1iQk7EixNmR89ZDtDIcWuK/TdJWam/mYMEiRvSQEQ2
- V++UlzCpALxIwRSw9Ig==
-X-Authority-Analysis: v=2.4 cv=BPmDalQG c=1 sm=1 tr=0 ts=69e61cc1 cx=c_pps
- a=g1v0Z557R90hA0UpD/5Yag==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22 a=EUspDBNiAAAA:8
- a=rvE_S6D2-Cyk851oGd0A:9 a=MFSWADHSvvjO3QEy5MdX:22
-X-Proofpoint-ORIG-GUID: RLxyeJsarE1YpYsvkXr52vbiuV9gDRiU
-X-Proofpoint-GUID: RLxyeJsarE1YpYsvkXr52vbiuV9gDRiU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-20_02,2026-04-17_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 phishscore=0 adultscore=0 malwarescore=0 spamscore=0
- lowpriorityscore=0 impostorscore=0 suspectscore=0 clxscore=1015 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604070000 definitions=main-2604200123
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [0.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FREEMAIL_CC(0.00)[gmail.com,oss.qualcomm.com,kernel.org,linaro.org,bgdev.pl,vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35260-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35261-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ajay.nandam@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[sashal@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:dkim,qualcomm.com:email,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 8617142AD77
+	RCPT_COUNT_SEVEN(0.00)[9];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,msgid.link:url,qualcomm.com:email]
+X-Rspamd-Queue-Id: 0A99F42B758
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Ensure the LPI pinctrl device clocks are runtime resumed
-before accessing GPIO registers and autosuspended after
-the access completes.
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Guard GPIO register read and write helpers with synchronous
-runtime PM calls so the device is active during MMIO
-operations.
+[ Upstream commit 5a32ebabb6819fafce99e7bc6575ca568af6d22a ]
 
-Signed-off-by: Ajay Kumar Nandam <ajay.nandam@oss.qualcomm.com>
+The GPIO get callback is expected to return 0 or 1 (or a negative error
+code). Ensure that the value returned by lp873x_gpio_get() is normalized
+to the [0, 1] range.
+
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: https://patch.msgid.link/20260218190657.2974723-4-dmitry.torokhov@gmail.com
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 26 ++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-index 2b0956ff2ae0..75ae21478fa4 100644
---- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-@@ -38,32 +38,46 @@ struct lpi_pinctrl {
- 	const struct lpi_pinctrl_variant_data *data;
- };
+LLM Generated explanations, may be completely bogus:
+
+Now I have all the information I need. Let me compile the full analysis.
+
+---
+
+## PHASE 1: COMMIT MESSAGE FORENSICS
+
+**Step 1.1: Subject Line**
+- Subsystem: `gpio: lp873x`
+- Action: "normalize" (correctness fix, ensuring API compliance)
+- Summary: Normalize return value of `gpio_get` callback to [0, 1] range
+Record: [gpio: lp873x] [normalize] [Fix return value to comply with GPIO
+API contract]
+
+**Step 1.2: Tags**
+- `Signed-off-by: Dmitry Torokhov` - Author, major kernel contributor
+  (input subsystem maintainer, also contributes to GPIO)
+- `Link: https://patch.msgid.link/20260218190657.2974723-4-
+  dmitry.torokhov@gmail.com` - Patch 4 in a series
+- `Signed-off-by: Bartosz Golaszewski` - GPIO subsystem maintainer
+  applied it
+- No Fixes: tag (expected for AUTOSEL candidates)
+- No Cc: stable tag
+Record: Author is a well-known kernel maintainer. Patch applied by GPIO
+subsystem maintainer.
+
+**Step 1.3: Commit Body**
+The commit message explains the GPIO `.get()` callback API contract: it
+must return 0, 1, or negative error. The lp873x driver violated this.
+Record: Bug = API contract violation. Return value is non-normalized
+(can return values > 1 like 16).
+
+**Step 1.4: Hidden Bug Fix?**
+Yes. "normalize" disguises a real correctness bug. The driver returns
+`val & BIT(offset * BITS_PER_GPO)` which for offset=1 returns 16 (not 0
+or 1). This violates the GPIO API contract.
+Record: This IS a bug fix despite "normalize" language.
+
+## PHASE 2: DIFF ANALYSIS
+
+**Step 2.1: Inventory**
+- 1 file: `drivers/gpio/gpio-lp873x.c`, 1 line changed
+- Function modified: `lp873x_gpio_get()`
+Record: Minimal single-line change in one function.
+
+**Step 2.2: Code Flow Change**
+Before: `return val & BIT(offset * BITS_PER_GPO);` - returns 0 or
+BIT(offset*4), which for offset=1 is 16.
+After: `return !!(val & BIT(offset * BITS_PER_GPO));` - returns 0 or 1.
+Record: Changes return value normalization on the normal code path.
+
+**Step 2.3: Bug Mechanism**
+Category: Logic/correctness fix (type g). `BITS_PER_GPO` is 4. For
+offset=0, `BIT(0)=1` (fine). For offset=1, `BIT(4)=16` (bug - returns 16
+instead of 1).
+
+This interacts critically with `86ef402d805d` (sanitizer added in
+v6.15):
+- **Original sanitizer** (v6.15): Returns `-EBADE` if `ret > 1` --
+  meaning GPO2 reads would FAIL with an error
+- **Revised sanitizer** (v7.0, commit `ec2cceadfae72`): Warns and
+  normalizes to `!!ret`
+- **Without sanitizer** (v6.14 and older): Non-normalized value
+  propagated to consumers
+
+Record: API violation; offset=1 returns 16 instead of 1. Can cause
+-EBADE errors in some stable tree versions.
+
+**Step 2.4: Fix Quality**
+Trivially correct. `!!` is the standard C idiom for boolean
+normalization. Zero regression risk.
+Record: Obviously correct, minimal, zero risk.
+
+## PHASE 3: GIT HISTORY
+
+**Step 3.1: Blame**
+The buggy line (`return val & BIT(...)`) was introduced in
+`83f141030cec88` (2016-08-31, v4.9) - the original driver. Bug present
+since inception.
+Record: Bug exists since v4.9, present in all stable trees.
+
+**Step 3.2: Fixes Tag**
+No Fixes: tag present. However, sister commits reference `Fixes:
+86ef402d805d`. The lp873x commit likely should have had this tag.
+Record: Sister commits all have `Fixes: 86ef402d805d`.
+
+**Step 3.3: File History**
+Only 2 changes since v6.6: `30d15b8949828` (GPIO set callback rename)
+and `d9d87d90cc0b1` (rename back). Neither affects `lp873x_gpio_get()`.
+The fix applies cleanly to all stable trees.
+Record: Standalone fix, no prerequisites for the get() function.
+
+**Step 3.4: Author**
+Dmitry Torokhov is the input subsystem maintainer and a very active
+kernel contributor. He authored multiple similar GPIO normalization
+fixes (`fbd03587ba732` for amd-fch, `2bb995e6155cb` for qca807x,
+`e2fa075d5ce19` for ti-ads7950). He also reported the issue that led to
+the gpiolib sanitizer fix `ec2cceadfae72`.
+Record: Highly trusted author. Systematic fix across multiple drivers.
+
+**Step 3.5: Dependencies**
+None. The change to `lp873x_gpio_get()` is self-contained - the function
+hasn't changed since 2016.
+Record: No dependencies. Clean apply expected.
+
+## PHASE 4: MAILING LIST
+
+**Step 4.1-4.2**: Lore is behind a bot protection wall. However, b4 dig
+confirmed the series and the sister patches. The patch was accepted by
+the GPIO subsystem maintainer (Bartosz Golaszewski).
+
+**Step 4.3: Bug Context**
+The framework-level fix `ec2cceadfae72` was prompted by Dmitry Torokhov
+reporting that `86ef402d805d` broke multiple drivers. Bartosz
+Golaszewski then:
+1. Changed the sanitizer from -EBADE to warn+normalize
+2. CC'd stable on that fix
+3. Accepted all driver-level fixes from Dmitry
+
+**Step 4.4: Series Context**
+This is patch 4 in a series of GPIO normalization fixes. Each patch is
+independent (different drivers).
+
+**Step 4.5: Stable Discussion**
+The sister commit `e2fa075d5ce19` (ti-ads7950) explicitly has `Cc:
+<Stable@vger.kernel.org>`. The framework fix `ec2cceadfae72` also has
+`Cc: stable`. This lp873x patch appears to have missed the Cc: stable
+tag despite being the same class of fix.
+Record: Sister patches have Cc: stable. This one appears to have been
+missed.
+
+## PHASE 5: CODE SEMANTIC ANALYSIS
+
+**Step 5.1-5.2**: `lp873x_gpio_get` is called via the `.get` callback in
+`template_chip`. The GPIO framework calls it through `gpiochip_get()` ->
+`gpio_chip_get_value()` -> gpiod_get_value/gpiod_get_raw_value paths.
+
+**Step 5.4**: Call chain: userspace GPIO access -> gpiod_get_value() ->
+gpio_chip_get_value() -> gpiochip_get() -> lp873x_gpio_get(). Reachable
+from userspace via the GPIO chardev interface.
+
+Record: Reachable from userspace, called on every GPIO read of this
+device.
+
+## PHASE 6: CROSS-REFERENCING
+
+**Step 6.1**: The buggy code exists in all stable trees (since v4.9).
+The lp873x driver has barely changed.
+
+**Step 6.2**: The `lp873x_gpio_get()` function is unchanged since 2016.
+The fix should apply cleanly to all stable trees.
+
+**Step 6.3**: No related fixes for this specific driver in stable.
+
+Record: Clean backport expected to all active stable trees.
+
+## PHASE 7: SUBSYSTEM CONTEXT
+
+**Step 7.1**: GPIO subsystem - IMPORTANT level. GPIO is used widely in
+embedded/IoT systems.
+**Step 7.2**: The lp873x is a TI PMIC used in embedded/industrial
+systems (BeagleBone, etc.).
+Record: Peripheral driver but with real embedded users.
+
+## PHASE 8: IMPACT AND RISK ASSESSMENT
+
+**Step 8.1**: Affects users of LP873x PMIC GPO2 (offset=1). The LP873x
+is used on TI AM335x/AM57xx platforms.
+
+**Step 8.2**: Triggered on every GPIO read of GPO2. Impact varies by
+stable tree:
+- v6.15+ with only `86ef402d805d`: Returns -EBADE error (FUNCTIONAL
+  BREAKAGE)
+- v7.0+ with `ec2cceadfae72`: Warning in dmesg
+- v6.14 and older: Non-normalized value to consumers (potential subtle
+  bugs)
+
+**Step 8.3**: Severity varies: MEDIUM (warning + potential wrong
+behavior) to HIGH (functional breakage with -EBADE in certain stable
+trees)
+
+**Step 8.4**: BENEFIT: Eliminates API violation, prevents -EBADE errors
+in some trees, removes warning. RISK: Essentially zero (single `!!`
+addition).
+
+## PHASE 9: FINAL SYNTHESIS
+
+**Evidence FOR:**
+1. Trivial 1-line fix, obviously correct (`!!` normalization)
+2. Fixes real API contract violation (returning 16 instead of 1)
+3. Zero regression risk
+4. Sister patches (`e2fa075d5ce19`, `2bb995e6155cb`) have `Cc: stable`
+   and `Fixes:` tags
+5. Author is highly trusted kernel maintainer
+6. Applied by GPIO subsystem maintainer
+7. Bug present since v4.9 - affects all stable trees
+8. In some stable trees (v6.15+), the unfixed driver causes -EBADE
+   functional errors
+9. Clean backport expected - function unchanged since 2016
+
+**Evidence AGAINST:**
+1. No Fixes: tag or Cc: stable on this specific commit (likely
+   oversight)
+2. Low user population (LP873x PMIC users only)
+3. Impact in latest stable trees is "just" a warning (with the sanitizer
+   normalization)
+
+**Stable Rules Checklist:**
+1. Obviously correct? **YES** - `!!` is standard normalization
+2. Fixes real bug? **YES** - API violation, wrong return values
+3. Important issue? **MEDIUM-HIGH** - can cause -EBADE in some trees
+4. Small and contained? **YES** - 1 line, 1 file
+5. No new features? **YES** - pure fix
+6. Can apply to stable? **YES** - function unchanged since 2016
+
+## Verification
+
+- [Phase 1] Parsed tags: Author is Dmitry Torokhov, applied by GPIO
+  maintainer Bartosz Golaszewski. No Fixes:/Cc:stable.
+- [Phase 2] Diff analysis: 1 line changed in `lp873x_gpio_get()`, `val &
+  BIT(...)` -> `!!(val & BIT(...))`. For offset=1, changes return from
+  16 to 1.
+- [Phase 3] git blame: buggy line from `83f141030cec88` (v4.9,
+  2016-08-31), present in all stable trees.
+- [Phase 3] git show `86ef402d805d`: sanitizer that returns -EBADE for
+  ret > 1, first in v6.15.
+- [Phase 3] git show `ec2cceadfae72`: follow-up changing -EBADE to
+  warn+normalize, has `Cc: stable`.
+- [Phase 3] Sister commits `2bb995e6155cb` (qca807x) and `e2fa075d5ce19`
+  (ti-ads7950): both have `Fixes: 86ef402d805d` and one has `Cc:
+  stable`.
+- [Phase 3] git log: only 2 unrelated changes to lp873x since v6.6 (GPIO
+  set callback renames), neither affect get().
+- [Phase 4] b4 dig: confirmed sister patches found on lore. Lore itself
+  blocked by bot protection.
+- [Phase 5] Call chain: userspace -> gpiod_get_value -> gpiochip_get ->
+  lp873x_gpio_get. Reachable from userspace.
+- [Phase 6] Function `lp873x_gpio_get()` is identical in all stable
+  trees since v4.9. Clean apply expected.
+- [Phase 8] BITS_PER_GPO=4, offset=1 returns BIT(4)=16, confirmed via
+  computation.
+- UNVERIFIED: Could not directly access lore.kernel.org discussion for
+  this specific patch due to bot protection. Relied on b4 dig and sister
+  patch analysis.
+
+The fix is a trivially correct 1-line normalization that fixes a real
+API violation present since v4.9. Sister patches in the same series have
+explicit stable nominations. The risk is essentially zero.
+
+**YES**
+
+ drivers/gpio/gpio-lp873x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpio-lp873x.c b/drivers/gpio/gpio-lp873x.c
+index 5376708a81bfe..f4413fa5a8110 100644
+--- a/drivers/gpio/gpio-lp873x.c
++++ b/drivers/gpio/gpio-lp873x.c
+@@ -55,7 +55,7 @@ static int lp873x_gpio_get(struct gpio_chip *chip, unsigned int offset)
+ 	if (ret < 0)
+ 		return ret;
  
--static int lpi_gpio_read(struct lpi_pinctrl *state, unsigned int pin,
-+static u32 lpi_gpio_read(struct lpi_pinctrl *state, unsigned int pin,
- 			 unsigned int addr)
- {
--	u32 pin_offset;
-+	u32 pin_offset, val;
-+	int ret;
- 
- 	if (state->data->flags & LPI_FLAG_USE_PREDEFINED_PIN_OFFSET)
- 		pin_offset = state->data->groups[pin].pin_offset;
- 	else
- 		pin_offset = LPI_TLMM_REG_OFFSET * pin;
- 
--	return ioread32(state->tlmm_base + pin_offset + addr);
-+	ret = pm_runtime_resume_and_get(state->dev);
-+	if (ret < 0)
-+		return 0;
-+
-+	val = ioread32(state->tlmm_base + pin_offset + addr);
-+	pm_runtime_put_autosuspend(state->dev);
-+
-+	return val;
+-	return val & BIT(offset * BITS_PER_GPO);
++	return !!(val & BIT(offset * BITS_PER_GPO));
  }
  
--static int lpi_gpio_write(struct lpi_pinctrl *state, unsigned int pin,
--			  unsigned int addr, unsigned int val)
-+static void lpi_gpio_write(struct lpi_pinctrl *state, unsigned int pin,
-+			   unsigned int addr, unsigned int val)
- {
- 	u32 pin_offset;
-+	int ret;
- 
- 	if (state->data->flags & LPI_FLAG_USE_PREDEFINED_PIN_OFFSET)
- 		pin_offset = state->data->groups[pin].pin_offset;
- 	else
- 		pin_offset = LPI_TLMM_REG_OFFSET * pin;
- 
-+	ret = pm_runtime_resume_and_get(state->dev);
-+	if (ret < 0)
-+		return;
-+
- 	iowrite32(val, state->tlmm_base + pin_offset + addr);
-+	pm_runtime_put_autosuspend(state->dev);
- 
--	return 0;
-+	return;
- }
- 
- static const struct pinctrl_ops lpi_gpio_pinctrl_ops = {
+ static int lp873x_gpio_set(struct gpio_chip *chip, unsigned int offset,
 -- 
-2.34.1
+2.53.0
 
 
