@@ -1,146 +1,128 @@
-Return-Path: <linux-gpio+bounces-35271-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35272-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YAt/M3FG5mk+uAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35271-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 17:29:53 +0200
+	id aIViFMxN5mmgugEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35272-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 18:01:16 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 544F042E3A7
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 17:29:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 20C4F42ED71
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 18:01:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id A804A31A7713
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 14:33:12 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id DF957308AB47
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 15:05:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 736263A2553;
-	Mon, 20 Apr 2026 13:32:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBB983D0917;
+	Mon, 20 Apr 2026 14:27:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhCQE5DU"
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="Diw8+RkR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3111B4BC009;
-	Mon, 20 Apr 2026 13:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E73F3D090A;
+	Mon, 20 Apr 2026 14:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776691973; cv=none; b=nZPYUsys5NpD6Ybdcm6Fe6R6fEKCmvLuwRGyEg8FdyfxsYNFSSp242tHEqb2gJAFY948aMJvLYXcMXyFDWwd5FYbcTkUcwHQjFnE+46OaAUX4YurV2OQ/UNvbRIbnW7IaJ7IpRIox/nd/2l7XmnYxkVPD+hzpJpYKmmqctewvoE=
+	t=1776695277; cv=none; b=gZqRuW9gYgHm7hW8yv3agt6/b+9ovv9+xge/e4Rw+t7xiUACwyB26EwYSUuaW26jHw9rCtVVl1e5IH/T+KwDIyT1Edd7LxCqNvCNi7z3TMTgdCi9W9lnI3kmTrr4r288Zaag7Nop2Bce6yP0Ei0oe0v+D8+PfhWwHooEjBrG/Gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776691973; c=relaxed/simple;
-	bh=ygLoYx8ZSLC+bb1Qij8yqEMz1QBgFeofoq+0ubva8y8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A4NLoBfMPcKA3Oh4TIBPFSswBdEFb64W0EBHtxrosUorHx5TSFnOkD8PPhofTVNHWNuW4gBWwH5MJbiGuEcOj0ikj2XHO2k7b/hi+zMAQpHbFIgkYP1fH5XDkNVf7RskXS5aLZojVoBp6Lq8SIwMcDl6avEkJXARN6zYk8bxXSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhCQE5DU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2347C2BCB6;
-	Mon, 20 Apr 2026 13:32:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776691973;
-	bh=ygLoYx8ZSLC+bb1Qij8yqEMz1QBgFeofoq+0ubva8y8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jhCQE5DUUdj1SeqHGNC472t5KiFU6bxNwWFdFOcCyG6QmmU5U6H4KG2FNLYcECodP
-	 EVfdgws/A7p2Qb2W96dhh0ldiXqgXjaAHvR7H9tSQkm56Jtz6ud/pXGqnmZ7IWLwEZ
-	 S7gmaAO1TSuuDcDHOV3WZnAihk2tBBqA8LOHXN/Zh8W1+v7P/GQmAu+HRPSHoTrvru
-	 ijREK+UGcf6cNiXsO140x7sGJnkERhVFGLwsOy9PO1CdPBpZYQPBKTmJN3Yfe6ndo6
-	 LJehrCq1GaE+02QZrL5HKR70Ynityrlq52ZWDYt0tRgkElnic7LlFKPYXk176jyf8X
-	 g7YZ8EtNqzP1g==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Sasha Levin <sashal@kernel.org>,
-	linusw@kernel.org,
-	brgl@kernel.org,
-	thierry.reding@kernel.org,
-	jonathanh@nvidia.com,
-	linux-gpio@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.18] gpio: tegra: fix irq_release_resources calling enable instead of disable
-Date: Mon, 20 Apr 2026 09:21:33 -0400
-Message-ID: <20260420132314.1023554-299-sashal@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260420132314.1023554-1-sashal@kernel.org>
-References: <20260420132314.1023554-1-sashal@kernel.org>
+	s=arc-20240116; t=1776695277; c=relaxed/simple;
+	bh=GmHovF65AhcKaDhKuPYPUEDtvbz4tbknbmC0pegJ98Y=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=QONeNlj1H0w2/ykuhbfgh07chvs3419/H5oU6FSmljLaj7pwBBevoTO9C5NI8BcoML7YqW4hbyb/Y6UkpOE0N0na8Jp+xpJYllFMo/4sqoK/Yihe7+Q5kS0A6Ku11AFpolTwHbqVuyD7CgVqE5s68mESJrvShFofzxBqCkfnzdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=Diw8+RkR; arc=none smtp.client-ip=185.70.43.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1776695272; x=1776954472;
+	bh=17HvWcOauQRMeOJCVn04433LU5s1g0RbLGiy/EatyKY=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=Diw8+RkRQZm1m+spZiGo/UjPxllqV+DYxMJhAgJjNLkqxY4dxb3HrjCegE6IQG0YW
+	 xBTMRa69ZX/0lEFimD57oSJfAYjhNSUMVhPXKTyDINeho7Jev2c3tIaWvHjTOh0psW
+	 O3zFTpA2EEMXETzAG2xZQg08R0yuEBZrHCP7cRRQChDKFQkK9J1Pb3jkKMiso1JLwS
+	 WhLCWba3viy43ANNnWNnLhNh+sEecDM/BOxs0/9EERJ/PcWkEKwKqVro1LLwCJWZqp
+	 pcbtiU/uIrI//oz31y730stRCG9aQraf6m227kcYl2yOS5ncxZY6DhWDvdAU6VSWeQ
+	 TwhBuPUxZ7XTg==
+Date: Mon, 20 Apr 2026 14:27:46 +0000
+To: Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Abel Vesa <abel.vesa@oss.qualcomm.com>
+From: Alexander Koskovich <akoskovich@pm.me>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alexander Koskovich <akoskovich@pm.me>
+Subject: [PATCH v2 0/2] pinctrl: qcom: eliza: Split up some QUP pin groups
+Message-ID: <20260420-fix-eliza-pinctrl-v2-0-b68329fd6701@pm.me>
+Feedback-ID: 37836894:user:proton
+X-Pm-Message-ID: 5cbdbca9aa3f92a619abb89777b3915c0ea35c61
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.18.23
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[pm.me,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[pm.me:s=protonmail3];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35271-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-35272-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sashal@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.999];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[pm.me:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 544F042E3A7
+	MISSING_XM_UA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[akoskovich@pm.me,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[pm.me:email,pm.me:dkim,pm.me:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 20C4F42ED71
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
+Multiple QUPs have lanes that can be routed to one of two GPIOs and
+collapsing them prevents devicetrees from requesting specific routing.
 
-[ Upstream commit 1561d96f5f55c1bca9ff047ace5813f4f244eea6 ]
+For example, a board that wires an I2C SCL line to one of two GPIOs
+cannot request that specific pin with the groups collapsed.
 
-tegra_gpio_irq_release_resources() erroneously calls tegra_gpio_enable()
-instead of tegra_gpio_disable(). When IRQ resources are released, the
-GPIO configuration bit (CNF) should be cleared to deconfigure the pin as
-a GPIO. Leaving it enabled wastes power and can cause unexpected behavior
-if the pin is later reused for an alternate function via pinctrl.
+This series splits them up so devicetrees can request the configuration
+they need.
 
-Fixes: 66fecef5bde0 ("gpio: tegra: Convert to gpio_irq_chip")
-Signed-off-by: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
-Link: https://patch.msgid.link/20260407210247.1737938-1-samasth.norway.ananda@oracle.com
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Alexander Koskovich <akoskovich@pm.me>
 ---
+Changes in v2:
+- Update bindings to reflect new split functions
+- Link to v1: https://lore.kernel.org/r/20260418-fix-eliza-pinctrl-v1-1-864=
+bf95ac83b@pm.me
 
-LLM Generated explanations, may be completely bogus:
+---
+Alexander Koskovich (2):
+      dt-bindings: pinctrl: qcom,eliza-tlmm: Update function list
+      pinctrl: qcom: eliza: Split up some QUP pin groups
 
-Error: Failed to generate final synthesis
+ .../bindings/pinctrl/qcom,eliza-tlmm.yaml          |  13 +-
+ drivers/pinctrl/qcom/pinctrl-eliza.c               | 200 +++++++++++++++++=
+----
+ 2 files changed, 179 insertions(+), 34 deletions(-)
+---
+base-commit: c7275b05bc428c7373d97aa2da02d3a7fa6b9f66
+change-id: 20260418-fix-eliza-pinctrl-b6e66dd92766
 
- drivers/gpio/gpio-tegra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Best regards,
+--=20
+Alexander Koskovich <akoskovich@pm.me>
 
-diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-index 15a5762a82c25..b14052fe64ac6 100644
---- a/drivers/gpio/gpio-tegra.c
-+++ b/drivers/gpio/gpio-tegra.c
-@@ -595,7 +595,7 @@ static void tegra_gpio_irq_release_resources(struct irq_data *d)
- 	struct tegra_gpio_info *tgi = gpiochip_get_data(chip);
- 
- 	gpiochip_relres_irq(chip, d->hwirq);
--	tegra_gpio_enable(tgi, d->hwirq);
-+	tegra_gpio_disable(tgi, d->hwirq);
- }
- 
- static void tegra_gpio_irq_print_chip(struct irq_data *d, struct seq_file *s)
--- 
-2.53.0
 
 
