@@ -1,66 +1,65 @@
-Return-Path: <linux-gpio+bounces-35263-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35265-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cEDFIAos5mliswEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35263-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 15:37:14 +0200
+	id AFItEhkz5mlqtQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35265-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 16:07:21 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3185F42C0E5
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 15:37:14 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F7EB42CA6D
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 16:07:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B402631302E4
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 13:26:56 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E0E2C30EF7B8
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2026 13:50:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9DEB3C3456;
-	Mon, 20 Apr 2026 13:17:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 135D33EF679;
+	Mon, 20 Apr 2026 13:25:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CY2JTM3A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="np2+yb2Y"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565D53C345F;
-	Mon, 20 Apr 2026 13:17:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8C23EF66F;
+	Mon, 20 Apr 2026 13:25:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776691051; cv=none; b=a3+hsCfDgAlTeiF2Q/+hHQLLztW1iKKKMn09b5+kzEZd+ifH+ec93ILgpnuKQefnmoJ8WyM8UzHiTpBjsiw65AbHjXpUue6Us4Azr2X38/QfOe/VyhJeV+1pOPCO3GbtUrwcQ9f9pLaCMQkn6jE7HysOuIFG5cSSdUBkz2LM1BA=
+	t=1776691526; cv=none; b=VjULE5fv+D+XQU9lp07hBqUDMvcLs8crhE/GrEF4nXX7AXxMAtXYBnQm/ISzUWJKLVzMonwh3Rfs2QmnBVsPIIYtmJHQth7EB5dzvTuoT06xYKwQkXSvy+ITv6J7csfIuwSrWKtueZ58J4r13FViSLW0OmRHRYW/CvEruFFoaLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776691051; c=relaxed/simple;
-	bh=7X5Udci/GbMjq5DiV3vyaQVZSRriOrN3RQrkmmC9Xzw=;
+	s=arc-20240116; t=1776691526; c=relaxed/simple;
+	bh=ubS9T5/EslsE8hzijNiUf6dCFla8yAD2zRaeAPwLVXs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A1lM51Z/F8lsGZ6bEGuns2w9e1lGnAVJiI/KfdeOu1yIwijMOZ10V3M3n0MF6EtLmMztAodEjxaas98xMA3VAWQoNo3ZKe/N91TMotGes39xm8T1feKKW0px0nNfOxYxZ7E1aejN60C9BEAi85s22Hpdp1DLv+hcyw85kKqD0OE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CY2JTM3A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E722C2BCB6;
-	Mon, 20 Apr 2026 13:17:30 +0000 (UTC)
+	 MIME-Version:Content-Type; b=mps+zNLhOBSSGLt+pzpZeYtMSHp3+bdDvQkiWg4CnkXCmuHxRvjayrB+Oy8bvKK1V6oCIXqdI+VOPKBJA3D4o3ONFRN3XqoZvLA+oRRzSW6xY5rWa2VeEbi1UeH8YhNAlbX4HsrGVOcEiJ72l3UenfyG/Cz7jvJTZpgoz4oreZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=np2+yb2Y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6556C2BCB7;
+	Mon, 20 Apr 2026 13:25:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776691051;
-	bh=7X5Udci/GbMjq5DiV3vyaQVZSRriOrN3RQrkmmC9Xzw=;
+	s=k20201202; t=1776691526;
+	bh=ubS9T5/EslsE8hzijNiUf6dCFla8yAD2zRaeAPwLVXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CY2JTM3A0q6zNKhtzVKqVxlC2vnlz9TfG5ODaZzvva4ii9ao4z2GIDxJvb5W2TH9v
-	 ypdpv0siYJ5MRsTgF3eKO6RIPN6OKSO4u/Y9Me0uFIzjkZ6yCxDFC9el0XmHGWOCEN
-	 DcVwvoGo3B1gDoH1LR6kwxa0U0qhWB7K/VSPQzyGltZa7gkyLt26Z9Ao+wMtPecAVu
-	 UwpNlI93DfKpLFwy5pJvdZTMb5rVrAS1XDHr/h5JVUBQo3tOicri3ekWoMZ/J9o19x
-	 2D5japPl3tShjnYoYawIMgpsP7LUxyxmuGxtErRvi1icEdOaqaFLf41InY6eGQ+8T/
-	 3xx4Dq35R+Ksg==
+	b=np2+yb2YuSpY10oMMFgGw6CV5VOsjo6I8HqYAh3hRPWo9ziRXj/A/r9KqKyhJpJ8z
+	 i5xjaXUkQosoXAq4bJKBZp2RVeQsmKMroZ069k7eInYa0NV0XxZa7cY8Q2jCTPkJ7j
+	 B3LXJCiXc9LIP+VgbeTLDvmF7YwH524aSHlTErxC7nKP9w4YaqXt1fu/YMD0EIQRhZ
+	 3r1RN0GKsDfmk/qrsEdv+SJIsy4KHAAJUZZD2UcGfsED+mORtu1QfT4Lnd88MJTXcs
+	 NT+ELmFTSxBAyS/Qq+ySDHn3r6DtIqz9+Q/JaHTdEzMCf4Xf7lan/Vx4KML0K4Wpl4
+	 rmHwDazOdRUpg==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+Cc: Tzuyi Chang <tychang@realtek.com>,
 	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Yu-Chun Lin <eleanor.lin@realtek.com>,
+	Linus Walleij <linusw@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	thomas.richard@bootlin.com,
-	linusw@kernel.org,
-	brgl@kernel.org,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 7.0-6.18] gpio: cgbc: normalize return value of gpio_get
-Date: Mon, 20 Apr 2026 09:08:51 -0400
-Message-ID: <20260420131539.986432-65-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 7.0-6.12] pinctrl: realtek: Fix return value and silence log for unsupported configs
+Date: Mon, 20 Apr 2026 09:17:55 -0400
+Message-ID: <20260420132314.1023554-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260420131539.986432-1-sashal@kernel.org>
-References: <20260420131539.986432-1-sashal@kernel.org>
+In-Reply-To: <20260420132314.1023554-1-sashal@kernel.org>
+References: <20260420132314.1023554-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -72,317 +71,391 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 7.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [0.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_CC(0.00)[gmail.com,oss.qualcomm.com,kernel.org,bootlin.com,vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-35263-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35265-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[sashal@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,msgid.link:url]
-X-Rspamd-Queue-Id: 3185F42C0E5
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ernel.org:url,qualcomm.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,realtek.com:email]
+X-Rspamd-Queue-Id: 6F7EB42CA6D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Tzuyi Chang <tychang@realtek.com>
 
-[ Upstream commit 49621f1c97788216f2f10f1a9e903f216e289f5d ]
+[ Upstream commit 6a6b238c66dc69cd784baf03b170c50f7e5f24d9 ]
 
-The GPIO get callback is expected to return 0 or 1 (or a negative error
-code). Ensure that the value returned by cgbc_gpio_get() is normalized
-to the [0, 1] range.
+Treating unsupported configurations as errors causes upper layers (like the
+GPIO subsystem) to interpret optional features as hard failures, aborting
+operations or printing unnecessary error logs.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Link: https://patch.msgid.link/20260218190657.2974723-2-dmitry.torokhov@gmail.com
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+For example, during gpiod_get(), the GPIO framework attempts to set
+PIN_CONFIG_PERSIST_STATE. Since this driver does not support it, false
+error reports are generated in dmesg.
+
+Fix this by returning -ENOTSUPP and demoting the log level to dev_dbg.
+
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Signed-off-by: Tzuyi Chang <tychang@realtek.com>
+Signed-off-by: Yu-Chun Lin <eleanor.lin@realtek.com>
+Signed-off-by: Linus Walleij <linusw@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
 LLM Generated explanations, may be completely bogus:
 
-Now I have all the information needed for a complete analysis.
+Now I have enough information to provide a comprehensive analysis.
 
----
-
-## PHASE 1: COMMIT MESSAGE FORENSICS
+## Phase 1: Commit Message Forensics
 
 **Step 1.1: Subject Line**
-- Subsystem: `gpio: cgbc:`
-- Action verb: "normalize" (implies correcting incorrect behavior)
-- Summary: Normalizes the return value of the GPIO get callback to the
-  [0, 1] range
+Record: [pinctrl: realtek] [Fix + silence] Fix return value and demote
+log level for unsupported pinconf parameters.
 
 **Step 1.2: Tags**
-- `Signed-off-by: Dmitry Torokhov` - author, prolific kernel/input/GPIO
-  contributor
-- `Link:` to lore patch submission
-- `Signed-off-by: Bartosz Golaszewski` - GPIO subsystem maintainer who
-  applied it
-- No `Fixes:` tag, no `Cc: stable` tag (but sibling patches in the same
-  series DO have these tags)
+Record:
+- Reviewed-by: Bartosz Golaszewski (GPIO subsystem maintainer)
+- Signed-off-by: Tzuyi Chang (original author, the person who authored
+  the driver in the first place)
+- Signed-off-by: Yu-Chun Lin (series submitter)
+- Signed-off-by: Linus Walleij (pinctrl subsystem maintainer)
+- No Fixes: tag, no Cc: stable (expected)
+- No Reported-by, no Link:
 
-**Step 1.3: Commit Body**
-- Clearly states the API contract: GPIO get callback must return 0, 1,
-  or negative error
-- States the driver violates this by returning non-normalized values
-  (e.g., 2, 4, 8, etc.)
-- The fix "normalizes" to [0, 1]
+**Step 1.3: Commit Body Analysis**
+Record: The commit explains a concrete failure mode: "Treating
+unsupported configurations as errors causes upper layers (like the GPIO
+subsystem) to interpret optional features as hard failures, aborting
+operations..." With a specific example: during `gpiod_get()`, the GPIO
+framework attempts to set `PIN_CONFIG_PERSIST_STATE`. Since the driver
+returns `-EINVAL` (not `-ENOTSUPP`), `gpiod_get()` fails entirely. This
+is a real functional bug, not cosmetic.
 
 **Step 1.4: Hidden Bug Fix Detection**
-- YES - this is a bug fix. The driver violates the gpio_chip API
-  contract. With the gpiolib sanitization commit (86ef402d805d) present
-  in v6.15+, this violation causes either `-EBADE` errors or runtime
-  warnings.
+Record: Marked as "silence log" which sounds cosmetic, but the `return
+-EINVAL` -> `-ENOTSUPP` change is a real functional bug fix. The GPIO
+layer's helper `gpio_set_config_with_argument_optional()` only swallows
+`-ENOTSUPP`; `-EINVAL` propagates up and fails `gpiod_get()`.
 
-## PHASE 2: DIFF ANALYSIS
+## Phase 2: Diff Analysis
 
 **Step 2.1: Inventory**
-- 1 file changed: `drivers/gpio/gpio-cgbc.c`
-- 2 lines removed, 2 lines added (net 0 change)
-- Function modified: `cgbc_gpio_get()`
-- Scope: single-file, single-function surgical fix
+Record: 1 file, 2 lines changed (+2/-2), single function
+`rtd_pconf_parse_conf()`, single-file surgical fix.
 
 **Step 2.2: Code Flow Change**
-- BEFORE: `return (int)(val & (u8)BIT(offset));` — returns the raw bit
-  value (could be 1, 2, 4, 8, 16, 32, 64, 128)
-- AFTER: `return !!(val & BIT(offset));` — returns 0 or 1
-- Also removes unnecessary `else` after `return ret`
+Record: In the `default:` branch of the `switch ((u32)param)` in
+`rtd_pconf_parse_conf`:
+- BEFORE: `dev_err(...); return -EINVAL;`
+- AFTER: `dev_dbg(...); return -ENOTSUPP;`
 
 **Step 2.3: Bug Mechanism**
-- Category: Logic/correctness fix (API contract violation)
-- The `BIT(offset)` for offset > 0 yields values > 1 (BIT(1)=2,
-  BIT(2)=4, etc.)
-- The old code masks `val` with `BIT(offset)`, returning the bit's
-  position value rather than 0/1
-- With gpiolib sanitize (86ef402d805d in v6.15+), returning values > 1
-  triggers `-EBADE` or a warning
+Record: Logic/correctness fix + return-code semantics fix. The pinctrl
+API contract with gpiolib expects `-ENOTSUPP` for "feature not
+implemented" so that optional config calls (like
+`PIN_CONFIG_PERSIST_STATE` from `gpiod_set_transitory()`) are silently
+ignored. Returning `-EINVAL` breaks this contract.
 
 **Step 2.4: Fix Quality**
-- Obviously correct: `!!` is the standard C idiom for boolean
-  normalization
-- Minimal/surgical: 2-line change in a single function
-- Zero regression risk: `!!` can only produce 0 or 1, which is exactly
-  what's expected
-- The fix is identical in pattern to all 6 other patches in the series
+Record: Obviously correct. All the other branches in the same switch
+already return `-ENOTSUPP` (see lines 297, 304, 317, 329, 415, 432, 449)
+- the default path was the outlier. The companion function
+`rtd_pin_config_get()` also already returns `-ENOTSUPP` in its default
+(line 478). No regression risk - a change from a hard error to a soft
+error for an inherently "unsupported" case.
 
-## PHASE 3: GIT HISTORY INVESTIGATION
+## Phase 3: Git History Investigation
 
 **Step 3.1: Blame**
-- The buggy `return (int)(val & (u8)BIT(offset))` line was introduced by
-  commit `4342bf63b64b0` (Thomas Richard, 2024-10-01) when the cgbc GPIO
-  driver was first created in v6.13-rc1.
+Record: The buggy `return -EINVAL` was introduced in the original driver
+commit `e99ce78030db2` ("pinctrl: realtek: Add common pinctrl driver for
+Realtek DHC RTD SoCs"), which entered mainline in v6.7-rc1. Verified:
+`git show e99ce78030db2` shows the buggy code was there from day one.
 
-**Step 3.2: Fixes Target**
-- The commit doesn't have a `Fixes:` tag, but the sibling patches
-  reference `Fixes: 86ef402d805d ("gpiolib: sanitize the return value of
-  gpio_chip::get()")`, which was added in v6.15-rc1.
+**Step 3.2: Fixes Tag**
+Record: No Fixes tag present. Based on git blame, the effective "Fixes:"
+would be `e99ce78030db2` ("pinctrl: realtek: Add common pinctrl driver
+for Realtek DHC RTD SoCs"), which is in stable trees from v6.12 onwards.
 
-**Step 3.3: Related Changes**
-- This is part of a 7-patch series by Dmitry Torokhov, all normalizing
-  gpio_get return values across different drivers.
-- The gpiolib core workaround (ec2cceadfae72) landed in v7.0-rc2, adding
-  normalization + warning in gpiolib itself.
-- The cgbc_gpio_get function has been unchanged since its creation — no
-  conflicting changes.
+**Step 3.3: File History**
+Record: Between v6.12 and this fix, only 2 commits touch the file:
+```
+6a6b238c66dc6 pinctrl: realtek: Fix return value and silence log for
+unsupported configs
+a248904e30309 pinctrl: realtek: Cleanup license string
+```
+Standalone fix; no dependencies on other series patches.
 
 **Step 3.4: Author**
-- Dmitry Torokhov is a highly respected kernel developer (input
-  subsystem maintainer, Google). He reported the problem with the
-  gpiolib sanitize commit and contributed the driver-side fixes.
+Record: Tzuyi Chang is the original author of the Realtek pinctrl driver
+(verified via `git log --author`). This is a fix from the subsystem
+domain expert. Reviewed by Bartosz Golaszewski (GPIO subsystem
+maintainer), and applied by Linus Walleij (pinctrl maintainer).
 
 **Step 3.5: Dependencies**
-- The fix touches only `cgbc_gpio_get()` which is unchanged since the
-  driver was created. No dependencies on any other patches.
-- The diff applies cleanly to any tree containing the cgbc driver
-  (v6.13+).
+Record: None. The default branch of a switch statement is self-
+contained. Does not rely on any other patch in the v2 14-patch series.
 
-## PHASE 4: MAILING LIST RESEARCH
+## Phase 4: Mailing List Research
 
-**Step 4.1: Original Patch Discussion**
-- Patch 2/7 in series `[PATCH 1/7] gpio: bd9571mwv: normalize return
-  value of gpio_get`
-- 11 messages in thread. Applied by Bartosz Golaszewski (GPIO
-  maintainer).
-- Discussion revealed Dmitry recommended reverting 86ef402d805d for
-  stable but keeping it for 7.0. Bartosz instead sent ec2cceadfae72 to
-  normalize in gpiolib core (with `Cc: stable`).
+**Step 4.1: Lore Thread**
+Record: b4 dig found: `https://lore.kernel.org/all/20260306075244.117039
+9-3-eleanor.lin@realtek.com/`. Submitted as patch 2/14 of "pinctrl:
+realtek: Core improvements and RTD1625 support".
 
 **Step 4.2: Reviewers**
-- Applied directly by Bartosz Golaszewski (GPIO subsystem maintainer)
-- No explicit Reviewed-by on the cgbc patch, but the entire series was
-  applied together
+Record: b4 dig -w shows appropriate reviewers: Linus Walleij (pinctrl
+maintainer), Bartosz Golaszewski (GPIO maintainer who added Reviewed-
+by), linux-gpio ML. The RIGHT people reviewed this.
 
-**Step 4.3-4.5: Bug Context**
-- The underlying issue is well-documented: commit 86ef402d805d broke
-  many GPIO drivers that returned non-normalized values. The cgbc driver
-  is one of them.
+**Step 4.3: Series Revisions**
+Record: b4 dig -a shows only v2 exists (no v3/v4 required). The v2
+change was simply adding Bartosz's Reviewed-by; no behavior changes.
 
-## PHASE 5: CODE SEMANTIC ANALYSIS
+**Step 4.4: No stable tag in series**
+Record: No `Cc: stable` was added in the patch or discussion. No
+explicit stable nomination from reviewers - but this is expected for the
+candidates being reviewed here.
 
-**Step 5.1-5.4: Function Analysis**
-- `cgbc_gpio_get()` is the `.get` callback for the cgbc GPIO chip,
-  assigned at probe time (line 173)
-- It's called by gpiolib core (`gpiochip_get()`) whenever any consumer
-  reads this GPIO
-- For Congatec Board Controller GPIO, this affects 14 GPIO pins (pins
-  0-13)
-- Pins with offset > 0 would return values > 1, triggering the bug
+**Step 4.5: Related prior art**
+Record: Confirmed that a nearly-identical fix was already made for
+`pinctrl-amd`: commit `87b549efcb0f7` ("pinctrl: amd: Don't show
+`Invalid config param` errors"), which:
+- Changed `dev_err` -> `dev_dbg` AND `-EINVAL` -> `-ENOTSUPP` for the
+  same unsupported `PIN_CONFIG_PERSIST_STATE` scenario triggered by
+  `gpiod_get()`
+- Was explicitly marked with `Cc: stable@vger.kernel.org # 6.1`
+- Was accepted to stable
 
-## PHASE 6: STABLE TREE ANALYSIS
+This strongly validates that the pattern is considered stable material.
 
-**Step 6.1: Code Existence in Stable**
-- cgbc driver: exists in v6.13+ stable trees
-- gpiolib sanitize (86ef402d805d): exists in v6.15+ stable trees
-- gpiolib normalize workaround (ec2cceadfae72, `Cc: stable`): exists in
-  v7.0, will be backported to v6.15+
+## Phase 5: Code Semantic Analysis
+
+**Step 5.1: Functions**
+Record: Single function: `rtd_pconf_parse_conf`.
+
+**Step 5.2: Callers**
+Record: Called from `rtd_pin_config_set`
+(`drivers/pinctrl/realtek/pinctrl-rtd.c:493`). That is the
+`.pin_config_set` callback used by the pinctrl framework. This is called
+via pinctrl → gpiolib integration.
+
+**Step 5.3/5.4: Call Chain (gpiod_get failure path)**
+Record (verified in `drivers/gpio/gpiolib.c`):
+
+```c
+gpiod_get() ...
+  -> gpiod_configure_flags()            // line 4897
+    -> gpiod_set_transitory()           // line 4938 unconditional
+      ->
+gpio_set_config_with_argument_optional(PIN_CONFIG_PERSIST_STATE) // line
+3228
+        -> gpio_set_config_with_argument() -> pinctrl set_config
+callback
+         // Line 2721: "if (ret != -ENOTSUPP) return ret;"
+         // -EINVAL propagates up as hard error
+```
+
+So every `gpiod_get()` on a Realtek RTD SoC was failing with -EINVAL.
+This is reachable from `.probe()` of every device that requests a GPIO
+via `gpiod_get()` - a very common operation.
+
+**Step 5.5: Similar Patterns**
+Record: Similar issue fixed in `pinctrl-amd` (87b549efcb0f7). Other
+pinctrl drivers correctly use -ENOTSUPP. The helper
+`gpio_set_config_with_argument_optional()` has existed since v5.11-rc1
+(commit `baca3b15cd2a1`), so the `-ENOTSUPP` contract is long-standing.
+
+## Phase 6: Cross-referencing and Stable Tree Analysis
+
+**Step 6.1: Where does the buggy code exist?**
+Record (verified via `git show v<TAG>:drivers/pinctrl/realtek/pinctrl-
+rtd.c`):
+- v6.6: driver does NOT exist (not affected)
+- v6.12: buggy code present (affected)
+- v6.13: buggy code present (affected)
+- v6.15: buggy code present (affected)
+- Active stable trees affected: 6.12.y and later LTS/stable branches
 
 **Step 6.2: Backport Complexity**
-- The `cgbc_gpio_get()` function is IDENTICAL in all stable trees from
-  v6.13 onwards
-- The patch applies cleanly to any tree with the cgbc driver
+Record: Only 2 commits touched this file between v6.12 and the fix, and
+the other is a license string cleanup. The surrounding context in the
+`default:` branch has not changed since driver introduction. Clean apply
+expected.
 
-**Step 6.3: Impact Matrix**
-- **v6.13-v6.14 stable**: Driver exists, sanitize check absent. Bug is
-  latent (no user-visible effect since gpiolib didn't check). Low
-  priority.
-- **v6.15+ stable**: Driver AND sanitize check exist. Without
-  ec2cceadfae72: driver returns `-EBADE` for pins > 0 (broken!). With
-  ec2cceadfae72 but without this fix: driver works but triggers a
-  warning on every `gpio_get` for pins 1-13.
+**Step 6.3: Related fixes already in stable**
+Record: None found for this specific issue in pinctrl-rtd.
 
-## PHASE 7: SUBSYSTEM CONTEXT
+## Phase 7: Subsystem Context
 
-- Subsystem: GPIO (`drivers/gpio/`) - IMPORTANT, used by many
-  embedded/SBC platforms
-- The Congatec Board Controller is used in embedded industrial computing
-- Criticality: PERIPHERAL (specific hardware), but users of this
-  hardware depend on it
+**Step 7.1: Subsystem/Criticality**
+Record: Subsystem: pinctrl (specifically Realtek DHC RTD SoC pinctrl).
+Hardware-specific, but on these platforms it affects ALL users since the
+failure is in a very common GPIO path (`gpiod_get()`). Criticality:
+IMPORTANT for Realtek RTD users.
 
-## PHASE 8: IMPACT AND RISK ASSESSMENT
+**Step 7.2: Subsystem Activity**
+Record: Actively developed; the fact that the bug wasn't previously
+caught suggests limited runtime coverage, but once a consumer calls
+`gpiod_get()` it breaks.
+
+## Phase 8: Impact and Risk Assessment
 
 **Step 8.1: Affected Users**
-- Users of Congatec Board Controller hardware with GPIO
+Record: Users of Realtek DHC (Digital Home Center) RTD SoCs, e.g.,
+RTD1xxx family (TV/STB/embedded ARM64 systems). Driver-specific, but
+universal across those platforms.
 
-**Step 8.2: Trigger Conditions**
-- Any read of GPIO pins 1-13 (offset > 0) triggers the bug
-- This is a normal operation path, not an edge case
+**Step 8.2: Trigger**
+Record: Any caller of `gpiod_get()` / `gpiod_get_index()` / similar in a
+driver that targets a Realtek RTD SoC. Common paths: every probe
+function requesting a GPIO line. No privilege needed — triggered during
+normal boot.
 
-**Step 8.3: Failure Severity**
-- Without gpiolib workaround: GPIO reads return error (-EBADE) for most
-  pins → MEDIUM-HIGH (driver broken)
-- With gpiolib workaround: Warning emitted on every read → LOW-MEDIUM
-  (functional but noisy)
+**Step 8.3: Failure Mode**
+Record: `gpiod_get()` returns `-EINVAL` with log "setup of GPIO %s
+failed: -22". Consumer driver probe fails. Depending on device: missing
+hardware support (HDMI detect, reset pins, regulator enables) -
+effectively device breakage on affected SoCs. Severity: HIGH.
 
-**Step 8.4: Risk-Benefit**
-- BENEFIT: Fixes incorrect driver behavior, eliminates runtime warnings,
-  prevents potential breakage
-- RISK: Virtually zero — `!!` normalization is trivially correct
-- RATIO: Very favorable
+**Step 8.4: Risk/Benefit**
+Record:
+- BENEFIT: Restores correct `gpiod_get()` operation on Realtek RTD SoCs;
+  eliminates false error messages. HIGH benefit for that user
+  population.
+- RISK: Changing a log-level and an errno value. Only affects the
+  error/unsupported path. All other callers of this pinctrl driver that
+  use supported params are unaffected. VERY LOW risk.
 
-## PHASE 9: FINAL SYNTHESIS
+## Phase 9: Final Synthesis
 
-**Evidence FOR backporting:**
-1. Fixes a real API contract violation that causes warnings or errors in
-   v6.15+ trees
-2. 2-line change, trivially correct (`!!` normalization)
-3. Sibling patches in the same series have `Fixes:` and `Cc: stable`
-   tags
-4. Applied by GPIO subsystem maintainer
-5. Author is a top-tier kernel developer
-6. Zero regression risk
-7. Clean apply to all stable trees containing the driver
+**Step 9.1: Evidence**
 
-**Evidence AGAINST backporting:**
-1. The gpiolib core workaround (ec2cceadfae72) already handles this at
-   the framework level
-2. No explicit `Fixes:` or `Cc: stable` on this specific patch
-3. For v6.13-v6.14 where the sanitize check doesn't exist, the bug is
-   latent
+FOR backporting:
+- Fixes a real functional bug: `gpiod_get()` fails entirely on Realtek
+  RTD SoCs
+- Small, surgical, obviously-correct change (2 lines)
+- Fix aligns with how all other `-ENOTSUPP` returns in the same file
+  work
+- Reviewed by the GPIO subsystem maintainer (Bartosz Golaszewski)
+- Applied by the pinctrl maintainer (Linus Walleij)
+- An identical conceptual fix was already backported to stable for
+  `pinctrl-amd` (commit `87b549efcb0f7` with `Cc: stable # 6.1`)
+- Buggy code present since v6.7-rc1, exists in current LTS (6.12.y) and
+  later
+- No dependencies on the rest of the 14-patch series
+- Clean apply expected
 
-**Stable Rules Checklist:**
-1. Obviously correct? YES — `!!` is trivially correct
-2. Fixes a real bug? YES — API violation causing errors/warnings
-3. Important issue? MEDIUM — driver broken or warning-spewing without
-   fix
-4. Small and contained? YES — 2 lines in 1 function
-5. No new features? Correct — pure bug fix
-6. Applies to stable? YES — cleanly
+AGAINST backporting:
+- No explicit Cc: stable or Fixes: tag (expected; that is why this is a
+  candidate for review)
+- No Reported-by or user bug link (but the commit message clearly
+  describes the failure mechanism and the fix is obviously correct)
+
+**Step 9.2: Stable Rules Checklist**
+1. Obviously correct and tested: YES (matches the GPIO contract; all
+   sibling branches already use -ENOTSUPP)
+2. Fixes a real bug affecting users: YES (gpiod_get() failure)
+3. Important issue: YES (driver/GPIO broken = device probe failures)
+4. Small and contained: YES (2 lines in one function)
+5. No new features/APIs: YES (pure bug fix)
+6. Can apply to stable: YES (clean apply expected on 6.12.y+)
+
+**Step 9.3: Exception**
+Not applicable (this is a straightforward bug fix, not a special
+exception category).
+
+**Step 9.4: Decision**
+Strong YES.
 
 ## Verification
 
-- [Phase 1] Parsed tags: Signed-off-by Dmitry Torokhov and Bartosz
-  Golaszewski, Link to patch submission
-- [Phase 2] Diff analysis: 2 lines changed in `cgbc_gpio_get()`,
-  `(int)(val & (u8)BIT(offset))` → `!!(val & BIT(offset))`
-- [Phase 3] git blame: buggy code introduced in 4342bf63b64b0
-  (v6.13-rc1), present in stable 6.13+
-- [Phase 3] git show 86ef402d805d: confirmed sanitize commit in
-  v6.15-rc1, makes non-[0,1] returns an error
-- [Phase 3] git show ec2cceadfae72: confirmed gpiolib normalize
-  workaround in v7.0-rc2 with `Cc: stable`
-- [Phase 3] git tag --contains: verified cgbc in v6.13+, sanitize in
-  v6.15+, normalize in v7.0
-- [Phase 3] git diff shows `cgbc_gpio_get()` unchanged since driver
-  creation — clean apply
-- [Phase 4] b4 mbox: found 11-message thread, all 7 patches applied by
-  Bartosz Golaszewski
-- [Phase 4] Mailing list discussion: Dmitry recommended reverting
-  sanitize for stable; Bartosz instead sent gpiolib normalize fix
-- [Phase 4] Sibling patches (e2fa075d5ce19, 2bb995e6155cb,
-  fb22bb9701d48) all have `Fixes: 86ef402d805d` and `Cc: stable`
-- [Phase 5] `cgbc_gpio_get()` is the `.get` callback called by gpiolib
-  on every GPIO read
-- [Phase 6] Confirmed driver exists in 6.13+ and sanitize check in
-  6.15+; patch applies cleanly
-- [Phase 8] For offset > 0, `BIT(offset)` yields values 2-128; returning
-  these violates API and triggers warnings/errors
+- [Phase 1] Parsed tags: Reviewed-by: Bartosz Golaszewski; Signed-off-
+  by: author + Linus Walleij. No Fixes, no Cc:stable.
+- [Phase 2] Diff: Verified 2-line change in `rtd_pconf_parse_conf`
+  default branch, converting `dev_err + -EINVAL` to `dev_dbg +
+  -ENOTSUPP`. Context shows all other error cases in same switch already
+  return `-ENOTSUPP`.
+- [Phase 3] `git blame`/`git show e99ce78030db2`: Verified buggy code
+  was present from the driver's original commit.
+- [Phase 3] `git describe --contains e99ce78030db2`: returns
+  `v6.7-rc1~70^2~58` - driver added in v6.7-rc1.
+- [Phase 3] `git log v6.12..6a6b238c66dc6 --
+  drivers/pinctrl/realtek/pinctrl-rtd.c`: Only 2 commits between v6.12
+  and the fix - clean backport.
+- [Phase 4] `b4 dig -c 6a6b238c66dc6`: Found lore thread `https://lore.k
+  ernel.org/all/20260306075244.1170399-3-eleanor.lin@realtek.com/`,
+  matched by patch-id.
+- [Phase 4] `b4 dig -a`: Only v2 exists; v2 changelog shows only "Add
+  Bartosz's Reviewed-by tag" (no code change from v1).
+- [Phase 4] `b4 dig -w`: Verified linusw@kernel.org,
+  bartosz.golaszewski@oss.qualcomm.com, linux-gpio@vger.kernel.org on
+  the thread.
+- [Phase 4] `git show 87b549efcb0f7`: Confirmed `pinctrl-amd` got the
+  same conceptual fix with `Cc: stable@vger.kernel.org # 6.1`.
+- [Phase 5] Verified call chain in `drivers/gpio/gpiolib.c`: `gpiod_get`
+  → `gpiod_configure_flags` (line 4771/4897) → `gpiod_set_transitory`
+  (line 4938) → `gpio_set_config_with_argument_optional` (line 3228)
+  which only swallows `-ENOTSUPP` (line 2721).
+- [Phase 5] `git describe --contains baca3b15cd2a1`: helper added in
+  v5.11-rc1; present in all LTS trees of interest.
+- [Phase 6] Verified via `git show
+  v6.12/v6.13/v6.15:drivers/pinctrl/realtek/pinctrl-rtd.c`: buggy code
+  present in all; v6.6 does not contain driver.
+- [Phase 8] Verified caller at `drivers/gpio/gpiolib.c:4771`: on error,
+  `gpiod_put(desc)` + `dev_err(... setup of GPIO %s failed: %d)` - user-
+  visible failure.
+- UNVERIFIED: Could not retrieve dmesg logs from an actual Realtek RTD
+  device (no hardware access), but the code path analysis is definitive.
+- UNVERIFIED: Did not check every single 6.7.y-6.11.y tree individually
+  - these are EOL so not relevant for current backport targets.
 
-The fix is small, surgical, trivially correct, and eliminates incorrect
-API behavior that causes runtime warnings in stable trees. The sibling
-patches explicitly target stable. The absence of `Cc: stable` on this
-specific patch appears to be an oversight or inconsistency within the
-series.
+The fix is small, surgical, obviously correct, reviewed by the
+appropriate maintainers, and an exact precedent (`pinctrl-amd`
+87b549efcb0f7) was previously accepted to stable. It fixes a concrete
+functional failure (`gpiod_get()` breakage on Realtek RTD SoCs) present
+in active LTS 6.12.y and later.
 
 **YES**
 
- drivers/gpio/gpio-cgbc.c | 4 ++--
+ drivers/pinctrl/realtek/pinctrl-rtd.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-cgbc.c b/drivers/gpio/gpio-cgbc.c
-index 0efa1b61001ad..84b5ed3c6e22b 100644
---- a/drivers/gpio/gpio-cgbc.c
-+++ b/drivers/gpio/gpio-cgbc.c
-@@ -47,8 +47,8 @@ static int cgbc_gpio_get(struct gpio_chip *chip, unsigned int offset)
+diff --git a/drivers/pinctrl/realtek/pinctrl-rtd.c b/drivers/pinctrl/realtek/pinctrl-rtd.c
+index 2440604863327..8d7cdb18cf773 100644
+--- a/drivers/pinctrl/realtek/pinctrl-rtd.c
++++ b/drivers/pinctrl/realtek/pinctrl-rtd.c
+@@ -456,8 +456,8 @@ static int rtd_pconf_parse_conf(struct rtd_pinctrl *data,
+ 		break;
  
- 	if (ret)
- 		return ret;
--	else
--		return (int)(val & (u8)BIT(offset));
-+
-+	return !!(val & BIT(offset));
- }
+ 	default:
+-		dev_err(data->dev, "unsupported pinconf: %d\n", (u32)param);
+-		return -EINVAL;
++		dev_dbg(data->dev, "unsupported pinconf: %d\n", (u32)param);
++		return -ENOTSUPP;
+ 	}
  
- static int __cgbc_gpio_set(struct gpio_chip *chip, unsigned int offset,
+ 	ret = regmap_update_bits(data->regmap_pinctrl, reg_off, mask, val);
 -- 
 2.53.0
 
