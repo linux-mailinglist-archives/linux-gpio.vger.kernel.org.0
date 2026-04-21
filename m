@@ -1,55 +1,55 @@
-Return-Path: <linux-gpio+bounces-35296-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35295-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8DwHA0tH52mw6AEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35296-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Apr 2026 11:45:47 +0200
+	id mI5LBgRI52kF6QEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35295-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Apr 2026 11:48:52 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25286439048
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Apr 2026 11:45:46 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC1D1439140
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Apr 2026 11:48:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 650F53010218
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Apr 2026 09:45:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 80929305AD79
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Apr 2026 09:45:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF3A03B0AD6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A631D3AF66F;
 	Tue, 21 Apr 2026 09:45:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eY/JHEyu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iD67QomR"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D863AE6FD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CEE3AE6F3;
 	Tue, 21 Apr 2026 09:45:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776764713; cv=none; b=kOr/XDdhRpDpukC16vTDMo7wHzoGPyCFtRruNNb67LGnF6/a/OA2rcq38wRQ5uXKYPqpslR0mMu+3WJ6ycaIopcPJPSso1g55mhP9+7GpHxPZMfGIfeUdshgD4LfKZl0qTTfE8pTaZ4e5seNVUvksnLaIg3elBgnM5U8NWwgjgA=
+	t=1776764713; cv=none; b=CJfmO3mhbB820cOkTgsnX4/wsLHGcA1sSHtOxee0V0edxwL6z+dc9AA5vDmBFv9E/zD3ga7u68obH3ky6vk5iGoU62XQvLs6lDZ7aBvfeEOC5TbOYY7XsMyzNZfft0gin4W64sAbZxuCiSlBLbxOKBEN69QqYnuMHxAhaR3+cf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776764713; c=relaxed/simple;
-	bh=CHhHEb5sgQt9z+DgNHdyFkJRxxQ8BX3aIo7SXeKph/w=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tSdRIYLzFlpvLL+8bREum9Z9CbNHtaAQ5VU3/sfkfExJNeWlQ9BfmyqHWR5hU1XA8Ft6HP8H3P+7Q5xtaVvHuywwFbGh7i8TveE+7edvTzWMZv/t8uRpVds+G7RWolUxsOBx2cmkNR+4vJ1PT0qT8Y00W0hyHNRAa7qBnpcqNco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eY/JHEyu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F256CC2BCB5;
-	Tue, 21 Apr 2026 09:45:12 +0000 (UTC)
+	bh=mPipYwK9VLZR38znykoW7GBA2phEVD7eZlvFmnR+xfM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XPcFzT2L21bwFipPeFBghMQnlSh1zA6GZkyMCRISAx484I1bcaB0oVJ/9Wo0NHDRLO7lPYoB8All33xMeXb1k9pcwx8GFBQLMwjsh7bsT+tTudBhypL2RjhbfcTNzst9e3Bw5CiKjvn1NN7ZWC8qi0mRWsQu3DpE3vW4lRGqSgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iD67QomR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0C687C2BCB0;
+	Tue, 21 Apr 2026 09:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1776764713;
-	bh=CHhHEb5sgQt9z+DgNHdyFkJRxxQ8BX3aIo7SXeKph/w=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=eY/JHEyu1Y0/NaBk5nBLOhd71CVVRGZl5J0kW0jqC4HdmTxv9I/SW15VQgRQmC7mM
-	 /FjjIjZk4qqs3ZM4hRSpscyka9yOtHeYnxZdbHWNi1WjPJOiKPErRD5xwHPcA1aVr/
-	 YLJ18GEGtCKaYwdneM4pYugayerJLODVC22cRZSed0GB6su98zqNTX4SoAuWM1AM0l
-	 yYtCc6wcbP8dimKOjFmtiIuSsa5Mt0xA5ih5IScRDyEMHzTRF7OKZu0TELhonlAD6t
-	 9rG9p0Zt5V6zAsC23B/DVXOMPHXewLi3KZckPmdo03QRXumfng49GsjM0N+Ceth/l4
-	 WDUEP1wA4nhPQ==
+	bh=mPipYwK9VLZR38znykoW7GBA2phEVD7eZlvFmnR+xfM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=iD67QomRbgziVgted+XFBTrXjQYu4bDvN8w3uG7bpBwzZotLAE8UkeUDF1t8dJfiO
+	 +H6dq68haeqTx5++HFMc9LXvc52S9JWGf1rtr8WZVWQjD4MTBUNBX6Mo3a2l8TiBET
+	 7Bv8/AxnOJbdxzlKPmMMhm66+BZv1EbWJq6E66vLq+5X6r2J5F3TjbdMmoGMjUHOLB
+	 d1RD0f3ZpuVgGfQ+f59N6fznw7c02ewItpjIgvki8TAuJQ2mkuzJF4FVGnHU+aWXkI
+	 ptpzhvfDf49eBhCXC0SzL9AewtFPl+Q1zmdKpb8TocHmoDuKhpZ7itCBwlmqugJgZA
+	 N7uAp2eupwCHQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED9BF327CE;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04C7F327CF;
 	Tue, 21 Apr 2026 09:45:12 +0000 (UTC)
 From: Alexandre MINETTE via B4 Relay <devnull+contact.alex-min.fr@kernel.org>
-Subject: [PATCH 0/8] Add Samsung Galaxy S4 support
-Date: Tue, 21 Apr 2026 11:45:06 +0200
-Message-Id: <20260421-mainline-send-v1-sending-v1-0-bcb0857724de@alex-min.fr>
+Date: Tue, 21 Apr 2026 11:45:07 +0200
+Subject: [PATCH 1/8] dt-bindings: arm: qcom: Add Samsung Galaxy S4
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIACJH52kC/x2MwQqAIBAFfyX23EJKhPUr0SH0ZQu1hUIE0b8nn
- YY5zDyUkQSZhuqhhEuyHFrE1BX5ddYIllCcbGO7prWG91l0EwVnaODL/BSNbF0P3zt0wRsq+Zm
- wyP2vx+l9P3sOLCFqAAAA
+Message-Id: <20260421-mainline-send-v1-sending-v1-1-bcb0857724de@alex-min.fr>
+References: <20260421-mainline-send-v1-sending-v1-0-bcb0857724de@alex-min.fr>
+In-Reply-To: <20260421-mainline-send-v1-sending-v1-0-bcb0857724de@alex-min.fr>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -75,11 +75,11 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
  iommu@lists.linux.dev, Alexandre MINETTE <contact@alex-min.fr>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1776764711; l=1782;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1776764711; l=776;
  i=contact@alex-min.fr; s=20260421; h=from:subject:message-id;
- bh=CHhHEb5sgQt9z+DgNHdyFkJRxxQ8BX3aIo7SXeKph/w=;
- b=iLRPlGSXT3LnuC/vB7tE1btiUBFHxZZnZ+LvfrLycTACCo+OS6a2vvYLdkKQsuG9cOyMxs5+b
- F6NC3gyqJaLCMRltTFLGAw+y/MvfM6X1fnMaIY3YEcAFP7MejT00bI2
+ bh=Akgl3hzfClofydDGp4o3os1sJpq4Hx+LaZv5zck8bfU=;
+ b=+8CpDr4EzIFz+bunBXtMybY6nKObFYFwHNsn8kPnztW+RXdinyTWtxwdUvcKVVKiF4sqAFGWY
+ uiqJGGzqA0gCp/6wT/Z/7k/9dTi8ZAIh9ZbiqknebkATY+p+fp7BPCf
 X-Developer-Key: i=contact@alex-min.fr; a=ed25519;
  pk=KOCaxY4v16ptaT0uk1FRkuaDF2n1JhmnYwLiqWD76M4=
 X-Endpoint-Received: by B4 Relay for contact@alex-min.fr/20260421 with
@@ -91,72 +91,57 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35296-lists,linux-gpio=lfdr.de,contact.alex-min.fr];
+	TAGGED_FROM(0.00)[bounces-35295-lists,linux-gpio=lfdr.de,contact.alex-min.fr];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[22];
 	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	HAS_REPLYTO(0.00)[contact@alex-min.fr];
 	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	PRECEDENCE_BULK(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,alex-min.fr:email,alex-min.fr:replyto,alex-min.fr:mid]
-X-Rspamd-Queue-Id: 25286439048
+	DBL_BLOCKED_OPENRESOLVER(0.00)[alex-min.fr:email,alex-min.fr:replyto,alex-min.fr:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: AC1D1439140
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add initial mainline support for the Samsung Galaxy S4, codenamed jflte.
+From: Alexandre MINETTE <contact@alex-min.fr>
 
-This series adds the devicetree binding and board DTS, together with the
-small driver and common DTS changes needed to boot the device with working
-USB peripheral mode.
-
-Tested on a Samsung Galaxy S4 GT-I9505. With this series the device boots
-and supports UART, USB peripheral mode with USB networking, the front
-notification LED and the physical buttons.
+Add the compatible for this Samsung smartphone, codenamed jflte.
 
 Signed-off-by: Alexandre MINETTE <contact@alex-min.fr>
 ---
-Alexandre MINETTE (8):
-      dt-bindings: arm: qcom: Add Samsung Galaxy S4
-      dt-bindings: extcon: qcom,pm8941-misc: Add PM8921 compatible
-      pinctrl: qcom: Register functions before enabling pinctrl
-      iommu/msm: Look up masters per IOMMU instance
-      extcon: qcom-spmi-misc: Add PM8921 compatible
-      ARM: dts: qcom: apq8064: Fix USB controller clocks
-      ARM: dts: qcom: pm8921: Add USB ID extcon
-      ARM: dts: qcom: Add Samsung Galaxy S4
+ Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
- Documentation/devicetree/bindings/arm/qcom.yaml    |   1 +
- .../bindings/extcon/qcom,pm8941-misc.yaml          |  17 +-
- arch/arm/boot/dts/qcom/Makefile                    |   1 +
- arch/arm/boot/dts/qcom/pm8921.dtsi                 |   7 +
- .../boot/dts/qcom/qcom-apq8064-samsung-jflte.dts   | 484 +++++++++++++++++++++
- arch/arm/boot/dts/qcom/qcom-apq8064.dtsi           |  18 +-
- drivers/extcon/extcon-qcom-spmi-misc.c             |   1 +
- drivers/iommu/msm_iommu.c                          |  28 +-
- drivers/pinctrl/qcom/pinctrl-msm.c                 |  15 +-
- 9 files changed, 545 insertions(+), 27 deletions(-)
----
-base-commit: b4e07588e743c989499ca24d49e752c074924a9a
-change-id: 20260421-mainline-send-v1-sending-289ec98e6dc1
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index b4943123d2e4..2ec9f8be9609 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -40,6 +40,7 @@ properties:
+               - asus,nexus7-flo
+               - lg,nexus4-mako
+               - sony,xperia-yuga
++              - samsung,jflte
+               - qcom,apq8064-cm-qs600
+               - qcom,apq8064-ifc6410
+           - const: qcom,apq8064
 
-Best regards,
 -- 
-Alexandre MINETTE <contact@alex-min.fr>
+2.43.0
 
 
 
