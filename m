@@ -1,212 +1,216 @@
-Return-Path: <linux-gpio+bounces-35374-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35373-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YGNDA4Ek6WmMUwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-35374-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 21:41:53 +0200
+	id eIs5Oy0j6WmMUwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-35373-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 21:36:13 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05C4E44A3DF
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 21:41:52 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90D7344A33F
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 21:36:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 23B2F30093B5
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 19:41:47 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A35663008C20
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 19:36:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44CD0371D05;
-	Wed, 22 Apr 2026 19:41:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA1DA3EE1F4;
+	Wed, 22 Apr 2026 19:36:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MRsQrcrT"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BT5o0int";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="hUxGH1at"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6884C6C
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 19:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01D436E496
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 19:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776886906; cv=none; b=AjQ9cKSm10qJ5XKDvPLcwI2S4jgoYwcnED1I3wHJv1Vz0Do7yxY2jG3BhuoqTOyeUTW2p3gqRzmQiTSQ+c3yOahnJM+Uw4CXCdgZkkUiiIuqJR/RN/n8VQp/Dv4sql/zIxCu94XcBYnARUn42Ohp+/MtF+h9BCN/OvC8v53LqZk=
+	t=1776886564; cv=none; b=kcON6/Qn4J1y+6BA38P7Ctawaq94+wC7xEV8X2fy1888t56Ia7XjGUyqkVbRhlf6yB/8qR5mBJQCA1yzd4+NbFTawwiKhpXLxL6wD53HJ/tlVG9r82KKFvGjfs7Jh2zHBo/QIzgzAjp/5+1xps/K9fXcaWz85j1gOc1yV79PUq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776886906; c=relaxed/simple;
-	bh=1jDHS3//SVF2/A/vC8oT6/lwq+kdzpM3dPjKRF+cWNI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ppm7C5e1aCjV0SeDYxA/9RINhM2dHplnT0HMeVUOkDUYXQtyomheSYKUeZFKaivJuHIpskoRoTYmmU0jxTA+XnZC2G/fNdUw4LN4uJr+4rXv+JXiLd1la/rJwMvjBltk6dpyuMfoyL11+foYY7DfeFgEgcVmfUaodYyGvyodTdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MRsQrcrT; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6715594a4c2so6906142a12.1
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 12:41:44 -0700 (PDT)
+	s=arc-20240116; t=1776886564; c=relaxed/simple;
+	bh=vp+SJmaRpuP5wpJJX9U6EKJzOSkzhIqZAqlRBKoIrL0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=a8LSEJuxmr9HimRd4/iTMSAF0pIbHAuW4ht/naHggFSI0Zbw3LaqAUzE/21bwiiegWKjfOOIYRJUjLzndl67e42zV8Kqz84eEqMYNt53UnhYQ7/dbLybAj5D2nEZMUWic5c/K14+cR0lVc/QMJaWuTQxN1pZUIb+8i5Iytkbooo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BT5o0int; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=hUxGH1at; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63MG3hm32012019
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 19:36:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	p7getAbtuwjys8gy+hm+EGK6ZsIm6NuSTLfjNxjvD/U=; b=BT5o0intOoWRwcKk
+	0T4e0Hgl+A5K7WapCdR44MlSEv2s9k1OhSwGweAq8L6iSJH95ZBCx6Lvu0zlH7l5
+	nUY/T7lsBc7lSe6iEeSyhuG585oEy+n+my0D1VzdmNI+42O8SR1/5lj3/UQibJMw
+	3Oc3mIQNrzTQn9ntRh2Dplm/F8bXjP4K3iA3uOKpkXKstmpvbLQpkIeGWDMgSI1Y
+	PBV5kjVtlEUeK8yLqfkALqxkJ3IU5vKylnSOcMHbKp96jl4L8MeDXAeMJso5HyRR
+	t8HRrF4cIdFv7gxi+zfSnQJcmzyCPQswJBjhHPCxG0PUlBPafQzPLKqEfW7COwRF
+	H7k/ZQ==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dq1h78sbn-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 19:36:00 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-50fbc49bef6so33712731cf.0
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 12:35:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1776886902; x=1777491702; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=oss.qualcomm.com; s=google; t=1776886557; x=1777491357; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=A8JHz3Efp15Ndyc9pOP3Ax7qZyPD4IXnQM3cK5pq58E=;
-        b=MRsQrcrTIPhThod0RM5gMJaowpR+wL5yr68O1yOEraIaeSsDLoDyvxzzSBsI9MEAR+
-         J7MGzqhIkPC2LCTUi1cT3av4s9goqcbGhohrKtBmvCcQkUaRthZrJFq121iFYWqVMZE6
-         ndgJKgxwL35EHaBEjrD2Hm1+Doji6SulF+6Ho=
+        bh=p7getAbtuwjys8gy+hm+EGK6ZsIm6NuSTLfjNxjvD/U=;
+        b=hUxGH1atHeG/e7WtLKFPfqLmPhc7b9gKOqoxjfTfKU8S4Bv9+kZDQFOnH3MISBIwN/
+         ZWH6bCRKYFxzmlGvAhpMPYzy1wcAp6dzUfMdV9GQNXr2UtoLPrL6dwWkmB8/LoMbQOyx
+         TejgkbAcgGQHgjainTeFIb5SSMtKaR2EDSHsOZeKzaLrTDn1drQ6E5KASQ8Gbo5nZlWe
+         uoF128FPuBBG35JmAyMFlnNzi040LNvBwhp6wJeGJAN6NU3zT2aBZBNH+it+n5zmFOJL
+         t/C895M3pB+Cnj83Zh/aRFTT7T/zmZRZo/96BtlrBxNfDCIySh0ffkDQOS/PiqxV4DSw
+         rCYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776886902; x=1777491702;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20251104; t=1776886557; x=1777491357;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=A8JHz3Efp15Ndyc9pOP3Ax7qZyPD4IXnQM3cK5pq58E=;
-        b=IewDPWRpivZsgF7Rv2hS5WMFrhATXAT6wU59/FcPVOKeW6hjZhKOi59OJkAvNozJPQ
-         bHuiTSqUmMvMfac4/mek5t3WMS9lf2TKk36D8GxCcql3Cxt6xnPnUU4PVAY3GA5jCnD8
-         QxOWBQPb8SIroHfjn5uMDiX9QGienwEAiOWsp0Ghh7yUzhXEZRLjCDplmsrw7/Pb7ITP
-         Wur4TvI8xB1DFaHStFa9OlwrIpvsRzYetjUnA5fiaTZN2ytDuefCYlsJB2WIpPUUt3Zl
-         EbIoltRR5I0oM9k2IUrc7i4EmSAkja/+4uKcH0XYFeKXw6E6bQENV+iQFI0eu0UFQ6OL
-         4ekg==
-X-Forwarded-Encrypted: i=1; AFNElJ97evM2IXLWhHHf8ZvBSPSQjp2Ysdc1UskhCiE9ya43Ba1vc7EvT8pn/Wp94fKGRVweTYzqRe3nRkIy@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWMGsH45a7iO2z+XKdBAXrqKGxC7skFWc8BFZQ/Z8V61Fv/PuZ
-	GYIftzhw4t/8D+/4e4HjNxxn3av1DUr63uDk6hXFimxGhrFqZvzjPBdQYtAYM+aqtTOulo7py4j
-	Me8KUzCaq
-X-Gm-Gg: AeBDievo7S0LE+Exrp35XKWh4URTRkhBKwpNUK5SnFf8rxWO+ifEg47G+jlaKF8Zfzh
-	tmfg0QFuPjotZ38OOLfdx+sGyKb7oPxTvxCpmHjT6ow3hT4sJ6Q72u9rY8tDeQgd0TJx67vxqkG
-	iCeFrPFURDlCiiasxU7UHeXWrgZ01aUJE4ab2Yr4vJuy9L7Z96SiwGH42TR8f7lZw+QfNGVSz91
-	LsUjrPKPqFEabiomHchzH2DPM+xI4hf2T8C9eHKToCIyWg/n+DFEs6g21sWQprp+BWg4gnxOhs4
-	vXTO1Q9+GP3yAXp+ElyGfIXhC9J382GS7SWC1YIEhUrgKed7Y2Bhkmn6M7/azXgPyDsFK1nOuq2
-	MX7hRk6S+vJrji9I15sa7Pb5zNfSTLdECAgwR+yT82JP/QpSLt9fw/3e6e15qhlSeovfTERoYKB
-	le1T0g//Nt7KiutFWQBFyXrz17mR0YCIBLpt57w+VShG7tu07g8pUDU5MaBjM+eh7j9NbQKUov
-X-Received: by 2002:a17:907:7b9a:b0:ba6:5855:1cc0 with SMTP id a640c23a62f3a-ba65855318bmr853312466b.2.1776886902465;
-        Wed, 22 Apr 2026 12:41:42 -0700 (PDT)
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ba45572d01esm605320166b.62.2026.04.22.12.41.42
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2026 12:41:42 -0700 (PDT)
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-672c12e95e9so8347496a12.2
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 12:41:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/+F4WsUl3mCPaElnWnPHBd8ushtYUa15PbiGxFrvITYGjKhgcS8gC6+dzJFNtZSYNyexH2GfwptKOD@vger.kernel.org
-X-Received: by 2002:a05:600c:4714:b0:48a:5574:3a5b with SMTP id
- 5b1f17b1804b1-48a55743d05mr122645615e9.27.1776886533988; Wed, 22 Apr 2026
- 12:35:33 -0700 (PDT)
+        bh=p7getAbtuwjys8gy+hm+EGK6ZsIm6NuSTLfjNxjvD/U=;
+        b=Iyii87p0qWqvcyvbU+snQjSpape3Go7T4Jv5MQFwxOcFPxQVhnX5HdnTJBjONUp30A
+         FMiqI/7OeQ5TWCmFi4gSRLmC4ZjgbiLqFbUgDHC8o3S/tKNEAHYxEfPYuF7+IVDlcZ4G
+         v6QbWDqeSOGjYo1KsAtlYuQMF34KOZ6nRPIqtW1qpi6rRA3Ad3Y8kiXxPV5pOa++ASzZ
+         Sbrq16BW+U166qRux+wq3qArGvqc6xB81ObFfC4gp7FrNl5xv8c2GWvN/clBicwgDD3L
+         BdlIdzYXZbP0XT1iPa5OVM2P1PbQMOg9m+W9qJvNhraF/xA9kTKJt23WEjftOy7opjQh
+         WAcg==
+X-Forwarded-Encrypted: i=1; AFNElJ8mMXoCwAiF6gNaPkz54lK0KiMjTyYcCpRnqzs7tH8Tgwji7fK40K+hdyAYxQCjpqgO+bgKlHTmbpbv@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrO1NMq7Q5wndtz5AybUcrC5OahQZ/xtF0syxQivKVctMxHuID
+	BGNtnBVg6j98+DXMzb3rkH7N2NC3/63HMOgeswBB3kZ0MX1F5HZsuJ+xR6Gn+nHZXqKNTEEWGzV
+	7KR31iNYCN6s1bXaEEl7xcp1xnhp/RNIaZMHb7/1sQVgivxytHkkQ5qqVZ10f8QT9
+X-Gm-Gg: AeBDietm5isGVeNQlHU8WIOdrREWtPrscrRLGNcGQO4ulr+VeA2FVZ+bwRIwkFlvdYN
+	HTc/un6kHEHnJ+Dq/u1pQXGlp2Sdug2PzIPCEdwV62+7pnCPty0K+FMC34Fql0uc1RmVVYBJLqV
+	eSte4R6bQbBrB7vw5Oi9CXSyWho55VNkK/HwxE50BYihcfKZG5K/BtFcKYdSYXBOXdnKJgxAaV/
+	1fccJrWGZ3yn+jC6ghFJQysNB3+fILBz5NwMwEdUybQRDTHH1tsVz/W8sQEIeIMUqjhf6Okw0GI
+	Pv6P2XC23VTlB8omzCA4JUNbAVSXC4dFbpwlz6M7UjEOOSTkvRR2m6eaVwUvurFJF8wBzHvxBhp
+	3kUSvHU1gx148wPCTbfSCSBz/MG4nZPpbeZFsPoMaiT8VfgNejfmYx5ZiZLlilyJjtdTJAGLRXh
+	UXxswu0DdwdkL9ynOMKtFzb3GMqeyqzm1jPj0YuACyaV0l4w==
+X-Received: by 2002:a05:622a:1918:b0:50e:631c:c390 with SMTP id d75a77b69052e-50e631cc465mr177606611cf.44.1776886557586;
+        Wed, 22 Apr 2026 12:35:57 -0700 (PDT)
+X-Received: by 2002:a05:622a:1918:b0:50e:631c:c390 with SMTP id d75a77b69052e-50e631cc465mr177606141cf.44.1776886557164;
+        Wed, 22 Apr 2026 12:35:57 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a4185c8a33sm4723395e87.36.2026.04.22.12.35.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2026 12:35:55 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+        Jessica Zhang <jesszhan0024@gmail.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Cong Yang <yangcong5@huaqin.corp-partner.google.com>,
+        Ondrej Jirman <megi@xff.cz>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Jagan Teki <jagan@edgeble.ai>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
+        Bartosz Golaszewski <brgl@kernel.org>,
+        Jie Gan <jie.gan@oss.qualcomm.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Riccardo Mereu <r.mereu@arduino.cc>
+In-Reply-To: <20260418-waveshare-dsi-touch-v4-0-b249f3e702bd@oss.qualcomm.com>
+References: <20260418-waveshare-dsi-touch-v4-0-b249f3e702bd@oss.qualcomm.com>
+Subject: Re: (subset) [PATCH v4 0/4] drm/panel: support Waveshare DSI TOUCH
+ kits
+Message-Id: <177688655533.759482.6233087265509719567.b4-ty@b4>
+Date: Wed, 22 Apr 2026 22:35:55 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260325143555.451852-1-herve.codina@bootlin.com>
- <20260325143555.451852-3-herve.codina@bootlin.com> <CAMuHMdU7x7LWFkD9xiq+wyOqnn0bdzr+JLfvbBexoiWyv8kftA@mail.gmail.com>
- <CAD=FV=UK3NQKQN7FXyG4nGdDKO=LQYhnL4ZweomQ_4R9-EAYag@mail.gmail.com> <aekg_IELc65BFrWp@ashevche-desk.local>
-In-Reply-To: <aekg_IELc65BFrWp@ashevche-desk.local>
-From: Doug Anderson <dianders@chromium.org>
-Date: Wed, 22 Apr 2026 12:35:22 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XTvvq11y7kxmrfBe3dZsKro7N9=i-Hj9aqsLBay2Q9Rw@mail.gmail.com>
-X-Gm-Features: AQROBzBA2DSdR2HBaIYSKp4MrG-iWYSiPDxUw6OYCOPyJYNxN20LzPXgyZNheJI
-Message-ID: <CAD=FV=XTvvq11y7kxmrfBe3dZsKro7N9=i-Hj9aqsLBay2Q9Rw@mail.gmail.com>
-Subject: Re: [PATCH v6 02/27] of: dynamic: Fix overlayed devices not probing
- because of fw_devlink
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Herve Codina <herve.codina@bootlin.com>, 
-	Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kalle Niemi <kaleposti@gmail.com>, Matti Vaittinen <mazziesaccount@gmail.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
-	Linus Walleij <linusw@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Daniel Scally <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org, 
-	driver-core@lists.linux.dev, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.1
+X-Proofpoint-ORIG-GUID: 6NZTm063vpC0Lv5CE69FppT3s3XpVQJy
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIyMDE4OSBTYWx0ZWRfX6utDyYs/Grzd
+ aHpP5lf+osIPrxI3NkZuqOMnNUR7fw9f0C/KLZdrtHYuc8V4tFtekbwFIhSuyx9hXS3IMXXn1tI
+ fL1iJrzC9PZgeM6DREVqbOp0e3DuUhQPdig73mNFifFjgENQnG9zrysY10inLkbcowjPO9UaHkP
+ VY6lgdx7PbfeN34T/Wo+FPYlCa//29CbHuVv38XZSEt5uRPY4X9WauPDOeXIE84f3vHRBMENwPL
+ CjKp/YX63cMy+E30gZWbDRDI7C/klaZxNSLc6Pi0srq/cNwKdhwhSCZ+4YoOP+XPbgyPAwkWHmD
+ n4eif8ujuO6bUuqHXlXrh4q+TUxjLVOflTywdx6YKNJ9I0grJ8457aqxwCiQC5hAcJ+hNPX82Tp
+ R4TRpKtGglMjcQXoOruvkcM72/bhsjW3tHgXL1fcoUDjz9w7999npe+N0SNSv24MAVVhbf3Q5aE
+ oqTJVEh4ntPym9tg/OQ==
+X-Authority-Analysis: v=2.4 cv=UqNT8ewB c=1 sm=1 tr=0 ts=69e92320 cx=c_pps
+ a=WeENfcodrlLV9YRTxbY/uA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22 a=V1Sr_61zPZr-dZQ6qXoA:9
+ a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22
+X-Proofpoint-GUID: 6NZTm063vpC0Lv5CE69FppT3s3XpVQJy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-22_02,2026-04-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 adultscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ priorityscore=1501 impostorscore=0 bulkscore=0 lowpriorityscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
+ definitions=main-2604220189
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[chromium.org,none];
-	R_DKIM_ALLOW(-0.20)[chromium.org:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[linux-m68k.org,bootlin.com,lunn.ch,kernel.org,gmail.com,linuxfoundation.org,nxp.com,pengutronix.de,baylibre.com,sang-engineering.com,axentia.se,arndb.de,google.com,opensource.cirrus.com,cirrus.com,linaro.org,linux.intel.com,stgolabs.net,huawei.com,intel.com,vger.kernel.org,lists.linux.dev,lists.infradead.org,microchip.com];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[chromium.org:+];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-35374-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35373-lists,linux-gpio=lfdr.de];
+	FREEMAIL_TO(0.00)[linaro.org,gmail.com,ffwll.ch,linux.intel.com,kernel.org,suse.de,huaqin.corp-partner.google.com,xff.cz,redhat.com,edgeble.ai,oss.qualcomm.com];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[27];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,oss.qualcomm.com:dkim,qualcomm.com:dkim];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dianders@chromium.org,linux-gpio@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[61];
-	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
+	FROM_NEQ_ENVFROM(0.00)[dmitry.baryshkov@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,bootlin.com:email,linux-m68k.org:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,chromium.org:dkim,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 05C4E44A3DF
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 90D7344A33F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi,
+On Sat, 18 Apr 2026 02:16:19 +0300, Dmitry Baryshkov wrote:
+> The Waveshare DSI TOUCH family of DSI panel kits feature different DSI
+> video-mode panels, bundled with the separate controlling circuit,
+> produing necessary voltages from the 3.3V and 5V supplies. Extend panel
+> drivers to support those Waveshare panels and also add GPIO driver for
+> the onboard control circuitry.
+> 
+> 
+> [...]
 
-On Wed, Apr 22, 2026 at 12:27=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Apr 22, 2026 at 11:51:36AM -0700, Doug Anderson wrote:
-> > On Wed, Apr 22, 2026 at 10:44=E2=80=AFAM Geert Uytterhoeven
-> > <geert@linux-m68k.org> wrote:
-> > > On Wed, 25 Mar 2026 at 15:36, Herve Codina <herve.codina@bootlin.com>=
- wrote:
->
-> ...
->
-> > > > +               if (fwnode->flags & FWNODE_FLAG_NOT_DEVICE)
-> > >
-> > > After commit f72e77c33e4b5657 ("device property: Make modifications
-> > > of fwnode "flags" thread safe"), this must be changed to:
-> > >
-> > >     if (fwnode_test_flag(fwnode, FWNODE_FLAG_NOT_DEVICE))
-> > >
-> > > With this change my DT overlays are working again.
-> > >
-> > > I guess keeping the FWNODE_FLAG_* names, but changing their values
-> > > from bit masks to bit numbers was probably not such a good idea,
-> > > as it fails to catch missing conversions...
-> >
-> > Crud, I should have thought about that. :( Do you think it's worth it
-> > to do a rename at this point to catch future problems?
->
-> You can try locally with allyesconfig / allmodconfig and see the outcome.
-> If there are missed cases, and their amount reasonably low, I won't bothe=
-r
-> in this case.
+Applied to drm-misc-next, thanks!
 
-I believe I caught all of them at the time of my CL, but the problem
-is in-flight stuff, right? I think the problem Geert is pointing out
-isn't something I missed in my original patch but rather an
-interaction between my patch and this in-flight patch.
+[1/4] dt-bindings: display/panel: ilitek,ili9881c: describe Waveshare panel
+      commit: 7ae674a399b6d83ab9b463adb61cc0b64e298eaf
+[2/4] drm/panel: ilitek-ili9881c: support Waveshare 7.0" DSI panel
+      commit: 4c95b2b7d49edc5846730970cef322a6d8d967ba
 
-> But for the future it's kinda rule of thumb to rename when
-> semantics changed.
+Best regards,
+-- 
+With best wishes
+Dmitry
 
-Noted. I've certainly done that before, but I didn't think about it in
-this case.
 
--Doug
 
