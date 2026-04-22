@@ -1,176 +1,182 @@
-Return-Path: <linux-gpio+bounces-35351-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35352-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oL6MCr606GmIOwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-35351-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 13:45:02 +0200
+	id APQqDmm56GkHPgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-35352-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 14:04:57 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88DA44458E4
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 13:45:01 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C87A445AD2
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 14:04:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E7335304523A
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 11:44:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BA8B8300F9F7
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 12:04:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25C913D091F;
-	Wed, 22 Apr 2026 11:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ktOEzpdU"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E2C32E6CCD;
+	Wed, 22 Apr 2026 12:04:54 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA3834F483;
-	Wed, 22 Apr 2026 11:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5EF175A6D
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 12:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776858260; cv=none; b=Nq8ZUzTR5qRR9a/VnsC9xWViOrIK8HSKxJ7cib0sbjz+UjV4eK6lKO1C4HVLOxq0n81SEdQoSn9a+GBLg0ztUFr73xozEAQMz6glV+oJ9IG6kT2ROZDYSjNyOGa3UnKkvL9lEOtUSKyUWpXB395ACNzp4yMiUJDU0thwKEupqEM=
+	t=1776859493; cv=none; b=TclIq+rbv7/y/vfenoe/r+nTb/HJ0mAcjLYy/vXFY6OJFgkIbPJ2j4VF18vXVwXoCXINYt/VUPRG0um7H88nJ3Nf7loFTcCuMiXKO5rSIZGWNmdfz7z0pw0C4eppUZMtw0nZAnp2XPO/CiO8w8ZibHbQdbLf5YtpPAm1gjNOros=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776858260; c=relaxed/simple;
-	bh=jhptRH9NwVJexkC7VbAUXdVKvsP7WnTfWca81DZoqAs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ozs50aPlydTa6dGYMd/AwMFLRtNme7uZEcGyE3NK3KidstSGtGQ5TdFf4kCbV6VpZPQTsoGtIsYwQBhmc2vVYZAVUbctbBYzjZCFXanwrhUWKJd8pz14fwmkqfpBtUS29ZxHPr3lksM2bizREHeFDd9hj0F6BGXYRUBRrxz2nus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ktOEzpdU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BCF58C19425;
-	Wed, 22 Apr 2026 11:44:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776858259;
-	bh=jhptRH9NwVJexkC7VbAUXdVKvsP7WnTfWca81DZoqAs=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=ktOEzpdUCP6JYApKumRzkyw9A55BDaNe2JPGU3uIYBglVVivVPROgbLfsXGzM2Xy+
-	 Mxl3PnO5dFL9h6QevTzuBGa0CxQTXj4jrs4Y+JAJ3Pfj1X/agxRoPOBuUKs3x/RqXM
-	 Hh4aI6kerDPAjte21w3No4CF6WbrMSKXgD45leMEdN2XMlBMYfa0vsDjcgKJ8whnho
-	 shGzNpyIxet2vpdkF2rXmYfvPhy5LU5dFayMCuL4w4OWS2pIKmEezp1aiCeFxeUD/b
-	 l6/4kpRyEfvse7z1UwnCv/lnPQbuKfmZLtZwmxl/Uf6fxisytXCQhlg2iqP3RyM3Xn
-	 I/1HQvS82UaRg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B70F94CBE;
-	Wed, 22 Apr 2026 11:44:19 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Wed, 22 Apr 2026 11:44:13 +0000
-Subject: [PATCH] pinctrl: meson: amlogic-a4: fix deadlock issue
+	s=arc-20240116; t=1776859493; c=relaxed/simple;
+	bh=heNJUHm5r9IeudYZX2feX2GOb6GdY81hvbpNQO/lRDI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mqMm2OgPt3m5Bec5BferkDFKGqgf5nUGgOibRy9ErX9bFnQw2febCTzevmx0ZWGh6mKd9nwGK2S+zN2mx+1Ahbq+kHruu38kzjLTnRXpQtQffSDJalFlRmnvAx+NU8WRXMCrMf7G5vcuqhDMbCY2ZY2WIRLViQPW/6TWpAjqDd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ba7a1cc0380so673664166b.2
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 05:04:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776859490; x=1777464290;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CSSaNDclY+hoXNdXjyqRLx9mMF7rFOkXAgklHu0Nry8=;
+        b=Pmf/eJrCairOmotmHX8XRPKKvh7KvVMOGE8iYCpbmiL8Z0b8nwuBi7U+JTpzO3dnIS
+         BMclj/b/nrViyuRddKUqe3xdcgzL9Srm5c06nNMSBwQXaC4dxy0B5rktmdSMuChHfCdV
+         AuFUsDM+YOyoNvalf+I0q2E8E8Uu1QrSvquEb1Tbm7uA6NZFkoAYV7bD2uRiDKYkZ3pY
+         XuiWzRkJ/wR6/AW5RjRSZ46igRPQIHXC7jZh8K3VVy/hwl//QdML5XDRa3PofK4S8fdR
+         l9vhcwc2OVz95F/2FpPOt8W6qrsSbZawJFvgATPTY3NOPLMWV2fEf1PDDqWk0aUGaRLs
+         pszA==
+X-Forwarded-Encrypted: i=1; AFNElJ/iwfM8lhf/4OqnNpTqd+9qk5oZwmWyNN8T8J+m2tjOO3hYIxGiMXXIyW9G0LrQIrIesK/y1hfADMPt@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0MNRgqULiOa00bFeQjyE7G2abDk/+NXhnsYpbhgUN2aXAEssI
+	QbXlc0hzSnBZ5+EnGLvu/a/B1/XeKVCCVj+4jqApHR/5Al+5cJ3bnGazrheSUnAsq2E=
+X-Gm-Gg: AeBDieue8zSHlQYRjIqeo6c6GafFYTP8JBDVs+RiHn5lmGKU0c2kltub0Z4yRgI/dvF
+	TdHea2opt/pypLk8RjvWW2G72XjcQiFL/j3Zcv2U8VBKSRpZ4HGLAHrPoqLWtWS91cVqMQ6VjNR
+	17B6fdC2hgzus4ZgomLC96xzQu87UOGlDqseeWdOsaSH875lk6iYsG/qvSLa1EAfHF+UfDLHV1U
+	gYwrosq7Qn8u9jan/2AdSK0YY6bUH95+0NDYw/zT4Fm5YAQYiW/ojHqqkzI5vyaU3RB4cct/p/K
+	WmNgGHbTT8Rh2MtLz1uboe2bb2c9fSd46A6a2rRFUwf7ukH/MP6lKhGeze0xMCHik55lkKF75pD
+	2Rpj7ZIdj2U2lxEwwmEVWYmNB6klnHUgscJmd6rFUVr7Cav60Nf9aBRh/G+pUdL2rYGiHv6HEPI
+	HMxACb1KhdE7peGz8fzgrHRgpUNU6y3YLKsJjzIBp6kelUa31Lhfr/PuLtdiX1E5hbVKXy7IA=
+X-Received: by 2002:a17:907:849:b0:b9c:69df:4d7b with SMTP id a640c23a62f3a-ba41aeefa42mr1140352766b.39.1776859490095;
+        Wed, 22 Apr 2026 05:04:50 -0700 (PDT)
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ba454d1bf00sm529473966b.33.2026.04.22.05.04.49
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2026 05:04:49 -0700 (PDT)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b9c3a9fe80fso752949066b.3
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 05:04:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9AtZ6XD2M61uz7Jdp4LawNont/cpMvFOBYgTbpAeoiK18zkc378Wz2+jSNe5vUKSfgIeH9npJYk+02@vger.kernel.org
+X-Received: by 2002:a17:907:268b:b0:ba5:1970:2bb6 with SMTP id
+ a640c23a62f3a-ba519702c56mr898304966b.34.1776859488923; Wed, 22 Apr 2026
+ 05:04:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260422-fix-pinconf-v1-1-abb4d2e0da55@amlogic.com>
-X-B4-Tracking: v=1; b=H4sIAIy06GkC/x3NQQqDQAyF4atI1gY02C68inQxkyY1m4xkigji3
- Tt2+fP4eCdUCZMKc3dCyG7VircY+w54Tf4RtHdroIGew0SEagdu5lxccaIsIzPpIyk0kVMVzJG
- c19toCXQ5vve0hTT5P1pe1/UD9QwM4XgAAAA=
-X-Change-ID: 20260422-fix-pinconf-42be1cc2f5af
-To: Linus Walleij <linusw@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1776858256; l=2200;
- i=xianwei.zhao@amlogic.com; s=20251216; h=from:subject:message-id;
- bh=Ss1NSqKaiC5N5QiCWkTV2uRyv5Uo42HRnPH2RlMwg5E=;
- b=fr7u9d+eLFEa7sccl3XsNIMQoaiZ7WblPDxAAp4bIzh/HrYB6ydQXMiU1Ec+47fQmUWfWWegx
- Yj1u23N8KyqBcB7KMBYSwEMnn8XKl/x0IRNVvlYw3sfzP8B5LsRUsqG
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=dWwxtWCxC6FHRurOmxEtr34SuBYU+WJowV/ZmRJ7H+k=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20251216 with
- auth_id=578
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
-X-Spamd-Result: default: False [-0.66 / 15.00];
+References: <20260413182456.811543-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20260413182456.811543-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20260413182456.811543-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 22 Apr 2026 14:04:35 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWJCyurtvXfUFw8NA7RONgtf9XqqWvrcg0iWjPBCutSEA@mail.gmail.com>
+X-Gm-Features: AQROBzDuK88y7skSIsbJm8EH5n7PJ8NFVloT8VUmIGD2wAxUgH48C7LtE8lF00g
+Message-ID: <CAMuHMdWJCyurtvXfUFw8NA7RONgtf9XqqWvrcg0iWjPBCutSEA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] pinctrl: renesas: rzg2l: Handle RZ/V2H(P) IOLH
+ configuration in PM cache
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linusw@kernel.org>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spamd-Result: default: False [0.04 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35351-lists,linux-gpio=lfdr.de,xianwei.zhao.amlogic.com];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,linaro.org,baylibre.com,googlemail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_FROM(0.00)[bounces-35352-lists,linux-gpio=lfdr.de];
+	DMARC_NA(0.00)[linux-m68k.org];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	R_DKIM_NA(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	HAS_REPLYTO(0.00)[xianwei.zhao@amlogic.com];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,amlogic.com:email,amlogic.com:replyto,amlogic.com:mid]
-X-Rspamd-Queue-Id: 88DA44458E4
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux-m68k.org:email]
+X-Rspamd-Queue-Id: 8C87A445AD2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Hi Prabhakar,
 
-Accessing the pinconf-pins sysfs node may deadlock.
+On Mon, 13 Apr 2026 at 20:25, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Include PIN_CFG_IOLH_RZV2H in the IOLH capability checks when saving
+> and restoring pin configuration registers.
+>
+> On RZ/V2H(P), the IOLH configuration is defined by the
+> PIN_CFG_IOLH_RZV2H capability. The previous implementation did not
+> account for this, causing the IOLH registers to be skipped during PM
+> save/restore.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-pinconf_pins_show() holds pctldev->mutex, and the platform driver
-calls pinctrl_find_gpio_range_from_pin(), which tries to acquire
-the same mutex again, leading to a deadlock.
+Thanks for your patch!
 
-Use pinctrl_find_gpio_range_from_pin_nolock() to fix this issue.
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> @@ -3033,7 +3033,8 @@ static void rzg2l_pinctrl_pm_setup_regs(struct rzg2l_pinctrl *pctrl, bool suspen
+>                 }
+>
+>                 caps = FIELD_GET(PIN_CFG_MASK, cfg);
+> -               has_iolh = !!(caps & (PIN_CFG_IOLH_A | PIN_CFG_IOLH_B | PIN_CFG_IOLH_C));
+> +               has_iolh = !!(caps & (PIN_CFG_IOLH_A | PIN_CFG_IOLH_B |
+> +                                     PIN_CFG_IOLH_C | PIN_CFG_IOLH_RZV2H));
 
-Fixes: 6e9be3abb78c ("pinctrl: Add driver support for Amlogic SoCs")
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
----
-Fix deadlock issue.
----
- drivers/pinctrl/meson/pinctrl-amlogic-a4.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Unless I am missing something, PIN_CFG_IOLH_RZV2H is only ever set for
+dedicated pins on RZ/V2H and RZ/G3E, so this change does not have any
+impact for now?
 
-diff --git a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-index e2293a872dcb..35d27626a336 100644
---- a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-+++ b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-@@ -292,7 +292,7 @@ static int aml_calc_reg_and_bit(struct pinctrl_gpio_range *range,
- static int aml_pinconf_get_pull(struct aml_pinctrl *info, unsigned int pin)
- {
- 	struct pinctrl_gpio_range *range =
--			 pinctrl_find_gpio_range_from_pin(info->pctl, pin);
-+			 pinctrl_find_gpio_range_from_pin_nolock(info->pctl, pin);
- 	struct aml_gpio_bank *bank = gpio_chip_to_bank(range->gc);
- 	unsigned int reg, bit, val;
- 	int ret, conf;
-@@ -326,7 +326,7 @@ static int aml_pinconf_get_drive_strength(struct aml_pinctrl *info,
- 					  u16 *drive_strength_ua)
- {
- 	struct pinctrl_gpio_range *range =
--			 pinctrl_find_gpio_range_from_pin(info->pctl, pin);
-+			 pinctrl_find_gpio_range_from_pin_nolock(info->pctl, pin);
- 	struct aml_gpio_bank *bank = gpio_chip_to_bank(range->gc);
- 	unsigned int reg, bit;
- 	unsigned int val;
-@@ -365,7 +365,7 @@ static int aml_pinconf_get_gpio_bit(struct aml_pinctrl *info,
- 				    unsigned int reg_type)
- {
- 	struct pinctrl_gpio_range *range =
--			 pinctrl_find_gpio_range_from_pin(info->pctl, pin);
-+			 pinctrl_find_gpio_range_from_pin_nolock(info->pctl, pin);
- 	struct aml_gpio_bank *bank = gpio_chip_to_bank(range->gc);
- 	unsigned int reg, bit, val;
- 	int ret;
+>                 has_ien = !!(caps & PIN_CFG_IEN);
+>                 has_pupd = !!(caps & PIN_CFG_PUPD);
+>                 has_smt = !!(caps & PIN_CFG_SMT);
+> @@ -3131,7 +3132,8 @@ static void rzg2l_pinctrl_pm_setup_dedicated_regs(struct rzg2l_pinctrl *pctrl, b
+>                 }
+>
+>                 /* And apply them in a single shot. */
+> -               has_iolh = !!(caps & (PIN_CFG_IOLH_A | PIN_CFG_IOLH_B | PIN_CFG_IOLH_C));
+> +               has_iolh = !!(caps & (PIN_CFG_IOLH_A | PIN_CFG_IOLH_B |
+> +                                     PIN_CFG_IOLH_C | PIN_CFG_IOLH_RZV2H));
+>                 has_ien = !!(caps & PIN_CFG_IEN);
+>                 has_sr = !!(caps & PIN_CFG_SR);
+>                 pincnt = hweight8(FIELD_GET(RZG2L_SINGLE_PIN_BITS_MASK, cfg));
 
----
-base-commit: bd7fd288490c64835a74c05e631c102ce056d5e1
-change-id: 20260422-fix-pinconf-42be1cc2f5af
+This part LGTM.
 
-Best regards,
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Xianwei Zhao <xianwei.zhao@amlogic.com>
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
