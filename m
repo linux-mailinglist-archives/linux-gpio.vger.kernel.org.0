@@ -1,145 +1,146 @@
-Return-Path: <linux-gpio+bounces-35349-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35350-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KKdHL3St6Gn6OgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-35349-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 13:13:56 +0200
+	id IMciMjGz6GmIOwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-35350-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 13:38:25 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 248EE445262
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 13:13:56 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 383FC445818
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 13:38:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9443E3029241
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 11:13:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B6999305C8D7
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 11:35:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18FCA3CEB81;
-	Wed, 22 Apr 2026 11:13:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 167C93D16F8;
+	Wed, 22 Apr 2026 11:35:54 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00463CE49D
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 11:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27CE35DA48
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 11:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776856421; cv=none; b=FVK27JDJ9pH11Qv7ZFC0Cj00o2dMpJEDlr81aXa36/OZWCMxJu15VR3d5UTrxAihS2k2hYwHMSYmxkP+KPNe+ha8QRTNd2hcRGM4WYsX7BNtupILvYgALMJ8wT3I0rHruL+NfvF3QMh6CWIZGIbP+glTl4f04IiZIDTye/PD+Fg=
+	t=1776857753; cv=none; b=mBKSI2hWvMgN7osqwb6VXKixk5yBEpdZ/peYQ4wwmXfQujA11MRZko4z+cN5iaTqd8/Y1rQ3CS+UB3uQMr4HAzpshngVk9ufltDmzL/1froUlq01owYX64L1ykH/IdymTQnozaUPIlZSvkVEja5Jxyu5NbJ72djH0xnaooHst2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776856421; c=relaxed/simple;
-	bh=cBjhdCwW7hgdwmZ1DkVjCPmyFRahOur6Pa10yN5MASQ=;
+	s=arc-20240116; t=1776857753; c=relaxed/simple;
+	bh=R9JlaNaEei47q8RFqO5ggVnbPEsNSaXaU0nZijnGZ+Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qNSn41g2Gw7q8ATme85RHlbp4G47mXDg/8Ex6aoDvhwNUt1YQx89gE70jhWc0mymFOTrZvUockKxZjjxVsuHSAWKhZiaG3CZgi0OQ4EyXxZScUlakb72kAcqk8TlpMXTHv8pWDGmvn1A4Op67aGa0A7/iUuJbyoahJqvgbD/sgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.50
+	 To:Cc:Content-Type; b=Ym2T/ui5MT+VzfFmg1annlFxhfTSMDpad+b6J60/e671UgNDUlQ8MziHN7UrSl7GcUpvyX6cj2S6MtvbGT1EY5Y2V/BjLG9LdQK9WZE0givgHpPD7/Xg6DNkbqSGERq0mfJ+Nn563AOhOZAMxI0LXfnAaGIkeaJNos/yvPmynO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-60fa5eb3ee1so1685677137.2
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 04:13:40 -0700 (PDT)
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-953c5738c03so2935611241.2
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 04:35:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776856419; x=1777461219;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=1s+zgG1aC1QktYkJ+rJATA7ko8k/pNI81E1TOGy7G8Y=;
-        b=O+DQdDaVK/3aNtgqh0SezaGVeHdoR1h8GeKD9nBnQAYOGyYQWCCtphzjmXQFxrTlSR
-         x5h/LNqfR3xEPHrh7dwrBowNgsVP0Np5ngVHLjlAY1OF0diZ/FiJAH+Kdymju1Fzn5oi
-         X3kh01iXwWA2Qvfk2akQIjOibO1937F9iFQwxOH8Z39dbLuXwr0UT4KV14IZkwSyLqG8
-         hNcjAYdKseUH9xsfVqJJFJ37rat4JORGBEGL+WmyGUPXVJ1cskxtS8AIXWWiLj0N4/b+
-         6hmAf2aJKo0FXfMV4v06YvYyCWCVBOPgbhCtz+7kvU0DkfNyRZ0JhMzHTSMnCMxiPpbG
-         YtRg==
-X-Forwarded-Encrypted: i=1; AFNElJ/ivScdmC/DWM94y/Xs2rjM4fOd4aoelFZvWi/heoV0uFMgfAaFLeip2rD8YwqoMn4HAfAZRS/+jfAc@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywpn6eSIs1zPVzy6dDfxnPcg52+KjHkSu+mhZHj2YnV+Ncu8aOe
-	rGcKlMi8QDQVYoSAGhX96uOzx/fqQNeJdTQZAI8Sf4ql7afl0O1BJ4FWksqAZ9NgqhA=
-X-Gm-Gg: AeBDieuzRrKwY1wGWO/OWL/FQz0h23wExFBuPtVyw008f8XySIMYd7moroHF8ZxTuOb
-	u8vCa/Bmrd/Mlh71UTbTC4JnuGL0MhYYNKXwSCaBw+/L5zidKnagR5tchuzgIU4u4ptC0ITbKsf
-	L23R1Ag3dTROIbBFJ3a99PZ4cK5F3ZAQp0ATHbD4w9JjBlQPTbWLDQOZZogZ+J1J7M2hjOWjv13
-	TZqoDEy442GTOy4M2YllquKxrHqlZpuVBtFOqeasML7d6e5DS89a9i8w38FJkVaHLrYlMd2Dyfl
-	2SPyhnKHYMIrsQvvxARYtn/cyFZK1tFK6h74QoMXy02gTt7z3AM5NeTelX2x+M/zlTe72dZlmxS
-	YcbXgdNvee1Y0k0jokYRTAuiGzoMMVLTz/uZ13HrVwEUA01IJ/iyKZUo2J9vHGpeokMXgQFJKj2
-	zkDCe35jHNhAgIyKHbDAb3XQmjX0/G9OeTlF7lvh8m5MLItZCvV7Of1FIDODhB6aPZTBPz7iymV
-	8Y=
-X-Received: by 2002:a05:6102:1591:b0:607:9443:b2ee with SMTP id ada2fe7eead31-616f73ff3e9mr8795037137.15.1776856419487;
-        Wed, 22 Apr 2026 04:13:39 -0700 (PDT)
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com. [209.85.221.174])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-61745c9e53esm7836656137.5.2026.04.22.04.13.37
+        d=1e100.net; s=20251104; t=1776857751; x=1777462551;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ELJxWI9ESJzbGIe+C75G9R94zA1sKEl066/NjIEF+RY=;
+        b=P5ud3b2heEY4LiyWeQn6peT+zKAYFG8dN/ZGaZt2dpOS6B+umUazEMjgFJdLBz9Bcb
+         XD96j9DZbJEgpFpeiiQo9pf5jTzmZSxbwJYEpVKhRAHB9ZM8L4Mcyiv/621uCoN0Gm5t
+         +5OaijArzYZNDwLs8Rwi1Yp7dxXQWb8m3tV3A1YaY39eJ886kArQg8oeIdXH4wAR0Cf2
+         AdTAzDPAoufaI6pWxVLX+ZkOFunFjNEq0DxQ56Ile+QLA4jEO9moQN7hKhfCAZaw/JMt
+         DV3N9au941apBz1ZA9E3w2C6jRcHangfCu6vZ1D80aNhN/7bfhhB02fpUULRUZuXP3ph
+         bIbg==
+X-Forwarded-Encrypted: i=1; AFNElJ+9oBzx46OQjv58lhcDE45U2x9+i2QzPqVPFkZX8T6RwjqzveiL6bi1Eru/gmcZaLbI6WwKESSMrJvy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5qXpR8pJX7Vym4xi1juiArlLjQofstjFnjSWkeRmJZbxz/sL+
+	RVUJXASgMnO3hlr8AUfxVRkqKZY7l4mpo1q+og4Q4tz4Rx93jmFtk0yJ49QCMVTA+uc=
+X-Gm-Gg: AeBDievTMfEEh3K48GAqkH64wgaq3Dyuspv1Divsg8gX25IFEJTNug6H5+cGjahGz1A
+	CxVOcR60UQ1UfDyqR8ffBNR8tBEOmyGpuPvZBs8mG7hL3RMmXoiRk+ozZIX0VqLciaNKJmq94NG
+	4zoHLYuHkGgrKBJtqtfFZVUlhGdPXS3wVUFRInnagGhxQAFccpB7OlrjxzqIxE2Sax3Yacs7moX
+	L+onFRjIJWsXSOWqeSZlydPPxh+sM4k58FklwIGrNqcw7jRzktWfAUAUIBHgDjzmbSR8gDS8asr
+	ToUDMUd6QL+VuLkDZptU4DB2lDqOCDqFbjKg7wcqIUagUqxHhQayX4a1BYdBqJ/0Sa2C4BtP+dy
+	zWqEBDAwfJGTzZEl5uO6UuBGmDNQOTYWTZh9FwOnDwGpqlZHIp5UgnuUt3KZy7Nbo8/P61wLom7
+	F9Kbr8fRVnr+OMM7TOMkKubQQX/o/2zZeykYqGSeaSdFxfsUq5cgi08E3pGEjltULKu8xVaEc=
+X-Received: by 2002:a05:6102:b10:b0:611:82b:a590 with SMTP id ada2fe7eead31-616f73f6ee1mr10803361137.25.1776857751595;
+        Wed, 22 Apr 2026 04:35:51 -0700 (PDT)
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-61745d93542sm7588502137.6.2026.04.22.04.35.51
         for <linux-gpio@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2026 04:13:38 -0700 (PDT)
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5673804da95so1628973e0c.0
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 04:13:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+MAqjbXq2r08vPPQO75VRlgTmSVs9qkJGdTAzS+sgxta9kweQHjNL3B/Ba+ebDvAMvqMMJ4NJlwHm0@vger.kernel.org
-X-Received: by 2002:a05:6102:8095:b0:611:183c:e7d with SMTP id
- ada2fe7eead31-616f59ac05cmr9378138137.10.1776856417366; Wed, 22 Apr 2026
- 04:13:37 -0700 (PDT)
+        Wed, 22 Apr 2026 04:35:51 -0700 (PDT)
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-953a2a4761cso2839752241.1
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 04:35:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/AUnOJLxDAo+XXzNlxIg1AL92hK4RChD2iitiCAfyG13vRcCDCrFuQuQ6MlEkegmuoVlWEDSVFD1bl@vger.kernel.org
+X-Received: by 2002:a05:6102:f14:b0:611:3bcb:aef6 with SMTP id
+ ada2fe7eead31-616f16429b5mr10579231137.0.1776857750839; Wed, 22 Apr 2026
+ 04:35:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260328090548.84124-1-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20260328090548.84124-1-biju.das.jz@bp.renesas.com>
+References: <20260413182456.811543-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20260413182456.811543-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20260413182456.811543-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 22 Apr 2026 13:13:26 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVoL1aRz5zoiGqPYdS6dvThAYBAN20Dy2=4B9pDv+gSVQ@mail.gmail.com>
-X-Gm-Features: AQROBzC0TXcMAHai-Jk9wksyFb2WZNepvBEXCR1h1vtfe4dycIPBLaHTb1ULuaY
-Message-ID: <CAMuHMdVoL1aRz5zoiGqPYdS6dvThAYBAN20Dy2=4B9pDv+gSVQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Fix incorrect PUPD register
- offset for high pins during suspend/resume
-To: Biju <biju.das.au@gmail.com>
-Cc: Linus Walleij <linusw@kernel.org>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 22 Apr 2026 13:35:38 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXew2OoNujZUboymX6ZJcxQQUjH0U1G+neQexz90_hqCA@mail.gmail.com>
+X-Gm-Features: AQROBzBlN3WCKio0G3EgdMYhQvWWpP_T7dxVxH_6xJWVnBA5bQ7oLj2FGGENTas
+Message-ID: <CAMuHMdXew2OoNujZUboymX6ZJcxQQUjH0U1G+neQexz90_hqCA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] pinctrl: renesas: rzg2l: Fix SMT register cache handling
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linusw@kernel.org>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-1.46 / 15.00];
+X-Spamd-Result: default: False [0.04 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35349-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35350-lists,linux-gpio=lfdr.de];
 	DMARC_NA(0.00)[linux-m68k.org];
 	FREEMAIL_TO(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
-	R_DKIM_NA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCPT_COUNT_SEVEN(0.00)[8];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-m68k.org:email,mail.gmail.com:mid,glider.be:email,renesas.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 248EE445262
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-m68k.org:email,mail.gmail.com:mid,renesas.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,glider.be:email]
+X-Rspamd-Queue-Id: 383FC445818
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Sat, 28 Mar 2026 at 10:05, Biju <biju.das.au@gmail.com> wrote:
-> From: Biju Das <biju.das.jz@bp.renesas.com>
+On Mon, 13 Apr 2026 at 20:25, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> When saving/restoring pull-up/down register state during suspend/resume,
-> the second PUPD register access was incorrectly using the same base offse=
-t
-> as the first, effectively reading/writing the same register twice instead
-> of the adjacent one.
+> Store SMT register cache per bank instead of using a single array.
 >
-> Add the correct + 4 byte offset to the second RZG2L_PCTRL_REG_ACCESS32
-> call so that pupd[1][port] is properly saved and restored from the next
-> 32-bit register in the PUPD register pair, covering pins 4=E2=80=937 of p=
-orts
-> with 4 or more pins.
+> On RZ/V2H(P), the SMT register is split across two 32-bit registers: bits
+
+Also on RZ/V2N, and RZ/G3E.
+
+> 0/8/16/24 control pins 0-3, while pins 4-7 are controlled by the
+> corresponding bits in the next register. The previous implementation
+> cached only a single SMT register, leading to incomplete save/restore of
+> SMT state.
 >
-> Fixes: b2bd65fbb617 ("pinctrl: renesas: rzg2l: Add suspend/resume support=
- for pull up/down")
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Convert cache->smt to a per-bank array and allocate storage for both
+> halves. Update suspend/resume handling to save and restore both SMT
+> registers when present.
+>
+> Fixes: 837afa592c623 ("pinctrl: renesas: rzg2l: Add suspend/resume support for Schmitt control registers")
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 i.e. will queue in renesas-pinctrl-fixes for v7.1.
@@ -148,13 +149,10 @@ Gr{oetje,eeting}s,
 
                         Geert
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
                                 -- Linus Torvalds
 
