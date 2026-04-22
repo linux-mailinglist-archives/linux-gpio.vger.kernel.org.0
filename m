@@ -1,105 +1,85 @@
-Return-Path: <linux-gpio+bounces-35343-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35344-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8DNjKJGQ6GmpMQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-35343-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 11:10:41 +0200
+	id 6FI2G8yY6GkwNQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-35344-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 11:45:48 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3830443C85
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 11:10:40 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40AFE4442F7
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 11:45:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E083F30095CA
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 09:10:13 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 61F1E30285AB
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 09:45:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5A483C197A;
-	Wed, 22 Apr 2026 09:10:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7CD73C0621;
+	Wed, 22 Apr 2026 09:45:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Yj+l5AA+";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="PjDAODNh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wp+8MNHl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CB33BFE2A
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 09:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11553C9EC2
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 09:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776849012; cv=none; b=M8XOfACj6rEJMlCEVP28nGHwBeggCZd0HLKzxvF2TNvCJCfrvtsW7D3yN++YXGEe0rEfqv+fdM8pxv83nkpSQvyvcR/fLdHXzWGoh2uGnj8C8/xBuLAUUyKy1Uc3fkeu5nmIetbYvpqdXojsirK7lqE1Cnd8mXIl2bvnS2d17Bo=
+	t=1776851141; cv=none; b=qXwkbsFiFJ6GDgVdpJ0Uz9v8L3ukIt2ie5uSGLaQoBLn8+NP99g30HiI0ExmVdxjBMzanZDi5FJal/GYRKHVc6K17RvGOOpLzOS8F/cI1HYZHcM/sm9exUzE0NAzq6j6vNFx+4KfFLWzwywPvhETRseIL5LT0MceLTY+iG23Ge4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776849012; c=relaxed/simple;
-	bh=Ht5XepZYeWRruFIhSU9il0UdSXEj0Q/RgKbZF358CzQ=;
+	s=arc-20240116; t=1776851141; c=relaxed/simple;
+	bh=ODnCfWZuWwHdn590dcvqmnkYq/WoxSTobshHkjf3NH0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jYOp0EFKnwSmssCnlwoRznkqVNjl4ZeYrdnkcOE2h/s9YvwoFzHssSpiIytdG8KkLetjWayFp4C38stzUthsD0TrATQQ6o6xOjXdRrzyra+gouRFJWXHE3ITCMoRcwopoK5VaHLOQFC0dqydal9p/r5jPF9GPoLMRq2FMGe4bk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Yj+l5AA+; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=PjDAODNh; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63M96E4Q664048
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 09:10:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Ht3ugslvaAB2Tu02wj4yEDUsNolBfYrFDnScbsYJ3ic=; b=Yj+l5AA+2wthYYYx
-	H8NyPInpanMAxY//LbbvDmYdeAIopIN51yaDsUFyoqeN8gkkMS4+ZKKL/q6Y6pD8
-	Z56ULvAT8gctR9s7GsRcWIhkOHb0E9LlLaB7jetxIF9iRUi78ItcxQugjQCUUTWv
-	DtUMTKhE9UQ7EELK3FolEVbOJvszZVUsS+KfdwpHS6PNgiv+SEVNRS6L6WsrxZjD
-	8a451y7NNGwMtC4GOpaG5MT5Wy8q3lKsLiZV6eKapwj2VoLkPJfaEh6hmwbv4PAN
-	YCxpytvC6vcSx6TIXom9wqpGOwDKd6et/2DkWScx+ItbRqi51T5uwKvJXfRTCUuk
-	3zqzuQ==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dpudgr123-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 09:10:10 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-8954b9b5da7so14444126d6.2
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 02:10:10 -0700 (PDT)
+	 In-Reply-To:Content-Type; b=aLxsNDGW30v2JurGNZ/Fj5ls8eNUXWRyNSu6vQPXvzU6z/yqwqYETMa+ClzAo8XiMyF8UktQK3k0EPqQCiW2Z3BpKUwXcr0Fqr12BmV56mbcVx0kFUsSGKt9Gay9d5WgYfzFjJLe9vTSqj/RtUQ/dnn6Q7/MPJB2MaoWBGCLtv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wp+8MNHl; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4891c00e7aeso29733855e9.2
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 02:45:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1776849009; x=1777453809; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1776851135; x=1777455935; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ht3ugslvaAB2Tu02wj4yEDUsNolBfYrFDnScbsYJ3ic=;
-        b=PjDAODNhJTswMSAb99LcyGNINSuDClgsTrMBvusG1DI6yUG32w0NC5jFApwNIg7zeV
-         BH5jnwRPbu0Z/p4CmoVvRege4nxMRLU4fEgGz9jApb67J77sm6Nb1QV3PhaXeREe3SV0
-         9RuLQJ/2ZKL+roxEyWgI4JukRGpSzUjExskNssu6cSxzSvo04XCgOTaOat+WkloL5t7T
-         szhOoR6mQURqIPo0aDQYMDYDdpn5lqnhn8A3zh2M50VVYnJ7wrvDLnzEDwnCRThH7+Ek
-         27Nt0KmG64s/R2envjhaROvfjw6W+oeyqt4ze9vWLDp6MOSZLaDAUHloB1FVg48/sZjo
-         uYmA==
+        bh=DeuZlq/zNmg8pc25SmmpuXfPXUHWMsZAmnTbjh6IQJw=;
+        b=Wp+8MNHlunhbA/YQl5T1elv7ZrxgMytgNySJhv5sH5KwXi/UNDe16R90EzfVA3sM8W
+         QsJhFehGMJXChGXYFkKKL4a9FS8vD+cpI/40hBFxwdW1n5XrDUpoQjQu/gyAhNnAChi2
+         yc8FIjt3QQwo7JLz1IsrFUwNRVb6Dg/rKdV6DPl2y3DjU8knh1Kk+XKITRXTYDgIS5JB
+         UHWsux0Bur5KBUpiPwSABBdV4y8HHeVoHbP80TuKZHK6Upt8cI8c5vE/QhVwT5pzDvYU
+         25l22nrIuAFljSVfSHTwJaX5ZWHtW7PWa6mlUMQ9JdAf6oWDJVf9+c34sPVJpJTmeYG7
+         NkuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776849009; x=1777453809;
+        d=1e100.net; s=20251104; t=1776851135; x=1777455935;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Ht3ugslvaAB2Tu02wj4yEDUsNolBfYrFDnScbsYJ3ic=;
-        b=H103QFLqlH8a6nl89AB4Tv3q1uxG48PHAamaahVgMyV2oVk6le8yfT4bW6Sj4d7Cj/
-         PJSj5ARVt13d7e7yroG3WFDah27+BGhLjhDY1/us8CvLre0W+iBwi7ruVJL/fKuAya3B
-         nlzuvQoge02IOvpKxJJkybgeSkgO6+uB7GMiNs9G799em+6ACT8vUpQkuGHT4Hw9tGWO
-         5XIuPyEYOLzFVhWHAKLza0GLeLkVepjcEEfFiPDAXEif5GidPLkHKTUVaWz7hg/L9AJa
-         LWA9jw9XTMyb5noT/pLG4Vz1iEJPP5afulciTydCZTfiO7ZnIq99piJ7zdEO9wyM/MxF
-         UaBw==
-X-Forwarded-Encrypted: i=1; AFNElJ9a3hNQWZgtITPj6VgwauA+SqWhD4+hZucZx3hfLQuXmX+MRrP4RgQFsKKgAhOVx7W/aJ/Q1ZhetGGc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQR+rXEo/Vj59r+0SYBsGjCV8X2zWduGLoKBSkggW3tLURS6Hk
-	TB0X/tPorO1Uk19bgQGVkiNFnhgH1jMf7K4H6lCLgOU4fWm5q3N2jQdZw0TAfqx1hcstBlqxqAm
-	+GAFIAV7y9cBj2x7lV8ENaNLFguTFrfvP7Wpp0nRUy/U9op6vCPeYttKO1ERLdTQ8
-X-Gm-Gg: AeBDietH5pdeBK+RX6TjMzR1eZz9h4nnL7KPrxRpJ1P8VuDQL5GRdfb7gjstCo/PB/f
-	mrjBvH2rc9uPQjqxhd6sjsk3F1Q2TJmVhRUBx5V0y49lZKfrCYqjjXPLFtr+J6sikKrH/BJMTfx
-	EbnB4ZFxUNFCUnv4uPpXOPBXmcY43gsD9kFMlGwDEdnq5Pcd15dhIZXWSzYULhwvuxJ5PX5d3Bi
-	ZVs2jsnH/d/Ww3a2PwlXavMy/XMiPFclakW1mkZ6rQ2cMsuFOtTe3KfJChUMb459crskNSn5Hwh
-	tBkGZka8TvtyoTuYpiTE7UbK2LD/VLaGBgefL6zs9aa/DcI3msyNv/o3NSSZIq6679w5E2LGoVP
-	+q1v2OUuKINohSnPrAHXTZmEzzZmocbcKIbUzb0W6CIuMb220hbuKyaLEKGhkfTnf/8OBZYIEVl
-	lz6g46/ceKDB1x4w==
-X-Received: by 2002:a05:6214:29c8:b0:8ac:a833:a22d with SMTP id 6a1803df08f44-8b02813864emr257999226d6.3.1776849009605;
-        Wed, 22 Apr 2026 02:10:09 -0700 (PDT)
-X-Received: by 2002:a05:6214:29c8:b0:8ac:a833:a22d with SMTP id 6a1803df08f44-8b02813864emr257998856d6.3.1776849009062;
-        Wed, 22 Apr 2026 02:10:09 -0700 (PDT)
-Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ba455539817sm518715166b.56.2026.04.22.02.10.06
+        bh=DeuZlq/zNmg8pc25SmmpuXfPXUHWMsZAmnTbjh6IQJw=;
+        b=L6ZnX0l5wLUsw3+MuPaLOKFoMinpPLesJjHh6rL6SzOHLno4dVIvNVrA39hGcxf/RN
+         /D1fBUqSmveVUI+rsdRddUaD3WeEnb8PY3XWQFkNIxA6NusUrqPKJQeOxGyPmaFxpPZO
+         4QaFzheniAXfWX1cjbB9i6Ohi/EBDym1UBi/NN5jvKipemXovu5b2XwuoCSrbAbKaVyu
+         XXZzDlm5HdzKK1fd+TweQZtjN3KQ8bf4jt170txspa4323dZ8sa4SRXk52RTEAsIXAuj
+         BveRo9HuhX9XszjVc8RiJft7h40aMu/Xpse8Pi9+es7A77+BNJY+XxwI0ncUXBoeMkWi
+         zFnw==
+X-Forwarded-Encrypted: i=1; AFNElJ/kLS9E2MJcFQ44tv6VlSMFep7+GFiMZsxFLzTDVXP8YI0w7VHS6yMLVKPX5ebRwVjFKFHFmjFJjGBk@vger.kernel.org
+X-Gm-Message-State: AOJu0YytWkh8I9zr3tSgPOruzA3L+fwH699p7yrEW8sUL5mF1wxFQ6kK
+	bBA8cL6FMAyP1LTDYklm4s/Z5msYtGk4Qw8fd5qTZmNXJM3OUe7PYeW5
+X-Gm-Gg: AeBDiev/9REYmUcWkCIi527/3+2gol8ud7Etv4HOej6uLLHiykvj1WL8Brm0glrwJbu
+	kCjWa2YvojOaq1woTJniRXSMPQukewADGIRAAXy/4huAQPk0RUj3ErONZjhKRAIHWRx3/hgWLFD
+	rP0BIaPlU0AIrdMKyij/qqE/pNx5grjyng+CNh4wH4LoHF7odM7AsNroT4cmz29NSZdrH1jyeaz
+	vbF1DJRhlbXujkwm8lXbc+X+OvHo0Mgf8VgRDpfLFC720nQmRhiVXiy8uhNaWBqyBeshukqWaGO
+	bVmbuA+8/e6ehf7Xdz2BqLKT/DyT9bBhCdUun6pVm3KQp27XEjjPzeWjSKKFsyuFcXihUDJHMMQ
+	N4qMDXVSgK3bJY9FZcCZndHCuxwoYlqAFmWbu5aQjpl8bdCmwQCfQshxIclPHvVCm/r1q957wh6
+	rNanttynC3bLcfTJZj3FoNUXW16oQCzb8yamQVWcmJP0PEqLXtp/pTvbtpZV4iSVcACHIBcAqnQ
+	ValrSk=
+X-Received: by 2002:a05:600c:3ba0:b0:485:ae14:8191 with SMTP id 5b1f17b1804b1-488fb73a089mr338917855e9.5.1776851134576;
+        Wed, 22 Apr 2026 02:45:34 -0700 (PDT)
+Received: from ?IPV6:2a01:e11:202b:40:3c42:f121:865e:1066? ([2a01:e11:202b:40:3c42:f121:865e:1066])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a525a0b1asm80365995e9.2.2026.04.22.02.45.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2026 02:10:08 -0700 (PDT)
-Message-ID: <9635af37-f3cd-4f82-ac87-84e51021822d@oss.qualcomm.com>
-Date: Wed, 22 Apr 2026 11:10:05 +0200
+        Wed, 22 Apr 2026 02:45:34 -0700 (PDT)
+Message-ID: <4e55e31e-a5e8-4098-8a7f-bb52476b882a@gmail.com>
+Date: Wed, 22 Apr 2026 11:45:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -107,115 +87,201 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] pinctrl: qcom: eliza: Split up some QUP pin groups
-To: Alexander Koskovich <akoskovich@pm.me>
-Cc: Bjorn Andersson <andersson@kernel.org>, Linus Walleij
- <linusw@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Abel Vesa <abel.vesa@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20260420-fix-eliza-pinctrl-v2-0-b68329fd6701@pm.me>
- <20260420-fix-eliza-pinctrl-v2-2-b68329fd6701@pm.me>
- <cdaf1f7d-72d1-4481-aa3f-4b15990cf6a6@oss.qualcomm.com>
- <Li2-2Zov5lvXZcLfb6l0_7mDAg2QB-ag10-aLD59ulR1pntDBHpNORrd0I5Gg_YGqo-rGdIgil2DmrVw1CoDhgN1S7QLsnId_k2mf4u5DYk=@pm.me>
+Subject: Re: [BUG] 36-second boot delay due to by
+ acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>,
+ Francesco Lauritano <francesco.lauritano1@protonmail.com>,
+ Mario Limonciello <superm1@kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "westeri@kernel.org" <westeri@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>
+References: <6iFCwGH2vssb7NRUTWGpkubGMNbgIlBHSz40z8ZsezjxngXpoiiRiJaijviNvhiDAGIr43bfUmdxLmxYoHDjyft4DgwFc3Pnu5hzPguTa0s=@protonmail.com>
+ <4402ed86-77f5-4a47-a9e1-8d57a709bb15@kernel.org>
+ <woxnPhTYiKi2aLzBK8GnO8DpvdgYjQc-P42uhJOzyrcYC3Gdstht27hML8yNHgOklhm2MgGA7wt9gGZ17BHoWlG0vqJuVVJDgCSev8udfds=@protonmail.com>
+ <NIIS8XD_nSRvp36X39GxcDRAWsaScQIFx6o9JsFCbyBZk5PqznRdxg9EDDb_9tzWd5TcjzxrRtFx5_uLCVa5wJAYykW2k0Ue_XPMPtWCQiY=@protonmail.com>
+ <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
+ <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
+ <20251218063954.GT2275908@black.igk.intel.com>
+ <b57b44c3-ea96-4189-8b70-71bf4a80d29b@kernel.org>
+ <20251218103831.GW2275908@black.igk.intel.com>
+ <51f999d7-2064-47dc-8d9b-e262588bfbdb@gmail.com>
+ <20260422090709.GB557136@black.igk.intel.com>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <Li2-2Zov5lvXZcLfb6l0_7mDAg2QB-ag10-aLD59ulR1pntDBHpNORrd0I5Gg_YGqo-rGdIgil2DmrVw1CoDhgN1S7QLsnId_k2mf4u5DYk=@pm.me>
-Content-Type: text/plain; charset=UTF-8
+From: Marco Scardovi <mscardovi95@gmail.com>
+In-Reply-To: <20260422090709.GB557136@black.igk.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: 0YBrrqBenEMkKdVCHIBKfoNcKpqtKQSd
-X-Authority-Analysis: v=2.4 cv=c5ibhx9l c=1 sm=1 tr=0 ts=69e89072 cx=c_pps
- a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22
- a=EUspDBNiAAAA:8 a=dVDS_O1aKoMvdT6kGvYA:9 a=QEXdDO2ut3YA:10
- a=pJ04lnu7RYOZP9TFuWaZ:22
-X-Proofpoint-GUID: 0YBrrqBenEMkKdVCHIBKfoNcKpqtKQSd
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIyMDA4MyBTYWx0ZWRfX75PsMzPnXzn/
- nYg3ZIskknz+2l5czEmJG02YUg46dJR6uOD9FSX41bhKI/c9WNqeqDNhchVBJ4lEMoIJQ3VM06q
- VxMQflYE0xCy+pUjvA37p8eUcevzTEpRks6LNw3npt3NE2UskIocSKYauuMMfGvJeu2Qs40+sh7
- 1OkAcbIXOpmM1jo0rfWaK8h2283oWasXpRkxtP2G1cW/a+1cd+It5Ov5ZFh9/QcBDFyWGmQqY9N
- BmxiLfOLMWuweGLSGRVbix3Lnk9q5tNQQDMOLm5G/+7gPy/Yi2V15W3CRwgVZElFcscnAmhc9wp
- V7vwQbrNQ2ypaBs/Sr5RwLTR6+H0V30K9GsUsBbUB8ADXB0uEj/aeXzxmaPVpbxUyqNExyES63x
- 4QDh/Cg7j9kobJnNCsjkfOaGFquW8gAbNJRsART5Cmv8PG1F7XzsxHs5EmsXkj2TEGCu15WdN6D
- Zz/q1HiuVPiEg0tbKHA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-21_03,2026-04-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 malwarescore=0 spamscore=0 lowpriorityscore=0 suspectscore=0
- adultscore=0 impostorscore=0 phishscore=0 clxscore=1015 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2604220083
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:dkim,qualcomm.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35343-lists,linux-gpio=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[konrad.dybcio@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[kernel.org,protonmail.com,vger.kernel.org];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35344-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	DBL_PROHIBIT(0.00)[0.0.0.24:email,0.0.1.99:email];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mscardovi95@gmail.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: A3830443C85
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[protonmail.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,0.0.0.21:email]
+X-Rspamd-Queue-Id: 40AFE4442F7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 4/21/26 6:50 PM, Alexander Koskovich wrote:
-> On Tuesday, April 21st, 2026 at 9:06 AM, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
-> 
->> On 4/20/26 4:28 PM, Alexander Koskovich wrote:
->>> Multiple QUPs have lanes that can be routed to one of two GPIOs and
->>> collapsing them prevents devicetrees from requesting specific routing.
->>>
->>> For example, a board that wires an I2C SCL line to one of two GPIOs
->>> cannot request that specific pin with the groups collapsed.
->>>
->>> This change splits them up so devicetrees can request the configuration
->>> they need.
+
+On 4/22/26 11:07, Mika Westerberg wrote:
+> Hi,
+>
+> On Wed, Apr 22, 2026 at 09:51:01AM +0200, Marco Scardovi wrote:
+>> On 12/18/25 11:38, Mika Westerberg wrote:
+>>> On Thu, Dec 18, 2025 at 11:33:14AM +0100, Hans de Goede wrote:
+>>>> Hi,
+>>>>
+>>>> On 18-Dec-25 07:39, Mika Westerberg wrote:
+>>>>> On Wed, Dec 17, 2025 at 07:19:56PM +0000, Francesco Lauritano wrote:
+>>>>>> On Wednesday, December 17th, 2025 at 7:01 PM, Mario Limonciello <superm1@kernel.org> wrote:
+>>>>>>
+>>>>>>> On 12/17/25 10:57 AM, Francesco Lauritano wrote:
+>>>>>>>
+>>>>>>>> On Wednesday, December 17th, 2025 at 4:12 PM, Francesco Lauritano francesco.lauritano1@protonmail.com wrote:
+>>>>>>>>
+>>>>>>>>> The _AEI defines 5 GPIO interrupts. Narrowed it down to two:
+>>>>>>>>>
+>>>>>>>>> gpiolib_acpi.ignore_interrupt=AMDI0030:00@21,AMDI0030:00@24
+>>>>>>>>>
+>>>>>>>>> This fixes the delay. Pins 0x15 and 0x18 both call: \_SB.PCI0.SBRG.HNC0()
+>>>>>>>> Traced it further. HNC0(pin, 0) takes the Else branch and calls:
+>>>>>>>> ATKM(0xC0)
+>>>>>>>> ADTM(Zero)
+>>>>>>>>
+>>>>>>>> ADTM calls NOD2(), which is the actual culprit:
+>>>>>>>>
+>>>>>>>> While ((Arg0 != RDNT))
+>>>>>>>> {
+>>>>>>>> If ((Local0 >= 0x0F)) { Break }
+>>>>>>>> Notify (^^GPP0.PEGP, Arg0)
+>>>>>>>> Local0++
+>>>>>>>> Sleep (Local0 * 0x64)
+>>>>>>>> }
+>>>>>>>>
+>>>>>>>> It notifies the dGPU and polls RDNT, sleeping 100, 200, ... 1500ms per iteration.
+>>>>>>>> Max 15 loops = ~12s per pin. GPU doesn't respond at boot so it maxes out.
+>>>>>>>>
+>>>>>>>> Two pins, ~12s each, ~24-36s total.
+>>>>>>>>
+>>>>>>>> Francesco
+>>>>>>> Any idea why isn't the dGPU responding? I would have expected
+>>>>>>> https://git.kernel.org/torvalds/c/4d4c10f763d78 sets up policy that it's
+>>>>>>> in D0.
+>>>>>>>
+>>>>>>> Is the dGPU turned off in BIOS or through some reverse engineered
+>>>>>>> tool/API or something?
+>>>>>> dmesg without the workaround:
+>>>>>> [    1.005184] pci 0000:01:00.0: PME# supported from D0 D3hot
+>>>>>> [    1.288811] pci 0000:01:00.0: vgaarb: VGA device added
+>>>>>> [   38.250139] nvidia: loading out-of-tree module taints kernel.
+>>>>>> [   38.369358] nvidia 0000:01:00.0: enabling device (0000 -> 0003)
+>>>>>> [   39.744421] NVRM: GPS ACPI DSM called before _acpiDsmSupportedFuncCacheInit
+>>>>>>
+>>>>>> GPU is in D0 from 1.0s. nvidia loads at 38.2s after the GPIO hang completes.
+>>>>>>
+>>>>>> No weird tools/APIs besides userspace utils (asusctl/supergfxctl).
+>>>>>>
+>>>>>> No changes to BIOS factory defaults other than disabling Fast Boot.
+>>>>>> dGPU is active, Display Mode is Dynamic (hybrid).
+>>>>>>
+>>>>>> Traced RDNT - it's set by GPS function 19 in the ACPI tables:
+>>>>>> Case (0x13)
+>>>>>> {
+>>>>>>       Debug = "GPS fun 19"
+>>>>>>       \_SB.PCI0.SBRG.RDNT = (Local1 + 0xD1)
+>>>>>> }
+>>>>>>
+>>>>>> As far as I can understand GPIO initcall blocks at late_initcall_sync, preventing nvidia
+>>>>>> from loading in time to respond. Based on the timing, GPU is awake but nothing can
+>>>>>> register a handler while kernel is stuck at NOD2 polling loop.
+>>>>> I wonder if you could try with the nouveau driver so that it's built-in to
+>>>>> the kernel proper? Then it should be ready at the time these events
+>>>>> trigger.
+>>>> That is not really a workable solution though.
+>>> Yeah, I did not meant it to be the "solution" rather just to check whether
+>>> it is related if the GPU driver is there or not. You cannot build the
+>>> proprietary driver into the kernel so that's why I suggested the
+>>> open-source one.
+>> Hi Everyone,
 >>
->> Please massage the commit message so that it highlights that the issue
->> is that there are multiple functions defined for a given pin, sharing
->> the same name
-> 
-> Will do in v3, also I was looking at how sm8550 handles this with qup2_se0, and
-> noticed they don't split every lane in this case, they only split out the
-> lanes that have two possible GPIOS:
-> 
-> 	msm_mux_qup2_se0_l0_mira,
-> 	msm_mux_qup2_se0_l0_mirb,
-> 	msm_mux_qup2_se0_l1_mira,
-> 	msm_mux_qup2_se0_l1_mirb,
-> 	msm_mux_qup2_se0_l2_mira,
-> 	msm_mux_qup2_se0_l2_mirb,
-> 	msm_mux_qup2_se0_l3_mira,
-> 	msm_mux_qup2_se0_l3_mirb,
-> 
-> For Eliza I split them all out since I figured if I was already splitting some
-> out for mira/mirb I should just also split the rest, but should I mirror this?
+>> I would start saying sorry for the necrobump. I faced the same problem on my
+>> G614PR and fixed the same way as Francesco.
+>>
+>> Do you happen to know if there is any news about this? I'm currently on
+>> CachyOS with kernel 7.0 and noticed it behaves the same way as 6.19.
+>>
+>> I'm on to try patches or provide more infos if needed, even if I have to
+>> admit I know Linux but not that deeply.
+> As far as I can tell no updates unfortunately. I guess we could go with
+> slightly updated patch from Francesco, like below that just ignores those
+> two interrupts. Can you try if that works for you?
+>
+> This list of devices that suffer from the "edge events on boot" seems to be
+> growing so maybe we should re-think if that should be enabled for all
+> systems or limit to the problematic ones (although that list could get big
+> too ;-))
+>
+> diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
+> index a0116f004975..4e60a176ac93 100644
+> --- a/drivers/gpio/gpiolib-acpi-quirks.c
+> +++ b/drivers/gpio/gpiolib-acpi-quirks.c
+> @@ -392,6 +392,23 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+>   			.ignore_wake = "VEN_0488:00@355",
+>   		},
+>   	},
+> +	{
+> +		/*
+> +		 * The ASUS ROG Strix G16 (2025) ACPI GPIO configuration
+> +		 * causes acpi_gpio_handle_deferred_request_irqs() to
+> +		 * stall for ~36 seconds during boot so ignore the two
+> +		 * interrupts involved.
+> +		 *
+> +		 * Found in BIOS G614PP.307.
+> +		 */
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16 G614PP_G614PP"),
+> +		},
+> +		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+> +			.ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
+> +		},
+> +	},
+>   	{} /* Terminating entry */
+>   };
+>   
 
-I'm a fan of keeping it minimal and only splitting where necessary
+Hi Mika,
 
-Konrad
+thank you for the quick reply. AFAICS the patch as is would only works 
+for the G614PP and not for the others (for eg I have G614PR_G614PR).
+
+Assuming all the variants suffer the same problem would it be ok to use 
+a wildcard for it?
+
 
