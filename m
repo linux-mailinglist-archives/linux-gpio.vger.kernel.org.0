@@ -1,210 +1,260 @@
-Return-Path: <linux-gpio+bounces-35370-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35371-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EAdjIccX6WlpUQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-35370-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 20:47:35 +0200
+	id wF98DnAb6Wm7UQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-35371-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 21:03:12 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E38D7449D84
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 20:47:34 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EF48449FFE
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 21:03:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E6A593076163
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 18:47:29 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id ACA87301BEE9
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 18:58:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD2772DC357;
-	Wed, 22 Apr 2026 18:47:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3A553EF0A4;
+	Wed, 22 Apr 2026 18:58:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjpyRkox"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XAbJv6Dj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209581A704B
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 18:47:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776883648; cv=pass; b=Kme4IKihER6HHH3+SxcSceEwXowPKdE1eTjDqga3evWOxYSjISs4bEbG5jUV/Vh+b6Bd78uiWeP+Me8gbguFN6vIgz57iJiChu3rbcGP08ggXK4jmEqKTFYiLI/Q/K23vgO1xyrE+g50UCRbdtf4VotBESh9EGwOKZ5d3GZj8ik=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776883648; c=relaxed/simple;
-	bh=koO1gTzJVerY/oBMbjuuST5CEbfWNHXW583XAUNa55Y=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1523EE1FD
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 18:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776884306; cv=none; b=FM5dUlEEMwuq5R6J2gFJwnuOoL/yY92Z+ulitmypxAFwskDuwIBGe44vsqWPznpMhuRSSVYmpxogiqyTr7q1tsEv7531IyiHycISNssqDbs5nm9b+bNty1H7VSEKoD3W9HfSoOYfxXSaDI6ZDh+eJUYXLOiRSTY6ncWociGtNic=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776884306; c=relaxed/simple;
+	bh=W3gJGhETv1i99hgZ4Qzxlq7+a/rqAi15n3RaJvZubfA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WAHPlApnLzr2AyArx1Q0Zw4J+O/juQTkSUP9er8ix5CNHnULJbCsIV52hZ9diSDvKqewzS+Jbr4D6vSdfBPkDgt/FUou1qDBGKX64M4v5NoTBzfULHrVvtXW/oaT0mUxhpPZ4ByfqJ+mSbkMSfzr5l4Mc8U5BlH4nkxpxG55uX4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BjpyRkox; arc=pass smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ba545100a13so354396866b.2
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 11:47:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776883645; cv=none;
-        d=google.com; s=arc-20240605;
-        b=FWPXw8HiS2S9oiUJ2N3oNVqlLo5YVOvQgt9079XrRxFru81t3rAeNBYFJ+Y4Cjb9ST
-         8aF44dqmW9FdftZwJms8y45zckP+k+ye7KT5XyFNFjwe1zUjVpzIFQr7kOeH+qOTuuKN
-         Fv6vQOcm8lszTwgg3vq8+VYxYjtb4dSD9vgAOHOgSI/E0000fOqwVnrvjhs6TK69F4cA
-         vFnNQYxwLQIvmalkgJsxlUa3XAumxKp1NDZQ2ax9v3SJCpoNIbO658wk6bNHXdfoj6Yq
-         E5O3uQLo3YVigTcVDcAPLdnsy6MCei28I0RoaK7uuaEF9NNA8m0g0u37nowbQbKWSz9B
-         tCYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=a4tbV3vnwAWI1orS7bjpXKGapwTuCv+wj00co1PEd0U=;
-        fh=UcFZxoY6gWszHYKlBdwOZtuuL7+x2l1irkHLnE9uho0=;
-        b=emJ9/RMY+PCbhO4/qSSmkOWWBZ2iZ5tgjZ8lISA2nRv4N6ks7IB9OhlOGMrcngaKKp
-         yCdifHbBfHSoMcbsTQC+u+NPTiDaEfCRc+z6mH+xI5tgGfP65ca4c/7Yr2iRezG58ZiG
-         R+rzzpOHZYpNpOZjvF9G9Lw3sXB4HFs8nJlBdnMjq17Kep9HjNTByTo//xLpV8UtUOQA
-         Bv6M6sLtG+myAPXDvhB1hs7XHfpICzR+bzjwXpMTZWl2Xon9BgWne7/0tYaGL2BZvBlV
-         FEb0OY67hd7bRcNQgnHsbsnAYU2MADCiUCY8zTUO/zrlrBRm2PRZHndZew+DIPaMLia2
-         paBw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	 To:Cc:Content-Type; b=ASAUgs/G7gJWySS27ZkkqLO+Q7xkmUEUhjeZojtySwio2oCh5WBByYvwocWpbxSMzJwWnX+dmLWUb6vmB78/hnABJZQeOzvjoTa9nxs0+Ux7B/Ww96mFffGNkGqIMqXAcaqQpDb0u/X0A+9OE5+m8zLezeepGSGASwpIBo/ASuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XAbJv6Dj; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b8d7f22d405so997804866b.0
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 11:58:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776883645; x=1777488445; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1776884293; x=1777489093; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a4tbV3vnwAWI1orS7bjpXKGapwTuCv+wj00co1PEd0U=;
-        b=BjpyRkoxTEP7pMYuUq3XWTKQFJeerQ9pGmGo4Ns+SPEvAhZBepfcNw/5n2hUgamtnz
-         fMMsYRoMwxFi7YlkSD2VJ3/JdAiNSWi4svOUYJ2BDWZXFYaFM0lInUolSYt23EN5PrHQ
-         lCQlaJoZI1HF4j+kThPWs6AJCbuDuGUZ4XhiGorSGMsR5pi4HpoWvht4RsqoQaM/zbuz
-         uTzxeYo9Re8ew8h0J1gadmA9TgVXOzeGticFkhmvO3+G1FYTgbRYOnagMz+L4MHbTKjH
-         4k1jmx7/3SZXPehEaCzm7FO6omFFG4LedpGInmSpUx71tQvZFssKT8Hz4XZ5UtH9PN+x
-         dQOg==
+        bh=R4vBmmJ5gC2QCrFlTLiSjZ3SPsY2SAKP5dBxbzswxUI=;
+        b=XAbJv6DjAeK4ufKpCLXymAiXE/a84iW1wwr4W/UF8T7rDivxR4T3spJfBVgiGi0+sY
+         +cblj8FbTc+JCyUoCx3zk5eF4qgQ8wnSClPqIWk0CsUQLLpadiri+W5NwPIntQkRk23o
+         nCXw3SGOjAwlD5zLpjjL9ymewEMvb6ZOn1l84=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776883645; x=1777488445;
+        d=1e100.net; s=20251104; t=1776884293; x=1777489093;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=a4tbV3vnwAWI1orS7bjpXKGapwTuCv+wj00co1PEd0U=;
-        b=pFpyoW186yOda+b+IXIraUL9/4Zfxp54BRQpAuli9zb2T00R/t1548g36fx0Jz4BYw
-         ci6DSY+dYf6hETX9GPNAn0m+TyTZtCKoGR0PP1iKHfMJeLkc4aSOfEXeWX8tgZUwqcrh
-         7MYkdE2IrqQ3Nm9uRTd4uQi3Q3VMCkgW7K6BrM2yCbZeodAIsjPaVyuotPEWrorwBhsU
-         mtTGq4cTWxZhOlUVowreIs9/wcjfoScDGo3wsxWzP/iU4i8gTxR0wsLZxiKqpeoK+DNf
-         R347IrKwweEvjmOipf96wHVoKQJywNNldO1p1GvaVWtoP0yCPBEiCipVFCosviTpyhUV
-         Kg+Q==
-X-Forwarded-Encrypted: i=1; AFNElJ9v4H5xYSjEd9y9+OR+Mrf7gq/mbpR+Cg9pj0Pqddq6hi+FAH5RVWcevGy2sgIbaHrPb/U6bN2l3Xr+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd28900Q3zEUMeqcGc770YRMwPFoUICuUnLZh3FrtuPskfK7w1
-	lE+XSydqvTAFNpb0CTbgZ/yh56UM4KI2sKcPIm7gIpdBHaYveNm5wYzSAWdo1foWJG7+1dtQJfw
-	a/SqRO0sPiL9Ve/+doSzrHKjuZGdmUKU=
-X-Gm-Gg: AeBDiet+ow1gd8aYKT++qg/1SesaqyMIfc6W6m6SawVA3cJfE6Srg9T0VXKmAQGqu01
-	CUci9xI8vPjT6vJeyDMLTaUvz7U3qre/iweiLIqkiJMaIOS6BPTimfFG4L09cWg3RwX2DYDZpNi
-	LFXRdHY69QP31rnEbnY1hThsmYaEQIzPJmbYRD0LO9xjKpZ6HpdRCD/UsssUATK4it6+90tlCd/
-	JDnkItp8NGFvOcmB/OvP+DubGHcxLOB5WIgwgcTFU24VLRXJo1f4EiEMz4SOsm48EVjRp3G0Uk9
-	c/F5prFfkR2ouuXVv3HA
-X-Received: by 2002:a17:907:3f12:b0:ba7:f5fd:ede0 with SMTP id
- a640c23a62f3a-ba7f5fdf234mr730503066b.6.1776883645234; Wed, 22 Apr 2026
- 11:47:25 -0700 (PDT)
+        bh=R4vBmmJ5gC2QCrFlTLiSjZ3SPsY2SAKP5dBxbzswxUI=;
+        b=hsfuHg9M8e8+TuY+/Nbtmr0xuHcAQwylX66KUnzSZvu6bOoED8zDA5LdZbQO/2wWhd
+         eNF2iTxjFliuWwJjQVSF+PU13jyMp/1eUU3G8jpv/ubZR6kil7wYqpyKE28wR23oEPQk
+         tQxoofWTrxouDPRb/o8DbiAR7LBkgovQQnVpzT29jZzmGHBp1MPQcZSjOZJvzo345/7f
+         E024DueSdeuY5ZuftEB6vlzX6ylm9p/tO2dLVW5hry8muLIN/wUtepiMTDc7nUcQr5AV
+         ifpou/IHMhTCFbsuClDv0XAZlA9YIIWngvTNuo2GSlIdCZIrLZGpB0dlohcP+L1kBZeP
+         SYpQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/nBikCO6T36Xw/IWaHzX04vaYT55tzXsgUqrc2C4XIQknMe7SDAmbMcYTPhilxfWwG9MpbZcz7YOFL@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBhZRcYCiNzwUCScZctj6fCCMBseLkmceRnmqcmCYVBVm/gilX
+	Zmu2PpE6xcTzLFJk1GwMz1FhEhAhs36ObhbWaJsCoxQo6MCcir0kJt7ey5qcLdTlwtdYXw+7Iqg
+	LnKRdHdrx
+X-Gm-Gg: AeBDiesvJiyTFmQJTyTnbTj0dj6pTPZPHi3rHfRZGVpzsB/ZJLe9/xkWzoZyvJtlgbc
+	7f09W2I7ygq+cDHowal4U0YbbXqL+j3PRM7j/4zub9pG8c/+6aAH1Qf8/swLUlqAST8vDoLhYQF
+	ifq3K67VnXiId2lndlP8KUOmqNl5rqNtHnEpf1ZFTXzbKbR4xnRB1yuUyBvfioPy2W+2YqhFlNx
+	GSjuxZAezVpHt8Prt9qmpikKWwQceZbFYEMbIM3mWEOPWsKi+ZJ51t9RSb3CEkrLRsl4azo6DJt
+	BiLQ7AtsUu6mKQP0IwFPu/UfVkTfnft53nPFpnK7xve2j34LSSEHTP9N4oCFB164YRjXs6MSSl4
+	qz/pee3oCW9ZokMZwR5pNAMY+u4hOunu8XkqQZ4O/yiFhp5RBofVVc3k1Bk3CoURmssBlD8i7Bw
+	bazlzjctBIWGquLEXe6JgmPEpwBp81Gf5+To876L75h9G/2XSNXLxs43CyjjXHxCnbDc+ibUM+I
+	76JqbOUgAI=
+X-Received: by 2002:a17:906:fd86:b0:b9c:4a6c:7dc5 with SMTP id a640c23a62f3a-ba418b7c10bmr1336921566b.5.1776884292455;
+        Wed, 22 Apr 2026 11:58:12 -0700 (PDT)
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ba451211091sm613674766b.5.2026.04.22.11.58.12
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2026 11:58:12 -0700 (PDT)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b8d7f22d405so997801266b.0
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 11:58:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8ir19vXhiqRGqdROB89GV4yX0nFQ5AQC9FOiwP4TTFqWeYNqwT0eKza/aW2HfvyKEGZf5JlXivFxGj@vger.kernel.org
+X-Received: by 2002:a05:6000:2f8a:b0:43d:7a08:a5e6 with SMTP id
+ ffacd0b85a97d-43fe3e073c9mr39087653f8f.29.1776883909243; Wed, 22 Apr 2026
+ 11:51:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAD++jLnk_5KG_q1aCtpOrTCbhtK-FxXH6BhPFSwukyt2F4uxmQ@mail.gmail.com>
- <20260201111812.18945-1-jie.i.li@nokia.com>
-In-Reply-To: <20260201111812.18945-1-jie.i.li@nokia.com>
-From: =?UTF-8?B?5p2O5p2w?= <lj29312931@gmail.com>
-Date: Wed, 22 Apr 2026 20:47:13 +0200
-X-Gm-Features: AQROBzCdqKXfgmKgxFT-Yi_N4yfa0Tzd0YRSe3TdEhbBeGIcCvxPNLhWMlBLtbM
-Message-ID: <CAO3NRJjHRoEpSE2YRCN3XFC+oF4w-heCfpQStKQEkgZhO61oxA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] i2c: improve bus recovery for single-ended GPIOs
-To: wsa@kernel.org, linusw@kernel.org
-Cc: linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jie Li <jie.i.li@nokia.com>
+References: <20260325143555.451852-1-herve.codina@bootlin.com>
+ <20260325143555.451852-3-herve.codina@bootlin.com> <CAMuHMdU7x7LWFkD9xiq+wyOqnn0bdzr+JLfvbBexoiWyv8kftA@mail.gmail.com>
+In-Reply-To: <CAMuHMdU7x7LWFkD9xiq+wyOqnn0bdzr+JLfvbBexoiWyv8kftA@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Wed, 22 Apr 2026 11:51:36 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UK3NQKQN7FXyG4nGdDKO=LQYhnL4ZweomQ_4R9-EAYag@mail.gmail.com>
+X-Gm-Features: AQROBzAV3w_CPq4qi5veiP_uOv4VWrOsaTYpBbypDAKqTbu6jiZzeNsnLIn0Vds
+Message-ID: <CAD=FV=UK3NQKQN7FXyG4nGdDKO=LQYhnL4ZweomQ_4R9-EAYag@mail.gmail.com>
+Subject: Re: [PATCH v6 02/27] of: dynamic: Fix overlayed devices not probing
+ because of fw_devlink
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kalle Niemi <kaleposti@gmail.com>, Matti Vaittinen <mazziesaccount@gmail.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Linus Walleij <linusw@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Davidlohr Bueso <dave@stgolabs.net>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org, 
+	driver-core@lists.linux.dev, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Saravana Kannan <saravanak@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[chromium.org,none];
+	R_DKIM_ALLOW(-0.20)[chromium.org:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-35370-lists,linux-gpio=lfdr.de];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[bootlin.com,lunn.ch,kernel.org,gmail.com,linuxfoundation.org,nxp.com,pengutronix.de,baylibre.com,sang-engineering.com,axentia.se,arndb.de,google.com,opensource.cirrus.com,cirrus.com,linaro.org,linux.intel.com,stgolabs.net,huawei.com,intel.com,vger.kernel.org,lists.linux.dev,lists.infradead.org,microchip.com];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	DKIM_TRACE(0.00)[chromium.org:+];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-35371-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lj29312931@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: E38D7449D84
+	FROM_NEQ_ENVFROM(0.00)[dianders@chromium.org,linux-gpio@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[64];
+	TAGGED_RCPT(0.00)[linux-gpio,dt,renesas];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,glider.be:email,bootlin.com:email,linux-m68k.org:email,chromium.org:dkim]
+X-Rspamd-Queue-Id: 2EF48449FFE
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Wolfram,
+Hi,
 
-I'm just gently pinging this patch series to see if you have any
-further comments or if it's ready to be picked up for the I2C tree.
+On Wed, Apr 22, 2026 at 10:44=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Herv=C3=A9,
+>
+> CC Douglas
+>
+> On Wed, 25 Mar 2026 at 15:36, Herve Codina <herve.codina@bootlin.com> wro=
+te:
+> > From: Saravana Kannan <saravanak@google.com>
+> >
+> > When an overlay is applied, if the target device has already probed
+> > successfully and bound to a device, then some of the fw_devlink logic
+> > that ran when the device was probed needs to be rerun. This allows newl=
+y
+> > created dangling consumers of the overlayed device tree nodes to be
+> > moved to become consumers of the target device.
+> >
+> > Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT overlays")
+> > Reported-by: Herve Codina <herve.codina@bootlin.com>
+> > Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgy=
+o8x6=3D9F9rZ+-KzjOg@mail.gmail.com/
+> > Closes: https://lore.kernel.org/all/20240221095137.616d2aaa@bootlin.com=
+/
+> > Closes: https://lore.kernel.org/lkml/20240312151835.29ef62a0@bootlin.co=
+m/
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > Link: https://lore.kernel.org/lkml/20240411235623.1260061-3-saravanak@g=
+oogle.com/
+> > [Herve: Rebase on top of recent kernel]
+> > [Herve: Add the call to driver_deferred_probe_trigger()]
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > Tested-by: Kalle Niemi <kaleposti@gmail.com>
+> > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> > --- a/drivers/base/core.c
+> > +++ b/drivers/base/core.c
+> > @@ -235,6 +235,79 @@ static void __fw_devlink_pickup_dangling_consumers=
+(struct fwnode_handle *fwnode,
+> >                 __fw_devlink_pickup_dangling_consumers(child, new_sup);
+> >  }
+> >
+> > +static void fw_devlink_pickup_dangling_consumers(struct device *dev)
+> > +{
+> > +       struct fwnode_handle *child;
+> > +
+> > +       guard(mutex)(&fwnode_link_lock);
+> > +
+> > +       fwnode_for_each_available_child_node(dev->fwnode, child)
+> > +               __fw_devlink_pickup_dangling_consumers(child, dev->fwno=
+de);
+> > +       __fw_devlink_link_to_consumers(dev);
+> > +}
+> > +
+> > +/**
+> > + * fw_devlink_refresh_fwnode - Recheck the tree under this firmware no=
+de
+> > + * @fwnode: The fwnode under which the fwnode tree has changed
+> > + *
+> > + * This function is mainly meant to adjust the supplier/consumer depen=
+dencies
+> > + * after a fwnode tree overlay has occurred.
+> > + */
+> > +void fw_devlink_refresh_fwnode(struct fwnode_handle *fwnode)
+> > +{
+> > +       struct device *dev;
+> > +
+> > +       /*
+> > +        * Find the closest ancestor fwnode that has been converted to =
+a device
+> > +        * that can bind to a driver (bus device).
+> > +        */
+> > +       fwnode_handle_get(fwnode);
+> > +       do {
+> > +               if (fwnode->flags & FWNODE_FLAG_NOT_DEVICE)
+>
+> After commit f72e77c33e4b5657 ("device property: Make modifications
+> of fwnode "flags" thread safe"), this must be changed to:
+>
+>     if (fwnode_test_flag(fwnode, FWNODE_FLAG_NOT_DEVICE))
+>
+> With this change my DT overlays are working again.
+>
+> I guess keeping the FWNODE_FLAG_* names, but changing their values
+> from bit masks to bit numbers was probably not such a good idea,
+> as it fails to catch missing conversions...
 
-This v3 series already includes the Reviewed-by tags from Linus
-Walleij for both patches.
+Crud, I should have thought about that. :( Do you think it's worth it
+to do a rename at this point to catch future problems?
 
-Thanks for your time!
-
-Best regards,
-Jie Li
-
-On Sun, Feb 1, 2026 at 12:18=E2=80=AFPM Jie Li <lj29312931@gmail.com> wrote=
-:
->
-> Greetings,
->
-> Apologies for the delay in responding.
->
-> Thank you very much for your review and the specific guidance regarding
-> the return types. I really appreciate your patience and time spent
-> guiding me through my first contribution to the kernel.
->
-> This series (v3) updates the helper function to use the 'bool' type as
-> suggested and includes the Reviewed-by tags.
->
-> This series addresses a limitation in the I2C bus recovery mechanism wher=
-e
-> certain open-drain GPIOs are incorrectly identified as input-only,
-> preventing the recovery logic from functioning.
->
-> Following the suggestion from Linus Walleij, this version drops the
-> previously proposed "force-set-sda" DT property. Instead, it
-> introduces a generic helper in the GPIO subsystem to identify
-> single-ended configurations. This allows the I2C core to reliably
-> enable recovery for open-drain lines regardless of the
-> instantaneous hardware direction reporting.
->
-> Changes in v3:
-> - Patch 1:
->   - Changed return type of gpiod_is_single_ended() from int to bool.
->   - Updated return values from 0/1 to false/true.
->   - Added Reviewed-by: Linus Walleij.
-> - Patch 2:
->   - Added Reviewed-by: Linus Walleij.
->
-> Changes in v2:
-> - Replaced DT-based "force-set-sda" with a gpiolib helper.
-> - Added gpiod_is_single_ended() to drivers/gpio/gpiolib.c.
-> - Updated i2c-core-base.c to use the new helper.
->
-> Jie Li (2):
->   gpiolib: add gpiod_is_single_ended() helper
->   i2c: core: support recovery for single-ended GPIOs
->
->  drivers/gpio/gpiolib.c        | 22 ++++++++++++++++++++++
->  drivers/i2c/i2c-core-base.c   |  3 ++-
->  include/linux/gpio/consumer.h |  5 +++++
->  3 files changed, 29 insertions(+), 1 deletion(-)
->
-> --
-> 2.43.0
->
+-Doug
 
