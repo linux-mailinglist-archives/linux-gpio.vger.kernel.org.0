@@ -1,80 +1,80 @@
-Return-Path: <linux-gpio+bounces-35362-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35363-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id L2H9ATnz6Gl3SAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-35362-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 18:11:37 +0200
+	id eCUjA7vz6GmQSAIAu9opvQ
+	(envelope-from <linux-gpio+bounces-35363-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 18:13:47 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36B394484C8
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 18:11:35 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 342FC448565
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 18:13:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 61C9430A5D58
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 16:05:49 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 6318530DB6F7
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2026 16:06:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4351038A706;
-	Wed, 22 Apr 2026 16:05:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A29237F017;
+	Wed, 22 Apr 2026 16:05:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ma3Yr86C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U4rbNoMF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECA237D124
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 16:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86EC438B157
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 16:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776873915; cv=none; b=jQgqc8XcRoChmap4D7TjhML7g7wNanJyT+6fAYXzwrqXbE/DdgbDWsw+eZO89Z+8PmAvyXb1I7uEgCsGx1/n9fKdGhTCIHUO9TYUq/f8eDzLVW0mzJUlbCQ1dpMbSSE+rTsHr9Di/1Wwp1QSeeYOMQZwXUu9A2m7iO2Sn0xu4Lw=
+	t=1776873919; cv=none; b=S2FYxtUNtxHweVgFtlZ5TMNx+KGLclsv/qQRAOSujc3rhWYJr1Yh5ZU/2rKZfBbSGkS3puTVPExI5lDPBBhfpxuiFrCFTwkkXxHABYBJ/+yy2AUljoSuBfTY3uD2u0Q5BYqP6GMdH1ABRx2zfnFS03gZgbulFdDd772m2dhTvOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776873915; c=relaxed/simple;
-	bh=0oF5yLnqueqC9tyouh3AcpVVlddHY0rpyMWXyvW8cHI=;
+	s=arc-20240116; t=1776873919; c=relaxed/simple;
+	bh=VgOr825JFd85qpx9ZSe3P5UBh8fNbkiALkxKCmKvveY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=f/0w9XcvoihXmsqBHqqJYX6xJn1mYsjgEegFaXbjQjfkSMNHg5qeF1l0I9SYYiFYMk2maXh4Ps93EmIYaCuPQSsWL43+b123sWwwMHEqIEF/ez+4d6QAn/MfRRhPA4P4YH0BHn4BM5J+xqcAcSNiNwL3TRlODmKoKRtad0msVjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ma3Yr86C; arc=none smtp.client-ip=209.85.210.171
+	 MIME-Version; b=Wpn3KcAOKAK+SRYdhUsx0hVUcAXwQxQvrIEJl3s7mq6WzpNbwnsCfXveeXxf3rzWePMExCHnxEur8B5uZt+P0Hy2BlIxy0BXkfzEjjd0wKPwd1uPNLV7Xa8P44tRdvmNJ+cLK7Eiu+0oRjqwZvQ9lZDmYNxBpxnpaeIwT8x+J2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U4rbNoMF; arc=none smtp.client-ip=209.85.210.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-82f83bd32efso4438096b3a.2
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 09:05:13 -0700 (PDT)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-82fcd0aa2dbso1052783b3a.0
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2026 09:05:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776873913; x=1777478713; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1776873916; x=1777478716; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hxb256EBeZtQyoihRghLekjihrjtRwmLsvJYxZ59QmU=;
-        b=ma3Yr86ClFK61Jn9bZTfZOHVCGyoV6k03Y4GxmyQyHGMxd9fVcEtJyZgdrMmBKGsxF
-         4382zRKrlJNkg5qdiyvUjKi9vppDNDgZKw/ecB1gF856ciP5vOhuiBnj+nrZwO/RAfb4
-         MuS988/lMMY7sshPvga1A93U2YuCG589vdUWFRlOslPP/QedOI8ug7SYQtf4ELIJTObQ
-         Qv+tfFuHlEbG7stq7a2eyy4lhlD/rn8/P9uG6rmuAapNUmVcLtZXpMJ3tE52ZspTZxrF
-         7T8ely/kEiAEcxC7/C3c5mBZxKyxDBJLf9H/aP0WeSXEfPDhWSyvV6OgL74pOxhYD6+b
-         0Ttw==
+        bh=r78Ht7d3rD0nKWuIXu8vxDpeZ4/LkBaXzBNsFb0PtOo=;
+        b=U4rbNoMFQuAci9G8rVh8tGL7tiwcAwZh5UnmQHdJLpbKQr2/OSu6KSulDw1MA9q+OV
+         1TRgxivxt9TELwvEbRkSD88MiH0891ykjZtgaJM17+Ttzxgw+nPHvE+cpYB1JX2SbOtv
+         0zOFpXu6E6StIla6WPK/dmSiKuI3Cql5N4lK5NjsLWS1II0EhRT8Qasy5EFic9IDjj7Y
+         ijv4H6C121lEUaDJ53EOw1Je86sDpOZEfqD6kNmAi2ZIB+e4eypTC2gV/AOj13liTgLq
+         WeLqQeKE0TTit0+x5v/aJAGG0CZxh4HpqxIgCmiN5X3tG0L49BcEssOmH3FQyDsvDObZ
+         w0Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776873913; x=1777478713;
+        d=1e100.net; s=20251104; t=1776873916; x=1777478716;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=hxb256EBeZtQyoihRghLekjihrjtRwmLsvJYxZ59QmU=;
-        b=BhIQI0V8vXM+E5rrx0yV5vx2tZZbQBg/h2HQogn2j+lpG1LsE2ch2+M4tNIYoCddbC
-         Sh7LphxcE3A+PxQXIP9siMhGEXHDU7gPOS2V3D6g2Ig28Zz68/IgMpcmFKYGeLpMx9dw
-         eJyRiTqPDTfZOvCAj8qrMCzyMn4oWAu5GScO+ZbWflkyCWaegif7hARlNzgg6lC23Nk8
-         T9ThBHdp2AWXnExwBAQdr5axRnnq1+UKyRrBZx6Qq5O7hiLM0klLHbXrduFUYfXnr0rl
-         2j7SYmvz+qgA9BUPzoKDxvLgBSBEKOEXnuX46r1eK1cXc/rYDfbyD37vhyNezy07PRy0
-         2VhQ==
-X-Gm-Message-State: AOJu0YwX6zk+La+lRwSYfqR2kuLhl15b47QCNeAsKCIgeoPOTxk+PINe
-	MQLH8rBSOGr6L8OA10FnMMXq3RlhjSlXUb6fI5oGAFd6Udks9n9bzcdT
-X-Gm-Gg: AeBDies9MoVKXl1eQa1SQTdCRgAUNSEWACNlX65dieN8BrG9WS3J8XD8ycilkraT7Vd
-	tzzq5TqbEYqrXmWgVnX9To+g7M0FXYFEkrAhYBF3edOB5MN6cQoTdn2lUhl8i3nzDbaRI21keZF
-	qCsyClERnf30oHpaIKwoXYSy0E65wNT8KANN3OFsErVT3lnZlHkEG/EHi9yNyHMcDPCGTCYX3sH
-	g/NhAZgqBcfzQqCCGDiDTXDVp5pBjbNCMPOizHZ0bNcYL39PAx/U0xGUXC2QC4839ycHnAkEdym
-	UzLrK57mdAqqArImK78ejxUR+Qjwyv7L1K9UE8sRE8zQpjotpmxM3dFzcg9AYgKw5CT7uu63nYi
-	5eZbJZ5055CinHB0frK4zMAHIV0STLMZ4wi7ww5bdySpNP1oJGpqYmKC9zWS3dKki8T5m5qLlCa
-	m2vkqdmoFGegtOfFb0R6pW50V6gVcVdudYFHN+xNhHJg63IpabuhEDHPirQi/YcxDS
-X-Received: by 2002:a05:6a00:800d:b0:82c:9223:cc95 with SMTP id d2e1a72fcca58-82f8c7db124mr24045763b3a.1.1776873912716;
-        Wed, 22 Apr 2026 09:05:12 -0700 (PDT)
+        bh=r78Ht7d3rD0nKWuIXu8vxDpeZ4/LkBaXzBNsFb0PtOo=;
+        b=CqutqnkAlKODQpun7QrK297g9wyFT1qc2c0dtB71bzVjZxJeLEyNS8DvAPLX0tAKmy
+         90/E63o8o4tpjrm0nGlnMg+7FTBqhcFd0X2auNRAONJYn9sAa36hGQOKzC1DfTSrjNDz
+         NcUCdZ7YM5RxZ3KzxQfqLF9vFd1lgDySb7v3MAipVSnRe1dqYtSsoDEvkDr8v/u09897
+         ENzNi1y32XLmFDz0qCbFPtIX14fbw+H110Ne/3x3dZASXhcNd6+xnHqA3vLmS6sPsCoF
+         HeZLJvaRg9TEvafk1Uu3H4wP+stWkKWQNZsXssMP4bn2grJSlc5rK0JkzeZEj94JNH1y
+         mlOg==
+X-Gm-Message-State: AOJu0YwpLIBzXvUUMVgbDbmjrqZOIFn97EgNXVjwUe2K7IlsPbbV2O9f
+	Ou9ki+B8y6qfFrREBQae0DtIx6Nq4cgCDtUB7JtK4bgu1HCzzlPioskS
+X-Gm-Gg: AeBDievrNHRxi0a8tn7afc7t5bZg9nOCYrjRpYw3xG+hK5Qvo5f2ElxACB7Fb76QEjQ
+	3L7dGObtHeuyTepQy1vZ7SeTbmOAVQOuGVK7Tv6k2phQgZtVIVFTg6vBLfoh4YXF/HcQd9LhTK2
+	LcvpXTl60HYq9M00yxa63bruPLMcnXUHvPLcDKpY5EaaInsQn92HA1xEz6duuf3qIS+jx4Io9me
+	gmKQrQ+4j3J9ZzmUqqCYKyfNvmSX+rqpMe3B0KapZGkFZpH9BXWh/GaEVe7Q1XLRPwc83JQaBMG
+	O/DSEe+NTPHByVhv3zjHuUsQi98+q9yIsXx99RILxDAkOwKA9/++p65f38vbfGI/B3heNB/wHIi
+	ttXxzRWFcEqD/MkArqGHiqeTD9Tqwqff1Fs/aoqaOQTe4niEwJQgNn7+Cw6Bkz3MpkGJfNbnE9E
+	tbK/y9F42UHd0/7yuNTAfqPx2tlyH+k1SHw8X01hxUeALcHV2QEcdah8AOHlSmhTNn
+X-Received: by 2002:a05:6a00:3a20:b0:82f:50ef:3eab with SMTP id d2e1a72fcca58-82f8b54738emr19822095b3a.28.1776873915614;
+        Wed, 22 Apr 2026 09:05:15 -0700 (PDT)
 Received: from happycpu-p1.. ([121.160.151.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82f8ec003dcsm18151031b3a.52.2026.04.22.09.05.10
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82f8ec003dcsm18151031b3a.52.2026.04.22.09.05.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Apr 2026 09:05:12 -0700 (PDT)
+        Wed, 22 Apr 2026 09:05:15 -0700 (PDT)
 From: Chanhong Jung <happycpu@gmail.com>
 To: Linus Walleij <linusw@kernel.org>,
 	Bartosz Golaszewski <brgl@kernel.org>,
@@ -85,9 +85,9 @@ To: Linus Walleij <linusw@kernel.org>,
 Cc: linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/2] dt-bindings: gpio: fairchild,74hc595: add registers-default property
-Date: Thu, 23 Apr 2026 01:05:03 +0900
-Message-Id: <33d515f13769c685e6811463a14e111252a7c58d.1776872453.git.happycpu@gmail.com>
+Subject: [PATCH v1 2/2] gpio: 74x164: support 'registers-default' DT property for initial state
+Date: Thu, 23 Apr 2026 01:05:04 +0900
+Message-Id: <77cc91a966bfcbeaad825b8be607dbd7a85dbbdb.1776872453.git.happycpu@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1776872453.git.happycpu@gmail.com>
 References: <cover.1776872453.git.happycpu@gmail.com>
@@ -103,13 +103,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35362-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35363-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -124,63 +124,62 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 36B394484C8
+X-Rspamd-Queue-Id: 342FC448565
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-The 74HC595 and 74LVC594 shift registers latch their outputs until the
-first serial write, so boards that depend on a specific power-on pattern
-(for example active-low indicators, reset lines, or other signals that
-must come up non-zero) have no way to express that today: the Linux
-driver always writes zeros from its zero-initialised buffer during
-probe.
+74HC595 and 74LVC594 chains retain their output state from the first
+serial write onwards. Today the driver always kicks that first write
+from a zero-initialised buffer, so every output comes up low until user
+space issues a write. Boards that rely on the chain to drive signals
+whose power-on state matters (active-low indicators, reset lines, etc.)
+have no way to express the desired initial pattern via DT, and must
+reinvent it from user space each time after probe.
 
-Describe a new optional 'registers-default' property that carries a u8
-array - one byte per cascaded register, in the same order used by the
-driver's internal buffer (first byte targets the last register in the
-chain). The Linux driver change that consumes this property follows.
+Read the new optional 'registers-default' u8 array into chip->buffer
+after the buffer's size becomes known (so __counted_by() is satisfied)
+and before the first __gen_74x164_write_config(). Absence of the
+property keeps the current zeroing behaviour; an invalid size is
+rejected with dev_err_probe() so that dtbs_check violations surface
+loudly at probe time.
 
-This property is already recognised by the corresponding U-Boot driver
-(drivers/gpio/74x164_gpio.c), so documenting it here brings the two
-bindings back in sync and allows boards to initialise the chain once
-from the bootloader DT and keep the same value after the kernel takes
-over.
+The matching binding change documents the property's layout. The
+corresponding U-Boot driver (drivers/gpio/74x164_gpio.c) has honoured
+the same property for years, so the two bootstages can now agree on
+the initial state without user-space involvement.
 
 Signed-off-by: Chanhong Jung <happycpu@gmail.com>
 ---
- .../devicetree/bindings/gpio/fairchild,74hc595.yaml    | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/gpio/gpio-74x164.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml b/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
-index 23410aeca..c6221ed75 100644
---- a/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
-+++ b/Documentation/devicetree/bindings/gpio/fairchild,74hc595.yaml
-@@ -45,6 +45,15 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     description: Number of daisy-chained shift registers
+diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
+index c226524ef..b433a4a61 100644
+--- a/drivers/gpio/gpio-74x164.c
++++ b/drivers/gpio/gpio-74x164.c
+@@ -134,6 +134,20 @@ static int gen_74x164_probe(struct spi_device *spi)
  
-+  registers-default:
-+    $ref: /schemas/types.yaml#/definitions/uint8-array
-+    description:
-+      Initial state of the daisy-chained outputs, written by the driver
-+      before the gpiochip is registered. One byte per cascaded register,
-+      in the same order used by the driver's buffer (the first byte
-+      targets the last register in the chain). When absent, outputs come
-+      up zeroed. The number of entries must match 'registers-number'.
+ 	chip->registers = nregs;
+ 
++	/*
++	 * Optionally seed the chain with a board-specified pattern so that
++	 * the outputs come up in a known state on the first SPI write. When
++	 * the property is absent, the buffer stays zeroed by devm_kzalloc()
++	 * and the existing behaviour is preserved.
++	 */
++	if (device_property_present(dev, "registers-default")) {
++		ret = device_property_read_u8_array(dev, "registers-default",
++						    chip->buffer, nregs);
++		if (ret)
++			return dev_err_probe(dev, ret,
++					     "Invalid 'registers-default'\n");
++	}
 +
-   enable-gpios:
-     description: GPIO connected to the OE (Output Enable) pin.
-     maxItems: 1
-@@ -79,6 +88,7 @@ examples:
-             gpio-controller;
-             #gpio-cells = <2>;
-             registers-number = <4>;
-+            registers-default = /bits/ 8 <0xff 0xff 0x00 0x00>;
-             spi-max-frequency = <100000>;
-         };
-     };
+ 	chip->gpiod_oe = devm_gpiod_get_optional(dev, "enable", GPIOD_OUT_LOW);
+ 	if (IS_ERR(chip->gpiod_oe))
+ 		return PTR_ERR(chip->gpiod_oe);
 -- 
 2.34.1
 
