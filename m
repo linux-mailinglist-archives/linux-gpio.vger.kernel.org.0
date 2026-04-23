@@ -1,145 +1,286 @@
-Return-Path: <linux-gpio+bounces-35403-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35404-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sAUyO0/h6WkYmgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-35403-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 11:07:27 +0200
+	id wMxZN63h6WmTmQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-35404-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 11:09:01 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 646E344F078
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 11:07:22 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A11444F0C1
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 11:08:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B2DE331043B0
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 09:00:43 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 884A730087CB
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 09:08:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB9FF3E0238;
-	Thu, 23 Apr 2026 09:00:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 658ED3E0220;
+	Thu, 23 Apr 2026 09:08:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sSX/9NHD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="buIvE1hs"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED1C3E0244
-	for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2026 09:00:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DD72D73BC;
+	Thu, 23 Apr 2026 09:08:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776934842; cv=none; b=qb5oHt3xfhcGYhKEAzOHhIfMVmrTbTRaGYuuwqiAaWzG6kz14/OY+7yEmb6WLBnHjwFYdDL3FXzhNwZ2tf0mrQA84x6/yb9aGcoS6yjkRlq/NNq6R1A56By21MuI3IVTq3HGBVO5P7FAKfh4l0T5ZfFICxquqppLy9wbM1RHW/s=
+	t=1776935331; cv=none; b=J2u6nmVpbmzeoucZcOiqzWX/hG89H3ZENvxufShLm/+DStKZUOjXqwVJCIN85TlFcKsXde+1XMACJKC9S7VsFC6oc5Kf4wkkuF7P2egGCWakutb5yi++7f/nUe/OQ/fJAizMxjATloCaNx7nFifdXfh8rb50ivxLL1v20C0rWOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776934842; c=relaxed/simple;
-	bh=6q0r/1TvK+MktTVn74r7g3AEL1reBVSs6U50xmMtSVM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KTXx+dvskAEA9wHYNzdtl2QiFYI4kW/n21ksA7O6dyUyMrJk0lO0EpgSGQPfrTNfnCymh0d8yPvw4G4sdPiM/K8Tc+rVWsxJRMNULGI7woI66fAIopIV74JCJ7wHVng/uHrHx29XlckYCtqaEsdfZEjGHljoGdMhwoP7kGTOkLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sSX/9NHD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D9B4C2BCAF
-	for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2026 09:00:41 +0000 (UTC)
+	s=arc-20240116; t=1776935331; c=relaxed/simple;
+	bh=AajPNYE6TFj2rP8H0CMm3qNBnbsYRpDyKEMrNNFlxC4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PUodrLADlqdBvq2lb00iZhGlChQXT5pkHWFVSQq1Hdw8Q0hTYnKirB2e8YqOoqgF/ELNL2HiQi0h2NmzLF5WT9pemvEqhEco/9RXwKKqRwIkXsh6EE3UETmcwk245SoTVVLQUx4HAPzJY7NBZsxVT+g3ppkJabJQkfOxAQ6MGhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=buIvE1hs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68B21C2BCB2;
+	Thu, 23 Apr 2026 09:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776934841;
-	bh=6q0r/1TvK+MktTVn74r7g3AEL1reBVSs6U50xmMtSVM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=sSX/9NHDvpbGfbzkTt4eI+dpk1LelG5GYy14JrFh7TcDCVJWJZbZuVHON1W8MEVVi
-	 puIcAJiZkYi9H1oe2mb1oLltK15IiCQPSyfZor4K3yN7wXYkIMXakV8/8xRMnQJ/Vs
-	 jt3t2y8AhDyL9xL5k6hlizSFFMAMMt5MKnef6/gJdjXlFP3sAh3JTRzErx0Ib8EjCI
-	 UIt/dfMGN5VtO76bi3qCf47pFXkQQssL7dhvVQBnHsHnSgunpnbly2wffKv1FRFERx
-	 UJYHZ01X97UTJBb/xPF8IZbPfZOZEbgLt2swvDxHEp59hsCz36FXknW6ZSdzSujXr6
-	 sDzuOT5z6F8jA==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-38e91b06006so53192351fa.2
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2026 02:00:41 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yx4A1A91rC6vlT8V184KVxs1ZulzGgtEdbSK0lQwV6tvpO5UgYN
-	bGKf3eYfoYoefXsrAWzvHRLyROjthoPrfybVkQBeYysl2SeQDyF3r3W8Hy0fe1PBb5fei98rRTt
-	DfqhxWcsfZjlJ/OAmK0c6cGI2y3Ka7+ar8YlkU5BFTw==
-X-Received: by 2002:a05:651c:2101:b0:38e:9eb1:693b with SMTP id
- 38308e7fff4ca-38ec77f4ac4mr83250951fa.3.1776934840066; Thu, 23 Apr 2026
- 02:00:40 -0700 (PDT)
+	s=k20201202; t=1776935331;
+	bh=AajPNYE6TFj2rP8H0CMm3qNBnbsYRpDyKEMrNNFlxC4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=buIvE1hsbJLLTrrhVVInDJ2ppacZAzbWKDKaPq3D5fxir4QDSzXw5/bUi94QI/gB/
+	 agTq+n3xUnZk53cML3ywFrnM4fs/MthZL2HqxNpPgf85zeFi/iJLjj7q5S2odwMwOD
+	 EHbLwoBU/D+5yj/MiVV8baAq1sbM8fTmy/B6d775kLk9BMH3DOCVLcEJ1yVgprGcoO
+	 EmGFxkXuI2NxafoVx9x47wz9AqD5m3wp/lGtspAYLxgo2vjB3ZcuBX03TSj9JmtVBs
+	 +97FFXhfu8t2J2SiFzeUB8Fw600HWOK1cC8YFZQmraCTuwFXriNPrTY8g8U69VIaSB
+	 eMQ9nIQPKTOMw==
+Date: Thu, 23 Apr 2026 11:08:43 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linusw@kernel.org>, Lei Xue <lei.xue@mediatek.com>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Sean Wang <sean.wang@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	yong.mao@mediatek.com, qingliang.li@mediatek.com,
+	Fred-WY.Chen@mediatek.com, ot_cathy.xu@mediatek.com,
+	ot_shunxi.zhang@mediatek.com, ot_yaoy.wang@mediatek.com,
+	ot_ye.wang@mediatek.com, linux-acpi@vger.kernel.org,
+	robh@kernel.org
+Subject: Re: [PATCH 2/3] pinctrl: mediatek: Add acpi support
+Message-ID: <aenhm/YOAMwjiBzh@lpieralisi>
+References: <20251125023639.2416546-1-lei.xue@mediatek.com>
+ <20251125023639.2416546-3-lei.xue@mediatek.com>
+ <CAD++jL=h4ZEgrjgGOfgFyAXBM7EL91ZD-La82UQ7GPOXv8h9WQ@mail.gmail.com>
+ <aScwaxBG53dnZ4a4@lpieralisi>
+ <aSdBu-B9mwU2-1_S@smile.fi.intel.com>
+ <aSgipbe75hrwhTD7@lpieralisi>
+ <aShgYukPRfDkq_Z0@smile.fi.intel.com>
+ <aSh0EyGm9ZHAc3dN@lpieralisi>
+ <aeHSl9MYGq0bRXsu@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260422012041.39933-1-vfazio@gmail.com>
-In-Reply-To: <20260422012041.39933-1-vfazio@gmail.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Thu, 23 Apr 2026 11:00:27 +0200
-X-Gmail-Original-Message-ID: <CAMRc=McDMFStyjaUrOBMRhhumkSQJwaHLzd6V8WhpH-kL04ptg@mail.gmail.com>
-X-Gm-Features: AQROBzCajDLHBPPBTmopv5ueh3IWi-ALNwwB7ayn6z7bK3Q0vp2NtRme5JnhOik
-Message-ID: <CAMRc=McDMFStyjaUrOBMRhhumkSQJwaHLzd6V8WhpH-kL04ptg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 0/9] bindings: python: modernize C extensions
-To: Vincent Fazio <vfazio@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aeHSl9MYGq0bRXsu@ashevche-desk.local>
+X-Spamd-Result: default: False [3.84 / 15.00];
+	MID_END_EQ_FROM_USER_PART(4.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35403-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-35404-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	MAILSPIKE_FAIL(0.00)[2600:3c0a:e001:db::12fc:5321:query timed out];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[kernel.org,mediatek.com,huawei.com,arm.com,linaro.org,gmail.com,collabora.com,vger.kernel.org,lists.infradead.org];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MAILSPIKE_FAIL(0.00)[172.232.135.74:query timed out];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lpieralisi@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,python.org:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 646E344F078
+	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 8A11444F0C1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Wed, Apr 22, 2026 at 3:20=E2=80=AFAM Vincent Fazio <vfazio@gmail.com> wr=
-ote:
->
-> This series performs some minor cleanup of the C extension modules and
-> migrates the module defintions to multi-phase intitialization (PEP 489).
->
-> Patch 1 makes `chip_get_line_name` consistent with other functions.
->
-> Patches 2 & 3 avoid calling back into python to perform C level object
-> cleanup.
->
-> Patch 4 introduces no real functional change but simplifies the code to
-> get the same result.
->
-> Patch 5 applies suggestions from from a utility maintained by a CPython
-> core developer to help modernize macro/function usage.
->
-> Patch 6 conditionally compiles support for using a standard CPython
-> function over a backported version bundled within the C extension.
->
-> Patches 7-9 migrate the C extensions to use multi-phase initialization
-> as described in PEP 489 [0]. While not strictly necessary for enabling
-> free-threaded builds, it makes adding support more straighforward and
-> sets the stage for both PEP 793 [1] which soft-deprecates PyInit_* and
-> PEP 803 [2] which could simplify wheel builds.
->
-> Patches have been tested against the full matrix of supported versions:
->   https://github.com/vfazio/libgpiod/actions/runs/24752901690
->
-> [0]: https://peps.python.org/pep-0489/
-> [1]: https://peps.python.org/pep-0793/
-> [2]: https://peps.python.org/pep-0803/
->
-> Signed-off-by: Vincent Fazio <vfazio@gmail.com>
-> ---
+On Fri, Apr 17, 2026 at 09:26:31AM +0300, Andy Shevchenko wrote:
+> On Thu, Nov 27, 2025 at 04:53:55PM +0100, Lorenzo Pieralisi wrote:
+> > On Thu, Nov 27, 2025 at 04:29:54PM +0200, Andy Shevchenko wrote:
+> > > On Thu, Nov 27, 2025 at 11:06:29AM +0100, Lorenzo Pieralisi wrote:
+> > > > On Wed, Nov 26, 2025 at 08:06:51PM +0200, Andy Shevchenko wrote:
+> 
+> [...]
+> 
+> > > > > > I also assume/hope that we don't want to add a "reg-names" _DSD property either
+> > > > > > in ACPI to deal with this seamlessly in DT/ACPI (that was done for
+> > > > > > "interrupt-names"):
+> > > > > > 
+> > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/firmware-guide/acpi/enumeration.rst?h=v6.18-rc7#n188
+> > > > > 
+> > > > > Hmm... Why not?
+> > > > 
+> > > > What's the policy there ?
+> > > 
+> > > > Half of the ACPI bindings for an interrupt
+> > > > descriptor are defined in the ACPI specs (ie _CRS) and the other half
+> > > > (ie "interrupt-names") is documented in the Linux kernel (or are we
+> > > > documenting this elsewhere ?) ?
+> > > 
+> > > Yeah, nobody pursued ACPI specification updates / addendum to make it fully
+> > > official. _De facto_ we have established practice for GPIOs enumeration
+> > > (as most used resources in the OSes), Linux official for PWM, I²C muxes,
+> > > multi-functional HW (such as Diolan DLN-2, LJCA), Microsoft defined for
+> > > so called "USB hardwired" devices, Linux defined for LEDs and GPIO keys,
+> > > sensor mount matrix as per "most used" cases + DT analogue works just
+> > > because we have agnostic APIs in IIO to retrieve that. There are maybe
+> > > more, but don't remember
+> > > 
+> > > So, I think the practical "policies" are that:
+> > > - if it's defined in ACPI spec, we use the spec
+> > > - if there is Microsoft addendum, we rely on what Windows does
+> > > - WMI, EFI, and other "windoze"-like vendor defined cases
+> > > - if it makes sense, we establish practice from Linux perspective
+> > > - the rest, every vendor does what it does
+> > > 
+> > > That said, for the first two we expect OEMs to follow, for the third one
+> > > depends, but there are established WMI calls and other more or less "standard"
+> > > interfaces, so like the first two.
+> > > 
+> > > For the fourth one (Linux) we do, but living in the expectation that some or
+> > > more vendors fall to the fifth category and we might need to support that if
+> > > we want their HW work in Linux.
+> > > 
+> > > > Or we are saying that "interrupt-names" properties are added by kernel
+> > > > code _only_ (through software nodes, to make parsing seamless between DT
+> > > > and ACPI) based on hardcoded name values in drivers ?
+> > > 
+> > > No, the idea behind software nodes is to "fix" the FW nodes in case the FW
+> > > description can not be modified (and that might well happen to even DT in some
+> > > cases AFAIH). So, if some driver hard codes "interrupt-names" we expect that
+> > > new versions of the FW that support the HW that needs the property will be
+> > > amended accordingly.
+> > > 
+> > > "interrupt-names" has been established for ACPI to support a separate SMB alert
+> > > interrupt. However, I haven't heard any development of that IRL (for real
+> > > devices in ACPI environment).
+> > > 
+> > > > I don't think I can grok any example of the latter in the mainline.
+> > > > 
+> > > > I am asking because I'd need to add something similar shortly to make parsing
+> > > > of platform devices created out of ACPI static tables easier (I guess we
+> > > > can postpone discussion till I post the code but I thought I'd ask).
+> > > 
+> > > Oh, I can go ahead and tell you, try to avoid that. Why?! Whatever,
+> > > indeed, please Cc me to that, I will be glad to study the case and
+> > > try to be helpful.
+> > > 
+> > > (Have you considered DT overlays instead? There is a big pending support for
+> > >  that for _ACPI_ platforms.)
+> > 
+> > Long story short: we do need to create platform devices out of static
+> > table (eg ARM64 IORT) entries. Current code parses the table entries and
+> > try to map the devices IRQs (ie acpi_register_gsi()) when the platform
+> > device is created. Now, the interrupt controller that device IRQ's is
+> > routed to might not have probed yet. We have to defer probing and later,
+> > when the platform driver probes, map the IRQ.
+> > 
+> > Issue is: for OF nodes and ACPI devices, behind the platform device
+> > firmware node there is a standard firmware object, so implementing
+> > fwnode_irq_get() is trivial. For the devices I am talking about,
+> > the data providing GSI info (hwirq, trigger/polarity) is static
+> > table specific, so the idea was to stash that data and embed it in
+> > fwnode_static along with a irq_get() fwnode_operations function
+> > specific to that piece of data so that device drivers can actually do:
+> > 
+> > fwnode_irq_get()
+> > 
+> > on the fwnode _seamlessly_ (if you still do wonder: those platform
+> > devices created out of static table entries in ACPI in OF are
+> > of_node(s)).
+> > 
+> > There is a less convoluted solution (that is what some platform
+> > drivers in ACPI do today), that is, we pass the static table
+> > data in pdev->dev.platform_data and each platform_driver parses it differently.
+> > 
+> > That works but that also means the in the respective device drivers
+> > OF and ACPI IRQ (and MMIO) parsing differ (which is not necessarily
+> > a problem I just have to rewrite them all).
+> 
+> Hmm... The parsing inside drivers is quite a custom case. I would avoid doing
+> it if it's not device specific (I mean if it's not related to the very unique
+> device or family of the devices which most likely won't appear again in the
+> future). In other words, I prefer agnostic solutions over custom ones.
+> 
+> > Now - when it comes to "interrupt-names". Some of the device drivers
+> > I mention do:
+> > 
+> > eg platform_get_irq_byname_optional()
+> > 
+> > that expects the IRQ to be mapped and stored in a named platform device resource.
+> > 
+> > That's easy in DT - for two reasons:
+> > 
+> > (1) "interrupt-names"
+> > (2) standard properties behind the of_node
+> > 
+> > how to do that for fwnodes that aren't backed by either OF nodes or ACPI
+> > devices (that do use "interrupt-names" _DSD property) is a question.
+> > 
+> > Mind, the "interrupt-names" thing is a detail in the whole mechanism.
+> > 
+> > DT overlays to represent in ACPI those static table entries ?
+> > 
+> > I vividly remember the days ACPI for ARM64 was being merged - that's what
+> > our crystal ball predicted :)
+> 
+> So, the idea is to translate ACPI static table entries (which comes from IORT)
+> to the IRQ fwnodes at initialisation (parsing) time?
 
-Thanks for doing this. Series looks good to me except for one nit in patch =
-1/9.
+They don't come from IORT only but that does not matter much. The point is,
+we have got to have a standard way for device drivers to retrieve a HW
+IRQ number for devices created out of static tables (and only code that
+knows what a static table represents can initialize such fwnodes because
+the interrupt fields are different in different static tables).
 
-Bart
+Lorenzo
+
+> > This delayed IRQ mapping notwithstanding, I read what you wrote and took
+> > note. The worry is, this fwnode_*() (on ACPI nodes) interface trickling
+> > into subsystems where it should not (ie PCI, clocks, regulators) - hopefully
+> > the respective maintainers are keeping an eye on it.
+> > 
+> > > > Are we going to do the same for "reg-names" ?
+> > > 
+> > > If it makes sense and we expect some vendor to follow that _in ACPI_,
+> > > why not?
+> > > 
+> > > > Most importantly, what is DT maintainers stance on the matter ?
+> > > 
+> > > AFAIK They don't care as long as there is a schema provided, accepted and
+> > > used in DT, if it's ACPI-only thing, then it most likely should be done
+> > > in ACPI-like way (see above the first two / three items: spec, MS, WMI/EFI).
+> > > 
+> > > > > > I am sorry I have got more questions than answers here - it would be good
+> > > > > > to understand where the line is drawn when it comes to OF/ACPI and fwnode
+> > > > > > heuristics compatibility.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
 
