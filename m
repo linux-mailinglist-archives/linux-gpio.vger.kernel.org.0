@@ -1,192 +1,220 @@
-Return-Path: <linux-gpio+bounces-35423-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35424-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oJtXOltc6mnXyQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-35423-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 19:52:27 +0200
+	id yAoEOA9b6mnXyQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-35424-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 19:46:55 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E6D4455C56
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 19:52:27 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 148A5455B64
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 19:46:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 74A3630E5BB9
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 17:45:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C82C830125C1
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 17:46:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F4C93AB29E;
-	Thu, 23 Apr 2026 17:44:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BE3B37B40B;
+	Thu, 23 Apr 2026 17:46:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBu8iRtF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TgxG5Rf0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F89037C10A;
-	Thu, 23 Apr 2026 17:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B896B38736F
+	for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2026 17:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776966268; cv=none; b=NSNu15bgROQ0cUOZVkucfH7fUBARoJn694dDG78eDUows6TAN+3NWSRH103NDi32X00NGi1XFymaiYjRWwejyyuOJLVuwTDtSiQDyXImGNTIWQtc2Megrxvrfdb7+N+Wg+OZuENr673DjDS8m3Zn6wxQcu2RmOqWEh9BPTxG+3w=
+	t=1776966399; cv=none; b=H+HRH61TyN0DFuA1WaPZ7xX5q0/UIFH8p1JiZrVrLjM8496XIz4anisQiOn5T4TV6k8QPOiRReVTF3UUJG7sObTwFZWOAQU5R5LU7MrpTYa9ZKVPQXUAcvksWnrtu7geXnLGFqbn+0fuLaY/OBlhd7z6Ui6PUzJY19ACaz3G5ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776966268; c=relaxed/simple;
-	bh=Ca6918fcOAXDM3mevQIr9UFJydEQNXb86m/+edpbIC8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dftPrP++McxpH3CQNxoJ0mA58V7k9ezDR6xEY4K78TP4k23QVLj17k5TwQ3GD3P9hLFa0wDq0D1TUdBTrQ2F8Xa141m09qPjPlNOwgMgG5ujHPUTd4igcBILbRCK7PItAZjmNuUXGn0JRnimzkM2MxtYZ9tdxD70X3kDpXFOW2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBu8iRtF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B558DC2BCAF;
-	Thu, 23 Apr 2026 17:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776966268;
-	bh=Ca6918fcOAXDM3mevQIr9UFJydEQNXb86m/+edpbIC8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aBu8iRtFL+Ml28WAMlWVSTzNQysPYMICkXs8iHwEl66fo33PA83dxwmevXPQQ+8r+
-	 03oNzphPXfEn2JbEdywqHe7tIQBtSWk2smDoiP5qJEz4T9SIQJTUmfhl4b9SQHt5je
-	 ZOwt4sdI6EeBvPuh2YSRd1/7Nzc0ld+fSTlcJlo/M6Q/KKZVTJ9Yb0rkFLeCpYg3vq
-	 RUXInthqnG+cSRYc7ZytRSXcRZSrWI99++7ZWujhmzXACHfFkIte2jw04JlDIc58OZ
-	 +EYO0HeTnSkElit8Iw3fYHtGMH0IddZ9VlxfAChsS1CaEM59XvTguRxlE6Em7hXYYF
-	 Onb3Y/C9LQ6gA==
-Date: Thu, 23 Apr 2026 18:44:22 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Billy Tsai <billy_tsai@aspeedtech.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Ryan Chen <ryan_chen@aspeedtech.com>,
-	Andrew Jeffery <andrew@aj.id.au>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v7 1/3] dt-bindings: pinctrl: Add
- aspeed,ast2700-soc0-pinctrl
-Message-ID: <20260423-clever-swooned-a06907e9101e@spud>
-References: <20260416-upstream_pinctrl-v7-0-d72762253163@aspeedtech.com>
- <20260416-upstream_pinctrl-v7-1-d72762253163@aspeedtech.com>
- <20260416-brutishly-saga-ba7168a4cd14@spud>
- <OSQPR06MB7252EB0C2A1A3313DE49406B8B202@OSQPR06MB7252.apcprd06.prod.outlook.com>
- <20260417-anemia-borrower-fb90ac02b417@spud>
- <OSQPR06MB7252BD7967D2567AD6DA7A1D8B2F2@OSQPR06MB7252.apcprd06.prod.outlook.com>
+	s=arc-20240116; t=1776966399; c=relaxed/simple;
+	bh=Q/08wWQ4SfuMhfDVP9sXEtWA2o3HnwK33N7dXefJmWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L3Kczjqkh2mEaEaMlrNqLom12V1hO7EjWU3HWKFZEvVdHzBsRW0cquNemPRAxtkJmrImCQPLEkZz0Mm1lmZg9wmHBslNM0xv6e5a/WnCsNLH3f/ZKko6aH3r9Cf9Y5+LeoXQOYd36MsSPiFM8Vg7vmn+4XRaxZVZAUpE1dErj3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TgxG5Rf0; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-483487335c2so68418895e9.2
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2026 10:46:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776966396; x=1777571196; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KKO0ZSfKpXY8aQTH5b7X8YGTTyGiXXEYMnXwkBPcBbk=;
+        b=TgxG5Rf0D6+XEDnDW9xBvzpnyRDZDrymF543ek4kkzR+gYRk8/nffD/by7kRisi3D2
+         q71qvkSVSdP2YG71S1mxZg3tKApvpAA4piUNIKDddPY/9hAbspQ3m6OjYu96sto8HlKx
+         ucKLoK5148Y3oRXEjOBSpGKxlj11ApiqLapCdSPpMLp2PnVRuIdzvuyEgYn4Uq7Gg7MM
+         WcGWWpU2dSAwB7UW1bAEFVw4RT1XafzBUa8k1/AswBlzt+l20RrLClMnUyjoor93ZVqY
+         L618uq6XvNkDcvNIce5c+d9AOoDy1gDZCrRrElOtWC6W0VUu1QoxNcRjicwp864/ae0T
+         zZ0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776966396; x=1777571196;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KKO0ZSfKpXY8aQTH5b7X8YGTTyGiXXEYMnXwkBPcBbk=;
+        b=saCaxBZGEU10qexrv0iso9gSIFGn61K0tZ3A18oSzgNTTv4d/llGsTJy8PCp6/9etg
+         s9jxl0PLC2xzzzCZFKaa7YqaaK44fNwpymUoyKnFXhK4s4KwAlCNHCh3r7wL5x4pPkqE
+         +y4Rscn9F9C7UdQdLo/Kj72nZkNlX1IJPEmsy3NlhXyuYIZo4EeEIFB+b3nzQlP9BysH
+         YxHIiTne68+o9NtD5sgiHsE9en15IjbVbJVn1uBtAgPZ2LZXRVpO2tvVXNNxsW/06hoT
+         k5hMbxe/6FwZhBBb6DudKAMRKI7ZnAXGu4lybIBjLKvrvJxmig58kCyo9t6w5uyyiOmA
+         8ghQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/fVaRXqQewFGJqeoC129Ugj/YjMQb6XXa+0uY/PMHwFpoGGHNImD31wrIMjc1J9Xclg1SgddRXBQQP@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTmnEqkHRC1Ux0q2bD+SK9R1EvOmT+UyewA+ZlBAy3ifatgL6r
+	1E9TJSaTt/phCRqDtq84QTU0vC580dIe5UCNZEAKNersVtDZDEHyS6vY
+X-Gm-Gg: AeBDieswxXFPpUl76POoUMFULqsUUwn0KkiQodEldIOvq3N9am/XdbAVHKnMeWkR1j2
+	MVx33CjhSzhPrwO/95HTA6MPuchGmJBqRP2SOxbrH3R8nhPb35KalRVtORAaj5zjrndbeQmxkAs
+	8Gch875pqWqxV7d23L4ZvxaZyK2Ggu820nHMhj/dh8OyaiTnbIKpl0BVCqGMInMlF5jPLz+oIgu
+	cfBtJ1E3bPBbhD1pak8RKTga4xSpYKHkJFF++Bpnx2p7DoFAleULSHuxzMG06pyPb5ZPrxYpJiI
+	N8wmipoyOSzAxKlViXfolHQoC3VJr2LV3FER3r/rsL/h8b3NU4EUoYtOLbxbinxNsqP3ppqPqzw
+	/UyGMzdOlajzmmE/AeFh9wA5SwOXx11NYYag+dyPh6kbAIUfL1FiEr2CMd8o1vqu5Rw76ZRQ3Rc
+	6CKJracYXs4w6ay4zeBEFtPE70rZSC4bcEOnbXW2JYNfwk13qawdp9/Vo3GozSVYlidYk06uULT
+	LyNjuI=
+X-Received: by 2002:a05:600c:6085:b0:488:936a:6220 with SMTP id 5b1f17b1804b1-488fb782618mr367619265e9.21.1776966395897;
+        Thu, 23 Apr 2026 10:46:35 -0700 (PDT)
+Received: from ?IPV6:2a01:e11:202b:40:3c42:f121:865e:1066? ([2a01:e11:202b:40:3c42:f121:865e:1066])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fc0f82bbsm916283675e9.3.2026.04.23.10.46.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Apr 2026 10:46:34 -0700 (PDT)
+Message-ID: <f72a1da5-2cc1-4e08-9441-ea252062b4e5@gmail.com>
+Date: Thu, 23 Apr 2026 19:46:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="JAt2RGrDeiha8/Di"
-Content-Disposition: inline
-In-Reply-To: <OSQPR06MB7252BD7967D2567AD6DA7A1D8B2F2@OSQPR06MB7252.apcprd06.prod.outlook.com>
-X-Spamd-Result: default: False [-2.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] 36-second boot delay due to by
+ acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
+To: Mario Limonciello <superm1@kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>
+Cc: Francesco Lauritano <francesco.lauritano1@protonmail.com>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "westeri@kernel.org" <westeri@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>
+References: <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
+ <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
+ <20251218063954.GT2275908@black.igk.intel.com>
+ <b57b44c3-ea96-4189-8b70-71bf4a80d29b@kernel.org>
+ <20251218103831.GW2275908@black.igk.intel.com>
+ <51f999d7-2064-47dc-8d9b-e262588bfbdb@gmail.com>
+ <20260422090709.GB557136@black.igk.intel.com>
+ <4e55e31e-a5e8-4098-8a7f-bb52476b882a@gmail.com>
+ <20260422095558.GC557136@black.igk.intel.com>
+ <5a36760d-5d1e-4eee-9006-3fed042aa2cd@gmail.com>
+ <20260423044211.GD557136@black.igk.intel.com>
+ <3d562963-9581-4e0f-b9a0-5f0fe28d2495@kernel.org>
+Content-Language: en-US
+From: Marco Scardovi <mscardovi95@gmail.com>
+In-Reply-To: <3d562963-9581-4e0f-b9a0-5f0fe28d2495@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35423-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 6E6D4455C56
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[protonmail.com,vger.kernel.org,kernel.org];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35424-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	DBL_PROHIBIT(0.00)[0.0.1.99:email];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mscardovi95@gmail.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,0.0.0.24:email,0.0.0.21:email]
+X-Rspamd-Queue-Id: 148A5455B64
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---JAt2RGrDeiha8/Di
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Apr 20, 2026 at 07:22:57AM +0000, Billy Tsai wrote:
-> In particular, I'll split the constraints as follows:
->=20
-> - For pinmux, the presence of `function` will require `groups`, and
->   `pins` will not be allowed. This reflects the hardware design, where
->   the groups are defined by the pins affected by a given mux expression
->=20
-> - For pin configuration, exactly one of `groups` or `pins` will be
->   required (using oneOf), so that configuration is applied either at
->   group level or per-pin, but not both.
->=20
->=20
-> - if:
->     required:
->       - function
->   then:
->     required:
->       - groups
->     not:
->       required:
->         - pins
-
->   else:
-
-I think this is a separate section under an allOf, rather than an else.
-You can also simplify the condition above to just be
-- if:
-    required:
-      - function
-  then:
-    required:
-      - groups
-since the node will then always be tested against what you have below
-
->     oneOf:
->       - required:
->           - groups
->         not:
->           required:
->             - pins
->       - required:
->           - pins
->         not:
->           required:
->             - groups
-
-I think this here simplifies to
-oneOf:
-  - required:
-     - groups
-  - required:
-     - pins
-
-You'd also need to note that pin level config settings should take
-precedence over group level ones.
-
---JAt2RGrDeiha8/Di
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaepadgAKCRB4tDGHoIJi
-0iGUAQCSvZRjl2it7AaROKHK0Bp704DuQXDbJXJ0D6NcO6IYSQD/TPXLQsCR9Y10
-jtbhzr6qfBOMLqlIhuZTFyJ2Xq5jBAw=
-=i4l7
------END PGP SIGNATURE-----
-
---JAt2RGrDeiha8/Di--
+On 4/23/26 07:15, Mario Limonciello wrote:
+> On 4/22/26 23:42, Mika Westerberg wrote:
+>> Hi,
+>>
+>> On Wed, Apr 22, 2026 at 02:08:29PM +0200, Marco Scardovi wrote:
+>>>>> Assuming all the variants suffer the same problem would it be ok 
+>>>>> to use a
+>>>>> wildcard for it?
+>>>> Yeah, we could expand it to all "ROG Strix G16" I think:
+>>>>
+>>>> diff --git a/drivers/gpio/gpiolib-acpi-quirks.c 
+>>>> b/drivers/gpio/gpiolib-acpi-quirks.c
+>>>> index a0116f004975..e3a6111854e8 100644
+>>>> --- a/drivers/gpio/gpiolib-acpi-quirks.c
+>>>> +++ b/drivers/gpio/gpiolib-acpi-quirks.c
+>>>> @@ -392,6 +392,23 @@ static const struct dmi_system_id 
+>>>> gpiolib_acpi_quirks[] __initconst = {
+>>>>                .ignore_wake = "VEN_0488:00@355",
+>>>>            },
+>>>>        },
+>>>> +    {
+>>>> +        /*
+>>>> +         * The ASUS ROG Strix G16 (2025) ACPI GPIO configuration
+>>>> +         * causes acpi_gpio_handle_deferred_request_irqs() to
+>>>> +         * stall for ~36 seconds during boot so ignore the two
+>>>> +         * interrupts involved.
+>>>> +         *
+>>>> +         * Found in BIOS G614PP.307.
+>>>> +         */
+>>>> +        .matches = {
+>>>> +            DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+>>>> +            DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16"),
+>>>> +        },
+>>>> +        .driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+>>>> +            .ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
+>>>> +        },
+>>>> +    },
+>>>>        {} /* Terminating entry */
+>>>>    };
+>>> As for now it seems working. I've reverted it on my kernel as I prefer
+>>> remain as much as possible close to the CachyOS' one but hopefully 
+>>> it will
+>>> be implemented on 7.1, if someone propose the patch and it is 
+>>> accepted. It
+>>> would be amazing to see Asus more interested on Linux and more 
+>>> strict with
+>>> their BIOS but in the end I understand it's like asking for the moon.
+>>
+>> Okay thanks for checking. I guess this is what we have to live with 
+>> for now
+>> until someone finds a better way of dealing with these.
+>>
+>> @Francesco, would you like to submit a new version of the patch 
+>> similar to
+>> above or you want me to do that?
+>
+> Hans suggested that we might want to look at ripping out this edge 
+> triggered events at boot earlier in the thread.
+>
+> https://lore.kernel.org/platform-driver-x86/20260423044211.GD557136@black.igk.intel.com/T/#mdca882e6606d3a894ec7499d3b742d040933dbdb 
+>
+>
+> Hans - as you pointed out that the Surface lid state is the only real 
+> issue left and you happen to have one do you think you could work up 
+> some patches?
+>
+I see. Well, that makes totally sense
 
