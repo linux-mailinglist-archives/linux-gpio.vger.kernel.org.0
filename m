@@ -1,131 +1,183 @@
-Return-Path: <linux-gpio+bounces-35431-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35432-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6MzmHaGP6mnK0gIAu9opvQ
-	(envelope-from <linux-gpio+bounces-35431-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 23:31:13 +0200
+	id HJgWH4Gb6mnF1QIAu9opvQ
+	(envelope-from <linux-gpio+bounces-35432-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 00:21:53 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAE4A457E64
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 23:31:12 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D00D458109
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 00:21:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D68833043AC2
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 21:27:34 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B10B7301C5AC
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 22:21:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A1D437C901;
-	Thu, 23 Apr 2026 21:27:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF60733EAEC;
+	Thu, 23 Apr 2026 22:21:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJMpeSbQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGYr+H72"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEEC32C937
-	for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2026 21:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DB62D6407
+	for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2026 22:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776979652; cv=none; b=M5Rk4KQG14wTct3hZO43QS4QcrAtLyG4uL7hm8AdeOPJKCZ7hXPo1pCNwk1+AnescDrKu+3kZXf1BINOEmpjDVSUOmAtl1TsC1h6dNYGBTIkG3MG8NDE6/TTcOk2lw6WBqWcUg86ZFDDI33XOKIiJEHCC8TPgOuIUbAZJVoWmIs=
+	t=1776982909; cv=none; b=vCEJbDQ4smK25CW8NXp8hPEwpB3SLWbwIc0KmcGWJMgnNNynByRwRM2kTuVU7CitJU83PQ9JhQ2s4B/yxDz7xUmkRCjk8Hl72PYm4Iqk+hNs1Vlg47kzwjeqkPkK7IJEuVqnmmQFLFk8vv6XUftytOTWrDc2GSFQF4RW2Up1wyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776979652; c=relaxed/simple;
-	bh=LHGK+gI0n/9OErq8+42i/9GhBphDgJzvi2yvX7jJL5g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nakqOJ3aGqJStXXNfh1EVJDLHc0rQww3ZzKzi8eax2Dq93d9s0eAcOnppg0bdVdGhHwY0PUK97Q4OhRmgzjAe8jV0VU/a9HWtZeFlX1FhlEaaBEAaNWlUcuATAjbGce4tkvjN9W54i4/IJF0rN6P3oRVWbjvazVXQwEf8ejc/zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJMpeSbQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5F5AC2BCB9
-	for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2026 21:27:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776979651;
-	bh=LHGK+gI0n/9OErq8+42i/9GhBphDgJzvi2yvX7jJL5g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HJMpeSbQIM60Q3d53I9Zwep4hwpP5Ebj0iU2PC74N58EP5/6NIVNKKG7GctKJQpnQ
-	 orw8/2S/YvWvrXs0+mPtAvvgSiRs4hbftCaKNIom/RpDnEsCDD04XIpjBTCErtKrUz
-	 6EoZ0o2E6hSCzfrDQ5rg9YSYidB8h4aUT6tvnKtOq2LGHno9pHOgsKuVpGPUwiw82q
-	 ofkhkA3IvfZrwq63MJPIEg3AmiblkTzxP7qUwJjet679saisdrDu9xWiUWvrV8FaQy
-	 5VUndRjUC2Al6Om+tKLKavGyq63B8mbboH99/v6ajPWepNQJ4NYYsWhGcsAlou4yY8
-	 lfC3EcDPAbJoQ==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-38e68e4389cso75809691fa.3
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2026 14:27:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+nPgAgHEyQhIc7EJ42dLqObcV7VVCeh33ZCGRTI/ev/rEtaHrgyLmH+3SAaaudOt/zYlav28B8r6Vf@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxl8SXdpbCPuTKKNGK9xwlpN/HUQdUblqMHpsm9nXYY+sBVqPtw
-	JUM4kX1pDIqfX5+FKTdUNoiNWD6Ofo5ZJ0/OPhxT6CZiig57JWsIFABXCJhdBBxG1qCECPis8cv
-	TVW2jDWa5CLvrDoG9ywrLdCF/J9DS6og=
-X-Received: by 2002:a05:6512:6d2:b0:5a2:9b44:1cb with SMTP id
- 2adb3069b0e04-5a4172c0fabmr8827159e87.2.1776979650648; Thu, 23 Apr 2026
- 14:27:30 -0700 (PDT)
+	s=arc-20240116; t=1776982909; c=relaxed/simple;
+	bh=XgyeyPimgkNpizlW638YP4I86xaSrI+4b/FsVNHNFQo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IepH81A3mE9bcZhSXD95FkNWWyUdGSc2H53dxxKMTik0h59WVulUb1OwhozL0uBv5abKZKGOSaxRqGJH1l+0LieaXlnVZb9i2TpyhVSWH/hFJLukvatZqkLzDcOXucTEGmwbnM56b4gnMeDAGGeJi5ysePkW/WFosDKzne4/eeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AGYr+H72; arc=none smtp.client-ip=209.85.160.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-40427db1300so5455929fac.0
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2026 15:21:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776982907; x=1777587707; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tvRqQz28GgwGSdDRIEbbeoOKkXVV3dg0BBIJfA0mca4=;
+        b=AGYr+H72JvXTr9EtfD8P5FRi65L9eacf4ulbvKeZSebZeeiaQtGAgdIAs0vJPePPLm
+         uqyRwBEmgMxL67pu+MUdufrop9zYYZBFH3is/1vflpKjFOYmuA9mYtgOPofsbgkCsigv
+         HuLUcqRG0Xzrj+ybxmiQ7YKCcS51/kKBEHj5kV0pVJLykal+jH1uGirXXSSxhMr2UxZY
+         enjrWh1UhGzz5Qb1UyLZJf1jsq+vDoXMOgUinoR6LIgq5r3F9gHuW1mXlqwykuroNudN
+         pZvl0vuENxlTp4E9/4kODik5i/0Fs/xRLUrlX2q2pJCP0YCY+Tkl8B+n3MztjY/oDV98
+         xXkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776982907; x=1777587707;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tvRqQz28GgwGSdDRIEbbeoOKkXVV3dg0BBIJfA0mca4=;
+        b=OUBvLupWcLOeBznO1TRCMK8Imm9Doha+8V28tWxwIDCRhbHYXhI4ejovQnoXBjnfPy
+         gh4mNpLgByiQBtefeOlVCdnxXAcjXENDtwv7LVDuEIXOSE8fPImIVvuBta4/aG1xv7Vp
+         PGJvL/l0AjBrOkT1rKuQkjVpxIPnowK9cd1fHXifHv/5IwciXTrUQjpHiEMcfB8M95rZ
+         pgP/zfjpNa3TKrpBA6e3JrANwIu/JLckobCyWRbFod+9UNgkErx6MiZshaVVpcadHhvT
+         q8VA7IB7rOfzIqBW4o/kQV4wAafeSHCVVYZtapPxcwpG5RNXMXdCBruYO+ycA4azNYhB
+         icfg==
+X-Gm-Message-State: AOJu0YyXRXFUBEUv0Rc5tA+wbglchnsKFsjJFGIEglML5/DY9XBbkcB3
+	OHEnbR0MJwLfnegJxsuZWAzDZiRMknweDBhvFML7k7Zlc0zAwXcqN9n5VPFqUw==
+X-Gm-Gg: AeBDiet0gIQNUfTb8iPf3fN33GWJ75ViPMr+QtEU4JuM7efyFy5MpJFx9Qdonz2CZnP
+	cNvK7W+OjngbKwYmd/gA3hEmoq84sv4QuiADJGSkbKyvKyPi3IYn8v5G/lYNY/oZ973d6TeUdCp
+	/MYoAUpFQ+jr2KK1kqanz8vhou5zIjGPYQKVTio8Htpk7rZ+L3jT+eqL5WJvEJ0mU0XveVt+sgJ
+	A4Rv3yxWxkd3SBEr3Dy2qQWPDLShyqtivN9iN7tZrKgKSolOc8f4BFBNEyQPi7OqHQyNCe2edsG
+	7CCzdUOGmctuJVCHKnt5cPazWAkqA3FG/Khs4taJSNbd8tf1qIN8s3vSOv4d3pDRmkORf0icK1h
+	eYB6Xc+jovEYBAxL/mcPDvLsFN7eML7hiDh5OKbDdfOCFM2I4jsJa78en9xmV2qS7Z/huetHznd
+	pZDHWBYkihCcGOqZETK8RmPbT6s0VhvoeKXVz/ztS4Fz7qJBRgN7Fp+bE7DJH7ZwHBGdmpqE9X
+X-Received: by 2002:a05:6870:7a0f:b0:41c:bab:5f9d with SMTP id 586e51a60fabf-42abf23972amr19016731fac.4.1776982906898;
+        Thu, 23 Apr 2026 15:21:46 -0700 (PDT)
+Received: from Zephyrus.localdomain ([131.93.209.211])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-42b930afa63sm17784598fac.5.2026.04.23.15.21.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2026 15:21:46 -0700 (PDT)
+From: Vincent Fazio <vfazio@gmail.com>
+To: linux-gpio@vger.kernel.org
+Cc: brgl@kernel.org,
+	Vincent Fazio <vfazio@gmail.com>
+Subject: [libgpiod][PATCH v2 0/8] bindings: python: modernize C extensions
+Date: Thu, 23 Apr 2026 17:21:17 -0500
+Message-ID: <20260423222125.29097-1-vfazio@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260413-waveshare-dsi-touch-v3-0-3aeb53022c32@oss.qualcomm.com> <20260413-waveshare-dsi-touch-v3-16-3aeb53022c32@oss.qualcomm.com>
-In-Reply-To: <20260413-waveshare-dsi-touch-v3-16-3aeb53022c32@oss.qualcomm.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 23 Apr 2026 23:27:19 +0200
-X-Gmail-Original-Message-ID: <CAD++jLk6Bt1ocd9nbrDPg3tRnKkZdG=otB=CPv6iuY_Que5HcQ@mail.gmail.com>
-X-Gm-Features: AQROBzBgvARcF3IK5AHeLBYYiVQtCKareEdSCXulR4gFnM4VD2cDpl4FLI87TaU
-Message-ID: <CAD++jLk6Bt1ocd9nbrDPg3tRnKkZdG=otB=CPv6iuY_Que5HcQ@mail.gmail.com>
-Subject: Re: [PATCH v3 16/21] drm/panel: jadard-jd9365da-h3: support Waveshare
- 720p DSI panels
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <jesszhan0024@gmail.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Cong Yang <yangcong5@huaqin.corp-partner.google.com>, Ondrej Jirman <megi@xff.cz>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Jagan Teki <jagan@edgeble.ai>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Jie Gan <jie.gan@oss.qualcomm.com>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Riccardo Mereu <r.mereu@arduino.cc>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35431-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[linaro.org,gmail.com,ffwll.ch,linux.intel.com,kernel.org,suse.de,huaqin.corp-partner.google.com,xff.cz,redhat.com,edgeble.ai,oss.qualcomm.com,lists.freedesktop.org,vger.kernel.org,arduino.cc];
-	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35432-lists,linux-gpio=lfdr.de];
+	RCPT_COUNT_THREE(0.00)[3];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[vfazio@gmail.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,qualcomm.com:email,arduino.cc:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: EAE4A457E64
+	TAGGED_RCPT(0.00)[linux-gpio];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 9D00D458109
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Apr 13, 2026 at 4:06=E2=80=AFPM Dmitry Baryshkov
-<dmitry.baryshkov@oss.qualcomm.com> wrote:
+This series performs some minor cleanup of the C extension modules and
+migrates the module defintions to multi-phase intitialization (PEP 489).
 
-> Add configuration for Waveshare 9.0" and 10.1" 720p DSI panels using
-> JD9365 controller.
->
-> Tested-by: Riccardo Mereu <r.mereu@arduino.cc>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Patches 1 & 2 avoid calling back into python to perform C level object
+cleanup.
 
-Reviewed-by: Linus Walleij <linusw@kernel.org>
+Patch 3 introduces no real functional change but simplifies the code to
+get the same result.
 
-Yours,
-Linus Walleij
+Patch 4 applies suggestions from from a utility maintained by a CPython
+core developer to help modernize macro/function usage.
+
+Patch 5 conditionally compiles support for using a standard CPython
+function over a backported version bundled within the C extension.
+
+Patches 6-8 migrate the C extensions to use multi-phase initialization
+as described in PEP 489 [0]. While not strictly necessary for enabling
+free-threaded builds, it makes adding support more straighforward and
+sets the stage for both PEP 793 [1] which soft-deprecates PyInit_* and
+PEP 803 [2] which could simplify wheel builds.
+
+Patches have been tested against the full matrix of supported versions:
+  https://github.com/vfazio/libgpiod/actions/runs/24860932220
+
+[0]: https://peps.python.org/pep-0489/
+[1]: https://peps.python.org/pep-0793/
+[2]: https://peps.python.org/pep-0803/
+
+Signed-off-by: Vincent Fazio <vfazio@gmail.com>
+---
+Changes in v2:
+- Dropped "bindings: python: use Py_RETURN_NONE in chip_get_line_name" (Bartosz)
+- Adjusted patch 4 to simplify Py_None strong reference acquisition
+- Updated link to passing pipeline
+- Link to v1: https://lore.kernel.org/all/20260422012041.39933-1-vfazio@gmail.com/
+---
+
+Vincent Fazio (8):
+  bindings: python: avoid PyObject_CallMethod during chip finalize
+  bindings: python: avoid PyObject_CallMethod during request finalize
+  bindings: python: simplify disallowing _ext.Request from being created
+  bindings: python: use suggestions from upgrade_pythoncapi.py
+  bindings: python: use PyImport_ImportModuleAttrString when available
+  bindings: python: migrate the gpiod._ext module to multi-phase init
+  bindings: python: tests: migrate the system module to multi-phase init
+  bindings: python: tests: migrate the gpiosim module to multi-phase
+    init
+
+ bindings/python/gpiod/ext/chip.c     |  29 ++---
+ bindings/python/gpiod/ext/common.c   |   5 +-
+ bindings/python/gpiod/ext/internal.h |  10 +-
+ bindings/python/gpiod/ext/module.c   |  68 ++++++------
+ bindings/python/gpiod/ext/request.c  |  26 ++---
+ bindings/python/tests/gpiosim/ext.c  | 153 +++++++++++++++++----------
+ bindings/python/tests/system/ext.c   |   7 +-
+ 7 files changed, 171 insertions(+), 127 deletions(-)
+
+-- 
+2.43.0
+
 
