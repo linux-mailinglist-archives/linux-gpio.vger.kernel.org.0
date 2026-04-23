@@ -1,167 +1,172 @@
-Return-Path: <linux-gpio+bounces-35389-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35390-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AJ+aFtul6WlogAIAu9opvQ
-	(envelope-from <linux-gpio+bounces-35389-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 06:53:47 +0200
+	id eGa8AGqr6WkxgwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-35390-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 07:17:30 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC9E944D184
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 06:53:46 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F4CE44D37D
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 07:17:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 118903060C9F
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 04:51:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8A48030247D6
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2026 05:16:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDB323CCA09;
-	Thu, 23 Apr 2026 04:51:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B07CA33D4FD;
+	Thu, 23 Apr 2026 05:16:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="NPOQdWwa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IRlvFOO1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBCA3CAE6C;
-	Thu, 23 Apr 2026 04:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705D31E5724;
+	Thu, 23 Apr 2026 05:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776919917; cv=none; b=qVMgDuG3GeY7662cnb44Oct7cWcYvznjahFYB+JS6sL4hOm0HFZNeTF47OhniOA5h1jDUh2+WKp+4VHmJlqtTpYnu//j/hJzQCbZbolBhEbwLuVo4MMT++YPc0/pqquOIjm/x4rpNAaWwbiazGx9+i+aAfgV7C2llihSbgA2+38=
+	t=1776921362; cv=none; b=LWVraEeos/7zThXhp7KX2slDFilzQmNIDnx/9qisiFtbPA22LqeGtvT2XJ/9Fkif5QwwBHvxAd/OLohqquD8SKhC1QVyGPvGRPFxJ1Xjlocb/tVJqKnAzZr7EwAZ+Q0W6RHBVR481V857RjQdvVmg/rxWsLAmqtqUmgr0qKu/No=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776919917; c=relaxed/simple;
-	bh=TR7ngD+JdK4DU+FncCkwlbE2pgVePIwx/bMTGXF3mX8=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XuOnePqWVpIeHDuGadXneqXIKEThqVNJNvII79krxilmt7wDngQr6m4VWNX6b3rhKqzvpr0rcei+GHsW3TikGl1T5mQWWf5fH1xDsZNctp+znyN+2a9FSWJEaXw3DvEK3N3YfxIhp+ajm5xFIsHlzUr1yHAlTDvlRfG5I8UWwzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=NPOQdWwa; arc=none smtp.client-ip=109.224.244.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1776919909; x=1777179109;
-	bh=TR7ngD+JdK4DU+FncCkwlbE2pgVePIwx/bMTGXF3mX8=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=NPOQdWwaMhiwus1AVugPqvCmN1yJIoa/0aXCdYZ2TNZD5gUWC8341gBqDHfdwcy2t
-	 sIxif7Q9mIGYwq03fB58GJxf0fYXAHM6PCE8mveBTHYW/EmKcbuSeIS+ykZtWxUxv4
-	 LhnJlQhwBLmLkz9OLH/OPb+j7RDuvNGQyuMgv6wDMWREVPuEQyr+Bm2aHPJZTSZVfw
-	 SqDH9H02Q8Uh+RvouTVKcvPo3VcQkEbCL8TgHyNy6mbNYS0hBkdJuGFx9KUdhgQE/j
-	 W1/h/qU1SkKNPGe456vwUxbPQ/ipQ3BNZP+vN48T5JhsVGQ/FRU+u2aFV3NY04xKvI
-	 UO5giwjj8AaGw==
-Date: Thu, 23 Apr 2026 04:51:45 +0000
-To: Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linusw@kernel.org>
-From: Alexander Koskovich <akoskovich@pm.me>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Alexander Koskovich <akoskovich@pm.me>
-Subject: [PATCH RFC 2/2] pinctrl: qcom: eliza: Fix QDSS trace clock/control pingroup names
-Message-ID: <20260423-misc-eliza-pinctrl-v1-2-2498b365ff2c@pm.me>
-In-Reply-To: <20260423-misc-eliza-pinctrl-v1-0-2498b365ff2c@pm.me>
-References: <20260423-misc-eliza-pinctrl-v1-0-2498b365ff2c@pm.me>
-Feedback-ID: 37836894:user:proton
-X-Pm-Message-ID: 696da0a1c4e1f3a061f5ad25b9d5e8191c93cb7f
+	s=arc-20240116; t=1776921362; c=relaxed/simple;
+	bh=WBlJC2xQ6vXNDpAD4NMjUofuCEcyUB1qLXll+KoCQ5Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GIluMx0FpVrCJewxOCd7PRm9hn88D9uTNQWd/Td7tewUqH422PJsawK9zP5AygBEs9E2A44eZ8aNUz+ZQLV3jRU09aNiOcp7KnYrHpjQm/4u9iV3pMksDRp63bTcfOQzEvSrtAEIF5fHge3rkqSk/wuQicnrKSTtS6u4fbvC3HI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IRlvFOO1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 594D8C2BCB2;
+	Thu, 23 Apr 2026 05:16:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776921362;
+	bh=WBlJC2xQ6vXNDpAD4NMjUofuCEcyUB1qLXll+KoCQ5Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IRlvFOO1bMNHBMIGrlyAT47NE/YJHDzM+7gF8LbHOmafwOllZfQZSOqOPWnEIvTC8
+	 y1sxpApBZIGiyaOxEZiNKWRePhS1pqTTs7yTMaKa9+Jlhk3x8259gmEr1zdyiI7lQn
+	 hGggR9s+2Zwy1ie8/pUcHGiOWUa1dM8M4A2xfjsEnBhBiih6qOGApCpr3NgzVjjdnF
+	 dWtstpgK6lI/C407fyk2omqskuXMFixFr/6h/BLGVVFj2GhdGM6UHqT6AnPV3I8j2M
+	 tT+GTGMTFEZcNWJnvpXEeviTEPkpt5CxJZHHLDEzidWjFogpi1QZAWOxPreyBrsLtH
+	 Md63Dv6EbO4+g==
+Message-ID: <3d562963-9581-4e0f-b9a0-5f0fe28d2495@kernel.org>
+Date: Thu, 23 Apr 2026 00:15:59 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] 36-second boot delay due to by
+ acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
+Content-Language: en-US
+To: Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Marco Scardovi <mscardovi95@gmail.com>, Hans de Goede <hansg@kernel.org>
+Cc: Francesco Lauritano <francesco.lauritano1@protonmail.com>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "westeri@kernel.org" <westeri@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>
+References: <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
+ <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
+ <20251218063954.GT2275908@black.igk.intel.com>
+ <b57b44c3-ea96-4189-8b70-71bf4a80d29b@kernel.org>
+ <20251218103831.GW2275908@black.igk.intel.com>
+ <51f999d7-2064-47dc-8d9b-e262588bfbdb@gmail.com>
+ <20260422090709.GB557136@black.igk.intel.com>
+ <4e55e31e-a5e8-4098-8a7f-bb52476b882a@gmail.com>
+ <20260422095558.GC557136@black.igk.intel.com>
+ <5a36760d-5d1e-4eee-9006-3fed042aa2cd@gmail.com>
+ <20260423044211.GD557136@black.igk.intel.com>
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20260423044211.GD557136@black.igk.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[pm.me,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[pm.me:s=protonmail3];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35389-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[protonmail.com,vger.kernel.org,kernel.org];
+	TAGGED_FROM(0.00)[bounces-35390-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[linux.intel.com,gmail.com,kernel.org];
 	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[pm.me:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_PROHIBIT(0.00)[0.0.0.21:email,0.0.1.99:email];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[akoskovich@pm.me,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[superm1@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[pm.me:email,pm.me:dkim,pm.me:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: AC9E944D184
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,0.0.0.24:email]
+X-Rspamd-Queue-Id: 9F4CE44D37D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Fix a few typos for these in their respective pingroups, the groups
-already exist they just weren't referenced.
+On 4/22/26 23:42, Mika Westerberg wrote:
+> Hi,
+> 
+> On Wed, Apr 22, 2026 at 02:08:29PM +0200, Marco Scardovi wrote:
+>>>> Assuming all the variants suffer the same problem would it be ok to use a
+>>>> wildcard for it?
+>>> Yeah, we could expand it to all "ROG Strix G16" I think:
+>>>
+>>> diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
+>>> index a0116f004975..e3a6111854e8 100644
+>>> --- a/drivers/gpio/gpiolib-acpi-quirks.c
+>>> +++ b/drivers/gpio/gpiolib-acpi-quirks.c
+>>> @@ -392,6 +392,23 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+>>>    			.ignore_wake = "VEN_0488:00@355",
+>>>    		},
+>>>    	},
+>>> +	{
+>>> +		/*
+>>> +		 * The ASUS ROG Strix G16 (2025) ACPI GPIO configuration
+>>> +		 * causes acpi_gpio_handle_deferred_request_irqs() to
+>>> +		 * stall for ~36 seconds during boot so ignore the two
+>>> +		 * interrupts involved.
+>>> +		 *
+>>> +		 * Found in BIOS G614PP.307.
+>>> +		 */
+>>> +		.matches = {
+>>> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+>>> +			DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16"),
+>>> +		},
+>>> +		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+>>> +			.ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
+>>> +		},
+>>> +	},
+>>>    	{} /* Terminating entry */
+>>>    };
+>> As for now it seems working. I've reverted it on my kernel as I prefer
+>> remain as much as possible close to the CachyOS' one but hopefully it will
+>> be implemented on 7.1, if someone propose the patch and it is accepted. It
+>> would be amazing to see Asus more interested on Linux and more strict with
+>> their BIOS but in the end I understand it's like asking for the moon.
+> 
+> Okay thanks for checking. I guess this is what we have to live with for now
+> until someone finds a better way of dealing with these.
+> 
+> @Francesco, would you like to submit a new version of the patch similar to
+> above or you want me to do that?
 
-Signed-off-by: Alexander Koskovich <akoskovich@pm.me>
----
- drivers/pinctrl/qcom/pinctrl-eliza.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Hans suggested that we might want to look at ripping out this edge 
+triggered events at boot earlier in the thread.
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-eliza.c b/drivers/pinctrl/qcom/pi=
-nctrl-eliza.c
-index b3413520a115..ba99b2a20e9e 100644
---- a/drivers/pinctrl/qcom/pinctrl-eliza.c
-+++ b/drivers/pinctrl/qcom/pinctrl-eliza.c
-@@ -1340,7 +1340,7 @@ static const struct msm_pingroup eliza_groups[] =3D {
- =09[51] =3D PINGROUP(51, _, _, _, _, _, _, _, _, _, _, _),
- =09[52] =3D PINGROUP(52, qup1_se2, pcie1_clk_req_n, qup1_se2, ddr_bist_com=
-plete, qdss_gpio_tracedata, _, vsense_trigger_mirnat, _, _, _, _),
- =09[53] =3D PINGROUP(53, qup1_se2, qup1_se2, gcc_gp1, ddr_bist_stop, _, qd=
-ss_gpio_tracedata, _, _, _, _, _),
--=09[54] =3D PINGROUP(54, qup1_se2, qup1_se6, qdss_gpio_tracedata, gnss_adc=
-1, atest_usb, ddr_pxi0, _, _, _, _, _),
-+=09[54] =3D PINGROUP(54, qup1_se2, qup1_se6, qdss_gpio_traceclk, gnss_adc1=
-, atest_usb, ddr_pxi0, _, _, _, _, _),
- =09[55] =3D PINGROUP(55, qup1_se2, dp0_hot, qup1_se6, _, gnss_adc0, atest_=
-usb, ddr_pxi0, _, _, _, _),
- =09[56] =3D PINGROUP(56, usb0_hs, tsense_pwm1, tsense_pwm2, tsense_pwm3, t=
-sense_pwm4, _, _, _, _, _, _),
- =09[57] =3D PINGROUP(57, sd_write_protect, _, _, _, _, _, _, _, _, _, _),
-@@ -1358,7 +1358,7 @@ static const struct msm_pingroup eliza_groups[] =3D {
- =09[69] =3D PINGROUP(69, cam_mclk, audio_ext_mclk0, resout_gpio, prng_rosc=
-1, _, _, _, _, _, _, _),
- =09[70] =3D PINGROUP(70, cci_i2c_sda, tmess_prng2, _, phase_flag, atest_ch=
-ar, _, _, _, _, _, _),
- =09[71] =3D PINGROUP(71, cci_i2c_scl, tmess_prng3, _, phase_flag, atest_ch=
-ar, _, _, _, _, _, _),
--=09[72] =3D PINGROUP(72, cci_i2c_sda, tmess_prng1, qdss_gpio_tracedata, at=
-est_char, _, _, _, _, _, _, _),
-+=09[72] =3D PINGROUP(72, cci_i2c_sda, tmess_prng1, qdss_gpio_tracectl, ate=
-st_char, _, _, _, _, _, _, _),
- =09[73] =3D PINGROUP(73, cci_i2c_scl, tmess_prng0, qdss_cti, atest_char, _=
-, _, _, _, _, _, _),
- =09[74] =3D PINGROUP(74, cci_i2c_sda, prng_rosc3, qdss_cti, atest_char, _,=
- _, _, _, _, _, _),
- =09[75] =3D PINGROUP(75, cci_i2c_scl, _, phase_flag, _, _, _, _, _, _, _, =
-_),
-@@ -1430,10 +1430,10 @@ static const struct msm_pingroup eliza_groups[] =3D=
- {
- =09[141] =3D PINGROUP(141, _, _, _, _, _, _, _, _, _, _, egpio),
- =09[142] =3D PINGROUP(142, _, _, _, _, _, _, _, _, _, _, egpio),
- =09[143] =3D PINGROUP(143, _, _, _, _, _, _, _, _, _, _, egpio),
--=09[144] =3D PINGROUP(144, _, qdss_gpio_tracedata, _, _, _, _, _, _, _, _,=
- egpio),
-+=09[144] =3D PINGROUP(144, _, qdss_gpio_tracectl, _, _, _, _, _, _, _, _, =
-egpio),
- =09[145] =3D PINGROUP(145, qdss_gpio_tracedata, _, _, _, _, _, _, _, _, _,=
- egpio),
- =09[146] =3D PINGROUP(146, _, qdss_gpio_tracedata, _, _, _, _, _, _, _, _,=
- egpio),
--=09[147] =3D PINGROUP(147, ddr_bist_fail, _, qdss_gpio_tracedata, _, _, _,=
- _, _, _, _, egpio),
-+=09[147] =3D PINGROUP(147, ddr_bist_fail, _, qdss_gpio_traceclk, _, _, _, =
-_, _, _, _, egpio),
- =09[148] =3D PINGROUP(148, _, _, _, _, _, _, _, _, _, _, egpio),
- =09[149] =3D PINGROUP(149, _, _, _, _, _, _, _, _, _, _, egpio),
- =09[150] =3D PINGROUP(150, _, _, _, _, _, _, _, _, _, _, egpio),
+https://lore.kernel.org/platform-driver-x86/20260423044211.GD557136@black.igk.intel.com/T/#mdca882e6606d3a894ec7499d3b742d040933dbdb
 
---=20
-2.53.0
-
+Hans - as you pointed out that the Surface lid state is the only real 
+issue left and you happen to have one do you think you could work up 
+some patches?
 
 
