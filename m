@@ -1,213 +1,207 @@
-Return-Path: <linux-gpio+bounces-35473-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35474-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wAPHC5I062lfJwAAu9opvQ
-	(envelope-from <linux-gpio+bounces-35473-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 11:14:58 +0200
+	id KEIPDnY162nRJwAAu9opvQ
+	(envelope-from <linux-gpio+bounces-35474-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 11:18:46 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C01945C006
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 11:14:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 90A2345C0C7
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 11:18:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 27A08301CCE3
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 09:11:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3DCE33008238
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 09:15:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3208037D104;
-	Fri, 24 Apr 2026 09:11:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE43B379966;
+	Fri, 24 Apr 2026 09:15:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="idXwK1lD"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LW0/RAIx";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="j9AqeY4a"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0D4383C8F
-	for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2026 09:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777021903; cv=pass; b=bkGTZhSJe5wXc4Ozk0zYh5I0ICNJMK6DhsS5NR2x5KAJ6PYqbCQc2ANaoCr5OQCJJi/o9f/7fNWHtRN7TXddgT7Dn2O7UgEFO1IvGv0FLuFI8xPHpmR64SlpJKvYIXXzAEotNCewXxZKwwOc56n5vBGCEgGxKSHKhZnOiK1UAyY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777021903; c=relaxed/simple;
-	bh=bCVvojzYqQuDyWp0cOp3N2y7Tu20jPoOeLNc1/1U9KY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eWSw6shUjOfS31wX2UZQphZqPP2wo5LUDGPXLKdyS3vCKbzHLB4KeUQwgoosEU6C5hWBb+EJTz0CZV18/bQEHkbqfTa/ghkAqPzROq7PyHhCHWNQ7VQouVh8qHnhjJim9YSY6Xa+Amz8TRqu+ZuonPHTySWiFNW2wjOWXB/BMb8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=idXwK1lD; arc=pass smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-488d2079582so88536605e9.2
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2026 02:11:40 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777021899; cv=none;
-        d=google.com; s=arc-20240605;
-        b=O6hLjgHklZufHMH8EQmLxWC2Ufr/L6H5Cd4w8ZyVQnZReXiBxGX/VzbcGdLU5DyykY
-         Sxsci7yt6+5qbSwDlKmRwz20f2VLm7vqhwW/iBwV+IUQ2rnUjRj///vMmaSEq8mPTJ4S
-         zxzyaQXYrMjUAw7tcynbVzVnAO1Wh7SjutV2vPA4Tq5cbn04fVIvAfr1q4QxF1gTU3Eu
-         ZxCSeX0IOmn4a4LZoIn4fKHSsgC6Agx4+kEl0zoi7mIlfvPLDk9f6gg8jdPnXWp6CNQs
-         PlOojFnkYDwh1jUSzPIxcZZrpif9oCyoYGgLMCsT4smCJwIPrYWheiLn/FpoP/uIUJq+
-         +kCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=miy2q2ejB68ifuUHv9cL8PbvBuD8kpHsI5eemIqLjlU=;
-        fh=722KtpS5XukMZUt6kWVQWnT6Oxg/CRenkAB2bj7ksWE=;
-        b=ihJCJ3CKmO8E1Lr0FZ4G3vLMIjRyfmExC6Ip+3ri57wSimwTIAjMBbb7bku7JtQ+/t
-         O1g335K4RmTbtClp3g83Qg4uR64NVSxCYvBRTzfWsRtAy3bbv59T9gJgSVonT3k1jyRj
-         3o+imVpy1i4tmXmO256Q9oeFvoE1mm0Gq6mNIBeuk+jhnORw6jPdJKi/i+Zaf4NaGCdC
-         r4Vn6lp4+WfaQ7KXlliZwvbq+uyHbMS+A4/9Nn9Mfb7XHZ9wMRMhD1GMhPXHtsmMrurm
-         Wn9kJErOCY8y4tMdg8enpM+4gleZlTLXvT8ofavHzxRtckXe4CPGFKOESF5twrZeN1gg
-         7uRQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592BE3033DF
+	for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2026 09:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777022105; cv=none; b=QhOZBZThcufDqJ8+L+vlX04b1G6jArLn8qQI1VvGse/le/vERDbxtLM2LBcHV8oHQb8j+NIYETsfFpIKAZNnyU2S4jn6JnDRFqzgCDbEDKrDn2fSVXEX+HT8uIRu9MrJXpKEo65EV0Ir3rB9FzzIl6QYgr8zXK0GuvOubuWik7Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777022105; c=relaxed/simple;
+	bh=P8vn0C6citzGLq21XMsH9ZxmLpJgJ84HjMtovS88ioA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MMn/smHKOdyHjSKBCsHCtqYW/ooAn34o7WIPPo/Zp20KcSciWMZVILUUxxpZfsv9zZgqGMvpl0ZwTShGGD4dbt1udkem3Ot3EIpgn7PlmrfSNYFWySAHlnmamJkLE4c2fEaFlzaMYienhH2lo5lLaFjGF/ND38XvcU8K4t//598=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LW0/RAIx; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=j9AqeY4a; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63O95h7J1533417
+	for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2026 09:15:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	dczzA+m5o+RTKSraLloNXSj8G6ES72B4nPpYKJunUQs=; b=LW0/RAIxOjQVPymn
+	ologMtlRuvk2V6PjmBGTPQWoxBLy8o6wPDo9MK3ylzlgQ4g4kcXbjTNTS8I/FDg9
+	6Xwe6bye3fRFjbzeP6eDgagO9OImtMNrSTDGyBHNI5RnZxK0bj0epGZxkfwkV9T0
+	RhL/bLMjyhUIv6gS2dl/ftHqGLHl64l10qYFkjUjbnVmsQXsg48NiBjmGUhRaoRf
+	biRKb1VvoDRsMWitmzBF2lqve2rWZT+12v9v9TFM/xnL1PVcXe2UaPD9eBBPUZ8q
+	zMXgsOy3d8BYMAgU7uPjLrU/oFkhtwzLxU29RNwNqvAYIA6Fg/zNnI9I2V6BDAwV
+	FvmnDA==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dqr26kad6-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2026 09:15:02 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-50da31af14cso207391301cf.1
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2026 02:15:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777021899; x=1777626699; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=oss.qualcomm.com; s=google; t=1777022102; x=1777626902; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=miy2q2ejB68ifuUHv9cL8PbvBuD8kpHsI5eemIqLjlU=;
-        b=idXwK1lD12vNoVUylAds0/gXrRAjkyzpM2BoobCyIMkKNiBLwu9RENwbRvusdELl60
-         X8RcOs0o/M1vgnMQpI14zGHqdCnUnE6Wdn2SyMAQm3g54IAacXJ+DNPEHEuXAvS19cwJ
-         lPeBP3Oz/ADBa7AVDmuY07Sf9RFxM0zzl14JxBS0QoXyD2WG4zdAbB4wgBmb45lhFob3
-         nYu3+pBYmMWx8ImQir8iwOOJnO+iNDKQMxmH7Ss1psNRZU0XgJGHwYkLZ2I8kJsfB8df
-         qOWENIo0qIMA9ZFBmKU/7y2ZcWNTDi8sJZMkL9MGi3lKvL+1Qw4VFuQmjj0CNDo3/PpU
-         N/QQ==
+        bh=dczzA+m5o+RTKSraLloNXSj8G6ES72B4nPpYKJunUQs=;
+        b=j9AqeY4azQNRJ155XSCywNS6186ic6CCTz8ZsLbyNfOB+mG0n6V9O3fZAUk6fz17Em
+         AsBQcJXes0pWqIgzvcrl9XXOg1I5ddQ7jRHniH+tj0DD9AgMfpE5nXcRLaT2WGxcUDUC
+         /ir6DmqOL3ywO6/bRkVU6dH9ELX9g7z83yDfP1U23b07BLInMFfoVl87277VWdSG4tew
+         Yzgu276RbpQEu2sQL077e2FaJ2RenL9jk2R3v6TbglDbskQmX4HtDg6JoD3XePoyAyeA
+         BN72OaA38k8+BRgtcoIS6hFbdEwYMOHcr8Fu53eGfizoqYdtWyshkm9CNbDO1AhkCzaw
+         2zrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777021899; x=1777626699;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20251104; t=1777022102; x=1777626902;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=miy2q2ejB68ifuUHv9cL8PbvBuD8kpHsI5eemIqLjlU=;
-        b=TP1kTedr7sj3c29ZY9Kn16/GbpLpwMmD6r2a1ULDzZUbDpnOkpXlFJdAlL4ZfYtcVM
-         zbll3qhkQaCq50B5KX1202hcNWBOKtisMIjn7NMRdS5lPkJAjhOVqdEhS4K4UTBoV06r
-         /6UrTG4zufh2plTsHtAccAxrTYQRLb+dZTkJJQct7+cJ1mIsmnhUtBuYTsOMhdu0/c7D
-         MWw5SEbBbr/pfiRrdxsujEenM8XWIqSDXTvAvAn1lH0rFjLTh9YjEkhaaHAwhvj1GMZT
-         SacfmkcDkURzQheAYISLgtlIRJMLVmmH9XHc5zx906OiJZfCV9NhcgL7Rbt0EH3ldFyM
-         TSRw==
-X-Forwarded-Encrypted: i=1; AFNElJ9GQyta+RqGTkQKrpQLbqf0Uza/l+izOiR1TK8LeYbtr0KwHtg5SwCkuRX7uKB13gWCNK314aiatje+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxpj/E2MMEAf7fNJ0/feOJhC2z/TCViZzBNNNyxNYKHfeU+Ewi/
-	0jSmkW+gtKHBbdxUmV6s7ZD2PMtQl1hlB5OTu4FNldKR7kq2wB8Rt8JE1WhIxvqIdzCQvfQjPnL
-	CXYzN+uraH3NG54So9u0QMILVaPZHiYJMgafd
-X-Gm-Gg: AeBDietjG37AHYLzQsW1H2OcI8cQaYUr5b/PoThw/oxlp/gPKwglMKguM+Jzx7f0qiP
-	9FPbnU3VS9kNBqMgFI1YEov3cHTbX3SdZyAYZaJ3hY86wgfDvaZpHAD8ARVUtbr8QEdbO/tkYsz
-	nKVP6ulWgSb9lARh2l8wE43kE97WsCDQhBPfBHiQE0CT0nGiVYVot4KdRgAv8xPyBl69ciUlEjJ
-	O+kYvjRERgWQK3+26RfYumoJahhg7U0zHaxYiCzbRZw4VVqisHgBTdAOZchkwns3eU+LgoAeIw4
-	lp1TtcPkeDSYjVm6lw4mw9Q5LN8uKgsr3/IG7DzrGdOTwI+P1LFQZRVyUlnK+t49MqbdMLqmK3a
-	fMg4=
-X-Received: by 2002:a05:600c:3596:b0:48a:563c:c8c5 with SMTP id
- 5b1f17b1804b1-48a563cd1b2mr218141245e9.8.1777021899224; Fri, 24 Apr 2026
- 02:11:39 -0700 (PDT)
+        bh=dczzA+m5o+RTKSraLloNXSj8G6ES72B4nPpYKJunUQs=;
+        b=T/Jxag4fvPhaerdQF3FUrwl3kVecGNuwtOU9mBUyFSe601V25ohobUxp6n+kH8o1jj
+         z/PQzk2OT78yPJ1Yo3y0Efs8iiXETcq5ZfcYXeKBweA72msx6auY1qYObpQeOd34xBT8
+         DPTHvPY6PRI8mS6x2yhio4Nr469LN11tKsSg87jMfbLrYSriVIDWexC1TBAzhGY/NdKJ
+         aqJ4ify5FPbNcof1xquTv0iieJa8XAWNlWuDS1VR6tVbJFERccLxmENgnqvOYijBuSFS
+         VlTFIAV4Dny/3sGNF2sNYH2ozjo9gaLsRv9krsxF3f/yz/JPm6nzLVw0U2cnmvdX+rC0
+         OJpg==
+X-Gm-Message-State: AOJu0YyYZs08FQwaisNhoDZYWEtJAEpJqlwMcgoYVOK977KdN7KrKv9/
+	ToFJeRpahAx/MKdlFefUdaYZID4ne0eglYz1oztGXDWhZCYoeQrqGwPc2pDtpYzBO4mu+djlxL9
+	4CFaOKVSOebL6pLIXWPm7nwQf/AeeLz3fIEWL9buDumEDH7jVWt2gWzNxjp+eM3WPD2E9EZGJ
+X-Gm-Gg: AeBDietDYtAluuflzSogSmBIVlFJm1cTYXdrTaXhZAydeoRb74tOAiIc8wA3sMF9NQ8
+	TEfGyGk2TeTakNztYO5G9AexB2YYcA+D1vi5XHENN8qn2aENgiUQ3WJ/NxzFfvScj+XlBW+BwhS
+	g+Y+tDFUuzzDmzJ7uw9H4H1LDFNf7go+2f4U5rW5dAD4n9P8LT99hiVS2XoaPUm54D3NTIJmT4C
+	Wk05yDObmqVqozoT8U3b1oc5vwT1FxYOc5x6uyyUgnN+sdVsY2a7CXTi4DL6nbLPEoONdDGbWeO
+	d3mylF1Ge4gISxPPcNYoFgmr/iEV+4ca/YM9JjoLnMoUPZ9FTUtZKwfJubJ1DCJmtaSQx8YQDTE
+	DyJknrR5TOH/OhSGaGH8pbfVTRnqfYtaKUmz99PoyhBZKqkA2iwfUUb5NAUQ7
+X-Received: by 2002:a05:622a:4d94:b0:50b:3d9f:384e with SMTP id d75a77b69052e-50e36c51196mr439857521cf.44.1777022102134;
+        Fri, 24 Apr 2026 02:15:02 -0700 (PDT)
+X-Received: by 2002:a05:622a:4d94:b0:50b:3d9f:384e with SMTP id d75a77b69052e-50e36c51196mr439856971cf.44.1777022101249;
+        Fri, 24 Apr 2026 02:15:01 -0700 (PDT)
+Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:35ca:88ed:3f2e:db28])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a55b8baaesm386567315e9.10.2026.04.24.02.14.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Apr 2026 02:15:00 -0700 (PDT)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+To: linux-gpio@vger.kernel.org, Vincent Fazio <vfazio@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+        brgl@kernel.org
+Subject: Re: [libgpiod][PATCH v2 0/8] bindings: python: modernize C extensions
+Date: Fri, 24 Apr 2026 11:14:58 +0200
+Message-ID: <177702209523.44726.7029839955267203403.b4-ty@oss.qualcomm.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260423222125.29097-1-vfazio@gmail.com>
+References: <20260423222125.29097-1-vfazio@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260413182456.811543-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20260413182456.811543-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdWJCyurtvXfUFw8NA7RONgtf9XqqWvrcg0iWjPBCutSEA@mail.gmail.com>
- <CA+V-a8vpkh_+Ka5mk-kewRXJc34oXFc5_4VgHUY=RU5YAFS8uw@mail.gmail.com> <CAMuHMdXtccbEZ0Bd=A0kvC5sg3YzMdKmVuiYrVpJMXpT2zqUYg@mail.gmail.com>
-In-Reply-To: <CAMuHMdXtccbEZ0Bd=A0kvC5sg3YzMdKmVuiYrVpJMXpT2zqUYg@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 24 Apr 2026 10:11:12 +0100
-X-Gm-Features: AQROBzDFyS3biKTrtU7_Eq2n7MWHBnnukWxEIubfoSLdXNDL5SPcwM233GIlJdk
-Message-ID: <CA+V-a8u7GRTZBq2AdPa0Hmm7MCGsNTkcrjRn9F0BkFeHHOOKzw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] pinctrl: renesas: rzg2l: Handle RZ/V2H(P) IOLH
- configuration in PM cache
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linusw@kernel.org>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 7C01945C006
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: HABl1cLJ8Vm8oJLC3aUfdee1Ov14eTkA
+X-Authority-Analysis: v=2.4 cv=QLhYgALL c=1 sm=1 tr=0 ts=69eb3496 cx=c_pps
+ a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22 a=VwQbUJbxAAAA:8
+ a=EUspDBNiAAAA:8 a=8j6Xd8NdIVo6hSJ-GiUA:9 a=QEXdDO2ut3YA:10
+ a=uxP6HrT_eTzRwkO_Te1X:22
+X-Proofpoint-GUID: HABl1cLJ8Vm8oJLC3aUfdee1Ov14eTkA
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI0MDA4NSBTYWx0ZWRfX5gPlY4id8/1K
+ zcC0G5iLfP5e26e4rpyI8uiUxMY18PD7icoAlwrt/0amt1SuGm8GCLGGNZ+Vg43clO3477ElSOz
+ d3fndAw1utlQUe/fjVg0Ez/fan/J6Lgenn1YMfnDzTuJOwBDuGglWFnaGbRVwaAWqne6vvOnLcH
+ 8JG55zZL5uiWd/JzBtuczeOVlTrVrxtqNzRqSP5bYGJaMICMnbgUekchjr3/K7uo7K6Gqk5PjVY
+ OQixY08yQSwKJtclgPsQqg5wdd1vSS3Kq+KuQCzFrlv34DEUHkZRdl1LGg3ZN3Q468zjEF1vwF6
+ J7ulwaSPZI3Mld1Tm+oYwFE2xCssERttIuZzY7j8VJfcjRe7pqd3+VN0d96u3DyjA02l1Qhu8Ry
+ 6rY+2kZoA5VbeeKF9PeIdusqOdE8dxvObML9Ll/vx65DrsngTNe+JQyuhYq8D7xujYimk2mZXY/
+ Z2s0J4I4F2f1oachxvg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-23_03,2026-04-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 spamscore=0 suspectscore=0 phishscore=0 bulkscore=0
+ lowpriorityscore=0 malwarescore=0 adultscore=0 clxscore=1015
+ priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
+ definitions=main-2604240085
+X-Rspamd-Queue-Id: 90A2345C0C7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35473-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[prabhakarcsengg@gmail.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35474-lists,linux-gpio=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[vger.kernel.org,gmail.com];
+	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
+	RCPT_COUNT_THREE(0.00)[4];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:dkim,qualcomm.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,oss.qualcomm.com:dkim,oss.qualcomm.com:mid];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,renesas.com:email,mail.gmail.com:mid,linux-m68k.org:email]
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[7]
 
-Hi Geert,
 
-On Fri, Apr 24, 2026 at 9:27=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hu Prabhakar,
->
-> On Fri, 24 Apr 2026 at 10:22, Lad, Prabhakar <prabhakar.csengg@gmail.com>=
- wrote:
-> > On Wed, Apr 22, 2026 at 1:04=E2=80=AFPM Geert Uytterhoeven <geert@linux=
--m68k.org> wrote:
-> > > On Mon, 13 Apr 2026 at 20:25, Prabhakar <prabhakar.csengg@gmail.com> =
-wrote:
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > Include PIN_CFG_IOLH_RZV2H in the IOLH capability checks when savin=
-g
-> > > > and restoring pin configuration registers.
-> > > >
-> > > > On RZ/V2H(P), the IOLH configuration is defined by the
-> > > > PIN_CFG_IOLH_RZV2H capability. The previous implementation did not
-> > > > account for this, causing the IOLH registers to be skipped during P=
-M
-> > > > save/restore.
-> > > >
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.c=
-om>
-> > >
-> > > Thanks for your patch!
-> > >
-> > > > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > > > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > > > @@ -3033,7 +3033,8 @@ static void rzg2l_pinctrl_pm_setup_regs(struc=
-t rzg2l_pinctrl *pctrl, bool suspen
-> > > >                 }
-> > > >
-> > > >                 caps =3D FIELD_GET(PIN_CFG_MASK, cfg);
-> > > > -               has_iolh =3D !!(caps & (PIN_CFG_IOLH_A | PIN_CFG_IO=
-LH_B | PIN_CFG_IOLH_C));
-> > > > +               has_iolh =3D !!(caps & (PIN_CFG_IOLH_A | PIN_CFG_IO=
-LH_B |
-> > > > +                                     PIN_CFG_IOLH_C | PIN_CFG_IOLH=
-_RZV2H));
-> > >
-> > > Unless I am missing something, PIN_CFG_IOLH_RZV2H is only ever set fo=
-r
-> > > dedicated pins on RZ/V2H and RZ/G3E, so this change does not have any
-> > > impact for now?
-> > >
-> > Agreed I will drop the changes from rzg2l_pinctrl_pm_setup_regs() and
-> > send a v3 for this patch only.
->
-> No need to resend, I will drop it while applying.
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> i.e. will queue in renesas-pinctrl for v7.2 with this fixed.
->
-Thank you for taking care of it.
+On Thu, 23 Apr 2026 17:21:17 -0500, Vincent Fazio wrote:
+> This series performs some minor cleanup of the C extension modules and
+> migrates the module defintions to multi-phase intitialization (PEP 489).
+> 
+> Patches 1 & 2 avoid calling back into python to perform C level object
+> cleanup.
+> 
+> Patch 3 introduces no real functional change but simplifies the code to
+> get the same result.
+> 
+> [...]
 
-Cheers,
-Prabhakar
+Applied, thanks!
+
+[1/8] bindings: python: avoid PyObject_CallMethod during chip finalize
+      https://git.kernel.org/brgl/c/53be72baca59ef4488f8c998d9cf6b172ad9aa00
+[2/8] bindings: python: avoid PyObject_CallMethod during request finalize
+      https://git.kernel.org/brgl/c/e5b6f6ecb9f81097129d6d05b5e6b2a1ba75d8d2
+[3/8] bindings: python: simplify disallowing _ext.Request from being created
+      https://git.kernel.org/brgl/c/55ce0cf68158bb61ea1ed52d4a827e7759beba6d
+[4/8] bindings: python: use suggestions from upgrade_pythoncapi.py
+      https://git.kernel.org/brgl/c/63d4fd7ad704073f6e629fdb66c4302cf398f502
+[5/8] bindings: python: use PyImport_ImportModuleAttrString when available
+      https://git.kernel.org/brgl/c/9106b6c190e9852157ef0e4f0683823862a289ff
+[6/8] bindings: python: migrate the gpiod._ext module to multi-phase init
+      https://git.kernel.org/brgl/c/89ffee834920bf7daa85b529ca9877b90d4d75e1
+[7/8] bindings: python: tests: migrate the system module to multi-phase init
+      https://git.kernel.org/brgl/c/bf4211f3e19bf6acea2e3a49dfd46a734dc90a41
+[8/8] bindings: python: tests: migrate the gpiosim module to multi-phase init
+      https://git.kernel.org/brgl/c/7acbbcf7789719f577d0ddba2298167ea73c57ee
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
