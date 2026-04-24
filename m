@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-35450-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35451-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sAVLIjzK6mmtDgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-35450-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 03:41:16 +0200
+	id +JlzCWfK6mmtDgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-35451-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 03:41:59 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C131458D83
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 03:41:16 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22466458DA1
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 03:41:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B0F4E3020FE3
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 01:40:19 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 63DA5300D56A
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 01:40:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B70F12773DA;
-	Fri, 24 Apr 2026 01:40:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 363AA299A87;
+	Fri, 24 Apr 2026 01:40:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="xdVtIpRn"
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="BcKTN8z+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013025.outbound.protection.outlook.com [52.101.72.25])
+Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013046.outbound.protection.outlook.com [52.101.72.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1F1277C96;
-	Fri, 24 Apr 2026 01:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64EA629D28F;
+	Fri, 24 Apr 2026 01:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776994808; cv=fail; b=Wiw1BnBY9BflVY2cZki6+1WB1exWA/cuKKurrMkKNF7ljPDzZzYY/7K1d1aGJupcIpToRJDmtN/9I8MrJ0Q6rtA5gkUjOX390z691YLTNCzmO2C+WG5eO+Q2hkdkUWzWNLahoLzglLbM6xi/LFFsyU76ClQNFOQEV2a6nVPKeZM=
+	t=1776994813; cv=fail; b=h4NSG2OpzxEPjdotKtCgtqGp8rO5rqwa8fMmsEtZ9icHNpMTd8P+493lTLyCh/aFpvQ1alhfFif5ke6hfgMq0mhGA8CgBhd2Rsy5ftjFkDSC0b2BcG6CW+gcPM0tl1tnVFDsNUMKOO08lP3KifvJcL+pjodDp4sG+qNl40r7tpo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776994808; c=relaxed/simple;
-	bh=BYLUvPpfzaIBNeRQovwvRJKp2H9g8OyEni8+ktXRgvs=;
+	s=arc-20240116; t=1776994813; c=relaxed/simple;
+	bh=cLTIfnGAzIjEnDLYcdNOv8VjdnMkTIVDwIhgt3FnDhM=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=OShKb0TNwL2vOUfyWJb6BhgainWZ0xc8RsL26ZQrN3ebuEyZSCAvRu7SjhKnbHB/skAEnRb+tkHtQw5Xm+dVLsh1GapP0K96KktEZbEJSojeMZJZYD7yAclAzx3F6Gb4wgy49Pf8qTGeTDl27Pvg3QXkzp/TxI0FMn5rit9hMIU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=xdVtIpRn; arc=fail smtp.client-ip=52.101.72.25
+	 To:Cc:MIME-Version; b=hqoqJzmdzOcfh5gCsH9YBJTqVxqAj2THShbZ8lch6aaAOeM8G4b6CPp6CSA2Q6x0/sAGatsrr8y8dJUepflr8D/IweAmAZAkVyOTkc3ljiTnE0KAdXh0Fcx9CXAjefIOkYwguSL4hQ5pF9nJ2ELfFjSrkNKq/3bMNnLjRLsFil8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=BcKTN8z+; arc=fail smtp.client-ip=52.101.72.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Zn1Ci4ukIUrW0Dm3gp5EykA/Q/6HxaLBXpeNjSLP91kqmmAu+GWJ7Lg8XQSCVrLAj+AB6VvhGzKC6RivKwytv6xKhXYD6hFr/8TTZHMRLbRY8We911laf38xJJA+SpbSR7s7ywT+SUZvvPJmoYaaNVUvZS0UnxJmBFObnqUyUVT7UbbphqxefqdSxcLuQr+g4yDuEA6ABpwT1gKfOGd/CAYeEBIRTw2WqIVRM0nQhte2gk1Qaa7Gks6ZV2yY7hK7DopZ1OFJxNosmr4vyjyG39gjVgfj0AqJu0UkKXarRgiiPrHknTa0m+upLYYYnwC3E4IGYpR02CjYwdFJ3tHW6A==
+ b=c9Crvm+qnuRXqgzxEF8xLIF3kkuVzAZI60ZXVxdoSVGYQkejye3Dx5ntSoENGDMciCycg193PNkvl/VavJu4aKTzAebFp8TSga4HOaPFhVCPtgyRwctvk7YFAbvNrK27oxZOGAtjAJR6xNajlIBNIWzuHAhLGzhhEpo6wQTqP9MMphrd0VIw3qI75inaIZ/gL3/gsLW9WYn/DO5hB8PydmIbe8Lp/BOEF93wCALz9vtwf2o+dsLjM1X1XMTD9umJzeZVtpSz1t3g6RlgmRBLJyUnA53SiCaFK7PHPDaFIPoStID5sgKDH+PttaSlf8Sv9VpXs6XCTkBgUaVupVh/Bg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=62f+Qx0wlmDEkQvxsskjpFYSF7HYxHmyfReCsejF4Rc=;
- b=YwoBqixEz/6QL9GTjwKBp+ZzwKwEPvGVfXg60nTEjWc+nPiPWppFhqA0r34YkOx/0VKYIXqj0HxdpKcwI2wPUDE8cpASpHZCuI1xDZUfjo4/99miCksrHgG5w9fxVfeN1gikh3ef5oMRttM6CrT4J0CJ2MXuUij8hHJgIjU33TRoW4H8vzVjwX7IPlVLxQB+Edr/K4F+Ok49tw/T4RuLrlz+Vh2YB9AU8mItZx+SlYZOtI6Bb6XoOyDwMnwnh1eISYodSLPd94F5dUF52oootBTnKa5yft/EWU1GoywLV2wLWXy8ljaPttAjWoVhH8cYIY1/XGWC5Fyjm18AenG4Iw==
+ bh=UdtLwQJLtDVIBENIs3xfWkzAlnCbUk0cunj+tIuwIz0=;
+ b=gZog3TNIO0IadhNS7YSX3HFvsMbORbKqgAqV3FfCeb5h0COQhp0vaLI0zTSsSQVcISfwmuFE8Gctc5v1MnK1G6I6pcK4+BfY/ixOUPjM2Zsl3prHVaxffaCNbCsXB7lPNaYzowNpDG05h3B7tyk1mGgtXH3gi+geoH192ocbhoVSfhZKNDi2kV3oF2eTAxgurnHKV9IZSNF8Jsi8jBVMLWKQr9stajiQyhsZbnY24DUpRQYQTuAQgwZ5lrNBaop7K/PJv3obnXrwGB3+mg/Kx0hpZk26MFJVLmocXNF1Ozc7fec5SO0zPzm0TGC88FnDmtKgZKwhrWOXhRrV11WB0A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector1-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=62f+Qx0wlmDEkQvxsskjpFYSF7HYxHmyfReCsejF4Rc=;
- b=xdVtIpRnCQmD7yJdbk+L+nq7eENdHD7FQbZvQBYpRNliNPod0y77f4vFUt4ZoeN4zTLs4H48kGdXg+0YTno3AulAvT1GAarDyHGzB5+MBxY4YIQYKTnYX3Ro/kBnmnVzugUOLLQpSxPA0HrG4nfIlVKVGkUpy/5lt1B/eKkU7N4mlVypJLI5R4bRznvxBkJDOoWjS2jrnctGSpQt2Jwrp6AuIck+8VI/gLXrYWXJAHDibk00MMVneflcFYZnpt8PPw8DZQ5AlAM16E7wutIgRcfYrrp274qvQWdqRvYag5TqEp06rlpXzYKtKvwxKY8nRZ7pt76oft1vwMznypqncw==
+ bh=UdtLwQJLtDVIBENIs3xfWkzAlnCbUk0cunj+tIuwIz0=;
+ b=BcKTN8z+q2aa37FUK7DvtUb1tI94sZMifwsDxkHVya1G5s6wYp0Q/R/sM7q5TmfUmkkcfqjfo8PkeJE0hRYA9Ln/XYx2EknqOv+tG3ilZGaMVOd4x+NW3bvgYGqwEaNP5ivlFVaoCAIR+KceoIer1TdLdkxxOiQGHtrp/W0ZZa4pV/ynxjngLRRAMLUmPsikw3A37WeXXdeYml/QdGDJ/MqKsEy5WFOcQOBqqoD7Ud52sJAt+ZCxtXTYddA2Vu6aJS4mL6EIqO8mrb+maE6YQzdVZTamk0pHJ6ifWf5tjgNo7LP+u585wonyVSBPF5r/chPPi98acvgjiDdkPkPJ0g==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=oss.nxp.com;
 Received: from AS8PR04MB9080.eurprd04.prod.outlook.com (2603:10a6:20b:447::16)
  by VE1PR04MB7455.eurprd04.prod.outlook.com (2603:10a6:800:1a1::23) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.22; Fri, 24 Apr
- 2026 01:40:03 +0000
+ 2026 01:40:08 +0000
 Received: from AS8PR04MB9080.eurprd04.prod.outlook.com
  ([fe80::92c2:2e03:bf99:68eb]) by AS8PR04MB9080.eurprd04.prod.outlook.com
  ([fe80::92c2:2e03:bf99:68eb%6]) with mapi id 15.20.9846.021; Fri, 24 Apr 2026
- 01:40:03 +0000
+ 01:40:07 +0000
 From: Guoniu Zhou <guoniu.zhou@oss.nxp.com>
-Date: Fri, 24 Apr 2026 09:42:25 +0800
-Subject: [PATCH v6 2/4] media: i2c: ds90ub953: Add back channel GPIO
- support
+Date: Fri, 24 Apr 2026 09:42:26 +0800
+Subject: [PATCH v6 3/4] media: i2c: ds90ub953: use devm_mutex_init() to
+ simplify code
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260424-ds90ub953-v6-2-7a84efbab316@oss.nxp.com>
+Message-Id: <20260424-ds90ub953-v6-3-7a84efbab316@oss.nxp.com>
 References: <20260424-ds90ub953-v6-0-7a84efbab316@oss.nxp.com>
 In-Reply-To: <20260424-ds90ub953-v6-0-7a84efbab316@oss.nxp.com>
 To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
@@ -79,11 +79,11 @@ Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
  linux-gpio@vger.kernel.org, Guoniu Zhou <guoniu.zhou@nxp.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1776994953; l=3804;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1776994953; l=2757;
  i=guoniu.zhou@oss.nxp.com; s=20250815; h=from:subject:message-id;
- bh=gje9vH51hA/z/uPiO/U0Y8u7/GSL19gAMVItmcpKXyk=;
- b=q43dFBgNL4z/+VXHauQ9fUK8YnfNzkB9mxBz9RpCxdOv7i+f6tGklJiSgUT4AKbqjG+Ahf+V4
- WsyiVBodJJ0AGUVp7SjS7ueWGhty8eFzescrFZw6Okm6v3MVuNtxol+
+ bh=3/WEgG1NNImg/h3VAcPVEQFyPY2QkmrMkCtpoug71jo=;
+ b=OwpCwb4CaNaTWfiVeTvL1xK92BneX9OVG+JpMI12NCkR91wwnDWLxqBe/eUWiEe0/idi+zCYU
+ BrePqsM5oDBBo7MT0jO5hkIwhOEmatxHw3805Gx/BSdxXHCE9iWq9a0
 X-Developer-Key: i=guoniu.zhou@oss.nxp.com; a=ed25519;
  pk=MM+/XICg5S78/gs+f9wtGP6yIvkyjTdZwfaxXeu5rlo=
 X-ClientProxiedBy: MA5P287CA0164.INDP287.PROD.OUTLOOK.COM
@@ -98,81 +98,81 @@ MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: AS8PR04MB9080:EE_|VE1PR04MB7455:EE_
-X-MS-Office365-Filtering-Correlation-Id: bab77a13-dd2c-46d9-e6e0-08dea1a267d2
+X-MS-Office365-Filtering-Correlation-Id: daca719e-e7c2-49f2-5eb5-08dea1a26a9e
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|366016|7416014|376014|52116014|1800799024|19092799006|56012099003|22082099003|18002099003|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	YoJI5KE5RITuPs+mO9YhtZlRw6zc/D7kUppwBUhqgBR87zxfgDJZY3V4Mxz7bQY6HV7KxVL3epBZJNgHWNH1x3df4HHZDcmmPBtlWE2iTchdWvgOa1D3+epSyoiyaCOJUE8M0ERtLXpO9m5D1SbXPLVwah/4x5A0DL7h+ZX0lJGrHSKcnCMxkkSKIUfprTHuD7uqFmVmLHb10V9rk0c0H3jAaJbF2A8L1Y7lq/Tzda7PnO6QylTI9FeDUrAFYjX16oh4oo49S9eccXpMjHTGtG/XA6MZpWSmADpIYsuLAxYht8P8kE4Wl3wwqAEfyW6tDb69/LT+uSEhzfyGR7SZeg942hRjKXic6pYvagm4J4CoIHXEM71SVZChPZVpoe5hkWOTME8N89M1ScaY9EAT9Pt8GG8W0GXw8xmVv6klHGUzDh5P2UcV7lcqKVBhcHJMkYgoSo4p/B+O7+Tb/ao4lU+7vFofAWJsW5cg6CRBPQODXOgcI3TgbrWApzsJfxE+uL1V41qPgpb/V5nZHLwogtw+r30N7kY3QyyoPgiWtOIkwgGvFy0nRPHEmwYVNJY74ZbxXh7hVJPY7FvBsun2AkAwLnTg24uIKZbW4jFH3un93NgOet4QEmMl7Scfp2HEbtWPlf3ZKRQg9xjaz2+iYfLcEnxrt5dKlUO8XT36wYSxmysx9HOIKleYV/b3PAjPdKNlaSN+sdJwUg2Cv0t0T9xfhfUXLXL2ajvDXNa2j/WbU0q5u9fqKULKnuiYtzNocxFKzfrka6IzkkMnJaFScmfWFWZoFKQNL8VQZS/7gz8=
+	UV/rrH+UCYcfHZtHtdyl/HvdCuaoYUikP+1KG7EyQ1gBPGq+HslQKvSMLS1VpdpUVsh6QRzKWAQkHUkck8HFKKeBo0oxhJLuL2wRLZQSRbqrvoCtn008+0kXWwKlpaawB/hf6xH844mc2gl/YYiVnUuBaVTb00edCqtBbJ6YxkoLBkVufUJKZAjx+QqqGFTEtJyaErshaS0Eihy7L54tD1vrCm3rNaxOsZCTS6o1/QFzCAvHvxGA1k0h7TNHA0AR9KofaXGjavUhr597+zoSpZ2OOYtQZuM8PD5BPtzFb+XlzIBhBV3h7S/gMXyNLrNjukEtwtYs31hZUTyddUO3W1MEWCvkca31Fmw2Qc/0amCSsq+E/0eMVBiwANhB66wUAnMoOBljLmpirl7dNamXguceMTYv61vFvOYAfGjsTB5WicNwgpTNcIlNWLJmpH1zb6NB45PEBFDxHrRper2LYwP3Nw+f9XpEogFsOgjN3z5e2u3wkuW8olQwly7i0figa6gaDO6SJkbzj3L8G8T1VfOWUC3DAyS4f3OqKf7tcc6iH9QFVqNWYx2Kz8bcR4cqe2qt5ip+1fYdEG1f9/bSM0/6YJNCOISpq9YezqwyWAMNqfZsH9/MjlQTOXnSjFNZu440aWSrNj4RbTw4q9sEP8PNVi3OxQqxpBeXcuH/MJROawSudCucQVw/ZrqfhLfG0XiOAmHtVJs63W8wnT+cr+StjcnNsvcH+B0CWhFf15wnP+4NP5jthj2SQH+TLWymE9aJqFq+3uFSPl8NpTPZHP5bWQGl5nusx4mGd26mhqc=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB9080.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(52116014)(1800799024)(19092799006)(56012099003)(22082099003)(18002099003)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?STYrK2NtazhSVjl1ZzRIMS9CcHVVRU9ySTM4RU9tbEF5bG5FNmM5TDhZT3Vz?=
- =?utf-8?B?R0ZzeEU3Q3RSQ0orTTBYRzRWMGVVNUxJbVlFay9TRG80OTJocGRBQlFTTDRR?=
- =?utf-8?B?MmdOSWhxWWFSV0wwYjdlYzFHbDBYTTh1bkRrM2VwNFBFYXdpUUhwdGRnUTV0?=
- =?utf-8?B?TSt6bEduUGgyZmtVdHJWNjFQbkpXeTFQWm43Y3JtUlpGcEFsLy9OWnpqOGMw?=
- =?utf-8?B?ZEJjdUxlQmREN3luNDg0U2prdzFNS3pPdHovd0IxRUg1eG5UTGNuQmx1NmE5?=
- =?utf-8?B?MmlESXhoalVzZm1ITWJveDZJa1JCRUt6TUZCYnkzc0NSZ0tCNFR2K1h0R3kz?=
- =?utf-8?B?VkdCeHNWbUhoTTArQlFoa1dRYlk5eUJMUmpzYmZwRTE4TVRjcmltYjRPOWt6?=
- =?utf-8?B?a3VVd3lOWEdGZnlNMnZodllOTFV0ZGxPbEQ5cnJITWE3T242QmNxN3ZhZEEw?=
- =?utf-8?B?cVBJN3ZmcE83bWI1Znp4dlpDTWl4UHF0c2daVDA1ZVowZEdkMXJ6UjZOVnhw?=
- =?utf-8?B?ek1zMm5aZ21DY3crV05ZcTV5RzUxMGZrL3FHMFZNYVFvaUhqWi85b3ZLYWV3?=
- =?utf-8?B?ODFFUVhBN0tldllMRU9yaW95T3BBYjR3a2pMNHNGWHpNVTdLTW5SNDk2QTFF?=
- =?utf-8?B?UEcwNEtFb3Z0ODY3Qys3ZVIzcHNvek9OSEt2a3B4cmFySGJjcklEUnBBMUtW?=
- =?utf-8?B?NitPVGU0dmdXYlhCY1BSb1k0RGxLRjdxUHpyMjdyKzhRMjF1VTlSTmJ3d21l?=
- =?utf-8?B?eCtGanhwQlVYSWlndDEzWVZZTjVUTGJFQWhvRHNBMkJrdnB5eFpCcEdLUHJY?=
- =?utf-8?B?NjBqK2R0Rjd3dnhrM3VxTEVVa0NHK2NtcUdIMnJpWjVLR3hqS0phQzRILzRX?=
- =?utf-8?B?OHZuUGNDTloxR3U4QWN1RFAwUDkzSStpMmNqTzBac1ZDN2w4Z0NpM2U0Rktm?=
- =?utf-8?B?L2FTQzRJN2lrVk1NcU1uQkRmQjBBQ3lheWJ5Z1V6WkVDUzFQOGFUN3VSRTVQ?=
- =?utf-8?B?MmsrVm5KZlB1TlBZYzIvUmVHY2RFSUNNYURxZGRSYUw2dFBLeE1FUTVPaHdi?=
- =?utf-8?B?ckNpR1VqWEwyc21YckdhWUpWQnNRMlVOOW9kVTZrd3JYWGlJZmxEVFZjaFdj?=
- =?utf-8?B?WjVXdUxUemRpU25DNFVaQ1E5Nm5lcGRQendjemNMakNBUW1KeVlYcnAweVlT?=
- =?utf-8?B?VmZ2QTVMcGg2V0dZcTlYcXNqVXo2K3hLYlozc1VqcXc4SnNoOFlYZitIdHNI?=
- =?utf-8?B?OGdrSC9ZN2Q0YWtTQzVsVW1aOXkwMWwyc081Q2RhVXYxVHloejR4WHFzTDBa?=
- =?utf-8?B?dmVQYXdzTmNEY09naGRjaGYzWDIySFJXb0dQTENQTlVMTWNWUDA4cVI3Z3Zi?=
- =?utf-8?B?cW90RWNYMGNodnA0M3RDenFTRTFXcWZHVkhDK1VsaTNJUVJjb3pLbUJCakJ3?=
- =?utf-8?B?Mmpka1pCbEhRZ09lYXVtUDhsVmFGdUZOa2F1RDRiYW40NERCV1lDeXZsSVMx?=
- =?utf-8?B?eWVLcThZa0hSMDNoYmhGcmZqcGczNTZlaFY4M2dlTG4xRkRlNzRpV2RCWkZx?=
- =?utf-8?B?ekgreUhFcit6Qkt0R09teDE3VVAzNlJxUnBzME0zWS9Za0NuK2RUYzVyWVF5?=
- =?utf-8?B?NFRGZzB0czJIWTVoTXp5THA0bU1jQnZCZzI3N0N1Q0cweFFYQjJuZkNJNzZE?=
- =?utf-8?B?WHptRmVsRE0vMjh6dy9mNkFTWVdBaFdoVjJCZFRXbDExTldMdXZkaGlsbTdt?=
- =?utf-8?B?aWxwU1cybVVWMHY3a3ZXNmp0L01WTS81L1kyOSsrMElCYURFT2ZLb1ljRkI0?=
- =?utf-8?B?eExWV2dGQTg4M3JYaE1rRTMwSXdpUkJWWVdFa3h2QUY0WGthWFh1TUpwSGJw?=
- =?utf-8?B?Y1NSNkdDNVEwcDFCTk9OR3ZOazBKQlJjei9jeXFVZDl0VFdJQUFNbFZYMEJk?=
- =?utf-8?B?bmlVMzQrSmRWczczK3lxRTN2dE44Umd0WlQ0SFlHN0doWGJ3K1ltSU9BaXEr?=
- =?utf-8?B?VDZLL1BrYTQ0a205bDZuV25HMGhCNi8wVFpXcnRoaGtaTzFyVVBLb2tUMFNz?=
- =?utf-8?B?TzhubThNRGJQd0FVbHptamcwYzZoOUc5cWIwZzUvT1FHNytPM3FWTitLaGwr?=
- =?utf-8?B?UldSK1A2Z1ZSY3poSUdJZnZtelh4YXBJRTd6QTAreUcrakFlTW5SQTlaVVpu?=
- =?utf-8?B?UzFZeks5aVNVNHdvd1NiZ3V2ZkEreVRYTThRTmltRU13UHRhWHlrb1BtMkdk?=
- =?utf-8?B?Z0RJeXp1bFVENmlKRlAvSXY3eHdLQmxLZHpxRko5aTZWaDlLWUwvUldpM3Jx?=
- =?utf-8?B?S05GNjVielYvVFo3UFQ1SWxFcnVuTVdNUVF6c2FGMFo3dm53Rjd6Zz09?=
+	=?utf-8?B?cFUrRE9EbDgydC81T0dlSjg3Y2hVR1F3RHBkQ1ZWT29uQW14SWx0TndkV2U4?=
+ =?utf-8?B?RGV1SkNPSnQ4d3NpSXMyREpqeWV6TmVsdU1MSXpySHhmTVViUC9hOEJtbEVV?=
+ =?utf-8?B?Q1RuYkdJcG9nUTFZQXFCZHVLcGhyT25TYXRQeVVxNk9lTEo5L2k0WFJxaFc3?=
+ =?utf-8?B?cVNGZVJnUStQSE5sSlMyMlJLeXlROVhPUGljU3F4ZVlmZ2pNS3hNc09COHd0?=
+ =?utf-8?B?RUljSVBnUEorWWhZcnRyTmgxYmJBWVQvdmpwTWZvaHZYVWF2dURmcUdIQjRC?=
+ =?utf-8?B?MnhhVnZ6Q0J4bnhVaEZDdnNYeUM4ZTVHb1crVXpYNUN5RHpxQ1VmNUJTSHpr?=
+ =?utf-8?B?VWtFc1NQSUp0ZkRUZEQ4OFR5ZHRBM3JUcVNCcjZBNjBSRGlxM2dlWkx1Q3JI?=
+ =?utf-8?B?QjJJdmw0alc0ZHBIRmtLbHUyUWlLZ3VBdGRTamQ3d2ljVngwVm1ZNHJjYkVP?=
+ =?utf-8?B?SXpET21YK0piQy95S3UvV1AydWxCL2xlV0xpWjQ5cXVTeUt6Y0N6M1R5eVdp?=
+ =?utf-8?B?d0FRRXcyRFNFOHVYbTlHVHVqc1FpQjIxTnJFWkxsNU5GNmZuUWFlZEQ5N0Fm?=
+ =?utf-8?B?L2duUmNtV3BwdXp3QTZjQXBYOWdoeFVaenV6aTJIQlYxWnZEazJkQnNzNjRh?=
+ =?utf-8?B?eVl2K3VqaFNpTm1jL2FhdmhMOTNISGFDUUEyQmYwMVRHcndlWmc2Y1Q1WVlR?=
+ =?utf-8?B?VEZMV2NrN2Q5eE1pbVRnTUpSZWRkTVRZeFV2MDhLSmN1UGVxdUhsVytSd0JZ?=
+ =?utf-8?B?R3ZrYUZ2VDlacU9PTkFuQ2p0dytpTVgxMGlTcUU5REU3UVpScjdiZ2FNeC9T?=
+ =?utf-8?B?aE9pemJEWnlXendHL3g3SXlLbVE3aVlISWl3Um9NU051bkEvT1lreFBUM0VF?=
+ =?utf-8?B?blNaVGxHZERhUEd1VXhQNHJVbUJlZnpxRFFwbCtoQjRMV1JwY1pHTTVQV2Jx?=
+ =?utf-8?B?ZlFQTGh6L2lKeHdtcXFJV1BnOGdCSHZlTnpCeFk2RmdrZ1VTRGJVWUhDUXdO?=
+ =?utf-8?B?b1cySXVwdHVtdjlOVDJ2eEJucHp6T2ZHTmZKSk5IOEw5OE05NW5vMDhBc1pO?=
+ =?utf-8?B?WGFOZ0RiYmVIbWVGNnJGS2xBZ2syU0xwSU56TVdHU1JQT09ZSDJWNThOTDBL?=
+ =?utf-8?B?dkhPZVVnTlhaN24rRVdHc3pmTWFyWDA3dXpIRkQzcG1KNWhNeExPeG5JSWty?=
+ =?utf-8?B?L1UwVGRINzRYbWdTR0kxUWNtTlRQYTZpd3dWZk81dTc2ZFFjMmRndkNidnV0?=
+ =?utf-8?B?ckx2b1dZOHpRcjdzWlZEQUVlTENlb0poQy9YSEZyVlc1TkdrN0tkVkpjcGgz?=
+ =?utf-8?B?MXBOc1NFR3R5N1hPV2duMGhmZUluUGpnL1lrbHRYbDlnSUw2WjJ2SjJxYWs1?=
+ =?utf-8?B?MXNSSHFhQmZrK2VibHgzYmYyaXN0bVVYMk02eUNYWTVSMFpCR3M3b0VpWldV?=
+ =?utf-8?B?OTBpKys0TDRTcTQwR3pVOVJGRjJKSXdrUGpJUk9EaTBoMDhYV2RMdHBYV0VJ?=
+ =?utf-8?B?SDFoR2w1OVdNd0Rqa0lLSXN3V0VoclkzN2VNeUZ6KzVJaFJrcmJzOGdqZ25B?=
+ =?utf-8?B?ZDRaSzJ2aUlWZXMzTW13dkwvdWNGMVRqTXpFbTcwd1p6MkNlKzd1RmlJS2dn?=
+ =?utf-8?B?NE93WTYxRjVhOHdtNzgycmxROSt1TUNYZisvWFdsOUtJVnZjeVphREg5anpN?=
+ =?utf-8?B?WkI1eGJxVnkxZVdiaU4wbmk5N0laMGZrSlExMzhYUy9peU0xblY3andkR1V4?=
+ =?utf-8?B?OHJ3cXlCOWVZdFBaM1k2b293bkw1cjExYk5PUFJCVkM1SlB0cjl6SDcybFZL?=
+ =?utf-8?B?c3laa2pGWmwrTWx1SzN4cUFDalBpbUZOMnM2b0FWK3RkbUFtTVpjUWkrRitD?=
+ =?utf-8?B?WkRiMjdlajlLWUpsTXZRNGlkM1ltNm9IMVZpeW03eDNOWjRWWjQwc28xMCtL?=
+ =?utf-8?B?UXE0KzJxTkxVdG5WMmlBL040M1RqeHFkVHphaEp3aXdUaDkreVorZkhrU29j?=
+ =?utf-8?B?Nm1oY3B2aDM3OHhoaytwNi90QUV1YWc4MFo2OG5rcGVoUVNURzFWaE8vSW15?=
+ =?utf-8?B?YkRSVzNSZUxKNmlFUGJYVkhLdEluUW9CcjIvZGdXemZGbGZhODVPNGduM1dY?=
+ =?utf-8?B?THYrZTBhdUFEU0tvS1QzY2hmUC8waHpZeVNxMVh2cDM5YjFDOUQybDRjZWRV?=
+ =?utf-8?B?NTliY210U3d6OGtrZ290WCtMVVlhNmVMYjl4QlVTOUc4czlHWUpKZHozMkNE?=
+ =?utf-8?B?aXdLbzR2eDl2VWxIK21Ycy9VZGpMWG8vRGJFWEFnS1Z1b3NnN1hyeS91VEE4?=
+ =?utf-8?B?VGZYY1BNb3RDa25ZM3k0ZHVQakVwRDcrSUttYk1CYzhWSFpnMU9jdz09?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bab77a13-dd2c-46d9-e6e0-08dea1a267d2
+X-MS-Exchange-CrossTenant-Network-Message-Id: daca719e-e7c2-49f2-5eb5-08dea1a26a9e
 X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB9080.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2026 01:40:03.3080
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2026 01:40:07.9607
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MmIhQoQ4WuKgMIk4JK4Cwm4T6A3rLYlZOLdWp43aiEQ7KI/Sq+bX8veuy6f2F0t9yBsDfjwiDOHenlyJJtw4jg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: Wwev+GKX7SpusEHlU19j/+IPbpVHNohHruLo5gH1jOp+J+0HgXmOqPMl7CQjnmOh8V1yJKd3cj1FTFp7PPrfjA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7455
-X-Rspamd-Queue-Id: 4C131458D83
+X-Rspamd-Queue-Id: 22466458DA1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [1.94 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	R_DKIM_ALLOW(-0.20)[NXP1.onmicrosoft.com:s=selector1-NXP1-onmicrosoft-com];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35450-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35451-lists,linux-gpio=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[15];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -187,131 +187,101 @@ X-Spamd-Result: default: False [1.94 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.nxp.com:mid,nxp.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,NXP1.onmicrosoft.com:dkim]
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.nxp.com:mid,nxp.com:email,ideasonboard.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,NXP1.onmicrosoft.com:dkim]
 
 From: Guoniu Zhou <guoniu.zhou@nxp.com>
 
-The ds90ub953 supports GPIO0 through GPIO3. When enabled as an output,
-each GPIO pin can be programed to output remote data coming from the
-compatible deserializer using the register LOCAL_GPIO_DATA[7:4] field.
+Use devm_mutex_init() to simplify the code. No functional change.
 
-Add back channel GPIO support by parsing flags from device tree.
-
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 Signed-off-by: Guoniu Zhou <guoniu.zhou@nxp.com>
 ---
 Changes in v6:
-- Changed approach from extending GPIO range (v5) to using a custom GPIO
-  flag (GPIO_DATA_SOURCE_REMOTE) as suggested by the driver maintainer
-
-Changes in v4:
-- Only log GPIO 0-3 stats since remote GPIO 4-7 reuse GPIO 0-3 pins.
-
-Changes in v3:
-- Update driver to expand GPIO range.
+- Added Reviewed-by tag from Tomi Valkeinen
 
 Changes in v2:
-- Parse gpio third cell to select which GPIO pin the data from remote
-  compatible deserializer.
+- Move PTR_ERR() in dev_err_probe();
 ---
- drivers/media/i2c/ds90ub953.c | 51 ++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 45 insertions(+), 6 deletions(-)
+ drivers/media/i2c/ds90ub953.c | 33 +++++++++++++--------------------
+ 1 file changed, 13 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/media/i2c/ds90ub953.c b/drivers/media/i2c/ds90ub953.c
-index a8ab67f4137f..da63dcfbbbc3 100644
+index da63dcfbbbc3..c37d9cbe88b9 100644
 --- a/drivers/media/i2c/ds90ub953.c
 +++ b/drivers/media/i2c/ds90ub953.c
-@@ -27,6 +27,8 @@
- #include <media/v4l2-mediabus.h>
- #include <media/v4l2-subdev.h>
+@@ -1299,7 +1299,9 @@ static int ub953_probe(struct i2c_client *client)
+ 	if (!priv->plat_data)
+ 		return dev_err_probe(dev, -ENODEV, "Platform data missing\n");
  
-+#include <dt-bindings/gpio/gpio.h>
-+
- #include "ds90ub953.h"
+-	mutex_init(&priv->reg_lock);
++	ret = devm_mutex_init(dev, &priv->reg_lock);
++	if (ret)
++		return ret;
  
- #define UB953_PAD_SINK			0
-@@ -71,6 +73,7 @@ struct ub953_data {
- 	bool			non_continous_clk;
+ 	/*
+ 	 * Initialize to invalid values so that the first reg writes will
+@@ -1308,32 +1310,26 @@ static int ub953_probe(struct i2c_client *client)
+ 	priv->current_indirect_target = 0xff;
  
- 	struct gpio_chip	gpio_chip;
-+	u32			gpio_flags[UB953_NUM_GPIOS];
+ 	priv->regmap = devm_regmap_init_i2c(client, &ub953_regmap_config);
+-	if (IS_ERR(priv->regmap)) {
+-		ret = PTR_ERR(priv->regmap);
+-		dev_err_probe(dev, ret, "Failed to init regmap\n");
+-		goto err_mutex_destroy;
+-	}
++	if (IS_ERR(priv->regmap))
++		return dev_err_probe(dev, PTR_ERR(priv->regmap),
++				     "Failed to init regmap\n");
  
- 	struct v4l2_subdev	sd;
- 	struct media_pad	pads[2];
-@@ -258,6 +261,12 @@ static int ub953_write_ind(struct ub953_data *priv, u8 block, u8 reg, u8 val,
- /*
-  * GPIO chip
-  */
-+
-+static inline bool ub953_gpio_is_remote(unsigned int flag)
-+{
-+	return !!(flag & GPIO_DATA_SOURCE_REMOTE);
-+}
-+
- static int ub953_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
- {
- 	struct ub953_data *priv = gpiochip_get_data(gc);
-@@ -288,13 +297,23 @@ static int ub953_gpio_direction_out(struct gpio_chip *gc, unsigned int offset,
- 				    int value)
- {
- 	struct ub953_data *priv = gpiochip_get_data(gc);
-+	bool is_remote = ub953_gpio_is_remote(priv->gpio_flags[offset]);
-+	unsigned int mask, val;
- 	int ret;
+ 	priv->clkin = devm_clk_get_optional(dev, "clkin");
+-	if (IS_ERR(priv->clkin)) {
+-		ret = PTR_ERR(priv->clkin);
+-		dev_err_probe(dev, ret, "failed to parse 'clkin'\n");
+-		goto err_mutex_destroy;
+-	}
++	if (IS_ERR(priv->clkin))
++		return dev_err_probe(dev, PTR_ERR(priv->clkin),
++				     "Failed to parse 'clkin'\n");
  
--	ret = regmap_update_bits(priv->regmap, UB953_REG_LOCAL_GPIO_DATA,
--				 UB953_REG_LOCAL_GPIO_DATA_GPIO_OUT_SRC(offset),
--				 value ? UB953_REG_LOCAL_GPIO_DATA_GPIO_OUT_SRC(offset) :
--					 0);
-+	mask = UB953_REG_LOCAL_GPIO_DATA_GPIO_OUT_SRC(offset) |
-+	       UB953_REG_LOCAL_GPIO_DATA_GPIO_RMTEN(offset);
- 
-+	if (is_remote) {
-+		/* Enable remote deserializer GPIO data on local GPIO */
-+		val = UB953_REG_LOCAL_GPIO_DATA_GPIO_RMTEN(offset);
-+	} else {
-+		/* Set output value on local GPIO and disable remote mode */
-+		val = value ? UB953_REG_LOCAL_GPIO_DATA_GPIO_OUT_SRC(offset) : 0;
-+	}
-+
-+	ret = regmap_update_bits(priv->regmap, UB953_REG_LOCAL_GPIO_DATA,
-+				 mask, val);
+ 	ret = ub953_parse_dt(priv);
  	if (ret)
- 		return ret;
+-		goto err_mutex_destroy;
++		return ret;
  
-@@ -330,10 +349,30 @@ static int ub953_gpio_of_xlate(struct gpio_chip *gc,
- 			       const struct of_phandle_args *gpiospec,
- 			       u32 *flags)
- {
-+	struct ub953_data *priv = gpiochip_get_data(gc);
-+	struct device *dev = &priv->client->dev;
-+	u32 pin;
-+
-+	if (WARN_ON(gc->of_gpio_n_cells < 2))
-+		return -EINVAL;
-+
-+	if (WARN_ON(gpiospec->args_count < gc->of_gpio_n_cells))
-+		return -EINVAL;
-+
-+	pin = gpiospec->args[0];
-+	if (pin >= UB953_NUM_GPIOS) {
-+		dev_err(dev, "Invalid GPIO pin number: %u\n", pin);
-+		return -EINVAL;
-+	}
-+
-+	/* Store GPIO flags for each pin */
-+	priv->gpio_flags[pin] = gpiospec->args[1];
-+
-+	/* Return standard flags to GPIO core */
- 	if (flags)
--		*flags = gpiospec->args[1];
-+		*flags = gpiospec->args[1] & ~GPIO_DATA_SOURCE_REMOTE;
+ 	ret = ub953_hw_init(priv);
+ 	if (ret)
+-		goto err_mutex_destroy;
++		return ret;
  
--	return gpiospec->args[0];
-+	return pin;
+ 	ret = ub953_gpiochip_probe(priv);
+-	if (ret) {
+-		dev_err_probe(dev, ret, "Failed to init gpiochip\n");
+-		goto err_mutex_destroy;
+-	}
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to init gpiochip\n");
+ 
+ 	ret = ub953_register_clkout(priv);
+ 	if (ret) {
+@@ -1357,8 +1353,6 @@ static int ub953_probe(struct i2c_client *client)
+ 	ub953_subdev_uninit(priv);
+ err_gpiochip_remove:
+ 	ub953_gpiochip_remove(priv);
+-err_mutex_destroy:
+-	mutex_destroy(&priv->reg_lock);
+ 
+ 	return ret;
+ }
+@@ -1373,7 +1367,6 @@ static void ub953_remove(struct i2c_client *client)
+ 	ub953_subdev_uninit(priv);
+ 
+ 	ub953_gpiochip_remove(priv);
+-	mutex_destroy(&priv->reg_lock);
  }
  
- static int ub953_gpiochip_probe(struct ub953_data *priv)
+ static const struct ub953_hw_data ds90ub953_hw = {
 
 -- 
 2.34.1
