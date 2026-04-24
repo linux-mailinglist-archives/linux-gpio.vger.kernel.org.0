@@ -1,50 +1,50 @@
-Return-Path: <linux-gpio+bounces-35508-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35509-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kNrtMzOl62nIPgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-35508-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 19:15:31 +0200
+	id 0DU4Jv6j62nIPgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-35509-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 19:10:22 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66801461BCE
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 19:15:31 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 211C8461A64
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 19:10:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7FC4330115B5
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 17:00:10 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B51BF3026CA8
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 17:02:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB9D833D6F9;
-	Fri, 24 Apr 2026 17:00:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F004133E346;
+	Fri, 24 Apr 2026 17:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dT6hJ6hP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ONhycMRj"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E5F4D8CE;
-	Fri, 24 Apr 2026 17:00:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC62033C1AD;
+	Fri, 24 Apr 2026 17:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777050009; cv=none; b=DJCqMsRR8fI6NRzm8ft5ubXGmVl+eEdru3FK5p5P4Ch8BOwS/euaSB05zeTITJh5F9+tcx5km8AFSAfKYNJNCuMB73Zns7RG17n4Ww2cALFduE6iP5o2KFJWkEVFpveCzlpvm2xgNLmyRN8wfoxM1GWe/ymqXphxMutabaB4gKI=
+	t=1777050118; cv=none; b=PVTXc/FOIpWTeQmCTBzxFWKEwsGEgvikJzTLP4ui3674RNVbAgr4GO9pH7sJwcyzh3RowuG+e+v/PnxcuzeUtu7xjH59E0KtiKhsTQXguoWnREz34I7pXuIZEZW9UyQDXdLoFr0EYpuEuDA5ROU45vt6CAwayjxH9Vv9remnN8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777050009; c=relaxed/simple;
-	bh=xmAOUoANTj5Fy6Q6Q7e6qCJjfEsxwi+gOHX4xphQ07g=;
+	s=arc-20240116; t=1777050118; c=relaxed/simple;
+	bh=2GVsFCx4KosclkJej36I7xIXKXkZWqFz2ettm9BJffQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qLM2SNxTN61Eo37laYDmfbPhacsvucsxPUPhuFw+J+t7iSMZZnhcFbnamVBtoGmPjC24NpCioI6jLMbU7uO7O+OJVAWRl56qHQxgA1NWICdskOqmXJ8jYGYyo3J4w6zP5t7TU7wgWvAYbJdy2f+gTJqFJYBibXSf88K5cgSDCPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dT6hJ6hP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 080C8C19425;
-	Fri, 24 Apr 2026 17:00:05 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=EDNxG5ot3Y01tCYANzVR8X0LLDVy63PlUmMHYrUg76iq8zym6MHGHDDeG5e9pwlmQV2j+ClHNBEWZWeC36LHnR8ga9i//JX2glRjYyeLpXWcd1H71Au5cwXoBOMSAa16Jq5AXVT4lZOIBokMUoHE8SiRNvHIn4r8i0orIOEaLb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ONhycMRj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41ABAC2BCB5;
+	Fri, 24 Apr 2026 17:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777050009;
-	bh=xmAOUoANTj5Fy6Q6Q7e6qCJjfEsxwi+gOHX4xphQ07g=;
+	s=k20201202; t=1777050118;
+	bh=2GVsFCx4KosclkJej36I7xIXKXkZWqFz2ettm9BJffQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dT6hJ6hPEd/TB0iXlKfHCCFW+tpqRYPQS2roQSvnrzHMzE/GRQYxLKzq+lpgxNMsH
-	 vAk/h7DSTFbmt5uPrcLj/dKOxdubFqrPd0a5/iysPLkzRpzXdb+SgiTl8gOpwByHzh
-	 v3EursNsF/k0+KXgOVFKu+h5OuuQGOy+0dtsubQEzZCmWE4JhqLezBFvWjVN2ZT565
-	 mTcpinnOqdgIUEH5nbz8bU49I0hXyKt3Bz7Wtns0HitzvNsgspPDz8lp+zH060wB15
-	 ww7xTywuWnaUgIT0ZhnqKI1xO8iouNpflzRVSTTK2PHjdjzpzvxVQ/SaNW8DKDmGq6
-	 M/nl0zymKvtdQ==
-Date: Fri, 24 Apr 2026 18:00:03 +0100
+	b=ONhycMRjKSNjYrHo7khtfvuuklElvJ8jLdxrHDsOSYsKQdV5nHhA32gUQzj7h42oD
+	 qAtiTBJrhco9B4oEPpIUN/vDgAgjvfD3Z+x9AiqRDMm/Acj0NlHSmjmj0v/nDHYIYX
+	 m2t1GZ7FgGckj2+bSUOKmtOIIwWdrYtHoiptiHAkz1pqcxAMt+eTzrH4kFnITDep20
+	 y9YF2x9wRrq5KeBen38NHfBk2VTPY+NGLzqTqCUyntys8/K8rKfxUcS3mpcnJ39FkK
+	 asW2bMAQAIDqdN9CQdQ2BTvjnMt4jXhuZgibSKZEO4aFN27aQH6+G2cQbHPVupE7ur
+	 iCEGgJDiqqZog==
+Date: Fri, 24 Apr 2026 18:01:52 +0100
 From: Conor Dooley <conor@kernel.org>
 To: Changhuang Liang <changhuang.liang@starfivetech.com>
 Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -59,11 +59,10 @@ Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
 	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	Lianfeng Ouyang <lianfeng.ouyang@starfivetech.com>
-Subject: Re: [PATCH v1 19/20] riscv: dts: starfive: Add StarFive JHB100 pin
- function definitions
-Message-ID: <20260424-anvil-mocha-86cd01d7401f@spud>
+Subject: Re: [PATCH v1 20/20] riscv: dts: starfive: jhb100: Add pinctrl nodes
+Message-ID: <20260424-bok-storm-4f4583686777@spud>
 References: <20260424111330.702272-1-changhuang.liang@starfivetech.com>
- <20260424111330.702272-20-changhuang.liang@starfivetech.com>
+ <20260424111330.702272-21-changhuang.liang@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -71,10 +70,10 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="re5CKRJFQkYCTInl"
+	protocol="application/pgp-signature"; boundary="DqhoXpfq+UgDU/hi"
 Content-Disposition: inline
-In-Reply-To: <20260424111330.702272-20-changhuang.liang@starfivetech.com>
-X-Rspamd-Queue-Id: 66801461BCE
+In-Reply-To: <20260424111330.702272-21-changhuang.liang@starfivetech.com>
+X-Rspamd-Queue-Id: 211C8461A64
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.26 / 15.00];
@@ -84,11 +83,11 @@ X-Spamd-Result: default: False [-2.26 / 15.00];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35508-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35509-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
@@ -101,430 +100,290 @@ X-Spamd-Result: default: False [-2.26 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[17];
 	TO_DN_SOME(0.00)[]
 
 
---re5CKRJFQkYCTInl
+--DqhoXpfq+UgDU/hi
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 24, 2026 at 04:13:29AM -0700, Changhuang Liang wrote:
- +
-> +/* Function Selection */
-> +
-> +/* pinctrl_sys0 pad function selection */
-> +#define FUNC_SYS0_DOM_HOSTSS_AUXPWRGOOD0		1
-> +#define FUNC_SYS0_DOM_HOSTSS_AUXPWRGOOD1		1
-> +#define FUNC_SYS0_HBLED					1
-> +#define FUNC_SYS0_PE2RST_OUT				0
-> +#define FUNC_SYS0_GPIO3					1
-> +
-> +/* pinctrl_sys0h pad function selection */
-> +#define FUNC_SYS0H_ESPI0_DATA0				1
-> +#define FUNC_SYS0H_ESPI0_DATA1				1
-> +#define FUNC_SYS0H_ESPI0_DATA2				1
-> +#define FUNC_SYS0H_ESPI0_DATA3				1
-> +#define FUNC_SYS0H_ESPI0_CLK				1
-> +#define FUNC_SYS0H_ESPI0_CS				1
-> +#define FUNC_SYS0H_ESPI0_ALERT				1
-> +#define FUNC_SYS0H_ESPI0_RESET				0
-> +#define FUNC_SYS0H_GPIO7				1
-> +#define FUNC_SYS0H_ESPI0_VW0				1
-> +#define FUNC_SYS0H_ESPI0_VW1				1
-> +#define FUNC_SYS0H_ESPI0_VW2				1
-> +#define FUNC_SYS0H_ESPI0_VW3				1
-> +#define FUNC_SYS0H_ESPI1_VW0				2
-> +#define FUNC_SYS0H_ESPI1_VW1				2
-> +#define FUNC_SYS0H_ESPI1_VW2				2
-> +#define FUNC_SYS0H_ESPI1_VW3				2
-> +#define FUNC_SYS0H_SCAP_TRIG0_A				3
-> +#define FUNC_SYS0H_SCAP_TRIG1_A				3
+On Fri, Apr 24, 2026 at 04:13:30AM -0700, Changhuang Liang wrote:
+> Add pinctrl nodes for starfive JHB100 SoC. They contain
+> pinctrl_per0/pinctrl_per1/pinctrl_per2/pinctrl_per2pok/pinctrl_per3/
+> pinctrl_sys0/pinctrl_sys0h/pinctrl_sys1/pinctrl_sys2.
+>=20
+> Signed-off-by: Lianfeng Ouyang <lianfeng.ouyang@starfivetech.com>
 
-I'll be blunt here, I hate this. The sheer number of repeated numbers
-between each pin of a function suggests to me that the approach is
-wrong.
-At the very least, the number of defines could be significantly reduced,
-but the whole approach of using pinmux is called into question here in
-my opinion.
+What did Lianfeng do? A signoff alone suggests something is incorrectly
+attributed here.
 
+> Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+> ---
+>  .../boot/dts/starfive/jhb100-evb1-eth.dts     |  27 +++++
+>  arch/riscv/boot/dts/starfive/jhb100-evb1.dtsi |   4 +
+>  .../boot/dts/starfive/jhb100-pinctrl.dtsi     |  19 ++++
+>  arch/riscv/boot/dts/starfive/jhb100.dtsi      | 107 ++++++++++++++++++
+>  4 files changed, 157 insertions(+)
+>  create mode 100644 arch/riscv/boot/dts/starfive/jhb100-pinctrl.dtsi
+>=20
+> diff --git a/arch/riscv/boot/dts/starfive/jhb100-evb1-eth.dts b/arch/risc=
+v/boot/dts/starfive/jhb100-evb1-eth.dts
+> index 62cd046e1224..f7e82f9d0ff1 100644
+> --- a/arch/riscv/boot/dts/starfive/jhb100-evb1-eth.dts
+> +++ b/arch/riscv/boot/dts/starfive/jhb100-evb1-eth.dts
+> @@ -4,3 +4,30 @@
+>   */
+> =20
+>  #include "jhb100-evb1.dtsi"
+> +
+> +&pinctrl_per0 {
+> +	gpioe-i3c0-vref =3D <JHB100_PINVREF_3_3V>; /* VREF for GPIOB8-11, 32-33=
+ */
+> +	gpioe-i3c1-vref =3D <JHB100_PINVREF_3_3V>; /* VREF for GPIOB12-15, 34-3=
+5 */
+> +	gpioe-i3c2-vref =3D <JHB100_PINVREF_3_3V>; /* VREF for GPIOB16-23 */
+> +	gpioe-i3c4-vref =3D <JHB100_PINVREF_3_3V>; /* VREF for GPIOB36-43 */
+> +};
+> +
+> +&pinctrl_per1 {
+> +	gpioe-spi-vref =3D <JHB100_PINVREF_3_3V>; /* VREF for GPIOC0-4 */
+> +	gpioe-qspi0-vref =3D <JHB100_PINVREF_3_3V>; /* VREF for GPIOC5-11 */
+> +	gpioe-qspi1-vref =3D <JHB100_PINVREF_3_3V>; /* VREF for GPIOC12-19 */
+> +	gpioe-qspi2-vref =3D <JHB100_PINVREF_3_3V>; /* VREF for GPIOC20-27 */
+> +};
+> +
+> +&pinctrl_per2 {
+> +	gpionw-vref =3D <JHB100_PINVREF_1_8V>; /* VREF for GPIOD19-30 */
+> +};
+> +
+> +&pinctrl_per3 {
+> +	gpios-vref =3D <JHB100_PINVREF_1_8V>; /* VREF for GPIOE0-10 */
+> +};
+> +
+> +&pinctrl_sys2 {
+> +	gpiow-vref =3D <JHB100_PINVREF_3_3V>; /* VREF for GPIOA36-39 */
+> +	gpiow-inner-vref =3D <JHB100_PINVREF_3_3V>; /* VREF for GPIOA40-43 */
+> +};
+> diff --git a/arch/riscv/boot/dts/starfive/jhb100-evb1.dtsi b/arch/riscv/b=
+oot/dts/starfive/jhb100-evb1.dtsi
+> index 462b6fb7953b..acd5949bcfdb 100644
+> --- a/arch/riscv/boot/dts/starfive/jhb100-evb1.dtsi
+> +++ b/arch/riscv/boot/dts/starfive/jhb100-evb1.dtsi
+> @@ -3,7 +3,9 @@
+>   * Copyright (c) 2024-2026 StarFive Technology Co., Ltd.
+>   */
+> =20
+> +#include "jhb100-pinfunc.h"
+>  #include "jhb100.dtsi"
+> +#include "jhb100-pinctrl.dtsi"
+> =20
+>  / {
+>  	model =3D "StarFive JHB100 EVB-1";
+> @@ -29,4 +31,6 @@ memory@40000000 {
+> =20
+>  &uart6 {
+>  	status =3D "okay";
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&uart6_pins>;
+>  };
+> diff --git a/arch/riscv/boot/dts/starfive/jhb100-pinctrl.dtsi b/arch/risc=
+v/boot/dts/starfive/jhb100-pinctrl.dtsi
+> new file mode 100644
+> index 000000000000..d12b79376521
+> --- /dev/null
+> +++ b/arch/riscv/boot/dts/starfive/jhb100-pinctrl.dtsi
+> @@ -0,0 +1,19 @@
+> +// SPDX-License-Identifier: GPL-2.0 OR MIT
+> +/*
+> + * Copyright (c) 2025-2026 StarFive Technology Co., Ltd.
+> + */
+> +
+> +&pinctrl_sys2 {
+> +	uart6_pins: uart6-grp {
+> +		uart6-tx-pins {
+> +			pinmux =3D <PINMUX(PADNUM_SYS2_GPIO_A38,
+> +					 FUNC_SYS2_UART6_TX)>;
+> +		};
+> +
+> +		uart6-rx-pins {
+> +			pinmux =3D <PINMUX(PADNUM_SYS2_GPIO_A39,
+> +					 FUNC_SYS2_UART6_RX)>;
+> +			input-enable;
+> +		};
+> +	};
+> +};
+
+Could we get some more examples, to exercise each pin controller?
+Is that impossible without adding more peripherals other than uart?
+
+Cheers,
 Conor.
 
+> diff --git a/arch/riscv/boot/dts/starfive/jhb100.dtsi b/arch/riscv/boot/d=
+ts/starfive/jhb100.dtsi
+> index 700d00f800bc..74d427d7f2df 100644
+> --- a/arch/riscv/boot/dts/starfive/jhb100.dtsi
+> +++ b/arch/riscv/boot/dts/starfive/jhb100.dtsi
+> @@ -425,6 +425,18 @@ per0crg: clock-controller@11a08000 {
+>  				#reset-cells =3D <1>;
+>  			};
+> =20
+> +			pinctrl_per0: pinctrl@11a0a000 {
+> +				compatible =3D "starfive,jhb100-per0-pinctrl";
+> +				reg =3D <0x0 0x11a0a000 0x0 0x1000>;
+> +				resets =3D <&per0crg JHB100_PER0RST_GPIO_IOMUX_PRESETN>;
+> +				interrupts =3D <60>;
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +				gpio-ranges =3D <&pinctrl_per0 0 0 60>;
+> +			};
 > +
-> +/* pinctrl_sys1 pad numbers */
-> +#define FUNC_SYS1_ESPI1_DATA0				1
-> +#define FUNC_SYS1_ESPI1_DATA1				1
-> +#define FUNC_SYS1_ESPI1_DATA2				1
-> +#define FUNC_SYS1_ESPI1_DATA3				1
-> +#define FUNC_SYS1_ESPI1_CLK				1
-> +#define FUNC_SYS1_ESPI1_CS				1
-> +#define FUNC_SYS1_ESPI1_ALERT				1
-> +#define FUNC_SYS1_ESPI1_RESET				0
-> +#define FUNC_SYS1_GPIO7					1
+>  			per1crg: clock-controller@11b40000 {
+>  				compatible =3D "starfive,jhb100-per1crg";
+>  				reg =3D <0x0 0x11b40000 0x0 0x1000>;
+> @@ -440,6 +452,18 @@ per1crg: clock-controller@11b40000 {
+>  				#reset-cells =3D <1>;
+>  			};
+> =20
+> +			pinctrl_per1: pinctrl@11b42000 {
+> +				compatible =3D "starfive,jhb100-per1-pinctrl";
+> +				reg =3D <0x0 0x11b42000 0x0 0x800>;
+> +				resets =3D <&per1crg JHB100_PER1RST_IOMUX_PRESETN>;
+> +				interrupts =3D <61>;
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +				gpio-ranges =3D <&pinctrl_per1 0 0 36>;
+> +			};
 > +
-> +#define FUNC_SYS1_HOST0_PORT80_DATA_OUT0		2
-> +#define FUNC_SYS1_HOST0_PORT80_DATA_OUT1		2
-> +#define FUNC_SYS1_HOST0_PORT80_DATA_OUT2		2
-> +#define FUNC_SYS1_HOST0_PORT80_DATA_OUT3		2
-> +#define FUNC_SYS1_HOST0_PORT80_DATA_OUT4		2
-> +#define FUNC_SYS1_HOST0_PORT80_DATA_OUT5		2
-> +#define FUNC_SYS1_HOST0_PORT80_DATA_OUT6		2
-> +#define FUNC_SYS1_HOST0_PORT80_DATA_OUT7		2
+>  			per2crg: clock-controller@11bc0000 {
+>  				compatible =3D "starfive,jhb100-per2crg";
+>  				reg =3D <0x0 0x11bc0000 0x0 0x1000>;
+> @@ -461,6 +485,30 @@ per2crg: clock-controller@11bc0000 {
+>  				#reset-cells =3D <1>;
+>  			};
+> =20
+> +			pinctrl_per2: pinctrl@11bc2000 {
+> +				compatible =3D "starfive,jhb100-per2-pinctrl";
+> +				reg =3D <0x0 0x11bc2000 0x0 0x400>;
+> +				resets =3D <&per2crg JHB100_PER2RST_IOMUX_PRESETN>;
+> +				interrupts =3D <62>;
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +				gpio-ranges =3D <&pinctrl_per2 0 0 31>;
+> +			};
 > +
-> +#define FUNC_SYS1_HOST1_PORT80_DATA_OUT0		3
-> +#define FUNC_SYS1_HOST1_PORT80_DATA_OUT1		3
-> +#define FUNC_SYS1_HOST1_PORT80_DATA_OUT2		3
-> +#define FUNC_SYS1_HOST1_PORT80_DATA_OUT3		3
-> +#define FUNC_SYS1_HOST1_PORT80_DATA_OUT4		3
-> +#define FUNC_SYS1_HOST1_PORT80_DATA_OUT5		3
-> +#define FUNC_SYS1_HOST1_PORT80_DATA_OUT6		3
-> +#define FUNC_SYS1_HOST1_PORT80_DATA_OUT7		3
+> +			pinctrl_per2pok: pinctrl@11bc2400 {
+> +				compatible =3D "starfive,jhb100-per2pok-pinctrl";
+> +				reg =3D <0x0 0x11bc2400 0x0 0x400>;
+> +				resets =3D <&per2crg JHB100_PER2RST_POK_IOMUX_PRESETN>;
+> +				interrupts =3D <63>;
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +				gpio-ranges =3D <&pinctrl_per2pok 0 0 18>;
+> +			};
 > +
-> +/* pinctrl_sys2 pad function selection */
-> +#define FUNC_SYS2_UART_CTS				1
-> +#define FUNC_SYS2_UART_RTS				1
-> +#define FUNC_SYS2_UART_DCD				1
-> +#define FUNC_SYS2_UART_DSR				1
-> +#define FUNC_SYS2_UART_DTR				1
-> +#define FUNC_SYS2_UART_RI				1
-> +#define FUNC_SYS2_UART0_TX				1
-> +#define FUNC_SYS2_UART0_RX				1
-> +#define FUNC_SYS2_UART1_TX				1
-> +#define FUNC_SYS2_UART1_RX				1
-> +#define FUNC_SYS2_UART2_TX				1
-> +#define FUNC_SYS2_UART2_RX				1
-> +#define FUNC_SYS2_UART3_TX				1
-> +#define FUNC_SYS2_UART3_RX				1
-> +#define FUNC_SYS2_UART4_TX				1
-> +#define FUNC_SYS2_UART4_RX				1
-> +#define FUNC_SYS2_UART5_TX				1
-> +#define FUNC_SYS2_UART5_RX				1
-> +#define FUNC_SYS2_UART6_TX				1
-> +#define FUNC_SYS2_UART6_RX				1
-> +#define FUNC_SYS2_UART7_TX				1
-> +#define FUNC_SYS2_UART7_RX				1
-> +#define FUNC_SYS2_UART8_TX				1
-> +#define FUNC_SYS2_UART8_RX				1
-> +#define FUNC_SYS2_UART9_TX				1
-> +#define FUNC_SYS2_UART9_RX				1
-> +#define FUNC_SYS2_UART10_TX				1
-> +#define FUNC_SYS2_UART10_RX				1
-> +#define FUNC_SYS2_UART11_TX				1
-> +#define FUNC_SYS2_UART11_RX				1
-> +#define FUNC_SYS2_UART12_TX				1
-> +#define FUNC_SYS2_UART12_RX				1
-> +#define FUNC_SYS2_UART13_TX				1
-> +#define FUNC_SYS2_UART13_RX				1
-> +#define FUNC_SYS2_UART14_TX				1
-> +#define FUNC_SYS2_UART14_RX				1
+>  			per3crg: clock-controller@11c40000 {
+>  				compatible =3D "starfive,jhb100-per3crg";
+>  				reg =3D <0x0 0x11c40000 0x0 0x1000>;
+> @@ -480,6 +528,18 @@ per3crg: clock-controller@11c40000 {
+>  				#reset-cells =3D <1>;
+>  			};
+> =20
+> +			pinctrl_per3: pinctrl@11c42000 {
+> +				compatible =3D "starfive,jhb100-per3-pinctrl";
+> +				reg =3D <0x0 0x11c42000 0x0 0x1000>;
+> +				resets =3D <&per3crg JHB100_PER3RST_IOMUX_PRESETN>;
+> +				interrupts =3D <64>;
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +				gpio-ranges =3D <&pinctrl_per3 0 0 11>;
+> +			};
 > +
-> +#define FUNC_SYS2_I2C8_SMBALERT				2
-> +#define FUNC_SYS2_I2C9_SMBALERT				2
-> +#define FUNC_SYS2_I2C10_SMBALERT			2
-> +#define FUNC_SYS2_I2C11_SMBALERT			2
-> +#define FUNC_SYS2_I2C12_SMBALERT			2
-> +#define FUNC_SYS2_I2C13_SMBALERT			2
-> +#define FUNC_SYS2_I2C14_SMBALERT			2
-> +#define FUNC_SYS2_I2C15_SMBALERT			2
-> +#define FUNC_SYS2_HOST0_PORT80_DATA_OUT0		2
-> +#define FUNC_SYS2_HOST0_PORT80_DATA_OUT1		2
-> +#define FUNC_SYS2_HOST0_PORT80_DATA_OUT2		2
-> +#define FUNC_SYS2_HOST0_PORT80_DATA_OUT3		2
-> +#define FUNC_SYS2_HOST0_PORT80_DATA_OUT4		2
-> +#define FUNC_SYS2_HOST0_PORT80_DATA_OUT5		2
-> +#define FUNC_SYS2_HOST0_PORT80_DATA_OUT6		2
-> +#define FUNC_SYS2_HOST0_PORT80_DATA_OUT7		2
-> +#define FUNC_SYS2_JTAG_MST_TDI				2
-> +#define FUNC_SYS2_JTAG_MST_TRST_N			2
-> +#define FUNC_SYS2_JTAG_MST_TMS				2
-> +#define FUNC_SYS2_JTAG_MST_TCK				2
-> +#define FUNC_SYS2_JTAG_MST_TDO				2
+>  			sys0crg: clock-controller@13000000 {
+>  				compatible =3D "starfive,jhb100-sys0crg";
+>  				reg =3D <0x0 0x13000000 0x0 0x4000>;
+> @@ -513,6 +573,53 @@ sys2crg: clock-controller@13008000 {
+>  				#clock-cells =3D <1>;
+>  				#reset-cells =3D <1>;
+>  			};
 > +
-> +#define FUNC_SYS2_HOST1_PORT80_DATA_OUT0		3
-> +#define FUNC_SYS2_HOST1_PORT80_DATA_OUT1		3
-> +#define FUNC_SYS2_HOST1_PORT80_DATA_OUT2		3
-> +#define FUNC_SYS2_HOST1_PORT80_DATA_OUT3		3
-> +#define FUNC_SYS2_HOST1_PORT80_DATA_OUT4		3
-> +#define FUNC_SYS2_HOST1_PORT80_DATA_OUT5		3
-> +#define FUNC_SYS2_HOST1_PORT80_DATA_OUT6		3
-> +#define FUNC_SYS2_HOST1_PORT80_DATA_OUT7		3
+> +			pinctrl_sys0: pinctrl@13080000 {
+> +				compatible =3D "starfive,jhb100-sys0-pinctrl";
+> +				reg =3D <0x0 0x13080000 0x0 0x800>;
+> +				resets =3D <&sys0crg JHB100_SYS0RST_SYS0_IOMUX_PRESETN>;
+> +				interrupts =3D <56>;
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +				gpio-ranges =3D <&pinctrl_sys0 0 0 4>;
+> +			};
 > +
-> +/* pinctrl_per0 function numbers */
-> +#define FUNC_PER0_I2C0_CLK				1
-> +#define FUNC_PER0_I2C0_DATA				1
-> +#define FUNC_PER0_I2C1_CLK				1
-> +#define FUNC_PER0_I2C1_DATA				1
-> +#define FUNC_PER0_I2C2_CLK				1
-> +#define FUNC_PER0_I2C2_DATA				1
-> +#define FUNC_PER0_I2C3_CLK				1
-> +#define FUNC_PER0_I2C3_DATA				1
-> +#define FUNC_PER0_I2C4_CLK				1
-> +#define FUNC_PER0_I2C4_DATA				1
-> +#define FUNC_PER0_I2C5_CLK				1
-> +#define FUNC_PER0_I2C5_DATA				1
-> +#define FUNC_PER0_I2C6_CLK				1
-> +#define FUNC_PER0_I2C6_DATA				1
-> +#define FUNC_PER0_I2C7_CLK				1
-> +#define FUNC_PER0_I2C7_DATA				1
-> +#define FUNC_PER0_I2C8_CLK				1
-> +#define FUNC_PER0_I2C8_DATA				1
-> +#define FUNC_PER0_I2C9_CLK				1
-> +#define FUNC_PER0_I2C9_DATA				1
-> +#define FUNC_PER0_I2C10_CLK				1
-> +#define FUNC_PER0_I2C10_DATA				1
-> +#define FUNC_PER0_I2C11_CLK				1
-> +#define FUNC_PER0_I2C11_DATA				1
-> +#define FUNC_PER0_I2C12_CLK				1
-> +#define FUNC_PER0_I2C12_DATA				1
-> +#define FUNC_PER0_I2C13_CLK				1
-> +#define FUNC_PER0_I2C13_DATA				1
-> +#define FUNC_PER0_SMBUS0_SMBALERT			1
-> +#define FUNC_PER0_SMBUS1_SMBALERT			1
-> +#define FUNC_PER0_SMBUS2_SMBALERT			1
-> +#define FUNC_PER0_SMBUS3_SMBALERT			1
-> +#define FUNC_PER0_SMBUS4_SMBALERT			1
-> +#define FUNC_PER0_SMBUS5_SMBALERT			1
-> +#define FUNC_PER0_SMBUS6_SMBALERT			1
-> +#define FUNC_PER0_SMBUS7_SMBALERT			1
-> +#define FUNC_PER0_MIPI_I3C12_SCL0			1
-> +#define FUNC_PER0_MIPI_I3C12_SDA0			1
-> +#define FUNC_PER0_MIPI_I3C13_SCL0			1
-> +#define FUNC_PER0_MIPI_I3C13_SDA0			1
-> +#define FUNC_PER0_MIPI_I3C14_SCL0			1
-> +#define FUNC_PER0_MIPI_I3C14_SDA0			1
-> +#define FUNC_PER0_MIPI_I3C15_SCL0			1
-> +#define FUNC_PER0_MIPI_I3C15_SDA0			1
-> +#define FUNC_PER0_MIPI_I3C0_SCL0			1
-> +#define FUNC_PER0_MIPI_I3C0_SDA0			1
-> +#define FUNC_PER0_MIPI_I3C1_SCL0			1
-> +#define FUNC_PER0_MIPI_I3C1_SDA0			1
-> +#define FUNC_PER0_MIPI_I3C2_SCL0			1
-> +#define FUNC_PER0_MIPI_I3C2_SDA0			1
-> +#define FUNC_PER0_MIPI_I3C3_SCL0			1
-> +#define FUNC_PER0_MIPI_I3C3_SDA0			1
-> +#define FUNC_PER0_MIPI_I3C4_SCL1			1
-> +#define FUNC_PER0_MIPI_I3C4_SDA1			1
-> +#define FUNC_PER0_MIPI_I3C5_SCL1			1
-> +#define FUNC_PER0_MIPI_I3C5_SDA1			1
-> +#define FUNC_PER0_MIPI_I3C6_SCL1			1
-> +#define FUNC_PER0_MIPI_I3C6_SDA1			1
-> +#define FUNC_PER0_MIPI_I3C7_SCL1			1
-> +#define FUNC_PER0_MIPI_I3C7_SDA1			1
+> +			pinctrl_sys0h: pinctrl@13080800 {
+> +				compatible =3D "starfive,jhb100-sys0h-pinctrl";
+> +				reg =3D <0x0 0x13080800 0x0 0x800>;
+> +				resets =3D <&sys0crg JHB100_SYS0RST_SYS0H_IOMUX_PRESETN>;
+> +				interrupts =3D <57>;
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +				gpio-ranges =3D <&pinctrl_sys0h 0 0 12>;
+> +			};
 > +
-> +#define FUNC_PER0_MIPI_I3C4_SCL0			2
-> +#define FUNC_PER0_MIPI_I3C4_SDA0			2
-> +#define FUNC_PER0_MIPI_I3C5_SCL0			2
-> +#define FUNC_PER0_MIPI_I3C5_SDA0			2
-> +#define FUNC_PER0_MIPI_I3C6_SCL0			2
-> +#define FUNC_PER0_MIPI_I3C6_SDA0			2
-> +#define FUNC_PER0_MIPI_I3C7_SCL0			2
-> +#define FUNC_PER0_MIPI_I3C7_SDA0			2
-> +#define FUNC_PER0_MIPI_I3C8_SCL0			2
-> +#define FUNC_PER0_MIPI_I3C8_SDA0			2
-> +#define FUNC_PER0_MIPI_I3C9_SCL0			2
-> +#define FUNC_PER0_MIPI_I3C9_SDA0			2
-> +#define FUNC_PER0_MIPI_I3C10_SCL0			2
-> +#define FUNC_PER0_MIPI_I3C10_SDA0			2
-> +#define FUNC_PER0_MIPI_I3C11_SCL0			2
-> +#define FUNC_PER0_MIPI_I3C11_SDA0			2
-> +#define FUNC_PER0_GMAC2_MDC				2
-> +#define FUNC_PER0_GMAC2_MDIO				2
-> +#define FUNC_PER0_GMAC3_MDC				2
-> +#define FUNC_PER0_GMAC3_MDIO				2
-> +#define FUNC_PER0_GMAC1_MDC				2
-> +#define FUNC_PER0_GMAC1_MDIO				2
-> +#define FUNC_PER0_WDT0_3_OR_RESET_OUTPUT		2
-> +#define FUNC_PER0_WDT_SECRP_RESET_OUTPUT		2
-> +#define FUNC_PER0_WDT4_RESET_OUTPUT			2
-> +#define FUNC_PER0_WDT4_RESTART_INPUT			2
+> +			pinctrl_sys1: pinctrl@13081000 {
+> +				compatible =3D "starfive,jhb100-sys1-pinctrl";
+> +				reg =3D <0x0 0x13081000 0x0 0x1000>;
+> +				resets =3D <&sys1crg JHB100_SYS1RST_SYS1_IOMUX_PRESETN>;
+> +				interrupts =3D <58>;
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +				gpio-ranges =3D <&pinctrl_sys1 0 0 8>;
+> +			};
 > +
-> +/* pinctrl_per1 pad function selection */
-> +#define FUNC_PER1_SPI0_N_SS_OUT_0			1
-> +#define FUNC_PER1_SPI0_N_SS_OUT_1			1
-> +#define FUNC_PER1_SPI0_SCLK_OUT				1
-> +#define FUNC_PER1_SPI0_TX				1
-> +#define FUNC_PER1_SPI0_RX				1
-> +#define FUNC_PER1_SFC0_N_SS_OUT_0			1
-> +#define FUNC_PER1_SFC0_N_SS_OUT_1			1
-> +#define FUNC_PER1_SFC0_SCLK_OUT				1
-> +#define FUNC_PER1_SFC0_IO0				1
-> +#define FUNC_PER1_SFC0_IO1				1
-> +#define FUNC_PER1_SFC0_IO2				1
-> +#define FUNC_PER1_SFC0_IO3				1
-> +#define FUNC_PER1_SFC1_N_SS_OUT_0			1
-> +#define FUNC_PER1_SFC1_N_SS_OUT_1			1
-> +#define FUNC_PER1_SFC1_N_SS_OUT_2			1
-> +#define FUNC_PER1_SFC1_SCLK_OUT				1
-> +#define FUNC_PER1_SFC1_IO0				1
-> +#define FUNC_PER1_SFC1_IO1				1
-> +#define FUNC_PER1_SFC1_IO2				1
-> +#define FUNC_PER1_SFC1_IO3				1
-> +#define FUNC_PER1_SFC2_N_SS_OUT_0			1
-> +#define FUNC_PER1_SFC2_N_SS_OUT_1			1
-> +#define FUNC_PER1_SFC2_N_SS_OUT_2			1
-> +#define FUNC_PER1_SFC2_SCLK_OUT				1
-> +#define FUNC_PER1_SFC2_IO0				1
-> +#define FUNC_PER1_SFC2_IO1				1
-> +#define FUNC_PER1_SFC2_IO2				1
-> +#define FUNC_PER1_SFC2_IO3				1
-> +#define FUNC_PER1_SGPIO0_M_CLK				1
-> +#define FUNC_PER1_SGPIO0_M_LOAD				1
-> +#define FUNC_PER1_SGPIO0_M_DATA_OUT			1
-> +#define FUNC_PER1_SGPIO0_M_DATA_IN			1
-> +#define FUNC_PER1_I2C14_CLK				1
-> +#define FUNC_PER1_I2C14_DATA				1
-> +#define FUNC_PER1_I2C15_CLK				1
-> +#define FUNC_PER1_I2C15_DATA				1
-> +
-> +#define FUNC_PER1_SGPIO1_M_CLK				2
-> +#define FUNC_PER1_SGPIO1_M_LOAD				2
-> +#define FUNC_PER1_SGPIO1_M_DATA_OUT			2
-> +#define FUNC_PER1_SGPIO1_M_DATA_IN			2
-> +
-> +/* pinctrl_per2 function selection */
-> +#define FUNC_PER2_FAN0_TACH_I_0				1
-> +#define FUNC_PER2_FAN0_TACH_I_1				1
-> +#define FUNC_PER2_FAN0_TACH_I_2				1
-> +#define FUNC_PER2_FAN0_TACH_I_3				1
-> +#define FUNC_PER2_FAN0_TACH_I_4				1
-> +#define FUNC_PER2_FAN0_TACH_I_5				1
-> +#define FUNC_PER2_FAN0_TACH_I_6				1
-> +#define FUNC_PER2_FAN0_TACH_I_7				1
-> +#define FUNC_PER2_FAN0_TACH_I_8				1
-> +#define FUNC_PER2_FAN0_TACH_I_9				1
-> +#define FUNC_PER2_FAN0_TACH_I_10			1
-> +#define FUNC_PER2_FAN0_TACH_I_11			1
-> +#define FUNC_PER2_FAN0_TACH_I_12			1
-> +#define FUNC_PER2_FAN0_TACH_I_13			1
-> +#define FUNC_PER2_FAN0_TACH_I_14			1
-> +#define FUNC_PER2_FAN0_TACH_I_15			1
-> +#define FUNC_PER2_GMAC2_RGMII_RX_CLK			1
-> +#define FUNC_PER2_GMAC2_RGMII_RXCTL			1
-> +#define FUNC_PER2_GMAC2_RGMII_PHY_RXD0			1
-> +#define FUNC_PER2_GMAC2_RGMII_PHY_RXD1			1
-> +#define FUNC_PER2_GMAC2_RGMII_PHY_RXD2			1
-> +#define FUNC_PER2_GMAC2_RGMII_PHY_RXD3			1
-> +#define FUNC_PER2_GMAC2_RGMII_TX_CLK			1
-> +#define FUNC_PER2_GMAC2_RGMII_TXCTL			1
-> +#define FUNC_PER2_GMAC2_RGMII_PHY_TX0			1
-> +#define FUNC_PER2_GMAC2_RGMII_PHY_TX1			1
-> +#define FUNC_PER2_GMAC2_RGMII_PHY_TX2			1
-> +#define FUNC_PER2_GMAC2_RGMII_PHY_TX3			1
-> +
-> +#define FUNC_PER2_GMAC2_RMII_RX_CLK			2
-> +#define FUNC_PER2_GMAC2_RMII_CRSDV			2
-> +#define FUNC_PER2_GMAC2_RMII_PHY_RXD0			2
-> +#define FUNC_PER2_GMAC2_RMII_PHY_RXD1			2
-> +#define FUNC_PER2_GMAC2_RMII_RX_CKO			2
-> +#define FUNC_PER2_GMAC2_RMII_TXEN			2
-> +#define FUNC_PER2_GMAC2_RMII_PHY_TXD0			2
-> +#define FUNC_PER2_GMAC2_RMII_PHY_TXD1			2
-> +
-> +#define FUNC_PER2_HOSTSS0_PORT80_DATA_OUT0		2
-> +#define FUNC_PER2_HOSTSS0_PORT80_DATA_OUT1		2
-> +#define FUNC_PER2_HOSTSS0_PORT80_DATA_OUT2		2
-> +#define FUNC_PER2_HOSTSS0_PORT80_DATA_OUT3		2
-> +#define FUNC_PER2_HOSTSS0_PORT80_DATA_OUT4		2
-> +#define FUNC_PER2_HOSTSS0_PORT80_DATA_OUT5		2
-> +#define FUNC_PER2_HOSTSS0_PORT80_DATA_OUT6		2
-> +#define FUNC_PER2_HOSTSS0_PORT80_DATA_OUT7		2
-> +#define FUNC_PER2_HOSTSS1_PORT80_DATA_OUT0		3
-> +#define FUNC_PER2_HOSTSS1_PORT80_DATA_OUT1		3
-> +#define FUNC_PER2_HOSTSS1_PORT80_DATA_OUT2		3
-> +#define FUNC_PER2_HOSTSS1_PORT80_DATA_OUT3		3
-> +#define FUNC_PER2_HOSTSS1_PORT80_DATA_OUT4		3
-> +#define FUNC_PER2_HOSTSS1_PORT80_DATA_OUT5		3
-> +#define FUNC_PER2_HOSTSS1_PORT80_DATA_OUT6		3
-> +#define FUNC_PER2_HOSTSS1_PORT80_DATA_OUT7		3
-> +
-> +/* pinctrl_per2pok function selection */
-> +#define FUNC_PER2POK_PWM0_CHANNEL0			0
-> +#define FUNC_PER2POK_PWM0_CHANNEL1			0
-> +#define FUNC_PER2POK_PWM0_CHANNEL2			0
-> +#define FUNC_PER2POK_PWM0_CHANNEL3			0
-> +#define FUNC_PER2POK_PWM0_CHANNEL4			0
-> +#define FUNC_PER2POK_PWM0_CHANNEL5			0
-> +#define FUNC_PER2POK_PWM0_CHANNEL6			0
-> +#define FUNC_PER2POK_PWM0_CHANNEL7			0
-> +
-> +#define FUNC_PER2POK_CAN0_TXD				1
-> +#define FUNC_PER2POK_CAN0_RXD				1
-> +#define FUNC_PER2POK_CAN0_STBY				1
-> +#define FUNC_PER2POK_CAN1_TXD				1
-> +#define FUNC_PER2POK_CAN1_RXD				1
-> +#define FUNC_PER2POK_CAN1_STBY				1
-> +#define FUNC_PER2POK_GPIO_PASSTHRU1_IN			1
-> +#define FUNC_PER2POK_GPIO_PASSTHRU1_OUT			1
-> +#define FUNC_PER2POK_GPIO_PASSTHRU2_IN			1
-> +#define FUNC_PER2POK_GPIO_PASSTHRU2_OUT			1
-> +#define FUNC_PER2POK_GPIO10				1
-> +#define FUNC_PER2POK_GPIO11				1
-> +#define FUNC_PER2POK_GPIO12				1
-> +#define FUNC_PER2POK_GPIO13				1
-> +#define FUNC_PER2POK_GPIO14				1
-> +#define FUNC_PER2POK_GPIO15				1
-> +#define FUNC_PER2POK_GPIO16				1
-> +#define FUNC_PER2POK_GPIO17				1
-> +
-> +#define FUNC_PER2POK_GPIO_PASSTHRU3_IN			2
-> +#define FUNC_PER2POK_GPIO_PASSTHRU3_OUT			2
-> +#define FUNC_PER2POK_HOSTSS0_PORT80_DATA_OUT0		2
-> +#define FUNC_PER2POK_HOSTSS0_PORT80_DATA_OUT1		2
-> +#define FUNC_PER2POK_HOSTSS0_PORT80_DATA_OUT2		2
-> +#define FUNC_PER2POK_HOSTSS0_PORT80_DATA_OUT3		2
-> +#define FUNC_PER2POK_HOSTSS0_PORT80_DATA_OUT4		2
-> +#define FUNC_PER2POK_HOSTSS0_PORT80_DATA_OUT5		2
-> +#define FUNC_PER2POK_HOSTSS0_PORT80_DATA_OUT6		2
-> +#define FUNC_PER2POK_HOSTSS0_PORT80_DATA_OUT7		2
-> +
-> +#define FUNC_PER2POK_HOSTSS1_PORT80_DATA_OUT0		3
-> +#define FUNC_PER2POK_HOSTSS1_PORT80_DATA_OUT1		3
-> +#define FUNC_PER2POK_HOSTSS1_PORT80_DATA_OUT2		3
-> +#define FUNC_PER2POK_HOSTSS1_PORT80_DATA_OUT3		3
-> +#define FUNC_PER2POK_HOSTSS1_PORT80_DATA_OUT4		3
-> +#define FUNC_PER2POK_HOSTSS1_PORT80_DATA_OUT5		3
-> +#define FUNC_PER2POK_HOSTSS1_PORT80_DATA_OUT6		3
-> +#define FUNC_PER2POK_HOSTSS1_PORT80_DATA_OUT7		3
-> +
-> +/* pinctrl_per3 function selection */
-> +#define FUNC_PER3_GMAC0_MDC				1
-> +#define FUNC_PER3_GMAC0_MDIO				1
-> +#define FUNC_PER3_GMAC0_RMII_RCLKI			1
-> +#define FUNC_PER3_GMAC0_RMII_RCLKO			1
-> +#define FUNC_PER3_GMAC0_RMII_CRSDV			1
-> +#define FUNC_PER3_GMAC0_RMII_PHY_RXD0			1
-> +#define FUNC_PER3_GMAC0_RMII_PHY_RXD1			1
-> +#define FUNC_PER3_GMAC0_RMII_TXEN			1
-> +#define FUNC_PER3_GMAC0_RMII_PHY_TXD0			1
-> +#define FUNC_PER3_GMAC0_RMII_PHY_TXD1			1
-> +
-> +/* gpio func sel value */
-> +#define FUNC_SEL0_GPIO					0
-> +#define FUNC_SEL1_GPIO					1
-> +
-> +/* vref value */
-> +#define JHB100_PINVREF_3_3V				0
-> +#define JHB100_PINVREF_2_5V				1
-> +#define JHB100_PINVREF_1_8V				2
-> +
-> +#endif
+> +			pinctrl_sys2: pinctrl@13082000 {
+> +				compatible =3D "starfive,jhb100-sys2-pinctrl";
+> +				reg =3D <0x0 0x13082000 0x0 0x1000>;
+> +				interrupts =3D <59>;
+> +				interrupt-controller;
+> +				#interrupt-cells =3D <2>;
+> +				gpio-controller;
+> +				#gpio-cells =3D <2>;
+> +				gpio-ranges =3D <&pinctrl_sys2 0 0 37>;
+> +			};
+>  		};
+>  	};
+>  };
 > --=20
 > 2.25.1
 >=20
 
---re5CKRJFQkYCTInl
+--DqhoXpfq+UgDU/hi
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaeuhkwAKCRB4tDGHoIJi
-0o7ZAQCsahVAkp2ZRTw8TTY7D+qWkWQSlPSDNlOXyr28l3K/YQEA3LR2rLo1rcZK
-xDGHw8slg0mRk1Njvfjo4MA9GJTsww0=
-=s9as
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaeuiAAAKCRB4tDGHoIJi
+0rW5AP9ktwCVW5LRPVXVFklvVpQefHXwVkUhNzJjPS0ZMNA0LgEA9Imph0GBt+JF
+fE6HN543JjjqciJ8ylRkVmuxVwhtpgQ=
+=Y7fR
 -----END PGP SIGNATURE-----
 
---re5CKRJFQkYCTInl--
+--DqhoXpfq+UgDU/hi--
 
