@@ -1,58 +1,58 @@
-Return-Path: <linux-gpio+bounces-35456-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35457-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UJyqBEob62lTIgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-35456-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 09:27:06 +0200
+	id kBjlF1Uf62mRIgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-35457-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 09:44:21 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B1FC45AB3D
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 09:27:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B362845ACF3
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 09:44:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 90FA53017010
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 07:26:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 66C083013A8E
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 07:44:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6585636C5BB;
-	Fri, 24 Apr 2026 07:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B211E3368A2;
+	Fri, 24 Apr 2026 07:44:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e11Bde3d"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XzVBZ0em"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2332427FD74
-	for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2026 07:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E0D30C34A
+	for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2026 07:44:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777015594; cv=none; b=jWLkBK1e8G49ipsdnFZRWVOCgbZohG3hn8L77dyt31GOwPbA77THHLSu1rlZNLKdrZ3/sEUMho8Tpom0h8xpSUYepoi3M2FP5EbYWQa/n+z1Eb8cWtj/Vp4/PBOSp22b1WcVGXHPLvQG+VQOJImJyXd4THRur9RvEgATaBCtpMg=
+	t=1777016657; cv=none; b=KPpb1iuQ/8UKhrY65sF6cljBMeDKijc0BNWJhmeMccGupfnNUFLLoiGVz/qAKrGYz5SPHQwal6EXH1AEKwpmYgi5bHhuNq4WB9WMX84n2JRZvuJn40C7Nb8Xybx0D9o53Sc0VSKxDDcU+ishrqHytx71jaUjo8+R97KSQM4p0LI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777015594; c=relaxed/simple;
-	bh=m3OnOKNjVkQfvjbC8vrwVb5oJK6foDK0Kguq8tXWdSo=;
+	s=arc-20240116; t=1777016657; c=relaxed/simple;
+	bh=5ObiY7L/NEZ2AVzTJWRLxmU4Cg40y2szTcf05CZbkBE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i4Z7TEg/T7UF3cgTExareRrrinQip74H+mNNG737tcy0UZdQHWbbgIdrBoLOw4+DprzYC4I3oWp0hKtkebWCKf6BLcaAqgiB0Wro4Ay+OoBPmyKU8mGvPsfh8NycMXj4Fip0ur2Ahk5LwwisTsg7NeU94ncjcgjCGdKvNddWlBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e11Bde3d; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8C54C4AF0C
-	for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2026 07:26:33 +0000 (UTC)
+	 To:Cc:Content-Type; b=oKmwWlXSP9MSbboJEEEg/VfGzvaBJY7c8nTT4tpTUaWtGEy4dOF7MXFOKpu5LSF7BvAgONVfv1FJdzxYxTawOYMTE3Sze7rsJyNVviPjli7g1UrplKwYzWlGFm89KE6t7GTPYWDTCqKbCutrHzFY2Zz48v/8LlMjjm9JzU+uYL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XzVBZ0em; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C437C2BCB7
+	for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2026 07:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777015593;
-	bh=m3OnOKNjVkQfvjbC8vrwVb5oJK6foDK0Kguq8tXWdSo=;
+	s=k20201202; t=1777016657;
+	bh=5ObiY7L/NEZ2AVzTJWRLxmU4Cg40y2szTcf05CZbkBE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=e11Bde3dkLLbc0SCXq7yrsallptlVV4pT7hOvAZ9EQdzToIQzZv7oNhx6TJXA7DY/
-	 9QrcDG9bjBKqhxqUI/PPyJPHvSslG0BPu0KL6OnPNardT++2KXIgJ1LQJfXCmvwobN
-	 /r/vOHl+6hxWWFark0qRvXcTcCTukHcfYHfu/hbWFg3/HRhbloHfX/H4foY49ACqTL
-	 VvljpCWKZa7NnBa8FM87h/y+yJkEBTLGqoeHP8ZkqkrO2G9yD4V7AibjBa7N22rMab
-	 xcKyF/koJ4YpSigvP3ylBQ5Zch6sec+weo+rWWvZMAMszOFIwbYPHQW0mjqgD0Aehp
-	 OQ3tchQtpW/SQ==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5a415fd6bceso8378390e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2026 00:26:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/p84VhcKoOrSmpaV4aPF4K32xU2Wa9BEkq3JW3Spwf9943o6vV1r7beOqczlDIcHsV6bmq5kYRjnmG@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRXaJfJDSK8sIvi55dNDEIwaa5tuxvLJk/mUCSKhHJKBdit80e
-	6gwrfgGcqA0t5PZepSwZvQyT84A6nGvzT169g/7Lvhvw3YKDcxu+aELOyR1hhoQiT66fRE2wf80
-	lMJTrhY6uFVQCAQf1NyxLFOAqwqpx+0U=
-X-Received: by 2002:a05:6512:3a86:b0:5a2:9b98:f280 with SMTP id
- 2adb3069b0e04-5a4172ac06fmr10262099e87.22.1777015592508; Fri, 24 Apr 2026
- 00:26:32 -0700 (PDT)
+	b=XzVBZ0emHqYcfGw31lpnCzF0BdOdMSefCvbGjl08UMCG9TeIxzEjs/QybM5efbsCH
+	 TsAIXP0XnM/gayvMyDXKONLXjvwb+rPKxn4Akjc/07VMHdFtL+rJKN5utcpjbvutA5
+	 oTyS5H3KIN4B7dkVK14WfxwfaSnc8d7V0g/jt/GDjSy9orqxSyN6wau8JpNxFleeyl
+	 GHXyxNvJHYyxrtXy9G0rlvB1SRliyxvdFiFT3LOFIClDm3eHD1AhwoGYBG1wM5uAF0
+	 rpmjYB8O+goJLsapKNzzlQDd6ISSNQaNVWJUulEBS6un/lWFn+I5Kq5Nt1QQv7yhuE
+	 BsmyjzIVdXL1Q==
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-38dd9f0fdc6so88624311fa.0
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2026 00:44:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+yPGlOCuh2YtFeCbxOLMRkpeN6STxJrC7UhAmHEQdnd8NN3VViamUfO6TYvLu/uYrf0ZlQ1IZTM3Va@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7vaPuxDgMwjUJ/gZ9n8+GVn4GmftuBEHwv7a0IAemLaR4uOHa
+	w4yVgth5RqKdzjj2E2djBBeku6rLBQCp572iGmT5d2gGRN4nge9orvmDFMz5RSGG7gGFUGH8TiG
+	drPsFZAPmbVpuBkPY8dFpmBYW9vWLXxI=
+X-Received: by 2002:a05:6512:1095:b0:5a4:e53:f52c with SMTP id
+ 2adb3069b0e04-5a417299818mr9911885e87.16.1777016655855; Fri, 24 Apr 2026
+ 00:44:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -60,14 +60,14 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20260414-axiado-ax3000-sgpio-controller-v1-0-b5c7e4c2e69b@axiado.com>
- <20260414-axiado-ax3000-sgpio-controller-v1-1-b5c7e4c2e69b@axiado.com>
-In-Reply-To: <20260414-axiado-ax3000-sgpio-controller-v1-1-b5c7e4c2e69b@axiado.com>
+ <20260414-axiado-ax3000-sgpio-controller-v1-2-b5c7e4c2e69b@axiado.com>
+In-Reply-To: <20260414-axiado-ax3000-sgpio-controller-v1-2-b5c7e4c2e69b@axiado.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Fri, 24 Apr 2026 09:26:18 +0200
-X-Gmail-Original-Message-ID: <CAD++jL=yc4rmNELLKUpreUqRbQ1Krg95C-o1xSrnD9Aicm4wgw@mail.gmail.com>
-X-Gm-Features: AQROBzCvj1UqvLHeNE2eWeWx72NKzjKr6xPICatDGA6Oq4KfxHHermVnTdGUct0
-Message-ID: <CAD++jL=yc4rmNELLKUpreUqRbQ1Krg95C-o1xSrnD9Aicm4wgw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: gpio: add Axiado SGPIO controller
+Date: Fri, 24 Apr 2026 09:44:04 +0200
+X-Gmail-Original-Message-ID: <CAD++jLkqD25mudwd0wBCz=-FCzgzssOv5bXTNDdizxdCOY0j=A@mail.gmail.com>
+X-Gm-Features: AQROBzCRgiauT9XkDa0yKpB-HNsx8xcHz9gG5I0VdXMGNJPbGVtGHrNlM1aaYHA
+Message-ID: <CAD++jLkqD25mudwd0wBCz=-FCzgzssOv5bXTNDdizxdCOY0j=A@mail.gmail.com>
+Subject: Re: [PATCH 2/3] gpio: axiado: add SGPIO controller support
 To: Petar Stepanovic <pstepanovic@axiado.com>
 Cc: Tzu-Hao Wei <twei@axiado.com>, Swark Yang <syang@axiado.com>, 
 	Prasad Bolisetty <pbolisetty@axiado.com>, Bartosz Golaszewski <brgl@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -77,7 +77,7 @@ Cc: Tzu-Hao Wei <twei@axiado.com>, Swark Yang <syang@axiado.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 8B1FC45AB3D
+X-Rspamd-Queue-Id: B362845ACF3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
@@ -88,7 +88,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35456-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35457-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -105,104 +105,48 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid,axiado.com:email]
 
 Hi Petar,
 
 thanks for your patch!
 
-On Tue, Apr 14, 2026 at 3:49=E2=80=AFPM Petar Stepanovic <pstepanovic@axiad=
+On Tue, Apr 14, 2026 at 3:48=E2=80=AFPM Petar Stepanovic <pstepanovic@axiad=
 o.com> wrote:
 
-> Add device tree binding for the Axiado SGPIO controller.
+> Add support for the Axiado SGPIO controller.
 >
-> The SGPIO controller provides a serialized interface for
-> controlling multiple GPIO signals over a limited number of
-> physical lines. It supports configurable data direction and
-> interrupt handling.
+> The controller provides a serialized interface for GPIOs with
+> configurable direction and interrupt support.
 >
-> The binding describes the properties required to instantiate
-> the controller and register it as a GPIO provider.
+> The driver registers the controller as a gpio_chip and uses
+> regmap for register access.
 >
 > Signed-off-by: Petar Stepanovic <pstepanovic@axiado.com>
 
 (...)
 
-> +description: |
-> +  The SGPIO controller provides a serialized interface for controlling
-> +  multiple GPIO signals over a limited number of physical lines.
-> +  It supports configurable data direction and interrupt handling.
+> +static void ax3000_sgpio_set(struct gpio_chip *chip, unsigned int offset=
+,
+> +                            int value)
+> +{
+> +       struct ax3000_sgpio *sgpio =3D gpiochip_get_data(chip);
+> +       unsigned long flags;
+> +       u32 bank =3D (offset / 2) / 32;
+> +       u32 position =3D (offset / 2) % 32;
 
-This is pretty generic, can you write some details on how this happens?
+This systematic calculation of offsets from bank and position and the
+whole bank concept makes me feel that perhaps the bindings are
+better off reflecting the bank structure either by defining several banks
+using 2 cells or by using a 3-cell binding?
 
-> +  '#gpio-cells':
-> +    const: 2
+For 3-cell see:
+commit bd3ce71078bde4ecbfc60d49c96d1c55de0635cc
+"gpiolib: of: Handle threecell GPIO chips"
+for some details on how this can help.
 
-Are you sure you don't want to use 3 here instead and split the 128
-GPIOs into 4 "banks" second cell being the bank number?
-<&gpio 2 4>; ?
-
-Maybe this also solves the 512 GPIO by grouping the GPIOs into
-8 banks...?
-
-> +  '#interrupt-cells':
-> +    const: 2
-
-Same there.
-
-> +  design-variant:
-> +    description: SGPIO design variant size in bits (e.g. 128 or 512).
-> +    enum: [128, 512]
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-Just use two different compatible strings and infer the variant from
-that string instead.
-
-> +  ngpios:
-> +    description: The number of gpios this controller has.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-Same here, certainly the 128 variant has 128 gpios and
-the 512 has 512 GPIOs? Just use the compatible string
-to infer this.
-
-> +  bus-frequency:
-> +    description: The SGPIO shift clock frequency in Hz.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-Don't you want to use the clock bindings and a clk property
-for this?
-
-> +  apb-frequency:
-> +    description: The APB bus frequency in Hz.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-Dito.
-
-> +  dout-init:
-> +    description: Initial values for the dout registers.
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    minItems: 4
-> +    maxItems: 4
-
-In:
-Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-
-you find:
-
-  lines-initial-states:
-    $ref: /schemas/types.yaml#/definitions/uint32
-    description:
-      Bitmask that specifies the initial state of each line.
-      When a bit is set to zero, the corresponding line will be initialized=
- to
-      the input (pulled-up) state.
-      When the  bit is set to one, the line will be initialized to the
-      low-level output state.
-      If the property is not specified all lines will be initialized to the
-      input state.
-
-If this is what you want, use this standard binding instead.
+Either of these approaches will further probably help you to
+use GPIO_GENERIC (gpio-mmio) helper functions with this hardware,
 
 Yours,
 Linus Walleij
