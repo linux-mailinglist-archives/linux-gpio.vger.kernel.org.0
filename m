@@ -1,230 +1,142 @@
-Return-Path: <linux-gpio+bounces-35521-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35522-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WHS9IDt77GlaZAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-35521-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Apr 2026 10:28:43 +0200
+	id mG2yFUqX7Gn2aAAAu9opvQ
+	(envelope-from <linux-gpio+bounces-35522-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Apr 2026 12:28:26 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E515E46588C
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Apr 2026 10:28:42 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 046BE465E6A
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Apr 2026 12:28:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CFB8C301C124
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Apr 2026 08:28:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E9F16300FC57
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Apr 2026 10:28:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D71B933F5B4;
-	Sat, 25 Apr 2026 08:28:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1A1E394789;
+	Sat, 25 Apr 2026 10:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NG5qN5p1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2112.outbound.protection.partner.outlook.cn [139.219.17.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF4A9460;
-	Sat, 25 Apr 2026 08:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777105718; cv=fail; b=i5n66/r1m31Dl+d0DDcUdox9knu2LHXSuY6KT0xvGDzRhn8Ka3tqEU4ghiVJaQ0fwFzYcnphFIftZUoQBF7okZsjgdhv9M8NzVsNzYvzCLLZscNKRIm3pXLMmztbWIYgcfkAtKq4NADhYSB4vjco/SUCZlvxa3CXjjhoMbVbJvA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777105718; c=relaxed/simple;
-	bh=jmIEktV32QhVFiEAQwea4ElU+Jt6ykPB/wV/xN43UEk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=KVY+imSCinR4+0mlgL0Xuz1L/f0dFNLeQ8RUO0/yCAQ66cLDwkpfKqz2OgftuGYMC1Js2gYYcTIQ66umlEIhMrBXlgwALP6AJakGcGl+EAU7YEdQFKsTvzePyirPDkzltJf72kxj5KuBe2Bf916bCm/0m8/LwdRDl4SmE5iHYHg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eUm8NT48ngpIpjvh+KKkX6Lt04JkY0kyexkzPYJ+dLQbANzQ/OGbN9H0RPeW6mmPewGUAU4kCvFdHJwv6P4NxTU19YoSBfLQ+aDUH0MhN62fd3wGiIizWQMmUH5ETyKrUKEEQ0848FCTcmRNjBkQuCATg44as8H9fHTYlS/QSbY7so1StU3yE+qoOdxStrxFlGM88KQD8eJBsSWaSOfXgHitMooPS0qB1RTV8qgWF/urZAhj/4YaUSMkcB2mAMgbmcQaANTQcJ81ctmu7Ew1AOMRcdG2Lc3kltVEPE0iEySnkrM0vda/YI2oG01qS0iNkK1jpudLlDpy/HD/y/iOTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OpNm3gOCZiAuMiwmpL3Bcyi6BhvV1vSfmQOCo41qS+Q=;
- b=Hddsm+h0PrvDZWJOa6cEcW1gbimrCLa3XoqHRAbtaEytlOekpsGtcGRxce+PYALgzGC0FBaflAB8oQxcrTJMJYu90mI9JBZW5bmF91UUon/AXTNaU5hOQk6ljtRIWmsif5bH3vYk3zLliQ/OwdOLrkFwvJlsvaBbhVRqVv7ZfoBui6vkJe/sJe3lQXmWKygIjb07tePMl/ik0ceMi0N+U5ZSsn1RZ/s294FGQzOYR4emSu6udjSsYnHi/cDqCRCmFtgQLLQghHGkCwd3tzU4+PoiJhPs3fYJBK+T7H1V5+yFWd8bfd5ahpv1jFCjfkds/864u16zngFpBaEwNho/eA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:7::14) by ZQ2PR01MB1162.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:11::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.23; Sat, 25 Apr
- 2026 08:28:27 +0000
-Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- ([fe80::4386:5cc4:3bc4:4795]) by
- ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn ([fe80::4386:5cc4:3bc4:4795%4])
- with mapi id 15.20.9846.023; Sat, 25 Apr 2026 08:28:27 +0000
-From: Hal Feng <hal.feng@starfivetech.com>
-To: Rosen Penev <rosenp@gmail.com>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>
-CC: Emil Renner Berthing <kernel@esmil.dk>, Linus Walleij <linusw@kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: starfive: jh7110: use struct_size
-Thread-Topic: [PATCH] pinctrl: starfive: jh7110: use struct_size
-Thread-Index: AQHc1FSOQCufTpFWXUS3Fp05cQifcLXvclCw
-Date: Sat, 25 Apr 2026 08:28:27 +0000
-Message-ID:
- <ZQ2PR01MB1307BDE655197786EA27A194E6282@ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn>
-References: <20260425014029.438186-1-rosenp@gmail.com>
-In-Reply-To: <20260425014029.438186-1-rosenp@gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: ZQ2PR01MB1307:EE_|ZQ2PR01MB1162:EE_
-x-ms-office365-filtering-correlation-id: 054cd05b-2a5b-451a-002a-08dea2a49fee
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|1800799024|38070700021|56012099003|22082099003|18002099003;
-x-microsoft-antispam-message-info:
- qhxrzWj7rVkq67IIUmGr9YpEuHsiWtyyvfWzWRmCChxu91mIcrHVq66tidHhCVIJ/9Crg/a2FLFsdyc8IW65ujqUzS+yPUrqf7HlW3xrm5xDSESJ/TQ17s9UkAT9qG8HsdAfbu6g9a0BCP6MMMpUJLynxRG0w7jpq1Bkfujv+lb1kNbLhhc8xK/Nd0xohNqcbSJjqkhioBAKOIUIBoHOlsixvrXpmLM+8CzKGpYWpb8Jrtp0QkUTphQt2+MuY7WjL4XOlUyj2JgFGYPDhIVaETnBKTnUp5FXw1Vn539COVwtSagMO+ZsdyA9XpGfS4nC6axEzvUhQrr/4KZ4ZDRVE4E7Sxpwuv8KLcw+MGclENvVsIKLf9gD8WcMHdhmc5ulqGJ4UUFKVXyqcE2TnjAF8rkVJ1CMAWzWzWtmSza73t/T7ZgCoIq663zouNQ0R0+b8CD2SFEsp7sDfryxGRIk/q12sd+d6pdwuxzT40e9AGkvu5+myhiNx+9oQdHOu//4wkwr5gJOJqmw5Fa5vpHksaLne9Me7rLgUu/O+iAIxgRWsamFmFYviVQ7oomxADzj2PQu3uTvCA1cIyKkZ17wm50jCdIHOnsYfgw2+M2rGhs=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700021)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?kjHDxBiClisBQis6iTYmgvfqk+e5urUWGKFkfeMTcidULdWpuemYu3M0bEoH?=
- =?us-ascii?Q?oH0DFOE3wF7xbGXLDY7n6IeDh7S7Ru1ztqC+R1RrQDrItjyAQs7TZpaWd4Ih?=
- =?us-ascii?Q?tQ0Gxs0p7v/QmB0xlozBcvVUSd0ZgLQSTvbof5RFh78l/E4q9nUT7PJRSIOp?=
- =?us-ascii?Q?tOjOETjEb0F3ll8XQ7yVsdfnfZQkz584ReXgM2Jw8DkKdhLEKs7g3ZGzQuvC?=
- =?us-ascii?Q?v92ll3rO4nNmKRTycGidXy6W9ElP68lsKlrmiKiPZAvsySUYRMCVKuYGCXoR?=
- =?us-ascii?Q?Il+CzKU/wX98gB6Ewb3JBo7mmu3/HV0oEMA94XU8f70T0+GapJwIbEABwri5?=
- =?us-ascii?Q?nskV12NahsX7PJNyzZISIPCgaCvDS6l/pERSFp3yMFfgQ/U1h78uNzcTfbIY?=
- =?us-ascii?Q?SWPRnlo1CoVybPhMU+0jSmkMqfGD1piryrmBestKsN0VF3JenPgw++gjcqwR?=
- =?us-ascii?Q?kJ6FqblO4mpFWXTyFBeu7mdw3xQjuDQU2tcvagvnxee6TY1MpI5YiuDt1CLg?=
- =?us-ascii?Q?Nv/KB71JlySiweQS0rZFKYtemhVyZna2IoXm86EWNuXBUcZftI66piRz/Tcc?=
- =?us-ascii?Q?21yOqpX8skBmaqjFPWIeeCUrYYk4uEMoj+4z9cDfcqxEEtA35lfKWZCGZwf5?=
- =?us-ascii?Q?kTNnqkp0cqTEt4wNmzpRaOOhUUaej2ldFivMPXJ6U9utWSnzIDfPS8rx/Oil?=
- =?us-ascii?Q?BE1nkDLUIrTk/jkQnllHpY/rc91Wa9c9wLYbU07LEjL915TzMnDn3Eimfl5p?=
- =?us-ascii?Q?fNetqx0T6jYeIEuuTUE1OKAVJBDJsLvNeX5s967IHqpCOTvB1TYWFiJA+uaZ?=
- =?us-ascii?Q?B7phvsLY42ec8Ktv5R/oJKsbKxsi3JR1PeJH7Wr0xZjawmcOXOelmV4dYqKa?=
- =?us-ascii?Q?H+f6Y9vheEqfGzQK8+xi8y2diY6cxJZxF+mMWWQSnN8eFaaXh1pi5P5z9mzD?=
- =?us-ascii?Q?1nSUaKunMcUj+M2CbCE55/JJ71S7SBk6shxh4p1qmw4sqe/s2mAfGoifX23d?=
- =?us-ascii?Q?43ScGZ8Uf+PjFkevw6coX4M2vL9FSNzmO++XmLPQHKrXXMGq9yOvQB8WxujJ?=
- =?us-ascii?Q?BEnk9vhhNBpbecvc6H/6cvkC0oU3/JBsbgMaj4enK6gr0Pk8zM+PIdMh+1Js?=
- =?us-ascii?Q?mUH19pbBuOsuQHsbg35TFO+NMAzHmk3msB1b7KxbfscKHlV4u+glVEwMwYmi?=
- =?us-ascii?Q?O2qC42iHXRM6ERZITSWDiSDizfnttvAqr2J3SPtl2MBS7OUs9JR2DJztG0AH?=
- =?us-ascii?Q?24JGIcnfAc6tVZVAmw4LEze+oZxMcU11h/V6xE6HBaXeoYr2Tr3cXzlaKHaq?=
- =?us-ascii?Q?JLVf/bO10arfTQl5YuqWRQp0PIZr598XghKpcunQIMK9Pif4psptwqH1SRbk?=
- =?us-ascii?Q?XtKgKCturTxuDvZ2HUOY0C8iH/PpvXNHFB0qIBZscsNPeGXqKlpdl4fo/idQ?=
- =?us-ascii?Q?erl49wLOrQRIeQEil8no5brbeUyI6B9FhrazDLhoocW1CyDSPd6+eW7ruJ9m?=
- =?us-ascii?Q?zQnTVOm31N/QAOtO3xFLfAGmklEfGL/1xRr52JFV2ERVjKC8Q4/TMVwFpghp?=
- =?us-ascii?Q?CD53Pn/rb2x34RANxKHSGKr6J+wnrTQYEZKqmIywbrmJ3V2/D2GJAmVjuvM1?=
- =?us-ascii?Q?pEEWI6jImPKpP3p4la6uD8hzO8depySRzV8nXfylrj5xuuvRISxvLsqH/0t8?=
- =?us-ascii?Q?VZ3ma+wTYAyVfEzbNyvzfzGIfGqAUaLoPHfxYq8XKllsDZtZivLT4DHxo6Xs?=
- =?us-ascii?Q?SOW8NTK6Yw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFA5392C2C;
+	Sat, 25 Apr 2026 10:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777112899; cv=none; b=dmavtmVk/3IHcc7f5EYcdx4GHq8WxoVWtfKMJnaOxn0GO9zW62u+KuaUgvb9KJ4pSi2gpBwrN5dqz3B0NjoMkKjpi+6UzxfzHR6Z4szz4vsOonR1/q7SgFm2rvvTFpV8jyTG10l109qpzPhNS0QX99OPC+uOXCnMUC0jSAW5uUk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777112899; c=relaxed/simple;
+	bh=WlYDlFfUUzFaRHeGD4iH6v+lOpnT6yZ/E73ow4hkmvA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gzebeSvNJN3GmOtUL73at3ZEsxA2XydMNFoHIISAw8bAYF9SONXynftYJruMxKAHN/hDaINuBCDqHycZ0f+eco8+0JNZS2Lk5PqYrKRfMDaBEo8GZmPXHY97EF5X+NDEevLtFNzUkY2gIU8ISWUQ3Q5ktSREIH3d7UrLbNrq8cU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NG5qN5p1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 609B2C2BCB0;
+	Sat, 25 Apr 2026 10:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777112899;
+	bh=WlYDlFfUUzFaRHeGD4iH6v+lOpnT6yZ/E73ow4hkmvA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NG5qN5p1YOXTbi8hrAatRnVtI9aDmhk1wURWmX+P/VtTeHp3J2OaeET1sF8r5oSkL
+	 HKNj2Fga+ghyFspQOtAJVd7AiX/tr4J+bmDJVRDkl57yOCz060IQp0ZrYRgE6EfPcU
+	 tOOJBPQVlm6zD/g2nkRuumH+NwWyip0yk1faFpkqQxq4KqXB5CfWYQvj5Nlj4Sbhcj
+	 3p8+bahZJItL2yYREYmM+rCFneP5rcvE2XVTTAuYl0v5qRhAQeG0eqhFDDcqs6qBhW
+	 uke4r2M7WrsmbOhKB+jYKL6e8CKmW78yWmsyvDK8I6/77+yCZRmGJzIUXvxIyHK05L
+	 D/BfE+q20oq1A==
+Date: Sat, 25 Apr 2026 12:28:17 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Changhuang Liang <changhuang.liang@starfivetech.com>
+Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Emil Renner Berthing <kernel@esmil.dk>, Paul Walmsley <pjw@kernel.org>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Bartosz Golaszewski <brgl@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Lianfeng Ouyang <lianfeng.ouyang@starfivetech.com>
+Subject: Re: [PATCH v1 07/20] dt-bindings: pinctrl: Add
+ starfive,jhb100-sys2-pinctrl
+Message-ID: <20260425-excellent-radiant-weasel-9f99be@quoll>
+References: <20260424111330.702272-1-changhuang.liang@starfivetech.com>
+ <20260424111330.702272-8-changhuang.liang@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 054cd05b-2a5b-451a-002a-08dea2a49fee
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Apr 2026 08:28:27.4470
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iRNYVe6uul6ctCRUqCHAJzoq0nm3BpwE9fAhzJgvxKbrFmkrc+SmAKqZrbE/eZd6CzjpdqEIcW0FLv45rSOHZMYfMaxJDbb4ThG7jO4+ZUE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ2PR01MB1162
-X-Rspamd-Queue-Id: E515E46588C
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260424111330.702272-8-changhuang.liang@starfivetech.com>
+X-Rspamd-Queue-Id: 046BE465E6A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [2.04 / 15.00];
-	DMARC_POLICY_QUARANTINE(1.50)[starfivetech.com : SPF not aligned (relaxed), No valid DKIM,quarantine];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35521-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35522-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[gmail.com,vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hal.feng@starfivetech.com,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_FIVE(0.00)[5];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,starfivetech.com:email,ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn:mid]
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-> On 25.04.26 09:40, Rosen Penev wrote:
-> Instead of an extra kcalloc, Use a flexible array member to combine alloc=
-ations.
-> Saves a pointer in the struct.
->=20
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+On Fri, Apr 24, 2026 at 04:13:17AM -0700, Changhuang Liang wrote:
+> +description: |
+> +  Pinctrl bindings for JHB100 RISC-V SoC from StarFive Technology Ltd.
+> +
+> +  The JHB100 SoC has 13 pinctrl domains - sys0, sys0h, sys1, sys2, per0, per1,
+> +  per2, per2pok, per3, adc0, adc1, emmc, and vga.
+> +  This document provides an overview of the "sys2" pinctrl domain.
+> +
+> +  The "sys2" domain has a pin controller which provides
+> +  - function selection for GPIO pads.
+> +  - GPIO pad configuration.
+> +  - GPIO interrupt handling.
+> +
+> +  In the SYS2 Pin Controller, there are 37 multi-function GPIO_PADs. Each of them can be
+> +  multiplexed to different hardware blocks through function selection. Each iopad has a maximum
+> +  of up to 4 functions - 0, 1, 2, and 3. Function 0 is the default function which is the GPIO
+> +  function. Function 1, 2, and 3 are the alternate functions or peripheral signals that can be
+> +  routed to the iopad. The function selection can be carried out by writing the function number
+> +  to the iopad function select register.
+> +  Each iopad is configurable with parameters such as input-enable, internal pull-up/pull-down
+> +  bias, drive strength, schmitt trigger, slew rate, and debounce width.
+> +
+> +  This domain contains an IO group which support voltage levels 1.8V and 3.3V
+> +  1. gpiow - comprises PAD_GPIO_A36 through PAD_GPIO_A39.
+> +  2. gpiow-inner - comprises PAD_GPIO_A40 through PAD_GPIO_A43.
+> +
+> +  This IO group must be configured with a voltage setting that matches the external voltage level
+> +  provided to the IO group.
 
-Looks good.
+Wrap at 80.
 
-Acked-by: Hal Feng <hal.feng@starfivetech.com>
+Please wrap code according to the preferred limit expressed in Kernel
+coding style (checkpatch is not a coding style description, but only a
+tool).  However don't wrap blindly (see Kernel coding style).
 
 Best regards,
-Hal
-
-> ---
->  drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c | 12 +++++-------
-> drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h |  2 +-
->  2 files changed, 6 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
-> b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
-> index e44480e71ea8..3572e8edd9f3 100644
-> --- a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
-> +++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
-> @@ -857,17 +857,15 @@ int jh7110_pinctrl_probe(struct platform_device
-> *pdev)
->  		return -EINVAL;
->  	}
->=20
-> +#if IS_ENABLED(CONFIG_PM_SLEEP)
-> +	sfp =3D devm_kzalloc(dev, struct_size(sfp, saved_regs, info->nsaved_reg=
-s),
-> +			GFP_KERNEL);
-> +#else
->  	sfp =3D devm_kzalloc(dev, sizeof(*sfp), GFP_KERNEL);
-> +#endif
->  	if (!sfp)
->  		return -ENOMEM;
->=20
-> -#if IS_ENABLED(CONFIG_PM_SLEEP)
-> -	sfp->saved_regs =3D devm_kcalloc(dev, info->nsaved_regs,
-> -				       sizeof(*sfp->saved_regs), GFP_KERNEL);
-> -	if (!sfp->saved_regs)
-> -		return -ENOMEM;
-> -#endif
-> -
->  	sfp->base =3D devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(sfp->base))
->  		return PTR_ERR(sfp->base);
-> diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h
-> b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h
-> index 2da2d6858008..188fc9d96269 100644
-> --- a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h
-> +++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h
-> @@ -21,7 +21,7 @@ struct jh7110_pinctrl {
->  	/* register read/write mutex */
->  	struct mutex mutex;
->  	const struct jh7110_pinctrl_soc_info *info;
-> -	u32 *saved_regs;
-> +	u32 saved_regs[];
->  };
->=20
->  struct jh7110_gpio_irq_reg {
-> --
-> 2.54.0
+Krzysztof
 
 
