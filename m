@@ -1,87 +1,89 @@
-Return-Path: <linux-gpio+bounces-35519-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35520-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cAV4Kz3t62lHTAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-35519-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Apr 2026 00:22:53 +0200
+	id 4O0SEKgb7GkgUgAAu9opvQ
+	(envelope-from <linux-gpio+bounces-35520-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Apr 2026 03:40:56 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51B14463CA0
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Apr 2026 00:22:52 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CE2A464755
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Apr 2026 03:40:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 64C76300831F
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2026 22:22:52 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0799F3007538
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Apr 2026 01:40:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C19C27FD4F;
-	Fri, 24 Apr 2026 22:22:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8E9021CFEF;
+	Sat, 25 Apr 2026 01:40:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKa8C61a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJvTVP9i"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA186245012
-	for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2026 22:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F1C1C5F27
+	for <linux-gpio@vger.kernel.org>; Sat, 25 Apr 2026 01:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777069371; cv=none; b=AYcP0pfhcUVzfAPpbGqrivnI2wyBoVQdg1gn8hySDfuEj0kF97BxMAtjbzW00MFpBmsySfkAtxzY55HYzaED3s+kELWc/GrRubIsd9vqrH/4hofumUY6WL2hDRW8JAWEOSkuVxKxfdzDz/oE5Mc/9qFNtNMnr+fDJfvUC+PIl3A=
+	t=1777081250; cv=none; b=qB9hhrVhLq2B77pYiamWOjJYtTVQ6ZTKiZtxxcTYgcdXoRJc+010hlLrBOv4ZXs/8lpW3HPXmU38nXIUD4Mny0EaO0b2iatqlnWRiNpIZqASRxm0xGxPw4nTqA7KCAxfDaYjr3xtAhWZRZPxrLZXHcLoSURp0U9KVZu/oIprIB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777069371; c=relaxed/simple;
-	bh=LKA0yy9RcxNl2whwAN56X8uktnB+GZ7F5MBTwHDkxlo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YqZynn1+sy03CEU7CuUXKodWJOLJuovvkJW0k/Exxh4BTT87GsUGmJrGoT3HUN1a/BM+YqLKWKm0F4HQvT1TOOayzq0erf3gzIdplOlWArxot53nAkM5H6L7xezE+1Lv+zvCGO8vcHvEXMJGyqfi2x7bEoGmwsXDhFhbJtBKzgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WKa8C61a; arc=none smtp.client-ip=209.85.161.42
+	s=arc-20240116; t=1777081250; c=relaxed/simple;
+	bh=s7xRw2+FvzK5g98p/kRflojZycaFuy0Jd6uptcZKYT8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Dtj4fGrJ98H2XGXXNmNnoh7xzdKhK6JUqG+x6I8BGWluJ6yfwkzevsGoUU8CTd7j4L92HCm2SDfY/i6zJAL7bxWE2OZgEgHsJQJZy0z2ACFnKFZrMVr9k5LVA4E8AvYEpNehRc26B4MTLukOzl3XGSXeqcjTb6NCspTe53zq10I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aJvTVP9i; arc=none smtp.client-ip=209.85.215.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-6949f3eeaf6so1770097eaf.0
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2026 15:22:49 -0700 (PDT)
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-c70c112cb61so5509582a12.0
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2026 18:40:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777069369; x=1777674169; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1777081248; x=1777686048; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hMUOlRheR2ZvpjpoFSAfZ9e9X+cDeCX6/i1HLTycI6E=;
-        b=WKa8C61agNBwOOzsDH2NcNsz0Cp6kHFM15HcgAeqcmVGbpdq0U42IytZ/s+GZE2QCG
-         WSKwgWXFcZPXruJkVDcXeaNOuuV1SCHGRQufoL0e6L1G93z+u4LTgDKYAl/yOzw/yltW
-         /4pz/sdSJuhoZumkuAfJb/tPmra8Mgy5dnG6rJZqMWKdGWp+TJI3ROeV7i7RioB6QKtW
-         jN7o66vPY6IZMt/HIZ8cL3Mr/8pYqp4CLV6odDWkyaBBNAlvxE0i2RlvmsWeIyQDP7cY
-         ABvazn4niDAxKeIAtOvFSGHZ8yRD3XsKSNUDwta2R6m1QjOiyR1BOPK7xbfyfUnsmwyF
-         LJ0Q==
+        bh=oxYF7ui2BPFGy0dMMzZR3KyJQqUuOE+azCNCA95w7Vk=;
+        b=aJvTVP9irXwPzHfYR8rRujCbjERMNfW0EkjAh7QkYALbudMRPNPX6ftxsiK5/fOG0c
+         RqtfwStOZnxirqfIOhwSlWa8sZzTO7e0NMeg6ABZ+ClHUjjOLHDG37MjHDJ5dJlun/Bq
+         0aIfTDyexDM7/tNiIspzV6NsPdQsCog3OdAVXqoy8L13c4DH5az9hI6dl2QCZK1gSfZ8
+         udG176foGiGoJnzVE3sqh2xs9fhx1xZ4FIeMqBdmXNwh8RmTp+fbPRYDrCB+daWeh8ap
+         lX+it7Oxg6BRh7f8ZHFf2F3mr9JyioXrap1keY2ZwHQ33PhN/30E6g2+4gOmq7+vl0JK
+         782w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777069369; x=1777674169;
+        d=1e100.net; s=20251104; t=1777081248; x=1777686048;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hMUOlRheR2ZvpjpoFSAfZ9e9X+cDeCX6/i1HLTycI6E=;
-        b=XUG0kbd9UNEH3VahUCMY3srAGFo0cT/AA40nbsglBWnxg+dJbkJ471C/+xmQTyTTDD
-         n8X3e8x5jrCReCyNMaiWk8wQap7F06b3vSMglsUz86p71VbVmVrIkZ+AANBh7iOU335l
-         l+0Tb/kv4sWzNjCXqYipp+yfebZiN5CXROT4xoUjz5dLNzHs2ugl0ZLqB7hTauKdo8kJ
-         xVYwb31p33m0YdL3fkEmfvVjXZh4e7KIIezScfcs/dUoXKtZ2I2EfTgwddtXacV37MfA
-         WE0vQHlD9pSf8hE02iCykfSVFx8dkxgglm0uClK+lNGWbfg0w76uJJn1tQh38mWKW5QN
-         15pw==
-X-Gm-Message-State: AOJu0YwmInIKJDFH0IRjYRWGkIsMdHtxu9nS+MVaZLw8sUzk/qSdKaka
-	YAUaEebEpycBeeZofZAAaTsNJZ93M7svH4bufEiW4W7AC+20wAzC/Sqy
-X-Gm-Gg: AeBDiesjDD8GK0ewzkc5P+sq7F/z9MTmeJxBFzqEApnjsy8exbpjPzXv1jR1aXReohO
-	df2gLHl7Sd3BxQVcNy2I3d9uNnORM5Df7MTq1uKHFpyvgCBVWQAi2AEtvdVqKRDOGczGqU8CChj
-	dPEj1ybEVt8YpjLYPj4AgFAqSjverii/IzgMIlhugx1Z1OFasbhKujVDrNiWpAuyTlxdccsK8M+
-	DPjMVzaK8qA9tWTSr8KlftO2WGxZk/GPvgifkuEdW2mvh2JnOpXmso77R2MKnBZrrSm9enmQYgi
-	N88prPKSlCiARoVpZbhjCah1Xrf1xZqtNPc1HyNRZqvmr2pZzlNP+ydtbc1/9+iOIL9thJSOn6p
-	Hr6yxCGELK6lxkfw4sfJivWnD+wwJpNbWgXTA5+YbkScuDqjerNvC5VNA8boRn1XJh/J0kqYx0o
-	rvHDzmEIROZHUZWas0qDi2//+8NBSCXBfmlsxF43DnVrxeHrJ0HWp2NX5ALJq1xMFD2Dcz
-X-Received: by 2002:a05:6820:4b91:b0:694:9bfe:950b with SMTP id 006d021491bc7-6949bfe9fa8mr8206752eaf.26.1777069368574;
-        Fri, 24 Apr 2026 15:22:48 -0700 (PDT)
-Received: from linuxescape.lan (23-88-128-2.fttp.usinternet.com. [23.88.128.2])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-42c16b64a83sm14370514fac.18.2026.04.24.15.22.48
+        bh=oxYF7ui2BPFGy0dMMzZR3KyJQqUuOE+azCNCA95w7Vk=;
+        b=r7OWZ8TIf03xcyv85Z7t+54S8cZXYXzmPSfwDeObLcAvGEC4Glb+SAxxge9KzLFjwj
+         ysbcGwYURmC1zjnhPbKq8lR+0g+5GXnvVwJXhYQmiU9UL7E9n8i0q8lQ5D0WgQoZtZLR
+         xKW9ezUlgwwRUZHnm8XwgyePFdvTKMyTjpq4vYZS5I+eFFk9R6g1EFIRrePOBxhwUkMU
+         vzqIJ5+IiH/WV5Wz4UA+00tEeZJwYcU5gRIIIRGQQLMFlQBZGtmuRc78BQ59jxdHgSM9
+         uLyYskVVG0Utw9sC/0uxt3K1k86ZVHidG+2T/RC17WUtQuXaUEjysxPuLZ9jFc4fUnwY
+         J7+w==
+X-Gm-Message-State: AOJu0Ywdd36O+ci+U/fOLpUedlOMk5XISI6vUobu2BFERMiRzLEDJ9KA
+	n+xSrH+4EMiasYTFnohei3vbKcCihyziakBIhbasEyRlkfFCxNpJkc0Z69nP4g==
+X-Gm-Gg: AeBDiesxXof7xx2QhdCOVOwkdInHumGoVUFsvAjp2Y4eSRYF9OETViaL47+DnBOcGut
+	CXzRK8wPUuCeD+cWtEFleJPUiLdkJB1Iw4WdUMznoxryfySxI8+A3PxIW53CywQG3QC9VuEGraS
+	oVYTd+ahRH/RDW81PvO82J1lGD7Newa91y+cm9fSDa5rcFR9xi7tCs3D45+pg3s/NqsRIi48QHc
+	ULIwBoR3FKFHSkOLTBBrjkEODQqFEVzjdVAuTM5QDqPxdK2TdO/YKGAiI4Iy5M14MxKetIyx13U
+	YNGafzCugIhbvjC732+B+r+z26ptXMRskv2CUINuqdIITSn2LYumttOCG8uJLY0OfvEf+voA+cS
+	P5IokNq9Wd23IldbYfa5V3RDUsQXj73VagICcsq404bhTD8uf2ktlEP0xMtQszxOBy/fSAeM2kL
+	bFjpahaPbu0f4xE0nCZP84nCA9Wyi7J1+P685+QtEYRSQs+sQsUQdIjErP6hFqLSqXIEwzvoYkj
+	uLZvRsh9CgqYcHNh0BCmTmQkw==
+X-Received: by 2002:a05:6a20:6a0d:b0:398:9d1e:1c6 with SMTP id adf61e73a8af0-3a08d28d04fmr37529929637.0.1777081248013;
+        Fri, 24 Apr 2026 18:40:48 -0700 (PDT)
+Received: from ryzen ([2601:644:8000:5b5d::8bd])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c7976f0811fsm18694358a12.0.2026.04.24.18.40.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2026 15:22:48 -0700 (PDT)
-From: Maxwell Doose <m32285159@gmail.com>
-To: linusw@kernel.org,
-	brgl@kernel.org
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: sim: Replace sprintf() with sysfs_emit()
-Date: Fri, 24 Apr 2026 17:22:47 -0500
-Message-ID: <20260424222247.37295-1-m32285159@gmail.com>
-X-Mailer: git-send-email 2.53.0
+        Fri, 24 Apr 2026 18:40:47 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-gpio@vger.kernel.org
+Cc: Emil Renner Berthing <kernel@esmil.dk>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Linus Walleij <linusw@kernel.org>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] pinctrl: starfive: jh7110: use struct_size
+Date: Fri, 24 Apr 2026 18:40:29 -0700
+Message-ID: <20260425014029.438186-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -89,146 +91,88 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 51B14463CA0
+X-Rspamd-Queue-Id: 2CE2A464755
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-35520-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35519-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCPT_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[rosenp@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_NEQ_ENVFROM(0.00)[m32285159@gmail.com,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[4];
-	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_NONE(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 
-Replace sprintf() function calls with sysfs_emit() in the configfs show
-callbacks. This will help harden the driver and will bring the driver
-up-to-date with more modern functions.
+Instead of an extra kcalloc, Use a flexible array member to combine
+allocations. Saves a pointer in the struct.
 
-Suggested-by: Bartosz Golaszewski <brgl@kernel.org>
-Signed-off-by: Maxwell Doose <m32285159@gmail.com>
+Signed-off-by: Rosen Penev <rosenp@gmail.com>
 ---
- drivers/gpio/gpio-sim.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c | 12 +++++-------
+ drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h |  2 +-
+ 2 files changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index 13b87c8e6d0c..f1059f1dc25c 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -697,9 +697,9 @@ static ssize_t gpio_sim_device_config_dev_name_show(struct config_item *item,
- 
- 	pdev = dev->probe_data.pdev;
- 	if (pdev)
--		return sprintf(page, "%s\n", dev_name(&pdev->dev));
-+		return sysfs_emit(page, "%s\n", dev_name(&pdev->dev));
- 
--	return sprintf(page, "gpio-sim.%d\n", dev->id);
-+	return sysfs_emit(page, "gpio-sim.%d\n", dev->id);
- }
- 
- CONFIGFS_ATTR_RO(gpio_sim_device_config_, dev_name);
-@@ -713,7 +713,7 @@ gpio_sim_device_config_live_show(struct config_item *item, char *page)
- 	scoped_guard(mutex, &dev->lock)
- 		live = gpio_sim_device_is_live(dev);
- 
--	return sprintf(page, "%c\n", live ? '1' : '0');
-+	return sysfs_emit(page, "%c\n", live ? '1' : '0');
- }
- 
- static unsigned int gpio_sim_get_line_names_size(struct gpio_sim_bank *bank)
-@@ -1094,7 +1094,7 @@ static int gpio_sim_emit_chip_name(struct device *dev, void *data)
- 		return 0;
- 
- 	if (device_match_fwnode(dev, ctx->swnode))
--		return sprintf(ctx->page, "%s\n", dev_name(dev));
-+		return sysfs_emit(ctx->page, "%s\n", dev_name(dev));
- 
- 	return 0;
- }
-@@ -1112,7 +1112,7 @@ static ssize_t gpio_sim_bank_config_chip_name_show(struct config_item *item,
- 		return device_for_each_child(&dev->probe_data.pdev->dev, &ctx,
- 					     gpio_sim_emit_chip_name);
- 
--	return sprintf(page, "none\n");
-+	return sysfs_emit(page, "none\n");
- }
- 
- CONFIGFS_ATTR_RO(gpio_sim_bank_config_, chip_name);
-@@ -1125,7 +1125,7 @@ gpio_sim_bank_config_label_show(struct config_item *item, char *page)
- 
- 	guard(mutex)(&dev->lock);
- 
--	return sprintf(page, "%s\n", bank->label ?: "");
-+	return sysfs_emit(page, "%s\n", bank->label ?: "");
- }
- 
- static ssize_t gpio_sim_bank_config_label_store(struct config_item *item,
-@@ -1160,7 +1160,7 @@ gpio_sim_bank_config_num_lines_show(struct config_item *item, char *page)
- 
- 	guard(mutex)(&dev->lock);
- 
--	return sprintf(page, "%u\n", bank->num_lines);
-+	return sysfs_emit(page, "%u\n", bank->num_lines);
- }
- 
- static ssize_t
-@@ -1206,7 +1206,7 @@ gpio_sim_line_config_name_show(struct config_item *item, char *page)
- 
- 	guard(mutex)(&dev->lock);
- 
--	return sprintf(page, "%s\n", line->name ?: "");
-+	return sysfs_emit(page, "%s\n", line->name ?: "");
- }
- 
- static ssize_t gpio_sim_line_config_name_store(struct config_item *item,
-@@ -1241,7 +1241,7 @@ gpio_sim_line_config_valid_show(struct config_item *item, char *page)
- 
- 	guard(mutex)(&dev->lock);
- 
--	return sprintf(page, "%c\n", line->valid ? '1' : '0');
-+	return sysfs_emit(page, "%c\n", line->valid ? '1' : '0');
- }
- 
- static ssize_t gpio_sim_line_config_valid_store(struct config_item *item,
-@@ -1279,7 +1279,7 @@ static ssize_t gpio_sim_hog_config_name_show(struct config_item *item,
- 
- 	guard(mutex)(&dev->lock);
- 
--	return sprintf(page, "%s\n", hog->name ?: "");
-+	return sysfs_emit(page, "%s\n", hog->name ?: "");
- }
- 
- static ssize_t gpio_sim_hog_config_name_store(struct config_item *item,
-@@ -1333,7 +1333,7 @@ static ssize_t gpio_sim_hog_config_direction_show(struct config_item *item,
+diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+index e44480e71ea8..3572e8edd9f3 100644
+--- a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
++++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c
+@@ -857,17 +857,15 @@ int jh7110_pinctrl_probe(struct platform_device *pdev)
  		return -EINVAL;
  	}
  
--	return sprintf(page, "%s\n", repr);
-+	return sysfs_emit(page, "%s\n", repr);
- }
++#if IS_ENABLED(CONFIG_PM_SLEEP)
++	sfp = devm_kzalloc(dev, struct_size(sfp, saved_regs, info->nsaved_regs),
++			GFP_KERNEL);
++#else
+ 	sfp = devm_kzalloc(dev, sizeof(*sfp), GFP_KERNEL);
++#endif
+ 	if (!sfp)
+ 		return -ENOMEM;
  
- static ssize_t
+-#if IS_ENABLED(CONFIG_PM_SLEEP)
+-	sfp->saved_regs = devm_kcalloc(dev, info->nsaved_regs,
+-				       sizeof(*sfp->saved_regs), GFP_KERNEL);
+-	if (!sfp->saved_regs)
+-		return -ENOMEM;
+-#endif
+-
+ 	sfp->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(sfp->base))
+ 		return PTR_ERR(sfp->base);
+diff --git a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h
+index 2da2d6858008..188fc9d96269 100644
+--- a/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h
++++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh7110.h
+@@ -21,7 +21,7 @@ struct jh7110_pinctrl {
+ 	/* register read/write mutex */
+ 	struct mutex mutex;
+ 	const struct jh7110_pinctrl_soc_info *info;
+-	u32 *saved_regs;
++	u32 saved_regs[];
+ };
+ 
+ struct jh7110_gpio_irq_reg {
 -- 
-2.53.0
+2.54.0
 
 
