@@ -1,234 +1,211 @@
-Return-Path: <linux-gpio+bounces-35550-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35551-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IJyMJZE672mD+gAAu9opvQ
-	(envelope-from <linux-gpio+bounces-35550-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 12:29:37 +0200
+	id EPxJIhg772mD+gAAu9opvQ
+	(envelope-from <linux-gpio+bounces-35551-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 12:31:52 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A03FE47107C
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 12:29:36 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id B681A4710D6
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 12:31:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id B495730462BC
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 10:15:22 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 01C8A300C95A
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 10:18:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB05A3B6364;
-	Mon, 27 Apr 2026 10:15:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBCD4309EE6;
+	Mon, 27 Apr 2026 10:18:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HV+CBUaa";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="aGx9v/ha"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="B8KlCH0W";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="ZKhGHSnP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C293B4E94
-	for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 10:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6016D308F3B
+	for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 10:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777284906; cv=none; b=ZdpTEn8nvHwxh5IkG+pHO/6Y1Z/zwqzWUF0ix0bHABTOdAt1GK+uewbvL0Tk8AKWHvIdrG6hGYBblrgz8cqleAFjuLLuBbJDUv8jSa5od5m/rfWOjcDEKiiNzMz5pJJYNAjWSBV1/xAGWuwca6c36/huEMcaLdArIjnUxyQandw=
+	t=1777285109; cv=none; b=MOZBjACta2fyeBth/u+LeTMvp5OvGTfydY0bi86g4R40kcr3fciaimPDIvfjiEEPxwe+thP2tJPYfGRqA/wmkIL+/M/BkMBWrCQOC1lB/DMOUHcLN24CvGFCL1pxQIJVaS1P3RrQ+qxfF2kHxL3Tz4GzneHHVxHH2W2bUfIFgB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777284906; c=relaxed/simple;
-	bh=QUFXBzpkBmtSJp6dEvH4Bwph1Q3gQ0ja0Z2WYmUkQsI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IsENTROyZYFXxuZW7fpxgHAtYYNpNd4wlvXcHkc0lTa6HP57Iew9i+U0JlH+CLPFgxtQ0W06asU3XXyxwRbpKy/yQeld1VYem0G2IOT6ktoQNMu2cblgIXfZmGW6WrnraYO4m8ih2kzNxKRWKFr8ocknGnLIXL6kVR9WT0jX/Ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HV+CBUaa; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=aGx9v/ha; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1777285109; c=relaxed/simple;
+	bh=qi07rhbkZX5kV1q7T3eMORzlTK+gMtVNcpbOp1pndqM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=B/emHmJ/oBONMeD8Cm5tTa5vtxIHSHaejNCpGiUF1KO8f9nwoJ/dWC5Y3U03sQyJI7tN44dEp/AV/O7nQMDXyVbWtZNFlBv/H2af6aE1A2rvscW3QqN7peuw3Q3ht5HCXrBhV+Rpgh8u55iWs797X2laUXlodTkdUjDtv7FWRHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=B8KlCH0W; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ZKhGHSnP; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63R8TFZ23682546
-	for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 10:15:00 GMT
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63R8kFlc3961977
+	for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 10:18:27 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	NnFC+THpzuBRYuI1QSSHMrOlp6CZ6opXo17NR8e9HW0=; b=HV+CBUaaexEgtjky
-	3pmkSzER0s5JSHcZeuqQrhwwwBg3gdJBu/ooQ8QFvGtsDaZOcSd3pf1BTLvntian
-	nW/394YQ9/VKcUcjN27DIIJ9vHUaLih4m//YKioPNtwSSTx6Du6U2/wg3SxbVFJO
-	fwBKxErySXHzbKS6dCi0wqrlJAt2GSMwidRSGIq+wYsIodKQbx/hsCSaBWTh+kp7
-	qTrB7NYYniYYj3xVIvanA7/A4ee7lBrr+Ym4BcsOyklB9jnmhX3qWBsqy/uANTEt
-	V9IzJRSjQylMoxRMlgpk6uc750buGps+pwyrf4sw+rx8eULoProl1KvbIz3qQ7xR
-	PlBdOA==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4drnmr5m7c-1
+	vbozWXvo4QjX4iElfaTeguvBAkfy1ceGfogaHli9wlI=; b=B8KlCH0Wvv4A+Cnf
+	aAVr7DHhtWimI/NUqHBH91bRFRAutSWQkMrCJksWuA5WWWUPvmRoK/lkKC+RNSCf
+	Qw/8gGVTHITFDlI3p5hT4tFg8JghvCccvuc/gSfh1HNyx/Hx5XHnhcwA04LJ3y0i
+	tppEJBrhIJOY0EfVNOreAVkGgYdyf/QDXuJBCaKzjz7DVf9ZC3nj0HUcGh3N/uxa
+	gM+jqtlHAhfZe1jXx5KHrcLW7lJXrKMp0DBwybqp3JixYQzCjZG6MLy+XKRDxtGd
+	PePi5ToaWJJiQTWKCmKP3WajGdCpReYNUzApTcm9iiNREyyqNga7379Vo2seVEhS
+	Xk21tg==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dt4k30kjb-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 10:15:00 +0000 (GMT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-50df4c130dbso166850061cf.1
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 03:15:00 -0700 (PDT)
+	for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 10:18:27 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-8b02ea0c595so18515306d6.0
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 03:18:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1777284899; x=1777889699; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NnFC+THpzuBRYuI1QSSHMrOlp6CZ6opXo17NR8e9HW0=;
-        b=aGx9v/haSRrAun7avWWCDTwP6CYvkAT8axgwaOmO+ULJ0uO5uIQNHLzJ2zGb3bK1YS
-         SlksA+klLeMomZGrlfYAtMfvFLrDAzVyj5fLH8jjh2IpjbbeyX6ljsZkkLstk49IoVyc
-         B8/KrUjPIr1cgPqnrOo/St8a52yAt67pdQYUMPA6KR7BGjXG4CisK64Z6mFrxdZG6w3V
-         W8bc+sPbBbe2EJJOWIX7yf0L3KEUQuDn4OXmDM2CjvwTkssMoK1DMpCH+I/YsNN3s01w
-         8EWyGZ7ntpKALA58Dx1IUVbHf626Wyc2PUt7V1z6C82ynuGdKcNVnax9aYD1TOt8lFRt
-         aKhg==
+        d=oss.qualcomm.com; s=google; t=1777285107; x=1777889907; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=vbozWXvo4QjX4iElfaTeguvBAkfy1ceGfogaHli9wlI=;
+        b=ZKhGHSnPnr+GKviibXPWqyWgvYLS7TGAWh23aRtx7FKhlxF6Fmcww/kpq3Q3Erc8IW
+         fDlCkUDIB+uKNpQt6AZopdS+vjSzzG6BBLykW83Ja9Yd7D5tFB2dGiyeXOYCDhAfk9CE
+         cUjf23E8z0H7CZ5fzUW5r7KdluurA9MI4V5arSnk9oXoKfz6koiNqhUBP6b7SGRiJqUm
+         4UMG8nANVMFXKWjKnDuSbkJd4x2n7T1a33fq+tZRmtf6dxWjRpto6GgpF650fbjMdeBZ
+         Cl2vxlSxFEOWqqOFnM/rK3DIaX93gsp+SEhOBem0kXlHchtD8+MiB8+AQ7vRhAOg+Ueu
+         gRnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777284899; x=1777889699;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=NnFC+THpzuBRYuI1QSSHMrOlp6CZ6opXo17NR8e9HW0=;
-        b=X48SbcutPHJieez0VGAS/xWsQiszvtB6dFklPKaJVNK9V5sO2lzAVKdTpSQYQUk90s
-         vOSASUXCe101r39DoDNJ9lNs2SNmocQyLzxJtqDwxT7VoqM6JnMw8SEnn29a05E6Ns2k
-         d2c3ZGO4jSLVL3IOjcWEK7BGE1JV58WWJYaAWjg2UA1IQrcIYZ/+vRer9aZYwyN2GsXr
-         QC03e1JjX54qYbHE5J+OkuJcewdcvcVnTcsR2TrW9G4xHQQJ566DY2n8tlNWRIinMfPg
-         eey5m3gjfWVqdr796x3I53u0ZJNAO6iKpCvPSlaO0aAMEGSoSIwY0QmH8Zj6IL9eAYRU
-         EKDA==
-X-Forwarded-Encrypted: i=1; AFNElJ9hcN9Wfq+jjiBN5JcHcaBU2AR3kX9dA8HMTF678NImukuwB3UPj99PIdDF1syfWjgcAXz+k55frAbf@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJDqIL/XxOExs0us3wab1eeq663m57qspqwdpft0S4WNOH0GtB
-	geudBh72MFdkX+w7Z+XeJOJa2CNQeVsQbqUT+DOcEfMAT2F8sTN3e4mA9EZID6LwEGfakWDVbFf
-	38IIZ+5ZTifBKM7kq5X6fUZzL5O5iIqUvuazblUrOycHjN/LICaFRl92nM+IpoNlb
-X-Gm-Gg: AeBDievrndQNBKp31Tw3UEOnt9ekuwh1rBUGmCfdvqb6NNj1XySF53ljuOCDk9bjuiM
-	1owwC9g1gdtvzhZpH2DcKSe91ZWcerU2oRF7Y1+3j9K3FRR0qsYcLYsJe2dyCAyJXVM7fTd8ImV
-	UJc29F0tFZ+atKNDW5o1iNbZgZeajSdjGvrc+f3g6u7GeEfqEC4cxhGnY1a4VFtB0/QJ8kYpWAn
-	BAW8tIDxaC+WG5JHheTFW7smcCkxjsgNOOLpDYgRmUVmjg6cHtQyu3PB7E6tGTQTOuFrp+H2PKc
-	VZyQfi514emmtrYfCcEWRBlKbVLRgnjtS3TbylEnyK6wiPzscqu3WGGVa3go+hahSqp6hWASEfa
-	gUKtbmm8A+vzQJtGg5O57WS2UaLHaSegmDDYiEHnP2NKx67ElZBUv2BH+/C8RPA==
-X-Received: by 2002:a05:622a:1189:b0:50b:3128:9916 with SMTP id d75a77b69052e-50e366622c6mr541353411cf.18.1777284899580;
-        Mon, 27 Apr 2026 03:14:59 -0700 (PDT)
-X-Received: by 2002:a05:622a:1189:b0:50b:3128:9916 with SMTP id d75a77b69052e-50e366622c6mr541352981cf.18.1777284898987;
-        Mon, 27 Apr 2026 03:14:58 -0700 (PDT)
-Received: from brgl-qcom.local ([2a01:cb1d:dc:7e00:5062:ae86:23aa:702c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fb74c789sm235103445e9.5.2026.04.27.03.14.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2026 03:14:58 -0700 (PDT)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Date: Mon, 27 Apr 2026 12:14:35 +0200
-Subject: [PATCH v2 4/4] ARM: pxa: pxa27x: attach software node to its
- target GPIO controller
+        d=1e100.net; s=20251104; t=1777285107; x=1777889907;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vbozWXvo4QjX4iElfaTeguvBAkfy1ceGfogaHli9wlI=;
+        b=MvNGHAqalxt7N4PjnHjIfVj+yyzEp+wLEpf8ZsXfMs1zogIEnFQxtFUGlexAEQ0aqb
+         Vcn9qGdobvHf5t/rHlA/m3vJB4280eIZc5EO3GJPeCaOl0saijEPPv2kon5rmkh+8Pxx
+         BvTPsVTHQbsGmpoyNE/thDOdpgaiHa12njIa1D7kprme6rUxPTmmpVRq62Qf+2qOnV1e
+         1pbZSJl7R4yoNkRE/C4W47zrklKq0LaSfZJ1xGadfNgwq4m5SrMCKo7dKwefTW6AP8SS
+         v9BesTitbOGBZioFdVxgrDskkkD0bBuugD00l3g1KhTEJClq93cPtYv+aYbT6LwjG/Ge
+         HDng==
+X-Forwarded-Encrypted: i=1; AFNElJ/DkbblIofxiyh0YfqDQ0aAYqhcWAa9T6VOvmYeCNu6r+BMr/zLYukpz5sSd4crsqC/Yh19Lr6sJ6nU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9qfnLrZTa7rShrwM9SV6DtOInexSvwqf8RlqGUPaFV4dQ3QXB
+	KldpwC0U88/4kdJtyu7LuBwpf2gX7ZiWsBO9Eokei9SjKG3YjJrvRGbzawQVEKi1YRKJ+u5vPPm
+	HDDsUJ0/7GJAtoROheQ0WD6M6UbWHtDrr+VI4iCBymA02qAUB58Vrf5a7+vaqJogp
+X-Gm-Gg: AeBDievh1rNVMC16eIymwl+eTga2jx0e5Tz1ThQrzmnXgMPKAEwEa5WkTOwWRMxrV4/
+	tXOsNQ+Bzt7vyF+BtR/TYIo0sbohqxtuzNOwFXMzwm7mQEWqZbF6ei08RwKsEFFO8P7IuM4kL4A
+	nGbGKyr4ItIozHzCm9vywiCUDLS/zkIvHn6evsyRWz3zMMPQWhzWE2aXuwoMkfatmYtcqI+Mtm7
+	JQsVi5y3wdstHZgFLWEU5FVkDQf2PsQtZ+oFBL3jRkwEVp4pLmTi0j30ON1mgoDIT/HXhIhCkfu
+	gL0K7tH49eM0S3jbWPICs4bHlKGVgiB5l+N5ywA0yDHGAgh4xFRXdUg2brrvYuz2tPxx4TZzCzC
+	qe0WAElIDr4EPTMLDWew9XAGv7nKLww2iRaesxHk6lLDh4aPzBiOZnDBm+yaycXl88z8sHy9GTu
+	5QbzySqyhgCY9Ytg==
+X-Received: by 2002:a05:6214:2466:b0:8ac:8337:ca0e with SMTP id 6a1803df08f44-8b0281d5f4cmr461283666d6.6.1777285106696;
+        Mon, 27 Apr 2026 03:18:26 -0700 (PDT)
+X-Received: by 2002:a05:6214:2466:b0:8ac:8337:ca0e with SMTP id 6a1803df08f44-8b0281d5f4cmr461283306d6.6.1777285106202;
+        Mon, 27 Apr 2026 03:18:26 -0700 (PDT)
+Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ba455043cdbsm1104657566b.46.2026.04.27.03.18.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2026 03:18:25 -0700 (PDT)
+Message-ID: <54cd62f7-bccd-40e5-be19-624cea3dd1ae@oss.qualcomm.com>
+Date: Mon, 27 Apr 2026 12:18:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260427-pxa-gpio-swnodes-v2-4-86fc24b9e714@oss.qualcomm.com>
-References: <20260427-pxa-gpio-swnodes-v2-0-86fc24b9e714@oss.qualcomm.com>
-In-Reply-To: <20260427-pxa-gpio-swnodes-v2-0-86fc24b9e714@oss.qualcomm.com>
-To: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: qcom: Make important drivers default
+To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
         Russell King <linux@armlinux.org.uk>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Arnd Bergmann <arnd@kernel.org>, Linus Walleij <linusw@kernel.org>
-Cc: brgl@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1410;
- i=bartosz.golaszewski@oss.qualcomm.com; h=from:subject:message-id;
- bh=QUFXBzpkBmtSJp6dEvH4Bwph1Q3gQ0ja0Z2WYmUkQsI=;
- b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBp7zcW0gzVXClN5VVOTRxa+RE5TCaXuqQP71OWt
- hkwwqRXAPOJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCae83FgAKCRAFnS7L/zaE
- wzOlD/9447Zai8Bs5wxsjdHZK9N3uqso6J3LYdYllcbS6cniDTtAP0pJ19XuWv/X+WMmsuehLfd
- TpsAK0rSkUaVbxICaSPlabuq9oPrHIliU6uISSQuthbFbUlWAdKEPd7Ra7XTsqad8Ide0mNN7zt
- Tv6r/BvCEB6HJs+dCE4tCn/PyeiRrngePZb/QI57coZsQRKJmG+++jxeCw6+afi/8mHuOV7wWsP
- u3EZh8mBSpGTxVZC6Crhstn9DZ6p/IgHOQo6oVofrRuNV85cEvT/has+IdwJIZzHS6kcMdraIZZ
- kQ8tqy30oCTzcfpI0mgMTpVHKAekYEZ0N4PMqzqif8L7n//56M/oe5HyHFKR/Y1aglO0DLTv8Hp
- ZWsF52sSHqRlj8KCGF85WBrpPSPuRqtQj67KXrMdjnMAfiIASFjLuzqY8Q0a3c8Qbmeb2DcPbM0
- 7D8zi//6Z3ztZ0EWM2uKLt9HO7dqUxCdivrWwLXHg2uf2U77BaoE2aw/PAa4YoRvxiZMYnHCKTN
- dwyMqUB3Dgg84hFxmvAtsXBCzKJctRyqIU9AOmYALh6Xkh25zwOvteXN5rf3Rks5FLwgtQoibMI
- yDRsIsb6UsH+ZRuWh6jmZgvay0S3VHWoQ8BgrBrHekqXBHg6W9SBSdB+RD+0dYNepaupMjB09r0
- qj6wG3ALSRM15sw==
-X-Developer-Key: i=bartosz.golaszewski@oss.qualcomm.com; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
-X-Authority-Analysis: v=2.4 cv=aqCCzyZV c=1 sm=1 tr=0 ts=69ef3724 cx=c_pps
- a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=CBFrsqW9wnp9SfA-JgMA:9 a=QEXdDO2ut3YA:10
- a=a_PwQJl-kcHnX1M80qC6:22
-X-Proofpoint-GUID: KuoRFPqnweDZCbcPPR6TnfKeaWSWQVEv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI3MDEwOCBTYWx0ZWRfXzLJZKm53Ph+6
- JIgv9A/rgdgE/n3Chk1DO0sztLwLBuqzmL8HVZMuhSjOtM5m4tqJqW3P+xVXXa8iZmVxj9bOpC7
- bcfOgu5vyiG4MXHZmPRC131zyDnsSGH0PwG7Qt6b+oPlSUZ5QPnD3YORI9ez/rQS00JUfSvAtWZ
- z2iUv90dybEYyLhTRPPOnbpNjpOmAPK+O0i0RM4xDns2tHhtFOrtLUo/osGHpDmkFELnj6qZszW
- QsikjAwoYvFOjetO1Hg7QZKjdcTSKyD1oo3SrsljiC0Xs7kz0IReAbd5OcRfYImprnva/h8XFAG
- 4X1mOcr9PrGnNspmG8Fn8OQb/ASM7s3sK1bE7Kg0CE6imu6bnKWF11l2c2s2vMWUVM++LQRbyYO
- PlDs757tF3qokl2SIyTo9I1kSZ0eueCeTk28YRPn6KE71K/S0G/pG50tMVRS7FPUiRVeJNqMVz8
- LXwINDe3b8XB7CWNNhw==
-X-Proofpoint-ORIG-GUID: KuoRFPqnweDZCbcPPR6TnfKeaWSWQVEv
+        Bjorn Andersson
+ <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Linus Walleij <linusw@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20260425155505.83688-2-krzysztof.kozlowski@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20260425155505.83688-2-krzysztof.kozlowski@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI3MDEwOSBTYWx0ZWRfX6Yk/j6c4HIYJ
+ KtT7k7pXmJkXJxx2elcEraDMlGwy5QVQLby316JtObuVGOw4DtPhlmDE7d59Vo7MqMkZ24kNCRF
+ D14MgvHuPCfvmJ6O6S+9wFTRgqAzxGa4csAprL9ztUNvTaS4Tc3bABTV/xtnVqNTV7RS/L3q2TN
+ JVivyjr0ky5urm69nzWo0RrYkSgGUSNbchv1uEOa5JsRQwTy7lPsWaTQIcLcfwOAWkaCIy1TlUq
+ lIWHrSvnHziaT/ouHonviTM//wmYBIdOUuYz4XLutZcIennLmdrQndeu6xrcjSOCj2AJOgf9Cif
+ 6Ta9OsYTtv2B9zt7jVMlqaUaNwAnN/F8ZlNQJPxaqQNaadsy0yarry2696nh8X7UHF3SI25RZZO
+ ey8W5uotU183SjjmCG9nOpkIPs0nMgfdjVFWcF0YiDecd8IiogcTVELXREDB6Q0+V9Zzb3x5gDP
+ uQJ8rzGujKWNEOOteIA==
+X-Authority-Analysis: v=2.4 cv=a7QAM0SF c=1 sm=1 tr=0 ts=69ef37f3 cx=c_pps
+ a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22
+ a=EUspDBNiAAAA:8 a=rorZNA5PaGnq6atEbW0A:9 a=QEXdDO2ut3YA:10
+ a=1HOtulTD9v-eNWfpl4qZ:22
+X-Proofpoint-GUID: SkY1ldy7SZDZOwIyp4UNsri_d5Hfm1cw
+X-Proofpoint-ORIG-GUID: SkY1ldy7SZDZOwIyp4UNsri_d5Hfm1cw
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-04-27_03,2026-04-21_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 impostorscore=0 phishscore=0 spamscore=0 adultscore=0
- suspectscore=0 malwarescore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
+ clxscore=1015 malwarescore=0 spamscore=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 bulkscore=0 priorityscore=1501 adultscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2604270108
-X-Rspamd-Queue-Id: A03FE47107C
+ reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2604270109
+X-Rspamd-Queue-Id: B681A4710D6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
 	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35550-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:dkim,oss.qualcomm.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,qualcomm.com:dkim,qualcomm.com:email];
-	FREEMAIL_TO(0.00)[zonque.org,gmail.com,free.fr,armlinux.org.uk,kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:dkim,oss.qualcomm.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,qualcomm.com:dkim,qualcomm.com:email];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35551-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_NEQ_ENVFROM(0.00)[konrad.dybcio@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bartosz.golaszewski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_COUNT_SEVEN(0.00)[7]
 
-Software node describing the GPIO controller for the pxa27x platforms is
-currently "dangling" - it's not actually attached to the relevant
-controller and doesn't allow real fwnode lookup. Attach it once it's
-registered as a firmware node before adding the platform device.
+On 4/25/26 5:55 PM, Krzysztof Kozlowski wrote:
+> The main SoC TLMM (Top-Level Multiplexer) pin controller drivers are
+> essential for booting up SoCs and are not really optional for a given
+> platform.  Kernel should not ask users choice of drivers when that
+> choice is obvious and known to the developers that answer should be
+> 'yes' or 'module'.
+> 
+> Switch all Qualcomm TLMM pin controller drivers to a default 'yes' for
+> ARCH_QCOM.  This has impact:
+> 
+> 1. arm64 defconfig: enable PINCTRL_SM7150 and PINCTRL_HAWI, which were
+>    not selected before but should be, because these platforms need them
+>    for proper boot.
+> 
+> 2. arm qcom_defconfig: no changes.
+> 
+> 3. arm multi_v7 defconfig: enable drivers necessary to boot ARM 32-bit
+>    platforms, which are already enabled on qcom_defconfig.
+> 
+> 4. COMPILE_TEST builds: enable by default all drivers for arm or arm64
+>    builds, whenever ARCH_QCOM is selected.  This has impact on build
+>    time and feels logical, because if one selects ARCH_QCOM then
+>    probably by default wants to build test it entirely.  Kernels with
+>    COMPILE_TEST are not supposed to be used for booting.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+> 
+> ---
 
-Reviewed-by: Linus Walleij <linusw@kernel.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
----
- arch/arm/mach-pxa/pxa27x.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-diff --git a/arch/arm/mach-pxa/pxa27x.c b/arch/arm/mach-pxa/pxa27x.c
-index ff63619790383859ba111e3efe7619aa6cbd248e..bacfd50939fd447ffa11d398867dea7fa638988b 100644
---- a/arch/arm/mach-pxa/pxa27x.c
-+++ b/arch/arm/mach-pxa/pxa27x.c
-@@ -277,7 +277,6 @@ void __init pxa27x_set_i2c_power_info(struct i2c_pxa_platform_data *info)
- }
- 
- static struct platform_device *devices[] __initdata = {
--	&pxa27x_device_gpio,
- 	&pxa27x_device_udc,
- 	&pxa_device_pmu,
- 	&pxa_device_i2s,
-@@ -342,6 +341,10 @@ static int __init pxa27x_init(void)
- 
- 		if (!of_have_populated_dt()) {
- 			software_node_register(&pxa2xx_gpiochip_node);
-+			pxa27x_device_gpio.dev.fwnode = software_node_fwnode(
-+								&pxa2xx_gpiochip_node);
-+			platform_device_register(&pxa27x_device_gpio);
-+
- 			pxa2xx_set_dmac_info(&pxa27x_dma_pdata);
- 			ret = platform_add_devices(devices,
- 						   ARRAY_SIZE(devices));
-
--- 
-2.47.3
-
+Konrad
 
