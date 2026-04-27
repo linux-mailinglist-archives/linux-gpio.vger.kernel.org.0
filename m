@@ -1,147 +1,199 @@
-Return-Path: <linux-gpio+bounces-35556-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35557-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KP3DEfxJ72lO/wAAu9opvQ
-	(envelope-from <linux-gpio+bounces-35556-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 13:35:24 +0200
+	id KMlhB4VM72kEAAEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35557-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 13:46:13 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8280471D2C
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 13:35:23 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA12D471EF9
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 13:46:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5FECE3013A75
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 11:31:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CC77830107CD
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 11:46:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF53F3B19AC;
-	Mon, 27 Apr 2026 11:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE22E30F924;
+	Mon, 27 Apr 2026 11:46:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tSvWRqAj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="of5yp/Ko"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F6130DEA6
-	for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 11:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740AC270EC3;
+	Mon, 27 Apr 2026 11:46:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777289449; cv=none; b=CDiVAa6T3yxAkZJXCvpfVEL3hnSPDtWoo6q6qduedKEPEdzroS6QAMbT8xkUHBKXC2QsfEM8A9QVH9QD1lBrk/uTkIB1s55p7q6WeTnvKNTY95mBvKwszIfwDp78vHKOwfMFpCPez1KcnrKRIKrNHPxQunnUzViIK4uCPMzKdNU=
+	t=1777290367; cv=none; b=aOfdlKugbwJN1eop/FkxsOfh8Idnk606nYq4Q1dkJYgdwC7j7M3Gbt/Nj+oRoFkLmBXDvfQfphkSmthW7igiy48lLEY/h07XCMJ2qM1cjspvDjpt1870TOmz8GyOVSU3FkPIMCkfDb/5nFMDchSEpQrZ+6YLpO4suauHK6rsEQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777289449; c=relaxed/simple;
-	bh=uuhq7sA60Gqf+d9o89HegPUXAaIeJCCjhTAYQjVkdZw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fOaP95iA6A+8VTbaTEnh8IdFhwLGUixGoDccMQ41aNlEM3JB7UVKCz/NFn40exhzQt25//uRRuZYwGe1jYig+hEj4wfQ5dYpXZ2EaYXsHrebXWn3FtWtUuQK/d7x4/k8woIdqXnn2oadseiK8I3vfJfYAsekmijx0NWFPv4xxSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tSvWRqAj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75DFFC2BCFB
-	for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 11:30:49 +0000 (UTC)
+	s=arc-20240116; t=1777290367; c=relaxed/simple;
+	bh=A04kvKesBHSkpPbcNW+ARy0smW82/E5vU4pNuts1UXw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pG2ht9JeqPfzZRe1JyKJxWA7pkQyR2NH+sOXh5P2y/q02jD8avCnh+mi5uLZCyF3NobVLuAvHPuU2fYPNSamWAOLkiuXW5xbU414yHMNkEvHpHq0lHtz1n5NZ2jBRTDqza15kPFt1ENBs+Cac6xvBBVHezTFWnD1ejhukDkAK1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=of5yp/Ko; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C377C19425;
+	Mon, 27 Apr 2026 11:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777289449;
-	bh=uuhq7sA60Gqf+d9o89HegPUXAaIeJCCjhTAYQjVkdZw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=tSvWRqAjQZPnE18tS/WSED4tXggK1kOvZF2lng31Vexe4UnmzFi/U/s5xZVxWMc0L
-	 M2PKVyk3iwd02FqluEWz+50hjpy6fL64GWROhU7zNqTwSRP9fdxHiBd4doWfvq7e3P
-	 8ERgmh4JvUYQ9P2GKx6t/D74EDZ2fdnEWoxZLGCBTMHQ+y/9F/5lxok3CJn7DElNQH
-	 30LGawrLnyQHTjC+emfAAyLM5MWXgJNPiKrGJoeoRlNHu1b6nbtCoPGaPqBMFuoGXl
-	 BBYt79Ea1YhGM2NXSDJSranc3rlxJ5d0gJzevFkGmMoHif+q6i0o8YiYELxYFZYcFO
-	 6O9r8OwtZnPtQ==
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-38e68e4389cso105313001fa.3
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 04:30:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/0b0nCNsZpZIc6Be9Y/31poMKLrulZeLS2UbQwycsTSlnTZkV2iSOw7yfQMBx1EKFr57NSjMC0Wz9D@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywci0CPII1SDBRnaOZ607i7WowzKLYamt0bJoOs7Sx+EW7yEQP1
-	FCBly+uPMqqog7iGnXOldkEY9I3Jj9LSaKYa3BCSJSuo/K+L9QUdTsxtkX/DhJ0v7qdoACcTVzU
-	YPgAbW64ps6KOvNnZLnHMiP4gbvgeTOwzL0GjPWpijA==
-X-Received: by 2002:a05:651c:41d7:b0:38c:6b42:3d77 with SMTP id
- 38308e7fff4ca-38ec780c22bmr131866391fa.2.1777289447975; Mon, 27 Apr 2026
- 04:30:47 -0700 (PDT)
+	s=k20201202; t=1777290367;
+	bh=A04kvKesBHSkpPbcNW+ARy0smW82/E5vU4pNuts1UXw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=of5yp/Ko12TZAVJBRrG9/6BsSRnQXUKcvOBnblcPPz5Nl/RgXe0y44xGnlzBco67A
+	 3eqI0Iavmau+ZwBQH9nZQuOOfo6HU4D6V4kcUTNbNMPzBF0Trdknf+bhbmaLVVfxPx
+	 A6k+cp6b3PQ8FYuc+e5rB1oBr5kiJk6/bWG5l8ZQY3ngtJ2aUibgOvaNCGHP6h6yNX
+	 xnCvb+040EpyrTAJsVr7ugTuQ9RnBvaqj1ObsgqFygf80/QRX4+udhmbIwaX19f05g
+	 +rscnjOV5O0lzhuapHg7/kRTBTQ3vOkfet7FNBeyUllO/1FWKrjMuzbWNTRr+Cg6TM
+	 Odn5BQlH6BBEw==
+Message-ID: <c55b55ea-a8d5-481e-916f-eb92aeb2e06d@kernel.org>
+Date: Mon, 27 Apr 2026 13:46:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260402-baytrail-real-swnode-v2-0-6f5054a4cc07@oss.qualcomm.com>
- <20260402-baytrail-real-swnode-v2-4-6f5054a4cc07@oss.qualcomm.com> <CAJZ5v0iwfZPcFtM7Jv29bXFmh3zN0OaG9UfNY5iC5RpzRzp07w@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iwfZPcFtM7Jv29bXFmh3zN0OaG9UfNY5iC5RpzRzp07w@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Mon, 27 Apr 2026 13:30:35 +0200
-X-Gmail-Original-Message-ID: <CAMRc=MdU7RPefrq48+UwNZRZyY15xaVJxGPtgTkb=kormDid+w@mail.gmail.com>
-X-Gm-Features: AVHnY4JlotpDuyz8EzI3eJfkgs-1h8ebDHBxv3BtsLxXORU4YbE7QcSHGar9q8k
-Message-ID: <CAMRc=MdU7RPefrq48+UwNZRZyY15xaVJxGPtgTkb=kormDid+w@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] platform/x86: x86-android-tablets: enable fwnode
- matching of GPIO chips
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: C8280471D2C
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] 36-second boot delay due to by
+ acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
+To: Mario Limonciello <superm1@kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Marco Scardovi <mscardovi95@gmail.com>
+Cc: Francesco Lauritano <francesco.lauritano1@protonmail.com>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "westeri@kernel.org" <westeri@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>
+References: <e8ed4d4e-37e1-4577-bf80-62fcefbef7dc@kernel.org>
+ <ReQS8sQSGy3UTuG6tyPvoOb8_037sC6A2yXsSFNuXY1PlTFtCcDHnjf8vufEsk8avBSIL46U0qE-ZjTJD1xsbVYZ6_d2-wlTOZ2NJ2coTsc=@protonmail.com>
+ <20251218063954.GT2275908@black.igk.intel.com>
+ <b57b44c3-ea96-4189-8b70-71bf4a80d29b@kernel.org>
+ <20251218103831.GW2275908@black.igk.intel.com>
+ <51f999d7-2064-47dc-8d9b-e262588bfbdb@gmail.com>
+ <20260422090709.GB557136@black.igk.intel.com>
+ <4e55e31e-a5e8-4098-8a7f-bb52476b882a@gmail.com>
+ <20260422095558.GC557136@black.igk.intel.com>
+ <5a36760d-5d1e-4eee-9006-3fed042aa2cd@gmail.com>
+ <20260423044211.GD557136@black.igk.intel.com>
+ <3d562963-9581-4e0f-b9a0-5f0fe28d2495@kernel.org>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <3d562963-9581-4e0f-b9a0-5f0fe28d2495@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: BA12D471EF9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35556-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[oss.qualcomm.com,linux.intel.com,gmail.com,linuxfoundation.org,kernel.org,vger.kernel.org,lists.linux.dev];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[protonmail.com,vger.kernel.org,kernel.org];
+	TAGGED_FROM(0.00)[bounces-35557-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
+	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[kernel.org,linux.intel.com,gmail.com];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DBL_PROHIBIT(0.00)[0.0.0.24:email,0.0.0.21:email,0.0.1.99:email];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[hansg@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-On Sat, Apr 4, 2026 at 8:25=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.org=
-> wrote:
->
-> > +
-> > +static void auto_secondary_unregister_notifier(void *data)
-> > +{
-> > +       struct notifier_block *nb =3D data;
-> > +
-> > +       bus_unregister_notifier(&acpi_bus_type, nb);
-> > +}
->
-> Instead of exporting acpi_bus_type in the previous patch and defining
-> this function here, can you define
->
-> void acpi_bus_unregister_notifier(void *data)
-> {
->        struct notifier_block *nb =3D data;
->
->        bus_unregister_notifier(&acpi_bus_type, nb);
-> }
->
-> in the previous patch and use it here?
->
+Hi,
 
-Not really because we still need to call bus_find_device_by_name(). I
-think it's better to just export this one symbol than to add three new
-ones.
+On 23-Apr-26 07:15, Mario Limonciello wrote:
+> On 4/22/26 23:42, Mika Westerberg wrote:
+>> Hi,
+>>
+>> On Wed, Apr 22, 2026 at 02:08:29PM +0200, Marco Scardovi wrote:
+>>>>> Assuming all the variants suffer the same problem would it be ok to use a
+>>>>> wildcard for it?
+>>>> Yeah, we could expand it to all "ROG Strix G16" I think:
+>>>>
+>>>> diff --git a/drivers/gpio/gpiolib-acpi-quirks.c b/drivers/gpio/gpiolib-acpi-quirks.c
+>>>> index a0116f004975..e3a6111854e8 100644
+>>>> --- a/drivers/gpio/gpiolib-acpi-quirks.c
+>>>> +++ b/drivers/gpio/gpiolib-acpi-quirks.c
+>>>> @@ -392,6 +392,23 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+>>>>                .ignore_wake = "VEN_0488:00@355",
+>>>>            },
+>>>>        },
+>>>> +    {
+>>>> +        /*
+>>>> +         * The ASUS ROG Strix G16 (2025) ACPI GPIO configuration
+>>>> +         * causes acpi_gpio_handle_deferred_request_irqs() to
+>>>> +         * stall for ~36 seconds during boot so ignore the two
+>>>> +         * interrupts involved.
+>>>> +         *
+>>>> +         * Found in BIOS G614PP.307.
+>>>> +         */
+>>>> +        .matches = {
+>>>> +            DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+>>>> +            DMI_MATCH(DMI_PRODUCT_NAME, "ROG Strix G16"),
+>>>> +        },
+>>>> +        .driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+>>>> +            .ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
+>>>> +        },
+>>>> +    },
+>>>>        {} /* Terminating entry */
+>>>>    };
+>>> As for now it seems working. I've reverted it on my kernel as I prefer
+>>> remain as much as possible close to the CachyOS' one but hopefully it will
+>>> be implemented on 7.1, if someone propose the patch and it is accepted. It
+>>> would be amazing to see Asus more interested on Linux and more strict with
+>>> their BIOS but in the end I understand it's like asking for the moon.
+>>
+>> Okay thanks for checking. I guess this is what we have to live with for now
+>> until someone finds a better way of dealing with these.
+>>
+>> @Francesco, would you like to submit a new version of the patch similar to
+>> above or you want me to do that?
+> 
+> Hans suggested that we might want to look at ripping out this edge triggered events at boot earlier in the thread.
+> 
+> https://lore.kernel.org/platform-driver-x86/20260423044211.GD557136@black.igk.intel.com/T/#mdca882e6606d3a894ec7499d3b742d040933dbdb
+> 
+> Hans - as you pointed out that the Surface lid state is the only real issue left and you happen to have one do you think you could work up some patches?
 
-Bart
+Right, so I read further in the thread that Armin has a maybe better suggestion,
+after that has been merged I can check a bunch of the current devices with
+.no_edge_events_on_boot which I still have and see if those quirks can be
+dropped now.
+
+But the above quirk for the ASUS ROG Strix G16 (2025) does not use
+.no_edge_events_on_boot which just disables the initial run of
+the ACPI event handler at boot. Instead it uses:
+
+            .ignore_interrupt = "AMDI0030:00@21,AMDI0030:00@24",
+
+which *completely* disables the ACPI event handlers for the mentioned pins.
+
+So for the 36-second boot delay issue we first need to see if
+switching to ".no_edge_events_on_boot = true" helps.
+
+Marco (Scardovi) can you test if passing gpiolib_acpi.run_edge_events_on_boot=-1
+also fixes the 36 second boot delay ?
+
+Regards,
+
+Hans
+
+
+
 
