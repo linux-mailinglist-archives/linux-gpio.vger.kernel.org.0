@@ -1,186 +1,241 @@
-Return-Path: <linux-gpio+bounces-35630-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35631-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oEtIHEjM72knGAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35630-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 22:51:20 +0200
+	id WNkmJTPY72koGwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35631-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 23:42:11 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB74F47A4A7
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 22:51:19 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E574247AC19
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 23:42:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4B74F302B50A
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 20:51:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7E33F305E990
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 21:41:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6458639525E;
-	Mon, 27 Apr 2026 20:50:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00B6437C939;
+	Mon, 27 Apr 2026 21:41:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E3MSBf3p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ci+ImqOB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9C23932E0
-	for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 20:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDCD242D6A
+	for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 21:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777323037; cv=none; b=KdJmku0Ce1RuD/2CvvQL2GNx47FVUltV7d3RvcBfb6gW3a7EtmoyecLfxmtRbplvFvYl7Jj/kdH6w/jOcH+h41QeQ0IO4X9gaBqc598cCyjuXLXwnPCeVsl44IRASUzNrlJpRaBwfPJ62jbJnnXGMtVaQDRhNKngwmChVegC+ok=
+	t=1777326090; cv=none; b=EYfj1tkEqWT0eAICchMr0U7EAA5NrvBwckBHxX2+4n5GsKgVSFA5yhRb3diGDP5tJmMRTfcGgzm1PsWLf6A1RxP4BgxHjBcQPNRRYDzkCh5Ets1NMgTePEWmJ+CKy46+wNUVLH9lYxyS6rfWb0z/XoJpgsSw7vmg/WGm5G6PPW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777323037; c=relaxed/simple;
-	bh=LS7UeFCYENZ9Xd/KmF8dbXXziMoWhhO1+Zz/OyxlBBk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SgSsa/w4mXFW2kWTuSTFqevXodzoA/IHTl1He4jZMBvGGprw+3+OFjhPYzkX6c07e2iTMNDpGHOeTlmi19ymmdPazgzL8+dV2zdWcnxVFGQqXpR+frI5zyh2mScjKx0/PGnrn+yQ5dX58MxOeIshLM6YyQZBY/smufTUKBAPjFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E3MSBf3p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 595D0C2BCC4
-	for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 20:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777323036;
-	bh=LS7UeFCYENZ9Xd/KmF8dbXXziMoWhhO1+Zz/OyxlBBk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=E3MSBf3pk3wwnNPFMzp1z1nVz6t1Xj7EayjcLrC5JOyu74LCaGcgIhk0FdcVjsEga
-	 vUvKo3y3SZXXrbn7TdUYgOXjWAKiiCgs2NKcJfYubTZd8Md6D3EN7AD4zi1BfVwbpS
-	 WNvzyVPxXyfScZmpQgR8Zyc3NSpWLQlR2J0t7TVmbg5JjWcgUmCNVP4aFOfawR5JGa
-	 0r0qbprcow33GerK0DWcBcB7tJMI9CPlCCfvBgGuwH4wVroFcEE494JnsHUKVnZmzC
-	 QF8r9X+GBu7HVM7w09KCK08ONFrRfwr1SvlYHqndehJwWIKPoVfohZ2q7FxsiZ0WYL
-	 VT805+Yi2VThw==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-38e7d984096so117523621fa.2
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 13:50:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8ADRrHKi2xpkIeyo3DNJ5GSfcYwwWd3h/Txf+JZuV2yAZuZtIhgVdfvu0ui1ZnUjitsaHiPQBhb9eq@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzzk3i73FUEl8DMHYunxsn16jPFPa3+MyYiR2tPBHNKzttpY1aN
-	NUV41u/kAck64xXeyyp6Ma361vEnwyFiWpaqDh7cEauCNL0cbvM9IVyPckR9aUApV7uCqhiSy2+
-	4V3gmRBJ55ecQ5jH5l/JdrPy1iXT5yDQ=
-X-Received: by 2002:a05:6512:3f18:b0:5a3:fe5e:3d49 with SMTP id
- 2adb3069b0e04-5a746626a7dmr115073e87.23.1777323035055; Mon, 27 Apr 2026
- 13:50:35 -0700 (PDT)
+	s=arc-20240116; t=1777326090; c=relaxed/simple;
+	bh=eZX3CDov/wKXGxHlMANg1Y9JRIPqVl+INQsMru3R7jw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EYK91sGVw8Yjqm6upVYoZEosy4pXAhsCgqxvBxw/DVRv9vyf3HP1Ot0avuVdJFUVoAtmH/wjL5orXEUpShLo1kaqrYHLA4CjfOU6t/G6Pj5y0VUgSxC3jsoNSmbvzbd+x9I/qiUGcAa89QPyvSE3zFIoUKe0kmnqRgab2pWcKzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ci+ImqOB; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-4094b31a037so6197075fac.1
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 14:41:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777326088; x=1777930888; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XccsB8eYNsZqIBiFPfFrnn/DwDUI5DYyitE3KWf801U=;
+        b=Ci+ImqOBhp/t+JVUKiQwYz7KgpcsAAuL4Q4WHtr/qhuzOwDErg9k93jmt781xwLLgz
+         pJtjg+6UW8xIMsxbiQVxFhatvigiJuY7tpjQ4t4nTKkQqZ5JsYDfgxJTYOl9qUDAvw8b
+         qtD9ge6atiF0SvrjhS/Y/XikiUkqp5uN1ZHyhdudsrDerZx5GdIaUQpG+0jkLwAuAy5z
+         N/zxPGeZvFxj9UTWGWGW54YzxUaKaDnZZN3MMbASTDlT2gI+HygFl/jbrdXcKo9N0pVM
+         11NT005yQvaJrkYQkw8xNn2xLm3DXvtxAZJ7ydaUEqaqM4Rq3iFVdmogV7TGr5Uz3fMR
+         DRpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777326088; x=1777930888;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XccsB8eYNsZqIBiFPfFrnn/DwDUI5DYyitE3KWf801U=;
+        b=fqqGxxKSpVjEwP7rpjCluBXInrix27f32D6bhScTmVPzOwcGxR4ZulAm7kS94eqyJm
+         wy2pghbv1WQE2su1wZgvzFKlN47pYOViEWHPxk86fP+lLg5IIueRUZ7aaxcICSosLrTj
+         TngyS+ohappP/3ZZJK6iYnrp3dTV78Y/BOKNhFUuXFcMdPpti38gzjBq6usTHpqLLIgB
+         8bTngbBGVZqLkSFP/XxflUySzb1yEwu419GKuY3sYtBD2yoYdrsCgWkZXSdLUb6Emkkw
+         v5ps5ytqzZYh78edGZysSboIYivY1HFr/RqHSMum4CrnDody+crGBC2UB1ohgmB8RWz1
+         g90A==
+X-Gm-Message-State: AOJu0Yw1AIr/FzG30uXEi6KBMDQDJp9zRBaxkPhKR+5QPg5mPVjHQIy3
+	LND0wdyaxsUBnYLfUt3a4JuphJlJHVgOw4AQ5jk1gjZK0ETXgZ2+vlFrKTBD2Q==
+X-Gm-Gg: AeBDieueT14N7DvkKCpWO2TovPP2cadHCCkp3yWst9d44cM45Wo0Ci7uD6FbgytXeRZ
+	RZvrj3Z458LMbebETbAKCDKb5hKTPCbB+OqA7RndjNY+jLTID/wsIVh/oSVutH5Co2nxaCSUZBy
+	wrm9k3Mww/oBPId2Bh2GGpFg6axAHOrwPjQS90kjik2RQdCzrARA6pFI3tb7+AZlEmR2MMFqprl
+	cMLdLO/2XSLHN2aJSQU+28bD1q9d0ma5HQDc5YPEcdF+Rtj+FY6RiYycLDBb4odgAr2mo5L4iQq
+	b2zrWszx+wC8BKX7Kzlnty5UpeJ/3f6cVwsQ4SN7B/G5x3goFW1esWi6jW/C6Us8MP/JAcFNL9O
+	M6+Yg3STcnq9HTOvDqMt575XFcjVkMYHIYNzELqHyBLFdPzuZIDUuGEMULo+9O9CbHC8OMuvgIL
+	TNDEEMgGLhIugw8muAbS2Hw1WHkNlJlDRgq8rWec9o9axD5T36S8cYtC530jXvRqky8Iyv
+X-Received: by 2002:a05:6820:2005:b0:696:23ca:a8 with SMTP id 006d021491bc7-6965cbafc8emr180949eaf.54.1777326088256;
+        Mon, 27 Apr 2026 14:41:28 -0700 (PDT)
+Received: from linuxescape.lan (23-88-128-2.fttp.usinternet.com. [23.88.128.2])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6965ba3686bsm348322eaf.9.2026.04.27.14.41.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Apr 2026 14:41:27 -0700 (PDT)
+From: Maxwell Doose <m32285159@gmail.com>
+To: linusw@kernel.org,
+	brgl@kernel.org
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] gpio: sim: Replace sprintf() with sysfs_emit()
+Date: Mon, 27 Apr 2026 16:41:26 -0500
+Message-ID: <20260427214126.17818-1-m32285159@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260424-ds90ub953-v6-0-7a84efbab316@oss.nxp.com>
- <20260424-ds90ub953-v6-1-7a84efbab316@oss.nxp.com> <CAD++jLmi1Q4sGeY6vK7fxw8AdCmiiW-8kdEi4OFkV1xep=Od_A@mail.gmail.com>
- <AS8PR04MB9080113A71D87E952561FC53FA362@AS8PR04MB9080.eurprd04.prod.outlook.com>
-In-Reply-To: <AS8PR04MB9080113A71D87E952561FC53FA362@AS8PR04MB9080.eurprd04.prod.outlook.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Mon, 27 Apr 2026 22:50:23 +0200
-X-Gmail-Original-Message-ID: <CAD++jLkuDWPd5KsKTpQ=htyupaXEwkPt_jV+RNngs+TTVkYSkw@mail.gmail.com>
-X-Gm-Features: AVHnY4LMs19qECeHOCX1rdutVu9oADk-D7aG7FAXma_lqqC3H1U5IuEltiXqiKY
-Message-ID: <CAD++jLkuDWPd5KsKTpQ=htyupaXEwkPt_jV+RNngs+TTVkYSkw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/4] dt-bindings: media: ti,ds90ub953: Add support for
- remote GPIO data source
-To: "G.N. Zhou (OSS)" <guoniu.zhou@oss.nxp.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Frank Li <frank.li@nxp.com>, 
-	Vladimir Zapolskiy <vz@mleia.com>, Bartosz Golaszewski <brgl@kernel.org>, 
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "G.N. Zhou" <guoniu.zhou@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: EB74F47A4A7
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: E574247AC19
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35630-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35631-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_SOME(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_NEQ_ENVFROM(0.00)[m32285159@gmail.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_THREE(0.00)[4];
+	PRECEDENCE_BULK(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
+	TO_DN_NONE(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,nxp.com:email,mail.gmail.com:mid]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-On Mon, Apr 27, 2026 at 11:13=E2=80=AFAM G.N. Zhou (OSS)
-<guoniu.zhou@oss.nxp.com> wrote:
-> [Me]
+Replace sprintf() function calls with sysfs_emit() in the configfs show
+callbacks. This will help harden the driver and will bring the driver
+up-to-date with more modern functions.
 
-> > I understand that the driver needs to deal with this in a per-gpio-line=
- basis
-> > though, have you considered:
-> >
-> > 1. Just hard-coding this into the driver based on the .compatible
-> >   string, if the remote GPIOs are always the same for this TI thing?
-> >
-> > 2. If it is just for one particular system, you *could* actually have
-> >   a table/mask inside the driver for this:
-> >   if (of_machine_is_compatible("my-funky-system")) which will
-> >   kick in only on that very machine,
-> >
-> > 3. If you really want to store the information in the media i2c
-> >   device node, add some custom property like this:
-> >   ti,remote-sources =3D <0x0000001f>;
-> >   where a bit is set to 1 for each GPIO which is remote.
-> >
-> > Putting flags on the GPIO lines themselves seems too complex and system=
--
-> > specific.
->
-> Thank you for the detailed feedback.
->
-> After considering your suggestions, I think option 3 (custom device prope=
-rty)
-> is the most appropriate approach for this case.
+Suggested-by: Bartosz Golaszewski <brgl@kernel.org>
+Signed-off-by: Maxwell Doose <m32285159@gmail.com>
+---
+  v2:
+ - Rebase commit onto tag 7.1-rc1.
+ - No functional changes from v1.
 
-Why is that the most appropriate?
+ drivers/gpio/gpio-sim.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-I think (1) is most appropriate, if the hardware with this compatible
-always looks like this. You need to answer the question if this
-is a per-system flag for the GPIO lines or something that is *always*
-applicable for a device with compatible ti,ds90ub9NN-q1?
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+index e19701c2ed67..d1e5f0ad56ad 100644
+--- a/drivers/gpio/gpio-sim.c
++++ b/drivers/gpio/gpio-sim.c
+@@ -695,9 +695,9 @@ static ssize_t gpio_sim_device_config_dev_name_show(struct config_item *item,
+ 
+ 	pdev = dev->pdev;
+ 	if (pdev)
+-		return sprintf(page, "%s\n", dev_name(&pdev->dev));
++		return sysfs_emit(page, "%s\n", dev_name(&pdev->dev));
+ 
+-	return sprintf(page, "gpio-sim.%d\n", dev->id);
++	return sysfs_emit(page, "gpio-sim.%d\n", dev->id);
+ }
+ 
+ CONFIGFS_ATTR_RO(gpio_sim_device_config_, dev_name);
+@@ -711,7 +711,7 @@ gpio_sim_device_config_live_show(struct config_item *item, char *page)
+ 	scoped_guard(mutex, &dev->lock)
+ 		live = gpio_sim_device_is_live(dev);
+ 
+-	return sprintf(page, "%c\n", live ? '1' : '0');
++	return sysfs_emit(page, "%c\n", live ? '1' : '0');
+ }
+ 
+ static unsigned int gpio_sim_get_line_names_size(struct gpio_sim_bank *bank)
+@@ -1056,7 +1056,7 @@ static int gpio_sim_emit_chip_name(struct device *dev, void *data)
+ 		return 0;
+ 
+ 	if (device_match_fwnode(dev, ctx->swnode))
+-		return sprintf(ctx->page, "%s\n", dev_name(dev));
++		return sysfs_emit(ctx->page, "%s\n", dev_name(dev));
+ 
+ 	return 0;
+ }
+@@ -1074,7 +1074,7 @@ static ssize_t gpio_sim_bank_config_chip_name_show(struct config_item *item,
+ 		return device_for_each_child(&dev->pdev->dev, &ctx,
+ 					     gpio_sim_emit_chip_name);
+ 
+-	return sprintf(page, "none\n");
++	return sysfs_emit(page, "none\n");
+ }
+ 
+ CONFIGFS_ATTR_RO(gpio_sim_bank_config_, chip_name);
+@@ -1087,7 +1087,7 @@ gpio_sim_bank_config_label_show(struct config_item *item, char *page)
+ 
+ 	guard(mutex)(&dev->lock);
+ 
+-	return sprintf(page, "%s\n", bank->label ?: "");
++	return sysfs_emit(page, "%s\n", bank->label ?: "");
+ }
+ 
+ static ssize_t gpio_sim_bank_config_label_store(struct config_item *item,
+@@ -1122,7 +1122,7 @@ gpio_sim_bank_config_num_lines_show(struct config_item *item, char *page)
+ 
+ 	guard(mutex)(&dev->lock);
+ 
+-	return sprintf(page, "%u\n", bank->num_lines);
++	return sysfs_emit(page, "%u\n", bank->num_lines);
+ }
+ 
+ static ssize_t
+@@ -1168,7 +1168,7 @@ gpio_sim_line_config_name_show(struct config_item *item, char *page)
+ 
+ 	guard(mutex)(&dev->lock);
+ 
+-	return sprintf(page, "%s\n", line->name ?: "");
++	return sysfs_emit(page, "%s\n", line->name ?: "");
+ }
+ 
+ static ssize_t gpio_sim_line_config_name_store(struct config_item *item,
+@@ -1203,7 +1203,7 @@ gpio_sim_line_config_valid_show(struct config_item *item, char *page)
+ 
+ 	guard(mutex)(&dev->lock);
+ 
+-	return sprintf(page, "%c\n", line->valid ? '1' : '0');
++	return sysfs_emit(page, "%c\n", line->valid ? '1' : '0');
+ }
+ 
+ static ssize_t gpio_sim_line_config_valid_store(struct config_item *item,
+@@ -1241,7 +1241,7 @@ static ssize_t gpio_sim_hog_config_name_show(struct config_item *item,
+ 
+ 	guard(mutex)(&dev->lock);
+ 
+-	return sprintf(page, "%s\n", hog->name ?: "");
++	return sysfs_emit(page, "%s\n", hog->name ?: "");
+ }
+ 
+ static ssize_t gpio_sim_hog_config_name_store(struct config_item *item,
+@@ -1295,7 +1295,7 @@ static ssize_t gpio_sim_hog_config_direction_show(struct config_item *item,
+ 		return -EINVAL;
+ 	}
+ 
+-	return sprintf(page, "%s\n", repr);
++	return sysfs_emit(page, "%s\n", repr);
+ }
+ 
+ static ssize_t
 
-If it for example always applies to ti,ds90ub971-q1, then make that
-compatible decide how to handle indvidual line, just write
-code for it. That is case (1).
+base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+-- 
+2.53.0
 
-If this setting depends on how the serializer is integrated and the
-remote setting may apply to some systems with this device and not others,
-you have options (2) and (3).
-
-> However, I initially implemented this using a custom device property
-> (ti,gpio-data) in v1 [1], and Vladimir rejected that approach.
-
-Vladimir is saying that the driver code should handle this
-without any extra DT properties. That can be done with approach
-(1) and (2). But I don't know about that.
-
-I think the basic problem with the patch is that no-one (myself included)
-apart from you understand what a remote serializer is, why it is
-remote and what that means, how the mechanism between the
-components making up this essentially works etc. I.e. a much
-longer and more detailed commit message and binding explaining
-very cleary what this is and how it works and why the special
-property is needed on some lines, and how it is a property
-of some specific way of integrating this GPIO controller.
-
-If a custom property should be used ti,gpio-data is too generic,
-come up with a property name that actually says what it is all
-about and which anyone would understand. "gpio-data" is a
-bit "the thing that does the thing" and overly generic term.
-
-Yours,
-Linus Walleij
 
