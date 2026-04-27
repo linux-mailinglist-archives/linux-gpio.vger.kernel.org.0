@@ -1,87 +1,94 @@
-Return-Path: <linux-gpio+bounces-35631-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35632-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WNkmJTPY72koGwEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35631-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 23:42:11 +0200
+	id IHVnDaHY72l/GwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35632-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 23:44:01 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E574247AC19
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 23:42:10 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7C0047ACF2
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 23:44:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7E33F305E990
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 21:41:32 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 854BB30117E4
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 21:43:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00B6437C939;
-	Mon, 27 Apr 2026 21:41:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5474639FCD2;
+	Mon, 27 Apr 2026 21:43:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ci+ImqOB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r5n2ctel"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDCD242D6A
-	for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 21:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D3238B7BD
+	for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 21:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777326090; cv=none; b=EYfj1tkEqWT0eAICchMr0U7EAA5NrvBwckBHxX2+4n5GsKgVSFA5yhRb3diGDP5tJmMRTfcGgzm1PsWLf6A1RxP4BgxHjBcQPNRRYDzkCh5Ets1NMgTePEWmJ+CKy46+wNUVLH9lYxyS6rfWb0z/XoJpgsSw7vmg/WGm5G6PPW8=
+	t=1777326202; cv=none; b=rwFvTtT+AKP1N57/LJlE/gkhJqi9vPdhjxbf5h5fvb+E5mKxk/5zRNbH6qs02JE4PSRpI0m8ulcWJANNefSKEYcof5bl10bS01pgAPqCfG6xU0jLLN5YnxgYTwbH4JEN/DUxhzeYX+Uv+Km2ELoPvINv6pXG38t7wogHCUct/ZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777326090; c=relaxed/simple;
-	bh=eZX3CDov/wKXGxHlMANg1Y9JRIPqVl+INQsMru3R7jw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EYK91sGVw8Yjqm6upVYoZEosy4pXAhsCgqxvBxw/DVRv9vyf3HP1Ot0avuVdJFUVoAtmH/wjL5orXEUpShLo1kaqrYHLA4CjfOU6t/G6Pj5y0VUgSxC3jsoNSmbvzbd+x9I/qiUGcAa89QPyvSE3zFIoUKe0kmnqRgab2pWcKzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ci+ImqOB; arc=none smtp.client-ip=209.85.160.52
+	s=arc-20240116; t=1777326202; c=relaxed/simple;
+	bh=UZi0qepuaqHlW8QBtGVWyJ3TFaH0AKq/gLzYrAYY678=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ntm4M7s9comIbSNKEnlP4jM4yokzHJqlWUNNsFu7JNLW/xGJ5ScIwOIRFt2BuWpX8XYhZZng7G2nmxmTfp5QKc4ZHDKmown4aQpUnZUfMI62inJD9k8h/Ls4OVG5xkfHAVjpCfObflcT1YoCBZ6LSVt3SXNjDg1k164VLAM7CYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=r5n2ctel; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-4094b31a037so6197075fac.1
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 14:41:29 -0700 (PDT)
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-43cf7683a28so7151482f8f.2
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 14:43:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777326088; x=1777930888; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1777326198; x=1777930998; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XccsB8eYNsZqIBiFPfFrnn/DwDUI5DYyitE3KWf801U=;
-        b=Ci+ImqOBhp/t+JVUKiQwYz7KgpcsAAuL4Q4WHtr/qhuzOwDErg9k93jmt781xwLLgz
-         pJtjg+6UW8xIMsxbiQVxFhatvigiJuY7tpjQ4t4nTKkQqZ5JsYDfgxJTYOl9qUDAvw8b
-         qtD9ge6atiF0SvrjhS/Y/XikiUkqp5uN1ZHyhdudsrDerZx5GdIaUQpG+0jkLwAuAy5z
-         N/zxPGeZvFxj9UTWGWGW54YzxUaKaDnZZN3MMbASTDlT2gI+HygFl/jbrdXcKo9N0pVM
-         11NT005yQvaJrkYQkw8xNn2xLm3DXvtxAZJ7ydaUEqaqM4Rq3iFVdmogV7TGr5Uz3fMR
-         DRpQ==
+        bh=9zaJmxmPtYn1AnHNsGSnxP0G6t9RJZXJdc+PeFZxIeo=;
+        b=r5n2ctel9ZTY3em35AZdnAaytR3nONCjv7CnRVH4WpSQobmrjOWWRzRksexRkNO8qW
+         fngrYtklrOtL5/uW5lFjr0zIsSo4snWrU3f6Z1u6F64JMWt1upYtAnKEA9noHN8bJKCY
+         yLOhDzOZoPQxZqiyGHer6lTssUHX3vwL0z1NwJ7uLlIpv4JRhalWDMM52Fq4nJl8s3B9
+         bu6bswmE9L+3PGQsOuszmjGG5mykE1ToB5sEZtdC6ikaq+gDl/rkpRBYGdlMLyZdKbw8
+         Ce46F3v9x/tvQPLggyO3XfcX5jyfMCTKpbZ9pOwVx9eKsDGV11ZfDu4RjNi+j0BwqGiD
+         26Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777326088; x=1777930888;
+        d=1e100.net; s=20251104; t=1777326198; x=1777930998;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XccsB8eYNsZqIBiFPfFrnn/DwDUI5DYyitE3KWf801U=;
-        b=fqqGxxKSpVjEwP7rpjCluBXInrix27f32D6bhScTmVPzOwcGxR4ZulAm7kS94eqyJm
-         wy2pghbv1WQE2su1wZgvzFKlN47pYOViEWHPxk86fP+lLg5IIueRUZ7aaxcICSosLrTj
-         TngyS+ohappP/3ZZJK6iYnrp3dTV78Y/BOKNhFUuXFcMdPpti38gzjBq6usTHpqLLIgB
-         8bTngbBGVZqLkSFP/XxflUySzb1yEwu419GKuY3sYtBD2yoYdrsCgWkZXSdLUb6Emkkw
-         v5ps5ytqzZYh78edGZysSboIYivY1HFr/RqHSMum4CrnDody+crGBC2UB1ohgmB8RWz1
-         g90A==
-X-Gm-Message-State: AOJu0Yw1AIr/FzG30uXEi6KBMDQDJp9zRBaxkPhKR+5QPg5mPVjHQIy3
-	LND0wdyaxsUBnYLfUt3a4JuphJlJHVgOw4AQ5jk1gjZK0ETXgZ2+vlFrKTBD2Q==
-X-Gm-Gg: AeBDieueT14N7DvkKCpWO2TovPP2cadHCCkp3yWst9d44cM45Wo0Ci7uD6FbgytXeRZ
-	RZvrj3Z458LMbebETbAKCDKb5hKTPCbB+OqA7RndjNY+jLTID/wsIVh/oSVutH5Co2nxaCSUZBy
-	wrm9k3Mww/oBPId2Bh2GGpFg6axAHOrwPjQS90kjik2RQdCzrARA6pFI3tb7+AZlEmR2MMFqprl
-	cMLdLO/2XSLHN2aJSQU+28bD1q9d0ma5HQDc5YPEcdF+Rtj+FY6RiYycLDBb4odgAr2mo5L4iQq
-	b2zrWszx+wC8BKX7Kzlnty5UpeJ/3f6cVwsQ4SN7B/G5x3goFW1esWi6jW/C6Us8MP/JAcFNL9O
-	M6+Yg3STcnq9HTOvDqMt575XFcjVkMYHIYNzELqHyBLFdPzuZIDUuGEMULo+9O9CbHC8OMuvgIL
-	TNDEEMgGLhIugw8muAbS2Hw1WHkNlJlDRgq8rWec9o9axD5T36S8cYtC530jXvRqky8Iyv
-X-Received: by 2002:a05:6820:2005:b0:696:23ca:a8 with SMTP id 006d021491bc7-6965cbafc8emr180949eaf.54.1777326088256;
-        Mon, 27 Apr 2026 14:41:28 -0700 (PDT)
-Received: from linuxescape.lan (23-88-128-2.fttp.usinternet.com. [23.88.128.2])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6965ba3686bsm348322eaf.9.2026.04.27.14.41.27
+        bh=9zaJmxmPtYn1AnHNsGSnxP0G6t9RJZXJdc+PeFZxIeo=;
+        b=jQOofb2XnTBUJn+pQhX1WbocJJr6WpvsVXokytZ4RV9/cw4BfgFMN5HKmHM4zPtOdy
+         FvHG6NhNL4qoGolioeEUDpfL1V+jLF6L4Ezyte4P457macO+N3EgMskDvTiI9PEnj01Z
+         TFExnM8uB/4EZAYuvbjzhU6eGMH+KvV21+GPWQAojvQtV7gLmEmhMLreZ0NSvOyo49IZ
+         PYoK8m85Q2uPn3M1iJSZKe0NCOXj1rZrRyCJ7UzrhFxA4h0if4YAGeUhnZJbGP3Wb+Wq
+         dHAV40IZI8GSsPM9dBHF/tCxDgT/1H/ZEDko0UBs/YFkMTZCFGb1M4hdnJ5MgHO99UvD
+         jfew==
+X-Forwarded-Encrypted: i=1; AFNElJ8AAFNxiCkcSbHUbsqkmCl0G0AoYQQv2CbywmlszkJyjvoZHCEac9ej3HzMPCS7ZE0uzflCJj4CqDHL@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCPOITmRkousA1v+41Jwl2LcdbATJQHs/iONjRvJRr57RgmXyM
+	Vd+Vcml8rzDVY2jLLsYEJKtEoyJakCrqKoVmoCkq7Knl87S0kA1m7k8A
+X-Gm-Gg: AeBDieu0D4WFQeBhMfYCkwKXb6TNynpem0AdfGZWfMHydGWVIGnzP17nm4WaOtUDzdB
+	6uDjSEZ0uIeaK56D5EASGN9RECM/FwOriwhKt1OhNuLncAN9tiByNcFoB2242ybr+mDA7vcVFIe
+	0outTy41JVF3/YPOsUjETPtqGIPN5z8W13YaLYL403K4lb23sqcTjfS6xgJ6JnPaKzb3Qc7F8yv
+	1uNVP/lwAeyJOE6UTq4f+nu3WZ+gBgOMv3G5LB5c/gb4CIl8T58YBrGtqISR017kyDB0ssQ1TIo
+	7pEQPLSCEhu0MRDtSv83phdVopiRV/jVP5Wj4NBaq110g0h/HnSR0Pvg+ymnRmA3wO9peP7AFVf
+	GAsFGyl0dKqlCdu1J39p/k2MYexNSBtefUCaEKwhDKWpHqIRGh3lTHqxiLHMYAqYfIcdWF1ZoFM
+	TKk6TRO2eDSspaYTioEw9r75dq6ZV1cerpFvCaVOzRpSi34Jb2XFUJOQIMdWT0pXLXDYv0FDhw
+X-Received: by 2002:a05:6000:3101:b0:43d:1cec:4767 with SMTP id ffacd0b85a97d-44649c98decmr874235f8f.36.1777326198308;
+        Mon, 27 Apr 2026 14:43:18 -0700 (PDT)
+Received: from ST.. ([102.187.193.100])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4463d02f2a2sm1174592f8f.10.2026.04.27.14.43.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2026 14:41:27 -0700 (PDT)
-From: Maxwell Doose <m32285159@gmail.com>
-To: linusw@kernel.org,
-	brgl@kernel.org
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] gpio: sim: Replace sprintf() with sysfs_emit()
-Date: Mon, 27 Apr 2026 16:41:26 -0500
-Message-ID: <20260427214126.17818-1-m32285159@gmail.com>
-X-Mailer: git-send-email 2.53.0
+        Mon, 27 Apr 2026 14:43:17 -0700 (PDT)
+From: Mohamed Ayman <mohamedaymanworkspace@gmail.com>
+To: Linus Walleij <linusw@kernel.org>,
+	Imre Kaloz <kaloz@openwrt.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/INTEL IXP4XX ARM ARCHITECTURE),
+	linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Mohamed Ayman <mohamedaymanworkspace@gmail.com>,
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/INTEL IXP4XX ARM ARCHITECTURE),
+	linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] gpio: ixp4xx: switch to dynamic GPIO base
+Date: Tue, 28 Apr 2026 00:43:10 +0300
+Message-Id: <20260427214311.331996-1-mohamedaymanworkspace@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -89,153 +96,79 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: E574247AC19
+X-Rspamd-Queue-Id: C7C0047ACF2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[gmail.com,lists.infradead.org,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35631-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35632-lists,linux-gpio=lfdr.de];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mohamedaymanworkspace@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_NEQ_ENVFROM(0.00)[m32285159@gmail.com,linux-gpio@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[4];
-	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	TO_DN_NONE(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	NEURAL_HAM(-0.00)[-0.998];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 
-Replace sprintf() function calls with sysfs_emit() in the configfs show
-callbacks. This will help harden the driver and will bring the driver
-up-to-date with more modern functions.
+Most IXP4xx platforms are Device Tree-based, and GPIO consumers
+use phandle-based descriptors rather than legacy integer GPIO numbers.
 
-Suggested-by: Bartosz Golaszewski <brgl@kernel.org>
-Signed-off-by: Maxwell Doose <m32285159@gmail.com>
+Audit of the IXP4xx platform shows:
+- No gpio_request(), gpio_get_value(), or gpio_set_value() users
+  in arch/arm/mach-ixp4xx/
+- No platform data using fixed GPIO numbers
+
+This switches the gpiochip to dynamic base allocation, aligning
+with modern gpiolib expectations where GPIO numbers are not globally
+fixed and may be assigned dynamically.
+
+Set gpiochip.base = -1 to allow gpiolib to assign the GPIO base
+dynamically, avoiding global GPIO number space conflicts.
+
+Signed-off-by: Mohamed Ayman <mohamedaymanworkspace@gmail.com>
 ---
-  v2:
- - Rebase commit onto tag 7.1-rc1.
- - No functional changes from v1.
+ drivers/gpio/gpio-ixp4xx.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
- drivers/gpio/gpio-sim.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index e19701c2ed67..d1e5f0ad56ad 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -695,9 +695,9 @@ static ssize_t gpio_sim_device_config_dev_name_show(struct config_item *item,
- 
- 	pdev = dev->pdev;
- 	if (pdev)
--		return sprintf(page, "%s\n", dev_name(&pdev->dev));
-+		return sysfs_emit(page, "%s\n", dev_name(&pdev->dev));
- 
--	return sprintf(page, "gpio-sim.%d\n", dev->id);
-+	return sysfs_emit(page, "gpio-sim.%d\n", dev->id);
- }
- 
- CONFIGFS_ATTR_RO(gpio_sim_device_config_, dev_name);
-@@ -711,7 +711,7 @@ gpio_sim_device_config_live_show(struct config_item *item, char *page)
- 	scoped_guard(mutex, &dev->lock)
- 		live = gpio_sim_device_is_live(dev);
- 
--	return sprintf(page, "%c\n", live ? '1' : '0');
-+	return sysfs_emit(page, "%c\n", live ? '1' : '0');
- }
- 
- static unsigned int gpio_sim_get_line_names_size(struct gpio_sim_bank *bank)
-@@ -1056,7 +1056,7 @@ static int gpio_sim_emit_chip_name(struct device *dev, void *data)
- 		return 0;
- 
- 	if (device_match_fwnode(dev, ctx->swnode))
--		return sprintf(ctx->page, "%s\n", dev_name(dev));
-+		return sysfs_emit(ctx->page, "%s\n", dev_name(dev));
- 
- 	return 0;
- }
-@@ -1074,7 +1074,7 @@ static ssize_t gpio_sim_bank_config_chip_name_show(struct config_item *item,
- 		return device_for_each_child(&dev->pdev->dev, &ctx,
- 					     gpio_sim_emit_chip_name);
- 
--	return sprintf(page, "none\n");
-+	return sysfs_emit(page, "none\n");
- }
- 
- CONFIGFS_ATTR_RO(gpio_sim_bank_config_, chip_name);
-@@ -1087,7 +1087,7 @@ gpio_sim_bank_config_label_show(struct config_item *item, char *page)
- 
- 	guard(mutex)(&dev->lock);
- 
--	return sprintf(page, "%s\n", bank->label ?: "");
-+	return sysfs_emit(page, "%s\n", bank->label ?: "");
- }
- 
- static ssize_t gpio_sim_bank_config_label_store(struct config_item *item,
-@@ -1122,7 +1122,7 @@ gpio_sim_bank_config_num_lines_show(struct config_item *item, char *page)
- 
- 	guard(mutex)(&dev->lock);
- 
--	return sprintf(page, "%u\n", bank->num_lines);
-+	return sysfs_emit(page, "%u\n", bank->num_lines);
- }
- 
- static ssize_t
-@@ -1168,7 +1168,7 @@ gpio_sim_line_config_name_show(struct config_item *item, char *page)
- 
- 	guard(mutex)(&dev->lock);
- 
--	return sprintf(page, "%s\n", line->name ?: "");
-+	return sysfs_emit(page, "%s\n", line->name ?: "");
- }
- 
- static ssize_t gpio_sim_line_config_name_store(struct config_item *item,
-@@ -1203,7 +1203,7 @@ gpio_sim_line_config_valid_show(struct config_item *item, char *page)
- 
- 	guard(mutex)(&dev->lock);
- 
--	return sprintf(page, "%c\n", line->valid ? '1' : '0');
-+	return sysfs_emit(page, "%c\n", line->valid ? '1' : '0');
- }
- 
- static ssize_t gpio_sim_line_config_valid_store(struct config_item *item,
-@@ -1241,7 +1241,7 @@ static ssize_t gpio_sim_hog_config_name_show(struct config_item *item,
- 
- 	guard(mutex)(&dev->lock);
- 
--	return sprintf(page, "%s\n", hog->name ?: "");
-+	return sysfs_emit(page, "%s\n", hog->name ?: "");
- }
- 
- static ssize_t gpio_sim_hog_config_name_store(struct config_item *item,
-@@ -1295,7 +1295,7 @@ static ssize_t gpio_sim_hog_config_direction_show(struct config_item *item,
- 		return -EINVAL;
+diff --git a/drivers/gpio/gpio-ixp4xx.c b/drivers/gpio/gpio-ixp4xx.c
+index f34d87869c8b..669b139cd499 100644
+--- a/drivers/gpio/gpio-ixp4xx.c
++++ b/drivers/gpio/gpio-ixp4xx.c
+@@ -311,12 +311,7 @@ static int ixp4xx_gpio_probe(struct platform_device *pdev)
  	}
+ 	g->chip.gc.ngpio = 16;
+ 	g->chip.gc.label = "IXP4XX_GPIO_CHIP";
+-	/*
+-	 * TODO: when we have migrated to device tree and all GPIOs
+-	 * are fetched using phandles, set this to -1 to get rid of
+-	 * the fixed gpiochip base.
+-	 */
+-	g->chip.gc.base = 0;
++	g->chip.gc.base = -1;
+ 	g->chip.gc.parent = &pdev->dev;
+ 	g->chip.gc.owner = THIS_MODULE;
  
--	return sprintf(page, "%s\n", repr);
-+	return sysfs_emit(page, "%s\n", repr);
- }
- 
- static ssize_t
-
-base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
 -- 
-2.53.0
+2.34.1
 
 
