@@ -1,138 +1,186 @@
-Return-Path: <linux-gpio+bounces-35629-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35630-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qHo4MVjM72knGAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35629-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 22:51:36 +0200
+	id oEtIHEjM72knGAEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35630-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 22:51:20 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2211647A4C6
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 22:51:36 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB74F47A4A7
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 22:51:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 890C130A15E4
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 20:49:29 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4B74F302B50A
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 20:51:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9E633890E2;
-	Mon, 27 Apr 2026 20:49:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6458639525E;
+	Mon, 27 Apr 2026 20:50:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="EV7Rwp4G"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E3MSBf3p"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306DF243951;
-	Mon, 27 Apr 2026 20:49:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9C23932E0
+	for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 20:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777322965; cv=none; b=sGKjkEEP5Y8KzZ5fxLJZtfbu669rkVhGAA8YPR0xrqCsmGP45fQ55Ddc/iWj1J8NSKYj/vx1HAVdFSsVmv18paMRwpVF1Au1KE55AEYbznGSL9ASrr/Y31x/JaylSilN1HU5sz4yNvXa11+xM4XEVBwvUp04bH7hsvPeFWOfLqs=
+	t=1777323037; cv=none; b=KdJmku0Ce1RuD/2CvvQL2GNx47FVUltV7d3RvcBfb6gW3a7EtmoyecLfxmtRbplvFvYl7Jj/kdH6w/jOcH+h41QeQ0IO4X9gaBqc598cCyjuXLXwnPCeVsl44IRASUzNrlJpRaBwfPJ62jbJnnXGMtVaQDRhNKngwmChVegC+ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777322965; c=relaxed/simple;
-	bh=uQ/YKk4y6AYZo+6AFX+AM0sFp8rKkf1QpU4q+remftM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eh1dbnWVtO/LvchwBn5wM64lt+4cJZ5QyUtlAWzRTtGB1Vmiv2CSvDbOobnSl1BgHcy52+xGPC77yfkwrOa0RmaNwq7yWDkrV2N1aGj9zJYnn/0E4bsx++3rOEbCZhNC3fH8v6t/cSvKXRSNrmzTL2abnMT/uDHtLaw2DpEBXkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=EV7Rwp4G; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=MMLMoTlttTEwr271DiSMonjx8J90NXXfd9ve6+eILxM=; b=EV7Rwp4GVIMdKKqXd3daio4dni
-	PYihHigVemQahqAa6RE+MXr56Knz1fOFHIbCByako21GgIrqitw04bALZWRWSpGRqLTcDXxCL0w8B
-	oufkYJAoQF8/enNswTG0WJsiTz7K2M1ZhaYLcJNaVvYvFaIjHLsx8iF2gsW2BGMXi5LA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1wHSt8-000DrS-6z; Mon, 27 Apr 2026 22:49:06 +0200
-Date: Mon, 27 Apr 2026 22:49:06 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Shenwei Wang <shenwei.wang@nxp.com>
-Cc: "Padhi, Beleswar" <b-padhi@ti.com>, Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Frank Li <frank.li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	dl-linux-imx <linux-imx@nxp.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v13 3/4] gpio: rpmsg: add generic rpmsg GPIO driver
-Message-ID: <6e01e114-e336-4744-b6b4-563ec42e321b@lunn.ch>
-References: <20260422212849.1240591-1-shenwei.wang@nxp.com>
- <20260422212849.1240591-4-shenwei.wang@nxp.com>
- <22fb5fac-2568-42be-a7e3-7e89d0017eb3@ti.com>
- <PAXPR04MB91850A11C58419C03909145F89362@PAXPR04MB9185.eurprd04.prod.outlook.com>
- <6412a758-4560-4cf1-a0d0-5b24d1a715f1@lunn.ch>
- <PAXPR04MB9185009A17DFDF3D6C8B44E789362@PAXPR04MB9185.eurprd04.prod.outlook.com>
+	s=arc-20240116; t=1777323037; c=relaxed/simple;
+	bh=LS7UeFCYENZ9Xd/KmF8dbXXziMoWhhO1+Zz/OyxlBBk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SgSsa/w4mXFW2kWTuSTFqevXodzoA/IHTl1He4jZMBvGGprw+3+OFjhPYzkX6c07e2iTMNDpGHOeTlmi19ymmdPazgzL8+dV2zdWcnxVFGQqXpR+frI5zyh2mScjKx0/PGnrn+yQ5dX58MxOeIshLM6YyQZBY/smufTUKBAPjFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E3MSBf3p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 595D0C2BCC4
+	for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 20:50:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777323036;
+	bh=LS7UeFCYENZ9Xd/KmF8dbXXziMoWhhO1+Zz/OyxlBBk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=E3MSBf3pk3wwnNPFMzp1z1nVz6t1Xj7EayjcLrC5JOyu74LCaGcgIhk0FdcVjsEga
+	 vUvKo3y3SZXXrbn7TdUYgOXjWAKiiCgs2NKcJfYubTZd8Md6D3EN7AD4zi1BfVwbpS
+	 WNvzyVPxXyfScZmpQgR8Zyc3NSpWLQlR2J0t7TVmbg5JjWcgUmCNVP4aFOfawR5JGa
+	 0r0qbprcow33GerK0DWcBcB7tJMI9CPlCCfvBgGuwH4wVroFcEE494JnsHUKVnZmzC
+	 QF8r9X+GBu7HVM7w09KCK08ONFrRfwr1SvlYHqndehJwWIKPoVfohZ2q7FxsiZ0WYL
+	 VT805+Yi2VThw==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-38e7d984096so117523621fa.2
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 13:50:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8ADRrHKi2xpkIeyo3DNJ5GSfcYwwWd3h/Txf+JZuV2yAZuZtIhgVdfvu0ui1ZnUjitsaHiPQBhb9eq@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzzk3i73FUEl8DMHYunxsn16jPFPa3+MyYiR2tPBHNKzttpY1aN
+	NUV41u/kAck64xXeyyp6Ma361vEnwyFiWpaqDh7cEauCNL0cbvM9IVyPckR9aUApV7uCqhiSy2+
+	4V3gmRBJ55ecQ5jH5l/JdrPy1iXT5yDQ=
+X-Received: by 2002:a05:6512:3f18:b0:5a3:fe5e:3d49 with SMTP id
+ 2adb3069b0e04-5a746626a7dmr115073e87.23.1777323035055; Mon, 27 Apr 2026
+ 13:50:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR04MB9185009A17DFDF3D6C8B44E789362@PAXPR04MB9185.eurprd04.prod.outlook.com>
-X-Rspamd-Queue-Id: 2211647A4C6
+References: <20260424-ds90ub953-v6-0-7a84efbab316@oss.nxp.com>
+ <20260424-ds90ub953-v6-1-7a84efbab316@oss.nxp.com> <CAD++jLmi1Q4sGeY6vK7fxw8AdCmiiW-8kdEi4OFkV1xep=Od_A@mail.gmail.com>
+ <AS8PR04MB9080113A71D87E952561FC53FA362@AS8PR04MB9080.eurprd04.prod.outlook.com>
+In-Reply-To: <AS8PR04MB9080113A71D87E952561FC53FA362@AS8PR04MB9080.eurprd04.prod.outlook.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Mon, 27 Apr 2026 22:50:23 +0200
+X-Gmail-Original-Message-ID: <CAD++jLkuDWPd5KsKTpQ=htyupaXEwkPt_jV+RNngs+TTVkYSkw@mail.gmail.com>
+X-Gm-Features: AVHnY4LMs19qECeHOCX1rdutVu9oADk-D7aG7FAXma_lqqC3H1U5IuEltiXqiKY
+Message-ID: <CAD++jLkuDWPd5KsKTpQ=htyupaXEwkPt_jV+RNngs+TTVkYSkw@mail.gmail.com>
+Subject: Re: [PATCH v6 1/4] dt-bindings: media: ti,ds90ub953: Add support for
+ remote GPIO data source
+To: "G.N. Zhou (OSS)" <guoniu.zhou@oss.nxp.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Frank Li <frank.li@nxp.com>, 
+	Vladimir Zapolskiy <vz@mleia.com>, Bartosz Golaszewski <brgl@kernel.org>, 
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "G.N. Zhou" <guoniu.zhou@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: EB74F47A4A7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[lunn.ch,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[lunn.ch:s=20171124];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-35630-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35629-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	FREEMAIL_CC(0.00)[ti.com,kernel.org,lwn.net,linaro.org,nxp.com,pengutronix.de,linuxfoundation.org,vger.kernel.org,gmail.com,lists.linux.dev,lists.infradead.org,bgdev.pl];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andrew@lunn.ch,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[lunn.ch:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lunn.ch:dkim,lunn.ch:mid]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,nxp.com:email,mail.gmail.com:mid]
 
-> > struct virtio_gpio_response {
-> >         __u8 status;
-> >         __u8 value;
-> > };
+On Mon, Apr 27, 2026 at 11:13=E2=80=AFAM G.N. Zhou (OSS)
+<guoniu.zhou@oss.nxp.com> wrote:
+> [Me]
 
-> It is the same message format. Please see the message definition (GET_DIRECTION) below:
+> > I understand that the driver needs to deal with this in a per-gpio-line=
+ basis
+> > though, have you considered:
+> >
+> > 1. Just hard-coding this into the driver based on the .compatible
+> >   string, if the remote GPIOs are always the same for this TI thing?
+> >
+> > 2. If it is just for one particular system, you *could* actually have
+> >   a table/mask inside the driver for this:
+> >   if (of_machine_is_compatible("my-funky-system")) which will
+> >   kick in only on that very machine,
+> >
+> > 3. If you really want to store the information in the media i2c
+> >   device node, add some custom property like this:
+> >   ti,remote-sources =3D <0x0000001f>;
+> >   where a bit is set to 1 for each GPIO which is remote.
+> >
+> > Putting flags on the GPIO lines themselves seems too complex and system=
+-
+> > specific.
+>
+> Thank you for the detailed feedback.
+>
+> After considering your suggestions, I think option 3 (custom device prope=
+rty)
+> is the most appropriate approach for this case.
 
-> +   +-----+-----+-----+-----+-----+----+
-> +   |0x00 |0x01 |0x02 |0x03 |0x04 |0x05|
-> +   | 1   | 2   |port |line | err | dir|
-> +   +-----+-----+-----+-----+-----+----+
+Why is that the most appropriate?
 
-Sorry, but i don't see how two u8 vs six u8 are the same message
-format.
+I think (1) is most appropriate, if the hardware with this compatible
+always looks like this. You need to answer the question if this
+is a per-system flag for the GPIO lines or something that is *always*
+applicable for a device with compatible ti,ds90ub9NN-q1?
 
-       Andrew
+If it for example always applies to ti,ds90ub971-q1, then make that
+compatible decide how to handle indvidual line, just write
+code for it. That is case (1).
+
+If this setting depends on how the serializer is integrated and the
+remote setting may apply to some systems with this device and not others,
+you have options (2) and (3).
+
+> However, I initially implemented this using a custom device property
+> (ti,gpio-data) in v1 [1], and Vladimir rejected that approach.
+
+Vladimir is saying that the driver code should handle this
+without any extra DT properties. That can be done with approach
+(1) and (2). But I don't know about that.
+
+I think the basic problem with the patch is that no-one (myself included)
+apart from you understand what a remote serializer is, why it is
+remote and what that means, how the mechanism between the
+components making up this essentially works etc. I.e. a much
+longer and more detailed commit message and binding explaining
+very cleary what this is and how it works and why the special
+property is needed on some lines, and how it is a property
+of some specific way of integrating this GPIO controller.
+
+If a custom property should be used ti,gpio-data is too generic,
+come up with a property name that actually says what it is all
+about and which anyone would understand. "gpio-data" is a
+bit "the thing that does the thing" and overly generic term.
+
+Yours,
+Linus Walleij
 
