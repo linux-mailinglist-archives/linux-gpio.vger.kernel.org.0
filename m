@@ -1,67 +1,67 @@
-Return-Path: <linux-gpio+bounces-35605-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35606-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QOguEiiH72ksCQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35605-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 17:56:24 +0200
+	id +MeUHnuH72ksCQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35606-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 17:57:47 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD241475B55
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 17:56:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D30B6475BD6
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 17:57:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B04BF301E21F
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 15:42:35 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F1DF430C7FEA
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 15:43:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CDB131E84F;
-	Mon, 27 Apr 2026 15:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EE86344024;
+	Mon, 27 Apr 2026 15:43:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Umiet226"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G1zVc9Am"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B171A6822;
-	Mon, 27 Apr 2026 15:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A10337B97;
+	Mon, 27 Apr 2026 15:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777304554; cv=none; b=mthT+D4enHRjtAIuDMVRym9tWS33/hGPh0zYIbV6EmudPcxwyQxwx0Wcv/7wMEy4QaWqf0Y02WzAy2XgR+2e/zNS20pqu6lxNEQc1jFqEFY3JqQjpBJOXZBMsYXsTq6cVeS4IUC/sVQTYSpSsmQAemw84vL2IWfVssbzeTXyU68=
+	t=1777304620; cv=none; b=m9/m00xGw8fYDtomACvfn0R+PW2ccEdpSVc7G7F2T+nR+50jQ0xYxJDerhMTeL+K3g5/lUfgBhgR/VcobAa6Z6Ugno4B79UtNhhvUuvt4p2GY7JhILcOzUV9cFjSlqhrbrXXU0qfJHy7re/jsv9lfbxVEJcbxbMi5Vzgtfn77BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777304554; c=relaxed/simple;
-	bh=jpeqo3blo68qkWdVPmQrUuVlGinKzd6r+L8pS5ET8wc=;
+	s=arc-20240116; t=1777304620; c=relaxed/simple;
+	bh=6ISVTMtRX4NqFtLqj4qSZrtb1sJJjw46nVYpkNvtzzE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mUom5wg236c6AlWSk9QkYoPUbOo8YOlJmJCmxXu1Uj/1rKC4yaWdrb7DH9kghJ16Sywb+lMrGaDc/FKiWgAQgPas3hGzS8AvvLgpJdgmnH6tdq/+YTEOXWdLrhvj14xtJ0v3T99pNAhVy+ziOnqDTLtj/9W0clyAx+e6GYaHUUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Umiet226; arc=none smtp.client-ip=192.198.163.8
+	 Content-Type:Content-Disposition:In-Reply-To; b=qGf9jvaWjBKwv6QCs3/18vbUqepBaviGk1RzOPCSp6WuvVEe1goDvBuY7qnBUTyNd6vab53JhzpcYd9NAbKxiPdac1OKpExgGs67Bc4cEX34zp8oOb98/DrA3F2LsxE3k1hgwk6UFs5DaMa4CTx3/dpHHuNMFJ6LXTRe3zERluM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G1zVc9Am; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777304552; x=1808840552;
+  t=1777304618; x=1808840618;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=jpeqo3blo68qkWdVPmQrUuVlGinKzd6r+L8pS5ET8wc=;
-  b=Umiet226sjN59+PO5ZFl9SfXMnsmLGb2b49uLAycdvGK2fkxMcfocAqB
-   k2xghJ3pvIBg82pkwRFCykyU1DfBnZDJVcjRxSpeaM6wL8YV08mdSPpAe
-   McJ4P38HlFTyHwWGPsL1s8a2L6RiKHfOFQUvDDmFxamadkuzMIpSiB4Tz
-   COY1LUb0N26s1KvggAj5CzHDbcydEebVYpNKN9wn7oe9HUYuUfGk4mmVO
-   hcA+hgDPNRLGQmqz+ohSb16EZGvIek62LltAuPkgweacjL3uHoqzyVFCM
-   b9JzYgParHj4yfd4+M8Bv1rt4tyacBgO1AGExLXCcgOUBNkJ7ksoQyrZ8
-   Q==;
-X-CSE-ConnectionGUID: GJmEHxCoREyHgAj0lo1fBA==
-X-CSE-MsgGUID: +wGkdRo1QeqfvF+OXOZ4iA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11769"; a="95758804"
+  bh=6ISVTMtRX4NqFtLqj4qSZrtb1sJJjw46nVYpkNvtzzE=;
+  b=G1zVc9Am0lg0OLEg0IaI2O93vquAA+1aB7uJwL2FFFUoHkoN1wWbMQGt
+   5vEjNa5dzQkTtpqQVVZmZLXCNeg7WPvUJ4gdh5cCh8OiN99ww4OjG8+7F
+   bEzVFHJepQMpR24mq92heRJmi4hD0UE9cjybDfryspqclBIqxLAvdOiyC
+   NXi82JGeJ5atAUruEA2A/yDhzJldBGqUYTFaBf3VeXr0cgq0az6qUUsSC
+   uf8c/0/U0qo5dSl4VtAwVdrTkVyezQZu+qODHJ7Sl2Yu64eg0JRh8yN51
+   ZnzqtFI7iJ2X+09mB4ubkdgp8+OeCZqTvSXFlESMI5blDcDb8XN+gvvFB
+   A==;
+X-CSE-ConnectionGUID: pkfnsPSvSaqbuizfOlhiyg==
+X-CSE-MsgGUID: kqlQ3sM3ScmYFVbfEsrwtw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11769"; a="103656950"
 X-IronPort-AV: E=Sophos;i="6.23,202,1770624000"; 
-   d="scan'208";a="95758804"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2026 08:42:31 -0700
-X-CSE-ConnectionGUID: YGGLeOhSQYyz1BHpkVsziQ==
-X-CSE-MsgGUID: aLLViqwXTyqs3NaMC227iQ==
+   d="scan'208";a="103656950"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2026 08:43:38 -0700
+X-CSE-ConnectionGUID: MSbhwIMpSU6XPZgGx/cnPg==
+X-CSE-MsgGUID: VNR5LbqfS7Cae+5Twd97QQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,202,1770624000"; 
-   d="scan'208";a="235425461"
+   d="scan'208";a="238660909"
 Received: from fpallare-mobl4.ger.corp.intel.com (HELO localhost) ([10.245.244.2])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2026 08:42:28 -0700
-Date: Mon, 27 Apr 2026 18:42:25 +0300
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2026 08:43:35 -0700
+Date: Mon, 27 Apr 2026 18:43:33 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Arnd Bergmann <arnd@kernel.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -73,8 +73,9 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 	linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org
 Subject: Re: [PATCH] usb: udc: pxa: remove unused platform_data
-Message-ID: <ae-D4Qki41GpOHyx@ashevche-desk.local>
+Message-ID: <ae-EJW3UXgVbiXt0@ashevche-desk.local>
 References: <20260427143300.2887692-1-arnd@kernel.org>
+ <ae-D4Qki41GpOHyx@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -83,10 +84,10 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260427143300.2887692-1-arnd@kernel.org>
+In-Reply-To: <ae-D4Qki41GpOHyx@ashevche-desk.local>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
-X-Rspamd-Queue-Id: BD241475B55
+X-Rspamd-Queue-Id: D30B6475BD6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -99,7 +100,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_CC(0.00)[linuxfoundation.org,arndb.de,zonque.org,gmail.com,free.fr,kernel.org,lists.infradead.org,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-35605-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35606-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	HAS_ORG_HEADER(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -116,50 +117,24 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	NEURAL_HAM(-0.00)[-0.999];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ashevche-desk.local:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,ashevche-desk.local:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-On Mon, Apr 27, 2026 at 04:32:10PM +0200, Arnd Bergmann wrote:
-
-> None of the remaining boards put useful data into the platform_data
-> structures, so effectively this only works with DT based probing.
-> 
-> Remove all code that references this data, to stop using the legacy
-> gpiolib interfaces. The pxa27x version already supports gpio
-> descriptors, while the pxa25x version now does it the same way.
+On Mon, Apr 27, 2026 at 06:42:31PM +0300, Andy Shevchenko wrote:
+> On Mon, Apr 27, 2026 at 04:32:10PM +0200, Arnd Bergmann wrote:
 
 ...
 
-> +	dev->pullup_gpio = devm_gpiod_get_index_optional(&pdev->dev, "pullup", 0,
-> +						    GPIOD_OUT_HIGH);
+> I even wouldn't mind this to be long single line
+> 
+> 		dev_dbg(dev, "can't get pullup GPIO: %ld\n", PTR_ERR(dev->pullup_gpio));
+> 
+> (I dropped ' err' part in this variant, though).
 
-While I gave a tag some time ago, I still wonder why we use _index variant here.
-With
+Or even
 
-	struct device *dev = &pdev->dev;
+		dev_dbg(dev, "can't get pullup GPIO: %pe\n", dev->pullup_gpio);
 
-it becomes just a single line (yes, 82 characters long).
-
-	dev->pullup_gpio = devm_gpiod_get_optional(dev, "pullup", GPIOD_OUT_HIGH);
-
-> +	if (IS_ERR(dev->pullup_gpio)) {
-> +		dev_dbg(&pdev->dev,
-> +			"can't get pullup gpio err: %ld\n",
-> +			PTR_ERR(dev->pullup_gpio));
-
-This occupies more LOC than needed (also gpio --> GPIO).
-
-		dev_dbg(dev, "can't get pullup GPIO err: %ld\n",
-			PTR_ERR(dev->pullup_gpio));
-
-I even wouldn't mind this to be long single line
-
-		dev_dbg(dev, "can't get pullup GPIO: %ld\n", PTR_ERR(dev->pullup_gpio));
-
-(I dropped ' err' part in this variant, though).
-
-> +		retval = PTR_ERR(dev->pullup_gpio);
-> +		goto err;
->  	}
+which fits 80.
 
 -- 
 With Best Regards,
