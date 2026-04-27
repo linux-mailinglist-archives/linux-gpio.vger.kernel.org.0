@@ -1,190 +1,162 @@
-Return-Path: <linux-gpio+bounces-35532-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35533-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6CT3CvvF7ml5xgAAu9opvQ
-	(envelope-from <linux-gpio+bounces-35532-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 04:12:11 +0200
+	id eP/9Jcjs7mlV0wAAu9opvQ
+	(envelope-from <linux-gpio+bounces-35533-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 06:57:44 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8111F46C0D7
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 04:12:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BC8546D1C2
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 06:57:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 412C8300EF52
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 02:12:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BD1D0300AB08
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2026 04:57:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7DE52E7F3E;
-	Mon, 27 Apr 2026 02:11:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 777DA346FCA;
+	Mon, 27 Apr 2026 04:57:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AURVf7gp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z17TkTM6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293FA846A
-	for <linux-gpio@vger.kernel.org>; Mon, 27 Apr 2026 02:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326712EDD62;
+	Mon, 27 Apr 2026 04:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777255919; cv=none; b=ukju/BOfIYtpq4UAIuJLzyLHr4K7lkCQSps+HdWyrq76ImOetpUXTW6p9HOC7cr0Hcjz9pE4wmdoMbHSTs9VGN48RCmkQHQpzTwov5AbVgeiU6i0IkFfz5v47d4SGPwYmTG+R+NYSRk7ZLbwL1WBEsMC8P8WF0Gnl2NAWoek4VQ=
+	t=1777265857; cv=none; b=pWQmm02Uo8acGAq5jL4jJXceGStDN33c8FU89agPgNG7n4+IG2KWPf4Jz7ilo1dPwNxs+kkzqpJ402zrDNLomd8PQlcGFCXhKhwZj6Ut9nLFOPOCE7HUXrrmb5NHyWiv9iiS0SNzEMNdOPuvUHzWkdQ5okgU34okrcPeRWhampo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777255919; c=relaxed/simple;
-	bh=+3p0Ns/EM0rIdRNtD3BpcOrY+O7vxIjfM2fOiRE5eDg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P7DM5UkSZyU6hFs59aHpcyfbxhAAzbXyiyfQQjKVlCe27Qod6QoMDfT+ru7DoYPeDA1DilAY7UCmE1NV9k6bZBnncII8/NhP4LeKVhJFNG7QFEQuw1nY1LTKk/JM6Egx+VN8lz2VJBbiewoqUinJr1yIxc5vm7VjzQMh1w7wq/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AURVf7gp; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-c70ea5e9e9dso4227053a12.1
-        for <linux-gpio@vger.kernel.org>; Sun, 26 Apr 2026 19:11:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1777255916; x=1777860716; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mF/9AhbFaWy+vBCE+sic1C2hAqKkKmrRtazAAKk6boM=;
-        b=AURVf7gpD6Ch5ReRDLf8vLE3d1QD5NKsx02A3ePLfBj/7QryvoXoXNkaX/zDaVr4Mi
-         aPGl958hK4O1DrcKr2dw56GPu0xlCa4Y3TZfrMb3anlPMcl27WxiV+5bnkxo18j4FEdp
-         QwhwaIPiki+6qTU2TUiY4TagVF4YalBuyjwj4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777255916; x=1777860716;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mF/9AhbFaWy+vBCE+sic1C2hAqKkKmrRtazAAKk6boM=;
-        b=oXI2umW4Fe9UWVtdWTLM8yk30nYfIMTsWeIdPQSr5US/qNZss8yiOIPY7zcbMxX21U
-         pSdm6p9qFh6/aM+CG+9aIGFkYnd7f1K+px1HcPyYab478DPyD6IdZafimHc1ILnZT730
-         o28+dKrfjl9MdxoTt8UMoUCFLjQzG6jmdeW2IMqCjgVlmG0Ake/22Lckwt2BgfPnuTqt
-         iLomGsE9nz0JQut/7+HOFyAbcNvYACGLnGLhruAgzo3AyQEjUcs+eP8ZqmRrjErX3EpT
-         iH9iBfjTut+YihaNu7IlT/zzKVLvHQlwFt8QkLPkYUVSt/iIHySFVPRxZ8TIJ+Z0ddpq
-         4LBg==
-X-Forwarded-Encrypted: i=1; AFNElJ9z730v6KilD2irSvnmEWwGMhOtOapme8mE5dWAzwydW0XxmvBd7bI5aM2+AyKSu0O6tlK6EcHVa4cx@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJrOYM5mvV5RDwPeeL9NQ74e//QHPZXeopEZaoIzLX26zoAlfZ
-	fEMn+WHM9ck+TCvGFNA/dn9NzxVF6pCOIpqY9S39E4C/kN1J0iiZc0GNlRhI2SEnwA==
-X-Gm-Gg: AeBDietmjgsPlYOU2vnbB1C1voHT9cBRIePhyL/Gve2x+CzMIZTO1dsRgX4geC1cZS5
-	rdd0sRXt3ZiTlFuWvL6powEP07V21MpTKGMiepcewpFkPL5AhwUOdkTq8ddewfGmBewgBJra2rg
-	ssEX7QBjFuFMlYqCgQfSiHXQyOVvUvY0nwHPtocNPhcGMUL+D2pNrQOtvHbjyyePOKvvV/bmhMO
-	LiT6W3tpdejRFMvIg9kbQnYGBL7w/98eC6FuWCECcF5ultvaCoxIYvz6Wa0/jOpK6zhzAaOTPEI
-	78LsArcW4e+Q4WbKDiocOHYDEw+r6hhGF+xSIudMXp79VOpraZaOM33M5ab7YDzF/xsSUkJiq1o
-	jxSWj1vZ8McZHtVhP9qc+w3u46Q87VQDI8pCikmJO5E9V1hV2aZe6wm0ZTL4f1fEUMXEriXyn3m
-	FywhLCzql0+yr5t/iX7Adwh5MwHm9JG+oxHq9Uaw35L+Di8evFoGHkvOcSF+pDbRfVYHkdkUdyL
-	g9hbxj4DituKx/eaQY=
-X-Received: by 2002:a05:6a20:158a:b0:39b:abdc:4215 with SMTP id adf61e73a8af0-3a08d68e0e4mr46011148637.10.1777255916491;
-        Sun, 26 Apr 2026 19:11:56 -0700 (PDT)
-Received: from wenstp920.tpe.corp.google.com ([2a00:79e0:201d:8:8f3b:cb24:e20a:84bd])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82f8e9d2fa9sm31234668b3a.16.2026.04.26.19.11.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2026 19:11:56 -0700 (PDT)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Linus Walleij <linusw@kernel.org>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	linux-mediatek@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Hao Chang <ot_chhao.chang@mediatek.com>,
-	Qingliang Li <qingliang.li@mediatek.com>
-Subject: [PATCH] pinctrl: mediatek: eint: Drop base from mtk_eint_chip_write_mask()
-Date: Mon, 27 Apr 2026 10:11:46 +0800
-Message-ID: <20260427021148.2049555-1-wenst@chromium.org>
-X-Mailer: git-send-email 2.54.0.rc2.544.gc7ae2d5bb8-goog
+	s=arc-20240116; t=1777265857; c=relaxed/simple;
+	bh=jZ/gQyskDf9bpQeRgub9iz10gqKL3J/aAnToYVfGb5M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nq8ogbg//JXXAlhnujGHErT2jYQ1iurCvv2vu+TH9sKTgj0JF6fDVTMTKSayvyyUNxqmuiju//YgFe93UoadU3OHBtjENk4alpOW0Dlezf+gJTP7FXi5ADgI9kyDpajlZ5MWd+AwpdlzOcxAQx/o3Yquti+av7SDXV6Ha8yPCJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z17TkTM6; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777265855; x=1808801855;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jZ/gQyskDf9bpQeRgub9iz10gqKL3J/aAnToYVfGb5M=;
+  b=Z17TkTM6/hdIK583V2vp1xSdhEbTB19/5sU2BfBYX9YyjhvC9kYFNfPJ
+   4Dgz7xPcWxeeiWcurUotNBVnV5mJQkkwGeaoB0LXGDY6csAGqLSSrqykn
+   Sb+EVZs+OO3iIWNkSkC35WKEIjLrpGfSryTlbS3iIMgjunAoQFtbsH+qR
+   wXD151WleEk4wp8E7xkJaA03dImWSdhZkIT3PWCPy2q1YtdPrQkfWCtsD
+   CUw4S5Do4tfiOp1Q/zub2T52nIi2KmvjqXkIL46MghH38iGhUVScXUYw+
+   J0hQi2wy41uMCqqvl+WlFuGSn+kuGszdLnbTv0+VnOkTWkLt9b2/2y2JJ
+   A==;
+X-CSE-ConnectionGUID: Y+Ev2GXYQ8+C6YzN+3P4+A==
+X-CSE-MsgGUID: NE0c7awPSwaPqtkIK64zIA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11768"; a="78034473"
+X-IronPort-AV: E=Sophos;i="6.23,201,1770624000"; 
+   d="scan'208";a="78034473"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2026 21:57:35 -0700
+X-CSE-ConnectionGUID: 8rqvHTCuQ3eocDuDgTFMYw==
+X-CSE-MsgGUID: V1wDDYX7SdOeOKk1NOgFxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,201,1770624000"; 
+   d="scan'208";a="271659496"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa001.jf.intel.com with ESMTP; 26 Apr 2026 21:57:32 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id 6F1DB95; Mon, 27 Apr 2026 06:57:31 +0200 (CEST)
+Date: Mon, 27 Apr 2026 06:57:31 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Mario Limonciello <superm1@kernel.org>,
+	Marco Scardovi <mscardovi95@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Francesco Lauritano <francesco.lauritano1@protonmail.com>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"westeri@kernel.org" <westeri@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>
+Subject: Re: [BUG] 36-second boot delay due to by
+ acpi_gpio_handle_deferred_request_irqs on ASUS ROG Strix G16 (2025)
+Message-ID: <20260427045731.GI557136@black.igk.intel.com>
+References: <20260422090709.GB557136@black.igk.intel.com>
+ <4e55e31e-a5e8-4098-8a7f-bb52476b882a@gmail.com>
+ <20260422095558.GC557136@black.igk.intel.com>
+ <5a36760d-5d1e-4eee-9006-3fed042aa2cd@gmail.com>
+ <20260423044211.GD557136@black.igk.intel.com>
+ <3d562963-9581-4e0f-b9a0-5f0fe28d2495@kernel.org>
+ <f72a1da5-2cc1-4e08-9441-ea252062b4e5@gmail.com>
+ <a2a187d9-363c-48fe-8301-6a199366c478@gmx.de>
+ <f4979d43-f61f-4387-8490-ccec7043c940@kernel.org>
+ <bcdd110b-489e-4f09-892d-b2d6ce4b0ff0@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 8111F46C0D7
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <bcdd110b-489e-4f09-892d-b2d6ce4b0ff0@gmx.de>
+X-Rspamd-Queue-Id: 3BC8546D1C2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[chromium.org,none];
-	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[chromium.org:s=google];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,collabora.com];
-	TAGGED_FROM(0.00)[bounces-35532-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,protonmail.com,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-35533-lists,linux-gpio=lfdr.de];
+	FREEMAIL_TO(0.00)[gmx.de];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[wenst@chromium.org,linux-gpio@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[chromium.org:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio];
 	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[intel.com:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,chromium.org:email,chromium.org:dkim,chromium.org:mid]
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mika.westerberg@linux.intel.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:dkim,black.igk.intel.com:mid]
 
-When support for multiple EINT base addresses was added in commit
-3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple
-addresses"), mtk_eint_chip_write_mask() was changed to write interrupt
-masks for all base addresses in one call. However the "base" parameter
-was left around and now causes sparse warnings:
+On Sat, Apr 25, 2026 at 10:41:46PM +0200, Armin Wolf wrote:
+> > > according to the Microsoft documentation
+> > > (https://learn.microsoft.com/
+> > > en-us/windows-hardware/drivers/bringup/general-purpose-i-o--gpio-,
+> > > section "GPIO controllers and ActiveBoth interrupts"), triggering
+> > > GPIO interrupts marked as ActiveBoth during initialization is
+> > > correct as long as the associated GPIO line is already "asserted"
+> > > (aka logic level low). I think the problem is that we also trigger
+> > > edge-based GPIO interrupts _not_ marked as ActiveBoth.
+> > > 
+> > > Based on this i agree with Hans, except that we should continue you
+> > > trigger ActiveBoth GPIO interrupts as long as the above
+> > > condition applies.
+> > > 
+> > > Thanks,
+> > > Armin Wolf
+> > > 
+> > 
+> > So maybe something like this (attached)?
+> 
+> Yes, exactly.
 
-    mtk-eint.c:428:44: warning: incorrect type in argument 2 (different address spaces)
-    mtk-eint.c:428:44:    expected void [noderef] __iomem *base
-    mtk-eint.c:428:44:    got void [noderef] __iomem **base
-    mtk-eint.c:436:44: warning: incorrect type in argument 2 (different address spaces)
-    mtk-eint.c:436:44:    expected void [noderef] __iomem *base
-    mtk-eint.c:436:44:    got void [noderef] __iomem **base
+This is good information and definitely scales better than the quirk list.
+The linked document also mentions that there is _DSM under GPIO device that
+could be used to override the asserted state:
 
-Since the "base" parameter is no longer needed, just drop it.
+https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/gpio-controller-device-specific-method---dsm-
 
-Fixes: 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple addresses")
-Cc: Hao Chang <ot_chhao.chang@mediatek.com>
-Cc: Qingliang Li <qingliang.li@mediatek.com>
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
----
-Only compile tested.
----
- drivers/pinctrl/mediatek/mtk-eint.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-index 2a3c04eedc5f..47ac92ea98c2 100644
---- a/drivers/pinctrl/mediatek/mtk-eint.c
-+++ b/drivers/pinctrl/mediatek/mtk-eint.c
-@@ -246,7 +246,7 @@ static int mtk_eint_irq_set_wake(struct irq_data *d, unsigned int on)
- }
- 
- static void mtk_eint_chip_write_mask(const struct mtk_eint *eint,
--				     void __iomem *base, unsigned int **buf)
-+				     unsigned int **buf)
- {
- 	int inst, port, port_num;
- 	void __iomem *reg;
-@@ -425,7 +425,7 @@ static void mtk_eint_irq_handler(struct irq_desc *desc)
- 
- int mtk_eint_do_suspend(struct mtk_eint *eint)
- {
--	mtk_eint_chip_write_mask(eint, eint->base, eint->wake_mask);
-+	mtk_eint_chip_write_mask(eint, eint->wake_mask);
- 
- 	return 0;
- }
-@@ -433,7 +433,7 @@ EXPORT_SYMBOL_GPL(mtk_eint_do_suspend);
- 
- int mtk_eint_do_resume(struct mtk_eint *eint)
- {
--	mtk_eint_chip_write_mask(eint, eint->base, eint->cur_mask);
-+	mtk_eint_chip_write_mask(eint, eint->cur_mask);
- 
- 	return 0;
- }
--- 
-2.54.0.rc2.544.gc7ae2d5bb8-goog
-
+I wonder if we should implement that as well?
 
