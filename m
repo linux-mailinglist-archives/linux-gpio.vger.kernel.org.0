@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-35665-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35666-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eJ5GIJ968GkBUAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35665-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 11:15:11 +0200
+	id 2FJPNTyD8GlwUQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35666-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 11:51:56 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FF0848114F
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 11:15:11 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8428481E48
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 11:51:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id D1C3B30231EB
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 09:13:03 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 086BE311D63D
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 09:13:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC8533DCD90;
-	Tue, 28 Apr 2026 09:10:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 645D03D6CBB;
+	Tue, 28 Apr 2026 09:12:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YN0cVSjB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IRmGXFgS"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1C93D6CD7
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 09:10:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26ACA3CFF44
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 09:12:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777367452; cv=none; b=U5iWXl7DncOcYgwm93QnT8WsjDstU0Azjamb701iJqcGxS+umq+qJXmiOAOehPk3vLHrTU0LxAGCunOSHA7kmBAsOKbtO6//Ll0gjtuUBgtXwrn44cldUdazR4TOTLJhnjXnRoX9dH5clcclyWicC/XSlXXychcGDei7eEWnzM0=
+	t=1777367534; cv=none; b=M9TFRMMJi9UJ4xak7gybhI8P5Tp+htAco4KxZDZxy5HndaXzNXEnqovzN+9n7m9+PC3dd1zKBlL4vO3YJtw1Mr55Lk024sEh4CE+c5hi4Jxp6+REZBPnmqA/FG/IJK2Wy+jiybnPcxF3eIUccGAeRWYBF6JAtyzxoW480rTNNj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777367452; c=relaxed/simple;
-	bh=TvOzo8RjsLIaVVajzywOgjFrzZwCgL5apopPTnfRjy0=;
+	s=arc-20240116; t=1777367534; c=relaxed/simple;
+	bh=+vV1cq1FE3OBlSf+VVLa+jyUyRoJrEi+/2DabEYx9HY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fj4qMJTNdRWOpPZbUyYtBcdX2j6388Lq+EVKsdu4iKpQ+b1Dmxj4FL1ZUXlyd38jo3WDBbCYHbxH+EZJTW/D2FAD3Rzwqt5G2yQwew6V7DMUlryU15yWmo9KqB+1M/JC4lKj9cgp3VIaYqR5gIeIGjWUyXBp7aAt0/NhBlDMddc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YN0cVSjB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F9D0C2BCC9
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 09:10:52 +0000 (UTC)
+	 To:Cc:Content-Type; b=NJUAHwyzghE2UmcC4o6ozFOydhfyoSJggMazCLSnwUEFueuYnNQKv6DYlp5asDyd1Wy1qakX8jj2zr9g/JlkNqH96QoIqeeuQr5KjVrEP+maIjGTcrlRg32VJGtyv2RB45S0vgB4pwqhowN2gs+3CmeozQ18kM08Hq6DPvwyPUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IRmGXFgS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBDB7C2BCB9
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 09:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777367452;
-	bh=TvOzo8RjsLIaVVajzywOgjFrzZwCgL5apopPTnfRjy0=;
+	s=k20201202; t=1777367533;
+	bh=+vV1cq1FE3OBlSf+VVLa+jyUyRoJrEi+/2DabEYx9HY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YN0cVSjBhpqxw6QKrKuxWUGd11SDdOBA7ABeXT/kOAoepwMDJDSxLRF5wJQo5lmAP
-	 PSuUNffzGyUujMFAi+ZvFWFsQSoZcLjM7nxpc0Up75sWfxrRjGBebrtFdIxP6OGCDo
-	 pkpUQuOt67WzOzVgBAt+S/e+k8LPQh7RI7z4l3usttSPrYRukOqTNkcoWGJIWwWMAq
-	 tHin3fxcpQQsW0FTtXaqUyDnD9Rhmwo6JG0oA5MlDDZCKjaIL2158mr5VKncs++iS9
-	 Xn+8aXW/EkwWjC7/iUFZ1fVl0woDNBSBjUgLj7NRrdY1nnQFuSYkMr4X8piUWhPF8w
-	 5MXRvYG/B0hGQ==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5a402b2d102so11796518e87.3
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 02:10:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9yyNX/m0gkH3F13941S3R/xGnP3tdtL8ZgRniedALBjoHqZWnoNQMuvZ2Iy+RdBHqQD4dDd4XS32C4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx28Jyd9ApoQKZpPRZi6Ly5cjGqXRBv6kQHN8EMtcvARkJWM393
-	obACU/f55mlA81Oln5uuaKEpIBjS3y4ihuicRdmggKKWNvQq/k+eDooJl1kMG8aIl26kvcoph7X
-	2IUOPk6VE1NR4nUwCqodDBP7GStH2GXA=
-X-Received: by 2002:a05:6512:3f28:b0:5a4:505:f633 with SMTP id
- 2adb3069b0e04-5a74662df1emr1039066e87.38.1777367450963; Tue, 28 Apr 2026
- 02:10:50 -0700 (PDT)
+	b=IRmGXFgSvCF3Yu7x4FvWQDcCfcF7Uwqf/IZmGl82fj2/WeDWxn/pgObJKt4DQMzpU
+	 QKLOgAxg/wzYxmTWB5XpS5M4H6igwy0ANhBCnNK4qLQ6OY8lkfwQJ8JxHbnrBxeO6U
+	 FhdgQs0Xf5cx9Hlwuzw0fMk8buKjpCL16Kkl3D7UIDZiLjMhpiTe1v7+WL4PxIRBaO
+	 6RtJ9t1uUjUH0p8HzcPbX2Kr0KZEXjew3tzqcbGHR7UwG1KUzwDdS0hf31uPu53ccm
+	 z1pgh2L+o1a/9G3lmV2sDmbXiwtSUkfU8Ofen7fKzYF/3/CSrS9AOGtfVQ9cYAdxKu
+	 2KsFSmz+NLn8Q==
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-38dd9f0fdc6so125233851fa.0
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 02:12:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8VdIS/yyK1hDx7VeEIgB8++yotX+LjlzwdtcZcEk03e3FyS+PdVj5YiSVAKRNl40HQvzHUGMe65Rbt@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIEjjKKKM4be9nTpaVZ/LrsALAfYTZ6X+Ut04r23fmd9O4SZGR
+	j4EKPzmvNxYpt1lwI1tlNVIaZTcQhLVkmLA634uPwG1Jpp1fgE9E/JVny5uH7eCJi+Lr0F045n9
+	Tsci/NCtvdtrtLsI9Q3xscqoZfgiXUAE=
+X-Received: by 2002:a05:651c:f07:b0:38e:8357:c5ae with SMTP id
+ 38308e7fff4ca-39243147e32mr5888901fa.9.1777367532541; Tue, 28 Apr 2026
+ 02:12:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260410-pinctrl-testing-v1-0-6f708c855867@oss.qualcomm.com>
-In-Reply-To: <20260410-pinctrl-testing-v1-0-6f708c855867@oss.qualcomm.com>
+References: <20260410-pinctrl-testing-v1-0-6f708c855867@oss.qualcomm.com> <20260410-pinctrl-testing-v1-4-6f708c855867@oss.qualcomm.com>
+In-Reply-To: <20260410-pinctrl-testing-v1-4-6f708c855867@oss.qualcomm.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Tue, 28 Apr 2026 11:10:37 +0200
-X-Gmail-Original-Message-ID: <CAD++jLmeH6Hy1tm-uTV7YP9gHc7vk+-vaYNT5cqZPU75Jyt-=w@mail.gmail.com>
-X-Gm-Features: AVHnY4Lt1Nb-eIUW4vHkvKpaNVPQodgCRHtRa3BH6rlTVPd0JsgyLmESZ18n1Jo
-Message-ID: <CAD++jLmeH6Hy1tm-uTV7YP9gHc7vk+-vaYNT5cqZPU75Jyt-=w@mail.gmail.com>
-Subject: Re: [PATCH 0/4] pinctrl: More compile testing
+Date: Tue, 28 Apr 2026 11:12:00 +0200
+X-Gmail-Original-Message-ID: <CAD++jL=Ee=BdLarnwFxM6A0+G9rYV4NJTm2go4p91ArZy-YLDA@mail.gmail.com>
+X-Gm-Features: AVHnY4KEPMN0rWMtFgqCeeIxS-mVWtisiUNAOatuMw1puUfVBGi-Zw3AeUL_BJk
+Message-ID: <CAD++jL=Ee=BdLarnwFxM6A0+G9rYV4NJTm2go4p91ArZy-YLDA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] ARM: realtek: MAINTAINERS: Include pin controller drivers
 To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -76,18 +76,18 @@ Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
 	James Tai <james.tai@realtek.com>, Yu-Chun Lin <eleanor.lin@realtek.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 2FF0848114F
+X-Rspamd-Queue-Id: D8428481E48
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35665-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35666-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -95,7 +95,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCPT_COUNT_TWELVE(0.00)[12];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
@@ -104,20 +104,21 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,mail.gmail.com:mid,qualcomm.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,mail.gmail.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 
 On Fri, Apr 10, 2026 at 3:05=E2=80=AFPM Krzysztof Kozlowski
 <krzysztof.kozlowski@oss.qualcomm.com> wrote:
 
-> Follows https://lore.kernel.org/r/20260410103005.163128-2-krzysztof.kozlo=
-wski@oss.qualcomm.com/
-> but should not depend on it anyhow.
+> No dedicated maintainers are shown for Realtek SoC pin controllers,
+> except pinctrl subsystem maintainer, which means reduced review and
+> impression of abandoned drivers.  Pin controller drivers are essential
+> part of an SoC, so in case of lack of dedicated entry at least cover it
+> by the SoC platform maintainers.
 >
-> More compile testing means better bot coverage. Plus having ||
-> COMPILE_TEST and obj-CONFIG_ARCH_FOO is kind of pointless.
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 
-Patches applied, early in the kernel cycle so the more build errors
-we get from these the better, we have time to harden the patches.
+I didn't apply this patch since Yu-Chun says it will be applied to
+the SoC tree.
 
 Yours,
 Linus Walleij
