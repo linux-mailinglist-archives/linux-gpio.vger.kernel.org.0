@@ -1,187 +1,181 @@
-Return-Path: <linux-gpio+bounces-35715-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35717-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yMlqOgvZ8GkLaQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35715-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 17:58:03 +0200
+	id AMijArTu8Gn9bAEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35717-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 19:30:28 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4792B4885B7
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 17:58:03 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05056489FC5
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 19:30:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3838330BF114
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 15:56:57 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id A806C340FAAA
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 16:13:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED6A53B95FD;
-	Tue, 28 Apr 2026 15:56:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0AB8480321;
+	Tue, 28 Apr 2026 16:06:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dqR1kfeJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aVllIqr4"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1143CA4A3;
-	Tue, 28 Apr 2026 15:56:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F9747F2D9;
+	Tue, 28 Apr 2026 16:06:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777391816; cv=none; b=Wgs8sJ2FJQv37GPgAIcihKV69E2YQOEYQnkGBLMGaxuAXRtE/98GszKIXryGx+CjT1UHpVbqR2d1vK6+++izNcOJD3v2UsOtEBIkqY9G8ZEt12PFS5XNgHDzr3H1T1EOFuIQbmaYu90nVgjiA6IQ4NeaYplWGea/NXXvc4Vw+2k=
+	t=1777392398; cv=none; b=sQct/JH9DWqcLdEuDRS77zLsTPpXRQWGsP2aP5qYXMzrN7r4TL0NLMLXfG45rdR6+3SUAmBqhHrnG0uSq247iYc475ejA/QbRavP8BrYgDSTePAQgUoS0PW6/+E6IyGViLXpyE8tbsBXwTKQ2PgJ1cxtpiUtQ12rTDqt56iXMSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777391816; c=relaxed/simple;
-	bh=IbUu3EsP9Li+cuVWPlIVW0Aqv6ymhM5gFfl2nsie23c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c1vSBQKSpN8Dhf29OrF37dE8eFyt7njnY0+6qslTJBoFFygBFTCBkDakmI/HZ+tGzTXEGUOf3ZjgOXvs9gHKGru+E4g8fE43v9VE6tPW4+jEHeXQ5qVHMvjhQihozSt8/WON+Wez22pJRSlhK1OSDMGU/3ZNoROCgQZzOBaNAQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dqR1kfeJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 794C3C32782;
-	Tue, 28 Apr 2026 15:56:54 +0000 (UTC)
+	s=arc-20240116; t=1777392398; c=relaxed/simple;
+	bh=wJpZOr7WpcpInKgvVGac/trrFN9ZpHJHZEoCiuPdrYs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nrsgFm+s1gTYxIaChQQi4FlN6h7qcoBaH+snNsh7xHgWdxAZ8Ij8USV83kmrQtv8jc7z1jL8EuYm2Qi30zYvx3VIIIYmRshqsjEU0cjcFIDwcHfOXSTE8wh+np87RuydPf83fFcPg6szC1GmhTsTfbMqNhbYbfoH1A78NHocZB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aVllIqr4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3B441C32782;
+	Tue, 28 Apr 2026 16:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777391816;
-	bh=IbUu3EsP9Li+cuVWPlIVW0Aqv6ymhM5gFfl2nsie23c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dqR1kfeJNpBCfQ0FYEA8s+Ze3sNIJqXCLxVgGE/vFKZLtY+wFLzKgLXdzkHI5M0r2
-	 nrtJ1vqhoFbvhOvll64yQgwv83D3k84Ar2kRbL+JK8/Z0KD4FEi2S6MrT3q4E6tRTl
-	 QhTw1PKPsfdLh4uR0Qg2jvFpwikHkiONf6Ard2+4RWvoxrhxXKhSRAR7h4b4gU+k8d
-	 1bRPHUPzNTi1OAYboGQRmZkzyY0Ur7XjPNdufZgSWSeGsw5fg9HC4NRfXevrCDjQ8K
-	 VRW4vTfh667c1Pp1UlkpB2iN7j2ZFm1MQ8P9MBG0FwnDl8rciBnft26CDYM0P4Jh5f
-	 UtT5HSdXXI7SQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Thomas Gleixner <tglx@kernel.org>,
-	linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH] mips: select legacy gpiolib interfaces where used
-Date: Tue, 28 Apr 2026 17:56:19 +0200
-Message-Id: <20260428155651.3252500-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1777392398;
+	bh=wJpZOr7WpcpInKgvVGac/trrFN9ZpHJHZEoCiuPdrYs=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=aVllIqr4JCKqyLIoeSN16CpPbBgwVIEtlQp2ENbArx74blpc0WIyD0pMONFWWKBwI
+	 BwPk4r94IAL6pT2TYrFp5xkrUxjPyQOc4Ok52/VHwfqRpIR+NfYtyPg5QxtTbo2G8d
+	 njSpW0C4h3yljJ95g4FvGzaUYQon9gp1U+SdKCX+hSObkYwiiVAxyafxPMe6Ml9+q+
+	 jYwcXFWvNNirR8T1/cUZt4GnXQAvs2Q/9uQY4yzCoDMu5WtP6s5tr5oR73aHL/oDMH
+	 bQQUPuigS5R1I9qlBB+JSV/MAs/g8ffyf+FF8tzMnEMa63IbdPe+7IRi2ebsVYFeFD
+	 mJgwWJnJT/vuQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE44CFF886D;
+	Tue, 28 Apr 2026 16:06:37 +0000 (UTC)
+From: =?utf-8?q?Nuno_S=C3=A1_via_B4_Relay?= <devnull+nuno.sa.analog.com@kernel.org>
+Subject: [PATCH v10 0/3] hwmon: Add support for the LTC4283 Hot Swap
+ Controller
+Date: Tue, 28 Apr 2026 17:07:25 +0100
+Message-Id: <20260428-ltc4283-support-v10-0-4f26f46491c3@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4792B4885B7
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3XN0Q6CIBgF4FdxXEeDXwTsqvdoXRCCspk4MFZzv
+ nvoTTXX5Tnb+c6MognORHQqZhRMctH5IQdKDgXSnRpag12TCwQEOClJiftJM5Aljo9x9GHChJd
+ WSKV1pRjKqzEY654bebnm3Lk4+fDaHhJf2/9W4phgYw2lFQGrGjirQfW+PWp/RyuW5BcAYg/ID
+ DBBGwNV1QiQO6D+AIzwPVBn4Ma5tlqwGjj9AZZleQOU2LccMgEAAA==
+X-Change-ID: 20260303-ltc4283-support-063f78acc5a4
+To: linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+ Bartosz Golaszewski <brgl@kernel.org>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1777392450; l=2621;
+ i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
+ bh=wJpZOr7WpcpInKgvVGac/trrFN9ZpHJHZEoCiuPdrYs=;
+ b=JKTAEyv8cj4/a5R73is9A5no+jJH+LIDC8oOOPpDWV5LA7qj9M6fnD7uU0fVpMp8GjS21gyUf
+ 75zEL7JTuzwDsHKjW2OhuDP0gP+IHitPpIWLldEjAKerHCrfhk668N/
+X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
+ pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
+X-Endpoint-Received: by B4 Relay for nuno.sa@analog.com/20231116 with
+ auth_id=100
+X-Original-From: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
+Reply-To: nuno.sa@analog.com
+X-Rspamd-Queue-Id: 05056489FC5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35715-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-35717-lists,linux-gpio=lfdr.de,nuno.sa.analog.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FROM_NEQ_ENVFROM(0.00)[arnd@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[arndb.de:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	RCPT_COUNT_TWELVE(0.00)[12];
+	FROM_HAS_DN(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-gpio@vger.kernel.org];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	HAS_REPLYTO(0.00)[nuno.sa@analog.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:replyto,analog.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,msgid.link:url]
 
-From: Arnd Bergmann <arnd@arndb.de>
+This is v8 for the LTC4283 how swap controller. 
 
-A few old machines have not been converted away from the old-style
-gpiolib interfaces. Make these select the new CONFIG_GPIOLIB_LEGACY
-symbol so the code still works where it is needed but can be left
-out otherwise.
+Similar to the LTC4282 device, we're clearing some fault logs in the
+reset_history attributes.
 
-This is the list of all gpio_request() calls in mips:
+Guenter, for my last email worrying about rsense low values, this is
+what I got internally:
 
-  arch/mips/alchemy/devboards/db1000.c:           gpio_request(19, "sd0_cd");
-  arch/mips/alchemy/devboards/db1000.c:           gpio_request(20, "sd1_cd");
-  arch/mips/alchemy/devboards/db1200.c:   gpio_request(215, "otg-vbus");
-  arch/mips/bcm47xx/workarounds.c:        err = gpio_request_one(usb_power, GPIOF_OUT_INIT_HIGH, "usb_power");
-  arch/mips/bcm63xx/boards/board_bcm963xx.c:              gpio_request_one(board.ephy_reset_gpio,
-  arch/mips/txx9/rbtx4927/setup.c:        gpio_request(15, "sio-dtr");
+"10uOhm at the smallest sense voltage of 15mV would be 1500A and 72kW, which
+seems a tad excessive. The highest currents I’ve seen are around 200A, and
+the -48V market 4283 serves is generally a lot lower than that. Normal values
+are around 200uOhm.  I’d say the resolution should be around 1uohm and if a
+minimum is needed, 50uOhm is probably safe."
 
-Most of these should be easy enough to change to modern gpio descriptors
-or remove if they are no longer in use.
+For the resolution, I'm pretty sure I got the tenths of micro
+resolution for ltc4282 so I just kept it in here. So, if you don't mind
+I would prefer to keep it this way to be safer and changing that now would
+require me to change some formulas and I would prefer not to do that at
+this stage.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/mips/Kconfig         | 5 +++++
- arch/mips/alchemy/Kconfig | 1 -
- arch/mips/txx9/Kconfig    | 1 +
- 3 files changed, 6 insertions(+), 1 deletion(-)
+Changes in v10:
+- Patch 2:
+ * Replace regmap_clear_bits() with direct regmap_write() in
+   ltc4283_read_alarm();
+ * Simplify ltc4283_read_energy() overflow handling using
+   mul_u64_u64_div_u64() for 128-bit intermediate precision;
+ * Simplify ltc4283_write_power_word() overflow handling using
+   mul_u64_u64_div_u64();
+ * Fix clamp-before-multiply overflow in ltc4283_write_minmax() by
+   clamping against LONG_MAX/MILLI first;
+ * Drop broken %*ph format from ltc4283_parse_array_prop() error
+   message;
+ * Remove unused #include <linux/overflow.h>.
+- Link to v9: https://patch.msgid.link/20260406-ltc4283-support-v9-0-b66cfc749261@analog.com
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 4364f3dba688..b91e62d69a5d 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -206,6 +206,8 @@ config MIPS_ALCHEMY
- 	select CSRC_R4K
- 	select IRQ_MIPS_CPU
- 	select DMA_NONCOHERENT		# Au1000,1500,1100 aren't, rest is
-+	select GPIOLIB
-+	select GPIOLIB_LEGACY
- 	select MIPS_FIXUP_BIGPHYS_ADDR if PCI
- 	select SYS_HAS_CPU_MIPS32_R1
- 	select SYS_SUPPORTS_32BIT_KERNEL
-@@ -307,6 +309,7 @@ config BCM47XX
- 	select SYS_HAS_EARLY_PRINTK
- 	select USE_GENERIC_EARLY_PRINTK_8250
- 	select GPIOLIB
-+	select GPIOLIB_LEGACY
- 	select LEDS_GPIO_REGISTER
- 	select BCM47XX_NVRAM
- 	select BCM47XX_SPROM
-@@ -330,6 +333,7 @@ config BCM63XX
- 	select SYS_HAS_CPU_BMIPS4380
- 	select SWAP_IO_SPACE
- 	select GPIOLIB
-+	select GPIOLIB_LEGACY
- 	select MIPS_L1_CACHE_SHIFT_4
- 	select HAVE_LEGACY_CLK
- 	help
-@@ -999,6 +1003,7 @@ config MIKROTIK_RB532
- 	select SWAP_IO_SPACE
- 	select BOOT_RAW
- 	select GPIOLIB
-+	select GPIOLIB_LEGACY
- 	select MIPS_L1_CACHE_SHIFT_4
- 	help
- 	  Support the Mikrotik(tm) RouterBoard 532 series,
-diff --git a/arch/mips/alchemy/Kconfig b/arch/mips/alchemy/Kconfig
-index 6ca81e1bd35c..cf5ad52c0a0f 100644
---- a/arch/mips/alchemy/Kconfig
-+++ b/arch/mips/alchemy/Kconfig
-@@ -12,7 +12,6 @@ config MIPS_MTX1
- 
- config MIPS_DB1XXX
- 	bool "Alchemy DB1XXX / PB1XXX boards"
--	select GPIOLIB
- 	select HAVE_PCI
- 	select HAVE_PATA_PLATFORM
- 	select SYS_SUPPORTS_LITTLE_ENDIAN
-diff --git a/arch/mips/txx9/Kconfig b/arch/mips/txx9/Kconfig
-index 7335efa4d528..92b759a434c0 100644
---- a/arch/mips/txx9/Kconfig
-+++ b/arch/mips/txx9/Kconfig
-@@ -37,6 +37,7 @@ config SOC_TX4927
- 	select IRQ_TXX9
- 	select PCI_TX4927
- 	select GPIO_TXX9
-+	select GPIOLIB_LEGACY
- 
- config SOC_TX4938
- 	bool
--- 
-2.39.5
+---
+Nuno Sá (3):
+      dt-bindings: hwmon: Document the LTC4283 Swap Controller
+      hwmon: ltc4283: Add support for the LTC4283 Swap Controller
+      gpio: gpio-ltc4283: Add support for the LTC4283 Swap Controller
+
+ .../devicetree/bindings/hwmon/adi,ltc4283.yaml     |  272 +++
+ Documentation/hwmon/index.rst                      |    1 +
+ Documentation/hwmon/ltc4283.rst                    |  266 +++
+ MAINTAINERS                                        |    9 +
+ drivers/gpio/Kconfig                               |   15 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-ltc4283.c                        |  218 +++
+ drivers/hwmon/Kconfig                              |   12 +
+ drivers/hwmon/Makefile                             |    1 +
+ drivers/hwmon/ltc4283.c                            | 1795 ++++++++++++++++++++
+ 10 files changed, 2590 insertions(+)
+---
+base-commit: 30a90fa04af6937493fbba20e3e923b5b5a162b4
+change-id: 20260303-ltc4283-support-063f78acc5a4
+--
+
+Thanks!
+- Nuno Sá
+
 
 
