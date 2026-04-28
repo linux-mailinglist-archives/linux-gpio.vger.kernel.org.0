@@ -1,75 +1,71 @@
-Return-Path: <linux-gpio+bounces-35655-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35656-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4Pe1Ootu8GmgTQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35655-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 10:23:39 +0200
+	id WPvsCsVu8GmgTQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35656-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 10:24:37 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 470A247FF2B
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 10:23:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A9C7547FF7B
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 10:24:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9A33D3089F20
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 08:16:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5C3623059FF4
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 08:18:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B84A93D34B9;
-	Tue, 28 Apr 2026 08:16:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D79653C661D;
+	Tue, 28 Apr 2026 08:18:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qIBWvKmq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WWhH7r6Z"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774EA374728
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 08:16:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9880E3C73E1
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 08:18:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777364170; cv=none; b=Aqy0K1AVr+OY5QBSEpmRojSXzXpCCexMel90FuB2gKB6a4AhM9J7PXSkAkfQSIMOFEP0zIv6VCfGcA1IETydPzvyxgy+zSfqd2qzxP6I8OLtgRqzjnyo6G2FONDhDuuiRpE5vNfTxDXSqQdivJ5d454m6B65F8ye/CTUny8IAhE=
+	t=1777364319; cv=none; b=I9u8wR4HtM+LOqIxrmwyipJle+N9yhh1oW7AHmruSd/1H5OTnHPvAvuYZUjVIJvyqHbYx1rpZQbkDCpMBrf5XuYnaSqu8zCxCT6drRmRP2pOklkpwf2h6oLLUIhNFw/50ONTx4U/BiTO014Uz6y1mPLTHYVUOfS/3Jpa34IT5Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777364170; c=relaxed/simple;
-	bh=bq8HV6bZ3WcAcFCsC2OjX+q9RAprj5qn+EQSHi6y6+k=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iC0odRotk3AjN06gewVVmKbsx8VO/nIwjzZW73q00UI1CjlacId5cxS7JHO844pmyRvhMRqybZL1EoKaEOuwpnBWj/SDairbU9z6dPF3/amdRzrDvkg3HSai0DEoC6HAliwl6F3z2gPXH23xOhmrzlh2AJWkG+fVJvBuOJSsNAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qIBWvKmq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C1EFC2BCB7
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 08:16:10 +0000 (UTC)
+	s=arc-20240116; t=1777364319; c=relaxed/simple;
+	bh=rhTVfU0iqqWoXDOvkBlf/jSklc9+eqr7sxlcBfQT9M8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qYXLrLSZ9yY60rgnbiLI9xfwAjSQ1OoGyLeYd7j7egVd0s7ESOT9j0zWR6kUAR+Ml44GpayM9kiEx9BbGyWsHfXqodxRFtDClXWbod/Hsw302EryRR3/o5q/dewGnKu+qeiXw5FMZPOrRiOF3iNeWymArARSmZGkrPdWLk6G0MM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WWhH7r6Z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C85DC4AF0C
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 08:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777364170;
-	bh=bq8HV6bZ3WcAcFCsC2OjX+q9RAprj5qn+EQSHi6y6+k=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=qIBWvKmquz27t+Go2V5gNIPUUhN+84xp0X8Niq5t1XbT4ItMvfvOGJAJ66U6cuOhx
-	 48nM5MUbOP/xZ4/VARPnd4M14YZj/fj5PdoKwkfwI+CQnB91OAh4Xgs0NU/zYAQK/O
-	 IHsPsU9BXs79FxUrL2xP/vqQTB2+ErlGF04q7Fnk8aHpvSCmy9F4cwEDZQX+X5QNGz
-	 hc1TGeVUYVl/L04D9x9LRg8wiiGR3A2zDfn/h6vnjFtYn89vPJK6WiiJaQRwuMV/j7
-	 bE2yLJlgXcWthuZ3WMubdJagLxyUcR9JeUGeneDEEyTROyN4DF4JaGAvJIQk84ws1R
-	 lKqg0/tcwHkdQ==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-59dcdf60427so10075887e87.3
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 01:16:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/GKyP0M8QVManNpn88lHGRulzZ6T3/FeaLaKVSI5MQZRjwUd08lzn50ZIyTlJrdF3gTis9WgoTPx6+@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywxw0oraerwZ3mSe6eXvtdUhRIg4iIJoFiyNM9qyQwXjwDMH16C
-	Nlkcds4uRVWWSzRMXgtl8t8J0yuefvNYUskYJAYR86dg6thwcTVbjxge7exI+64EXaNQYUNXpDM
-	4aP3bQR4izXLLlmOuLlmZi+HqzQYWmizJaRaHgVuoig==
-X-Received: by 2002:a05:6512:33c9:b0:5a4:19de:eb70 with SMTP id
- 2adb3069b0e04-5a74661dc65mr839483e87.28.1777364168951; Tue, 28 Apr 2026
- 01:16:08 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 28 Apr 2026 01:16:07 -0700
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 28 Apr 2026 01:16:07 -0700
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260427135841.96266-1-tzungbi@kernel.org>
+	s=k20201202; t=1777364319;
+	bh=rhTVfU0iqqWoXDOvkBlf/jSklc9+eqr7sxlcBfQT9M8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WWhH7r6ZRUSWECnN00A9lnuE2V4KHXjMyZ4g0wK97LPDRGmHVZQNET24ueovX2+2u
+	 1DaBcX6XdRRCj9+iwml0tczkLdQm3D6yNpoVJp5zanuhEabyfUF4sSag6oPjXhJCns
+	 dch36Ra5BOlX6Y1FecwewOne8gChNUUlH/EK9XYOHXSvz2JD1LMF9X6R85FBOF8VCS
+	 M9oZk0+MPz5DWqdNay6NJNp83WTtTTaZXYmyhI/lkyYP/Nbvo1XF6QyrUQ3ptxOiCx
+	 DJqRtjFVMWCyMLcztcMEQhrA6cfpCLoxsDcquWVMN8QvSD6DChdSvP1b1rIyZlAh3n
+	 rmI/VTSyYQSLg==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5a0fc5e2c59so10336803e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 01:18:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+xYBFAW+czV4qDz1Nt4K3UtJOWV0ILR0Ho8xg9zOWvv5G8YM5NWEHQVPa/RXkc/ASW+MjkSmv42Oe+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ7uy5gdlz+zaPSiMtryB1nwqp0ge6AWjDAQAxUaN+silcPBPY
+	Fn3A2o5io42hNFMG34PZn3tj3pFpcIHuD/7cgzWpihcEU8pVgxTl6ImKTuV3Ji4Uwj3BQ/IRL9h
+	gv1YoKNjXdjdVhVXZwlaIQw19RhZimK0vNkg5Q79HCw==
+X-Received: by 2002:a05:6512:124f:b0:5a3:ff48:f7db with SMTP id
+ 2adb3069b0e04-5a746615ca1mr877554e87.34.1777364318061; Tue, 28 Apr 2026
+ 01:18:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260427135841.96266-1-tzungbi@kernel.org>
-Date: Tue, 28 Apr 2026 01:16:07 -0700
-X-Gmail-Original-Message-ID: <CAMRc=MdnrKaEgFZod7DZC2FkigeQW6DogfODwmsZO=LS0Zie+w@mail.gmail.com>
-X-Gm-Features: AVHnY4LPpc6CD92dyZC7ll_n7sufI8xvpfzAcz25gEttk1XdSLAYMTRwT5j_PwM
-Message-ID: <CAMRc=MdnrKaEgFZod7DZC2FkigeQW6DogfODwmsZO=LS0Zie+w@mail.gmail.com>
+References: <20260427135841.96266-1-tzungbi@kernel.org> <CAMRc=MdnrKaEgFZod7DZC2FkigeQW6DogfODwmsZO=LS0Zie+w@mail.gmail.com>
+In-Reply-To: <CAMRc=MdnrKaEgFZod7DZC2FkigeQW6DogfODwmsZO=LS0Zie+w@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Tue, 28 Apr 2026 10:18:25 +0200
+X-Gmail-Original-Message-ID: <CAMRc=McXwgujqaZw-S-yzU329fRPmjPDZHvc9aMd9=MeU8mvCw@mail.gmail.com>
+X-Gm-Features: AVHnY4JD7aUdC5j3W8xDfoS0kGuriHPxhl3Qt0U8ZbQApFNMnsdkWkk7dojljys
+Message-ID: <CAMRc=McXwgujqaZw-S-yzU329fRPmjPDZHvc9aMd9=MeU8mvCw@mail.gmail.com>
 Subject: Re: [PATCH v9 0/9] drivers/base: Introduce revocable
 To: Tzung-Bi Shih <tzungbi@kernel.org>
 Cc: Benson Leung <bleung@chromium.org>, linux-kernel@vger.kernel.org, 
@@ -80,10 +76,10 @@ Cc: Benson Leung <bleung@chromium.org>, linux-kernel@vger.kernel.org,
 	Wolfram Sang <wsa+renesas@sang-engineering.com>, Jason Gunthorpe <jgg@nvidia.com>, 
 	Johan Hovold <johan@kernel.org>, "Paul E . McKenney" <paulmck@kernel.org>, 
 	Dan Williams <dan.j.williams@intel.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linusw@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Rspamd-Queue-Id: 470A247FF2B
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: A9C7547FF7B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -95,60 +91,39 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35655-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid,lpc.events:url];
+	TAGGED_FROM(0.00)[bounces-35656-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
+	RCPT_COUNT_TWELVE(0.00)[20];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
 
-On Mon, 27 Apr 2026 15:58:32 +0200, Tzung-Bi Shih <tzungbi@kernel.org> said:
-> This series introduces the "revocable" mechanism, a synchronization
-> primitive designed to prevent Use-After-Free errors.
+On Tue, Apr 28, 2026 at 10:16=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.o=
+rg> wrote:
 >
-> - Patch 1 introduces the revocable which is an implementation of ideas
->   from the talk [1].
+> > ---
+> > v9:
+> > - Rebase onto v7.1-rc1.
+> > - Remove the selftests patch as it makes less sense to test revocable
+> >   APIs via kselftests.
 >
-> - Patch 2 adds KUnit test cases.
+> May I suggest kunit for that purpose?
 >
-> - Patches 3 to 7 transitions the UAF prevention logic within the GPIO
->   core (gpiolib) to use the "revocable" mechanism.
->
->   The existing code aims to prevent UAF issues when the underlying GPIO
->   chip is removed.  They replace that custom logic with the generic
->   "revocable" API, which is designed to handle such lifecycle
->   dependencies.  There should be no changes in behavior.
->
-> - Patches 8 to 9 uses "revocable" mechanism to fix an UAF in
->   cros_ec_chardev driver.  Alternatively, [2] is a series for fixing the
->   same issue without using "revocable".
->
-> Since v9, there are two ways to manage the resource provider handle.
-> - Embedded allocation: patches 3 to 7 might be the potential user.
-> - Dynamic allocation: patches 8 to 9 might be the potential user.
->
-> [1] https://lpc.events/event/17/contributions/1627/
-> [2] https://lore.kernel.org/all/20260427134659.95181-1-tzungbi@kernel.org
->
-> ---
-> v9:
-> - Rebase onto v7.1-rc1.
-> - Remove the selftests patch as it makes less sense to test revocable
->   APIs via kselftests.
+> Bart
 
-May I suggest kunit for that purpose?
+Nevermind this, you did exactly that.
 
 Bart
 
