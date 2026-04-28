@@ -1,841 +1,351 @@
-Return-Path: <linux-gpio+bounces-35723-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35724-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aFdSEYzz8GnUbQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35723-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 19:51:08 +0200
+	id MAZsOnrl8GmoagEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35724-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 18:51:06 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45BD048A310
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 19:51:06 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 453C0489592
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 18:51:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C1FC831DC9EC
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 16:36:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E1368322AD2A
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 16:36:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A4253264DD;
-	Tue, 28 Apr 2026 16:35:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09ABC325716;
+	Tue, 28 Apr 2026 16:36:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cGjW8Idf";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="IXHv3VvD"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="D7yT/Thh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012055.outbound.protection.outlook.com [52.101.66.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B731ADC7E
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 16:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777394158; cv=none; b=quIm3ys+UNmsoYsDVi1VtoHsG/cQY983kjJMnEudwZ6rYEwBR+/A5oIx49gI1py64kNeWVdDnpoRlllXpxKf4E3A23+HWmW8R3g8tNCDvCRvD5EBbmnmra363PhpWzu4G+9jdZnB1uTO9F9NSIPJjqT3NvZKW/zlC2tS9vqQH6c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777394158; c=relaxed/simple;
-	bh=jI0tPC4tDd+wKQNIa7rfhf0kb0nJRXzO/zQ9FpQLENE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s3a4kHDSzv+vfhEkZN1NMuz3gHO+yvEjEHSctUelcJ2CCBkCXXiUS57SpfgMRLfbDkGOheUcYYTFMtCcn4gA+32X00t5A0RCSuuS/UyZ18f+3YTsNsPd/wUsYpHfk7KjsccDEQAftgnRPGz9yMVntpl3EmTySwWd8496Y9IffHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cGjW8Idf; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=IXHv3VvD; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63SFsQPg3705090
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 16:35:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=oadSlOUD1KzxQRufIOtEIqEZGmpUhIcER7I
-	Fi124J44=; b=cGjW8Idfh1zhYa2bPuf5WUE8oOCNq4EmnncWC81THy9z3cDwezE
-	KaiOQOSxEPY0ObCbhplbu9kBbgRlJq2f60VNTSsAbw0pJnT5JQt86vycFvUpjUc1
-	b6lZaY7wEGOb4pwfM35C5GgsAr9gZW3qPw4QtHelKvp3L1Fwpvb5xmpta5Bn1T4c
-	XBHNcToPg+AE9Q+/O9y4exJMZCYiJhpzwuBRMhUHipbZwbCxJrq8K31J5IFiMfeT
-	1MIEQYVa8cRKuHguf+LMonTV+g2bRmiAhXY7rZHmQfi41RrJwAyBK+xwXoY1KQi6
-	hkHQ/b/r6czz/DgPbk7u9W3TLRNzpaB8rVw==
-Received: from mail-vk1-f197.google.com (mail-vk1-f197.google.com [209.85.221.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dttxh9g9m-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 16:35:55 +0000 (GMT)
-Received: by mail-vk1-f197.google.com with SMTP id 71dfb90a1353d-56eeaefec9bso11663288e0c.2
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 09:35:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1777394154; x=1777998954; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oadSlOUD1KzxQRufIOtEIqEZGmpUhIcER7IFi124J44=;
-        b=IXHv3VvDLaPZ6jVZKLylLEiyVPbLKR5vDsfyel16drKBcpCmHRz9xAKB81ezVvo2mM
-         S7TbQv0CkDahqBS7KEj5EY8NXrQnUrP9qH9FUe7k9u9WkOaFeMid5lF8rr896R7xgUsw
-         69xjlLGXTsOSk5unFPxRPBUEBr8Y4ZojI6ejNaq5J7h8WM6ISn6oBeb8s9ZD4aOK89Wt
-         Cy3rhQwABRv5MPLKRvFR+NbSQ0kPWqv6MVW56d4t5+ATV8OXab2bWsP/NvdpJaJKEKl+
-         F8zO6BQNU2ubFLxQaTnGsu+BVtSImLsQU4wK1zhvrPcRdR2QVVwiQxLbauYMdBOAXMDD
-         Zzzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777394154; x=1777998954;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oadSlOUD1KzxQRufIOtEIqEZGmpUhIcER7IFi124J44=;
-        b=pltLU4uf+DE4yZaFeQIFpuDinviqIZrOudHITGyysuVBL5y3dtMGEfakWOiy+XaINS
-         FXZ2exN7GJjCJ0dpuCy9hkwJkqEVwMxQaAK1jpst3uh15aUUnO6ZVyCeB/Sn7ZQdaGxU
-         Itzt1BbYo2i25M61L4WjKHoVwbFJMfWpWbSyTc7tD2QjtLsVc0NG3IHEVowvtEO2ENZ6
-         uC+rgOEo0KWllcR3mfkXKhNyxPVRYabzZ6YtNGZHLQOcAm/01cWqxpCv4ZhjZE2Z/8Rb
-         KJ306KHyv1X/9ehb3d1ct5s+TOwuS884Fri7rLW+ti+J/Blrdud1Lza7X8FlJKi5/5gc
-         zvQA==
-X-Forwarded-Encrypted: i=1; AFNElJ/EznpIvRKUHoTNWe/5fEw9ELEgRWbjHSOix0sIjtnuf6r4wD3S2+6kO7qjhw0jx096EKvFxkbuGb+j@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyrnq9eFO4hrPtjUOZpWgrKK1iNwIBxqGRiCBfusZv2ms72MSqU
-	hsEPRDpWP4mnsvxkn1EvlCGqyiOe2m5oc+jI+g4KaCENfvHS62P22z683Vs66RN1G6XHD8YEhVJ
-	wNPFmk9NIlYOicsiXcipVdoGNopM/uZwZijjUbSXGB6ylOU/fOppZAri3lT7SVJfQ
-X-Gm-Gg: AeBDietd83+gbCSkuUh8+1tWUEZV1jos80fw0bq8RWwcpC2J/+hV8c/+wsHUdWFo5J+
-	QL42O2YQOnExfptPASaLIDZARkgLltvcNp1q87I2Xbghs8gsFjIA8evol57IK9s9/oklgB/h+g2
-	WTmx2Sht47UI367ZfxGeuUFvuy6E6ViVXnGmdMiB2qoqG7EsRoOo6XqC1bkdWSdhGzEgUaRfy9P
-	0GNID+6HFCssJaHRPuAig2E8hsvfWAjdQRVbc5+ZCnS51kiaHQwzb8bStlT5pWLnA1N387ihqDG
-	WsyWiKypky+rJRkG5v0CewT3zlptUnv8BfMG7kwF9YQ5h3j01nhRJRzIXPdbK0eBUinBvlopbge
-	mj1C4G8dRaMqoeqlBcWlWhSBzn+n57uas8HYuLe9xXxJ74+c=
-X-Received: by 2002:a05:6122:1827:b0:56e:e9cf:710e with SMTP id 71dfb90a1353d-573a554147cmr2156733e0c.3.1777394154035;
-        Tue, 28 Apr 2026 09:35:54 -0700 (PDT)
-X-Received: by 2002:a05:6122:1827:b0:56e:e9cf:710e with SMTP id 71dfb90a1353d-573a554147cmr2156692e0c.3.1777394153154;
-        Tue, 28 Apr 2026 09:35:53 -0700 (PDT)
-Received: from quoll ([178.197.219.94])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a7b571b83sm4322655e9.13.2026.04.28.09.35.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2026 09:35:52 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-To: Russell King <linux@armlinux.org.uk>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Linus Walleij <linusw@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: [PATCH v2] pinctrl: qcom: Make important drivers default
-Date: Tue, 28 Apr 2026 18:35:49 +0200
-Message-ID: <20260428163548.154392-2-krzysztof.kozlowski@oss.qualcomm.com>
-X-Mailer: git-send-email 2.51.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE70545039;
+	Tue, 28 Apr 2026 16:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777394184; cv=fail; b=uyyJXoJ8rOytoIXBQHGbJWBm+ZfUYAA23gWojrJ7+OSeh39+/penl7uX2EVQ0H8vBH49bwlgG7ObdY7oo3ipDfTHA8JC/t2hRvYQ0Y0lQhi0W78+1DpqEwuAqMoHAN3/FfxDq0HPVIAJ1DqASvXDh7t8hgiUk0sNkzbUDiRZcis=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777394184; c=relaxed/simple;
+	bh=i/adgY7CVt1fMwtM1gfd6XvlpEkDkdTlZco3hhq6JEo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=nK8QXJvtVhWUBrjpQ8HqQ4qng9ecA+hRZZJP5KB4l463VqyMJRFp9L8McOpajjgE0W7a0XCvs/GTTDJ3thmXVe9xuJsiyZI1GWDDs7Lw/iQOdFBpcDHslIW6PpWE1ljwR0PDOLKy5XJpeNYaNmzACulOwu7BK09DjK3eGohLIuE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=D7yT/Thh; arc=fail smtp.client-ip=52.101.66.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KeVDKhojuZ5FihL2Gh1Dzej6TRwSa10U+ql3pBQQJmtlUH4TklWfMa7LU5mm+PJ4IYAHp1GxK9f7Eo+iVs30TgTQ4xtE7vXlQtRexiraveD8afGdJmzWi5FjbH02nTUkZ3XM17pL7oNIO47ASw0C4DOb5ddWwuU4fvbdnxZBWzcMKom4b9IYn3Nfxmncp7hnSZ82smA9hRVi3uh9hsDwt3K8xhFOg4SVEyuvpBP0gvnlmrHAJR0X8MdBrZ0zf4ECIwHJ1/U8CBnZKNLZa0tg30mqwvQ3ZPj6juhiKyWFeVH3uKKLxhMzP9S4M/gUjDZEEEqRmOfkE3pK3LeuBBtn9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YBFZDcmrnhT3Om894Po0V720gXBPGinpgGBmDQ0WZ9k=;
+ b=FjLvNGRYA6PjHhv8zl0Uz8q13hCc0W52fCBAM9Km2CtWc84jqLXgrMigrMGfuX0AjrcjhhF+US2dQuImQ5KL0eUTDUjFpJRSVR1tM0nlA4rg+KToeljODhxNBibHx0hqaFTX1uBsfyV8efx5hZTOybhYmd2vJOiu8k8xUwQ1lQ8MPdxoOzZYUZLR8UTz4f47SE5uoMZD/lJ3tStvX4F05TuT+UVtzqty5y1PGW2MypEmjaTEitovVBKJGJ4nI2yJrrZXcMlcU/3YoMBP0FwKQVxdhWeyRsdRqaGklUfm9CWIijNqxg/o/lnbVNnc7rcFBV4uw+49qeYgTrvFb1K8Lw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YBFZDcmrnhT3Om894Po0V720gXBPGinpgGBmDQ0WZ9k=;
+ b=D7yT/Thhr4t/lto8cgsZV0Bgj6+C3CRKYvM+TgsU+fsu50sBTNiviO6USMh2oZFhGGwOOdG5NrVVBR46ZL1txr+9NE4zohj2/HtAPa+G6ON9tp1wb8uz+RqNbwc36m8DAumwIBPEzkd6AdK7gnlqljm1KbSl167PuQpTFYdnANa7pYjtiQZEEAcr6lfup8jcMsoOKak7sXe5rmN/rgRVUlHoZVVY291rn9hxPoJwAEQC6zHWkKYuLqkucUCHkVVLZBNomFsOKN+rDLzzLFvWEkqe6EjLSH9sCrYDG+apQlRp53ynROPD5DnmUMiJDjjy5pSBp6snJXKYooEjoXMORA==
+Received: from PAXPR04MB9185.eurprd04.prod.outlook.com (2603:10a6:102:231::11)
+ by VI1PR04MB6942.eurprd04.prod.outlook.com (2603:10a6:803:136::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.26; Tue, 28 Apr
+ 2026 16:36:18 +0000
+Received: from PAXPR04MB9185.eurprd04.prod.outlook.com
+ ([fe80::b4c0:6119:2228:2ceb]) by PAXPR04MB9185.eurprd04.prod.outlook.com
+ ([fe80::b4c0:6119:2228:2ceb%4]) with mapi id 15.20.9846.025; Tue, 28 Apr 2026
+ 16:36:18 +0000
+From: Shenwei Wang <shenwei.wang@nxp.com>
+To: "Padhi, Beleswar" <b-padhi@ti.com>, Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Mathieu
+ Poirier <mathieu.poirier@linaro.org>, Frank Li <frank.li@nxp.com>, Sascha
+ Hauer <s.hauer@pengutronix.de>
+CC: Shuah Khan <skhan@linuxfoundation.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Peng Fan
+	<peng.fan@nxp.com>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-remoteproc@vger.kernel.org"
+	<linux-remoteproc@vger.kernel.org>, "imx@lists.linux.dev"
+	<imx@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v13 3/4] gpio: rpmsg: add generic rpmsg GPIO driver
+Thread-Topic: [PATCH v13 3/4] gpio: rpmsg: add generic rpmsg GPIO driver
+Thread-Index: AQHc1y0jvFA11n28QUCTjU6fNbLbbw==
+Date: Tue, 28 Apr 2026 16:36:18 +0000
+Message-ID:
+ <PAXPR04MB91858D4F2549FA068D7ECCC289372@PAXPR04MB9185.eurprd04.prod.outlook.com>
+References: <20260422212849.1240591-1-shenwei.wang@nxp.com>
+ <20260422212849.1240591-4-shenwei.wang@nxp.com>
+ <22fb5fac-2568-42be-a7e3-7e89d0017eb3@ti.com>
+ <PAXPR04MB91850A11C58419C03909145F89362@PAXPR04MB9185.eurprd04.prod.outlook.com>
+ <29485742-6e49-482e-b73d-228295daaeec@ti.com>
+ <PAXPR04MB918568939EC7DAEB4BB6C8F989372@PAXPR04MB9185.eurprd04.prod.outlook.com>
+ <32c119af-96ad-4da0-86f2-cdc4ba57ef0b@ti.com>
+ <PAXPR04MB9185C7741DCC422212F952CD89372@PAXPR04MB9185.eurprd04.prod.outlook.com>
+ <8c8cefaa-7d9e-4b73-b92f-40cb52b37f2e@ti.com>
+In-Reply-To: <8c8cefaa-7d9e-4b73-b92f-40cb52b37f2e@ti.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR04MB9185:EE_|VI1PR04MB6942:EE_
+x-ms-office365-filtering-correlation-id: 4c42d29c-5e46-4bb8-97a6-08dea544460f
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|19092799006|1800799024|366016|376014|7416014|921020|38070700021|18002099003|56012099003|22082099003;
+x-microsoft-antispam-message-info:
+ vojYnOucAqgrlHBm4cpCOF73ysaq+F7MJtpQBpEqgs9ISGdH1V+7RvVW0ijX9ock+TRjeZ5zQ41M+0yq+RiKUtPwqFC7saKIyikteHaTbdAqMLXO/rTWnbqZDn4+t+fube1jFmTANnWvze61C5Bnhgkor2ihHDsAWkMq1zKZblYpIuXMIOVisAYP9V6AYfb87d6DL7wY9QfB2z8rXKSzRQtQHFC0U4tYFuWYwMNJXmOpNA3PPOKr4gzrSiIc7tXoaEoNQT2W1J+Eelog80Bp+qU6mi5geQ65+68rzaUib8CiDO60TbQBI27ZgWBhcR4mvmTAehNh9TC0nx7ehoA5122EVAZxRzNiDzc4nP0zqzU7SPmYm+elUtdiKJJdSBKjyIifnm95dBZXxSKAFMWR8xWbplLLvgOAMLdStRB+rxn8lSamt+A9V8KkWSTXit4m2eS9xJGZipY9qcTQTpQ5aNL8AjFs3rb6kec+K7FCWfgpTOa7nYpj/LoiBghKu0AQLqVBzLk7avh5dxUz/6RdYYxMJ12UytPYjsumBOCWUsJrX6QI6mrsiSksoq1KqCokl5dgfNDtflUvJm1+Quo9OutyQDJ4FDg03wPOrtRF/Gd5y73znXCPZdOa/SwnjJf3bfCobvvZQ8V/pjbCGfU65HBuhVmsL1hDsdlFA3WxwzyEszfsayyBZyXUiktT5KFwfbulAeTgcOLeYQnAgs0U8kFI1TXr12XT3defpMBXyUNKIlODjwfS05ZHWSW2OCeWXvRc9meEeRRMAZ6IjjqOJqCCZanYnVO0MmmUHKONIJ9jLRnSi0m3bOhmP+Sfkqsx
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9185.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(1800799024)(366016)(376014)(7416014)(921020)(38070700021)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?3TA+I6sRj4brZwx/UNCtVNCAKDuWkY26iNUKMqsfqoXZ0i/4SV80ishX2FNh?=
+ =?us-ascii?Q?CbvlTMtnRosxxFJbW2cGvGundsCMhXOkb74C4ifxau13/5nQ7W4zcThIte3r?=
+ =?us-ascii?Q?F94S6Wq1tc67eJsViWCrLll0ndWIXmzI2fCbbrsd8XRj9HxcqTiH1V/6ElVu?=
+ =?us-ascii?Q?c2SYsgBFYj0AOr7kEq+RGKU6yMOFY6o3OU7adbbPJNfIobEtf2opf9il7quD?=
+ =?us-ascii?Q?R/Gxijq2TnCiVta/woekpLDv0Vnx4i7C+QEWzzLepCOFDKqKn/svj9YSbKVC?=
+ =?us-ascii?Q?xqoBRSFqDnJK/PY1a1o1FKMmfxIDibDwQC8+nYyxRR9NGQhpMXo6knRSP6ey?=
+ =?us-ascii?Q?3WrFwuTRQsUa1eLLP/JyAczWPkaw4GpAP/L94UUezRAP6Ggb5NYkp83Ec9xv?=
+ =?us-ascii?Q?gqBIscJ4BylcvrLwXOUTKyHbscHBXet3CXwZRRtenrCNWSCGswnmjKVKF7hN?=
+ =?us-ascii?Q?36KOkpLEtLphDuRESGfDYraFJJW3jLLNUfPiyl541hdi1+L4N1Ya2V5ftZbC?=
+ =?us-ascii?Q?UHg+sYGIPzYN1MALvKl//kzxXLN+QXIB2D6l4SHjumlh/QrJftC2r0ImPv5k?=
+ =?us-ascii?Q?e8dZXD7Sx1Fpo98sdrUL1aNSPCrfneLXlewOcrg4Bo0hoeD4bB7q0tL0RQFS?=
+ =?us-ascii?Q?zzdqHmgIOHJg/PBUV1PeRMZLf397C7HvOL5AxjCLe4tg7CqGCaHeOzitOPOO?=
+ =?us-ascii?Q?585bPmN3/79Gd7s9EmiAfWbfKk/wTPE5W2IdYu0w74USz76gMkwVYbMjD0ch?=
+ =?us-ascii?Q?GVmNTEvMSXdyFqpMDDDvLC2eBGvcT1391yn39fMVsFIQm+rpIuFPmWvi4+wW?=
+ =?us-ascii?Q?aiEI64b8J4Qy4dF+j6p3iKrt54mnaJwWRM60BpnmhYwGZ8ewGaH6lEAW7wQc?=
+ =?us-ascii?Q?/vPhy/SgMtuPYFFc5D644B1AHJRP7Brt8RWf2M1SG4DwRu6uLvhOudsGIcuc?=
+ =?us-ascii?Q?9sx3jJjrlVh7iOzG5jZg3eeO1IhxlMSlv7Nq7Xtm60Xcaa4xWbRXuDYL5v57?=
+ =?us-ascii?Q?40Qdwr1QVxf2DD8dW6646ou9vT371RmVAT/GhflkYVPsuxfs8y6Scb49p4c6?=
+ =?us-ascii?Q?bKl6mJ2xD4i3ytULrcP5ir8PYZLOt1ElW9EM9Q/L5PWJ0r4oUBOwu8rkom8s?=
+ =?us-ascii?Q?vE5/B2vKxeI4Namx9c/6ud/VnzPAuit4oFL4N2d0cPK8iPExmGAc18zohk0p?=
+ =?us-ascii?Q?Ogb3KUh+VPC+fXWWv28cWQIQQ9JDP0q79oFk2cwZJ73Y5KEFsLHUCf0IWnuX?=
+ =?us-ascii?Q?IM2j+U7grWeFxqgtccwI0VYleldm4PKSdW1cCeYDRtV7s3F01/y9MfbMZmlb?=
+ =?us-ascii?Q?OKk9GjmbfFd56B/4hpwRCaI7/YzOAcbzQhqbpo7UYFuzIOzlgL1FqwZfBaMd?=
+ =?us-ascii?Q?jfuM2yw1tYpo7gN/+g+h8VtuHmraR9+ZOANkKFNYgTmGs9F22KEJoKzskzfw?=
+ =?us-ascii?Q?I+wPGp34SU+QEbQF980Qcy458QfAyRGUs1nxgOhteCqj4PbhCEc4ILOzMXY4?=
+ =?us-ascii?Q?xk1Ozis28aSh9S+sqPI4bKr22qnp+uzB7GXmf2BwwH4RnHiG1gwQcQS+HlYE?=
+ =?us-ascii?Q?k4/PZkPbLWx4s6Mf0ecPyB7ckkkX2r4pHFUCsprftOxf59NkdBrqEPgfD9Kg?=
+ =?us-ascii?Q?4cdB5LtfE4UFhuhEWWqCLPC+RooU0g7EImpY1uJYTv0E6DP81aWWCiEc69kG?=
+ =?us-ascii?Q?M9LKH7kj2ME7K7hToKTFWtbnTOw5YsfkqCcOHPSwgGiktqFn?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=24788; i=krzysztof.kozlowski@oss.qualcomm.com;
- h=from:subject; bh=jI0tPC4tDd+wKQNIa7rfhf0kb0nJRXzO/zQ9FpQLENE=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBp8OHk6FOkpu8G1Z3z5YeWnKa5tH+H4Il/UBP0K
- TnyDmlqcOGJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCafDh5AAKCRDBN2bmhouD
- 1xbSEACVWaSfg/3/Rl4J20T2pJ/7vYHFM3oWEY6x/vgJz6+WrXY1NVYXAb5J5BjstVQdeShKQo+
- iSIaWLiXZqiOeLuc2JDdn45rm/7DXV9uZaGX4UcQ9jXfUl1YDAcBU4JE4CznplKYtFdMkIvMTDN
- b2Xd1A05J7W6kmASJb1IvuEs7HcCAvODbUQJyUDWKATvBLdSSBei8FumvEvHbLGYhzuW2C0lDDw
- YYLmcka54G7+CSh6trBq64wFtVTLWZ3vkBQg3JqqHX0enCOG0jgpcobd488zMXqwotlHZf2ZBdr
- vYAKYYOK+LC1NCepMnMp0zfdhHUhgAWRbD0T5cHg+YASjlDqzUdRqBVxbT92EY2i39eXJw1qcCW
- Bv6dI0iJDbDQ8+11mkYijvwNdIamQ7uujV3wH0WteOMVjFUNLA9cYzjFJYuvZe/7pb7784GVCuj
- pEH6rcc0+1GOJvFdrSaudG2NDPSr1gM7Aq0ZGwbVv3C1jwjyUaDhsPSy5WDcOJbH+a/OkjmF3cK
- PPFCHwQ2xTQb2cMOY43/06GiAIHwRDaPt2crqELhcr9pEBG/zxzxjaYUeCBxDHKmPO6HyuUXmHx
- iviRgYZmkAZaa5B7dyteW9bIRtCG3aaR2FXSWVoVEdUGKqGTLmyCmZ42fSKTDSLhosupm2YugcZ oh9UreTocxN7ZWw==
-X-Developer-Key: i=krzysztof.kozlowski@oss.qualcomm.com; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDI4MDE2MCBTYWx0ZWRfX0VV0MeaCNlPJ
- x6b7OUt4FNyVz0JfUHxwQbHWrnlgH+aPTD42dCGVGWoCf6BPMo+jpGzhQsO8UXzxBsdrktsyclM
- JLdkXLfuIzN1cK0eiUXpWq1oAll5dmQ2Xa1nac2JxdRkbDOPZ7uPLr6ktT7DcjJ3TwLm/talCsU
- zbfvGOXcOuV2iUQZ7+ha/aOlMB5dRGZO9j7GzsXwLTzd2qesHCKmfR7Hu5PDOpsgvrz4eb1uc9H
- xpPeEdEhNqiNXNwnrVWUtSjvXCMDVWSQfUjT2ywDZWoXhfnscyrq/eNfN1n0UR9mZ65lb5H5l9U
- RgGJ4/Zj4EXmtPOcluUJwAjhOYQS81D3TqcdiCfQACCadTim7DbCL5ZY+AvlLJEPBxf8qTuoWE5
- YQJlRZzjjK0IiKuceODCy9ek3HkRzSdDRJCZyfTQ9Or3zEQ7zkyMNcbIwVMeCEVHNZ/cIVUUl1N
- qnZYa6H8ri2LnN5B1MQ==
-X-Authority-Analysis: v=2.4 cv=Uu5T8ewB c=1 sm=1 tr=0 ts=69f0e1eb cx=c_pps
- a=JIY1xp/sjQ9K5JH4t62bdg==:117 a=gOEeR9iKwsj33Yj5oN/cWg==:17
- a=A5OVakUREuEA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22 a=EUspDBNiAAAA:8
- a=VwQbUJbxAAAA:8 a=Amw14q-JFhzbT9FOICoA:9 a=tNoRWFLymzeba-QzToBc:22
-X-Proofpoint-ORIG-GUID: sX0HOjZoNKJUzlqkAfn7WSbmdbTgDBzo
-X-Proofpoint-GUID: sX0HOjZoNKJUzlqkAfn7WSbmdbTgDBzo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-28_05,2026-04-28_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 spamscore=0 phishscore=0 adultscore=0 clxscore=1015
- suspectscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
- lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
- definitions=main-2604280160
-X-Rspamd-Queue-Id: 45BD048A310
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9185.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c42d29c-5e46-4bb8-97a6-08dea544460f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2026 16:36:18.4243
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ByrfzpsIPzfy2rWi0afGiugB80C7qYXHa04sM2gbkVkOnRlAgcfSApCtmxCitYm/7AHvo+2dcHpWaAtxg6kdBg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6942
+X-Rspamd-Queue-Id: 453C0489592
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
+X-Spamd-Result: default: False [1.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35723-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:dkim,qualcomm.com:email,oss.qualcomm.com:dkim,oss.qualcomm.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FROM_NEQ_ENVFROM(0.00)[krzysztof.kozlowski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35724-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[linuxfoundation.org,vger.kernel.org,pengutronix.de,gmail.com,nxp.com,lists.linux.dev,lists.infradead.org,bgdev.pl,lunn.ch];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	TAGGED_RCPT(0.00)[linux-gpio];
 	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[shenwei.wang@nxp.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[nxp.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	NEURAL_HAM(-0.00)[-1.000];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-The main SoC TLMM (Top-Level Multiplexer) pin controller drivers are
-essential for booting up SoCs and are not really optional for a given
-platform.  Kernel should not ask users choice of drivers when that
-choice is obvious and known to the developers that answer should be
-'yes' or 'module'.
 
-Switch all Qualcomm TLMM pin controller drivers to a default 'yes' for
-ARCH_QCOM.  This has impact:
 
-1. arm64 defconfig: enable PINCTRL_SM7150, PINCTRL_IPQ9650 and
-   PINCTRL_HAWI, which were not selected before but should be, because
-   these platforms need them for proper boot.
+> -----Original Message-----
+> From: Padhi, Beleswar <b-padhi@ti.com>
+> Sent: Tuesday, April 28, 2026 10:53 AM
+> To: Shenwei Wang <shenwei.wang@nxp.com>; Linus Walleij
+> <linusw@kernel.org>; Bartosz Golaszewski <brgl@kernel.org>; Jonathan Corb=
+et
+> <corbet@lwn.net>; Rob Herring <robh@kernel.org>; Krzysztof Kozlowski
+> <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>; Bjorn Andersson
+> <andersson@kernel.org>; Mathieu Poirier <mathieu.poirier@linaro.org>; Fra=
+nk Li
+> <frank.li@nxp.com>; Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Shuah Khan <skhan@linuxfoundation.org>; linux-gpio@vger.kernel.org; l=
+inux-
+> doc@vger.kernel.org; linux-kernel@vger.kernel.org; Pengutronix Kernel Tea=
+m
+> <kernel@pengutronix.de>; Fabio Estevam <festevam@gmail.com>; Peng Fan
+> <peng.fan@nxp.com>; devicetree@vger.kernel.org; linux-
+> remoteproc@vger.kernel.org; imx@lists.linux.dev; linux-arm-
+> kernel@lists.infradead.org; dl-linux-imx <linux-imx@nxp.com>; Bartosz
+> Golaszewski <brgl@bgdev.pl>; Andrew Lunn <andrew@lunn.ch>
+> Subject: [EXT] Re: [PATCH v13 3/4] gpio: rpmsg: add generic rpmsg GPIO dr=
+iver
+> >>
+> >> Nothing extra in my opinion. rpmsg_create_ept() just creates a
+> >> dynamic local endpoint address for Linux's usage. The firmware just
+> >> has to make sure to reply to the same endpoint address where it
+> >> received the message. This should already be in place IMO, because
+> >> currently you are sending all messages in the default
+> > Since rpmsg_create_ept creates a new local endpoint address on the
+> > Linux side, how is the remote system expected to learn and use this
+> > new address for communication if no additional logic is added on the re=
+mote
+> side?
+>=20
+>=20
+> Remote side learns the endpoint when it receives any message from Linux f=
+rom
+> the dynamic endpoint.
+>=20
+> Lets say rpmsg_create_ept() allocates a dynamic local ept of 1026. When y=
+ou
+> send the message from this endpoint, the standard rpmsg header would have=
+:
+>=20
+>      85 struct rpmsg_hdr {
+>      86         __rpmsg32 src; // 1026
+>      87         __rpmsg32 dst; // rpdev->dst (e.g. 400)
+>      88         __rpmsg32 reserved;
+>      89         __rpmsg16 len;
+>      90         __rpmsg16 flags;
+>      91         u8 data[];
+>      92 } __packed;
+>=20
+> Remote side tracks the dynamic endpoint by reading src =3D 1026. And whil=
+e
+> sending the response it fills the header as:
+>=20
+>      85 struct rpmsg_hdr {
+>      86         __rpmsg32 src; // 400
+>      87         __rpmsg32 dst; // 1026
+>      88         __rpmsg32 reserved;
+>      89         __rpmsg16 len;
+>      90         __rpmsg16 flags;
+>      91         u8 data[];
+>      92 } __packed;
+>=20
 
-2. arm qcom_defconfig: no changes.
+This explains how reply messages work in this scenario: the remote side can=
+ simply send=20
+the response back to the source address of the incoming message.
 
-3. arm multi_v7 defconfig: enable drivers necessary to boot ARM 32-bit
-   platforms, which are already enabled on qcom_defconfig.
+How does this work for notification messages initiated by the remote side? =
+Should the remote=20
+system need to add additional logic to track the source address based on th=
+e GPIO instance?
 
-4. COMPILE_TEST builds: enable by default all drivers for arm or arm64
-   builds, whenever ARCH_QCOM is selected.  This has impact on build
-   time and feels logical, because if one selects ARCH_QCOM then
-   probably by default wants to build test it entirely.  Kernels with
-   COMPILE_TEST are not supposed to be used for booting.
+Thanks,
+Shenwei
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Reviewed-by: Linus Walleij <linusw@kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-
----
-
-I did similar change for clocks and I will be continuing with
-interconnect and other missing pieces.
-
-Changes in v2:
-1. Rebase on Linus W. devel branch. This should go with pinctrl, I
-   think.
-2. Add tags.
-3. Update also PINCTRL_IPQ9650.
----
- arch/arm/configs/multi_v7_defconfig |  8 ----
- arch/arm/configs/qcom_defconfig     | 15 -------
- arch/arm64/configs/defconfig        | 46 ----------------------
- drivers/pinctrl/qcom/Kconfig        |  1 +
- drivers/pinctrl/qcom/Kconfig.msm    | 61 +++++++++++++++++++++++++++++
- 5 files changed, 62 insertions(+), 69 deletions(-)
-
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index bcc9aabc1202..3847a6c17193 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -483,14 +483,6 @@ CONFIG_PINCTRL_PALMAS=y
- CONFIG_PINCTRL_STMFX=y
- CONFIG_PINCTRL_OWL=y
- CONFIG_PINCTRL_S500=y
--CONFIG_PINCTRL_MSM=y
--CONFIG_PINCTRL_APQ8064=y
--CONFIG_PINCTRL_APQ8084=y
--CONFIG_PINCTRL_IPQ8064=y
--CONFIG_PINCTRL_MSM8660=y
--CONFIG_PINCTRL_MSM8960=y
--CONFIG_PINCTRL_MSM8X74=y
--CONFIG_PINCTRL_MSM8916=y
- CONFIG_PINCTRL_QCOM_SPMI_PMIC=y
- CONFIG_PINCTRL_QCOM_SSBI_PMIC=y
- CONFIG_PINCTRL_RZA2=y
-diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
-index 29a1dea500f0..03309b89ea4c 100644
---- a/arch/arm/configs/qcom_defconfig
-+++ b/arch/arm/configs/qcom_defconfig
-@@ -123,22 +123,7 @@ CONFIG_I2C_QUP=y
- CONFIG_SPI=y
- CONFIG_SPI_QUP=y
- CONFIG_SPMI=y
--CONFIG_PINCTRL_MSM=y
--CONFIG_PINCTRL_APQ8064=y
--CONFIG_PINCTRL_APQ8084=y
--CONFIG_PINCTRL_IPQ4019=y
--CONFIG_PINCTRL_IPQ8064=y
--CONFIG_PINCTRL_MSM8226=y
--CONFIG_PINCTRL_MSM8660=y
--CONFIG_PINCTRL_MSM8960=y
--CONFIG_PINCTRL_MDM9607=y
--CONFIG_PINCTRL_MDM9615=y
--CONFIG_PINCTRL_MSM8X74=y
--CONFIG_PINCTRL_MSM8909=y
--CONFIG_PINCTRL_MSM8916=y
- CONFIG_GPIOLIB=y
--CONFIG_PINCTRL_SDX55=y
--CONFIG_PINCTRL_SDX65=y
- CONFIG_PINCTRL_QCOM_SPMI_PMIC=y
- CONFIG_PINCTRL_QCOM_SSBI_PMIC=y
- CONFIG_GPIO_SYSFS=y
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index d905a0777f93..dde8b61338e3 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -651,53 +651,7 @@ CONFIG_PINCTRL_IMX8ULP=y
- CONFIG_PINCTRL_IMX91=y
- CONFIG_PINCTRL_IMX93=y
- CONFIG_PINCTRL_IMX_SCMI=y
--CONFIG_PINCTRL_MSM=y
--CONFIG_PINCTRL_ELIZA=y
--CONFIG_PINCTRL_GLYMUR=y
--CONFIG_PINCTRL_IPQ5018=y
--CONFIG_PINCTRL_IPQ5210=y
--CONFIG_PINCTRL_IPQ5332=y
--CONFIG_PINCTRL_IPQ5424=y
--CONFIG_PINCTRL_IPQ8074=y
--CONFIG_PINCTRL_IPQ6018=y
--CONFIG_PINCTRL_IPQ9574=y
--CONFIG_PINCTRL_KAANAPALI=y
--CONFIG_PINCTRL_MSM8916=y
--CONFIG_PINCTRL_MSM8953=y
--CONFIG_PINCTRL_MSM8976=y
--CONFIG_PINCTRL_MSM8994=y
--CONFIG_PINCTRL_MSM8996=y
--CONFIG_PINCTRL_MSM8998=y
--CONFIG_PINCTRL_QCM2290=y
--CONFIG_PINCTRL_QCS404=y
--CONFIG_PINCTRL_QCS615=y
--CONFIG_PINCTRL_QCS8300=y
--CONFIG_PINCTRL_QDF2XXX=y
--CONFIG_PINCTRL_QDU1000=y
- CONFIG_PINCTRL_RP1=m
--CONFIG_PINCTRL_SA8775P=y
--CONFIG_PINCTRL_SC7180=y
--CONFIG_PINCTRL_SC7280=y
--CONFIG_PINCTRL_SC8180X=y
--CONFIG_PINCTRL_SC8280XP=y
--CONFIG_PINCTRL_SDM660=y
--CONFIG_PINCTRL_SDM670=y
--CONFIG_PINCTRL_SDM845=y
--CONFIG_PINCTRL_SDX75=y
--CONFIG_PINCTRL_SM4450=y
--CONFIG_PINCTRL_SM6115=y
--CONFIG_PINCTRL_SM6125=y
--CONFIG_PINCTRL_SM6350=y
--CONFIG_PINCTRL_SM6375=y
--CONFIG_PINCTRL_MILOS=y
--CONFIG_PINCTRL_SM8150=y
--CONFIG_PINCTRL_SM8250=y
--CONFIG_PINCTRL_SM8350=y
--CONFIG_PINCTRL_SM8450=y
--CONFIG_PINCTRL_SM8550=y
--CONFIG_PINCTRL_SM8650=y
--CONFIG_PINCTRL_SM8750=y
--CONFIG_PINCTRL_X1E80100=y
- CONFIG_PINCTRL_QCOM_SPMI_PMIC=y
- CONFIG_PINCTRL_LPASS_LPI=m
- CONFIG_PINCTRL_MILOS_LPASS_LPI=m
-diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-index 3accf0b489bb..156ba1c853ba 100644
---- a/drivers/pinctrl/qcom/Kconfig
-+++ b/drivers/pinctrl/qcom/Kconfig
-@@ -6,6 +6,7 @@ config PINCTRL_MSM
- 	depends on GPIOLIB
- 	# OF for pinconf_generic_dt_node_to_map_group() from GENERIC_PINCONF
- 	depends on OF
-+	default ARCH_QCOM
- 	select QCOM_SCM
- 	select PINMUX
- 	select GENERIC_PINMUX_FUNCTIONS
-diff --git a/drivers/pinctrl/qcom/Kconfig.msm b/drivers/pinctrl/qcom/Kconfig.msm
-index b78d6410ed2e..f171ae0d891f 100644
---- a/drivers/pinctrl/qcom/Kconfig.msm
-+++ b/drivers/pinctrl/qcom/Kconfig.msm
-@@ -4,6 +4,7 @@ if PINCTRL_MSM
- config PINCTRL_APQ8064
- 	tristate "Qualcomm APQ8064 pin controller driver"
- 	depends on ARM || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm TLMM block found in the Qualcomm APQ8064 platform.
-@@ -11,6 +12,7 @@ config PINCTRL_APQ8064
- config PINCTRL_APQ8084
- 	tristate "Qualcomm APQ8084 pin controller driver"
- 	depends on ARM || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm TLMM block found in the Qualcomm APQ8084 platform.
-@@ -18,6 +20,7 @@ config PINCTRL_APQ8084
- config PINCTRL_ELIZA
- 	tristate "Qualcomm Eliza pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc Top Level Mode Multiplexer block (TLMM)
-@@ -28,6 +31,7 @@ config PINCTRL_ELIZA
- config PINCTRL_GLYMUR
- 	tristate "Qualcomm Glymur pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc Top Level Mode Multiplexer block (TLMM)
-@@ -38,6 +42,7 @@ config PINCTRL_GLYMUR
- config PINCTRL_HAWI
- 	tristate "Qualcomm Hawi pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc Top Level Mode Multiplexer block (TLMM)
-@@ -48,6 +53,7 @@ config PINCTRL_HAWI
- config PINCTRL_IPQ4019
- 	tristate "Qualcomm IPQ4019 pin controller driver"
- 	depends on ARM || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm TLMM block found in the Qualcomm IPQ4019 platform.
-@@ -55,6 +61,7 @@ config PINCTRL_IPQ4019
- config PINCTRL_IPQ5018
- 	tristate "Qualcomm IPQ5018 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for
- 	  the Qualcomm Technologies Inc. TLMM block found on the
-@@ -64,6 +71,7 @@ config PINCTRL_IPQ5018
- config PINCTRL_IPQ8064
- 	tristate "Qualcomm IPQ8064 pin controller driver"
- 	depends on ARM || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm TLMM block found in the Qualcomm IPQ8064 platform.
-@@ -71,6 +79,7 @@ config PINCTRL_IPQ8064
- config PINCTRL_IPQ5210
- 	tristate "Qualcomm IPQ5210 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -79,6 +88,7 @@ config PINCTRL_IPQ5210
- config PINCTRL_IPQ5332
- 	tristate "Qualcomm IPQ5332 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -87,6 +97,7 @@ config PINCTRL_IPQ5332
- config PINCTRL_IPQ5424
- 	tristate "Qualcomm IPQ5424 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for
-           the Qualcomm Technologies Inc. TLMM block found on the
-@@ -96,6 +107,7 @@ config PINCTRL_IPQ5424
- config PINCTRL_IPQ8074
- 	tristate "Qualcomm IPQ8074 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for
- 	  the Qualcomm Technologies Inc. TLMM block found on the
-@@ -105,6 +117,7 @@ config PINCTRL_IPQ8074
- config PINCTRL_IPQ6018
- 	tristate "Qualcomm IPQ6018 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for
- 	  the Qualcomm Technologies Inc. TLMM block found on the
-@@ -114,6 +127,7 @@ config PINCTRL_IPQ6018
- config PINCTRL_IPQ9574
- 	tristate "Qualcomm IPQ9574 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for
-           the Qualcomm Technologies Inc. TLMM block found on the
-@@ -123,6 +137,7 @@ config PINCTRL_IPQ9574
- config PINCTRL_IPQ9650
- 	tristate "Qualcomm IPQ9650 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for
-           the Qualcomm Technologies Inc. TLMM block found on the
-@@ -132,6 +147,7 @@ config PINCTRL_IPQ9650
- config PINCTRL_KAANAPALI
- 	tristate "Qualcomm Kaanapali pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -140,6 +156,7 @@ config PINCTRL_KAANAPALI
- config PINCTRL_MSM8226
- 	tristate "Qualcomm 8226 pin controller driver"
- 	depends on ARM || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -148,6 +165,7 @@ config PINCTRL_MSM8226
- config PINCTRL_MSM8660
- 	tristate "Qualcomm 8660 pin controller driver"
- 	depends on ARM || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm TLMM block found in the Qualcomm 8660 platform.
-@@ -155,12 +173,14 @@ config PINCTRL_MSM8660
- config PINCTRL_MSM8960
- 	tristate "Qualcomm 8960 pin controller driver"
- 	depends on ARM || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm TLMM block found in the Qualcomm 8960 platform.
- 
- config PINCTRL_MDM9607
- 	tristate "Qualcomm 9607 pin controller driver"
-+	default ARCH_QCOM if ARM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm TLMM block found in the Qualcomm 9607 platform.
-@@ -168,6 +188,7 @@ config PINCTRL_MDM9607
- config PINCTRL_MDM9615
- 	tristate "Qualcomm 9615 pin controller driver"
- 	depends on ARM || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm TLMM block found in the Qualcomm 9615 platform.
-@@ -175,6 +196,7 @@ config PINCTRL_MDM9615
- config PINCTRL_MSM8X74
- 	tristate "Qualcomm 8x74 pin controller driver"
- 	depends on ARM || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm TLMM block found in the Qualcomm 8974 platform.
-@@ -182,12 +204,14 @@ config PINCTRL_MSM8X74
- config PINCTRL_MSM8909
- 	tristate "Qualcomm 8909 pin controller driver"
- 	depends on ARM || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm TLMM block found on the Qualcomm MSM8909 platform.
- 
- config PINCTRL_MSM8916
- 	tristate "Qualcomm 8916 pin controller driver"
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm TLMM block found on the Qualcomm 8916 platform.
-@@ -201,6 +225,7 @@ config PINCTRL_MSM8917
- config PINCTRL_MSM8953
- 	tristate "Qualcomm 8953 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm TLMM block found on the Qualcomm MSM8953 platform.
-@@ -210,6 +235,7 @@ config PINCTRL_MSM8953
- config PINCTRL_MSM8976
- 	tristate "Qualcomm 8976 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm TLMM block found on the Qualcomm MSM8976 platform.
-@@ -219,6 +245,7 @@ config PINCTRL_MSM8976
- config PINCTRL_MSM8994
- 	tristate "Qualcomm 8994 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm TLMM block found in the Qualcomm 8994 platform. The
-@@ -227,6 +254,7 @@ config PINCTRL_MSM8994
- config PINCTRL_MSM8996
- 	tristate "Qualcomm MSM8996 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm TLMM block found in the Qualcomm MSM8996 platform.
-@@ -234,6 +262,7 @@ config PINCTRL_MSM8996
- config PINCTRL_MSM8998
- 	tristate "Qualcomm MSM8998 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm TLMM block found in the Qualcomm MSM8998 platform.
-@@ -241,6 +270,7 @@ config PINCTRL_MSM8998
- config PINCTRL_QCM2290
- 	tristate "Qualcomm QCM2290 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  TLMM block found in the Qualcomm QCM2290 platform.
-@@ -248,6 +278,7 @@ config PINCTRL_QCM2290
- config PINCTRL_QCS404
- 	tristate "Qualcomm QCS404 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  TLMM block found in the Qualcomm QCS404 platform.
-@@ -255,6 +286,7 @@ config PINCTRL_QCS404
- config PINCTRL_QCS615
- 	tristate "Qualcomm QCS615 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  TLMM block found on the Qualcomm QCS615 platform.
-@@ -262,6 +294,7 @@ config PINCTRL_QCS615
- config PINCTRL_QCS8300
- 	tristate "Qualcomm QCS8300 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux and pinconf driver for the Qualcomm
- 	  TLMM block found on the Qualcomm QCS8300 platform.
-@@ -269,6 +302,7 @@ config PINCTRL_QCS8300
- config PINCTRL_QDF2XXX
- 	tristate "Qualcomm QDF2xxx pin controller driver"
- 	depends on ACPI
-+	default ARCH_QCOM if ARM64
- 	help
- 	  This is the GPIO driver for the TLMM block found on the
- 	  Qualcomm Technologies QDF2xxx SOCs.
-@@ -276,6 +310,7 @@ config PINCTRL_QDF2XXX
- config PINCTRL_QDU1000
- 	tristate "Qualcomm QDU1000/QRU1000 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf, and gpiolib driver for the
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -284,6 +319,7 @@ config PINCTRL_QDU1000
- config PINCTRL_SA8775P
- 	tristate "Qualcomm SA8775P pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux and pinconf driver for the Qualcomm
- 	  TLMM block found on the Qualcomm SA8775P platforms.
-@@ -299,6 +335,7 @@ config PINCTRL_SAR2130P
- config PINCTRL_SC7180
- 	tristate "Qualcomm SC7180 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -307,6 +344,7 @@ config PINCTRL_SC7180
- config PINCTRL_SC7280
- 	tristate "Qualcomm SC7280 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -316,6 +354,7 @@ config PINCTRL_SC8180X
- 	tristate "Qualcomm SC8180x pin controller driver"
- 	depends on (OF || ACPI)
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -324,6 +363,7 @@ config PINCTRL_SC8180X
- config PINCTRL_SC8280XP
- 	tristate "Qualcomm SC8280xp pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -332,6 +372,7 @@ config PINCTRL_SC8280XP
- config PINCTRL_SDM660
- 	tristate "Qualcomm SDM660 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -340,6 +381,7 @@ config PINCTRL_SDM660
- config PINCTRL_SDM670
- 	tristate "Qualcomm SDM670 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -349,6 +391,7 @@ config PINCTRL_SDM845
- 	tristate "Qualcomm SDM845 pin controller driver"
- 	depends on (OF || ACPI)
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -357,6 +400,7 @@ config PINCTRL_SDM845
- config PINCTRL_SDX55
- 	tristate "Qualcomm SDX55 pin controller driver"
- 	depends on ARM || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -365,6 +409,7 @@ config PINCTRL_SDX55
- config PINCTRL_SDX65
-         tristate "Qualcomm SDX65 pin controller driver"
-         depends on ARM || COMPILE_TEST
-+	default ARCH_QCOM
-         help
-          This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-          Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -373,6 +418,7 @@ config PINCTRL_SDX65
- config PINCTRL_SDX75
-         tristate "Qualcomm SDX75 pin controller driver"
-         depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
-         help
-          This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-          Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -381,6 +427,7 @@ config PINCTRL_SDX75
- config PINCTRL_SM4450
- 	tristate "Qualcomm SM4450 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -389,6 +436,7 @@ config PINCTRL_SM4450
- config PINCTRL_SM6115
- 	tristate "Qualcomm SM6115,SM4250 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -397,6 +445,7 @@ config PINCTRL_SM6115
- config PINCTRL_SM6125
- 	tristate "Qualcomm SM6125 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -405,6 +454,7 @@ config PINCTRL_SM6125
- config PINCTRL_SM6350
- 	tristate "Qualcomm SM6350 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -413,6 +463,7 @@ config PINCTRL_SM6350
- config PINCTRL_SM6375
- 	tristate "Qualcomm SM6375 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -421,6 +472,7 @@ config PINCTRL_SM6375
- config PINCTRL_SM7150
- 	tristate "Qualcomm SM7150 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -429,6 +481,7 @@ config PINCTRL_SM7150
- config PINCTRL_MILOS
- 	tristate "Qualcomm Milos pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -437,6 +490,7 @@ config PINCTRL_MILOS
- config PINCTRL_SM8150
- 	tristate "Qualcomm SM8150 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -445,6 +499,7 @@ config PINCTRL_SM8150
- config PINCTRL_SM8250
- 	tristate "Qualcomm SM8250 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -453,6 +508,7 @@ config PINCTRL_SM8250
- config PINCTRL_SM8350
- 	tristate "Qualcomm SM8350 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -461,6 +517,7 @@ config PINCTRL_SM8350
- config PINCTRL_SM8450
- 	tristate "Qualcomm SM8450 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -469,6 +526,7 @@ config PINCTRL_SM8450
- config PINCTRL_SM8550
- 	tristate "Qualcomm SM8550 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -477,6 +535,7 @@ config PINCTRL_SM8550
- config PINCTRL_SM8650
- 	tristate "Qualcomm SM8650 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -485,6 +544,7 @@ config PINCTRL_SM8650
- config PINCTRL_SM8750
- 	tristate "Qualcomm SM8750 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc TLMM block found on the Qualcomm
-@@ -493,6 +553,7 @@ config PINCTRL_SM8750
- config PINCTRL_X1E80100
- 	tristate "Qualcomm X1E80100 pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-+	default ARCH_QCOM
- 	help
- 	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
- 	  Qualcomm Technologies Inc Top Level Mode Multiplexer block (TLMM)
--- 
-2.51.0
-
+> Note: Remote firmware can also send messages from dynamically created
+> endpoints on its side, and Linux can learn those in the same manner. The =
+dynamic
+> endpoint address is passed to the callback as 'u32 src'. So you could pas=
+s on the
+> 'src' from rpmsg_gpio_channel_callback() to
+> rpmsg_gpio_send_message() as 'dst' and call rpmsg_sendto(port->ept, msg,
+> sizeof(*msg), dst) to reply to the dynamic endpoint on firmware's side.
+>=20
+> Thanks,
+> Beleswar
+>=20
+> >
+> > Is this handled automatically by the rpmsg stack software, or does it
+> > require explicit support on the remote system to exchange and track end=
+point
+> addresses?
+> >
+> > Thanks,
+> > Shenwei
+> >
+> >> endpoint (rpdev->ept) which is also dynamic[1] and is created when
+> >> the channel is created. And you receive the responses correctly.
+> >> (Unless you have hard-coded the default ept address in the firmware)
+> >>
+> >> [1]:
+> >> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgi=
+t
+> >>
+> hub.co%2F&data=3D05%7C02%7Cshenwei.wang%40nxp.com%7C057bf7f0976749
+> 5bcc3
+> >>
+> 108dea53e43f7%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63912
+> 98840
+> >>
+> 26686251%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiI
+> wLjAu
+> >>
+> MDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C
+> %7C
+> >>
+> &sdata=3DiSxGWEvYSyu29loP9b1R2bw8bvwR7pbzQ7D%2FGeB%2BUYE%3D&reser
+> ved=3D0
+> >>
+> m%2Ftorvalds%2Flinux%2Fblob%2Fmaster%2Fdrivers%2Frpmsg%2Frpmsg_core.
+> >>
+> c%23L480&data=3D05%7C02%7Cshenwei.wang%40nxp.com%7C4ec06bf01bb14dd
+> >>
+> 2625708dea5387471%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C6
+> >>
+> 39129859078622527%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRyd
+> >>
+> WUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%
+> >>
+> 3D%7C0%7C%7C%7C&sdata=3DOUmjqOdWqiXSTjPDv1TUvrjKP1YTx9ji44SdGlIR2n
+> >> Q%3D&reserved=3D0
+> >> (chinfo.src is RPMSG_ADDR_ANY)
+> >>
+> >> Thanks,
+> >> Beleswar
+> >>
+> >>> If the remote side does not need any extra support, this would be an
+> >>> excellent
+> >> solution.
+> >>> Thanks,
+> >>> Shenwei
+> >>>
+> >>>> 3. Send msgs from local ept in rpmsg_gpio_send_message() by:
+> >>>>       rpmsg_send(port->ept, msg, sizeof(*msg));
+> >>>>
+> >>>> 4. Get the port info in rpmsg_gpio_channel_callback() by:
+> >>>>       struct rpmsg_gpio_port *port =3D priv;
+> >>>>
+> >>>> Which also eliminates the need for struct rpdev_drvdata as you can
+> >>>> just do
+> >>>> rpmsg_get_rproc_node_name(rpdev) from rpmsg_gpiochip_register().
+> >>>>
 
