@@ -1,164 +1,120 @@
-Return-Path: <linux-gpio+bounces-35670-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35671-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SMg0KTN98GkaUAEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35670-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 11:26:11 +0200
+	id oB/jNOV/8GlSUAEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35671-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 11:37:41 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D10D4815CC
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 11:26:10 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D99D4819AA
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 11:37:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 00B0D3276A5F
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 09:19:37 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C856A3110BDC
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 09:28:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 436563148D9;
-	Tue, 28 Apr 2026 09:19:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6A0938E5C5;
+	Tue, 28 Apr 2026 09:27:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XA4n621B"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MEZHm19g"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F912D47E9
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 09:19:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABFC38AC78
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 09:27:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777367974; cv=none; b=Eoe5Ai9EWCT8YUQR1FOn+C+aisk50l0o8pcRKBKRV/3BMU/dX9FPnInMZJQyscOFCePyPp4BCMnJaiLgSKKfVfqg/tu+1ys5PSKItBZHk/Lu4ctqFxOIWLuwxoFXrOjNk3Qaokf4GI0taiDt5UzoQMj5/Z3071ga9wPnIcSzL+s=
+	t=1777368465; cv=none; b=KV46jTUFv0tvYMtPdFsWTbDvM7wr+nic6/jZYkG/k/tbDuwLa4P+QHFqLmXKy1eDaG3cS8boqx7wEOWd9SmnsL0zirp/9etzfERm5xFWH05HLHXFvgAJ2W7hex8e/s/O2/yj0nMqe5LEReEF629fDNMf07T4kkghd1pNTitH3EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777367974; c=relaxed/simple;
-	bh=ZMSJhyCOtIvkpDAY1UyV0WQQ/akVYaE/bewN9HqkYjI=;
+	s=arc-20240116; t=1777368465; c=relaxed/simple;
+	bh=JLPg9I2TfzrfbOLy6uXjaM76yTogNYLPST+TWWZ8VZc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fW8U2L9HbZhpgfw0ucerW3tyNjz30E1eCf1cRDZVaccXU9rho3fmD+yKTahcdBx57p5eLRNghcKo+Ro4qyMFuecXP814z9vSz/nVf0b/rctSGFg+8L48eiaf4DVylU7VZ25garoN2rKXw62dXbv/UKWv0+I1XocDBt1GlHU1ngo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XA4n621B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B80AEC2BCF5
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 09:19:33 +0000 (UTC)
+	 To:Cc:Content-Type; b=XamU9iWXY+CN8Q9AA3769Mxc2FQYaCqMS8A64fp3zsNZ3NB64CTTtGjsNtPQWg60AMsMfb6JrwrKRgbel6Ke4NvBSn/8Eu/hNf6E+NKmX8Y7wTcax1teITFlmqzSIwJMYcmaPPUkYuKIeXi+hG13KyCsoDLIS9T1XfnYygP9vbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MEZHm19g; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37113C4AF0B
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 09:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777367973;
-	bh=ZMSJhyCOtIvkpDAY1UyV0WQQ/akVYaE/bewN9HqkYjI=;
+	s=k20201202; t=1777368465;
+	bh=JLPg9I2TfzrfbOLy6uXjaM76yTogNYLPST+TWWZ8VZc=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XA4n621B4oxs87UXHlV5GM7gBt/2vn5/LdyCWHwfVBQZEGshe8CNZXj318dxb4fCB
-	 0xOi9b6b7XQdIQA/4XxbV7XNhFOvqmxglUSjQLsvERJWt1KIGGD9O7sJduiXdQyMND
-	 893pVGekl2a2PDWCxWqlQkUmJw1G06qw8Iu2fOmDZ6xwSpKE7Moc4n7691x3LTYgVG
-	 R3ddxwnIEIoPpvoyAQTqnxS/cvuW/+plVKWZTrX57sW4HBLb8ZtfpNZcDa8qDQyDff
-	 ZVbEOIJiHOrnBDwUM2AnxDV4EW2sE2Xs8GIDZzWL209dypeNWazYlIu+HzTmRcJpml
-	 GskwFfsGb6d+g==
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-38e91b06006so92286751fa.2
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 02:19:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9LbLxV3/yiU4VG1AIE8+VXF3XNTPoowwz3Y+eLrclp6EjFwnwFm8APDvYrIRqG6ys4RHnl93cDo7nj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQmHa0C3QtrVehv9HTaOpuH/Wfwbwk5eRQBgh3IeYx0zkry713
-	KLbj5x6luxJGY8ZlHEdAIWl8/jEz2z4ItjzICVvB+h0ERBc3FOrje4p357zsIC9FSC8GyV6U5TY
-	zbvV8B/iL4pmN40XfkqICOW3DnCFMqUbttrsrYcioJw==
-X-Received: by 2002:a05:651c:513:b0:38e:58c7:cd0 with SMTP id
- 38308e7fff4ca-39240ccfba3mr7100321fa.10.1777367972313; Tue, 28 Apr 2026
- 02:19:32 -0700 (PDT)
+	b=MEZHm19gvZpwO9u3ndneAVtCNM4tyEd/w6l1ikZE8f7b+7m8O8nrIBHZx3cq2a4SP
+	 WErQQtPfw3VpSnkv6JOBohBk4Dvw+FZUrs8gPyyuaDMiqiXL34VaT9t3kgHFqKR7j6
+	 XGjhKCsZAdsX7df+bmHEvpl0uTjkPUpPi0DiFu+2ZTlumJOnI+sYfR3dUUzjBXXc4G
+	 mQ7begPvK17AGMAgjyUvAWQBpTxa7FyMM1OpS7F/DlH27LvXwjgFUuOcUJiyiaNIvJ
+	 uzTIX5eE15cPAkjhZycxsRAbJEVCwZ1nQ/HpHWMVjOmemcfxK7Ls3T+tw8D6136E5t
+	 1ZPsx2nC9AUnQ==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5a2b5ea59a1so16844363e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2026 02:27:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+FEcEg3X4E9p86GDY4mlzcSPgbB33OYIBCR+jl5CzVxF7UyrH6olQArnt5UF2x1yCu9udaCqGfpub1@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwcLaHUHaSOEDiUzeFktpGvDTJ45ocnFNUmsJ5niErhORC8XhE
+	uU+dZ3Zob7O63IJM8bR5mr2xy3nzhhreAmRl+17DU3fMgGzGQrYfbx1ehfoJK9fJ1NDen7Edu5N
+	xB1o5IIIDUtu6p777lGYgBzZTmcssjO8=
+X-Received: by 2002:a05:6512:39c9:b0:5a2:c914:8af7 with SMTP id
+ 2adb3069b0e04-5a74641075dmr832234e87.5.1777368463886; Tue, 28 Apr 2026
+ 02:27:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260427-baytrail-real-swnode-v3-0-0003e4c1708c@oss.qualcomm.com>
- <20260427-baytrail-real-swnode-v3-2-0003e4c1708c@oss.qualcomm.com> <f100e787-f45a-4d72-9664-a75b1181763e@kernel.org>
-In-Reply-To: <f100e787-f45a-4d72-9664-a75b1181763e@kernel.org>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Tue, 28 Apr 2026 11:19:20 +0200
-X-Gmail-Original-Message-ID: <CAMRc=MfVMLz3jZvxdgaD8ZUdcX6pgYO=WGCfH-dDmpU_WsfDLA@mail.gmail.com>
-X-Gm-Features: AVHnY4L6HCdejwKae1mL2EFJhpoS5hPoP_ZtDkqrEE7U7UUevyusXQnkvGNf5lM
-Message-ID: <CAMRc=MfVMLz3jZvxdgaD8ZUdcX6pgYO=WGCfH-dDmpU_WsfDLA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] platform/x86: x86-android-tablets: enable fwnode
- matching of GPIO chips
-To: Hans de Goede <hansg@kernel.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20260415-ipq9650_tlmm-v1-0-bd16ccb06332@oss.qualcomm.com>
+In-Reply-To: <20260415-ipq9650_tlmm-v1-0-bd16ccb06332@oss.qualcomm.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Tue, 28 Apr 2026 11:27:32 +0200
+X-Gmail-Original-Message-ID: <CAD++jLmxJUPNjXkFi490GSPwB-bHs4tdJmMFwxyCX07N=kxGHA@mail.gmail.com>
+X-Gm-Features: AVHnY4ItGCSX_rPtMRPswLMsDRdapaHild8dXsI33WcyNIcmsp3xn1n67AlJGXQ
+Message-ID: <CAD++jLmxJUPNjXkFi490GSPwB-bHs4tdJmMFwxyCX07N=kxGHA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Introduce TLMM driver for Qualcomm IPQ9650 SoC
+To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 0D10D4815CC
+X-Rspamd-Queue-Id: 8D99D4819AA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35670-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[oss.qualcomm.com,linux.intel.com,gmail.com,linuxfoundation.org,kernel.org,vger.kernel.org,lists.linux.dev];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35671-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brgl@kernel.org,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-On Tue, Apr 28, 2026 at 11:16=E2=80=AFAM Hans de Goede <hansg@kernel.org> w=
-rote:
->
-> Hi Bartosz,
->
-> On 27-Apr-26 14:19, Bartosz Golaszewski wrote:
-> > In order to allow GPIOLIB to match cherryview and baytrail GPIO
-> > controllers by their firmware nodes instead of their names, we need to
-> > attach the - currently "dangling" - existing software nodes to their
-> > target devices dynamically.
-> >
-> > We deal with devices described in ACPI so set up a bus notifier waiting
-> > for the ADD events. We know the name of the device we're waiting for so
-> > match against it and - on match - assign the appropriate software node
-> > as the secondary firmware node of the underlying ACPI node. In case the
-> > event was emitted earlier than this driver's probe: also make sure the
-> > device was not added before.
-> >
-> > Scheduling fine-grained devres actions allows for proper teardown and
-> > unsetting of the secondary firmware nodes.
->
-> Thank you for your work on this.
->
-> The x86-android-tablets.ko kernel module uses platform_create_bundle()
-> so its probe() cannot return -EPROBE_DEFER. IOW it expects all the GPIO
-> pins which it needs to already be there when it loads (which so far in
-> practice holds, since these x86 GPIO controllers are always builtin
-> for various reasons).
->
-> This means that there is no need all the notifier stuff. Only adding
-> an acpi_bus_find_device_by_name() helper as suggested by Rafael and
-> then finding the GPIO controllers and attaching the swnodes is
-> necessary.
->
-> And if the acpi_bus_find_device_by_name() fails it is ok to fail
-> the probe() just like it currently fails when gpiod_get() returns
-> -EPROBE_DEFER (or fails for other reasons).
->
-> This should nicely simplify this patch.
->
+On Wed, Apr 15, 2026 at 1:29=E2=80=AFPM Kathiravan Thirumoorthy
+<kathiravan.thirumoorthy@oss.qualcomm.com> wrote:
 
-Thanks Hans, I was not aware of this. Given that this is the only
-driver needing this quirk, it will indeed make things much simpler.
-I'll have a v4 by the end of this week.
+> The IPQ9650 is Qualcomm's SoC for Routers, Gateways and Access Points.
+> Add the pinctrl support for the same.
+>
+> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualc=
+omm.com>
 
-Bart
+Patches applied for v7.2!
+
+Yours,
+Linus Walleij
 
