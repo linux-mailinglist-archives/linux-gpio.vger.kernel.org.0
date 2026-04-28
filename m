@@ -1,135 +1,187 @@
-Return-Path: <linux-gpio+bounces-35714-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35715-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EBNzHv/Y8GkLaQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35714-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 17:57:51 +0200
+	id yMlqOgvZ8GkLaQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35715-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 17:58:03 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25A054885AA
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 17:57:48 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4792B4885B7
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 17:58:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1E7F23087BC0
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 15:53:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3838330BF114
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2026 15:56:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA4F73C3C03;
-	Tue, 28 Apr 2026 15:53:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED6A53B95FD;
+	Tue, 28 Apr 2026 15:56:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hi9K4462"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dqR1kfeJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A7B125AA;
-	Tue, 28 Apr 2026 15:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1143CA4A3;
+	Tue, 28 Apr 2026 15:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777391604; cv=none; b=MnzKFj2js0J/IqJmJQpV6yg0ZdTwtdSl2OuyXCekrYwhK/9J17iU8tYwt2g7xgnyBG2iyJL1j4UcLpZszQ6XnLQP9/up1vdoex0YCtgCPtSVwzDzCG+cAzaKuD1ZNz5SbQ3NfXi3corAPLpkG7Arl/kcxRYdcDXDiQbWNv352Dw=
+	t=1777391816; cv=none; b=Wgs8sJ2FJQv37GPgAIcihKV69E2YQOEYQnkGBLMGaxuAXRtE/98GszKIXryGx+CjT1UHpVbqR2d1vK6+++izNcOJD3v2UsOtEBIkqY9G8ZEt12PFS5XNgHDzr3H1T1EOFuIQbmaYu90nVgjiA6IQ4NeaYplWGea/NXXvc4Vw+2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777391604; c=relaxed/simple;
-	bh=JMt8H9iAMk6x8ihJgGd8qy1rGIfkjZMj9pTiUslgLfk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WaeNI9wz+31rzMb6B++tnzEURa7juWxyZwqc66LhexpxFeZ5lRQtNBOw4x2FYdYYCfawddUQsOv5nNNeXTJ8cMaJQtYVqBfIlyY+IMjPw8ernEe4jziM7JJimt/WDhmwDz5oRLCOxNgQ+YJgue0ORWp1MJUZ5Y5YL4e3eZD5+kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hi9K4462; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777391603; x=1808927603;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JMt8H9iAMk6x8ihJgGd8qy1rGIfkjZMj9pTiUslgLfk=;
-  b=Hi9K4462NVgg9lmwSu5qKlBe7CrzbmDEvu0ICtTfHSDkAvu2vHhQlGoB
-   uchyuKujG5ZCoT3PCcEKUOm+UmFXez2hnuWFVhnu18JMVTmYVvaJ2DAeT
-   VN921lXGMb8IFo49HkrgRIW0ZuvcZLZ/ZnPKd0ZbF618oU9PROipJnWqC
-   QPxgqOvv4qnK++NFm9YllrXOyasuijljCV9bk9jaRgmLRKlczAIJPaFiO
-   Ctuyn7Yj+CtkS16VbwShKq4PG/SyBgoL7Q1HT0/e/5fGkXU8OJ96bLar9
-   7wgIqGen5KtY1l5OMn1Rj7wWHb2UF+GQifqAVFm2MtXISu8M2w4mqxNG7
-   g==;
-X-CSE-ConnectionGUID: RlIHUVHjTfOmuFrE2lto2Q==
-X-CSE-MsgGUID: kjDuego6R4CSYEqJJX0IDg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11770"; a="78323095"
-X-IronPort-AV: E=Sophos;i="6.23,204,1770624000"; 
-   d="scan'208";a="78323095"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2026 08:53:22 -0700
-X-CSE-ConnectionGUID: bblyab2ZRMSKiRwhs3bZkA==
-X-CSE-MsgGUID: kg7dTy14Q0iA8y8QJSZlNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,204,1770624000"; 
-   d="scan'208";a="257309931"
-Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.213])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2026 08:53:19 -0700
-Date: Tue, 28 Apr 2026 18:53:17 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: move legacy interface into linux/gpio/legacy.h
-Message-ID: <afDX7WabVPVce4kc@ashevche-desk.local>
-References: <20260428154522.2861492-1-arnd@kernel.org>
+	s=arc-20240116; t=1777391816; c=relaxed/simple;
+	bh=IbUu3EsP9Li+cuVWPlIVW0Aqv6ymhM5gFfl2nsie23c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c1vSBQKSpN8Dhf29OrF37dE8eFyt7njnY0+6qslTJBoFFygBFTCBkDakmI/HZ+tGzTXEGUOf3ZjgOXvs9gHKGru+E4g8fE43v9VE6tPW4+jEHeXQ5qVHMvjhQihozSt8/WON+Wez22pJRSlhK1OSDMGU/3ZNoROCgQZzOBaNAQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dqR1kfeJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 794C3C32782;
+	Tue, 28 Apr 2026 15:56:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777391816;
+	bh=IbUu3EsP9Li+cuVWPlIVW0Aqv6ymhM5gFfl2nsie23c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dqR1kfeJNpBCfQ0FYEA8s+Ze3sNIJqXCLxVgGE/vFKZLtY+wFLzKgLXdzkHI5M0r2
+	 nrtJ1vqhoFbvhOvll64yQgwv83D3k84Ar2kRbL+JK8/Z0KD4FEi2S6MrT3q4E6tRTl
+	 QhTw1PKPsfdLh4uR0Qg2jvFpwikHkiONf6Ard2+4RWvoxrhxXKhSRAR7h4b4gU+k8d
+	 1bRPHUPzNTi1OAYboGQRmZkzyY0Ur7XjPNdufZgSWSeGsw5fg9HC4NRfXevrCDjQ8K
+	 VRW4vTfh667c1Pp1UlkpB2iN7j2ZFm1MQ8P9MBG0FwnDl8rciBnft26CDYM0P4Jh5f
+	 UtT5HSdXXI7SQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Thomas Gleixner <tglx@kernel.org>,
+	linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH] mips: select legacy gpiolib interfaces where used
+Date: Tue, 28 Apr 2026 17:56:19 +0200
+Message-Id: <20260428155651.3252500-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260428154522.2861492-1-arnd@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-X-Rspamd-Queue-Id: 25A054885AA
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4792B4885B7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,arndb.de,gmail.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-35714-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[7];
+	TAGGED_FROM(0.00)[bounces-35715-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ashevche-desk.local:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,intel.com:dkim]
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_NEQ_ENVFROM(0.00)[arnd@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[arndb.de:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-On Tue, Apr 28, 2026 at 05:45:07PM +0200, Arnd Bergmann wrote:
+From: Arnd Bergmann <arnd@arndb.de>
 
-> Split the old contents from gpio.h for clarity. Ideally any driver
-> that still includes linux/gpio.h can now be ported over to use
-> either linux/gpio/legacy.h or linux/gpio/consumer.h, with the
-> original file getting removed once that is complete.
-> 
-> No functional changes intended for now.
+A few old machines have not been converted away from the old-style
+gpiolib interfaces. Make these select the new CONFIG_GPIOLIB_LEGACY
+symbol so the code still works where it is needed but can be left
+out otherwise.
 
-But I'm not sure why. The idea to kill gpio.h completely, no need to keep it
-longer than legacy stuff exists. I don't take 'clarity' as a good justification
-here, since the old header are still there (however just a shallow wrapper).
+This is the list of all gpio_request() calls in mips:
 
+  arch/mips/alchemy/devboards/db1000.c:           gpio_request(19, "sd0_cd");
+  arch/mips/alchemy/devboards/db1000.c:           gpio_request(20, "sd1_cd");
+  arch/mips/alchemy/devboards/db1200.c:   gpio_request(215, "otg-vbus");
+  arch/mips/bcm47xx/workarounds.c:        err = gpio_request_one(usb_power, GPIOF_OUT_INIT_HIGH, "usb_power");
+  arch/mips/bcm63xx/boards/board_bcm963xx.c:              gpio_request_one(board.ephy_reset_gpio,
+  arch/mips/txx9/rbtx4927/setup.c:        gpio_request(15, "sio-dtr");
+
+Most of these should be easy enough to change to modern gpio descriptors
+or remove if they are no longer in use.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/mips/Kconfig         | 5 +++++
+ arch/mips/alchemy/Kconfig | 1 -
+ arch/mips/txx9/Kconfig    | 1 +
+ 3 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 4364f3dba688..b91e62d69a5d 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -206,6 +206,8 @@ config MIPS_ALCHEMY
+ 	select CSRC_R4K
+ 	select IRQ_MIPS_CPU
+ 	select DMA_NONCOHERENT		# Au1000,1500,1100 aren't, rest is
++	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 	select MIPS_FIXUP_BIGPHYS_ADDR if PCI
+ 	select SYS_HAS_CPU_MIPS32_R1
+ 	select SYS_SUPPORTS_32BIT_KERNEL
+@@ -307,6 +309,7 @@ config BCM47XX
+ 	select SYS_HAS_EARLY_PRINTK
+ 	select USE_GENERIC_EARLY_PRINTK_8250
+ 	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 	select LEDS_GPIO_REGISTER
+ 	select BCM47XX_NVRAM
+ 	select BCM47XX_SPROM
+@@ -330,6 +333,7 @@ config BCM63XX
+ 	select SYS_HAS_CPU_BMIPS4380
+ 	select SWAP_IO_SPACE
+ 	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 	select MIPS_L1_CACHE_SHIFT_4
+ 	select HAVE_LEGACY_CLK
+ 	help
+@@ -999,6 +1003,7 @@ config MIKROTIK_RB532
+ 	select SWAP_IO_SPACE
+ 	select BOOT_RAW
+ 	select GPIOLIB
++	select GPIOLIB_LEGACY
+ 	select MIPS_L1_CACHE_SHIFT_4
+ 	help
+ 	  Support the Mikrotik(tm) RouterBoard 532 series,
+diff --git a/arch/mips/alchemy/Kconfig b/arch/mips/alchemy/Kconfig
+index 6ca81e1bd35c..cf5ad52c0a0f 100644
+--- a/arch/mips/alchemy/Kconfig
++++ b/arch/mips/alchemy/Kconfig
+@@ -12,7 +12,6 @@ config MIPS_MTX1
+ 
+ config MIPS_DB1XXX
+ 	bool "Alchemy DB1XXX / PB1XXX boards"
+-	select GPIOLIB
+ 	select HAVE_PCI
+ 	select HAVE_PATA_PLATFORM
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
+diff --git a/arch/mips/txx9/Kconfig b/arch/mips/txx9/Kconfig
+index 7335efa4d528..92b759a434c0 100644
+--- a/arch/mips/txx9/Kconfig
++++ b/arch/mips/txx9/Kconfig
+@@ -37,6 +37,7 @@ config SOC_TX4927
+ 	select IRQ_TXX9
+ 	select PCI_TX4927
+ 	select GPIO_TXX9
++	select GPIOLIB_LEGACY
+ 
+ config SOC_TX4938
+ 	bool
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.5
 
 
