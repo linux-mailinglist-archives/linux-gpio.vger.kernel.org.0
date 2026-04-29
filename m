@@ -1,175 +1,218 @@
-Return-Path: <linux-gpio+bounces-35815-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35816-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0LfJJp518mkHrgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35815-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 23:18:22 +0200
+	id KFhjMPt58mnjrgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35816-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 23:36:59 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0513349A833
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 23:18:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D25FC49AA23
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 23:36:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id ECD83301FFB8
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 21:18:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 45A523036741
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 21:36:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 890563AE6FC;
-	Wed, 29 Apr 2026 21:18:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ED0D3B27C4;
+	Wed, 29 Apr 2026 21:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Jr+R6Qpk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lH+dIeKq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from spindle.queued.net (spindle.queued.net [45.33.49.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D00D3612D8;
-	Wed, 29 Apr 2026 21:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.33.49.30
+Received: from flow-b5-smtp.messagingengine.com (flow-b5-smtp.messagingengine.com [202.12.124.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B746277C9D;
+	Wed, 29 Apr 2026 21:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777497494; cv=none; b=M1eirKB4tvt4n8OldsCeG6KMIVkK2PxOvXLVAFsmrtvXv1BCxt/WHa8dYy8Jll0D33gzwxav/bPSsgPSrNnYcIzzFaTm2fM/5+P8ljscOrqXYCJLpxXyiSlDOjfEI4D91XZgtoAFzHy5roXAMaqrC8ivf1iwb7I4AdRJr+zjm4k=
+	t=1777498590; cv=none; b=OOmxWLN2QsHTwQeo6p6f8k+teshnh73wZAWfbNLzCibQrlMdr1OfyqtWgIeB7k/P3cxr/gXadkc627BRxD8jJ/nNCl9gNQo6JcSz3yvyFrGdLHB5RES7DPikQt3eE9MUkChTgcsLZwQt3LA9vjeqFoFrZkKppu0oGfcCVQIUti4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777497494; c=relaxed/simple;
-	bh=wCQnVO0oGCTintY02RpAkwVa16hnjsIra+wY0t9ep7Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ucbc4Ovu7dxDrOYtlKCoUOJ0q7S1oThhhw7cpm8c00gZq9IuP2HOWHlfNp8WjdkBmr/toaS+qrU+Wt81t4UoA1NVaxc9t7QZa7w+pThUmmyuOSZKSIJ+z8K6XAWJQHBjmUFBVekxNguF0ITg13Ofhz/qrIxZfbjUfC1udR//h+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=queued.net; spf=pass smtp.mailfrom=queued.net; arc=none smtp.client-ip=45.33.49.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=queued.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queued.net
-Received: by spindle.queued.net (Postfix, from userid 1001)
-	id AE30211B818; Wed, 29 Apr 2026 17:18:12 -0400 (EDT)
-Received: from [192.168.12.132] (unknown [172.56.35.236])
-	by spindle.queued.net (Postfix) with ESMTPSA id 18EE011B801;
-	Wed, 29 Apr 2026 17:18:08 -0400 (EDT)
-Message-ID: <fddba1c8-a95a-490f-962e-8505cb948672@queued.net>
-Date: Wed, 29 Apr 2026 17:18:08 -0400
+	s=arc-20240116; t=1777498590; c=relaxed/simple;
+	bh=klf0tstlaQQRwsbPlrG8dRk7UxgfXScT7I6Ug1NVWqo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=ggtG+0VCwswovEzdH5WmOOnreU2mKXBGD+b8toIa4Fwu+ItbduLrHAgfN1t6eofq3ZQMxViySTbikThdUGYWvitAPL9XmQGNadm1IUxvE8gkIWkUIVY3mGqymUovYCUXYT/S1pfukX8LmxgGkHKsQFbuDMyjzfFGc4a2wYp6Npg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Jr+R6Qpk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lH+dIeKq; arc=none smtp.client-ip=202.12.124.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.stl.internal (Postfix) with ESMTP id BF9B4130036A;
+	Wed, 29 Apr 2026 17:36:26 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-04.internal (MEProxy); Wed, 29 Apr 2026 17:36:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1777498586;
+	 x=1777505786; bh=5c6EKeRaeRgw2IP6/aj0vwG5gMU6SBqRhc9H6l67RiQ=; b=
+	Jr+R6QpkxIywS/7WcSX44vaN9mfpxh7lBC2ezZrvdvuA/yI+NBgPqA9p1STNkGxv
+	+d48HacyNpKlIYgICiGd2MaHDc9qZjiR7fn+eFjIL70w+t2NjuHnAaHPu+W5YBJg
+	ANsGVbscLAui2TZcyw/0j58ke/CfVlQCeQhDi4ZcbrBNt6Z9hu1LCHdKLJbIy//W
+	9Wl16IcsT1sYF8P8bBxmIhuWzinkqAP0KyxuCpZY2eipNp6hADnDn89bKQlXLXPU
+	+twHMtrBu3HzhxOv21mgHo069Hz4yZynJw3+ds/cBumeITKX3FxdSb/JRljN7qKL
+	LrN53qX0XMZKZuAwWviCSA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1777498586; x=
+	1777505786; bh=5c6EKeRaeRgw2IP6/aj0vwG5gMU6SBqRhc9H6l67RiQ=; b=l
+	H+dIeKqoYkoZhzjlRFOgPwh6Y2FWWcE8/DB5spvkDaBfxAULdmlBIkLHMmkvMZwT
+	gViu6vzN/tIYlHs2lUsOq1RZY94Lpo8XT9gxDpc8lM1EU49KKT1787DaKatfnIfu
+	C8w3KTJqxEU2iZZlk86pBDCo6g3y6v3cyki8SnkAU7IQWMkpiXS37XAjhOxMHkNl
+	iF8td4IVsEJ2gpictINOm+8jDDgXLno5xEX7JlFPNdIa0Y1PFdTDe6qO7r9/HsKE
+	JygEHebypLDS5V2Nf3FvK2DixXjhRspCzvu6BeKxrIcMBU8Uvnj88RiMdn06lnwF
+	pV8f4LNsk6g8tuO6FqGLw==
+X-ME-Sender: <xms:2nnyae4igw8uVEMMztjiAbf_zsCdn6yhDMpsb1lqcNZA7PPowcjEuA>
+    <xme:2nnyaSuHLt8KUulleeBoxX1S6dP-b1Gw_xoLfgASRLEQVlyK_4tx17HEAp0NdPaua
+    94grnG3ddm8JJnAA229mKBXPmqyzQgMsMDH9RNU79Qj1PXshC7ztg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekheehgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
+    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopedvjedpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtohepthhonhihsegrthhomhhiuggvrdgtohhmpdhrtghpthhtohepsggtoh
+    hushhsohhnsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopehkhhhilhhmrghnsegs
+    rgihlhhisghrvgdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrd
+    hnvghtpdhrtghpthhtoheptghhuhhnkhgvvgihsehgmhgrihhlrdgtohhmpdhrtghpthht
+    ohepughmihhtrhihrdhtohhrohhkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhope
+    gvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtoheprggrrhhordhkohhs
+    khhinhgvnhesihhkihdrfhhipdhrtghpthhtoheprghnughrvggrsheskhgvmhhnrgguvg
+    drihhnfhho
+X-ME-Proxy: <xmx:2nnyaQVgbuPYwQ5PhORdbzIQH5UhjHsL72TZyvElKtkH1aaRbv438Q>
+    <xmx:2nnyadxpkCobOu3ZukawY3SpbfPzxsOghsEgMP3SNhGL8Vb0cspQDQ>
+    <xmx:2nnyaeibFjsc08s8EhBQwOqVh2QaA3ndmeaPDON86htoMSYXBjMHIA>
+    <xmx:2nnyaQMltp_xmQ2nS6jRq7wyIVO4JwQcWZDKNPUXxJb4EIrvy47p3A>
+    <xmx:2nnyaXavduEMWLUdY2sB7yCKpzJ24ICtTtce4Ut1i37Vrhc5Zf-xsmEA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id EA351700065; Wed, 29 Apr 2026 17:36:25 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/olpc: select GPIOLIB_LEGACY
-To: Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linusw@kernel.org>
-Cc: Arnd Bergmann <arnd@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Bartosz Golaszewski <brgl@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
- linux-sound@vger.kernel.org,
+X-ThreadId: A9F4XwaMmS3c
+Date: Wed, 29 Apr 2026 23:35:44 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Krzysztof Kozlowski" <krzk@kernel.org>, "Arnd Bergmann" <arnd@kernel.org>
+Cc: "Aaro Koskinen" <aaro.koskinen@iki.fi>,
+ "Andreas Kemnade" <andreas@kemnade.info>,
+ "Bartosz Golaszewski" <brgl@kernel.org>,
+ =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ "Eric Dumazet" <edumazet@google.com>, "Felipe Balbi" <balbi@kernel.org>,
+ "Jakub Kicinski" <kuba@kernel.org>,
+ "Johannes Berg" <johannes@sipsolutions.net>,
+ "Kevin Hilman" <khilman@baylibre.com>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Linus Walleij" <linusw@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
+ "Rob Herring" <robh+dt@kernel.org>, "Roger Quadros" <rogerq@kernel.org>,
+ "Tony Lindgren" <tony@atomide.com>, linux-wireless@vger.kernel.org,
+ Netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- James Cameron <quozl@us.netrek.org>, James Cameron <quozl@laptop.org>,
- linux-geode@lists.infradead.org, Lubomir Rintel <lkundrak@v3.sk>
-References: <20260427144338.3436940-1-arnd@kernel.org>
- <CAD++jLm951WUzBVWa4QakOBuLQy+HQOD0SwQ7tHEuPkM=j3XGw@mail.gmail.com>
- <63e9542f-c170-4361-9b2e-7fde8fc16da4@app.fastmail.com>
- <CAD++jLmQRMs=Hwh9=Kzu_HEAqJea2jPJ=R9eBFQQVTYpXCZ+gw@mail.gmail.com>
- <86f3a260-5d1f-4e86-afac-23a0e47736ff@queued.net>
- <cc7fe7a5-9a60-4ab2-800b-4708abf42032@app.fastmail.com>
-Content-Language: en-US
-From: Andres Salomon <dilinger@queued.net>
-Autocrypt: addr=dilinger@queued.net; keydata=
- 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
-In-Reply-To: <cc7fe7a5-9a60-4ab2-800b-4708abf42032@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Bogosity: Ham, tests=bogofilter, spamicity=0.000000, version=1.2.5
-X-Rspamd-Queue-Id: 0513349A833
+ Linux-OMAP <linux-omap@vger.kernel.org>,
+ "Christian Lamparter" <chunkeey@gmail.com>
+Message-Id: <556b64c4-febb-4dc6-8d51-1b1c2d2c6aa6@app.fastmail.com>
+In-Reply-To: <e4a7e9d8-7091-4520-a634-ff0a44eb5139@kernel.org>
+References: <20260427142355.2532714-1-arnd@kernel.org>
+ <20260427142355.2532714-4-arnd@kernel.org>
+ <e4a7e9d8-7091-4520-a634-ff0a44eb5139@kernel.org>
+Subject: Re: [PATCH v3 3/3] p54spi: convert to devicetree
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: D25FC49AA23
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.04 / 15.00];
-	DMARC_POLICY_QUARANTINE(1.50)[queued.net : SPF not aligned (relaxed), No valid DKIM,quarantine];
+X-Spamd-Result: default: False [-0.65 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[arndb.de,none];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[arndb.de:s=fm2,messagingengine.com:s=fm2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	TAGGED_FROM(0.00)[bounces-35815-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[iki.fi,kemnade.info,kernel.org,baylibre.com,davemloft.net,gmail.com,google.com,sipsolutions.net,redhat.com,atomide.com,vger.kernel.org,lists.infradead.org];
+	TAGGED_FROM(0.00)[bounces-35816-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[27];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dilinger@queued.net,linux-gpio@vger.kernel.org];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	NEURAL_HAM(-0.00)[-0.940];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	FROM_NEQ_ENVFROM(0.00)[arnd@arndb.de,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[arndb.de:+,messagingengine.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[]
 
-On 4/29/26 16:39, Arnd Bergmann wrote:
-> On Wed, Apr 29, 2026, at 00:39, Andres Salomon wrote:
->> On 4/28/26 18:34, Linus Walleij wrote:
->>> On Tue, Apr 28, 2026 at 3:57 PM Arnd Bergmann <arnd@arndb.de> wrote:
-[...]
-> 
->> I can't speak for other (former) OLPC folks, but I donated my remaining
->> OLPC hardware about seven years ago; so I no longer have any interest or
->> ability to support the hardware.
-> 
-> I see you are still listed as paid support for AMD Geode in the
-> MAINTAINERS file. Is that still the case, or did that end along
-> with your involvement in XO-1?
-> 
+On Wed, Apr 29, 2026, at 10:07, Krzysztof Kozlowski wrote:
+> On 27/04/2026 16:23, Arnd Bergmann wrote:
+>>  
+>> -	ret = gpio_request(p54spi_gpio_power, "p54spi power");
+>> -	if (ret < 0) {
+>> -		dev_err(&priv->spi->dev, "power GPIO request failed: %d", ret);
+>> +	priv->gpio_powerdown = gpiod_get(&spi->dev, "powerdown", GPIOD_OUT_HIGH);
+>> +	if (IS_ERR(priv->gpio_powerdown)) {
+>> +		ret = PTR_ERR(priv->gpio_powerdown);
+>> +		dev_err(&priv->spi->dev, "powerdown GPIO request failed: %d", ret);
+>
+> Binding said it is optional, so this cannot be a failure.
+>
+> Also, please use ret = dev_err_probe syntax.
 
-No, my involvement with anything Geode and OLPC ended years ago. Feel 
-free to remove me from MAINTAINERS (unless someone has specific 
-questions about hardware, which I'm happy to answer).
+Ok, fixed both.
 
+>> @@ -686,10 +659,19 @@ static void p54spi_remove(struct spi_device *spi)
+>>  	p54_free_common(priv->hw);
+>>  }
+>>  
+>> +struct of_device_id p54spi_of_ids[] = {
+>
+> static const
 
-> Are you aware of any Geode users that still update their kernels?
-> I found that OpenWRT still publishes Geode builds (with XO-1
-> disabled, but everything else built in) but no indication that
-> anyone has actually run these after around 2017.
-> 
->        Arnd
+I would have expected that to trigger a compile-time warning for a
+missing declaration, not sure what happened here. Fixed now.
 
-Personally I don't know anyone, but I feel like those Geode thin clients 
-are more likely to still be in use. A machine with 256MB of ram in 2026 
-is going to be an absolutely miserable laptop to use, but that's still 
-fine for a limited router or wifi access point. If you remove/disable 
-the Geode stuff, you probably won't hear complaints until the next major 
-OpenWRT release, though.
+>> +	{ .compatible = "cnxt,3110x", },
+>> +	{ .compatible = "isil,p54spi", },
+>> +	{ .compatible = "st,stlc4550", },
+>> +	{ .compatible = "st,stlc4560", },
+>
+> At least last two devices are then compatible, so this should be
+> expressed in the binding with fallback and drop stlc4560 here. Maybe all
+> of them are compatible.
+
+The driver doesn't know the difference, so I assume they are
+either all compatible, or the other ones don't actually work.
+I've dropped everything except  "st,stlc4550" now, as that is the
+one I used in the dts file. I kept the other identifiers
+in the binding as:
+
+  compatible:
+    oneOf:
+      - const: st,stlc4560
+      - items:
+          - enum:
+              - cnxt,3110x
+              - st,stlc4550
+              - isil,p54spi
+          - const: st,stlc4560
+
+Not sure if that's the best way to express this.
+
+       Arnd
 
