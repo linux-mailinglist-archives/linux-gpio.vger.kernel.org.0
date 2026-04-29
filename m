@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-35766-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35767-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AF6/I0a38WngjwEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35766-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 09:46:14 +0200
+	id cFBqDNK38WngjwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35767-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 09:48:34 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26396490AC5
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 09:46:14 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9BA3490BC2
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 09:48:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 339EE3021182
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 07:45:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id ED955302DFAD
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 07:45:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEF5A3B27F5;
-	Wed, 29 Apr 2026 07:44:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D21B33DEDD;
+	Wed, 29 Apr 2026 07:44:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XLEEuTe/"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="c2e5JnIE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760803A784D;
-	Wed, 29 Apr 2026 07:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C2A3B27CD
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Apr 2026 07:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777448677; cv=none; b=UHYfG6ev/EwexPKmgei4NS6lWzYIPFbRoknCuDT4FJYmJ2RGy+Lc8HIajx7XABjp6O7LaVY32wJkovP1JQivdrsOYwxW1G6bxXnJ4wPOc+rJelcM33m+Af0FmX8pUZbYWPTx56HOpjiy9Ch+T1FffuPp3ejBJBJ+LEF7YriMWsI=
+	t=1777448679; cv=none; b=V8JrZQg26LFIcRqJYB20mIs9Gae4+gpN9XCZGHKSrQZ539blHoDRFqVorrTMAiKKQN8AgYo4q8Zpj9pbe8J6+RztLsA4TJQyNgj4eyeJ/jNgmTW7gPVtuIlO3I/Aj4Xn1ET9yQmca5CfEai8+VkE11UwdQvUe5J85eqpNcIbCRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777448677; c=relaxed/simple;
-	bh=qG4JoL193VppkbzCeHx7J7tia7prNvgEynGydiAdJB8=;
+	s=arc-20240116; t=1777448679; c=relaxed/simple;
+	bh=Tq9Zm5cc8QAyn6CoesgnMmrTCJ/2c3DE+Za8nxun/8U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fD0fumzQp0iLYdVzYs8FNtYhePkKl0CZX9TUszfkD9nYr09hzOXgMQWMevhpE5gSbVc0KzKICAV8JAq+FDLamDkjJL5TWMX3k6In3NGxHs7uCwQ7MVnhc8vJpa0qCtrvjSbxijuGfkc0iGXjzaVUuYzKJGLYCHvBRZFxKQkwRnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XLEEuTe/; arc=none smtp.client-ip=185.246.84.56
+	 MIME-Version; b=t5w0KFDGU8F+7Zj+g/gJdz7J0eNVVLaQJhGhUDB4YrR7xySpIfKnYWdXAxHWjpQKiqkTKaVGbaFeCJGlboZcdKMjZ4O5zQGJPLvSERQ5FlkV8NfXBg9Byj3ODSZKOYm5N0NVGIk+8sFN9zPptt5ZZM2Q8y4nKGzyQydPshugaAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=c2e5JnIE; arc=none smtp.client-ip=185.171.202.116
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 2D4781A347C;
-	Wed, 29 Apr 2026 07:44:34 +0000 (UTC)
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 9464BC5CD5A;
+	Wed, 29 Apr 2026 07:45:20 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 023DF601DF;
-	Wed, 29 Apr 2026 07:44:34 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9BEA7107298A1;
-	Wed, 29 Apr 2026 09:44:30 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 92AB3601DF;
+	Wed, 29 Apr 2026 07:44:36 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 95089107298A3;
+	Wed, 29 Apr 2026 09:44:33 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1777448672; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1777448675; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=luaVjD7OW5gT2xj48rg1oNvZJhOyOblcokl5JE/AWQY=;
-	b=XLEEuTe/IjF0b/Y4jPrtn+/VwYvruqQ5l8nZg4Dqe2tQSgkChhlw3CCC+7JWa2yQkiRbiA
-	Fgt8RtLTOpDklcO4DGI4+pm6K8py9EFbjvNIxanizBpSmU28ptVMKx1Ae2fHuBzKqXMFT2
-	Zd0HfrRJRF7eGr0OISC9JwSHFbGV76G5q1gpiRqxtDLZ/GrmQ0Ehc2a5scJ/UygQ7kK/rO
-	Kpgg0vPKZEQ42z4dIt4MSoMeM3B+F7tEkhxO3RbOeCPxzZ1C56Gu46RBgl52WxyzBTvItQ
-	NKQ67oKSsrToRNhOHBuAjX9GBnM6vVs+TlUikVd1+sXskZf1JMXSP5+8Fn27gA==
+	bh=zPHbeqWn73H0ZvBSUfxN/4jGBDJpeb4A0vDFShhp6ms=;
+	b=c2e5JnIE2JY6xEja9UFUxU6quTMyEyqNo9/zfoufj5HupML1SsqzN5qsmpRrxEhH4X0FPs
+	T8hw5uuF52aikZWOzkrgWYFqbJPoMGl8/B1Ua5hmdllzS0U3+5DDutsI8tmIj7W1kj2r9D
+	Lwsi6PHU18jOzUHPusAsVmcAvd2ztkG58RrPAh441Sd1OWjCO+L4N2m7s3F7SgNJLidA80
+	rUkmp6RfXxUco8E/D2+qRGSwGZq4RYz0+1lUfGCJRwb+H+VJwF0jC72rka+DPNT0f5h1sQ
+	swPdmNdrKXsBZPHSKQDUk80ox5OgH20WBAu77N4kUH8EQ3St4FCYIr9anZ9GUw==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Herve Codina <herve.codina@bootlin.com>,
 	Bartosz Golaszewski <brgl@kernel.org>,
@@ -69,9 +69,9 @@ Cc: linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v2 09/17] ASoC: simple-amplifier: Introduce support for gpio-audio-amp
-Date: Wed, 29 Apr 2026 09:43:45 +0200
-Message-ID: <20260429074356.118420-10-herve.codina@bootlin.com>
+Subject: [PATCH v2 10/17] ASoC: simple-amplifier: gpio-audio-amp: Add support for extra power supplies
+Date: Wed, 29 Apr 2026 09:43:46 +0200
+Message-ID: <20260429074356.118420-11-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260429074356.118420-1-herve.codina@bootlin.com>
 References: <20260429074356.118420-1-herve.codina@bootlin.com>
@@ -83,7 +83,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
-X-Rspamd-Queue-Id: 26396490AC5
+X-Rspamd-Queue-Id: B9BA3490BC2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.84 / 15.00];
@@ -92,7 +92,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114];
 	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -100,7 +100,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FREEMAIL_TO(0.00)[bootlin.com,kernel.org,gmail.com,perex.cz,suse.com];
 	RCPT_COUNT_TWELVE(0.00)[17];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35766-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35767-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
@@ -113,122 +113,142 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,bootlin.com:email,bootlin.com:dkim,bootlin.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,bootlin.com:email,bootlin.com:dkim,bootlin.com:mid]
 
-Improve the simple-amplifier introducing preliminary support for
-gpio-audio-amp.
+The gpio-audio-amp devices can use additional power supplies:
+  - vddio,
+  - vdda1,
+  - vdda2
 
-Those amplifiers are amplifiers driven by gpios.
-
-This support introduction doesn't handle any GPIO yet but introduces
-the compatible strings and the related DAPM table.
-
-Two gpio-audio-amp are available: A mono and a stereo version.
-
-The mono version has only one audio channel and gpio settings impact
-features such as the gain or mute of this sole channel.
-
-The stereo version has two channels (left and right). Gpio settings
-impact both channels in the same manner and at the same time. For
-instance, the gain setting set the gain of both channels as well as
-the mute setting mutes both channels.
+Add support for those additional power supplies.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- sound/soc/codecs/simple-amplifier.c | 54 +++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ sound/soc/codecs/simple-amplifier.c | 85 ++++++++++++++++++++++++++++-
+ 1 file changed, 82 insertions(+), 3 deletions(-)
 
 diff --git a/sound/soc/codecs/simple-amplifier.c b/sound/soc/codecs/simple-amplifier.c
-index a70f70566340..ab4fa074603e 100644
+index ab4fa074603e..537731996544 100644
 --- a/sound/soc/codecs/simple-amplifier.c
 +++ b/sound/soc/codecs/simple-amplifier.c
-@@ -4,6 +4,7 @@
-  * Author: Jerome Brunet <jbrunet@baylibre.com>
-  */
- 
-+#include <linux/bits.h>
- #include <linux/gpio/consumer.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
-@@ -12,6 +13,9 @@
- #include <sound/soc.h>
- 
+@@ -15,6 +15,7 @@
  struct simple_amp_data {
-+	unsigned int supports;
-+#define SIMPLE_AUDIO_SUPPORT_PGA		BIT(0)
-+
+ 	unsigned int supports;
+ #define SIMPLE_AUDIO_SUPPORT_PGA		BIT(0)
++#define SIMPLE_AUDIO_SUPPORT_POWER_SUPPLIES	BIT(1)
+ 
  	const struct snd_soc_dapm_widget *dapm_widgets;
  	unsigned int num_dapm_widgets;
- 	const struct snd_soc_dapm_route *dapm_routes;
-@@ -66,6 +70,38 @@ static const struct snd_soc_dapm_route simple_amp_dapm_routes[] = {
- 	{ "OUTR", NULL, "DRV" },
- };
+@@ -127,10 +128,86 @@ static int simple_amp_add_basic_dapm(struct snd_soc_component *component)
+ 	return 0;
+ }
  
-+static const struct snd_soc_dapm_widget simple_amp_mono_pga_dapm_widgets[] = {
-+	SND_SOC_DAPM_INPUT("IN"),
-+	SND_SOC_DAPM_OUTPUT("OUT"),
-+	SND_SOC_DAPM_PGA_E("PGA", SND_SOC_NOPM, 0, 0, NULL, 0, simple_amp_power_event,
-+			   (SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD)),
-+	SND_SOC_DAPM_REGULATOR_SUPPLY("vdd", 0, 0),
++struct simple_amp_supply {
++	const char *prop_name;
++	const struct snd_soc_dapm_widget dapm_widget;
++	const struct snd_soc_dapm_route dapm_route;
 +};
 +
-+static const struct snd_soc_dapm_route simple_amp_mono_pga_dapm_routes[] = {
-+	{ "PGA", NULL, "IN" },
-+	{ "PGA", NULL, "vdd" },
-+	{ "OUT", NULL, "PGA" },
++static const struct simple_amp_supply simple_amp_supplies[] = {
++	{
++		.prop_name = "vddio-supply",
++		.dapm_widget = SND_SOC_DAPM_REGULATOR_SUPPLY("vddio", 0, 0),
++		.dapm_route = { "PGA", NULL, "vddio" },
++	}, {
++		.prop_name = "vdda1-supply",
++		.dapm_widget = SND_SOC_DAPM_REGULATOR_SUPPLY("vdda1", 0, 0),
++		.dapm_route = { "PGA", NULL, "vdda1" },
++	}, {
++		.prop_name = "vdda2-supply",
++		.dapm_widget = SND_SOC_DAPM_REGULATOR_SUPPLY("vdda2", 0, 0),
++		.dapm_route = { "PGA", NULL, "vdda2" },
++	},
++	{ /* End of list */}
 +};
 +
-+static const struct snd_soc_dapm_widget simple_amp_stereo_pga_dapm_widgets[] = {
-+	SND_SOC_DAPM_INPUT("INL"),
-+	SND_SOC_DAPM_INPUT("INR"),
-+	SND_SOC_DAPM_OUTPUT("OUTL"),
-+	SND_SOC_DAPM_OUTPUT("OUTR"),
-+	SND_SOC_DAPM_PGA_E("PGA", SND_SOC_NOPM, 0, 0, NULL, 0, simple_amp_power_event,
-+			   (SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD)),
-+	SND_SOC_DAPM_REGULATOR_SUPPLY("vdd", 0, 0),
-+};
++static int simple_amp_add_power_supplies(struct snd_soc_component *component)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_component_to_dapm(component);
++	struct simple_amp *simple_amp = snd_soc_component_get_drvdata(component);
++	const struct simple_amp_supply *supply;
++	struct device *dev = component->dev;
++	int ret;
 +
-+static const struct snd_soc_dapm_route simple_amp_stereo_pga_dapm_routes[] = {
-+	{ "PGA", NULL, "INL" },
-+	{ "PGA", NULL, "INR" },
-+	{ "PGA", NULL, "vdd" },
-+	{ "OUTL", NULL, "PGA" },
-+	{ "OUTR", NULL, "PGA" },
-+};
++	/*
++	 * Those additional power supplies are attached to the PGA.
++	 * If PGA is not supported, simply skipped them.
++	 */
++	if (!(simple_amp->data->supports & SIMPLE_AUDIO_SUPPORT_PGA)) {
++		dev_err(dev, "Extra power supplied need PGA\n");
++		return -EINVAL;
++	}
 +
- static int simple_amp_add_basic_dapm(struct snd_soc_component *component)
++	supply = simple_amp_supplies;
++	do {
++		if (!of_property_present(dev->of_node, supply->prop_name))
++			continue;
++
++		ret = snd_soc_dapm_new_controls(dapm, &supply->dapm_widget, 1);
++		if (ret) {
++			dev_err(dev, "Failed to add control for '%s' (%d)\n",
++				supply->prop_name, ret);
++			return ret;
++		}
++		ret = snd_soc_dapm_add_routes(dapm, &supply->dapm_route, 1);
++		if (ret) {
++			dev_err(dev, "Failed to add route for '%s' (%d)\n",
++				supply->prop_name, ret);
++			return ret;
++		}
++	} while ((++supply)->prop_name);
++
++	return 0;
++}
++
+ static int simple_amp_component_probe(struct snd_soc_component *component)
  {
- 	struct snd_soc_dapm_context *dapm = snd_soc_component_to_dapm(component);
-@@ -133,9 +169,27 @@ static const struct simple_amp_data simple_audio_amplifier_data = {
- 	.num_dapm_routes	= ARRAY_SIZE(simple_amp_dapm_routes),
++	struct simple_amp *simple_amp = snd_soc_component_get_drvdata(component);
++	int ret;
++
+ 	/* Add basic dapm widgets and routes */
+-	return simple_amp_add_basic_dapm(component);
++	ret = simple_amp_add_basic_dapm(component);
++	if (ret)
++		return ret;
++
++	/* Add additional power supplies */
++	if (simple_amp->data->supports & SIMPLE_AUDIO_SUPPORT_POWER_SUPPLIES) {
++		ret = simple_amp_add_power_supplies(component);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
+ }
+ 
+ static const struct snd_soc_component_driver simple_amp_component_driver = {
+@@ -170,7 +247,8 @@ static const struct simple_amp_data simple_audio_amplifier_data = {
  };
  
-+static const struct simple_amp_data simple_audio_mono_pga_data = {
-+	.supports		= SIMPLE_AUDIO_SUPPORT_PGA,
-+	.dapm_widgets		= simple_amp_mono_pga_dapm_widgets,
-+	.num_dapm_widgets	= ARRAY_SIZE(simple_amp_mono_pga_dapm_widgets),
-+	.dapm_routes		= simple_amp_mono_pga_dapm_routes,
-+	.num_dapm_routes	= ARRAY_SIZE(simple_amp_mono_pga_dapm_routes),
-+};
-+
-+static const struct simple_amp_data simple_audio_stereo_pga_data = {
-+	.supports		= SIMPLE_AUDIO_SUPPORT_PGA,
-+	.dapm_widgets		= simple_amp_stereo_pga_dapm_widgets,
-+	.num_dapm_widgets	= ARRAY_SIZE(simple_amp_stereo_pga_dapm_widgets),
-+	.dapm_routes		= simple_amp_stereo_pga_dapm_routes,
-+	.num_dapm_routes	= ARRAY_SIZE(simple_amp_stereo_pga_dapm_routes),
-+};
-+
- static const struct of_device_id simple_amp_ids[] = {
- 	{ .compatible = "dioo,dio2125",		  .data = &simple_audio_amplifier_data},
- 	{ .compatible = "simple-audio-amplifier", .data = &simple_audio_amplifier_data},
-+	{ .compatible = "gpio-audio-amp-mono",	  .data = &simple_audio_mono_pga_data},
-+	{ .compatible = "gpio-audio-amp-stereo",  .data = &simple_audio_stereo_pga_data},
- 	{ }
+ static const struct simple_amp_data simple_audio_mono_pga_data = {
+-	.supports		= SIMPLE_AUDIO_SUPPORT_PGA,
++	.supports		= SIMPLE_AUDIO_SUPPORT_PGA |
++				  SIMPLE_AUDIO_SUPPORT_POWER_SUPPLIES,
+ 	.dapm_widgets		= simple_amp_mono_pga_dapm_widgets,
+ 	.num_dapm_widgets	= ARRAY_SIZE(simple_amp_mono_pga_dapm_widgets),
+ 	.dapm_routes		= simple_amp_mono_pga_dapm_routes,
+@@ -178,7 +256,8 @@ static const struct simple_amp_data simple_audio_mono_pga_data = {
  };
- MODULE_DEVICE_TABLE(of, simple_amp_ids);
+ 
+ static const struct simple_amp_data simple_audio_stereo_pga_data = {
+-	.supports		= SIMPLE_AUDIO_SUPPORT_PGA,
++	.supports		= SIMPLE_AUDIO_SUPPORT_PGA |
++				  SIMPLE_AUDIO_SUPPORT_POWER_SUPPLIES,
+ 	.dapm_widgets		= simple_amp_stereo_pga_dapm_widgets,
+ 	.num_dapm_widgets	= ARRAY_SIZE(simple_amp_stereo_pga_dapm_widgets),
+ 	.dapm_routes		= simple_amp_stereo_pga_dapm_routes,
 -- 
 2.53.0
 
