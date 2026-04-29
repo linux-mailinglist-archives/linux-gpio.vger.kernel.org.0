@@ -1,120 +1,166 @@
-Return-Path: <linux-gpio+bounces-35753-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35754-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GLJjIt2s8WmwjgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35753-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 09:01:49 +0200
+	id 2KIZIE2w8WkRjwEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35754-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 09:16:29 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CD94490223
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 09:01:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B5E7490514
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 09:16:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4CF88306BA84
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 06:59:25 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0078730AD2ED
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 07:10:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41F4F39DBE7;
-	Wed, 29 Apr 2026 06:59:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DC753A380F;
+	Wed, 29 Apr 2026 07:10:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q/cg4vGU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kISnpD83"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01715217F27;
-	Wed, 29 Apr 2026 06:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4959139D6DB;
+	Wed, 29 Apr 2026 07:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777445964; cv=none; b=VMbyRt/DHYoDmW3HPvqasg/J9Jktnpauxb/lL4FR7M+fwh74pcKNoZSCxaq30nJntT8Vx0xuPTxxXClRkzwTooNEkW+HrkFCYrfeAtNaAhmkdqiRdDTmjBDle9i4h7Kcyr0L4qfoJhZaH3ZuKjjSZhuI9DftW7C6BW3p9Fohdnk=
+	t=1777446602; cv=none; b=C6x26nWunZ3Ej2jbHwiZmiejWnSUmAbaP6lY8qqUm3hYgzaHkjvErkb7i98IW5JXEgPbXyG36T6LGGGPujnnPOnH4BUWDBQ3bDQphGVkjT6By6qQM2+FKNIEw07DUczP00y3dBzbh+gYFGtUsiy6mKzdIBmHnuy8QjmwIlR/SQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777445964; c=relaxed/simple;
-	bh=Ty5rDqNCr57ubNVebLW5G9qiKvLhrBRgSdwjbxVB//Y=;
+	s=arc-20240116; t=1777446602; c=relaxed/simple;
+	bh=4Zy0uAMx48BrgJFZV9aSEkf8HlXY7+fqMe6l8NPxS0c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fXlbtPPBe2GJ7g3asRI8578N8RUvmzsxQ9FgM9on+DIAueeiYrwkh+t6fEL/O08543L5/P3kdqdqJwR84NNhoKCSB5TitH9RR+LvZlICA7uiLfh1tZuZNsyN212Xak8s/0EuG4xo1mnk8DRcp55F2/l/MHmNtXZh1ZK5rOvopes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q/cg4vGU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D286C2BCC4;
-	Wed, 29 Apr 2026 06:59:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777445963;
-	bh=Ty5rDqNCr57ubNVebLW5G9qiKvLhrBRgSdwjbxVB//Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q/cg4vGU7RW/4xZcVjUfFD/VIJjxpJ945fY3zz0vmzzs0f/oDvWLpkIG2wGQf+hQV
-	 H/67Y9EXKsCuC4S9iUn/s6ijzLiq3T/4VsWLtJKX6yn2A37DG/zoy2C3il+zy7ICwR
-	 IEuq8aUt+/11kqeNR7P2uNUuW4mdH8SplRlXP4K6gQExRo9UjL0lpbH5t1+tQGp6OQ
-	 1J1W68d9K1amvAYorNC8WMeV3lCJt2Uw+H2q9jM2VKljcCIUpruRN1v7usa4ySZhvh
-	 sOBagINgJlzk9fr2AMpGPR7VRuULasJmSN32ll8i3+Yu+fVLaSn4VBm23zOzpI9IW0
-	 lnTEd/o9A+xQA==
-Date: Wed, 29 Apr 2026 08:59:21 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Richard Cochran <richardcochran@gmail.com>, Bartosz Golaszewski <brgl@kernel.org>, 
-	Shawn Guo <shengchao.guo@oss.qualcomm.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: describe the Qualcomm
- nord-tlmm
-Message-ID: <20260429-smoky-expert-poodle-30482a@quoll>
-References: <20260428-nord-tlmm-v3-0-f16f08d084cc@oss.qualcomm.com>
- <20260428-nord-tlmm-v3-1-f16f08d084cc@oss.qualcomm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=DIemqhATRQapu/q5WWvjbXsUN/TOKkTgpWBCpSXf0Zx8MvZoDeUrlcstqpR3NrcllLzdJaADVv6Gy9ADsgNMqvleKz9mZYIk2uFYl+jW720aGJqnqrnZiezvKhwJ+bGm4VPthn4I+98/2qssbx4BWCZBgMictMCcX4j0nAyEjrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kISnpD83; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777446601; x=1808982601;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4Zy0uAMx48BrgJFZV9aSEkf8HlXY7+fqMe6l8NPxS0c=;
+  b=kISnpD83JAnq6qIGq3LCIUZiEWHgfMHxcRVXPTI8QKLSiY43Rd9w55Yv
+   ntCP+oI6NZmBZnI3HiC+am4TLXFGjG0j9M9CGB3KUH8vSocDURyf50rz6
+   YvgluPM6Wfj2U78UbynAaAPaF5mScg/EmOrFlAXZ9v61+n4IpnnL7wQQ4
+   nOIJXQbaNMujbLBhFs5lLIUv/+ho/lq4l7xr41UsUZfFpCpg6EhhiCFzm
+   vK4IAI0DENsw6DoXZIksk5xj57VKoTI3jRqe0KBUG6HMDr/ON9QzXXJFV
+   YxKUQYLvt61usapTuzVDlQi5ATPSzb22fbPPtS5SSEPx33onO+8gVkbU7
+   g==;
+X-CSE-ConnectionGUID: Jgwxn9fWRk+mz2EgPKvMIg==
+X-CSE-MsgGUID: GsxxrYFcTTakRPLXlJn8lg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11770"; a="101030814"
+X-IronPort-AV: E=Sophos;i="6.23,205,1770624000"; 
+   d="scan'208";a="101030814"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2026 00:10:00 -0700
+X-CSE-ConnectionGUID: DQYx6t+QR3SDFVd1q3NErQ==
+X-CSE-MsgGUID: G/VvZE3LTr+stC8gBLUahg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,205,1770624000"; 
+   d="scan'208";a="257739654"
+Received: from ettammin-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.245.141])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2026 00:09:57 -0700
+Date: Wed, 29 Apr 2026 10:09:55 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: westeri@kernel.org, linusw@kernel.org, brgl@kernel.org,
+	bentiss@kernel.org, hansg@kernel.org,
+	Francesco Lauritano <francesco.lauritano1@protonmail.com>,
+	Marco Scardovi <mscardovi95@gmail.com>, Armin Wolf <W_Armin@gmx.de>,
+	mika.westerberg@linux.intel.com, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: acpi: Only trigger ActiveBoth interrupts on boot
+Message-ID: <afGuw9VbvnGTQW0F@ashevche-desk.local>
+References: <20260429025247.1372984-1-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260428-nord-tlmm-v3-1-f16f08d084cc@oss.qualcomm.com>
-X-Rspamd-Queue-Id: 4CD94490223
+In-Reply-To: <20260429025247.1372984-1-mario.limonciello@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Rspamd-Queue-Id: 3B5E7490514
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35753-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,protonmail.com,gmail.com,gmx.de,linux.intel.com,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-35754-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[16];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,oss.qualcomm.com,arndb.de,vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	DKIM_TRACE(0.00)[intel.com:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,qualcomm.com:email]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ashevche-desk.local:mid,intel.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-On Tue, Apr 28, 2026 at 03:48:10PM +0200, Bartosz Golaszewski wrote:
-> Add a DT binding document describing the TLMM pin controller available
-> on the Nord platforms from Qualcomm.
+On Tue, Apr 28, 2026 at 09:52:39PM -0500, Mario Limonciello wrote:
+> Commit ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge events at
+> least once on boot") introduced logic to trigger edge-based GPIO
+> interrupts during initialization to ensure proper initial state setup
+> when firmware doesn't initialize it.
 > 
-> Co-developed-by: Shawn Guo <shengchao.guo@oss.qualcomm.com>
-> Signed-off-by: Shawn Guo <shengchao.guo@oss.qualcomm.com>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
->  .../bindings/pinctrl/qcom,nord-tlmm.yaml           | 141 +++++++++++++++++++++
->  1 file changed, 141 insertions(+)
+> However, according to the Microsoft GPIO documentation, triggering GPIO
+> interrupts during initialization should only happen for interrupts
+> marked as ActiveBoth (both IRQF_TRIGGER_RISING and IRQF_TRIGGER_FALLING)
+> and only when the associated GPIO line is already asserted (logic level
+> low).
+> 
+> The current implementation incorrectly triggers:
+> 1. Any edge-triggered interrupt (RISING-only or FALLING-only)
+> 2. RISING interrupts when value is high and FALLING when value is low
+> 
+> This causes problems at bootup for single-edge interrupts that
+> don't follow the ActiveBoth pattern.
+> 
+> Fix this by:
+> - Only triggering when BOTH rising and falling edges are configured
+> - Only triggering when the GPIO line is asserted (value == 0)
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Good catch!
 
-Best regards,
-Krzysztof
+...
+
+>  	if (acpi_gpio_need_run_edge_events_on_boot() &&
+> -	    (event->irqflags & (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING))) {
+> +	    ((event->irqflags & (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING)) ==
+> +	     (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING))) {
+
+Use _MASK in both cases.
+
+	    ((event->irqflags & IRQF_TRIGGER_MASK) == IRQF_TRIGGER_MASK)) {
+
+>  		value = gpiod_get_raw_value_cansleep(event->desc);
+> -		if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
+> -		    ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
+> +		if (value == 0)
+>  			event->handler(event->irq, event);
+>  	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
