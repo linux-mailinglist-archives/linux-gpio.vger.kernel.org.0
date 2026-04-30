@@ -1,185 +1,154 @@
-Return-Path: <linux-gpio+bounces-35904-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35905-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KOx1G3xA82kGywEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35904-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 13:43:56 +0200
+	id kGOsFOU882kGywEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35905-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 13:28:37 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DDDA4A24BA
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 13:43:55 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 060F24A2214
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 13:28:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 82A6B30D8056
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 11:21:27 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 108EE302330F
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 11:23:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7D0A3D7D96;
-	Thu, 30 Apr 2026 11:20:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 259E43D7D6F;
+	Thu, 30 Apr 2026 11:23:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cpqLcMhm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XAp10jUO"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4AF3AF67A;
-	Thu, 30 Apr 2026 11:20:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB70C19E839;
+	Thu, 30 Apr 2026 11:23:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777548021; cv=none; b=sU/rge2PcR+otxs4fHrNJYpxiwI3O3y38pplYBlbUZdYvwpkrj83Ia/lP0jSFa6rsGa0kGBM5F3X3mCPh+7t5/UWT5WRqarkauF+fGtR2eM0zd+CMu+KT2UKtwd6fJyxikDaqFiMaeupOl114+89C3KFN1V8wn6RZsEMFBL3554=
+	t=1777548223; cv=none; b=DyvFlykRcYLfLUADL3y6DaMsdGIezes2NsOlvDj3Wc5/+d6wmCkumEdfuVa1csFr15GXc46ca3ifJCwYG5eJn043aXUDh/wxrGUZHzjnqxFWCrII/tcWPFNzbyDbR5/tLfL/d2O2PfaqSsIBLqWgdh0/vm+JFAGAW63bW2KEA8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777548021; c=relaxed/simple;
-	bh=CbSjDmbB+fwd9uisoHdA7Y4E4U6AJ9oA6oBIi/aMsc8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=RyUVQ58CH6pjIFEa2hOXrZOG0E61slUsmfnfEAQXBF2RzL9I2hJGNio1Lq2oazsMjgev/4vqX30oyNbaBfG4K9Fa6X1ifJggXH5Fr6YMNae6vB4gMFGMwYD9YSKEa9AFcbsEC2IV2GdXkT/+hhBLiIrQ4meceShBddTKEMgjqx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cpqLcMhm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0E20C2BCB3;
-	Thu, 30 Apr 2026 11:20:20 +0000 (UTC)
+	s=arc-20240116; t=1777548223; c=relaxed/simple;
+	bh=y0DV5zO2eVU82OJnZH8JCZffr1Ytd2kNwNVgaDihKA4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qj+zOFWEdXnJRRHNE5JxoN8ceDKJL6b/yROXqDL4Qm9lDoWNEglLQTq6FdoxdOxxjQ8BNi/7rOTdPXAV6gqtum5s8835j90b3Lk9KLbtaRF3hLGjOR4ztGoShJrPKeYw8snBCZWAG+BtrT7TUmtP3qfOqhoFKZnhATvxemJBJjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XAp10jUO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03496C2BCB3;
+	Thu, 30 Apr 2026 11:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777548021;
-	bh=CbSjDmbB+fwd9uisoHdA7Y4E4U6AJ9oA6oBIi/aMsc8=;
-	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
-	b=cpqLcMhmh2CIoQ+Nl5Ja10CZ2fUCK2AqQR0hPt+Jg56DI00cidDuS0GPw+Qqf2Diq
-	 tfB3oTt+jVvOoWtK1OREKNbMQ2zNRKBsYVHr9vr/0mHG9ZtBEm0RDDG0n5xZWzRlBo
-	 MRxBgyCcjKBLbWiELDDYr034AwDjtwcB95J+z8jQJbK+g+dDRXpr2whmW0DLkM4yP0
-	 xAp4x6MN2ejYI7MGy5fmbB5PQOGEMBBhMtlSiZZr+8OQyFC232C4CM+PV2mKFIzzNK
-	 OCgWgFQfu+bEYdah5EWqsOzBW2kA+q3gNXYKzCInBmIgj48lTMpgYrCK0T2K6CNH8w
-	 n4MzBQKAn6sFw==
+	s=k20201202; t=1777548223;
+	bh=y0DV5zO2eVU82OJnZH8JCZffr1Ytd2kNwNVgaDihKA4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XAp10jUOjzOViGFVLYzXFsSpPcrh5x5F92QGm9mC/vmXDe676ueudgsaZYQ6KUm2j
+	 AvRRfHe1kxTQQGEOnBmUPT5N3ptYqfw1xewVZi4kpS2hpx+7ML6EperetjKxPmq6KA
+	 o6jIci19JHmpIhWybbuDHY127z+wXBhxGaBfbmKe/azGAIB/5GcoFH1DQD7Odw/ntE
+	 Qp3SKLkzJkIoChmUAfZ1Ac0li1h4UBkSOgj73+OHJ9bF3irhKOr0VS4NS6R9DWkx51
+	 7i3cwpLgRZ1DK5KphBhy+p6yiulIyOU1r1xbYqyHf0O7YRcl3ZWlW87W7D1BPNDqWG
+	 3gfY5wInoLxzA==
+Message-ID: <6ff75de9-6d5f-4d4a-bb19-1c06d0aa8d3a@kernel.org>
+Date: Thu, 30 Apr 2026 13:23:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed;
- boundary=d813880cce0dd36de044a5774161cd7c2bdcd11d3b8f945b00451ee61dba;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Thu, 30 Apr 2026 13:20:16 +0200
-Message-Id: <DI6G6LSE68E9.1PHS6K9083JJ9@kernel.org>
-Subject: Re: [PATCH v2 3/4] gpio: realtek: Add driver for Realtek DHC
- RTD1625 SoC
-Cc: "Bartosz Golaszewski" <brgl@kernel.org>, "linux-gpio@vger.kernel.org"
- <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org"
- <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-realtek-soc@lists.infradead.org"
- <linux-realtek-soc@lists.infradead.org>,
- =?utf-8?b?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?= <cy.huang@realtek.com>,
- =?utf-8?b?U3RhbmxleSBDaGFuZ1vmmIzogrLlvrdd?= <stanley_chang@realtek.com>,
- =?utf-8?b?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "afaerber@suse.com" <afaerber@suse.com>,
- =?utf-8?b?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>
-From: "Michael Walle" <mwalle@kernel.org>
-To: =?utf-8?b?WXUtQ2h1biBMaW4gW+ael+elkOWQm10=?= <eleanor.lin@realtek.com>,
- "Linus Walleij" <linusw@kernel.org>
-X-Mailer: aerc 0.20.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] gpio: Remove "default y" in Kconfig
+To: Yu-Chun Lin <eleanor.lin@realtek.com>, linusw@kernel.org,
+ brgl@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ afaerber@suse.com, tychang@realtek.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-realtek-soc@lists.infradead.org, cy.huang@realtek.com,
+ stanley_chang@realtek.com, james.tai@realtek.com
 References: <20260408025243.1155482-1-eleanor.lin@realtek.com>
- <20260408025243.1155482-4-eleanor.lin@realtek.com>
- <CAMRc=MfUh_OuxS4SC6QzSOg_PMNc9i9crGYgBASrbVUgHDHSCw@mail.gmail.com>
- <52bf9ce2b7754af8af69b0afee0d07b2@realtek.com>
- <CAD++jLkpS-T9yK=ctSwpLvXkj7s7ivmwu1KKwzy4KS40LVYeyA@mail.gmail.com>
- <DHXSUW3NJU22.1RUYUHQZSZ53S@kernel.org>
- <b73f34ec55984a33b0172e2ac3a28e04@realtek.com>
-In-Reply-To: <b73f34ec55984a33b0172e2ac3a28e04@realtek.com>
-X-Rspamd-Queue-Id: 9DDDA4A24BA
+ <20260408025243.1155482-2-eleanor.lin@realtek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20260408025243.1155482-2-eleanor.lin@realtek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 060F24A2214
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-3.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MV_CASE(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35904-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mwalle@kernel.org,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-35905-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
---d813880cce0dd36de044a5774161cd7c2bdcd11d3b8f945b00451ee61dba
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+On 08/04/2026 04:52, Yu-Chun Lin wrote:
+> Remove the default y to avoid bloating the build for non-Realtek platforms
+> when COMPILE_TEST is enable on other platforms.
+> 
 
-Hi,
+Why isn't this driver important for Realtek SoC? This should be
+explained, otherwise proper fix is default for ARCH_REALTEK.
 
-On Thu Apr 30, 2026 at 11:58 AM CEST, Yu-Chun Lin [=E6=9E=97=E7=A5=90=E5=90=
-=9B] wrote:
->> >> 3. Hardware Debounce: We also need to support hardware debounce setti=
-ngs per pin,
->> >> which requires custom configuration via set_config mapped to these sp=
-ecific per-pin
->> >> registers.
->> >
->> > Just add a version of an optional .set_config() call to gpio-regmap.c
->> > to handle this using .reg_mask_xlate() per above and add a new
->> > GPIO_REGMAP_CONFIG_OP to the above enum, problem solved.
->> >
->> > If it seems too hard I can write patch 1 & 2 adding this infrastructur=
-e
->> > but I bet you can easily see what can be done with gpio-regmap.c
->> > here provided Michael W approves the idea.
->> >
->
-> Our .set_config requires mapping specific debounce time values to
-> hardware-specific enums and applying a Write-Enable bit.
->
-> Would it be better to allow drivers to assign a custom '.set_config' call=
-back
-> directly within 'struct gpio_regmap_config'?
-
-Yeah, I don't think there will be much code sharing of
-code/functionality for the .set_config callback. A custom
-.set_config was proposed many times in the past.
-
-> Additionally, I didn't mention this in my previous email. we also need to
-> implement GPIO interrupts. Our hardware design does not fit well with
-> 'regmap_irq_chip'. Therefore, I am planning to create our own 'irqdomain'=
- and
-> 'irqchip' ops to handle our cascaded interrupts.
->
-> Because of this custom IRQ implementation, I would need to use 'readl()/w=
-ritel()'
-> for the IRQ callbacks in the rtd1625 GPIO driver instead of the regmap AP=
-Is.
-> Do you have any suggestions on how to handle this gracefully while keepin=
-g it
-> aligned with the regmap infrastructure?
-
-Why can't the MMIO regmap be used for that?
-
--michael
-
---d813880cce0dd36de044a5774161cd7c2bdcd11d3b8f945b00451ee61dba
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCafM68RIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/gI3AGAy9Rtm8M8cPTowSj7LX/6Bv869nnmd8Cw
-MpzVztzODqPB/LkXkMyvpkhWH6AzyLlvAX48SNhCzsSDeC7wqRKPl8sErYeJZGLX
-es14enI6yhoXQgX6nbZ9889InNSwBDjGvOQ=
-=hoAy
------END PGP SIGNATURE-----
-
---d813880cce0dd36de044a5774161cd7c2bdcd11d3b8f945b00451ee61dba--
+Best regards,
+Krzysztof
 
