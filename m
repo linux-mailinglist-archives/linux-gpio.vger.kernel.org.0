@@ -1,218 +1,144 @@
-Return-Path: <linux-gpio+bounces-35816-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35817-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KFhjMPt58mnjrgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35816-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 23:36:59 +0200
+	id +I2RLjSt8mn/tQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35817-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 03:15:32 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D25FC49AA23
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 23:36:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6299149BF69
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 03:15:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 45A523036741
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2026 21:36:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 092B7302B74E
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 01:15:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ED0D3B27C4;
-	Wed, 29 Apr 2026 21:36:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00932258CD0;
+	Thu, 30 Apr 2026 01:15:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Jr+R6Qpk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lH+dIeKq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MrkX8KhD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from flow-b5-smtp.messagingengine.com (flow-b5-smtp.messagingengine.com [202.12.124.140])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B746277C9D;
-	Wed, 29 Apr 2026 21:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BA572631;
+	Thu, 30 Apr 2026 01:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777498590; cv=none; b=OOmxWLN2QsHTwQeo6p6f8k+teshnh73wZAWfbNLzCibQrlMdr1OfyqtWgIeB7k/P3cxr/gXadkc627BRxD8jJ/nNCl9gNQo6JcSz3yvyFrGdLHB5RES7DPikQt3eE9MUkChTgcsLZwQt3LA9vjeqFoFrZkKppu0oGfcCVQIUti4=
+	t=1777511726; cv=none; b=hhVArP/1TFHvAwIns2wwh70gwp1gJyU/CEz0uq16VOkzQYahu/dm6FL4smgItIJXDyuIwigNeZrhtONrclp1Ww8QMFhif4coILijozxXuT1Qhil4tGpN1RMKU73dlBzVuddlBNjclAhQTVTRDnYdHFInDpynf7Ui1vdrKcb1nAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777498590; c=relaxed/simple;
-	bh=klf0tstlaQQRwsbPlrG8dRk7UxgfXScT7I6Ug1NVWqo=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=ggtG+0VCwswovEzdH5WmOOnreU2mKXBGD+b8toIa4Fwu+ItbduLrHAgfN1t6eofq3ZQMxViySTbikThdUGYWvitAPL9XmQGNadm1IUxvE8gkIWkUIVY3mGqymUovYCUXYT/S1pfukX8LmxgGkHKsQFbuDMyjzfFGc4a2wYp6Npg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Jr+R6Qpk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lH+dIeKq; arc=none smtp.client-ip=202.12.124.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailflow.stl.internal (Postfix) with ESMTP id BF9B4130036A;
-	Wed, 29 Apr 2026 17:36:26 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-04.internal (MEProxy); Wed, 29 Apr 2026 17:36:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1777498586;
-	 x=1777505786; bh=5c6EKeRaeRgw2IP6/aj0vwG5gMU6SBqRhc9H6l67RiQ=; b=
-	Jr+R6QpkxIywS/7WcSX44vaN9mfpxh7lBC2ezZrvdvuA/yI+NBgPqA9p1STNkGxv
-	+d48HacyNpKlIYgICiGd2MaHDc9qZjiR7fn+eFjIL70w+t2NjuHnAaHPu+W5YBJg
-	ANsGVbscLAui2TZcyw/0j58ke/CfVlQCeQhDi4ZcbrBNt6Z9hu1LCHdKLJbIy//W
-	9Wl16IcsT1sYF8P8bBxmIhuWzinkqAP0KyxuCpZY2eipNp6hADnDn89bKQlXLXPU
-	+twHMtrBu3HzhxOv21mgHo069Hz4yZynJw3+ds/cBumeITKX3FxdSb/JRljN7qKL
-	LrN53qX0XMZKZuAwWviCSA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1777498586; x=
-	1777505786; bh=5c6EKeRaeRgw2IP6/aj0vwG5gMU6SBqRhc9H6l67RiQ=; b=l
-	H+dIeKqoYkoZhzjlRFOgPwh6Y2FWWcE8/DB5spvkDaBfxAULdmlBIkLHMmkvMZwT
-	gViu6vzN/tIYlHs2lUsOq1RZY94Lpo8XT9gxDpc8lM1EU49KKT1787DaKatfnIfu
-	C8w3KTJqxEU2iZZlk86pBDCo6g3y6v3cyki8SnkAU7IQWMkpiXS37XAjhOxMHkNl
-	iF8td4IVsEJ2gpictINOm+8jDDgXLno5xEX7JlFPNdIa0Y1PFdTDe6qO7r9/HsKE
-	JygEHebypLDS5V2Nf3FvK2DixXjhRspCzvu6BeKxrIcMBU8Uvnj88RiMdn06lnwF
-	pV8f4LNsk6g8tuO6FqGLw==
-X-ME-Sender: <xms:2nnyae4igw8uVEMMztjiAbf_zsCdn6yhDMpsb1lqcNZA7PPowcjEuA>
-    <xme:2nnyaSuHLt8KUulleeBoxX1S6dP-b1Gw_xoLfgASRLEQVlyK_4tx17HEAp0NdPaua
-    94grnG3ddm8JJnAA229mKBXPmqyzQgMsMDH9RNU79Qj1PXshC7ztg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekheehgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
-    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopedvjedpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepthhonhihsegrthhomhhiuggvrdgtohhmpdhrtghpthhtohepsggtoh
-    hushhsohhnsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopehkhhhilhhmrghnsegs
-    rgihlhhisghrvgdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrd
-    hnvghtpdhrtghpthhtoheptghhuhhnkhgvvgihsehgmhgrihhlrdgtohhmpdhrtghpthht
-    ohepughmihhtrhihrdhtohhrohhkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhope
-    gvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtoheprggrrhhordhkohhs
-    khhinhgvnhesihhkihdrfhhipdhrtghpthhtoheprghnughrvggrsheskhgvmhhnrgguvg
-    drihhnfhho
-X-ME-Proxy: <xmx:2nnyaQVgbuPYwQ5PhORdbzIQH5UhjHsL72TZyvElKtkH1aaRbv438Q>
-    <xmx:2nnyadxpkCobOu3ZukawY3SpbfPzxsOghsEgMP3SNhGL8Vb0cspQDQ>
-    <xmx:2nnyaeibFjsc08s8EhBQwOqVh2QaA3ndmeaPDON86htoMSYXBjMHIA>
-    <xmx:2nnyaQMltp_xmQ2nS6jRq7wyIVO4JwQcWZDKNPUXxJb4EIrvy47p3A>
-    <xmx:2nnyaXavduEMWLUdY2sB7yCKpzJ24ICtTtce4Ut1i37Vrhc5Zf-xsmEA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id EA351700065; Wed, 29 Apr 2026 17:36:25 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1777511726; c=relaxed/simple;
+	bh=vvDX/pA4obptcoB8r+zBlgS7GWuCXYfNLD3tyicSDSc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FJ76kKJ2I7KD+uRl2uOioSEVpywoeWtXwD9xUWSb5vj10sGygOZeifSpGYDJ/ARVM6hOHkhsrqa009TayhSPqlEc/FjnGoTMYMEZgwgJoBzSkbn7GqcEfpFNbOPjJyAa3egbf4xMItnGg9fjRWEuha5f2yDaLP6aF608jev/AG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MrkX8KhD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36ECCC19425;
+	Thu, 30 Apr 2026 01:15:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777511726;
+	bh=vvDX/pA4obptcoB8r+zBlgS7GWuCXYfNLD3tyicSDSc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MrkX8KhD6zsAjd9QvQmk3O1y+6q9Guz8hJLyHRDNOV6HrOEbn7AKNvLnHFmyA67PV
+	 hODjS9SgGMljY8wadLm2M3Fj1WUzzSxqpGcNPXL6IAn0iMFAHaYk/I2IslWkwym8nc
+	 jHyggflWm8G9wxf1RkUUTiScGKu51kDNwpfhu1MksRu8gO4XMxm1VhsfwufeDBJGgI
+	 bfSUTHfMmLjQCcgvpaW7PCqBzHlu1yKko488Jl9G+6UVzcRNd9Sn1q9IQpikIK/2MP
+	 IZDL48bi1w+40BUHx/VWSrt+ZuLZYlm4VuUCEuZ5I4EniSUBhFxZ1K1/r0Y/TdGaR7
+	 PEMQS56XB7t2g==
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+	id 9AA111AC585D; Thu, 30 Apr 2026 02:15:23 +0100 (BST)
+Date: Thu, 30 Apr 2026 10:15:23 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Bartosz Golaszewski <brgl@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 08/17] ASoC: simple-amplifier: Remove DAPM widgets and
+ routes from the ASoC component driver
+Message-ID: <afKtK2r7oD9_ZSHe@sirena.co.uk>
+References: <20260429074356.118420-1-herve.codina@bootlin.com>
+ <20260429074356.118420-9-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A9F4XwaMmS3c
-Date: Wed, 29 Apr 2026 23:35:44 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>, "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Aaro Koskinen" <aaro.koskinen@iki.fi>,
- "Andreas Kemnade" <andreas@kemnade.info>,
- "Bartosz Golaszewski" <brgl@kernel.org>,
- =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
- "David S . Miller" <davem@davemloft.net>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- "Eric Dumazet" <edumazet@google.com>, "Felipe Balbi" <balbi@kernel.org>,
- "Jakub Kicinski" <kuba@kernel.org>,
- "Johannes Berg" <johannes@sipsolutions.net>,
- "Kevin Hilman" <khilman@baylibre.com>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Linus Walleij" <linusw@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
- "Rob Herring" <robh+dt@kernel.org>, "Roger Quadros" <rogerq@kernel.org>,
- "Tony Lindgren" <tony@atomide.com>, linux-wireless@vger.kernel.org,
- Netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- Linux-OMAP <linux-omap@vger.kernel.org>,
- "Christian Lamparter" <chunkeey@gmail.com>
-Message-Id: <556b64c4-febb-4dc6-8d51-1b1c2d2c6aa6@app.fastmail.com>
-In-Reply-To: <e4a7e9d8-7091-4520-a634-ff0a44eb5139@kernel.org>
-References: <20260427142355.2532714-1-arnd@kernel.org>
- <20260427142355.2532714-4-arnd@kernel.org>
- <e4a7e9d8-7091-4520-a634-ff0a44eb5139@kernel.org>
-Subject: Re: [PATCH v3 3/3] p54spi: convert to devicetree
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: D25FC49AA23
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="YzX+qqkkFX9ZNKo4"
+Content-Disposition: inline
+In-Reply-To: <20260429074356.118420-9-herve.codina@bootlin.com>
+X-Cookie: 667:
+X-Rspamd-Queue-Id: 6299149BF69
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.65 / 15.00];
+X-Spamd-Result: default: False [-2.76 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[arndb.de,none];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[arndb.de:s=fm2,messagingengine.com:s=fm2];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[iki.fi,kemnade.info,kernel.org,baylibre.com,davemloft.net,gmail.com,google.com,sipsolutions.net,redhat.com,atomide.com,vger.kernel.org,lists.infradead.org];
-	TAGGED_FROM(0.00)[bounces-35816-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35817-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,perex.cz,suse.com,vger.kernel.org,csgroup.eu,bootlin.com];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[27];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[arnd@arndb.de,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[arndb.de:+,messagingengine.com:+];
-	RCVD_COUNT_FIVE(0.00)[6];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[]
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[broonie@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sirena.co.uk:mid]
 
-On Wed, Apr 29, 2026, at 10:07, Krzysztof Kozlowski wrote:
-> On 27/04/2026 16:23, Arnd Bergmann wrote:
->>  
->> -	ret = gpio_request(p54spi_gpio_power, "p54spi power");
->> -	if (ret < 0) {
->> -		dev_err(&priv->spi->dev, "power GPIO request failed: %d", ret);
->> +	priv->gpio_powerdown = gpiod_get(&spi->dev, "powerdown", GPIOD_OUT_HIGH);
->> +	if (IS_ERR(priv->gpio_powerdown)) {
->> +		ret = PTR_ERR(priv->gpio_powerdown);
->> +		dev_err(&priv->spi->dev, "powerdown GPIO request failed: %d", ret);
->
-> Binding said it is optional, so this cannot be a failure.
->
-> Also, please use ret = dev_err_probe syntax.
 
-Ok, fixed both.
+--YzX+qqkkFX9ZNKo4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->> @@ -686,10 +659,19 @@ static void p54spi_remove(struct spi_device *spi)
->>  	p54_free_common(priv->hw);
->>  }
->>  
->> +struct of_device_id p54spi_of_ids[] = {
->
-> static const
+On Wed, Apr 29, 2026 at 09:43:44AM +0200, Herve Codina wrote:
 
-I would have expected that to trigger a compile-time warning for a
-missing declaration, not sure what happened here. Fixed now.
+> +	ret = snd_soc_dapm_add_routes(dapm, simple_amp->data->dapm_routes,
+> +				      simple_amp->data->num_dapm_routes);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to basic dapm routes (%d)\n", ret);
+> +		return ret;
+> +	}
 
->> +	{ .compatible = "cnxt,3110x", },
->> +	{ .compatible = "isil,p54spi", },
->> +	{ .compatible = "st,stlc4550", },
->> +	{ .compatible = "st,stlc4560", },
->
-> At least last two devices are then compatible, so this should be
-> expressed in the binding with fallback and drop stlc4560 here. Maybe all
-> of them are compatible.
+failed to add.
 
-The driver doesn't know the difference, so I assume they are
-either all compatible, or the other ones don't actually work.
-I've dropped everything except  "st,stlc4550" now, as that is the
-one I used in the dts file. I kept the other identifiers
-in the binding as:
+--YzX+qqkkFX9ZNKo4
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  compatible:
-    oneOf:
-      - const: st,stlc4560
-      - items:
-          - enum:
-              - cnxt,3110x
-              - st,stlc4550
-              - isil,p54spi
-          - const: st,stlc4560
+-----BEGIN PGP SIGNATURE-----
 
-Not sure if that's the best way to express this.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmnyrSoACgkQJNaLcl1U
+h9CxWwf7B7BwikowS64ll/nFyPsTdf1LTK2ejHsnmJSFmyb02Y+FFjNqnVYKPxRm
+Wdsn5w5lbhN31hP6QvJNIRKjIKd3YPQI+ZFC1s55RaiJ1mDPHD3od9MQLhGSkEFn
+GdaOJezgwQNS95ynCEqX8wDMBQCfLXNEGR7dVTXeSiIPD9oUeOETwnX+5C/kW3nd
+K3GRX1sMq3OaV/HL8FlW0DVOAGXEY9RkyrlmQE/nvkolYkgsyDkZhoheRdXkLNZ3
+ZuwyyM0os8aSiMcO9AA4sW/rLhi6Ixd5q3CnQiHMkqQKBfvfXAyGFcynG210YvWx
+KB/q5Whb9r2x2DBNj0pAXIhvb4FRag==
+=bN5d
+-----END PGP SIGNATURE-----
 
-       Arnd
+--YzX+qqkkFX9ZNKo4--
 
