@@ -1,126 +1,185 @@
-Return-Path: <linux-gpio+bounces-35903-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35904-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2DTZCq8882mFygEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35903-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 13:27:43 +0200
+	id KOx1G3xA82kGywEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35904-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 13:43:56 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B67464A21BB
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 13:27:42 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DDDA4A24BA
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 13:43:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2B9F63110357
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 11:20:33 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 82A6B30D8056
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 11:21:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38BCB3FD123;
-	Thu, 30 Apr 2026 11:17:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7D0A3D7D96;
+	Thu, 30 Apr 2026 11:20:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rn6zcSXw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cpqLcMhm"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1D13E717F
-	for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 11:17:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4AF3AF67A;
+	Thu, 30 Apr 2026 11:20:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777547872; cv=none; b=s0xQVJ+sD3joRreo5+iPz0BNNnkmRKt/T+HICPuFaHze8+HJIvLIAj2atg63gojjcY+8MVV1wzgcTvk0PBXWYmNKdrhAtfe20JWuAS2/YODwhTQwRLv43uWoLPEj51LI5VYYffK8lqjljeDbVHCmowFDQeOk8d5A8e/wvMlrCjc=
+	t=1777548021; cv=none; b=sU/rge2PcR+otxs4fHrNJYpxiwI3O3y38pplYBlbUZdYvwpkrj83Ia/lP0jSFa6rsGa0kGBM5F3X3mCPh+7t5/UWT5WRqarkauF+fGtR2eM0zd+CMu+KT2UKtwd6fJyxikDaqFiMaeupOl114+89C3KFN1V8wn6RZsEMFBL3554=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777547872; c=relaxed/simple;
-	bh=PUDOqtoxvsiD7CZ6LXvbfBsm5Ghj9NVPmU5VX/aXFl4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s0vfH0o3K+PIyvDcAQQJiv0j1YLANgGgurNerUv8ZR5EU/uUGsetuQFG5rGFD8GGz84nYZ2V9lt6/mcmwxBvtyi4eGfg2m9p3U8fzCrHQ/aOJ5OTI5PHVaH1H/tuKBz681WV4WrwiC9foTssOXLbng6p4y1jq9hpeTSow956hWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rn6zcSXw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97414C2BCC7
-	for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 11:17:51 +0000 (UTC)
+	s=arc-20240116; t=1777548021; c=relaxed/simple;
+	bh=CbSjDmbB+fwd9uisoHdA7Y4E4U6AJ9oA6oBIi/aMsc8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=RyUVQ58CH6pjIFEa2hOXrZOG0E61slUsmfnfEAQXBF2RzL9I2hJGNio1Lq2oazsMjgev/4vqX30oyNbaBfG4K9Fa6X1ifJggXH5Fr6YMNae6vB4gMFGMwYD9YSKEa9AFcbsEC2IV2GdXkT/+hhBLiIrQ4meceShBddTKEMgjqx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cpqLcMhm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0E20C2BCB3;
+	Thu, 30 Apr 2026 11:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777547871;
-	bh=PUDOqtoxvsiD7CZ6LXvbfBsm5Ghj9NVPmU5VX/aXFl4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rn6zcSXwFMHz2u+EZwfG4zhu/2I9vgf+7QkbmE5QvYuXjXbAxaOK6+g7jEaxXbJt8
-	 KDsgNInn6Mv/gHKDiU9heY4y8W+8T8K8VeAZHMLyopvKMBBAONzzBACQOStOoyuqPS
-	 tlbULCS/Kw3uAjMjKvf8LKTI1VpdxIkcJyTtq0dZd86p4GoGFweQsUYTXRIOXbpcBa
-	 7b9y7eLl935ffpHPWzafu9QhIg9BNxgX7jEaD006SRwlV+Vyqs/8CKUz1lXWcVKVqL
-	 bF2La3pCmSkFeEK5+V4x8m8LrfjfsAeYhy71DymDQSzO5JPtyF7lF7smQp+T2iiX1b
-	 NeD9NJod5Sg0Q==
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-38ea6a5a0b3so7449041fa.3
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 04:17:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ//TXR5bDOUuEYLluIbEL2BN6q+6Y8tQJYQcJXRNiT/F2pcqAOj8/cLuEigabj3eXqTqdAdnrleld/i@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOekxfsRKWf95JsjEOm5zo5hIR6DqSTAcy63qLrFmSCZDNfr9g
-	+/MCxKkOjhW/2FCWNvh5YJkAnrFP2Ao3HLcvGJbs8W3tZ/Mgd//MYSgibCqpMafT7umHbuw1H65
-	0aYaocW9lzkcqIpWLmPqMBrjwH++n1S4=
-X-Received: by 2002:a2e:8a87:0:b0:38a:2776:1484 with SMTP id
- 38308e7fff4ca-3934e30721cmr10475791fa.28.1777547870071; Thu, 30 Apr 2026
- 04:17:50 -0700 (PDT)
+	s=k20201202; t=1777548021;
+	bh=CbSjDmbB+fwd9uisoHdA7Y4E4U6AJ9oA6oBIi/aMsc8=;
+	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
+	b=cpqLcMhmh2CIoQ+Nl5Ja10CZ2fUCK2AqQR0hPt+Jg56DI00cidDuS0GPw+Qqf2Diq
+	 tfB3oTt+jVvOoWtK1OREKNbMQ2zNRKBsYVHr9vr/0mHG9ZtBEm0RDDG0n5xZWzRlBo
+	 MRxBgyCcjKBLbWiELDDYr034AwDjtwcB95J+z8jQJbK+g+dDRXpr2whmW0DLkM4yP0
+	 xAp4x6MN2ejYI7MGy5fmbB5PQOGEMBBhMtlSiZZr+8OQyFC232C4CM+PV2mKFIzzNK
+	 OCgWgFQfu+bEYdah5EWqsOzBW2kA+q3gNXYKzCInBmIgj48lTMpgYrCK0T2K6CNH8w
+	 n4MzBQKAn6sFw==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260427143437.3059210-1-arnd@kernel.org>
-In-Reply-To: <20260427143437.3059210-1-arnd@kernel.org>
-From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 30 Apr 2026 13:17:38 +0200
-X-Gmail-Original-Message-ID: <CAD++jLmF1L9dM39+M-Yq6EXKn-1zijNdzdqqbb3m0eW0NgvT8g@mail.gmail.com>
-X-Gm-Features: AVHnY4I86MzwdcX5dGBhjFvXy0nZzkQE3a2tg4sgxxdF0TLxUgiQTziX71HJOJw
-Message-ID: <CAD++jLmF1L9dM39+M-Yq6EXKn-1zijNdzdqqbb3m0eW0NgvT8g@mail.gmail.com>
-Subject: Re: [PATCH] mfd: wm8994: remove dead legacy-gpio code
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Thomas Gleixner <tglx@kernel.org>, 
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>, patches@opensource.cirrus.com, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: B67464A21BB
+Mime-Version: 1.0
+Content-Type: multipart/signed;
+ boundary=d813880cce0dd36de044a5774161cd7c2bdcd11d3b8f945b00451ee61dba;
+ micalg=pgp-sha384; protocol="application/pgp-signature"
+Date: Thu, 30 Apr 2026 13:20:16 +0200
+Message-Id: <DI6G6LSE68E9.1PHS6K9083JJ9@kernel.org>
+Subject: Re: [PATCH v2 3/4] gpio: realtek: Add driver for Realtek DHC
+ RTD1625 SoC
+Cc: "Bartosz Golaszewski" <brgl@kernel.org>, "linux-gpio@vger.kernel.org"
+ <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org"
+ <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-realtek-soc@lists.infradead.org"
+ <linux-realtek-soc@lists.infradead.org>,
+ =?utf-8?b?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?= <cy.huang@realtek.com>,
+ =?utf-8?b?U3RhbmxleSBDaGFuZ1vmmIzogrLlvrdd?= <stanley_chang@realtek.com>,
+ =?utf-8?b?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "afaerber@suse.com" <afaerber@suse.com>,
+ =?utf-8?b?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>
+From: "Michael Walle" <mwalle@kernel.org>
+To: =?utf-8?b?WXUtQ2h1biBMaW4gW+ael+elkOWQm10=?= <eleanor.lin@realtek.com>,
+ "Linus Walleij" <linusw@kernel.org>
+X-Mailer: aerc 0.20.0
+References: <20260408025243.1155482-1-eleanor.lin@realtek.com>
+ <20260408025243.1155482-4-eleanor.lin@realtek.com>
+ <CAMRc=MfUh_OuxS4SC6QzSOg_PMNc9i9crGYgBASrbVUgHDHSCw@mail.gmail.com>
+ <52bf9ce2b7754af8af69b0afee0d07b2@realtek.com>
+ <CAD++jLkpS-T9yK=ctSwpLvXkj7s7ivmwu1KKwzy4KS40LVYeyA@mail.gmail.com>
+ <DHXSUW3NJU22.1RUYUHQZSZ53S@kernel.org>
+ <b73f34ec55984a33b0172e2ac3a28e04@realtek.com>
+In-Reply-To: <b73f34ec55984a33b0172e2ac3a28e04@realtek.com>
+X-Rspamd-Queue-Id: 9DDDA4A24BA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-3.76 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	MV_CASE(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35903-lists,linux-gpio=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	TAGGED_FROM(0.00)[bounces-35904-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,mail.gmail.com:mid,linaro.org:email]
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mwalle@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 
-On Mon, Apr 27, 2026 at 4:34=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
-te:
+--d813880cce0dd36de044a5774161cd7c2bdcd11d3b8f945b00451ee61dba
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-> From: Arnd Bergmann <arnd@arndb.de>
+Hi,
+
+On Thu Apr 30, 2026 at 11:58 AM CEST, Yu-Chun Lin [=E6=9E=97=E7=A5=90=E5=90=
+=9B] wrote:
+>> >> 3. Hardware Debounce: We also need to support hardware debounce setti=
+ngs per pin,
+>> >> which requires custom configuration via set_config mapped to these sp=
+ecific per-pin
+>> >> registers.
+>> >
+>> > Just add a version of an optional .set_config() call to gpio-regmap.c
+>> > to handle this using .reg_mask_xlate() per above and add a new
+>> > GPIO_REGMAP_CONFIG_OP to the above enum, problem solved.
+>> >
+>> > If it seems too hard I can write patch 1 & 2 adding this infrastructur=
+e
+>> > but I bet you can easily see what can be done with gpio-regmap.c
+>> > here provided Michael W approves the idea.
+>> >
 >
-> The old-style gpio handling in wm8994 came from a commit 7c8844481a1c
-> ("mfd: wm8994: Emulate level triggered interrupts if required") in
-> linux-3.11, but nothing in the kernel ever set the 'irq_gpio' member
-> in the wm8994_pdata structure, so this was always dead code.
+> Our .set_config requires mapping specific debounce time values to
+> hardware-specific enums and applying a Write-Enable bit.
 >
-> Remove it now to reduce the dependency on the legacy gpio interfaces.
+> Would it be better to allow drivers to assign a custom '.set_config' call=
+back
+> directly within 'struct gpio_regmap_config'?
+
+Yeah, I don't think there will be much code sharing of
+code/functionality for the .set_config callback. A custom
+.set_config was proposed many times in the past.
+
+> Additionally, I didn't mention this in my previous email. we also need to
+> implement GPIO interrupts. Our hardware design does not fit well with
+> 'regmap_irq_chip'. Therefore, I am planning to create our own 'irqdomain'=
+ and
+> 'irqchip' ops to handle our cascaded interrupts.
 >
-> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Because of this custom IRQ implementation, I would need to use 'readl()/w=
+ritel()'
+> for the IRQ callbacks in the rtd1625 GPIO driver instead of the regmap AP=
+Is.
+> Do you have any suggestions on how to handle this gracefully while keepin=
+g it
+> aligned with the regmap infrastructure?
 
-Reviewed-by: Linus Walleij <linusw@kernel.org>
+Why can't the MMIO regmap be used for that?
 
-Yours,
-Linus Walleij
+-michael
+
+--d813880cce0dd36de044a5774161cd7c2bdcd11d3b8f945b00451ee61dba
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCafM68RIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQEic87j4CH/gI3AGAy9Rtm8M8cPTowSj7LX/6Bv869nnmd8Cw
+MpzVztzODqPB/LkXkMyvpkhWH6AzyLlvAX48SNhCzsSDeC7wqRKPl8sErYeJZGLX
+es14enI6yhoXQgX6nbZ9889InNSwBDjGvOQ=
+=hoAy
+-----END PGP SIGNATURE-----
+
+--d813880cce0dd36de044a5774161cd7c2bdcd11d3b8f945b00451ee61dba--
 
