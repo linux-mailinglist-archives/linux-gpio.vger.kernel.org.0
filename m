@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-35947-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35946-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UIliFNSL82md4wEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35947-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 19:05:24 +0200
+	id 0P0RILWL82md4wEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35946-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 19:04:53 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CA774A62D2
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 19:05:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C54814A62BC
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 19:04:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A2CE63076A1D
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 17:01:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 01DDC305DA4E
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 17:01:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5D8D407572;
-	Thu, 30 Apr 2026 17:01:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8174942980A;
+	Thu, 30 Apr 2026 17:01:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="RETGdYmf"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="pEu3ZEMX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F58343D4F5;
-	Thu, 30 Apr 2026 17:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986C846AF06;
+	Thu, 30 Apr 2026 17:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777568502; cv=none; b=OPdYB6w+cMMHMyXjVJfCLcJR0cPKy6rLQ4E8doyeoMVwHnb/fM7Nb4uPVpjkZeVuelaLVzBu9zuOVbo2Gvu/uFFduxfPne/jWT1w+0nYL8umMflxy6DKmFpm9Xnx35absx5xqkRGu2eTU2otU9EHDjuFswUTeLSQranJODzVNyE=
+	t=1777568498; cv=none; b=OVcH7nrOXcJ1O+fKbKuIis3afG5sBPLN6oXWmOB1HKD5+riLH2AmrD+G+dVOaurRA6cwpoB93AZkdFTV3adlQIfQ+3z9FZ503FZd3A8zhBor1DPLFNRm3QreYEMfaxCu5ICtMc4CPHS6HYmO8/ygX+kqsAFDCKtxh//h5vEKz6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777568502; c=relaxed/simple;
-	bh=fuTPZzLeQpxxgglnlIKcfEjSZIZ8CufrAc3nDKCmECM=;
+	s=arc-20240116; t=1777568498; c=relaxed/simple;
+	bh=tEHqUKd7SeWSVNvwZnO6UJxbtIX1mCyDdZ8zE13AGWc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mDoWeyBa2ooo/mSTdhcKKhg5zZvgrJ0u0W+Cm3geOHQaIjs51ArfOmBLFMjGoy8aAvMc7m1xaz1sWy+E6hO/cST+F2zrPHhtAS+46n9xsjoxdnL2AqzUTmK17kfZ5/yKMOKjfrcc/1Cn6h/Ejb3E3Suzbg1wAAmjXS1zt4Mbhh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=RETGdYmf; arc=none smtp.client-ip=117.135.210.5
+	 MIME-Version; b=HAQzkfPls71BwXa7x26Nluk+0JyvUBxVqpxQvFPNZek6D0OAfuaSRVmrxT6y1J8Eu0THIBYoPpkGMnFfPVQQu3lfFJINJvpIie7Gge+Yu3vAa0xL3FWkRPV0CiffCKdI+mRedJCIWXTxYNaN++/oPUrIfrtpu+N6vuuNozo9pYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=pEu3ZEMX; arc=none smtp.client-ip=220.197.31.3
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=qZ
-	ABNGoWFWoPhAAOCiuFPy4aggXq+lshlAidBfGbMEE=; b=RETGdYmfI2CPs/bCzO
-	g5RD2OX8Xm+X/1YGCy9M+P8/oibjK1By1+5Kpw/Gc4vwiOHbBhNbYUwy2a79GQ7w
-	9i1fYMx1wXMKdgqqoPusZlHArI0HzPQT6A3Y3aFISYWuL08DjVr7EhqOBd5Rn29s
-	w/5+M4WSV4Ec9I+O8RxEHs++I=
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=zJ
+	+iSnk5S6nknL6mOvlsg+cA2m3dwlua2JfYjdZqjdc=; b=pEu3ZEMX/k0SXE7khq
+	0mZprogHP4LDw/WWvfPpoBkG2btxT3sbKJHdJFs4XfrE46aDt4veS/eZ6FEpf6NM
+	WfL0ScVLXcxYvm+ZjgcRZbOZxx0iFi6ChLHRi8HqPTOuGmaEtKeR/PHTD0iLZ4Fg
+	RlpBKTxCd1R6/YLBqgEyvErOM=
 Received: from zhb.. (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgAHlazWivNpMZwfCA--.7765S3;
-	Fri, 01 May 2026 01:01:12 +0800 (CST)
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgAHlazWivNpMZwfCA--.7765S4;
+	Fri, 01 May 2026 01:01:13 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
 To: linusw@kernel.org,
 	unicorn_wang@outlook.com,
@@ -51,9 +51,9 @@ To: linusw@kernel.org,
 Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hans Zhang <18255117159@163.com>
-Subject: [PATCH 1/2] pinctrl: sophgo: Use FIELD_MODIFY()
-Date: Fri,  1 May 2026 01:01:03 +0800
-Message-Id: <20260430170104.53854-2-18255117159@163.com>
+Subject: [PATCH 2/2] pinctrl: spacemit: Use FIELD_MODIFY()
+Date: Fri,  1 May 2026 01:01:04 +0800
+Message-Id: <20260430170104.53854-3-18255117159@163.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260430170104.53854-1-18255117159@163.com>
 References: <20260430170104.53854-1-18255117159@163.com>
@@ -64,13 +64,13 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgAHlazWivNpMZwfCA--.7765S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW7urW7uF43GrWktry3WrykZrb_yoW8uFyDpr
-	4SkrWSyr1Dtr4rury5CF4qkr1Yg3WxK3srGa13tw12g3W8JryUZF98KFyYvr4rXFWI9r4r
-	Wa1xZry5ZF45ArUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pR73kJUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbC7Bkw02nzitl86AAA3L
-X-Rspamd-Queue-Id: 9CA774A62D2
+X-CM-TRANSID:QCgvCgAHlazWivNpMZwfCA--.7765S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWrur17tw45KFy5XF17WF45Jrb_yoW3urg_CF
+	97GayxAryYka4I9ry5K3WfXFZa9ayUXr4FvwnIqa45C34xXw1rWFykur1UKayrWF4fAFZ5
+	K3yDXryrCF9rAjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRG38nUUUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbCxBkw02nzitmLzgAA3y
+X-Rspamd-Queue-Id: C54814A62BC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -84,7 +84,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_TO(0.00)[kernel.org,outlook.com,gmail.com];
-	TAGGED_FROM(0.00)[bounces-35947-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35946-lists,linux-gpio=lfdr.de];
 	FREEMAIL_CC(0.00)[vger.kernel.org,163.com];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
@@ -108,64 +108,24 @@ No functional change intended.
 
 Signed-off-by: Hans Zhang <18255117159@163.com>
 ---
- drivers/pinctrl/sophgo/pinctrl-cv18xx.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ drivers/pinctrl/spacemit/pinctrl-k1.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/sophgo/pinctrl-cv18xx.c b/drivers/pinctrl/sophgo/pinctrl-cv18xx.c
-index c3a2dcf71f2a..40a85d93b52e 100644
---- a/drivers/pinctrl/sophgo/pinctrl-cv18xx.c
-+++ b/drivers/pinctrl/sophgo/pinctrl-cv18xx.c
-@@ -333,13 +333,11 @@ static int cv1800_pinconf_compute_config(struct sophgo_pinctrl *pctrl,
+diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
+index b0be62b1c816..54674f55ed81 100644
+--- a/drivers/pinctrl/spacemit/pinctrl-k1.c
++++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
+@@ -777,9 +777,8 @@ static int spacemit_pinconf_generate_config(struct spacemit_pinctrl *pctrl,
+ 				return -EINVAL;
+ 			}
+ 		} else {
+-			v &= ~PAD_SLEW_RATE;
+ 			slew_rate = slew_rate > 1 ? (slew_rate - 2) : 0;
+-			v |= FIELD_PREP(PAD_SLEW_RATE, slew_rate);
++			FIELD_MODIFY(PAD_SLEW_RATE, &v, slew_rate);
+ 		}
+ 	}
  
- 		switch (param) {
- 		case PIN_CONFIG_BIAS_PULL_DOWN:
--			v &= ~PIN_IO_PULLDOWN;
--			v |= FIELD_PREP(PIN_IO_PULLDOWN, arg);
-+			FIELD_MODIFY(PIN_IO_PULLDOWN, &v, arg);
- 			m |= PIN_IO_PULLDOWN;
- 			break;
- 		case PIN_CONFIG_BIAS_PULL_UP:
--			v &= ~PIN_IO_PULLUP;
--			v |= FIELD_PREP(PIN_IO_PULLUP, arg);
-+			FIELD_MODIFY(PIN_IO_PULLUP, &v, arg);
- 			m |= PIN_IO_PULLUP;
- 			break;
- 		case PIN_CONFIG_DRIVE_STRENGTH_UA:
-@@ -347,8 +345,7 @@ static int cv1800_pinconf_compute_config(struct sophgo_pinctrl *pctrl,
- 						    priv->power_cfg, arg);
- 			if (ret < 0)
- 				return ret;
--			v &= ~PIN_IO_DRIVE;
--			v |= FIELD_PREP(PIN_IO_DRIVE, ret);
-+			FIELD_MODIFY(PIN_IO_DRIVE, &v, ret);
- 			m |= PIN_IO_DRIVE;
- 			break;
- 		case PIN_CONFIG_INPUT_SCHMITT_UV:
-@@ -356,21 +353,18 @@ static int cv1800_pinconf_compute_config(struct sophgo_pinctrl *pctrl,
- 							 priv->power_cfg, arg);
- 			if (ret < 0)
- 				return ret;
--			v &= ~PIN_IO_SCHMITT;
--			v |= FIELD_PREP(PIN_IO_SCHMITT, ret);
-+			FIELD_MODIFY(PIN_IO_SCHMITT, &v, ret);
- 			m |= PIN_IO_SCHMITT;
- 			break;
- 		case PIN_CONFIG_POWER_SOURCE:
- 			/* Ignore power source as it is always fixed */
- 			break;
- 		case PIN_CONFIG_SLEW_RATE:
--			v &= ~PIN_IO_OUT_FAST_SLEW;
--			v |= FIELD_PREP(PIN_IO_OUT_FAST_SLEW, arg);
-+			FIELD_MODIFY(PIN_IO_OUT_FAST_SLEW, &v, arg);
- 			m |= PIN_IO_OUT_FAST_SLEW;
- 			break;
- 		case PIN_CONFIG_BIAS_BUS_HOLD:
--			v &= ~PIN_IO_BUS_HOLD;
--			v |= FIELD_PREP(PIN_IO_BUS_HOLD, arg);
-+			FIELD_MODIFY(PIN_IO_BUS_HOLD, &v, arg);
- 			m |= PIN_IO_BUS_HOLD;
- 			break;
- 		default:
 -- 
 2.34.1
 
