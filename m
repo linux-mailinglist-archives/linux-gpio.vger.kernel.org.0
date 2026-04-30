@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-35851-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35852-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oJvKEt4i82nIxQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35851-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 11:37:34 +0200
+	id QKFxLzQi82nIxQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35852-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 11:34:44 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95A9D49FEC3
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 11:37:33 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79AE249FE27
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 11:34:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D29F9305615B
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 09:34:35 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 1C21E300D745
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 09:34:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DBBD3A0EB8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E62DA3A5E64;
 	Thu, 30 Apr 2026 09:34:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CVZ0T1kU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NZENjqUB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B564A3A5E81
-	for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 09:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AD43A16AA
+	for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 09:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777541673; cv=none; b=m8455UvnFN2bJfXTZfIQGk/RlBMoBXiVeG6NbqBokbmDxa/jfZ1L7Kd5Mm2f34uJC0HokxfKrdG5MAD4CyIw0fbYH8Y0V9yCWwRQJobKnyxPTJY8nxnu2ey2LsJszWkomSpWn56/ZM36bYbQkm5U4ByUKA0a9U1QY2ULdNqWYuA=
+	t=1777541673; cv=none; b=mMyQ4RK+ycTVYK4HnqDavAauueebXPBk/vSgQ47e648K2EViXg6RxK4ArVwfUzVx/8q223zjCGyY0jwsQg7oRW+Xm3YOBZbelB1Kd+8oxfFdENTJ46MjTwTtoUV3enB8EtD3V8i4mWwvkJ0MwZkZd8ibvD30v0KbCevqRIZx6xI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1777541673; c=relaxed/simple;
-	bh=L2M4Vqp9RfqgGtk1NVtU80uZ/o8rWFC6KgMYLqkjKRQ=;
+	bh=JcDxBvVYuzHTM0pBmSHEbRu5yB+4Iol+TmC03eQIgL0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VEP+vejpMrGyHxy788vsOPyG0nhfiT06D3pv/9w4wgEOzugH2HwghqVRet/+AorMr/cqjhjM/5+00DBiTlJ1M4ZSJkrjUH6LOjy6+c6YPkKL+cUNETX2GS7W696O6XMio/dMvMlKUFZxnEKTQGIOC1m6BMNdn0/yT9B0Y/0xGrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CVZ0T1kU; arc=none smtp.client-ip=209.85.221.54
+	 MIME-Version; b=HABjWARZt6RmKezFFugr4uyITD+SefAPNK9MKJ6YCd2thmyH3NhiEnb67ZEw42Wz0yNCewo9CZs34g1ErwyBnIwY35Xguz4U5B6ou88KZWnibWf4I3Tej4vva67vtGpSVU9mI0tJ+YpOhQ706DG5AHbo56UKKLMhZqgKoXVEjmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NZENjqUB; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-43cfce3a195so372171f8f.2
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 02:34:30 -0700 (PDT)
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-43d73352cf2so607735f8f.1
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 02:34:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777541669; x=1778146469; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1777541670; x=1778146470; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Z3rCYOpWHkYf3cWmjVv7h50il+B2+zlhmGM/eE2K0hU=;
-        b=CVZ0T1kUz/qtXrtZ6JMq8HzyOS3Ls6W+2ZY8yUyl2syO8VXDyjxnY4x5JRXloPmkDs
-         pL+ccJvmDUO0H0CzyHPc4/mdWa6M3F9oUa1PLqMZaPpCoFYv16+FhIB/PlLu41WhVY9K
-         7JZHwqCLjevdl5cwEqXlRbPr2K2fChLzMFpV79q4DrdYMfKP7n5HjfPoeOcxyxdqge/J
-         BGtip0sQWsbOIS0/2fYkqLTtFToawfSM8ee6Ve15p9tvQoWmYxrocF4wfxxYw3uWz+HJ
-         JFEa+f/PXNfeUudMSorrTFNj5djXSz25Lj6An+md2hPbmnOHKpXP1FSdbx63ljsIsqfF
-         et4g==
+        bh=bGpoI1aZ4hWunrNAuGb7QzS+oVWyQAHR2Jm1DddCfOY=;
+        b=NZENjqUBKEUt9EE+HYL9e7mdnGSvUZ8+W2eQXPDYhG4iLJyvdy4yCmfnqo6v+z0cBH
+         XfhbqITYDfjH1KPja2YlR3k+w+EQEHr1Z7qLVHqDoPbEwXOzFpAREmSrTmg7S/vaNX7s
+         VeccxZPvEY5OuT4w8+ZAXFkDOnfs/8AYCRmfC3VPCSQmtHzV+F9JIpAAVBs+sgGOES1+
+         +YaBAhkBZG1WF00/u5QPpY2yl3WhoC6udK4pdERpEwnTrKeAEvoapbWCG+efV6b3QOW7
+         3NDv4eMQMTR6E6dKwlb+B2ov8B2YGOpid0KiRUBDVIytdcJmfgzH6w53YV0lG9x+8JfG
+         hOoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777541669; x=1778146469;
+        d=1e100.net; s=20251104; t=1777541670; x=1778146470;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Z3rCYOpWHkYf3cWmjVv7h50il+B2+zlhmGM/eE2K0hU=;
-        b=UJB1DDvdMnVLE0/8sG1A0qD04HPquVDhewAYMNV99Fa1mWNfePc8Zh5pdmouZBOZh0
-         Ny3eUgkdz8JgNVKflCP7+0kUZDj5BZ5qKRabZB65tLBqjNlrT+9Z6wPwt9lXiHi37HGi
-         VLn6rUxujn202f7WHgljFwio2LpSwghQNbpKYVXJ4Ttj35qeYF+GtU+MUbWuXlMD3eeX
-         3EVeLgXOFDGiDs9xzteqPR75uhHQfDM7VyVGISd2NWcnCMXNi7I+5P2tH1umM9uCb7Ib
-         QyWqr6iyu22V34zCF/CezDSOM6EygHSq2o6JoW3CnoRgo4D2VsbBkXnJ6/yAd/FMS57D
-         PUAQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/55i1UIR4wq/QlC8J8i2mSl2OS44v+qEntiHCUjEoqbpkZxedynJzL5XGYBenxD3IKbXSjcDo3Lvyk@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzkh/MGesQkpoZi0tEKDPx63p3j8A/NlSA1IAMAy7XNZWdONyie
-	2cJUBZH6qYoYaXqLkhfQein9QcOBAkHU4cBDIo0rwRD8dq07PqnS+J/IHuTFxg==
-X-Gm-Gg: AeBDiesR/+yTj7nAmLyJ0hgu8fXCka6d0DVFmvG4i553gtQ++JLPgBV+CIMk/OTmhzJ
-	4e5zM0qx4AqcBouVg6/DMyYZQz+9G543OBzs+qpCzPbwk/FQf4YdMOvBwczaga1sc9pq3+NDCY2
-	B4o1k+ssWhBMtGvEsdP9nMhLd0MwBqkar56kJzEuuMTnTx2rRE93/lWhI9lh5PKjYfAPhB5oRqe
-	bGuLSOvhEzqxtKIw3qkvcdBdO05aUn2kMcXnidevW1WXisRG8yXFibclu4e6vcy8LWHfLkxhc9b
-	N6VZCkAxdYe+8OXnwC4Xx8lCNqxfEXVNSwjfhKnaw0+PCwj/qJg8KYY7v0FJmlzefu9f7hCBI1p
-	xNJTgCKltPWhI4A9jsMuUrpqvEvSATfLFTRn75XW/x+MnyuRUlTOEe4VaZeG8j4fMp9Zi5tZ47U
-	z1H1MTQQHSh8Q9md2a0yEcgOU20tJlooDJQNKLtNV7P7yEAHjEik3FSYyH
-X-Received: by 2002:a05:6000:26c8:b0:43f:e22f:606 with SMTP id ffacd0b85a97d-4493dbdb55dmr3077275f8f.2.1777541668897;
-        Thu, 30 Apr 2026 02:34:28 -0700 (PDT)
+        bh=bGpoI1aZ4hWunrNAuGb7QzS+oVWyQAHR2Jm1DddCfOY=;
+        b=kyp3oJS3X0nmZk+zfn+U0jskJGQ8+wtDEWSq+YSuyD6OT9WH61LS0XBKeyvgBrprel
+         ALb1CNRZILCZlgbxAhJ3+k7AfvjqVlwG5Vv5eVZCnpcI1UW7+luHZ6dDgWzPQqYNp2of
+         5MpHKUyN7gpbvi0ZcGKNJpnU+A41uQLGcKwI/RqMTDgiO3JAEVTe+ji4GqHNrKoRSWzU
+         l6vC8fk8zqQMH8MgGFnt1lDEgytP9EtpQJ6sofp/49eQ2NfSq5Tus6vP9DT9jf7Hg1DM
+         PbVzwWlGac+Mi5JtibFiwLco/aZ38YcgPItgIDbNMN8UAyzyR1A6/kUQAWv3XNfOgKSc
+         ysWw==
+X-Forwarded-Encrypted: i=1; AFNElJ/lFLi7cZRw8CZzuJ5nnWm2ooEcw1VpjjEYeT3Xcop0uWhp0zjTBBpRdMgaNiClIFtSX32Bc/OiRWtZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHZXZeITMb34KHb/PCXPbdEHkEUdVCxoHF0wy9euU8idHZkNyz
+	QFk/f3YR+pI0m34mvnh4qSBnEBjLY7B3xJGx89H39DmTv/xaIROquy2C
+X-Gm-Gg: AeBDietrzObrVMawCE8+VhCd8ibJ/IQymywrPqmvKcuOOGcqM+nrDLXgYXNKpzVSYBF
+	MLDDJBGOI3kInbvYZllfxyqp3vyiu9bVMuaoLJDlKIPvQzvxUoQ0H0PbldACWAAQbi6V19p5Vus
+	hKhYz2jKlTOqb9ez7pvYbv7z9GAAQbpXP5LmelwP2V2hqvibQcWwhrKo4B/Y8b2Hn/uQlzME7u2
+	FpwHBhB67jaGxkM2A0yBBCkIHzEhOMgV0ZqSUk1Vheia58POu62w3SUFGr4bflIcW+/5i4yQz/v
+	8IAdOBQOdSPgEnAo97Pc0+6ca/d4c2cXrHPRRNH0XosMGF3zoSV9kxPNSfYk2aXMeRrvfiav0K1
+	L+azstZTuLe00E4Wq4TAUtlnEoABZWtXZJgCTXyP3MqMu78JCX1mIKP/XyvL6u6PHEpjQG1VY8V
+	OvoOdyhKGTrcZszFj6yAfjmOuOpz+B3Vu31NdbpXVoQdFop07W3f3i7/Gg
+X-Received: by 2002:a5d:584b:0:b0:43f:df1b:9e07 with SMTP id ffacd0b85a97d-4493f03b2d1mr3377278f8f.42.1777541669905;
+        Thu, 30 Apr 2026 02:34:29 -0700 (PDT)
 Received: from localhost.localdomain ([2a00:23c4:a758:8a01:342:901:e785:f7d2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-447b76e5c22sm11953913f8f.28.2026.04.30.02.34.28
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-447b76e5c22sm11953913f8f.28.2026.04.30.02.34.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2026 02:34:28 -0700 (PDT)
+        Thu, 30 Apr 2026 02:34:29 -0700 (PDT)
 From: Biju <biju.das.au@gmail.com>
 X-Google-Original-From: Biju <biju.das.jz@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -86,9 +86,9 @@ Cc: Biju Das <biju.das.jz@bp.renesas.com>,
 	linux-kernel@vger.kernel.org,
 	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
 	Biju Das <biju.das.au@gmail.com>
-Subject: [PATCH v4 3/7] pinctrl: renesas: rzg2l: Add support for selecting power source for {WDT,AWO,ISO}
-Date: Thu, 30 Apr 2026 10:34:08 +0100
-Message-ID: <20260430093422.74812-4-biju.das.jz@bp.renesas.com>
+Subject: [PATCH v4 4/7] pinctrl: renesas: rzg2l: Update OEN pin validation to use exact match
+Date: Thu, 30 Apr 2026 10:34:09 +0100
+Message-ID: <20260430093422.74812-5-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260430093422.74812-1-biju.das.jz@bp.renesas.com>
 References: <20260430093422.74812-1-biju.das.jz@bp.renesas.com>
@@ -99,20 +99,20 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 95A9D49FEC3
+X-Rspamd-Queue-Id: 79AE249FE27
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35851-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35852-lists,linux-gpio=lfdr.de];
 	FREEMAIL_CC(0.00)[bp.renesas.com,vger.kernel.org,gmail.com];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -120,7 +120,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	FROM_NEQ_ENVFROM(0.00)[bijudasau@gmail.com,linux-gpio@vger.kernel.org];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_COUNT_FIVE(0.00)[5];
@@ -129,177 +129,38 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	FREEMAIL_FROM(0.00)[gmail.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[renesas.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bp.renesas.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bp.renesas.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 
 From: Biju Das <biju.das.jz@bp.renesas.com>
 
-The RZ/G3L SoC has support for setting power source that are not
-controlled by the following voltage control registers:
-  - SD_CH{0,1,2}_POC, XSPI_POC, ETH{0,1}_POC, I3C_SET.POC
-
-Add support for selecting voltages using OTHER_POC register for
-setting I/O domain voltage for WDT, ISO and AWO by extending
-rzg2l_caps_to_pwr_reg() with a mask output parameter so that callers
-callers can identify which bit(s) within OTHER_POC correspond to the
-requested domain. Update rzg2l_get_power_source() to extract the
-relevant bit field via field_get() when reading OTHER_POC, and update
-rzg2l_set_power_source() to perform a read-modify-write under the
-spinlock when writing to OTHER_POC, since multiple domains share the
-same register.
+The RZ/G2L SoC uses pin 0 from a port for OEN while RZ/G3L uses pin 1. The
+existing greater-than comparison against oen_max_pin in
+rzg2l_pin_to_oen_bit() would incorrectly accept any pin below that value
+rather than enforcing the single valid OEN pin for each SoC. Replace the
+range check with an exact equality test so that only the designated OEN
+pin is accepted.
 
 Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
-v3->v4:
- * Updated commit description.
- * Updated rzg2l_caps_to_pwr_reg() to return mask in addition to register
-   offset.
- * Dropped ffs(), using field_get() instead to get PoC offset in
-   rzg2l_get_power_source().
- * Simplified rzg2l_set_power_source() by using mask from
-   rzg2l_caps_to_pwr_reg().
- * Added scoped_guard() for RMW operation in rzg2l_set_power_source().
-v2->v3:
- * No change
-v1->v2:
- * No change
+v4:
+ * New patch.
 ---
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 53 ++++++++++++++++++++-----
- 1 file changed, 44 insertions(+), 9 deletions(-)
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index ca9d4a3ec737..7b1bb66d4ff6 100644
+index 7b1bb66d4ff6..2a46ba7b3709 100644
 --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -63,10 +63,18 @@
- #define PIN_CFG_SMT			BIT(16)	/* Schmitt-trigger input control */
- #define PIN_CFG_ELC			BIT(17)
- #define PIN_CFG_IOLH_RZV2H		BIT(18)
-+#define PIN_CFG_PVDD1833_OTH_AWO_POC	BIT(19) /* known on RZ/G3L only */
-+#define PIN_CFG_PVDD1833_OTH_ISO_POC	BIT(20) /* known on RZ/G3L only */
-+#define PIN_CFG_WDTOVF_N_POC		BIT(21) /* known on RZ/G3L only */
+@@ -1124,7 +1124,7 @@ static int rzg2l_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
+ 	u64 caps = FIELD_GET(PIN_CFG_MASK, *pin_data);
+ 	u8 pin = RZG2L_PIN_ID_TO_PIN(_pin);
  
- #define RZG2L_SINGLE_PIN		BIT_ULL(63)	/* Dedicated pin */
- #define RZG2L_VARIABLE_CFG		BIT_ULL(62)	/* Variable cfg for port pins */
- 
-+#define PIN_CFG_OTHER_POC_MASK	\
-+					(PIN_CFG_PVDD1833_OTH_AWO_POC | \
-+					 PIN_CFG_PVDD1833_OTH_ISO_POC | \
-+					 PIN_CFG_WDTOVF_N_POC)
-+
- #define RZG2L_MPXED_COMMON_PIN_FUNCS(group) \
- 					(PIN_CFG_IOLH_##group | \
- 					 PIN_CFG_PUPD | \
-@@ -146,6 +154,7 @@
- #define SD_CH(off, ch)		((off) + (ch) * 4)
- #define ETH_POC(off, ch)	((off) + (ch) * 4)
- #define QSPI			(0x3008) /* known on RZ/{G2L,G2LC,G2UL,Five} only */
-+#define OTHER_POC		(0x3028) /* known on RZ/G3L only */
- 
- #define PVDD_2500		2	/* I/O domain voltage 2.5V */
- #define PVDD_1800		1	/* I/O domain voltage <= 1.8V */
-@@ -900,7 +909,8 @@ static void rzg2l_rmw_pin_config(struct rzg2l_pinctrl *pctrl, u32 offset,
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
- }
- 
--static int rzg2l_caps_to_pwr_reg(const struct rzg2l_register_offsets *regs, u32 caps)
-+static int rzg2l_caps_to_pwr_reg(const struct rzg2l_register_offsets *regs,
-+				 u32 caps, u8 *mask)
- {
- 	if (caps & PIN_CFG_IO_VMC_SD0)
- 		return SD_CH(regs->sd_ch, 0);
-@@ -912,6 +922,16 @@ static int rzg2l_caps_to_pwr_reg(const struct rzg2l_register_offsets *regs, u32
- 		return ETH_POC(regs->eth_poc, 1);
- 	if (caps & PIN_CFG_IO_VMC_QSPI)
- 		return QSPI;
-+	if (caps & PIN_CFG_OTHER_POC_MASK) {
-+		if (caps & PIN_CFG_PVDD1833_OTH_AWO_POC)
-+			*mask = BIT(0);
-+		else if (caps & PIN_CFG_PVDD1833_OTH_ISO_POC)
-+			*mask = BIT(1);
-+		else
-+			*mask = BIT(2);
-+
-+		return OTHER_POC;
-+	}
- 
- 	return -EINVAL;
- }
-@@ -920,17 +940,20 @@ static int rzg2l_get_power_source(struct rzg2l_pinctrl *pctrl, u32 pin, u32 caps
- {
- 	const struct rzg2l_hwcfg *hwcfg = pctrl->data->hwcfg;
- 	const struct rzg2l_register_offsets *regs = &hwcfg->regs;
-+	u8 val, mask;
- 	int pwr_reg;
--	u8 val;
- 
- 	if (caps & PIN_CFG_SOFT_PS)
- 		return pctrl->settings[pin].power_source;
- 
--	pwr_reg = rzg2l_caps_to_pwr_reg(regs, caps);
-+	pwr_reg = rzg2l_caps_to_pwr_reg(regs, caps, &mask);
- 	if (pwr_reg < 0)
- 		return pwr_reg;
- 
- 	val = readb(pctrl->base + pwr_reg);
-+	if (pwr_reg == OTHER_POC)
-+		val = field_get(mask, val);
-+
- 	switch (val) {
- 	case PVDD_1800:
- 		return 1800;
-@@ -948,8 +971,8 @@ static int rzg2l_set_power_source(struct rzg2l_pinctrl *pctrl, u32 pin, u32 caps
- {
- 	const struct rzg2l_hwcfg *hwcfg = pctrl->data->hwcfg;
- 	const struct rzg2l_register_offsets *regs = &hwcfg->regs;
-+	u8 poc_val, val, mask;
- 	int pwr_reg;
--	u8 val;
- 
- 	if (caps & PIN_CFG_SOFT_PS) {
- 		pctrl->settings[pin].power_source = ps;
-@@ -958,25 +981,37 @@ static int rzg2l_set_power_source(struct rzg2l_pinctrl *pctrl, u32 pin, u32 caps
- 
- 	switch (ps) {
- 	case 1800:
--		val = PVDD_1800;
-+		poc_val = PVDD_1800;
- 		break;
- 	case 2500:
- 		if (!(caps & (PIN_CFG_IO_VMC_ETH0 | PIN_CFG_IO_VMC_ETH1)))
- 			return -EINVAL;
--		val = PVDD_2500;
-+		poc_val = PVDD_2500;
- 		break;
- 	case 3300:
--		val = PVDD_3300;
-+		poc_val = PVDD_3300;
- 		break;
- 	default:
+-	if (pin > pctrl->data->hwcfg->oen_max_pin)
++	if (pin != pctrl->data->hwcfg->oen_max_pin)
  		return -EINVAL;
- 	}
  
--	pwr_reg = rzg2l_caps_to_pwr_reg(regs, caps);
-+	pwr_reg = rzg2l_caps_to_pwr_reg(regs, caps, &mask);
- 	if (pwr_reg < 0)
- 		return pwr_reg;
- 
--	writeb(val, pctrl->base + pwr_reg);
-+	if (pwr_reg == OTHER_POC) {
-+		scoped_guard(raw_spinlock, &pctrl->lock) {
-+			val = readb(pctrl->base + pwr_reg);
-+			if (poc_val)
-+				val |= mask;
-+			else
-+				val &= ~mask;
-+			writeb(val, pctrl->base + pwr_reg);
-+		}
-+	} else {
-+		writeb(poc_val, pctrl->base + pwr_reg);
-+	}
-+
- 	pctrl->settings[pin].power_source = ps;
- 
- 	return 0;
+ 	/*
 -- 
 2.43.0
 
