@@ -1,51 +1,51 @@
-Return-Path: <linux-gpio+bounces-35905-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35906-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kGOsFOU882kGywEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35905-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 13:28:37 +0200
+	id iPHZKSA982kGywEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35906-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 13:29:36 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 060F24A2214
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 13:28:36 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19DB64A224C
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 13:29:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 108EE302330F
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 11:23:47 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 779D730488C1
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 11:24:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 259E43D7D6F;
-	Thu, 30 Apr 2026 11:23:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D26613D8908;
+	Thu, 30 Apr 2026 11:24:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XAp10jUO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mhE7dn2x"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB70C19E839;
-	Thu, 30 Apr 2026 11:23:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913943AF67A;
+	Thu, 30 Apr 2026 11:24:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777548223; cv=none; b=DyvFlykRcYLfLUADL3y6DaMsdGIezes2NsOlvDj3Wc5/+d6wmCkumEdfuVa1csFr15GXc46ca3ifJCwYG5eJn043aXUDh/wxrGUZHzjnqxFWCrII/tcWPFNzbyDbR5/tLfL/d2O2PfaqSsIBLqWgdh0/vm+JFAGAW63bW2KEA8w=
+	t=1777548271; cv=none; b=jRRw6LI5RwC2vGzCBpFWOFtqE88AK33lYLAdyUS5n9TC3MEvI+jx8er/AEVhV6UQnDcKdKs//sYszJYs4jzWWg0w0IjzxK6J1jwnl1zfng1my7vWgSzvxlrb0C0RMdU6eM3jrR2tEYjk7j/LKwGy2kXT0bcogI6qbQU0NrpO2Fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777548223; c=relaxed/simple;
-	bh=y0DV5zO2eVU82OJnZH8JCZffr1Ytd2kNwNVgaDihKA4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qj+zOFWEdXnJRRHNE5JxoN8ceDKJL6b/yROXqDL4Qm9lDoWNEglLQTq6FdoxdOxxjQ8BNi/7rOTdPXAV6gqtum5s8835j90b3Lk9KLbtaRF3hLGjOR4ztGoShJrPKeYw8snBCZWAG+BtrT7TUmtP3qfOqhoFKZnhATvxemJBJjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XAp10jUO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03496C2BCB3;
-	Thu, 30 Apr 2026 11:23:39 +0000 (UTC)
+	s=arc-20240116; t=1777548271; c=relaxed/simple;
+	bh=dsGnAliiTDQC0j0QOXt/Ci4gp/31DHhmKm7DB4q1qrs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=lMY33IGwJE1BUWcGogY2dTIUaLrYCP2BTdjFhCIzN+JqdTP2Xuo+gzB0kQDGwKV+dA0Xkau42OAK9jgcnDI9WThCLmhlpGd8WsgK6ZxxRz3/SOieE3vfmGdsnxMe4n4qz5yUZKoaRqJWQ5+LM2T4puG2lzER0avEqe4mI9O+3fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mhE7dn2x; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8029C2BCB3;
+	Thu, 30 Apr 2026 11:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777548223;
-	bh=y0DV5zO2eVU82OJnZH8JCZffr1Ytd2kNwNVgaDihKA4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XAp10jUOjzOViGFVLYzXFsSpPcrh5x5F92QGm9mC/vmXDe676ueudgsaZYQ6KUm2j
-	 AvRRfHe1kxTQQGEOnBmUPT5N3ptYqfw1xewVZi4kpS2hpx+7ML6EperetjKxPmq6KA
-	 o6jIci19JHmpIhWybbuDHY127z+wXBhxGaBfbmKe/azGAIB/5GcoFH1DQD7Odw/ntE
-	 Qp3SKLkzJkIoChmUAfZ1Ac0li1h4UBkSOgj73+OHJ9bF3irhKOr0VS4NS6R9DWkx51
-	 7i3cwpLgRZ1DK5KphBhy+p6yiulIyOU1r1xbYqyHf0O7YRcl3ZWlW87W7D1BPNDqWG
-	 3gfY5wInoLxzA==
-Message-ID: <6ff75de9-6d5f-4d4a-bb19-1c06d0aa8d3a@kernel.org>
-Date: Thu, 30 Apr 2026 13:23:38 +0200
+	s=k20201202; t=1777548271;
+	bh=dsGnAliiTDQC0j0QOXt/Ci4gp/31DHhmKm7DB4q1qrs=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=mhE7dn2xF64/1R/Z9eBpoAPfKVt2/xgy1fF6qd45Z3qCKLeild20yo0v2m0yBTlUm
+	 +xVwJ0YsRP9JtpcEl1fF8jVlOJ0oRl/vZPPgQNWKW+5u2FGXBKhkfpU/9Nnj4io9+X
+	 vo97UQFgvf7TkWnVmH/bbNe1azK2n4QWF8URihVXFLBpi6vOtigWQDEnZifzvQQ3nU
+	 /8B/6fGkMyJTZ6MEM16NdmmsN905CRfzCTRbQYUzt4PbXSytNQUz5NgcWsuk6ydJ61
+	 J7eDcdO6qC+b1CxBxlfoNYjw15cbS2w/L5rjqjr/M1D3QhVnh5CpbtgIP8d1B5ATkX
+	 p8TYP7G6LMJaQ==
+Message-ID: <e1829cf5-c277-4e34-8bcf-addc27bfd69c@kernel.org>
+Date: Thu, 30 Apr 2026 13:24:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -54,6 +54,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 1/4] gpio: Remove "default y" in Kconfig
+From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Yu-Chun Lin <eleanor.lin@realtek.com>, linusw@kernel.org,
  brgl@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
  afaerber@suse.com, tychang@realtek.com
@@ -63,7 +64,7 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  stanley_chang@realtek.com, james.tai@realtek.com
 References: <20260408025243.1155482-1-eleanor.lin@realtek.com>
  <20260408025243.1155482-2-eleanor.lin@realtek.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+ <6ff75de9-6d5f-4d4a-bb19-1c06d0aa8d3a@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -108,29 +109,29 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260408025243.1155482-2-eleanor.lin@realtek.com>
+In-Reply-To: <6ff75de9-6d5f-4d4a-bb19-1c06d0aa8d3a@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 060F24A2214
+X-Rspamd-Queue-Id: 19DB64A224C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35905-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35906-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[16];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-gpio@vger.kernel.org];
@@ -141,13 +142,16 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-On 08/04/2026 04:52, Yu-Chun Lin wrote:
-> Remove the default y to avoid bloating the build for non-Realtek platforms
-> when COMPILE_TEST is enable on other platforms.
+On 30/04/2026 13:23, Krzysztof Kozlowski wrote:
+> On 08/04/2026 04:52, Yu-Chun Lin wrote:
+>> Remove the default y to avoid bloating the build for non-Realtek platforms
+>> when COMPILE_TEST is enable on other platforms.
+>>
 > 
+> Why isn't this driver important for Realtek SoC? This should be
+> explained, otherwise proper fix is default for ARCH_REALTEK.
 
-Why isn't this driver important for Realtek SoC? This should be
-explained, otherwise proper fix is default for ARCH_REALTEK.
+And you were kind of asked for it at v1...
 
 Best regards,
 Krzysztof
