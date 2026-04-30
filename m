@@ -1,119 +1,190 @@
-Return-Path: <linux-gpio+bounces-35860-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35861-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cOqKM8Ep82lsxwEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35860-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 12:06:57 +0200
+	id ULIRD0gq82mwxgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35861-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 12:09:12 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id E888C4A07EC
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 12:06:56 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9041F4A086D
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 12:09:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A0E953073BA2
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 09:54:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 10419300C5A2
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 09:57:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 307083AEF27;
-	Thu, 30 Apr 2026 09:53:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74EBC393DD9;
+	Thu, 30 Apr 2026 09:57:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJAvl/oP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cU9Ff4nm"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D273ACF1F;
-	Thu, 30 Apr 2026 09:53:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3677439BFFF
+	for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 09:57:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777542803; cv=none; b=gpUIDIY9oUkGL6l0qWE8kYakBKqZ43yTJFZHAv0bDeIBNT53U20WNbj8lm8JcOiyOgtrUnnaSNj/YjceEW+rBQ9vCPXPffu8sZ0k/oJmttpCVs7UV863zR9ZdzdFB5sSZaIiX2kV1iXRoRZEKxkeivZRDq/N2F9nCkvSotLjmeU=
+	t=1777543037; cv=none; b=jZsSBV73LnRCPAj76Kn4WDEzEWxAxAkLeASAdPS63CbOyZ/hKBZOfHbhJPUC/6VHQGiDq66H3P2Cj0sl3ub1JrzYWqS0nxOFtyIrOtk0nXD1e1gOjf3eMvx06YCrpAZIB6hfTU+qiY+4YwXlWfJQ14Am2TOYKOx2FX2Hv2KtxHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777542803; c=relaxed/simple;
-	bh=gLv1J8aooT74j+73knzVWxsx/gzOvweF9fEZO7MZcxU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fuWFBVUoItpj03zV7IrFyLWH+yllPgU+eR6LU7ZrJnEbu1gd/Fiy40FAQ0r37ZGKhexu7YcfvHUlcyb7LrawnDN4/BfX9ERVR3caLjbZliXE/a513oJnvbdOa2k9m3vihnWg1uqf0wc0u97EGpE4SjHLXKYTMWXcpJqsCRX6Jmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJAvl/oP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38EE2C2BCB3;
-	Thu, 30 Apr 2026 09:53:21 +0000 (UTC)
+	s=arc-20240116; t=1777543037; c=relaxed/simple;
+	bh=RwvCmSJulumGeXi0ewU+k1aaU5bqDhOyaS0bBtaKz2E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WuTxUr4TTjiYYk0WfMdjSpFTAk7gZWydXzPlEXOtg6ENjG4J8iUXtUA47cMONYCeE/3oO/yR036tb0VydetNsp0VtU+9PoAAJCrAqc2kIJd11nXlgyfd7T7n1wNJtkbfiXSog3Y1ZWELw/fBr7AQ5a1hz2Mv7wZ8q0qQyaK2rsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cU9Ff4nm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A1FEC2BCB4
+	for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 09:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777542802;
-	bh=gLv1J8aooT74j+73knzVWxsx/gzOvweF9fEZO7MZcxU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uJAvl/oPgfNiolqKg8hazCoSihF3+g1J5/e4c0nTChld06K/09kd6Tfa8GdgYkZvU
-	 ItvKzojJBvnHZzKx/MB1EnVrOk7PuJfyB+wbHfwptkptKqzNawrNmHGD3nFsJfxifO
-	 +sgHeuFf9TT6K1ikxLoNqw9YnsNrvp1zwWHoxoK3GLg6VBmcaG8LDOjeg1obPCTQwb
-	 llZa97VdDEE0yU6vyx6MjuWyZiQqDYvJEp6lkEcgnb17FEL24sWEBmNTNOZobHyocx
-	 jKnPvzkB89pBRQChqqm7ntLzDuqOpv6dIf3Ca/F8pnbKy6MJuQ4J0oZsdvJLa9dSUP
-	 Gpp7Xxm1iej/g==
-Date: Thu, 30 Apr 2026 10:53:18 +0100
-From: Lee Jones <lee@kernel.org>
-To: Linus Walleij <linusw@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: (subset) [PATCH v3 2/4] mfd: timberdale: set up a software node
- for the GPIO cell
-Message-ID: <20260430095318.GH1806155@google.com>
-References: <20260327-gpio-timberdale-swnode-v3-2-9a1bc1b2b124@oss.qualcomm.com>
- <177754249505.2432539.2686885340680056271.b4-ty@b4>
+	s=k20201202; t=1777543037;
+	bh=RwvCmSJulumGeXi0ewU+k1aaU5bqDhOyaS0bBtaKz2E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=cU9Ff4nmkLDTLzmGXxKUOxohnzH4mL9BQn4BqdNSH/FJnveFlWSQlSM6H8nivu0ev
+	 0HUsZ0zlLuKIXXtdmpnuQzI9DfLmhIoj8M123u+C+kzy1HSroafDcYQlqGnDFKvgMF
+	 RmpxT9ePP+3svCU/swn35V3tuJ2d0oBWeXsqj/Uvsig8NagoZCOPNDy+A0mhyFVKud
+	 nqCC9Ir+dPsmOmypEm+ufJDvsM0tGcrTnALAAEhRlRuCKwYAjK5JQxmeeIelKVvOUL
+	 9/Usg4QfAN/biDR+XWh4tI0APNb9ewX3RSxjjGt9woPeyNFnbGcAG8oP5qU1q3jCfb
+	 8+POysTjEqX0g==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5a4113ab355so756245e87.1
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 02:57:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ/VTDtxFKxpppLthBiOGZ1L2weUe46gbxglrAVmaa/ic/5BvdUBGDkEpnuxu9b1qzJem315emSfX/T+@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyUT33EIkGtba3ftDBzCcZ8Ojc92QxhPIjLhUXJ+YqyY8aIgmx
+	GSbOEbo5ZbvAjyA4ogZt1+Awb4tnxYsgkxO8Iqjx2k7id/70nCqme/7wI+sKYiiUWM8ytnNendP
+	v6xNU34qUEsrWabo/hnVIMw/Z+zMxbvo=
+X-Received: by 2002:a05:6512:4017:b0:5a2:864a:bebb with SMTP id
+ 2adb3069b0e04-5a8522d4eb8mr758559e87.20.1777543035289; Thu, 30 Apr 2026
+ 02:57:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <177754249505.2432539.2686885340680056271.b4-ty@b4>
-X-Rspamd-Queue-Id: E888C4A07EC
+References: <20260430-baytrail-real-swnode-v4-0-767bcda6667f@oss.qualcomm.com> <20260430-baytrail-real-swnode-v4-1-767bcda6667f@oss.qualcomm.com>
+In-Reply-To: <20260430-baytrail-real-swnode-v4-1-767bcda6667f@oss.qualcomm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 30 Apr 2026 11:57:01 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jooK3LqEXOH3m6Le4gDiMDOjCAawsmq_Kzim7T76kcDw@mail.gmail.com>
+X-Gm-Features: AVHnY4LLRxYWhknbQDaqqATspis7Xhq8JMKrXRvQlheeSpBHn0eRZucKuI2NAL8
+Message-ID: <CAJZ5v0jooK3LqEXOH3m6Le4gDiMDOjCAawsmq_Kzim7T76kcDw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] ACPI: provide acpi_bus_find_device_by_name()
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
+	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	brgl@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 9041F4A086D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35860-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35861-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[linux.intel.com,gmail.com,linuxfoundation.org,kernel.org,vger.kernel.org,lists.linux.dev];
 	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lee@kernel.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[rafael@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	NEURAL_HAM(-0.00)[-0.998];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,mail.gmail.com:mid]
 
-On Thu, 30 Apr 2026, Lee Jones wrote:
+On Thu, Apr 30, 2026 at 9:34=E2=80=AFAM Bartosz Golaszewski
+<bartosz.golaszewski@oss.qualcomm.com> wrote:
+>
+> Provide a helper allowing to locate an ACPI device by its name.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
-> On Fri, 27 Mar 2026 11:49:08 +0100, Bartosz Golaszewski wrote:
-> > Using generic device properties instead of custom platform data
-> > structures is preferred due to the resulting unification of the way
-> > properties are accessed in consumer drivers. There's no DT node for the
-> > GPIO cell in this driver but we can create a software node with device
-> > properties and attach it to all the GPIO cells.
-> > 
-> > 
-> > [...]
-> 
-> Applied, thanks!
-> 
-> [2/4] mfd: timberdale: set up a software node for the GPIO cell
->       commit: 2012c0d1b91767b68dedac127c3575cf816313e1
+Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
 
-No idea what's going on here!
-
--- 
-Lee Jones
+> ---
+>  drivers/acpi/bus.c   | 13 +++++++++++++
+>  include/linux/acpi.h |  7 +++++++
+>  2 files changed, 20 insertions(+)
+>
+> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
+> index 2ec095e2009e40b0645f654fb051429e5679dc7c..5dd8459be03db4165bcb59943=
+b94ea7db273ad7b 100644
+> --- a/drivers/acpi/bus.c
+> +++ b/drivers/acpi/bus.c
+> @@ -1181,6 +1181,19 @@ int acpi_bus_for_each_dev(int (*fn)(struct device =
+*, void *), void *data)
+>  }
+>  EXPORT_SYMBOL_GPL(acpi_bus_for_each_dev);
+>
+> +/**
+> + * acpi_bus_find_device_by_name() - Locate an ACPI device by its name
+> + * @name: Name of the device to match
+> + *
+> + * Returns:
+> + * New reference to the matched device or NULL if the device can't be fo=
+und.
+> + */
+> +struct device *acpi_bus_find_device_by_name(const char *name)
+> +{
+> +       return bus_find_device_by_name(&acpi_bus_type, NULL, name);
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_bus_find_device_by_name);
+> +
+>  struct acpi_dev_walk_context {
+>         int (*fn)(struct acpi_device *, void *);
+>         void *data;
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 67effb91fa98373d7bf19be5ae3d8baa9328d6e1..10d6c6c11bdffcad14100601e=
+104520366dfc30b 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -798,6 +798,8 @@ int acpi_get_local_u64_address(acpi_handle handle, u6=
+4 *addr);
+>  int acpi_get_local_address(acpi_handle handle, u32 *addr);
+>  const char *acpi_get_subsystem_id(acpi_handle handle);
+>
+> +struct device *acpi_bus_find_device_by_name(const char *name);
+> +
+>  #ifdef CONFIG_ACPI_MRRM
+>  int acpi_mrrm_max_mem_region(void);
+>  #endif
+> @@ -1106,6 +1108,11 @@ static inline const char *acpi_get_subsystem_id(ac=
+pi_handle handle)
+>         return ERR_PTR(-ENODEV);
+>  }
+>
+> +static inline struct device *acpi_bus_find_device_by_name(const char *na=
+me)
+> +{
+> +       return NULL;
+> +}
+> +
+>  static inline int acpi_register_wakeup_handler(int wake_irq,
+>         bool (*wakeup)(void *context), void *context)
+>  {
+>
+> --
+> 2.47.3
+>
 
