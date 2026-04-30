@@ -1,911 +1,456 @@
-Return-Path: <linux-gpio+bounces-35943-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35944-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8C7qI8GE82kY4wEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35943-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 18:35:13 +0200
+	id EGDMI9KG82l04wEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35944-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 18:44:02 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C2F24A5C82
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 18:35:12 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2C324A5EA8
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 18:44:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B16C73007660
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 16:29:03 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E9AEF30682CA
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 16:40:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC1F74219EA;
-	Thu, 30 Apr 2026 16:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16EAF337BAC;
+	Thu, 30 Apr 2026 16:40:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FPc9pY3k"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Dhl/V2R8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013051.outbound.protection.outlook.com [52.101.83.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D12F427A0B;
-	Thu, 30 Apr 2026 16:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777566542; cv=none; b=ObDtbFNWbn0e822Gav+5zrLYx6fafm3+LrJb/CNNk6gZNaUdjgBA2b+RPsbweMqCS78nq2Rg2KufhViUlOe8RnHogbbrczmE2RgzjYkOPyKAIMYhjYtAzMNGYn3z73bpfhSG4ew0wAtBn9XezK/5MZ6cqtCYDX6TP0n/ybqh7Sc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777566542; c=relaxed/simple;
-	bh=jgRsewY+If+JOuVi7cNItrBcsWY9spq5fwhsPIc4p+Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JGhEHygUKphI3fPZz41SmJaJKBWjOQpXfkRZtK6DmqPtaV09FEcycbampT66rsz4yOovAR1B7NRlZUggvMNioobkmO1dHbw7OQ1vx7zvK6aaMrSKWrL9O3xNvxg4v39PmfTgODhSFgFC4jdSLeaimWvdOQM/BFapIWDGnyhHlgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FPc9pY3k; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44570C2BCB3;
-	Thu, 30 Apr 2026 16:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777566542;
-	bh=jgRsewY+If+JOuVi7cNItrBcsWY9spq5fwhsPIc4p+Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=FPc9pY3kp2fDHFzOS0e48pvzF9Q9T/gp/JOe4WSq/4TWzy3EODQHif1cP4THuvKa3
-	 fXQ0YHRgQFUCgNgueHrsgNomVp2mpRZXa/awH4QgB1+FCsEVKclHa5fvnbDXm4BS1X
-	 cBNpLVTojfGK2cdsrInNhnByEsQfjnWpJCuLeNUIwlCl5EchVhauGrdwxY+e/zBzMc
-	 OdJQj/t6Bs5xcKX2HeTTd6iqKxUjqU4idqDiqAOrC6U8n1GE3z2dS96euFxiFLBHEU
-	 T0z/AWDEOoLdG7qbsPc5sEZiB0MKbz0k7FjvXKdTbwsMO8UK5QyD02u1kjVzD/SjUa
-	 Q9CET8ujGq1Mg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Lee Jones <lee@kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	kernel test robot <lkp@intel.com>,
-	Harald Welte <laforge@gnumonks.org>,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH] mfd: ezx-pcap: remove unused driver
-Date: Thu, 30 Apr 2026 18:28:05 +0200
-Message-Id: <20260430162855.2029285-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1A1478861;
+	Thu, 30 Apr 2026 16:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777567237; cv=fail; b=h8xQbvuMIQBPlSwDiKp+PZDJJj3TByGfpxhZMWNaE1VZcOgUbPb6dUjgJ9NM5zR3L40QSeoNzFwHheC2We5oKkS6KmwzS3icMVMwalTvI0u7y6na8Ar0bPum041wEhjLu1LN70fvwdnW7vowagOJ4zb2uUXLHuOGPu1NhMt2ejw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777567237; c=relaxed/simple;
+	bh=FTd94LHjIwbVHPG7qJQLJOsh/dEqYi6fZx9NntaioXM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Rr5EdzxR26HT6t4xkydOIY7tCcALuHUPg+HmIdx6+XnkHWieXJ4tyK2MSAqXQM/bYIVU6Eqcxl7mcrN21NwdSPNyF+yj+TPBBDln5aGbPBslqX0H0FA710AOqOVZP3Vo611k2PqCgQ12yMuHg4wjEX5SdFeqF0Eiw7gbhsT6zFo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Dhl/V2R8; arc=fail smtp.client-ip=52.101.83.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YdnWNO+BPSoDIyNJoGRGbTCI6SZXQzWZmvIct2QNj/V2C+3eeIX7KqrbXN63MNgRC7fAr9e6gHP0pO2hTN/1z7fm9FhgKcjCKuklepyJVJNWCrnS6LGvyHkKdReqeOqXjXMucydCXoTO1l2Lpox04zM3UDcGLo8m5kNzpYusxnoZ3Kc9JOPy0X9AHnpFwVQSepF60bJdxCwayi8JpiIem63QEgW9Ief73Wh1gwqezhN0WYXFuCWs5nM6ITNSAeO8IzCikCaQiygsx3K9AM4yntFcwWORF9kXtwA/fbFP1ihLHX8NTCELR0t8TdL/JISAQ6V1CNNGOhSZZuxPFje/iA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O5A9f9O3WvGSqetyu2u0V9bJqhxWK+Svf6RMw4BPDf4=;
+ b=VnDWOOcVnHIMWlfvE7U6Oi9zlxCeH12ODWw614cttzIrRuoLUIYzcadZo1FngkTYUnAoXzgAtRj91ukmuQTfxwgw8FEJCKulDr/oXM+4AOrAiCYr0XgTWAIoHSRo8pBpLaV50vzLSurR0ZUdvI6CxMACElJ0g5CRy0QMJXHVLPPjzSpSC1p9+Vcs1lgXOVQB0EMG2lXHoVUY0PQsnx30C3SceVCIDkHoXn9v6udTlF4jAosifsRJx2Crk9RRWNQxKAUP4ahZTsCEaJNPnjOy2gC/QparaGSJTDEeJ/iAKh+faUdwrPQ4T831bIG2mB7eBbgETuDag3ApfjPqU20CXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 164.130.1.60) smtp.rcpttodomain=ti.com smtp.mailfrom=foss.st.com; dmarc=fail
+ (p=none sp=none pct=100) action=none header.from=foss.st.com; dkim=none
+ (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O5A9f9O3WvGSqetyu2u0V9bJqhxWK+Svf6RMw4BPDf4=;
+ b=Dhl/V2R8UaO8M6KCAqbwlPFz5QD8qkJFfP50V7YlEnzc+YJwIGV+cWL4y7jg6vJ+MKPOgtJPwzY6XuAH+Ik/1JAiTxhhCd03tV0Eg7niR6p4P+uaRv0GjW3eLmMUcI7Oe6p0aKPdU4rn0eFgXez94DQspbGd+RSNhRqmGe41wpX8WWpYjy1lIS7UmFITzmb/6e6cvabP1iEbjalyuiGPGdAn0B+viXPA8bmAiVhl23l8uwAlbDzMWXIqOnNBDiIvnf0qkJElMkNV24eYYc05NBQR6fsXbjo7NXjfpv8yDy7wx/+S7s+akiot/bNhemo1fvp5R8KilOxhgMkgd8OF0A==
+Received: from CWLP265CA0509.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:18b::8)
+ by DU0PR10MB7093.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:42f::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.19; Thu, 30 Apr
+ 2026 16:40:25 +0000
+Received: from AMS0EPF0000019B.eurprd05.prod.outlook.com
+ (2603:10a6:400:18b:cafe::da) by CWLP265CA0509.outlook.office365.com
+ (2603:10a6:400:18b::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9846.30 via Frontend Transport; Thu,
+ 30 Apr 2026 16:40:25 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 164.130.1.60)
+ smtp.mailfrom=foss.st.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=foss.st.com;
+Received-SPF: Fail (protection.outlook.com: domain of foss.st.com does not
+ designate 164.130.1.60 as permitted sender) receiver=protection.outlook.com;
+ client-ip=164.130.1.60; helo=smtpO365.st.com;
+Received: from smtpO365.st.com (164.130.1.60) by
+ AMS0EPF0000019B.mail.protection.outlook.com (10.167.16.247) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9870.22 via Frontend Transport; Thu, 30 Apr 2026 16:40:24 +0000
+Received: from STKDAG1NODE2.st.com (10.75.128.133) by smtpO365.st.com
+ (10.250.44.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.29; Thu, 30 Apr
+ 2026 18:43:37 +0200
+Received: from [10.252.1.69] (10.252.1.69) by STKDAG1NODE2.st.com
+ (10.75.128.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.29; Thu, 30 Apr
+ 2026 18:40:22 +0200
+Message-ID: <4c526816-b127-43e7-86e9-eee4dc1152bc@foss.st.com>
+Date: Thu, 30 Apr 2026 18:40:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 3/4] gpio: rpmsg: add generic rpmsg GPIO driver
+To: Beleswar Prasad Padhi <b-padhi@ti.com>, Mathieu Poirier
+	<mathieu.poirier@linaro.org>
+CC: Shenwei Wang <shenwei.wang@nxp.com>, Andrew Lunn <andrew@lunn.ch>, "Linus
+ Walleij" <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>,
+	"Jonathan Corbet" <corbet@lwn.net>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bjorn
+ Andersson <andersson@kernel.org>, Frank Li <frank.li@nxp.com>, Sascha Hauer
+	<s.hauer@pengutronix.de>, Shuah Khan <skhan@linuxfoundation.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Pengutronix
+ Kernel Team" <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+	"Peng Fan" <peng.fan@nxp.com>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-remoteproc@vger.kernel.org"
+	<linux-remoteproc@vger.kernel.org>, "imx@lists.linux.dev"
+	<imx@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+References: <20260422212849.1240591-1-shenwei.wang@nxp.com>
+ <20260422212849.1240591-4-shenwei.wang@nxp.com>
+ <22fb5fac-2568-42be-a7e3-7e89d0017eb3@ti.com>
+ <PAXPR04MB91850A11C58419C03909145F89362@PAXPR04MB9185.eurprd04.prod.outlook.com>
+ <6412a758-4560-4cf1-a0d0-5b24d1a715f1@lunn.ch>
+ <PAXPR04MB9185009A17DFDF3D6C8B44E789362@PAXPR04MB9185.eurprd04.prod.outlook.com>
+ <6e01e114-e336-4744-b6b4-563ec42e321b@lunn.ch>
+ <PAXPR04MB9185A098D894B6A6EBCC13F889372@PAXPR04MB9185.eurprd04.prod.outlook.com>
+ <afImuoeHolxGgw3H@p14s>
+ <PAXPR04MB9185F2F6DDB55AC56C92D63B89342@PAXPR04MB9185.eurprd04.prod.outlook.com>
+ <CANLsYkwvL0Z3+12MD=J+Dc2yAU2T8ypizyG=6AhYoWOh55odHA@mail.gmail.com>
+ <472f85bd-42c2-40c6-abfd-b76924797069@ti.com>
+ <CANLsYkzt9xUczxSU28u-TfZAAjr0ufZKXAj8Eqfq=45gufXW3w@mail.gmail.com>
+ <f7ef3417-eb84-4467-ac72-a9bc8b0c81e8@foss.st.com>
+ <21de8440-adf7-454b-acfc-06e50882e075@ti.com>
+Content-Language: en-US
+From: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
+In-Reply-To: <21de8440-adf7-454b-acfc-06e50882e075@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4C2F24A5C82
+X-ClientProxiedBy: ENXCAS1NODE2.st.com (10.75.128.138) To STKDAG1NODE2.st.com
+ (10.75.128.133)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS0EPF0000019B:EE_|DU0PR10MB7093:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6fa9bd02-6a39-411d-7261-08dea6d72d8f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|82310400026|36860700016|13003099007|56012099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	58SRUWgayTTxSN+K440MRz5BIQh1G9LVzs9YnMdIblmHPSVrcTSgJiOk4Xu6hq/SFsyoR9+1i+p58yP8s7Zup4FMrvVezBYIlebpSlrPzv581LOCSD/yQL8VemIY2aVMtgxQodJa3wrT/yugRQEeGIGmNT0gQxa+wuwwCo+QNdNpChEqtqlwK32VbEKJzia2bglGZ0xbN1ZrzP0MIRZrgrQz4ukGv6ONa9WQu/NW7SWAr5/J/LUCMxsfnrHubiYnZZqzEmbbmO+Sa1n1FO/w+pT4wzwttJp1Ws9byXFaYlnjRf9HHVbvBpdVSnVUKtcuD1wgkyFFUt0e2bAST05TwVIR3VajA+LypedB3zpeNtTq8gdt+BkjC9sK+BFgaUaV6NXh3lBE0YeoXH12emQcKiFxssMGIp7aSVsi9KwIqeI3KL0mMbTQ7RY10sfTukDrhkUt+0SzntE1ifp+4D4Hin2cUZWG/47DHrilDEJrvOYpUXRaQGmWG2QEyrmoHxC/niqvCTRvwTMaURo8vAwQ4Ag58qKREYPw9mmKtSCT1QN9ZFH6nsYadL5tAy7Tw8SgZJFPdgpfEUUCrC7yHEUl+zmAnUzCBW4RqvZH/RuSGF+IbhCJhHHBBfcs6Jt8J5O28GOmDoqHNt/6Cz8/q+8hv+14mTKc6UG6qNtZR8uSgLMjoBbBMr8Et1pJ1dP7l+DwKNs/yPSJnNzYJ/tGrVGcgqLZTcw6Q3TM0iqiF6Q7p7E=
+X-Forefront-Antispam-Report:
+	CIP:164.130.1.60;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(82310400026)(36860700016)(13003099007)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	/HFH5SNp21P67oj3jgS9VxLOoZTT79GwVQGfmSbEPHWNACZ+zsTXs7daT7VzOAKaBpiJMpUBTSgQJzHL5q/4pFtYVdBMbQfPXixwoOwNZwaaNOIpTxTXgN1QWC/t5cvlmq73yXM0bXnzw/5Q3t9/gJvpMktMiwmpjQzsLOhCN+GuW5Pax/0q1M6vsHiaclTnW3y0Qch9gEIq4whLn7OAwsF1WJxYvE2MfHrhxQjAaGgp2RAyJQHGS7KFLtr8mI7w6+vjjdkGNwuPNn+2TzuIxSIndaFIHXokDa+jLIVkcfxoY7fbyQLxgBbRVHsWA7dnD111eDuM1Z/v32SMPtlfGf5joXsWyqV/if1nimUl6ck4O2pEcfXJZ1nJRXf9j7zyondnOGy65c8dulSvMDozwDIqO9Abv36L++3M9K3tmbxn6rmOAl41qGgCgl/Xi+gO
+X-OriginatorOrg: foss.st.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2026 16:40:24.4804
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6fa9bd02-6a39-411d-7261-08dea6d72d8f
+X-MS-Exchange-CrossTenant-Id: 75e027c9-20d5-47d5-b82f-77d7cd041e8f
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=75e027c9-20d5-47d5-b82f-77d7cd041e8f;Ip=[164.130.1.60];Helo=[smtpO365.st.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF0000019B.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR10MB7093
+X-Rspamd-Queue-Id: D2C324A5EA8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+X-Spamd-Result: default: False [1.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[foss.st.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[foss.st.com:s=selector2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35943-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FROM_NEQ_ENVFROM(0.00)[arnd@kernel.org,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[26];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35944-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[nxp.com,lunn.ch,kernel.org,lwn.net,pengutronix.de,linuxfoundation.org,vger.kernel.org,gmail.com,lists.linux.dev,lists.infradead.org,bgdev.pl];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-gpio];
 	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[gnumonks.org:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,arndb.de:email,intel.com:email]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[arnaud.pouliquen@foss.st.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[foss.st.com:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	RCVD_COUNT_SEVEN(0.00)[8]
 
-From: Arnd Bergmann <arnd@arndb.de>
 
-Support for the Motorola EZX phones based on Intel PXA processors was
-removed in 2022, but this driver remained present in the tree. As far
-as I can tell, the support was never quite functional upstream because
-the board files did not actually instatiate the SPI device for the PCAP.
 
-There are still also drivers for the various mfd cells: keys, touchscreen,
-regulor and rtc, all of which are obviously orphaned as well but can
-be removed separately as the Kconfig dependency now prevents them from
-being enabled.
+On 4/30/26 14:56, Beleswar Prasad Padhi wrote:
+> Hello Arnaud,
+> 
+> On 30/04/26 13:05, Arnaud POULIQUEN wrote:
+>> Hello,
+>>
+>> On 4/29/26 21:20, Mathieu Poirier wrote:
+>>> On Wed, 29 Apr 2026 at 12:07, Padhi, Beleswar <b-padhi@ti.com> wrote:
+>>>>
+>>>> Hi Mathieu,
+>>>>
+>>>> On 4/29/2026 11:03 PM, Mathieu Poirier wrote:
+>>>>> On Wed, 29 Apr 2026 at 10:53, Shenwei Wang <shenwei.wang@nxp.com> wrote:
+>>>>>>
+>>>>>>
+>>>>>>> -----Original Message-----
+>>>>>>> From: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>>>>>> Sent: Wednesday, April 29, 2026 10:42 AM
+>>>>>>> To: Shenwei Wang <shenwei.wang@nxp.com>
+>>>>>>> Cc: Andrew Lunn <andrew@lunn.ch>; Padhi, Beleswar <b-padhi@ti.com>; Linus
+>>>>>>> Walleij <linusw@kernel.org>; Bartosz Golaszewski <brgl@kernel.org>; Jonathan
+>>>>>>> Corbet <corbet@lwn.net>; Rob Herring <robh@kernel.org>; Krzysztof Kozlowski
+>>>>>>> <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>; Bjorn Andersson
+>>>>>>> <andersson@kernel.org>; Frank Li <frank.li@nxp.com>; Sascha Hauer
+>>>>>>> <s.hauer@pengutronix.de>; Shuah Khan <skhan@linuxfoundation.org>; linux-
+>>>>>>> gpio@vger.kernel.org; linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org;
+>>>>>>> Pengutronix Kernel Team <kernel@pengutronix.de>; Fabio Estevam
+>>>>>>> <festevam@gmail.com>; Peng Fan <peng.fan@nxp.com>;
+>>>>>>> devicetree@vger.kernel.org; linux-remoteproc@vger.kernel.org;
+>>>>>>> imx@lists.linux.dev; linux-arm-kernel@lists.infradead.org; dl-linux-imx <linux-
+>>>>>>> imx@nxp.com>; Bartosz Golaszewski <brgl@bgdev.pl>
+>>>>>>> Subject: [EXT] Re: [PATCH v13 3/4] gpio: rpmsg: add generic rpmsg GPIO driver
+>>>>>>> On Tue, Apr 28, 2026 at 03:24:59PM +0000, Shenwei Wang wrote:
+>>>>>>>>
+>>>>>>>>> -----Original Message-----
+>>>>>>>>> From: Andrew Lunn <andrew@lunn.ch>
+>>>>>>>>> Sent: Monday, April 27, 2026 3:49 PM
+>>>>>>>>> To: Shenwei Wang <shenwei.wang@nxp.com>
+>>>>>>>>> Cc: Padhi, Beleswar <b-padhi@ti.com>; Linus Walleij
+>>>>>>>>> <linusw@kernel.org>; Bartosz Golaszewski <brgl@kernel.org>; Jonathan
+>>>>>>>>> Corbet <corbet@lwn.net>; Rob Herring <robh@kernel.org>; Krzysztof
+>>>>>>>>> Kozlowski <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>;
+>>>>>>>>> Bjorn Andersson <andersson@kernel.org>; Mathieu Poirier
+>>>>>>>>> <mathieu.poirier@linaro.org>; Frank Li <frank.li@nxp.com>; Sascha
+>>>>>>>>> Hauer <s.hauer@pengutronix.de>; Shuah Khan
+>>>>>>>>> <skhan@linuxfoundation.org>; linux-gpio@vger.kernel.org; linux-
+>>>>>>>>> doc@vger.kernel.org; linux-kernel@vger.kernel.org; Pengutronix
+>>>>>>>>> Kernel Team <kernel@pengutronix.de>; Fabio Estevam
+>>>>>>>>> <festevam@gmail.com>; Peng Fan <peng.fan@nxp.com>;
+>>>>>>>>> devicetree@vger.kernel.org; linux- remoteproc@vger.kernel.org;
+>>>>>>>>> imx@lists.linux.dev; linux-arm- kernel@lists.infradead.org;
+>>>>>>>>> dl-linux-imx <linux-imx@nxp.com>; Bartosz Golaszewski
+>>>>>>>>> <brgl@bgdev.pl>
+>>>>>>>>> Subject: [EXT] Re: [PATCH v13 3/4] gpio: rpmsg: add generic rpmsg
+>>>>>>>>> GPIO driver
+>>>>>>>>>>> struct virtio_gpio_response {
+>>>>>>>>>>>            __u8 status;
+>>>>>>>>>>>            __u8 value;
+>>>>>>>>>>> };
+>>>>>>>>>> It is the same message format. Please see the message definition
+>>>>>>>>> (GET_DIRECTION) below:
+>>>>>>>>>
+>>>>>>>>>> +   +-----+-----+-----+-----+-----+----+
+>>>>>>>>>> +   |0x00 |0x01 |0x02 |0x03 |0x04 |0x05|
+>>>>>>>>>> +   | 1   | 2   |port |line | err | dir|
+>>>>>>>>>> +   +-----+-----+-----+-----+-----+----+
+>>>>>>>>> Sorry, but i don't see how two u8 vs six u8 are the same message format.
+>>>>>>>>>
+>>>>>>>> Some changes to the message format are necessary.
+>>>>>>>>
+>>>>>>>> Virtio uses two communication channels (virtqueues): one for requests and
+>>>>>>> replies, and a second one for events.
+>>>>>>>> In contrast, rpmsg provides only a single communication channel, so a
+>>>>>>>> type field is required to distinguish between different kinds of messages.
+>>>>>>>>
+>>>>>>>> Since rpmsg replies and events share the same message format, an additional
+>>>>>>> line is introduced to handle both cases.
+>>>>>>>> Finally, rpmsg supports multiple GPIO controllers, so a port field is added to
+>>>>>>> uniquely identify the target controller.
+>>>>>>>
+>>>>>>> I have commented on this before - RPMSG is already providing multiplexing
+>>>>>>> capability by way of endpoints.  There is no need for a port field.  One endpoint,
+>>>>>>> one GPIO controller.
+>>>>>>>
+>>>>>> You still need a way to let the remote side know which port the endpoint maps to, either
+>>>>>> by embedding the port information in the message (the current way), or by sending it
+>>>>>> separately.
+>>>>>>
+>>>>> An endpoint is created with every namespace request.  There should be
+>>>>> one namespace request for every GPIO controller, which yields a unique
+>>>>> endpoint for each controller and eliminates the need for an extra
+>>>>> field to identify them.
+>>>>
+>>>>
+>>>> Right, but this can still be done by just having one namespace request.
+>>>> We can create new endpoints bound to an existing namespace/channel by
+>>>> invoking rpmsg_create_ept(). This is what I suggested here too:
+>>>> https://lore.kernel.org/all/29485742-6e49-482e-b73d-228295daaeec@ti.com/
+>>>>
+>>>
+>>> I will look at your suggestion (i.e link above) later this week or next week.
+>>>
+>>>> My mental model looks like this for the complete picture:
+>>>>
+>>>> 1. namespace/channel#1 = rpmsg-io
+>>>>       a. ept1 -> gpio-controller@1
+>>>>       b. ept2 -> gpio-controller@2
+>>>>
+>>>
+>>> I've asked for one endpoint per GPIO controller since the very
+>>> beginning.  I don't yet have a strong opinion on whether to use one
+>>> namespace request per GPIO controller or a single request that spins
+>>> off multiple endpoints.  I'll have to look at your link and reflect on
+>>> that.  Regardless of how we proceed on that front, multiplexing needs
+>>> to happen at the endpoint level rather than the packet level.  This is
+>>> the only way this work can move forward.
+>>>
+>>
+>> I would be more in favor of Mathieu’s proposal: “An endpoint is created with every namespace request.”
+>>
+>> If the endpoint is created only on the Linux side, how do we match the Linux endpoint address with the local port field on the remote side?
+> 
+> 
+> Simply by sending a message to the remote containing the newly created
+> endpoint and the port idx. Note that is this done just one time, after this
+> Linux need not have the port field in the message everytime its sending
+> a message.
+> 
+>>
+>> With a multi-namespace approach, the namespace could be rpmsg-io-[addr], where [addr] corresponds to the GPIO controller address in the DT. This would:
+> 
+> 
+> You will face the same problem in this case also that you asked above:
+> "how do we match the Linux endpoint address with the local port field
+> on the remote side?"
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202604301209.f1YXTsIr-lkp@intel.com/
-Cc: Harald Welte <laforge@gnumonks.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/mfd/Kconfig          |   7 -
- drivers/mfd/Makefile         |   1 -
- drivers/mfd/ezx-pcap.c       | 491 -----------------------------------
- include/linux/mfd/ezx-pcap.h | 253 ------------------
- 4 files changed, 752 deletions(-)
- delete mode 100644 drivers/mfd/ezx-pcap.c
- delete mode 100644 include/linux/mfd/ezx-pcap.h
+Sorry I probably introduced confusion here
+my sentence should be;
+  With a multi-namespace approach, the namespace could be rpmsg-io-[port],
+  where [port] corresponds to the GPIO controller port in the DT.
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 7192c9d1d268..d08d70d41bce 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1199,13 +1199,6 @@ config MFD_OCELOT
- 
- 	  If unsure, say N.
- 
--config EZX_PCAP
--	bool "Motorola EZXPCAP Support"
--	depends on SPI_MASTER
--	help
--	  This enables the PCAP ASIC present on EZX Phones. This is
--	  needed for MMC, TouchScreen, Sound, USB, etc..
--
- config MFD_CPCAP
- 	tristate "Support for Motorola CPCAP"
- 	depends on SPI
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index e75e8045c28a..dd4bb7e77c33 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -131,7 +131,6 @@ obj-$(CONFIG_MFD_CORE)		+= mfd-core.o
- ocelot-soc-objs			:= ocelot-core.o ocelot-spi.o
- obj-$(CONFIG_MFD_OCELOT)	+= ocelot-soc.o
- 
--obj-$(CONFIG_EZX_PCAP)		+= ezx-pcap.o
- obj-$(CONFIG_MFD_CPCAP)		+= motorola-cpcap.o
- 
- obj-$(CONFIG_MCP)		+= mcp-core.o
-diff --git a/drivers/mfd/ezx-pcap.c b/drivers/mfd/ezx-pcap.c
-deleted file mode 100644
-index e8b51f630a60..000000000000
---- a/drivers/mfd/ezx-pcap.c
-+++ /dev/null
-@@ -1,491 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Driver for Motorola PCAP2 as present in EZX phones
-- *
-- * Copyright (C) 2006 Harald Welte <laforge@openezx.org>
-- * Copyright (C) 2009 Daniel Ribeiro <drwyrm@gmail.com>
-- */
--
--#include <linux/module.h>
--#include <linux/kernel.h>
--#include <linux/platform_device.h>
--#include <linux/interrupt.h>
--#include <linux/irq.h>
--#include <linux/mfd/ezx-pcap.h>
--#include <linux/spi/spi.h>
--#include <linux/gpio/legacy.h>
--#include <linux/slab.h>
--
--#define PCAP_ADC_MAXQ		8
--struct pcap_adc_request {
--	u8 bank;
--	u8 ch[2];
--	u32 flags;
--	void (*callback)(void *, u16[]);
--	void *data;
--};
--
--struct pcap_chip {
--	struct spi_device *spi;
--
--	/* IO */
--	u32 buf;
--	spinlock_t io_lock;
--
--	/* IRQ */
--	unsigned int irq_base;
--	u32 msr;
--	struct work_struct isr_work;
--	struct work_struct msr_work;
--	struct workqueue_struct *workqueue;
--
--	/* ADC */
--	struct pcap_adc_request *adc_queue[PCAP_ADC_MAXQ];
--	u8 adc_head;
--	u8 adc_tail;
--	spinlock_t adc_lock;
--};
--
--/* IO */
--static int ezx_pcap_putget(struct pcap_chip *pcap, u32 *data)
--{
--	struct spi_transfer t;
--	struct spi_message m;
--	int status;
--
--	memset(&t, 0, sizeof(t));
--	spi_message_init(&m);
--	t.len = sizeof(u32);
--	spi_message_add_tail(&t, &m);
--
--	pcap->buf = *data;
--	t.tx_buf = (u8 *) &pcap->buf;
--	t.rx_buf = (u8 *) &pcap->buf;
--	status = spi_sync(pcap->spi, &m);
--
--	if (status == 0)
--		*data = pcap->buf;
--
--	return status;
--}
--
--int ezx_pcap_write(struct pcap_chip *pcap, u8 reg_num, u32 value)
--{
--	unsigned long flags;
--	int ret;
--
--	spin_lock_irqsave(&pcap->io_lock, flags);
--	value &= PCAP_REGISTER_VALUE_MASK;
--	value |= PCAP_REGISTER_WRITE_OP_BIT
--		| (reg_num << PCAP_REGISTER_ADDRESS_SHIFT);
--	ret = ezx_pcap_putget(pcap, &value);
--	spin_unlock_irqrestore(&pcap->io_lock, flags);
--
--	return ret;
--}
--EXPORT_SYMBOL_GPL(ezx_pcap_write);
--
--int ezx_pcap_read(struct pcap_chip *pcap, u8 reg_num, u32 *value)
--{
--	unsigned long flags;
--	int ret;
--
--	spin_lock_irqsave(&pcap->io_lock, flags);
--	*value = PCAP_REGISTER_READ_OP_BIT
--		| (reg_num << PCAP_REGISTER_ADDRESS_SHIFT);
--
--	ret = ezx_pcap_putget(pcap, value);
--	spin_unlock_irqrestore(&pcap->io_lock, flags);
--
--	return ret;
--}
--EXPORT_SYMBOL_GPL(ezx_pcap_read);
--
--int ezx_pcap_set_bits(struct pcap_chip *pcap, u8 reg_num, u32 mask, u32 val)
--{
--	unsigned long flags;
--	int ret;
--	u32 tmp = PCAP_REGISTER_READ_OP_BIT |
--		(reg_num << PCAP_REGISTER_ADDRESS_SHIFT);
--
--	spin_lock_irqsave(&pcap->io_lock, flags);
--	ret = ezx_pcap_putget(pcap, &tmp);
--	if (ret)
--		goto out_unlock;
--
--	tmp &= (PCAP_REGISTER_VALUE_MASK & ~mask);
--	tmp |= (val & mask) | PCAP_REGISTER_WRITE_OP_BIT |
--		(reg_num << PCAP_REGISTER_ADDRESS_SHIFT);
--
--	ret = ezx_pcap_putget(pcap, &tmp);
--out_unlock:
--	spin_unlock_irqrestore(&pcap->io_lock, flags);
--
--	return ret;
--}
--EXPORT_SYMBOL_GPL(ezx_pcap_set_bits);
--
--/* IRQ */
--int irq_to_pcap(struct pcap_chip *pcap, int irq)
--{
--	return irq - pcap->irq_base;
--}
--EXPORT_SYMBOL_GPL(irq_to_pcap);
--
--int pcap_to_irq(struct pcap_chip *pcap, int irq)
--{
--	return pcap->irq_base + irq;
--}
--EXPORT_SYMBOL_GPL(pcap_to_irq);
--
--static void pcap_mask_irq(struct irq_data *d)
--{
--	struct pcap_chip *pcap = irq_data_get_irq_chip_data(d);
--
--	pcap->msr |= 1 << irq_to_pcap(pcap, d->irq);
--	queue_work(pcap->workqueue, &pcap->msr_work);
--}
--
--static void pcap_unmask_irq(struct irq_data *d)
--{
--	struct pcap_chip *pcap = irq_data_get_irq_chip_data(d);
--
--	pcap->msr &= ~(1 << irq_to_pcap(pcap, d->irq));
--	queue_work(pcap->workqueue, &pcap->msr_work);
--}
--
--static struct irq_chip pcap_irq_chip = {
--	.name		= "pcap",
--	.irq_disable	= pcap_mask_irq,
--	.irq_mask	= pcap_mask_irq,
--	.irq_unmask	= pcap_unmask_irq,
--};
--
--static void pcap_msr_work(struct work_struct *work)
--{
--	struct pcap_chip *pcap = container_of(work, struct pcap_chip, msr_work);
--
--	ezx_pcap_write(pcap, PCAP_REG_MSR, pcap->msr);
--}
--
--static void pcap_isr_work(struct work_struct *work)
--{
--	struct pcap_chip *pcap = container_of(work, struct pcap_chip, isr_work);
--	struct pcap_platform_data *pdata = dev_get_platdata(&pcap->spi->dev);
--	u32 msr, isr, int_sel, service;
--	int irq;
--
--	do {
--		ezx_pcap_read(pcap, PCAP_REG_MSR, &msr);
--		ezx_pcap_read(pcap, PCAP_REG_ISR, &isr);
--
--		/* We can't service/ack irqs that are assigned to port 2 */
--		if (!(pdata->config & PCAP_SECOND_PORT)) {
--			ezx_pcap_read(pcap, PCAP_REG_INT_SEL, &int_sel);
--			isr &= ~int_sel;
--		}
--
--		ezx_pcap_write(pcap, PCAP_REG_MSR, isr | msr);
--		ezx_pcap_write(pcap, PCAP_REG_ISR, isr);
--
--		service = isr & ~msr;
--		for (irq = pcap->irq_base; service; service >>= 1, irq++) {
--			if (service & 1)
--				generic_handle_irq_safe(irq);
--		}
--		ezx_pcap_write(pcap, PCAP_REG_MSR, pcap->msr);
--	} while (gpio_get_value(pdata->gpio));
--}
--
--static void pcap_irq_handler(struct irq_desc *desc)
--{
--	struct pcap_chip *pcap = irq_desc_get_handler_data(desc);
--
--	desc->irq_data.chip->irq_ack(&desc->irq_data);
--	queue_work(pcap->workqueue, &pcap->isr_work);
--}
--
--/* ADC */
--void pcap_set_ts_bits(struct pcap_chip *pcap, u32 bits)
--{
--	unsigned long flags;
--	u32 tmp;
--
--	spin_lock_irqsave(&pcap->adc_lock, flags);
--	ezx_pcap_read(pcap, PCAP_REG_ADC, &tmp);
--	tmp &= ~(PCAP_ADC_TS_M_MASK | PCAP_ADC_TS_REF_LOWPWR);
--	tmp |= bits & (PCAP_ADC_TS_M_MASK | PCAP_ADC_TS_REF_LOWPWR);
--	ezx_pcap_write(pcap, PCAP_REG_ADC, tmp);
--	spin_unlock_irqrestore(&pcap->adc_lock, flags);
--}
--EXPORT_SYMBOL_GPL(pcap_set_ts_bits);
--
--static void pcap_disable_adc(struct pcap_chip *pcap)
--{
--	u32 tmp;
--
--	ezx_pcap_read(pcap, PCAP_REG_ADC, &tmp);
--	tmp &= ~(PCAP_ADC_ADEN|PCAP_ADC_BATT_I_ADC|PCAP_ADC_BATT_I_POLARITY);
--	ezx_pcap_write(pcap, PCAP_REG_ADC, tmp);
--}
--
--static void pcap_adc_trigger(struct pcap_chip *pcap)
--{
--	unsigned long flags;
--	u32 tmp;
--	u8 head;
--
--	spin_lock_irqsave(&pcap->adc_lock, flags);
--	head = pcap->adc_head;
--	if (!pcap->adc_queue[head]) {
--		/* queue is empty, save power */
--		pcap_disable_adc(pcap);
--		spin_unlock_irqrestore(&pcap->adc_lock, flags);
--		return;
--	}
--	/* start conversion on requested bank, save TS_M bits */
--	ezx_pcap_read(pcap, PCAP_REG_ADC, &tmp);
--	tmp &= (PCAP_ADC_TS_M_MASK | PCAP_ADC_TS_REF_LOWPWR);
--	tmp |= pcap->adc_queue[head]->flags | PCAP_ADC_ADEN;
--
--	if (pcap->adc_queue[head]->bank == PCAP_ADC_BANK_1)
--		tmp |= PCAP_ADC_AD_SEL1;
--
--	ezx_pcap_write(pcap, PCAP_REG_ADC, tmp);
--	spin_unlock_irqrestore(&pcap->adc_lock, flags);
--	ezx_pcap_write(pcap, PCAP_REG_ADR, PCAP_ADR_ASC);
--}
--
--static irqreturn_t pcap_adc_irq(int irq, void *_pcap)
--{
--	struct pcap_chip *pcap = _pcap;
--	struct pcap_adc_request *req;
--	u16 res[2];
--	u32 tmp;
--
--	spin_lock(&pcap->adc_lock);
--	req = pcap->adc_queue[pcap->adc_head];
--
--	if (WARN(!req, "adc irq without pending request\n")) {
--		spin_unlock(&pcap->adc_lock);
--		return IRQ_HANDLED;
--	}
--
--	/* read requested channels results */
--	ezx_pcap_read(pcap, PCAP_REG_ADC, &tmp);
--	tmp &= ~(PCAP_ADC_ADA1_MASK | PCAP_ADC_ADA2_MASK);
--	tmp |= (req->ch[0] << PCAP_ADC_ADA1_SHIFT);
--	tmp |= (req->ch[1] << PCAP_ADC_ADA2_SHIFT);
--	ezx_pcap_write(pcap, PCAP_REG_ADC, tmp);
--	ezx_pcap_read(pcap, PCAP_REG_ADR, &tmp);
--	res[0] = (tmp & PCAP_ADR_ADD1_MASK) >> PCAP_ADR_ADD1_SHIFT;
--	res[1] = (tmp & PCAP_ADR_ADD2_MASK) >> PCAP_ADR_ADD2_SHIFT;
--
--	pcap->adc_queue[pcap->adc_head] = NULL;
--	pcap->adc_head = (pcap->adc_head + 1) & (PCAP_ADC_MAXQ - 1);
--	spin_unlock(&pcap->adc_lock);
--
--	/* pass the results and release memory */
--	req->callback(req->data, res);
--	kfree(req);
--
--	/* trigger next conversion (if any) on queue */
--	pcap_adc_trigger(pcap);
--
--	return IRQ_HANDLED;
--}
--
--int pcap_adc_async(struct pcap_chip *pcap, u8 bank, u32 flags, u8 ch[],
--						void *callback, void *data)
--{
--	struct pcap_adc_request *req;
--	unsigned long irq_flags;
--
--	/* This will be freed after we have a result */
--	req = kmalloc_obj(struct pcap_adc_request);
--	if (!req)
--		return -ENOMEM;
--
--	req->bank = bank;
--	req->flags = flags;
--	req->ch[0] = ch[0];
--	req->ch[1] = ch[1];
--	req->callback = callback;
--	req->data = data;
--
--	spin_lock_irqsave(&pcap->adc_lock, irq_flags);
--	if (pcap->adc_queue[pcap->adc_tail]) {
--		spin_unlock_irqrestore(&pcap->adc_lock, irq_flags);
--		kfree(req);
--		return -EBUSY;
--	}
--	pcap->adc_queue[pcap->adc_tail] = req;
--	pcap->adc_tail = (pcap->adc_tail + 1) & (PCAP_ADC_MAXQ - 1);
--	spin_unlock_irqrestore(&pcap->adc_lock, irq_flags);
--
--	/* start conversion */
--	pcap_adc_trigger(pcap);
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(pcap_adc_async);
--
--/* subdevs */
--static int pcap_remove_subdev(struct device *dev, void *unused)
--{
--	platform_device_unregister(to_platform_device(dev));
--	return 0;
--}
--
--static int pcap_add_subdev(struct pcap_chip *pcap,
--						struct pcap_subdev *subdev)
--{
--	struct platform_device *pdev;
--	int ret;
--
--	pdev = platform_device_alloc(subdev->name, subdev->id);
--	if (!pdev)
--		return -ENOMEM;
--
--	pdev->dev.parent = &pcap->spi->dev;
--	pdev->dev.platform_data = subdev->platform_data;
--
--	ret = platform_device_add(pdev);
--	if (ret)
--		platform_device_put(pdev);
--
--	return ret;
--}
--
--static void ezx_pcap_remove(struct spi_device *spi)
--{
--	struct pcap_chip *pcap = spi_get_drvdata(spi);
--	unsigned long flags;
--	int i;
--
--	/* remove all registered subdevs */
--	device_for_each_child(&spi->dev, NULL, pcap_remove_subdev);
--
--	/* cleanup ADC */
--	spin_lock_irqsave(&pcap->adc_lock, flags);
--	for (i = 0; i < PCAP_ADC_MAXQ; i++)
--		kfree(pcap->adc_queue[i]);
--	spin_unlock_irqrestore(&pcap->adc_lock, flags);
--
--	/* cleanup irqchip */
--	for (i = pcap->irq_base; i < (pcap->irq_base + PCAP_NIRQS); i++)
--		irq_set_chip_and_handler(i, NULL, NULL);
--}
--
--static int ezx_pcap_probe(struct spi_device *spi)
--{
--	struct pcap_platform_data *pdata = dev_get_platdata(&spi->dev);
--	struct pcap_chip *pcap;
--	int i, adc_irq;
--	int ret;
--
--	/* platform data is required */
--	if (!pdata)
--		return -ENODEV;
--
--	pcap = devm_kzalloc(&spi->dev, sizeof(*pcap), GFP_KERNEL);
--	if (!pcap)
--		return -ENOMEM;
--
--	spin_lock_init(&pcap->io_lock);
--	spin_lock_init(&pcap->adc_lock);
--	INIT_WORK(&pcap->isr_work, pcap_isr_work);
--	INIT_WORK(&pcap->msr_work, pcap_msr_work);
--	spi_set_drvdata(spi, pcap);
--
--	/* setup spi */
--	spi->bits_per_word = 32;
--	spi->mode = SPI_MODE_0 | (pdata->config & PCAP_CS_AH ? SPI_CS_HIGH : 0);
--	ret = spi_setup(spi);
--	if (ret)
--		return ret;
--
--	pcap->spi = spi;
--
--	/* setup irq */
--	pcap->irq_base = pdata->irq_base;
--	pcap->workqueue = devm_alloc_ordered_workqueue(&spi->dev, "pcapd", 0);
--	if (!pcap->workqueue)
--		return -ENOMEM;
--
--	/* redirect interrupts to AP, except adcdone2 */
--	if (!(pdata->config & PCAP_SECOND_PORT))
--		ezx_pcap_write(pcap, PCAP_REG_INT_SEL,
--					(1 << PCAP_IRQ_ADCDONE2));
--
--	/* setup irq chip */
--	for (i = pcap->irq_base; i < (pcap->irq_base + PCAP_NIRQS); i++) {
--		irq_set_chip_and_handler(i, &pcap_irq_chip, handle_simple_irq);
--		irq_set_chip_data(i, pcap);
--		irq_clear_status_flags(i, IRQ_NOREQUEST | IRQ_NOPROBE);
--	}
--
--	/* mask/ack all PCAP interrupts */
--	ezx_pcap_write(pcap, PCAP_REG_MSR, PCAP_MASK_ALL_INTERRUPT);
--	ezx_pcap_write(pcap, PCAP_REG_ISR, PCAP_CLEAR_INTERRUPT_REGISTER);
--	pcap->msr = PCAP_MASK_ALL_INTERRUPT;
--
--	irq_set_irq_type(spi->irq, IRQ_TYPE_EDGE_RISING);
--	irq_set_chained_handler_and_data(spi->irq, pcap_irq_handler, pcap);
--	irq_set_irq_wake(spi->irq, 1);
--
--	/* ADC */
--	adc_irq = pcap_to_irq(pcap, (pdata->config & PCAP_SECOND_PORT) ?
--					PCAP_IRQ_ADCDONE2 : PCAP_IRQ_ADCDONE);
--
--	ret = devm_request_irq(&spi->dev, adc_irq, pcap_adc_irq, 0, "ADC",
--				pcap);
--	if (ret)
--		goto free_irqchip;
--
--	/* setup subdevs */
--	for (i = 0; i < pdata->num_subdevs; i++) {
--		ret = pcap_add_subdev(pcap, &pdata->subdevs[i]);
--		if (ret)
--			goto remove_subdevs;
--	}
--
--	/* board specific quirks */
--	if (pdata->init)
--		pdata->init(pcap);
--
--	return 0;
--
--remove_subdevs:
--	device_for_each_child(&spi->dev, NULL, pcap_remove_subdev);
--free_irqchip:
--	for (i = pcap->irq_base; i < (pcap->irq_base + PCAP_NIRQS); i++)
--		irq_set_chip_and_handler(i, NULL, NULL);
--
--	return ret;
--}
--
--static struct spi_driver ezxpcap_driver = {
--	.probe	= ezx_pcap_probe,
--	.remove = ezx_pcap_remove,
--	.driver = {
--		.name	= "ezx-pcap",
--	},
--};
--
--static int __init ezx_pcap_init(void)
--{
--	return spi_register_driver(&ezxpcap_driver);
--}
--
--static void __exit ezx_pcap_exit(void)
--{
--	spi_unregister_driver(&ezxpcap_driver);
--}
--
--subsys_initcall(ezx_pcap_init);
--module_exit(ezx_pcap_exit);
--
--MODULE_AUTHOR("Daniel Ribeiro / Harald Welte");
--MODULE_DESCRIPTION("Motorola PCAP2 ASIC Driver");
--MODULE_ALIAS("spi:ezx-pcap");
-diff --git a/include/linux/mfd/ezx-pcap.h b/include/linux/mfd/ezx-pcap.h
-deleted file mode 100644
-index ea51b1cdca5a..000000000000
---- a/include/linux/mfd/ezx-pcap.h
-+++ /dev/null
-@@ -1,253 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Copyright 2009 Daniel Ribeiro <drwyrm@gmail.com>
-- *
-- * For further information, please see http://wiki.openezx.org/PCAP2
-- */
--
--#ifndef EZX_PCAP_H
--#define EZX_PCAP_H
--
--struct pcap_subdev {
--	int id;
--	const char *name;
--	void *platform_data;
--};
--
--struct pcap_platform_data {
--	unsigned int irq_base;
--	unsigned int config;
--	int gpio;
--	void (*init) (void *);	/* board specific init */
--	int num_subdevs;
--	struct pcap_subdev *subdevs;
--};
--
--struct pcap_chip;
--
--int ezx_pcap_write(struct pcap_chip *, u8, u32);
--int ezx_pcap_read(struct pcap_chip *, u8, u32 *);
--int ezx_pcap_set_bits(struct pcap_chip *, u8, u32, u32);
--int pcap_to_irq(struct pcap_chip *, int);
--int irq_to_pcap(struct pcap_chip *, int);
--int pcap_adc_async(struct pcap_chip *, u8, u32, u8[], void *, void *);
--void pcap_set_ts_bits(struct pcap_chip *, u32);
--
--#define PCAP_SECOND_PORT	1
--#define PCAP_CS_AH		2
--
--#define PCAP_REGISTER_WRITE_OP_BIT	0x80000000
--#define PCAP_REGISTER_READ_OP_BIT	0x00000000
--
--#define PCAP_REGISTER_VALUE_MASK	0x01ffffff
--#define PCAP_REGISTER_ADDRESS_MASK	0x7c000000
--#define PCAP_REGISTER_ADDRESS_SHIFT	26
--#define PCAP_REGISTER_NUMBER		32
--#define PCAP_CLEAR_INTERRUPT_REGISTER	0x01ffffff
--#define PCAP_MASK_ALL_INTERRUPT		0x01ffffff
--
--/* registers accessible by both pcap ports */
--#define PCAP_REG_ISR		0x0	/* Interrupt Status */
--#define PCAP_REG_MSR		0x1	/* Interrupt Mask */
--#define PCAP_REG_PSTAT		0x2	/* Processor Status */
--#define PCAP_REG_VREG2		0x6	/* Regulator Bank 2 Control */
--#define PCAP_REG_AUXVREG	0x7	/* Auxiliary Regulator Control */
--#define PCAP_REG_BATT		0x8	/* Battery Control */
--#define PCAP_REG_ADC		0x9	/* AD Control */
--#define PCAP_REG_ADR		0xa	/* AD Result */
--#define PCAP_REG_CODEC		0xb	/* Audio Codec Control */
--#define PCAP_REG_RX_AMPS	0xc	/* RX Audio Amplifiers Control */
--#define PCAP_REG_ST_DAC		0xd	/* Stereo DAC Control */
--#define PCAP_REG_BUSCTRL	0x14	/* Connectivity Control */
--#define PCAP_REG_PERIPH		0x15	/* Peripheral Control */
--#define PCAP_REG_LOWPWR		0x18	/* Regulator Low Power Control */
--#define PCAP_REG_TX_AMPS	0x1a	/* TX Audio Amplifiers Control */
--#define PCAP_REG_GP		0x1b	/* General Purpose */
--#define PCAP_REG_TEST1		0x1c
--#define PCAP_REG_TEST2		0x1d
--#define PCAP_REG_VENDOR_TEST1	0x1e
--#define PCAP_REG_VENDOR_TEST2	0x1f
--
--/* registers accessible by pcap port 1 only (a1200, e2 & e6) */
--#define PCAP_REG_INT_SEL	0x3	/* Interrupt Select */
--#define PCAP_REG_SWCTRL		0x4	/* Switching Regulator Control */
--#define PCAP_REG_VREG1		0x5	/* Regulator Bank 1 Control */
--#define PCAP_REG_RTC_TOD	0xe	/* RTC Time of Day */
--#define PCAP_REG_RTC_TODA	0xf	/* RTC Time of Day Alarm */
--#define PCAP_REG_RTC_DAY	0x10	/* RTC Day */
--#define PCAP_REG_RTC_DAYA	0x11	/* RTC Day Alarm */
--#define PCAP_REG_MTRTMR		0x12	/* AD Monitor Timer */
--#define PCAP_REG_PWR		0x13	/* Power Control */
--#define PCAP_REG_AUXVREG_MASK	0x16	/* Auxiliary Regulator Mask */
--#define PCAP_REG_VENDOR_REV	0x17
--#define PCAP_REG_PERIPH_MASK	0x19	/* Peripheral Mask */
--
--/* PCAP2 Interrupts */
--#define PCAP_NIRQS		23
--#define PCAP_IRQ_ADCDONE	0	/* ADC done port 1 */
--#define PCAP_IRQ_TS		1	/* Touch Screen */
--#define PCAP_IRQ_1HZ		2	/* 1HZ timer */
--#define PCAP_IRQ_WH		3	/* ADC above high limit */
--#define PCAP_IRQ_WL		4	/* ADC below low limit */
--#define PCAP_IRQ_TODA		5	/* Time of day alarm */
--#define PCAP_IRQ_USB4V		6	/* USB above 4V */
--#define PCAP_IRQ_ONOFF		7	/* On/Off button */
--#define PCAP_IRQ_ONOFF2		8	/* On/Off button 2 */
--#define PCAP_IRQ_USB1V		9	/* USB above 1V */
--#define PCAP_IRQ_MOBPORT	10
--#define PCAP_IRQ_MIC		11	/* Mic attach/HS button */
--#define PCAP_IRQ_HS		12	/* Headset attach */
--#define PCAP_IRQ_ST		13
--#define PCAP_IRQ_PC		14	/* Power Cut */
--#define PCAP_IRQ_WARM		15
--#define PCAP_IRQ_EOL		16	/* Battery End Of Life */
--#define PCAP_IRQ_CLK		17
--#define PCAP_IRQ_SYSRST		18	/* System Reset */
--#define PCAP_IRQ_DUMMY		19
--#define PCAP_IRQ_ADCDONE2	20	/* ADC done port 2 */
--#define PCAP_IRQ_SOFTRESET	21
--#define PCAP_IRQ_MNEXB		22
--
--/* voltage regulators */
--#define V1		0
--#define V2		1
--#define V3		2
--#define V4		3
--#define V5		4
--#define V6		5
--#define V7		6
--#define V8		7
--#define V9		8
--#define V10		9
--#define VAUX1		10
--#define VAUX2		11
--#define VAUX3		12
--#define VAUX4		13
--#define VSIM		14
--#define VSIM2		15
--#define VVIB		16
--#define SW1		17
--#define SW2		18
--#define SW3		19
--#define SW1S		20
--#define SW2S		21
--
--#define PCAP_BATT_DAC_MASK		0x000000ff
--#define PCAP_BATT_DAC_SHIFT		0
--#define PCAP_BATT_B_FDBK		(1 << 8)
--#define PCAP_BATT_EXT_ISENSE		(1 << 9)
--#define PCAP_BATT_V_COIN_MASK		0x00003c00
--#define PCAP_BATT_V_COIN_SHIFT		10
--#define PCAP_BATT_I_COIN		(1 << 14)
--#define PCAP_BATT_COIN_CH_EN		(1 << 15)
--#define PCAP_BATT_EOL_SEL_MASK		0x000e0000
--#define PCAP_BATT_EOL_SEL_SHIFT		17
--#define PCAP_BATT_EOL_CMP_EN		(1 << 20)
--#define PCAP_BATT_BATT_DET_EN		(1 << 21)
--#define PCAP_BATT_THERMBIAS_CTRL	(1 << 22)
--
--#define PCAP_ADC_ADEN			(1 << 0)
--#define PCAP_ADC_RAND			(1 << 1)
--#define PCAP_ADC_AD_SEL1		(1 << 2)
--#define PCAP_ADC_AD_SEL2		(1 << 3)
--#define PCAP_ADC_ADA1_MASK		0x00000070
--#define PCAP_ADC_ADA1_SHIFT		4
--#define PCAP_ADC_ADA2_MASK		0x00000380
--#define PCAP_ADC_ADA2_SHIFT		7
--#define PCAP_ADC_ATO_MASK		0x00003c00
--#define PCAP_ADC_ATO_SHIFT		10
--#define PCAP_ADC_ATOX			(1 << 14)
--#define PCAP_ADC_MTR1			(1 << 15)
--#define PCAP_ADC_MTR2			(1 << 16)
--#define PCAP_ADC_TS_M_MASK		0x000e0000
--#define PCAP_ADC_TS_M_SHIFT		17
--#define PCAP_ADC_TS_REF_LOWPWR		(1 << 20)
--#define PCAP_ADC_TS_REFENB		(1 << 21)
--#define PCAP_ADC_BATT_I_POLARITY	(1 << 22)
--#define PCAP_ADC_BATT_I_ADC		(1 << 23)
--
--#define PCAP_ADC_BANK_0			0
--#define PCAP_ADC_BANK_1			1
--/* ADC bank 0 */
--#define PCAP_ADC_CH_COIN		0
--#define PCAP_ADC_CH_BATT		1
--#define PCAP_ADC_CH_BPLUS		2
--#define PCAP_ADC_CH_MOBPORTB		3
--#define PCAP_ADC_CH_TEMPERATURE		4
--#define PCAP_ADC_CH_CHARGER_ID		5
--#define PCAP_ADC_CH_AD6			6
--/* ADC bank 1 */
--#define PCAP_ADC_CH_AD7			0
--#define PCAP_ADC_CH_AD8			1
--#define PCAP_ADC_CH_AD9			2
--#define PCAP_ADC_CH_TS_X1		3
--#define PCAP_ADC_CH_TS_X2		4
--#define PCAP_ADC_CH_TS_Y1		5
--#define PCAP_ADC_CH_TS_Y2		6
--
--#define PCAP_ADC_T_NOW			0
--#define PCAP_ADC_T_IN_BURST		1
--#define PCAP_ADC_T_OUT_BURST		2
--
--#define PCAP_ADC_ATO_IN_BURST		6
--#define PCAP_ADC_ATO_OUT_BURST		0
--
--#define PCAP_ADC_TS_M_XY		1
--#define PCAP_ADC_TS_M_PRESSURE		2
--#define PCAP_ADC_TS_M_PLATE_X		3
--#define PCAP_ADC_TS_M_PLATE_Y		4
--#define PCAP_ADC_TS_M_STANDBY		5
--#define PCAP_ADC_TS_M_NONTS		6
--
--#define PCAP_ADR_ADD1_MASK		0x000003ff
--#define PCAP_ADR_ADD1_SHIFT		0
--#define PCAP_ADR_ADD2_MASK		0x000ffc00
--#define PCAP_ADR_ADD2_SHIFT		10
--#define PCAP_ADR_ADINC1			(1 << 20)
--#define PCAP_ADR_ADINC2			(1 << 21)
--#define PCAP_ADR_ASC			(1 << 22)
--#define PCAP_ADR_ONESHOT		(1 << 23)
--
--#define PCAP_BUSCTRL_FSENB		(1 << 0)
--#define PCAP_BUSCTRL_USB_SUSPEND	(1 << 1)
--#define PCAP_BUSCTRL_USB_PU		(1 << 2)
--#define PCAP_BUSCTRL_USB_PD		(1 << 3)
--#define PCAP_BUSCTRL_VUSB_EN		(1 << 4)
--#define PCAP_BUSCTRL_USB_PS		(1 << 5)
--#define PCAP_BUSCTRL_VUSB_MSTR_EN	(1 << 6)
--#define PCAP_BUSCTRL_VBUS_PD_ENB	(1 << 7)
--#define PCAP_BUSCTRL_CURRLIM		(1 << 8)
--#define PCAP_BUSCTRL_RS232ENB		(1 << 9)
--#define PCAP_BUSCTRL_RS232_DIR		(1 << 10)
--#define PCAP_BUSCTRL_SE0_CONN		(1 << 11)
--#define PCAP_BUSCTRL_USB_PDM		(1 << 12)
--#define PCAP_BUSCTRL_BUS_PRI_ADJ	(1 << 24)
--
--/* leds */
--#define PCAP_LED0		0
--#define PCAP_LED1		1
--#define PCAP_BL0		2
--#define PCAP_BL1		3
--#define PCAP_LED_3MA		0
--#define PCAP_LED_4MA		1
--#define PCAP_LED_5MA		2
--#define PCAP_LED_9MA		3
--#define PCAP_LED_T_MASK		0xf
--#define PCAP_LED_C_MASK		0x3
--#define PCAP_BL_MASK		0x1f
--#define PCAP_BL0_SHIFT		0
--#define PCAP_LED0_EN		(1 << 5)
--#define PCAP_LED1_EN		(1 << 6)
--#define PCAP_LED0_T_SHIFT	7
--#define PCAP_LED1_T_SHIFT	11
--#define PCAP_LED0_C_SHIFT	15
--#define PCAP_LED1_C_SHIFT	17
--#define PCAP_BL1_SHIFT		20
--
--/* RTC */
--#define PCAP_RTC_DAY_MASK	0x3fff
--#define PCAP_RTC_TOD_MASK	0xffff
--#define PCAP_RTC_PC_MASK	0x7
--#define SEC_PER_DAY		86400
--
--#endif
--- 
-2.39.5
+
+For instance:
+
+       rpmsg {
+         rpmsg-io {
+           #address-cells = <1>;
+           #size-cells = <0>;
+
+           gpio@25 {
+             compatible = "rpmsg-gpio";
+             reg = <25>;
+             gpio-controller;
+             #gpio-cells = <2>;
+             #interrupt-cells = <2>;
+             interrupt-controller;
+           };
+
+           gpio@32 {
+             compatible = "rpmsg-gpio";
+             reg = <32>;
+             gpio-controller;
+             #gpio-cells = <2>;
+             #interrupt-cells = <2>;
+             interrupt-controller;
+           };
+         };
+       };
+
+  rpmsg-io-25  would match with gpio@25
+  rpmsg-io-32  would match with gpio@32
+
+
+> 
+> Because the endpoint that is created on a namespace request is also
+> dynamic in nature. How will the remote know which endpoint addr
+> Linux allocated for a namespace that it announced?
+> 
+> As an example/PoC, I created a firmware example which announces
+> 2 name services to Linux, one is the standard "rpmsg_chrdev" and
+> the other is a TI specific name service "ti.ipc4.ping-pong". You can
+> see it created 2 different addresses (0x400 and 0x401) for each of
+> the name service request from the same firmware:
+> 
+> root@j784s4-evm:~# dmesg | grep virtio0 | grep -i channel
+> [    9.290275] virtio_rpmsg_bus virtio0: creating channel ti.ipc4.ping-pong addr 0xd
+> [    9.311230] virtio_rpmsg_bus virtio0: creating channel rpmsg_chrdev addr 0xe
+> [    9.496645] rpmsg_chrdev virtio0.rpmsg_chrdev.-1.14: DEBUG: Channel formed from src = 0x400 to dst = 0xe
+> [    9.707255] rpmsg_client_sample virtio0.ti.ipc4.ping-pong.-1.13: new channel: 0x401 -> 0xd!
+> 
+> So in this case, rpmsg-io-1 can have different ept addr than rpmsg-io-2
+> Back to same problem. Simple solution is to reply to remote with the
+> created ept addr and the index.
+
+That why I would like to suggest to use the name service field to 
+identify the port/controller, instead of the endpoint address.
+>   
+> 
+>>
+>> - match the RPMsg probe with the DT,
+> 
+> 
+> We can probe from all controllers with a single name service
+> announcement too.
+> 
+>> - provide a simple mapping between the port and the endpoint on both sides,
+> 
+> 
+> We are trying to get rid of this mapping from Linux side to adapt
+> the gpio-virtio design.
+> 
+>> - allow multiple endpoints on the remote side,
+> 
+> 
+> We can support this as well with single nameservice model.
+> There is no limitation. Remote has to send a message with
+> its newly created ept that's all.
+> 
+>> - provide a simple discovery mechanism for remote capabilities.
+> 
+> 
+> A single announcement: "rpmsg-io" is also discovery mechanism.
+> 
+> Feel free to let me know if you have concerns with any of the
+> suggestions!
+
+My only concern, whatever the solution, is that we find a smart
+solution to associate the correct endpoint with the correct GPIO
+port/controller defined in the DT.
+
+I may have misunderstood your solution. Could you please help me
+understand your proposal by explaining how you would handle three
+GPIO ports defined in the DT, considering that the endpoint
+addresses on the Linux side can be random?
+If I assume there is a unique endpoint on the remote side,
+I do not understand how you can match, on the firmware side,
+the Linux endpoint address to the GPIO port.
+
+Thanks and Regards,Arnaud
+
+> 
+> Thanks,
+> Beleswar
+> 
+>>
+>> Regards,
+>> Arnaud
+>>
+>>>> 2. namespace/channel#2 = rpmsg-i2c
+>>>>       a. ept1 -> i2c@1
+>>>>       b. ept2 -> i2c@2
+>>>>       c. ept3 -> i2c@3
+>>>>
+>>>> etc...
+>>>>
+>>>> This way device groups are isolated with each channel/namespace, and
+>>>> instances within each device groups are also respected with specific
+>>>> endpoints.
+>>>>
+>>>> Thanks,
+>>>> Beleswar
+>>>>
+>>>
+>>
 
 
