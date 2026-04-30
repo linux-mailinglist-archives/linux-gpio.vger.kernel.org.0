@@ -1,100 +1,94 @@
-Return-Path: <linux-gpio+bounces-35849-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35850-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qBjLNywi82nIxQEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35849-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 11:34:36 +0200
+	id UEEHOi4i82nIxQEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35850-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 11:34:38 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC94A49FE0A
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 11:34:36 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D712349FE19
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 11:34:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 548823005A87
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 09:34:32 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 991D5300B599
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 09:34:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5E673A5E85;
-	Thu, 30 Apr 2026 09:34:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F05B53A5E7F;
+	Thu, 30 Apr 2026 09:34:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KpKblg51"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sGHUrYnt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B843A5430
-	for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 09:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD333A3816
+	for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 09:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777541670; cv=none; b=PX+aHVrCdEwc0QXjTiDucl7Xl//ysL8D24r3dpACEDrHLCW4KUrpqCNp0PrO+PO/pNLLkBY01JPqPDENsoSfSP7a/+tZincpLxRt21tGNSrMuARuhX3d/sOzcrnBLp3YP3ULl/YSdoU2bdfCyY/cX+21Wj/BKFfjL9t4up8AnNg=
+	t=1777541671; cv=none; b=TbVRghKM77ogs3UFa+wQxOp80cTwqcZ4FrR1cnbSBqydpjJqYY0JmgVUnIUqjUuC1oLHY9tODGe8LPvkazCH/TtkLGnWHkdKdNhsPWlTpRK9XZ/0XVvyt9tA7Bsc18jmF4OD8tIpCrjqSHyUhE8Tf5j5RBigUzyVVycux1Qv5Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777541670; c=relaxed/simple;
-	bh=2FY+4h7hB3E2g/vAnzM8D+ctfKyKw0UkzdwKveu8pvY=;
+	s=arc-20240116; t=1777541671; c=relaxed/simple;
+	bh=+VsM6Ck+0mhhhcVKrksxgtMDsF2usvUzWlIisd1MRss=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HOo6xexHMesERgRrdxtUbaYroOtM8G45ijlbKC9rku+H1CCOFpRZt98EIZGVzF7qhYp7gayu80i5veTVS70bTQBLU1HeeCqB3oA65v9DbZLVXRRrzQvrP+CGSa44v8LW1hW0fFMp1zDuRdy3kI7K7snE5nu13/UmoMfppkmj1XU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KpKblg51; arc=none smtp.client-ip=209.85.221.52
+	 MIME-Version; b=Osx9EM6in5krpI3LratGxlVOGHAoQ5Zz1PEt74ratr7O9OevAD32QSsnbpirWr5pU78fI/lhEeM1xfhTbwrlts3KPXNyrKZBpm846kPqiOoJINY2MG1V/lEr9rXmtlgM0kcYJDOHPShIK782DR5Qa4gdbgN6zRCk6Fhp9/Xkmfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sGHUrYnt; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-43eb05b1875so375490f8f.3
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 02:34:28 -0700 (PDT)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-43d70b3e159so371759f8f.0
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 02:34:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777541667; x=1778146467; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1777541668; x=1778146468; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DdHsjRXgE4RkIPMJ+uwSXVihouNvsOsYu4YaJgqIAYA=;
-        b=KpKblg51Koxm+Xc1dFb3h4KV0ebQLnhyDFTLRul+oWwQmZiXFpYx/dOndwGlIhjmJl
-         ssdPorLDbUGLTp8K2XPiyi9e51e4F9O34+EUA4zgug7auAbQPAs0HpZsb+WY1F7+T8uT
-         jrv8fdhho9dLV/uTBaYgiw8WJVMDjMTJlihBZpriwo7ncsqINwQADRv0qQqpc6xaWLau
-         Mn25kgxHm10HZ3NlwJnyrFWTm6MZU9ZK9x1bSPVM996836xhCuZeahO8yQMY+sCD++cj
-         9684OI6YSYaH0e2algPeMry6Px9hYpAgTw2aeLHtlykB5X/v/JE/zQiVEe9Jjb5HRMab
-         HSRg==
+        bh=BKg3OC8AKD5+2DyohOa+42Ozw5Xain5YLEWs5Ro/WAo=;
+        b=sGHUrYntl1yNwgfTuFDxFe27FNOB7qW+2NPFctc06VGgl2kxZEik0X5P9cNEehTybn
+         kXzDX4zLK5YIJMz9/DcaWMB71KGXWxtiwMkIPQqYOxPbzHFmmn4XnjBzmKqe7gHvH7IZ
+         t9xFm+eSdJEiZAFALsgMpEOjZZmy2fDTKNKKDiP/EOsXePT59B05mntltqszFN+SFzWH
+         c2/u5Z6Aqo1dbOhy4AG6TEoXXxt9CvwzHrBuT22p+lxFn27L/NHwkj1Su9yoNCnZlMUt
+         RCQWmMCZ+n/4zRolDoGhKYAeJzHvtuK8VJVNy0fT4IXRiLn7LWUrZFIaWm8kGycdcdL2
+         YszQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777541667; x=1778146467;
+        d=1e100.net; s=20251104; t=1777541668; x=1778146468;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=DdHsjRXgE4RkIPMJ+uwSXVihouNvsOsYu4YaJgqIAYA=;
-        b=hldZy0qqJ8kLjCEcJnHWMvq/D5kzQ6F/8FKJQmH9NXdN0+YWa/ydQPosmM+ve72V/K
-         aybwEYLn4OAcnTypwQref5U7ogGmEgjmQnb2hvjlM1Fi6O1YOXqTRmCe0l/5WmtBKcNq
-         SFcRKzYdKQWenflRb4rz9ETvYXbbW163pK1NETFGd2wGmLr1AZWHuKqsSbJRaC1TNzlL
-         +fx2l8ur9QoRS+rMXQHZCPtUp1T8E8GasEclozWqiW722YuTyY7AfE1C1P80C8tkJcoR
-         FLZkM6q9HK+/Y7zB09MlC6SDoMuV2NG/Xn1EUozAqd1vwD1lhwDWzCShPuVZJH42tmTv
-         ehJQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/RFzC6r5Sd8LtMoWn/u2RNMmTYlypNCq1REUryKNm9OiIoFVYUznB2dqCGze9BxpQaMTNLR8bkDXrP@vger.kernel.org
-X-Gm-Message-State: AOJu0YydE9BXNVvo2vaTYUI5DjWNeNQzwVG0Wy0G0tK2+rp0f4o8+6Au
-	o1c9k5UxHqOyc5/tIvcIqndRrDsjZ8l0s4jsaO+Gm4WYgi1QvHIy4I+b
-X-Gm-Gg: AeBDieucTNJ/zkOzle/I0Gn346VRbxTXp+He7BMjt/y30kEZF58MF2aYHXL7+aoKaVv
-	dla9ksV6ghrFR+HyGV4SFZmG7Ggnu7D4rj7iBbRy8kYhubxCxTxpTSXWwMK/Q8t2tJwEYrGzzam
-	PtO9N1xQuePestgDSIitvG8z5hJEgImxUCz55DfrT/lLZ6pnyaHSA3FHYNRCxuXewDxh5pxUwZS
-	HeTiBR6eqcs2Frl+L+SjMll5S9lY2rrmGXK63j6PyKdHFV2C2VstAaTgU3GVilzmzHgjQyAdpkg
-	CcAhSe1qyao05g5b1COnWPwnTPfhv3vzmux02bWFdBEZEO7/djmZ1DYOrFsGUrttZl6ye6codPH
-	Cbg054hzawIcf/7xn0wjuYT8Aj+QdAcLyo91XRLJ4AbzoECgbaFueHLT8iBzaUtq6Ss6y+EUIZD
-	ChiinwyLBm3hxh/A5GUbushVde7doe4VJGOy1JS59OsqJpfQc46TRjohma
-X-Received: by 2002:a05:6000:24c9:b0:448:e182:b7ae with SMTP id ffacd0b85a97d-4493d8f4194mr3306042f8f.7.1777541666717;
-        Thu, 30 Apr 2026 02:34:26 -0700 (PDT)
+        bh=BKg3OC8AKD5+2DyohOa+42Ozw5Xain5YLEWs5Ro/WAo=;
+        b=C+/jbYEi/dvMcv2QWs/vhGM2PSEUnv8zg0BeIl5ZEPBfOlt1NqovIapg4Q5O3kAUxG
+         CZGPap5qjNSoFoU/maCk9mLwDxtnjSKJ1gLMUDX1pTYufltaYGVO2GQuL/jg6JFtDC3d
+         kJYP2FNA14j1f6OsoZjAZ20E9bIJz7O/0XTVnWlkUWGnlTgh0w/tgTeS0W0//Pz29Ptu
+         J5VfEE6KKHJURN0nuuPqTbahvO1JUlw8pib52YGYsj4eNF51BOnwqhb0XBcwUSU3XFuA
+         bVdbnCrbrAcNdbM5Nd+VHFR8fXktMyFotzxq2mL6I4O+Fcnls1ywo6R8I03SrQDrA1yY
+         E2Tg==
+X-Forwarded-Encrypted: i=1; AFNElJ9CGS7cc5OpoSRQmxp5SZ8ztYpqbChwMUrOLXPV/y8gyFF+/yMxl6eScy2JimjkCqI0K4pDipHFmJ+i@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx685sDctW3R+FdKfTC0W67lGO5b55rLDQMZ+m0kQJZaVkd9Kfs
+	pnrtA8e7jfkR5OeYL52YBaRWDLqC9x6f/S4Y4ePykSHHXESdMiGMvvuE
+X-Gm-Gg: AeBDieuAffnXBhO4t1A+p6UswJ+5xfbo8xWNT16kbliSXI/AUFJbk0YHaxkAN1lYLLs
+	f4IJo5y4fzUbzILn4DvClmUO2pNl4aX9KuhYv9PBRUg9JiLPD616UXZPeEmPx7r45or5B/q2bdg
+	OGpBA+mu1Cg3eXX33i2jRpEiBDvP4SQ3QXNtAWs1fyB6NYFCAm6es/kjqe84LC3yAx5+LYmfrq1
+	CajH3uxhjANHk0LiLxG/Y0BWWrSSmU+TEkjeZaey+omSv8yXiEuEjpxSGKxt8vsQS3PPiNnhDfT
+	d4QnmStsyuJ6guzUKaCF0uu74qeNAsDWLW2AD1MzgZUj5nXNrT3SkeyxhiWhshSsJeMbGzKeMKh
+	lghWUW305hkUI2MsxHxBv7bHqe8Z0ei8fR4Zv1WNygjiZ4SXAPPVtp+jlvV1o4t35oG7q7rBRY9
+	EPyhuP88RIGzRdTL8e6hMv5OKMlabtYas0VQ1ktRY+VLE7BReUasbjVs16
+X-Received: by 2002:a05:6000:25c4:b0:43d:2f94:3b40 with SMTP id ffacd0b85a97d-4493c381e7dmr3475621f8f.6.1777541667841;
+        Thu, 30 Apr 2026 02:34:27 -0700 (PDT)
 Received: from localhost.localdomain ([2a00:23c4:a758:8a01:342:901:e785:f7d2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-447b76e5c22sm11953913f8f.28.2026.04.30.02.34.25
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-447b76e5c22sm11953913f8f.28.2026.04.30.02.34.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2026 02:34:26 -0700 (PDT)
+        Thu, 30 Apr 2026 02:34:27 -0700 (PDT)
 From: Biju <biju.das.au@gmail.com>
 X-Google-Original-From: Biju <biju.das.jz@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linusw@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>
+	Linus Walleij <linusw@kernel.org>
 Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
 	linux-renesas-soc@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Biju Das <biju.das.au@gmail.com>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v4 1/7] dt-bindings: pinctrl: renesas: Document RZ/G3L SoC
-Date: Thu, 30 Apr 2026 10:34:06 +0100
-Message-ID: <20260430093422.74812-2-biju.das.jz@bp.renesas.com>
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Biju Das <biju.das.au@gmail.com>
+Subject: [PATCH v4 2/7] pinctrl: renesas: rzg2l: Make QSPI register handling conditional
+Date: Thu, 30 Apr 2026 10:34:07 +0100
+Message-ID: <20260430093422.74812-3-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260430093422.74812-1-biju.das.jz@bp.renesas.com>
 References: <20260430093422.74812-1-biju.das.jz@bp.renesas.com>
@@ -105,158 +99,115 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: AC94A49FE0A
+X-Rspamd-Queue-Id: D712349FE19
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35849-lists,linux-gpio=lfdr.de];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[glider.be,kernel.org,gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	FREEMAIL_CC(0.00)[bp.renesas.com,vger.kernel.org,gmail.com,microchip.com];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35850-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[bp.renesas.com,vger.kernel.org,gmail.com];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bijudasau@gmail.com,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio,renesas,dt];
-	NEURAL_HAM(-0.00)[-1.000];
 	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[bijudasau@gmail.com,linux-gpio@vger.kernel.org];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[bp.renesas.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 
 From: Biju Das <biju.das.jz@bp.renesas.com>
 
-Add documentation for the pin controller found on the Renesas RZ/G3L
-(R9A08G046) SoC. The RZ/G3L PFC is similar to the RZ/G3S SoC but has
-more pins.
+The QSPI register at offset 0x3008 is not present on all SoCs supported by
+the RZ/G2L pinctrl driver. Unconditionally reading and writing this
+register during suspend/resume on hardware that lacks it can cause
+undefined behaviour.
 
-Also add header file similar to RZ/G3E and RZ/V2H as it has alpha
-numeric ports.
+Add a qspi field to rzg2l_register_offsets to allow per-SoC declaration of
+the QSPI register offset, and guard the suspend/resume accesses with a
+check on that field. Populate the offset only for the RZ/{G2L,G2LC,G2UL,
+Five} hardware configuration, which is where the register is known to
+exist.
 
-Document renesas,clonech property for controlling clone channel
-control register located on SYSC IP block on RZ/G3L SoC.
-
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
 Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
-v3->v4:
- * Dropped Port P4 as it does not exist on RZ/G3L SoC.
- * Retained the tag as it is trivial change.
-v2->v3:
- * Documented renesas,clonech property for controlling clone channel
-   control register located on SYSC IP block on RZ/G3L SoC.
- * Retained the tag as it is similar change for RZ/G3E thermal bindings.
-v1->v2:
- * Collected tag
+v4:
+ * New patch.
 ---
- .../pinctrl/renesas,rzg2l-pinctrl.yaml        | 20 ++++++++++
- .../pinctrl/renesas,r9a08g046-pinctrl.h       | 38 +++++++++++++++++++
- 2 files changed, 58 insertions(+)
- create mode 100644 include/dt-bindings/pinctrl/renesas,r9a08g046-pinctrl.h
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-index 1a94e396b1b0..fb1fe1ea759f 100644
---- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-@@ -26,6 +26,7 @@ properties:
-               - renesas,r9a07g043-pinctrl # RZ/G2UL{Type-1,Type-2} and RZ/Five
-               - renesas,r9a07g044-pinctrl # RZ/G2{L,LC}
-               - renesas,r9a08g045-pinctrl # RZ/G3S
-+              - renesas,r9a08g046-pinctrl # RZ/G3L
-               - renesas,r9a09g047-pinctrl # RZ/G3E
-               - renesas,r9a09g056-pinctrl # RZ/V2N
-               - renesas,r9a09g057-pinctrl # RZ/V2H(P)
-@@ -88,6 +89,16 @@ properties:
-           - const: main
-           - const: error
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index bc2154b69514..ca9d4a3ec737 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -145,7 +145,7 @@
+ #define SMT(off)		(0x3400 + (off) * 8)
+ #define SD_CH(off, ch)		((off) + (ch) * 4)
+ #define ETH_POC(off, ch)	((off) + (ch) * 4)
+-#define QSPI			(0x3008)
++#define QSPI			(0x3008) /* known on RZ/{G2L,G2LC,G2UL,Five} only */
  
-+  renesas,clonech:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    items:
-+      - items:
-+          - description: phandle to system controller
-+          - description: offset of clone channel control register
-+    description:
-+      Phandle and offset to the system controller containing the clone channel
-+      control values.
-+
- additionalProperties:
-   anyOf:
-     - type: object
-@@ -150,6 +161,15 @@ additionalProperties:
- allOf:
-   - $ref: pinctrl.yaml#
+ #define PVDD_2500		2	/* I/O domain voltage 2.5V */
+ #define PVDD_1800		1	/* I/O domain voltage <= 1.8V */
+@@ -220,12 +220,14 @@ static const struct pin_config_item renesas_rzv2h_conf_items[] = {
+  * @sd_ch: SD_CH register offset
+  * @eth_poc: ETH_POC register offset
+  * @oen: OEN register offset
++ * @qspi: QSPI register offset
+  */
+ struct rzg2l_register_offsets {
+ 	u16 pwpr;
+ 	u16 sd_ch;
+ 	u16 eth_poc;
+ 	u16 oen;
++	u16 qspi;
+ };
  
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: renesas,r9a08g046-pinctrl
-+    then:
-+      required:
-+        - renesas,clonech
-+
-   - if:
-       properties:
-         compatible:
-diff --git a/include/dt-bindings/pinctrl/renesas,r9a08g046-pinctrl.h b/include/dt-bindings/pinctrl/renesas,r9a08g046-pinctrl.h
-new file mode 100644
-index 000000000000..5ec5bfc27c7d
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/renesas,r9a08g046-pinctrl.h
-@@ -0,0 +1,38 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * This header provides constants for Renesas RZ/G3L family pinctrl bindings.
-+ *
-+ * Copyright (C) 2026 Renesas Electronics Corp.
-+ *
-+ */
-+
-+#ifndef __DT_BINDINGS_PINCTRL_RENESAS_R9A08G046_PINCTRL_H__
-+#define __DT_BINDINGS_PINCTRL_RENESAS_R9A08G046_PINCTRL_H__
-+
-+#include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
-+
-+/* RZG3L_Px = Offset address of PFC_P_mn  - 0x22 */
-+#define RZG3L_P2	2
-+#define RZG3L_P3	3
-+#define RZG3L_P5	5
-+#define RZG3L_P6	6
-+#define RZG3L_P7	7
-+#define RZG3L_P8	8
-+#define RZG3L_PA	10
-+#define RZG3L_PB	11
-+#define RZG3L_PC	12
-+#define RZG3L_PD	13
-+#define RZG3L_PE	14
-+#define RZG3L_PF	15
-+#define RZG3L_PG	16
-+#define RZG3L_PH	17
-+#define RZG3L_PJ	19
-+#define RZG3L_PK	20
-+#define RZG3L_PL	21
-+#define RZG3L_PM	22
-+#define RZG3L_PS	28
-+
-+#define RZG3L_PORT_PINMUX(b, p, f)	RZG2L_PORT_PINMUX(RZG3L_P##b, p, f)
-+#define RZG3L_GPIO(port, pin)		RZG2L_GPIO(RZG3L_P##port, pin)
-+
-+#endif /* __DT_BINDINGS_PINCTRL_RENESAS_R9A08G046_PINCTRL_H__ */
+ /**
+@@ -3297,7 +3299,8 @@ static int rzg2l_pinctrl_suspend_noirq(struct device *dev)
+ 			cache->eth_poc[i] = readb(pctrl->base + ETH_POC(regs->eth_poc, i));
+ 	}
+ 
+-	cache->qspi = readb(pctrl->base + QSPI);
++	if (regs->qspi)
++		cache->qspi = readb(pctrl->base + regs->qspi);
+ 	cache->oen = readb(pctrl->base + pctrl->data->hwcfg->regs.oen);
+ 
+ 	if (!atomic_read(&pctrl->wakeup_path))
+@@ -3323,7 +3326,8 @@ static int rzg2l_pinctrl_resume_noirq(struct device *dev)
+ 			return ret;
+ 	}
+ 
+-	writeb(cache->qspi, pctrl->base + QSPI);
++	if (regs->qspi)
++		writeb(cache->qspi, pctrl->base + regs->qspi);
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 	rzg2l_oen_write_with_pwpr(pctrl, cache->oen);
+@@ -3381,6 +3385,7 @@ static const struct rzg2l_hwcfg rzg2l_hwcfg = {
+ 		.sd_ch = 0x3000,
+ 		.eth_poc = 0x300c,
+ 		.oen = 0x3018,
++		.qspi = QSPI,
+ 	},
+ 	.iolh_groupa_ua = {
+ 		/* 3v3 power source */
 -- 
 2.43.0
 
