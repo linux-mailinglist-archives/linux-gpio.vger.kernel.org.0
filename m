@@ -1,190 +1,185 @@
-Return-Path: <linux-gpio+bounces-35861-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35862-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ULIRD0gq82mwxgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35861-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 12:09:12 +0200
+	id oCz9F5kq82mwxgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35862-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 12:10:33 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9041F4A086D
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 12:09:11 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 641714A08A3
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 12:10:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 10419300C5A2
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 09:57:18 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B47C63007A70
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 09:58:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74EBC393DD9;
-	Thu, 30 Apr 2026 09:57:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6957D39EF30;
+	Thu, 30 Apr 2026 09:58:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cU9Ff4nm"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Ei3OTv4y";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="f+dO5OsK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from flow-b5-smtp.messagingengine.com (flow-b5-smtp.messagingengine.com [202.12.124.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3677439BFFF
-	for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 09:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2AB3A5451;
+	Thu, 30 Apr 2026 09:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777543037; cv=none; b=jZsSBV73LnRCPAj76Kn4WDEzEWxAxAkLeASAdPS63CbOyZ/hKBZOfHbhJPUC/6VHQGiDq66H3P2Cj0sl3ub1JrzYWqS0nxOFtyIrOtk0nXD1e1gOjf3eMvx06YCrpAZIB6hfTU+qiY+4YwXlWfJQ14Am2TOYKOx2FX2Hv2KtxHs=
+	t=1777543114; cv=none; b=uC9G8253qv5yLBE/Nz4FjrvXZ8djwzM3pTcLWA1YSqpx82E18me3HtQAb1LVD3vmQ6fFqxWzBdOOoiK2WL46uCtgHn9ybR5mZTAaOPn0tD1MesHkHP5WLT35A6QvG8UUkXD80nFgFEgxUQsTPduOR80ts8sUJ4uTKyaNEtMbqsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777543037; c=relaxed/simple;
-	bh=RwvCmSJulumGeXi0ewU+k1aaU5bqDhOyaS0bBtaKz2E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WuTxUr4TTjiYYk0WfMdjSpFTAk7gZWydXzPlEXOtg6ENjG4J8iUXtUA47cMONYCeE/3oO/yR036tb0VydetNsp0VtU+9PoAAJCrAqc2kIJd11nXlgyfd7T7n1wNJtkbfiXSog3Y1ZWELw/fBr7AQ5a1hz2Mv7wZ8q0qQyaK2rsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cU9Ff4nm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A1FEC2BCB4
-	for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 09:57:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777543037;
-	bh=RwvCmSJulumGeXi0ewU+k1aaU5bqDhOyaS0bBtaKz2E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cU9Ff4nmkLDTLzmGXxKUOxohnzH4mL9BQn4BqdNSH/FJnveFlWSQlSM6H8nivu0ev
-	 0HUsZ0zlLuKIXXtdmpnuQzI9DfLmhIoj8M123u+C+kzy1HSroafDcYQlqGnDFKvgMF
-	 RmpxT9ePP+3svCU/swn35V3tuJ2d0oBWeXsqj/Uvsig8NagoZCOPNDy+A0mhyFVKud
-	 nqCC9Ir+dPsmOmypEm+ufJDvsM0tGcrTnALAAEhRlRuCKwYAjK5JQxmeeIelKVvOUL
-	 9/Usg4QfAN/biDR+XWh4tI0APNb9ewX3RSxjjGt9woPeyNFnbGcAG8oP5qU1q3jCfb
-	 8+POysTjEqX0g==
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5a4113ab355so756245e87.1
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Apr 2026 02:57:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/VTDtxFKxpppLthBiOGZ1L2weUe46gbxglrAVmaa/ic/5BvdUBGDkEpnuxu9b1qzJem315emSfX/T+@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyUT33EIkGtba3ftDBzCcZ8Ojc92QxhPIjLhUXJ+YqyY8aIgmx
-	GSbOEbo5ZbvAjyA4ogZt1+Awb4tnxYsgkxO8Iqjx2k7id/70nCqme/7wI+sKYiiUWM8ytnNendP
-	v6xNU34qUEsrWabo/hnVIMw/Z+zMxbvo=
-X-Received: by 2002:a05:6512:4017:b0:5a2:864a:bebb with SMTP id
- 2adb3069b0e04-5a8522d4eb8mr758559e87.20.1777543035289; Thu, 30 Apr 2026
- 02:57:15 -0700 (PDT)
+	s=arc-20240116; t=1777543114; c=relaxed/simple;
+	bh=uwbYKYPPdd/Z1s24vYMWqvTSRXHHdWm2fojXFGd2N1I=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=GqmCT+/8wV5/ncfFrkHF6yMX7ABoZLbpFLhtI+mtk9iCzZSVwWUURv7c86Upj+7gS76tcJ7+XdFxY6t+py4ipNv3j7ddTxbBcvucdIcvzN7tJRRcycs/qQYFBoiPV8ATG9ilkF1n1QdY3kkdnwn69bhfA53taFwrHOPWneinXBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Ei3OTv4y; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=f+dO5OsK; arc=none smtp.client-ip=202.12.124.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.stl.internal (Postfix) with ESMTP id 1F9B61300024;
+	Thu, 30 Apr 2026 05:58:30 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-04.internal (MEProxy); Thu, 30 Apr 2026 05:58:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1777543109;
+	 x=1777550309; bh=2GZRcmUnBgFU/NnSUNvF0yJ6OQh07+XuyeXMMfMjdpw=; b=
+	Ei3OTv4yPMbRmJibf59VFwjx/txeLxhoz1vkiRSeiuQdFzP60yCwic1wXfQ1ypwa
+	MkMu9W2lRCwTXuI+l9H+yh6t6UfIHRRx2kAvxwofEA9gqlulztPdPxIboAjNKxwf
+	OIlIPutFxrv45KYJSmx9OyELKDIEAt8q11lUs5Noyl9rU5jcTKnz3gk3zHLuGl+h
+	NtX0iICmZYs46wBbWskSZ1o14QwCjcQ7Y1b3J0DjGXrsMV0HL1jWsiWykcmY6teT
+	Gjas5Xh01RYTEIO5hWnd1XtdkTy/z4GCt5kyuqF61epboJrDqzRRhNSKO27FQyKe
+	BiVRk1sBHjWsFiFb79L0xA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1777543109; x=
+	1777550309; bh=2GZRcmUnBgFU/NnSUNvF0yJ6OQh07+XuyeXMMfMjdpw=; b=f
+	+dO5OsKQEP+z4dIuEky0DobJ4pu+ixgoYFPzObV+1t65xswx+yk/6884x9NPu37W
+	FR1rNA4sHgWb65DYcaeTlP1wPwinHwVb/8eCe58+Mxtp45sv/5ArZsbDiaN/JdOU
+	ixBvGHOi1bXWAPKqdvumj+6LGfz8Sr3sV4R/vA2x2FbMRvBi6IdX9KEQPTfPKD6G
+	tJB8Dc33Teu/0ekw4WoyIkp5PsaZvy7Ma/X+XeXKNb74ZMW9cmutATamYAR/vPAr
+	gSomBT2TxyIs8mJ4kl9z75pxpWsumMnn/gK7VTANqjY+kfwl8HoGwOJ4TNRdQ3uB
+	HjOs+2I98kYtBCbmnwawA==
+X-ME-Sender: <xms:xSfzaRsKVlg-ScY42aRobmDN45st5Yh6tt82I_2nrYdLqqesPCLR0w>
+    <xme:xSfzaVRjKYABycFlKXsHs5n9HtHcLmIxyKCGIBiHXpQCmzmUqd9gUKVjl9FYtnzoz
+    eWJJDRb4PCpyOQdcM6DfPE1oSBIzd6p3FESjRSLtwwlDTxTIIJ744E>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekjedtvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpeeutdekkeeftdehleekieejvedtkeelvdevteeugeejlefhhfehiefggedtvdduieen
+    ucffohhmrghinhepuggvvhhitggvthhrvggvrdhorhhgnecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgs
+    pghrtghpthhtohepvdejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtohhnhi
+    esrghtohhmihguvgdrtghomhdprhgtphhtthhopegstghouhhsshhonhessggrhihlihgs
+    rhgvrdgtohhmpdhrtghpthhtohepkhhhihhlmhgrnhessggrhihlihgsrhgvrdgtohhmpd
+    hrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegt
+    hhhunhhkvggvhiesghhmrghilhdrtghomhdprhgtphhtthhopegumhhithhrhidrthhorh
+    hokhhhohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepvgguuhhmrgiivghtsehgohho
+    ghhlvgdrtghomhdprhgtphhtthhopegrrghrohdrkhhoshhkihhnvghnsehikhhirdhfih
+    dprhgtphhtthhopegrnhgurhgvrghssehkvghmnhgruggvrdhinhhfoh
+X-ME-Proxy: <xmx:xSfzaTqz2TAqWBJNhUetmWcAQzThHEWytbSBu19pUreFLJpG8D_ifQ>
+    <xmx:xSfzaW114DhQkU7PsC_pDzf0NnfqA_rV3BUeA383pB1vx6bThO5C9w>
+    <xmx:xSfzaaXOO6WiQjxnFZ0qTKACe6PlmvZcmZoS_VD5fJtxQrEjlV4AmA>
+    <xmx:xSfzaXyNXunqCtskmYElQtsXbGmJjI8cN5ZUoEABr6gmV3ZRd9EQIQ>
+    <xmx:xSfzaVodQF4K2tXT2Oxfv5o8TlVySilTpseCUTQ8a7plToUY_s5B80Tb>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 4C14A700065; Thu, 30 Apr 2026 05:58:29 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260430-baytrail-real-swnode-v4-0-767bcda6667f@oss.qualcomm.com> <20260430-baytrail-real-swnode-v4-1-767bcda6667f@oss.qualcomm.com>
-In-Reply-To: <20260430-baytrail-real-swnode-v4-1-767bcda6667f@oss.qualcomm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 30 Apr 2026 11:57:01 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jooK3LqEXOH3m6Le4gDiMDOjCAawsmq_Kzim7T76kcDw@mail.gmail.com>
-X-Gm-Features: AVHnY4LLRxYWhknbQDaqqATspis7Xhq8JMKrXRvQlheeSpBHn0eRZucKuI2NAL8
-Message-ID: <CAJZ5v0jooK3LqEXOH3m6Le4gDiMDOjCAawsmq_Kzim7T76kcDw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] ACPI: provide acpi_bus_find_device_by_name()
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linusw@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	brgl@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 9041F4A086D
+X-ThreadId: A3XgsrJ_aa9s
+Date: Thu, 30 Apr 2026 11:58:09 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Rob Herring" <robh@kernel.org>, "Arnd Bergmann" <arnd@kernel.org>
+Cc: "Christian Lamparter" <chunkeey@gmail.com>,
+ "Andreas Kemnade" <andreas@kemnade.info>,
+ =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+ "Eric Dumazet" <edumazet@google.com>,
+ "Bartosz Golaszewski" <brgl@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Johannes Berg" <johannes@sipsolutions.net>,
+ "Jakub Kicinski" <kuba@kernel.org>,
+ "Kevin Hilman" <khilman@baylibre.com>, linux-kernel@vger.kernel.org,
+ linux-wireless@vger.kernel.org, Linux-OMAP <linux-omap@vger.kernel.org>,
+ "Felipe Balbi" <balbi@kernel.org>, "Rob Herring" <robh+dt@kernel.org>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, devicetree@vger.kernel.org,
+ Netdev <netdev@vger.kernel.org>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Roger Quadros" <rogerq@kernel.org>,
+ linux-arm-kernel@lists.infradead.org,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ "Aaro Koskinen" <aaro.koskinen@iki.fi>,
+ "Tony Lindgren" <tony@atomide.com>, "Linus Walleij" <linusw@kernel.org>
+Message-Id: <f7e0f283-a640-4017-824d-2efdf5543470@app.fastmail.com>
+In-Reply-To: <177754112702.3678889.4847926893667561974.robh@kernel.org>
+References: <20260430081242.3686993-1-arnd@kernel.org>
+ <20260430081242.3686993-2-arnd@kernel.org>
+ <177754112702.3678889.4847926893667561974.robh@kernel.org>
+Subject: Re: [PATCH v4 1/3 net-next] dt-bindings: net: add st,stlc4560/p54spi binding
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 641714A08A3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.65 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[arndb.de,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[arndb.de:s=fm2,messagingengine.com:s=fm2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-35861-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[linux.intel.com,gmail.com,linuxfoundation.org,kernel.org,vger.kernel.org,lists.linux.dev];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	XM_UA_NO_VERSION(0.01)[];
+	TAGGED_FROM(0.00)[bounces-35862-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
+	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rafael@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[27];
+	FREEMAIL_CC(0.00)[gmail.com,kemnade.info,baylibre.com,google.com,kernel.org,sipsolutions.net,vger.kernel.org,redhat.com,davemloft.net,lists.infradead.org,iki.fi,atomide.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,qualcomm.com:email,mail.gmail.com:mid]
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[arnd@arndb.de,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[arndb.de:+,messagingengine.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[devicetree.org:url,messagingengine.com:dkim,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,app.fastmail.com:mid,arndb.de:dkim]
 
-On Thu, Apr 30, 2026 at 9:34=E2=80=AFAM Bartosz Golaszewski
-<bartosz.golaszewski@oss.qualcomm.com> wrote:
+On Thu, Apr 30, 2026, at 11:25, Rob Herring (Arm) wrote:
+> On Thu, 30 Apr 2026 10:12:40 +0200, Arnd Bergmann wrote:
+>>  .../bindings/net/wireless/st,stlc4560.yaml    | 61 +++++++++++++++++++
+>>  MAINTAINERS                                   |  1 +
+>>  2 files changed, 62 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/wireless/st,stlc4560.yaml
+>> 
 >
-> Provide a helper allowing to locate an ACPI device by its name.
+> My bot found errors running 'make dt_binding_check' on your patch:
 >
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> yamllint warnings/errors:
+>
+> $id: Cannot determine base path from $id, relative path/filename 
+> doesn't match actual path or filename
+>  	 $id: http://devicetree.org/schemas/net/wireless/st,stlc45xx.yaml
+>  	file: 
 
-Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+Thanks for the report, I've fixed it now for v5, to adjust for the
+renamed file.
 
-> ---
->  drivers/acpi/bus.c   | 13 +++++++++++++
->  include/linux/acpi.h |  7 +++++++
->  2 files changed, 20 insertions(+)
->
-> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-> index 2ec095e2009e40b0645f654fb051429e5679dc7c..5dd8459be03db4165bcb59943=
-b94ea7db273ad7b 100644
-> --- a/drivers/acpi/bus.c
-> +++ b/drivers/acpi/bus.c
-> @@ -1181,6 +1181,19 @@ int acpi_bus_for_each_dev(int (*fn)(struct device =
-*, void *), void *data)
->  }
->  EXPORT_SYMBOL_GPL(acpi_bus_for_each_dev);
->
-> +/**
-> + * acpi_bus_find_device_by_name() - Locate an ACPI device by its name
-> + * @name: Name of the device to match
-> + *
-> + * Returns:
-> + * New reference to the matched device or NULL if the device can't be fo=
-und.
-> + */
-> +struct device *acpi_bus_find_device_by_name(const char *name)
-> +{
-> +       return bus_find_device_by_name(&acpi_bus_type, NULL, name);
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_bus_find_device_by_name);
-> +
->  struct acpi_dev_walk_context {
->         int (*fn)(struct acpi_device *, void *);
->         void *data;
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 67effb91fa98373d7bf19be5ae3d8baa9328d6e1..10d6c6c11bdffcad14100601e=
-104520366dfc30b 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -798,6 +798,8 @@ int acpi_get_local_u64_address(acpi_handle handle, u6=
-4 *addr);
->  int acpi_get_local_address(acpi_handle handle, u32 *addr);
->  const char *acpi_get_subsystem_id(acpi_handle handle);
->
-> +struct device *acpi_bus_find_device_by_name(const char *name);
-> +
->  #ifdef CONFIG_ACPI_MRRM
->  int acpi_mrrm_max_mem_region(void);
->  #endif
-> @@ -1106,6 +1108,11 @@ static inline const char *acpi_get_subsystem_id(ac=
-pi_handle handle)
->         return ERR_PTR(-ENODEV);
->  }
->
-> +static inline struct device *acpi_bus_find_device_by_name(const char *na=
-me)
-> +{
-> +       return NULL;
-> +}
-> +
->  static inline int acpi_register_wakeup_handler(int wake_irq,
->         bool (*wakeup)(void *context), void *context)
->  {
->
-> --
-> 2.47.3
->
+      Arnd
 
