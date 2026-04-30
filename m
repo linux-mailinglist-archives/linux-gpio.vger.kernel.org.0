@@ -1,461 +1,224 @@
-Return-Path: <linux-gpio+bounces-35925-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35926-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AHqdGhJV82mLzgEAu9opvQ
-	(envelope-from <linux-gpio+bounces-35925-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 15:11:46 +0200
+	id mLnOKrZV82mLzgEAu9opvQ
+	(envelope-from <linux-gpio+bounces-35926-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 15:14:30 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE67E4A3355
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 15:11:45 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D40A4A3444
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 15:14:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1C2BF30143D6
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 13:11:06 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 6BEB6300DF61
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2026 13:14:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE18F41324F;
-	Thu, 30 Apr 2026 13:11:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8ED04219F9;
+	Thu, 30 Apr 2026 13:14:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ca7jZ949"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ha51BWrG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013004.outbound.protection.outlook.com [40.107.159.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18A941325C;
-	Thu, 30 Apr 2026 13:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777554664; cv=none; b=krMMk8l+DoT/sLm2mlWMu/JmKT17v0R772s10BAwhqhtlZU1BBJAsL83ztGh0mI7QjYEDIfiHBmbxOVDb/HcDzGKe+DoovvBGaZruGcj21dXTSFMA98YK7XOMr3OVimcGbFyy+c24zFDsaCp0Cr7z6BQGN90vc4m5Jhvnm3JRsU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777554664; c=relaxed/simple;
-	bh=JuCRkvGOswoi3WGFkpI3D9SLSQcDha7ElNMRA+/rc48=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F4T+3D+nzcYlcIhVA0Lbh8EIbb0ciRjUJwzk82MJ8RMVh+fvjOe2+VfVKykEMZ0C3/rWKaXRtGNM+uHC9ulVUtqimYTaVNbbkzDv/d1PiaH1uc8Lq40M7tVAHf0ZsdXUOum2eAadcZ9xM18vh7qdMbdyvQIxDy9jAyhpFhiqwpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ca7jZ949; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09A0BC2BCB3;
-	Thu, 30 Apr 2026 13:10:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777554663;
-	bh=JuCRkvGOswoi3WGFkpI3D9SLSQcDha7ElNMRA+/rc48=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ca7jZ949NiRz9X456ga5edaX4HJ7N1rrUuhHNVXACgqn/B0U4P5qSwpjchzz7e2qc
-	 hzCmqFwrB/h59jNtIGxLgFYVSyu7a7pp4Dn3EY5t/iRfW6df6X7Ox/BOFrdXYtYBYY
-	 +0GS5MPD3Ghg+XX5SXqD19KUT4GeaBra5QUi6l3orMmEx3QLB5Zq/i0zYToDKaDZpV
-	 62a/8qXkSbVQgTGeiEz/lvcg3SBCdoXVP02zVZJTA8Os+MI/ZzbWK0a3MwkYPk0UY8
-	 mMY/BUXsFWd0vTwY00YNZQJh2wtnMfLcnPVH2Nj3ClvumCPyDuraBQmpJHmuKVaXJu
-	 6TqKaHRoDvr+g==
-Date: Thu, 30 Apr 2026 14:10:56 +0100
-From: Lee Jones <lee@kernel.org>
-To: "Thomas Perrot (Schneider Electric)" <thomas.perrot@bootlin.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	=?iso-8859-1?Q?J=E9r=E9mie?= Dautheribes <jeremie.dautheribes@bootlin.com>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-watchdog@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v5 3/5] mfd: aaeon: Add SRG-IMX8P MCU driver
-Message-ID: <20260430131056.GI1806155@google.com>
-References: <20260408-dev-b4-aaeon-mcu-driver-v5-0-ad98bd481668@bootlin.com>
- <20260408-dev-b4-aaeon-mcu-driver-v5-3-ad98bd481668@bootlin.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8020D3BED31;
+	Thu, 30 Apr 2026 13:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.4
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777554855; cv=fail; b=Gbgl2e6PczPPpE4Tt4TkEQcUjXkgBzf/ya9Sr5ByGrz41/HnlCLCO9Y+HdfMyHV/qRL0ArRbcmOt6vRiwcv+/bnzZMZeZdHEVHjzxWdAnkqe3PxdJKPKlfCd5cOLwJcEO3TG94Eiopu31ga/tV/KfcncU8idzDo58DRtzd0qpMU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777554855; c=relaxed/simple;
+	bh=AH1A5skINbAs8sroMIR+LWPYDhJVTblL2ruVJDBMxOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=bXujIYbrVxY5+v8N4SGHFLodhVv9pr8CdA6gwTpKYAZ/tczt9IQZVxEP3KlmQy2K0hGf4uFaQ9waYS0UkSY9h2Vd+Q6iNwNKWxRA2EESCYla8tz8WsvcUVQA4dxZTkjJ+SDtd4onunfLRyFA/UKuTOZINUJvV6PRuBmZLBX5fm8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Ha51BWrG; arc=fail smtp.client-ip=40.107.159.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RLhdMTISKU7PRkyW6hdPNgraN2Gz2+t3bhE3Ps34yTmK9Nm6NM/dxtRJvJo7VCxLaI5iLTKeUTaBg/Fxg68rA90LWmnUqmqmSpNrU9/sm1A7PlJ3AndOXyWK1t3lmQenF0CHIWUhIODEOJFJwg93AOO2sCsveNz/zC5lNr1mNccxcONnH4MEKt1G3+nCzNwX5bEEUqcboCLDSQrluk10V3iNieFG6AU2GsjCIl0vw6mDaq5klyPRDlpVBBCDulX6fqZvd2mGzkSGmz+0wNiyrHfSmIRuMO+97rHCOAFY3Yu7mR0rMEEQEEdKJuZo5mbWmi4qPiwTk/sBh3syBQRwGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ir7o8M6GivbIaDlTA/aJPIPbDzPTKaLGkUcXrqV20XE=;
+ b=fMsk6UqnihgPu2FEwiIfF78nXhPaea+aBLVr6NBSWCoywUHgtSAjwHhOdREGYjn834qtf2HQmsnMjdVjE/fR3QkMnepM2SbrBLKBYsMA45gOkU+WEZW6ADguCB40kjnl2xR3HM+9k6F2cDMriOZdu4kGTrAUuMW2UHvT88bo26Qr5SmAeteW2XQWiZ9rMTrl9oe6+1LLQr9arlx5C/txzI+Mu5BpOIoIjCAxw7jWOgonQDlGy+21khlVK5lJyVcrVZkwzDsnkGmXZdisxV6PhnoMJ51+mS8K1fViOauQjerXAST1TC5coDPrEW6kg0nXXwvfNH7ayUFbqn/lqdPMpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ir7o8M6GivbIaDlTA/aJPIPbDzPTKaLGkUcXrqV20XE=;
+ b=Ha51BWrGR4kddN0/cHpg4c3jCRBqMMkMLyJcc5ePTRMy1tuxgodL0rl8b1oBjAcAH+yiUwez4P15vCpDkiBTNFjlu1qy6/omHWyORiGyX6ECZuEwS6PvMEPJp3tvjcY5l+9yffrO52IL99wPk2lnarnIZwbnD3po3F9czkjexl+adXAlmGt0DucJr3TpGttDhOM0Zre4X2IppJRYEkKOnXCwkyx3ve70X6YLG4OxK4hmON1Pb5eaLfMqkasaL3pl3i24ibgz0XfYQrB9Cj90SbwGs00eS1/mXLkp3EFpbMWnVHK9OYaCdyhpvbfBXid5hcfqqnoPOzKDVTmNz3w6Sw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM9PR04MB8585.eurprd04.prod.outlook.com (2603:10a6:20b:438::13)
+ by PAXPR04MB8319.eurprd04.prod.outlook.com (2603:10a6:102:1c3::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.20; Thu, 30 Apr
+ 2026 13:14:08 +0000
+Received: from AM9PR04MB8585.eurprd04.prod.outlook.com
+ ([fe80::f010:fca8:7ef:62f4]) by AM9PR04MB8585.eurprd04.prod.outlook.com
+ ([fe80::f010:fca8:7ef:62f4%4]) with mapi id 15.20.9846.025; Thu, 30 Apr 2026
+ 13:14:08 +0000
+Date: Thu, 30 Apr 2026 16:14:03 +0300
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-phy@lists.infradead.org, Vinod Koul <vkoul@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-can@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org,
+	linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
+	linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+	spacemit@lists.linux.dev, UNGLinuxDriver@microchip.com,
+	Markus Schneider-Pargmann <msp@baylibre.com>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Vincent Mailhol <mailhol@kernel.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH v7 phy-next 17/27] phy: introduce phy_get_max_link_rate()
+ helper for consumers
+Message-ID: <20260430131403.2elptecuozimo76s@skbuf>
+References: <20260430110652.558622-1-vladimir.oltean@nxp.com>
+ <20260430110652.558622-18-vladimir.oltean@nxp.com>
+ <CAMuHMdWbeeRmLf6Ae0Fr0un=-z7z5ONc_hDdjebP=KVkXHPbhw@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWbeeRmLf6Ae0Fr0un=-z7z5ONc_hDdjebP=KVkXHPbhw@mail.gmail.com>
+X-ClientProxiedBy: VI1PR07CA0251.eurprd07.prod.outlook.com
+ (2603:10a6:803:b4::18) To AM9PR04MB8585.eurprd04.prod.outlook.com
+ (2603:10a6:20b:438::13)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260408-dev-b4-aaeon-mcu-driver-v5-3-ad98bd481668@bootlin.com>
-X-Rspamd-Queue-Id: EE67E4A3355
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM9PR04MB8585:EE_|PAXPR04MB8319:EE_
+X-MS-Office365-Filtering-Correlation-Id: 30868a1a-e1ac-4785-a287-08dea6ba5ca6
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|1800799024|10070799003|19092799006|366016|7416014|376014|22082099003|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+ zG4OVrLhrR2CtNxfHJ+fxxLlwDVlo1AU9V0vSMrDQg5bpwrhVd/yPdZ3GTlbTCldqDLGgClISrdkibbiRwYW7/VxQHqV+KxY2m043uwPU9fSaBbar+ZxNl14hUH/033+zaDU1WABuyomn7zqljYvcccXo6zzY6F+3gQvCmD0XTI5CUNsn5OLh0T8xK40rfo1/Lf9p9bxU7cqzdDjVB0OvZVnPA0t/j16J8tn8zCvOEfFTHkEmMGg4kYdGQTePTGYczjsygdioNretm0IcKDN3GA/kfuCLP274g9Iy50Srhhke6z/JOqL58fitmGGDqTt6th5u60u6dXsb6Uj7WNfmzSnAlnCm5xp6mzmcOO2Xz4GNzx6Y5YsNphv3DpdgmQ4CTciQlYr33lUG7K/QlPbZOApzWu8dSvD5eKv0SZuU7ryto9aYJ+UJhGg55KiQ6b1Z6/iETwBoeJ1XU1UC0EGFv79HSSZEF1Czspy44c3CPJAmifSioc6xUmFYgEx8pgqJHkUMMQTbZxExl1xYc5F2dAf+ehSFS11W1zxo7OBLdCbzYeKh0Ez077DOieFnv0qH4dSvTGUR4qT3Eqafz/BhMFRNLR93afpj9yq4xbKvrtTjzEUzLQ95wp6wEAHa5cK2UewbNwIfkSnQXw+QfqfQtxEbdrD+aBZu9YRGEAbB5DrWHoaFOh9wI9zcvlGJOAStWak7Ur61oZ/AkUXN0yYXWj1vtz7+Kscu3CMWd7BqjA=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8585.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(19092799006)(366016)(7416014)(376014)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?us-ascii?Q?DaWeOPM0rFyvex+WWp5ITc8x4qrI5NGNETDRXepVXtKOhi9/+dvqGxNncnC2?=
+ =?us-ascii?Q?bJtZTthLSeN3n8g11s/dNjMAzIjn1/VAtr6OP3QfR9R37W5h9pnqXDy3sDB3?=
+ =?us-ascii?Q?RKtleIKTKJgvyOhN2XBiH2dtXrvwwYKLNIsq9q7XmIb5jP/eJnF8igtO2t+1?=
+ =?us-ascii?Q?VeyZFdOqSVq42JdrWfAw/fxcrzfOQ1fsH6EpzxAI5Y7T/yZafCmpwkmv1qPv?=
+ =?us-ascii?Q?s6QtsQMU/5W/s3IsWm3QSLo7fFoPU6XXbvXuLFDU/lQI//HQDPLCOiWwdOHp?=
+ =?us-ascii?Q?/nI3yVtZiFLqE6OiaY0cuNPn9xbCXBz4LdJ032yHIK7JNneIWRBfRu1eTI+h?=
+ =?us-ascii?Q?FXRsou20xrvMjnvu+hwb9W5e7NcL0RqnBRZb0Z/4KUFRs+yKwc305QD6ipCf?=
+ =?us-ascii?Q?9SDR2O9wEyv4jlsB40D9CehLALM5bQXOEIK+Yci8HTouxU9Q12+aGjKttA4F?=
+ =?us-ascii?Q?JZrS5EecPXOPzCnpX6GbMAQVrWvqZC4ZPAm+6Ie3ea/FOoVoElAOmE70IgKk?=
+ =?us-ascii?Q?MXKYpfcimbNVGIeFMEY3XcRNFSUH1+4kivS3xhDo1kCVeqJu7do65iRl0QKe?=
+ =?us-ascii?Q?aih4+SEqUx654qV94j38IvP1nAwZIykMcRNc7O90jDlvzGC+3P08UaOBZAee?=
+ =?us-ascii?Q?R8NJBgBszRHD1j0U+bFX95Zn9Q24eJSPYprP90LbG9PcI/gwtsDzZxIpLRty?=
+ =?us-ascii?Q?jLpU46dpAsNsSV3DJUiEchZMhjiKvyEK/18ii/icjY4Frd+teqTRLyLuMDR4?=
+ =?us-ascii?Q?ZRJKm9LphwKdrM6orWgnKJ8pZ+7C7qp47sCmcWHfl9RL0CV9mciFKBUlrCqb?=
+ =?us-ascii?Q?+M1VjSIvWKDtA8a3WCVXVys87fB8bp+YMwEFxg0lg+UflqVp405cAi96u/R5?=
+ =?us-ascii?Q?3FcZzbEol7/wu8dE1i5kxF3P784DjjGsu2NMr+76R4z7SwLAYRcETTk521Db?=
+ =?us-ascii?Q?QwYpxhma51yDPvKF3aCAGgq0pRTNiNu2WaG1QzBAA0dhfkuNnfFMb7FSr73d?=
+ =?us-ascii?Q?kswdUjWNlPf88AKcqeqsqhbEBOU6MWlspG+jCv8W47cNMNmFw8r2pw2Ivpav?=
+ =?us-ascii?Q?k0x1vu3WqRGwAVlkZrgt/SH30SgjeDjlO6NEFk0gqVo7D/O+ml8znDwOOR3H?=
+ =?us-ascii?Q?4Wzf9fAYBIUYPc3/lxw1G5+pjCV6IqcmJrdIYEV5N6vIh2WRPYe6eUNSdfJE?=
+ =?us-ascii?Q?MKVHfFpYyBD+rQLjSFCQO+0MMr3wkp48zhB1pgpbyne2S/27qxNauKfpPc+9?=
+ =?us-ascii?Q?FvGd9i5NmdGS27b0YSbVpx+WHQCD+jwfsI3zd96ese3uuCfzzBThHc045b+P?=
+ =?us-ascii?Q?kKlAhCqPsMJJXw9IN8/40bQvzUYxKYFHAaNvM1tTc850yM0kMM2OR32cMZ+j?=
+ =?us-ascii?Q?uvYK6IUpBDrpfg9vUAFE0ztnR6hlXQA6QCmluRSjgyNpnpv9mBzOVrF+tC8X?=
+ =?us-ascii?Q?4mhf5EhwmR5dKV6DTCW//KlY+d8he1x7siRCLd0HdehelPvY9DLksN33tX+5?=
+ =?us-ascii?Q?Q5twCDgk8BMP3DRTjTk1LPaPqOhgYY/wcnRqsQNMSkuIhVqblRBOwvD00v+w?=
+ =?us-ascii?Q?FmWBOxVlrKqpM0TDPSzLcROy7L3OKxFZO7AQRMsGdEFP0xDYLhQ34N+Tc4If?=
+ =?us-ascii?Q?of+Nq/+Cdp2GnTqDFe2wwOGxF9aq055hHlhpxuRtalbdALHYLFEwaxbhY5DQ?=
+ =?us-ascii?Q?OzjqueXmRCQYJei5oNejuC9aLMCMIpF2lgOZOFggHDTuXSwzAY5FdjP6HfKa?=
+ =?us-ascii?Q?vSkh0RQfm0sD5lMQQV5vDKvD+kSsVJ9WmKFTyuORV8DeUwkI/FhENd5aYVWB?=
+X-MS-Exchange-AntiSpam-MessageData-1: +FM0dUh4+P1/QtJYMlCx5UgQ7Z0z6huRmuE=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30868a1a-e1ac-4785-a287-08dea6ba5ca6
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8585.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2026 13:14:08.3527
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: O+VO9Uo5tAfPp1U/YaBx1A7LlceKzVPqUF/50dds5Vafhpn61OZf6qHabYRl6Z9sm9SsgcFDEpimlVx67Ms/ww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8319
+X-Rspamd-Queue-Id: 8D40A4A3444
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [1.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
+	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-35926-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35925-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,pengutronix.de,gmail.com,bootlin.com,linux-watchdog.org,roeck-us.net,vger.kernel.org,lists.linux.dev,lists.infradead.org];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[44];
+	FREEMAIL_CC(0.00)[lists.infradead.org,kernel.org,linaro.org,lists.freedesktop.org,vger.kernel.org,lists.linux.dev,microchip.com,baylibre.com,intel.com,ideasonboard.com,kwiboo.se,gmail.com,linux.intel.com,suse.de,ffwll.ch,rock-chips.com,pengutronix.de,bootlin.com,tuxon.dev,glider.be];
+	DKIM_TRACE(0.00)[nxp.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[vladimir.oltean@nxp.com,linux-gpio@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lee@kernel.org,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,bootlin.com:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,glider.be:email]
 
-On Wed, 08 Apr 2026, Thomas Perrot (Schneider Electric) wrote:
+On Thu, Apr 30, 2026 at 01:59:53PM +0200, Geert Uytterhoeven wrote:
+> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be> # rcar_canfd
 
-> Add Multi-Function Device (MFD) driver for the Aaeon SRG-IMX8P
-> embedded controller. This driver provides the core I2C communication
-> interface and registers child devices (GPIO and watchdog controllers).
-> 
-> The driver implements a custom regmap bus over I2C to match the MCU's
-> fixed 3-byte command format [opcode, arg, value]. Register addresses
-> are encoded as 16-bit values (opcode << 8 | arg) using the
-> AAEON_MCU_REG() macro defined in the shared header. The regmap
-> instance is shared with child drivers via dev_get_regmap(). Concurrent
-> I2C accesses from child drivers are serialized by regmap's built-in
-> locking.
-> 
-> I2C transfers use heap-allocated DMA-safe buffers rather than
-> stack-allocated ones, as required by I2C controllers that perform DMA.
-> 
-> Regmap caching is enabled (REGCACHE_MAPLE) with a volatile_reg
-> callback that marks GPIO input read registers (opcode 0x72) and the
-> watchdog status register (opcode 0x63, arg 0x02) as volatile. All
-> other registers written by the driver (GPIO direction,
-> GPO state, watchdog control) are stable and can be safely cached.
-> 
-> Co-developed-by: Jérémie Dautheribes (Schneider Electric) <jeremie.dautheribes@bootlin.com>
-> Signed-off-by: Jérémie Dautheribes (Schneider Electric) <jeremie.dautheribes@bootlin.com>
-> Signed-off-by: Thomas Perrot (Schneider Electric) <thomas.perrot@bootlin.com>
-> ---
->  MAINTAINERS                   |   2 +
->  drivers/mfd/Kconfig           |  10 +++
->  drivers/mfd/Makefile          |   1 +
->  drivers/mfd/aaeon-mcu.c       | 204 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/aaeon-mcu.h |  40 +++++++++
->  5 files changed, 257 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ea9d55f76f35..f91b6a1826d0 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -191,6 +191,8 @@ M:	Thomas Perrot <thomas.perrot@bootlin.com>
->  R:	Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/mfd/aaeon,srg-imx8p-mcu.yaml
-> +F:	drivers/mfd/aaeon-mcu.c
-> +F:	include/linux/mfd/aaeon-mcu.h
->  
->  AAEON UPBOARD FPGA MFD DRIVER
->  M:	Thomas Richard <thomas.richard@bootlin.com>
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index aace5766b38a..82ec1d8e7224 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1561,6 +1561,16 @@ config ABX500_CORE
->  	  remain unchanged when IC changes. Binding of the functions to
->  	  actual register access is done by the IC core driver.
->  
-> +config MFD_AAEON_MCU
-> +	tristate "Aaeon SRG-IMX8P MCU Driver"
-> +	depends on I2C || COMPILE_TEST
-> +	select MFD_CORE
-> +	help
-> +	  Select this option to enable support for the Aaeon SRG-IMX8P
-> +	  onboard microcontroller (MCU). This driver provides the core
-> +	  functionality to communicate with the MCU over I2C. The MCU
-> +	  provides GPIO and watchdog functionality.
-> +
->  config AB8500_CORE
->  	bool "ST-Ericsson AB8500 Mixed Signal Power Management chip"
->  	depends on ABX500_CORE && MFD_DB8500_PRCMU
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index e75e8045c28a..34db5b033584 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_MFD_88PM860X)	+= 88pm860x.o
->  obj-$(CONFIG_MFD_88PM800)	+= 88pm800.o 88pm80x.o
->  obj-$(CONFIG_MFD_88PM805)	+= 88pm805.o 88pm80x.o
->  obj-$(CONFIG_MFD_88PM886_PMIC)	+= 88pm886.o
-> +obj-$(CONFIG_MFD_AAEON_MCU)	+= aaeon-mcu.o
->  obj-$(CONFIG_MFD_ACT8945A)	+= act8945a.o
->  obj-$(CONFIG_MFD_SM501)		+= sm501.o
->  obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
-> diff --git a/drivers/mfd/aaeon-mcu.c b/drivers/mfd/aaeon-mcu.c
-> new file mode 100644
-> index 000000000000..3b4e2d891534
-> --- /dev/null
-> +++ b/drivers/mfd/aaeon-mcu.c
-> @@ -0,0 +1,204 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Aaeon MCU driver
-> + *
-> + * Copyright (C) 2026 Bootlin
-> + * Author: Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>
-> + * Author: Thomas Perrot <thomas.perrot@bootlin.com>
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/mfd/aaeon-mcu.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +struct aaeon_mcu {
-> +	struct i2c_client *client;
-> +	u8 *cmd;      /* DMA-safe 3-byte write buffer [opcode, arg, value] */
-> +	u8 *response; /* DMA-safe 1-byte read buffer for MCU acknowledgment */
-> +};
-> +
-> +static const struct mfd_cell aaeon_mcu_devs[] = {
-> +	MFD_CELL_BASIC("aaeon-mcu-wdt", NULL, NULL, 0, 0),
-> +	MFD_CELL_BASIC("aaeon-mcu-gpio", NULL, NULL, 0, 0),
-> +};
-> +
-> +/* Number of bytes in a MCU command: [opcode, arg, value] */
-> +#define AAEON_MCU_CMD_LEN      3
-> +
-> +/*
-> + * Custom regmap bus for the Aaeon MCU I2C protocol.
-> + *
-> + * The MCU uses a fixed 3-byte command format [opcode, arg, value] followed
-> + * by a 1-byte response. It requires a STOP condition between the command
-> + * write and the response read, so two separate i2c_transfer() calls are
-> + * issued.  The regmap lock serialises concurrent accesses from the GPIO
-> + * and watchdog child drivers.
-> + *
-> + * Register addresses are encoded as a 16-bit big-endian value where the
-> + * high byte is the opcode and the low byte is the argument, matching the
-> + * wire layout produced by regmap for reg_bits=16.
-> + */
-> +
-> +static int aaeon_mcu_regmap_write(void *context, const void *data, size_t count)
-> +{
-> +	struct aaeon_mcu *mcu = context;
-> +	struct i2c_client *client = mcu->client;
-> +	struct i2c_msg write_msg;
-> +	/* The MCU always sends a response byte after each command; discard it. */
-> +	struct i2c_msg response_msg;
-> +	int ret;
-> +
-> +	memcpy(mcu->cmd, data, count);
-> +
-> +	write_msg.addr  = client->addr;
-> +	write_msg.flags = 0;
-> +	write_msg.buf   = mcu->cmd;
-> +	write_msg.len   = count;
-> +
-> +	response_msg.addr  = client->addr;
-> +	response_msg.flags = I2C_M_RD;
-> +	response_msg.buf   = mcu->response;
-> +	response_msg.len   = 1;
-> +
-> +	ret = i2c_transfer(client->adapter, &write_msg, 1);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret != 1)
-> +		return -EIO;
-> +
-> +	ret = i2c_transfer(client->adapter, &response_msg, 1);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret != 1)
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +
-> +static int aaeon_mcu_regmap_read(void *context, const void *reg_buf,
-> +				 size_t reg_size, void *val_buf, size_t val_size)
-> +{
-> +	struct aaeon_mcu *mcu = context;
-> +	struct i2c_client *client = mcu->client;
-> +	struct i2c_msg write_msg;
-> +	struct i2c_msg read_msg;
-> +	int ret;
-> +
-> +	/*
-> +	 * reg_buf holds the 2-byte big-endian register address [opcode, arg].
-> +	 * Append a trailing 0x00 to form the full 3-byte MCU command.
-> +	 */
-> +	mcu->cmd[0] = ((u8 *)reg_buf)[0];
-> +	mcu->cmd[1] = ((u8 *)reg_buf)[1];
-> +	mcu->cmd[2] = 0x00;
-> +
-> +	write_msg.addr  = client->addr;
-> +	write_msg.flags = 0;
-> +	write_msg.buf   = mcu->cmd;
-> +	write_msg.len   = AAEON_MCU_CMD_LEN;
-> +
-> +	read_msg.addr  = client->addr;
-> +	read_msg.flags = I2C_M_RD;
-> +	read_msg.buf   = val_buf;
-> +	read_msg.len   = val_size;
-> +
-> +	ret = i2c_transfer(client->adapter, &write_msg, 1);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret != 1)
-> +		return -EIO;
-> +
-> +	ret = i2c_transfer(client->adapter, &read_msg, 1);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret != 1)
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct regmap_bus aaeon_mcu_regmap_bus = {
-> +	.write = aaeon_mcu_regmap_write,
-> +	.read  = aaeon_mcu_regmap_read,
-> +};
-> +
-> +static bool aaeon_mcu_volatile_reg(struct device *dev, unsigned int reg)
-> +{
-> +	/*
-> +	 * GPIO input registers are driven by external signals and can change
-> +	 * at any time without CPU involvement, always read from hardware.
-> +	 *
-> +	 * The watchdog status register reflects hardware state and can change
-> +	 * autonomously.
-> +	 *
-> +	 * All other registers are written by the driver and their values are
-> +	 * stable, so they can be safely cached.
-> +	 */
-> +	if ((reg >> 8) == AAEON_MCU_READ_GPIO_OPCODE)
-> +		return true;
-> +	if (reg == AAEON_MCU_REG(AAEON_MCU_CONTROL_WDT_OPCODE, 0x02))
-> +		return true;
-> +	return false;
-> +}
-> +
-> +static const struct regmap_config aaeon_mcu_regmap_config = {
-> +	.reg_bits          = 16,
-> +	.val_bits          = 8,
-> +	.reg_format_endian = REGMAP_ENDIAN_BIG,
-> +	.max_register      = AAEON_MCU_MAX_REGISTER,
-> +	.volatile_reg      = aaeon_mcu_volatile_reg,
-> +	.cache_type        = REGCACHE_MAPLE,
-> +};
-> +
-> +static int aaeon_mcu_probe(struct i2c_client *client)
-> +{
-> +	struct aaeon_mcu *mcu;
+Thanks.
 
-Nit: We usually call this ddata, but it's not a blocker.
-
-> +	struct regmap *regmap;
-> +
-> +	mcu = devm_kzalloc(&client->dev, sizeof(*mcu), GFP_KERNEL);
-> +	if (!mcu)
-> +		return -ENOMEM;
-> +
-> +	mcu->client = client;
-> +
-> +	mcu->cmd = devm_kzalloc(&client->dev, AAEON_MCU_CMD_LEN * sizeof(*mcu->cmd), GFP_KERNEL);
-> +	if (!mcu->cmd)
-> +		return -ENOMEM;
-> +
-> +	mcu->response = devm_kzalloc(&client->dev, sizeof(*mcu->response), GFP_KERNEL);
-> +	if (!mcu->response)
-> +		return -ENOMEM;
-> +
-> +	regmap = devm_regmap_init(&client->dev, &aaeon_mcu_regmap_bus,
-> +				  mcu, &aaeon_mcu_regmap_config);
-> +	if (IS_ERR(regmap))
-> +		return dev_err_probe(&client->dev, PTR_ERR(regmap),
-> +				     "failed to initialize regmap\n");
-> +
-> +	return devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_AUTO,
-> +				    aaeon_mcu_devs, ARRAY_SIZE(aaeon_mcu_devs),
-> +				    NULL, 0, NULL);
-> +}
-> +
-> +static const struct of_device_id aaeon_mcu_of_match[] = {
-> +	{ .compatible = "aaeon,srg-imx8p-mcu" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, aaeon_mcu_of_match);
-> +
-> +static struct i2c_driver aaeon_mcu_driver = {
-> +	.driver = {
-> +		.name = "aaeon_mcu",
-
-Nit: This should be a '-'.
-
-> +		.of_match_table = aaeon_mcu_of_match,
-> +	},
-> +	.probe = aaeon_mcu_probe,
-> +};
-> +module_i2c_driver(aaeon_mcu_driver);
-> +
-> +MODULE_DESCRIPTION("Aaeon MCU Driver");
-> +MODULE_AUTHOR("Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>");
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/linux/mfd/aaeon-mcu.h b/include/linux/mfd/aaeon-mcu.h
-> new file mode 100644
-> index 000000000000..3a1aeec85d60
-> --- /dev/null
-> +++ b/include/linux/mfd/aaeon-mcu.h
-> @@ -0,0 +1,40 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * Aaeon MCU driver definitions
-> + *
-> + * Copyright (C) 2026 Bootlin
-> + * Author: Jérémie Dautheribes <jeremie.dautheribes@bootlin.com>
-> + * Author: Thomas Perrot <thomas.perrot@bootlin.com>
-> + */
-> +
-> +#ifndef __LINUX_MFD_AAEON_MCU_H
-> +#define __LINUX_MFD_AAEON_MCU_H
-> +
-> +/*
-> + * MCU register address: the high byte is the command opcode, the low
-> + * byte is the argument.  This matches the 3-byte wire format
-> + * [opcode, arg, value] used by the MCU I2C protocol.
-> + */
-> +#define AAEON_MCU_REG(op, arg)		(((op) << 8) | (arg))
-> +
-> +/*
-> + * Opcode for GPIO input reads. These registers are volatile, their values
-> + * are driven by external signals and can change without CPU involvement.
-> + * Used by the MFD driver's volatile_reg callback to bypass the regmap cache.
-> + */
-> +#define AAEON_MCU_READ_GPIO_OPCODE	0x72
-> +
-> +/*
-> + * Opcode for watchdog control and status commands.
-> + * The status register (arg=0x02) reflects hardware state and is volatile.
-> + */
-> +#define AAEON_MCU_CONTROL_WDT_OPCODE	0x63
-> +
-> +/*
-> + * Highest register address in the MCU register map.
-> + * The WRITE_GPIO opcode (0x77) with the highest GPIO argument (0x0B = 11,
-> + * i.e. MAX_GPIOS - 1) produces the largest encoded address.
-> + */
-> +#define AAEON_MCU_MAX_REGISTER		AAEON_MCU_REG(0x77, 0x0B)
-> +
-> +#endif /* __LINUX_MFD_AAEON_MCU_H */
+> > --- a/include/linux/phy/phy.h
+> > +++ b/include/linux/phy/phy.h
+> > @@ -57,6 +57,7 @@ int phy_notify_disconnect(struct phy *phy, int port);
+> >  int phy_notify_state(struct phy *phy, union phy_notify state);
+> >  int phy_get_bus_width(struct phy *phy);
+> >  void phy_set_bus_width(struct phy *phy, int bus_width);
+> > +u32 phy_get_max_link_rate(struct phy *phy);
 > 
-> -- 
-> 2.53.0
-> 
+> This (and all the existing getters) should take a "const struct phy *".
 
--- 
-Lee Jones
+Yeah... Let's see what other review comments pop up (including Sashiko,
+which would be seeing this series for the first time) and decide
+afterwards whether to make the argument const for the new getters as
+part of a separate set, or in v8.
+
+I don't think that modifying the existing getters is in scope for this
+27 patch set.
 
