@@ -1,82 +1,82 @@
-Return-Path: <linux-gpio+bounces-35962-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35963-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sNA4I+PO9GkYFQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-35962-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 01 May 2026 18:03:47 +0200
+	id QADKNjzO9GkDFAIAu9opvQ
+	(envelope-from <linux-gpio+bounces-35963-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 01 May 2026 18:01:00 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BE384ADE21
-	for <lists+linux-gpio@lfdr.de>; Fri, 01 May 2026 18:03:46 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75DFC4ADD9A
+	for <lists+linux-gpio@lfdr.de>; Fri, 01 May 2026 18:01:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 1B1263039A71
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 May 2026 15:56:36 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 22D2E3016524
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 May 2026 15:56:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AAA53D75BC;
-	Fri,  1 May 2026 15:55:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EAC03E2773;
+	Fri,  1 May 2026 15:55:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="GEhor2Xh"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="AKa5ieJ9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963683E0255
-	for <linux-gpio@vger.kernel.org>; Fri,  1 May 2026 15:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBD83E0C75
+	for <linux-gpio@vger.kernel.org>; Fri,  1 May 2026 15:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777650905; cv=none; b=oPiV/AGGQ6GiMkaqIgrT7z8Dl9ecaYTOtoDCNfJl3WeEgVE9e6/yPDubnDZaxR9AD10SxGewyTj+EOqda+KVzZhzBx9dsuTurQQv3dWUdrTX+9OyRKMbXwzChqIzf+0EjerQI8Lgf18bRd5L6E55tuE8nbWJy9JRgwPNpaXS8Bg=
+	t=1777650909; cv=none; b=uzSLPhmscFhBM++pKc2lzdSAkfhGeuP5/v9XNScUp335xS2Hq8Jl4c/DkLiB5Wegrada/TLtELQ8CEBlRpdVxsANiZfGM53dcqRWXiFl6VXS26zt/PS4cGVIoto4rv7EV2pix4Jy1UE0OIsv1XSa+8F0zHFt4Q/X04XsFKRGcKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777650905; c=relaxed/simple;
-	bh=JP+j+6TCICqN/WR7i+VV1XoY2uZyoR7unSKG3xQnVg0=;
+	s=arc-20240116; t=1777650909; c=relaxed/simple;
+	bh=forzRLWyCfBDKVOI2MzBg0coVCA3/2GJsEyKABozfGM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=glxhh3YKMBWjENNT0rrJ+rT8FcyhkHIpaHOoyTrwbbm+ID6WNX3gybunkcfcLJ5qMxuKsOYLVz/N3F1CdTUshFXd80hCp0iUpjIxWjRj8OBfvvZXBURoN3TlgHSD0N4SD/ORjlfF4AFNO8mhuICL+Fjus7Twkw5Ioa2ftZZghY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=GEhor2Xh; arc=none smtp.client-ip=209.85.219.54
+	 MIME-Version; b=UipJ9Bnlr/rcKH6knb7QeUlI8kL96HixFVG+C+fXYH1TyJiVr+UYqKvfAGAPiUSqNsYoh4heoS96Mkx87nCXSVd9wwHf1Gtx2wUKY0IUk29waPXB8AaEO7yfRpoXsy0L5aDvjd4FBWcvM8ZiRLt1hvMzQ0D5MGqxDx4/WW9T4vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=AKa5ieJ9; arc=none smtp.client-ip=209.85.219.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-8a3970f1a0eso21356816d6.2
-        for <linux-gpio@vger.kernel.org>; Fri, 01 May 2026 08:55:02 -0700 (PDT)
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-8b3eab6ec9bso37461256d6.1
+        for <linux-gpio@vger.kernel.org>; Fri, 01 May 2026 08:55:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1777650902; x=1778255702; darn=vger.kernel.org;
+        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1777650905; x=1778255705; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TLtmgJRm59utBOLEfAtowzngTeaKeZzm+b79FRaQwf0=;
-        b=GEhor2Xhchs9e/VAinzpBGhWZkOhnOlYVFAKavBdVbF4CiEDhjWXzAZey/uZ2zfAH8
-         3GABSRnh19s9dxYDxtUpQbd5n+ZKePAEcc2RyjM9zZUXxSjzLLt9YhHtsDd5TgYHQPUL
-         RPQuP6uIwxaVQoidXTe/7UPk/fTZLmlDHRfDlDVta5lAYtM0gzpIwr8jeW9nDNqPeaFJ
-         0Hk5/5L5LDeJWZ6+ubHXHQSuKFxW/pj1/RHVaVeTC8vLx9NHu04O26LEZ7TbvSAnONqR
-         CGNv5zSKE735vWle+QIVGAor3nS2uhyH+WRavkPYM2CqUOke/5nuD9mt6S67ht7JL+IF
-         HgSQ==
+        bh=50TsK4N6iAWHzmW5eczyB3FZ4V18yVei4HQEr+i+4YQ=;
+        b=AKa5ieJ9SiTd0iUyg1x8+srPtItY4J0zkRz+JmMNVz47x4pjSpoAXTuZfQ1Zl5QAEj
+         HX64df7Mj1Nw/ZBS4x5T87iIbI2fH8sb3Qegi5gE5DcKtS7uJwOdnx5BJ5qUu7D730L9
+         4Qte625Ci6IZfGEEknvaBCYnnfQkczDu7no4sst6o3wjrputOaaogRSzh/o7KyZDqxT7
+         2ZDnN3cusuxEV/by+C53rWp/N0HjkQR+xlH4puVBmPlpVs+MA8ATVBhldJnQ8b2jl4Nr
+         rWcV4ftmUJgOa1q1YJCF/ehdei71YrMr9ixTIcP6U3FMpM97eZmzEk8ZW3NA5TzqDh1S
+         EMIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777650902; x=1778255702;
+        d=1e100.net; s=20251104; t=1777650905; x=1778255705;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=TLtmgJRm59utBOLEfAtowzngTeaKeZzm+b79FRaQwf0=;
-        b=FOq9YOVazAM2+B3qW+ZQna0X10RYE99kN+pkIBy2ZaEln+7s0He3VsI6jxjEIHcR3Q
-         0oo3fMZxtW9sOzjKSZIXf09HEpJy+iPRxcS64KyyxqFLHNO1kCte9kpeEyWoYBjmhoDN
-         as5LngBtG8PKZ9utYiLoLrCSgDTQ/MWWlnHTyUTlfrCeW19nZWAfnUCwqRiA371bi8OF
-         YTXs+ErIXHmz1qcTtiw2xUfG8fdCOgW8cesb2oNVbCeUsuXe992EKo31/OmN4X/qCsDn
-         UwqhyXEk5n18jLn0E2vhqiJkzGubnV8raORY37CY+piELafHqV140gGo6pjhS3aHNL5L
-         rC7w==
-X-Forwarded-Encrypted: i=1; AFNElJ9bKj261iz9DKLBUYfi4cd17JMHYKZswKHigZhEstZJi0RuzJKdoPI4+hbQvcRgduhoMfhl6GS2mny2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4qBH/6AejC1PGWQkHwTYkdfZRuRNIgl+x3J2FsQ+M/pnMOBo9
-	guoCC4NaVaM9MxFxePn4i3sUv31//QQnsn6yg2Pjet3qxU+aJo9y7mYCIEl9yEwl1pY=
-X-Gm-Gg: AeBDieuusue0IEms85mjOldI/Q8CBt1c2Z9xN0Vj2cCs0sqoKs750RtHP+JDOXIS5K6
-	2Ukv/UaxCVDKTF2+UDCrrotYkPKNBDCQZ+QsqfCvvFLry5tvSatGuNv7T/UjIsGc+2AJ5baARbV
-	5WhjWuRGts+7Keexqs9i1n/yBfu845u/eynqqrx7PjH8v5gFwaM8bhUBxICfBdfiC/iGjqctw+A
-	AJ9lxwr87hTFAqz5otWxLWjEPZtytAknRvylRlTgvFs1hB+cxj6u+xR3yWF1ti1aAH3doRzbUty
-	EVPuP1QcyNycvgCRJBsacCFE4xhv/7KtecF1tYVF6w18HF5KB+pBSmARBbKO1IPET8Um4CsYLam
-	oZ0zo+kxLbkKstjGYlKeeM+5ZQWZUSrT8ci/4M/u/GdghiHm4exbxSGwaEZ9s4rwwaMc8f1KER3
-	D1UsXbGmlaxQpAybKOP7aHQIw0Tq8T4hB+AnVZGUA7JReyCSwVM8TE8C73CkOzvUKuBnyM6pn5l
-	XkqCg==
-X-Received: by 2002:a05:6214:4802:b0:8ae:652b:e3c4 with SMTP id 6a1803df08f44-8b668d0b700mr535566d6.49.1777650901165;
-        Fri, 01 May 2026 08:55:01 -0700 (PDT)
+        bh=50TsK4N6iAWHzmW5eczyB3FZ4V18yVei4HQEr+i+4YQ=;
+        b=L1ybMmJk0kzbjuvqcV7ua0qHCXp4TJyEBPasN4Yae/4F3y1gUJU9pFw/m1TDxRd8iR
+         kzuEUIWFxumDcUbFPUTJRscFalsyxEmpGszgjApiENcFIFZLvR5DmPYekh1ONhtqzvpW
+         GrNJT9u7Z4vraztkdDCx3Nzy5Rhe8BulainvUqDB+ORMroy/gcplo9QFxAS0u3EnhRut
+         ANwlTzsn7Qjo8Dou6qF2fueMOjAlY2s1s0oMsSMRqwte3GQlKk0wxMhaGQ/VvzWYtiic
+         mg5hGmPu2hTPXTPAMGxmHvXGYOPFk8Cs2YhPstqqg2ft/My+Fo2EGF1foPVGQts4q7gw
+         Mc/g==
+X-Forwarded-Encrypted: i=1; AFNElJ8XO0yX+RdYl+3A8ol/jUb93hEJCu6eCEveh5H7f6lH7NX5Ip7R4gRrRDWLBuqrqu37TSULK5+z/iKG@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoTxAi6sW545Ox6xnff6vRjIwr9WZ1nXnpKVbBRs+Tq6ghfe77
+	vreJrX5Xkrj/keQASRxuWLHzcG+jzZS2p34aJkW7aimdXpabCuYyvsOksKvP3mvFMZU=
+X-Gm-Gg: AeBDietaPwt3U9A1ZCnHFfMTf6Xq+xsjsmi3musNpQyDDmsP/OJAQRSknfvdsxySLQ3
+	pm27wGhOJLOpy60q4xinigBDlNw3Nuv5clAcar64595b0bacNlG+1UMmqSMI8VPmWFqI6rXzTFn
+	Tjcphc9Dr4HFr/lamtf453/bZQaxj6n08+5DCCb8a1NWqBcfafEj0KLu1j23fZ1TZAvrY9srrjU
+	rGSsajpTOBPdMTdE7lXYtVLhMiQLsDrn8RLt6k/pu89FYbvZwHa2QtxevJGavkbpquDiXSkbg0/
+	ZyBzItcGvo8aNoZhX8KYCwUj37nL+QU7WiDfieVq9AVyKYZZ3x7HG7KraAWLzUr9gidjuTMmpzI
+	03S0bQRyj5dTZ0SNJuIcleJ9c5+y98infgMaa4Udf39A7a9LmYZ9Td1C2EzW/NiBX2eNKMaMQ2O
+	j/77ySXirAGzIBnwDthU92UUjFlGCZzqUWaioTowCv2frEludZBYyvmomtQpptdd5HWvkPwSLVj
+	pkDMQ==
+X-Received: by 2002:a05:622a:488e:b0:510:45cd:3939 with SMTP id d75a77b69052e-51045cd3b6emr22049751cf.5.1777650904662;
+        Fri, 01 May 2026 08:55:04 -0700 (PDT)
 Received: from zippy.localdomain (c-75-72-117-212.hsd1.mn.comcast.net. [75.72.117.212])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8b539aa7293sm26615406d6.22.2026.05.01.08.54.57
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8b539aa7293sm26615406d6.22.2026.05.01.08.55.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2026 08:55:00 -0700 (PDT)
+        Fri, 01 May 2026 08:55:04 -0700 (PDT)
 From: Alex Elder <elder@riscstar.com>
 To: andrew+netdev@lunn.ch,
 	davem@davemloft.net,
@@ -94,7 +94,7 @@ To: andrew+netdev@lunn.ch,
 	brgl@kernel.org,
 	arnd@arndb.de,
 	gregkh@linuxfoundation.org
-Cc: Daniel Thompson <daniel@riscstar.com>,
+Cc: daniel@riscstar.com,
 	elder@riscstar.com,
 	mohd.anwar@oss.qualcomm.com,
 	a0987203069@gmail.com,
@@ -128,9 +128,9 @@ Cc: Daniel Thompson <daniel@riscstar.com>,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 10/12] net: stmmac: tc956x: add TC956x/QPS615 support
-Date: Fri,  1 May 2026 10:54:18 -0500
-Message-ID: <20260501155421.3329862-11-elder@riscstar.com>
+Subject: [PATCH net-next 11/12] misc: tc956x_pci: add TC956x/QPS615 support
+Date: Fri,  1 May 2026 10:54:19 -0500
+Message-ID: <20260501155421.3329862-12-elder@riscstar.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20260501155421.3329862-1-elder@riscstar.com>
 References: <20260501155421.3329862-1-elder@riscstar.com>
@@ -141,7 +141,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 7BE384ADE21
+X-Rspamd-Queue-Id: 75DFC4ADD9A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [1.44 / 15.00];
@@ -149,979 +149,772 @@ X-Spamd-Result: default: False [1.44 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[riscstar-com.20251104.gappssmtp.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	DMARC_POLICY_SOFTFAIL(0.10)[riscstar.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35962-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_CC(0.00)[riscstar.com,oss.qualcomm.com,gmail.com,foss.st.com,kernel.org,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
-	MIME_TRACE(0.00)[0:+];
-	FROM_NEQ_ENVFROM(0.00)[elder@riscstar.com,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_GT_50(0.00)[50];
 	DKIM_TRACE(0.00)[riscstar-com.20251104.gappssmtp.com:+];
-	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
-	TO_DN_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-35963-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[riscstar.com:mid,riscstar.com:email,riscstar-com.20251104.gappssmtp.com:dkim,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	MIME_TRACE(0.00)[0:+];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[elder@riscstar.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCVD_COUNT_FIVE(0.00)[5];
+	NEURAL_HAM(-0.00)[-0.997];
+	RCPT_COUNT_GT_50(0.00)[50];
+	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
+	TO_DN_NONE(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[riscstar.com:mid,riscstar.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,riscstar-com.20251104.gappssmtp.com:dkim]
 
-From: Daniel Thompson <daniel@riscstar.com>
+The Toshiba TC956x is an Ethernet AVB/TSN bridge,  and is
+essentially a small and highly-specialized SoC.  It implements
+a number of internal functions, including a GPIO controller,
+control registers managing internal reset and clock control
+signals, a PCIe switch and internal endpoint, and mapping
+hardware that translates between PCIe and internal addressing.
 
-Toshiba TC956x is an Ethernet AVB/TSN bridge and is essentially a
-small and highly-specialized SoC. TC956x includes an "eMAC" subsystem
-that can be accessed, along with several other peripherals, via two
-PCIe endpoint functions. There is a main driver for the endpoint that
-decomposes things and creates auxiliary bus devices to model the SoC.
+The internal PCIe endpoint implements two PCIe functions, each of
+which has an attached eMAC.  Each of these eMACs is represented as
+two separate devices:  a PCIe function; and the eMAC.  The PCIe
+function driver serves as the primary driver, creating other
+associated devices using the auxiliary bus.
 
-The eMAC consists of a Designware XGMAC, XPCS and PMA. Each eMAC is
-supported by an MSIGEN that bridges TC956x level interrupts to PCIe
-MSIs.
+PCIe function 0 is responsible for managing common features on
+the TC956x chip.  It initializes a "chip" data structure that
+keeps track of common information, and makes that available via
+its platform_data pointer to its PCIe function 1 peer.  It also
+configures the address mapping hardware, and sets up an auxiliary
+device for the GPIO controller.
 
-Add a driver for the eMAC/MSIGEN combination.
+As probing concludes, an auxiliary device is created to represent
+the eMAC functionality attached to the PCIe function.  A block
+of information is set up to be shared with the auxiliary device.
+It provides the IRQ to be used by the MAC device, as well as a
+some memory-mapped I/O pointers and a few other bits of information
+about the chip.  This information is supplied via the auxiliary
+device's platform_data pointer.
 
-Co-developed-by: Alex Elder <elder@riscstar.com>
-Signed-off-by: Alex Elder <elder@riscstar.com>
+Co-developed-by: Daniel Thompson <daniel@riscstar.com>
 Signed-off-by: Daniel Thompson <daniel@riscstar.com>
+Signed-off-by: Alex Elder <elder@riscstar.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/Kconfig   |  13 +
- drivers/net/ethernet/stmicro/stmmac/Makefile  |   2 +
- .../ethernet/stmicro/stmmac/dwmac-tc956x.c    | 791 ++++++++++++++++++
- include/soc/toshiba/tc956x-dwmac.h            |  84 ++
- 4 files changed, 890 insertions(+)
- create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-tc956x.c
- create mode 100644 include/soc/toshiba/tc956x-dwmac.h
+ drivers/misc/Kconfig      |  10 +
+ drivers/misc/Makefile     |   1 +
+ drivers/misc/tc956x_pci.c | 667 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 678 insertions(+)
+ create mode 100644 drivers/misc/tc956x_pci.c
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-index e3dd5adda5aca..66bcfaccbe21f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-+++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-@@ -404,6 +404,19 @@ config DWMAC_MOTORCOMM
- 	  This enables glue driver for Motorcomm DWMAC-based PCI Ethernet
- 	  controllers. Currently only YT6801 is supported.
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 00683bf06258f..d021f37129e27 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -644,6 +644,16 @@ config MCHP_LAN966X_PCI
+ 	    - lan966x-miim (MDIO_MSCC_MIIM)
+ 	    - lan966x-switch (LAN966X_SWITCH)
  
-+config DWMAC_TC956X
-+	tristate "Toshiba TC956X DWMAC support"
++config TOSHIBA_TC956X_PCI
++	tristate "Toshiba TC956X PCI function support"
 +	depends on PCI
-+	depends on COMMON_CLK
-+	depends on TOSHIBA_TC956X_PCI
-+	default m if TOSHIBA_TC956X_PCI
++	select AUXILIARY_BUS
 +	help
-+	  This selects the Toshiba TC956X (and Qualcomm QPS615) support in the
-+	  stmmac driver.
++	  This enables support for the two PCI functions implemented by
++	  the embedded PCIe endpoint in the Toshiba TC956X.  This driver
++	  creates auxiliary devices and requires drivers for these devices
++	  to function.
 +
-+	  This provides support for the ethernet controllers found on these
-+	  devices.
-+
- config STMMAC_PCI
- 	tristate "STMMAC PCI bus support"
- 	depends on PCI
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
-index a1cea2f57252e..e8e7f95dbe3e8 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Makefile
-+++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
-@@ -51,4 +51,6 @@ obj-$(CONFIG_STMMAC_PCI)	+= stmmac-pci.o
- obj-$(CONFIG_DWMAC_INTEL)	+= dwmac-intel.o
- obj-$(CONFIG_DWMAC_LOONGSON)	+= dwmac-loongson.o
- obj-$(CONFIG_DWMAC_MOTORCOMM)	+= dwmac-motorcomm.o
-+obj-$(CONFIG_TC956X_PCI)	+= tc956x-pci.o
-+obj-$(CONFIG_DWMAC_TC956X)	+= dwmac-tc956x.o
- stmmac-pci-objs:= stmmac_pci.o
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-tc956x.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-tc956x.c
+ source "drivers/misc/c2port/Kconfig"
+ source "drivers/misc/eeprom/Kconfig"
+ source "drivers/misc/cb710/Kconfig"
+diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+index b32a2597d2467..644d508338382 100644
+--- a/drivers/misc/Makefile
++++ b/drivers/misc/Makefile
+@@ -75,3 +75,4 @@ obj-$(CONFIG_MCHP_LAN966X_PCI)	+= lan966x-pci.o
+ obj-y				+= keba/
+ obj-y				+= amd-sbi/
+ obj-$(CONFIG_MISC_RP1)		+= rp1/
++obj-$(CONFIG_TOSHIBA_TC956X_PCI) += tc956x_pci.o
+diff --git a/drivers/misc/tc956x_pci.c b/drivers/misc/tc956x_pci.c
 new file mode 100644
-index 0000000000000..27ff83dd3bd9e
+index 0000000000000..741a0ae0d3afb
 --- /dev/null
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-tc956x.c
-@@ -0,0 +1,791 @@
++++ b/drivers/misc/tc956x_pci.c
+@@ -0,0 +1,667 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
 +/*
 + * Copyright (C) 2026 by RISCstar Solutions Corporation.  All rights reserved.
++ */
++
++/*
++ * The Toshiba TC956X implements a PCIe Gen 3 switch that connects an
++ * upstream x4 port to three downstream PCIe ports--two external ones
++ * and an internal one which implements an internal PCIe endpoint.  The
++ * endpoint implements two PCIe functions, each having a Synopsys XGMAC
++ * Ethernet interface.
 + *
-+ * Derived from code having the following copyrights:
-+ * Copyright (C) 2011-2012  Vayavya Labs Pvt Ltd
-+ * Copyright (C) 2025 Toshiba Electronic Devices & Storage Corporation
++ * The TC956X implements other functionality, including an embedded
++ * MCU, a UART, a GPIO controller, internal resets and clocks, and
++ * interrupt handling.  These features are separate from (and in some
++ * cases used by) both Ethernet XGMACs.  Each Ethernet MAC must be
++ * attached to a working PHY for it to be functional, and for this
++ * reason either of them (or both!) might not be usable/used.
++ *
++ * To support the non-XGMAC functionality on the TC956X regardless of
++ * the presence of either Ethernet PHY, the Ethernet functions are
++ * treated as two parts:  a PCIe function; and a Synopsys XGMAC component.
++ * The PCIe function has access to the BARs used by the XGMAC, and maps
++ * them for use.  Each XGMAP is treated as an auxiliary sub-device of
++ * its (parent) PCIe function, and is probed and bound separate from it.
++ *
++ * This PCI driver binds to the Toshiba TC956X (physical) PCI function
++ * (VID 0x1179, DID 0x0220).  There are two of these present on the
++ * TC956X SoC.  This driver maps the PCI BARs and performs other initial
++ * setup, then creates auxiliary devices.
++ *
++ * Embedded PCI function 0 manages non-MAC functionality.  This includes
++ * creating and registering the GPIO auxiliary device (if necessary), as
++ * well as asserting and deasserting internal reset signals and enabling
++ * and disabling internal clocks.
++ *
++ * Both PCI functions create auxiliary devices to implement an Ethernet
++ * XGMAC.  A block of data (struct tc956x_dwmac_data) is shared using
++ * the auxiliary device's platform data with the stmmac driver that
++ * binds to the XGMAC auxiliary device.  This includes a number of
++ * pointers to memory regions used by the stmmac driver.
 + */
 +
 +#include <linux/auxiliary_bus.h>
-+#include <linux/bitops.h>
-+#include <linux/iopoll.h>
-+#include <linux/irqdomain.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/pcs/pcs-xpcs-regmap.h>
-+#include <linux/pcs/pcs-xpcs.h>
-+#include <linux/phy.h>
++#include <linux/compiler_types.h>
++#include <linux/device.h>
++#include <linux/dev_printk.h>
++#include <linux/init.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/pci.h>
++#include <linux/property.h>
 +#include <linux/regmap.h>
-+#include <linux/stmmac.h>
 +#include <linux/types.h>
-+#include <linux/units.h>
 +
 +#include <soc/toshiba/tc956x-dwmac.h>
 +
-+#include "common.h"
-+#include "dwxgmac2.h"
-+#include "stmmac.h"
++#define DRIVER_NAME			TC956X_PCIE_DRIVER_NAME
 +
-+#define DRIVER_NAME			"dwmac-tc956x"
++#define GPIO_DEVICE_NAME		"tc9564-gpio"
 +
-+#define TC956X_PTP_CLOCK_RATE		(250 * HZ_PER_MHZ)
++#define PCI_DEVICE_ID_TOSHIBA_TC956X	0x0220
 +
-+#define TC956X_RX_FIFO_KB		46	/* Shared by all RX queues */
-+#define TC956X_TX_FIFO_KB		46	/* Shared by all TX queues */
++/* PCI BAR assignments */
++#define PCI_BAR_BRIDGE_CONFIG		0	/* For TAMAP */
++#define PCI_BAR_SFR			4	/* For all other features */
 +
-+/* Fields and values for the EMACTL registers */
-+#define EMAC_SP_SEL_MASK		GENMASK(3, 0)
-+#define SP_SEL_SGMII_2500M		4
-+#define SP_SEL_SGMII_1000M		5
-+#define SP_SEL_SGMII_100M		6
-+#define SP_SEL_SGMII_10M		7
-+#define EMAC_PHY_INF_SEL_MASK		GENMASK(5, 4)
-+#define PCS_CLK_PHY			1	/* Clock from PHY */
-+#define EMAC_INV_SGM_SIG_DET		BIT(6)	/* 1 = polarity inverted */
-+#define EMAC_LPIHWCLKEN			BIT(8)	/* 1 = low power mode */
-+#define EMAC_INIT_DONE			BIT(21)
++/* Chip and revision ID register */
++#define NCID_OFFSET			0x0000
++#define NCID_REV_ID_MASK		GENMASK(7, 0)
 +
-+/* MSIGEN Registers */
-+#define MSI_OUT_EN_OFFSET		0x0000
-+#define MSI_MASK_CLR_OFFSET		0x000c
-+#define MSI_MASK_VALUE			BIT(0)
-+#define MSI_INT_STS_OFFSET		0x0010
++/* Reset and clock register offsets.  MAC resets and clocks are controlled
++ * by bits in register 0 for MAC0, register 1 for MAC1.  Other non-MAC
++ * resets and clocks (whose IDs are defined here) are controlled by bits
++ * in register 0.
++ *
++ * These are relative to the base of the clock/reset regmap.
++ */
++#define RSTCTRL0_OFFSET			0x0008
++#define RSTCTRL1_OFFSET			0x0010
++#define CLKCTRL0_OFFSET			0x0004
++#define CLKCTRL1_OFFSET			0x000c
 +
-+enum msigen_hwirq {
-+	HWIRQ_LPI		= 0,
-+	HWIRQ_PMT		= 1,
-+	HWIRQ_EVENT		= 2,
-+	HWIRQ_TX0		= 3,
-+	HWIRQ_RX0		= 11,
-+	HWIRQ_XPCS		= 19,
-+	HWIRQ_PHY		= 20,
-+	HWIRQ_PFMAILBOX		= 21,
-+	HWIRQ_MSIREQ_PLS	= 24
++enum reset_id {
++	RESET_MCU		= 0,
++	RESET_MCU1		= 1,
++	RESET_MSIGEN		= 18,
++	RESET_INTC		= 4,
++	RESET_UART0		= 16,
 +};
 +
-+#define HWIRQ_COUNT			25
-+
-+/* Offset to the XPCS memory block, relative to the EMAC address range */
-+#define DWMAC_XPCS_OFFSET		0x3a00
-+
-+/* Offset to the PMATOP memory block, relative to the EMAC address range */
-+#define DWMAC_PMATOP_OFFSET			0x4000
-+
-+#define PMA_CML_GL_PM_CFG0			0x01b8
++enum clock_id {
++	CLOCK_MCU		= 0,
++	CLOCK_SRAM		= 13,
++	CLOCK_MSIGEN		= 18,
++	CLOCK_PLL		= 24,
++	CLOCK_SGMII		= 25,
++	CLOCK_REFCLK		= 26,
++	CLOCK_INTC		= 4,
++	CLOCK_UART0		= 16,
++};
 +
 +/*
-+ * Five sets three registers must be configured for PMA.  The HWT_REFCLK
-+ * registers are each separated by 0x14 bytes.  The Common0 configuration
-+ * registers are separated by 0x8 bytes.
++ * The TAMAP function has four AXI translation tables each with eight
++ * 4-byte registers.  The Ethernet MAC accesses PCI resources through
++ * addressses based at TC956X_SLV00_SRC_ADDR, and the first translation
++ * table converts those to PCIe address space starting based at 0x0.
++ * We don't use the other three available TAMAC tables.
 + */
-+#define PMA_REG_COUNT				5
++#define ATR_AXI4_SLV0_OFFSET		0x0800
++#define AXI4_TABLE_ENTRY_COUNT		4
++#define AXI4_ENTRY_BASE(id)		((id) * AXI4_TABLE_STRIDE)
++#define AXI4_TABLE_STRIDE               0x20
 +
-+#define PMA_HWT_REFCK_R_EN			0x1080
-+#define PMA_HWT_REFCK_TERM_EN			0x1090
-+#define PMA_HWT_REFCK_STRIDE			0x0014
++/* Address translation space parameters used for entry 0 */
++#define SLV00_ATR_SIZE			35	/* 2^36 (64 gigabytes) */
++/* TC956X_SLV00_SRC_ADDR is the source address, defined in the common header */
++#define SLV00_TRSL_ADDR			0x0000000000000000ULL
 +
-+#define PMA_COMM_CFG_0_1			0x1888
-+#define PMA_COMM_CFG_0_1_STRIDE			0x0008
++/* Translation entry registers, fields, and values used */
++#define SRC_ADDR_LO_OFFSET		0x0000
++#define ATR_IMPL			BIT(0)		/* 1 = enabled */
++#define ATR_SIZE_MASK			GENMASK(6, 1)	/* size 2^(ATR + 1) */
++#define SRC_ADDR_HI_OFFSET		0x0004
++#define TRSL_ADDR_LO_OFFSET		0x0008
++#define TRSL_ADDR_HI_OFFSET		0x000c
++#define TRSL_PARAM_OFFSET		0x0010
++#define TRSL_ID_MASK			GENMASK(3, 0)
++#define TRSL_ID_PCIE_TX_RX		0
++#define TRSL_PARAM_MASK			GENMASK(27, 16)
 +
-+/* PMA_COMM_CFG_0_1 fields (WRITE_MASK is a field name) */
-+#define COMM_CFG_WRITE_MASK_MASK		GENMASK(16, 9)
-+#define WRITE_MASK_VALUE			0xf7	/* Power-on value */
-+#define COMM_CFG_ENABLE				BIT(8)
-+#define COMM_CFG_WRITE_DATA_MASK		GENMASK(7, 0)
-+#define WRITE_DATA_VALUE			0x04	/* Power-on value */
-+
-+/**
-+ * struct tc956x_data - Toshiba-specific platform data
-+ * @dev:		Device pointer
-+ * @irq_domain:		MSIGEN IRQ domain
-+ * @auxbus_data:	Pointer to data passed from the parent device
-+ * @plat:		Pointer to our stmmac platform data
-+ * @dma_cfg:		DMA config buffer used by plat_stmmacenet_data
-+ * @mdio_bus_data:	MDIO bus data used by plat_stmmacenet_data
-+ * @axi:		AXI data used by plat_stmmacenet_data
-+ * @desc:		DMA descriptor data used by mac_device_info
-+ * @dma:		DMA operations data used by mac_device_info
++/*
++ * The TC956X implements an "SFR" address space, which provides access
++ * to *all* internal IP block registers, both MAC and non-MAC.  This
++ * space is also accessible via an I2C interface used by the PCI pwrctl
++ * driver (in "pci-pwrctrl-tc9563.c"), though that driver accesses the
++ * range in a very limited way.  For the MAC functions we divide up the
++ * range, providing specific addresses needed by the stmmac driver.
 + */
-+struct tc956x_data {
++#define EMAC_CTL_OFFSET(_mac_id)	((_mac_id) ? 0x1074 : 0x1070)
++#define MSIGEN_OFFSET(_mac_id)		((_mac_id) ? 0xf100 : 0xf000)
++#define DWMAC_OFFSET(_mac_id)		((_mac_id) ? 0x48000 : 0x40000)
++
++/*
++ * struct tc956x_chip - Common information related to the TC956X chip
++ * @dev:		Device structure for function 0
++ * @sfr:		Mapped SFR regions (BAR 4, one per PCI function)
++ * @bridge_config:	Regmap used for bridge configuration (BAR 0)
++ * @reset_clock_regmap:	Regmap used for resets and clocks
++ * @rev_id:		Chip revision ID (for quirks)
++ */
++struct tc956x_chip {
 +	struct device *dev;
-+	struct irq_domain *irq_domain;
-+	struct tc956x_dwmac_data *auxbus_data;
-+	struct plat_stmmacenet_data *plat;
-+
-+	/* These three fields are used by the plat_stmmacenet_data structure */
-+	struct stmmac_dma_cfg dma_cfg;
-+	struct stmmac_mdio_bus_data mdio_bus_data;
-+	struct stmmac_axi axi;
-+
-+	/* These two fields are used by the mac_device_info structure */
-+	struct stmmac_desc_ops desc;
-+	struct stmmac_dma_ops dma;
++	void __iomem *sfr[2];
++	void __iomem *bridge_config;
++	struct regmap *reset_clock_regmap;
++	u8 rev_id;
 +};
 +
-+struct tc956x_mac_speed {
-+	phy_interface_t phy_interface;
-+	int speed;
-+	u32 sp_sel;
-+};
-+
-+static struct tc956x_mac_speed mac_speed[] = {
-+	{ PHY_INTERFACE_MODE_2500BASEX,	SPEED_2500,  SP_SEL_SGMII_2500M, },
-+	{ PHY_INTERFACE_MODE_SGMII,	SPEED_2500,  SP_SEL_SGMII_2500M, },
-+	{ PHY_INTERFACE_MODE_SGMII,	SPEED_1000,  SP_SEL_SGMII_1000M, },
-+	{ PHY_INTERFACE_MODE_SGMII,	SPEED_100,   SP_SEL_SGMII_100M, },
-+	{ PHY_INTERFACE_MODE_SGMII,	SPEED_10,    SP_SEL_SGMII_10M, },
-+};
-+
-+/* TC956x uses indirect addressing so this need only describe a 1KiB range */
-+static const struct regmap_config xpcs_regmap_config = {
++static const struct regmap_config gpio_regmap_config = {
++	.name		= "tc956x-gpio",
 +	.reg_bits	= 32,
++	.reg_stride	= 4,
++	.reg_base	= 0x1200,	/* Register GPIOI0 */
 +	.val_bits	= 32,
-+	.reg_base	= 0x00,		/* Minimum XPCS reg offset */
-+	.max_register	= 0xff,		/* Register DW_VR_CSR_VIEWPORT */
-+	.reg_shift	= REGMAP_UPSHIFT(2),
++	.max_register	= 0x1214,	/* Register GPIOO1 */
 +};
 +
-+static void tc956x_msigen_irq_handler(struct irq_desc *desc)
++static const struct regmap_config reset_clock_regmap_config = {
++	.name		= "tc956x-clk-reset",
++	.reg_bits	= 32,
++	.reg_stride	= 4,
++	.reg_base	= 0x1000,	/* Register NCTLSTS */
++	.val_bits	= 32,
++	.max_register	= 0x1010,	/* Register NRSTCTRL1 */
++};
++
++/* Common clock/reset register update function (also used for MACs) */
++void tc956x_reset_clock_set(const struct tc956x_chip *chip, bool reset,
++			    bool reg0, bool set, u8 bit)
 +{
-+	struct irq_domain *irq_domain = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct irq_chip_generic *gc;
-+	unsigned long status;
-+	unsigned int hwirq;
++	u32 mask = BIT(bit);
++	u32 offset;
 +
-+	gc = irq_get_domain_generic_chip(irq_domain, 0);
++	if (reset)
++		offset = reg0 ? RSTCTRL0_OFFSET : RSTCTRL1_OFFSET;
++	else
++		offset = reg0 ? CLKCTRL0_OFFSET : CLKCTRL1_OFFSET;
 +
-+	chained_irq_enter(chip, desc);
++	/* Note: no need to check for errors on read/write for MMIO regmap */
++	(void)regmap_update_bits(chip->reset_clock_regmap, offset, mask,
++				 set ? mask : 0);
++}
++EXPORT_SYMBOL_GPL(tc956x_reset_clock_set);
 +
-+	status = irq_reg_readl(gc, MSI_INT_STS_OFFSET);
-+	for_each_set_bit(hwirq, &status, HWIRQ_COUNT)
-+		generic_handle_domain_irq(irq_domain, hwirq);
-+
-+	/*
-+	 * Clear the MSI flag. Most interrupts within TC956X are level-high
-+	 * type. If any interrupts are still asserted then clearing this flag
-+	 * will cause the (edge-triggered) MSI to be regenerated.
-+	 */
-+	irq_reg_writel(gc, MSI_MASK_VALUE, MSI_MASK_CLR_OFFSET);
-+
-+	chained_irq_exit(chip, desc);
++static inline void chip_reset_assert(const struct tc956x_chip *chip,
++				     enum reset_id id)
++{
++	tc956x_reset_clock_set(chip, true, true, true, (u8)id);
 +}
 +
-+static int tc956x_msigen_irq_chip_init(struct irq_chip_generic *gc)
++static inline void chip_reset_deassert(const struct tc956x_chip *chip,
++				       enum reset_id id)
 +{
-+	struct tc956x_data *td = gc->domain->host_data;
-+
-+	gc->reg_base = td->auxbus_data->msigen;
-+	gc->chip_types[0].regs.mask = MSI_OUT_EN_OFFSET;
-+	gc->chip_types[0].chip.irq_mask = irq_gc_mask_clr_bit;
-+	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_set_bit;
-+
-+	/* Disable all interrupts */
-+	irq_reg_writel(gc, 0, MSI_OUT_EN_OFFSET);
-+
-+	return 0;
++	tc956x_reset_clock_set(chip, true, true, false, (u8)id);
 +}
 +
-+static void tc956x_msigen_irq_chip_exit(struct irq_chip_generic *gc)
++static inline void chip_clock_enable(const struct tc956x_chip *chip,
++				     enum clock_id id)
 +{
-+	irq_reg_writel(gc, 0, MSI_OUT_EN_OFFSET);
++	tc956x_reset_clock_set(chip, false, true, true, (u8)id);
 +}
 +
-+static int tc956x_msigen_irq_domain_init(struct irq_domain *irq_domain)
++static inline void chip_clock_disable(const struct tc956x_chip *chip,
++				      enum clock_id id)
 +{
-+	struct tc956x_data *td = irq_domain->host_data;
-+
-+	irq_set_chained_handler_and_data(td->auxbus_data->msigen_irq,
-+					 tc956x_msigen_irq_handler,
-+					 irq_domain);
-+
-+	return 0;
++	tc956x_reset_clock_set(chip, false, true, false, (u8)id);
 +}
 +
-+static void tc956x_msigen_irq_domain_exit(struct irq_domain *irq_domain)
++static void adev_release(struct device *dev)
 +{
-+	struct tc956x_data *td = irq_domain->host_data;
++	struct auxiliary_device *adev = to_auxiliary_dev(dev);
 +
-+	irq_set_chained_handler_and_data(td->auxbus_data->msigen_irq,
-+					 NULL, NULL);
++	of_node_put(adev->dev.of_node);
++	kfree(adev);
 +}
 +
-+/* We have one IRQ chip instance with 25 IRQs in its domain */
-+static struct irq_domain *
-+tc956x_msigen_irq_domain_instantiate(struct tc956x_data *td)
++static void adev_remove(void *data)
 +{
-+	struct irq_domain_chip_generic_info dgc_info;
-+	struct irq_domain_info info;
++	struct auxiliary_device *adev = data;
 +
-+	dgc_info.name = "tc956x-msigen";
-+	dgc_info.handler = handle_level_irq;
-+	dgc_info.irqs_per_chip = HWIRQ_COUNT;
-+	dgc_info.num_ct = 1;
-+	dgc_info.init = tc956x_msigen_irq_chip_init;
-+	dgc_info.exit = tc956x_msigen_irq_chip_exit;
-+
-+	info.domain_flags = IRQ_DOMAIN_FLAG_DESTROY_GC;
-+	info.size = HWIRQ_COUNT;
-+	info.hwirq_max = HWIRQ_COUNT;
-+	info.ops = &irq_generic_chip_ops;
-+	info.host_data = td;
-+	info.dgc_info = &dgc_info;
-+	info.init = tc956x_msigen_irq_domain_init;
-+	info.exit = tc956x_msigen_irq_domain_exit;
-+
-+	return devm_irq_domain_instantiate(td->dev, &info);
++	auxiliary_device_delete(adev);
++	auxiliary_device_uninit(adev);
 +}
 +
-+/**
-+ * tc956x_pma_init() - Initialize PMA
-+ * @td:	bsp_priv pointer
-+ *
-+ * Initialize (or re-initialize) the PMA, configure the clocks and wait for the
-+ * eMAC to be ready.
-+ */
-+static void tc956x_pma_init(struct tc956x_data *td)
++static int adev_device_add(struct device *dev, const char *name, u32 id,
++			   void *platform_data)
 +{
-+	const struct tc956x_chip *chip = td->auxbus_data->chip;
-+	void __iomem *emac_ctl = td->auxbus_data->emac_ctl;
-+	u32 id = td->auxbus_data->mac_id;
-+	void __iomem *pmatop;
-+	u32 val;
-+	u32 i;
-+
-+	/*
-+	 * When we re-initialize the PMA then the reset will already have
-+	 * been deasserted. We must make sure the PMA reset is asserted before
-+	 * we change the clock settings.
-+	 */
-+	tc956x_reset_assert(chip, id, MAC_RESET_PMA);
-+
-+	pmatop = td->auxbus_data->emac + DWMAC_PMATOP_OFFSET;
-+
-+	/* Power on CML buffer (0 = normal mode, 1 = power down) */
-+	writel(0, pmatop + PMA_CML_GL_PM_CFG0);
-+
-+	/* This value switches clock from C0_REFCK to CLK_REF_I */
-+	val = u32_encode_bits(WRITE_MASK_VALUE, COMM_CFG_WRITE_MASK_MASK);
-+	val |= COMM_CFG_ENABLE;
-+	val |= u32_encode_bits(WRITE_DATA_VALUE, COMM_CFG_WRITE_DATA_MASK);
-+
-+	for (i = 0; i < PMA_REG_COUNT; i++) {
-+		u32 offset =  i * PMA_HWT_REFCK_STRIDE;
-+
-+		/* Disable C0_REFCK and 100 ohm termination */
-+		writel(0, pmatop + PMA_HWT_REFCK_R_EN + offset);
-+		writel(0, pmatop + PMA_HWT_REFCK_TERM_EN + offset);
-+
-+		/* Switch clock from C0_REFCK to CLK_REF_I */
-+		offset =  i * PMA_COMM_CFG_0_1_STRIDE;
-+		writel(val, pmatop + PMA_COMM_CFG_0_1 + offset);
-+	}
-+
-+	tc956x_reset_deassert(chip, id, MAC_RESET_PMA);
-+
-+	WARN_ON(readl_poll_timeout(emac_ctl, val, val & EMAC_INIT_DONE, 50, 1000000));
-+}
-+
-+static int tc956x_mac_speed_select(struct tc956x_data *td, int speed)
-+{
-+	phy_interface_t phy_interface = td->plat->phy_interface;
-+	struct net_device *netdev;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(mac_speed); i++) {
-+		if (mac_speed[i].speed != speed)
-+			continue;
-+
-+		if (mac_speed[i].phy_interface == phy_interface)
-+			return mac_speed[i].sp_sel;
-+	}
-+	netdev = dev_get_drvdata(td->dev);
-+	netdev_err(netdev, "%s/%d unsupported\n",
-+		   phy_modes(phy_interface), speed);
-+
-+	return -EOPNOTSUPP;
-+}
-+
-+static int tc956x_mac_configure(struct tc956x_data *td, int speed)
-+{
-+	void __iomem *emac_ctl = td->auxbus_data->emac_ctl;
-+	int sp_sel;
-+	u32 val;
-+
-+	sp_sel = tc956x_mac_speed_select(td, speed);
-+	if (sp_sel < 0)
-+		return sp_sel;
-+
-+	val = readl(emac_ctl);
-+	val |= EMAC_LPIHWCLKEN;
-+	val &= ~EMAC_INV_SGM_SIG_DET;
-+	val = u32_replace_bits(val, PCS_CLK_PHY, EMAC_PHY_INF_SEL_MASK);
-+	val = u32_replace_bits(val, sp_sel, EMAC_SP_SEL_MASK);
-+	writel(val, emac_ctl);
-+
-+	return 0;
-+}
-+
-+static int tc956x_mac_enable(struct tc956x_data *td)
-+{
-+	const struct tc956x_chip *chip = td->auxbus_data->chip;
-+	struct plat_stmmacenet_data *plat = td->plat;
-+	u32 id = td->auxbus_data->mac_id;
++	struct auxiliary_device *adev;
 +	int ret;
 +
-+	tc956x_clock_enable(chip, id, MAC_CLOCK_TX);
-+	tc956x_clock_enable(chip, id, MAC_CLOCK_RX);
-+	tc956x_clock_enable(chip, id, MAC_CLOCK_ALL);
-+	if (id)
-+		tc956x_clock_enable(chip, id, MAC_CLOCK_RMII);
++	adev = kzalloc_obj(*adev);
++	if (!adev)
++		return -ENOMEM;
 +
-+	/* Set the speed related registers */
-+	ret = tc956x_mac_configure(td, plat->max_speed);
++	adev->id = id;
++	adev->name = name;
++	adev->dev.parent = dev;
++	adev->dev.platform_data = platform_data;
++	adev->dev.release = adev_release;
++	device_set_of_node_from_dev(&adev->dev, dev);
++
++	ret = auxiliary_device_init(adev);
++	if (ret) {
++		of_node_put(adev->dev.of_node);
++		kfree(adev);
++		return ret;
++	}
++
++	ret = auxiliary_device_add(adev);
++	if (ret) {
++		auxiliary_device_uninit(adev);
++		return ret;
++	}
++
++	return devm_add_action_or_reset(dev, adev_remove, adev);
++}
++
++/* The embedded GPIO controller has an auxiliary device driver */
++static int chip_gpio_adev_add(struct tc956x_chip *chip)
++{
++	struct device *dev = chip->dev;
++	struct regmap *regmap;
++
++	/* If needed, PCIe function 0 implements the GPIO controller. */
++	if (!device_property_present(dev, "gpio-controller"))
++		return 0;
++
++	regmap = devm_regmap_init_mmio(dev, chip->sfr[0], &gpio_regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	return adev_device_add(dev, GPIO_DEVICE_NAME, 0, regmap);
++}
++
++/* The two embedded XGMAC controllers have an auxiliary device driver */
++static int function_xgmac_adev_add(struct pci_dev *pdev,
++				   struct tc956x_chip *chip,
++				   unsigned int msigen_irq)
++{
++	u8 mac_id = PCI_FUNC(pdev->devfn);
++	struct device *dev = &pdev->dev;
++	struct tc956x_dwmac_data *data;
++	void __iomem *sfr;
++	int ret;
++
++	if (mac_id > 1)
++		return -EINVAL;
++	sfr = chip->sfr[mac_id];
++
++	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->chip = chip;
++	data->msigen = sfr + MSIGEN_OFFSET(mac_id);
++	data->msigen_irq = msigen_irq;
++	data->emac = sfr + DWMAC_OFFSET(mac_id);
++	data->emac_ctl = sfr + EMAC_CTL_OFFSET(mac_id);
++	data->rev_id = chip->rev_id;
++	data->mac_id = mac_id;
++
++	ret = adev_device_add(dev, TC956X_XGMAC_DEV_NAME, mac_id, data);
 +	if (ret)
 +		return ret;
 +
-+	tc956x_reset_deassert(chip, id, MAC_RESET_MAC);
-+	tc956x_pma_init(td);
-+	tc956x_reset_deassert(chip, id, MAC_RESET_XPCS);
++	return 0;
++}
++
++static int chip_reset_clock_init(struct tc956x_chip *chip)
++{
++	void __iomem *base = chip->sfr[0];
++	struct device *dev = chip->dev;
++	struct regmap *regmap;
++
++	regmap = devm_regmap_init_mmio(dev, base, &reset_clock_regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++	chip->reset_clock_regmap = regmap;
 +
 +	return 0;
 +}
 +
-+static void tc956x_mac_disable(struct tc956x_data *td)
++static int chip_tamap_init(struct tc956x_chip *chip, struct pci_dev *pdev)
 +{
-+	const struct tc956x_chip *chip = td->auxbus_data->chip;
-+	u32 id = td->auxbus_data->mac_id;
++	void __iomem *base;
 +
-+	tc956x_reset_assert(chip, id, MAC_RESET_MAC);
-+	tc956x_reset_assert(chip, id, MAC_RESET_PMA);
-+	tc956x_reset_assert(chip, id, MAC_RESET_XPCS);
++	base = pcim_iomap_region(pdev, PCI_BAR_BRIDGE_CONFIG, DRIVER_NAME);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
 +
-+	tc956x_clock_disable(chip, id, MAC_CLOCK_ALL);
-+	tc956x_clock_disable(chip, id, MAC_CLOCK_RX);
-+	tc956x_clock_disable(chip, id, MAC_CLOCK_TX);
-+	if (id)
-+		tc956x_clock_disable(chip, id, MAC_CLOCK_RMII);
++	chip->bridge_config = base + ATR_AXI4_SLV0_OFFSET;
++
++	return 0;
 +}
 +
-+static void tc956x_mac_init_state(struct tc956x_data *td)
++/**
++ * chip_tamap_config() - Configure the table address map registers
++ * @chip:	The TC956X chip pointer
++ *
++ * Populate the registers used to translate AXI bus accesses to PCI TLPs.
++ * TC956X_SLV00_SRC_ADDR defines the base address of the AXI address range.
++ * AXI addresses are translated to the PCIe address range, whose base address
++ * is defined by SLV00_TRSL_ADDR (which is 0x0).
++ */
++static void chip_tamap_config(struct tc956x_chip *chip)
 +{
-+	const struct tc956x_chip *chip = td->auxbus_data->chip;
-+	u32 id = td->auxbus_data->mac_id;
++	void __iomem *table_base = chip->bridge_config;
++	void __iomem *entry_base;
++	u32 trsl_param_val;
++	u32 atr_size_val;
++	u32 val;
++	u32 i;
 +
-+	tc956x_clock_disable(chip, id, MAC_CLOCK_125M);
-+	tc956x_clock_disable(chip, id, MAC_CLOCK_312_5M);
++	/*
++	 * The lower bits of the source address must be zero, because the
++	 * SRC_ADDR_LO register encodes the address translation space size
++	 * and "implmented" bit there.  The size field defines the size of
++	 * the translation space (2^(ATR_SIZE + 1)).  The minimum size is
++	 * 4096 bytes, so ATR_SIZE value must be 11 or more.
++	 */
++	BUILD_BUG_ON(!!u32_get_bits(lower_32_bits(TC956X_SLV00_SRC_ADDR),
++						  ATR_SIZE_MASK));
++	BUILD_BUG_ON(TC956X_SLV00_SRC_ADDR & ATR_IMPL);
++	BUILD_BUG_ON(SLV00_ATR_SIZE < 11);
 +
-+	tc956x_mac_disable(td);
++	/*
++	 * We only use the first AXI4 slave TAMAC table:
++	 *	EDMA address region:	0x10 0000 0000 - 0x1f ffff ffff
++	 *	is translated to:	0x00 0000 0000 - 0x0f ffff ffff
++	 */
++	entry_base = table_base + AXI4_ENTRY_BASE(0);
++
++	atr_size_val = u32_encode_bits(SLV00_ATR_SIZE, ATR_SIZE_MASK);
++	atr_size_val |= ATR_IMPL;
++	val = lower_32_bits(TC956X_SLV00_SRC_ADDR) | atr_size_val;
++	writel(val, entry_base + SRC_ADDR_LO_OFFSET);
++
++	val = upper_32_bits(TC956X_SLV00_SRC_ADDR);
++	writel(val, entry_base + SRC_ADDR_HI_OFFSET);
++
++	val = lower_32_bits(SLV00_TRSL_ADDR);
++	writel(val, entry_base + TRSL_ADDR_LO_OFFSET);
++
++	val = upper_32_bits(SLV00_TRSL_ADDR);
++	writel(val, entry_base + TRSL_ADDR_HI_OFFSET);
++
++	/* This TRSL_PARAM value is assigned for all four TAMAC tables */
++	trsl_param_val = u32_encode_bits(TRSL_ID_PCIE_TX_RX, TRSL_ID_MASK);
++
++	writel(trsl_param_val, entry_base + TRSL_PARAM_OFFSET);
++
++	/* Set all other unused entries to default values (no translation) */
++	for (i = 1; i < AXI4_TABLE_ENTRY_COUNT; i++) {
++		entry_base = table_base + AXI4_ENTRY_BASE(i);
++
++		writel(0x0, entry_base + SRC_ADDR_LO_OFFSET);
++		writel(0x0, entry_base + SRC_ADDR_HI_OFFSET);
++		writel(0x0, entry_base + TRSL_ADDR_LO_OFFSET);
++		writel(0x0, entry_base + TRSL_ADDR_HI_OFFSET);
++		writel(trsl_param_val, entry_base + TRSL_PARAM_OFFSET);
++	}
++}
++
++static void chip_msigen_enable(struct tc956x_chip *chip)
++{
++	chip_clock_enable(chip, CLOCK_MSIGEN);
++	chip_reset_deassert(chip, RESET_MSIGEN);
++}
++
++static void chip_msigen_disable(struct tc956x_chip *chip)
++{
++	chip_reset_assert(chip, RESET_MSIGEN);
++	chip_clock_disable(chip, CLOCK_MSIGEN);
++}
++
++static void chip_init_state(struct tc956x_chip *chip)
++{
++	/* The only IP block we currently use is MSIGEN */
++	chip_reset_assert(chip, RESET_MCU);
++	chip_reset_assert(chip, RESET_MCU1);
++	chip_reset_assert(chip, RESET_INTC);
++	chip_reset_assert(chip, RESET_UART0);
++	chip_clock_disable(chip, CLOCK_MCU);
++	chip_clock_disable(chip, CLOCK_SRAM);
++	chip_clock_disable(chip, CLOCK_PLL);
++	chip_clock_disable(chip, CLOCK_SGMII);
++	chip_clock_disable(chip, CLOCK_REFCLK);
++	chip_clock_disable(chip, CLOCK_INTC);
++	chip_clock_disable(chip, CLOCK_UART0);
++
++	/* Start with MSIGEN in reset with its clock disabled */
++	chip_msigen_disable(chip);
++}
++
++static void chip_link_del(void *data)
++{
++	struct device_link *link = data;
++
++	device_link_del(link);
 +}
 +
 +/*
-+ * Override method for dwxgmac301_dma_ops->init_rx_chan
++ * Function 0 will allocate the chip structure that is shared by both
++ * functions.  Once it has allocated the structure it assigns it as
++ * the PCI device platform data.  Function 1 can access the shared
++ * chip structure by looking up the function 0 device to use its
++ * platform data..
 + *
-+ * This differs from the dwxgmac301_dma_ops->init_rx_chan by translating the DMA
-+ * address for TC956x internal bus. The window that provides DMA access to PCI
-+ * is linearly mapped at 0x10_0000_0000.
++ * Returns a chip structure pointer, or a pointer-coded error.
 + */
-+static void tc956x_dma_init_rx_chan(struct stmmac_priv *priv,
-+				    void __iomem *ioaddr,
-+				    struct stmmac_dma_cfg *dma_cfg,
-+				    dma_addr_t phy, u32 chan)
++static struct tc956x_chip *chip_get(struct pci_dev *pdev)
 +{
-+	dma_addr_t translated = phy + TC956X_SLV00_SRC_ADDR;
-+
-+	dwxgmac2_dma_init_rx_chan(priv, ioaddr, dma_cfg, phy, chan);
-+
-+	writel(upper_32_bits(translated),
-+	       ioaddr + XGMAC_DMA_CH_RxDESC_HADDR(chan));
-+	writel(lower_32_bits(translated),
-+	       ioaddr + XGMAC_DMA_CH_RxDESC_LADDR(chan));
-+}
-+
-+/* Override method for dwxgmac301_dma_ops->init_tx_chan */
-+static void tc956x_dma_init_tx_chan(struct stmmac_priv *priv,
-+				    void __iomem *ioaddr,
-+				    struct stmmac_dma_cfg *dma_cfg,
-+				    dma_addr_t phy, u32 chan)
-+{
-+	dma_addr_t translated = phy + TC956X_SLV00_SRC_ADDR;
-+
-+	dwxgmac2_dma_init_tx_chan(priv, ioaddr, dma_cfg, phy, chan);
-+
-+	writel(upper_32_bits(translated),
-+	       ioaddr + XGMAC_DMA_CH_TxDESC_HADDR(chan));
-+	writel(lower_32_bits(translated),
-+	       ioaddr + XGMAC_DMA_CH_TxDESC_LADDR(chan));
-+}
-+
-+/* Override method for dwxgmac210_desc_ops->set_addr */
-+static void tc956x_desc_set_addr(struct dma_desc *p, dma_addr_t addr)
-+{
-+	dma_addr_t translated = addr + TC956X_SLV00_SRC_ADDR;
-+
-+	p->des0 = cpu_to_le32(lower_32_bits(translated));
-+	p->des1 = cpu_to_le32(upper_32_bits(translated));
-+}
-+
-+/* Override method for dwxgmac210_desc_ops->set_sec_addr */
-+static void tc956x_desc_set_sec_addr(struct dma_desc *p, dma_addr_t addr,
-+				     bool is_valid)
-+{
-+	dma_addr_t translated = addr + TC956X_SLV00_SRC_ADDR;
-+
-+	p->des2 = cpu_to_le32(lower_32_bits(translated));
-+	p->des3 = cpu_to_le32(upper_32_bits(translated));
-+}
-+
-+/*
-+ * Use mac_setup to apply the override methods above.
-+ *
-+ * The memory for the modified ops structures is pre-allocated as part of
-+ * struct tc956x_data.
-+ */
-+static int tc956x_mac_setup(void *apriv, struct mac_device_info *mac)
-+{
-+	struct stmmac_priv *priv = apriv;
-+	struct stmmac_desc_ops *desc;
-+	struct stmmac_dma_ops *dma;
-+	struct tc956x_data *td;
-+
-+	td = priv->plat->bsp_priv;
-+
-+	/* dwxgmac301_dma_ops needs extending to provide DMA address translation */
-+	dma = &td->dma;
-+	*dma = dwxgmac301_dma_ops;
-+	dma->init_rx_chan = tc956x_dma_init_rx_chan;
-+	dma->init_tx_chan = tc956x_dma_init_tx_chan;
-+	mac->dma = dma;
-+
-+	/* dwxgmac210_desc_ops also needs extending for the same reason */
-+	desc = &td->desc;
-+	*desc = dwxgmac210_desc_ops;
-+	desc->set_addr = tc956x_desc_set_addr;
-+	desc->set_sec_addr = tc956x_desc_set_sec_addr;
-+	mac->desc = desc;
-+
-+	priv->hw = mac;
-+
-+	return dwxgmac2_setup(priv);
-+}
-+
-+static int tc956x_pcs_init(struct stmmac_priv *priv)
-+{
-+	struct xpcs_regmap_config xpcs_regmap_cfg;
-+	void __iomem *emac = priv->ioaddr;
-+	struct regmap *xpcs_regmap;
-+	void __iomem *xpcs_addr;
-+	struct dw_xpcs *xpcs;
-+
-+	xpcs_addr = emac + DWMAC_XPCS_OFFSET;
-+	xpcs_regmap = devm_regmap_init_mmio(priv->device, xpcs_addr,
-+					    &xpcs_regmap_config);
-+	if (IS_ERR(xpcs_regmap))
-+		return PTR_ERR(xpcs_regmap);
-+
-+	xpcs_regmap_cfg.regmap = xpcs_regmap;
-+	xpcs_regmap_cfg.reg_indir = true;
-+
-+	xpcs = devm_xpcs_regmap_register(priv->device, &xpcs_regmap_cfg);
-+	if (IS_ERR(xpcs))
-+		return PTR_ERR(xpcs);
-+
-+	xpcs_config_eee_mult_fact(xpcs, priv->plat->mult_fact_100ns);
-+	priv->hw->phylink_pcs = xpcs_to_phylink_pcs(xpcs);
-+
-+	return 0;
-+}
-+
-+static struct phylink_pcs *tc956x_select_pcs(struct stmmac_priv *priv,
-+					     phy_interface_t interface)
-+{
-+	return priv->hw->phylink_pcs;
-+}
-+
-+static void tc956x_fix_mac_speed(void *bsp_priv, phy_interface_t interface,
-+				 int speed, unsigned int mode)
-+{
-+	struct tc956x_data *td = bsp_priv;
-+
-+	tc956x_mac_configure(td, speed);
-+	tc956x_pma_init(td);
-+}
-+
-+static int tc956x_dwmac_suspend(struct device *dev, void *bsp_priv)
-+{
-+	struct tc956x_data *td = bsp_priv;
-+
-+	tc956x_mac_disable(td);
-+
-+	return 0;
-+}
-+
-+static int tc956x_dwmac_resume(struct device *dev, void *bsp_priv)
-+{
-+	struct tc956x_data *td = bsp_priv;
-+
-+	return tc956x_mac_enable(td);
-+}
-+
-+/* Called by tc956x_dwmac_probe(); return errors with dev_err_probe() */
-+static int tc956x_dwmac_parse_dt(struct tc956x_data *td)
-+{
-+	struct device_node *mdio_node;
-+	struct device *dev = td->dev;
-+	struct device_node *np;
-+
-+	np = dev_of_node(dev);
-+	if (!np)
-+		return dev_err_probe(dev, -EINVAL, "no devicetree node\n");
-+
-+	/* Find the MDIO bus */
-+	for_each_child_of_node(np, mdio_node) {
-+		if (of_device_is_compatible(mdio_node,
-+					    "snps,dwmac-mdio"))
-+			break;
-+	}
-+
-+	/* Pass the MDIO bus (if there is one) to the core driver */
-+	if (mdio_node) {
-+		td->plat->mdio_node = mdio_node;
-+		td->plat->mdio_bus_data->needs_reset = true;
-+	}
-+
-+	return 0;
-+}
-+
-+static int tc956x_lookup_max_speed(phy_interface_t phy_interface)
-+{
-+	switch (phy_interface) {
-+	case PHY_INTERFACE_MODE_SGMII:
-+	case PHY_INTERFACE_MODE_2500BASEX:
-+		return SPEED_2500;
-+
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+/* Called by tc956x_dwmac_probe(); return errors with dev_err_probe() */
-+static int tc956x_plat_dat_init(struct tc956x_data *td)
-+{
-+	struct plat_stmmacenet_data *plat;
-+	phy_interface_t phy_interface;
-+	struct device *dev = td->dev;
-+	struct stmmac_axi *axi;
-+	u32 speed;
++	unsigned int devfn = pdev->devfn;
++	struct device *dev = &pdev->dev;
++	struct tc956x_chip *chip;
++	struct device_link *link;
++	struct pci_dev *peer;
 +	int ret;
-+	u32 i;
 +
-+	phy_interface = device_get_phy_mode(dev);
-+	if (phy_interface < 0)
-+		return -ENODEV;
++	/* Function 0 just allocates the chip structure */
++	if (!PCI_FUNC(devfn)) {
++		chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
++		if (!chip)
++			return ERR_PTR(-ENOMEM);
 +
-+	/* The platform structure is allocated with devm_kzalloc() */
-+	plat = stmmac_plat_dat_alloc(dev);
-+	if (!plat)
-+		return -ENOMEM;
++		/*
++		 * The function whose device pointer matches the chip's
++		 * device pointer manages common resources (like MSIGEN).
++		 */
++		chip->dev = dev;
 +
-+	ret = tc956x_lookup_max_speed(phy_interface);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "unsupported phy speed\n");
-+	speed = ret;
-+
-+	plat->core_type = DWMAC_CORE_XGMAC;
-+	plat->bus_id = td->auxbus_data->mac_id;
-+	plat->phy_interface = phy_interface;
-+	plat->mdio_bus_data = &td->mdio_bus_data;
-+	/* Parent PCI device is used for DMA */
-+	plat->dma_device = dev->parent;
-+	plat->dma_cfg = &td->dma_cfg;
-+	plat->dma_cfg->pbl = 32;
-+	plat->dma_cfg->pblx8 = true;
-+
-+	/*
-+	 * Our MAC clock rate is fixed at 125 MHz.  For XGMAC, clk_csr 0
-+	 * represents "divide by 62" and gets the best rate under 2.5 MHz.
-+	 */
-+	plat->clk_csr = 0;	/* MDC clock = clk_csr_i / 62 */
-+	plat->force_sf_dma_mode = 1;
-+	plat->max_speed = speed;
-+	plat->unicast_filter_entries = 32;
-+
-+	/*
-+	 * TC956x has 8 RX queues but we observe significantly reduced RX
-+	 * bandwidth if we don't have at least 8k FIFO space per queue, so
-+	 * by default we avoid using all the queues.
-+	 */
-+	plat->rx_queues_to_use = 4;
-+
-+	/*
-+	 * TX956x has 8 TX queues but only #0 to #3 work for general IP traffic.
-+	 * For now we will limit the driver to only these queues.
-+	 */
-+	plat->tx_queues_to_use = 4;
-+
-+	/*
-+	 * Oversized FIFOs result in reduced performance in bandwidth tests.
-+	 * Limit them to 8KiB per queue, or the total available.
-+	 */
-+	plat->tx_fifo_size =
-+		min(TC956X_TX_FIFO_KB, 8 * plat->tx_queues_to_use) * SZ_1K;
-+	plat->rx_fifo_size =
-+		min(TC956X_RX_FIFO_KB, 8 * plat->rx_queues_to_use) * SZ_1K;
-+	plat->host_dma_width = 36;
-+
-+	plat->rx_sched_algorithm = MTL_RX_ALGORITHM_SP;
-+	plat->tx_sched_algorithm = MTL_TX_ALGORITHM_WRR;
-+
-+	/* Default RX chan is set to queue index (0..rx_queues_to_use-1) */
-+	for (i = 0; i < plat->rx_queues_to_use; i++)
-+		plat->rx_queues_cfg[i].mode_to_use = MTL_QUEUE_DCB;
-+
-+	for (i = 0; i < plat->tx_queues_to_use; i++) {
-+		plat->tx_queues_cfg[i].weight = 12;
-+		plat->tx_queues_cfg[i].mode_to_use = MTL_QUEUE_DCB;
-+
-+		/* Only queues 5-8 support time-based scheduling on TC956X */
-+		if (i >= 5)
-+			plat->tx_queues_cfg[i].tbs_en = 1;
++		return chip;
 +	}
 +
-+	plat->fix_mac_speed = tc956x_fix_mac_speed;
-+	plat->suspend = tc956x_dwmac_suspend;
-+	plat->resume = tc956x_dwmac_resume;
-+	plat->mac_setup = tc956x_mac_setup;
-+	plat->pcs_init = tc956x_pcs_init;
-+	plat->select_pcs = tc956x_select_pcs;
++	/* Function 1 has to get the chip structure from function 0 */
++	peer = pci_get_slot(pdev->bus, PCI_DEVFN(PCI_SLOT(devfn), 0));
++	if (!peer)
++		return ERR_PTR(-ENXIO);
 +
-+	plat->bsp_priv = td;
-+	plat->clk_ptp_rate = TC956X_PTP_CLOCK_RATE;
++	/* If function 0 hasn't set up the chip yet, try again later */
++	chip = dev_get_platdata(&peer->dev);
++	if (!chip)
++		return ERR_PTR(-EPROBE_DEFER);
 +
-+	/* AXI Configuration */
-+	axi = &td->axi;
-+	axi->axi_lpi_en = 1;
-+	axi->axi_wr_osr_lmt = 31;
-+	axi->axi_rd_osr_lmt = 31;
-+	/* All sizes (2^2..2^8) are supported */
-+	axi->axi_blen_regval = DMA_AXI_BLEN_MASK;
-+	plat->axi = axi;
++	/* Mark function 1's device as dependent on function 0 */
++	link = device_link_add(dev, &peer->dev, DL_FLAG_STATELESS);
++	if (!link)
++		return ERR_PTR(-ENODEV);
 +
-+	plat->mac_port_sel_speed = speed;
-+	plat->flags = STMMAC_FLAG_MULTI_MSI_EN | STMMAC_FLAG_TSO_EN;
++	ret = devm_add_action_or_reset(&peer->dev, chip_link_del, link);
++	if (ret)
++		return ERR_PTR(ret);
 +
-+	td->plat = plat;
++	return chip;
++}
++
++static int chip_init(struct tc956x_chip *chip, struct pci_dev *pdev)
++{
++	u32 id = PCI_FUNC(pdev->devfn) ? 1 : 0;
++	u32 val;
++	int ret;
++
++	/* Both chips need to map their SFR region */
++	chip->sfr[id] = pcim_iomap_region(pdev, PCI_BAR_SFR, DRIVER_NAME);
++	if (IS_ERR(chip->sfr[id]))
++		return PTR_ERR(chip->sfr[id]);
++
++	/* Function 0 handles common initialization */
++	if (id)
++		return 0;
++
++	ret = chip_tamap_init(chip, pdev);
++	if (ret)
++		return ret;
++
++	ret = chip_reset_clock_init(chip);
++	if (ret)
++		return ret;
++
++	chip_init_state(chip);
++
++	ret = chip_gpio_adev_add(chip);
++	if (ret)
++		return ret;
++
++	/* Get the revision ID */
++	val = readl(chip->sfr[0] + NCID_OFFSET);
++	chip->rev_id = u32_get_bits(val, NCID_REV_ID_MASK);
++
++	chip_tamap_config(chip);
++	chip_msigen_enable(chip);
 +
 +	return 0;
 +}
 +
-+/*
-+ * The domain was created with IRQ_DOMAIN_FLAG_DESTROY_GC, so any mapped IRQs
-+ * will be disposed when the domain is removed (when the device is destroyed).
-+ */
-+static int tc956x_stmmac_resources_init(struct tc956x_data *td,
-+					struct stmmac_resources *res)
++static int
++tc956x_function_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 +{
-+	struct irq_domain *irq_domain = td->irq_domain;
-+	u32 i;
++	struct device *dev = &pdev->dev;
++	struct tc956x_chip *chip;
++	unsigned int msigen_irq;
++	int ret;
 +
-+	res->irq = irq_create_mapping(irq_domain, HWIRQ_EVENT);
-+	if (!res->irq)
++	/* Despite being a PCI device, we require devicetree */
++	if (!dev->of_node)
 +		return -EINVAL;
 +
-+	for (i = 0; i < td->plat->tx_queues_to_use; i++) {
-+		res->tx_irq[i] = irq_create_mapping(irq_domain, HWIRQ_TX0 + i);
-+		if (!res->tx_irq[i])
-+			return -EINVAL;
-+	}
++	ret = pcim_enable_device(pdev);
++	if (ret)
++		return ret;
 +
-+	for (i = 0; i < td->plat->rx_queues_to_use; i++) {
-+		res->rx_irq[i] = irq_create_mapping(irq_domain, HWIRQ_RX0 + i);
-+		if (!res->tx_irq[i])
-+			return -EINVAL;
-+	}
++	pci_set_master(pdev);
 +
-+	res->addr = td->auxbus_data->emac;
++	/* Function 1 gets -EPROBE_DEFER until function 0 sets platform data */
++	chip = chip_get(pdev);
++	if (IS_ERR(chip))
++		return dev_err_probe(dev, PTR_ERR(chip), "failed to get chip\n");
++
++	/* We called pcim_enable_device() so this will be freed automatically */
++	ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_MSI);
++	if (ret < 1)
++		return dev_err_probe(dev, ret ? : -EIO,
++				     "failed to allocate IRQ vectors\n");
++
++	ret = pci_irq_vector(pdev, 0);
++	if (ret < 1)
++		return dev_err_probe(dev, ret ? : -EIO, "failed to get IRQ\n");
++	msigen_irq = ret;
++
++	ret = chip_init(chip, pdev);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to initialize chip\n");
++
++	/* We're ready; the other function can now probe */
++	dev->platform_data = chip;
++
++	ret = function_xgmac_adev_add(pdev, chip, msigen_irq);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to add xgmap device\n");
 +
 +	return 0;
 +}
 +
-+static int tc956x_dwmac_probe(struct auxiliary_device *adev,
-+			      const struct auxiliary_device_id *id)
++static void tc956x_function_remove(struct pci_dev *pdev)
 +{
-+	struct stmmac_resources res = { };
-+	struct device *dev = &adev->dev;
-+	struct tc956x_data *td;
-+	int ret;
++	struct tc956x_chip *chip = dev_get_platdata(&pdev->dev);
 +
-+	td = devm_kzalloc(dev, sizeof(*td), GFP_KERNEL);
-+	if (!td)
-+		return -ENOMEM;
++	pci_clear_master(pdev);
 +
-+	td->dev = dev;
-+	td->auxbus_data = dev_get_platdata(dev);
-+	if (!td->auxbus_data)
-+		return dev_err_probe(dev, -EINVAL, "no platform data\n");
-+
-+	ret = tc956x_plat_dat_init(td);
-+	if (ret)
-+		return ret;
-+
-+	ret = tc956x_dwmac_parse_dt(td);
-+	if (ret)
-+		return ret;
-+
-+	td->irq_domain = tc956x_msigen_irq_domain_instantiate(td);
-+	if (IS_ERR(td->irq_domain))
-+		return dev_err_probe(dev, PTR_ERR(td->irq_domain),
-+				     "failed to instantiate IRQ domain\n");
-+
-+	/* Put the MAC in a known initial state */
-+	tc956x_mac_init_state(td);
-+
-+	ret = tc956x_stmmac_resources_init(td, &res);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "failed to initialize stmmac resources\n");
-+
-+	ret = tc956x_mac_enable(td);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to enable MAC\n");
-+
-+	ret = stmmac_dvr_probe(dev, td->plat, &res);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed stmmac probe\n");
-+
-+	return 0;
++	if (&pdev->dev == chip->dev)
++		chip_msigen_disable(chip);
 +}
 +
-+static void tc956x_dwmac_remove(struct auxiliary_device *adev)
-+{
-+	struct device *dev = &adev->dev;
-+	struct net_device *ndev = dev_get_drvdata(dev);
-+	struct stmmac_priv *priv = netdev_priv(ndev);
-+	struct tc956x_data *td = priv->plat->bsp_priv;
-+
-+	stmmac_dvr_remove(dev);
-+	tc956x_mac_disable(td);
-+}
-+
-+static const struct auxiliary_device_id tc956x_dwmac_ids[] = {
-+	{ .name = TC956X_PCIE_DRIVER_NAME "." TC956X_XGMAC_DEV_NAME, },
++static const struct pci_device_id tc956x_function_id_table[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_TOSHIBA, PCI_DEVICE_ID_TOSHIBA_TC956X), },
 +	{ },
 +};
-+MODULE_DEVICE_TABLE(auxiliary, tc956x_dwmac_ids);
++MODULE_DEVICE_TABLE(pci, tc956x_function_id_table);
 +
-+static struct auxiliary_driver tc956x_dwmac_driver = {
++static int tc956x_chip_suspend_noirq(struct device *dev)
++{
++	struct tc956x_chip *chip = dev_get_platdata(dev);
++	struct pci_dev *pdev = to_pci_dev(dev);
++
++	if (dev == chip->dev)
++		chip_msigen_disable(chip);
++
++	/* It seems most callers ignore the return value here */
++	pci_save_state(pdev);
++	pci_wake_from_d3(pdev, true);
++
++	return 0;
++}
++
++static int tc956x_chip_resume_noirq(struct device *dev)
++{
++	struct tc956x_chip *chip = dev_get_platdata(dev);
++	struct pci_dev *pdev = to_pci_dev(dev);
++
++	pci_wake_from_d3(pdev, false);
++	pci_set_power_state(pdev, PCI_D0);
++	pci_restore_state(pdev);
++
++	if (dev != chip->dev)
++		return 0;
++
++	/* Reconfigure tamap tables following suspend */
++	chip_tamap_config(chip);
++
++	chip_msigen_enable(chip);
++
++	return 0;
++}
++
++static DEFINE_NOIRQ_DEV_PM_OPS(tc956x_chip_pm_ops,
++			       tc956x_chip_suspend_noirq,
++			       tc956x_chip_resume_noirq);
++
++static struct pci_driver tc956x_function_driver = {
 +	.name		= DRIVER_NAME,
-+	.probe		= tc956x_dwmac_probe,
-+	.remove		= tc956x_dwmac_remove,
-+	.id_table	= tc956x_dwmac_ids,
-+	.driver = {
-+		.name	= DRIVER_NAME,
-+		.pm	= &stmmac_simple_pm_ops,
-+		.owner	= THIS_MODULE,
++	.id_table	= tc956x_function_id_table,
++	.probe		= tc956x_function_probe,
++	.remove		= tc956x_function_remove,
++	.driver		= {
++		.name		= DRIVER_NAME,
++		.owner		= THIS_MODULE,
++		.pm		= pm_sleep_ptr(&tc956x_chip_pm_ops),
 +	},
 +};
-+module_auxiliary_driver(tc956x_dwmac_driver);
 +
-+MODULE_DESCRIPTION("Toshiba TC956x PCIe Ethernet Network Driver");
++module_pci_driver(tc956x_function_driver);
++
++MODULE_DESCRIPTION("Toshiba TC956X PCIe Embedded Function Driver");
 +MODULE_LICENSE("GPL");
-diff --git a/include/soc/toshiba/tc956x-dwmac.h b/include/soc/toshiba/tc956x-dwmac.h
-new file mode 100644
-index 0000000000000..5ca39cf764be9
---- /dev/null
-+++ b/include/soc/toshiba/tc956x-dwmac.h
-@@ -0,0 +1,84 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Copyright (C) 2026 by RISCstar Solutions Corporation.  All rights reserved.
-+ */
-+
-+#ifndef __TOSHIBA_TC956X_DWMAC_H__
-+#define __TOSHIBA_TC956X_DWMAC_H__
-+
-+#include <linux/compiler_types.h>
-+#include <linux/types.h>
-+
-+#define TC956X_PCIE_DRIVER_NAME	"tc956x_pci"
-+
-+#define TC956X_XGMAC_DEV_NAME	"dwmac-tc956x"
-+
-+/* Starting address of the space translated by the PCIe endpoint bridge */
-+#define TC956X_SLV00_SRC_ADDR	0x0000001000000000ULL
-+
-+enum tc956x_reset_id {
-+	MAC_RESET_MAC		= 7,
-+	MAC_RESET_PMA		= 30,
-+	MAC_RESET_XPCS		= 31,
-+};
-+
-+enum tc956x_clock_id {
-+	MAC_CLOCK_TX		= 7,
-+	MAC_CLOCK_RX		= 14,
-+	MAC_CLOCK_ALL		= 31,
-+	MAC_CLOCK_125M		= 29,
-+	MAC_CLOCK_312_5M	= 30,
-+	MAC_CLOCK_RMII		= 15,	/* eMAC 1 only */
-+};
-+
-+/**
-+ * struct tc956x_dwmac_data - Structure passed to stmmac auxiliary devices.
-+ * @chip:		Context pointer needed for reset and clock operations
-+ * @emac:		I/O mapped address used by eMAC
-+ * @emac_ctl:		I/O mapped address used for eMAC control
-+ * @msigen:		I/O mapped address used by MSIGEN
-+ * @msigen_irq:		IRQ number used by MSIGEN
-+ * @rev_id:		Chip revision ID (for quirks)
-+ * @mac_id:		Unique device ID (0 or 1)
-+ *
-+ * This structure is passed via platform data to the stmmac auxiliary devices.
-+ */
-+struct tc956x_dwmac_data {
-+	const struct tc956x_chip *chip;
-+	void __iomem *emac;
-+	void __iomem *emac_ctl;
-+	void __iomem *msigen;
-+	unsigned int msigen_irq;
-+	u8 rev_id;
-+	u8 mac_id;
-+};
-+
-+extern void tc956x_reset_clock_set(const struct tc956x_chip *chip, bool reset,
-+				   bool reg0, bool set, u8 bit);
-+
-+static inline void tc956x_reset_assert(const struct tc956x_chip *chip,
-+				       u8 mac_id, enum tc956x_reset_id id)
-+{
-+	tc956x_reset_clock_set(chip, true, !mac_id, true, (u8)id);
-+}
-+
-+static inline void tc956x_reset_deassert(const struct tc956x_chip *chip,
-+					 u8 mac_id, enum tc956x_reset_id id)
-+{
-+	tc956x_reset_clock_set(chip, true, !mac_id, false, (u8)id);
-+}
-+
-+static inline void tc956x_clock_enable(const struct tc956x_chip *chip,
-+				       u8 mac_id, enum tc956x_clock_id id)
-+{
-+	tc956x_reset_clock_set(chip, false, !mac_id, true, (u8)id);
-+}
-+
-+static inline void tc956x_clock_disable(const struct tc956x_chip *chip,
-+					u8 mac_id, enum tc956x_clock_id id)
-+{
-+	tc956x_reset_clock_set(chip, false, !mac_id, false, (u8)id);
-+}
-+
-+#endif /* __TOSHIBA_TC956X_DWMAC_H__*/
 -- 
 2.51.0
 
