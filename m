@@ -1,178 +1,171 @@
-Return-Path: <linux-gpio+bounces-35969-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35970-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CWaZMHnm9GmxFgIAu9opvQ
-	(envelope-from <linux-gpio+bounces-35969-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Fri, 01 May 2026 19:44:25 +0200
+	id 6LnzCqvr9GkhFwIAu9opvQ
+	(envelope-from <linux-gpio+bounces-35970-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Fri, 01 May 2026 20:06:35 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B8DE4AE9CB
-	for <lists+linux-gpio@lfdr.de>; Fri, 01 May 2026 19:44:24 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF9EE4AEB48
+	for <lists+linux-gpio@lfdr.de>; Fri, 01 May 2026 20:06:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id BD3C0301410C
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 May 2026 17:39:02 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 29C2830160C0
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 May 2026 18:06:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2704A31690E;
-	Fri,  1 May 2026 17:38:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B356E33F38A;
+	Fri,  1 May 2026 18:06:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="1RUdOWDp"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="psJ3Fjh4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3F93148B5;
-	Fri,  1 May 2026 17:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE2633260F
+	for <linux-gpio@vger.kernel.org>; Fri,  1 May 2026 18:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777657138; cv=none; b=V6rK4Fh9tSA9lAq8lwOb5pg4qPA3jcCKUU2S1CSh9UmDFgQsVuwOBVKcRvJk81U6hGQ2ov0u4GeGHm6LL6lS1S17C6cJMvLWT6/aW/2Nbu/3o0NIff4EHKgkGj7abCnTckeuvuxFudq+YK+SbEDl1UGYgwz2tqmEfO/ysV2lMcg=
+	t=1777658789; cv=none; b=oTseX0Bntm6MDvGWsOiBaiUg79If85HBhfmgYYzylKceNX0Po6DwK5QOQs4Xg1hGbFn22JcLNM3l0qNRyRTGabjEQH1FPddJ73hmAhT90h6ZGfXJ0KfIxC8PNTMSwu5GiNmi5W6R7ab+n7rx7AEwzqo6TCKHKiLyGuBxMs50u7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777657138; c=relaxed/simple;
-	bh=FkLvuBwHLW9KIU/MWqsTCq6sClXi+dyujMF+dGFavFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rEyfZ97z01lv+9o7s1tsyZnStvEVYu1SkYo+L5c/CDfm7co33GWk5EolOTHBQ7Q+Hhsvb4Uwgha6RqKLYoJV7qGsl/36nallS7fa9vUzZ8wrKePrKxKaFbwbho48VfuqBWexaIlvT0ZKN3JQ+Omoy5iFKz0NC4r2Al8NWcugXR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=1RUdOWDp; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=v1G+n5y3YaiJOCPRo9ZSXyCutKw19S+mOiIPygXvWbA=; b=1RUdOWDpRr1oCft025cSv8R4JM
-	7JEFjRj+B2aOR33WNSyqJ0LUTLOPlRXuB27RxpQuiHsoK2UxvcHt/feQeARPBKKRd75vpeMJBL+VA
-	QutEOfQtlovqoFmxTw5pLgvxcNj79Ys9Gxw2YAyJbf0T6TYLP527f884yruR48HgiUwQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1wIrok-000qnU-W4; Fri, 01 May 2026 19:38:22 +0200
-Date: Fri, 1 May 2026 19:38:22 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Alex Elder <elder@riscstar.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, maxime.chevallier@bootlin.com,
-	rmk+kernel@armlinux.org.uk, andersson@kernel.org,
-	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linusw@kernel.org, brgl@kernel.org,
-	arnd@arndb.de, gregkh@linuxfoundation.org,
-	Daniel Thompson <daniel@riscstar.com>, mohd.anwar@oss.qualcomm.com,
-	a0987203069@gmail.com, alexandre.torgue@foss.st.com, ast@kernel.org,
-	boon.khai.ng@altera.com, chenchuangyu@xiaomi.com,
-	chenhuacai@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
-	hkallweit1@gmail.com, inochiama@gmail.com, john.fastabend@gmail.com,
-	julianbraha@gmail.com, livelycarpet87@gmail.com,
-	matthew.gerlach@altera.com, mcoquelin.stm32@gmail.com, me@ziyao.cc,
-	prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
-	rohan.g.thomas@altera.com, sdf@fomichev.me,
-	siyanteng@cqsoftware.com.cn, weishangjuan@eswincomputing.com,
-	wens@kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 08/12] dt-bindings: net: toshiba,tc965x-dwmac:
- add TC956x Ethernet bridge
-Message-ID: <1f34cbce-e2dd-4e80-b136-55d0efa50002@lunn.ch>
-References: <20260501155421.3329862-1-elder@riscstar.com>
- <20260501155421.3329862-9-elder@riscstar.com>
+	s=arc-20240116; t=1777658789; c=relaxed/simple;
+	bh=oKkQnY5vlFNovbcjfh6JBo8TVogGXpyGhtvkDtTNy3E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O3nT0ea8eUkeJG+ZuPjpKfWLnk0Sj5SG5cdflEfEfGZd+BeRX23ECdEEqfW8EExICbjXrd2c0YPnpOzfFFlV3GCgMU1hyTrF8wuqpgyjxggC8/RQ/X/9vRZ9Oa7ulQaiGgqfULRf8zmV0+yjVJ3PrZKcKfXcjiNq7na14azN48A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=psJ3Fjh4; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-799001d73bdso21094487b3.0
+        for <linux-gpio@vger.kernel.org>; Fri, 01 May 2026 11:06:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1777658787; x=1778263587; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=h1DjW845zhModhDu44NYwmrHvDI4OE4s13MqVWiObLc=;
+        b=psJ3Fjh4F/IvT+GnFPrExEwYlGYre21c/sJ635RZrszNYBXaXf5wN64XMn6ym7/psU
+         Q2p+xXX2OyIDv3LMm6MTze4TlZkVqEoa5LBRKzq8SHUMpzTAWhKGajoUlT/6qaLDwchY
+         5BnJcxhDXuQgHakxWjVfWWVVLyFWoIHmsKPMrAtEoUGU4SP3U/bJWLSo/wF43VT4VLU3
+         JVzTAhYmNHQMjGVKGbxeLIpjZKHAtTc12qpZWpK/Atj7nRqy6PwkvuqCStFJ1iK3aWrp
+         kNUE6XQc2lSrMSKr6TAQQe2G4Uo/xq82lf8T/LX65G1UDU74tl4CipLKYY0ErDW5fkzF
+         Md4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777658787; x=1778263587;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h1DjW845zhModhDu44NYwmrHvDI4OE4s13MqVWiObLc=;
+        b=o9jFK7vTCuNNdCaanYeUE0QcfvRPTT1vMQdFTaOa7R9r1Vjv0i18h9bzYoK9GqzJVG
+         oehVElFrFmY2HFcPkqz36mZ8jtQgV2bR2lwrNE0CkmiUOXP50unwXT9jHmPAFCT1PSkT
+         olr9jhEMVWQ3EEHgtwyUheiBIdBxe9JAlb46QOZ5SpcbCEkTEyu4BcFN9KQAjO1UfJS7
+         ZVxOSyyQWSm3KIGmHBId7TdNOpY3EiwvfSYw1REiOX2nhY0AMgNg+2FXt5lVnExBCPc6
+         ZMDqM/+L5pBLWGrUAy+Z8jlUTLbRk9ONoz4cb/3FZcXR4eosewFNyaAv5IJ+OBAHJT2l
+         4tpw==
+X-Forwarded-Encrypted: i=1; AFNElJ98uI25iZccoKh2jKlcxbiYg25P41diy1LucahKuvuA9in6xpZ6xkLziNtinZidm2fFPMLqVZlBYhD7@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWCBzHJ2eepRjwnbNHsk4oxLBXeIKdR5d2cnBUXJhelYBGnxXf
+	HgjNmTWCwYn0idU9kcLVQ/LTD83mTVzS589VudcW75h/sS4cvNvJINXreKGknSrhp0I=
+X-Gm-Gg: AeBDieuMHcmM6wlo30nLC+GS3fzwvO9fd9QrZa27Xmlby3QAMZOnQTJ1AVvaiU3N374
+	SEdjm8uR1AmXbURIMy4fQSGMxAUNmAWnBjfsrsXEPuQ+Fb45cf/s3POKl21O65OyDYdoE2nNuR+
+	SRCpeD/mOI5pqWxdavYzP5fjnDvFf65GLF7BGfQNGeAGK0ngR4yuW7HKaIQeMwjLG9Lqfi2sWCu
+	jED7IelYW+7U0w/6vyTtkYhY37KQ87uEAwz4hAA4ppyGlRNERmpiuzCoMCilINByJoZ+HJu9XSS
+	BpJecuG97rteCdoT3s45Z/oTdsRF+pQWKlU9PgOWIuyEgNA1sy1KqAVli/e8xIdUNL+D0iXMzVD
+	GBXIsKdGQT+CChRW+zVC1wWB1/aortROTCZWPQu5BUkZvWuclM/MUVeYS6BcOrALzHUN6kEaHcX
+	2jo0rTkd9Yoler+yeFZ7ZHP34aGdcZL++Jpa3xCkLr2dWX0RePUP+GNYac+8XHBgbuKQGHV55ep
+	w==
+X-Received: by 2002:a05:690c:dd3:b0:7af:6904:3f3f with SMTP id 00721157ae682-7bd77170409mr4261187b3.45.1777658787005;
+        Fri, 01 May 2026 11:06:27 -0700 (PDT)
+Received: from [172.22.22.28] (c-75-72-117-212.hsd1.mn.comcast.net. [75.72.117.212])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7bd66019105sm14575347b3.0.2026.05.01.11.06.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2026 11:06:26 -0700 (PDT)
+Message-ID: <539b9de3-4a78-44cf-9085-06cd0cab2d17@riscstar.com>
+Date: Fri, 1 May 2026 13:06:23 -0500
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260501155421.3329862-9-elder@riscstar.com>
-X-Rspamd-Queue-Id: 2B8DE4AE9CB
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 04/12] net: stmmac: dma: create a separate
+ dma_device pointer
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, maxime.chevallier@bootlin.com,
+ rmk+kernel@armlinux.org.uk, andersson@kernel.org, konradybcio@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, linusw@kernel.org,
+ brgl@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
+ daniel@riscstar.com, mohd.anwar@oss.qualcomm.com, a0987203069@gmail.com,
+ alexandre.torgue@foss.st.com, ast@kernel.org, boon.khai.ng@altera.com,
+ chenchuangyu@xiaomi.com, chenhuacai@kernel.org, daniel@iogearbox.net,
+ hawk@kernel.org, hkallweit1@gmail.com, inochiama@gmail.com,
+ john.fastabend@gmail.com, julianbraha@gmail.com, livelycarpet87@gmail.com,
+ matthew.gerlach@altera.com, mcoquelin.stm32@gmail.com, me@ziyao.cc,
+ prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
+ rohan.g.thomas@altera.com, sdf@fomichev.me, siyanteng@cqsoftware.com.cn,
+ weishangjuan@eswincomputing.com, wens@kernel.org, netdev@vger.kernel.org,
+ bpf@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20260501155421.3329862-1-elder@riscstar.com>
+ <20260501155421.3329862-5-elder@riscstar.com>
+ <9203d8dd-8ec0-415e-9c2e-5b06b1b8dc11@lunn.ch>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <9203d8dd-8ec0-415e-9c2e-5b06b1b8dc11@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: DF9EE4AEB48
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [4.84 / 15.00];
-	SEM_URIBL(3.50)[0.0.0.0:email];
+X-Spamd-Result: default: False [-0.06 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[riscstar-com.20251104.gappssmtp.com:s=20251104];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[riscstar.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
-	BAD_REP_POLICIES(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[lunn.ch,davemloft.net,google.com,kernel.org,redhat.com,bootlin.com,armlinux.org.uk,arndb.de,linuxfoundation.org,riscstar.com,oss.qualcomm.com,gmail.com,foss.st.com,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
-	TAGGED_FROM(0.00)[bounces-35969-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	DMARC_POLICY_ALLOW(0.00)[lunn.ch,none];
 	MIME_TRACE(0.00)[0:+];
-	R_DKIM_ALLOW(0.00)[lunn.ch:s=20171124];
+	FREEMAIL_CC(0.00)[lunn.ch,davemloft.net,google.com,kernel.org,redhat.com,bootlin.com,armlinux.org.uk,arndb.de,linuxfoundation.org,riscstar.com,oss.qualcomm.com,gmail.com,foss.st.com,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	GREYLIST(0.00)[pass,body];
-	DKIM_TRACE(0.00)[lunn.ch:+];
+	TAGGED_FROM(0.00)[bounces-35970-lists,linux-gpio=lfdr.de];
+	DKIM_TRACE(0.00)[riscstar-com.20251104.gappssmtp.com:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[50];
-	NEURAL_HAM(-0.00)[-0.743];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andrew@lunn.ch,linux-gpio@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[elder@riscstar.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_GT_50(0.00)[50];
 	MID_RHS_MATCH_FROM(0.00)[];
-	R_SPF_ALLOW(0.00)[+ip6:2600:3c04:e001:36c::/64];
-	MISSING_XM_UA(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,0.0.0.0:email,lunn.ch:dkim,lunn.ch:mid,1c:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,riscstar-com.20251104.gappssmtp.com:dkim,checkpatch.pl:url]
 
-Your ASCII art of the chip might be useful here as documentation.
+On 5/1/26 12:13 PM, Andrew Lunn wrote:
+>>   	if (priv->dma_cap.host_dma_width) {
+>> -		ret = dma_set_mask_and_coherent(device,
+>> -				DMA_BIT_MASK(priv->dma_cap.host_dma_width));
+>> +		u64 mask = DMA_BIT_MASK(priv->dma_cap.host_dma_width);
+>> +
+>> +		ret = dma_set_mask_and_coherent(priv->dma_device, mask);
+> 
+> I'm nitpicking, but i don't think you need to introduce mask.
+> DMA_BIT_MASK... is already on a line of its own, and is within the 80
+> limit. Nothing changes here with s/device/priv->dma_device/
+> 
+> 	Andrew
 
-> +  # We can't allOf reference Ethernet-controller.yaml because we end up with
-> +  # contradictory $nodename rules (`ethernet@` versus `pci@`). Happily only a
-> +  # small number of the properties are useful on TC956x so we can just reference
-> +  # what we need.
+I did this.  It was simply to silence a checkpatch.pl warning
+about a long line.
 
-Why not add an subnodes for the ethernet interfaces?
+I don't care either way, I'll gladly put it back the way it was.
 
-> +examples:
-> +  - |
-> +    pcie {
-> +      #address-cells = <3>;
-> +      #size-cells = <2>;
-> +
-> +      tc956x_emac0: pci@0,0 {
-> +        compatible = "pci1179,0220";
-> +        reg = <0x50000 0x0 0x0 0x0 0x0>;
-> +        #address-cells = <3>;
-> +        #size-cells = <2>;
-> +        device_type = "pci";
-> +        ranges;
-> +
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-
-I've not got to the GPIO driver patch yet...
-
-Is the GPIO part of the ethernet device, or part of the chip? The
-hierarchy here should match the hierarchy of the hardware.
-
-> +        phy-mode = "10gbase-r";
-> +        phy-handle = <&tc956x_emac0_phy>;
-> +
-> +        mdio {
-> +          compatible = "snps,dwmac-mdio";
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +
-> +          tc956x_emac0_phy: ethernet-phy@1c {
-> +            compatible = "ethernet-phy-id311c.1c12";
-> +            reg = <0x1c>;
-> +          };
-> +        };
-> +      };
-> +      pci@0,1 {
-> +        compatible = "pci1179,0220";
-> +        reg = <0x50100 0x0 0x0 0x0 0x0>;
-> +        #address-cells = <3>;
-> +        #size-cells = <2>;
-> +        device_type = "pci";
-> +        ranges;
-> +
-
-You second ethernet does not have a gpio controller?
-
-	Andrew
+					-Alex
 
