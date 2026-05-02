@@ -1,137 +1,175 @@
-Return-Path: <linux-gpio+bounces-35981-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-35982-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WHocEc729WlvQwIAu9opvQ
-	(envelope-from <linux-gpio+bounces-35981-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sat, 02 May 2026 15:06:22 +0200
+	id 4AI2FAUP9mkiSAIAu9opvQ
+	(envelope-from <linux-gpio+bounces-35982-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sat, 02 May 2026 16:49:41 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5E554B2152
-	for <lists+linux-gpio@lfdr.de>; Sat, 02 May 2026 15:06:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EEEFD4B28CA
+	for <lists+linux-gpio@lfdr.de>; Sat, 02 May 2026 16:49:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7FA653010394
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 May 2026 13:06:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A4223300CBDB
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 May 2026 14:49:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 028773806BD;
-	Sat,  2 May 2026 13:06:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F9C63806CE;
+	Sat,  2 May 2026 14:49:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rKxrA4Ip"
+	dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="oF8wqdex";
+	dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="DsMG1es8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707D433D4FD
-	for <linux-gpio@vger.kernel.org>; Sat,  2 May 2026 13:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9315C1D7E41;
+	Sat,  2 May 2026 14:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777727174; cv=pass; b=M7DN7b9yejok17us4okmo0ZTUMJCk0+qxcoWsoKQ3GxQBO/JrOGWHF7UbgKMsAUsKaMo0NuuMA8vsxGN/S+YViY/4Auy/wgpUd100ejJwM65dGKf1XbYSIzbLBXNe9J+BduM0yRNMwsMOswKdezhnXMRijqcKk/aAUePSECFEtg=
+	t=1777733345; cv=pass; b=hItaSJctuLvg6hFrkJjAA6tVBj8aJwdOnRQYLTtZIkp+cvyZYVF01vy5V4ioQaHeTEt27hJwM/ykVDmAdCQg/uwQACZiSkVNBh4zxB/NT+LQOXJU81t4WeDEjDBb8F2mcpXP4BOa+9RK5AXRjrFakGac4ciNxBmjfmXCzKeCiak=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777727174; c=relaxed/simple;
-	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=jwNRtdYzOrb6tI1+NZqt96BoCX+EbbFXNOW/LlawzlVotfPqcTWAQrqBTlHOWOEgknufOekILGQAcW4n3koNDGISO+MxikGFK7CqCSCEb6R1xaxo1t9l4W1J92QIn8S7cAXmnM2lK+1hG5TQqtFbo2Em84b9bR8yZk3+w3hinTg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rKxrA4Ip; arc=pass smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4891c00e7aeso21182115e9.2
-        for <linux-gpio@vger.kernel.org>; Sat, 02 May 2026 06:06:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777727171; cv=none;
-        d=google.com; s=arc-20240605;
-        b=R1c1Kpos98i1VXRtOFKd3IPuqNwSVn684JwzvZgR6cDPMw6uJlYIfQcr8HdOuFBT+3
-         LodM5Qiazls5DSvaYKGe4iAvm1HwGuVjfMswM5dedKc3JN6pXKHKwH1HTcEw8mM11lgp
-         pM8/ICM2meOSZwdjjwF64zyj1ozqSXQQd8V/jWLHpKipJpe/fQ5HWyhNBYJgzJ9JnyiQ
-         NR+W5hObidCmOU7F8SGRXeMozyEWHwoijijIkZwFtAFl075OEPglqTfyb553Oyts0tWQ
-         xzOUHHmjQIU0VgWPgdjk0eR2r2ioOCiC0gkKk/K1sevHeFZK/eOJVprvonxnfYHh85Zx
-         kIjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        fh=wme3R0kehEfc9nCbc8GNEWaZY2q8y+qi2lMansKtfUA=;
-        b=U/BzDUZ7o0ba174tpK35cj54edJdxcsAqFWDFUtqSsm8Xmqh4bHWo7GLFxKt0fSAH5
-         dnpuQp3uEAiSsAXvTFCLh3HeEyTpdhORv08R7uEHaoTjAXv9y4G6836L3eicWKcH5AFo
-         jRhNSd/WCM3M6jZqGBp9mCuzdh+YTwSsDdhxVDzoVix+DNnX3Zoa0suE2Wot8dzNAA1+
-         S+ym+SLIlKeR6vhZAUlHlVjL2xenwTFHy3ft9SqbhYt2TQKv2y1+2P2gYTCbujf7Ky7s
-         B+epArm+ZK0C87iAB2J/tBRKxgoDsySgLBBUsIt1GRFzkIZBYlX2HQV+x+smEpNXdvnd
-         PoHw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777727171; x=1778331971; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        b=rKxrA4IpDIebmmpDkvM+eDGcr8bPlhUU5V2ldw/pt9hWAvzS/UHrXPX+JT65hjRoVz
-         dzC7tCus3bTHJB+HfWG9WaZlRuKcghJQmVB0IvesA+7u30Nd4slwwZRCVHW5X7mkq6gT
-         R/zOyapfkQ1yeSaLZTsRDKYbE290r2Jj4pmn1Dp+ndFSyn6+KdJWm0jmYGy92l3RtCLo
-         oQ2lzmmb5OCIqkEM83Gnm/eoJJKvuJ3frPBvOJvGlTanqXCShUcl+D4q2P5PVWKAcV5e
-         B88pxtB6F4AN7gh5ARioyqpyMwawaFjCDUrn/+O6VJxplviphJ+XjEhBd/b9bYbo82De
-         Thmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777727171; x=1778331971;
-        h=to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        b=pr6OZBf7egwycSvZN+RhofdaeRh1qLyDjOb9SuIoy2TQ9H3aAT2ZolqXGC2Yk+NPRO
-         JlUo/LVgWjhE9h/fOcqLDHwq+kYdnyE9cpvZo2buQOJ1XLxp3fLF9ogcTIptOoHko+M/
-         Tamn4yeqOXvoFJlOCsLpvekFw9Jqw2n5/pkFZxEcSytdvdH8K16KSPaMSJWAg5pvArD7
-         PVgJL22Rdom6l1g/sDOg8xS/qH1PNV/wswNQOQf91lvPqy2CPNsalNvoTzqRnLptBvBw
-         fXVUcgc1A4l4xLERH9XtAq9Kak2ZUA3FCmj6TiL8ki+4iuHGaOfeVAzrYsBsf448gLKF
-         y47w==
-X-Gm-Message-State: AOJu0YzT64FBj2yL+SjeoY/uQmMJgr1l0fZW3jJ79prZ/qe69oChwc/E
-	/koK9CEKg2PXIK2Oq3j4NMLKbgpOYFOojv5Oa0zvUZZSbdW9jKeLvHDej2gFEFUkBjXqDqb2wvN
-	iHcioOP4mVLxDhz4foKH1u0BlvGEk5VCa8Q==
-X-Gm-Gg: AeBDiethme93NAE9ZnRUiIQu+qJo/LCol1vbX4gezeEx1EoYczm+1MXC4ZmCslkA8V8
-	DS2SFqgI0l9EB280T9Xaykj0Uyr46Y+tNdJ1h5+wJMy9ujC3Ng5PxaMtybjrpORDKzObVI7Un2n
-	svcNEwl7BIRBEMPgG0FRyp4dvfswn/z5PFMqb+vSpi2yqMd2p83kAqCgHpruz0q1PWfzZ1DXxbI
-	S3fRU8O46tpQmT6+GoEc9wIdqzxTs2ITUGYrssrLnUxqOCKkxp6w3bT3Xu5A1Rw088Ts2egWmLJ
-	8ru01WgPEG6f6+/+xc4=
-X-Received: by 2002:a05:600c:4712:b0:488:b241:2c5f with SMTP id
- 5b1f17b1804b1-48a9867501emr38461605e9.26.1777727170667; Sat, 02 May 2026
- 06:06:10 -0700 (PDT)
+	s=arc-20240116; t=1777733345; c=relaxed/simple;
+	bh=H1gP1uQxmN0GOvEug9MTUgTvKbWjePcwyXu0ijdfHlQ=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=OR9O6iOV1/M79gn863MFv4nWSfOkougsjoA0NOEK37MspGf4brh57KKetinnzQRZVdF0vc1vUsUaGF5P/bTdt4tWeJMZuQAlofr4K4yHOGGwbewHZJaREfofJhn2E/L+Ip7YeP8ymo+wUrN4xSu3ZJcnhL80FsxW2K/jeMysPeU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=goldelico.com; spf=pass smtp.mailfrom=goldelico.com; dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=oF8wqdex; dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=DsMG1es8; arc=pass smtp.client-ip=85.215.255.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=goldelico.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goldelico.com
+ARC-Seal: i=1; a=rsa-sha256; t=1777733313; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=e6itlIHEut/CPuoZDesPd7jHWDdjrBNN76l2JwPCfyZ4Gw59aM1IPCoaaFA2EW0E1K
+    cCjOyklcepHi/5yYR7RjHKqn0GgwY1upw/fgQsd02P5TiBxcqWlwNWP9BTp9QgGGds5C
+    bypITQKtIRB+q9iFnKIxFDPCJMDdkKi1mBN3jExEb9vxAvprKAi8D7/47WHjcFot8m9i
+    hOC87SQiB54yVKdDMtjxFoXCjsen8R6TwlqCMlRP28sYpJd1Zig3o1JMzcRSXd/klQ5a
+    njJx27kenk6mXE88dPm5XRq/VJzjBflQ2f8YreCPJu9AaZ/kMACj5xD1ZxkFxsoFIOot
+    i2Tw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1777733313;
+    s=strato-dkim-0002; d=strato.com;
+    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=U0F2bp1mazAkJtSUEyvJv/Ar4TEUHcrJS1Sxc7iPu/w=;
+    b=kkm/jEv8Q1coPGRqAgw00IKDsMPIwC51eh0QeESYrOJGLBR/kJwJVkAuiy84Du37o2
+    TIb69fK9uQNVslVWVvpSUF1d342IJk+vULHmaZdoukmmv/chYUHQmm/APYJBjnOTWDdf
+    aEneVBcGXA421puqzSae4jpRGgKshs18WOoCuJsl5W6H8jAHrTUH6oN/frmO7ZvhCfMH
+    BtgqkTLBLbGl46LiVZ78e06G12jk4G8AETfigVR5u8GnG7jq5LG1ws5h6Q1q1hR2Ssuz
+    IVJ0xfzQKVcyOsm4+NVxm7Uv9IHlhGjebxkC4RJB39ar/1mf21ebWkwTyM3Kdhs0Mj3l
+    4b5g==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1777733313;
+    s=strato-dkim-0002; d=goldelico.com;
+    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=U0F2bp1mazAkJtSUEyvJv/Ar4TEUHcrJS1Sxc7iPu/w=;
+    b=oF8wqdexWxrJxhDdkT9Mzf+qQGrDtLy4Pvg6y3lk49nJvo2rXASQaXUzKQRXM43ER0
+    QijNJo7tLfJuoxQdH+1gQa3HO5TugDLPTVXz/3kJehD9zagUXfPIptbMOa5LA9VO9F1h
+    UaZYgdebAB6jUMr6djVQthmAeMaX2VbyO0v945iIYrTEdbT/3cFKUi46/GMK/Hs7yvnI
+    +190gTdYAI5CtPtb6k2qyKxQ5D+g0XrgmyWEuINQYBbuXdO+9sFJcrGCj+eh+kca1bew
+    BD01Q3PWhg1o9IKe2wq5UkhWA+qsM9LUp58SqeVXnqf6NAXd0YnW1APBZJ8EYjEDRAeT
+    6wQg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1777733313;
+    s=strato-dkim-0003; d=goldelico.com;
+    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=U0F2bp1mazAkJtSUEyvJv/Ar4TEUHcrJS1Sxc7iPu/w=;
+    b=DsMG1es88ao8/91HpH1qVJILUUqJnJWArDBTRTvoiAjIP1WkUgj1fMYXCdfVcIQ4/v
+    VusIXROai6OSAYusMbAw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0lFzL1yfzkZ"
+Received: from smtpclient.apple
+    by smtp.strato.de (RZmta 55.0.1 DYNA|AUTH)
+    with ESMTPSA id Qcf97c242EmWZPM
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+	(Client did not present a certificate);
+    Sat, 2 May 2026 16:48:32 +0200 (CEST)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: Ramon Fried <rfried.dev@gmail.com>
-Date: Sat, 2 May 2026 16:05:58 +0300
-X-Gm-Features: AVHnY4LZo0ERS8-xPJFUINzLdBeDMb7jMokEv212dOYuQpkjHYb8Q2RqSaV2acs
-Message-ID: <CAGi-RUKgyFUR3DCXYvd-SydaN4o-M=-aEyoF-RUw7HtAyL66mg@mail.gmail.com>
-Subject: unsubscribe
-To: linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Rspamd-Queue-Id: A5E554B2152
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81.1.6\))
+Subject: Re: [PATCH 3/7] pinctrl: ingenic: Fix type in .pin_config_group_get()
+ callback
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <9f50c234c44af9075b5252ee7e59452ed2179b27.1777562725.git.geert+renesas@glider.be>
+Date: Sat, 2 May 2026 16:48:21 +0200
+Cc: Linus Walleij <linusw@kernel.org>,
+ Lorenzo Bianconi <lorenzo@kernel.org>,
+ Sean Wang <sean.wang@kernel.org>,
+ Paul Cercueil <paul@crapouillou.net>,
+ Tony Lindgren <tony@atomide.com>,
+ Haojian Zhuang <haojian.zhuang@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ linux-gpio@vger.kernel.org,
+ linux-mediatek@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ linux-mips@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-omap@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <98F0E379-88A0-414E-B24A-187374E5FCAD@goldelico.com>
+References: <cover.1777562725.git.geert+renesas@glider.be>
+ <9f50c234c44af9075b5252ee7e59452ed2179b27.1777562725.git.geert+renesas@glider.be>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+X-Mailer: Apple Mail (2.3826.700.81.1.6)
+X-Rspamd-Queue-Id: EEEFD4B28CA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[signature check failed: fail, {[1] = sig:subspace.kernel.org:reject}];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	MV_CASE(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[goldelico.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[goldelico.com:s=strato-dkim-0002,goldelico.com:s=strato-dkim-0003];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_ALL(0.00)[];
-	TAGGED_FROM(0.00)[bounces-35981-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-35982-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_ONE(0.00)[1];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rfrieddev@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	SINGLE_SHORT_PART(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,crapouillou.net,atomide.com,linaro.org,gmail.com,collabora.com,bp.renesas.com,vger.kernel.org,lists.infradead.org];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hns@goldelico.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[goldelico.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,renesas];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,glider.be:email,goldelico.com:dkim,goldelico.com:mid]
+
+
+
+> Am 30.04.2026 um 17:33 schrieb Geert Uytterhoeven =
+<geert+renesas@glider.be>:
+>=20
+> On 64-bit platforms, "unsigned long" is 64-bit.  Hence checking if all
+> "unsigned long" configuration values are equal should be done using an
+> "unsigned long" temporary.
+>=20
+> While Ingenic is a 32-bit platform, it is still better to use the
+> correct type, to serve as an example.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+tested to show no visible difference on Ingenic X1600 based board (Letux =
+X16) on top of v7.1-rc1.
+
+BR and thanks,
+Nikolaus
 
 
 
