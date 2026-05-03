@@ -1,201 +1,195 @@
-Return-Path: <linux-gpio+bounces-36001-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36002-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sC8yJV1Z92mxgQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36001-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Sun, 03 May 2026 16:19:09 +0200
+	id 1rj7Hk2b92lkjgIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36002-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Sun, 03 May 2026 21:00:29 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95F034B6030
-	for <lists+linux-gpio@lfdr.de>; Sun, 03 May 2026 16:19:08 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B604A4B70E5
+	for <lists+linux-gpio@lfdr.de>; Sun, 03 May 2026 21:00:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 7D9213002924
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 May 2026 14:19:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 128533009141
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 May 2026 19:00:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A5F43C8700;
-	Sun,  3 May 2026 14:19:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4D0E372ED0;
+	Sun,  3 May 2026 19:00:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FxCxleWV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsrCCPon"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6233CBE70
-	for <linux-gpio@vger.kernel.org>; Sun,  3 May 2026 14:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA9E38BF72
+	for <linux-gpio@vger.kernel.org>; Sun,  3 May 2026 19:00:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777817942; cv=none; b=n3IRhvG+GY4r7YreD5L0krrZAiHPu7umWFPPkMHxlRlmW52Jgk5YR8OZKPzWkvED4IhyLMaRPNi8lmd9P1I0D2pFRGPI4ebfqj0KShi6DB/JTd+zKcCIlxz2yvxTw2W3JetI6oWM5MtuAuaa0Oyjqh+9pTppqttXCJvD/Vp4oxA=
+	t=1777834823; cv=none; b=B9kPC4EIFftjPzhBOyWABSh+3r2zV2BCPT9xSE8bK4M2IIO/9sCCFrEInY73+hbHbe+kwWk5sHEW7l6+GWU9SWowS1xWBXyTQz7yT10mt0iozDKju4XhCPTAd/J8IzYeYIGISFKoxiV3hUMcP31Kizd+SX8X8lWHLN1kh4/4T3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777817942; c=relaxed/simple;
-	bh=k2g4JV1KUrs12s7qAM9odomL0DLieqxgng3pruwzcJc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D4A+Ndun65db2HXSna4EP+s23PuzS+CmaFEJY3daUQk66jU9wu3RlklUyAY8vJ2eyTod3LLlHMvqFoqohk10dQcSp0ajutBfnbvaELyc2okJl9TI+Jd75J7fu5cC2yMNIJDr/wsOJwE2hDw9zvRKQV5jSSeN3fJwkle2HzR15LU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FxCxleWV; arc=none smtp.client-ip=209.85.128.45
+	s=arc-20240116; t=1777834823; c=relaxed/simple;
+	bh=o6F3nF2O0oh1QqtBXJyM5pwHLTdevetrcOoH6c/SVrw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JTRgxN84kEAJcz1TapOHWGjzyqFoLZRF1sNv4KBeDdDQc60vgeEiHTi7xGCIOji5JJoIrnb702SJU/3JIeVIiXRu5wWyMSBV/aJfFRMax2j1Rxlcmq9X7Oj196JZ+Hv4ynxLsBoL6L8ROkl2egBcRf+dpT4GmZsK1l3a65rZnac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DsrCCPon; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-488b0e1b870so52934775e9.2
-        for <linux-gpio@vger.kernel.org>; Sun, 03 May 2026 07:19:00 -0700 (PDT)
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-8296d553142so2309227b3a.3
+        for <linux-gpio@vger.kernel.org>; Sun, 03 May 2026 12:00:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777817939; x=1778422739; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=D31Kjx5p4Zz0J/9eHZzNKvFTByn7RU7HP4MuPEMcbXY=;
-        b=FxCxleWVN7MUblEkz+DTBFfykM3uOd4ljZpkD8n02Xxh0N21/QcqUoIxh1P7lNZSVP
-         S4bUEfUp8j7DmN2JpD8x0EKYLqDZG+CjqgvRtNACbTrI8caK2156xKy1pk3YLbO2xoWL
-         n+WDd36/Bwhqk8tyFP7VzWLEt8q3HmolSgzTixH4Btwbz5FtU6wcoO/Bv4Vonm9EPeYx
-         9AxLBrW0RsrigQCXe47Nj9IdgH4WpJR90fQhmvkHqVo38IRNur2bcQd66hAWdr9sojOm
-         FJyJaFOAdzyyYcuIfTmGeTB4IwcFEeKJsiwbXFyHz9Cnk6pDGMhPzm3dla29nD6qESZB
-         agNw==
+        d=gmail.com; s=20251104; t=1777834821; x=1778439621; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KjVAUyKukJeCfmaUj1rdh/OVSGApfRD+jJDm/U7qFBo=;
+        b=DsrCCPonOxied9ANQ4e+E3Uc8D6GjFG/28vOAWLuqCQsfdbu3tXw6Vhw3ziYle57xc
+         R4sO1K8KtVW4F/PlG6zfbqC2jOlwzYgduws4DcdHhdLiW2cIJpOjpGBs+gkGXz0Pl0EC
+         55/14EK47HMj0XHaMgC0G/JUvaGGScPv6aZS0fqIyFPNk2xBmht4uyZfOIheb94ajq01
+         Amt5X5R6Is89X9GNM5li4sth7Fba7Km2SBv74Jq0Yl87QEe1QMAhh1NJS8ScB2A29QyV
+         LsBOAu7n0y110kSTX/Xf698vhKGrY3HLtsQY+/yQQeeLMpH8Y4m+gtEermo+BX+hokDk
+         +EpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777817939; x=1778422739;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=D31Kjx5p4Zz0J/9eHZzNKvFTByn7RU7HP4MuPEMcbXY=;
-        b=X3vjOja8TcHYBqhkrshjnSWcBQkBp4e2oKcH78UBo/c/lU6xyzctyo5yvgIxAVtbUQ
-         gf2h7T8gYHjRVo4Lqr1FRsH63AvvHGW+fJsdxZJTEXO9kQkGkzxpIoc2DiT3HtWfLuqp
-         TEaPP7LFVVLMDqJwymvd+Fe6JjkawYJkB6DmfJjhTaG/l33EW/xADh6h4SRJ8WdMVl3o
-         FiLpRRj1vJ6JX8ZLPs8eGjmSgeHPnU3wlamdx7ALjbJ/p2yvAyxyCDaa5+F4Tm3pp5Ml
-         uAoZ0B8kDs8+AuGkU7LBuJCuOQtrDf59j/LwMt4saAxbK1YIvLmjiNmW1liwLPSATVMu
-         5bLw==
-X-Forwarded-Encrypted: i=1; AFNElJ+oVgjG1QlORDKQ2laOWucGnScsjWe9zpYY28X2/jU93DkjF4auo8y7DL5xK/Ty7i64mIz1sjsLk4qY@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxm/wuC3Lcq7KzAjv6YssUHE/rZq5VBttFMtarvDfRrCrnjt2kX
-	wCmEmoxq0Fp/wsuvXSmXKXWBBv3UHvG6SVNLgDyBzb0W7Z5kYZD5pBn+
-X-Gm-Gg: AeBDietn5qxG55PCUQseBAqvRjndpuqzSezmiKLDy3MKkVRnCsNBQbUqc54v9oUU8y+
-	exlKKfwFbSDhwG2L/e8C8y0EzARmX4uYaYqSPbKLtgOSvhITL55MLDFkoE1mR4x19VNrtz8KoSG
-	Ml5SdcxjN84Yo00V7/02w128z7paSNPm3jg46nEJQSBcMQDPp9nIHXtGGnhaRsHvHMTQ+WzsIX9
-	YjNgESWEKSe8V/IgMqfXijcO9BE2iDSMnTQidvaevzkjpi6Ash83YYYK0oOLk7A+se3xKA0VeDv
-	2jZs/EnYvtAtVngBm05AoQ6maXdFUzYjFazThxb6QIqaknUBs2a4fpWxGDkts5hHKV62kvZWKxV
-	uslJyTYVGN/lsYEqr8TWy6JgPxlglZG04VLJfAdpsutt/ZHwj825QAtmQcECPbIq17W48ONrQWM
-	ibRkFBGrNCAcKSJZ+vqzTf1peMwOFcvEthL2GGxRW6wVcmS+xeg7TPVN1pEqDTLkEdl4h15eq7w
-	M8u1Pg=
-X-Received: by 2002:a05:600c:698d:b0:487:2439:b7be with SMTP id 5b1f17b1804b1-48a9852f4b9mr100217425e9.6.1777817939042;
-        Sun, 03 May 2026 07:18:59 -0700 (PDT)
-Received: from ?IPV6:2a01:e11:202b:40:68b1:8d59:e348:c16e? ([2a01:e11:202b:40:68b1:8d59:e348:c16e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a8eb75fc1sm209044485e9.7.2026.05.03.07.18.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 May 2026 07:18:58 -0700 (PDT)
-Message-ID: <a42767b8-7a0c-4202-9132-be8fa65baabc@gmail.com>
-Date: Sun, 3 May 2026 16:18:57 +0200
+        d=1e100.net; s=20251104; t=1777834821; x=1778439621;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KjVAUyKukJeCfmaUj1rdh/OVSGApfRD+jJDm/U7qFBo=;
+        b=Fy7rZ3O4vYg3MvQuvSaaSp+vmEo7y+edRHt25snsU3u/GCD4OZF5n5dYGMjvdW5avJ
+         pLlLuctQwxAfd962UOZBY0I2V/z/szAIbytwmoO8W04TxBT4sd2JKw/izy0V+wkjgbj1
+         eIW52LQjbUT1sZWdZv4UPMTdcxEqPK0gwFjRW0i2uPDDl11Hs0zxewiiddHXX/cNf5Q8
+         1JAACfCiKsG61dtrFQoYPy7gNLm/R6mjniIeQTqY8VePIkDShHThXyd/NTCugf8OfRgi
+         uwTpN1M/5wDTFVN+Lz8sCg9M8uoXWVmnVUQ5sUjv1idtHSx2cMOmb0oLGYd2JF2cDXrx
+         BkBw==
+X-Gm-Message-State: AOJu0Yxc1ySu1mxQLe+8KpbBhyuyx0joE70v3UX314ZlOqZCB+nObS1N
+	pNBqbUDR2yDtwyAxWSxXKL/POEYlPQK1gnZuz29ugaPgyiuUHIdfA2+mS1noVg==
+X-Gm-Gg: AeBDieviLLc9Uo8TBwToG0sMNMH4dWnCzP7kC5GyrEMMaAOgC46XmTDoNzQlzTVs3ZW
+	/dcanJHcAA1SeYv4Zy461sEdWiNarvbr1WNoBseAeBx1QjvX+Iu9CdrNaqsgMYC40RW2YufaG+V
+	pBjMHtINmDoSmgkS9mAlalY814R1+AbS9IdsYBjErrDndmW/waMwPkt3j+hcWQY07uHrPD5v5Ja
+	ZePtYr3HaDtirLLnP1BYiWszbeW8szZ+jUmbN/K7m2M0rJDhxWLVmiUVRtaLAkdP7k/SdSWnzL3
+	QLMy770aJig0Uil39WMOkRKb7NGGzET//G3BH0FGBUubqDd/ErSYT6UV8jVhqzqLvk0VJnqM+Vb
+	+96IgFbWExkF+Ljosy5CEICCRZ8eqMA908tS+WywoCjaUPsKjqUc6i1zLkKxBhtDd3kQ2yxD8yU
+	deBkKfTpSXU8o9B3Q6crDkUXEZRN4DGDpEvKmb
+X-Received: by 2002:a05:6a00:430a:b0:81f:852b:a925 with SMTP id d2e1a72fcca58-8352d03bf06mr5948036b3a.1.1777834821160;
+        Sun, 03 May 2026 12:00:21 -0700 (PDT)
+Received: from localhost ([188.253.123.154])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-83515ad0183sm10229043b3a.31.2026.05.03.12.00.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 May 2026 12:00:20 -0700 (PDT)
+From: Zhang Xiaolei <zxl434815272@gmail.com>
+To: linux-gpio@vger.kernel.org
+Cc: brgl@kernel.org,
+	warthog618@gmail.com,
+	linux-kernel@vger.kernel.org,
+	Zhang Xiaolei <zxl434815272@gmail.com>
+Subject: [PATCH] tools: gpio: fix buffer overflow and add bounds check
+Date: Mon,  4 May 2026 03:00:16 +0800
+Message-ID: <20260503190016.13439-1-zxl434815272@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpiolib: acpi: Only trigger ActiveBoth interrupts on boot
-To: Hans de Goede <hansg@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>, westeri@kernel.org,
- linusw@kernel.org, brgl@kernel.org, bentiss@kernel.org,
- Francesco Lauritano <francesco.lauritano1@protonmail.com>,
- Armin Wolf <W_Armin@gmx.de>, mika.westerberg@linux.intel.com,
- linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <20260429025247.1372984-1-mario.limonciello@amd.com>
- <6f359bec-2525-40e9-9994-15b16fb82f12@kernel.org>
- <afHcUTi5QNq8LlIb@ashevche-desk.local>
- <c7fb45be-f53f-461f-b7a2-8298e5c7df05@kernel.org>
-Content-Language: en-US
-From: Marco Scardovi <mscardovi95@gmail.com>
-In-Reply-To: <c7fb45be-f53f-461f-b7a2-8298e5c7df05@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 95F034B6030
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: B604A4B70E5
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[amd.com,kernel.org,protonmail.com,gmx.de,linux.intel.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-36001-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36002-lists,linux-gpio=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mscardovi95@gmail.com,linux-gpio@vger.kernel.org];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[zxl434815272@gmail.com,linux-gpio@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
+Replace strcpy() with strncpy() to avoid potential buffer overflow
+in req.consumer. Also add validation for num_lines to prevent
+out-of-bounds access to req.offsets.
 
-On 4/29/26 13:01, Hans de Goede wrote:
-> Hi,
->
-> On 29-Apr-26 12:24, Andy Shevchenko wrote:
->> On Wed, Apr 29, 2026 at 11:48:13AM +0200, Hans de Goede wrote:
->>> On 29-Apr-26 04:52, Mario Limonciello wrote:
->> ...
->>
->>>> +	/*
->>>> +	 * Make sure we trigger the initial state of ActiveBoth IRQs.
->>>> +	 *
->>>> +	 * According to the Microsoft GPIO documentation, triggering GPIO
->>>> +	 * interrupts marked as ActiveBoth during initialization is correct
->>>> +	 * as long as the associated GPIO line is already "asserted"
->>>> +	 * (logic level low). We should not trigger edge-based GPIO
->>>> +	 * interrupts not marked as ActiveBoth.
->>>> +	 *
->>>> +	 * See: https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/general-purpose-i-o--gpio-
->>>> +	 * Section: "GPIO controllers and ActiveBoth interrupts"
->>>> +	 */
->>>>   	if (acpi_gpio_need_run_edge_events_on_boot() &&
->>>> -	    (event->irqflags & (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING))) {
->>>> +	    ((event->irqflags & (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING)) ==
->>>> +	     (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING))) {
->>>>   		value = gpiod_get_raw_value_cansleep(event->desc);
->>>> -		if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
->>>> -		    ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
->>>> +		if (value == 0)
->>>>   			event->handler(event->irq, event);
->>>>   	}
->>>>   }
->>> One nitpick, which can be a follow-up patch since Andy has already picked this
->>> one up.
->>>
->>> I think that now that the second if condition has been simplified to just
->>> value == 0, it can be added to the first if as " && value == 0" dropping
->>> the nested if.
->> But we need to get that value first (unconditionally!). I think it wouldn't
->> be desirable change.
-> Ah right, I read over the line getting the value I thought this was already
-> done, never mind:
->
-> FWIW:
->
-> Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
->
-> Regards,
->
-> Hans
+Fix incorrect ioctl name in error message.
 
-Hi everyone,
+Signed-off-by: Zhang Xiaolei <zxl434815272@gmail.com>
+---
+ tools/gpio/gpio-utils.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-I tested it personally against both kernel 7.0 and 7.1 and can say it works.
-
-Are there any news on how it is proceeding? Somewhere I can check the 
-progress?
-
-Best regards,
-
-Marco "scardracs" Scardovi
+diff --git a/tools/gpio/gpio-utils.c b/tools/gpio/gpio-utils.c
+index 4096bcd511d1..1afd9dff2bed 100644
+--- a/tools/gpio/gpio-utils.c
++++ b/tools/gpio/gpio-utils.c
+@@ -65,11 +65,15 @@ int gpiotools_request_line(const char *device_name, unsigned int *lines,
+ 	int i;
+ 	int ret;
+ 
++	if (!device_name || !lines || !config || !consumer ||
++	    num_lines == 0 || num_lines > GPIO_V2_LINES_MAX)
++		return -EINVAL;
++
+ 	ret = asprintf(&chrdev_name, "/dev/%s", device_name);
+ 	if (ret < 0)
+ 		return -ENOMEM;
+ 
+-	fd = open(chrdev_name, 0);
++	fd = open(chrdev_name, O_RDONLY);
+ 	if (fd == -1) {
+ 		ret = -errno;
+ 		fprintf(stderr, "Failed to open %s, %s\n",
+@@ -78,27 +82,29 @@ int gpiotools_request_line(const char *device_name, unsigned int *lines,
+ 	}
+ 
+ 	memset(&req, 0, sizeof(req));
++
+ 	for (i = 0; i < num_lines; i++)
+ 		req.offsets[i] = lines[i];
+ 
+ 	req.config = *config;
+-	strcpy(req.consumer, consumer);
++	strncpy(req.consumer, consumer, sizeof(req.consumer) - 1);
++	req.consumer[sizeof(req.consumer) - 1] = '\0';
+ 	req.num_lines = num_lines;
+ 
+ 	ret = ioctl(fd, GPIO_V2_GET_LINE_IOCTL, &req);
+ 	if (ret == -1) {
+ 		ret = -errno;
+ 		fprintf(stderr, "Failed to issue %s (%d), %s\n",
+-			"GPIO_GET_LINE_IOCTL", ret, strerror(errno));
++			"GPIO_V2_GET_LINE_IOCTL", ret, strerror(errno));
+ 	}
+ 
+ 	if (close(fd) == -1)
+ 		perror("Failed to close GPIO character device file");
++
+ exit_free_name:
+ 	free(chrdev_name);
+ 	return ret < 0 ? ret : req.fd;
+ }
+-
+ /**
+  * gpiotools_set_values() - Set the value of gpio(s)
+  * @fd:			The fd returned by
+-- 
+2.54.0
 
 
