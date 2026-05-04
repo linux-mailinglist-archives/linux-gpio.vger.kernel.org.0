@@ -1,187 +1,169 @@
-Return-Path: <linux-gpio+bounces-36076-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36082-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wJMmDdug+GkgxQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36076-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 04 May 2026 15:36:27 +0200
+	id gJ1vGKG0+Gm3zAIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36082-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 04 May 2026 17:00:49 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4E7D4BDF4A
-	for <lists+linux-gpio@lfdr.de>; Mon, 04 May 2026 15:36:26 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00D324C04F7
+	for <lists+linux-gpio@lfdr.de>; Mon, 04 May 2026 17:00:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7A1C7301E5B7
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 May 2026 13:36:08 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 1DB603024FF5
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 May 2026 14:56:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 491E23DB629;
-	Mon,  4 May 2026 13:36:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEEDE3E0245;
+	Mon,  4 May 2026 14:56:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="uincUZpy"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rZWMKMgL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F463A7F4E
-	for <linux-gpio@vger.kernel.org>; Mon,  4 May 2026 13:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F32378812;
+	Mon,  4 May 2026 14:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777901767; cv=none; b=P+RCnH7sK6Wapg2kNy7xgi2J/QQxQyP2/H4B7XsIp/AEEMv+cPN+qHFwLcuDOqF+U3ml4npcRylu1fZC2gosACqo+XfONBaCjG8O9PUos9BTTlVdisyrzxk192n6q5iRpXnS4DidDOZh8ZnLKP/6jRWumuphYgOBJckzch9Zjn8=
+	t=1777906593; cv=none; b=Cws1r00e08TqMCXoxyxTa8jV4V2t2DC9Hwl8wXD/0XVm9fZoLHly00BhOnC4fjub6GPJ9Y1frz3OJksG2NvNkwAqsUXYpk34jA93Qn53MlFIFnINC6BzBdoSrkx6sAdEPwnKegRxg6lX0BMO0PXhzF7hktYqqo6G/Rm+SSKnnmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777901767; c=relaxed/simple;
-	bh=LERfixZ4A/mCAlL4UIEjVNTDqF1ZRae/7FZpoHehMsc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ueb4AE7LZClaTQ4lsU15IYwvVo0+OGI1D48JsEHn23pBJp5b8MLZjRA+AVwC8Abxw5abilTeHf36u0GgxbyNy/z9z5X3Qkl9INl7KopEm745z/FabeU4AYJjZyQ+O1jZ8b6i2J+KojW6MiBmdFRxNvWDbc+iltzdSkwOloRwREU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=uincUZpy; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-8ee62a19730so445816685a.3
-        for <linux-gpio@vger.kernel.org>; Mon, 04 May 2026 06:36:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1777901765; x=1778506565; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=z9fU46qFzoianaIQCMZvMdojbyNNsa2tYadi8NkaEg8=;
-        b=uincUZpyQyXqvG2nseIYqBdFhOtC/F998c4JWNN8VIz83igZnlmBwOJO7uMXmPKHgG
-         7NPHDCkjxrVkjG+nXRtngo2rOAATdDdK/Pephk+Y04/pYrGPkfOHuG/WytkaGqU8B3Y0
-         aJSvi1PcaZbSTnWYZEuH3t4m6uJpNDU7ZlGtd6xivvb4/jyPhy4UekcKkD3R7mM/OuXb
-         RSvD/eJ/Fkg2ihVaziysfOxQpCPXPDT4RXNhvk7t0Z82tFzidLa+RS/LRCm1U2bNyYEV
-         71UyuKiqYKWVcHV5CBLhU0g+waujWIaKq5LgKL/2PFW0GViTXbMS4In5FrnwIqfnbp2a
-         9dIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777901765; x=1778506565;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z9fU46qFzoianaIQCMZvMdojbyNNsa2tYadi8NkaEg8=;
-        b=hMBDQI86bN7qM/pGfYQpOQmc4f0frMaWotdNewerWZrVfjK1z4Gj1vSG3bX2QhEKt6
-         G2sCHHg/jfxePIvnutg4ynuxcB9cd4FCYz8v9tQNZ/Xwsbi3DytRlhhzb6DseRlj+OdO
-         iw+XJYSSmGXz0uldpzYiRQqHYLdYgOWii8HSK9/uK8V3WhCHn6epNvKY7/0Grybs0D9i
-         5N2Un79crBHRObLYlHlP3F4R35ObtlRfuGTpT4L0Q3rKoEyjgIQaAIzEWdOMZQ5NPo7E
-         22jbjLjPypF0zA1MovaCW5tOXFuvkGmVDLZgC150WYIsfwFtF5R/gyE0duklTeIoeeHJ
-         zP5w==
-X-Forwarded-Encrypted: i=1; AFNElJ86LQ1/y/BjJCj94VNfI9f+23d/A7d7s7ZvOI8fdsGW8LjlvpP3Gy9SNi3L5mRx7QBrc2vbj2L/wA2R@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+QXoC35H8CDRzmGppOhjpoE76Ca9oUbRSOiBnESQ4q1p59wZd
-	N0tFMH1e49vGtzqtZ4F+R13CvwzEXWyQXv6OIy52cwvBzOV73LbydPqBTK9m/TINvRM=
-X-Gm-Gg: AeBDietPw7EmNZhXh7GBe/m6dMaYYgeefD5awSU7RyJJobF4V4rtUD2civ/2n/QbChE
-	j+cUwnZPoNfDFK3o5aCjsm/Edt8Q97k/6YgS3xK5fQPvMRNU6/wTLbUuhyotAGDxwRRC2QOVGYE
-	rPhv8RPG3xZi8oNiJ/EDR76pV9+4u1ITPYUrTj8sOuGerqxHs4QOsfxpgB1fuCqXwXeeq1gORaE
-	uOfARka9sNq5U0HHo3LF+MLvzFK7PuMbqnlqvmBu8r7pn3/fKgjPt7hEQLTTv0lQW1WNeCB7WUF
-	xEWBGglSjsM14s5T1DXDiQ5wiKzZTKv5d/Y2fD5p8mzYBIKXmaKHBx14DK5mY+sYhLPXGQYHhrW
-	3lYjoRon3NaaWCiUbkfvVGk7+1t7ABxxI5PwctuvgXlFUHzwaDyB9fbAbGtuxDvFvQyImSSe3Aa
-	LHB0mFXz6S5kpKlwsmPWH8hv1h9lVk/a4vnn6o8X3m86vhc/SDb3HP1GrUlDRM5XgKvkNsxFRli
-	Q==
-X-Received: by 2002:a05:620a:2905:b0:8eb:f3c7:224a with SMTP id af79cd13be357-8fd17d49626mr1448021685a.30.1777901764463;
-        Mon, 04 May 2026 06:36:04 -0700 (PDT)
-Received: from [172.22.22.28] (c-75-72-117-212.hsd1.mn.comcast.net. [75.72.117.212])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8fc29a80784sm1058189985a.12.2026.05.04.06.36.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2026 06:36:04 -0700 (PDT)
-Message-ID: <7fbb8bb4-5626-4908-ba80-2db35661e30a@riscstar.com>
-Date: Mon, 4 May 2026 08:36:00 -0500
+	s=arc-20240116; t=1777906593; c=relaxed/simple;
+	bh=KtagOfNLEs02cUVPj4FT+pAk0pBIYBNPgs62jaR0P04=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SN5MiwxExtWN+KuS21TBdMMq9ue8e0FcAzyhuBi/L5MKAK2+pcmUXwnFy1KHUtLuf7meW9kGuXHQ4M2nN/aT59h/fpFGFj4mMRANGSe6Mzrf3UjWM0n1JuT17iobB0eQWAdSM86cwg1Hl2xC4gjnWGLC6ACCSCgEdoVR8S/DQOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rZWMKMgL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9353C2BCC4;
+	Mon,  4 May 2026 14:56:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1777906593;
+	bh=KtagOfNLEs02cUVPj4FT+pAk0pBIYBNPgs62jaR0P04=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rZWMKMgLDxLk8OfQEWZkHQ2/vZEF0UzjawV1RjbsheUbUR0tnauJh5gj5Ey5UfcDf
+	 H+BJVA+E3umxco6Q9Ic/zwyrI1E3tp4zGaooZbUCwpYQSS7Q/M+DbU4EuhAuwKuyw0
+	 PlNfJx6LjogUGtJRiBAidVhHmbbM/0lv9OhL/QtY=
+Date: Mon, 4 May 2026 16:25:41 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: zain_zhou@realsil.com.cn
+Cc: linux-staging@lists.linux.dev, linux-i3c@lists.infradead.org,
+	devicetree@vger.kernel.org, alexandre.belloni@bootlin.com,
+	Frank.Li@nxp.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linusw@kernel.org, brgl@kernel.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] staging: i3c: add Realtek RTS490x I3C HUB driver
+Message-ID: <2026050412-bush-rosy-959d@gregkh>
+References: <20260430121354.6253-1-zain_zhou@realsil.com.cn>
+ <20260430121354.6253-2-zain_zhou@realsil.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 04/12] net: stmmac: dma: create a separate
- dma_device pointer
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, maxime.chevallier@bootlin.com,
- rmk+kernel@armlinux.org.uk, andersson@kernel.org, konradybcio@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, linusw@kernel.org,
- brgl@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
- daniel@riscstar.com, mohd.anwar@oss.qualcomm.com, a0987203069@gmail.com,
- alexandre.torgue@foss.st.com, ast@kernel.org, boon.khai.ng@altera.com,
- chenchuangyu@xiaomi.com, chenhuacai@kernel.org, daniel@iogearbox.net,
- hawk@kernel.org, hkallweit1@gmail.com, inochiama@gmail.com,
- john.fastabend@gmail.com, julianbraha@gmail.com, livelycarpet87@gmail.com,
- matthew.gerlach@altera.com, mcoquelin.stm32@gmail.com, me@ziyao.cc,
- prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
- rohan.g.thomas@altera.com, sdf@fomichev.me, siyanteng@cqsoftware.com.cn,
- weishangjuan@eswincomputing.com, wens@kernel.org, netdev@vger.kernel.org,
- bpf@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20260501155421.3329862-1-elder@riscstar.com>
- <20260501155421.3329862-5-elder@riscstar.com>
- <9203d8dd-8ec0-415e-9c2e-5b06b1b8dc11@lunn.ch>
- <539b9de3-4a78-44cf-9085-06cd0cab2d17@riscstar.com>
- <4cbe1a04-4a49-4e4d-95f4-ed4df1afa24f@lunn.ch>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <4cbe1a04-4a49-4e4d-95f4-ed4df1afa24f@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: B4E7D4BDF4A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260430121354.6253-2-zain_zhou@realsil.com.cn>
+X-Rspamd-Queue-Id: 00D324C04F7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.06 / 15.00];
+X-Spamd-Result: default: False [3.84 / 15.00];
+	MID_END_EQ_FROM_USER_PART(4.00)[];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[riscstar-com.20251104.gappssmtp.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[linuxfoundation.org,none];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[linuxfoundation.org:s=korg];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[riscstar.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[lunn.ch,davemloft.net,google.com,kernel.org,redhat.com,bootlin.com,armlinux.org.uk,arndb.de,linuxfoundation.org,riscstar.com,oss.qualcomm.com,gmail.com,foss.st.com,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36076-lists,linux-gpio=lfdr.de];
-	DKIM_TRACE(0.00)[riscstar-com.20251104.gappssmtp.com:+];
+	TAGGED_FROM(0.00)[bounces-36082-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[linuxfoundation.org:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[elder@riscstar.com,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCPT_COUNT_GT_50(0.00)[50];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	FROM_NEQ_ENVFROM(0.00)[gregkh@linuxfoundation.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.996];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[riscstar.com:mid,riscstar-com.20251104.gappssmtp.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,checkpatch.pl:url]
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linuxfoundation.org:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 
-On 5/1/26 3:55 PM, Andrew Lunn wrote:
-> On Fri, May 01, 2026 at 01:06:23PM -0500, Alex Elder wrote:
->> On 5/1/26 12:13 PM, Andrew Lunn wrote:
->>>>    	if (priv->dma_cap.host_dma_width) {
->>>> -		ret = dma_set_mask_and_coherent(device,
->>>> -				DMA_BIT_MASK(priv->dma_cap.host_dma_width));
->>>> +		u64 mask = DMA_BIT_MASK(priv->dma_cap.host_dma_width);
->>>> +
->>>> +		ret = dma_set_mask_and_coherent(priv->dma_device, mask);
->>>
->>> I'm nitpicking, but i don't think you need to introduce mask.
->>> DMA_BIT_MASK... is already on a line of its own, and is within the 80
->>> limit. Nothing changes here with s/device/priv->dma_device/
->>>
->>> 	Andrew
->>
->> I did this.  It was simply to silence a checkpatch.pl warning
->> about a long line.
->>
->> I don't care either way, I'll gladly put it back the way it was.
+On Thu, Apr 30, 2026 at 08:13:54PM +0800, zain_zhou@realsil.com.cn wrote:
+> From: zain_zhou <zain_zhou@realsil.com.cn>
 > 
-> Please pull checkpatch fixes out into a patch of their own.
-
-That's what we'll do in the next version.  I'll undo this particular
-change, and will add it to the end of the series.
-
-Thanks.
-
-					-Alex
-
-
+> Add driver for Realtek RTS490x series I3C HUB devices (RTS4900,
+> RTS4901, RTS4902, RTS4903, RTS4904, RTS4906).
 > 
->         Andrew
+> The I3C HUB is a smart device that provides:
+>   - voltage compatibility across I3C Controller and Target devices
+>   - bus capacitance isolation
+>   - address conflict isolation
+>   - I3C port expansion (up to 8 target ports)
+>   - dual controller port support
+>   - I3C and SMBus device compatibility
+>   - GPIO expansion via target ports
+> 
+> The driver supports:
+>   - Device Tree based configuration of LDO, pull-up, IO strength
+>     and per-port mode (I3C/SMBus/GPIO/disabled)
+>   - Logical I3C bus registration per target port
+>   - SMBus agent functionality with IBI and polling modes
+>   - GPIO chip with IRQ support
+>   - DebugFS interface for register access and DT config inspection
+>   - IBI (In-Band Interrupt) handling
+> 
+> The driver is placed in staging as it has known issues to be resolved
+> before mainlining; see drivers/staging/rts490x/TODO for details.
+> 
+> Signed-off-by: zain_zhou <zain_zhou@realsil.com.cn>
 
+We need a real name, not an email alias.
+
+And no, please don't add new drivers to drivers/staging/ especially when
+it is so easy to fix them up properly "first" before adding them to the
+kernel tree.
+
+Your TODO file is pretty easy:
+
+> diff --git a/drivers/staging/rts490x/TODO b/drivers/staging/rts490x/TODO
+> new file mode 100644
+> index 000000000000..0be2d7693d68
+> --- /dev/null
+> +++ b/drivers/staging/rts490x/TODO
+> @@ -0,0 +1,19 @@
+> +TODO list for rts490xa-i3c-hub staging driver
+> +==============================================
+> +
+> +- Move driver out of staging once the following are addressed:
+> +  - Add proper DT binding schema validation (dt-schema)
+> +  - Clean up open-coded OF property parsing; use device_property_* APIs
+> +    instead of of_property_read_* where possible
+> +  - Remove use of full_name / sscanf for node name parsing; use
+> +    of_node_name_eq() and fwnode helpers instead
+> +  - Replace global mutex (i3c_hub_regmap_mutex) with per-device locking
+> +  - Add kernel-doc comments for all exported/public functions
+> +  - Resolve TODO comment in i3c_hub_hw_configure_tp() regarding MUX
+> +    connection verification
+> +  - Remove TBD comment in i3c_hub_probe() regarding DEV_CMD security lock
+> +  - Review and fix potential locking issues in i3c_hub_delayed_work()
+> +    when registering logical buses
+> +  - Fix error handling in i3c_hub_delayed_work(): early return on failure
+> +    does not unregister already-registered logical buses, causing resource
+> +    leak; needs proper cleanup on error path
+
+All of those you could do this week.  Don't add stuff to staging that
+you are going to maintain, as it will be more work in the end.  Just do
+the needed extra effort and then merge it to the proper place in the
+tree.
+
+thanks,
+
+greg k-h
 
