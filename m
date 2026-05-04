@@ -1,156 +1,205 @@
-Return-Path: <linux-gpio+bounces-36011-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36012-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sBQDOFpL+GmQsQIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36011-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 04 May 2026 09:31:38 +0200
+	id WF1TGoRM+GmQsQIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36012-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Mon, 04 May 2026 09:36:36 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3549F4B95CF
-	for <lists+linux-gpio@lfdr.de>; Mon, 04 May 2026 09:31:37 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD85F4B96C1
+	for <lists+linux-gpio@lfdr.de>; Mon, 04 May 2026 09:36:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3EB4D3010EF2
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 May 2026 07:31:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F29D03012EB7
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 May 2026 07:34:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 531AC2797AC;
-	Mon,  4 May 2026 07:31:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EB562E62A4;
+	Mon,  4 May 2026 07:34:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T2k0UDfl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gVbAOi/w"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590D12EAD1B;
-	Mon,  4 May 2026 07:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777879890; cv=none; b=n6p7a9xMWJ+tRTO4zbrwTmjHASEg5OVVt3j4UBzf5LgEF6akFRN2QY/pb5Q8i9SX0KaWyi+uCHepW+1X9WxNodEJSZyZCLZThzzm+y6yQQZTQaAIk4BZgY/aoBShWZ8btp+TCak8B+7OStcdI8crg1ZHb8HQ1LzlceeQkLkOLWs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777879890; c=relaxed/simple;
-	bh=6g7xp08WTGLosFsZvjTI5s8npg6GBiLQJ2IOqbWCD6M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UIZe+IwvbsCmoX7yEd9mx/Nvvrq1R230JHoa5/Ce9N5gNkX/AmO1YGI5j2QHBx+yVUO4xNIRTAB6I/9AaYKfW07NPIYctBO1lY57mcjPc79iSAQG4kfWPr/xi1xgRAF4kMU8OpTVIUjRAk4/vX/8MOn9VzKbho77kRQgOKI04zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T2k0UDfl; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777879888; x=1809415888;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6g7xp08WTGLosFsZvjTI5s8npg6GBiLQJ2IOqbWCD6M=;
-  b=T2k0UDfluzMoJr7bnVGvgrBsdSzorhFL+RGZqW1MvWRhkmTtbZq2DNEs
-   T/NHwXvsqeF19PRjlXF70ALPFXKClTz7+RPkSmcp2dIL6KhE0gCtzPGwS
-   VnQaB8pTkyH9JpmiUIKQUhjIW42VM4YtLITLEmHZ7v/pX0LATehdwp2Cv
-   T12NU/o1pVpAS4/LlLQ3AyiTtdn5Gx7Z3/eARL0nRgB+nFGS1X02Ux6kq
-   E3AXXhhQjQ9AUuF6eCnQ92lvoxvaFDw3CobROLRgH3PEK3RxZho8EC6bF
-   2d9oPcp4aas09ggdQrm2LRO1oZ6Vy+TlTBFZB17JCn/jLygNCwPVJp8y8
-   g==;
-X-CSE-ConnectionGUID: Fy8Ehq95SLqta0CO1+UjYg==
-X-CSE-MsgGUID: 8T/YpU5HRj+c7dVXy+AnBg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11775"; a="78758081"
-X-IronPort-AV: E=Sophos;i="6.23,215,1770624000"; 
-   d="scan'208";a="78758081"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2026 00:31:28 -0700
-X-CSE-ConnectionGUID: N0ky8Wf5Q/+58WxIh3WUQg==
-X-CSE-MsgGUID: TJdHNHWNQ8y+rSV7qyMi4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,215,1770624000"; 
-   d="scan'208";a="232797863"
-Received: from hrotuna-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.245.78])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2026 00:31:25 -0700
-Date: Mon, 4 May 2026 10:31:23 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] [v2] leds: gpio: make legacy gpiolib interface optional
-Message-ID: <afhLS6xwHGm9_mLy@ashevche-desk.local>
-References: <20260430091202.2724109-1-arnd@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBF71D63F3
+	for <linux-gpio@vger.kernel.org>; Mon,  4 May 2026 07:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777880090; cv=pass; b=pl9Ubui9y10lyqrS3X7K/Ihv04D7KpuyhNr6YBoTgG732A31CogCFbvNlFDPFL6A27B3WN8+PZK9EphSaIxF+4R4FcBxa89EVdAWQBjggqEg3s819E7gBAG92707COIeN5oNon0vI7TJSKtrRl5AARYeA9ww/PN0RNMKemtuHJo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777880090; c=relaxed/simple;
+	bh=mImTrtDwrEXC7X93ncElFhdb+XQUNNI1BSOw9cTkKyU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W36uAXoSmaYhq31/H9CLxn9Uq/yQG1cHrhcCPfAN9vzmkZMgtTrD7FZU+vQUg6OskCWy1wusVExrbP15k/ZEKFUaytLKxF28f6bPuySeNoBwOrcqnB92DW/sbkwELzXHwQX2V+cagRGe0Pkb3CGKhHDmAGJ2uJMNy5Ib/zFALrU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gVbAOi/w; arc=pass smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-59dea72099eso3841666e87.0
+        for <linux-gpio@vger.kernel.org>; Mon, 04 May 2026 00:34:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777880087; cv=none;
+        d=google.com; s=arc-20240605;
+        b=J29VR0un2zwLqInk2QhWSEGjNqsA3g9h4ozBaB+Efm30njaPH9HI3VYD+kH81Yedbd
+         j8CqD79mtmJgeVmv7CuWizJLwYsBLJm4kOOpnZpi4xciEoewSJZuUiNu/8JwPO/pXi61
+         7WNqtm0hpA1cg5DEkUbXeJNZD1AcqFZbN2JzRu80EQLA0iYXwHhUBVV2OFGVZ59W/bAm
+         tIvHm8O+lOiN/ZQU3XcwSOmsbNgVJS4V07ylemsSLq1L2T2jb8UfN6jwO0XJ/EhuMOvC
+         Og1zqVpNGKR1l0KMP8yz/y300USO7BFkBktSzD1jLMrXUPAxr7cstX8PnhXEWdwtjb1g
+         P5Rg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=zmqoE5sH6WuPce4B+/6WncWE7pwXnMFKOobdKhulk1E=;
+        fh=SbApjUznTQgKLRYVcink9hSfCKYetz9SCgUb+RQHjAE=;
+        b=d2HC9tqYdYPL1ay5QwXd4rYNbmoAYW5RYzVuueLzLpNYYdK3I4Tnyh5Ph5l6fHqxQn
+         Zrd2CPW2aL57JQJ8k2rmM+dNxnpnrCh7FS5Z493Up8PcQTYETneUJXRiuczD16SFEraA
+         oMzNl9vwFkndrS/atXcUBQQItA+yKyp48A1+BrOoh2BsJ0hbBB8BVleKxR/SQSK8923p
+         X0ZpdAlXIF45bWT70Oa0ck7NHBlj3lzKVuaINXqZ2emRmkZ8zPYU/1/SImFLOAYkb9NC
+         hNMFqy1rDmWzG3gWm4GOZ2hGxukuzSY6cEx236GOnaTjtEQoguBhMuL7FyPBhE3n05Lg
+         i5Fw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1777880087; x=1778484887; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zmqoE5sH6WuPce4B+/6WncWE7pwXnMFKOobdKhulk1E=;
+        b=gVbAOi/wwclWQqbPw7DlfjZ+9+9Tsd+A6szBIUo4DdnMXM9Bmu0V049sNNDEmeLhU4
+         BrqiEaiihyBmc53ZTEv3IhU4ZoP3GOEUapLUYY6mkBqTLjohaIhLIFgZuA6LxV9HgevN
+         zl4k0Kj9D2qHcJVMmHL2TkRf0O3rQBur/yrQ0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777880087; x=1778484887;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=zmqoE5sH6WuPce4B+/6WncWE7pwXnMFKOobdKhulk1E=;
+        b=M4BHmQN5oN6L1MIzIPwnK9UEMRaumEDR8/0h7bnRcV+2R3lpKwn0VT9XsSdPjwXQvL
+         7tZ4X8KLSXcDVygaKepuujUkKoxJWDRwVhQqwS7S3veWtPt2TB6YmEMiS0rvMpR5o018
+         iMyjM9wSVYcILfGZibXiRnUCXAmH121DoZjiru8XDvE/tXtJk021wZO2pU9P4IAJG9hf
+         hIDMJ47SHzednWbCEQg5cFB1iuw5VCMi3JuOcKV0O87LC58rQwTHbvy4ajg+Jd74EH7a
+         Z84XK5/GQv5EZzI5L7d8PmGfoLHYQNGqRzukORettHif0E3DUoFV2yBDQagw7XKKBqsA
+         KoAw==
+X-Forwarded-Encrypted: i=1; AFNElJ8e8a+sJrQqMWMggh8XOpXEqd5YM/yoTj7Mfrwf+UUAhq7knVNpvPjvv1uQrbdVwaWKpIfnopkHMT1S@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBPeqb8nyT2biu85nSGSAx6Lwnp2cMK801M61IyccXff7HuA22
+	oj91SEMX3zIj92p0JqFOtP1dx+Nsn1/muAy/e6JPwc/+CSs4BJ44JHSNBkPPV+O4FvcH7Ox1VfQ
+	b/ZJX7kSAc8Zrur3iQr+tYieoJKgp5JhU9gnAOCbH
+X-Gm-Gg: AeBDieuqDa5Bbp4gjxMR9ZgxE2PEcNcMZSav7+H1bJMVsgAgpfVib1ZVIkbQfx7/2Te
+	Q9DssIF6+led27HYzaXLpICQ5twCdO+CZkuxQOcEI3cZRbBQK8zOzRmYKEkI0pTvHfqAj+LDc5m
+	XzWwcIlDypmsvOz2SrjOyWAmCM5o7I7J2WX9ObrwmwVMVCniHetfjZ7nSoQruVggJK6K6tujVUw
+	nzhy9jduHFj4Kqy6GfuhOnzvckOtzzKO3+XjvC2DVNXykL28T2ECqLQtk1Ej5DejA2ylJTPBfuB
+	NElXZ5i4mQ5XXfqaF1OPm7B4Z3PnJ3VV/7HWDibqZFoWYsHc
+X-Received: by 2002:a05:6512:3b84:b0:5a2:a3dc:51e3 with SMTP id
+ 2adb3069b0e04-5a862ec11b8mr2434888e87.12.1777880087115; Mon, 04 May 2026
+ 00:34:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260430091202.2724109-1-arnd@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-X-Rspamd-Queue-Id: 3549F4B95CF
+References: <20260504072748.2580172-1-zhengxingda@iscas.ac.cn> <20260504072748.2580172-2-zhengxingda@iscas.ac.cn>
+In-Reply-To: <20260504072748.2580172-2-zhengxingda@iscas.ac.cn>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Mon, 4 May 2026 15:34:35 +0800
+X-Gm-Features: AVHnY4IuKDBbAkS85uOVR5vEB6IDbpI4Sjzup8SfiFFfaDlz9Xmq5t63cjYsvnU
+Message-ID: <CAGXv+5F6BSmqq5HEybuCSwt75LVzh5gvs2wQpqy3vgfLi60Dcg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: mediatek: mt8188-geralt: enable Wi-Fi card
+To: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Hui Liu <hui.liu@mediatek.com>, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: BD85F4B96C1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[chromium.org,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[chromium.org:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,arndb.de,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-36011-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36012-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[intel.com:+];
-	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@linux.intel.com,linux-gpio@vger.kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,collabora.com,mediatek.com,vger.kernel.org,lists.infradead.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[wenst@chromium.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[chromium.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[]
 
-On Thu, Apr 30, 2026 at 11:11:55AM +0200, Arnd Bergmann wrote:
+Hi,
 
-> There are still a handful of ancient mips/armv5/sh boards that use the
-> gpio_led:gpio member to pass an old-style gpio number, but all modern
-> users have been converted to gpio descriptors.
-> 
-> While the CONFIG_GPIOLIB_LEGACY option that guards devm_gpio_request_one()
-> and related helpers is currently turned on in all kernel builds,
-> the plan is to only enable it on the few platforms that actually
-> pass gpio numbers in any platform_data.
-> 
-> Split out the legacy portion of the platform_data handling into a custom
-> helper function that is guarded with in #ifdef block, to allow the
-> the leds-gpio driver to compile cleanly when CONFIG_GPIOLIB_LEGACY
-> gets turned off. Once the last user is converted, this function can
-> be removed.
+On Mon, May 4, 2026 at 3:28=E2=80=AFPM Icenowy Zheng <zhengxingda@iscas.ac.=
+cn> wrote:
+>
+> The mainline pcie-mediatek-gen3 driver does not have code managing
+> downstream device power / reset.
+>
+> As the Wi-Fi card on ciri is a fixed device, set the related regulator
+> to always-on and use GPIO hog to set the status of its reset pin.
 
-...
+The plan now is to model it as an M.2 E-key slot (even though the chip
+is actually soldered on the main board).
 
->  		return gpiod;
->  	}
->  
-> -	/*
-> -	 * This is the legacy code path for platform code that
-> -	 * still uses GPIO numbers. Ultimately we would like to get
-> -	 * rid of this block completely.
-> -	 */
-> +	return gpiod;
-
-Do we need to repeat the upper `return gpiod;` statement? With this split
-I don't see that we need to have two repetitive return statements.
-
--- 
-With Best Regards,
-Andy Shevchenko
+I have some of the patches ready, but I'm still working out the USB
+side of it.
 
 
+ChenYu
+
+> Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8188-geralt.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8188-geralt.dtsi b/arch/arm64=
+/boot/dts/mediatek/mt8188-geralt.dtsi
+> index 8e423504ec052..c25780098103b 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8188-geralt.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8188-geralt.dtsi
+> @@ -544,6 +544,11 @@ &mt6359codec {
+>         mediatek,mic-type-2 =3D <2>; /* DMIC */
+>  };
+>
+> +&mt6359_vcn18_ldo_reg {
+> +       /* Used by WLAN */
+> +       regulator-always-on;
+> +};
+> +
+>  &mt6359_vcore_buck_reg {
+>         regulator-always-on;
+>  };
+> @@ -1145,6 +1150,12 @@ pins-en-pp3300-wlan {
+>                         output-low;
+>                 };
+>         };
+> +
+> +       wlan-reset-hog {
+> +               gpio-hog;
+> +               gpios =3D <145 GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +       };
+>  };
+>
+>  &pmic {
+> --
+> 2.52.0
+>
+>
 
