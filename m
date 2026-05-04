@@ -1,172 +1,159 @@
-Return-Path: <linux-gpio+bounces-36097-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36098-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UyaQFCQS+WnV5AIAu9opvQ
-	(envelope-from <linux-gpio+bounces-36097-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Mon, 04 May 2026 23:39:48 +0200
+	id 2MFrDvAs+Wkq6QIAu9opvQ
+	(envelope-from <linux-gpio+bounces-36098-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 01:34:08 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49A0F4C4295
-	for <lists+linux-gpio@lfdr.de>; Mon, 04 May 2026 23:39:46 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 062D54C4DA1
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 01:34:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 037653007229
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 May 2026 21:39:44 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 078D6301C6FC
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 May 2026 23:34:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6784361650;
-	Mon,  4 May 2026 21:39:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C8C33DE429;
+	Mon,  4 May 2026 23:34:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sDKAD1/k"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="NIZxlofX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F363603D2
-	for <linux-gpio@vger.kernel.org>; Mon,  4 May 2026 21:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777930780; cv=pass; b=CN1BmReaecryFou0mWSQQKzaODVau+8mZ2vrk1cD5ymHVP0G8nqys0jhY4uZ+DBQTyIux6COM0+faJ42whjbaUjpq7cgxwgLrGZCRSD0URVujS2iXYIuuZHXeOY5iilRSoq7M25lKC6CCwNrXnw5br3tqS26DsLsvTDfal8Tw6c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777930780; c=relaxed/simple;
-	bh=6YjbNRliUsnvFxeuK2qme89F4cjmT+3UuPzE2SBEtCw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZIUWTX/DZL9IIBrcb42ljRk+vYpnYc2CmHkPGiFRhq43lcYp6nRB4tTMfhMFTMm1s6vZ5u0W6xER8J3/Di619sPYF0pVQ6PrZonJTejgf3trFvn16xOU6hT5aguW5RpLuXjeN1ptiFDiZv1lhD5dGIpvsVYMrU0tqr3aAgNhMAs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sDKAD1/k; arc=pass smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-7bdaa68cf81so3213637b3.3
-        for <linux-gpio@vger.kernel.org>; Mon, 04 May 2026 14:39:39 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777930778; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Rx60AMd0dWPpF7GkHmZVAywr18XMZfMfErvfpDwyRhfJ0Fj/UKNSpNekWe2BHjTZFY
-         ZXPwW37T/y2xjuf5stXxLLd3UOiyWVAX7Td0QNi/Tv9+a4HBe6SHDdwumxXAX/g0gZPc
-         fUI3DLHM4S75i6kNjP3Rgjr4vT2AZH2s2K9Y+eUb1kYX4N3rwq9rIPm4HrN/K1gvgBTh
-         3lkOIVv3z00nzsA/O3595zKqB/iyIUkBf2ZJrp9QMniMSBY7zguGEllLa+wybx+qXMZK
-         iJlN8Xa5BgccfhAREDsRrQqxn60A+3hnTjIBLyiHvq4Wyi/buXn9rsh/nERntsrhbrsU
-         zZeA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=eYC1iNJVSzY2bMcbNG561uzmxYXnU3fLRm+besdn5aQ=;
-        fh=WW7e65GYR2tMpEgkgEDF5MZEFWp6dV53dIQgGtXWrhM=;
-        b=SGkCtrPAWr3STWbO9ZdqLckuRdtODdhY5pVIqz6+sshfQlfLHC1O0PVooiNTVeyYWY
-         LaxDTw9/dMLr9otXpLReYgvBOy6qYNhRM/OVv7GOtwJ04uDNnO6d3gBaKG4lGapRKimv
-         GzU+BeSlThccoQWYJ/SACZyslIZvPHA2uCX87Xh+RAilNdAU8kO3SPjK7qfIx0iuld0/
-         CRoJIda5bG0+x7FOd44TWweFG+aKN0HA8O2wYzgAZLxjc1E/YRY3gqFqEfS8+2/45weg
-         OcTysWhuGA9uHo1gTrxc4FHWCLw/jM2BBbauccfQ5WqykpPXgixPy3QfC4cCwRtIh/KZ
-         z5Ww==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777930778; x=1778535578; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eYC1iNJVSzY2bMcbNG561uzmxYXnU3fLRm+besdn5aQ=;
-        b=sDKAD1/kr+kL4YJCdq5crsvI1b95BDVNgEZETcU81YuM9bx/crt77dgFlNZF93MxsG
-         5uojNY2ozcAXNmEs+2omqfGKL2Elp7Jwq4l1fxjvFt9nU1TSKxcwBWa/R9FAzWiE2UPM
-         p/UBuoiDJu6nh7Qu1EOEjXxquV3lqgENdJ/1ahv1RaeLTCvdqOMJrs3gmNV7nuyUlBu8
-         qkmchWJsAs/1oGgzgM4IltY1zF7Ti51VvJ/Ef+KBQ78yFAeAx8GCnpy2MzmamKplbsLp
-         PGNc67GKhfv2sYonjEeNGtIK57vDCNF2+e58TYAukWHqgaoKMFrPIl951i9S5BPh0jGY
-         c/LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777930778; x=1778535578;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=eYC1iNJVSzY2bMcbNG561uzmxYXnU3fLRm+besdn5aQ=;
-        b=WvmfWeJL92ehflmR+z1DtcGuChp6iLlPHe/0U87+RUMGkLXge+s6Rn/1MaAUnNO27x
-         kY2fzN8AvQYBZ0Fwtda7pftSStplYDKrDMYhLibZ2Iz+mOiPrvd7prlgxffawN3/zteY
-         wg8ccPjdPwHNEPWDXYgXgpvQ6By2zJhZheKT4oAilLERLTADarOkG51xRtyKrCu8ohrV
-         6wWnxgOg/FXPyfaWGQDFEc0YYJ9xSsNfBrRbLCHXO93PYy9DvLiWGMMXjml9hbgsDadi
-         RZQ9cBr9W6STgQAacIm2AJ3uOhZtBJ4lycVtdLiBUwMlU2ZbUBpiszi0rmlFutjECsOD
-         uZkw==
-X-Forwarded-Encrypted: i=1; AFNElJ9UkjkwoJjqKxqHlP94rQcN1dZlUCxnyniT6Cwn3ml4hhW97vxWty1hVDZKOOcb8q9nNv7PBVs8wuYX@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkhQYIKCI1sMfxXs5qQ9J8Kl4++58YUa28ju+0Wmxj/pCnAi8n
-	LeJHvm53p8gh2bExlgYydGnHvPSZO3Erbeg2DUhNZb+kAIaG+aQD41KVxDBKPN4+binPpN6pDh6
-	5diVn/XIiIA9CX9feCD7md8CWsLBwCl4=
-X-Gm-Gg: AeBDieue/Swgn1/VNgB87CpVriKpD3cQeRD3BBKv0BXpOs0fmUzM2zVyyx6Iun3sRf5
-	OPeM8aJFHEuDSH3hojARx9tO9rGo88ov3AeGSSTDe0SehAOFnh5CLNZnjR9zEjWgZ5EaunAD1sZ
-	sfJ3/NtEGZZt1z3UzhHBR6ZURMoEmVimHCRdTqqc5LqRR+puAamrVanhNQukOodYIZ8QlckVnQ7
-	E6DsQpqfeikTN0wTkSfcSSUzL8zgpTImof/peWC6bkiJ+Xv35CXfS142smk7XM6zgJQ73u+5ruO
-	FiDzelLEVLb+D9M=
-X-Received: by 2002:a05:690c:7107:b0:79f:d961:47bf with SMTP id
- 00721157ae682-7bd76f7e855mr115202087b3.8.1777930778428; Mon, 04 May 2026
- 14:39:38 -0700 (PDT)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8818D3DD532;
+	Mon,  4 May 2026 23:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777937645; cv=none; b=BPn0BJi63gLfbRJeP1J9Rhs1s09MtNDNN8QrBm3QBr/eYfZou6JgLmGpKpQKLHhZaJBsaP2V8KwnryNEhKfvqE1eQrI9iCvFaISTFnCHW6AqtgncbMtrAK8tgQiULv4AzTHQAds00phD0TrXpukn32i+fX/tQowoNc56Jwnw4bQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777937645; c=relaxed/simple;
+	bh=yRUjHk/bWRa3yzbi/uy35powhSCptlYsurtPe87JWYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uyUZJa6OSj/cCU31xgiZo2HMDEk6ZL0ErgJ6L4zdu7MOoHFURpAucBdZsPIOLDdi2KkxD35cGGsUcDQcBmCzjJ3ppaEZlwuyjZxlby1Ij4w7gZPtiPmukMVwGxk5DG5bsASRPlu+f2xmmdjPPTiKHQheNKk/8jo4Fywr3m8o6yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=NIZxlofX; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E3E924C0;
+	Mon,  4 May 2026 16:33:56 -0700 (PDT)
+Received: from ryzen.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC9AD3F7B4;
+	Mon,  4 May 2026 16:33:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1777937641; bh=yRUjHk/bWRa3yzbi/uy35powhSCptlYsurtPe87JWYM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NIZxlofX6t0+2104etadZndVgufTMw9ZvqEMHOclqmJC6gHGx/FJ2GAAgTD4+zcGZ
+	 c7N5fov8VNvAdoRfsxzoCJ2vcYepEka6aEq8NeWpLckyyjrz0usTToXaoF3iGpc5Pj
+	 w611q2DlRNqSgvTjqeFmoWDEwQ2F9XQ9ghdPNtCg=
+Date: Tue, 5 May 2026 01:33:25 +0200
+From: Andre Przywara <andre.przywara@arm.com>
+To: Felix Gu <ustc.gu@gmail.com>
+Cc: Linus Walleij <linusw@kernel.org>, Chen-Yu Tsai <wens@kernel.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
+ <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>,
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: sunxi: fix regulator leak in
+ sunxi_pmx_request() error path
+Message-ID: <20260505013325.74de6c21@ryzen.lan>
+In-Reply-To: <20260504-sunxi-v1-1-c0fd0df52776@gmail.com>
+References: <20260504-sunxi-v1-1-c0fd0df52776@gmail.com>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260504213429.64596-1-lucasp.linux@gmail.com>
-In-Reply-To: <20260504213429.64596-1-lucasp.linux@gmail.com>
-From: Maxwell Doose <m32285159@gmail.com>
-Date: Mon, 4 May 2026 16:39:26 -0500
-X-Gm-Features: AVHnY4LaNExOPQrEc1NolhlO_WfrWDKhv5R4XNd0vYsoY3AQL321-a2kSMrC8lo
-Message-ID: <CAKqfh0F2zdLCJ3dMcbDZXsq+_V0_2+FGWPUThfN+GevUe-YZEQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] tools: include: add proper strscpy() declaration
-To: Lucas Poupeau <lucasp.linux@gmail.com>
-Cc: acme@kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 49A0F4C4295
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 062D54C4DA1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[arm.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[arm.com:s=foss];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36097-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-36098-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,sholland.org,vger.kernel.org,lists.infradead.org,lists.linux.dev];
+	MIME_TRACE(0.00)[0:+];
+	HAS_ORG_HEADER(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	NEURAL_HAM(-0.00)[-1.000];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[m32285159@gmail.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[andre.przywara@arm.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[arm.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid]
+	RCPT_COUNT_SEVEN(0.00)[10];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
-On Mon, May 4, 2026 at 4:34=E2=80=AFPM Lucas Poupeau <lucasp.linux@gmail.co=
-m> wrote:
->
-> Currently, strscpy() is defined as a macro for strcpy() in the tools
-> headers. This is unsafe and prevents using the real strscpy() logic
-> that provides better buffer overflow protection.
->
-> Remove the macro hack and add a proper extern declaration for
-> strscpy(). This allows tools to use the safer string copying API
-> once the implementation is provided.
->
-> Suggested-by: Maxwell Doose <m32285159@gmail.com>
-> Signed-off-by: Lucas Poupeau <lucasp.linux@gmail.com>
+On Mon, 04 May 2026 22:53:26 +0800
+Felix Gu <ustc.gu@gmail.com> wrote:
+
+> In the error path of sunxi_pmx_request(), the code calls
+> regulator_put(s_reg->regulator) to release the regulator. However,
+> s_reg->regulator is only assigned after a successful regulator_enable().
+> This causes a memory leak: the regulator obtained via regulator_get()
+> is never properly released when regulator_enable() fails.
+
+Yes, that's a correct observation. The fix looks alright, though I
+wonder if we should drop the "goto" here altogether, since there is only
+one caller, and the code would look better like this:
+
+	ret = regulator_enable(reg);
+	if (ret) {
+		dev_err(pctl->dev, ...
+		regulator_put(reg);
+		return ret;
+        }
+...
+
+> Fixes: dc1445584177 ("pinctrl: sunxi: Fix and simplify pin bank regulator handling")
+> Signed-off-by: Felix Gu <ustc.gu@gmail.com>
+
+Regardless, the fix is correct, so:
+
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+
+Cheers,
+Andre
+
 > ---
->  tools/include/linux/string.h |  5 ++++-
->  tools/lib/string.c           | 37 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 41 insertions(+), 1 deletion(-)
->
-[snip]
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> index d3042e0c9712..25489beeb312 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> @@ -925,7 +925,7 @@ static int sunxi_pmx_request(struct pinctrl_dev *pctldev, unsigned offset)
+>  	return 0;
+>  
+>  out:
+> -	regulator_put(s_reg->regulator);
+> +	regulator_put(reg);
+>  
+>  	return ret;
+>  }
+> 
+> ---
+> base-commit: b9303e6bff706758c167af686b5315ad00233bf8
+> change-id: 20260504-sunxi-cda91661c181
+> 
+> Best regards,
 
-Didn't you already submit this? Doesn't look like anything changed if
-this is a v2.
-
-best regards,
-max
 
