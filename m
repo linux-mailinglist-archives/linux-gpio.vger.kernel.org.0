@@ -1,198 +1,241 @@
-Return-Path: <linux-gpio+bounces-36227-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36228-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AJMmAMcV+mntJAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36227-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 18:07:35 +0200
+	id qB4kKegW+mkqJQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36228-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 18:12:24 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86FE74D0E23
-	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 18:07:34 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93A184D1034
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 18:12:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id BA13230E5B3D
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2026 15:59:22 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id DB13030A5C63
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2026 15:59:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 047B448B381;
-	Tue,  5 May 2026 15:58:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2788048AE32;
+	Tue,  5 May 2026 15:59:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="Bo0T+uYt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UCqD9cRV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE7148B366
-	for <linux-gpio@vger.kernel.org>; Tue,  5 May 2026 15:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB5833064D;
+	Tue,  5 May 2026 15:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777996733; cv=none; b=J8E/iyBrMuMZuXYW+9uQsRDEPR+VJsmWANrlrRt0I2CfqK9+X8qQYlECNFlOqqlovmEoADAhRN7zjKIrmj+oLL6lJ0RPciG+m9wQw1MCaTvYK4ov303ZfPSAz6cIwp5v2XTEgkXA37lPX7/1GLQaa3AKRFBmKmNXRAUz7Or+5YQ=
+	t=1777996760; cv=none; b=NzcdjH/ZNYLevezEyGNu5aXzQmdQyjqGhB6Vj/UOR7SxTZbz/Bm4fJLbiaMoEelLWmsRmkgS/7Y9GqfkxLNbFGUuZwlPLNlE1/usO4Q1gK3/8qcmV2S+mHp/WY5vTv5x0An6GmBvI/MnDITJwf+iADEf8fQj5314x+MRTN2B3m8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777996733; c=relaxed/simple;
-	bh=J84KpcArs6vG8jkcaA8eqYNE61DrVpr3S1BqehpaogI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gQFpJOuN4+wH19tjNG5yRekZlXquKbpb3f+llOi8EDM0uEEnfuxNMi6uMOaIjvIyz401JNRl3Vn+qc79+7Arpf7YLICULFN31ngZQ65SmBppxa1lzjrJgU3fDkretRYHgX3H0fmMgbenuLkZ0K+gXmNfjdDsCv4lUBsz6JymEzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=Bo0T+uYt; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4852a9c6309so44081715e9.0
-        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2026 08:58:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1777996729; x=1778601529; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=01VfL6gZZIzvH10mF1K5m6OM2N7Xtov5WNdZLRl6ixg=;
-        b=Bo0T+uYtRK7qzCXjEG3X7Xtxbi0zVegst5mQqt045lBgootaHRNsakmETF2OvOIqRH
-         SiERBZDmYy0zmbj7hfj/2yMZMxWd5GEeGXYJ6RNMuMAO0XOLy0tIA/Hj9l0fbiPzuqla
-         FpX4JZlutMh3cqH2Rjfo+WYomdT1M8uzLHhtMzvXDu1KYE9r8aMNuXReyCfT2VbVfLX1
-         IbYo1QmAQeh1aufH3LfK4WoXWBXcGqARcNIXXOyG84cXbrw4vVqVNqIjiidDrsbmgfDP
-         mq00/J2YQDL3W8RVPArxjMrdH2yO7PWsSom2FY3i+xQ6Hpq+Byt6BYdIG6PEOsh2stSK
-         G6YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777996729; x=1778601529;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=01VfL6gZZIzvH10mF1K5m6OM2N7Xtov5WNdZLRl6ixg=;
-        b=mQwx7JJuKe2rg2p8l+p6VVU44Pn0Qu8p370ZefjB8ZtYrDMmvREPNA2QUXBuUK8tJ2
-         EheQNChpNXqKKKm9Ta7PjB0T53ts654IjGYgkgKRxzPFHVddQ45J4iWlZJEvyQlv6oFT
-         +77ihKHsKlqUny8x0Hn0Z4x2TdIsuTPRCaKH+YxFHj9FJ0OtGd0yp5AID+BcRxRD0RPI
-         fRrqbTljrD4e7u15RbUrmuKyCu0/5xgSZ7AMPGpgxwnD6mkvTSgdsERiLv0JqGZVgSMs
-         JK1Xm2KS5xHe2gBb4FM3h/pFwilPkKxULMH2LU1HKHeyeI0glFlOxhbDt4PPPVJc4u2I
-         L7fA==
-X-Forwarded-Encrypted: i=1; AFNElJ+lCiUB2dTiC24w3xOgEpt5lPKH+nZDYCUtyy9CFbkX77y3/VXx4bXnn2z33oxAgLwwMHSxilb8nPFf@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1u6qIw4aSID8n0x/puTvmeWda/UhvB64bVj7fih2hAaQLxyy0
-	MsWSsT7j7EGvQt4HVwCpPpYPIbnHzbqtv3Q4+WQK8n2DfXpesmz4RnRPYX8mgpkUdoQ=
-X-Gm-Gg: AeBDiet7tFLMwfkRzwNImKTSM4Klclpaqqzha9JUGiu3xs+m1zddXuBhKv0BgQyVsJg
-	bYr/nvbKEdCLetSKzg1JZB9DjaCcsIaJY8szwLi86bHZNsUhnHnVSJhHskiVNZHmiQGbG7imClF
-	ZgLTlz5ABz6TR/oMA4Rp9IyNBDeVz2dAQ8AK9x2Mhj6blpP7DvTJ+ZXkflULw7B+ool/7n2IVcV
-	JQ6RwL0MeOKPDuHyuHh4wN2wN+5srt2dQzPsGEtfiPD/G0F2J2CTrFh10qv8oO4cP5XIDK0p+l4
-	uJIGcMU9IvMFSX2Hu9bQB3HmUkSqU3Mk3Br3sYEDKAtCc6PstcRmr6aL///TlVYuu8/y/voQ8FY
-	Ls/8vev4Jxuh1CtdcbikvjlzbbKZo0udA3t1k/3vsUHJt+9SX2PYJlVjXVl+Lrgru9/15Pqrnp6
-	nc1qcAwZqD1Z/ZdHtgBgCictLEsf/UG32yqXI5Nyt4CZzCNu++5hp9+AwH8zmHxLEYAnH6l0K+u
-	/ucXEqQfvwAXueXFui8HBMX52wH6QH8xvNB7cTk1+4xBPK+2LymikxA3fAyrYiCzQpyBOTbH8Lv
-	K/h8SPg3jG5HHdj4U1Y=
-X-Received: by 2002:a05:600c:528e:b0:489:ecee:c4ef with SMTP id 5b1f17b1804b1-48d18bde33amr61483785e9.13.1777996729166;
-        Tue, 05 May 2026 08:58:49 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a822bf3ffsm444582355e9.7.2026.05.05.08.58.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2026 08:58:48 -0700 (PDT)
-Date: Tue, 5 May 2026 16:58:45 +0100
-From: Daniel Thompson <daniel@riscstar.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Alex Elder <elder@riscstar.com>, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, maxime.chevallier@bootlin.com,
-	rmk+kernel@armlinux.org.uk, andersson@kernel.org,
-	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linusw@kernel.org, brgl@kernel.org,
-	arnd@arndb.de, gregkh@linuxfoundation.org,
-	mohd.anwar@oss.qualcomm.com, a0987203069@gmail.com,
-	alexandre.torgue@foss.st.com, ast@kernel.org,
-	boon.khai.ng@altera.com, chenchuangyu@xiaomi.com,
-	chenhuacai@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
-	hkallweit1@gmail.com, inochiama@gmail.com, john.fastabend@gmail.com,
-	julianbraha@gmail.com, livelycarpet87@gmail.com,
-	matthew.gerlach@altera.com, mcoquelin.stm32@gmail.com, me@ziyao.cc,
-	prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
-	rohan.g.thomas@altera.com, sdf@fomichev.me,
-	siyanteng@cqsoftware.com.cn, weishangjuan@eswincomputing.com,
-	wens@kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 02/12] net: pcs: pcs-xpcs: select operating mode
- for 10G-baseR capable PCS
-Message-ID: <afoTtdAO23DhOeZ8@aspen.lan>
-References: <20260501155421.3329862-1-elder@riscstar.com>
- <20260501155421.3329862-3-elder@riscstar.com>
- <f9a581a2-02ea-4948-8c97-835cb7638b1d@lunn.ch>
+	s=arc-20240116; t=1777996760; c=relaxed/simple;
+	bh=Rln2btHpLEkU3ktKxMapEczF6jjV96udsVudxc09Xyc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tgOovTe/XwVsMqXpWAHMcnZT4XG+085N/9apFIsMk8Y0uoEtzoqR5Ia59MgQAwuyMFEDHY7Ql6jY2AnEAqWsO5hXDQlO9ThdrWe7INTpzLK6t/QvpATtLIbcSkummJry39YQeFW6DKqDOj21673qtsKiWr+4OpkKFvHGB+0BnOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UCqD9cRV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EB67C2BCB4;
+	Tue,  5 May 2026 15:59:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777996760;
+	bh=Rln2btHpLEkU3ktKxMapEczF6jjV96udsVudxc09Xyc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=UCqD9cRVWmOZPY4cJcnpMwLHPDkgArlz7A9cZ4a2/O4tT9B1lLoxgYzXUtEZlZgHg
+	 dRy+QmHimlXdpct3eko0PEn4+fQqT501SO2CAiuFzhOCZJj8DEsaEpecV8YZSqymCd
+	 8vD497GbUVAjGoZmReFAwr6mo7BZSAcCDhLoxRaN4xxbg/qUSaP8SyzP1Of+qSpsf5
+	 FHauGZgic3KEQuheOwBacSNE/As4VI4N9OMCoQc4Cy+dSWlO/tg1YH3eMA1/mSs3E/
+	 dzYuSJ/5sBMCUfGdIDpNkgVu2PH1qtO2mJ+b8DNaB1GPZ/zrdoNqLhjN25LXeaAON9
+	 BsuP0UFiXGFYQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH] [v3] leds: gpio: make legacy gpiolib interface optional
+Date: Tue,  5 May 2026 17:58:48 +0200
+Message-Id: <20260505155915.3698243-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f9a581a2-02ea-4948-8c97-835cb7638b1d@lunn.ch>
-X-Rspamd-Queue-Id: 86FE74D0E23
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 93A184D1034
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.06 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[riscstar-com.20251104.gappssmtp.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[riscstar.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[riscstar.com,lunn.ch,davemloft.net,google.com,kernel.org,redhat.com,bootlin.com,armlinux.org.uk,arndb.de,linuxfoundation.org,oss.qualcomm.com,gmail.com,foss.st.com,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
-	TAGGED_FROM(0.00)[bounces-36227-lists,linux-gpio=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[riscstar-com.20251104.gappssmtp.com:+];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-36228-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_NEQ_ENVFROM(0.00)[arnd@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[daniel@riscstar.com,linux-gpio@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[50];
-	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	NEURAL_HAM(-0.00)[-0.999];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,aspen.lan:mid,riscstar-com.20251104.gappssmtp.com:dkim]
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,qualcomm.com:email,arndb.de:email]
 
-On Fri, May 01, 2026 at 06:50:45PM +0200, Andrew Lunn wrote:
-> > +static int xpcs_config_operating_mode(struct dw_xpcs *xpcs, int an_mode)
-> > +{
-> > +	int mdio_stat2, ret;
-> > +
-> > +	switch (an_mode) {
-> > +	case DW_AN_C37_SGMII:
-> > +	case DW_AN_C37_1000BASEX:
-> > +	case DW_2500BASEX:
-> > +		mdio_stat2 = xpcs_read(xpcs, MDIO_MMD_PCS, MDIO_STAT2);
-> > +		if (mdio_stat2 < 0)
-> > +			return mdio_stat2;
-> > +
-> > +		/*
-> > +		 * If this XPCS supports 10Gbase-R then it will be the default
-> > +		 * which prevents 1000base-X and slower from working correctly.
->
-> It would be interesting to know if Toshiba messed up the integration
-> of the PCS, or there is an errata for the licensed IP.
+From: Arnd Bergmann <arnd@arndb.de>
 
-I'm afraid I don't know, but it looks like the issue is not unique to
-Toshiba!
+There are still a handful of ancient mips/armv5/sh boards that use the
+gpio_led:gpio member to pass an old-style gpio number, but all modern
+users have been converted to gpio descriptors.
 
-This is a discovery which, rather to my chagrin, I only made after we
-posted the patches (thanks to a hint from Sashiko): there is similar
-code in txgbe_xpcs_switch_mode(). I cleary overlooked that when I
-originally reviewed the existing XPCS code. I suspect I stopped
-scanning that code path due to the PMA related conditional branch...
+While the CONFIG_GPIOLIB_LEGACY option that guards devm_gpio_request_one()
+and related helpers is currently turned on in all kernel builds,
+the plan is to only enable it on the few platforms that actually
+pass gpio numbers in any platform_data.
 
-Regardless of how I missed it, txgbe_xpcs_switch_mode() implements
-similar logic to this patch. I think it is using MDIO_PCS_CTRL2_10GBX as
-the Reserved value but otherwise looks similar. There are comments that
-imply 10Gbase-X isn't implemented by their XPCS which would make
-MDIO_PCS_CTRL2_10GBX reserved (but are too vague to be 100% sure).
+Split out the legacy portion of the platform_data handling into a custom
+helper function that is guarded with in #ifdef block, to allow the
+the leds-gpio driver to compile cleanly when CONFIG_GPIOLIB_LEGACY
+gets turned off. Once the last user is converted, this function can
+be removed.
 
-Right now it looks like xpcs_switch_interface_mode() and my
-xpcs_config_operating_mode() are more closely related than I realized
-so I plan to move my code into xpcs_switch_interface_mode().
+Link: https://lore.kernel.org/all/e9252384-a55c-4a91-9c61-06e05a0b2ce4@app.fastmail.com/
+Reviewed-by: Linus Walleij <linusw@kernel.org>
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v3: simplify gpio_led_get_gpiod
+v2: rework a little bit to keep the legacy code path more separate,
+    extend changelog description
 
-I don't think I can unify the Wangxun and Toshiba code (the waits and
-resets in the Wangxun code make that too high risk) but I'm not yet
-ready to give up and just make the Toshiba changes into another vendor
-quirk!
+Related to this, we may also want to remove support for passing
+a gpio descriptor in the ->gpiod flag. The only user doing this
+at the moment was introduced in commit 1892e87a3e91 ("powerpc/warp:
+switch to using gpiod API").
+---
+ drivers/leds/leds-gpio.c | 54 ++++++++++++++++++++++++++--------------
+ include/linux/leds.h     |  2 ++
+ 2 files changed, 38 insertions(+), 18 deletions(-)
 
+diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
+index 961acc18d0ac..109e2316b775 100644
+--- a/drivers/leds/leds-gpio.c
++++ b/drivers/leds/leds-gpio.c
+@@ -212,7 +212,6 @@ static struct gpio_desc *gpio_led_get_gpiod(struct device *dev, int idx,
+ 					    const struct gpio_led *template)
+ {
+ 	struct gpio_desc *gpiod;
+-	int ret;
+ 
+ 	/*
+ 	 * This means the LED does not come from the device tree
+@@ -221,18 +220,30 @@ static struct gpio_desc *gpio_led_get_gpiod(struct device *dev, int idx,
+ 	 * the GPIO from there.
+ 	 */
+ 	gpiod = devm_gpiod_get_index_optional(dev, NULL, idx, GPIOD_OUT_LOW);
+-	if (IS_ERR(gpiod))
+-		return gpiod;
+-	if (gpiod) {
++	if (!IS_ERR(gpiod))
+ 		gpiod_set_consumer_name(gpiod, template->name);
+-		return gpiod;
+-	}
+ 
+-	/*
+-	 * This is the legacy code path for platform code that
+-	 * still uses GPIO numbers. Ultimately we would like to get
+-	 * rid of this block completely.
+-	 */
++	return gpiod;
++}
++
++#ifdef CONFIG_GPIOLIB_LEGACY
++/*
++ * This is the legacy code path for platform code that still uses
++ * GPIO numbers, mainly MIPS and SuperH board files.
++ * Ultimately we would like to get rid of this block completely.
++ *
++ * ppc44x-warp sets the template->gpiod directly instead of
++ * adding a lookup table or device properties. This is not
++ * much better.
++ */
++static struct gpio_desc *gpio_led_get_legacy_gpiod(struct device *dev, int idx,
++						   const struct gpio_led *template)
++{
++	struct gpio_desc *gpiod;
++	int ret;
++
++	if (template->gpiod)
++		return template->gpiod;
+ 
+ 	/* skip leds that aren't available */
+ 	if (!gpio_is_valid(template->gpio))
+@@ -252,6 +263,13 @@ static struct gpio_desc *gpio_led_get_gpiod(struct device *dev, int idx,
+ 
+ 	return gpiod;
+ }
++#else
++static struct gpio_desc *gpio_led_get_legacy_gpiod(struct device *dev, int idx,
++						   const struct gpio_led *template)
++{
++	return template->gpiod ?: ERR_PTR(-ENOENT);
++}
++#endif
+ 
+ static int gpio_led_probe(struct platform_device *pdev)
+ {
+@@ -270,14 +288,14 @@ static int gpio_led_probe(struct platform_device *pdev)
+ 			const struct gpio_led *template = &pdata->leds[i];
+ 			struct gpio_led_data *led_dat = &priv->leds[i];
+ 
+-			if (template->gpiod)
+-				led_dat->gpiod = template->gpiod;
+-			else
+-				led_dat->gpiod =
+-					gpio_led_get_gpiod(dev, i, template);
++			led_dat->gpiod = gpio_led_get_gpiod(dev, i, template);
++			if (!led_dat->gpiod)
++				led_dat->gpiod = gpio_led_get_legacy_gpiod(dev,
++								  i, template);
++
+ 			if (IS_ERR(led_dat->gpiod)) {
+-				dev_info(dev, "Skipping unavailable LED gpio %d (%s)\n",
+-					 template->gpio, template->name);
++				dev_info(dev, "Skipping unavailable LED gpio %s\n",
++					 template->name);
+ 				continue;
+ 			}
+ 
+diff --git a/include/linux/leds.h b/include/linux/leds.h
+index b16b803cc1ac..e646bffcd8e7 100644
+--- a/include/linux/leds.h
++++ b/include/linux/leds.h
+@@ -676,8 +676,10 @@ typedef int (*gpio_blink_set_t)(struct gpio_desc *desc, int state,
+ struct gpio_led {
+ 	const char *name;
+ 	const char *default_trigger;
++#ifdef CONFIG_GPIOLIB_LEGACY
+ 	unsigned 	gpio;
+ 	unsigned	active_low : 1;
++#endif
+ 	unsigned	retain_state_suspended : 1;
+ 	unsigned	panic_indicator : 1;
+ 	unsigned	default_state : 2;
+-- 
+2.39.5
 
-Daniel.
 
