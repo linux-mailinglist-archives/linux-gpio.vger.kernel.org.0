@@ -1,989 +1,262 @@
-Return-Path: <linux-gpio+bounces-36125-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36126-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6NDCFU26+WmNBAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36125-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 11:37:17 +0200
+	id qJ/QKGm6+WlICwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36126-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 11:37:45 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A25264C9E50
-	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 11:37:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 618524C9EB4
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 11:37:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D91BD304203D
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2026 09:35:02 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 927833046394
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2026 09:35:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1363E329E4B;
-	Tue,  5 May 2026 09:34:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44D3D327C18;
+	Tue,  5 May 2026 09:35:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="c3PCpREu";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="CGslGEGB"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Cr4UYMq7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013015.outbound.protection.outlook.com [40.107.159.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737513246FE
-	for <linux-gpio@vger.kernel.org>; Tue,  5 May 2026 09:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777973695; cv=none; b=ik7ae5Zwok7ZW9VrxyKFPlLGY8Sor3fAb05EcMeXJXSbysQ7GNR45WkGcn1kz7/4dia5i1CSkabm3nlxnqDaRkPxT5pccIklq8oNGgPeSHDS8EwT0TtUiiRJoGRRZaxPm2DLxZzhP53hcd6EwB1hXnI5A1pbj7oeQrnXR8Obdzw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777973695; c=relaxed/simple;
-	bh=o9D9Zw2e3v9jjEe0WlnNjCKjS7ljgxEbcFShc2nwRJo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iAz7mQB3hImPexiWIla6DEM4JVvHs4bGdPjWC8Ksp/tmjP5hPblrbo8gEHr5Ll97r3rW57dFR9IQxtmMaN1PVvwdnBQeoBKorJ755AsBf3IQTglrkjI/VUhEWj7NBnSQ6ElFxS9e9o/1Vcwxqn93TZB7D56lBldyLcO8awB2BGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=c3PCpREu; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=CGslGEGB; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6455wOG1299881
-	for <linux-gpio@vger.kernel.org>; Tue, 5 May 2026 09:34:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=YAt88ACrK6ebceojmYiwgVZwSKwG7ByrdX+
-	VSiLcbRI=; b=c3PCpREu0pCOTLFpMktvvXYLoSf9SIeYgt/gUZkFbPymV2Yj8sA
-	Yk+8uhtnSFkDQe6nDsFFNcLABOzWhqY+hxMQO3h24lmbonneO+FlBt4LzeOzHLh6
-	KZzbg2zwsKaDrBPDSnxLGDxoKC9HB1U9EyprnuoGs7ppsuSCZ+ZOsEHpqVPXdcW/
-	yO/F8MA+TkJpb+okavMqJtES7aUbaLZHRivVBKv6o8bqN96SjCodXTTIKyQa94pE
-	0ICnsHWJ5uIq/wIhk5fr8uKsgudUr7cOHlaQB9JSOhXkriUvLiyXRV1XXHTyxrD0
-	xN0z2OGdmzwCJQ9BdpQkQfn4Qr0Y2/WOMdA==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4dxvndbsg9-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-gpio@vger.kernel.org>; Tue, 05 May 2026 09:34:52 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-50edf01172bso140133961cf.2
-        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2026 02:34:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1777973691; x=1778578491; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YAt88ACrK6ebceojmYiwgVZwSKwG7ByrdX+VSiLcbRI=;
-        b=CGslGEGBriP8TiS0ARdjEaImW85aeMi6GBnmof+6FPckY+ii0xh0ZqabKIEEKG6cAO
-         qFpfy8qheCBu+fcfPrX2p1o10XblzXp47zAHfZmb/chHj6SMd8P6DAH5VBuJV5UA2p6w
-         wrLYsgTLfmlqNVS0ndukF20PrknQZ7sVtmJ78VdRKGAqEBMAK9wst4ezKfVM9hwwHhFO
-         NhAH3ZuINlXzBZxUMWBSjz1v2d/DLBLFEKOa24kMCMHOSuQi6odBQ3t73pqIW5LACBwY
-         ATV6PKT1RRGCjntj6YEdkr35yDewN4QvGoVm6h/Zxbc7Z/AYU8RqwzPpgD1FTryaPQs0
-         /O+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777973691; x=1778578491;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YAt88ACrK6ebceojmYiwgVZwSKwG7ByrdX+VSiLcbRI=;
-        b=JHXq54aoHNmILc9IOU2aUelw6aTAuBc1uhfgG4hl43/1d9cNFmtmbYQmrKehZW76n5
-         Ge5aYmtC+npuvr5GuzrVR9oLftI+C4VQRjuD8S/Fcfx+rcvCOCG9UcN70mrVCPSOvYBx
-         cDO2E8ORVINff7orHZyp8P2sj4pxxWp+xnVY4utQy+L+isv9G3scIZXyFpnfqKFdb2E1
-         4g7cKMbRftAVK+3tRau1loXVCjRmG8jdGoO4aF5VicT2wROnyfMBRITihaCZM+4TjsiC
-         JMB9l9YCH9cF0/NlR8SID36UIigAXPZlARQAYc6rgaF11KJOqHjWrGEMJsWLVMFbZP5A
-         9Svg==
-X-Forwarded-Encrypted: i=1; AFNElJ8Fyi7ZauO8sDuU7pzIMEBmJna1NVmReNnA+syU4VLZlBQZ6vJYca1/UYGByp3ZXsHNSUIqiNjGdHhk@vger.kernel.org
-X-Gm-Message-State: AOJu0YypKFfC5pudu7d8o4MWEAU8QmllwRJG1A/l0RlUxCm/4m+rHAW9
-	9VqSygCo2VmJU3bKiY4MHSgDvlmREd6w63wPEN/ijnZzfKls9a7LOlkqyO6Tl/0Qfilvnvu7pxn
-	1DS3ur7XzIGphw3sEfHFUmMEVHA07HXNOHWx8RLQickqRJoi1+YLsjZm+hN9QkCYv+JI86fbM
-X-Gm-Gg: AeBDiesKWbvzip88pkerDxERugHZNJEhPRUNt/8df53q1F3qLAR6MLvwIflqffqQjGa
-	A7uId8n8eP+ThWTAlaHblaw7BAGp4bOcgpYeCv4vh1nrWB9rgmwjgrl9hZrhdaOynCvrVp9H1IS
-	bttmnD/rba5PfhT1Q9pvATPt5V6VV33K+kYnRWKKBUEr4aXzPQhY3l6W75DCKsIksxuW7WOYG1+
-	sqfkTpK558uekv7qGMHciPviF4DmEH+ePpKHqRj/zZAqhnKCWyzC9NSbjVIX4F1YYiPSZ1kwrOU
-	WMgoki2EZwMzE26S9HLJgbABeXI0fQh/A87l/4CJ9TaHtg7QHqekqVofdfB17PzbEiaFhRONF3h
-	FEMijUwzDe+pVe6LSTW/SnFAmovmbV+WBz4zntkaio797V+o=
-X-Received: by 2002:a05:622a:2484:b0:50f:b3d2:6edd with SMTP id d75a77b69052e-5104bf6b69bmr192016571cf.43.1777973690718;
-        Tue, 05 May 2026 02:34:50 -0700 (PDT)
-X-Received: by 2002:a05:622a:2484:b0:50f:b3d2:6edd with SMTP id d75a77b69052e-5104bf6b69bmr192016251cf.43.1777973690132;
-        Tue, 05 May 2026 02:34:50 -0700 (PDT)
-Received: from quoll ([178.197.219.94])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a82307f28sm657001505e9.13.2026.05.05.02.34.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2026 02:34:49 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linusw@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Subject: [PATCH] pinctrl: qcom: Move MODULE_DEVICE_TABLE next to the table itself
-Date: Tue,  5 May 2026 11:34:45 +0200
-Message-ID: <20260505093444.61336-2-krzysztof.kozlowski@oss.qualcomm.com>
-X-Mailer: git-send-email 2.51.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AE23242A9;
+	Tue,  5 May 2026 09:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777973702; cv=fail; b=nXT5UMBxQ2RNeGzOg2NbNJvPDV1/7mzNJzFz70AWU16CeIFwUr9EQuKq51p3xhNpI9jYmMCoQ3+mAuFYU53saUmUXZmfdS0vytP1BtlQnCrauVM8nTHtUmHXUsWLKJTWC+025wvSAxpkcVdFYIwkrAVMAtpCRSHh9xBqMw7BvUU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777973702; c=relaxed/simple;
+	bh=SgTScyAujxw5hlQDlhShWym668ReAXj3m/ns+SwRWy4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=lpI6dGcxLe+KreMzakO6nJk6ZfUpG6bcy8tLkjd2QAQrrDnq+A+1oiNTpt5NNWQgyhVFtLUYN6eYAW/VJ9ri7FiPZoUjjKGk3i+WZ42h53NK2bb3+qArNGQHJRcxUs85WvWeSLBl/3nQkF94ghwjCgLaoU/R1hZGryNHKRayZjM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Cr4UYMq7; arc=fail smtp.client-ip=40.107.159.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aA4juv1n1gxn1dRZINBnO7Xac5QaYNUYc/0jgXEB6FuAqamUWhIE6Hl7FgQh1TimKaGjgc4q5i6WriTVs+hHWkTlUwL4AYIxQFjaqVCAdrrYBkLqZ/HqQWmn4piwyHQWhxzz2bNN/rVvMIBBpgMxooVmap8zb/+SJvvahqLVapn6wBfg9WYxuVfh8YA2RohMz7x84Gs34L41vTFbJ5uuj2D4N7Sbqovl3jQVyNOzPCdU/DM+mNA5bCJ8QAI6hIL77WconcPbZBKHxRJ4g6u0B6UHhXHUoJ4UtNPRJjsz5IixLlTCyY1HDE7S20rVBTakcsQ0VL0ZvvtYqGg+48bHOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DrfXFBxaTkwG3F4vpSrKWyGG9VEG+HyW79q9UI3kISw=;
+ b=U6RIbFSnJxuWPuUovcYTLmW9p97pRhptND7VyGz8206m6r+9+pVxxp7+xOJVJjy61f3wvsnPXSldvLCR4olNkuILQKxY9Oea4Vz5DJfZ+7py7arM9n+q7M1r4xBfAyl8Z/ESLLzy0r/1dtfUWnlFEj2UNhHD+YJL55AmPLzyVzEsEWfqcaS8JbRNfWJYiM2afdPgkH+9u9sN0uqdnANp8I/uNpAzuYah75WkDVHlQH/KHY55SCmgTzGoutv6WvjSR663oAPGs4O+WZ80a++LEoOiEcNs8TPNmPXCgHY3/IVevzA1pb7TRylPvVb+n3alI/5qieY5tALoaWxamJirAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DrfXFBxaTkwG3F4vpSrKWyGG9VEG+HyW79q9UI3kISw=;
+ b=Cr4UYMq7ZvK7rSYJuM9IO9Fg+J/T8+liiLNCx/xQDNHSIeVXOiBF8C3d/n1pkXNz3JUPvJozrrrFWNJXhm4qXvkvFMWv/cv0d4/uR5Z8eES9T4KZBch/+TcpTpT3mv83h9/+2E0A676QcT261ZeBo6bDNJELu0k1LVF2kGWD3O7EWVgIN1XmJ4VK35mgUelqZtsoO71LtpXN0VZlgnPQXUAEGfIOyyuiFe245KUjeHrdnuoZ+7CJT/gaQXUgXOhinUsBZiYrKeHPw9+qchjE/EPCm/vLzmZ+AOhDYR6y6yhQR7/hwv1cj03tcyc6CesTP9IS+9NBmYhCZjXE+XUg/Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM9PR04MB8585.eurprd04.prod.outlook.com (2603:10a6:20b:438::13)
+ by AM7PR04MB6982.eurprd04.prod.outlook.com (2603:10a6:20b:dd::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.27; Tue, 5 May
+ 2026 09:34:56 +0000
+Received: from AM9PR04MB8585.eurprd04.prod.outlook.com
+ ([fe80::f010:fca8:7ef:62f4]) by AM9PR04MB8585.eurprd04.prod.outlook.com
+ ([fe80::f010:fca8:7ef:62f4%4]) with mapi id 15.20.9870.023; Tue, 5 May 2026
+ 09:34:56 +0000
+Date: Tue, 5 May 2026 12:34:51 +0300
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: linux-phy@lists.infradead.org
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-can@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org,
+	linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
+	linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+	spacemit@lists.linux.dev, UNGLinuxDriver@microchip.com,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	JC Kuo <jckuo@nvidia.com>, Johan Hovold <johan+linaro@kernel.org>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Mathias Nyman <mathias.nyman@intel.com>,
+	Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v7 phy-next 14/27] usb: gadget: tegra-xudc: avoid direct
+ dereference of phy->dev.of_node
+Message-ID: <20260505093451.ll4agt6lmlixsz5g@skbuf>
+References: <20260430110652.558622-1-vladimir.oltean@nxp.com>
+ <20260430110652.558622-15-vladimir.oltean@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260430110652.558622-15-vladimir.oltean@nxp.com>
+X-ClientProxiedBy: WA2P291CA0030.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:1f::26) To AM9PR04MB8585.eurprd04.prod.outlook.com
+ (2603:10a6:20b:438::13)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=33165; i=krzysztof.kozlowski@oss.qualcomm.com;
- h=from:subject; bh=o9D9Zw2e3v9jjEe0WlnNjCKjS7ljgxEbcFShc2nwRJo=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBp+bm0A1tXJfmjbx2zvFfyvo95f6h/p2uk39mML
- 0z6f7+4M6GJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCafm5tAAKCRDBN2bmhouD
- 1+1hD/9IvOvlYzlDsmZZaz3Jh9cob9i+jqmXcE1WDzTXNW4SMlHdlQ1iDxG4uK5+21TdvuH3c0J
- 1wrfKiEZpHuhSchRaP07qxbgljMeZby/FY8NlCeNNZQLt6/ToNbyKRoo00C0aequzRFjtUOliEW
- 8U2Y3s4S8ngCsIn30OPHawMRZbyfvcTmHh6IECUsgodxB2xNI4EKpTUfQsXLwSExUcnTcGevgUA
- 0QW4f+NBieWNKaOsiNiqkZsJ7yfw7uqH98cKGIU9WQBjUsEpJbXBG5sx7l14VGftSmd3I5CDDdP
- eGX5AiyMiS61I228PeeIN0bMk5aWVIdCj3G1NSHIhwNMLRNdY1DZQxaca3l7VDnPnjPJU8cSOpt
- w5NaSmvGrIWfeOURQNL7JBl8INE+coK/fSO7CyhMnkp89tK8NiDrztx45bx5Cv4jvgHo3iIExFN
- Jx5Di3zcyeR8vMFJ15aPEE3lgHYl1+qm2koeT23gklRS3DkPhPcdunHzHOP7ukqbtflA3qocR0R
- 3vcWzM42grZ22L/G08EUp/LoNDn5u9gim5Zz/4gmpFkfPRKt+JKnVUp0aOUBb4DrfPBaOwG7Nqt
- Cwi8aMJOv7GJ2dlnQEZpozFvA4CqXRiFJ+uC2bN/g7sR+ixm6lif80oJB2VtXxrpGgmDftYQiqu NlSiXXnxvKRG7Zg==
-X-Developer-Key: i=krzysztof.kozlowski@oss.qualcomm.com; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: xqpTGob7up5-C0R9SAD17dVuCwS6lZ7G
-X-Authority-Analysis: v=2.4 cv=d9jFDxjE c=1 sm=1 tr=0 ts=69f9b9bc cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=gOEeR9iKwsj33Yj5oN/cWg==:17
- a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22 a=EUspDBNiAAAA:8
- a=P9AO8p_xAAAA:8 a=LpQP-O61AAAA:8 a=IpJZQVW2AAAA:8 a=ihISPRCK7baVuPMuo1oA:9
- a=dawVfQjAaf238kedN5IG:22 a=BrxYzOUWrsNcVizivA99:22 a=pioyyrs4ZptJ924tMmac:22
- a=IawgGOuG5U0WyFbmm1f5:22
-X-Proofpoint-GUID: xqpTGob7up5-C0R9SAD17dVuCwS6lZ7G
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA1MDA4OCBTYWx0ZWRfX9SQPVdsSNeLt
- oxTXkA1E4M/G525NakIuK82j3k3zoPIJ9B3P1P36pLZKLBWirq4IYolWFZgAvmJdGaJEMqm88Hk
- d0ChoczRrgqlQXGZT+7GrRS0uYjjYXoAlC4l1ubbuFeAEqqiv3veLvfCqIK/tiKuvW46DuMrusX
- bcCxAPOJNcN9dC1Nfna0mSOvvLukqk+ywy992+WvQ0yn3D2Q6koh32soIWqFsXWNC2UX6shRlfa
- V/dttSIAWL72HqN19ruWrJ56UF0px0BPwrVvlW6M/GZyT59yrTqjw3J2X0XeJsX0WTm0iVGlIn/
- kN3QhlCUQzGl57vhLcbq1xYG3v7u3ylzu7al7kg/FGf5PSk01OcsFDI9wDym76UoXiJ/FwmAhYh
- hbdiLJwAZpE4t1r5uzd8B3sHQBxuSvFOMs9qTGw5AG6ZJncArbm31yJpCIHJGrxofZDerp5BI6a
- WfPQJUwZrJYfBOvA43Q==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-05_02,2026-04-30_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 impostorscore=0 spamscore=0 clxscore=1015 phishscore=0
- malwarescore=0 bulkscore=0 adultscore=0 priorityscore=1501 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605050088
-X-Rspamd-Queue-Id: A25264C9E50
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM9PR04MB8585:EE_|AM7PR04MB6982:EE_
+X-MS-Office365-Filtering-Correlation-Id: 299da94d-f720-4412-f8dc-08deaa8991a9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|10070799003|376014|1800799024|7416014|19092799006|18002099003|22082099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	2MGr/f+sIHDM+kMB9zfAPP/V2MGkg2njpS99D01eJkXeaHJlx+CUOGE13d8u3izBrYxnthzewExWM8LnJZZWvEsBh9fbKmSBlvTSxH25jIJbnkpDKby0dV+heLxkcWHTyp4LGLszjDm2DDGNpxBVOQ9+3cKwqJfOvVB2FNWpI2REdr6lFM3U8k8J2px4O0hYr6bdDU+32I6L7+py03IXd/rtFm9CgAJdxS9sUbjEaaZwfPyNxwz+yUUW1DOVwYzMJEOu6Q2sDnucMKeBJxvncXwCKfzHUtu6w/nEYKu/oA/IYLem4m+JnnLSKaFzJZV3Fg871RmkvD1ensZHxp9b5d9ereE6wTamVVMxdgoe9X5kxD/MSVxxEgd8E/oiW2R3OcQ6VEmrQbXYaB/4f9qJ+kILOb6DLZSFMrRBnhyOk6zi+wnZ3HTYkJN5PnKK54GnZ9eFM0kQGRuTswnWT/7YmNNBkVVdmn42W2YM9gaF4k3vR/aVT5oYHSs88IeAbbEGVdqsXOvQNjVtZ8IbMicXx0e2K/WInPv0koNuQlyvTQe2Q8KdWcoJCVvO8/No1RXWYYL3HlP3iVk/kbdtAEq+An2LT5qTTlP1r9NCzRLptkUpxlR4MyrYXAv+ziPqcTXHysL78NRHSMmgrpoXUdRDJbTK9LOGzgSbJjZ05fMaGtEp6rtRRo2vdhKosD2c5H6P
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8585.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(10070799003)(376014)(1800799024)(7416014)(19092799006)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?0uxuLjGGxM4YZsM1a0pkwE7ym66Ne8cfhuNj1ewmXJvz+Idpv1QylbY4nas+?=
+ =?us-ascii?Q?LLoj23JRcxSba3JOev93pD3OiuZrLNcd5gJ3TaouSgFFeF1LFqSleZCNJ6Xd?=
+ =?us-ascii?Q?f/7ipfmgtZ2a+umokjw8lg3NmtqyRUkxBdndnsiRbf1VjTGv90B2kg1Ft64O?=
+ =?us-ascii?Q?s+iuxwIcBhGFsmnn9CcCYK1/FmIOBrsR9oi2EOHZE2/621BkE3k9jDkwavxe?=
+ =?us-ascii?Q?c3QtgsG5ujYbB8RJueuUK4E2wsV1Qm8M2IfLVNI0C3PqeiT0VW5mJaq7Hz6U?=
+ =?us-ascii?Q?9vGvclv4pj91gZXIOHG/cL9evTNU/W1+nK/LXDEIg/N0qNp/h803d9rJJwue?=
+ =?us-ascii?Q?NFM4LqlXfCshWxbuueCKW8ZPd04F4aw+x1nndd2O55RfPixBTuP+3lO0UHhE?=
+ =?us-ascii?Q?b1gd39562KyPOsHRnEanZJvbMinz2z7dwfr1XC58rJRp/w5bO/uvtUseeRQw?=
+ =?us-ascii?Q?l6CeUWkUF5I9N+WhiED01/S05sQrwnl0WidKfz6CnRqb4eYAOnx2OJIeEHnU?=
+ =?us-ascii?Q?8n9ach8lLQJWy59qU0M8mPypwNhS97ENiSWWjfJDOREKSkVpuUKKOy5GP597?=
+ =?us-ascii?Q?3vF5DjMZs1u1yc0wEKJbf2N9Jb6NFnjlkB2H02AIwCLGwK9T8unOv+gf5puH?=
+ =?us-ascii?Q?LzGl/hzk5DV5sTR+SkfGqRrAcoAO6IxwmzIvr+Y5s66VuVIN/uItZl+SEXcj?=
+ =?us-ascii?Q?7hSifevmybPLq2iq3HKu2DYpdrrnbuTb+vYcwx1c0sqTiVUmwihRErPuIGsO?=
+ =?us-ascii?Q?+olT3dQqSViTu2wSLPydrrLU1LSS6MY2jiBv2aMHcJegXe2gm4FPwQcrLl0g?=
+ =?us-ascii?Q?VvSQTjc0fb6Zib+sXPdYPnhUzgPzpGu7zG2bX/XtyZWuvGfYCs99hKjNzbE7?=
+ =?us-ascii?Q?RyC7Vh2/DlAWCZdcI50D1xxRegmgZ9fOOIqzRHBXW45TI5hqrlhGRgwnx77R?=
+ =?us-ascii?Q?VAv7aGnE6k8hfGsaHvFpjT2Ns5/CFRaEkspS/G+rCnrKQ84FfWHiIHpI6jt2?=
+ =?us-ascii?Q?+Nf9viP+I/CEULK6zKySogwjsPjin4x1GpXtDjII7Gl04dnkAReBwUBYJ3fs?=
+ =?us-ascii?Q?PUI2Y1bWvi3b3MWSQ13jkCrQH6nOnroszgQb96df1u9A4bAm9QdTs8qUCU1A?=
+ =?us-ascii?Q?Dy5URD6/2BXtoWwFGmdPZIqQronUpJ/mbQXXBksKu8btNNQLUcGrY8GZz/fr?=
+ =?us-ascii?Q?HkleU0HATT6egWx3T2l65PKqWlS2Dv/gBOUiokODQnoMaSbdS8QPHo16CJ+n?=
+ =?us-ascii?Q?vtYuI5aM+5YUD+QAa8RWP++hMOKqzwJHGDC6xSkXYcBYk5Xr6fls871ge5Jk?=
+ =?us-ascii?Q?u2ZwjWqB0lsaQ+oxKpyofpOVpQcSd/zXVPOoZF4Iy+PvsCm1sMsQyzoV25HD?=
+ =?us-ascii?Q?j8xz+jNnokar4iNdhWxYQo1cn2Cd2M2UsMwdkQPqf4bKiy3QWNeRqoI0pHij?=
+ =?us-ascii?Q?2Kq1msruol1HSgYrSDtfvyEWwFaP9KjTJFbqxnPzYEE8jQ5OVYol+eCcBrJV?=
+ =?us-ascii?Q?izx/toLA7C/5NKmQDtkaCHprxT8jHdkR89HtNJklPBhKGR5fQ7MLvdBRgBlt?=
+ =?us-ascii?Q?rJYfff42a4j/v94BNfyysbc4fzbprA/aJBM1FfsFhSU/xXV18HGL49QjFrbQ?=
+ =?us-ascii?Q?ao2jt5XmSgdU2yia8W/2r2FPuvoZz/yllyZ32uXA0rJ7aOf0xTGydqhWZJUJ?=
+ =?us-ascii?Q?tytVx5cHxFRpoD2rqZrqplYuSBPKvc7f+RBGX3NzVJK9TELk5nq4kZB1325m?=
+ =?us-ascii?Q?sGCcW6NL7/dOpE+0ChsJkevlYeVQB8SWcY1z5mgPQ4iMnfc+NABnPG2MZpFW?=
+X-MS-Exchange-AntiSpam-MessageData-1: H83cw4H/FNCIvZmKkb5xxyk3u0B2OyraBGE=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 299da94d-f720-4412-f8dc-08deaa8991a9
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8585.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2026 09:34:56.6305
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CjnBXSbiSdhnvQbdPi4Jvyr4YbM4MOpRK6wxzo82WEm0hxZ/Py31EwwziY0046fcwZD04l0qR8lrVOZL0Z/EkQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6982
+X-Rspamd-Queue-Id: 618524C9EB4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[qualcomm.com,reject];
-	R_MISSING_CHARSET(0.50)[];
+X-Spamd-Result: default: False [1.84 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
+	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[qualcomm.com:s=qcppdkim1,oss.qualcomm.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-36126-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36125-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oss.qualcomm.com:dkim,oss.qualcomm.com:mid,baylibre.com:email,codeaurora.org:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,sonymobile.com:email,qualcomm.com:dkim,qualcomm.com:email];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzysztof.kozlowski@oss.qualcomm.com,linux-gpio@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[30];
+	FREEMAIL_CC(0.00)[kernel.org,linaro.org,lists.freedesktop.org,lists.infradead.org,vger.kernel.org,lists.linux.dev,microchip.com,linuxfoundation.org,nvidia.com,intel.com,gmail.com];
+	DKIM_TRACE(0.00)[nxp.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_NEQ_ENVFROM(0.00)[vladimir.oltean@nxp.com,linux-gpio@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
-	DKIM_TRACE(0.00)[qualcomm.com:+,oss.qualcomm.com:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	TAGGED_RCPT(0.00)[linux-gpio,linaro];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,args.np:url,nxp.com:dkim,nxp.com:email]
 
-By convention MODULE_DEVICE_TABLE() immediately follows the ID table it
-exports, because this is easier to read and verify.  It also makes more
-sense since #ifdef for ACPI or OF could hide both of them.
+Sashiko says:
+> commit 1ca88ec2e954b3a331eb5afb8081406d9200c8f6
+> Author: Vladimir Oltean <vladimir.oltean@nxp.com>
+> usb: gadget: tegra-xudc: avoid direct dereference of phy->dev.of_node
+> 
+> This commit replaces direct dereferences of the device tree node with a
+> parallel lookup using the phys phandle and the padctl provider. It also
+> introduces a local usbphy variable to hold the output and simplify error
+> checks.
+> 
+> > diff --git a/drivers/usb/gadget/udc/tegra-xudc.c b/drivers/usb/gadget/udc/tegra-xudc.c
+> > index e9d33be028664..cf4e6c87e44da 100644
+> > --- a/drivers/usb/gadget/udc/tegra-xudc.c
+> > +++ b/drivers/usb/gadget/udc/tegra-xudc.c
+> [ ... ]
+> > @@ -3515,7 +3516,10 @@ static int tegra_xudc_phy_get(struct tegra_xudc *xudc)
+> >  	xudc->vbus_nb.notifier_call = tegra_xudc_vbus_notify;
+> >
+> >  	for (i = 0; i < xudc->soc->num_phys; i++) {
+> > +		struct of_phandle_args args;
+> >  		char phy_name[] = "usb.-.";
+> > +		struct usb_phy *usbphy;
+> > +		int index, err;
+> 
+> This declares a local err variable inside the loop, shadowing the outer
+> err variable from the function scope.
+> Later in this loop, if devm_phy_optional_get() or devm_usb_get_phy_by_node()
+> fails, the code assigns the error code to this inner err and uses goto
+> clean_up.
+> Since the inner err is destroyed when leaving the loop block, will the
+> function incorrectly return the outer err which is still 0?
 
-Some Qualcomm pin controller drivers already have this correctly placed,
-so adjust the other drivers.  No functional impact.
+This is correct, I've removed the duplicated "err" variable declaration
+for v8.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
----
- drivers/pinctrl/qcom/pinctrl-apq8064.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-apq8084.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-eliza.c     | 2 +-
- drivers/pinctrl/qcom/pinctrl-glymur.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-hawi.c      | 2 +-
- drivers/pinctrl/qcom/pinctrl-ipq4019.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-ipq6018.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-ipq8064.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-ipq8074.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-kaanapali.c | 2 +-
- drivers/pinctrl/qcom/pinctrl-mdm9607.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-mdm9615.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-milos.c     | 2 +-
- drivers/pinctrl/qcom/pinctrl-msm8226.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-msm8660.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-msm8916.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-msm8953.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-msm8960.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-msm8976.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-msm8994.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-msm8996.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-msm8998.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-msm8x74.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-qcm2290.c   | 2 +-
- drivers/pinctrl/qcom/pinctrl-qcs404.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-qcs615.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-sc7180.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-sc7280.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-sdm660.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-sdm845.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-sdx55.c     | 2 +-
- drivers/pinctrl/qcom/pinctrl-sdx65.c     | 2 +-
- drivers/pinctrl/qcom/pinctrl-sm6115.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-sm6125.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-sm6350.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-sm6375.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-sm8150.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-sm8250.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-sm8350.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-sm8450.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-sm8550.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-sm8650.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-sm8750.c    | 2 +-
- drivers/pinctrl/qcom/pinctrl-x1e80100.c  | 2 +-
- 44 files changed, 44 insertions(+), 44 deletions(-)
+> >
+> >  		/* Get USB2 phy */
+> >  		snprintf(phy_name, sizeof(phy_name), "usb2-%d", i);
+> [ ... ]
+> > @@ -3525,22 +3529,31 @@ static int tegra_xudc_phy_get(struct tegra_xudc *xudc)
+> >  			dev_err_probe(xudc->dev, err,
+> >  				"failed to get PHY for phy-name usb2-%d\n", i);
+> >  			goto clean_up;
+> > -		} else if (xudc->utmi_phy[i]) {
+> [ ... ]
+> >  		} else if (!xudc->utmi_phy[i]) {
+> >  			/* if utmi phy is not available, ignore USB3 phy get */
+> >  			continue;
+> >  		}
+> >
+> > +		index = of_property_match_string(np, "phy-names", phy_name);
+> > +		if (index < 0)
+> > +			continue;
+> > +
+> > +		err = of_parse_phandle_with_args(np, "phys", "#phy-cells",
+> > +						 index, &args);
+> > +		if (err)
+> > +			continue;
+> 
+> If either of these device tree parsing steps fail, the code uses continue
+> to skip to the next iteration.
+> Does this unintentionally skip the entire USB3 PHY initialization block
+> that follows later in this loop for the current port?
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-apq8064.c b/drivers/pinctrl/qcom/pinctrl-apq8064.c
-index 3654913f1ae5..a47f3d4f1ea5 100644
---- a/drivers/pinctrl/qcom/pinctrl-apq8064.c
-+++ b/drivers/pinctrl/qcom/pinctrl-apq8064.c
-@@ -622,6 +622,7 @@ static const struct of_device_id apq8064_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,apq8064-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, apq8064_pinctrl_of_match);
- 
- static struct platform_driver apq8064_pinctrl_driver = {
- 	.driver = {
-@@ -646,4 +647,3 @@ module_exit(apq8064_pinctrl_exit);
- MODULE_AUTHOR("Bjorn Andersson <bjorn.andersson@sonymobile.com>");
- MODULE_DESCRIPTION("Qualcomm APQ8064 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, apq8064_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-apq8084.c b/drivers/pinctrl/qcom/pinctrl-apq8084.c
-index 9fdbe6743512..e3c1f86aba7d 100644
---- a/drivers/pinctrl/qcom/pinctrl-apq8084.c
-+++ b/drivers/pinctrl/qcom/pinctrl-apq8084.c
-@@ -1198,6 +1198,7 @@ static const struct of_device_id apq8084_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,apq8084-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, apq8084_pinctrl_of_match);
- 
- static struct platform_driver apq8084_pinctrl_driver = {
- 	.driver = {
-@@ -1221,4 +1222,3 @@ module_exit(apq8084_pinctrl_exit);
- 
- MODULE_DESCRIPTION("Qualcomm APQ8084 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, apq8084_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-eliza.c b/drivers/pinctrl/qcom/pinctrl-eliza.c
-index c1f756cbcdeb..1eb690d07e18 100644
---- a/drivers/pinctrl/qcom/pinctrl-eliza.c
-+++ b/drivers/pinctrl/qcom/pinctrl-eliza.c
-@@ -1519,6 +1519,7 @@ static const struct of_device_id eliza_tlmm_of_match[] = {
- 	{ .compatible = "qcom,eliza-tlmm", },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, eliza_tlmm_of_match);
- 
- static struct platform_driver eliza_tlmm_driver = {
- 	.driver = {
-@@ -1542,4 +1543,3 @@ module_exit(eliza_tlmm_exit);
- 
- MODULE_DESCRIPTION("QTI Eliza TLMM driver");
- MODULE_LICENSE("GPL");
--MODULE_DEVICE_TABLE(of, eliza_tlmm_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-glymur.c b/drivers/pinctrl/qcom/pinctrl-glymur.c
-index 9838c7839923..20f076e59375 100644
---- a/drivers/pinctrl/qcom/pinctrl-glymur.c
-+++ b/drivers/pinctrl/qcom/pinctrl-glymur.c
-@@ -1777,6 +1777,7 @@ static const struct of_device_id glymur_tlmm_of_match[] = {
- 	{ .compatible = "qcom,mahua-tlmm", .data = &mahua_tlmm },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, glymur_tlmm_of_match);
- 
- static int glymur_tlmm_probe(struct platform_device *pdev)
- {
-@@ -1811,4 +1812,3 @@ module_exit(glymur_tlmm_exit);
- 
- MODULE_DESCRIPTION("QTI Glymur TLMM driver");
- MODULE_LICENSE("GPL");
--MODULE_DEVICE_TABLE(of, glymur_tlmm_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-hawi.c b/drivers/pinctrl/qcom/pinctrl-hawi.c
-index 5c7894f3b9cb..cdde69e954a7 100644
---- a/drivers/pinctrl/qcom/pinctrl-hawi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-hawi.c
-@@ -1584,6 +1584,7 @@ static const struct of_device_id hawi_tlmm_of_match[] = {
- 	{ .compatible = "qcom,hawi-tlmm", },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, hawi_tlmm_of_match);
- 
- static struct platform_driver hawi_tlmm_driver = {
- 	.driver = {
-@@ -1607,4 +1608,3 @@ module_exit(hawi_tlmm_exit);
- 
- MODULE_DESCRIPTION("QTI Hawi TLMM driver");
- MODULE_LICENSE("GPL");
--MODULE_DEVICE_TABLE(of, hawi_tlmm_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq4019.c b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-index 05fdd73b951e..adf7c8631f72 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-@@ -702,6 +702,7 @@ static const struct of_device_id ipq4019_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,ipq4019-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, ipq4019_pinctrl_of_match);
- 
- static struct platform_driver ipq4019_pinctrl_driver = {
- 	.driver = {
-@@ -725,4 +726,3 @@ module_exit(ipq4019_pinctrl_exit);
- 
- MODULE_DESCRIPTION("Qualcomm ipq4019 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, ipq4019_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq6018.c b/drivers/pinctrl/qcom/pinctrl-ipq6018.c
-index cc83f9362a85..9a42e343ff17 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq6018.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq6018.c
-@@ -1072,6 +1072,7 @@ static const struct of_device_id ipq6018_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,ipq6018-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, ipq6018_pinctrl_of_match);
- 
- static struct platform_driver ipq6018_pinctrl_driver = {
- 	.driver = {
-@@ -1095,4 +1096,3 @@ module_exit(ipq6018_pinctrl_exit);
- 
- MODULE_DESCRIPTION("QTI ipq6018 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, ipq6018_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq8064.c b/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-index 0a9e357e64c6..78d320d56be6 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-@@ -624,6 +624,7 @@ static const struct of_device_id ipq8064_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,ipq8064-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, ipq8064_pinctrl_of_match);
- 
- static struct platform_driver ipq8064_pinctrl_driver = {
- 	.driver = {
-@@ -648,4 +649,3 @@ module_exit(ipq8064_pinctrl_exit);
- MODULE_AUTHOR("Andy Gross <agross@codeaurora.org>");
- MODULE_DESCRIPTION("Qualcomm IPQ8064 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, ipq8064_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq8074.c b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
-index 64ce8ea8f544..0b95f52adcc3 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq8074.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
-@@ -1033,6 +1033,7 @@ static const struct of_device_id ipq8074_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,ipq8074-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, ipq8074_pinctrl_of_match);
- 
- static struct platform_driver ipq8074_pinctrl_driver = {
- 	.driver = {
-@@ -1056,4 +1057,3 @@ module_exit(ipq8074_pinctrl_exit);
- 
- MODULE_DESCRIPTION("Qualcomm ipq8074 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, ipq8074_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-kaanapali.c b/drivers/pinctrl/qcom/pinctrl-kaanapali.c
-index 5cc45b9c55ab..e95ac064b84c 100644
---- a/drivers/pinctrl/qcom/pinctrl-kaanapali.c
-+++ b/drivers/pinctrl/qcom/pinctrl-kaanapali.c
-@@ -1774,6 +1774,7 @@ static const struct of_device_id kaanapali_tlmm_of_match[] = {
- 	{ .compatible = "qcom,kaanapali-tlmm",},
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, kaanapali_tlmm_of_match);
- 
- static struct platform_driver kaanapali_tlmm_driver = {
- 	.driver = {
-@@ -1797,4 +1798,3 @@ module_exit(kaanapali_tlmm_exit);
- 
- MODULE_DESCRIPTION("QTI Kaanapali TLMM driver");
- MODULE_LICENSE("GPL");
--MODULE_DEVICE_TABLE(of, kaanapali_tlmm_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-mdm9607.c b/drivers/pinctrl/qcom/pinctrl-mdm9607.c
-index 5794b0a11010..ce61eb415755 100644
---- a/drivers/pinctrl/qcom/pinctrl-mdm9607.c
-+++ b/drivers/pinctrl/qcom/pinctrl-mdm9607.c
-@@ -1050,6 +1050,7 @@ static const struct of_device_id mdm9607_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,mdm9607-tlmm", },
- 	{ }
- };
-+MODULE_DEVICE_TABLE(of, mdm9607_pinctrl_of_match);
- 
- static struct platform_driver mdm9607_pinctrl_driver = {
- 	.driver = {
-@@ -1073,4 +1074,3 @@ module_exit(mdm9607_pinctrl_exit);
- 
- MODULE_DESCRIPTION("Qualcomm mdm9607 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, mdm9607_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-mdm9615.c b/drivers/pinctrl/qcom/pinctrl-mdm9615.c
-index 729fe3d7e14e..f87e4d9a8f4f 100644
---- a/drivers/pinctrl/qcom/pinctrl-mdm9615.c
-+++ b/drivers/pinctrl/qcom/pinctrl-mdm9615.c
-@@ -439,6 +439,7 @@ static const struct of_device_id mdm9615_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,mdm9615-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, mdm9615_pinctrl_of_match);
- 
- static struct platform_driver mdm9615_pinctrl_driver = {
- 	.driver = {
-@@ -463,4 +464,3 @@ module_exit(mdm9615_pinctrl_exit);
- MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
- MODULE_DESCRIPTION("Qualcomm MDM9615 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, mdm9615_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-milos.c b/drivers/pinctrl/qcom/pinctrl-milos.c
-index 74b5253257af..f5079a0ce0a3 100644
---- a/drivers/pinctrl/qcom/pinctrl-milos.c
-+++ b/drivers/pinctrl/qcom/pinctrl-milos.c
-@@ -1310,6 +1310,7 @@ static const struct of_device_id milos_tlmm_of_match[] = {
- 	{ .compatible = "qcom,milos-tlmm" },
- 	{ /* sentinel */ }
- };
-+MODULE_DEVICE_TABLE(of, milos_tlmm_of_match);
- 
- static struct platform_driver milos_tlmm_driver = {
- 	.driver = {
-@@ -1333,4 +1334,3 @@ module_exit(milos_tlmm_exit);
- 
- MODULE_DESCRIPTION("QTI Milos TLMM driver");
- MODULE_LICENSE("GPL");
--MODULE_DEVICE_TABLE(of, milos_tlmm_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8226.c b/drivers/pinctrl/qcom/pinctrl-msm8226.c
-index d27b7599ea83..6f02e7c2499e 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8226.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8226.c
-@@ -645,6 +645,7 @@ static const struct of_device_id msm8226_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,msm8226-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, msm8226_pinctrl_of_match);
- 
- static struct platform_driver msm8226_pinctrl_driver = {
- 	.driver = {
-@@ -669,4 +670,3 @@ module_exit(msm8226_pinctrl_exit);
- MODULE_AUTHOR("Bartosz Dudziak <bartosz.dudziak@snejp.pl>");
- MODULE_DESCRIPTION("Qualcomm MSM8226 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, msm8226_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8660.c b/drivers/pinctrl/qcom/pinctrl-msm8660.c
-index 5ded00396cd9..5b28a1c21a88 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8660.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8660.c
-@@ -974,6 +974,7 @@ static const struct of_device_id msm8660_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,msm8660-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, msm8660_pinctrl_of_match);
- 
- static struct platform_driver msm8660_pinctrl_driver = {
- 	.driver = {
-@@ -998,4 +999,3 @@ module_exit(msm8660_pinctrl_exit);
- MODULE_AUTHOR("Bjorn Andersson <bjorn.andersson@sonymobile.com>");
- MODULE_DESCRIPTION("Qualcomm MSM8660 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, msm8660_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8916.c b/drivers/pinctrl/qcom/pinctrl-msm8916.c
-index 709c5d1d4d0a..d115035ff96a 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8916.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8916.c
-@@ -960,6 +960,7 @@ static const struct of_device_id msm8916_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,msm8916-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, msm8916_pinctrl_of_match);
- 
- static struct platform_driver msm8916_pinctrl_driver = {
- 	.driver = {
-@@ -983,4 +984,3 @@ module_exit(msm8916_pinctrl_exit);
- 
- MODULE_DESCRIPTION("Qualcomm msm8916 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, msm8916_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8953.c b/drivers/pinctrl/qcom/pinctrl-msm8953.c
-index 02ea89f5feaa..d537fdaae148 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8953.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8953.c
-@@ -1807,6 +1807,7 @@ static const struct of_device_id msm8953_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,msm8953-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, msm8953_pinctrl_of_match);
- 
- static struct platform_driver msm8953_pinctrl_driver = {
- 	.driver = {
-@@ -1830,4 +1831,3 @@ module_exit(msm8953_pinctrl_exit);
- 
- MODULE_DESCRIPTION("QTI msm8953 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, msm8953_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8960.c b/drivers/pinctrl/qcom/pinctrl-msm8960.c
-index 2fb15208aba0..a373150468ca 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8960.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8960.c
-@@ -1239,6 +1239,7 @@ static const struct of_device_id msm8960_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,msm8960-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, msm8960_pinctrl_of_match);
- 
- static struct platform_driver msm8960_pinctrl_driver = {
- 	.driver = {
-@@ -1263,4 +1264,3 @@ module_exit(msm8960_pinctrl_exit);
- MODULE_AUTHOR("Bjorn Andersson <bjorn.andersson@sonymobile.com>");
- MODULE_DESCRIPTION("Qualcomm MSM8960 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, msm8960_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8976.c b/drivers/pinctrl/qcom/pinctrl-msm8976.c
-index 906a90778b97..bba3c87d8144 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8976.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8976.c
-@@ -1087,6 +1087,7 @@ static const struct of_device_id msm8976_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,msm8976-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, msm8976_pinctrl_of_match);
- 
- static struct platform_driver msm8976_pinctrl_driver = {
- 	.driver = {
-@@ -1110,4 +1111,3 @@ module_exit(msm8976_pinctrl_exit);
- 
- MODULE_DESCRIPTION("Qualcomm msm8976 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, msm8976_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8994.c b/drivers/pinctrl/qcom/pinctrl-msm8994.c
-index ecbe6b91d1da..fdaa67c5869f 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8994.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8994.c
-@@ -1334,6 +1334,7 @@ static const struct of_device_id msm8994_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,msm8994-pinctrl", },
- 	{ }
- };
-+MODULE_DEVICE_TABLE(of, msm8994_pinctrl_of_match);
- 
- static struct platform_driver msm8994_pinctrl_driver = {
- 	.driver = {
-@@ -1357,4 +1358,3 @@ module_exit(msm8994_pinctrl_exit);
- 
- MODULE_DESCRIPTION("Qualcomm MSM8994 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, msm8994_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8996.c b/drivers/pinctrl/qcom/pinctrl-msm8996.c
-index 73b07a10a957..332b18a8fa9c 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8996.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8996.c
-@@ -1911,6 +1911,7 @@ static const struct of_device_id msm8996_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,msm8996-pinctrl", },
- 	{ }
- };
-+MODULE_DEVICE_TABLE(of, msm8996_pinctrl_of_match);
- 
- static struct platform_driver msm8996_pinctrl_driver = {
- 	.driver = {
-@@ -1934,4 +1935,3 @@ module_exit(msm8996_pinctrl_exit);
- 
- MODULE_DESCRIPTION("Qualcomm msm8996 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, msm8996_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8998.c b/drivers/pinctrl/qcom/pinctrl-msm8998.c
-index dcf11b79e562..0552c8212b29 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8998.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8998.c
-@@ -1525,6 +1525,7 @@ static const struct of_device_id msm8998_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,msm8998-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, msm8998_pinctrl_of_match);
- 
- static struct platform_driver msm8998_pinctrl_driver = {
- 	.driver = {
-@@ -1548,4 +1549,3 @@ module_exit(msm8998_pinctrl_exit);
- 
- MODULE_DESCRIPTION("QTI msm8998 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, msm8998_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm8x74.c b/drivers/pinctrl/qcom/pinctrl-msm8x74.c
-index ff432ec5815a..9422629ec6ca 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm8x74.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm8x74.c
-@@ -1073,6 +1073,7 @@ static const struct of_device_id msm8x74_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,msm8974-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, msm8x74_pinctrl_of_match);
- 
- static struct platform_driver msm8x74_pinctrl_driver = {
- 	.driver = {
-@@ -1097,5 +1098,4 @@ module_exit(msm8x74_pinctrl_exit);
- MODULE_AUTHOR("Bjorn Andersson <bjorn.andersson@sonymobile.com>");
- MODULE_DESCRIPTION("Qualcomm MSM8x74 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, msm8x74_pinctrl_of_match);
- 
-diff --git a/drivers/pinctrl/qcom/pinctrl-qcm2290.c b/drivers/pinctrl/qcom/pinctrl-qcm2290.c
-index 3b28ac498885..d20b5bd329fb 100644
---- a/drivers/pinctrl/qcom/pinctrl-qcm2290.c
-+++ b/drivers/pinctrl/qcom/pinctrl-qcm2290.c
-@@ -1124,6 +1124,7 @@ static const struct of_device_id qcm2290_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,qcm2290-tlmm", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, qcm2290_pinctrl_of_match);
- 
- static struct platform_driver qcm2290_pinctrl_driver = {
- 	.driver = {
-@@ -1147,4 +1148,3 @@ module_exit(qcm2290_pinctrl_exit);
- 
- MODULE_DESCRIPTION("QTI QCM2290 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, qcm2290_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-qcs404.c b/drivers/pinctrl/qcom/pinctrl-qcs404.c
-index 1048a7093b2e..01c0f0b2839a 100644
---- a/drivers/pinctrl/qcom/pinctrl-qcs404.c
-+++ b/drivers/pinctrl/qcom/pinctrl-qcs404.c
-@@ -1635,6 +1635,7 @@ static const struct of_device_id qcs404_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,qcs404-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, qcs404_pinctrl_of_match);
- 
- static struct platform_driver qcs404_pinctrl_driver = {
- 	.driver = {
-@@ -1658,4 +1659,3 @@ module_exit(qcs404_pinctrl_exit);
- 
- MODULE_DESCRIPTION("Qualcomm QCS404 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, qcs404_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-qcs615.c b/drivers/pinctrl/qcom/pinctrl-qcs615.c
-index 0ed4332d989e..9b4b95771d0b 100644
---- a/drivers/pinctrl/qcom/pinctrl-qcs615.c
-+++ b/drivers/pinctrl/qcom/pinctrl-qcs615.c
-@@ -1073,6 +1073,7 @@ static const struct of_device_id qcs615_tlmm_of_match[] = {
- 	},
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, qcs615_tlmm_of_match);
- 
- static int qcs615_tlmm_probe(struct platform_device *pdev)
- {
-@@ -1101,4 +1102,3 @@ module_exit(qcs615_tlmm_exit);
- 
- MODULE_DESCRIPTION("QTI QCS615 TLMM driver");
- MODULE_LICENSE("GPL");
--MODULE_DEVICE_TABLE(of, qcs615_tlmm_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-index 01cfcb416f33..a02a9a78a557 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-@@ -1148,6 +1148,7 @@ static const struct of_device_id sc7180_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,sc7180-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, sc7180_pinctrl_of_match);
- 
- static struct platform_driver sc7180_pinctrl_driver = {
- 	.driver = {
-@@ -1172,4 +1173,3 @@ module_exit(sc7180_pinctrl_exit);
- 
- MODULE_DESCRIPTION("QTI sc7180 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, sc7180_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280.c b/drivers/pinctrl/qcom/pinctrl-sc7280.c
-index f22fd56efd89..bb32a56649df 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc7280.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc7280.c
-@@ -1494,6 +1494,7 @@ static const struct of_device_id sc7280_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,sc7280-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, sc7280_pinctrl_of_match);
- 
- static struct platform_driver sc7280_pinctrl_driver = {
- 	.driver = {
-@@ -1518,4 +1519,3 @@ module_exit(sc7280_pinctrl_exit);
- 
- MODULE_DESCRIPTION("QTI sc7280 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, sc7280_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdm660.c b/drivers/pinctrl/qcom/pinctrl-sdm660.c
-index ab0368653d30..c4a1ec90a341 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdm660.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdm660.c
-@@ -1433,6 +1433,7 @@ static const struct of_device_id sdm660_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,sdm630-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, sdm660_pinctrl_of_match);
- 
- static struct platform_driver sdm660_pinctrl_driver = {
- 	.driver = {
-@@ -1456,4 +1457,3 @@ module_exit(sdm660_pinctrl_exit);
- 
- MODULE_DESCRIPTION("QTI sdm660 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, sdm660_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-index b5ed2311b70e..48fbe3623e17 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-@@ -1339,6 +1339,7 @@ static const struct of_device_id sdm845_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,sdm845-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, sdm845_pinctrl_of_match);
- 
- static struct platform_driver sdm845_pinctrl_driver = {
- 	.driver = {
-@@ -1364,4 +1365,3 @@ module_exit(sdm845_pinctrl_exit);
- 
- MODULE_DESCRIPTION("QTI sdm845 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, sdm845_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdx55.c b/drivers/pinctrl/qcom/pinctrl-sdx55.c
-index 3e87f5927924..656a0726db92 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdx55.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdx55.c
-@@ -981,6 +981,7 @@ static const struct of_device_id sdx55_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,sdx55-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, sdx55_pinctrl_of_match);
- 
- static struct platform_driver sdx55_pinctrl_driver = {
- 	.driver = {
-@@ -1004,4 +1005,3 @@ module_exit(sdx55_pinctrl_exit);
- 
- MODULE_DESCRIPTION("QTI sdx55 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, sdx55_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdx65.c b/drivers/pinctrl/qcom/pinctrl-sdx65.c
-index 4e787341b2a2..dde8993ca9b1 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdx65.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdx65.c
-@@ -929,6 +929,7 @@ static const struct of_device_id sdx65_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,sdx65-tlmm", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, sdx65_pinctrl_of_match);
- 
- static struct platform_driver sdx65_pinctrl_driver = {
- 	.driver = {
-@@ -952,4 +953,3 @@ module_exit(sdx65_pinctrl_exit);
- 
- MODULE_DESCRIPTION("QTI sdx65 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, sdx65_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm6115.c b/drivers/pinctrl/qcom/pinctrl-sm6115.c
-index 234451fbf47b..e36716514f1f 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm6115.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm6115.c
-@@ -897,6 +897,7 @@ static const struct of_device_id sm6115_tlmm_of_match[] = {
- 	{ .compatible = "qcom,sm6115-tlmm", },
- 	{ }
- };
-+MODULE_DEVICE_TABLE(of, sm6115_tlmm_of_match);
- 
- static struct platform_driver sm6115_tlmm_driver = {
- 	.driver = {
-@@ -920,4 +921,3 @@ module_exit(sm6115_tlmm_exit);
- 
- MODULE_DESCRIPTION("QTI sm6115 tlmm driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, sm6115_tlmm_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm6125.c b/drivers/pinctrl/qcom/pinctrl-sm6125.c
-index 2cf9136860fc..7447ef9a4931 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm6125.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm6125.c
-@@ -1256,6 +1256,7 @@ static const struct of_device_id sm6125_tlmm_of_match[] = {
- 	{ .compatible = "qcom,sm6125-tlmm", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, sm6125_tlmm_of_match);
- 
- static struct platform_driver sm6125_tlmm_driver = {
- 	.driver = {
-@@ -1279,4 +1280,3 @@ module_exit(sm6125_tlmm_exit);
- 
- MODULE_DESCRIPTION("QTI sm6125 TLMM driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, sm6125_tlmm_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm6350.c b/drivers/pinctrl/qcom/pinctrl-sm6350.c
-index eb8cd4aa8a97..4089c96ff736 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm6350.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm6350.c
-@@ -1363,6 +1363,7 @@ static const struct of_device_id sm6350_tlmm_of_match[] = {
- 	{ .compatible = "qcom,sm6350-tlmm" },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, sm6350_tlmm_of_match);
- 
- static struct platform_driver sm6350_tlmm_driver = {
- 	.driver = {
-@@ -1386,4 +1387,3 @@ module_exit(sm6350_tlmm_exit);
- 
- MODULE_DESCRIPTION("QTI SM6350 TLMM driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, sm6350_tlmm_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm6375.c b/drivers/pinctrl/qcom/pinctrl-sm6375.c
-index d4547dd9f21f..8da71d940b90 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm6375.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm6375.c
-@@ -1506,6 +1506,7 @@ static const struct of_device_id sm6375_tlmm_of_match[] = {
- 	{ .compatible = "qcom,sm6375-tlmm", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, sm6375_tlmm_of_match);
- 
- static struct platform_driver sm6375_tlmm_driver = {
- 	.driver = {
-@@ -1529,4 +1530,3 @@ module_exit(sm6375_tlmm_exit);
- 
- MODULE_DESCRIPTION("QTI SM6375 TLMM driver");
- MODULE_LICENSE("GPL");
--MODULE_DEVICE_TABLE(of, sm6375_tlmm_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8150.c b/drivers/pinctrl/qcom/pinctrl-sm8150.c
-index 0767261f5149..3c29de948034 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8150.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8150.c
-@@ -1532,6 +1532,7 @@ static const struct of_device_id sm8150_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,sm8150-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, sm8150_pinctrl_of_match);
- 
- static struct platform_driver sm8150_pinctrl_driver = {
- 	.driver = {
-@@ -1555,4 +1556,3 @@ module_exit(sm8150_pinctrl_exit);
- 
- MODULE_DESCRIPTION("QTI sm8150 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, sm8150_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8250.c b/drivers/pinctrl/qcom/pinctrl-sm8250.c
-index f73f3b052de4..abf5f68ef62f 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8250.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8250.c
-@@ -1354,6 +1354,7 @@ static const struct of_device_id sm8250_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,sm8250-pinctrl", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, sm8250_pinctrl_of_match);
- 
- static struct platform_driver sm8250_pinctrl_driver = {
- 	.driver = {
-@@ -1377,4 +1378,3 @@ module_exit(sm8250_pinctrl_exit);
- 
- MODULE_DESCRIPTION("QTI sm8250 pinctrl driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, sm8250_pinctrl_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8350.c b/drivers/pinctrl/qcom/pinctrl-sm8350.c
-index 377ddfc77e4f..8bd278c97171 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8350.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8350.c
-@@ -1632,6 +1632,7 @@ static const struct of_device_id sm8350_tlmm_of_match[] = {
- 	{ .compatible = "qcom,sm8350-tlmm", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, sm8350_tlmm_of_match);
- 
- static struct platform_driver sm8350_tlmm_driver = {
- 	.driver = {
-@@ -1655,4 +1656,3 @@ module_exit(sm8350_tlmm_exit);
- 
- MODULE_DESCRIPTION("QTI SM8350 TLMM driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, sm8350_tlmm_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8450.c b/drivers/pinctrl/qcom/pinctrl-sm8450.c
-index a1d84074ea49..8ca5b6e15e6c 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8450.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8450.c
-@@ -1667,6 +1667,7 @@ static const struct of_device_id sm8450_tlmm_of_match[] = {
- 	{ .compatible = "qcom,sm8450-tlmm", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, sm8450_tlmm_of_match);
- 
- static struct platform_driver sm8450_tlmm_driver = {
- 	.driver = {
-@@ -1690,4 +1691,3 @@ module_exit(sm8450_tlmm_exit);
- 
- MODULE_DESCRIPTION("QTI SM8450 TLMM driver");
- MODULE_LICENSE("GPL v2");
--MODULE_DEVICE_TABLE(of, sm8450_tlmm_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8550.c b/drivers/pinctrl/qcom/pinctrl-sm8550.c
-index cc8fbf4d5e84..d12256d970a0 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8550.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8550.c
-@@ -1752,6 +1752,7 @@ static const struct of_device_id sm8550_tlmm_of_match[] = {
- 	{ .compatible = "qcom,sm8550-tlmm", },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, sm8550_tlmm_of_match);
- 
- static struct platform_driver sm8550_tlmm_driver = {
- 	.driver = {
-@@ -1775,4 +1776,3 @@ module_exit(sm8550_tlmm_exit);
- 
- MODULE_DESCRIPTION("QTI SM8550 TLMM driver");
- MODULE_LICENSE("GPL");
--MODULE_DEVICE_TABLE(of, sm8550_tlmm_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8650.c b/drivers/pinctrl/qcom/pinctrl-sm8650.c
-index ab41292e3b4e..cf57d226c47f 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8650.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8650.c
-@@ -1732,6 +1732,7 @@ static const struct of_device_id sm8650_tlmm_of_match[] = {
- 	{ .compatible = "qcom,sm8650-tlmm", },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, sm8650_tlmm_of_match);
- 
- static struct platform_driver sm8650_tlmm_driver = {
- 	.driver = {
-@@ -1755,4 +1756,3 @@ module_exit(sm8650_tlmm_exit);
- 
- MODULE_DESCRIPTION("QTI SM8650 TLMM driver");
- MODULE_LICENSE("GPL");
--MODULE_DEVICE_TABLE(of, sm8650_tlmm_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8750.c b/drivers/pinctrl/qcom/pinctrl-sm8750.c
-index 4cfe73f30fac..f27e55c088d5 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8750.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8750.c
-@@ -1701,6 +1701,7 @@ static const struct of_device_id sm8750_tlmm_of_match[] = {
- 	{ .compatible = "qcom,sm8750-tlmm", },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, sm8750_tlmm_of_match);
- 
- static struct platform_driver sm8750_tlmm_driver = {
- 	.driver = {
-@@ -1724,4 +1725,3 @@ module_exit(sm8750_tlmm_exit);
- 
- MODULE_DESCRIPTION("QTI SM8750 TLMM driver");
- MODULE_LICENSE("GPL");
--MODULE_DEVICE_TABLE(of, sm8750_tlmm_of_match);
-diff --git a/drivers/pinctrl/qcom/pinctrl-x1e80100.c b/drivers/pinctrl/qcom/pinctrl-x1e80100.c
-index a9fe75fc45e5..8d2b8246170b 100644
---- a/drivers/pinctrl/qcom/pinctrl-x1e80100.c
-+++ b/drivers/pinctrl/qcom/pinctrl-x1e80100.c
-@@ -1851,6 +1851,7 @@ static const struct of_device_id x1e80100_pinctrl_of_match[] = {
- 	{ .compatible = "qcom,x1e80100-tlmm", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, x1e80100_pinctrl_of_match);
- 
- static struct platform_driver x1e80100_pinctrl_driver = {
- 	.driver = {
-@@ -1874,4 +1875,3 @@ module_exit(x1e80100_pinctrl_exit);
- 
- MODULE_DESCRIPTION("QTI X1E80100 TLMM pinctrl driver");
- MODULE_LICENSE("GPL");
--MODULE_DEVICE_TABLE(of, x1e80100_pinctrl_of_match);
--- 
-2.51.0
+This is correct, although theoretically of_property_match_string() and
+of_parse_phandle_with_args() should not fail as long as devm_phy_optional_get()
+succeeded for that very same phy_name starting from the very same OF node.
+But nonetheless, if this happens due to bugs, I've instead treated the
+condition as fatal and printed error messages for v8.
 
+> > +
+> > +		/* Get usb-phy, if utmi phy is available */
+> > +		usbphy = devm_usb_get_phy_by_node(xudc->dev, args.np, NULL);
+> > +		of_node_put(args.np);
+> [ ... ]
 
