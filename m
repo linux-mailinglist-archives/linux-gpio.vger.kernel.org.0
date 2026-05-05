@@ -1,151 +1,134 @@
-Return-Path: <linux-gpio+bounces-36173-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36175-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kGQVAPbK+Wn3EAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36173-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 12:48:22 +0200
+	id aCxiE13G+WmmDwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36175-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 12:28:45 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68AD14CBCAB
-	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 12:48:20 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED4674CB43C
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 12:28:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 28F1430ACA24
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2026 10:27:27 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 509EC3003827
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2026 10:28:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8E2B3370E4;
-	Tue,  5 May 2026 10:27:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A7D433B6D0;
+	Tue,  5 May 2026 10:28:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="mkgJVHrB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r+XBGfQj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35BA52D8DC3;
-	Tue,  5 May 2026 10:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E67430C637
+	for <linux-gpio@vger.kernel.org>; Tue,  5 May 2026 10:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777976845; cv=none; b=GxVF4zLU2EYrpoqle8UER6sZnm57Ch7mFdc4ihUq2WhQasi8gpDqpDFe0z+1nYCdaGyJhwJ1kCJCGt3OrusNlJbzRKeVBIOVGvWNNLu05k69zBTQdm/krTd1bvDqJZWDsaOz6unntZ/K1znNzFCRD4MGZ2R/X5o9fUksNQnhMGQ=
+	t=1777976914; cv=none; b=f0JuGnzKDIhb3jNqB7RwAibWzGMmm/JFwitxdVdyaZkSUucsONjUDrtLtbWvyXHgYL9SfYdLKWz1ME4hISKLl1gXMK6XBPe/FLBPjaZxN3aQj1OI6JVhq0NZCU+zBBr3152mituja0D9koH0zZWcgC8PwbUjVvSlvLhToIfxMvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777976845; c=relaxed/simple;
-	bh=buKsSZ+7jW/UO5tcyoJnJM3jwIHms8+0rSELJYgMv38=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=JaDSKTRn/mInuBRrOs9+OqCV/PgyThAOWxoDSU0DDK5DVF09VnzfOyNEAi+WHGw3gUBwNrwFa6noKpBwvXqeSxo7hOOotTE825/CPoNx/jND7x4dAendMVFNC0HcoiFi1AP5TEdRJ38/idJr6/OVYsFHcqNwYLOqnByj2CDghR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=mkgJVHrB; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 645AR5zP41151053, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1777976825; bh=buKsSZ+7jW/UO5tcyoJnJM3jwIHms8+0rSELJYgMv38=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=mkgJVHrBo+1ysTT19p5CNIRkHdmTfy4xkcVllc0UBYxsZk5VZ6e1QDEVhS/ZY34TE
-	 mp0x7Fa0NE37JJSph6OBQkGTWwv4JA+KhCptWaVLtNRibGQoqSlWvJ8kcwkCXQXf7J
-	 1+/wcZCLL1Bp1c0f55SHvnXdc5ML0tIDUO8TSncswePjN6ubADK/PAzaOji84ClvKM
-	 uxIfczzcfC04FP1R0ag385VV3Zk3T0RlJM9X1mn+W66bGu+frmw6E59aN0dYGG6pB4
-	 VAxZtmxMQF6WOI6DFHzCeH2Br37GVb5Z/XzRjKLSr+tSypF80nP0ELf+Sw99Z6bCV3
-	 yjaVo1JaVd1Lg==
-Received: from mail.realtek.com (rtkexhmbs03.realtek.com.tw[10.21.1.53])
-	by rtits2.realtek.com.tw (8.15.2/3.27/5.94) with ESMTPS id 645AR5zP41151053
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 5 May 2026 18:27:05 +0800
-Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
- RTKEXHMBS03.realtek.com.tw (10.21.1.53) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Tue, 5 May 2026 18:27:04 +0800
-Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
- RTKEXHMBS06.realtek.com.tw (10.21.1.56) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Tue, 5 May 2026 18:27:04 +0800
-Received: from RTKEXHMBS06.realtek.com.tw ([fe80::ed72:3015:2840:4458]) by
- RTKEXHMBS06.realtek.com.tw ([fe80::ed72:3015:2840:4458%10]) with mapi id
- 15.02.1748.010; Tue, 5 May 2026 18:27:04 +0800
-From: =?utf-8?B?WXUtQ2h1biBMaW4gW+ael+elkOWQm10=?= <eleanor.lin@realtek.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        "linusw@kernel.org"
-	<linusw@kernel.org>,
-        "brgl@kernel.org" <brgl@kernel.org>,
-        "robh@kernel.org"
-	<robh@kernel.org>,
-        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-        "conor+dt@kernel.org" <conor+dt@kernel.org>,
-        "afaerber@suse.com"
-	<afaerber@suse.com>,
-        =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?=
-	<tychang@realtek.com>
-CC: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-        "linux-realtek-soc@lists.infradead.org"
-	<linux-realtek-soc@lists.infradead.org>,
-        =?utf-8?B?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?= <cy.huang@realtek.com>,
-        =?utf-8?B?U3RhbmxleSBDaGFuZ1vmmIzogrLlvrdd?= <stanley_chang@realtek.com>,
-        =?utf-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>
-Subject: RE: [PATCH v2 1/4] gpio: Remove "default y" in Kconfig
-Thread-Topic: [PATCH v2 1/4] gpio: Remove "default y" in Kconfig
-Thread-Index: AQHc2JPPhFmKb15Oy0q6ziQ+KMIRSbX28IkAgAhPSpA=
-Date: Tue, 5 May 2026 10:27:04 +0000
-Message-ID: <9f28aa58bb8c441ca7b4a0e75c2947cf@realtek.com>
-References: <20260408025243.1155482-1-eleanor.lin@realtek.com>
- <20260408025243.1155482-2-eleanor.lin@realtek.com>
- <6ff75de9-6d5f-4d4a-bb19-1c06d0aa8d3a@kernel.org>
- <e1829cf5-c277-4e34-8bcf-addc27bfd69c@kernel.org>
-In-Reply-To: <e1829cf5-c277-4e34-8bcf-addc27bfd69c@kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1777976914; c=relaxed/simple;
+	bh=zytMuWjG0fiHX9INaamnKiHfY1coYLUKlKEAABYlbWw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oc7r+OueyCPjcrCGELGl2ZvB/6MZnR2xygi+r3dI42FGyTgTVk88NzliI+wOF/6RPw4qKuUHSVjlFPGcKOkvziQe6Sz69OpZxH8jMGuT/+WokQtS1OD4NevEVesamvaELCJFogXfoKQlgz/IMFjVUSl/8kVACUNGXV0Wss+7+Qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r+XBGfQj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20847C2BCFA
+	for <linux-gpio@vger.kernel.org>; Tue,  5 May 2026 10:28:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777976914;
+	bh=zytMuWjG0fiHX9INaamnKiHfY1coYLUKlKEAABYlbWw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=r+XBGfQjmEqlhCRyhvawLxMRxMqfQ8vs1qaoF8H1d1Lq7A3CvsSLHSsFL1d6EziXr
+	 fiqGCfi9rsnhRQ66tMpjqRGdlT55Ygdecf9N90TSkgSMcpAnkHmjJLypsC4G2Z8IWT
+	 trh3QJ0/ypwMnrf/XlqEij1u8tEEvFdUP2RcEALI35f4/Qwy+rc7EwGQJzSPWShQnE
+	 NiaFvFE5PxYCTv2YMmt3t67fQJTMdEq6vw9Gs+KAJkh2vDtgjse3sVynfJZlG2Dsrc
+	 7rueWHjaVpD2fIq2BIfPWlSJPv1WcBFw3TYlkIonUmYoygWBPNSs8CJoK5NobZnsVQ
+	 Z7taWD5BsRoZA==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5a85b30dd54so3872730e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2026 03:28:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9cG98o67FQa0WExU++BXuwEQlKG5Goa733EIhFt9eN+qkxs0PrtkW7HCJelRi4Gq+6uHnzbhAWGaQx@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgJ74xPENM4TfpRRnaGSbN2BnArpsEB6gFYTXNjWcPqBiyXQfR
+	51ZlJkycQCxc8f867XN/g3mAw/Ci2EmROluG06oHZBheimX3mrgSZ/5PyAUnfPAkDR9a8OuGIxz
+	5vFEzVfGvbIq9IPqCqMh4KenYn3byLCc=
+X-Received: by 2002:a05:6512:1091:b0:5a8:7652:9258 with SMTP id
+ 2adb3069b0e04-5a876529284mr2605579e87.0.1777976912811; Tue, 05 May 2026
+ 03:28:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 68AD14CBCAB
+References: <20260430-enable_wakeup_capable_gpios-v1-1-5de39bf06094@oss.qualcomm.com>
+In-Reply-To: <20260430-enable_wakeup_capable_gpios-v1-1-5de39bf06094@oss.qualcomm.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Tue, 5 May 2026 12:28:21 +0200
+X-Gmail-Original-Message-ID: <CAD++jLnX5J+GncH1U6zE40eErQ1LeNiPmQqZe5UewR3S4VhBOw@mail.gmail.com>
+X-Gm-Features: AVHnY4JBZ0_aB4B7_nUxwn9lnfxpk_Z6f18SRCw7UeiainLcID73YORf9XCZVRs
+Message-ID: <CAD++jLnX5J+GncH1U6zE40eErQ1LeNiPmQqZe5UewR3S4VhBOw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: qcom: Unconditionally mark gpio as wakeup enable
+To: Sneh Mankad <sneh.mankad@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: ED4674CB43C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.06 / 15.00];
-	MIME_BASE64_TEXT_BOGUS(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[realtek.com,none];
-	R_DKIM_ALLOW(-0.20)[realtek.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36173-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[realtek.com:dkim,realtek.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	DKIM_TRACE(0.00)[realtek.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[eleanor.lin@realtek.com,linux-gpio@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36175-lists,linux-gpio=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[qualcomm.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,mail.gmail.com:mid]
 
-PiBPbiAzMC8wNC8yMDI2IDEzOjIzLCBLcnp5c3p0b2YgS296bG93c2tpIHdyb3RlOg0KPiA+IE9u
-IDA4LzA0LzIwMjYgMDQ6NTIsIFl1LUNodW4gTGluIHdyb3RlOg0KPiA+PiBSZW1vdmUgdGhlIGRl
-ZmF1bHQgeSB0byBhdm9pZCBibG9hdGluZyB0aGUgYnVpbGQgZm9yIG5vbi1SZWFsdGVrDQo+ID4+
-IHBsYXRmb3JtcyB3aGVuIENPTVBJTEVfVEVTVCBpcyBlbmFibGUgb24gb3RoZXIgcGxhdGZvcm1z
-Lg0KPiA+Pg0KPiA+DQo+ID4gV2h5IGlzbid0IHRoaXMgZHJpdmVyIGltcG9ydGFudCBmb3IgUmVh
-bHRlayBTb0M/IFRoaXMgc2hvdWxkIGJlDQo+ID4gZXhwbGFpbmVkLCBvdGhlcndpc2UgcHJvcGVy
-IGZpeCBpcyBkZWZhdWx0IGZvciBBUkNIX1JFQUxURUsuDQo+IA0KPiBBbmQgeW91IHdlcmUga2lu
-ZCBvZiBhc2tlZCBmb3IgaXQgYXQgdjEuLi4NCj4gDQo+IEJlc3QgcmVnYXJkcywNCj4gS3J6eXN6
-dG9mDQoNCkkgd2FzIGFzc3VtaW5nIG91ciBkZWZjb25maWcgYWxyZWFkeSBlbmFibGVzIHRoaXMg
-ZHJpdmVyIGFzIGJ1aWx0LWluLCBzbw0Kc2ltcGx5IGRyb3BwaW5nICJkZWZhdWx0IHkiIHNlZW1l
-ZCBzdWZmaWNpZW50Lg0KDQpJIHdpbGwgY2hhbmdlIGl0ICdkZWZhdWx0IEFSQ0hfUkVBTFRFSycu
-DQoNCkJlc3QgcmVnYXJkcywNCll1LUNodW4NCg==
+On Thu, Apr 30, 2026 at 7:54=E2=80=AFAM Sneh Mankad
+<sneh.mankad@oss.qualcomm.com> wrote:
+
+> The wakeup enable bit needs to be set irrespective of the SoC using PDC o=
+r
+> MPM as wakeup capable irqchip to allow the GPIO interrupts to be forwarde=
+d
+> to parent irqchip.
+>
+> This is set only for PDC irqchip using additional check skip_wake_irqs
+> making it impossible for MPM irqchip to detect the GPIO interrupt during
+> SoC low power mode since for MPM irqchip the skip_wake_irqs is always
+> false.
+>
+> Remove skip_wake_irqs condition when setting wakeup enable bit to allow
+> forwarding GPIO interrupts for SoCs using MPM irqchip too.
+>
+> Fixes: 76b446f5b86e ("pinctrl: qcom: handle intr_target_reg wakeup_presen=
+t/enable bits")
+> Signed-off-by: Sneh Mankad <sneh.mankad@oss.qualcomm.com>
+
+Good work here, also super-dangerous so if some more Qualcomm
+engineers could pitch in on this patch it'd be great.
+
+Is this an urgent (-rc) or nonurgent (next) fix?
+
+Yours,
+Linus Walleij
 
