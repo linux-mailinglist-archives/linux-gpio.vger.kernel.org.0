@@ -1,168 +1,153 @@
-Return-Path: <linux-gpio+bounces-36189-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36190-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sDkyAl3b+WkmEwMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36189-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 13:58:21 +0200
+	id WHLKEELd+WlPEwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36190-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 14:06:26 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FB654CD18E
-	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 13:58:20 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 805714CD333
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 14:06:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DDE0B3014FF0
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2026 11:58:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 18673300F9D3
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2026 12:01:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3A4F39B482;
-	Tue,  5 May 2026 11:58:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36CE240629A;
+	Tue,  5 May 2026 12:01:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cEzCYbvz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V+9QHRIh"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B351C383C6C;
-	Tue,  5 May 2026 11:58:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE06401A34
+	for <linux-gpio@vger.kernel.org>; Tue,  5 May 2026 12:01:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777982297; cv=none; b=jDkUoAyESsuEBQ0VfPIFfFsPbz2SMF9448+oaFt+UtTZPvUQSYtF+mVHHvW29a3QG5AVjwZR3vL4K32oMAgJ/eYJiSanVUQzAVGGpYK/XqW2UC8uIrkv1JXyqMFW8OHIIiImhFLJ6pv8xKoMnSZHjNkqb41GGBK25faOn0vFytg=
+	t=1777982504; cv=none; b=Zn0mdo7zq8Pz6datdSgxjuMj1ItkxBtjeQyitRSiElY4RI1W73ElrUV4gSk/mhU4abydDriCLsLC4eoY6EUU8oXAWwX3cVYWi9PCnUeFEnd66sDjj+Bbab6ZkEqJtt/J+sdeigxtuVzfH3r/9V7okohx+0MmPKPsNjpIurY0uPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777982297; c=relaxed/simple;
-	bh=zpz/IBCMJ9rlEr5yvIog9kP6PEwlQCzTVEu7FEW2KM4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=FGfrAXycODGsUDId3MUYJ5uujKtC5geUuWxuh2BW5EUJfAwPrb6m/gAYPbMSYzVAcvfJqQb8xGrPNSpt/SqHNXtUTVI06gnMKxsyM2iUQIpW0Ytbagk2huVWDNhjkvGMWLZ1KD4+ls3exeP9ekiXfzykYnZ9IvksewNDBmC4hcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cEzCYbvz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10004C2BCB4;
-	Tue,  5 May 2026 11:58:13 +0000 (UTC)
+	s=arc-20240116; t=1777982504; c=relaxed/simple;
+	bh=zjOUqmnVlxzn/jhh27mtHYwDsEUKzKnrEhLxdccdfQ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KUTRjOIL8fNUyXWC57AcdVfalxd09n88ngpov2Jmpq51DfH78P06K1q95qipW0KiY7pw6APvCZQ7B6TtXAHgeirwgq4fqgHc/LjsYaC54wBhWGn/cQp0LrGIPXKVS+TD5jSFdmuHffTFzvfS3mgcGfdsoXnpKylcu+wWXWoBzv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V+9QHRIh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C52FC2BCC7
+	for <linux-gpio@vger.kernel.org>; Tue,  5 May 2026 12:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777982297;
-	bh=zpz/IBCMJ9rlEr5yvIog9kP6PEwlQCzTVEu7FEW2KM4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=cEzCYbvzlQqVwbMHf3QKF3rgBoeN0/DldW50hQ2kCJwawcZw3c7FeP99QGUIKKRRf
-	 rPVlDpcd7kZOIlxtgbE3kljytwC7tCAeSQ/Oe9dHJMV+y1Tx+wj4xwCrIPl0KMOfMu
-	 caR/laiD6TwQHFfXueIMSjPmgX0Z5vmewf8IQkm2W8a8p/hk29v+A+qRB4coQANeWV
-	 w3Xi9OkfUjN5HFv1LQtwjwWoPxjwTag61ifSccoKkQMWXmo6ordqP2qVvs91CGi+b1
-	 C6uyHTmQoCDprRlbP8k92QxZXn7CQsIWUlx0u4zPh0Jtv+3pd0jF4IWTD3yCWrMpJ1
-	 m96mKYj83UOhg==
-From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linusw@kernel.org>, 
- "Darren.Ye" <darren.ye@mediatek.com>
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
-In-Reply-To: <20250822125301.12333-1-darren.ye@mediatek.com>
-References: <20250822125301.12333-1-darren.ye@mediatek.com>
-Subject: Re: [PATCH v7 00/10] ASoC: mediatek: Add support for MT8196 SoC
-Message-Id: <177798229351.597350.5415197464438946507.b4-ty@b4>
-Date: Tue, 05 May 2026 20:58:13 +0900
+	s=k20201202; t=1777982503;
+	bh=zjOUqmnVlxzn/jhh27mtHYwDsEUKzKnrEhLxdccdfQ0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=V+9QHRIhVjgDjskMrzKAB9GA1JLu8ERyirz5PSM7ljTSvu9T+YPB4jPCebIyH6Epv
+	 RQ2Dod5qFnmPxG95vgMR3QuuwKtQe0oUP08cTNoHklsHoZZEDHGDTGm89KhSipXG5k
+	 bjrV4OUnykxMD4OFtCDTi4oKn26cfBh9vc6YlTaY3xSvnHda42i8gVbOK6thoKzMh6
+	 j0Cxd4eDz9//snPs5AH2ASThc3yfjj/0QZdwVr7+ZaVH7FoqvSDI5AaLRG4msZ0K3Y
+	 BSGBd3uvmW+iiOgeUv7bk+aUeRXfal4LeoDPAfrEbqegGBqjKWCYh+HidihEYaE1au
+	 wcjrNbalhqHrA==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-38e97e73234so49934351fa.1
+        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2026 05:01:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9jXZvri9N10arfVZ5bwAZYVmETzj6Q/TSHAVgTxrN7JVyw4ZMhH3Kq0X705cA98XZa5JIMEkuYq9b0@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUabtdmoSm/a9lB9/9nZGM2GhHjT9r8F01R2WfIJRefCca1WSB
+	HQkma9jIZ50I3AQG1JNXNchWNWhZ+awU2+weD+XJcP8tZSupo9QUohEtzgGDYJTUGKg7xB3Mk1g
+	U99GueCr2GM4LenZaP4m28olsl94gdU4=
+X-Received: by 2002:a05:6512:1250:b0:5a1:38c4:4247 with SMTP id
+ 2adb3069b0e04-5a862ebe341mr4599132e87.1.1777982502024; Tue, 05 May 2026
+ 05:01:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.16-dev
-X-Rspamd-Queue-Id: 9FB654CD18E
+References: <CAAMcf8C_A9dJ_v4QRKtb9eGNOpJ7BZNOGsFP4i2WFOZxOVBPnQ@mail.gmail.com>
+In-Reply-To: <CAAMcf8C_A9dJ_v4QRKtb9eGNOpJ7BZNOGsFP4i2WFOZxOVBPnQ@mail.gmail.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Tue, 5 May 2026 14:01:30 +0200
+X-Gmail-Original-Message-ID: <CAD++jLn9DpaknOm3S9ZUOY6Jyo=SuhVSv-vzNaw=S1uuOeYoRg@mail.gmail.com>
+X-Gm-Features: AVHnY4IO6x8dSZgK4ST5fVqGPK4i0BUOY6dM6Z0Yp7EnMooB7Wjw-itWE-dYdkM
+Message-ID: <CAD++jLn9DpaknOm3S9ZUOY6Jyo=SuhVSv-vzNaw=S1uuOeYoRg@mail.gmail.com>
+Subject: Re: gpio-mt7621 unroutable IRQs to bank0
+To: Vicente Bergas <vicencb@gmail.com>
+Cc: Sergio Paracuellos <sergio.paracuellos@gmail.com>, Bartosz Golaszewski <brgl@kernel.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, 
+	Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 805714CD333
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,kernel.org,secretlab.ca,linutronix.de,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-36190-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,kernel.org,collabora.com,perex.cz,suse.com,bgdev.pl,mediatek.com];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36189-lists,linux-gpio=lfdr.de];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[broonie@kernel.org,linux-gpio@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,darren.ye:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-On Fri, 22 Aug 2025 20:52:29 +0800, Darren.Ye wrote:
-> This series of patches adds support for Mediatek AFE of MT8196 SoC.
-> Patches are based on broonie tree "for-next" branch.
-> 
-> Changes since v6:
->  - optimize mtk_afe_pcm_pointer interface and improved logic checks.
->  - update mt8196_afe_private structure by removing unused member variables.
->  - only reference clocks directly supplied to afe and set required frequencies directly.
->  - update adda driver according to reviewer suggestions.
->  - update i2s driver according to reviewer suggestions.
->  - update tdm driver according to reviewer suggestions.
->  - optimize platform driver and update widget rotues.
->  - move the sof route from platform driver to the machine driver, and moved pinctrl to platform driver.
->  - update the afe yaml file to remove unnecessary clock references.
-> 
-> [...]
+Hi Vicente,
 
-Applied to
+On Sat, May 2, 2026 at 11:52=E2=80=AFPM Vicente Bergas <vicencb@gmail.com> =
+wrote:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> drivers/gpio/gpio-mt7621.c is registering 96 GPIOs,
+> all of them capable of generating IRQs.
+> But the `struct irq_chip` can only handle 32 IRQs,
+> so, 3 banks are instantiated.
+>
+> The DTS file specifies the interrupt for one device as
+>  interrupt-parent =3D <&gpio>;
+>  interrupts =3D <0 IRQ_TYPE_EDGE_FALLING>;
+> which should be routed to Bank0 GPIO0 but
+> it is instead routed to Bank2. This is the bug.
+>
+> The call trace that leads to the problem is:
+>  drivers/i2c/i2c-core-base.c:i2c_device_probe
+>  drivers/base/property.c:fwnode_irq_get
+>  drivers/of/irq.c:of_irq_get
+>  include/linux/irqdomain.h:irq_find_host
+>  include/linux/irqdomain.h:irq_find_matching_host
+>  include/linux/irqdomain.h:irq_find_matching_fwnode
+>  kernel/irq/irqdomain.c:irq_find_matching_fwspec
+>
+> As a way to prove that this is indeed the problem,
+> the following workaround makes it work.
+> It just inverts the sorting order of all matches,
+> so it picks Bank0 instead of Bank2.
 
-Thanks!
+That's a tricksy bug, I can't exactly see where the issue
+is.
 
-[01/10] ASoC: mediatek: common: modify mtk afe platform driver for mt8196
-        https://git.kernel.org/broonie/misc/c/1aadc0147b42
-[02/10] ASoC: mediatek: mt8196: add common header
-        https://git.kernel.org/broonie/misc/c/33eda2c14ff7
-[03/10] ASoC: mediatek: mt8196: support audio clock control
-        https://git.kernel.org/broonie/misc/c/7384ecab34eb
-[04/10] ASoC: mediatek: mt8196: support ADDA in platform driver
-        https://git.kernel.org/broonie/misc/c/9a5881402c6e
-[05/10] ASoC: mediatek: mt8196: support I2S in platform driver
-        https://git.kernel.org/broonie/misc/c/65a195132669
-[06/10] ASoC: mediatek: mt8196: support TDM in platform driver
-        https://git.kernel.org/broonie/misc/c/ede4d841111a
-[07/10] ASoC: mediatek: mt8196: add platform driver
-        https://git.kernel.org/broonie/misc/c/57513aabfe5b
-[08/10] ASoC: dt-bindings: mediatek,mt8196-afe: add audio AFE
-        https://git.kernel.org/broonie/misc/c/5cd03440c0d4
-[09/10] ASoC: mediatek: mt8196: add machine driver with nau8825
-        https://git.kernel.org/broonie/misc/c/de764b0d1838
-[10/10] ASoC: dt-bindings: mediatek,mt8196-nau8825: Add audio sound card
-        https://git.kernel.org/broonie/misc/c/1c65cc451873
+I think to solve this you might need to allocate an external
+irqdomain that deal with the three different gpiochip
+instances when translating the irqs.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+There is gpiochip_irqchip_add_domain() which is currently
+only used in drivers/gpio/gpio-regmap.c, but it should do
+the trick I think.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+Yours,
+Linus Walleij
 
