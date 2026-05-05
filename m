@@ -1,315 +1,201 @@
-Return-Path: <linux-gpio+bounces-36239-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36240-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KHNdAJ0m+mmHKQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36239-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 19:19:25 +0200
+	id AOLZG1Ys+mlXKgMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36240-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 19:43:50 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 847484D1EF6
-	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 19:19:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 081B24D240D
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 19:43:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 76D9D301104D
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2026 17:19:23 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 128073075BFB
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2026 17:41:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A79C492190;
-	Tue,  5 May 2026 17:19:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A11B14A33F7;
+	Tue,  5 May 2026 17:41:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZslYmDK9"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KJMbBg7v"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-yw1-f226.google.com (mail-yw1-f226.google.com [209.85.128.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF6E3BF68E
-	for <linux-gpio@vger.kernel.org>; Tue,  5 May 2026 17:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE264A33FA
+	for <linux-gpio@vger.kernel.org>; Tue,  5 May 2026 17:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778001562; cv=none; b=X4gaBkqCgFHwpQRslqUdNulVdPy9vC53cS/EQ7Uv+iOm6+mkstojuJ3S6Wp8uWhYPCcNpV4fP2OoWEW1YeygT1YXU653A2TuYtpnprgm17QwZwmy5mS89a7xSoZ8tH0R5sHDcis5doBVmHaDFrLOVTMmkT3eiMVM56mQdcIqFxE=
+	t=1778002876; cv=none; b=e3G3b8Y1V9YPr6LU2fTPNoBTAEH68uRPO4ohnh3a5MO0IeSWPgQ9IwdQxCqompxtZ5jXSCM06CTB0SakoN4rPuFypmtKHekTmYCiGsUbiS046E+Cl6FYTKxHil9ZB9ZrcJDNj9V6V/svnxfAUUD8maiyhkyeNg3KnDe8bgYdX3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778001562; c=relaxed/simple;
-	bh=U+afFZuILb43fRFvzC2Y/lAW3ml2uo5rujpWac2kEYc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h3zK31lY8l9ETm5QoeGvkS5eo4pogMVtFgzixEjSY6Wggkj4dCrcvswwY0QOD/8SdW1RPkakrdLcnr1IQQ/uz19ZBnYVmvlWLbZ0Vz4oTY3dMCaIF+DuMBm1kozKVadaDVFsuGrdhP2kel5mWCWCcqO1O3NQ5Y1QgBtRHM+lVK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZslYmDK9; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-82faf871346so3458076b3a.0
-        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2026 10:19:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1778001560; x=1778606360; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=WL3Uj3kb7PrFoW/8XQQ00eIJvsOj+gpzAMtc380q7Qs=;
-        b=ZslYmDK99hTBX07134L37gvoJ1V9M52d8Dy4TupDnS3fBVzvC5zBXt0aqZmp8Smo9Q
-         4AViCdvilP82PTQHPrdb1JAzzpyXBo4OWOI3/y2e+/KpRzS/Pi/jhYIlxGPFWoB6fxXP
-         LYw1S0vDrYm7L6z3eLvMQeYFEa3DSFBr3nGAAIs5TmvnPcnhi9EseQ814oWUuywMuRC2
-         8FjYcdjG3FmdTpBUGuLNIp6FlRgGNNSuljVO6OR7RirCycwNlqgQHS+IY5inmTgk6uIE
-         468i1Q47U9hb0B0MPqW3r+XImKvZpqYiqZQmyh0wuxMTe6AFVQannv0bHhIKjoGZtGwq
-         erMA==
+	s=arc-20240116; t=1778002876; c=relaxed/simple;
+	bh=GQNkioTZY8zsJN6NDokufPbM8F0jKsJOPiFzG+FzFGc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=PgATcvhtiI8J6T0w28RSPAawmuKR33OUnkGSfIgXIiyuTmfycUjLXQS9Ap3cxbqRQHUeReyE87bsUpRLM6gD+D3sNI3Fw8Qbh2sfnfPfDXa7feVNKzhV5YfesSvtjzk0eu+NPtBFXp5SVXeg0W3dvHcJ7GJ+OYUvmOnV/WUp6Cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=KJMbBg7v; arc=none smtp.client-ip=209.85.128.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-yw1-f226.google.com with SMTP id 00721157ae682-7bd87e5d8ffso1593607b3.1
+        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2026 10:41:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778001560; x=1778606360;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WL3Uj3kb7PrFoW/8XQQ00eIJvsOj+gpzAMtc380q7Qs=;
-        b=kI4F94EqOA6Nbyn3xOjSsOF1zZx/2s9ePAJmzxS+s2wIVKcrlFHXzkYoyAtLd738Fn
-         vEUs585kBuL0Te9bAh2xnZ7WFFl+BPxXS0rSyI31IiVYODcBqb5BYPOUeIWnZVY+Vc9z
-         LkpPfS03ZHzi8hIygdVciU+bLn3+fkfJ6G/aa+KD+sXtG5ey5SYA3Xekdd9OIeug76Gp
-         mKrNWNfazGAJ0UnJ6yEaCQ83J+QwHOI/M0IQXXs6kJzAiaVJFIItPTxrXUNFgamoxGBW
-         Jw8DK33t0xJqnR7OPVSALAzbyRQbrTBbhNtYvI8YFVF8DNqnebZrKkWAgIfZGiKMsyt3
-         eEJQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8urjsxcqcDCaTAYGW1ah3p/lBWdqeQTcNfHX7weSC8iJKtvjp0uhvuNUSeZGPntoPhCSTFSHQOjpwk@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzn1WUB8YDcMeY1uBar46y+YfMNdCpLeHhVcRieMmQouuWJ3bjz
-	qPHmC2AFvGrTNGSDfzy2sBr03WLPNCi07pDCQ2YJ0ah2uJY0iz2jWmpsCIMXZ7CfGUo=
-X-Gm-Gg: AeBDiev+ToKZ/66+qnLpWIMz+Bfzs8ruhpcIbwej4aqfsZpOkDkuY1hrpRK8xd9HrhE
-	msgCkbLkUnc/aUe61jakJuTlEhLlkHb48Hyfqn6vdKTkpHQhJxfsm+PZ7qCP6JBZNvnupxg4nRU
-	9PuceoyM1aKikmQFTc7KNpp2trmpqQqMyPJKw3vz5SeptnHsmhwkiTmE+9BTh4VEDl2O2/mi03R
-	eC+dG6kesicAEs3CyqT40paJj2cbGulC1tbHwFWdWMul6+FA9kmBLP9ShJcGSdAKKpT9PWZ5DN2
-	nyqydYt5wx4+fyoP9zFFbdbLmcZM1oP+m0ukuLRjmJPDI8GBnmARQoBMEstZxx+4M2DwtnAScQU
-	KVeBzc8fjaiIoxKnfG8uLgfGPBatdOSi/3NVfaEw7KbO6zvXI99WB23Kw3n4ob6Mb8Q+RFvKFOF
-	8gtqvVnebmFc1MtRTrP621vULytk1aKChdjZYkM+LWUftVnB6Q
-X-Received: by 2002:a05:6a00:61c2:b0:83a:3135:edbd with SMTP id d2e1a72fcca58-83a3135f266mr300178b3a.7.1778001559581;
-        Tue, 05 May 2026 10:19:19 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:7e49:16e6:42db:e391])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-83962e7e3fcsm3646944b3a.0.2026.05.05.10.19.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2026 10:19:18 -0700 (PDT)
-Date: Tue, 5 May 2026 11:19:15 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
-Cc: "Padhi, Beleswar" <b-padhi@ti.com>, Shenwei Wang <shenwei.wang@nxp.com>,
-	Andrew Lunn <andrew@lunn.ch>, Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>, Frank Li <frank.li@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	dl-linux-imx <linux-imx@nxp.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v13 3/4] gpio: rpmsg: add generic rpmsg GPIO driver
-Message-ID: <afomkynW95IRIHYW@p14s>
-References: <6412a758-4560-4cf1-a0d0-5b24d1a715f1@lunn.ch>
- <PAXPR04MB9185009A17DFDF3D6C8B44E789362@PAXPR04MB9185.eurprd04.prod.outlook.com>
- <6e01e114-e336-4744-b6b4-563ec42e321b@lunn.ch>
- <PAXPR04MB9185A098D894B6A6EBCC13F889372@PAXPR04MB9185.eurprd04.prod.outlook.com>
- <afImuoeHolxGgw3H@p14s>
- <PAXPR04MB9185F2F6DDB55AC56C92D63B89342@PAXPR04MB9185.eurprd04.prod.outlook.com>
- <CANLsYkwvL0Z3+12MD=J+Dc2yAU2T8ypizyG=6AhYoWOh55odHA@mail.gmail.com>
- <472f85bd-42c2-40c6-abfd-b76924797069@ti.com>
- <CANLsYkzt9xUczxSU28u-TfZAAjr0ufZKXAj8Eqfq=45gufXW3w@mail.gmail.com>
- <f7ef3417-eb84-4467-ac72-a9bc8b0c81e8@foss.st.com>
+        d=1e100.net; s=20251104; t=1778002872; x=1778607672;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:dkim-signature:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EbBVbZQpK7Lvxj1vVsDLr4pX2aQ5pdv85p+B8cI0h8g=;
+        b=khoGj2SqLa6leLzV1lT2y6EGpnnHEGkrnI44Nrw2Xb6ohNRpvAqBSzpEnlXet7p7Rk
+         iwi7NcDcDfcso/gwZBWAqm1VzQwcEwnIlgqmc9DmZl8RxCN+MJYs/kC7Hag5jwk4ZA/s
+         2fr8oA8qc388AwzjjNXrdcsdLoKd7zl7xm1FtSrV9Be6x6H1B8/TTTP9ZfIjtxbcmyWn
+         1O9Be9NmL6hI0UAlxzok65Qgh1yyUIdf7F7ehUv6v0i8xGWv6O25JuIkm0SLrcXCVw/z
+         t3wrRnD1B6PXsyLuPQfpPQqtUvf39+DKMiCGPWhFAxCUTTBWP70raocSW9qQPN05A9aw
+         lGFA==
+X-Forwarded-Encrypted: i=1; AFNElJ+g17W5ygedndKHHeB0VW1RygAl3nrx0IB6j01JTmrxUns9avCzrTKftmoF3hHHFjKOJkFH2YnxIllN@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxaSR7UCOH/RD5dQ1FjvwDLgsbHj9KaSKej8/zNPHaKcMZpcqY
+	3N/NjLtYvkPNlA4Epv15Kxk9pIm2xwXmR8WnTyk0zE2f9r8xTvT+mAKyi2zMKmaEtA6/+TXNZCW
+	BR7eHCRCcwdWJX7cPErCqIwwUAGtT8e4mIkj3kk9AfvbvZJq1m/VY+04ohHBPDf5hP1FxtwhF8G
+	G2CouZMKv65hZLBiCubrhR0AHasKYd0vpdzltSe3CBC33jNSnONsRsQtQohdXwt9PfvOnR7RD4Q
+	AkJWl+SgVPutQNDlkb+dg==
+X-Gm-Gg: AeBDieuWgZZ8hstSHjjG6bMYJuwdq6os6OVth+HJDKiHUUA8Ar8E8Kylzheob7mQ/k7
+	a4a3ezmmTNb1qyT01CmRaOBLcTWoYavxsFKwZBC+PjrR5CLpCyO1p1p78DHnmyHu7Ip8tE5BLLm
+	LiNGcdp3F6KfQFDDqXzXbwOVcQzS5Im4Ni5BYLFMAbt7eRKR/tEhMcqpvDh9qNJDYnA5RuMmg3O
+	lAA95M008gYcA0ekfzcAkfXUR+2/Cn3BPJsRbsgh6iX/kvbdUNXPytj8C9PdLE3D4LZZ/NtoNqK
+	eJX+higAW3W9UCKyY9pnnA4/BJj+83prJSmMEkH+aHQNVmARj/WyE8EnWP1Y8Gm6TiblKet/CtD
+	3HUJuT2XB+TeDBc09kQYUe9mAcf1cICLI1ZU1HzGEIZ30UyzJse7muLncyxPGN5WOLsWPGJwzd4
+	bHPmPyIz9QKOBMlRjyYSGtWYO/CSZHjwCEF6rhOBLahod6GlQiS/FigZ3AMb1sek3BjAUKE9da
+X-Received: by 2002:a05:690c:39d:b0:7b2:9347:7ba7 with SMTP id 00721157ae682-7bda8b53364mr44873087b3.22.1778002872352;
+        Tue, 05 May 2026 10:41:12 -0700 (PDT)
+Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-16.dlp.protect.broadcom.com. [144.49.247.16])
+        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-7bd667fe89asm8663927b3.14.2026.05.05.10.41.12
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 May 2026 10:41:12 -0700 (PDT)
+X-Relaying-Domain: broadcom.com
+X-CFilter-Loop: Reflected
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-8b4bebd2b2aso3214776d6.1
+        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2026 10:41:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1778002871; x=1778607671; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=EbBVbZQpK7Lvxj1vVsDLr4pX2aQ5pdv85p+B8cI0h8g=;
+        b=KJMbBg7vy8QoWGQ37Abuk7abqfVs/C2WsiY+VhTuvnFkCJoR55Q73PJRX38DTzArcw
+         u9vG5u+eoEzubnBv7epIliyxvzCqX4NgepFDxHwJ7O1igQ+FaaORz1uuKMBhzw92o41V
+         y0MMnzyGPNQurIk9fUZYV4+8Ot1UY7vVWON9s=
+X-Forwarded-Encrypted: i=1; AFNElJ87Zk5wQsUVbWNzyP3hWDnf+IpbmoLOEwAGboHFltx5CMjV4w64JwVLj/zK5z5FWvTS80Hbe6Tg6bcG@vger.kernel.org
+X-Received: by 2002:a05:620a:25c8:b0:8cd:8e8a:3584 with SMTP id af79cd13be357-902e299dd70mr664633285a.11.1778002871614;
+        Tue, 05 May 2026 10:41:11 -0700 (PDT)
+X-Received: by 2002:a05:620a:25c8:b0:8cd:8e8a:3584 with SMTP id af79cd13be357-902e299dd70mr664627985a.11.1778002871100;
+        Tue, 05 May 2026 10:41:11 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8fc2c253259sm1372131985a.24.2026.05.05.10.41.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 May 2026 10:41:10 -0700 (PDT)
+Message-ID: <e095fec0-f0fa-4a6f-a758-9d45f804cb3e@broadcom.com>
+Date: Tue, 5 May 2026 10:41:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f7ef3417-eb84-4467-ac72-a9bc8b0c81e8@foss.st.com>
-X-Rspamd-Queue-Id: 847484D1EF6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] pinctrl: bcm: Move MODULE_DEVICE_TABLE next to the
+ table itself
+To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Linus Walleij <linusw@kernel.org>,
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org
+References: <20260505094321.75040-3-krzysztof.kozlowski@oss.qualcomm.com>
+Content-Language: en-US, fr-FR
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20260505094321.75040-3-krzysztof.kozlowski@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
+X-Rspamd-Queue-Id: 081B24D240D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
-	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[broadcom.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
+	R_DKIM_ALLOW(-0.20)[broadcom.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36239-lists,linux-gpio=lfdr.de];
-	FREEMAIL_CC(0.00)[ti.com,nxp.com,lunn.ch,kernel.org,lwn.net,pengutronix.de,linuxfoundation.org,vger.kernel.org,gmail.com,lists.linux.dev,lists.infradead.org,bgdev.pl];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,qualcomm.com:email,broadcom.com:email,broadcom.com:dkim,broadcom.com:mid];
+	DKIM_TRACE(0.00)[broadcom.com:+];
+	URIBL_MULTI_FAIL(0.00)[broadcom.com:server fail,tor.lore.kernel.org:server fail,qualcomm.com:server fail];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[26];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36240-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[linaro.org:+];
-	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mathieu.poirier@linaro.org,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[florian.fainelli@broadcom.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	NEURAL_HAM(-0.00)[-1.000];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCVD_COUNT_SEVEN(0.00)[7]
 
-On Thu, Apr 30, 2026 at 09:35:09AM +0200, Arnaud POULIQUEN wrote:
-> Hello,
+On 5/5/26 02:43, 'Krzysztof Kozlowski' via BCM-KERNEL-FEEDBACK-LIST,PDL 
+wrote:
+> By convention MODULE_DEVICE_TABLE() immediately follows the ID table it
+> exports, because this is easier to read and verify.  It also makes more
+> sense since #ifdef for ACPI or OF could hide both of them.
 > 
-> On 4/29/26 21:20, Mathieu Poirier wrote:
-> > On Wed, 29 Apr 2026 at 12:07, Padhi, Beleswar <b-padhi@ti.com> wrote:
-> > > 
-> > > Hi Mathieu,
-> > > 
-> > > On 4/29/2026 11:03 PM, Mathieu Poirier wrote:
-> > > > On Wed, 29 Apr 2026 at 10:53, Shenwei Wang <shenwei.wang@nxp.com> wrote:
-> > > > > 
-> > > > > 
-> > > > > > -----Original Message-----
-> > > > > > From: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > > > > > Sent: Wednesday, April 29, 2026 10:42 AM
-> > > > > > To: Shenwei Wang <shenwei.wang@nxp.com>
-> > > > > > Cc: Andrew Lunn <andrew@lunn.ch>; Padhi, Beleswar <b-padhi@ti.com>; Linus
-> > > > > > Walleij <linusw@kernel.org>; Bartosz Golaszewski <brgl@kernel.org>; Jonathan
-> > > > > > Corbet <corbet@lwn.net>; Rob Herring <robh@kernel.org>; Krzysztof Kozlowski
-> > > > > > <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>; Bjorn Andersson
-> > > > > > <andersson@kernel.org>; Frank Li <frank.li@nxp.com>; Sascha Hauer
-> > > > > > <s.hauer@pengutronix.de>; Shuah Khan <skhan@linuxfoundation.org>; linux-
-> > > > > > gpio@vger.kernel.org; linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > > > > > Pengutronix Kernel Team <kernel@pengutronix.de>; Fabio Estevam
-> > > > > > <festevam@gmail.com>; Peng Fan <peng.fan@nxp.com>;
-> > > > > > devicetree@vger.kernel.org; linux-remoteproc@vger.kernel.org;
-> > > > > > imx@lists.linux.dev; linux-arm-kernel@lists.infradead.org; dl-linux-imx <linux-
-> > > > > > imx@nxp.com>; Bartosz Golaszewski <brgl@bgdev.pl>
-> > > > > > Subject: [EXT] Re: [PATCH v13 3/4] gpio: rpmsg: add generic rpmsg GPIO driver
-> > > > > > On Tue, Apr 28, 2026 at 03:24:59PM +0000, Shenwei Wang wrote:
-> > > > > > > 
-> > > > > > > > -----Original Message-----
-> > > > > > > > From: Andrew Lunn <andrew@lunn.ch>
-> > > > > > > > Sent: Monday, April 27, 2026 3:49 PM
-> > > > > > > > To: Shenwei Wang <shenwei.wang@nxp.com>
-> > > > > > > > Cc: Padhi, Beleswar <b-padhi@ti.com>; Linus Walleij
-> > > > > > > > <linusw@kernel.org>; Bartosz Golaszewski <brgl@kernel.org>; Jonathan
-> > > > > > > > Corbet <corbet@lwn.net>; Rob Herring <robh@kernel.org>; Krzysztof
-> > > > > > > > Kozlowski <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>;
-> > > > > > > > Bjorn Andersson <andersson@kernel.org>; Mathieu Poirier
-> > > > > > > > <mathieu.poirier@linaro.org>; Frank Li <frank.li@nxp.com>; Sascha
-> > > > > > > > Hauer <s.hauer@pengutronix.de>; Shuah Khan
-> > > > > > > > <skhan@linuxfoundation.org>; linux-gpio@vger.kernel.org; linux-
-> > > > > > > > doc@vger.kernel.org; linux-kernel@vger.kernel.org; Pengutronix
-> > > > > > > > Kernel Team <kernel@pengutronix.de>; Fabio Estevam
-> > > > > > > > <festevam@gmail.com>; Peng Fan <peng.fan@nxp.com>;
-> > > > > > > > devicetree@vger.kernel.org; linux- remoteproc@vger.kernel.org;
-> > > > > > > > imx@lists.linux.dev; linux-arm- kernel@lists.infradead.org;
-> > > > > > > > dl-linux-imx <linux-imx@nxp.com>; Bartosz Golaszewski
-> > > > > > > > <brgl@bgdev.pl>
-> > > > > > > > Subject: [EXT] Re: [PATCH v13 3/4] gpio: rpmsg: add generic rpmsg
-> > > > > > > > GPIO driver
-> > > > > > > > > > struct virtio_gpio_response {
-> > > > > > > > > >           __u8 status;
-> > > > > > > > > >           __u8 value;
-> > > > > > > > > > };
-> > > > > > > > > It is the same message format. Please see the message definition
-> > > > > > > > (GET_DIRECTION) below:
-> > > > > > > > 
-> > > > > > > > > +   +-----+-----+-----+-----+-----+----+
-> > > > > > > > > +   |0x00 |0x01 |0x02 |0x03 |0x04 |0x05|
-> > > > > > > > > +   | 1   | 2   |port |line | err | dir|
-> > > > > > > > > +   +-----+-----+-----+-----+-----+----+
-> > > > > > > > Sorry, but i don't see how two u8 vs six u8 are the same message format.
-> > > > > > > > 
-> > > > > > > Some changes to the message format are necessary.
-> > > > > > > 
-> > > > > > > Virtio uses two communication channels (virtqueues): one for requests and
-> > > > > > replies, and a second one for events.
-> > > > > > > In contrast, rpmsg provides only a single communication channel, so a
-> > > > > > > type field is required to distinguish between different kinds of messages.
-> > > > > > > 
-> > > > > > > Since rpmsg replies and events share the same message format, an additional
-> > > > > > line is introduced to handle both cases.
-> > > > > > > Finally, rpmsg supports multiple GPIO controllers, so a port field is added to
-> > > > > > uniquely identify the target controller.
-> > > > > > 
-> > > > > > I have commented on this before - RPMSG is already providing multiplexing
-> > > > > > capability by way of endpoints.  There is no need for a port field.  One endpoint,
-> > > > > > one GPIO controller.
-> > > > > > 
-> > > > > You still need a way to let the remote side know which port the endpoint maps to, either
-> > > > > by embedding the port information in the message (the current way), or by sending it
-> > > > > separately.
-> > > > > 
-> > > > An endpoint is created with every namespace request.  There should be
-> > > > one namespace request for every GPIO controller, which yields a unique
-> > > > endpoint for each controller and eliminates the need for an extra
-> > > > field to identify them.
-> > > 
-> > > 
-> > > Right, but this can still be done by just having one namespace request.
-> > > We can create new endpoints bound to an existing namespace/channel by
-> > > invoking rpmsg_create_ept(). This is what I suggested here too:
-> > > https://lore.kernel.org/all/29485742-6e49-482e-b73d-228295daaeec@ti.com/
-> > > 
-> > 
-> > I will look at your suggestion (i.e link above) later this week or next week.
-> > 
-> > > My mental model looks like this for the complete picture:
-> > > 
-> > > 1. namespace/channel#1 = rpmsg-io
-> > >      a. ept1 -> gpio-controller@1
-> > >      b. ept2 -> gpio-controller@2
-> > > 
-> > 
-> > I've asked for one endpoint per GPIO controller since the very
-> > beginning.  I don't yet have a strong opinion on whether to use one
-> > namespace request per GPIO controller or a single request that spins
-> > off multiple endpoints.  I'll have to look at your link and reflect on
-> > that.  Regardless of how we proceed on that front, multiplexing needs
-> > to happen at the endpoint level rather than the packet level.  This is
-> > the only way this work can move forward.
-> > 
+> Most of the pin controller drivers already have this correctly placed,
+> so adjust the other drivers.  No functional impact.
 > 
-> I would be more in favor of Mathieu’s proposal: “An endpoint is created with
-> every namespace request.”
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 > 
-> If the endpoint is created only on the Linux side, how do we match the Linux
-> endpoint address with the local port field on the remote side?
-> 
-> With a multi-namespace approach, the namespace could be rpmsg-io-[addr],
-> where [addr] corresponds to the GPIO controller address in the DT. This
-> would:
-> 
-> - match the RPMsg probe with the DT,
-> - provide a simple mapping between the port and the endpoint on both sides,
-> - allow multiple endpoints on the remote side,
-> - provide a simple discovery mechanism for remote capabilities.
->
+> ---
 
-This is exactly what I had in mind but I'll finish reading this thread before
-expressing a final point of view.  That said, the namespace announcement should
-be "rpmsg-gpio-[addr]" rather than "rpmsg-io-[addr]" to make sure there is no
-ambiguity on the meaning of "io".
+late to the party:
 
-More comments to come...
- 
-> Regards,
-> Arnaud
-> 
-> > > 2. namespace/channel#2 = rpmsg-i2c
-> > >      a. ept1 -> i2c@1
-> > >      b. ept2 -> i2c@2
-> > >      c. ept3 -> i2c@3
-> > > 
-> > > etc...
-> > > 
-> > > This way device groups are isolated with each channel/namespace, and
-> > > instances within each device groups are also respected with specific
-> > > endpoints.
-> > > 
-> > > Thanks,
-> > > Beleswar
-> > > 
-> > 
-> 
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
