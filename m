@@ -1,73 +1,73 @@
-Return-Path: <linux-gpio+bounces-36205-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36206-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WLeKOEfp+WmsFAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36205-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 14:57:43 +0200
+	id gJzEN2Hp+WnWFAMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36206-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 14:58:09 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61C9E4CE098
-	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 14:57:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 618064CE0B3
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 14:58:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 4049430531EF
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2026 12:56:39 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 8E897305D017
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2026 12:56:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2599E3DA7C2;
-	Tue,  5 May 2026 12:56:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2E4B42846D;
+	Tue,  5 May 2026 12:56:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hzodQ2NC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TW8pdnz6"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB15346E4E
-	for <linux-gpio@vger.kernel.org>; Tue,  5 May 2026 12:56:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B488B425CE2
+	for <linux-gpio@vger.kernel.org>; Tue,  5 May 2026 12:56:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777985795; cv=none; b=Bwtzptmk4KE9VSFjztjOjppTm96M6oXL2obAw2Nxy0c3sd4M6x6x3+fCgTDDT4FLRuhaz6TqR5uf/6ZT1hGm+r07967ueBXMrpIfuZLfN8x68fp3EqFI0wb2vvNn0Clg2g2YHwXjkmAF+V68tSEv3JqTyecY2vOQStf/OzlfSYQ=
+	t=1777985810; cv=none; b=j0VBrq/YAF73dFAO1q9rsGigd7n/JbjGBvHICSo2QAMEcmLcIrB08d+2I2y6zp1EqmG8ksXq5YwVxPxwD0KqHe5Xc3urqdX1ZGdGccTKZyi2aZyL9Z/Nu17Q4CmVd2BGYIvs7hh+keCMq55rhHLhhcqLMgp3liQZ3/1nFfdfSfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777985795; c=relaxed/simple;
+	s=arc-20240116; t=1777985810; c=relaxed/simple;
 	bh=ZUs4wo3g3+7GpdmJ7ncT0CXa7bmF1VEsrvwglg4jLoE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hmhcb4r70LfmluyyJHBXoAqWydAKoudAHhr5LSdvfCjFBTLUu01GGm94fRs1ms8VUR49uU3v0Znwtff2F5HZR/OGPfXFZ4s17T39e+iWJJim/TuaDi+BxObNd7p00p3JYn+KjPiZochNNcY9lBI3+VKzdK0w4/2kvsPbDapIIm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hzodQ2NC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98817C2BCC7
-	for <linux-gpio@vger.kernel.org>; Tue,  5 May 2026 12:56:35 +0000 (UTC)
+	 To:Cc:Content-Type; b=lAH8Tumc4S6LQ/jNa0sseyLT6XYy3fPc99H3YJ7bGn2Pa2L7xk6zAwGgNahUEwa5PmvqsVOvzyX4ohnjUNKph37+dIReAAOPU2B9WvV8DAEwmKlH3cQUaMS/gJkIsBqYWeVVZpNx9mex3kolOTFDwMW6RFXMVtFrBxuQgEYjvv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TW8pdnz6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D326C2BCFA
+	for <linux-gpio@vger.kernel.org>; Tue,  5 May 2026 12:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777985795;
+	s=k20201202; t=1777985810;
 	bh=ZUs4wo3g3+7GpdmJ7ncT0CXa7bmF1VEsrvwglg4jLoE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hzodQ2NCG9zoh2XqXyjZl5yyYhCcjuWCm9xc/oDTNJN1WJLwwL4HFEEMw9c8vQxSB
-	 //Xl5vKkviuGByHP5wUr5ppSPYKuYFZ9OO0iUFN3H3myUY7ktL+tolifDlitP26ngm
-	 P2Ng3zfyVql6y1Oc8dn9tQA25C4f7gJ1V3P6lr+Dy5b8QDs61od9yKdadTwEqofx7E
-	 Iux2b2dydeMXEVmqSYTJjk9HGstHpKXAO8vFfXpOiEYdHQ91v0SIZi5qVgvaVmyMys
-	 EbFAso9I0L52rHJC+2erRMZ8fQaDgGu0r7ZbzddawxTG6n08oAPfF2l+Dt5FJRIgUN
-	 IED1yLyvleX7A==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-3937014be0cso31957061fa.0
-        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2026 05:56:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8bpwy2SKDSPgl0IXKjcjf6uvBlhJTyqt3zum0faxAH/i43sBHxMR8N0swOq0xHpt+5yKJJUkvxuJn/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDU9xqrLj2D4ZI0gg2AOQreF7qjuf42OQx1IIZFMpYbYu8+WPK
-	ojnaVg4kLIDfcibVtt/hnNrPMVFdDLfFKialShiCDlcYab2/Iwrx0wzyRJ8HHvLFIJHothqZ5GZ
-	Ncsw0MdIhpIqzQbXPOFKC1i8p9ucnaFI=
-X-Received: by 2002:a05:651c:324e:b0:38e:aeab:9ba6 with SMTP id
- 38308e7fff4ca-3937850065bmr44277651fa.24.1777985794358; Tue, 05 May 2026
- 05:56:34 -0700 (PDT)
+	b=TW8pdnz6ylCu+n5A3jS6uOFfm1r+mrh5QJj/b5ngfXVDaIb6sHGRAklRK+cd8AwyJ
+	 LM4uXqHWrv1OQYhOadPOWdI0+97b/ql0+GrGkVegK8/S2QGKL5MSYZaa71wfnd8cPI
+	 BtaZlO4QuaxNAyVQCaqeW8pMIP9qhv1FpLcMKgHItIIKnZn+Wc9rdz4yx5dy5wT5PO
+	 t/CZudqTq/6Q/Ajl0B6O+Cp5L/3u5wVQrHWbmJYuJ7pg4XoxkaBSFzCIDYWaJm9JQD
+	 h4c5Z+uVfXj3DdraDaZGDRkC9kELRIYwtQQwaE2rmuZiTAm9RtmBcbK/VRcD310Tg9
+	 A8JBWqsMhnijQ==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-38a01c80c34so52191371fa.0
+        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2026 05:56:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8n0SnJ3Sm5Vws7lqiKWIDTGWlMyXSs+9orCjnt8jXTg8Q427WQUpmze5pwkBiQWQnOhQi78lXfC9FI@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeWKEa88ERMy+SU54BLb3JpuO0EA9H7Zu5S2tBtU/gnaFnN4J7
+	yVygdhI8yHz8ougXT9qRb8vFBEKIYaLnCgghGJHS+YR9RjgDAAsg0JaJjiDmblnmUcOAkWbT2At
+	sYIMaFIVAZ6o0cI4EVHOyEOZFfP/fcmQ=
+X-Received: by 2002:a2e:be0c:0:b0:38a:a77a:b0b2 with SMTP id
+ 38308e7fff4ca-393785870femr48588051fa.30.1777985808984; Tue, 05 May 2026
+ 05:56:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260505094321.75040-3-krzysztof.kozlowski@oss.qualcomm.com>
-In-Reply-To: <20260505094321.75040-3-krzysztof.kozlowski@oss.qualcomm.com>
+References: <20260505094321.75040-3-krzysztof.kozlowski@oss.qualcomm.com> <20260505094321.75040-4-krzysztof.kozlowski@oss.qualcomm.com>
+In-Reply-To: <20260505094321.75040-4-krzysztof.kozlowski@oss.qualcomm.com>
 From: Linus Walleij <linusw@kernel.org>
-Date: Tue, 5 May 2026 14:56:23 +0200
-X-Gmail-Original-Message-ID: <CAD++jLmzzcp+CUKmr6-WLcDmB2zaOki_DTkvADOQ6V-1g710HA@mail.gmail.com>
-X-Gm-Features: AVHnY4L5pGyidj4m0uJSds10p3ObB3yt2OdQMJ_NihpEGQGZ3UJKnYpGnOY1ZG8
-Message-ID: <CAD++jLmzzcp+CUKmr6-WLcDmB2zaOki_DTkvADOQ6V-1g710HA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: bcm: Move MODULE_DEVICE_TABLE next to the
- table itself
+Date: Tue, 5 May 2026 14:56:37 +0200
+X-Gmail-Original-Message-ID: <CAD++jLn-QPagz4m6jkYU6JJS22cRZrsGA=h20JiSvn-3Pxq=Dg@mail.gmail.com>
+X-Gm-Features: AVHnY4Igt9-o67zqCdCfXKKYOq79SDn0cypO6X1gGr102Z0s00tmMJ-a4onPwSE
+Message-ID: <CAD++jLn-QPagz4m6jkYU6JJS22cRZrsGA=h20JiSvn-3Pxq=Dg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: rockchip: Move MODULE_DEVICE_TABLE next to
+ the table itself
 To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
 	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
@@ -76,7 +76,7 @@ Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
 	linux-rockchip@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 61C9E4CE098
+X-Rspamd-Queue-Id: 618064CE0B3
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
@@ -91,7 +91,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36205-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-36206-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
