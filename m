@@ -1,148 +1,170 @@
-Return-Path: <linux-gpio+bounces-36231-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36232-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uPUqMaoY+mlYJQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36231-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 18:19:54 +0200
+	id oAqGELUa+mkJJgMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36232-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 18:28:37 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 740544D121C
-	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 18:19:54 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D915C4D1467
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 18:28:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DF89130404A1
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2026 16:18:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8B821305430B
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2026 16:25:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C54848C3F5;
-	Tue,  5 May 2026 16:17:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 861BA48C3F4;
+	Tue,  5 May 2026 16:25:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b0eAoqAG"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="BOLA12n2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5273E95A3;
-	Tue,  5 May 2026 16:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E428038BF81
+	for <linux-gpio@vger.kernel.org>; Tue,  5 May 2026 16:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777997858; cv=none; b=ClhulN+uJ2ADp8qzuJrT0EtyPZNKv8Dl/5QhtUj+2JIsKh80DD48ELI3xsW5+XBR31rKR/Yg5tM/4EWqhm6bLJQ2PtVTwmh9rQMELiEveV+dkznkeAI/as3H+x9f84gi+Ptpd/oxYo9Hbfvi8behLHG2mMnh2De8sr9pG0BLsnA=
+	t=1777998335; cv=none; b=hMqj7qm2chL/oiDzAm8sk9tMlOO7Ee0djNx3YAVgOugvgko0FjxSB5GZcz+zTEDUL7bVq1aa/p5UOqgiSJ6qkhMI+tva9gh5/9Z9uRNC3S5RnKv8L1LLw78mj0uyzE1obd5g9s183ELRQ9zm2NX5Udz7UaNck/XEso7d5N583Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777997858; c=relaxed/simple;
-	bh=7M3AF7q+dZnICNvL/G6NPLScjPNthj9sH2v2XN2lfbM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H+CFBoOwCojfsWdpwp7rRUn3PD0ji94k6thcnkQN9vqzbg7Ew1qxa/Bs+bz6KZVikKb3/qUXJ7i3jUggS/GFIxolFvYU+CihC3SNQpnCqh3h+LQSlJ7nvIlejoJvbuQsZenS25hJGLM7chiFbES1lneodPrIso2nWlsEJf7MTzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b0eAoqAG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBDB0C2BCB4;
-	Tue,  5 May 2026 16:17:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777997857;
-	bh=7M3AF7q+dZnICNvL/G6NPLScjPNthj9sH2v2XN2lfbM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=b0eAoqAG4aFxn51HZEQ2sKQOfZGxQAk+IaGrUL6jDsOf/I6HU52o0IlfrhmLHW8fu
-	 IQbyqNRG7D1HQVBqvgi7eo9EKRXogixw1YNLNmmd6ufrD0xsVQ1zuw5P+TOzY2p7Ep
-	 j706/5ZxTByy2r+79h/Hwii9H0Wbpjj8Gi6dXGsOCBFvSdctNQ5a1BrNkE7JuhegmZ
-	 BrAKOj5oaW6Z2kQurwnnCOiwIGx0oYITLCQAGbmy7ZkMPzXYsOGsg0eXblJrKL5vDc
-	 JnY9splxPxjFlRcITMSDL8cRP7jJGINo2ORpzD9TqPoO3oEYWHCjxG+2HLE81yZWyR
-	 uPZCrkk8bmLfA==
-Date: Tue, 5 May 2026 17:17:23 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>, Lars-Peter Clausen
- <lars@metafoo.de>, "Hennerich, Michael" <Michael.Hennerich@analog.com>,
- David Lechner <dlechner@baylibre.com>, "Sa, Nuno" <Nuno.Sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linus Walleij
- <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Philipp Zabel
- <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
- <skhan@linuxfoundation.org>, "linux-iio@vger.kernel.org"
- <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org"
- <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org"
- <linux-pwm@vger.kernel.org>, "linux-gpio@vger.kernel.org"
- <linux-gpio@vger.kernel.org>, "linux-doc@vger.kernel.org"
- <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v9 3/6] iio: adc: ad4691: add triggered buffer support
-Message-ID: <20260505171723.390feb20@jic23-huawei>
-In-Reply-To: <afoFjaUBcGXeuEzH@ashevche-desk.local>
-References: <20260430-ad4692-multichannel-sar-adc-driver-v9-0-33e439e4fb87@analog.com>
-	<20260430-ad4692-multichannel-sar-adc-driver-v9-3-33e439e4fb87@analog.com>
-	<afhReLCsEdaEOT_H@ashevche-desk.local>
-	<LV9PR03MB841441B282275F8F36FD12C1F7312@LV9PR03MB8414.namprd03.prod.outlook.com>
-	<20260505142640.49cde0ca@jic23-huawei>
-	<afoFjaUBcGXeuEzH@ashevche-desk.local>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1777998335; c=relaxed/simple;
+	bh=10ad65O0ps7iM6dei8qNX30QY3FkTiMh2oPpwbtxSn0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fTkDfk+QC0HOTMC34pEU3M59I14iiQOfa/dLB5HUO9L5jRV94hm5msYqC+hQ6t70vPPi/V3bWLZX4ATCVEbsfU7sAqE1tFA5o85EP8gsGx3qMSZTHq6lwP2zD+YAnEQkW4FmrxsMmnKo+PJ7GqLO2mj2p7FvquFlDRaylJZpm54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=BOLA12n2; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4838c15e3cbso44609545e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2026 09:25:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1777998332; x=1778603132; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dvgEgjFlnhgVavTSLAwA8kue6OnY1fSQmcbYOk/Oxj8=;
+        b=BOLA12n2zlvmTn6BetXu2cIMwXhJbX+fAz/gLq6do6zp3kF4K8bysb/R3kx6QmU/sL
+         sy3LWQoP4bi8cfnuP560JUjb7CQJze1XckvA6zXP0cQCyFX4ek6Ex+BhPLyNPHbkcKvi
+         mi3Mf1XGJcV9KZdHYB4NPiQe4Be5mJyy0DlMvUJcGYrNtvX/tmmSESSG8uRanKtf6QrH
+         +jXCiqbm1qvvfa3oR65MrApVGLhfnE5RhpdCkSitxFVUhnKXbOyeOYf85Na4ivlYhRxp
+         29xl5m38ckNZuCyrfLY9/TP0RzuQ/yCbLpPNfD20ghiwdgtgdjyIoXBIwXneCGn1k6w7
+         F+hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777998332; x=1778603132;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dvgEgjFlnhgVavTSLAwA8kue6OnY1fSQmcbYOk/Oxj8=;
+        b=ifx5ELDfMR4t3hUS3uR5ypOXgqphzi0qBh5TuAr30PRLNmRUCBbmM5W4Z3Qk2C2fOA
+         l0G2ptJhEGCC3XNVZFttQLOeQV8IEh+kTC5ckKjsXbM8PAw7g6YScMOf9W4pnnXBPLT+
+         F7ffUh05AflpFUi9ZRQJp9iYktNVkMiGl5QH1ru3IUW+0H2R3IwBAscC5cq51GK87QlG
+         6nn8W01JyXi8cV30NKRrCc9kvyZTasAWhRAewxj+hTd/X+2LzGiUyZHSU4Bvi8vbaDNu
+         y2zVfIAYHgqX3o5X6Z6gOXIfBZ9V6dFf+F5rJIHfkfop2455FfyerG3wLyprQKbiuJ6c
+         72Hw==
+X-Forwarded-Encrypted: i=1; AFNElJ/hSKiR8ETd3gqcsyDRmPS0iDnQgFrWfat0waMjJCcTHTKwcxVt+vTwSYq8kNcUzW+aMMJUmhN2r7wB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2rqKUvGG433jAWoCG8/fNYNcl6B4fniJkFu3LEWB3XYpn3qx/
+	Kdu86rw+yi5aobkZ88306r8OzyttwF36izbCEvtbxfZwi496tLlMn0fqsUc1j3yCu7I=
+X-Gm-Gg: AeBDietFpZZgoAQl4QqWHkZ78RInkKpH9JKIY3dKDfvUJFcSJcn2ZjR7M/JHn71wkdQ
+	zV2H4ALGhSdFcYLUEKmIEMAfRLNspmma+115ltTotsW5j3/3w/rbBeV5/z1bIabyDl59BjUzThi
+	u7aAM07cfPEmMKtlFodaMLHepKc6ZnECFvP6gbJb77ANwAbdImdnQYSRWD7Xe73OKqIGnKUiNFV
+	HjHzMrhLEf/XylbSltj35pqa+p1xefzG2q0fPDwbMArNd0K7fgR74U5aYoqADZy4fC5v/mPZLAi
+	5p6a+d9H0FoPM+IYe7U6Gjoy51obgEqnDX+ZLDgUNFHMCEyq5q/CPNjBFTUkUDLSa/7mB/iWLOf
+	7MBx0MN1fdNfctuVRaAylEJOeXJBUY8YNf+bhifsTyGAAiA2nNlNzlecEMR5dsmtyjKoBdixv3p
+	WZlSzKDyIyEQQqOVNcIvZWyYhW0gNOl2UfYhskIMiymf9XHwn1FmjTt9JSRTyeIoMraUzcO4lUl
+	hR1xw9jyHiii/78c6HFPLSCgkL7+U2BZkjFAno83amhhEj5cZk0xebSdCO/8h6iPtE8FA+hWyhR
+	JImizQtJ0LN9L2hQM0g=
+X-Received: by 2002:a05:600c:3e05:b0:489:1ff1:74df with SMTP id 5b1f17b1804b1-48a9852fbcfmr256956845e9.1.1777998332149;
+        Tue, 05 May 2026 09:25:32 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a81ed6bafsm737620655e9.2.2026.05.05.09.25.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2026 09:25:31 -0700 (PDT)
+Date: Tue, 5 May 2026 17:25:28 +0100
+From: Daniel Thompson <daniel@riscstar.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Alex Elder <elder@riscstar.com>, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, maxime.chevallier@bootlin.com,
+	rmk+kernel@armlinux.org.uk, andersson@kernel.org,
+	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linusw@kernel.org, brgl@kernel.org,
+	arnd@arndb.de, gregkh@linuxfoundation.org,
+	mohd.anwar@oss.qualcomm.com, a0987203069@gmail.com,
+	alexandre.torgue@foss.st.com, ast@kernel.org,
+	boon.khai.ng@altera.com, chenchuangyu@xiaomi.com,
+	chenhuacai@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
+	hkallweit1@gmail.com, inochiama@gmail.com, john.fastabend@gmail.com,
+	julianbraha@gmail.com, livelycarpet87@gmail.com,
+	matthew.gerlach@altera.com, mcoquelin.stm32@gmail.com, me@ziyao.cc,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
+	rohan.g.thomas@altera.com, sdf@fomichev.me,
+	siyanteng@cqsoftware.com.cn, weishangjuan@eswincomputing.com,
+	wens@kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 12/12] arm64: dts: qcom: qcs6490-rb3gen2: enable
+ TC9564 with a single QCS8081 phy
+Message-ID: <afoZ-LuVRaX6ixs4@aspen.lan>
+References: <20260501155421.3329862-1-elder@riscstar.com>
+ <20260501155421.3329862-13-elder@riscstar.com>
+ <d29621c3-07fc-4720-abff-d8901a0d791c@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 740544D121C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d29621c3-07fc-4720-abff-d8901a0d791c@lunn.ch>
+X-Rspamd-Queue-Id: D915C4D1467
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-0.06 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_DKIM_ALLOW(-0.20)[riscstar-com.20251104.gappssmtp.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[riscstar.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36231-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[analog.com,metafoo.de,baylibre.com,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
+	FREEMAIL_CC(0.00)[riscstar.com,lunn.ch,davemloft.net,google.com,kernel.org,redhat.com,bootlin.com,armlinux.org.uk,arndb.de,linuxfoundation.org,oss.qualcomm.com,gmail.com,foss.st.com,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
+	TAGGED_FROM(0.00)[bounces-36232-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	DKIM_TRACE(0.00)[riscstar-com.20251104.gappssmtp.com:+];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[daniel@riscstar.com,linux-gpio@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[50];
+	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,riscstar-com.20251104.gappssmtp.com:dkim,1c:email,aspen.lan:mid]
 
-On Tue, 5 May 2026 17:58:21 +0300
-Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
+On Fri, May 01, 2026 at 11:09:42PM +0200, Andrew Lunn wrote:
+> > +					tc956x_emac1_phy: ethernet-phy@1c {
+> > +						compatible = "ethernet-phy-id004d.d101";
+> > +						reg = <0x1c>;
+> > +						reset-gpios = <&tc956x_emac0 1 GPIO_ACTIVE_LOW>;
+> > +						reset-assert-us = <20>;
+> > +						reset-deassert-us = <20>;
+> > +
+> > +						pinctrl-names = "default";
+> > +						pinctrl-0 = <&qep_irq_pin>;
+> > +						interrupts-extended = <&tlmm 101 IRQ_TYPE_EDGE_FALLING>;
+>
+> What is probably wrong. PHY interrupts are level, not edge.
 
-> On Tue, May 05, 2026 at 02:26:40PM +0100, Jonathan Cameron wrote:
-> 
-> ...
-> 
-> > > > > +	for (i = 0; i < ARRAY_SIZE(ad4691_gp_names); i++) {
-> > > > > +		irq = fwnode_irq_get_byname(dev_fwnode(dev),
-> > > > > +					    ad4691_gp_names[i]);
-> > > > > +		if (irq > 0)
-> > > > > +			break;    
-> > > > 
-> > > > This is problematic in case the above returns EPROBE_DEFER. Can you confirm
-> > > > it
-> > > > may not ever happen? (Note, I don't know the answer.)  
-> > > 
-> > > You are right, thanks for this!  
-> > I'm missing something. Why is that a problem?  Driver will return
-> > the error and a dev_err_probe() is used so it won't print anything.
-> > So probe will fail which is exactly what we want.  
-> 
-> If there are two IRQs and the first one is probe deferred and second returns
-> an error, we return that error instead of the deferral probe.
-> 
-> May be I missed something, but I have no idea how in this case it may return
-> the first error code in such a case.
-Ah. Indeed. I completely misread the code.  if (irq) would do the job to fix this.
-J
-> 
+Thanks (and agree). Will fix.
 
+
+Daniel.
 
