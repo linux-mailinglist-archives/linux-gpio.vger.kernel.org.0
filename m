@@ -1,154 +1,182 @@
-Return-Path: <linux-gpio+bounces-36137-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36138-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IKphEPW8+WnvCwMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36137-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 11:48:37 +0200
+	id OK1zMwO9+WmTCwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36138-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 11:48:51 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A12A4CA1AA
-	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 11:48:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DD2EF4CA1BA
+	for <lists+linux-gpio@lfdr.de>; Tue, 05 May 2026 11:48:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 40B57301A93F
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2026 09:46:16 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 1A5E030173BB
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2026 09:47:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AF6A2C21FF;
-	Tue,  5 May 2026 09:46:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38E622D061D;
+	Tue,  5 May 2026 09:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YQtJCedx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WJWuqp6O"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C03029E116
-	for <linux-gpio@vger.kernel.org>; Tue,  5 May 2026 09:46:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11DE29E116
+	for <linux-gpio@vger.kernel.org>; Tue,  5 May 2026 09:47:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777974375; cv=none; b=AvEBsitLwhE8gEGc2gXZsq+n3ibryQiDtkyiXzNpDQrb/RfGiALWq/mJlAS/4LtbHgzA4FSuynS6N8piI9djcLfaPfSWAEse+hT7YdgmkGcxRd05niAzYDJAfQDqjkR39ppQNxjiqCLb+WYmLncdDrRrjF/BXsiO6f1uF6qLXuQ=
+	t=1777974432; cv=none; b=EZ4bOKqyEk6jx6K2nTdJWuAW6uM3PLpQk5J8PIWwpBB6/+dbuNLueDFMk5EZvuZEF0XXzc5ussN5mDrtkoNbaO0oBBpMsR7wK451cejHyxWvAJAtrKfG1Q/8wl6BFUUhauEEoR3MJ5saHkAbPp/Mjq0385iN9xi+Gbz8QenlS8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777974375; c=relaxed/simple;
-	bh=dRupWt7MDVmF6oGdB664BE5eszPjbUpZIphP9q4IEv4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u/K49dK0ooA7zyYLkTZwHApBjCEIGyrfrSq0HhpGhkzPnMgpQxYvQQO7uQI+dQkIa4QVeQFEn3eKEBLKaxjaOX4avt0z+0VmSxA8ifofzcq1TBN12EpSxP2oq8swrc1gJSfWe+NzRmksmbr/fli2609/RqvZSzvStMskxB1uz7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YQtJCedx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99151C2BCB4
-	for <linux-gpio@vger.kernel.org>; Tue,  5 May 2026 09:46:14 +0000 (UTC)
+	s=arc-20240116; t=1777974432; c=relaxed/simple;
+	bh=rwH6hBKT44ZJOeb+mzc++yS7777RrA7f0KMw7Gsm2og=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Wv32uTtWtUHqQ5QyxWF8mkJBI265kxlR0vDSK4gG+oz06wcI4WxsdL22qsqjsSRrc9mKX6X0PJ+VkAw0uU2NX639oT7YtNVm2z7LkKEVDByuyq/UZ8NJ66SyIiY1S52Y8xeykOoHK8vY4Q4EnHxfGY46Zrmi0NT8fFKX8zQnbUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WJWuqp6O; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAF72C2BCB4;
+	Tue,  5 May 2026 09:47:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777974374;
-	bh=dRupWt7MDVmF6oGdB664BE5eszPjbUpZIphP9q4IEv4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YQtJCedxy8u0UFTn/Z6rggc//oHiuQqDswnaVSXEzZXjqjI0w9mX2UdHleq6WKiWt
-	 +eGDU6sLgcMk9tQFRzH2uREGjfqoh/rLzJ+kKi3QHYxshfyX3w1Q5U4+QCJXC6wm/T
-	 LeL77ZnYXVolVQ+pHg9wrXJnytbV0hcEEGrmiKhY48QUslJRDEQbyBCIaBN3XFiNjn
-	 is182kFm89xn2GHfj3WL2zl8h38WJcc4kIU8uGtcA4KhM6kV6NrhK92fm78mTzkI09
-	 cMMMgZXWo1LtzJyQdjfL4FVKQvLjiaMzq/H3z0E9r/N0oMkEDXMyxDhnfVxNXoHvp8
-	 Cmp1U6scGugJg==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5a85b30dd54so3838013e87.2
-        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2026 02:46:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+X2PVnzT13MpBrcsW1k66WPj9xN5f/TBaR5gV0XHfZInmGo13z1hUyShCm6tdkzezaCt9bb2k1hzQj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEwxNuyJ6rgzDa/wt5f7LSbUG/biNVki2BXWm0Ck7NX5ZKATMD
-	waBcZJhwtt13Lo2OP/P+FnABgUGoIQlglyQDllKsbw6boix7EbB2wCXqzSWyES1oa65i4uSQ9G8
-	FM57LXKWDmE6kMrSP5ksgxEpnEwp3AtI=
-X-Received: by 2002:ac2:5599:0:b0:5a8:6b4b:bea0 with SMTP id
- 2adb3069b0e04-5a86b4bbf45mr2490283e87.41.1777974371358; Tue, 05 May 2026
- 02:46:11 -0700 (PDT)
+	s=k20201202; t=1777974431;
+	bh=rwH6hBKT44ZJOeb+mzc++yS7777RrA7f0KMw7Gsm2og=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WJWuqp6OrhbEhzdTq7o2XxWkpvJBSf+4BpCWKHMGzDmWBJ+9DYONv1UJkgg6bHWP3
+	 AzY3wFIiknmZPSw+fvIZ1e+nt37a3t2NUmSwu1u+unoYvXzpSN50+E4Xvua/eCBlum
+	 mlST9iVUtpv9kB1Hz9y4sMzwj2U7vO5KPbkT808/awihdBYNLW+jtsDqtUSA43DXO+
+	 BaiRq0L7u2wHIGU/g+5Bg5vI0f+nut7mB53dVYZN6gJlwQfBMuxTjb6xGbPsoBud4l
+	 dhiSuVREimtazKYPqo45W7pZCTujQ+OrEwvqUkZYJd3O7b6GjjAypPasJrgzGne7FN
+	 XQQNsyN5Q2i6g==
+Message-ID: <f384dd12-c982-42e6-9b7b-95d09a1bb63d@kernel.org>
+Date: Tue, 5 May 2026 11:47:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1776872453.git.happycpu@gmail.com> <33d515f13769c685e6811463a14e111252a7c58d.1776872453.git.happycpu@gmail.com>
- <CAD++jLkOZGunkfs2EO_DQDPLnLVp+OPG6o4EKaY5GkAcqYQy5w@mail.gmail.com> <CAMRc=MfQY2Z+q=YGO0jEBip0dGjyq+uCH8EZwi9RaUOJxf74UA@mail.gmail.com>
-In-Reply-To: <CAMRc=MfQY2Z+q=YGO0jEBip0dGjyq+uCH8EZwi9RaUOJxf74UA@mail.gmail.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Tue, 5 May 2026 11:45:59 +0200
-X-Gmail-Original-Message-ID: <CAD++jLkkhB89iM3iBv+8cwK9fmmGWrEvDez1VcjGiWZp543hdg@mail.gmail.com>
-X-Gm-Features: AVHnY4KHXq9rneTkcgED1JGQbSrHQsb9lHUBwDqL8Q1iTokG2fFYTi52Qwlz3QE
-Message-ID: <CAD++jLkkhB89iM3iBv+8cwK9fmmGWrEvDez1VcjGiWZp543hdg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: gpio: fairchild,74hc595: add
- registers-default property
-To: Bartosz Golaszewski <brgl@kernel.org>
-Cc: Chanhong Jung <happycpu@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Ripard <mripard@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 3A12A4CA1AA
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] pinctrl: intel: Stop setting IRQF_NO_THREAD ?
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ linux-gpio@vger.kernel.org
+References: <18ab52bd-9171-4667-a600-0f52ab7017ac@kernel.org>
+ <20250623061517.GU2824380@black.fi.intel.com>
+ <afm0GTghqnG6JuC0@ashevche-desk.local>
+ <3df439b7-2c28-44f5-81ed-5d4747e7096f@kernel.org>
+ <afm7t40WdlYopUKu@ashevche-desk.local>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <afm7t40WdlYopUKu@ashevche-desk.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: DD2EF4CA1BA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	SUBJECT_ENDS_QUESTION(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,vger.kernel.org];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36137-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-36138-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_HAS_DN(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hansg@kernel.org,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	TAGGED_RCPT(0.00)[linux-gpio];
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 
-On Wed, Apr 29, 2026 at 11:04=E2=80=AFAM Bartosz Golaszewski <brgl@kernel.o=
-rg> wrote:
+Hi Andy,
 
-> >   lines-initial-states:
-> >     $ref: /schemas/types.yaml#/definitions/uint32
-> >     description:
-> >       Bitmask that specifies the initial state of each line.
-> >       When a bit is set to zero, the corresponding line will be initial=
-ized to
-> >       the input (pulled-up) state.
-> >       When the  bit is set to one, the line will be initialized to the
-> >       low-level output state.
-> >       If the property is not specified all lines will be initialized to=
- the
-> >       input state.
-> >
-> > If you want to set up initial states, use this property.
-> >
-> > This also makes it possible for us to centralize the handling later on.
-> >
->
-> Ah, the old initial/default GPIO values problem strikes again. :(
->
-> IMO this is software configuration, not HW description. I think the
-> driver should do it based on the compatible and/or machine. It should
-> not be a property but if Krzysztof is fine with it, I'll queue it.
+On 5-May-26 11:43, Andy Shevchenko wrote:
+> On Tue, May 05, 2026 at 11:39:51AM +0200, Hans de Goede wrote:
+>> On 5-May-26 11:10, Andy Shevchenko wrote:
+>>> On Mon, Jun 23, 2025 at 09:15:17AM +0300, Mika Westerberg wrote:
+>>>> On Sat, Jun 21, 2025 at 10:49:33AM +0200, Hans de Goede wrote:
+>>>
+>>>>> While debugging the following lockdep report:
+>>>>>
+>>>>> =============================
+>>>>>  [ BUG: Invalid wait context ]
+>>>>>  ...
+>>>>>  swapper/10/0 is trying to lock:
+>>>>>  ffff88819c271888 (&tp->xfer_wait){....}-{3:3},
+>>>>>   at: __wake_up (kernel/sched/wait.c:106 kernel/sched/wait.c:127)
+>>>>>  ...
+>>>>>  Call Trace:
+>>>>>  <IRQ>
+>>>>>  ...
+>>>>>  __raw_spin_lock_irqsave (./include/linux/spinlock_api_smp.h:111)
+>>>>>  __wake_up (kernel/sched/wait.c:106 kernel/sched/wait.c:127)
+>>>>>  vsc_tp_isr (drivers/misc/mei/vsc-tp.c:110) mei_vsc_hw
+>>>>>  __handle_irq_event_percpu (kernel/irq/handle.c:158)
+>>>>>  handle_irq_event (kernel/irq/handle.c:195 kernel/irq/handle.c:210)
+>>>>>  handle_edge_irq (kernel/irq/chip.c:833)
+>>>>>  ...
+>>>>>  </IRQ>
+>>>>>
+>>>>> I realized after a while that the root-cause here is the IRQF_NO_THREAD
+>>>>> usage in pinctrl-intel.c. This was introduced in 1a7d1cb81eb2 ("pinctrl:
+>>>>> intel: Prevent force threading of the interrupt handler") to avoid problems
+>>>>> caused by using request_irq() for what should be a chained irq handler
+>>>>> (which itself is a workaround because of a shared IRQ on some platforms).
+>>>>>
+>>>>> Generally speaking using IRQF_NO_THREAD is undesirable for 2 reasons:
+>>>>>
+>>>>> 1. It introduces extra latency on PREEMPT-RT kernels
+>>>>> 2. Setting IRQF_NO_THREAD requires all interrupt handlers for GPIO
+>>>>>    interrupts to use raw-spinlocks only since normal spinlocks can
+>>>>>    sleep in PREEMPT-RT kernels and with IRQF_NO_THREAD the interrupt
+>>>>>    handlers will run in an atomic context
+>>>>>
+>>>>> 2. is what is causing the lockdep report above, by simply using a
+>>>>> wake_up(&wq_head) call in an interrupt handler, since wait-queues
+>>>>> use normal spinlocks not raw spinlocks.
+>>>>>
+>>>>> I've tried just removing the IRQF_NO_THREAD flag and that fixes
+>>>>> the lockdep report. I've also tried reproducing the problem for
+>>>>> which the flag was added in commit 1a7d1cb81eb2 by using a kernel
+>>>>> with CONFIG_IRQ_FORCED_THREADING and "threadirqs" on the kernel
+>>>>> commandline. And the problem not reproduce. I'm not sure this is
+>>>>> 100% proof that the flag is no longer necessary though ...
+>>>>
+>>>> Can you try also with CONFIG_PREEMPT_RT and see if that triggers the issue?
+>>>> If not then:
+>>>>
+>>>>> So 2 questions:
+>>>>>
+>>>>> 1. Should we maybe just drop the flag ?
+>>>>> 2. Or should we have 2 different code-paths for GPIO controllers
+>>>>> with/without shared IRQs and use a chained-irq approach for the
+>>>>> not shared case, to at least reduce the usage of the flag ?
+>>>>
+>>>> I would just drop the flag then.
+>>>
+>>> Hans, any conclusion on this?
+>>
+>> I worked around this issue in the affected driver.
+> 
+> Is it upstream? Can you share the commit ID or patch in ML (if it's ready)
+> for that? (Just for the record.)
 
-This one is particularly uncomfortably hard to define.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=cee3dba7b7416c02ff3
 
-If we depend on the machine we need to sprinkle
-of_machine_is_compatible() over all drivers.
+Regards,
 
-A lot of detailed properties that could have been handled by a few
-gazillion of_machine_is_compatible():s are already present
-in the kernel.
+Hans
 
-What is good about the property that has the same name
-is that we can create nicer looking kernel code that is easier
-to maintain. The DT maintainers may not care about that, but
-from a GPIO subsystem PoV I think the line-initial-states
-are better.
 
-Yours,
-Linus Walleij
 
