@@ -1,187 +1,612 @@
-Return-Path: <linux-gpio+bounces-36294-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36295-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AG2zLzZT+2k5ZgMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36294-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 16:41:58 +0200
+	id KEeBKH9W+2n+ZQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36295-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 16:55:59 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 519994DC6D0
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 16:41:58 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 984F04DCB49
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 16:55:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id BFCF930A6DFC
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 14:36:03 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 3B89F303EC14
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 14:43:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89F333EC2F8;
-	Wed,  6 May 2026 14:36:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 572D440F8C3;
+	Wed,  6 May 2026 14:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="Y+sNC/Ek";
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="RhslPSKM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+Received: from extorris.mess.org (extorris.mess.org [92.243.27.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF71143D518;
-	Wed,  6 May 2026 14:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA7148166E;
+	Wed,  6 May 2026 14:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.243.27.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778078159; cv=none; b=JH7mkSU85AN33ixMiBK6KNkMq/I9QsYDZpDbas8VlQZd3fFo2UGuGKgsRjB1G/4e4yyAk/hA4PWz77nhSqlge3H6SrJAkn8fyPKB5yb6zMEWyGJuTYD+aEjQha9lUbFNGm2bC4EVnHounTxcNADHI7Apixy8MBS76vktd1uh3+M=
+	t=1778078610; cv=none; b=NJZs55F0QvEMHpXSfh9UmYQD6eVr7mfja8dD1crggx+AR/5T2aPCn7+dv0SBnoUT05fKBrmMoilNWZaM1Hf205xv0vW9kbaersRqSADRdSuskL3DMjh2WWws4OGLdZ/YHAJ+wfrt2diQR31GHiLx6rJLTmycuJwtbMKhZCbrvww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778078159; c=relaxed/simple;
-	bh=Zur84kG6Cnp4wreiG5CN4FgwbW1EIdYLvjwk+4rMp9I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hWh+kVXWcOL6nEfYH8GlMmyqT6g3PusCZecvtgvYgDkf+O4HoyEPXhyFfqKQAowJoijKvO/vEj1yRx3xkksoZj49nFqi/yy+yLpY05y+97ug9HsRThpcwBpl8GEb4OWIjgeaAiOHdItNX3PD2GbWFP6FX4jwxCUG+8uU7xEaT1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=54.207.19.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
-X-QQ-mid: zesmtpgz9t1778078124tfdb3498a
-X-QQ-Originating-IP: HLf/KqKvl4iUx55Y9dX5tREX5GHA3CKBaEkxPVPPjPc=
-Received: from [127.0.0.1] ( [116.234.74.217])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 06 May 2026 22:35:19 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 7518115279056366694
-Message-ID: <4C0D95BC59F1A4ED+53f3be85-2cdd-4058-8950-57970027d481@radxa.com>
-Date: Wed, 6 May 2026 22:35:18 +0800
+	s=arc-20240116; t=1778078610; c=relaxed/simple;
+	bh=A1B3nJpY4ScbQWP11G5jpvKqoxxwkHCRodBvg0PzDdg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HFtATlzkMAnzeNdzxYRixqVABalzkCwXdpaXOEl2ZBeJ9a0KUhySV8xLFGUPzTPwIs9qiSp/CT9KRinsWodXhul5Lg5y39Nj2mEU9RCQvaTbGQAfsmxMu1GHC0X+ORX5Je/3+Crc+McdCMGAOQgu1ew8nCc5e/vDLEutTihBccc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org; spf=pass smtp.mailfrom=mess.org; dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b=Y+sNC/Ek; dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b=RhslPSKM; arc=none smtp.client-ip=92.243.27.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1778078606; bh=A1B3nJpY4ScbQWP11G5jpvKqoxxwkHCRodBvg0PzDdg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Y+sNC/EklmcfadL/jIgi8uMI0OurI754hf1cY4LsNmuuJKeRR2zbS4f2IXSNHS9WI
+	 cHHpJhmNXNmL1+a/SzF3Z/h8TfrBnS6w7Ps806fp8wup/l0LHGO62HwRe68WrZnSXA
+	 Y7B+9vLs/mhqujP5c5UmqEjQ9OPylkv2Cbn8ThPdYMbWoUp+wuL7LypcGwgNWknD4w
+	 6jZ3eeymkb7YuGt8jOJdJT0oj+Y8xXAqbXL+xqvGDAQwwd6NN0ZAc8cveAQPni+bQ9
+	 UQexary2aS3ItEspz238uLu3sNTW60HSVvUTt4jFjU6czwMa0rjHOZjEgledAFi0JO
+	 b2icS0BBPtC1g==
+Received: by extorris.mess.org (Postfix, from userid 1004)
+	id C2E5441CE2; Wed, 06 May 2026 15:43:26 +0100 (BST)
+X-Spam-Level: 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1778078590; bh=A1B3nJpY4ScbQWP11G5jpvKqoxxwkHCRodBvg0PzDdg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=RhslPSKMuQUHbMtcvW5yJwF2caxDNLvs9lji3W7RBq0QS8BDNXY7jPJGGQptCedym
+	 TxboVJq6ttADi/ICQRzB+80Obbu4wSlcPJn02JqWBHIGb463l06C8qAnI6132jAZfx
+	 1vg3QNnBLZcGP6bM0waeP/nShmt5wxlJv96CBBh7IDfeGtBnDKNQeJCN6B4H6eu9+n
+	 Vspgy2QpvsuEqYAVw3MVMjx426y4wHLsa41ItaXkJg3B0IUp4yCaeGyZoEW5ms2Xz/
+	 0ePAFN8XP8NpDPHmjjGjngWZsFXV29gL6X4XT7sZKNPu4az0PgVuxp+VLMFp3fseFU
+	 JqqIzRu9JYoKQ==
+Received: from maru.local (unknown [140.228.74.55])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by extorris.mess.org (Postfix) with ESMTPSA id A1A4441CE0;
+	Wed, 06 May 2026 15:43:10 +0100 (BST)
+From: Sean Young <sean@mess.org>
+To: linux-kernel@vger.kernel.org,
+	Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [PATCH 5/8] gpio: ts5500: Remove gpio driver as board no longer supported
+Date: Wed,  6 May 2026 15:42:50 +0100
+Message-ID: <cd44c71752347272ee836b469e77f26dfb44d06c.1778071745.git.sean@mess.org>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <cover.1778071745.git.sean@mess.org>
+References: <cover.1778071745.git.sean@mess.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 10/12] net: stmmac: tc956x: add TC956x/QPS615
- support
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Alex Elder <elder@riscstar.com>, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, maxime.chevallier@bootlin.com,
- rmk+kernel@armlinux.org.uk, andersson@kernel.org, konradybcio@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, linusw@kernel.org,
- brgl@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
- Daniel Thompson <daniel@riscstar.com>, mohd.anwar@oss.qualcomm.com,
- a0987203069@gmail.com, alexandre.torgue@foss.st.com, ast@kernel.org,
- boon.khai.ng@altera.com, chenchuangyu@xiaomi.com, chenhuacai@kernel.org,
- daniel@iogearbox.net, hawk@kernel.org, hkallweit1@gmail.com,
- inochiama@gmail.com, john.fastabend@gmail.com, julianbraha@gmail.com,
- livelycarpet87@gmail.com, matthew.gerlach@altera.com,
- mcoquelin.stm32@gmail.com, me@ziyao.cc,
- prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
- rohan.g.thomas@altera.com, sdf@fomichev.me, siyanteng@cqsoftware.com.cn,
- weishangjuan@eswincomputing.com, wens@kernel.org, netdev@vger.kernel.org,
- bpf@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20260501155421.3329862-1-elder@riscstar.com>
- <20260501155421.3329862-11-elder@riscstar.com>
- <224E233C593EF171+8c8a43dd-5061-40f8-9eb7-f360eabf2ecc@radxa.com>
- <4015f47a-af62-441d-b1b8-a8598f963970@lunn.ch>
-Content-Language: en-US
-From: Xilin Wu <sophon@radxa.com>
-In-Reply-To: <4015f47a-af62-441d-b1b8-a8598f963970@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:radxa.com:qybglogicsvrsz:qybglogicsvrsz3b-0
-X-QQ-XMAILINFO: OfvHCbuEslM3Ck5szwuuQAkL7b1wZdWKW5s8yTwsBXMt0g7JWSmtLq5z
-	GeqGX+SvAzYkXuUOHu0oZS1KcuPOB7YBUdOFze6JBifAKzTWQiSYoOFU8mP12whoplFDt5R
-	0vrN3lnq1jUm9vvtu78UuasMewHcoRlx/XVkUfpbM6Rpuwc9p0ZEb1S9o1wIoD4coV4wm4X
-	qoWyyx9iFZ4L6VwVQTOmk6aF1py0JsFAiDCJRkvby+pvEWLB+cHnAbcNK87AKUcvmMfO5XR
-	8wqVOOG57Oc3EboSM6cIjXGlKeaEGVGrzL9nKILgRvvp+HFkIsgmYHftsqrWbua3ZfharTU
-	sFHYbNPuzEYd/YPYwQgP6lLL5Fv4jJOgbp69v7lqp/QOhFgBHF1O0t4+CgIVMlmVPXH3rP7
-	HSf4PL5Vu6oASDITs91M1rTnDrlf/iBvE1t73lBwR78h6gfKV2WIemvvb8ag5KgX2o7S3cH
-	Rn4jFLVJImGVSv2o8ry0grQlS2JLeIV+qZRMOl8FrxFIyP+kPuxz69UvJDBKZJyni1piSaQ
-	Up21qbkJjGqxW/ShWB3OOl7ezSX/y4ca10qw0vr3DB8zHhJkcXoGERyAzKp8tUaN7dShEuQ
-	LyX1BOwyIcAj9VwTf/XQ8WYEsWg+/INTigOOVsmmIldH92kr4ZUlKmZF3A++16LWX8LkCmF
-	1fVf+m+CXvR/Hj2Q7fuaVJgjnxBPYqrXd1Vk04rFe4oPvNIGut7/P7ksDs7dQRL55rUdjg3
-	WHtsSvHSBA/RmyseO2kpPgkisxGcYTklXDM4hP7R2XvapIdgRqA4ujjZ1T2HFWHnXwg/LtG
-	lm3TtAsAHV14yezknyUT8nl+KBhjiJZ92JRUyUyXhZMiY9d7rudY2wr3RZx9SiKh9CYstFF
-	8MvJTinKwRpw4NdmF16h1kgvc+FJxeN1j9TA7pF2MhvpaUlEWZc54M5OE6iIg/F9GNsYQze
-	N5CzIBeWkys2UFo8YOUDNHCn0S62D1uw9Vq23fce78sGFIB0huepiu4RCUO0XObQa3vt6Y7
-	IpRES9DP2aXTxbEYqqTLAxnVWZo/KZEV4QWT7ikpMl/HoOpdIs7xjrUg41rUsvkJmAUkouP
-	Y0klfgQdeZ5hs3vrHwsWLw=
-X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
-X-QQ-RECHKSPAM: 0
-X-Rspamd-Queue-Id: 519994DC6D0
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 984F04DCB49
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.14 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[mess.org,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[mess.org:s=2020];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[radxa.com : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36294-lists,linux-gpio=lfdr.de];
-	FORGED_MUA_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[riscstar.com,lunn.ch,davemloft.net,google.com,kernel.org,redhat.com,bootlin.com,armlinux.org.uk,arndb.de,linuxfoundation.org,oss.qualcomm.com,gmail.com,foss.st.com,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[51];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sophon@radxa.com,linux-gpio@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-36295-lists,linux-gpio=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.982];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,radxa.com:mid,radxa.com:email]
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_NEQ_ENVFROM(0.00)[sean@mess.org,linux-gpio@vger.kernel.org];
+	RCPT_COUNT_THREE(0.00)[4];
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[mess.org:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mess.org:email,mess.org:dkim,mess.org:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,savoirfairelinux.com:email]
 
-On 5/6/2026 10:19 PM, Andrew Lunn wrote:
-> On Wed, May 06, 2026 at 08:59:01PM +0800, Xilin Wu wrote:
->> On 5/1/2026 11:54 PM, Alex Elder wrote:
->>> +	/* AXI Configuration */
->>> +	axi = &td->axi;
->>> +	axi->axi_lpi_en = 1;
->>> +	axi->axi_wr_osr_lmt = 31;
->>> +	axi->axi_rd_osr_lmt = 31;
->>> +	/* All sizes (2^2..2^8) are supported */
->>> +	axi->axi_blen_regval = DMA_AXI_BLEN_MASK;
->>> +	plat->axi = axi;
->>> +
->>> +	plat->mac_port_sel_speed = speed;
->>> +	plat->flags = STMMAC_FLAG_MULTI_MSI_EN | STMMAC_FLAG_TSO_EN;
->>
->> I got WoL working only after adding STMMAC_FLAG_USE_PHY_WOL here. I guess
->> it's required, since the driver clocks down the MAC/PMA/XPCS in its suspend
->> hook?
-> 
-> Nice to see somebody testing WoL.
-> 
-> In your testing, is it the PHY doing the WoL, or the MAC? I assume
-> PHY.
-> 
-> If i remember the DT correctly, the PHY interrupt is connected to a
-> SoC GPIO, not a GPIO of this chip. So for your board, it is the SoCs
-> GPIO controllers ability to perform the wake which is
-> important. However, where the PHY interrupt is connected is a board
-> design issue. Could the PHY interrupt be connected to the chip? Would
-> the chip be able to wake the system? Should STMMAC_FLAG_USE_PHY_WOL be
-> conditional?
-> 
-> 	Andrew
-> 
+Since commit 8b793a92d862 ("x86/cpu: Remove M486/M486SX/ELAN support"),
+this board is no longer supported. Remove the gpio driver too.
 
-Hi Andrew,
+Signed-off-by: Sean Young <sean@mess.org>
+---
+ drivers/gpio/Kconfig       |   9 -
+ drivers/gpio/Makefile      |   1 -
+ drivers/gpio/gpio-ts5500.c | 446 -------------------------------------
+ 3 files changed, 456 deletions(-)
+ delete mode 100644 drivers/gpio/gpio-ts5500.c
 
-Yes, the PHY is doing the WoL. And I guess this makes sense as it allows 
-the MAC to power down during suspend to save power.
-
-The INTN pin of QCA8081 is connected to the ETH_0_INT_N of QPS615. And 
-the INTN_WOL pin is connected to a SoC GPIO.
-
-Without this change, I can't get WoL to work. I have a working branch 
-for our board here:
-https://github.com/strongtz/linux-radxa-qcom/commits/v7.0.2-8280-wip/
-
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 020e51e30317..359a21cb093e 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1093,15 +1093,6 @@ config GPIO_SCH311X
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called gpio-sch311x.
+ 
+-config GPIO_TS5500
+-	tristate "TS-5500 DIO blocks and compatibles"
+-	depends on TS5500 || COMPILE_TEST
+-	help
+-	  This driver supports Digital I/O exposed by pin blocks found on some
+-	  Technologic Systems platforms. It includes, but is not limited to, 3
+-	  blocks of the TS-5500: DIO1, DIO2 and the LCD port, and the TS-5600
+-	  LCD port.
+-
+ config GPIO_WINBOND
+ 	tristate "Winbond Super I/O GPIO support"
+ 	select ISA_BUS_API
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index b267598b517d..dc9d1106e75f 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -194,7 +194,6 @@ obj-$(CONFIG_GPIO_TPS68470)		+= gpio-tps68470.o
+ obj-$(CONFIG_GPIO_TQMX86)		+= gpio-tqmx86.o
+ obj-$(CONFIG_GPIO_TS4800)		+= gpio-ts4800.o
+ obj-$(CONFIG_GPIO_TS4900)		+= gpio-ts4900.o
+-obj-$(CONFIG_GPIO_TS5500)		+= gpio-ts5500.o
+ obj-$(CONFIG_GPIO_TWL4030)		+= gpio-twl4030.o
+ obj-$(CONFIG_GPIO_TWL6040)		+= gpio-twl6040.o
+ obj-$(CONFIG_GPIO_UNIPHIER)		+= gpio-uniphier.o
+diff --git a/drivers/gpio/gpio-ts5500.c b/drivers/gpio/gpio-ts5500.c
+deleted file mode 100644
+index 3c7f2efe10fd..000000000000
+--- a/drivers/gpio/gpio-ts5500.c
++++ /dev/null
+@@ -1,446 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Digital I/O driver for Technologic Systems TS-5500
+- *
+- * Copyright (c) 2012 Savoir-faire Linux Inc.
+- *	Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+- *
+- * Technologic Systems platforms have pin blocks, exposing several Digital
+- * Input/Output lines (DIO). This driver aims to support single pin blocks.
+- * In that sense, the support is not limited to the TS-5500 blocks.
+- * Actually, the following platforms have DIO support:
+- *
+- * TS-5500:
+- *   Documentation: https://docs.embeddedts.com/TS-5500
+- *   Blocks: DIO1, DIO2 and LCD port.
+- *
+- * TS-5600:
+- *   Documentation: https://docs.embeddedts.com/TS-5600
+- *   Blocks: LCD port (identical to TS-5500 LCD).
+- */
+-
+-#include <linux/bitops.h>
+-#include <linux/gpio/driver.h>
+-#include <linux/io.h>
+-#include <linux/module.h>
+-#include <linux/platform_device.h>
+-#include <linux/slab.h>
+-
+-/* List of supported Technologic Systems platforms DIO blocks */
+-enum ts5500_blocks { TS5500_DIO1, TS5500_DIO2, TS5500_LCD, TS5600_LCD };
+-
+-struct ts5500_priv {
+-	const struct ts5500_dio *pinout;
+-	struct gpio_chip gpio_chip;
+-	spinlock_t lock;
+-	bool strap;
+-	u8 hwirq;
+-};
+-
+-/*
+- * Hex 7D is used to control several blocks (e.g. DIO2 and LCD port).
+- * This flag ensures that the region has been requested by this driver.
+- */
+-static bool hex7d_reserved;
+-
+-/*
+- * This structure is used to describe capabilities of DIO lines,
+- * such as available directions and connected interrupt (if any).
+- */
+-struct ts5500_dio {
+-	const u8 value_addr;
+-	const u8 value_mask;
+-	const u8 control_addr;
+-	const u8 control_mask;
+-	const bool no_input;
+-	const bool no_output;
+-	const u8 irq;
+-};
+-
+-#define TS5500_DIO_IN_OUT(vaddr, vbit, caddr, cbit)	\
+-	{						\
+-		.value_addr = vaddr,			\
+-		.value_mask = BIT(vbit),		\
+-		.control_addr = caddr,			\
+-		.control_mask = BIT(cbit),		\
+-	}
+-
+-#define TS5500_DIO_IN(addr, bit)		\
+-	{					\
+-		.value_addr = addr,		\
+-		.value_mask = BIT(bit),		\
+-		.no_output = true,		\
+-	}
+-
+-#define TS5500_DIO_IN_IRQ(addr, bit, _irq)	\
+-	{					\
+-		.value_addr = addr,		\
+-		.value_mask = BIT(bit),		\
+-		.no_output = true,		\
+-		.irq = _irq,			\
+-	}
+-
+-#define TS5500_DIO_OUT(addr, bit)		\
+-	{					\
+-		.value_addr = addr,		\
+-		.value_mask = BIT(bit),		\
+-		.no_input = true,		\
+-	}
+-
+-/*
+- * Input/Output DIO lines are programmed in groups of 4. Their values are
+- * available through 4 consecutive bits in a value port, whereas the direction
+- * of these 4 lines is driven by only 1 bit in a control port.
+- */
+-#define TS5500_DIO_GROUP(vaddr, vbitfrom, caddr, cbit)		\
+-	TS5500_DIO_IN_OUT(vaddr, vbitfrom + 0, caddr, cbit),	\
+-	TS5500_DIO_IN_OUT(vaddr, vbitfrom + 1, caddr, cbit),	\
+-	TS5500_DIO_IN_OUT(vaddr, vbitfrom + 2, caddr, cbit),	\
+-	TS5500_DIO_IN_OUT(vaddr, vbitfrom + 3, caddr, cbit)
+-
+-/*
+- * TS-5500 DIO1 block
+- *
+- *  value    control  dir    hw
+- *  addr bit addr bit in out irq name     pin offset
+- *
+- *  0x7b  0  0x7a  0  x   x      DIO1_0   1   0
+- *  0x7b  1  0x7a  0  x   x      DIO1_1   3   1
+- *  0x7b  2  0x7a  0  x   x      DIO1_2   5   2
+- *  0x7b  3  0x7a  0  x   x      DIO1_3   7   3
+- *  0x7b  4  0x7a  1  x   x      DIO1_4   9   4
+- *  0x7b  5  0x7a  1  x   x      DIO1_5   11  5
+- *  0x7b  6  0x7a  1  x   x      DIO1_6   13  6
+- *  0x7b  7  0x7a  1  x   x      DIO1_7   15  7
+- *  0x7c  0  0x7a  5  x   x      DIO1_8   4   8
+- *  0x7c  1  0x7a  5  x   x      DIO1_9   6   9
+- *  0x7c  2  0x7a  5  x   x      DIO1_10  8   10
+- *  0x7c  3  0x7a  5  x   x      DIO1_11  10  11
+- *  0x7c  4           x          DIO1_12  12  12
+- *  0x7c  5           x      7   DIO1_13  14  13
+- */
+-static const struct ts5500_dio ts5500_dio1[] = {
+-	TS5500_DIO_GROUP(0x7b, 0, 0x7a, 0),
+-	TS5500_DIO_GROUP(0x7b, 4, 0x7a, 1),
+-	TS5500_DIO_GROUP(0x7c, 0, 0x7a, 5),
+-	TS5500_DIO_IN(0x7c, 4),
+-	TS5500_DIO_IN_IRQ(0x7c, 5, 7),
+-};
+-
+-/*
+- * TS-5500 DIO2 block
+- *
+- *  value    control  dir    hw
+- *  addr bit addr bit in out irq name     pin offset
+- *
+- *  0x7e  0  0x7d  0  x   x      DIO2_0   1   0
+- *  0x7e  1  0x7d  0  x   x      DIO2_1   3   1
+- *  0x7e  2  0x7d  0  x   x      DIO2_2   5   2
+- *  0x7e  3  0x7d  0  x   x      DIO2_3   7   3
+- *  0x7e  4  0x7d  1  x   x      DIO2_4   9   4
+- *  0x7e  5  0x7d  1  x   x      DIO2_5   11  5
+- *  0x7e  6  0x7d  1  x   x      DIO2_6   13  6
+- *  0x7e  7  0x7d  1  x   x      DIO2_7   15  7
+- *  0x7f  0  0x7d  5  x   x      DIO2_8   4   8
+- *  0x7f  1  0x7d  5  x   x      DIO2_9   6   9
+- *  0x7f  2  0x7d  5  x   x      DIO2_10  8   10
+- *  0x7f  3  0x7d  5  x   x      DIO2_11  10  11
+- *  0x7f  4           x      6   DIO2_13  14  12
+- */
+-static const struct ts5500_dio ts5500_dio2[] = {
+-	TS5500_DIO_GROUP(0x7e, 0, 0x7d, 0),
+-	TS5500_DIO_GROUP(0x7e, 4, 0x7d, 1),
+-	TS5500_DIO_GROUP(0x7f, 0, 0x7d, 5),
+-	TS5500_DIO_IN_IRQ(0x7f, 4, 6),
+-};
+-
+-/*
+- * TS-5500 LCD port used as DIO block
+- * TS-5600 LCD port is identical
+- *
+- *  value    control  dir    hw
+- *  addr bit addr bit in out irq name    pin offset
+- *
+- *  0x72  0  0x7d  2  x   x      LCD_0   8   0
+- *  0x72  1  0x7d  2  x   x      LCD_1   7   1
+- *  0x72  2  0x7d  2  x   x      LCD_2   10  2
+- *  0x72  3  0x7d  2  x   x      LCD_3   9   3
+- *  0x72  4  0x7d  3  x   x      LCD_4   12  4
+- *  0x72  5  0x7d  3  x   x      LCD_5   11  5
+- *  0x72  6  0x7d  3  x   x      LCD_6   14  6
+- *  0x72  7  0x7d  3  x   x      LCD_7   13  7
+- *  0x73  0               x      LCD_EN  5   8
+- *  0x73  6           x          LCD_WR  6   9
+- *  0x73  7           x      1   LCD_RS  3   10
+- */
+-static const struct ts5500_dio ts5500_lcd[] = {
+-	TS5500_DIO_GROUP(0x72, 0, 0x7d, 2),
+-	TS5500_DIO_GROUP(0x72, 4, 0x7d, 3),
+-	TS5500_DIO_OUT(0x73, 0),
+-	TS5500_DIO_IN(0x73, 6),
+-	TS5500_DIO_IN_IRQ(0x73, 7, 1),
+-};
+-
+-static inline void ts5500_set_mask(u8 mask, u8 addr)
+-{
+-	u8 val = inb(addr);
+-	val |= mask;
+-	outb(val, addr);
+-}
+-
+-static inline void ts5500_clear_mask(u8 mask, u8 addr)
+-{
+-	u8 val = inb(addr);
+-	val &= ~mask;
+-	outb(val, addr);
+-}
+-
+-static int ts5500_gpio_input(struct gpio_chip *chip, unsigned offset)
+-{
+-	struct ts5500_priv *priv = gpiochip_get_data(chip);
+-	const struct ts5500_dio line = priv->pinout[offset];
+-	unsigned long flags;
+-
+-	if (line.no_input)
+-		return -ENXIO;
+-
+-	if (line.no_output)
+-		return 0;
+-
+-	spin_lock_irqsave(&priv->lock, flags);
+-	ts5500_clear_mask(line.control_mask, line.control_addr);
+-	spin_unlock_irqrestore(&priv->lock, flags);
+-
+-	return 0;
+-}
+-
+-static int ts5500_gpio_get(struct gpio_chip *chip, unsigned offset)
+-{
+-	struct ts5500_priv *priv = gpiochip_get_data(chip);
+-	const struct ts5500_dio line = priv->pinout[offset];
+-
+-	return !!(inb(line.value_addr) & line.value_mask);
+-}
+-
+-static int ts5500_gpio_output(struct gpio_chip *chip, unsigned offset, int val)
+-{
+-	struct ts5500_priv *priv = gpiochip_get_data(chip);
+-	const struct ts5500_dio line = priv->pinout[offset];
+-	unsigned long flags;
+-
+-	if (line.no_output)
+-		return -ENXIO;
+-
+-	spin_lock_irqsave(&priv->lock, flags);
+-	if (!line.no_input)
+-		ts5500_set_mask(line.control_mask, line.control_addr);
+-
+-	if (val)
+-		ts5500_set_mask(line.value_mask, line.value_addr);
+-	else
+-		ts5500_clear_mask(line.value_mask, line.value_addr);
+-	spin_unlock_irqrestore(&priv->lock, flags);
+-
+-	return 0;
+-}
+-
+-static int ts5500_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
+-{
+-	struct ts5500_priv *priv = gpiochip_get_data(chip);
+-	const struct ts5500_dio line = priv->pinout[offset];
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&priv->lock, flags);
+-	if (val)
+-		ts5500_set_mask(line.value_mask, line.value_addr);
+-	else
+-		ts5500_clear_mask(line.value_mask, line.value_addr);
+-	spin_unlock_irqrestore(&priv->lock, flags);
+-
+-	return 0;
+-}
+-
+-static int ts5500_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
+-{
+-	struct ts5500_priv *priv = gpiochip_get_data(chip);
+-	const struct ts5500_dio *block = priv->pinout;
+-	const struct ts5500_dio line = block[offset];
+-
+-	/* Only one pin is connected to an interrupt */
+-	if (line.irq)
+-		return line.irq;
+-
+-	/* As this pin is input-only, we may strap it to another in/out pin */
+-	if (priv->strap)
+-		return priv->hwirq;
+-
+-	return -ENXIO;
+-}
+-
+-static int ts5500_enable_irq(struct ts5500_priv *priv)
+-{
+-	int ret = 0;
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&priv->lock, flags);
+-	if (priv->hwirq == 7)
+-		ts5500_set_mask(BIT(7), 0x7a); /* DIO1_13 on IRQ7 */
+-	else if (priv->hwirq == 6)
+-		ts5500_set_mask(BIT(7), 0x7d); /* DIO2_13 on IRQ6 */
+-	else if (priv->hwirq == 1)
+-		ts5500_set_mask(BIT(6), 0x7d); /* LCD_RS on IRQ1 */
+-	else
+-		ret = -EINVAL;
+-	spin_unlock_irqrestore(&priv->lock, flags);
+-
+-	return ret;
+-}
+-
+-static void ts5500_disable_irq(struct ts5500_priv *priv)
+-{
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&priv->lock, flags);
+-	if (priv->hwirq == 7)
+-		ts5500_clear_mask(BIT(7), 0x7a); /* DIO1_13 on IRQ7 */
+-	else if (priv->hwirq == 6)
+-		ts5500_clear_mask(BIT(7), 0x7d); /* DIO2_13 on IRQ6 */
+-	else if (priv->hwirq == 1)
+-		ts5500_clear_mask(BIT(6), 0x7d); /* LCD_RS on IRQ1 */
+-	else
+-		dev_err(priv->gpio_chip.parent, "invalid hwirq %d\n",
+-			priv->hwirq);
+-	spin_unlock_irqrestore(&priv->lock, flags);
+-}
+-
+-static int ts5500_dio_probe(struct platform_device *pdev)
+-{
+-	enum ts5500_blocks block = platform_get_device_id(pdev)->driver_data;
+-	struct device *dev = &pdev->dev;
+-	const char *name = dev_name(dev);
+-	struct ts5500_priv *priv;
+-	unsigned long flags;
+-	int ret;
+-
+-	ret = platform_get_irq(pdev, 0);
+-	if (ret < 0)
+-		return ret;
+-
+-	priv = devm_kzalloc(dev, sizeof(struct ts5500_priv), GFP_KERNEL);
+-	if (!priv)
+-		return -ENOMEM;
+-
+-	platform_set_drvdata(pdev, priv);
+-	priv->hwirq = ret;
+-	spin_lock_init(&priv->lock);
+-
+-	priv->gpio_chip.owner = THIS_MODULE;
+-	priv->gpio_chip.label = name;
+-	priv->gpio_chip.parent = dev;
+-	priv->gpio_chip.direction_input = ts5500_gpio_input;
+-	priv->gpio_chip.direction_output = ts5500_gpio_output;
+-	priv->gpio_chip.get = ts5500_gpio_get;
+-	priv->gpio_chip.set = ts5500_gpio_set;
+-	priv->gpio_chip.to_irq = ts5500_gpio_to_irq;
+-	priv->gpio_chip.base = -1;
+-
+-	switch (block) {
+-	case TS5500_DIO1:
+-		priv->pinout = ts5500_dio1;
+-		priv->gpio_chip.ngpio = ARRAY_SIZE(ts5500_dio1);
+-
+-		if (!devm_request_region(dev, 0x7a, 3, name)) {
+-			dev_err(dev, "failed to request %s ports\n", name);
+-			return -EBUSY;
+-		}
+-		break;
+-	case TS5500_DIO2:
+-		priv->pinout = ts5500_dio2;
+-		priv->gpio_chip.ngpio = ARRAY_SIZE(ts5500_dio2);
+-
+-		if (!devm_request_region(dev, 0x7e, 2, name)) {
+-			dev_err(dev, "failed to request %s ports\n", name);
+-			return -EBUSY;
+-		}
+-
+-		if (hex7d_reserved)
+-			break;
+-
+-		if (!devm_request_region(dev, 0x7d, 1, name)) {
+-			dev_err(dev, "failed to request %s 7D\n", name);
+-			return -EBUSY;
+-		}
+-
+-		hex7d_reserved = true;
+-		break;
+-	case TS5500_LCD:
+-	case TS5600_LCD:
+-		priv->pinout = ts5500_lcd;
+-		priv->gpio_chip.ngpio = ARRAY_SIZE(ts5500_lcd);
+-
+-		if (!devm_request_region(dev, 0x72, 2, name)) {
+-			dev_err(dev, "failed to request %s ports\n", name);
+-			return -EBUSY;
+-		}
+-
+-		if (!hex7d_reserved) {
+-			if (!devm_request_region(dev, 0x7d, 1, name)) {
+-				dev_err(dev, "failed to request %s 7D\n", name);
+-				return -EBUSY;
+-			}
+-
+-			hex7d_reserved = true;
+-		}
+-
+-		/* Ensure usage of LCD port as DIO */
+-		spin_lock_irqsave(&priv->lock, flags);
+-		ts5500_clear_mask(BIT(4), 0x7d);
+-		spin_unlock_irqrestore(&priv->lock, flags);
+-		break;
+-	}
+-
+-	ret = devm_gpiochip_add_data(dev, &priv->gpio_chip, priv);
+-	if (ret) {
+-		dev_err(dev, "failed to register the gpio chip\n");
+-		return ret;
+-	}
+-
+-	ret = ts5500_enable_irq(priv);
+-	if (ret) {
+-		dev_err(dev, "invalid interrupt %d\n", priv->hwirq);
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-
+-static void ts5500_dio_remove(struct platform_device *pdev)
+-{
+-	struct ts5500_priv *priv = platform_get_drvdata(pdev);
+-
+-	ts5500_disable_irq(priv);
+-}
+-
+-static const struct platform_device_id ts5500_dio_ids[] = {
+-	{ "ts5500-dio1", TS5500_DIO1 },
+-	{ "ts5500-dio2", TS5500_DIO2 },
+-	{ "ts5500-dio-lcd", TS5500_LCD },
+-	{ "ts5600-dio-lcd", TS5600_LCD },
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(platform, ts5500_dio_ids);
+-
+-static struct platform_driver ts5500_dio_driver = {
+-	.driver = {
+-		.name = "ts5500-dio",
+-	},
+-	.probe = ts5500_dio_probe,
+-	.remove = ts5500_dio_remove,
+-	.id_table = ts5500_dio_ids,
+-};
+-
+-module_platform_driver(ts5500_dio_driver);
+-
+-MODULE_LICENSE("GPL");
+-MODULE_AUTHOR("Savoir-faire Linux Inc. <kernel@savoirfairelinux.com>");
+-MODULE_DESCRIPTION("Technologic Systems TS-5500 Digital I/O driver");
 -- 
-Best regards,
-Xilin Wu <sophon@radxa.com>
+2.54.0
+
 
