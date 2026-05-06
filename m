@@ -1,273 +1,358 @@
-Return-Path: <linux-gpio+bounces-36311-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36272-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QGYHKqBl+2kuaQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36311-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 18:00:32 +0200
+	id kPQOEp4K+2mbVQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36272-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 11:32:14 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C155C4DDC18
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 18:00:31 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EC414D8A54
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 11:32:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EC54A309E684
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 15:56:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0641330376A3
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 09:29:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8824C3E3165;
-	Wed,  6 May 2026 15:56:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E7C03E5579;
+	Wed,  6 May 2026 09:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjGFkPW/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2110.outbound.protection.partner.outlook.cn [139.219.146.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2966347D95B;
-	Wed,  6 May 2026 15:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.110
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778082998; cv=fail; b=SRgVmfGy2vBnheZ0JQugUtPB4tjM0p3O7YYY4Xp7dYdhBBiXUkjoGiB7HKe7f/9WlTpekycYHRCxQ8YouRl1YNMnU0mQ9QA7zEpEogtG425gaBf11yJ76qS2ySJ+hJ+2OHytiPA66fWR4+9Ob+kLiRIx49u3yaX0WqaCdsJT2CI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778082998; c=relaxed/simple;
-	bh=3cdirSAGaGDnorGyOgMnO90YvYT/I9F14uF2el/Zhhw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Kn4b2xBZWI22a1dO7Yp9pMScGe842absHH8xQrUUmFP2yLrFM3ty2H01hDBeCdIoVINpJ2qTL28wGCggDB3Sw3yw4XlMTHtozJhnyK6OfNAJXkHP7nuesAVeR/monYqILRUym+xVXmxj8UnWRmIz4gnBUr4XtMk5BGWyD0qeFNY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dbrRuxJkNqtOIrnxQp60IdNwxaWzDJpKByV4UzCu9FNk5vmBYa7/Oz73BXcxB8Mp7Do2jLe/wP2bbb/XVdY5Tk4lcSJ1k/YN7gTGaz9m7GkAur0rCt1kAyklbhyiDuddLai+XJ0Z/Z37YYV//edoxghv/lxm6qxnwpHzzI7I1E28xniRs+zpZMWkVviw3VCRPTvozrEn/anW0tEfd+UWuv7afscwRQz2+CA4Y2e39/JCCxxYxZwe7NI/Vy595nVThWfSUj6DaEPxogHAYDolmLAOfZ143N6SsiQywAsFBpYgBMhJOOG/kYN1rPBEQcTLGf+igw+6RZ965y/NzKYd8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uJKEKVPIq1XRSdKOOntc9VF2F23Ieo4f1lZdwnoGwX0=;
- b=d+6JsZsTnWI37eX55CkEyUfZU72QTwsVwbldsh1+Aeo83m+qqvbbyNn1JUND9Ps5xXXRK+gBu8hMalRUIkFCa6JQP6RfQKomBicL+PmS0+eMQ8JTyzz2hTesmFzcz5IjFacSpPTvbGRCyf6lPCAYuJZ+E4vLQY7fpWE7woFAWxiyk8bQbI7170eRxn1m9T5IF7mpQD9DU+Xt8/iSMPfE/1u3TFTFQvVDUZl6HJm5JhA8iBQl7vL6Lt4guPkQ+tAzmUMC+MSIhNTUmR4IDKJZJIWSwiMFZ3CB6rpOo63fQhHRQFwSM6fjvy86TUwOOmfXHqJsT4tQDlOyfYG6YZGuhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:17::6) by ZQ4PR01MB1172.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:14::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.15; Wed, 6 May
- 2026 09:23:37 +0000
-Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
- ([fe80::e7d4:256c:b066:850d]) by
- ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn ([fe80::e7d4:256c:b066:850d%5])
- with mapi id 15.20.9891.008; Wed, 6 May 2026 09:23:37 +0000
-From: Changhuang Liang <changhuang.liang@starfivetech.com>
-To: Conor Dooley <conor@kernel.org>
-CC: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Emil Renner Berthing <kernel@esmil.dk>, Paul Walmsley <pjw@kernel.org>,
-	Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexandre Ghiti <alex@ghiti.fr>, Philipp Zabel <p.zabel@pengutronix.de>,
-	Bartosz Golaszewski <brgl@kernel.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, Lianfeng Ouyang
-	<lianfeng.ouyang@starfivetech.com>
-Subject: Re: [PATCH v1 11/20] dt-bindings: pinctrl: Add
- starfive,jhb100-per1-pinctrl
-Thread-Topic: [PATCH v1 11/20] dt-bindings: pinctrl: Add
- starfive,jhb100-per1-pinctrl
-Thread-Index: AQHc09tvLatUK5oq3keSy4c9Ncpt5LXubvkAgAVF1NCAASNvgIAL9BTw
-Date: Wed, 6 May 2026 09:23:36 +0000
-Message-ID:
- <ZQ4PR01MB1202F561A68C43547A85D1E7F23F2@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
-References: <20260424111330.702272-1-changhuang.liang@starfivetech.com>
- <20260424111330.702272-12-changhuang.liang@starfivetech.com>
- <20260424-mumps-foothill-ef122c1029c0@spud>
- <ZQ4PR01MB120229BE0DAC2658164C066AF2372@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
- <20260428-hardhat-both-1c9aa594a45a@spud>
-In-Reply-To: <20260428-hardhat-both-1c9aa594a45a@spud>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: ZQ4PR01MB1202:EE_|ZQ4PR01MB1172:EE_
-x-ms-office365-filtering-correlation-id: 6475f694-eb94-495c-fc29-08deab51271b
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700021|56012099003|18002099003|22082099003;
-x-microsoft-antispam-message-info:
- uKyLAUOB1M1rdjZ7VM216P9y7hUaP6JCFmlFKKjfxZ4zATBg9w6xBKsS5W19KVzwYxcm14cFhoPTlIJ+DgiA7CRK8SHrRZEWQyqWGgja5qeTcRfpcxRQ1pi4Jg1MR9unQbAfYm/y4gNQYMl/xMp207beYp6bKtAH0BpBRNHBn7m2u42K4bj0azHt6u8XpT4gmBo8FuKiazt9eWd1BXv259Il0afmXoOoWVXPpQIIqYS0+YPvOG2xvIpsKszFmLoHhtunP4M1B3L0Z0RtR8O2/Kp5jbdXt8K5QJoIM0Gn7iw6iBrjK2ZvzOIGuXm/koa/XvljjQLJyaHJEnVLP2ZEuW8I5ah39nJ4tKePSCxGufbCCYVvQDD4HilvylijYX2c8Ds9Tl/DZhgeHgrHPr6pHimGbEjE1AX7MWlIvJizzNso42hVH79SpOvbhJfVJWllGTGulaHsKbS5PMLmjcdRpugOJwrB6Nm6aBB8Hfml3jPGbfiiyRC0xyouZe2oyI3DXbNBKfogKu1NIzHLH4NYXJB6XTR4ekHDhcbEJujX2rDzt6DQi44l9M9iztGoXrFc
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700021)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Uy566qmnzeObFGEfVpxuK3doQQ83ff25mtBEh3d3TemKDeJ3nfwbguyTka32?=
- =?us-ascii?Q?O0xOwISG1171zxuouK3rAbFQFsaz9ErbvfpRr+yqfpfWsGOn9lgXjMKZqu67?=
- =?us-ascii?Q?NWIfQ08Rrz6XuU4dGwSdpXN2TjuBRO5r26oHOlzwNhl/GM3NiQ3VblX8ilOd?=
- =?us-ascii?Q?yR3QfxnPvOE9x7C7REpXriIll4Rj8HMgq/8D7GddGlVjBlThGoz/aTCgg2+Q?=
- =?us-ascii?Q?hMBm1imt3E1fadyJvm5hic7P33Cut8xeR3TWY0h1MMjCsPZYuAGa5yz2tx+5?=
- =?us-ascii?Q?oP/DbJs+5GT12aG5mgBhwhhWVsV2P5SI5RPQogmKIlb3qokWFgadTs5id7e+?=
- =?us-ascii?Q?sL+nQEedVU7ux0wsLm1nPeGMo4PTkW5+rsGhTYTTH1jNnXp257V6sX0aCR3/?=
- =?us-ascii?Q?bHdKFtZxNXBOnOJN7yRTL2hny8AQEnFI96U/upVVu80PSaJA4TB/r0GiVwTI?=
- =?us-ascii?Q?+J958lfHNEA4ypM0MNvgGiprWWHNJy1H0Q0v4WLJ2b5XZtz+uvMolp6vKY2f?=
- =?us-ascii?Q?kixBACxg3v6ZIqGkynn+5uKu8xsZwlGi9PlPzW2enE5u8ZGR910YjYiiPfhx?=
- =?us-ascii?Q?juBN5pWsjidVAl3nsd/I0kXqIfKj4AqsednlcPdkwrnrbRZkzqVggYvX/21v?=
- =?us-ascii?Q?s75db86JFBhUgCC8oLESULbDXzlfJVc73rdNDwvVz99Ozk0g3lkjsETWbcxe?=
- =?us-ascii?Q?Y1E5W+pWoWoRtISkuILLhYX8eLrlBtqtsZCTH83zDm0rbwqHd4H/Zb8TA73w?=
- =?us-ascii?Q?92dpgqxPwzY3ECKsP5NsE2iDqpnUEJpx46yLflYf+W9fq6yfmVniPuRsj+74?=
- =?us-ascii?Q?zpnok8aHJIPUMtIrJYb5ZOcGsBEqZkYtaE33K88mNuYSSJbWsXykxpCWW3vn?=
- =?us-ascii?Q?l6LuPhnVaJWrw+I9p2EMO4uUPer60ExVL9xKv8vd8rbLpQX4uVsbHC1eeUXC?=
- =?us-ascii?Q?Kiu6DR0W1Fm7640FophNtG7ueJN2Zgvn77JJFQRLKDB47GVmzk5mJedbpV5g?=
- =?us-ascii?Q?X1lclNVc/DH/x2cPDgMBwDd6L1OuczzFVulBy4gW/mqkUqkYR5JMJZaKX/Av?=
- =?us-ascii?Q?UuPp3QsxybF7SMhMhHR7lE+7xrIJ6K6SvxUNFkB2/xmJD3Z3vvf63I8Q6d6U?=
- =?us-ascii?Q?+BV1tNGz436RXnmms+a3BRqy/7x1ZjT8Slg4cxgvh6zegvpTRV+78nWLABf5?=
- =?us-ascii?Q?3uFBT0KmtRKMAeZwQrM7ux5ddjV4KG17mUDMBKlFfXvoiDr/R44ilufj5JRN?=
- =?us-ascii?Q?uWYn1pcLmDkAYysoLwnlzUQkZ4ibx43hVjxEG/fZ7SejiaJ7d/nLgbwttvqf?=
- =?us-ascii?Q?vrbhP/YRcUHxgrUG/PV7SDHDIH1jq+pP+5hQbnUXczoKWCEfiQftFXSs8Cun?=
- =?us-ascii?Q?7R7VU87s6Ldk+7Htc3Y/7vKYfvXbyu3W8FhVNscPWGI9CXaFUGggJEH2Mq2Z?=
- =?us-ascii?Q?ZnNkbnwbpnwWRLnXy/RHZ8diqhGSf2RMwN/KUlKxIKdJZTMFQhxZ6V0pjao1?=
- =?us-ascii?Q?cOZvpDUTSvVK0r0dTrBKz6RJONW2yLgTwGLmumaUNB7FPtE31xPqFnon/xql?=
- =?us-ascii?Q?q9tskyisgkIf6EmjgztfuUhrEupQEO1BU+W1UmSzKXG2BPa9IZM90xJgJPit?=
- =?us-ascii?Q?uOABoJFPIUg0tPj3UwFSIL7Pb1H2rcxx+bdJY1SGdDJIqonASNaHx9XgUX4e?=
- =?us-ascii?Q?YNn/Zq1lofKZI/TPoDWfaNVBovRPmwvr/A8x29RxXym9YHHUkTmrNlTgktXT?=
- =?us-ascii?Q?stzmFJkkQEoKyJ3cw3hj9Sd8rp25wIo=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B403E1D01
+	for <linux-gpio@vger.kernel.org>; Wed,  6 May 2026 09:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778059780; cv=none; b=Q5SjFws5ahTXmuskKQ8jwqWpQRffmCZNY4P1v7bKjSRUdEBrsVOh6LNGAxtmGp14+EwnQzWt5m3fdEE8lEEWlvVkdu7C5ggN/0K3CknQPPbGpHgSayhOzAfp1SahN7KtKTSweCH12zrwKdtxfC5t3KlHqk/Vkr4/bGeQRGjcx0c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778059780; c=relaxed/simple;
+	bh=b6KDebbwB9y2ayWmTDcDF7ZXzrnROwC7atimGy8vf0g=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=jgdChDsX0Efa0K47SnjtXB5PYr/xzQd8KuM8+hqUlnwGRDzYa04HDiNQ/+3m/LDIiUtpRCA2eluOUA2qJ74DZw0r4qGvMzJwS3a4qtuEGb/7FYQb6rjKVlsyio3OQVWOvuWuEhGzD4erWTPi0QvSvPak+fpQZWViWdxyD298dRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BjGFkPW/; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4852a9c6309so49739945e9.0
+        for <linux-gpio@vger.kernel.org>; Wed, 06 May 2026 02:29:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778059778; x=1778664578; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U/I8gmtTJP4V7dsNote1TQ7GwmlIxPNJ693ojN9z7bA=;
+        b=BjGFkPW/6bSGbXo3NSVroU6XqXBQIXXcmCw+xNmUY3StCPVICQornGq/IpS7rY29ej
+         hvseDjPgmP9O9TTpsoFB7uQ8rLgsLKsylGyg2MzPBPdOc7ZoEfmFu/CGLF8YcoUzRP5V
+         meJauL5a2/a0bc0vwlrce915K4tgqG3gU5qeQEXE6svMBvKibSPKpFdUSFjtcVYZzrg1
+         AJW4Pihm6bTj94XL691TOLRAXv25NPV9Y5SMvvhTqP5rmPtNwZfR6fQ5ShGxwoio1AZS
+         E+9rJNb7SF+MlSuhr0SxpyZZRFm1yaorVkga1MeBExBnEeU5zrXJsfeOZ7ziHV6NcBiL
+         omaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778059778; x=1778664578;
+        h=content-transfer-encoding:cc:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=U/I8gmtTJP4V7dsNote1TQ7GwmlIxPNJ693ojN9z7bA=;
+        b=TLGT9Ot+hY0Qllsc9mhjvaJvrwwnJRv6lk9oLSLQwV7BapMmPRVOsguWrrpXsJ8v99
+         56F8+o0EH/XWN5uneXS5r61U+E/OBmwms8GqNInn/4Jz8cdzEvR+aWt9ZrJEHUuLClXM
+         I4mkvogOKc+5B3+Dfvz6KIJ8AMMO/G2mbJzAm9Mvz4pV3+8vjbsACYfCm7xrBNVoHUQ0
+         MlrVDC0xkzW4k/QDRxFZysxwfe1Uz48Ytn37ns+S7FxJHQ5ZNkvli06XzMYH9y5/Etmy
+         KnVTFV8FYJHynMqXa9L35X9/P5die+7vx3asz/QNyLvPJ+xVFB8YfPuoYoC5v519c6bq
+         3qMA==
+X-Gm-Message-State: AOJu0Yx4VM0pT3mcJcEgOQTN2fgOI+wL3/MnNwGBp7IgsK3XOjUp4qLW
+	otg90AB+PXGiN7HivwwTqXmdRTLPres0lNzL20mfDKXYH5AgBEMj6FgJB4PCUkhHrT+JWmwC
+X-Gm-Gg: AeBDiescFqF+A/ko63RyLvmvDDfmj4ux3DSi6q0DVZHo5oDZNV369Q91ZdQVaJWXefl
+	n5OqWRp7I+dMroZsn6iQgPOg4HrFu1j9qXyZTiNNksQ/6T3GywDBOtCsUhd+I7Vng94ZLYAl21d
+	/MEpC8Wy80Ccv17/Odi+/KjobxGHVE6zLeJX03GMAksD0xiOj2CWcjYVTZsYep9uPz0uMMx04E6
+	oCQB40vxu40CdUHt89Hy8bQ5Z9HTmp5u/X4XZUGmIDZVM8Hjx5xsEFbETWkuquQI8O+5XU0SZj5
+	oFcy8VatZdzOOzJbgahzOB1kucKegkdBrYdHWTlvlBgg3Tg83LV8dsw3jlay8ECyBCYqR/65VaV
+	yGvd2pdmBPJB+HuSPANd96TUliIOz+rL/p3+i4S4vPT/taYdSD3aTpxYGAds3PvTsWg32HRK5RN
+	eBcmF0hGebpIdqqHjbUBmG6TPhZZ23sb1CgKnjfrkB69TbgQeiOSqp4x4fSmolp7U2OYK1LB2ZT
+	0o3PF8=
+X-Received: by 2002:a05:600c:34ca:b0:489:1f08:91b with SMTP id 5b1f17b1804b1-48e521e6085mr44681375e9.16.1778059777373;
+        Wed, 06 May 2026 02:29:37 -0700 (PDT)
+Received: from ?IPV6:2a01:e11:202b:40:68b1:8d59:e348:c16e? ([2a01:e11:202b:40:68b1:8d59:e348:c16e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e538a547bsm38017295e9.5.2026.05.06.02.29.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 May 2026 02:29:36 -0700 (PDT)
+Message-ID: <59174ed2-dc3a-4891-929f-bf513deecdc2@gmail.com>
+Date: Wed, 6 May 2026 11:29:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6475f694-eb94-495c-fc29-08deab51271b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2026 09:23:37.0018
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FuerHwtXM5GFeawXRfQk5QhdK71janhM/c8jakeLxsim3FYPkBHmdwDiPWcEaYv3XJPhBDpncXNR8Nt95Cxmwxt37ujp4I9izhQBt2Dtgxf+mKNX85vinzufyU6Jb8E6
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ4PR01MB1172
-X-Rspamd-Queue-Id: C155C4DDC18
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: mika.westerberg@linux.intel.com, mathias.nyman@linux.intel.com
+From: Marco Scardovi <mscardovi95@gmail.com>
+Subject: [PATCH] gpio: acpi: modernize resource management using cleanup.h
+Cc: linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 9EC414D8A54
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [3.54 / 15.00];
-	DMARC_POLICY_QUARANTINE(1.50)[starfivetech.com : SPF not aligned (relaxed), No valid DKIM,quarantine];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36311-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[changhuang.liang@starfivetech.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	TAGGED_FROM(0.00)[bounces-36272-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	RCVD_COUNT_FIVE(0.00)[5];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn:mid]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mscardovi95@gmail.com,linux-gpio@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_NONE(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:email]
 
-Hi, Conor
+Hi everyone,
 
-Thanks for the review.
+I was looking for ways to switch to modern cleanup guards and auto-freeing
+pointers to simplify error paths and synchronization in gpiolib-acpi-core.c
+so I came up with the patch you can find below.
 
-> On Tue, Apr 28, 2026 at 01:28:05AM +0000, Changhuang Liang wrote:
-> > > On Fri, Apr 24, 2026 at 04:13:21AM -0700, Changhuang Liang wrote:
-> > > > Add pinctrl bindings for StarFive JHB100 SoC Peripheral-1(per1)
-> > > > pinctrl controller.
-> > > >
-> > > > Signed-off-by: Changhuang Liang
-> > > > <changhuang.liang@starfivetech.com>
-> > > > +        properties:
-> > > > +          pinmux:
-> > > > +            description: |
-> > > > +              The list of GPIOs and their function select.
-> > > > +              The PINMUX macros are used to configure the
-> > > > +              function selection.
-> > >
-> > > Why is the pinmux property needed?
-> > > Can you use pins and function instead?
-> > >
-> > > Looking at the defines that you have added, it appears that lots of
-> > > defines for the same peripheral share the same numerical values,
-> > > suggesting that across peripheral, all (or most) pins would share
-> > > the same mux setting/"function select", suggesting that pins/function
-> would suffice.
-> > >
-> > > I'd like to see some justification for pinmux being the right
-> > > solution here, like the "function select" used by one peripheral
-> > > being significantly different for many of its pins.
-> >
-> > We think that implementing this in the pinmux will be relatively
-> > simple. It avoids the need to create a large number of mapping
-> > relationships in the driver, which simplifies our driver
-> > implementation. I'm not sure if you'll find this explanation acceptable=
-.
->=20
-> I don't really see how pins + functions would require lots of "mapping
-> relationships". Instead of having
-> +/* pinctrl_sys2 pad function selection */
-> +#define FUNC_SYS2_UART_CTS				1
-> +#define FUNC_SYS2_UART_RTS				1
-> +#define FUNC_SYS2_UART_DCD				1
-> +#define FUNC_SYS2_UART_DSR				1
-> +#define FUNC_SYS2_UART_DTR				1
-> +#define FUNC_SYS2_UART_RI				1
-> +#define FUNC_SYS2_UART0_TX				1
-> +#define FUNC_SYS2_UART0_RX				1
-> +#define FUNC_SYS2_UART1_TX				1
-> +#define FUNC_SYS2_UART1_RX				1
-> +#define FUNC_SYS2_UART2_TX				1
-> +#define FUNC_SYS2_UART2_RX				1
-> +#define FUNC_SYS2_UART3_TX				1
-> +#define FUNC_SYS2_UART3_RX				1
-> +#define FUNC_SYS2_UART4_TX				1
-> +#define FUNC_SYS2_UART4_RX				1
-> +#define FUNC_SYS2_UART5_TX				1
-> +#define FUNC_SYS2_UART5_RX				1
-> +#define FUNC_SYS2_UART6_TX				1
-> +#define FUNC_SYS2_UART6_RX				1
-> +#define FUNC_SYS2_UART7_TX				1
-> +#define FUNC_SYS2_UART7_RX				1
-> +#define FUNC_SYS2_UART8_TX				1
-> +#define FUNC_SYS2_UART8_RX				1
-> +#define FUNC_SYS2_UART9_TX				1
-> +#define FUNC_SYS2_UART9_RX				1
-> +#define FUNC_SYS2_UART10_TX				1
-> +#define FUNC_SYS2_UART10_RX				1
-> +#define FUNC_SYS2_UART11_TX				1
-> +#define FUNC_SYS2_UART11_RX				1
-> +#define FUNC_SYS2_UART12_TX				1
-> +#define FUNC_SYS2_UART12_RX				1
-> +#define FUNC_SYS2_UART13_TX				1
-> +#define FUNC_SYS2_UART13_RX				1
-> +#define FUNC_SYS2_UART14_TX				1
-> +#define FUNC_SYS2_UART14_RX				1
-> you just define a function called "uart" and have a simple map of that st=
-ring to
-> the number 1. You end up with a single array with the relationships, not =
-lots.
->=20
-> Frankly, pinmux just does not seem appropriate to me when it looks like 9=
-0%+
-> of the pin mappings for a peripheral share the same function value.
-> There appears only to be a rare number of cases where that doesn't apply,=
- but
-> that could be handled by having them represented by a different group/pin=
-s
-> node with a different function.
+Here you can see the main points I've worked on:
+- Use DEFINE_FREE() for gpio_desc and ACPI resources.
+- Use guard(mutex)() within the OpRegion handler loop for automatic locking.
+- Use __free() for automatic descriptor and memory cleanup.
+- Fix off-by-one error in GPIO pin bounds check.
+- Return AE_OK on out-of-range pins to allow processing other resources
+   even if one is misconfigured in firmware.
+- Use break instead of goto in OpRegion handler for cleaner control flow
+   leveraging auto-cleanup.
 
-Thank you for sharing the method. We are trying to make some modifications,=
- and the results are quite good.
+I've tested it (both build and functionality) against linux-next-20260430.
 
-Best Regards,
-Changhuang
+Signed-off-by: Marco Scardovi <mscardovi95@gmail.com>
+---
+  drivers/gpio/gpiolib-acpi-core.c | 94 
++++++++++++++++++++---------------------
+  1 file changed, 43 insertions(+), 51 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib-acpi-core.c 
+b/drivers/gpio/gpiolib-acpi-core.c
+index eb8a40cfb7a9..19a18222b7b2 100644
+--- a/drivers/gpio/gpiolib-acpi-core.c
++++ b/drivers/gpio/gpiolib-acpi-core.c
+@@ -7,6 +7,9 @@
+   *          Mika Westerberg <mika.westerberg@linux.intel.com>
+   */
+
++#include <linux/cleanup.h>
++#include <linux/slab.h>
++
+  #include <linux/acpi.h>
+  #include <linux/dmi.h>
+  #include <linux/errno.h>
+@@ -23,6 +26,16 @@
+  #include "gpiolib.h"
+  #include "gpiolib-acpi.h"
+
++DEFINE_FREE(free_gpio_desc, struct gpio_desc *, {
++    if (_T)
++        gpiochip_free_own_desc(_T);
++})
++
++DEFINE_FREE(acpi_free, void *, {
++    if (_T)
++        ACPI_FREE(_T);
++})
++
+  /**
+   * struct acpi_gpio_event - ACPI GPIO event handler data
+   *
+@@ -361,6 +374,7 @@ static acpi_status acpi_gpiochip_alloc_event(struct 
+acpi_resource *ares,
+      struct acpi_gpio_event *event;
+      irq_handler_t handler = NULL;
+      struct gpio_desc *desc;
++    struct gpio_desc *desc_guard __free(free_gpio_desc) = NULL;
+      unsigned int pin;
+      int ret, irq;
+
+@@ -370,6 +384,11 @@ static acpi_status acpi_gpiochip_alloc_event(struct 
+acpi_resource *ares,
+      handle = ACPI_HANDLE(chip->parent);
+      pin = agpio->pin_table[0];
+
++    if (pin >= chip->ngpio) {
++        dev_err(chip->parent, "Failed to request GPIO for pin 0x%04X, 
+out of range\n", pin);
++        return AE_OK;
++    }
++
+      if (pin <= 255) {
+          char ev_name[8];
+          sprintf(ev_name, "_%c%02X",
+@@ -392,31 +411,26 @@ static acpi_status 
+acpi_gpiochip_alloc_event(struct acpi_resource *ares,
+
+      desc = acpi_request_own_gpiod(chip, agpio, 0, "ACPI:Event");
+      if (IS_ERR(desc)) {
+-        dev_err(chip->parent,
+-            "Failed to request GPIO for pin 0x%04X, err %pe\n",
+-            pin, desc);
++        dev_err(chip->parent, "Failed to request GPIO for pin 0x%04X, 
+err %pe\n", pin, desc);
+          return AE_OK;
+      }
++    desc_guard = desc;
+
+      ret = gpiochip_lock_as_irq(chip, pin);
+      if (ret) {
+-        dev_err(chip->parent,
+-            "Failed to lock GPIO pin 0x%04X as interrupt, err %d\n",
+-            pin, ret);
+-        goto fail_free_desc;
++        dev_err(chip->parent, "Failed to lock GPIO pin 0x%04X as 
+interrupt, err %d\n", pin, ret);
++        return AE_OK;
+      }
+
+      irq = gpiod_to_irq(desc);
+      if (irq < 0) {
+-        dev_err(chip->parent,
+-            "Failed to translate GPIO pin 0x%04X to IRQ, err %d\n",
+-            pin, irq);
+-        goto fail_unlock_irq;
++        dev_err(chip->parent, "Failed to translate GPIO pin 0x%04X to 
+IRQ, err %d\n", pin, irq);
++        goto err_unlock;
+      }
+
+      event = kzalloc_obj(*event);
+      if (!event)
+-        goto fail_unlock_irq;
++        goto err_unlock;
+
+      event->irqflags = IRQF_ONESHOT;
+      if (agpio->triggering == ACPI_LEVEL_SENSITIVE) {
+@@ -444,17 +458,15 @@ static acpi_status 
+acpi_gpiochip_alloc_event(struct acpi_resource *ares,
+      event->irq = irq;
+      event->irq_is_wake = acpi_gpio_irq_is_wake(chip->parent, agpio);
+      event->pin = pin;
+-    event->desc = desc;
++    /* Transfer ownership to event, prevent auto-free */
++    event->desc = no_free_ptr(desc_guard);
+
+      list_add_tail(&event->node, &acpi_gpio->events);
+
+      return AE_OK;
+
+-fail_unlock_irq:
++err_unlock:
+      gpiochip_unlock_as_irq(chip, pin);
+-fail_free_desc:
+-    gpiochip_free_own_desc(desc);
+-
+      return AE_OK;
+  }
+
+@@ -1086,7 +1098,7 @@ acpi_gpio_adr_space_handler(u32 function, 
+acpi_physical_address address,
+      struct acpi_gpio_chip *achip = region_context;
+      struct gpio_chip *chip = achip->chip;
+      struct acpi_resource_gpio *agpio;
+-    struct acpi_resource *ares;
++    struct acpi_resource *ares __free(acpi_free) = NULL;
+      u16 pin_index = address;
+      acpi_status status;
+      int length;
+@@ -1097,20 +1109,17 @@ acpi_gpio_adr_space_handler(u32 function, 
+acpi_physical_address address,
+      if (ACPI_FAILURE(status))
+          return status;
+
+-    if (WARN_ON(ares->type != ACPI_RESOURCE_TYPE_GPIO)) {
+-        ACPI_FREE(ares);
++    if (WARN_ON(ares->type != ACPI_RESOURCE_TYPE_GPIO))
+          return AE_BAD_PARAMETER;
+-    }
+
+      agpio = &ares->data.gpio;
+
+      if (WARN_ON(agpio->io_restriction == ACPI_IO_RESTRICT_INPUT &&
+-        function == ACPI_WRITE)) {
+-        ACPI_FREE(ares);
++        function == ACPI_WRITE))
+          return AE_BAD_PARAMETER;
+-    }
+
+      length = min(agpio->pin_table_length, pin_index + bits);
++    status = AE_OK;
+      for (i = pin_index; i < length; ++i) {
+          unsigned int pin = agpio->pin_table[i];
+          struct acpi_gpio_connection *conn;
+@@ -1118,7 +1127,7 @@ acpi_gpio_adr_space_handler(u32 function, 
+acpi_physical_address address,
+          u16 word, shift;
+          bool found;
+
+-        mutex_lock(&achip->conn_lock);
++        guard(mutex)(&achip->conn_lock);
+
+          found = false;
+          list_for_each_entry(conn, &achip->conns, node) {
+@@ -1150,17 +1159,15 @@ acpi_gpio_adr_space_handler(u32 function, 
+acpi_physical_address address,
+          if (!found) {
+              desc = acpi_request_own_gpiod(chip, agpio, i, 
+"ACPI:OpRegion");
+              if (IS_ERR(desc)) {
+-                mutex_unlock(&achip->conn_lock);
+                  status = AE_ERROR;
+-                goto out;
++                break;
+              }
+
+              conn = kzalloc_obj(*conn);
+              if (!conn) {
+                  gpiochip_free_own_desc(desc);
+-                mutex_unlock(&achip->conn_lock);
+                  status = AE_NO_MEMORY;
+-                goto out;
++                break;
+              }
+
+              conn->pin = pin;
+@@ -1168,8 +1175,6 @@ acpi_gpio_adr_space_handler(u32 function, 
+acpi_physical_address address,
+              list_add_tail(&conn->node, &achip->conns);
+          }
+
+-        mutex_unlock(&achip->conn_lock);
+-
+          /*
+           * For the cases when OperationRegion() consists of more than
+           * 64 bits calculate the word and bit shift to use that one to
+@@ -1188,8 +1193,6 @@ acpi_gpio_adr_space_handler(u32 function, 
+acpi_physical_address address,
+          }
+      }
+
+-out:
+-    ACPI_FREE(ares);
+      return status;
+  }
+
+
 
