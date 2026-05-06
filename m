@@ -1,168 +1,132 @@
-Return-Path: <linux-gpio+bounces-36271-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36311-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uEZvGWEH+2mbVQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36271-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 11:18:25 +0200
+	id QGYHKqBl+2kuaQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36311-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 18:00:32 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14E8C4D87AB
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 11:18:24 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C155C4DDC18
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 18:00:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1B885300C82F
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 09:18:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EC54A309E684
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 15:56:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5DF03E1201;
-	Wed,  6 May 2026 09:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="i8xaNt+b"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8824C3E3165;
+	Wed,  6 May 2026 15:56:39 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-00128a01.pphosted.com (mx0b-00128a01.pphosted.com [148.163.139.77])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2110.outbound.protection.partner.outlook.cn [139.219.146.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE66B3D3335;
-	Wed,  6 May 2026 09:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.139.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2966347D95B;
+	Wed,  6 May 2026 15:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.110
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778059095; cv=fail; b=uJ0RxQrgcf+s3y7Q5KgUB2UX8ylr/5M/k6gKDZR0X9dLMVUi+Rwo/MFO07A9ygg7G4qJc5ba8u6NGPMX3Mo9Swm3P7PPGd+yU6/bXlnFWvfWAPB0RCWq/obU+urGjDZ1MLwBEmxqcFE0UhpED10P+7kmMqH0b3a48YcnOV/V4sw=
+	t=1778082998; cv=fail; b=SRgVmfGy2vBnheZ0JQugUtPB4tjM0p3O7YYY4Xp7dYdhBBiXUkjoGiB7HKe7f/9WlTpekycYHRCxQ8YouRl1YNMnU0mQ9QA7zEpEogtG425gaBf11yJ76qS2ySJ+hJ+2OHytiPA66fWR4+9Ob+kLiRIx49u3yaX0WqaCdsJT2CI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778059095; c=relaxed/simple;
-	bh=9uslsVvrrxFz+qJ4VA7M0UqBGU3nyRZ6FJHilUJnxOA=;
+	s=arc-20240116; t=1778082998; c=relaxed/simple;
+	bh=3cdirSAGaGDnorGyOgMnO90YvYT/I9F14uF2el/Zhhw=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=gJDLOPJHGqIdd844yOUYLKEvwSFOi2pjysY7+9L2E4BABlrxnYPmgemenb/af44Ejiadgv9SLEPuGmA6OC8GMZxHUH7GYhE7q/hM3Wt4cm3i+6PagoxsXXODQmo+9CawRvinwvPX2a4W9cdnf2/sII10g4SNFbQIOBi9BdV+yI0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=i8xaNt+b; arc=fail smtp.client-ip=148.163.139.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6463lo8e2378763;
-	Wed, 6 May 2026 05:17:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=9usls
-	VvrrxFz+qJ4VA7M0UqBGU3nyRZ6FJHilUJnxOA=; b=i8xaNt+biy9WJWBaC2H+9
-	XznfvuFXhSR83i/jveIeQTOVKxfHopemP2/SC4Z62Vb+qWfrLA4P5m2NqfhUwSj0
-	iBo+3TK2WOIm4q522UJcLKhGATMgT+gfXJjSwd5ZVtr5HSovx4luh8C9sow6Pr2R
-	15jQU3zm7KndoCH/PD5KrUyVXy2TarWVTgZ1pKgYlP0WMoALPX1gxU3/6NBGeQZb
-	nV1tx780MnKCrfhqyHGj0cSmObVghZgUHpVQcErdv3vm00z88NnKMFzuu67tUAee
-	61IGopY5fw8lnA4lbTtRkYfuIYiKe7KjZ44tvFcCxjvNcXBW+DQWKT4WsFlLFhDj
-	Q==
-Received: from cy3pr05cu001.outbound.protection.outlook.com (mail-westcentralusazon11013007.outbound.protection.outlook.com [40.93.201.7])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 4dyx23ru6b-2
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Wed, 06 May 2026 05:17:38 -0400 (EDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BVT8ulzCSR84LF4EQETQlwCr8a9ykOq3JVEHdcXx1ml/vefEUmfS4AQy9bLNOB3Ssw4f36hpkC6+GluXs+9SJZBvdtZVkAueoSM9T6Mg0qOZkZD/6suRZTNCndos7nm6ydtpW1Vrx2Vw1z+Tdb/eaWBH1tcowpzhTz/CjLHfeUAqcUk4sC7PqiDIxp1zzIFB/7dKTUFBaQYBAeLokWaP/WpZDPPTG/VImX6dCWJ1bYhqxaGP9Fvt851yr1VQa3Lu49vxPByVhFZ/2aj1RQCGwOu4qJ6lkqBm6Slys4DDTpXa/swN7NgaUqeptHGjtf1XmyyAuZEvXykAcQEz+kzlPQ==
+	 Content-Type:MIME-Version; b=Kn4b2xBZWI22a1dO7Yp9pMScGe842absHH8xQrUUmFP2yLrFM3ty2H01hDBeCdIoVINpJ2qTL28wGCggDB3Sw3yw4XlMTHtozJhnyK6OfNAJXkHP7nuesAVeR/monYqILRUym+xVXmxj8UnWRmIz4gnBUr4XtMk5BGWyD0qeFNY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dbrRuxJkNqtOIrnxQp60IdNwxaWzDJpKByV4UzCu9FNk5vmBYa7/Oz73BXcxB8Mp7Do2jLe/wP2bbb/XVdY5Tk4lcSJ1k/YN7gTGaz9m7GkAur0rCt1kAyklbhyiDuddLai+XJ0Z/Z37YYV//edoxghv/lxm6qxnwpHzzI7I1E28xniRs+zpZMWkVviw3VCRPTvozrEn/anW0tEfd+UWuv7afscwRQz2+CA4Y2e39/JCCxxYxZwe7NI/Vy595nVThWfSUj6DaEPxogHAYDolmLAOfZ143N6SsiQywAsFBpYgBMhJOOG/kYN1rPBEQcTLGf+igw+6RZ965y/NzKYd8A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
+ s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9uslsVvrrxFz+qJ4VA7M0UqBGU3nyRZ6FJHilUJnxOA=;
- b=YXc5OC5dlqa9qLj82lpPzYSQJNx1DfwQbTkTqeI75EE2hj3X8ZQUydnqassfrU40KGmU+rRgTYdHN0QFSWnutUQkL12IAkAgrOikCdsLJKo980qsuvWlmPnMQIyCDkMNtx0wZPpdT174BZbn/BnNs5LizZ5cuduhsruQ3VZuibq+ZwTNzEzQ2ZazwZa3BH8nnK3OZSXn4rgwqq0TBDlUnmtiaCdawwbsIRw9sCxteXeQkgwLpao+LgJ2CcQ9Uplw0GX0VgUVl/pf27X6A0mAjk8fX6VlWPrfyaxNZqINQaQ7fTomPkZdnHOxSPDB6SFYQCWofPAoCb9nVKFsRpQH9A==
+ bh=uJKEKVPIq1XRSdKOOntc9VF2F23Ieo4f1lZdwnoGwX0=;
+ b=d+6JsZsTnWI37eX55CkEyUfZU72QTwsVwbldsh1+Aeo83m+qqvbbyNn1JUND9Ps5xXXRK+gBu8hMalRUIkFCa6JQP6RfQKomBicL+PmS0+eMQ8JTyzz2hTesmFzcz5IjFacSpPTvbGRCyf6lPCAYuJZ+E4vLQY7fpWE7woFAWxiyk8bQbI7170eRxn1m9T5IF7mpQD9DU+Xt8/iSMPfE/1u3TFTFQvVDUZl6HJm5JhA8iBQl7vL6Lt4guPkQ+tAzmUMC+MSIhNTUmR4IDKJZJIWSwiMFZ3CB6rpOo63fQhHRQFwSM6fjvy86TUwOOmfXHqJsT4tQDlOyfYG6YZGuhw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-Received: from LV9PR03MB8414.namprd03.prod.outlook.com (2603:10b6:408:367::23)
- by CH8PR03MB8273.namprd03.prod.outlook.com (2603:10b6:610:2bc::9) with
- Microsoft SMTP Server (version=TLS1_2,
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:17::6) by ZQ4PR01MB1172.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:14::8) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.15; Wed, 6 May
- 2026 09:17:36 +0000
-Received: from LV9PR03MB8414.namprd03.prod.outlook.com
- ([fe80::d661:7c16:d052:cc81]) by LV9PR03MB8414.namprd03.prod.outlook.com
- ([fe80::d661:7c16:d052:cc81%6]) with mapi id 15.20.9891.008; Wed, 6 May 2026
- 09:17:36 +0000
-From: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>
-To: Jonathan Cameron <jic23@kernel.org>,
-        Radu Sabau via B4 Relay
-	<devnull+radu.sabau.analog.com@kernel.org>
-CC: Lars-Peter Clausen <lars@metafoo.de>,
-        "Hennerich, Michael"
-	<Michael.Hennerich@analog.com>,
-        David Lechner <dlechner@baylibre.com>,
-        "Sa,
- Nuno" <Nuno.Sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?=
-	<ukleinek@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
-	<broonie@kernel.org>,
-        Linus Walleij <linusw@kernel.org>,
-        Bartosz Golaszewski
-	<brgl@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jonathan Corbet
-	<corbet@lwn.net>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: RE: [PATCH v9 4/6] iio: adc: ad4691: add SPI offload support
-Thread-Topic: [PATCH v9 4/6] iio: adc: ad4691: add SPI offload support
-Thread-Index: AQHc2Ip7GFfgCljdvUysP75/UKS6EbX/hcwAgAE55vA=
-Date: Wed, 6 May 2026 09:17:35 +0000
+ 2026 09:23:37 +0000
+Received: from ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+ ([fe80::e7d4:256c:b066:850d]) by
+ ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn ([fe80::e7d4:256c:b066:850d%5])
+ with mapi id 15.20.9891.008; Wed, 6 May 2026 09:23:37 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Conor Dooley <conor@kernel.org>
+CC: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Emil Renner Berthing <kernel@esmil.dk>, Paul Walmsley <pjw@kernel.org>,
+	Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>, Philipp Zabel <p.zabel@pengutronix.de>,
+	Bartosz Golaszewski <brgl@kernel.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, Lianfeng Ouyang
+	<lianfeng.ouyang@starfivetech.com>
+Subject: Re: [PATCH v1 11/20] dt-bindings: pinctrl: Add
+ starfive,jhb100-per1-pinctrl
+Thread-Topic: [PATCH v1 11/20] dt-bindings: pinctrl: Add
+ starfive,jhb100-per1-pinctrl
+Thread-Index: AQHc09tvLatUK5oq3keSy4c9Ncpt5LXubvkAgAVF1NCAASNvgIAL9BTw
+Date: Wed, 6 May 2026 09:23:36 +0000
 Message-ID:
- <LV9PR03MB8414C0CA41D0561D85032461F73F2@LV9PR03MB8414.namprd03.prod.outlook.com>
-References:
- <20260430-ad4692-multichannel-sar-adc-driver-v9-0-33e439e4fb87@analog.com>
-	<20260430-ad4692-multichannel-sar-adc-driver-v9-4-33e439e4fb87@analog.com>
- <20260505152828.61f40411@jic23-huawei>
-In-Reply-To: <20260505152828.61f40411@jic23-huawei>
-Accept-Language: en-US
-Content-Language: en-GB
+ <ZQ4PR01MB1202F561A68C43547A85D1E7F23F2@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
+References: <20260424111330.702272-1-changhuang.liang@starfivetech.com>
+ <20260424111330.702272-12-changhuang.liang@starfivetech.com>
+ <20260424-mumps-foothill-ef122c1029c0@spud>
+ <ZQ4PR01MB120229BE0DAC2658164C066AF2372@ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn>
+ <20260428-hardhat-both-1c9aa594a45a@spud>
+In-Reply-To: <20260428-hardhat-both-1c9aa594a45a@spud>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LV9PR03MB8414:EE_|CH8PR03MB8273:EE_
-x-ms-office365-filtering-correlation-id: 1bc95bd6-2bde-4ecb-e29f-08deab504fee
-x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
+x-ms-traffictypediagnostic: ZQ4PR01MB1202:EE_|ZQ4PR01MB1172:EE_
+x-ms-office365-filtering-correlation-id: 6475f694-eb94-495c-fc29-08deab51271b
 x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700021|22082099003|56012099003|18002099003;
+ BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700021|56012099003|18002099003|22082099003;
 x-microsoft-antispam-message-info:
- 8Z1vTQddSo2CyF6EvXxTm7EzMBO05B5uEhlUSBpdrMQEqBc3woynqyIJII7CnqD00gNpxNwJ8ycOgYVhbNolKAx5A+bMXFySduSbVwC8fhLMHBRNkAcHMre58xG/wHDz5b+DaS5DvzjhTtOtouksisk9bBpBHQV4Avj0X9s+dNOz88YzG0uoMd3H4GNJOcGmWrqBEBC7s484yWZmc9v5O8SVBCIwO2pkMe78zWpjZ8L71iE5uyFh8DtGiB4yfMk6Ar39w+B56Hy7ckZbfnc7snl78aesBiK5kfD6uHDY8spgWXNZD+029GDgU9fZ/jbJkDa1zI3JNTMUR7LdcOHZlo/6NOQa1ML8se+vC7uDIUXUbpOdLNg80TxOjxtArlLREmNRhGnt2ZIXilPapBoAovZeP3AeYSGNHAGZMpIabVE47mjd8sV/h307bFvAZ+vRfjOMWd8YP9sIN/V4DdrPDR2vz/eZPxGGoNI/QLptKmN257ED7/SAMrAVXOHrlZC2zBrnTVzlPISmjAHIl7aXoCFgg5+xm+ZxcRFVitpia5edijsLEmgBNb2tjQ8vx8IZlCX8de6O+cQXugUCOQIUea7UJcz/NdkVu76YZnAYTAzBpVD7q99wZEHbuaM6ekxbeaKEa0mHc8RJga9jPLyQeiwMHT/1YqiRaNmwbzYs1st2Mhz/1kPmozbBGxc4bJPS
+ uKyLAUOB1M1rdjZ7VM216P9y7hUaP6JCFmlFKKjfxZ4zATBg9w6xBKsS5W19KVzwYxcm14cFhoPTlIJ+DgiA7CRK8SHrRZEWQyqWGgja5qeTcRfpcxRQ1pi4Jg1MR9unQbAfYm/y4gNQYMl/xMp207beYp6bKtAH0BpBRNHBn7m2u42K4bj0azHt6u8XpT4gmBo8FuKiazt9eWd1BXv259Il0afmXoOoWVXPpQIIqYS0+YPvOG2xvIpsKszFmLoHhtunP4M1B3L0Z0RtR8O2/Kp5jbdXt8K5QJoIM0Gn7iw6iBrjK2ZvzOIGuXm/koa/XvljjQLJyaHJEnVLP2ZEuW8I5ah39nJ4tKePSCxGufbCCYVvQDD4HilvylijYX2c8Ds9Tl/DZhgeHgrHPr6pHimGbEjE1AX7MWlIvJizzNso42hVH79SpOvbhJfVJWllGTGulaHsKbS5PMLmjcdRpugOJwrB6Nm6aBB8Hfml3jPGbfiiyRC0xyouZe2oyI3DXbNBKfogKu1NIzHLH4NYXJB6XTR4ekHDhcbEJujX2rDzt6DQi44l9M9iztGoXrFc
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV9PR03MB8414.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700021)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700021)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?90dqzqVNshYaEaiS6+jh4VWSRk+sGWRBxxJ3rSL2ZUW/4RkfcZ6ImefhQV?=
- =?iso-8859-1?Q?tQS3Q/gaBMwnCB4U3AhqSJjpS7WxjHN1Px2bjddgV+3Yb4Gp/SLM8naVnn?=
- =?iso-8859-1?Q?waOrsZdcEsQjDQCQY3tCp2gSWJaTySH2q8O/kpWjc95NWiUcPaWllNk/ox?=
- =?iso-8859-1?Q?VMo8Mppc552jp26sjaIv447aldbrsWNXwxdO7l3MaB5WoH0gksZviJjN95?=
- =?iso-8859-1?Q?Y1Ymu9nv3/l5oOqPQEiKihv8HuXDxpY5aCFvY7v7pocU/sWQ+54zFqHd2V?=
- =?iso-8859-1?Q?TkfjT5ILJRcFtGgx+0HZ1AfMtTtHY3Cmn6iJMn+VlafTnDciDYkQJvJVM2?=
- =?iso-8859-1?Q?AHjS0/wVO0qBnoDqw1uEqRIPNvW0FvpQ/s113+8FtiFEmHeWT5PhITgHrG?=
- =?iso-8859-1?Q?AS+N0IxSs27I3PBAoEtjECSNxj5j7zxcaCFl1LSibFu52huj5HAOj6vK71?=
- =?iso-8859-1?Q?3iAikoIOp6JnfhhTP8iO9ftRg+BRp4+79RWYTInRdhwUmczVNS1qFy1GjR?=
- =?iso-8859-1?Q?lwE5QObeIb9FsB6RYWpqeCrBJB3yyrRkBlcuSdCu6DtyEkofbrxytWSuKp?=
- =?iso-8859-1?Q?1qFalR8HXESOxcCqQkuHE01IHoXpAQAuIsT6+YcrbaObNKkjvQ670PNWIr?=
- =?iso-8859-1?Q?QdVbF9jcDdxRreM9NVGouPZkyTCX8/EeO9udY684pIY3/l6t7jcuzsbey4?=
- =?iso-8859-1?Q?6gTvO+QqLsOIh0meJ5Ip8hYHfhGD8RVIrh3W0kGpuaiKDVG4YjVizwLp9c?=
- =?iso-8859-1?Q?Oxjzv+YOa228/Pa9uQb9EQ1lGWCLn5TOXH0YqdWbtEPCTd0Xbf+SdZGaCJ?=
- =?iso-8859-1?Q?L/e0x1NrDD6/sFv/lVfAJipwuLC7LhSuawwAbnmNYQbQC3kpzGGYEDKMIK?=
- =?iso-8859-1?Q?bj7d8xpKh6hCwZZBEQ1lETmh9T99oV2hxR3C6ql7Dry0SXj8UNK+2RSead?=
- =?iso-8859-1?Q?6XjnJsIbIBVukaunCQPhYncWwMQ/H9yINSTrOhIvsfL+ftrPwhU877Ykeu?=
- =?iso-8859-1?Q?aAWerjHLFPIBOLh1UVB/nv5ta4MGpT/JGK/Tm1CsURGOTF0JknqCbU0VL3?=
- =?iso-8859-1?Q?+U2+p5VztGT/6fuHbX8Ce4nqlQrQ6ASSB2xqZnD3yGkRJxGBlJCXwXbhGz?=
- =?iso-8859-1?Q?F235fsNXhlOa5Iwki0jye+I74djWUj+LJRsWD2uYnwr8yossFLVngHiQEH?=
- =?iso-8859-1?Q?KMGnrUM/CfpzZ9zB6j5MfK3Pjj0Qv0KZwmjxIorgF3Su9Zskpj1G19wXqA?=
- =?iso-8859-1?Q?og57A6dt5NGop4mcbA/z/K/J/NzCNNMt84x8+t7dnI+Q81dcSbdufocAr/?=
- =?iso-8859-1?Q?t9vuNxzXYVWrpCwjcf8r8wAWOdS9oYvxxK5XRkHSjRUO6bq54TYvuR8FVM?=
- =?iso-8859-1?Q?U73MYRhokwid9qen/P0WIsT5tTg3YF8wk2KruI6SGu1vQ4NbTaEDW+7NEs?=
- =?iso-8859-1?Q?ce/CUcfGIFaBeJqSAMsU8/bc+FJJXCiHFqvmpunywxHvi43PLxec51iXRH?=
- =?iso-8859-1?Q?kpIngGnjJaoS2rf6sZLSoRdZlW1B+YLdM6nroZ0z6ZWhhb+PV008d1cu4T?=
- =?iso-8859-1?Q?5VaByzKbuhZAova7wD0FfBwCSBxrbYd9bnN5/aQMGAimGl61fIkw97IokS?=
- =?iso-8859-1?Q?pTvg3oqG6JeUzprLFYgbv9iF7L5ZBIlxQktWlQMWWU+nDWcp75/6XizlMG?=
- =?iso-8859-1?Q?3Uy9SO6cIOU6/j4XXMsK+o790Z+yQRKj/cvlXRJKf++HnVhQVCKmeExlo8?=
- =?iso-8859-1?Q?YLCx7zEbMVJWtZYo4SsDh91cwK/nt6joTVpuOnYjo65X1xznN6i9nDKRMu?=
- =?iso-8859-1?Q?4SfeIlwzwg=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
+ =?us-ascii?Q?Uy566qmnzeObFGEfVpxuK3doQQ83ff25mtBEh3d3TemKDeJ3nfwbguyTka32?=
+ =?us-ascii?Q?O0xOwISG1171zxuouK3rAbFQFsaz9ErbvfpRr+yqfpfWsGOn9lgXjMKZqu67?=
+ =?us-ascii?Q?NWIfQ08Rrz6XuU4dGwSdpXN2TjuBRO5r26oHOlzwNhl/GM3NiQ3VblX8ilOd?=
+ =?us-ascii?Q?yR3QfxnPvOE9x7C7REpXriIll4Rj8HMgq/8D7GddGlVjBlThGoz/aTCgg2+Q?=
+ =?us-ascii?Q?hMBm1imt3E1fadyJvm5hic7P33Cut8xeR3TWY0h1MMjCsPZYuAGa5yz2tx+5?=
+ =?us-ascii?Q?oP/DbJs+5GT12aG5mgBhwhhWVsV2P5SI5RPQogmKIlb3qokWFgadTs5id7e+?=
+ =?us-ascii?Q?sL+nQEedVU7ux0wsLm1nPeGMo4PTkW5+rsGhTYTTH1jNnXp257V6sX0aCR3/?=
+ =?us-ascii?Q?bHdKFtZxNXBOnOJN7yRTL2hny8AQEnFI96U/upVVu80PSaJA4TB/r0GiVwTI?=
+ =?us-ascii?Q?+J958lfHNEA4ypM0MNvgGiprWWHNJy1H0Q0v4WLJ2b5XZtz+uvMolp6vKY2f?=
+ =?us-ascii?Q?kixBACxg3v6ZIqGkynn+5uKu8xsZwlGi9PlPzW2enE5u8ZGR910YjYiiPfhx?=
+ =?us-ascii?Q?juBN5pWsjidVAl3nsd/I0kXqIfKj4AqsednlcPdkwrnrbRZkzqVggYvX/21v?=
+ =?us-ascii?Q?s75db86JFBhUgCC8oLESULbDXzlfJVc73rdNDwvVz99Ozk0g3lkjsETWbcxe?=
+ =?us-ascii?Q?Y1E5W+pWoWoRtISkuILLhYX8eLrlBtqtsZCTH83zDm0rbwqHd4H/Zb8TA73w?=
+ =?us-ascii?Q?92dpgqxPwzY3ECKsP5NsE2iDqpnUEJpx46yLflYf+W9fq6yfmVniPuRsj+74?=
+ =?us-ascii?Q?zpnok8aHJIPUMtIrJYb5ZOcGsBEqZkYtaE33K88mNuYSSJbWsXykxpCWW3vn?=
+ =?us-ascii?Q?l6LuPhnVaJWrw+I9p2EMO4uUPer60ExVL9xKv8vd8rbLpQX4uVsbHC1eeUXC?=
+ =?us-ascii?Q?Kiu6DR0W1Fm7640FophNtG7ueJN2Zgvn77JJFQRLKDB47GVmzk5mJedbpV5g?=
+ =?us-ascii?Q?X1lclNVc/DH/x2cPDgMBwDd6L1OuczzFVulBy4gW/mqkUqkYR5JMJZaKX/Av?=
+ =?us-ascii?Q?UuPp3QsxybF7SMhMhHR7lE+7xrIJ6K6SvxUNFkB2/xmJD3Z3vvf63I8Q6d6U?=
+ =?us-ascii?Q?+BV1tNGz436RXnmms+a3BRqy/7x1ZjT8Slg4cxgvh6zegvpTRV+78nWLABf5?=
+ =?us-ascii?Q?3uFBT0KmtRKMAeZwQrM7ux5ddjV4KG17mUDMBKlFfXvoiDr/R44ilufj5JRN?=
+ =?us-ascii?Q?uWYn1pcLmDkAYysoLwnlzUQkZ4ibx43hVjxEG/fZ7SejiaJ7d/nLgbwttvqf?=
+ =?us-ascii?Q?vrbhP/YRcUHxgrUG/PV7SDHDIH1jq+pP+5hQbnUXczoKWCEfiQftFXSs8Cun?=
+ =?us-ascii?Q?7R7VU87s6Ldk+7Htc3Y/7vKYfvXbyu3W8FhVNscPWGI9CXaFUGggJEH2Mq2Z?=
+ =?us-ascii?Q?ZnNkbnwbpnwWRLnXy/RHZ8diqhGSf2RMwN/KUlKxIKdJZTMFQhxZ6V0pjao1?=
+ =?us-ascii?Q?cOZvpDUTSvVK0r0dTrBKz6RJONW2yLgTwGLmumaUNB7FPtE31xPqFnon/xql?=
+ =?us-ascii?Q?q9tskyisgkIf6EmjgztfuUhrEupQEO1BU+W1UmSzKXG2BPa9IZM90xJgJPit?=
+ =?us-ascii?Q?uOABoJFPIUg0tPj3UwFSIL7Pb1H2rcxx+bdJY1SGdDJIqonASNaHx9XgUX4e?=
+ =?us-ascii?Q?YNn/Zq1lofKZI/TPoDWfaNVBovRPmwvr/A8x29RxXym9YHHUkTmrNlTgktXT?=
+ =?us-ascii?Q?stzmFJkkQEoKyJ3cw3hj9Sd8rp25wIo=3D?=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -170,165 +134,140 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Exchange-RoutingPolicyChecked:
-	iZCKJf6YtbCtRSuIlSfWdRgoydgwLwiAVfLK91H9o60ZMnnLZHjEsjWeN4tydiS8qKnD9oaIJKPbBgnRSHpumaoPMInbeRAxEtxsWIoOb8NHkrJvW80Laz3xQV/eapopfFwZxqyTqKcOznQYEKSUacyAloVin88OtqC1csjSHn7U10cVrdX9xBWZ5OcbDZ1nMoUmM9vGHTWnUWzz4GPrjzH3jnxKEhqpTF1LM2JEYfiGS0V+4GUf6zHeOIsU42YaWomec5K6bqwt6feTeGvAoVm8cZ+J58/QZw4tzOMYGKBJZJmtPly2RBo/yijrmfMI1Za1Nkb9ccUCM+aclAy63w==
-X-OriginatorOrg: analog.com
+X-OriginatorOrg: starfivetech.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LV9PR03MB8414.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1bc95bd6-2bde-4ecb-e29f-08deab504fee
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2026 09:17:35.9552
+X-MS-Exchange-CrossTenant-AuthSource: ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6475f694-eb94-495c-fc29-08deab51271b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2026 09:23:37.0018
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EhC9oh8KYKXQ72uU48z2GpvKSxR2u1EMSs9LpBzKuvNGuBVsMebJEopBRguHrmC4rfgv0AO5UkJeaBK1XxBtHw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH8PR03MB8273
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA2MDA5MCBTYWx0ZWRfX3DjPLXhb7kO6
- zh5b2fy8XyS8tXqDjyqplY4aAMJRPW5s/E74wslvuCgXLJhzWsobW05WsIjbR6hm4IX2YmstHnc
- U8ek58Lf36YrHPNT3TklsNYPof8ouwhDg8tu6hAU7kafvIILtUmHPRGfk3s948gtgD2bELnK58d
- j5dbOXPTIFu6F9vuTpBOuX/0DAIKLAJIMdB6ILv0omH8Sn0Mpfd5c5VmE040uvheMsnDQD7XwdK
- 9O91agSh2zrqpL77z1J0TLYVSkt6wuL2De4jpfHtILuKXbZaO0hqoxIWI2+Ac20PahGyXhU2B48
- Jj+7UfPhMn3fpEyY4BQTfd1yg/Lg9Ar/Y2LAXWbUeFhq/u73EbmFgSFHelF+PDbXzFoQDFqSRwa
- PulbyzSRzZOMNhh4uZoli5cAo55keqAqm+pHNxMESEr7Xi+QisSOK/CE0nO3Lku5gKAWEACEeWA
- 1v3etGbfIynYQ8x1pTQ==
-X-Proofpoint-GUID: 9mGDrNv69fOA0F2L9e24wLPNYdo5FLEE
-X-Authority-Analysis: v=2.4 cv=DvxmPm/+ c=1 sm=1 tr=0 ts=69fb0732 cx=c_pps
- a=PxTiP5NnQLoflLcDylFrfg==:117 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=8nJEP1OIZ-IA:10
- a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=0sLvza09kfJOxVLZPwjg:22
- a=ugNRTJOwpmtT476g4l8T:22 a=uherdBYGAAAA:8 a=c92rfblmAAAA:8 a=VwQbUJbxAAAA:8
- a=gAnH3GRIAAAA:8 a=IpJZQVW2AAAA:8 a=pGLkceISAAAA:8 a=07d9gI8wAAAA:8
- a=ag1SF4gXAAAA:8 a=H3tf1KL8IO896_5gjrMA:9 a=wPNLvfGTeEIA:10
- a=GvGzcOZaWPEFPQC_NcjD:22 a=IawgGOuG5U0WyFbmm1f5:22 a=e2CUPOnPG4QKp8I52DXD:22
- a=Yupwre4RP9_Eg_Bd0iYG:22
-X-Proofpoint-ORIG-GUID: 9mGDrNv69fOA0F2L9e24wLPNYdo5FLEE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-05_03,2026-04-30_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 lowpriorityscore=0 malwarescore=0 adultscore=0 bulkscore=0
- priorityscore=1501 clxscore=1015 impostorscore=0 phishscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605060090
-X-Rspamd-Queue-Id: 14E8C4D87AB
+X-MS-Exchange-CrossTenant-userprincipalname: FuerHwtXM5GFeawXRfQk5QhdK71janhM/c8jakeLxsim3FYPkBHmdwDiPWcEaYv3XJPhBDpncXNR8Nt95Cxmwxt37ujp4I9izhQBt2Dtgxf+mKNX85vinzufyU6Jb8E6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ4PR01MB1172
+X-Rspamd-Queue-Id: C155C4DDC18
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.34 / 15.00];
+X-Spamd-Result: default: False [3.54 / 15.00];
+	DMARC_POLICY_QUARANTINE(1.50)[starfivetech.com : SPF not aligned (relaxed), No valid DKIM,quarantine];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[analog.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[analog.com:s=DKIM];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[metafoo.de,analog.com,baylibre.com,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-36271-lists,linux-gpio=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[analog.com:+];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36311-lists,linux-gpio=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Radu.Sabau@analog.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[changhuang.liang@starfivetech.com,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,radu.sabau.analog.com,dt];
-	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	REDIRECTOR_URL(0.00)[urldefense.com];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.998];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn:mid]
 
+Hi, Conor
 
+Thanks for the review.
 
-> -----Original Message-----
-> From: Jonathan Cameron <jic23@kernel.org>
-> Sent: Tuesday, May 5, 2026 5:28 PM
-> To: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
-> Cc: Sabau, Radu bogdan <Radu.Sabau@analog.com>; Lars-Peter Clausen
-> <lars@metafoo.de>; Hennerich, Michael <Michael.Hennerich@analog.com>;
-> David Lechner <dlechner@baylibre.com>; Sa, Nuno <Nuno.Sa@analog.com>;
-> Andy Shevchenko <andy@kernel.org>; Rob Herring <robh@kernel.org>;
-> Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor Dooley
-> <conor+dt@kernel.org>; Uwe Kleine-K=F6nig <ukleinek@kernel.org>; Liam
-> Girdwood <lgirdwood@gmail.com>; Mark Brown <broonie@kernel.org>; Linus
-> Walleij <linusw@kernel.org>; Bartosz Golaszewski <brgl@kernel.org>; Phili=
-pp
-> Zabel <p.zabel@pengutronix.de>; Jonathan Corbet <corbet@lwn.net>; Shuah
-> Khan <skhan@linuxfoundation.org>; linux-iio@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> pwm@vger.kernel.org; linux-gpio@vger.kernel.org; linux-doc@vger.kernel.or=
-g
-> Subject: Re: [PATCH v9 4/6] iio: adc: ad4691: add SPI offload support
+> On Tue, Apr 28, 2026 at 01:28:05AM +0000, Changhuang Liang wrote:
+> > > On Fri, Apr 24, 2026 at 04:13:21AM -0700, Changhuang Liang wrote:
+> > > > Add pinctrl bindings for StarFive JHB100 SoC Peripheral-1(per1)
+> > > > pinctrl controller.
+> > > >
+> > > > Signed-off-by: Changhuang Liang
+> > > > <changhuang.liang@starfivetech.com>
+> > > > +        properties:
+> > > > +          pinmux:
+> > > > +            description: |
+> > > > +              The list of GPIOs and their function select.
+> > > > +              The PINMUX macros are used to configure the
+> > > > +              function selection.
+> > >
+> > > Why is the pinmux property needed?
+> > > Can you use pins and function instead?
+> > >
+> > > Looking at the defines that you have added, it appears that lots of
+> > > defines for the same peripheral share the same numerical values,
+> > > suggesting that across peripheral, all (or most) pins would share
+> > > the same mux setting/"function select", suggesting that pins/function
+> would suffice.
+> > >
+> > > I'd like to see some justification for pinmux being the right
+> > > solution here, like the "function select" used by one peripheral
+> > > being significantly different for many of its pins.
+> >
+> > We think that implementing this in the pinmux will be relatively
+> > simple. It avoids the need to create a large number of mapping
+> > relationships in the driver, which simplifies our driver
+> > implementation. I'm not sure if you'll find this explanation acceptable=
+.
 >=20
-> [External]
+> I don't really see how pins + functions would require lots of "mapping
+> relationships". Instead of having
+> +/* pinctrl_sys2 pad function selection */
+> +#define FUNC_SYS2_UART_CTS				1
+> +#define FUNC_SYS2_UART_RTS				1
+> +#define FUNC_SYS2_UART_DCD				1
+> +#define FUNC_SYS2_UART_DSR				1
+> +#define FUNC_SYS2_UART_DTR				1
+> +#define FUNC_SYS2_UART_RI				1
+> +#define FUNC_SYS2_UART0_TX				1
+> +#define FUNC_SYS2_UART0_RX				1
+> +#define FUNC_SYS2_UART1_TX				1
+> +#define FUNC_SYS2_UART1_RX				1
+> +#define FUNC_SYS2_UART2_TX				1
+> +#define FUNC_SYS2_UART2_RX				1
+> +#define FUNC_SYS2_UART3_TX				1
+> +#define FUNC_SYS2_UART3_RX				1
+> +#define FUNC_SYS2_UART4_TX				1
+> +#define FUNC_SYS2_UART4_RX				1
+> +#define FUNC_SYS2_UART5_TX				1
+> +#define FUNC_SYS2_UART5_RX				1
+> +#define FUNC_SYS2_UART6_TX				1
+> +#define FUNC_SYS2_UART6_RX				1
+> +#define FUNC_SYS2_UART7_TX				1
+> +#define FUNC_SYS2_UART7_RX				1
+> +#define FUNC_SYS2_UART8_TX				1
+> +#define FUNC_SYS2_UART8_RX				1
+> +#define FUNC_SYS2_UART9_TX				1
+> +#define FUNC_SYS2_UART9_RX				1
+> +#define FUNC_SYS2_UART10_TX				1
+> +#define FUNC_SYS2_UART10_RX				1
+> +#define FUNC_SYS2_UART11_TX				1
+> +#define FUNC_SYS2_UART11_RX				1
+> +#define FUNC_SYS2_UART12_TX				1
+> +#define FUNC_SYS2_UART12_RX				1
+> +#define FUNC_SYS2_UART13_TX				1
+> +#define FUNC_SYS2_UART13_RX				1
+> +#define FUNC_SYS2_UART14_TX				1
+> +#define FUNC_SYS2_UART14_RX				1
+> you just define a function called "uart" and have a simple map of that st=
+ring to
+> the number 1. You end up with a single array with the relationships, not =
+lots.
 >=20
-> On Thu, 30 Apr 2026 13:16:46 +0300
-> Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
-> wrote:
->=20
-> > From: Radu Sabau <radu.sabau@analog.com>
-> >
-> > Add SPI offload support to enable DMA-based, CPU-independent data
-> > acquisition using the SPI Engine offload framework.
-> >
-> > When an SPI offload is available (devm_spi_offload_get() succeeds),
-> > the driver registers a DMA engine IIO buffer and uses dedicated buffer
-> > setup operations. If no offload is available the existing software
-> > triggered buffer path is used unchanged.
-> >
-> > Both CNV Burst Mode and Manual Mode support offload, but use different
-> > trigger mechanisms:
-> >
-> > CNV Burst Mode: the SPI Engine is triggered by the ADC's DATA_READY
-> > signal on the GP pin specified by the trigger-source consumer reference
-> > in the device tree (one cell =3D GP pin number 0-3). For this mode the
-> > driver acts as both an SPI offload consumer (DMA RX stream, message
-> > optimization) and a trigger source provider: it registers the
-> > GP/DATA_READY output via devm_spi_offload_trigger_register() so the
-> > offload framework can match the '#trigger-source-cells' phandle and
-> > automatically fire the SPI Engine DMA transfer at end-of-conversion.
-> >
-> > Manual Mode: the SPI Engine is triggered by a periodic trigger at
-> > the configured sampling frequency. The pre-built SPI message uses
-> > the pipelined CNV-on-CS protocol: N+1 16-bit transfers are issued
-> > for N active channels (the first result is discarded as garbage from
-> > the pipeline flush) and the remaining N results are captured by DMA.
-> >
-> > All offload transfers use 16-bit frames (bits_per_word=3D16, len=3D2).
-> > The channel scan_type (storagebits=3D16, shift=3D0, IIO_BE) is shared
-> > between the software triggered-buffer and offload paths; no separate
-> > scan_type or channel array is needed for the offload case. The
-> > ad4691_manual_channels[] array introduced in the triggered-buffer
-> > commit is reused here: it hides the IIO_CHAN_INFO_OVERSAMPLING_RATIO
-> > attribute, which is not applicable in Manual Mode.
-> >
-> > Kconfig gains a dependency on IIO_BUFFER_DMAENGINE.
-> >
-> > Signed-off-by: Radu Sabau <radu.sabau@analog.com>
-> In general have a read through Sashiko reviews once they come in and
-> if you agree with them reply to your own patches to say what you are
-> changing.
-> https://urldefense.com/v3/__https://sashiko.dev/*/patchset/20260430-
-> ad4692-multichannel-sar-adc-driver-v9-0-
-> 33e439e4fb87*40analog.com__;IyU!!A3Ni8CS0y2Y!-
-> G5xU6m5PVXdQJCRVp_OOtLEM0gRiLsoZigLcBOrGi00oHLlyYgtxQAtx7azQuyZ
-> Bkv8I3Cgy2WoEg$
-> No perfect but another one in here is something I missed completely.
->=20
-> A few of them called out here but please make sure you've addressed them
-> all or established them to be false (which happens!)
->=20
+> Frankly, pinmux just does not seem appropriate to me when it looks like 9=
+0%+
+> of the pin mappings for a peripheral share the same function value.
+> There appears only to be a rare number of cases where that doesn't apply,=
+ but
+> that could be handled by having them represented by a different group/pin=
+s
+> node with a different function.
 
-Will have a look at Sashiko review in order to address everything in the ne=
-xt
-version.
-I will also reply to each patch and mention the change, argue to why I thin=
-k the
-raised concern could be false and perhaps have a follow-up discussion here.
+Thank you for sharing the method. We are trying to make some modifications,=
+ and the results are quite good.
 
+Best Regards,
+Changhuang
 
