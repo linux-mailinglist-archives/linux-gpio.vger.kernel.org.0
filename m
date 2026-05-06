@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-36283-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36285-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iOP/KvY1+2nfXgMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36283-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 14:37:10 +0200
+	id wJ8cOPo1+2nfXgMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36285-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 14:37:14 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF1FD4DA490
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 14:37:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 222254DA497
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 14:37:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 61A99300C39A
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 12:37:06 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B3024300A5B8
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 12:37:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7231044E042;
-	Wed,  6 May 2026 12:37:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17D8944E041;
+	Wed,  6 May 2026 12:37:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kTT2ogFg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDLMjJeq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A564D3264E6
-	for <linux-gpio@vger.kernel.org>; Wed,  6 May 2026 12:36:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D9744D039
+	for <linux-gpio@vger.kernel.org>; Wed,  6 May 2026 12:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778071022; cv=none; b=NYtPZKuAnqEEiJ+KDQTpPjf8NfKy2Ua37Fs0aY3CaGoRwfmYFMY7WMTGZH/MmRRbfGW2bRVJmOvA2YItjsi7Z7LtpdLTDntfjcPg4NwP2BSj+WuMMcHEMt5aAyuBik1ooYh9oCOxAibdF/NmvBgtiTvFqsbjy3E4iztdosvT9PU=
+	t=1778071024; cv=none; b=f5Arn2UK5N6uy/kc8gnOsEi8R412NfRmTwQEKf6Q/jVxkbQxf34GgBc3pY3nHdqDSThFBSl7ZTnxU7kjISRJB4FQjbJmxyoZFWHeX2FBmxOr+NlIHtYUw4x1obOGokiv9rKzJdOzUmWj5D2hEuxFxXuyqaiStAOiSP8HBsDdluw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778071022; c=relaxed/simple;
-	bh=cApX1dihbn8PQ41u5UpHALMQ0+hXvurYSyFH0ym8sdU=;
+	s=arc-20240116; t=1778071024; c=relaxed/simple;
+	bh=KKiO622uH2fJq1/tL0XKTF01Sy2g4i8eF9XE0Orhm3g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cbU520frbBk8Fv+Ci3he8KGK45hpnMsiNLYgG0SHtw2TjWIy6pluZ7eXEZSthLycbx1CfL1EoiKSMg2jSEnEfwHuQhM3YhQ6f2dFYYcNTPnkpHa11wkgXK6R4tDHkTx7OxENXhUFXhEbqggzhv+/CqAcSmR5N0Y+D5uiMbvi+44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kTT2ogFg; arc=none smtp.client-ip=209.85.128.53
+	 MIME-Version; b=o2P+PXj0wrl/T9cqKnYIBob2YsX3/CjATF2NSRYUUMcQh9uozwgH9/G27OBSmsKJ4QR6MUZv4SuKe/pQOG2g8Co5J3vqfP+hgwLsA+cQJSbqIXDpT8gCVP/2czv6Wk2OESvdugkITY/YPp9coxb/QeUQN7gMzXpDcc57E6rJ2wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DDLMjJeq; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-48a7fe4f40bso68697195e9.0
-        for <linux-gpio@vger.kernel.org>; Wed, 06 May 2026 05:36:58 -0700 (PDT)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4891e86fabeso76501425e9.1
+        for <linux-gpio@vger.kernel.org>; Wed, 06 May 2026 05:36:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778071017; x=1778675817; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1778071018; x=1778675818; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1o/09lEmBoTZNo86PdS11r1OH5tVpbMNKESkbLzHhHg=;
-        b=kTT2ogFgo4lSi6JzJsobmBtNM/5KcLFIB1SQF+5yGCY2N/LpjmfsotZIfV7eSFo4qT
-         dCARjV8ssuJn5/ZRdCa7jljKncwlHP8oH8vBpRAhPegYFQNlr18s0faBHVq8JvhqB35j
-         RgXhbcl/QZKbkmn3B6VOviU0Y64zS9VAVsnESRXfPvAwUB48GV4Ni9ABFTlq7lA+tJG8
-         6ONoaFTXoSTJFiSWYErZhh6PxxamyZ3wfLpb+jl8oeIJj3Lb5JXaV7Doy3zHBKe1lXzP
-         DgCGodgOc5F0ESyNczM5otV1DRQk0OMmlvlR7MpYtuZC4an8t4OEb2hhrlMhnOt3PbIJ
-         3OAA==
+        bh=/zYEKZkZ0zrzlHgzw7EqsB6P1zONDhRzS0uvOcHxVKk=;
+        b=DDLMjJeqfTt+pEmhiVbxIWjuCSo1pS8fYkZHJAV2Lm2kPrDR9hipn5o70o6gGtM9CU
+         BMLqFmC9OeWnRUQtDFA3RDpBCcJwFx+TG8Br2nB6NdB/yxVkc0Mitu2WSEcaKs68G2e1
+         e0/zBJNjPQu94RSfla8zWzXwHdF2OfZV4jKhn9Pd8TVaLRopyeONPn2H8gzbBhefSY0D
+         9Lz4vXXh23Erwq/EYiU0wdqaiiH4KJC3B9f55ZlfY2XhHweU4aKeHioZ8sd0Wp+5ElA2
+         4ZX6eh7Bga0T0qi6WxvFRHZ8McDyAra7X4nH7Q/Qfjm0K5FUQomI5vIrcYrj242Kak9q
+         FfXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778071017; x=1778675817;
+        d=1e100.net; s=20251104; t=1778071018; x=1778675818;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=1o/09lEmBoTZNo86PdS11r1OH5tVpbMNKESkbLzHhHg=;
-        b=YUnIegI+nk3rbKaaNqlqccS7yUzoBWCVnFs7uSwe/nxsr03pCRbCYnDuKyLU3EFR4C
-         jIMWXwmyR2HtVCFh2srtYuCYOi4QkCtQwqRc5/5+GUdYiZBjEj/ex93A41S9SPKBIWn1
-         KiinIvM0eTpS/I8c9MbzRcAmaW1BvCLlo3A8FiyqtQI7a2MUuxV4tPnkoi5zzjbhvijs
-         d/iL/RheWut2y72Dr+s1l091XTrm63dixFhs8JOSfbUVG4pXhX/RpOFr+gaYGKi/IoyQ
-         lM264JRjyUNEaOw47495Jg14SObaXkwGKoUd1aqBUlncbN1HjBe/LyoAjhkpYV9JaC/w
-         XopA==
-X-Forwarded-Encrypted: i=1; AFNElJ97iLaYnDAebp9u7U7rWtFFqEv7qpVNsNwg7iNxHNGNtdh72U60MDJZM4zzXeHDjw1HaKy8dVAY0zx1@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCbksmy0hHuZHEojI6/mP3dHm/QZQdnjckbzfqIGKGKL+XONZ3
-	LDSLouiLYzV5BBT6cAT+2vC1AWXDdm4jv6sC3yZHjibtqQyJwQbAQLkh
-X-Gm-Gg: AeBDieuEYJFAheKat62G1IlIInoytGAd8aHos4OeRzmNxUHcG0AnpoKeUa1Ym9mX4kl
-	J4VTHjAppb1lvwuZk2JLpTmgjpV6/TeGCtrOhNsWSgz9kL63lq00qV+6GzazEieIyGWBNwoGT/H
-	1fG4BU8AC8j1on9Ue+9O9/Kkjy9Cxf33jnOIdKHYHVUQSdjzi5OVInOgktrfNqxueS66Dnq1yJ5
-	6fqLrKvfZciflMj9tLD048zmK3uFQ7+yTsR1CKjYj/6ih3nZb+Ku+CVguMDbtBH0ibMvQCiMxqz
-	mq/cqc5S9TrdbvTh+0ebJjaeXXUZtyDJjPPnYstNnJFrnyOvAcmg1t65fy4mKEiMLh762wvg2Ue
-	fd3xYTFa9lNHJGB8Fi+nhybyMpDttKuEB74JvyiK9BTVNeYyX+5MKG9BpQncRIpNmA91NDP9J4O
-	Si/7bJXuVCZedDxTOYWvN6MCOuiQ==
-X-Received: by 2002:a05:600c:4f51:b0:48d:1a94:56c with SMTP id 5b1f17b1804b1-48e51f3054cmr61078965e9.18.1778071016590;
-        Wed, 06 May 2026 05:36:56 -0700 (PDT)
+        bh=/zYEKZkZ0zrzlHgzw7EqsB6P1zONDhRzS0uvOcHxVKk=;
+        b=c5X4vdNuQ1jKL3uUM0WEyBdva3yKGXb225qLxXO3NYupQVNosv0wS2NWChh24iuJbt
+         iaX9n8jgNdL9xUGjETrjlJVvZArDzyAlxkbrFeyPBteXKY36VkSV8JmsmLH7ItH0y1s1
+         cuTIzvubMYPBjwy4w+5qOtdWGS0/IwgClu/J2TnhOKP28ohcSeGTLpJd++yY46M8QVzk
+         Xk3BUNtfWIebgK6sF9fgtYTISIqa/Bd9j/nycthoVTArFSLikAj6QN8+Kq0PBk/cY2kf
+         zPPo2Ow8RLI/oGYfL0qpKHWHH5JKe5zE+eW5youF73K8qh3Ll2EAru4orhk1wn5piowi
+         T4Jg==
+X-Forwarded-Encrypted: i=1; AFNElJ8ZmZRNjLAjDnD7MrPHfv8G95QyCFyYkT0pXHbWfEVMfdBXGnEeO2YtYET8htePoiSPd8IUqJ3ZNMom@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW02FrQTZYYMbe0RPyGBhSOgXts9Q2Y3OJCtWJSFexXdYrdAM+
+	uedqET0PMvmNgW05XeTPDaCoF822mlOvlMH5yo9vL/cNlq3oqQaV4tjv
+X-Gm-Gg: AeBDievx6+LJp/DJu6aG/TzTOa3adGfbikj2Zg2itYrl89oBkj9m/r2rHbyaTeyg0co
+	+IeLbP59wyHNASnk+UEvKlIvh48l2HUcmyjw0KVQK3gZRcAoO0f9JUjGbUcRrsTe5EY+pz/4vVh
+	F9KjQfM58iDOEZG8ZNlcRyWSK5LxDV8DtXO329KV0hJ2imK8a8vTPS4C6Jdb2/pkYiOMGKnBIuE
+	pibXXNzOW+w84HkV7Jq0RPrCYncGwJqSQuJvd5U5mBcMbxKL5YfGIj/nEWDnLWhsxAijdEQCpzi
+	CpvceiTysyXCV3gqVnBYicsS9xd50KH55IWCkw8cc7DfpfYbfsl7N0SI3ldB30dFutMgKIBkdX0
+	+gBPrBv+bBGT3Gy7jquoK7w4o4gwBUZRxBb557GDXl9xSb4joBimLfI2MRL1FvoC+UPmKZUjPgS
+	O9qqsCZKRX8ivxb1oFAQZPQTvgIK1Hjcru8wQ0
+X-Received: by 2002:a05:600c:a411:b0:488:af48:af11 with SMTP id 5b1f17b1804b1-48e51e08ce3mr40215835e9.1.1778071017611;
+        Wed, 06 May 2026 05:36:57 -0700 (PDT)
 Received: from ROG ([2a01:e11:202b:40:68b1:8d59:e348:c16e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e530cf964sm31767485e9.1.2026.05.06.05.36.55
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e530cf964sm31767485e9.1.2026.05.06.05.36.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2026 05:36:56 -0700 (PDT)
+        Wed, 06 May 2026 05:36:57 -0700 (PDT)
 From: Marco Scardovi <mscardovi95@gmail.com>
 To: mika.westerberg@intel.com
 Cc: mathias.nyman@intel.com,
@@ -84,9 +84,9 @@ Cc: mathias.nyman@intel.com,
 	linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Marco Scardovi <mscardovi95@gmail.com>
-Subject: [PATCH v2 0/3] gpio: acpi: modernize resource management using cleanup.h
-Date: Wed,  6 May 2026 14:35:33 +0200
-Message-ID: <20260506123637.1077421-2-mscardovi95@gmail.com>
+Subject: [PATCH v2 1/3] [PATCH 1/3] gpio: acpi: modernize resource management using cleanup.h
+Date: Wed,  6 May 2026 14:35:34 +0200
+Message-ID: <20260506123637.1077421-3-mscardovi95@gmail.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260506123637.1077421-1-mscardovi95@gmail.com>
 References: <20260506113215.GK6785@://intel.com>
@@ -98,7 +98,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: AF1FD4DA490
+X-Rspamd-Queue-Id: 222254DA497
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -107,13 +107,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[intel.com,vger.kernel.org,gmail.com];
-	TAGGED_FROM(0.00)[bounces-36283-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-36285-lists,linux-gpio=lfdr.de];
 	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -129,26 +129,62 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,intel.com:email]
 
-*** BLURB HERE ***
+---
+ drivers/gpio/gpiolib-acpi-core.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Hi Mika,
-thanks for the quick reply. Unfortunately I noticed too late that thunderbird had
-broken my patch during copy/paste. I'm pushing it again using git send-mail.
-I've divided tha patch in 3 smaller pieces: let me know if it is ok for you and
-Andy. In the meantime I'm testing it against KASAN and kmemleak as You suggested.
-
-Let me know if there's anything else I need to improve.
-
-Marco Scardovi (3):
-  gpio: acpi: modernize resource management using cleanup.h
-  gpio: acpi: modernize resource management using cleanup.h
-  gpio: acpi: modernize resource management using cleanup.h
-
- drivers/gpio/gpiolib-acpi-core.c | 68 ++++++++++++++++----------------
- 1 file changed, 35 insertions(+), 33 deletions(-)
-
+diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
+index eb8a40cfb7a9..7c17bffcd4e7 100644
+--- a/drivers/gpio/gpiolib-acpi-core.c
++++ b/drivers/gpio/gpiolib-acpi-core.c
+@@ -7,6 +7,8 @@
+  *          Mika Westerberg <mika.westerberg@linux.intel.com>
+  */
+ 
++#include <linux/cleanup.h>
++#include <linux/slab.h>
+ #include <linux/acpi.h>
+ #include <linux/dmi.h>
+ #include <linux/errno.h>
+@@ -23,6 +25,16 @@
+ #include "gpiolib.h"
+ #include "gpiolib-acpi.h"
+ 
++DEFINE_FREE(free_gpio_desc, struct gpio_desc *, {
++	if (_T)
++		gpiochip_free_own_desc(_T);
++})
++
++DEFINE_FREE(acpi_free, void *, {
++	if (_T)
++		ACPI_FREE(_T);
++})
++
+ /**
+  * struct acpi_gpio_event - ACPI GPIO event handler data
+  *
+@@ -361,6 +373,7 @@ static acpi_status acpi_gpiochip_alloc_event(struct acpi_resource *ares,
+ 	struct acpi_gpio_event *event;
+ 	irq_handler_t handler = NULL;
+ 	struct gpio_desc *desc;
++	struct gpio_desc *desc_guard __free(free_gpio_desc) = NULL;
+ 	unsigned int pin;
+ 	int ret, irq;
+ 
+@@ -370,6 +383,11 @@ static acpi_status acpi_gpiochip_alloc_event(struct acpi_resource *ares,
+ 	handle = ACPI_HANDLE(chip->parent);
+ 	pin = agpio->pin_table[0];
+ 
++	if (pin >= chip->ngpio) {
++		dev_err(chip->parent, "Failed to request GPIO for pin 0x%04X, out of range\n", pin);
++		return AE_OK;
++	}
++
+ 	if (pin <= 255) {
+ 		char ev_name[8];
+ 		sprintf(ev_name, "_%c%02X",
 -- 
 2.54.0
 
