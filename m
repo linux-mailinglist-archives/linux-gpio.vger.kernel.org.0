@@ -1,192 +1,152 @@
-Return-Path: <linux-gpio+bounces-36292-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36293-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sJyHOgFQ+2mSZQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36292-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 16:28:17 +0200
+	id sKP8DlBO+2nWYwMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36293-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 16:21:04 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5946E4DC2B6
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 16:28:17 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10A174DC06D
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 16:21:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 700BD315656D
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 14:16:39 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B9682300613A
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 14:20:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 945A0480DE0;
-	Wed,  6 May 2026 14:14:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B363048033C;
+	Wed,  6 May 2026 14:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="opZ83zhD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC0447F2C4;
-	Wed,  6 May 2026 14:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0544F43D518;
+	Wed,  6 May 2026 14:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778076899; cv=none; b=jyva5tCA1QRvlP19856zabT8SlRaeyuKXGubTbt7TJxJRQBnxsrTS1FIrwAhuBbeGIXqowkqmPmBgHBOzF5PYJFGXDDx6gv4KG9uA9NVcuum1N22WiLZSH6UXPQflOCL3OhOdm2inHX3nUuQ7TraoqZsVM875eKV2nCi1B3Zj9s=
+	t=1778077247; cv=none; b=LcZWKzf803N12y0cJ++iqTWljBXJb/w9hLhzPKddmJw4swnSKpoouPKwfNUKJSwod6/WKlCngLwkQpRkmm8Gn67qJOogCeqTE/lUHuext0PwBW/AEnAwuVfyNvLLSwnsjMY8wNOBfSt9ocnah88s0yJIN4KIDesQfRSgFjKgqA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778076899; c=relaxed/simple;
-	bh=Pm0+Gh1N3CQZmo80V9svpnAeqF+PlXCFFDOgCkyNM1Q=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DXoXmvKv7oB08/j5MTLsGzvSwWXRUXVnNP/556zoJZhbQ1pxD3sFDbAEh7zIfEBbIdhoKZDb65Y9bJyItjQ7gAKC5kbxt6zaLZQx3Iv7tFQxVYSKNoK3+Jfh8hYXxpLSSmpKYnBGYiZEiahtakjwSiJjKVARMSTp6oO47GeTZGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from edelgard.fodlan.icenowy.me (unknown [112.94.100.82])
-	by APP-05 (Coremail) with SMTP id zQCowABH2AvSTPtpLvWNDw--.25404S2;
-	Wed, 06 May 2026 22:14:42 +0800 (CST)
-Message-ID: <4a43edb8c7ae3f96f77272db89ec6450ffa28876.camel@iscas.ac.cn>
-Subject: Re: [PATCH 2/2] arm64: dts: mediatek: mt8188-geralt: enable Wi-Fi
- card
-From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger	 <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno	 <angelogioacchino.delregno@collabora.com>, Hui
- Liu <hui.liu@mediatek.com>, 	linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, 	linux-mediatek@lists.infradead.org
-Date: Wed, 06 May 2026 22:14:41 +0800
-In-Reply-To: <CAGXv+5F6BSmqq5HEybuCSwt75LVzh5gvs2wQpqy3vgfLi60Dcg@mail.gmail.com>
-References: <20260504072748.2580172-1-zhengxingda@iscas.ac.cn>
-	 <20260504072748.2580172-2-zhengxingda@iscas.ac.cn>
-	 <CAGXv+5F6BSmqq5HEybuCSwt75LVzh5gvs2wQpqy3vgfLi60Dcg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 
+	s=arc-20240116; t=1778077247; c=relaxed/simple;
+	bh=dCNsi5z6SE2MWwj9xZX3J8gRDqSesA8VaakN/eL/kEI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PqFKmVXbJyHr+ts1KwmzjMc12pwOXGMCSa8QvUj9NU8E47N7R2sAgKsZtcuHF1BXFqJaPjIjSJXP3M+4HNebUMcmDBTgjtkB12ZqPnE37edx4zrkbvaJ4aFZpPkIkKyDx2Ei+xNmhGb1fo2s/vLwuJAU9TRGt+W8N9tNRLsmzGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=opZ83zhD; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=1TINjW2+GVZfWHKbu6bM194099KLPKEaQdFEP5VO8RU=; b=opZ83zhD6sjRhZ7vgFaALHMDtg
+	yMrK1zc9GmBjDoW8m7f+apmZY4/bw8ws/7BIjjUvBWL3eGr2+CaCiB09M4COnVl9XwQH95NQrl262
+	e3VsH1fC3/lBBMuIlH1rUjT+xI53oA9VMCYeMYcxZxYvxxer0ML+kfNiaZ4gwy/8Y4Nc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1wKd6Q-001eSU-BM; Wed, 06 May 2026 16:19:54 +0200
+Date: Wed, 6 May 2026 16:19:54 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Xilin Wu <sophon@radxa.com>
+Cc: Alex Elder <elder@riscstar.com>, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, maxime.chevallier@bootlin.com,
+	rmk+kernel@armlinux.org.uk, andersson@kernel.org,
+	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linusw@kernel.org, brgl@kernel.org,
+	arnd@arndb.de, gregkh@linuxfoundation.org,
+	Daniel Thompson <daniel@riscstar.com>, mohd.anwar@oss.qualcomm.com,
+	a0987203069@gmail.com, alexandre.torgue@foss.st.com, ast@kernel.org,
+	boon.khai.ng@altera.com, chenchuangyu@xiaomi.com,
+	chenhuacai@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
+	hkallweit1@gmail.com, inochiama@gmail.com, john.fastabend@gmail.com,
+	julianbraha@gmail.com, livelycarpet87@gmail.com,
+	matthew.gerlach@altera.com, mcoquelin.stm32@gmail.com, me@ziyao.cc,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
+	rohan.g.thomas@altera.com, sdf@fomichev.me,
+	siyanteng@cqsoftware.com.cn, weishangjuan@eswincomputing.com,
+	wens@kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 10/12] net: stmmac: tc956x: add TC956x/QPS615
+ support
+Message-ID: <4015f47a-af62-441d-b1b8-a8598f963970@lunn.ch>
+References: <20260501155421.3329862-1-elder@riscstar.com>
+ <20260501155421.3329862-11-elder@riscstar.com>
+ <224E233C593EF171+8c8a43dd-5061-40f8-9eb7-f360eabf2ecc@radxa.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:zQCowABH2AvSTPtpLvWNDw--.25404S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7try8Xw1Dtw4DWF47JrWfuFg_yoW8uFWxpr
-	1ktFWUtryUGrs7JF45Xr17JFW5Ar1fJwn8Cr1xXFy8tr15Ar1jqr98Xr909w4UJr48Jw1F
-	qr10vry7ur1UZFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvqb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4
-	A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-	w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
-	vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY
-	1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-	wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-	v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
-	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
-	ZFpf9x07j8KsUUUUUU=
-X-CM-SenderInfo: x2kh0wp0lqwv3d6l2u1dvotugofq/
-X-Rspamd-Queue-Id: 5946E4DC2B6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <224E233C593EF171+8c8a43dd-5061-40f8-9eb7-f360eabf2ecc@radxa.com>
+X-Rspamd-Queue-Id: 10A174DC06D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.04 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[lunn.ch,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[lunn.ch:s=20171124];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FREEMAIL_CC(0.00)[riscstar.com,lunn.ch,davemloft.net,google.com,kernel.org,redhat.com,bootlin.com,armlinux.org.uk,arndb.de,linuxfoundation.org,oss.qualcomm.com,gmail.com,foss.st.com,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
+	TAGGED_FROM(0.00)[bounces-36293-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36292-lists,linux-gpio=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[iscas.ac.cn];
-	RCPT_COUNT_TWELVE(0.00)[13];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,collabora.com,mediatek.com,vger.kernel.org,lists.infradead.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[lunn.ch:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[51];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[zhengxingda@iscas.ac.cn,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[andrew@lunn.ch,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.977];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,iscas.ac.cn:mid,iscas.ac.cn:email]
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 
-=E5=9C=A8 2026-05-04=E4=B8=80=E7=9A=84 15:34 +0800=EF=BC=8CChen-Yu Tsai=E5=
-=86=99=E9=81=93=EF=BC=9A
-> Hi,
->=20
-> On Mon, May 4, 2026 at 3:28=E2=80=AFPM Icenowy Zheng
-> <zhengxingda@iscas.ac.cn> wrote:
-> >=20
-> > The mainline pcie-mediatek-gen3 driver does not have code managing
-> > downstream device power / reset.
-> >=20
-> > As the Wi-Fi card on ciri is a fixed device, set the related
-> > regulator
-> > to always-on and use GPIO hog to set the status of its reset pin.
->=20
-> The plan now is to model it as an M.2 E-key slot (even though the
-> chip
-> is actually soldered on the main board).
-
-Interestingly I saw a "PCI_PWRCTRL_GENERIC" driver in 7.1, although it
-does not support toggling #PERST now -- maybe this should be done and
-used instead? (Well it looks like the driver had existed for some time,
-but it was for "slots" previously)
-
-Thanks,
-Icenowy
-
->=20
-> I have some of the patches ready, but I'm still working out the USB
-> side of it.
->=20
->=20
-> ChenYu
->=20
-> > Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
-> > ---
-> > =C2=A0arch/arm64/boot/dts/mediatek/mt8188-geralt.dtsi | 11 +++++++++++
-> > =C2=A01 file changed, 11 insertions(+)
-> >=20
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8188-geralt.dtsi
-> > b/arch/arm64/boot/dts/mediatek/mt8188-geralt.dtsi
-> > index 8e423504ec052..c25780098103b 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8188-geralt.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8188-geralt.dtsi
-> > @@ -544,6 +544,11 @@ &mt6359codec {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mediatek,mic-type-2 =3D <2>;=
- /* DMIC */
-> > =C2=A0};
-> >=20
-> > +&mt6359_vcn18_ldo_reg {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Used by WLAN */
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regulator-always-on;
-> > +};
+On Wed, May 06, 2026 at 08:59:01PM +0800, Xilin Wu wrote:
+> On 5/1/2026 11:54 PM, Alex Elder wrote:
+> > +	/* AXI Configuration */
+> > +	axi = &td->axi;
+> > +	axi->axi_lpi_en = 1;
+> > +	axi->axi_wr_osr_lmt = 31;
+> > +	axi->axi_rd_osr_lmt = 31;
+> > +	/* All sizes (2^2..2^8) are supported */
+> > +	axi->axi_blen_regval = DMA_AXI_BLEN_MASK;
+> > +	plat->axi = axi;
 > > +
-> > =C2=A0&mt6359_vcore_buck_reg {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regulator-always-on;
-> > =C2=A0};
-> > @@ -1145,6 +1150,12 @@ pins-en-pp3300-wlan {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 outpu=
-t-low;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 };
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wlan-reset-hog {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 gpio-hog;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 gpios =3D <145 GPIO_ACTIVE_HIGH>;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 output-high;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
-> > =C2=A0};
-> >=20
-> > =C2=A0&pmic {
-> > --
-> > 2.52.0
-> >=20
-> >=20
+> > +	plat->mac_port_sel_speed = speed;
+> > +	plat->flags = STMMAC_FLAG_MULTI_MSI_EN | STMMAC_FLAG_TSO_EN;
+> 
+> I got WoL working only after adding STMMAC_FLAG_USE_PHY_WOL here. I guess
+> it's required, since the driver clocks down the MAC/PMA/XPCS in its suspend
+> hook?
 
+Nice to see somebody testing WoL.
+
+In your testing, is it the PHY doing the WoL, or the MAC? I assume
+PHY.
+
+If i remember the DT correctly, the PHY interrupt is connected to a
+SoC GPIO, not a GPIO of this chip. So for your board, it is the SoCs
+GPIO controllers ability to perform the wake which is
+important. However, where the PHY interrupt is connected is a board
+design issue. Could the PHY interrupt be connected to the chip? Would
+the chip be able to wake the system? Should STMMAC_FLAG_USE_PHY_WOL be
+conditional?
+
+	Andrew
 
