@@ -1,181 +1,208 @@
-Return-Path: <linux-gpio+bounces-36309-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36310-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QLGZGmxk+2kuaQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36309-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 17:55:24 +0200
+	id CJn1LIti+2kuaQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36310-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 17:47:23 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C5A74DDAE1
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 17:55:23 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91E874DD8B7
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 17:47:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 4B5A230AAB64
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 15:40:59 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 16DEC3022053
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 15:45:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE274481AAE;
-	Wed,  6 May 2026 15:40:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAE40494A1B;
+	Wed,  6 May 2026 15:45:30 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24ADF3F7A8F
-	for <linux-gpio@vger.kernel.org>; Wed,  6 May 2026 15:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368F547DD65;
+	Wed,  6 May 2026 15:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778082033; cv=none; b=i783q9jZnh9z1S5BQJG15v87NxtqOsk+RkeDp46zdjo0lOAN0IIbWcmEEYUlJzrN43kFGeSAj+tUfy/iPpkts95i8c8tY3fRpVNGkLKwc3OR0w3Do03ounA/Ko2baacgIlkfIshsZTeUNkauAhE/OCJl1M2ktogOOuJoi/h7M/A=
+	t=1778082328; cv=none; b=r0qpRPjH9RflHXHbWRCGjgyuNETuPeQ7WDd7P35plWmU40oChKLRT1t6WUhsn1zaGooQSKBzFQI4HrYs1a0hEATZS+FHrhvp885ZQeVcHS5MXpOd9UGZA1PW7ypqfbJqgrxrE7j5f37FzU83UYymeRjVqjTG9JPgNh2XsTLmHSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778082033; c=relaxed/simple;
-	bh=hnTY1C4YQfuFQnTdHlPMeKkehEjARMiDrJabpHckQn4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lwimQ6YZYZxtXczrdSrFEeYAlbhVNfDQL/QP2h/M1ghan2RaYR9ODYeKDgS3pBqxoaw8/g9eq0hCuGvtPTku+3OXZxZqoJ9mZlhkx0WgX27kdb+LRwNjBixnvPjWvO0bIapDunCNlt6H26VGrx5Hqk2AHXoon7V5a0OyTe8O2rY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-5752b279662so1128560e0c.2
-        for <linux-gpio@vger.kernel.org>; Wed, 06 May 2026 08:40:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778082027; x=1778686827;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XhB1wUc2hdpCHk9AKQGT4q75t8HPfDZeAd/QYRJBqkA=;
-        b=mGL0/Hs4k7J6yQdZf8cL5G5+UCdBhsihq7xu4OmnNliB1eBw/spLiudwgzitr22Cuv
-         AqgUepSdynIFv99Jtj2VOynR/TCfill19+pio23KEVD5NCjKGcipja+qJxna1rHUhOVf
-         pXX2Mt1dNYhUBJO4SEKWay9e/Lg7fjobmbFaRnqtqmlBeLyRRPcgOxS3YCeo074tLuQr
-         7jZa7kAMh18A7FvmoPhna2/hgHNpYHcnlC0D/2N7/EV9wX84zzXeZ15K9CGh97ptResa
-         gy8ZM9MPKPRYu29BGtghg0EST1gOB5rbrXeIG8Ft0vcI4in6bqsdBTKYYYb1nZ4pt+Si
-         KBpA==
-X-Forwarded-Encrypted: i=1; AFNElJ9J6GkfAYYRyDbgWoT2cGuweSWynEtld9kwdd+JudnGqnu1OgmDZgwY63rpzzZx0SJzrwS40tgqWMMi@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoILAOZQj8FBziOAkhBrP1H76hS62zQ/vXdWHZwvQYw/LHDZXj
-	tvmK2z3OOh633XzLWhvcJ9m5TR3Iw7eVmaAU24OLGHIKouvnh+jd32ilPW3ucb2M40k=
-X-Gm-Gg: AeBDiev0Rf6+PyBC4eQVd2rJgNe2Qnw75Kr3KFPZfgWFFvUQo8X7T8VSg/JplwhoO7e
-	RZKULbtzDG9/ETY56EiW52E8hteb+jjFsn3IpC+6gxlJkhZBFuiK/75e/H7EvGpoQGNnOrQ+Tfm
-	YZ97F3hE7+Ugin6Jh8iUR3Yb80Zye9GjujqvpPQ0I6Upvi9vRbedmuKEXMIisjlfIlP1Bo7Vvlr
-	6zycA5s0VJm1qtDEQPPPyb7k2+VaKZOAl5hpcJmCRgHfV4PyNRkuQCDKeG8lov9ZuvwcsTniYpW
-	KSJPmgK+PtA79KjOHBbv2dtha+TiDRrv8uNlLf9106iBh4PSlGAp+KPd+jP3/eBEHSwxugJKwHT
-	cePv1OK9wm9qy9zAc5U/It9roCTdfELFlqKFg3qasv84w51eaphhYFVNHMKVgGcILUij0gvLKN1
-	Kn/F1N7V/DvWdtCwlp7lLu0lc30bX66zfR+MSpNrrmy97+qrTJS07Ui1mQ5Lfq14iK3uybDFW8M
-	nQ=
-X-Received: by 2002:a05:6122:d15:b0:56d:7b2e:89a1 with SMTP id 71dfb90a1353d-57559538111mr1995566e0c.4.1778082026578;
-        Wed, 06 May 2026 08:40:26 -0700 (PDT)
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com. [209.85.221.170])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-57560c80bafsm1009135e0c.3.2026.05.06.08.40.25
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2026 08:40:26 -0700 (PDT)
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-5673804da95so2313724e0c.0
-        for <linux-gpio@vger.kernel.org>; Wed, 06 May 2026 08:40:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+MYLR7z4KMMe/gGXBrl5Ts+RQ8nB2whAa4DFg4iP5zyczGc0Vcje1+gVTt7yxbO2eE3i+FhDrTZdWh@vger.kernel.org
-X-Received: by 2002:a05:6102:4429:b0:602:8ad9:1f6f with SMTP id
- ada2fe7eead31-630f901b15amr1756658137.5.1778082025698; Wed, 06 May 2026
- 08:40:25 -0700 (PDT)
+	s=arc-20240116; t=1778082328; c=relaxed/simple;
+	bh=cLst7TIrzB2EttSm/QmnT/2eZbnvabiG+RpImWplrts=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CjdwVBRfo7ay8xcRFijGb48ydeTsp0acLKOm++O0yltb9fX2MMJLAQaH+lJVnDtX1mLbwjlXCuvZwbxcBTkkqB1FCrjgERAxmcVziyx2E2ohnXOpUdHTgL9AHIUFnsIPPbtmX17jhrPqVvFfTnKCB6wsxgWXzVOobghUr1WU528=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=54.254.200.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
+X-QQ-mid: zesmtpsz7t1778082303tad718e7d
+X-QQ-Originating-IP: IUbeVjFMUOeWOYng8sGFzDDtrsWNZj3aHK3Nzskz1o8=
+Received: from [127.0.0.1] ( [116.234.74.217])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 06 May 2026 23:44:57 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 7158039803468193792
+Message-ID: <549BE66F62F1470F+a489d4fd-10ab-484c-9b55-6aecfd05d383@radxa.com>
+Date: Wed, 6 May 2026 23:44:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260430093422.74812-1-biju.das.jz@bp.renesas.com> <20260430093422.74812-8-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20260430093422.74812-8-biju.das.jz@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 6 May 2026 17:40:14 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVwdKsmV3A8opxi7f1rnqSpVFsRg+Mfb7wQLC84NkL7PQ@mail.gmail.com>
-X-Gm-Features: AVHnY4JATluaWsu6W_RJQ4MJF5cAxj9Q7vuMaGT0fiazB3FLnuoB8rjp_3_f3yc
-Message-ID: <CAMuHMdVwdKsmV3A8opxi7f1rnqSpVFsRg+Mfb7wQLC84NkL7PQ@mail.gmail.com>
-Subject: Re: [PATCH v4 7/7] pinctrl: renesas: rzg2l: Add support for clone
- channel control
-To: Biju <biju.das.au@gmail.com>
-Cc: Linus Walleij <linusw@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Rspamd-Queue-Id: 5C5A74DDAE1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 10/12] net: stmmac: tc956x: add TC956x/QPS615
+ support
+To: Daniel Thompson <daniel@riscstar.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Alex Elder <elder@riscstar.com>,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, maxime.chevallier@bootlin.com,
+ rmk+kernel@armlinux.org.uk, andersson@kernel.org, konradybcio@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, linusw@kernel.org,
+ brgl@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
+ mohd.anwar@oss.qualcomm.com, a0987203069@gmail.com,
+ alexandre.torgue@foss.st.com, ast@kernel.org, boon.khai.ng@altera.com,
+ chenchuangyu@xiaomi.com, chenhuacai@kernel.org, daniel@iogearbox.net,
+ hawk@kernel.org, hkallweit1@gmail.com, inochiama@gmail.com,
+ john.fastabend@gmail.com, julianbraha@gmail.com, livelycarpet87@gmail.com,
+ matthew.gerlach@altera.com, mcoquelin.stm32@gmail.com, me@ziyao.cc,
+ prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
+ rohan.g.thomas@altera.com, sdf@fomichev.me, siyanteng@cqsoftware.com.cn,
+ weishangjuan@eswincomputing.com, wens@kernel.org, netdev@vger.kernel.org,
+ bpf@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20260501155421.3329862-1-elder@riscstar.com>
+ <20260501155421.3329862-11-elder@riscstar.com>
+ <224E233C593EF171+8c8a43dd-5061-40f8-9eb7-f360eabf2ecc@radxa.com>
+ <4015f47a-af62-441d-b1b8-a8598f963970@lunn.ch>
+ <4C0D95BC59F1A4ED+53f3be85-2cdd-4058-8950-57970027d481@radxa.com>
+ <aftgorkah-Hjrvq2@aspen.lan>
+Content-Language: en-US
+From: Xilin Wu <sophon@radxa.com>
+In-Reply-To: <aftgorkah-Hjrvq2@aspen.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:radxa.com:qybglogicsvrsz:qybglogicsvrsz3b-0
+X-QQ-XMAILINFO: MGxrRyrvqqSAJPtm9+Xn8xQ2xA1AHSxENunW+ehiuhpYbHNZNVX+5I77
+	wfEoPZdY8rSSnBMxbOMBAUXrcxyTiHvHjYdLIruNFlVs5lr5HDLEQ1ApU0cFLR+6YfK0cxl
+	xLQwQUO7Tb69bQylEOxrNQ6mWphQKFg/TiXsZ1gi+FVTHjgIg/Fr6j8Q457nWfpG48XAJzc
+	5XvJ2E6Usyo8kQ57Bnnqm+krfqblXcs7i1vUPim1nujyUIPBIbi8cwlBm36UDmFh3srxEhE
+	+Ryb56EQI1VkDQa2KKpshuWjq99XGYnWUOM/1rx4F2kFuyYWa2Z4COGGN9BC+ALkqj5ePLH
+	gbFiAWQ8TibPnvNKMS36uWka8lMqh7bKXZxLD/k8uLcy/PVK3UWVekpSyAFTm1MafcK88MG
+	VoAWmLFZ2mggMy2AuIU7+qsCwNCuVdY5sg3BJB51QtMSyOfS2mUsq0m/v0hpmk3xADo5kK9
+	8FlW7z8nbMx8jvr66nXsWSoEdREevD5+5Xmy1nAdvuGWktXcGQhVnd2CZKJbVVfuaT1pf/4
+	C3cwwkAyC54RvT6IWnn9HShasbW724+bTFuNBJfsSCilvctGMH6syQbfTBK5OXQKvmIw3x4
+	qarzR6NdI1hR994C8uKTsqpkUrueoQnqMFptlxAEM7X3jvvwwKbXzDc48sHQUQXwZ7B7aMa
+	Nal6lzE8DmjyGk461b4kkEEATnaV8ntovq9/27lotTr1/xibXNTV9+AqsNiPkHXhoiDZ9aS
+	/5rpNyFTXrtTnE6OsWnPwjzI8uFcL7V3DeIY3PENtYZLgjn2hABGOpP/FpulKp01zIu/AgG
+	ENVE8OEgHs0pcexza2gSGkY1zJzV2iyqswTeiiqJ8XKL1yVdsmIBIFWYLyEqYOWPqPJzIhi
+	Tre2PFAPTXsrW8c0g33qtsnMjdlCxTQcbWps7nfZCdy4bU05lSAE96EcWRLkNu1O4Z27qV+
+	h9nrlUOx7j5H/UqAO0ENqXCkAmY5Rkmwfe7kIlC8UklVOo4ZAc5o6kI8cPsw3yP2N8BQ1fh
+	aBu0P+aQQ0sAvHSKc2povYS6tafFYhOZCJpENmhXfoKDGX96f5QE0Jx3VZ2z0/w7bZde9Wc
+	Lu07ZB4YcFxuQPT4Rqx3Cjt7S1VQoSk0g==
+X-QQ-XMRINFO: Mp0Kj//9VHAxzExpfF+O8yhSrljjwrznVg==
+X-QQ-RECHKSPAM: 0
+X-Rspamd-Queue-Id: 91E874DD8B7
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.46 / 15.00];
+X-Spamd-Result: default: False [0.14 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[radxa.com : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,bp.renesas.com,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-36309-lists,linux-gpio=lfdr.de];
-	DMARC_NA(0.00)[linux-m68k.org];
-	FREEMAIL_TO(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-36310-lists,linux-gpio=lfdr.de];
+	FORGED_MUA_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_CC(0.00)[lunn.ch,riscstar.com,davemloft.net,google.com,kernel.org,redhat.com,bootlin.com,armlinux.org.uk,arndb.de,linuxfoundation.org,oss.qualcomm.com,gmail.com,foss.st.com,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
+	RCPT_COUNT_GT_50(0.00)[51];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-gpio@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	NEURAL_HAM(-0.00)[-0.999];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	FROM_NEQ_ENVFROM(0.00)[sophon@radxa.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.981];
+	MID_RHS_MATCH_FROM(0.00)[];
 	R_DKIM_NA(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[renesas.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,mail.gmail.com:mid,glider.be:email,linux-m68k.org:email]
+	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,radxa.com:mid,radxa.com:email]
 
-Hi Biju,
+On 5/6/2026 11:39 PM, Daniel Thompson wrote:
+> On Wed, May 06, 2026 at 10:35:18PM +0800, Xilin Wu wrote:
+>> On 5/6/2026 10:19 PM, Andrew Lunn wrote:
+>>> On Wed, May 06, 2026 at 08:59:01PM +0800, Xilin Wu wrote:
+>>>> On 5/1/2026 11:54 PM, Alex Elder wrote:
+>>>>> +	/* AXI Configuration */
+>>>>> +	axi = &td->axi;
+>>>>> +	axi->axi_lpi_en = 1;
+>>>>> +	axi->axi_wr_osr_lmt = 31;
+>>>>> +	axi->axi_rd_osr_lmt = 31;
+>>>>> +	/* All sizes (2^2..2^8) are supported */
+>>>>> +	axi->axi_blen_regval = DMA_AXI_BLEN_MASK;
+>>>>> +	plat->axi = axi;
+>>>>> +
+>>>>> +	plat->mac_port_sel_speed = speed;
+>>>>> +	plat->flags = STMMAC_FLAG_MULTI_MSI_EN | STMMAC_FLAG_TSO_EN;
+>>>>
+>>>> I got WoL working only after adding STMMAC_FLAG_USE_PHY_WOL here. I guess
+>>>> it's required, since the driver clocks down the MAC/PMA/XPCS in its suspend
+>>>> hook?
+>>>
+>>> Nice to see somebody testing WoL.
+>>>
+>>> In your testing, is it the PHY doing the WoL, or the MAC? I assume
+>>> PHY.
+>>>
+>>> If i remember the DT correctly, the PHY interrupt is connected to a
+>>> SoC GPIO, not a GPIO of this chip. So for your board, it is the SoCs
+>>> GPIO controllers ability to perform the wake which is
+>>> important. However, where the PHY interrupt is connected is a board
+>>> design issue. Could the PHY interrupt be connected to the chip? Would
+>>> the chip be able to wake the system? Should STMMAC_FLAG_USE_PHY_WOL be
+>>> conditional?
+>>
+>> Yes, the PHY is doing the WoL. And I guess this makes sense as it allows the
+>> MAC to power down during suspend to save power.
+>>
+>> The INTN pin of QCA8081 is connected to the ETH_0_INT_N of QPS615. And the
+>> INTN_WOL pin is connected to a SoC GPIO.
+> 
+> Interesting. That is different to RB3gen2 where INTN is routed to both
+> (although there is a do-not-fit 0ohm resistor option that could change
+> that).
+> 
+> Does that mean you don't get phy interrupts reported in /proc/interrupts
+> before any suspend happens?
+> 
 
-On Thu, 30 Apr 2026 at 11:34, Biju <biju.das.au@gmail.com> wrote:
-> From: Biju Das <biju.das.jz@bp.renesas.com>
->
-> The RZ/G3L SoC has some IP such as I2C ch{2,3},SCIF ch{3,4,5},
-> RSPI ch{1,2} and RSCI ch{1,2,3} need to control the clone channel for
-> proper operation. As per the RZ/G3L hardware manual, the clone channel
-> setting is to be done before the mux setting.
->
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> ---
-> v3->v4:
+No. The phy works in polling mode AFAIK.
 
-Thanks for the update!
+> 
+>> Without this change, I can't get WoL to work. I have a working branch for
+>> our board here:
+>> https://github.com/strongtz/linux-radxa-qcom/commits/v7.0.2-8280-wip/
+> 
+> I took a quick look at the DT and I noticed you have an SGMII PHY
+> attached to both eMAC0 and eMAC1 on your board. This is something we
+> think should work but were unable to test. Are you able to use both
+> eMACs concurrently? Would be great to see that confirmed!
+> 
+> 
+> Daniel.
+> 
 
-> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+Yes, both eMACs can be used concurrently. And they can reach 2.5Gbps 
+under iperf3 testing.
 
-> @@ -623,6 +644,45 @@ static int rzg2l_validate_pin(struct rzg2l_pinctrl *pctrl,
->         return 0;
->  }
->
-> +static int rzg2l_pinctrl_set_clone_mode(struct rzg2l_pinctrl *pctrl,
-> +                                       u8 port, u8 pin, u8 func)
-> +{
-> +       unsigned int i;
-> +
-> +       if (!pctrl->data->clone_channel_data)
-> +               return 0;
-> +
-> +       switch (func) {
-> +       case 2:
-> +       case 4 ... 7:
-> +               break;
-> +       default:
-> +               return 0;
-> +       }
-> +
-> +       for (i = 0; i < pctrl->data->n_clone_channel_data; i++) {
-> +               unsigned int pin_data = pctrl->data->clone_channel_data[i];
-
-u32, to match clone_channel_data[i].  I will fix that while applying, so
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v7.2.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Best regards,
+Xilin Wu <sophon@radxa.com>
 
