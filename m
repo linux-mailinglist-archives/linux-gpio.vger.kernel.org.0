@@ -1,184 +1,205 @@
-Return-Path: <linux-gpio+bounces-36250-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36251-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MMJgG0Ko+mlURAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36250-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 04:32:34 +0200
+	id wKbeFL6u+mniRgMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36251-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 05:00:14 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 173FB4D5B17
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 04:32:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0030D4D5C88
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 05:00:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 81B4D3038A5A
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 02:31:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 116723027134
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 03:00:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 798862D2382;
-	Wed,  6 May 2026 02:31:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3146323AB87;
+	Wed,  6 May 2026 03:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="gL7jkrvA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023094.outbound.protection.outlook.com [52.101.127.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FFA19DF6A;
-	Wed,  6 May 2026 02:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778034671; cv=none; b=hrGXYl2nZSDtICYm+qnGAY2ZnV/YtcYrCyafKk7wtXkoWbvXyVYK8iZnVw0ExwL2x4ZmpqDIuFTUfy5reHkprnjPp4FP2DZPztHPei5bZ9VEYaSKDh1yMP/2ckJ59khsoxI8EuDdV1z/v0UgqMjrKRqyTBvZtyw/DLtfvCEpIvw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778034671; c=relaxed/simple;
-	bh=g5oNCXLIrRB8Peo+P5aiq5oeMf2uwLyTTn+a4i74TPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IHwgMEfwmu39wnwoy2cCxvvZAAOV0IyBIomipSx26bkFue+J/1dJ4wozFzkdDYPLWnzaw5cegee1NhcIf2T0tOIcmOBmGT/MKCMCpZ0CN0p65AuuuISAC//nmPfGpe4p8NZXDIi7+fZ0FLlARmD+sRxnjhw7iMQNFzeafqgdF2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=18.132.163.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
-X-QQ-mid: esmtpsz16t1778034653t405f70b0
-X-QQ-Originating-IP: 4meMtvNm/og9G0fVM/ycSpSa183Qcv1XH6iFoe6ZdSA=
-Received: from [127.0.0.1] ( [116.234.74.217])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 06 May 2026 10:30:47 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 2498618263695594642
-Message-ID: <DD71CDEABC7C16D5+02d052ff-13bb-4712-a847-91416f76c578@radxa.com>
-Date: Wed, 6 May 2026 10:30:46 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5A72DCF67;
+	Wed,  6 May 2026 03:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778036408; cv=fail; b=hgBkLuxbNNCFoeovDRpWK9b4g3WvYnnGVFUaQdGgdf6CP9ir0LwsNVvoy2lfw2Q7NGxTwP3UPz3j2vE32kH2jdoOGHBE6mjy4pbd/g8D4IImj/DarWb39BYG7F+UVRrXWq/mDKmrCyUDVChX5fwzfZQt96digm+6YY1SPHfQeHU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778036408; c=relaxed/simple;
+	bh=bwsFwtFRr7+RCyn3lv0+UXMp/cT48GCQmqBixp2jYhE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ejLWJ8w3liWnAqDC2o+JJvDZecAeM4oAhFgtrZKhVfADJECMIQl68PKFnZCHzoZIkAxGwwwAM3Mvs0ygSkDbgmiyuHHjdoMKYOe/knXDBvB/jiT8o2f3auXWlO5B3AeI+21qkaL5R0fX6XM52ZSVacfwkhxkmpI7m0lXtS+ZV9Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=gL7jkrvA; arc=fail smtp.client-ip=52.101.127.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VSDvaa0gEQw4Jwamh0/358n7K2+PTs118QkexC9NgPyes8S6bDTh1eq0PlohdoTCJmpK/S/BnH0BlcQ370izdo2gXp24o62oegHeCQabewIPbfG+HPGqgN2aD9u3Aiy+1WjFwdUyHB3Qz6V60Gh6+p3eQmHPcTQLWanFAKiyQ4fXWmsL28h2Q56Kgu1KIziIacV6eex7imBzQb/iUIlbks2lVheJdlYNG6CmOjWDLevb9DJ35oKuVcWVnnHGiyiP+OF29dOTn+SsixnKGtSGMG43KtHOD4l7FhCLENo85IxO+7WgZgBxPRtIsZ5NIMyoEmnsVcArH3l+J2UiqDVOYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dxPRS4Ci/VlOJYrV9W8AOwAzbKcHcyph1XDoOS4jmsE=;
+ b=Vf57Yn1WGJZQE6G0kn0yKU8iyn3AIQNQJ1X+P0FPh7O5EVtFOzp4+yB0dgv3sGMxJhNKUD5vyHhdBEzYn8JQ0eV5V8UbDB65tGEZiu/8eZP9H0UbT5F5iAGuP8uye71xVPGjXwZzy1YCcd7sAOTkvP0Rk9GWwSIFXmZ8+XKB/ftTFKEXbKyaAlQ+KeJqDKLyK3AsGe6qn1+nEfWE+GvkshvO7QkVY1H/jAF1kdgsWjWI+WUBkvOjTCFUKrfHvQz4QS6JPIpR2OkXsqk8vPHvA2qgMTyfs9pcEk7Uao8uzwhqiZ4ArxK1zYBxJZ4PKX+EVMmvdorYeus0gtzO2zBImg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dxPRS4Ci/VlOJYrV9W8AOwAzbKcHcyph1XDoOS4jmsE=;
+ b=gL7jkrvAeBDitt8ILu/H54VwBX45NKRgGMgw/NrorPSJtabuuTaIikyxsW8W5ddJN3bGivUmiKrGZLO1A+/1YwOPjrTnrWvSnOqj+7fmq5mZbJ3h5UfDQ8nvEHx3fUr6d5vTXtKuO2XXitoJ/gNReukB9X+iQEU9RplOsoB76j7k0u2gXBIJPXTWS+4wINd260Qh0PXFNshxl08odeFacdRmwwcJrnI6Vbh69R0MrdlAEGXZaXP50OqELnIlRfmmFP1DInlMUmQ5oV/Z3s5IjI/da09R8+VQNzh8XmCQV7gR5j+W/ggQHXyiYmFnyTXPC7qdJ7QQGB/G7Uful/115A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
+ by SEZPR03MB8156.apcprd03.prod.outlook.com (2603:1096:101:18c::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.15; Wed, 6 May
+ 2026 03:00:01 +0000
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::78d4:9dee:2e32:d1e4]) by TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::78d4:9dee:2e32:d1e4%3]) with mapi id 15.20.9891.008; Wed, 6 May 2026
+ 03:00:00 +0000
+Message-ID: <659fea60-6b65-4f70-96b3-780b53740e22@amlogic.com>
+Date: Wed, 6 May 2026 10:59:56 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: pinctl: amlogic,pinctrl-a4: Add
+ compatible string for A9
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Linus Walleij <linusw@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20260428-a9-pinctrl-v1-0-cd611bb5f52d@amlogic.com>
+ <20260428-a9-pinctrl-v1-1-cd611bb5f52d@amlogic.com>
+ <20260430-notorious-cat-of-wonder-a6dacf@quoll>
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+In-Reply-To: <20260430-notorious-cat-of-wonder-a6dacf@quoll>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TP0P295CA0046.TWNP295.PROD.OUTLOOK.COM (2603:1096:910:3::9)
+ To TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 10/12] net: stmmac: tc956x: add TC956x/QPS615
- support
-To: Alex Elder <elder@riscstar.com>, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, maxime.chevallier@bootlin.com,
- rmk+kernel@armlinux.org.uk, andersson@kernel.org, konradybcio@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, linusw@kernel.org,
- brgl@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org
-Cc: Daniel Thompson <daniel@riscstar.com>, mohd.anwar@oss.qualcomm.com,
- a0987203069@gmail.com, alexandre.torgue@foss.st.com, ast@kernel.org,
- boon.khai.ng@altera.com, chenchuangyu@xiaomi.com, chenhuacai@kernel.org,
- daniel@iogearbox.net, hawk@kernel.org, hkallweit1@gmail.com,
- inochiama@gmail.com, john.fastabend@gmail.com, julianbraha@gmail.com,
- livelycarpet87@gmail.com, matthew.gerlach@altera.com,
- mcoquelin.stm32@gmail.com, me@ziyao.cc,
- prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
- rohan.g.thomas@altera.com, sdf@fomichev.me, siyanteng@cqsoftware.com.cn,
- weishangjuan@eswincomputing.com, wens@kernel.org, netdev@vger.kernel.org,
- bpf@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20260501155421.3329862-1-elder@riscstar.com>
- <20260501155421.3329862-11-elder@riscstar.com>
-Content-Language: en-US
-From: Xilin Wu <sophon@radxa.com>
-In-Reply-To: <20260501155421.3329862-11-elder@riscstar.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:radxa.com:qybglogicsvrsz:qybglogicsvrsz3b-0
-X-QQ-XMAILINFO: MxdW4jxL6NvXsbtSC0sdkRTYslY/wd+PTnnOEmueE64hCrFI+earuJRV
-	hgNg2Ceej//UIQfd+2Wlk//epUITPXjjocchjWHEZMcdfNK1LLNLFyz0ZfXIRI3td8fvLcg
-	ioV78ncJzF7+KQCzQK9t0u73IRt2vWCCO0ElFvy14O+nJcxgQpZdBKTQ9TxTIcZUoaAwD4Q
-	xxzCEbjkDEoZxLTSeuiKoMKu+9qsf2zYfVwTd4hlpiDd5MHlm0CJzfCfSSoeI2FKWi3VgWo
-	9CEexip17TssKCTg8w/buxu5ytVm0435turBile67gA71cUUxk7zTng8zNvMjJmNoMxOCli
-	SSSo40gjI+GpvWoeF8JpMycBvTtnwXL8DvuC8k18EOcCQq+lv2FwbMqMBWph7sa7gSjdkCp
-	O8jkqB5fGOO5vVNzg/eaRrs7biPOkQy44iN36TDJx0Wb03IkHOXbWxOab453acDV/JxVNOl
-	uN9OScd0yczqaUxHJhVCBUC6AHGRz92UcT3bVSvvvD+L9qnUx3msHzghPxpppLzzOOcG0xw
-	n79UGEvdQpwNrII1tgGEiLdYEYaUqmKTtnlD19HdD5uYy9GBUatNcBJtzhbCH9ijDsGrDTy
-	sIre1iDEw9SwHlD/oFtCYBgrgyS6IHnf2+zt/3HEx1OgJOH5rlUg03KJ4BOL5bmDkOOdVtg
-	hV3z89018f9IgXo2HO9E26kHWJoIdXlggavuQIQ/xNcS8GyZ973bAYpcbARpt/R5eHrlGKt
-	yYmwp6EciINtFp7rAHahigqRc7OkhTAYteXoLX+w13hrYAAbpmbGo7nyIQh6eVXWksTovTp
-	DNCclkxdoVXVsPuZuHvdsyeAiCuxOhLSqYwUXbeLg/0vNJMLPsFFK1MyzNaPPLIFuwuERmM
-	W0BM4I5HB7dilQPZZyLzEFCaY2yOLQxcMxwiwF8R32kA1J4gqGyz16Qs8HzIVHG3H24Vu5H
-	bSaoBbcHAZIxNn+BUYUmS+plXKCWKlZWHhqmJJh7mvJXe92jRy1l2J4fKNglrg3Cni9s=
-X-QQ-XMRINFO: MPJ6Tf5t3I/ylTmHUqvI8+Wpn+Gzalws3A==
-X-QQ-RECHKSPAM: 0
-X-Rspamd-Queue-Id: 173FB4D5B17
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|SEZPR03MB8156:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2907ecd2-d8af-4abb-a6fa-08deab1b9040
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|1800799024|7416014|18002099003|22082099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	t+2/J2IlIN65Jyep3mGBlzbgIa2PYqkQ7NzglLl39u8mRBxw0JdGI/IjSbAtHxaJyG29ruxEiu21fsTgYSlu+GTkYi8995EoGqulNnAUVXKRpa225eKCSdLNrlz/oHGDajZs+AWu2XfG03hSomVwjndoYVqibB9Ez9PZAfy2AzGDd2FhijYM6SJ2u2uFZbcwPu33jlJWrCvX1xT4ugOzkaNB9jBhIoMdv3HLACINKv+cAKS2hFhMnMOD5M6ufzOvVp8d4aB5A+9UaRAHRIB+xDp0jEocTSy5wo/K4lk58aJPIccAmnOStDzttSaFZjunJnG3Dy4wRCo78LzvlKbSlgQaRjSSAryPZ8ZQUJShSRJdRNT6PzbZoT7ABQG6x1LwZ4U5F+wE014uC1iDEYqj5qes5OkSe1/Chdpl9Tj4YQ6b0NIQ1jArPEmWzW77imRAO1OSV3V/0F8zR0V0FZr31+us1FhQnNrQxcAzFz+I+BdmFs18e70LffWImu6OkHATEu5JCXqQsOUERdDDlmR581s7LdXRdxtRAZxCCJVByne+h3P0wAl1z3r5T1LoWRz74oVMXNs96K131tK0YYQfcs/MjhEAY9kN7yPHbXmYELWUALcnzMuSLOJFxNIvMyzdyDqrrzOXNW+96mWf1gJbLPOWdQjHo2K7xmptNx1mJtyrYshI0ILNPx1KWtYKEdNa
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UmpwZWkvYUtlaHJabTF1OTBWWXdodkpnWkxWWHM1WC9LQktPQ0gyc3FocGtn?=
+ =?utf-8?B?ME9BaXgvMnpJall2dXRiMy82MDNIWTZxK2ROb0xtSjdPWWZSN2lEU3FuK1Yx?=
+ =?utf-8?B?UWg4eXpsR0QwMHpUdkRCNGk4M1VsNjdJdHNoRXFDeUYzdFp0QTdBdkFuT3Zi?=
+ =?utf-8?B?MnBqZ1ZZcDdzajArVnVUVy9HWlhoNXpnWm9mTFdPUkRiVWprWkdjYzc1dG95?=
+ =?utf-8?B?YTVhT1FTdlErK2Z1dWdTWUFaaVB1OHAwWGUvSDNmWjNBVER1WHhFQlMxUnpQ?=
+ =?utf-8?B?cmE1ZCtrZEswTTMvcHA5cS9Xd01OakpzUGxtQ0FpYnN3WmFwd3ZoZXhxVG5i?=
+ =?utf-8?B?bXY2eFpqYmw5R0JiSkdVaWdDWnhOMWdEd1o2QmtVUXlaUWxlN0VKcTRlaDZh?=
+ =?utf-8?B?SkdWQmZ6amsrR1VnckdhZjhBWHg3L0dnS202V0t0b2NwTTJRODkvNGIvbE5I?=
+ =?utf-8?B?bmE4cFB4TTgwWXV2c2Y2Q05nYTFFSFFLZWJneE0vekhuVUNDdEdhL2VSRmt5?=
+ =?utf-8?B?MUxuaUpsdklGTGU2TTZLSWNZUnhJMFBJa0FPVDBEd0ZBVUZlZ1FkQVlJVzhh?=
+ =?utf-8?B?dDF5aGZjVzBhYWZxajYxeWF5dmJpMDNhTGFWc0ZHVElaN0xSdUdWNi9MUFMx?=
+ =?utf-8?B?eTRWSjJWWEp6Z08yMXd1cTU2WjZrdXhUNncyeU1QbTA5UW5LUURhUVRlU1Qw?=
+ =?utf-8?B?VHVtanozanJjOHhtMDFZaTI3NFBzS2s1elBUNGNxblo5Mk96aHFKV1ZHbkpx?=
+ =?utf-8?B?VVdUYWhIV3daakFyY05WZzNmZXZ0QUlKV2djU3B6SWFjRjExWmZqQzI3Rm81?=
+ =?utf-8?B?c0dOZkMvZWhrUm5QcjJPZFQ3aVBQK0x1bEhzS3JBNFJGRVRzazF6S04ya3Mx?=
+ =?utf-8?B?ZnZVV3lqQUY1dUhza3gvTXdQRE9VS0pWcEphS2ROMlN6S09zdTZNeUhzN3do?=
+ =?utf-8?B?VEJCcjA1djZOenljNXFTUG1WcHJaUlpNK3ZZVVdxYUVabzQ3SG15aTdYUlV6?=
+ =?utf-8?B?cEdhVVpnSUFDdzZGYkRoZVBSdUR2NWc5VC9aTFhDTnovdjZneTRQWlE0K3Yr?=
+ =?utf-8?B?c3JJeTFWMFRHZXpKcFQwMzFFcXZGS0xSU0wwQWN5VFZuLzhGNTN0dlU4QUtC?=
+ =?utf-8?B?MUN3VURmMTJvRUxOME5HTk80Qmt4QlBDZHViaWtpajJhdzVJSndXTlB6OHZV?=
+ =?utf-8?B?OUtjK2wvVThZTVRDNlBDY3ZUSjQwa09KSEV3dUZPOUZvT1hEbUFJMUpoM1FY?=
+ =?utf-8?B?OFowN2dyRjVVRWxxZlA1YTBVUWRPOHpWamJvWnZGRzFodDlYL0QwZU5XWldG?=
+ =?utf-8?B?cHgzU3lDQzdwYXZTMFljRVFiRVNFUUFEckh3SzNzayt0cDg4UmNZU1dERGI4?=
+ =?utf-8?B?cnVodDhhZFRYcHhaeEtPWU5HMUo5djcvVW5vVEhuL25MNnovK1d4MlhIQ1hz?=
+ =?utf-8?B?alk3ZW82UEJhQUk5TWY1cUY5UlBVeVhCWEdXSDVjK2hUZGJkNHBMYVpjamtC?=
+ =?utf-8?B?WlQ5ZGs5anhMVk5idmM0cHdoZTZ4TjVKVDd0dnhhVlJwWUdkRDVkYjdDdEgw?=
+ =?utf-8?B?T05aS2FTdldodDJoUUVpMXB3eDY2NmhHZndUZkQ4NzRLYVgxd3ZQVzdxbEtH?=
+ =?utf-8?B?MlNxUkI1NGlHWVNoQXdnTWpVQUpDbXpQNVhJeWo1OTN4WGg5M3ZGdllGYTJC?=
+ =?utf-8?B?U2dTWmovVVFrc2FaNHJoWTJneHllemJDek9LdDRLWm1IZ0wrMkllMmRpK3NB?=
+ =?utf-8?B?NHZaRXZ0SUoxVDVoTFVQdm42b0E3Ty93UlNCWW5ZbEZvVW51MWpKbXJzYnc2?=
+ =?utf-8?B?cVZCVk8xL1paTGpBTWVsczdZSHIxOW11alhMVi9UUVY5M05LUGx1bkVCSnBv?=
+ =?utf-8?B?NjNnZmNYWEJBM1NkcnhTdWo3aEhQZjRrRFRUNE5KeGhvMURzMkYxb3d1MEZG?=
+ =?utf-8?B?azlJM1lkZVFaaGZHQ05HVEY1aWk5ekgzcmVvWHM0VXdXUlBZRHpWNGpkTjZ3?=
+ =?utf-8?B?N1VLZnQ2SGZxYlU3b3p2bi9aYVVSajFwSzJkNDJVVWZ4TXZqOUgxbEg3MnZO?=
+ =?utf-8?B?UmZjNjhKOHBlZkszdUFFTUo3b3d6ZDZBaysxb0Vja2JWTUlNOXRQKy9UWHZQ?=
+ =?utf-8?B?a0RiVmpWN2NacGIxTHNIbk5OVEo2WDAxcmZnSVFLZGhEeTRoT2daR215TFZ0?=
+ =?utf-8?B?Skh4VHg3eEwrNkdJejcxN0ZzWjBmazBmRlh4ZjJ6LzZzT3creUlkRDIrTDBo?=
+ =?utf-8?B?UkE3MGZ3WmNwZlZTck9ZQzM3NzI1VUlEZ0xZSm1xRmdyWk1oMkRVK1pzbkZX?=
+ =?utf-8?B?YS9KWnhSNjBoR3FmZTlZRXR4L2swbEhzcW8zaStrRW80RitGZEpvdz09?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2907ecd2-d8af-4abb-a6fa-08deab1b9040
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2026 03:00:00.7393
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2Aa2Tkj46uEb6LAVrqMKgMo1g24efr6ROrx8LmRrHnnWXopaqnUTJG6rOULq5RXNrAqmnZ/VFwgj6aym6/MAWd903BE5Ks+SwEYvmd7aMn8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR03MB8156
+X-Rspamd-Queue-Id: 0030D4D5C88
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.14 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[amlogic.com,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[amlogic.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[radxa.com : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36250-lists,linux-gpio=lfdr.de];
-	FORGED_MUA_MAILLIST(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	TAGGED_FROM(0.00)[bounces-36251-lists,linux-gpio=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[riscstar.com,oss.qualcomm.com,gmail.com,foss.st.com,kernel.org,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[50];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sophon@radxa.com,linux-gpio@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,linaro.org,baylibre.com,googlemail.com,lists.infradead.org,vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.986];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[xianwei.zhao@amlogic.com,linux-gpio@vger.kernel.org];
+	DKIM_TRACE(0.00)[amlogic.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-gpio,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,radxa.com:mid,radxa.com:email,riscstar.com:email]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-On 5/1/2026 11:54 PM, Alex Elder wrote:
-> From: Daniel Thompson <daniel@riscstar.com>
+Hi Krzysztof,
+    Thanks for your advice.
+
+On 2026/4/30 17:36, Krzysztof Kozlowski wrote:
+> On Tue, Apr 28, 2026 at 08:22:48AM +0000, Xianwei Zhao wrote:
+>> Update dt-binding document for pinctrl of Amlogic A9.
+> And why it is not compatible with a4 or a5? You have entire commit msg
+> for this.
 > 
-> Toshiba TC956x is an Ethernet AVB/TSN bridge and is essentially a
-> small and highly-specialized SoC. TC956x includes an "eMAC" subsystem
-> that can be accessed, along with several other peripherals, via two
-> PCIe endpoint functions. There is a main driver for the endpoint that
-> decomposes things and creates auxiliary bus devices to model the SoC.
-> 
-> The eMAC consists of a Designware XGMAC, XPCS and PMA. Each eMAC is
-> supported by an MSIGEN that bridges TC956x level interrupts to PCIe
-> MSIs.
-> 
-> Add a driver for the eMAC/MSIGEN combination.
-> 
-> Co-developed-by: Alex Elder <elder@riscstar.com>
-> Signed-off-by: Alex Elder <elder@riscstar.com>
-> Signed-off-by: Daniel Thompson <daniel@riscstar.com>
-> ---
->   drivers/net/ethernet/stmicro/stmmac/Kconfig   |  13 +
->   drivers/net/ethernet/stmicro/stmmac/Makefile  |   2 +
->   .../ethernet/stmicro/stmmac/dwmac-tc956x.c    | 791 ++++++++++++++++++
->   include/soc/toshiba/tc956x-dwmac.h            |  84 ++
->   4 files changed, 890 insertions(+)
->   create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-tc956x.c
->   create mode 100644 include/soc/toshiba/tc956x-dwmac.h
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> index e3dd5adda5aca..66bcfaccbe21f 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> +++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> @@ -404,6 +404,19 @@ config DWMAC_MOTORCOMM
->   	  This enables glue driver for Motorcomm DWMAC-based PCI Ethernet
->   	  controllers. Currently only YT6801 is supported.
->   
-> +config DWMAC_TC956X
-> +	tristate "Toshiba TC956X DWMAC support"
-> +	depends on PCI
-> +	depends on COMMON_CLK
-> +	depends on TOSHIBA_TC956X_PCI
-> +	default m if TOSHIBA_TC956X_PCI
 
-Hi Alex,
+Will add a commit message explaining why it is not compatible with 
+previous SoCs.
 
-I think GENERIC_IRQ_CHIP should be selected here.
-
-Thank you for the driver.
-
--- 
-Best regards,
-Xilin Wu <sophon@radxa.com>
-
+>> Signed-off-by: Xianwei Zhao<xianwei.zhao@amlogic.com>
+>> ---
+>>   Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml | 1 +
+>>   1 file changed, 1 insertion(+)
+> Best regards,
+> Krzysztof
 
