@@ -1,366 +1,156 @@
-Return-Path: <linux-gpio+bounces-36280-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36281-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cGRJCsgm+2kQXAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36280-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 13:32:24 +0200
+	id wNBHLFE2+2nfXgMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36281-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 14:38:41 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6C604D9BA0
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 13:32:23 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 136464DA4F9
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 14:38:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id DD1E5300C0C1
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 11:32:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C75DC303C636
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 12:34:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22C69429819;
-	Wed,  6 May 2026 11:32:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C67C44B674;
+	Wed,  6 May 2026 12:34:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N/yd5YKL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhzSr+NY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76644313543;
-	Wed,  6 May 2026 11:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8DF329E44
+	for <linux-gpio@vger.kernel.org>; Wed,  6 May 2026 12:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778067140; cv=none; b=lHvVFvma2o6R3T44WOGoomeUZzIU8/Ccr6F7x0GbEu/iABp0L9cqPhV32/WLX3ssi0GjVXwVg+a0tisG1GM8AV2GVw1eNrYRAgjgh34jz8wuEMkJZAOG4XZ0lzG6z8B2tWRFSdcxYyTuLcU/eLLNUbF86b9hzhSNdjK6nz2CLvI=
+	t=1778070882; cv=none; b=oulvNXfY2z9CK0yG+uhTeeWj29YJKG5xhrm2cPhO20PeDoEdz6rN8FcZMzgfrVNY11T/n4J1w0kq4WzsC9mY3fUPBnq9ADWLF4akwX0K1kuYUiOHqgrvseXqmWzkUew+sNdhs00itmPF2R9N1t2cBxgJToFYGOTZNZbhi4Xgl20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778067140; c=relaxed/simple;
-	bh=O6TF3HsWcTy6sdh8ERgaGEDnfbxo5JycHdzco+fV99Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r+IlvOw5TavIGw1ISXEKXfdkQFd2Zu8292MM1VYXde/dEKkE1Ajoxj0D9yfiVT2qgqdMQFbTmD8mRLr6An9k8cZoP53XjL/7/Q9CKVwTzQNGeHIbqz9U+DP8UR+eGz9m07/zSFM85Zevvxx385R7Qe57iI1M71/KCtS8IsT8oew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N/yd5YKL; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778067139; x=1809603139;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=O6TF3HsWcTy6sdh8ERgaGEDnfbxo5JycHdzco+fV99Q=;
-  b=N/yd5YKL4rmRwtBSWP2g4EKXH9VmLjzvKMXjJZrpjYhA4m+JfGQLqjQ3
-   RkLgX6DpYvYEkeqlS8ZNmBeK31V0ifaVCuntGFf/OgTYpGDvflIDc1pga
-   pICdHmcQF8QrKdkpvLHsPde+Tzhr67AZCjc7aZLaemoWmuHNDXFTlkx2x
-   fUyxzjefOIRCWSi6YP9NEst4/8xuqA4coChShZcFET9v29IYP0b+HrmcK
-   TtQWZJVFlN1zrXG6YJGcNe3yIi15GB92iMEeAKbeZHjsG9c4lkrZSzjDH
-   a94egeXC2uoZw8O/vzeYhaJSwCZEndYz1UCZme2QxyurVHdPDYFF9JfXj
-   w==;
-X-CSE-ConnectionGUID: I80yiqw3TKKTD0zIPruOjQ==
-X-CSE-MsgGUID: sBaMIdCgTqmtcKnQ6ZyuhA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11777"; a="90451370"
-X-IronPort-AV: E=Sophos;i="6.23,219,1770624000"; 
-   d="scan'208";a="90451370"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2026 04:32:18 -0700
-X-CSE-ConnectionGUID: I0uO+rMCQnWeXhjzshuPZg==
-X-CSE-MsgGUID: 2eQO0X2DT4Ke8O30NSNBWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,219,1770624000"; 
-   d="scan'208";a="231568222"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa006.fm.intel.com with ESMTP; 06 May 2026 04:32:16 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 1EC3595; Wed, 06 May 2026 13:32:15 +0200 (CEST)
-Date: Wed, 6 May 2026 13:32:15 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Marco Scardovi <mscardovi95@gmail.com>
-Cc: mathias.nyman@linux.intel.com, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH] gpio: acpi: modernize resource management using cleanup.h
-Message-ID: <20260506113215.GK6785@black.igk.intel.com>
-References: <59174ed2-dc3a-4891-929f-bf513deecdc2@gmail.com>
+	s=arc-20240116; t=1778070882; c=relaxed/simple;
+	bh=+0t5J3uKawirFSYDlt6mpuGzzmawvxPYoRdvTbLhz2g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WHJihLr8YgUwD3Hk6ThTo7vw5eXs7ETY1poHp/shaY0VPB2Id4OK1+ELUaX6RmltzDT9YFfviN/O3Dnvsdu1EZ3OGEjGLaDqSNr5ZwR7+1cptt4SrA2WAvkbwcBxyGOzxyJjVDYbTJ5vBDmvUVBPXCj5Omy2jdNEDQS8Hiz6duQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IhzSr+NY; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-43d7e23defbso3637648f8f.0
+        for <linux-gpio@vger.kernel.org>; Wed, 06 May 2026 05:34:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778070880; x=1778675680; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RQK5Udi7dRRSC+3+y19Y1o4p+F8AR8D8gNY8SQ+8KnI=;
+        b=IhzSr+NYHKIK3wS1nYaGOkf9e3+egFK97OxgDS7oF2cWZqBvZ4/OQ61bq/KKOVv8DS
+         9r/4OLLNtEgf3o8BWXH83AxtO5tpVTYGvm78jV7yKPs7glAlZDM6Ei7atLnrQI8xxRBZ
+         sOB4tx8uQJ+ZolpzraJGwggD+1c4IQRoKAPEQ5H1vozQiV61e4DtYD7ecuXLHB02xrRz
+         KOgq6GWCpzCjlt8Cn9jL8zTH8RSfe2L6jOwjMN4tfqmd1FStoxJ8cay4qprjD5wyJsmA
+         YhTu9Tf6yDC1etwLACauoui2uf6gegjkqG+YYdFIYPuc/zPbdRor4ltQro9Glw/0jR33
+         qi0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778070880; x=1778675680;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=RQK5Udi7dRRSC+3+y19Y1o4p+F8AR8D8gNY8SQ+8KnI=;
+        b=Y01ofvtUbecj4+KDBN5LATx3LO3mdmTsBIevcQoxOI1cYt/xqsTWVlpTGx0OEWfZsR
+         gq43ya1Fky49ajEuoI/Cjr6ou1a3bQCq9CmHs1I2qJztaeI29DiVQl15508bkzuSsX46
+         P88Y24lCm1hBxMS8Vf4x96CetnXktNuHjxLsvY/wxgkz58zOwjFiVzqZd9olqcQydcac
+         viQ0INgk9hfRNmz7jJxADqhqGwRZasjbcBCt8f0rMiC7xqPECS6KeoL5oKO7MZXf94jG
+         kltGTtZYD8AIfqgW/fyiaL4UykKMuNxXTNLbnUFxXQ1r8Zn1nDtIERtRJQ2rEgdivRyw
+         U7kQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9GplS2oxMBYUnJcm+V3Rftu1wyylXcBnuDblfrJ5YJi9hQv2ECSQPMENYfNR2+GLfdPS07dqdhiOrh@vger.kernel.org
+X-Gm-Message-State: AOJu0YwehrnbThb/64DClTUMpFFK0sG5QZNss3Usdq1pCBFMGVy8oxPf
+	RO5Z4Sgma8wjNak3VBIRta8e2SnX6y9V7h0Zf/27oMFIweKcxTDW7uoc
+X-Gm-Gg: AeBDiese/Rq8TL2LJ4dRVCLpc2LKJTcr7cka8z9wXVlX8v0izzm5FU/5/Fko/f8/vck
+	LeysLWU0dymCCOSmVPzWbodzQwbiYVPegbt2HwCq96d0q7Pbwf/LTgk75qBTtB5oMlUE3/wm6VM
+	+NPuznIxDm3Pi9BHXd2qEzBBQN5g0eMWGJe9VdsWFtYQFNhhcs9d/4uZhHpKx6Wp8ym2FjKy6VX
+	gqddFdBdvBYyCvhg75dDjbZnnWbt1w9JhEAekL/qo87tx+vxCOVCFNqZZpDv+7RdNbgsukAKLSx
+	MJF8BJWPbl4C8r1A25+BNvUO+sdhQkjmuDBjBtJy8Nd5zbmNA0FjKWSR8pVgHl1DcVei+GE2Y+h
+	RxUhPq/jIDCepo0lakGrViyxhvzSmeF6OK+TZ2W85XlXQN/snSBSKn8EwJ0cW75nFppzEI1zlAN
+	NpRhCWLalk6M1z/kPsD2ubzznsoA==
+X-Received: by 2002:a05:6000:e90:b0:44f:f454:8a4d with SMTP id ffacd0b85a97d-4515ce1ca3amr4245062f8f.23.1778070879846;
+        Wed, 06 May 2026 05:34:39 -0700 (PDT)
+Received: from ROG ([2a01:e11:202b:40:68b1:8d59:e348:c16e])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45054b03df9sm11951459f8f.24.2026.05.06.05.34.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2026 05:34:39 -0700 (PDT)
+From: Marco Scardovi <mscardovi95@gmail.com>
+To: mika.westerberg@intel.com
+Cc: mathias.nyman@intel.com,
+	andriy.shevchenko@intel.com,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marco Scardovi <mscardovi@icloud.com>
+Subject: [PATCH v2 0/3] gpio: acpi: modernize resource management using cleanup.h
+Date: Wed,  6 May 2026 14:34:21 +0200
+Message-ID: <20260506123427.1077274-1-mscardovi95@gmail.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260506113215.GK6785@://intel.com>
+References: <20260506113215.GK6785@://intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <59174ed2-dc3a-4891-929f-bf513deecdc2@gmail.com>
-X-Rspamd-Queue-Id: B6C604D9BA0
+X-Rspamd-Queue-Id: 136464DA4F9
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36280-lists,linux-gpio=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[intel.com,vger.kernel.org,icloud.com];
+	TAGGED_FROM(0.00)[bounces-36281-lists,linux-gpio=lfdr.de];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mika.westerberg@linux.intel.com,linux-gpio@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[mscardovi95@gmail.com,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	TAGGED_RCPT(0.00)[linux-gpio];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,intel.com:dkim,intel.com:email]
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,icloud.com:email]
 
-Hi.
+From: Marco Scardovi <mscardovi@icloud.com>
 
-+Andy
+*** BLURB HERE ***
 
-On Wed, May 06, 2026 at 11:29:36AM +0200, Marco Scardovi wrote:
-> Hi everyone,
-> 
-> I was looking for ways to switch to modern cleanup guards and auto-freeing
-> pointers to simplify error paths and synchronization in gpiolib-acpi-core.c
-> so I came up with the patch you can find below.
-> 
-> Here you can see the main points I've worked on:
-> - Use DEFINE_FREE() for gpio_desc and ACPI resources.
-> - Use guard(mutex)() within the OpRegion handler loop for automatic locking.
-> - Use __free() for automatic descriptor and memory cleanup.
-> - Fix off-by-one error in GPIO pin bounds check.
-> - Return AE_OK on out-of-range pins to allow processing other resources
->   even if one is misconfigured in firmware.
-> - Use break instead of goto in OpRegion handler for cleaner control flow
->   leveraging auto-cleanup.
+Hi Mika,
+thanks for the quick reply. Unfortunately I noticed too late that thunderbird had
+broken my patch during copy/paste. I'm pushing it again using git send-mail.
+I've divided tha patch in 3 smaller pieces: let me know if it is ok for you and
+Andy. In the meantime I'm testing it against KASAN and kmemleak as You suggested.
 
-That should be several patches not one doing all these.
+Let me know if there's anything else I need to improve.
 
-> I've tested it (both build and functionality) against linux-next-20260430.
-> 
-> Signed-off-by: Marco Scardovi <mscardovi95@gmail.com>
-> ---
->  drivers/gpio/gpiolib-acpi-core.c | 94
-> +++++++++++++++++++---------------------
->  1 file changed, 43 insertions(+), 51 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib-acpi-core.c
-> b/drivers/gpio/gpiolib-acpi-core.c
-> index eb8a40cfb7a9..19a18222b7b2 100644
-> --- a/drivers/gpio/gpiolib-acpi-core.c
-> +++ b/drivers/gpio/gpiolib-acpi-core.c
-> @@ -7,6 +7,9 @@
->   *          Mika Westerberg <mika.westerberg@linux.intel.com>
->   */
-> 
-> +#include <linux/cleanup.h>
-> +#include <linux/slab.h>
-> +
+Marco Scardovi (3):
+  gpio: acpi: modernize resource management using cleanup.h
+  gpio: acpi: modernize resource management using cleanup.h
+  gpio: acpi: modernize resource management using cleanup.h
 
-Drop the empty line.
+ drivers/gpio/gpiolib-acpi-core.c | 68 ++++++++++++++++----------------
+ 1 file changed, 35 insertions(+), 33 deletions(-)
 
->  #include <linux/acpi.h>
->  #include <linux/dmi.h>
->  #include <linux/errno.h>
-> @@ -23,6 +26,16 @@
->  #include "gpiolib.h"
->  #include "gpiolib-acpi.h"
-> 
-> +DEFINE_FREE(free_gpio_desc, struct gpio_desc *, {
-> +    if (_T)
-> +        gpiochip_free_own_desc(_T);
-> +})
-> +
-> +DEFINE_FREE(acpi_free, void *, {
-> +    if (_T)
-> +        ACPI_FREE(_T);
-> +})
+-- 
+2.54.0
 
-These are white space damaged. Also I'm not big fan of these but if Andy is
-fine then works for me too. However, please test with KASAN and kmemleak
-enabled that you don't break anything.
-
-> +
->  /**
->   * struct acpi_gpio_event - ACPI GPIO event handler data
->   *
-> @@ -361,6 +374,7 @@ static acpi_status acpi_gpiochip_alloc_event(struct
-> acpi_resource *ares,
->      struct acpi_gpio_event *event;
->      irq_handler_t handler = NULL;
->      struct gpio_desc *desc;
-> +    struct gpio_desc *desc_guard __free(free_gpio_desc) = NULL;
->      unsigned int pin;
->      int ret, irq;
-> 
-> @@ -370,6 +384,11 @@ static acpi_status acpi_gpiochip_alloc_event(struct
-> acpi_resource *ares,
->      handle = ACPI_HANDLE(chip->parent);
->      pin = agpio->pin_table[0];
-> 
-> +    if (pin >= chip->ngpio) {
-> +        dev_err(chip->parent, "Failed to request GPIO for pin 0x%04X, out
-> of range\n", pin);
-
-This is damaged too.
-
-Actually let's start with a proper patch and then look the details :)
-
-> +        return AE_OK;
-> +    }
-> +
->      if (pin <= 255) {
->          char ev_name[8];
->          sprintf(ev_name, "_%c%02X",
-> @@ -392,31 +411,26 @@ static acpi_status acpi_gpiochip_alloc_event(struct
-> acpi_resource *ares,
-> 
->      desc = acpi_request_own_gpiod(chip, agpio, 0, "ACPI:Event");
->      if (IS_ERR(desc)) {
-> -        dev_err(chip->parent,
-> -            "Failed to request GPIO for pin 0x%04X, err %pe\n",
-> -            pin, desc);
-> +        dev_err(chip->parent, "Failed to request GPIO for pin 0x%04X, err
-> %pe\n", pin, desc);
->          return AE_OK;
->      }
-> +    desc_guard = desc;
-> 
->      ret = gpiochip_lock_as_irq(chip, pin);
->      if (ret) {
-> -        dev_err(chip->parent,
-> -            "Failed to lock GPIO pin 0x%04X as interrupt, err %d\n",
-> -            pin, ret);
-> -        goto fail_free_desc;
-> +        dev_err(chip->parent, "Failed to lock GPIO pin 0x%04X as interrupt,
-> err %d\n", pin, ret);
-> +        return AE_OK;
->      }
-> 
->      irq = gpiod_to_irq(desc);
->      if (irq < 0) {
-> -        dev_err(chip->parent,
-> -            "Failed to translate GPIO pin 0x%04X to IRQ, err %d\n",
-> -            pin, irq);
-> -        goto fail_unlock_irq;
-> +        dev_err(chip->parent, "Failed to translate GPIO pin 0x%04X to IRQ,
-> err %d\n", pin, irq);
-> +        goto err_unlock;
->      }
-> 
->      event = kzalloc_obj(*event);
->      if (!event)
-> -        goto fail_unlock_irq;
-> +        goto err_unlock;
-> 
->      event->irqflags = IRQF_ONESHOT;
->      if (agpio->triggering == ACPI_LEVEL_SENSITIVE) {
-> @@ -444,17 +458,15 @@ static acpi_status acpi_gpiochip_alloc_event(struct
-> acpi_resource *ares,
->      event->irq = irq;
->      event->irq_is_wake = acpi_gpio_irq_is_wake(chip->parent, agpio);
->      event->pin = pin;
-> -    event->desc = desc;
-> +    /* Transfer ownership to event, prevent auto-free */
-> +    event->desc = no_free_ptr(desc_guard);
-> 
->      list_add_tail(&event->node, &acpi_gpio->events);
-> 
->      return AE_OK;
-> 
-> -fail_unlock_irq:
-> +err_unlock:
->      gpiochip_unlock_as_irq(chip, pin);
-> -fail_free_desc:
-> -    gpiochip_free_own_desc(desc);
-> -
->      return AE_OK;
->  }
-> 
-> @@ -1086,7 +1098,7 @@ acpi_gpio_adr_space_handler(u32 function,
-> acpi_physical_address address,
->      struct acpi_gpio_chip *achip = region_context;
->      struct gpio_chip *chip = achip->chip;
->      struct acpi_resource_gpio *agpio;
-> -    struct acpi_resource *ares;
-> +    struct acpi_resource *ares __free(acpi_free) = NULL;
->      u16 pin_index = address;
->      acpi_status status;
->      int length;
-> @@ -1097,20 +1109,17 @@ acpi_gpio_adr_space_handler(u32 function,
-> acpi_physical_address address,
->      if (ACPI_FAILURE(status))
->          return status;
-> 
-> -    if (WARN_ON(ares->type != ACPI_RESOURCE_TYPE_GPIO)) {
-> -        ACPI_FREE(ares);
-> +    if (WARN_ON(ares->type != ACPI_RESOURCE_TYPE_GPIO))
->          return AE_BAD_PARAMETER;
-> -    }
-> 
->      agpio = &ares->data.gpio;
-> 
->      if (WARN_ON(agpio->io_restriction == ACPI_IO_RESTRICT_INPUT &&
-> -        function == ACPI_WRITE)) {
-> -        ACPI_FREE(ares);
-> +        function == ACPI_WRITE))
->          return AE_BAD_PARAMETER;
-> -    }
-> 
->      length = min(agpio->pin_table_length, pin_index + bits);
-> +    status = AE_OK;
->      for (i = pin_index; i < length; ++i) {
->          unsigned int pin = agpio->pin_table[i];
->          struct acpi_gpio_connection *conn;
-> @@ -1118,7 +1127,7 @@ acpi_gpio_adr_space_handler(u32 function,
-> acpi_physical_address address,
->          u16 word, shift;
->          bool found;
-> 
-> -        mutex_lock(&achip->conn_lock);
-> +        guard(mutex)(&achip->conn_lock);
-> 
->          found = false;
->          list_for_each_entry(conn, &achip->conns, node) {
-> @@ -1150,17 +1159,15 @@ acpi_gpio_adr_space_handler(u32 function,
-> acpi_physical_address address,
->          if (!found) {
->              desc = acpi_request_own_gpiod(chip, agpio, i, "ACPI:OpRegion");
->              if (IS_ERR(desc)) {
-> -                mutex_unlock(&achip->conn_lock);
->                  status = AE_ERROR;
-> -                goto out;
-> +                break;
->              }
-> 
->              conn = kzalloc_obj(*conn);
->              if (!conn) {
->                  gpiochip_free_own_desc(desc);
-> -                mutex_unlock(&achip->conn_lock);
->                  status = AE_NO_MEMORY;
-> -                goto out;
-> +                break;
->              }
-> 
->              conn->pin = pin;
-> @@ -1168,8 +1175,6 @@ acpi_gpio_adr_space_handler(u32 function,
-> acpi_physical_address address,
->              list_add_tail(&conn->node, &achip->conns);
->          }
-> 
-> -        mutex_unlock(&achip->conn_lock);
-> -
->          /*
->           * For the cases when OperationRegion() consists of more than
->           * 64 bits calculate the word and bit shift to use that one to
-> @@ -1188,8 +1193,6 @@ acpi_gpio_adr_space_handler(u32 function,
-> acpi_physical_address address,
->          }
->      }
-> 
-> -out:
-> -    ACPI_FREE(ares);
->      return status;
->  }
-> 
 
