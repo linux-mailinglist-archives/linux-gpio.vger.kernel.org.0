@@ -1,37 +1,37 @@
-Return-Path: <linux-gpio+bounces-36321-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36322-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2OH/LFOa+2k2eQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36321-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 21:45:23 +0200
+	id 4EEKJCSc+2lxeQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36322-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 21:53:08 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F0D94DFF0D
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 21:45:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C24B4DFF9B
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 21:53:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EA9AF301F5C0
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 19:44:36 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8C2AD3014BCE
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 19:53:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7D7933B6DB;
-	Wed,  6 May 2026 19:44:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC03B34B1A2;
+	Wed,  6 May 2026 19:53:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="r8sFM1pw"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="sTc/uhrd"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E062E1722;
-	Wed,  6 May 2026 19:44:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3DCC2FDC38;
+	Wed,  6 May 2026 19:52:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778096674; cv=none; b=OsFFWEEj+n3pgBYEAclii23YHpU+N7TTK7Plm8P+d4Fx8sHj4WtvUvwJWge05/erMLRW8UzFks8EZGJmoJNQ0uqXeHiRYx1p//3b+FQYYvuEcXvAeNe3Bgadd/q1i7mHcueegshi3cBZIYFoCAvKJhyh1t/1KcV1UafoPH1NQhk=
+	t=1778097180; cv=none; b=ZJYDoPNuBRYt60Wt9Y09uBCgtHXNsSJlD+aCQS59vPaekE0wY9ByC3YCzdZa6TAWkDR0nOxocsaRa6+NBHdmwjdSfrjItOwmelsVw/Q0za8pBak2SMJK5wJraQCZt/t6EHxPvfAteJy0yGKzEBbjtPGUcPq9yCtLKKj+w/2pUS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778096674; c=relaxed/simple;
-	bh=0YUUrxVxCjt2QmOLirTyM0FZ+bSf6y2AZqT+AxHoPjg=;
+	s=arc-20240116; t=1778097180; c=relaxed/simple;
+	bh=IOtFOPMt4Nq2ieBI30BlD7YV0L0Y+BTFgi5nZlW+WLg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X8X2g1FNr2N682i62uKiZdyYIkuCaKGRUbWKzrrWd9H0EWaBCIyJrI1zTgzTAsEdTbRMCC6StGKB3UCI79HQjGtzOsm7vlj46lOZl7ayl2yvZWEf4RVDAyt2B+ROfxIcD2sPFDY/8M2Fl/zfYgoFt7XYo01uZuYt+i1vDuHKqVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=r8sFM1pw; arc=none smtp.client-ip=156.67.10.101
+	 Content-Type:Content-Disposition:In-Reply-To; b=i5Grgjz9h1AdLwQTiMm70DDpdGoHSUEPVYzAXiBA+qLYIZVL7ijyxyFuQOMd9zCIeJhHYN4ElJBaNhynrutwBzEjMKQLmQ/lWkQxusTeMgkXwDp0X3g3BLMBQeP2mK0MPYxkbFW6R8xa5Oby380EPG0wYL8yPp9J65ZTdz1WaTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=sTc/uhrd; arc=none smtp.client-ip=156.67.10.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
@@ -39,21 +39,22 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
 	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
 	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=K1q3NI3BsSpOEHU3gmV8o6cjnh4W3gSw9Ujwg8EaS+A=; b=r8sFM1pwHJMVxud91KWvxLzmcJ
-	gwRnbQDJaMv62Iq9lhwBZzABSwYGSEE82UrEms+6AWU5jNfdJfR411CccFSrQH9zjssZ/YoBWl7O2
-	DCTNp/nXrptBPLlYXwwXR0+qOG0wDZuVdAryAuBRIjI81zj4gUpXxwjsm7t7bhyEmcG0=;
+	bh=LLm/OyrLL/bFbrU/6UU1ygktiOEEMm3JkZVjxWOAaEM=; b=sTc/uhrdL+f56jIUOYaI0nqCje
+	VW5KJ91Ih/YjryXx+Dtp4boxbSBp2M6yCNeZ2uiaISvG8eGaokn5gkGgnJF8sE6m5eX8idzZSW83L
+	7wzQEjNtqgX9EUcUGWHGKlsfwhGELCW2T+rQqz/LLmbboncShwHwquVOVBF6Eet5PNCs=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
 	(envelope-from <andrew@lunn.ch>)
-	id 1wKi9o-001hEj-Dc; Wed, 06 May 2026 21:43:44 +0200
-Date: Wed, 6 May 2026 21:43:44 +0200
+	id 1wKiI8-001hI4-02; Wed, 06 May 2026 21:52:20 +0200
+Date: Wed, 6 May 2026 21:52:19 +0200
 From: Andrew Lunn <andrew@lunn.ch>
-To: Alex Elder <elder@riscstar.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+To: Daniel Thompson <daniel@riscstar.com>
+Cc: Xilin Wu <sophon@radxa.com>, Alex Elder <elder@riscstar.com>,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
 	kuba@kernel.org, pabeni@redhat.com, maxime.chevallier@bootlin.com,
 	rmk+kernel@armlinux.org.uk, andersson@kernel.org,
 	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
 	conor+dt@kernel.org, linusw@kernel.org, brgl@kernel.org,
-	arnd@arndb.de, gregkh@linuxfoundation.org, daniel@riscstar.com,
+	arnd@arndb.de, gregkh@linuxfoundation.org,
 	mohd.anwar@oss.qualcomm.com, a0987203069@gmail.com,
 	alexandre.torgue@foss.st.com, ast@kernel.org,
 	boon.khai.ng@altera.com, chenchuangyu@xiaomi.com,
@@ -69,14 +70,14 @@ Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
 	linux-gpio@vger.kernel.org,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 09/12] gpio: tc956x: add TC956x/QPS615 support
-Message-ID: <7d7b6b89-3ef4-4891-a794-c8b11f39db34@lunn.ch>
+Subject: Re: [PATCH net-next 10/12] net: stmmac: tc956x: add TC956x/QPS615
+ support
+Message-ID: <982d4d8c-5348-4fd7-8ad2-aac9b3791150@lunn.ch>
 References: <20260501155421.3329862-1-elder@riscstar.com>
- <20260501155421.3329862-10-elder@riscstar.com>
- <736fb3b7-c88a-4ec4-96ad-d1b79cc48d30@lunn.ch>
- <30cec7dd-ac3c-47ab-896a-c29992bd5ba5@riscstar.com>
- <3666e3e6-e6f3-4cbf-b9fe-caa394fbab7c@lunn.ch>
- <0751a051-9894-45be-92d6-0d46f2c39293@riscstar.com>
+ <20260501155421.3329862-11-elder@riscstar.com>
+ <224E233C593EF171+8c8a43dd-5061-40f8-9eb7-f360eabf2ecc@radxa.com>
+ <4015f47a-af62-441d-b1b8-a8598f963970@lunn.ch>
+ <afteD2d8d87Nyvl7@aspen.lan>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -85,8 +86,8 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0751a051-9894-45be-92d6-0d46f2c39293@riscstar.com>
-X-Rspamd-Queue-Id: 5F0D94DFF0D
+In-Reply-To: <afteD2d8d87Nyvl7@aspen.lan>
+X-Rspamd-Queue-Id: 3C24B4DFF9B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -98,71 +99,39 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	URIBL_MULTI_FAIL(0.00)[lunn.ch:server fail,sea.lore.kernel.org:server fail];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[lunn.ch,davemloft.net,google.com,kernel.org,redhat.com,bootlin.com,armlinux.org.uk,arndb.de,linuxfoundation.org,riscstar.com,oss.qualcomm.com,gmail.com,foss.st.com,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36321-lists,linux-gpio=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[radxa.com,riscstar.com,lunn.ch,davemloft.net,google.com,kernel.org,redhat.com,bootlin.com,armlinux.org.uk,arndb.de,linuxfoundation.org,oss.qualcomm.com,gmail.com,foss.st.com,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
+	TAGGED_FROM(0.00)[bounces-36322-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[lunn.ch:+];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[50];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[51];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[andrew@lunn.ch,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[lunn.ch:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[lunn.ch:dkim,lunn.ch:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-> >                ----------------------------------
-> >                |              Host              |
-> >                ------+...+----------+........+---
-> >                      |i2c|          |  PCIe  |
-> >      ----------------+...+----------+........+------
-> >      | TC956x        |I2C|          |upstream|     |
-> >      |               -----        --+--------+---  |
-> >      |  -----  ------  -------    | PCIe switch |  |
-> >      |  |SPI|  |GPIO|  |reset|    |             |  |
-> >      |  -----  ------  |clock|    | DS3 DS2 DS1 |  |
-> >      |                 -------    ---++--++--++--  |
-> >      |  -----  ------     downstream//    \\  \\   |  downstream
-> >      |  |MCU|  |SRAM|    /==========/      \\  \===== PCIe port 1
-> >      |  -----  ------   //PCIe port 3       \\     |
-> >      |                  ||                   \======= downstream
-> >      |  ----+-----------++-----------+----         |  PCIe port 2
-> >      |  | M | internal PCIe endpoint | M |         |
-> >      |  | S |------------------------| S |  ------ |
-> >      |  | I |   PCIe   |  |   PCIe   | I |  |UART| |
-> >      |  | G |function 0|  |function 1| G |  ------ |
-> >      |  | E |----++----|  |----++----| E |         |
-> >      |  | N |  eMAC 0  |  |  eMAC 1  | N |         |
-> >      --------+.......+------+.....+-----------------
-> >              |USXGMII|      |SGMII|
-> >            --+.......+--  --+.....+--
-> >            |  ARQ113C  |  | QEP8121 |
-> >            |    PHY    |  |   PHY   |
-> >            -------------  -----------
-> > 
+> TL;DR - there are conceivable (and sane) hardware designs where the
+> interrupt goes only to the TC9564 GPIO, but they are too different to
+> RB3gen2 (and related SBC designs) for them to be supported before
+> they exist!
 
+Agreed. I'm just trying to be cautious. It would be bad to saying that
+WoL is supported in general, because a board might come along where it
+does not work because the TC9564 itself cannot wake the system. If the
+driver needs to say WoL is supported, it should try to validate the
+system is using a supported set of features.
 
-> Because the internal endpoint won't operate until the PCIe
-> power controller has enabled power, this GPIO driver and
-> the PCIe power control driver won't interfere with each
-> other's access to the shared registers.
+But lets get the basic features supported first, WoL can be added
+later.
 
-What i find interesting is that there are two GPIOs, and two external
-downstream PCIe ports. A naive way of looking at this is that each
-external PCIe port has one GPIO. And the internal PCIe port does not
-have one. Hence the internal port might well work without any
-additional setup?  That was my thinking.
-
-But you are saying it is not as simple as this, and two GPIOs affect
-three ports? Do you have any idea what they actually do?
-
-      Andrew
+       Andrew
 
