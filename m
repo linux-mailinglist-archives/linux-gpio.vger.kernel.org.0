@@ -1,200 +1,160 @@
-Return-Path: <linux-gpio+bounces-36273-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36274-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kAbVLzwP+2kTWAMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36273-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 11:51:56 +0200
+	id WEljCiAT+2lLWQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36274-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 12:08:32 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65C814D8F4C
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 11:51:56 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B7D84D91FB
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 12:08:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E951A30382A1
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 09:46:13 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 6F6CB3031F58
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 09:59:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE6C53ED109;
-	Wed,  6 May 2026 09:46:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EACFC401490;
+	Wed,  6 May 2026 09:58:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="qf95NCfx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C8+4eyhu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B145A3ECBE3
-	for <linux-gpio@vger.kernel.org>; Wed,  6 May 2026 09:46:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D628F3F2100;
+	Wed,  6 May 2026 09:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778060768; cv=none; b=jaz3aQEYENsXLWyXNU4bY02jms9UcqP70v1Hs8T2XcJrJsNt7WL6c1t2/m6oKyQSR21YPg4xXzUkClXP5l5ujqdnN+3GtOBIPU0D7uz4P6DOHVyXkKAASm2MTdrA6KXcvFMyQfPa8Eg4ug3MDJn3x5Qt01MakHsfIu7Bn1iNlcY=
+	t=1778061490; cv=none; b=bIN0ZoJLgeFedKsJqWOTxHBgRrT5AIpk5v6+sctH+GRktlMF9byZQg6kcC0OBoUphZroKOobsl0EDGXd2LZW/olGPpSk7y3Tuzz+fmcwu21PXDMOsZXkpBSdqzES0GxZxXUgf6orz4P2KZt8xUQlpzcUSzygy1+Bq7EaMhVHAz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778060768; c=relaxed/simple;
-	bh=UfLP1tUzO3A3YXd/nCpoke2Vqju/wUSSq/yG/FR+WW0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WD3PcdNXp4CCB9KJZAxrT7wlbfuaOrbBaqFZk9fFnP/Q1uFhEOHplTmFZrak9N2W8ejzT3DTCeroAwlPLL634UWX3mRTe0OvwuzVmIEUz2sfkfDkgX5VI8lNDPaDYNbS1cppOAuqwzyEOOR+Eq4Pyjc/9kgQVheLhRKv8ZXkLRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=qf95NCfx; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-488d2079582so64530045e9.2
-        for <linux-gpio@vger.kernel.org>; Wed, 06 May 2026 02:46:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1778060765; x=1778665565; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jvO5cR5xwJ6Wruq4xsZ8UnvszQRGf9f2UYLH+AJmPFY=;
-        b=qf95NCfx8eT8q+22AmgDAhodGtcSDNymauOoWGWblOztJb5IKvE6NaVvy3K+b+D8i/
-         c9Y8lg72wraLqzTH0qEnVPAtIfQOJlUlSZCIq1gMShmOkMHVvMfQ0VQYeFpRAzmQssk9
-         vIerJMRrg66l8fQCySh2uxli7IpQszcZahsyJ/8YYthhm6qj1wkLXF1n8R3uCUXWFj5o
-         lkJlUgz5frR5fjSYlmyuQV/P96ZyqGmzZsPvfp64RCJ6JdKDd/HpNqBUTb0el0RcvyuW
-         Hia7rf2sTxsMoiE2s0SGV20z2+TzaHiSq+H4zCrxtAffDGsZeaO7KtkcgYhqTsNyRvps
-         9GlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778060765; x=1778665565;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jvO5cR5xwJ6Wruq4xsZ8UnvszQRGf9f2UYLH+AJmPFY=;
-        b=Rd3oBPJxOL1ejH1FgxabZ1mhwXK/QVLy4Gj2J2aHRtfTHgRX1OHeUuZyWBfK6pDedT
-         LpeXjdJCnYI40n51VI7HKpajra2kM0R3kVjN7gSGoXA28MEsaIL0QYsCGiOZdPMaPdln
-         W6xZlAPLK/KTE2gDGgCFRylgsEQQvr84pu/wdeIRts10jH4Dyn7CbfQes6gSOYIQlmP3
-         YDY8xiRBqpXPO644UBVaDsnJ+AVSTd9q3LvJxMaStKk5olxRp02yjFtUk3kiaGbzIJwy
-         aKiyWrgeYF/mJKY8bpuQIMFOh/YgLSIDrOg39X2Yee8cWt2YGQxFH+MF8q6pzepao+gA
-         N7VQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+OYdWQVxuYdDr1s2BPjh5+8J0rTpIxRJvMdDWuRySU3l/QhzvagXlRdjrZqLWRk4lfY4+IfL50xUUR@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBaJpZC+Mc0E7OdyoE8Hxx4A/OCkunrQkdalDUMZx600MhAL9K
-	7Me//w/rU1IAFZZKUfCfnGKRKARe+ZHlPvTa7wmsjyjoVePTBTU8OXWi4Jrwjx/YoD4=
-X-Gm-Gg: AeBDiev5Yb1xEA9ag102iVkfmCcc04l3AHn8Wt/nbHaNZBX8m9eI0r+Ai/mjI/qreH5
-	SINYDuC5GEgpfl6awhbuOLvCLcl+g4lhgoBAPDHPV5tBidraOOcREQvsyXkxOx/eQ+nWUT7qqXZ
-	fPuiIisT00jWUhFtb1xrKJvyoch3cenOlLhQ5IpCN8tUl95aORatQIMZhUpjIcqFCjfX+IFeQSx
-	BMyOR7bVCG06hpQmcbYTfdAYE4emCS/nZllljOZ2drNrDUfC3rPBcNbIeceMD3j35tspAMnoPN0
-	OPUJnXiCimbA+XA7OwVEcc9Aor5kFK6CqeIkrUGIINofBWXKUCzIpk2ilj/n08bSjGKdPVy+a/t
-	0SSPx9VHb9Nl5Js4Va36tBkFkqbq4rnVww+IUE4aFXzufFLc62rirRMJ10qqdMdz4+wWFZ90vCF
-	4JePJgDGPUxHvT0m/ZEY/e06BY1bJaST2nOjcOzVmbu1t5ikqYxqBBgHkB1tE2IkY/f86brzut7
-	8YBls4f05zPoD2RFSJSzp2C2gI3yv7YmqHMAEAj72E+ai0xXhgzv+FLC/qykk/0TmECA3AkdIv8
-	ulPosrp0vTbUoABXW94=
-X-Received: by 2002:a05:600c:a305:b0:48a:5970:2005 with SMTP id 5b1f17b1804b1-48e51e08362mr31054235e9.2.1778060764831;
-        Wed, 06 May 2026 02:46:04 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e5313b023sm19233185e9.5.2026.05.06.02.46.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2026 02:46:04 -0700 (PDT)
-Date: Wed, 6 May 2026 10:46:00 +0100
-From: Daniel Thompson <daniel@riscstar.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Alex Elder <elder@riscstar.com>, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, maxime.chevallier@bootlin.com,
-	rmk+kernel@armlinux.org.uk, andersson@kernel.org,
-	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linusw@kernel.org, brgl@kernel.org,
-	arnd@arndb.de, gregkh@linuxfoundation.org,
-	mohd.anwar@oss.qualcomm.com, a0987203069@gmail.com,
-	alexandre.torgue@foss.st.com, ast@kernel.org,
-	boon.khai.ng@altera.com, chenchuangyu@xiaomi.com,
-	chenhuacai@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
-	hkallweit1@gmail.com, inochiama@gmail.com, john.fastabend@gmail.com,
-	julianbraha@gmail.com, livelycarpet87@gmail.com,
-	matthew.gerlach@altera.com, mcoquelin.stm32@gmail.com, me@ziyao.cc,
-	prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
-	rohan.g.thomas@altera.com, sdf@fomichev.me,
-	siyanteng@cqsoftware.com.cn, weishangjuan@eswincomputing.com,
-	wens@kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	s=arc-20240116; t=1778061490; c=relaxed/simple;
+	bh=QSMJQ+qo2d/9QKlnpqj/XC1VAZOrvcslyFb4rShhWfo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g4CEbyYFMGRBhvrnBWFwLJ9arp8Km8cC2KDbaryv+BMlDN85D3JtvrAT4t1vTX4QNqqXLudKWWNRbJl7DXn+0j22cKprXi4gdcs9OBPAubynbIm2l6O+Dqx6NuzgCtVQ2jKKudZAjYWz5OQiuCMMXtUPEzxduDXKhPUnvpmFUYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C8+4eyhu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E674C2BCB8;
+	Wed,  6 May 2026 09:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778061488;
+	bh=QSMJQ+qo2d/9QKlnpqj/XC1VAZOrvcslyFb4rShhWfo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=C8+4eyhuvovWq6mc3xqieYOq9rP+hCzGwn0H8Mgh8B99uy5MH/ax2hBokSkgCW+o8
+	 eZxZhQD+cT9cai+VpeUww1hPBCUpEZVkRuYSydROOzI4Vx/xV8AgFbIJkccIhgn0rA
+	 xvL/tze8Kyir8FhZkIL/f6fNrXTCV5NFPys661tKV4/DgfL2tUU5r4LFQI9NKO+LKI
+	 7wzDFYi+zpnGN6HbZY9hleThnNyzfIiYtWZOOzJt0HCxyI3Gm87asYiyxoP2Tmgi/w
+	 EWWO6n8bPPgHHedIOY1I51zTeEcVIjacf1e3lTTM2Pmib/meTXzaavoIXuWrfMx3BV
+	 /n0WSNKVDuHfQ==
+From: Conor Dooley <conor@kernel.org>
+To: Linus Walleij <linusw@kernel.org>
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Yixun Lan <dlan@kernel.org>,
+	Troy Mitchell <troy.mitchell@linux.spacemit.com>,
 	linux-gpio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 03/12] net: pcs: pcs-xpcs: Preserve BMCR_ANENBLE
- during link up
-Message-ID: <afsN2JrKNFw-PV-g@aspen.lan>
-References: <20260501155421.3329862-1-elder@riscstar.com>
- <20260501155421.3329862-4-elder@riscstar.com>
- <91332fc1-11ed-444e-a211-699420cf0108@lunn.ch>
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev
+Subject: [RFC v1 0/4] generic pinmux dt_node_to_map implementation
+Date: Wed,  6 May 2026 10:57:38 +0100
+Message-ID: <20260506-energize-dramatize-051909e54256@spud>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <91332fc1-11ed-444e-a211-699420cf0108@lunn.ch>
-X-Rspamd-Queue-Id: 65C814D8F4C
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2283; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=vL3K36qzSz+jxyjtup88by9kUgRXxlFkjxJK/EVWVx4=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJm/BSa1vbz+/sXPt4+nML0KOv1ojrcO6+r3P90V5QT0t 6yYUGSf31HKwiDGxSArpsiSeLuvRWr9H5cdzj1vYeawMoEMYeDiFICJFIkzMvROTS2ZUvNc5UWB tbVo2LmGHn1pBv59Cu/togLu1llMP83IMLn4/NKwN1POf7dcvL3xMEO1W1EBp9dX6SIzP7VuduF FnAA=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 2B7D84D91FB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.06 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[riscstar-com.20251104.gappssmtp.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[riscstar.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[riscstar.com,lunn.ch,davemloft.net,google.com,kernel.org,redhat.com,bootlin.com,armlinux.org.uk,arndb.de,linuxfoundation.org,oss.qualcomm.com,gmail.com,foss.st.com,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
-	TAGGED_FROM(0.00)[bounces-36273-lists,linux-gpio=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[riscstar-com.20251104.gappssmtp.com:+];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-36274-lists,linux-gpio=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[daniel@riscstar.com,linux-gpio@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[50];
-	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-gpio];
+	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[riscstar.com:email,riscstar-com.20251104.gappssmtp.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,aspen.lan:mid]
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,microchip.com:email,infradead.org:email]
 
-On Fri, May 01, 2026 at 07:06:15PM +0200, Andrew Lunn wrote:
-> On Fri, May 01, 2026 at 10:54:11AM -0500, Alex Elder wrote:
-> > From: Daniel Thompson <daniel@riscstar.com>
-> >
-> > Currently the XCPS found on Toshiba TC9564 (a.k.a. Qualcomm QPS615)
-> > is unable to operate at 1000base-X and slower with a PHY connected
-> > using SGMII/2500base-X (in our case a Qualcomm QCA8081). The link
-> > negotiates speed correctly but the MAC can't get any packets out.
->
-> We need to break this down into its components.
->
-> I assume you are saying the PHY negotiates the media speed with the
-> link partner. That is PHY talking to PHY.
->
-> But we also have the PCS talking to the PHY. There can be inband
-> signalling here, for SGMII and 2500BaseX. But not for over clocked
-> SGMII, which is how some vendors implement 2500BaseX. SGMII signalling
-> does not work when overclocked to 2.5G.
->
-> > This attracted attention to the ANENABLE bit and we observed that the
-> > bit is currently set during config and cleared during link up.
->
-> Here we are talking about the PCS ANEBNABLE, not the PHY ANEBNABLE. So
-> this is negotiation between the PCS and the PHY.
->
-> > Preserving the bit during link up allows the system to work as expected.
->
-> >  	int ret;
-> >
-> >  	if (neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED)
-> >  		return;
->
-> Think about this.
->
-> >  	ret = xpcs_write(xpcs, MDIO_MMD_VEND2, MII_BMCR,
-> > -			 mii_bmcr_encode_fixed(speed, duplex));
-> > +			 mii_bmcr_encode_fixed(speed, duplex) | an_enable);
->
-> And mii_bmcr_encode_fixed().
+From: Conor Dooley <conor.dooley@microchip.com>
 
-Thanks for highlighting that... and for being gentle with the clue
-stick!
+Hey Linus,
 
-This patch will be gone the next time this patchset is published and
-I'll get the phylink configured properly.
+Whipped this up last week, at to a first glance it appears to work,
+although the spacemit platform I've used to implement this has very
+limited in-tree use of pinctrl so it is hard to be sure.
 
+What I don't love though is how similar the functions
+pinctrl_generic_pins_function_dt_node_to_map() and
+pinctrl_generic_pinmux_dt_node_to_map() are - essentially identical
+other than which function they in turn call.
 
-Daniel.
+Basically, I wanna know if you think that that is acceptable, or if
+you'd rather see something that's totally generic between the two
+and figures out which foo_dt_subnode_to_map() function to call*,
+or convert pinctrl_generic_pins_function_dt_node_to_map() and
+pinctrl_generic_pinmux_dt_node_to_map() to wrappers that pass a function
+pointer of the appropriate foo_dt_subnode_to_map() to a shared node
+parsing function, or some third option that I have not considered.
+
+If you try to apply this, it's on top of Frank's mux series. It's also
+here if any of the spacemit-ters want to look at what I did to their
+driver:
+https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/log/?h=spacemit-pinctrl
+
+None of the patches have real commit messages due to this being RFC :)
+
+Cheers,
+Conor.
+
+* pinmux/pins + functions/groups + functions I think are the only
+  really valid combinations here, so it wouldn't be too difficult to
+  arrange that logic.
+
+CC: Linus Walleij <linusw@kernel.org>
+CC: Yixun Lan <dlan@kernel.org>
+CC: Conor Dooley <conor.dooley@microchip.com>
+CC: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+CC: linux-gpio@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-riscv@lists.infradead.org
+CC: spacemit@lists.linux.dev
+
+Conor Dooley (4):
+  pinctrl: generic: change signature of pinctrl_generic_to_map() to pass
+    void data
+  pinctrl: add new generic groups/function creation function for pinmux
+  pinctrl: spacemit: delete check_power()
+  pinctrl: spacemit: move over to generic pinmux dt_node_to_map
+    implementation
+
+ drivers/pinctrl/pinconf.h             |  20 +++-
+ drivers/pinctrl/pinctrl-generic.c     | 139 +++++++++++++++++++++++++-
+ drivers/pinctrl/spacemit/pinctrl-k1.c |  70 +++----------
+ 3 files changed, 164 insertions(+), 65 deletions(-)
+
+-- 
+2.53.0
+
 
