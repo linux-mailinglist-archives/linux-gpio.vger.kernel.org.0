@@ -1,97 +1,97 @@
-Return-Path: <linux-gpio+bounces-36305-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36306-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KEfVGjNh+2kuaQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36305-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 17:41:39 +0200
+	id QKjICEth+2kuaQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36306-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 17:42:03 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 059D84DD723
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 17:41:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C19B04DD74F
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 17:42:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4FE453036CFD
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 15:39:55 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 51C2F303A904
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 15:40:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F11CE48124E;
-	Wed,  6 May 2026 15:39:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCDF5492535;
+	Wed,  6 May 2026 15:39:49 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00093ED5B8
-	for <linux-gpio@vger.kernel.org>; Wed,  6 May 2026 15:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3AE948AE04
+	for <linux-gpio@vger.kernel.org>; Wed,  6 May 2026 15:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778081978; cv=none; b=dsj/N78aVGuu6orTiKDVF9+cc+kfY5SRil4rs++n4UYAS+TXrVDT3ePz+JxhLBDoV1Ks2LZFaMA0TdvCsta7dKkSoZk05MoyaJainVPmb7a+id4RFxv1OsBhD/tzHb7omU5h+Yj0m4GG74Vo8eHxNuz6mQZJ/+XpJMJ/F+bi/js=
+	t=1778081989; cv=none; b=sPEG4CIORLud8VlKhIytGQJlWBMjMBzqe0yAWFlhfZpwyspJ15nC240BakpyIwc3dMSLdAO+sLcxo83Y2xHldh09FZDpiPwR8IBkxf8LYdwIsGSEuWuNJmt5s4vmmQBwW8Mx3RUn7gcB5qH9EqwSgeUV7cRZNT/nut/9e7Muzrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778081978; c=relaxed/simple;
-	bh=b1Zj/yubQP5OfGxkmSWulM2UnchKdTF2OR2GBJBJdSY=;
+	s=arc-20240116; t=1778081989; c=relaxed/simple;
+	bh=LBmIgDAwAQqV4l2LIzPR18nkhRL7wfdwqg45Bs8q/1Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AYVSWYb5oQsABJ9k6AhUG3X1/+gKiHM5HT0wTy4SLFgmor2cHmGfvSC0lIxTAL1MIGoboc98uDXomWpOwzbWyyZC8+yrsVdRfH0El87CroGn0Js+1oCg7fbtNWD47pnWr5yufVs3rS9+/ds/S4y8LgEe4RC6AaeK3d4YBofXViI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.50
+	 To:Cc:Content-Type; b=NpUjoD69hH6In29nPK56Vv9xaUHEVnr+J4HE9C6UFEC2eNZ3TD2Plztnadg6t95CwUFSLndJL6p/U0R3BWpldTCOVGxLWpk08Tr0Hn0g4TCTcmO+TCz+Mu9LtFFAsLLuZzLLlDuXZD3mF7O5CHZv8SwyVmfdFio48EGS0ih4bdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-94ac7f22d23so1777004241.3
-        for <linux-gpio@vger.kernel.org>; Wed, 06 May 2026 08:39:36 -0700 (PDT)
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-62ddb07fbd2so1467237137.2
+        for <linux-gpio@vger.kernel.org>; Wed, 06 May 2026 08:39:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778081975; x=1778686775;
+        d=1e100.net; s=20251104; t=1778081987; x=1778686787;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LXYTW+fjcIqcCo2bBFDn3rYsoWd1fm91n2FElFkHP/k=;
-        b=cvVBRx7GGairgBrfjoGGXvX03XCePghL+KhhAb+VLytQpg24cjhYNO856TPS/qySSV
-         Wlm/NpYR7eApkqRn2fnLjLfCQIUUP2t3kNQgheoQdU3fMoZNjEIM6NjwKImdXa2btFnp
-         UoULTaC4bcla4tDd9OCsUItbHO9NVJMiD+AB3Qs5f0FoPCvQFODQO+bGJPpX1zo8CC9o
-         zXYbX3KWFlrjaBVSB36ZaT+VsyJ+jgXkIzLp+DWL5xHysJC/xPgiaQO8uCZVklGFm3Jr
-         yUlf900mDhfNbtqKtylTNqWpbrnesbPDuMtC4qryJey+xRcFUG9O182uuP8JzfCOWzZt
-         +00g==
-X-Forwarded-Encrypted: i=1; AFNElJ99CQOVXyS5sGl1T5APM3bxfBo14tMSHCnEvx9kamltsKuOkkCf8/T5kUkZ4MhA/8HxXAo8lsG5mM01@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAdf3nKnJjvG11ilnInXwk/S4uzyvswqR86L1uI9DkU8VC7B3R
-	u9TeGsaRrFZJWc4r98uDSlwjhULdMcEosUmOSWh9Lv8g3vvmRHONLvO7p+FCQKumtHQ=
-X-Gm-Gg: AeBDieuMiDL+zGqHjuYOwvxI0o+TfAwhiMo349+pvX5xZni5H4hG4grJ15h1iTzvVR9
-	8TnAk6L3VTu+B5rUnUhASJSeINJ3GKrI3EzwQM6bDO06dPTjcZaq2uDUFBhiVE6Mqciu0CYDI0P
-	NTSprq7ML36w/rnUkcKZeHQkUk53nRauAuSUmaU9rVtMM5BvD2U+9ZFNCuVMfKI7a34QMhxkVpm
-	htLcTVAB5YuGFC8rKCSswVBOwuLhUljbuhquVOvY/LjMW4K1Pz/LpwQnP8BqSH0QY8MHkZSR590
-	MYzX56dViFikT7nTQ3EW34oCNG9cEBIZHqyF2dEwqlZS6C8ZMxYZMNctWVNN7U3ItuWDKUXEBN+
-	gLF+ESrqVQexevFKNMPDoi9Pun5uSePuy5DvYSigvnRHi25rZ9xD4fuVvpmzuzAqHw5wjM1bxjw
-	c/ZOXduRKU8OGFpyXqFLzy4evmmueF/XW1DZa1rRLxdcVBycxUoZPO2H7rZOYt7aPl7NYtJwVsi
-	RUUCv2jUA==
-X-Received: by 2002:a05:6102:2921:b0:62f:3c55:d419 with SMTP id ada2fe7eead31-630f8c17667mr1846217137.0.1778081975224;
-        Wed, 06 May 2026 08:39:35 -0700 (PDT)
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-95d0ac3217dsm6203656241.3.2026.05.06.08.39.34
+        bh=0kbrhikwqovxPcm2MY0WIUqDXXvt/c4ldcoQ6G9OQw0=;
+        b=nXopg2bVxfgW3vsrJ0IMTLtv+GhH0t489Z4yBIumVq/QxZonDxzywnz2f0iXsChu8u
+         pCvtmp1n28iKho+Nxa4DGxC1FzWhhsFliXTX0lrRiD+fx4VBOl1wxdNdgswyoDgmR0Hw
+         3183oXr6xj1IYRub/XxoqdxkLvqOg9uhp7yJn6e9zO2lcBgrhqgbx6vgdAkymwImv5wO
+         28r7qYUX2WMibp5NSFqUGpdD4q4DHloJfAduVSAQpHwlEyflSE2JhiAJxQwyFL1saikJ
+         0l5zAAw5PWNFeoz4lC9i+JhDpgTCX6HRjKrCj1hXNrN80BneqIULrIh/NSEG6Q1E7xms
+         bn/A==
+X-Forwarded-Encrypted: i=1; AFNElJ9IYROOVA5XaFM4opu3TPzFSakFFTsVAyujLFe/S5fhEbMqGK9Z4G4qdOCEpxsrdCvAulNf7WUYKJhg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1eQ92sG4qBq+x+2mefN6VuXnCucTBpdZ1Bponoe/Pi26YZGVG
+	GTEaMFjqttHy/r9krXKDV3Cy0xpndFTV8rJpG6fvp5Lf0JY5jkNhYoRv8mrOTKnk4ao=
+X-Gm-Gg: AeBDies7QEQQx7utGcs7S0XDwe1GjGXgdt81G75L5ycbILCmqflIokWFFOzeIXRvalw
+	ndGPyEq4l5Y+MmBndBx9dwu5NKlXpwriXSk/i1aOkGK3nf9IokMN2TUalyPcsUHzLRYTdmk5F7J
+	TkUyDQrbSC4KiauGv01QKpnKTsuGrB0CzVGFR/iD22paBvjjzWpJU5l6dmnzq8PWDzXbmcPSFtE
+	2Q28cFgeMxYjm1lFONHfFKTFaGzpL7SjZu0fh9Zr2Zl4qLK9dSZQVElqmCOG/x52Q5X0iih+QUy
+	uw8u1l2KE0pzxHqT1k+nMEcwHoLqHF65K/VucWvANX7h9URAt6bnCutih07GK0Hk0yZtc5SlSQY
+	BcN2Prp+NbSUfury42I+26TWOsC4Ojzsep2z0j/UlJT0FZMsXj7MYy9ZR3UCagzO9kHz0SfhnPV
+	aSlvSv7Foh3AmNZMRDmJgMPfM3iDdfxQ+aYgXEyA28pibPr1MwLb3TWZGCdd7qKrDWfAgxofr7m
+	BNsn6ISUg==
+X-Received: by 2002:a05:6102:4420:b0:608:1b6e:f4dc with SMTP id ada2fe7eead31-630f8ee9c5dmr1800261137.11.1778081986788;
+        Wed, 06 May 2026 08:39:46 -0700 (PDT)
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-630f858f550sm1669988137.3.2026.05.06.08.39.46
         for <linux-gpio@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2026 08:39:34 -0700 (PDT)
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-62dff2771abso1496891137.2
-        for <linux-gpio@vger.kernel.org>; Wed, 06 May 2026 08:39:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ++w6cgpdNqryqtmeJ0/2jXr1HZHr6sbX71oaGGT5b0ep6YlAC9zMWI2/RZUZd5A7uGlVAcYaL3x1Xe@vger.kernel.org
-X-Received: by 2002:a05:6102:419e:b0:605:3556:6619 with SMTP id
- ada2fe7eead31-630f907d492mr1975422137.31.1778081974628; Wed, 06 May 2026
- 08:39:34 -0700 (PDT)
+        Wed, 06 May 2026 08:39:46 -0700 (PDT)
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-62e94ae15f7so1451463137.3
+        for <linux-gpio@vger.kernel.org>; Wed, 06 May 2026 08:39:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ861iSpLFwubF3/tKi2f+3UZZm1PhXahwWSNmzHOJpW7uO813Pmy4mwz4UeOQ0QQL0564Z6p1Kpog8o@vger.kernel.org
+X-Received: by 2002:a05:6102:b15:b0:628:397c:ecea with SMTP id
+ ada2fe7eead31-630f8ee791fmr1784531137.10.1778081986328; Wed, 06 May 2026
+ 08:39:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260430093422.74812-1-biju.das.jz@bp.renesas.com> <20260430093422.74812-4-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20260430093422.74812-4-biju.das.jz@bp.renesas.com>
+References: <20260430093422.74812-1-biju.das.jz@bp.renesas.com> <20260430093422.74812-5-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20260430093422.74812-5-biju.das.jz@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 6 May 2026 17:39:22 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUaTUWUNYBOFe_6Ri1_riRutUZ9VEfz37RJV5UXS=Vg0Q@mail.gmail.com>
-X-Gm-Features: AVHnY4LgzfHN41YN-V7cEvvs2C2tHhX8ZDYGE5oWoEa2HgNRZk365TqmESGxYzA
-Message-ID: <CAMuHMdUaTUWUNYBOFe_6Ri1_riRutUZ9VEfz37RJV5UXS=Vg0Q@mail.gmail.com>
-Subject: Re: [PATCH v4 3/7] pinctrl: renesas: rzg2l: Add support for selecting
- power source for {WDT,AWO,ISO}
+Date: Wed, 6 May 2026 17:39:34 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUzfB7d8S7y2YQk-QtgHff+QZeVcXHdmGFeFrT3acTZHw@mail.gmail.com>
+X-Gm-Features: AVHnY4LGjtWPKHZA8LMgL9Wu8go-UfXc8etk5Fq9z1BmwattUYtahz5UCfOKg4M
+Message-ID: <CAMuHMdUzfB7d8S7y2YQk-QtgHff+QZeVcXHdmGFeFrT3acTZHw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/7] pinctrl: renesas: rzg2l: Update OEN pin validation
+ to use exact match
 To: Biju <biju.das.au@gmail.com>
 Cc: Linus Walleij <linusw@kernel.org>, Biju Das <biju.das.jz@bp.renesas.com>, 
 	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, 
 	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Rspamd-Queue-Id: 059D84DD723
+X-Rspamd-Queue-Id: C19B04DD74F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.46 / 15.00];
@@ -103,7 +103,7 @@ X-Spamd-Result: default: False [-1.46 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36305-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-36306-lists,linux-gpio=lfdr.de];
 	DMARC_NA(0.00)[linux-m68k.org];
 	FREEMAIL_TO(0.00)[gmail.com];
 	RCVD_TLS_LAST(0.00)[];
@@ -119,150 +119,20 @@ X-Spamd-Result: default: False [-1.46 / 15.00];
 	R_DKIM_NA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCPT_COUNT_SEVEN(0.00)[7];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[glider.be:email,linux-m68k.org:email,renesas.com:email,mail.gmail.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-
-Hi Biju,
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-m68k.org:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,glider.be:email,mail.gmail.com:mid,renesas.com:email]
 
 On Thu, 30 Apr 2026 at 11:34, Biju <biju.das.au@gmail.com> wrote:
 > From: Biju Das <biju.das.jz@bp.renesas.com>
 >
-> The RZ/G3L SoC has support for setting power source that are not
-> controlled by the following voltage control registers:
->   - SD_CH{0,1,2}_POC, XSPI_POC, ETH{0,1}_POC, I3C_SET.POC
->
-> Add support for selecting voltages using OTHER_POC register for
-> setting I/O domain voltage for WDT, ISO and AWO by extending
-> rzg2l_caps_to_pwr_reg() with a mask output parameter so that callers
-> callers can identify which bit(s) within OTHER_POC correspond to the
-> requested domain. Update rzg2l_get_power_source() to extract the
-> relevant bit field via field_get() when reading OTHER_POC, and update
-> rzg2l_set_power_source() to perform a read-modify-write under the
-> spinlock when writing to OTHER_POC, since multiple domains share the
-> same register.
+> The RZ/G2L SoC uses pin 0 from a port for OEN while RZ/G3L uses pin 1. The
+> existing greater-than comparison against oen_max_pin in
+> rzg2l_pin_to_oen_bit() would incorrectly accept any pin below that value
+> rather than enforcing the single valid OEN pin for each SoC. Replace the
+> range check with an exact equality test so that only the designated OEN
+> pin is accepted.
 >
 > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> ---
-> v3->v4:
->  * Updated commit description.
->  * Updated rzg2l_caps_to_pwr_reg() to return mask in addition to register
->    offset.
->  * Dropped ffs(), using field_get() instead to get PoC offset in
->    rzg2l_get_power_source().
->  * Simplified rzg2l_set_power_source() by using mask from
->    rzg2l_caps_to_pwr_reg().
->  * Added scoped_guard() for RMW operation in rzg2l_set_power_source().
 
-Thanks for the update!
-
-> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-
-> @@ -900,7 +909,8 @@ static void rzg2l_rmw_pin_config(struct rzg2l_pinctrl *pctrl, u32 offset,
->         raw_spin_unlock_irqrestore(&pctrl->lock, flags);
->  }
->
-> -static int rzg2l_caps_to_pwr_reg(const struct rzg2l_register_offsets *regs, u32 caps)
-> +static int rzg2l_caps_to_pwr_reg(const struct rzg2l_register_offsets *regs,
-> +                                u32 caps, u8 *mask)
->  {
->         if (caps & PIN_CFG_IO_VMC_SD0)
->                 return SD_CH(regs->sd_ch, 0);
-> @@ -912,6 +922,16 @@ static int rzg2l_caps_to_pwr_reg(const struct rzg2l_register_offsets *regs, u32
->                 return ETH_POC(regs->eth_poc, 1);
->         if (caps & PIN_CFG_IO_VMC_QSPI)
->                 return QSPI;
-> +       if (caps & PIN_CFG_OTHER_POC_MASK) {
-> +               if (caps & PIN_CFG_PVDD1833_OTH_AWO_POC)
-> +                       *mask = BIT(0);
-> +               else if (caps & PIN_CFG_PVDD1833_OTH_ISO_POC)
-> +                       *mask = BIT(1);
-> +               else
-> +                       *mask = BIT(2);
-> +
-> +               return OTHER_POC;
-> +       }
-
-You could always return a proper value in *mask...
-
->
->         return -EINVAL;
->  }
-> @@ -920,17 +940,20 @@ static int rzg2l_get_power_source(struct rzg2l_pinctrl *pctrl, u32 pin, u32 caps
->  {
->         const struct rzg2l_hwcfg *hwcfg = pctrl->data->hwcfg;
->         const struct rzg2l_register_offsets *regs = &hwcfg->regs;
-> +       u8 val, mask;
->         int pwr_reg;
-> -       u8 val;
->
->         if (caps & PIN_CFG_SOFT_PS)
->                 return pctrl->settings[pin].power_source;
->
-> -       pwr_reg = rzg2l_caps_to_pwr_reg(regs, caps);
-> +       pwr_reg = rzg2l_caps_to_pwr_reg(regs, caps, &mask);
->         if (pwr_reg < 0)
->                 return pwr_reg;
->
->         val = readb(pctrl->base + pwr_reg);
-> +       if (pwr_reg == OTHER_POC)
-
-... so you could drop this check...
-
-> +               val = field_get(mask, val);
-> +
->         switch (val) {
->         case PVDD_1800:
->                 return 1800;
-
-> @@ -958,25 +981,37 @@ static int rzg2l_set_power_source(struct rzg2l_pinctrl *pctrl, u32 pin, u32 caps
->
->         switch (ps) {
->         case 1800:
-> -               val = PVDD_1800;
-> +               poc_val = PVDD_1800;
->                 break;
->         case 2500:
->                 if (!(caps & (PIN_CFG_IO_VMC_ETH0 | PIN_CFG_IO_VMC_ETH1)))
->                         return -EINVAL;
-> -               val = PVDD_2500;
-> +               poc_val = PVDD_2500;
->                 break;
->         case 3300:
-> -               val = PVDD_3300;
-> +               poc_val = PVDD_3300;
->                 break;
->         default:
->                 return -EINVAL;
->         }
->
-> -       pwr_reg = rzg2l_caps_to_pwr_reg(regs, caps);
-> +       pwr_reg = rzg2l_caps_to_pwr_reg(regs, caps, &mask);
->         if (pwr_reg < 0)
->                 return pwr_reg;
->
-> -       writeb(val, pctrl->base + pwr_reg);
-> +       if (pwr_reg == OTHER_POC) {
-> +               scoped_guard(raw_spinlock, &pctrl->lock) {
-> +                       val = readb(pctrl->base + pwr_reg);
-> +                       if (poc_val)
-> +                               val |= mask;
-> +                       else
-> +                               val &= ~mask;
-> +                       writeb(val, pctrl->base + pwr_reg);
-> +               }
-> +       } else {
-> +               writeb(poc_val, pctrl->base + pwr_reg);
-> +       }
-
-... but that would mean you would always do an RMW-cycle,
-while other SoCs have just one field, and don't need RMW.
-
-> +
->         pctrl->settings[pin].power_source = ps;
->
->         return 0;
-
-We can always revisit this later, if the need arises for more variants, so
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 i.e. will queue in renesas-pinctrl for v7.2.
 
