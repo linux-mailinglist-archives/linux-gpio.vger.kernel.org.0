@@ -1,151 +1,154 @@
-Return-Path: <linux-gpio+bounces-36289-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36290-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oP/iJyo6+2nUXwMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36289-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 14:55:06 +0200
+	id sBMTJKo7+2kQYQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36290-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 15:01:30 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 060304DA931
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 14:55:05 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EB964DAA85
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 15:01:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id C4214305EAB8
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 12:51:16 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id ED2763020D74
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 12:59:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08BD344DB7D;
-	Wed,  6 May 2026 12:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EV/cT3yM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 673B93FA5CD;
+	Wed,  6 May 2026 12:59:41 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1186744E045;
-	Wed,  6 May 2026 12:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635443EF65F;
+	Wed,  6 May 2026 12:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778071875; cv=none; b=tqpZ1wXkShphUWnQ5fZlzIq7YN5VYlDTuytyov3RdzB6ILxGgiYdrI2fjhbU7b3HNRSMTqrsYcOTY33hdf6TGIZDSb6OhHQ2kheigQ6bSO6+oSuRwczFPh/SXh86Zv0vfQpZ6N+AjQY/qtzxqxyKPOWuXCR1CYYIvsB9rrftNy0=
+	t=1778072378; cv=none; b=qJJ8oNHI+Qxa90J7qdIlU293SxVODVhX57PuAtxlfytncsRe1NCjJp7ytnmed0kPO8eyTvl6Ssh77eNalxdN4bQp/zJKUACh8ziKUXTyW9cyk4UuDdWnJMcNqBI4eWHl1EokrIQvdkn2CJiy67+piyYnCGgwCXOcVHpqgs1wifk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778071875; c=relaxed/simple;
-	bh=NL8vqlia/Db1s/BAwE2DZLUGLxpFhvU1atzwhuPFyh4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RlYA71lv+tnMj+Rf9allwflOEIR5EmEZQp23mjsXn3vkbnPjuAEfHx4gMjofJwj1iGRSoPT6qnzhqv6+YYYwiAAQqD87geeUBNyq8GRjVau2dZecOCSd5FNL7JSOepMAXU2yHAV0H2L/fe9Ys1fZAlUxKrngMjYorMn4kOTBr/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EV/cT3yM; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778071874; x=1809607874;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NL8vqlia/Db1s/BAwE2DZLUGLxpFhvU1atzwhuPFyh4=;
-  b=EV/cT3yMHvUmMuL+4HjkcXpmXq9UjxkdbTO7mF/vuqVFlASiCJE2etqV
-   s1S0EPP8S0MthlAJYi8FaVH2jxfNS09U+mrVpQveJQu9p6aRYVu7VLR5A
-   nPfjt1vY9J+1qO1900Vr84Prhn8jX6halOTmU2ZdRy0EN+9935d5/Ti71
-   khAa/ci1d9FKch3pl/0vOGwSpffEUramOybYxV4ZqiSkguLh4T0lAdqJs
-   D/8R4K7cTJwOLRiWjrDLAi3KU1Vib97MeEOwyF0gYai5fjdb0bAX6BMJ6
-   751PV78hoS2soKKvAE/i7Y80PH8yRC0y948K7DIBrl53XqAyEoAuSO2qo
-   w==;
-X-CSE-ConnectionGUID: iJDDaYKAQiyRNFIYSbktIg==
-X-CSE-MsgGUID: m6QOddTjQYClMhgsrOLp3w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11777"; a="78848513"
-X-IronPort-AV: E=Sophos;i="6.23,219,1770624000"; 
-   d="scan'208";a="78848513"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2026 05:51:13 -0700
-X-CSE-ConnectionGUID: h8g9pckaQ8i8tFx0fMG7tw==
-X-CSE-MsgGUID: 9G4w6qJNT6WFpKb9gH4yeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,219,1770624000"; 
-   d="scan'208";a="274267273"
-Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.183])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2026 05:51:11 -0700
-Date: Wed, 6 May 2026 15:51:09 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Marco Scardovi <mscardovi95@gmail.com>
-Cc: mika.westerberg@intel.com, mathias.nyman@intel.com,
-	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] [PATCH 1/3] gpio: acpi: modernize resource
- management using cleanup.h
-Message-ID: <afs5PZgTimaZWs1U@ashevche-desk.local>
-References: <20260506113215.GK6785@://intel.com>
- <20260506123637.1077421-1-mscardovi95@gmail.com>
- <20260506123637.1077421-3-mscardovi95@gmail.com>
+	s=arc-20240116; t=1778072378; c=relaxed/simple;
+	bh=/EbnYU/iZY2yOz8yBdD9aB5PCxtNb9eUGqjoYehaTIw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ot73//eM8F5nWb7RP/d92xZVuD+Fjg3QyGA7WRFg8CtmKmaRYQh5bXrMW+p5K5qZUN8mVd7qXq1F1pYCrGGS/88IDyjWK7+GN3tVcoPvAc/cJIgbKBkwhV8l93nYm55Wl8d5ZiUx4kbIvLSfu0e48x+ur3RfbsCo5fz0N+zFFDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=54.254.200.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
+X-QQ-mid: esmtpgz13t1778072348t4051910c
+X-QQ-Originating-IP: f3bsUKV8Yv9fAvdHOTDcH8/P4Nuy4zA3F7S2G3vmc0A=
+Received: from [127.0.0.1] ( [116.234.74.217])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 06 May 2026 20:59:03 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 152799247874170222
+Message-ID: <224E233C593EF171+8c8a43dd-5061-40f8-9eb7-f360eabf2ecc@radxa.com>
+Date: Wed, 6 May 2026 20:59:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260506123637.1077421-3-mscardovi95@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-X-Rspamd-Queue-Id: 060304DA931
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 10/12] net: stmmac: tc956x: add TC956x/QPS615
+ support
+To: Alex Elder <elder@riscstar.com>, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, maxime.chevallier@bootlin.com,
+ rmk+kernel@armlinux.org.uk, andersson@kernel.org, konradybcio@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, linusw@kernel.org,
+ brgl@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org
+Cc: Daniel Thompson <daniel@riscstar.com>, mohd.anwar@oss.qualcomm.com,
+ a0987203069@gmail.com, alexandre.torgue@foss.st.com, ast@kernel.org,
+ boon.khai.ng@altera.com, chenchuangyu@xiaomi.com, chenhuacai@kernel.org,
+ daniel@iogearbox.net, hawk@kernel.org, hkallweit1@gmail.com,
+ inochiama@gmail.com, john.fastabend@gmail.com, julianbraha@gmail.com,
+ livelycarpet87@gmail.com, matthew.gerlach@altera.com,
+ mcoquelin.stm32@gmail.com, me@ziyao.cc,
+ prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
+ rohan.g.thomas@altera.com, sdf@fomichev.me, siyanteng@cqsoftware.com.cn,
+ weishangjuan@eswincomputing.com, wens@kernel.org, netdev@vger.kernel.org,
+ bpf@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20260501155421.3329862-1-elder@riscstar.com>
+ <20260501155421.3329862-11-elder@riscstar.com>
+Content-Language: en-US
+From: Xilin Wu <sophon@radxa.com>
+In-Reply-To: <20260501155421.3329862-11-elder@riscstar.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpgz:radxa.com:qybglogicsvrsz:qybglogicsvrsz3b-0
+X-QQ-XMAILINFO: MgRO26CFjEybBwd/wb6YOxM+siCGdgtDrW15n+VzbyblX64iDdSDShIb
+	deAJrTuoFkcNcvF9gQYpiGl1YaAUpdVNpS14TK62mLxdwgs7fwiOlT9CWK75edlL7XFmiaI
+	1d+ksVxlupHpLm9WTvFrJNIwSboF53JgMdbxAnRXD1NmB1DrQmf9ce8kniC31Y0ncey3oru
+	Ci+MZSceC76IC5au0yXYDS257/Xys4YOlsmd6VWDJ1UkEVNd+ypd4tXM6r/EUmQ2R+vGcoT
+	C89pDgGV4qJfmU7Azmu7nJyFyg8iuhIrtvW6ocrQpQ/dAnH/WYTcUW0lMA2iR4rfDwAVPvq
+	0y6/VY36c2M1i3wZcUIn9IR7UOKUld1QIufjtwnl0C9JOOB1VPQrGbKc0TqgNYogccvTH3s
+	qfQXd3jb20QxARZJYCXUlc3w8qwBhk99EErGXOQBYRgBcm/EhKGHxa0mHcuZVK/WCRMWEx+
+	elGnATbx/LKqMk5HPeCsuiOXq7KdWNbHBI2FNHIVRqzDv/tkrUqTN1BJTng2PDUPueLiLrc
+	Z13b9wAvB4gRQ4Yed80aoiWMVEf3Erz5sFHCw+cHtmjhF57HCzk4rZCIIzwzizHp2pNmGJW
+	HgnC2vAN4o9evo6M+YTXEmPP16mxYyR/YYqXUFj+urhJm9arJJ8sOHCl3lyifRK6GGsLQQc
+	wanDO41FJ1/IDq/4MaFbCsg/XcA466ApLfIAtA2Z/ZxYxtkHitfPc5vH/cFLlgZC/NQxnMr
+	8WHqQz7BVF8eteyx/YHsmQQD4tBPm4NvwrmrPug43BpVtiGRi10ktQKtpAjZY0A1ewyiDUC
+	n4DPe3vJirX98tNnwVBARx8B1EgNunDUt/zx0vkUwbmgxKi0vhgJtffn90CbN8BGHP0uNYO
+	ejeEBkkrBoi23VN9eb5HGZPE86FWDY3tFTEQUlqt1d7tZ1GjVRcw47rlUpbBh472a7wtZxB
+	wzwqvsyFV6hzGBwsV5ANmiQxkSV7XE+uKD2be9do5MmnnWwfacL6W5mLxSK1a8Ou63T1yo2
+	saQGZtFA==
+X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
+X-QQ-RECHKSPAM: 0
+X-Rspamd-Queue-Id: 9EB964DAA85
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [0.14 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[radxa.com : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-36290-lists,linux-gpio=lfdr.de];
+	FORGED_MUA_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	HAS_ORG_HEADER(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-36289-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_THREE(0.00)[4];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[riscstar.com,oss.qualcomm.com,gmail.com,foss.st.com,kernel.org,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[50];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-gpio@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	FROM_NEQ_ENVFROM(0.00)[sophon@radxa.com,linux-gpio@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.988];
+	MID_RHS_MATCH_FROM(0.00)[];
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,radxa.com:mid,radxa.com:email]
 
-On Wed, May 06, 2026 at 02:35:34PM +0200, Marco Scardovi wrote:
-
-No, this is wrong and completely missed the guidelines!
-Please, spend near hours to study the Submitting Patches and Coding Style
-kernel documentation before preparing and sending a v3.
-
-...
-
-> +#include <linux/cleanup.h>
-> +#include <linux/slab.h>
->  #include <linux/acpi.h>
->  #include <linux/dmi.h>
->  #include <linux/errno.h>
-
-...
-
-> +DEFINE_FREE(free_gpio_desc, struct gpio_desc *, {
-> +	if (_T)
-> +		gpiochip_free_own_desc(_T);
-> +})
+On 5/1/2026 11:54 PM, Alex Elder wrote:
+> +	/* AXI Configuration */
+> +	axi = &td->axi;
+> +	axi->axi_lpi_en = 1;
+> +	axi->axi_wr_osr_lmt = 31;
+> +	axi->axi_rd_osr_lmt = 31;
+> +	/* All sizes (2^2..2^8) are supported */
+> +	axi->axi_blen_regval = DMA_AXI_BLEN_MASK;
+> +	plat->axi = axi;
 > +
-> +DEFINE_FREE(acpi_free, void *, {
-> +	if (_T)
-> +		ACPI_FREE(_T);
-> +})
+> +	plat->mac_port_sel_speed = speed;
+> +	plat->flags = STMMAC_FLAG_MULTI_MSI_EN | STMMAC_FLAG_TSO_EN;
 
-And yes, these are still subject to comments I gave against v1.
+I got WoL working only after adding STMMAC_FLAG_USE_PHY_WOL here. I 
+guess it's required, since the driver clocks down the MAC/PMA/XPCS in 
+its suspend hook?
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Best regards,
+Xilin Wu <sophon@radxa.com>
 
 
