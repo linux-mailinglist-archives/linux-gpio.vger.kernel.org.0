@@ -1,289 +1,222 @@
-Return-Path: <linux-gpio+bounces-36299-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36300-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eFjcAudY+2n+ZQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36299-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 17:06:15 +0200
+	id YKqrCC1e+2kuaQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36300-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 17:28:45 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 999014DCDBF
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 17:06:14 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80B344DD372
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 17:28:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B2AC53003370
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 15:06:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1C9DB3019916
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 15:28:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7842047DD74;
-	Wed,  6 May 2026 15:06:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0808248BD5A;
+	Wed,  6 May 2026 15:28:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="LMpge8MW"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="C+XW4o+3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011008.outbound.protection.outlook.com [52.101.65.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E8A72627;
-	Wed,  6 May 2026 15:06:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778079970; cv=fail; b=WCVPuZUEGxR459ts/DLTGfuSFyQKzWfwuu4W0915V239EAoCMEVZLpc66aqM0LokiVqx36u6U6qbS9i/kfMZGtCTMtKEvsW8OnroTZBsC+WI04255dLRHs+Ax4gaOqZsFf898MjLX5y/JfQ0BDtsqfvgaoInWq+MSeWFmQyxDMY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778079970; c=relaxed/simple;
-	bh=2KK6q40woFX/BlluTbPZo+uLq7+PoadIqmXXNxhJ0Aw=;
-	h=Date:From:To:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=OUzLOobjU3DFoKP2CGnVgk7FeA7TZ0wkYJW6rbjA6/B+Sji99kUpds0rCBl0p98kaeFMedaSofrOqsrGra6IJ5HACF47jKF0+EnujVIXRatyngUh8UxhzNu/yTK+9gr39OH/9A5PUCln0zqk1fHOVJ2wi2nO2g2HvD0E3PQ0jOs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=LMpge8MW reason="signature verification failed"; arc=fail smtp.client-ip=52.101.65.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=R4JXAr6y+2roSkS6g6XhChy1P5jstNBRnmIaciOISzAOVZ+UjE13xhQLxwh2dnhHvkq9d0VGOIoGLZ9QPqzWJ/zJokOjgHDxBXDQiR3OhB6R8AdrgKNNv0wIxXq+okdHMR4+TzO5PZZN6NOxxxtQuFypYzOlU5IZA3/gupnAVarbZ5NNwOBzQEhKkvpNgk1QhHgTUB6YxH5sMxHQT/3pzhoOS+FMmGHfI3hIpaJWdtLNxLZiN5y/LtJ9odH4Ho8qolKak7KGPNDFu59A6A68rMG/dufp977mUnNMZm/9o3NYouVbqBIZW5JJ5MuVfU7B71qwRXyazCh+fcGbXzQqMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EU3Aywg5ok19lv5R/2i9As7o+nL23GP/gaPpeTA2SDg=;
- b=ZDl1cpn7ZutBYNfbK3GgyewJ1AZCb6vHmsZL8tV1cUPWFzgANKPzqq2b3A/YkqkLXIpuKTfrQQ+xFsRlumxTTSrx5lGthiWsT/fZpmq1vRrnn5gXXUsnCtljDO2p4uDRCh1kBgmQovMUEgejNskO1qXA4/u5qvfZd0wdUtFaP44fbJfPxosaesHJD7jRe32MdGJtbuiI+qdUEfLoT9QGDkSvzzhLE8luRhRzSxkJ8a5R6uvxqepBTUz+Z68hWBhw4LlJZnxWTd9ET+KCAxmoYwCX9IeDMquB4XXcemUoeGtzgYopyVruoM3TEg9V1mJYdKeS4rk/EVSbPkvpW1W/8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EU3Aywg5ok19lv5R/2i9As7o+nL23GP/gaPpeTA2SDg=;
- b=LMpge8MWzA8wbFKiDnjMAcn7GZo2tsKGbAL4KRZ5cf+cXjnEcE/qEMJNnvRlBVHgJPTgh1UojCyNxnBtvgdkw40tvedGGQkU7KekAMq/MocNOtL592iqm7Ofa9s8HHbiV8E2MlGfeI7oU1re3l5SECos8Pd9jCEw7/Gyc1nccsZqpKxXCIHJahNpGXYNHio/pqsBPfdp9K7JwBagkgXMXd1Xdh4TrDPY/3z/2je4bg1c0MVK/fbQTeiUJKZmquYrKEF1pc3CkigPlahr4I7Y+kHgmlQXq5+S1vBOMizgcnQNqj17NrXJOYOFPZZvcgol57SbNjfHYLFoi22HHmVYLg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
- by PA4PR04MB7981.eurprd04.prod.outlook.com (2603:10a6:102:c0::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.15; Wed, 6 May
- 2026 15:06:05 +0000
-Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
- ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
- ([fe80::75e4:8143:ddbc:6588%6]) with mapi id 15.20.9870.023; Wed, 6 May 2026
- 15:06:05 +0000
-Date: Wed, 6 May 2026 11:05:57 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	NXP S32 Linux Team <s32@nxp.com>, Linus Walleij <linusw@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	"open list:PIN CONTROLLER - FREESCALE" <linux-gpio@vger.kernel.org>,
-	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
-	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] pinctrl: imx1: Allow parsing DT without function
- nodes
-Message-ID: <aftY1fPLH6s-kHEy@lizhi-Precision-Tower-5810>
-References: <20260505160902.1425532-1-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260505160902.1425532-1-Frank.Li@nxp.com>
-X-ClientProxiedBy: PH8P221CA0028.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:510:2d8::28) To PA4PR04MB9366.eurprd04.prod.outlook.com
- (2603:10a6:102:2a9::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A68A47DFA5
+	for <linux-gpio@vger.kernel.org>; Wed,  6 May 2026 15:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778081302; cv=none; b=tJtzgcrGISTUbBYrflmMYEU9sCbV7vCL0qiLLD0hftY5VYQJJOmdO5RY3aEv4bKDKyeWjXzYCYi6PKRfGVTRO/h8uSXHTHEW6/642ZJPBKn3rcuqS3eTfXOsQDQJYeFZn9SxkGDT9k5sL7ct6C1dJqGYFVs5mQj4dnlBOCHQkok=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778081302; c=relaxed/simple;
+	bh=ZjEF3HpGwOZm1XS1TR6kZf0bNGfRZAZycuJei4ErS4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ssm6sZ1n3g/4RHRwwdFb/EIuQtfRK1Y+lAokKRjWQnBjYpogKj/EMc+QHCFZlzJCJn3owky6LIFq/EhbDkpba0TcXk+x0qPGq8KDW8Z+xLCWm6FmztU5vaCT2Fos8bDjKevtSsZqiipxRqWziHMvs/jIVfBG3t42sExg5COZEM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=C+XW4o+3; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-43fe608cb92so3927959f8f.2
+        for <linux-gpio@vger.kernel.org>; Wed, 06 May 2026 08:28:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1778081300; x=1778686100; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CGs4aXiGfe9FWzGIQNV1c8scbxohD/REqUQGlNaM17Q=;
+        b=C+XW4o+3BpfIYq+R7bvkXpReBGJrMLl/LMNXIlRWJaDMCP8l12gnAozRU838922lJO
+         RRMdFfzQKpQnWzb6ARXvdQ/RtmoNDrD6n6niAyKgqBRMYhB4EgtCI9TgzaWGrCFvQr69
+         fFOwH466Yb5gBEBbxEPPUBIughRl1DS0H5ACmf77Pp1KVqBLSvWKdCqpaMHf8bQrkbrG
+         WSEmp1uejt1RRMTrd2KyJVV6XAhyvlzZlZ6XjoIR5zHH8AFIBX7xOryI1vY82/TAmX2r
+         QaH5nTkRIC2PshdIC8H4YqtCezuEp5OV4V4OailE6fk5iyxuluRnpcZi1h4qmNgHK/m3
+         OkoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778081300; x=1778686100;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CGs4aXiGfe9FWzGIQNV1c8scbxohD/REqUQGlNaM17Q=;
+        b=gjJoJedBat+J4XBGLDJ4FAQXXqDFSTrZKKxnZ+Xx/NpYpZsawivUGK6smVe7cmleeD
+         hCgFoPc6fzNvyH9yHO2W8m3ZdKK8bRgwC5JDEEM8z/ZLFiHa+EfMoNeeVnc2lF2x3SjU
+         x0brweSQM7Zf65KQ4WkaeDqFM66gDYGuEn4w3IjxVSjtseIZogQvy64kJR48Iqwtfr69
+         McQDJ+upxQU8sQbh/Jqz87teYsW/S/cQhcL/FUXYmZpOfNGMBbHanhlqRhSQIehQ11yt
+         HbIeA284cQkzU2TXkPxuMshQI72cLsUAc1g4dKSfHHlSOIJIXtOF5aY+K83kyZwjJDQo
+         xXgA==
+X-Forwarded-Encrypted: i=1; AFNElJ/aoBiiEcX35lDV9W/LEkm7vHvKzwU73TDlZMxbOQJEiuM4eZWE8yXEfMOvKBUDo2scdBMmazwCs1bw@vger.kernel.org
+X-Gm-Message-State: AOJu0YwunP1GzEDYjncK6XR4lLT3uTtK7PzMdNnscwTwZtykvDSBxPB0
+	Gg6HK8cKJJRZQlCtkQDa90gg51cVjVfNWytcq+A0b8aICtNDVG7d4EV/jdrQYDvaWiw=
+X-Gm-Gg: AeBDievkCtknl3iM9S74dz+G2vFAMjCIM7w7MMpeykxrIraiXbl6U/lthSFfQenOXvW
+	YTom0iZl2D9b2oJg3i6rM+v+NwLRSldB181i+w9X830I7HkmvOzPbLwlXJWPKSfcOzPK5yRiVxW
+	yUpDvM+6dUV8SOUz/25S78VBXDKKh8XqMXXvHDHb7THPJwOzms9dO+39JllkObSwhChmCXDOLy/
+	jWFViwgL/XKzCGBfEnHmV+AsT7YD2QOEH00QLdk26C5JY8B5yeMSZ//lbOtLEdf6Esp0R7blq1/
+	DssqRMl+YftC41CgC2z8a5dnE6MQ8/8s+TJe91cj57RY1WkK8rHIjHaUcfgFN7p3fviJRBezLmB
+	tTYhcalEiNUs3oXUY9FoE6bxv7zxsNijpGrlPS3Xd5X9pZFZXu51fc9DOTrZBFnyTH+wIwYeoWv
+	2Lo+5FXKFDv+dIx6Tmx0Sjxol1ohb7UjGz5KRYWWYRg3ZTZUYhokWCqYpe9erdGetdUlYrgETe4
+	bT7TDcqudqRLJSrVC8IvGry7Ge/96jWC/dl+x41DBuPeeyXpJzdXLuqyzZKCBhKN+Fmh13SapN3
+	6EiJBdPrH+VvAc6LqWA=
+X-Received: by 2002:a05:6000:2405:b0:44e:902f:e341 with SMTP id ffacd0b85a97d-4515cf11ce9mr6889250f8f.20.1778081299271;
+        Wed, 06 May 2026 08:28:19 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45055960902sm14773996f8f.28.2026.05.06.08.28.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2026 08:28:18 -0700 (PDT)
+Date: Wed, 6 May 2026 16:28:15 +0100
+From: Daniel Thompson <daniel@riscstar.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Xilin Wu <sophon@radxa.com>, Alex Elder <elder@riscstar.com>,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, maxime.chevallier@bootlin.com,
+	rmk+kernel@armlinux.org.uk, andersson@kernel.org,
+	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linusw@kernel.org, brgl@kernel.org,
+	arnd@arndb.de, gregkh@linuxfoundation.org,
+	mohd.anwar@oss.qualcomm.com, a0987203069@gmail.com,
+	alexandre.torgue@foss.st.com, ast@kernel.org,
+	boon.khai.ng@altera.com, chenchuangyu@xiaomi.com,
+	chenhuacai@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
+	hkallweit1@gmail.com, inochiama@gmail.com, john.fastabend@gmail.com,
+	julianbraha@gmail.com, livelycarpet87@gmail.com,
+	matthew.gerlach@altera.com, mcoquelin.stm32@gmail.com, me@ziyao.cc,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
+	rohan.g.thomas@altera.com, sdf@fomichev.me,
+	siyanteng@cqsoftware.com.cn, weishangjuan@eswincomputing.com,
+	wens@kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 10/12] net: stmmac: tc956x: add TC956x/QPS615
+ support
+Message-ID: <afteD2d8d87Nyvl7@aspen.lan>
+References: <20260501155421.3329862-1-elder@riscstar.com>
+ <20260501155421.3329862-11-elder@riscstar.com>
+ <224E233C593EF171+8c8a43dd-5061-40f8-9eb7-f360eabf2ecc@radxa.com>
+ <4015f47a-af62-441d-b1b8-a8598f963970@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|PA4PR04MB7981:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4cd143cb-91b6-4610-6bf4-08deab80fed0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|52116014|19092799006|1800799024|366016|921020|38350700014|56012099003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	aR8EV2JjUnvxOFLCAiuQNq7wYkTtAKTGHwPw1MOvz59fD/spVSnH9xijqJBdeInwdzfOzeJT4KlLRqovCzB5bLbp2/bOFBNADS+uW6KI7Tj3sCeF5LvUNcCoue28uh6zZNnOjTYqJj5xBc6DjXqsXy+Pc5YgHGPSKzZnhbfDpWCg48AbZPudBsHhjzejPSWfC5xJWyxXZKuZndgY2b56Usekyyvj+OqsVxBp63tjHjSdG3DHPLRj+Zt2UrxZ+jCEKpPzOxcL8xkIJp7hrMaHSkxMq6WoXpycWMZbuoT9SWD1NOdd5txcI+mTI9KYN5QgfLHUj8UPCVEJUsSSoJHSoK6Olj9nrOlYzC4LMynKfNMMvAOqrwYSWMXE37Muf5azjI6qjmV6Knz/qJA5Sb0JpZktY4Qu+wvQB8zVw3oJDCnXY4/rVObRZT7hXGxdZJ8sVGRsc5zc+anlDQD1x4JmF5s7IFRIseQM2q/Yt0/ao7Bnq2UdYnG/bL8KrzAvspT1JRzIwNlVwZm/fbJBdsdgMolG9iKzP0sWH3+nVfCTu6tF4ubUUxtGCXWa0arUU2W+OID7k3aasGib3v41PpV02P3DCIh8n+sDb59FxeHgGvrC8buf2p02yOz0MSvOsv/wgQg94LKm7Z395sLR6cNPeJYLy7ZzArSSeOiEO1shhvM0skoIeMUyp4EAxKc8S9xzsJnlvl1MDccGqCVXrEe7mesIVgRQBSWK3VrvYwfeL8+T26a3vTPTaYVWsqgAfM9KERoFrJkXtJLzyR4E7S/qmA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(19092799006)(1800799024)(366016)(921020)(38350700014)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?DNQ8eJM0r4AUG+3B26Dwa0PZKwql+wuov2oppLkUcuqqQ7qL2aSQSAsgqf?=
- =?iso-8859-1?Q?W7qWF1gFQVtOOkmv0b9Y7Zv3ZbnbD+pU0B/wcUWf43DW5XfV/ZMUTN8RrF?=
- =?iso-8859-1?Q?gOx5kOqBJTrV4HOfDP9glSVBOmWzBhaq/EQYHwFxvg8d4/AY8d1E1qUE9C?=
- =?iso-8859-1?Q?psr2ABHXEpWBOKgeyU58Pnc656OCDzCj2XBVv+ZwDHix0Oj0ErM7k5F+gT?=
- =?iso-8859-1?Q?Vcaop1e0zn+zcrxwAXQ2G1QbA3VQOT4E09CilDUw2AbJWVcuBfJWPKb8PO?=
- =?iso-8859-1?Q?q+Dhp9ABTLg3lmTu0lI2kr1CCTdmmxujhluMGJQ7zb9m8C7lajc9LJhAVW?=
- =?iso-8859-1?Q?jP0YI81KQBP99P7TgcYm7omt1Xjz37dWz4cYcHi8iTNf2XFGzCpQEFg1PW?=
- =?iso-8859-1?Q?FKrvsHO6x1hS7duIQkPDMp7o0VvmaCEtzBOBeZjPWnHIYPx9h1hI7yOweg?=
- =?iso-8859-1?Q?j9R86lZp+5NivdN3Z73PI95tmoIwiYqqj64/ekF3fwl/9mUsv3F99KJ7pd?=
- =?iso-8859-1?Q?dRXjp3TdzeARRUyLgtGGcQAJb7yxovOdiJI8gvMBIKrr71QpLP37ZXJcpc?=
- =?iso-8859-1?Q?vD3Kjk+T4d+30iupSXddFr2tv75Dw2MJ7j/4Z/3XBfDMR9kP8TYXv30rxD?=
- =?iso-8859-1?Q?uuuLI1ULZUplr3QX0ClHgRVH2iu+NB3BIWrMKJIY4nME1pPpNb/HBOdTyd?=
- =?iso-8859-1?Q?IArTRT6nnoYYCN55V0M8TfbDonpDy+bS/9W1Tuu2ISMnXwoS2p16NOoTn4?=
- =?iso-8859-1?Q?kt8obY3einSO0C87+NxJidyS1RakM6e9rUV7npfysW8KhWRIUoSfpXYBSB?=
- =?iso-8859-1?Q?VuFhZv392EuoqJB+2s/EX3ujhFTvHvFzcmGn8Q0FUvv9jbC989OrZAL5ti?=
- =?iso-8859-1?Q?FVMzLfQYDT/JG8TPDta49mZGjbsOT/XJNq6KX/QarQpCqHKyOKi46NktgC?=
- =?iso-8859-1?Q?730t+6K+yKBuBdYuqnyuC4Kp1Hsvm77P4iFEdxVbqUvJDhnhLeZvFvOvqd?=
- =?iso-8859-1?Q?uxIY/NDyqEWZ/hY4JFvBlkriEesBHjUXxw6NwmnLa17mCjPX4sif04+HnN?=
- =?iso-8859-1?Q?l8hscuG4zX4oE401ZqMDEbqIX9LLDCb9nlWTVDGL8pIvDISw1kHo6/SxfV?=
- =?iso-8859-1?Q?R4O1VLDqawc4h4Urz/BQje9huwmVcGz8vwDRys22pp/LsZOoh2dm9sybdm?=
- =?iso-8859-1?Q?662hh5Yj4xT9K4sEAmQhg6btSWM6YFb1acHq2+p0NCb810ZWP1/okeUgv9?=
- =?iso-8859-1?Q?lhtr9wgS8svDB1V2SoZPW5QP25vlge7a2GkbluqPe7cQn1QA9shEO9zufn?=
- =?iso-8859-1?Q?SJzqzQmM4+amo31xfaJptLwWPoV47dvg5yjTPtMKuql0XPiRYGCfEHwATM?=
- =?iso-8859-1?Q?L7fLUeCgGRVwAU++QMItGt9YYPxLzXA+cL5L7nIfUSo9YlXrDhzNZBfBLP?=
- =?iso-8859-1?Q?TDKJw1FdYnoQPu4OpLuL2eqJwOGlHKMM79j9EU9Rk8+RKfBd9VD/mZ4v8p?=
- =?iso-8859-1?Q?emU1N71TPiCcbn13QZXWTp7T8IOzwQ3PWrvW6CAc3U928FJpFoxkxyIv7s?=
- =?iso-8859-1?Q?I6S5aKMFaKTe1HZEA7BKa73yPzNAy4zAMQC0NqfkEZoU2XNwXnm+An+OXx?=
- =?iso-8859-1?Q?G0ydKlmoAi5UR80bByIyRzW/m/66jq6H8MTcuqIg9D4JQDRiLDGYKFMF1X?=
- =?iso-8859-1?Q?5S6wO6jZpszlFMBmFnvJrI5GEM2bR92mUoKql6B2IWalNjPrfEoZmiU0vg?=
- =?iso-8859-1?Q?MBYhG23z4iA7+0mouwe2NvbSQOELrOcHnREMzVtUHCsHOp?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4cd143cb-91b6-4610-6bf4-08deab80fed0
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2026 15:06:05.4130
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: t++0z32CYZT1fHDUxIlhbt9UAWRq6laeVTq/J5bPIJZEqmnkvAHya4140Gp1Nvb1DDnlpwyb/TbJ6ORJ1Be4RQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7981
-X-Rspamd-Queue-Id: 999014DCDBF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4015f47a-af62-441d-b1b8-a8598f963970@lunn.ch>
+X-Rspamd-Queue-Id: 80B344DD372
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [2.14 / 15.00];
-	R_DKIM_REJECT(1.00)[nxp.com:s=selector1];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+X-Spamd-Result: default: False [-0.06 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_DKIM_ALLOW(-0.20)[riscstar-com.20251104.gappssmtp.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[riscstar.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[nxp.com : SPF not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-36299-lists,linux-gpio=lfdr.de];
-	TO_DN_ALL(0.00)[];
+	FREEMAIL_CC(0.00)[radxa.com,riscstar.com,lunn.ch,davemloft.net,google.com,kernel.org,redhat.com,bootlin.com,armlinux.org.uk,arndb.de,linuxfoundation.org,oss.qualcomm.com,gmail.com,foss.st.com,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
+	TAGGED_FROM(0.00)[bounces-36300-lists,linux-gpio=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[riscstar-com.20251104.gappssmtp.com:+];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[armadeus.com,nxp.com,gmail.com,pengutronix.de,kernel.org,vger.kernel.org,lists.linux.dev,lists.infradead.org];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,linux-gpio@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
-	DKIM_TRACE(0.00)[nxp.com:-];
-	NEURAL_HAM(-0.00)[-0.982];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-gpio];
+	FROM_NEQ_ENVFROM(0.00)[daniel@riscstar.com,linux-gpio@vger.kernel.org];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,nxp.com:email,armadeus.com:email]
+	RCPT_COUNT_GT_50(0.00)[51];
+	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,aspen.lan:mid]
 
-On Tue, May 05, 2026 at 12:09:02PM -0400, Frank Li wrote:
-> The old format to define pinctrl settings for imx in DT has two hierarchy
-> levels. The first level are function device nodes. The second level are
-> pingroups which contain a property fsl,pins. The original ntention was to
-> define all pin functions in a single dtsi file and just reference the
-> correct ones in the board files.
+On Wed, May 06, 2026 at 04:19:54PM +0200, Andrew Lunn wrote:
+> On Wed, May 06, 2026 at 08:59:01PM +0800, Xilin Wu wrote:
+> > On 5/1/2026 11:54 PM, Alex Elder wrote:
+> > > +	/* AXI Configuration */
+> > > +	axi = &td->axi;
+> > > +	axi->axi_lpi_en = 1;
+> > > +	axi->axi_wr_osr_lmt = 31;
+> > > +	axi->axi_rd_osr_lmt = 31;
+> > > +	/* All sizes (2^2..2^8) are supported */
+> > > +	axi->axi_blen_regval = DMA_AXI_BLEN_MASK;
+> > > +	plat->axi = axi;
+> > > +
+> > > +	plat->mac_port_sel_speed = speed;
+> > > +	plat->flags = STMMAC_FLAG_MULTI_MSI_EN | STMMAC_FLAG_TSO_EN;
+> >
+> > I got WoL working only after adding STMMAC_FLAG_USE_PHY_WOL here. I guess
+> > it's required, since the driver clocks down the MAC/PMA/XPCS in its suspend
+> > hook?
 >
-> The commit ("5fcdf6a7ed95e pinctrl: imx: Allow parsing DT without function
-> nodes") already make moden i.MX chip support flatten layout.
->
-> Make legacy chipes (more than 15 years) support this flatten layout also.
+> Nice to see somebody testing WoL.
 
-Linus Walleij:
+Absolutely!
 
-	Commit message missed an important information.
+We recently stripped out the (obviously broken and partially ported)
+WoL support we had in tc956x-pci.c. We planned to bring it back later.
+Hadn't realized it could be so easy.
 
-	This is fix v7.1 i.mx27 boot regression. Although it is old chip,
-it'd better to get merged in v7.1 fix cycle.
 
-Frank
+> In your testing, is it the PHY doing the WoL, or the MAC? I assume
+> PHY.
+>
+> If i remember the DT correctly, the PHY interrupt is connected to a
+> SoC GPIO, not a GPIO of this chip.
 
->
-> Fixes: e948cbdc41d6f ("ARM: dts: imx: remove redundant intermediate node in pinmux hierarchy")
-> Tested-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> Change in v2
-> - Add Tested-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-> - Use of_property_present()
-> ---
->  drivers/pinctrl/freescale/pinctrl-imx1-core.c | 48 ++++++++++++++++---
->  1 file changed, 41 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/pinctrl/freescale/pinctrl-imx1-core.c b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-> index b36c8a1461b7c..b7bd4ef9c0db5 100644
-> --- a/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-> +++ b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-> @@ -540,10 +540,34 @@ static int imx1_pinctrl_parse_functions(struct device_node *np,
->  	return 0;
->  }
->
-> +/*
-> + * Check if the DT contains pins in the direct child nodes. This indicates the
-> + * newer DT format to store pins. This function returns true if the first found
-> + * fsl,pins property is in a child of np. Otherwise false is returned.
-> + */
-> +static bool imx1_pinctrl_dt_is_flat_functions(struct device_node *np)
-> +{
-> +	struct device_node *function_np;
-> +	struct device_node *pinctrl_np;
-> +
-> +	for_each_child_of_node(np, function_np) {
-> +		if (of_property_present(function_np, "fsl,pins"))
-> +			return true;
-> +
-> +		for_each_child_of_node(function_np, pinctrl_np) {
-> +			if (of_property_present(pinctrl_np, "fsl,pins"))
-> +				return false;
-> +		}
-> +	}
-> +
-> +	return true;
-> +}
-> +
->  static int imx1_pinctrl_parse_dt(struct platform_device *pdev,
->  		struct imx1_pinctrl *pctl, struct imx1_pinctrl_soc_info *info)
->  {
->  	struct device_node *np = pdev->dev.of_node;
-> +	bool flat_funcs;
->  	int ret;
->  	u32 nfuncs = 0;
->  	u32 ngroups = 0;
-> @@ -552,9 +576,15 @@ static int imx1_pinctrl_parse_dt(struct platform_device *pdev,
->  	if (!np)
->  		return -ENODEV;
->
-> -	for_each_child_of_node_scoped(np, child) {
-> -		++nfuncs;
-> -		ngroups += of_get_child_count(child);
-> +	flat_funcs = imx1_pinctrl_dt_is_flat_functions(np);
-> +	if (flat_funcs) {
-> +		nfuncs = 1;
-> +		ngroups = of_get_child_count(np);
-> +	} else {
-> +		for_each_child_of_node_scoped(np, child) {
-> +			++nfuncs;
-> +			ngroups += of_get_child_count(child);
-> +		}
->  	}
->
->  	if (!nfuncs) {
-> @@ -574,10 +604,14 @@ static int imx1_pinctrl_parse_dt(struct platform_device *pdev,
->  	if (!info->functions || !info->groups)
->  		return -ENOMEM;
->
-> -	for_each_child_of_node_scoped(np, child) {
-> -		ret = imx1_pinctrl_parse_functions(child, info, ifunc++);
-> -		if (ret == -ENOMEM)
-> -			return -ENOMEM;
-> +	if (flat_funcs) {
-> +		imx1_pinctrl_parse_functions(np, info, 0);
-> +	} else {
-> +		for_each_child_of_node_scoped(np, child) {
-> +			ret = imx1_pinctrl_parse_functions(child, info, ifunc++);
-> +			if (ret == -ENOMEM)
-> +				return -ENOMEM;
-> +		}
->  	}
->
->  	return 0;
-> --
-> 2.43.0
->
+On RB3Gen2 (and I think also the QPS615 reference design) the phy
+interrupt is routed twice. It is connected both to the TC9564 GPIO
+block and to the host SoC.
+
+
+> So for your board, it is the SoCs
+> GPIO controllers ability to perform the wake which is
+> important. However, where the PHY interrupt is connected is a board
+> design issue. Could the PHY interrupt be connected to the chip? Would
+> the chip be able to wake the system? Should STMMAC_FLAG_USE_PHY_WOL be
+> conditional?
+
+I couldn't think of any reason to use the TC9564 GPIO block for the
+interrupts on RB3gen2 so I left it unused and the DT describes the SoC
+routing only.
+
+However if TC9564 were to be mounted on a real PCIe card then we'd have
+to use the TC9564 GPIO instead and would have to leave enough of the
+TC9564 enabled to handle the interrupt (and also to load a firmware to
+catch the interrupt and drive the PCI wake up signal).
+
+However such systems would need extensions to the current driver. We
+have done all we can to make it possible to add those extensions in the
+future but we would not be able to test them: not only do would a real
+PCIe card need extra driver features to play nice with ACPI but the
+card would also need an I2C EEPROM. We don't have that EEPROM on
+RB3gen2 (and again, we'd need firmware to read it).
+
+TL;DR - there are conceivable (and sane) hardware designs where the
+interrupt goes only to the TC9564 GPIO, but they are too different to
+RB3gen2 (and related SBC designs) for them to be supported before
+they exist!
+
+
+Daniel.
 
