@@ -1,48 +1,49 @@
-Return-Path: <linux-gpio+bounces-36274-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36275-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WEljCiAT+2lLWQMAu9opvQ
-	(envelope-from <linux-gpio+bounces-36274-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 12:08:32 +0200
+	id QCGGNigT+2lLWQMAu9opvQ
+	(envelope-from <linux-gpio+bounces-36275-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 12:08:40 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B7D84D91FB
-	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 12:08:31 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC7E64D9232
+	for <lists+linux-gpio@lfdr.de>; Wed, 06 May 2026 12:08:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 6F6CB3031F58
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 09:59:31 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B694C3031F49
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2026 09:59:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EACFC401490;
-	Wed,  6 May 2026 09:58:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E78A93FD15D;
+	Wed,  6 May 2026 09:58:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C8+4eyhu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XNXkQku1"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D628F3F2100;
-	Wed,  6 May 2026 09:58:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A03402BA2;
+	Wed,  6 May 2026 09:58:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778061490; cv=none; b=bIN0ZoJLgeFedKsJqWOTxHBgRrT5AIpk5v6+sctH+GRktlMF9byZQg6kcC0OBoUphZroKOobsl0EDGXd2LZW/olGPpSk7y3Tuzz+fmcwu21PXDMOsZXkpBSdqzES0GxZxXUgf6orz4P2KZt8xUQlpzcUSzygy1+Bq7EaMhVHAz4=
+	t=1778061491; cv=none; b=W61GQ4AcViBIpNEw4YRRbk5Yjk9jY0Xdb7/gptpGQ3PZxCI3v0pQIuuerqtW4qwBQcBI9ULSG65xHrtU9rN+J3CjxClqh2npslhmo+WySEArs4CW+p3iZfKWt+wVEeanq/afylfxe53UrMEsMJ7OmRXTvd8vE+A9+JQo8U9qSG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778061490; c=relaxed/simple;
-	bh=QSMJQ+qo2d/9QKlnpqj/XC1VAZOrvcslyFb4rShhWfo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g4CEbyYFMGRBhvrnBWFwLJ9arp8Km8cC2KDbaryv+BMlDN85D3JtvrAT4t1vTX4QNqqXLudKWWNRbJl7DXn+0j22cKprXi4gdcs9OBPAubynbIm2l6O+Dqx6NuzgCtVQ2jKKudZAjYWz5OQiuCMMXtUPEzxduDXKhPUnvpmFUYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C8+4eyhu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E674C2BCB8;
-	Wed,  6 May 2026 09:58:06 +0000 (UTC)
+	s=arc-20240116; t=1778061491; c=relaxed/simple;
+	bh=nS+w53mgZDDz5/WHgJtZUFy3p+Gm1mncA2Mp8hJAH74=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YV8gxFaSVr+rQSMW/AYYT7DrAGy9RJDnusj/PPRZ62DfzK2G4iGN0/N+A8ZtnpbQZTid9oFnc1Feav+C+YMfTV4BK1ZNvv9K+SbySw0px3Za6BHJZAYH3Fsw+cD62inqSlk1KN574/1g0D4Kg5JUZxpEr8pWC4JRadcitFpaM1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XNXkQku1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC201C2BCC9;
+	Wed,  6 May 2026 09:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778061488;
-	bh=QSMJQ+qo2d/9QKlnpqj/XC1VAZOrvcslyFb4rShhWfo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=C8+4eyhuvovWq6mc3xqieYOq9rP+hCzGwn0H8Mgh8B99uy5MH/ax2hBokSkgCW+o8
-	 eZxZhQD+cT9cai+VpeUww1hPBCUpEZVkRuYSydROOzI4Vx/xV8AgFbIJkccIhgn0rA
-	 xvL/tze8Kyir8FhZkIL/f6fNrXTCV5NFPys661tKV4/DgfL2tUU5r4LFQI9NKO+LKI
-	 7wzDFYi+zpnGN6HbZY9hleThnNyzfIiYtWZOOzJt0HCxyI3Gm87asYiyxoP2Tmgi/w
-	 EWWO6n8bPPgHHedIOY1I51zTeEcVIjacf1e3lTTM2Pmib/meTXzaavoIXuWrfMx3BV
-	 /n0WSNKVDuHfQ==
+	s=k20201202; t=1778061490;
+	bh=nS+w53mgZDDz5/WHgJtZUFy3p+Gm1mncA2Mp8hJAH74=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=XNXkQku1uHHdKKAtHRjXNdS25Uae4Aqi3pNq5aNNDiyT2Om7uGSnVXCw8dOCAWQKh
+	 bKtCO3LCuYUICNBzWGpN9QXT5o7YJPcFe/eZyh02x03CuhfSEVLNlhPmsGCQAULxTk
+	 7Xa8mbzQjPaAXrDIeq5A8hGur2yo+iDkeBzIvuR/3U+50vJ/ywNyfr4YfFznDmIDEq
+	 Up3hQJpqxC8Jn1WWogcn5xF2FTI9kEnOT762Z2PUEOghRsbpW3DE7IhTGKAQLurCYb
+	 zb233IsLBDidkAwMIQ6YZILbIS/5bOjpS3ZVYZ7g94WoNN3geDR/WHRCm7S5oevW0l
+	 vuKKXk8jx33SQ==
 From: Conor Dooley <conor@kernel.org>
 To: Linus Walleij <linusw@kernel.org>
 Cc: conor@kernel.org,
@@ -53,20 +54,22 @@ Cc: conor@kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	spacemit@lists.linux.dev
-Subject: [RFC v1 0/4] generic pinmux dt_node_to_map implementation
-Date: Wed,  6 May 2026 10:57:38 +0100
-Message-ID: <20260506-energize-dramatize-051909e54256@spud>
+Subject: [RFC v1 1/4] pinctrl: generic: change signature of pinctrl_generic_to_map() to pass void data
+Date: Wed,  6 May 2026 10:57:39 +0100
+Message-ID: <20260506-impotency-untagged-2b3d46b57039@spud>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260506-energize-dramatize-051909e54256@spud>
+References: <20260506-energize-dramatize-051909e54256@spud>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2283; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=vL3K36qzSz+jxyjtup88by9kUgRXxlFkjxJK/EVWVx4=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJm/BSa1vbz+/sXPt4+nML0KOv1ojrcO6+r3P90V5QT0t 6yYUGSf31HKwiDGxSArpsiSeLuvRWr9H5cdzj1vYeawMoEMYeDiFICJFIkzMvROTS2ZUvNc5UWB tbVo2LmGHn1pBv59Cu/togLu1llMP83IMLn4/NKwN1POf7dcvL3xMEO1W1EBp9dX6SIzP7VuduF FnAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2497; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=t1tswcXW1xGoS+RayKsRaGJ8HHS0FkJbWLql/CcOziI=; b=owGbwMvMwCVWscWwfUFT0iXG02pJDJm/BSaXfFPfffymmOxen8mpidxeynlPvk6YWfI24PrhW 60m13XudJSyMIhxMciKKbIk3u5rkVr/x2WHc89bmDmsTCBDGLg4BWAi17YzMvxXXe7/pf72wa03 T0jExSs8/PpVSzVs7w9l5ec+R7J5ymYx/NOM/ta08MfmounxD0rWsbS/mfBd+Opf15pDag6Hdj+ bvIEVAA==
 X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 2B7D84D91FB
+X-Rspamd-Queue-Id: DC7E64D9232
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.16 / 15.00];
@@ -74,7 +77,7 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -83,7 +86,7 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36274-lists,linux-gpio=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-36275-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-gpio@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -94,66 +97,64 @@ X-Spamd-Result: default: False [-1.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-gpio];
 	TO_DN_SOME(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,microchip.com:email,infradead.org:email]
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[microchip.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 
 From: Conor Dooley <conor.dooley@microchip.com>
 
-Hey Linus,
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ drivers/pinctrl/pinconf.h         | 6 ++----
+ drivers/pinctrl/pinctrl-generic.c | 5 ++---
+ 2 files changed, 4 insertions(+), 7 deletions(-)
 
-Whipped this up last week, at to a first glance it appears to work,
-although the spacemit platform I've used to implement this has very
-limited in-tree use of pinctrl so it is hard to be sure.
-
-What I don't love though is how similar the functions
-pinctrl_generic_pins_function_dt_node_to_map() and
-pinctrl_generic_pinmux_dt_node_to_map() are - essentially identical
-other than which function they in turn call.
-
-Basically, I wanna know if you think that that is acceptable, or if
-you'd rather see something that's totally generic between the two
-and figures out which foo_dt_subnode_to_map() function to call*,
-or convert pinctrl_generic_pins_function_dt_node_to_map() and
-pinctrl_generic_pinmux_dt_node_to_map() to wrappers that pass a function
-pointer of the appropriate foo_dt_subnode_to_map() to a shared node
-parsing function, or some third option that I have not considered.
-
-If you try to apply this, it's on top of Frank's mux series. It's also
-here if any of the spacemit-ters want to look at what I did to their
-driver:
-https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/log/?h=spacemit-pinctrl
-
-None of the patches have real commit messages due to this being RFC :)
-
-Cheers,
-Conor.
-
-* pinmux/pins + functions/groups + functions I think are the only
-  really valid combinations here, so it wouldn't be too difficult to
-  arrange that logic.
-
-CC: Linus Walleij <linusw@kernel.org>
-CC: Yixun Lan <dlan@kernel.org>
-CC: Conor Dooley <conor.dooley@microchip.com>
-CC: Troy Mitchell <troy.mitchell@linux.spacemit.com>
-CC: linux-gpio@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-CC: linux-riscv@lists.infradead.org
-CC: spacemit@lists.linux.dev
-
-Conor Dooley (4):
-  pinctrl: generic: change signature of pinctrl_generic_to_map() to pass
-    void data
-  pinctrl: add new generic groups/function creation function for pinmux
-  pinctrl: spacemit: delete check_power()
-  pinctrl: spacemit: move over to generic pinmux dt_node_to_map
-    implementation
-
- drivers/pinctrl/pinconf.h             |  20 +++-
- drivers/pinctrl/pinctrl-generic.c     | 139 +++++++++++++++++++++++++-
- drivers/pinctrl/spacemit/pinctrl-k1.c |  70 +++----------
- 3 files changed, 164 insertions(+), 65 deletions(-)
-
+diff --git a/drivers/pinctrl/pinconf.h b/drivers/pinctrl/pinconf.h
+index 83f2d00c732e1..5d99fef27657f 100644
+--- a/drivers/pinctrl/pinconf.h
++++ b/drivers/pinctrl/pinconf.h
+@@ -171,8 +171,7 @@ int pinctrl_generic_to_map(struct pinctrl_dev *pctldev, struct device_node *pare
+ 			   struct device_node *np, struct pinctrl_map **maps,
+ 			   unsigned int *num_maps, unsigned int *num_reserved_maps,
+ 			   const char **group_name, unsigned int ngroups,
+-			   const char **functions, unsigned int *pins,
+-			   unsigned int npins);
++			   void *data, unsigned int *pins, unsigned int npins);
+ #else
+ static inline int
+ pinctrl_generic_pins_function_dt_node_to_map(struct pinctrl_dev *pctldev,
+@@ -188,8 +187,7 @@ pinctrl_generic_to_map(struct pinctrl_dev *pctldev, struct device_node *parent,
+ 		       struct device_node *np, struct pinctrl_map **maps,
+ 		       unsigned int *num_maps, unsigned int *num_reserved_maps,
+ 		       const char **group_name, unsigned int ngroups,
+-		       const char **functions, unsigned int *pins,
+-		       unsigned int npins)
++		       void *data, unsigned int *pins, unsigned int npins)
+ {
+ 	return -ENOTSUPP;
+ }
+diff --git a/drivers/pinctrl/pinctrl-generic.c b/drivers/pinctrl/pinctrl-generic.c
+index 76670aef62da4..6a13fd4eea65b 100644
+--- a/drivers/pinctrl/pinctrl-generic.c
++++ b/drivers/pinctrl/pinctrl-generic.c
+@@ -21,8 +21,7 @@ int pinctrl_generic_to_map(struct pinctrl_dev *pctldev, struct device_node *pare
+ 			   struct device_node *np, struct pinctrl_map **maps,
+ 			   unsigned int *num_maps, unsigned int *num_reserved_maps,
+ 			   const char **group_names, unsigned int ngroups,
+-			   const char **functions, unsigned int *pins,
+-			   unsigned int npins)
++			   void *data, unsigned int *pins, unsigned int npins)
+ {
+ 	struct device *dev = pctldev->dev;
+ 	unsigned int num_configs;
+@@ -45,7 +44,7 @@ int pinctrl_generic_to_map(struct pinctrl_dev *pctldev, struct device_node *pare
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = pinctrl_generic_add_group(pctldev, group_name, pins, npins, functions);
++	ret = pinctrl_generic_add_group(pctldev, group_name, pins, npins, data);
+ 	if (ret < 0)
+ 		return dev_err_probe(dev, ret, "failed to add group %s: %d\n",
+ 				     group_name, ret);
 -- 
 2.53.0
 
