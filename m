@@ -1,251 +1,238 @@
-Return-Path: <linux-gpio+bounces-36380-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-36381-lists+linux-gpio=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0K2nJZih/Gn2SAAAu9opvQ
-	(envelope-from <linux-gpio+bounces-36380-lists+linux-gpio=lfdr.de@vger.kernel.org>)
-	for <lists+linux-gpio@lfdr.de>; Thu, 07 May 2026 16:28:40 +0200
+	id IF+xJMOn/Gn5SQAAu9opvQ
+	(envelope-from <linux-gpio+bounces-36381-lists+linux-gpio=lfdr.de@vger.kernel.org>)
+	for <lists+linux-gpio@lfdr.de>; Thu, 07 May 2026 16:54:59 +0200
 X-Original-To: lists+linux-gpio@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7A9E4EA2C1
-	for <lists+linux-gpio@lfdr.de>; Thu, 07 May 2026 16:28:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E3B524EAA48
+	for <lists+linux-gpio@lfdr.de>; Thu, 07 May 2026 16:54:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 89A5A3086F6B
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 May 2026 14:25:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 015E6306D963
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 May 2026 14:47:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFCFA35B633;
-	Thu,  7 May 2026 14:25:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F29F410D04;
+	Thu,  7 May 2026 14:47:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kqvm6WrF"
+	dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b="y6sHvENc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988A831714A;
-	Thu,  7 May 2026 14:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3573F7A99
+	for <linux-gpio@vger.kernel.org>; Thu,  7 May 2026 14:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778163946; cv=none; b=cX0gcNLNH/5IrPauV3YRNpkIC4Cj7SuuoIPf73aq4kJjQTwDyQu+aY5EhfQnlNBxIeaGXIyOBwFH+G8uDMONl6X+pRBBJHX6heCpCqP+z0VsySqMGxbfCnyLQ5lGPGdh3/sgN2TwViwFOyMmjZmRW19aTTZqo6R3fIfliF0Kguw=
+	t=1778165234; cv=none; b=EfNE6BOxzk2A9j4leC0tvHS+A0uK6Ln5MxqRV88sPFVoTtH2aPtayXHB8GI9OQoYPIQDUJsWlEv2cmgD3ZeMvHrSfXfmBybiEGrl20boChgS7KH4EFmgablODyWkxYOasit9+BdshcLfY16fICA/rdmozSHneonlHSRFGI38l20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778163946; c=relaxed/simple;
-	bh=vlPB5SDuOt75n5oB0tM9u/D39/Xgib3IJQ8fXj5/sdg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Tw6nBNgaV1aru/0uy/aPTnzOEdGmkWVxm4+LWrpbS5wiuLr0G+2L4SsMtgDaj0m9fhxgHlmODm/7c/otl/t0xd949PvXyzE1fz7hHGLXlA9Y23/WHyOhdzO9a+IKZPvjXN2M4vxJYk3+IgZw+CKkKLWB2OfjSZv5eLt8m4JGEgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kqvm6WrF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC92FC2BCC9;
-	Thu,  7 May 2026 14:25:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778163946;
-	bh=vlPB5SDuOt75n5oB0tM9u/D39/Xgib3IJQ8fXj5/sdg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Kqvm6WrFdsSdlOu0qxKmLBuGM3nxTavGCrP+bpd9SNsH/MKkT+TZHdBUPnl2kAqkF
-	 v51j7R3UFIHs+c3I+sXkYCJCY1FldZquy4PhrOiqXsg2ce81bbG9HtXAYTi8MThkSF
-	 wqXHOkRa1SbnPp+Mz8ZFNmJfqeA0UGopZMnqSMOx8WVsX5le0XF1K6+FytOc1jzlnp
-	 7tZmPKxePPzKCKtKXWfGtGpERz76+TJazibrUPLLnQ/PKvCG2GdO9t6nHyiLlYx2dp
-	 VMzkKhZOXH2DHQ6B807kULwijk+ROT2WQCmx8BCuBO5f5Cuu3uPOZpijH9ZKlOYkZ4
-	 dyl+aDOe2wM0w==
-Date: Thu, 7 May 2026 15:25:32 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, "Hennerich, Michael"
- <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, "Sa,
- Nuno" <Nuno.Sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
- <ukleinek@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
- <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>, Bartosz
- Golaszewski <brgl@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v9 3/6] iio: adc: ad4691: add triggered buffer support
-Message-ID: <20260507152532.09b385eb@jic23-huawei>
-In-Reply-To: <LV9PR03MB8414E0FFAD9C9423189117B2F73C2@LV9PR03MB8414.namprd03.prod.outlook.com>
-References: <20260430-ad4692-multichannel-sar-adc-driver-v9-0-33e439e4fb87@analog.com>
-	<20260430-ad4692-multichannel-sar-adc-driver-v9-3-33e439e4fb87@analog.com>
-	<LV9PR03MB8414E0FFAD9C9423189117B2F73C2@LV9PR03MB8414.namprd03.prod.outlook.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1778165234; c=relaxed/simple;
+	bh=/OysdnbnOtECLkkSa00qUIDUT8c+z8rBTm0QaKE643Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gyTTxOGJ20zd+WLN86YdZJcs3YTJPBpmYKxZNa7SZqE0UJI+2/Ue5OriGW8tWznZ9NgVGXQz1bbd/0KyqJl6YDF6bkQO5u6Dr2bq3frDQwisPyKmxRbRqWn57G/4oxduNdrl7Os6M4xty7AFnRldViWczcVt0xR77EVidjTdbtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20251104.gappssmtp.com header.i=@riscstar-com.20251104.gappssmtp.com header.b=y6sHvENc; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4891c00e7aeso8654415e9.2
+        for <linux-gpio@vger.kernel.org>; Thu, 07 May 2026 07:47:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20251104.gappssmtp.com; s=20251104; t=1778165230; x=1778770030; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QZB38wJGIZd42iBI3srRP0pjjAxDTyyGTqCWJp8RgtQ=;
+        b=y6sHvENcFjVQHrSBavIoyq7oFwxMGglGYH82YKxB3rYUBU2WXPRYsxMkRmjaL8UJtJ
+         8qCHl9DPDYrsxc98WoBL2OVnRxquMXDR7DJkEJ9EsIq4AZGGHrWcAHRBS18gya1ZxKtR
+         EnlmuxisPmWVI/FCv2UT17Z2tvp0mlc86/WG39g8c3YrEIGrOiRRn5f3rGEvIAe9NK4M
+         G3PU4X1W2bs7CtqpYJU4OLJ9+/f8MTwSAHunB19JS2FigfTQbWc1FjXIgGDLFSsZnLYJ
+         srSccQtsHw2YSHp5ap4GUnDf1aUWOpktSnhkWm07DoTgrs60aRygAE7qvb6LOWLgEOL6
+         oFLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778165230; x=1778770030;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QZB38wJGIZd42iBI3srRP0pjjAxDTyyGTqCWJp8RgtQ=;
+        b=ktG3D2tySlL2kxeTG7yYVsa5uO0BBGkUdeDanHSsDtj7KxScNNrVE4JEgVN0oY69il
+         1Y2UlZQV+e+PQgE3DldiwxOTrZNDhk/h9xIuCfszVE1xV9Q+xrIFlIHWts5M5sSi+a46
+         u2QMZC2cERyTuHkbzTxU+c6jt8palM8q+DDN49HjPpwtnD9suPyL6i7PEDln25tfaasm
+         4ujKsjRmu6z6kfaLzOHWxqn6VdNSS0XlSUyfOqrTe3X8MYqBqCELaaorrr3Ok0O3J/9d
+         T2n59Y3yBmkXvYy6AtEKoSrFGpNfgB8/mefO44YlfdQNSluk0ZEX12gBEXsEoI+78Ffw
+         vcWA==
+X-Forwarded-Encrypted: i=1; AFNElJ852U822kXpiG+QsN/EbDmykWk3ym/CTrvZHLRFFjNTiO/FgJkmSr8H3Cpgk+JCjo3zT2FQ1KHYnbgT@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFC74XH7yA274wpyQ0nsKrzUra2i7Cs2WS7G6hwAo273S66NLL
+	v0J0lcGePQbRFQUzCWhSM8OvZzFHLOzZ/HGODAtcc9i95Z4ek+FC3RTRh2oWz/VtjfQ=
+X-Gm-Gg: AeBDiessV/7ffkXczQxhLWgJOGHhtQDIcsV9qZq5QdPwAJO0vqZqALGFW8QjQEHwg40
+	ifxiPVG0Lfdo4SbM0ySmoewhX3OG0/g8yIref2TACcYvgPmCEVq1zJDqdCagJxwGsGGq07DZd40
+	W1W5L8Y67iZ6dlwCvEKY+IfkacTRyeO2e22mIqjGixbrkmPE9HRD320ENjpg/fqI22FkFQ0rBrX
+	MFXdfv+dZhvDMzFhco3MDABRkegiEGKyRRvjExC8prAHDAR8ogkXle2Bx/7/MLyQqwzZIcnbukC
+	8J9nYTLgqpIQ76jkPbGN0ImGrRcRlS/cC+ZX7Ra4flvvnvJ1bVfaVXG6/pERUDa9M76Pv9z9pGI
+	tqEldk4FGS8Dr6WHeDssNn5hiEAOwahKyyRUpgEM129FJLgxU60b6ylWZOVXYhL8k4zy9/O+QBw
+	FXpCbv7GeDLO2qE4a8EUY1UIDIqt6H0fkmjXuILwyTolc5Y8LMUNsUhoV452//lKlBHHbovE8i+
+	/n4k9Ern2FmG0nGr9JHgL9UJ3MFjlhhvg6Fy38C7aUHBZp553eHzOUJSbAevk56ajtr54jj31/f
+	WPdaqegijv1i+/cZUK4=
+X-Received: by 2002:a05:600c:a317:b0:488:a977:8d6 with SMTP id 5b1f17b1804b1-48e52bd4f32mr100824405e9.19.1778165230150;
+        Thu, 07 May 2026 07:47:10 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e538a5486sm134813275e9.6.2026.05.07.07.47.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2026 07:47:09 -0700 (PDT)
+Date: Thu, 7 May 2026 15:47:06 +0100
+From: Daniel Thompson <daniel@riscstar.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Alex Elder <elder@riscstar.com>, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, maxime.chevallier@bootlin.com,
+	rmk+kernel@armlinux.org.uk, andersson@kernel.org,
+	konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linusw@kernel.org, brgl@kernel.org,
+	arnd@arndb.de, gregkh@linuxfoundation.org,
+	mohd.anwar@oss.qualcomm.com, a0987203069@gmail.com,
+	alexandre.torgue@foss.st.com, ast@kernel.org,
+	boon.khai.ng@altera.com, chenchuangyu@xiaomi.com,
+	chenhuacai@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
+	hkallweit1@gmail.com, inochiama@gmail.com, john.fastabend@gmail.com,
+	julianbraha@gmail.com, livelycarpet87@gmail.com,
+	matthew.gerlach@altera.com, mcoquelin.stm32@gmail.com, me@ziyao.cc,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, richardcochran@gmail.com,
+	rohan.g.thomas@altera.com, sdf@fomichev.me,
+	siyanteng@cqsoftware.com.cn, weishangjuan@eswincomputing.com,
+	wens@kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 08/12] dt-bindings: net: toshiba,tc965x-dwmac:
+ add TC956x Ethernet bridge
+Message-ID: <afyl6gpHLlAnxir7@aspen.lan>
+References: <20260501155421.3329862-1-elder@riscstar.com>
+ <20260501155421.3329862-9-elder@riscstar.com>
+ <20260504-fascinating-teal-tarsier-b116c8@quoll>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: E7A9E4EA2C1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260504-fascinating-teal-tarsier-b116c8@quoll>
+X-Rspamd-Queue-Id: E3B524EAA48
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [4.94 / 15.00];
+	SEM_URIBL(3.50)[0.0.0.0:email];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
+	BAD_REP_POLICIES(0.10)[];
+	DMARC_POLICY_SOFTFAIL(0.10)[riscstar.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-36380-lists,linux-gpio=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[23];
+	TAGGED_FROM(0.00)[bounces-36381-lists,linux-gpio=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[metafoo.de,analog.com,baylibre.com,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
+	FREEMAIL_CC(0.00)[riscstar.com,lunn.ch,davemloft.net,google.com,kernel.org,redhat.com,bootlin.com,armlinux.org.uk,arndb.de,linuxfoundation.org,oss.qualcomm.com,gmail.com,foss.st.com,altera.com,xiaomi.com,iogearbox.net,ziyao.cc,bp.renesas.com,fomichev.me,cqsoftware.com.cn,eswincomputing.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
+	RCVD_TLS_LAST(0.00)[];
+	GREYLIST(0.00)[pass,body];
+	R_DKIM_ALLOW(0.00)[riscstar-com.20251104.gappssmtp.com:s=20251104];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[riscstar-com.20251104.gappssmtp.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-gpio@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_GT_50(0.00)[50];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[daniel@riscstar.com,linux-gpio@vger.kernel.org];
+	NEURAL_SPAM(0.00)[0.665];
+	TAGGED_RCPT(0.00)[linux-gpio,netdev,kernel,dt];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-gpio,dt];
+	MISSING_XM_UA(0.00)[];
+	R_SPF_ALLOW(0.00)[+ip6:2600:3c0a:e001:db::/64:c];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[0.0.0.0:email,riscstar.com:email,riscstar-com.20251104.gappssmtp.com:dkim,aspen.lan:mid,1c:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Thu, 7 May 2026 11:37:25 +0000
-"Sabau, Radu bogdan" <Radu.Sabau@analog.com> wrote:
+On Mon, May 04, 2026 at 01:00:07PM +0200, Krzysztof Kozlowski wrote:
+> On Fri, May 01, 2026 at 10:54:16AM -0500, Alex Elder wrote:
+> > From: Daniel Thompson <daniel@riscstar.com>
+> >
+> > Add devicetree bindings for the Toshiba TC956x family of Ethernet-AVB/TSN
+> > bridges.
+> >
+> > Signed-off-by: Daniel Thompson <daniel@riscstar.com>
+> > Signed-off-by: Alex Elder <elder@riscstar.com>
 
-> Addressing Sashiko's review for triggered buffer patch.
-> 
-> > -----Original Message-----
-> > From: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
-> > Sent: Thursday, April 30, 2026 1:17 PM  
-> 
-> ...
-> 
-> > +static int ad4691_manual_buffer_preenable(struct iio_dev *indio_dev)
-> > +{
-> > +	struct ad4691_state *st = iio_priv(indio_dev);
-> > +	unsigned int prev_i, k, i;
-> > +	bool first;
-> > +	int ret;
+Alex already replied to most of your comments but on this one
+specifically...
+
+
+> > ---
+> >  .../bindings/net/toshiba,tc956x-dwmac.yaml    | 111 ++++++++++++++++++
+> >  1 file changed, 111 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/net/toshiba,tc956x-dwmac.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/toshiba,tc956x-dwmac.yaml b/Documentation/devicetree/bindings/net/toshiba,tc956x-dwmac.yaml
+> > new file mode 100644
+> > index 0000000000000..d95d22a3761da
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/toshiba,tc956x-dwmac.yaml
+> > @@ -0,0 +1,111 @@
+> > <snip>
+> > +examples:
+> > +  - |
+> > +    pcie {
+> > +      #address-cells = <3>;
+> > +      #size-cells = <2>;
 > > +
-> > +	memset(st->scan_xfers, 0, sizeof(st->scan_xfers));
-> > +	memset(st->scan_tx, 0, sizeof(st->scan_tx));
+> > +      tc956x_emac0: pci@0,0 {
+> > +        compatible = "pci1179,0220";
+> > +        reg = <0x50000 0x0 0x0 0x0 0x0>;
+> > +        #address-cells = <3>;
+> > +        #size-cells = <2>;
+> > +        device_type = "pci";
+> > +        ranges;
 > > +
-> > +	spi_message_init(&st->scan_msg);
+> > +        gpio-controller;
+> > +        #gpio-cells = <2>;
 > > +
-> > +	first = true;
-> > +	prev_i = 0;
-> > +	k = 0;
-> > +	iio_for_each_active_channel(indio_dev, i) {
-> > +		st->scan_tx[k] = cpu_to_be16(AD4691_ADC_CHAN(i));
-> > +		st->scan_xfers[k].tx_buf = &st->scan_tx[k];
-> > +		/*
-> > +		 * The pipeline means xfer[0] receives the residual from the
-> > +		 * previous sequence, not a valid sample for channel i. Point
-> > +		 * it at vals[i] anyway; xfer[1] (or the NOOP when only one
-> > +		 * channel is active) will overwrite that slot with the real
-> > +		 * result, so no separate dummy buffer is needed.
-> > +		 */
-> > +		if (first) {
-> > +			st->scan_xfers[k].rx_buf = &st->vals[i];
-> > +			first = false;
-> > +		} else {
-> > +			st->scan_xfers[k].rx_buf = &st->vals[prev_i];
-> > +		}  
-> 
-> 
-> "The IIO subsystem expects data pushed to the buffer to be densely packed
-> according to the active channels in the scan mask.
-> If only a subset of channels are enabled, does assigning the rx_buf pointer
-> directly to absolute array indices at &st->vals[i] leave holes in the buffer?
-> When iio_push_to_buffers_with_ts() is called, this might cause it to read
-> uninitialized memory instead of the expected samples."
-> 
-> I would say there is no change needed. Writing to &st->vals[scan_index] and
-> passing the full array to iio_push_to_buffers_with_ts() is the standard IIO kfifo
-> pattern: the core demultiplexes by reading data[scan_index * storagebits/8]
-> for each active channel; holes at inactive indices are silently ignored.
-> The same pattern is used in ad4695, ad_sigma_delta, and others. The
-> pipeline residual in the first manual-mode transfer is overwritten by the
-> subsequent transfer before the scan is pushed, as the comment explains.
-
-This looks wrong to me.
-
-What holes?  If available_scan_masks is set we will do a bunch of
-demux work - but then this code would see the mask picked from that
-list. If it's not then typically we won't (subject to multiple consumers
-forcing it - but that still won't close up holes here).
-
-If the active_scan_mask == the one requested, there is no demux at all
-and I think that's the case here - the code pushes the data passed in
-directly to the kfifo.
-
-Perhaps given an illustration of what the layout of resulting data
-is if only even numbered channels are enabled.
-
-
-
-> 
-> > +		st->scan_xfers[k].len = sizeof(__be16);
-> > +		st->scan_xfers[k].cs_change = 1;
-> > +		spi_message_add_tail(&st->scan_xfers[k], &st->scan_msg);
-> > +		prev_i = i;
-> > +		k++;
-> > +	}
-> > +  
-> 
+> > +        phy-mode = "10gbase-r";
+> > +        phy-handle = <&tc956x_emac0_phy>;
+> > +
+> > +        mdio {
+> > +          compatible = "snps,dwmac-mdio";
+> > +          #address-cells = <1>;
+> > +          #size-cells = <0>;
+> > +
+> > +          tc956x_emac0_phy: ethernet-phy@1c {
+> > +            compatible = "ethernet-phy-id311c.1c12";
+> > +            reg = <0x1c>;
+> > +          };
+> > +        };
+> > +      };
 >
-> > +	st->scan_xfers[2 * k + 1].len = sizeof(__be16);
-> > +	st->scan_xfers[2 * k + 1].cs_change = 1;
-> > +	spi_message_add_tail(&st->scan_xfers[2 * k + 1], &st->scan_msg);
-> > +
-> > +	ret = spi_optimize_message(st->spi, &st->scan_msg);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = regmap_write(st->regmap, AD4691_STD_SEQ_CONFIG,
-> > +			   bitmap_read(indio_dev->active_scan_mask, 0,
-> > +				       iio_get_masklength(indio_dev)));
-> > +	if (ret)
-> > +		goto err_unoptimize;
-> > +
-> > +	ret = regmap_write(st->regmap, AD4691_ACC_MASK_REG,
-> > +			   ~bitmap_read(indio_dev->active_scan_mask, 0,
-> > +				iio_get_masklength(indio_dev)) &
-> > GENMASK(15, 0));
-> > +	if (ret)
-> > +		goto err_unoptimize;
-> > +
-> > +	ret = ad4691_enter_conversion_mode(st);
-> > +	if (ret)
-> > +		goto err_unoptimize;
-> > +
-> > +	ret = ad4691_sampling_enable(st, true);
-> > +	if (ret)
-> > +		goto err_exit_conv;
-> > +
-> > +	enable_irq(st->irq);
-> > +	return 0;  
-> 
-> "Is there a race condition introduced by enabling the PWM and unmasking the
-> IRQ here?
-> If a hardware interrupt fires before the IIO core attaches the trigger's poll
-> function, iio_trigger_poll() drops the event. Will the IRQ handler then call
-> disable_irq_nosync() without ever running the consumer thread to re-enable it?"
-> 
-> Valid. preenable is called before the IIO core attaches the trigger
-> poll function; if a DATA_READY IRQ fires in that window, iio_trigger_poll()
-> is dropped, disable_irq_nosync() disables the IRQ, and enable_irq() is
-> never called, leaving the IRQ stuck. Although the delay would need to be 
-> very great for this to happen, I moved sampling_enable(true) and
-> enable_irq() to a new postenable callback which the IIO core calls only
-> after the trigger poll function is attached.
+> Keep only one example, unless you have different properties (not their
+> values, but their presence),
 
-Make sure to add a comment on why that is there.
-Otherwise makes sense.
+At some point I simplified the example by stripping out excess
+properties from each ethernet-phy. In the process it looks like I
+removed too much and eliminated reason I thought it important to
+include both PCI functions in the example!
 
-> 
+Each ethernet-phy will typically describe a reset gpio but we expect
+only eMAC0 to act as a gpio-controller. For that reason I wanted to
+show that. You can see part of that that in the current example because
+tc956x_emac1 is not a gpio-controller.
 
-Rest look fine to me.
+In other words tc956x_emac**1**_phy will, in the real world, include a
+reset-gpios property that references tc956x_emac**0**. For example:
 
+    reset-gpios = <&tc956x_emac0 1 GPIO_ACTIVE_LOW>
+
+
+So... is it better to strip it back the example to describe only a
+single PCI function or should I add back the reset-gpios that I
+accidentally removed?
+
+
+Daniel.
 
